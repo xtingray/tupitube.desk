@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -59,7 +59,7 @@
 #include <QCamera>
 #include <QCameraImageCapture>
 
-class TUPI_EXPORT TupCameraInterface : public QFrame
+class TUPITUBE_EXPORT TupCameraInterface : public QFrame
 {
     Q_OBJECT
 

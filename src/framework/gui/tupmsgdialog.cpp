@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -82,7 +82,7 @@ void TupMsgDialog::setupGUI()
     QString html = "<html>\n";
     html += "<head>\n";
     html += "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html;charset=utf-8\">\n";
-    html += "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:tupi.css\" />\n";
+    html += "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:tupitube.css\" />\n";
     html += "</head>\n";
     html += "<body class=\"tip_background0" + QString::number(index) + "\">\n";
     html += msg;

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -39,7 +39,7 @@
 
 // Header
 
-class TUPI_EXPORT TupLayerIndexHeader : public QHeaderView
+class TUPITUBE_EXPORT TupLayerIndexHeader : public QHeaderView
 {
     public:
         TupLayerIndexHeader(QWidget * parent = 0);

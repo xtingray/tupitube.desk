@@ -9,12 +9,12 @@
 #include <QVideoRendererControl>
 #include <QVideoSurfaceFormat>
 
-class TUPI_EXPORT VideoIF {
+class TUPITUBE_EXPORT VideoIF {
     public:
         virtual void updateVideo() = 0;
 };
 
-class TUPI_EXPORT TupVideoSurface: public QAbstractVideoSurface
+class TUPITUBE_EXPORT TupVideoSurface: public QAbstractVideoSurface
 {
     Q_OBJECT
 

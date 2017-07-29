@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -126,12 +126,12 @@ void TipDatabase::loadVideos(const QString &videoPath)
     QFile file(videoPath);
 
     if (!file.exists()) {
-		#ifdef K_DEBUG
+        #ifdef K_DEBUG
             QString msg = "TipDatabase::loadVideos() - Fatal Error: File doesn't exist -> " + videoPath;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else
-                tError() << msg;
+                tWarning() << msg;
             #endif
         #endif
 	    return;	
@@ -143,7 +143,7 @@ void TipDatabase::loadVideos(const QString &videoPath)
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else
-                tError() << msg;
+                tWarning() << msg;
             #endif
         #endif
         return;
@@ -192,7 +192,7 @@ void TipDatabase::loadVideos(const QString &videoPath)
                 record = "<html>\n";
                 record += "<head>\n";
                 record += "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html;charset=utf-8\">\n";
-                record += "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:tupi.css\" />\n";
+                record += "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:tupitube.css\" />\n";
                 record += "</head>\n";
                 record += "<body class=\"tupi_background5\">\n";
                 record += "<p><center><b>";
@@ -262,7 +262,7 @@ void TipDatabase::loadTips(const QString &tipPath)
                 record = "<html>\n";
                 record += "<head>\n";
                 record += "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html;charset=utf-8\">\n";
-                record += "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:tupi.css\" />\n";
+                record += "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:tupitube.css\" />\n";
                 record += "</head>\n";
                 record += "<body class=\"tip_background0" + QString::number(index) + "\">\n";
                 record += e.text();

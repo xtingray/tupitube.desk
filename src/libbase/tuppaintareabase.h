@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -63,7 +63,7 @@ class TupPaintAreaRotator;
  * @author Jorge Cuadrado - David Cuadrado
 */
 
-class TUPI_EXPORT TupPaintAreaBase : public QGraphicsView
+class TUPITUBE_EXPORT TupPaintAreaBase : public QGraphicsView
 {
     Q_OBJECT
 

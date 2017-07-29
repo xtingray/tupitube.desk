@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -55,7 +55,7 @@
 #include <QDesktopWidget>
 #include <QPushButton>
 
-class TUPI_EXPORT TupBasicCameraInterface : public QFrame
+class TUPITUBE_EXPORT TupBasicCameraInterface : public QFrame
 {
     Q_OBJECT
 

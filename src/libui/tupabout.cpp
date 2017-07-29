@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -47,7 +47,7 @@
 #include <QDir>
 
 /**
- * This class defines the About dialog of Tupi.
+ * This class defines the About dialog of TupiTube.
  * Here is where the dialog tabs are setted.
  * @author David Cuadrado
 */
@@ -56,14 +56,14 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Cancel, parent)
 {
     // SQA: Check if these instructions are doing something for real
     setWindowIcon(QIcon(THEME_DIR + "icons/about.png"));
-    setWindowTitle(tr("About Tupi"));    
+    setWindowTitle(tr("About TupiTube"));    
     setFixedSize(525, 458);
 
     QStringList path;
 #ifdef Q_OS_WIN
-    QString resources = SHARE_DIR + "help/";
+    QString resources = SHARE_DIR + "html/";
 #else
-    QString resources = SHARE_DIR + "data/help/";
+    QString resources = SHARE_DIR + "data/html/";
 #endif
     path << resources + "css";
     path << resources + "images";
@@ -129,9 +129,9 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Cancel, parent)
     palette.setColor(QPalette::Foreground, QColor(50, 50, 50, 255));
     credits->setPalette(palette);
 
+    /*
     // Acknowledgment Tab 
-
-    QString sponsorFile = QString() + "help/pages/thanks.html";
+    QString sponsorFile = QString() + "html/pages/thanks.html";
 #ifdef Q_OS_WIN
     QString sponsorPath = SHARE_DIR + sponsorFile;
 #else
@@ -144,10 +144,11 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Cancel, parent)
     sponsorsText->moveCursor(QTextCursor::Start);
 
     addTab(sponsorsText, tr("Thanks"));
+    */
 
-    // Tupi Description Tab 
+    // TupiTube Description Tab 
 
-    QString tupiFile = QString() + "help/pages/tupi_short.html";
+    QString tupiFile = QString() + "html/pages/tupi_short.html";
 #ifdef Q_OS_WIN
     QString tupiPath = SHARE_DIR + tupiFile;
 #else
@@ -163,7 +164,7 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Cancel, parent)
 
     // 4: License Terms Tab
 
-    QString licenseFile = QString() + "help/pages/philosophy.html"; 
+    QString licenseFile = QString() + "html/pages/philosophy.html"; 
 #ifdef Q_OS_WIN
     QString licensePath = SHARE_DIR + licenseFile;
 #else

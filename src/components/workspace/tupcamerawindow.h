@@ -10,7 +10,7 @@
 #include <QCamera>
 #include <QCameraImageCapture>
 
-class TUPI_EXPORT TupCameraWindow: public QWidget, public VideoIF
+class TUPITUBE_EXPORT TupCameraWindow: public QWidget, public VideoIF
 {
     Q_OBJECT
 

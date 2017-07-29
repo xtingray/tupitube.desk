@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -45,7 +45,7 @@
 #include <QTextStream>
 #include <QMap>
 
-class TUPI_EXPORT TupPhoneme : public QObject, public TupAbstractSerializable
+class TUPITUBE_EXPORT TupPhoneme : public QObject, public TupAbstractSerializable
 {
     public:
         TupPhoneme();
@@ -65,7 +65,7 @@ class TUPI_EXPORT TupPhoneme : public QObject, public TupAbstractSerializable
         QPointF pos;
 };
 
-class TUPI_EXPORT TupWord : public QObject, public TupAbstractSerializable
+class TUPITUBE_EXPORT TupWord : public QObject, public TupAbstractSerializable
 {
     public:
         TupWord();
@@ -89,7 +89,7 @@ class TUPI_EXPORT TupWord : public QObject, public TupAbstractSerializable
         QList<TupPhoneme *> phonemes;
 };
 
-class TUPI_EXPORT TupPhrase : public QObject, public TupAbstractSerializable
+class TUPITUBE_EXPORT TupPhrase : public QObject, public TupAbstractSerializable
 {
     public:
         TupPhrase();
@@ -113,7 +113,7 @@ class TUPI_EXPORT TupPhrase : public QObject, public TupAbstractSerializable
         QList<TupWord *> words;
 };
 
-class TUPI_EXPORT TupVoice : public QObject, public TupAbstractSerializable
+class TUPITUBE_EXPORT TupVoice : public QObject, public TupAbstractSerializable
 {
     public:
         TupVoice();
@@ -145,7 +145,7 @@ class TUPI_EXPORT TupVoice : public QObject, public TupAbstractSerializable
         QList<TupPhrase *> phrases;
 };
 
-class TUPI_EXPORT TupLipSync : public QObject, public TupAbstractSerializable
+class TUPITUBE_EXPORT TupLipSync : public QObject, public TupAbstractSerializable
 {
     public:
         TupLipSync();

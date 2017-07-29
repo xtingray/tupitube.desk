@@ -35,10 +35,10 @@
 
 module RQonf
     CONFIG = {}
-    CONFIG["prefix"] = "/usr/local/tupi"
-    CONFIG["bindir"] = "/usr/local/tupi/bin"
-    CONFIG["libdir"] = "/usr/local/tupi/lib"
-    CONFIG["includedir"] = "/usr/local/tupi/include"
-    CONFIG["sharedir"] = "/usr/local/tupi/share"
+    CONFIG["prefix"] = "/usr/local/tupitube.desk"
+    CONFIG["bindir"] = "/usr/local/tupitube.desk/bin"
+    CONFIG["libdir"] = "/usr/local/tupitube.desk/lib"
+    CONFIG["includedir"] = "/usr/local/tupitube.desk/include"
+    CONFIG["sharedir"] = "/usr/local/tupitube.desk/share"
     CONFIG["libavdir"] = "/usr"
 end

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -46,14 +46,14 @@
 #define T_GUI_EXPORT Q_GUI_EXPORT
 #define T_CORE_EXPORT Q_DECL_EXPORT
 #define T_SOUND_EXPORT Q_DECL_EXPORT
-#define TUPI_EXPORT Q_GUI_EXPORT
-#define TUPI_PLUGIN Q_DECL_EXPORT
+#define TUPITUBE_EXPORT Q_GUI_EXPORT
+#define TUPITUBE_PLUGIN Q_DECL_EXPORT
 #else
 #define T_GUI_EXPORT
 #define T_CORE_EXPORT
 #define T_SOUND_EXPORT
-#define TUPI_EXPORT
-#define TUPI_PLUGIN
+#define TUPITUBE_EXPORT
+#define TUPITUBE_PLUGIN
 #endif
 
 #ifdef QT_GUI_LIB

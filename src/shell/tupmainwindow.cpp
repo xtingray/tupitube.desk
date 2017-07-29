@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -42,7 +42,7 @@
 #include "tuppaintareaevent.h"
 #include "tuppaintareacommand.h"
 
-// Tupi Framework
+// TupiTube Framework
 #include "tipdialog.h"
 #include "tupmsgdialog.h"
 #include "tosd.h"
@@ -80,7 +80,7 @@
 
 /**
  * This class defines the main window application.
- * Here is where all the Tupi GUI is initialized 
+ * Here is where all the TupiTube GUI is initialized 
  * @author David Cuadrado
 */
 
@@ -106,7 +106,7 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(0), animat
     #endif
 
     // Naming the main frame...
-    setWindowTitle(tr("Tupi: 2D Magic"));
+    setWindowTitle(tr("TupiTube Desk"));
     setWindowIcon(QIcon(THEME_DIR + "icons/about.png"));
     setObjectName("TupMainWindow_");
 
@@ -292,7 +292,7 @@ void TupMainWindow::createNewNetProject(const QString &title, const QStringList 
 {
     isNetworked = true;
     projectName = title;
-    setWindowTitle(tr("Tupi: 2D Magic") + " - " + projectName + " " + tr("[ by %1 | net mode ]").arg(netUser));
+    setWindowTitle(tr("TupiTube Desk") + " - " + projectName + " " + tr("[ by %1 | net mode ]").arg(netUser));
 
     if (m_viewChat) {
         removeToolView(m_viewChat);
@@ -680,7 +680,7 @@ void TupMainWindow::resetUI()
 
     setUpdatesEnabled(true);
 
-    setWindowTitle(tr("Tupi: 2D Magic"));
+    setWindowTitle(tr("TupiTube Desk"));
 
     if (isNetworked) { 
         m_viewChat->expandDock(false);
@@ -733,10 +733,10 @@ void TupMainWindow::setupNetworkProject()
 
 /**
  * @if english
- * This method sets up a Tupi network project.
+ * This method sets up a TupiTube network project.
  * @endif
  * @if spanish
- * Este metodo configura un proyecto para trabajo en red de Tupi.
+ * Este metodo configura un proyecto para trabajo en red de TupiTube.
  * @endif
  * @return 
 */
@@ -761,10 +761,10 @@ void TupMainWindow::setupNetworkProject(TupProjectManagerParams *params)
 
 /**
  * @if english
- * This method sets up a Tupi local/single project.
+ * This method sets up a TupiTube local/single project.
  * @endif
  * @if spanish
- * Este metodo configura un proyecto local/individual de Tupi.
+ * Este metodo configura un proyecto local/individual de TupiTube.
  * @endif
  * @return true if the local project can be configured
 */
@@ -785,16 +785,16 @@ void TupMainWindow::setupLocalProject(TupProjectManagerParams *params)
         m_projectManager->setParams(params);
         projectName = params->projectName();
         author = params->author();
-        setWindowTitle(tr("Tupi: 2D Magic") +  " - " + projectName + " [ " + tr("by") + " " + author + " ]");
+        setWindowTitle(tr("TupiTube Desk") +  " - " + projectName + " [ " + tr("by") + " " + author + " ]");
     }
 }
 
 /**
  * @if english
- * This method opens a Tupi project. 
+ * This method opens a TupiTube project. 
  * @endif
  * @if spanish
- * Este metodo abre un proyecto de Tupi.
+ * Este metodo abre un proyecto de TupiTube.
  * @endif
 */
 
@@ -803,8 +803,8 @@ void TupMainWindow::openProject()
     TCONFIG->beginGroup("General");
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
 
-    QString package = QFileDialog::getOpenFileName(this, tr("Open Tupi project"), path,
-                      tr("Tupi Project Package (*.tup)"));
+    QString package = QFileDialog::getOpenFileName(this, tr("Open TupiTube project"), path,
+                      tr("TupiTube Project Package (*.tup)"));
 
     if (package.isEmpty() || !package.endsWith(".tup")) 
         return;
@@ -865,7 +865,7 @@ void TupMainWindow::openProject(const QString &path)
             if (author.length() <= 0)
                 author = "Anonymous";
 
-            setWindowTitle(tr("Tupi: 2D Magic") + " - " + projectName + " [ " + tr("by") + " " + author + " ]");
+            setWindowTitle(tr("TupiTube Desk") + " - " + projectName + " [ " + tr("by") + " " + author + " ]");
             setWorkSpace();
 
             m_exposureSheet->updateLayerOpacity(0, 0);
@@ -899,10 +899,10 @@ void TupMainWindow::updateRecentProjectList()
 
 /**
  * @if english
- * This method opens an animation project from a Tupi Server.
+ * This method opens an animation project from TupiTube repository.
  * @endif
  * @if spanish
- * Este metodo abre un proyecto de animacion desde un servidor de Tupi.
+ * Este metodo abre un proyecto de animacion desde el repositorio de TupiTube.
  * @endif
 */
 
@@ -914,10 +914,10 @@ void TupMainWindow::openProjectFromServer()
 
 /**
  * @if english
- * This method sends a local Tupi project into the animations server.
+ * This method sends a local TupiTube project into the animations server.
  * @endif
  * @if spanish
- * Este metodo envia un proyecto local de Tupi en el servidor de animaciones.
+ * Este metodo envia un proyecto local de TupiTube en el servidor de animaciones.
  * @endif
 */
 
@@ -929,10 +929,10 @@ void TupMainWindow::importProjectToServer()
 
 /**
  * @if english
- * This method opens the Tupi preferences dialog.
+ * This method opens the TupiTube preferences dialog.
  * @endif
  * @if spanish
- * Este metodo abre el dialogo de preferencias de Tupi.
+ * Este metodo abre el dialogo de preferencias de TupiTube.
  * @endif
 */
 
@@ -967,10 +967,10 @@ void TupMainWindow::showHelp()
 
 /**
  * @if english
- * This method opens the "About Tupi" dialog.
+ * This method opens the "About TupiTube Desk" dialog.
  * @endif
  * @if spanish
- * Este metodo abre el dialogo "Acerca de Tupi".
+ * Este metodo abre el dialogo "Acerca de TupiTube Desk".
  * @endif
 */
 
@@ -1004,10 +1004,10 @@ void TupMainWindow::showTipDialog()
 
 /**
  * @if english
- * This method imports Gimp color palettes for Tupi.
+ * This method imports Gimp color palettes for TupiTube.
  * @endif
  * @if spanish
- * Este metodo importa paletas de colores de Gimp para Tupi.
+ * Este metodo importa paletas de colores de Gimp para TupiTube.
  * @endif
 */
 
@@ -1129,10 +1129,10 @@ void TupMainWindow::connectWidgetToPaintArea(QWidget *widget)
 
 /**
  * @if english 
- * This method is in charge of the function "Save as" for Tupi projects.
+ * This method is in charge of the function "Save as" for TupiTube projects.
  * @endif
  * @if spanish
- * Este metodo se encarga de la funcion "Salvar como" para proyectos de Tupi.
+ * Este metodo se encarga de la funcion "Salvar como" para proyectos de TupiTube.
  * @endif
 */
 
@@ -1152,7 +1152,7 @@ void TupMainWindow::saveAs()
     isSaveDialogOpen = true;
 
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save Project As"), home,
-                       tr("Tupi Project Package (*.tup)"));
+                       tr("TupiTube Project Package (*.tup)"));
     if (fileName.isEmpty()) {
         isSaveDialogOpen = false;
         return;
@@ -1198,7 +1198,7 @@ void TupMainWindow::saveAs()
     if (isNetworked) {
         isNetworked = false;
         m_projectManager->setHandler(new TupLocalProjectManagerHandler, false);
-        setWindowTitle(tr("Tupi: 2D Magic") + " - " + projectName + " [ " + tr("by") + " " + author + " ]");
+        setWindowTitle(tr("TupiTube Desk") + " - " + projectName + " [ " + tr("by") + " " + author + " ]");
     }
 
     saveProject();
@@ -1206,7 +1206,7 @@ void TupMainWindow::saveAs()
 
 /**
  * @if english 
- * This method does all the tasks required to save a Tupi Project.
+ * This method does all the tasks required to save a TupiTube Project.
  * @endif
  * @if spanish
  * Este metodo se encarga de todas las tareas necesarias para guardar un proyecto.
@@ -1247,7 +1247,7 @@ void TupMainWindow::saveProject()
             int indexDot = name.lastIndexOf(".");
             name = name.left(indexDot);
 
-            setWindowTitle(tr("Tupi: 2D Magic") +  " - " + name + " [ " + tr("by") +  " " +  author + " ]");
+            setWindowTitle(tr("TupiTube Desk") +  " - " + name + " [ " + tr("by") +  " " +  author + " ]");
 
             int last = m_fileName.lastIndexOf("/");
             QString dir = m_fileName.left(last);
@@ -1510,7 +1510,7 @@ void TupMainWindow::requestProject()
     } else if (TupMainWindow::requestType == ImportProjectToNet) {
                const char *home = getenv("HOME");
                QString file = QFileDialog::getOpenFileName(this, tr("Import project package"),
-                                                           home, tr("Tupi Project Package (*.tup)"));
+                                                           home, tr("TupiTube Project Package (*.tup)"));
                if (file.length() > 0) {
                    QFile project(file);
                    if (project.exists()) {

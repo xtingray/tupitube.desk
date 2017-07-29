@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -45,7 +45,7 @@
  * @author Jorge Cuadrado
 */
 
-class TUPI_EXPORT TupImportProjectPackage : public QDomDocument
+class TUPITUBE_EXPORT TupImportProjectPackage : public QDomDocument
 {
     public:
         TupImportProjectPackage(const QString &projectPath);

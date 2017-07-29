@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -81,17 +81,17 @@ int main(int argc, char ** argv)
 #ifdef Q_OS_UNIX
 #ifdef K_DEBUG
     TDebug::setOutputChannel();
-    // Initializing the crash handler, very useful to catch bugs
+    // Initializing the crash handler (bug catcher)
     TupCrashHandler::init();
 #endif
 #endif
 
-    // Setting the current version for Tupi
+    // Setting TupiTube Desk version values
     kAppProp->setVersion(VERSION);
     kAppProp->setCodeName(CODE_NAME);
     kAppProp->setRevision(REVISION);
 
-    // Time to define global variables for Tupi
+    // Defining TupiTube global variables
     QDir appDirPath(QApplication::applicationDirPath());
     TCONFIG->beginGroup("General");
 
@@ -104,7 +104,7 @@ int main(int argc, char ** argv)
         #if defined(Q_OS_MAC)
             TCONFIG->setValue("Home", appDirPath.absolutePath());
         #else
-            TCONFIG->setValue("Home", QString::fromLocal8Bit(::getenv("TUPI_HOME")));
+            TCONFIG->setValue("Home", QString::fromLocal8Bit(::getenv("TUPITUBE_HOME")));
         #endif
         
         #ifdef Q_OS_WIN
@@ -143,9 +143,9 @@ int main(int argc, char ** argv)
     kAppProp->setShareDir(appDirPath.absolutePath() + "/share");
 #else
     kAppProp->setHomeDir(TCONFIG->value("Home").toString());
-    kAppProp->setBinDir(QString::fromLocal8Bit(::getenv("TUPI_BIN")));
-    kAppProp->setPluginDir(QString::fromLocal8Bit(::getenv("TUPI_PLUGIN")));
-    kAppProp->setShareDir(QString::fromLocal8Bit(::getenv("TUPI_SHARE")));
+    kAppProp->setBinDir(QString::fromLocal8Bit(::getenv("TUPITUBE_BIN")));
+    kAppProp->setPluginDir(QString::fromLocal8Bit(::getenv("TUPITUBE_PLUGIN")));
+    kAppProp->setShareDir(QString::fromLocal8Bit(::getenv("TUPITUBE_SHARE")));
 #endif
 
     QString locale = QString(QLocale::system().name()).left(2);

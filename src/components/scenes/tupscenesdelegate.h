@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -43,7 +43,7 @@
 #include <QItemDelegate>
 #include <QRegExp>
 
-class TUPI_EXPORT TupScenesDelegate : public QItemDelegate
+class TUPITUBE_EXPORT TupScenesDelegate : public QItemDelegate
 {
     Q_OBJECT
 

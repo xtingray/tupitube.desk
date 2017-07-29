@@ -45,7 +45,7 @@
 #include <QPaintEvent>
 #include <QWidget>
 
-class TUPI_EXPORT TColorCell : public QWidget
+class TUPITUBE_EXPORT TColorCell : public QWidget
 {
     Q_OBJECT
 

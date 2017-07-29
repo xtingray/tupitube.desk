@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -43,7 +43,7 @@
     @author David Cuadrado
 */
 
-class TUPI_PLUGIN TLibavMovieGenerator : public TMovieGenerator
+class TUPITUBE_PLUGIN TLibavMovieGenerator : public TMovieGenerator
 {
     public:
         TLibavMovieGenerator(TMovieGeneratorInterface::Format format, int width, int height, int fps = 24, double duration = 0);

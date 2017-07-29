@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -45,7 +45,7 @@
 class TupProjectRequest;
 class TupProjectResponse;
 
-class TUPI_EXPORT TupProjectRequestArgument
+class TUPITUBE_EXPORT TupProjectRequestArgument
 {
     public:
         TupProjectRequestArgument();
@@ -68,7 +68,7 @@ class TUPI_EXPORT TupProjectRequestArgument
  * @author David Cuadrado
 */
 
-class TUPI_EXPORT TupProjectRequest
+class TUPITUBE_EXPORT TupProjectRequest
 {
     public:
         enum Action

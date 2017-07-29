@@ -53,7 +53,7 @@ Use: ./configure [options]
   --help:               Show this message
   --prefix=[path]:      Sets installation path [/usr]
   --bindir=[path]:      Set binaries path [/usr/bin]
-  --libdir=[path]:      Set library path [/usr/lib/tupi | /usr/lib64/tupi]
+  --libdir=[path]:      Set library path [/usr/lib/tupitube | /usr/lib64/tupitube]
   --sharedir=[path]:    Set data path [/usr/share]
   --with-libav=[path]: Set libav installation path [/usr]
   --with-quazip=[path]: Set quazip installation path [/usr]
@@ -160,7 +160,7 @@ _EOH_
        end
 
        config.addOption("debug")
-       config.addDefine("K_DEBUG")
+       config.addDefine("TUP_DEBUG")
        print "[ \033[92mON\033[0m ]\n"
     else
        var = open(file_name).grep(/debug/)
@@ -176,8 +176,8 @@ _EOH_
     end
 
     config.addDefine('VERSION=\\\\\"0.2\\\\\"')
-    config.addDefine('CODE_NAME=\\\\\"Arara\\\\\"')
-    config.addDefine('REVISION=\\\\\"09\\\\\"')
+    config.addDefine('CODE_NAME=\\\\\"Arani\\\\\"')
+    config.addDefine('REVISION=\\\\\"10\\\\\"')
     config.addDefine('CONFIG_VERSION=\\\\\"2\\\\\"')
 
     if File.exists?('/etc/canaima_version')

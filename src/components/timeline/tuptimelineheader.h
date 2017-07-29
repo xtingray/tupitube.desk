@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -54,7 +54,7 @@ struct TimeLineLayerItem
     bool isSound;
 };
 
-class TUPI_EXPORT TupTimeLineHeader : public QHeaderView
+class TUPITUBE_EXPORT TupTimeLineHeader : public QHeaderView
 {
     Q_OBJECT
 

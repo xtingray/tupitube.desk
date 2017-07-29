@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -57,7 +57,7 @@
  * Moreover, it provides an OK Button and a Cancel Button.
  */
 
-class TUPI_EXPORT TupAbout : public TabDialog
+class TUPITUBE_EXPORT TupAbout : public TabDialog
 {
     Q_OBJECT
 

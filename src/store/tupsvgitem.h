@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -53,7 +53,7 @@ class TupFrame;
  * @author David Cuadrado
 */
 
-class TUPI_EXPORT TupSvgItem : public QGraphicsSvgItem, public TupAbstractSerializable
+class TUPITUBE_EXPORT TupSvgItem : public QGraphicsSvgItem, public TupAbstractSerializable
 {
     public:
         TupSvgItem(QGraphicsItem * parent = 0);

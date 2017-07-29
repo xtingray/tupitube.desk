@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -46,9 +46,9 @@
 QString TupTwitter::NEWS_HOST = QString("http://www.maefloresta.com");
 QString TupTwitter::IS_HOST_UP_URL = QString("/updates/test.xml");
 QString TupTwitter::USER_TIMELINE_URL = QString("/updates/tweets.html");
-QString TupTwitter::TUPI_VERSION_URL = QString("/updates/current_version.xml");
-QString TupTwitter::TUPI_WEB_MSG = QString("/updates/web_msg.");
-QString TupTwitter::TUPI_VIDEOS = QString("/updates/videos.xml");
+QString TupTwitter::TUPITUBE_VERSION_URL = QString("/updates/current_version.xml");
+QString TupTwitter::TUPITUBE_WEB_MSG = QString("/updates/web_msg.");
+QString TupTwitter::TUPITUBE_VIDEOS = QString("/updates/videos.xml");
 QString TupTwitter::BROWSER_FINGERPRINT = QString("Tupi_Browser 1.0");
 
 struct TupTwitter::Private
@@ -158,7 +158,7 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
 
     if (answer.length() > 0) {
         if (answer.compare("<ok>true</ok>") == 0) { // The webserver data is available! 
-            requestFile(NEWS_HOST + TUPI_VERSION_URL);
+            requestFile(NEWS_HOST + TUPITUBE_VERSION_URL);
         } else {
             if (answer.startsWith("<version>")) { // Processing Tupi versioning data
                 checkSoftwareUpdates(array);
@@ -183,11 +183,11 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
             } else {
                 if (answer.startsWith("<div")) { // Getting Twitter records 
                     formatStatus(array);
-                    requestFile(NEWS_HOST + TUPI_WEB_MSG + k->locale + ".html");
+                    requestFile(NEWS_HOST + TUPITUBE_WEB_MSG + k->locale + ".html");
                 } else {
                     if (answer.startsWith("<webmsg>")) { // Getting web msg
                         saveFile(answer, "webmsg.html");
-                        requestFile(NEWS_HOST + TUPI_VIDEOS);
+                        requestFile(NEWS_HOST + TUPITUBE_VIDEOS);
                     } else {
                         if (answer.startsWith("<youtube>")) { // Getting video list
                             saveFile(answer, "videos.xml");
@@ -342,7 +342,7 @@ void TupTwitter::formatStatus(QByteArray array)
     html += "<html>\n";
     html += "<head>\n";
     html += "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n";
-    html += "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:tupi.css\">\n";
+    html += "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:tupitube.css\">\n";
     html += "</head>\n";
 
     if (k->themeName.compare("Dark") == 0) {

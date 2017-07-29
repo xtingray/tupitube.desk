@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -50,7 +50,7 @@
 class TupTimeLineTable;
 class TupTimeLineTableItemDelegate;
 
-class TUPI_EXPORT TupTimeLineTableItem : public QTableWidgetItem
+class TUPITUBE_EXPORT TupTimeLineTableItem : public QTableWidgetItem
 {
     public:
         enum Attributes
@@ -73,7 +73,7 @@ class TupTimeLineRuler;
 /**
  * @author David Cuadrado
 */
-class TUPI_EXPORT TupTimeLineTable : public QTableWidget
+class TUPITUBE_EXPORT TupTimeLineTable : public QTableWidget
 {
     Q_OBJECT;
     

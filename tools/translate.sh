@@ -35,7 +35,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>. #
 ###########################################################################
 
-TUPI_DIR="`dirname $0`/.."
+TUPITUBE_DIR="`dirname $0`/.."
 TS_FILE=/tmp/tupi_untranslated.ts
 PRO_FILE="lang.pro"
 
@@ -50,8 +50,8 @@ echo "PREFIX =" > $PRO_FILE
 echo "ROOT =" >> $PRO_FILE
 echo "" >> $PRO_FILE
 
-HEADERS=$(find $TUPI_DIR -name "*.h" -printf "%p ")
-SOURCES=$(find $TUPI_DIR -name "*.cpp" -printf "%p ")
+HEADERS=$(find $TUPITUBE_DIR -name "*.h" -printf "%p ")
+SOURCES=$(find $TUPITUBE_DIR -name "*.cpp" -printf "%p ")
 
 echo "HEADERS = $HEADERS" >> $PRO_FILE
 echo "SOURCES = $SOURCES" >> $PRO_FILE
@@ -70,7 +70,7 @@ else
 	echo "* Please install linguist"
 fi
 
-cd $TUPI_DIR
+cd $TUPITUBE_DIR
 
 echo "Done. File generated!"
 

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -44,7 +44,7 @@
 #include "tglobal.h"
 #include "tconfigurationdialog.h"
 
-class TUPI_EXPORT TupPreferencesDialog : public TConfigurationDialog
+class TUPITUBE_EXPORT TupPreferencesDialog : public TConfigurationDialog
 {
     Q_OBJECT
     

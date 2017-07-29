@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -298,7 +298,7 @@ void TupMainWindow::setupMenu()
     m_helpMenu->addAction(m_actionManager->find("help"));
     m_helpMenu->addAction(m_actionManager->find("tip_of_day"));
     m_helpMenu->addSeparator();
-    m_helpMenu->addAction(m_actionManager->find("about_tupi"));
+    m_helpMenu->addAction(m_actionManager->find("about_tupitube"));
 
     setMenuItemsContext(false);
 
@@ -431,8 +431,8 @@ void TupMainWindow::setupHelpActions()
 
     new TAction(QPixmap(THEME_DIR + "icons/tip.png"), tr("Tip Of The Day"), QKeySequence(tr("Ctrl+T")),
                 this, SLOT(showTipDialog()), m_actionManager, "tip_of_day");
-    new TAction(QPixmap(THEME_DIR + "icons/about.png"), tr("About Tupi"), QKeySequence(tr("Ctrl+K")), 
-                this, SLOT(aboutTupi()), m_actionManager, "about_tupi");
+    new TAction(QPixmap(THEME_DIR + "icons/about.png"), tr("About TupiTube"), QKeySequence(tr("Ctrl+K")), 
+                this, SLOT(aboutTupi()), m_actionManager, "about_tupitube");
 }
 
 /**

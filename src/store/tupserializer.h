@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -57,7 +57,7 @@
  * 
 */
 
-class TUPI_EXPORT TupSerializer
+class TUPITUBE_EXPORT TupSerializer
 {
     public:
         TupSerializer();

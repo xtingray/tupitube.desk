@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -480,9 +480,9 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &path, DocType type)
     QString base = kAppProp->shareDir() + "data/storyboard/";
 
     if (type == HTML) 
-        QFile::copy(base + "tupi.html.css", path + "/tupi.css");
+        QFile::copy(base + "tupi.html.css", path + "/tupitube.css");
     else
-        QFile::copy(base + "tupi.pdf.css", path + "/tupi.css");
+        QFile::copy(base + "tupi.pdf.css", path + "/tupitube.css");
 
     QString index = path + "/index.html";
 
@@ -498,7 +498,7 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &path, DocType type)
     if (record.length() == 0)
         record = "&nbsp;";
     out << "<title>" << record << "</title>\n";
-    out << "<link rel=\"stylesheet\" type=\"text/css\" href=\"tupi.css\" media=\"screen\" />\n";
+    out << "<link rel=\"stylesheet\" type=\"text/css\" href=\"tupitube.css\" media=\"screen\" />\n";
     out << "</head>\n";
     out << "<body>\n";
     out << "<div id=\"header\">\n";

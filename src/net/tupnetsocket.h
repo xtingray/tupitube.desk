@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -50,7 +50,7 @@ class TupNetProjectManagerHandler;
  * @author David Cuadrado
 */
 
-class TUPI_EXPORT TupNetSocket : public TupSocketBase
+class TUPITUBE_EXPORT TupNetSocket : public TupSocketBase
 {
     Q_OBJECT
     

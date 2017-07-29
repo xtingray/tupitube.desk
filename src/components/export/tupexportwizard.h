@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -55,7 +55,7 @@ class TupExportWizardPage;
  * @author David Cuadrado
 */
 
-class TUPI_EXPORT TupExportWizard : public QDialog
+class TUPITUBE_EXPORT TupExportWizard : public QDialog
 {
     Q_OBJECT
 
@@ -97,7 +97,7 @@ class TUPI_EXPORT TupExportWizard : public QDialog
 #include <QGridLayout>
 #include <QLabel>
 
-class TUPI_EXPORT TupExportWizardPage : public TVHBox
+class TUPITUBE_EXPORT TupExportWizardPage : public TVHBox
 {
     Q_OBJECT
 

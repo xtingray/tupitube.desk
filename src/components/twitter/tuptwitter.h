@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -43,7 +43,7 @@
 #include <QtNetwork>
 #include <QByteArray>
 
-class TUPI_EXPORT TupTwitter : public QWidget
+class TUPITUBE_EXPORT TupTwitter : public QWidget
 {
     Q_OBJECT
 
@@ -69,10 +69,10 @@ class TUPI_EXPORT TupTwitter : public QWidget
         static QString NEWS_HOST;
         static QString IS_HOST_UP_URL;
         static QString USER_TIMELINE_URL;
-        static QString TUPI_VERSION_URL;
+        static QString TUPITUBE_VERSION_URL;
         static QString BROWSER_FINGERPRINT;
-        static QString TUPI_WEB_MSG;
-        static QString TUPI_VIDEOS;
+        static QString TUPITUBE_WEB_MSG;
+        static QString TUPITUBE_VIDEOS;
 
         struct Private;
         Private *const k;

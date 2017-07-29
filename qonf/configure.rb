@@ -164,29 +164,23 @@ module RQonf
       last_opt = ""
 
       while args.size > optc
-
         arg = args[optc].strip
 
         if arg =~ /^--([\w-]*)={0,1}([\W\w]*)/
-
           opt = $1.strip
           val = $2.strip
           @options[opt] = val
           last_opt = opt
-
         else
-
           # arg is an arg for option
           if not last_opt.to_s.empty? and @options[last_opt].to_s.empty?
             @options[last_opt] = arg
           else
             raise "Invalid option: #{arg}"
           end
-
         end
 
         optc += 1
-
       end
     end
 
@@ -227,12 +221,12 @@ module RQonf
 
       if @options['libdir'].nil? then
         if RUBY_PLATFORM == "x86_64-linux"
-           @options['libdir'] = @options['prefix'] + "/lib64/tupi"
+           @options['libdir'] = @options['prefix'] + "/lib64/tupitube"
         else
-           @options['libdir'] = @options['prefix'] + "/lib/tupi"
+           @options['libdir'] = @options['prefix'] + "/lib/tupitube"
         end
-      elsif !@options['libdir'].end_with? "tupi" then
-            @options['libdir'] = @options['libdir'] + "/tupi"
+      elsif !@options['libdir'].end_with? "tupitube" then
+            @options['libdir'] = @options['libdir'] + "/tupitube"
       end
 
       if @options['includedir'].nil? then
@@ -240,7 +234,7 @@ module RQonf
       end
 
       if @options['sharedir'].nil? then
-        @options['sharedir'] = @options['prefix'] + "/share/tupi"
+        @options['sharedir'] = @options['prefix'] + "/share/tupitube"
       end
 
       launcher_prefix = @options['prefix']
@@ -253,21 +247,21 @@ module RQonf
       else
         @options['package-build'] = @options['prefix']
         launcher_prefix = "/usr"
-        launcher_sharedir = "/usr/share/tupi"
+        launcher_sharedir = "/usr/share/tupitube"
         if RUBY_PLATFORM == "x86_64-linux"
-           launcher_libdir = "/usr/lib64/tupi"
+           launcher_libdir = "/usr/lib64/tupitube"
         else
-           launcher_libdir = "/usr/lib/tupi"
+           launcher_libdir = "/usr/lib/tupitube"
         end
         launcher_bindir = "/usr/bin"
       end
 
       newfile = "#!/bin/bash\n\n"
-      newfile += "export TUPI_HOME=\"" + launcher_prefix + "\"\n"
-      newfile += "export TUPI_SHARE=\"" + launcher_sharedir + "\"\n"
-      newfile += "export TUPI_LIB=\"" + launcher_libdir + "\"\n"
-      newfile += "export TUPI_PLUGIN=\"" + launcher_libdir + "/plugins\"\n"
-      newfile += "export TUPI_BIN=\"" + launcher_bindir + "\"\n\n"
+      newfile += "export TUPITUBE_HOME=\"" + launcher_prefix + "\"\n"
+      newfile += "export TUPITUBE_SHARE=\"" + launcher_sharedir + "\"\n"
+      newfile += "export TUPITUBE_LIB=\"" + launcher_libdir + "\"\n"
+      newfile += "export TUPITUBE_PLUGIN=\"" + launcher_libdir + "/plugins\"\n"
+      newfile += "export TUPITUBE_BIN=\"" + launcher_bindir + "\"\n\n"
 
       path = ""
       unless @options['with-libav'].nil? then
@@ -286,30 +280,27 @@ module RQonf
       end
 
       if RUBY_PLATFORM.downcase.include?("darwin")
-        newfile += "export DYLD_FALLBACK_LIBRARY_PATH=\"" + path + "\$\{TUPI_LIB\}:\$\{TUPI_PLUGIN\}:$DYLD_FALLBACK_LIBRARY_PATH\"\n\n"
-        newfile += "open ${TUPI_BIN}/Tupi.app $*"
+        newfile += "export DYLD_FALLBACK_LIBRARY_PATH=\"" + path + "\$\{TUPITUBE_LIB\}:\$\{TUPITUBE_PLUGIN\}:$DYLD_FALLBACK_LIBRARY_PATH\"\n\n"
+        newfile += "open ${TUPITUBE_BIN}/TupiTube.app $*"
       else
-        newfile += "export LD_LIBRARY_PATH=\"" + path + "\$\{TUPI_LIB\}:\$\{TUPI_PLUGIN\}:$LD_LIBRARY_PATH\"\n\n"
-        newfile += "exec ${TUPI_BIN}/tupi.bin $*"
+        newfile += "export LD_LIBRARY_PATH=\"" + path + "\$\{TUPITUBE_LIB\}:\$\{TUPITUBE_PLUGIN\}:$LD_LIBRARY_PATH\"\n\n"
+        newfile += "exec ${TUPITUBE_BIN}/tupitube.bin $*"
       end
 
-      launcher = File.open("launcher/tupi", "w") { |f|
+      launcher = File.open("launcher/tupitube.desk", "w") { |f|
         f << newfile
       }
 
       newfile = "[Desktop Entry]\n"
       # newfile += "Encoding=UTF-8\n"
 
-      newfile += "Name=Tupi: 2D Magic\n"
-      newfile += "Name[es]=Tupí: Magia 2D\n"
-      newfile += "Name[pt]=Tupí: Magia 2D\n"
-      newfile += "Name[ru]=Tupi: магия 2D\n"
+      newfile += "Name=TupiTube Desk\n"
       newfile += "GenericName=2D Animation Editor\n"
       newfile += "GenericName[es]=Editor de Animaciones 2D\n"
       newfile += "GenericName[pt]=Editor de Animações 2D\n"
       newfile += "GenericName[ru]=Редактор 2D анимации\n"
-      newfile += "Exec=" + launcher_bindir + "/tupi\n"
-      newfile += "Icon=tupi\n"
+      newfile += "Exec=" + launcher_bindir + "/tupitube.desk\n"
+      newfile += "Icon=tupitube.desk\n"
       newfile += "Type=Application\n"
       newfile += "MimeType=application/tup;\n"
       newfile += "Categories=Graphics;2DGraphics;RasterGraphics;\n"
@@ -319,7 +310,7 @@ module RQonf
       newfile += "Comment[ru]=Создание двухмерной векторной анимации\n"
       newfile += "Terminal=false\n"
 
-      File.open("launcher/tupi.desktop", "w") { |f|
+      File.open("launcher/tupitube.desktop", "w") { |f|
         f << newfile
       }
 

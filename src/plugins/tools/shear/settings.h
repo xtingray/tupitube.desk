@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -55,7 +55,7 @@ class TupItemTweener;
  * @author Gustav Gonzalez 
 */
 
-class TUPI_PLUGIN Settings : public QWidget 
+class TUPITUBE_PLUGIN Settings : public QWidget 
 {
     Q_OBJECT
 

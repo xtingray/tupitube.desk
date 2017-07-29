@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -50,7 +50,7 @@
  * @author Gustav Gonzalez
 */
 
-class TUPI_EXPORT APNGPlugin : public TupExportPluginObject
+class TUPITUBE_EXPORT APNGPlugin : public TupExportPluginObject
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "com.maefloresta.tupi.TupToolInterface" FILE "apngplugin.json")

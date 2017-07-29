@@ -43,7 +43,7 @@
 #include <QMouseEvent>
 #include <QImage>
 
-class TUPI_EXPORT TSlider : public QGraphicsView
+class TUPITUBE_EXPORT TSlider : public QGraphicsView
 {
     Q_OBJECT
 

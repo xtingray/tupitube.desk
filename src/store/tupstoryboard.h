@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -43,7 +43,7 @@
 #include <QDomDocument>
 #include <QDomElement>
 
-class TUPI_EXPORT TupStoryboard : public QObject, public TupAbstractSerializable
+class TUPITUBE_EXPORT TupStoryboard : public QObject, public TupAbstractSerializable
 {
     Q_OBJECT
 

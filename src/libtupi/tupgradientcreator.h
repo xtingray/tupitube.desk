@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: Magia 2D                                                *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -64,7 +64,7 @@ class SpinControl;
   * @author Jorge Cuadrado
   */
 
-class TUPI_EXPORT TupGradientCreator : public QFrame
+class TUPITUBE_EXPORT TupGradientCreator : public QFrame
 {
     Q_OBJECT
 
@@ -176,7 +176,7 @@ class TUPI_EXPORT TupGradientCreator : public QFrame
  * @author Jorge Cuadrado
  */
 
-class TUPI_EXPORT SpinControl: public QGroupBox
+class TUPITUBE_EXPORT SpinControl: public QGroupBox
 {
     Q_OBJECT
     public:
