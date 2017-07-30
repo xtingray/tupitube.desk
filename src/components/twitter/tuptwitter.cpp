@@ -354,7 +354,7 @@ void TupTwitter::formatStatus(QByteArray array)
     }
 
     html += "<center><img src=\"file:maefloresta.png\" alt=\"maefloresta\"/></center>\n";
-    html += "<div class=\"twitter_headline\"><center>&nbsp;&nbsp;@maefloresta</center></div></div>\n";
+    html += "<div class=\"twitter_headline\"><center>&nbsp;&nbsp;@tupitube</center></div></div>\n";
     QString css = "twitter_tupi_version";  
     if (k->update)
         css = "twitter_tupi_update"; 
@@ -365,11 +365,11 @@ void TupTwitter::formatStatus(QByteArray array)
     html += tr("Code Name") + ": <b>" + k->codeName + "</b>";
 
     if (k->update)
-        html += "&nbsp;&nbsp;&nbsp;<b>[</b> <a href=\"http://www.maefloresta.com\">" + tr("It's time to upgrade! Click here!") + "</a>  <b>]</b>"; 
+        html += "&nbsp;&nbsp;&nbsp;<b>[</b> <a href=\"http://www.tupitube.com/downloads\">" + tr("It's time to upgrade! Click here!") + "</a>  <b>]</b>"; 
 
     html += "</center></div>\n";
     html += "<div class=\"twitter_tupi_donation\"><center>\n";
-    html += "<a href=\"http://www.maefloresta.com/portal/donations\">" + tr("Want to help us to make a better project? Click here!") + "</a>";
+    html += "<a href=\"http://www.maefloresta.com/portal/support\">" + tr("Want to help us to make a better project? Click here!") + "</a>";
     html += "</center></div>\n";
     html += tweets;
     html += "</body>\n";
