@@ -6,25 +6,30 @@ TEMPLATE = app
 
 macx {
     CONFIG += console static
-    ICON = ../../launcher/icons/tupi.icns
+    ICON = ../../launcher/icons/tupitube.desk.icns
     QMAKE_INFO_PLIST = ./Info.plist
     QMAKE_LFLAGS += -Wl,-rpath,@loader_path/../,-rpath,@executable_path/../,-rpath,@executable_path/../Frameworks
     TARGET = ../../bin/TupiTube
 
-    INSTALLS += icons
+    INSTALLS += icons \
+                target \
+                tupidata \
+                html
 
     icons.target = ../../launcher/icons/tupitube.desk.png
     icons.commands = cp ../../launcher/icons/tupitube.desk.png $(INSTALL_ROOT)/pixmaps
     icons.path = /pixmaps/
-
-    INSTALLS += target \
-                tupidata \
 
     target.path = /bin/
 
     tupidata.target = data
     tupidata.commands = cp -r data/* $(INSTALL_ROOT)/data
     tupidata.path = /data/
+
+    html.target = html
+    html.files = html
+    html.commands = cp -r html $(INSTALL_ROOT)/share/tupitube/data
+    html.path = /data/
 }
 
 unix:!mac {

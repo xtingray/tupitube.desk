@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ###########################################################################
-#   Project TUPI: Magia 2D                                                #
+#   Project TUPITUBE DESK                                                 #
 #   Project Contact: info@maefloresta.com                                 #
 #   Project Website: http://www.maefloresta.com                           #
 #   Project Leader: Gustav Gonzalez <info@maefloresta.com>                #
@@ -36,7 +36,7 @@
 ###########################################################################
 
 #Usage:
-# ./tools/build_mac_osx_app.sh /Users/username/tupi/sources/tupi /Users/username/tupi/installer
+# ./tools/build_mac_osx_app.sh /Users/username/tupitube/sources/tupitube.desk /Users/username/tupitube/installer
 
 QT_PATH=/Users/xtingray/Qt5.8.0
 export PATH=$QT_PATH/5.8/clang_64/bin:$PATH
@@ -57,12 +57,12 @@ cd $TUPITUBE_GIT_REPOSITORY
 make install
 
 cd $INSTALLATION_PATH
-cp -r lib/tupi/plugins TupiTube.app/Contents/MacOS
+cp -r lib/tupitube/plugins TupiTube.app/Contents/MacOS
 
 mkdir TupiTube.app/Contents/MacOS/share
 cp -r share/pixmaps TupiTube.app/Contents/MacOS/share/
-cp -r share/tupi/data TupiTube.app/Contents/MacOS/share/
-cp -r share/tupi/themes TupiTube.app/Contents/MacOS/share/
+cp -r share/tupitube/data TupiTube.app/Contents/MacOS/share/
+cp -r share/tupitube/themes TupiTube.app/Contents/MacOS/share/
 
 cd TupiTube.app/Contents/MacOS/plugins
 
@@ -85,7 +85,7 @@ cd $INSTALLATION_PATH
 mkdir TupiTube.app/Contents/Frameworks/
 
 for lib in ${LIBS[@]}; do
-    cp lib/tupi/$lib TupiTube.app/Contents/Frameworks/
+    cp lib/tupitube/$lib TupiTube.app/Contents/Frameworks/
 done
 for lib in ${LIBS[@]}; do
     $INSTALLER_SCRIPT $INSTALLATION_PATH/TupiTube.app/Contents/Frameworks/$lib  \/usr\/local\/lib\/ @executable_path/../Frameworks/
