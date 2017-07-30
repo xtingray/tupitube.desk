@@ -244,7 +244,7 @@ void TCellView::addItem(const QImage &i)
 void TCellView::wheelEvent(QWheelEvent *event)
 {
     if (event->modifiers() == Qt::ControlModifier) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             #ifdef Q_OS_WIN
                 qDebug() << "[TCellView::wheelEvent()] - event->delta(): " << event->delta();
             #else

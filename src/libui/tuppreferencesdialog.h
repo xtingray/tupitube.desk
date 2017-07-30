@@ -36,11 +36,6 @@
 #ifndef TUPPREFERENCESDIALOG_H
 #define TUPPREFERENCESDIALOG_H
 
-/**
- * @file tuppreferencesdialog.h
- * @brief Include this file if you need the class TupPreferencesDialog
- */
-
 #include "tglobal.h"
 #include "tconfigurationdialog.h"
 

@@ -64,7 +64,7 @@ bool TActionManager::insert(QAction *action, const QString &_id, const QString &
 
     QAction *a = (m_actionContainer[container])[id];
     if (a == action) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TActionManager::insert() - Fatal Error: Cannot insert action with id -> " + id;;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -142,7 +142,7 @@ QAction *TActionManager::find(const QString &_id, const QString &container) cons
     }
 
     if (action == 0) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TActionManager::find() - Fatal Error: Returning NULL action: " + id + " in " + container;
             #ifdef Q_OS_WIN
                 qDebug() << msg;

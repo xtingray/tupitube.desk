@@ -37,7 +37,7 @@
 
 TupImageDevice::TupImageDevice(QWidget *parent) : QWidget(parent)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupImageDevice()]";
         #else
@@ -56,7 +56,7 @@ TupImageDevice::TupImageDevice(QWidget *parent) : QWidget(parent)
 
 TupImageDevice::~TupImageDevice()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TupImageDevice()]";
         #else

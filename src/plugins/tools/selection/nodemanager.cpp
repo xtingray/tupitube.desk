@@ -61,7 +61,7 @@ struct NodeManager::Private
 
 NodeManager::NodeManager(QGraphicsItem *parent, QGraphicsScene *scene, int zValue): k(new Private)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[NodeManager::NodeManager()]";
         #else
@@ -201,7 +201,7 @@ void NodeManager::restoreItem()
 
 void NodeManager::scale(float sx, float sy)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[NodeManager::scale()]";
         #else
@@ -230,7 +230,7 @@ void NodeManager::scale(float sx, float sy)
 
 void NodeManager::rotate(double angle)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[NodeManager::rotate()]";
         #else

@@ -292,7 +292,7 @@ void Settings::clearData()
 
 void Settings::notifySelection(bool flag)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[Settings::notifySelection()]";
         #else

@@ -39,7 +39,7 @@
 
 int main()
 {
-    char sentence[50] = "Tupi: Open Magic!";
+    char sentence[50] = "TupiTube Desk";
     char compressedSentence[50];
     char uncompressedSentence[50];
 

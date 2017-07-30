@@ -149,7 +149,7 @@ struct TupLayerIndex::Private
 
 TupLayerIndex::TupLayerIndex(int sceneIndex, QWidget *parent) : QTableWidget(0, 1, parent), k(new Private)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupLayerIndex()]";
         #else
@@ -180,7 +180,7 @@ TupLayerIndex::TupLayerIndex(int sceneIndex, QWidget *parent) : QTableWidget(0, 
 
 TupLayerIndex::~TupLayerIndex()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TupLayerIndex()]";
         #else

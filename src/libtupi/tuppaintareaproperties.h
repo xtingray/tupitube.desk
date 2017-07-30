@@ -54,7 +54,7 @@ struct TUPITUBE_EXPORT TupPaintAreaProperties
         QColor onionSkinBackground;
         int gridSeparation;
         
-        Tupi::RenderType renderType;
+        TupiTube::RenderType renderType;
 };
 
 #endif

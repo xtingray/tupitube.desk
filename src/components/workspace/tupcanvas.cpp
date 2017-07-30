@@ -52,7 +52,7 @@ TupCanvas::TupCanvas(QWidget *parent, Qt::WindowFlags flags, TupGraphicsScene *s
                    const QPointF centerPoint, const QSize &screenSize, TupProject *project, qreal scaleFactor,
                    int angle, TupBrushManager *brushManager) : QFrame(parent, flags), k(new Private)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupCanvas()]";
         #else
@@ -60,7 +60,7 @@ TupCanvas::TupCanvas(QWidget *parent, Qt::WindowFlags flags, TupGraphicsScene *s
         #endif
     #endif
 
-    setWindowTitle(tr("Tupi: 2D Magic"));
+    setWindowTitle("TupiTube Desk");
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/animation_mode.png")));
 
     k->hand = Right;

@@ -138,7 +138,7 @@ QStringList Tweener::keys() const
 
 void Tweener::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[Tweener::press()]";
         #else
@@ -166,7 +166,7 @@ void Tweener::move(const TupInputDeviceInformation *input, TupBrushManager *brus
 
 void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[Tweener::release()]";
         #else
@@ -560,7 +560,7 @@ void Tweener::removeTweenFromProject(const QString &name)
              }
         }
     } else {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "Tweener::removeTweenFromProject() - Scale tween couldn't be removed -> " + name;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -625,7 +625,7 @@ void Tweener::updateMode(TupToolPlugin::Mode mode)
                 k->origin = k->currentTween->transformOriginPoint();
             }
         } else {
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
                 QString msg = "Tweener::updateMode() - Current tween pointer is NULL!";
                 #ifdef Q_OS_WIN
                     qDebug() << msg;

@@ -36,7 +36,7 @@
 #ifndef TUPDEBUGWIDGET_H
 #define TUPDEBUGWIDGET_H
 
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
 
 #include "tglobal.h"
 #include "tupmodulewidgetbase.h"

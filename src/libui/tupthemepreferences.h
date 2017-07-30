@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                *
+ *   Project TUPITUBE DESK                                                 *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -40,9 +40,6 @@
 #include "tcolorbutton.h"
 #include "tconfig.h"
 
-/**
- * @author David Cuadrado
-*/
 class TUPITUBE_EXPORT TupThemePreferences : public QWidget
 {
     Q_OBJECT
@@ -50,7 +47,6 @@ class TUPITUBE_EXPORT TupThemePreferences : public QWidget
     public:
         TupThemePreferences(QWidget *parent = 0);
         ~TupThemePreferences();
-
         void saveValues();        
         
     private:

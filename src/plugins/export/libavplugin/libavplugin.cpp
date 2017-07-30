@@ -147,7 +147,7 @@ bool LibavPlugin::exportToFormat(const QColor color, const QString &filePath, co
     {
          if (!generator->movieHeaderOk()) {
              errorMsg = generator->getErrorMsg();
-             #ifdef K_DEBUG
+             #ifdef TUP_DEBUG
                  QString msg = "LibavPlugin::exportToFormat() - [ Fatal Error ] - Can't create video -> " + filePath;
                  #ifdef Q_OS_WIN
                      qDebug() << msg;

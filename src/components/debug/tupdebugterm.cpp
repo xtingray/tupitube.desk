@@ -35,7 +35,7 @@
 
 #include "tupdebugterm.h"
 
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
 
 TupDebugTerm::TupDebugTerm(QWidget *parent, int width) : QWidget(parent)
 {

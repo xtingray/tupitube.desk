@@ -352,7 +352,7 @@ void Settings::activeRangeForm(bool enable)
 
 void Settings::setParameters(const QString &name, int framesCount, int initFrame)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[Settings::setParameters()]";
         #else
@@ -385,7 +385,7 @@ void Settings::setParameters(const QString &name, int framesCount, int initFrame
 
 void Settings::setParameters(TupItemTweener *currentTween)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[Settings::setParameters()]";
         #else
@@ -466,7 +466,7 @@ void Settings::applyTween()
 {
     if (!k->selectionDone) {
         TOsd::self()->display(tr("Info"), tr("You must select at least one object!"), TOsd::Info); 
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "Settings::applyTween() - You must select at least one object!";
             #ifdef Q_OS_WIN
          qDebug() << msg;
@@ -480,7 +480,7 @@ void Settings::applyTween()
 
     if (!k->propertiesDone) {
         TOsd::self()->display(tr("Info"), tr("You must set Tween properties first!"), TOsd::Error);
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "Settings::applyTween() - You must set Tween properties first!";
             #ifdef Q_OS_WIN
          qDebug() << msg;
@@ -496,7 +496,7 @@ void Settings::applyTween()
         int end = k->rangeEnd->value();
         if (start == end) {
             TOsd::self()->display(tr("Info"), tr("Angle range must be greater than 0!"), TOsd::Error);
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
          QString msg = "Settings::applyTween() - Angle range must be greater than 0!";
          #ifdef Q_OS_WIN
              qDebug() << msg;
@@ -510,7 +510,7 @@ void Settings::applyTween()
         int range = abs(start - end); 
         if (range < k->degreesPerFrame->value()) { 
             TOsd::self()->display(tr("Info"), tr("Angle range must be greater than Speed!"), TOsd::Error);
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
          QString msg = "Settings::applyTween() - Angle range must be greater than Speed!";
          #ifdef Q_OS_WIN
              qDebug() << msg;
@@ -562,7 +562,7 @@ void Settings::emitOptionChanged(int option)
             } else {
          k->options->setCurrentIndex(0);
          TOsd::self()->display(tr("Info"), tr("Select objects for Tweening first!"), TOsd::Info);
-         #ifdef K_DEBUG
+         #ifdef TUP_DEBUG
              QString msg = "Settings::emitOptionChanged() - You must set Tween properties first!";
              #ifdef Q_OS_WIN
                  qDebug() << msg;

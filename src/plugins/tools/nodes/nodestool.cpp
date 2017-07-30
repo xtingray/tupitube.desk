@@ -94,7 +94,7 @@ void NodesTool::move(const TupInputDeviceInformation *input, TupBrushManager *br
 
 void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[NodesTool::release()]";
         #else
@@ -161,7 +161,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                         k->nodeGroup->clearChangedNodes();
                     // }
                 } else {
-                    #ifdef K_DEBUG
+                    #ifdef TUP_DEBUG
                         QString msg = "NodesTool::release() - Fatal Error: Invalid position [ " + QString::number(position) + " ]";
                         #ifdef Q_OS_WIN
                             qDebug() << msg;
@@ -171,7 +171,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                     #endif
                 }
             } else {
-                #ifdef K_DEBUG
+                #ifdef TUP_DEBUG
                     QString msg = "NodesTool::release() - Invalid selected item index: " + QString::number(itemIndex);
                     #ifdef Q_OS_WIN
                        qDebug() << msg;
@@ -210,7 +210,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                         emit requested(&event);
                         k->nodeGroup->clearChangedNodes();
                     } else {
-                        #ifdef K_DEBUG
+                        #ifdef TUP_DEBUG
                             QString msg = "NodesTool::release() - Fatal Error: Invalid position [ " + QString::number(position) + " ]";
                             #ifdef Q_OS_WIN
                                 qDebug() << msg;
@@ -220,7 +220,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                         #endif
                     }
                 } else {
-                    #ifdef K_DEBUG
+                    #ifdef TUP_DEBUG
                         QString msg = "NodesTool::release() - Node group has NO changes!";
                         #ifdef Q_OS_WIN
                             qDebug() << msg;
@@ -243,7 +243,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
         }
     } else {
         if (k->activeSelection) {
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
                 QString msg = "NodesTool::release() - Empty selection! Removing nodes...";
                 #ifdef Q_OS_WIN
                     qDebug() << msg;
@@ -283,7 +283,7 @@ TupFrame* NodesTool::currentFrame()
 
 void NodesTool::itemResponse(const TupItemResponse *response)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[NodesTool::itemResponse()]";
         #else
@@ -309,7 +309,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
                  if (item) {
                      k->nodeGroup = new TNodeGroup(item, k->scene, TNodeGroup::LineSelection, k->baseZValue);
                  } else {
-                     #ifdef K_DEBUG
+                     #ifdef TUP_DEBUG
                          QString msg = "NodesTool::itemResponse() - Fatal Error: No item was found";
                          #ifdef Q_OS_WIN
                              qDebug() << msg;
@@ -336,7 +336,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
                          k->nodeGroup->resizeNodes(k->realFactor);
                      }
                  } else {
-                     #ifdef K_DEBUG
+                     #ifdef TUP_DEBUG
                          QString msg = "NodesTool::itemResponse() - Fatal Error: No item was found";
                          #ifdef Q_OS_WIN
                              qDebug() << msg;
@@ -361,7 +361,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
                      k->activeSelection = true;
                      k->nodeGroup->resizeNodes(k->realFactor);
                  } else {
-                     #ifdef K_DEBUG
+                     #ifdef TUP_DEBUG
                          QString msg = "NodesTool::itemResponse() - Fatal error: No item was found";
                          #ifdef Q_OS_WIN
                              qDebug() << msg;
@@ -376,7 +376,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
             break;
             default:
             {
-                 #ifdef K_DEBUG
+                 #ifdef TUP_DEBUG
                      qDebug() << "NodesTool::itemResponse() - default action"; 
                  #endif
 
@@ -449,7 +449,7 @@ QCursor NodesTool::cursor() const
 
 void NodesTool::resizeNodes(qreal scaleFactor)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[NodesTool::resizeNodes()]";
         #else

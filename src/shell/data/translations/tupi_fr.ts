@@ -69,8 +69,8 @@
     </message>
     <message>
         <location filename="../src/plugins/tools/scheme/configurator.cpp" line="48"/>
-        <source>This tool is just a &lt;b&gt;proof-of-concept&lt;/b&gt; of the basic algorithm for the Tupi&apos;s free-tracing vectorial brushes</source>
-        <translation>Cet outil est juste une &lt;b&gt;démonstration de concept&lt;/b&gt; des algorithmes basiques pour les brosses vectorielles de traçage de Tupi</translation>
+        <source>This tool is just a &lt;b&gt;proof-of-concept&lt;/b&gt; of the basic algorithm for the TupiTube&apos;s free-tracing vectorial brushes</source>
+        <translation>Cet outil est juste une &lt;b&gt;démonstration de concept&lt;/b&gt; des algorithmes basiques pour les brosses vectorielles de traçage de TupiTube</translation>
     </message>
     <message>
         <location filename="../src/plugins/tools/scheme/configurator.cpp" line="58"/>
@@ -282,8 +282,8 @@
     <name>KinasWidget</name>
     <message>
         <location filename="../src/components/kinas/kinaswidget.cpp" line="42"/>
-        <source>Tupi Script</source>
-        <translation>Script Tupi</translation>
+        <source>TupiTube Script</source>
+        <translation>Script TupiTube</translation>
     </message>
 </context>
 <context>
@@ -493,18 +493,18 @@
     </message>
     <message>
         <location filename="../src/shell/tupcrashhandler.cpp" line="52"/>
-        <source>Well, Tupi has crashed...</source>
-        <translation>Bon, Tupi s&apos;est planté...</translation>
+        <source>Well, TupiTube has crashed...</source>
+        <translation>Eh bien, TupiTube s&apos;est écrasé...</translation>
+    </message>
+    <message>
+        <location filename="../src/shell/tupcrashhandler.cpp" line="54"/>
+        <source>Relaunch TupiTube</source>
+        <translation>Relancer TupiTube</translation>
     </message>
     <message>
         <location filename="../src/shell/tupcrashhandler.cpp" line="53"/>
         <source>Close</source>
         <translation>Fermer</translation>
-    </message>
-    <message>
-        <location filename="../src/shell/tupcrashhandler.cpp" line="54"/>
-        <source>Re-launch Tupi</source>
-        <translation>Relancer Tupi</translation>
     </message>
     <message>
         <location filename="../src/shell/tupcrashhandler.cpp" line="55"/>
@@ -978,12 +978,12 @@
     <message>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="498"/>
         <source>Angle range must be greater than 0!</source>
-        <translation>L'amplitude angulaire doit être supérieure à 0!</translation>
+        <translation>L&apos;amplitude angulaire doit être supérieure à 0!</translation>
     </message>
     <message>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="512"/>
         <source>Angle range must be greater than Speed!</source>
-        <translation>L'amplitude Angulaire doit être supérieure à la Vitesse!</translation>
+        <translation>L&apos;amplitude Angulaire doit être supérieure à la Vitesse!</translation>
     </message>
     <message>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="177"/>
@@ -1019,7 +1019,7 @@
         <source>Selection Properties</source>
         <translation>Sélection des Propriétés</translation>
     </message>
-	<message>
+    <message>
         <location filename="../src/plugins/tools/selection/settings.cpp" line="76"/>
         <source>Flips</source>
         <translation>Basculements</translation>
@@ -1052,7 +1052,7 @@
     <message>
         <location filename="../src/plugins/tools/selection/settings.cpp" line="113"/>
         <source>Send object to back one level</source>
-        <translation>Envoyer l&apos;objet un niveau en arrière</translation> 
+        <translation>Envoyer l&apos;objet un niveau en arrière</translation>
     </message>
     <message>
         <location filename="../src/plugins/tools/selection/settings.cpp" line="116"/>
@@ -1515,7 +1515,7 @@
 <context>
     <name>TipDatabase</name>
     <message>
-        <location filename="../src/framework/core/tipdatabase.cpp" line="199"/>
+        <location filename="../src/framework/core/tipdatabase.cpp" line="204"/>
         <source>Did you already watch this video?</source>
         <translation>Avez-vous déjà regardé cette vidéo?</translation>
     </message>
@@ -1563,32 +1563,27 @@
 <context>
     <name>TupAbout</name>
     <message>
-        <location filename="../src/libui/tupabout.cpp" line="59"/>
-        <source>About Tupi</source>
-        <translation>À propos de Tupi</translation>
-    </message>
-    <message>
         <location filename="../src/libui/tupabout.cpp" line="126"/>
         <source>Credits</source>
         <translation>Crédits</translation>
     </message>
     <message>
-        <location filename="../src/libui/tupabout.cpp" line="146"/>
-        <source>Thanks</source>
-        <translation>Remerciements</translation>
+        <location filename="../src/libui/tupabout.cpp" line="59"/>
+        <source>About TupiTube Desk</source>
+        <translation>À propos de TupiTube Desk</translation>
     </message>
     <message>
-        <location filename="../src/libui/tupabout.cpp" line="162"/>
+        <location filename="../src/libui/tupabout.cpp" line="163"/>
         <source>About</source>
         <translation>À propos</translation>
     </message>
     <message>
-        <location filename="../src/libui/tupabout.cpp" line="177"/>
+        <location filename="../src/libui/tupabout.cpp" line="178"/>
         <source>License Agreement</source>
         <translation>Accord de Licence</translation>
     </message>
     <message>
-        <location filename="../src/libui/tupabout.cpp" line="178"/>
+        <location filename="../src/libui/tupabout.cpp" line="179"/>
         <source>Close</source>
         <translation>Fermer</translation>
     </message>
@@ -1597,8 +1592,8 @@
     <name>TupBasicCameraInterface</name>
     <message>
         <location filename="../src/components/workspace/tupbasiccamerainterface.cpp" line="61"/>
-        <source>Tupi Camera Manager</source>
-        <translation>Gestionnaire de Caméra Tupi</translation>
+        <source>TupiTube Camera Manager</source>
+        <translation>Gestionnaire de Caméra TupiTube</translation>
     </message>
     <message>
         <location filename="../src/components/workspace/tupbasiccamerainterface.cpp" line="61"/>
@@ -1641,7 +1636,7 @@
     <message>
         <location filename="../src/components/brush/tupbrushwidget.cpp" line="59"/>
         <source>Brush Properties</source>
-        <translation>Propriétés des Brosses</translation>                                                             
+        <translation>Propriétés des Brosses</translation>
     </message>
     <message>
         <location filename="../src/components/brush/tupbrushwidget.cpp" line="69"/>
@@ -1775,8 +1770,8 @@
     <name>TupCameraInterface</name>
     <message>
         <location filename="../src/components/workspace/tupcamerainterface.cpp" line="63"/>
-        <source>Tupi Camera Manager</source>
-        <translation>Gestionnaire de caméra Tupi</translation>
+        <source>TupiTube Camera Manager</source>
+        <translation>Gestionnaire de caméra TupiTube</translation>
     </message>
     <message>
         <location filename="../src/components/workspace/tupcamerainterface.cpp" line="63"/>
@@ -1970,13 +1965,6 @@
 </context>
 <context>
     <name>TupCanvas</name>
-    <message>
-        <location filename="../src/components/workspace/tupcanvas.cpp" line="63"/>
-        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="78"/>
-        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="79"/>
-        <source>Tupi: 2D Magic</source>
-        <translation>Tupi: 2D Magic</translation>
-    </message>
     <message>
         <location filename="../src/components/workspace/tupcanvas.cpp" line="86"/>
         <source>Frame Backward</source>
@@ -2222,7 +2210,7 @@
     <message>
         <location filename="../src/components/colorpalette/tupcolorpalette.cpp" line="241"/>
         <source>Reset background</source>
-        <translation>Réinitialiser l'arrière-plan</translation>
+        <translation>Réinitialiser l&apos;arrière-plan</translation>
     </message>
     <message>
         <location filename="../src/components/colorpalette/tupcolorpalette.cpp" line="359"/>
@@ -2240,7 +2228,7 @@
     <message>
         <location filename="../src/components/workspace/tupconfigurationarea.cpp" line="296"/>
         <source>Cursor here for expand</source>
-        <translation>Mettre le curseur ici pour expansion</translation>    
+        <translation>Mettre le curseur ici pour expansion</translation>
     </message>
     <message>
         <location filename="../src/components/workspace/tupconfigurationarea.cpp" line="339"/>
@@ -2296,7 +2284,7 @@
     <message>
         <location filename="../src/shell/tupcrashwidget.cpp" line="112"/>
         <source>What&apos;s happening?</source>
-        <translation>Que se passe t'il?</translation>
+        <translation>Que se passe t&apos;il?</translation>
     </message>
     <message>
         <location filename="../src/shell/tupcrashwidget.cpp" line="140"/>
@@ -2730,7 +2718,7 @@ SVP, renommer le fichier du projet</translation>
         <source>Enable Background Transparency</source>
         <translation>Activer la Transparence des Fond</translation>
     </message>
-	<message>
+    <message>
         <location filename="../src/components/export/tupexportmodule.cpp" line="72"/>
         <source>Image Name Prefix: </source>
         <translation>Préfixe pour le nom de l&apos;image: </translation>
@@ -2834,8 +2822,8 @@ SVP, renommer le fichier du projet</translation>
     </message>
     <message>
         <location filename="../src/components/export/tupexportmodule.cpp" line="442"/>
-        <source>Format problem. Tupi Internal error.</source>
-        <translation>Problème de format. Erreur interne de Tupi</translation>
+        <source>Format problem. TupiTube Internal error.</source>
+        <translation>Problème de format. Erreur interne de TupiTube</translation>
     </message>
     <message>
         <location filename="../src/components/export/tupexportmodule.cpp" line="448"/>
@@ -2887,8 +2875,8 @@ SVP, renommer le fichier du projet</translation>
     </message>
     <message>
         <location filename="../src/components/export/tupexportwidget.cpp" line="105"/>
-        <source>Post Animation In Tupitube</source>
-        <translation>Poster l&apos;Animation dans Tupitube</translation>
+        <source>Post Animation In TupiTube</source>
+        <translation>Poster l&apos;Animation dans TupiTube</translation>
     </message>
     <message>
         <location filename="../src/components/export/tupexportwidget.cpp" line="138"/>
@@ -3636,8 +3624,8 @@ SVP, renommer le fichier du projet</translation>
     </message>
     <message>
         <location filename="../src/components/library/tuplibrarywidget.cpp" line="887"/>
-        <source>Tupi library item</source>
-        <translation>Elément de la bibliothèque Tupi</translation>
+        <source>TupiTube library item</source>
+        <translation>Elément de la bibliothèque TupiTube</translation>
     </message>
     <message>
         <location filename="../src/components/library/tuplibrarywidget.cpp" line="989"/>
@@ -3831,537 +3819,526 @@ SVP, renommer le fichier du projet</translation>
 <context>
     <name>TupMainWindow</name>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="109"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="295"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="683"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="788"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="868"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1201"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1250"/>
-        <source>Tupi: 2D Magic</source>
-        <translation>Tupi: 2D Magic</translation>
-    </message>
-    <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="295"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="261"/>
         <source>[ by %1 | net mode ]</source>
         <translation>[ par %1 | mode net ]</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="344"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="438"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1063"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1242"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="301"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="395"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="873"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1007"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="344"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="301"/>
         <source>Opening a new document...</source>
         <translation>Ouverture d&apos;un nouveau document...</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="362"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1302"/>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="267"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="319"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1050"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="227"/>
         <source>Animation</source>
         <translation>Animation</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="417"/>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="275"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="374"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="235"/>
         <source>Player</source>
         <translation>Lecteur</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="438"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="395"/>
         <source>Project &lt;b&gt;%1&lt;/b&gt; opened!</source>
         <translation>Projet &lt;b&gt;%1&lt;/b&gt; ouvert!</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="557"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="490"/>
         <source>Question</source>
         <translation>Question</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="559"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="492"/>
         <source>The document has been modified.</source>
         <translation>Le document a été modifié.</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="560"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="493"/>
         <source>Do you want to save the project?</source>
         <translation>Voulez-vous sauvegarder le projet?</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="562"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="495"/>
         <source>Save</source>
         <translation>Sauvegarder</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="563"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="496"/>
         <source>Discard</source>
         <translation>Ne pas enregistrer</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="564"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="497"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="788"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="868"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1201"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1250"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="678"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="740"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="975"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1015"/>
         <source>by</source>
         <translation>par</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="806"/>
-        <source>Open Tupi project</source>
-        <translation>Ouvrir un projet Tupi</translation>
+        <location filename="../src/shell/tupmainwindow.cpp" line="687"/>
+        <source>Open TupiTube project</source>
+        <translation>Ouvrez projet TupiTube</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="807"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1155"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1513"/>
-        <source>Tupi Project Package (*.tup)</source>
-        <translation>Paquet du projet Tupi (*.tup)</translation>
+        <location filename="../src/shell/tupmainwindow.cpp" line="688"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="929"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1224"/>
+        <source>TupiTube Project Package (*.tup)</source>
+        <translation>Projet TupiTube (*.tup)</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="880"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1065"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1172"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1187"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1256"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1521"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1525"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="752"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="875"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="946"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="961"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1021"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1232"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1236"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="880"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="752"/>
         <source>Cannot open project!</source>
         <translation>Vous ne pouvez pas ouvrir le projet!</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="994"/>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="432"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="813"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="364"/>
         <source>Tip Of The Day</source>
         <translation>Conseil Du Jour</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="994"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="813"/>
         <source>Previous</source>
         <translation>Précédent</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="994"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="813"/>
         <source>Next</source>
         <translation>Suivant</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="994"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1546"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="813"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1257"/>
         <source>Close</source>
         <translation>Fermer</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1018"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="828"/>
         <source>Gimp Palette (*.gpl *.txt *.css)</source>
         <translation>Palette Gimp (*.gpl *.txt *.css)</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1018"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="828"/>
         <source>Import Gimp Palettes</source>
         <translation>Importer Des Palettes De Gimp</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1063"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="873"/>
         <source>Gimp palette import was successful</source>
         <translation>L&apos;importation de la palette Gimp s&apos;est bien passée</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1065"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="875"/>
         <source>Gimp palette import was unsuccessful</source>
         <translation>L&apos;importation de la palette Gimp a échoué</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1154"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="928"/>
         <source>Save Project As</source>
         <translation>Enregistrer Le Projet Sous</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1172"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="946"/>
         <source>Directory does not exist! Please, choose another path.</source>
         <translation>Le répertoire est inexistant! SVP, choisissez un autre chemin.</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1187"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="961"/>
         <source>Insufficient permissions. Please, pick another path.</source>
         <translation>Permissions insuffisantes. SVP, choisissez un autre chemin.</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1242"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1007"/>
         <source>Project &lt;b&gt;%1&lt;/b&gt; saved</source>
         <translation>Projet &lt;b&gt;%1&lt;/b&gt; sauvegardé</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1256"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1021"/>
         <source>Cannot save the project!</source>
         <translation>Impossible d&apos;enregistrer le projet!</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1303"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1051"/>
         <source>New camera</source>
         <translation>Nouvelle caméra</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1512"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1223"/>
         <source>Import project package</source>
         <translation>Importation du paquet projet</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1521"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1232"/>
         <source>Can&apos;t import project. File is empty!</source>
         <translation>Vous ne pouvez pas importer le projet. Le fichier est vide!</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1525"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1236"/>
         <source>Can&apos;t save the project. File doesn&apos;t exist!</source>
         <translation>Vous ne pouvez pas enregistrer le projet. Fichier inexistant!</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1541"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1252"/>
         <source>Fatal Error</source>
         <translation>Erreur fatale</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1543"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1254"/>
         <source>The connection to the server has been lost.</source>
         <translation>La connexion au serveur a été perdue</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1544"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1255"/>
         <source>Please, try to connect again in a while</source>
         <translation>SVP, essayez de vous connecter à nouveau dans un moment</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="61"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="46"/>
         <source>Hide top panels</source>
         <translation>Cacher les panneaux supérieurs</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="61"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="46"/>
         <source>Alt</source>
         <translation>Alt</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="68"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="53"/>
         <source>Shift+P</source>
         <translation>Shift+P</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="79"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="64"/>
         <source>Shift+B</source>
         <translation>Shift+B</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="90"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="75"/>
         <source>Shift+L</source>
         <translation>Shift+L</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="94"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="79"/>
         <source>Bitmap</source>
         <translation>Bitmap</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="94"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="79"/>
         <source>Alt+B</source>
         <translation>Alt+B</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="97"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="82"/>
         <source>Bitmap Sequence</source>
         <translation>Séquence Bitmap</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="97"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="82"/>
         <source>Alt+Shift+B</source>
         <translation>Alt+Shift+B</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="100"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="85"/>
         <source>SVG File</source>
         <translation>Fichier SVG</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="100"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="85"/>
         <source>Alt+S</source>
         <translation>Alt+S</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="103"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="88"/>
         <source>SVG Sequence</source>
         <translation>Séquence SVG</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="103"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="88"/>
         <source>Alt+Shift+S</source>
         <translation>Alt+Shift+S</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="119"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="104"/>
         <source>Shift+C</source>
         <translation>Shift+C</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="130"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="115"/>
         <source>Shift+E</source>
         <translation>Shift+E</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="141"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="126"/>
         <source>Shift+T</source>
         <translation>Shift+T</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="193"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="159"/>
         <source>Open Recent</source>
         <translation>Ouvrir Récent</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="356"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="307"/>
         <source>Save Project</source>
         <translation>Sauvegarder Le Projet</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="361"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="312"/>
         <source>Save Project As...</source>
         <translation>Enregistrer Le Projet Sous...</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="373"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="323"/>
         <source>&amp;Import GIMP Palettes</source>
         <translation>&amp;Importer Des Palettes De GIMP</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="184"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="150"/>
         <source>&amp;File</source>
         <translation>&amp;Fichier</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="217"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="183"/>
         <source>&amp;Edit</source>
         <translation>&amp;Editer</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="227"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="193"/>
         <source>&amp;Import</source>
         <translation>&amp;Importer</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="243"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="209"/>
         <source>&amp;Window</source>
         <translation>&amp;Fenêtre</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="262"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="222"/>
         <source>Modules</source>
         <translation>Modules</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="283"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="243"/>
         <source>News</source>
         <translation>Actualités</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="296"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="256"/>
         <source>&amp;Help</source>
         <translation>&amp;Aide</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="335"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="286"/>
         <source>Ctrl+N</source>
         <translation>Ctrl+N</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="335"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="286"/>
         <source>New Project</source>
         <translation>Nouveau Projet</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="337"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="288"/>
         <source>Open new project</source>
         <translation>Ouvrir un nouveau projet</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="340"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="291"/>
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="340"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="291"/>
         <source>Open Project</source>
         <translation>Projet Ouvert</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="343"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="294"/>
         <source>Load existent project</source>
         <translation>Charger un projet existant</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="357"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="308"/>
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="359"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="310"/>
         <source>Save current project in current location</source>
         <translation>Enregistrer le projet actuel dans l&apos;emplacement actuel</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="362"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="313"/>
         <source>Ctrl+Shift+S</source>
         <translation>Ctrl+Shift+S</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="363"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="314"/>
         <source>Open dialog box to save current project in any location</source>
         <translation>Ouvrir la boîte de dialogue pour enregistrer le projet dans n&apos;importe quel emplacement</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="366"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="317"/>
         <source>Ctrl+W</source>
         <translation>Ctrl+W</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="366"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="317"/>
         <source>Cl&amp;ose Project</source>
         <translation>Fermer Projet</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="368"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="319"/>
         <source>Close active project</source>
         <translation>Fermer le projet actif</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="374"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="324"/>
         <source>Shift+G</source>
         <translation>Shift+G</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="375"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="325"/>
         <source>Import palettes</source>
         <translation>Importer les palettes</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="378"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="328"/>
         <source>&amp;Import Papagayo Lip-sync</source>
         <translation>&amp;Importer La Synchronisation Labiale Papagayo</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="379"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="329"/>
         <source>Alt+P</source>
         <translation>Alt+P</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="380"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="330"/>
         <source>Import Papagayo lip-sync</source>
         <translation>Importer La Synchronisation Labiale Papagayo</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="384"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="334"/>
         <source>&amp;Export Project</source>
         <translation>&amp;Exporter Le projet</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="384"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="334"/>
         <source>Ctrl+R</source>
         <translation>Ctrl+R</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="386"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="336"/>
         <source>Export project to several video formats</source>
         <translation>Exporter le projet sous différents formats vidéo</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="390"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="340"/>
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="390"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="340"/>
         <source>Quit</source>
         <translation>Quitter</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="393"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="343"/>
         <source>Close application</source>
         <translation>Fermer,l&apos;application</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="411"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="352"/>
         <source>Pr&amp;eferences...</source>
         <translation>Pr&amp;éférences...</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="412"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="353"/>
         <source>Ctrl+P</source>
         <translation>Ctrl+P</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="414"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="355"/>
         <source>Opens the preferences dialog box</source>
         <translation>Ouvrir la boîte de dialogue des préférences</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="428"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="360"/>
         <source>F1</source>
         <translation>F1</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="428"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="360"/>
         <source>Online Help Content</source>
         <translation>Contenu De l&apos;Aide nn Ligne</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="432"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="364"/>
         <source>Ctrl+T</source>
         <translation>Ctrl+T</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="434"/>
-        <source>About Tupi</source>
-        <translation>A propos de Tupi</translation>
-    </message>
-    <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="434"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="366"/>
         <source>Ctrl+K</source>
         <translation>Ctrl+K</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="449"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="366"/>
+        <source>About TupiTube Desk</source>
+        <translation>À propos de TupiTube Desk</translation>
+    </message>
+    <message>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="372"/>
         <source>Actions Bar</source>
         <translation>Barre des Actions</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="539"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="444"/>
         <source>Undo</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="541"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="446"/>
         <source>Ctrl+Z</source>
         <translation>Ctrl+Z</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="544"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="449"/>
         <source>Redo</source>
         <translation>Rétablir</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="546"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="451"/>
         <source>Ctrl+Y</source>
         <translation>Ctrl+Y</translation>
     </message>
@@ -4374,7 +4351,7 @@ SVP, renommer le fichier du projet</translation>
         <translation>Dernières Nouvelles!</translation>
     </message>
     <message>
-        <location filename="../src/framework/gui/tupmsgdialog.cpp" line="93"/>
+        <location filename="../src/framework/gui/tupmsgdialog.cpp" line="94"/>
         <source>Close</source>
         <translation>Fermer</translation>
     </message>
@@ -4607,8 +4584,8 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     </message>
     <message>
         <location filename="../src/shell/tupnewproject.cpp" line="165"/>
-        <source>Tupitube project</source>
-        <translation>Projet Tupitube</translation>
+        <source>TupiTube project</source>
+        <translation>Projet TupiTube</translation>
     </message>
     <message>
         <location filename="../src/shell/tupnewproject.cpp" line="171"/>
@@ -5191,8 +5168,8 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <name>TupPreferencesDialog</name>
     <message>
         <location filename="../src/libui/tuppreferencesdialog.cpp" line="57"/>
-        <source>Tupi Preferences</source>
-        <translation>Préférences de Tupi</translation>
+        <source>TupiTube Preferences</source>
+        <translation>Préférences de TupiTube</translation>
     </message>
     <message>
         <location filename="../src/libui/tuppreferencesdialog.cpp" line="60"/>
@@ -5601,8 +5578,8 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     </message>
     <message>
         <location filename="../src/libui/tupthemepreferences.cpp" line="95"/>
-        <source>Note: You must restart Tupi to apply theme changes</source>
-        <translation>Note: Vous devez relancer Tupi pour appliquer les changements de thème</translation>
+        <source>Note: You must restart TupiTube to apply theme changes</source>
+        <translation>Note: Vous devez relancer TupiTube pour appliquer les changements de thème</translation>
     </message>
 </context>
 <context>

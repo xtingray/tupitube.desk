@@ -41,14 +41,12 @@
 #include "twizard.h"
 #include "txyspinbox.h"
 
-#ifdef K_DEBUG
-
+#ifdef TUP_DEBUG
 #ifdef Q_OS_WIN
-#include <QDebug>
+  #include <QDebug>
 #else
-#include "tdebug.h"
+  #include "tdebug.h"
 #endif
-
 #endif
 
 #include <QLineEdit>
@@ -70,7 +68,6 @@ class TupNewProject : public TabDialog
     Q_OBJECT
 
     public:
-
         enum Format { FREE = 0, 
                       FORMAT_520,
                       FORMAT_640,

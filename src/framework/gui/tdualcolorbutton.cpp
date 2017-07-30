@@ -35,6 +35,14 @@
 
 #include "tdualcolorbutton.h"
 
+#include <QWidget>
+#include <QMouseEvent>
+#include <QPixmap>
+#include <QPaintEvent>
+#include <QBrush>
+#include <qdrawutil.h>
+#include <QPainter>
+
 #include "tcolorarrow.xpm"
 #include "tcolorreset.xpm"
 
@@ -108,16 +116,12 @@ void TDualColorButton::setForeground(const QBrush &c)
 {
     k->fgBrush = c;
     update();
-
-    // emit fgChanged(k->fgBrush.color());
 }
 
 void TDualColorButton::setBackground(const QBrush &c)
 {
     k->bgBrush = c;
     update();
-
-    // emit bgChanged(k->bgBrush.color());
 }
 
 void TDualColorButton::setCurrentColor(const QBrush &c)
@@ -172,27 +176,19 @@ void TDualColorButton::mousePressEvent(QMouseEvent *event)
 
     if (fgRect.contains(mPos)) {
         k->currentSpace = Foreground;
-        // tFatal() << "TDualColorButton::mousePressEvent() - emitting foreground signal!";
         emit selectionChanged(Foreground);
     } else if (bgRect.contains(mPos)) {
-               k->currentSpace = Background;
-               // tFatal() << "TDualColorButton::mousePressEvent() - emitting background signal!";
-               emit selectionChanged(Background);
+        k->currentSpace = Background;
+        emit selectionChanged(Background);
     } else if (event->pos().x() > fgRect.width()) {
-               // We handle the swap and reset controls as soon as the mouse is
-               // is pressed and ignore further events on this click (mosfet).
-               QBrush tmpBrush = k->fgBrush;
-               k->fgBrush = k->bgBrush;
-               k->bgBrush = tmpBrush;
-               emit switchColors();
-               // emit fgChanged(k->fgBrush);
-               // emit bgChanged(k->bgBrush);
+        QBrush tmpBrush = k->fgBrush;
+        k->fgBrush = k->bgBrush;
+        k->bgBrush = tmpBrush;
+        emit switchColors();
     } else if (event->pos().x() < bgRect.x()) {
-               k->fgBrush.setColor(Qt::black);
-               k->bgBrush.setColor(QColor(0,0,0,0));
-               emit resetColors();
-               // emit fgChanged(k->fgBrush);
-               // emit bgChanged(k->bgBrush);
+        k->fgBrush.setColor(Qt::black);
+        k->bgBrush.setColor(QColor(0,0,0,0));
+        emit resetColors();
     }
 
     update();

@@ -162,7 +162,7 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent), k(new Private
     layout->addWidget(panel, 4, 0);
     layout->addWidget(renderAndFps, 4, 1);
 
-    QCheckBox *activeNetOptions = new QCheckBox(tr("Tupitube project"));
+    QCheckBox *activeNetOptions = new QCheckBox(tr("TupiTube project"));
     connect(activeNetOptions, SIGNAL(toggled(bool)), this, SLOT(enableNetOptions(bool)));
 
     // SQA: Code temporarily disabled

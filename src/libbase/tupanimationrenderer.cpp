@@ -65,7 +65,7 @@ TupAnimationRenderer::TupAnimationRenderer(const QColor color, TupLibrary *libra
 
 TupAnimationRenderer::~TupAnimationRenderer()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TupAnimationRenderer()]";
         #else

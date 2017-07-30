@@ -83,7 +83,7 @@ void PencilTool::setupActions()
 
 void PencilTool::init(TupGraphicsScene *scene)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[PencilTool::init()]";
         #else
@@ -257,7 +257,7 @@ void PencilTool::saveConfig()
 
 void PencilTool::keyPressEvent(QKeyEvent *event)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[PencilTool::keyPressEvent()]";
         #else
@@ -290,7 +290,7 @@ void PencilTool::keyPressEvent(QKeyEvent *event)
 
 void PencilTool::keyReleaseEvent(QKeyEvent *event) 
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[PencilTool::keyReleaseEvent()]";
         #else

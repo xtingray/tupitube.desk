@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleName</key>
-	<string>Tupi</string>
+	<string>TupiTube</string>
 	<key>CFBundleIconFile</key>
-	<string>tupi.icns</string>
+	<string>tupitube.desk.icns</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleGetInfoString</key>
@@ -13,9 +13,9 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleExecutable</key>
-	<string>Tupi</string>
+	<string>TupiTube</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.maefloresta.tupi</string>
+	<string>com.maefloresta.tupitube</string>
 	<key>NOTE</key>
 	<string>Package built by cristiandavid@me.com</string>
 </dict>

@@ -50,7 +50,7 @@ struct TupBasicCameraInterface::Private
 TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QByteArray> cameraDevices, QComboBox *devicesCombo, int cameraIndex, 
                                        const QSize cameraSize, int counter, QWidget *parent) : QFrame(parent), k(new Private)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupBasicCameraInterface()]";
         #else
@@ -58,7 +58,7 @@ TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QBy
         #endif
     #endif
 
-    setWindowTitle(tr("Tupi Camera Manager") + " | " + tr("Current resolution:") + " " + title);
+    setWindowTitle(tr("TupiTube Camera Manager") + " | " + tr("Current resolution:") + " " + title);
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/camera.png")));
 
     k->counter = counter;
@@ -167,7 +167,7 @@ TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QBy
 
 TupBasicCameraInterface::~TupBasicCameraInterface()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TupBasicCameraInterface()]";
         #else
@@ -187,7 +187,7 @@ void TupBasicCameraInterface::closeEvent(QCloseEvent *event)
     }
 
     if (! dir.rmdir(dir.absolutePath())) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupBasicCameraInterface::closeEvent() - Fatal Error: Can't remove pictures directory -> " + dir.absolutePath();
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -206,7 +206,7 @@ QString TupBasicCameraInterface::randomPath()
     QString path = CACHE_DIR + TAlgorithm::randomString(8);
     QDir dir;
     if (!dir.mkdir(path)) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupBasicCameraInterface::randomPath() - Fatal Error: Can't create pictures directory -> " + path;
             #ifdef Q_OS_WIN
                 qDebug() << msg;

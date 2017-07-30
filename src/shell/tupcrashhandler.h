@@ -36,7 +36,7 @@
 #ifndef TUPCRASHHANDLER_H
 #define TUPCRASHHANDLER_H
 
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
 
 #include "tapplicationproperties.h"
 #include "tdebug.h"

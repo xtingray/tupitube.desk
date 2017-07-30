@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPI: 2D Magic                                                *
+ *   Project TUPITUBE DESK                                                 *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *                                                                         *
@@ -9,7 +9,7 @@
  *    Andres Calderon / @andresfcalderon                                   *
  *    Antonio Vanegas / @hpsaturn                                          *
  *                                                                         *
- *   Tupi is a fork of the KTooN project                                   *
+ *   TupiTube Desk is a fork of the KTooN project                          *
  *   KTooN's versions:                                                     *
  *   2006:                                                                 *
  *    David Cuadrado                                                       *

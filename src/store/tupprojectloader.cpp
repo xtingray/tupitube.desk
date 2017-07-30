@@ -103,7 +103,7 @@ void TupProjectLoader::createSoundLayer(int scenePosition, int layerPosition, co
 
 void TupProjectLoader::createScene(const QString &name, int scenePosition, TupProject *project)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupProjectLoader::createScene()]";
         #else

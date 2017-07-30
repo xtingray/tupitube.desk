@@ -48,7 +48,7 @@ struct TupCameraStatus::Private
 
 TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWidget *parent) : QFrame(parent), k(new Private)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupCameraStatus()]";
         #else
@@ -139,7 +139,7 @@ TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWid
 
 TupCameraStatus::~TupCameraStatus()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TupCameraStatus()]";
         #else
@@ -151,7 +151,7 @@ TupCameraStatus::~TupCameraStatus()
 void TupCameraStatus::setFPS(int frames)
 {
     /*
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupScreen::setFPS()]";
         #else

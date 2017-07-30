@@ -103,7 +103,7 @@ void TupWebHunter::slotError(QNetworkReply::NetworkError error)
     switch (error) {
             case QNetworkReply::HostNotFoundError:
                  { 
-                 #ifdef K_DEBUG
+                 #ifdef TUP_DEBUG
                      QString msg = "TupWebHunter::slotError() - Network Error: Host not found";
                      #ifdef Q_OS_WIN
                          qDebug() << msg;
@@ -115,7 +115,7 @@ void TupWebHunter::slotError(QNetworkReply::NetworkError error)
             break;
             case QNetworkReply::TimeoutError:
                  {
-                 #ifdef K_DEBUG
+                 #ifdef TUP_DEBUG
                      QString msg = "TupWebHunter::slotError() - Network Error: Time out!";
                      #ifdef Q_OS_WIN
                          qDebug() << msg;
@@ -127,7 +127,7 @@ void TupWebHunter::slotError(QNetworkReply::NetworkError error)
             break;
             case QNetworkReply::ConnectionRefusedError:
                  {
-                 #ifdef K_DEBUG
+                 #ifdef TUP_DEBUG
                      QString msg = "TupWebHunter::slotError() - Network Error: Connection Refused!";
                      #ifdef Q_OS_WIN
                          qDebug() << msg;
@@ -139,7 +139,7 @@ void TupWebHunter::slotError(QNetworkReply::NetworkError error)
             break;
             case QNetworkReply::ContentNotFoundError:
                  {
-                 #ifdef K_DEBUG
+                 #ifdef TUP_DEBUG
                      QString msg = "TupWebHunter::slotError() - Network Error: Content not found!";
                      #ifdef Q_OS_WIN
                          qDebug() << msg;
@@ -152,7 +152,7 @@ void TupWebHunter::slotError(QNetworkReply::NetworkError error)
             case QNetworkReply::UnknownNetworkError:
             default:
                  {
-                 #ifdef K_DEBUG
+                 #ifdef TUP_DEBUG
                      QString msg = "TupWebHunter::slotError() - Network Error: Unknown Network error!";
                      #ifdef Q_OS_WIN
                          qDebug() << msg;

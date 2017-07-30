@@ -42,7 +42,7 @@
 
 bool TupCommandExecutor::createLayer(TupLayerResponse *response)
 {	
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupCommandExecutor::createLayer()]";
         #else
@@ -78,7 +78,7 @@ bool TupCommandExecutor::createLayer(TupLayerResponse *response)
 
 bool TupCommandExecutor::removeLayer(TupLayerResponse *response)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupCommandExecutor::removeLayer()]";
         #else
@@ -120,7 +120,7 @@ bool TupCommandExecutor::moveLayer(TupLayerResponse *response)
         return false;
 
     if (! scene->moveLayer(position, newPosition)) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupCommandExecutor::moveLayer() - Error while moving layer!";
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -165,7 +165,7 @@ bool TupCommandExecutor::renameLayer(TupLayerResponse *response)
     int position = response->layerIndex();
     QString newName = response->arg().toString();
 	
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         QString msg = "TupCommandExecutor::renameLayer() - Renaming layer to: " + newName;
         #ifdef Q_OS_WIN
             qWarning() << msg;
@@ -228,7 +228,7 @@ bool TupCommandExecutor::setLayerVisibility(TupLayerResponse *response)
 
 bool TupCommandExecutor::addLipSync(TupLayerResponse *response)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         QString msg = "TupCommandExecutor::addLipSync() - Adding lipsync...";
         #ifdef Q_OS_WIN
             qWarning() << msg;
@@ -262,7 +262,7 @@ bool TupCommandExecutor::addLipSync(TupLayerResponse *response)
 
 bool TupCommandExecutor::updateLipSync(TupLayerResponse *response)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         QString msg = "TupCommandExecutor::updateLipSync() - Updating lipsync...";
         #ifdef Q_OS_WIN
             qWarning() << msg;
@@ -291,7 +291,7 @@ bool TupCommandExecutor::updateLipSync(TupLayerResponse *response)
 
 bool TupCommandExecutor::removeLipSync(TupLayerResponse *response)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         QString msg = "TupCommandExecutor::removeLipSync() - Adding lipsync...";
         #ifdef Q_OS_WIN
             qWarning() << msg;

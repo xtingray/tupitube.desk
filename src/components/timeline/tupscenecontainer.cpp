@@ -51,7 +51,7 @@ TupSceneContainer::~TupSceneContainer()
 
 void TupSceneContainer::addScene(int sceneIndex, TupTimeLineTable *framesTable, const QString &sceneName)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupSceneContainer::addScene()]";
         #else

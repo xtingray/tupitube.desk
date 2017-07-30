@@ -41,9 +41,8 @@
 #include "tupanimationspace.h"
 #include "tuppreferencesdialog.h"
 
-// modules
+// Modules
 #include "tupexposuresheet.h"
-// #include "kinaswidget.h"
 #include "tupbrushwidget.h"
 #include "tupcolorpalette.h"
 #include "tupsceneswidget.h"
@@ -58,25 +57,17 @@
 #include "tosd.h"
 #include "toolview.h"
 
-// Including headers about projects management
+// Projects management 
 #include "tupprojectmanager.h"
 #include "tupnetprojectmanagerhandler.h"
 
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
 #ifdef Q_OS_WIN
   #include <QDebug>
 #else
   #include "tdebug.h"
 #endif
 #endif
-
-/* SQA: Debug visual component has been removed
-#ifdef K_DEBUG
-#ifdef Q_OS_LINUX
-  #include "tupdebugwidget.h"
-#endif
-#endif
-*/
 
 #include <QMainWindow>
 #include <QMenu>
@@ -94,11 +85,6 @@ class TupProjectManagerParams;
 class TupNetProjectManagerParams;
 class TupProjectResponse;
 
-/**
- * This class defines the main window application
- * @author David Cuadrado
-*/
-
 class TupMainWindow : public TabbedMainWindow
 {
     Q_OBJECT
@@ -109,7 +95,6 @@ class TupMainWindow : public TabbedMainWindow
              Animation = 0x01,
              Player = 0x02,
              News = 0x04,
-             // Play = 0x08,
              All = Animation | Player | News
         };
 
@@ -126,26 +111,12 @@ class TupMainWindow : public TabbedMainWindow
         ~TupMainWindow();
 
     private:
-        /**
-         * Creates the file action 
-         */
         void setupFileActions();
         void setPreferencesAction();
-        // void setupWindowActions();
-        // void setupInsertActions();
-
-        /**
-         * Sets up the actions in the toolbar
-         */
         void setupToolBar();
-
-        /**
-         * Sets up he actions in the menu
-         */
         void setupMenu();
 
         void setupHelpActions();
-        // void setupActions();
         void setMenuItemsContext(bool flag);
 
         void connectWidgetToManager(QWidget *widget);
@@ -162,22 +133,8 @@ class TupMainWindow : public TabbedMainWindow
         void saveDefaultPath(const QString &dir);
 
     protected:
-        /**
-         *  Event for main window closing control
-         *
-         * Reimplemented from QWidget.
-         * @param close_event The input event
-         */
         void closeEvent(QCloseEvent *event);
-
-        /**
-         *  Creates the application GUI according to the information from the data classes
-         */
         virtual void createGUI();
-
-        /**
-         *  Updates the open recent menu item names according to the @a recent_names list of file names
-         */
         void updateOpenRecentMenu(QMenu *menu, QStringList recents);
 
     public slots:
@@ -234,14 +191,12 @@ class TupMainWindow : public TabbedMainWindow
 
     private:
         TupProjectManager *m_projectManager;
-        // Tupi::RenderType m_renderType;
         QString m_fileName;
         bool lastSave;
 
     private:
         TupDocumentView *animationTab;
         TupAnimationspace *playerTab;
-        // TupHelpBrowser *helpTab;
         TupTwitterWidget *newsTab;
         TupStatusBar *m_statusBar;
         TActionManager *m_actionManager;
@@ -270,13 +225,6 @@ class TupMainWindow : public TabbedMainWindow
         TupScenesWidget *m_scenes;
         TupTimeLine *m_timeLine;
 
-/* SQA: debug visual component has been removed
-#if defined(QT_GUI_LIB) && defined(K_DEBUG) && defined(Q_OS_LINUX)
-        TupDebugWidget *m_debug;
-#endif
-*/
-
-        // TupHelpWidget *m_helper;
         TupLibraryWidget *m_libraryWidget;
         TupColorPalette *m_colorPalette;
         TupBrushWidget *m_brushWidget;
@@ -287,7 +235,6 @@ class TupMainWindow : public TabbedMainWindow
         ToolView *scenesView;  
         ToolView *helpView;
         ToolView *timeView;
-        // ToolView *debugView;
         ToolView *exportView;
         TupExportWidget *exportWidget;
 

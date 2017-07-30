@@ -36,7 +36,7 @@
 #ifndef TUPCRASHWIDGET_H
 #define TUPCRASHWIDGET_H
 
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
 
 #include "tupcrashhandler.h"
 #include "tconfig.h"

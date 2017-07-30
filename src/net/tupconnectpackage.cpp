@@ -37,7 +37,7 @@
 
 /*
 <user_connect version="0">
-    <client type="0"/> // 0 for Tupi artist clients - 1 for Tupi admin clients
+    <client type="0"/> // 0 for TupiTube artist clients - 1 for TupiTube admin clients
     <username>user_username</username>
     <password>md5_hashed_password</password>
 </user_connect>

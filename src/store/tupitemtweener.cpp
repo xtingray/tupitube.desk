@@ -36,7 +36,7 @@
 #include "tupitemtweener.h"
 #include "tupsvg2qt.h"
 
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
     #ifdef Q_OS_UNIX
         #define VERIFY_STEP(index) if (index > k->frames || k->frames == 0) { \
                                    tWarning("items") << "Invalid step " << index << " for tweening, maximun step are " \
@@ -157,7 +157,7 @@ void TupItemTweener::addStep(const TupTweenerStep &step)
 {
     int counter = step.index();
   
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
     #ifdef Q_OS_WIN
         qWarning() << "TupItemTweener::addStep() - counter: " << counter;
     #else
@@ -191,7 +191,7 @@ TupTweenerStep * TupItemTweener::stepAt(int index)
 
 void TupItemTweener::setPosAt(int index, const QPointF &pos)
 {
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
     #ifdef Q_OS_WIN
         qWarning() << "TupItemTweener::setPosAt() - index: " << index;
     #else
@@ -204,7 +204,7 @@ void TupItemTweener::setPosAt(int index, const QPointF &pos)
 
 void TupItemTweener::setRotationAt(int index, double angle)
 {
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
     #ifdef Q_OS_WIN
         qWarning() << "TupItemTweener::setRotationAt() - index: " << index;
     #else
@@ -217,7 +217,7 @@ void TupItemTweener::setRotationAt(int index, double angle)
 
 void TupItemTweener::setScaleAt(int index, double sx, double sy)
 {
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
     #ifdef Q_OS_WIN
         qWarning() << "TupItemTweener::setScaleAt() - index: " << index;
     #else
@@ -230,7 +230,7 @@ void TupItemTweener::setScaleAt(int index, double sx, double sy)
 
 void TupItemTweener::setShearAt(int index, double sx, double sy)
 {
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
     #ifdef Q_OS_WIN
         qWarning() << "TupItemTweener::setShearAt() - index: " << index;
     #else
@@ -243,7 +243,7 @@ void TupItemTweener::setShearAt(int index, double sx, double sy)
 
 void TupItemTweener::setOpacityAt(int index, double opacity)
 {
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
     #ifdef Q_OS_WIN
         qWarning() << "TupItemTweener::setOpacityAt() - index: " << index;
     #else
@@ -256,7 +256,7 @@ void TupItemTweener::setOpacityAt(int index, double opacity)
 
 void TupItemTweener::setColorAt(int index, const QColor &color)
 {
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
     #ifdef Q_OS_WIN
         qWarning() << "TupItemTweener::setColorAt() - index: " << index;
     #else
@@ -299,7 +299,7 @@ QPointF TupItemTweener::transformOriginPoint()
 
 void TupItemTweener::fromXml(const QString &xml)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         QString msg = "TupItemTweener::fromXml() - Tween content: ";
         #ifdef Q_OS_WIN
            qWarning() << msg;
@@ -494,7 +494,7 @@ void TupItemTweener::fromXml(const QString &xml)
 
 QDomElement TupItemTweener::toXml(QDomDocument &doc) const
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         QString msg1 = "TupItemTweener::toXml() - Saving tween: " + k->name;
         QString msg2 = "TupItemTweener::toXml() - Type: " + QString::number(k->type);
         #ifdef Q_OS_WIN

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                *
+ *   Project TUPITUBE DESK                                                 *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -39,12 +39,6 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QRadioButton>
-
-/**
- * This class handles the preferences dialog for the paint area settings.
- * Here is where the paint area parameters are set.
- * @author David Cuadrado
-*/
 
 struct TupThemePreferences::Private
 {
@@ -92,7 +86,7 @@ void TupThemePreferences::setupPage()
 
     pageLayout->addSpacing(15);
 
-    QLabel *noteLabel = new QLabel(tr("Note: You must restart Tupi to apply theme changes"));
+    QLabel *noteLabel = new QLabel(tr("Note: You must restart TupiTube to apply theme changes"));
     pageLayout->addWidget(noteLabel);
 
     widget->setLayout(pageLayout);

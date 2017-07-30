@@ -36,7 +36,7 @@
 #ifndef TUPDEBUGTERM_H
 #define TUPDEBUGTERM_H
 
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
 
 #include "tglobal.h"
 

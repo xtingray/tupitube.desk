@@ -39,31 +39,10 @@
 #include "tglobal.h"
 #include "talgorithm.h"
 
-#include <QDomDocument>
-#include <QFile>
-#include <QWidget>
-#include <QString>
-#include <QList>
-
-/**
- * @class TipDatabase
- * 
- * This class handles the tips database about the application
- * 
- * El archivo de base de datos tiene la siguiente forma:
- * 
- * @verbatim
- * \<TipOfDay\>
- *     \<tip>Tip1.\</tip\>
- *     \<tip>Tipn\</tip\>
- * \</TipOfDay\>
- * @endverbatim
- * 
- * @author David Cuadrado
- */
-
 class T_CORE_EXPORT TipDatabase : public QWidget
 {
+    Q_OBJECT
+
     public:
         TipDatabase(const QString &videoPath, const QString &tipPath, QWidget *parent=0);
         ~TipDatabase();

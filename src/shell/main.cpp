@@ -39,12 +39,12 @@
 #include "tcollapsiblewidget.h"
 #include "talgorithm.h"
 
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
 #ifdef Q_OS_WIN
-#include <QDebug>
+  #include <QDebug>
 #else
-#include "tdebug.h"
-#include "tupcrashhandler.h"
+  #include "tdebug.h"
+  #include "tupcrashhandler.h"
 #endif
 #endif
 
@@ -63,23 +63,13 @@
 #include <QThread>
 #include <QStyleFactory>
 
-/**
- * Main class of the application.
- * This is the code where Tupi application starts.
- * @author David Cuadrado
-*/
-
-/**
- * This method is the first one invoked when Tupi is launched
- */
-
 int main(int argc, char ** argv)
 {
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
     TupApplication application(argc, argv);
 
 #ifdef Q_OS_UNIX
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
     TDebug::setOutputChannel();
     // Initializing the crash handler (bug catcher)
     TupCrashHandler::init();
@@ -91,7 +81,7 @@ int main(int argc, char ** argv)
     kAppProp->setCodeName(CODE_NAME);
     kAppProp->setRevision(REVISION);
 
-    // Defining TupiTube global variables
+    // Defining TupiTube Desk global variables
     QDir appDirPath(QApplication::applicationDirPath());
     TCONFIG->beginGroup("General");
 
@@ -112,7 +102,7 @@ int main(int argc, char ** argv)
                 QDir dir("C:\temp");
                 if (!dir.exists()) {
                     if (!dir.mkdir("C:\temp")) {
-                        #ifdef K_DEBUG
+                        #ifdef TUP_DEBUG
                             qDebug() << "main.cpp - Fatal error: WinXP issue!";
                         #endif
                         return 0;
@@ -127,7 +117,7 @@ int main(int argc, char ** argv)
         #endif
     }
 
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
     QString debug = "main.cpp - CACHE path: " + TCONFIG->value("Cache").toString();
     #ifdef Q_OS_WIN
         qWarning() << debug;
@@ -196,7 +186,7 @@ int main(int argc, char ** argv)
             translator->load(langFile);
             application.installTranslator(translator);
         } else {
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
                 QString msg = "main.cpp - Error: Can't open file -> " + langFile;
                 #ifdef Q_OS_WIN
                     qDebug() << msg;
@@ -210,8 +200,8 @@ int main(int argc, char ** argv)
     TupMainWindow mainWindow;
     mainWindow.showMaximized();
 
-    // Looking for plugins for Tupi
-    #ifdef K_DEBUG
+    // Looking for plugins for TupiTube Desk
+    #ifdef TUP_DEBUG
         QString msg = "main.cpp - Loading plugins from: " + kAppProp->pluginDir();
         #ifdef Q_OS_WIN
             qWarning() << msg;
@@ -222,7 +212,7 @@ int main(int argc, char ** argv)
     QApplication::addLibraryPath(kAppProp->pluginDir());
 
     // Loading visual components required for the Crash Handler
-    #if defined(Q_OS_UNIX) && defined(K_DEBUG)
+    #if defined(Q_OS_UNIX) && defined(TUP_DEBUG)
         CHANDLER->setConfig(DATA_DIR + "crashhandler.xml");
         CHANDLER->setImagePath(THEME_DIR + "icons/");
     #endif
@@ -244,6 +234,6 @@ int main(int argc, char ** argv)
         }
     }
 
-    // It's time to play with Tupi!
+    // It's time to play with TupiTube Desk!
     return application.exec();
 }

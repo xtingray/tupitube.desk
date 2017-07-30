@@ -41,21 +41,6 @@
 #include "tviewbutton.h"
 // #include "taudioplayer.h"
 
-/**
- * This class implements the Tupi GUI
- * Here is where all the Tupi GUI components are defined 
- * @author David Cuadrado 
-*/
-
-/**
- * @if english
- * This method includes the widgets around the border of the main window
- * @endif
- * @if spanish
- * Este metodo incluye los componentes alrededor del borde la ventana principal
- * @endif
-*/
-
 void TupMainWindow::createGUI()
 {
     TAction *hideAction = new TAction(QPixmap(THEME_DIR + "icons/hide_top_panel.png"), tr("Hide top panels"), QKeySequence(tr("Alt")),
@@ -145,35 +130,16 @@ void TupMainWindow::createGUI()
     connectWidgetToManager(m_timeLine);
     connectWidgetToLocalManager(m_timeLine);
 
-/* SQA: Debug visual component has been removed
-#if defined(QT_GUI_LIB) && defined(K_DEBUG) && defined(Q_OS_LINUX)
-    QDesktopWidget desktop;
-    m_debug = new TupDebugWidget(this, desktop.screenGeometry().width());
-    debugView = addToolView(m_debug, Qt::BottomDockWidgetArea, Animation, "Debug Term", QKeySequence(tr("Shift+D")));
-    m_actionManager->insert(debugView->toggleViewAction(), "show_debug");
-    addToPerspective(debugView->toggleViewAction(), Animation);
-#endif
-*/
-
+    /* SQA: Define if scripting support should be enabled
     // Adding the script editor to the bottom side, if kinas was enabled
-    /*
 #ifdef ENABLE_KINAS
     KinasWidget *m_scriptEditor = new KinasWidget;
-    addToolView(m_scriptEditor, Qt::BottomDockWidgetArea, Animation, "Tupi Script", QKeySequence(tr("Shift+K"));
+    addToolView(m_scriptEditor, Qt::BottomDockWidgetArea, Animation, "TupiTube Script", QKeySequence(tr("Shift+K"));
 #endif
     */
 
     enableToolViews(false);
 }
-
-/**
- * @if english
- * This method defines the main menu for the application
- * @endif
- * @if spanish
- * Este metodo define el menu principal para la aplicacion
- * @endif
-*/
 
 void TupMainWindow::setupMenu()
 {
@@ -250,12 +216,6 @@ void TupMainWindow::setupMenu()
     m_windowMenu->addAction(m_actionManager->find("show_scenes"));
     m_windowMenu->addAction(m_actionManager->find("show_exposure"));
 
-/* SQA: Debug visual component has been removed
-#if defined(QT_GUI_LIB) && defined(K_DEBUG) && defined(Q_OS_LINUX)
-    m_windowMenu->addAction(m_actionManager->find("show_debug"));
-#endif
-*/
-
     m_windowMenu->addSeparator();
 
     // Setup perspective menu
@@ -321,15 +281,6 @@ void TupMainWindow::setMenuItemsContext(bool flag)
     m_viewMenu->setEnabled(flag);
 }
 
-/**
- * @if english
- * This method defines the actions for the options in the menu File
- * @endif
- * @if spanish
- * Este metodo define las acciones para las opciones del menu Archivo
- * @endif
-*/
-
 void TupMainWindow::setupFileActions()
 {
     TAction *newProject = new TAction(QPixmap(THEME_DIR + "icons/new.png"), tr("New Project"), QKeySequence(tr("Ctrl+N")),
@@ -369,7 +320,6 @@ void TupMainWindow::setupFileActions()
     m_actionManager->insert(close, "close_project", "file");
 
     // Import Palette action
-
     TAction *importPalette = new TAction(QPixmap(THEME_DIR + "icons/import.png"), tr("&Import GIMP Palettes"),
 					 QKeySequence(tr("Shift+G")), this, SLOT(importPalettes()), m_actionManager);
     importPalette->setStatusTip(tr("Import palettes"));
@@ -397,15 +347,6 @@ void TupMainWindow::setupFileActions()
     connect(qApp, SIGNAL(lastWindowClosed()), qApp, SLOT(quit()));
 }
 
-/**
- * @if english
- * This method defines the actions for the options in the menu Settings
- * @endif
- * @if spanish
- * Este metodo define las acciones para las opciones del menu Configuracion
- * @endif
-*/
-
 void TupMainWindow::setPreferencesAction()
 {
     TAction *preferences = new TAction(QPixmap(THEME_DIR + "icons/properties.png"), tr("Pr&eferences..."), 
@@ -413,15 +354,6 @@ void TupMainWindow::setPreferencesAction()
                                         m_actionManager, "preferences");
     preferences->setStatusTip(tr("Opens the preferences dialog box"));
 }
-
-/**
- * @if english
- * This method defines the actions for the options in the menu Help
- * @endif
- * @if spanish
- * Este metodo define las acciones para las opciones del menu Ayuda
- * @endif
-*/
 
 void TupMainWindow::setupHelpActions()
 {
@@ -431,18 +363,9 @@ void TupMainWindow::setupHelpActions()
 
     new TAction(QPixmap(THEME_DIR + "icons/tip.png"), tr("Tip Of The Day"), QKeySequence(tr("Ctrl+T")),
                 this, SLOT(showTipDialog()), m_actionManager, "tip_of_day");
-    new TAction(QPixmap(THEME_DIR + "icons/about.png"), tr("About TupiTube"), QKeySequence(tr("Ctrl+K")), 
+    new TAction(QPixmap(THEME_DIR + "icons/about.png"), tr("About TupiTube Desk"), QKeySequence(tr("Ctrl+K")), 
                 this, SLOT(aboutTupi()), m_actionManager, "about_tupitube");
 }
-
-/**
- * @if english
- * This method defines the Toolbar and its actions
- * @endif
- * @if spanish
- * Este metodo define la barra de herramientas y sus acciones
- * @endif
-*/
 
 void TupMainWindow::setupToolBar()
 {
@@ -460,15 +383,6 @@ void TupMainWindow::setupToolBar()
     mainToolBar->addAction(m_actionManager->find("save_project_as"));
     mainToolBar->addAction(m_actionManager->find("close_project"));
 }
-
-/**
- * @if english
- * This method updates the entries in the recent menu option
- * @endif
- * @if spanish
- * Este metodo actualiza las entradas en la opcion "Recientes" del menu
- * @endif
-*/
 
 void TupMainWindow::updateOpenRecentMenu(QMenu *menu, QStringList recents)
 {
@@ -500,15 +414,6 @@ void TupMainWindow::updateOpenRecentMenu(QMenu *menu, QStringList recents)
     if (!m_recentProjectsMenu->isEnabled())
         m_recentProjectsMenu->setEnabled(true);
 }
-
-/**
- * @if english
- * This method changes the perspective view according the events
- * @endif
- * @if spanish
- * Este metodo cambia la vista de perspectiva de acuerdo a los eventos
- * @endif
-*/
 
 void TupMainWindow::changePerspective(QAction *action)
 {

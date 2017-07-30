@@ -33,7 +33,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
 
 #include "tupcrashhandler.h"
 #include "tupcrashwidget.h"
@@ -49,9 +49,9 @@ TupCrashHandler::TupCrashHandler()
     setTrapper(crashTrapper);
 
     m_config.title = QObject::tr("Fatal Error");
-    m_config.message = QObject::tr("Well, Tupi has crashed...");
+    m_config.message = QObject::tr("Well, TupiTube has crashed...");
     m_config.closeButton = QObject::tr("Close");
-    m_config.launchButton = QObject::tr("Re-launch Tupi");
+    m_config.launchButton = QObject::tr("Re-launch TupiTube");
     m_config.defaultText = QObject::tr("This is a general failure");
     m_config.defaultImage = "crash.png";
 

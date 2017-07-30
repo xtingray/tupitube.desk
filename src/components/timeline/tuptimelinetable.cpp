@@ -218,7 +218,7 @@ TupTimeLineTable::~TupTimeLineTable()
 
 void TupTimeLineTable::setup()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupTimeLineTable::setup()]";
         #else
@@ -293,7 +293,7 @@ bool TupTimeLineTable::isSoundLayer(int layerIndex)
 
 void TupTimeLineTable::insertLayer(int layerIndex, const QString &name)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupTimeLineTable::insertLayer()]";
         #else
@@ -315,7 +315,7 @@ void TupTimeLineTable::insertSoundLayer(int layerIndex, const QString &name)
 
 void TupTimeLineTable::removeLayer(int layerIndex)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupTimeLineTable::removeLayer()]";
         #else
@@ -469,7 +469,7 @@ void TupTimeLineTable::selectFrame(int frameIndex)
 
 void TupTimeLineTable::removeFrame(int layerIndex, int frameIndex)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupTimeLineTable::removeFrame()]";
         #else
@@ -491,7 +491,7 @@ void TupTimeLineTable::removeFrame(int layerIndex, int frameIndex)
 
 void TupTimeLineTable::removeFrameSelection(int layerIndex, int frameIndex, int layers, int frames, bool doSelection)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupTimeLineTable::removeFrameSelection()]";
         #else
@@ -545,7 +545,7 @@ bool TupTimeLineTable::frameIsLocked(int layerIndex, int frameIndex)
     if (frame) {
         return frame->isLocked(); 
     } else {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupTimeLineTable::frameIsLocked() - Layer: " + QString::number(layerIndex) + QString(", Frame: ") + QString::number(frameIndex) + QString(" doesn't exist");
             #ifdef Q_OS_WIN
                 qDebug() << msg;

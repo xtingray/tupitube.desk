@@ -41,7 +41,7 @@ SOURCES += talgorithm.cpp \
            txmlparserbase.cpp
 
 unix {
-    contains(DEFINES, K_DEBUG) {
+    contains(DEFINES, TUP_DEBUG) {
         HEADERS += tdebug.h
         SOURCES += tdebug.cpp
     }

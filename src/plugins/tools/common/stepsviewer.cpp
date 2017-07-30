@@ -83,7 +83,7 @@ QSize StepsViewer::sizeHint() const
 
 void StepsViewer::loadPath(const QGraphicsPathItem *pathItem, QList<int> intervals)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[StepsViewer::loadPath()]";
         #else
@@ -156,7 +156,7 @@ void StepsViewer::loadPath(const QGraphicsPathItem *pathItem, QList<int> interva
 
 void StepsViewer::setPath(const QGraphicsPathItem *pathItem)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[StepsViewer::setPath()]";
         #else
@@ -282,7 +282,7 @@ void StepsViewer::setPath(const QGraphicsPathItem *pathItem)
 // +/- frames slot and text/input slot 
 void StepsViewer::updatePathSection(int column, int row)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[StepsViewer::updatePathSection()]";
         #else
@@ -444,7 +444,7 @@ QString StepsViewer::intervals()
 
 void StepsViewer::clearInterface()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[StepsViewer::clearInterface()]";
         #else
@@ -559,7 +559,7 @@ void StepsViewer::calculateGroups()
 
 void StepsViewer::commitData(QWidget *editor)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[StepsViewer::commitData()]";
         #else
@@ -582,7 +582,7 @@ void StepsViewer::commitData(QWidget *editor)
             cell->setText(value);
             updatePathSection(column, row);
         } else {
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
                 QString msg = "input value: " + value;
                 #ifdef Q_OS_WIN
                     qDebug() << msg;

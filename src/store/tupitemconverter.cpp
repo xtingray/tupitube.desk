@@ -117,7 +117,7 @@ TupPathItem *TupItemConverter::convertToPath(QGraphicsItem *item)
 
         case TupItemGroup::Type:
         {
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
                 QString msg = "TupItemConverter::convertToPath - Error: Group items are not supported";
                 #ifdef Q_OS_WIN
                     qWarning() << msg;
@@ -132,7 +132,7 @@ TupPathItem *TupItemConverter::convertToPath(QGraphicsItem *item)
 
         default:
         {
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
                 QString msg = "TupItemConverter::convertToPath - Using default converter...";
                 #ifdef Q_OS_WIN
                     qWarning() << msg;

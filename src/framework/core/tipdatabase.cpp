@@ -35,6 +35,11 @@
 
 #include "tipdatabase.h"
 
+#include <QDomDocument>
+#include <QFile>
+#include <QWidget>
+#include <QList>
+
 struct TipDatabase::Private
 {
     QList<QString> tips;
@@ -126,7 +131,7 @@ void TipDatabase::loadVideos(const QString &videoPath)
     QFile file(videoPath);
 
     if (!file.exists()) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TipDatabase::loadVideos() - Fatal Error: File doesn't exist -> " + videoPath;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -138,7 +143,7 @@ void TipDatabase::loadVideos(const QString &videoPath)
 	}
 	
     if (!file.open(QIODevice::ReadOnly)) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TipDatabase::loadVideos() - Fatal Error: Insufficient permissions to read file -> " + videoPath;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -151,7 +156,7 @@ void TipDatabase::loadVideos(const QString &videoPath)
    
     if (!doc.setContent(&file)) {
         file.close();
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TipDatabase::loadVideos() - Fatal Error: Can't load XML file -> " + videoPath;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -224,7 +229,7 @@ void TipDatabase::loadTips(const QString &tipPath)
     QFile file(tipPath);
     
     if (!file.open(QIODevice::ReadOnly)) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TipDatabase::loadTips() - Fatal Error: Insufficient permissions to read file -> " + tipPath;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -237,7 +242,7 @@ void TipDatabase::loadTips(const QString &tipPath)
     
     if (!doc.setContent(&file)) {
         file.close();
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TipDatabase::loadTips() - Fatal Error: Can't load XML file -> " + tipPath;
             #ifdef Q_OS_WIN
                 qDebug() << msg;

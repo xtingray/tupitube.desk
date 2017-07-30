@@ -150,7 +150,7 @@ QStringList Tweener::keys() const
 
 void Tweener::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[Tweener::press()]";
         #else
@@ -170,7 +170,7 @@ void Tweener::press(const TupInputDeviceInformation *input, TupBrushManager *bru
                 k->path->setPath(path);
             }
         } else {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "Tweener::press() - Error: No position!";
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -197,7 +197,7 @@ void Tweener::move(const TupInputDeviceInformation *input, TupBrushManager *brus
 
 void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[Tweener::release()]";
         #else
@@ -237,7 +237,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                     }
                 }
             } else {
-                #ifdef K_DEBUG
+                #ifdef TUP_DEBUG
                     QString msg = "Tweener::release() - No position!";
                     #ifdef Q_OS_WIN
                         qDebug() << msg;
@@ -761,7 +761,7 @@ void Tweener::removeTweenFromProject(const QString &name)
                  }
         }
     } else {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "Tweener::removeTweenFromProject() - Position tween couldn't be removed -> " + name;
             #ifdef Q_OS_WIN
                 qDebug() << msg;

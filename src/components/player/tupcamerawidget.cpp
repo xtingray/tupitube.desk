@@ -58,7 +58,7 @@ struct TupCameraWidget::Private
 
 TupCameraWidget::TupCameraWidget(TupProject *project, bool isNetworked, QWidget *parent) : QFrame(parent), k(new Private)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupCameraWidget()]";
         #else
@@ -89,7 +89,7 @@ TupCameraWidget::TupCameraWidget(TupProject *project, bool isNetworked, QWidget 
 
 TupCameraWidget::~TupCameraWidget()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TupCameraWidget()]";
         #else
@@ -343,7 +343,7 @@ void TupCameraWidget::previousFrame()
 
 bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupCameraWidget::handleProjectResponse()]";
         #else
@@ -395,7 +395,7 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
             break;
             default:
             {
-                 #ifdef K_DEBUG
+                 #ifdef TUP_DEBUG
                      QString msg = "TupCameraWidget::handleProjectResponse() - Unknown/Unhandled project action: " + QString::number(sceneResponse->action());
                      #ifdef Q_OS_WIN
                          qDebug() << msg;

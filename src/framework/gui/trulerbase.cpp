@@ -218,7 +218,7 @@ void TRulerBase::setSeparation(int sep)
         k->separation = sep;
         update();
     } else {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TRulerBase::setSeparation() - Error: Can't assign separation : " + QString::number(sep);
             #ifdef Q_OS_WIN
                 qDebug() << msg;

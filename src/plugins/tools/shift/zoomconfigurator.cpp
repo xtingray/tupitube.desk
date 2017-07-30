@@ -40,7 +40,7 @@
 
 ZoomConfigurator::ZoomConfigurator(QWidget *parent) :QWidget(parent)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[ZoomConfigurator()]";
         #else
@@ -94,7 +94,7 @@ ZoomConfigurator::ZoomConfigurator(QWidget *parent) :QWidget(parent)
 
 ZoomConfigurator::~ZoomConfigurator()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~ZoomConfigurator()]";
         #else

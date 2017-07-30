@@ -82,7 +82,7 @@ void FillTool::setupActions()
 
 void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[FillTool::press()]";
         #else
@@ -124,7 +124,7 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                     // This condition only applies for images
                     if (libraryItem->type() != TupLibraryObject::Item) {
                         TOsd::self()->display(tr("Error"), tr("Sorry, only native objects can be filled"), TOsd::Error);
-                        #ifdef K_DEBUG
+                        #ifdef TUP_DEBUG
                             QString msg = "FillTool::press() - Warning: item is a RASTER object!";
                             #ifdef Q_OS_WIN
                                 qWarning() << msg;
@@ -140,7 +140,7 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                 TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
                 if (svg) {
                     TOsd::self()->display(tr("Error"), tr("Sorry, only native objects can be filled"), TOsd::Error);
-                    #ifdef K_DEBUG
+                    #ifdef TUP_DEBUG
                         QString msg = "FillTool::press() - Warning: item is a SVG object!";
                         #ifdef Q_OS_WIN
                             qWarning() << msg;
@@ -179,7 +179,7 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
 
                     emit requested(&event);
                 } else {
-                    #ifdef K_DEBUG
+                    #ifdef TUP_DEBUG
                         QString msg = "FillTool::press() - Fatal Error: QAbstractGraphicsShapeItem cast has failed!";
                         #ifdef Q_OS_WIN
                             qDebug() << msg;
@@ -190,7 +190,7 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                 }
             }
         } else {
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
                 QString msg = "FillTool::press() - No item found";
                 #ifdef Q_OS_WIN
                     qDebug() << msg;

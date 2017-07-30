@@ -62,7 +62,7 @@ struct TupColorForm::Private
 
 TupColorForm::TupColorForm(QWidget *parent) : QWidget(parent), k(new Private)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupColorForm()]";
         #else
@@ -75,7 +75,7 @@ TupColorForm::TupColorForm(QWidget *parent) : QWidget(parent), k(new Private)
 
 TupColorForm::~TupColorForm()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TupColorForm()]";
         #else

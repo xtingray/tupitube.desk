@@ -38,24 +38,16 @@
 
 #include "tapplication.h"
 
-#ifdef K_DEBUG
-
+#ifdef TUP_DEBUG
 #ifdef Q_OS_WIN
 #include <QDebug>
 #else
 #include "tdebug.h"
 #endif
-
 #endif
 
 #include <QDesktopWidget>
 #include <QRect>
-
-/**
- * Support Class for main.cpp
- * This class contains some of the basic methods required when Tupi is launched
- * @author David Cuadrado
-*/
 
 class TupApplication : public TApplication
 {
@@ -66,16 +58,7 @@ class TupApplication : public TApplication
         ~TupApplication();
 
     public slots:
-        /**
-         * @if english
-         * Create a cache directory with the path defined at cacheDir variable
-         * @endif
-         * @if spanish
-         * Crea el cache en la ruta especificada por la variable cacheDir
-         * @endif
-         * @param cacheDir the path for the repository dir
-         */
-         void createCache(const QString &cacheDir);
+        void createCache(const QString &cacheDir);
 };
 
 #endif

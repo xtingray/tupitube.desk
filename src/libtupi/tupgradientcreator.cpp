@@ -166,7 +166,7 @@ void TupGradientCreator::setGradient(const QBrush & brush)
                    k->spinControl->setAngle((int) static_cast<const QConicalGradient*>(gradient)->angle());
         }
     } else {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
 		    QString msg = "TupGradientCreator::setGradient() - Error: Brush has no gradient (null)";
 		    #ifdef Q_OS_WIN
                qDebug() << msg;

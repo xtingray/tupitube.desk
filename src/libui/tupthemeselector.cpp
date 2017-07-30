@@ -306,7 +306,7 @@ void TupThemeSelector::loadSchemaFromListView(QTreeWidgetItem *item, int)
         kApp->applyTheme(SHARE_DIR + "themes/" + item->text(0));
         
         if (! item->text(0).isEmpty()) {
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
                 #ifdef Q_OS_WIN
                     qDebug() << "[TupThemeSelector::loadSchemaFromListView()]";
                 #else

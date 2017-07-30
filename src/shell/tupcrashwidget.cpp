@@ -35,7 +35,7 @@
 
 #include "tupcrashwidget.h"
 
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
 
 class TextArea : public QTextBrowser
 {

@@ -54,7 +54,7 @@ TConfig* TConfig::m_instance = 0;
 
 TConfig::TConfig() : QObject(), k(new Private)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TConfig()]";
         #else
@@ -67,7 +67,7 @@ TConfig::TConfig() : QObject(), k(new Private)
 
     if (!k->configDirectory.exists()) {
         k->firstTime = true;
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TConfig::TConfig() - Config file doesn't exist. Creating path: " + k->configDirectory.path();
             #ifdef Q_OS_WIN
                 qWarning() << msg;
@@ -77,7 +77,7 @@ TConfig::TConfig() : QObject(), k(new Private)
         #endif
 
         if (!k->configDirectory.mkdir(k->configDirectory.path())) {
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
                 QString msg = "TConfig::TConfig() - Fatal Error: Can't create path -> " + k->configDirectory.path();
                 #ifdef Q_OS_WIN
                     qDebug() << msg;
@@ -96,7 +96,7 @@ TConfig::TConfig() : QObject(), k(new Private)
 
 TConfig::~TConfig()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TConfig()]";
         #else
@@ -128,7 +128,7 @@ void TConfig::checkConfigFile()
 
         k->isOk = k->document.setContent(&config, &errorMsg, &errorLine, &errorColumn);
         if (!k->isOk) {
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
                 QString msg1 = "TConfig::checkConfigFile() - Fatal Error: Configuration file is corrupted - Line: " + QString::number(errorLine) + " - Column: " + QString::number(errorColumn);
                 QString msg2 = "TConfig::checkConfigFile() - Message: " + errorMsg;
                 #ifdef Q_OS_WIN

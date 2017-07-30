@@ -84,7 +84,7 @@ SelectionTool::~SelectionTool()
 
 void SelectionTool::init(TupGraphicsScene *scene)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[SelectionTool::init()]";
         #else
@@ -103,7 +103,7 @@ void SelectionTool::init(TupGraphicsScene *scene)
 
 void SelectionTool::initItems(TupGraphicsScene *scene)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[SelectionTool::initItems()]";
         #else
@@ -134,7 +134,7 @@ QStringList SelectionTool::keys() const
 
 void SelectionTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[SelectionTool::press()]";
         #else
@@ -213,7 +213,7 @@ void SelectionTool::move(const TupInputDeviceInformation *input, TupBrushManager
 
 void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[SelectionTool::release()]";
         #else
@@ -312,7 +312,7 @@ TupFrame* SelectionTool::frameAt(int sceneIndex, int layerIndex, int frameIndex)
             if (layer) {
                 frame = layer->frameAt(frameIndex);
             } else {
-                #ifdef K_DEBUG
+                #ifdef TUP_DEBUG
                     QString msg = "SelectionTool::frameAt() - Fatal Error: Layer is NULL! -> " + QString::number(layerIndex);
                     #ifdef Q_OS_WIN
                         qDebug() << msg;
@@ -330,7 +330,7 @@ TupFrame* SelectionTool::frameAt(int sceneIndex, int layerIndex, int frameIndex)
             }
        }
     } else {
-       #ifdef K_DEBUG
+       #ifdef TUP_DEBUG
            QString msg = "SelectionTool::frameAt() - Fatal Error: Scene is NULL! -> " + QString::number(sceneIndex);
            #ifdef Q_OS_WIN
                qDebug() << msg;
@@ -382,7 +382,7 @@ QWidget *SelectionTool::configurator()
 
 void SelectionTool::aboutToChangeScene(TupGraphicsScene *scene)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[SelectionTool::aboutToChangeScene()]";
         #else
@@ -397,7 +397,7 @@ void SelectionTool::aboutToChangeScene(TupGraphicsScene *scene)
 
 void SelectionTool::aboutToChangeTool()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[SelectionTool::aboutToChangeTool()]";
         #else
@@ -410,7 +410,7 @@ void SelectionTool::aboutToChangeTool()
 
 void SelectionTool::itemResponse(const TupItemResponse *response)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[SelectionTool::itemResponse()]";
         #else
@@ -441,7 +441,7 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
                               node->beginToEdit();
                      }
                  } else {
-                     #ifdef K_DEBUG
+                     #ifdef TUP_DEBUG
                          QString msg = "SelectionTool::itemResponse - No item found";
                          #ifdef Q_OS_WIN
                              qDebug() << msg;
@@ -523,7 +523,7 @@ void SelectionTool::saveConfig()
 
 void SelectionTool::keyPressEvent(QKeyEvent *event)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[SelectionTool::keyPressEvent()]";
         #else
@@ -707,7 +707,7 @@ void SelectionTool::applyGroupAction(Settings::Group action)
                          if (i < total)
                              items += ", ";
                      } else {
-                         #ifdef K_DEBUG
+                         #ifdef TUP_DEBUG
                              QString msg = "SelectionTool::applyGroupAction() - Fatal Error: Index of item is invalid! -> -1";
                              #ifdef Q_OS_WIN
                                  qDebug() << msg;
@@ -909,7 +909,7 @@ void SelectionTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
 
         emit requested(&event);
     } else {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "SelectionTool::requestTransformation() - Fatal Error: Invalid item position !!! [ " + QString::number(position) + " ]";
             #ifdef Q_OS_WIN
                 qDebug() << msg;

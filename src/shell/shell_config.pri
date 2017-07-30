@@ -1,4 +1,3 @@
-
 QT += xml opengl svg
 
 INCLUDEPATH += ../plugins/tools/selection
@@ -8,7 +7,6 @@ PLAYER_DIR = ../components/player
 WORKSPACE_DIR = ../components/workspace
 BRUSH_DIR = ../components/brush
 # KINAS_DIR = ../components/kinas 
-# HELP_DIR = ../components/help 
 IMPORT_DIR = ../components/import 
 EXPORT_DIR = ../components/export 
 EXPOSURE_DIR = ../components/exposure 
@@ -27,7 +25,6 @@ include($$WORKSPACE_DIR/workspace.pri)
 include($$PLAYER_DIR/player.pri)
 include($$BRUSH_DIR/brush.pri)
 # include($$KINAS_DIR/kinas.pri)
-# include($$HELP_DIR/help.pri)
 include($$IMPORT_DIR/import.pri)
 include($$EXPORT_DIR/export.pri)
 include($$EXPOSURE_DIR/exposure.pri)
@@ -40,10 +37,3 @@ include($$STORE_DIR/store.pri)
 include($$LIBTUPI_DIR/libtupi.pri)
 include($$LIBBASE_DIR/libbase.pri)
 include($$NET_DIR/net.pri)
-
-# linux-g++ {
-# contains(DEFINES, K_DEBUG) {
-#    DEBUG_DIR = ../components/debug
-#    include($$DEBUG_DIR/debug.pri)
-# }
-# }

@@ -216,7 +216,7 @@ void TControlNode::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void TControlNode::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TControlNode::mouseReleaseEvent()]";
         #else

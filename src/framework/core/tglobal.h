@@ -36,43 +36,35 @@
 #ifndef TGLOBAL_H
 #define TGLOBAL_H
 
-/**
- * This class defines enumerations used in the whole code of the project.
- *
- * @author David Cuadrado
-*/
-
 #if defined(QT_SHARED) || defined(QT_PLUGIN)
-#define T_GUI_EXPORT Q_GUI_EXPORT
-#define T_CORE_EXPORT Q_DECL_EXPORT
-#define T_SOUND_EXPORT Q_DECL_EXPORT
-#define TUPITUBE_EXPORT Q_GUI_EXPORT
-#define TUPITUBE_PLUGIN Q_DECL_EXPORT
+  #define T_GUI_EXPORT Q_GUI_EXPORT
+  #define T_CORE_EXPORT Q_DECL_EXPORT
+  #define T_SOUND_EXPORT Q_DECL_EXPORT
+  #define TUPITUBE_EXPORT Q_GUI_EXPORT
+  #define TUPITUBE_PLUGIN Q_DECL_EXPORT
 #else
-#define T_GUI_EXPORT
-#define T_CORE_EXPORT
-#define T_SOUND_EXPORT
-#define TUPITUBE_EXPORT
-#define TUPITUBE_PLUGIN
+  #define T_GUI_EXPORT
+  #define T_CORE_EXPORT
+  #define T_SOUND_EXPORT
+  #define TUPITUBE_EXPORT
+  #define TUPITUBE_PLUGIN
 #endif
 
 #ifdef QT_GUI_LIB
 #include <QImage>
 #endif
 
-#ifdef K_DEBUG
-
+#ifdef TUP_DEBUG
 #ifdef Q_OS_WIN
-#include <QDebug>
+  #include <QDebug>
 #else
-#include "tdebug.h"
+  #include "tdebug.h"
 #endif
-
 #endif
 
 #define LIBRARY_DIR CONFIG_DIR+"/libraries"
 
-namespace Tupi 
+namespace TupiTube 
 {
     enum RenderType
       {

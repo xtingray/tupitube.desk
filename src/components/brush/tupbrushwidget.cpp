@@ -193,7 +193,7 @@ TupBrushWidget::TupBrushWidget(QWidget *parent) : TupModuleWidgetBase(parent), k
 
 TupBrushWidget::~TupBrushWidget()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TupBrushWidget()]";
         #else
@@ -206,7 +206,7 @@ TupBrushWidget::~TupBrushWidget()
 
 void TupBrushWidget::setThickness(int thickness)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupBrushWidget::setThickness()]";
         #else
@@ -250,7 +250,7 @@ void TupBrushWidget::setPenColor(const QColor color)
 
 void TupBrushWidget::setPenThickness(int thickness)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupBrushWidget::setPenThickness()]";
         #else
@@ -276,7 +276,7 @@ void TupBrushWidget::setBrush(const QBrush brush)
 
 void TupBrushWidget::init(int thickness)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupBrushWidget::init()]";
         #else

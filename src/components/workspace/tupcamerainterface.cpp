@@ -52,7 +52,7 @@ struct TupCameraInterface::Private
 TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> cameraDevices, QComboBox *devicesCombo, int cameraIndex, 
                                        const QSize cameraSize, int counter, QWidget *parent) : QFrame(parent), k(new Private)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupCameraInterface()]";
         #else
@@ -60,7 +60,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
         #endif
     #endif
 
-    setWindowTitle(tr("Tupi Camera Manager") + " | " + tr("Current resolution:") + " " + title);
+    setWindowTitle(tr("TupiTube Camera Manager") + " | " + tr("Current resolution:") + " " + title);
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/camera.png")));
 
     k->counter = counter;
@@ -254,7 +254,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
 
 TupCameraInterface::~TupCameraInterface()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TupCameraInterface()]";
         #else
@@ -289,7 +289,7 @@ QString TupCameraInterface::randomPath()
     QString path = CACHE_DIR + TAlgorithm::randomString(8);
     QDir dir;
     if (!dir.mkdir(path)) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupCameraInterface::randomPath() - Fatal Error: Can't create pictures directory -> " + path;
             #ifdef Q_OS_WIN
                 qDebug() << msg;

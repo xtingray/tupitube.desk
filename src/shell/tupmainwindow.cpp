@@ -53,16 +53,15 @@
 #include "tupprojectcommand.h"
 #include "tuplocalprojectmanagerhandler.h"
 
-// #ifdef USE_NET
+// Network support
 #include "tupnetprojectmanagerparams.h"
 #include "tupconnectdialog.h"
 #include "tuplistpackage.h"
 #include "tupimportprojectpackage.h"
 #include "tuplistprojectspackage.h"
 #include "tupsavepackage.h"
-// #end
 
-// Qt
+// Qt Framework
 #include <QImage>
 #include <QPixmap>
 #include <QResizeEvent>
@@ -78,26 +77,10 @@
 #include <QClipboard>
 #include <QDesktopServices>
 
-/**
- * This class defines the main window application.
- * Here is where all the TupiTube GUI is initialized 
- * @author David Cuadrado
-*/
-
-/**
- * @if english
- * This is the constructor method for this class.
- * @endif
- * @if spanish
- * Este es el metodo constructor para esta clase.
- * @endif
- * @return 
-*/
-
 TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(0), animationTab(0), playerTab(0), 
                m_viewChat(0), m_exposureSheet(0), m_scenes(0), isSaveDialogOpen(false), internetOn(false)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupMainWindow()]";
         #else
@@ -105,8 +88,8 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(0), animat
         #endif
     #endif
 
-    // Naming the main frame...
-    setWindowTitle(tr("TupiTube Desk"));
+    // Naming the main window
+    setWindowTitle("TupiTube Desk");
     setWindowIcon(QIcon(THEME_DIR + "icons/about.png"));
     setObjectName("TupMainWindow_");
 
@@ -121,7 +104,7 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(0), animat
             setStyleSheet(styleSheet);
         file.close();
     } else {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupMainWindow::TupMainWindow() - theme file doesn't exist -> " + QString(THEME_DIR + "config/ui.qss"); 
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -198,7 +181,7 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(0), animat
         if (update)
             QDesktopServices::openUrl(QString("http://maefloresta.com/portal/updates"));
 
-        // Check if user wants to see a Tupi tip for every time he launches the program
+        // Check if user wants to see a TupiTube tip for every time he launches the program
         TCONFIG->beginGroup("General");
         bool showTips = TCONFIG->value("ShowTipOfDay", true).toBool();
 
@@ -231,17 +214,9 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(0), animat
     lastSave = false;
 }
 
-/**
- * @if english
- * This is the destructor method for this class.
- * @endif
- * @if spanish
- * Este es el metodo destructor para esta clase.
- * @endif
-*/
 TupMainWindow::~TupMainWindow()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TupMainWindow()]";
         #else
@@ -259,18 +234,9 @@ TupMainWindow::~TupMainWindow()
     delete penView;
 }
 
-/**
- * @if english
- * This method cleans and set the whole interface to start a new project.
- * @endif
- * @if spanish
- * Este metodo limpia y configura toda la interfaz para iniciar un nuevo proyecto.
- * @endif
-*/
-
 void TupMainWindow::createNewLocalProject()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupMainWindow::createNewLocalProject()]";
         #else
@@ -310,18 +276,9 @@ void TupMainWindow::createNewNetProject(const QString &title, const QStringList 
     setWorkSpace(users);
 }
 
-/**
- * @if english
- * This method supports all the low level tasks for the method createNewLocalProject().
- * @endif
- * @if spanish
- * Este metodo soporta todas las tareas de bajo nivel para el metodo createNewLocalProject().
- * @endif
-*/
-
 void TupMainWindow::setWorkSpace(const QStringList &users)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupMainWindow::setWorkSpace()]";
         #else
@@ -449,7 +406,7 @@ void TupMainWindow::addTwitterPage()
     if (tabCount() == 2) {
         QString twitterPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/twitter.html";
         if (QFile::exists(twitterPath)) {
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
                 QString msg = "TupMainWindow::addTwitterPage() - Loading page -> " + twitterPath;
                 #ifdef Q_OS_WIN
                     qWarning() << msg;
@@ -466,7 +423,7 @@ void TupMainWindow::addTwitterPage()
 
             helpAction->setEnabled(true);
         } else {
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
                 QString msg = "TupMainWindow::addTwitterPage() - Warning: Couldn't load page -> " + twitterPath;
                 #ifdef Q_OS_WIN
                     qDebug() << msg;
@@ -478,18 +435,9 @@ void TupMainWindow::addTwitterPage()
     }
 }
 
-/**
- * @if english
- * This method is the first level instruction called when a new project is requested.
- * @endif
- * @if spanish
- * Este metodo es la instruccion de primer nivel llamada cuando un nuevo proyecto es solicitado.
- * @endif
-*/
-
 void TupMainWindow::newProject()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         QString msg = "Creating new project...";
         #ifdef Q_OS_WIN
            qWarning() << msg;
@@ -514,29 +462,14 @@ void TupMainWindow::newProject()
             setupLocalProject(wizard->parameters());
             createNewLocalProject();
         }
-/* SQA: Debug visual component has been removed
-#if defined(QT_GUI_LIB) && defined(K_DEBUG) && defined(Q_OS_LINUX)
-    m_debug->setProjectStatus(true); 
-#endif
-*/
     }
 
     delete wizard;
 }
 
-/**
- * @if english
- * This method handles all the tasks required to close a project session.
- * @endif
- * @if spanish
- * Este metodo se encarga de todas las tareas requeridas para cerrar un proyecto en sesion.
- * @endif
- * @return true if the project is closed successfully
-*/
-
 bool TupMainWindow::closeProject()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupMainWindow::closeProject()]";
         #else
@@ -589,7 +522,7 @@ bool TupMainWindow::closeProject()
 
 void TupMainWindow::resetUI()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupMainWindow::resetUI()]";
         #else
@@ -604,12 +537,6 @@ void TupMainWindow::resetUI()
     libraryView->expandDock(false);
     scenesView->expandDock(false);
     timeView->expandDock(false);
-
-/* SQA: debug visual component has been removed
-#if defined(QT_GUI_LIB) && defined(K_DEBUG) && defined(Q_OS_LINUX)
-    debugView->expandDock(false);
-#endif
-*/
 
     setUpdatesEnabled(false);
     setMenuItemsContext(false);
@@ -691,23 +618,7 @@ void TupMainWindow::resetUI()
     m_projectManager->removeProjectPath(CACHE_DIR + projectName);
 
     resetMousePointer();
-
-/* SQA: Debug visual component has been removed
-#if defined(QT_GUI_LIB) && defined(K_DEBUG) && defined(Q_OS_LINUX)
-    m_debug->setProjectStatus(false);
-#endif
-*/
 }
-
-/**
- * @if english
- * This method sets up a Tupi network project.
- * @endif
- * @if spanish
- * Este metodo configura un proyecto para trabajo en red de Tupi.
- * @endif
- * @return true if the network project can be configured
-*/
 
 void TupMainWindow::setupNetworkProject()
 {
@@ -725,21 +636,10 @@ void TupMainWindow::setupNetworkProject()
         netUser = netDialog->login();
         params->setLogin(netUser);
         params->setPassword(netDialog->password());
-        // params->setProjectName(projectName);
 
         setupNetworkProject(params);
     }
 }
-
-/**
- * @if english
- * This method sets up a TupiTube network project.
- * @endif
- * @if spanish
- * Este metodo configura un proyecto para trabajo en red de TupiTube.
- * @endif
- * @return 
-*/
 
 void TupMainWindow::setupNetworkProject(TupProjectManagerParams *params)
 {
@@ -759,19 +659,9 @@ void TupMainWindow::setupNetworkProject(TupProjectManagerParams *params)
     }
 }
 
-/**
- * @if english
- * This method sets up a TupiTube local/single project.
- * @endif
- * @if spanish
- * Este metodo configura un proyecto local/individual de TupiTube.
- * @endif
- * @return true if the local project can be configured
-*/
-
 void TupMainWindow::setupLocalProject(TupProjectManagerParams *params)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupMainWindow::setupLocalProject()]";
         #else
@@ -789,15 +679,6 @@ void TupMainWindow::setupLocalProject(TupProjectManagerParams *params)
     }
 }
 
-/**
- * @if english
- * This method opens a TupiTube project. 
- * @endif
- * @if spanish
- * Este metodo abre un proyecto de TupiTube.
- * @endif
-*/
-
 void TupMainWindow::openProject()
 {
     TCONFIG->beginGroup("General");
@@ -812,18 +693,9 @@ void TupMainWindow::openProject()
     openProject(package);
 }
 
-/**
- * @if english
- * This method does all the tasks required to open a project.
- * @endif
- * @if spanish
- * Este metodo realiza todas las tareas requeridas para abrir un proyecto.
- * @endif
-*/
-
 void TupMainWindow::openProject(const QString &path)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         QString msg = "TupMainWindow::openProject() - Opening project: " + path;
         #ifdef Q_OS_WIN
            qWarning() << msg;
@@ -897,44 +769,17 @@ void TupMainWindow::updateRecentProjectList()
     }
 }
 
-/**
- * @if english
- * This method opens an animation project from TupiTube repository.
- * @endif
- * @if spanish
- * Este metodo abre un proyecto de animacion desde el repositorio de TupiTube.
- * @endif
-*/
-
 void TupMainWindow::openProjectFromServer()
 {
     TupMainWindow::requestType = OpenNetProject;
     setupNetworkProject();
 }
 
-/**
- * @if english
- * This method sends a local TupiTube project into the animations server.
- * @endif
- * @if spanish
- * Este metodo envia un proyecto local de TupiTube en el servidor de animaciones.
- * @endif
-*/
-
 void TupMainWindow::importProjectToServer()
 {
     TupMainWindow::requestType = ImportProjectToNet;
     setupNetworkProject();
 }
-
-/**
- * @if english
- * This method opens the TupiTube preferences dialog.
- * @endif
- * @if spanish
- * Este metodo abre el dialogo de preferencias de TupiTube.
- * @endif
-*/
 
 void TupMainWindow::preferences()
 {
@@ -951,28 +796,10 @@ void TupMainWindow::preferences()
     }
 }
 
-/**
- * @if english
- * This method opens the help dialog.
- * @endif
- * @if spanish
- * Este metodo abre el dialogo de ayuda.
- * @endif
-*/
-
 void TupMainWindow::showHelp()
 {
     QDesktopServices::openUrl(QString("http://maefloresta.com/wiki"));
 }
-
-/**
- * @if english
- * This method opens the "About TupiTube Desk" dialog.
- * @endif
- * @if spanish
- * Este metodo abre el dialogo "Acerca de TupiTube Desk".
- * @endif
-*/
 
 void TupMainWindow::aboutTupi()
 {
@@ -980,14 +807,6 @@ void TupMainWindow::aboutTupi()
     about->show();
 }
 
-/**
- * @if english
- * This method opens the tips dialog.
- * @endif
- * @if spanish
- * Este metodo abre el dialogo de consejos utiles.
- * @endif
-*/
 void TupMainWindow::showTipDialog()
 {
     QStringList labels;
@@ -1001,15 +820,6 @@ void TupMainWindow::showTipDialog()
     tipDialog->move((int) (desktop.screenGeometry().width() - tipDialog->width())/2 , 
                     (int) (desktop.screenGeometry().height() - tipDialog->height())/2);
 }
-
-/**
- * @if english
- * This method imports Gimp color palettes for TupiTube.
- * @endif
- * @if spanish
- * Este metodo importa paletas de colores de Gimp para TupiTube.
- * @endif
-*/
 
 void TupMainWindow::importPalettes()
 {
@@ -1030,7 +840,7 @@ void TupMainWindow::importPalettes()
                    if (ok) {
                        m_colorPalette->parsePaletteFile(importer.filePath());
                    } else {
-                       #ifdef K_DEBUG
+                       #ifdef TUP_DEBUG
                            QString msg = "TupMainWindow::importPalettes() - Fatal Error: Couldn't import file -> " + QString(*file);
                            #ifdef Q_OS_WIN
                                qDebug() << msg;
@@ -1041,7 +851,7 @@ void TupMainWindow::importPalettes()
                        isOk = false;
                    }
                } else {
-                   #ifdef K_DEBUG
+                   #ifdef TUP_DEBUG
                        QString msg = "TupMainWindow::importPalettes() - Fatal Error: Couldn't import palette -> " + QString(*file);
                        #ifdef Q_OS_WIN
                            qDebug() << msg;
@@ -1067,15 +877,6 @@ void TupMainWindow::importPalettes()
     }
 }
 
-/**
- * @if english
- * This method defines the events handlers for the project opened.
- * @endif
- * @if spanish
- * Este metodo define los manejadores de eventos para el proyecto abierto.
- * @endif
-*/
-
 void TupMainWindow::connectWidgetToManager(QWidget *widget)
 {
     connect(widget, SIGNAL(requestTriggered(const TupProjectRequest *)), m_projectManager, 
@@ -1087,15 +888,6 @@ void TupMainWindow::connectWidgetToManager(QWidget *widget)
     // SQA: Pending for revision
     //connect(widget, SIGNAL(postPage(QWidget *)), this, SLOT(addPage(QWidget *)));
 }
-
-/**
- * @if english
- * This method defines the events handlers for the local requests.
- * @endif
- * @if spanish
- * Este metodo define los manejadores de eventos para las solicitudes locales.
- * @endif
-*/
 
 void TupMainWindow::connectWidgetToLocalManager(QWidget *widget)
 {
@@ -1112,33 +904,15 @@ void TupMainWindow::disconnectWidgetToManager(QWidget *widget)
             SLOT(handleProjectResponse(TupProjectResponse *)));
 }
 
-/**
- * @if english
- * This method defines the events handlers for the paint area.
- * @endif
- * @if spanish
- * Este metodo define los manejadores de eventos para el area de dibujo.
- * @endif
-*/
-
 void TupMainWindow::connectWidgetToPaintArea(QWidget *widget)
 {
     connect(widget, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)), 
             this, SLOT(createPaintCommand(const TupPaintAreaEvent *)));
 }
 
-/**
- * @if english 
- * This method is in charge of the function "Save as" for TupiTube projects.
- * @endif
- * @if spanish
- * Este metodo se encarga de la funcion "Salvar como" para proyectos de TupiTube.
- * @endif
-*/
-
 void TupMainWindow::saveAs()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupMainWindow::saveAs()]";
         #else
@@ -1170,7 +944,7 @@ void TupMainWindow::saveAs()
     QDir directory(path);
     if (!directory.exists()) {
         TOsd::self()->display(tr("Error"), tr("Directory does not exist! Please, choose another path."), TOsd::Error);
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString file = path.toLocal8Bit();
             QString msg = "TupMainWindow::saveAs() - Fatal Error: Directory doesn't exist! -> " + file;
             #ifdef Q_OS_WIN
@@ -1204,18 +978,9 @@ void TupMainWindow::saveAs()
     saveProject();
 }
 
-/**
- * @if english 
- * This method does all the tasks required to save a TupiTube Project.
- * @endif
- * @if spanish
- * Este metodo se encarga de todas las tareas necesarias para guardar un proyecto.
- * @endif
-*/
-
 void TupMainWindow::saveProject()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupMainWindow::saveProject()]";
         #else
@@ -1272,15 +1037,6 @@ void TupMainWindow::saveProject()
     }
 }
 
-/**
- * @if english 
- * This method opens a recent project.
- * @endif
- * @if spanish
- * Este metodo abre un proyecto reciente.
- * @endif
-*/
-
 void TupMainWindow::openRecentProject()
 {
     QAction *action = qobject_cast<QAction *>(sender());
@@ -1288,14 +1044,6 @@ void TupMainWindow::openRecentProject()
         openProject(action->text());
 }
 
-/**
- * @if english 
- * This method shows the Animation module menu.
- * @endif
- * @if spanish
- * Este metodo muestra el menu del modulo de Animacion.
- * @endif
-*/
 // SQA: Check if this method is still used for something
 void TupMainWindow::showAnimationMenu(const QPoint &p)
 {
@@ -1304,15 +1052,6 @@ void TupMainWindow::showAnimationMenu(const QPoint &p)
     menu->exec(p);
     delete menu;
 }
-
-/**
- * @if english 
- * This method redefines the closeEvent method for the main window.
- * @endif
- * @if spanish
- * Este metodo redefine el metodo closeEvent para el marco principal de la interfaz.
- * @endif
-*/
 
 void TupMainWindow::closeEvent(QCloseEvent *event)
 {
@@ -1330,24 +1069,14 @@ void TupMainWindow::closeEvent(QCloseEvent *event)
     }
 
     TCONFIG->beginGroup("General");
-    // TCONFIG->setValue("LastProject", lastProject);
     TCONFIG->setValue("Recents", m_recentProjects);
 
     TMainWindow::closeEvent(event);
 }
 
-/**
- * @if english 
- * This method creates a command for the paint area and include it into the undo/redo history.
- * @endif
- * @if spanish
- * Este metodo crea un comando para el area de dibujo y lo incluye en el historial de hacer/deshacer.
- * @endif
-*/
-
 void TupMainWindow::createPaintCommand(const TupPaintAreaEvent *event)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupMainWindow::createPaintCommand()]";
         #else
@@ -1356,7 +1085,7 @@ void TupMainWindow::createPaintCommand(const TupPaintAreaEvent *event)
     #endif
 
     if (!animationTab) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupMainWindow::createPaintCommand() - No animation tab... aborting!"; 
             #ifdef Q_OS_WIN
                qDebug() << msg;
@@ -1384,7 +1113,7 @@ void TupMainWindow::createPaintCommand(const TupPaintAreaEvent *event)
 
 void TupMainWindow::updatePenColor(const QColor &color)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupMainWindow::updatePenColor()]";
         #else
@@ -1398,7 +1127,7 @@ void TupMainWindow::updatePenColor(const QColor &color)
 
 void TupMainWindow::updatePenThickness(int thickness)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupMainWindow::updatePenThickness()]";
         #else
@@ -1409,15 +1138,6 @@ void TupMainWindow::updatePenThickness(int thickness)
     TupPaintAreaEvent *event = new TupPaintAreaEvent(TupPaintAreaEvent::ChangePenThickness, thickness);
     createPaintCommand(event);
 }
-
-/**
- * @if english 
- * This method adds a page/tab to the main window.
- * @endif
- * @if spanish
- * Este metodo adiciona una pagina/tab a la ventana principal.
- * @endif
-*/
 
 void TupMainWindow::addPage(QWidget *widget)
 {
@@ -1459,15 +1179,6 @@ void TupMainWindow::updateCurrentTab(int index)
         }
     }
 }
-
-/**
- * @if english 
- * This method exports the animation project to a video/image format.
- * @endif
- * @if spanish
- * Este metodo exporta un proyecto de animacion a un formato de video/imagen.
- * @endif
-*/
 
 void TupMainWindow::exportProject()
 {
@@ -1560,7 +1271,7 @@ void TupMainWindow::netProjectSaved()
 
 void TupMainWindow::updatePlayer(bool removeAction)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupMainWindow::updatePlayer()]";
         #else

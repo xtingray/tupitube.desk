@@ -67,7 +67,7 @@ TupPluginManager *TupPluginManager::instance()
 
 void TupPluginManager::loadPlugins()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         QString msg = "TupPluginManager::loadPlugins() - Loading plugins...";
         #ifdef Q_OS_WIN
             qWarning() << msg;
@@ -86,7 +86,7 @@ void TupPluginManager::loadPlugins()
              QPluginLoader *loader = new QPluginLoader(pluginDirectory.absoluteFilePath(fileName));
              QObject *plugin = qobject_cast<QObject*>(loader->instance());
 
-             #ifdef K_DEBUG
+             #ifdef TUP_DEBUG
                  #ifdef Q_OS_WIN
                      qWarning() << "TupPluginManager::loadPlugins() - Trying to load plugin from: " << fileName;
                  #else
@@ -113,7 +113,7 @@ void TupPluginManager::loadPlugins()
 
                  k->loaders << loader;
              } else {
-                 #ifdef K_DEBUG
+                 #ifdef TUP_DEBUG
                      QString msg = "TupPluginManager::loadPlugins() - Cannot load plugin, error was: " + loader->errorString();
                      #ifdef Q_OS_WIN
                          qDebug() << msg;
@@ -127,7 +127,7 @@ void TupPluginManager::loadPlugins()
 
 void TupPluginManager::unloadPlugins()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         QString msg = "TupPluginManager::unloadPlugins() - Unloading plugins...";
         #ifdef Q_OS_WIN
             qWarning() << msg;

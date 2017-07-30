@@ -79,7 +79,7 @@ bool TupPaletteParser::startTag(const QString &tag, const QXmlAttributes &atts)
                    if (c.isValid()) {
                        k->brushes << c;
                    } else {
-                   #ifdef K_DEBUG
+                   #ifdef TUP_DEBUG
                        QString msg = "TupPaletteParser::startTag() - Error: Invalid color!";
                        #ifdef Q_OS_WIN
                            qDebug() << msg;
@@ -121,7 +121,7 @@ bool TupPaletteParser::startTag(const QString &tag, const QXmlAttributes &atts)
                              break;
                            default:
                              {
-                               #ifdef K_DEBUG
+                               #ifdef TUP_DEBUG
                                    QString msg = "TupPaletteParser::startTag() - No gradient type: " + QString::number(type);
                                    #ifdef Q_OS_WIN
                                        qDebug() << msg;

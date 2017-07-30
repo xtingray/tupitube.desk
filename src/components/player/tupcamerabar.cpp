@@ -37,7 +37,7 @@
 
 TupCameraBar::TupCameraBar(QWidget *parent) : QFrame(parent)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupCameraBar()]";
         #else
@@ -90,7 +90,7 @@ TupCameraBar::TupCameraBar(QWidget *parent) : QFrame(parent)
 
 TupCameraBar::~TupCameraBar()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TupCameraBar()]";
         #else

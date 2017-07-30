@@ -60,7 +60,7 @@ TupAnimationspace::TupAnimationspace(TupCameraWidget *playerUI, QWidget *parent)
 
 TupAnimationspace::~TupAnimationspace()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TupCameraWidget()]";
         #else

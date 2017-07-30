@@ -1,42 +1,39 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                *
- *   Project Contact: info@maefloresta.com                                 *
- *   Project Website: http://www.maefloresta.com                           *
- *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
- *                                                                         *
- *   Developers:                                                           *
- *   2010:                                                                 *
- *    Gustavo Gonzalez / xtingray                                          *
- *                                                                         *
- *   KTooN's versions:                                                     * 
- *                                                                         *
- *   2006:                                                                 *
- *    David Cuadrado                                                       *
- *    Jorge Cuadrado                                                       *
- *   2003:                                                                 *
- *    Fernado Roldan                                                       *
- *    Simena Dinas                                                         *
- *                                                                         *
+ *   Project TUPITUBE DESK                                     *
+ *   Project Contact: info@maefloresta.com                         *
+ *   Project Website: http://www.maefloresta.com                       *
+ *   Project Leader: Gustav Gonzalez <info@maefloresta.com>            *
+ *                                                         *
+ *   Developers:                                               *
+ *   2010:                                                 *
+ *    Gustavo Gonzalez / xtingray                                  *
+ *                                                         *
+ *   KTooN's versions:                                         * 
+ *                                                         *
+ *   2006:                                                 *
+ *    David Cuadrado                                           *
+ *    Jorge Cuadrado                                           *
+ *   2003:                                                 *
+ *    Fernado Roldan                                           *
+ *    Simena Dinas                                             *
+ *                                                         *
  *   Copyright (C) 2010 Gustav Gonzalez - http://www.maefloresta.com       *
- *   License:                                                              *
+ *   License:                                                  *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
+ *   (at your option) any later version.                           *
+ *                                                         *
  *   This program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
- *                                                                         *
+ *   GNU General Public License for more details.                      *
+ *                                                         *
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
 #include "tupprojectresponse.h"
-
-// This class returns information about data structure of a Tupi project 
-// It is used from signals in the TupProject class to send data to other classes
 
 class TupProjectResponse::Private
 {
@@ -70,43 +67,43 @@ int TupProjectResponse::action() const
 {
     if (k->mode == Undo) {
         switch (k->action) {
-                case TupProjectRequest::Add:
-                     {
-                        return TupProjectRequest::Remove;
-                     }
-                break;
-                case TupProjectRequest::Remove:
-                     {
-                        return TupProjectRequest::Add;
-                     }
-                break;
-                case TupProjectRequest::InsertSymbolIntoFrame:
-                     {
-                        return TupProjectRequest::RemoveSymbolFromFrame;
-                     }
-                break;
-                case TupProjectRequest::Ungroup:
-                     {
-                        return TupProjectRequest::Group;
-                     }
-                break;
-                case TupProjectRequest::Group:
-                     {
-                        return TupProjectRequest::Ungroup;
-                     }
-                break;
-                default:
-                     {
-                        #ifdef K_DEBUG
-                            QString msg = "TupProjectResponse::action() - Returning same action as UNDO respoonse -> " + QString::number(k->action);
-                            #ifdef Q_OS_WIN
-                                qDebug() << msg;
-                            #else
-                                tWarning() << msg;
-                            #endif
+            case TupProjectRequest::Add:
+                 {
+                    return TupProjectRequest::Remove;
+                 }
+            break;
+            case TupProjectRequest::Remove:
+                 {
+                    return TupProjectRequest::Add;
+                 }
+            break;
+            case TupProjectRequest::InsertSymbolIntoFrame:
+                 {
+                    return TupProjectRequest::RemoveSymbolFromFrame;
+                 }
+            break;
+            case TupProjectRequest::Ungroup:
+                 {
+                    return TupProjectRequest::Group;
+                 }
+            break;
+            case TupProjectRequest::Group:
+                 {
+                    return TupProjectRequest::Ungroup;
+                 }
+            break;
+            default:
+                 {
+                    #ifdef TUP_DEBUG
+                        QString msg = "TupProjectResponse::action() - Returning same action as UNDO respoonse -> " + QString::number(k->action);
+                        #ifdef Q_OS_WIN
+                        qDebug() << msg;
+                        #else
+                        tWarning() << msg;
                         #endif
-                     }
-                break;
+                    #endif
+                 }
+            break;
         }
     }
 
@@ -367,43 +364,43 @@ TupProjectResponseFactory::~TupProjectResponseFactory()
 TupProjectResponse *TupProjectResponseFactory::create(int part, int action)
 {
     switch (part) {
-            case TupProjectRequest::Scene:
-             {
-                 return new TupSceneResponse(part, action);
-             }
-            break;
-            case TupProjectRequest::Layer:
-             {
-                 return new TupLayerResponse(part, action);
-             }
-            break;
-            case TupProjectRequest::Frame:
-             {
-                 return new TupFrameResponse(part, action);
-             }
-            break;
-            case TupProjectRequest::Item:
-             {
-                 return new TupItemResponse(part, action);
-             }
-            break;
-            case TupProjectRequest::Library:
-             {
-                 return new TupLibraryResponse(part, action);
-             }
-            break;
-            default:
-             {
-                 #ifdef K_DEBUG
-                     QString msg = "TupProjectResponseFactory::create() - Error: Unknown/Unhandled element: " + QString::number(part);
-                     #ifdef Q_OS_WIN
-                         qDebug() << msg;
-                     #else
-                         tFatal() << msg;
-                     #endif
-                 #endif
-             }
-            break;
+        case TupProjectRequest::Scene:
+        {
+            return new TupSceneResponse(part, action);
+        }
+        break;
+        case TupProjectRequest::Layer:
+        {
+            return new TupLayerResponse(part, action);
+        }
+        break;
+        case TupProjectRequest::Frame:
+        {
+            return new TupFrameResponse(part, action);
+        }
+        break;
+        case TupProjectRequest::Item:
+        {
+            return new TupItemResponse(part, action);
+        }
+        break;
+        case TupProjectRequest::Library:
+        {
+            return new TupLibraryResponse(part, action);
+        }
+        break;
+        default:
+        {
+            #ifdef TUP_DEBUG
+                QString msg = "TupProjectResponseFactory::create() - Error: Unknown/Unhandled element: " + QString::number(part);
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tFatal() << msg;
+                #endif
+            #endif
+        }
+        break;
     }
     
     return new TupProjectResponse(part, action);

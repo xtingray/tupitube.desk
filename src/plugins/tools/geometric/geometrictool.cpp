@@ -84,7 +84,7 @@ QStringList GeometricTool::keys() const
 
 void GeometricTool::init(TupGraphicsScene *scene)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[GeometricTool::init()]";
         #else
@@ -124,7 +124,7 @@ void GeometricTool::setupActions()
 
 void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[GeometricTool::press()]";
         #else
@@ -184,7 +184,7 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
 void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
     /*
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[GeometricTool::move()]";
         #else
@@ -283,7 +283,7 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
 
 void GeometricTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[GeometricTool::release()]";
         #else
@@ -391,7 +391,7 @@ QCursor GeometricTool::cursor() const
 
 void GeometricTool::endItem()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[GeometricTool::endItem()]";
         #else

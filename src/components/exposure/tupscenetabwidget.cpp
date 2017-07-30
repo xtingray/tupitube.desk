@@ -176,7 +176,7 @@ TupExposureTable* TupSceneTabWidget::getTable(int index)
         if (table) {
             return table;
         } else {
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
                 QString msg = "TupSceneTabWidget::getTable() - [ Fatal Error ] - Table pointer is NULL!";
                 #ifdef Q_OS_WIN
                     qDebug() << msg;
@@ -187,7 +187,7 @@ TupExposureTable* TupSceneTabWidget::getTable(int index)
         }
     }
 
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         QString msg = "TupSceneTabWidget::getTable() - [ Fatal Error ] - Invalid table index: " + QString::number(index);
         #ifdef Q_OS_WIN
             qDebug() << msg;
@@ -234,7 +234,7 @@ void TupSceneTabWidget::setLayerVisibility(int sceneIndex, int layerIndex, bool 
         TupExposureTable *table = k->tables.at(sceneIndex);
         table->setLayerVisibility(layerIndex, visibility);
     } else {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupSceneTabWidget::setLayerVisibility() - [ Fatal Error ] - Invalid table index: " + QString::number(sceneIndex);
             #ifdef Q_OS_WIN
                 qDebug() << msg;

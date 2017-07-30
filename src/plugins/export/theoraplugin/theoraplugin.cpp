@@ -35,7 +35,7 @@
 
 #include "theoraplugin.h"
 
-// Tupi Framework
+// TupiTube Framework
 #include "theoramoviegenerator.h"
 
 #include "tuplayer.h"
@@ -81,7 +81,7 @@ bool TheoraPlugin::exportToFormat(const QColor color, const QString &filePath, c
     {
          if (!generator->movieHeaderOk()) {
              errorMsg = generator->getErrorMsg();
-             #ifdef K_DEBUG
+             #ifdef TUP_DEBUG
                     QString msg = "FFMpegPlugin::exportToFormat() - [ Fatal Error ] - Can't create video -> " + filePath;
                     #ifdef Q_OS_WIN
                         qDebug() << msg;

@@ -72,7 +72,7 @@ TupColorPicker::TupColorPicker(QWidget *parent) : QFrame(parent), k(new Private)
 
 TupColorPicker::~TupColorPicker()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TupColorPicker()]";
         #else

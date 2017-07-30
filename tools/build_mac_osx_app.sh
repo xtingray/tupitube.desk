@@ -57,42 +57,42 @@ cd $TUPITUBE_GIT_REPOSITORY
 make install
 
 cd $INSTALLATION_PATH
-cp -r lib/tupi/plugins Tupi.app/Contents/MacOS
+cp -r lib/tupi/plugins TupiTube.app/Contents/MacOS
 
-mkdir Tupi.app/Contents/MacOS/share
-cp -r share/pixmaps Tupi.app/Contents/MacOS/share/
-cp -r share/tupi/data Tupi.app/Contents/MacOS/share/
-cp -r share/tupi/themes Tupi.app/Contents/MacOS/share/
+mkdir TupiTube.app/Contents/MacOS/share
+cp -r share/pixmaps TupiTube.app/Contents/MacOS/share/
+cp -r share/tupi/data TupiTube.app/Contents/MacOS/share/
+cp -r share/tupi/themes TupiTube.app/Contents/MacOS/share/
 
-cd Tupi.app/Contents/MacOS/plugins
+cd TupiTube.app/Contents/MacOS/plugins
 
-find . -name "*.dylib" -exec $INSTALLER_SCRIPT $INSTALLATION_PATH/Tupi.app/Contents/MacOS/plugins/{} \/usr\/local\/lib\/ @executable_path/../Frameworks/ \;
-
-for lib in ${LIBS[@]}; do
-    find . -name "*.dylib" -exec $INSTALLER_SCRIPT $INSTALLATION_PATH/Tupi.app/Contents/MacOS/plugins/{} $lib @executable_path/../Frameworks/$lib \;
-done
-
-cd $INSTALLATION_PATH/Tupi.app/Contents/MacOS
+find . -name "*.dylib" -exec $INSTALLER_SCRIPT $INSTALLATION_PATH/TupiTube.app/Contents/MacOS/plugins/{} \/usr\/local\/lib\/ @executable_path/../Frameworks/ \;
 
 for lib in ${LIBS[@]}; do
-    $INSTALLER_SCRIPT $INSTALLATION_PATH/Tupi.app/Contents/MacOS/Tupi $lib @executable_path/../Frameworks/$lib  \;
+    find . -name "*.dylib" -exec $INSTALLER_SCRIPT $INSTALLATION_PATH/TupiTube.app/Contents/MacOS/plugins/{} $lib @executable_path/../Frameworks/$lib \;
 done
 
-cp -r $QT_PATH/MaintenanceTool.app/Contents/Resources/qt_menu.nib $INSTALLATION_PATH/Tupi.app/Contents/Resources
+cd $INSTALLATION_PATH/TupiTube.app/Contents/MacOS
+
+for lib in ${LIBS[@]}; do
+    $INSTALLER_SCRIPT $INSTALLATION_PATH/TupiTube.app/Contents/MacOS/TupiTube $lib @executable_path/../Frameworks/$lib  \;
+done
+
+cp -r $QT_PATH/MaintenanceTool.app/Contents/Resources/qt_menu.nib $INSTALLATION_PATH/TupiTube.app/Contents/Resources
 
 cd $INSTALLATION_PATH
 
-mkdir Tupi.app/Contents/Frameworks/
+mkdir TupiTube.app/Contents/Frameworks/
 
 for lib in ${LIBS[@]}; do
-    cp lib/tupi/$lib Tupi.app/Contents/Frameworks/
+    cp lib/tupi/$lib TupiTube.app/Contents/Frameworks/
 done
 for lib in ${LIBS[@]}; do
-    $INSTALLER_SCRIPT $INSTALLATION_PATH/Tupi.app/Contents/Frameworks/$lib  \/usr\/local\/lib\/ @executable_path/../Frameworks/
+    $INSTALLER_SCRIPT $INSTALLATION_PATH/TupiTube.app/Contents/Frameworks/$lib  \/usr\/local\/lib\/ @executable_path/../Frameworks/
     for sublib in ${LIBS[@]}; do
-        $INSTALLER_SCRIPT $INSTALLATION_PATH/Tupi.app/Contents/Frameworks/$lib $sublib @executable_path/../Frameworks/$sublib
+        $INSTALLER_SCRIPT $INSTALLATION_PATH/TupiTube.app/Contents/Frameworks/$lib $sublib @executable_path/../Frameworks/$sublib
     done
 done
 
-macdeployqt Tupi.app -dmg -libpath=/usr/local/lib
+macdeployqt TupiTube.app -dmg -libpath=/usr/local/lib
 

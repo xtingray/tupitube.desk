@@ -39,12 +39,6 @@
 #include "tuppaintareapreferences.h"
 #include "tupthemepreferences.h"
 
-/**
- * This class handles the preferences dialog for Tupi.
- * Here is where the forms of the Tupi preferences dialog are defined.
- * @author David Cuadrado
-*/
-
 struct TupPreferencesDialog::Private
 {
     TupGeneralPreferences *general;
@@ -54,7 +48,7 @@ struct TupPreferencesDialog::Private
 
 TupPreferencesDialog::TupPreferencesDialog(QWidget *parent) : TConfigurationDialog(parent), k(new Private)
 {
-    setWindowTitle(tr("Tupi Preferences"));
+    setWindowTitle(tr("TupiTube Preferences"));
 
     k->general = new TupGeneralPreferences;
     addPage(k->general, tr("General"), QPixmap(THEME_DIR + "icons/tupi_general_preferences.png"));

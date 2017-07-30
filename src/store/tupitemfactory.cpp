@@ -111,7 +111,7 @@ QGraphicsItem* TupItemFactory::createItem(const QString &root)
 bool TupItemFactory::startTag(const QString& qname, const QXmlAttributes& atts)
 {
     /*
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupItemFactory::startTag()] - qname: " << qname;
         #else
@@ -286,7 +286,7 @@ void TupItemFactory::text(const QString & ch)
 bool TupItemFactory::endTag(const QString& qname)
 {
     /*
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupItemFactory::endTag()] - qname: " << qname;
         #else
@@ -341,7 +341,7 @@ bool TupItemFactory::endTag(const QString& qname)
                    setItemGradient(*k->gradient, false);
     } else {
                /*
-               #ifdef K_DEBUG
+               #ifdef TUP_DEBUG
                    QString msg = "TupItemFactory::endTag() - Unknown tag: " + qname;
                    #ifdef Q_OS_WIN
                        qWarning() << msg;

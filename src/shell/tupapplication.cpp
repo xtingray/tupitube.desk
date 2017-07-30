@@ -36,12 +36,6 @@
 #include "tupapplication.h"
 #include "tapplicationproperties.h"
 
-/**
- * Support Class for main.cpp
- * This class contains some of the basic methods required when Tupi is launched
- * @author David Cuadrado
-*/
-
 TupApplication::TupApplication(int &argc, char **argv) : TApplication(argc, argv)
 {
     setApplicationName("tupitube");
@@ -49,7 +43,7 @@ TupApplication::TupApplication(int &argc, char **argv) : TApplication(argc, argv
 
 TupApplication::~TupApplication()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         QString msg = "[Destroying ~TupApplication]";
         #ifdef Q_OS_WIN
            qDebug() << msg;
@@ -63,7 +57,7 @@ void TupApplication::createCache(const QString &cacheDir)
 {
     QDir cache(cacheDir);
     if (!cache.exists()) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "Initializing repository: " + cacheDir;
             #ifdef Q_OS_WIN
                 qWarning() << msg;
@@ -73,7 +67,7 @@ void TupApplication::createCache(const QString &cacheDir)
         #endif
 
        if (!cache.mkdir(cacheDir)) {
-           #ifdef K_DEBUG
+           #ifdef TUP_DEBUG
                QString msg = "TupApplication::createCache() - Fatal Error: Can't create project repository";
                #ifdef Q_OS_WIN
                    qDebug() << msg;

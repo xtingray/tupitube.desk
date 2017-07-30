@@ -146,7 +146,7 @@ void TupGradientViewer::createGradient()
             }
             default:
             {
-                #ifdef K_DEBUG
+                #ifdef TUP_DEBUG
                     QString msg = "TupGradientViewer::createGradient() - Fatal Error: the gradient type doesn't exists!";
                     #ifdef Q_OS_WIN
                         qDebug() << msg;
@@ -204,7 +204,7 @@ QGradient TupGradientViewer::gradient()
             }
             default:
             {
-                #ifdef K_DEBUG
+                #ifdef TUP_DEBUG
                     QString msg = "TupGradientViewer::gradient() - Fatal error: the gradient type doesn't exists!";
                     #ifdef Q_OS_WIN
                         qDebug() << msg;
@@ -280,7 +280,7 @@ void TupGradientViewer::setGradient(const QGradient* gradient)
             }
             default:
             { 
-                 #ifdef K_DEBUG
+                 #ifdef TUP_DEBUG
                      QString msg = "TupGradientViewer::setGradient() - Fatal Error: the gradient type doesn't exists!";
                      #ifdef Q_OS_WIN
                          qDebug() << msg;

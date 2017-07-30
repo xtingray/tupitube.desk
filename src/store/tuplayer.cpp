@@ -89,7 +89,7 @@ void TupLayer::setFrames(const Frames &frames)
 
 void TupLayer::setFrame(int index, TupFrame *frame)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupLayer::setFrame()]";
         #else
@@ -200,7 +200,7 @@ bool TupLayer::restoreFrame(int index)
         }
         return false;
     } else {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupLayer::restoreFrame() - Fatal Error: "
             "No available frames to restore index -> " + QString::number(index);
             #ifdef Q_OS_WIN
@@ -216,7 +216,7 @@ bool TupLayer::restoreFrame(int index)
 
 bool TupLayer::removeFrame(int pos)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupLayer::removeFrame()]";
         #else
@@ -275,7 +275,7 @@ bool TupLayer::restoreResettedFrame(int pos)
             return true;
         }
     } else {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupLayer::restoreResettedFrame() - Fatal Error: "
             "No available resetted frames to restore -> " + QString::number(k->resettedFrames.count());
             #ifdef Q_OS_WIN
@@ -337,7 +337,7 @@ bool TupLayer::moveFrame(int from, int to)
 bool TupLayer::exchangeFrame(int from, int to)
 {
     if (from < 0 || from >= k->frames.count() || to < 0 || to >= k->frames.count()) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupLayer::exchangeFrame() - Fatal Error: frame indexes are invalid -> from: " + QString::number(from) + " / to: " + QString::number(to);
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -381,7 +381,7 @@ bool TupLayer::extendFrame(int pos, int times)
 TupFrame *TupLayer::frameAt(int position) const
 {
     if (position < 0 || position >= k->frames.count()) {        
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg1 = "TupLayer::frameAt() - Fatal Error: frame index out of bound : " + QString::number(position);
             QString msg2 = "TupLayer::frameAt() - Fatal Error: index limit at layer(" + QString::number(k->index) + ") : " + QString::number(k->frames.count()-1);
             #ifdef Q_OS_WIN
@@ -402,7 +402,7 @@ TupFrame *TupLayer::frameAt(int position) const
 
 void TupLayer::fromXml(const QString &xml)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupLayer::fromXml()]";
         #else
@@ -571,7 +571,7 @@ bool TupLayer::tweenExists(const QString &name, TupItemTweener::Type type)
 
 bool TupLayer::removeTween(const QString &name, TupItemTweener::Type type)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupLayer::removeTween()]";
         #else

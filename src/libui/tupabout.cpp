@@ -56,7 +56,7 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Cancel, parent)
 {
     // SQA: Check if these instructions are doing something for real
     setWindowIcon(QIcon(THEME_DIR + "icons/about.png"));
-    setWindowTitle(tr("About TupiTube"));    
+    setWindowTitle(tr("About TupiTube Desk"));
     setFixedSize(525, 458);
 
     QStringList path;
@@ -85,7 +85,7 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Cancel, parent)
     QString creditsText;
 
     if (!file.open(QIODevice::ReadOnly)) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupAbout::TupAbout() - Fatal Error: Can't open \"credits.xml\" file";
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -97,7 +97,7 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Cancel, parent)
     }
 
     if (!doc.setContent(&file)) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupAbout::TupAbout() - Fatal Error: File \"credits.xml\" is corrupt!";
             #ifdef Q_OS_WIN
                 qDebug() << msg;

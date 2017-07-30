@@ -68,7 +68,7 @@ struct TupColorPalette::Private
 
 TupColorPalette::TupColorPalette(QWidget *parent) : TupModuleWidgetBase(parent), k(new Private)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupColorPalette()]";
         #else
@@ -107,7 +107,7 @@ TupColorPalette::TupColorPalette(QWidget *parent) : TupModuleWidgetBase(parent),
 
 TupColorPalette::~TupColorPalette()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TupColorPalette()]";
         #else

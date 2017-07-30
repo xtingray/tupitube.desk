@@ -38,7 +38,7 @@
 TApplication::TApplication(int & argc, char ** argv) : QApplication(argc, argv)
 {
     /*
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TApplication()]";
         #else
@@ -62,7 +62,7 @@ TApplication::~TApplication()
     TCONFIG->sync();
 
     /*
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TApplication()]";
         #else

@@ -35,7 +35,7 @@
 
 #include "tupdebugwidget.h"
 
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
 
 TupDebugWidget::TupDebugWidget(QWidget *parent, int width) : TupModuleWidgetBase(parent, "Debug Terminal")
 {

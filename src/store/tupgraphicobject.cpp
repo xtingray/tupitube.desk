@@ -61,7 +61,7 @@ struct TupGraphicObject::Private
 TupGraphicObject::TupGraphicObject(QGraphicsItem *item, TupFrame *parent) : QObject(parent), k(new Private)
 {
     /*
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupGraphicObject()]";
         #else
@@ -81,7 +81,7 @@ TupGraphicObject::TupGraphicObject(QGraphicsItem *item, TupFrame *parent) : QObj
 TupGraphicObject::~TupGraphicObject()
 {
     /*
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TupGraphicObject()]";
         #else
@@ -117,7 +117,7 @@ void TupGraphicObject::setItem(QGraphicsItem *item)
         k->item = item;
         initItemData();
     } else {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupGraphicObject::setItem() - Fatal Error: QGraphicsItem is null!";
             #ifdef Q_OS_WIN
                 qDebug() << msg;

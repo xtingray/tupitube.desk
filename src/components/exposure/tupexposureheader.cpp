@@ -184,7 +184,7 @@ void TupExposureHeader::mousePressEvent(QMouseEvent *event)
             QHeaderView::mousePressEvent(event);
         }
     } else {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupExposureHeader::mousePressEvent() - Fatal Error: Section index is invalid -> " + QString::number(section);
             #ifdef Q_OS_WIN
                 qDebug() << msg;

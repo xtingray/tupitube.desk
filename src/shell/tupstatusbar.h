@@ -36,7 +36,7 @@
 #ifndef TUPSTATUSBAR_H
 #define TUPSTATUSBAR_H
 
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
 
 #ifdef Q_OS_WIN
 #include <QDebug>

@@ -46,7 +46,7 @@ struct TupScenesWidget::Private
 
 TupScenesWidget::TupScenesWidget(QWidget *parent) : TupModuleWidgetBase(parent, "TupScenesWidget"), k(new Private)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupScenesWidget()]";
         #else
@@ -62,7 +62,7 @@ TupScenesWidget::TupScenesWidget(QWidget *parent) : TupModuleWidgetBase(parent, 
 
 TupScenesWidget::~TupScenesWidget()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TupScenesWidget()]";
         #else
@@ -129,7 +129,7 @@ void TupScenesWidget::sendEvent(int action)
 
 void TupScenesWidget::selectScene(int index)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupScenesWidget::selectScene()]";
         #else
@@ -145,7 +145,7 @@ void TupScenesWidget::selectScene(int index)
 
 void TupScenesWidget::emitRequestInsertScene()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupScenesWidget::emitRequestInsertScene()]";
         #else
@@ -178,7 +178,7 @@ void TupScenesWidget::emitRequestInsertScene()
 
 void TupScenesWidget::emitRequestRemoveScene()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupScenesWidget::emitRequestRemoveScene()]";
         #else
@@ -208,7 +208,7 @@ void TupScenesWidget::emitRequestRemoveScene()
 
 void TupScenesWidget::closeAllScenes()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupScenesWidget::closeAllScenes()]";
         #else
@@ -223,7 +223,7 @@ void TupScenesWidget::closeAllScenes()
 
 void TupScenesWidget::sceneResponse(TupSceneResponse *e)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupScenesWidget::sceneResponse()]";
             qDebug() << "SHOW_VAR: " << e->action();

@@ -39,7 +39,7 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
                                  QString title, const TupExportWidget *widget) : TupExportWizardPage(title), m_currentExporter(0), 
                                  m_currentFormat(TupExportInterface::NONE), m_project(project)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupExportModule::TupExportModule()]";
         #else
@@ -230,7 +230,7 @@ void TupExportModule::enableTransparency(bool flag)
 
 void TupExportModule::chooseFile()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupExportModule::chooseFile()]";
         #else
@@ -258,7 +258,7 @@ void TupExportModule::chooseFile()
 
 void TupExportModule::chooseDirectory()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupExportModule::chooseDirectory()]";
         #else
@@ -284,7 +284,7 @@ void TupExportModule::updateState(const QString &name)
 
 void TupExportModule::exportIt()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupExportModule::exportIt()]";
         #else
@@ -325,7 +325,7 @@ void TupExportModule::exportIt()
         if (filename.length() == 0) {
             TOsd::self()->display(tr("Error"), tr("Directory doesn't exist! Please, choose another path."), TOsd::Error);
 
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
                 QString file = path.toLocal8Bit();
                 QString msg = "TupExportModule::exportIt() - [Tracer 01] Fatal Error: Directory doesn't exist! -> " + file;
                 #ifdef Q_OS_WIN
@@ -366,7 +366,7 @@ void TupExportModule::exportIt()
     QDir directory(path);
     if (!directory.exists()) {
         TOsd::self()->display(tr("Error"), tr("Directory doesn't exist! Please, choose another path."), TOsd::Error);
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString file = path.toLocal8Bit();
             QString msg = "TupExportModule::exportIt() - [Tracer 02] Fatal Error: Directory doesn't exist! -> " + file;
             #ifdef Q_OS_WIN
@@ -397,7 +397,7 @@ void TupExportModule::exportIt()
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     if (m_currentExporter) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString file = path.toLocal8Bit();
             QString msg = "TupExportModule::exportIt() -  Exporting to file: " + file;
             #ifdef Q_OS_WIN
@@ -409,7 +409,7 @@ void TupExportModule::exportIt()
 
         QList<TupScene *> scenes = scenesToExport();
 
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg1 = "TupExportModule::exportIt() - Exporting " + QString::number(scenes.count()) + " scenes";
             #ifdef Q_OS_WIN
                 qWarning() << msg1;
@@ -439,7 +439,7 @@ void TupExportModule::exportIt()
                                                      QSize(width, height), m_fps->value(), m_project->library());
         }
     } else {
-        TOsd::self()->display(tr("Error"), tr("Format problem. Tupi Internal error."), TOsd::Error);
+        TOsd::self()->display(tr("Error"), tr("Format problem. TupiTube Internal error."), TOsd::Error);
     }
 
     QApplication::restoreOverrideCursor();

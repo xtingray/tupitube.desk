@@ -234,7 +234,7 @@ void SchemeTool::move(const TupInputDeviceInformation *input, TupBrushManager *b
                 pm = (-1) * (1/m);
             } 
 
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
                    if (m == 100)
                        tError() << "SchemeTool::move() - M: NAN";
                    else
@@ -356,7 +356,7 @@ void SchemeTool::move(const TupInputDeviceInformation *input, TupBrushManager *b
 
             if (k->previewPoint.x() < currentPoint.x()) {
                 if (k->previewPoint.y() < currentPoint.y()) {
-                    #ifdef K_DEBUG
+                    #ifdef TUP_DEBUG
                            tDebug() << "    -> SchemeTool::move() - Going down-right";
                            tDebug() << "";
                     #endif
@@ -373,7 +373,7 @@ void SchemeTool::move(const TupInputDeviceInformation *input, TupBrushManager *b
                     k->connector = QPoint(endX, endY);
 
                 } else if (k->previewPoint.y() > currentPoint.y()) {
-                           #ifdef K_DEBUG
+                           #ifdef TUP_DEBUG
                                   tDebug() << "    -> SchemeTool::move() - Going up-right";
                                   tDebug() << "";
                            #endif
@@ -389,7 +389,7 @@ void SchemeTool::move(const TupInputDeviceInformation *input, TupBrushManager *b
                            qreal endY = (m*(endX - currentPoint.x())) + currentPoint.y();
                            k->connector = QPoint(endX, endY);
                 } else {
-                     #ifdef K_DEBUG
+                     #ifdef TUP_DEBUG
                             tDebug() << "    -> SchemeTool::move() - Going right";
                             tDebug() << "";
                      #endif
@@ -407,7 +407,7 @@ void SchemeTool::move(const TupInputDeviceInformation *input, TupBrushManager *b
                 }
             } else if (k->previewPoint.x() > currentPoint.x()) {
                 if (k->previewPoint.y() < currentPoint.y()) {
-                     #ifdef K_DEBUG
+                     #ifdef TUP_DEBUG
                             tDebug() << "    -> SchemeTool::move() - Going down-left";
                             tDebug() << "";
                      #endif
@@ -424,7 +424,7 @@ void SchemeTool::move(const TupInputDeviceInformation *input, TupBrushManager *b
                     qreal endY = (m*(endX - currentPoint.x())) + currentPoint.y();
                     k->connector = QPoint(endX, endY);
                 } else if (k->previewPoint.y() > currentPoint.y()) {
-                           #ifdef K_DEBUG
+                           #ifdef TUP_DEBUG
                                   tDebug() << "    -> SchemeTool::move() - Going up-left";
                                   tDebug() << "";
                            #endif
@@ -451,7 +451,7 @@ void SchemeTool::move(const TupInputDeviceInformation *input, TupBrushManager *b
                            qreal endY = (m*(endX - currentPoint.x())) + currentPoint.y();
                            k->connector = QPoint(endX, endY);
                 } else {
-                     #ifdef K_DEBUG
+                     #ifdef TUP_DEBUG
                             tDebug() << "    -> SchemeTool::move() - Going left";
                             tDebug() << "";
                      #endif
@@ -469,7 +469,7 @@ void SchemeTool::move(const TupInputDeviceInformation *input, TupBrushManager *b
                 }
             } else if (k->previewPoint.x() == currentPoint.x()) {
                        if (k->previewPoint.y() > currentPoint.y()) {
-                           #ifdef K_DEBUG
+                           #ifdef TUP_DEBUG
                                   tDebug() << "    -> SchemeTool::move() - Going up";
                                   tDebug() << "";
                            #endif
@@ -485,7 +485,7 @@ void SchemeTool::move(const TupInputDeviceInformation *input, TupBrushManager *b
                            qreal endY = currentPoint.y() - k->arrowSize;
                            k->connector = QPoint(endX, endY);
                        } else {
-                           #ifdef K_DEBUG
+                           #ifdef TUP_DEBUG
                                   tDebug() << "    -> SchemeTool::move() - Going down";
                                   tDebug() << "";
                            #endif

@@ -39,7 +39,7 @@ KinasWidget::KinasWidget(QWidget *parent) : TupModuleWidgetBase(parent)
 {
     TINIT;
 
-    setWindowTitle(tr("Tupi Script"));
+    setWindowTitle(tr("TupiTube Script"));
     setWindowIcon(QPixmap(THEME_DIR + "icons/color_palette.png"));
 
     m_splitter = new QSplitter(this);

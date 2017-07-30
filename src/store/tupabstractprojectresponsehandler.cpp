@@ -48,7 +48,7 @@ TupAbstractProjectResponseHandler::~TupAbstractProjectResponseHandler()
 bool TupAbstractProjectResponseHandler::handleResponse(TupProjectResponse *response)
 {
     /*
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupAbstractProjectResponseHandler::handleResponse()]";
         #else
@@ -91,7 +91,7 @@ bool TupAbstractProjectResponseHandler::handleResponse(TupProjectResponse *respo
             break;
             default:
             {
-                 #ifdef K_DEBUG
+                 #ifdef TUP_DEBUG
                      QString msg = "TupAbstractProjectResponseHandler::handleResponse() - Error: Unknown project response: " + QString::number(response->part());
                      #ifdef Q_OS_WIN
                          qDebug() << msg;

@@ -147,7 +147,7 @@ void TupScene::setLayers(const Layers &layers)
 TupLayer *TupScene::createLayer(QString name, int position, bool loaded)
 {
     if (position < 0 || position > k->layers.count()) {        
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupScene::createLayer() - Invalid index -> " + QString::number(position);
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -172,7 +172,7 @@ TupLayer *TupScene::createLayer(QString name, int position, bool loaded)
 
 TupSoundLayer *TupScene::createSoundLayer(int position, bool loaded)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[createSoundLayer()] - position: " << position;
         #else
@@ -181,7 +181,7 @@ TupSoundLayer *TupScene::createSoundLayer(int position, bool loaded)
     #endif    
     
     if (position < 0 || position > k->soundLayers.count()) {    
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupScene::createSoundLayer() - [ Fatal Error ] - Index incorrect!";
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -222,7 +222,7 @@ bool TupScene::restoreLayer(int index)
 
 bool TupScene::removeLayer(int position)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupScene::removeLayer()] - position: " << position;
         #else
@@ -250,7 +250,7 @@ bool TupScene::removeLayer(int position)
 TupLayer *TupScene::layerAt(int position) const
 {
     if (position < 0 || position >= k->layers.count()) {    
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg1 = "TupScene::layerAt() - FATAL ERROR: LAYERS TOTAL: " + QString::number(k->layers.count());
             QString msg2 = "TupScene::layerAt() - FATAL ERROR: index out of bound -> Position: " + QString::number(position);
             QString msg3 = "TupScene::layerAt() - FATAL ERROR: The layer requested doesn't exist anymore";
@@ -273,7 +273,7 @@ TupLayer *TupScene::layerAt(int position) const
 TupSoundLayer *TupScene::soundLayer(int position) const
 {
     if (position < 0 || position >= k->soundLayers.count()) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = " FATAL ERROR: index out of bound " + QString::number(position);
             #ifdef Q_OS_WIN
                qDebug() << msg;
@@ -289,7 +289,7 @@ TupSoundLayer *TupScene::soundLayer(int position) const
 
 void TupScene::fromXml(const QString &xml)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupScene::fromXml()]";
         #else
@@ -299,7 +299,7 @@ void TupScene::fromXml(const QString &xml)
 
     QDomDocument document;
     if (!document.setContent(xml)) {
-		#ifdef K_DEBUG
+		#ifdef TUP_DEBUG
             QString msg = "TupScene::fromXml() - Error while processing XML file";
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -391,7 +391,7 @@ QDomElement TupScene::toXml(QDomDocument &doc) const
 bool TupScene::moveLayer(int from, int to)
 {
     if (from < 0 || from >= k->layers.count() || to < 0 || to >= k->layers.count()) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupScene::moveLayer() - FATAL ERROR: Layer index out of bound " + QString::number(to);
             #ifdef Q_OS_WIN
                  qDebug() << msg;
@@ -554,7 +554,7 @@ bool TupScene::tweenExists(const QString &name, TupItemTweener::Type type)
 
 bool TupScene::removeTween(const QString &name, TupItemTweener::Type type)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupScene::removeTween()]";
         #else
@@ -591,7 +591,7 @@ bool TupScene::removeTween(const QString &name, TupItemTweener::Type type)
 
 void TupScene::removeTweensFromLayer(int layerIndex)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupScene::removeTweensFromLayer()]";
         #else
@@ -606,7 +606,7 @@ void TupScene::removeTweensFromLayer(int layerIndex)
 
 void TupScene::removeTweensFromFrame(int layerIndex, int frameIndex)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupScene::removeTweensFromFrame()]" << frameIndex;
         #else

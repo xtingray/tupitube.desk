@@ -109,7 +109,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->drawRoundRect(square);
 
     /* SQA: Code for debugging purposes
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         painter->setFont(QFont(painter->font().family(), 5));
         painter->drawText(square, QString::number(k->typeNode));
     #endif
@@ -141,7 +141,7 @@ QRectF Node::boundingRect() const
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     /*
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[Node::itemChange()]";
         #else
@@ -162,7 +162,7 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
 
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[Node::mousePressEvent()]";
         #else
@@ -177,7 +177,7 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[Node::mouseReleaseEvent()]";
         #else
@@ -231,7 +231,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void Node::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[Node::mouseDoubleClickEvent()]";
         #else

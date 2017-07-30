@@ -54,7 +54,7 @@ DefaultSettings::~DefaultSettings()
 
 void DefaultSettings::save(TMainWindow *window)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         QString msg = "TMainWindow::DefaultSettings::save() - Saving UI settings [ " + qApp->applicationName() + " ]";
         #ifdef Q_OS_WIN
             qWarning() << msg;
@@ -104,7 +104,7 @@ void DefaultSettings::save(TMainWindow *window)
 
 void DefaultSettings::restore(TMainWindow *window)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
 	QString msg = "TMainWindow::DefaultSettings::restore() - Restoring UI settings [ " + qApp->applicationName() + " ]";
         #ifdef Q_OS_WIN
             qWarning() << msg;
@@ -250,7 +250,7 @@ void TMainWindow::addSpecialButton(TAction *action)
 ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int perspective, const QString &code, QKeySequence shortcut)
 {
     /*
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TMainWindow::addToolView()]";
         #else
@@ -287,7 +287,7 @@ ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int
 
 void TMainWindow::removeToolView(ToolView *view)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TMainWindow::removeToolView()]";
         #else
@@ -322,7 +322,7 @@ void TMainWindow::removeToolView(ToolView *view)
 
 void TMainWindow::enableToolViews(bool flag)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TMainWindow::enableToolViews()]";
         #else
@@ -350,7 +350,7 @@ void TMainWindow::enableToolViews(bool flag)
 void TMainWindow::moveToolView(ToolView *view, Qt::DockWidgetArea newPlace)
 {
     /*
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TMainWindow::moveToolView()]";
         #else
@@ -374,7 +374,7 @@ void TMainWindow::moveToolView(ToolView *view, Qt::DockWidgetArea newPlace)
  */
 void TMainWindow::addToPerspective(QWidget *widget, int perspective)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TMainWindow::addToPerspective()]";
         #else
@@ -401,7 +401,7 @@ void TMainWindow::addToPerspective(QWidget *widget, int perspective)
  */
 void TMainWindow::removeFromPerspective(QWidget *widget)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TMainWindow::removeFromPerspective()]";
         #else
@@ -472,7 +472,7 @@ Qt::DockWidgetArea TMainWindow::toDockWidgetArea(Qt::ToolBarArea area)
                break;
             default: 
                {
-                   #ifdef K_DEBUG
+                   #ifdef TUP_DEBUG
                        QString msg = "TMainWindow::toDockWidgetArea() - Floating -> " + QString::number(area);
                        #ifdef Q_OS_WIN
                            qWarning() << msg;
@@ -512,7 +512,7 @@ Qt::ToolBarArea TMainWindow::toToolBarArea(Qt::DockWidgetArea area)
                break;
             default: 
                {
-                 #ifdef K_DEBUG
+                 #ifdef TUP_DEBUG
                      QString msg = "TMainWindow::toToolBarArea() - Floating -> " + QString::number(area);
                      #ifdef Q_OS_WIN
                          qWarning() << msg;
@@ -540,7 +540,7 @@ void TMainWindow::setEnableButtonBlending(bool enable)
 void TMainWindow::relayoutViewButton(bool topLevel)
 {
     /*
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TMainWindow::relayoutViewButton()]";
         #else
@@ -573,7 +573,7 @@ void TMainWindow::relayoutViewButton(bool topLevel)
 void TMainWindow::relayoutToolView()
 {
     /*
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TMainWindow::relayoutToolView()]";
         #else
@@ -627,7 +627,7 @@ void TMainWindow::relayoutToolView()
  */
 void TMainWindow::setCurrentPerspective(int workspace)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TMainWindow::setCurrentPerspective()]";
         #else

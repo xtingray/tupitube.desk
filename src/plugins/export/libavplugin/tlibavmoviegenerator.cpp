@@ -81,7 +81,7 @@ struct TLibavMovieGenerator::Private
 static AVStream *addVideoStream(AVFormatContext *oc, AVCodec **codec, enum AVCodecID codec_id, const QString &movieFile, int width, int height, int fps, const QString &errorDetail)
 {
     /*
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         QString msg = "TLibavMovieGenerator::addVideoStream() - codec_id: " + QString::number(codec_id);
         #ifdef Q_OS_WIN
             qWarning() << msg;
@@ -99,7 +99,7 @@ static AVStream *addVideoStream(AVFormatContext *oc, AVCodec **codec, enum AVCod
     *codec = avcodec_find_encoder(codec_id);
     if (!(*codec)) {
         errorMsg = "libav error: Could not find encoder. " + errorDetail;
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg1 = "TLibavMovieGenerator::addVideoStream() - " + errorMsg;
             QString msg2 = "TLibavMovieGenerator::addVideoStream() - Unavailable Codec ID: " + QString::number(codec_id);
             #ifdef Q_OS_WIN
@@ -116,7 +116,7 @@ static AVStream *addVideoStream(AVFormatContext *oc, AVCodec **codec, enum AVCod
     st = avformat_new_stream(oc, *codec);
     if (!st) {
         errorMsg = "libav error: Could not alloc stream. " + errorDetail; 
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = QString("") + "TLibavMovieGenerator::addVideoStream() - " + errorMsg;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -224,7 +224,7 @@ bool TLibavMovieGenerator::Private::openVideo(AVCodec *codec, AVStream *st, cons
     ret = avcodec_open2(c, codec, NULL);
     if (ret < 0) {
         QString errorMsg = "The video codec required is not installed in your system. " + errorDetail;
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = QString("") + "TLibavMovieGenerator::openVideo() - " + errorMsg;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -240,7 +240,7 @@ bool TLibavMovieGenerator::Private::openVideo(AVCodec *codec, AVStream *st, cons
 
     if (!frame) {
         errorMsg = "There is no available memory to export your project as a video";
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = QString("") + "TLibavMovieGenerator::openVideo() - " + errorMsg;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -351,7 +351,7 @@ AVFrame *TLibavMovieGenerator::Private::alloc_picture(enum AVPixelFormat pix_fmt
 
 bool TLibavMovieGenerator::Private::writeVideoFrame(const QString &movieFile, const QImage &image)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         QString msg = "TLibavMovieGenerator::writeVideoFrame() - Generating frame #" + QString::number(frameCount);
         #ifdef Q_OS_WIN
             qWarning() << msg;
@@ -384,7 +384,7 @@ bool TLibavMovieGenerator::Private::writeVideoFrame(const QString &movieFile, co
     int ret = avcodec_encode_video2(c, &pkt, frame, &got_output);
     if (ret < 0) {
         errorMsg = "[1] Error while encoding the video of your project";
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = QString("") + "TLibavMovieGenerator::writeVideoFrame() - " + errorMsg;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -409,7 +409,7 @@ bool TLibavMovieGenerator::Private::writeVideoFrame(const QString &movieFile, co
 
     if (ret != 0) {
         errorMsg = "[2] Error while encoding the video of your project";
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = QString("") + "TLibavMovieGenerator::writeVideoFrame() - " + errorMsg;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -469,7 +469,7 @@ bool TLibavMovieGenerator::begin()
 
     k->fmt = av_guess_format(NULL, k->movieFile.toLocal8Bit().data(), NULL);
     if (!k->fmt) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = QString("") + "TLibavMovieGenerator::begin() - Can't guess format. Selecting MPEG by default...";
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -495,7 +495,7 @@ bool TLibavMovieGenerator::begin()
 
     if (!k->oc) {
         k->errorMsg = "libav error: Error while doing export. " + errorDetail;
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = QString("") + "TLibavMovieGenerator::begin() - " + k->errorMsg;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -516,7 +516,7 @@ bool TLibavMovieGenerator::begin()
         k->openVideo(video_codec, k->video_st, errorDetail);
     } else {
         k->errorMsg = "<b>libav error:</b> Video codec required is not installed. " + errorDetail;
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = QString("") + "TLibavMovieGenerator::begin() - " + k->errorMsg;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -531,7 +531,7 @@ bool TLibavMovieGenerator::begin()
         ret = avio_open(&k->oc->pb, k->movieFile.toLocal8Bit().data(), AVIO_FLAG_WRITE);
         if (ret < 0) {
             k->errorMsg = "libav error: could not open video file";
-            #ifdef K_DEBUG
+            #ifdef TUP_DEBUG
                 QString msg = QString("") + "TLibavMovieGenerator::begin() - " + k->errorMsg;
                 #ifdef Q_OS_WIN
                     qDebug() << msg;
@@ -566,7 +566,7 @@ QString TLibavMovieGenerator::getErrorMsg() const
 void TLibavMovieGenerator::handle(const QImage& image)
 {
     if (!k->video_st) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TLibavMovieGenerator::handle() - The total of frames has been processed (" + QString::number(k->streamDuration) + " seg)";
             #ifdef Q_OS_WIN
                 qWarning() << msg;
@@ -577,7 +577,7 @@ void TLibavMovieGenerator::handle(const QImage& image)
         return;
     }
 
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         QString msg1 = "TLibavMovieGenerator::handle() - Duration: " + QString::number(k->streamDuration); 
         #ifdef Q_OS_WIN
             qWarning() << msg1;

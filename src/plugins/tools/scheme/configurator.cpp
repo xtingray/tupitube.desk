@@ -37,7 +37,7 @@
 
 Configurator::Configurator(QWidget *parent) :QWidget(parent)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
            TINIT;
     #endif
 
@@ -128,7 +128,7 @@ Configurator::Configurator(QWidget *parent) :QWidget(parent)
 
 Configurator::~Configurator()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
            TEND;
     #endif
 }

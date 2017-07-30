@@ -60,7 +60,7 @@ struct TupExportWidget::Private
 
 TupExportWidget::TupExportWidget(TupProject *project, QWidget *parent, bool isLocal) : TupExportWizard(parent), k(new Private)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupExportWidget()]";
         #else
@@ -102,7 +102,7 @@ TupExportWidget::TupExportWidget(TupProject *project, QWidget *parent, bool isLo
         loadPlugins();
         k->pluginPage->selectFirstItem();
     } else {
-        setWindowTitle(tr("Post Animation In Tupitube"));
+        setWindowTitle(tr("Post Animation In TupiTube"));
         setWindowIcon(QIcon(THEME_DIR + "icons/net_document.png"));
 
         k->scenesPage = new TupSceneSelector(this);
@@ -118,7 +118,7 @@ TupExportWidget::TupExportWidget(TupProject *project, QWidget *parent, bool isLo
 
 TupExportWidget::~TupExportWidget()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[~TupExportWidget()]";
         #else
@@ -151,7 +151,7 @@ void TupExportWidget::loadPlugins()
                              pluginList.insert(index, exporter);
                      #endif
                  } else {
-                     #ifdef K_DEBUG
+                     #ifdef TUP_DEBUG
                          QString msg = "TupExportWidget::loadPlugins() - [ Fatal Error ] - Can't load export plugin";
                          #ifdef Q_OS_WIN
                             qDebug() << msg;
@@ -181,7 +181,7 @@ void TupExportWidget::setExporter(const QString &plugin)
 
         k->imagesArrayExport->setCurrentExporter(currentExporter);
     } else {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupExportWidget::setExporter() - [ Fatal Error ] - Can't load export plugin -> " + plugin;
             #ifdef Q_OS_WIN
                 qDebug() << msg;

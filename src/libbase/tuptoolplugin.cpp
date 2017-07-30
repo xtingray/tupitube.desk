@@ -75,7 +75,7 @@ QString TupToolPlugin::name() const
 
 void TupToolPlugin::begin()
 {
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
     QString msg = "TupToolPlugin::begin() - Begin: " + k->currentTool;
     #ifdef Q_OS_WIN
         qWarning() << msg;
@@ -87,7 +87,7 @@ void TupToolPlugin::begin()
 
 void TupToolPlugin::end()
 {
-#ifdef K_DEBUG
+#ifdef TUP_DEBUG
     QString msg = "TupToolPlugin::end() - End: " + k->currentTool;
     #ifdef Q_OS_WIN
         qWarning() << msg;

@@ -107,7 +107,7 @@ Configurator::~Configurator()
 
 void Configurator::loadTweenList(QList<QString> tweenList)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[Configurator::loadTweenList()]";
         #else
@@ -277,7 +277,7 @@ void Configurator::editTween()
 
 void Configurator::closeTweenProperties()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[Configurator::closeTweenProperties()]";
         #else
@@ -328,7 +328,7 @@ void Configurator::notifySelection(bool flag)
 
 void Configurator::closeSettingsPanel()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[Configurator::closeSettingsPanel()]";
         #else
@@ -357,7 +357,7 @@ void Configurator::applyItem()
 
 void Configurator::resetUI()
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[Configurator::resetUI()]";
         #else

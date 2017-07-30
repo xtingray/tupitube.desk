@@ -144,7 +144,7 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                           lastFrame = strList.at(2).toInt();
                           word->setEndFrame(lastFrame);
                           numPhonemes = strList.at(3).toInt();
-                          #ifdef K_DEBUG
+                          #ifdef TUP_DEBUG
                               if (numPhonemes == 0) {
                                   QString msg = "TupPapagayoImporter::TupPapagayoImporter() - Warning: Word \"" +  strWord + "\" has NO phonemes associated! :(";
                                   #ifdef Q_OS_WIN
@@ -181,7 +181,7 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                                word->addPhoneme(phoneme);
                           }
                       } else {
-                          #ifdef K_DEBUG
+                          #ifdef TUP_DEBUG
                               QString msg = "TupPapagayoImporter() - Fatal Error: frames size is less than numPhonemes -> ";
                               msg += QString::number(frames.count()) + " < " + QString::number(numPhonemes);
                               #ifdef Q_OS_WIN
@@ -215,7 +215,7 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
         k->lipsync->verifyStructure();
     } else {
         k->isValid = false;
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupPapagayoImporter() - Fatal Error: Insufficient permissions to load file! -> " + file;
             #ifdef Q_OS_WIN
                 qDebug() << msg;

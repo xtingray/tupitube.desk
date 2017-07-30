@@ -56,7 +56,7 @@ void TupCommandExecutor::getScenes(TupSceneResponse *response)
 
 bool TupCommandExecutor::createScene(TupSceneResponse *response)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupCommandExecutor::createScene()]";
         #else
@@ -87,7 +87,7 @@ bool TupCommandExecutor::createScene(TupSceneResponse *response)
 
 bool TupCommandExecutor::removeScene(TupSceneResponse *response)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupCommandExecutor::removeScene()]";
         #else
@@ -108,7 +108,7 @@ bool TupCommandExecutor::removeScene(TupSceneResponse *response)
             return true;
         } 
     } else {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupCommandExecutor::removeScene() - Fatal Error: No scene at index -> " + QString::number(pos);
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -138,7 +138,7 @@ bool TupCommandExecutor::lockScene(TupSceneResponse *response)
     int pos = response->sceneIndex();
     bool lock = response->arg().toBool();
 
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         QString msg = "TupCommandExecutor::lockScene() - Scene is locked: " + QString::number(lock);
         #ifdef Q_OS_WIN
             qWarning() << msg;
@@ -194,7 +194,7 @@ bool TupCommandExecutor::setSceneVisibility(TupSceneResponse *response)
 
 bool TupCommandExecutor::resetScene(TupSceneResponse *response)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupCommandExecutor::resetScene()]";
         #else
@@ -221,7 +221,7 @@ bool TupCommandExecutor::resetScene(TupSceneResponse *response)
             return true;
         }
     } else {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupCommandExecutor::resetScene() - Fatal Error: No scene at index -> " + QString::number(pos);
             #ifdef Q_OS_WIN
                 qDebug() << msg;

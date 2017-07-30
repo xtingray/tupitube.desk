@@ -41,7 +41,7 @@
 #include "tupgraphicalgorithm.h"
 #include "tuprotationdial.h"
 
-// Tupi Framework 
+// TupiTube Framework 
 #include "tupscene.h"
 #include "tconfig.h"
 #include "tapplication.h"
@@ -78,7 +78,7 @@ struct TupPaintAreaBase::Private
 
 TupPaintAreaBase::TupPaintAreaBase(QWidget *parent, QSize dimension, TupLibrary *library) : QGraphicsView(parent), k(new Private)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupPaintAreaBase::TupPaintAreaBase()]";
         #else
@@ -150,7 +150,7 @@ void TupPaintAreaBase::drawActionSafeArea(bool draw)
 void TupPaintAreaBase::setTool(TupToolPlugin *tool)
 {
     if (!scene()) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupPaintAreaBase::setTool() - Fatal Error: No scene available";
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -182,7 +182,7 @@ bool TupPaintAreaBase::actionSafeAreaFlag() const
 
 void TupPaintAreaBase::mousePressEvent(QMouseEvent * event)
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupPaintAreaBase::mousePressEvent()]";
         #else
@@ -191,7 +191,7 @@ void TupPaintAreaBase::mousePressEvent(QMouseEvent * event)
     #endif
 
     if (!canPaint()) { 
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupPaintAreaBase::mousePressEvent() -> I can't paint right now!";
             #ifdef Q_OS_WIN
                 qWarning() << msg;
@@ -210,7 +210,7 @@ void TupPaintAreaBase::mousePressEvent(QMouseEvent * event)
 void TupPaintAreaBase::mouseMoveEvent(QMouseEvent *event)
 {
     if (!canPaint()) { 
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupPaintAreaBase::mouseMoveEvent() - Canvas is busy. Can't paint!";
             #ifdef Q_OS_WIN
                 qWarning() << msg;
@@ -454,7 +454,7 @@ void TupPaintAreaBase::drawPadLock(QPainter *painter, const QRectF &rect, QStrin
 
 bool TupPaintAreaBase::canPaint() const
 {
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupPaintAreaBase::canPaint()]";
         #else
@@ -468,7 +468,7 @@ bool TupPaintAreaBase::canPaint() const
             return !frame->isLocked();
         }
     } else {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupPaintAreaBase::canPaint() - Warning: Scene is NULL!";
             #ifdef Q_OS_WIN
                 qWarning() << msg;

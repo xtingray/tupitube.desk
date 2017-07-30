@@ -84,7 +84,7 @@ void TupGraphicLibraryItem::fromXml(const QString &xml)
 void TupGraphicLibraryItem::setObject(TupLibraryObject *object)
 {
     if (!object) {
-        #ifdef K_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupGraphicLibraryItem::setObject() - Setting null library object";
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -96,7 +96,7 @@ void TupGraphicLibraryItem::setObject(TupLibraryObject *object)
         return;
     }
     
-    #ifdef K_DEBUG
+    #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qWarning() << "TupGraphicLibraryItem::setObject() - object->symbolName(): " << object->symbolName();
         #else
