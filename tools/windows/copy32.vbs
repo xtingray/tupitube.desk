@@ -2,8 +2,8 @@ Set fileSystem = CreateObject("Scripting.FileSystemObject")
 
 zlibDir = "c:\GnuWin32\bin"
 quazipDir = "c:\Quazip\lib"
-sourceDir = "c:\devel\sources\tupi\src"
-tupiDir = "c:\tupi"
+sourceDir = "c:\devel\sources\tupitube.desk\src"
+tupiDir = "c:\tupitube"
 
 If fileSystem.FolderExists(tupiDir) Then
 fileSystem.DeleteFolder tupiDir
@@ -24,11 +24,11 @@ fileSystem.CreateFolder tupiDir & "\lib\libav"
 fileSystem.CopyFile "c:\GnuWin32\bin\zlib1.dll", tupiDir & "\lib\libav\"
 fileSystem.CopyFile "c:\devel\sources\platforms\qwindows.dll", tupiDir & "\bin\platforms\qwindows.dll"
 fileSystem.CopyFile quazipDir & "\quazip.dll", tupiDir & "\lib\quazip.dll"
-fileSystem.CopyFile "c:\devel\sources\tupi\tools\windows\tupitube.iss", tupiDir & "\tupitube.iss"
-fileSystem.CopyFile "c:\devel\sources\tupi\tools\windows\tupitube.ico", tupiDir & "\bin\tupitube.ico"
-fileSystem.CopyFile "c:\devel\sources\tupi\tools\windows\TupiTube.bat", tupiDir & "\bin\TupiTube.bat"
-fileSystem.CopyFile "c:\devel\sources\tupi\tools\windows\TupiTube.vbs", tupiDir & "\bin\TupiTube.vbs"
-fileSystem.CopyFile sourceDir & "\shell\release\tupitube.exe", tupiDir & "\bin\tupitube.exe"
+fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\tupitube.iss", tupiDir & "\tupitube.iss"
+fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\tupitube.ico", tupiDir & "\bin\tupitube.ico"
+fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\TupiTube.bat", tupiDir & "\bin\TupiTube.bat"
+fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\TupiTube.vbs", tupiDir & "\bin\TupiTube.vbs"
+fileSystem.CopyFile sourceDir & "\shell\release\tupitube.desk.exe", tupiDir & "\bin\tupitube.desk.exe"
 fileSystem.CopyFile sourceDir & "\framework\core\release\tupifwcore.dll", tupiDir & "\lib\tupifwcore.dll"
 fileSystem.CopyFile sourceDir & "\framework\gui\release\tupifwgui.dll", tupiDir & "\lib\tupifwgui.dll"
 fileSystem.CopyFile sourceDir & "\store\release\tupistore.dll", tupiDir & "\lib\tupistore.dll"

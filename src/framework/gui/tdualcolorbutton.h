@@ -38,6 +38,8 @@
 
 #include "tglobal.h"
 
+#include <QWidget>
+
 class T_GUI_EXPORT TDualColorButton : public QWidget
 {
     Q_OBJECT

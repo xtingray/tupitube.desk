@@ -39,6 +39,8 @@
 #include "tglobal.h"
 #include "talgorithm.h"
 
+#include <QWidget>
+
 class T_CORE_EXPORT TipDatabase : public QWidget
 {
     Q_OBJECT

@@ -35,7 +35,6 @@
 
 #include "tdualcolorbutton.h"
 
-#include <QWidget>
 #include <QMouseEvent>
 #include <QPixmap>
 #include <QPaintEvent>

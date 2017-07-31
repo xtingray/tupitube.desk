@@ -37,7 +37,6 @@
 
 #include <QDomDocument>
 #include <QFile>
-#include <QWidget>
 #include <QList>
 
 struct TipDatabase::Private

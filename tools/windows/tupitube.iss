@@ -87,5 +87,5 @@ Root: HKCR; Subkey: "TupiTubeDesk\DefaultIcon"; ValueType: string; ValueName: ""
 Root: HKCR; Subkey: "TupiTubeDesk\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\bin\TupiTube.vbs"" ""%1"""; Flags: uninsdeletekey
 
 [Icons]
-Name: "{group}\TupiTube"; Filename: "{app}\bin\TupiTube.vbs"; IconFilename: "{app}\bin\tupitube.ico"
+Name: "{group}\TupiTube Desk"; Filename: "{app}\bin\TupiTube.vbs"; IconFilename: "{app}\bin\tupitube.ico"
 Name: "{commondesktop}\TupiTube Desk"; Filename: "{app}\bin\TupiTube.vbs"; IconFilename: "{app}\bin\tupitube.ico"; Comment: "2D Animation Tool"
