@@ -1307,7 +1307,6 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
         }
     }
 
-    // if (event->key() == Qt::Key_1) {
     if (event->key() == Qt::Key_Plus) {
         if (event->modifiers() == Qt::NoModifier) {
             emit zoomIn();
@@ -1315,7 +1314,6 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
         }
     }
 
-    // if (event->key() == Qt::Key_2) {
     if (event->key() == Qt::Key_Minus) {
         if (event->modifiers() == Qt::NoModifier) {
             emit zoomOut();
@@ -1329,6 +1327,7 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
         return;
     }
 
+    /*
     if (event->key() == Qt::Key_PageUp) {
         if (event->modifiers() == Qt::ControlModifier)
             removeCurrentFrame();
@@ -1344,6 +1343,7 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
             goOneFrameForward();
         return;
     }
+    */
 
     // Redundant shortcut for "Add Frame" feature (as 9)
     if (event->key() == Qt::Key_Insert) {
@@ -1355,8 +1355,12 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
         TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex, TupProjectRequest::Add, tr("Frame"));
         emit requestTriggered(&request);
 
-        request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex, TupProjectRequest::Select);
+        QString selection = QString::number(layerIndex) + "," + QString::number(layerIndex) + ","
+                            + QString::number(frameIndex) + "," + QString::number(frameIndex);
+
+        request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex, TupProjectRequest::Select, selection);
         emit localRequestTriggered(&request);
+
         return;
     }
 
@@ -1375,8 +1379,13 @@ void TupPaintArea::goOneFrameBack()
     TupGraphicsScene *scene = graphicsScene();
 
     if (scene->currentFrameIndex() > 0) {
-        TupProjectRequest request = TupRequestBuilder::createFrameRequest(scene->currentSceneIndex(), scene->currentLayerIndex(),
-                                                                        scene->currentFrameIndex() - 1, TupProjectRequest::Select, "1");
+        int layerIndex = scene->currentLayerIndex();
+        int frameIndex = scene->currentFrameIndex() - 1;
+        QString selection = QString::number(layerIndex) + "," + QString::number(layerIndex) + ","
+                            + QString::number(frameIndex) + "," + QString::number(frameIndex);
+
+        TupProjectRequest request = TupRequestBuilder::createFrameRequest(scene->currentSceneIndex(), layerIndex,
+                                                                          frameIndex, TupProjectRequest::Select, selection);
         emit localRequestTriggered(&request);
     }
 }
@@ -1393,9 +1402,10 @@ void TupPaintArea::goOneFrameForward()
                                                      frameIndex,
                                                      TupProjectRequest::Add, tr("Frame"));
         emit requestTriggered(&request);
+        frameIndex = scene->currentFrameIndex();
     }
 
-    goToFrame(scene->currentFrameIndex() + 1);
+    goToFrame(frameIndex);
 }
 
 void TupPaintArea::copyCurrentFrame()
@@ -1439,37 +1449,22 @@ void TupPaintArea::pasteCurrentFrame()
 
 void TupPaintArea::copyFrameForward()
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupPaintArea::copyFrameForward()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     TupGraphicsScene *gScene = graphicsScene();
     int sceneIndex = gScene->currentSceneIndex();
     int layerIndex = gScene->currentLayerIndex();
     int frameIndex = gScene->currentFrameIndex();
 
-    QString frameName = tr("Frame");
-    TupScene *scene = k->project->sceneAt(sceneIndex);
-    if (scene) {
-        TupLayer *layer = scene->layerAt(layerIndex);
-        if (layer) {
-            TupFrame *frame = layer->frameAt(frameIndex);
-            if (frame)
-                frameName = frame->frameName();
-        }
-    }
-
-    TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex, TupProjectRequest::Copy);
-    emit localRequestTriggered(&request);
-
-    int target = frameIndex + 1;
-    request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, target, TupProjectRequest::Add, "");
+    TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex,
+                                                                      TupProjectRequest::Extend, 1);
     emit requestTriggered(&request);
-
-    request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, target, TupProjectRequest::Paste);
-    emit localRequestTriggered(&request);
-
-    request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, target, TupProjectRequest::Rename, frameName);
-    emit requestTriggered(&request);
-
-    request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, target, TupProjectRequest::Select);
-    emit localRequestTriggered(&request);
 }
 
 void TupPaintArea::removeCurrentFrame()
@@ -1496,52 +1491,55 @@ void TupPaintArea::removeCurrentFrame()
     int layerIndex = gScene->currentLayerIndex();
     int frameIndex = gScene->currentFrameIndex();
 
-    int framesCount = 0;
-    TupScene *scene = k->project->sceneAt(sceneIndex);
-    if (scene) {
-        TupLayer *layer = scene->layerAt(layerIndex);
-        if (layer)
-            framesCount = layer->framesCount();
-        else
-            return;
-    } else {
-        return;
-    }
-
-    TupProjectRequest request;
-    if (framesCount == 1) {
-        request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, 0, TupProjectRequest::Reset);
-        emit requestTriggered(&request);
-
-        request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, 0, TupProjectRequest::Rename, tr("Frame"));
-        emit requestTriggered(&request);
-    } else {
-        request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex, TupProjectRequest::Remove);
-        emit requestTriggered(&request);
-
-        if (frameIndex > 0) {
-            request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex - 1, TupProjectRequest::Select);
-            emit localRequestTriggered(&request);
-        }
-    }
+    TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex,
+                                                                      TupProjectRequest::RemoveSelection, "1,1:0");
+    emit requestTriggered(&request);
 }
 
 void TupPaintArea::goToFrame(int index)
 {
     TupGraphicsScene *scene = graphicsScene();
+    int layerIndex = scene->currentLayerIndex();
+    QString selection = QString::number(layerIndex) + "," + QString::number(layerIndex) + ","
+                        + QString::number(index) + "," + QString::number(index);
+
     TupProjectRequest request = TupRequestBuilder::createFrameRequest(scene->currentSceneIndex(),
-                                                                    scene->currentLayerIndex(),
-                                                                    index,
-                                                                    TupProjectRequest::Select);
-                                                                    // TupProjectRequest::Select, "1");
+                                                   layerIndex, index, TupProjectRequest::Select, selection);
     emit localRequestTriggered(&request);
 }
 
 void TupPaintArea::goToFrame(int frameIndex, int layerIndex, int sceneIndex)
 {
+    QString selection = QString::number(layerIndex) + "," + QString::number(layerIndex) + ","
+                        + QString::number(frameIndex) + "," + QString::number(frameIndex);
+
     TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex,
-                                                                      TupProjectRequest::Select);
+                                                                      TupProjectRequest::Select, selection);
     emit localRequestTriggered(&request);
+}
+
+void TupPaintArea::goOneLayerBack()
+{
+    TupGraphicsScene *gScene = graphicsScene();
+    int sceneIndex = gScene->currentSceneIndex();
+    int layerIndex = gScene->currentLayerIndex();
+    int frameIndex = gScene->currentFrameIndex();
+
+    if (layerIndex > 0)
+        goToFrame(frameIndex, layerIndex-1, sceneIndex);
+}
+
+void TupPaintArea::goOneLayerForward()
+{
+    TupGraphicsScene *gScene = graphicsScene();
+    int sceneIndex = gScene->currentSceneIndex();
+    int layerIndex = gScene->currentLayerIndex();
+    int frameIndex = gScene->currentFrameIndex();
+
+    layerIndex++;
+    TupScene *scene = gScene->scene();
+    if (layerIndex < scene->layersCount())
+        goToFrame(frameIndex, layerIndex, sceneIndex);
 }
 
 void TupPaintArea::goToScene(int sceneIndex)

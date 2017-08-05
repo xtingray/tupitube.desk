@@ -188,6 +188,8 @@ class TupMainWindow : public TabbedMainWindow
         void hideTopPanels();
         void showWebMessage();
         void setUpdateFlag(bool flag);
+        void checkTimeLineVisibility(bool visible);
+        void checkExposureVisibility(bool visible);
 
     private:
         TupProjectManager *m_projectManager;
@@ -254,6 +256,7 @@ class TupMainWindow : public TabbedMainWindow
     signals:
         void responsed(TupProjectResponse *);
         void updateAnimationModule(TupProject *, int, int, int);
+        void activeDockChanged(int);
 };
 
 #endif

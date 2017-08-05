@@ -392,9 +392,23 @@ void TupExposureTable::selectFrame(int layerIndex, int frameIndex, const QString
             qDebug() << "[TupExposureTable::selectFrame()]";
         #else
             T_FUNCINFO;
+            tWarning() << "layerIndex -> " << layerIndex;
+            tWarning() << "frameIndex -> " << frameIndex;
             tWarning() << "selection -> " << selection;
         #endif
     #endif
+
+    if (selection.isEmpty()) {
+        #ifdef TUP_DEBUG
+            QString msg = "TupExposureTable::selectFrame() - Selection area parameter is EMPTY!";
+            #ifdef Q_OS_WIN
+                qDebug() << msg;
+            #else
+                tError() << msg;
+            #endif
+        #endif
+        return;
+    }
 
     if (k->header->currentSectionIndex() != layerIndex)
         k->header->updateSelection(layerIndex);
@@ -415,7 +429,7 @@ void TupExposureTable::selectFrame(int layerIndex, int frameIndex, const QString
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupExposureTable::selectFrame() - Selection area parameter is misconfigured!";
+            QString msg = "TupExposureTable::selectFrame() - Selection area parameter is MISCONFIGURED!";
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else

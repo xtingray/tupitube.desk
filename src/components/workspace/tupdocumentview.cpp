@@ -138,6 +138,8 @@ struct TupDocumentView::Private
     TAction *borderFillAction;
     TAction *fillAction;
     TAction *papagayoAction;
+
+    DockType currentDock;
 };
 
 TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNetworked, const QStringList &users) : QMainWindow(parent), k(new Private)
@@ -760,14 +762,41 @@ void TupDocumentView::loadPlugin(int menu, int index)
     switch (menu) {
             case TupToolPlugin::Arrows:
                  {
-                     if (index == TupToolPlugin::FrameBack) {
-                         k->paintArea->goOneFrameBack();
-                     } else if (index == TupToolPlugin::FrameForward) {
-                                k->paintArea->goOneFrameForward();
-                     } else if (index == TupToolPlugin::QuickCopy) {
-                                k->paintArea->copyFrameForward();
+                     if (k->currentDock == ExposureSheet) {
+                         if (index == TupToolPlugin::UpArrow) {
+                             k->paintArea->goOneFrameBack();
+                         } else if (index == TupToolPlugin::DownArrow) {
+                             k->paintArea->goOneFrameForward();
+                         } else if (index == TupToolPlugin::QuickCopyDown) {
+                             k->paintArea->copyFrameForward();
+                         } else if (index == TupToolPlugin::DeleteUp) {
+                             k->paintArea->removeCurrentFrame();
+                         } else if (index == TupToolPlugin::LeftArrow) {
+                             k->paintArea->goOneLayerBack();
+                         } else if (index == TupToolPlugin::RightArrow) {
+                             k->paintArea->goOneLayerForward();
+                         } 
+
+                         return;
                      }
-                     return;
+
+                     if (k->currentDock == TimeLine) {
+                         if (index == TupToolPlugin::LeftArrow) {
+                             k->paintArea->goOneFrameBack();
+                         } else if (index == TupToolPlugin::RightArrow) {
+                             k->paintArea->goOneFrameForward();
+                         } else if (index == TupToolPlugin::QuickCopyRight) {
+                             k->paintArea->copyFrameForward();
+                         } else if (index == TupToolPlugin::DeleteLeft) {
+                             k->paintArea->removeCurrentFrame();
+                         } else if (index == TupToolPlugin::UpArrow) {
+                             k->paintArea->goOneLayerBack();
+                         } else if (index == TupToolPlugin::DownArrow) {
+                             k->paintArea->goOneLayerForward();
+                         }
+
+                         return;
+                     }
                  }
             break;
             case TupToolPlugin::ColorMenu:
@@ -2235,4 +2264,9 @@ void TupDocumentView::updateBrush(const QBrush &brush)
 {
     k->status->setBrush(brush);
     emit fillColorChanged(brush.color());
+}
+
+void TupDocumentView::updateActiveDock(int currentDock)
+{
+    k->currentDock = DockType(currentDock);
 }

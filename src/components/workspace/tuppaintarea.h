@@ -113,6 +113,8 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         int currentFrameIndex();
         void resetWorkSpaceCenter(const QSize projectSize);
         void updateLoadingFlag(bool flag);
+        void goOneLayerBack();
+        void goOneLayerForward();
 
     public slots:
         void setNextFramesOnionSkinCount(int n);

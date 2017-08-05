@@ -88,6 +88,8 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
     Q_OBJECT
 
     public:
+        enum DockType { None = 0, ExposureSheet, TimeLine };
+
         TupDocumentView(TupProject *project, QWidget *parent = 0, bool isNetworked = true, const QStringList &users = QStringList());
         ~TupDocumentView();
         void setWorkSpaceSize(int width, int height);
@@ -179,6 +181,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         void resetWorkSpaceTransformations();
         void updateBgColor(const QColor color);
         void updatePaintArea();
+        void updateActiveDock(int currentDock);
 
     signals:
         void requestTriggered(const TupProjectRequest *event);

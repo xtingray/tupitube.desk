@@ -258,14 +258,14 @@ void TupCanvas::oneFrameBack()
 {
     if (k->frameIndex > 0) {
         k->frameIndex--;
-        emit callAction(TupToolPlugin::Arrows, TupToolPlugin::FrameBack);
+        emit callAction(TupToolPlugin::Arrows, TupToolPlugin::LeftArrow);
     }
 }
 
 void TupCanvas::oneFrameForward()
 {
     k->frameIndex++;
-    emit callAction(TupToolPlugin::Arrows, TupToolPlugin::FrameForward);
+    emit callAction(TupToolPlugin::Arrows, TupToolPlugin::RightArrow);
 }
 
 void TupCanvas::wakeUpPencil()

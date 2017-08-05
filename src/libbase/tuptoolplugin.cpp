@@ -182,7 +182,29 @@ QPair<int, int> TupToolPlugin::setKeyAction(int key, Qt::KeyboardModifiers modif
     TupToolPlugin::MenuIndex menu = TupToolPlugin::BrushesMenu;
     int tool = TupToolPlugin::PencilTool;
 
-    switch (key) {
+    if (modifiers & Qt::ControlModifier) {
+        switch (key) {
+            case Qt::Key_Right:
+                menu = TupToolPlugin::Arrows;
+                tool = TupToolPlugin::QuickCopyRight;
+            break;
+            case Qt::Key_Down:
+            case Qt::Key_PageDown:
+                menu = TupToolPlugin::Arrows;
+                tool = TupToolPlugin::QuickCopyDown;
+            break;
+            case Qt::Key_Up:
+            case Qt::Key_PageUp:
+                menu = TupToolPlugin::Arrows;
+                tool = TupToolPlugin::DeleteUp; 
+            break;
+            case Qt::Key_Left:
+                menu = TupToolPlugin::Arrows;
+                tool = TupToolPlugin::DeleteLeft;              
+            break;
+        }
+    } else {
+        switch (key) {
             case Qt::Key_P:
                  if (modifiers == Qt::ShiftModifier) {
                      menu = TupToolPlugin::ColorMenu;
@@ -244,32 +266,26 @@ QPair<int, int> TupToolPlugin::setKeyAction(int key, Qt::KeyboardModifiers modif
                  tool = TupToolPlugin::ContourTool;
             break;
 
-            /*
-            case Qt::Key_Z:
-                 menu = TupToolPlugin::ZoomMenu;
-                 if (modifiers == Qt::ShiftModifier)
-                     tool = TupToolPlugin::ZoomOutTool;
-                 else
-                     tool = TupToolPlugin::ZoomInTool;
+            case Qt::Key_Left:
+                 menu = TupToolPlugin::Arrows;
+                 tool = TupToolPlugin::LeftArrow;
             break;
-
-            case Qt::Key_H:
-                 menu = TupToolPlugin::ZoomMenu;
-                 tool = TupToolPlugin::ShiftTool;
-            break;
-            */
 
             case Qt::Key_Right:
                  menu = TupToolPlugin::Arrows;
-                 if (modifiers == Qt::ControlModifier)
-                     tool = TupToolPlugin::QuickCopy;
-                 else
-                     tool = TupToolPlugin::FrameForward;
+                 tool = TupToolPlugin::RightArrow;
             break;
 
-            case Qt::Key_Left:
+            case Qt::Key_PageUp:
+            case Qt::Key_Up:
                  menu = TupToolPlugin::Arrows;
-                 tool = TupToolPlugin::FrameBack;
+                 tool = TupToolPlugin::UpArrow;
+            break;
+
+            case Qt::Key_PageDown:
+            case Qt::Key_Down:
+                 menu = TupToolPlugin::Arrows;
+                 tool = TupToolPlugin::DownArrow;
             break;
 
             case Qt::Key_Delete:
@@ -282,6 +298,7 @@ QPair<int, int> TupToolPlugin::setKeyAction(int key, Qt::KeyboardModifiers modif
                  menu = TupToolPlugin::InvalidMenu;
                  tool = TupToolPlugin::InvalidBrush;
             }
+        }
     }
 
     QPair<int, int> flags;

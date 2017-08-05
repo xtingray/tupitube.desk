@@ -301,7 +301,6 @@ void TupExposureSheet::applyAction(int action)
                      flags.chop(1); 
 
                      QString selection = QString::number(layers) + "," + QString::number(frames) + ":" + flags;
-
                      TupProjectRequest request = TupRequestBuilder::createFrameRequest(scene, coords.at(0), coords.at(2), 
                                                                                        TupProjectRequest::RemoveSelection, selection);
                      emit requestTriggered(&request);
@@ -1068,6 +1067,8 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
                                       }
                                   }
                               }
+                              table->clearSelection();
+                              table->selectFrame(layerIndex, frameLimit-1);
                           } else {
                               removeBlock(table, layerIndex, frameIndex, layersTotal, framesTotal);
                           }

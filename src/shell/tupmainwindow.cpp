@@ -329,6 +329,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(animationTab, SIGNAL(fillColorChanged(const QColor &)), m_colorPalette, SLOT(updateFillColor(const QColor &)));
         connect(animationTab, SIGNAL(bgColorChanged(const QColor &)), m_colorPalette, SLOT(updateBgColor(const QColor &)));
         connect(animationTab, SIGNAL(penWidthChanged(int)), this, SLOT(updatePenThickness(int)));
+        connect(this, SIGNAL(activeDockChanged(int)), animationTab, SLOT(updateActiveDock(int)));
 
         animationTab->setAntialiasing(true);
 

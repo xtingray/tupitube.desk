@@ -113,6 +113,8 @@ void TupMainWindow::createGUI()
     // connect(m_exposureSheet, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
 
     exposureView = addToolView(m_exposureSheet, Qt::RightDockWidgetArea, Animation, "Exposure Sheet", QKeySequence(tr("Shift+E")));
+    connect(exposureView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkTimeLineVisibility(bool)));
+
     m_actionManager->insert(exposureView->toggleViewAction(), "show_exposure");
     addToPerspective(exposureView->toggleViewAction(), Animation);
 
@@ -124,6 +126,8 @@ void TupMainWindow::createGUI()
     connect(m_timeLine, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
 
     timeView = addToolView(m_timeLine, Qt::BottomDockWidgetArea, Animation, "Time Line", QKeySequence(tr("Shift+T")));
+    connect(timeView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkExposureVisibility(bool)));
+
     m_actionManager->insert(timeView->toggleViewAction(), "show_timeline");
     addToPerspective(timeView->toggleViewAction(), Animation);
 
@@ -472,5 +476,31 @@ void TupMainWindow::hideTopPanels()
             menuBar()->setVisible(true);
             mainToolBar->setVisible(true);
         }
+    }
+}
+
+void TupMainWindow::checkTimeLineVisibility(bool visible)
+{
+    if (visible) {
+        if (timeView->isExpanded())
+            timeView->expandDock(false);
+
+        emit activeDockChanged(1);
+    } else {
+        if (!timeView->isExpanded())
+            emit activeDockChanged(0);
+    }
+}
+
+void TupMainWindow::checkExposureVisibility(bool visible)
+{
+    if (visible) {
+        if (exposureView->isExpanded())
+            exposureView->expandDock(false);
+
+        emit activeDockChanged(2);
+    } else {
+        if (!exposureView->isExpanded())
+            emit activeDockChanged(0);
     }
 }
