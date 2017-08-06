@@ -75,10 +75,10 @@ struct TupDocumentView::Private
     QMenu *motionMenu;
     QMenu *miscMenu;
     QMenu *filterMenu;
-    QMenu *toolsMenu;
-    QMenu *editMenu;
-    QMenu *viewMenu;
-    QMenu *orderMenu;
+    // QMenu *toolsMenu;
+    // QMenu *editMenu;
+    // QMenu *viewMenu;
+    // QMenu *orderMenu;
 
     QToolBar *barGrid;
     QToolBar *toolbar;
@@ -689,14 +689,6 @@ void TupDocumentView::loadPlugins()
         k->miscMenu->addAction(k->actionManager->find("post_image"));
 
     k->miscMenu->addAction(k->actionManager->find("storyboard"));
-
-    #ifdef Q_OS_WIN
-        if (QSysInfo::windowsVersion() != QSysInfo::WV_XP)
-            k->miscMenu->addAction(k->actionManager->find("camera"));
-    #else
-        k->miscMenu->addAction(k->actionManager->find("camera"));
-    #endif
-
     k->miscMenu->addAction(k->actionManager->find("papagayo"));
 
     foreach (QObject *plugin, TupPluginManager::instance()->filters()) {
@@ -737,6 +729,15 @@ void TupDocumentView::loadPlugins()
     k->toolbar->addAction(k->borderFillAction);
     k->toolbar->addSeparator();
     k->toolbar->addAction(k->motionMenu->menuAction());
+    #ifdef Q_OS_WIN
+        if (QSysInfo::windowsVersion() != QSysInfo::WV_XP) {
+            k->toolbar->addSeparator();
+            k->toolbar->addAction(k->actionManager->find("camera"));
+        }
+    #else
+        k->toolbar->addSeparator();
+        k->toolbar->addAction(k->actionManager->find("camera"));
+    #endif
     k->toolbar->addSeparator();
     k->toolbar->addAction(k->miscMenu->menuAction());
 

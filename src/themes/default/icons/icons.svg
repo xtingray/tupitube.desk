@@ -2937,6 +2937,16 @@
        y1="3.4793684"
        x2="12.568782"
        y2="2.7563672" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient5849"
+       id="linearGradient11049-5"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(8.4891828,0,0,8.4891828,195.71409,719.8627)"
+       x1="46.268806"
+       y1="10.217085"
+       x2="46.238808"
+       y2="7.7501349" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -2945,9 +2955,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.5"
-     inkscape:cx="901.51397"
-     inkscape:cy="1626.071"
+     inkscape:zoom="5.6568542"
+     inkscape:cx="333.3015"
+     inkscape:cy="284.65324"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -15328,6 +15338,60 @@
          id="path3820-0-8-2"
          style="fill:#ffffff;fill-opacity:1;stroke:#c0c0c0;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          sodipodi:type="arc" />
+    </g>
+    <g
+       id="g14897"
+       transform="translate(-254.50982,-5.7761437)"
+       inkscape:export-xdpi="72.050003"
+       inkscape:export-ydpi="72.050003">
+      <path
+         inkscape:export-ydpi="70.809998"
+         inkscape:export-xdpi="70.809998"
+         inkscape:export-filename="/media/windows/linux/xtingray/tupi/sources/tupi/src/themes/dark/icons/camera.png"
+         sodipodi:nodetypes="ccccccccc"
+         inkscape:connector-curvature="0"
+         id="rect3928-2-0"
+         d="m 570.46339,785.50783 3.27893,-5.22399 c 2.18964,-0.35269 8.22892,-1.18488 8.22892,-1.18488 4.34552,-1.31676 8.69104,-0.95414 12.50622,0.29236 0,0 4.20433,1.14197 6.55236,1.16653 l 4.27978,2.68499 -0.25779,14.6381 -32.26024,0.90558 z"
+         style="fill:url(#linearGradient11049-5);fill-opacity:1;stroke:none" />
+      <path
+         sodipodi:nodetypes="ccccccccccccccccc"
+         inkscape:export-ydpi="70.809998"
+         inkscape:export-xdpi="70.809998"
+         inkscape:export-filename="/media/windows/linux/xtingray/tupi/sources/tupi/src/themes/dark/icons/camera.png"
+         inkscape:connector-curvature="0"
+         id="path3132-4-9"
+         d="m 569.25318,786.68185 1.9448,13.55702 33.70483,-0.18761 1.34345,-17.66621 -4.89425,-2.64092 -13.74944,-2.89804 -14.87445,2.60195 -3.95473,6.20091 3.0508,-0.26253 2.6691,-3.56609 13.261,-4.02295 13.261,3.97705 2.79235,2.29891 -1.71867,13.7269 -27.88965,0 -2.50782,-11.30599 z"
+         style="fill:#008700;fill-opacity:1;stroke:none" />
+      <g
+         inkscape:export-ydpi="70.809998"
+         inkscape:export-xdpi="70.809998"
+         transform="matrix(1.3240284,0,0,1.3240284,41.204818,721.0651)"
+         id="g14848-8">
+        <path
+           style="fill:none;fill-opacity:0.44875351;stroke:#008700;stroke-width:1.91738439;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1"
+           d="m 420.85861,50.70981 c 0,4.09492 -3.5567,7.4145 -7.94412,7.4145 -4.38741,0 -7.94411,-3.31958 -7.94411,-7.4145 0,-4.09492 3.04529,-7.43895 7.41451,-7.8382 3.47754,-0.31776 8.90572,1.73517 8.89985,7.4181"
+           id="path4303-0"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="csssc"
+           inkscape:export-filename="/media/windows/linux/xtingray/tupi/sources/tupi/src/themes/dark/icons/camera.png"
+           inkscape:export-xdpi="541.01862"
+           inkscape:export-ydpi="541.01862" />
+        <path
+           sodipodi:type="arc"
+           style="fill:#dcdcdc;fill-opacity:0;stroke:#008700;stroke-width:1.37766349;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="path4325-9"
+           sodipodi:cx="413.12634"
+           sodipodi:cy="50.438324"
+           sodipodi:rx="4.7185645"
+           sodipodi:ry="4.5663524"
+           d="m 417.84491,50.438324 a 4.7185645,4.5663524 0 0 1 -4.66085,4.566011 4.7185645,4.5663524 0 0 1 -4.77487,-4.45431 4.7185645,4.5663524 0 0 1 4.54404,-4.674979 4.7185645,4.5663524 0 0 1 4.88603,4.339943"
+           sodipodi:start="0"
+           sodipodi:end="6.2342569"
+           sodipodi:open="true"
+           inkscape:export-filename="/media/windows/linux/xtingray/tupi/sources/tupi/src/themes/dark/icons/camera.png"
+           inkscape:export-xdpi="541.01862"
+           inkscape:export-ydpi="541.01862" />
+      </g>
     </g>
   </g>
 </svg>
