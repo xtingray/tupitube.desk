@@ -70,6 +70,7 @@ class TUPITUBE_EXPORT TupBasicCameraInterface : public QFrame
     signals:
         void projectSizeHasChanged(const QSize size);
         void pictureHasBeenSelected(int id, const QString path);
+        void closed();
 
     private slots:
         void changeCameraDevice(int index);

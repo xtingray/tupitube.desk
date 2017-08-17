@@ -156,7 +156,6 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         void selectFrame(int frame, int layer, int scene);
         void selectScene(int scene);
 
-    private slots:
         void showPos(const QPointF &point);	
         void setCursor(const QCursor &cursor);
         void selectToolFromMenu(QAction *action);
@@ -167,6 +166,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
 
         void updatePen(const QPen &pen);
         void updateBrush(const QBrush &brush);
+        void updateCameraMode();
 
     public slots:
         void undo();
@@ -175,7 +175,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         void applyFilter();
         void drawGrid();
         void drawActionSafeArea();
-        bool handleProjectResponse(TupProjectResponse *event);
+        bool handleProjectResponse(TupProjectResponse *response);
         void updateNodesScale(qreal factor);
         void importPapagayoLipSync();
         void resetWorkSpaceTransformations();

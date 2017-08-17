@@ -29,6 +29,7 @@ HEADERS += tuppaintarea.h \
            tupinfowidget.h \
            tupruler.h \
            tupcamerainterface.h \
+           tupreflexinterface.h \
            tupbasiccamerainterface.h \
            tupcameradialog.h \
            tupcamerawindow.h \
@@ -55,6 +56,7 @@ SOURCES += tuppaintarea.cpp \
            tupinfowidget.cpp \
            tupruler.cpp \
            tupcamerainterface.cpp \
+           tupreflexinterface.cpp \
            tupbasiccamerainterface.cpp \
            tupcameradialog.cpp \
            tupcamerawindow.cpp \

@@ -105,6 +105,12 @@ void TupCameraWindow::stopCamera()
 
 void TupCameraWindow::reset()
 {
+    if (k->videoSurface)
+        k->videoSurface->stop();
+
+    if (k->camera->state() == QCamera::ActiveState)
+        k->camera->stop();
+
     QDir dir(k->dir);
     foreach (QString file, dir.entryList(QStringList() << "*.jpg")) {
              QString absolute = dir.absolutePath() + "/" + file;
@@ -113,7 +119,7 @@ void TupCameraWindow::reset()
 
     if (! dir.rmdir(dir.absolutePath())) {
         #ifdef TUP_DEBUG
-            QString msg = "TupCameraInterface::closeEvent() - Fatal Error: Can't remove pictures directory -> " + dir.absolutePath();
+            QString msg = "TupCameraWindow::reset() - Fatal Error: Can't remove pictures directory -> " + dir.absolutePath();
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else
@@ -121,12 +127,6 @@ void TupCameraWindow::reset()
             #endif
         #endif 
     }
-
-    if (k->videoSurface)
-        k->videoSurface->stop();
-
-    if (k->camera->state() == QCamera::ActiveState)
-        k->camera->stop();
 }
 
 void TupCameraWindow::error(QCamera::Error error)
@@ -181,15 +181,12 @@ void TupCameraWindow::takePicture(int counter)
         prev += "00";
     if (counter >= 10 && counter < 100)
         prev += "0";
-
     QString imagePath = k->dir + "/" + prev + QString::number(counter) + ".jpg";
 
     //on half pressed shutter button
     k->camera->searchAndLock();
-
     //on shutter button pressed
     k->imageCapture->capture(imagePath);
-
     //on shutter button released
     k->camera->unlock();
 
@@ -199,6 +196,15 @@ void TupCameraWindow::takePicture(int counter)
 void TupCameraWindow::imageSavedFromCamera(int id, const QString path)
 {
     Q_UNUSED(id);
+
+    #ifdef TUP_DEBUG
+        QString msg = "TupCameraInterface::imageSavedFromCamera() - Picture path -> " + path;
+        #ifdef Q_OS_WIN
+            qDebug() << msg;
+        #else
+            tWarning() << msg;
+        #endif
+    #endif
 
     if (path.isEmpty())
         return;

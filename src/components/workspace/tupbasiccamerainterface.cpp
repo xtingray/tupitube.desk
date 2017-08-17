@@ -180,6 +180,9 @@ void TupBasicCameraInterface::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event);
 
+    if (k->currentCamera->state() == QCamera::ActiveState)
+        k->currentCamera->stop();
+
     QDir dir(k->path);
     foreach (QString file, dir.entryList(QStringList() << "*.jpg")) {
              QString absolute = dir.absolutePath() + "/" + file;
@@ -197,8 +200,7 @@ void TupBasicCameraInterface::closeEvent(QCloseEvent *event)
         #endif
     }
 
-    if (k->currentCamera->state() == QCamera::ActiveState)
-        k->currentCamera->stop();
+    emit closed();
 }
 
 QString TupBasicCameraInterface::randomPath()

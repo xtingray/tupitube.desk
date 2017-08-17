@@ -48,6 +48,8 @@ struct TupCameraDialog::Private
     QString cameraReference;
     int deviceIndex;
     bool useBasicInterface;
+    QCheckBox *lowCheck;
+    bool isWebcam;
 };
 
 TupCameraDialog::TupCameraDialog(QComboBox *devicesCombo, const QSize projectSize, QList<QSize> resolutions, QWidget *parent) : QDialog(parent), k(new Private)
@@ -64,8 +66,8 @@ TupCameraDialog::TupCameraDialog(QComboBox *devicesCombo, const QSize projectSiz
 
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 
+    k->cameraReference = k->devicesCombo->itemText(0);
     if (devicesCombo->count() > 1) {
-        k->cameraReference = k->devicesCombo->itemText(0);
         k->deviceIndex = 0; 
         setCamera(k->cameraReference);
 
@@ -79,7 +81,7 @@ TupCameraDialog::TupCameraDialog(QComboBox *devicesCombo, const QSize projectSiz
         QFont font = cameraReference->font();
         font.setBold(true);
         cameraReference->setFont(font);
-        cameraReference->setText(k->devicesCombo->itemText(0));
+        cameraReference->setText(k->cameraReference);
         layout->addWidget(cameraLabel);
         layout->addWidget(cameraReference);
     }
@@ -88,22 +90,29 @@ TupCameraDialog::TupCameraDialog(QComboBox *devicesCombo, const QSize projectSiz
 
     QLabel *resolutionLabel = new QLabel(tr("Available Camera Resolutions:"));
     k->resolutionCombo = new QComboBox();
-    for (int i=0; i<k->resolutions.size(); i++) {
+    int suggested = 0;
+    for (int i = 0; i<k->resolutions.size(); i++) {
          QSize size = k->resolutions.at(i);
          QString label = QString::number(size.width()) + "x" + QString::number(size.height());
          k->resolutionCombo->addItem(label);
+         if (size.width() > projectSize.width())
+             suggested = i;
     }
-    k->resolutionCombo->setCurrentIndex(k->resolutions.size() - 1);
-    k->cameraSize = k->resolutions.at(k->resolutions.size() - 1);
+    k->resolutionCombo->setCurrentIndex(suggested);
+    k->cameraSize = k->resolutions.at(suggested);
 
     connect(k->resolutionCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setCameraResolution(int)));
 
     QCheckBox *resizeCheck = new QCheckBox(tr("Resize my project to fit camera resolution"));
     connect(resizeCheck, SIGNAL(toggled(bool)), this, SLOT(projectSizeHasChanged(bool)));
 
-    QCheckBox *lowCheck = new QCheckBox(tr("Use the basic camera interface (low resources)"));
-    connect(lowCheck, SIGNAL(toggled(bool)), this, SLOT(enableBasicCamera(bool)));
+    k->lowCheck = new QCheckBox(tr("Use the basic camera interface (low resources)"));
+    connect(k->lowCheck, SIGNAL(toggled(bool)), this, SLOT(enableBasicCamera(bool)));
 
+    QVBoxLayout *propertiesLayout = new QVBoxLayout;
+    propertiesLayout->addWidget(resizeCheck);
+    propertiesLayout->addWidget(k->lowCheck);
+    
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->addStretch(1);
 
@@ -118,10 +127,11 @@ TupCameraDialog::TupCameraDialog(QComboBox *devicesCombo, const QSize projectSiz
 
     layout->addWidget(resolutionLabel);
     layout->addWidget(k->resolutionCombo);
-    layout->addWidget(resizeCheck);
-    layout->addWidget(lowCheck);
+    layout->addLayout(propertiesLayout);
 
     layout->addLayout(buttonLayout);
+
+    updateCameraType();
 }
 
 TupCameraDialog::~TupCameraDialog()
@@ -130,14 +140,27 @@ TupCameraDialog::~TupCameraDialog()
 
 void TupCameraDialog::changeCameraDevice(const QString &cameraReference)
 {
-    disconnect(k->resolutionCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setCameraResolution(int)));
+    #ifdef TUP_DEBUG
+        QString msg = "TupCameraDialog::changeCameraDevice() - Camera selected -> " + cameraReference;
+        #ifdef Q_OS_WIN
+            qWarning() << msg;
+        #else
+            tWarning() << msg;
+        #endif
+    #endif
+
+    // disconnect(k->resolutionCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setCameraResolution(int)));
+
     k->cameraReference = cameraReference;
     k->deviceIndex = k->devicesCombo->currentIndex();
     setCamera(k->cameraReference);
 
+    updateCameraType();
+
     // QCameraImageCapture *imageCapture = new QCameraImageCapture(k->camera);
     // k->resolutions = imageCapture->supportedResolutions();
 
+    /*
     k->resolutions.clear();
     k->resolutions << QSize(1280, 1024);
     k->resolutions << QSize(1280, 960);
@@ -148,28 +171,30 @@ void TupCameraDialog::changeCameraDevice(const QString &cameraReference)
     k->resolutions << QSize(320, 240);
     k->resolutions << QSize(176, 144);
     k->resolutions << QSize(160, 120);
-	
     k->resolutionCombo->clear();
-
+    int suggested = 0;
     for (int i=0; i<k->resolutions.size(); i++) {
          QSize size = k->resolutions.at(i);
          QString label = QString::number(size.width()) + "x" + QString::number(size.height());
          k->resolutionCombo->addItem(label);
+         if (size.width() > k->projectSize.width())
+             suggested = i;
     }
-    k->resolutionCombo->setCurrentIndex(k->resolutions.size() - 1);
-    k->cameraSize = k->resolutions.at(k->resolutions.size() - 1);
+    k->resolutionCombo->setCurrentIndex(suggested);
+    k->cameraSize = k->resolutions.at(suggested);
 
     connect(k->resolutionCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setCameraResolution(int)));
+    */
 }
 
 void TupCameraDialog::setCamera(const QString &cameraReference)
 {
     foreach(const QByteArray &deviceName, QCamera::availableDevices()) {
-            QString description = k->camera->deviceDescription(deviceName);
-            if (description.compare(cameraReference) == 0) {
-                k->camera = new QCamera(deviceName);
-                break;
-            }
+        QString description = k->camera->deviceDescription(deviceName);
+        if (description.compare(cameraReference) == 0) {
+            k->camera = new QCamera(deviceName);
+            break;
+        }
     }
 }
 
@@ -206,4 +231,20 @@ void TupCameraDialog::enableBasicCamera(bool flag)
 bool TupCameraDialog::useBasicCamera()
 {
     return k->useBasicInterface;
+}
+
+void TupCameraDialog::updateCameraType()
+{
+    if (k->cameraReference.contains("Nikon") || k->cameraReference.contains("Canon")) {
+        k->lowCheck->setVisible(false);
+        k->isWebcam = false;
+    } else {
+        k->lowCheck->setVisible(true);
+        k->isWebcam = true;
+    }
+}
+
+bool TupCameraDialog::isWebcam()
+{
+    return k->isWebcam;
 }

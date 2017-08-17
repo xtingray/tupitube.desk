@@ -55,6 +55,7 @@
 #include "tupstoryboarddialog.h"
 #include "tupruler.h"
 #include "tupcamerainterface.h"
+#include "tupreflexinterface.h"
 #include "tupbasiccamerainterface.h"
 #include "tupcameradialog.h"
 #include "tuplibrary.h"
@@ -140,6 +141,7 @@ struct TupDocumentView::Private
     TAction *papagayoAction;
 
     DockType currentDock;
+    bool cameraMode;
 };
 
 TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNetworked, const QStringList &users) : QMainWindow(parent), k(new Private)
@@ -163,6 +165,7 @@ TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNe
     k->onLineUsers = users;
     k->dynamicFlag = false;
     k->staticFlag = false;
+    k->cameraMode = false;
 
     k->photoCounter = 1;
     k->nodesScaleFactor = 1;
@@ -1121,9 +1124,20 @@ void TupDocumentView::selectToolFromMenu(QAction *action)
     } 
 }
 
-bool TupDocumentView::handleProjectResponse(TupProjectResponse *event)
+bool TupDocumentView::handleProjectResponse(TupProjectResponse *response)
 {
-    return k->paintArea->handleResponse(event);
+    if (TupFrameResponse *frameResponse = static_cast<TupFrameResponse *>(response)) {
+        switch (frameResponse->action()) {
+            case TupProjectRequest::Add:
+                if (k->cameraMode)
+                    QApplication::restoreOverrideCursor();
+            break;
+            default:
+            break;
+        }
+    }
+
+    return k->paintArea->handleResponse(response);
 }
 
 void TupDocumentView::applyFilter()
@@ -1877,25 +1891,30 @@ void TupDocumentView::fullScreenRightClick()
 
 void TupDocumentView::cameraInterface()
 {
+    if (k->cameraMode) {
+        TOsd::self()->display(tr("Warning"), tr("Please, close current camera dialog first!"), TOsd::Error);
+        return;
+    }
+
     int camerasTotal = QCamera::availableDevices().count();
     if (camerasTotal > 0) {
         QList<QByteArray> cameraDevices;
         QComboBox *devicesCombo = new QComboBox;
         foreach(const QByteArray &deviceName, QCamera::availableDevices()) {
-                QCamera *device = new QCamera(deviceName);
-                QString description = device->deviceDescription(deviceName);
-                bool found = false;
-                for (int i=0; i<devicesCombo->count(); i++) {
-                     QString item = devicesCombo->itemText(i);
-                     if (item.compare(description) == 0) {
-                         found = true;
+            QCamera *device = new QCamera(deviceName);
+            QString description = device->deviceDescription(deviceName);
+            bool found = false;
+            for (int i=0; i<devicesCombo->count(); i++) {
+                QString item = devicesCombo->itemText(i);
+                if (item.compare(description) == 0) {
+                    found = true;
                          break;
-                     }
                 }
-                if (!found) {
-                    devicesCombo->addItem(description);
-                    cameraDevices << deviceName;
-                }
+            }
+            if (!found) {
+                devicesCombo->addItem(description);
+                cameraDevices << deviceName;
+            }
         }
 
         /* SQA: This lines should be enabled in some point at the future
@@ -1924,34 +1943,53 @@ void TupDocumentView::cameraInterface()
 
         TupCameraDialog *cameraDialog = new TupCameraDialog(devicesCombo, projectSize, resolutions);
         cameraDialog->show();
-        cameraDialog->move((int) (desktop.screenGeometry().width() - cameraDialog->width())/2 ,
+        cameraDialog->move((int) (desktop.screenGeometry().width() - cameraDialog->width())/2,
                            (int) (desktop.screenGeometry().height() - cameraDialog->height())/2);
 
         if (cameraDialog->exec() == QDialog::Accepted) {
+            k->cameraMode = true;
+            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
             k->cameraSize = cameraDialog->cameraResolution();
-            QString title = QString::number(k->cameraSize.width()) + "x" + QString::number(k->cameraSize.height());
+            QString resolution = QString::number(k->cameraSize.width()) + "x" + QString::number(k->cameraSize.height());
 
             if (cameraDialog->changeProjectSize()) {
                 if (k->cameraSize != projectSize) 
                     resizeProjectDimension(k->cameraSize);
             } 
 
-            if (cameraDialog->useBasicCamera()) {
-                TupBasicCameraInterface *dialog = new TupBasicCameraInterface(title, cameraDevices, devicesCombo, cameraDialog->cameraIndex(), k->cameraSize, k->photoCounter);
+            if (cameraDialog->isWebcam()) {
+                if (cameraDialog->useBasicCamera()) {
+                    TupBasicCameraInterface *dialog = new TupBasicCameraInterface(resolution, cameraDevices, devicesCombo, cameraDialog->cameraIndex(), 
+                                                                                  k->cameraSize, k->photoCounter);
+
+                    connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
+                    connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode())); 
+                    dialog->show();
+                    dialog->move((int) (desktop.screenGeometry().width() - dialog->width())/2 ,
+                                 (int) (desktop.screenGeometry().height() - dialog->height())/2);
+                } else {
+                    TupCameraInterface *dialog = new TupCameraInterface(resolution, cameraDevices, devicesCombo, cameraDialog->cameraIndex(),
+                                                                        k->cameraSize, k->photoCounter);
+
+                    connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
+                    connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode())); 
+                    dialog->show();
+                    dialog->move((int) (desktop.screenGeometry().width() - dialog->width())/2 ,
+                                 (int) (desktop.screenGeometry().height() - dialog->height())/2);
+                }
+            } else { // UI for reflex cameras
+                int index = cameraDialog->cameraIndex();
+                TupReflexInterface *dialog = new TupReflexInterface(devicesCombo->itemText(index), resolution, cameraDevices.at(index), k->cameraSize, k->photoCounter);
 
                 connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
-                dialog->show();
-                dialog->move((int) (desktop.screenGeometry().width() - dialog->width())/2 ,
-                             (int) (desktop.screenGeometry().height() - dialog->height())/2);
-            } else {
-                TupCameraInterface *dialog = new TupCameraInterface(title, cameraDevices, devicesCombo, cameraDialog->cameraIndex(),
-                                                                k->cameraSize, k->photoCounter);
-
-                connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
+                connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode())); 
                 dialog->show();
                 dialog->move((int) (desktop.screenGeometry().width() - dialog->width())/2 ,
                              (int) (desktop.screenGeometry().height() - dialog->height())/2);
             }
+
+            QApplication::restoreOverrideCursor();
         }
     } else {
         // No devices connected!
@@ -2270,4 +2308,9 @@ void TupDocumentView::updateBrush(const QBrush &brush)
 void TupDocumentView::updateActiveDock(int currentDock)
 {
     k->currentDock = DockType(currentDock);
+}
+
+void TupDocumentView::updateCameraMode()
+{
+    k->cameraMode = false;
 }

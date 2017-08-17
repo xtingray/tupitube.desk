@@ -6,9 +6,9 @@
  *                                                                         *
  *   Developers:                                                           *
  *   2010:                                                                 *
- *    Gustavo Gonzalez                                                     *
+ *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
- *   KTooN's versions:                                                     * 
+ *   KTooN's versions:                                                     *
  *                                                                         *
  *   2006:                                                                 *
  *    David Cuadrado                                                       *
@@ -33,47 +33,39 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPCAMERADIALOG_H
-#define TUPCAMERADIALOG_H
+#ifndef TUPREFLEXINTERFACE_H
+#define TUPREFLEXINTERFACE_H
 
 #include "tglobal.h"
-#include "tapplicationproperties.h"
-#include "tconfig.h"
 
 #include <QDialog>
-#include <QComboBox>
-#include <QLabel>
-#include <QComboBox>
-#include <QBoxLayout>
-#include <QCheckBox>
-#include <QPushButton>
-#include <QDir>
+#include <QCloseEvent>
 #include <QCamera>
-#include <QCameraImageCapture>
 
-class TUPITUBE_EXPORT TupCameraDialog : public QDialog
+class TUPITUBE_EXPORT TupReflexInterface : public QDialog
 {
     Q_OBJECT
 
     public:
-        TupCameraDialog(QComboBox *devicesCombo, const QSize projectSize, QList<QSize> resolutions, QWidget *parent=0);
-        ~TupCameraDialog();
+        TupReflexInterface(const QString &cameraDesc, const QString &resolution, QByteArray cameraDevice, 
+                           const QSize cameraSize = QSize(), int counter = 1, QWidget *parent = 0);
+        ~TupReflexInterface();
 
-        int cameraIndex();
-        QSize cameraResolution() const;
-        bool changeProjectSize();
-        bool useBasicCamera();
-        bool isWebcam();
+    protected:
+        void closeEvent(QCloseEvent *event);
+
+    signals:
+        void pictureHasBeenSelected(int id, const QString path);
+        void closed();
 
     private slots:
-        void changeCameraDevice(const QString &camera);
-        void setCameraResolution(int index);
-        void projectSizeHasChanged(bool flag);
-        void enableBasicCamera(bool flag);
+        void takePicture();
+        void reset();
+        void imageSavedFromCamera(int id, const QString path);
+        void error(QCamera::Error error);
 
     private:
-        void setCamera(const QString &cameraReference);
-        void updateCameraType();
+        void randomPath();
 
         struct Private;
         Private *const k;

@@ -73,6 +73,7 @@ class TUPITUBE_EXPORT TupCameraInterface : public QFrame
 
     signals:
         void pictureHasBeenSelected(int id, const QString path);
+        void closed();
 
     private slots:
         void changeCameraDevice(int index);

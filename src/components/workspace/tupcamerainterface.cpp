@@ -87,7 +87,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
 
     QString path = randomPath();
 
-    if (cameraDevices.count() == 1) {
+    if (cameraDevices.count() == 1) { // Only one camera was detected
         QByteArray device = cameraDevices.at(0);
         QCamera *camera = new QCamera(device);
         QCameraImageCapture *imageCapture = new QCameraImageCapture(camera);
@@ -268,6 +268,7 @@ void TupCameraInterface::closeEvent(QCloseEvent *event)
     Q_UNUSED(event);
 
     k->currentCamera->reset();
+    emit closed();
 }
 
 QSize TupCameraInterface::setBestResolution(QList<QSize> resolutions, QSize cameraSize)
