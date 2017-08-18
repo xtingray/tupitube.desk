@@ -6,7 +6,7 @@
  *                                                                         *
  *   Developers:                                                           *
  *   2010:                                                                 *
- *    Gustavo Gonzalez / xtingray                                          *
+ *    Gustav Gonzalez / xtingray                                           *
  *                                                                         *
  *   KTooN's versions:                                                     *
  *                                                                         *
@@ -33,50 +33,42 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPREFLEXINTERFACE_H
-#define TUPREFLEXINTERFACE_H
+#ifndef TUPREFLEXRENDERAREA_H
+#define TUPREFLEXRENDERAREA_H
 
 #include "tglobal.h"
 
-#include <QDialog>
-#include <QCloseEvent>
-#include <QCamera>
+#include <QBrush>
+#include <QPen>
+#include <QPixmap>
+#include <QWidget>
 
-class TUPITUBE_EXPORT TupReflexInterface : public QDialog
+class TUPITUBE_EXPORT TupReflexRenderArea : public QWidget
 {
     Q_OBJECT
 
     public:
-        TupReflexInterface(const QString &cameraDesc, const QString &resolution, QByteArray cameraDevice, 
-                           const QSize cameraSize = QSize(), int counter = 1, QWidget *parent = 0);
-        ~TupReflexInterface();
+        TupReflexRenderArea(const QSize &size, QWidget *parent = 0);
 
-    protected:
-        void closeEvent(QCloseEvent *event);
+        QSize minimumSizeHint() const override;
+        QSize sizeHint() const override;
 
-    signals:
-        void pictureHasBeenSelected(int id, const QString path);
-        void closed();
-
-    private slots:
-        void takePicture();
-        void enableActionSafeArea();
-        void enableGrid();
-        void updateColour();
+        void enableSafeArea(bool enabled);
+        void enableGrid(bool enabled);
         void updateGridSpacing(int space);
-        void showHistory();
+        void updateGridColor(const QColor color);
+        void showHistory(bool flag);
         void updateImagesOpacity(double opacity);
         void updateImagesDepth(int depth);
 
-        void reset();
-        void imageSavedFromCamera(int id, const QString path);
-        void error(QCamera::Error error);
+        void addPixmap(const QString &path);
+
+    protected:
+        void paintEvent(QPaintEvent *event) override;
 
     private:
-        void randomPath();
-
         struct Private;
         Private *const k;
 };
 
-#endif
+#endif // TUPREFLEXRENDERAREA_H

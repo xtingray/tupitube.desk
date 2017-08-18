@@ -34,10 +34,12 @@
  ***************************************************************************/
 
 #include "tupreflexinterface.h"
+#include "tupreflexrenderarea.h"
 #include "tupapplication.h"
 #include "tapplicationproperties.h"
 #include "talgorithm.h"
 #include "tosd.h"
+#include "tupcolorwidget.h"
 
 #include <QCameraImageCapture>
 #include <QBoxLayout>
@@ -45,6 +47,8 @@
 #include <QDir>
 #include <QDesktopWidget>
 #include <QPushButton>
+#include <QSpinBox>
+#include <QColorDialog>
 
 struct TupReflexInterface::Private
 {
@@ -52,9 +56,19 @@ struct TupReflexInterface::Private
     QCameraImageCapture *imageCapture;
     int counter;
     QString path;
+
     QPushButton *clickButton;
-    QLabel *screen;
-    QList<QPixmap> stack;
+    QPushButton *safeAreaButton;
+    QPushButton *gridButton;
+
+    QWidget *gridWidget;
+    QColor gridColor;
+    TupColorWidget *colorCell;
+
+    QPushButton *historyButton;
+    QWidget *historyWidget;
+
+    TupReflexRenderArea *screen;
 };
 
 TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString &resolution, QByteArray cameraDevice, 
@@ -103,10 +117,7 @@ TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString 
     connect(k->camera, SIGNAL(error(QCamera::Error)), this, SLOT(error(QCamera::Error)));
     connect(k->imageCapture, SIGNAL(imageSaved(int, const QString)), this, SLOT(imageSavedFromCamera(int, const QString)));
 
-    QPixmap canvas(cameraSize);
-    canvas.fill(Qt::gray);
-    k->screen = new QLabel;
-    k->screen->setPixmap(canvas);
+    k->screen = new TupReflexRenderArea(displaySize);
 
     QWidget *menuWidget = new QWidget;
     QBoxLayout *menuLayout = new QBoxLayout(QBoxLayout::TopToBottom, menuWidget);
@@ -117,11 +128,6 @@ TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString 
     devicesLabel->setText(deviceString);
     devicesLabel->setAlignment(Qt::AlignHCenter);
 
-    k->clickButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/photo.png")), "");
-    k->clickButton->setIconSize(QSize(20, 20));
-    k->clickButton->setToolTip(tr("Take picture"));
-    connect(k->clickButton, SIGNAL(clicked()), this, SLOT(takePicture()));
-
     menuLayout->addWidget(devicesLabel);
 
     QLabel *deviceDesc = new QLabel;
@@ -131,6 +137,94 @@ TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString 
     deviceDesc->setText(cameraDesc);
     menuLayout->addWidget(deviceDesc);
 
+    k->clickButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/photo.png")), "");
+    k->clickButton->setIconSize(QSize(20, 20));
+    k->clickButton->setToolTip(tr("Take picture"));
+    connect(k->clickButton, SIGNAL(clicked()), this, SLOT(takePicture()));
+
+    k->safeAreaButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/safe_area.png")), "");
+    k->safeAreaButton->setIconSize(QSize(20, 20));
+    k->safeAreaButton->setToolTip(tr("Show safe area"));
+    k->safeAreaButton->setShortcut(QKeySequence(tr("+")));
+    k->safeAreaButton->setCheckable(true);
+    connect(k->safeAreaButton, SIGNAL(clicked()), this, SLOT(enableActionSafeArea()));
+
+    k->gridButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/subgrid.png")), "");
+    k->gridButton->setIconSize(QSize(20, 20));
+    k->gridButton->setToolTip(tr("Show grid"));
+    k->gridButton->setShortcut(QKeySequence(tr("#")));
+    k->gridButton->setCheckable(true);
+    connect(k->gridButton, SIGNAL(clicked()), this, SLOT(enableGrid()));
+
+    k->gridWidget = new QWidget;
+    QGridLayout *gridLayout = new QGridLayout(k->gridWidget);
+    gridLayout->setHorizontalSpacing(2);
+
+    QLabel *gridLabel = new QLabel;
+    gridLabel->setPixmap(QPixmap(THEME_DIR + "icons/grid_spacing.png"));
+    gridLabel->setToolTip(tr("Grid spacing"));
+    gridLabel->setMargin(2);
+
+    QSpinBox *gridSpacing = new QSpinBox;
+    gridSpacing->setSingleStep(10);
+    gridSpacing->setRange(10, 100);
+    gridSpacing->setValue(10);
+    connect(gridSpacing, SIGNAL(valueChanged(int)), this, SLOT(updateGridSpacing(int)));
+
+    QLabel *colorLabel = new QLabel;
+    colorLabel->setPixmap(QPixmap(THEME_DIR + "icons/color_palette.png"));
+    colorLabel->setToolTip(tr("Grid color"));
+    colorLabel->setMargin(2);
+
+    k->gridColor = QColor(0, 0, 180, 50);
+    k->colorCell = new TupColorWidget(k->gridColor);
+    connect(k->colorCell, SIGNAL(clicked()), this, SLOT(updateColour()));
+
+    gridLayout->addWidget(gridLabel, 0, 0, Qt::AlignHCenter);
+    gridLayout->addWidget(gridSpacing, 0, 1, Qt::AlignHCenter);
+    gridLayout->addWidget(colorLabel, 1, 0, Qt::AlignHCenter);
+    gridLayout->addWidget(k->colorCell, 1, 1, Qt::AlignHCenter);
+
+    k->gridWidget->setVisible(false);
+
+    k->historyButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/bitmap_array.png")), "");
+    k->historyButton->setIconSize(QSize(20, 20));
+    k->historyButton->setToolTip(tr("Show previous images"));
+    k->historyButton->setShortcut(QKeySequence(tr("P")));
+    k->historyButton->setCheckable(true);
+    connect(k->historyButton, SIGNAL(clicked()), this, SLOT(showHistory()));
+
+    k->historyButton->setVisible(false); 
+
+    k->historyWidget = new QWidget;
+    QGridLayout *historyLayout = new QGridLayout(k->historyWidget);
+    historyLayout->setHorizontalSpacing(2);
+
+    QLabel *opacityLabel = new QLabel;
+    opacityLabel->setPixmap(QPixmap(THEME_DIR + "icons/onion.png"));
+    opacityLabel->setToolTip(tr("Image opacity level"));
+    QDoubleSpinBox *opacitySpin = new QDoubleSpinBox;
+    opacitySpin->setSingleStep(0.1);
+    opacitySpin->setValue(0.5);
+    opacitySpin->setRange(0.0, 1.0);
+    opacitySpin->setDecimals(2);
+    connect(opacitySpin, SIGNAL(valueChanged(double)), this, SLOT(updateImagesOpacity(double)));
+
+    QLabel *previousLabel = new QLabel;
+    previousLabel->setPixmap(QPixmap(THEME_DIR + "icons/layer.png"));
+    previousLabel->setToolTip(tr("Amount of images to show"));
+    QSpinBox *previousSpin = new QSpinBox;
+    previousSpin->setValue(1);
+    previousSpin->setRange(0, 5);
+    connect(previousSpin, SIGNAL(valueChanged(int)), this, SLOT(updateImagesDepth(int)));
+
+    historyLayout->addWidget(opacityLabel, 0, 0, Qt::AlignHCenter);
+    historyLayout->addWidget(opacitySpin, 0, 1, Qt::AlignHCenter);
+    historyLayout->addWidget(previousLabel, 1, 0, Qt::AlignHCenter);
+    historyLayout->addWidget(previousSpin, 1, 1, Qt::AlignHCenter);
+
+    k->historyWidget->setVisible(false);
+
     QPushButton *exitButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/exit.png")), "");
     exitButton->setIconSize(QSize(20, 20));
     exitButton->setToolTip(tr("Close manager"));
@@ -138,10 +232,15 @@ TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString 
     connect(exitButton, SIGNAL(clicked()), this, SLOT(close()));
 
     menuLayout->addWidget(new TSeparator(Qt::Horizontal));
-    menuLayout->addWidget(k->clickButton);
 
+    menuLayout->addWidget(k->clickButton);
+    menuLayout->addWidget(k->safeAreaButton);
+    menuLayout->addWidget(k->gridButton);
+    menuLayout->addWidget(k->gridWidget);
+    menuLayout->addWidget(k->historyButton);
+    menuLayout->addWidget(k->historyWidget);
     menuLayout->addWidget(exitButton);
-    menuLayout->addStretch(2);
+    menuLayout->addStretch();
 
     QBoxLayout *dialogLayout = new QBoxLayout(QBoxLayout::LeftToRight, this); 
     dialogLayout->addWidget(k->screen);
@@ -191,9 +290,6 @@ void TupReflexInterface::takePicture()
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    tError() << "TupReflexInterface::takePicture() - 0 Camera state: " << k->camera->state();
-    tError() << "TupReflexInterface::takePicture() - 0 Is camera available? -> " << k->camera->isAvailable();
-
     QString prev = "pic";
     if (k->counter < 10)
         prev += "00";
@@ -203,9 +299,6 @@ void TupReflexInterface::takePicture()
 
     k->camera->load();
     k->camera->start();
-
-    tError() << "TupReflexInterface::takePicture() - 1 Camera state: " << k->camera->state();
-    tError() << "TupReflexInterface::takePicture() - 1 Is camera available? -> " << k->camera->isAvailable();
 
     // on half pressed shutter button
     k->camera->searchAndLock();
@@ -219,10 +312,6 @@ void TupReflexInterface::takePicture()
 
     // Take picture here
     k->counter++;
-
-    tError() << "TupReflexInterface::takePicture() - 2 Camera state: " << k->camera->state();
-    tError() << "TupReflexInterface::takePicture() - 2 Is camera available? -> " << k->camera->isAvailable();
-    tError() << "";
 }
 
 void TupReflexInterface::reset()
@@ -304,25 +393,51 @@ void TupReflexInterface::imageSavedFromCamera(int id, const QString path)
         return;
 
     emit pictureHasBeenSelected(k->counter, path);
+    k->screen->addPixmap(path);
 
-    QPixmap picture;
-    picture.load(path);
-    k->stack << picture;
+    if (!k->historyButton->isVisible())
+        k->historyButton->setVisible(true);
+}
 
-    int size = k->stack.count();
-    double opacity = 0.5;
-    if (size > 1) {
-        QPixmap base = k->stack.at(0);
-        QPainter painter(&base);
-        QPixmap frame;
-        for (int i=0; i < size; i++) {
-            painter.setOpacity(opacity);
-            // opacity -= 0.01;
-            frame = k->stack.at(i);
-            painter.drawPixmap(0, 0, frame);
-        }
-        k->screen->setPixmap(base);
-    } else {
-        k->screen->setPixmap(picture);
+void TupReflexInterface::enableActionSafeArea()
+{
+    k->screen->enableSafeArea(k->safeAreaButton->isChecked());
+}
+
+void TupReflexInterface::enableGrid()
+{
+    bool flag = k->gridButton->isChecked();
+    k->gridWidget->setVisible(flag);
+    k->screen->enableGrid(flag);
+}
+
+void TupReflexInterface::updateColour()
+{
+    QColor color = QColorDialog::getColor(k->gridColor, this);
+    if (color.isValid()) {
+        k->screen->updateGridColor(color);
+        k->colorCell->setBrush(QBrush(color));
     }
+}
+
+void TupReflexInterface::updateGridSpacing(int space)
+{
+    k->screen->updateGridSpacing(space);
+}
+
+void TupReflexInterface::showHistory()
+{
+    bool flag = k->historyButton->isChecked();
+    k->historyWidget->setVisible(flag);
+    k->screen->showHistory(flag);
+}
+
+void TupReflexInterface::updateImagesOpacity(double opacity)
+{
+    k->screen->updateImagesOpacity(opacity);
+}
+
+void TupReflexInterface::updateImagesDepth(int depth)
+{
+    k->screen->updateImagesDepth(depth);
 }

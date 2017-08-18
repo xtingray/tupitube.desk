@@ -35,7 +35,8 @@ HEADERS += tuppaintarea.h \
            tupcamerawindow.h \
            tupvideosurface.h \
            tuppapagayoimporter.h \
-           tuppapagayodialog.h
+           tuppapagayodialog.h \
+           tupreflexrenderarea.h
 
 SOURCES += tuppaintarea.cpp \
            tupconfigurationarea.cpp \
@@ -62,7 +63,8 @@ SOURCES += tuppaintarea.cpp \
            tupcamerawindow.cpp \
            tupvideosurface.cpp \
            tuppapagayoimporter.cpp \
-           tuppapagayodialog.cpp
+           tuppapagayodialog.cpp \
+           tupreflexrenderarea.cpp
 
 SHELL_DIR = ../../shell/
 INCLUDEPATH += $$SHELL_DIR
