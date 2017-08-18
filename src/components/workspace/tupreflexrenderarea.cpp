@@ -167,7 +167,7 @@ void TupReflexRenderArea::paintEvent(QPaintEvent *)
                 painter.setOpacity(1.0);
                 painter.drawPixmap(0, 0, frame);
             }
-        } else if (size == 1) {
+        } else {
             frame = k->stack.at(0);
             painter.setOpacity(1.0);
             painter.drawPixmap(0, 0, frame);

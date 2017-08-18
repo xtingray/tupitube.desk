@@ -57,6 +57,8 @@ struct TupReflexInterface::Private
     int counter;
     QString path;
 
+    TupReflexRenderArea *screen;
+
     QPushButton *clickButton;
     QPushButton *safeAreaButton;
     QPushButton *gridButton;
@@ -67,8 +69,6 @@ struct TupReflexInterface::Private
 
     QPushButton *historyButton;
     QWidget *historyWidget;
-
-    TupReflexRenderArea *screen;
 };
 
 TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString &resolution, QByteArray cameraDevice, 
