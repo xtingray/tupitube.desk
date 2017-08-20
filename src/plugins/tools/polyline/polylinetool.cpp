@@ -167,16 +167,18 @@ void PolyLineTool::press(const TupInputDeviceInformation *input, TupBrushManager
         k->item->setPen(brushManager->pen());
         k->item->setPath(k->path);
     } else { // This condition happens from the second point of the polyline and until the last one
-        if (!scene->items().contains(k->item))
-            scene->includeObject(k->item, true); // SQA: Polyline hack
+        if (k->item) {
+            if (!scene->items().contains(k->item))
+                scene->includeObject(k->item, true); // SQA: Polyline hack
 
-        if (k->movingOn) {
-            k->path.cubicTo(k->right, k->mirror, input->pos());
-            k->movingOn = false;
-        } else {
-            k->path.cubicTo(k->lastPoint, k->lastPoint, k->lastPoint);
+            if (k->movingOn) {
+                k->path.cubicTo(k->right, k->mirror, input->pos());
+                k->movingOn = false;
+            } else {
+                k->path.cubicTo(k->lastPoint, k->lastPoint, k->lastPoint);
+            }
+            k->item->setPath(k->path);
         }
-        k->item->setPath(k->path);
     }
     
     k->center = input->pos();
