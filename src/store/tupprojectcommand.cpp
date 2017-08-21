@@ -539,10 +539,12 @@ void TupProjectCommand::sceneCommand()
     TupSceneResponse *response = static_cast<TupSceneResponse *>(k->response);
 
     switch (response->action()) {
+	    // SQA: Check if this case is valid 
             case TupProjectRequest::GetInfo:
             {
                  k->executor->getScenes(response);
             }
+	    break;
             case TupProjectRequest::Add:
             {
                  k->executor->createScene(response);
