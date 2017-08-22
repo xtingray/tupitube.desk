@@ -462,26 +462,26 @@ void TupFrame::addItem(const QString &id, QGraphicsItem *item)
 void TupFrame::removeImageItemFromFrame(const QString &id)
 {
     for (int i=0; i<k->objectIndexes.size(); i++) {
-             if (k->objectIndexes[i].compare(id) == 0)
-                 removeGraphicAt(i);
+        if (k->objectIndexes[i].compare(id) == 0)
+            removeGraphicAt(i);
     }
 }
 
 void TupFrame::updateIdFromFrame(const QString &oldId, const QString &newId)
 {
     for (int i=0; i<k->objectIndexes.size(); i++) {
-             if (k->objectIndexes.at(i).compare(oldId) == 0) {
-                 k->objectIndexes[i] = newId;
+        if (k->objectIndexes.at(i).compare(oldId) == 0) {
+            k->objectIndexes[i] = newId;
 
-                 TupGraphicObject *object = k->graphics.at(i);
-                 TupGraphicLibraryItem *libraryItem = static_cast<TupGraphicLibraryItem *>(object->item());
-                 libraryItem->setSymbolName(newId);
+            TupGraphicObject *object = k->graphics.at(i);
+            TupGraphicLibraryItem *libraryItem = static_cast<TupGraphicLibraryItem *>(object->item());
+            libraryItem->setSymbolName(newId);
 
-                 object->setObjectName(newId);
-                 object->setItem(libraryItem);
+            object->setObjectName(newId);
+            object->setItem(libraryItem);
 
-                 k->graphics[i] = object;
-             }
+            k->graphics[i] = object;
+        }
     }
 }
 
@@ -1231,7 +1231,8 @@ QGraphicsItem *TupFrame::createItem(QPointF coords, const QString &xml, bool loa
         #ifdef Q_OS_WIN
             qDebug() << "[TupFrame::createItem()]";
         #else
-            T_FUNCINFO;
+            tWarning() << "coords: " << coords;
+            T_FUNCINFO << xml;
         #endif
     #endif
 

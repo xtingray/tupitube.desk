@@ -442,28 +442,28 @@ void TupGraphicsScene::addFrame(TupFrame *frame, double opacity, Context mode)
     }
 
     do {
-           int objectZValue = objects.at(0)->itemZValue();  
-           int svgZValue = svgItems.at(0)->zValue(); 
+        int objectZValue = objects.at(0)->itemZValue();  
+        int svgZValue = svgItems.at(0)->zValue(); 
 
-           if (objectZValue < svgZValue) {
-               TupGraphicObject *object = objects.takeFirst();
-               processNativeObject(object, frameType, opacity, mode);
-           } else {  
-               TupSvgItem *svg = svgItems.takeFirst();
-               processSVGObject(svg, frameType, opacity, mode);
-           }
+        if (objectZValue < svgZValue) {
+            TupGraphicObject *object = objects.takeFirst();
+            processNativeObject(object, frameType, opacity, mode);
+        } else {  
+            TupSvgItem *svg = svgItems.takeFirst();
+            processSVGObject(svg, frameType, opacity, mode);
+        }
 
-           if (objects.isEmpty()) {
-               foreach (TupSvgItem *svg, svgItems)
-                        processSVGObject(svg, frameType, opacity, mode);
-               return;
-           } else {
-               if (svgItems.isEmpty()) {
-                   foreach (TupGraphicObject *object, objects)
-                            processNativeObject(object, frameType, opacity, mode);
-                   return;
-               }
-           }
+        if (objects.isEmpty()) {
+            foreach (TupSvgItem *svg, svgItems)
+                processSVGObject(svg, frameType, opacity, mode);
+            return;
+        } else {
+            if (svgItems.isEmpty()) {
+                foreach (TupGraphicObject *object, objects)
+                    processNativeObject(object, frameType, opacity, mode);
+                return;
+            }
+        }
     } while (true);
 }
 
@@ -499,6 +499,18 @@ void TupGraphicsScene::addGraphicObject(TupGraphicObject *object, TupFrame::Fram
 
     QGraphicsItem *item = object->item();
     if (item) {
+        /* SQA: Code for debugging purposes 
+        #ifdef TUP_DEBUG
+            #ifdef Q_OS_WIN
+                qDebug() << "Object XML:";
+                qDebug() << object->toString();
+            #else
+                qWarning() << "Object XML:";
+                qWarning() << object->toString();
+            #endif
+        #endif
+        */
+
         if (frameType == TupFrame::Regular) {
             if (k->framePosition.layer == k->layerOnProcess && k->framePosition.frame == k->frameOnProcess)
                 k->onionSkin.accessMap.insert(item, true);

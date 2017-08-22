@@ -396,3 +396,15 @@ void TupGraphicObject::undoPenAction()
         }
     }
 }
+
+
+QString TupGraphicObject::toString() const
+{
+    QString data;
+    QTextStream stream(&data);
+    QDomDocument doc;
+    QDomElement e = this->toXml(doc);
+    e.save(stream, 4);
+
+    return data;
+}

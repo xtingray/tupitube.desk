@@ -100,6 +100,8 @@ class TUPITUBE_EXPORT TupGraphicObject : public QObject, public TupAbstractSeria
         void redoPenAction();
         void undoPenAction();
 
+        QString toString() const;
+
     public:
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc)  const;

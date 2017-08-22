@@ -174,10 +174,12 @@ void PencilTool::release(const TupInputDeviceInformation *input, TupBrushManager
             blackEllipse->setBrush(inkPen.brush());
             scene->includeObject(blackEllipse);
 
+            QPointF point = currentPoint - distance;
+
             QDomDocument doc;
             doc.appendChild(blackEllipse->toXml(doc));
             TupProjectRequest request = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(), scene->currentLayerIndex(), scene->currentFrameIndex(),
-                                                                             0, currentPoint, scene->spaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
+                                                                             0, point, scene->spaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
                                                                              doc.toString());
             emit requested(&request);
             return;
