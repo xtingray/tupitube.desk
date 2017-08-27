@@ -249,17 +249,17 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
     // Drawing frames from every layer
     for (int i=0; i < k->scene->layersCount(); i++) {
          TupLayer *layer = k->scene->layerAt(i);
-         k->layerOnProcess = i;
-         k->layerOnProcessOpacity = layer->opacity();
-         int framesCount = layer->framesCount();
-         k->zLevel = (i + 2)*ZLAYER_LIMIT;
+         if (layer) {
+             k->layerOnProcess = i;
+             k->layerOnProcessOpacity = layer->opacity();
+             int framesCount = layer->framesCount();
+             k->zLevel = (i + 2)*ZLAYER_LIMIT;
 
-         if (photogram < framesCount) {
-             TupFrame *mainFrame = layer->frameAt(photogram);
-             QString currentFrame = "";
+             if (photogram < framesCount) {
+                 TupFrame *mainFrame = layer->frameAt(photogram);
+                 QString currentFrame = "";
 
-             if (mainFrame) {
-                 if (layer) {
+                 if (mainFrame) {
                      if (layer->isVisible()) {
                          int maximum = qMax(k->onionSkin.previous, k->onionSkin.next);
                          double opacityFactor = k->opacity / (double)maximum;
@@ -272,12 +272,12 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
                                      limit = 0;
 
                                  for (int frameIndex = limit; frameIndex < photogram; frameIndex++) {
-                                      TupFrame *frame = layer->frameAt(frameIndex);
-                                      if (frame) {
-                                          k->frameOnProcess = frameIndex;
-                                          addFrame(frame, opacity, Previous);
-                                      }
-                                      opacity += opacityFactor;
+                                     TupFrame *frame = layer->frameAt(frameIndex);
+                                     if (frame) {
+                                         k->frameOnProcess = frameIndex;
+                                         addFrame(frame, opacity, Previous);
+                                     }
+                                     opacity += opacityFactor;
                                  }
                              }
                          }
@@ -298,20 +298,20 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
                                      limit = framesCount - 1;
 
                                  for (int frameIndex = photogram+1; frameIndex <= limit; frameIndex++) {
-                                      TupFrame * frame = layer->frameAt(frameIndex);
-                                      if (frame) {
-                                          k->frameOnProcess = frameIndex;
-                                          addFrame(frame, opacity, Next);
-                                      }
-                                      opacity -= opacityFactor;
+                                     TupFrame * frame = layer->frameAt(frameIndex);
+                                     if (frame) {
+                                         k->frameOnProcess = frameIndex;
+                                         addFrame(frame, opacity, Next);
+                                     }
+                                     opacity -= opacityFactor;
                                  }
                              }
                          }
 
                          addLipSyncObjects(layer, photogram, k->zLevel);
                      }
-                  }
-              }
+                 }
+             }
          }
     }
 

@@ -423,10 +423,23 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
 
     QGraphicsItem *item = 0;
     TupFrame *frame = frameAt(response->sceneIndex(), response->layerIndex(), response->frameIndex());
-    if (response->itemType() == TupLibraryObject::Svg && frame->svgItemsCount()>0) {
-        item = frame->svgAt(response->itemIndex());
-    } else if (frame->graphicItemsCount()>0) {
-               item = frame->item(response->itemIndex());
+    if (frame) {
+        if (response->itemType() == TupLibraryObject::Svg && frame->svgItemsCount() > 0) {
+            item = frame->svgAt(response->itemIndex());
+        } else if (frame->graphicItemsCount()>0) {
+            item = frame->item(response->itemIndex());
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            QString msg = "SelectionTool::itemResponse - Fatal Error: frame is NULL! (index: " 
+                          + QString::number(response->frameIndex()) + ")";
+            #ifdef Q_OS_WIN
+                qDebug() << msg;
+            #else
+                tError() << msg;
+            #endif
+        #endif
+        return;
     }
 
     updateItemPosition();
