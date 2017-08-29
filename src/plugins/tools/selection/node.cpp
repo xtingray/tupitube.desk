@@ -171,7 +171,10 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
     #endif
 
     k->oldPoint = event->scenePos();
-    k->manager->setPressedStatus(true);
+
+    if (k->manager) 
+        k->manager->setPressedStatus(true);
+
     QGraphicsItem::mousePressEvent(event);
 }
 
@@ -187,7 +190,9 @@ void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     QGraphicsItem::mouseReleaseEvent(event);
     k->parent->setSelected(true);
-    k->manager->setPressedStatus(false);
+
+    if (k->manager)
+        k->manager->setPressedStatus(false);
 }
 
 void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)

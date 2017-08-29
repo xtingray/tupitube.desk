@@ -869,36 +869,36 @@ void TupPaintArea::copyItems()
         if (currentScene) {
             k->oldPosition = selected.at(0)->boundingRect().topLeft();
             foreach (QGraphicsItem *item, selected) {
-                     QDomDocument dom;
-                     dom.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(dom));
-                     k->copiesXml << dom.toString();
+                QDomDocument dom;
+                dom.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(dom));
+                k->copiesXml << dom.toString();
 
-                     // Paint it to clipbard
-                     QPixmap toPixmap(item->boundingRect().size().toSize());
-                     toPixmap.fill(Qt::transparent);
+                // Paint it to clipbard
+                QPixmap toPixmap(item->boundingRect().size().toSize());
+                toPixmap.fill(Qt::transparent);
 
-                     QPainter painter(&toPixmap);
-                     painter.setRenderHint(QPainter::Antialiasing);
+                QPainter painter(&toPixmap);
+                painter.setRenderHint(QPainter::Antialiasing);
 
-                     QStyleOptionGraphicsItem opt;
-                     opt.state = QStyle::State_None;
+                QStyleOptionGraphicsItem opt;
+                opt.state = QStyle::State_None;
 
-                     if (item->isEnabled())
-                         opt.state |= QStyle::State_Enabled;
-                     if (item->hasFocus())
-                         opt.state |= QStyle::State_HasFocus;
-                     if (item == currentScene->mouseGrabberItem())
-                         opt.state |= QStyle::State_Sunken;
+                if (item->isEnabled())
+                    opt.state |= QStyle::State_Enabled;
+                if (item->hasFocus())
+                    opt.state |= QStyle::State_HasFocus;
+                if (item == currentScene->mouseGrabberItem())
+                    opt.state |= QStyle::State_Sunken;
 
-                     opt.exposedRect = item->boundingRect();
-                     opt.levelOfDetail = 1;
-                     opt.matrix = item->sceneMatrix();
-                     opt.palette = palette();
+                opt.exposedRect = item->boundingRect();
+                opt.levelOfDetail = 1;
+                opt.matrix = item->sceneMatrix();
+                opt.palette = palette();
 
-                     item->paint(&painter, &opt, this);
-                     painter.end();
+                item->paint(&painter, &opt, this);
+                painter.end();
 
-                     QApplication::clipboard()->setPixmap(toPixmap);
+                QApplication::clipboard()->setPixmap(toPixmap);
             }
         }
     } else {
@@ -923,29 +923,41 @@ void TupPaintArea::pasteItems()
             k->position = viewPosition();
     
         foreach (QString xml, k->copiesXml) {
-                 TupLibraryObject::Type type = TupLibraryObject::Item;
-                 int total = currentScene->currentFrame()->graphicItemsCount();
+            TupFrame *frame = currentScene->currentFrame();
+            if (frame) {
+                int total = frame->graphicItemsCount();
+                TupLibraryObject::Type type = TupLibraryObject::Item;
 
-                 if (xml.startsWith("<svg")) {
-                     type = TupLibraryObject::Svg;
-                     total = currentScene->currentFrame()->svgItemsCount();
-                 } 
+                if (xml.startsWith("<svg")) {
+                    type = TupLibraryObject::Svg;
+                    total = frame->svgItemsCount();
+                } 
 
-                 int init = xml.indexOf("pos=") + 6;
-                 int end = xml.indexOf(")", init);
-                 int n = end - init;
-                 QString string = xml.mid(init, n);  
-                 QStringList list = string.split(",");
-                 int x = list.at(0).toFloat();
-                 int y = list.at(1).toFloat();
-                 QPoint point = QPoint(x, y);
+                int init = xml.indexOf("pos=") + 6;
+                int end = xml.indexOf(")", init);
+                int n = end - init;
+                QString string = xml.mid(init, n);  
+                QStringList list = string.split(",");
+                int x = list.at(0).toFloat();
+                int y = list.at(1).toFloat();
+                QPoint point = QPoint(x, y);
 
-                 TupProjectRequest event = TupRequestBuilder::createItemRequest(currentScene->currentSceneIndex(),
-                                           currentScene->currentLayerIndex(),
-                                           currentScene->currentFrameIndex(),
-                                           total, point, k->spaceMode, type,   
-                                           TupProjectRequest::Add, xml);
-                 emit requestTriggered(&event);
+                TupProjectRequest event = TupRequestBuilder::createItemRequest(currentScene->currentSceneIndex(),
+                                          currentScene->currentLayerIndex(),
+                                          currentScene->currentFrameIndex(),
+                                          total, point, k->spaceMode, type,   
+                                          TupProjectRequest::Add, xml);
+                emit requestTriggered(&event);
+            } else {
+                #ifdef TUP_DEBUG
+                    QString msg = "TupPaintArea::pasteItems() - Fatal Error: Frame is NULL!";
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg;
+                    #else
+                        tError() << msg;
+                    #endif
+                #endif
+            }
         }
         k->menuOn = false;
     } else {

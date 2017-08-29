@@ -1738,71 +1738,49 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
     #endif
     */
 
+    if (!object) {
+        #ifdef TUP_DEBUG
+            QString msg = "TupGraphicsScene::includeObject() - Fatal Error: Graphic item is NULL!";
+            #ifdef Q_OS_WIN
+                qDebug() << msg;
+            #else
+                tError() << msg;
+                tWarning() << "Space Context: " << k->spaceContext;
+            #endif
+        #endif
+
+        return;
+    }
+
     if (k->spaceContext == TupProject::FRAMES_EDITION) {
         TupLayer *layer = k->scene->layerAt(k->framePosition.layer);
         if (layer) {
             TupFrame *frame = layer->frameAt(k->framePosition.frame);
             if (frame) {
                 int zLevel = frame->getTopZLevel();
-                // int zLevel = k->zLevel;
                 if (isPolyLine) // SQA: Polyline hack
                     zLevel--;
-                if (object) {
-                    object->setOpacity(layer->opacity());
-                    object->setZValue(zLevel);
-                    addItem(object);
-                    k->zLevel++;
-                } else {
-                    #ifdef TUP_DEBUG
-                        QString msg = "TupGraphicsScene::includeObject() - FRAMES_EDITION - Fatal Error: Graphic item is NULL!";
-                        #ifdef Q_OS_WIN
-                            qDebug() << msg;
-                        #else
-                            tError() << msg;
-                        #endif
-                    #endif
-                }
+
+                object->setOpacity(layer->opacity());
+                object->setZValue(zLevel);
+                addItem(object);
+                k->zLevel++;
             }
         }
     } else {
         TupBackground *bg = k->scene->background();
         if (bg) {
+            TupFrame *frame;
             if (k->spaceContext == TupProject::STATIC_BACKGROUND_EDITION) {
-                TupFrame *frame = bg->staticFrame();
-                if (frame) {
-                    if (object) {
-                        int zLevel = frame->getTopZLevel();
-                        object->setZValue(zLevel);
-                        addItem(object);
-                    } else {
-                        #ifdef TUP_DEBUG
-                            QString msg = "TupGraphicsScene::includeObject() - STATIC_BACKGROUND - Fatal Error: Graphic item is NULL!";
-                            #ifdef Q_OS_WIN
-                                qDebug() << msg;
-                            #else
-                                tError() << msg;
-                            #endif
-                        #endif
-                    }
-                }
+                frame = bg->staticFrame();
             } else if (k->spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-                TupFrame *frame = bg->dynamicFrame();
-                if (frame) {
-                    if (object) {
-                        int zLevel = frame->getTopZLevel();
-                        object->setZValue(zLevel);
-                        addItem(object);
-                    } else {
-                        #ifdef TUP_DEBUG
-                            QString msg = "TupGraphicsScene::includeObject() - DYNAMIC_BACKGROUND - Fatal Error: Graphic item is NULL!";
-                            #ifdef Q_OS_WIN
-                                qDebug() << msg;
-                            #else
-                                tError() << msg;
-                            #endif
-                        #endif
-                    }
-                }
+                frame = bg->dynamicFrame();
+            }
+
+            if (frame) {
+                int zLevel = frame->getTopZLevel();
+                object->setZValue(zLevel);
+                addItem(object);
             }
         }
     }
