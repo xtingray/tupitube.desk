@@ -278,7 +278,7 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
             case Item:
             case Sound:
             {
-                 object.setAttribute("path", finfo.fileName());
+                 object.setAttribute("path", k->folder + "/" + finfo.fileName());
             }
             break;
             default:
