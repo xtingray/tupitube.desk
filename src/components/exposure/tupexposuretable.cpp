@@ -576,20 +576,34 @@ void TupExposureTable::exchangeFrame(int oldPosLayer, int oldPosFrame, int newPo
     #endif
 
     QTableWidgetItem *frame1 = item(oldPosFrame, oldPosLayer);
-    TupExposureTable::FrameType type1 = TupExposureTable::FrameType(frame1->data(TupExposureTable::IsEmpty).toInt());
-    QString name1 = frame1->text();
-
     QTableWidgetItem *frame2 = item(newPosFrame, newPosLayer);
-    TupExposureTable::FrameType type2 = TupExposureTable::FrameType(frame2->data(TupExposureTable::IsEmpty).toInt());
-    QString name2 = frame2->text();
 
-    frame1->setText(name2);
-    frame1->setData(IsEmpty, type2);
-    frame2->setText(name1);
-    frame2->setData(IsEmpty, type1);
+    if (frame1 && frame2) { 
+        TupExposureTable::FrameType type1 = TupExposureTable::FrameType(frame1->data(TupExposureTable::IsEmpty).toInt());
+        QString name1 = frame1->text();
 
-    if (!external)
-        setCurrentItem(frame2);
+        TupExposureTable::FrameType type2 = TupExposureTable::FrameType(frame2->data(TupExposureTable::IsEmpty).toInt());
+        QString name2 = frame2->text();
+
+        frame1->setText(name2);
+        frame1->setData(IsEmpty, type2);
+
+        frame2->setText(name1);
+        frame2->setData(IsEmpty, type1);
+
+        if (!external)
+            setCurrentItem(frame2);
+    } else {
+        #ifdef TUP_DEBUG
+            QString msg = "TupExposureTable::exchangeFrame() - Fatal Error: Some of the frame cells are NULL -> indexes: [" 
+                          + QString::number(oldPosFrame) +  ", " + QString::number(newPosFrame) + "]";
+            #ifdef Q_OS_WIN
+                qDebug() << msg;
+            #else
+                tError() << msg;
+            #endif
+        #endif
+    }
 }
 
 void TupExposureTable::moveLayer(int oldPosLayer, int newPosLayer)

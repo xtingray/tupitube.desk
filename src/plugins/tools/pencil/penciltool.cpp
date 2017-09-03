@@ -185,8 +185,7 @@ void PencilTool::release(const TupInputDeviceInformation *input, TupBrushManager
             return;
         } else {
             double smoothness = k->configurator->smoothness();
-            if (smoothness > 0)
-                smoothPath(k->path, smoothness);
+            smoothPath(k->path, smoothness);
         }
 
         k->item->setBrush(brushManager->brush());

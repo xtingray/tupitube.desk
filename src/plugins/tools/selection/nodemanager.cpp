@@ -208,11 +208,11 @@ void NodeManager::scale(float sx, float sy)
             T_FUNCINFO;
             tWarning() << "Scale X: " << sx;
             tWarning() << "Scale Y: " << sy;
+            tWarning() << "Rotation: " << k->rotation;
         #endif
     #endif
 
     QTransform transform;
-
     QPointF point = k->parent->boundingRect().center();
     transform.translate(point.x(), point.y());
     transform.rotate(k->rotation);
