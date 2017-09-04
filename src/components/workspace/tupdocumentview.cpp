@@ -1016,10 +1016,8 @@ void TupDocumentView::selectTool()
                      break;
                 case TupToolInterface::Fill:
                      // SQA: Check if this line is the best way to switch the fill tools
-                     if (k->currentFillType == TColorCell::Contour) {
-                         tError() << "Activating contour fill!";
+                     if (k->currentFillType == TColorCell::Contour)
                          k->borderFillAction->trigger();
-                     }
 
                      k->status->enableFullScreenFeature(true);
                      break;
