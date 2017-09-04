@@ -239,19 +239,21 @@ bool TupLibraryFolder::removeFolder(const QString &id)
 {
     if (k->folders.contains(id)) {
         TupLibraryFolder *folder = getFolder(id);
-        LibraryObjects objects = folder->objects();
-        foreach (QString oid, objects.keys()) {
-                 if (folder->removeObject(oid, true)) {
-                     TupLibraryObject::Type extension = static_cast<TupLibraryObject::Type>(objects[oid]->type());
-                     if (extension != TupLibraryObject::Item) {
-                         if (!k->project->removeSymbolFromFrame(oid, extension))
-                             return false;
-                     }
-                 }
-        }
+        if (folder) { 
+            LibraryObjects objects = folder->objects();
+            foreach (QString oid, objects.keys()) {
+                if (folder->removeObject(oid, true)) {
+                    TupLibraryObject::Type extension = static_cast<TupLibraryObject::Type>(objects[oid]->type());
+                    if (extension != TupLibraryObject::Item) {
+                        if (!k->project->removeSymbolFromFrame(oid, extension))
+                            return false;
+                    }
+                }
+            }
 
-        bool result = k->folders.remove(id); 
-        return result;
+            bool result = k->folders.remove(id); 
+            return result;
+        }
     }
 
     #ifdef TUP_DEBUG
