@@ -96,6 +96,9 @@ void GeometricTool::init(TupGraphicsScene *scene)
     delete k->path;
     k->path = 0;
     k->proportion = false;
+
+    foreach (QGraphicsView *view, scene->views())
+        view->setDragMode(QGraphicsView::NoDrag);
 }
 
 void GeometricTool::setupActions()

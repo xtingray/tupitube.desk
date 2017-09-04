@@ -269,12 +269,12 @@ void TupColorPalette::setupColorDisplay()
     addChild(topPanel);
 }
 
-void TupColorPalette::updateColorMode(TColorCell::FillType flag)
+void TupColorPalette::updateColorMode(TColorCell::FillType type)
 {
     QBrush brush;
     QColor color;
 
-    if (flag == TColorCell::Background) {
+    if (type == TColorCell::Background) {
         k->currentSpace = TColorCell::Background;
         brush = k->bgColor->brush();
         color = brush.color();
@@ -288,28 +288,27 @@ void TupColorPalette::updateColorMode(TColorCell::FillType flag)
         if (k->bgColor->isChecked())
             k->bgColor->setChecked(false);
 
-        if (flag == TColorCell::Contour) {
+        if (type == TColorCell::Contour) {
             k->currentSpace = TColorCell::Contour;
             brush = k->contourColor->brush();
             if (k->fillColor->isChecked()) 
                 k->fillColor->setChecked(false);
-        } else {
-            if (flag == TColorCell::Inner) {
-                k->currentSpace = TColorCell::Inner;
-                brush = k->fillColor->brush();
-                if (k->contourColor->isChecked())
-                    k->contourColor->setChecked(false);
-            }
+        } else if (type == TColorCell::Inner) {
+            k->currentSpace = TColorCell::Inner;
+            brush = k->fillColor->brush();
+            if (k->contourColor->isChecked())
+                k->contourColor->setChecked(false);
         }
 
         color = brush.color();
         k->htmlField->setText(color.name());
+        emit colorSpaceChanged(type);
     }
 
     if (k->fgType == Solid && k->tab->currentIndex() != 0) {
         k->tab->setCurrentIndex(0);
     } else if (k->fgType == Gradient && k->tab->currentIndex() != 1) {
-               k->tab->setCurrentIndex(1);
+        k->tab->setCurrentIndex(1);
     }
 
     updateLuminancePicker(color);
@@ -584,6 +583,8 @@ void TupColorPalette::init()
     k->colorForm->setColor(contourColor);
     k->gradientManager->setCurrentColor(Qt::white);
     blockSignals(false);
+
+    emit colorSpaceChanged(TColorCell::Contour);
 
     TupPaintAreaEvent fillEvent(TupPaintAreaEvent::ChangeBrush, k->currentFillBrush);
     emit paintAreaEventTriggered(&fillEvent);

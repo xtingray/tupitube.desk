@@ -140,6 +140,8 @@ struct TupDocumentView::Private
     TAction *fillAction;
     TAction *papagayoAction;
 
+    TColorCell::FillType currentFillType;
+
     DockType currentDock;
     bool cameraMode;
 };
@@ -165,8 +167,9 @@ TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNe
     k->onLineUsers = users;
     k->dynamicFlag = false;
     k->staticFlag = false;
-    k->cameraMode = false;
+    k->currentFillType = TColorCell::Contour;
 
+    k->cameraMode = false;
     k->photoCounter = 1;
     k->nodesScaleFactor = 1;
 
@@ -729,7 +732,7 @@ void TupDocumentView::loadPlugins()
     k->toolbar->addAction(k->nodesAction);
     k->toolbar->addSeparator();
     k->toolbar->addAction(k->fillAction);
-    k->toolbar->addAction(k->borderFillAction);
+    // k->toolbar->addAction(k->borderFillAction);
     k->toolbar->addSeparator();
     k->toolbar->addAction(k->motionMenu->menuAction());
     #ifdef Q_OS_WIN
@@ -758,6 +761,8 @@ void TupDocumentView::loadPlugin(int menu, int index)
             qDebug() << "[TupDocumentView::loadPlugin()]";
         #else
             T_FUNCINFO;
+            tWarning() << "Menu: " << menu;
+            tWarning() << "Index: " << index;
         #endif
     #endif
 
@@ -819,44 +824,44 @@ void TupDocumentView::loadPlugin(int menu, int index)
                      QList<QAction*> brushActions = k->shapesMenu->actions();
 
                      switch (index) {
-                             case TupToolPlugin::PencilTool:
-                             {
-                                 action = k->pencilAction;
-                             }
-                             break;
-                             case TupToolPlugin::InkTool:
-                             {
-                                 action = k->inkAction;
-                             }
-                             break;
-                             // SQA: Enable it only for debugging
-                             /*
-                             case TupToolPlugin::SchemeTool:
-                             {
-                                 action = k->schemeAction;
-                             }
-                             break;
-                             */
-                             case TupToolPlugin::PolyLineTool:
-                             {
-                                 action = k->polyLineAction;
-                             }
-                             break;
-                             case TupToolPlugin::RectangleTool:
-                             {
-                                 action = (TAction *) brushActions[0];
-                             }
-                             break;
-                             case TupToolPlugin::EllipseTool:
-                             {
-                                 action = (TAction *) brushActions[1];
-                             }
-                             break;
-                             case TupToolPlugin::LineTool:
-                             {
-                                 action = (TAction *) brushActions[2];
-                             }
-                             break;
+                         case TupToolPlugin::PencilTool:
+                         {
+                             action = k->pencilAction;
+                         }
+                         break;
+                         case TupToolPlugin::InkTool:
+                         {
+                             action = k->inkAction;
+                         }
+                         break;
+                         // SQA: Enable it only for debugging
+                         /*
+                         case TupToolPlugin::SchemeTool:
+                         {
+                             action = k->schemeAction;
+                         }
+                         break;
+                         */
+                         case TupToolPlugin::PolyLineTool:
+                         {
+                             action = k->polyLineAction;
+                         }
+                         break;
+                         case TupToolPlugin::RectangleTool:
+                         {
+                             action = (TAction *) brushActions[0];
+                         }
+                         break;
+                         case TupToolPlugin::EllipseTool:
+                         {
+                             action = (TAction *) brushActions[1];
+                         }
+                         break;
+                         case TupToolPlugin::LineTool:
+                         {
+                             action = (TAction *) brushActions[2];
+                         }
+                         break;
                      }
                  }
             break;
@@ -1010,6 +1015,12 @@ void TupDocumentView::selectTool()
                          k->motionMenu->menuAction()->setIcon(action->icon());
                      break;
                 case TupToolInterface::Fill:
+                     // SQA: Check if this line is the best way to switch the fill tools
+                     if (k->currentFillType == TColorCell::Contour) {
+                         tError() << "Activating contour fill!";
+                         k->borderFillAction->trigger();
+                     }
+
                      k->status->enableFullScreenFeature(true);
                      break;
                 case TupToolInterface::Selection:
@@ -1060,7 +1071,15 @@ void TupDocumentView::selectTool()
         }
 
         k->paintArea->setTool(tool);
-        k->paintArea->viewport()->setCursor(action->cursor());
+
+        if (tool->toolType() == TupToolInterface::Fill) {
+            if (k->currentFillType == TColorCell::Contour) {
+                QCursor cursor = QCursor(kAppProp->themeDir() + "cursors/line_fill.png", 0, 11);
+                k->paintArea->viewport()->setCursor(cursor);
+            }
+        } else {
+            k->paintArea->viewport()->setCursor(action->cursor());
+        }
 
         if (toolName.compare(tr("Object Selection")) == 0 || toolName.compare(tr("Nodes Selection")) == 0 ||
             toolName.compare(tr("PolyLine")) == 0 || toolName.compare(tr("Position Tween")) == 0 ||
@@ -1933,10 +1952,13 @@ void TupDocumentView::cameraInterface()
         resolutions << QSize(1224, 768);
         resolutions << QSize(800, 600);
         resolutions << QSize(640, 480);
+
+        /* SQA: Check if this resolutions have any sense
         resolutions << QSize(352, 288);
         resolutions << QSize(320, 240);
         resolutions << QSize(176, 144);
         resolutions << QSize(160, 120);
+        */
 
         QDesktopWidget desktop;
         QSize projectSize = k->project->dimension();
@@ -2313,4 +2335,24 @@ void TupDocumentView::updateActiveDock(int currentDock)
 void TupDocumentView::updateCameraMode()
 {
     k->cameraMode = false;
+}
+
+void TupDocumentView::setFillTool(TColorCell::FillType type)
+{
+    if (k->currentTool) {
+        if (k->currentTool->toolType() == TupToolInterface::Fill) {
+            k->currentFillType = type;
+            if (type == TColorCell::Contour) {
+                k->borderFillAction->trigger();
+
+                QCursor cursor = QCursor(kAppProp->themeDir() + "cursors/line_fill.png", 0, 11);
+                k->paintArea->viewport()->setCursor(cursor);
+            } else if (type == TColorCell::Inner) {
+                k->fillAction->trigger();
+
+                QCursor cursor = QCursor(kAppProp->themeDir() + "cursors/internal_fill.png", 0, 11);
+                k->paintArea->viewport()->setCursor(cursor);
+            }
+        }
+    }
 }

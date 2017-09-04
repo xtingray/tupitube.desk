@@ -102,6 +102,7 @@ class TUPITUBE_EXPORT TupColorPalette : public TupModuleWidgetBase
 		
     signals:
         void paintAreaEventTriggered(const TupPaintAreaEvent *event);
+        void colorSpaceChanged(TColorCell::FillType type);
 
     private:
         void setupButtons();

@@ -119,6 +119,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         void updatePerspective();
         QColor projectBGColor() const;
         void updateWorkspace();
+        void setFillTool(TColorCell::FillType type);
 
     private slots:
         void setNextOnionSkin(int n);

@@ -233,8 +233,8 @@ void FillTool::aboutToChangeScene(TupGraphicsScene *)
 void FillTool::aboutToChangeTool() 
 {
     foreach (QGraphicsItem *item, k->scene->items()) {
-             item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-             item->setFlag(QGraphicsItem::ItemIsFocusable, false);
+        item->setFlag(QGraphicsItem::ItemIsSelectable, false);
+        item->setFlag(QGraphicsItem::ItemIsFocusable, false);
     }
 }
 
