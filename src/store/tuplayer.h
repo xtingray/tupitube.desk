@@ -80,8 +80,8 @@ class TUPITUBE_EXPORT TupLayer : public QObject, public TupAbstractSerializable
         void setVisible(bool isVisible);
         bool isVisible() const;
 
-        void setOpacity(double opacity);
-        double opacity();
+        void setOpacity(qreal opacity);
+        qreal opacity();
         
         TupFrame *createFrame(QString name, int position, bool loaded = false);
         bool restoreFrame(int index);

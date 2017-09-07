@@ -1761,7 +1761,20 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
                 if (isPolyLine) // SQA: Polyline hack
                     zLevel--;
 
-                object->setOpacity(layer->opacity());
+                qreal opacity = layer->opacity(); 
+                if (opacity >= 0 && opacity <= 1) {
+                    object->setOpacity(opacity);
+                } else {
+                    #ifdef TUP_DEBUG
+                        QString msg = "TupGraphicsScene::includeObject() - Fatal Error: Opacity value is invalid -> " + QString::number(opacity);
+                        #ifdef Q_OS_WIN
+                            qDebug() << msg;
+                        #else
+                            tError() << msg;
+                        #endif
+                    #endif
+                }
+
                 object->setZValue(zLevel);
                 addItem(object);
                 k->zLevel++;

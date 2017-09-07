@@ -144,22 +144,57 @@ void TupExposureHeader::moveHeaderSection(int position, int newPosition, bool is
 
 int TupExposureHeader::lastFrame(int section)
 {
-    if (section < m_sections.count())
+    if (section >= 0 && section < m_sections.count())
         return m_sections[section].lastFrame;
+
+    #ifdef TUP_DEBUG
+        QString msg = "TupExposureHeader::lastFrame() - Fatal Error: Section index is invalid -> " + QString::number(section);
+
+        #ifdef Q_OS_WIN
+            qDebug() << msg;
+        #else
+            tError() << msg;
+            tError() << "m_sections count: " << m_sections.count(); 
+        #endif
+    #endif
 
     return -1;
 }
 
 void TupExposureHeader::removeSection(int section)
 {
-    if (section < m_sections.count())
+    if (section >= 0 && section < m_sections.count()) {
         m_sections.removeAt(section);
+    } else {
+        #ifdef TUP_DEBUG
+            QString msg = "TupExposureHeader::removeSection() - Fatal Error: Section index is invalid -> " + QString::number(section);
+
+            #ifdef Q_OS_WIN
+                qDebug() << msg;
+            #else
+                tError() << msg;
+                tError() << "m_sections count: " << m_sections.count();
+            #endif
+        #endif
+    }
 }
 
 void TupExposureHeader::setLastFrame(int section, int num)
 {
-    if (section < m_sections.count())
+    if (section >= 0 && section < m_sections.count()) {
         m_sections[section].lastFrame = num;
+    } else {
+        #ifdef TUP_DEBUG
+            QString msg = "TupExposureHeader::removeSelection() - Fatal Error: Section index is invalid -> " + QString::number(section);
+
+            #ifdef Q_OS_WIN
+                qDebug() << msg;
+            #else
+                tError() << msg;
+                tError() << "m_sections count: " << m_sections.count();
+            #endif
+        #endif
+    }
 }
 
 void TupExposureHeader::mousePressEvent(QMouseEvent *event)
@@ -270,4 +305,4 @@ int TupExposureHeader::currentSectionIndex()
     return m_currentSection;
 }
 
-//#include "tupexposuretable.moc"
+// #include "tupexposuretable.moc"

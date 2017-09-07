@@ -49,7 +49,7 @@ struct TupLayer::Private
     int framesCounter;
     bool isLocked;
     int index;
-    double opacity;
+    qreal opacity;
 
     QList<TupGraphicObject *> tweeningGraphicObjects;
     QList<TupSvgItem *> tweeningSvgObjects;
@@ -132,12 +132,12 @@ bool TupLayer::isVisible() const
     return k->isVisible;
 }
 
-void TupLayer::setOpacity(double opacity)
+void TupLayer::setOpacity(qreal opacity)
 {
     k->opacity = opacity; 
 }
 
-double TupLayer::opacity()
+qreal TupLayer::opacity()
 {
     return k->opacity;
 }
