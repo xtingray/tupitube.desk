@@ -760,29 +760,31 @@ void Tweener::updatePath()
         #endif
     #endif
 
-    QPainterPath::Element e = k->path->path().elementAt(0);
-    QPointF point = QPointF(e.x, e.y);
-    if (point != k->firstNode) {
-        int distanceX = point.x() - k->firstNode.x();
-        int distanceY = point.y() - k->firstNode.y();
-        k->firstNode = point;
-        k->pathOffset = QPointF(distanceX, distanceY);
+    if (k->path) {
+        QPainterPath::Element e = k->path->path().elementAt(0);
+        QPointF point = QPointF(e.x, e.y);
+        if (point != k->firstNode) {
+            int distanceX = point.x() - k->firstNode.x();
+            int distanceY = point.y() - k->firstNode.y();
+            k->firstNode = point;
+            k->pathOffset = QPointF(distanceX, distanceY);
 
-        if (k->objects.size() > 0) {
-            int i = 0;
-            foreach (QGraphicsItem *item, k->objects) {
-                     item->moveBy(distanceX, distanceY);
-                     if (i == 0) {
-                         QRectF rect = item->sceneBoundingRect();
-                         k->itemObjectReference = rect.center();
-                     }
-                     i++;
+            if (k->objects.size() > 0) {
+                int i = 0;
+                foreach (QGraphicsItem *item, k->objects) {
+                    item->moveBy(distanceX, distanceY);
+                    if (i == 0) {
+                        QRectF rect = item->sceneBoundingRect();
+                        k->itemObjectReference = rect.center();
+                    }
+                    i++;
+                }
             }
         }
-    }
 
-    k->configurator->updateSteps(k->path);
-    updateTweenPoints();
+        k->configurator->updateSteps(k->path);
+        updateTweenPoints();
+    }
 }
 
 /* This method saves the settings of this plugin */

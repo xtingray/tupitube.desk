@@ -139,7 +139,7 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(0), animat
         if (webMsgFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
             QTextStream in(&webMsgFile);
             while (!in.atEnd())
-                   fileContent += in.readLine();
+                fileContent += in.readLine();
         }
     }
 
@@ -152,22 +152,21 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(0), animat
             QDomElement root = doc.documentElement();
             QDomNode n = root.firstChild();
             while (!n.isNull()) {
-                   QDomElement e = n.toElement();
-                   if (e.tagName() == "show") {
-                       QString flag = e.text();
-                       if (flag.compare("true") == 0)
-                           showWebMsg = true;
-                       else
-                           break;
-                   } else if (e.tagName() == "size") {
-                       QStringList numbers = e.text().split(",");
-                       if (numbers.size() == 2) {
-                           webMsgSize = QSize(numbers.at(0).toInt(), numbers.at(1).toInt());
-                       }
-                   } else if (e.tagName() == "text") {
-                       webContent = e.text();
-                   }
-                   n = n.nextSibling();
+                QDomElement e = n.toElement();
+                if (e.tagName() == "show") {
+                    QString flag = e.text();
+                    if (flag.compare("true") == 0)
+                        showWebMsg = true;
+                    else
+                        break;
+                } else if (e.tagName() == "size") {
+                    QStringList numbers = e.text().split(",");
+                    if (numbers.size() == 2)
+                        webMsgSize = QSize(numbers.at(0).toInt(), numbers.at(1).toInt());
+                } else if (e.tagName() == "text") {
+                    webContent = e.text();
+                }
+                n = n.nextSibling();
             }
         }
     }
@@ -832,37 +831,37 @@ void TupMainWindow::importPalettes()
         QStringList::ConstIterator file = files.begin();
         bool isOk = true;
         while (file != files.end()) {
-               TupPaletteImporter importer;
-               bool ok = importer.import(*file, TupPaletteImporter::Gimp);
-               if (ok) {
-                   QString home = getenv("HOME");
-                   QString path = home + "/.tupi/palettes";
-                   ok = importer.saveFile(path);
-                   if (ok) {
-                       m_colorPalette->parsePaletteFile(importer.filePath());
-                   } else {
-                       #ifdef TUP_DEBUG
-                           QString msg = "TupMainWindow::importPalettes() - Fatal Error: Couldn't import file -> " + QString(*file);
-                           #ifdef Q_OS_WIN
-                               qDebug() << msg;
-                           #else
-                               tError() << msg;
-                           #endif
-                       #endif
-                       isOk = false;
-                   }
-               } else {
-                   #ifdef TUP_DEBUG
-                       QString msg = "TupMainWindow::importPalettes() - Fatal Error: Couldn't import palette -> " + QString(*file);
-                       #ifdef Q_OS_WIN
-                           qDebug() << msg;
-                       #else
-                           tError() << msg;
-                       #endif
-                   #endif
-                   isOk = false;
-               }
-               file++;
+            TupPaletteImporter importer;
+            bool ok = importer.import(*file, TupPaletteImporter::Gimp);
+            if (ok) {
+                QString home = getenv("HOME");
+                QString path = home + "/.tupi/palettes";
+                ok = importer.saveFile(path);
+                if (ok) {
+                    m_colorPalette->parsePaletteFile(importer.filePath());
+                } else {
+                    #ifdef TUP_DEBUG
+                        QString msg = "TupMainWindow::importPalettes() - Fatal Error: Couldn't import file -> " + QString(*file);
+                        #ifdef Q_OS_WIN
+                            qDebug() << msg;
+                        #else
+                            tError() << msg;
+                        #endif
+                    #endif
+                    isOk = false;
+                }
+            } else {
+                #ifdef TUP_DEBUG
+                    QString msg = "TupMainWindow::importPalettes() - Fatal Error: Couldn't import palette -> " + QString(*file);
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg;
+                    #else
+                        tError() << msg;
+                    #endif
+                #endif
+                isOk = false;
+            }
+            file++;
         }
 
         if (isOk) {

@@ -164,6 +164,19 @@ void StepsViewer::setPath(const QGraphicsPathItem *pathItem)
         #endif
     #endif
 
+    if (!pathItem) {
+        #ifdef TUP_DEBUG
+            QString msg = "StepsViewer::setPath() - Fatal Error: pathItem is NULL!";
+            #ifdef Q_OS_WIN
+                qDebug() << msg;
+            #else
+                tError() << msg;
+            #endif
+        #endif
+
+        return;
+    }
+
     // Set of key points which define the path 
     k->path = pathItem->path();
     k->points = k->path.toFillPolygon();
@@ -514,7 +527,6 @@ void StepsViewer::addTableRow(int row, int frames)
 
     setRowHeight(row, 20);
 }
-
 
 void StepsViewer::calculateKeys()
 {

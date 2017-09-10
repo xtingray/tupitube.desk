@@ -221,8 +221,10 @@ int Settings::startComboSize()
 
 void Settings::updateSteps(const QGraphicsPathItem *path)
 {
-    k->stepViewer->setPath(path);
-    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->stepViewer->totalSteps()));
+    if (path) {
+        k->stepViewer->setPath(path);
+        k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->stepViewer->totalSteps()));
+    }
 }
 
 void Settings::emitOptionChanged(int option)
