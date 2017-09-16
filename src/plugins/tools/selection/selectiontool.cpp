@@ -426,7 +426,7 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
     if (frame) {
         if (response->itemType() == TupLibraryObject::Svg && frame->svgItemsCount() > 0) {
             item = frame->svgAt(response->itemIndex());
-        } else if (frame->graphicItemsCount()>0) {
+        } else if (frame->graphicItemsCount() > 0) {
             item = frame->item(response->itemIndex());
         }
     } else {
