@@ -123,6 +123,9 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
         void requestRenameLayer(int layerIndex, const QString &name);
         void moveLayer(int oldIndex, int newIndex);
         void actionTriggered(QAction *action);
+
+        void exportCurrentLayer();
+        void importCurrentLayer();
 };
 
 #endif

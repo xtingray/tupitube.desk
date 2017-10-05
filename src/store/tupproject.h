@@ -143,6 +143,8 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         void updateSpaceContext(TupProject::Mode mode);
         TupProject::Mode spaceContext();
 
+        void importLayer(int sceneIndex, const QString &layer);
+
     signals:
         void responsed(TupProjectResponse *response);
 

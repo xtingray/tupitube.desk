@@ -96,6 +96,9 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *project) : TupMo
     k->scenesContainer = new TupSceneTabWidget(this);
     connect(k->scenesContainer, SIGNAL(currentChanged(int)), this, SLOT(requestChangeScene(int)));
     connect(k->scenesContainer, SIGNAL(updateLayerOpacity(double)), this, SLOT(requestUpdateLayerOpacity(double)));
+    connect(k->scenesContainer, SIGNAL(exportActionCalled()), this, SLOT(exportCurrentLayer()));
+    connect(k->scenesContainer, SIGNAL(importActionCalled()), this, SLOT(importCurrentLayer()));
+
     addChild(k->scenesContainer);
     createMenuForAFrame();
     // createMenuForSelection();
@@ -1410,4 +1413,57 @@ void TupExposureSheet::removeBlock(TupExposureTable *table, int layerIndex, int 
         table->selectFrame(layerIndex, lastIndex);
     else
         table->selectFrame(layerIndex, frameIndex);
+}
+
+void TupExposureSheet::exportCurrentLayer()
+{
+    int sceneIndex = k->scenesContainer->currentIndex();
+    int layerIndex = k->currentTable->currentLayer();
+
+    TupScene *scene = k->project->sceneAt(sceneIndex);
+    TupLayer *layer = scene->layerAt(layerIndex);
+
+    QDomDocument doc;
+    QDomElement data = layer->toXml(doc);
+
+    TCONFIG->beginGroup("General");
+    QString home = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
+
+    QString path = QFileDialog::getSaveFileName(this, tr("Export TupiTube Layer As"), home,
+                       tr("TupiTube Layer Package (*.tlayer)"));
+
+    if (path.isEmpty())
+        return;
+
+    if (!path.endsWith(".tlayer"))
+        path += ".tlayer";
+
+    QFile file(path);
+    if (file.open(QIODevice::ReadWrite)) {
+        QTextStream stream(&file);
+        stream << doc.toString() << endl;
+    }
+    file.close();
+
+    TOsd::self()->display(tr("Information"), tr("Layer exported successfully!"));
+}
+
+void TupExposureSheet::importCurrentLayer()
+{
+    TCONFIG->beginGroup("General");
+    QString home = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
+
+    QString path = QFileDialog::getOpenFileName(this, tr("Import TupiTube Layer"),
+                                                home, tr("TupiTube Layer Package (*.tlayer)"));
+
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) 
+        return;
+
+    QTextStream in(&file);
+    QString xml = in.readAll();
+    file.close();
+
+    int sceneIndex = k->scenesContainer->currentIndex();
+    k->project->importLayer(sceneIndex, xml);
 }

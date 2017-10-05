@@ -170,6 +170,13 @@ TupLayer *TupScene::createLayer(QString name, int position, bool loaded)
     return layer;
 }
 
+void TupScene::addLayer(const QString &xml)
+{
+    TupLayer *layer = new TupLayer(this, k->layers.count());
+    layer->fromXml(xml);
+    k->layers << layer;
+}
+
 TupSoundLayer *TupScene::createSoundLayer(int position, bool loaded)
 {
     #ifdef TUP_DEBUG

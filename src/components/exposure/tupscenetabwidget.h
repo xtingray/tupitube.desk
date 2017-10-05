@@ -80,6 +80,8 @@ class T_GUI_EXPORT TupSceneTabWidget : public QFrame
     signals:
         void currentChanged(int index);
         void updateLayerOpacity(double opacity);
+        void exportActionCalled();
+        void importActionCalled();
 
     private:
         struct Private;

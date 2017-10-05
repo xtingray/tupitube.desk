@@ -105,6 +105,8 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
         bool removeLayer(int index);
 
         TupLayer *createLayer(QString name, int position, bool loaded = false);
+        void addLayer(const QString &xml);
+
         TupSoundLayer *createSoundLayer(int position, bool loaded = false);
 
         bool restoreLayer(int index);

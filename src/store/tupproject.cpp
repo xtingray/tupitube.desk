@@ -1066,3 +1066,9 @@ TupProject::Mode TupProject::spaceContext()
 {
     return k->spaceMode;
 }
+
+void TupProject::importLayer(int sceneIndex, const QString &layer)
+{
+    TupScene *scene = k->scenes.at(sceneIndex);
+    scene->addLayer(layer);
+}

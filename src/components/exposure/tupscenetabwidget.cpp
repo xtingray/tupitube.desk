@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tupscenetabwidget.h"
+#include "timagebutton.h"
 
 struct TupSceneTabWidget::Private
 {
@@ -76,8 +77,8 @@ void TupSceneTabWidget::addScene(int index, const QString &name, TupExposureTabl
     QVBoxLayout *layout = new QVBoxLayout(frame);
     layout->setMargin(1);
 
-    QHBoxLayout *opacityLayout = new QHBoxLayout;
-    opacityLayout->setAlignment(Qt::AlignHCenter);
+    QHBoxLayout *toolsLayout = new QHBoxLayout;
+    toolsLayout->setAlignment(Qt::AlignHCenter);
 
     QLabel *header = new QLabel();
     QPixmap pix(THEME_DIR + "icons/layer_opacity.png");
@@ -93,10 +94,22 @@ void TupSceneTabWidget::addScene(int index, const QString &name, TupExposureTabl
 
     k->opacityControl << opacitySpinBox;
 
-    opacityLayout->addWidget(header);
-    opacityLayout->addWidget(opacitySpinBox);
+    toolsLayout->addWidget(header);
+    toolsLayout->addWidget(opacitySpinBox);
 
-    layout->addLayout(opacityLayout);
+    TImageButton *exportButton = new TImageButton(QIcon(THEME_DIR + "icons/layer_opacity.png"), 16);
+    exportButton->setToolTip(tr("Export Current Layer"));
+    connect(exportButton, SIGNAL(clicked(bool)), this, SIGNAL(exportActionCalled()));
+
+    TImageButton *importButton = new TImageButton(QIcon(THEME_DIR + "icons/layer_opacity.png"), 16);
+    importButton->setToolTip(tr("Import Current Layer"));
+    connect(importButton, SIGNAL(clicked(bool)), this, SIGNAL(importActionCalled()));
+
+    toolsLayout->addSpacing(10);
+    toolsLayout->addWidget(exportButton);
+    toolsLayout->addWidget(importButton);
+
+    layout->addLayout(toolsLayout);
     layout->addWidget(table);
     frame->setLayout(layout);
 
@@ -110,8 +123,8 @@ void TupSceneTabWidget::restoreScene(int index, const QString &name)
     QVBoxLayout *layout = new QVBoxLayout(frame);
     layout->setMargin(1);
 
-    QHBoxLayout *opacityLayout = new QHBoxLayout;
-    opacityLayout->setAlignment(Qt::AlignHCenter);
+    QHBoxLayout *toolsLayout = new QHBoxLayout;
+    toolsLayout->setAlignment(Qt::AlignHCenter);
 
     QLabel *header = new QLabel();
     QPixmap pix(THEME_DIR + "icons/layer_opacity.png");
@@ -122,10 +135,10 @@ void TupSceneTabWidget::restoreScene(int index, const QString &name)
     QDoubleSpinBox *opacitySpinBox = k->undoOpacities.takeLast();
     k->opacityControl << opacitySpinBox;
 
-    opacityLayout->addWidget(header);
-    opacityLayout->addWidget(opacitySpinBox);
+    toolsLayout->addWidget(header);
+    toolsLayout->addWidget(opacitySpinBox);
 
-    layout->addLayout(opacityLayout);
+    layout->addLayout(toolsLayout);
     layout->addWidget(table);
     frame->setLayout(layout);
 
