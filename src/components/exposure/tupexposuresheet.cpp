@@ -96,8 +96,10 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *project) : TupMo
     k->scenesContainer = new TupSceneTabWidget(this);
     connect(k->scenesContainer, SIGNAL(currentChanged(int)), this, SLOT(requestChangeScene(int)));
     connect(k->scenesContainer, SIGNAL(updateLayerOpacity(double)), this, SLOT(requestUpdateLayerOpacity(double)));
-    connect(k->scenesContainer, SIGNAL(exportActionCalled()), this, SLOT(exportCurrentLayer()));
-    connect(k->scenesContainer, SIGNAL(importActionCalled()), this, SLOT(importCurrentLayer()));
+
+    // SQA: Pending features
+    // connect(k->scenesContainer, SIGNAL(exportActionCalled()), this, SLOT(exportCurrentLayer()));
+    // connect(k->scenesContainer, SIGNAL(importActionCalled()), this, SLOT(importCurrentLayer()));
 
     addChild(k->scenesContainer);
     createMenuForAFrame();
@@ -1415,6 +1417,7 @@ void TupExposureSheet::removeBlock(TupExposureTable *table, int layerIndex, int 
         table->selectFrame(layerIndex, frameIndex);
 }
 
+/* SQA: Useful code for future features
 void TupExposureSheet::exportCurrentLayer()
 {
     int sceneIndex = k->scenesContainer->currentIndex();
@@ -1467,3 +1470,4 @@ void TupExposureSheet::importCurrentLayer()
     int sceneIndex = k->scenesContainer->currentIndex();
     k->project->importLayer(sceneIndex, xml);
 }
+*/

@@ -1113,12 +1113,12 @@ void TupGraphicsScene::cleanWorkSpace()
     k->onionSkin.accessMap.clear();
 
     foreach (QGraphicsItem *item, items()) {
-             if (item->scene() == this)
-                 removeItem(item);
+        if (item->scene() == this)
+            removeItem(item);
     }
 
     foreach (TupLineGuide *line, k->lines)
-             addItem(line);
+        addItem(line);
 }
 
 int TupGraphicsScene::currentFrameIndex() const
@@ -1757,7 +1757,8 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
         if (layer) {
             TupFrame *frame = layer->frameAt(k->framePosition.frame);
             if (frame) {
-                int zLevel = frame->getTopZLevel();
+                // SQA: The constant 100 assumes than 100 items have been created per frame
+                int zLevel = (k->scene->framesCount()*100) + frame->getTopZLevel();
                 if (isPolyLine) // SQA: Polyline hack
                     zLevel--;
 

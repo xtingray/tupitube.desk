@@ -97,6 +97,7 @@ void TupSceneTabWidget::addScene(int index, const QString &name, TupExposureTabl
     toolsLayout->addWidget(header);
     toolsLayout->addWidget(opacitySpinBox);
 
+    /*
     TImageButton *exportButton = new TImageButton(QIcon(THEME_DIR + "icons/layer_opacity.png"), 16);
     exportButton->setToolTip(tr("Export Current Layer"));
     connect(exportButton, SIGNAL(clicked(bool)), this, SIGNAL(exportActionCalled()));
@@ -108,6 +109,7 @@ void TupSceneTabWidget::addScene(int index, const QString &name, TupExposureTabl
     toolsLayout->addSpacing(10);
     toolsLayout->addWidget(exportButton);
     toolsLayout->addWidget(importButton);
+    */
 
     layout->addLayout(toolsLayout);
     layout->addWidget(table);

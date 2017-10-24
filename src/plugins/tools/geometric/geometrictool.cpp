@@ -147,39 +147,35 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
 
             k->currentPoint = input->pos();
         } else if (name() == tr("Ellipse")) {
-                   k->added = false;
-                   k->ellipse = new TupEllipseItem(QRectF(input->pos(), QSize(0,0)));
-                   k->ellipse->setPen(brushManager->pen());
-                   k->ellipse->setBrush(brushManager->brush());
+            k->added = false;
+            k->ellipse = new TupEllipseItem(QRectF(input->pos(), QSize(0,0)));
+            k->ellipse->setPen(brushManager->pen());
+            k->ellipse->setBrush(brushManager->brush());
 
-                   k->currentPoint = input->pos();
+            k->currentPoint = input->pos();
         } else if (name() == tr("Line")) {
-                   k->currentPoint = input->pos();
+            k->currentPoint = input->pos();
 
-                   if (k->path) {
-                       QPainterPath path = k->path->path();
-                       path.cubicTo(k->lastPoint, k->lastPoint, k->lastPoint);
-                       k->path->setPath(path);
-                   } else {
-                       k->path = new TupPathItem;
-                       k->path->setPen(brushManager->pen());
-                       k->path->setBrush(brushManager->brush());
+            if (k->path) {
+                QPainterPath path = k->path->path();
+                path.cubicTo(k->lastPoint, k->lastPoint, k->lastPoint);
+                k->path->setPath(path);
+            } else {
+                k->path = new TupPathItem;
+                k->path->setPen(brushManager->pen());
+                k->path->setBrush(brushManager->brush());
 
-                       QPainterPath path;
-                       path.moveTo(k->currentPoint);
-                       k->path->setPath(path);
-                       scene->includeObject(k->path);
+                QPainterPath path;
+                path.moveTo(k->currentPoint);
+                k->path->setPath(path);
+                scene->includeObject(k->path);
 
-                       k->line = new TupLineItem();
-                       k->line->setPen(brushManager->pen());
-                       k->line->setLine(QLineF(input->pos().x(), input->pos().y(), input->pos().x(), input->pos().y()));
+                k->line = new TupLineItem();
+                k->line->setPen(brushManager->pen());
+                k->line->setLine(QLineF(input->pos().x(), input->pos().y(), input->pos().x(), input->pos().y()));
 
-                       TupFrame *frame = scene->currentFrame();
-                       int zLevel = frame->getTopZLevel();
-                       k->line->setZValue(zLevel);
-
-                       scene->addItem(k->line);
-                   }
+                scene->includeObject(k->line);
+            }
         }
     }
 }

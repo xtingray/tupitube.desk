@@ -124,8 +124,9 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
         void moveLayer(int oldIndex, int newIndex);
         void actionTriggered(QAction *action);
 
-        void exportCurrentLayer();
-        void importCurrentLayer();
+        // SQA: Pending features
+        // void exportCurrentLayer();
+        // void importCurrentLayer();
 };
 
 #endif
