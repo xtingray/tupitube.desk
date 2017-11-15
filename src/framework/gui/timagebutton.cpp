@@ -61,20 +61,20 @@ class TImageButton::Animation
         int m_interval;
 };
 
-TImageButton::TImageButton(const QIcon &icon, int size, QWidget *parent, bool animate ) : QPushButton(parent), m_imageSize(size), m_animator(0), m_isAnimated(animate)
+TImageButton::TImageButton(const QIcon &icon, int size, QWidget *parent, bool animate) : QPushButton(parent), m_imageSize(size), m_animator(0), m_isAnimated(animate)
 {
     setup();
     setImage(icon);
 }
 
-TImageButton::TImageButton(const QIcon &icon, int size, QObject *reciever, const char *method, QWidget *parent, bool animate ) : QPushButton(parent), m_imageSize(size), m_animator(0), m_isAnimated(animate)
+TImageButton::TImageButton(const QIcon &icon, int size, QObject *reciever, const char *method, QWidget *parent, 
+                           bool animate) : QPushButton(parent), m_imageSize(size), m_animator(0), m_isAnimated(animate)
 {
     setup();
     setImage(icon);
     
     connect(this, SIGNAL(clicked()), reciever, method);
 }
-
 
 TImageButton::~TImageButton()
 {

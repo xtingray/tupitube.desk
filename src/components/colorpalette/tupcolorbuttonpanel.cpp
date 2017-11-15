@@ -35,6 +35,7 @@
 
 #include "tupcolorbuttonpanel.h"
 #include "tupcolorbutton.h"
+#include "timagebutton.h"
 
 #include <QBoxLayout>
 #include <QDebug>
@@ -94,6 +95,9 @@ void TupColorButtonPanel::setPanel(const QSize &cellSize, const QString &buttonP
     connect(blue, &TupColorButton::clicked, this, &TupColorButtonPanel::updateSelection);
     k->baseColors << blue;
 
+    TImageButton *settings = new TImageButton(QPixmap(THEME_DIR + "icons/settings.png"), 22, this, true);
+    connect(settings, SIGNAL(clicked()), this, SLOT(customizeColors()));
+
     QBoxLayout *bottomLayout = new QHBoxLayout(this);
     bottomLayout->setAlignment(Qt::AlignHCenter);
     bottomLayout->setContentsMargins(3, 5, 3, 3);
@@ -106,6 +110,7 @@ void TupColorButtonPanel::setPanel(const QSize &cellSize, const QString &buttonP
     bottomLayout->addWidget(red);
     bottomLayout->addWidget(green);
     bottomLayout->addWidget(blue);
+    bottomLayout->addWidget(settings);
 }
 
 TupColorButtonPanel::~TupColorButtonPanel()
@@ -148,4 +153,9 @@ void TupColorButtonPanel::resetPanel()
 void TupColorButtonPanel::enableTransparentColor(bool flag)
 {
     k->trans->setVisible(flag);
+}
+
+void TupColorButtonPanel::customizeColors()
+{
+
 }
