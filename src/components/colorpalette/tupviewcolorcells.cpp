@@ -34,19 +34,25 @@
  ***************************************************************************/
 
 #include "tupviewcolorcells.h"
+#include "tupcolorbuttonpanel.h"
+
+// #include "tcolorcell.h"
 
 struct TupViewColorCells::Private
 {
     QComboBox *chooserPalette;
     QStackedWidget *containerPalette;
+
     TupCellsColor *defaultPalette;
     TupCellsColor *qtColorPalette;
     TupCellsColor *customColorPalette;
     TupCellsColor *customGradientPalette;
+
     int numColorRecent;
     QBrush currentColor;
     QTableWidgetItem* currentCell;
     QVBoxLayout *layout;
+    TupColorButtonPanel *buttonPanel;
 };
 
 TupViewColorCells::TupViewColorCells(QWidget *parent) : QFrame(parent), k(new Private)
@@ -156,6 +162,15 @@ void TupViewColorCells::setupForm()
 
     k->chooserPalette->setCurrentIndex(lastIndex);
     k->containerPalette->setCurrentIndex(lastIndex);
+
+    k->buttonPanel = new TupColorButtonPanel(Qt::SolidPattern, QSize(22, 22), 10, "6,4,2", this);
+    connect(k->buttonPanel, &TupColorButtonPanel::clickColor, this, &TupViewColorCells::updateColorFromPanel);
+    k->buttonPanel->setFixedHeight(35);
+
+    QHBoxLayout *basicLayout = new QHBoxLayout;
+    basicLayout->addWidget(k->buttonPanel);
+
+    k->layout->addLayout(basicLayout);
 }
 
 void TupViewColorCells::readPalettes(const QString &paletteDir)
@@ -279,6 +294,7 @@ void TupViewColorCells::changeColor(QTableWidgetItem* item)
     #endif
 
     if (item) {
+        k->buttonPanel->resetPanel();
         if (k->currentCell) {
             QColor currentColor = k->currentCell->background().color();
             QColor newColor = item->background().color(); 
@@ -297,6 +313,16 @@ void TupViewColorCells::clearSelection()
 {
     if (k->currentCell)
         k->currentCell->setSelected(false);
+}
+
+void TupViewColorCells::resetBasicPanel()
+{
+    k->buttonPanel->resetPanel();
+}
+
+void TupViewColorCells::enableTransparentColor(bool flag)
+{
+    k->buttonPanel->enableTransparentColor(flag);
 }
 
 void TupViewColorCells::fillNamedColor()
@@ -338,9 +364,9 @@ void TupViewColorCells::removeCurrentColor()
 {
      TCellView *palette = qobject_cast<TCellView *>(k->containerPalette->currentWidget());
      if (palette) {
-          if (k->defaultPalette != palette) {
-              //TODO: Add function removeItem in TCellView
-          }
+         if (k->defaultPalette != palette) {
+             // SQA: Add function removeItem in TCellView
+         }
      }
 }
 
@@ -373,4 +399,12 @@ void TupViewColorCells::setupButtons()
 void TupViewColorCells::setColor(const QBrush& brush)
 {
     k->currentColor = brush;
+}
+
+void TupViewColorCells::updateColorFromPanel(const QColor &color)
+{
+    clearSelection();
+
+    QBrush brush(color);
+    emit colorSelected(brush);
 }

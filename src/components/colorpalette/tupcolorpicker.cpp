@@ -42,6 +42,7 @@ struct TupColorPicker::Private
     QPixmap *pix;
     int pWidth;
     int pHeight;
+    bool target;
 };
 
 TupColorPicker::TupColorPicker(QWidget *parent) : QFrame(parent), k(new Private)
@@ -52,6 +53,8 @@ TupColorPicker::TupColorPicker(QWidget *parent) : QFrame(parent), k(new Private)
     k->pHeight = 200;
     k->hue = 0;
     k->saturation = 0;
+    k->target = false;
+
     setColor(150, 255);
 
     QImage img(k->pWidth, k->pHeight, QImage::Format_RGB32);
@@ -98,7 +101,18 @@ int TupColorPicker::saturationPoint(const QPoint &pt)
 
 void TupColorPicker::setColor(const QPoint &pt)
 { 
+    k->target = true;
     setColor(huePoint(pt), saturationPoint(pt)); 
+}
+
+void TupColorPicker::clearSelection()
+{
+    k->target = false;
+    QRect rect(colorPoint(), QSize(20,20));
+    rect = rect.united(QRect(colorPoint(), QSize(20, 20)));
+    rect.translate(contentsRect().x()-9, contentsRect().y()-9);
+
+    repaint(rect);
 }
 
 QSize TupColorPicker::sizeHint() const
@@ -174,8 +188,10 @@ void TupColorPicker::paintEvent(QPaintEvent*)
     painter.drawPixmap(rect.topLeft(), *k->pix);
     QPoint point = colorPoint() + rect.topLeft();
 
-    painter.setPen(Qt::white);
-    painter.drawRect(point.x()-4, point.y()-4, 10, 10);
+    if (k->target) {
+        painter.setPen(Qt::white);
+        painter.drawRect(point.x()-4, point.y()-4, 10, 10);
+    }
 }
 
 int TupColorPicker::hue()

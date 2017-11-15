@@ -58,6 +58,7 @@ class TUPITUBE_EXPORT TupColorPicker : public QFrame
         ~TupColorPicker();
         int hue();
         int saturation();
+        void clearSelection();
 
     public slots:
         void setColor(int hue, int saturation);

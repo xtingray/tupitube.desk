@@ -36,6 +36,7 @@
 
 #include "tcolorcell.h"
 #include "tconfig.h"
+// #include "tapplicationproperties.h"
 
 #include <QPainter>
 #include <QDebug>
@@ -78,8 +79,16 @@ void TColorCell::paintEvent(QPaintEvent *event)
 
     QPainter painter(this);
     painter.fillRect(rect(), k->brush);
-    QRect border = rect();
+    /*
+    if (k->brush.color() == Qt::transparent) {
+        QImage transparent(THEME_DIR + "icons/trans_big.png");
+        painter.drawImage(rect().topLeft(), transparent);
+    } else {
+        painter.fillRect(rect(), k->brush);
+    }
+    */
 
+    QRect border = rect();
     if (k->enabled) {
         if (k->checked) {
             QColor borderColor1 = QColor(200, 200, 200); 
@@ -99,7 +108,10 @@ void TColorCell::paintEvent(QPaintEvent *event)
             painter.drawRect(border);
         } else {
             QRect frame = QRect(border.topLeft(), QSize(k->size.width()-1, k->size.height()-1));
-            painter.setPen(QPen(QColor(190, 190, 190), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+            if (k->brush.color() == Qt::transparent)
+                painter.setPen(QPen(QColor(30, 30, 30), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+            else
+                painter.setPen(QPen(QColor(190, 190, 190), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
             painter.drawRect(frame);
         }
     } else {

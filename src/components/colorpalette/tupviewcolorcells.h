@@ -65,18 +65,8 @@ class TUPITUBE_EXPORT TupViewColorCells : public QFrame
         void readPaletteFile(const QString &file);
         void setColor(const QBrush & brush);
         void clearSelection();
-
-    private:
-        struct Private;
-        Private *const k;
-
-    private:
-        void setupForm();
-        void setupButtons();
-        void addDefaultColor(int i, int j, const QColor &);
-        void fillNamedColor();
-        void readPalettes(const QString &paletteDir);
-        void addPalette(TupCellsColor *palette);
+        void resetBasicPanel();
+        void enableTransparentColor(bool flag);
 
     // protected:
     //     QSize sizeHint() const;
@@ -89,6 +79,21 @@ class TUPITUBE_EXPORT TupViewColorCells : public QFrame
         virtual void removeCurrentColor();
         virtual void addPalette(const QString & name, const QList<QBrush> & brushes, bool editable);
         void changeColor(QTableWidgetItem*);
+
+    private slots:
+        void updateColorFromPanel(const QColor &color);
+
+    private:
+        void setupForm();
+        void setupButtons();
+        void addDefaultColor(int i, int j, const QColor &);
+        void fillNamedColor();
+        void readPalettes(const QString &paletteDir);
+        void addPalette(TupCellsColor *palette);
+
+        struct Private;
+        Private *const k;
+
 };
 
 #endif

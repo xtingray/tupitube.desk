@@ -20,7 +20,9 @@ HEADERS += tupcolorpicker.h \
            tupcellscolor.h \
            tuppaletteparser.h \
            tupformitem.h \
-           tupcolorform.h
+           tupcolorform.h \
+           tupcolorbutton.h \
+           tupcolorbuttonpanel.h
 
 SOURCES += tupcolorpicker.cpp \
            tupcolorpalette.cpp \
@@ -28,7 +30,9 @@ SOURCES += tupcolorpicker.cpp \
            tupcellscolor.cpp \
            tuppaletteparser.cpp \
            tupformitem.cpp \
-           tupcolorform.cpp
+           tupcolorform.cpp \
+           tupcolorbutton.cpp \
+           tupcolorbuttonpanel.cpp
 
 FRAMEWORK_DIR = "../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

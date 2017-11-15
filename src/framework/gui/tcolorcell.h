@@ -49,7 +49,7 @@ class TUPITUBE_EXPORT TColorCell : public QWidget
     Q_OBJECT
 
     public:
-        enum FillType{Contour = 0, Inner, Background, PreviousFrames, NextFrames, Layers};
+        enum FillType{Contour = 0, Inner, Background, Basic, PreviousFrames, NextFrames, Layers};
         TColorCell(FillType index, const QBrush &brush, const QSize &size);
         ~TColorCell();
         QSize sizeHint() const;

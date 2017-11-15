@@ -99,7 +99,7 @@ TupColorPalette::TupColorPalette(QWidget *parent) : TupModuleWidgetBase(parent),
     setupGradientManager();
 
     k->tab->setPalette(palette());
-    k->tab->setMinimumHeight(300);
+    k->tab->setMinimumHeight(320);
     k->splitter->addWidget(k->tab);
 
     setMinimumWidth(316);
@@ -275,6 +275,7 @@ void TupColorPalette::updateColorMode(TColorCell::FillType type)
     QColor color;
 
     if (type == TColorCell::Background) {
+        k->paletteContainer->enableTransparentColor(false);
         k->currentSpace = TColorCell::Background;
         brush = k->bgColor->brush();
         color = brush.color();
@@ -285,6 +286,8 @@ void TupColorPalette::updateColorMode(TColorCell::FillType type)
         if (k->fillColor->isChecked())
             k->fillColor->setChecked(false);
     } else {
+        k->paletteContainer->enableTransparentColor(true);
+        k->paletteContainer->resetBasicPanel();
         if (k->bgColor->isChecked())
             k->bgColor->setChecked(false);
 
@@ -432,12 +435,34 @@ void TupColorPalette::setGlobalColors(const QBrush &brush)
         emit paintAreaEventTriggered(&event);
     } else {
         if (k->currentSpace == TColorCell::Contour) {
+            if (brush.color() == Qt::transparent) {
+                if (k->fillColor->color() == Qt::transparent) {
+                    QBrush black(Qt::black);
+                    k->fillColor->setBrush(black);
+                    k->currentFillBrush = black;
+
+                    TupPaintAreaEvent event(TupPaintAreaEvent::ChangeBrush, black);
+                    emit paintAreaEventTriggered(&event);
+                }
+            }
+
             k->contourColor->setBrush(brush);
             k->currentContourBrush = brush;
 
             TupPaintAreaEvent event(TupPaintAreaEvent::ChangePenColor, brush.color());
             emit paintAreaEventTriggered(&event);
         } else {
+            if (brush.color() == Qt::transparent) {
+                if (k->contourColor->color() == Qt::transparent) {
+                    QBrush black(Qt::black);
+                    k->contourColor->setBrush(black);
+                    k->currentContourBrush = black;
+
+                    TupPaintAreaEvent event(TupPaintAreaEvent::ChangePenColor, black);
+                    emit paintAreaEventTriggered(&event);
+                }
+            }
+
             k->fillColor->setBrush(brush);
             k->currentFillBrush = brush;
 
@@ -450,6 +475,8 @@ void TupColorPalette::setGlobalColors(const QBrush &brush)
 
 void TupColorPalette::updateColorFromPalette(const QBrush &brush)
 {
+    k->colorPickerArea->clearSelection();
+
     setGlobalColors(brush);
     QColor color = brush.color();
     updateLuminancePicker(color);
@@ -478,6 +505,9 @@ void TupColorPalette::syncColor(const QColor &color)
 
 void TupColorPalette::setHS(int hue, int saturation)
 {
+    k->paletteContainer->clearSelection();
+    k->paletteContainer->resetBasicPanel();
+
     int luminance = 255;
     if (hue == 0 && saturation == 0)
         luminance = 0;

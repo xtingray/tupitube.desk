@@ -8,7 +8,7 @@
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
- *   KTooN's versions:                                                     * 
+ *   KTooN's versions:                                                     *
  *                                                                         *
  *   2006:                                                                 *
  *    David Cuadrado                                                       *
@@ -33,89 +33,35 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPCOLORPALETTE_H
-#define TUPCOLORPALETTE_H
+#ifndef TUPCOLORBUTTONPANEL_H
+#define TUPCOLORBUTTONPANEL_H
 
-#include "tglobal.h"
-#include "tupmodulewidgetbase.h"
-#include "ticon.h"
-#include "timagebutton.h"
-#include "tcolorcell.h"
-#include "tconfig.h"
-#include "tuppaintareaevent.h"
-#include "tupcolorform.h"
-#include "tupviewcolorcells.h"
-#include "tupcolorpicker.h"
-#include "tslider.h"
-#include "tupgradientcreator.h"
-#include "tvhbox.h"
+#include <QWidget>
 
-#include <QBoxLayout>
-#include <QPushButton>
-#include <QLineEdit>
-#include <QFrame>
-#include <QToolTip>
-#include <QComboBox>
-#include <QGroupBox>
-#include <QSplitter>
-#include <QMenu>
-#include <QTabWidget>
-
-/**
- * @author Jorge Cuadrado
-*/
-
-class TUPITUBE_EXPORT TupColorPalette : public TupModuleWidgetBase
+class TupColorButtonPanel : public QWidget
 {
     Q_OBJECT
 
     public:
-        enum BrushType { Solid = 0, Gradient };
+        TupColorButtonPanel(Qt::BrushStyle style, const QSize &baseColorCellSize, int spacing,
+                            const QString &buttonParams, QWidget *parent = 0);
+        ~TupColorButtonPanel();
+        void resetPanel();
+        void enableTransparentColor(bool flag);
 
-        TupColorPalette(QWidget *parent = 0);
-        ~TupColorPalette();
-
-        // SQA: change this for QBrush
-        QPair<QColor, QColor> color();
-        void parsePaletteFile(const QString &file);
-        void setBgColor(const QColor &color);
-
-    public slots:
-        void init();
-        void updateContourColor(const QColor &color);
-        void updateFillColor(const QColor &color);
-        void updateBgColor(const QColor &color);
+    signals:
+        void clickColor(const QColor &color);
 
     private slots:
-        void updateColorMode(TColorCell::FillType flag);
-        void initBg();
-        void setColorOnAppFromHTML(const QBrush &brush);
-        void updateColorFromHTML();
-        void updateBgColorFromHTML();
-        void syncColor(const QColor &color);
-        void setHS(int h, int s);
-
-        void updateColorFromPalette(const QBrush& brush);
-        void updateColorFromDisplay(const QBrush& brush);
-        void updateGradientColor(const QBrush &brush);
-        void switchColors();
-        void updateColorType(int index);
-		
-    signals:
-        void paintAreaEventTriggered(const TupPaintAreaEvent *event);
-        void colorSpaceChanged(TColorCell::FillType type);
+        void updateSelection(int index);
 
     private:
-        void setupButtons();
-        void setupColorDisplay();
-        void setupMainPalette();
-        void setupColorChooser();
-        void setupGradientManager();
-        void setGlobalColors(const QBrush &brush);
-        void updateLuminancePicker(const QColor &color);
+       void setPanel(const QSize &cellSize, const QString &buttonParams);
+       void setState(int index, bool isSelected);
 
-        struct Private;
-        Private *const k;
+       struct Private;
+       Private *const k;
+       int spacing;
 };
 
 #endif
