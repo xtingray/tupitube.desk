@@ -1618,16 +1618,6 @@
     </linearGradient>
     <linearGradient
        inkscape:collect="always"
-       xlink:href="#linearGradient3911-3-8"
-       id="linearGradient4005-5-6"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(0.70710678,0.66291261)"
-       x1="0.53699273"
-       y1="7.3049078"
-       x2="2.4555922"
-       y2="5.9325323" />
-    <linearGradient
-       inkscape:collect="always"
        id="linearGradient3911-3-8">
       <stop
          style="stop-color:#008700;stop-opacity:1;"
@@ -2955,9 +2945,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.98410957"
-     inkscape:cx="557.06184"
-     inkscape:cy="1267.3319"
+     inkscape:zoom="11.313709"
+     inkscape:cx="396.80541"
+     inkscape:cy="265.21437"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -7179,7 +7169,9 @@
     </g>
     <g
        id="g9474"
-       transform="translate(140.05713,-385.94308)">
+       transform="translate(140.05713,-385.94308)"
+       inkscape:export-xdpi="38.68"
+       inkscape:export-ydpi="38.68">
       <path
          inkscape:export-ydpi="1432.9553"
          inkscape:export-xdpi="1432.9553"
@@ -15645,5 +15637,37 @@
        sodipodi:end="6.2756978"
        sodipodi:open="true"
        d="m 584.73512,-214.30911 a 6.1242156,6.1242156 0 0 1 -6.11276,6.1242 6.1242156,6.1242156 0 0 1 -6.13563,-6.10128 6.1242156,6.1242156 0 0 1 6.08978,-6.14704 6.1242156,6.1242156 0 0 1 6.15843,6.07826" />
+    <g
+       id="g8604-9"
+       transform="translate(297.3053,452.70767)"
+       inkscape:export-xdpi="50.91"
+       inkscape:export-ydpi="50.91">
+      <g
+         inkscape:export-filename="/home/xtingray/tupi/sources/tupi/src/themes/default/icons/redo_big.png"
+         inkscape:export-ydpi="791.24982"
+         inkscape:export-xdpi="791.24982"
+         id="g3961-5-6"
+         transform="matrix(-14.103129,0,0,14.103129,124.33271,234.5497)">
+        <g
+           id="g3919-3-1"
+           transform="translate(-0.171875,-0.59375)"
+           inkscape:export-filename="/media/windows/linux/xtingray/tupi/sources/tupi/src/themes/default/icons/undo.png"
+           inkscape:export-xdpi="1200"
+           inkscape:export-ydpi="1200">
+          <path
+             sodipodi:nodetypes="ccccccc"
+             inkscape:connector-curvature="0"
+             id="path3899-3-8"
+             d="M 3.6570679,6.5899207 C 3.2022362,6.3063414 2.3828026,6.5144224 1.7898641,6.8274644 1.7861812,6.7132961 1.7051586,6.5549337 1.6572815,6.5070566 1.5136504,6.7943187 1.3700194,7.4461829 1.3589708,7.7776391 1.8672039,7.6450566 2.5190679,7.6229596 2.8726213,7.6450566 2.6921618,7.4940598 2.5117022,7.3430631 2.3312427,7.1920663 2.649809,6.9729368 3.2390646,6.6985648 3.6570679,6.5899207 Z"
+             style="fill:#ffffff;fill-opacity:0;stroke:none" />
+          <path
+             sodipodi:nodetypes="ccccccccccccccc"
+             inkscape:connector-curvature="0"
+             id="path3897-6-8"
+             d="m 1.6023082,6.4498596 c 0.08073,0.053385 0.1929384,0.1429423 0.3049175,0.231484 C 2.2130817,6.4433307 3.1045105,6.0948323 3.9959394,6.6412659 3.2214587,6.6469346 2.7618617,6.9840588 2.5508568,7.2438436 2.7904401,7.4417603 2.8201012,7.5291915 3.0596845,7.7271082 2.5232909,7.6159786 1.9603842,7.6248254 1.2383568,7.9938436 1.2774198,7.4287394 1.4227834,6.8535821 1.5868459,6.4447279 1.6701789,6.5801446 1.6532905,6.6013322 1.6869053,6.7367489 1.5801345,7.0570614 1.4623151,7.3610311 1.4649193,7.6813436 1.8841135,7.4831017 2.1537597,7.481838 2.6281966,7.5156155 2.4713148,7.4165038 2.4028212,7.3284407 2.2348908,7.2624747 2.3714086,7.0017328 3.0990235,6.6028841 3.6111918,6.5686373 2.6434384,6.2651949 2.0041352,6.7928442 1.7696068,6.9938436 1.6758568,6.7021769 1.6432664,6.8548076 1.5495164,6.5631409 1.6328494,6.5839739 1.5189789,6.4290266 1.6023082,6.4498596 Z"
+             style="fill:#008700;fill-opacity:1;stroke:none" />
+        </g>
+      </g>
+    </g>
   </g>
 </svg>

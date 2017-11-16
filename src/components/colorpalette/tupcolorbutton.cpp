@@ -161,3 +161,8 @@ void TupColorButton::setEditable(bool flag)
 {
     k->editable = flag;
 }
+
+int TupColorButton::index()
+{
+    return k->index;
+}

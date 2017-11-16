@@ -2370,9 +2370,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="22.627417"
-     inkscape:cx="637.82839"
-     inkscape:cy="255.20382"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="676.15867"
+     inkscape:cy="241.97512"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -6370,8 +6370,8 @@
     <g
        id="g9474"
        transform="translate(140.05713,-381.94308)"
-       inkscape:export-xdpi="168.8"
-       inkscape:export-ydpi="168.8">
+       inkscape:export-xdpi="38.68"
+       inkscape:export-ydpi="38.68">
       <path
          inkscape:export-ydpi="1432.9553"
          inkscape:export-xdpi="1432.9553"
@@ -13832,6 +13832,32 @@
            height="6.6743503"
            x="640.27899"
            y="791.1322" />
+      </g>
+    </g>
+    <g
+       id="g3961-1-9-5-6"
+       inkscape:export-filename="/home/xtingray/tupi/sources/tupi.mobile/images/redo.png"
+       inkscape:export-xdpi="87.599998"
+       inkscape:export-ydpi="87.599998"
+       transform="matrix(-7.7198571,-2.7546063,-2.7546063,7.7198571,711.71674,749.74993)">
+      <g
+         inkscape:export-ydpi="1200"
+         inkscape:export-xdpi="1200"
+         inkscape:export-filename="/media/windows/linux/xtingray/tupi/sources/tupi/src/themes/dark/icons/undo.png"
+         transform="translate(-0.171875,-0.59375)"
+         id="g3919-5-8-6-7">
+        <path
+           style="fill:#ffffff;fill-opacity:0;stroke:none"
+           d="M 3.6570679,6.5899207 C 3.2022362,6.3063414 2.3828026,6.5144224 1.7898641,6.8274644 1.7861812,6.7132961 1.7051586,6.5549337 1.6572815,6.5070566 1.5136504,6.7943187 1.3700194,7.4461829 1.3589708,7.7776391 1.8672039,7.6450566 2.5190679,7.6229596 2.8726213,7.6450566 2.6921618,7.4940598 2.5117022,7.3430631 2.3312427,7.1920663 2.649809,6.9729368 3.2390646,6.6985648 3.6570679,6.5899207 Z"
+           id="path3899-1-8-4-9"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="ccccccc" />
+        <path
+           style="fill:#000000;fill-opacity:1;stroke:none"
+           d="m 1.6257457,6.4537659 c 0.057292,0.049479 0.1695009,0.139036 0.28148,0.2275777 C 2.2130817,6.4433307 3.1045105,6.0948323 3.9959394,6.6412659 3.2214587,6.6469346 2.7618617,6.9840588 2.5508568,7.2438436 2.7904401,7.4417603 2.8201012,7.5291915 3.0596845,7.7271082 2.5232909,7.6159786 1.9603842,7.6248254 1.2383568,7.9938436 1.2774198,7.4287394 1.4110646,6.6543634 1.6024709,6.4486342 c 0.083333,0.1354167 0.05082,0.152698 0.084434,0.2881147 C 1.5801345,7.0570614 1.4623151,7.3610311 1.4649193,7.6813436 1.8841135,7.4831017 2.1537597,7.481838 2.6281966,7.5156155 2.4713148,7.4165038 2.4028212,7.3284407 2.2348908,7.2624747 2.3714086,7.0017328 3.0990235,6.6028841 3.6111918,6.5686373 2.6434384,6.2651949 2.0041352,6.7928442 1.7696068,6.9938436 1.6758568,6.7021769 1.6432664,6.8548076 1.5495164,6.5631409 c 0.083333,0.020833 -0.0071,-0.130208 0.076229,-0.109375 z"
+           id="path3897-0-5-4-9"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="ccccccccccccccc" />
       </g>
     </g>
   </g>

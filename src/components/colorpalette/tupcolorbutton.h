@@ -58,6 +58,7 @@ class TUPITUBE_EXPORT TupColorButton : public QWidget
         bool isSelected();
         void setBrush(const QBrush &brush);
         void setEditable(bool flag);
+        int index();
 
     protected:
         void paintEvent(QPaintEvent *painter);

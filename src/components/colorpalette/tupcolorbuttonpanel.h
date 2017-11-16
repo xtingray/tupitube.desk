@@ -55,6 +55,7 @@ class TupColorButtonPanel : public QWidget
     private slots:
         void updateSelection(int index);
         void customizeColors();
+        void resetColors();
 
     private:
        void setPanel(const QSize &cellSize, const QString &buttonParams);
