@@ -146,7 +146,8 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                           numPhonemes = strList.at(3).toInt();
                           #ifdef TUP_DEBUG
                               if (numPhonemes == 0) {
-                                  QString msg = "TupPapagayoImporter::TupPapagayoImporter() - Warning: Word \"" +  strWord + "\" has NO phonemes associated! :(";
+                                  QString msg = "TupPapagayoImporter::TupPapagayoImporter() - Warning: Word \"" 
+                                                +  strWord + "\" has NO phonemes associated! :(";
                                   #ifdef Q_OS_WIN
                                       qDebug() << msg;
                                   #else

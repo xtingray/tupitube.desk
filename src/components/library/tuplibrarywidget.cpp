@@ -69,6 +69,8 @@ struct TupLibraryWidget::Private
     QTreeWidgetItem *currentItemDisplayed;
     QFileSystemWatcher *watcher;
     QList<QString> editorItems;
+    bool isEffectSound;
+    TupLibraryObject *currentSound;
 
     struct Frame
     {
@@ -91,12 +93,16 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     k->childCount = 0;
     k->renaming = false;
     k->mkdir = false;
+    k->isEffectSound = false;
 
     setWindowIcon(QPixmap(THEME_DIR + "icons/library.png"));
     setWindowTitle(tr("Library"));
 
     k->libraryDir = QDir(CONFIG_DIR + "libraries");
+
     k->display = new TupLibraryDisplay();
+    connect(k->display, SIGNAL(frameUpdated(int)), this, SLOT(updateSoundTiming(int)));
+
     k->libraryTree = new TupItemManager(this);
 
     connect(k->libraryTree, SIGNAL(itemSelected(QTreeWidgetItem *)), this,
@@ -206,7 +212,6 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     connect(k->watcher, SIGNAL(fileChanged(QString)), this, SLOT(updateItemFromSaveAction()));
 }
 
-
 TupLibraryWidget::~TupLibraryWidget()
 {
     #ifdef TUP_DEBUG
@@ -222,6 +227,14 @@ TupLibraryWidget::~TupLibraryWidget()
 
 void TupLibraryWidget::resetGUI()
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupLibraryWidget::resetGUI()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     k->library->reset();
     k->display->reset();
     k->libraryTree->cleanUI();
@@ -247,7 +260,8 @@ void TupLibraryWidget::addFolder(const QString &folderName)
 void TupLibraryWidget::updateItemEditionState()
 {
     if (k->editorItems.count() == 2) {
-        TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove, k->editorItems.at(0), TupLibraryObject::Folder); 
+        TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove, 
+                                                                            k->editorItems.at(0), TupLibraryObject::Folder); 
         emit requestTriggered(&request);
     }
 
@@ -286,7 +300,8 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
 
         if (!object) {
             #ifdef TUP_DEBUG
-                QString msg = "TupLibraryWidget::previewItem() - Fatal Error: Cannot find the object: " + item->text(1) + "." + item->text(2).toLower();
+                QString msg = "TupLibraryWidget::previewItem() - Fatal Error: Cannot find the object: " 
+                              + item->text(1) + "." + item->text(2).toLower();
                 #ifdef Q_OS_WIN
                     qDebug() << msg;
                 #else
@@ -326,6 +341,8 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                    break;
                 case TupLibraryObject::Sound:
                    {
+                     k->currentSound = object;
+
                      k->display->setSoundObject(object->dataPath());
                      k->display->showSoundPlayer();
                    }
@@ -1533,6 +1550,7 @@ void TupLibraryWidget::importSound()
             QByteArray data = file.readAll();
             file.close();
 
+            k->isEffectSound = true;
             TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
                                                            TupLibraryObject::Sound, k->project->spaceContext(), data);
             emit requestTriggered(&request);
@@ -1621,7 +1639,14 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                             break;
                             case TupLibraryObject::Sound:
                                {
+                                 TupLibraryObject *object = k->library->getObject(id);
+                                 if (object)
+                                     object->setSoundEffectFlag(k->isEffectSound);
+                                 k->isEffectSound = false;
+
                                  item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
+                                 k->libraryTree->setCurrentItem(item);
+                                 previewItem(item);
                                }
                             break;
                             default:
@@ -2160,4 +2185,13 @@ void TupLibraryWidget::saveDefaultPath(const QString &dir)
 void TupLibraryWidget::openStore()
 {
     QDesktopServices::openUrl(QString("http://maefloresta.com/store"));
+}
+
+void TupLibraryWidget::updateSoundTiming(int frame)
+{
+    if (k->currentSound) {
+        k->currentSound->updateFrameToPlay(frame);
+        k->library->updateEffectSoundList(k->currentSound->dataPath(), frame);
+        emit soundUpdated();
+    }
 }

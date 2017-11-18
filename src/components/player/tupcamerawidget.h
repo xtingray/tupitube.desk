@@ -80,6 +80,7 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         void setLoop();
         void selectScene(int index);
         void updateProgressBar(int advance);
+        void updateSoundItems();
 
     public slots:
         bool handleProjectResponse(TupProjectResponse *event);

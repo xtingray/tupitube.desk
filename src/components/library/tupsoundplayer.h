@@ -63,6 +63,9 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         QSize sizeHint() const;
         void setSoundObject(const QString &path);
 
+    signals:
+        void frameUpdated(int frame);
+
     private slots:
         void playFile();
         void positionChanged(qint64 value);

@@ -63,6 +63,9 @@ class TUPITUBE_EXPORT TupLibraryDisplay : public QWidget
         void showSoundPlayer();
         void setSoundObject(const QString &path);
 
+    signals:
+        void frameUpdated(int frame);
+
     private:
         struct Private;
         Private *const k;

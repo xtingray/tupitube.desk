@@ -35,6 +35,8 @@
 
 #include "tupsoundplayer.h"
 
+#include <QSpinBox>
+
 struct TupSoundPlayer::Private
 {
     QMediaPlayer *player;
@@ -45,6 +47,8 @@ struct TupSoundPlayer::Private
     qint64 duration;
     QTime soundTotalTime;
     QString totalTime;
+
+    QWidget *frameWidget;
 };
 
 TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent), k(new Private)
@@ -58,6 +62,28 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent), k(new Private)
     connect(k->player, SIGNAL(positionChanged(qint64)), SLOT(positionChanged(qint64)));
     connect(k->player, SIGNAL(durationChanged(qint64)), SLOT(durationChanged(qint64)));
     connect(k->player, SIGNAL(stateChanged(QMediaPlayer::State)), SLOT(stateChanged(QMediaPlayer::State)));
+
+    k->frameWidget = new QWidget;
+
+    QLabel *frameLabel = new QLabel(tr("Play at frame:") + " ");
+    QSpinBox *frameBox = new QSpinBox();
+    frameBox->setMinimum(1);
+    frameBox->setValue(1);
+    connect(frameBox, SIGNAL(valueChanged(int)), this, SIGNAL(frameUpdated(int)));
+
+    QBoxLayout *effectLayout = new QBoxLayout(QBoxLayout::LeftToRight, k->frameWidget);
+    effectLayout->addStretch();
+    effectLayout->addWidget(frameLabel);
+    effectLayout->addWidget(frameBox);
+    effectLayout->addStretch();
+
+    /*
+    k->lipSyncWidget = new QWidget;
+    QBoxLayout *lipLayout = new QBoxLayout(QBoxLayout::LeftToRight, k->lipSyncWidget);
+    lipLayout->addStretch();
+    lipLayout->addWidget(new QLabel(tr("Papagayo Lip-Sync Sound")));
+    lipLayout->addStretch();
+    */
 
     k->timer = new QLabel("");
     QBoxLayout *timerLayout = new QBoxLayout(QBoxLayout::LeftToRight);
@@ -86,6 +112,8 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent), k(new Private)
 
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->addSpacing(5);
+    layout->addWidget(k->frameWidget);
+    // layout->addWidget(k->lipSyncWidget);
     layout->addLayout(timerLayout);
     layout->addLayout(sliderLayout);
     layout->addLayout(buttonLayout);
@@ -148,7 +176,6 @@ void TupSoundPlayer::positionChanged(qint64 value)
 
 void TupSoundPlayer::durationChanged(qint64 value)
 {
-    qDebug() << "TupSoundPlayer::durationChanged() - value: " << value;
     k->duration = value/1000;
     k->slider->setMinimum(0);
     k->slider->setMaximum(k->duration);

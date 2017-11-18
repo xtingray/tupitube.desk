@@ -45,6 +45,7 @@ TupLibraryDisplay::TupLibraryDisplay() : QWidget(), k(new Private)
 {
     k->previewPanel = new TupItemPreview(this);
     k->soundPlayer = new TupSoundPlayer(this);
+    connect(k->soundPlayer, SIGNAL(frameUpdated(int)), this, SIGNAL(frameUpdated(int)));
 
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->addWidget(k->previewPanel);
@@ -66,6 +67,7 @@ QSize TupLibraryDisplay::sizeHint() const
 
 void TupLibraryDisplay::reset()
 {
+    k->soundPlayer->hide();
     k->previewPanel->reset();
 }
 

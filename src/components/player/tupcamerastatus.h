@@ -69,9 +69,11 @@ class TUPITUBE_EXPORT TupCameraStatus : public QFrame
 
     signals:
         void sceneIndexChanged(int index);
+        void muteEnabled(bool mute);
 
     private slots:
         void setDuration();
+        void mute();
 
     private:
         struct Private;

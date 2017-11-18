@@ -208,5 +208,13 @@ void TupItemPreview::paintEvent(QPaintEvent *)
         }
 
         k->proxy->paint(&painter, &opt, this); // paint isn't const...
+    } else {
+        #ifdef TUP_DEBUG
+            #ifdef Q_OS_WIN
+                qDebug() << "[TupItemPreview::paintEvent() - Warning: proxy is NULL]";
+            #else
+                tWarning() << "TupItemPreview::paintEvent() - Warning: proxy is NULL";
+            #endif
+        #endif
     }
 }

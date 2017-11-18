@@ -56,7 +56,7 @@ struct TupScreen::Private
     QTimer *playBackTimer;
     TupAnimationRenderer *renderer;
 
-    QList<TupSoundLayer *> sounds;
+    // QList<TupSoundLayer *> sounds;
     QList<QImage> photograms; 
     QList<QImage> newList;
     QList<photoArray> animationList;
@@ -64,12 +64,13 @@ struct TupScreen::Private
     QSize screenDimension;
 
     TupLibrary *library;
-    QList<QPair<int, QString> > lipSyncRecords;
+    QList<QPair<int, QString> > soundRecords;
     QList<QMediaPlayer *> soundPlayer;
 
     bool isPlaying;
     bool playFlag;
     bool playBackFlag;
+    bool mute;
 };
 
 TupScreen::TupScreen(TupProject *project, const QSize viewSize, bool isScaled, QWidget *parent) : QFrame(parent), k(new Private)
@@ -91,11 +92,11 @@ TupScreen::TupScreen(TupProject *project, const QSize viewSize, bool isScaled, Q
     k->fps = 24;
     k->currentSceneIndex = 0;
     k->currentFramePosition = 0;
-    // k->soundPlayer = QList();
 
     k->isPlaying = false;
     k->playFlag = true; 
     k->playBackFlag = false;
+    k->mute = false;
 
     k->timer = new QTimer(this);
     k->playBackTimer = new QTimer(this);
@@ -125,7 +126,7 @@ TupScreen::~TupScreen()
     k->newList.clear();
     k->photograms.clear();
     k->animationList.clear();
-    k->sounds.clear();
+    // k->sounds.clear();
     k->renderControl.clear();
 
     // delete k->soundPlayer;
@@ -222,8 +223,10 @@ void TupScreen::paintEvent(QPaintEvent *)
     #endif
     */
 
-    if (k->isPlaying && k->playFlag)
-        playLipSyncAt(k->currentFramePosition);
+    if (!k->mute) {
+        if (k->isPlaying && k->playFlag)
+            playSoundAt(k->currentFramePosition);
+    }
 
     if (!k->firstShoot) {
         if (k->currentFramePosition > -1 && k->currentFramePosition < k->photograms.count())
@@ -272,11 +275,8 @@ void TupScreen::play()
             QApplication::restoreOverrideCursor();
         }
 
-        if (k->renderControl.at(k->currentSceneIndex)) {
-            for (int i=0; i<k->soundPlayer.count(); i++)
-                 k->soundPlayer.at(i)->play();
+        if (k->renderControl.at(k->currentSceneIndex))
             k->timer->start(1000/k->fps);
-        }
     }
 }
 
@@ -295,10 +295,12 @@ void TupScreen::playBack()
         return;
 
     if (k->playFlag) {
-        for (int i=0; i<k->soundPlayer.count(); i++)
-            k->soundPlayer.at(i)->stop();
+        stopSounds();
+
+        /*
         foreach (TupSoundLayer *sound, k->sounds)
-                 sound->stop();
+            sound->stop();
+        */
 
         k->playFlag = false;
         if (k->timer->isActive())
@@ -339,13 +341,10 @@ void TupScreen::pause()
             render();
 
         k->isPlaying = true;
-        if (k->playFlag) {
-            for (int i=0; i<k->soundPlayer.count(); i++)
-                 k->soundPlayer.at(i)->play();
+        if (k->playFlag)
             k->timer->start(1000 / k->fps);
-        } else {
+        else
             k->playBackTimer->start(1000 / k->fps);
-        }
     }
 }
 
@@ -380,16 +379,15 @@ void TupScreen::stopAnimation()
     k->isPlaying = false;
 
     if (k->playFlag) {
-        for (int i=0; i<k->soundPlayer.count(); i++)
-            k->soundPlayer.at(i)->pause();
+        stopSounds();
 
         if (k->timer) {
             if (k->timer->isActive())
                 k->timer->stop();
         }
 
-        foreach (TupSoundLayer *sound, k->sounds)
-                 sound->stop();
+        // foreach (TupSoundLayer *sound, k->sounds)
+        //     sound->stop();
     } else {
         if (k->playBackTimer) {
             if (k->playBackTimer->isActive())
@@ -464,13 +462,17 @@ void TupScreen::advance()
     #endif
     */
 
-    if (k->cyclicAnimation && k->currentFramePosition >= k->photograms.count())
+    if (k->cyclicAnimation && k->currentFramePosition >= k->photograms.count()) {
         k->currentFramePosition = 0;
+        stopSounds();
+    }
 
+    /*
     if (k->currentFramePosition == 0) {
         foreach (TupSoundLayer *sound, k->sounds)
             sound->play();
     }
+    */
 
     if (k->currentFramePosition < k->photograms.count()) {
         repaint();
@@ -611,21 +613,21 @@ void TupScreen::render()
     k->renderer->setScene(scene, k->project->dimension());
     int i = 1;
     while (k->renderer->nextPhotogram()) {
-           k->renderized = QImage(k->project->dimension(), QImage::Format_RGB32);
-           k->painter = new QPainter(&k->renderized);
-           k->painter->setRenderHint(QPainter::Antialiasing);
+        k->renderized = QImage(k->project->dimension(), QImage::Format_RGB32);
+        k->painter = new QPainter(&k->renderized);
+        k->painter->setRenderHint(QPainter::Antialiasing);
 
-           k->renderer->render(k->painter);
-           delete k->painter;
-           k->painter = NULL;
+        k->renderer->render(k->painter);
+        delete k->painter;
+        k->painter = NULL;
 
-           if (k->isScaled)
-               k->photograms << k->renderized.scaledToWidth(k->screenDimension.width(), Qt::SmoothTransformation);
-           else
-               k->photograms << k->renderized;
+        if (k->isScaled)
+            k->photograms << k->renderized.scaledToWidth(k->screenDimension.width(), Qt::SmoothTransformation);
+        else
+            k->photograms << k->renderized;
 
-           emit isRendering(i); 
-           i++;
+        emit isRendering(i); 
+        i++;
     }
 
     k->animationList.replace(k->currentSceneIndex, k->photograms);
@@ -791,7 +793,7 @@ void TupScreen::updateFirstFrame()
     if (k->currentSceneIndex > -1 && k->currentSceneIndex < k->animationList.count()) {
         TupScene *scene = k->project->sceneAt(k->currentSceneIndex);
         if (scene) { 
-            setLipSyncSettings();
+            loadSoundRecords();
 
             k->renderer = new TupAnimationRenderer(k->project->bgColor(), k->library);
             k->renderer->setScene(scene, k->project->dimension());
@@ -857,14 +859,24 @@ void TupScreen::addPhotogramsArray(int sceneIndex)
     }
 }
 
-void TupScreen::setLipSyncSettings()
+void TupScreen::loadSoundRecords()
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupScreen::loadSoundRecords()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
+    k->soundRecords.clear();
     k->soundPlayer.clear();
 
     TupScene *scene = k->project->sceneAt(k->currentSceneIndex);
+    // Loading lipSync sounds
     if (scene) {
         if (scene->lipSyncTotal() > 0) {
-            k->lipSyncRecords.clear();
+            k->soundRecords.clear();
             Mouths mouths = scene->getLipSyncList();
             int i = 0;
             foreach(TupLipSync *lipsync, mouths) {
@@ -875,7 +887,8 @@ void TupScreen::setLipSyncSettings()
                         QPair<int, QString> soundRecord;
                         soundRecord.first = lipsync->initFrame();
                         soundRecord.second = sound->dataPath();
-                        k->lipSyncRecords << soundRecord;
+
+                        k->soundRecords << soundRecord;
                         k->soundPlayer << new QMediaPlayer();
                         i++;
                     }
@@ -883,17 +896,53 @@ void TupScreen::setLipSyncSettings()
             }
         }
     }
+
+    QList<QPair<int, QString> > effectsList = k->library->soundEffectList();
+    int size = effectsList.count();
+
+    for (int i=0; i<size; i++)  {
+        QPair<int, QString> sound = effectsList.at(i);
+        k->soundRecords << sound;
+        k->soundPlayer << new QMediaPlayer();
+    }
 }
 
-void TupScreen::playLipSyncAt(int frame)
+void TupScreen::playSoundAt(int frame)
 {
-    int size = k->lipSyncRecords.count();
+    int size = k->soundRecords.count();
+
     for(int i=0; i<size; i++) {
-        QPair<int, QString> soundRecord = k->lipSyncRecords.at(i);
+        QPair<int, QString> soundRecord = k->soundRecords.at(i);
         if (frame == soundRecord.first) {
-            QString path = soundRecord.second;
-            k->soundPlayer.at(i)->setMedia(QUrl::fromLocalFile(soundRecord.second));
-            k->soundPlayer.at(i)->play();
+            if (i < k->soundPlayer.count()) {
+                k->soundPlayer.at(i)->setMedia(QUrl::fromLocalFile(soundRecord.second));
+                k->soundPlayer.at(i)->play();
+            } else { 
+                #ifdef TUP_DEBUG
+                    tError() << "TupScreen::playSoundAt() -  Fatal Error: Not sound file was found at -> " << soundRecord.second;
+                #endif
+            }
         }
     }
+}
+
+void TupScreen::enableMute(bool flag)
+{
+    k->mute = flag;
+
+    if (k->mute) {
+        stopSounds();
+    } else {
+       if (k->isPlaying) {
+           stop();
+           play();
+       }
+    }
+}
+
+void TupScreen::stopSounds()
+{
+    int size = k->soundRecords.count();
+    for(int i=0; i<size; i++)
+        k->soundPlayer.at(i)->stop();
 }

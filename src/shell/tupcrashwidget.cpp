@@ -156,13 +156,13 @@ void TupCrashWidget::addBacktracePage(const QString &execInfo, const QString &ba
 void TupCrashWidget::restart()
 {
    /*
-   QString path = QString::fromLocal8Bit(::getenv("TUPITUBE_BIN")) + "/tupi &";
+   QString path = QString::fromLocal8Bit(::getenv("TUPITUBE_BIN")) + "/tupitube &";
    QByteArray ba = path.toAscii();
    system(ba.data());
    kill(m_pid, 9);
    */
 
-   QString path = QString::fromLocal8Bit(::getenv("TUPITUBE_BIN")) + "/tupi &";
+   QString path = QString::fromLocal8Bit(::getenv("TUPITUBE_BIN")) + "/tupitube &";
    QByteArray ba = path.toLatin1();
 
    int flag = system(ba.data());

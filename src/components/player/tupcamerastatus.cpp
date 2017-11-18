@@ -44,6 +44,8 @@ struct TupCameraStatus::Private
     QCheckBox *loopBox;
     bool loop;
     int framesTotal;
+    bool mute;
+    TImageButton *soundButton;
 };
 
 TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWidget *parent) : QFrame(parent), k(new Private)
@@ -57,6 +59,7 @@ TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWid
     #endif
 
     k->framesTotal = 1;
+    k->mute = false;
 
     setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
 
@@ -68,7 +71,7 @@ TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWid
 
     sceneInfoLayout->addWidget(sceneNameText, 1);
     sceneInfoLayout->addWidget(k->scenes, 1);
-    sceneInfoLayout->addSpacing(20);
+    sceneInfoLayout->addSpacing(15);
 
     QLabel *label = new QLabel("<B>" + tr("Frames Total") + ":</B> ");
     k->framesCount = new QLabel;
@@ -76,7 +79,7 @@ TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWid
     sceneInfoLayout->addWidget(label, 1);
     sceneInfoLayout->addWidget(k->framesCount, 1);
 
-    sceneInfoLayout->addSpacing(20);
+    sceneInfoLayout->addSpacing(15);
 
     QLabel *fpsText = new QLabel("<B>" + tr("FPS") + ":</B> ");
 
@@ -90,14 +93,14 @@ TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWid
     sceneInfoLayout->addWidget(fpsText, 1);
     sceneInfoLayout->addWidget(k->fpsBox, 1);
 
-    sceneInfoLayout->addSpacing(20);
+    sceneInfoLayout->addSpacing(15);
 
     QLabel *durationLabel = new QLabel("<B>" + tr("Duration") + ":</B> ");
     k->duration = new QLabel();
     sceneInfoLayout->addWidget(durationLabel, 1);
     sceneInfoLayout->addWidget(k->duration, 1);
 
-    sceneInfoLayout->addSpacing(20);
+    sceneInfoLayout->addSpacing(15);
 
     k->loopBox = new QCheckBox();
     k->loopBox->setToolTip(tr("Loop"));
@@ -115,7 +118,15 @@ TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWid
 
     sceneInfoLayout->addWidget(k->loopBox, 1);
 
-    sceneInfoLayout->addSpacing(20);
+    sceneInfoLayout->addSpacing(15);
+
+    k->soundButton = new TImageButton(QPixmap(THEME_DIR + "icons/speaker.png"), 22, this, true);
+    k->soundButton->setShortcut(QKeySequence(tr("M")));
+    k->soundButton->setToolTip(tr("Mute"));
+    connect(k->soundButton, SIGNAL(clicked()), this, SLOT(mute()));
+    sceneInfoLayout->addWidget(k->soundButton, 1);
+
+    sceneInfoLayout->addSpacing(15);
 
     QPushButton *exportButton = new QPushButton(tr("Export"));
     exportButton->setIcon(QIcon(THEME_DIR + "icons/export_button.png"));
@@ -213,4 +224,22 @@ void TupCameraStatus::setDuration()
     int fps = k->fpsBox->value();
     qreal duration = (qreal) k->framesTotal / (qreal) fps;
     k->duration->setText(QString::number(duration, 'f', 2) + QString(" " + tr("secs")));
+}
+
+void TupCameraStatus::mute()
+{
+    QString img("icons/mute.png");
+
+    if (k->mute) {
+        k->mute = false;
+        img = "icons/speaker.png";
+        k->soundButton->setToolTip(tr("Mute"));
+    } else {
+        k->mute = true;
+        k->soundButton->setToolTip(tr("Unmute"));
+    }
+
+    k->soundButton->setImage(QPixmap(THEME_DIR + img));
+
+    emit muteEnabled(k->mute);
 }

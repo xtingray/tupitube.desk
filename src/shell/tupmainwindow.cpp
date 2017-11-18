@@ -359,6 +359,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         // TupCamera Widget
         cameraWidget = new TupCameraWidget(m_projectManager->project(), isNetworked);
         connectWidgetToManager(cameraWidget);
+        connect(m_libraryWidget, SIGNAL(soundUpdated()), cameraWidget, SLOT(updateSoundItems()));
 
         m_libraryWidget->setNetworking(isNetworked);
 

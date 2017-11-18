@@ -109,7 +109,11 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
         void updatePaths(const QString &newPath);
 
         bool loadingProject();
-        
+
+        QList<QPair<int, QString> > soundEffectList();
+
+        void updateEffectSoundList(const QString &soundPath, int frame);
+ 
     public:
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;

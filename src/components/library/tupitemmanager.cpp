@@ -38,8 +38,7 @@
 /**
  * This class provides some methods for the TupLibraryWidget.
  * Here is where folder methods are defined for the Library widget.
- * @author David Cuadrado
-*/
+ **/
 
 TupItemManager::TupItemManager(QWidget *parent) : TreeListWidget(parent), m_currentFolder(0)
 {

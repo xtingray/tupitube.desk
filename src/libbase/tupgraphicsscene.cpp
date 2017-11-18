@@ -1784,7 +1784,7 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
     } else {
         TupBackground *bg = k->scene->background();
         if (bg) {
-            TupFrame *frame;
+            TupFrame *frame = new TupFrame;
             if (k->spaceContext == TupProject::STATIC_BACKGROUND_EDITION) {
                 frame = bg->staticFrame();
             } else if (k->spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION) {

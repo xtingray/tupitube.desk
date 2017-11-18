@@ -253,6 +253,7 @@ void TupCameraWidget::addStatusPanel(bool isNetworked)
     k->status = new TupCameraStatus(this, isNetworked);
     k->status->setScenes(k->project);
     connect(k->status, SIGNAL(sceneIndexChanged(int)), this, SLOT(selectScene(int)));
+    connect(k->status, SIGNAL(muteEnabled(bool)), k->screen, SLOT(enableMute(bool)));
 
     updateFramesTotal(0);
     int fps = k->project->fps();
@@ -396,7 +397,8 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
             default:
             {
                  #ifdef TUP_DEBUG
-                     QString msg = "TupCameraWidget::handleProjectResponse() - Unknown/Unhandled project action: " + QString::number(sceneResponse->action());
+                     QString msg = "TupCameraWidget::handleProjectResponse() - Unknown/Unhandled project action: " 
+                                   + QString::number(sceneResponse->action());
                      #ifdef Q_OS_WIN
                          qDebug() << msg;
                      #else
@@ -501,4 +503,9 @@ void TupCameraWidget::updateTimerPanel(int currentFrame)
     k->currentFrameBox->setText(QString::number(currentFrame));
     double time = k->fpsDelta * currentFrame;
     k->timerSecsLabel->setText(QString::number(time, 'f', 2));
+}
+
+void TupCameraWidget::updateSoundItems()
+{
+    k->screen->loadSoundRecords();
 }

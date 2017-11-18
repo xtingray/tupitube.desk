@@ -49,6 +49,9 @@ struct TupLibraryObject::Private
     QString smallId;
     QString extension;
     QByteArray rawData; 
+
+    bool isSoundEffect;
+    int playAt; 
 };
 
 TupLibraryObject::TupLibraryObject(QObject *parent) : QObject(parent), k(new Private)
@@ -61,6 +64,8 @@ TupLibraryObject::TupLibraryObject(const QString &name, const QString &folder, T
     setSymbolName(name);
     k->folder = folder;
     k->type = type;
+    k->isSoundEffect = false;
+    k->playAt = 0;
 }
 
 TupLibraryObject::~TupLibraryObject()
@@ -100,6 +105,16 @@ void TupLibraryObject::setType(TupLibraryObject::Type type)
 TupLibraryObject::Type TupLibraryObject::type() const
 {
     return k->type;
+}
+
+int TupLibraryObject::frameToPlay()
+{
+    return k->playAt;
+}
+
+void TupLibraryObject::updateFrameToPlay(int frame)
+{
+    k->playAt = frame;
 }
 
 void TupLibraryObject::setSymbolName(const QString &name)
@@ -232,8 +247,14 @@ void TupLibraryObject::fromXml(const QString &xml)
                 case TupLibraryObject::Image:
                 case TupLibraryObject::Svg:
                 case TupLibraryObject::Item:
+                     {
+                         k->dataPath = objectTag.attribute("path");
+                     }
+                break;
                 case TupLibraryObject::Sound:
                      {
+                         k->isSoundEffect = objectTag.attribute("soundEffect").toInt() ? true : false;
+                         k->playAt = objectTag.attribute("playAt").toInt();
                          k->dataPath = objectTag.attribute("path");
                      }
                 break;
@@ -260,7 +281,6 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
     QDomElement object = doc.createElement("object");
     object.setAttribute("id", k->symbolName);
     object.setAttribute("type", k->type);
-    
     QFileInfo finfo(k->dataPath);
     
     switch (k->type) {
@@ -276,8 +296,14 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
             case Image:
             case Svg:
             case Item:
+            {
+                 object.setAttribute("path", k->folder + "/" + finfo.fileName());
+            }
+            break;
             case Sound:
             {
+                 object.setAttribute("soundEffect", k->isSoundEffect);
+                 object.setAttribute("playAt", k->playAt);
                  object.setAttribute("path", k->folder + "/" + finfo.fileName());
             }
             break;
@@ -507,6 +533,7 @@ bool TupLibraryObject::saveData(const QString &dataDir)
                      return false;
                  }
             }
+
             case TupLibraryObject::Sound:
             {
                  QString path = dataDir + "/audio/";
@@ -526,7 +553,7 @@ bool TupLibraryObject::saveData(const QString &dataDir)
 
                      if (isOk != -1) {
                          #ifdef TUP_DEBUG
-                             QString msg = "TupLibraryObject::saveData() - Image file saved successfully -> " + k->dataPath;
+                             QString msg = "TupLibraryObject::saveData() - Sound file has been saved successfully -> " + k->dataPath;
                              #ifdef Q_OS_WIN
                                  qWarning() << msg;
                              #else
@@ -557,7 +584,7 @@ bool TupLibraryObject::saveData(const QString &dataDir)
                      return false;
                  }
             }
-            break;
+
             case TupLibraryObject::Svg:
             {
                  QString path = dataDir + "/svg/";
@@ -586,7 +613,7 @@ bool TupLibraryObject::saveData(const QString &dataDir)
                      return false;
                  }
             }
-            break;
+
             case TupLibraryObject::Image:
             {
                  QString path = dataDir + "/images/";
@@ -648,7 +675,7 @@ bool TupLibraryObject::saveData(const QString &dataDir)
                      return false;
                  }
             }
-            break;
+
             default: 
                 #ifdef TUP_DEBUG
                     QString msg = "TupLibraryObject::saveData() - Fatal Error: Type is not supported -> " + QString::number(k->type);
@@ -662,4 +689,14 @@ bool TupLibraryObject::saveData(const QString &dataDir)
     }
 
     return false;
+}
+
+void TupLibraryObject::setSoundEffectFlag(bool flag)
+{
+    k->isSoundEffect = flag;
+}
+
+bool TupLibraryObject::isSoundEffect()
+{
+    return k->isSoundEffect;
 }

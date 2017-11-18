@@ -287,9 +287,9 @@ void crashTrapper(int sig)
             QString gdb;
 
 #ifdef UBUNTU
-            gdb = "/usr/bin/sudo /usr/bin/gdb -n -nw -batch -ex where " + BIN_DIR + "tupi.bin --pid=";
+            gdb = "/usr/bin/sudo /usr/bin/gdb -n -nw -batch -ex where " + BIN_DIR + "tupitube.bin --pid=";
 #else
-            gdb = "/usr/bin/gdb -n -nw -batch -ex where " + BIN_DIR + "tupi.bin --pid=";
+            gdb = "/usr/bin/gdb -n -nw -batch -ex where " + BIN_DIR + "tupitube.bin --pid=";
 #endif
             gdb += QString::number(::getppid());
             bt = runCommand(gdb);

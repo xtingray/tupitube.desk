@@ -125,6 +125,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void updateItemFromSaveAction();
         void updateItemEditionState();
         void importNativeObjects();
+        void updateSoundTiming(int frame);
 
     public slots:
         void addFolder(const QString &folderName = QString());
@@ -139,6 +140,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
 
     signals:
         void requestCurrentGraphic();
+        void soundUpdated();
 
     private:
         void callExternalEditor(QTreeWidgetItem *item, const QString &software);

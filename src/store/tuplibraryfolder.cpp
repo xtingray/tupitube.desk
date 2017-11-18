@@ -45,6 +45,7 @@ struct TupLibraryFolder::Private
     LibraryObjects objects;
     TupProject *project;
     bool loadingProject;
+    QList<QPair<int, QString> > soundRecords;
 };
 
 TupLibraryFolder::TupLibraryFolder(const QString &id, TupProject *project, QObject *parent) : QObject(parent), k(new Private)
@@ -83,7 +84,6 @@ TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::Type type, co
                 tError() << msg;
             #endif
         #endif
-
         return 0;
     }
 
@@ -100,9 +100,6 @@ TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::Type type, co
     }
 
     TupLibraryObject *object = new TupLibraryObject(name, folder, type, this);
-    // object->setSymbolName(name);
-    // object->setParent(this);
-    // object->setType(type);
 
     if (!object->loadRawData(data)) {
         #ifdef TUP_DEBUG
@@ -127,6 +124,13 @@ TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::Type type, co
 
     bool success = object->saveData(k->project->dataDir());
     if (success) {
+        if (type == TupLibraryObject::Sound) {
+            QPair<int, QString> soundRecord;
+            soundRecord.first = object->frameToPlay();
+            soundRecord.second = object->dataPath();
+            k->soundRecords << soundRecord;
+        }
+
         if (loaded && ret)
             TupProjectLoader::createSymbol(type, name, id(), data, k->project);
 
@@ -158,13 +162,13 @@ bool TupLibraryFolder::addObject(TupLibraryObject *object)
 bool TupLibraryFolder::addObject(const QString &folderName, TupLibraryObject *object)
 {
     foreach (TupLibraryFolder *folder, k->folders) {
-             if (folder->id().compare(folderName) == 0) {
-                 LibraryObjects bag = folder->objects();
-                 if (!bag.contains(object->symbolName())) {
-                     folder->addObject(object);
-                     return true;
-                 }
-             }
+        if (folder->id().compare(folderName) == 0) {
+            LibraryObjects bag = folder->objects();
+            if (!bag.contains(object->symbolName())) {
+                folder->addObject(object);
+                return true;
+            }
+        }
     }
 
     return false;
@@ -173,12 +177,11 @@ bool TupLibraryFolder::addObject(const QString &folderName, TupLibraryObject *ob
 bool TupLibraryFolder::reloadObject(const QString &id)
 {
     foreach (QString oid, k->objects.keys()) {
-             if (oid.compare(id) == 0) {
-                 QString path = k->objects[id]->dataPath();
-                 if (QFile::exists(path)) {  
-                     return k->objects[id]->loadData(path);
-                 }
-             }
+        if (oid.compare(id) == 0) {
+            QString path = k->objects[id]->dataPath();
+            if (QFile::exists(path))
+                return k->objects[id]->loadData(path);
+        }
     }
 
     #ifdef TUP_DEBUG
@@ -206,21 +209,21 @@ bool TupLibraryFolder::addFolder(TupLibraryFolder *folder)
 bool TupLibraryFolder::removeObject(const QString &id, bool absolute)
 {
     foreach (QString oid, k->objects.keys()) {
-             if (oid.compare(id) == 0) {
-                 QString path = k->objects[id]->dataPath();
-                 if (absolute) {
-                     QFileInfo finfo(path);
-                     if (finfo.isFile())
-                         QFile::remove(path);
-                 }
-                 return k->objects.remove(id);
-             }
+        if (oid.compare(id) == 0) {
+            QString path = k->objects[id]->dataPath();
+            if (absolute) {
+                QFileInfo finfo(path);
+                if (finfo.isFile())
+                    QFile::remove(path);
+            }
+            return k->objects.remove(id);
+        }
     }
 
     foreach (TupLibraryFolder *folder, k->folders) {
-             TupLibraryObject *object = folder->getObject(id);
-             if (object)
-                 return folder->removeObject(id, absolute);
+        TupLibraryObject *object = folder->getObject(id);
+        if (object)
+            return folder->removeObject(id, absolute);
     }
 
     #ifdef TUP_DEBUG
@@ -272,14 +275,14 @@ bool TupLibraryFolder::moveObject(const QString &id, const QString &target)
 {
     TupLibraryObject *object = getObject(id);
     if (object) {
-        if (removeObject(id, false))
+        if (removeObject(id, false)) {
             foreach (TupLibraryFolder *folder, k->folders) {
-                     if (folder->id().compare(target) == 0) {
-                         folder->addObject(object);
-                         return true;
-                     }
+                if (folder->id().compare(target) == 0) {
+                    folder->addObject(object);
+                    return true;
+                }
             }
-
+        }
     }
 
     return false;
@@ -312,13 +315,13 @@ QString TupLibraryFolder::id() const
 bool TupLibraryFolder::exists(const QString &id)
 {
     foreach (QString oid, k->objects.keys()) {
-             if (oid.compare(id) == 0)
-                 return true;
+        if (oid.compare(id) == 0)
+            return true;
     }
 
     foreach (TupLibraryFolder *folder, k->folders) {
-             if (folder->exists(id))
-                 return true;
+        if (folder->exists(id))
+            return true;
     }
 
     #ifdef TUP_DEBUG
@@ -336,14 +339,14 @@ bool TupLibraryFolder::exists(const QString &id)
 TupLibraryObject *TupLibraryFolder::getObject(const QString &id) const
 {
     foreach (QString oid, k->objects.keys()) {
-             if (oid.compare(id) == 0) 
-                 return k->objects[oid];
+        if (oid.compare(id) == 0) 
+            return k->objects[oid];
     }
 
     foreach (TupLibraryFolder *folder, k->folders) {
-             TupLibraryObject *object = folder->getObject(id);
-             if (object)
-                 return object;
+        TupLibraryObject *object = folder->getObject(id);
+        if (object)
+            return object;
     }
     
     #ifdef TUP_DEBUG
@@ -369,8 +372,8 @@ TupLibraryFolder *TupLibraryFolder::getFolder(const QString &id) const
     #endif
 
     foreach (TupLibraryFolder *folder, k->folders) {
-             if (folder->id().compare(id) == 0)
-                 return folder;
+        if (folder->id().compare(id) == 0)
+            return folder;
     }
 
     #ifdef TUP_DEBUG
@@ -388,8 +391,8 @@ TupLibraryFolder *TupLibraryFolder::getFolder(const QString &id) const
 bool TupLibraryFolder::folderExists(const QString &id) const
 {
     foreach (TupLibraryFolder *folder, k->folders) {
-             if (folder->id().compare(id) == 0)
-                 return true;
+        if (folder->id().compare(id) == 0)
+            return true;
     }
   
     #ifdef TUP_DEBUG
@@ -498,31 +501,44 @@ void TupLibraryFolder::fromXml(const QString &xml)
     QDomNode domNode = root.firstChild();
     
     while (!domNode.isNull()) {
-           QDomElement e = domNode.toElement();
+        QDomElement e = domNode.toElement();
         
-           if (!e.isNull()) {
-               if (e.tagName() == "object") {
-                   loadItem(id(), domNode);
-               } else if (e.tagName() == "folder") {
-                       QDomDocument folderDocument;
-                       folderDocument.appendChild(folderDocument.importNode(domNode, true));
+        if (!e.isNull()) {
+            if (e.tagName() == "object") {
+                loadItem(id(), domNode);
+            } else if (e.tagName() == "folder") {
+                QDomDocument folderDocument;
+                folderDocument.appendChild(folderDocument.importNode(domNode, true));
 
-                       TupLibraryFolder *folder = new TupLibraryFolder(e.attribute("id"), k->project, this);
-                       addFolder(folder);
+                TupLibraryFolder *folder = new TupLibraryFolder(e.attribute("id"), k->project, this);
+                addFolder(folder);
 
-                       TupProjectLoader::createSymbol(TupLibraryObject::Folder, e.attribute("id"), QString(), 
-                                                      "FOLDER",  k->project);
+                TupProjectLoader::createSymbol(TupLibraryObject::Folder, e.attribute("id"), QString(), 
+                                               "FOLDER",  k->project);
 
-                       // Loading the objects inside this folder
-                       loadObjects(e.attribute("id"), folderDocument.toString(0));
-               }
-
+                // Loading the objects inside this folder
+                loadObjects(e.attribute("id"), folderDocument.toString(0));
            }
+        }
 
-           domNode = domNode.nextSibling();
+        domNode = domNode.nextSibling();
     }
 
     k->loadingProject = false;
+}
+
+QDomElement TupLibraryFolder::toXml(QDomDocument &doc) const
+{
+    QDomElement folder = doc.createElement("folder");
+    folder.setAttribute("id", k->id);
+
+    foreach (TupLibraryFolder *folderObject, k->folders)
+        folder.appendChild(folderObject->toXml(doc));
+
+    foreach (TupLibraryObject *object, k->objects.values())
+        folder.appendChild(object->toXml(doc));
+
+    return folder;
 }
 
 void TupLibraryFolder::loadObjects(const QString &folder, const QString &xml)
@@ -573,16 +589,27 @@ void TupLibraryFolder::loadItem(const QString &folder, QDomNode xml)
     object->fromXml(objectDocument.toString(0));
 
     switch (object->type()) {
-            case TupLibraryObject::Image:
-            case TupLibraryObject::Svg:
-            case TupLibraryObject::Item:
-            case TupLibraryObject::Sound:
-            {
-                 object->loadDataFromPath(k->project->dataDir());
+        case TupLibraryObject::Image:
+        case TupLibraryObject::Svg:
+        case TupLibraryObject::Item:
+        {
+            object->loadDataFromPath(k->project->dataDir());
+        }
+        break;
+        case TupLibraryObject::Sound:
+        {
+            object->loadDataFromPath(k->project->dataDir());
+
+            if (object->isSoundEffect()) {
+                QPair<int, QString> soundRecord;
+                soundRecord.first = object->frameToPlay();
+                soundRecord.second = object->dataPath();
+                k->soundRecords << soundRecord;
             }
-            break;
-            default:
-            break;
+        }
+        break;
+        default:
+        break;
     }
 
     if (folder.compare("library") == 0)
@@ -602,20 +629,6 @@ void TupLibraryFolder::loadItem(const QString &folder, QDomNode xml)
                                    object->symbolName(), folder, data.toLocal8Bit(), k->project);
 }
 
-QDomElement TupLibraryFolder::toXml(QDomDocument &doc) const
-{
-    QDomElement folder = doc.createElement("folder");
-    folder.setAttribute("id", k->id);
-
-    foreach (TupLibraryFolder *folderObject, k->folders)
-             folder.appendChild(folderObject->toXml(doc));
-    
-    foreach (TupLibraryObject *object, k->objects.values())
-             folder.appendChild(object->toXml(doc));
-    
-    return folder;
-}
-
 void TupLibraryFolder::reset()
 {
     k->objects.clear();
@@ -625,32 +638,50 @@ void TupLibraryFolder::reset()
 void TupLibraryFolder::updatePaths(const QString &newPath)
 {
     foreach (QString oid, k->objects.keys()) {
-             QString oldPath = k->objects[oid]->dataPath();
-             QFileInfo logicalPath(oldPath);
-             QString filename = logicalPath.fileName();
-             QString path = "";
+         QString oldPath = k->objects[oid]->dataPath();
+         QFileInfo logicalPath(oldPath);
+         QString filename = logicalPath.fileName();
+         QString path = "";
 
-             if (k->objects[oid]->type() == TupLibraryObject::Image)
-                 path = newPath + "/images/" + filename; 
+         if (k->objects[oid]->type() == TupLibraryObject::Image)
+             path = newPath + "/images/" + filename; 
 
-             if (k->objects[oid]->type() == TupLibraryObject::Svg)
-                 path = newPath + "/svg/" + filename;
+         if (k->objects[oid]->type() == TupLibraryObject::Svg)
+             path = newPath + "/svg/" + filename;
 
-             if (k->objects[oid]->type() == TupLibraryObject::Sound)
-                 path = newPath + "/audio/" + filename;
+         if (k->objects[oid]->type() == TupLibraryObject::Sound)
+             path = newPath + "/audio/" + filename;
 
-             if (k->objects[oid]->type() == TupLibraryObject::Item)
-                 path = newPath + "/obj/" + filename;
+         if (k->objects[oid]->type() == TupLibraryObject::Item)
+             path = newPath + "/obj/" + filename;
 
-             k->objects[oid]->setDataPath(path);
+         k->objects[oid]->setDataPath(path);
 
     }
 
     foreach (TupLibraryFolder *folder, k->folders)
-             folder->updatePaths(newPath);    
+        folder->updatePaths(newPath);    
 }
 
 bool TupLibraryFolder::loadingProject()
 {
     return k->loadingProject;
+}
+
+QList<QPair<int, QString> > TupLibraryFolder::soundEffectList()
+{
+    return k->soundRecords;
+}
+
+void TupLibraryFolder::updateEffectSoundList(const QString &soundPath, int frame)
+{
+    int size = k->soundRecords.count();
+    for(int i=0; i<size; i++) {
+        QPair<int, QString> soundRecord = k->soundRecords.at(i);
+        if (soundPath.compare(soundRecord.second) == 0) {
+            soundRecord.first = frame;
+            k->soundRecords.replace(i, soundRecord);
+            return;
+        }
+    }
 }

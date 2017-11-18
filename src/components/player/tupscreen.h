@@ -78,6 +78,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void setFPS(int fps);
         void resetPhotograms(int sceneIndex);
         void updateAnimationArea();
+        void loadSoundRecords();
 
     public slots:
         void render();
@@ -91,6 +92,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
     private slots:
         void advance();
         void back();
+        void enableMute(bool flag);
 
     protected:
         void frameResponse(TupFrameResponse *event);
@@ -117,8 +119,8 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void initPhotogramsArray();
         void addPhotogramsArray(int index);
         void updateFirstFrame();
-        void setLipSyncSettings();
-        void playLipSyncAt(int frame);
+        void playSoundAt(int frame);
+        void stopSounds();
 
         struct Private;
         Private *const k;

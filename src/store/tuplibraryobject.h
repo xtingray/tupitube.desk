@@ -83,6 +83,9 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         void setFolder(const QString &folder);
         QString folder() const;
 
+        int frameToPlay();
+        void updateFrameToPlay(int frame);
+
         QString smallId() const;
         QString extension() const;
         
@@ -91,7 +94,10 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         bool loadData(const QString &path);
         
         bool saveData(const QString &dataDir);
-        
+
+        void setSoundEffectFlag(bool flag);
+        bool isSoundEffect();
+
     public:
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
