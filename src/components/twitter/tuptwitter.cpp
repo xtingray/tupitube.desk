@@ -43,7 +43,7 @@
 #include <QNetworkAccessManager>
 #include <QFile>
 
-QString TupTwitter::NEWS_HOST = QString("http://www.maefloresta.com");
+QString TupTwitter::NEWS_HOST = QString("https://www.maefloresta.com");
 QString TupTwitter::IS_HOST_UP_URL = QString("/updates/test.xml");
 QString TupTwitter::USER_TIMELINE_URL = QString("/updates/tweets.html");
 QString TupTwitter::TUPITUBE_VERSION_URL = QString("/updates/current_version.xml");
@@ -369,7 +369,7 @@ void TupTwitter::formatStatus(QByteArray array)
 
     html += "</center></div>\n";
     html += "<div class=\"twitter_tupi_donation\"><center>\n";
-    html += "<a href=\"http://www.maefloresta.com/portal/support\">" + tr("Want to help us to make a better project? Click here!") + "</a>";
+    html += "<a href=\"https://www.maefloresta.com/portal/support\">" + tr("Want to help us to make a better project? Click here!") + "</a>";
     html += "</center></div>\n";
     html += tweets;
     html += "</body>\n";
