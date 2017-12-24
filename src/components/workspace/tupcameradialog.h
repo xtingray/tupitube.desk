@@ -42,14 +42,6 @@
 
 #include <QDialog>
 #include <QComboBox>
-#include <QLabel>
-#include <QComboBox>
-#include <QBoxLayout>
-#include <QCheckBox>
-#include <QPushButton>
-#include <QDir>
-#include <QCamera>
-#include <QCameraImageCapture>
 
 class TUPITUBE_EXPORT TupCameraDialog : public QDialog
 {

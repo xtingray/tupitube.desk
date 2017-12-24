@@ -6,7 +6,6 @@
 
 #include <QtGui>
 #include <QWidget>
-#include <QMessageBox>
 #include <QCamera>
 #include <QCameraImageCapture>
 

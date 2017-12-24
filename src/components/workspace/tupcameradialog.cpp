@@ -35,6 +35,14 @@
 
 #include "tupcameradialog.h"
 
+#include <QCamera>
+#include <QCameraImageCapture>
+#include <QLabel>
+#include <QBoxLayout>
+#include <QDir>
+#include <QCheckBox>
+#include <QPushButton>
+
 struct TupCameraDialog::Private
 {
     QSize projectSize;

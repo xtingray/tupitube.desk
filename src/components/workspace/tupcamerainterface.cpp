@@ -34,6 +34,24 @@
  ***************************************************************************/
 
 #include "tupcamerainterface.h"
+#include "tupcamerawindow.h"
+#include "tupapplication.h"
+#include "tapplicationproperties.h"
+#include "tseparator.h"
+#include "talgorithm.h"
+#include "tosd.h"
+#include "tupcolorwidget.h"
+
+#include <QBoxLayout>
+#include <QIcon>
+#include <QDir>
+#include <QDesktopWidget>
+#include <QPushButton>
+#include <QSpinBox>
+#include <QDoubleSpinBox>
+#include <QColorDialog>
+#include <QCamera>
+#include <QCameraImageCapture>
 
 struct TupCameraInterface::Private
 {

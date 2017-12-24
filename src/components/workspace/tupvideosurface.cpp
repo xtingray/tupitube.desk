@@ -1,5 +1,8 @@
 #include "tupvideosurface.h"
 
+#include <QScreen>
+#include <QGuiApplication>
+
 struct TupVideoSurface::Private
 {
     QWidget* targetWidget;
@@ -20,6 +23,7 @@ struct TupVideoSurface::Private
     int gridSpace;
     int historyInit;
     int historyEnd;
+    qreal rotation;
 
     QPen gridAxesPen;
     QPen gridPen;
@@ -29,8 +33,8 @@ struct TupVideoSurface::Private
     QPen greenThinPen;
 };
 
-TupVideoSurface::TupVideoSurface(QWidget *widget, VideoIF *target, const QSize &displaySize, 
-                                 bool isScaled, QObject *parent) : QAbstractVideoSurface(parent), k(new Private)
+TupVideoSurface::TupVideoSurface(QWidget *widget, VideoIF *target, const QSize &displaySize, bool isScaled, 
+                                 int orientation, QObject *parent) : QAbstractVideoSurface(parent), k(new Private)
 {
     setNativeResolution(displaySize);
 
@@ -58,6 +62,10 @@ TupVideoSurface::TupVideoSurface(QWidget *widget, VideoIF *target, const QSize &
     QRect rect = k->targetWidget->rect();
     k->widgetWidth = rect.size().width();
     k->widgetHeight = rect.size().height();
+
+    const QScreen *screen = QGuiApplication::primaryScreen();
+    const int screenAngle = screen->angleBetween(screen->nativeOrientation(), screen->orientation());
+    k->rotation = (360 - orientation + screenAngle) % 360; 
 }
 
 TupVideoSurface::~TupVideoSurface()
@@ -117,8 +125,11 @@ void TupVideoSurface::paint(QPainter *painter)
 
         QPoint leftTop((qAbs(k->widgetWidth - width))/2, (qAbs(k->widgetHeight - height))/2);
 
-        if (!image.isNull()) 
+        if (!image.isNull()) {
+            if (k->rotation != 0)
+                image = image.transformed(QTransform().rotate(k->rotation));
             painter->drawImage(leftTop, image);
+        }
 
         if (k->showPrevious && !k->history.empty() && k->historySize > 0) {
             for (int i=k->historyInit; i <= k->historyEnd; i++) {

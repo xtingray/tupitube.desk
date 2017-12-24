@@ -37,27 +37,10 @@
 #define TUPCAMERAINTERFACE_H
 
 #include "tglobal.h"
-#include "tupcamerawindow.h"
-#include "tupapplication.h"
-#include "tapplicationproperties.h"
-#include "tseparator.h"
-#include "talgorithm.h"
-#include "tosd.h"
-#include "tupcolorwidget.h"
 
 #include <QFrame>
 #include <QCloseEvent>
 #include <QComboBox>
-#include <QBoxLayout>
-#include <QIcon>
-#include <QDir>
-#include <QDesktopWidget>
-#include <QPushButton>
-#include <QSpinBox>
-#include <QDoubleSpinBox>
-#include <QColorDialog>
-#include <QCamera>
-#include <QCameraImageCapture>
 
 class TUPITUBE_EXPORT TupCameraInterface : public QFrame
 {

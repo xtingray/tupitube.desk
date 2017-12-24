@@ -37,6 +37,8 @@
 
 #include <QCameraExposure>
 #include <QCameraFocus>
+#include <QCameraInfo>
+#include <QMessageBox>
 
 struct TupCameraWindow::Private
 {
@@ -83,7 +85,8 @@ TupCameraWindow::TupCameraWindow(QCamera *input, const QSize &camSize, const QSi
     if (camSize != displaySize)
         isScaled = true;
 
-    k->videoSurface = new TupVideoSurface(this, this, displaySize, isScaled, this);
+    QCameraInfo cameraInfo(*input); 
+    k->videoSurface = new TupVideoSurface(this, this, displaySize, isScaled, cameraInfo.orientation(), this);
     rendererControl->setSurface(k->videoSurface);
 }
 
