@@ -67,6 +67,7 @@ class QMake
                 break
             end
         end
+
         if command.length == 0
             return false
         end
@@ -74,33 +75,36 @@ class QMake
         version = []
 
         IO.popen("#{command} -query QT_VERSION") { |prc|
-                 found = prc.readlines.join("")
-                 version = found.split(".")
-                 if (found.length != 0)
-                     qtversion = found.chop
-                 end
+            found = prc.readlines.join("")
+            if (found.length != 0)
+                found = found.chop
+                qtversion = found 
+                version = found.split(".")
+            else
+                return false
+            end
         }
 
         minver = minqtversion.split(".")
 
         version.size.times { |i|
-                if i == 0
-                   if version[i] < minver[i]
-                      return false 
-                   end
+            if i == 0
+                if Integer(version[i]) < Integer(minver[i])
+                    return false 
                 end
+            end
 
-                if i == 1
-                   if version[i] < minver[i]
-                      return false
-                   end
+            if i == 1
+                if Integer(version[i]) < Integer(minver[i])
+                    return false
                 end
+            end
 
-                if i == 2
-                   if version[i] < minver[i]
-                      return false
-                   end
+            if i == 2
+                if Integer(version[i]) < Integer(minver[i])
+                    return false
                 end
+            end
         }
                 
         @path = command
@@ -136,7 +140,7 @@ class QMake
          if debug == 1 
              flags = ""
              print $endl
-             Info.info << "Compiling test..." <<  $endl
+             Info.info << "Compiling test..." << $endl
          end
 
         fork do

@@ -539,7 +539,7 @@ bool TupProjectManager::removeProjectPath(const QString &projectPath)
     }
 	
     #ifdef TUP_DEBUG
-        QString msg = "[TupProjectManager::removeProjectPath()] - Result? -> " + QString::number(result);
+        QString msg = "[TupProjectManager::removeProjectPath()] - Result -> " + QString::number(result);
         #ifdef Q_OS_WIN
             qWarning() << msg;
         #else

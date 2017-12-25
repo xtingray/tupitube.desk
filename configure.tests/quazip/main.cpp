@@ -45,14 +45,14 @@ int main()
 
     QuaZip zip(zipName);	
     if (!zip.open(QuaZip::mdCreate)) 
-        return false;
+        return 0;
 
     QuaZipFile outFile(&zip);
     if (!outFile.open(QIODevice::WriteOnly, QuaZipNewInfo(file.fileName())))
-        return false;
+        return 0;
 
     if (!file.open(QIODevice::ReadOnly))
-        return false;
+        return 0;
 
     while (file.getChar(&c) && outFile.putChar(c)) {};
 
@@ -60,10 +60,8 @@ int main()
     file.close();
     zip.close();
 
-    if (zip.getZipError() != 0) {
-        return false;
-    }
+    if (zip.getZipError() != 0)
+        return 0;
 
-    return 0;
+    return 1;
 }
-
