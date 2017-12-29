@@ -121,6 +121,7 @@ class TUPITUBE_EXPORT TupCommandExecutor : public QObject
         bool removeSymbolFromFrame(TupLibraryResponse *response);
         
         bool setTween(TupItemResponse *response);
+        bool updateTweenPath(TupItemResponse *response);
         bool extendFrame(TupFrameResponse *response);
         bool copyFrameSelection(TupFrameResponse *response);
         // bool pasteFrame( TupFrameResponse *response);

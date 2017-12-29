@@ -39,15 +39,24 @@
 struct StepsViewer::Private
 {
     QList<int> frames;
-    QList<TPushButton*> *plusButton;
-    QList<TPushButton*> *minusButton;
+    QList<int> undoFrames;
+
     QList<Segment> pointBlocks;
+
     QList<Segment> segments;
-    int records;
+    QList<Segment> undoSegments;
+
     QPainterPath path;
+    QList<QPainterPath> doList;
+    QList<QPainterPath> undoList;
+
+    int records;
     QList<QPointF> keys;
     QPolygonF points;
     QList<QPointF> tweenPoints;
+
+    QList<TPushButton*> *plusButton;
+    QList<TPushButton*> *minusButton;
 };
 
 StepsViewer::StepsViewer(QWidget *parent) : QTableWidget(parent), k(new Private)
@@ -179,6 +188,8 @@ void StepsViewer::setPath(const QGraphicsPathItem *pathItem)
 
     // Set of key points which define the path 
     k->path = pathItem->path();
+    k->doList << k->path;
+
     k->points = k->path.toFillPolygon();
     k->points.removeLast();
 
@@ -411,12 +422,12 @@ QVector<TupTweenerStep *> StepsViewer::steps()
     QVector<TupTweenerStep *> stepsVector;
     int i = 0;
     foreach (QList<QPointF> segment, k->segments) {
-             foreach (QPointF point, segment) {
-                      TupTweenerStep *step = new TupTweenerStep(i);
-                      step->setPosition(point);
-                      stepsVector << step;
-                      i++;
-             }
+        foreach (QPointF point, segment) {
+            TupTweenerStep *step = new TupTweenerStep(i);
+            step->setPosition(point);
+            stepsVector << step;
+            i++;
+        }
     }
 
     return stepsVector;
@@ -435,8 +446,8 @@ void StepsViewer::loadTweenPoints()
 {
     k->tweenPoints.clear();
     foreach (QList<QPointF> segment, k->segments) {
-             foreach (QPointF point, segment) 
-                      k->tweenPoints << point;
+        foreach (QPointF point, segment) 
+             k->tweenPoints << point;
     }
 }
 
@@ -604,4 +615,53 @@ void StepsViewer::commitData(QWidget *editor)
             #endif
         }
     }
+}
+
+void StepsViewer::undoSegment()
+{
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[StepsViewer::undoSegment()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
+    k->points = k->path.toFillPolygon();
+    k->points.removeLast();
+
+    calculateKeys();
+
+    k->undoFrames << k->frames.last();
+    k->frames.removeLast();
+
+    k->undoSegments << k->segments.last();
+    k->segments.removeLast();
+    loadTweenPoints();
+
+    disconnect(k->plusButton->last(), SIGNAL(clicked(int, int)), this, SLOT(updatePathSection(int, int)));
+    k->plusButton->removeLast();
+    disconnect(k->minusButton->last(), SIGNAL(clicked(int, int)), this, SLOT(updatePathSection(int, int)));
+    k->minusButton->removeLast(); 
+
+    removeRow(rowCount()-1);
+}
+
+void StepsViewer::redoSegment()
+{
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[StepsViewer::redoSegment()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
+    k->frames << k->undoFrames.last();
+    k->undoFrames.removeLast();
+
+    k->segments << k->undoSegments.last();
+    k->undoSegments.removeLast();
+    loadTweenPoints();
+    addTableRow(rowCount(), k->frames.last());
 }

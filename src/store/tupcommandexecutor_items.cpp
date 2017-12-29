@@ -1210,6 +1210,21 @@ bool TupCommandExecutor::setTween(TupItemResponse *response)
     return false;
 }
 
+bool TupCommandExecutor::updateTweenPath(TupItemResponse *response)
+{   
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupCommandExecutor::updateTweenTween()]";
+        #else
+            T_FUNCINFO;
+            SHOW_VAR(response);
+        #endif
+    #endif
+
+    emit responsed(response);
+    return true;
+}
+
 bool TupCommandExecutor::setBrush(TupItemResponse *response)
 {
     #ifdef TUP_DEBUG

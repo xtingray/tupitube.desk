@@ -100,24 +100,25 @@ class TUPITUBE_EXPORT TupProjectRequest
             SetTween = 18,
             UpdateTween = 19,
             RemoveTween = 20,
+            UpdateTweenPath = 21,
             
             // frames
-            Update = 21,
-            Extend = 22,
-            Copy = 23,
-            CopySelection = 24,
-            Paste = 25,
-            PasteSelection = 26,
+            Update = 22,
+            Extend = 23,
+            Copy = 24,
+            CopySelection = 25,
+            Paste = 26,
+            PasteSelection = 27,
 
             // scenes
-            GetInfo = 27, 
-            BgColor = 28,
+            GetInfo = 28, 
+            BgColor = 29,
 
             // layer
-            AddLipSync = 29,
-            UpdateLipSync = 30,
-            RemoveLipSync = 31,
-            UpdateOpacity = 32 
+            AddLipSync = 30,
+            UpdateLipSync = 31,
+            RemoveLipSync = 32,
+            UpdateOpacity = 33 
         };
         
         enum Part

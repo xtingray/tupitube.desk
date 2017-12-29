@@ -694,6 +694,11 @@ void TupProjectCommand::itemCommand()
                  k->executor->setTween(response);
             }
             break;
+            case TupProjectRequest::UpdateTweenPath:
+            {
+                 k->executor->updateTweenPath(response);
+            }
+            break;
             default: 
             {
                  #ifdef TUP_DEBUG

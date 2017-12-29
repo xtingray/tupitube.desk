@@ -72,6 +72,9 @@ class TUPITUBE_EXPORT StepsViewer : public QTableWidget
 
         virtual QSize sizeHint() const;
 
+        void undoSegment();
+        void redoSegment();
+
     signals:
         void totalHasChanged(int total);
 

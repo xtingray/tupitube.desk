@@ -105,6 +105,8 @@ class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSeriali
         QDomElement toXml(QDomDocument &doc) const;
 
         QGraphicsPathItem *graphicsPath() const;
+        void setGraphicsPath(const QString &path);
+
         QList<int> intervals();
         QString tweenType();
 

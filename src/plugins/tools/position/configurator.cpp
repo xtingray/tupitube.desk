@@ -379,3 +379,14 @@ void Configurator::setCurrentTween(TupItemTweener *currentTween)
 {
     k->currentTween = currentTween;
 }
+
+void Configurator::undoSegment()
+{
+    k->settingsPanel->undoSegment();
+}
+
+void Configurator::redoSegment()
+{
+    k->settingsPanel->redoSegment();
+}
+

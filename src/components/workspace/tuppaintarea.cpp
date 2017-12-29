@@ -605,6 +605,7 @@ void TupPaintArea::itemResponse(TupItemResponse *response)
               }
             break;
             case TupProjectRequest::Move:
+            case TupProjectRequest::UpdateTweenPath:
               {
                   // Do nothing
               }

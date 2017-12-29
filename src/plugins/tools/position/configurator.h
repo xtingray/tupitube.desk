@@ -97,6 +97,9 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void resetUI();
         void setCurrentTween(TupItemTweener *currentTween);
 
+        void undoSegment();
+        void redoSegment();
+
     public slots:
         void editTween();
         void closeTweenProperties();

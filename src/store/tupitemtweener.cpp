@@ -608,6 +608,11 @@ QGraphicsPathItem *TupItemTweener::graphicsPath() const
     return item;
 }
 
+void TupItemTweener::setGraphicsPath(const QString &path)
+{
+    k->path = path;
+}
+
 QList<int> TupItemTweener::intervals()
 {
     QList<int> sections;

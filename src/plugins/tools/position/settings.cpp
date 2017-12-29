@@ -178,8 +178,7 @@ void Settings::setParameters(const QString &name, int framesCount, int startFram
     initStartCombo(framesCount, startFrame);
 }
 
-// Editing selected Tween
-
+// Load properties of currentTween 
 void Settings::setParameters(TupItemTweener *currentTween)
 {
     setEditMode();
@@ -350,4 +349,14 @@ void Settings::updateTotalLabel(int total)
 {
     k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(total));
     emit framesTotalChanged(); 
+}
+
+void Settings::undoSegment()
+{
+    k->stepViewer->undoSegment();
+}
+
+void Settings::redoSegment()
+{
+    k->stepViewer->redoSegment();
 }
