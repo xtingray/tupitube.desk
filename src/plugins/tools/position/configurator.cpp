@@ -380,13 +380,13 @@ void Configurator::setCurrentTween(TupItemTweener *currentTween)
     k->currentTween = currentTween;
 }
 
-void Configurator::undoSegment()
+void Configurator::undoSegment(const QPainterPath path)
 {
-    k->settingsPanel->undoSegment();
+    k->settingsPanel->undoSegment(path);
 }
 
-void Configurator::redoSegment()
+void Configurator::redoSegment(const QPainterPath path)
 {
-    k->settingsPanel->redoSegment();
+    k->settingsPanel->redoSegment(path);
 }
 

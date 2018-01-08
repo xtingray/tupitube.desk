@@ -72,8 +72,8 @@ class TUPITUBE_EXPORT StepsViewer : public QTableWidget
 
         virtual QSize sizeHint() const;
 
-        void undoSegment();
-        void redoSegment();
+        void undoSegment(const QPainterPath path);
+        void redoSegment(const QPainterPath path);
 
     signals:
         void totalHasChanged(int total);
@@ -90,6 +90,8 @@ class TUPITUBE_EXPORT StepsViewer : public QTableWidget
         QList<QPointF> calculateSegmentPoints(QPointF begin, QPointF end, int total);
         void addTableRow(int row, int frames);
         void loadTweenPoints();
+        void updateSegments();
+
         struct Private;
         Private *const k;
 

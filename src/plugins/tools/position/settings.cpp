@@ -351,12 +351,12 @@ void Settings::updateTotalLabel(int total)
     emit framesTotalChanged(); 
 }
 
-void Settings::undoSegment()
+void Settings::undoSegment(const QPainterPath path)
 {
-    k->stepViewer->undoSegment();
+    k->stepViewer->undoSegment(path);
 }
 
-void Settings::redoSegment()
+void Settings::redoSegment(const QPainterPath path)
 {
-    k->stepViewer->redoSegment();
+    k->stepViewer->redoSegment(path);
 }

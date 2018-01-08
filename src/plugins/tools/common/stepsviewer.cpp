@@ -47,8 +47,6 @@ struct StepsViewer::Private
     QList<Segment> undoSegments;
 
     QPainterPath path;
-    QList<QPainterPath> doList;
-    QList<QPainterPath> undoList;
 
     int records;
     QList<QPointF> keys;
@@ -188,8 +186,6 @@ void StepsViewer::setPath(const QGraphicsPathItem *pathItem)
 
     // Set of key points which define the path 
     k->path = pathItem->path();
-    k->doList << k->path;
-
     k->points = k->path.toFillPolygon();
     k->points.removeLast();
 
@@ -539,6 +535,7 @@ void StepsViewer::addTableRow(int row, int frames)
     setRowHeight(row, 20);
 }
 
+// Store all the points of the current path
 void StepsViewer::calculateKeys()
 {
     k->keys.clear();
@@ -559,6 +556,7 @@ void StepsViewer::calculateKeys()
     }
 }
 
+// Calculate blocks of points per segment 
 void StepsViewer::calculateGroups()
 {
     k->pointBlocks.clear();
@@ -617,7 +615,7 @@ void StepsViewer::commitData(QWidget *editor)
     }
 }
 
-void StepsViewer::undoSegment()
+void StepsViewer::undoSegment(const QPainterPath path)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -627,27 +625,32 @@ void StepsViewer::undoSegment()
         #endif
     #endif
 
+    k->path = path;
+
     k->points = k->path.toFillPolygon();
     k->points.removeLast();
 
     calculateKeys();
+    calculateGroups();
 
     k->undoFrames << k->frames.last();
     k->frames.removeLast();
+    k->records--;
 
     k->undoSegments << k->segments.last();
     k->segments.removeLast();
-    loadTweenPoints();
 
-    disconnect(k->plusButton->last(), SIGNAL(clicked(int, int)), this, SLOT(updatePathSection(int, int)));
+    updateSegments();
+
+    // disconnect(k->plusButton->last(), SIGNAL(clicked(int, int)), this, SLOT(updatePathSection(int, int)));
     k->plusButton->removeLast();
-    disconnect(k->minusButton->last(), SIGNAL(clicked(int, int)), this, SLOT(updatePathSection(int, int)));
+    // disconnect(k->minusButton->last(), SIGNAL(clicked(int, int)), this, SLOT(updatePathSection(int, int)));
     k->minusButton->removeLast(); 
 
     removeRow(rowCount()-1);
 }
 
-void StepsViewer::redoSegment()
+void StepsViewer::redoSegment(const QPainterPath path)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -657,11 +660,109 @@ void StepsViewer::redoSegment()
         #endif
     #endif
 
+    k->path = path;
+
+    k->points = k->path.toFillPolygon();
+    k->points.removeLast();
+
+    calculateKeys();
+    calculateGroups();
+
     k->frames << k->undoFrames.last();
     k->undoFrames.removeLast();
+    k->records++;
 
     k->segments << k->undoSegments.last();
     k->undoSegments.removeLast();
-    loadTweenPoints();
+
+    updateSegments();
+
     addTableRow(rowCount(), k->frames.last());
 }
+
+void StepsViewer::updateSegments()
+{
+    int total = k->frames.count();
+    for (int row=0; row < total; row++) { // Processing every segment
+         QList<QPointF> block = k->pointBlocks.at(row);
+         int frames = k->frames.at(row);
+         int size = block.size();
+         QList<QPointF> segment; 
+
+         if (size > 2) {
+             if (size < frames) { // There are less available points than path points
+                 int range = size;
+                 QList<QPointF> input = block;
+                 while (range < frames) {
+                        QList<QPointF> newBlock;
+                        for (int i=0; i<input.size()-1; i++) {
+                             QPointF step = input.at(i+1) - input.at(i);
+                             QPointF middle = input.at(i) + QPointF(step.x()/2, step.y()/2);
+                             newBlock << input.at(i) << middle;
+                        }
+                        newBlock << input.last();
+                        range = newBlock.size();
+                        input = newBlock;
+                 }
+                 size = input.size();
+                 block = input;
+             } 
+
+             if (row==0) {
+                 frames--;
+                 segment.append(block.at(0));
+             }
+
+             int delta = size/frames;
+             int pos = delta;
+             if (frames > 2) {
+                 int modDelta = 0;
+                 int module = size % frames;
+                 if (module > 0)
+                     modDelta = frames/module;
+
+                 int modPos = 1;
+                 int modCounter = 1;
+
+                 for (int i=1; i < frames; i++) { // calculating points set for the segment j
+                      if (module > 0) {
+                          if (i == modPos && modCounter < module) {
+                              pos++;
+                              modPos += modDelta;
+                              modCounter++;
+                          }
+                      }
+                      segment << block.at(pos);
+                      pos += delta;
+                 }
+             } else {
+                 if (row > 0)
+                     segment << block.at(pos);
+                 else // when frames == 3
+                     segment << block.at(size/2);
+             }
+
+             segment << k->keys.at(row);
+         } else {
+             QPointF init = block.at(0);
+             if (row == 0) {
+                 frames--;
+                 segment << init;
+             } else {
+                 init = k->keys.at(row-1);
+             }
+
+             if (row == 0 && frames == 1)
+                 segment << k->keys.at(row);
+             else
+                 segment.append(calculateSegmentPoints(init, k->keys.at(row), frames));
+         }  
+
+         k->segments.replace(row, segment);
+    }
+
+    loadTweenPoints();
+}
+
+
+

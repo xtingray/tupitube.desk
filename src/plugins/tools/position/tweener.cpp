@@ -1095,11 +1095,7 @@ void Tweener::itemResponse(const TupItemResponse *response)
     #endif
 
     if (response->action() == TupProjectRequest::UpdateTweenPath) {
-        if (response->mode() == TupProjectResponse::Do)
-            tError() << "Tweener::itemResponse() - Tracing update tween path action! -> Do";
-
         if (response->mode() == TupProjectResponse::Undo) { 
-            tError() << "Tweener::itemResponse() - Tracing update tween path action! -> Undo";
             if (!k->doList.isEmpty()) {
                 k->undoList << k->doList.last();
                 k->doList.removeLast();
@@ -1108,10 +1104,11 @@ void Tweener::itemResponse(const TupItemResponse *response)
                 if (k->nodesGroup) {
                     k->nodesGroup->clear();
                     k->nodesGroup = 0;
-                    disconnect(k->nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath())); 
+                    // disconnect(k->nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath())); 
                 }
                 removeTweenPoints();
 
+                QPainterPath path;
                 if (k->doList.isEmpty()) {
                     k->path = new QGraphicsPathItem;
                     k->path->setZValue(k->baseZValue);
@@ -1120,11 +1117,11 @@ void Tweener::itemResponse(const TupItemResponse *response)
                     QPen pen(QBrush(color), 2, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
                     k->path->setPen(pen);
 
-                    QPainterPath path;
                     path.moveTo(k->firstNode);
                     k->path->setPath(path);
+                    k->scene->addItem(k->path);
                 } else {
-                    QPainterPath path = k->doList.last();
+                    path = k->doList.last();
                     k->path->setPath(path);
                     k->scene->addItem(k->path);
 
@@ -1137,13 +1134,12 @@ void Tweener::itemResponse(const TupItemResponse *response)
                     k->nodesGroup->expandAllNodes();
                 }
 
-                k->configurator->undoSegment();
+                k->configurator->undoSegment(path);
                 paintTweenPoints();
             }
         }
 
         if (response->mode() == TupProjectResponse::Redo) {
-            tError() << "Tweener::itemResponse() - Tracing update tween path action! -> Redo";
             if (!k->undoList.isEmpty()) {
                 k->doList << k->undoList.last();
                 k->undoList.removeLast();
@@ -1152,10 +1148,9 @@ void Tweener::itemResponse(const TupItemResponse *response)
                 if (k->nodesGroup) {
                     k->nodesGroup->clear();
                     k->nodesGroup = 0;
-                    disconnect(k->nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath()));
+                    // disconnect(k->nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath()));
                 }
                 removeTweenPoints();
-                k->configurator->redoSegment();
 
                 QPainterPath path = k->doList.last();
                 k->path->setPath(path);
@@ -1168,6 +1163,8 @@ void Tweener::itemResponse(const TupItemResponse *response)
                 k->nodesGroup->show();
                 k->nodesGroup->resizeNodes(k->realFactor);
                 k->nodesGroup->expandAllNodes();
+
+                k->configurator->redoSegment(path);
                 paintTweenPoints();
             }
         }
