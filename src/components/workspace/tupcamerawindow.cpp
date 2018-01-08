@@ -86,6 +86,16 @@ TupCameraWindow::TupCameraWindow(QCamera *input, const QSize &camSize, const QSi
         isScaled = true;
 
     QCameraInfo cameraInfo(*input); 
+
+    #ifdef TUP_DEBUG
+        QString msg = "TupCameraWindow() - Camera Orientation: " + QString::number(cameraInfo.orientation());
+        #ifdef Q_OS_WIN
+            qDebug() << msg;
+        #else
+            tWarning() << msg;
+        #endif
+    #endif
+
     k->videoSurface = new TupVideoSurface(this, this, displaySize, isScaled, cameraInfo.orientation(), this);
     rendererControl->setSurface(k->videoSurface);
 }

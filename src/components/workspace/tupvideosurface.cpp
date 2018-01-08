@@ -64,6 +64,16 @@ TupVideoSurface::TupVideoSurface(QWidget *widget, VideoIF *target, const QSize &
     k->widgetHeight = rect.size().height();
 
     const QScreen *screen = QGuiApplication::primaryScreen();
+
+    #ifdef TUP_DEBUG
+        QString msg = "TupVideoSurface() - Screen Orientation: " + QString::number(screen->nativeOrientation());
+        #ifdef Q_OS_WIN
+            qDebug() << msg;
+        #else
+            tWarning() << msg;
+        #endif
+    #endif
+
     const int screenAngle = screen->angleBetween(screen->nativeOrientation(), screen->orientation());
     k->rotation = (360 - orientation + screenAngle) % 360; 
 }
