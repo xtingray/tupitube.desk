@@ -36,9 +36,11 @@
 #ifndef TUPCOLORBUTTONPANEL_H
 #define TUPCOLORBUTTONPANEL_H
 
+#include "tglobal.h"
+
 #include <QWidget>
 
-class TupColorButtonPanel : public QWidget
+class TUPITUBE_EXPORT TupColorButtonPanel : public QWidget
 {
     Q_OBJECT
 

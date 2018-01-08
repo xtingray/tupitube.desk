@@ -132,6 +132,7 @@ void TupColorButton::mousePressEvent(QMouseEvent *event)
 void TupColorButton::mouseDoubleClickEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
+	
     emit doubledClicked(k->index);
 }
 
