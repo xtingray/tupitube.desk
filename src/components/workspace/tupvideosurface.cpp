@@ -1,3 +1,38 @@
+/***************************************************************************
+ *   Project TUPITUBE DESK                                                 *
+ *   Project Contact: info@maefloresta.com                                 *
+ *   Project Website: http://www.maefloresta.com                           *
+ *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
+ *                                                                         *
+ *   Developers:                                                           *
+ *   2010:                                                                 *
+ *    Gustavo Gonzalez                                                     *
+ *                                                                         *
+ *   KTooN's versions:                                                     *
+ *                                                                         *
+ *   2006:                                                                 *
+ *    David Cuadrado                                                       *
+ *    Jorge Cuadrado                                                       *
+ *   2003:                                                                 *
+ *    Fernado Roldan                                                       *
+ *    Simena Dinas                                                         *
+ *                                                                         *
+ *   Copyright (C) 2010 Gustav Gonzalez - http://www.maefloresta.com       *
+ *   License:                                                              *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
+ ***************************************************************************/
+
 #include "tupvideosurface.h"
 
 #include <QScreen>
@@ -157,27 +192,36 @@ void TupVideoSurface::paint(QPainter *painter)
             }
         }
 
+        int midX = k->displaySize.width() / 2;
+        int midY = k->displaySize.height() / 2;
+
+        int minX = midX - (width/2);
+        int maxX = midX + (width/2);
+        int minY = midY - (height/2);
+        int maxY = midY + (height/2);
+
         if (k->grid) {
-            int midX = width/2; 
-            int midY = height/2;
             painter->setPen(k->gridPen);
+
             int initX = midX - k->gridSpace;
-            for (int i=initX; i > 0; i -= k->gridSpace)
-                 painter->drawLine(i, 0, i, height);
+            for (int i=initX; i > minX; i -= k->gridSpace)
+                 painter->drawLine(i, minY, i, maxY);
+
             initX = midX + k->gridSpace;
-            for (int i=initX; i < width; i += k->gridSpace)
-                 painter->drawLine(i, 0, i, height);
+            for (int i=initX; i < maxX; i += k->gridSpace)
+                 painter->drawLine(i, minY, i, maxY);
 
             int initY = midY - k->gridSpace;
-            for (int i=initY; i > 0; i -= k->gridSpace)
-                 painter->drawLine(0, i, width, i);
+            for (int i=initY; i > minY; i -= k->gridSpace)
+                 painter->drawLine(minX, i, maxX, i);
+
             initY = midY + k->gridSpace;
-            for (int i=initY; i < height; i += k->gridSpace)
-                 painter->drawLine(0, i, width, i);
+            for (int i=initY; i < maxY; i += k->gridSpace)
+                 painter->drawLine(minX, i, maxX, i);
 
             painter->setPen(k->gridAxesPen);
-            painter->drawLine(midX, 0, midX, height);
-            painter->drawLine(0, midY, width, midY);
+            painter->drawLine(midX, minY, midX, maxY);
+            painter->drawLine(minX, midY, maxX, midY);
         }
 
         if (k->safeArea) {
@@ -190,8 +234,8 @@ void TupVideoSurface::paint(QPainter *painter)
             int hSpace2 = hSpace*2;
             int vSpace2 = vSpace*2;
 
-            QPoint rectLeft = image.rect().topLeft();
-            QPoint rectRight = image.rect().bottomRight();
+            QPoint rectLeft(minX, minY);
+            QPoint rectRight(maxX, maxY);
 
             QPointF left = rectLeft + QPointF(outerBorder, outerBorder);
             QPointF right = rectRight - QPointF(outerBorder, outerBorder);
