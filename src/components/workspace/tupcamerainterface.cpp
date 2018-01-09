@@ -151,6 +151,11 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
     clickButton->setToolTip(tr("Take picture"));
     connect(clickButton, SIGNAL(clicked()), this, SLOT(takePicture()));
 
+    QPushButton *flipButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/flip_camera.png")), "");
+    flipButton->setIconSize(QSize(20, 20));
+    flipButton->setToolTip(tr("Flip camera"));
+    connect(flipButton, SIGNAL(clicked()), this, SLOT(takePicture()));
+
     k->safeAreaButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/safe_area.png")), "");
     k->safeAreaButton->setIconSize(QSize(20, 20));
     k->safeAreaButton->setToolTip(tr("Show safe area"));
@@ -253,6 +258,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
     devicesCombo->setCurrentIndex(cameraIndex);
     menuLayout->addWidget(new TSeparator(Qt::Horizontal));
     menuLayout->addWidget(clickButton);
+    menuLayout->addWidget(flipButton);
     menuLayout->addWidget(k->safeAreaButton);
     menuLayout->addWidget(k->gridButton);
     menuLayout->addWidget(k->gridWidget);

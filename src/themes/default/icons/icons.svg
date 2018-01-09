@@ -2977,8 +2977,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="8"
-     inkscape:cx="123.33128"
-     inkscape:cy="1493.7443"
+     inkscape:cx="502.91887"
+     inkscape:cy="565.62802"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -15769,6 +15769,102 @@
          id="g20763" />
       <g
          id="g20765" />
+    </g>
+    <g
+       id="g21007"
+       transform="translate(0.125,0.75)"
+       inkscape:export-xdpi="129.28"
+       inkscape:export-ydpi="129.28">
+      <g
+         transform="matrix(0.90432872,0.42683669,-0.42683669,0.90432872,501.1593,473.97563)"
+         inkscape:export-ydpi="129.28"
+         inkscape:export-xdpi="129.28"
+         id="g8188-9">
+        <g
+           id="g8146-2">
+          <path
+             sodipodi:nodetypes="cccccccc"
+             inkscape:connector-curvature="0"
+             style="fill:#008700;fill-opacity:1"
+             d="M 1.3640073,8.6047427 1.4211456,14.693243 2.762631,13.184495 C 7.2834406,18.548375 14.707822,16.257775 15.938,9 l -2.17725,0.34375 c -1.037633,6.222077 -7.6966362,6.189933 -9.5975073,3.120493 l 2.0732524,-0.348554 z"
+             id="path8148-4" />
+        </g>
+        <g
+           id="g8152-1" />
+        <g
+           id="g8154-7" />
+        <g
+           id="g8156-4" />
+        <g
+           id="g8158-4" />
+        <g
+           id="g8160-6" />
+        <g
+           id="g8162-1" />
+        <g
+           id="g8164-1" />
+        <g
+           id="g8166-6" />
+        <g
+           id="g8168-0" />
+        <g
+           id="g8170-3" />
+        <g
+           id="g8172-3" />
+        <g
+           id="g8174-9" />
+        <g
+           id="g8176-1" />
+        <g
+           id="g8178-3" />
+        <g
+           id="g8180-0" />
+      </g>
+      <g
+         transform="matrix(-0.90432872,-0.42683669,0.42683669,-0.90432872,508.5907,495.99873)"
+         inkscape:export-ydpi="129.28"
+         inkscape:export-xdpi="129.28"
+         id="g8188-9-8">
+        <g
+           id="g8146-2-2">
+          <path
+             sodipodi:nodetypes="cccccccc"
+             inkscape:connector-curvature="0"
+             style="fill:#008700;fill-opacity:1"
+             d="M 1.3640073,8.6047427 1.4211456,14.693243 2.762631,13.184495 C 7.2834406,18.548375 14.707822,16.257775 15.938,9 l -2.17725,0.28125 c -0.912633,5.690827 -7.3355003,6.570295 -9.5975073,3.182993 l 2.0732524,-0.348554 z"
+             id="path8148-4-4" />
+        </g>
+        <g
+           id="g8152-1-6" />
+        <g
+           id="g8154-7-2" />
+        <g
+           id="g8156-4-4" />
+        <g
+           id="g8158-4-6" />
+        <g
+           id="g8160-6-6" />
+        <g
+           id="g8162-1-0" />
+        <g
+           id="g8164-1-2" />
+        <g
+           id="g8166-6-1" />
+        <g
+           id="g8168-0-5" />
+        <g
+           id="g8170-3-7" />
+        <g
+           id="g8172-3-2" />
+        <g
+           id="g8174-9-7" />
+        <g
+           id="g8176-1-5" />
+        <g
+           id="g8178-3-8" />
+        <g
+           id="g8180-0-5" />
+      </g>
     </g>
   </g>
 </svg>
