@@ -88,7 +88,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
     QDesktopWidget desktop;
     int desktopWidth = desktop.screenGeometry().width();
 
-    if (cameraSize.width() > desktopWidth) {
+    if (cameraSize.width() > desktopWidth) { // If camera resolution is bigger than screen resolution
         int width = desktopWidth/2;
         int height = width * cameraSize.height() / cameraSize.width();
         displaySize = QSize(width, height);
@@ -97,7 +97,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
         if (desktopWidth > 800)
             maxWidth = 800;
 
-        if (cameraSize.width() > maxWidth) {
+        if (cameraSize.width() > maxWidth) { // Limit display size to maxWidth
             int height = maxWidth * cameraSize.height() / cameraSize.width();
             displaySize = QSize(maxWidth, height);
         }
@@ -154,7 +154,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
     QPushButton *flipButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/flip_camera.png")), "");
     flipButton->setIconSize(QSize(20, 20));
     flipButton->setToolTip(tr("Flip camera"));
-    connect(flipButton, SIGNAL(clicked()), this, SLOT(takePicture()));
+    connect(flipButton, SIGNAL(clicked()), this, SLOT(flipCamera()));
 
     k->safeAreaButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/safe_area.png")), "");
     k->safeAreaButton->setIconSize(QSize(20, 20));
@@ -226,7 +226,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
     previousLabel->setPixmap(QPixmap(THEME_DIR + "icons/layer.png"));
     previousLabel->setToolTip(tr("Amount of images to show"));
     QSpinBox *previousSpin = new QSpinBox;
-    previousSpin->setValue(1);
+    previousSpin->setValue(2);
     previousSpin->setRange(0, 5);
     connect(previousSpin, SIGNAL(valueChanged(int)), this, SLOT(updateImagesDepth(int)));
 
@@ -391,4 +391,9 @@ void TupCameraInterface::updateColour()
         k->currentCamera->updateGridColor(color);
         k->colorCell->setBrush(QBrush(color));
     }
+}
+
+void TupCameraInterface::flipCamera()
+{
+   k->currentCamera->flipCamera();
 }

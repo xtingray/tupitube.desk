@@ -31,6 +31,7 @@ class TUPITUBE_EXPORT TupCameraWindow: public QWidget, public VideoIF
         void updateImagesDepth(int depth);
         void updateGridSpacing(int space);
         void updateGridColor(const QColor color);
+        void flipCamera();
 
     signals:
         void pictureHasBeenSelected(int id, const QString path);

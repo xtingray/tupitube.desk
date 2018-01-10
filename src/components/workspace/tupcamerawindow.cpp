@@ -80,15 +80,15 @@ TupCameraWindow::TupCameraWindow(QCamera *input, const QSize &camSize, const QSi
 
     QVideoRendererControl *rendererControl = service->requestControl<QVideoRendererControl*>();
 
-    bool isScaled = false;
-
+    bool isScaled = false; 
     if (camSize != displaySize)
-        isScaled = true;
+        isScaled = true; // Camera Size is bigger than Display Size
 
     QCameraInfo cameraInfo(*input); 
 
     #ifdef TUP_DEBUG
         QString msg = "TupCameraWindow() - Camera Orientation: " + QString::number(cameraInfo.orientation());
+
         #ifdef Q_OS_WIN
             qDebug() << msg;
         #else
@@ -261,3 +261,7 @@ void TupCameraWindow::updateGridColor(const QColor color)
     k->videoSurface->updateGridColor(color);
 }
 
+void TupCameraWindow::flipCamera()
+{
+    k->videoSurface->flipSurface();
+}
