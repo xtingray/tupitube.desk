@@ -87,15 +87,12 @@ TupCameraWindow::TupCameraWindow(QCamera *input, const QSize &camSize, const QSi
     QCameraInfo cameraInfo(*input); 
 
     #ifdef TUP_DEBUG
-        QString msg1 = "TupCameraWindow() - isScaled: " + QString::number(isScaled);
-        QString msg2 = "TupCameraWindow() - Camera Orientation: " + QString::number(cameraInfo.orientation());
+        QString msg = "TupCameraWindow() - Camera Orientation: " + QString::number(cameraInfo.orientation());
 
         #ifdef Q_OS_WIN
-            qDebug() << msg1;
-            qDebug() << msg2;
+            qDebug() << msg;
         #else
-            tWarning() << msg1;
-            tWarning() << msg2;
+            tWarning() << msg;
         #endif
     #endif
 

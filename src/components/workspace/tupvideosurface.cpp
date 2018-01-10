@@ -101,11 +101,21 @@ TupVideoSurface::TupVideoSurface(QWidget *widget, VideoIF *target, const QSize &
     const QScreen *screen = QGuiApplication::primaryScreen();
 
     #ifdef TUP_DEBUG
-        QString msg = "TupVideoSurface() - Screen Orientation: " + QString::number(screen->nativeOrientation());
+        QString msg1 = "TupVideoSurface() - k->isScaled: " + QString::number(k->isScaled);
+        QString msg2 = "TupVideoSurface() - k->displaySize: " + QString::number(displaySize.width()) + ", " + QString::number(displaySize.height());
+        QString msg3 = "TupVideoSurface() - k->widgetSize: " + QString::number(k->widgetWidth) + ", " + QString::number(k->widgetHeight);
+        QString msg4 = "TupVideoSurface() - Screen Orientation: " + QString::number(screen->nativeOrientation());
+
         #ifdef Q_OS_WIN
-            qDebug() << msg;
+            qDebug() << msg1;
+            qDebug() << msg2;
+            qDebug() << msg3;
+            qDebug() << msg4;
         #else
-            tWarning() << msg;
+            tWarning() << msg1;
+            tWarning() << msg2;
+            tWarning() << msg3;
+            tWarning() << msg4;
         #endif
     #endif
 

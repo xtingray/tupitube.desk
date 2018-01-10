@@ -87,6 +87,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
     QSize displaySize = cameraSize;
     QDesktopWidget desktop;
     int desktopWidth = desktop.screenGeometry().width();
+
     if (cameraSize.width() > desktopWidth) { // If camera resolution is bigger than screen resolution
         int width = desktopWidth/2;
         int height = width * cameraSize.height() / cameraSize.width();
