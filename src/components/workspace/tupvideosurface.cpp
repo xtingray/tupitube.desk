@@ -172,7 +172,9 @@ void TupVideoSurface::paint(QPainter *painter)
 
         if (!image.isNull()) {
             if (k->rotation != 0)
-                image = image.transformed(QTransform().rotate(k->rotation));
+                image = image.mirrored(true, true);
+                // image = image.transformed(QTransform().rotate(k->rotation));
+                image = image.mirrored(true, true);
             painter->drawImage(leftTop, image);
         }
 
