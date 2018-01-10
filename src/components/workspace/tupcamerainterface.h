@@ -68,6 +68,7 @@ class TUPITUBE_EXPORT TupCameraInterface : public QFrame
         void updateImagesDepth(int depth);
         void updateGridSpacing(int space);
         void updateColour();
+        void flipCamera();
 
     private:
         QSize setBestResolution(QList<QSize> resolutions, QSize cameraSize);

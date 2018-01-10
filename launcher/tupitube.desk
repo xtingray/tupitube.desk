@@ -1,11 +1,11 @@
 #!/bin/bash
 
-export TUPITUBE_HOME="/Users/xtingray/tupitube/installer"
-export TUPITUBE_SHARE="/Users/xtingray/tupitube/installer/share/tupitube"
-export TUPITUBE_LIB="/Users/xtingray/tupitube/installer/lib/tupitube"
-export TUPITUBE_PLUGIN="/Users/xtingray/tupitube/installer/lib/tupitube/plugins"
-export TUPITUBE_BIN="/Users/xtingray/tupitube/installer"
+export TUPITUBE_HOME="/usr/local/tupitube.desk"
+export TUPITUBE_SHARE="/usr/local/tupitube.desk/share/tupitube"
+export TUPITUBE_LIB="/usr/local/tupitube.desk/lib/tupitube"
+export TUPITUBE_PLUGIN="/usr/local/tupitube.desk/lib/tupitube/plugins"
+export TUPITUBE_BIN="/usr/local/tupitube.desk/bin"
 
-export DYLD_FALLBACK_LIBRARY_PATH="/usr/local/lib:/usr/local/lib:/usr/local/lib:${TUPITUBE_LIB}:${TUPITUBE_PLUGIN}:$DYLD_FALLBACK_LIBRARY_PATH"
+export LD_LIBRARY_PATH="/usr/local/lib:/usr/local/lib:${TUPITUBE_LIB}:${TUPITUBE_PLUGIN}:$LD_LIBRARY_PATH"
 
-open ${TUPITUBE_BIN}/TupiTube.app $*
+exec ${TUPITUBE_BIN}/tupitube.bin $*

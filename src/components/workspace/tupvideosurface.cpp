@@ -179,8 +179,11 @@ void TupVideoSurface::paint(QPainter *painter)
         if (k->showPrevious && !k->history.empty() && k->historySize > 0) {
             for (int i=k->historyInit; i <= k->historyEnd; i++) {
                  QImage image = k->history.at(i);
-                 QPixmap transparent(image.size());
+                 image = image.scaledToWidth(width, Qt::SmoothTransformation);
+
+                 QPixmap transparent(QSize(width, height));
                  transparent.fill(Qt::transparent);
+
                  QPainter p;
                  p.begin(&transparent);
                  p.setCompositionMode(QPainter::CompositionMode_Source);
@@ -188,6 +191,8 @@ void TupVideoSurface::paint(QPainter *painter)
                  p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
                  p.fillRect(transparent.rect(), QColor(0, 0, 0, k->opacity));
                  p.end();
+
+                 transparent = transparent.scaledToWidth(width, Qt::SmoothTransformation);
                  painter->drawPixmap(leftTop, transparent);
             }
         }
@@ -376,4 +381,12 @@ void TupVideoSurface::updateGridColor(const QColor color)
     gridColor.setAlpha(50);
     k->gridPen = QPen(gridColor);
     k->videoIF->updateVideo();
+}
+
+void TupVideoSurface::flipSurface()
+{
+    if (k->rotation == 0)
+        k->rotation = 180;
+    else
+        k->rotation = 0;
 }

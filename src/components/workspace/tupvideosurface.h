@@ -69,6 +69,7 @@ class TUPITUBE_EXPORT TupVideoSurface: public QAbstractVideoSurface
         void updateImagesDepth(int depth);
         void updateGridSpacing(int space);
         void updateGridColor(const QColor color);
+        void flipSurface();
 
     private:
         void calculateImageDepth();
