@@ -129,3 +129,19 @@ QStringList TAlgorithm::header(const QString &input)
 
     return tokenList;
 }
+
+bool TAlgorithm::isKeyRandomic(const QString &id)
+{
+    QChar pattern = id.at(0);
+    int counter = 1;
+    int size = id.size();
+    for (int i = 1; i < size; ++i) {
+        if (id.at(i) == pattern)
+            counter++;
+    }
+
+    if (size == counter)
+        return false;
+
+    return true;
+}

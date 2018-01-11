@@ -48,34 +48,11 @@
 class T_CORE_EXPORT TAlgorithm
 {
     public:
-        /**
-         * @if english
-         * Returns a random integer
-         * @endif
-         * @return 
-         */
         static int random();
-
-        /**
-         * @if english
-         * Returns a random string, this may be useful for temporary file names
-         * @endif
-         * @param length 
-         * @return 
-         */
         static QString randomString(int length);
-
-        /**
-         * @if english
-         * Returns a random color
-         * @endif
-         * 
-         * @param withAlpha 
-         * @return 
-         */
         static QColor randomColor(bool withAlpha = false);
-
         static QStringList header(const QString &input);
+        static bool isKeyRandomic(const QString &id);
 };
 
 #endif

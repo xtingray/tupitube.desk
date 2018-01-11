@@ -165,7 +165,7 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
 
                 TCONFIG->beginGroup("General");
                 QString id = TCONFIG->value("ClientID", "0").toString();
-                if (id.compare("0") == 0) {
+                if (id.compare("0") == 0 || !TAlgorithm::isKeyRandomic(id)) {
                     id = TAlgorithm::randomString(20); 
                     TCONFIG->setValue("ClientID", id);
                 }
