@@ -2,7 +2,7 @@
 AppName=TupiTube Desk
 AppVersion=0.2.10
 AppPublisher=MaeFloresta
-AppPublisherURL=http://www.maefloresta.com/
+AppPublisherURL=https://www.maefloresta.com/
 DefaultDirName={pf}\TupiTube
 DefaultGroupName=TupiTube
 OutputDir=c:\devel\installer
