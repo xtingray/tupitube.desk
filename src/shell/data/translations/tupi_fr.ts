@@ -3950,7 +3950,7 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="src/shell/tupmainwindow_gui.cpp" line="84"/>
         <source>Bitmap Sequence</source>
-        <translation>Séquence Bitmap</translation>
+        <translation>Séquence bitmap</translation>
     </message>
     <message>
         <location filename="src/shell/tupmainwindow_gui.cpp" line="84"/>
