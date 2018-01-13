@@ -7,13 +7,13 @@
         <location filename="src/plugins/tools/common/buttonspanel.cpp" line="41"/>
         <location filename="src/plugins/tools/papagayo/buttonspanel.cpp" line="41"/>
         <source>Edit Tween</source>
-        <translation>Éditer l&apos;Interpolation</translation>
+        <translation>Éditer l&apos;interpolation</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/common/buttonspanel.cpp" line="45"/>
         <location filename="src/plugins/tools/papagayo/buttonspanel.cpp" line="45"/>
         <source>Remove Tween</source>
-        <translation>Supprimer l&apos;Interpolation</translation>
+        <translation>Supprimer l&apos;interpolation</translation>
     </message>
 </context>
 <context>
@@ -46,7 +46,7 @@
     <message>
         <location filename="src/plugins/tools/ink/configurator.cpp" line="97"/>
         <source>Dot Spacing</source>
-        <translation>Espacement des Points</translation>
+        <translation>Espacement des points</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/ink/configurator.cpp" line="113"/>
@@ -66,12 +66,12 @@
     <message>
         <location filename="src/plugins/tools/color/configurator.cpp" line="72"/>
         <source>Coloring Tween Properties</source>
-        <translation>Propriétés de l&apos;Interpolation de Coloration</translation>
+        <translation>Propriétés de l&apos;Interpolation de coloration</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/opacity/configurator.cpp" line="76"/>
         <source>Opacity Tween Properties</source>
-        <translation>Propriétés de l&apos;Interpolation d&apos;Opacité</translation>
+        <translation>Propriétés de l&apos;Interpolation d&apos;opacité</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/position/configurator.cpp" line="86"/>
@@ -86,7 +86,7 @@
     <message>
         <location filename="src/plugins/tools/scale/configurator.cpp" line="76"/>
         <source>Scale Tween Properties</source>
-        <translation>Propriétés de l&apos;Interpolation d&apos;Échelle</translation>
+        <translation>Propriétés de l&apos;Interpolation d&apos;échelle</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/shear/configurator.cpp" line="76"/>
@@ -274,7 +274,7 @@
     <message>
         <location filename="src/plugins/tools/nodes/nodestool.cpp" line="114"/>
         <source>SVG objects cannot be edited!</source>
-        <translation>Les objets SVG ne peuvent êtres édités!</translation>
+        <translation>Les objets SVG ne peuvent être édités!</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/nodes/nodestool.cpp" line="120"/>
@@ -393,7 +393,7 @@
     <message>
         <location filename="src/plugins/tools/composed/positionsettings.cpp" line="222"/>
         <source>Position Tween is set!</source>
-        <translation>La Interpolation de Position est réglée!</translation>
+        <translation>L'interpolation de position est réglée!</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/composed/positionsettings.cpp" line="247"/>
@@ -640,12 +640,12 @@
     <message>
         <location filename="src/plugins/tools/color/settings.cpp" line="183"/>
         <source>Line Fill</source>
-        <translation>Remplissage de Ligne</translation>
+        <translation>Remplissage de ligne</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/color/settings.cpp" line="184"/>
         <source>Internal Fill</source>
-        <translation>Remplissage Interne</translation>
+        <translation>Remplissage interne</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/color/settings.cpp" line="185"/>
@@ -655,7 +655,7 @@
     <message>
         <location filename="src/plugins/tools/color/settings.cpp" line="193"/>
         <source>Initial Color</source>
-        <translation>Couleur Initiale</translation>
+        <translation>Couleur initiale</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/color/settings.cpp" line="209"/>
@@ -890,7 +890,7 @@
     <message>
         <location filename="src/plugins/tools/rotation/settings.cpp" line="279"/>
         <source>Degrees Range</source>
-        <translation>Gamme des Degrés</translation>
+        <translation>Gamme des degrés</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/rotation/settings.cpp" line="282"/>
@@ -910,7 +910,7 @@
     <message>
         <location filename="src/plugins/tools/rotation/settings.cpp" line="512"/>
         <source>Angle range must be greater than Speed!</source>
-        <translation>L&apos;amplitude Angulaire doit être supérieure à la Vitesse!</translation>
+        <translation>L&apos;amplitude angulaire doit être supérieure à la vitesse!</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/scale/settings.cpp" line="177"/>
@@ -928,7 +928,7 @@
         <location filename="src/plugins/tools/scale/settings.cpp" line="179"/>
         <location filename="src/plugins/tools/shear/settings.cpp" line="180"/>
         <source>Only Height</source>
-        <translation>Hauteur Seulement</translation>
+        <translation>Hauteur seulement</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/scale/settings.cpp" line="180"/>
@@ -959,12 +959,12 @@
     <message>
         <location filename="src/plugins/tools/selection/settings.cpp" line="87"/>
         <source>Vertical Flip</source>
-        <translation>Basculement Vertical</translation>
+        <translation>Basculement vertical</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/selection/settings.cpp" line="89"/>
         <source>Crossed Flip</source>
-        <translation>Inversion Ccoisée</translation>
+        <translation>Inversion croisée</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/selection/settings.cpp" line="101"/>
@@ -1004,7 +1004,7 @@
     <message>
         <location filename="src/plugins/tools/selection/settings.cpp" line="149"/>
         <source>Ungroup Objects</source>
-        <translation>Dégrouper les Objets</translation>
+        <translation>Dégrouper les objets</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/selection/settings.cpp" line="161"/>
@@ -1076,7 +1076,7 @@
     <message>
         <location filename="src/plugins/tools/geometric/settings.cpp" line="57"/>
         <source>Line Properties</source>
-        <translation>Propriétés de la Ligne</translation>
+        <translation>Propriétés de la ligne</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/geometric/settings.cpp" line="64"/>
@@ -1127,7 +1127,7 @@
     <message>
         <location filename="src/plugins/tools/selection/settings.cpp" line="289"/>
         <source>Show Tools</source>
-        <translation>Montrer les Outils</translation>
+        <translation>Montrer les outils</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/selection/settings.cpp" line="290"/>
@@ -1622,7 +1622,7 @@
     <message>
         <location filename="src/components/workspace/tupcameradialog.cpp" line="87"/>
         <source>Camera Detected:</source>
-        <translation>Caméra Détectée:</translation>
+        <translation>Caméra détectée:</translation>
     </message>
     <message>
         <location filename="src/components/workspace/tupcameradialog.cpp" line="99"/>
@@ -1758,7 +1758,7 @@
     <message>
         <location filename="src/components/player/tupcamerastatus.cpp" line="76"/>
         <source>Frames Total</source>
-        <translation>Total des Images</translation>
+        <translation>Total des images</translation>
     </message>
     <message>
         <location filename="src/components/player/tupcamerastatus.cpp" line="84"/>
@@ -1953,12 +1953,12 @@
     <message>
         <location filename="src/components/workspace/tupcanvas.cpp" line="151"/>
         <source>Onion Skin Factor</source>
-        <translation>Paramètres de Pelure d&apos;Oignon</translation>
+        <translation>Paramètres de pelure d&apos;oignon</translation>
     </message>
     <message>
         <location filename="src/components/workspace/tupcanvas.cpp" line="155"/>
         <source>Close Full Screen</source>
-        <translation>Fermer le Mode Plein Écran</translation>
+        <translation>Fermer le mode plein écran</translation>
     </message>
     <message>
         <location filename="src/components/workspace/tupcanvas.cpp" line="293"/>
@@ -2101,7 +2101,7 @@
     <message>
         <location filename="src/components/colorpalette/tupcolorpalette.cpp" line="361"/>
         <source>Color Mixer</source>
-        <translation>Mélangeur de Couleurs</translation>
+        <translation>Mélangeur de couleurs</translation>
     </message>
     <message>
         <location filename="src/components/colorpalette/tupcolorpalette.cpp" line="369"/>
@@ -2270,7 +2270,7 @@
     <message>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="446"/>
         <source>Storyboard Settings</source>
-        <translation>Propriétés du Storyboard</translation>
+        <translation>Propriétés du storyboard</translation>
     </message>
     <message>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="451"/>
@@ -2318,7 +2318,7 @@
         <location filename="src/components/workspace/tupdocumentview.cpp" line="502"/>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="513"/>
         <source>Image Sequence</source>
-        <translation>Séquence d&apos;images</translation>
+        <translation>Séquence d&apos;image</translation>
     </message>
     <message>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="564"/>
@@ -2357,7 +2357,7 @@
         <location filename="src/components/workspace/tupdocumentview.cpp" line="614"/>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="1083"/>
         <source>Position Tween</source>
-        <translation>Interpolation de Position</translation>
+        <translation>Interpolation de position</translation>
     </message>
     <message>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="376"/>
@@ -2369,7 +2369,7 @@
     <message>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="623"/>
         <source>Scale Tween</source>
-        <translation>Interpolation d&apos;Échelle</translation>
+        <translation>Interpolation d&apos;échelle</translation>
     </message>
     <message>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="626"/>
@@ -2379,12 +2379,12 @@
     <message>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="629"/>
         <source>Opacity Tween</source>
-        <translation>Interpolation d&apos;Opacité</translation>
+        <translation>Interpolation d&apos;opacité</translation>
     </message>
     <message>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="632"/>
         <source>Coloring Tween</source>
-        <translation>Interpolation de Coloration</translation>
+        <translation>Interpolation de coloration</translation>
     </message>
     <message>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="635"/>
@@ -2399,7 +2399,7 @@
     <message>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="655"/>
         <source>Line Fill</source>
-        <translation>Remplissage de Ligne</translation>
+        <translation>Remplissage de ligne</translation>
     </message>
     <message>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="661"/>
@@ -2408,7 +2408,7 @@
         <location filename="src/components/workspace/tupdocumentview.cpp" line="2282"/>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="2293"/>
         <source>Papagayo Lip-sync</source>
-        <translation>Synchronisation Labiale Papagayo</translation>
+        <translation>Synchronisation labiale Papagayo</translation>
     </message>
     <message>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="921"/>
@@ -2446,7 +2446,7 @@
     <message>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="1210"/>
         <source>Frames Mode</source>
-        <translation>Mode Images</translation>
+        <translation>Mode images</translation>
     </message>
     <message>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="1211"/>
@@ -2456,7 +2456,7 @@
     <message>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="1212"/>
         <source>Dynamic BG Mode</source>
-        <translation>Mode BG Dynamique</translation>
+        <translation>Mode BG dynamique</translation>
     </message>
     <message>
         <location filename="src/components/workspace/tupdocumentview.cpp" line="1236"/>
@@ -2685,7 +2685,7 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="src/components/export/tupexportmodule.cpp" line="316"/>
         <source>Image sequence already exists. Overwrite it?</source>
-        <translation>La séquence d&apos;images existe. Voulez-vous l&apos;écraser?</translation>
+        <translation>La séquence d&apos;images existe déjà. Voulez-vous l&apos;écraser?</translation>
     </message>
     <message>
         <location filename="src/components/export/tupexportmodule.cpp" line="326"/>
@@ -2973,7 +2973,7 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="src/libui/tupgeneralpreferences.cpp" line="84"/>
         <source>On Startup</source>
-        <translation>Au Démarrage</translation>
+        <translation>Au démarrage</translation>
     </message>
     <message>
         <location filename="src/libui/tupgeneralpreferences.cpp" line="93"/>
@@ -3049,7 +3049,7 @@ SVP, renommer le fichier du projet</translation>
         <location filename="src/libbase/tupgraphicsscene.cpp" line="1683"/>
         <location filename="src/libbase/tupgraphicsscene.cpp" line="1692"/>
         <source>Object Selection</source>
-        <translation>Sélection d&apos;Objet</translation>
+        <translation>Sélection d&apos;objet</translation>
     </message>
     <message>
         <location filename="src/libbase/tupgraphicsscene.cpp" line="1683"/>
@@ -3072,7 +3072,7 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="src/components/workspace/tupimagedialog.cpp" line="54"/>
         <source>My Picture</source>
-        <translation>Mon Image</translation>
+        <translation>Mon image</translation>
     </message>
     <message>
         <location filename="src/components/workspace/tupimagedialog.cpp" line="60"/>
@@ -3274,12 +3274,12 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="src/store/tupitemtweener.cpp" line="643"/>
         <source>Opacity Tween</source>
-        <translation>Interpolation d&apos;Opacité</translation>
+        <translation>Interpolation d&apos;opacité</translation>
     </message>
     <message>
         <location filename="src/store/tupitemtweener.cpp" line="646"/>
         <source>Coloring Tween</source>
-        <translation>Interpolation de Coloration</translation>
+        <translation>Interpolation de coloration</translation>
     </message>
     <message>
         <location filename="src/store/tupitemtweener.cpp" line="649"/>
@@ -3433,7 +3433,7 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="src/components/library/tuplibrarywidget.cpp" line="380"/>
         <source>Library is empty!</source>
-        <translation>la bibliothèque est vide!</translation>
+        <translation>La bibliothèque est vide!</translation>
     </message>
     <message>
         <location filename="src/components/library/tuplibrarywidget.cpp" line="393"/>
@@ -3475,7 +3475,7 @@ SVP, renommer le fichier du projet</translation>
         <location filename="src/components/library/tuplibrarywidget.cpp" line="643"/>
         <location filename="src/components/library/tuplibrarywidget.cpp" line="1177"/>
         <source>Native Objects</source>
-        <translation>Objets Natifs</translation>
+        <translation>Objets natifs</translation>
     </message>
     <message>
         <location filename="src/components/library/tuplibrarywidget.cpp" line="648"/>
@@ -3617,7 +3617,7 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="src/components/library/tuplibrarywidget.cpp" line="1445"/>
         <source>%1 SVG files will be loaded.</source>
-        <translation>Les fichiers %1 SVG seront chargés.</translation>
+        <translation>Les fichiers %1 SVG seront chargé.</translation>
     </message>
     <message>
         <location filename="src/components/library/tuplibrarywidget.cpp" line="1473"/>
@@ -3840,7 +3840,7 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="src/shell/tupmainwindow.cpp" line="829"/>
         <source>Import Gimp Palettes</source>
-        <translation>Importer des palettes De Gimp</translation>
+        <translation>Importer des palettes de Gimp</translation>
     </message>
     <message>
         <location filename="src/shell/tupmainwindow.cpp" line="874"/>
@@ -3855,12 +3855,12 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="src/shell/tupmainwindow.cpp" line="929"/>
         <source>Save Project As</source>
-        <translation>Enregistrer Le Projet Sous</translation>
+        <translation>Enregistrer le projet sous</translation>
     </message>
     <message>
         <location filename="src/shell/tupmainwindow.cpp" line="947"/>
         <source>Directory does not exist! Please, choose another path.</source>
-        <translation>Le répertoire est inexistant! SVP, choisissez un autre chemin.</translation>
+        <translation>Le répertoire n'existe pas! SVP, choisissez un autre chemin.</translation>
     </message>
     <message>
         <location filename="src/shell/tupmainwindow.cpp" line="962"/>
@@ -4000,7 +4000,7 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="src/shell/tupmainwindow_gui.cpp" line="313"/>
         <source>Save Project</source>
-        <translation>Sauvegarder Le Projet</translation>
+        <translation>Sauvegarder le projet</translation>
     </message>
     <message>
         <location filename="src/shell/tupmainwindow_gui.cpp" line="318"/>
@@ -4010,7 +4010,7 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="src/shell/tupmainwindow_gui.cpp" line="329"/>
         <source>&amp;Import GIMP Palettes</source>
-        <translation>&amp;Importer Des Palettes De GIMP</translation>
+        <translation>&amp;Importer des palettes de GIMP</translation>
     </message>
     <message>
         <location filename="src/shell/tupmainwindow_gui.cpp" line="156"/>
@@ -4070,7 +4070,7 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="src/shell/tupmainwindow_gui.cpp" line="297"/>
         <source>Open Project</source>
-        <translation>Projet Ouvert</translation>
+        <translation>Projet ouvert</translation>
     </message>
     <message>
         <location filename="src/shell/tupmainwindow_gui.cpp" line="300"/>
@@ -4538,7 +4538,7 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <message>
         <location filename="src/shell/tupnewproject.cpp" line="302"/>
         <source>Please, fill in the server name or IP</source>
-        <translation>SVP, précisez le nom du serveur ou son IP</translation>
+        <translation>SVP, précisez le nom du serveur ou l'adresse IP</translation>
     </message>
     <message>
         <location filename="src/shell/tupnewproject.cpp" line="339"/>
@@ -4727,7 +4727,7 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
         <location filename="src/components/workspace/tuppaintarea.cpp" line="1107"/>
         <location filename="src/components/workspace/tuppaintarea.cpp" line="1144"/>
         <source>No items selected</source>
-        <translation>Aucun élément sélectionné</translation>
+        <translation>Aucuns éléments sélectionnés</translation>
     </message>
     <message>
         <location filename="src/components/workspace/tuppaintarea.cpp" line="1488"/>
@@ -4745,7 +4745,7 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <message>
         <location filename="src/libbase/tuppaintareabase.cpp" line="343"/>
         <source>No Scene!</source>
-        <translation>Pas de Scène!</translation>
+        <translation>Pas de scène!</translation>
     </message>
     <message>
         <location filename="src/libbase/tuppaintareabase.cpp" line="350"/>
@@ -4755,7 +4755,7 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <message>
         <location filename="src/libbase/tuppaintareabase.cpp" line="419"/>
         <source>No Frames!</source>
-        <translation>Pas d&apos;Images!</translation>
+        <translation>Pas d&apos;images!</translation>
     </message>
     <message>
         <location filename="src/libbase/tuppaintareabase.cpp" line="422"/>
@@ -4773,12 +4773,12 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <message>
         <location filename="src/libui/tuppaintareapreferences.cpp" line="82"/>
         <source>Grid Settings</source>
-        <translation>Paramètres de Grille</translation>
+        <translation>Paramètres de la grille</translation>
     </message>
     <message>
         <location filename="src/libui/tuppaintareapreferences.cpp" line="95"/>
         <source>Grid Color:</source>
-        <translation>Couleur de la Grille:</translation>
+        <translation>Couleur de la grille:</translation>
     </message>
     <message>
         <location filename="src/libui/tuppaintareapreferences.cpp" line="102"/>
@@ -4852,7 +4852,7 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
         <location filename="src/components/workspace/tuppaintareastatus.cpp" line="207"/>
         <location filename="src/components/workspace/tuppaintareastatus.cpp" line="208"/>
         <source>Contour Color</source>
-        <translation>Couleur de Contour</translation>
+        <translation>Couleur de contour</translation>
     </message>
     <message>
         <location filename="src/components/workspace/tuppaintareastatus.cpp" line="211"/>
@@ -4998,7 +4998,7 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <message>
         <location filename="src/components/export/tuppluginselector.cpp" line="38"/>
         <source>Select Plugin</source>
-        <translation>Sélectionnez le plug-In</translation>
+        <translation>Sélectionnez le plug-in</translation>
     </message>
     <message>
         <location filename="src/components/export/tuppluginselector.cpp" line="119"/>
@@ -5044,7 +5044,7 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <message>
         <location filename="src/components/export/tuppluginselector.cpp" line="261"/>
         <source>Animated Image</source>
-        <translation>Image Animée</translation>
+        <translation>Image animée</translation>
     </message>
     <message>
         <location filename="src/components/export/tuppluginselector.cpp" line="263"/>
@@ -5724,17 +5724,17 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <message>
         <location filename="src/components/colorpalette/tupviewcolorcells.cpp" line="130"/>
         <source>Named Colors</source>
-        <translation>Couleurs Nommées</translation>
+        <translation>Couleurs nommées</translation>
     </message>
     <message>
         <location filename="src/components/colorpalette/tupviewcolorcells.cpp" line="137"/>
         <source>Custom Color Palette</source>
-        <translation>Palette de couleurs personnalisée</translation>
+        <translation>Palette de couleurs personnalisées</translation>
     </message>
     <message>
         <location filename="src/components/colorpalette/tupviewcolorcells.cpp" line="143"/>
         <source>Custom Gradient Palette</source>
-        <translation>Palette de dégradés personnalisée</translation>
+        <translation>Palette de dégradés personnalisés</translation>
     </message>
     <message>
         <location filename="src/components/colorpalette/tupviewcolorcells.cpp" line="384"/>
@@ -5877,7 +5877,7 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
         <location filename="src/plugins/tools/composed/tweener.cpp" line="383"/>
         <location filename="src/plugins/tools/composed/tweener.cpp" line="759"/>
         <source>Composed Tween</source>
-        <translation>Interpolation Composée</translation>
+        <translation>Interpolation composée</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/composed/tweener.cpp" line="381"/>
@@ -5890,7 +5890,7 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
         <location filename="src/plugins/tools/opacity/tweener.cpp" line="232"/>
         <location filename="src/plugins/tools/opacity/tweener.cpp" line="518"/>
         <source>Opacity Tween</source>
-        <translation>Interpolation d&apos;Opacité</translation>
+        <translation>Interpolation d&apos;opacité</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/opacity/tweener.cpp" line="230"/>
@@ -6031,7 +6031,7 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <message>
         <location filename="src/plugins/tools/composed/tweenerpanel.cpp" line="419"/>
         <source>Update Tween</source>
-        <translation>Mise à jour de l&apos;Interpolation</translation>
+        <translation>Mise à jour de l&apos;interpolation</translation>
     </message>
     <message>
         <location filename="src/plugins/tools/composed/tweenerpanel.cpp" line="421"/>
