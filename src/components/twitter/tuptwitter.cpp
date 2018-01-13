@@ -365,11 +365,11 @@ void TupTwitter::formatStatus(QByteArray array)
     html += tr("Code Name") + ": <b>" + k->codeName + "</b>";
 
     if (k->update)
-        html += "&nbsp;&nbsp;&nbsp;<b>[</b> <a href=\"http://www.tupitube.com/downloads\">" + tr("It's time to upgrade! Click here!") + "</a>  <b>]</b>"; 
+        html += "&nbsp;&nbsp;&nbsp;<b>[</b> <a href=\"https://www.maefloresta.com\">" + tr("It's time to upgrade! Click here!") + "</a>  <b>]</b>"; 
 
     html += "</center></div>\n";
     html += "<div class=\"twitter_tupi_donation\"><center>\n";
-    html += "<a href=\"https://www.maefloresta.com/portal/support\">" + tr("Want to help us to make a better project? Click here!") + "</a>";
+    html += "<a href=\"https://www.patreon.com/maefloresta\">" + tr("Want to help us to make a better project? Click here!") + "</a>";
     html += "</center></div>\n";
     html += tweets;
     html += "</body>\n";
