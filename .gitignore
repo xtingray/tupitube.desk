@@ -27,8 +27,7 @@ configure.tests/quazip/quazip
 src/framework/tupconfig.pri
 tupiglobal.pri
 
-launcher/tupitube.desk
-launcher/tupitube.desktop
+launcher/*
 
 3rdparty/Makefile
 3rdparty/potrace/Makefile

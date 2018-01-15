@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Debian
+
+if [ -e /usr/bin/apt-get ] || [ -e /etc/debian_version ]
+then
+sudo apt-get --assume-yes install libogg0 libtheora0
+sudo apt-get --assume-yes install zlib1g
+fi
+
+# RedHat
+
