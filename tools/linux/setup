@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Debian
+# Debian/Ubuntu
 
 if [ -e /usr/bin/apt-get ] || [ -e /etc/debian_version ]
 then
@@ -15,4 +15,13 @@ then
 sudo yum --assumeyes install zlib zlib-devel
 sudo yum --assumeyes install libogg libogg-devel 
 sudo yum --assumeyes install libtheora
+fi
+
+# OpenSuse
+
+if [ -e /etc/SuSE-release ]
+then
+sudo zypper --non-interactive install zlib zlib-devel
+sudo zypper --non-interactive install libogg0 libogg-devel
+sudo zypper --non-interactive install libtheora0
 fi
