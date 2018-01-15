@@ -10,3 +10,9 @@ fi
 
 # RedHat
 
+if [ -e /etc/redhat-release ] || [ -e /usr/bin/yum ]
+then
+sudo yum --assumeyes install zlib zlib-devel
+sudo yum --assumeyes install libogg libogg-devel 
+sudo yum --assumeyes install libtheora
+fi
