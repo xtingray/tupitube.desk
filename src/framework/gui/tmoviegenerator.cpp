@@ -44,7 +44,7 @@ TMovieGenerator::~TMovieGenerator()
 {
 }
 
-bool TMovieGenerator::begin()
+bool TMovieGenerator::beginVideo()
 {
     return true;
 }
@@ -54,7 +54,7 @@ void TMovieGenerator::nextFrame()
     handle(*this);
 }
 
-bool TMovieGenerator::movieHeaderOk() 
+bool TMovieGenerator::validMovieHeader() 
 {
     return true;
 }
@@ -64,7 +64,7 @@ QString TMovieGenerator::getErrorMsg() const
     return 0;
 }
 
-void TMovieGenerator::end()
+void TMovieGenerator::endVideo()
 {
 }
 
@@ -72,3 +72,8 @@ void TMovieGenerator::reset()
 {
     fill(qRgba(255, 255, 255, 0));
 }
+
+void TMovieGenerator::saveMovie(const QString &)
+{
+}
+

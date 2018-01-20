@@ -36,12 +36,6 @@
 #ifndef TMOVIEGENERATORINTERFACE_H
 #define TMOVIEGENERATORINTERFACE_H
 
-#include <QImage>
-
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TMovieGeneratorInterface
 {
     public:
@@ -65,18 +59,21 @@ class T_GUI_EXPORT TMovieGeneratorInterface
         virtual ~TMovieGeneratorInterface() {};
         virtual void nextFrame() = 0;
         virtual void reset() = 0;
-        virtual bool movieHeaderOk() = 0;
+        virtual bool validMovieHeader() = 0;
         virtual QString getErrorMsg() const = 0;
+        virtual void saveMovie(const QString &filename);
 
+        /*
         void saveMovie(const QString &filename) {
-                       end();
-                       createMovieFile(filename);
+            endVideo();
+            createMovieFile(filename);
         };
+        */
 
     protected:
         virtual void createMovieFile(const QString &filename) = 0;
-        virtual bool begin() = 0;
-        virtual void end() = 0;
+        virtual bool beginVideo() = 0;
+        virtual void endVideo() = 0;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(TMovieGeneratorInterface::Formats);

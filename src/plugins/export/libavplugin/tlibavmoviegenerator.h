@@ -39,24 +39,21 @@
 #include "tglobal.h"
 #include "tmoviegenerator.h"
 
-/**
-    @author David Cuadrado
-*/
-
 class TUPITUBE_PLUGIN TLibavMovieGenerator : public TMovieGenerator
 {
     public:
         TLibavMovieGenerator(TMovieGeneratorInterface::Format format, int width, int height, int fps = 24, double duration = 0);
         TLibavMovieGenerator(TMovieGeneratorInterface::Format format, const QSize &size, int fps = 24, double duration = 0);
         ~TLibavMovieGenerator();
-        virtual bool movieHeaderOk();
+        virtual bool validMovieHeader();
         virtual QString getErrorMsg() const;
+        void saveMovie(const QString &filename);
 
     protected:
         void createMovieFile(const QString &fileName);
         virtual void handle(const QImage &image);
-        virtual bool begin();
-        virtual void end();
+        virtual bool beginVideo();
+        virtual void endVideo();
 
     private:
         struct Private;

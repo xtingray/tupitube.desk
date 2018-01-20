@@ -145,7 +145,7 @@ bool LibavPlugin::exportToFormat(const QColor color, const QString &filePath, co
 
     TupAnimationRenderer renderer(color, library);
     {
-         if (!generator->movieHeaderOk()) {
+         if (!generator->validMovieHeader()) {
              errorMsg = generator->getErrorMsg();
              #ifdef TUP_DEBUG
                  QString msg = "LibavPlugin::exportToFormat() - [ Fatal Error ] - Can't create video -> " + filePath;
@@ -163,13 +163,13 @@ bool LibavPlugin::exportToFormat(const QColor color, const QString &filePath, co
          painter.setRenderHint(QPainter::Antialiasing, true);
 
          foreach (TupScene *scene, scenes) {
-                  renderer.setScene(scene, size);
+             renderer.setScene(scene, size);
 
-                  while (renderer.nextPhotogram()) {
-                         renderer.render(&painter);
-                         generator->nextFrame();
-                         generator->reset();
-                  }
+             while (renderer.nextPhotogram()) {
+                 renderer.render(&painter);
+                 generator->nextFrame();
+                 generator->reset();
+             }
          }
     }
 

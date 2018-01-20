@@ -62,14 +62,15 @@ class TUPITUBE_EXPORT TheoraMovieGenerator : public TMovieGenerator
     public:
         TheoraMovieGenerator(const QSize &size, int fps = 24, double duration = 0, int frames = 0);
         ~TheoraMovieGenerator();
-        virtual bool movieHeaderOk();
+        virtual bool validMovieHeader();
         virtual QString getErrorMsg() const;
+        virtual void saveMovie(const QString &filename);
 
     protected:
         void createMovieFile(const QString &fileName);
         virtual void handle(const QImage &image);
-        virtual bool begin();
-        virtual void end();
+        virtual bool beginVideo();
+        virtual void endVideo();
 
     private:
         void writeTheoraFrame(unsigned long w, unsigned long h, unsigned char *yuv, int last);

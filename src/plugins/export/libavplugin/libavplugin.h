@@ -47,10 +47,6 @@
 #include <QImage>
 #include <QPainter>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_PLUGIN LibavPlugin : public TupExportPluginObject
 {
     Q_OBJECT
@@ -65,8 +61,6 @@ class TUPITUBE_PLUGIN LibavPlugin : public TupExportPluginObject
         virtual bool exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes, TupExportInterface::Format format, const QSize &size, int fps, TupLibrary *library);
         virtual bool exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene, const QSize &size, TupLibrary *library);
 
-        // virtual const char* getExceptionMsg();
-        // const char *errorMsg;
         virtual QString getExceptionMsg() const;
         QString errorMsg;
 

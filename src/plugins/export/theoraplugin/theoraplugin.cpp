@@ -79,7 +79,7 @@ bool TheoraPlugin::exportToFormat(const QColor color, const QString &filePath, c
 
     TupAnimationRenderer renderer(color, library);
     {
-         if (!generator->movieHeaderOk()) {
+         if (!generator->validMovieHeader()) {
              errorMsg = generator->getErrorMsg();
              #ifdef TUP_DEBUG
                     QString msg = "FFMpegPlugin::exportToFormat() - [ Fatal Error ] - Can't create video -> " + filePath;

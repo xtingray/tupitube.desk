@@ -39,10 +39,6 @@
 #include "tglobal.h"
 #include "tmoviegeneratorinterface.h"
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TMovieGenerator : public QImage, public TMovieGeneratorInterface
 {
     public:
@@ -50,12 +46,13 @@ class T_GUI_EXPORT TMovieGenerator : public QImage, public TMovieGeneratorInterf
         ~TMovieGenerator();
         void nextFrame();
         void reset();
-        virtual bool movieHeaderOk() = 0;
+        virtual bool validMovieHeader() = 0;
         virtual QString getErrorMsg() const = 0;
+        virtual void saveMovie(const QString &filename);
 
     protected:
-        virtual bool begin();
-        virtual void end();
+        virtual bool beginVideo();
+        virtual void endVideo();
         virtual void handle(const QImage &image) = 0;
 };
 

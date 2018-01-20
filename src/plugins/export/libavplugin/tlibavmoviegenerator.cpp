@@ -43,8 +43,11 @@
 
 #ifdef __cplusplus
 extern "C" {
+#include "libavutil/channel_layout.h"
 #include "libavutil/mathematics.h"
+#include "libavutil/opt.h"
 #include "libavformat/avformat.h"
+#include "libavresample/avresample.h"
 // #include "libswscale/swscale.h"
 }
 #endif
@@ -53,9 +56,21 @@ extern "C" {
 #define av_frame_alloc  avcodec_alloc_frame
 #endif
 
+#define STREAM_DURATION   10.0
+
 struct TLibavMovieGenerator::Private
 {
-    AVFrame *frame;
+    AVFrame *videoFrame;
+    AVFrame *audioFrame;
+    AVFrame *tmpAudioFrame;
+
+    // pts of the next frame that will be generated
+    int64_t next_pts;
+
+    float t;
+    float tincr;
+    float tincr2;
+
     QString movieFile;
     int fps;
     int frameCount;
@@ -64,21 +79,34 @@ struct TLibavMovieGenerator::Private
     QString errorMsg;
 
     AVStream *video_st;
+    AVStream *audio_st;
+    AVAudioResampleContext *avAudioR;
+
     AVFormatContext *oc;
     AVOutputFormat *fmt;
 
     void chooseFileExtension(int format);
+
     bool openVideo(AVCodec *codec, AVStream *st, const QString &errorDetail);
+    bool openAudio(AVStream *st);
+
+    AVFrame *allocAudioFrame(enum AVSampleFormat sample_fmt, uint64_t channel_layout,
+                               int sample_rate, int nb_samples);
+
     void RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint iRGBIncrement, bool bSwapRGB, int width, int height);
 
-    // Temporal method
-    void fill_yuv_image(AVFrame *pict, int frame_index, int width, int height);
-    AVFrame *alloc_picture(enum AVPixelFormat pix_fmt, int width, int height);
     bool writeVideoFrame(const QString &movieFile, const QImage &image);
+
+    AVFrame * getAudioFrame();
+    int encodeAudioFrame();
+    bool writeAudioFrame();
+
     void closeVideo(AVStream *st);
+    void closeAudio();
 };
 
-static AVStream *addVideoStream(AVFormatContext *oc, AVCodec **codec, enum AVCodecID codec_id, const QString &movieFile, int width, int height, int fps, const QString &errorDetail)
+static AVStream *addVideoStream(AVFormatContext *oc, AVCodec **codec, enum AVCodecID codec_id, const QString &movieFile, 
+                                int width, int height, int fps, const QString &errorDetail)
 {
     /*
     #ifdef TUP_DEBUG
@@ -95,7 +123,7 @@ static AVStream *addVideoStream(AVFormatContext *oc, AVCodec **codec, enum AVCod
     AVStream *st;
     QString errorMsg = "";
 
-    /* find the encoder */
+    // Find the encoder
     *codec = avcodec_find_encoder(codec_id);
     if (!(*codec)) {
         errorMsg = "libav error: Could not find encoder. " + errorDetail;
@@ -131,12 +159,12 @@ static AVStream *addVideoStream(AVFormatContext *oc, AVCodec **codec, enum AVCod
     c = st->codec;
     c->codec_id = codec_id;
 
-    /* put sample parameters */
+    // Put sample parameters
     c->bit_rate = 6000000;
     if (fps == 1)
         c->bit_rate = 4000000;
 
-    /* resolution must be a multiple of two */
+    // Resolution must be a multiple of two
     c->width = width;  
     c->height = height; 
 
@@ -171,47 +199,109 @@ static AVStream *addVideoStream(AVFormatContext *oc, AVCodec **codec, enum AVCod
     return st;
 }
 
+static AVStream * addAudioStream(AVFormatContext *oc, enum AVCodecID codec_id, AVAudioResampleContext *avAudioR)
+{
+    AVStream *st;
+    AVCodecContext *c;
+    AVCodec *codec;
+    int ret;
+
+    /* find the audio encoder */
+    codec = avcodec_find_encoder(codec_id);
+    if (!codec) {
+        fprintf(stderr, "codec not found\n");
+        exit(1);
+    }
+
+    st = avformat_new_stream(oc, codec);
+    if (!st) {
+        fprintf(stderr, "Could not alloc stream\n");
+        exit(1);
+    }
+
+    c = st->codec;
+
+    /* put sample parameters */
+    c->sample_fmt     = codec->sample_fmts           ? codec->sample_fmts[0]           : AV_SAMPLE_FMT_S16;
+    c->sample_rate    = codec->supported_samplerates ? codec->supported_samplerates[0] : 44100;
+    c->channel_layout = codec->channel_layouts       ? codec->channel_layouts[0]       : AV_CH_LAYOUT_STEREO;
+    c->channels       = av_get_channel_layout_nb_channels(c->channel_layout);
+    c->bit_rate       = 64000;
+
+    st->time_base = (AVRational){ 1, c->sample_rate };
+
+    // some formats want stream headers to be separate
+    if (oc->oformat->flags & AVFMT_GLOBALHEADER)
+        c->flags |= CODEC_FLAG_GLOBAL_HEADER;
+
+    /* initialize sample format conversion;
+     * to simplify the code, we always pass the data through lavr, even
+     * if the encoder supports the generated format directly -- the price is
+     * some extra data copying;
+     */
+    avAudioR = avresample_alloc_context();
+    if (!avAudioR) {
+        fprintf(stderr, "Error allocating the resampling context\n");
+        exit(1);
+    }
+
+    av_opt_set_int(avAudioR, "in_sample_fmt", AV_SAMPLE_FMT_S16, 0);
+    av_opt_set_int(avAudioR, "in_sample_rate", 44100, 0);
+    av_opt_set_int(avAudioR, "in_channel_layout", AV_CH_LAYOUT_STEREO, 0);
+    av_opt_set_int(avAudioR, "out_sample_fmt", c->sample_fmt, 0);
+    av_opt_set_int(avAudioR, "out_sample_rate", c->sample_rate, 0);
+    av_opt_set_int(avAudioR, "out_channel_layout", c->channel_layout, 0);
+
+    ret = avresample_open(avAudioR);
+    if (ret < 0) {
+        fprintf(stderr, "Error opening the resampling context\n");
+        exit(1);
+    }
+
+    return st;
+}
+
 void TLibavMovieGenerator::Private::chooseFileExtension(int format)
 {
     switch (format) {
-            case WEBM:
-                 movieFile += ".webm";
-                 break;
+        case WEBM:
+            movieFile += ".webm";
+        break;
 
-            /* SQA: Obsolete format
-            case SWF:
-                 movieFile += ".swf";
-                 break;
-            */
+        /* SQA: Obsolete format
+        case SWF:
+            movieFile += ".swf";
+        break;
+        */
 
-            case MP4:
-                 movieFile += ".mp4";
-                 break;
+        case MP4:
+            movieFile += ".mp4";
+        break;
 
-            /* SQA: MPEG codec was removed because it crashes. Check the issue!
-            case MPEG:
-                 movieFile += ".mpg";
-                 break;
-            */
+        /* SQA: MPEG codec was removed because it crashes. Check the issue!
+        case MPEG:
+            movieFile += ".mpg";
+        break;
+        */
 
-            /* SQA: Obsolete format
-            case ASF:
-                 movieFile += ".asf";
-                 break;
-            */
+        /* SQA: Obsolete format
+        case ASF:
+            movieFile += ".asf";
+        break;
+        */
 
-            case AVI:
-                 movieFile += ".avi";
-                 break;
-            case MOV:
-                 movieFile += ".mov";
-                 break;
-            case GIF:
-                 movieFile += ".gif";
-                 break;
-            default:
-                 movieFile += ".mpg";
-                 break;
+        case AVI:
+            movieFile += ".avi";
+        break;
+        case MOV:
+            movieFile += ".mov";
+        break;
+        case GIF:
+            movieFile += ".gif";
+        break;
+        default:
+            movieFile += ".mpg";
+        break;
     }
 }
 
@@ -236,9 +326,9 @@ bool TLibavMovieGenerator::Private::openVideo(AVCodec *codec, AVStream *st, cons
     }
 
     /* allocate and init a re-usable frame */
-    frame = av_frame_alloc();
+    videoFrame = av_frame_alloc();
 
-    if (!frame) {
+    if (!videoFrame) {
         errorMsg = "There is no available memory to export your project as a video";
         #ifdef TUP_DEBUG
             QString msg = QString("") + "TLibavMovieGenerator::openVideo() - " + errorMsg;
@@ -251,6 +341,87 @@ bool TLibavMovieGenerator::Private::openVideo(AVCodec *codec, AVStream *st, cons
         return false;
     }
 	
+    return true;
+}
+
+AVFrame *allocAudioFrame(enum AVSampleFormat sample_fmt, uint64_t channel_layout,
+                         int sample_rate, int nb_samples)
+{
+    AVFrame *frame = av_frame_alloc();
+    int ret;
+
+    if (!frame) {
+        #ifdef TUP_DEBUG
+            QString msg = "TLibavMovieGenerator::allocAudioFrame() - "
+                          "Fatal Error: Can't not allocate audio frame";
+            #ifdef Q_OS_WIN
+                qDebug() << msg;
+            #else
+                tError() << msg;
+            #endif
+        #endif
+        return 0;
+    }
+
+    frame->format = sample_fmt;
+    frame->channel_layout = channel_layout;
+    frame->sample_rate = sample_rate;
+    frame->nb_samples = nb_samples;
+
+    if (nb_samples) {
+        ret = av_frame_get_buffer(frame, 0);
+        if (ret < 0) {
+            #ifdef TUP_DEBUG
+                QString msg = "TLibavMovieGenerator::allocAudioFrame() - Fatal Error: Can't not allocate audio buffer";
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError() << msg;
+                #endif
+            #endif
+            return 0;
+        }
+    }
+
+    return frame;
+}
+
+bool TLibavMovieGenerator::Private::openAudio(AVStream *st)
+{
+    AVCodecContext *c;
+    int nb_samples;
+
+    c = st->codec;
+
+    // Open sound codec 
+    if (avcodec_open2(c, NULL, NULL) < 0) {
+        #ifdef TUP_DEBUG
+            QString msg = "TLibavMovieGenerator::openAudio() - Fatal Error: Could not open codec";
+            #ifdef Q_OS_WIN
+                qDebug() << msg;
+            #else
+                tError() << msg;
+            #endif
+        #endif
+
+        return false;
+    }
+
+    // Init signal generator
+    t = 0;
+    tincr = 2 * M_PI * 110.0 / c->sample_rate;
+
+    // Increment frequency by 110 Hz per second 
+    tincr2 = 2 * M_PI * 110.0 / c->sample_rate / c->sample_rate;
+
+    if (c->codec->capabilities & CODEC_CAP_VARIABLE_FRAME_SIZE)
+        nb_samples = 10000;
+    else
+        nb_samples = c->frame_size;
+
+    audioFrame = allocAudioFrame(c->sample_fmt, c->channel_layout, c->sample_rate, nb_samples);
+    tmpAudioFrame = allocAudioFrame(AV_SAMPLE_FMT_S16, AV_CH_LAYOUT_STEREO, 44100, nb_samples);
+
     return true;
 }
 
@@ -297,58 +468,6 @@ void TLibavMovieGenerator::Private::RGBtoYUV420P(const uint8_t *bufferRGB, uint8
     }
 }
 
-/* Prepare a dummy image. */
-void TLibavMovieGenerator::Private::fill_yuv_image(AVFrame *pict, int frame_index, int width, int height) 
-{
-    int x, y, i, ret;
-
-    /* when we pass a frame to the encoder, it may keep a reference to it
-     * internally;
-     * make sure we do not overwrite it here
-     */
-    ret = av_frame_make_writable(pict);
-    if (ret < 0)
-        exit(1);
-
-    i = frame_index;
-
-    /* Y */
-    for (y = 0; y < height; y++)
-        for (x = 0; x < width; x++)
-            pict->data[0][y * pict->linesize[0] + x] = x + y + i * 3;
-
-    /* Cb and Cr */
-    for (y = 0; y < height / 2; y++) {
-        for (x = 0; x < width / 2; x++) {
-            pict->data[1][y * pict->linesize[1] + x] = 128 + y + i * 2;
-            pict->data[2][y * pict->linesize[2] + x] = 64 + x + i * 5;
-        }
-    }
-}
-
-AVFrame *TLibavMovieGenerator::Private::alloc_picture(enum AVPixelFormat pix_fmt, int width, int height)
-{
-    AVFrame *picture;
-    int ret;
-
-    picture = av_frame_alloc();
-    if (!picture)
-        return NULL;
-
-    picture->format = pix_fmt;
-    picture->width  = width;
-    picture->height = height;
-
-    /* allocate the buffers for the frame data */
-    ret = av_frame_get_buffer(picture, 8);
-    if (ret < 0) {
-        fprintf(stderr, "Could not allocate frame data.\n");
-        exit(1);
-    }
-
-    return picture;
-}
-
 bool TLibavMovieGenerator::Private::writeVideoFrame(const QString &movieFile, const QImage &image)
 {
     #ifdef TUP_DEBUG
@@ -372,16 +491,16 @@ bool TLibavMovieGenerator::Private::writeVideoFrame(const QString &movieFile, co
 
     if (movieFile.endsWith("gif", Qt::CaseInsensitive)) {
         QImage img = image.convertToFormat(Format_RGB888);
-        avpicture_fill((AVPicture *)frame, img.bits(), AV_PIX_FMT_RGB24, w, h);
+        avpicture_fill((AVPicture *)videoFrame, img.bits(), AV_PIX_FMT_RGB24, w, h);
     } else { 
         int size = avpicture_get_size(AV_PIX_FMT_YUV420P, w, h);
         uint8_t *pic_dat = (uint8_t *) av_malloc(size);
         RGBtoYUV420P(image.bits(), pic_dat, image.depth()/8, true, w, h);
-        avpicture_fill((AVPicture *)frame, pic_dat, AV_PIX_FMT_YUV420P, w, h);
-        frame->pts += av_rescale_q(1, video_st->codec->time_base, video_st->time_base);
+        avpicture_fill((AVPicture *)videoFrame, pic_dat, AV_PIX_FMT_YUV420P, w, h);
+        videoFrame->pts += av_rescale_q(1, video_st->codec->time_base, video_st->time_base);
     }
 
-    int ret = avcodec_encode_video2(c, &pkt, frame, &got_output);
+    int ret = avcodec_encode_video2(c, &pkt, videoFrame, &got_output);
     if (ret < 0) {
         errorMsg = "[1] Error while encoding the video of your project";
         #ifdef TUP_DEBUG
@@ -395,13 +514,13 @@ bool TLibavMovieGenerator::Private::writeVideoFrame(const QString &movieFile, co
         return false;
     }
 
-    /* If size is zero, it means the image was buffered. */
+    // If size is zero, it means the image was buffered.
     if (got_output) {
         if (c->coded_frame->key_frame)
             pkt.flags |= AV_PKT_FLAG_KEY;
         pkt.stream_index = video_st->index;
 
-        /* Write the compressed frame to the media file. */
+        // Write the compressed frame to the media file. 
         ret = av_interleaved_write_frame(oc, &pkt);
     } else {
         ret = 0;
@@ -425,31 +544,161 @@ bool TLibavMovieGenerator::Private::writeVideoFrame(const QString &movieFile, co
     return true;
 }
 
+AVFrame * TLibavMovieGenerator::Private::getAudioFrame()
+{
+    AVFrame *frame = tmpAudioFrame;
+    int j, i, v;
+    int16_t *q = (int16_t*) audioFrame->data[0];
+
+    // Check if we want to generate more frames
+    if (av_compare_ts(next_pts, audio_st->codec->time_base,
+                      STREAM_DURATION, (AVRational){ 1, 1 }) >= 0)
+        return NULL;
+
+    for (j = 0; j < audioFrame->nb_samples; j++) {
+        v = (int)(sin(t) * 10000);
+        for (i = 0; i < audio_st->codec->channels; i++)
+            *q++ = v;
+        t += tincr;
+        tincr += tincr2;
+    }
+
+    return frame;
+}
+
+int TLibavMovieGenerator::Private::encodeAudioFrame()
+{
+    // Data and size must be 0 
+    AVPacket pkt;  // = { 0 };
+    int got_packet;
+
+    av_init_packet(&pkt);
+    avcodec_encode_audio2(audio_st->codec, &pkt, audioFrame, &got_packet);
+
+    if (got_packet) {
+        pkt.stream_index = audio_st->index;
+
+        av_packet_rescale_ts(&pkt, audio_st->codec->time_base, audio_st->time_base);
+
+        /* Write the compressed frame to the media file. */
+        if (av_interleaved_write_frame(oc, &pkt) != 0) {
+            fprintf(stderr, "Error while writing audio frame\n");
+            exit(1);
+        }
+    }
+
+    return (audioFrame || got_packet) ? 0 : 1;
+}
+
+bool TLibavMovieGenerator::Private::writeAudioFrame()
+{
+    AVFrame *frame;
+    int got_output = 0;
+    int ret;
+
+    frame = getAudioFrame();
+    got_output |= !!frame;
+
+    // Feed the data to avAudioR
+    if (frame) {
+        ret = avresample_convert(avAudioR, NULL, 0, 0,
+                                 frame->extended_data, frame->linesize[0],
+                                 frame->nb_samples);
+        if (ret < 0) {
+            fprintf(stderr, "Error feeding audio data to the resampler\n");
+            exit(1);
+        }
+    }
+
+    while ((frame && avresample_available(avAudioR) >= audioFrame->nb_samples) ||
+           (!frame && avresample_get_out_samples(avAudioR, 0))) {
+        // When we pass a frame to the encoder, it may keep a reference to it
+        // internally. Make sure we do not overwrite it here
+        ret = av_frame_make_writable(audioFrame);
+        if (ret < 0)
+            exit(1);
+
+        /* the difference between the two avresample calls here is that the
+         * first one just reads the already converted data that is buffered in
+         * the lavr output buffer, while the second one also flushes the
+         * resampler */
+        if (frame) {
+            ret = avresample_read(avAudioR, audioFrame->extended_data,
+                                  audioFrame->nb_samples);
+        } else {
+            ret = avresample_convert(avAudioR, audioFrame->extended_data,
+                                     audioFrame->linesize[0], audioFrame->nb_samples,
+                                     NULL, 0, 0);
+        }
+
+        if (ret < 0) {
+            fprintf(stderr, "Error while resampling\n");
+            exit(1);
+        } else if (frame && ret != audioFrame->nb_samples) {
+            fprintf(stderr, "Too few samples returned from lavr\n");
+            exit(1);
+        }
+
+        audioFrame->nb_samples = ret;
+
+        audioFrame->pts = next_pts;
+        next_pts += audioFrame->nb_samples;
+
+        got_output |= encodeAudioFrame();
+    }
+
+    // return !got_output;
+
+    return true;
+}
+
 void TLibavMovieGenerator::Private::closeVideo(AVStream *st)
 {
     avcodec_close(st->codec);
-    av_free(frame);
+    // av_free(videoFrame);
+    av_frame_free(&videoFrame);
 }
 
-TLibavMovieGenerator::TLibavMovieGenerator(TMovieGeneratorInterface::Format format, int width, int height, int fps, double duration)
- : TMovieGenerator(width, height), k(new Private)
+void TLibavMovieGenerator::Private::closeAudio()
 {
-    errorDetail = "This is not a problem directly related to <b>Tupi</b>. Please, check your libav installation and codec support. More info: <b>http://libav.org</b>";
-    k->movieFile = QDir::tempPath() + "/tupi_video_" + TAlgorithm::randomString(12);
+    avcodec_close(audio_st->codec);
+    av_frame_free(&audioFrame);
+    av_frame_free(&tmpAudioFrame);
+    avresample_free(&avAudioR);
+}
+
+void TLibavMovieGenerator::saveMovie(const QString &filename) 
+{
+    endVideo();
+    createMovieFile(filename);
+}
+
+TLibavMovieGenerator::TLibavMovieGenerator(TMovieGeneratorInterface::Format format, int width, int height, 
+                      int fps, double duration) : TMovieGenerator(width, height), k(new Private)
+{
+    errorDetail = "This is not a problem directly related to <b>TupiTube Desk</b>. "
+                  "Please, check your libav installation and codec support. "
+                  "More info: <b>http://libav.org</b>";
+
+    k->movieFile = QDir::tempPath() + "/tupitube_video_" + TAlgorithm::randomString(12);
     k->chooseFileExtension(format);
     k->fps = fps;
     k->streamDuration = duration;
-    k->exception = begin();
+    k->exception = beginVideo();
 }
 
-TLibavMovieGenerator::TLibavMovieGenerator(TMovieGeneratorInterface::Format format, const QSize &size, int fps, double duration) : TMovieGenerator(size.width(), size.height()), k(new Private)
+TLibavMovieGenerator::TLibavMovieGenerator(TMovieGeneratorInterface::Format format, const QSize &size, 
+                      int fps, double duration) : TMovieGenerator(size.width(), size.height()), k(new Private)
 {
-    errorDetail = "This is not a problem directly related to <b>Tupi</b>. Please, check your libav installation and codec support. More info: <b>http://libav.org</b>";
-    k->movieFile = QDir::tempPath() + "/tupi_video_" + TAlgorithm::randomString(12);
+    errorDetail = "This is not a problem directly related to <b>TupiTube Desk</b>. "
+                  "Please, check your libav installation and codec support. "
+                  "More info: <b>http://libav.org</b>";
+
+    k->movieFile = QDir::tempPath() + "/tupitube_video_" + TAlgorithm::randomString(12);
     k->chooseFileExtension(format);
     k->fps = fps;
     k->streamDuration = duration;
-    k->exception = begin();
+    k->exception = beginVideo();
 }
 
 TLibavMovieGenerator::~TLibavMovieGenerator()
@@ -460,7 +709,7 @@ TLibavMovieGenerator::~TLibavMovieGenerator()
     delete k;
 }
 
-bool TLibavMovieGenerator::begin()
+bool TLibavMovieGenerator::beginVideo()
 {
     int ret;
     AVCodec *video_codec = 0;
@@ -470,7 +719,7 @@ bool TLibavMovieGenerator::begin()
     k->fmt = av_guess_format(NULL, k->movieFile.toLocal8Bit().data(), NULL);
     if (!k->fmt) {
         #ifdef TUP_DEBUG
-            QString msg = QString("") + "TLibavMovieGenerator::begin() - Can't guess format. Selecting MPEG by default...";
+            QString msg = QString("") + "TLibavMovieGenerator::beginVideo() - Can't guess format. Selecting MPEG by default...";
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else
@@ -496,7 +745,7 @@ bool TLibavMovieGenerator::begin()
     if (!k->oc) {
         k->errorMsg = "libav error: Error while doing export. " + errorDetail;
         #ifdef TUP_DEBUG
-            QString msg = QString("") + "TLibavMovieGenerator::begin() - " + k->errorMsg;
+            QString msg = QString("") + "TLibavMovieGenerator::beginVideo() - " + k->errorMsg;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else
@@ -517,7 +766,7 @@ bool TLibavMovieGenerator::begin()
     } else {
         k->errorMsg = "<b>libav error:</b> Video codec required is not installed. " + errorDetail;
         #ifdef TUP_DEBUG
-            QString msg = QString("") + "TLibavMovieGenerator::begin() - " + k->errorMsg;
+            QString msg = QString("") + "TLibavMovieGenerator::beginVideo() - " + k->errorMsg;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else 
@@ -532,7 +781,7 @@ bool TLibavMovieGenerator::begin()
         if (ret < 0) {
             k->errorMsg = "libav error: could not open video file";
             #ifdef TUP_DEBUG
-                QString msg = QString("") + "TLibavMovieGenerator::begin() - " + k->errorMsg;
+                QString msg = QString("") + "TLibavMovieGenerator::beginVideo() - " + k->errorMsg;
                 #ifdef Q_OS_WIN
                     qDebug() << msg;
                 #else
@@ -545,15 +794,15 @@ bool TLibavMovieGenerator::begin()
 
     avformat_write_header(k->oc, NULL);
 
-    if (k->frame)
-        k->frame->pts = 0;
+    if (k->videoFrame)
+        k->videoFrame->pts = 0;
 
     k->frameCount = 0;
 
     return true;
 }
 
-bool TLibavMovieGenerator::movieHeaderOk() 
+bool TLibavMovieGenerator::validMovieHeader() 
 { 
     return k->exception;
 }
@@ -567,7 +816,8 @@ void TLibavMovieGenerator::handle(const QImage& image)
 {
     if (!k->video_st) {
         #ifdef TUP_DEBUG
-            QString msg = "TLibavMovieGenerator::handle() - The total of frames has been processed (" + QString::number(k->streamDuration) + " seg)";
+            QString msg = "TLibavMovieGenerator::handle() - The total of frames has been "
+                          "processed (" + QString::number(k->streamDuration) + " seg)";
             #ifdef Q_OS_WIN
                 qWarning() << msg;
             #else
@@ -587,11 +837,12 @@ void TLibavMovieGenerator::handle(const QImage& image)
     #endif
 
     k->writeVideoFrame(k->movieFile, image);
+
     // k->frame->pts += av_rescale_q(1, k->video_st->codec->time_base, k->video_st->time_base);
     // k->frame->pts += av_rescale_q(1, k->video_st->time_base, k->video_st->time_base);
 }
 
-void TLibavMovieGenerator::end()
+void TLibavMovieGenerator::endVideo()
 {
     av_write_trailer(k->oc);
 

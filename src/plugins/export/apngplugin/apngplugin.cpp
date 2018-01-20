@@ -75,7 +75,7 @@ bool APNGPlugin::exportToFormat(const QColor color, const QString &filePath, con
 
     TupAnimationRenderer renderer(color);
     {
-         if (!generator->movieHeaderOk()) {
+         if (!generator->validMovieHeader()) {
              errorMsg = generator->getErrorMsg();
              #ifdef TUP_DEBUG
                     tError() << "FFMpegPlugin::exportToFormat() - [ Fatal Error ] - Can't create video -> " << filePath;
