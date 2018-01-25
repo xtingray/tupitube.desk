@@ -8,4 +8,4 @@ export TUPITUBE_BIN="./bin"
 
 export LD_LIBRARY_PATH="./lib/libav:./lib/quazip:./lib/qt:${TUPITUBE_LIB}:${TUPITUBE_PLUGIN}:$LD_LIBRARY_PATH"
 
-exec ${TUPITUBE_BIN}/tupitube.bin $*
+exec ${TUPITUBE_BIN}/tupitube.bin "$@"

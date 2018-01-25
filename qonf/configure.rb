@@ -284,7 +284,7 @@ module RQonf
         newfile += "open ${TUPITUBE_BIN}/TupiTube.app $*"
       else
         newfile += "export LD_LIBRARY_PATH=\"" + path + "\$\{TUPITUBE_LIB\}:\$\{TUPITUBE_PLUGIN\}:$LD_LIBRARY_PATH\"\n\n"
-        newfile += "exec ${TUPITUBE_BIN}/tupitube.bin $*"
+        newfile += "exec ${TUPITUBE_BIN}/tupitube.bin \"$@\""
       end
 
       launcher = File.open("launcher/tupitube.desk", "w") { |f|
