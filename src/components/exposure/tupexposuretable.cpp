@@ -36,11 +36,6 @@
 #include "tupexposuretable.h"
 #include "tconfig.h"
 
-/**
- * @author Jorge Cuadrado
- */
-
-/////////////////
 class TUPITUBE_EXPORT TupExposureVerticalHeader : public QHeaderView
 {
     public:

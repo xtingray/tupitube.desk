@@ -35,12 +35,6 @@
 
 #include "tupbrushmanager.h"
 
-/**
- * This class handles the set of brushes for painting.
- * Here is where methods to set/unset brushes are defined.
- * @author David Cuadrado
-*/
-
 struct TupBrushManager::Private
 {
     Private() : pen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap)), brush(Qt::transparent) {}

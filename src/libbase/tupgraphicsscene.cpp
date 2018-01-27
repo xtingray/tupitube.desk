@@ -53,12 +53,6 @@
 #include "tupguideline.h"
 #include "tuplibrary.h"
 
-/**
- * This class defines the data structure and methods for handling animation scenes.
- * Here is where the set of photograms of one scene are processed.
- * @author David Cuadrado
-*/
-
 struct TupGraphicsScene::Private
 {
     TupToolPlugin *tool;

@@ -49,12 +49,6 @@
 #include <QCheckBox>
 #include <QInputDialog>
 
-/**
- * This class defines the themes manager for Tupi.
- * Here is where methods related to themes management are defined.
- * @author David Cuadrado
-*/
-
 TupThemeSelector::TupThemeSelector(QWidget *parent) : TVHBox(parent, Qt::Vertical)
 {
     setupChooseColor();

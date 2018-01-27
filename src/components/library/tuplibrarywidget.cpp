@@ -38,12 +38,6 @@
 
 #define RETURN_IF_NOT_LIBRARY if (!k->library) return;
 
-/**
- * This class defines the Library widget.
- * Here is where events around the Library widget are handled.
- * @author David Cuadrado
-*/
-
 struct TupLibraryWidget::Private
 {
     Private() : library(0)

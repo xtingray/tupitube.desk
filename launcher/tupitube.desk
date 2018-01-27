@@ -8,4 +8,4 @@ export TUPITUBE_BIN="/usr/local/tupitube.desk/bin"
 
 export LD_LIBRARY_PATH="/usr/local/lib:/usr/local/lib:${TUPITUBE_LIB}:${TUPITUBE_PLUGIN}:$LD_LIBRARY_PATH"
 
-exec ${TUPITUBE_BIN}/tupitube.bin $*
+exec ${TUPITUBE_BIN}/tupitube.bin "$@"

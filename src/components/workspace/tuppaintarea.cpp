@@ -36,12 +36,6 @@
 #include "tuppaintarea.h"
 #include "toptionaldialog.h"
 
-/**
- * This class defines the behavior of the main paint area when ilustration module is on
- * Here is where all the events about the paint area are processed.
- * @author David Cuadrado
-*/
-
 struct TupPaintArea::Private
 {
     TupProject *project;

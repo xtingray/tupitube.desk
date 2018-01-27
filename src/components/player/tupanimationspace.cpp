@@ -35,12 +35,6 @@
 
 #include "tupanimationspace.h"
 
-/**
- * This class defines the space which contains the Animation Mode interface.
- * Here is where the visual space for Animation Mode is defined.
- * @author David Cuadrado
-*/
-
 struct TupAnimationspace::Private
 {
     TupCameraWidget *playerInterface;

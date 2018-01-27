@@ -46,12 +46,6 @@
 #include <QScrollArea>
 #include <QDir>
 
-/**
- * This class defines the About dialog of TupiTube.
- * Here is where the dialog tabs are setted.
- * @author David Cuadrado
-*/
-
 TupAbout::TupAbout(QWidget *parent) : TabDialog(Cancel, parent)
 {
     // SQA: Check if these instructions are doing something for real

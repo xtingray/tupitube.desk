@@ -38,12 +38,6 @@
 #include "tupprojectcommand.h"
 #include "tupfilemanager.h"
 
-/**
- * This class handles all the procedures related to the projects local format for Tupi.
- *
- * @author David Cuadrado
-*/
-
 TupLocalProjectManagerHandler::TupLocalProjectManagerHandler(QObject *parent) : TupAbstractProjectHandler(parent)
 {
 }

@@ -36,10 +36,6 @@
 #include "tupexposureheader.h"
 #include "tconfig.h"
 
-/**
- * @author Jorge Cuadrado
- */
-
 TupExposureHeader::TupExposureHeader(QWidget * parent) : QHeaderView(Qt::Horizontal, parent), m_editedSection(-1), m_sectionOnMotion(false)
 {
     setSectionsClickable(true);

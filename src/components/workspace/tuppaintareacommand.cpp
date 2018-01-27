@@ -35,11 +35,6 @@
 
 #include "tuppaintareacommand.h"
 
-/**
- * This class defines the undo/redo functions for the paint area
- * @author David Cuadrado
-*/
-
 struct TupPaintAreaCommand::Private
 {
     TupPaintArea *paintArea;

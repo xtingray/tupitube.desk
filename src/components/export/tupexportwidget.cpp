@@ -40,12 +40,6 @@
 #include "tupexportmodule.h"
 #include "tupvideoproperties.h"
 
-/**
- * This class handles the whole process to export a project into a movie format.
- * The export widget uses a wizard to guide the process: format, escenes, target file
- * @author David Cuadrado
-*/
-
 struct TupExportWidget::Private
 {
     TupPluginSelector *pluginPage;

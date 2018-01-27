@@ -39,10 +39,6 @@
 
 #include <QCheckBox>
 
-/**
- * @author David Cuadrado
- **/
-
 struct TupGeneralPreferences::Private
 {
     QStringList startup;

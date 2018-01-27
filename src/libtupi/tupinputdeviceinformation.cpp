@@ -35,11 +35,7 @@
 
 #include "tupinputdeviceinformation.h"
 
-/**
- * This class captures and process all the mouse/tablet events.
- *
- * @author David Cuadrado
-*/
+// Mouse/tablet events manager
 
 struct TupInputDeviceInformation::Private
 {

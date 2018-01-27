@@ -35,12 +35,6 @@
 
 #include "tupsymboleditor.h"
 
-/**
- * This class defines the toolbar at the left side of the paint area.
- * Here is where tool plugins are loaded and where the toolbar is created.
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT View : public QGraphicsView
 {
     public:

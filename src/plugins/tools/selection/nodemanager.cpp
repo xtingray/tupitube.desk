@@ -36,12 +36,6 @@
 #include "nodemanager.h"
 #include "tupgraphicobject.h"
 
-/**
- * This class handles the methods required to manipulate a set of nodes.
- * 
- * @author Jorge Cuadrado
-*/
-
 struct NodeManager::Private
 {
     QHash<Node::TypeNode, Node *> nodes;

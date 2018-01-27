@@ -11,10 +11,12 @@
             <lib path="-lavformat" />
             <lib path="-lavcodec" />
             <lib path="-lswscale" />
+            <lib path="-lavresample" />
         </libs>
         <includes>
             <include path="/usr/include/libavformat/" />
             <include path="/usr/include/libavcodec/" />
+            <include path="/usr/include/libavresample/" />
         </includes>
     </provide>
     <solution>

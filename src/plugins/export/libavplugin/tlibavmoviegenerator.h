@@ -58,8 +58,6 @@ class TUPITUBE_PLUGIN TLibavMovieGenerator : public TMovieGenerator
     private:
         struct Private;
         Private *const k;
-
-        QString errorDetail;
 };
 
 #endif

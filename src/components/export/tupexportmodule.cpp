@@ -54,9 +54,9 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
     if (output == TupExportWidget::Animation) {
         setTag("ANIMATION");
     } else if (output == TupExportWidget::ImagesArray) {
-               setTag("IMAGES_ARRAY");
+        setTag("IMAGES_ARRAY");
     } else if (output == TupExportWidget::AnimatedImage) {
-               setTag("ANIMATED_IMAGE");
+        setTag("ANIMATED_IMAGE");
     }
 
     bgTransparency = new QCheckBox(tr("Enable Background Transparency"));
@@ -453,6 +453,16 @@ void TupExportModule::exportIt()
     } else {
         QString msg = m_currentExporter->getExceptionMsg();
         QMessageBox msgBox;
+
+        QFile file(THEME_DIR + "config/ui.qss");
+        if (file.exists()) {
+            file.open(QFile::ReadOnly);
+            QString styleSheet = QLatin1String(file.readAll());
+            if (styleSheet.length() > 0)
+                msgBox.setStyleSheet(styleSheet);
+            file.close();
+        }
+
         msgBox.setWindowTitle(tr("Fatal Error: Can't export video"));
         msgBox.setIcon(QMessageBox::Critical);
         msgBox.setTextFormat(Qt::RichText);

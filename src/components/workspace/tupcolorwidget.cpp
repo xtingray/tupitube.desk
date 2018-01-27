@@ -35,12 +35,6 @@
 
 #include "tupcolorwidget.h"
 
-/**
- * This class defines the options panel in the bottom of the paint area.
- * Controls for Rotation, Antialising and OpenGL
- * @author David Cuadrado
-*/
-
 TupColorWidget::TupColorWidget(const QBrush color) : m_brush(color)
 {
     setFixedSize(20, 20);

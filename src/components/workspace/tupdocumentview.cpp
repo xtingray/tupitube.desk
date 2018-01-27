@@ -62,12 +62,6 @@
 #include "tuppapagayoimporter.h"
 #include "tuppapagayodialog.h"
 
-/**
- * This class defines all the environment for the Ilustration interface.
- * Here is where all the tools for Ilustration are defined.
- * @author David Cuadrado
-*/
-
 struct TupDocumentView::Private
 {
     QSize wsDimension;

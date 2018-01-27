@@ -72,8 +72,3 @@ void TMovieGenerator::reset()
 {
     fill(qRgba(255, 255, 255, 0));
 }
-
-void TMovieGenerator::saveMovie(const QString &)
-{
-}
-

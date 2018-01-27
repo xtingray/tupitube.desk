@@ -63,67 +63,67 @@ TupExportInterface::Formats LibavPlugin::availableFormats()
 TMovieGeneratorInterface::Format LibavPlugin::videoFormat(TupExportInterface::Format format)
 {
     switch (format) {
-            case TupExportInterface::MP4:
-                 {
-                   return TLibavMovieGenerator::MP4;
-                 }
-                 break;
-            case TupExportInterface::GIF:
-                 {
-                   return TLibavMovieGenerator::GIF;
-                 }
-                 break;
-            case TupExportInterface::AVI:
-                 {
-                   return TLibavMovieGenerator::AVI;
-                 }
-                 break;
+        case TupExportInterface::MP4:
+            {
+                return TLibavMovieGenerator::MP4;
+            }
+        break;
+        case TupExportInterface::GIF:
+            {
+                return TLibavMovieGenerator::GIF;
+            }
+        break;
+        case TupExportInterface::AVI:
+            {
+                return TLibavMovieGenerator::AVI;
+            }
+        break;
 
-            /* SQA: MPEG codec was removed because it crashes. Check the issue
-            case TupExportInterface::MPEG:
-                 {
-                   return TLibavMovieGenerator::MPEG;
-                 }
-                 break;
-            */
+        /* SQA: MPEG codec was removed because it crashes. Check the issue
+        case TupExportInterface::MPEG:
+            {
+                return TLibavMovieGenerator::MPEG;
+            }
+        break;
+        */
 
-            case TupExportInterface::MOV:
-                 {
-                   return TLibavMovieGenerator::MOV;
-                 }
-                 break;
-            case TupExportInterface::WEBM:
-                 {
-                   return TLibavMovieGenerator::WEBM;
-                 }
-                 break;
+        case TupExportInterface::MOV:
+            {
+                return TLibavMovieGenerator::MOV;
+            }
+        break;
+        case TupExportInterface::WEBM:
+            {
+                return TLibavMovieGenerator::WEBM;
+            }
+        break;
 
-            /* SQA: Obsolete formats
-            case TupExportInterface::SWF:
-                 {
-                   return TLibavMovieGenerator::SWF;
-                 }
-                 break;
-            case TupExportInterface::ASF:
-                 {
-                   return TLibavMovieGenerator::ASF;
-                 }
-                 break;
-            */
+        /* SQA: Obsolete formats
+        case TupExportInterface::SWF:
+            {
+                return TLibavMovieGenerator::SWF;
+            }
+        break;
+        case TupExportInterface::ASF:
+            {
+                return TLibavMovieGenerator::ASF;
+            }
+        break;
+        */
 
-            case TupExportInterface::PNG:
-            case TupExportInterface::JPEG:
-            case TupExportInterface::XPM:
-            // case TupExportInterface::SMIL:
-            case TupExportInterface::NONE:
-                 {
-                   return TLibavMovieGenerator::NONE;
-                 }
-            default:
-                 {
-                   return TLibavMovieGenerator::NONE;
-                 }
-                 break;
+        case TupExportInterface::PNG:
+        case TupExportInterface::JPEG:
+        case TupExportInterface::XPM:
+        // case TupExportInterface::SMIL:
+        case TupExportInterface::NONE:
+            {
+                return TLibavMovieGenerator::NONE;
+            }
+        default:
+            {
+                return TLibavMovieGenerator::NONE;
+            }
+        break;
     }
 
     return TLibavMovieGenerator::NONE;
@@ -133,7 +133,7 @@ bool LibavPlugin::exportToFormat(const QColor color, const QString &filePath, co
 {
     qreal duration = 0;
     foreach (TupScene *scene, scenes)
-             duration += (qreal) scene->framesCount() / (qreal) fps;
+        duration += (qreal) scene->framesCount() / (qreal) fps;
 
     TLibavMovieGenerator *generator = 0;
     TMovieGeneratorInterface::Format format = videoFormat(fmt);
@@ -141,36 +141,39 @@ bool LibavPlugin::exportToFormat(const QColor color, const QString &filePath, co
     if (format == TLibavMovieGenerator::NONE)
         return false;
 
+    // SQA: Get sound files from library and pass them as QList to TLibavMovieGenerator 
+
     generator = new TLibavMovieGenerator(format, size, fps, duration);
 
     TupAnimationRenderer renderer(color, library);
     {
-         if (!generator->validMovieHeader()) {
-             errorMsg = generator->getErrorMsg();
-             #ifdef TUP_DEBUG
-                 QString msg = "LibavPlugin::exportToFormat() - [ Fatal Error ] - Can't create video -> " + filePath;
-                 #ifdef Q_OS_WIN
-                     qDebug() << msg;
-                 #else
-                     tError() << msg;
-                 #endif
-             #endif
-             delete generator;
-             return false;
-         }
+        if (!generator->validMovieHeader()) {
+            errorMsg = generator->getErrorMsg();
+            #ifdef TUP_DEBUG
+                QString msg = "LibavPlugin::exportToFormat() - [ Fatal Error ] - Can't create video -> " + filePath;
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError() << msg;
+                #endif
+            #endif
+            delete generator;
 
-         QPainter painter(generator);
-         painter.setRenderHint(QPainter::Antialiasing, true);
+            return false;
+        }
 
-         foreach (TupScene *scene, scenes) {
-             renderer.setScene(scene, size);
+        QPainter painter(generator);
+        painter.setRenderHint(QPainter::Antialiasing, true);
 
-             while (renderer.nextPhotogram()) {
-                 renderer.render(&painter);
-                 generator->nextFrame();
-                 generator->reset();
-             }
-         }
+        foreach (TupScene *scene, scenes) {
+            renderer.setScene(scene, size);
+
+            while (renderer.nextPhotogram()) {
+                renderer.render(&painter);
+                generator->nextFrame();
+                generator->reset();
+            }
+        }
     }
 
     generator->saveMovie(filePath);

@@ -42,12 +42,6 @@
 #include <QPushButton>
 #include <QColorDialog>
 
-/**
- * This class handles the preferences dialog for the paint area settings.
- * Here is where the paint area parameters are set.
- * @author David Cuadrado
-*/
-
 struct TupPaintAreaPreferences::Private
 {
     QColor gridColor; 

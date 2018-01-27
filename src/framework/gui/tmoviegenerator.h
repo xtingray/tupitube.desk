@@ -39,6 +39,8 @@
 #include "tglobal.h"
 #include "tmoviegeneratorinterface.h"
 
+#include <QImage>
+
 class T_GUI_EXPORT TMovieGenerator : public QImage, public TMovieGeneratorInterface
 {
     public:
@@ -48,7 +50,6 @@ class T_GUI_EXPORT TMovieGenerator : public QImage, public TMovieGeneratorInterf
         void reset();
         virtual bool validMovieHeader() = 0;
         virtual QString getErrorMsg() const = 0;
-        virtual void saveMovie(const QString &filename);
 
     protected:
         virtual bool beginVideo();
