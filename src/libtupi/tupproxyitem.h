@@ -42,10 +42,6 @@
 #include <QGraphicsItemGroup>
 #include <QPainter>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupProxyItem : public QGraphicsItem
 {
     public:

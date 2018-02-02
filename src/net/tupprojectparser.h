@@ -36,10 +36,6 @@
 #ifndef TUPPROJECTPARSER_H
 #define TUPPROJECTPARSER_H
 
-/**
- * @author Jorge Cuadrado
-*/
-
 #include "tglobal.h"
 #include "tupxmlparserbase.h"
 

@@ -41,10 +41,6 @@
 
 #include <QFileInfo>
 
-/**
-    @author David Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupSoundLayer : public TupLayer
 {
     public:

@@ -41,10 +41,6 @@
 
 #include <QGraphicsEllipseItem>
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupEllipseItem: public TupAbstractSerializable, public QGraphicsEllipseItem
 {
     public:

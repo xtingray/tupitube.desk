@@ -459,12 +459,18 @@ void TupFrame::addItem(const QString &id, QGraphicsItem *item)
     k->objectIndexes.append(id);
 }
 
-void TupFrame::removeImageItemFromFrame(const QString &id)
+bool TupFrame::removeImageItemFromFrame(const QString &id)
 {
+    bool found = false;
+
     for (int i=0; i<k->objectIndexes.size(); i++) {
-        if (k->objectIndexes[i].compare(id) == 0)
+        if (k->objectIndexes[i].compare(id) == 0) {
             removeGraphicAt(i);
+            found = true;
+        }
     }
+
+    return found;
 }
 
 void TupFrame::updateIdFromFrame(const QString &oldId, const QString &newId)
@@ -503,12 +509,18 @@ void TupFrame::addSvgItem(const QString &id, TupSvgItem *item)
     k->svg.append(item);
 }
 
-void TupFrame::removeSvgItemFromFrame(const QString &id)
+bool TupFrame::removeSvgItemFromFrame(const QString &id)
 {
+    bool found = false;
+
     for (int i = 0; i < k->svgIndexes.size(); ++i) {
-         if (k->svgIndexes.at(i).compare(id) == 0)
+         if (k->svgIndexes.at(i).compare(id) == 0) {
              removeSvgAt(i); 
+             found = true;
+         }
     }
+
+    return found;
 }
 
 void TupFrame::updateSvgIdFromFrame(const QString &oldId, const QString &newId)

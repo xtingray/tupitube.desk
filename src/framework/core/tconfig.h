@@ -49,11 +49,6 @@
 
 class TConfig;
 
-/**
- * @author David Cuadrado
- * this is a dom config handler
-*/
-
 class T_CORE_EXPORT TConfig : public QObject
 {
     Q_OBJECT

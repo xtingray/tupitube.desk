@@ -44,10 +44,6 @@
 
 class TupProject;
 
-/**
- * @author David Cuadrado
-*/ 
-
 class TUPITUBE_EXPORT TupLibrary : public TupLibraryFolder
 {
     Q_OBJECT;

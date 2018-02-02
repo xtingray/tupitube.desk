@@ -42,10 +42,6 @@
 #include <QStackedWidget>
 #include <QHash>
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TStackedMainWindow : public TMainWindow
 {
     Q_OBJECT

@@ -52,10 +52,6 @@
 #include <QLineEdit>
 #include <QMap>
 
-/**
- * @author David Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupLibraryDialog : public QDialog
 {
     Q_OBJECT

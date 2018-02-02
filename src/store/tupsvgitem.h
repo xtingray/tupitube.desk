@@ -49,10 +49,6 @@
 
 class TupFrame;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupSvgItem : public QGraphicsSvgItem, public TupAbstractSerializable
 {
     public:

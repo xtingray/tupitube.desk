@@ -46,10 +46,6 @@
 #include <QGraphicsView>
 #include <QApplication>
 
-/**
- * @author Jorge Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupLineGuide : public QGraphicsItem
 {
     public:

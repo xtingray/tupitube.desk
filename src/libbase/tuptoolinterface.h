@@ -55,10 +55,6 @@
 
 class TupScene;
 
-/**
- * @author David Cuadrado 
-*/
-
 class TUPITUBE_EXPORT TupToolInterface
 {
     public:

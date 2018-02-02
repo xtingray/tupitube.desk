@@ -54,10 +54,6 @@
 #include <QBrush>
 #include <cmath>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT SchemeTool : public TupToolPlugin
 {
     Q_OBJECT

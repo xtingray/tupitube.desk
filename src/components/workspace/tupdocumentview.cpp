@@ -128,6 +128,7 @@ struct TupDocumentView::Private
     // Note: Enable it only for debugging
     // TAction *schemeAction;
     TAction *polyLineAction;
+    TAction *textAction;
     TAction *selectionAction;
     TAction *nodesAction;
     TAction *borderFillAction;
@@ -594,13 +595,8 @@ void TupDocumentView::loadPlugins()
                                    if (toolName.compare(tr("Ellipse")) == 0)
                                        brushTools[1] = action;
 
-                                   // SQA: This code has been disabled temporarily
-                                   /*
-                                   if (toolName.compare(tr("Text")) == 0) {
-                                       action->setDisabled(true);
-                                       brushTools[7] = action;
-                                   }
-                                   */
+                                   if (toolName.compare(tr("Text")) == 0)
+                                       k->textAction = action;
                                  }
                                  break;
                               case TupToolInterface::Tweener:
@@ -719,6 +715,7 @@ void TupDocumentView::loadPlugins()
     // SQA: Enable it only for debugging goals
     // k->toolbar->addAction(k->schemeAction);
     k->toolbar->addAction(k->polyLineAction);
+    k->toolbar->addAction(k->textAction);
     k->toolbar->addSeparator();
     k->toolbar->addAction(k->shapesMenu->menuAction());
     k->toolbar->addSeparator();

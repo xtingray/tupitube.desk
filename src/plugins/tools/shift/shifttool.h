@@ -52,10 +52,6 @@
 
 // class TupGraphicsScene;
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_PLUGIN ShiftTool: public TupToolPlugin
 {
     Q_OBJECT

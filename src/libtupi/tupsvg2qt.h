@@ -45,10 +45,6 @@
 #include <QXmlAttributes>
 #include <QBrush>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupSvg2Qt
 {
     private:

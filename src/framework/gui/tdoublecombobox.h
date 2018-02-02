@@ -43,10 +43,6 @@
 #include <QLineEdit>
 #include <cmath>
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TDoubleComboBox : public QComboBox
 {
     Q_OBJECT

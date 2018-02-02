@@ -42,10 +42,6 @@
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupPixmapItem : public QGraphicsPixmapItem, public TupAbstractSerializable
 {
     public:

@@ -43,10 +43,6 @@
 #include <QTcpSocket>
 #include <QDomDocument>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupSocketBase : public QTcpSocket
 {
     Q_OBJECT

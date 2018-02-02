@@ -39,10 +39,6 @@
 #include "tglobal.h"
 #include "tupxmlparserbase.h"
 
-/**
- * @author David Cuadrado 
-*/
-
 class TUPITUBE_EXPORT TupAckParser : public TupXmlParserBase
 {
     public:

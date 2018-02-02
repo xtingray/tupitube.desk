@@ -60,10 +60,6 @@
 
 class TupPathItem;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_PLUGIN EraserTool : public TupToolPlugin
 {
     Q_OBJECT

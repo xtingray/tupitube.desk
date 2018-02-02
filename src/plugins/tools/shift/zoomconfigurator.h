@@ -49,10 +49,6 @@
 #include <QTableWidgetItem>
 #include <QTextEdit>
 
-/**
- * @author Jorge Cuadrado
-**/
-
 class TUPITUBE_PLUGIN ZoomConfigurator : public QWidget
 {
     Q_OBJECT

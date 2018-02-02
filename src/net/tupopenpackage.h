@@ -39,10 +39,6 @@
 #include "tglobal.h"
 #include <QDomDocument>
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupOpenPackage: public QDomDocument
 {
     public:

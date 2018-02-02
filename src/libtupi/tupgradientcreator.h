@@ -51,67 +51,17 @@
 
 class SpinControl;
 
- /**
-  * 
-  * @if english
-  * @short translate me
-  * @elseif spanish
-  * @short Esta clase provee de una simple interfaz grafica para crear gradientes.
-  * Consta de un visalizador de gradientes,  un configurador de "stops", dos selector de tipos de gradientes (tipo y "spread").
-  * 
-  * @endif
-  *
-  * @author Jorge Cuadrado
-  */
-
 class TUPITUBE_EXPORT TupGradientCreator : public QFrame
 {
     Q_OBJECT
 
     public:
-        /**
-         * @if english
-         * Translate
-         * @elseif spanish
-         * Constructor por defecto.
-         * @endif
-         */
         TupGradientCreator(QWidget *parent = 0);
-        /**
-         * Destructor
-         */
         ~TupGradientCreator();
         
-        /**
-         * @if english
-         * Translate
-         * @elseif spanish
-         * Cambia el color del "stop" actual.
-         * @endif
-         */
         void setCurrentColor(const QColor &);
-        /**
-         * @if english
-         * Translate
-         * @elseif spanish
-         * Devuelve el tipo del gradiente actual.
-         * @endif
-         * @see QGradient
-         */
         int gradientType();
-        /**
-         * @if english
-         * Translate
-         * @elseif spanish
-         * Devuelve un QBrush con el gradiente acutal.
-         * @endif
-         * @see QBrush
-         */
         QBrush currentGradient();
-        
-        /**
-         * Devuelve el tamano ideal
-         */
         virtual QSize sizeHint () const;
 
     private:
@@ -128,40 +78,9 @@ class TUPITUBE_EXPORT TupGradientCreator : public QFrame
     */
         
     public slots:
-        /**
-         * @if english
-         * Translate
-         * @elseif spanish
-         * Cambia el tipo del gradiente actual.
-         * @endif
-         * @see QGradient
-         */
         void changeType(int type);
-        /**
-         * @if english
-         * Translate
-         * @elseif spanish
-         * Cambia el "spread" del gradiente actual.
-         * @endif
-         * @see QGradient
-         */
         void changeSpread(int spread);
-        /**
-         * @if english
-         * Translate
-         * @elseif spanish
-         * Cambia los "GradientStops" del gradiente actual.
-         * @endif
-         * @see QGradientStops
-         */
         void changeGradientStops( const QGradientStops& );
-        /**
-         * @if english
-         * Translate
-         * @elseif spanish
-         * Cambia el gradiente actual.
-         * @endif
-         */
         void setGradient(const QBrush & gradient);
         
     private slots:
@@ -171,10 +90,6 @@ class TUPITUBE_EXPORT TupGradientCreator : public QFrame
         void gradientChanged(const QBrush &);
         void controlArrowAdded();
 };
-
-/**
- * @author Jorge Cuadrado
- */
 
 class TUPITUBE_EXPORT SpinControl: public QGroupBox
 {

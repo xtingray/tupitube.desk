@@ -79,10 +79,6 @@ class TupPaintAreaCommand;
 class TupPaintAreaEvent;
 class TupProjectResponse;
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
 {
     Q_OBJECT

@@ -48,10 +48,6 @@ class QGraphicsSceneMouseEvent;
 class QMouseEvent;
 class QTabletEvent;
 
-/**
- * @author David Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupInputDeviceInformation : public QObject
 {
     public:

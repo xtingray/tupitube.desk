@@ -41,9 +41,6 @@
 
 #include <QWidget>
 
-/**
- * @author David Cuadrado
-*/
 class TUPITUBE_EXPORT TupPaintAreaPreferences : public QWidget
 {
     Q_OBJECT

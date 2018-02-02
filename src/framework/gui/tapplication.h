@@ -66,18 +66,6 @@ class QPalette;
 
 typedef QMap<QString, QString> ParseArgs;
 
-/**
- * @if english
- * This class manages the main settings for the others classes and modules of the application
- * @endif
- * @if spanish
- * Esta clase sirve para controlar y proveer informacion a las demas clases y modulos de la aplicacion
- * @endif
- * 
- * @author David Cuadrado
- * @TODO
- * @li We need have a cache directory (like /tmp in un*x)
-*/
 class T_GUI_EXPORT TApplication : public QApplication
 {
     Q_OBJECT

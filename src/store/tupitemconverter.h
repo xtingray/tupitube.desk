@@ -47,10 +47,6 @@ class TupEllipseItem;
 class TupRectItem;
 class TupLineItem;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupItemConverter
 {
     private:

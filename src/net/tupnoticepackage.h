@@ -40,10 +40,6 @@
 
 #include <QDomDocument>
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupNoticePackage : public QDomDocument
 {
     public:

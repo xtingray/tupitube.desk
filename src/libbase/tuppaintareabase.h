@@ -58,11 +58,6 @@ class TupInputDeviceInformation;
 class TupProject;
 class TupPaintAreaRotator;
 
-/**
- * This class provides an area to draw with some kind of brushes
- * @author Jorge Cuadrado - David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupPaintAreaBase : public QGraphicsView
 {
     Q_OBJECT

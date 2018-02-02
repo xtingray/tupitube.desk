@@ -60,11 +60,6 @@ class TButtonBar;
 class ToolView;
 class TMainWindowAbstractSettings;
 
-/**
- * iDeality Main Window
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TMainWindow : public QMainWindow
 {
     Q_OBJECT

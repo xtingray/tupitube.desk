@@ -43,10 +43,6 @@
 
 class TupPaintAreaBase;
 
-/**
-    @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupPaintAreaRotator : public QObject
 {
     Q_OBJECT

@@ -46,10 +46,6 @@
 
 class TupLibraryObject;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSerializable
 {
     public:

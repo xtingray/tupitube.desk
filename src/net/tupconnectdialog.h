@@ -53,10 +53,6 @@
 
 // class TupNetProjectManagerParams;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupConnectDialog : public QDialog
 {
     Q_OBJECT

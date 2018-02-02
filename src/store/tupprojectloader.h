@@ -43,10 +43,6 @@
 
 class TupProject;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupProjectLoader
 {
     public:

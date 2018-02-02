@@ -46,10 +46,6 @@
 #include <QHBoxLayout>
 #include <QTime>
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupNotice: public QWidget
 {
     Q_OBJECT

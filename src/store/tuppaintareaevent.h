@@ -39,10 +39,6 @@
 #include "tglobal.h"
 #include "tupprojectrequest.h"
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupPaintAreaEvent
 {
     public:

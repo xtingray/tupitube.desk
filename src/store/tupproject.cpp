@@ -624,10 +624,15 @@ bool TupProject::removeSymbol(const QString &name, TupLibraryObject::Type type)
 
              frame = bg->dynamicFrame();
              if (frame) {
+                 bool found = false;
+
                  if (type != TupLibraryObject::Svg)
-                     frame->removeImageItemFromFrame(name);
+                     found = frame->removeImageItemFromFrame(name);
                  else
-                     frame->removeSvgItemFromFrame(name);
+                     found = frame->removeSvgItemFromFrame(name);
+
+                 if (found)
+                     bg->scheduleRender(true);
              }
          }
 
@@ -713,10 +718,12 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
         } else if (spaceMode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
             TupBackground *bg = scene->background();
 
-            if (bg)
+            if (bg) {
                 frame = bg->dynamicFrame();
-            else
+                bg->scheduleRender(true);
+            } else {
                 return false;
+            }
         } else {
             #ifdef TUP_DEBUG
                 QString msg = "TupProject::insertSymbolIntoFrame() - Fatal Error: invalid spaceMode!";
@@ -893,10 +900,15 @@ bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::Ty
 
              frame = bg->dynamicFrame();
              if (frame) {
+                 bool found = false;
+
                  if (type == TupLibraryObject::Svg)
-                     frame->removeSvgItemFromFrame(name);
+                     found = frame->removeSvgItemFromFrame(name);
                  else
-                     frame->removeImageItemFromFrame(name);
+                     found = frame->removeImageItemFromFrame(name);
+
+                 if (found)
+                     bg->scheduleRender(true);
              }
          }
     }

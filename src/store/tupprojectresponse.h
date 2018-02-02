@@ -41,11 +41,6 @@
 #include "tupscene.h"
 #include "tuplibraryobject.h"
 
-/**
- * Response to request (aka TupProjectRequest)
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupProjectResponse
 {
     public:

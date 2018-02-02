@@ -42,10 +42,6 @@
 #include <QPainter>
 #include <QMouseEvent>
 
-/**
- * @author David Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupTimeLineRuler : public QHeaderView
 {
     Q_OBJECT

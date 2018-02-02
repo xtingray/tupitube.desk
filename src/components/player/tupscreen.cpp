@@ -94,7 +94,7 @@ TupScreen::TupScreen(TupProject *project, const QSize viewSize, bool isScaled, Q
     k->currentFramePosition = 0;
 
     k->isPlaying = false;
-    k->playFlag = true; 
+    k->playFlag = true;
     k->playBackFlag = false;
     k->mute = false;
 
@@ -142,9 +142,7 @@ TupScreen::~TupScreen()
     delete k;
 }
 
-/**
-    Clean a photogram array if the scene has changed
-**/
+// Clean a photogram array if the scene has changed
 
 void TupScreen::resetPhotograms(int sceneIndex)
 {
@@ -180,6 +178,7 @@ void TupScreen::initPhotogramsArray()
 
     k->renderControl.clear();
     k->animationList.clear();
+
     for (int i=0; i < k->project->scenesCount(); i++) {
          k->renderControl.insert(i, false);
          k->animationList.insert(i, k->newList);
@@ -745,9 +744,7 @@ TupScene *TupScreen::currentScene() const
     return 0;
 }
 
-/**
-    Update and paint the first image of the current scene
-**/
+// Update and paint the first image of the current scene
 
 void TupScreen::updateAnimationArea()
 {
@@ -776,9 +773,7 @@ void TupScreen::updateAnimationArea()
     }
 }
 
-/**
-    Prepare the first photogram of the current scene to be painted
-**/
+// Prepare the first photogram of the current scene to be painted
 
 void TupScreen::updateFirstFrame()
 {
@@ -919,7 +914,8 @@ void TupScreen::playSoundAt(int frame)
                 k->soundPlayer.at(i)->play();
             } else { 
                 #ifdef TUP_DEBUG
-                    tError() << "TupScreen::playSoundAt() -  Fatal Error: Not sound file was found at -> " << soundRecord.second;
+                    tError() << "TupScreen::playSoundAt() -  Fatal Error: "
+                                " Not sound file was found at -> " << soundRecord.second;
                 #endif
             }
         }

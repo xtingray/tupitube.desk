@@ -39,10 +39,6 @@
 #include "tglobal.h"
 #include <QWidget> 
 
-/**
- * @author Jorge Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupFormItem : public QWidget
 {
     Q_OBJECT

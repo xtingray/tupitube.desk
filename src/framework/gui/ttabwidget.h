@@ -42,10 +42,6 @@
 #include <QWheelEvent>
 #include <QTabBar>
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TTabWidget : public QTabWidget
 {
     Q_OBJECT

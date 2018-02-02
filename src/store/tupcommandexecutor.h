@@ -50,10 +50,6 @@ class TupLayerResponse;
 class TupProjectResponse;
 class TupLibraryResponse;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupCommandExecutor : public QObject
 {
     Q_OBJECT

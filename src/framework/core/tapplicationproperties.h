@@ -43,10 +43,6 @@
 #include <QLocale>
 #include <QApplication>
 
-/**
- * @author David Cuadrado
-*/
-
 class T_CORE_EXPORT TApplicationProperties
 {
     protected:

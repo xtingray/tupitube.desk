@@ -45,9 +45,6 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-/**
- * @author David Cuadrado
-*/
 class T_GUI_EXPORT TItemSelector : public QWidget
 {
     Q_OBJECT

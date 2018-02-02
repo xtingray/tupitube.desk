@@ -49,10 +49,6 @@
 
 // class TupNetProjectManagerParams;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupNetFileManager : public TupFileManager 
 {
     public:

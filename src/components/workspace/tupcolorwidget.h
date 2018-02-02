@@ -44,12 +44,6 @@
 #include <QWidget>
 #include <QPainter>
 
-/**
- * This class defines the options panel in the bottom of the paint area.
- * Controls for Rotation, Antialising and OpenGL
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupColorWidget : public QWidget
 {
     Q_OBJECT

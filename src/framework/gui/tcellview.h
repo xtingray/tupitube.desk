@@ -50,11 +50,6 @@
 
 class TCellViewItemDelegate;
 
-/**
- * @file tcellview.h
- * @brief Include this file if you need the class TCellView, TCellViewItem, TCellViewItemDelegate or TCellViewModel
- */
-
 class T_GUI_EXPORT TCellViewItem : public QTableWidgetItem
 {
     public:
@@ -65,9 +60,6 @@ class T_GUI_EXPORT TCellViewItem : public QTableWidgetItem
         QBrush background() const;
 };
 
-/**
- * @author David Cuadrado
- */
 class T_GUI_EXPORT TCellView : public QTableWidget
 {
     Q_OBJECT

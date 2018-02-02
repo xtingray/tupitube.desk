@@ -44,12 +44,7 @@
 #include <QBrush>
 #include <QGraphicsItem>
 
-// class QGraphicsItem;
 class TupLibrary;
-
-/**
- * @author David Cuadrado
-*/
 
 class TUPITUBE_EXPORT TupItemFactory : public TXmlParserBase
 {
@@ -65,15 +60,9 @@ class TUPITUBE_EXPORT TupItemFactory : public TXmlParserBase
     	
     	void setLibrary(const TupLibrary *library);
     	
-    	/**
-    	 * Analiza etiquetas de apertura del documento XML
-    	 */
     	bool startTag(const QString& qname, const QXmlAttributes& atts);
     	void text(const QString &ch);
     	
-    	/**
-    	 * Analiza etiquetas de cierre del documento XML
-    	 */
     	bool endTag(const QString& qname);
     	
     	QGraphicsItem *create(const QString &xml);

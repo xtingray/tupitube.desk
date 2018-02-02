@@ -47,10 +47,6 @@
 class TupProjectRequest;
 class TupProjectResponse;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupRequestBuilder
 {
     protected:

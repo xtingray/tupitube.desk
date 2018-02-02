@@ -45,10 +45,6 @@
 #include <QDomElement>
 #include <QColor>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT SmilePlugin : public TupExportPluginObject
 {
     Q_OBJECT

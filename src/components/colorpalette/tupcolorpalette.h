@@ -61,10 +61,6 @@
 #include <QMenu>
 #include <QTabWidget>
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupColorPalette : public TupModuleWidgetBase
 {
     Q_OBJECT

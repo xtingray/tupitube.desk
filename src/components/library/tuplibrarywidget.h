@@ -85,10 +85,6 @@
 // class TupLibrary;
 typedef QMap<QString, TupLibraryObject *> LibraryObjects;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
 {
     Q_OBJECT

@@ -43,14 +43,6 @@
 #include <QHeaderView>
 #include <QResizeEvent>
 
-/**
- * @if spanish
- *     La clase TWidgetListView provee una lista de widgets basada en items
- *     @brief Provee una lista de widgets
- * @endif
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TWidgetListView : public QTableWidget
 {
     Q_OBJECT

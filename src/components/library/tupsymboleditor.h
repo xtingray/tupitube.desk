@@ -50,10 +50,6 @@
 
 class TupLibraryObject;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupSymbolEditor : public QMainWindow
 {
     Q_OBJECT

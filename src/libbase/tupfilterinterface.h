@@ -54,10 +54,6 @@
 
 class QKeySequence;
 
-/**
- * @author David Cuadrado
-**/
-
 class TUPITUBE_EXPORT AFilterInterface
 {
     public:

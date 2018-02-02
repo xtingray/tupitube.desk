@@ -48,11 +48,6 @@
 
 class QGraphicsItem;
 
-/**
- * This class render a QGraphicsItem 
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupItemPreview : public QWidget
 {
     Q_OBJECT

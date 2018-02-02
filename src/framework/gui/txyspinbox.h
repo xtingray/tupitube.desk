@@ -47,10 +47,6 @@
 #include <QHBoxLayout>
 #include <QSizePolicy>
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TXYSpinBox : public QGroupBox
 {
     Q_OBJECT

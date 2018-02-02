@@ -67,11 +67,6 @@ typedef QList<TupLayer *> Layers;
 typedef QList<TupSoundLayer *> SoundLayers;
 typedef QList<TupLipSync *> Mouths;
 
-/**
- * @brief This class represents the scene data structure
- * @author David Cuadrado 
-*/
-
 class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
 {
     Q_OBJECT

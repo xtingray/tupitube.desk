@@ -51,10 +51,6 @@
 #include <QLabel>
 #include <QTreeWidgetItem>
 
-/**
- * @author Jorge Cuadrado
-*/
-
 // class QTreeWidgetItem;
 
 class TUPITUBE_EXPORT TupListProjectDialog : public QDialog

@@ -42,10 +42,6 @@
 #include "tuptimelinetable.h"
 #include "tuprequestbuilder.h"
 
-/**
- * @author David Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
 {
     Q_OBJECT

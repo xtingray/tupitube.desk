@@ -45,10 +45,6 @@
 #include <QTreeWidgetItem>
 #include <QHeaderView>
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupScenesList : public TreeListWidget
 {
     Q_OBJECT

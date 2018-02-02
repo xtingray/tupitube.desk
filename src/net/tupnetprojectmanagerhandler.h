@@ -83,10 +83,6 @@ class TupNetSocket;
 class TupNetProjectManagerParams;
 */
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupNetProjectManagerHandler : public TupAbstractProjectHandler
 {
     Q_OBJECT

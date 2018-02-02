@@ -43,10 +43,6 @@
 #include "qplugin.h"
 #include "tglobal.h"
 
-/**
- * @author David Cuadrado
-*/
-
 class T_CORE_EXPORT TAudioEngineIface
 {
     public:

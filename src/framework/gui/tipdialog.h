@@ -59,11 +59,6 @@
 class QCheckBox;
 class QTextBrowser;
 
-/**
- * @class TipDialog
- * @author David Cuadrado
- */
-
 class T_GUI_EXPORT TipDialog : public QDialog
 {
     Q_OBJECT

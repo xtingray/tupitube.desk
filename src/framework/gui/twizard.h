@@ -50,10 +50,6 @@
 
 class TWizardPage;
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TWizard : public QDialog
 {
     Q_OBJECT

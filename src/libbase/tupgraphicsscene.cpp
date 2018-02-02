@@ -182,7 +182,7 @@ void TupGraphicsScene::setCurrentFrame(int layer, int frame)
     k->framePosition.frame = frame;
 
     foreach (QGraphicsView *view, views())
-             view->setDragMode(QGraphicsView::NoDrag);
+        view->setDragMode(QGraphicsView::NoDrag);
 }
 
 void TupGraphicsScene::drawCurrentPhotogram()

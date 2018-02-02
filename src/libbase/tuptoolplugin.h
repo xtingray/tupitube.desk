@@ -52,10 +52,6 @@ class QGraphicsView;
 class TupInputDeviceInformation;
 class TupBrushManager;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
 {
     Q_OBJECT

@@ -49,10 +49,6 @@
 #include <QMimeData>
 #include <QTextStream>
 
-/**
- * @author Jorge Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupCellsColor : public TCellView
 {
     Q_OBJECT

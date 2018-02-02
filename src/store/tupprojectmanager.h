@@ -53,11 +53,6 @@ class QUndoStack;
 class TupCommandExecutor;
 class TupProjectResponse;
 
-/**
- * Events handler class for the project
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupProjectManager : public QObject
 {
     Q_OBJECT

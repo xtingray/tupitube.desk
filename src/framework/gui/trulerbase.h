@@ -50,33 +50,11 @@
 
 class TRulerBase;
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class T_GUI_EXPORT TRulerBase : public QFrame
 {
     Q_OBJECT
     
     public:
-
-    /***
-         enum Unit {
-             SC_POINTS      = 0,
-             SC_PT          = 0,
-             SC_MILLIMETERS = 1,
-             SC_MM          = 1,
-             SC_INCHES      = 2,
-             SC_IN          = 2,
-             SC_PICAS       = 3,
-             SC_P           = 3,
-             SC_CENTIMETERS = 4,
-             SC_CM          = 4,
-             SC_CICERO      = 5,
-             SC_C           = 5
-         };
-    */
-        
         TRulerBase(Qt::Orientation orientation=Qt::Horizontal, QWidget *parent = 0);
         virtual ~TRulerBase();
         

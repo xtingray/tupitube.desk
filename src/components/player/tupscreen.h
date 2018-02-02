@@ -58,10 +58,6 @@
 #include <QMediaPlayer>
 #include <QUrl>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectResponseHandler
 {
     Q_OBJECT

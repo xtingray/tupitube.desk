@@ -51,11 +51,6 @@
 #include <QDomDocument>
 #include <QDir>
 
-/**
- * @author Jorge Cuadrado
- * 
-*/
-
 class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
 {
     Q_OBJECT

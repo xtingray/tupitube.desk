@@ -43,10 +43,6 @@
 #include <QButtonGroup>
 #include <QBoxLayout>
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TRadioButtonGroup : public QGroupBox
 {
     Q_OBJECT

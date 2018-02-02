@@ -59,10 +59,6 @@
 
 class TupProjectManagerParams;
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TupNewProject : public TabDialog
 {
     Q_OBJECT

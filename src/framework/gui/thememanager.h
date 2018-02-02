@@ -45,9 +45,6 @@
 
 // class ThemeDocument;
 
-/**
- * @author David Cuadrado
-*/
 class T_GUI_EXPORT ThemeManager : public QXmlDefaultHandler
 {
     public:

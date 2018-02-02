@@ -40,10 +40,6 @@
 #include <QAbstractButton>
 #include <QPainter>
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TFlatButton : public QAbstractButton
 {
     Q_OBJECT

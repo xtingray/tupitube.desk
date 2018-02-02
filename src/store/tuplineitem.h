@@ -41,10 +41,6 @@
 
 #include <QGraphicsLineItem>
 
-/**
-    @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupLineItem : public QGraphicsLineItem, public TupAbstractSerializable
 {
     public:

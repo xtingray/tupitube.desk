@@ -52,10 +52,6 @@
 #include <QPaintDevice>
 #include <QGraphicsView>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
 {
     Q_OBJECT

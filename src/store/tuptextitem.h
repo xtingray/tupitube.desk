@@ -44,10 +44,6 @@
 #include <QFocusEvent>
 #include <QTimer>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupTextItem : public QGraphicsTextItem, public TupAbstractSerializable
 {
     Q_OBJECT

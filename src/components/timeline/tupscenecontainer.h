@@ -43,10 +43,6 @@
 #include <QWheelEvent>
 #include <QTabBar>
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TupSceneContainer : public QTabWidget
 {
     Q_OBJECT

@@ -56,10 +56,6 @@ class ToolView;
 class QAction;
 class QMenu;
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TButtonBar : public QToolBar
 {
     Q_OBJECT

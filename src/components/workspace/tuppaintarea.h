@@ -80,11 +80,6 @@ class TupInputDeviceInformation;
 class TupProject;
 class TupPaintAreaRotator;
 
-/**
- * This class provides an area to make different kind of traces
- * @author Jorge Cuadrado - David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstractProjectResponseHandler
 {
     Q_OBJECT

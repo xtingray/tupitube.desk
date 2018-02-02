@@ -57,10 +57,6 @@ class QStackedWidget;
 class QListWidget;
 class QListWidgetItem;
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TConfigurationDialog : public QDialog
 {
     Q_OBJECT

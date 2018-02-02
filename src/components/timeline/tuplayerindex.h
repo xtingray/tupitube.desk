@@ -55,10 +55,6 @@
 #include <QPainter>
 #include <QItemDelegate>
 
-/**
- * @author David Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupLayerIndex : public QTableWidget
 {
     Q_OBJECT

@@ -42,10 +42,6 @@
 #include "tuppluginmanager.h"
 #include "tosd.h"
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupExportWidget : public TupExportWizard
 {
     Q_OBJECT

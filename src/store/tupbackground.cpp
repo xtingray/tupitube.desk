@@ -282,6 +282,11 @@ bool TupBackground::rasterRenderIsPending()
     return noRender;
 }
 
+void TupBackground::scheduleRender(bool status)
+{
+    noRender = status;
+}
+
 void TupBackground::setDynamicRaster(QImage bg)
 {
     raster = bg;

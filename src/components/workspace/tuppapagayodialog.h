@@ -48,10 +48,6 @@
 #include <QPushButton>
 #include <QFileDialog>
 
-/**
- * @author David Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupPapagayoDialog : public QDialog
 {
     Q_OBJECT

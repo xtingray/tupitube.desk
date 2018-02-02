@@ -60,10 +60,6 @@ class TupProjectResponse;
 class QCheckBox;
 class TupCameraStatus;
 
-/**
- * @author David Cuadrado 
-*/
-
 class TUPITUBE_EXPORT TupCameraWidget : public QFrame
 {
     Q_OBJECT

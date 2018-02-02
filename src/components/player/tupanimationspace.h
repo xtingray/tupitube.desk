@@ -45,10 +45,6 @@
 #include <QLinearGradient>
 #include <QBoxLayout>
 
-/**
- * @author David Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupAnimationspace : public QMainWindow
 {
     Q_OBJECT

@@ -47,9 +47,6 @@
 class QGraphicsItem;
 class TupItemTweener;
 
-/**
- * @author David Cuadrado
-*/
 class TUPITUBE_EXPORT TupGraphicObject : public QObject, public TupAbstractSerializable
 {
     public:

@@ -50,11 +50,6 @@
 #include <QStyleOptionButton>
 #include <QStylePainter>
 
-/**
- * A image pressable
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TImageButton : public QPushButton
 {
     Q_OBJECT

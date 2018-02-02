@@ -43,10 +43,6 @@
 #include <QColor>
 #include <QVector>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupTweenerStep : public TupAbstractSerializable
 {
     public:

@@ -46,11 +46,6 @@
 
 class QTabWidget;
 
-/**
- * A tabbed main window.
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TabbedMainWindow : public TMainWindow
 {
     Q_OBJECT

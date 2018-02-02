@@ -36,12 +36,6 @@
 #ifndef TUPSPLASH_H
 #define TUPSPLASH_H
 
-/**
- * @author Fernando Roldan - David Cuadrado
- * @file splash.h
- * @brief Include this file if you need the class TupSplash
- */
-
 #include "tapplicationproperties.h"
 
 #ifdef TUP_DEBUG

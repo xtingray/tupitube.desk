@@ -50,10 +50,6 @@
 
 typedef QList<QPointF> Segment;
 
-/**
- * @author Jorge Cuadrado 
-*/
-
 class TUPITUBE_EXPORT StepsViewer : public QTableWidget
 {
     Q_OBJECT

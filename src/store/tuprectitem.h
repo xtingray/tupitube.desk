@@ -45,10 +45,6 @@
 #include <QBrush>
 #include <QGraphicsScene>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupRectItem : public QGraphicsRectItem, public TupAbstractSerializable
 {
     public:

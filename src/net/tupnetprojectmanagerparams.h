@@ -39,10 +39,6 @@
 #include "tglobal.h"
 #include "tupprojectmanagerparams.h"
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupNetProjectManagerParams : public TupProjectManagerParams
 {
     public:

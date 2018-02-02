@@ -55,10 +55,6 @@
 class TupItemResponse;
 class NodeManager;
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
 {
     Q_OBJECT

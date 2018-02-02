@@ -39,10 +39,6 @@
 #include "tupframe.h"
 #include "tglobal.h"
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupFrameGroup : public TupFrame
 {
     public:

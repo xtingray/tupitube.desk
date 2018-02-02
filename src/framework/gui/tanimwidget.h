@@ -36,11 +36,6 @@
 #ifndef TANIMWIDGET_H
 #define TANIMWIDGET_H
 
-/**
- * @file tanimwidget.h
- * @brief Include this file if you need the class TAnimWidget
- */
-
 // #include "tglobal.h"
 #include "tapplication.h"
 
@@ -54,67 +49,23 @@
 
 typedef QList<QPixmap> ListOfPixmaps;
 
-/**
- * @if english
- * @short The class TAnimWidget provides a widget containing a simple animation of moving text or image sequences  
- * @elseif spanish
- * @short La clase TAnimWidget provee de un widget que hace una simple animacion, de un texto o una secuencia de imagenes.
- * 
- * @Author David Cuadrado
- * @endif
- */
-
 class T_GUI_EXPORT TAnimWidget : public QWidget
 {
     public:
         enum Type { AnimText = 0, AnimPixmap };
 
-        /**
-          * Builds a TAnimWidget object with a background, an animated text and a parent widget
-          * @param px background
-          * @param text text to animate 
-          * @param parent 
-          */
         TAnimWidget(const QPixmap &px, const QString &text, QWidget *parent = 0);
-
-        /**
-          * Builds a TAnimWidget object with a background, an image list and a parent widget
-          * @param lop images to animate 
-          * @param parent 
-          */
         TAnimWidget(ListOfPixmaps lop, QWidget *parent = 0);
-
-        /**
-         * Destructor
-         */
         ~TAnimWidget();
 
-        /**
-         * set an image as animation background
-         * @param px background 
-         */
         void setBackgroundPixmap(const QPixmap &px);
 
     protected:
-        /**
-         * Starts animation
-         */
         void showEvent(QShowEvent * e);
-
-        /**
-         * Stops animation 
-         */
         void hideEvent(QHideEvent * e);
 
     protected:
-        /**
-         * Handles animation flow
-         */
         void timerEvent(QTimerEvent *e);
-
-        /**
-         * Draws animation
-         */
         void paintEvent(QPaintEvent *e);
 
     private:

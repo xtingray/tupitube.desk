@@ -42,15 +42,7 @@
 #include <QDomDocument>
 #include <QDomElement>
 
-/**
- * @if spanish
- * Clase abstracta para clases que necesiten ser guardadas, como los frames, scenes, items, etc.
- * @endif
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupAbstractSerializable
-// class TupAbstractSerializable
 {
     protected:
         TupAbstractSerializable() {};

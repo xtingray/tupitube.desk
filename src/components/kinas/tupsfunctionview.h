@@ -38,10 +38,6 @@
 
 #include <QTreeWidget>
 
-/**
-    @author David Cuadrado
-**/
-
 class TupSFunctionView : public QTreeWidget
 {
     Q_OBJECT

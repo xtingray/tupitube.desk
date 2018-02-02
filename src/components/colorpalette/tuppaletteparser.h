@@ -45,10 +45,6 @@
 #include <QConicalGradient>
 #include <QRadialGradient>
 
-/**
- * @author David Cuadrado
-*/
-
 //TODO TupPaletteParser: portar a TXmlParserBase
 
 class TUPITUBE_EXPORT TupPaletteParser : public TXmlParserBase

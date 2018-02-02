@@ -51,10 +51,6 @@
 #include <QScrollArea>
 #include <QGroupBox>
 
-/**
-    @author Jorge Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupViewColorCells : public QFrame
 {
     Q_OBJECT

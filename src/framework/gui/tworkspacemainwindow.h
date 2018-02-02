@@ -41,10 +41,6 @@
 
 #include <QMdiArea>
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TWorkspaceMainWindow : public TMainWindow
 {
     Q_OBJECT

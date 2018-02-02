@@ -42,38 +42,15 @@
 #include <QBrush>
 #include <QList>
 
-/**
- * Esta clase se utiliza para guardar las paletas
- * @brief Esta clase representa un documento de paletta
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupPaletteDocument : public QDomDocument
 {
     public:
-        /**
-         * Construye un documento de paleta con un nombre
-         */
         TupPaletteDocument(const QString &name, bool isEditable);
-        
-        /**
-         * Destructor
-         */
         ~TupPaletteDocument();
         
-        /**
-         * Añade un gradiente al documento
-         */
         void addGradient(const QGradient &gradient);
-        
-        /**
-         * Añade un color al documento
-         */
         void addColor(const QColor &color);
         
-        /**
-         * Pone una lista de colores o gradientes en el documento
-         */
         void setElements(const QList<QBrush > &colors);
 };
 

@@ -73,10 +73,6 @@
 class TupItemResponse;
 class TupGraphicsScene;
 
-/**
- * @author Jorge Cuadrado
- */
-
 class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
 {
     Q_OBJECT

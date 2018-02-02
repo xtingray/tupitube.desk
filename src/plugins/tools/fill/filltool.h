@@ -60,10 +60,6 @@
 
 // class TupPathItem;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_PLUGIN FillTool : public TupToolPlugin
 {
     Q_OBJECT

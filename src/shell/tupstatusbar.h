@@ -51,10 +51,6 @@
 #include <QTimer>
 #include <QStatusBar>
 
-/**
- * @author David Cuadrado
-*/
-
 class TupStatusBar : public QStatusBar
 {
     Q_OBJECT

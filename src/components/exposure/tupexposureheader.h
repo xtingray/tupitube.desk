@@ -56,10 +56,6 @@ struct ExposureLayerItem
     bool isLocked;
 };
 
-/**
- * @author Jorge Cuadrado
- */
-
 class TUPITUBE_EXPORT TupExposureHeader: public QHeaderView
 {
     Q_OBJECT

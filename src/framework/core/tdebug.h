@@ -80,10 +80,6 @@
 #include <QColor>
 #endif
 
-/**
- * @author David Cuadrado
-*/
-
 #ifdef __GNUC__
 #define T_FUNCINFO tDebug() << "[" << __PRETTY_FUNCTION__ << "] "
 #define T_FUNCINFOX(area) tDebug(area) << "[" << __PRETTY_FUNCTION__ << "] "

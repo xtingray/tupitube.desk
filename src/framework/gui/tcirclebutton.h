@@ -35,10 +35,6 @@
 
 #ifndef TCIRCLEBUTTON_H
 #define TCIRCLEBUTTON_H
-/**
- * @file tcirclebutton.h
- * Include this file if you need the class TCircleButton
- */
 
 #include "tglobal.h"
 
@@ -55,11 +51,6 @@
 #include <QPainterPath>
 #include <QTimer>
 #include <QPaintEngine>
-
-/**
- * @short The TCircleButton class provides a circular button
- * @author David Cuadrado
-*/
 
 class T_GUI_EXPORT TCircleButton : public QPushButton
 {

@@ -44,10 +44,6 @@
 
 class QPluginLoader;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupPluginManager : public QObject
 {
     Q_OBJECT

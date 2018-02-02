@@ -47,10 +47,6 @@ class TupProjectManagerParams;
 class TupProjectCommand;
 class TupProject;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupAbstractProjectHandler : public QObject
 {
     Q_OBJECT

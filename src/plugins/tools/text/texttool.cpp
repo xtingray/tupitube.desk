@@ -44,7 +44,7 @@
 
 TextTool::TextTool()
 {
-    m_configurator = new TextConfigurator;
+    config = new TextConfigurator;
     setupActions();
 }
 
@@ -69,9 +69,9 @@ void TextTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
              return;
     }
 
-    m_item = new TupTextItem;
-    m_item->setPos(input->pos());
-    m_item->setDefaultTextColor(brushManager->penColor());
+    textItem = new TupTextItem;
+    textItem->setPos(input->pos());
+    textItem->setDefaultTextColor(brushManager->penColor());
 }
 
 void TextTool::doubleClick(const TupInputDeviceInformation *input, TupGraphicsScene *scene)
@@ -104,32 +104,32 @@ void TextTool::release(const TupInputDeviceInformation *input, TupBrushManager *
     Q_UNUSED(input);
     Q_UNUSED(brushManager);
 
-    if (m_configurator->text().isEmpty()) {
-        delete m_item;
+    if (config->text().isEmpty()) {
+        delete textItem;
         return;
     }
 
-    if (m_configurator->isHtml())
-        m_item->setHtml(m_configurator->text());
+    if (config->isHtml())
+        textItem->setHtml(config->text());
     else
-        m_item->setPlainText(m_configurator->text());
+        textItem->setPlainText(config->text());
 
-    m_item->setFont(m_configurator->textFont());
+    textItem->setFont(config->textFont());
 
-    scene->includeObject(m_item);
+    scene->includeObject(textItem);
 
     QDomDocument doc;
-    doc.appendChild(m_item->toXml(doc));
+    doc.appendChild(textItem->toXml(doc));
 
-    TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(), scene->currentLayerIndex(), 
-                                                                   scene->currentFrameIndex(), 0, QPointF(), scene->spaceContext(), 
-                                                                   TupLibraryObject::Item, TupProjectRequest::Add, doc.toString());
-    emit requested(&event);
+    TupProjectRequest request = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(), scene->currentLayerIndex(), scene->currentFrameIndex(), 
+                                                                     0, QPointF(), scene->spaceContext(), TupLibraryObject::Item, TupProjectRequest::Add, 
+                                                                     doc.toString());
+    emit requested(&request);
 }
 
 QMap<QString, TAction *> TextTool::actions() const
 {
-    return m_actions;
+    return textActions;
 }
 
 int TextTool::toolType() const
@@ -139,7 +139,7 @@ int TextTool::toolType() const
 		
 QWidget *TextTool::configurator()
 {
-    return m_configurator;
+    return config;
 }
 
 void TextTool::aboutToChangeTool()
@@ -157,7 +157,7 @@ void TextTool::setupActions()
     text->setShortcut(QKeySequence(tr("T")));
     text->setCursor(QCursor(kAppProp->themeDir() + "cursors/text.png"));
 
-    m_actions.insert(tr("Text"), text);
+    textActions.insert(tr("Text"), text);
 }
 
 void TextTool::saveConfig()

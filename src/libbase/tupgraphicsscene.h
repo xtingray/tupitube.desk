@@ -51,10 +51,6 @@
 #include <QKeyEvent>
 #include <QDesktopWidget>
 
-/**
- * @author David Cuadrado
-*/
-
 class TupFrame;
 class TupGraphicObject;
 class TupScene;

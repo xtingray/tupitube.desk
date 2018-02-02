@@ -43,10 +43,6 @@
 #include <QIcon>
 #include <QFont>
 
-/**
- * @author David Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupButtonItem : public QObject, public QGraphicsItem, public TupAbstractSerializable
 {
     Q_OBJECT

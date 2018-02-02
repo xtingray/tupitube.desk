@@ -41,11 +41,6 @@
 #include <QString>
 #include <QByteArray>
 
-/**
- * This class (un)compress and (un)hash a string
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupCompress
 {
     public:

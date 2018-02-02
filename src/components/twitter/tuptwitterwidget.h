@@ -48,10 +48,6 @@
 #include <QMenu>
 #include <QMouseEvent>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupTwitterWidget : public QWidget
 {
     Q_OBJECT

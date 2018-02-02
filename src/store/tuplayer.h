@@ -53,11 +53,6 @@ typedef QList<TupLipSync *> Mouths;
 class TupScene;
 class TupProject;
 
-/**
- * @brief This class represents a layer. Layers are defined by the TupDocument class and they contain TupFrames
- * @author David Cuadrado 
-*/
-
 class TUPITUBE_EXPORT TupLayer : public QObject, public TupAbstractSerializable
 {
     Q_OBJECT

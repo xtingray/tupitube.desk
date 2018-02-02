@@ -45,10 +45,6 @@
 
 class TupProjectResponse;
 
-/**
- * @author David Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupRequestParser : public TupXmlParserBase
 {
     public:

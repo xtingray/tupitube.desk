@@ -50,10 +50,6 @@
 
 #define K_GIVE_NAME(obj) obj->setObjectName(#obj);
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TFormValidator
 {
     public:
@@ -92,4 +88,3 @@ class T_GUI_EXPORT TFormValidator
 };
 
 #endif
-

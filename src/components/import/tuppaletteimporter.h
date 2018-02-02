@@ -43,10 +43,6 @@
 #include <QDir>
 #include <QTextStream>
 
-/**
- * @author David Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupPaletteImporter
 {
     public:

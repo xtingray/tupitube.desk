@@ -42,10 +42,6 @@
 #include <QPolygon>
 #include <QPainter>
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TToolBox : public QToolBox
 {
     Q_OBJECT

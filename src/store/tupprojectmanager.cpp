@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                *
+ *   Project TUPITUBE DESK                                                 *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -288,9 +288,8 @@ bool TupProjectManager::loadProject(const QString &fileName)
     return ok;
 }
 
-/**
- * Returns true if project is open
- */
+// Returns true if project is open
+
 bool TupProjectManager::isOpen() const
 {
     return k->project->isOpen();
@@ -315,11 +314,12 @@ bool TupProjectManager::isValid() const
 }
 
 /**
- * This function is called when some event is triggered by the project
- * It must be re-implemented if you want to deal with the event in another way, i.ex: send it through the net.
- * By default, it sends the event through the signal commandExecuted
- * @param event 
- */
+ *  This function is called when some event is triggered by the project
+ *  It must be re-implemented if you want to deal with the event in another way, i.ex: send it through the net.
+ *  By default, it sends the event through the signal commandExecuted
+ *  @param event 
+ **/
+
 void TupProjectManager::handleProjectRequest(const TupProjectRequest *request)
 {	
     #ifdef TUP_DEBUG
@@ -401,7 +401,8 @@ void TupProjectManager::handleLocalRequest(const TupProjectRequest *request)
                         layer->setOpacity(opacity);
                     } else {
                         #ifdef TUP_DEBUG
-                            QString msg = "TupProjectManager::handleLocalRequest() - Fatal Error: Layer pointer is NULL [index = " +  QString::number(k->layerIndex) + "]";
+                            QString msg = "TupProjectManager::handleLocalRequest() - Fatal Error: "
+                                          " Layer pointer is NULL [index = " +  QString::number(k->layerIndex) + "]";
                             #ifdef Q_OS_WIN
                                 qDebug() << msg;
                             #else
@@ -418,14 +419,15 @@ void TupProjectManager::handleLocalRequest(const TupProjectRequest *request)
     }
 }
 
-/**
- * This function creates a command to execute an action, i.e. add a frame. 
- * The command has the information necessary to undo its effect.
- * Usually this command must be added into the commands stack.
- * The command created is not deleted by this class, this task depends on the user.
- * @param event 
- * @return 
+/*
+ *  This function creates a command to execute an action, i.e. add a frame. 
+ *  The command has the information necessary to undo its effect.
+ *  Usually this command must be added into the commands stack.
+ *  The command created is not deleted by this class, this task depends on the user.
+ *  @param event 
+ *  @return 
  */
+
 void TupProjectManager::createCommand(const TupProjectRequest *request, bool addToStack)
 {
     #ifdef TUP_DEBUG
@@ -524,7 +526,8 @@ bool TupProjectManager::removeProjectPath(const QString &projectPath)
     QDir dir(projectPath);
 
     if (dir.exists(projectPath)) {
-        Q_FOREACH(QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden | QDir::AllDirs | QDir::Files, QDir::DirsFirst)) {
+        Q_FOREACH(QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden 
+                                                    | QDir::AllDirs | QDir::Files, QDir::DirsFirst)) {
             if (info.isDir()) {
                 QString path = info.absoluteFilePath();
                 result = removeProjectPath(path);
@@ -552,5 +555,5 @@ bool TupProjectManager::removeProjectPath(const QString &projectPath)
 
 void TupProjectManager::updateProjectDimension(const QSize size)
 {
-    k->project->setDimension(size);     
+    k->project->setDimension(size);
 }

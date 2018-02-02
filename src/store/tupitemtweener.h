@@ -49,11 +49,6 @@
 class QGraphicsItem;
 class QGraphicsPathItem;
 
-/**
- * @TODO: - setColorAt, setZAt
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSerializable
 {
     Q_OBJECT

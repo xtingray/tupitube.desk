@@ -49,10 +49,6 @@
 // class QBoxLayout;
 // class QGridLayout;
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TFormFactory
 {
     public:

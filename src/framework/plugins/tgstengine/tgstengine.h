@@ -47,10 +47,6 @@
 #endif
 */
 
-/**
- * @author David Cuadrado
-*/
-
 class TGstEngine : public QObject, public TAudioEngineIface
 {
     Q_OBJECT

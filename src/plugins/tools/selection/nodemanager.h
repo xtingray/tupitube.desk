@@ -43,10 +43,6 @@
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_PLUGIN NodeManager : public QObject
 {
     Q_OBJECT

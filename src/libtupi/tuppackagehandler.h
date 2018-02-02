@@ -51,10 +51,6 @@
 
 // class QuaZip;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupPackageHandler
 {
     public:

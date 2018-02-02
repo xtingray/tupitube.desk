@@ -43,15 +43,6 @@
 #include <QSpinBox>
 #include <QSlider>
 
-/**
- * @if english
- * This class represents a spinbox editable
- * @elseif spanish
- * Esta clase representa un spinbox editable
- * @endif
- * @author Jorge Cuadrado
-*/
-
 class T_GUI_EXPORT TEditSpinBox : public QGroupBox
 {
     Q_OBJECT

@@ -40,11 +40,6 @@
 
 #include <QColor>
 
-/**
- * Class containing generic useful algorithms about random values
- * @author David Cuadrado
-*/
-
 class T_CORE_EXPORT TAlgorithm
 {
     public:

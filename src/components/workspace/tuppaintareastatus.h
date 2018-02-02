@@ -56,10 +56,6 @@
 #include <QLineEdit>
 #include <QDir>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupPaintAreaStatus : public QStatusBar
 {
     Q_OBJECT

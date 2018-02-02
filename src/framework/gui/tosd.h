@@ -51,10 +51,6 @@
 #include <QDesktopWidget>
 #include <QLinearGradient>
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TOsd : public QWidget
 {
     Q_OBJECT

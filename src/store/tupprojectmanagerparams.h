@@ -42,10 +42,6 @@
 #include <QSize>
 #include <QColor>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupProjectManagerParams
 {
     public:

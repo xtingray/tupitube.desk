@@ -113,7 +113,6 @@ bool TupCommandExecutor::removeFrame(TupFrameResponse *response)
                 if (layer->removeFrame(pos)) {
                     response->setState(doc.toString(0));
                     emit responsed(response);
-
                     return true;
                 }
             }
@@ -446,7 +445,6 @@ bool TupCommandExecutor::setFrameVisibility(TupFrameResponse *response)
             if (frame) { 
                 frame->setVisible(view);
                 emit responsed(response);
-
                 return true;
             }
         }

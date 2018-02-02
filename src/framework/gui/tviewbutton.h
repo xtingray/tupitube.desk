@@ -50,10 +50,6 @@
 
 class ToolView;
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TViewButton : public QToolButton
 {
     Q_OBJECT

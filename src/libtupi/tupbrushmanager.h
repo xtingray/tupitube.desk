@@ -42,10 +42,6 @@
 #include <QPen>
 #include <QBrush>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupBrushManager : public QObject
 {
     Q_OBJECT

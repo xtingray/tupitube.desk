@@ -48,15 +48,6 @@
 #include <QGraphicsItem>
 #include <QFont>
 
-// class QGraphicsItem;
-
-/**
- * @author David Cuadrado
- * @todo:
- * - Serialize fonts
- * 
-*/
-
 class TUPITUBE_EXPORT TupSerializer
 {
     public:

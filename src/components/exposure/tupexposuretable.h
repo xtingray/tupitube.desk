@@ -52,10 +52,6 @@
 
 class TupExposureVerticalHeader;
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupExposureTable : public QTableWidget
 {
     Q_OBJECT

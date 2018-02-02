@@ -44,10 +44,6 @@
 #include <QSplitter>
 #include <QTabWidget>
 
-/**
- * @author David Cuadrado
-**/
-
 class KinasWidget : public TupModuleWidgetBase
 {
     Q_OBJECT

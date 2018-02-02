@@ -43,10 +43,6 @@
 #include <QPainter>
 #include <QPaintEngine>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupImageDevice : public QWidget
 {
     Q_OBJECT

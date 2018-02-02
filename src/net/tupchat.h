@@ -48,10 +48,6 @@
 #include <QTime>
 #include <QList>
 
-/**
- * @author David Cuadrado 
-*/
-
 class TUPITUBE_EXPORT TupChat : public QWidget
 {
     Q_OBJECT

@@ -36,11 +36,6 @@
 #ifndef TCIRCLEBUTTONBAR_H
 #define TCIRCLEBUTTONBAR_H
 
-/**
- * @file tcirclebuttonbar.h
- * Include this file if you need the class TCircleButtonBar
- */
-
 #include "tcirclebutton.h"
 #include "tglobal.h"
 
@@ -56,29 +51,12 @@
 
 class QPainterPath;
 
-/**
- * @short The TCircleButtonBar class provides a circular button bar
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TCircleButtonBar : public QFrame
 {
     public:
-        /**
-         * Constructs a TCircleButtonBar
-         */
         TCircleButtonBar(int radio = 40, QWidget *parent= 0);
-
-        /**
-         * Destructor
-         */
         ~TCircleButtonBar();
 
-        /**
-         * Add button in TCircleButtonBar
-         * @param pix image of new TCircleButton
-         * @return pointer of new TCircleButton
-         */
          TCircleButton *addButton(const QPixmap &pix);
 
     private:

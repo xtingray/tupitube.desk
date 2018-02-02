@@ -46,9 +46,6 @@
 #include <QPainter>
 #include <QSvgGenerator>
 
-/**
-    @author David Cuadrado
-*/
 class TUPITUBE_PLUGIN ImagePlugin : public TupExportPluginObject
 {
     Q_OBJECT

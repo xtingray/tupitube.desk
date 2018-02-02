@@ -45,10 +45,6 @@
 #include <QGraphicsPathItem>
 #include <QAbstractGraphicsShapeItem>
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class T_GUI_EXPORT TNodeGroup : public QObject
 {
     Q_OBJECT

@@ -43,10 +43,6 @@
 #include <QCryptographicHash>
 #include <QStringList>
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupConnectPackage : public QDomDocument
 {
     public:

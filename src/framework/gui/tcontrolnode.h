@@ -51,10 +51,6 @@
 #include <QObject>
 #include <QPointF>
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TNodeGroup;
 
 class T_GUI_EXPORT TControlNode : public QGraphicsItem

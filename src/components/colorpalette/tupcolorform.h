@@ -39,10 +39,6 @@
 #include "tglobal.h"
 #include <QWidget>
 
-/**
- * @author Jorge Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupColorForm : public QWidget
 {
     Q_OBJECT

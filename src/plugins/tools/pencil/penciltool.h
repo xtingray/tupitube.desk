@@ -64,10 +64,6 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsView>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
 {
     Q_OBJECT

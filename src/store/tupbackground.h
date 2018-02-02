@@ -43,10 +43,6 @@
 #include <QImage>
 #include <QPixmap>
 
-/**
- * @author Gustav Gonzalez
-*/
-
 class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializable
 {
     Q_OBJECT
@@ -56,10 +52,12 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         TupBackground(TupScene *parent, const QSize dimension, const QColor bgColor);
         ~TupBackground();
 
-        void setBgColor(const QColor color);
         TupFrame* staticFrame();
         TupFrame* dynamicFrame(); 
+
+        void setBgColor(const QColor color);
         void clear();
+
         void renderDynamicView();
         QPixmap dynamicView(int frameIndex);
         void setDynamicDirection(int direction);
@@ -69,10 +67,12 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         void setDynamicRaster(QImage bg);
         QImage dynamicRaster();
         bool dynamicBgIsEmpty();
-        bool staticBgIsEmpty();
         bool rasterRenderIsPending();
-        void setDynamicOpacity(double opacity); 
+        void scheduleRender(bool status);
+        void setDynamicOpacity(double opacity);
         double dynamicOpacity();
+
+        bool staticBgIsEmpty();
         void setStaticOpacity(double opacity);
         double staticOpacity();
         TupScene * scene();

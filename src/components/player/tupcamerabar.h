@@ -45,10 +45,6 @@
 #include <QPushButton>
 #include <QBoxLayout>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupCameraBar : public QFrame
 {
     Q_OBJECT

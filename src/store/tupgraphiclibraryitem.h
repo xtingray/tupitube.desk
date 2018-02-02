@@ -45,10 +45,6 @@
 
 // class TupLibraryObject;
 
-/**
- * @author David Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupGraphicLibraryItem : public TupProxyItem, public TupAbstractSerializable
 {
     public:

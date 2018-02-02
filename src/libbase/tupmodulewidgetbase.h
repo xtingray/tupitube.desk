@@ -50,10 +50,6 @@
 #include <QBoxLayout>
 #include <QDialog>
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupModuleWidgetBase : public QWidget, public TupAbstractProjectResponseHandler
 {
     Q_OBJECT

@@ -48,11 +48,6 @@
 class TMainWindow;
 class QMainWindow;
 
-/**
- * This class creates a TMainWindow from other QMainWindow
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TMainWindowFactory
 {
     public:

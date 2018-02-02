@@ -48,10 +48,6 @@
 class QComboBox;
 class QFontComboBox;
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TFontChooser : public QFrame
 {
     Q_OBJECT

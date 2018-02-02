@@ -58,11 +58,6 @@ class TupScene;
 typedef QList<TupGraphicObject *> GraphicObjects;
 typedef QList<TupSvgItem *> SvgObjects;
 
-/**
- * @brief Esta clase representa un marco o frame de la animacion
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupFrame : public QObject, public TupAbstractSerializable
 {
     Q_OBJECT
@@ -98,11 +93,11 @@ class TUPITUBE_EXPORT TupFrame : public QObject, public TupAbstractSerializable
       
         void addLibraryItem(const QString &id, TupGraphicLibraryItem *libraryItem);
         void addItem(const QString &id, QGraphicsItem *item);
-        void removeImageItemFromFrame(const QString &id);
+        bool removeImageItemFromFrame(const QString &id);
         void updateIdFromFrame(const QString &oldId, const QString &newId);
 
         void addSvgItem(const QString &id, TupSvgItem *item);
-        void removeSvgItemFromFrame(const QString &id);
+        bool removeSvgItemFromFrame(const QString &id);
         void updateSvgIdFromFrame(const QString &oldId, const QString &newId);
 
         void replaceItem(int position, QGraphicsItem *item);

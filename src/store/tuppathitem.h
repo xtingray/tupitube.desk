@@ -36,7 +36,6 @@
 #ifndef TUPPATHITEM_H
 #define TUPPATHITEM_H
 
-// #include "tglobal.h"
 #include "tupabstractserializable.h"
 
 #include <QGraphicsPathItem>
@@ -47,9 +46,6 @@
 #include <QPainterPath>
 #include <QCursor>
 
-/**
- * @author David Cuadrado
-*/
 class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGraphicsPathItem
 {
     public:

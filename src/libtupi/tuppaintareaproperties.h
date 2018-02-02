@@ -39,10 +39,6 @@
 #include "tglobal.h"
 #include <QColor>
 
-/**
- * @author David Cuadrado
-**/
-
 struct TUPITUBE_EXPORT TupPaintAreaProperties
 {
     public:

@@ -54,10 +54,6 @@
 
 class TupItemTweener;
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_PLUGIN Configurator : public QFrame
 {
     Q_OBJECT

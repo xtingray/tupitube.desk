@@ -46,10 +46,6 @@ class QPainter;
 class TupScene;
 class TupLibrary;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupAnimationRenderer
 {
     public:

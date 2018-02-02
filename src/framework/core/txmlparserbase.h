@@ -40,10 +40,6 @@
 
 #include <QXmlDefaultHandler>
 
-/**
- * @author David Cuadrado
-*/
-
 class T_CORE_EXPORT TXmlParserBase : public QXmlDefaultHandler
 {
     public:

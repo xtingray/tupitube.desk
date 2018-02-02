@@ -64,10 +64,6 @@ class TUPITUBE_EXPORT TupProjectRequestArgument
         QString m_value;
 };
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupProjectRequest
 {
     public:

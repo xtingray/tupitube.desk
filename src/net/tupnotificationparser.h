@@ -39,10 +39,6 @@
 #include "tglobal.h"
 #include "tupxmlparserbase.h"
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupNotificationParser : public TupXmlParserBase
 {
     public:

@@ -42,10 +42,6 @@
 #include <QStyleFactory>
 #include <QApplication>
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TStyleComboBox : public QComboBox
 {
     Q_OBJECT

@@ -41,10 +41,6 @@
 #include <QDomDocument>
 #include <QFile>
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupImportProjectPackage : public QDomDocument
 {
     public:

@@ -46,10 +46,6 @@
 #include <QApplication>
 #include <QPoint>
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TVHBox : public QFrame
 {
     Q_OBJECT

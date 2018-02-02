@@ -57,8 +57,8 @@
  * @n-Si es Radial: el centro, punto focal 
  * @n-Si es Conico: el centro,
  * @endif
- * @author Jorge Cuadrado
 */
+
 class TUPITUBE_EXPORT TupGradientViewer : public QFrame
 {
 	Q_OBJECT

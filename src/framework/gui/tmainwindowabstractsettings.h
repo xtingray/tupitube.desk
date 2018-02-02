@@ -42,10 +42,6 @@
 class ToolView;
 class TMainWindow;
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TMainWindowAbstractSettings : public QObject
 {
     public:

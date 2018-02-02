@@ -49,10 +49,6 @@
 #include <QLayout>
 #include <QEvent>
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT ToolView : public QDockWidget
 {
     Q_OBJECT

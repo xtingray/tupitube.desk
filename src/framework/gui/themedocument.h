@@ -46,7 +46,6 @@
 typedef QMap<QString, QString> ThemeKey;
 
 /**
- * @author David Cuadrado
  * <?xml version = '1.0' encoding = 'UTF-8'?>
  * @verbatim
  * <Theme name="" version="" >

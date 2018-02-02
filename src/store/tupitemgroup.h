@@ -41,10 +41,6 @@
 
 #include <QGraphicsItemGroup>
 
-/**
- * @author Jorge Cuadrado
- **/
-
 class TUPITUBE_EXPORT TupItemGroup: public TupAbstractSerializable, public QGraphicsItemGroup
 {
     public:

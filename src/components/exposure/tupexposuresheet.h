@@ -62,10 +62,6 @@
 #include <QList>
 #include <QMenu>
 
-/**
-* @author Jorge Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
 {
     Q_OBJECT

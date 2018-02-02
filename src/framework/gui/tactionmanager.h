@@ -54,11 +54,6 @@ typedef QHash<QString, TActionDict> TActionContainer;
 class QToolBar;
 class QMenuBar;
 
-/**
- * @short class TActionManager provides an action manager, this handler makes easier the access and sort of any action of the app.
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TActionManager : public QObject
 {
     Q_OBJECT

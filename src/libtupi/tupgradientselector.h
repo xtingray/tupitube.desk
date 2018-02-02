@@ -54,15 +54,6 @@
 #include <QPolygon>
 #include <QList>
 
-/**
- * @if english
- * @short This class provides a simple graphical interface to generate "GradientStops"
- * @elseif spanish
- * @short Esta clase provee de una simple interfaz grafica para generar "GradientStops".
- * @endif
- * @author Jorge Cuadrado
- */
-
 class TUPITUBE_EXPORT TupGradientSelector : public QAbstractSlider
 {
    Q_OBJECT
@@ -135,35 +126,10 @@ class TUPITUBE_EXPORT TupGradientSelector : public QAbstractSlider
       
    public:
 
-      /**
-       * @if english
-       * Translate
-       * @elseif spanish
-       * Constructor por defecto.
-       * @endif
-       */
       TupGradientSelector(QWidget *parent=0);
-      
-      /**
-       * @if english
-       * Translate
-       * @elseif spanish
-       * Crea un TupGradientSelector, con una orientacion definida.
-       * @endif
-       * @see Qt::Orientation
-       */
       TupGradientSelector(Qt::Orientation o, QWidget *parent = 0);
-      /**
-       * Destructor
-       */
       ~TupGradientSelector();
-      /**
-       * @if english
-       * Translate
-       * @elseif spanish
-       * Pone un GradienStops, para ser editado.
-       * @endif
-       */
+
       void setStops(const QGradientStops &);
       
       Qt::Orientation orientation() const
@@ -184,43 +150,15 @@ class TUPITUBE_EXPORT TupGradientSelector : public QAbstractSlider
             ::value();
       }
 
-      /**
-       * @if english
-       * Translate
-       * @elseif spanish
-       * Pone el numero maximo de flechas, que definen el "GradienStops".
-       * @endif
-       */
       void setMaxArrows(int value);
 
-      /**
-       * @if english
-       * Translate
-       * @elseif spanish
-       * Devuelve el "GradienStops" actual.
-       * @endif
-       */
       QGradientStops  gradientStops() const
       {
          return m_gradient.stops();
       }
 
-      /**
-       * @if english
-       * Translate
-       * @elseif spanish
-       * Crea el "GradienStops" actual apartir de las flechas acutales.
-       * @endif
-       */
       void createGradient();
       
-      /**
-       * @if english
-       * Translate
-       * @elseif spanish
-       * Cambia el color de la flecha actualmente seleccionada.
-       * @endif
-       */
       void setCurrentColor(const QColor& color);
 
    signals:

@@ -46,10 +46,6 @@
 
 typedef QHash<int, QPushButton *> Buttons;
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TabDialog : public QDialog
 {
     Q_OBJECT

@@ -42,10 +42,6 @@
 
 class TupProject;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupFileManager : public QObject
 {
     Q_OBJECT
@@ -54,7 +50,6 @@ class TUPITUBE_EXPORT TupFileManager : public QObject
         TupFileManager();
         ~TupFileManager();
 
-        //virtual bool save(const QString &filename, const TupProject *project);
         virtual bool save(const QString &filename, TupProject *project);
         virtual bool load(const QString &filename, TupProject *project);
 };

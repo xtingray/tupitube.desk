@@ -56,10 +56,6 @@ class TupLibraryObject;
 typedef QMap<QString, TupLibraryFolder *> Folders;
 typedef QMap<QString, TupLibraryObject *> LibraryObjects;
 
-/**
- * @author David Cuadrado
-**/
-
 class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSerializable
 {
     Q_OBJECT

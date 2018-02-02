@@ -40,10 +40,6 @@
 
 #include <QXmlDefaultHandler>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupXmlParserBase : public QXmlDefaultHandler
 {
     public:

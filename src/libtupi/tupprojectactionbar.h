@@ -53,10 +53,6 @@
 class TImageButton;
 class QBoxLayout;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupProjectActionBar : public QWidget
 {
     Q_OBJECT

@@ -39,10 +39,6 @@
 #include <QTextEdit>
 #include <QMimeData>
 
-/**
-    @author David Cuadrado
-**/
-
 class TupSEditor : public QTextEdit
 {
     Q_OBJECT

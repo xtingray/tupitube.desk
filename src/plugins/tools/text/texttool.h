@@ -47,9 +47,6 @@
 #include <QKeySequence>
 #include <QGraphicsView>
 
-/**
- * @author David Cuadrado
-*/
 class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
 {
     Q_OBJECT
@@ -81,10 +78,10 @@ class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
         void setupActions();
         
     private:
-        TupTextItem *m_item;
-        TextConfigurator *m_configurator;
-        QPoint m_position;
-        QMap<QString, TAction *> m_actions;
+        TupTextItem *textItem;
+        TextConfigurator *config;
+        // QPoint pos;
+        QMap<QString, TAction *> textActions;
 };
 
 #endif

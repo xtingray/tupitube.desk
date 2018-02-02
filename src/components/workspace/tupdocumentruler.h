@@ -43,10 +43,6 @@
 #include <iostream>
 using namespace std;
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupDocumentRuler : public TRulerBase
 {
     Q_OBJECT

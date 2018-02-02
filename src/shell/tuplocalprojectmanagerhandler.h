@@ -51,10 +51,6 @@
 #include <QDomDocument>
 #include <QDomElement>
 
-/**
- * @author David Cuadrado
-*/
-
 class TupLocalProjectManagerHandler : public TupAbstractProjectHandler
 {
     Q_OBJECT

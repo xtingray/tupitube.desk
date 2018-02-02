@@ -51,10 +51,6 @@
 
 class TupExportWizardPage;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupExportWizard : public QDialog
 {
     Q_OBJECT

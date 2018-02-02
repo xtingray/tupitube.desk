@@ -58,12 +58,6 @@ class TupLibrary;
 
 typedef QList<TupScene *> Scenes;
 
-/**
- * This class contains the project data structure including scenes.
- * 
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializable
 {
     Q_OBJECT

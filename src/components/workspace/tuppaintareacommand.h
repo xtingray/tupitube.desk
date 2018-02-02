@@ -47,10 +47,6 @@
 // class TupPaintArea;
 // class TupPaintAreaEvent;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupPaintAreaCommand : public QUndoCommand
 {
     public:

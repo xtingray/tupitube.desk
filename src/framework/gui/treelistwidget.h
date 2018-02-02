@@ -44,10 +44,6 @@
 #include <QEvent>
 #include <QLineEdit>
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TreeListWidget : public QTreeWidget
 {
     Q_OBJECT

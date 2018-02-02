@@ -41,10 +41,6 @@
 
 #include <QObject>
 
-/**
- * @author David Cuadrado
- */
-
 class TUPITUBE_EXPORT TupExportPluginObject : public QObject, public TupExportInterface
 {
     Q_OBJECT

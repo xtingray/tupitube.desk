@@ -47,10 +47,6 @@
 
 class NodeManager;
 
-/**
- * @author Jorge Cuadrado 
-*/
-
 class TUPITUBE_PLUGIN Node : public QObject, public QGraphicsItem
 {
     Q_OBJECT

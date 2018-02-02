@@ -47,10 +47,6 @@
 #include <QMimeData>
 #include <QDrag>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupItemManager : public TreeListWidget
 {
     Q_OBJECT

@@ -55,10 +55,6 @@
 
 class QCheckBox;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupThemeSelector : public TVHBox
 {
     Q_OBJECT

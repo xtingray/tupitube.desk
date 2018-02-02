@@ -45,10 +45,6 @@
 #include <QDir>
 #include <QColor>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupExportInterface
 {
     public:

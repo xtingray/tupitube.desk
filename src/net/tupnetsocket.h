@@ -46,10 +46,6 @@
 
 class TupNetProjectManagerHandler;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupNetSocket : public TupSocketBase
 {
     Q_OBJECT

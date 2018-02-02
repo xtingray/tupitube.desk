@@ -53,10 +53,6 @@
 #include <QStyleOptionButton>
 #include <QTimer>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupConfigurationArea : public QDockWidget
 {
     Q_OBJECT

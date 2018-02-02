@@ -47,10 +47,6 @@
 #include <QBoxLayout>
 #include <QFontDatabase>
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_PLUGIN TextConfigurator : public QWidget
 {
     Q_OBJECT

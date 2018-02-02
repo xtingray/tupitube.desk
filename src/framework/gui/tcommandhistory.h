@@ -47,10 +47,6 @@ class QUndoStack;
 class QMenu;
 class QAction;
 
-/**
- * @author David Cuadrado
-*/
-
 class T_GUI_EXPORT TCommandHistory : public QObject
 {
     Q_OBJECT

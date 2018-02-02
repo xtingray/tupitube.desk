@@ -47,10 +47,6 @@
 #include <QHeaderView>
 #include <QPushButton>
 
-/**
- * @author Jorge Cuadrado
-*/
-
 class TUPITUBE_PLUGIN Settings : public QWidget
 {
     Q_OBJECT

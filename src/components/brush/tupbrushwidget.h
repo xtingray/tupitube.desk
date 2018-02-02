@@ -52,10 +52,6 @@
 
 class TupPaintAreaEvent;
 
-/**
- * @author David Cuadrado
-*/
-
 class TUPITUBE_EXPORT TupBrushWidget : public TupModuleWidgetBase
 {
     Q_OBJECT
