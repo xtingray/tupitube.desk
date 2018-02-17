@@ -255,6 +255,8 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
     exitButton->setShortcut(Qt::Key_Escape);
     connect(exitButton, SIGNAL(clicked()), this, SLOT(close()));
 
+    QLabel *counterLabel = new QLabel("0");
+
     devicesCombo->setCurrentIndex(cameraIndex);
     menuLayout->addWidget(new TSeparator(Qt::Horizontal));
     menuLayout->addWidget(clickButton);
@@ -265,6 +267,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
     menuLayout->addWidget(k->historyButton);
     menuLayout->addWidget(k->historyWidget);
     menuLayout->addWidget(exitButton);
+    menuLayout->addWidget(counterLabel);
     menuLayout->addStretch(2);
 
     connect(devicesCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeCameraDevice(int)));
