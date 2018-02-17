@@ -478,6 +478,8 @@ void TupDocumentView::createLateralToolBar()
     // connect(k->miscMenu, SIGNAL(triggered(QAction *)), this, SLOT(selectToolFromMenu(QAction*)));
 }
 
+// SQA: This method must be protected while every new project is being loaded
+
 void TupDocumentView::loadPlugins()
 {
     bool imagePluginLoaded = false; 
