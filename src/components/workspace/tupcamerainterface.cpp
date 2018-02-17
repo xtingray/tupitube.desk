@@ -255,7 +255,11 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
     exitButton->setShortcut(Qt::Key_Escape);
     connect(exitButton, SIGNAL(clicked()), this, SLOT(close()));
 
+    QFont font = this->font();
+    font.setPointSize(20);
     QLabel *counterLabel = new QLabel("0");
+    counterLabel->setAlignment(Qt::AlignHCenter);
+    counterLabel->setFont(font);
 
     devicesCombo->setCurrentIndex(cameraIndex);
     menuLayout->addWidget(new TSeparator(Qt::Horizontal));
