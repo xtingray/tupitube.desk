@@ -65,6 +65,7 @@ struct TupCameraInterface::Private
     int counter;
     QColor gridColor;
     TupColorWidget *colorCell;
+    QLabel *counterLabel;
 };
 
 TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> cameraDevices, QComboBox *devicesCombo, int cameraIndex, 
@@ -255,14 +256,19 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
     exitButton->setShortcut(Qt::Key_Escape);
     connect(exitButton, SIGNAL(clicked()), this, SLOT(close()));
 
+    QLabel *takesLabel = new QLabel("Takes");
+    takesLabel->setAlignment(Qt::AlignHCenter);
+
     QFont font = this->font();
-    font.setPointSize(20);
-    QLabel *counterLabel = new QLabel("0");
-    counterLabel->setAlignment(Qt::AlignHCenter);
-    counterLabel->setFont(font);
+    font.setPointSize(50);
+    k->counterLabel = new QLabel("0");
+    k->counterLabel->setAlignment(Qt::AlignHCenter);
+    k->counterLabel->setFont(font);
 
     devicesCombo->setCurrentIndex(cameraIndex);
     menuLayout->addWidget(new TSeparator(Qt::Horizontal));
+    menuLayout->addWidget(takesLabel);
+    menuLayout->addWidget(k->counterLabel);
     menuLayout->addWidget(clickButton);
     menuLayout->addWidget(flipButton);
     menuLayout->addWidget(k->safeAreaButton);
@@ -271,7 +277,6 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
     menuLayout->addWidget(k->historyButton);
     menuLayout->addWidget(k->historyWidget);
     menuLayout->addWidget(exitButton);
-    menuLayout->addWidget(counterLabel);
     menuLayout->addStretch(2);
 
     connect(devicesCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeCameraDevice(int)));
@@ -340,6 +345,7 @@ QString TupCameraInterface::randomPath()
 void TupCameraInterface::takePicture()
 {
     k->currentCamera->takePicture(k->counter);
+    k->counterLabel->setText(QString::number(k->counter));
     k->counter++;
 }
 

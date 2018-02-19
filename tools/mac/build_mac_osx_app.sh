@@ -45,7 +45,7 @@ export DYLD_FRAMEWORK_PATH=$QT_PATH/5.10.0/clang_64/lib
 
 TUPITUBE_GIT_REPOSITORY=$1
 INSTALLATION_PATH=$2
-INSTALLER_SCRIPT=$TUPITUBE_GIT_REPOSITORY/tools/update_dylib_path.rb
+INSTALLER_SCRIPT=$TUPITUBE_GIT_REPOSITORY/tools/mac/update_dylib_path.rb
 TUPI_VERSION=0.2.10
 
 declare -a LIBS=('libtupigui.dylib' 'libtupistore.dylib' 'libtupi.dylib' \
