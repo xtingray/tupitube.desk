@@ -1875,12 +1875,25 @@ void TupLibraryWidget::refreshItem(QTreeWidgetItem *item)
     }
 }
 
-void TupLibraryWidget::updateLibrary(QString node, QString target) 
+void TupLibraryWidget::updateLibrary(QString file, QString folder) 
 {
-    if (target.length() > 0)
-        k->library->moveObject(node, target);
+    #ifdef TUP_DEBUG
+        QString msg1 = "TupLibraryWidget::updateLibrary() - folder: " + folder;
+        QString msg2 = "TupLibraryWidget::updateLibrary() - file: " + file;
+
+        #ifdef Q_OS_WIN
+            qDebug() << msg1;
+            qDebug() << msg2;
+        #else
+            tError() << msg1;
+            tError() << msg2;
+        #endif
+    #endif
+
+    if (folder.length() > 0)
+        k->library->moveObject(file, folder);
     else
-        k->library->moveObjectToRoot(node);
+        k->library->moveObjectToRoot(file);
 }
 
 void TupLibraryWidget::openInkscapeToEdit(QTreeWidgetItem *item)

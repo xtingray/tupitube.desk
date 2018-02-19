@@ -278,6 +278,7 @@ bool TupLibraryFolder::moveObject(const QString &id, const QString &target)
         if (removeObject(id, false)) {
             foreach (TupLibraryFolder *folder, k->folders) {
                 if (folder->id().compare(target) == 0) {
+                    object->updateFolder(target);
                     folder->addObject(object);
                     return true;
                 }

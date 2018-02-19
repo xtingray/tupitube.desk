@@ -79,6 +79,8 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         void setFolder(const QString &folder);
         QString folder() const;
 
+        void updateFolder(const QString &folder);
+
         int frameToPlay();
         void updateFrameToPlay(int frame);
 

@@ -66,6 +66,8 @@ TupLibraryObject::TupLibraryObject(const QString &name, const QString &folder, T
     k->type = type;
     k->isSoundEffect = false;
     k->playAt = 0;
+
+    tError() << "TupLibraryObject::TupLibraryObject() - k->folder: " << folder;
 }
 
 TupLibraryObject::~TupLibraryObject()
@@ -134,6 +136,48 @@ QString TupLibraryObject::symbolName() const
 void TupLibraryObject::setFolder(const QString &folder)
 {
     k->folder = folder;
+}
+
+void TupLibraryObject::updateFolder(const QString &folder)
+{
+    QFileInfo finfo(k->dataPath);
+    QString filename = finfo.fileName();
+    QDir dir = finfo.dir();
+
+    QString newPath = dir.path() + "/";
+    if (!folder.isEmpty()) {
+        newPath += folder + "/";
+        if (!dir.exists(newPath)) { 
+            if (!dir.mkpath(newPath)) {
+                #ifdef TUP_DEBUG
+                    QString msg = "TupLibraryObject::updateFolder() - Fatal Error: Couldn't create path -> " + newPath;
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg;
+                    #else
+                        tError() << msg;
+                    #endif
+                #endif
+                return;
+            }
+        }
+    }
+    newPath += filename;
+
+    if (k->dataPath.compare(newPath) != 0) {
+        if (dir.rename(k->dataPath, newPath)) {
+            k->folder = folder;
+            k->dataPath = newPath;
+        } else {
+            #ifdef TUP_DEBUG
+                QString msg = "TupLibraryObject::updateFolder() - Fatal Error: Couldn't move object -> " + k->dataPath + " to " + newPath;
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError() << msg;
+                #endif
+            #endif
+        }
+    }
 }
 
 QString TupLibraryObject::folder() const
@@ -249,6 +293,7 @@ void TupLibraryObject::fromXml(const QString &xml)
                 case TupLibraryObject::Item:
                      {
                          k->dataPath = objectTag.attribute("path");
+                         tError() << "TupLibraryObject::fromXml() - k->dataPath: " << k->dataPath;
                      }
                 break;
                 case TupLibraryObject::Sound:
@@ -282,29 +327,41 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
     object.setAttribute("id", k->symbolName);
     object.setAttribute("type", k->type);
     QFileInfo finfo(k->dataPath);
+    QString path = finfo.fileName();
+    if (!k->folder.isEmpty())
+        path = k->folder + "/" + finfo.fileName();
+
+    #ifdef TUP_DEBUG
+        QString msg = "TupLibraryObject::toXml() - Saving element -> " + path;
+        #ifdef Q_OS_WIN
+            qWarning() << msg;
+        #else
+            tWarning() << msg;
+        #endif
+    #endif
     
     switch (k->type) {
             case Text:
             {
-                 QGraphicsItem *item = qvariant_cast<QGraphicsItem *>(k->data);
-                 if (item) {
-                     if (TupAbstractSerializable *serializable = dynamic_cast<TupAbstractSerializable *>(item))
-                         object.appendChild(serializable->toXml(doc));
-                 }
+                QGraphicsItem *item = qvariant_cast<QGraphicsItem *>(k->data);
+                if (item) {
+                    if (TupAbstractSerializable *serializable = dynamic_cast<TupAbstractSerializable *>(item))
+                        object.appendChild(serializable->toXml(doc));
+                }
             }
             break;
             case Image:
             case Svg:
             case Item:
             {
-                 object.setAttribute("path", k->folder + "/" + finfo.fileName());
+                object.setAttribute("path", path);
             }
             break;
             case Sound:
             {
-                 object.setAttribute("soundEffect", k->isSoundEffect);
-                 object.setAttribute("playAt", k->playAt);
-                 object.setAttribute("path", k->folder + "/" + finfo.fileName());
+                object.setAttribute("soundEffect", k->isSoundEffect);
+                object.setAttribute("playAt", k->playAt);
+                object.setAttribute("path", path);
             }
             break;
             default:
@@ -426,7 +483,7 @@ bool TupLibraryObject::loadData(const QString &path)
             qDebug() << "TupLibraryObject::loadData()";
         #else
             T_FUNCINFO;
-            tWarning() << "Object path: " << path;;
+            tWarning() << "Object path: " << path;
         #endif
     #endif
 
@@ -616,6 +673,8 @@ bool TupLibraryObject::saveData(const QString &dataDir)
 
             case TupLibraryObject::Image:
             {
+                 tError() << "TupLibraryObject::saveData() - k->folder : " << k->folder;
+
                  QString path = dataDir + "/images/";
                  if (k->folder.length() > 0)
                      path += k->folder + "/";
