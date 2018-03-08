@@ -462,7 +462,7 @@ void TupScreen::advance()
     */
 
     if (k->cyclicAnimation && k->currentFramePosition >= k->photograms.count()) {
-        k->currentFramePosition = 0;
+        k->currentFramePosition = -1;
         stopSounds();
     }
 
