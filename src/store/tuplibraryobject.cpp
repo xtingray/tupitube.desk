@@ -66,8 +66,6 @@ TupLibraryObject::TupLibraryObject(const QString &name, const QString &folder, T
     k->type = type;
     k->isSoundEffect = false;
     k->playAt = 0;
-
-    tError() << "TupLibraryObject::TupLibraryObject() - k->folder: " << folder;
 }
 
 TupLibraryObject::~TupLibraryObject()
@@ -293,7 +291,9 @@ void TupLibraryObject::fromXml(const QString &xml)
                 case TupLibraryObject::Item:
                      {
                          k->dataPath = objectTag.attribute("path");
-                         tError() << "TupLibraryObject::fromXml() - k->dataPath: " << k->dataPath;
+			 int index = k->dataPath.lastIndexOf("/");
+			 if (index > 0)
+			     k->folder = k->dataPath.left(index);
                      }
                 break;
                 case TupLibraryObject::Sound:
@@ -673,8 +673,6 @@ bool TupLibraryObject::saveData(const QString &dataDir)
 
             case TupLibraryObject::Image:
             {
-                 tError() << "TupLibraryObject::saveData() - k->folder : " << k->folder;
-
                  QString path = dataDir + "/images/";
                  if (k->folder.length() > 0)
                      path += k->folder + "/";
