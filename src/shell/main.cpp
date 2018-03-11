@@ -197,8 +197,11 @@ int main(int argc, char ** argv)
         }
     }
 
-    TupMainWindow mainWindow;
-    mainWindow.showMaximized();
+    TupMainWindow *mainWindow = new TupMainWindow();
+    mainWindow->showMaximized();
+    #if defined(Q_OS_MAC)
+        application.setMainWindow(mainWindow);
+    #endif
 
     // Looking for plugins for TupiTube Desk
     #ifdef TUP_DEBUG
@@ -223,14 +226,24 @@ int main(int argc, char ** argv)
             QString files = TCONFIG->value("Recents").toString();
             QStringList recents = files.split(';');
             if (!files.isEmpty())
-                mainWindow.openProject(recents.first());
+                mainWindow->openProject(recents.first());
         }
     } else {
         // If there is a second argument, it means to open a project from the command line
         if (argc == 2) {
             QString project = QString(argv[1]);
+
+            #ifdef TUP_DEBUG
+                QString msg = "main.cpp - Opening project -> " + project;
+                #ifdef Q_OS_WIN
+                   qWarning() << msg;
+                #else
+                   tWarning() << msg;
+                #endif
+            #endif
+
             if (project.endsWith(".tup") || project.endsWith(".TUP"))
-                mainWindow.openProject(project);
+                mainWindow->openProject(project);
         }
     }
 

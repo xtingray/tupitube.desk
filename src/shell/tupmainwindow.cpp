@@ -76,6 +76,7 @@
 #include <QThread>
 #include <QClipboard>
 #include <QDesktopServices>
+#include <QFileOpenEvent>
 
 TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(0), animationTab(0), playerTab(0), 
                m_viewChat(0), m_exposureSheet(0), m_scenes(0), isSaveDialogOpen(false), internetOn(false)
@@ -92,6 +93,7 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(0), animat
     setWindowTitle("TupiTube Desk");
     setWindowIcon(QIcon(THEME_DIR + "icons/about.png"));
     setObjectName("TupMainWindow_");
+    setAcceptDrops(true);
 
     isNetworked = false;
     exportWidget = NULL;
@@ -1054,6 +1056,19 @@ void TupMainWindow::showAnimationMenu(const QPoint &p)
     delete menu;
 }
 
+#if defined(Q_OS_MAC)
+bool TupMainWindow::event(QEvent *event)
+{
+    if (event->type() == QEvent::FileOpen) {
+        QFileOpenEvent *openEvent = static_cast<QFileOpenEvent *>(event);
+        openProject(openEvent->file());
+        return false;
+    }
+
+    return QMainWindow::event(event); 
+}
+#endif
+
 void TupMainWindow::closeEvent(QCloseEvent *event)
 {
     QString lastProject = m_fileName;
@@ -1334,4 +1349,18 @@ void TupMainWindow::setUpdateFlag(bool flag)
 {
     TCONFIG->beginGroup("General");
     TCONFIG->setValue("NotifyUpdate", flag);
+}
+
+void TupMainWindow::dragEnterEvent(QDragEnterEvent *e)
+{
+    if (e->mimeData()->hasUrls())
+        e->acceptProposedAction();
+}
+
+void TupMainWindow::dropEvent(QDropEvent *e)
+{
+    QList<QUrl> list = e->mimeData()->urls();
+    QString project = list.at(0).toLocalFile();
+
+    openProject(project);
 }

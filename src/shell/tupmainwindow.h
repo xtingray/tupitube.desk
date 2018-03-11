@@ -81,6 +81,9 @@
 #include <QToolBar>
 #include <QDesktopWidget>
 
+#include <QDragEnterEvent>
+#include <QDropEvent>
+
 class TupProjectManagerParams;
 class TupNetProjectManagerParams;
 class TupProjectResponse;
@@ -133,9 +136,14 @@ class TupMainWindow : public TabbedMainWindow
         void saveDefaultPath(const QString &dir);
 
     protected:
+        #if defined(Q_OS_MAC)
+            bool event(QEvent *event);
+        #endif
         void closeEvent(QCloseEvent *event);
         virtual void createGUI();
         void updateOpenRecentMenu(QMenu *menu, QStringList recents);
+        void dragEnterEvent(QDragEnterEvent *event);
+        void dropEvent(QDropEvent *event);
 
     public slots:
         void openProject(const QString &path);

@@ -48,6 +48,8 @@
 
 #include <QDesktopWidget>
 #include <QRect>
+#include <QEvent>
+#include <QMainWindow>
 
 class TupApplication : public TApplication
 {
@@ -56,9 +58,22 @@ class TupApplication : public TApplication
     public:
         TupApplication(int &argc, char **argv);
         ~TupApplication();
+        #if defined(Q_OS_MAC)
+            void setMainWindow(QMainWindow *mainWindow);
+        #endif
+
+    protected:
+        #if defined(Q_OS_MAC)
+            bool event(QEvent *event);
+        #endif
 
     public slots:
         void createCache(const QString &cacheDir);
+
+    private:
+        #if defined(Q_OS_MAC)
+            QMainWindow *mainWindow;
+        #endif
 };
 
 #endif

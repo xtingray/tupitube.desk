@@ -80,3 +80,20 @@ void TupApplication::createCache(const QString &cacheDir)
 
     kAppProp->setCacheDir(cacheDir);
 }
+
+#if defined(Q_OS_MAC)
+void TupApplication::setMainWindow(QMainWindow *mw) 
+{
+    mainWindow = mw;
+}
+
+bool TupApplication::event(QEvent *event)
+{
+    if (event->type() == QEvent::FileOpen) {
+        QApplication::sendEvent(mainWindow, event);
+        return false;
+    }
+    
+    return QApplication::event(event);
+}
+#endif

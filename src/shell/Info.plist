@@ -12,18 +12,26 @@
 	<string>0.2.10</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
-	<dict>
-	<key>CFBundleTypeName</key>
-	<string>TUP</string>
-	<key>LSHandlerRank</key>
-	<string>Owner</string>
-        <key>CFBundleTypeIconFiles</key>
-        <string>tup.png</string>
-	<key>LSItemContentTypes</key>
-	<array>
-	<string>com.maefloresta.tup</string>
-	</array>
-	</dict>
+	  <dict>
+            <key>CFBundleTypeExtensions</key>
+            <array>
+              <string>TUP</string>
+            </array>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+	    <key>CFBundleTypeName</key>
+	    <string>TupiTube Animation</string>
+            <key>CFBundleTypeIconFiles</key>
+              <array>
+                <string>tup.png</string>
+              </array>
+	    <key>LSItemContentTypes</key>
+	    <array>
+	      <string>com.maefloresta.tup</string>
+	    </array>
+            <key>LSHandlerRank</key>
+            <string>Owner</string>
+	  </dict>
 	</array>
 	<key>CFBundleIconFile</key>
 	<string>tupitube.desk.icns</string>
@@ -31,8 +39,6 @@
 	<string>APPL</string>
 	<key>CFBundleGetInfoString</key>
 	<string>Created by MaeFloresta</string>
-	<key>CFBundleExecutable</key>
-	<string>TupiTube</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.maefloresta.tupitube</string>
 	<key>NOTE</key>
