@@ -717,7 +717,10 @@ void TupDocumentView::loadPlugins()
     // SQA: Enable it only for debugging goals
     // k->toolbar->addAction(k->schemeAction);
     k->toolbar->addAction(k->polyLineAction);
-    k->toolbar->addAction(k->textAction);
+
+    // SQA: Temporarily disabled
+    // k->toolbar->addAction(k->textAction);
+
     k->toolbar->addSeparator();
     k->toolbar->addAction(k->shapesMenu->menuAction());
     k->toolbar->addSeparator();
