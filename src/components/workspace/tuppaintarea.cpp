@@ -1,12 +1,12 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                *
+ *   Project TUPITUBE DESK                                                 *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
  *   2010:                                                                 *
- *    Gustav Gonzalez / xtingray                                          *
+ *    Gustav Gonzalez / xtingray                                           *
  *                                                                         *
  *   KTooN's versions:                                                     * 
  *                                                                         *
