@@ -64,6 +64,7 @@ struct TupTwitter::Private
     QString url;
     QString webMsg;
     bool update;
+    bool showAds;
     QString themeName;
     QString locale;
 };
@@ -73,6 +74,7 @@ TupTwitter::TupTwitter(QWidget *parent) : QWidget(parent), k(new Private)
     k->update = false;
     TCONFIG->beginGroup("General");
     k->themeName = TCONFIG->value("Theme", "Light").toString();
+    k->showAds = TCONFIG->value("ShowAds", true).toBool();
 
     k->locale = QString(QLocale::system().name()).left(2);
     if (k->locale.length() < 2) {
@@ -186,7 +188,8 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
                     requestFile(NEWS_HOST + TUPITUBE_WEB_MSG + k->locale + ".html");
                 } else {
                     if (answer.startsWith("<webmsg>")) { // Getting web msg
-                        saveFile(answer, "webmsg.html");
+                        if (k->showAds)
+                            saveFile(answer, "webmsg.html");
                         requestFile(NEWS_HOST + TUPITUBE_VIDEOS);
                     } else {
                         if (answer.startsWith("<youtube>")) { // Getting video list
