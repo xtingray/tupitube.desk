@@ -53,29 +53,41 @@ TupApplication::~TupApplication()
     #endif
 }
 
-void TupApplication::createCache(const QString &cacheDir)
+void TupApplication::resetCache()
 {
+    TCONFIG->beginGroup("General");
+    TCONFIG->setValue("Cache", QDir::tempPath());
+    cacheDir = QDir::tempPath();
+}
+
+void TupApplication::createCache(QString cacheDir)
+{
+    if (cacheDir.isEmpty())
+        resetCache();
+
     QDir cache(cacheDir);
     if (!cache.exists()) {
+        resetCache();
+
         #ifdef TUP_DEBUG
-            QString msg = "Initializing repository: " + cacheDir;
-            #ifdef Q_OS_WIN
-                qWarning() << msg;
-            #else
-                tWarning() << msg;
-            #endif
+           QString msg = "Initializing repository: " + cacheDir;
+           #ifdef Q_OS_WIN
+               qWarning() << msg;
+           #else
+               tWarning() << msg;
+           #endif
         #endif
 
-       if (!cache.mkdir(cacheDir)) {
-           #ifdef TUP_DEBUG
-               QString msg = "TupApplication::createCache() - Fatal Error: Can't create project repository";
-               #ifdef Q_OS_WIN
-                   qDebug() << msg;
-               #else
-                   tError() << msg;
-               #endif
-           #endif
-       }
+        if (!cache.mkdir(cacheDir)) {
+            #ifdef TUP_DEBUG
+                QString msg = "TupApplication::createCache() - Fatal Error: Can't create project repository";
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError() << msg;
+                #endif
+            #endif
+        }
     }
 
     kAppProp->setCacheDir(cacheDir);

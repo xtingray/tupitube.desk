@@ -117,15 +117,6 @@ int main(int argc, char ** argv)
         #endif
     }
 
-#ifdef TUP_DEBUG
-    QString debug = "main.cpp - CACHE path: " + TCONFIG->value("Cache").toString();
-    #ifdef Q_OS_WIN
-        qWarning() << debug;
-    #else
-        tWarning() << debug;
-    #endif
-#endif
-    
 #if defined(Q_OS_MAC)
     kAppProp->setHomeDir(TCONFIG->value("Home").toString());
     kAppProp->setBinDir(appDirPath.absolutePath());
@@ -166,6 +157,15 @@ int main(int argc, char ** argv)
 
     // Setting the repository directory (where the projects are saved)
     application.createCache(TCONFIG->value("Cache").toString());
+
+#ifdef TUP_DEBUG
+    QString debug = "main.cpp - CACHE path: " + TCONFIG->value("Cache").toString();
+    #ifdef Q_OS_WIN
+        qWarning() << debug;
+    #else
+        tWarning() << debug;
+    #endif
+#endif
 
     QStyle *style = QStyleFactory::create("fusion");
     QApplication::setStyle(style);

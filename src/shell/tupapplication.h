@@ -68,12 +68,14 @@ class TupApplication : public TApplication
         #endif
 
     public slots:
-        void createCache(const QString &cacheDir);
+        void createCache(QString cacheDir);
 
     private:
+        void resetCache();
         #if defined(Q_OS_MAC)
             QMainWindow *mainWindow;
         #endif
+        QString cacheDir;
 };
 
 #endif
