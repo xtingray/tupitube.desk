@@ -68,7 +68,7 @@ class TupApplication : public TApplication
         #endif
 
     public slots:
-        void createCache(QString cacheDir);
+        void createCache(const QString &cacheDir);
 
     private:
         void resetCache();

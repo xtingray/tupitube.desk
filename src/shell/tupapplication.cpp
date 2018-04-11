@@ -53,22 +53,10 @@ TupApplication::~TupApplication()
     #endif
 }
 
-void TupApplication::resetCache()
+void TupApplication::createCache(const QString &cacheDir)
 {
-    TCONFIG->beginGroup("General");
-    TCONFIG->setValue("Cache", QDir::tempPath());
-    cacheDir = QDir::tempPath();
-}
-
-void TupApplication::createCache(QString cacheDir)
-{
-    if (cacheDir.isEmpty())
-        resetCache();
-
     QDir cache(cacheDir);
     if (!cache.exists()) {
-        resetCache();
-
         #ifdef TUP_DEBUG
            QString msg = "Initializing repository: " + cacheDir;
            #ifdef Q_OS_WIN

@@ -115,7 +115,14 @@ int main(int argc, char ** argv)
         #else
             TCONFIG->setValue("Cache", QDir::tempPath());    
         #endif
-    }
+    } else {
+        QString cache = TCONFIG->value("Cache").toString();
+        if (cache.isEmpty())
+            TCONFIG->setValue("Cache", QDir::tempPath());
+        QDir dir(cache);
+        if (!dir.exists())
+            TCONFIG->setValue("Cache", QDir::tempPath());
+    } 
 
 #if defined(Q_OS_MAC)
     kAppProp->setHomeDir(TCONFIG->value("Home").toString());
