@@ -3809,7 +3809,7 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="../src/shell/tupmainwindow.cpp" line="690"/>
         <source>Open TupiTube project</source>
-        <translation>Ouvrez le projet TupiTube</translation>
+        <translation type="unfinished">Ouvrir le projet de TupiTube</translation>
     </message>
     <message>
         <location filename="../src/shell/tupmainwindow.cpp" line="691"/>
@@ -4094,7 +4094,7 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="../src/shell/tupmainwindow_gui.cpp" line="297"/>
         <source>Open Project</source>
-        <translation>Projet ouvert</translation>
+        <translation>Ouvrir un project</translation>
     </message>
     <message>
         <location filename="../src/shell/tupmainwindow_gui.cpp" line="300"/>
