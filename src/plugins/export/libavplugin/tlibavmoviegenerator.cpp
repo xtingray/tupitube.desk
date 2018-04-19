@@ -81,8 +81,8 @@ struct TLibavMovieGenerator::Private
     QString errorMsg;
 
     AVStream *video_st;
-    AVStream *audio_st;
-    AVAudioResampleContext *avAudioR;
+    // AVStream *audio_st;
+    // AVAudioResampleContext *avAudioR;
 
     AVFormatContext *oc;
     AVOutputFormat *fmt;
@@ -91,25 +91,29 @@ struct TLibavMovieGenerator::Private
 
     AVStream * addVideoStream(AVFormatContext *oc, AVCodec **codec, enum AVCodecID codec_id, 
                               const QString &movieFile, int width, int height, int fps);
+	/*
     AVStream * addAudioStream(AVFormatContext *oc, AVCodec **codec, enum AVCodecID codec_id, 
                               AVAudioResampleContext *avAudioR);
+    */
 
     bool openVideo(AVCodec *codec, AVStream *st);
-    bool openAudio(AVCodec *codec, AVStream *st);
+    // bool openAudio(AVCodec *codec, AVStream *st);
 
     // Video methods
     void RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint iRGBIncrement, bool bSwapRGB, int width, int height);
     bool writeVideoFrame(const QString &movieFile, const QImage &image);
 
     // Audio methods
+	/*
     AVFrame *allocAudioFrame(enum AVSampleFormat sample_fmt, uint64_t channel_layout,
                              int sample_rate, int nb_samples);
     AVFrame * getAudioFrame();
     int encodeAudioFrame();
     bool writeAudioFrame();
+	*/
 
     void closeVideo(AVStream *st);
-    void closeAudio();
+    // void closeAudio();
 };
 
 TLibavMovieGenerator::TLibavMovieGenerator(TMovieGeneratorInterface::Format format, int width, int height, 
@@ -150,7 +154,7 @@ bool TLibavMovieGenerator::beginVideo()
 {
     int ret;
     AVCodec *video_codec = 0;
-    AVCodec *audio_codec = 0;
+    // AVCodec *audio_codec = 0;
     QString errorDetail = "This is not a problem directly related to <b>TupiTube Desk</b>. "
                           "Please, check your libav installation and codec support. "
                           "More info: <b>http://libav.org</b>";
@@ -200,12 +204,14 @@ bool TLibavMovieGenerator::beginVideo()
     if (k->fmt->video_codec != AV_CODEC_ID_NONE)
         k->video_st = k->addVideoStream(k->oc, &video_codec, k->fmt->video_codec, k->movieFile, width(), height(), k->fps);
 
+	/*
     if (k->hasSounds) {
         k->audio_st = NULL;
         if (k->fmt->audio_codec != AV_CODEC_ID_NONE)
             k->audio_st = k->addAudioStream(k->oc, &audio_codec, k->fmt->audio_codec, k->avAudioR);
     }
-
+    */
+	
     av_dump_format(k->oc, 0, k->movieFile.toLocal8Bit().data(), 1); 
 	
     if (k->video_st) {
@@ -237,6 +243,7 @@ bool TLibavMovieGenerator::beginVideo()
         return false;
     }
 
+	/*
     if (k->hasSounds) {
         if (k->audio_st) {
             bool success = k->openAudio(audio_codec, k->audio_st);  
@@ -267,6 +274,7 @@ bool TLibavMovieGenerator::beginVideo()
             return false;
         }
     }
+	*/
 
     if (!(k->fmt->flags & AVFMT_NOFILE)) {
         ret = avio_open(&k->oc->pb, k->movieFile.toLocal8Bit().data(), AVIO_FLAG_WRITE);
@@ -390,6 +398,7 @@ AVStream * TLibavMovieGenerator::Private::addVideoStream(AVFormatContext *oc, AV
     return st;
 }
 
+/*
 AVStream * TLibavMovieGenerator::Private::addAudioStream(AVFormatContext *oc, AVCodec **codec, enum AVCodecID codec_id, AVAudioResampleContext *avAudioR)
 {
     AVStream *st;
@@ -443,11 +452,11 @@ AVStream * TLibavMovieGenerator::Private::addAudioStream(AVFormatContext *oc, AV
     if (oc->oformat->flags & AVFMT_GLOBALHEADER)
         c->flags |= CODEC_FLAG_GLOBAL_HEADER;
 
-    /* initialize sample format conversion;
-     * to simplify the code, we always pass the data through lavr, even
-     * if the encoder supports the generated format directly -- the price is
-     * some extra data copying;
-     */
+    // initialize sample format conversion;
+    // to simplify the code, we always pass the data through lavr, even
+    // if the encoder supports the generated format directly -- the price is
+    // some extra data copying;
+ 
     avAudioR = avresample_alloc_context();
     if (!avAudioR) {
         #ifdef TUP_DEBUG
@@ -485,6 +494,7 @@ AVStream * TLibavMovieGenerator::Private::addAudioStream(AVFormatContext *oc, AV
 
     return st;
 }
+*/
 
 bool TLibavMovieGenerator::Private::openVideo(AVCodec *codec, AVStream *st)
 {
@@ -527,7 +537,7 @@ bool TLibavMovieGenerator::Private::openVideo(AVCodec *codec, AVStream *st)
     return true;
 }
 
-
+/*
 AVFrame * TLibavMovieGenerator::Private::allocAudioFrame(enum AVSampleFormat sample_fmt, uint64_t channel_layout,
                                                          int sample_rate, int nb_samples)
 {
@@ -626,8 +636,9 @@ bool TLibavMovieGenerator::Private::openAudio(AVCodec *codec, AVStream *st)
     audioFrame = allocAudioFrame(c->sample_fmt, c->channel_layout, c->sample_rate, nb_samples);
     tmpAudioFrame = allocAudioFrame(AV_SAMPLE_FMT_S16, AV_CH_LAYOUT_STEREO, 44100, nb_samples);
 
-    return true;
+    return true;audio
 }
+*/
 
 #define RGBtoYUV(r, g, b, y, u, v) \
   y = (uint8_t)(((int)30*r + (int)59*g + (int)11*b)/100); \
@@ -751,6 +762,7 @@ bool TLibavMovieGenerator::Private::writeVideoFrame(const QString &movieFile, co
     return true;
 }
 
+/*
 AVFrame * TLibavMovieGenerator::Private::getAudioFrame()
 {
     #ifdef TUP_DEBUG
@@ -762,7 +774,7 @@ AVFrame * TLibavMovieGenerator::Private::getAudioFrame()
         #endif
     #endif
 
-    AVFrame *frame = tmpAudioFrame;
+    AVFrame *frame = tmpAudioFrame;avsaa
     int j, i, v;
     int16_t *q = (int16_t*) frame->data[0];
 
@@ -865,10 +877,10 @@ bool TLibavMovieGenerator::Private::writeAudioFrame()
             return false;
         }
 
-        /* the difference between the two avresample calls here is that the
-         * first one just reads the already converted data that is buffered in
-         * the lavr output buffer, while the second one also flushes the
-         * resampler */
+        // the difference between the two avresample calls here is that the
+        // first one just reads the already converted data that is buffered in
+        // the lavr output buffer, while the second one also flushes the
+        // resampler
         if (frame) {
             ret = avresample_read(avAudioR, audioFrame->extended_data,
                                   audioFrame->nb_samples);
@@ -900,6 +912,7 @@ bool TLibavMovieGenerator::Private::writeAudioFrame()
 
     return true;
 }
+*/
 
 void TLibavMovieGenerator::handle(const QImage& image)
 {
@@ -927,8 +940,10 @@ void TLibavMovieGenerator::handle(const QImage& image)
     #endif
 
     k->writeVideoFrame(k->movieFile, image);
+	/*
     if (k->hasSounds)
         k->writeAudioFrame();
+	*/
 }
 
 void TLibavMovieGenerator::Private::chooseFileExtension(int format)
@@ -982,18 +997,18 @@ void TLibavMovieGenerator::Private::closeVideo(AVStream *st)
     av_frame_free(&videoFrame);
 }
 
+/*
 void TLibavMovieGenerator::Private::closeAudio()
 {
     avcodec_close(audio_st->codec);
 
-    /*
     if (audioFrame)
         av_frame_free(&audioFrame);
     if (tmpAudioFrame)
         av_frame_free(&tmpAudioFrame);
     avresample_free(&avAudioR);
-    */
 }
+*/
 
 void TLibavMovieGenerator::saveMovie(const QString &filename) 
 {
@@ -1018,10 +1033,12 @@ void TLibavMovieGenerator::endVideo()
     if (k->video_st)
         k->closeVideo(k->video_st);
 
+	/*
     if (k->hasSounds) {
         if (k->audio_st)
             k->closeAudio();
     }
+	*/
 
     if (!(k->fmt->flags & AVFMT_NOFILE))
         avio_close(k->oc->pb);
