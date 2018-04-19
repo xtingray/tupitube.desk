@@ -2,46 +2,46 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleName</key>
-	<string>TupiTube Desk</string>
-	<key>CFBundleDisplayName</key>
-	<string>TupiTube Desk</string>
-	<key>CFBundleExecutable</key>
-	<string>TupiTube</string>
-	<key>CFBundleVersion</key>
-	<string>0.2.10</string>
-	<key>CFBundleDocumentTypes</key>
-	<array>
-	  <dict>
-            <key>CFBundleTypeExtensions</key>
-            <array>
-              <string>TUP</string>
-            </array>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-	    <key>CFBundleTypeName</key>
-	    <string>TupiTube Animation</string>
-            <key>CFBundleTypeIconFiles</key>
-              <array>
-                <string>tup.png</string>
-              </array>
-	    <key>LSItemContentTypes</key>
-	    <array>
-	      <string>com.maefloresta.tup</string>
-	    </array>
-            <key>LSHandlerRank</key>
-            <string>Owner</string>
-	  </dict>
-	</array>
-	<key>CFBundleIconFile</key>
-	<string>tupitube.desk.icns</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleGetInfoString</key>
-	<string>Created by MaeFloresta</string>
-	<key>CFBundleIdentifier</key>
-	<string>com.maefloresta.tupitube</string>
-	<key>NOTE</key>
-	<string>Package built by cristiandavid@me.com</string>
+    <key>CFBundleName</key>
+    <string>TupiTube Desk</string>
+    <key>CFBundleDisplayName</key>
+    <string>TupiTube Desk</string>
+    <key>CFBundleExecutable</key>
+    <string>TupiTube</string>
+    <key>CFBundleVersion</key>
+    <string>0.2.10</string>
+    <key>CFBundleDocumentTypes</key>
+        <array>
+            <dict>
+                <key>CFBundleTypeName</key>
+                <string>TupiTube Animation</string>
+                <key>CFBundleTypeIconFiles</key>
+                    <array>
+                        <string>tup.png</string>
+                    </array>
+                <key>LSItemContentTypes</key>
+                    <array>
+                        <string>com.maefloresta.tup</string>
+                    </array>
+                <key>CFBundleTypeExtensions</key>
+                    <array>
+                        <string>tup</string>
+                    </array>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>LSHandlerRank</key>
+                <string>Owner</string>
+            </dict>
+        </array>
+    <key>CFBundleIconFile</key>
+    <string>tupitube.desk.icns</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleGetInfoString</key>
+    <string>Created by MaeFloresta</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.maefloresta.tupitube</string>
+    <key>NOTE</key>
+    <string>Package built by cristiandavid@me.com</string>
 </dict>
 </plist>

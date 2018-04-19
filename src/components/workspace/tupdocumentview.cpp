@@ -2286,8 +2286,11 @@ void TupDocumentView::papagayoManager()
 void TupDocumentView::updatePerspective()
 {
     if (k->currentTool) {
-        if (k->currentTool->name().compare(tr("Papagayo Lip-sync")) == 0)
-            k->currentTool->updateWorkSpaceContext();
+        QString toolName = k->currentTool->name(); 
+        if (!toolName.isNull()) {
+            if (toolName.compare(tr("Papagayo Lip-sync")) == 0)
+                k->currentTool->updateWorkSpaceContext();
+        }
     }
 }
 
