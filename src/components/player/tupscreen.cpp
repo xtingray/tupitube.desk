@@ -88,6 +88,7 @@ TupScreen::TupScreen(TupProject *project, const QSize viewSize, bool isScaled, Q
     k->library = project->library();
     k->isScaled = isScaled;
     k->screenDimension = viewSize;
+
     k->cyclicAnimation = false;
     k->fps = 24;
     k->currentSceneIndex = 0;
