@@ -50,6 +50,7 @@ struct TupCameraWidget::Private
     QSize playerDimension;
     QSize screenDimension;
     bool isScaled;
+    QWidget *titleWidget;
 
     QLabel *currentFrameBox;
     QLabel *timerSecsLabel;
@@ -67,8 +68,14 @@ TupCameraWidget::TupCameraWidget(TupProject *project, bool isNetworked, QWidget 
     #endif
 
     QDesktopWidget desktop;
-    int desktopWidth = (40 * desktop.screenGeometry().width()) / 100;
-    int desktopHeight = (40 * desktop.screenGeometry().height()) / 100;
+
+    int percent = 40;
+    int height = desktop.screenGeometry().height();
+    if (height <= 800)
+        percent = 20;
+
+    int desktopWidth = (percent * desktop.screenGeometry().width()) / 100;
+    int desktopHeight = (percent * height) / 100;
     k->screenDimension = QSize(desktopWidth, desktopHeight);
 
     k->project = project;
@@ -126,35 +133,30 @@ void TupCameraWidget::addVideoHeader()
     labelLayout->setAlignment(Qt::AlignCenter);
     labelLayout->setSpacing(0);
 
-    QFont font = this->font();
-    font.setBold(true);
-    QLabel *name = new QLabel(k->project->projectName() + ": ");
-    name->setFont(font);
-
-    font.setBold(false);
-    QLabel *description = new QLabel(k->project->description());
-    description->setFont(font);
-
-    labelLayout->addWidget(name);
-    labelLayout->addWidget(description);
-
     QLabel *icon = new QLabel();
     icon->setPixmap(QPixmap(THEME_DIR + "icons/player.png"));
     QLabel *title = new QLabel(tr("Scene Preview"));
+    QFont font = this->font();
     font.setBold(true);
     title->setFont(font);
-    font.setBold(false);
-    k->scaleLabel = new QLabel;
-    k->scaleLabel->setFont(font);
 
-    setDimensionLabel(k->project->dimension());
-
-    QWidget *titleWidget = new QWidget();
-    QHBoxLayout *titleLayout = new QHBoxLayout(titleWidget);
+    k->titleWidget = new QWidget();
+    QHBoxLayout *titleLayout = new QHBoxLayout(k->titleWidget);
     titleLayout->setContentsMargins(0, 0, 0, 0);
     titleLayout->setAlignment(Qt::AlignCenter);
     titleLayout->addWidget(icon);
     titleLayout->addWidget(title);
+
+    setProgressBar();
+
+    QLabel *name = new QLabel(k->project->projectName() + ": ");
+    name->setFont(font);
+
+    font.setBold(false);
+    QLabel *description = new QLabel(k->project->description() + "  ");
+    description->setFont(font);
+
+    setDimensionLabel(k->project->dimension());
 
     QWidget *scaleWidget = new QWidget();
     QHBoxLayout *scaleLayout = new QHBoxLayout(scaleWidget);
@@ -162,13 +164,16 @@ void TupCameraWidget::addVideoHeader()
     scaleLayout->setAlignment(Qt::AlignCenter);
     scaleLayout->addWidget(k->scaleLabel);
 
-    k->layout->addWidget(titleWidget, 0, Qt::AlignCenter);
-    addProgressBar();
+    labelLayout->addWidget(name);
+    labelLayout->addWidget(description);
+    labelLayout->addWidget(scaleWidget);
+
+    k->layout->addWidget(k->titleWidget, 0, Qt::AlignCenter);
+    k->layout->addWidget(k->progressBar, 0, Qt::AlignCenter);
     k->layout->addLayout(labelLayout, Qt::AlignCenter);
-    k->layout->addWidget(scaleWidget, 0, Qt::AlignCenter);
 }
 
-void TupCameraWidget::addProgressBar()
+void TupCameraWidget::setProgressBar()
 {
     TCONFIG->beginGroup("General");
     QString themeName = TCONFIG->value("Theme", "Light").toString();
@@ -184,7 +189,7 @@ void TupCameraWidget::addProgressBar()
     k->progressBar->setMaximumHeight(5);
     k->progressBar->setTextVisible(false);
     k->progressBar->setRange(1, 100);
-    k->layout->addWidget(k->progressBar, 0, Qt::AlignCenter);
+    k->progressBar->setVisible(false);
 }
 
 void TupCameraWidget::addTimerPanel()
@@ -265,6 +270,11 @@ void TupCameraWidget::addStatusPanel(bool isNetworked)
 
 void TupCameraWidget::setDimensionLabel(const QSize dimension)
 {
+    QFont font = this->font();
+    font.setBold(false);
+    k->scaleLabel = new QLabel;
+    k->scaleLabel->setFont(font);
+
     int screenWidth = k->screenDimension.width();
     int screenHeight = k->screenDimension.height();
 
@@ -495,6 +505,16 @@ void TupCameraWidget::updateFirstFrame()
 
 void TupCameraWidget::updateProgressBar(int advance)
 {
+    if (advance == 0) {
+        k->titleWidget->setVisible(true);
+        k->progressBar->setVisible(false);
+    }
+
+    if (advance == 1) {
+        k->titleWidget->setVisible(false);
+        k->progressBar->setVisible(true);
+    }
+
     k->progressBar->setValue(advance);
 }
 

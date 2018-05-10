@@ -100,7 +100,7 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
 
     private:
         void addVideoHeader();
-        void addProgressBar();
+        void setProgressBar();
         void addTimerPanel();
         void addAnimationDisplay();
         void addControlsBar();

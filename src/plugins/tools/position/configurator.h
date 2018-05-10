@@ -96,6 +96,8 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void undoSegment(const QPainterPath path);
         void redoSegment(const QPainterPath path);
 
+        void enableSaveOption(bool flag);
+
     public slots:
         void editTween();
         void closeTweenProperties();

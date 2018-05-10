@@ -77,6 +77,7 @@ class TUPITUBE_PLUGIN Settings : public QWidget
 
         void undoSegment(const QPainterPath path);
         void redoSegment(const QPainterPath path);
+        void enableSaveOption(bool flag);
 
     private slots:
         void emitOptionChanged(int option);

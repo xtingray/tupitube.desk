@@ -271,7 +271,6 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
                } else if ((e.type == QPainterPath::LineToElement || e.type == QPainterPath::MoveToElement)) {
                           TControlNode *node;
                           if (index+1 < path.elementCount()) {
-                    
                               if (path.elementAt(index+1).type == QPainterPath::CurveToElement) {
                                   node = new TControlNode(index, this, path.elementAt(index), pathItem, k->scene, k->level);
                                   node->setRight(new TControlNode(index+1, this, path.elementAt(index+1), pathItem, k->scene));
@@ -330,14 +329,14 @@ void TNodeGroup::emitNodeClicked(TControlNode::State state)
 void TNodeGroup::expandAllNodes()
 {
     foreach (TControlNode *node, k->nodes)
-             node->showChildNodes(true);
+        node->showChildNodes(true);
 }
 
 bool TNodeGroup::isSelected()
 {
     foreach (TControlNode *node, k->nodes) {
-             if (node->isSelected())
-                 return true;
+        if (node->isSelected())
+            return true;
     }
 
     return false;
@@ -351,7 +350,7 @@ int TNodeGroup::size()
 void TNodeGroup::resizeNodes(qreal scaleFactor)
 {
     foreach (TControlNode *node, k->nodes) {
-             if (node)
-                 node->resize(scaleFactor);
+        if (node)
+            node->resize(scaleFactor);
     }
 }

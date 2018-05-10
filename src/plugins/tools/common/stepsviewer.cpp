@@ -104,6 +104,10 @@ void StepsViewer::loadPath(const QGraphicsPathItem *pathItem, QList<int> interva
     // Set of key points which define the path
     k->path = pathItem->path();
     k->points = k->path.toFillPolygon();
+
+    if (k->points.isEmpty())
+        return;
+
     k->points.removeLast();
 
     // This list contains the (green) key points of the path
@@ -187,7 +191,9 @@ void StepsViewer::setPath(const QGraphicsPathItem *pathItem)
     // Set of key points which define the path 
     k->path = pathItem->path();
     k->points = k->path.toFillPolygon();
-    k->points.removeLast();
+
+    if (!k->points.isEmpty())
+        k->points.removeLast();
 
     calculateKeys();
 
@@ -511,6 +517,16 @@ QList<QPointF> StepsViewer::calculateSegmentPoints(QPointF begin, QPointF end, i
 
 void StepsViewer::addTableRow(int row, int frames)  
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[StepsViewer::addTableRow()]";
+        #else
+            T_FUNCINFO;
+            tWarning() << "row: " << row;
+            tWarning() << "frames: " << frames;
+        #endif
+    #endif
+
     setRowCount(rowCount() + 1);
 
     QTableWidgetItem *intervalItem = new QTableWidgetItem();
@@ -628,24 +644,31 @@ void StepsViewer::undoSegment(const QPainterPath path)
     k->path = path;
 
     k->points = k->path.toFillPolygon();
-    k->points.removeLast();
+    if (!k->points.isEmpty())
+        k->points.removeLast();
 
     calculateKeys();
     calculateGroups();
 
-    k->undoFrames << k->frames.last();
-    k->frames.removeLast();
+    if (!k->frames.isEmpty()) { 
+        k->undoFrames << k->frames.last();
+        k->frames.removeLast();
+    }
+
     k->records--;
 
-    k->undoSegments << k->segments.last();
-    k->segments.removeLast();
+    if (!k->segments.isEmpty()) {
+        k->undoSegments << k->segments.last();
+        k->segments.removeLast();
+    }
 
     updateSegments();
 
-    // disconnect(k->plusButton->last(), SIGNAL(clicked(int, int)), this, SLOT(updatePathSection(int, int)));
-    k->plusButton->removeLast();
-    // disconnect(k->minusButton->last(), SIGNAL(clicked(int, int)), this, SLOT(updatePathSection(int, int)));
-    k->minusButton->removeLast(); 
+    if (!k->plusButton->isEmpty()) 
+        k->plusButton->removeLast();
+
+    if (!k->minusButton->isEmpty())
+        k->minusButton->removeLast(); 
 
     removeRow(rowCount()-1);
 }

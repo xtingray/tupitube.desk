@@ -110,7 +110,7 @@ Tweener::~Tweener()
     delete k;
 }
 
-/* This method initialize the context of the plugin */
+// This method initialize the context of the plugin
 
 void Tweener::init(TupGraphicsScene *scene)
 {
@@ -170,15 +170,16 @@ void Tweener::updateStartFrame(int index)
         k->initFrame = index - 1;
 }
 
-/* This method returns the plugin name */
+// This method returns the plugin name
 
 QStringList Tweener::keys() const
 {
     return QStringList() << tr("Position Tween");
 }
 
-/* This method makes an action when the mouse is pressed on the workspace 
- * depending on the active mode: Selecting an object or Creating a path  
+/*
+  This method makes an action when the mouse is pressed on the workspace 
+  depending on the active mode: Selecting an object or Creating a path  
 */
 
 void Tweener::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
@@ -204,7 +205,7 @@ void Tweener::press(const TupInputDeviceInformation *input, TupBrushManager *bru
     } 
 }
 
-/* This method is executed while the mouse is pressed and on movement */
+// This method is executed while the mouse is pressed and on movement
 
 void Tweener::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
@@ -213,8 +214,9 @@ void Tweener::move(const TupInputDeviceInformation *input, TupBrushManager *brus
     Q_UNUSED(scene);
 }
 
-/* This method finishes the action started on the press method depending
- * on the active mode: Selecting an object or Creating a path
+/*
+  This method finishes the action started on the press method depending
+  on the active mode: Selecting an object or Creating a path
 */
 
 void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
@@ -316,21 +318,21 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
     } 
 }
 
-/* This method returns the list of actions defined in this plugin */
+// This method returns the list of actions defined in this plugin
 
 QMap<QString, TAction *> Tweener::actions() const
 {
     return k->actions;
 }
 
-/* This method returns the list of actions defined in this plugin */
+// This method returns the list of actions defined in this plugin
 
 int Tweener::toolType() const
 {
     return TupToolInterface::Tweener;
 }
 
-/* This method returns the tool panel associated to this plugin */
+// This method returns the tool panel associated to this plugin
 
 QWidget *Tweener::configurator()
 {
@@ -354,14 +356,14 @@ QWidget *Tweener::configurator()
     return k->configurator;
 }
 
-/* This method is called when there's a change on/of scene */
+// This method is called when there's a change on/of scene
 
 void Tweener::aboutToChangeScene(TupGraphicsScene *scene)
 {
     Q_UNUSED(scene);
 }
 
-/* This method is called when this plugin is off */
+// This method is called when this plugin is off
 
 void Tweener::aboutToChangeTool()
 {
@@ -411,7 +413,7 @@ void Tweener::resetGUI()
     }
 }
 
-/* This method defines the actions contained in this plugin */
+// This method defines the actions contained in this plugin
 
 void Tweener::setupActions()
 {
@@ -424,7 +426,7 @@ void Tweener::setupActions()
     k->actions.insert(tr("Position Tween"), action);
 }
 
-/* This method initializes the "Create path" mode */
+// This method initializes the "Create path" mode
 
 void Tweener::setTweenPath()
 {
@@ -438,7 +440,6 @@ void Tweener::setTweenPath()
 
     if (k->path) {
         k->pathOffset = QPointF(0, 0);
-
         if (!k->isPathInScene) {
             k->scene->addItem(k->path);
             k->isPathInScene = true;
@@ -454,14 +455,15 @@ void Tweener::setTweenPath()
         k->nodesGroup->show();
         k->nodesGroup->resizeNodes(k->realFactor);
         k->nodesGroup->expandAllNodes();
+
+        paintTweenPoints();
     }
 
-    paintTweenPoints();
     k->editMode = TupToolPlugin::Properties;
     disableSelection();
 }
 
-/* This method initializes the "Select object" mode */
+// This method initializes the "Select object" mode
 
 void Tweener::setSelection()
 {
@@ -500,17 +502,17 @@ void Tweener::setSelection()
 
     k->scene->enableItemsForSelection();
     foreach (QGraphicsView *view, k->scene->views())
-             view->setDragMode(QGraphicsView::RubberBandDrag);
+        view->setDragMode(QGraphicsView::RubberBandDrag);
     // When Object selection is enabled, previous selection is set
     if (k->objects.size() > 0) {
         foreach (QGraphicsItem *item, k->objects) {
-                 item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
-                 item->setSelected(true);
+            item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+            item->setSelected(true);
         }
     }
 }
 
-/* This method transforms the path created into a QString representation */
+// This method transforms the path created into a QString representation
 
 QString Tweener::pathToCoords()
 {
@@ -566,7 +568,7 @@ QString Tweener::pathToCoords()
     return strPath.trimmed();
 }
 
-/* This method resets this plugin */
+// This method resets this plugin
 
 void Tweener::applyReset()
 {
@@ -603,7 +605,7 @@ void Tweener::applyReset()
     k->configurator->clearData();
 }
 
-/* This method applies to the project, the Tween created from this plugin */
+// This method applies to the project, the Tween created from this plugin
 
 void Tweener::applyTween()
 {
@@ -764,8 +766,9 @@ void Tweener::applyTween()
     */
 }
 
-/* This method updates the data of the path into the tool panel 
- * and disables edition mode for nodes
+/*
+  This method updates the data of the path into the tool panel 
+  and disables edition mode for nodes
 */
 
 void Tweener::updatePath()
@@ -805,7 +808,7 @@ void Tweener::updatePath()
     }
 }
 
-/* This method saves the settings of this plugin */
+// This method saves the settings of this plugin
 
 void Tweener::saveConfig()
 {
@@ -1001,8 +1004,8 @@ void Tweener::clearSelection()
 {
     if (k->objects.size() > 0) {
         foreach (QGraphicsItem *item, k->objects) {
-                 if (item->isSelected())
-                     item->setSelected(false);
+            if (item->isSelected())
+                item->setSelected(false);
         }
         k->objects.clear();
         k->configurator->notifySelection(false);
@@ -1014,11 +1017,11 @@ void Tweener::clearSelection()
 void Tweener::disableSelection()
 {
     foreach (QGraphicsView *view, k->scene->views()) {
-             view->setDragMode (QGraphicsView::NoDrag);
-             foreach (QGraphicsItem *item, view->scene()->items()) {
-                      item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-                      item->setFlag(QGraphicsItem::ItemIsMovable, false);
-             }
+        view->setDragMode (QGraphicsView::NoDrag);
+        foreach (QGraphicsItem *item, view->scene()->items()) {
+            item->setFlag(QGraphicsItem::ItemIsSelectable, false);
+            item->setFlag(QGraphicsItem::ItemIsMovable, false);
+        }
     }
 }
 
@@ -1090,7 +1093,7 @@ void Tweener::itemResponse(const TupItemResponse *response)
         #ifdef Q_OS_WIN
             qDebug() << "[Tweener::itemResponse()] " << response->itemIndex();
         #else
-            T_FUNCINFO << response->itemIndex();
+            T_FUNCINFO << " - item index: " << response->itemIndex();
         #endif
     #endif
 
@@ -1120,19 +1123,21 @@ void Tweener::itemResponse(const TupItemResponse *response)
                     path.moveTo(k->firstNode);
                     k->path->setPath(path);
                     k->scene->addItem(k->path);
+
+                    k->configurator->enableSaveOption(false);
                 } else {
                     path = k->doList.last();
                     k->path->setPath(path);
                     k->scene->addItem(k->path);
-
-                    k->nodesGroup = new TNodeGroup(k->path, k->scene, TNodeGroup::PositionTween, k->baseZValue);
-                    connect(k->nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath()));
-                    k->nodesGroup->createNodes(k->path);
-
-                    k->nodesGroup->show();
-                    k->nodesGroup->resizeNodes(k->realFactor);
-                    k->nodesGroup->expandAllNodes();
                 }
+
+                k->nodesGroup = new TNodeGroup(k->path, k->scene, TNodeGroup::PositionTween, k->baseZValue);
+                connect(k->nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath()));
+                k->nodesGroup->createNodes(k->path);
+
+                k->nodesGroup->show();
+                k->nodesGroup->resizeNodes(k->realFactor);
+                k->nodesGroup->expandAllNodes();
 
                 k->configurator->undoSegment(path);
                 paintTweenPoints();
@@ -1212,14 +1217,21 @@ void Tweener::paintTweenPoints()
         QList<QPointF> points = k->configurator->tweenPoints();
         int total = points.size();
         for (int i=0; i<total; i++) {
-             QPen inkPen(color, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-             TupEllipseItem *ellipse = new TupEllipseItem(QRectF(points.at(i) - QPointF(2,2), QSize(4, 4)));
-             ellipse->setPen(inkPen);
-             ellipse->setBrush(inkPen.brush());
-             k->scene->addItem(ellipse);
-             k->dots << ellipse;
+            QPen inkPen(color, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+            TupEllipseItem *ellipse = new TupEllipseItem(QRectF(points.at(i) - QPointF(2,2), QSize(4, 4)));
+            ellipse->setPen(inkPen);
+            ellipse->setBrush(inkPen.brush());
+            k->scene->addItem(ellipse);
+            k->dots << ellipse;
         }
     } 
+
+    if (k->nodesGroup) {
+        if (k->nodesGroup->size() == 4)
+            k->configurator->enableSaveOption(true);
+    } else {
+        k->configurator->enableSaveOption(false);
+    }
 }
 
 void Tweener::updateTweenPoints()

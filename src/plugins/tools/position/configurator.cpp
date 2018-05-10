@@ -263,6 +263,14 @@ void Configurator::addTween(const QString &name)
 
 void Configurator::editTween()
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[Configurator::editTween()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     activeTweenManagerPanel(false);
 
     k->mode = TupToolPlugin::Edit;
@@ -390,3 +398,7 @@ void Configurator::redoSegment(const QPainterPath path)
     k->settingsPanel->redoSegment(path);
 }
 
+void Configurator::enableSaveOption(bool flag)
+{
+    k->settingsPanel->enableSaveOption(flag);
+}

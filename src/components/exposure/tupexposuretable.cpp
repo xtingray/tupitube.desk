@@ -754,6 +754,11 @@ int TupExposureTable::framesCountAtLayer(int layer)
 
 void TupExposureTable::keyPressEvent(QKeyEvent *event)
 {
+    if (event->key() == Qt::Key_Return) {
+        emit newPerspective(4);
+        return;
+    }
+
     if (event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Delete) {
         emit selectionRemoved();
         return;

@@ -172,6 +172,8 @@ void Settings::setParameters(const QString &name, int framesCount, int startFram
 
     k->comboInit->setEnabled(false);
     k->apply->setToolTip(tr("Save Tween"));
+    k->apply->setEnabled(false);
+
     k->remove->setIcon(QPixmap(kAppProp->themeDir() + "icons/close.png"));
     k->remove->setToolTip(tr("Cancel Tween"));
 
@@ -179,8 +181,17 @@ void Settings::setParameters(const QString &name, int framesCount, int startFram
 }
 
 // Load properties of currentTween 
+
 void Settings::setParameters(TupItemTweener *currentTween)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[Settings::setParameters()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     setEditMode();
 
     notifySelection(true);
@@ -264,7 +275,7 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     root.setAttribute("intervals", k->stepViewer->intervals());
 
     foreach (TupTweenerStep *step, k->stepViewer->steps())
-             root.appendChild(step->toXml(doc));
+        root.appendChild(step->toXml(doc));
 
     doc.appendChild(root);
 
@@ -359,4 +370,9 @@ void Settings::undoSegment(const QPainterPath path)
 void Settings::redoSegment(const QPainterPath path)
 {
     k->stepViewer->redoSegment(path);
+}
+
+void Settings::enableSaveOption(bool flag)
+{
+    k->apply->setEnabled(flag);
 }
