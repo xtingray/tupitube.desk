@@ -399,7 +399,12 @@ void TupMainWindow::setupToolBar()
     mainToolBar->addAction(m_actionManager->find("save_project"));
     mainToolBar->addAction(m_actionManager->find("save_project_as"));
     mainToolBar->addAction(m_actionManager->find("close_project"));
-    mainToolBar->addAction(m_actionManager->find("visit_store"));
+
+
+    TCONFIG->beginGroup("General");
+    bool showAds = TCONFIG->value("ShowAds", true).toBool();
+    if (showAds)
+        mainToolBar->addAction(m_actionManager->find("visit_store"));
 }
 
 void TupMainWindow::updateOpenRecentMenu(QMenu *menu, QStringList recents)

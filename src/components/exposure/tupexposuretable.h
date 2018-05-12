@@ -126,6 +126,7 @@ class TUPITUBE_EXPORT TupExposureTable : public QTableWidget
         void mouseMoveEvent(QMouseEvent *event);
         // void mouseReleaseEvent(QMouseEvent *event);
         void keyPressEvent(QKeyEvent *event);
+        void mouseDoubleClickEvent(QMouseEvent *event);
         void enterEvent(QEvent *event);
         void leaveEvent(QEvent *event);
 

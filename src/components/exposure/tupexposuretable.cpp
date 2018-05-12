@@ -182,6 +182,7 @@ struct TupExposureTable::Private
     bool removingLayer;
     bool isLocalRequest;
     QString themeName;
+    bool isEditing;
 };
 
 TupExposureTable::TupExposureTable(QWidget * parent) : QTableWidget(parent), k(new Private)
@@ -190,6 +191,7 @@ TupExposureTable::TupExposureTable(QWidget * parent) : QTableWidget(parent), k(n
     k->themeName = TCONFIG->value("Theme", "Light").toString();
 
     k->isLocalRequest = false;
+    k->isEditing = false;
 
     TupExposureVerticalHeader *verticalHeader = new TupExposureVerticalHeader(this);
     setVerticalHeader(verticalHeader);
@@ -723,6 +725,14 @@ void TupExposureTable::mouseMoveEvent(QMouseEvent *event)
     QTableWidget::mouseMoveEvent(event);
 }
 
+void TupExposureTable::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton)
+        k->isEditing = true;
+
+    QTableWidget::mouseDoubleClickEvent(event);
+}
+
 void TupExposureTable::commitData(QWidget *editor)
 {
     QLineEdit *lineEdit = qobject_cast<QLineEdit *>(editor);
@@ -755,7 +765,11 @@ int TupExposureTable::framesCountAtLayer(int layer)
 void TupExposureTable::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Return) {
-        emit newPerspective(4);
+        if (!k->isEditing)
+            emit newPerspective(4);
+        else
+            k->isEditing = false; 
+
         return;
     }
 
@@ -892,3 +906,5 @@ void TupExposureTable::updateSceneView(int layerIndex, int frameIndex)
 {
     scrollToItem(item(frameIndex, layerIndex));
 }
+
+
