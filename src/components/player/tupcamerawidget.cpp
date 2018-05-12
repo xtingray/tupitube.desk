@@ -69,7 +69,7 @@ TupCameraWidget::TupCameraWidget(TupProject *project, bool isNetworked, QWidget 
 
     QDesktopWidget desktop;
 
-    int percent = 60;
+    int percent = 40;
     int height = desktop.screenGeometry().height();
     if (height <= 700)
         percent = 30;
