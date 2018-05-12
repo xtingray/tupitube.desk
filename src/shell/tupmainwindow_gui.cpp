@@ -342,6 +342,12 @@ void TupMainWindow::setupFileActions()
     exportProject->setStatusTip(tr("Export project to several video formats"));
     m_actionManager->insert(exportProject, "export", "file");
 
+    // Visit Store action
+    TAction *visitStore = new TAction(QPixmap(THEME_DIR + "icons/store.png"), tr("Visit Store"), QKeySequence(),
+                                      this, SLOT(openStore()), m_actionManager);
+    visitStore->setStatusTip(tr("Visit Store"));
+    m_actionManager->insert(visitStore, "visit_store", "file");
+
     // Exit action
     TAction *exit = new TAction(QPixmap(THEME_DIR + "icons/exit.png"), tr("Quit"), QKeySequence(tr("Ctrl+Q")),
                                 qApp, SLOT(closeAllWindows()), m_actionManager);
@@ -351,6 +357,11 @@ void TupMainWindow::setupFileActions()
 
     // when the last window is closed, the application should quit
     connect(qApp, SIGNAL(lastWindowClosed()), qApp, SLOT(quit()));
+}
+
+void TupMainWindow::openStore()
+{
+    QDesktopServices::openUrl(QString("https://store.maefloresta.com"));
 }
 
 void TupMainWindow::setPreferencesAction()
@@ -388,6 +399,7 @@ void TupMainWindow::setupToolBar()
     mainToolBar->addAction(m_actionManager->find("save_project"));
     mainToolBar->addAction(m_actionManager->find("save_project_as"));
     mainToolBar->addAction(m_actionManager->find("close_project"));
+    mainToolBar->addAction(m_actionManager->find("visit_store"));
 }
 
 void TupMainWindow::updateOpenRecentMenu(QMenu *menu, QStringList recents)

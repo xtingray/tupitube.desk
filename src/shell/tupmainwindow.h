@@ -199,6 +199,7 @@ class TupMainWindow : public TabbedMainWindow
         void checkTimeLineVisibility(bool visible);
         void checkExposureVisibility(bool visible);
         void updateFillTool(TColorCell::FillType type);
+        void openStore();
 
     private:
         TupProjectManager *m_projectManager;
