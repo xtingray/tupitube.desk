@@ -38,6 +38,7 @@
 #include "talgorithm.h"
 
 #include <QDomDocument>
+#include <QSslConfiguration>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
@@ -49,7 +50,7 @@ QString TupTwitter::USER_TIMELINE_URL = QString("/updates/tweets.html");
 QString TupTwitter::TUPITUBE_VERSION_URL = QString("/updates/current_version.xml");
 QString TupTwitter::TUPITUBE_WEB_MSG = QString("/updates/web_msg.");
 QString TupTwitter::TUPITUBE_VIDEOS = QString("/updates/videos.xml");
-QString TupTwitter::BROWSER_FINGERPRINT = QString("Tupi_Browser 1.0");
+QString TupTwitter::BROWSER_FINGERPRINT = QString("Tupi_Browser 2.0");
 
 struct TupTwitter::Private
 {
@@ -103,6 +104,7 @@ void TupTwitter::start()
     k->manager = new QNetworkAccessManager(this);
     connect(k->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(closeRequest(QNetworkReply*)));
 
+	k->request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
     k->request.setUrl(QUrl(url));
     k->request.setRawHeader("User-Agent", BROWSER_FINGERPRINT.toLatin1());
 

@@ -20,9 +20,8 @@ fileSystem.CreateFolder tupiDir & "\plugins"
 fileSystem.CreateFolder tupiDir & "\lib"
 fileSystem.CreateFolder tupiDir & "\lib\qt5"
 fileSystem.CreateFolder tupiDir & "\lib\libav"
+fileSystem.CreateFolder tupiDir & "\lib\ssl"
 
-fileSystem.CopyFile "c:\GnuWin32\bin\zlib1.dll", tupiDir & "\lib\libav\"
-fileSystem.CopyFile "c:\devel\sources\platforms\qwindows.dll", tupiDir & "\bin\platforms\qwindows.dll"
 fileSystem.CopyFile quazipDir & "\quazip.dll", tupiDir & "\lib\quazip.dll"
 fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\tupitube.iss", tupiDir & "\tupitube.iss"
 fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\tupitube.ico", tupiDir & "\bin\tupitube.ico"
@@ -66,6 +65,9 @@ fileSystem.CopyFile sourceDir & "\plugins\tools\shear\release\tupisheartool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\export\imageplugin\release\tupiimageplugin.dll", tupiDir & "\plugins\tupiimageplugin.dll"
 fileSystem.CopyFile sourceDir & "\plugins\export\libavplugin\release\tupilibavplugin.dll", tupiDir & "\plugins\tupilibavplugin.dll"
 
+fileSystem.CopyFile "c:\GnuWin32\bin\zlib1.dll", tupiDir & "\lib\libav\"
+fileSystem.CopyFile "c:\devel\sources\platforms\qwindows.dll", tupiDir & "\bin\platforms\qwindows.dll"
+
 fileSystem.CopyFolder sourceDir & "\shell\data", tupiDir & "\data"
 fileSystem.CopyFolder sourceDir & "\shell\html", tupiDir & "\data\html"
 fileSystem.CopyFolder sourceDir & "\components\colorpalette\palettes", tupiDir & "\data\palettes"
@@ -75,5 +77,6 @@ fileSystem.CopyFolder "c:\devel\sources\imageformats", tupiDir & "\bin\imageform
 fileSystem.CopyFolder "c:\devel\sources\mediaservice", tupiDir & "\bin\mediaservice"
 fileSystem.CopyFolder "c:\devel\sources\audio", tupiDir & "\bin\audio"
 fileSystem.CopyFolder "c:\devel\sources\libav", tupiDir & "\lib\libav"
+fileSystem.CopyFolder "c:\devel\sources\ssl", tupiDir & "\lib\ssl"
 
 MsgBox "Copy is done! :D"
