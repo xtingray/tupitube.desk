@@ -915,8 +915,13 @@ void TupScreen::playSoundAt(int frame)
                 k->soundPlayer.at(i)->play();
             } else { 
                 #ifdef TUP_DEBUG
-                    tError() << "TupScreen::playSoundAt() -  Fatal Error: "
-                                " Not sound file was found at -> " << soundRecord.second;
+                    QString msg = "TupScreen::playSoundAt() -  Fatal Error: "
+					"Not sound file was found at -> " + soundRecord.second;
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg;
+                    #else
+                        tError() << msg;
+                    #endif
                 #endif
             }
         }
