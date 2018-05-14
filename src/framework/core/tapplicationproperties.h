@@ -58,9 +58,9 @@ class T_CORE_EXPORT TApplicationProperties
         void setPluginDir(const QString &path);
         void setCacheDir(const QString &path);
         void setRepositoryDir(const QString &path);
-        void setVersion(const QString &path);
-        void setCodeName(const QString &path);
-        void setRevision(const QString &path);
+        void setVersion(const QString &version);
+        void setCodeName(const QString &code);
+        void setRevision(const QString &revision);
 
         virtual QString homeDir() const;
         virtual QString binDir() const;

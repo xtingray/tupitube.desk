@@ -101,19 +101,19 @@ void TApplicationProperties::setRepositoryDir(const QString &path)
     k->repositoryDir = path;
 }
 
-void TApplicationProperties::setVersion(const QString &path)
+void TApplicationProperties::setVersion(const QString &version)
 {
-    k->version = path;
+    k->version = version;
 }
 
-void TApplicationProperties::setCodeName(const QString &path)
+void TApplicationProperties::setCodeName(const QString &code)
 {
-    k->codeName = path;
+    k->codeName = code;
 }
 
-void TApplicationProperties::setRevision(const QString &path)
+void TApplicationProperties::setRevision(const QString &revision)
 {
-    k->revision = path;
+    k->revision = revision;
 }
 
 QString TApplicationProperties::homeDir() const

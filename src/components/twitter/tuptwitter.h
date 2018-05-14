@@ -66,7 +66,6 @@ class TUPITUBE_EXPORT TupTwitter : public QWidget
         void formatStatus(QByteArray array);
         void saveFile(const QString &answer, const QString &fileName);
 
-        static QString NEWS_HOST;
         static QString IS_HOST_UP_URL;
         static QString USER_TIMELINE_URL;
         static QString TUPITUBE_VERSION_URL;

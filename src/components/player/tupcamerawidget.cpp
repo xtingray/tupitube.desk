@@ -73,6 +73,8 @@ TupCameraWidget::TupCameraWidget(TupProject *project, bool isNetworked, QWidget 
     int height = desktop.screenGeometry().height();
     if (height <= 700)
         percent = 30;
+    if (height >= 1080)
+        percent = 60;
 
     int desktopWidth = (percent * desktop.screenGeometry().width()) / 100;
     int desktopHeight = (percent * height) / 100;

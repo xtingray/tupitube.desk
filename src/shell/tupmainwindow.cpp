@@ -170,20 +170,28 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(0), animat
                 }
                 n = n.nextSibling();
             }
+        } else {
+            #ifdef TUP_DEBUG
+                QString msg = "TupMainWindow() - Fatal error parsing file -> " + webMsgPath;
+                #ifdef Q_OS_WIN
+                    qWarning() << msg;
+                #else
+                    tError() << msg;
+                #endif
+            #endif
         }
     }
-
-    TCONFIG->beginGroup("General");
-    bool update = TCONFIG->value("NotifyUpdate", false).toBool();
 
     if (showWebMsg) {
         QTimer::singleShot(0, this, SLOT(showWebMessage()));
     } else {
+        TCONFIG->beginGroup("General");
+        bool update = TCONFIG->value("NotifyUpdate", false).toBool();
+
         if (update)
-            QDesktopServices::openUrl(QString("http://maefloresta.com/portal/updates"));
+            QDesktopServices::openUrl(QString(MAEFLORESTA_URL) + QString("downloads"));
 
         // Check if user wants to see a TupiTube tip for every time he launches the program
-        TCONFIG->beginGroup("General");
         bool showTips = TCONFIG->value("ShowTipOfDay", true).toBool();
 
         // If option is enabled, then, show a little dialog with a nice tip
@@ -351,11 +359,11 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         if (proportion <= 0.5) {
             animationTab->setZoomPercent("20");
         } else if (proportion > 0.5 && proportion <= 0.75) {
-                   animationTab->setZoomPercent("25");
+            animationTab->setZoomPercent("25");
         } else if (proportion > 0.75 && proportion <= 1.5) {
-                   animationTab->setZoomPercent("50");
+            animationTab->setZoomPercent("50");
         } else if (proportion > 1.5 && proportion < 2) {
-                   animationTab->setZoomPercent("75");
+            animationTab->setZoomPercent("75");
         }
 
         // TupCamera Widget

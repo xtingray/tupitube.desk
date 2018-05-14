@@ -63,6 +63,7 @@
 #endif
 
 #define LIBRARY_DIR CONFIG_DIR+"/libraries"
+#define MAEFLORESTA_URL "https://www.maefloresta.com/"
 
 namespace TupiTube 
 {

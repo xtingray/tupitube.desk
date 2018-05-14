@@ -44,12 +44,11 @@
 #include <QNetworkAccessManager>
 #include <QFile>
 
-QString TupTwitter::NEWS_HOST = QString("https://www.maefloresta.com");
-QString TupTwitter::IS_HOST_UP_URL = QString("/updates/test.xml");
-QString TupTwitter::USER_TIMELINE_URL = QString("/updates/tweets.html");
-QString TupTwitter::TUPITUBE_VERSION_URL = QString("/updates/current_version.xml");
-QString TupTwitter::TUPITUBE_WEB_MSG = QString("/updates/web_msg.");
-QString TupTwitter::TUPITUBE_VIDEOS = QString("/updates/videos.xml");
+QString TupTwitter::IS_HOST_UP_URL = QString("updates/test.xml");
+QString TupTwitter::USER_TIMELINE_URL = QString("updates/tweets.php");
+QString TupTwitter::TUPITUBE_VERSION_URL = QString("updates/current_version.xml");
+QString TupTwitter::TUPITUBE_WEB_MSG = QString("updates/web_msg.");
+QString TupTwitter::TUPITUBE_VIDEOS = QString("updates/videos.xml");
 QString TupTwitter::BROWSER_FINGERPRINT = QString("Tupi_Browser 2.0");
 
 struct TupTwitter::Private
@@ -90,7 +89,7 @@ TupTwitter::TupTwitter(QWidget *parent) : QWidget(parent), k(new Private)
 
 void TupTwitter::start()
 {
-    QString url = NEWS_HOST + IS_HOST_UP_URL;
+    QString url = MAEFLORESTA_URL + IS_HOST_UP_URL;
 
     #ifdef TUP_DEBUG
         QString msg = "TupTwitter::start() - Getting news updates...";
@@ -162,7 +161,7 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
 
     if (answer.length() > 0) {
         if (answer.compare("<ok>true</ok>") == 0) { // The webserver data is available! 
-            requestFile(NEWS_HOST + TUPITUBE_VERSION_URL);
+            requestFile(MAEFLORESTA_URL + TUPITUBE_VERSION_URL);
         } else {
             if (answer.startsWith("<version>")) { // Processing TupiTube versioning data
                 checkSoftwareUpdates(array);
@@ -183,16 +182,16 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
                     os = "win";
                 #endif
 
-                requestFile(NEWS_HOST + USER_TIMELINE_URL + "?id=" + id + "&os=" + os + "&v=" + kAppProp->codeName());
+                requestFile(MAEFLORESTA_URL + USER_TIMELINE_URL + "?id=" + id + "&os=" + os + "&v=" + kAppProp->version() + "." + kAppProp->revision());
             } else {
                 if (answer.startsWith("<div")) { // Getting Twitter records 
                     formatStatus(array);
-                    requestFile(NEWS_HOST + TUPITUBE_WEB_MSG + k->locale + ".html");
+                    requestFile(MAEFLORESTA_URL + TUPITUBE_WEB_MSG + k->locale + ".html");
                 } else {
                     if (answer.startsWith("<webmsg>")) { // Getting web msg
                         if (k->showAds)
                             saveFile(answer, "webmsg.html");
-                        requestFile(NEWS_HOST + TUPITUBE_VIDEOS);
+                        requestFile(MAEFLORESTA_URL + TUPITUBE_VIDEOS);
                     } else {
                         if (answer.startsWith("<youtube>")) { // Getting video list
                             saveFile(answer, "videos.xml");
