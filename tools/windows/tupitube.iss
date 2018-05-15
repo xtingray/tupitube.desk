@@ -46,6 +46,7 @@ Name: "{app}\plugins"
 Name: "{app}\lib"
 Name: "{app}\lib\qt5"
 Name: "{app}\lib\libav"
+Name: "{app}\lib\ssl"
 
 [Files]
 Source: "bin\*"; DestDir: "{app}\bin"
@@ -76,6 +77,7 @@ Source: "plugins\*"; DestDir: "{app}\plugins"
 Source: "lib\*"; DestDir: "{app}\lib"
 Source: "lib\qt5\*"; DestDir: "{app}\lib\qt5"
 Source: "lib\libav\*"; DestDir: "{app}\lib\libav"
+Source: "lib\ssl\*"; DestDir: "{app}\lib\ssl"
 
 [Registry]
 Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "TUPITUBE_HOME"; ValueData: "{app}"; Flags: uninsdeletevalue
