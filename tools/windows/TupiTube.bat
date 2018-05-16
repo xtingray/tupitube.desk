@@ -1,6 +1,3 @@
 @echo OFF
-set TUPITUBE_HOME=..\
-set PATH=..\lib;..\lib\ssl;..\lib\qt5;..\lib\libav
-set TUPITUBE_SHARE=..\data
-set TUPITUBE_PLUGIN=..\plugins
-tupitube.desk.exe
+set PATH=%TUPITUBE_HOME%\bin;%TUPITUBE_HOME%\lib;%TUPITUBE_HOME%\lib\ssl;%TUPITUBE_HOME%\lib\qt5;%TUPITUBE_HOME%\lib\libav
+start tupitube.desk.exe %1

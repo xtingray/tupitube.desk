@@ -1,4 +1,5 @@
 [Setup]
+SetupIconFile=bin\tupitube.ico
 AppName=TupiTube Desk
 AppVersion=0.2.10
 AppPublisher=MaeFloresta
@@ -85,9 +86,9 @@ Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environmen
 Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "TUPITUBE_PLUGIN"; ValueData: "{app}\plugins"; Flags: uninsdeletevalue
 Root: HKCR; Subkey: ".tup"; ValueType: string; ValueName: ""; ValueData: "TupiTubeDesk"; Flags: uninsdeletevalue 
 Root: HKCR; Subkey: "TupiTubeDesk"; ValueType: string; ValueName: ""; ValueData: "TupiTube Desk"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "TupiTubeDesk\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\bin\tupitube.ico,0"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "TupiTubeDesk\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\bin\TupiTube.vbs"" ""%1"""; Flags: uninsdeletekey
+Root: HKCR; Subkey: "TupiTubeDesk\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\bin\tupitube.desk.exe,0"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "TupiTubeDesk\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\bin\TupiTube.bat"" ""%1"""; Flags: uninsdeletekey
 
 [Icons]
-Name: "{group}\TupiTube Desk"; Filename: "{app}\bin\TupiTube.vbs"; IconFilename: "{app}\bin\tupitube.ico"
-Name: "{commondesktop}\TupiTube Desk"; Filename: "{app}\bin\TupiTube.vbs"; IconFilename: "{app}\bin\tupitube.ico"; Comment: "2D Animation Tool"
+Name: "{group}\TupiTube Desk"; Filename: "{app}\bin\TupiTube.bat"; IconFilename: "{app}\bin\tupitube.ico"
+Name: "{commondesktop}\TupiTube Desk"; Filename: "{app}\bin\TupiTube.bat"; IconFilename: "{app}\bin\tupitube.ico"; Comment: "2D Animation Tool"

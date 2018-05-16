@@ -107,6 +107,7 @@ unix {
 
 win32 {
     TARGET = tupitube.desk
+	RC_ICONS = ../../tools/windows/tupitube.ico
     include(../../win.pri)
     include(../../quazip.win.pri)
 }

@@ -91,9 +91,12 @@ int main(int argc, char ** argv)
     }
 
     if (TCONFIG->firstTime()) {
-        #if defined(Q_OS_MAC)
+        #if defined(Q_OS_MAC) 
             TCONFIG->setValue("Home", appDirPath.absolutePath());
-        #else
+        #elif defined(Q_OS_WIN)
+		    appDirPath.cdUp();
+			TCONFIG->setValue("Home", appDirPath.absolutePath());
+		#else
             TCONFIG->setValue("Home", QString::fromLocal8Bit(::getenv("TUPITUBE_HOME")));
         #endif
         
@@ -129,6 +132,13 @@ int main(int argc, char ** argv)
     kAppProp->setBinDir(appDirPath.absolutePath());
     kAppProp->setPluginDir(appDirPath.absolutePath() + "/plugins");
     kAppProp->setShareDir(appDirPath.absolutePath() + "/share");
+#elif defined(Q_OS_WIN)
+    appDirPath.cdUp();
+    QString home = appDirPath.absolutePath();
+    kAppProp->setHomeDir(home);
+    kAppProp->setBinDir(home + "/bin");
+    kAppProp->setPluginDir(home + "/plugins");
+    kAppProp->setShareDir(home + "/data");	
 #else
     kAppProp->setHomeDir(TCONFIG->value("Home").toString());
     kAppProp->setBinDir(QString::fromLocal8Bit(::getenv("TUPITUBE_BIN")));
