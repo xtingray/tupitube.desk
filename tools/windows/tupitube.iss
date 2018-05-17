@@ -1,11 +1,12 @@
 [Setup]
-SetupIconFile=bin\tupitube.ico
+SetupIconFile=bin\raw\icon\tupitube.ico
 AppName=TupiTube Desk
 AppVersion=0.2.10
 AppPublisher=MaeFloresta
 AppPublisherURL=https://www.maefloresta.com/
 DefaultDirName={pf}\TupiTube
 DefaultGroupName=TupiTube
+OutputBaseFilename=tupitube_installer
 OutputDir=c:\devel\installer
 ChangesEnvironment=yes
 ChangesAssociations=yes
@@ -14,10 +15,12 @@ ChangesAssociations=yes
 
 [Dirs]
 Name: "{app}\bin"
-Name: "{app}\bin\platforms"
-Name: "{app}\bin\imageformats"
-Name: "{app}\bin\mediaservice"
-Name: "{app}\bin\audio"
+Name: "{app}\bin\raw"
+Name: "{app}\bin\raw\platforms"
+Name: "{app}\bin\raw\imageformats"
+Name: "{app}\bin\raw\mediaservice"
+Name: "{app}\bin\raw\audio"
+Name: "{app}\bin\raw\icon"
 Name: "{app}\data"
 Name: "{app}\data\html"
 Name: "{app}\data\html\css"
@@ -51,10 +54,12 @@ Name: "{app}\lib\ssl"
 
 [Files]
 Source: "bin\*"; DestDir: "{app}\bin"
-Source: "bin\platforms\*"; DestDir: "{app}\bin\platforms"
-Source: "bin\imageformats\*"; DestDir: "{app}\bin\imageformats"
-Source: "bin\mediaservice\*"; DestDir: "{app}\bin\mediaservice"
-Source: "bin\audio\*"; DestDir: "{app}\bin\audio"
+Source: "bin\raw\*"; DestDir: "{app}\bin\raw"
+Source: "bin\raw\icon\*"; DestDir: "{app}\bin\raw\icon"
+Source: "bin\raw\platforms\*"; DestDir: "{app}\bin\raw\platforms"
+Source: "bin\raw\imageformats\*"; DestDir: "{app}\bin\raw\imageformats"
+Source: "bin\raw\mediaservice\*"; DestDir: "{app}\bin\raw\mediaservice"
+Source: "bin\raw\audio\*"; DestDir: "{app}\bin\raw\audio"
 Source: "data\html\css\*"; DestDir: "{app}\data\html\css"
 Source: "data\html\examples\*"; DestDir: "{app}\data\html\examples"
 Source: "data\html\images\*"; DestDir: "{app}\data\html\images"
@@ -86,9 +91,9 @@ Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environmen
 Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "TUPITUBE_PLUGIN"; ValueData: "{app}\plugins"; Flags: uninsdeletevalue
 Root: HKCR; Subkey: ".tup"; ValueType: string; ValueName: ""; ValueData: "TupiTubeDesk"; Flags: uninsdeletevalue 
 Root: HKCR; Subkey: "TupiTubeDesk"; ValueType: string; ValueName: ""; ValueData: "TupiTube Desk"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "TupiTubeDesk\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\bin\tupitube.desk.exe,0"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "TupiTubeDesk\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\bin\raw\tupitube.desk.exe,0"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "TupiTubeDesk\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\bin\TupiTube.bat"" ""%1"""; Flags: uninsdeletekey
 
 [Icons]
-Name: "{group}\TupiTube Desk"; Filename: "{app}\bin\TupiTube.bat"; IconFilename: "{app}\bin\tupitube.ico"
-Name: "{commondesktop}\TupiTube Desk"; Filename: "{app}\bin\TupiTube.bat"; IconFilename: "{app}\bin\tupitube.ico"; Comment: "2D Animation Tool"
+Name: "{group}\TupiTube Desk"; Filename: "{app}\bin\TupiTube.bat"; IconFilename: "{app}\bin\raw\icon\tupitube.ico"
+Name: "{commondesktop}\TupiTube Desk"; Filename: "{app}\bin\TupiTube.bat"; IconFilename: "{app}\bin\raw\icon\tupitube.ico"; Comment: "2D Animation Tool"
