@@ -176,8 +176,8 @@ _EOH_
     end
 
     config.addDefine('VERSION=\\\\\"0.2\\\\\"')
-    config.addDefine('CODE_NAME=\\\\\"Arani\\\\\"')
-    config.addDefine('REVISION=\\\\\"10\\\\\"')
+    config.addDefine('CODE_NAME=\\\\\"Abequar\\\\\"')
+    config.addDefine('REVISION=\\\\\"11\\\\\"')
     config.addDefine('CONFIG_VERSION=\\\\\"2\\\\\"')
 
     if File.exists?('/etc/canaima_version')
