@@ -38,10 +38,10 @@
 #Usage:
 # ./tools/build_mac_osx_app.sh /Users/username/tupitube/sources/tupitube.desk /Users/username/tupitube/installer
 
-QT_PATH=/Users/xtingray/Qt5.10.0
-export PATH=$QT_PATH/5.10.0/clang_64/bin:$PATH
-export DYLD_LIBRARY_PATH=/usr/local/lib:$DYLD_LIBRARY_PATH:$QT_PATH/5.10.0/clang_64/lib
-export DYLD_FRAMEWORK_PATH=$QT_PATH/5.10.0/clang_64/lib
+QT_PATH=/Users/xtingray/Qt5.10.1
+export PATH=$QT_PATH/5.10.1/clang_64/bin:$PATH
+export DYLD_LIBRARY_PATH=/usr/local/lib:$DYLD_LIBRARY_PATH:$QT_PATH/5.10.1/clang_64/lib
+export DYLD_FRAMEWORK_PATH=$QT_PATH/5.10.1/clang_64/lib
 
 TUPITUBE_GIT_REPOSITORY=$1
 INSTALLATION_PATH=$2
