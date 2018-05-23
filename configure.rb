@@ -72,12 +72,39 @@ _EOH_
        debug = 0
     end
 
+    config = RQonf::Config.new
+
+    Info.info << "Debug support... "
+
+    file_name = 'src/components/components.pro'
+    if debug == 1
+       var = open(file_name).grep(/debug/)
+       if var.count == 0
+          open(file_name, 'a') { |f|
+               f.puts "SUBDIRS += debug"
+          }
+       end
+
+       config.addOption("debug")
+       config.addDefine("TUP_DEBUG")
+       print "[ \033[92mON\033[0m ]\n"
+    else
+       var = open(file_name).grep(/debug/)
+       if var.count > 0
+          text = File.read(file_name)
+          new_contents = text.gsub(/\nSUBDIRS \+\= debug/, "")
+          File.open(file_name, "w") {|file| file.puts new_contents }
+       end
+
+       config.addOption("release")
+       config.addDefine("K_NODEBUG")
+       print "[ \033[91mOFF\033[0m ]\n"
+    end
+
     if conf.hasArgument?("with-libav") and conf.hasArgument?("without-libav")  
        Info.error << " ERROR: Options --with-libav and --without-libav are mutually exclusive\n"
        exit 0
     end
-
-    config = RQonf::Config.new
 
     if conf.hasArgument?("with-qtdir")
        qtdir = conf.argumentValue("with-qtdir")
@@ -146,33 +173,6 @@ _EOH_
     
     if conf.hasArgument?("install-headers")
        config.addDefine("ADD_HEADERS");
-    end
-
-    Info.info << "Debug support... "
-
-    file_name = 'src/components/components.pro'
-    if debug == 1 
-       var = open(file_name).grep(/debug/)
-       if var.count == 0
-          open(file_name, 'a') { |f|
-               f.puts "SUBDIRS += debug"
-          }
-       end
-
-       config.addOption("debug")
-       config.addDefine("TUP_DEBUG")
-       print "[ \033[92mON\033[0m ]\n"
-    else
-       var = open(file_name).grep(/debug/)
-       if var.count > 0
-          text = File.read(file_name)
-          new_contents = text.gsub(/\nSUBDIRS \+\= debug/, "")
-          File.open(file_name, "w") {|file| file.puts new_contents }
-       end
-
-       config.addOption("release")
-       config.addDefine("K_NODEBUG")
-       print "[ \033[91mOFF\033[0m ]\n"
     end
 
     config.addDefine('VERSION=\\\\\"0.2\\\\\"')
