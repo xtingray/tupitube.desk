@@ -79,7 +79,6 @@ void TupBackground::fromXml(const QString &xml)
 
                    if (staticBg) {
                        QString newDoc;
-
                        {
                            QTextStream ts(&newDoc);
                            ts << n;
@@ -88,21 +87,20 @@ void TupBackground::fromXml(const QString &xml)
                        staticBg->fromXml(newDoc);
                    }
                } else if (type == "landscape_dynamic") {
-                          dynamicBg = new TupFrame(this, "landscape_dynamic");
+                   dynamicBg = new TupFrame(this, "landscape_dynamic");
 
-                          if (dynamicBg) {
-                              QString newDoc;
+                   if (dynamicBg) {
+                       QString newDoc;
+                       {
+                           QTextStream ts(&newDoc);
+                           ts << n;
+                       }
 
-                              {
-                                  QTextStream ts(&newDoc);
-                                  ts << n;
-                              }
-
-                              dynamicBg->fromXml(newDoc);
-                              if (!dynamicBg->isEmpty()) {
-                                  renderDynamicView();
-                              }
-                          }
+                       dynamicBg->fromXml(newDoc);
+                       if (!dynamicBg->isEmpty()) {
+                           renderDynamicView();
+                       }
+                   }
                } else {
                    #ifdef TUP_DEBUG
                        QString msg = "TupBackground::fromXml() - Error: The background input is invalid";

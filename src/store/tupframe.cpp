@@ -311,33 +311,43 @@ void TupFrame::fromXml(const QString &xml)
                           if (symbol.length() > 0) {
                               TupLibraryObject *object = project()->library()->getObject(symbol);
 
-                              QString path(object->dataPath());
-                              QDomNode n2 = e.firstChild();
-                              TupSvgItem *svg = new TupSvgItem();
+                              if (object) {
+                                  QString path(object->dataPath());
+                                  QDomNode n2 = e.firstChild();
+                                  TupSvgItem *svg = new TupSvgItem();
 
-                              while (!n2.isNull()) {
-                                     QDomElement e2 = n2.toElement();
+                                  while (!n2.isNull()) {
+                                      QDomElement e2 = n2.toElement();
+                                      if (e2.tagName() == "properties") {
+                                          svg = new TupSvgItem(path, this);
+                                          svg->setSymbolName(symbol);
+                                          TupSerializer::loadProperties(svg, e2);
 
-                                     if (e2.tagName() == "properties") {
-                                         svg = new TupSvgItem(path, this);
-                                         svg->setSymbolName(symbol);
-                                         TupSerializer::loadProperties(svg, e2);
-
-                                         addSvgItem(symbol, svg);
-                                     } else if (e2.tagName() == "tweening") {
-                                         TupItemTweener *tweener = new TupItemTweener();
-                                         QString newDoc;
-                                         {
-                                             QTextStream ts(&newDoc);
-                                             ts << n2;
-                                         }
-                                         tweener->fromXml(newDoc);
-                                         svg->setTween(tweener);
-                                         scene()->addTweenObject(k->layer->layerIndex(), svg);
-                                     }
-                                     n2 = n2.nextSibling(); 
+                                          addSvgItem(symbol, svg);
+                                      } else if (e2.tagName() == "tweening") {
+                                          TupItemTweener *tweener = new TupItemTweener();
+                                          QString newDoc;
+                                          {
+                                              QTextStream ts(&newDoc);
+                                              ts << n2;
+                                          }
+                                          tweener->fromXml(newDoc);
+                                          svg->setTween(tweener);
+                                          scene()->addTweenObject(k->layer->layerIndex(), svg);
+                                      }
+                                      n2 = n2.nextSibling(); 
+                                  }
+                              } else {
+                                  #ifdef TUP_DEBUG
+                                      QString msg = "TupFrame::fromXml() - Fatal Error: Object is NULL -> " + symbol;
+                                      #ifdef Q_OS_WIN
+                                          qDebug() << msg;
+                                      #else
+                                          tError() << msg;
+                                      #endif
+                                  #endif
                               }
-                          } else {                              
+                          } else {
                               #ifdef TUP_DEBUG
                                   QString msg = "TupFrame::fromXml() - Fatal Error: Object id is NULL!";
                                   #ifdef Q_OS_WIN

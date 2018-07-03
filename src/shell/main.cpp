@@ -179,12 +179,21 @@ int main(int argc, char ** argv)
 
     // SQA: Add support for at least two languages for the next release 
     QList<QString> langSupport;
-    langSupport << "es" << "fr" << "pt";
+    langSupport << "es" << "fr" << "pt" << "zh";
     if (locale.compare("en") != 0 && langSupport.contains(locale)) {
         #ifdef Q_OS_WIN
             QString langFile = kAppProp->shareDir() + "translations/tupi_" + locale + ".qm";
         #else
             QString langFile = kAppProp->shareDir() + "data/translations/tupi_" + locale + ".qm";
+        #endif
+
+        #ifdef TUP_DEBUG
+            QString msg = "main.cpp - Loading lang file -> " + langFile;
+            #ifdef Q_OS_WIN
+                qDebug() << msg;
+            #else
+                tWarning() << msg;
+            #endif
         #endif
 
         if (QFile::exists(langFile)) {

@@ -1011,10 +1011,18 @@ void TupLibraryWidget::importBitmap(const QString &image)
         return;
 
     QFile file(image);
-    QFileInfo fileInfo(file);
-    QString key = fileInfo.fileName().toLower();
 
     if (file.open(QIODevice::ReadOnly)) {
+        QFileInfo fileInfo(file);
+        QString key = fileInfo.fileName().toLower();
+        int index = key.lastIndexOf(".");
+
+        QString name = key.mid(0, index);
+        if (name.length() > 30)
+            name = key.mid(0, 30);
+
+        QString extension = key.mid(index, key.length() - index);
+
         QByteArray data = file.readAll();
         file.close();
 
@@ -1070,12 +1078,9 @@ void TupLibraryWidget::importBitmap(const QString &image)
         }
 
         int i = 0;
-        int index = key.lastIndexOf(".");
-        QString name = key.mid(0, index);
-        QString extension = key.mid(index, key.length() - index);
         while (k->library->exists(key)) {
-               i++;
-               key = name + "-" + QString::number(i) + extension;
+            i++;
+            key = name + "-" + QString::number(i) + extension;
         }
 
         TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
@@ -1102,7 +1107,7 @@ void TupLibraryWidget::importSvgGroup()
         QStringList files = dialog.selectedFiles();
         int size = files.size();
         for (int i = 0; i < size; ++i)
-             importSvg(files.at(i));
+            importSvg(files.at(i));
 
         setDefaultPath(files.at(0));
     }
@@ -1114,11 +1119,18 @@ void TupLibraryWidget::importSvg(const QString &svgPath)
         return;
 
     QFile file(svgPath);
-    QFileInfo fileInfo(file);
-
-    QString key = fileInfo.fileName().toLower();
 
     if (file.open(QIODevice::ReadOnly)) {
+        QFileInfo fileInfo(file);
+        QString key = fileInfo.fileName().toLower();
+
+        int index = key.lastIndexOf(".");
+        QString name = key.mid(0, index);
+        if (name.length() > 30)
+            name = key.mid(0, 30);
+
+        QString extension = key.mid(index, key.length() - index);
+
         QByteArray data = file.readAll();
         file.close();
 
@@ -1139,12 +1151,9 @@ void TupLibraryWidget::importSvg(const QString &svgPath)
 
 
         int i = 0;
-        int index = key.lastIndexOf(".");
-        QString name = key.mid(0, index);
-        QString extension = key.mid(index, key.length() - index);
         while (k->library->exists(key)) {
-               i++;
-               key = name + "-" + QString::number(i) + extension;
+            i++;
+            key = name + "-" + QString::number(i) + extension;
         }
 
         TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
@@ -1169,7 +1178,7 @@ void TupLibraryWidget::importNativeObjects()
         QStringList files = dialog.selectedFiles();
         int size = files.size();
         for (int i = 0; i < size; ++i)
-             importNativeObject(files.at(i));
+            importNativeObject(files.at(i));
 
         setDefaultPath(files.at(0));
     }
@@ -1181,11 +1190,9 @@ void TupLibraryWidget::importNativeObject(const QString &object)
         return;
 
     QFile file(object);
-    QFileInfo fileInfo(file);
-
-    QString key = fileInfo.fileName().toLower();
-
     if (file.open(QIODevice::ReadOnly)) {
+        QFileInfo fileInfo(file);
+        QString key = fileInfo.fileName().toLower();
         QByteArray data = file.readAll();
         file.close();
 
@@ -1198,14 +1205,13 @@ void TupLibraryWidget::importNativeObject(const QString &object)
             #endif
         #endif
 
-
         int i = 0;
         int index = key.lastIndexOf(".");
         QString name = key.mid(0, index);
         QString extension = key.mid(index, key.length() - index);
         while (k->library->exists(key)) {
-               i++;
-               key = name + "-" + QString::number(i) + extension;
+            i++;
+            key = name + "-" + QString::number(i) + extension;
         }
 
         TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
