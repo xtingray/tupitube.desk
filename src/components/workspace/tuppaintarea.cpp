@@ -928,19 +928,10 @@ void TupPaintArea::pasteItems()
                     total = frame->svgItemsCount();
                 } 
 
-                int init = xml.indexOf("pos=") + 6;
-                int end = xml.indexOf(")", init);
-                int n = end - init;
-                QString string = xml.mid(init, n);  
-                QStringList list = string.split(",");
-                int x = list.at(0).toFloat();
-                int y = list.at(1).toFloat();
-                QPoint point = QPoint(x, y);
-
                 TupProjectRequest event = TupRequestBuilder::createItemRequest(currentScene->currentSceneIndex(),
                                           currentScene->currentLayerIndex(),
                                           currentScene->currentFrameIndex(),
-                                          total, point, k->spaceMode, type,   
+                                          total, itemPoint(xml), k->spaceMode, type,   
                                           TupProjectRequest::Add, xml);
                 emit requestTriggered(&event);
             } else {
@@ -972,18 +963,12 @@ void TupPaintArea::multipasteObject(int pasteTotal)
 
     TupGraphicsScene* currentScene = graphicsScene();
 
-    if (!k->menuOn) {
+    if (!k->menuOn)
         k->position = viewPosition();
-    }
    
     foreach (QString xml, k->copiesXml) {
              TupLibraryObject::Type type = TupLibraryObject::Item;
              int total = currentScene->currentFrame()->graphicItemsCount();
-
-             if (xml.startsWith("<svg")) {
-                 type = TupLibraryObject::Svg;
-                 total = currentScene->currentFrame()->svgItemsCount();
-             }
 
              TupScene *scene = k->project->sceneAt(currentScene->currentSceneIndex());
              if (scene) {
@@ -995,27 +980,42 @@ void TupPaintArea::multipasteObject(int pasteTotal)
                  if (distance < 0) {
                      for (int i=framesCount; i<=newFrameIndex; i++) {
                           TupProjectRequest request = TupRequestBuilder::createFrameRequest(k->currentSceneIndex,
-                                                                                            currentScene->currentLayerIndex(),
-                                                                                            i,
-                                                                                            TupProjectRequest::Add, tr("Frame"));
-                                                                                            // TupProjectRequest::Add, tr("Frame %1").arg(i + 1));
+                                                      currentScene->currentLayerIndex(), i, TupProjectRequest::Add, 
+                                                      tr("Frame"));
                           emit requestTriggered(&request);
                      }
+                 }
+
+                 if (xml.startsWith("<svg")) {
+                     type = TupLibraryObject::Svg;
+                     total = currentScene->currentFrame()->svgItemsCount();
                  }
 
                  int limit = currentFrame + pasteTotal;
                  for (int i=currentFrame+1; i<=limit; i++) {
                       TupProjectRequest event = TupRequestBuilder::createItemRequest(k->currentSceneIndex,
-                                                                                     currentScene->currentLayerIndex(),
-                                                                                     i,
-                                                                                     total, QPoint(), k->spaceMode, type,
-                                                                                     TupProjectRequest::Add, xml);
+                                                                   currentScene->currentLayerIndex(),
+                                                                   i, total, itemPoint(xml), k->spaceMode, type,
+                                                                   TupProjectRequest::Add, xml);
                       emit requestTriggered(&event);
                  }
              }
      }
 
      k->menuOn = false;
+}
+
+QPoint TupPaintArea::itemPoint(const QString &xml)
+{
+    int init = xml.indexOf("pos=") + 6;
+    int end = xml.indexOf(")", init);
+    int n = end - init;
+    QString string = xml.mid(init, n);
+    QStringList list = string.split(",");
+    int x = list.at(0).toFloat();
+    int y = list.at(1).toFloat();
+
+    return QPoint(x, y);
 }
 
 void TupPaintArea::pasteNextFive()
