@@ -35,12 +35,19 @@
 
 #include "tupcamerastatus.h"
 
+#include <QLabel>
+#include <QHBoxLayout>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QStatusBar>
+#include <QApplication>
+#include <QSpinBox>
+
 struct TupCameraStatus::Private
 {
     QSpinBox *fpsBox;
     QComboBox *scenes;
     QLabel *framesCount;
-    QLabel *duration;
     QCheckBox *loopBox;
     bool loop;
     int framesTotal;
@@ -88,17 +95,10 @@ TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWid
     k->fpsBox->setValue(24);
 
     connect(k->fpsBox, SIGNAL(valueChanged(int)), camera, SLOT(setFPS(int)));
-    connect(k->fpsBox, SIGNAL(valueChanged(int)), this, SLOT(setDuration()));
+    connect(k->fpsBox, SIGNAL(valueChanged(int)), this, SIGNAL(fpsChanged(int)));
 
     sceneInfoLayout->addWidget(fpsText, 1);
     sceneInfoLayout->addWidget(k->fpsBox, 1);
-
-    sceneInfoLayout->addSpacing(15);
-
-    QLabel *durationLabel = new QLabel("<B>" + tr("Duration") + ":</B> ");
-    k->duration = new QLabel();
-    sceneInfoLayout->addWidget(durationLabel, 1);
-    sceneInfoLayout->addWidget(k->duration, 1);
 
     sceneInfoLayout->addSpacing(15);
 
@@ -131,6 +131,7 @@ TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWid
     QPushButton *exportButton = new QPushButton(tr("Export"));
     exportButton->setIcon(QIcon(THEME_DIR + "icons/export_button.png"));
     exportButton->setFocusPolicy(Qt::NoFocus);
+    exportButton->setToolTip(tr("Export Project as Video File"));
 
     connect(exportButton, SIGNAL(pressed()), camera, SLOT(exportDialog()));
     sceneInfoLayout->addWidget(exportButton, 1);
@@ -175,8 +176,6 @@ void TupCameraStatus::setFPS(int frames)
         k->fpsBox->setValue(frames);
     else
         k->fpsBox->setValue(24);
-
-    setDuration();
 }
 
 int TupCameraStatus::getFPS()
@@ -207,7 +206,6 @@ void TupCameraStatus::setFramesTotal(const QString &frames)
 {
     k->framesCount->setText(frames);
     k->framesTotal = frames.toInt();
-    setDuration();
 }
 
 bool TupCameraStatus::isLooping()
@@ -217,13 +215,6 @@ bool TupCameraStatus::isLooping()
     TCONFIG->setValue("Loop", k->loop);
 
     return k->loop;
-}
-
-void TupCameraStatus::setDuration()
-{
-    int fps = k->fpsBox->value();
-    qreal duration = (qreal) k->framesTotal / (qreal) fps;
-    k->duration->setText(QString::number(duration, 'f', 2) + QString(" " + tr("secs")));
 }
 
 void TupCameraStatus::mute()

@@ -178,6 +178,7 @@ void TupProjectManager::setupNewProject()
 
     k->project->setProjectName(k->params->projectName());
     k->project->setAuthor(k->params->author());
+    k->project->setTags(k->params->tags());
     k->project->setDescription(k->params->description());
     k->project->setBgColor(k->params->bgColor());
     k->project->setDimension(k->params->dimension());

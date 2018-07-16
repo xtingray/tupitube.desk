@@ -39,6 +39,7 @@ struct TupProjectManagerParams::Private
 {
     QString projectName;
     QString author;
+    QString tags;
     QColor bgcolor;
     QString description;
     QSize dimension;
@@ -71,6 +72,16 @@ void TupProjectManagerParams::setAuthor(const QString &author)
 QString TupProjectManagerParams::author() const
 {
     return k->author;
+}
+
+void TupProjectManagerParams::setTags(const QString &tags)
+{
+    k->tags = tags;
+}
+
+QString TupProjectManagerParams::tags() const
+{
+    return k->tags;
 }
 
 void TupProjectManagerParams::setBgColor(const QColor color)

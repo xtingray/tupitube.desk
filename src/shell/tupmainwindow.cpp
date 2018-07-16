@@ -368,7 +368,9 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         // TupCamera Widget
         cameraWidget = new TupCameraWidget(m_projectManager->project(), isNetworked);
+        connect(cameraWidget, SIGNAL(projectAuthorUpdated(const QString &)), this, SLOT(updateProjectAuthor(const QString &)));
         connectWidgetToManager(cameraWidget);
+
         connect(m_libraryWidget, SIGNAL(soundUpdated()), cameraWidget, SLOT(updateSoundItems()));
 
         m_libraryWidget->setNetworking(isNetworked);
@@ -1331,6 +1333,7 @@ void TupMainWindow::resizeProjectDimension(const QSize dimension)
     disconnectWidgetToManager(cameraWidget);
     delete cameraWidget; 
     cameraWidget = new TupCameraWidget(m_projectManager->project(), isNetworked);
+    connect(cameraWidget, SIGNAL(projectAuthorUpdated(const QString &)), this, SLOT(updateProjectAuthor(const QString &)));
     connectWidgetToManager(cameraWidget);
 
     playerTab->setCameraWidget(cameraWidget);
@@ -1371,4 +1374,10 @@ void TupMainWindow::dropEvent(QDropEvent *e)
     QString project = list.at(0).toLocalFile();
 
     openProject(project);
+}
+
+void TupMainWindow::updateProjectAuthor(const QString &artist)
+{
+    author = artist;
+    setWindowTitle(tr("TupiTube Desk") +  " - " + projectName + " [ " + tr("by") + " " + author + " ]");
 }

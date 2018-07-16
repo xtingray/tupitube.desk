@@ -50,6 +50,7 @@ struct TupProject::Private
 {
     QString name;
     QString author;
+    QString tags;
     QColor bgColor;
     QString description;
     QSize dimension;
@@ -64,9 +65,6 @@ struct TupProject::Private
     TupProject::Mode spaceMode;
 };
 
-/**
- * Constructor
- */
 TupProject::TupProject(QObject *parent) : QObject(parent), k(new Private)
 {
     #ifdef TUP_DEBUG
@@ -79,15 +77,13 @@ TupProject::TupProject(QObject *parent) : QObject(parent), k(new Private)
     
     k->spaceMode = TupProject::NONE;
     k->bgColor = QColor("#fff");
+    k->tags = tr("#animation #2D #fun");
     k->sceneCounter = 0;
     k->isOpen = false;
     k->library = new TupLibrary("library", this);
     k->cachePath = "";
 }
 
-/**
- * Destructor
- */
 TupProject::~TupProject()
 {
     #ifdef TUP_DEBUG
@@ -103,9 +99,6 @@ TupProject::~TupProject()
     delete k;
 }
 
-/**
- * This function loads a local library
- */
 void TupProject::loadLibrary(const QString &filename)
 {
     #ifdef TUP_DEBUG
@@ -133,9 +126,6 @@ void TupProject::loadLibrary(const QString &filename)
     }
 }
 
-/**
- * This function closes project 
- */
 void TupProject::clear()
 {
     for (int i=0; i<k->scenes.count(); i++) {
@@ -151,20 +141,19 @@ void TupProject::clear()
     // deleteDataDir(k->cachePath);
 }
 
-/**
- * This function sets project name 
- */
 void TupProject::setProjectName(const QString &name)
 {
     k->name = name;
 }
 
-/**
- * This function sets author name 
- */
 void TupProject::setAuthor(const QString &author)
 {
     k->author = author;
+}
+
+void TupProject::setTags(const QString &tags)
+{
+    k->tags = tags;
 }
 
 void TupProject::setBgColor(const QColor color)
@@ -178,25 +167,16 @@ void TupProject::setBgColor(const QColor color)
     }
 }
 
-/**
- * This function sets project description
- */
 void TupProject::setDescription(const QString &description)
 {
     k->description = description;
 }
 
-/**
- * This function sets project dimension
- */
 void TupProject::setDimension(const QSize dimension)
 {
     k->dimension = dimension;
 }
 
-/**
- * This function sets FPS dimension
- */
 void TupProject::setFPS(const int fps)
 {
     k->fps = fps;
@@ -207,20 +187,19 @@ void TupProject::setDataDir(const QString &path)
     k->cachePath = path;
 }
 
-/**
- * Returns project name
- */
 QString TupProject::projectName() const
 {
     return k->name;
 }
 
-/**
- * Returns project name
- */
 QString TupProject::author() const
 {
     return k->author;
+}
+
+QString TupProject::tags() const
+{
+    return k->tags;
 }
 
 QColor TupProject::bgColor() const
@@ -228,25 +207,16 @@ QColor TupProject::bgColor() const
     return k->bgColor;
 }
 
-/**
- * Returns description project
- */
 QString TupProject::description() const
 {
     return k->description;
 }
 
-/**
- * Returns dimension project
- */
 QSize TupProject::dimension() const
 {
     return k->dimension;
 }
 
-/**
- * Returns fps project
- */
 int TupProject::fps() const
 {
     return k->fps;
@@ -471,7 +441,11 @@ void TupProject::fromXml(const QString &xml)
                               if (e1.tagName() == "author") {
                                   if (e1.firstChild().isText()) 
                                       setAuthor(e1.text());
-
+                              } else if (e1.tagName() == "tags") {
+                                         if (e1.text().isEmpty())
+                                             setTags(tr("#animation #2D #fun"));
+                                         else
+                                             setTags(e1.text());
                               } else if (e1.tagName() == "bgcolor") {
                                          if (e1.text().isEmpty())
                                              setBgColor(QColor("#ffffff"));
@@ -519,6 +493,9 @@ QDomElement TupProject::toXml(QDomDocument &doc) const
     QDomElement author = doc.createElement("author");
     author.appendChild(doc.createTextNode(k->author));
 
+    QDomElement tags = doc.createElement("tags");
+    tags.appendChild(doc.createTextNode(k->tags));
+
     QDomElement description = doc.createElement("description");
     description.appendChild(doc.createTextNode(k->description));
 
@@ -534,6 +511,7 @@ QDomElement TupProject::toXml(QDomDocument &doc) const
     fps.appendChild(doc.createTextNode(frames));
 
     meta.appendChild(author);
+    meta.appendChild(tags);
     meta.appendChild(color);
     meta.appendChild(description);
     meta.appendChild(size);

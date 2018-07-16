@@ -47,6 +47,7 @@ struct TupNewProject::Private
 {
     QLineEdit *projectName;
     QLineEdit *authorName;
+    QLineEdit *tags;
     QLineEdit *description;
 
     QColor color;
@@ -78,26 +79,33 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent), k(new Private
     QFrame *infoContainer = new QFrame();
     QGridLayout *layout = new QGridLayout(infoContainer);
 
-    QLabel *labelProjectName = new QLabel(tr("Project Name"), infoContainer);
-    layout->addWidget(labelProjectName, 0, 0);
+    QLabel *nameLabel = new QLabel(tr("Project Name"), infoContainer);
+    layout->addWidget(nameLabel, 0, 0);
 
     k->projectName = new QLineEdit(infoContainer);
     k->projectName->setText(tr("my_project"));
     layout->addWidget(k->projectName, 0, 1);
 
-    QLabel *labelAuthorName = new QLabel(tr("Author"), infoContainer);
-    layout->addWidget(labelAuthorName, 1, 0);
+    QLabel *authorLabel = new QLabel(tr("Author"), infoContainer);
+    layout->addWidget(authorLabel, 1, 0);
 
     k->authorName = new QLineEdit(infoContainer);
     k->authorName->setText(tr("Your name"));
     layout->addWidget(k->authorName, 1, 1);
 
-    QLabel *labelDescription = new QLabel(tr("Description"), infoContainer);
-    layout->addWidget(labelDescription, 2, 0);
+    QLabel *tagsLabel = new QLabel(tr("Tags"), infoContainer);
+    layout->addWidget(tagsLabel, 2, 0);
+
+    k->tags = new QLineEdit(infoContainer);
+    k->tags->setText(tr("#animation #2D #fun"));
+    layout->addWidget(k->tags, 2, 1);
+
+    QLabel *descLabel = new QLabel(tr("Description"), infoContainer);
+    layout->addWidget(descLabel, 3, 0);
 
     k->description = new QLineEdit(infoContainer);
     k->description->setText(tr("Just for fun!"));
-    layout->addWidget(k->description, 2, 1);
+    layout->addWidget(k->description, 3, 1);
 
     QBoxLayout *presetsLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     QLabel *presetsLabel = new QLabel(tr("Presets") + " ");
@@ -248,6 +256,7 @@ TupProjectManagerParams *TupNewProject::parameters()
         TupNetProjectManagerParams *params = new TupNetProjectManagerParams;
         params->setProjectName(k->projectName->text());
         params->setAuthor(k->authorName->text());
+        params->setTags(k->tags->text());
         params->setDescription(k->description->text());
         params->setBgColor(k->color);
         const QSize size(k->size->x(), k->size->y());
@@ -266,6 +275,7 @@ TupProjectManagerParams *TupNewProject::parameters()
     TupProjectManagerParams *params = new TupProjectManagerParams;
     params->setProjectName(k->projectName->text());
     params->setAuthor(k->authorName->text());
+    params->setTags(k->tags->text());
     params->setDescription(k->description->text());
     params->setBgColor(k->color);
     const QSize size(k->size->x(), k->size->y());

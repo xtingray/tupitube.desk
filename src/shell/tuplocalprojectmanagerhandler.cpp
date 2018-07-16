@@ -85,23 +85,23 @@ bool TupLocalProjectManagerHandler::isUndoCommand(const QString &xml)
                                          QDomNode n3 = e2.firstChild();
                                          if (n3.isNull() && isAdd && firstScene && firstLayer)
                                              return false;
-                                          while (!n3.isNull()) {
-                                                 QDomElement e3 = n3.toElement();
-                                                if (!e3.isNull()) {
-                                                    if (e3.tagName() == "frame") {
-                                                        QDomNode n4 = e3.firstChild();
-                                                        if (!n4.isNull()) {
-                                                            return true; 
-                                                        } else if ((e3.attribute("index").toInt() == 0) && isAdd && firstScene && firstLayer) {
-                                                                  return false; 
-                                                        }
-                                                    }
-                                                } 
-                                                n3 = n3.nextSibling();
-                                          } 
+                                         while (!n3.isNull()) {
+                                             QDomElement e3 = n3.toElement();
+                                             if (!e3.isNull()) {
+                                                 if (e3.tagName() == "frame") {
+                                                     QDomNode n4 = e3.firstChild();
+                                                     if (!n4.isNull()) {
+                                                         return true; 
+                                                     } else if ((e3.attribute("index").toInt() == 0) && isAdd && firstScene && firstLayer) {
+                                                         return false; 
+                                                     }
+                                                 }
+                                             } 
+                                             n3 = n3.nextSibling();
+                                         } 
                                      } // end if e2 layer
                                  } else if (isAdd && firstScene) {
-                                            return false;
+                                     return false;
                                  }
                                  n2 = n2.nextSibling();
                           } // end while n2

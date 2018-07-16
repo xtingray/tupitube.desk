@@ -35,6 +35,14 @@
 
 #include "tupcamerawidget.h"
 #include "tconfig.h"
+#include "tupinfodialog.h"
+
+#include <QMainWindow>
+#include <QLabel>
+#include <QHBoxLayout>
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QProgressBar>
 
 struct TupCameraWidget::Private
 {
@@ -54,7 +62,11 @@ struct TupCameraWidget::Private
 
     QLabel *currentFrameBox;
     QLabel *timerSecsLabel;
+    QLabel *duration;
+    int framesTotal;
     double fpsDelta;
+
+    QLabel *projectName;
 };
 
 TupCameraWidget::TupCameraWidget(TupProject *project, bool isNetworked, QWidget *parent) : QFrame(parent), k(new Private)
@@ -151,12 +163,8 @@ void TupCameraWidget::addVideoHeader()
 
     setProgressBar();
 
-    QLabel *name = new QLabel(k->project->projectName() + ": ");
-    name->setFont(font);
-
-    font.setBold(false);
-    QLabel *description = new QLabel(k->project->description() + "  ");
-    description->setFont(font);
+    k->projectName = new QLabel(k->project->projectName() + " ");
+    k->projectName->setFont(font);
 
     setDimensionLabel(k->project->dimension());
 
@@ -166,8 +174,16 @@ void TupCameraWidget::addVideoHeader()
     scaleLayout->setAlignment(Qt::AlignCenter);
     scaleLayout->addWidget(k->scaleLabel);
 
-    labelLayout->addWidget(name);
-    labelLayout->addWidget(description);
+    QPushButton *editButton = new QPushButton();
+    editButton->setIcon(QIcon(THEME_DIR + "icons/edit_sign.png"));
+    editButton->setFocusPolicy(Qt::NoFocus);
+    editButton->setToolTip(tr("Edit Project Information"));
+    connect(editButton, SIGNAL(pressed()), this, SLOT(infoDialog()));
+
+    labelLayout->addWidget(k->projectName);
+    labelLayout->addSpacing(5);
+    labelLayout->addWidget(editButton);
+    labelLayout->addSpacing(20);
     labelLayout->addWidget(scaleWidget);
 
     k->layout->addWidget(k->titleWidget, 0, Qt::AlignCenter);
@@ -214,6 +230,10 @@ void TupCameraWidget::addTimerPanel()
     k->timerSecsLabel->setMinimumWidth(50);
     k->timerSecsLabel->setStyleSheet(style);
 
+    QLabel *durationLabel = new QLabel(tr("Duration: "));
+    durationLabel->setFont(font);
+    k->duration = new QLabel("");
+
     QFrame *timerWidget = new QFrame(this);
     timerWidget->setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
 
@@ -223,11 +243,14 @@ void TupCameraWidget::addTimerPanel()
     timerLayout->addWidget(timerFramesLabel);
     timerLayout->addWidget(k->currentFrameBox);
     timerLayout->addSpacing(10);
+
     timerLayout->addWidget(stopwatchLabel);
     timerLayout->addWidget(k->timerSecsLabel);
-    
-    QLabel *secs = new QLabel(tr("secs"));
-    timerLayout->addWidget(secs);
+    timerLayout->addWidget(new QLabel(tr("secs")));
+    timerLayout->addSpacing(10);
+
+    timerLayout->addWidget(durationLabel);
+    timerLayout->addWidget(k->duration);
 
     k->layout->addWidget(timerWidget, 0, Qt::AlignCenter|Qt::AlignTop);
 }
@@ -261,6 +284,7 @@ void TupCameraWidget::addStatusPanel(bool isNetworked)
     k->status->setScenes(k->project);
     connect(k->status, SIGNAL(sceneIndexChanged(int)), this, SLOT(selectScene(int)));
     connect(k->status, SIGNAL(muteEnabled(bool)), k->screen, SLOT(enableMute(bool)));
+    connect(k->status, SIGNAL(fpsChanged(int)), this,  SLOT(setDuration(int)));
 
     updateFramesTotal(0);
     int fps = k->project->fps();
@@ -283,7 +307,7 @@ void TupCameraWidget::setDimensionLabel(const QSize dimension)
     int projectWidth = dimension.width();
     int projectHeight = dimension.height();
 
-    QString scale = "[ " + tr("Scale") + " ";
+    QString scale = "<b>[</b> " + tr("Scale") + " ";
     k->isScaled = false;
 
     if (projectWidth <= screenWidth && projectHeight <= screenHeight) {
@@ -308,7 +332,7 @@ void TupCameraWidget::setDimensionLabel(const QSize dimension)
 
     scale += " | " + tr("Size") + ": ";
     scale += QString::number(projectWidth) + "x" + QString::number(projectHeight);
-    scale += " px ]";
+    scale += " px <b>]</b>";
 
     k->scaleLabel->setText(scale);
 }
@@ -372,6 +396,7 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
             {
                  k->status->setScenes(k->project);
                  k->status->setCurrentScene(index);
+                 updateFramesTotal(index);
             }
             break;
             case TupProjectRequest::Remove:
@@ -382,8 +407,11 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
                  if (index == k->project->scenesCount())
                      index--;
 
-                 k->status->setScenes(k->project);
-                 k->status->setCurrentScene(index);
+                 if (index >= 0) {
+                     k->status->setScenes(k->project);
+                     k->status->setCurrentScene(index);
+                     updateFramesTotal(index);
+                 }
             }
             break;
             case TupProjectRequest::Reset:
@@ -440,15 +468,17 @@ void TupCameraWidget::setStatusFPS(int fps)
 
     k->project->setFPS(fps);
     k->screen->setFPS(fps);
+    setDuration(fps);
 }
 
 void TupCameraWidget::updateFramesTotal(int sceneIndex)
 {
     TupScene *scene = k->project->sceneAt(sceneIndex);
     if (scene) {
-        int total = scene->framesCount();
-        k->status->setFramesTotal(QString::number(total)); 
-        k->progressBar->setRange(0, total);
+        k->framesTotal = scene->framesCount();
+        k->status->setFramesTotal(QString::number(k->framesTotal)); 
+        k->progressBar->setRange(0, k->framesTotal);
+        setDuration(k->project->fps());
     }
 }
 
@@ -530,4 +560,30 @@ void TupCameraWidget::updateTimerPanel(int currentFrame)
 void TupCameraWidget::updateSoundItems()
 {
     k->screen->loadSoundRecords();
+}
+
+void TupCameraWidget::setDuration(int fps)
+{
+    qreal duration = (qreal) k->framesTotal / (qreal) fps;
+    k->duration->setText(QString::number(duration, 'f', 2) + QString(" " + tr("secs")));
+}
+
+void TupCameraWidget::infoDialog()
+{
+    TupInfoDialog *settings = new TupInfoDialog(k->project->tags(), 
+                                                        k->project->author(), k->project->description(), 
+                                                        this);
+    connect(settings, SIGNAL(dataSent(const QString &, const QString &, const QString &)), 
+            this, SLOT(saveProjectInfo(const QString &, const QString &, const QString &)));
+
+    settings->show();
+}
+
+void TupCameraWidget::saveProjectInfo(const QString &tags, const QString &author, 
+                                      const QString &description) 
+{
+    k->project->setTags(tags);
+    k->project->setAuthor(author);
+    emit projectAuthorUpdated(author);
+    k->project->setDescription(description);
 }

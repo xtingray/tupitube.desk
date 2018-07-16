@@ -11,13 +11,15 @@ HEADERS += tupcamerawidget.h \
            tupcamerabar.h \
            tupscreen.h \
            tupcamerastatus.h \
-           tupanimationspace.h
+           tupanimationspace.h \
+           tupinfodialog.h
 
 SOURCES += tupcamerawidget.cpp \
            tupcamerabar.cpp \
            tupscreen.cpp \
            tupcamerastatus.cpp \
-           tupanimationspace.cpp
+           tupanimationspace.cpp \
+           tupinfodialog.cpp
 
 EXPORT_DIR = ../export
 include($$EXPORT_DIR/export.pri)

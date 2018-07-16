@@ -33,81 +33,39 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPCAMERAWIDGET_H
-#define TUPCAMERAWIDGET_H
+#ifndef TUPINFODIALOG_H
+#define TUPINFODIALOG_H
 
 #include "tglobal.h"
-#include "tupexportwidget.h"
-#include "tseparator.h"
-#include "tupprojectrequest.h"
-#include "tupprojectresponse.h"
-#include "tuprequestbuilder.h"
-#include "tcirclebuttonbar.h"
-#include "tvhbox.h"
-#include "tupscreen.h"
-#include "tupcamerabar.h"
-#include "tupcamerastatus.h"
+#include "tconfig.h"
+#include "tapplicationproperties.h"
 
-#include <QFrame>
+#ifdef TUP_DEBUG
+#ifdef Q_OS_WIN
+  #include <QDebug>
+#else
+  #include "tdebug.h"
+#endif
+#endif
 
-class TupProjectResponse;
-class QCheckBox;
-class TupCameraStatus;
+#include <QDialog>
 
-class TUPITUBE_EXPORT TupCameraWidget : public QFrame
+class TupInfoDialog : public QDialog
 {
     Q_OBJECT
 
     public:
-        TupCameraWidget(TupProject *work, bool isNetworked = false, QWidget *parent = 0);
-        ~TupCameraWidget();
-
-        void updateFirstFrame();
-        QSize sizeHint() const;
-        void updateScenes(int sceneIndex);
-
-    private slots:
-        void setLoop();
-        void selectScene(int index);
-        void updateProgressBar(int advance);
-        void updateSoundItems();
-        void setDuration(int fps);
-        void infoDialog();
-        void saveProjectInfo(const QString &title, const QString &author, 
-                             const QString &description);
-
-    public slots:
-        bool handleProjectResponse(TupProjectResponse *event);
-        void setFPS(int fps);
-        void setStatusFPS(int fps);
-        void updateFramesTotal(int sceneIndex);
-        void exportDialog();
-        void postDialog();
-        void doPlay();
-        void doPlayBack();
-        void doPause();
-        void doStop();
-        void nextFrame();
-        void previousFrame();
-        void updateTimerPanel(int currentFrame);
+        TupInfoDialog(const QString &tags, const QString &author, const QString &desc, QWidget *parent = 0);
+        ~TupInfoDialog();
+        void focusProjectLabel();
 
     signals:
-        void requestTriggered(const TupProjectRequest *event);
-        void requestForExportVideoToServer(const QString &title, const QString &topics, 
-                                           const QString &description, int fps, const QList<int> indexes);
-        void projectAuthorUpdated(const QString &author);
-        // void requestForExportStoryboardToServer(const QString &title, const QString &topics, 
-        //                                         const QString &description, const QList<int> indexes);
+        void dataSent(const QString &, const QString &, const QString &);
+
+    private slots:
+        void updateInfo();
 
     private:
-        void addVideoHeader();
-        void setProgressBar();
-        void addTimerPanel();
-        void addAnimationDisplay();
-        void addControlsBar();
-        void addStatusPanel(bool isNetworked);
-
-        void setDimensionLabel(const QSize dimension);
         struct Private;
         Private *const k;
 };

@@ -278,7 +278,7 @@ bool TupNetProjectManagerHandler::setupNewProject(TupProjectManagerParams *param
     QString dimension = QString::number(netparams->dimension().width()) + "," + QString::number(netparams->dimension().height()); 
 
     TupNewProjectPackage newProjectPackage(netparams->projectName(), netparams->author(), netparams->description(),
-                                          netparams->bgColor().name(), dimension, QString::number(netparams->fps()));
+                                           netparams->bgColor().name(), dimension, QString::number(netparams->fps()));
     k->socket->send(newProjectPackage);
     
     return true;

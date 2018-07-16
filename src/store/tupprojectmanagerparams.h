@@ -54,6 +54,9 @@ class TUPITUBE_EXPORT TupProjectManagerParams
         void setAuthor(const QString &author);
         QString author() const;
 
+        void setTags(const QString &tags);
+        QString tags() const;
+
         void setDescription(const QString &description);
         QString description() const;
 

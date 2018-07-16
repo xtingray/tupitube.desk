@@ -77,6 +77,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
 
         void setProjectName(const QString &name);
         void setAuthor(const QString &author);
+        void setTags(const QString &tags);
         void setBgColor(const QColor color);
         void setDescription(const QString &description);
         void setDimension(const QSize dimension);
@@ -84,6 +85,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
 
         QString projectName() const;
         QString author() const;
+        QString tags() const;
         QColor bgColor() const;
         QString description() const;
         QSize dimension() const;

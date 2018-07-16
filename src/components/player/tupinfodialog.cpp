@@ -33,83 +33,84 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPCAMERAWIDGET_H
-#define TUPCAMERAWIDGET_H
+#include "tupinfodialog.h"
 
-#include "tglobal.h"
-#include "tupexportwidget.h"
-#include "tseparator.h"
-#include "tupprojectrequest.h"
-#include "tupprojectresponse.h"
-#include "tuprequestbuilder.h"
-#include "tcirclebuttonbar.h"
-#include "tvhbox.h"
-#include "tupscreen.h"
-#include "tupcamerabar.h"
-#include "tupcamerastatus.h"
+#include <QBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPlainTextEdit>
+#include <QPushButton>
 
-#include <QFrame>
-
-class TupProjectResponse;
-class QCheckBox;
-class TupCameraStatus;
-
-class TUPITUBE_EXPORT TupCameraWidget : public QFrame
+struct TupInfoDialog::Private
 {
-    Q_OBJECT
-
-    public:
-        TupCameraWidget(TupProject *work, bool isNetworked = false, QWidget *parent = 0);
-        ~TupCameraWidget();
-
-        void updateFirstFrame();
-        QSize sizeHint() const;
-        void updateScenes(int sceneIndex);
-
-    private slots:
-        void setLoop();
-        void selectScene(int index);
-        void updateProgressBar(int advance);
-        void updateSoundItems();
-        void setDuration(int fps);
-        void infoDialog();
-        void saveProjectInfo(const QString &title, const QString &author, 
-                             const QString &description);
-
-    public slots:
-        bool handleProjectResponse(TupProjectResponse *event);
-        void setFPS(int fps);
-        void setStatusFPS(int fps);
-        void updateFramesTotal(int sceneIndex);
-        void exportDialog();
-        void postDialog();
-        void doPlay();
-        void doPlayBack();
-        void doPause();
-        void doStop();
-        void nextFrame();
-        void previousFrame();
-        void updateTimerPanel(int currentFrame);
-
-    signals:
-        void requestTriggered(const TupProjectRequest *event);
-        void requestForExportVideoToServer(const QString &title, const QString &topics, 
-                                           const QString &description, int fps, const QList<int> indexes);
-        void projectAuthorUpdated(const QString &author);
-        // void requestForExportStoryboardToServer(const QString &title, const QString &topics, 
-        //                                         const QString &description, const QList<int> indexes);
-
-    private:
-        void addVideoHeader();
-        void setProgressBar();
-        void addTimerPanel();
-        void addAnimationDisplay();
-        void addControlsBar();
-        void addStatusPanel(bool isNetworked);
-
-        void setDimensionLabel(const QSize dimension);
-        struct Private;
-        Private *const k;
+    QLineEdit *projectTags;
+    QLineEdit *authorName;
+    QPlainTextEdit *descText;
 };
 
-#endif
+TupInfoDialog::TupInfoDialog(const QString &tags, const QString &author, 
+                                     const QString &desc, QWidget *parent) : QDialog(parent), k(new Private)
+{
+    setWindowTitle(tr("Project Information"));
+    setModal(true);
+
+    QGridLayout *gridLayout = new QGridLayout;
+
+    QLabel *tagsLabel = new QLabel(tr("Tags"));
+    gridLayout->addWidget(tagsLabel, 0, 0);
+
+    k->projectTags = new QLineEdit();
+    k->projectTags->setText(tags);
+    gridLayout->addWidget(k->projectTags, 0, 1);
+
+    QLabel *authorLabel = new QLabel(tr("Author"));
+    gridLayout->addWidget(authorLabel, 1, 0);
+
+    k->authorName = new QLineEdit();
+    k->authorName->setText(author);
+    gridLayout->addWidget(k->authorName, 1, 1);
+
+    QLabel *descLabel = new QLabel(tr("Description"));
+    k->descText = new QPlainTextEdit;
+    k->descText->setPlainText(desc);
+
+    QVBoxLayout *descLayout = new QVBoxLayout;
+    descLayout->addWidget(descLabel);
+    descLayout->addWidget(k->descText);
+
+    QPushButton *okButton = new QPushButton(tr("Update"), this);
+    connect(okButton, SIGNAL(pressed()), this, SLOT(updateInfo()));
+    QPushButton *cancelButton = new QPushButton(tr("Cancel"), this);
+    connect(cancelButton, SIGNAL(pressed()), this, SLOT(reject()));
+
+    QHBoxLayout *buttonsLayout = new QHBoxLayout;
+    buttonsLayout->addStretch(2);
+    buttonsLayout->addWidget(cancelButton);
+    buttonsLayout->addWidget(okButton);
+    
+    QVBoxLayout *layout = new QVBoxLayout;    
+    layout->addLayout(gridLayout);
+    layout->addLayout(descLayout);
+    layout->addLayout(buttonsLayout);
+
+    setLayout(layout);
+}
+
+TupInfoDialog::~TupInfoDialog()
+{
+    delete k;
+}
+
+void TupInfoDialog::focusProjectLabel() 
+{
+    k->projectTags->setFocus();
+    k->projectTags->selectAll();
+}
+
+void TupInfoDialog::updateInfo()
+{
+    emit dataSent(k->projectTags->text(), 
+                  k->authorName->text(), 
+                  k->descText->toPlainText());
+    accept();
+}
