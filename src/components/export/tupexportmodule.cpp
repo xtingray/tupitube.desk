@@ -250,6 +250,7 @@ void TupExportModule::chooseFile()
 
         int last = filename.lastIndexOf("/");
         QString dir = filename.left(last);
+
         TCONFIG->beginGroup("General");
         TCONFIG->setValue("DefaultPath", dir);
         TCONFIG->sync();

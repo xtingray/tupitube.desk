@@ -77,7 +77,7 @@ TupProject::TupProject(QObject *parent) : QObject(parent), k(new Private)
     
     k->spaceMode = TupProject::NONE;
     k->bgColor = QColor("#fff");
-    k->tags = tr("#animation #2D #fun");
+    k->tags = tr("#animation #2D");
     k->sceneCounter = 0;
     k->isOpen = false;
     k->library = new TupLibrary("library", this);
@@ -443,7 +443,7 @@ void TupProject::fromXml(const QString &xml)
                                       setAuthor(e1.text());
                               } else if (e1.tagName() == "tags") {
                                          if (e1.text().isEmpty())
-                                             setTags(tr("#animation #2D #fun"));
+                                             setTags(tr("#animation #2D"));
                                          else
                                              setTags(e1.text());
                               } else if (e1.tagName() == "bgcolor") {

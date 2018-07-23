@@ -97,7 +97,7 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent), k(new Private
     layout->addWidget(tagsLabel, 2, 0);
 
     k->tags = new QLineEdit(infoContainer);
-    k->tags->setText(tr("#animation #2D #fun"));
+    k->tags->setText(tr("#animation #2D"));
     layout->addWidget(k->tags, 2, 1);
 
     QLabel *descLabel = new QLabel(tr("Description"), infoContainer);
@@ -126,7 +126,7 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent), k(new Private
 
     presetsLayout->addWidget(presetsLabel);
     presetsLayout->addWidget(k->presets);
-    layout->addLayout(presetsLayout, 3, 0, 1, 2, Qt::AlignCenter);
+    layout->addLayout(presetsLayout, 4, 0, 1, 2, Qt::AlignCenter);
 
     QGroupBox *renderAndFps= new QGroupBox(tr("Options"));
 	
@@ -167,8 +167,8 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent), k(new Private
     QVBoxLayout *sizeLayout = new QVBoxLayout(panel);
     sizeLayout->addWidget(k->size);
 
-    layout->addWidget(panel, 4, 0);
-    layout->addWidget(renderAndFps, 4, 1);
+    layout->addWidget(panel, 5, 0);
+    layout->addWidget(renderAndFps, 5, 1);
 
     QCheckBox *activeNetOptions = new QCheckBox(tr("TupiTube project"));
     connect(activeNetOptions, SIGNAL(toggled(bool)), this, SLOT(enableNetOptions(bool)));
