@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1">
+<TS version="2.1" language="zh_CN" sourcelanguage="en_US">
 <context>
     <name>ButtonsPanel</name>
     <message>
@@ -35,21 +35,25 @@
     </message>
     <message>
         <location filename="../src/plugins/tools/ink/configurator.cpp" line="90"/>
+        <location filename="../src/plugins/tools/scheme/configurator.cpp" line="52"/>
         <source>Parameters</source>
         <translation>参数</translation>
     </message>
     <message>
         <location filename="../src/plugins/tools/ink/configurator.cpp" line="97"/>
+        <location filename="../src/plugins/tools/scheme/configurator.cpp" line="72"/>
         <source>Dot Spacing</source>
         <translation>点间距</translation>
     </message>
     <message>
         <location filename="../src/plugins/tools/ink/configurator.cpp" line="113"/>
+        <location filename="../src/plugins/tools/scheme/configurator.cpp" line="88"/>
         <source>Size Tolerance</source>
         <translation>尺寸公差</translation>
     </message>
     <message>
         <location filename="../src/plugins/tools/ink/configurator.cpp" line="129"/>
+        <location filename="../src/plugins/tools/scheme/configurator.cpp" line="112"/>
         <source>Smoothness</source>
         <translation>平滑</translation>
     </message>
@@ -92,6 +96,52 @@
         <location filename="../src/plugins/tools/papagayo/configurator.cpp" line="57"/>
         <source>Papagayo LipSync Files</source>
         <translation>Papagayo LipSync 文件</translation>
+    </message>
+    <message>
+        <location filename="../src/plugins/tools/scheme/configurator.cpp" line="48"/>
+        <source>This tool is just a &lt;b&gt;proof-of-concept&lt;/b&gt; of the basic algorithm for the Tupi&apos;s free-tracing vectorial brushes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/plugins/tools/scheme/configurator.cpp" line="58"/>
+        <source>Structure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/plugins/tools/scheme/configurator.cpp" line="63"/>
+        <source>Basic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/plugins/tools/scheme/configurator.cpp" line="64"/>
+        <source>Axial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/plugins/tools/scheme/configurator.cpp" line="65"/>
+        <source>Organic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/plugins/tools/scheme/configurator.cpp" line="104"/>
+        <source>Run simulation</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>EraserTool</name>
+    <message>
+        <location filename="../src/plugins/tools/eraser/erasertool.cpp" line="49"/>
+        <location filename="../src/plugins/tools/eraser/erasertool.cpp" line="54"/>
+        <location filename="../src/plugins/tools/eraser/erasertool.cpp" line="58"/>
+        <location filename="../src/plugins/tools/eraser/erasertool.cpp" line="79"/>
+        <source>Eraser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/plugins/tools/eraser/erasertool.cpp" line="55"/>
+        <source>E</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -220,12 +270,20 @@
         <location filename="../src/plugins/tools/ink/inktool.cpp" line="602"/>
         <location filename="../src/plugins/tools/ink/inktool.cpp" line="605"/>
         <source>Ink</source>
-        <translation>油墨</translation>
+        <translation type="unfinished">墨水</translation>
     </message>
     <message>
         <location filename="../src/plugins/tools/ink/inktool.cpp" line="601"/>
         <source>K</source>
         <translation>K</translation>
+    </message>
+</context>
+<context>
+    <name>KinasWidget</name>
+    <message>
+        <location filename="../src/components/kinas/kinaswidget.cpp" line="42"/>
+        <source>TupiTube Script</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -481,7 +539,7 @@
     <message>
         <location filename="../src/store/tupprojectcommand.cpp" line="214"/>
         <source>convert</source>
-        <translation type="转换"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/net/tupnetprojectmanagerhandler.cpp" line="535"/>
@@ -512,6 +570,21 @@
         <location filename="../src/shell/tupcrashhandler.cpp" line="55"/>
         <source>This is a general failure</source>
         <translation>这是一个普遍的失败</translation>
+    </message>
+</context>
+<context>
+    <name>SchemeTool</name>
+    <message>
+        <location filename="../src/plugins/tools/scheme/schemetool.cpp" line="129"/>
+        <location filename="../src/plugins/tools/scheme/schemetool.cpp" line="647"/>
+        <location filename="../src/plugins/tools/scheme/schemetool.cpp" line="651"/>
+        <source>Scheme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/plugins/tools/scheme/schemetool.cpp" line="648"/>
+        <source>M</source>
+        <translation type="unfinished">M</translation>
     </message>
 </context>
 <context>
@@ -627,14 +700,14 @@
         <translation>位置</translation>
     </message>
     <message>
-        <location filename="../src/plugins/tools/selection/settings.cpp" line="165"/>
         <location filename="../src/plugins/tools/papagayo/settings.cpp" line="167"/>
+        <location filename="../src/plugins/tools/selection/settings.cpp" line="165"/>
         <source>X</source>
         <translation>X</translation>
     </message>
     <message>
-        <location filename="../src/plugins/tools/selection/settings.cpp" line="173"/>
         <location filename="../src/plugins/tools/papagayo/settings.cpp" line="175"/>
+        <location filename="../src/plugins/tools/selection/settings.cpp" line="173"/>
         <source>Y</source>
         <translation>Y</translation>
     </message>
@@ -777,22 +850,22 @@
         <translation>关闭线</translation>
     </message>
     <message>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="82"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="83"/>
         <location filename="../src/plugins/tools/position/settings.cpp" line="68"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="90"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="85"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="86"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="83"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="82"/>
         <source>Name</source>
         <translation>名字</translation>
     </message>
     <message>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="92"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="93"/>
         <location filename="../src/plugins/tools/position/settings.cpp" line="78"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="100"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="95"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="96"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="93"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="92"/>
         <source>Options</source>
         <translation>选项</translation>
     </message>
@@ -807,59 +880,65 @@
         <translation>设置路径属性</translation>
     </message>
     <message>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="134"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="135"/>
+        <location filename="../src/plugins/tools/papagayo/settings.cpp" line="105"/>
         <location filename="../src/plugins/tools/position/settings.cpp" line="120"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="142"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="137"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="138"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="135"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="134"/>
-        <location filename="../src/plugins/tools/papagayo/settings.cpp" line="105"/>
         <source>Starting at frame</source>
         <translation>起始帧</translation>
     </message>
     <message>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="165"/>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="584"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="166"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="514"/>
+        <location filename="../src/plugins/tools/papagayo/settings.cpp" line="241"/>
         <location filename="../src/plugins/tools/position/settings.cpp" line="135"/>
         <location filename="../src/plugins/tools/position/settings.cpp" line="171"/>
-        <location filename="../src/plugins/tools/position/settings.cpp" line="195"/>
-        <location filename="../src/plugins/tools/position/settings.cpp" line="225"/>
-        <location filename="../src/plugins/tools/position/settings.cpp" line="350"/>
+        <location filename="../src/plugins/tools/position/settings.cpp" line="206"/>
+        <location filename="../src/plugins/tools/position/settings.cpp" line="236"/>
+        <location filename="../src/plugins/tools/position/settings.cpp" line="361"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="173"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="757"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="168"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="537"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="169"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="542"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="166"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="514"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="165"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="584"/>
-        <location filename="../src/plugins/tools/papagayo/settings.cpp" line="241"/>
         <source>Frames Total</source>
         <translation>帧总数</translation>
     </message>
     <message>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="290"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="275"/>
         <location filename="../src/plugins/tools/position/settings.cpp" line="174"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="377"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="278"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="277"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="275"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="290"/>
         <source>Save Tween</source>
         <translation>保存渐变</translation>
     </message>
     <message>
-        <location filename="../src/plugins/tools/position/settings.cpp" line="176"/>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="292"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="277"/>
+        <location filename="../src/plugins/tools/position/settings.cpp" line="178"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="379"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="280"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="279"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="277"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="292"/>
         <source>Cancel Tween</source>
         <translation>取消渐变</translation>
     </message>
     <message>
-        <location filename="../src/plugins/tools/position/settings.cpp" line="245"/>
-        <location filename="../src/plugins/tools/position/settings.cpp" line="311"/>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="370"/>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="375"/>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="431"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="349"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="354"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="397"/>
+        <location filename="../src/plugins/tools/position/settings.cpp" line="256"/>
+        <location filename="../src/plugins/tools/position/settings.cpp" line="322"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="468"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="482"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="498"/>
@@ -871,81 +950,75 @@
         <location filename="../src/plugins/tools/shear/settings.cpp" line="353"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="358"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="401"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="349"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="354"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="397"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="370"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="375"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="431"/>
         <source>Info</source>
         <translation>信息</translation>
     </message>
     <message>
-        <location filename="../src/plugins/tools/position/settings.cpp" line="245"/>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="431"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="397"/>
+        <location filename="../src/plugins/tools/position/settings.cpp" line="256"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="564"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="406"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="401"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="397"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="431"/>
         <source>Select objects for Tweening first!</source>
         <translation>首先为补间动画选择对象</translation>
     </message>
     <message>
-        <location filename="../src/plugins/tools/position/settings.cpp" line="311"/>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="370"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="349"/>
+        <location filename="../src/plugins/tools/position/settings.cpp" line="322"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="468"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="358"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="353"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="349"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="370"/>
         <source>You must select at least one object!</source>
         <translation>您必须选择至少一个对象</translation>
     </message>
     <message>
-        <location filename="../src/plugins/tools/position/settings.cpp" line="334"/>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="362"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="341"/>
+        <location filename="../src/plugins/tools/position/settings.cpp" line="345"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="460"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="350"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="345"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="341"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="362"/>
         <source>Update Tween</source>
         <translation>更新补间动画</translation>
     </message>
     <message>
-        <location filename="../src/plugins/tools/position/settings.cpp" line="336"/>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="364"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="343"/>
+        <location filename="../src/plugins/tools/position/settings.cpp" line="347"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="462"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="352"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="347"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="343"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="364"/>
         <source>Close Tween Properties</source>
         <translation>关闭补间动画属性</translation>
     </message>
     <message>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="93"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="94"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="101"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="96"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="97"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="94"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="93"/>
         <source>Select object</source>
         <translation>选择对象</translation>
     </message>
     <message>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="94"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="95"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="102"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="97"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="98"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="95"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="94"/>
         <source>Set Properties</source>
         <translation>设置属性</translation>
     </message>
     <message>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="142"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="143"/>
+        <location filename="../src/plugins/tools/papagayo/settings.cpp" line="240"/>
+        <location filename="../src/plugins/tools/papagayo/settings.cpp" line="287"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="150"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="145"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="146"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="143"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="142"/>
-        <location filename="../src/plugins/tools/papagayo/settings.cpp" line="240"/>
-        <location filename="../src/plugins/tools/papagayo/settings.cpp" line="287"/>
         <source>Ending at frame</source>
         <translation>结束帧</translation>
     </message>
@@ -1000,29 +1073,29 @@
         <translation>完成在</translation>
     </message>
     <message>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="231"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="219"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="314"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="219"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="219"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="219"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="231"/>
         <source>Loop</source>
         <translation>循环</translation>
     </message>
     <message>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="240"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="228"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="323"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="228"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="228"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="228"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="240"/>
         <source>Loop with Reverse</source>
         <translation>反向循环</translation>
     </message>
     <message>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="375"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="354"/>
         <location filename="../src/plugins/tools/rotation/settings.cpp" line="482"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="363"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="358"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="354"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="375"/>
         <source>You must set Tween properties first!</source>
         <translation>您必须先设置补间动画属性</translation>
     </message>
@@ -1066,10 +1139,10 @@
         <translation>缩放比例</translation>
     </message>
     <message>
+        <location filename="../src/plugins/tools/color/settings.cpp" line="222"/>
+        <location filename="../src/plugins/tools/opacity/settings.cpp" line="210"/>
         <location filename="../src/plugins/tools/scale/settings.cpp" line="210"/>
         <location filename="../src/plugins/tools/shear/settings.cpp" line="210"/>
-        <location filename="../src/plugins/tools/opacity/settings.cpp" line="210"/>
-        <location filename="../src/plugins/tools/color/settings.cpp" line="222"/>
         <source>Iterations</source>
         <translation>细分</translation>
     </message>
@@ -1163,6 +1236,26 @@
         <location filename="../src/plugins/tools/papagayo/settings.cpp" line="307"/>
         <source>Current Phoneme</source>
         <translation>当前 音素</translation>
+    </message>
+</context>
+<context>
+    <name>ShiftTool</name>
+    <message>
+        <location filename="../src/plugins/tools/shift/shifttool.cpp" line="91"/>
+        <location filename="../src/plugins/tools/shift/shifttool.cpp" line="96"/>
+        <location filename="../src/plugins/tools/shift/shifttool.cpp" line="98"/>
+        <location filename="../src/plugins/tools/shift/shifttool.cpp" line="103"/>
+        <location filename="../src/plugins/tools/shift/shifttool.cpp" line="124"/>
+        <location filename="../src/plugins/tools/shift/shifttool.cpp" line="132"/>
+        <location filename="../src/plugins/tools/shift/shifttool.cpp" line="180"/>
+        <location filename="../src/plugins/tools/shift/shifttool.cpp" line="211"/>
+        <source>Shift</source>
+        <translation type="unfinished">Shift</translation>
+    </message>
+    <message>
+        <location filename="../src/plugins/tools/shift/shifttool.cpp" line="97"/>
+        <source>H</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1774,24 +1867,19 @@
 <context>
     <name>TupCameraStatus</name>
     <message>
-        <location filename="../src/components/player/tupcamerastatus.cpp" line="68"/>
+        <location filename="../src/components/player/tupcamerastatus.cpp" line="75"/>
         <source>Scene</source>
         <translation>场景</translation>
     </message>
     <message>
-        <location filename="../src/components/player/tupcamerastatus.cpp" line="76"/>
+        <location filename="../src/components/player/tupcamerastatus.cpp" line="83"/>
         <source>Frames Total</source>
         <translation>总帧数</translation>
     </message>
     <message>
-        <location filename="../src/components/player/tupcamerastatus.cpp" line="84"/>
+        <location filename="../src/components/player/tupcamerastatus.cpp" line="91"/>
         <source>FPS</source>
         <translation>FPS</translation>
-    </message>
-    <message>
-        <location filename="../src/components/player/tupcamerastatus.cpp" line="98"/>
-        <source>Duration</source>
-        <translation>持续</translation>
     </message>
     <message>
         <location filename="../src/components/player/tupcamerastatus.cpp" line="106"/>
@@ -1810,7 +1898,7 @@
     </message>
     <message>
         <location filename="../src/components/player/tupcamerastatus.cpp" line="125"/>
-        <location filename="../src/components/player/tupcamerastatus.cpp" line="236"/>
+        <location filename="../src/components/player/tupcamerastatus.cpp" line="227"/>
         <source>Mute</source>
         <translation>静音</translation>
     </message>
@@ -1820,17 +1908,17 @@
         <translation>导出</translation>
     </message>
     <message>
-        <location filename="../src/components/player/tupcamerastatus.cpp" line="140"/>
+        <location filename="../src/components/player/tupcamerastatus.cpp" line="134"/>
+        <source>Export Project as Video File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/components/player/tupcamerastatus.cpp" line="141"/>
         <source>Post</source>
         <translation>发布者</translation>
     </message>
     <message>
-        <location filename="../src/components/player/tupcamerastatus.cpp" line="226"/>
-        <source>secs</source>
-        <translation>秒</translation>
-    </message>
-    <message>
-        <location filename="../src/components/player/tupcamerastatus.cpp" line="239"/>
+        <location filename="../src/components/player/tupcamerastatus.cpp" line="230"/>
         <source>Unmute</source>
         <translation>取消静音</translation>
     </message>
@@ -1838,32 +1926,43 @@
 <context>
     <name>TupCameraWidget</name>
     <message>
-        <location filename="../src/components/player/tupcamerawidget.cpp" line="143"/>
+        <location filename="../src/components/player/tupcamerawidget.cpp" line="152"/>
         <source>Scene Preview</source>
         <translation>现场预览</translation>
     </message>
     <message>
-        <location filename="../src/components/player/tupcamerawidget.cpp" line="195"/>
+        <location filename="../src/components/player/tupcamerawidget.cpp" line="180"/>
+        <source>Edit Project Information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/components/player/tupcamerawidget.cpp" line="218"/>
         <source>Current Frame: </source>
         <translation>当前帧:</translation>
     </message>
     <message>
-        <location filename="../src/components/player/tupcamerawidget.cpp" line="203"/>
+        <location filename="../src/components/player/tupcamerawidget.cpp" line="226"/>
         <source>Timer: </source>
         <translation>时间:</translation>
     </message>
     <message>
-        <location filename="../src/components/player/tupcamerawidget.cpp" line="222"/>
+        <location filename="../src/components/player/tupcamerawidget.cpp" line="233"/>
+        <source>Duration: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/components/player/tupcamerawidget.cpp" line="249"/>
+        <location filename="../src/components/player/tupcamerawidget.cpp" line="568"/>
         <source>secs</source>
         <translation>秒</translation>
     </message>
     <message>
-        <location filename="../src/components/player/tupcamerawidget.cpp" line="274"/>
+        <location filename="../src/components/player/tupcamerawidget.cpp" line="310"/>
         <source>Scale</source>
         <translation>比例</translation>
     </message>
     <message>
-        <location filename="../src/components/player/tupcamerawidget.cpp" line="297"/>
+        <location filename="../src/components/player/tupcamerawidget.cpp" line="333"/>
         <source>Size</source>
         <translation>尺寸</translation>
     </message>
@@ -1905,6 +2004,8 @@
     </message>
     <message>
         <location filename="../src/components/workspace/tupcanvas.cpp" line="94"/>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="95"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="96"/>
         <source>Pencil</source>
         <translation>铅笔</translation>
     </message>
@@ -1915,11 +2016,15 @@
     </message>
     <message>
         <location filename="../src/components/workspace/tupcanvas.cpp" line="102"/>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="113"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="114"/>
         <source>Rectangle</source>
         <translation>矩形</translation>
     </message>
     <message>
         <location filename="../src/components/workspace/tupcanvas.cpp" line="106"/>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="109"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="110"/>
         <source>Ellipse</source>
         <translation>椭圆</translation>
     </message>
@@ -1930,6 +2035,8 @@
     </message>
     <message>
         <location filename="../src/components/workspace/tupcanvas.cpp" line="114"/>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="129"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="130"/>
         <source>Delete Selection</source>
         <translation>删除选择</translation>
     </message>
@@ -1940,36 +2047,50 @@
     </message>
     <message>
         <location filename="../src/components/workspace/tupcanvas.cpp" line="123"/>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="145"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="146"/>
         <source>Undo</source>
         <translation>撤消</translation>
     </message>
     <message>
         <location filename="../src/components/workspace/tupcanvas.cpp" line="127"/>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="149"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="150"/>
         <source>Redo</source>
         <translation>重做</translation>
     </message>
     <message>
         <location filename="../src/components/workspace/tupcanvas.cpp" line="131"/>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="133"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="134"/>
         <source>Zoom In</source>
         <translation>放大</translation>
     </message>
     <message>
         <location filename="../src/components/workspace/tupcanvas.cpp" line="135"/>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="137"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="138"/>
         <source>Zoom Out</source>
         <translation>缩小</translation>
     </message>
     <message>
         <location filename="../src/components/workspace/tupcanvas.cpp" line="139"/>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="117"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="118"/>
         <source>Images</source>
         <translation>图片</translation>
     </message>
     <message>
         <location filename="../src/components/workspace/tupcanvas.cpp" line="143"/>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="153"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="154"/>
         <source>Color Palette</source>
         <translation>调色板</translation>
     </message>
     <message>
         <location filename="../src/components/workspace/tupcanvas.cpp" line="147"/>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="157"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="158"/>
         <source>Pen Size</source>
         <translation>指定盘区大小</translation>
     </message>
@@ -1985,28 +2106,68 @@
     </message>
     <message>
         <location filename="../src/components/workspace/tupcanvas.cpp" line="293"/>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="293"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="295"/>
         <source>Import a SVG file...</source>
         <translation>导入一个SVG文件...</translation>
     </message>
     <message>
         <location filename="../src/components/workspace/tupcanvas.cpp" line="294"/>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="294"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="296"/>
         <source>Vector</source>
         <translation>矢量</translation>
     </message>
     <message>
         <location filename="../src/components/workspace/tupcanvas.cpp" line="328"/>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="331"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="333"/>
         <source>Information</source>
         <translation>信息</translation>
     </message>
     <message>
         <location filename="../src/components/workspace/tupcanvas.cpp" line="330"/>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="333"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="335"/>
         <source>Image is bigger than workspace.</source>
         <translation>图像比工作空间更大。</translation>
     </message>
     <message>
         <location filename="../src/components/workspace/tupcanvas.cpp" line="331"/>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="334"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="336"/>
         <source>Do you want to resize it?</source>
         <translation>你想调整它的大小吗？</translation>
+    </message>
+    <message>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="99"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="100"/>
+        <source>Ink</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="121"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="122"/>
+        <source>Object Selection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="125"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="126"/>
+        <source>Nodes Selection</source>
+        <translation type="unfinished">节点选择</translation>
+    </message>
+    <message>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="141"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="142"/>
+        <source>Shift</source>
+        <translation type="unfinished">Shift</translation>
+    </message>
+    <message>
+        <location filename="../src/components/workspace/tupcanvas.pc.cpp" line="161"/>
+        <location filename="../src/components/workspace/tupcanvas.tablet.cpp" line="162"/>
+        <source>Exposure Sheet</source>
+        <translation type="unfinished">接触表</translation>
     </message>
 </context>
 <context>
@@ -2019,7 +2180,7 @@
     <message>
         <location filename="../src/net/tupchat.cpp" line="164"/>
         <source>Error:</source>
-        <translation type="错误"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/net/tupchat.cpp" line="165"/>
@@ -2205,6 +2366,14 @@
         <location filename="../src/shell/tupcrashwidget.cpp" line="153"/>
         <source>Backtrace</source>
         <translation>回溯</translation>
+    </message>
+</context>
+<context>
+    <name>TupDebugWidget</name>
+    <message>
+        <location filename="../src/components/debug/tupdebugwidget.cpp" line="44"/>
+        <source>Debug Console</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2455,7 +2624,7 @@
     <message>
         <location filename="../src/components/workspace/tupdocumentview.cpp" line="1197"/>
         <source>Paint area actions</source>
-        <translation type="油漆区操作"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/components/workspace/tupdocumentview.cpp" line="1200"/>
@@ -2596,8 +2765,9 @@
     </message>
     <message>
         <location filename="../src/components/workspace/tupdocumentview.cpp" line="2127"/>
-        <source>Papagayo project already exists!Please, rename the project&apos;s file</source>
-        <translation>Papagayo项目已经存在！请重命名项目的文件</translation>
+        <source>Papagayo project already exists!
+Please, rename the project&apos;s file</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/components/workspace/tupdocumentview.cpp" line="2227"/>
@@ -2679,84 +2849,84 @@
         <translation>视频文件</translation>
     </message>
     <message>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="269"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="270"/>
         <source>Choose a directory...</source>
         <translation>选择目录</translation>
     </message>
     <message>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="305"/>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="326"/>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="368"/>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="383"/>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="390"/>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="442"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="306"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="327"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="369"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="384"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="391"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="443"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="305"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="306"/>
         <source>Images name prefix can&apos;t be empty! Please, type a prefix.</source>
         <translation>图像名称前缀不能为空！ 请输入一个前缀。</translation>
     </message>
     <message>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="316"/>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="356"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="317"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="357"/>
         <source>Warning!</source>
         <translation>警告!</translation>
     </message>
     <message>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="316"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="317"/>
         <source>Image sequence already exists. Overwrite it?</source>
         <translation>图像序列已经存在。 覆盖它？</translation>
     </message>
     <message>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="326"/>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="368"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="327"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="369"/>
         <source>Directory doesn&apos;t exist! Please, choose another path.</source>
         <translation>目录不存在！ 请选择另一条路径。</translation>
     </message>
     <message>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="357"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="358"/>
         <source>File exists. Overwrite it?</source>
         <translation>文件存在。覆盖它?</translation>
     </message>
     <message>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="383"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="384"/>
         <source>Insufficient permissions. Please, choose another directory.</source>
         <translation>权限不足。请选择其他目录.</translation>
     </message>
     <message>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="390"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="391"/>
         <source>Insufficient permissions. Please, choose another path.</source>
         <translation>权限不足。请选择其他路径.</translation>
     </message>
     <message>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="442"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="443"/>
         <source>Format problem. TupiTube Internal error.</source>
         <translation>格式问题。TuSube内部错误错误.</translation>
     </message>
     <message>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="448"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="449"/>
         <source>Video file</source>
         <translation>视频文件</translation>
     </message>
     <message>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="448"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="449"/>
         <source>was saved successful</source>
         <translation>保存成功</translation>
     </message>
     <message>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="450"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="451"/>
         <source>Image sequence was saved successful</source>
         <translation>图像序列保存成功。</translation>
     </message>
     <message>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="451"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="452"/>
         <source>Information</source>
         <translation>消息</translation>
     </message>
     <message>
-        <location filename="../src/components/export/tupexportmodule.cpp" line="466"/>
+        <location filename="../src/components/export/tupexportmodule.cpp" line="467"/>
         <source>Fatal Error: Can&apos;t export video</source>
         <translation>致命错误：无法导出视频</translation>
     </message>
@@ -2859,37 +3029,37 @@
     </message>
     <message>
         <location filename="../src/components/exposure/tupexposuresheet.cpp" line="127"/>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="1249"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="1250"/>
         <source>1 frame</source>
         <translation>1 帧</translation>
     </message>
     <message>
         <location filename="../src/components/exposure/tupexposuresheet.cpp" line="131"/>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="1254"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="1255"/>
         <source>5 frames</source>
         <translation>5 帧</translation>
     </message>
     <message>
         <location filename="../src/components/exposure/tupexposuresheet.cpp" line="135"/>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="1259"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="1260"/>
         <source>10 frames</source>
         <translation>10 帧</translation>
     </message>
     <message>
         <location filename="../src/components/exposure/tupexposuresheet.cpp" line="139"/>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="1264"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="1265"/>
         <source>20 frames</source>
         <translation>20 帧</translation>
     </message>
     <message>
         <location filename="../src/components/exposure/tupexposuresheet.cpp" line="143"/>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="1269"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="1270"/>
         <source>50 frames</source>
         <translation>50 帧</translation>
     </message>
     <message>
         <location filename="../src/components/exposure/tupexposuresheet.cpp" line="147"/>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="1274"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="1275"/>
         <source>100 frames</source>
         <translation>100 帧</translation>
     </message>
@@ -2914,35 +3084,35 @@
         <translation>粘贴帧</translation>
     </message>
     <message>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="358"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="359"/>
         <source>Layer %1</source>
         <translation>层 1</translation>
     </message>
     <message>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="364"/>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="388"/>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="503"/>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="654"/>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="930"/>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="948"/>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="1409"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="365"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="389"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="504"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="655"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="931"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="949"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="1410"/>
         <source>Frame</source>
         <translation>帧</translation>
     </message>
     <message>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="382"/>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="650"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="383"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="651"/>
         <source>Scene %1</source>
         <translation>场景 %1</translation>
     </message>
     <message>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="385"/>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="653"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="386"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="654"/>
         <source>Layer 1</source>
         <translation>层 1</translation>
     </message>
     <message>
-        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="411"/>
+        <location filename="../src/components/exposure/tupexposuresheet.cpp" line="412"/>
         <source>Scene 1</source>
         <translation>场景 1</translation>
     </message>
@@ -3140,6 +3310,39 @@
     </message>
 </context>
 <context>
+    <name>TupInfoDialog</name>
+    <message>
+        <location filename="../src/components/player/tupinfodialog.cpp" line="54"/>
+        <source>Project Information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/components/player/tupinfodialog.cpp" line="59"/>
+        <source>Tags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/components/player/tupinfodialog.cpp" line="66"/>
+        <source>Author</source>
+        <translation type="unfinished">作者</translation>
+    </message>
+    <message>
+        <location filename="../src/components/player/tupinfodialog.cpp" line="73"/>
+        <source>Description</source>
+        <translation type="unfinished">描述</translation>
+    </message>
+    <message>
+        <location filename="../src/components/player/tupinfodialog.cpp" line="81"/>
+        <source>Update</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/components/player/tupinfodialog.cpp" line="83"/>
+        <source>Cancel</source>
+        <translation type="unfinished">取消</translation>
+    </message>
+</context>
+<context>
     <name>TupInfoWidget</name>
     <message>
         <location filename="../src/components/workspace/tupinfowidget.cpp" line="124"/>
@@ -3328,6 +3531,14 @@
     </message>
 </context>
 <context>
+    <name>TupLayerIndex</name>
+    <message>
+        <location filename="../src/components/timeline/tuplayerindex.cpp" line="172"/>
+        <source>Layers</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>TupLibraryDialog</name>
     <message>
         <location filename="../src/components/workspace/tuplibrarydialog.cpp" line="49"/>
@@ -3369,82 +3580,77 @@
         <translation>库</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="160"/>
-        <source>Library Store</source>
-        <translation>库存储</translation>
-    </message>
-    <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="169"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="163"/>
         <location filename="../src/components/library/tuplibrarywidget.cpp" line="1745"/>
         <source>Image</source>
         <translation>图片</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="170"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="164"/>
         <location filename="../src/components/library/tuplibrarywidget.cpp" line="1755"/>
         <source>Svg File</source>
         <translation>Svg文件</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="171"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="165"/>
         <location filename="../src/components/library/tuplibrarywidget.cpp" line="1765"/>
         <source>Native Object</source>
         <translation>本地对象</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="172"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="166"/>
         <location filename="../src/components/library/tuplibrarywidget.cpp" line="1750"/>
         <source>Image Sequence</source>
         <translation>图像序列</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="173"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="167"/>
         <location filename="../src/components/library/tuplibrarywidget.cpp" line="1760"/>
         <source>Svg Sequence</source>
         <translation>Svg顺序</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="174"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="168"/>
         <location filename="../src/components/library/tuplibrarywidget.cpp" line="1770"/>
         <source>Sound File</source>
         <translation>音频文件</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="181"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="175"/>
         <source>Add an object to library</source>
         <translation>将一个对象添加到库中</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="189"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="183"/>
         <source>Create new folder</source>
         <translation>创建新文件夹</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="196"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="190"/>
         <source>Insert library item into frame</source>
         <translation>将库项目插入到框架中</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="288"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="282"/>
         <location filename="../src/components/library/tuplibrarywidget.cpp" line="1803"/>
         <source>Directory</source>
         <translation>目录</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="307"/>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="358"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="301"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="352"/>
         <source>No preview available</source>
         <translation>预览不可用</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="374"/>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="387"/>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="401"/>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="414"/>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="770"/>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="879"/>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1094"/>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1161"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="368"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="381"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="395"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="408"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="764"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="873"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1093"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1164"/>
         <location filename="../src/components/library/tuplibrarywidget.cpp" line="1222"/>
         <location filename="../src/components/library/tuplibrarywidget.cpp" line="1402"/>
         <location filename="../src/components/library/tuplibrarywidget.cpp" line="1521"/>
@@ -3453,123 +3659,123 @@
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="374"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="368"/>
         <source>Library is empty!</source>
         <translation>文档为空</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="387"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="381"/>
         <source>There&apos;s no current selection!</source>
         <translation>目前没有选择！</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="401"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="395"/>
         <source>It&apos;s a directory! Please, pick a graphic object</source>
         <translation>它是一个目录！ 请选择一个图形对象</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="414"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="408"/>
         <source>It&apos;s a sound file! Please, pick a graphic object</source>
         <translation>它是一个声音文件！ 请选择一个图形对象</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="444"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="438"/>
         <source>Do you want to remove this object from Library?</source>
         <translation>你想从库中删除这个对象吗？</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="444"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="438"/>
         <source>Confirmation</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="617"/>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1001"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="611"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="995"/>
         <source>Images</source>
         <translation>相关图片</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="629"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="623"/>
         <source>Sounds</source>
         <translation>音效</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="637"/>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1171"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="631"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1174"/>
         <source>Native Objects</source>
         <translation>本机对象</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="642"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="636"/>
         <source>Export object...</source>
         <translation>导出对象...</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="686"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="680"/>
         <source>Info</source>
         <translation>信息</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="686"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="680"/>
         <source>Item exported successfully!</source>
         <translation>项目已成功导出</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="770"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="764"/>
         <source>Couldn&apos;t create images directory!</source>
         <translation>无法创建图像目录！</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="879"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="873"/>
         <source>Couldn&apos;t create vector directory!</source>
         <translation>无法创建矢量目录！</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="898"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="892"/>
         <source>TupiTube library item</source>
         <translation>TupiTube库项目</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1000"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="994"/>
         <source>Import images...</source>
         <translation>导入图片中</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1048"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1050"/>
         <location filename="../src/components/library/tuplibrarywidget.cpp" line="1309"/>
         <location filename="../src/components/library/tuplibrarywidget.cpp" line="1443"/>
         <source>Information</source>
         <translation>通知</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1050"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1052"/>
         <source>Image is bigger than workspace.</source>
         <translation>图像比工作区大</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1051"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1053"/>
         <source>Do you want to resize it?</source>
         <translation>你想调整它吗？</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1094"/>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1161"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1093"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1164"/>
         <location filename="../src/components/library/tuplibrarywidget.cpp" line="1222"/>
         <source>Cannot open file: %1</source>
         <translation>不能打开文件:%1</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1103"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1102"/>
         <source>Import SVG files...</source>
         <translation>导入SVG文件</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1104"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1103"/>
         <source>Vector</source>
         <translation>矢量</translation>
     </message>
     <message>
-        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1170"/>
+        <location filename="../src/components/library/tuplibrarywidget.cpp" line="1173"/>
         <source>Import objects...</source>
         <translation>导入物体中</translation>
     </message>
@@ -3721,216 +3927,218 @@
 <context>
     <name>TupMainWindow</name>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="262"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="613"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="681"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="743"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="978"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1018"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="270"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="623"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="691"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="753"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="988"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1028"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1382"/>
         <source>TupiTube Desk</source>
         <translation>TupiTube工作台</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="262"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="270"/>
         <source>[ by %1 | net mode ]</source>
         <translation>[ by %1 | net mode ]</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="302"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="398"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="876"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1010"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="310"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="408"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="886"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1020"/>
         <source>Information</source>
         <translation>信息</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="302"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="310"/>
         <source>Opening a new document...</source>
         <translation>打开新建文档...</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="320"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1053"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="328"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1063"/>
         <location filename="../src/shell/tupmainwindow_gui.cpp" line="233"/>
         <source>Animation</source>
         <translation>动画</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="377"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="387"/>
         <location filename="../src/shell/tupmainwindow_gui.cpp" line="241"/>
         <source>Player</source>
         <translation>表演者</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="398"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="408"/>
         <source>Project &lt;b&gt;%1&lt;/b&gt; opened!</source>
         <translation>项目打开了!</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="493"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="503"/>
         <source>Question</source>
         <translation>问题</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="495"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="505"/>
         <source>The document has been modified.</source>
         <translation>该文件已被修改</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="496"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="506"/>
         <source>Do you want to save the project?</source>
         <translation>你是否想保存这个项目</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="498"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="508"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="499"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="509"/>
         <source>Discard</source>
         <translation>放弃</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="500"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="510"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="681"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="743"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="978"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1018"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="691"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="753"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="988"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1028"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1382"/>
         <source>by</source>
         <translation>通过</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="690"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="700"/>
         <source>Open TupiTube project</source>
         <translation>打开TupiTube项目</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="691"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="932"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1240"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="701"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="942"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1250"/>
         <source>TupiTube Project Package (*.tup)</source>
         <translation>TupiTube项目包(*.tup)</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="755"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="878"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="949"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="964"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1024"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1248"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1252"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="765"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="888"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="959"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="974"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1034"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1258"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1262"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="755"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="765"/>
         <source>Cannot open project!</source>
         <translation>不能打开项目!</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="816"/>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="370"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="826"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="381"/>
         <source>Tip Of The Day</source>
         <translation>每日提示</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="816"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="826"/>
         <source>Previous</source>
         <translation>以前的</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="816"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="826"/>
         <source>Next</source>
         <translation>下一个</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="816"/>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1273"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="826"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1283"/>
         <source>Close</source>
         <translation>结束</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="831"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="841"/>
         <source>Import Gimp Palettes</source>
         <translation>导入 Gimp 调色板</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="831"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="841"/>
         <source>Gimp Palette (*.gpl *.txt *.css)</source>
         <translation>Gimp调色板 (*.gpl *.txt *.css)</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="876"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="886"/>
         <source>Gimp palette import was successful</source>
         <translation>Gimp调色板导入成功</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="878"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="888"/>
         <source>Gimp palette import was unsuccessful</source>
         <translation>Gimp调色板导入失败</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="931"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="941"/>
         <source>Save Project As</source>
         <translation>将项目另存为</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="949"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="959"/>
         <source>Directory does not exist! Please, choose another path.</source>
         <translation>目录不存在！请选择另一条路径</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="964"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="974"/>
         <source>Insufficient permissions. Please, pick another path.</source>
         <translation>权限不足。请选择另一条路径.</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1010"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1020"/>
         <source>Project &lt;b&gt;%1&lt;/b&gt; saved</source>
         <translation>保存项目</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1024"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1034"/>
         <source>Cannot save the project!</source>
         <translation>不能保存项目</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1054"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1064"/>
         <source>New camera</source>
         <translation>新的相机</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1239"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1249"/>
         <source>Import project package</source>
         <translation>导入项目包</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1248"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1258"/>
         <source>Can&apos;t import project. File is empty!</source>
         <translation>无法导入项目。 文件是空的！</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1252"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1262"/>
         <source>Can&apos;t save the project. File doesn&apos;t exist!</source>
         <translation>无法保存该项目。 文件不存在！</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1268"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1278"/>
         <source>Fatal Error</source>
         <translation>致命错误</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1270"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1280"/>
         <source>The connection to the server has been lost.</source>
         <translation>与服务器的连接已经丢失</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow.cpp" line="1271"/>
+        <location filename="../src/shell/tupmainwindow.cpp" line="1281"/>
         <source>Please, try to connect again in a while</source>
         <translation>请稍后尝试再次连接</translation>
     </message>
@@ -4176,81 +4384,87 @@
     </message>
     <message>
         <location filename="../src/shell/tupmainwindow_gui.cpp" line="346"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="348"/>
+        <source>Visit Store</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="352"/>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="346"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="352"/>
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="349"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="355"/>
         <source>Close application</source>
         <translation>关闭应用</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="358"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="369"/>
         <source>Pr&amp;eferences...</source>
         <translation>优先</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="359"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="370"/>
         <source>Ctrl+P</source>
         <translation>Ctrl+P</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="361"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="372"/>
         <source>Opens the preferences dialog box</source>
         <translation>打开首选项对话框</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="366"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="377"/>
         <source>Online Help Content</source>
         <translation>在线帮助内容</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="366"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="377"/>
         <source>F1</source>
         <translation>F1</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="370"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="381"/>
         <source>Ctrl+T</source>
         <translation>Ctrl+T</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="372"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="383"/>
         <source>About TupiTube Desk</source>
         <translation>关于 TupiTube Desk</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="372"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="383"/>
         <source>Ctrl+K</source>
         <translation>Ctrl+K</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="378"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="389"/>
         <source>Actions Bar</source>
         <translation>操作栏</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="450"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="467"/>
         <source>Undo</source>
         <translation>撤销</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="452"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="469"/>
         <source>Ctrl+Z</source>
         <translation>Ctrl+Z</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="455"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="472"/>
         <source>Redo</source>
         <translation>重做</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupmainwindow_gui.cpp" line="457"/>
+        <location filename="../src/shell/tupmainwindow_gui.cpp" line="474"/>
         <source>Ctrl+Y</source>
         <translation></translation>
     </message>
@@ -4303,8 +4517,9 @@
     </message>
     <message>
         <location filename="../src/net/tupnetprojectmanagerhandler.cpp" line="321"/>
-        <source>User &quot;%1&quot; is disabled.Please, contact the animation server admin to get access.</source>
-        <translation>用户“％1” 已禁用。请联系动画服务器管理员以获取访问权限。</translation>
+        <source>User &quot;%1&quot; is disabled.
+Please, contact the animation server admin to get access.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/net/tupnetprojectmanagerhandler.cpp" line="471"/>
@@ -4393,175 +4608,185 @@
 <context>
     <name>TupNewProject</name>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="75"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="76"/>
         <source>Create New Project</source>
         <translation>创建新的工程</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="81"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="82"/>
         <source>Project Name</source>
         <translation>工程名</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="85"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="86"/>
         <source>my_project</source>
         <translation>我的工程</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="88"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="89"/>
         <source>Author</source>
         <translation>作者</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="92"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="93"/>
         <source>Your name</source>
         <translation>你的姓名</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="95"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="96"/>
+        <source>Tags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/shell/tupnewproject.cpp" line="100"/>
+        <source>#animation #2D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/shell/tupnewproject.cpp" line="103"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="99"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="107"/>
         <source>Just for fun!</source>
         <translation>只是为了好玩！</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="103"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="111"/>
         <source>Presets</source>
         <translation>预先装载</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="109"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="117"/>
         <source>Free Format</source>
         <translation>自由格式</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="110"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="118"/>
         <source>520x380 - 24</source>
         <translation>520x380 - 24</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="111"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="119"/>
         <source>640x480 - 24</source>
         <translation>640x480 - 24</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="112"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="120"/>
         <source>480 (PAL DV/DVD) - 25</source>
         <translation>480 (PAL DV/DVD) - 25</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="113"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="121"/>
         <source>576 (PAL DV/DVD) - 25</source>
         <translation>576 (PAL DV/DVD) - 25</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="114"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="122"/>
         <source>720 (HD) - 24</source>
         <translation>720 (HD) - 24</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="115"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="123"/>
         <source>1080 (Full HD) - 24</source>
         <translation>1080 (Full HD) - 24</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="123"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="131"/>
         <source>Options</source>
         <translation>选择</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="133"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="141"/>
         <source>Background</source>
         <translation>背景</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="134"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="142"/>
         <source>Click here to change background color</source>
         <translation>点击此处更改背景颜色</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="141"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="149"/>
         <source>FPS</source>
         <translation>FPS</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="150"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="158"/>
         <source>Dimension</source>
         <translation>尺寸</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="165"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="173"/>
         <source>TupiTube project</source>
         <translation>TupiTube工程</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="171"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="179"/>
         <source>Project Info</source>
         <translation>工程信息</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="233"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="241"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="235"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="243"/>
         <source>Username</source>
         <translation>用户名</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="235"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="243"/>
         <source>Password</source>
         <translation>密码</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="235"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="243"/>
         <source>Server</source>
         <translation>服务器</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="235"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="243"/>
         <source>Port</source>
         <translation>端口</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="240"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="248"/>
         <source>Store password</source>
         <translation>保存密码</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="286"/>
-        <location filename="../src/shell/tupnewproject.cpp" line="292"/>
-        <location filename="../src/shell/tupnewproject.cpp" line="297"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="296"/>
         <location filename="../src/shell/tupnewproject.cpp" line="302"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="307"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="312"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="286"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="296"/>
         <source>Please, set a name for the project</source>
         <translation>请为该项目设置一个名称</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="292"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="302"/>
         <source>Please, fill in your username</source>
         <translation>请填写您的用户名</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="297"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="307"/>
         <source>Please, fill in your password</source>
         <translation>请填写您的密码</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="302"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="312"/>
         <source>Please, fill in the server name or IP</source>
         <translation>请填写服务器名称或IP</translation>
     </message>
     <message>
-        <location filename="../src/shell/tupnewproject.cpp" line="339"/>
+        <location filename="../src/shell/tupnewproject.cpp" line="349"/>
         <source>White</source>
         <translation>白色</translation>
     </message>
@@ -4730,7 +4955,7 @@
         <translation>添加到库...</translation>
     </message>
     <message>
-        <location filename="../src/components/workspace/tuppaintarea.cpp" line="1000"/>
+        <location filename="../src/components/workspace/tuppaintarea.cpp" line="984"/>
         <location filename="../src/components/workspace/tuppaintarea.cpp" line="1362"/>
         <location filename="../src/components/workspace/tuppaintarea.cpp" line="1410"/>
         <location filename="../src/components/workspace/tuppaintarea.cpp" line="1425"/>
@@ -5096,6 +5321,15 @@
     </message>
 </context>
 <context>
+    <name>TupProject</name>
+    <message>
+        <location filename="../src/store/tupproject.cpp" line="80"/>
+        <location filename="../src/store/tupproject.cpp" line="446"/>
+        <source>#animation #2D</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>TupProjectActionBar</name>
     <message>
         <location filename="../src/libtupi/tupprojectactionbar.cpp" line="96"/>
@@ -5198,17 +5432,17 @@
 <context>
     <name>TupProjectManager</name>
     <message>
-        <location filename="../src/store/tupprojectmanager.cpp" line="206"/>
+        <location filename="../src/store/tupprojectmanager.cpp" line="207"/>
         <source>Scene %1</source>
         <translation>场景 %1</translation>
     </message>
     <message>
-        <location filename="../src/store/tupprojectmanager.cpp" line="209"/>
+        <location filename="../src/store/tupprojectmanager.cpp" line="210"/>
         <source>Layer %1</source>
         <translation>层级 %1</translation>
     </message>
     <message>
-        <location filename="../src/store/tupprojectmanager.cpp" line="212"/>
+        <location filename="../src/store/tupprojectmanager.cpp" line="213"/>
         <source>Frame</source>
         <translation>帧</translation>
     </message>
@@ -5407,11 +5641,19 @@
     </message>
 </context>
 <context>
+    <name>TupSplash</name>
+    <message>
+        <location filename="../src/shell/tupsplash.cpp" line="53"/>
+        <source>Version </source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>TupStoryBoardDialog</name>
     <message>
         <location filename="../src/components/workspace/tupstoryboarddialog.cpp" line="119"/>
         <source>Storyboard Settings</source>
-        <translation type="故事板设置"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/components/workspace/tupstoryboarddialog.cpp" line="130"/>
@@ -5596,6 +5838,145 @@
     </message>
 </context>
 <context>
+    <name>TupThemeSelector</name>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="67"/>
+        <source>General</source>
+        <translation type="unfinished">一般的</translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="71"/>
+        <source>Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="71"/>
+        <source>Base</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="71"/>
+        <source>Foreground</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="71"/>
+        <source>Background</source>
+        <translation type="unfinished">背景</translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="72"/>
+        <source>Button</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="72"/>
+        <source>Button Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="95"/>
+        <source>Effects</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="99"/>
+        <source>Light</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="99"/>
+        <source>Midlight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="99"/>
+        <source>Dark</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="99"/>
+        <source>Mid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="121"/>
+        <source>Selections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="125"/>
+        <source>Highlight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="125"/>
+        <source>Highlighted Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="142"/>
+        <source>Text effects</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="145"/>
+        <source>Bright Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="145"/>
+        <source>Link</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="145"/>
+        <source>Link Visited</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="163"/>
+        <location filename="../src/libui/tupthemeselector.cpp" line="167"/>
+        <source>Schema</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="167"/>
+        <source>Owner</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="167"/>
+        <source>Date</source>
+        <translation type="unfinished">日期</translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="176"/>
+        <source>Save schema</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="183"/>
+        <source>Style</source>
+        <translation type="unfinished">设计式样</translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="187"/>
+        <source>Use this colors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="276"/>
+        <source>Name</source>
+        <translation type="unfinished">名字</translation>
+    </message>
+    <message>
+        <location filename="../src/libui/tupthemeselector.cpp" line="276"/>
+        <source>Please choose a theme name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>TupTimeLine</name>
     <message>
         <location filename="../src/components/timeline/tuptimeline.cpp" line="75"/>
@@ -5649,29 +6030,82 @@
     </message>
 </context>
 <context>
+    <name>TupToolsDialog</name>
+    <message>
+        <location filename="../src/components/workspace/tuptoolsdialog.cpp" line="59"/>
+        <source>Pencil</source>
+        <translation type="unfinished">铅笔</translation>
+    </message>
+    <message>
+        <location filename="../src/components/workspace/tuptoolsdialog.cpp" line="67"/>
+        <source>Ink</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/components/workspace/tuptoolsdialog.cpp" line="75"/>
+        <source>Polyline</source>
+        <translation type="unfinished">折线</translation>
+    </message>
+    <message>
+        <location filename="../src/components/workspace/tuptoolsdialog.cpp" line="83"/>
+        <source>Ellipse</source>
+        <translation type="unfinished">椭圆</translation>
+    </message>
+    <message>
+        <location filename="../src/components/workspace/tuptoolsdialog.cpp" line="91"/>
+        <source>Rectangle</source>
+        <translation type="unfinished">矩形</translation>
+    </message>
+    <message>
+        <location filename="../src/components/workspace/tuptoolsdialog.cpp" line="99"/>
+        <source>Object Selection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/components/workspace/tuptoolsdialog.cpp" line="108"/>
+        <source>Nodes Selection</source>
+        <translation type="unfinished">节点选择</translation>
+    </message>
+    <message>
+        <location filename="../src/components/workspace/tuptoolsdialog.cpp" line="116"/>
+        <source>Color Palette</source>
+        <translation type="unfinished">调色板</translation>
+    </message>
+    <message>
+        <location filename="../src/components/workspace/tuptoolsdialog.cpp" line="124"/>
+        <source>Pen Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/components/workspace/tuptoolsdialog.cpp" line="132"/>
+        <source>Opacity Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>TupTwitter</name>
     <message>
-        <location filename="../src/components/twitter/tuptwitter.cpp" line="366"/>
+        <location filename="../src/components/twitter/tuptwitter.cpp" line="367"/>
         <source>Latest Version</source>
         <translation>最新版本</translation>
     </message>
     <message>
-        <location filename="../src/components/twitter/tuptwitter.cpp" line="367"/>
+        <location filename="../src/components/twitter/tuptwitter.cpp" line="368"/>
         <source>Revision</source>
         <translation>复习</translation>
     </message>
     <message>
-        <location filename="../src/components/twitter/tuptwitter.cpp" line="368"/>
+        <location filename="../src/components/twitter/tuptwitter.cpp" line="369"/>
         <source>Code Name</source>
         <translation>代码名称</translation>
     </message>
     <message>
-        <location filename="../src/components/twitter/tuptwitter.cpp" line="371"/>
+        <location filename="../src/components/twitter/tuptwitter.cpp" line="372"/>
         <source>It&apos;s time to upgrade! Click here!</source>
         <translation>现在是升级的时候了！ 点击这里！</translation>
     </message>
     <message>
-        <location filename="../src/components/twitter/tuptwitter.cpp" line="375"/>
+        <location filename="../src/components/twitter/tuptwitter.cpp" line="376"/>
         <source>Want to help us to make a better project? Click here!</source>
         <translation>想帮助我们做出更好的项目？ 点击这里!</translation>
     </message>
@@ -5812,72 +6246,72 @@
     <name>Tweener</name>
     <message>
         <location filename="../src/plugins/tools/position/tweener.cpp" line="177"/>
-        <location filename="../src/plugins/tools/position/tweener.cpp" line="420"/>
-        <location filename="../src/plugins/tools/position/tweener.cpp" line="424"/>
-        <location filename="../src/plugins/tools/position/tweener.cpp" line="895"/>
+        <location filename="../src/plugins/tools/position/tweener.cpp" line="422"/>
+        <location filename="../src/plugins/tools/position/tweener.cpp" line="426"/>
+        <location filename="../src/plugins/tools/position/tweener.cpp" line="898"/>
         <source>Position Tween</source>
         <translation>补间动画位置</translation>
     </message>
     <message>
-        <location filename="../src/plugins/tools/position/tweener.cpp" line="422"/>
+        <location filename="../src/plugins/tools/position/tweener.cpp" line="424"/>
         <source>Shift+W</source>
         <translation>Shift+W</translation>
     </message>
     <message>
-        <location filename="../src/plugins/tools/position/tweener.cpp" line="622"/>
-        <location filename="../src/plugins/tools/rotation/tweener.cpp" line="437"/>
-        <location filename="../src/plugins/tools/scale/tweener.cpp" line="425"/>
-        <location filename="../src/plugins/tools/shear/tweener.cpp" line="434"/>
-        <location filename="../src/plugins/tools/opacity/tweener.cpp" line="384"/>
         <location filename="../src/plugins/tools/color/tweener.cpp" line="159"/>
         <location filename="../src/plugins/tools/color/tweener.cpp" line="166"/>
         <location filename="../src/plugins/tools/color/tweener.cpp" line="410"/>
         <location filename="../src/plugins/tools/composed/tweener.cpp" line="472"/>
+        <location filename="../src/plugins/tools/opacity/tweener.cpp" line="384"/>
+        <location filename="../src/plugins/tools/position/tweener.cpp" line="624"/>
+        <location filename="../src/plugins/tools/rotation/tweener.cpp" line="437"/>
+        <location filename="../src/plugins/tools/scale/tweener.cpp" line="425"/>
+        <location filename="../src/plugins/tools/shear/tweener.cpp" line="434"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../src/plugins/tools/position/tweener.cpp" line="622"/>
+        <location filename="../src/plugins/tools/color/tweener.cpp" line="410"/>
+        <location filename="../src/plugins/tools/composed/tweener.cpp" line="472"/>
+        <location filename="../src/plugins/tools/opacity/tweener.cpp" line="384"/>
+        <location filename="../src/plugins/tools/position/tweener.cpp" line="624"/>
         <location filename="../src/plugins/tools/rotation/tweener.cpp" line="437"/>
         <location filename="../src/plugins/tools/scale/tweener.cpp" line="425"/>
         <location filename="../src/plugins/tools/shear/tweener.cpp" line="434"/>
-        <location filename="../src/plugins/tools/opacity/tweener.cpp" line="384"/>
-        <location filename="../src/plugins/tools/color/tweener.cpp" line="410"/>
-        <location filename="../src/plugins/tools/composed/tweener.cpp" line="472"/>
         <source>Tween name is missing!</source>
         <translation>补间动画名字丢失</translation>
     </message>
     <message>
-        <location filename="../src/plugins/tools/position/tweener.cpp" line="733"/>
-        <location filename="../src/plugins/tools/rotation/tweener.cpp" line="545"/>
-        <location filename="../src/plugins/tools/scale/tweener.cpp" line="529"/>
-        <location filename="../src/plugins/tools/shear/tweener.cpp" line="551"/>
-        <location filename="../src/plugins/tools/opacity/tweener.cpp" line="490"/>
         <location filename="../src/plugins/tools/color/tweener.cpp" line="518"/>
         <location filename="../src/plugins/tools/composed/tweener.cpp" line="533"/>
         <location filename="../src/plugins/tools/composed/tweener.cpp" line="619"/>
+        <location filename="../src/plugins/tools/opacity/tweener.cpp" line="490"/>
+        <location filename="../src/plugins/tools/position/tweener.cpp" line="735"/>
+        <location filename="../src/plugins/tools/rotation/tweener.cpp" line="545"/>
+        <location filename="../src/plugins/tools/scale/tweener.cpp" line="529"/>
+        <location filename="../src/plugins/tools/shear/tweener.cpp" line="551"/>
         <source>Frame</source>
         <translation>结构</translation>
     </message>
     <message>
-        <location filename="../src/plugins/tools/position/tweener.cpp" line="747"/>
+        <location filename="../src/plugins/tools/color/tweener.cpp" line="532"/>
+        <location filename="../src/plugins/tools/composed/tweener.cpp" line="635"/>
+        <location filename="../src/plugins/tools/opacity/tweener.cpp" line="504"/>
+        <location filename="../src/plugins/tools/position/tweener.cpp" line="749"/>
         <location filename="../src/plugins/tools/rotation/tweener.cpp" line="559"/>
         <location filename="../src/plugins/tools/scale/tweener.cpp" line="544"/>
         <location filename="../src/plugins/tools/shear/tweener.cpp" line="565"/>
-        <location filename="../src/plugins/tools/opacity/tweener.cpp" line="504"/>
-        <location filename="../src/plugins/tools/color/tweener.cpp" line="532"/>
-        <location filename="../src/plugins/tools/composed/tweener.cpp" line="635"/>
         <source>Info</source>
         <translation>信息</translation>
     </message>
     <message>
-        <location filename="../src/plugins/tools/position/tweener.cpp" line="747"/>
+        <location filename="../src/plugins/tools/color/tweener.cpp" line="532"/>
+        <location filename="../src/plugins/tools/composed/tweener.cpp" line="635"/>
+        <location filename="../src/plugins/tools/opacity/tweener.cpp" line="504"/>
+        <location filename="../src/plugins/tools/position/tweener.cpp" line="749"/>
         <location filename="../src/plugins/tools/rotation/tweener.cpp" line="559"/>
         <location filename="../src/plugins/tools/scale/tweener.cpp" line="544"/>
         <location filename="../src/plugins/tools/shear/tweener.cpp" line="565"/>
-        <location filename="../src/plugins/tools/opacity/tweener.cpp" line="504"/>
-        <location filename="../src/plugins/tools/color/tweener.cpp" line="532"/>
-        <location filename="../src/plugins/tools/composed/tweener.cpp" line="635"/>
         <source>Tween %1 applied!</source>
         <translation>补间动画适用!</translation>
     </message>
@@ -6090,6 +6524,29 @@
         <location filename="../src/plugins/tools/composed/tweenertable.cpp" line="52"/>
         <source>Coloring</source>
         <translation>着色器</translation>
+    </message>
+</context>
+<context>
+    <name>ZoomConfigurator</name>
+    <message>
+        <location filename="../src/plugins/tools/shift/zoomconfigurator.cpp" line="54"/>
+        <source>Scale Factor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/plugins/tools/shift/zoomconfigurator.cpp" line="67"/>
+        <source>Tips</source>
+        <translation type="unfinished">提示</translation>
+    </message>
+    <message>
+        <location filename="../src/plugins/tools/shift/zoomconfigurator.cpp" line="74"/>
+        <source>Zoom Square mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/plugins/tools/shift/zoomconfigurator.cpp" line="74"/>
+        <source>Press Ctrl key + Mouse left button</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
