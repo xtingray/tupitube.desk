@@ -85,7 +85,7 @@ bool TupPackageHandler::makePackage(const QString &projectPath, const QString &p
         return false;
     }
 
-    if (! compress(&zip, projectPath)) {
+    if (!compress(&zip, projectPath)) {
         #ifdef TUP_DEBUG
             QString msg = "TupPackageHandler::makePackage() - Error while compress project: " + QString::number(zip.getZipError());
             #ifdef Q_OS_WIN
@@ -136,7 +136,8 @@ bool TupPackageHandler::compress(QuaZip *zip, const QString &path)
              }
         
              // SQA: Add an additional variable to avoid calling the same function twice
-             if (!outFile.open(QIODevice::WriteOnly, QuaZipNewInfo(stripRepositoryFromPath(filePath), stripRepositoryFromPath(filePath)))) 
+             QString cleanPath = stripRepositoryFromPath(filePath);
+             if (!outFile.open(QIODevice::WriteOnly, QuaZipNewInfo(cleanPath, cleanPath))) 
                  return false;
 
              inFile.setFileName(filePath);
