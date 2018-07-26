@@ -1579,21 +1579,27 @@ void TupFrame::reloadGraphicItem(const QString &id, const QString &path)
 
 void TupFrame::reloadSVGItem(const QString &id, TupLibraryObject *object)
 {
-    for (int i = 0; i < k->svgIndexes.size(); ++i) {
-         if (k->svgIndexes.at(i).compare(id) == 0) {
-             TupSvgItem *oldItem = k->svg.value(i);
+    if (object) {
+        for (int i = 0; i < k->svgIndexes.size(); ++i) {
+            if (k->svgIndexes.at(i).compare(id) == 0) {
+                TupSvgItem *oldItem = k->svg.value(i);
+                if (oldItem) {
+                    QString path = object->dataPath();
 
-             QString path = object->dataPath();
-             TupSvgItem *item = new TupSvgItem(path, this);
-             item->setSymbolName(object->symbolName());
-             item->setTransform(oldItem->transform());
-             item->setPos(oldItem->pos());
-             item->setEnabled(true);
-             item->setFlags(oldItem->flags());
-             item->setZValue(oldItem->zValue());
+                    TupSvgItem *item = new TupSvgItem(path, this);
+                    item->setSymbolName(object->symbolName());
+                    item->setTransform(oldItem->transform());
+                    item->setPos(oldItem->pos());
+                    item->setEnabled(true);
+                    item->setFlags(oldItem->flags());
+                    item->setZValue(oldItem->zValue());
 
-             k->svg[i] = item;
-         }
+                    k->svg[i] = item;
+                }
+
+                return;
+            }
+        }
     }
 }
 
@@ -1603,24 +1609,28 @@ void TupFrame::updateZLevel(int zLevelIndex)
     int graphicsSize = k->graphics.size();
     for (int i = 0; i < graphicsSize; ++i) {
          TupGraphicObject *object = k->graphics.at(i); 
-         int currentZValue = object->itemZValue();
-         int zLevel = zLevelIndex + (currentZValue % ZLAYER_LIMIT);
-         object->setItemZValue(zLevel);
-         if (i == (graphicsSize-1)) {
-             if (zLevel > max)
-                 max = zLevel;
+         if (object) {  
+             int currentZValue = object->itemZValue();
+             int zLevel = zLevelIndex + (currentZValue % ZLAYER_LIMIT);
+             object->setItemZValue(zLevel);
+             if (i == (graphicsSize-1)) {
+                 if (zLevel > max)
+                     max = zLevel;
+             }
          }
     }
 
     graphicsSize = k->svgIndexes.size(); 
     for (int i = 0; i < graphicsSize; ++i) {
          TupSvgItem *item = k->svg.value(i);
-         int currentZValue = item->zValue();
-         int zLevel = zLevelIndex + (currentZValue % ZLAYER_LIMIT);
-         item->setZValue(zLevel);
-         if (i == (graphicsSize-1)) {
-             if (zLevel > max)
-                 max = zLevel;
+         if (item) {
+             int currentZValue = item->zValue();
+             int zLevel = zLevelIndex + (currentZValue % ZLAYER_LIMIT);
+             item->setZValue(zLevel);
+             if (i == (graphicsSize-1)) {
+                 if (zLevel > max)
+                     max = zLevel;
+             }
          }
     }
 

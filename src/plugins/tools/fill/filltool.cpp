@@ -34,7 +34,20 @@
  ***************************************************************************/
 
 #include "filltool.h"
+
+#include "tconfig.h"
 #include "tupsvgitem.h"
+#include "tupserializer.h"
+#include "tupitemconverter.h"
+#include "tuprequestbuilder.h"
+#include "tupscene.h"
+#include "tupinputdeviceinformation.h"
+#include "tupgraphicsscene.h"
+#include "tupprojectrequest.h"
+#include "tupbrushmanager.h"
+#include "tupgraphiclibraryitem.h"
+#include "tupitemgroup.h"
+#include "tosd.h"
 
 struct FillTool::Private
 {
@@ -42,6 +55,7 @@ struct FillTool::Private
     TupGraphicsScene *scene;
     QCursor insideCursor;
     QCursor contourCursor;
+    TColorCell::FillType mode;
 };
 
 FillTool::FillTool() : k(new Private)
@@ -56,28 +70,27 @@ FillTool::~FillTool()
 void FillTool::init(TupGraphicsScene *scene)
 {
     k->scene = scene;
+
+    TCONFIG->beginGroup("ColorPalette");
+    int mode = TCONFIG->value("CurrentColorMode", 0).toInt();
+    k->mode = TColorCell::FillType(mode);
 }
 
 QStringList FillTool::keys() const
 {
-    return QStringList() << tr("Internal Fill") << tr("Line Fill");
+    return QStringList() << tr("Fill Tool");
 }
 
 void FillTool::setupActions()
 {
-    TAction *action1 = new TAction(QIcon(kAppProp->themeDir() + "icons/internal_fill.png"), tr("Internal Fill"), this);
-    action1->setShortcut(QKeySequence(tr("I")));
-    action1->setToolTip(tr("Internal Fill") + " - " + "I");
     k->insideCursor = QCursor(kAppProp->themeDir() + "cursors/internal_fill.png", 0, 11);
-    action1->setCursor(k->insideCursor);
-    k->actions.insert(tr("Internal Fill"), action1);
-    
-    TAction *action2 = new TAction(QIcon(kAppProp->themeDir() + "icons/line_fill.png"), tr("Line Fill"), this);
-    action2->setShortcut(QKeySequence(tr("B")));
-    action2->setToolTip(tr("Line Fill") + " - " + "B");
     k->contourCursor = QCursor(kAppProp->themeDir() + "cursors/line_fill.png", 0, 13);
-    action2->setCursor(k->contourCursor);
-    k->actions.insert(tr("Line Fill"), action2);
+
+    TAction *action1 = new TAction(QIcon(kAppProp->themeDir() + "icons/internal_fill.png"), tr("Fill Tool"), this);
+    action1->setShortcut(QKeySequence(tr("F")));
+    action1->setToolTip(tr("Fill Tool") + " - " + "F");
+    action1->setCursor(k->insideCursor);
+    k->actions.insert(tr("Fill Tool"), action1);
 }
 
 void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
@@ -159,16 +172,15 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                 if (qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(item)) {
                     QDomDocument doc;
                     TupProjectRequest::Action action = TupProjectRequest::Brush;
-                    if (name() == tr("Internal Fill")) {
+                    if (k->mode == TColorCell::Inner) {
                         frame->checkBrushStatus(itemIndex); 
                         QBrush brush = brushManager->brush();
-                        // action = TupProjectRequest::Brush;
                         doc.appendChild(TupSerializer::brush(&brush, doc));
-                    } else if (name() == tr("Line Fill")) {
-                               frame->checkPenStatus(itemIndex);
-                               QPen pen = brushManager->pen();
-                               action = TupProjectRequest::Pen;
-                               doc.appendChild(TupSerializer::pen(&pen, doc));
+                    } else if (k->mode == TColorCell::Contour) {
+                        frame->checkPenStatus(itemIndex);
+                        QPen pen = brushManager->pen();
+                        action = TupProjectRequest::Pen;
+                        doc.appendChild(TupSerializer::pen(&pen, doc));
                     }
 
                     TupProjectRequest event = TupRequestBuilder::createItemRequest(
@@ -262,7 +274,6 @@ void FillTool::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_F11 || event->key() == Qt::Key_Escape) {
         emit closeHugeCanvas();
-    // } else if (event->modifiers() != Qt::ShiftModifier && event->modifiers() != Qt::ControlModifier) {
     } else {
         QPair<int, int> flags = TupToolPlugin::setKeyAction(event->key(), event->modifiers());
         if (flags.first != -1 && flags.second != -1)
@@ -272,11 +283,17 @@ void FillTool::keyPressEvent(QKeyEvent *event)
 
 QCursor FillTool::cursor() const
 {
-    if (name() == tr("Internal Fill")) {
+    if (k->mode == TColorCell::Inner) {
         return k->insideCursor;
-    } else if (name() == tr("Line Fill")) {
-               return k->contourCursor;
+    } else if (k->mode == TColorCell::Contour) {
+        return k->contourCursor;
     }
 
     return QCursor(Qt::ArrowCursor);
 }
+
+void FillTool::setColorMode(TColorCell::FillType mode)
+{
+    k->mode = mode;
+}
+

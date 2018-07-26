@@ -34,8 +34,20 @@
  ***************************************************************************/
 
 #include "tupcolorpalette.h"
+
 #include "timagebutton.h"
 #include "tseparator.h"
+#include "tupmodulewidgetbase.h"
+#include "ticon.h"
+#include "tcolorcell.h"
+#include "tconfig.h"
+#include "tuppaintareaevent.h"
+#include "tupcolorform.h"
+#include "tupviewcolorcells.h"
+#include "tupcolorpicker.h"
+#include "tslider.h"
+#include "tupgradientcreator.h"
+#include "tvhbox.h"
 
 struct TupColorPalette::Private
 {
@@ -77,10 +89,12 @@ TupColorPalette::TupColorPalette(QWidget *parent) : TupModuleWidgetBase(parent),
     #endif
 
     k->currentSpace = TColorCell::Contour;
+    TCONFIG->beginGroup("ColorPalette");
+    TCONFIG->setValue("CurrentColorMode", 0);
+
     k->currentContourBrush = Qt::black;
     k->currentFillBrush = Qt::transparent;
     k->flagGradient = true;
-    // k->type = Solid;
 
     setWindowTitle(tr("Color Palette"));
     setWindowIcon(QPixmap(THEME_DIR + "icons/color_palette.png"));
@@ -271,6 +285,14 @@ void TupColorPalette::setupColorDisplay()
 
 void TupColorPalette::updateColorMode(TColorCell::FillType type)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupColorPalette::updateColorMode()] - type: " << type;
+        #else
+            T_FUNCINFOX("tools") << type;
+        #endif
+    #endif
+
     QBrush brush;
     QColor color;
 
@@ -305,6 +327,9 @@ void TupColorPalette::updateColorMode(TColorCell::FillType type)
 
         color = brush.color();
         k->htmlField->setText(color.name());
+        TCONFIG->beginGroup("ColorPalette");
+        TCONFIG->setValue("CurrentColorMode", type);
+
         emit colorSpaceChanged(type);
     }
 
@@ -760,4 +785,10 @@ void TupColorPalette::updateBgColor(const QColor &color)
         k->bgColor->setBrush(QBrush(color));
         updateColorMode(TColorCell::Background);
     }
+}
+
+void TupColorPalette::clickFillButton()
+{
+    if (!k->fillColor->isChecked())
+        k->fillColor->click();
 }

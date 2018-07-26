@@ -124,7 +124,11 @@ void TColorCell::paintEvent(QPaintEvent *event)
 void TColorCell::mousePressEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
+    click();
+}
 
+void TColorCell::click()
+{
     if (k->enabled) {
         setChecked(true);
         emit clicked(k->index);

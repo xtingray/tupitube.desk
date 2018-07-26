@@ -202,6 +202,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         void fillColorChanged(const QColor &color);
         void bgColorChanged(const QColor &color);
         void penWidthChanged(int width);
+        void fillToolEnabled();
 
     private:
         void setupDrawActions();

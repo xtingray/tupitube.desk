@@ -40,6 +40,7 @@
 #include "tuptoolinterface.h"
 #include "taction.h"
 #include "tupprojectresponse.h"
+#include "tcolorcell.h"
 
 #include <QObject>
 #include <QSize>
@@ -64,7 +65,7 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
                           EllipseTool, TextTool };
         enum ArrowTools { InvalidKey = -1, RightArrow, LeftArrow, UpArrow, DownArrow, QuickCopyRight, QuickCopyDown, DeleteUp, DeleteLeft, Delete };
         enum SelectTools { InvalidSelection = -1, NodesTool = 0, ObjectsTool };
-        enum FillTools { InvalidFill = -1, InsideTool = 0, ContourTool };
+        enum FillTools { InvalidFill = -1, FillTool = 0, ContourFill };
         enum ColorTools { InvalidColor = -1, ColorTool = 0 };
 
         enum Mode { Add = 1, Edit, View };
@@ -120,6 +121,8 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
 
         virtual void updateWorkSpaceContext();
         virtual void clearSelection();
+
+        virtual void setColorMode(TColorCell::FillType mode);
         
     signals:
         void requested(const TupProjectRequest *request);

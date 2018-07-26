@@ -131,11 +131,10 @@ struct TupDocumentView::Private
     TAction *textAction;
     TAction *selectionAction;
     TAction *nodesAction;
-    TAction *borderFillAction;
     TAction *fillAction;
     TAction *papagayoAction;
 
-    TColorCell::FillType currentFillType;
+    // TColorCell::FillType currentFillType;
 
     DockType currentDock;
     bool cameraMode;
@@ -162,7 +161,6 @@ TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNe
     k->onLineUsers = users;
     k->dynamicFlag = false;
     k->staticFlag = false;
-    k->currentFillType = TColorCell::Contour;
 
     k->cameraMode = false;
     k->photoCounter = 1;
@@ -484,25 +482,25 @@ void TupDocumentView::loadPlugins()
 {
     bool imagePluginLoaded = false; 
     foreach (QObject *plugin, TupPluginManager::instance()->formats()) {
-             if (plugin) {
-                 TupExportInterface *exporter = qobject_cast<TupExportInterface *>(plugin);
-                 if (exporter) {
-                     #ifdef TUP_DEBUG
-                         QString msg = "TupDocumentView::loadPlugins() - plugin: " + exporter->key();
-                         #ifdef Q_OS_WIN
-                             qWarning() << msg;
-                         #else
-                             tWarning() << msg;
-                         #endif
-                     #endif
+        if (plugin) {
+            TupExportInterface *exporter = qobject_cast<TupExportInterface *>(plugin);
+            if (exporter) {
+                #ifdef TUP_DEBUG
+                    QString msg = "TupDocumentView::loadPlugins() - plugin: " + exporter->key();
+                    #ifdef Q_OS_WIN
+                        qWarning() << msg;
+                    #else
+                        tWarning() << msg;
+                    #endif
+                #endif
 
-                     if (exporter->key().compare(tr("Image Sequence")) == 0) {
-                         k->imagePlugin = exporter;
-                         imagePluginLoaded = true;
-                         break;
-                     }
-                 }
-             }
+                if (exporter->key().compare(tr("Image Sequence")) == 0) {
+                    k->imagePlugin = exporter;
+                    imagePluginLoaded = true;
+                    break;
+                }
+            }
+        }
     }
 
     if (!imagePluginLoaded) {
@@ -641,11 +639,8 @@ void TupDocumentView::loadPlugins()
                                  break;
                               case TupToolInterface::Fill:
                                  {
-                                   if (toolName.compare(tr("Internal Fill")) == 0)
+                                   if (toolName.compare(tr("Fill Tool")) == 0)
                                        k->fillAction = action;
-
-                                   if (toolName.compare(tr("Line Fill")) == 0)
-                                       k->borderFillAction = action;
                                  }
                                  break;
                                case TupToolInterface::LipSync:
@@ -728,9 +723,9 @@ void TupDocumentView::loadPlugins()
     k->toolbar->addAction(k->nodesAction);
     k->toolbar->addSeparator();
     k->toolbar->addAction(k->fillAction);
-    // k->toolbar->addAction(k->borderFillAction);
     k->toolbar->addSeparator();
     k->toolbar->addAction(k->motionMenu->menuAction());
+
     #ifdef Q_OS_WIN
         if (QSysInfo::windowsVersion() != QSysInfo::WV_XP) {
             k->toolbar->addSeparator();
@@ -740,6 +735,7 @@ void TupDocumentView::loadPlugins()
         k->toolbar->addSeparator();
         k->toolbar->addAction(k->actionManager->find("camera"));
     #endif
+
     k->toolbar->addSeparator();
     k->toolbar->addAction(k->miscMenu->menuAction());
 
@@ -763,164 +759,183 @@ void TupDocumentView::loadPlugin(int menu, int index)
     #endif
 
     TAction *action = 0;
+    // TColorCell::FillType fillMode;
 
     switch (menu) {
-            case TupToolPlugin::Arrows:
-                 {
-                     if (k->currentDock == ExposureSheet) {
-                         if (index == TupToolPlugin::UpArrow) {
-                             k->paintArea->goOneFrameBack();
-                         } else if (index == TupToolPlugin::DownArrow) {
-                             k->paintArea->goOneFrameForward();
-                         } else if (index == TupToolPlugin::QuickCopyDown) {
-                             k->paintArea->copyFrameForward();
-                         } else if (index == TupToolPlugin::DeleteUp) {
-                             k->paintArea->removeCurrentFrame();
-                         } else if (index == TupToolPlugin::LeftArrow) {
-                             k->paintArea->goOneLayerBack();
-                         } else if (index == TupToolPlugin::RightArrow) {
-                             k->paintArea->goOneLayerForward();
-                         } 
+        case TupToolPlugin::Arrows:
+            {
+                if (k->currentDock == ExposureSheet) {
+                    if (index == TupToolPlugin::UpArrow) {
+                        k->paintArea->goOneFrameBack();
+                    } else if (index == TupToolPlugin::DownArrow) {
+                        k->paintArea->goOneFrameForward();
+                    } else if (index == TupToolPlugin::QuickCopyDown) {
+                        k->paintArea->copyFrameForward();
+                    } else if (index == TupToolPlugin::DeleteUp) {
+                        k->paintArea->removeCurrentFrame();
+                    } else if (index == TupToolPlugin::LeftArrow) {
+                        k->paintArea->goOneLayerBack();
+                    } else if (index == TupToolPlugin::RightArrow) {
+                        k->paintArea->goOneLayerForward();
+                    } 
 
-                         return;
-                     }
+                    return;
+                }
 
-                     if (k->currentDock == TimeLine) {
-                         if (index == TupToolPlugin::LeftArrow) {
-                             k->paintArea->goOneFrameBack();
-                         } else if (index == TupToolPlugin::RightArrow) {
-                             k->paintArea->goOneFrameForward();
-                         } else if (index == TupToolPlugin::QuickCopyRight) {
-                             k->paintArea->copyFrameForward();
-                         } else if (index == TupToolPlugin::DeleteLeft) {
-                             k->paintArea->removeCurrentFrame();
-                         } else if (index == TupToolPlugin::UpArrow) {
-                             k->paintArea->goOneLayerBack();
-                         } else if (index == TupToolPlugin::DownArrow) {
-                             k->paintArea->goOneLayerForward();
-                         }
+                if (k->currentDock == TimeLine) {
+                    if (index == TupToolPlugin::LeftArrow) {
+                        k->paintArea->goOneFrameBack();
+                    } else if (index == TupToolPlugin::RightArrow) {
+                        k->paintArea->goOneFrameForward();
+                    } else if (index == TupToolPlugin::QuickCopyRight) {
+                        k->paintArea->copyFrameForward();
+                    } else if (index == TupToolPlugin::DeleteLeft) {
+                        k->paintArea->removeCurrentFrame();
+                    } else if (index == TupToolPlugin::UpArrow) {
+                        k->paintArea->goOneLayerBack();
+                    } else if (index == TupToolPlugin::DownArrow) {
+                        k->paintArea->goOneLayerForward();
+                    }
 
-                         return;
-                     }
-                 }
+                    return;
+                }
+            }
             break;
             case TupToolPlugin::ColorMenu:
-                 {
-                     if (index == TupToolPlugin::ColorTool) {
-                         if (k->fullScreenOn) {
-                             QColor currentColor = brushManager()->penColor();
-                             emit openColorDialog(currentColor);
-                         }
-                         return;
-                     }
-                 }
+                {
+                    if (index == TupToolPlugin::ColorTool) {
+                        if (k->fullScreenOn) {
+                            QColor currentColor = brushManager()->penColor();
+                            emit openColorDialog(currentColor);
+                        }
+                        return;
+                    }
+                }
             break;
             case TupToolPlugin::BrushesMenu:
-                 {
-                     QList<QAction*> brushActions = k->shapesMenu->actions();
+                {
+                    QList<QAction*> brushActions = k->shapesMenu->actions();
 
-                     switch (index) {
-                         case TupToolPlugin::PencilTool:
-                         {
-                             action = k->pencilAction;
-                         }
-                         break;
-                         case TupToolPlugin::InkTool:
-                         {
-                             action = k->inkAction;
-                         }
-                         break;
-                         // SQA: Enable it only for debugging
-                         /*
-                         case TupToolPlugin::SchemeTool:
-                         {
-                             action = k->schemeAction;
-                         }
-                         break;
-                         */
-                         case TupToolPlugin::PolyLineTool:
-                         {
-                             action = k->polyLineAction;
-                         }
-                         break;
-                         case TupToolPlugin::RectangleTool:
-                         {
-                             action = (TAction *) brushActions[0];
-                         }
-                         break;
-                         case TupToolPlugin::EllipseTool:
-                         {
-                             action = (TAction *) brushActions[1];
-                         }
-                         break;
-                         case TupToolPlugin::LineTool:
-                         {
-                             action = (TAction *) brushActions[2];
-                         }
-                         break;
-                     }
-                 }
+                    switch (index) {
+                        case TupToolPlugin::PencilTool:
+                        {
+                            action = k->pencilAction;
+                        }
+                        break;
+                        case TupToolPlugin::InkTool:
+                        {
+                            action = k->inkAction;
+                        }
+                        break;
+                        // SQA: Enable it only for debugging
+                        /*
+                        case TupToolPlugin::SchemeTool:
+                        {
+                            action = k->schemeAction;
+                        }
+                        break;
+                        */
+                        case TupToolPlugin::PolyLineTool:
+                        {
+                            action = k->polyLineAction;
+                        }
+                        break;
+                        case TupToolPlugin::RectangleTool:
+                        {
+                            action = (TAction *) brushActions[0];
+                        }
+                        break;
+                        case TupToolPlugin::EllipseTool:
+                        {
+                            action = (TAction *) brushActions[1];
+                        }
+                        break;
+                        case TupToolPlugin::LineTool:
+                        {
+                            action = (TAction *) brushActions[2];
+                        }
+                        break;
+                    }
+                }
             break;
             case TupToolPlugin::SelectionMenu:
-                 {
-                     switch (index) {
-                         case TupToolPlugin::Delete:
-                         {
-                             k->paintArea->deleteItems();
-                         }
-                         break;
-                         case TupToolPlugin::NodesTool:
-                         {
-                             action = k->nodesAction;
-                         }
-                         break;
-                         case TupToolPlugin::ObjectsTool:
-                         {
-                             action = k->selectionAction;
-                         }
-                         break;
-                     }
-                 }
+                {
+                    switch (index) {
+                        case TupToolPlugin::Delete:
+                        {
+                            k->paintArea->deleteItems();
+                        }
+                        break;
+                        case TupToolPlugin::NodesTool:
+                        {
+                            action = k->nodesAction;
+                        }
+                        break;
+                        case TupToolPlugin::ObjectsTool:
+                        {
+                            action = k->selectionAction;
+                        }
+                        break;
+                    }
+                }
             break;
             case TupToolPlugin::FillMenu:
-                 {
-                     if (index == TupToolPlugin::InsideTool)
-                         action = k->fillAction;
-
-                     if (index == TupToolPlugin::ContourTool)
-                         action = k->borderFillAction;
-                 }
+                {
+                    if (index == TupToolPlugin::FillTool)
+                        action = k->fillAction;
+                        // fillMode = TColorCell::Inner;
+       
+                    /*
+                    if (index == TupToolPlugin::ContourFill) {
+                        action = k->fillAction;
+                        fillMode = TColorCell::Contour;
+                    }
+                    */
+                }
             break;
             /*
             case TupToolPlugin::ZoomMenu:
-                 {
-                     action = k->shiftAction;
-                 }
+                {
+                    action = k->shiftAction;
+                }
             break;
             */
             default:
-                 {
-                     #ifdef TUP_DEBUG
-                         QString msg = "TupDocumentView::loadPlugin() - Error: Invalid Menu Index / No plugin loaded";
-                         #ifdef Q_OS_WIN
-                             qDebug() << msg;
-                         #else
-                             tError() << msg;
-                         #endif
-                     #endif
-                     return;
-                 }
+                {
+                    #ifdef TUP_DEBUG
+                        QString msg = "TupDocumentView::loadPlugin() - Error: Invalid Menu Index / No plugin loaded";
+                        #ifdef Q_OS_WIN
+                            qDebug() << msg;
+                        #else
+                            tError() << msg;
+                        #endif
+                    #endif
+                    return;
+                }
             break;
     }
 
     if (action) {
-        QString toolName = tr("%1").arg(action->text());
-
-        if (toolName.compare(k->currentTool->name()) != 0) {
-            if (k->fullScreenOn) {
+        if (k->fullScreenOn) {
+            QString toolName = tr("%1").arg(action->text());
+            if (toolName.compare(k->currentTool->name()) != 0) {
                 action->trigger();
                 k->fullScreen->updateCursor(action->cursor());
             }
+
+            /*
+            if (menu == TupToolPlugin::FillMenu) {
+                QString icon = "internal_fill.png";
+                if (fillMode == TColorCell::Contour)
+                    icon = "line_fill.png";
+                else
+                    emit fillToolEnabled();
+
+                k->currentTool->setColorMode(fillMode);
+                QCursor cursor = QCursor(kAppProp->themeDir() + "cursors/" + icon, 0, 11);
+                k->fullScreen->updateCursor(cursor);
+            }
+            */
         }
     } else {
         #ifdef TUP_DEBUG
@@ -1011,11 +1026,16 @@ void TupDocumentView::selectTool()
                          k->motionMenu->menuAction()->setIcon(action->icon());
                      break;
                 case TupToolInterface::Fill:
-                     // SQA: Check if this line is the best way to switch the fill tools
-                     if (k->currentFillType == TColorCell::Contour)
-                         k->borderFillAction->trigger();
+                     {
+                         emit fillToolEnabled();
 
-                     k->status->enableFullScreenFeature(true);
+                         QCursor cursor = QCursor(kAppProp->themeDir() + "cursors/internal_fill.png", 0, 11);
+                         k->paintArea->viewport()->setCursor(cursor);
+                         k->status->enableFullScreenFeature(true);
+
+                         k->currentTool->setColorMode(TColorCell::Inner);
+                         k->fillAction->trigger();
+                     }
                      break;
                 case TupToolInterface::Selection:
                      k->status->enableFullScreenFeature(true);
@@ -1066,14 +1086,8 @@ void TupDocumentView::selectTool()
 
         k->paintArea->setTool(tool);
 
-        if (tool->toolType() == TupToolInterface::Fill) {
-            if (k->currentFillType == TColorCell::Contour) {
-                QCursor cursor = QCursor(kAppProp->themeDir() + "cursors/line_fill.png", 0, 11);
-                k->paintArea->viewport()->setCursor(cursor);
-            }
-        } else {
+        if (tool->toolType() != TupToolInterface::Fill)
             k->paintArea->viewport()->setCursor(action->cursor());
-        }
 
         if (toolName.compare(tr("Object Selection")) == 0 || toolName.compare(tr("Nodes Selection")) == 0 ||
             toolName.compare(tr("PolyLine")) == 0 || toolName.compare(tr("Position Tween")) == 0 ||
@@ -1104,7 +1118,6 @@ void TupDocumentView::selectToolFromMenu(QAction *action)
     QMenu *menu = qobject_cast<QMenu *>(action->parent());
     if (menu) {
         TAction *tool = qobject_cast<TAction *>(menu->activeAction());
-
         if (tool) {
             if (tool->text().compare(k->currentTool->name()) == 0)
                 return;
@@ -1156,7 +1169,6 @@ bool TupDocumentView::handleProjectResponse(TupProjectResponse *response)
 void TupDocumentView::applyFilter()
 {
     QAction *action = qobject_cast<QAction *>(sender());
-
     if (action) {
         // SQA: Check this code to understand how filters work 
         /*
@@ -1488,32 +1500,32 @@ void TupDocumentView::setSpaceContext()
         k->dynamicPropertiesBar->setVisible(false);
         k->motionMenu->setEnabled(true);
     } else if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
-               if (k->dynamicFlag) {
-                   k->dynamicFlag = false;
-                   renderDynamicBackground();
-               }
-               k->project->updateSpaceContext(TupProject::STATIC_BACKGROUND_EDITION);
-               k->staticPropertiesBar->setVisible(true);
-               k->dynamicPropertiesBar->setVisible(false);
-               k->motionMenu->setEnabled(false);
+        if (k->dynamicFlag) {
+            k->dynamicFlag = false;
+            renderDynamicBackground();
+        }
+        k->project->updateSpaceContext(TupProject::STATIC_BACKGROUND_EDITION);
+        k->staticPropertiesBar->setVisible(true);
+        k->dynamicPropertiesBar->setVisible(false);
+        k->motionMenu->setEnabled(false);
     } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-               k->dynamicFlag = true;
-               k->project->updateSpaceContext(TupProject::DYNAMIC_BACKGROUND_EDITION);
+        k->dynamicFlag = true;
+        k->project->updateSpaceContext(TupProject::DYNAMIC_BACKGROUND_EDITION);
 
-               int sceneIndex = k->paintArea->currentSceneIndex();
-               TupScene *scene = k->project->sceneAt(sceneIndex);
-               if (scene) {
-                   TupBackground *bg = scene->background();
-                   if (bg) {
-                       int direction = bg->dyanmicDirection();
-                       k->dirCombo->setCurrentIndex(direction);
-                       int shift = bg->dyanmicShift();
-                       k->shiftSpin->setValue(shift);
-                   }
-               }
-               k->staticPropertiesBar->setVisible(false);
-               k->dynamicPropertiesBar->setVisible(true);
-               k->motionMenu->setEnabled(false);
+        int sceneIndex = k->paintArea->currentSceneIndex();
+        TupScene *scene = k->project->sceneAt(sceneIndex);
+        if (scene) {
+            TupBackground *bg = scene->background();
+            if (bg) {
+                int direction = bg->dyanmicDirection();
+                k->dirCombo->setCurrentIndex(direction);
+                int shift = bg->dyanmicShift();
+                k->shiftSpin->setValue(shift);
+            }
+        }
+        k->staticPropertiesBar->setVisible(false);
+        k->dynamicPropertiesBar->setVisible(true);
+        k->motionMenu->setEnabled(false);
     }
 
     k->paintArea->updateSpaceContext();
@@ -1546,7 +1558,6 @@ int TupDocumentView::currentFramesTotal()
     int layerIndex = k->paintArea->graphicsScene()->currentLayerIndex();
 
     TupScene *scene = k->project->sceneAt(sceneIndex);
-
     if (scene) {
         TupLayer *layer = scene->layerAt(layerIndex);
         if (layer)
@@ -1617,7 +1628,8 @@ void TupDocumentView::setOnionFactor(double opacity)
 
 void TupDocumentView::showFullScreen()
 {
-    if (k->fullScreenOn || k->currentTool->toolType() == TupToolInterface::Tweener || k->currentTool->toolType() == TupToolInterface::LipSync)
+    if (k->fullScreenOn || k->currentTool->toolType() == TupToolInterface::Tweener 
+        || k->currentTool->toolType() == TupToolInterface::LipSync)
         return;
 
     k->fullScreenOn = true;
@@ -1731,7 +1743,8 @@ void TupDocumentView::exportImage()
     QString fileName = QFileDialog::getSaveFileName(this, tr("Export Frame As"), QDir::homePath(),
                                                         tr("Images") + " (*.png *.jpg *.svg)");
     if (!fileName.isNull()) {
-        bool isOk = k->imagePlugin->exportFrame(frameIndex, k->project->bgColor(), fileName, k->project->sceneAt(sceneIndex), k->project->dimension(), k->project->library()); 
+        bool isOk = k->imagePlugin->exportFrame(frameIndex, k->project->bgColor(), fileName, k->project->sceneAt(sceneIndex), 
+                                                k->project->dimension(), k->project->library()); 
         updatePaintArea();
         if (isOk)
             TOsd::self()->display(tr("Information"), tr("Frame has been exported successfully"));
@@ -2164,15 +2177,15 @@ void TupDocumentView::importPapagayoLipSync()
 
                         // Adding mouth images in the library
                         foreach (QString fileName, imagesList) {
-                                 QString key = fileName.toLower();
-                                 QFile f(mouthPath + "/" + fileName);
-                                 if (f.open(QIODevice::ReadOnly)) {
-                                     QByteArray data = f.readAll();
-                                     f.close();
-                                     request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key, TupLibraryObject::Image, k->project->spaceContext(), data, folder,
-                                                                                       sceneIndex, layerIndex, currentIndex);
-                                     emit requestTriggered(&request);
-                                 }
+                            QString key = fileName.toLower();
+                            QFile f(mouthPath + "/" + fileName);
+                            if (f.open(QIODevice::ReadOnly)) {
+                                QByteArray data = f.readAll();
+                                f.close();
+                                request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key, TupLibraryObject::Image, k->project->spaceContext(), data, folder,
+                                                                                  sceneIndex, layerIndex, currentIndex);
+                                emit requestTriggered(&request);
+                            }
                         }
 
                         // Adding lip-sync sound file
@@ -2338,18 +2351,13 @@ void TupDocumentView::setFillTool(TColorCell::FillType type)
 {
     if (k->currentTool) {
         if (k->currentTool->toolType() == TupToolInterface::Fill) {
-            k->currentFillType = type;
-            if (type == TColorCell::Contour) {
-                k->borderFillAction->trigger();
+            k->currentTool->setColorMode(type);
+            QString icon = "internal_fill.png";
+            if (type == TColorCell::Contour)
+                icon = "line_fill.png";
 
-                QCursor cursor = QCursor(kAppProp->themeDir() + "cursors/line_fill.png", 0, 11);
-                k->paintArea->viewport()->setCursor(cursor);
-            } else if (type == TColorCell::Inner) {
-                k->fillAction->trigger();
-
-                QCursor cursor = QCursor(kAppProp->themeDir() + "cursors/internal_fill.png", 0, 11);
-                k->paintArea->viewport()->setCursor(cursor);
-            }
+            QCursor cursor = QCursor(kAppProp->themeDir() + "cursors/" + icon, 0, 11);
+            k->paintArea->viewport()->setCursor(cursor);
         }
     }
 }

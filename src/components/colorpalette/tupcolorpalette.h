@@ -38,17 +38,7 @@
 
 #include "tglobal.h"
 #include "tupmodulewidgetbase.h"
-#include "ticon.h"
-#include "timagebutton.h"
 #include "tcolorcell.h"
-#include "tconfig.h"
-#include "tuppaintareaevent.h"
-#include "tupcolorform.h"
-#include "tupviewcolorcells.h"
-#include "tupcolorpicker.h"
-#include "tslider.h"
-#include "tupgradientcreator.h"
-#include "tvhbox.h"
 
 #include <QBoxLayout>
 #include <QPushButton>
@@ -81,9 +71,10 @@ class TUPITUBE_EXPORT TupColorPalette : public TupModuleWidgetBase
         void updateContourColor(const QColor &color);
         void updateFillColor(const QColor &color);
         void updateBgColor(const QColor &color);
+        void updateColorMode(TColorCell::FillType flag);
+        void clickFillButton();
 
     private slots:
-        void updateColorMode(TColorCell::FillType flag);
         void initBg();
         void setColorOnAppFromHTML(const QBrush &brush);
         void updateColorFromHTML();

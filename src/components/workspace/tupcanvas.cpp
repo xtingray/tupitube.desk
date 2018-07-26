@@ -212,14 +212,19 @@ void TupCanvas::closeEvent(QCloseEvent *event)
 void TupCanvas::colorDialog(const QColor &current)
 {
     QColor color = QColorDialog::getColor(current, this);
-    k->currentColor = color;
-    emit colorChangedFromFullScreen(color);
+    tError() << "TRACING color 1: " << color.name();
+    if (color.isValid()) { 
+        k->currentColor = color;
+        emit colorChangedFromFullScreen(color);
+    }
 }
 
 void TupCanvas::colorDialog()
 {
     QColor color = QColorDialog::getColor(k->currentColor, this);
-    emit colorChangedFromFullScreen(color);
+    tError() << "TRACING color 2: " << color.name();
+    if (color.isValid())
+        emit colorChangedFromFullScreen(color);
 }
 
 void TupCanvas::penDialog()

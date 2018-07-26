@@ -37,19 +37,9 @@
 #define FILLTOOLPLUGIN_H
 
 #include "tglobal.h"
-// #include "tupsvgitem.h"
-#include "tupserializer.h"
-#include "tupitemconverter.h"
-#include "tuprequestbuilder.h"
-#include "tupscene.h"
-#include "tupinputdeviceinformation.h"
-#include "tupgraphicsscene.h"
-#include "tupprojectrequest.h"
-#include "tupbrushmanager.h"
-#include "tupgraphiclibraryitem.h"
 #include "tuptoolplugin.h"
-#include "tupitemgroup.h"
-#include "tosd.h"
+#include "tuppathitem.h"
+#include "tcolorcell.h"
 
 #include <QObject>
 #include <QLabel>
@@ -98,6 +88,8 @@ class TUPITUBE_PLUGIN FillTool : public TupToolPlugin
         virtual void saveConfig();
         virtual void keyPressEvent(QKeyEvent *event);
         virtual QCursor cursor() const;
+
+        void setColorMode(TColorCell::FillType mode);
 
     signals:
         void closeHugeCanvas();

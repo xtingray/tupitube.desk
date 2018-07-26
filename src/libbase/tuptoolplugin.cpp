@@ -256,14 +256,16 @@ QPair<int, int> TupToolPlugin::setKeyAction(int key, Qt::KeyboardModifiers modif
                  tool = TupToolPlugin::NodesTool;
             break;
 
-            case Qt::Key_I:
-                 menu = TupToolPlugin::FillMenu;
-                 tool = TupToolPlugin::InsideTool;
-            break;
-
+            /*
             case Qt::Key_B:
                  menu = TupToolPlugin::FillMenu;
-                 tool = TupToolPlugin::ContourTool;
+                 tool = TupToolPlugin::ContourFill;
+            break;
+            */
+
+            case Qt::Key_F:
+                 menu = TupToolPlugin::FillMenu;
+                 tool = TupToolPlugin::FillTool;
             break;
 
             case Qt::Key_Left:
@@ -342,3 +344,9 @@ void TupToolPlugin::updateWorkSpaceContext()
 void TupToolPlugin::clearSelection()
 {
 }
+
+void TupToolPlugin::setColorMode(TColorCell::FillType mode)
+{
+    Q_UNUSED(mode);
+}
+

@@ -49,7 +49,7 @@ class TUPITUBE_EXPORT TColorCell : public QWidget
     Q_OBJECT
 
     public:
-        enum FillType{Contour = 0, Inner, Background, Basic, PreviousFrames, NextFrames, Layers};
+        enum FillType {Contour = 0, Inner, Background, Basic, PreviousFrames, NextFrames, Layers};
         TColorCell(FillType index, const QBrush &brush, const QSize &size);
         ~TColorCell();
         QSize sizeHint() const;
@@ -59,6 +59,7 @@ class TUPITUBE_EXPORT TColorCell : public QWidget
         void setChecked(bool isChecked);
         bool isChecked();
         void setBrush(const QBrush &brush);
+        void click();
 
     protected:
         void paintEvent(QPaintEvent *painter);
