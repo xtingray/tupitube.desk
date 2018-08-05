@@ -103,7 +103,7 @@ void TupTwitter::start()
     k->manager = new QNetworkAccessManager(this);
     connect(k->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(closeRequest(QNetworkReply*)));
 
-	k->request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+    k->request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
     k->request.setUrl(QUrl(url));
     k->request.setRawHeader("User-Agent", BROWSER_FINGERPRINT.toLatin1());
 
