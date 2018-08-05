@@ -275,7 +275,7 @@ ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int
     if (area == Qt::TopDockWidgetArea || area == Qt::BottomDockWidgetArea) 
         m_buttonBars[toToolBarArea(area)]->showSeparator(! m_buttonBars[Qt::LeftToolBarArea]->isEmpty());
     else if (area == Qt::LeftDockWidgetArea)
-             m_buttonBars[Qt::TopToolBarArea]->showSeparator(m_buttonBars[Qt::TopToolBarArea]->isEmpty());
+        m_buttonBars[Qt::TopToolBarArea]->showSeparator(m_buttonBars[Qt::TopToolBarArea]->isEmpty());
 
     connect(toolView, SIGNAL(topLevelChanged(bool)), this, SLOT(relayoutViewButton(bool)));
 
@@ -331,14 +331,14 @@ void TMainWindow::enableToolViews(bool flag)
     #endif
 
     foreach (TButtonBar *bar, m_buttonBars.values()) {
-             QList<ToolView *> views = m_toolViews[bar];
-             QList<ToolView *>::iterator it = views.begin();
+        QList<ToolView *> views = m_toolViews[bar];
+        QList<ToolView *>::iterator it = views.begin();
 
-             while (it != views.end()) {
-                    ToolView *view = *it;
-                    view->enableButton(flag);
-                    ++it;
-             }
+        while (it != views.end()) {
+            ToolView *view = *it;
+            view->enableButton(flag);
+            ++it;
+        }
     }
 }
 
@@ -420,7 +420,7 @@ void TMainWindow::removeFromPerspective(QWidget *widget)
 void TMainWindow::addToPerspective(const QList<QAction *> &actions, int perspective)
 {
     foreach (QAction *action, actions)
-             addToPerspective(action, perspective);
+        addToPerspective(action, perspective);
 }
 
 /**
@@ -450,38 +450,38 @@ void TMainWindow::removeFromPerspective(QAction *action)
 Qt::DockWidgetArea TMainWindow::toDockWidgetArea(Qt::ToolBarArea area)
 {
     switch (area) {
-            case Qt::LeftToolBarArea:
-               {
-                 return Qt::LeftDockWidgetArea;
-               }
-               break;
-            case Qt::RightToolBarArea:
-               {
-                 return Qt::RightDockWidgetArea;
-               }
-               break;
-            case Qt::TopToolBarArea:
-               {
-                 return Qt::TopDockWidgetArea;
-               }
-               break;
-            case Qt::BottomToolBarArea:
-               {
-                 return Qt::BottomDockWidgetArea;
-               }
-               break;
-            default: 
-               {
-                   #ifdef TUP_DEBUG
-                       QString msg = "TMainWindow::toDockWidgetArea() - Floating -> " + QString::number(area);
-                       #ifdef Q_OS_WIN
-                           qWarning() << msg;
-                       #else
-                           tWarning() << msg;
-                       #endif
+        case Qt::LeftToolBarArea:
+           {
+             return Qt::LeftDockWidgetArea;
+           }
+           break;
+        case Qt::RightToolBarArea:
+           {
+             return Qt::RightDockWidgetArea;
+           }
+           break;
+        case Qt::TopToolBarArea:
+           {
+             return Qt::TopDockWidgetArea;
+           }
+           break;
+        case Qt::BottomToolBarArea:
+           {
+             return Qt::BottomDockWidgetArea;
+           }
+           break;
+        default: 
+           {
+              #ifdef TUP_DEBUG
+                   QString msg = "TMainWindow::toDockWidgetArea() - Floating -> " + QString::number(area);
+                   #ifdef Q_OS_WIN
+                       qWarning() << msg;
+                   #else
+                       tWarning() << msg;
                    #endif
-               }
-               break;
+               #endif
+           }
+           break;
     }
 
     return Qt::LeftDockWidgetArea;
@@ -490,38 +490,38 @@ Qt::DockWidgetArea TMainWindow::toDockWidgetArea(Qt::ToolBarArea area)
 Qt::ToolBarArea TMainWindow::toToolBarArea(Qt::DockWidgetArea area)
 {
     switch (area) {
-            case Qt::LeftDockWidgetArea:
-               {
-                 return Qt::LeftToolBarArea;
-               }
-               break;
-            case Qt::RightDockWidgetArea:
-               {
-                 return Qt::RightToolBarArea;
-               }
-               break;
-            case Qt::TopDockWidgetArea:
-               {
-                 return Qt::TopToolBarArea;
-               }
-               break;
-            case Qt::BottomDockWidgetArea:
-               {
-                 return Qt::BottomToolBarArea;
-               }
-               break;
-            default: 
-               {
-                 #ifdef TUP_DEBUG
-                     QString msg = "TMainWindow::toToolBarArea() - Floating -> " + QString::number(area);
-                     #ifdef Q_OS_WIN
-                         qWarning() << msg;
-                     #else
-                         tWarning() << msg;
-                     #endif
+        case Qt::LeftDockWidgetArea:
+           {
+             return Qt::LeftToolBarArea;
+           }
+           break;
+        case Qt::RightDockWidgetArea:
+           {
+             return Qt::RightToolBarArea;
+           }
+           break;
+        case Qt::TopDockWidgetArea:
+           {
+             return Qt::TopToolBarArea;
+           }
+           break;
+        case Qt::BottomDockWidgetArea:
+           {
+             return Qt::BottomToolBarArea;
+           }
+           break;
+        default: 
+           {
+             #ifdef TUP_DEBUG
+                 QString msg = "TMainWindow::toToolBarArea() - Floating -> " + QString::number(area);
+                 #ifdef Q_OS_WIN
+                     qWarning() << msg;
+                 #else
+                     tWarning() << msg;
                  #endif
-               }
-               break;
+             #endif
+           }
+           break;
     }
 
     return Qt::LeftToolBarArea;
@@ -534,7 +534,7 @@ Qt::ToolBarArea TMainWindow::toToolBarArea(Qt::DockWidgetArea area)
 void TMainWindow::setEnableButtonBlending(bool enable)
 {
     foreach (TButtonBar *bar, m_buttonBars.values())
-             bar->setEnableButtonBlending(enable);
+        bar->setEnableButtonBlending(enable);
 }
 
 void TMainWindow::relayoutViewButton(bool topLevel)
@@ -558,15 +558,15 @@ void TMainWindow::relayoutViewButton(bool topLevel)
             TButtonBar *bar = m_buttonBars[m_forRelayout->button()->area()];
             bool exclusive = true;
             foreach (ToolView *view, m_toolViews[bar])
-                     exclusive = exclusive && !view->isFloating();
+                exclusive = exclusive && !view->isFloating();
 
             bar->setExclusive(exclusive);
             bar->onlyShow(m_forRelayout, true);
         }
     } else {
-            // Floating tool views aren't exclusive
-            if (ToolView *view = dynamic_cast<ToolView *>(sender()))
-                m_buttonBars[view->button()->area()]->setExclusive(false);
+        // Floating tool views aren't exclusive
+        if (ToolView *view = dynamic_cast<ToolView *>(sender()))
+            m_buttonBars[view->button()->area()]->setExclusive(false);
     }
 }
 
@@ -605,10 +605,9 @@ void TMainWindow::relayoutToolView()
             m_buttonBars[Qt::BottomToolBarArea]->showSeparator(! m_buttonBars[Qt::LeftToolBarArea]->isEmpty());
             m_buttonBars[Qt::TopToolBarArea]->showSeparator(! m_buttonBars[Qt::LeftToolBarArea]->isEmpty());
         } else if (area == Qt::LeftToolBarArea) {
-                   m_buttonBars[Qt::BottomToolBarArea]->showSeparator(m_buttonBars[Qt::LeftToolBarArea]->isEmpty());
-                   m_buttonBars[Qt::TopToolBarArea]->showSeparator(m_buttonBars[Qt::LeftToolBarArea]->isEmpty());
+            m_buttonBars[Qt::BottomToolBarArea]->showSeparator(m_buttonBars[Qt::LeftToolBarArea]->isEmpty());
+            m_buttonBars[Qt::TopToolBarArea]->showSeparator(m_buttonBars[Qt::LeftToolBarArea]->isEmpty());
         }
-        //////////
 
         m_toolViews[m_buttonBars[button->area()]].removeAll(m_forRelayout);
         m_toolViews[m_buttonBars[area]] << m_forRelayout;
@@ -654,63 +653,63 @@ void TMainWindow::setCurrentPerspective(int workspace)
     QHash<TButtonBar *, int> hideButtonCount;
 
     foreach (Views views, viewsList) {
-             foreach (ToolView *view, views) {
-                      TButtonBar *bar = m_buttonBars[view->button()->area()];
-                      bar->setUpdatesEnabled(false);
-                      view->setUpdatesEnabled(false);
+        foreach (ToolView *view, views) {
+            TButtonBar *bar = m_buttonBars[view->button()->area()];
+            bar->setUpdatesEnabled(false);
+            view->setUpdatesEnabled(false);
 
-                      if (view->perspective() & workspace) {
-                          bar->enable(view->button());
-                          if (view->isChecked())
-                              view->show(); 
-                      } else {
-                              bar->disable(view->button());
-                              if (view->isChecked() || view->isVisible())
-                                  view->close();
-                              hideButtonCount[bar]++;
-                      }
+            if (view->perspective() & workspace) {
+                bar->enable(view->button());
+                if (view->isChecked())
+                    view->show(); 
+            } else {
+                bar->disable(view->button());
+                if (view->isChecked() || view->isVisible())
+                    view->close();
+                hideButtonCount[bar]++;
+            }
 
-                      if (bar->isEmpty() && bar->isVisible()) {
-                          bar->hide();
-                      } else {
-                          if (!bar->isVisible() && bar->shouldBeVisible())
-                              bar->show();
-                      }
+            if (bar->isEmpty() && bar->isVisible()) {
+                bar->hide();
+            } else {
+                if (!bar->isVisible() && bar->shouldBeVisible())
+                    bar->show();
+            }
 
-                      view->setUpdatesEnabled(true);
-                      bar->setUpdatesEnabled(true);
-             }
+            view->setUpdatesEnabled(true);
+            bar->setUpdatesEnabled(true);
+        }
     }
 
     QHashIterator<TButtonBar *, int> barIt(hideButtonCount);
 
     // This loop hides the bars with no buttons
     while (barIt.hasNext()) {
-           barIt.next();
+        barIt.next();
 
-           if (barIt.key()->count() == barIt.value())
-               barIt.key()->hide();
+        if (barIt.key()->count() == barIt.value())
+            barIt.key()->hide();
     }
 
     QHashIterator<QWidget *, int> widgetIt(m_managedWidgets);
 
     while (widgetIt.hasNext()) {
-           widgetIt.next();
+        widgetIt.next();
 
-           if (widgetIt.value() & workspace)
-               widgetIt.key()->show();
-           else
-               widgetIt.key()->hide();
+        if (widgetIt.value() & workspace)
+            widgetIt.key()->show();
+        else
+            widgetIt.key()->hide();
     }
 
     QHashIterator<QAction *, int> actionIt(m_managedActions);
     while (actionIt.hasNext()) {
-           actionIt.next();
+        actionIt.next();
 
-           if (actionIt.value() & workspace)
-               actionIt.key()->setVisible(true);
-           else
-               actionIt.key()->setVisible(false);
+        if (actionIt.value() & workspace)
+            actionIt.key()->setVisible(true);
+        else
+            actionIt.key()->setVisible(false);
     }
 
     if (centralWidget())
@@ -794,14 +793,12 @@ bool TMainWindow::event(QEvent *e)
         if (pos.x() <= m_buttonBars[Qt::LeftToolBarArea]->pos().x() + 3 ) { // Left
             bar = m_buttonBars[Qt::LeftToolBarArea];
         } else if (pos.y() <= m_buttonBars[Qt::TopToolBarArea]->pos().y() + 3 && m_buttonBars[Qt::TopToolBarArea]->pos().y() <= pos.y()) {
-                   bar = m_buttonBars[Qt::TopToolBarArea];
+            bar = m_buttonBars[Qt::TopToolBarArea];
         } else if (pos.x() >= m_buttonBars[Qt::RightToolBarArea]->pos().x() + m_buttonBars[Qt::RightToolBarArea]->width() - 3 ) {
-                   bar = m_buttonBars[Qt::RightToolBarArea];
-        } else if (pos.y() >= m_buttonBars[Qt::BottomToolBarArea]->pos().y() +  
-                   m_buttonBars[Qt::BottomToolBarArea]->height() - 3 
-                   && m_buttonBars[Qt::BottomToolBarArea]->pos().y() + 
-                   m_buttonBars[Qt::BottomToolBarArea]->height() > pos.y()) {
-                   bar = m_buttonBars[Qt::BottomToolBarArea];
+            bar = m_buttonBars[Qt::RightToolBarArea];
+        } else if (pos.y() >= m_buttonBars[Qt::BottomToolBarArea]->pos().y() +  m_buttonBars[Qt::BottomToolBarArea]->height() - 3 
+                   && m_buttonBars[Qt::BottomToolBarArea]->pos().y() + m_buttonBars[Qt::BottomToolBarArea]->height() > pos.y()) {
+            bar = m_buttonBars[Qt::BottomToolBarArea];
         }
 
         if (bar) {

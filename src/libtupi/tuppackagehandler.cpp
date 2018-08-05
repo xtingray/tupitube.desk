@@ -123,45 +123,64 @@ bool TupPackageHandler::compress(QuaZip *zip, const QString &path)
     char c;
 
     QFileInfoList files = QDir(path).entryInfoList();
-    
+ 
     foreach (QFileInfo file, files) {
-             QString filePath = path + "/" + file.fileName();
+        QString filePath = path + "/" + file.fileName();
 
-             if (file.fileName().startsWith("."))
-                 continue;
+        if (file.fileName().startsWith("."))
+            continue;
+
+        if (file.isDir()) {
+            bool ok = compress(zip, file.path() + "/" + file.fileName());
+            if (!ok) {
+                #ifdef TUP_DEBUG
+                    QString msg = "TupPackageHandler::compress() - Error while compressing directory: " + file.fileName();
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg;
+                    #else
+                        tError() << msg;
+                    #endif
+                #endif
+                return false;
+            }
+            continue;
+        }
+
+        QString cleanPath = stripRepositoryFromPath(filePath);
+        if (!outFile.open(QIODevice::WriteOnly, QuaZipNewInfo(cleanPath, cleanPath))) 
+            return false;
+
+        inFile.setFileName(filePath);
+
+        if (!inFile.open(QIODevice::ReadOnly)) {
+            #ifdef TUP_DEBUG
+                QString msg = "TupPackageHandler::compress() - Error opening file " + inFile.fileName() + " : " + inFile.errorString();
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError() << msg;
+                #endif
+            #endif
+
+            return false;
+        }
+
+        while (inFile.getChar(&c) && outFile.putChar(c)) {};
         
-             if (file.isDir()) {
-                 compress(zip, file.path() + "/" + file.fileName());
-                 continue;
-             }
-        
-             // SQA: Add an additional variable to avoid calling the same function twice
-             QString cleanPath = stripRepositoryFromPath(filePath);
-             if (!outFile.open(QIODevice::WriteOnly, QuaZipNewInfo(cleanPath, cleanPath))) 
-                 return false;
+        if (outFile.getZipError() != UNZ_OK) {
+            #ifdef TUP_DEBUG
+                QString msg = "TupPackageHandler::compress() - Error while creating compressed file -> " + outFile.getFileName();
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError() << msg;
+                #endif
+            #endif
+            return false;
+        }
 
-             inFile.setFileName(filePath);
-
-             if (!inFile.open(QIODevice::ReadOnly)) {
-                 #ifdef TUP_DEBUG
-                     QString msg = "Error opening file " + inFile.fileName() + " : " + inFile.errorString();
-                     #ifdef Q_OS_WIN
-                         qDebug() << msg;
-                     #else
-                         tError() << msg;
-                     #endif
-                 #endif
-
-                 return false;
-             }
-
-             while (inFile.getChar(&c) && outFile.putChar(c)) {};
-        
-             if (outFile.getZipError()!=UNZ_OK)
-                 return false;
-
-             outFile.close();
-             inFile.close();
+        outFile.close();
+        inFile.close();
     }
     
     return true;

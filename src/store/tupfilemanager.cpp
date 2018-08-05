@@ -82,7 +82,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                 #endif
             } else {
                 // SQA: Check if these lines are really needed
-                if (! projectDir.mkdir(projectDir.path())) {
+                if (!projectDir.mkdir(projectDir.path())) {
                     #ifdef TUP_DEBUG
                         QString msg = "TupFileManager::save() - Error: Can't create path -> " + projectDir.path();
                         #ifdef Q_OS_WIN
@@ -106,7 +106,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
         }
     } else {
         if (!projectDir.exists()) {
-            if (! projectDir.mkdir(projectDir.path())) {
+            if (!projectDir.mkdir(projectDir.path())) {
                 #ifdef TUP_DEBUG
                     QString msg = "TupFileManager::save() - Error: Can't create path -> " + projectDir.path();
                     #ifdef Q_OS_WIN
@@ -149,6 +149,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                  tError() << msg;
              #endif
          #endif
+         return false;
      }
     }
 
@@ -177,6 +178,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                       tError() << msg;
                   #endif
               #endif
+              return false;
           }
      }
     }
@@ -202,6 +204,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                  tError() << msg;
              #endif
          #endif
+         return false;
      }
     }
 
@@ -210,7 +213,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 
     if (ok) {
         #ifdef TUP_DEBUG
-            QString msg = "TupFileManager::save() - Project saved in -> " + fileName;
+            QString msg = "TupFileManager::save() - Project saved at -> " + fileName;
             #ifdef Q_OS_WIN
                 qWarning() << msg;
             #else
@@ -219,13 +222,14 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
         #endif
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupFileManager::save() - Error: Project couldn't be saved in -> " + fileName;
+            QString msg = "TupFileManager::save() - Error: Project couldn't be saved at -> " + fileName;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else
                 tError() << msg;
             #endif
         #endif
+        return false;
     }
 
     return ok;
