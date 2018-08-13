@@ -66,8 +66,8 @@ class T_GUI_EXPORT ToolView : public QDockWidget
         QSize sizeHint() const;
         void setPerspective(int wsp);
         int perspective() const;
-        void setFixedSize(int s);
-        int fixedSize() const;
+        // void setFixedSize(int s);
+        // int fixedSize() const;
         void enableButton(bool flag);
         QString getObjectID();
         bool isChecked();

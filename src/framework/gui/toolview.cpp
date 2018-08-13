@@ -64,6 +64,14 @@ TViewButton *ToolView::button() const
 
 void ToolView::expandDock(bool flag)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[ToolView::expandDock()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     expanded = flag;
     if (flag)
         show();
@@ -80,6 +88,14 @@ bool ToolView::isExpanded()
 
 void ToolView::setExpandingFlag() 
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[ToolView::setExpandingFlag()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     if (expanded)
         expanded = false;
     else 
@@ -90,11 +106,27 @@ void ToolView::setExpandingFlag()
 
 void ToolView::setSizeHint() 
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[ToolView::setSizeHint()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 }
 
 void ToolView::saveSize(bool checked)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[ToolView::saveSize()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     Q_UNUSED(checked);
 
     if (m_button->area() == Qt::LeftToolBarArea || m_button->area() == Qt::RightToolBarArea)
@@ -105,6 +137,14 @@ void ToolView::saveSize(bool checked)
 
 QSize ToolView::sizeHint() const
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[ToolView::sizeHint()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     QSize size = QDockWidget::sizeHint();
 
     if (m_size < 0) 
@@ -138,18 +178,44 @@ int ToolView::perspective() const
     return m_perspective;
 }
 
+/*
 int ToolView::fixedSize() const
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[ToolView::fixedSize()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     return m_size;
 }
 
 void ToolView::setFixedSize(int s)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[ToolView::setFixedSize()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     m_size = s;
 }
+*/
 
 void ToolView::showEvent(QShowEvent *event)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[ToolView::showEvent()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     if (TMainWindow *mw = dynamic_cast<TMainWindow *>(parentWidget())) {
         if (!(mw->currentPerspective() & m_perspective)) {
             event->ignore(); // make sure!

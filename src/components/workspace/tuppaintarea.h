@@ -160,6 +160,7 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
     private:
         QPoint itemPoint(const QString &xml);
         void multipasteObject(int pasteTotal);
+
         struct Private;
         Private *const k;
 };

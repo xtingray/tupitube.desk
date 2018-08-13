@@ -77,27 +77,14 @@ bool EventFilter::eventFilter(QObject *obj, QEvent *event)
     return false;
 }
 
-/**
- * Construct a factory.
- * @return 
- */
 TMainWindowFactory::TMainWindowFactory()
 {
 }
 
-/**
- * Destructor
- * @return 
- */
 TMainWindowFactory::~TMainWindowFactory()
 {
 }
 
-/**
- * if centralWidget() is a QTabWidget an instance of TabbedMainWindow will be created
- * @param other 
- * @return 
- */
 TMainWindow *TMainWindowFactory::create(QMainWindow *other)
 {
     TMainWindow *mainWindow = 0;

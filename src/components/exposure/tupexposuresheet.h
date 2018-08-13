@@ -69,6 +69,7 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
     public:
         TupExposureSheet(QWidget *parent = 0, TupProject *project = 0);
         ~TupExposureSheet();
+
         void updateFramesState();
         void updateLayerOpacity(int sceneIndex, int layerIndex);
         double getLayerOpacity(int sceneIndex, int layerIndex);

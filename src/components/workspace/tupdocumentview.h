@@ -215,7 +215,6 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
 
         struct Private;
         Private *const k;
-
 };
 
 #endif
