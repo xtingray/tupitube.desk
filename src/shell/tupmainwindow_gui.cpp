@@ -440,6 +440,14 @@ void TupMainWindow::updateOpenRecentMenu(QMenu *menu, QStringList recents)
 
 void TupMainWindow::changePerspective(QAction *action)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupMainWindow::changePerspective(QAction)]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     int perspective = action->data().toInt();
 
     // Animation or Player perspective
@@ -454,6 +462,14 @@ void TupMainWindow::changePerspective(QAction *action)
 
 void TupMainWindow::changePerspective(int index)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupMainWindow::changePerspective(int)]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     if (index == 4) {
         setCurrentTab(1);
         cameraWidget->doPlay();

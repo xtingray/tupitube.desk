@@ -88,6 +88,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
 
         TupDocumentView(TupProject *project, QWidget *parent = 0, bool isNetworked = true, const QStringList &users = QStringList());
         ~TupDocumentView();
+
         void setWorkSpaceSize(int width, int height);
         void closeArea();
         QSize sizeHint() const;
