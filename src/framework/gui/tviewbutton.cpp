@@ -160,9 +160,9 @@ QStyleOptionToolButton TViewButton::styleOption() const
         size.transpose();
         opt.rect = QRect(QPoint(opt.rect.x(), opt.rect.y()), size);
     } else if (m_area == Qt::RightToolBarArea) {
-               QSize size = opt.rect.size();
-               size.transpose();
-               opt.rect = QRect(QPoint(opt.rect.x(), opt.rect.y()), size);
+        QSize size = opt.rect.size();
+        size.transpose();
+        opt.rect = QRect(QPoint(opt.rect.x(), opt.rect.y()), size);
     }
 
     if (parentWidget()) {
@@ -241,17 +241,17 @@ void TViewButton::paintEvent(QPaintEvent *e)
     QPainter painter(this);
 
     switch (m_area) {
-            case Qt::LeftToolBarArea:
-                 painter.rotate(-90);
-                 painter.drawPixmap(-pm.width(), 0, pm);
-            break;
-            case Qt::RightToolBarArea:
-                 painter.rotate(90);
-                 painter.drawPixmap(0, -pm.height(), pm);
-            break;
-            default:
-                 painter.drawPixmap(0, 0, pm);
-                 break;
+        case Qt::LeftToolBarArea:
+            painter.rotate(-90);
+            painter.drawPixmap(-pm.width(), 0, pm);
+        break;
+        case Qt::RightToolBarArea:
+            painter.rotate(90);
+            painter.drawPixmap(0, -pm.height(), pm);
+        break;
+        default:
+            painter.drawPixmap(0, 0, pm);
+        break;
     }
 
     m_palette.setBrush(QPalette::Background, opt.palette.background());
@@ -261,10 +261,10 @@ void TViewButton::paintEvent(QPaintEvent *e)
 QMenu *TViewButton::createMenu()
 {
     QMenu *menu = new QMenu(tr("Menu"), this);
-    menu->addAction(tr("Only icon"), this, SLOT(setOnlyIcon()) );
-    menu->addAction(tr("Only text"), this, SLOT(setOnlyText()) );
-    menu->addSeparator();
-	
+    // menu->addAction(tr("Only icon"), this, SLOT(setOnlyIcon()));
+    // menu->addAction(tr("Only text"), this, SLOT(setOnlyText()));
+    // menu->addSeparator();
+
     QAction *action = menu->addAction(tr("Mouse sensibility"));
     connect(action, SIGNAL(toggled(bool)), this, SLOT(setSensible(bool)));
     action->setCheckable(true);
@@ -317,33 +317,29 @@ void TViewButton::leaveEvent(QEvent*)
 
 void TViewButton::fade()
 {
-        if (m_animator->count == 0)
-            m_animator->count = 1;
+    if (m_animator->count == 0)
+        m_animator->count = 1;
 
-        m_animator->isEnter = false;
+    m_animator->isEnter = false;
 
-        if (m_blending)
-            m_animator->timer->start();
+    if (m_blending)
+        m_animator->timer->start();
 }
 
 void TViewButton::animate()
 {
     if (m_animator->isEnter) {
-
         m_animator->count += 1;
         update();
         if (m_animator->count > m_animator->MAXCOUNT)
             m_animator->timer->stop();
-
     } else {
-
         m_animator->count -= 1;
         if (m_animator->count < 1) {
             m_animator->timer->stop();
             m_animator->count = 1;
         }
         update();
-
     }
 }
 
@@ -398,6 +394,14 @@ ToolView *TViewButton::toolView() const
 
 void TViewButton::setActivated(bool flag)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TViewButton::setActivated()]";
+        #else
+            T_FUNCINFO << flag;
+        #endif
+    #endif
+
     setChecked(flag);
     toggled(flag);
 }

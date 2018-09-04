@@ -267,7 +267,7 @@ class TupMainWindow : public TabbedMainWindow
     signals:
         void responsed(TupProjectResponse *);
         void updateAnimationModule(TupProject *, int, int, int);
-        void activeDockChanged(int);
+        void activeDockChanged(TupDocumentView::DockType);
 };
 
 #endif

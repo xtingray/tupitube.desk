@@ -339,7 +339,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(animationTab, SIGNAL(bgColorChanged(const QColor &)), m_colorPalette, SLOT(updateBgColor(const QColor &)));
         connect(animationTab, SIGNAL(penWidthChanged(int)), this, SLOT(updatePenThickness(int)));
         connect(animationTab, SIGNAL(fillToolEnabled()), m_colorPalette, SLOT(clickFillButton()));
-        connect(this, SIGNAL(activeDockChanged(int)), animationTab, SLOT(updateActiveDock(int)));
+        connect(this, SIGNAL(activeDockChanged(TupDocumentView::DockType)), animationTab, SLOT(updateActiveDock(TupDocumentView::DockType)));
 
         animationTab->setAntialiasing(true);
 
@@ -550,6 +550,7 @@ void TupMainWindow::resetUI()
     penView->expandDock(false);
     libraryView->expandDock(false);
     scenesView->expandDock(false);
+    exposureView->expandDock(false);
     timeView->expandDock(false);
 
     setUpdatesEnabled(false);
@@ -615,9 +616,6 @@ void TupMainWindow::resetUI()
     m_fileName = QString();
 
     enableToolViews(false);
-
-    if (exposureView->isExpanded())
-        exposureView->expandDock(false);
 
     setUpdatesEnabled(true);
 
@@ -1191,8 +1189,10 @@ void TupMainWindow::updateCurrentTab(int index)
                 scenesView->expandDock(true);
 
             if (contextMode == TupProject::FRAMES_EDITION) {
+                /*
                 if (!exposureView->isExpanded())
                     exposureView->expandDock(true);
+                */
             } else {
                 exposureView->expandDock(false);
                 exposureView->enableButton(false);

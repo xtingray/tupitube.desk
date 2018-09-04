@@ -42,6 +42,7 @@ ToolView::ToolView(const QString &title, const QIcon &icon, const QString &code,
     setWindowIcon(icon);
     setup(title);
     setObjectName("ToolView-" + code);
+    name = title;
     expanded = false;
 }
 
@@ -178,7 +179,6 @@ int ToolView::perspective() const
     return m_perspective;
 }
 
-/*
 int ToolView::fixedSize() const
 {
     #ifdef TUP_DEBUG
@@ -204,7 +204,6 @@ void ToolView::setFixedSize(int s)
 
     m_size = s;
 }
-*/
 
 void ToolView::showEvent(QShowEvent *event)
 {
@@ -212,7 +211,7 @@ void ToolView::showEvent(QShowEvent *event)
         #ifdef Q_OS_WIN
             qDebug() << "[ToolView::showEvent()]";
         #else
-            T_FUNCINFO;
+            T_FUNCINFO << name;
         #endif
     #endif
 
@@ -238,8 +237,5 @@ QString ToolView::getObjectID()
 
 bool ToolView::isChecked()
 {
-    if (m_button->isChecked())
-        return true;
-
-    return false;
+    return m_button->isChecked();
 }

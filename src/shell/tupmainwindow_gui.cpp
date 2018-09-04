@@ -400,7 +400,6 @@ void TupMainWindow::setupToolBar()
     mainToolBar->addAction(m_actionManager->find("save_project_as"));
     mainToolBar->addAction(m_actionManager->find("close_project"));
 
-
     TCONFIG->beginGroup("General");
     bool showAds = TCONFIG->value("ShowAds", true).toBool();
     if (showAds)
@@ -470,7 +469,7 @@ void TupMainWindow::changePerspective(int index)
         #endif
     #endif
 
-    if (index == 4) {
+    if (index == 4) { // Player
         setCurrentTab(1);
         cameraWidget->doPlay();
     } else {
@@ -516,28 +515,58 @@ void TupMainWindow::hideTopPanels()
 
 void TupMainWindow::checkTimeLineVisibility(bool visible)
 {
-    if (visible) {
-        if (timeView->isExpanded())
-            timeView->expandDock(false);
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupMainWindow::checkTimeLineVisibility(bool)]";
+        #else
+            T_FUNCINFO << visible;
+        #endif
+    #endif
 
-        emit activeDockChanged(1);
+    if (visible) {
+        if (timeView->isExpanded()) {
+            tError() << "checkTimeLineVisibility() - Closing timeView";
+            timeView->blockSignals(true);
+            timeView->expandDock(false);
+            timeView->blockSignals(false);
+        }
+
+        emit activeDockChanged(TupDocumentView::ExposureSheet);
     } else {
         if (!timeView->isExpanded())
-            emit activeDockChanged(0);
+            emit activeDockChanged(TupDocumentView::None);
     }
+
+    tError() << "TupMainWindow::checkTimeLineVisibility() - timeView->isChecked() -> " << timeView->isChecked();
+    tError() << "TupMainWindow::checkTimeLineVisibility() - exposureView->isChecked() -> " << exposureView->isChecked();
 }
 
 void TupMainWindow::checkExposureVisibility(bool visible)
 {
-    if (visible) {
-        if (exposureView->isExpanded())
-            exposureView->expandDock(false);
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupMainWindow::checkExposureVisibility(bool)]";
+        #else
+            T_FUNCINFO << visible;
+        #endif
+    #endif
 
-        emit activeDockChanged(2);
+    if (visible) {
+        if (exposureView->isExpanded()) {
+            tError() << "checkExposureVisibility() - Closing exposureView";
+            exposureView->blockSignals(true);
+            exposureView->expandDock(false);
+            exposureView->blockSignals(false);
+        }
+
+        emit activeDockChanged(TupDocumentView::TimeLine);
     } else {
         if (!exposureView->isExpanded())
-            emit activeDockChanged(0);
+            emit activeDockChanged(TupDocumentView::None);
     }
+
+    tError() << "TupMainWindow::checkExposureVisibility() - timeView->isChecked() -> " << timeView->isChecked();
+    tError() << "TupMainWindow::checkExposureVisibility() - exposureView->isChecked() -> " << exposureView->isChecked();
 }
 
 void TupMainWindow::updateFillTool(TColorCell::FillType type)

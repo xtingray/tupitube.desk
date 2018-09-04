@@ -66,8 +66,8 @@ class T_GUI_EXPORT ToolView : public QDockWidget
         QSize sizeHint() const;
         void setPerspective(int wsp);
         int perspective() const;
-        // void setFixedSize(int s);
-        // int fixedSize() const;
+        void setFixedSize(int s);
+        int fixedSize() const;
         void enableButton(bool flag);
         QString getObjectID();
         bool isChecked();
@@ -87,6 +87,7 @@ class T_GUI_EXPORT ToolView : public QDockWidget
 
     private:
         TViewButton *m_button;
+        QString name;
         int m_size;
         int m_perspective;
         bool expanded;

@@ -193,7 +193,7 @@ void TabbedMainWindow::emitWidgetChanged(int index)
                break;
        }
 
-       //setCurrentPerspective(index + 1); 
+       // setCurrentPerspective(index + 1); 
 
        emit tabHasChanged(index);       
     }
@@ -283,6 +283,6 @@ void TabbedMainWindow::setCurrentTab(int index)
                     setCurrentPerspective(News);
                break;
         }
-        //setCurrentPerspective(index + 1);
+        // setCurrentPerspective(index + 1);
     }
 }
