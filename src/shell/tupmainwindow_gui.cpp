@@ -425,12 +425,12 @@ void TupMainWindow::updateOpenRecentMenu(QMenu *menu, QStringList recents)
     int i = 0;
     QAction *action[5];
     foreach (QString recent, recents) {
-             m_recentProjects << recent;
-             action[i] = new QAction(QPixmap(THEME_DIR + "icons/recent_files.png"), recent, this); 
-             action[i]->setIconVisibleInMenu(true);
-             menu->addAction(action[i]);
-             connect(action[i], SIGNAL(triggered()), this, SLOT(openRecentProject()));
-             i++;
+        m_recentProjects << recent;
+        action[i] = new QAction(QPixmap(THEME_DIR + "icons/recent_files.png"), recent, this); 
+        action[i]->setIconVisibleInMenu(true);
+        menu->addAction(action[i]);
+        connect(action[i], SIGNAL(triggered()), this, SLOT(openRecentProject()));
+        i++;
     }
 
     if (!m_recentProjectsMenu->isEnabled())
@@ -453,7 +453,7 @@ void TupMainWindow::changePerspective(QAction *action)
     if (perspective == Animation || perspective == Player) {
         setCurrentTab(perspective - 1);
     } else if (perspective == News) { // News perspective
-               setCurrentTab(2);
+        setCurrentTab(2);
     } 
 
     action->setChecked(true);
@@ -525,7 +525,6 @@ void TupMainWindow::checkTimeLineVisibility(bool visible)
 
     if (visible) {
         if (timeView->isExpanded()) {
-            tError() << "checkTimeLineVisibility() - Closing timeView";
             timeView->blockSignals(true);
             timeView->expandDock(false);
             timeView->blockSignals(false);
@@ -536,9 +535,6 @@ void TupMainWindow::checkTimeLineVisibility(bool visible)
         if (!timeView->isExpanded())
             emit activeDockChanged(TupDocumentView::None);
     }
-
-    tError() << "TupMainWindow::checkTimeLineVisibility() - timeView->isChecked() -> " << timeView->isChecked();
-    tError() << "TupMainWindow::checkTimeLineVisibility() - exposureView->isChecked() -> " << exposureView->isChecked();
 }
 
 void TupMainWindow::checkExposureVisibility(bool visible)
@@ -553,7 +549,6 @@ void TupMainWindow::checkExposureVisibility(bool visible)
 
     if (visible) {
         if (exposureView->isExpanded()) {
-            tError() << "checkExposureVisibility() - Closing exposureView";
             exposureView->blockSignals(true);
             exposureView->expandDock(false);
             exposureView->blockSignals(false);
@@ -564,9 +559,6 @@ void TupMainWindow::checkExposureVisibility(bool visible)
         if (!exposureView->isExpanded())
             emit activeDockChanged(TupDocumentView::None);
     }
-
-    tError() << "TupMainWindow::checkExposureVisibility() - timeView->isChecked() -> " << timeView->isChecked();
-    tError() << "TupMainWindow::checkExposureVisibility() - exposureView->isChecked() -> " << exposureView->isChecked();
 }
 
 void TupMainWindow::updateFillTool(TColorCell::FillType type)

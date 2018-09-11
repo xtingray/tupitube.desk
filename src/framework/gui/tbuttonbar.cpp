@@ -96,7 +96,7 @@ QMenu *TButtonBar::createMenu()
     a = menu->addAction(tr("Exclusive space"));
     a->setCheckable(true);
     a->setChecked(isExclusive());
-    //a->setChecked(false);
+    // a->setChecked(false);
 
     connect(a, SIGNAL(triggered(bool)), this, SLOT(setExclusive(bool)));
 
@@ -110,6 +110,14 @@ QMenu *TButtonBar::createMenu()
 
 void TButtonBar::addButton(TViewButton *viewButton)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TButtonBar::addButton()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     QAction *act = addWidget(viewButton);
     m_buttons.addButton(viewButton);
 
@@ -127,7 +135,15 @@ void TButtonBar::addButton(TViewButton *viewButton)
 
 void TButtonBar::removeButton(TViewButton *viewButton)
 {
-    if (! m_buttons.buttons().contains(viewButton)) 
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TButtonBar::removeButton()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
+    if (!m_buttons.buttons().contains(viewButton)) 
         return;
 
     m_buttons.removeButton(viewButton);
@@ -145,9 +161,9 @@ bool TButtonBar::isEmpty() const
     bool isEmpty = true;
 
     foreach (QAbstractButton *button, m_buttons.buttons()) {
-             isEmpty = isEmpty && button->isHidden();
-             if (! isEmpty) 
-                 break;
+        isEmpty = isEmpty && button->isHidden();
+        if (!isEmpty) 
+            break;
     }
 
     return isEmpty;
@@ -190,16 +206,16 @@ bool TButtonBar::shouldBeVisible() const
 void TButtonBar::setShowOnlyIcons()
 {
     foreach (QAbstractButton *button, m_buttons.buttons()) {
-             TViewButton *viewButton = static_cast<TViewButton *>(button);
-             viewButton->setOnlyIcon();
+        TViewButton *viewButton = static_cast<TViewButton *>(button);
+        viewButton->setOnlyIcon();
     }
 }
 
 void TButtonBar::setShowOnlyTexts()
 {
     foreach (QAbstractButton *button, m_buttons.buttons()) {
-             TViewButton *viewButton = static_cast<TViewButton *>(button);
-             viewButton->setOnlyText();
+        TViewButton *viewButton = static_cast<TViewButton *>(button);
+        viewButton->setOnlyText();
     }
 }
 
@@ -226,6 +242,14 @@ bool TButtonBar::isExclusive() const
 
 void TButtonBar::onlyShow(ToolView *tool, bool ensureVisible)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TButtonBar::onlyShow()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     TViewButton *button = tool->button();
 
     if (ensureVisible) {
@@ -238,25 +262,32 @@ void TButtonBar::onlyShow(ToolView *tool, bool ensureVisible)
 
 void TButtonBar::hideOthers(QAbstractButton *source)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TButtonBar::hideOthers()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     if (!m_buttons.exclusive()) {
         static_cast<TViewButton *>(source)->toggleView();
         return;
     }
 
     m_buttons.setExclusive(false);
-
     setUpdatesEnabled(false);
 
     foreach (QAbstractButton *b, m_buttons.buttons()) {
-             TViewButton *button = static_cast<TViewButton *>(b);
-             if (source != button) {
-                 if (button->toolView()->isVisible()) {
-                     button->blockSignals(true);
-                     button->toggleView();
-                     button->blockSignals(false);
-                     break;
-                 }
-             }
+        TViewButton *button = static_cast<TViewButton *>(b);
+        if (source != button) {
+            if (button->toolView()->isVisible()) {
+                button->blockSignals(true);
+                button->toggleView();
+                button->blockSignals(false);
+                break;
+            }
+        }
     }
 
     static_cast<TViewButton *>(source)->toggleView();
@@ -278,15 +309,15 @@ void TButtonBar::mousePressEvent(QMouseEvent *e)
     }
 }
 
-void TButtonBar::enterEvent(QEvent *e)
+void TButtonBar::enterEvent(QEvent *event)
 {
-    QToolBar::enterEvent(e);
+    QToolBar::enterEvent(event);
     doNotHide();
 }
 
-void TButtonBar::leaveEvent(QEvent *e)
+void TButtonBar::leaveEvent(QEvent *event)
 {
-    QToolBar::leaveEvent(e);
+    QToolBar::leaveEvent(event);
 
     if (m_autoHide && !m_hider.isActive() && !m_blockHider)
         m_hider.start(800);
@@ -294,13 +325,29 @@ void TButtonBar::leaveEvent(QEvent *e)
 
 void TButtonBar::doNotHide()
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TButtonBar::doNotHide()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     if (m_hider.isActive())
         m_hider.stop();
 }
 
-void TButtonBar::showSeparator(bool e)
+void TButtonBar::showSeparator(bool event)
 {
-    m_separator->setVisible(e);
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TButtonBar::showSeparator()]";
+        #else
+            T_FUNCINFO << event;
+        #endif
+    #endif
+
+    m_separator->setVisible(event);
 }
 
 int TButtonBar::count() const
@@ -311,5 +358,5 @@ int TButtonBar::count() const
 void TButtonBar::setEnableButtonBlending(bool enable)
 {
     foreach (QAbstractButton *button, m_buttons.buttons())
-             static_cast<TViewButton *>(button)->setBlending(enable);
+        static_cast<TViewButton *>(button)->setBlending(enable);
 }

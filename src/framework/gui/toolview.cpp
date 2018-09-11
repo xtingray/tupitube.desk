@@ -36,12 +36,13 @@
 #include "toolview.h"
 
 ToolView::ToolView(const QString &title, const QIcon &icon, const QString &code, QWidget * parent)
-          : QDockWidget(title, parent), m_size(-1), m_perspective(0)
+                   : QDockWidget(title, parent), m_size(-1), m_perspective(0)
 {
     setFeatures(AllDockWidgetFeatures);
     setWindowIcon(icon);
     setup(title);
     setObjectName("ToolView-" + code);
+
     name = title;
     expanded = false;
 }
@@ -55,7 +56,7 @@ void ToolView::setup(const QString &label)
     m_button = new TViewButton(this);
     m_button->setToolTip(label);
 
-    connect(toggleViewAction(), SIGNAL(toggled(bool)), this, SLOT(saveSize(bool)));
+    // connect(toggleViewAction(), SIGNAL(toggled(bool)), this, SLOT(saveSize(bool)));
 }
 
 TViewButton *ToolView::button() const
@@ -105,6 +106,7 @@ void ToolView::setExpandingFlag()
     // emit dockExpanded(expanded); 
 }
 
+/*
 void ToolView::setSizeHint() 
 {
     #ifdef TUP_DEBUG
@@ -115,7 +117,21 @@ void ToolView::setSizeHint()
         #endif
     #endif
 
+    // setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+}
+
+void ToolView::resizeEvent(QResizeEvent *event)
+{
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[ToolView::resizeEvent()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
+    QDockWidget::resizeEvent(event);
 }
 
 void ToolView::saveSize(bool checked)
@@ -124,7 +140,7 @@ void ToolView::saveSize(bool checked)
         #ifdef Q_OS_WIN
             qDebug() << "[ToolView::saveSize()]";
         #else
-            T_FUNCINFO;
+            T_FUNCINFO << checked;
         #endif
     #endif
 
@@ -135,7 +151,9 @@ void ToolView::saveSize(bool checked)
     else
         m_size = height();
 }
+*/
 
+/*
 QSize ToolView::sizeHint() const
 {
     #ifdef TUP_DEBUG
@@ -158,6 +176,7 @@ QSize ToolView::sizeHint() const
 
     return size;
 }
+*/
 
 void ToolView::setDescription(const QString &description)
 {
@@ -179,6 +198,7 @@ int ToolView::perspective() const
     return m_perspective;
 }
 
+/*
 int ToolView::fixedSize() const
 {
     #ifdef TUP_DEBUG
@@ -191,8 +211,10 @@ int ToolView::fixedSize() const
 
     return m_size;
 }
+*/
 
-void ToolView::setFixedSize(int s)
+/*
+void ToolView::setFixedSize(int size)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -202,9 +224,11 @@ void ToolView::setFixedSize(int s)
         #endif
     #endif
 
-    m_size = s;
+    m_size = size;
 }
+*/
 
+/*
 void ToolView::showEvent(QShowEvent *event)
 {
     #ifdef TUP_DEBUG
@@ -224,6 +248,7 @@ void ToolView::showEvent(QShowEvent *event)
 
     QDockWidget::showEvent(event);
 }
+*/
 
 void ToolView::enableButton(bool flag)
 {

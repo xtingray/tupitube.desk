@@ -62,28 +62,30 @@ class T_GUI_EXPORT ToolView : public QDockWidget
         void expandDock(bool flag);
         bool isExpanded();
         void setExpandingFlag();
-        void setSizeHint();
-        QSize sizeHint() const;
         void setPerspective(int wsp);
         int perspective() const;
-        void setFixedSize(int s);
-        int fixedSize() const;
+        // int fixedSize() const;
         void enableButton(bool flag);
         QString getObjectID();
         bool isChecked();
         void setShortcut(QKeySequence shortcut);
 
+        // void setFixedSize(int s);
+        // void setSizeHint();
+        // QSize sizeHint() const;
+
     // signals:
     //     void dockExpanded(bool expanded);
 
-    public slots:
-        void saveSize(bool checked);
+    // public slots:
+    //    void saveSize(bool checked);
 
     private:
         void setup(const QString &label);
 
-    protected:
-        virtual void showEvent(QShowEvent *event);
+    // protected:
+        // virtual void showEvent(QShowEvent *event);
+        // void resizeEvent(QResizeEvent *event);
 
     private:
         TViewButton *m_button;
@@ -91,6 +93,7 @@ class T_GUI_EXPORT ToolView : public QDockWidget
         int m_size;
         int m_perspective;
         bool expanded;
+        QSize dockSize;
 };
 
 #endif

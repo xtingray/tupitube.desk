@@ -383,6 +383,7 @@ void TViewButton::toggleView()
     m_toolView->toggleViewAction()->trigger();
     setChecked(m_toolView->isVisible());
     m_toolView->setUpdatesEnabled(true);
+
     if (mw)
         mw->setUpdatesEnabled(true);
 }
