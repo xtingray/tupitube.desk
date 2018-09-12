@@ -219,7 +219,6 @@ void TMainWindow::addSpecialButton(TAction *action)
 
 ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int perspective, const QString &code, QKeySequence shortcut)
 {
-    /*
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TMainWindow::addToolView()]";
@@ -227,9 +226,12 @@ ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int
             T_FUNCINFO << "- component: " << code;
         #endif
     #endif
-    */
 
     ToolView *toolView = new ToolView(widget->windowTitle(), widget->windowIcon(), code);
+
+    // SQA: Make this option available from the Preferences dialog
+    toolView->setFeatures(!QDockWidget::DockWidgetMovable | !QDockWidget::DockWidgetFloatable);
+
     toolView->setShortcut(shortcut);
     toolView->setWidget(widget);
     toolView->setPerspective(perspective);
@@ -247,7 +249,7 @@ ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int
     else if (area == Qt::LeftDockWidgetArea)
         m_buttonBars[Qt::TopToolBarArea]->showSeparator(m_buttonBars[Qt::TopToolBarArea]->isEmpty());
 
-    connect(toolView, SIGNAL(topLevelChanged(bool)), this, SLOT(relayoutViewButton(bool)));
+    // connect(toolView, SIGNAL(topLevelChanged(bool)), this, SLOT(relayoutViewButton(bool)));
 
     if (toolView->isVisible())
         toolView->expandDock(false);
@@ -695,10 +697,13 @@ bool TMainWindow::autoRestore() const
 
 QMenu *TMainWindow::createPopupMenu()
 {
+    /*
     QMenu *menu = QMainWindow::createPopupMenu();
     menu->addSeparator();
-
     return menu;
+    */
+
+    return 0;
 }
 
 void TMainWindow::setSettingsHandler(TMainWindowAbstractSettings *settings)
@@ -748,6 +753,7 @@ bool TMainWindow::event(QEvent *e)
     #endif
     */
 
+    /*
     if (e->type() == QEvent::HoverMove) {
         // Show bar if autohide is enabled
         QPoint pos = mapFromGlobal(QCursor::pos());
@@ -769,6 +775,7 @@ bool TMainWindow::event(QEvent *e)
                 bar->show();
         }
     }
+    */
 
     return QMainWindow::event(e);
 }

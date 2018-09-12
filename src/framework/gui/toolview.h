@@ -64,33 +64,17 @@ class T_GUI_EXPORT ToolView : public QDockWidget
         void setExpandingFlag();
         void setPerspective(int wsp);
         int perspective() const;
-        // int fixedSize() const;
         void enableButton(bool flag);
         QString getObjectID();
         bool isChecked();
         void setShortcut(QKeySequence shortcut);
 
-        // void setFixedSize(int s);
-        // void setSizeHint();
-        // QSize sizeHint() const;
-
-    // signals:
-    //     void dockExpanded(bool expanded);
-
-    // public slots:
-    //    void saveSize(bool checked);
-
     private:
         void setup(const QString &label);
-
-    // protected:
-        // virtual void showEvent(QShowEvent *event);
-        // void resizeEvent(QResizeEvent *event);
 
     private:
         TViewButton *m_button;
         QString name;
-        int m_size;
         int m_perspective;
         bool expanded;
         QSize dockSize;

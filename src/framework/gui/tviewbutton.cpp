@@ -261,9 +261,6 @@ void TViewButton::paintEvent(QPaintEvent *e)
 QMenu *TViewButton::createMenu()
 {
     QMenu *menu = new QMenu(tr("Menu"), this);
-    // menu->addAction(tr("Only icon"), this, SLOT(setOnlyIcon()));
-    // menu->addAction(tr("Only text"), this, SLOT(setOnlyText()));
-    // menu->addSeparator();
 
     QAction *action = menu->addAction(tr("Mouse sensibility"));
     connect(action, SIGNAL(toggled(bool)), this, SLOT(setSensible(bool)));
@@ -370,15 +367,19 @@ bool TViewButton::blending() const
 
 void TViewButton::toggleView()
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[ToolView::toggleView()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     QMainWindow *mw = static_cast<QMainWindow *>(m_toolView->parentWidget());
     m_toolView->setUpdatesEnabled(false);
+
     if (mw)
         mw->setUpdatesEnabled(false);
-
-    if (m_area == Qt::LeftToolBarArea || m_area == Qt::RightToolBarArea)
-        m_toolView->setSizePolicy(QSizePolicy::Preferred , QSizePolicy::Expanding);
-    else
-        m_toolView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     m_toolView->toggleViewAction()->trigger();
     setChecked(m_toolView->isVisible());

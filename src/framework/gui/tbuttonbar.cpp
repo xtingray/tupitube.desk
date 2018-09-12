@@ -96,7 +96,6 @@ QMenu *TButtonBar::createMenu()
     a = menu->addAction(tr("Exclusive space"));
     a->setCheckable(true);
     a->setChecked(isExclusive());
-    // a->setChecked(false);
 
     connect(a, SIGNAL(triggered(bool)), this, SLOT(setExclusive(bool)));
 
@@ -156,10 +155,9 @@ void TButtonBar::removeButton(TViewButton *viewButton)
 
 bool TButtonBar::isEmpty() const
 {
+    /*
     // O(n) -> very slow...
-
     bool isEmpty = true;
-
     foreach (QAbstractButton *button, m_buttons.buttons()) {
         isEmpty = isEmpty && button->isHidden();
         if (!isEmpty) 
@@ -167,6 +165,9 @@ bool TButtonBar::isEmpty() const
     }
 
     return isEmpty;
+    */
+
+    return m_buttons.buttons().isEmpty(); 
 }
 
 void TButtonBar::setExclusive(bool excl)
@@ -296,6 +297,7 @@ void TButtonBar::hideOthers(QAbstractButton *source)
     setUpdatesEnabled(true);
 }
 
+/*
 void TButtonBar::mousePressEvent(QMouseEvent *e)
 {
     QToolBar::mousePressEvent(e);
@@ -322,6 +324,7 @@ void TButtonBar::leaveEvent(QEvent *event)
     if (m_autoHide && !m_hider.isActive() && !m_blockHider)
         m_hider.start(800);
 }
+*/
 
 void TButtonBar::doNotHide()
 {

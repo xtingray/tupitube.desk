@@ -95,9 +95,9 @@ class T_GUI_EXPORT TButtonBar : public QToolBar
         void onlySetShouldBeVisible(bool shouldBeVisible);
 
     protected:
-        virtual void mousePressEvent(QMouseEvent *event);
-        virtual void enterEvent(QEvent *event);
-        virtual void leaveEvent(QEvent *event);
+        // virtual void mousePressEvent(QMouseEvent *event);
+        // virtual void enterEvent(QEvent *event);
+        // virtual void leaveEvent(QEvent *event);
 
     private:
         QButtonGroup m_buttons;
