@@ -112,9 +112,11 @@ class T_GUI_EXPORT TMainWindow : public QMainWindow
     public slots:
         void setEnableButtonBlending(bool enable);
 
+    /*
     private slots:
         void relayoutViewButton(bool topLevel);
         void relayoutToolView();
+    */
 
     signals:
         void perspectiveChanged(int wps);

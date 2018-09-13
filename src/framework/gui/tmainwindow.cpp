@@ -230,7 +230,7 @@ ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int
     ToolView *toolView = new ToolView(widget->windowTitle(), widget->windowIcon(), code);
 
     // SQA: Make this option available from the Preferences dialog
-    toolView->setFeatures(!QDockWidget::DockWidgetMovable | !QDockWidget::DockWidgetFloatable);
+    // toolView->setFeatures(!QDockWidget::DockWidgetMovable|!QDockWidget::DockWidgetFloatable);
 
     toolView->setShortcut(shortcut);
     toolView->setWidget(widget);
@@ -329,7 +329,7 @@ void TMainWindow::moveToolView(ToolView *view, Qt::DockWidgetArea newPlace)
 
     addDockWidget(newPlace, view);
     m_forRelayout = view;
-    relayoutToolView();
+    // relayoutToolView();
 }
 
 void TMainWindow::addToPerspective(QWidget *widget, int perspective)
@@ -495,6 +495,7 @@ void TMainWindow::setEnableButtonBlending(bool enable)
         bar->setEnableButtonBlending(enable);
 }
 
+/*
 void TMainWindow::relayoutViewButton(bool topLevel)
 {
     #ifdef TUP_DEBUG
@@ -574,6 +575,7 @@ void TMainWindow::relayoutToolView()
 
     m_forRelayout = 0;
 }
+*/
 
 void TMainWindow::setCurrentPerspective(int workspace)
 {

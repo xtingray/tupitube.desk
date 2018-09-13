@@ -38,7 +38,10 @@
 ToolView::ToolView(const QString &title, const QIcon &icon, const QString &code, QWidget *parent) : 
                    QDockWidget(title, parent), m_perspective(0)
 {
-    // setFeatures(AllDockWidgetFeatures);
+    // setFeatures(AllDockWidgetFeatures);    
+    // SQA: Make this option available from the Preferences dialog
+    // setFeatures(!QDockWidget::DockWidgetMovable | !QDockWidget::DockWidgetFloatable);
+    setFeatures(QDockWidget::NoDockWidgetFeatures);
     setWindowIcon(icon);
     setup(title);
     setObjectName("ToolView-" + code);
