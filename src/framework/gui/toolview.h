@@ -57,6 +57,7 @@ class T_GUI_EXPORT ToolView : public QDockWidget
         ToolView(const QString &title, const QIcon &icon = QIcon(), const QString &code = QString(), QWidget * parent = 0);
         virtual ~ToolView();
 
+        QString title() const;
         void setDescription(const QString &description);
         TViewButton *button() const;
         void expandDock(bool flag);
@@ -73,11 +74,10 @@ class T_GUI_EXPORT ToolView : public QDockWidget
         void setup(const QString &label);
 
     private:
-        TViewButton *m_button;
+        TViewButton *currentButton;
         QString name;
-        int m_perspective;
+        int currentPerspective;
         bool expanded;
-        QSize dockSize;
 };
 
 #endif

@@ -190,7 +190,7 @@ class TupMainWindow : public TabbedMainWindow
         void openRecentProject();
         void createPaintCommand(const TupPaintAreaEvent *event);
         void callSave();
-        void expandExposureView(TupProject::Mode contextMode);
+        void restoreFramesMode(TupProject::Mode contextMode);
         void resetMousePointer();
         void updateUsersOnLine(const QString &login, int state);
         void importPapagayoLipSync();
@@ -201,6 +201,11 @@ class TupMainWindow : public TabbedMainWindow
         void checkExposureVisibility(bool visible);
         void updateFillTool(TColorCell::FillType type);
         void openStore();
+        void updateColorPanelStatus(bool flag);
+        void updatePenPanelStatus(bool flag);
+        void updateLibraryPanelStatus(bool flag);
+        void updateScenesPanelStatus(bool flag);
+        void doPlay();
 
     private:
         TupProjectManager *m_projectManager;
@@ -263,6 +268,7 @@ class TupMainWindow : public TabbedMainWindow
         QString webContent;
         QSize webMsgSize;
         TAction *helpAction;
+        TupDocumentView::DockType currentDock;
 
     signals:
         void responsed(TupProjectResponse *);

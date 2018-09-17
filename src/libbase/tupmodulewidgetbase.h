@@ -58,15 +58,15 @@ class TUPITUBE_EXPORT TupModuleWidgetBase : public QWidget, public TupAbstractPr
         TupModuleWidgetBase(QWidget *parent, const char *name = 0);
         ~TupModuleWidgetBase();
         virtual void addChild(QWidget *child, Qt::Alignment alignment = 0);
-        void setFont(const QFont &);
+        // void setFont(const QFont &);
         QBoxLayout *boxLayout();
         
     private:
         struct Private;
         Private *const k;
         
-    protected:
-        virtual bool event(QEvent *e);
+    // protected:
+    //     virtual bool event(QEvent *e);
         
     public slots:
         bool handleProjectResponse(TupProjectResponse *response);
@@ -82,10 +82,10 @@ class TUPITUBE_EXPORT TupModuleWidgetBase : public QWidget, public TupAbstractPr
         virtual void libraryResponse(TupLibraryResponse *libraryResponse);
         
     signals:
-        void documentModified(bool);
-        void sendToStatus(const QString &);
-        void toggle();
-        void activate(bool);
+        // void documentModified(bool);
+        // void sendToStatus(const QString &);
+        // void toggle();
+        // void activate(bool);
         
         void requestTriggered(const TupProjectRequest *event);
         void localRequestTriggered(const TupProjectRequest *event);

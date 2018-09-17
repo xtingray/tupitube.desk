@@ -179,7 +179,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         void resetWorkSpaceTransformations();
         void updateBgColor(const QColor color);
         void updatePaintArea();
-        void updateActiveDock(DockType currentDock);
+        void updateActiveDock(TupDocumentView::DockType currentDock);
 
     signals:
         void requestTriggered(const TupProjectRequest *event);

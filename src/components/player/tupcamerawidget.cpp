@@ -350,7 +350,19 @@ QSize TupCameraWidget::sizeHint() const
 
 void TupCameraWidget::doPlay()
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupCameraWidget::doPlay()]";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+
     k->screen->play();
+    bool flag = false;
+    if (k->screen->currentSceneFrames() > 1)
+        flag = true;
+    k->status->enableExportButton(flag);
 }
 
 void TupCameraWidget::doPlayBack()

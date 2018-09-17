@@ -727,12 +727,11 @@ void TupPaintArea::deleteItems()
 
     if (!selected.empty()) {
         foreach (QGraphicsItem *item, selected) {
-                 if (qgraphicsitem_cast<TControlNode *> (item))
-                     selected.removeOne(item);
+             if (qgraphicsitem_cast<TControlNode *> (item))
+                 selected.removeOne(item);
         }
 
         TupGraphicsScene* currentScene = graphicsScene();
-
         if (currentScene) {
             int counter = 0;
             int total = selected.count();
@@ -855,8 +854,8 @@ void TupPaintArea::copyItems()
 
     if (!selected.isEmpty()) {
         foreach (QGraphicsItem *item, selected) {
-                 if (qgraphicsitem_cast<TControlNode *> (item))
-                     selected.removeOne(item);
+             if (qgraphicsitem_cast<TControlNode *> (item))
+                 selected.removeOne(item);
         }
 
         TupGraphicsScene* currentScene = graphicsScene();
@@ -1104,7 +1103,7 @@ void TupPaintArea::addSelectedItemsToLibrary()
 
     TupLibraryDialog dialog(k->project->library());
     foreach (QGraphicsItem *item, selected)
-             dialog.addItem(item);
+        dialog.addItem(item);
 
     if (dialog.exec() == QDialog::Accepted) {
         foreach (QGraphicsItem *item, selected) {

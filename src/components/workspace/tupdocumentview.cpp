@@ -2337,7 +2337,7 @@ void TupDocumentView::updateBrush(const QBrush &brush)
     emit fillColorChanged(brush.color());
 }
 
-void TupDocumentView::updateActiveDock(DockType currentDock)
+void TupDocumentView::updateActiveDock(TupDocumentView::DockType currentDock)
 {
     k->currentDock = DockType(currentDock);
 }

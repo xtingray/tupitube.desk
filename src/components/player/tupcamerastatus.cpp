@@ -49,6 +49,8 @@ struct TupCameraStatus::Private
     QComboBox *scenes;
     QLabel *framesCount;
     QCheckBox *loopBox;
+    QPushButton *exportButton;
+
     bool loop;
     int framesTotal;
     bool mute;
@@ -128,13 +130,13 @@ TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWid
 
     sceneInfoLayout->addSpacing(15);
 
-    QPushButton *exportButton = new QPushButton(tr("Export"));
-    exportButton->setIcon(QIcon(THEME_DIR + "icons/export_button.png"));
-    exportButton->setFocusPolicy(Qt::NoFocus);
-    exportButton->setToolTip(tr("Export Project as Video File"));
+    k->exportButton = new QPushButton(tr("Export"));
+    k->exportButton->setIcon(QIcon(THEME_DIR + "icons/export_button.png"));
+    k->exportButton->setFocusPolicy(Qt::NoFocus);
+    k->exportButton->setToolTip(tr("Export Project as Video File"));
 
-    connect(exportButton, SIGNAL(pressed()), camera, SLOT(exportDialog()));
-    sceneInfoLayout->addWidget(exportButton, 1);
+    connect(k->exportButton, SIGNAL(pressed()), camera, SLOT(exportDialog()));
+    sceneInfoLayout->addWidget(k->exportButton, 1);
 
     if (isNetworked) {
         sceneInfoLayout->addSpacing(5);
@@ -233,4 +235,9 @@ void TupCameraStatus::mute()
     k->soundButton->setImage(QPixmap(THEME_DIR + img));
 
     emit muteEnabled(k->mute);
+}
+
+void TupCameraStatus::enableExportButton(bool flag)
+{
+    k->exportButton->setVisible(flag);
 }

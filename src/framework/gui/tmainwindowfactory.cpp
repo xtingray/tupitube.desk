@@ -87,6 +87,14 @@ TMainWindowFactory::~TMainWindowFactory()
 
 TMainWindow *TMainWindowFactory::create(QMainWindow *other)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TMainWindowFactory::create()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     TMainWindow *mainWindow = 0;
 
     if (other->isVisible())
@@ -119,28 +127,28 @@ TMainWindow *TMainWindowFactory::create(QMainWindow *other)
     QList<QDockWidget *> docks = other->findChildren<QDockWidget *>();
 
     foreach (QDockWidget *dock, docks) {
-             dock->widget()->setWindowTitle(dock->windowTitle());
-             dock->widget()->setWindowIcon(dock->windowIcon());
+        dock->widget()->setWindowTitle(dock->windowTitle());
+        dock->widget()->setWindowIcon(dock->windowIcon());
 
-             Qt::DockWidgetArea area = other->dockWidgetArea(dock);
+        Qt::DockWidgetArea area = other->dockWidgetArea(dock);
 
-             if (area == 0)
-                 area = Qt::LeftDockWidgetArea;
+        if (area == 0)
+            area = Qt::LeftDockWidgetArea;
 
-             mainWindow->addToolView(dock->widget(), area);
+        mainWindow->addToolView(dock->widget(), area);
     }
 	
     QList<QToolBar *> toolBars = other->findChildren<QToolBar *>();
 
     foreach (QToolBar *toolBar, toolBars) {
-             toolBar->setParent(mainWindow);
+        toolBar->setParent(mainWindow);
 
-             Qt::ToolBarArea area = other->toolBarArea(toolBar);
+        Qt::ToolBarArea area = other->toolBarArea(toolBar);
 
-             if (area == 0)
-                 area = Qt::TopToolBarArea;
+        if (area == 0)
+            area = Qt::TopToolBarArea;
 
-             mainWindow->addToolBar(area, toolBar);
+        mainWindow->addToolBar(area, toolBar);
     }
 
     mainWindow->setStatusBar(other->statusBar());

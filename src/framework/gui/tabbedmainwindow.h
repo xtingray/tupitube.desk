@@ -44,7 +44,7 @@
 #include <QWheelEvent>
 #include <QTabBar>
 
-class QTabWidget;
+// class QTabWidget;
 
 class T_GUI_EXPORT TabbedMainWindow : public TMainWindow
 {
@@ -75,7 +75,6 @@ class T_GUI_EXPORT TabbedMainWindow : public TMainWindow
 
     protected slots:
         void closeCurrentTab();
-        //virtual void setupPerspective(int wps);
 
     signals:
         void widgetChanged(QWidget *widget);
@@ -85,10 +84,10 @@ class T_GUI_EXPORT TabbedMainWindow : public TMainWindow
         void emitWidgetChanged(int index);
 
     private:
-        QTabWidget *m_tabWidget;
-        QWidgetList m_persistantWidgets;
-        QHash<QWidget *, int> m_tabs;
-        QWidgetList m_pages;
+        QTabWidget *currentTab;
+        QWidgetList persistentWidgets;
+        QHash<QWidget *, int> tabs;
+        QWidgetList pages;
 };
 
 #endif

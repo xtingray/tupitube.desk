@@ -87,11 +87,19 @@ void TupAnimationspace::mousePressEvent(QMouseEvent *event)
 
 void TupAnimationspace::keyPressEvent(QKeyEvent *event) 
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupAnimationspace::keyPressEvent(QKeyEvent)]";
+    #else
+        T_FUNCINFO << event->key();
+    #endif
+#endif
+
     switch (event->key()) {
         case Qt::Key_Space:
           {
               k->playerInterface->doPause();
-          } 
+          }
         break;
         case Qt::Key_Escape:
           {
@@ -112,9 +120,9 @@ void TupAnimationspace::keyPressEvent(QKeyEvent *event)
         break;
         case Qt::Key_Return:
           {
-              emit newPerspective(0);
               k->playOn = false;
               k->playerInterface->doStop();
+              emit newPerspective(0);
           }
         break;
         case Qt::Key_1:

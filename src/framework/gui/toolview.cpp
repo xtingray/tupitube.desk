@@ -36,11 +36,8 @@
 #include "toolview.h"
 
 ToolView::ToolView(const QString &title, const QIcon &icon, const QString &code, QWidget *parent) : 
-                   QDockWidget(title, parent), m_perspective(0)
+                   QDockWidget(title, parent), currentPerspective(0)
 {
-    // setFeatures(AllDockWidgetFeatures);    
-    // SQA: Make this option available from the Preferences dialog
-    // setFeatures(!QDockWidget::DockWidgetMovable | !QDockWidget::DockWidgetFloatable);
     setFeatures(QDockWidget::NoDockWidgetFeatures);
     setWindowIcon(icon);
     setup(title);
@@ -56,13 +53,13 @@ ToolView::~ToolView()
 
 void ToolView::setup(const QString &label)
 {
-    m_button = new TViewButton(this);
-    m_button->setToolTip(label);
+    currentButton = new TViewButton(this);
+    currentButton->setToolTip(label);
 }
 
 TViewButton *ToolView::button() const
 {
-    return m_button;
+    return currentButton;
 }
 
 void ToolView::expandDock(bool flag)
@@ -81,7 +78,7 @@ void ToolView::expandDock(bool flag)
     else 
         close();
 
-    m_button->setActivated(flag);
+    currentButton->setActivated(flag);
 }
 
 bool ToolView::isExpanded()
@@ -107,27 +104,27 @@ void ToolView::setExpandingFlag()
 
 void ToolView::setDescription(const QString &description)
 {
-    m_button->setStatusTip(description);
+    currentButton->setStatusTip(description);
 }
 
 void ToolView::setShortcut(QKeySequence shortcut)
 {
-    m_button->setShortcut(shortcut);
+    currentButton->setShortcut(shortcut);
 }
 
 void ToolView::setPerspective(int wsp)
 {
-    m_perspective = wsp;
+    currentPerspective = wsp;
 }
 
 int ToolView::perspective() const
 {
-    return m_perspective;
+    return currentPerspective;
 }
 
 void ToolView::enableButton(bool flag)
 {
-    m_button->setEnabled(flag);
+    currentButton->setEnabled(flag);
 }
 
 QString ToolView::getObjectID() 
@@ -137,5 +134,10 @@ QString ToolView::getObjectID()
 
 bool ToolView::isChecked()
 {
-    return m_button->isChecked();
+    return currentButton->isChecked();
+}
+
+QString ToolView::title() const
+{
+    return name;
 }

@@ -37,28 +37,28 @@
 
 #ifndef TUPITUBE_GUI
 
-class TabWidgetPrivate : public QTabWidget
+class PrivateTabWidget : public QTabWidget
 {
     Q_OBJECT
 
     public:
-        TabWidgetPrivate(QWidget *parent = 0);
-        ~TabWidgetPrivate();
+        PrivateTabWidget(QWidget *parent = 0);
+        ~PrivateTabWidget();
 
     protected:
         virtual void wheelEvent(QWheelEvent *e);
         virtual void wheelMove(int delta);
 };
 
-TabWidgetPrivate::TabWidgetPrivate(QWidget *parent) : QTabWidget(parent)
+PrivateTabWidget::PrivateTabWidget(QWidget *parent) : QTabWidget(parent)
 {
 }
 
-TabWidgetPrivate::~TabWidgetPrivate()
+PrivateTabWidget::~PrivateTabWidget()
 {
 }
 
-void TabWidgetPrivate::wheelEvent(QWheelEvent *ev)
+void PrivateTabWidget::wheelEvent(QWheelEvent *ev)
 {
     QRect rect = tabBar()->rect();
     rect.setWidth(width());
@@ -67,7 +67,7 @@ void TabWidgetPrivate::wheelEvent(QWheelEvent *ev)
         wheelMove(ev->delta());
 }
 
-void TabWidgetPrivate::wheelMove(int delta)
+void PrivateTabWidget::wheelMove(int delta)
 {
     if (count() > 1) {
         int current = currentIndex();
@@ -87,7 +87,7 @@ void TabWidgetPrivate::wheelMove(int delta)
 #else
 
 #include "ttabwidget.h"
-#define TabWidgetPrivate TTabWidget
+#define PrivateTabWidget TTabWidget
 
 #endif
 
@@ -100,11 +100,9 @@ void TabWidgetPrivate::wheelMove(int delta)
  */
 TabbedMainWindow::TabbedMainWindow(QWidget *parent) : TMainWindow(parent)
 {
-    m_tabWidget = new TabWidgetPrivate;
-    setupTabWidget(m_tabWidget);
-    setCentralWidget(m_tabWidget);
-
-    //connect(this, SIGNAL(perspectiveChanged(int)), this, SLOT(setupPerspective(int)));
+    currentTab = new PrivateTabWidget;
+    setupTabWidget(currentTab);
+    setCentralWidget(currentTab);
 }
 
 /**
@@ -119,22 +117,30 @@ TabbedMainWindow::~TabbedMainWindow()
  * Setup the tab widget.
  * @param w 
  */
-void TabbedMainWindow::setupTabWidget(QTabWidget *w)
+void TabbedMainWindow::setupTabWidget(QTabWidget *widget)
 {
-    w->setFocusPolicy(Qt::NoFocus);
-    connect(w, SIGNAL(currentChanged(int)), this, SLOT(emitWidgetChanged(int)));
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TabbedMainWindow::setupTabWidget()]";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+
+    widget->setFocusPolicy(Qt::NoFocus);
+    connect(widget, SIGNAL(currentChanged(int)), this, SLOT(emitWidgetChanged(int)));
 }
 
 void TabbedMainWindow::addWidget(QWidget *widget, bool persistant, int perspective)
 {
     if (perspective & currentPerspective())
-        m_tabWidget->addTab(widget, widget->windowIcon(), widget->windowTitle());
+        currentTab->addTab(widget, widget->windowIcon(), widget->windowTitle());
 
     if (persistant)
-        m_persistantWidgets << widget;
+        persistentWidgets << widget;
 
-    m_pages << widget;
-    m_tabs[widget] = perspective;
+    pages << widget;
+    tabs[widget] = perspective;
 }
 
 /**
@@ -144,22 +150,22 @@ void TabbedMainWindow::addWidget(QWidget *widget, bool persistant, int perspecti
 void TabbedMainWindow::removeWidget(QWidget *widget, bool force)
 {
     if (force) 
-        m_persistantWidgets.removeAll(widget);
+        persistentWidgets.removeAll(widget);
 
-    if (m_persistantWidgets.contains(widget)) 
+    if (persistentWidgets.contains(widget))
         return;
 
-    int index = m_tabWidget->indexOf(widget);
+    int index = currentTab->indexOf(widget);
     if (index >= 0)
-        m_tabWidget->removeTab(index);
+        currentTab->removeTab(index);
 
-    m_tabs.remove(widget);
-    m_pages.removeAll(widget);
+    tabs.remove(widget);
+    pages.removeAll(widget);
 }
 
 int TabbedMainWindow::tabCount()
 {
-    return m_pages.count();
+    return pages.count();
 }
 
 /**
@@ -167,54 +173,34 @@ int TabbedMainWindow::tabCount()
  */
 void TabbedMainWindow::closeCurrentTab()
 {
-    int index = m_tabWidget->currentIndex();
+    int index = currentTab->currentIndex();
 
     if (index >= 0)
-        removeWidget(m_tabWidget->widget(index));
-}
-
-void TabbedMainWindow::emitWidgetChanged(int index)
-{
-    if (index != -1) {
-        //QWidget *w = m_tabWidget->widget(index);
-        
-       switch (index) {
-               case 0:
-                    setCurrentPerspective(Animation);
-               break;
-               case 1:
-                    setCurrentPerspective(Player);
-               break;
-               case 2:
-                    setCurrentPerspective(Help);
-               break;
-               case 3:
-                    setCurrentPerspective(News);
-               break;
-       }
-
-       // setCurrentPerspective(index + 1); 
-
-       emit tabHasChanged(index);       
-    }
+        removeWidget(currentTab->widget(index));
 }
 
 /**
  * Sets other tab widget.
  * @param w 
  */
-void TabbedMainWindow::setTabWidget(QTabWidget *w)
+void TabbedMainWindow::setTabWidget(QTabWidget *widget)
 {
-    m_tabWidget->close();
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TabbedMainWindow::setTabWidget()]";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
 
-    setupTabWidget(w);
+    currentTab->close();
+    setupTabWidget(widget);
 
-    delete m_tabWidget;
-    m_tabWidget = 0;
+    delete currentTab;
+    currentTab = 0;
 
-    setCentralWidget(w);
-
-    m_tabWidget = w;
+    setCentralWidget(widget);
+    currentTab = widget;
 }
 
 /**
@@ -223,66 +209,48 @@ void TabbedMainWindow::setTabWidget(QTabWidget *w)
  */
 QTabWidget *TabbedMainWindow::tabWidget() const
 {
-    return m_tabWidget;
+    return currentTab;
 }
 
-/*
-void TabbedMainWindow::setupPerspective(int wps)
+void TabbedMainWindow::emitWidgetChanged(int index)
 {
-    // FIXME: It is Flickering =(
-    m_tabWidget->setUpdatesEnabled(false);
-    setUpdatesEnabled(false);
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TabbedMainWindow::emitWidgetChanged()]";
+    #else
+        T_FUNCINFO << index;
+    #endif
+#endif
 
-    foreach (QWidget *w, m_pages) {
-             int perspective = m_tabs[w];
-
-             if (wps & perspective) {
-                 m_tabWidget->addTab(w, w->windowIcon(), w->windowTitle());
-                 w->show();
-             } else {
-                 w->hide();
-                 m_tabWidget->removeTab(m_tabWidget->indexOf(w));
-             }
-    }
-
-    m_tabWidget->setUpdatesEnabled(true);
-    setUpdatesEnabled(true);
-	
-    int count = m_tabWidget->count();
-
-    for (int index = 0; index < count; index++) {
-         QWidget *w = m_tabWidget->widget(index);
-
-         if (m_tabs[w] == wps) {
-             w->show();
-             m_tabWidget->setTabEnabled(index, true);
-         } else {
-             w->hide();
-             m_tabWidget->setTabEnabled(index, false);
-         }
+    if (index != -1) {
+        switch (index) {
+           case 0:
+                setCurrentPerspective(Animation);
+           break;
+           case 1:
+                setCurrentPerspective(Player);
+           break;
+           case 2:
+                setCurrentPerspective(Help);
+           break;
+           case 3:
+                setCurrentPerspective(News);
+           break;
+        }
+        emit tabHasChanged(index);
     }
 }
-*/
 
 void TabbedMainWindow::setCurrentTab(int index)
 {
-    if (index != -1) {
-        m_tabWidget->setCurrentIndex(index);
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TabbedMainWindow::setCurrentTab()]";
+    #else
+        T_FUNCINFO << index;
+    #endif
+#endif
 
-        switch (index) {
-               case 0:
-                    setCurrentPerspective(Animation);
-               break;
-               case 1:
-                    setCurrentPerspective(Player);
-               break;
-               case 2:
-                    setCurrentPerspective(Help);
-               break;
-               case 3:
-                    setCurrentPerspective(News);
-               break;
-        }
-        // setCurrentPerspective(index + 1);
-    }
+    if (index != -1)
+        currentTab->setCurrentIndex(index);
 }

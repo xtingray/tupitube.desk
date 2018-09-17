@@ -35,34 +35,34 @@
 
 #include "tbuttonbar.h"
 
-TButtonBar::TButtonBar(Qt::ToolBarArea area, QWidget *parent) : QToolBar(parent), m_autoHide(false), m_blockHider(false), m_shouldBeVisible(true)
+TButtonBar::TButtonBar(Qt::ToolBarArea area, QWidget *parent) : QToolBar(parent), m_shouldBeVisible(true)
 {
     setMovable(false);
-    setIconSize(QSize(16,16));
+    setIconSize(QSize(16, 16));
     m_buttons.setExclusive(true);
 
     switch (area) {
-            case Qt::LeftToolBarArea:
-                 {
-                    setWindowTitle(tr("Left button bar"));
-                 }
-                 break;
-            case Qt::RightToolBarArea:
-                 {
-                    setWindowTitle(tr("Right button bar"));
-                 }
-                 break;
-            case Qt::BottomToolBarArea:
-                 {
-                    setWindowTitle(tr("Bottom button bar"));
-                 }
-                 break;
-            case Qt::TopToolBarArea:
-                 {
-                    setWindowTitle(tr("Top button bar"));
-                 }
-                 break;
-            default: break;
+        case Qt::LeftToolBarArea:
+             {
+                setWindowTitle(tr("Left button bar"));
+             }
+             break;
+        case Qt::RightToolBarArea:
+             {
+                setWindowTitle(tr("Right button bar"));
+             }
+             break;
+        case Qt::BottomToolBarArea:
+             {
+                setWindowTitle(tr("Bottom button bar"));
+             }
+             break;
+        case Qt::TopToolBarArea:
+             {
+                setWindowTitle(tr("Top button bar"));
+             }
+             break;
+        default: break;
     }
 
     setObjectName("TButtonBar-"+windowTitle());
@@ -73,38 +73,10 @@ TButtonBar::TButtonBar(Qt::ToolBarArea area, QWidget *parent) : QToolBar(parent)
 
     connect(&m_hider, SIGNAL(timeout()), this, SLOT(hide()));
     connect(&m_buttons, SIGNAL(buttonClicked(QAbstractButton *)), this, SLOT(hideOthers(QAbstractButton *)));
-    connect(toggleViewAction(), SIGNAL(triggered(bool)), this, SLOT(onlySetShouldBeVisible(bool)));
 }
 
 TButtonBar::~TButtonBar()
 {
-}
-
-QMenu *TButtonBar::createMenu()
-{
-    QMenu *menu = new QMenu(windowTitle(), this);
-    QAction *a = 0;
-
-    a = menu->addAction(tr("Only icons"));
-    connect(a, SIGNAL(triggered()), this, SLOT(setShowOnlyIcons()));
-
-    a = menu->addAction(tr("Only texts"));
-    connect(a, SIGNAL(triggered()), this, SLOT(setShowOnlyTexts()));
-
-    menu->addSeparator();
-
-    a = menu->addAction(tr("Exclusive space"));
-    a->setCheckable(true);
-    a->setChecked(isExclusive());
-
-    connect(a, SIGNAL(triggered(bool)), this, SLOT(setExclusive(bool)));
-
-    a = menu->addAction(tr("Auto hide"));
-    a->setCheckable(true);
-    a->setChecked(autohide());
-    connect(a, SIGNAL(triggered(bool)), this, SLOT(setAutoHide(bool)));
-
-    return menu;
 }
 
 void TButtonBar::addButton(TViewButton *viewButton)
@@ -155,69 +127,12 @@ void TButtonBar::removeButton(TViewButton *viewButton)
 
 bool TButtonBar::isEmpty() const
 {
-    /*
-    // O(n) -> very slow...
-    bool isEmpty = true;
-    foreach (QAbstractButton *button, m_buttons.buttons()) {
-        isEmpty = isEmpty && button->isHidden();
-        if (!isEmpty) 
-            break;
-    }
-
-    return isEmpty;
-    */
-
     return m_buttons.buttons().isEmpty(); 
-}
-
-void TButtonBar::setExclusive(bool excl)
-{
-    m_buttons.setExclusive(excl);
-}
-
-void TButtonBar::setAutoHide(bool autohide)
-{
-    m_autoHide = autohide;
-    if (autohide)
-        hide();
-}
-
-bool TButtonBar::autohide() const
-{
-    return m_autoHide;
-}
-
-void TButtonBar::onlySetShouldBeVisible(bool shouldBeVisible)
-{
-    m_shouldBeVisible = shouldBeVisible;
-}
-
-void TButtonBar::setShouldBeVisible(bool shouldBeVisible)
-{
-    m_shouldBeVisible = shouldBeVisible;
-    setVisible(shouldBeVisible);
 }
 
 bool TButtonBar::shouldBeVisible() const
 {
     return m_shouldBeVisible;
-}
-
-
-void TButtonBar::setShowOnlyIcons()
-{
-    foreach (QAbstractButton *button, m_buttons.buttons()) {
-        TViewButton *viewButton = static_cast<TViewButton *>(button);
-        viewButton->setOnlyIcon();
-    }
-}
-
-void TButtonBar::setShowOnlyTexts()
-{
-    foreach (QAbstractButton *button, m_buttons.buttons()) {
-        TViewButton *viewButton = static_cast<TViewButton *>(button);
-        viewButton->setOnlyText();
-    }
 }
 
 void TButtonBar::disable(TViewButton *view)
@@ -236,31 +151,6 @@ void TButtonBar::enable(TViewButton *view)
         action->setVisible(true);
 }
 
-bool TButtonBar::isExclusive() const
-{
-    return m_buttons.exclusive();
-}
-
-void TButtonBar::onlyShow(ToolView *tool, bool ensureVisible)
-{
-    #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TButtonBar::onlyShow()]";
-        #else
-            T_FUNCINFO;
-        #endif
-    #endif
-
-    TViewButton *button = tool->button();
-
-    if (ensureVisible) {
-        if (tool->isVisible())
-            button->click();
-    }
-
-    hideOthers(button);
-}
-
 void TButtonBar::hideOthers(QAbstractButton *source)
 {
     #ifdef TUP_DEBUG
@@ -276,7 +166,7 @@ void TButtonBar::hideOthers(QAbstractButton *source)
         return;
     }
 
-    m_buttons.setExclusive(false);
+    // m_buttons.setExclusive(false);
     setUpdatesEnabled(false);
 
     foreach (QAbstractButton *b, m_buttons.buttons()) {
@@ -293,51 +183,8 @@ void TButtonBar::hideOthers(QAbstractButton *source)
 
     static_cast<TViewButton *>(source)->toggleView();
 
-    m_buttons.setExclusive(true);
+    // m_buttons.setExclusive(true);
     setUpdatesEnabled(true);
-}
-
-/*
-void TButtonBar::mousePressEvent(QMouseEvent *e)
-{
-    QToolBar::mousePressEvent(e);
-
-    if (e->button() == Qt::RightButton) {
-        m_blockHider = true;
-        createMenu()->exec(e->globalPos());
-        e->accept();
-
-        m_blockHider = false;
-    }
-}
-
-void TButtonBar::enterEvent(QEvent *event)
-{
-    QToolBar::enterEvent(event);
-    doNotHide();
-}
-
-void TButtonBar::leaveEvent(QEvent *event)
-{
-    QToolBar::leaveEvent(event);
-
-    if (m_autoHide && !m_hider.isActive() && !m_blockHider)
-        m_hider.start(800);
-}
-*/
-
-void TButtonBar::doNotHide()
-{
-    #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TButtonBar::doNotHide()]";
-        #else
-            T_FUNCINFO;
-        #endif
-    #endif
-
-    if (m_hider.isActive())
-        m_hider.stop();
 }
 
 void TButtonBar::showSeparator(bool event)
@@ -356,10 +203,4 @@ void TButtonBar::showSeparator(bool event)
 int TButtonBar::count() const
 {
     return m_buttons.buttons().count();
-}
-
-void TButtonBar::setEnableButtonBlending(bool enable)
-{
-    foreach (QAbstractButton *button, m_buttons.buttons())
-        static_cast<TViewButton *>(button)->setBlending(enable);
 }

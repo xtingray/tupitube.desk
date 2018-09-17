@@ -330,7 +330,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         connectWidgetToManager(animationTab);
         connectWidgetToLocalManager(animationTab);
-        connect(animationTab, SIGNAL(modeHasChanged(TupProject::Mode)), this, SLOT(expandExposureView(TupProject::Mode))); 
+        connect(animationTab, SIGNAL(modeHasChanged(TupProject::Mode)), this, SLOT(restoreFramesMode(TupProject::Mode)));
         connect(animationTab, SIGNAL(colorChangedFromFullScreen(const QColor &)), this, SLOT(updatePenColor(const QColor &)));
         connect(animationTab, SIGNAL(projectSizeHasChanged(const QSize)), this, SLOT(resizeProjectDimension(const QSize))); 
         connect(animationTab, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
@@ -391,6 +391,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(animationTab, SIGNAL(updateFPS(int)), cameraWidget, SLOT(setStatusFPS(int)));
 
         exposureView->expandDock(true);
+        currentDock = TupDocumentView::ExposureSheet;
 
         // SQA: Code useful for future features
         // if (!isNetworked) 
@@ -574,17 +575,17 @@ void TupMainWindow::resetUI()
             removeWidget(animationTab, true);
             removeWidget(playerTab, true);
         } else if (lastTab == 2) {
-                   removeWidget(animationTab, true);
-                   removeWidget(playerTab, true);   
+            removeWidget(animationTab, true);
+            removeWidget(playerTab, true);
 
-                   if (internetOn)
-                       removeWidget(newsTab, true);
+            if (internetOn)
+                removeWidget(newsTab, true);
         } else if (lastTab == 3) {
-                   removeWidget(animationTab, true);
-                   removeWidget(playerTab, true);
+            removeWidget(animationTab, true);
+            removeWidget(playerTab, true);
 
-                   if (internetOn)
-                       removeWidget(newsTab, true);
+            if (internetOn)
+                removeWidget(newsTab, true);
         }
     }
 
@@ -1171,13 +1172,21 @@ void TupMainWindow::addPage(QWidget *widget)
 
 void TupMainWindow::updateCurrentTab(int index)
 {
-    // SQA: Check/Test the content of this method
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupMainWindow::updateCurrentTab()]";
+    #else
+        T_FUNCINFO << index;
+    #endif
+#endif
 
     if (index == 1) {  // Player mode 
         lastTab = 1;
         updatePlayer();
         cameraWidget->updateFirstFrame();
         cameraWidget->setFocus();
+
+        QTimer::singleShot(0, this, SLOT(doPlay()));
     } else {
         if (index == 0) { // Animation mode
             animationTab->updatePerspective(); // Just for Papagayo UI
@@ -1185,17 +1194,19 @@ void TupMainWindow::updateCurrentTab(int index)
             if (lastTab == 1)
                 cameraWidget->doStop();
 
+            /*
             if (scenesView->isExpanded())
                 scenesView->expandDock(true);
+            */
 
-            if (contextMode == TupProject::FRAMES_EDITION) {
-                /*
-                if (!exposureView->isExpanded())
-                    exposureView->expandDock(true);
-                */
-            } else {
-                exposureView->expandDock(false);
-                exposureView->enableButton(false);
+            if (contextMode != TupProject::FRAMES_EDITION) {
+                if (exposureView->isExpanded()) {
+                    exposureView->expandDock(false);
+                    exposureView->enableButton(false);
+                } else if (timeView->isExpanded()) {
+                    timeView->expandDock(false);
+                    timeView->enableButton(false);
+                }
             }
 
             animationTab->updatePaintArea();
@@ -1226,15 +1237,41 @@ void TupMainWindow::callSave()
         saveProject();
 }
 
-void TupMainWindow::expandExposureView(TupProject::Mode mode) 
+void TupMainWindow::restoreFramesMode(TupProject::Mode mode)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupMainWindow::restoreFramesMode()]" << mode;
+    #else
+        T_FUNCINFO << "mode: " << mode << " - currentDock: " << currentDock;
+    #endif
+#endif
+
     contextMode = mode;
     if (contextMode == TupProject::FRAMES_EDITION) {
-        exposureView->expandDock(true);
+        if (currentDock == TupDocumentView::ExposureSheet) {
+            exposureView->expandDock(true);
+        } else if (currentDock == TupDocumentView::TimeLine) {
+            timeView->expandDock(true);
+        }
         exposureView->enableButton(true);
+        timeView->enableButton(true);
+        scenesView->enableButton(true);
     } else {
-        exposureView->expandDock(false);
+        if (exposureView->isExpanded()) {
+            currentDock = TupDocumentView::ExposureSheet;
+            exposureView->expandDock(false);
+        } else if (timeView->isExpanded()) {
+            currentDock = TupDocumentView::TimeLine;
+            timeView->expandDock(false);
+        }
+
+        if (scenesView->isExpanded()) {
+            scenesView->expandDock(false);
+        }
         exposureView->enableButton(false);
+        timeView->enableButton(false);
+        scenesView->enableButton(false);
     }
 }
 
@@ -1302,7 +1339,7 @@ void TupMainWindow::updatePlayer(bool removeAction)
         #ifdef Q_OS_WIN
             qDebug() << "[TupMainWindow::updatePlayer()]";
         #else
-            T_FUNCINFO;
+            T_FUNCINFO << removeAction;
         #endif
     #endif
 
