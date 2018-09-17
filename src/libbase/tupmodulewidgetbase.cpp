@@ -46,7 +46,6 @@ TupModuleWidgetBase::TupModuleWidgetBase(QWidget *parent, const char *name) :
 {
     setObjectName(name);
     k->container = new QVBoxLayout(this);
-    hide();
 }
 
 TupModuleWidgetBase::~TupModuleWidgetBase()
