@@ -61,19 +61,16 @@ void TupMainWindow::createGUI()
 
     connectWidgetToPaintArea(m_colorPalette);
 
-    // Adding the pen parameters widget to the left side of the interface 
-
+    // Adding the pen parameters widget to the left side of the interface
     m_brushWidget = new TupBrushWidget;
     penView = addToolView(m_brushWidget, Qt::LeftDockWidgetArea, Animation, "Pen", QKeySequence(tr("Shift+B")));
     connect(penView, SIGNAL(visibilityChanged(bool)), this, SLOT(updatePenPanelStatus(bool)));
 
     m_actionManager->insert(penView->toggleViewAction(), "show_pen");
     addToPerspective(penView->toggleViewAction(), Animation);
-
     connectWidgetToPaintArea(m_brushWidget);
 
     // Adding the objects library widget to the left side of the interface
-
     m_libraryWidget = new TupLibraryWidget(this);
     m_libraryWidget->setLibrary(m_projectManager->project()->library());
 

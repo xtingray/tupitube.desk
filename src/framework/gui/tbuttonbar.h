@@ -76,7 +76,7 @@ class T_GUI_EXPORT TButtonBar : public QToolBar
         int count() const;
 
     private slots:
-        void hideOthers(QAbstractButton *source);
+        void closeOtherPanels(QAbstractButton *source);
 
     private:
         QButtonGroup m_buttons;

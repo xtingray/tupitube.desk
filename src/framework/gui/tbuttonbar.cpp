@@ -72,7 +72,7 @@ TButtonBar::TButtonBar(Qt::ToolBarArea area, QWidget *parent) : QToolBar(parent)
     m_separator->setVisible(false);
 
     connect(&m_hider, SIGNAL(timeout()), this, SLOT(hide()));
-    connect(&m_buttons, SIGNAL(buttonClicked(QAbstractButton *)), this, SLOT(hideOthers(QAbstractButton *)));
+    connect(&m_buttons, SIGNAL(buttonClicked(QAbstractButton *)), this, SLOT(closeOtherPanels(QAbstractButton *)));
 }
 
 TButtonBar::~TButtonBar()
@@ -89,16 +89,15 @@ void TButtonBar::addButton(TViewButton *viewButton)
         #endif
     #endif
 
-    QAction *act = addWidget(viewButton);
+    QAction *action = addWidget(viewButton);
     m_buttons.addButton(viewButton);
 
-    if (viewButton->toolView()->isVisible()) {
-        hideOthers(viewButton);
-        viewButton->toggleView();
-    }
+    // if (viewButton->toolView()->isVisible())
+    //     viewButton->toggleView();
+    //     closeOtherPanels(viewButton);
 
-    m_actionForWidget[viewButton] = act;
-    act->setVisible(true);
+    m_actionForWidget[viewButton] = action;
+    action->setVisible(true);
 
     if (!isVisible()) 
         show();
@@ -151,26 +150,27 @@ void TButtonBar::enable(TViewButton *view)
         action->setVisible(true);
 }
 
-void TButtonBar::hideOthers(QAbstractButton *source)
+void TButtonBar::closeOtherPanels(QAbstractButton *source)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
-            qDebug() << "[TButtonBar::hideOthers()]";
+            qDebug() << "[TButtonBar::closeOtherPanels()]";
         #else
             T_FUNCINFO;
         #endif
     #endif
 
+    /*
     if (!m_buttons.exclusive()) {
         static_cast<TViewButton *>(source)->toggleView();
         return;
     }
+    */
 
-    // m_buttons.setExclusive(false);
     setUpdatesEnabled(false);
 
-    foreach (QAbstractButton *b, m_buttons.buttons()) {
-        TViewButton *button = static_cast<TViewButton *>(b);
+    foreach (QAbstractButton *item, m_buttons.buttons()) {
+        TViewButton *button = static_cast<TViewButton *>(item);
         if (source != button) {
             if (button->toolView()->isVisible()) {
                 button->blockSignals(true);
@@ -183,7 +183,6 @@ void TButtonBar::hideOthers(QAbstractButton *source)
 
     static_cast<TViewButton *>(source)->toggleView();
 
-    // m_buttons.setExclusive(true);
     setUpdatesEnabled(true);
 }
 

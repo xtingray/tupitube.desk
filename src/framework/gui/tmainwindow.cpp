@@ -74,7 +74,7 @@ void DefaultSettings::save(TMainWindow *window)
             settings.setValue("area", int(view->button()->area()));
             // settings.setValue("size", view->fixedSize());
             settings.setValue("style", view->button()->toolButtonStyle());
-            settings.setValue("sensibility", view->button()->isSensible());
+            // settings.setValue("sensibility", view->button()->isSensible());
             settings.setValue("visible", view->isVisible());
             settings.setValue("floating", view->isFloating());
             settings.setValue("position", view->pos());
@@ -118,7 +118,7 @@ void DefaultSettings::restore(TMainWindow *window)
 
             view->button()->setToolButtonStyle(Qt::ToolButtonStyle(settings.value("style", 
                                                int(view->button()->toolButtonStyle())).toInt()));
-            view->button()->setSensible(settings.value("sensibility", view->button()->isSensible()).toBool());
+            // view->button()->setSensible(settings.value("sensibility", view->button()->isSensible()).toBool());
 
             bool visible = settings.value("visible", false).toBool();
 
