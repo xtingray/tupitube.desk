@@ -1460,6 +1460,14 @@ TupPaintAreaCommand *TupDocumentView::createPaintCommand(const TupPaintAreaEvent
 
 void TupDocumentView::updatePaintArea()
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupDocumentView::updatePaintArea()]";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+
     k->paintArea->updatePaintArea(); 
 }
 
@@ -2028,6 +2036,14 @@ void TupDocumentView::cameraInterface()
 
 void TupDocumentView::resizeProjectDimension(const QSize dimension)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupMainWindow::resizeProjectDimension(QSize]";
+    #else
+        T_FUNCINFO << dimension;
+    #endif
+#endif
+
     k->paintArea->updateDimension(dimension);
 
     int width = k->wsDimension.width();

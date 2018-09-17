@@ -45,12 +45,7 @@ TupModuleWidgetBase::TupModuleWidgetBase(QWidget *parent, const char *name) :
                                          QWidget(parent), TupAbstractProjectResponseHandler(), k(new Private)
 {
     setObjectName(name);
-
     k->container = new QVBoxLayout(this);
-    // k->container->setMargin(5);
-    // k->container->setSpacing(1);
-    // adjustSize();
-
     hide();
 }
 
@@ -62,39 +57,7 @@ TupModuleWidgetBase::~TupModuleWidgetBase()
 void TupModuleWidgetBase::addChild(QWidget* child, Qt::Alignment alignment)
 {
     k->childs.append(child);
-    // k->container->invalidate();
     k->container->addWidget(child, 0, alignment);
-}
-
-/*
-void TupModuleWidgetBase::setFont(const QFont &f)
-{
-    QWidget::setFont(f);
-    // adjustSize();
-}
-*/
-
-/*
-bool TupModuleWidgetBase::event(QEvent *e)
-{
-    if (e->type() == QEvent::Hide) {
-        emit activate(false);
-    } else if (e->type() == QEvent::Show) {
-        emit activate(true);
-    }
-
-    return QWidget::event(e);
-}
-*/
-
-void TupModuleWidgetBase::enterEvent(QEvent *e)
-{
-    Q_UNUSED(e);
-}
-
-void TupModuleWidgetBase::leaveEvent(QEvent *e)
-{
-    Q_UNUSED(e);
 }
 
 QBoxLayout *TupModuleWidgetBase::boxLayout()

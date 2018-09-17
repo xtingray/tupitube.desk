@@ -147,8 +147,6 @@ void TupTimeLine::addScene(int sceneIndex, const QString &name)
     }
 
     TupTimeLineTable *framesTable = new TupTimeLineTable(sceneIndex, k->scenesContainer);
-    framesTable->setItemSize(10, 20);
-
     connect(framesTable, SIGNAL(frameSelected(int, int)), this, SLOT(selectFrame(int, int)));
     connect(framesTable, SIGNAL(selectionCopied()), SLOT(requestCopyFrameSelection()));
     connect(framesTable, SIGNAL(selectionPasted()), SLOT(requestPasteSelectionInCurrentFrame()));
@@ -450,8 +448,6 @@ void TupTimeLine::frameResponse(TupFrameResponse *response)
 
 void TupTimeLine::libraryResponse(TupLibraryResponse *response)
 {
-    // Q_UNUSED(response);
-
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupTimeLine::libraryResponse()]";

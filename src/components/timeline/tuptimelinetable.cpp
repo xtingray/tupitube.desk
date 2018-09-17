@@ -236,7 +236,8 @@ void TupTimeLineTable::setup()
     setHorizontalHeader(k->ruler);
     setVerticalHeader(k->layersColumn);
 
-    setItemSize(10, 25);
+    // setItemSize(10, 25);
+    setItemSize(10, 20);
     
     k->ruler->setSectionResizeMode(QHeaderView::Custom);
     k->layersColumn->setSectionResizeMode(QHeaderView::Custom);

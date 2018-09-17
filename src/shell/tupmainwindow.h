@@ -114,6 +114,7 @@ class TupMainWindow : public TabbedMainWindow
         ~TupMainWindow();
 
     private:
+        void createGUI();
         void setupFileActions();
         void setPreferencesAction();
         void setupToolBar();
@@ -140,7 +141,6 @@ class TupMainWindow : public TabbedMainWindow
             bool event(QEvent *event);
         #endif
         void closeEvent(QCloseEvent *event);
-        virtual void createGUI();
         void updateOpenRecentMenu(QMenu *menu, QStringList recents);
         void dragEnterEvent(QDragEnterEvent *event);
         void dropEvent(QDropEvent *event);
