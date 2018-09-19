@@ -34,6 +34,10 @@
  ***************************************************************************/
 
 #include "tupexportmodule.h"
+#include "tconfig.h"
+
+#include <QGroupBox>
+#include <QFileDialog>
 
 TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFormat outputFormat, 
                                  QString title, const TupExportWidget *widget) : TupExportWizardPage(title), m_currentExporter(0), 
@@ -127,15 +131,14 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
     QHBoxLayout *configureLayout = new QHBoxLayout(configure);
     configureLayout->addStretch();
 
-    QSize dimension = m_project->dimension(); 
-    m_size = new TXYSpinBox(tr("Size"));
-
+    dimension = m_project->dimension();
     int maxDimension = dimension.width();
     if (maxDimension < dimension.height())
         maxDimension = dimension.height();
 
+    m_size = new TSizeBox(tr("Size"));
+    m_size->setMinimum(100);
     m_size->setMaximum(maxDimension*2);
-
     m_size->setX(dimension.width());
     m_size->setY(dimension.height());
 
@@ -422,6 +425,7 @@ void TupExportModule::exportIt()
         if (scenes.count() > 0) { 
             int width = (int) m_size->x();
             int height = (int) m_size->y();
+
             /* libav requirement: resolution must be a multiple of two */
             if (width%2 != 0)
                 width++;

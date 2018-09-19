@@ -44,8 +44,6 @@
 #include <QWheelEvent>
 #include <QTabBar>
 
-// class QTabWidget;
-
 class T_GUI_EXPORT TabbedMainWindow : public TMainWindow
 {
     Q_OBJECT

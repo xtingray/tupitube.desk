@@ -67,7 +67,7 @@ class T_GUI_EXPORT ToolView : public QDockWidget
         int perspective() const;
         void enableButton(bool flag);
         QString getObjectID();
-        bool isChecked();
+        // bool isChecked();
         void setShortcut(QKeySequence shortcut);
 
     private:

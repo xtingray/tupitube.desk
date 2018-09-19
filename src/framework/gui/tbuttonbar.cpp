@@ -67,9 +67,11 @@ TButtonBar::TButtonBar(Qt::ToolBarArea area, QWidget *parent) : QToolBar(parent)
 
     setObjectName("TButtonBar-"+windowTitle());
 
+    /*
     m_separator = addAction("");
     m_separator->setEnabled(false); // Separator
     m_separator->setVisible(false);
+    */
 
     connect(&m_hider, SIGNAL(timeout()), this, SLOT(hide()));
     connect(&m_buttons, SIGNAL(buttonClicked(QAbstractButton *)), this, SLOT(closeOtherPanels(QAbstractButton *)));
@@ -98,6 +100,8 @@ void TButtonBar::addButton(TViewButton *viewButton)
 
     m_actionForWidget[viewButton] = action;
     action->setVisible(true);
+
+    addSeparator();
 
     if (!isVisible()) 
         show();
@@ -167,7 +171,7 @@ void TButtonBar::closeOtherPanels(QAbstractButton *source)
     }
     */
 
-    setUpdatesEnabled(false);
+    // setUpdatesEnabled(false);
 
     foreach (QAbstractButton *item, m_buttons.buttons()) {
         TViewButton *button = static_cast<TViewButton *>(item);
@@ -183,9 +187,10 @@ void TButtonBar::closeOtherPanels(QAbstractButton *source)
 
     static_cast<TViewButton *>(source)->toggleView();
 
-    setUpdatesEnabled(true);
+    // setUpdatesEnabled(true);
 }
 
+/*
 void TButtonBar::showSeparator(bool event)
 {
     #ifdef TUP_DEBUG
@@ -198,6 +203,7 @@ void TButtonBar::showSeparator(bool event)
 
     m_separator->setVisible(event);
 }
+*/
 
 int TButtonBar::count() const
 {

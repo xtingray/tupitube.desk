@@ -35,62 +35,6 @@
 
 #include "tabbedmainwindow.h"
 
-#ifndef TUPITUBE_GUI
-
-class PrivateTabWidget : public QTabWidget
-{
-    Q_OBJECT
-
-    public:
-        PrivateTabWidget(QWidget *parent = 0);
-        ~PrivateTabWidget();
-
-    protected:
-        virtual void wheelEvent(QWheelEvent *e);
-        virtual void wheelMove(int delta);
-};
-
-PrivateTabWidget::PrivateTabWidget(QWidget *parent) : QTabWidget(parent)
-{
-}
-
-PrivateTabWidget::~PrivateTabWidget()
-{
-}
-
-void PrivateTabWidget::wheelEvent(QWheelEvent *ev)
-{
-    QRect rect = tabBar()->rect();
-    rect.setWidth(width());
-
-    if (rect.contains(ev->pos()))
-        wheelMove(ev->delta());
-}
-
-void PrivateTabWidget::wheelMove(int delta)
-{
-    if (count() > 1) {
-        int current = currentIndex();
-        if (delta < 0) {
-            current = (current + 1) % count();
-        } else {
-            current--;
-            if (current < 0)
-                current = count() - 1;
-        }
-        setCurrentIndex(current);
-    }
-}
-
-#include "tabbedmainwindow.moc"
-
-#else
-
-#include "ttabwidget.h"
-#define PrivateTabWidget TTabWidget
-
-#endif
-
 // TabbedMainWindow
 
 /**
@@ -100,7 +44,7 @@ void PrivateTabWidget::wheelMove(int delta)
  */
 TabbedMainWindow::TabbedMainWindow(QWidget *parent) : TMainWindow(parent)
 {
-    currentTab = new PrivateTabWidget;
+    currentTab = new QTabWidget;
     setupTabWidget(currentTab);
     setCentralWidget(currentTab);
 }
@@ -127,7 +71,6 @@ void TabbedMainWindow::setupTabWidget(QTabWidget *widget)
     #endif
 #endif
 
-    widget->setFocusPolicy(Qt::NoFocus);
     connect(widget, SIGNAL(currentChanged(int)), this, SLOT(emitWidgetChanged(int)));
 }
 
@@ -174,7 +117,6 @@ int TabbedMainWindow::tabCount()
 void TabbedMainWindow::closeCurrentTab()
 {
     int index = currentTab->currentIndex();
-
     if (index >= 0)
         removeWidget(currentTab->widget(index));
 }

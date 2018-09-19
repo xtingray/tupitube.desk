@@ -48,8 +48,8 @@ TViewButton::TViewButton(ToolView *toolView, QWidget *parent) : QToolButton(pare
 
 void TViewButton::setup()
 {
-    setAutoRaise(true);
-    setFocusPolicy(Qt::NoFocus);
+    // setAutoRaise(true);
+    // setFocusPolicy(Qt::NoFocus);
     setText(m_toolView->windowTitle());
     setIcon(m_toolView->windowIcon());
 }
@@ -85,16 +85,20 @@ void TViewButton::toggleView()
         #endif
     #endif
 
+    /*
     QMainWindow *mw = static_cast<QMainWindow *>(m_toolView->parentWidget());
     if (mw)
         mw->setUpdatesEnabled(false);
+    */
 
     m_toolView->setUpdatesEnabled(false);
     m_toolView->toggleViewAction()->trigger();
     m_toolView->setUpdatesEnabled(true);
 
+    /*
     if (mw)
         mw->setUpdatesEnabled(true);
+    */
 }
 
 ToolView *TViewButton::toolView() const
@@ -102,6 +106,7 @@ ToolView *TViewButton::toolView() const
     return m_toolView;
 }
 
+/*
 void TViewButton::setActivated(bool flag)
 {
     #ifdef TUP_DEBUG
@@ -114,3 +119,4 @@ void TViewButton::setActivated(bool flag)
 
     toggled(flag);
 }
+*/

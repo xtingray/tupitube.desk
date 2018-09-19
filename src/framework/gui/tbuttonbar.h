@@ -71,7 +71,7 @@ class T_GUI_EXPORT TButtonBar : public QToolBar
         void enable(TViewButton *viewButton);
 
         bool shouldBeVisible() const;
-        void showSeparator(bool flag);
+        // void showSeparator(bool flag);
 
         int count() const;
 
@@ -81,7 +81,7 @@ class T_GUI_EXPORT TButtonBar : public QToolBar
     private:
         QButtonGroup m_buttons;
         QMap<QWidget *, QAction *> m_actionForWidget;
-        QAction *m_separator;
+        // QAction *m_separator;
         QTimer m_hider;
         bool m_blockHider;
         bool m_shouldBeVisible;

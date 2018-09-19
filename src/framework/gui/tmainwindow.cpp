@@ -121,7 +121,6 @@ void DefaultSettings::restore(TMainWindow *window)
             // view->button()->setSensible(settings.value("sensibility", view->button()->isSensible()).toBool());
 
             bool visible = settings.value("visible", false).toBool();
-
             if (visible && view->button()->isVisible()) {
                 view->button()->setChecked(true);
                 view->show();
@@ -165,8 +164,8 @@ TMainWindow::TMainWindow(QWidget *parent) : QMainWindow(parent), m_forRelayout(0
 
     specialToolBar = new QToolBar(tr("Show Top Panel"), this);
     specialToolBar->setIconSize(QSize(9, 5));
-    addToolBar(Qt::LeftToolBarArea, specialToolBar);
 
+    addToolBar(Qt::LeftToolBarArea, specialToolBar);
     addButtonBar(Qt::LeftToolBarArea);
     addButtonBar(Qt::RightToolBarArea);
     addButtonBar(Qt::TopToolBarArea);
@@ -184,8 +183,7 @@ void TMainWindow::addButtonBar(Qt::ToolBarArea area)
     TButtonBar *bar = new TButtonBar(area, this);
     addToolBar(area, bar);
     m_buttonBars.insert(area, bar);
-
-    bar->hide();
+    // bar->hide();
 }
 
 void TMainWindow::enableSpecialBar(bool flag)
@@ -220,8 +218,9 @@ ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int
     m_buttonBars[toToolBarArea(area)]->addButton(toolView->button());
 
     addDockWidget(area, toolView);
-
     m_toolViews[m_buttonBars[toToolBarArea(area)]] << toolView;
+
+    /*
     // Show separators
     if (area == Qt::TopDockWidgetArea || area == Qt::BottomDockWidgetArea) 
         m_buttonBars[toToolBarArea(area)]->showSeparator(!m_buttonBars[Qt::LeftToolBarArea]->isEmpty());
@@ -230,6 +229,7 @@ ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int
 
     if (toolView->isVisible())
         toolView->expandDock(false);
+    */
 
     return toolView;
 }
@@ -485,16 +485,18 @@ void TMainWindow::setCurrentPerspective(int workspace)
     typedef QList<ToolView *> Views;
     QList<Views > viewsList = m_toolViews.values();
 
+    /*
     setUpdatesEnabled(false);
     if (centralWidget())
         centralWidget()->setUpdatesEnabled(false);
+    */
 
     QHash<TButtonBar *, int> hideButtonCount;
     foreach (Views views, viewsList) {
         foreach (ToolView *view, views) {
             TButtonBar *bar = m_buttonBars[view->button()->area()];
-            bar->setUpdatesEnabled(false);
-            view->setUpdatesEnabled(false);
+            // bar->setUpdatesEnabled(false);
+            // view->setUpdatesEnabled(false);
 
             if (view->perspective() & workspace) {
                 bar->enable(view->button());
@@ -520,8 +522,8 @@ void TMainWindow::setCurrentPerspective(int workspace)
                     bar->show();
             }
 
-            view->setUpdatesEnabled(true);
-            bar->setUpdatesEnabled(true);
+            // view->setUpdatesEnabled(true);
+            // bar->setUpdatesEnabled(true);
         }
     }
 
@@ -529,14 +531,15 @@ void TMainWindow::setCurrentPerspective(int workspace)
     // This loop hides the bars with no buttons
     while (barIt.hasNext()) {
         barIt.next();
-
         if (barIt.key()->count() == barIt.value())
             barIt.key()->hide();
     }
 
+    /*
     if (centralWidget())
         centralWidget()->setUpdatesEnabled(true);
     setUpdatesEnabled(true);
+    */
 
     m_currentPerspective = workspace;
     emit perspectiveChanged(m_currentPerspective);
@@ -548,7 +551,6 @@ int TMainWindow::currentPerspective() const
 }
 
 // if autoRestore is true, the widgets will be loaded when main window is showed (position and properties)
-
 void TMainWindow::setAutoRestore(bool autoRestore)
 {
     m_autoRestore = autoRestore;

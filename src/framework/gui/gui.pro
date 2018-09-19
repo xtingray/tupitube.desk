@@ -54,7 +54,7 @@ HEADERS += taction.h \
            titemselector.h \
            tmainwindow.h \
            tmainwindowabstractsettings.h \
-           tmainwindowfactory.h \
+           # tmainwindowfactory.h \
            tmoviegenerator.h \
            tmoviegeneratorinterface.h \
            tnodegroup.h \
@@ -65,11 +65,11 @@ HEADERS += taction.h \
            tpushbutton.h \
            tradiobuttongroup.h \
            trulerbase.h \
-           tstackedmainwindow.h \
+           # tstackedmainwindow.h \
            tstylecombobox.h \
            tabbedmainwindow.h \
            tabdialog.h \
-           ttabwidget.h \
+           # ttabwidget.h \
            themedocument.h \
            thememanager.h \
            tipdialog.h \
@@ -87,6 +87,7 @@ HEADERS += taction.h \
            txyspinbox.h \
            tcolorcell.h \
            tslider.h \
+           tsizebox.h \
            tcolorarrow.xpm \
            tcolorreset.xpm
 
@@ -115,7 +116,7 @@ SOURCES += taction.cpp \
            timagebutton.cpp \
            titemselector.cpp \
            tmainwindow.cpp \
-           tmainwindowfactory.cpp \
+           # tmainwindowfactory.cpp \
            tmoviegenerator.cpp \
            tnodegroup.cpp \
            tseparator.cpp \
@@ -125,11 +126,11 @@ SOURCES += taction.cpp \
            tpushbutton.cpp \
            tradiobuttongroup.cpp \
            trulerbase.cpp \
-           tstackedmainwindow.cpp \
+           # tstackedmainwindow.cpp \
            tstylecombobox.cpp \
            tabbedmainwindow.cpp \
            tabdialog.cpp \
-           ttabwidget.cpp \
+           # ttabwidget.cpp \
            themedocument.cpp \
            thememanager.cpp \
            tipdialog.cpp \
@@ -145,6 +146,7 @@ SOURCES += taction.cpp \
            twizard.cpp \
            tworkspacemainwindow.cpp \
            txyspinbox.cpp \
+           tsizebox.cpp \
            tcolorcell.cpp \
            tslider.cpp
 

@@ -184,7 +184,7 @@ class TupMainWindow : public TabbedMainWindow
     private slots:
         void preferences();
         void showHelp();
-        void aboutTupi();
+        void aboutTupiTube();
         void showTipDialog();
         void importPalettes();
         void openRecentProject();

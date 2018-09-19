@@ -801,7 +801,7 @@ void TupMainWindow::preferences()
 
     QDesktopWidget desktop;
     dialog->move((int) (desktop.screenGeometry().width() - dialog->width())/2 , 
-                      (int) (desktop.screenGeometry().height() - dialog->height())/2);
+                 (int) (desktop.screenGeometry().height() - dialog->height())/2);
 
     if (dialog->exec() == QDialog::Accepted) {
         if (animationTab)
@@ -814,7 +814,7 @@ void TupMainWindow::showHelp()
     QDesktopServices::openUrl(QString("http://maefloresta.com/wiki"));
 }
 
-void TupMainWindow::aboutTupi()
+void TupMainWindow::aboutTupiTube()
 {
     TupAbout *about = new TupAbout(this);
     about->show();
@@ -1081,6 +1081,14 @@ bool TupMainWindow::event(QEvent *event)
 
 void TupMainWindow::closeEvent(QCloseEvent *event)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupMainWindow::closeEvent(QCloseEvent)]";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+
     QString lastProject = m_fileName;
 
     if (!closeProject()) {

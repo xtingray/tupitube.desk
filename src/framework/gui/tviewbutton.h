@@ -61,7 +61,7 @@ class T_GUI_EXPORT TViewButton : public QToolButton
 
         void setArea(Qt::ToolBarArea area);
         Qt::ToolBarArea area() const;
-        void setActivated(bool flag);
+        // void setActivated(bool flag);
         ToolView *toolView() const;
         void setup();
         void setFlag(bool value);

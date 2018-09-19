@@ -231,7 +231,6 @@ void TupPaintAreaBase::mouseMoveEvent(QMouseEvent *event)
     }
 
     QGraphicsView::mouseMoveEvent(event);
-
     if (!k->scene->mouseGrabberItem() && k->scene->isDrawing()) { // HACK
         QGraphicsSceneMouseEvent mouseEvent(QEvent::GraphicsSceneMouseMove);
         mouseEvent.setWidget(viewport());
@@ -303,6 +302,14 @@ void TupPaintAreaBase::tabletEvent(QTabletEvent *event)
 
 void TupPaintAreaBase::enterEvent(QEvent *event)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupPaintAreaBase::enterEvent(QEvent)";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+
     if (!hasFocus())
         setFocus();
 
@@ -311,6 +318,14 @@ void TupPaintAreaBase::enterEvent(QEvent *event)
 
 void TupPaintAreaBase::leaveEvent(QEvent *event)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupPaintAreaBase::leaveEvent(QEvent)";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+
     if (hasFocus())
         clearFocus();
 
@@ -496,8 +511,18 @@ void TupPaintAreaBase::wheelEvent(QWheelEvent *event)
     scaleView(pow((double)2, event->delta() / 520.0));
 }
 
+
 bool TupPaintAreaBase::viewportEvent(QEvent *event)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupPaintAreaBase::viewportEvent(QEvent)";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
+    /*
     bool flag = QGraphicsView::viewportEvent(event);
 
     if (event->type() == QEvent::Show) {
@@ -506,6 +531,9 @@ bool TupPaintAreaBase::viewportEvent(QEvent *event)
     }
 
     return flag;
+    */
+
+    return QGraphicsView::viewportEvent(event);
 }
 
 void TupPaintAreaBase::scaleView(qreal scaleFactor)

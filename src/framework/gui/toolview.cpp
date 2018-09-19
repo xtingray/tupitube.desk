@@ -78,7 +78,7 @@ void ToolView::expandDock(bool flag)
     else 
         close();
 
-    currentButton->setActivated(flag);
+    // currentButton->setActivated(flag);
 }
 
 bool ToolView::isExpanded()
@@ -132,10 +132,12 @@ QString ToolView::getObjectID()
     return objectName();
 }
 
+/*
 bool ToolView::isChecked()
 {
     return currentButton->isChecked();
 }
+*/
 
 QString ToolView::title() const
 {

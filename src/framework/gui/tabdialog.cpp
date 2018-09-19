@@ -38,7 +38,7 @@
 TabDialog::TabDialog(QWidget *parent, bool modal) : QDialog(parent)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
-    m_tabWidget = new TTabWidget(this);
+    m_tabWidget = new QTabWidget(this);
     mainLayout->addWidget(m_tabWidget);
     setLayout(mainLayout);
     setupButtons(Cancel|Ok);
@@ -49,7 +49,7 @@ TabDialog::TabDialog(int buttons, QWidget *parent, bool modal) : QDialog(parent)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
-    m_tabWidget = new TTabWidget(this);
+    m_tabWidget = new QTabWidget(this);
     mainLayout->addWidget(m_tabWidget);
     setupButtons(buttons);
     setModal(modal);
@@ -158,7 +158,7 @@ QPushButton *TabDialog::button(Button b)
     return m_buttons[b];
 }
 
-TTabWidget *TabDialog::tabWidget() const
+QTabWidget *TabDialog::tabWidget() const
 {
     return m_tabWidget;
 }
