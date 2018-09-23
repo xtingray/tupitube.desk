@@ -52,7 +52,7 @@ struct TupPaintArea::Private
     bool canvasEnabled;
 };
 
-TupPaintArea::TupPaintArea(TupProject *project, QWidget * parent) : TupPaintAreaBase(parent, project->dimension(), project->library()), k(new Private)
+TupPaintArea::TupPaintArea(TupProject *project, QWidget *parent) : TupPaintAreaBase(parent, project->dimension(), project->library()), k(new Private)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN

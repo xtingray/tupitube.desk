@@ -171,10 +171,17 @@ TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNe
     k->actionGroup = new QActionGroup(this); 
     k->actionGroup->setExclusive(true);
 
-    QFrame *frame = new QFrame(this, Qt::FramelessWindowHint);
-    QGridLayout *layout = new QGridLayout(frame);
+    // QFrame *frame = new QFrame(this, Qt::FramelessWindowHint);
+    QWidget *workspace = new QWidget;
+    QGridLayout *layout = new QGridLayout(workspace);
 
-    k->paintArea = new TupPaintArea(project, frame);
+    k->horizontalRuler = new TupRuler(Qt::Horizontal, this);
+    k->verticalRuler = new TupRuler(Qt::Vertical, this);
+    layout->addWidget(k->horizontalRuler, 0, 1);
+    layout->addWidget(k->verticalRuler, 1, 0);
+
+    k->paintArea = new TupPaintArea(project);
+    layout->addWidget(k->paintArea, 1, 1);
     // k->paintArea->setUseOpenGL(false);
 
     TCONFIG->beginGroup("OnionParameters");
@@ -183,14 +190,7 @@ TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNe
         k->opacityFactor = 0.5;
     k->paintArea->setOnionFactor(k->opacityFactor);
 
-    setCentralWidget(frame);
-
-    layout->addWidget(k->paintArea, 1, 1);
-
-    k->horizontalRuler = new TupRuler(Qt::Horizontal, this);
-    k->verticalRuler = new TupRuler(Qt::Vertical, this);
-    layout->addWidget(k->horizontalRuler, 0, 1);
-    layout->addWidget(k->verticalRuler, 1, 0);
+    setCentralWidget(workspace);
 
     connect(k->paintArea, SIGNAL(scaled(qreal)), this, SLOT(updateZoomVars(qreal)));
     connect(k->paintArea, SIGNAL(rotated(int)), this, SLOT(updateRotationVars(int)));
@@ -208,12 +208,19 @@ TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNe
     setupDrawActions();
     createLateralToolBar(); 
     createToolBar();
-    
-    k->status = new TupPaintAreaStatus(this);
-    setStatusBar(k->status);
-    connect(k->status, SIGNAL(newFramePointer(int)), k->paintArea, SLOT(goToFrame(int)));
-    connect(k->paintArea, SIGNAL(frameChanged(int)), k->status, SLOT(updateFrameIndex(int)));
 
+    k->status = new TupPaintAreaStatus(contourPen(), fillBrush());
+    setStatusBar(k->status);
+    connect(k->status, SIGNAL(newFramePointer(int)), this, SLOT(goToFrame(int)));
+    connect(k->status, SIGNAL(resetClicked()), this, SLOT(resetWorkSpaceTransformations()));
+    connect(k->status, SIGNAL(safeAreaClicked()), this, SLOT(drawActionSafeArea()));
+    connect(k->status, SIGNAL(gridClicked()), this, SLOT(drawGrid()));
+    connect(k->status, SIGNAL(angleChanged(int)), this, SLOT(setRotationAngle(int)));
+    connect(k->status, SIGNAL(zoomChanged(qreal)), this, SLOT(setZoomFactor(qreal)));
+    connect(k->status, SIGNAL(antialiasChanged(bool)), this, SLOT(setAntialiasing(bool)));
+    connect(k->status, SIGNAL(fullClicked()), this, SLOT(showFullScreen()));
+
+    connect(k->paintArea, SIGNAL(frameChanged(int)), k->status, SLOT(updateFrameIndex(int)));
     brushManager()->initBgColor(project->bgColor());
 
     connect(brushManager(), SIGNAL(penChanged(const QPen &)), this, SLOT(updatePen(const QPen &)));
@@ -266,12 +273,18 @@ void TupDocumentView::setAntialiasing(bool useIt)
     k->paintArea->setAntialiasing(useIt);
 }
 
-/*
-void TupDocumentView::setOpenGL(bool useIt)
+void TupDocumentView::goToFrame(int index)
 {
-    k->paintArea->setUseOpenGL(useIt);
+    int framesTotal = currentFramesTotal();
+    if (index <= framesTotal) {
+        k->paintArea->goToFrame(index - 1);
+    } else {
+        index = framesTotal;
+        k->paintArea->goToFrame(index -1);
+    }
+
+    k->status->setFramePointer(index);
 }
-*/
 
 void TupDocumentView::drawGrid()
 {
@@ -282,13 +295,6 @@ void TupDocumentView::drawActionSafeArea()
 {
     k->paintArea->drawActionSafeArea(!k->paintArea->actionSafeAreaFlag());
 }
-
-/*
-QPainter::RenderHints TupDocumentView::renderHints() const
-{
-    return k->paintArea->renderHints();
-}
-*/
 
 void TupDocumentView::updateRotationAngleFromRulers(int angle)
 {

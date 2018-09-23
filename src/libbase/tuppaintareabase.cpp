@@ -231,6 +231,8 @@ void TupPaintAreaBase::mouseMoveEvent(QMouseEvent *event)
     }
 
     QGraphicsView::mouseMoveEvent(event);
+    // SQA: Check if this code is really useful
+    /*
     if (!k->scene->mouseGrabberItem() && k->scene->isDrawing()) { // HACK
         QGraphicsSceneMouseEvent mouseEvent(QEvent::GraphicsSceneMouseMove);
         mouseEvent.setWidget(viewport());
@@ -243,6 +245,7 @@ void TupPaintAreaBase::mouseMoveEvent(QMouseEvent *event)
         // QApplication::sendEvent(k->scene, &mouseEvent);
         k->scene->mouseMoved(&mouseEvent);
     }
+    */
 
     k->position = mapToScene(event->pos()); 
     emit cursorPosition(k->position);
@@ -252,6 +255,8 @@ void TupPaintAreaBase::mouseReleaseEvent(QMouseEvent *event)
 {
     QGraphicsView::mouseReleaseEvent(event);
 
+    // SQA: Check if this code is really useful
+    /*
     if (! k->scene->mouseGrabberItem() && k->scene->isDrawing()) { // HACK
         QGraphicsSceneMouseEvent mouseEvent(QEvent::GraphicsSceneMouseRelease);
         mouseEvent.setWidget(viewport());
@@ -264,6 +269,7 @@ void TupPaintAreaBase::mouseReleaseEvent(QMouseEvent *event)
         // QApplication::sendEvent(k->scene, &mouseEvent);
         k->scene->mouseReleased(&mouseEvent);
     }
+    */
 }
 
 void TupPaintAreaBase::keyPressEvent(QKeyEvent *event)
@@ -302,6 +308,7 @@ void TupPaintAreaBase::tabletEvent(QTabletEvent *event)
 
 void TupPaintAreaBase::enterEvent(QEvent *event)
 {
+/*
 #ifdef TUP_DEBUG
     #ifdef Q_OS_WIN
         qDebug() << "[TupPaintAreaBase::enterEvent(QEvent)";
@@ -309,7 +316,7 @@ void TupPaintAreaBase::enterEvent(QEvent *event)
         T_FUNCINFO;
     #endif
 #endif
-
+*/
     if (!hasFocus())
         setFocus();
 
@@ -318,6 +325,7 @@ void TupPaintAreaBase::enterEvent(QEvent *event)
 
 void TupPaintAreaBase::leaveEvent(QEvent *event)
 {
+/*
 #ifdef TUP_DEBUG
     #ifdef Q_OS_WIN
         qDebug() << "[TupPaintAreaBase::leaveEvent(QEvent)";
@@ -325,11 +333,31 @@ void TupPaintAreaBase::leaveEvent(QEvent *event)
         T_FUNCINFO;
     #endif
 #endif
-
+*/
     if (hasFocus())
         clearFocus();
 
     QGraphicsView::leaveEvent(event);
+}
+
+bool TupPaintAreaBase::viewportEvent(QEvent *event)
+{
+    /*
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupPaintAreaBase::viewportEvent(QEvent)";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+    */
+
+    return QGraphicsView::viewportEvent(event);
+}
+
+void TupPaintAreaBase::wheelEvent(QWheelEvent *event)
+{
+    scaleView(pow((double)2, event->delta() / 520.0));
 }
 
 void TupPaintAreaBase::drawBackground(QPainter *painter, const QRectF &rect)
@@ -504,36 +532,6 @@ void TupPaintAreaBase::centerDrawingArea()
 QPointF TupPaintAreaBase::centerPoint() const
 {
     return k->drawingRect.center();
-}
-
-void TupPaintAreaBase::wheelEvent(QWheelEvent *event)
-{
-    scaleView(pow((double)2, event->delta() / 520.0));
-}
-
-
-bool TupPaintAreaBase::viewportEvent(QEvent *event)
-{
-    #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintAreaBase::viewportEvent(QEvent)";
-        #else
-            T_FUNCINFO;
-        #endif
-    #endif
-
-    /*
-    bool flag = QGraphicsView::viewportEvent(event);
-
-    if (event->type() == QEvent::Show) {
-        if (k->scene->items().isEmpty())
-            k->scene->drawCurrentPhotogram();
-    }
-
-    return flag;
-    */
-
-    return QGraphicsView::viewportEvent(event);
 }
 
 void TupPaintAreaBase::scaleView(qreal scaleFactor)

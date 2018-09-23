@@ -93,12 +93,6 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         void closeArea();
         QSize sizeHint() const;
 
-        void setAntialiasing(bool useIt);
-        // void setOpenGL(bool useIt);
-
-        // QPainter::RenderHints renderHints() const;
-        void setZoomFactor(qreal factor);
-
         TupBrushManager *brushManager() const;
         QPen contourPen() const;
         QBrush fillBrush() const;
@@ -109,7 +103,6 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         int currentFramesTotal();
         int currentSceneIndex();
         void setZoomPercent(const QString &percent);
-        void setRotationAngle(int angle);
         QSize workSpaceSize() const;
         void updateUsersOnLine(const QString &login, int state);
         void resizeProjectDimension(const QSize dimension);
@@ -119,6 +112,9 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         void setFillTool(TColorCell::FillType type);
 
     private slots:
+        void setRotationAngle(int angle);
+        void setZoomFactor(qreal factor);
+        void goToFrame(int index);
         void setNextOnionSkin(int n);
         void setPreviousOnionSkin(int n);
         void updateZoomVars(qreal factor);
@@ -180,6 +176,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         void updateBgColor(const QColor color);
         void updatePaintArea();
         void updateActiveDock(TupDocumentView::DockType currentDock);
+        void setAntialiasing(bool useIt);
 
     signals:
         void requestTriggered(const TupProjectRequest *event);
