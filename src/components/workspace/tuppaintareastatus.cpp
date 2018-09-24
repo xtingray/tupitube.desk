@@ -44,7 +44,6 @@ struct TupPaintAreaStatus::Private
     QComboBox *zoom;
     QComboBox *rotation;
     QCheckBox *antialiasHint;
-    QLabel *positionLabel;
 
     TupBrushStatus *contourStatus;
     TupBrushStatus *fillStatus;
@@ -64,16 +63,6 @@ TupPaintAreaStatus::TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent) 
     k->angle = 0;
     k->currentFrame = 1;
     k->colorContext = TColorCell::Contour;
-
-    QWidget *empty = new QWidget();
-    empty->setFixedWidth(5);
-    addPermanentWidget(empty, 1);
-
-    k->positionLabel = new QLabel;
-    QFont font = this->font();
-    font.setPointSize(8);
-    k->positionLabel->setFont(font);
-    addPermanentWidget(k->positionLabel, 2);
 
     QPushButton *resetWSButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/reset_workspace.png")), "");
     resetWSButton->setIconSize(QSize(16, 16));
@@ -313,6 +302,9 @@ void TupPaintAreaStatus::updateFrameIndex(int index)
 {
     index++;
     k->currentFrame = index;
+
+    tError() << "updateFrameIndex() -> " << index;
+
     QString text = QString::number(index); 
     k->frameField->setText(text);
 }
@@ -366,7 +358,9 @@ void TupPaintAreaStatus::enableFullScreenFeature(bool flag)
     k->fullScreenButton->setEnabled(flag);
 }
 
-void TupPaintAreaStatus::updatePosition(const QString &pos)
+void TupPaintAreaStatus::showPos(const QPointF &point)
 {
-    k->positionLabel->setText(pos);
+    QPoint dot = point.toPoint();
+    QString pos = "X: " +  QString::number(dot.x()) + " Y: " + QString::number(dot.y());
+    showMessage(pos);
 }

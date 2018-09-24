@@ -140,7 +140,8 @@ struct TupDocumentView::Private
     bool cameraMode;
 };
 
-TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNetworked, const QStringList &users) : QMainWindow(parent), k(new Private)
+TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNetworked, const QStringList &users) :
+                                 QMainWindow(parent), k(new Private)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -198,7 +199,7 @@ TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNe
     connect(k->paintArea, SIGNAL(zoomOut()), this, SLOT(applyZoomOut()));
     connect(k->paintArea, SIGNAL(newPerspective(int)), this, SIGNAL(newPerspective(int)));
 
-    connect(k->paintArea, SIGNAL(cursorPosition(const QPointF &)), this, SLOT(showPos(const QPointF &)));
+    // connect(k->paintArea, SIGNAL(cursorPosition(const QPointF &)), this, SLOT(showPos(const QPointF &)));
     connect(k->paintArea, SIGNAL(cursorPosition(const QPointF &)), k->verticalRuler, SLOT(movePointers(const QPointF&)));
     connect(k->paintArea, SIGNAL(cursorPosition(const QPointF &)), k->horizontalRuler, SLOT(movePointers(const QPointF&)));
     connect(k->paintArea, SIGNAL(changedZero(const QPointF&)), this, SLOT(changeRulerOrigin(const QPointF&)));
@@ -206,11 +207,10 @@ TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNe
     connect(k->paintArea, SIGNAL(localRequestTriggered(const TupProjectRequest *)), this, SIGNAL(localRequestTriggered(const TupProjectRequest *)));
 
     setupDrawActions();
-    createLateralToolBar(); 
+    createLateralToolBar();
     createToolBar();
 
     k->status = new TupPaintAreaStatus(contourPen(), fillBrush());
-    setStatusBar(k->status);
     connect(k->status, SIGNAL(newFramePointer(int)), this, SLOT(goToFrame(int)));
     connect(k->status, SIGNAL(resetClicked()), this, SLOT(resetWorkSpaceTransformations()));
     connect(k->status, SIGNAL(safeAreaClicked()), this, SLOT(drawActionSafeArea()));
@@ -221,11 +221,14 @@ TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNe
     connect(k->status, SIGNAL(fullClicked()), this, SLOT(showFullScreen()));
 
     connect(k->paintArea, SIGNAL(frameChanged(int)), k->status, SLOT(updateFrameIndex(int)));
+    connect(k->paintArea, SIGNAL(cursorPosition(const QPointF &)), k->status, SLOT(showPos(const QPointF &)));
     brushManager()->initBgColor(project->bgColor());
 
     connect(brushManager(), SIGNAL(penChanged(const QPen &)), this, SLOT(updatePen(const QPen &)));
     connect(brushManager(), SIGNAL(brushChanged(const QBrush &)), this, SLOT(updateBrush(const QBrush &)));
     connect(brushManager(), SIGNAL(bgColorChanged(const QColor &)), this, SLOT(updateBgColor(const QColor &)));
+
+    setStatusBar(k->status);
 
     // SQA: Find out why this timer instruction is required?
     QTimer::singleShot(500, this, SLOT(loadPlugins()));
@@ -382,12 +385,14 @@ void TupDocumentView::setZoomPercent(const QString &percent)
     k->status->setZoomPercent(percent);
 }
 
+/*
 void TupDocumentView::showPos(const QPointF &point)
 {
     QPoint dot = point.toPoint();
     QString message =  "X: " +  QString::number(dot.x()) + " Y: " + QString::number(dot.y());
     k->status->updatePosition(message);
 }
+*/
 
 void TupDocumentView::setupDrawActions()
 {

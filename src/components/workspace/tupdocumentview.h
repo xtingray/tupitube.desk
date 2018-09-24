@@ -150,7 +150,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         void selectFrame(int frame, int layer, int scene);
         void selectScene(int scene);
 
-        void showPos(const QPointF &point);	
+        // void showPos(const QPointF &point);
         void setCursor(const QCursor &cursor);
         void selectToolFromMenu(QAction *action);
         // void callAutoSave();

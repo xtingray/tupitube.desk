@@ -344,6 +344,8 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
                   if (response->action() == TupProjectRequest::Select) {
                       if (guiScene->currentFrameIndex() != response->frameIndex())
                           emit frameChanged(response->frameIndex());
+                  } else {
+                      emit frameChanged(response->frameIndex());
                   }
                   guiScene->setCurrentFrame(response->layerIndex(), response->frameIndex());
 

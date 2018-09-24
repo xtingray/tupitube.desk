@@ -218,6 +218,9 @@ ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int
     m_buttonBars[toToolBarArea(area)]->addButton(toolView->button());
 
     addDockWidget(area, toolView);
+    // SQA: This line is a hack to avoid self-resizing docks issue
+    resizeDocks({toolView}, {0}, Qt::Horizontal);
+
     m_toolViews[m_buttonBars[toToolBarArea(area)]] << toolView;
 
     /*

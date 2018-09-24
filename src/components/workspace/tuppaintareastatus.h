@@ -48,7 +48,6 @@
 #include <QPushButton>
 #include <QComboBox>
 #include <QCheckBox>
-#include <QLabel>
 #include <QHBoxLayout>
 #include <QIntValidator>
 #include <QObject>
@@ -62,6 +61,7 @@ class TUPITUBE_EXPORT TupPaintAreaStatus : public QStatusBar
     public:
         TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent = 0);
         ~TupPaintAreaStatus();
+
         void updateTool(const QString &label, const QPixmap &pixmap);
         void setZoomPercent(const QString &percent);
         void setRotationAngle(const QString &angle);
@@ -78,9 +78,10 @@ class TUPITUBE_EXPORT TupPaintAreaStatus : public QStatusBar
         void setPen(const QPen &pen);
         void setBrush(const QBrush  &brush);
         void applyRotation(const QString &text);
+        void showPos(const QPointF &point);
+        void updateFrameIndex(int index);
 
     private slots:
-        void updateFrameIndex(int index);
         void updateFramePointer();
 
     signals:
