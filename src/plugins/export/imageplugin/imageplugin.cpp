@@ -54,8 +54,17 @@ TupExportInterface::Formats ImagePlugin::availableFormats()
 }
 
 bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, const QList<TupScene *> &scenes, 
-                                         TupExportInterface::Format format, const QSize &size, int fps, TupLibrary *library)
+                                 TupExportInterface::Format format, const QSize &size, int fps, TupLibrary *library)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[ImagePlugin::exportToFormat()]";
+    #else
+        T_FUNCINFO;
+        tWarning() << "Size: " << size;
+    #endif
+#endif
+
     Q_UNUSED(fps);
 
     QFileInfo fileInfo(filePath);
@@ -89,57 +98,58 @@ bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, 
     }
 
     TupAnimationRenderer renderer(bgColor, library);
-
     foreach (TupScene *scene, scenes) {
-             renderer.setScene(scene, size);
+        renderer.setScene(scene, size);
 
-             int photogram = 0;
-             while (renderer.nextPhotogram()) {
-                    QString index = "";
-                    if (photogram < 10) {
-                        index = "000";
-                    } else if (photogram < 100) {
-                               index = "00";
-                    } else {
-                        index = "0";
-                    }
+        int photogram = 0;
+        while (renderer.nextPhotogram()) {
+            QString index = "";
+            if (photogram < 10) {
+                index = "000";
+            } else if (photogram < 100) {
+                index = "00";
+            } else {
+                index = "0";
+            }
 
-                    index += QString("%1").arg(photogram);
+            index += QString("%1").arg(photogram);
 
-                    if (QString(extension).compare("SVG") == 0) {
-                        QString path = fileInfo.absolutePath() + "/" + QString(m_baseName + "%1.%2").arg(index).arg(QString(extension).toLower());
+            if (QString(extension).compare("SVG") == 0) {
+                QString path = fileInfo.absolutePath() + "/" + QString(m_baseName + "%1.%2").arg(index).arg(QString(extension).toLower());
 
-                        QSvgGenerator generator;
-                        generator.setFileName(path);
-                        generator.setSize(size);
-                        generator.setViewBox(QRect(0, 0, size.width(), size.height()));
-                        QFileInfo info(path);
-                        generator.setTitle(info.fileName());
-                        generator.setDescription(scene->sceneName());
+                QSvgGenerator generator;
+                generator.setFileName(path);
+                generator.setSize(size);
+                generator.setViewBox(QRect(0, 0, size.width(), size.height()));
+                QFileInfo info(path);
+                generator.setTitle(info.fileName());
+                generator.setDescription(scene->sceneName());
 
-                        QPainter painter;
-                        painter.begin(&generator);
-                        painter.setRenderHint(QPainter::Antialiasing, true);
-                        renderer.render(&painter);
-                        painter.end();
-                    } else {
-                       QImage image(size, imageFormat);
-                       if (bgColor.alpha() == 0)
-                           image.fill(Qt::transparent);
-                       else
-                           image.fill(bgColor);
+                QPainter painter;
+                painter.begin(&generator);
+                painter.setRenderHint(QPainter::Antialiasing, true);
+                renderer.render(&painter); // Frame render is created here
+                painter.end();
 
-                       {
-                           QPainter painter(&image);
-                           painter.setRenderHint(QPainter::Antialiasing, true);
-                           renderer.render(&painter);
-                       }
 
-                       image.save(fileInfo.absolutePath() + "/" + QString(m_baseName + "%1.%2").arg(index).arg(QString(extension).toLower()), extension, 100);
-                    }          
+            } else {
+                QImage image(size, imageFormat);
+                if (bgColor.alpha() == 0)
+                    image.fill(Qt::transparent);
+                else
+                    image.fill(bgColor);
 
-                    photogram++;
-             }
+                {
+                    QPainter painter(&image);
+                    painter.setRenderHint(QPainter::Antialiasing, true);
+                    renderer.render(&painter);
+                }
+
+                image.save(fileInfo.absolutePath() + "/" + QString(m_baseName + "%1.%2").arg(index).arg(QString(extension).toLower()),
+                           extension, 100);
+            }
+            photogram++;
+        }
     }
 
     return true;
@@ -147,6 +157,15 @@ bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, 
 
 bool ImagePlugin::exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene, const QSize &size, TupLibrary *library)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[ImagePlugin::exportToFrame()]";
+    #else
+        T_FUNCINFO;
+        tWarning() << "Size: " << size;
+    #endif
+#endif
+
     bool result = false;
     QString path = filePath;
     const char *extension;

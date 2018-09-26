@@ -70,8 +70,6 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
     TCONFIG->beginGroup("General");
     path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
 
-    ////////////////
-
     QHBoxLayout *prefixLayout = new QHBoxLayout;
     prefixLayout->addWidget(new QLabel(tr("Image Name Prefix: ")));
 
@@ -125,8 +123,6 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
 
     layout->addLayout(filePathLayout);
 
-    /////////////////
-
     QWidget *configure = new QWidget;
     QHBoxLayout *configureLayout = new QHBoxLayout(configure);
     configureLayout->addStretch();
@@ -136,11 +132,12 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
     if (maxDimension < dimension.height())
         maxDimension = dimension.height();
 
-    m_size = new TSizeBox(tr("Size"));
-    m_size->setMinimum(100);
-    m_size->setMaximum(maxDimension*2);
-    m_size->setX(dimension.width());
-    m_size->setY(dimension.height());
+    m_size = new TSizeBox(tr("Size"), dimension);
+    // m_size->setMinimum(100);
+    // m_size->setMaximum(maxDimension*2);
+
+    // m_size->setX(dimension.width());
+    // m_size->setY(dimension.height());
 
     QGroupBox *groupBox = new QGroupBox(tr("Configuration"));
     QHBoxLayout *configLayout = new QHBoxLayout(groupBox);
@@ -151,6 +148,7 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
     m_fps->setValue(m_project->fps());
 
     configureLayout->addWidget(m_size);
+    configureLayout->addWidget(new QWidget());
 
     if (output == TupExportWidget::ImagesArray) {
         connect(bgTransparency, SIGNAL(toggled(bool)), this, SLOT(enableTransparency(bool)));
@@ -162,7 +160,6 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
     }
 
     configureLayout->addStretch();
-
     layout->addWidget(configure);
     layout->addStretch();
 
@@ -208,7 +205,8 @@ void TupExportModule::setCurrentFormat(int currentFormat, const QString &value)
     } else { // Images Array
         filename = QDir::homePath();
 
-        if (m_currentFormat == TupExportInterface::JPEG || m_currentFormat == TupExportInterface::SVG) {
+        // if (m_currentFormat == TupExportInterface::JPEG || m_currentFormat == TupExportInterface::SVG) {
+        if (m_currentFormat == TupExportInterface::JPEG) {
             if (bgTransparency->isEnabled())
                 bgTransparency->setEnabled(false);
         } else {

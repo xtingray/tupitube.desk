@@ -48,6 +48,7 @@ struct TupExportWidget::Private
     TupExportModule *imagesArrayExport;
     TupExportModule *animatedImageExport;
     TupVideoProperties *videoProperties;
+
     const TupProject *project;
     QHash<QString, TupExportInterface *> plugins;
 };
@@ -125,36 +126,36 @@ void TupExportWidget::loadPlugins()
 {
     QList<TupExportInterface *> pluginList;
     foreach (QObject *plugin, TupPluginManager::instance()->formats()) {
-             if (plugin) {
-                 TupExportInterface *exporter = qobject_cast<TupExportInterface *>(plugin);
-                 if (exporter) {
-                     int index = -1;
-                     if (exporter->key().compare(tr("Video Formats")) == 0)
-                         index = 0;
-                     if (exporter->key().compare(tr("Open Video Format")) == 0)
-                         index = 1;
-                     if (exporter->key().compare(tr("Image Sequence")) == 0)
-                         index = 2;
-                     if (exporter->key().compare(tr("Animated Image")) == 0)
-                         index = 3;
+        if (plugin) {
+            TupExportInterface *exporter = qobject_cast<TupExportInterface *>(plugin);
+            if (exporter) {
+                int index = -1;
+                if (exporter->key().compare(tr("Video Formats")) == 0)
+                    index = 0;
+                if (exporter->key().compare(tr("Open Video Format")) == 0)
+                    index = 1;
+                if (exporter->key().compare(tr("Image Sequence")) == 0)
+                    index = 2;
+                if (exporter->key().compare(tr("Animated Image")) == 0)
+                    index = 3;
 
-                     #if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
-                         pluginList.insert(index, exporter);
-                     #else
-                         if (exporter->key().compare(tr("Open Video Format")) != 0)
-                             pluginList.insert(index, exporter);
-                     #endif
-                 } else {
-                     #ifdef TUP_DEBUG
-                         QString msg = "TupExportWidget::loadPlugins() - [ Fatal Error ] - Can't load export plugin";
-                         #ifdef Q_OS_WIN
-                            qDebug() << msg;
-                         #else
-                            tError() << msg;
-                         #endif
-                     #endif
-                 }
-             }
+                #if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
+                    pluginList.insert(index, exporter);
+                #else
+                    if (exporter->key().compare(tr("Open Video Format")) != 0)
+                        pluginList.insert(index, exporter);
+                #endif
+            } else {
+                #ifdef TUP_DEBUG
+                    QString msg = "TupExportWidget::loadPlugins() - [ Fatal Error ] - Can't load export plugin";
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg;
+                    #else
+                        tError() << msg;
+                    #endif
+                #endif
+            }
+        }
     }
 
     for (int i=0; i<pluginList.size(); i++) {
