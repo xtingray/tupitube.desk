@@ -325,6 +325,11 @@ void TupScreen::playBack()
     }
 }
 
+bool TupScreen::isPlaying()
+{
+    return k->isPlaying;
+}
+
 void TupScreen::pause()
 {
     #ifdef TUP_DEBUG

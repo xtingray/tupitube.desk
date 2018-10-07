@@ -448,7 +448,20 @@ void TheoraMovieGenerator::createMovieFile(const QString &fileName)
     if (QFile::exists(fileName)) 
         QFile::remove(fileName);
 
-    QFile::copy(k->movieFile, fileName);
+    if (QFile::copy(k->movieFile, fileName)) {
+        if (QFile::exists(k->movieFile)) {
+            if (QFile::remove(k->movieFile)) {
+                #ifdef TUP_DEBUG
+                    QString msg = QString("") + "TheoraMovieGenerator::createMovieFile() - Removing temp video file -> " + k->movieFile;
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg;
+                    #else
+                        tWarning() << msg;
+                    #endif
+                #endif
+            }
+        }
+    }
 }
 
 void TheoraMovieGenerator::saveMovie(const QString &filename)

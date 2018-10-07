@@ -54,7 +54,7 @@ TupExportInterface::Formats ImagePlugin::availableFormats()
 }
 
 bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, const QList<TupScene *> &scenes, 
-                                 TupExportInterface::Format format, const QSize &size, int fps, TupLibrary *library)
+                                 TupExportInterface::Format format, const QSize &size, const QSize &newSize, int fps, TupLibrary *library)
 {
 #ifdef TUP_DEBUG
     #ifdef Q_OS_WIN
@@ -130,8 +130,6 @@ bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, 
                 painter.setRenderHint(QPainter::Antialiasing, true);
                 renderer.render(&painter); // Frame render is created here
                 painter.end();
-
-
             } else {
                 QImage image(size, imageFormat);
                 if (bgColor.alpha() == 0)
@@ -145,6 +143,8 @@ bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, 
                     renderer.render(&painter);
                 }
 
+                if (size != newSize)
+                    image = image.QImage::scaled(newSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
                 image.save(fileInfo.absolutePath() + "/" + QString(m_baseName + "%1.%2").arg(index).arg(QString(extension).toLower()),
                            extension, 100);
             }

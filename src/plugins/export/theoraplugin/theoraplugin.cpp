@@ -63,7 +63,7 @@ TupExportInterface::Formats TheoraPlugin::availableFormats()
 }
 
 bool TheoraPlugin::exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes, 
-                                  TupExportInterface::Format fmt, const QSize &size, int fps, TupLibrary *library)
+                                  TupExportInterface::Format fmt, const QSize &size, const QSize &newSize, int fps, TupLibrary *library)
 {
     Q_UNUSED(fmt);
 

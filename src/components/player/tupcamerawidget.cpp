@@ -496,8 +496,10 @@ void TupCameraWidget::updateFramesTotal(int sceneIndex)
 
 void TupCameraWidget::exportDialog()
 {
-    QDesktopWidget desktop;
+    if (k->screen->isPlaying())
+        k->screen->pause();
 
+    QDesktopWidget desktop;
     TupExportWidget *exportWidget = new TupExportWidget(k->project, this);
     exportWidget->show();
     exportWidget->move((int) (desktop.screenGeometry().width() - exportWidget->width())/2, 
