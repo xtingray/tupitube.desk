@@ -129,22 +129,21 @@ TMovieGeneratorInterface::Format LibavPlugin::videoFormat(TupExportInterface::Fo
     return TLibavMovieGenerator::NONE;
 }
 
-bool LibavPlugin::exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes, TupExportInterface::Format fmt, const QSize &size, int fps, TupLibrary *library)
+bool LibavPlugin::exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes, TupExportInterface::Format fmt, 
+                                 const QSize &size, const QSize &newSize, int fps, TupLibrary *library)
 {
+    Q_UNUSED(newSize);
+
     qreal duration = 0;
     foreach (TupScene *scene, scenes)
         duration += (qreal) scene->framesCount() / (qreal) fps;
 
-    TLibavMovieGenerator *generator = 0;
     TMovieGeneratorInterface::Format format = videoFormat(fmt);
-
     if (format == TLibavMovieGenerator::NONE)
         return false;
 
     // SQA: Get sound files from library and pass them as QList to TLibavMovieGenerator 
-
-    generator = new TLibavMovieGenerator(format, size, fps, duration);
-
+    TLibavMovieGenerator *generator = new TLibavMovieGenerator(format, size, fps, duration);
     TupAnimationRenderer renderer(color, library);
     {
         if (!generator->validMovieHeader()) {
@@ -164,10 +163,8 @@ bool LibavPlugin::exportToFormat(const QColor color, const QString &filePath, co
 
         QPainter painter(generator);
         painter.setRenderHint(QPainter::Antialiasing, true);
-
         foreach (TupScene *scene, scenes) {
             renderer.setScene(scene, size);
-
             while (renderer.nextPhotogram()) {
                 renderer.render(&painter);
                 generator->nextFrame();

@@ -36,9 +36,11 @@
 #ifndef TABDIALOG_H
 #define TABDIALOG_H
 
-#include "ttabwidget.h"
+// #include "ttabwidget.h"
+#include "tglobal.h"
 
 #include <QDialog>
+#include <QTabWidget>
 #include <QHash>
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -73,7 +75,7 @@ class T_GUI_EXPORT TabDialog : public QDialog
         void setButtonText(Button b, const QString &text);
         QPushButton *button(Button b);
         
-        TTabWidget *tabWidget() const;
+        QTabWidget *tabWidget() const;
         void enableTab(int index, bool enable);
         
     private:
@@ -89,7 +91,7 @@ class T_GUI_EXPORT TabDialog : public QDialog
         virtual void custom3() {};
         
     private:
-        TTabWidget *m_tabWidget;
+        QTabWidget *m_tabWidget;
         Buttons m_buttons;
 };
 

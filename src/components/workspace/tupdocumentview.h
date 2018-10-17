@@ -88,15 +88,10 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
 
         TupDocumentView(TupProject *project, QWidget *parent = 0, bool isNetworked = true, const QStringList &users = QStringList());
         ~TupDocumentView();
+
         void setWorkSpaceSize(int width, int height);
         void closeArea();
         QSize sizeHint() const;
-
-        void setAntialiasing(bool useIt);
-        // void setOpenGL(bool useIt);
-
-        // QPainter::RenderHints renderHints() const;
-        void setZoomFactor(qreal factor);
 
         TupBrushManager *brushManager() const;
         QPen contourPen() const;
@@ -108,7 +103,6 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         int currentFramesTotal();
         int currentSceneIndex();
         void setZoomPercent(const QString &percent);
-        void setRotationAngle(int angle);
         QSize workSpaceSize() const;
         void updateUsersOnLine(const QString &login, int state);
         void resizeProjectDimension(const QSize dimension);
@@ -118,6 +112,9 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         void setFillTool(TColorCell::FillType type);
 
     private slots:
+        void setRotationAngle(int angle);
+        void setZoomFactor(qreal factor);
+        void goToFrame(int index);
         void setNextOnionSkin(int n);
         void setPreviousOnionSkin(int n);
         void updateZoomVars(qreal factor);
@@ -153,7 +150,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         void selectFrame(int frame, int layer, int scene);
         void selectScene(int scene);
 
-        void showPos(const QPointF &point);	
+        // void showPos(const QPointF &point);
         void setCursor(const QCursor &cursor);
         void selectToolFromMenu(QAction *action);
         // void callAutoSave();
@@ -178,7 +175,8 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         void resetWorkSpaceTransformations();
         void updateBgColor(const QColor color);
         void updatePaintArea();
-        void updateActiveDock(int currentDock);
+        void updateActiveDock(TupDocumentView::DockType currentDock);
+        void setAntialiasing(bool useIt);
 
     signals:
         void requestTriggered(const TupProjectRequest *event);
@@ -215,7 +213,6 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
 
         struct Private;
         Private *const k;
-
 };
 
 #endif

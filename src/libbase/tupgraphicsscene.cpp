@@ -1580,9 +1580,9 @@ void TupGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent * event)
 }
 */
 
-bool TupGraphicsScene::event(QEvent *e)
+bool TupGraphicsScene::event(QEvent *event)
 {
-    return QGraphicsScene::event(e);
+    return QGraphicsScene::event(event);
 }
 
 void TupGraphicsScene::sceneResponse(TupSceneResponse *event)

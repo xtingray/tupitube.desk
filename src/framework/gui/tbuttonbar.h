@@ -67,44 +67,22 @@ class T_GUI_EXPORT TButtonBar : public QToolBar
         void addButton(TViewButton *viewButton);
         void removeButton(TViewButton *viewButton);
         bool isEmpty() const;
-        void disable(TViewButton *v);
-        void enable(TViewButton *v);
+        void disable(TViewButton *viewButton);
+        void enable(TViewButton *viewButton);
 
-        bool isExclusive() const;
-        bool autohide() const;
         bool shouldBeVisible() const;
-        void showSeparator(bool e);
+        // void showSeparator(bool flag);
 
         int count() const;
-        void setEnableButtonBlending(bool enable);
-
-    public slots:
-        void onlyShow(ToolView *tool, bool ensureVisible = false);
-        void setExclusive(bool excl);
-        void setAutoHide(bool autohide);
-        void setShowOnlyIcons();
-        void setShowOnlyTexts();
-        void setShouldBeVisible(bool shouldBeVisible);
-
-    private:
-        QMenu *createMenu();
 
     private slots:
-        void hideOthers(QAbstractButton *source);
-        void doNotHide();
-        void onlySetShouldBeVisible(bool shouldBeVisible);
-
-    protected:
-        virtual void mousePressEvent(QMouseEvent *event);
-        virtual void enterEvent(QEvent *event);
-        virtual void leaveEvent(QEvent *event);
+        void closeOtherPanels(QAbstractButton *source);
 
     private:
         QButtonGroup m_buttons;
         QMap<QWidget *, QAction *> m_actionForWidget;
-        QAction *m_separator;
+        // QAction *m_separator;
         QTimer m_hider;
-        bool m_autoHide;
         bool m_blockHider;
         bool m_shouldBeVisible;
 };

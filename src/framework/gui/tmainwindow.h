@@ -109,13 +109,6 @@ class T_GUI_EXPORT TMainWindow : public QMainWindow
         Qt::DockWidgetArea toDockWidgetArea(Qt::ToolBarArea area);
         Qt::ToolBarArea toToolBarArea(Qt::DockWidgetArea area);
 
-    public slots:
-        void setEnableButtonBlending(bool enable);
-
-    private slots:
-        void relayoutViewButton(bool topLevel);
-        void relayoutToolView();
-
     signals:
         void perspectiveChanged(int wps);
 
@@ -123,9 +116,8 @@ class T_GUI_EXPORT TMainWindow : public QMainWindow
         void addButtonBar(Qt::ToolBarArea area);
 
     protected:
-        virtual void closeEvent(QCloseEvent *e);
-        virtual void showEvent(QShowEvent *e);
-        virtual bool event(QEvent *e);
+        virtual void closeEvent(QCloseEvent *event);
+        virtual void showEvent(QShowEvent *event);
 
     private:
         ToolView *m_forRelayout;

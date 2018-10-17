@@ -57,23 +57,14 @@ class TUPITUBE_EXPORT TupModuleWidgetBase : public QWidget, public TupAbstractPr
     public:
         TupModuleWidgetBase(QWidget *parent, const char *name = 0);
         ~TupModuleWidgetBase();
+
         virtual void addChild(QWidget *child, Qt::Alignment alignment = 0);
-        void setFont(const QFont &);
         QBoxLayout *boxLayout();
-        
-    private:
-        struct Private;
-        Private *const k;
-        
-    protected:
-        virtual bool event(QEvent *e);
-        
+
     public slots:
         bool handleProjectResponse(TupProjectResponse *response);
         
     protected:
-        virtual void enterEvent(QEvent *e);
-        virtual void leaveEvent(QEvent *e);
         virtual void frameResponse(TupFrameResponse *frameRequest);
         virtual void layerResponse(TupLayerResponse *layerRequest);
         virtual void sceneResponse(TupSceneResponse *sceneRequest);
@@ -81,15 +72,14 @@ class TUPITUBE_EXPORT TupModuleWidgetBase : public QWidget, public TupAbstractPr
         virtual void itemResponse(TupItemResponse *event);
         virtual void libraryResponse(TupLibraryResponse *libraryResponse);
         
-    signals:
-        void documentModified(bool);
-        void sendToStatus(const QString &);
-        void toggle();
-        void activate(bool);
-        
+    signals:        
         void requestTriggered(const TupProjectRequest *event);
         void localRequestTriggered(const TupProjectRequest *event);
         void postPage(QWidget *widget);
+
+    private:
+        struct Private;
+        Private *const k;
 };
 
 #endif

@@ -33,31 +33,53 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TSTACKEDMAINWINDOW_H
-#define TSTACKEDMAINWINDOW_H
+#ifndef TSIZEBOX_H
+#define TSIZEBOX_H
 
 #include "tglobal.h"
-#include "tmainwindow.h"
+#include "tapplicationproperties.h"
+#include "tapplication.h"
 
-#include <QStackedWidget>
-#include <QHash>
+#include <QGroupBox>
+// #include <QPushButton>
+#include <QSpinBox>
+#include <QLabel>
+#include <QHBoxLayout>
+#include <QSizePolicy>
 
-class T_GUI_EXPORT TStackedMainWindow : public TMainWindow
+class T_GUI_EXPORT TSizeBox : public QGroupBox
 {
     Q_OBJECT
 
     public:
-        TStackedMainWindow(QWidget *parent = 0);
-        ~TStackedMainWindow();
-        void addWidget(QWidget *widget, int perspective = DefaultPerspective);
-        void removeWidget(QWidget *widget);
-        
+        TSizeBox(const QString &title, const QSize &size, QWidget *parent = 0);
+        ~TSizeBox();
+
+        void setSingleStep(int step);
+        // void setMinimum(int min);
+        // void setMaximum(int max);
+        // void setX(int x);
+        // void setY(int y);
+        int x();
+        int y();
+        void setModifyTogether(bool enable);
+
+    signals:
+        void valuesHaveChanged();
+
     private slots:
-        void setupPerspective(int perspective);
-        
+        void updateXValue();
+        void updateYValue();
+        // void toggleModify();
+
     private:
-        QStackedWidget *m_stack;
-        QHash<int, QWidget *> m_widgets;
+        QSize dimension;
+        QLabel *m_textX;
+        QLabel *m_textY;
+        QSpinBox *m_x;
+        QSpinBox *m_y;
+        // QPushButton *m_separator;
+        // bool m_modifyTogether;
 };
 
 #endif

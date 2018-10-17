@@ -116,6 +116,7 @@ struct TLibavMovieGenerator::Private
     // void closeAudio();
 };
 
+/*
 TLibavMovieGenerator::TLibavMovieGenerator(TMovieGeneratorInterface::Format format, int width, int height, 
                       int fps, double duration) : TMovieGenerator(width, height), k(new Private)
 {
@@ -128,6 +129,7 @@ TLibavMovieGenerator::TLibavMovieGenerator(TMovieGeneratorInterface::Format form
 
     k->exception = beginVideo();
 }
+*/
 
 TLibavMovieGenerator::TLibavMovieGenerator(TMovieGeneratorInterface::Format format, const QSize &size, 
                       int fps, double duration) : TMovieGenerator(size.width(), size.height()), k(new Private)
@@ -144,9 +146,6 @@ TLibavMovieGenerator::TLibavMovieGenerator(TMovieGeneratorInterface::Format form
 
 TLibavMovieGenerator::~TLibavMovieGenerator()
 {
-    if (QFile::exists(k->movieFile)) 
-        QFile::remove(k->movieFile);
-
     delete k;
 }
 
@@ -303,7 +302,7 @@ bool TLibavMovieGenerator::beginVideo()
 }
 
 AVStream * TLibavMovieGenerator::Private::addVideoStream(AVFormatContext *oc, AVCodec **codec, enum AVCodecID codec_id, 
-                                const QString &movieFile, int width, int height, int fps)
+                                 const QString &movieFile, int width, int height, int fps)
 {
     /*
     #ifdef TUP_DEBUG
@@ -756,7 +755,6 @@ bool TLibavMovieGenerator::Private::writeVideoFrame(const QString &movieFile, co
 
         return false;
     }
-
     frameCount++;
 
     return true;
@@ -914,7 +912,7 @@ bool TLibavMovieGenerator::Private::writeAudioFrame()
 }
 */
 
-void TLibavMovieGenerator::handle(const QImage& image)
+void TLibavMovieGenerator::handle(const QImage &image)
 {
     if (!k->video_st) {
         #ifdef TUP_DEBUG
@@ -1051,5 +1049,18 @@ void TLibavMovieGenerator::createMovieFile(const QString &fileName)
     if (QFile::exists(fileName)) 
         QFile::remove(fileName);
 
-    QFile::copy(k->movieFile, fileName);
+    if (QFile::copy(k->movieFile, fileName)) {
+        if (QFile::exists(k->movieFile)) {
+            if (QFile::remove(k->movieFile)) {
+                #ifdef TUP_DEBUG
+                    QString msg = QString("") + "TLibavMovieGenerator::createMovieFile() - Removing temp video file -> " + k->movieFile;
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg;
+                    #else
+                        tWarning() << msg;
+                    #endif
+                #endif
+            }
+        }
+    }
 }

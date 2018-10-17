@@ -350,7 +350,19 @@ QSize TupCameraWidget::sizeHint() const
 
 void TupCameraWidget::doPlay()
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupCameraWidget::doPlay()]";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+
     k->screen->play();
+    bool flag = false;
+    if (k->screen->currentSceneFrames() > 1)
+        flag = true;
+    k->status->enableExportButton(flag);
 }
 
 void TupCameraWidget::doPlayBack()
@@ -484,8 +496,10 @@ void TupCameraWidget::updateFramesTotal(int sceneIndex)
 
 void TupCameraWidget::exportDialog()
 {
-    QDesktopWidget desktop;
+    if (k->screen->isPlaying())
+        k->screen->pause();
 
+    QDesktopWidget desktop;
     TupExportWidget *exportWidget = new TupExportWidget(k->project, this);
     exportWidget->show();
     exportWidget->move((int) (desktop.screenGeometry().width() - exportWidget->width())/2, 

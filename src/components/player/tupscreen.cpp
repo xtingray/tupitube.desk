@@ -144,7 +144,6 @@ TupScreen::~TupScreen()
 }
 
 // Clean a photogram array if the scene has changed
-
 void TupScreen::resetPhotograms(int sceneIndex)
 {
     #ifdef TUP_DEBUG
@@ -165,6 +164,8 @@ void TupScreen::resetPhotograms(int sceneIndex)
     } else {
         initPhotogramsArray();
     }
+
+    resize(k->screenDimension);
 }
 
 void TupScreen::initPhotogramsArray()
@@ -255,9 +256,6 @@ void TupScreen::play()
         #endif
     #endif
 
-    if (k->photograms.count() == 1)
-        return;
-
     if (k->playBackFlag) {
         k->playBackFlag = false;
         if (k->playBackTimer->isActive())
@@ -274,6 +272,10 @@ void TupScreen::play()
             render();
             QApplication::restoreOverrideCursor();
         }
+
+        // No frames to play
+        if (k->photograms.count() == 1)
+            return;
 
         if (k->renderControl.at(k->currentSceneIndex))
             k->timer->start(1000/k->fps);
@@ -323,6 +325,11 @@ void TupScreen::playBack()
     }
 }
 
+bool TupScreen::isPlaying()
+{
+    return k->isPlaying;
+}
+
 void TupScreen::pause()
 {
     #ifdef TUP_DEBUG
@@ -339,6 +346,10 @@ void TupScreen::pause()
     } else {
         if (k->photograms.isEmpty())
             render();
+
+        // No frames to play
+        if (k->photograms.count() == 1)
+            return;
 
         k->isPlaying = true;
         if (k->playFlag)
@@ -662,8 +673,6 @@ void TupScreen::resizeEvent(QResizeEvent *event)
         #endif
     #endif
 
-    QFrame::resizeEvent(event);
-
     if (k->currentSceneIndex > -1) {
         k->currentFramePosition = 0;
         k->photograms = k->animationList.at(k->currentSceneIndex);
@@ -677,6 +686,8 @@ void TupScreen::resizeEvent(QResizeEvent *event)
             #endif
         #endif
     }
+
+    QFrame::resizeEvent(event);
 }
 
 void TupScreen::setLoop(bool loop)
@@ -746,7 +757,6 @@ TupScene *TupScreen::currentScene() const
 }
 
 // Update and paint the first image of the current scene
-
 void TupScreen::updateAnimationArea()
 {
     #ifdef TUP_DEBUG
@@ -764,7 +774,8 @@ void TupScreen::updateAnimationArea()
         update();
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupScreen::updateAnimationArea() - [ Fatal Error ] - Can't access to scene index: " + QString::number(k->currentSceneIndex);
+            QString msg = "TupScreen::updateAnimationArea() - [ Fatal Error ] - Can't access to scene index: "
+                          + QString::number(k->currentSceneIndex);
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else
@@ -775,7 +786,6 @@ void TupScreen::updateAnimationArea()
 }
 
 // Prepare the first photogram of the current scene to be painted
-
 void TupScreen::updateFirstFrame()
 {
     #ifdef TUP_DEBUG
@@ -907,7 +917,7 @@ void TupScreen::playSoundAt(int frame)
 {
     int size = k->soundRecords.count();
 
-    for(int i=0; i<size; i++) {
+    for (int i=0; i<size; i++) {
         QPair<int, QString> soundRecord = k->soundRecords.at(i);
         if (frame == soundRecord.first) {
             if (i < k->soundPlayer.count()) {
@@ -945,6 +955,11 @@ void TupScreen::enableMute(bool flag)
 void TupScreen::stopSounds()
 {
     int size = k->soundRecords.count();
-    for(int i=0; i<size; i++)
+    for (int i=0; i<size; i++)
         k->soundPlayer.at(i)->stop();
+}
+
+int TupScreen::currentSceneFrames()
+{
+    return k->photograms.count();
 }

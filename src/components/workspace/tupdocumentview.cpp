@@ -140,7 +140,8 @@ struct TupDocumentView::Private
     bool cameraMode;
 };
 
-TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNetworked, const QStringList &users) : QMainWindow(parent), k(new Private)
+TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNetworked, const QStringList &users) :
+                                 QMainWindow(parent), k(new Private)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -171,10 +172,17 @@ TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNe
     k->actionGroup = new QActionGroup(this); 
     k->actionGroup->setExclusive(true);
 
-    QFrame *frame = new QFrame(this, Qt::FramelessWindowHint);
-    QGridLayout *layout = new QGridLayout(frame);
+    // QFrame *frame = new QFrame(this, Qt::FramelessWindowHint);
+    QWidget *workspace = new QWidget;
+    QGridLayout *layout = new QGridLayout(workspace);
 
-    k->paintArea = new TupPaintArea(project, frame);
+    k->horizontalRuler = new TupRuler(Qt::Horizontal, this);
+    k->verticalRuler = new TupRuler(Qt::Vertical, this);
+    layout->addWidget(k->horizontalRuler, 0, 1);
+    layout->addWidget(k->verticalRuler, 1, 0);
+
+    k->paintArea = new TupPaintArea(project);
+    layout->addWidget(k->paintArea, 1, 1);
     // k->paintArea->setUseOpenGL(false);
 
     TCONFIG->beginGroup("OnionParameters");
@@ -183,14 +191,7 @@ TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNe
         k->opacityFactor = 0.5;
     k->paintArea->setOnionFactor(k->opacityFactor);
 
-    setCentralWidget(frame);
-
-    layout->addWidget(k->paintArea, 1, 1);
-
-    k->horizontalRuler = new TupRuler(Qt::Horizontal, this);
-    k->verticalRuler = new TupRuler(Qt::Vertical, this);
-    layout->addWidget(k->horizontalRuler, 0, 1);
-    layout->addWidget(k->verticalRuler, 1, 0);
+    setCentralWidget(workspace);
 
     connect(k->paintArea, SIGNAL(scaled(qreal)), this, SLOT(updateZoomVars(qreal)));
     connect(k->paintArea, SIGNAL(rotated(int)), this, SLOT(updateRotationVars(int)));
@@ -198,7 +199,7 @@ TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNe
     connect(k->paintArea, SIGNAL(zoomOut()), this, SLOT(applyZoomOut()));
     connect(k->paintArea, SIGNAL(newPerspective(int)), this, SIGNAL(newPerspective(int)));
 
-    connect(k->paintArea, SIGNAL(cursorPosition(const QPointF &)), this, SLOT(showPos(const QPointF &)));
+    // connect(k->paintArea, SIGNAL(cursorPosition(const QPointF &)), this, SLOT(showPos(const QPointF &)));
     connect(k->paintArea, SIGNAL(cursorPosition(const QPointF &)), k->verticalRuler, SLOT(movePointers(const QPointF&)));
     connect(k->paintArea, SIGNAL(cursorPosition(const QPointF &)), k->horizontalRuler, SLOT(movePointers(const QPointF&)));
     connect(k->paintArea, SIGNAL(changedZero(const QPointF&)), this, SLOT(changeRulerOrigin(const QPointF&)));
@@ -206,20 +207,28 @@ TupDocumentView::TupDocumentView(TupProject *project, QWidget *parent, bool isNe
     connect(k->paintArea, SIGNAL(localRequestTriggered(const TupProjectRequest *)), this, SIGNAL(localRequestTriggered(const TupProjectRequest *)));
 
     setupDrawActions();
-
-    createLateralToolBar(); 
+    createLateralToolBar();
     createToolBar();
-    
-    k->status = new TupPaintAreaStatus(this);
-    setStatusBar(k->status);
-    connect(k->status, SIGNAL(newFramePointer(int)), k->paintArea, SLOT(goToFrame(int)));
-    connect(k->paintArea, SIGNAL(frameChanged(int)), k->status, SLOT(updateFrameIndex(int)));
 
+    k->status = new TupPaintAreaStatus(contourPen(), fillBrush());
+    connect(k->status, SIGNAL(newFramePointer(int)), this, SLOT(goToFrame(int)));
+    connect(k->status, SIGNAL(resetClicked()), this, SLOT(resetWorkSpaceTransformations()));
+    connect(k->status, SIGNAL(safeAreaClicked()), this, SLOT(drawActionSafeArea()));
+    connect(k->status, SIGNAL(gridClicked()), this, SLOT(drawGrid()));
+    connect(k->status, SIGNAL(angleChanged(int)), this, SLOT(setRotationAngle(int)));
+    connect(k->status, SIGNAL(zoomChanged(qreal)), this, SLOT(setZoomFactor(qreal)));
+    connect(k->status, SIGNAL(antialiasChanged(bool)), this, SLOT(setAntialiasing(bool)));
+    connect(k->status, SIGNAL(fullClicked()), this, SLOT(showFullScreen()));
+
+    connect(k->paintArea, SIGNAL(frameChanged(int)), k->status, SLOT(updateFrameIndex(int)));
+    connect(k->paintArea, SIGNAL(cursorPosition(const QPointF &)), k->status, SLOT(showPos(const QPointF &)));
     brushManager()->initBgColor(project->bgColor());
 
     connect(brushManager(), SIGNAL(penChanged(const QPen &)), this, SLOT(updatePen(const QPen &)));
     connect(brushManager(), SIGNAL(brushChanged(const QBrush &)), this, SLOT(updateBrush(const QBrush &)));
     connect(brushManager(), SIGNAL(bgColorChanged(const QColor &)), this, SLOT(updateBgColor(const QColor &)));
+
+    setStatusBar(k->status);
 
     // SQA: Find out why this timer instruction is required?
     QTimer::singleShot(500, this, SLOT(loadPlugins()));
@@ -267,12 +276,18 @@ void TupDocumentView::setAntialiasing(bool useIt)
     k->paintArea->setAntialiasing(useIt);
 }
 
-/*
-void TupDocumentView::setOpenGL(bool useIt)
+void TupDocumentView::goToFrame(int index)
 {
-    k->paintArea->setUseOpenGL(useIt);
+    int framesTotal = currentFramesTotal();
+    if (index <= framesTotal) {
+        k->paintArea->goToFrame(index - 1);
+    } else {
+        index = framesTotal;
+        k->paintArea->goToFrame(index -1);
+    }
+
+    k->status->setFramePointer(index);
 }
-*/
 
 void TupDocumentView::drawGrid()
 {
@@ -283,13 +298,6 @@ void TupDocumentView::drawActionSafeArea()
 {
     k->paintArea->drawActionSafeArea(!k->paintArea->actionSafeAreaFlag());
 }
-
-/*
-QPainter::RenderHints TupDocumentView::renderHints() const
-{
-    return k->paintArea->renderHints();
-}
-*/
 
 void TupDocumentView::updateRotationAngleFromRulers(int angle)
 {
@@ -377,12 +385,14 @@ void TupDocumentView::setZoomPercent(const QString &percent)
     k->status->setZoomPercent(percent);
 }
 
+/*
 void TupDocumentView::showPos(const QPointF &point)
 {
     QPoint dot = point.toPoint();
     QString message =  "X: " +  QString::number(dot.x()) + " Y: " + QString::number(dot.y());
     k->status->updatePosition(message);
 }
+*/
 
 void TupDocumentView::setupDrawActions()
 {
@@ -1460,6 +1470,14 @@ TupPaintAreaCommand *TupDocumentView::createPaintCommand(const TupPaintAreaEvent
 
 void TupDocumentView::updatePaintArea()
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupDocumentView::updatePaintArea()]";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+
     k->paintArea->updatePaintArea(); 
 }
 
@@ -2028,6 +2046,14 @@ void TupDocumentView::cameraInterface()
 
 void TupDocumentView::resizeProjectDimension(const QSize dimension)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupMainWindow::resizeProjectDimension(QSize]";
+    #else
+        T_FUNCINFO << dimension;
+    #endif
+#endif
+
     k->paintArea->updateDimension(dimension);
 
     int width = k->wsDimension.width();
@@ -2337,7 +2363,7 @@ void TupDocumentView::updateBrush(const QBrush &brush)
     emit fillColorChanged(brush.color());
 }
 
-void TupDocumentView::updateActiveDock(int currentDock)
+void TupDocumentView::updateActiveDock(TupDocumentView::DockType currentDock)
 {
     k->currentDock = DockType(currentDock);
 }

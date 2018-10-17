@@ -53,7 +53,8 @@ TupExportInterface::Formats SmilePlugin::availableFormats()
     return TupExportInterface::SMIL;
 }
 
-bool SmilePlugin::exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes, TupExportInterface::Format format, const QSize &size, int fps)
+bool SmilePlugin::exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes, 
+                                 TupExportInterface::Format format, const QSize &size, const QSize &newSize, int fps)
 {
     QFileInfo fileInfo(filePath);
 

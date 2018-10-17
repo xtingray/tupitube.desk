@@ -34,6 +34,10 @@
  ***************************************************************************/
 
 #include "tupexportmodule.h"
+#include "tconfig.h"
+
+#include <QGroupBox>
+#include <QFileDialog>
 
 TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFormat outputFormat, 
                                  QString title, const TupExportWidget *widget) : TupExportWizardPage(title), m_currentExporter(0), 
@@ -66,13 +70,9 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
     TCONFIG->beginGroup("General");
     path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
 
-    ////////////////
-
     QHBoxLayout *prefixLayout = new QHBoxLayout;
     prefixLayout->addWidget(new QLabel(tr("Image Name Prefix: ")));
-
     QHBoxLayout *filePathLayout = new QHBoxLayout;
-
     if (output == TupExportWidget::ImagesArray)
         filePathLayout->addWidget(new QLabel(tr("Directory: ")));
     else // Animation or AnimatedImage
@@ -121,33 +121,26 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
 
     layout->addLayout(filePathLayout);
 
-    /////////////////
-
     QWidget *configure = new QWidget;
     QHBoxLayout *configureLayout = new QHBoxLayout(configure);
     configureLayout->addStretch();
 
-    QSize dimension = m_project->dimension(); 
-    m_size = new TXYSpinBox(tr("Size"));
-
+    dimension = m_project->dimension();
     int maxDimension = dimension.width();
     if (maxDimension < dimension.height())
         maxDimension = dimension.height();
 
-    m_size->setMaximum(maxDimension*2);
-
-    m_size->setX(dimension.width());
-    m_size->setY(dimension.height());
+    m_size = new TSizeBox(tr("Size"), dimension);
 
     QGroupBox *groupBox = new QGroupBox(tr("Configuration"));
     QHBoxLayout *configLayout = new QHBoxLayout(groupBox);
-
     m_fps = new QSpinBox;
     m_fps->setMinimum(0);
     m_fps->setMaximum(100);
     m_fps->setValue(m_project->fps());
 
     configureLayout->addWidget(m_size);
+    configureLayout->addWidget(new QWidget());
 
     if (output == TupExportWidget::ImagesArray) {
         connect(bgTransparency, SIGNAL(toggled(bool)), this, SLOT(enableTransparency(bool)));
@@ -159,7 +152,6 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
     }
 
     configureLayout->addStretch();
-
     layout->addWidget(configure);
     layout->addStretch();
 
@@ -202,15 +194,17 @@ void TupExportModule::setCurrentFormat(int currentFormat, const QString &value)
 
         filename += m_project->projectName();
         filename += extension;
+        m_size->setVisible(false);
     } else { // Images Array
         filename = QDir::homePath();
-
-        if (m_currentFormat == TupExportInterface::JPEG || m_currentFormat == TupExportInterface::SVG) {
-            if (bgTransparency->isEnabled())
-                bgTransparency->setEnabled(false);
+        if (m_currentFormat == TupExportInterface::JPEG) {
+            if (bgTransparency->isVisible())
+                bgTransparency->setVisible(false);
         } else {
-            if (!bgTransparency->isEnabled())
-                bgTransparency->setEnabled(true);
+            if (!bgTransparency->isVisible())
+                bgTransparency->setVisible(true);
+            if (m_currentFormat == TupExportInterface::SVG)
+                m_size->setVisible(false);
         }
     } 
 
@@ -297,7 +291,10 @@ void TupExportModule::exportIt()
     bool isArray = false;
     QString name = "";
 
-    if (m_currentFormat == TupExportInterface::JPEG || m_currentFormat == TupExportInterface::PNG || m_currentFormat == TupExportInterface::SVG) { // Images Array
+    QList<TupExportInterface::Format> imageFormats;
+    imageFormats << TupExportInterface::JPEG << TupExportInterface::PNG << TupExportInterface::SVG;
+
+    if (imageFormats.contains(m_currentFormat)) {
         isArray = true;
         name = m_prefix->text();
         path = m_filePath->text();
@@ -378,7 +375,8 @@ void TupExportModule::exportIt()
         #endif
         return;
     } else {
-        if (m_currentFormat == TupExportInterface::JPEG || m_currentFormat == TupExportInterface::PNG || m_currentFormat == TupExportInterface::SVG) { // Images Array
+        // if (m_currentFormat == TupExportInterface::JPEG || m_currentFormat == TupExportInterface::PNG || m_currentFormat == TupExportInterface::SVG) { // Images Array
+        if (imageFormats.contains(m_currentFormat)) {
             QFileInfo dir(path);
             if (!dir.isReadable() || !dir.isWritable()) {
                 TOsd::self()->display(tr("Error"), tr("Insufficient permissions. Please, choose another directory."), TOsd::Error);
@@ -419,17 +417,35 @@ void TupExportModule::exportIt()
             #endif
         #endif
 
-        if (scenes.count() > 0) { 
-            int width = (int) m_size->x();
-            int height = (int) m_size->y();
+        if (scenes.count() > 0) {
+            int width = dimension.width();
+            int height = dimension.height();
+            int newWidth = (int) m_size->x();
+            int newHeight = (int) m_size->y();
+
+            bool sizeHasChanged = false;
+            if (width != newWidth || height != newHeight) {
+                sizeHasChanged = true;
+                /* libav requirement: resolution must be a multiple of two */
+                if (newWidth%2 != 0)
+                    newWidth++;
+                if (newHeight%2 != 0)
+                    newHeight++;
+            }
+
             /* libav requirement: resolution must be a multiple of two */
             if (width%2 != 0)
                 width++;
             if (height%2 != 0)
                 height++;
 
+            if (!sizeHasChanged) {
+                newWidth = width;
+                newHeight = height;
+            }
+
             QColor color = m_project->bgColor();
-            if (m_currentFormat == TupExportInterface::PNG) {
+            if (m_currentFormat == TupExportInterface::PNG || m_currentFormat == TupExportInterface::SVG) {
                 if (transparency)
                     color.setAlpha(0);
                 else
@@ -437,7 +453,8 @@ void TupExportModule::exportIt()
             }
 
             done = m_currentExporter->exportToFormat(color, filename, scenes, m_currentFormat, 
-                                                     QSize(width, height), m_fps->value(), m_project->library());
+                                      QSize(width, height), QSize(newWidth, newHeight), m_fps->value(),
+                                      m_project->library());
         }
     } else {
         TOsd::self()->display(tr("Error"), tr("Format problem. TupiTube Internal error."), TOsd::Error);

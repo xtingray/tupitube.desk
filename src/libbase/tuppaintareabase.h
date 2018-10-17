@@ -104,8 +104,8 @@ class TUPITUBE_EXPORT TupPaintAreaBase : public QGraphicsView
         virtual void enterEvent(QEvent *event);
         virtual void leaveEvent(QEvent *event);
 
-        virtual void wheelEvent(QWheelEvent *event);
         virtual bool viewportEvent(QEvent *event);
+        virtual void wheelEvent(QWheelEvent *event);
 
     signals:
         void cursorPosition(const QPointF &pos);

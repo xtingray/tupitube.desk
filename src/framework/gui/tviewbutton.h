@@ -61,52 +61,22 @@ class T_GUI_EXPORT TViewButton : public QToolButton
 
         void setArea(Qt::ToolBarArea area);
         Qt::ToolBarArea area() const;
-
-        QSize sizeHint() const;
-        void fade();
-        bool isSensible() const;
-        bool blending() const;
-        void setActivated(bool flag);
-
+        // void setActivated(bool flag);
         ToolView *toolView() const;
         void setup();
-
         void setFlag(bool value);
 
-    public slots:
-        void setSensible(bool s);
-        void setBlending(bool e);
-
-    private:
-        QMenu *createMenu();
-        QStyleOptionToolButton styleOption() const;
-
     protected:
-        virtual void paintEvent(QPaintEvent *e);
-        virtual void mousePressEvent(QMouseEvent *e);
-        virtual void enterEvent(QEvent*);
-        virtual void leaveEvent(QEvent*);
+        virtual void mousePressEvent(QMouseEvent *);
 		
     public slots:
-        void setOnlyText();
-        void setOnlyIcon();
         void toggleView();
-
-    private slots:
-        void animate();
-        void toggleSensibility();
-
-    // signals:
-    //     void helpIsOpen();
 
     private:
         Qt::ToolBarArea m_area;
         class Animator;
-        Animator *m_animator;
         QPalette m_palette;
         ToolView *m_toolView;
-        bool m_isSensible;
-        bool m_blending;
 };
 
 #endif

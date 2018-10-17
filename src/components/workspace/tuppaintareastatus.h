@@ -40,7 +40,6 @@
 #include "tupdocumentview.h"
 #include "tseparator.h"
 #include "tupbrushmanager.h"
-// #include "tupcolorwidget.h"
 #include "tcolorcell.h"
 #include "tupbrushstatus.h"
 #include "tuptoolstatus.h"
@@ -49,7 +48,6 @@
 #include <QPushButton>
 #include <QComboBox>
 #include <QCheckBox>
-#include <QLabel>
 #include <QHBoxLayout>
 #include <QIntValidator>
 #include <QObject>
@@ -61,8 +59,9 @@ class TUPITUBE_EXPORT TupPaintAreaStatus : public QStatusBar
     Q_OBJECT
 
     public:
-        TupPaintAreaStatus(TupDocumentView *parent);
+        TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent = 0);
         ~TupPaintAreaStatus();
+
         void updateTool(const QString &label, const QPixmap &pixmap);
         void setZoomPercent(const QString &percent);
         void setRotationAngle(const QString &angle);
@@ -71,25 +70,34 @@ class TUPITUBE_EXPORT TupPaintAreaStatus : public QStatusBar
         void updateRotationAngle(int angle);
         void enableFullScreenFeature(bool flag);
         void updatePosition(const QString &position);
+        void setFramePointer(int index);
 
     public slots:
+        void selectAntialiasingHint();
         void applyZoom(const QString &text);
         void setPen(const QPen &pen);
         void setBrush(const QBrush  &brush);
         void applyRotation(const QString &text);
+        void showPos(const QPointF &point);
+        void updateFrameIndex(int index);
 
     private slots:
-        void selectAntialiasingHint();
-        // void selectRenderer(int id);
-        void updateFrameIndex(int index);
         void updateFramePointer();
 
     signals:
         void newFramePointer(int index);
+        void resetClicked();
+        void safeAreaClicked();
+        void gridClicked();
+        void angleChanged(int angle);
+        void zoomChanged(qreal factor);
+        void antialiasChanged(bool flag);
+        void fullClicked();
 
     private:
         void updateZoomField(const QString &text);
         void updateRotationField(const QString &angle);
+
         struct Private;
         Private *const k;
 };

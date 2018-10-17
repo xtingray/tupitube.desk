@@ -59,6 +59,7 @@ class TUPITUBE_EXPORT TupCameraStatus : public QFrame
         void setCurrentScene(int index);
         void setFramesTotal(const QString &frames);
         bool isLooping();
+        void enableExportButton(bool flag);
 
     signals:
         void sceneIndexChanged(int index);

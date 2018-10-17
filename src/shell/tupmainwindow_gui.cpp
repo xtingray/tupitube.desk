@@ -53,28 +53,30 @@ void TupMainWindow::createGUI()
     connect(m_colorPalette, SIGNAL(colorSpaceChanged(TColorCell::FillType)), this, SLOT(updateFillTool(TColorCell::FillType)));
 
     colorView = addToolView(m_colorPalette, Qt::LeftDockWidgetArea, Animation, "Color Palette", QKeySequence(tr("Shift+P")));
-    //colorView->setShortcut(QKeySequence(tr("Shift+P")));
+    connect(colorView, SIGNAL(visibilityChanged(bool)), this, SLOT(updateColorPanelStatus(bool)));
+    // colorView->setShortcut(QKeySequence(tr("Shift+P")));
 
     m_actionManager->insert(colorView->toggleViewAction(), "show_palette");
     addToPerspective(colorView->toggleViewAction(), Animation);
 
     connectWidgetToPaintArea(m_colorPalette);
 
-    // Adding the pen parameters widget to the left side of the interface 
-
+    // Adding the pen parameters widget to the left side of the interface
     m_brushWidget = new TupBrushWidget;
     penView = addToolView(m_brushWidget, Qt::LeftDockWidgetArea, Animation, "Pen", QKeySequence(tr("Shift+B")));
+    connect(penView, SIGNAL(visibilityChanged(bool)), this, SLOT(updatePenPanelStatus(bool)));
+
     m_actionManager->insert(penView->toggleViewAction(), "show_pen");
     addToPerspective(penView->toggleViewAction(), Animation);
-
     connectWidgetToPaintArea(m_brushWidget);
 
     // Adding the objects library widget to the left side of the interface
-
     m_libraryWidget = new TupLibraryWidget(this);
     m_libraryWidget->setLibrary(m_projectManager->project()->library());
 
     libraryView = addToolView(m_libraryWidget, Qt::LeftDockWidgetArea, Animation, "Library", QKeySequence(tr("Shift+L")));
+    connect(libraryView, SIGNAL(visibilityChanged(bool)), this, SLOT(updateLibraryPanelStatus(bool)));
+
     m_actionManager->insert(libraryView->toggleViewAction(), "show_library");
     addToPerspective(libraryView->toggleViewAction(), Animation);
 
@@ -104,6 +106,7 @@ void TupMainWindow::createGUI()
 
     m_scenes = new TupScenesWidget;
     scenesView = addToolView(m_scenes, Qt::RightDockWidgetArea, Animation, "Scenes Manager", QKeySequence(tr("Shift+C")));
+    connect(scenesView, SIGNAL(visibilityChanged(bool)), this, SLOT(updateScenesPanelStatus(bool)));
     m_actionManager->insert(scenesView->toggleViewAction(), "show_scenes");
     addToPerspective(scenesView->toggleViewAction(), Animation);
 
@@ -381,7 +384,7 @@ void TupMainWindow::setupHelpActions()
     new TAction(QPixmap(THEME_DIR + "icons/tip.png"), tr("Tip Of The Day"), QKeySequence(tr("Ctrl+T")),
                 this, SLOT(showTipDialog()), m_actionManager, "tip_of_day");
     new TAction(QPixmap(THEME_DIR + "icons/about.png"), tr("About TupiTube Desk"), QKeySequence(tr("Ctrl+K")), 
-                this, SLOT(aboutTupi()), m_actionManager, "about_tupitube");
+                this, SLOT(aboutTupiTube()), m_actionManager, "about_tupitube");
 }
 
 void TupMainWindow::setupToolBar()
@@ -399,7 +402,6 @@ void TupMainWindow::setupToolBar()
     mainToolBar->addAction(m_actionManager->find("save_project"));
     mainToolBar->addAction(m_actionManager->find("save_project_as"));
     mainToolBar->addAction(m_actionManager->find("close_project"));
-
 
     TCONFIG->beginGroup("General");
     bool showAds = TCONFIG->value("ShowAds", true).toBool();
@@ -426,12 +428,12 @@ void TupMainWindow::updateOpenRecentMenu(QMenu *menu, QStringList recents)
     int i = 0;
     QAction *action[5];
     foreach (QString recent, recents) {
-             m_recentProjects << recent;
-             action[i] = new QAction(QPixmap(THEME_DIR + "icons/recent_files.png"), recent, this); 
-             action[i]->setIconVisibleInMenu(true);
-             menu->addAction(action[i]);
-             connect(action[i], SIGNAL(triggered()), this, SLOT(openRecentProject()));
-             i++;
+        m_recentProjects << recent;
+        action[i] = new QAction(QPixmap(THEME_DIR + "icons/recent_files.png"), recent, this); 
+        action[i]->setIconVisibleInMenu(true);
+        menu->addAction(action[i]);
+        connect(action[i], SIGNAL(triggered()), this, SLOT(openRecentProject()));
+        i++;
     }
 
     if (!m_recentProjectsMenu->isEnabled())
@@ -440,13 +442,21 @@ void TupMainWindow::updateOpenRecentMenu(QMenu *menu, QStringList recents)
 
 void TupMainWindow::changePerspective(QAction *action)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupMainWindow::changePerspective(QAction)]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     int perspective = action->data().toInt();
 
     // Animation or Player perspective
     if (perspective == Animation || perspective == Player) {
         setCurrentTab(perspective - 1);
     } else if (perspective == News) { // News perspective
-               setCurrentTab(2);
+        setCurrentTab(2);
     } 
 
     action->setChecked(true);
@@ -454,12 +464,26 @@ void TupMainWindow::changePerspective(QAction *action)
 
 void TupMainWindow::changePerspective(int index)
 {
-    if (index == 4) {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupMainWindow::changePerspective(int)]";
+        #else
+            T_FUNCINFO << index;
+            tWarning() << "Updating QMainWindow interface...";
+        #endif
+    #endif
+
+    if (index == 4) { // Player
         setCurrentTab(1);
-        cameraWidget->doPlay();
+        // QTimer::singleShot(0, this, SLOT(doPlay()));
     } else {
         setCurrentTab(index);
     }
+}
+
+void TupMainWindow::doPlay()
+{
+    cameraWidget->doPlay();
 }
 
 void TupMainWindow::setUndoRedoActions()
@@ -500,27 +524,53 @@ void TupMainWindow::hideTopPanels()
 
 void TupMainWindow::checkTimeLineVisibility(bool visible)
 {
-    if (visible) {
-        if (timeView->isExpanded())
-            timeView->expandDock(false);
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupMainWindow::checkTimeLineVisibility(bool)]";
+        #else
+            T_FUNCINFO << visible;
+        #endif
+    #endif
 
-        emit activeDockChanged(1);
+    if (visible) {
+        if (timeView->isExpanded()) {
+            timeView->blockSignals(true);
+            timeView->expandDock(false);
+            timeView->blockSignals(false);
+        }
+
+        if (scenesView->isExpanded())
+            scenesView->expandDock(false);
+
+        currentDock = TupDocumentView::ExposureSheet;
+        emit activeDockChanged(TupDocumentView::ExposureSheet);
     } else {
         if (!timeView->isExpanded())
-            emit activeDockChanged(0);
+            emit activeDockChanged(TupDocumentView::None);
     }
 }
 
 void TupMainWindow::checkExposureVisibility(bool visible)
 {
-    if (visible) {
-        if (exposureView->isExpanded())
-            exposureView->expandDock(false);
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupMainWindow::checkExposureVisibility(bool)]";
+        #else
+            T_FUNCINFO << visible;
+        #endif
+    #endif
 
-        emit activeDockChanged(2);
+    if (visible) {
+        if (exposureView->isExpanded()) {
+            exposureView->blockSignals(true);
+            exposureView->expandDock(false);
+            exposureView->blockSignals(false);
+        }
+        currentDock = TupDocumentView::TimeLine;
+        emit activeDockChanged(TupDocumentView::TimeLine);
     } else {
         if (!exposureView->isExpanded())
-            emit activeDockChanged(0);
+            emit activeDockChanged(TupDocumentView::None);
     }
 }
 
@@ -530,4 +580,43 @@ void TupMainWindow::updateFillTool(TColorCell::FillType type)
 
     if (animationTab)
         animationTab->setFillTool(type);
+}
+
+void TupMainWindow::updateColorPanelStatus(bool flag)
+{
+    if (flag) {
+        if (penView->isExpanded())
+            penView->expandDock(false);
+        if (libraryView->isExpanded())
+            libraryView->expandDock(false);
+    }
+}
+
+void TupMainWindow::updatePenPanelStatus(bool flag)
+{
+    if (flag) {
+        if (colorView->isExpanded())
+            colorView->expandDock(false);
+        if (libraryView->isExpanded())
+            libraryView->expandDock(false);
+    }
+}
+
+void TupMainWindow::updateLibraryPanelStatus(bool flag)
+{
+    if (flag) {
+        if (colorView->isExpanded())
+            colorView->expandDock(false);
+
+        if (penView->isExpanded())
+            penView->expandDock(false);
+    }
+}
+
+void TupMainWindow::updateScenesPanelStatus(bool flag)
+{
+    if (flag) {
+        if (exposureView->isExpanded())
+            exposureView->expandDock(false);
+    }
 }

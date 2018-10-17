@@ -57,9 +57,6 @@ TupTimeLineHeader::TupTimeLineHeader(QWidget * parent) : QHeaderView(Qt::Vertica
     setSectionsClickable(true);
     setSectionsMovable(true);
     setFixedWidth(115);
-    // SQA: This code will be disabled until the "Lock layer" feature is implemented
-    // setFixedWidth(140);
-    // k->lockIcon = QPixmap(THEME_DIR + "icons/padlock.png");
     k->viewIconOn = QPixmap(THEME_DIR + "icons/show_layer.png");
     k->viewIconOff = QPixmap(THEME_DIR + "icons/hide_layer.png");
 
@@ -111,13 +108,6 @@ void TupTimeLineHeader::paintSection(QPainter * painter, const QRect & rect, int
     painter->drawText(10, y, k->layers[index].title);
 
     y = rect.y();
-
-    // SQA: This code will be disabled until the "Lock layer" feature is implemented
-    /* 
-    QRectF lockRect = QRectF(0, 0, 11, 12);
-    int lockY = (rect.height() - lockRect.height())/2;
-    painter->drawPixmap(QPointF(rect.x() + 90, lockY + y), k->lockIcon, lockRect);
-    */
 
     QRectF viewRect = QRectF(0, 0, 13, 7); 
     int viewY = (rect.height() - viewRect.height())/2;
@@ -261,4 +251,3 @@ bool TupTimeLineHeader::sectionIsMoving()
 {
     return k->sectionOnMotion;
 }
-

@@ -35,13 +35,15 @@
 
 #include "toolview.h"
 
-ToolView::ToolView(const QString &title, const QIcon &icon, const QString &code, QWidget * parent)
-          : QDockWidget(title, parent), m_size(-1), m_perspective(0)
+ToolView::ToolView(const QString &title, const QIcon &icon, const QString &code, QWidget *parent) : 
+                   QDockWidget(title, parent), currentPerspective(0)
 {
-    setFeatures(AllDockWidgetFeatures);
+    setFeatures(QDockWidget::NoDockWidgetFeatures);
     setWindowIcon(icon);
     setup(title);
     setObjectName("ToolView-" + code);
+
+    name = title;
     expanded = false;
 }
 
@@ -51,26 +53,32 @@ ToolView::~ToolView()
 
 void ToolView::setup(const QString &label)
 {
-    m_button = new TViewButton(this);
-    m_button->setToolTip(label);
-
-    connect(toggleViewAction(), SIGNAL(toggled(bool)), this, SLOT(saveSize(bool)));
+    currentButton = new TViewButton(this);
+    currentButton->setToolTip(label);
 }
 
 TViewButton *ToolView::button() const
 {
-    return m_button;
+    return currentButton;
 }
 
 void ToolView::expandDock(bool flag)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[ToolView::expandDock()]";
+        #else
+            T_FUNCINFO << flag;
+        #endif
+    #endif
+
     expanded = flag;
     if (flag)
         show();
     else 
         close();
 
-    m_button->setActivated(flag);
+    // currentButton->setActivated(flag);
 }
 
 bool ToolView::isExpanded()
@@ -80,89 +88,43 @@ bool ToolView::isExpanded()
 
 void ToolView::setExpandingFlag() 
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[ToolView::setExpandingFlag()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     if (expanded)
         expanded = false;
     else 
         expanded = true;
-
-    // emit dockExpanded(expanded); 
-}
-
-void ToolView::setSizeHint() 
-{
-    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-}
-
-void ToolView::saveSize(bool checked)
-{
-    Q_UNUSED(checked);
-
-    if (m_button->area() == Qt::LeftToolBarArea || m_button->area() == Qt::RightToolBarArea)
-        m_size = width();
-    else
-        m_size = height();
-}
-
-QSize ToolView::sizeHint() const
-{
-    QSize size = QDockWidget::sizeHint();
-
-    if (m_size < 0) 
-        return size;
-
-    if (m_button->area() == Qt::LeftToolBarArea || m_button->area()  == Qt::RightToolBarArea)
-        size.setWidth(m_size);
-    else
-        size.setHeight(m_size);
-
-    return size;
 }
 
 void ToolView::setDescription(const QString &description)
 {
-    m_button->setStatusTip(description);
+    currentButton->setStatusTip(description);
 }
 
 void ToolView::setShortcut(QKeySequence shortcut)
 {
-    m_button->setShortcut(shortcut);
+    currentButton->setShortcut(shortcut);
 }
 
 void ToolView::setPerspective(int wsp)
 {
-    m_perspective = wsp;
+    currentPerspective = wsp;
 }
 
 int ToolView::perspective() const
 {
-    return m_perspective;
-}
-
-int ToolView::fixedSize() const
-{
-    return m_size;
-}
-
-void ToolView::setFixedSize(int s)
-{
-    m_size = s;
-}
-
-void ToolView::showEvent(QShowEvent *event)
-{
-    if (TMainWindow *mw = dynamic_cast<TMainWindow *>(parentWidget())) {
-        if (!(mw->currentPerspective() & m_perspective)) {
-            event->ignore(); // make sure!
-            return;
-        }
-    }
-
-    QDockWidget::showEvent(event);
+    return currentPerspective;
 }
 
 void ToolView::enableButton(bool flag)
 {
-    m_button->setEnabled(flag);
+    currentButton->setEnabled(flag);
 }
 
 QString ToolView::getObjectID() 
@@ -170,10 +132,14 @@ QString ToolView::getObjectID()
     return objectName();
 }
 
+/*
 bool ToolView::isChecked()
 {
-    if (m_button->isChecked())
-        return true;
+    return currentButton->isChecked();
+}
+*/
 
-    return false;
+QString ToolView::title() const
+{
+    return name;
 }

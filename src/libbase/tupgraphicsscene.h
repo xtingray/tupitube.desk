@@ -161,7 +161,7 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         virtual void dropEvent(QGraphicsSceneDragDropEvent * event);
         */
         
-        virtual bool event(QEvent *e);
+        virtual bool event(QEvent *event);
 
     private:
         struct Private;

@@ -75,6 +75,8 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void resetPhotograms(int sceneIndex);
         void updateAnimationArea();
         void loadSoundRecords();
+        int currentSceneFrames();
+        bool isPlaying();
 
     public slots:
         void render();

@@ -52,7 +52,7 @@ struct TupPaintArea::Private
     bool canvasEnabled;
 };
 
-TupPaintArea::TupPaintArea(TupProject *project, QWidget * parent) : TupPaintAreaBase(parent, project->dimension(), project->library()), k(new Private)
+TupPaintArea::TupPaintArea(TupProject *project, QWidget *parent) : TupPaintAreaBase(parent, project->dimension(), project->library()), k(new Private)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -344,6 +344,8 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
                   if (response->action() == TupProjectRequest::Select) {
                       if (guiScene->currentFrameIndex() != response->frameIndex())
                           emit frameChanged(response->frameIndex());
+                  } else {
+                      emit frameChanged(response->frameIndex());
                   }
                   guiScene->setCurrentFrame(response->layerIndex(), response->frameIndex());
 
@@ -727,12 +729,11 @@ void TupPaintArea::deleteItems()
 
     if (!selected.empty()) {
         foreach (QGraphicsItem *item, selected) {
-                 if (qgraphicsitem_cast<TControlNode *> (item))
-                     selected.removeOne(item);
+             if (qgraphicsitem_cast<TControlNode *> (item))
+                 selected.removeOne(item);
         }
 
         TupGraphicsScene* currentScene = graphicsScene();
-
         if (currentScene) {
             int counter = 0;
             int total = selected.count();
@@ -855,8 +856,8 @@ void TupPaintArea::copyItems()
 
     if (!selected.isEmpty()) {
         foreach (QGraphicsItem *item, selected) {
-                 if (qgraphicsitem_cast<TControlNode *> (item))
-                     selected.removeOne(item);
+             if (qgraphicsitem_cast<TControlNode *> (item))
+                 selected.removeOne(item);
         }
 
         TupGraphicsScene* currentScene = graphicsScene();
@@ -1104,7 +1105,7 @@ void TupPaintArea::addSelectedItemsToLibrary()
 
     TupLibraryDialog dialog(k->project->library());
     foreach (QGraphicsItem *item, selected)
-             dialog.addItem(item);
+        dialog.addItem(item);
 
     if (dialog.exec() == QDialog::Accepted) {
         foreach (QGraphicsItem *item, selected) {
@@ -1583,6 +1584,14 @@ int TupPaintArea::currentFrameIndex()
 
 void TupPaintArea::resetWorkSpaceCenter(const QSize projectSize)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupPaintArea::resetWorkSpaceCenter()]";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+
     int centerX = projectSize.width()/2;
     int centerY = projectSize.height()/2;
 

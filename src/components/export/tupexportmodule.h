@@ -41,7 +41,7 @@
 #include "tupexportinterface.h"
 #include "tupexportwizard.h"
 #include "tupproject.h"
-#include "txyspinbox.h"
+#include "tsizebox.h"
 
 #include <QLineEdit>
 #include <QSpinBox>
@@ -90,14 +90,17 @@ class TUPITUBE_EXPORT TupExportModule : public TupExportWizardPage
         TupProject *m_project;
         QLineEdit *m_filePath;
         QLineEdit *m_prefix;
-        QSpinBox *m_fps;
-        TXYSpinBox *m_size;
+
         QString filename;
         QString path;
         QString extension;
         QCheckBox *bgTransparency;
         bool transparency;
-        bool browserWasOpened; 
+        bool browserWasOpened;
+        QSize dimension;
+
+        TSizeBox *m_size;
+        QSpinBox *m_fps;
 };
 
 #endif

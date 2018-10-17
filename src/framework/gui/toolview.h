@@ -57,38 +57,26 @@ class T_GUI_EXPORT ToolView : public QDockWidget
         ToolView(const QString &title, const QIcon &icon = QIcon(), const QString &code = QString(), QWidget * parent = 0);
         virtual ~ToolView();
 
+        QString title() const;
         void setDescription(const QString &description);
         TViewButton *button() const;
         void expandDock(bool flag);
         bool isExpanded();
         void setExpandingFlag();
-        void setSizeHint();
-        QSize sizeHint() const;
         void setPerspective(int wsp);
         int perspective() const;
-        void setFixedSize(int s);
-        int fixedSize() const;
         void enableButton(bool flag);
         QString getObjectID();
-        bool isChecked();
+        // bool isChecked();
         void setShortcut(QKeySequence shortcut);
-
-    // signals:
-    //     void dockExpanded(bool expanded);
-
-    public slots:
-        void saveSize(bool checked);
 
     private:
         void setup(const QString &label);
 
-    protected:
-        virtual void showEvent(QShowEvent *event);
-
     private:
-        TViewButton *m_button;
-        int m_size;
-        int m_perspective;
+        TViewButton *currentButton;
+        QString name;
+        int currentPerspective;
         bool expanded;
 };
 
