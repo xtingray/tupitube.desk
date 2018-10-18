@@ -83,6 +83,10 @@ class TUPITUBE_PLUGIN NodeManager : public QObject
 
         void resizeNodes(qreal factor);
 
+    signals:
+        void rotationUpdated(int angle);
+        void scaleUpdated(float x, float y);
+
     private:
         struct Private;
         Private *const k;

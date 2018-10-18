@@ -60,14 +60,23 @@ class TUPITUBE_PLUGIN Settings : public QWidget
 
         Settings(QWidget *parent = 0);
         ~Settings();
+
+        void enableFormControls(bool flag);
         void setPos(int x, int y);
-        void enablePositionControls(bool flag);
+        // void setRotationAngle(int angle);
+        // void setScaleFactor(double factor);
 
      signals:
         void callFlip(Settings::Flip flip);
         void callOrderAction(Settings::Order action);
         void callGroupAction(Settings::Group action);
-        void updateItemPosition(int x, int y);
+        void positionUpdated(int x, int y);
+        void rotationUpdated(int angle);
+        void scaleUpdated(float xFactor, float yFactor);
+
+     public slots:
+        void updateRotationAngle(int angle);
+        void updateScaleFactor(float x, float y);
 
      private slots:
         void vFlip();
@@ -80,8 +89,12 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         void openTipPanel();
         void notifyXMovement(int x);
         void notifyYMovement(int y);
+        void notifyRotation(int angle);
+        void notifyXScale(double factor);
+        void notifyYScale(double factor);
         void groupItems();
         void ungroupItems();
+        void enableProportion(int flag);
 
     private:
         struct Private;

@@ -115,7 +115,7 @@ void SelectionTool::initItems(TupGraphicsScene *scene)
     foreach (QGraphicsView *view, scene->views())
              view->setDragMode(QGraphicsView::RubberBandDrag);
 
-    panel->enablePositionControls(false);
+    panel->enableFormControls(false);
 }
 
 void SelectionTool::removeTarget()
@@ -196,6 +196,8 @@ void SelectionTool::press(const TupInputDeviceInformation *input, TupBrushManage
             
             if (!found) {
                 NodeManager *manager = new NodeManager(item, scene, k->nodeZValue);
+                connect(manager, SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
+                connect(manager, SIGNAL(scaleUpdated(float, float)), panel, SLOT(updateScaleFactor(float, float)));
                 manager->show();
                 manager->resizeNodes(k->realFactor);
                 k->nodeManagers << manager;
@@ -228,14 +230,19 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
     k->selectedObjects = scene->selectedItems();
 
     if (k->selectedObjects.count() > 0) {
+        panel->enableFormControls(true);
         k->activeSelection = true;
         foreach (NodeManager *manager, k->nodeManagers) {
             QGraphicsItem *item = manager->parentItem();
             int parentIndex = k->selectedObjects.indexOf(item); 
-            if (parentIndex != -1) // Object is IN the list
+            if (parentIndex != -1) { // Object is IN the list
                 k->selectedObjects.removeAt(parentIndex); // Remove node's item from selected objects list 
-            else // Object is NOT IN the selected objects list
-                delete k->nodeManagers.takeAt(k->nodeManagers.indexOf(manager)); // Removing node manager from nodes list 
+            } else { // Object is NOT IN the selected objects list
+                int index = k->nodeManagers.indexOf(manager);
+                disconnect(k->nodeManagers.at(index), SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
+                disconnect(k->nodeManagers.at(index), SIGNAL(scaleUpdated(float, float)), panel, SLOT(updateScaleFactor(float, float)));
+                delete k->nodeManagers.takeAt(index); // Removing node manager from nodes list
+            }
         }
 
         foreach (QGraphicsItem *item, k->selectedObjects) {
@@ -252,6 +259,8 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
 
                 if (!found) {
                     NodeManager *manager = new NodeManager(item, scene, k->nodeZValue);
+                    connect(manager, SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
+                    connect(manager, SIGNAL(scaleUpdated(float, float)), panel, SLOT(updateScaleFactor(float, float)));
                     manager->show();
                     manager->resizeNodes(k->realFactor);
                     k->nodeManagers << manager;
@@ -259,20 +268,20 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
             }
         }
 
-        // TupFrame *frame = currentFrame();
-        foreach (NodeManager *node, k->nodeManagers) {
-            if (node->isModified())
-                requestTransformation(node->parentItem(), k->frame);
+        foreach (NodeManager *manager, k->nodeManagers) {
+            if (manager->isModified())
+                requestTransformation(manager->parentItem(), k->frame);
         }
         updateItemPosition();
+        updateItemRotation();
     } else {
-        panel->enablePositionControls(false);
+        panel->enableFormControls(false);
         if (k->targetIsIncluded)
             k->targetIsIncluded = false;
 
-        foreach (NodeManager *nodeManager, k->nodeManagers) {
-            nodeManager->parentItem()->setSelected(false);
-            k->nodeManagers.removeAll(nodeManager);
+        foreach (NodeManager *manager, k->nodeManagers) {
+            manager->parentItem()->setSelected(false);
+            k->nodeManagers.removeAll(manager);
         }
 
         scene->drawCurrentPhotogram();
@@ -376,7 +385,9 @@ QWidget *SelectionTool::configurator()
         connect(panel, SIGNAL(callFlip(Settings::Flip)), this, SLOT(applyFlip(Settings::Flip)));
         connect(panel, SIGNAL(callOrderAction(Settings::Order)), this, SLOT(applyOrderAction(Settings::Order)));
         connect(panel, SIGNAL(callGroupAction(Settings::Group)), this, SLOT(applyGroupAction(Settings::Group)));
-        connect(panel, SIGNAL(updateItemPosition(int, int)), this, SLOT(updateItemPosition(int, int)));
+        connect(panel, SIGNAL(positionUpdated(int, int)), this, SLOT(updateItemPosition(int, int)));
+        connect(panel, SIGNAL(rotationUpdated(int)), this, SLOT(updateItemRotation(int)));
+        connect(panel, SIGNAL(scaleUpdated(float, float)), this, SLOT(updateItemScale(float, float)));
     }
 
     return panel;
@@ -479,9 +490,11 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
 
             k->selectedObjects << item;
             item->setSelected(true);
-            NodeManager *node = new NodeManager(item, k->scene, k->nodeZValue);
-            node->resizeNodes(k->realFactor);
-            k->nodeManagers << node;
+            NodeManager *manager = new NodeManager(item, k->scene, k->nodeZValue);
+            connect(manager, SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
+            connect(manager, SIGNAL(scaleUpdated(float, float)), panel, SLOT(updateScaleFactor(float, float)));
+            manager->resizeNodes(k->realFactor);
+            k->nodeManagers << manager;
 
             syncNodes();
         }
@@ -504,9 +517,11 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
                 if (graphic) {
                     k->selectedObjects << graphic;
                     graphic->setSelected(true);
-                    NodeManager *node = new NodeManager(graphic, k->scene, k->nodeZValue);
-                    node->resizeNodes(k->realFactor);
-                    k->nodeManagers << node;
+                    NodeManager *manager = new NodeManager(graphic, k->scene, k->nodeZValue);
+                    connect(manager, SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
+                    connect(manager, SIGNAL(scaleUpdated(float, float)), panel, SLOT(updateScaleFactor(float, float)));
+                    manager->resizeNodes(k->realFactor);
+                    k->nodeManagers << manager;
                 }
             }
 
@@ -802,6 +817,14 @@ void SelectionTool::sceneResponse(const TupSceneResponse *event)
 
 void SelectionTool::updateItemPosition() 
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[SelectionTool::updateItemPosition()]";
+    #else
+        T_FUNCINFOX("tools");
+    #endif
+#endif
+
     if (k->nodeManagers.count() == 1) {
         NodeManager *manager = k->nodeManagers.first();
         QGraphicsItem *item = manager->parentItem();
@@ -825,7 +848,7 @@ void SelectionTool::updateItemPosition()
                 int leftY = left.y();
                 if (leftX < minX)
                     minX = leftX;
-                if (leftY < minY)
+                 if (leftY < minY)
                     minY = leftY;
                 QPoint right = item->mapToScene(item->boundingRect().bottomRight()).toPoint();  
                 int rightX = right.x();
@@ -871,8 +894,39 @@ void SelectionTool::updateItemPosition()
     }
 }
 
+void SelectionTool::updateItemRotation()
+{
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[SelectionTool::updateItemRotation()]";
+    #else
+        T_FUNCINFOX("tools");
+    #endif
+#endif
+
+    if (k->nodeManagers.count() > 0) {
+        NodeManager *manager = k->nodeManagers.first();
+        QGraphicsItem *item = manager->parentItem();
+        qreal angle = item->data(TupGraphicObject::Rotate).toReal();
+        panel->updateRotationAngle(angle);
+    }
+}
+
+void SelectionTool::updateItemScale()
+{
+
+}
+
 void SelectionTool::updateItemPosition(int x, int y) 
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[SelectionTool::updateItemPosition(int, int)]";
+    #else
+        T_FUNCINFOX("tools");
+    #endif
+#endif
+
     if (k->nodeManagers.count() == 1) {
         NodeManager *manager = k->nodeManagers.first();
         QGraphicsItem *item = manager->parentItem();
@@ -892,8 +946,68 @@ void SelectionTool::updateItemPosition(int x, int y)
     }
 }
 
+void SelectionTool::updateItemRotation(int angle)
+{
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[SelectionTool::updateItemRotation(int)]";
+    #else
+        T_FUNCINFOX("tools");
+    #endif
+#endif
+
+    if (k->nodeManagers.count() == 1) {
+        NodeManager *manager = k->nodeManagers.first();
+        manager->rotate(angle);
+        if (manager->isModified())
+            requestTransformation(manager->parentItem(), k->frame);
+    } else {
+        if (k->nodeManagers.count() > 1) {
+            foreach (NodeManager *manager, k->nodeManagers) {
+                manager->rotate(angle);
+                if (manager->isModified())
+                    requestTransformation(manager->parentItem(), k->frame);
+            }
+        }
+    }
+}
+
+void SelectionTool::updateItemScale(float xFactor, float yFactor)
+{
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[SelectionTool::updateItemScale(float, float)]";
+    #else
+        T_FUNCINFOX("tools");
+    #endif
+#endif
+
+    if (k->nodeManagers.count() == 1) {
+        NodeManager *manager = k->nodeManagers.first();
+        manager->scale(xFactor, yFactor);
+        if (manager->isModified())
+            requestTransformation(manager->parentItem(), k->frame);
+    } else {
+        if (k->nodeManagers.count() > 1) {
+            foreach (NodeManager *manager, k->nodeManagers) {
+                manager->scale(xFactor, yFactor);
+                if (manager->isModified())
+                    requestTransformation(manager->parentItem(), k->frame);
+            }
+        }
+    }
+}
+
 void SelectionTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[SelectionTool::requestTransformation(QGraphicsItem *, TupFrame *)]";
+    #else
+        T_FUNCINFOX("tools");
+    #endif
+#endif
+
     QDomDocument doc;
     doc.appendChild(TupSerializer::properties(item, doc));
     TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);

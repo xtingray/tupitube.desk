@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tupserializer.h"
+#include "tupgraphicobject.h"
 #include "tupsvg2qt.h"
 
 TupSerializer::TupSerializer()
@@ -60,6 +61,7 @@ QDomElement TupSerializer::properties(const QGraphicsItem *item, QDomDocument &d
     strMatrix += QString::number(a) + "," + QString::number(b) + "," + QString::number(c) + "," + QString::number(d) + "," + QString::number(e) + "," + QString::number(f) + ")" ; 
     
     properties.setAttribute("transform", strMatrix);
+    properties.setAttribute("rotation", item->data(TupGraphicObject::Rotate).toInt());
     properties.setAttribute("pos", "(" + QString::number(item->pos().x()) + "," + QString::number(item->pos().y()) + ")");
     properties.setAttribute("enabled", item->isEnabled());
     properties.setAttribute("flags", item->flags());
@@ -80,6 +82,7 @@ void TupSerializer::loadProperties(QGraphicsItem *item, const QXmlAttributes &at
     item->setPos(pos);
     item->setEnabled(atts.value("pos") != "0"); // default true
     item->setFlags(QGraphicsItem::GraphicsItemFlags(atts.value("flags").toInt()));
+    item->setData(TupGraphicObject::Rotate, atts.value("rotation").toInt());
 }
 
 void TupSerializer::loadProperties(QGraphicsItem *item, const QDomElement &element)
@@ -96,6 +99,7 @@ void TupSerializer::loadProperties(QGraphicsItem *item, const QDomElement &eleme
         
         item->setEnabled(element.attribute("pos") != "0");
         item->setFlags(QGraphicsItem::GraphicsItemFlags(element.attribute("flags").toInt()));
+        item->setData(TupGraphicObject::Rotate, element.attribute("rotation").toInt());
     }
 }
 
@@ -295,15 +299,15 @@ void TupSerializer::loadPen(QPen &pen, const QXmlAttributes &atts)
     pen.setColor(color);
 }
 
-void TupSerializer::loadPen(QPen &pen, const QDomElement &element)
+void TupSerializer::loadPen(QPen &pen, const QDomElement &e)
 {
-    pen.setCapStyle(Qt::PenCapStyle(element.attribute("capStyle").toInt()));
-    pen.setStyle(Qt::PenStyle(element.attribute("style").toInt()));
-    pen.setJoinStyle(Qt::PenJoinStyle(element.attribute("joinStyle").toInt()));
-    pen.setWidthF(element.attribute("width").toDouble());
-    pen.setMiterLimit(element.attribute("miterLimit").toInt());
+    pen.setCapStyle(Qt::PenCapStyle(e.attribute("capStyle").toInt()));
+    pen.setStyle(Qt::PenStyle(e.attribute("style").toInt()));
+    pen.setJoinStyle(Qt::PenJoinStyle(e.attribute("joinStyle").toInt()));
+    pen.setWidthF(e.attribute("width").toDouble());
+    pen.setMiterLimit(e.attribute("miterLimit").toInt());
 
-    QDomNode node = element.firstChild();
+    QDomNode node = e.firstChild();
     QDomElement brushElement = node.toElement();
     QBrush brush; 
     loadBrush(brush, brushElement);

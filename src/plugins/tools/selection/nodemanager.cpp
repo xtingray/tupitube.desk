@@ -44,7 +44,7 @@ struct NodeManager::Private
 
     QTransform origTransform;
     QPointF origPos;
-    QPointF itemCenter;
+    // QPointF itemCenter;
 
     bool isPressed;
     bool proportional;
@@ -65,7 +65,7 @@ NodeManager::NodeManager(QGraphicsItem *parent, QGraphicsScene *scene, int zValu
 
     k->parent = parent;
     k->scene = scene;
-    k->itemCenter = QPointF(0, 0);
+    // k->itemCenter = QPointF(0, 0);
     k->isPressed = false;
 
     k->rotation = k->parent->data(TupGraphicObject::Rotate).toReal();
@@ -127,41 +127,41 @@ void NodeManager::syncNodes(const QRectF &rect)
     
     QHash<Node::TypeNode, Node *>::iterator it = k->nodes.begin();
     while (it != k->nodes.end()) {
-           if ((*it)) {
-               switch (it.key()) {
-                       case Node::TopLeft:
-                       {
-                            if ((*it)->scenePos() != rect.topLeft())
-                                (*it)->setPos(rect.topLeft());
-                            break;
-                       }
-                       case Node::TopRight:
-                       {
-                            if ((*it)->scenePos() != rect.topRight())
-                                (*it)->setPos(rect.topRight());
-                            break;
-                       }
-                       case Node::BottomRight:
-                       {
-                            if ((*it)->scenePos() != rect.bottomRight())
-                                (*it)->setPos(rect.bottomRight());
-                            break;
-                       }
-                       case Node::BottomLeft:
-                       {
-                            if ((*it)->scenePos() != rect.bottomLeft())
-                                (*it)->setPos(rect.bottomLeft());
-                            break;
-                       }
-                       case Node::Center:
-                       {
-                            if ((*it)->scenePos() != rect.center())
-                                (*it)->setPos(rect.center());
-                            break;
-                       }
-               }
-           }
-           ++it;
+        if ((*it)) {
+            switch (it.key()) {
+                case Node::TopLeft:
+                {
+                    if ((*it)->scenePos() != rect.topLeft())
+                        (*it)->setPos(rect.topLeft());
+                    break;
+                }
+                case Node::TopRight:
+                {
+                    if ((*it)->scenePos() != rect.topRight())
+                        (*it)->setPos(rect.topRight());
+                    break;
+                }
+                case Node::BottomRight:
+                {
+                    if ((*it)->scenePos() != rect.bottomRight())
+                        (*it)->setPos(rect.bottomRight());
+                    break;
+                }
+                case Node::BottomLeft:
+                {
+                    if ((*it)->scenePos() != rect.bottomLeft())
+                        (*it)->setPos(rect.bottomLeft());
+                    break;
+                }
+                case Node::Center:
+                {
+                    if ((*it)->scenePos() != rect.center())
+                        (*it)->setPos(rect.center());
+                    break;
+                }
+            }
+        }
+        ++it;
     }
 }
 
@@ -218,8 +218,10 @@ void NodeManager::scale(float sx, float sy)
     syncNodesFromParent();
     k->scaleX = sx;
     k->scaleY = sy;
-    k->parent->setData(TupGraphicObject::ScaleX, sx);
-    k->parent->setData(TupGraphicObject::ScaleY, sy);
+    // k->parent->setData(TupGraphicObject::ScaleX, sx);
+    // k->parent->setData(TupGraphicObject::ScaleY, sy);
+
+    emit scaleUpdated(sx, sy);
 }
 
 void NodeManager::rotate(double angle)
@@ -229,23 +231,25 @@ void NodeManager::rotate(double angle)
             qDebug() << "[NodeManager::rotate()]";
         #else
             T_FUNCINFO;
-            tWarning() << "angle: " << angle;
+            tWarning() << "New angle: " << angle;
         #endif
     #endif
 
     QTransform transform;
-
     QPointF point = k->parent->boundingRect().center();
     transform.translate(point.x(), point.y());
     transform.rotate(angle);
     transform.scale(k->scaleX, k->scaleY);
     transform.translate(-point.x(), -point.y());
 
+    k->parent->setTransformOriginPoint(point);
     k->parent->setTransform(transform);
 
     syncNodesFromParent();
     k->rotation = angle;
     k->parent->setData(TupGraphicObject::Rotate, k->rotation);
+
+    emit rotationUpdated(angle);
 }
 
 void NodeManager::horizontalFlip()

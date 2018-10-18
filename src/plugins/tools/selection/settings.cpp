@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
 
  *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
@@ -35,9 +35,12 @@
  ***************************************************************************/
 
 #include "settings.h"
+#include "tdebug.h"
 #include "tapplicationproperties.h"
 #include "timagebutton.h"
 #include "tseparator.h"
+
+#include <QCheckBox>
 
 struct Settings::Private
 {
@@ -45,21 +48,22 @@ struct Settings::Private
     QWidget *help;
     QSpinBox *xPosField;
     QSpinBox *yPosField;
+    QSpinBox *angleField;
+    QDoubleSpinBox *factorXField;
+    QDoubleSpinBox *factorYField;
+    QCheckBox *propCheck;
+
     QPushButton *tips;
     int currentX;
     int currentY;
+    int currentAngle;
+    double currentXFactor;
+    double currentYFactor;
     QTextEdit *textArea;
 };
 
 Settings::Settings(QWidget *parent) : QWidget(parent), k(new Private)
 {
-/*    
-#ifndef Q_OS_MAC
-    QFont font = this->font();
-    font.setPointSize(8);
-    setFont(font);
-#endif
-*/
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 
     QLabel *toolTitle = new QLabel;
@@ -199,6 +203,74 @@ Settings::Settings(QWidget *parent) : QWidget(parent), k(new Private)
 
     toolsLayout->addWidget(new TSeparator(Qt::Horizontal));
 
+    QLabel *rotation = new QLabel(tr("Rotation"));
+    rotation->setAlignment(Qt::AlignHCenter);
+    toolsLayout->addWidget(rotation);
+
+    QLabel *angleLabel = new QLabel(tr("Angle") + ": ");
+
+    k->angleField = new QSpinBox;
+    k->angleField->setMinimum(0);
+    k->angleField->setMaximum(360);
+    connect(k->angleField, SIGNAL(valueChanged(int)), this, SLOT(notifyRotation(int)));
+
+    k->angleField->setEnabled(false);
+
+    QBoxLayout *angleLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    angleLayout->setMargin(0);
+    angleLayout->setSpacing(0);
+    angleLayout->addWidget(angleLabel);
+    angleLayout->addWidget(k->angleField);
+
+    toolsLayout->addLayout(angleLayout);
+    toolsLayout->addWidget(new TSeparator(Qt::Horizontal));
+
+    QLabel *scale = new QLabel(tr("Scale"));
+    scale->setAlignment(Qt::AlignHCenter);
+    toolsLayout->addWidget(scale);
+
+    QLabel *factorXLabel = new QLabel(tr("X") + ": ");
+    k->factorXField = new QDoubleSpinBox;
+    k->factorXField->setDecimals(2);
+    k->factorXField->setMinimum(0.0);
+    k->factorXField->setMaximum(10);
+    k->factorXField->setSingleStep(0.05);
+    connect(k->factorXField, SIGNAL(valueChanged(double)), this, SLOT(notifyXScale(double)));
+
+    k->factorXField->setEnabled(false);
+
+    QBoxLayout *factorXLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    factorXLayout->setMargin(0);
+    factorXLayout->setSpacing(0);
+    factorXLayout->addWidget(factorXLabel);
+    factorXLayout->addWidget(k->factorXField);
+
+    toolsLayout->addLayout(factorXLayout);
+
+    QLabel *factorYLabel = new QLabel(tr("Y") + ": ");
+    k->factorYField = new QDoubleSpinBox;
+    k->factorYField->setDecimals(2);
+    k->factorYField->setMinimum(0.0);
+    k->factorYField->setMaximum(10);
+    k->factorYField->setSingleStep(0.05);
+    connect(k->factorYField, SIGNAL(valueChanged(double)), this, SLOT(notifyYScale(double)));
+
+    k->factorYField->setEnabled(false);
+
+    QBoxLayout *factorYLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    factorYLayout->setMargin(0);
+    factorYLayout->setSpacing(0);
+    factorYLayout->addWidget(factorYLabel);
+    factorYLayout->addWidget(k->factorYField);
+
+    toolsLayout->addLayout(factorYLayout);
+
+    k->propCheck = new QCheckBox(tr("Proportion"), this);
+    k->propCheck->setChecked(true);
+    connect(k->propCheck, SIGNAL(stateChanged(int)), this, SLOT(enableProportion(int)));
+    toolsLayout->addWidget(k->propCheck);
+    toolsLayout->setAlignment(k->propCheck, Qt::AlignHCenter);
+
     mainLayout->addWidget(k->tools);
 
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
@@ -297,10 +369,38 @@ void Settings::openTipPanel() {
     }
 }
 
-void Settings::setPos(int x, int y) {
-    if (!k->xPosField->isEnabled())
-        enablePositionControls(true);
+void Settings::enableFormControls(bool flag)
+{
+    if (!flag) {
+        k->xPosField->blockSignals(true);
+        k->yPosField->blockSignals(true);
+        k->angleField->blockSignals(true);
+        k->factorXField->blockSignals(true);
+        k->factorXField->blockSignals(true);
 
+        k->xPosField->setValue(0);
+        k->yPosField->setValue(0);
+        k->angleField->setValue(0);
+        k->factorXField->setValue(1.0);
+        k->factorYField->setValue(1.0);
+
+        k->xPosField->blockSignals(false);
+        k->yPosField->blockSignals(false);
+        k->angleField->blockSignals(false);
+        k->factorXField->blockSignals(false);
+        k->factorYField->blockSignals(false);
+    }
+
+    k->xPosField->setEnabled(flag);
+    k->yPosField->setEnabled(flag);
+    k->angleField->setEnabled(flag);
+    k->factorXField->setEnabled(flag);
+    k->factorYField->setEnabled(flag);
+    k->propCheck->setEnabled(flag);
+}
+
+void Settings::setPos(int x, int y)
+{
     k->xPosField->blockSignals(true);
     k->yPosField->blockSignals(true);
 
@@ -313,29 +413,89 @@ void Settings::setPos(int x, int y) {
     k->yPosField->blockSignals(false);
 }
 
-void Settings::enablePositionControls(bool flag)
+void Settings::updateRotationAngle(int angle)
 {
-    if (!flag) {
-        k->xPosField->blockSignals(true);
-        k->yPosField->blockSignals(true);
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[Settings::updateRotationAngle()]";
+    #else
+        T_FUNCINFO << angle;
+    #endif
+#endif
+    k->angleField->blockSignals(true);
 
-        k->xPosField->setValue(0);
-        k->yPosField->setValue(0);
+    if (angle > 359)
+        angle = 0;
+    k->angleField->setValue(angle);
+    k->currentAngle = angle;
 
-        k->xPosField->blockSignals(false);
-        k->yPosField->blockSignals(false);
-    }
-
-    k->xPosField->setEnabled(flag);
-    k->yPosField->setEnabled(flag);
+    k->angleField->blockSignals(false);
 }
 
-void Settings::notifyXMovement(int x) {
-    emit updateItemPosition(x - k->currentX, 0);
+void Settings::updateScaleFactor(float x, float y)
+{
+    k->factorXField->blockSignals(true);
+    k->factorYField->blockSignals(true);
+
+    k->currentXFactor = x;
+    k->factorXField->setValue(x);
+
+    k->currentYFactor = y;
+    k->factorYField->setValue(y);
+
+    k->factorXField->blockSignals(false);
+    k->factorYField->blockSignals(false);
+}
+
+void Settings::notifyXMovement(int x)
+{
+    emit positionUpdated(x - k->currentX, 0);
     k->currentX = k->xPosField->value();
 }
 
-void Settings::notifyYMovement(int y) {
-    emit updateItemPosition(0, y - k->currentY);
+void Settings::notifyYMovement(int y)
+{
+    emit positionUpdated(0, y - k->currentY);
     k->currentY = k->yPosField->value();
+}
+
+void Settings::notifyRotation(int angle)
+{
+    if (angle == 360) {
+        angle = 0;
+        k->angleField->setValue(0);
+    }
+    emit rotationUpdated(angle);
+    k->currentAngle = k->angleField->value();
+}
+
+void Settings::notifyXScale(double factor)
+{
+    if (k->propCheck->isChecked()) {
+        k->currentYFactor = factor;
+        k->factorYField->setValue(factor);
+    }
+
+    emit scaleUpdated(factor, k->currentYFactor);
+    k->currentXFactor = factor;
+}
+
+void Settings::notifyYScale(double factor)
+{
+    if (k->propCheck->isChecked()) {
+        k->currentXFactor = factor;
+        k->factorXField->setValue(factor);
+    }
+
+    emit scaleUpdated(k->currentXFactor, factor);
+    k->currentYFactor = factor;
+}
+
+void Settings::enableProportion(int flag)
+{
+    if (flag == Qt::Checked) {
+        float factor = k->factorXField->value();
+        k->factorYField->setValue(factor);
+        emit scaleUpdated(factor, factor);
+    }
 }

@@ -102,11 +102,15 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         void applyOrderAction(Settings::Order order);
         void applyGroupAction(Settings::Group action);
         void updateItemPosition(int x, int y);
+        void updateItemRotation(int angle);
+        void updateItemScale(float xFactor, float yFactor);
 
     private:
         void setupActions();
         bool selectionIsActive();
         void updateItemPosition();
+        void updateItemRotation();
+        void updateItemScale();
         void removeTarget();
         TupFrame* currentFrame();
         TupFrame* frameAt(int sceneIndex, int layerIndex, int frameIndex);
