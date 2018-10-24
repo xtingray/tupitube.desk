@@ -79,7 +79,7 @@ Settings::Settings(Settings::ToolType type, QWidget *parent) : QWidget(parent)
         textArea->append("<p><b>" + tr("Mouse Right Click or X Key") + ":</b> " +  tr("Close the line path") + "</p>");
         textArea->append("<p><b>" + tr("Shift") + ":</b> " +  tr("Align line to horizontal/vertical axis") + "</p>"); 
     } else {
-        textArea->append("<p><b>" + tr("Shift + Left Mouse Button") + ":</b> " +  tr("Set width/height proportional dimensions") + "</p>");
+        textArea->append("<p><b>" + tr("Ctrl + Left Mouse Button") + ":</b> " +  tr("Set width/height proportional dimensions") + "</p>");
     }
 
     // QString text = textArea->document()->toPlainText();

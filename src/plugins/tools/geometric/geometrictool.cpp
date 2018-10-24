@@ -59,7 +59,12 @@ struct GeometricTool::Private
     QPointF currentPoint;
     QPointF lastPoint;
     QMap<QString, TAction *> actions;
+
     bool proportion;
+    bool side;
+    int xSideLength;
+    int ySideLength;
+
     QGraphicsItem *item;
     QCursor squareCursor;
     QCursor circleCursor;
@@ -96,6 +101,7 @@ void GeometricTool::init(TupGraphicsScene *scene)
     delete k->path;
     k->path = 0;
     k->proportion = false;
+    k->side = false;
 
     foreach (QGraphicsView *view, scene->views())
         view->setDragMode(QGraphicsView::NoDrag);
@@ -204,10 +210,10 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
             k->added = true;
         }
 
-        int xMouse = input->pos().x();
-        int yMouse = input->pos().y();
-        int xInit = k->currentPoint.x();
-        int yInit = k->currentPoint.y();
+        int xMouse = static_cast<int> (input->pos().x());
+        int yMouse = static_cast<int> (input->pos().y());
+        int xInit = static_cast<int> (k->currentPoint.x());
+        int yInit = static_cast<int> (k->currentPoint.y());
 
         QRectF rect;
         if (name() == tr("Rectangle"))
@@ -215,16 +221,14 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
         else
             rect = k->ellipse->rect();
 
+        int width = abs(xMouse - xInit);
+        int height = abs(yMouse - yInit);
+        bool xWins = false;
+        if (width <= height)
+            xWins = true;
+
         if (k->proportion) {
-            int width = abs(xMouse - xInit);
-            int height = abs(yMouse - yInit);
-
-            bool xWins = false;
-            if (width <= height)
-                xWins = true; 
-
             QPointF target;
-
             if (xMouse >= xInit) {
                 if (yMouse >= yInit) {
                     if (xWins)
@@ -257,19 +261,54 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
 
                     rect.setTopLeft(target);
                 }
-            }
-            
+            }            
         } else {
-            if (xMouse >= xInit) {
-                if (yMouse >= yInit)
-                    rect.setBottomRight(input->pos());
-                else
-                    rect.setTopRight(input->pos());
+            if (k->side) {
+                QPointF target;
+                if (xMouse >= xInit) {
+                    if (yMouse >= yInit) { // Right-Down
+                        if (xWins) // Y > X
+                            target = QPointF(xInit + k->xSideLength, yInit + height);
+                        else // X > Y
+                            target = QPointF(xInit + width, yInit + k->ySideLength);
+                        rect.setBottomRight(target);
+                    } else { // Right-Up
+                        if (xWins) // Y > X
+                            target = QPointF(xInit + k->xSideLength, yInit - height);
+                        else // X > Y
+                            target = QPointF(xInit + width, yInit - k->ySideLength);
+                        rect.setTopRight(target);
+                    }
+                } else {
+                    if (yMouse >= yInit) { // Left-Down
+                        if (xWins) // Y > X
+                            target = QPointF(xInit - k->xSideLength, yInit + height);
+                        else // X > Y
+                            target = QPointF(xInit - width, yInit + k->ySideLength);
+                        rect.setBottomLeft(target);
+                    } else { // Left-Up
+                        if (xWins) // Y > X
+                            target = QPointF(xInit - k->xSideLength, yInit - height);
+                        else // X > Y
+                            target = QPointF(xInit - width, yInit - k->ySideLength);
+                        rect.setTopLeft(target);
+                    }
+                }
             } else {
-                if (yMouse >= yInit)
-                    rect.setBottomLeft(input->pos());
-                else
-                    rect.setTopLeft(input->pos());
+                k->xSideLength = static_cast<int> (abs(xInit - input->pos().x()));
+                k->ySideLength = static_cast<int> (abs(yInit - input->pos().y()));
+
+                if (xMouse >= xInit) {
+                    if (yMouse >= yInit)
+                        rect.setBottomRight(input->pos());
+                    else
+                        rect.setTopRight(input->pos());
+                } else {
+                    if (yMouse >= yInit)
+                        rect.setBottomLeft(input->pos());
+                    else
+                        rect.setTopLeft(input->pos());
+                }
             }
         }
 
@@ -300,11 +339,11 @@ void GeometricTool::release(const TupInputDeviceInformation *input, TupBrushMana
         doc.appendChild(dynamic_cast<TupAbstractSerializable *>(k->rect)->toXml(doc));
         point = k->rect->pos();
     } else if (name() == tr("Ellipse")) {
-               doc.appendChild(dynamic_cast<TupAbstractSerializable *>(k->ellipse)->toXml(doc));
-               QRectF rect = k->ellipse->rect();
-               point = rect.topLeft();
+        doc.appendChild(dynamic_cast<TupAbstractSerializable *>(k->ellipse)->toXml(doc));
+        QRectF rect = k->ellipse->rect();
+        point = rect.topLeft();
     } else if (name() == tr("Line")) {
-               return;
+        return;
     }
 
     TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(), scene->currentLayerIndex(), 
@@ -357,11 +396,13 @@ void GeometricTool::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_F11 || event->key() == Qt::Key_Escape) {
         emit closeHugeCanvas();
         return;
+    } else if (event->key() == Qt::Key_Control) {
+        k->proportion = true;
     } else if (event->key() == Qt::Key_Shift) {
-               k->proportion = true;
+        k->side = true;
     } else if (event->key() == Qt::Key_X) {
-               if (name() == tr("Line"))
-                   endItem();
+        if (name() == tr("Line"))
+            endItem();
     } else {
         QPair<int, int> flags = TupToolPlugin::setKeyAction(event->key(), event->modifiers());
         if (flags.first != -1 && flags.second != -1)
@@ -372,6 +413,8 @@ void GeometricTool::keyPressEvent(QKeyEvent *event)
 void GeometricTool::keyReleaseEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Shift)
+        k->side = false;
+    else if (event->key() == Qt::Key_Control)
         k->proportion = false;
 }
 

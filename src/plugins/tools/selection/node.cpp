@@ -204,6 +204,14 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
             qreal w = k->parent->boundingRect().width() / 2;
             qreal h = k->parent->boundingRect().height() / 2;
+
+            /*
+            double scaleX = k->parent->data(TupGraphicObject::ScaleX).toDouble();
+            double scaleY = k->parent->data(TupGraphicObject::ScaleY).toDouble();
+            tError() << "Node::mouseMoveEvent() - scaleX: " << scaleX;
+            tError() << "Node::mouseMoveEvent() - scaleY: " << scaleY;
+            */
+
             qreal sx = fabs(distance.x()) / w;
             qreal sy = fabs(distance.y()) / h;
 
@@ -211,19 +219,22 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
                 sy = sx;
             k->manager->scale(sx, sy);
         } else if (k->action == Rotate) {
-                   QPointF p1 = newPos;
-                   QPointF p2 = k->parent->sceneBoundingRect().center();
+            QPointF p1 = newPos;
+            QPointF p2 = k->parent->sceneBoundingRect().center();
 
-                   QLineF line(p2, p1);
-                   QLineF lineRef(p2, k->oldPoint);
-                   qreal angle = lineRef.angle() - line.angle();
+            QLineF line(p2, p1);
+            QLineF lineRef(p2, k->oldPoint);
+            qreal angle = k->parent->data(TupGraphicObject::Rotate).toReal() + (lineRef.angle() - line.angle());
 
-                   qreal rotation = k->parent->data(TupGraphicObject::Rotate).toReal() + angle;
-                   if (fabs(rotation) > 360)
-                       rotation = 0;
+            tError() << "Node::mouseMoveEvent() - angle: " << angle;
 
-                   k->manager->rotate(rotation);
-                   k->oldPoint = newPos;
+            if (angle < 0)
+                angle = 360 - fabs(angle);
+            if (angle > 359)
+                angle = 0;
+
+            k->manager->rotate(angle);
+            k->oldPoint = newPos;
         }
     }
 }

@@ -66,7 +66,7 @@ QDomElement TupPathItem::toXml(QDomDocument &doc) const
     
     QPen pen = this->pen();
     root.appendChild(TupSerializer::pen(&pen, doc));
-    
+
     return root;
 }
 
