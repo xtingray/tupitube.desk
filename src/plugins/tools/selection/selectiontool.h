@@ -103,7 +103,8 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         void applyGroupAction(Settings::Group action);
         void updateItemPosition(int x, int y);
         void updateItemRotation(int angle);
-        void updateItemScale(float xFactor, float yFactor);
+        void updateItemScale(double xFactor, double yFactor);
+        void enableProportion(bool flag);
 
     private:
         void setupActions();

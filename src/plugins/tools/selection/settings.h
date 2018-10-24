@@ -63,6 +63,9 @@ class TUPITUBE_PLUGIN Settings : public QWidget
 
         void enableFormControls(bool flag);
         void setPos(int x, int y);
+        void setProportionState(int flag);
+        bool formIsVisible();
+
         // void setRotationAngle(int angle);
         // void setScaleFactor(double factor);
 
@@ -72,11 +75,12 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         void callGroupAction(Settings::Group action);
         void positionUpdated(int x, int y);
         void rotationUpdated(int angle);
-        void scaleUpdated(float xFactor, float yFactor);
+        void scaleUpdated(double xFactor, double yFactor);
+        void activateProportion(bool flag);
 
      public slots:
         void updateRotationAngle(int angle);
-        void updateScaleFactor(float x, float y);
+        void updateScaleFactor(double x, double y);
 
      private slots:
         void vFlip();

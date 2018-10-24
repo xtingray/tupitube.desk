@@ -204,6 +204,14 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
             qreal w = k->parent->boundingRect().width() / 2;
             qreal h = k->parent->boundingRect().height() / 2;
+
+            /*
+            double scaleX = k->parent->data(TupGraphicObject::ScaleX).toDouble();
+            double scaleY = k->parent->data(TupGraphicObject::ScaleY).toDouble();
+            tError() << "Node::mouseMoveEvent() - scaleX: " << scaleX;
+            tError() << "Node::mouseMoveEvent() - scaleY: " << scaleY;
+            */
+
             qreal sx = fabs(distance.x()) / w;
             qreal sy = fabs(distance.y()) / h;
 
@@ -217,7 +225,9 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             QLineF line(p2, p1);
             QLineF lineRef(p2, k->oldPoint);
             qreal angle = k->parent->data(TupGraphicObject::Rotate).toReal() + (lineRef.angle() - line.angle());
+
             tError() << "Node::mouseMoveEvent() - angle: " << angle;
+
             if (angle < 0)
                 angle = 360 - fabs(angle);
             if (angle > 359)

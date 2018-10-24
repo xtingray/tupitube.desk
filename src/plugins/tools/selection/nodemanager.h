@@ -60,7 +60,7 @@ class TUPITUBE_PLUGIN NodeManager : public QObject
         
         void show();
         
-        void scale(float sx, float sy);
+        void scale(qreal sx, qreal sy);
         void rotate(double angle);
         void horizontalFlip();
         void verticalFlip();
@@ -85,7 +85,7 @@ class TUPITUBE_PLUGIN NodeManager : public QObject
 
     signals:
         void rotationUpdated(int angle);
-        void scaleUpdated(float x, float y);
+        void scaleUpdated(double x, double y);
 
     private:
         struct Private;

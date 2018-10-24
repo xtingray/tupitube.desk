@@ -44,13 +44,12 @@ struct NodeManager::Private
 
     QTransform origTransform;
     QPointF origPos;
-    // QPointF itemCenter;
 
     bool isPressed;
     bool proportional;
     qreal rotation;
-    qreal scaleX;
-    qreal scaleY;
+    double scaleX;
+    double scaleY;
 };
 
 NodeManager::NodeManager(QGraphicsItem *parent, QGraphicsScene *scene, int zValue): k(new Private)
@@ -65,20 +64,23 @@ NodeManager::NodeManager(QGraphicsItem *parent, QGraphicsScene *scene, int zValu
 
     k->parent = parent;
     k->scene = scene;
-    // k->itemCenter = QPointF(0, 0);
     k->isPressed = false;
 
     k->rotation = k->parent->data(TupGraphicObject::Rotate).toReal();
     k->scaleX = k->parent->data(TupGraphicObject::ScaleX).toReal();
+    if (k->scaleX == 0.0)
+        k->scaleX = 1;
     k->scaleY = k->parent->data(TupGraphicObject::ScaleY).toReal();
+    if (k->scaleY == 0.0)
+        k->scaleY = 1;
 
     // This condition is only for SVG objects
     if (qgraphicsitem_cast<QGraphicsSvgItem *> (parent)) {
-        if (k->scaleX == 0) {
+        if (static_cast<int> (k->scaleX) == 0) {
             k->scaleX = 1;
             k->parent->setData(TupGraphicObject::ScaleX, 1);
         }
-        if (k->scaleY == 0) {
+        if (static_cast<int> (k->scaleY) == 0) {
             k->scaleY = 1;
             k->parent->setData(TupGraphicObject::ScaleY, 1);
         }
@@ -193,7 +195,7 @@ void NodeManager::restoreItem()
     k->parent->setPos(k->origPos);
 }
 
-void NodeManager::scale(float sx, float sy)
+void NodeManager::scale(qreal sx, qreal sy)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -218,8 +220,8 @@ void NodeManager::scale(float sx, float sy)
     syncNodesFromParent();
     k->scaleX = sx;
     k->scaleY = sy;
-    // k->parent->setData(TupGraphicObject::ScaleX, sx);
-    // k->parent->setData(TupGraphicObject::ScaleY, sy);
+    k->parent->setData(TupGraphicObject::ScaleX, k->scaleX);
+    k->parent->setData(TupGraphicObject::ScaleY, k->scaleY);
 
     emit scaleUpdated(sx, sy);
 }
@@ -249,7 +251,7 @@ void NodeManager::rotate(double angle)
     k->rotation = angle;
     k->parent->setData(TupGraphicObject::Rotate, k->rotation);
 
-    emit rotationUpdated(angle);
+    emit rotationUpdated(static_cast<int>(angle));
 }
 
 void NodeManager::horizontalFlip()

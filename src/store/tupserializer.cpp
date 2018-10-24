@@ -59,9 +59,13 @@ QDomElement TupSerializer::properties(const QGraphicsItem *item, QDomDocument &d
     qreal f = m.dy();
     
     strMatrix += QString::number(a) + "," + QString::number(b) + "," + QString::number(c) + "," + QString::number(d) + "," + QString::number(e) + "," + QString::number(f) + ")" ; 
-    
+
     properties.setAttribute("transform", strMatrix);
     properties.setAttribute("rotation", item->data(TupGraphicObject::Rotate).toInt());
+    double sx = item->data(TupGraphicObject::ScaleX).toDouble();
+    properties.setAttribute("scale_x", QString::number(sx));
+    double sy = item->data(TupGraphicObject::ScaleY).toDouble();
+    properties.setAttribute("scale_y", QString::number(sy));
     properties.setAttribute("pos", "(" + QString::number(item->pos().x()) + "," + QString::number(item->pos().y()) + ")");
     properties.setAttribute("enabled", item->isEnabled());
     properties.setAttribute("flags", item->flags());
@@ -83,6 +87,10 @@ void TupSerializer::loadProperties(QGraphicsItem *item, const QXmlAttributes &at
     item->setEnabled(atts.value("pos") != "0"); // default true
     item->setFlags(QGraphicsItem::GraphicsItemFlags(atts.value("flags").toInt()));
     item->setData(TupGraphicObject::Rotate, atts.value("rotation").toInt());
+    double sx = atts.value("scale_x").toDouble();
+    item->setData(TupGraphicObject::ScaleX, sx);
+    double sy = atts.value("scale_y").toDouble();
+    item->setData(TupGraphicObject::ScaleY, sy);
 }
 
 void TupSerializer::loadProperties(QGraphicsItem *item, const QDomElement &element)
@@ -100,6 +108,10 @@ void TupSerializer::loadProperties(QGraphicsItem *item, const QDomElement &eleme
         item->setEnabled(element.attribute("pos") != "0");
         item->setFlags(QGraphicsItem::GraphicsItemFlags(element.attribute("flags").toInt()));
         item->setData(TupGraphicObject::Rotate, element.attribute("rotation").toInt());
+        double sx = element.attribute("scale_x").toDouble();
+        item->setData(TupGraphicObject::ScaleX, sx);
+        double sy = element.attribute("scale_y").toDouble();
+        item->setData(TupGraphicObject::ScaleY, sy);
     }
 }
 
