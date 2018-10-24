@@ -303,7 +303,7 @@ void TupPaintAreaStatus::updateFrameIndex(int index)
     index++;
     k->currentFrame = index;
 
-    tError() << "updateFrameIndex() -> " << index;
+    // tError() << "updateFrameIndex() -> " << index;
 
     QString text = QString::number(index); 
     k->frameField->setText(text);

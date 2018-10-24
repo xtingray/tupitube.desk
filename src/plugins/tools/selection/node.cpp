@@ -226,8 +226,6 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             QLineF lineRef(p2, k->oldPoint);
             qreal angle = k->parent->data(TupGraphicObject::Rotate).toReal() + (lineRef.angle() - line.angle());
 
-            tError() << "Node::mouseMoveEvent() - angle: " << angle;
-
             if (angle < 0)
                 angle = 360 - fabs(angle);
             if (angle > 359)
