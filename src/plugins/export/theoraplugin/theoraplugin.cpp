@@ -66,6 +66,7 @@ bool TheoraPlugin::exportToFormat(const QColor color, const QString &filePath, c
                                   TupExportInterface::Format fmt, const QSize &size, const QSize &newSize, int fps, TupLibrary *library)
 {
     Q_UNUSED(fmt);
+    Q_UNUSED(newSize);
 
     int frames = 0;
     qreal duration = 0;
