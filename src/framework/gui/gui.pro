@@ -73,7 +73,6 @@ HEADERS += taction.h \
            themedocument.h \
            thememanager.h \
            tipdialog.h \
-           tupmsgdialog.h \
            ttoolbox.h \
            toolview.h \
            treelistwidget.h \
@@ -89,7 +88,8 @@ HEADERS += taction.h \
            tslider.h \
            tsizebox.h \
            tcolorarrow.xpm \
-           tcolorreset.xpm
+           tcolorreset.xpm \
+           tmsgdialog.h
 
 SOURCES += taction.cpp \
            tactionmanager.cpp \
@@ -134,7 +134,6 @@ SOURCES += taction.cpp \
            themedocument.cpp \
            thememanager.cpp \
            tipdialog.cpp \
-           tupmsgdialog.cpp \
            ttoolbox.cpp \
            toolview.cpp \
            treelistwidget.cpp \
@@ -148,7 +147,8 @@ SOURCES += taction.cpp \
            txyspinbox.cpp \
            tsizebox.cpp \
            tcolorcell.cpp \
-           tslider.cpp
+           tslider.cpp \
+           tmsgdialog.cpp
 
 INCLUDEPATH += ../core ../ ../../libbase
 

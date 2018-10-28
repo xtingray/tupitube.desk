@@ -33,76 +33,34 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "tupmsgdialog.h"
-#include "tapplicationproperties.h"
-#include "tseparator.h"
-#include "talgorithm.h"
+#ifndef TMSGDIALOG_H
+#define TMSGDIALOG_H
 
-#include <QVBoxLayout>
-#include <QPushButton>
+#include "tglobal.h"
 
-TupMsgDialog::TupMsgDialog(const QString &message, QSize dialogSize, QWidget *parent) : QDialog(parent)
+#include <QDialog>
+#include <QTextBrowser>
+
+/**
+ * @class TMsgDialog
+ */
+
+class T_GUI_EXPORT TMsgDialog : public QDialog
 {
-    setModal(true);
-    msg = message;
-    size = dialogSize;
-    if (size == QSize(0, 0))
-        size = QSize(200, 100);
+    Q_OBJECT
 
-    setupGUI();
-}
+    public:
+        TMsgDialog(const QString &message, QSize dialogSize, bool isImage, QWidget *parent = 0);
+        ~TMsgDialog();
+        
+    private:
+        void setupGUI();
+        
+    private:
+        QString msg;
+        QSize size;
+        QTextBrowser *textBrowser;
+        bool isImageMsg;
+};
 
-TupMsgDialog::~TupMsgDialog()
-{
-}
-
-void TupMsgDialog::setupGUI()
-{
-    setWindowTitle(tr("Breaking News!"));
-    setWindowIcon(QPixmap(THEME_DIR + "icons/bubble.png"));
-
-    QVBoxLayout *layout = new QVBoxLayout(this);
-    textBrowser = new QTextBrowser;
-    textBrowser->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-    textBrowser->setFrameStyle(QFrame::NoFrame | QFrame::Plain);
-    textBrowser->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    textBrowser->setOpenExternalLinks(true);
-    QStringList path;
-#ifdef Q_OS_WIN
-    QString resources = SHARE_DIR + "html/";
-#else
-    QString resources = SHARE_DIR + "data/html/";
 #endif
-    path << resources + "css";
-    path << resources + "images";
-
-    textBrowser->setSearchPaths(path);
-
-    int index = TAlgorithm::random() % 3;
-    QString html = "<html>\n";
-    html += "<head>\n";
-    html += "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html;charset=utf-8\">\n";
-    html += "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:tupitube.css\" />\n";
-    html += "</head>\n";
-    html += "<body class=\"tip_background0" + QString::number(index) + "\">\n";
-    html += msg;
-    html += "\n</body>\n";
-    html += "</html>";
-
-    textBrowser->setHtml(html);
-
-    QPushButton *closeButton = new QPushButton(tr("Close"));
-    layout->addWidget(closeButton);
-    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
-
-    QHBoxLayout *buttonLayout = new QHBoxLayout;
-    buttonLayout->addWidget(closeButton, 1, Qt::AlignHCenter);
-
-    layout->addWidget(textBrowser);
-    layout->addWidget(new TSeparator);
-    layout->addLayout(buttonLayout);
-
-    setAttribute(Qt::WA_DeleteOnClose, true);
-
-    setFixedSize(size);
-}

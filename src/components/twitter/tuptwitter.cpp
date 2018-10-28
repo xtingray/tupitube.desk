@@ -49,6 +49,7 @@ QString TupTwitter::USER_TIMELINE_URL = QString("updates/tweets.php");
 QString TupTwitter::TUPITUBE_VERSION_URL = QString("updates/current_version.xml");
 QString TupTwitter::TUPITUBE_WEB_MSG = QString("updates/web_msg.");
 QString TupTwitter::TUPITUBE_VIDEOS = QString("updates/videos.xml");
+QString TupTwitter::TUPITUBE_IMAGES = QString("updates/images/");
 QString TupTwitter::BROWSER_FINGERPRINT = QString("Tupi_Browser 2.0");
 
 struct TupTwitter::Private
@@ -156,6 +157,25 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
     #endif
 
     QByteArray array = reply->readAll();
+
+    QString imageName = reply->url().fileName();
+    if (imageName.endsWith(".png", Qt::CaseInsensitive)) {
+        QString imgPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/images/";
+        QDir dir(imgPath);
+        if (!dir.exists())
+            dir.mkpath(imgPath);
+
+        QString image = imgPath + imageName;
+        QFile file(image);
+        if (file.open(QIODevice::WriteOnly)) {
+            file.write(array);
+            file.close();
+        }
+
+        requestFile(MAEFLORESTA_URL + TUPITUBE_VIDEOS);
+        return;
+    }
+
     QString answer(array);
     answer.chop(1);
 
@@ -182,15 +202,27 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
                     os = "win";
                 #endif
 
-                requestFile(MAEFLORESTA_URL + USER_TIMELINE_URL + "?id=" + id + "&os=" + os + "&v=" + kAppProp->version() + "." + kAppProp->revision());
+                requestFile(MAEFLORESTA_URL + USER_TIMELINE_URL + "?id=" + id + "&os=" + os + "&v=" + kAppProp->version()
+                            + "." + kAppProp->revision());
             } else {
                 if (answer.startsWith("<div")) { // Getting Twitter records 
                     formatStatus(array);
                     requestFile(MAEFLORESTA_URL + TUPITUBE_WEB_MSG + k->locale + ".html");
                 } else {
                     if (answer.startsWith("<webmsg>")) { // Getting web msg
-                        if (k->showAds)
+                        if (k->showAds) {
                             saveFile(answer, "webmsg.html");
+                            if (answer.contains("<image>")) {
+                                QString code = getImageCode(answer) + ".png";
+                                if (!code.isEmpty()) {
+                                    QString imgPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/images/" + code;
+                                    if (!QFile::exists(imgPath)) {
+                                        requestFile(MAEFLORESTA_URL + TUPITUBE_IMAGES + code);
+                                        return;
+                                    }
+                                }
+                            }
+                        }
                         requestFile(MAEFLORESTA_URL + TUPITUBE_VIDEOS);
                     } else {
                         if (answer.startsWith("<youtube>")) { // Getting video list
@@ -399,7 +431,7 @@ void TupTwitter::formatStatus(QByteArray array)
     emit pageReady();
 }
 
-void TupTwitter::saveFile(const QString &answer, const QString &fileName)
+bool TupTwitter::saveFile(const QString &answer, const QString &fileName)
 {
     QString msgPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/" + fileName;
     QFile file(msgPath);
@@ -407,5 +439,21 @@ void TupTwitter::saveFile(const QString &answer, const QString &fileName)
         QTextStream out(&file);
         out << answer;
         file.close();
+        return true;
     }
+
+    return false;
+}
+
+QString TupTwitter::getImageCode(const QString &answer) const
+{
+    QDomDocument doc;
+    if (doc.setContent(answer)) {
+        QDomNode root = doc.namedItem("webmsg");
+        QDomElement element = root.firstChildElement("image");
+        QString image = element.text();
+        return image;
+    }
+
+    return "";
 }

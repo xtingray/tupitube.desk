@@ -64,14 +64,16 @@ class TUPITUBE_EXPORT TupTwitter : public QWidget
         void requestFile(const QString &target);
         void checkSoftwareUpdates(QByteArray array);
         void formatStatus(QByteArray array);
-        void saveFile(const QString &answer, const QString &fileName);
+        bool saveFile(const QString &answer, const QString &fileName);
+        QString getImageCode(const QString &answer) const;
 
         static QString IS_HOST_UP_URL;
         static QString USER_TIMELINE_URL;
         static QString TUPITUBE_VERSION_URL;
-        static QString BROWSER_FINGERPRINT;
         static QString TUPITUBE_WEB_MSG;
         static QString TUPITUBE_VIDEOS;
+        static QString TUPITUBE_IMAGES;
+        static QString BROWSER_FINGERPRINT;
 
         struct Private;
         Private *const k;

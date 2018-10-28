@@ -44,7 +44,7 @@
 
 // TupiTube Framework
 #include "tipdialog.h"
-#include "tupmsgdialog.h"
+#include "tmsgdialog.h"
 #include "tosd.h"
 // #include "taudioplayer.h"
 
@@ -147,6 +147,7 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(0), animat
 
     // Processing web msg content
     bool showWebMsg = false;
+    isImageMsg = false;
     webContent = "";
     if (!fileContent.isEmpty()) {
         QDomDocument doc;
@@ -167,7 +168,10 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(0), animat
                         webMsgSize = QSize(numbers.at(0).toInt(), numbers.at(1).toInt());
                 } else if (e.tagName() == "text") {
                     webContent = e.text();
+                } else if (e.tagName() == "image") {
+                    isImageMsg = true;
                 }
+
                 n = n.nextSibling();
             }
         } else {
@@ -1394,7 +1398,7 @@ void TupMainWindow::saveDefaultPath(const QString &dir)
 
 void TupMainWindow::showWebMessage()
 {
-    TupMsgDialog *msgDialog = new TupMsgDialog(webContent, webMsgSize, this);
+    TMsgDialog *msgDialog = new TMsgDialog(webContent, webMsgSize, isImageMsg, this);
     msgDialog->show();
 
     QDesktopWidget desktop;

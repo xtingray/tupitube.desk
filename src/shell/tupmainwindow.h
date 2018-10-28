@@ -266,6 +266,7 @@ class TupMainWindow : public TabbedMainWindow
         QString author;
         QString netUser;
         QString webContent;
+        bool isImageMsg;
         QSize webMsgSize;
         TAction *helpAction;
         TupDocumentView::DockType currentDock;

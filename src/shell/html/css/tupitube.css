@@ -2,6 +2,18 @@ body {
      background-color:#ffffff;
 }
 
+.bg_white {
+     background-color: white;
+}
+
+.bg_gray {
+     background-color: #a0a0a0;
+}
+
+.bg_black {
+     background-color: black;
+}
+
 .tupi_background1 {
      background-image:url('file:bg1.png');
 }
