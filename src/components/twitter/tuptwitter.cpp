@@ -206,7 +206,18 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
                             + "." + kAppProp->revision());
             } else {
                 if (answer.startsWith("<div")) { // Getting Twitter records 
-                    formatStatus(array);
+                    if (!array.isNull()) {
+                        formatStatus(array);
+                    } else {
+                        #ifdef TUP_DEBUG
+                            QString msg = "TupTwitter::closeRequest() - Network Error: Twitter output is NULL!";
+                            #ifdef Q_OS_WIN
+                                qDebug() << msg;
+                            #else
+                                tError() << msg;
+                            #endif
+                        #endif
+                    }
                     requestFile(MAEFLORESTA_URL + TUPITUBE_WEB_MSG + k->locale + ".html");
                 } else {
                     if (answer.startsWith("<webmsg>")) { // Getting web msg

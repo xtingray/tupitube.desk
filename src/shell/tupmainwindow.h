@@ -185,6 +185,7 @@ class TupMainWindow : public TabbedMainWindow
         void preferences();
         void showHelp();
         void aboutTupiTube();
+        void openYouTubeChannel();
         void showTipDialog();
         void importPalettes();
         void openRecentProject();

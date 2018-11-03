@@ -838,6 +838,11 @@ void TupMainWindow::showTipDialog()
                     (int) (desktop.screenGeometry().height() - tipDialog->height())/2);
 }
 
+void TupMainWindow::openYouTubeChannel()
+{
+    QDesktopServices::openUrl(QString("https://www.youtube.com/tupitube"));
+}
+
 void TupMainWindow::importPalettes()
 {
     TCONFIG->beginGroup("General");
