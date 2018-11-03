@@ -2987,8 +2987,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.3643883"
-     inkscape:cx="526.67861"
-     inkscape:cy="1462.2619"
+     inkscape:cx="623.71179"
+     inkscape:cy="619.24906"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -16293,6 +16293,29 @@
           </g>
         </g>
       </g>
+    </g>
+    <g
+       id="g13434"
+       inkscape:export-xdpi="109.22"
+       inkscape:export-ydpi="109.22">
+      <rect
+         inkscape:export-ydpi="109.22"
+         inkscape:export-xdpi="109.22"
+         ry="2.4250028"
+         y="471.04306"
+         x="650.25598"
+         height="21.539732"
+         width="23.720621"
+         id="rect8108"
+         style="opacity:1;fill:#ffffff;fill-opacity:0;stroke:#008700;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="109.22"
+         inkscape:export-xdpi="109.22"
+         sodipodi:nodetypes="cccc"
+         inkscape:connector-curvature="0"
+         id="rect8098"
+         d="m 656.14067,475.57937 11.95124,6.23354 -11.95124,6.23354 z"
+         style="opacity:1;fill:#008700;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     </g>
   </g>
 </svg>
