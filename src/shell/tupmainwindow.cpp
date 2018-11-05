@@ -1203,7 +1203,10 @@ void TupMainWindow::updateCurrentTab(int index)
         cameraWidget->updateFirstFrame();
         cameraWidget->setFocus();
 
-        QTimer::singleShot(0, this, SLOT(doPlay()));
+        TCONFIG->beginGroup("AnimationParameters");
+        bool autoPlay = TCONFIG->value("AutoPlay", false).toBool();
+        if (autoPlay)
+            QTimer::singleShot(0, this, SLOT(doPlay()));
     } else {
         if (index == 0) { // Animation mode
             animationTab->updatePerspective(); // Just for Papagayo UI

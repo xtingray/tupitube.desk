@@ -45,12 +45,14 @@ class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
     Q_OBJECT
 
     public:
+        enum Group { Startup = 0, Confirm, Player };
         TupGeneralPreferences();
         ~TupGeneralPreferences();
         void saveValues();
 
     private:
-        QGridLayout * createForm(QStringList keys, QStringList labels);
+        QGridLayout * createForm(const QString &group, Group groupTag,
+                                 QStringList keys, QStringList labels);
         struct Private;
         Private *const k;
 };

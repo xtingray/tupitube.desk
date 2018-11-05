@@ -43,28 +43,39 @@ struct TupGeneralPreferences::Private
 {
     QStringList startup;
     QStringList confirmation;
-    QList<QCheckBox *> checkList;
+    QStringList player;
+
+    QList<QCheckBox *> startupList;
+    QList<QCheckBox *> confirmList;
+    QList<QCheckBox *> playerList;
 };
 
 TupGeneralPreferences::TupGeneralPreferences() : k(new Private)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
-    TCONFIG->beginGroup("General");
 
     k->startup << "OpenLastProject" << "ShowTipOfDay";
 
     QStringList labels;
     labels << tr("Always open last project") << tr("Show tip of the day");
 
-    QGridLayout *startupForm = createForm(k->startup, labels);
+    QGridLayout *startupForm = createForm("General", Startup, k->startup, labels);
 
-    k->confirmation << "ConfirmRemoveFrame" << "ConfirmRemoveLayer" << "ConfirmRemoveScene" << "ConfirmRemoveObject";
+    k->confirmation << "ConfirmRemoveFrame" << "ConfirmRemoveLayer"
+                    << "ConfirmRemoveScene" << "ConfirmRemoveObject";
 
     labels.clear();
-    labels << tr("Confirm \"Remove frame\" action") << tr("Confirm \"Remove layer\" action") << tr("Confirm \"Remove scene\" action") 
-           << tr("Confirm \"Remove object\" action from library"); 
+    labels << tr("Confirm \"Remove frame\" action") << tr("Confirm \"Remove layer\" action")
+           << tr("Confirm \"Remove scene\" action") << tr("Confirm \"Remove object\" action from library");
 
-    QGridLayout *confirmForm = createForm(k->confirmation, labels);
+    QGridLayout *confirmForm = createForm("General", Confirm, k->confirmation, labels);
+
+    k->player << "AutoPlay";
+
+    labels.clear();
+    labels << tr("Render and play project automatically");
+
+    QGridLayout *playerForm = createForm("AnimationParameters", Player, k->player, labels);
 
     QWidget *widget = new QWidget;
     QVBoxLayout *widgetLayout = new QVBoxLayout; 
@@ -91,6 +102,13 @@ TupGeneralPreferences::TupGeneralPreferences() : k(new Private)
     widgetLayout->addWidget(confirmLabel);
     widgetLayout->addLayout(confirmForm);
 
+    widgetLayout->addSpacing(15);
+
+    QLabel *playerLabel = new QLabel(tr("On Player"));
+    playerLabel->setFont(labelFont);
+    widgetLayout->addWidget(playerLabel);
+    widgetLayout->addLayout(playerForm);
+
     widget->setLayout(widgetLayout);
     layout->addWidget(widget);
     layout->setAlignment(widget, Qt::AlignLeft);
@@ -101,29 +119,48 @@ TupGeneralPreferences::~TupGeneralPreferences()
 {
 }
 
-QGridLayout * TupGeneralPreferences::createForm(QStringList keys, QStringList labels)
+QGridLayout * TupGeneralPreferences::createForm(const QString &groupName, Group group,
+                                                QStringList keys, QStringList labels)
 {
-    QGridLayout *startupForm = new QGridLayout;
+    QGridLayout *form = new QGridLayout;
     int total = labels.count();
+
+    TCONFIG->beginGroup(groupName);
+    QList<QCheckBox *> list;
     for (int i=0; i<total; i++) {
          bool flag = TCONFIG->value(keys.at(i)).toBool();
          QCheckBox *check = new QCheckBox(labels.at(i));
          check->setChecked(flag);
-         k->checkList << check;
-         startupForm->addWidget(check, i, 0, Qt::AlignLeft);
+         list << check;
+         form->addWidget(check, i, 0, Qt::AlignLeft);
     }
 
-    return startupForm;
+    if (group == Startup)
+        k->startupList = list;
+    else if (group == Confirm)
+        k->confirmList = list;
+    else if (group == Player)
+        k->playerList = list;
+
+    return form;
 }
 
 void TupGeneralPreferences::saveValues()
 {
     TCONFIG->beginGroup("General");
 
-    QStringList keys = k->startup + k->confirmation;
-    int total = keys.count();
+    int total = k->startup.count();
     for (int i=0; i<total; i++)
-         TCONFIG->setValue(keys.at(i), k->checkList.at(i)->isChecked());
+         TCONFIG->setValue(k->startup.at(i), k->startupList.at(i)->isChecked());
+
+    total = k->confirmation.count();
+    for (int i=0; i<total; i++)
+         TCONFIG->setValue(k->confirmation.at(i), k->confirmList.at(i)->isChecked());
+
+    TCONFIG->beginGroup("AnimationParameters");
+    total = k->player.count();
+    for (int i=0; i<total; i++)
+         TCONFIG->setValue(k->player.at(i), k->playerList.at(i)->isChecked());
 
     TCONFIG->sync();
 }
