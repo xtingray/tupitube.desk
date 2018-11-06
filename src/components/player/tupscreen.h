@@ -122,6 +122,9 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
 
         struct Private;
         Private *const k;
+
+        const TupProject *project;
+        int currentFramePosition;
 };
 
 #endif

@@ -47,9 +47,9 @@ struct TupScreen::Private
     QPoint imagePos;
     bool firstShoot;
     bool isScaled;
-    const TupProject *project;
+    // const TupProject *project;
     bool cyclicAnimation;
-    int currentFramePosition;
+    // int currentFramePosition;
     int currentSceneIndex;
     int fps;
     QTimer *timer;
@@ -73,7 +73,7 @@ struct TupScreen::Private
     bool mute;
 };
 
-TupScreen::TupScreen(TupProject *project, const QSize viewSize, bool isScaled, QWidget *parent) : QFrame(parent), k(new Private)
+TupScreen::TupScreen(TupProject *work, const QSize viewSize, bool isScaled, QWidget *parent) : QFrame(parent), k(new Private)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -84,15 +84,15 @@ TupScreen::TupScreen(TupProject *project, const QSize viewSize, bool isScaled, Q
     #endif
 
     k->container = parent;
-    k->project = project;
-    k->library = project->library();
+    project = work;
+    k->library = work->library();
     k->isScaled = isScaled;
     k->screenDimension = viewSize;
 
     k->cyclicAnimation = false;
     k->fps = 24;
     k->currentSceneIndex = 0;
-    k->currentFramePosition = 0;
+    currentFramePosition = 0;
 
     k->isPlaying = false;
     k->playFlag = true;
@@ -181,7 +181,7 @@ void TupScreen::initPhotogramsArray()
     k->renderControl.clear();
     k->animationList.clear();
 
-    for (int i=0; i < k->project->scenesCount(); i++) {
+    for (int i=0; i < project->scenesCount(); i++) {
          k->renderControl.insert(i, false);
          k->animationList.insert(i, k->newList);
     }
@@ -226,12 +226,12 @@ void TupScreen::paintEvent(QPaintEvent *)
 
     if (!k->mute) {
         if (k->isPlaying && k->playFlag)
-            playSoundAt(k->currentFramePosition);
+            playSoundAt(currentFramePosition);
     }
 
     if (!k->firstShoot) {
-        if (k->currentFramePosition > -1 && k->currentFramePosition < k->photograms.count())
-            k->currentPhotogram = k->photograms[k->currentFramePosition];
+        if (currentFramePosition > -1 && currentFramePosition < k->photograms.count())
+            k->currentPhotogram = k->photograms[currentFramePosition];
     } else {
         k->firstShoot = false;
     }
@@ -264,7 +264,7 @@ void TupScreen::play()
 
     k->isPlaying = true;
     k->playFlag = true;
-    k->currentFramePosition = 0;
+    currentFramePosition = 0;
 
     if (!k->timer->isActive()) {
         if (!k->renderControl.at(k->currentSceneIndex)) {
@@ -311,7 +311,7 @@ void TupScreen::playBack()
 
     k->isPlaying = true;
     k->playBackFlag = true;
-    k->currentFramePosition = k->photograms.count() - 1;
+    currentFramePosition = k->photograms.count() - 1;
 
     if (!k->playBackTimer->isActive()) {
         if (!k->renderControl.at(k->currentSceneIndex)) {
@@ -373,14 +373,14 @@ void TupScreen::stop()
     stopAnimation();
 
     if (k->playFlag) 
-        k->currentFramePosition = 0;
+        currentFramePosition = 0;
     else
-        k->currentFramePosition = k->photograms.count() - 1;
+        currentFramePosition = k->photograms.count() - 1;
 
-    if (k->currentFramePosition == 0)
+    if (currentFramePosition == 0)
         emit frameChanged(1);
     else
-        emit frameChanged(k->currentFramePosition);
+        emit frameChanged(currentFramePosition);
 
     repaint();
 }
@@ -423,12 +423,12 @@ void TupScreen::nextFrame()
     if (!k->renderControl.at(k->currentSceneIndex))
         render();
 
-    k->currentFramePosition += 1;
+    currentFramePosition += 1;
 
-    if (k->currentFramePosition == k->photograms.count())
-        k->currentFramePosition = 0;
+    if (currentFramePosition == k->photograms.count())
+        currentFramePosition = 0;
 
-    emit frameChanged(k->currentFramePosition + 1);
+    emit frameChanged(currentFramePosition + 1);
 
     repaint();
 }
@@ -451,12 +451,12 @@ void TupScreen::previousFrame()
     if (!k->renderControl.at(k->currentSceneIndex))
         render();
 
-    k->currentFramePosition -= 1;
+    currentFramePosition -= 1;
 
-    if (k->currentFramePosition < 0)
-        k->currentFramePosition = k->photograms.count() - 1;
+    if (currentFramePosition < 0)
+        currentFramePosition = k->photograms.count() - 1;
 
-    emit frameChanged(k->currentFramePosition + 1);
+    emit frameChanged(currentFramePosition + 1);
 
     repaint();
 }
@@ -473,22 +473,22 @@ void TupScreen::advance()
     #endif
     */
 
-    if (k->cyclicAnimation && k->currentFramePosition >= k->photograms.count()) {
-        k->currentFramePosition = -1;
+    if (k->cyclicAnimation && currentFramePosition >= k->photograms.count()) {
+        currentFramePosition = -1;
         stopSounds();
     }
 
     /*
-    if (k->currentFramePosition == 0) {
+    if (currentFramePosition == 0) {
         foreach (TupSoundLayer *sound, k->sounds)
             sound->play();
     }
     */
 
-    if (k->currentFramePosition < k->photograms.count()) {
+    if (currentFramePosition < k->photograms.count()) {
         repaint();
-        k->currentFramePosition++;
-        emit frameChanged(k->currentFramePosition);
+        currentFramePosition++;
+        emit frameChanged(currentFramePosition);
     } else if (!k->cyclicAnimation) {
         stop();
     }
@@ -504,12 +504,12 @@ void TupScreen::back()
         #endif
     #endif
 
-    if (k->cyclicAnimation && k->currentFramePosition < 0)
-        k->currentFramePosition = k->photograms.count() - 1;
+    if (k->cyclicAnimation && currentFramePosition < 0)
+        currentFramePosition = k->photograms.count() - 1;
 
-    if (k->currentFramePosition >= 0) {
+    if (currentFramePosition >= 0) {
         repaint();
-        k->currentFramePosition--;
+        currentFramePosition--;
     } else if (!k->cyclicAnimation) {
         stop();
     }
@@ -549,7 +549,7 @@ void TupScreen::sceneResponse(TupSceneResponse *event)
               k->renderControl.removeAt(index);
               k->animationList.removeAt(index);
 
-              if (index == k->project->scenesCount())
+              if (index == project->scenesCount())
                   index--;
 
               updateSceneIndex(index);
@@ -596,7 +596,7 @@ void TupScreen::render()
 
     emit isRendering(0);
 
-    TupScene *scene = k->project->sceneAt(k->currentSceneIndex);
+    TupScene *scene = project->sceneAt(k->currentSceneIndex);
     if (!scene) {
         #ifdef TUP_DEBUG
             QString msg = "TupScreen::render() - [ Fatal Error ] - Scene is NULL! -> index: " + QString::number(k->currentSceneIndex);
@@ -620,11 +620,11 @@ void TupScreen::render()
 
     k->photograms.clear();
 
-    k->renderer = new TupAnimationRenderer(k->project->bgColor(), k->library);
-    k->renderer->setScene(scene, k->project->dimension());
+    k->renderer = new TupAnimationRenderer(project->bgColor(), k->library);
+    k->renderer->setScene(scene, project->dimension());
     int i = 1;
     while (k->renderer->nextPhotogram()) {
-        k->renderized = QImage(k->project->dimension(), QImage::Format_RGB32);
+        k->renderized = QImage(project->dimension(), QImage::Format_RGB32);
         k->painter = new QPainter(&k->renderized);
         k->painter->setRenderHint(QPainter::Antialiasing);
 
@@ -674,7 +674,7 @@ void TupScreen::resizeEvent(QResizeEvent *event)
     #endif
 
     if (k->currentSceneIndex > -1) {
-        k->currentFramePosition = 0;
+        currentFramePosition = 0;
         k->photograms = k->animationList.at(k->currentSceneIndex);
     } else {
         #ifdef TUP_DEBUG
@@ -715,7 +715,7 @@ void TupScreen::updateSceneIndex(int index)
 
     k->currentSceneIndex = index;
     if (k->currentSceneIndex > -1 && k->currentSceneIndex < k->animationList.count()) {
-        k->currentFramePosition = 0;
+        currentFramePosition = 0;
         k->photograms = k->animationList.at(k->currentSceneIndex);
     } else {
         #ifdef TUP_DEBUG
@@ -745,11 +745,11 @@ TupScene *TupScreen::currentScene() const
     #endif
 
     if (k->currentSceneIndex > -1) {
-        return k->project->sceneAt(k->currentSceneIndex);
+        return project->sceneAt(k->currentSceneIndex);
     } else {
-        if (k->project->scenesCount() == 1) {
+        if (project->scenesCount() == 1) {
             k->currentSceneIndex = 0;
-            return k->project->sceneAt(0);
+            return project->sceneAt(0);
         } 
     }
 
@@ -768,7 +768,7 @@ void TupScreen::updateAnimationArea()
     #endif
 
     if (k->currentSceneIndex > -1 && k->currentSceneIndex < k->animationList.count()) {
-        k->currentFramePosition = 0;
+        currentFramePosition = 0;
         k->photograms = k->animationList.at(k->currentSceneIndex);
         updateFirstFrame();
         update();
@@ -797,15 +797,15 @@ void TupScreen::updateFirstFrame()
     #endif
 
     if (k->currentSceneIndex > -1 && k->currentSceneIndex < k->animationList.count()) {
-        TupScene *scene = k->project->sceneAt(k->currentSceneIndex);
+        TupScene *scene = project->sceneAt(k->currentSceneIndex);
         if (scene) { 
             loadSoundRecords();
 
-            k->renderer = new TupAnimationRenderer(k->project->bgColor(), k->library);
-            k->renderer->setScene(scene, k->project->dimension());
+            k->renderer = new TupAnimationRenderer(project->bgColor(), k->library);
+            k->renderer->setScene(scene, project->dimension());
             k->renderer->renderPhotogram(0);
 
-            k->renderized = QImage(k->project->dimension(), QImage::Format_RGB32);
+            k->renderized = QImage(project->dimension(), QImage::Format_RGB32);
 
             QPainter *painter = new QPainter(&k->renderized);
             painter->setRenderHint(QPainter::Antialiasing);
@@ -878,7 +878,7 @@ void TupScreen::loadSoundRecords()
     k->soundRecords.clear();
     k->soundPlayer.clear();
 
-    TupScene *scene = k->project->sceneAt(k->currentSceneIndex);
+    TupScene *scene = project->sceneAt(k->currentSceneIndex);
     // Loading lipSync sounds
     if (scene) {
         if (scene->lipSyncTotal() > 0) {
