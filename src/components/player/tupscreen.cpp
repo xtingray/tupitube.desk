@@ -203,8 +203,22 @@ void TupScreen::paintEvent(QPaintEvent *)
     }
 
     QPainter painter;
-    if (painter.begin(this))
-        painter.drawImage(imagePos, currentPhotogram);
+    if (painter.begin(this)) {
+        if (!currentPhotogram.isNull()) {
+            painter.drawImage(imagePos, currentPhotogram);
+        } else {
+            #ifdef TUP_DEBUG
+                QString msg = "TupScreen::paintEvent() - Photogram is NULL (index: "
+                              + QString::number(currentFramePosition) + "/"
+                              + QString::number(photograms.count()) + ")";
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError() << msg;
+                #endif
+            #endif
+        }
+    }
 
     // SQA: Border for the player. Useful for some tests
     // painter.setPen(QPen(Qt::gray, 0.5, Qt::SolidLine));

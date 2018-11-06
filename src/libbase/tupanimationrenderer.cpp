@@ -121,11 +121,27 @@ bool TupAnimationRenderer::nextPhotogram()
 
 void TupAnimationRenderer::renderPhotogram(int index) 
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupAnimationRenderer::renderPhotogram()] - index -> " << index;
+    #else
+        T_FUNCINFO << " index -> " << index;
+    #endif
+#endif
+
     k->scene->drawPhotogram(index, false);
 }
 
 void TupAnimationRenderer::render(QPainter *painter)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupAnimationRenderer::render()]";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+
     k->scene->render(painter, k->scene->sceneRect().toRect(), 
                      k->scene->sceneRect().toRect(), Qt::IgnoreAspectRatio);
 }
