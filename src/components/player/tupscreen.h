@@ -40,23 +40,14 @@
 #include "tupscene.h"
 #include "tupabstractprojectresponsehandler.h"
 #include "tupprojectresponse.h"
-#include "tupgraphicobject.h"
-#include "tupgraphicsscene.h"
 #include "tupanimationrenderer.h"
-#include "tupsoundlayer.h"
-#include "tuplibrary.h"
 
 #include <QImage>
 #include <QPainter>
 #include <QPaintEvent>
 #include <QFrame>
-#include <QGraphicsItem>
-#include <QApplication>
-#include <QMessageBox>
-#include <QDesktopWidget>
 #include <QTimer>
 #include <QMediaPlayer>
-#include <QUrl>
 
 class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectResponseHandler
 {
@@ -69,7 +60,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         QSize sizeHint() const;
         void setLoop(bool l);
         void updateSceneIndex(int index);
-        TupScene *currentScene() const;
+        TupScene *currentScene();
         int currentSceneIndex();
         void setFPS(int fps);
         void resetPhotograms(int sceneIndex);
@@ -120,11 +111,40 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void playSoundAt(int frame);
         void stopSounds();
 
-        struct Private;
-        Private *const k;
-
         const TupProject *project;
         int currentFramePosition;
+        int sceneIndex;
+        int fps;
+
+        QTimer *timer;
+        QTimer *playBackTimer;
+
+        TupAnimationRenderer *renderer;
+        QList<QImage> photograms;
+        QList<QImage> newList;
+
+        typedef QList<QImage> photoArray;
+        QList<photoArray> animationList;
+
+        QList<bool> renderControl;
+        QSize screenDimension;
+
+        TupLibrary *library;
+        QList<QPair<int, QString> > soundRecords;
+        QList<QMediaPlayer *> soundPlayer;
+
+        bool playerIsActive;
+        bool playFlag;
+        bool playBackFlag;
+        bool mute;
+        bool cyclicAnimation;
+        bool isScaled;
+        bool firstShoot;
+
+        QPoint imagePos;
+        QPainter *painter;
+        QImage renderized;
+        QImage currentPhotogram;
 };
 
 #endif
