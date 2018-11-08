@@ -49,7 +49,7 @@
 #include <QLabel>
 #include <QCheckBox>
 
-class TupCameraStatus;
+// class TupCameraStatus;
 
 class TUPITUBE_EXPORT TupCameraWidget : public QFrame
 {
@@ -76,6 +76,7 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
     public slots:
         bool handleProjectResponse(TupProjectResponse *event);
         void setFPS(int fps);
+        void updateFPS(int fps);
         void setStatusFPS(int fps);
         void updateFramesTotal(int sceneIndex);
         void exportDialog();

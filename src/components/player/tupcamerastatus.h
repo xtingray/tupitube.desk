@@ -36,10 +36,12 @@
 #ifndef TUPCAMERASTATUS_H
 #define TUPCAMERASTATUS_H
 
-#include "tupcamerawidget.h"
-#include "tupexportwidget.h"
+// #include "tupcamerawidget.h"
+// #include "tupexportwidget.h"
 #include "tconfig.h"
-#include "tseparator.h"
+// #include "tseparator.h"
+#include "timagebutton.h"
+#include "tupproject.h"
 
 #include <QFrame>
 #include <QLabel>
@@ -54,7 +56,8 @@ class TUPITUBE_EXPORT TupCameraStatus : public QFrame
     Q_OBJECT
 
     public:
-        TupCameraStatus(TupCameraWidget *camera = 0, bool isNetworked = false, QWidget *parent = 0);
+        // TupCameraStatus(TupCameraWidget *camera = 0, bool isNetworked = false, QWidget *parent = 0);
+        TupCameraStatus(bool isNetworked = false, QWidget *parent = 0);
         ~TupCameraStatus();
 
         void setScenes(TupProject *project);
@@ -69,13 +72,16 @@ class TUPITUBE_EXPORT TupCameraStatus : public QFrame
         void sceneIndexChanged(int index);
         void muteEnabled(bool muteAction);
         void fpsChanged(int fps);
+        void loopChanged();
+        void exportChanged();
+        void postChanged();
 
     private slots:
         void muteAction();
 
     private:
         QSpinBox *fpsBox;
-        QComboBox *scenes;
+        QComboBox *scenesCombo;
         QCheckBox *loopBox;
 
         bool loop;

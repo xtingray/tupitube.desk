@@ -34,10 +34,13 @@
  ***************************************************************************/
 
 #include "tupcamerastatus.h"
+#include "tupscene.h"
+#include "tupexportwidget.h"
 
 #include <QHBoxLayout>
 
-TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWidget *parent) : QFrame(parent)
+//TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWidget *parent) : QFrame(parent)
+TupCameraStatus::TupCameraStatus(bool isNetworked, QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -55,11 +58,11 @@ TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWid
     QBoxLayout *sceneInfoLayout = new QBoxLayout(QBoxLayout::LeftToRight, parent);
 
     QLabel *sceneNameText = new QLabel("<B>" + tr("Scene") + ":</B> ");
-    scenes = new QComboBox();
-    connect(scenes, SIGNAL(activated(int)), this, SIGNAL(sceneIndexChanged(int)));
+    scenesCombo = new QComboBox();
+    connect(scenesCombo, SIGNAL(activated(int)), this, SIGNAL(sceneIndexChanged(int)));
 
     sceneInfoLayout->addWidget(sceneNameText, 1);
-    sceneInfoLayout->addWidget(scenes, 1);
+    sceneInfoLayout->addWidget(scenesCombo, 1);
     sceneInfoLayout->addSpacing(15);
 
     QLabel *label = new QLabel("<B>" + tr("Frames Total") + ":</B> ");
@@ -76,7 +79,7 @@ TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWid
     fpsBox->setMinimum(1);
     fpsBox->setValue(24);
 
-    connect(fpsBox, SIGNAL(valueChanged(int)), camera, SLOT(setFPS(int)));
+    // connect(fpsBox, SIGNAL(valueChanged(int)), camera, SLOT(setFPS(int)));
     connect(fpsBox, SIGNAL(valueChanged(int)), this, SIGNAL(fpsChanged(int)));
 
     sceneInfoLayout->addWidget(fpsText, 1);
@@ -91,7 +94,8 @@ TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWid
 
     loopBox->setShortcut(QKeySequence(tr("Ctrl+L")));
 
-    connect(loopBox, SIGNAL(clicked()), camera, SLOT(setLoop()));
+    // connect(loopBox, SIGNAL(clicked()), camera, SLOT(setLoop()));
+    connect(loopBox, SIGNAL(clicked()), this, SIGNAL(loopChanged()));
 
     TCONFIG->beginGroup("AnimationParameters");
     loop = TCONFIG->value("Loop").toBool();
@@ -115,7 +119,8 @@ TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWid
     exportButton->setFocusPolicy(Qt::NoFocus);
     exportButton->setToolTip(tr("Export Project as Video File"));
 
-    connect(exportButton, SIGNAL(pressed()), camera, SLOT(exportDialog()));
+    // connect(exportButton, SIGNAL(pressed()), camera, SLOT(exportDialog()));
+    connect(exportButton, SIGNAL(pressed()), this, SIGNAL(exportChanged()));
     sceneInfoLayout->addWidget(exportButton, 1);
 
     if (isNetworked) {
@@ -124,7 +129,8 @@ TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWid
         postButton->setIcon(QIcon(THEME_DIR + "icons/import_project.png"));
         postButton->setFocusPolicy(Qt::NoFocus);
 
-        connect(postButton, SIGNAL(pressed()), camera, SLOT(postDialog()));
+        // connect(postButton, SIGNAL(pressed()), camera, SLOT(postDialog()));
+        connect(postButton, SIGNAL(pressed()), this, SIGNAL(postChanged()));
         sceneInfoLayout->addWidget(postButton, 1);
     }
 
@@ -167,20 +173,20 @@ int TupCameraStatus::getFPS()
 
 void TupCameraStatus::setCurrentScene(int index)
 {
-    if (scenes->currentIndex() != index)
-        scenes->setCurrentIndex(index);
+    if (scenesCombo->currentIndex() != index)
+        scenesCombo->setCurrentIndex(index);
 }
 
 void TupCameraStatus::setScenes(TupProject *project)
 {
-    if (scenes->count())
-        scenes->clear();
+    if (scenesCombo->count())
+        scenesCombo->clear();
 
     int scenesCount = project->scenes().size();
     for (int i = 0; i < scenesCount; i++) {
          TupScene *scene = project->scenes().at(i);
          if (scene)
-             scenes->addItem(scene->sceneName());
+             scenesCombo->addItem(scene->sceneName());
     }
 }
 

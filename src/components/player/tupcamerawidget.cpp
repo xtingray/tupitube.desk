@@ -254,11 +254,17 @@ void TupCameraWidget::addControlsBar()
 
 void TupCameraWidget::addStatusPanel(bool isNetworked)
 {
-    status = new TupCameraStatus(this, isNetworked);
+    status = new TupCameraStatus(isNetworked);
     status->setScenes(project);
     connect(status, SIGNAL(sceneIndexChanged(int)), this, SLOT(selectScene(int)));
     connect(status, SIGNAL(muteEnabled(bool)), screen, SLOT(enableMute(bool)));
-    connect(status, SIGNAL(fpsChanged(int)), this,  SLOT(setDuration(int)));
+    // connect(status, SIGNAL(fpsChanged(int)), this, SLOT(setFPS(int)));
+    // connect(status, SIGNAL(fpsChanged(int)), this, SLOT(setDuration(int)));
+    connect(status, SIGNAL(fpsChanged(int)), this, SLOT(updateFPS(int)));
+    connect(status, SIGNAL(loopChanged()), this, SLOT(setLoop()));
+    connect(status, SIGNAL(exportChanged()), this, SLOT(exportDialog()));
+    if (isNetworked)
+        connect(status, SIGNAL(postChanged()), this, SLOT(postDialog()));
 
     updateFramesTotal(0);
     int fps = project->fps();
@@ -293,11 +299,11 @@ void TupCameraWidget::setDimensionLabel(const QSize dimension)
         if (projectWidth > projectHeight) {
             int newH = (projectHeight*screenWidth)/projectWidth;
             playerDimension = QSize(screenWidth, newH);
-            proportion = (double) projectWidth / (double) screenWidth;
+            proportion = static_cast<double>(projectWidth) / static_cast<double>(screenWidth);
         } else { // projectHeight > projectWidth
             int newW = (projectWidth*screenHeight)/projectHeight;
             playerDimension = QSize(newW, screenHeight);
-            proportion = (double) projectHeight / (double) screenHeight;
+            proportion = static_cast<double>(projectHeight) / static_cast<double>(screenHeight);
         }
 
         scale += "1:" + QString::number(proportion, 'g', 2);
@@ -446,6 +452,18 @@ void TupCameraWidget::setFPS(int fps)
     fpsDelta = 1.0/fps;
 }
 
+void TupCameraWidget::setDuration(int fps)
+{
+    qreal time = static_cast<qreal> (framesTotal) / static_cast<qreal> (fps);
+    duration->setText(QString::number(time, 'f', 2) + QString(" " + tr("secs")));
+}
+
+void TupCameraWidget::updateFPS(int fps)
+{
+    setFPS(fps);
+    setDuration(fps);
+}
+
 void TupCameraWidget::setStatusFPS(int fps)
 {
     status->blockSignals(true);
@@ -548,12 +566,6 @@ void TupCameraWidget::updateTimerPanel(int currentFrame)
 void TupCameraWidget::updateSoundItems()
 {
     screen->loadSoundRecords();
-}
-
-void TupCameraWidget::setDuration(int fps)
-{
-    qreal time = (qreal) framesTotal / (qreal) fps;
-    duration->setText(QString::number(time, 'f', 2) + QString(" " + tr("secs")));
 }
 
 void TupCameraWidget::infoDialog()
