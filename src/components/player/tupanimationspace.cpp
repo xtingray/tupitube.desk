@@ -35,21 +35,16 @@
 
 #include "tupanimationspace.h"
 
-struct TupAnimationspace::Private
-{
-    TupCameraWidget *playerInterface;
-    QWidget *container;
-    bool playOn;
-};
+#include <QBoxLayout>
 
-TupAnimationspace::TupAnimationspace(TupCameraWidget *playerUI, QWidget *parent) : QMainWindow(parent), k(new Private)
+TupAnimationspace::TupAnimationspace(TupCameraWidget *playerUI, QWidget *parent) : QMainWindow(parent)
 {
     // TODO: Try a nice dark color for this window
     // setStyleSheet("QMainWindow { background-color: #d0d0d0; }");
 
-    k->playerInterface = playerUI;
-    k->playOn = false;
-    setCameraWidget(k->playerInterface);
+    playerInterface = playerUI;
+    playOn = false;
+    setCameraWidget(playerInterface);
 }
 
 TupAnimationspace::~TupAnimationspace()
@@ -62,21 +57,21 @@ TupAnimationspace::~TupAnimationspace()
         #endif
     #endif
 
-    delete k->playerInterface;
-    k->playerInterface = NULL;
-    delete k->container;
-    k->container = NULL;
-    delete k;
+    delete playerInterface;
+    playerInterface = NULL;
+
+    delete container;
+    container = NULL;
 }
 
 void TupAnimationspace::setCameraWidget(TupCameraWidget *playerUI) 
 {
-    k->container = new QWidget();
-    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, k->container);
-    k->playerInterface = playerUI;
-    layout->addWidget(k->playerInterface, 0, Qt::AlignCenter);
-    k->container->setLayout(layout);
-    setCentralWidget(k->container);
+    container = new QWidget();
+    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, container);
+    playerInterface = playerUI;
+    layout->addWidget(playerInterface, 0, Qt::AlignCenter);
+    container->setLayout(layout);
+    setCentralWidget(container);
 }
 
 void TupAnimationspace::mousePressEvent(QMouseEvent *event)
@@ -98,30 +93,30 @@ void TupAnimationspace::keyPressEvent(QKeyEvent *event)
     switch (event->key()) {
         case Qt::Key_Space:
           {
-              k->playerInterface->doPause();
+              playerInterface->doPause();
           }
         break;
         case Qt::Key_Escape:
           {
               setFocus();
-              k->playOn = false;
-              k->playerInterface->doStop();
+              playOn = false;
+              playerInterface->doStop();
           }
         break;
         case Qt::Key_Right:
           {
-              k->playerInterface->nextFrame(); 
+              playerInterface->nextFrame();
           }
         break;
         case Qt::Key_Left:
           {
-              k->playerInterface->previousFrame();
+              playerInterface->previousFrame();
           }
         break;
         case Qt::Key_Return:
           {
-              k->playOn = false;
-              k->playerInterface->doStop();
+              playOn = false;
+              playerInterface->doStop();
               emit newPerspective(0);
           }
         break;

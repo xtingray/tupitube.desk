@@ -37,19 +37,10 @@
 
 #include <QBoxLayout>
 #include <QLabel>
-#include <QLineEdit>
-#include <QPlainTextEdit>
 #include <QPushButton>
 
-struct TupInfoDialog::Private
-{
-    QLineEdit *projectTags;
-    QLineEdit *authorName;
-    QPlainTextEdit *descText;
-};
-
 TupInfoDialog::TupInfoDialog(const QString &tags, const QString &author, 
-                                     const QString &desc, QWidget *parent) : QDialog(parent), k(new Private)
+                             const QString &desc, QWidget *parent) : QDialog(parent)
 {
     setWindowTitle(tr("Project Information"));
     setModal(true);
@@ -59,24 +50,24 @@ TupInfoDialog::TupInfoDialog(const QString &tags, const QString &author,
     QLabel *tagsLabel = new QLabel(tr("Tags"));
     gridLayout->addWidget(tagsLabel, 0, 0);
 
-    k->projectTags = new QLineEdit();
-    k->projectTags->setText(tags);
-    gridLayout->addWidget(k->projectTags, 0, 1);
+    projectTags = new QLineEdit();
+    projectTags->setText(tags);
+    gridLayout->addWidget(projectTags, 0, 1);
 
     QLabel *authorLabel = new QLabel(tr("Author"));
     gridLayout->addWidget(authorLabel, 1, 0);
 
-    k->authorName = new QLineEdit();
-    k->authorName->setText(author);
-    gridLayout->addWidget(k->authorName, 1, 1);
+    authorName = new QLineEdit();
+    authorName->setText(author);
+    gridLayout->addWidget(authorName, 1, 1);
 
     QLabel *descLabel = new QLabel(tr("Description"));
-    k->descText = new QPlainTextEdit;
-    k->descText->setPlainText(desc);
+    descText = new QPlainTextEdit;
+    descText->setPlainText(desc);
 
     QVBoxLayout *descLayout = new QVBoxLayout;
     descLayout->addWidget(descLabel);
-    descLayout->addWidget(k->descText);
+    descLayout->addWidget(descText);
 
     QPushButton *okButton = new QPushButton(tr("Update"), this);
     connect(okButton, SIGNAL(pressed()), this, SLOT(updateInfo()));
@@ -98,19 +89,18 @@ TupInfoDialog::TupInfoDialog(const QString &tags, const QString &author,
 
 TupInfoDialog::~TupInfoDialog()
 {
-    delete k;
 }
 
 void TupInfoDialog::focusProjectLabel() 
 {
-    k->projectTags->setFocus();
-    k->projectTags->selectAll();
+    projectTags->setFocus();
+    projectTags->selectAll();
 }
 
 void TupInfoDialog::updateInfo()
 {
-    emit dataSent(k->projectTags->text(), 
-                  k->authorName->text(), 
-                  k->descText->toPlainText());
+    emit dataSent(projectTags->text(),
+                  authorName->text(),
+                  descText->toPlainText());
     accept();
 }

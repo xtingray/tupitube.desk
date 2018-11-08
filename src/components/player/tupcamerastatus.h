@@ -42,6 +42,10 @@
 #include "tseparator.h"
 
 #include <QFrame>
+#include <QLabel>
+#include <QComboBox>
+#include <QSpinBox>
+#include <QCheckBox>
 
 class TupCameraWidget;
 
@@ -63,15 +67,24 @@ class TUPITUBE_EXPORT TupCameraStatus : public QFrame
 
     signals:
         void sceneIndexChanged(int index);
-        void muteEnabled(bool mute);
+        void muteEnabled(bool muteAction);
         void fpsChanged(int fps);
 
     private slots:
-        void mute();
+        void muteAction();
 
     private:
-        struct Private;
-        Private *const k;
+        QSpinBox *fpsBox;
+        QComboBox *scenes;
+        QCheckBox *loopBox;
+
+        bool loop;
+        bool mute;
+        int framesTotal;
+
+        QLabel *framesCount;
+        TImageButton *soundButton;
+        QPushButton *exportButton;
 };
 
 #endif

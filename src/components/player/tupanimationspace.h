@@ -40,10 +40,6 @@
 #include "tupcamerawidget.h"
 
 #include <QMainWindow>
-#include <QMouseEvent>
-#include <QDropEvent>
-#include <QLinearGradient>
-#include <QBoxLayout>
 
 class TUPITUBE_EXPORT TupAnimationspace : public QMainWindow
 {
@@ -56,17 +52,15 @@ class TUPITUBE_EXPORT TupAnimationspace : public QMainWindow
 
     protected:
         void mousePressEvent(QMouseEvent *event);
-        // void mouseMoveEvent(QMouseEvent *event);
-        // void mouseReleaseEvent(QMouseEvent *event);
         void keyPressEvent(QKeyEvent *event);
 
     signals:
-        // void contextMenu(const QPoint &point);
         void newPerspective(int index);
 
     private:
-        struct Private;
-        Private *const k;
+        TupCameraWidget *playerInterface;
+        QWidget *container;
+        bool playOn;
 };
 
 #endif

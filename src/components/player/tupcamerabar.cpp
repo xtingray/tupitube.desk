@@ -34,6 +34,10 @@
  ***************************************************************************/
 
 #include "tupcamerabar.h"
+#include "tapplicationproperties.h"
+// #include <QPainter>
+
+#include <QBoxLayout>
 
 TupCameraBar::TupCameraBar(QWidget *parent) : QFrame(parent)
 {
@@ -49,43 +53,43 @@ TupCameraBar::TupCameraBar(QWidget *parent) : QFrame(parent)
     setMidLineWidth(2);
     setLineWidth(1);
 
-    QBoxLayout *m_mainLayout = new QBoxLayout(QBoxLayout::LeftToRight, parent);
-    m_mainLayout->addStretch(1);
+    QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::LeftToRight, parent);
+    mainLayout->addStretch(1);
 
-    m_mainLayout->setSpacing(10);
-    m_mainLayout->setMargin(3);
+    mainLayout->setSpacing(10);
+    mainLayout->setMargin(3);
 
-    m_rew = new TImageButton(QPixmap(THEME_DIR + "icons/rw.png"), 33, this, true);
-    m_rew->setToolTip(tr("Rewind"));
-    m_mainLayout->addWidget(m_rew);
-    connect(m_rew, SIGNAL(clicked()), this, SIGNAL(rew()));
+    rewindButton = new TImageButton(QPixmap(THEME_DIR + "icons/rw.png"), 33, this, true);
+    rewindButton->setToolTip(tr("Rewind"));
+    mainLayout->addWidget(rewindButton);
+    connect(rewindButton, SIGNAL(clicked()), this, SIGNAL(rew()));
 
-    m_play_back = new TImageButton(QPixmap(THEME_DIR + "icons/play_back.png"), 25, this, true);
-    m_play_back->setToolTip(tr("Play in reverse"));
-    m_mainLayout->addWidget(m_play_back);
-    connect(m_play_back, SIGNAL(clicked()), this, SIGNAL(playBack()));
+    playBackButton = new TImageButton(QPixmap(THEME_DIR + "icons/play_back.png"), 25, this, true);
+    playBackButton->setToolTip(tr("Play in reverse"));
+    mainLayout->addWidget(playBackButton);
+    connect(playBackButton, SIGNAL(clicked()), this, SIGNAL(playBack()));
 
-    m_play = new TImageButton(QPixmap(THEME_DIR + "icons/play.png"), 33, this, true);
-    m_play->setToolTip(tr("Play"));
-    m_mainLayout->addWidget(m_play);
-    connect(m_play, SIGNAL(clicked()), this, SIGNAL(play()));
+    playButton = new TImageButton(QPixmap(THEME_DIR + "icons/play.png"), 33, this, true);
+    playButton->setToolTip(tr("Play"));
+    mainLayout->addWidget(playButton);
+    connect(playButton, SIGNAL(clicked()), this, SIGNAL(play()));
 
-    m_pause = new TImageButton(QPixmap(THEME_DIR + "icons/pause.png"), 33, this, true);
-    m_pause->setToolTip(tr("Pause"));
-    m_mainLayout->addWidget(m_pause);
-    connect(m_pause, SIGNAL(clicked()), this, SIGNAL(pause()));
+    pauseButton = new TImageButton(QPixmap(THEME_DIR + "icons/pause.png"), 33, this, true);
+    pauseButton->setToolTip(tr("Pause"));
+    mainLayout->addWidget(pauseButton);
+    connect(pauseButton, SIGNAL(clicked()), this, SIGNAL(pause()));
 
-    m_stop = new TImageButton(QPixmap(THEME_DIR + "icons/stop.png"), 25, this, true);
-    m_stop->setToolTip(tr("Stop"));
-    m_mainLayout->addWidget(m_stop);
-    connect(m_stop, SIGNAL(clicked()), this, SIGNAL(stop()));
+    stopButton = new TImageButton(QPixmap(THEME_DIR + "icons/stop.png"), 25, this, true);
+    stopButton->setToolTip(tr("Stop"));
+    mainLayout->addWidget(stopButton);
+    connect(stopButton, SIGNAL(clicked()), this, SIGNAL(stop()));
 
-    m_ff = new TImageButton(QPixmap(THEME_DIR + "icons/ff.png"), 33, this, true);
-    m_ff->setToolTip(tr("Forward"));
-    m_mainLayout->addWidget(m_ff);
-    connect(m_ff, SIGNAL(clicked()), this, SIGNAL(ff()));
+    ffButton = new TImageButton(QPixmap(THEME_DIR + "icons/ff.png"), 33, this, true);
+    ffButton->setToolTip(tr("Forward"));
+    mainLayout->addWidget(ffButton);
+    connect(ffButton, SIGNAL(clicked()), this, SIGNAL(ff()));
 
-    setLayout(m_mainLayout);
+    setLayout(mainLayout);
 }
 
 TupCameraBar::~TupCameraBar()

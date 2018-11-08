@@ -38,20 +38,17 @@
 
 #include "tglobal.h"
 #include "tupexportwidget.h"
-#include "tseparator.h"
-#include "tupprojectrequest.h"
-#include "tupprojectresponse.h"
-#include "tuprequestbuilder.h"
-#include "tcirclebuttonbar.h"
-#include "tvhbox.h"
 #include "tupscreen.h"
 #include "tupcamerabar.h"
 #include "tupcamerastatus.h"
+#include "tupprojectrequest.h"
 
 #include <QFrame>
+#include <QHBoxLayout>
+#include <QProgressBar>
+#include <QLabel>
+#include <QCheckBox>
 
-class TupProjectResponse;
-class QCheckBox;
 class TupCameraStatus;
 
 class TUPITUBE_EXPORT TupCameraWidget : public QFrame
@@ -106,10 +103,26 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         void addAnimationDisplay();
         void addControlsBar();
         void addStatusPanel(bool isNetworked);
-
         void setDimensionLabel(const QSize dimension);
-        struct Private;
-        Private *const k;
+
+        QBoxLayout *layout;
+        TupScreen *screen;
+        QSize screenDimension;
+        TupCameraBar *cameraBar;
+        QProgressBar *progressBar;
+        TupCameraStatus *status;
+        TupProject *project;
+        QLabel *projectLabel;
+        int currentSceneIndex;
+        QLabel *scaleLabel;
+        QSize playerDimension;
+        bool isScaled;
+        QWidget *titleWidget;
+        QLabel *currentFrameBox;
+        QLabel *timerSecsLabel;
+        QLabel *duration;
+        int framesTotal;
+        double fpsDelta;
 };
 
 #endif

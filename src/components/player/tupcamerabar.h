@@ -38,12 +38,8 @@
 
 #include "tglobal.h"
 #include "timagebutton.h"
-#include "tapplicationproperties.h"
 
 #include <QFrame>
-#include <QPainter>
-#include <QPushButton>
-#include <QBoxLayout>
 
 class TUPITUBE_EXPORT TupCameraBar : public QFrame
 {
@@ -54,14 +50,6 @@ class TUPITUBE_EXPORT TupCameraBar : public QFrame
         ~TupCameraBar();
         void setPalette(const QPalette &);
 
-    private:
-        TImageButton *m_rew;
-        TImageButton *m_play;
-        TImageButton *m_play_back;
-        TImageButton *m_pause;
-        TImageButton *m_stop;
-        TImageButton *m_ff;
-
     signals:
         void playBack();
         void play();
@@ -70,7 +58,13 @@ class TUPITUBE_EXPORT TupCameraBar : public QFrame
         void ff();
         void rew();
 
-    protected:
+    private:
+        TImageButton *rewindButton;
+        TImageButton *playButton;
+        TImageButton *playBackButton;
+        TImageButton *pauseButton;
+        TImageButton *stopButton;
+        TImageButton *ffButton;
 };
 
 #endif

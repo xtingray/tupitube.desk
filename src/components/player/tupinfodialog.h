@@ -49,6 +49,8 @@
 #endif
 
 #include <QDialog>
+#include <QLineEdit>
+#include <QPlainTextEdit>
 
 class TupInfoDialog : public QDialog
 {
@@ -57,6 +59,7 @@ class TupInfoDialog : public QDialog
     public:
         TupInfoDialog(const QString &tags, const QString &author, const QString &desc, QWidget *parent = 0);
         ~TupInfoDialog();
+
         void focusProjectLabel();
 
     signals:
@@ -66,8 +69,9 @@ class TupInfoDialog : public QDialog
         void updateInfo();
 
     private:
-        struct Private;
-        Private *const k;
+        QLineEdit *projectTags;
+        QLineEdit *authorName;
+        QPlainTextEdit *descText;
 };
 
 #endif
