@@ -38,7 +38,6 @@
 
 #include "tglobal.h"
 #include "tcolorcell.h"
-// #include "tupcolorwidget.h"
 #include "tseparator.h"
 
 #include <QPixmap>

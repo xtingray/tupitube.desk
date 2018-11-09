@@ -39,18 +39,6 @@
 #include "tglobal.h"
 
 #include <QDockWidget>
-#include <QPushButton>
-#include <QLabel>
-#include <QTextBrowser>
-#include <QMainWindow>
-#include <QMouseEvent>
-#include <QApplication>
-#include <QPushButton>
-#include <QToolTip>
-#include <QPainter>
-#include <QPainterPath>
-#include <QStyle>
-#include <QStyleOptionButton>
 #include <QTimer>
 
 class TUPITUBE_EXPORT TupConfigurationArea : public QDockWidget
@@ -81,8 +69,10 @@ class TUPITUBE_EXPORT TupConfigurationArea : public QDockWidget
         void paintEvent (QPaintEvent *event);
 
    private:
-        struct Private;
-        Private *const k;
+        QTimer locker;
+        QTimer shower;
+        bool toolTipShowed;
+        QPoint mousePos;
 };
 
 #endif

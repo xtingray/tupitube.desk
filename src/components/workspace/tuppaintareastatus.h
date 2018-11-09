@@ -37,7 +37,6 @@
 #define TUPPAINTAREASTATUS_H
 
 #include "tglobal.h"
-#include "tupdocumentview.h"
 #include "tseparator.h"
 #include "tupbrushmanager.h"
 #include "tcolorcell.h"
@@ -48,11 +47,7 @@
 #include <QPushButton>
 #include <QComboBox>
 #include <QCheckBox>
-#include <QHBoxLayout>
-#include <QIntValidator>
-#include <QObject>
 #include <QLineEdit>
-#include <QDir>
 
 class TUPITUBE_EXPORT TupPaintAreaStatus : public QStatusBar
 {
@@ -96,10 +91,22 @@ class TUPITUBE_EXPORT TupPaintAreaStatus : public QStatusBar
 
     private:
         void updateZoomField(const QString &text);
-        void updateRotationField(const QString &angle);
+        void updateRotationField(const QString &degree);
 
-        struct Private;
-        Private *const k;
+        QPushButton *fullScreenButton;
+        QLineEdit *frameField;
+        QComboBox *zoomCombo;
+        QComboBox *rotationCombo;
+        QCheckBox *antialiasHint;
+
+        TupBrushStatus *contourStatus;
+        TupBrushStatus *fillStatus;
+
+        TupToolStatus *toolStatus;
+        TColorCell::FillType colorContext;
+        qreal scaleFactor;
+        int angle;
+        int currentFrame;
 };
 
 #endif

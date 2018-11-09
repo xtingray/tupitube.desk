@@ -36,23 +36,7 @@
 #include "tuppaintarea.h"
 #include "toptionaldialog.h"
 
-struct TupPaintArea::Private
-{
-    TupProject *project;
-    int currentSceneIndex;
-    QStringList copiesXml;
-    QString currentTool; 
-    bool deleteMode;
-    TupProject::Mode spaceMode;
-    QPointF oldPosition;
-    QPointF position;
-    bool menuOn;
-    QString copyFrameName;
-    bool copyIsValid;
-    bool canvasEnabled;
-};
-
-TupPaintArea::TupPaintArea(TupProject *project, QWidget *parent) : TupPaintAreaBase(parent, project->dimension(), project->library()), k(new Private)
+TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent) : TupPaintAreaBase(parent, work->dimension(), work->library())
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -63,15 +47,15 @@ TupPaintArea::TupPaintArea(TupProject *project, QWidget *parent) : TupPaintAreaB
     #endif
 
     setAccessibleName("WORKSPACE");
-    k->project = project;
-    k->canvasEnabled = false;
-    k->currentSceneIndex = 0;
-    k->deleteMode = false;
-    k->menuOn = false;
-    k->copyIsValid = false;
-    k->currentTool = tr("Pencil");
+    project = work;
+    canvasEnabled = false;
+    globalSceneIndex = 0;
+    deleteMode = false;
+    menuOn = false;
+    copyIsValid = false;
+    currentTool = tr("Pencil");
 
-    setBgColor(project->bgColor());
+    setBgColor(work->bgColor());
 
     setCurrentScene(0);
     graphicsScene()->setCurrentFrame(0, 0);
@@ -89,8 +73,6 @@ TupPaintArea::~TupPaintArea()
 
     graphicsScene()->clear();
     delete graphicsScene();
-
-    delete k;
 }
 
 void TupPaintArea::setCurrentScene(int index)
@@ -103,20 +85,20 @@ void TupPaintArea::setCurrentScene(int index)
         #endif
     #endif
 
-    if (k->project->scenesCount() > 0) {
-        TupScene *scene = k->project->sceneAt(index);
+    if (project->scenesCount() > 0) {
+        TupScene *scene = project->sceneAt(index);
         if (scene) {
-            k->currentSceneIndex = index;
+            globalSceneIndex = index;
             graphicsScene()->setCurrentScene(scene);
         } else {
-            if (k->project->scenesCount() == 1) {
+            if (project->scenesCount() == 1) {
                 setDragMode(QGraphicsView::NoDrag);
-                k->currentSceneIndex = 0;
+                globalSceneIndex = 0;
                 graphicsScene()->setCurrentScene(0);
             } else {
                 #ifdef TUP_DEBUG
                     QString msg1 = "TupPaintArea::setCurrentScene() - [ Fatal Error ] -  No scenes available. Invalid index -> " + QString::number(index);
-                    QString msg2 = "TupPaintArea::setCurrentScene() - Scenes total -> " + QString::number(k->project->scenesCount()); 
+                    QString msg2 = "TupPaintArea::setCurrentScene() - Scenes total -> " + QString::number(project->scenesCount());
                     #ifdef Q_OS_WIN
                         qDebug() << msg1;
                         qDebug() << msg2;
@@ -149,7 +131,7 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
         #endif
     #endif
 
-    if (!k->canvasEnabled)
+    if (!canvasEnabled)
         return;
 
     TupFrame *frame = graphicsScene()->currentFrame();
@@ -177,7 +159,7 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
         return;
     }
 
-    if (k->currentTool.compare(tr("Nodes Selection")) == 0) {
+    if (currentTool.compare(tr("Nodes Selection")) == 0) {
         // If a node is the target... abort!
         if (event->buttons() == Qt::RightButton) {
             if (qgraphicsitem_cast<TControlNode *>(scene()->itemAt(mapToScene(event->pos()), QTransform())))
@@ -186,17 +168,17 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
     }
 
     if (event->buttons() == Qt::RightButton) {
-        if (k->currentTool.compare(tr("PolyLine")) == 0) {
+        if (currentTool.compare(tr("PolyLine")) == 0) {
             emit closePolyLine();
             return;
         }
-        if (k->currentTool.compare(tr("Line")) == 0) {
+        if (currentTool.compare(tr("Line")) == 0) {
             emit closeLine();
             return;
         }
     }
 
-    if (k->currentTool.compare(tr("Object Selection")) == 0) {
+    if (currentTool.compare(tr("Object Selection")) == 0) {
         if (event->buttons() == Qt::RightButton) {
             // If a node is the target... abort!
             if (qgraphicsitem_cast<Node *>(scene()->itemAt(mapToScene(event->pos()), QTransform())))
@@ -224,7 +206,7 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
                 menu->addAction(tr("Copy"), this, SLOT(copyItems()));
             }
 
-            if (!k->copiesXml.isEmpty()) {
+            if (!copiesXml.isEmpty()) {
                 if (!activeSelection)
                     menu->addSeparator();
                 // menu->addAction(tr("Paste"), this, SLOT(pasteItems()), QKeySequence(tr("Ctrl+V")));
@@ -291,8 +273,8 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
             }
             */
 
-            k->position = viewPosition();
-            k->menuOn = true;
+            position = viewPosition();
+            menuOn = true;
             menu->exec(event->globalPos());
         }
     } 
@@ -332,7 +314,7 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
             case TupProjectRequest::RemoveSelection:
             case TupProjectRequest::Exchange:
               {
-                  if (k->spaceMode == TupProject::FRAMES_EDITION)
+                  if (spaceMode == TupProject::FRAMES_EDITION)
                       guiScene->drawCurrentPhotogram();
               }
             break;
@@ -349,7 +331,7 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
                   }
                   guiScene->setCurrentFrame(response->layerIndex(), response->frameIndex());
 
-                  if (k->spaceMode == TupProject::FRAMES_EDITION) {
+                  if (spaceMode == TupProject::FRAMES_EDITION) {
                       guiScene->drawPhotogram(response->frameIndex(), true);
                   } else {
                       guiScene->cleanWorkSpace();
@@ -406,7 +388,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
         case TupProjectRequest::Add:
           {
               if (response->mode() == TupProjectResponse::Redo || response->mode() == TupProjectResponse::Undo) {
-                  if (k->spaceMode == TupProject::FRAMES_EDITION)
+                  if (spaceMode == TupProject::FRAMES_EDITION)
                       guiScene->drawCurrentPhotogram();
               }
               return;
@@ -414,7 +396,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
         break;
         case TupProjectRequest::Remove:
           {
-              TupScene *scene = k->project->sceneAt(k->currentSceneIndex);
+              TupScene *scene = project->sceneAt(globalSceneIndex);
 
               if (scene->layersCount() > 1) {
                   if (response->layerIndex() != 0)
@@ -422,7 +404,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
                   else
                       guiScene->setCurrentFrame(response->layerIndex() + 1, frameIndex);
 
-                  if (k->spaceMode == TupProject::FRAMES_EDITION) {
+                  if (spaceMode == TupProject::FRAMES_EDITION) {
                       guiScene->drawCurrentPhotogram();
                   } else {
                       guiScene->cleanWorkSpace();
@@ -431,7 +413,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
               } else {
                   if (scene->layersCount() == 1) {
                       guiScene->setCurrentFrame(0, frameIndex);
-                      if (k->spaceMode == TupProject::FRAMES_EDITION) {
+                      if (spaceMode == TupProject::FRAMES_EDITION) {
                           guiScene->drawCurrentPhotogram();
                       } else {
                           guiScene->cleanWorkSpace();
@@ -452,7 +434,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
         case TupProjectRequest::TupProjectRequest::View:
           {
               guiScene->updateLayerVisibility(response->layerIndex(), response->arg().toBool());
-              if (k->spaceMode == TupProject::FRAMES_EDITION) {
+              if (spaceMode == TupProject::FRAMES_EDITION) {
                   guiScene->drawCurrentPhotogram();
               } else {
                   guiScene->cleanWorkSpace();
@@ -464,7 +446,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
         case TupProjectRequest::TupProjectRequest::Move:
           {
               guiScene->setCurrentFrame(response->arg().toInt(), frameIndex);
-              if (k->spaceMode == TupProject::FRAMES_EDITION) {
+              if (spaceMode == TupProject::FRAMES_EDITION) {
                   guiScene->drawCurrentPhotogram();
               } else {
                   guiScene->cleanWorkSpace();
@@ -475,7 +457,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
         break;
         default:
           {
-              if (k->spaceMode == TupProject::FRAMES_EDITION) {
+              if (spaceMode == TupProject::FRAMES_EDITION) {
                   guiScene->drawCurrentPhotogram();
               } else {
                   guiScene->cleanWorkSpace();
@@ -510,7 +492,7 @@ void TupPaintArea::sceneResponse(TupSceneResponse *event)
             case TupProjectRequest::Select:
               {
                   if (event->sceneIndex() >= 0) {
-                      if (k->project->scenesCount() == 1)
+                      if (project->scenesCount() == 1)
                           setCurrentScene(0);
                       else
                           setCurrentScene(event->sceneIndex());
@@ -519,7 +501,7 @@ void TupPaintArea::sceneResponse(TupSceneResponse *event)
             break;
             case TupProjectRequest::Remove:
               {
-                  if (k->project->scenesCount() > 0)
+                  if (project->scenesCount() > 0)
                       setCurrentScene(event->sceneIndex() - 1);
               }
             break;
@@ -588,8 +570,8 @@ void TupPaintArea::itemResponse(TupItemResponse *response)
             break;
             case TupProjectRequest::Remove:
               { 
-                  if (!k->deleteMode) {
-                      if (k->spaceMode == TupProject::FRAMES_EDITION) {
+                  if (!deleteMode) {
+                      if (spaceMode == TupProject::FRAMES_EDITION) {
                           guiScene->drawCurrentPhotogram();
                       } else {
                           guiScene->cleanWorkSpace();
@@ -608,7 +590,7 @@ void TupPaintArea::itemResponse(TupItemResponse *response)
             break;
             default:
               {
-                  if (k->spaceMode == TupProject::FRAMES_EDITION) {
+                  if (spaceMode == TupProject::FRAMES_EDITION) {
                       guiScene->drawCurrentPhotogram();
                   } else {
                       guiScene->cleanWorkSpace();
@@ -617,7 +599,7 @@ void TupPaintArea::itemResponse(TupItemResponse *response)
 
                   viewport()->update(scene()->sceneRect().toRect());
 
-                  if (guiScene->currentTool()->toolType() != TupToolInterface::Tweener && k->currentTool.compare(tr("PolyLine")) != 0)
+                  if (guiScene->currentTool()->toolType() != TupToolInterface::Tweener && currentTool.compare(tr("PolyLine")) != 0)
                       guiScene->resetCurrentTool();
               }
             break;
@@ -661,7 +643,7 @@ void TupPaintArea::libraryResponse(TupLibraryResponse *request)
         switch (request->action()) {
             case TupProjectRequest::InsertSymbolIntoFrame:
               {
-                  if (k->spaceMode == TupProject::FRAMES_EDITION) {
+                  if (spaceMode == TupProject::FRAMES_EDITION) {
                       guiScene->drawCurrentPhotogram();
                   } else {
                       guiScene->cleanWorkSpace();
@@ -670,14 +652,14 @@ void TupPaintArea::libraryResponse(TupLibraryResponse *request)
 
                   viewport()->update(scene()->sceneRect().toRect());
 
-                  if (k->currentTool.compare(tr("Object Selection")) == 0)
+                  if (currentTool.compare(tr("Object Selection")) == 0)
                       emit itemAddedOnSelection(guiScene);
               }
             break;
             case TupProjectRequest::Remove:
             case TupProjectRequest::RemoveSymbolFromFrame:
               {
-                  if (k->spaceMode == TupProject::FRAMES_EDITION) {
+                  if (spaceMode == TupProject::FRAMES_EDITION) {
                       guiScene->drawCurrentPhotogram();
                   } else {
                       guiScene->cleanWorkSpace();
@@ -722,7 +704,7 @@ void TupPaintArea::deleteItems()
         #endif
     #endif
 
-    if (k->currentTool.compare(tr("Object Selection")) != 0 && k->currentTool.compare(tr("Nodes Selection")) != 0)
+    if (currentTool.compare(tr("Object Selection")) != 0 && currentTool.compare(tr("Nodes Selection")) != 0)
         return;
 
     QList<QGraphicsItem *> selected = scene()->selectedItems();
@@ -737,10 +719,10 @@ void TupPaintArea::deleteItems()
         if (currentScene) {
             int counter = 0;
             int total = selected.count();
-            k->deleteMode = true;
+            deleteMode = true;
             foreach (QGraphicsItem *item, selected) {
                      if (counter == total-1) 
-                         k->deleteMode = false;
+                         deleteMode = false;
 
                      TupLibraryObject::Type type = TupLibraryObject::Svg;
                      TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
@@ -748,7 +730,7 @@ void TupPaintArea::deleteItems()
                      int frameIndex = -1;
                      int layerIndex = -1;
 
-                     if (k->spaceMode == TupProject::FRAMES_EDITION) {
+                     if (spaceMode == TupProject::FRAMES_EDITION) {
                          frameIndex = currentScene->currentFrameIndex();
                          layerIndex = currentScene->currentLayerIndex();
                          if (svg) {
@@ -761,7 +743,7 @@ void TupPaintArea::deleteItems()
                          TupBackground *bg = currentScene->scene()->background();
                          if (bg) {
                              TupFrame *frame;
-                             if (k->spaceMode == TupProject::STATIC_BACKGROUND_EDITION)
+                             if (spaceMode == TupProject::STATIC_BACKGROUND_EDITION)
                                  frame = bg->staticFrame();
                              else
                                  frame = bg->dynamicFrame();
@@ -797,8 +779,8 @@ void TupPaintArea::deleteItems()
 
                      if (itemIndex >= 0) {
                          TupProjectRequest event = TupRequestBuilder::createItemRequest( 
-                                                   currentScene->currentSceneIndex(), layerIndex, frameIndex, 
-                                                   itemIndex, QPointF(), k->spaceMode, type,
+                                                   currentScene->currentSceneIndex(), layerIndex, frameIndex,
+                                                   itemIndex, QPointF(), spaceMode, type,
                                                    TupProjectRequest::Remove);
                          emit requestTriggered(&event);
                      } else {
@@ -828,11 +810,11 @@ void TupPaintArea::ungroupItems()
         if (currentScene) {
             foreach (QGraphicsItem *item, selected) {
                      TupProjectRequest event = TupRequestBuilder::createItemRequest( 
-                                              currentScene->currentSceneIndex(), 
+                                              currentScene->currentSceneIndex(),
                                               currentScene->currentLayerIndex(), 
                                               currentScene->currentFrameIndex(), 
                                               currentScene->currentFrame()->indexOf(item), QPointF(), 
-                                              k->spaceMode, TupLibraryObject::Item,
+                                              spaceMode, TupLibraryObject::Item,
                                               TupProjectRequest::Ungroup);
                      emit requestTriggered(&event);
             }
@@ -851,7 +833,7 @@ void TupPaintArea::copyItems()
         #endif
     #endif
 
-    k->copiesXml.clear();
+    copiesXml.clear();
     QList<QGraphicsItem *> selected = scene()->selectedItems();
 
     if (!selected.isEmpty()) {
@@ -863,11 +845,11 @@ void TupPaintArea::copyItems()
         TupGraphicsScene* currentScene = graphicsScene();
 
         if (currentScene) {
-            k->oldPosition = selected.at(0)->boundingRect().topLeft();
+            oldPosition = selected.at(0)->boundingRect().topLeft();
             foreach (QGraphicsItem *item, selected) {
                 QDomDocument dom;
                 dom.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(dom));
-                k->copiesXml << dom.toString();
+                copiesXml << dom.toString();
 
                 // Paint it to clipbard
                 QPixmap toPixmap(item->boundingRect().size().toSize());
@@ -912,13 +894,13 @@ void TupPaintArea::pasteItems()
         #endif
     #endif
 
-    if (!k->copiesXml.isEmpty()) {
+    if (!copiesXml.isEmpty()) {
         TupGraphicsScene* currentScene = graphicsScene();
 
-        if (!k->menuOn)
-            k->position = viewPosition();
+        if (!menuOn)
+            position = viewPosition();
     
-        foreach (QString xml, k->copiesXml) {
+        foreach (QString xml, copiesXml) {
             TupFrame *frame = currentScene->currentFrame();
             if (frame) {
                 int total = frame->graphicItemsCount();
@@ -932,7 +914,7 @@ void TupPaintArea::pasteItems()
                 TupProjectRequest event = TupRequestBuilder::createItemRequest(currentScene->currentSceneIndex(),
                                           currentScene->currentLayerIndex(),
                                           currentScene->currentFrameIndex(),
-                                          total, itemPoint(xml), k->spaceMode, type,   
+                                          total, itemPoint(xml), spaceMode, type,
                                           TupProjectRequest::Add, xml);
                 emit requestTriggered(&event);
             } else {
@@ -946,7 +928,7 @@ void TupPaintArea::pasteItems()
                 #endif
             }
         }
-        k->menuOn = false;
+        menuOn = false;
     } else {
         pasteCurrentFrame();
     }
@@ -964,14 +946,14 @@ void TupPaintArea::multipasteObject(int pasteTotal)
 
     TupGraphicsScene* currentScene = graphicsScene();
 
-    if (!k->menuOn)
-        k->position = viewPosition();
+    if (!menuOn)
+        position = viewPosition();
    
-    foreach (QString xml, k->copiesXml) {
+    foreach (QString xml, copiesXml) {
              TupLibraryObject::Type type = TupLibraryObject::Item;
              int total = currentScene->currentFrame()->graphicItemsCount();
 
-             TupScene *scene = k->project->sceneAt(currentScene->currentSceneIndex());
+             TupScene *scene = project->sceneAt(currentScene->currentSceneIndex());
              if (scene) {
                  int framesCount = scene->framesCount();
                  int currentFrame = currentScene->currentFrameIndex();
@@ -980,7 +962,7 @@ void TupPaintArea::multipasteObject(int pasteTotal)
                  
                  if (distance < 0) {
                      for (int i=framesCount; i<=newFrameIndex; i++) {
-                          TupProjectRequest request = TupRequestBuilder::createFrameRequest(k->currentSceneIndex,
+                          TupProjectRequest request = TupRequestBuilder::createFrameRequest(globalSceneIndex,
                                                       currentScene->currentLayerIndex(), i, TupProjectRequest::Add, 
                                                       tr("Frame"));
                           emit requestTriggered(&request);
@@ -994,16 +976,16 @@ void TupPaintArea::multipasteObject(int pasteTotal)
 
                  int limit = currentFrame + pasteTotal;
                  for (int i=currentFrame+1; i<=limit; i++) {
-                      TupProjectRequest event = TupRequestBuilder::createItemRequest(k->currentSceneIndex,
+                      TupProjectRequest event = TupRequestBuilder::createItemRequest(globalSceneIndex,
                                                                    currentScene->currentLayerIndex(),
-                                                                   i, total, itemPoint(xml), k->spaceMode, type,
+                                                                   i, total, itemPoint(xml), spaceMode, type,
                                                                    TupProjectRequest::Add, xml);
                       emit requestTriggered(&event);
                  }
              }
      }
 
-     k->menuOn = false;
+     menuOn = false;
 }
 
 QPoint TupPaintArea::itemPoint(const QString &xml)
@@ -1103,7 +1085,7 @@ void TupPaintArea::addSelectedItemsToLibrary()
         return;
     }
 
-    TupLibraryDialog dialog(k->project->library());
+    TupLibraryDialog dialog(project->library());
     foreach (QGraphicsItem *item, selected)
         dialog.addItem(item);
 
@@ -1116,7 +1098,7 @@ void TupPaintArea::addSelectedItemsToLibrary()
                 doc.appendChild(itemSerializable->toXml(doc));
 
                 TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, 
-                                            symName, TupLibraryObject::Item, k->spaceMode, doc.toString().toLocal8Bit(), QString());
+                                            symName, TupLibraryObject::Item, spaceMode, doc.toString().toLocal8Bit(), QString());
                 emit requestTriggered(&request);
             }
         }
@@ -1163,7 +1145,7 @@ void TupPaintArea::requestItemMovement(QAction *action)
                  if (ok) {
                      TupProjectRequest event = TupRequestBuilder::createItemRequest(currentScene->currentSceneIndex(),
                                                currentScene->currentLayerIndex(), currentScene->currentFrameIndex(), index, QPointF(), 
-                                               k->spaceMode, type, TupProjectRequest::Move, moveType);
+                                               spaceMode, type, TupProjectRequest::Move, moveType);
                      emit requestTriggered(&event);
                  } else {
                      #ifdef TUP_DEBUG
@@ -1198,7 +1180,7 @@ void TupPaintArea::updatePaintArea()
         #endif
     #endif
 
-    if (k->spaceMode == TupProject::FRAMES_EDITION) {
+    if (spaceMode == TupProject::FRAMES_EDITION) {
         TupGraphicsScene* currentScene = graphicsScene();
         currentScene->drawCurrentPhotogram();
     } else {
@@ -1233,8 +1215,8 @@ void TupPaintArea::setCurrentTool(QString tool)
         #endif
     #endif
 
-    k->currentTool = tool;
-    k->canvasEnabled = true;
+    currentTool = tool;
+    canvasEnabled = true;
 }
 
 void TupPaintArea::updateSpaceContext()
@@ -1248,8 +1230,8 @@ void TupPaintArea::updateSpaceContext()
     #endif
 
     TupGraphicsScene* currentScene = graphicsScene();
-    currentScene->setSpaceMode(k->project->spaceContext());
-    k->spaceMode = k->project->spaceContext();
+    currentScene->setSpaceMode(project->spaceContext());
+    spaceMode = project->spaceContext();
 }
 
 void TupPaintArea::setOnionFactor(double value)
@@ -1261,7 +1243,7 @@ void TupPaintArea::setOnionFactor(double value)
 void TupPaintArea::keyPressEvent(QKeyEvent *event)
 {
     #ifdef TUP_DEBUG
-        QString msg1 = "TupPaintArea::keyPressEvent() - Current tool: " + k->currentTool;
+        QString msg1 = "TupPaintArea::keyPressEvent() - Current tool: " + currentTool;
         QString msg2 = "TupPaintArea::keyPressEvent() - Key: " + QString::number(event->key());
         QString msg3 = "TupPaintArea::keyPressEvent() - Key: " + event->text(); 
         #ifdef Q_OS_WIN
@@ -1329,7 +1311,7 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
         }
     }
 
-    if (k->currentTool.compare(tr("PolyLine")) == 0) {
+    if (currentTool.compare(tr("PolyLine")) == 0) {
         if (event->key() == Qt::Key_X)
             emit closePolyLine();
         return;
@@ -1423,17 +1405,17 @@ void TupPaintArea::copyCurrentFrame()
     int layerIndex = gScene->currentLayerIndex();
     int frameIndex = gScene->currentFrameIndex();
 
-    k->copyFrameName = tr("Frame");
-    TupScene *scene = k->project->sceneAt(sceneIndex);
+    copyFrameName = tr("Frame");
+    TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
         TupLayer *layer = scene->layerAt(layerIndex);
         if (layer) {
             TupFrame *frame = layer->frameAt(frameIndex);
             if (frame) {
-                k->copyFrameName = frame->frameName();
+                copyFrameName = frame->frameName();
                 TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex, TupProjectRequest::Copy);
                 emit localRequestTriggered(&request);
-                k->copyIsValid = true;
+                copyIsValid = true;
             }
         }
     }
@@ -1441,7 +1423,7 @@ void TupPaintArea::copyCurrentFrame()
 
 void TupPaintArea::pasteCurrentFrame()
 {
-    if (k->copyIsValid) {
+    if (copyIsValid) {
         TupGraphicsScene *gScene = graphicsScene();
         int sceneIndex = gScene->currentSceneIndex();
         int layerIndex = gScene->currentLayerIndex();
@@ -1450,7 +1432,7 @@ void TupPaintArea::pasteCurrentFrame()
         TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex, TupProjectRequest::Paste);
         emit localRequestTriggered(&request);
 
-        request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex, TupProjectRequest::Rename, k->copyFrameName);
+        request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex, TupProjectRequest::Rename, copyFrameName);
         emit requestTriggered(&request);
     }
 }

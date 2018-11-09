@@ -34,23 +34,22 @@
  ***************************************************************************/
 
 #include "tupcanvas.h"
+#include "tuptoolplugin.h"
+#include "timagebutton.h"
+#include "tuppendialog.h"
+#include "tuponiondialog.h"
 
-struct TupCanvas::Private
-{
-    QColor currentColor;
-    TupBrushManager *brushManager;
-    int frameIndex;
-    int layerIndex;
-    int sceneIndex;
-    QSize size;
-    TupGraphicsScene *scene;
-    TupProject *project;
-    UserHand hand;
-};
+#include <QColorDialog>
+#include <QIcon>
+#include <QBoxLayout>
+#include <QDesktopWidget>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QBuffer>
 
-TupCanvas::TupCanvas(QWidget *parent, Qt::WindowFlags flags, TupGraphicsScene *scene, 
-                   const QPointF centerPoint, const QSize &screenSize, TupProject *project, qreal scaleFactor,
-                   int angle, TupBrushManager *brushManager) : QFrame(parent, flags), k(new Private)
+TupCanvas::TupCanvas(QWidget *parent, Qt::WindowFlags flags, TupGraphicsScene *gScene,
+                   const QPointF centerPoint, const QSize &screenSize, TupProject *work, qreal scaleFactor,
+                   int angle, TupBrushManager *manager) : QFrame(parent, flags)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -63,15 +62,15 @@ TupCanvas::TupCanvas(QWidget *parent, Qt::WindowFlags flags, TupGraphicsScene *s
     setWindowTitle("TupiTube Desk");
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/animation_mode.png")));
 
-    k->hand = Right;
-    k->scene = scene;
+    hand = Right;
+    scene = gScene;
   
-    k->size = project->dimension();
-    k->currentColor = brushManager->penColor();
-    k->brushManager = brushManager;
-    k->project = project;
+    size = work->dimension();
+    currentColor = manager->penColor();
+    brushManager = manager;
+    project = work;
 
-    graphicsView = new TupCanvasView(this, scene, screenSize, k->size, project->bgColor());
+    graphicsView = new TupCanvasView(this, gScene, screenSize, size, work->bgColor());
     connect(graphicsView, SIGNAL(rightClick()), this, SIGNAL(rightClick()));
     connect(graphicsView, SIGNAL(zoomIn()), this, SLOT(wakeUpZoomIn()));
     connect(graphicsView, SIGNAL(zoomOut()), this, SLOT(wakeUpZoomOut()));
@@ -183,12 +182,12 @@ TupCanvas::TupCanvas(QWidget *parent, Qt::WindowFlags flags, TupGraphicsScene *s
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(2);
 
-    if (k->hand == Right)
+    if (hand == Right)
         layout->addLayout(controls);
 
     layout->addWidget(graphicsView);
 
-    if (k->hand == Left)
+    if (hand == Left)
         layout->addLayout(controls);
 
     setLayout(layout);
@@ -213,14 +212,14 @@ void TupCanvas::colorDialog(const QColor &current)
 {
     QColor color = QColorDialog::getColor(current, this);
     if (color.isValid()) { 
-        k->currentColor = color;
+        currentColor = color;
         emit colorChangedFromFullScreen(color);
     }
 }
 
 void TupCanvas::colorDialog()
 {
-    QColor color = QColorDialog::getColor(k->currentColor, this);
+    QColor color = QColorDialog::getColor(currentColor, this);
     if (color.isValid())
         emit colorChangedFromFullScreen(color);
 }
@@ -228,7 +227,7 @@ void TupCanvas::colorDialog()
 void TupCanvas::penDialog()
 {
     QDesktopWidget desktop;
-    TupPenDialog *dialog = new TupPenDialog(k->brushManager, this);
+    TupPenDialog *dialog = new TupPenDialog(brushManager, this);
     connect(dialog, SIGNAL(updatePen(int)), this, SIGNAL(penWidthChangedFromFullScreen(int)));
 
     QApplication::restoreOverrideCursor();
@@ -241,7 +240,7 @@ void TupCanvas::penDialog()
 void TupCanvas::onionDialog()
 {
     QDesktopWidget desktop;
-    TupOnionDialog *dialog = new TupOnionDialog(k->brushManager->penColor(), k->scene->opacity(), this);
+    TupOnionDialog *dialog = new TupOnionDialog(brushManager->penColor(), scene->opacity(), this);
     connect(dialog, SIGNAL(updateOpacity(double)), this, SLOT(setOnionOpacity(double)));
 
     QApplication::restoreOverrideCursor();
@@ -253,21 +252,21 @@ void TupCanvas::onionDialog()
 
 void TupCanvas::setOnionOpacity(double opacity)
 {
-    k->scene->setOnionFactor(opacity);
+    scene->setOnionFactor(opacity);
     emit onionOpacityChangedFromFullScreen(opacity); 
 }
 
 void TupCanvas::oneFrameBack()
 {
-    if (k->frameIndex > 0) {
-        k->frameIndex--;
+    if (frameIndex > 0) {
+        frameIndex--;
         emit callAction(TupToolPlugin::Arrows, TupToolPlugin::LeftArrow);
     }
 }
 
 void TupCanvas::oneFrameForward()
 {
-    k->frameIndex++;
+    frameIndex++;
     emit callAction(TupToolPlugin::Arrows, TupToolPlugin::RightArrow);
 }
 
@@ -309,7 +308,7 @@ void TupCanvas::wakeUpLibrary()
             f.close();
             TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, tag,
                                         TupLibraryObject::Svg, TupProject::FRAMES_EDITION, data, QString(),
-                                        k->scene->currentSceneIndex(), k->scene->currentLayerIndex(), k->scene->currentFrameIndex());
+                                        scene->currentSceneIndex(), scene->currentLayerIndex(), scene->currentFrameIndex());
             emit requestTriggered(&request);
         }
     } else {
@@ -322,8 +321,8 @@ void TupCanvas::wakeUpLibrary()
             QPixmap *pixmap = new QPixmap(graphicPath);
             int picWidth = pixmap->width();
             int picHeight = pixmap->height();
-            int projectWidth = k->size.width(); 
-            int projectHeight = k->size.height();
+            int projectWidth = size.width();
+            int projectHeight = size.height();
 
             if (picWidth > projectWidth || picHeight > projectHeight) {
                 QDesktopWidget desktop;
@@ -362,7 +361,7 @@ void TupCanvas::wakeUpLibrary()
 
            TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, tag,
                                                                                TupLibraryObject::Image, TupProject::FRAMES_EDITION, data, QString(),
-                                                                               k->scene->currentSceneIndex(), k->scene->currentLayerIndex(), k->scene->currentFrameIndex());
+                                                                               scene->currentSceneIndex(), scene->currentLayerIndex(), scene->currentFrameIndex());
            emit requestTriggered(&request);
 
            data.clear();

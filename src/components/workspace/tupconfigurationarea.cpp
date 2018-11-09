@@ -35,20 +35,25 @@
 
 #include "tupconfigurationarea.h"
 
-struct TupConfigurationArea::Private
-{
-    QTimer locker;
-    QTimer shower;
-    bool toolTipShowed;
-    QPoint mousePos;
-};
+#include <QPushButton>
+#include <QLabel>
+#include <QTextBrowser>
+#include <QMainWindow>
+#include <QMouseEvent>
+#include <QApplication>
+#include <QPushButton>
+#include <QToolTip>
+#include <QPainter>
+#include <QPainterPath>
+#include <QStyle>
+#include <QStyleOptionButton>
 
-TupConfigurationArea::TupConfigurationArea(QWidget *parent) : QDockWidget(parent), k(new Private)
+TupConfigurationArea::TupConfigurationArea(QWidget *parent) : QDockWidget(parent)
 {
-    k->toolTipShowed = false;
+    toolTipShowed = false;
     setAllowedAreas(Qt::RightDockWidgetArea);
 
-    connect(&k->shower, SIGNAL(timeout()), this, SLOT(showConfigurator()));
+    connect(&shower, SIGNAL(timeout()), this, SLOT(showConfigurator()));
 }
 
 TupConfigurationArea::~TupConfigurationArea()
@@ -57,8 +62,6 @@ TupConfigurationArea::~TupConfigurationArea()
         widget()->hide();
         widget()->setParent(0);
     }
-
-    delete k;
 }
 
 QSize TupConfigurationArea::sizeHint() const
@@ -90,7 +93,7 @@ void TupConfigurationArea::setConfigurator(QWidget *w, int minWidth)
 
 void TupConfigurationArea::toggleLock()
 {
-    k->locker.stop();
+    locker.stop();
     hideConfigurator();
 }
 
@@ -117,7 +120,7 @@ void TupConfigurationArea::shrink()
         return;
     }
 
-    bool hmt = mainWindow->hasMouseTracking();
+    bool mouseTrackingFlag = mainWindow->hasMouseTracking();
     int pm = style()->pixelMetric(QStyle::PM_DockWidgetSeparatorExtent);
 
     mainWindow->setMouseTracking(true);
@@ -131,11 +134,11 @@ void TupConfigurationArea::shrink()
         wOffset = 20;
         hOffset = -(y() * 2 + pm - 1); // SQA: FIXME FIXME FIXME
     } else if (position == Qt::LeftDockWidgetArea) {
-               wOffset = width()+(pm/2)+1;
-               hOffset = height() / 2;
+        wOffset = width()+(pm/2)+1;
+        hOffset = height() / 2;
     } else if (position == Qt::RightDockWidgetArea) {
-               wOffset = -(pm/2)+1;
-               hOffset = height() / 2;
+        wOffset = -(pm/2)+1;
+        hOffset = height() / 2;
     }
 
     QMouseEvent press(QEvent::MouseButtonPress,
@@ -221,33 +224,33 @@ void TupConfigurationArea::shrink()
     }
 
     qApp->processEvents();
-    mainWindow->setMouseTracking(hmt);
+    mainWindow->setMouseTracking(mouseTrackingFlag);
 }
 
 void TupConfigurationArea::enterEvent(QEvent *event)
 {
     Q_UNUSED(event);
 
-    if (k->locker.isActive()) 
-        k->locker.stop();
+    if (locker.isActive())
+        locker.stop();
 
-    if (k->shower.isActive())
+    if (shower.isActive())
         return;
 
-    k->shower.start(300);
+    shower.start(300);
 }
 
 void TupConfigurationArea::leaveEvent(QEvent *event)
 {
     Q_UNUSED(event);
 
-    if (k->shower.isActive())
-        k->shower.stop();
+    if (shower.isActive())
+        shower.stop();
 
-    if (k->locker.isActive() || rect().contains(mapFromGlobal(QCursor::pos())) || hasFocus())
+    if (locker.isActive() || rect().contains(mapFromGlobal(QCursor::pos())) || hasFocus())
         return;
 
-    k->locker.start(1000);
+    locker.start(1000);
 }
 
 void TupConfigurationArea::showConfigurator()
@@ -255,7 +258,6 @@ void TupConfigurationArea::showConfigurator()
     QWidget *widget = this->widget();
 
     if (widget && !isFloating()) {
-        // widget->setMinimumWidth(0);
         widget->setVisible(true);
 
         QPalette pal = parentWidget()->palette();
@@ -265,8 +267,8 @@ void TupConfigurationArea::showConfigurator()
         setFeatures(QDockWidget::AllDockWidgetFeatures);
     }
 
-    k->shower.stop();
-    k->mousePos = QCursor::pos();
+    shower.stop();
+    mousePos = QCursor::pos();
 }
 
 void TupConfigurationArea::hideConfigurator()
@@ -274,31 +276,26 @@ void TupConfigurationArea::hideConfigurator()
     QWidget *widget = this->widget();
 
     if (widget && !isFloating ()) {
-        // widget->setMinimumWidth(10);
         widget->setVisible(false);
         setFeatures(QDockWidget::NoDockWidgetFeatures);
-
-        // =================
 
         QPalette pal = palette();
         pal.setBrush(QPalette::Background, pal.button());
         setPalette(pal);
         setAutoFillBackground(true);
 
-        //==================
-
         for (int i = 0; i < 2; ++i) 
              qApp->processEvents();
 
         shrink();
 
-        if (!k->toolTipShowed) {
-            QToolTip::showText (k->mousePos, tr("Cursor here for expand"), this);
-            k->toolTipShowed = true;
+        if (!toolTipShowed) {
+            QToolTip::showText (mousePos, tr("Cursor here for expand"), this);
+            toolTipShowed = true;
         }
     }
 
-    k->mousePos = QCursor::pos();
+    mousePos = QCursor::pos();
 }
 
 void TupConfigurationArea::paintEvent(QPaintEvent *event)
@@ -320,16 +317,6 @@ void TupConfigurationArea::paintEvent(QPaintEvent *event)
         painter.setRenderHint(QPainter::Antialiasing, true);
         painter.setRenderHint(QPainter::TextAntialiasing, true);
 
-        // painter.setBrush( palette().highlight());
-        // QPainterPath path;
-        // 		
-        // QPolygon pol;
-        // pol << rect().topRight()-QPoint(0, -40) << QPoint(2, height()/2) << rect().bottomRight()-QPoint(0, 40);
-        // path.addPolygon(pol);
-        // 		
-        // painter.drawPath(path);
-        // painter.rotate(-90);
-
         QFont font("Times", 16, QFont::Bold);
         painter.setFont(font);
 
@@ -339,17 +326,11 @@ void TupConfigurationArea::paintEvent(QPaintEvent *event)
         buttonOption.text = tr("Properties");
         buttonOption.icon = QIcon();
         buttonOption.palette = palette();
-        // buttonOption.rect = QRect(rect().x(), rect().y()+(rect().width()-rect().y()), 
-        // rect().height(), rect().width());
         buttonOption.rect = rect();
         buttonOption.state = QStyle::State_On;
 
         buttonOption.features = QStyleOptionButton::DefaultButton;
 
-        style()->drawControl(QStyle::CE_PushButton, &buttonOption, &painter, this);
-		
-        // QString text = tr("Properties");
-        // QFontMetricsF fm(painter.font());
-        // painter.drawText(QPointF(height()/2-fm.width(text)/2, -(width()-fm.height()/2) ), text);
+        style()->drawControl(QStyle::CE_PushButton, &buttonOption, &painter, this);		
     }
 }

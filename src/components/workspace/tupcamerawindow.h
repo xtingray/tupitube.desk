@@ -44,8 +44,11 @@ class TUPITUBE_EXPORT TupCameraWindow: public QWidget, public VideoIF
         void error(QCamera::Error error);
 
     private:
-        struct Private;
-        Private *const k;
+        QCamera *camera;
+        QCameraImageCapture *imageCapture;
+        TupVideoSurface *videoSurface;
+        QString dir;
+        int counter;
 };
 
 #endif // TUPCAMERAWINDOW_H 

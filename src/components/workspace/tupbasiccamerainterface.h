@@ -39,21 +39,13 @@
 #include "tglobal.h"
 #include "tupapplication.h"
 #include "tapplicationproperties.h"
-#include "tseparator.h"
-#include "talgorithm.h"
-#include "tosd.h"
 
 #include <QFrame>
-#include <QCloseEvent>
 #include <QComboBox>
+#include <QCloseEvent>
 #include <QCamera>
 #include <QCameraViewfinder>
 #include <QCameraImageCapture>
-#include <QBoxLayout>
-#include <QIcon>
-#include <QDir>
-#include <QDesktopWidget>
-#include <QPushButton>
 
 class TUPITUBE_EXPORT TupBasicCameraInterface : public QFrame
 {
@@ -79,8 +71,15 @@ class TUPITUBE_EXPORT TupBasicCameraInterface : public QFrame
 
     private:
         QString randomPath();
-        struct Private;
-        Private *const k;
+
+        QStackedWidget *widgetStack;
+        QList <QCamera *> cameras;
+        QCamera *currentCamera;
+        QList <QCameraImageCapture *> imageCaptors;
+        QCameraImageCapture *currentImageCaptor;
+
+        QString path;
+        int counter;
 };
 
 #endif

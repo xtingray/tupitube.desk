@@ -38,6 +38,7 @@
 
 #include "tglobal.h"
 #include "tupdocumentruler.h"
+#include "tuppaintarea.h"
 #include "tactionmanager.h"
 #include "tosd.h"
 #include "tupfilterinterface.h"
@@ -46,6 +47,11 @@
 #include "tupstoryboard.h"
 #include "tcolorcell.h"
 #include "tupbrushmanager.h"
+#include "tupproject.h"
+#include "tupcanvas.h"
+#include "tupruler.h"
+#include "tuppaintareastatus.h"
+#include "tupexportinterface.h"
 
 #include <QMainWindow>
 #include <QLayout>
@@ -86,7 +92,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
     public:
         enum DockType { None = 0, ExposureSheet, TimeLine };
 
-        TupDocumentView(TupProject *project, QWidget *parent = 0, bool isNetworked = true, const QStringList &users = QStringList());
+        TupDocumentView(TupProject *work, QWidget *parent = 0, bool netFlag = true, const QStringList &users = QStringList());
         ~TupDocumentView();
 
         void setWorkSpaceSize(int width, int height);
@@ -99,7 +105,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
 
         TupPaintAreaCommand *createPaintCommand(const TupPaintAreaEvent *event);
         TupProject::Mode spaceContext();
-        TupProject *project();
+        TupProject *currentProject();
         int currentFramesTotal();
         int currentSceneIndex();
         void setZoomPercent(const QString &percent);
@@ -211,8 +217,75 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         double backgroundOpacity(TupFrame::FrameType type);
         void updateOnionColorSchemeStatus(bool status);
 
-        struct Private;
-        Private *const k;
+        QMenu *shapesMenu;
+        QMenu *motionMenu;
+        QMenu *miscMenu;
+        QMenu *filterMenu;
+
+        TupPaintArea *paintArea;
+        TupProject *project;
+        QSize wsDimension;
+        
+        QToolBar *barGrid;
+        QToolBar *toolbar;
+        QToolBar *dynamicPropertiesBar;
+        QToolBar *staticPropertiesBar;
+
+        QDoubleSpinBox *onionFactorSpin;
+        QSpinBox *prevOnionSkinSpin;
+        QSpinBox *nextOnionSkinSpin;
+
+        QComboBox *dirCombo;
+        QSpinBox *shiftSpin;
+
+        bool onionEnabled;
+        int prevOnionValue;
+        int nextOnionValue;
+        double opacityFactor;
+        int viewAngle;
+        int autoSaveTime;
+        bool fullScreenOn;
+        bool isNetworked;
+        QStringList onLineUsers;
+
+        TAction *pencilAction;
+        TAction *inkAction;
+        // Note: Enable it only for debugging
+        // TAction *schemeAction;
+        TAction *polyLineAction;
+        TAction *textAction;
+        TAction *selectionAction;
+        TAction *nodesAction;
+        TAction *fillAction;
+        TAction *papagayoAction;
+
+        TupCanvas *fullScreen;
+
+        TupRuler *verticalRuler;
+        TupRuler *horizontalRuler;
+
+        TActionManager *actionManager;
+        TupConfigurationArea *configurationArea;
+        TupToolPlugin *currentTool;
+        TupPaintAreaStatus *status;
+        QComboBox *spaceModeCombo;
+
+        bool dynamicFlag;
+        bool staticFlag;
+        QSize cameraSize;
+        int photoCounter;
+
+        QTimer *timer;
+
+        TupExportInterface *imagePlugin;
+
+        qreal nodesScaleFactor;
+        qreal cacheScaleFactor;
+
+        QActionGroup *actionGroup;
+
+        DockType currentDock;
+        bool cameraMode;
 };
 
 #endif

@@ -34,13 +34,11 @@
  ***************************************************************************/
 
 #include "tupcamerainterface.h"
-#include "tupcamerawindow.h"
 #include "tupapplication.h"
 #include "tapplicationproperties.h"
 #include "tseparator.h"
 #include "talgorithm.h"
 #include "tosd.h"
-#include "tupcolorwidget.h"
 
 #include <QBoxLayout>
 #include <QIcon>
@@ -53,23 +51,8 @@
 #include <QCamera>
 #include <QCameraImageCapture>
 
-struct TupCameraInterface::Private
-{
-    QStackedWidget *widgetStack;
-    TupCameraWindow *currentCamera;
-    QPushButton *gridButton; 
-    QPushButton *safeAreaButton;
-    QPushButton *historyButton;
-    QWidget *gridWidget;
-    QWidget *historyWidget;
-    int counter;
-    QColor gridColor;
-    TupColorWidget *colorCell;
-    QLabel *counterLabel;
-};
-
 TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> cameraDevices, QComboBox *devicesCombo, int cameraIndex, 
-                                       const QSize cameraSize, int counter, QWidget *parent) : QFrame(parent), k(new Private)
+                                       const QSize cameraSize, int i, QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -82,9 +65,9 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
     setWindowTitle(tr("TupiTube Camera Manager") + " | " + tr("Current resolution:") + " " + title);
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/camera.png")));
 
-    k->counter = counter;
+    counter = i;
 
-    k->widgetStack = new QStackedWidget();
+    widgetStack = new QStackedWidget();
     QSize displaySize = cameraSize;
     QDesktopWidget desktop;
     int desktopWidth = desktop.screenGeometry().width();
@@ -114,7 +97,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
         TupCameraWindow *cameraWindow = new TupCameraWindow(camera, cameraSize, displaySize, imageCapture, path);
         connect(cameraWindow, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SIGNAL(pictureHasBeenSelected(int, const QString)));
 
-        k->widgetStack->addWidget(cameraWindow);
+        widgetStack->addWidget(cameraWindow);
     } else {
         for (int i=0; i < cameraDevices.size(); i++) {
              QByteArray device = cameraDevices.at(i);
@@ -130,12 +113,12 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
              TupCameraWindow *cameraWindow = new TupCameraWindow(camera, camSize, displaySize, imageCapture, path);
              connect(cameraWindow, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SIGNAL(pictureHasBeenSelected(int, const QString)));
 
-             k->widgetStack->addWidget(cameraWindow);
+             widgetStack->addWidget(cameraWindow);
         }
     } 
 
-    k->widgetStack->setCurrentIndex(cameraIndex);
-    k->currentCamera = (TupCameraWindow *) k->widgetStack->currentWidget();
+    widgetStack->setCurrentIndex(cameraIndex);
+    currentCamera = (TupCameraWindow *) widgetStack->currentWidget();
 
     QWidget *menuWidget = new QWidget;
     QBoxLayout *menuLayout = new QBoxLayout(QBoxLayout::TopToBottom, menuWidget);
@@ -157,22 +140,22 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
     flipButton->setToolTip(tr("Flip camera"));
     connect(flipButton, SIGNAL(clicked()), this, SLOT(flipCamera()));
 
-    k->safeAreaButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/safe_area.png")), "");
-    k->safeAreaButton->setIconSize(QSize(20, 20));
-    k->safeAreaButton->setToolTip(tr("Show safe area"));
-    k->safeAreaButton->setShortcut(QKeySequence(tr("+")));
-    k->safeAreaButton->setCheckable(true);
-    connect(k->safeAreaButton, SIGNAL(clicked()), this, SLOT(drawActionSafeArea()));
+    safeAreaButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/safe_area.png")), "");
+    safeAreaButton->setIconSize(QSize(20, 20));
+    safeAreaButton->setToolTip(tr("Show safe area"));
+    safeAreaButton->setShortcut(QKeySequence(tr("+")));
+    safeAreaButton->setCheckable(true);
+    connect(safeAreaButton, SIGNAL(clicked()), this, SLOT(drawActionSafeArea()));
 
-    k->gridButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/subgrid.png")), "");
-    k->gridButton->setIconSize(QSize(20, 20));
-    k->gridButton->setToolTip(tr("Show grid"));
-    k->gridButton->setShortcut(QKeySequence(tr("#")));
-    k->gridButton->setCheckable(true);
-    connect(k->gridButton, SIGNAL(clicked()), this, SLOT(drawGrid()));
+    gridButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/subgrid.png")), "");
+    gridButton->setIconSize(QSize(20, 20));
+    gridButton->setToolTip(tr("Show grid"));
+    gridButton->setShortcut(QKeySequence(tr("#")));
+    gridButton->setCheckable(true);
+    connect(gridButton, SIGNAL(clicked()), this, SLOT(drawGrid()));
 
-    k->gridWidget = new QWidget;
-    QGridLayout *gridLayout = new QGridLayout(k->gridWidget);
+    gridWidget = new QWidget;
+    QGridLayout *gridLayout = new QGridLayout(gridWidget);
     gridLayout->setHorizontalSpacing(2);
 
     QLabel *gridLabel = new QLabel;
@@ -191,26 +174,26 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
     colorLabel->setToolTip(tr("Grid color"));
     colorLabel->setMargin(2);
 
-    k->gridColor = QColor(0, 0, 180, 50);
-    k->colorCell = new TupColorWidget(k->gridColor);
-    connect(k->colorCell, SIGNAL(clicked()), this, SLOT(updateColour()));
+    gridColor = QColor(0, 0, 180, 50);
+    colorCell = new TupColorWidget(gridColor);
+    connect(colorCell, SIGNAL(clicked()), this, SLOT(updateColour()));
 
     gridLayout->addWidget(gridLabel, 0, 0, Qt::AlignHCenter);
     gridLayout->addWidget(gridSpacing, 0, 1, Qt::AlignHCenter);
     gridLayout->addWidget(colorLabel, 1, 0, Qt::AlignHCenter);
-    gridLayout->addWidget(k->colorCell, 1, 1, Qt::AlignHCenter);
+    gridLayout->addWidget(colorCell, 1, 1, Qt::AlignHCenter);
 
-    k->gridWidget->setVisible(false);
+    gridWidget->setVisible(false);
 
-    k->historyButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/bitmap_array.png")), "");
-    k->historyButton->setIconSize(QSize(20, 20));
-    k->historyButton->setToolTip(tr("Show previous images"));
-    k->historyButton->setShortcut(QKeySequence(tr("P")));
-    k->historyButton->setCheckable(true);
-    connect(k->historyButton, SIGNAL(clicked()), this, SLOT(showHistory()));
+    historyButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/bitmap_array.png")), "");
+    historyButton->setIconSize(QSize(20, 20));
+    historyButton->setToolTip(tr("Show previous images"));
+    historyButton->setShortcut(QKeySequence(tr("P")));
+    historyButton->setCheckable(true);
+    connect(historyButton, SIGNAL(clicked()), this, SLOT(showHistory()));
 
-    k->historyWidget = new QWidget;
-    QGridLayout *historyLayout = new QGridLayout(k->historyWidget);
+    historyWidget = new QWidget;
+    QGridLayout *historyLayout = new QGridLayout(historyWidget);
     historyLayout->setHorizontalSpacing(2);
 
     QLabel *opacityLabel = new QLabel;
@@ -236,7 +219,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
     historyLayout->addWidget(previousLabel, 1, 0, Qt::AlignHCenter);
     historyLayout->addWidget(previousSpin, 1, 1, Qt::AlignHCenter);
 
-    k->historyWidget->setVisible(false);
+    historyWidget->setVisible(false);
 
     menuLayout->addWidget(devicesLabel);
     if (devicesCombo->count() == 1) {
@@ -261,31 +244,31 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
 
     QFont font = this->font();
     font.setPointSize(50);
-    k->counterLabel = new QLabel("0");
-    k->counterLabel->setAlignment(Qt::AlignHCenter);
-    k->counterLabel->setFont(font);
+    counterLabel = new QLabel("0");
+    counterLabel->setAlignment(Qt::AlignHCenter);
+    counterLabel->setFont(font);
 
     devicesCombo->setCurrentIndex(cameraIndex);
     menuLayout->addWidget(new TSeparator(Qt::Horizontal));
     menuLayout->addWidget(takesLabel);
-    menuLayout->addWidget(k->counterLabel);
+    menuLayout->addWidget(counterLabel);
     menuLayout->addWidget(clickButton);
     menuLayout->addWidget(flipButton);
-    menuLayout->addWidget(k->safeAreaButton);
-    menuLayout->addWidget(k->gridButton);
-    menuLayout->addWidget(k->gridWidget);
-    menuLayout->addWidget(k->historyButton);
-    menuLayout->addWidget(k->historyWidget);
+    menuLayout->addWidget(safeAreaButton);
+    menuLayout->addWidget(gridButton);
+    menuLayout->addWidget(gridWidget);
+    menuLayout->addWidget(historyButton);
+    menuLayout->addWidget(historyWidget);
     menuLayout->addWidget(exitButton);
     menuLayout->addStretch(2);
 
     connect(devicesCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeCameraDevice(int)));
 
     QBoxLayout *dialogLayout = new QBoxLayout(QBoxLayout::LeftToRight, this); 
-    dialogLayout->addWidget(k->widgetStack);
+    dialogLayout->addWidget(widgetStack);
     dialogLayout->addWidget(menuWidget);
 
-    k->currentCamera->startCamera();
+    currentCamera->startCamera();
 }
 
 TupCameraInterface::~TupCameraInterface()
@@ -303,7 +286,7 @@ void TupCameraInterface::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event);
 
-    k->currentCamera->reset();
+    currentCamera->reset();
     emit closed();
 }
 
@@ -344,19 +327,19 @@ QString TupCameraInterface::randomPath()
 
 void TupCameraInterface::takePicture()
 {
-    k->currentCamera->takePicture(k->counter);
-    k->counterLabel->setText(QString::number(k->counter));
-    k->counter++;
+    currentCamera->takePicture(counter);
+    counterLabel->setText(QString::number(counter));
+    counter++;
 }
 
 void TupCameraInterface::changeCameraDevice(int index)
 {
-    TupCameraWindow *item = (TupCameraWindow *) k->widgetStack->currentWidget();
+    TupCameraWindow *item = (TupCameraWindow *) widgetStack->currentWidget();
     item->stopCamera(); 
 
-    k->widgetStack->setCurrentIndex(index);   
-    k->currentCamera = (TupCameraWindow *) k->widgetStack->currentWidget();
-    k->currentCamera->startCamera();
+    widgetStack->setCurrentIndex(index);
+    currentCamera = (TupCameraWindow *) widgetStack->currentWidget();
+    currentCamera->startCamera();
 
     drawGrid();
     drawActionSafeArea();
@@ -365,48 +348,48 @@ void TupCameraInterface::changeCameraDevice(int index)
 
 void TupCameraInterface::drawGrid()
 {
-    bool flag = k->gridButton->isChecked();
-    k->gridWidget->setVisible(flag);
-    k->currentCamera->drawGrid(flag);
+    bool flag = gridButton->isChecked();
+    gridWidget->setVisible(flag);
+    currentCamera->drawGrid(flag);
 }
 
 void TupCameraInterface::drawActionSafeArea()
 {
-    k->currentCamera->drawActionSafeArea(k->safeAreaButton->isChecked());
+    currentCamera->drawActionSafeArea(safeAreaButton->isChecked());
 }
 
 void TupCameraInterface::showHistory()
 {
-    bool flag = k->historyButton->isChecked();
-    k->historyWidget->setVisible(flag);
-    k->currentCamera->showHistory(flag);
+    bool flag = historyButton->isChecked();
+    historyWidget->setVisible(flag);
+    currentCamera->showHistory(flag);
 }
 
 void TupCameraInterface::updateImagesOpacity(double opacity)
 {
-    k->currentCamera->updateImagesOpacity(opacity);
+    currentCamera->updateImagesOpacity(opacity);
 }
 
 void TupCameraInterface::updateImagesDepth(int depth)
 {
-    k->currentCamera->updateImagesDepth(depth);
+    currentCamera->updateImagesDepth(depth);
 }
 
 void TupCameraInterface::updateGridSpacing(int space)
 {
-    k->currentCamera->updateGridSpacing(space);
+    currentCamera->updateGridSpacing(space);
 }
 
 void TupCameraInterface::updateColour()
 {
-    QColor color = QColorDialog::getColor(k->gridColor, this);
+    QColor color = QColorDialog::getColor(gridColor, this);
     if (color.isValid()) {
-        k->currentCamera->updateGridColor(color);
-        k->colorCell->setBrush(QBrush(color));
+        currentCamera->updateGridColor(color);
+        colorCell->setBrush(QBrush(color));
     }
 }
 
 void TupCameraInterface::flipCamera()
 {
-   k->currentCamera->flipCamera();
+   currentCamera->flipCamera();
 }

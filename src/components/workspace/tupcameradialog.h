@@ -41,6 +41,7 @@
 #include "tconfig.h"
 
 #include <QDialog>
+#include <QCamera>
 #include <QComboBox>
 
 class TUPITUBE_EXPORT TupCameraDialog : public QDialog
@@ -48,7 +49,7 @@ class TUPITUBE_EXPORT TupCameraDialog : public QDialog
     Q_OBJECT
 
     public:
-        TupCameraDialog(QComboBox *devicesCombo, const QSize projectSize, QList<QSize> resolutions, QWidget *parent=0);
+        TupCameraDialog(QComboBox *devices, const QSize dimension, QList<QSize> resList, QWidget *parent=0);
         ~TupCameraDialog();
 
         int cameraIndex();
@@ -64,11 +65,23 @@ class TUPITUBE_EXPORT TupCameraDialog : public QDialog
         void enableBasicCamera(bool flag);
 
     private:
-        void setCamera(const QString &cameraReference);
+        void setCamera(const QString &reference);
         void updateCameraType();
 
-        struct Private;
-        Private *const k;
+        QSize projectSize;
+        QSize cameraSize;
+        bool resizeProject;
+
+        QCamera *camera;
+        QComboBox *devicesCombo;
+        QString cameraReference;
+
+        QComboBox *resolutionCombo;
+        QList<QSize> resolutions;
+        int deviceIndex;
+        bool useBasicInterface;
+        QCheckBox *lowCheck;
+        bool webcamFlag;
 };
 
 #endif

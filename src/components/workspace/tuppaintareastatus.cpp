@@ -35,34 +35,16 @@
 
 #include "tuppaintareastatus.h"
 
-struct TupPaintAreaStatus::Private
-{
-    TupDocumentView *documentView;
- 
-    QPushButton *fullScreenButton;
-    QLineEdit *frameField; 
-    QComboBox *zoom;
-    QComboBox *rotation;
-    QCheckBox *antialiasHint;
+#include <QHBoxLayout>
 
-    TupBrushStatus *contourStatus;
-    TupBrushStatus *fillStatus;
-
-    TupToolStatus *toolStatus;
-    TColorCell::FillType colorContext;
-    qreal scaleFactor;
-    int angle;
-    int currentFrame;
-};
-
-TupPaintAreaStatus::TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent) : QStatusBar(parent), k( new Private)
+TupPaintAreaStatus::TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent) : QStatusBar(parent)
 {
     setSizeGripEnabled(false);
 
-    k->scaleFactor = 100;
-    k->angle = 0;
-    k->currentFrame = 1;
-    k->colorContext = TColorCell::Contour;
+    scaleFactor = 100;
+    angle = 0;
+    currentFrame = 1;
+    colorContext = TColorCell::Contour;
 
     QPushButton *resetWSButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/reset_workspace.png")), "");
     resetWSButton->setIconSize(QSize(16, 16));
@@ -88,12 +70,12 @@ TupPaintAreaStatus::TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent) 
     connect(gridButton, SIGNAL(clicked()), this, SIGNAL(gridClicked()));
     addPermanentWidget(gridButton);
 
-    k->fullScreenButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/full_screen.png")), "");
-    k->fullScreenButton->setIconSize(QSize(16, 16));
-    k->fullScreenButton->setToolTip(tr("Full screen"));
-    k->fullScreenButton->setShortcut(QKeySequence(tr("F11")));
-    connect(k->fullScreenButton, SIGNAL(clicked()), this, SIGNAL(fullClicked()));
-    addPermanentWidget(k->fullScreenButton);
+    fullScreenButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/full_screen.png")), "");
+    fullScreenButton->setIconSize(QSize(16, 16));
+    fullScreenButton->setToolTip(tr("Full screen"));
+    fullScreenButton->setShortcut(QKeySequence(tr("F11")));
+    connect(fullScreenButton, SIGNAL(clicked()), this, SIGNAL(fullClicked()));
+    addPermanentWidget(fullScreenButton);
 
     QWidget *frameContainer = new QWidget;
     frameContainer->setFixedWidth(70);
@@ -105,14 +87,14 @@ TupPaintAreaStatus::TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent) 
     QPixmap framePix(THEME_DIR + "icons/frame_number.png");
     frameLabel->setPixmap(framePix);
 
-    k->frameField = new QLineEdit(frameContainer);
-    k->frameField->setFixedWidth(40);
-    k->frameField->setAlignment(Qt::AlignRight);
-    k->frameField->setText(tr("1"));
-    connect(k->frameField, SIGNAL(editingFinished()), this, SLOT(updateFramePointer()));
+    frameField = new QLineEdit(frameContainer);
+    frameField->setFixedWidth(40);
+    frameField->setAlignment(Qt::AlignRight);
+    frameField->setText(tr("1"));
+    connect(frameField, SIGNAL(editingFinished()), this, SLOT(updateFramePointer()));
 
     frameLayout->addWidget(frameLabel);
-    frameLayout->addWidget(k->frameField);
+    frameLayout->addWidget(frameField);
     addPermanentWidget(frameContainer);
 
     QWidget *zoomContainer = new QWidget;
@@ -126,20 +108,20 @@ TupPaintAreaStatus::TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent) 
     zoomTool->setPixmap(pix);
     zoomLayout->addWidget(zoomTool);
 
-    k->zoom = new QComboBox();
-    k->zoom->setDuplicatesEnabled(false);
-    k->zoom->setEditable(true);
+    zoomCombo = new QComboBox();
+    zoomCombo->setDuplicatesEnabled(false);
+    zoomCombo->setEditable(true);
 
     for (int i = 500; i >= 250; i-=50)
-         k->zoom->addItem(QString::number(i), i);
+         zoomCombo->addItem(QString::number(i), i);
     for (int i = 200; i >= 25; i-=25)
-         k->zoom->addItem(QString::number(i), i);
+         zoomCombo->addItem(QString::number(i), i);
 
-    k->zoom->setCurrentIndex(10);
-    k->zoom->setValidator(new QIntValidator(10, 200, this));
-    zoomLayout->addWidget(k->zoom);
+    zoomCombo->setCurrentIndex(10);
+    zoomCombo->setValidator(new QIntValidator(10, 200, this));
+    zoomLayout->addWidget(zoomCombo);
     zoomLayout->addWidget(new QLabel(tr("%")));
-    connect(k->zoom, SIGNAL(activated(const QString &)), this, SLOT(applyZoom(const QString &)));
+    connect(zoomCombo, SIGNAL(activated(const QString &)), this, SLOT(applyZoom(const QString &)));
     addPermanentWidget(zoomContainer);
 
     QWidget *rotContainer = new QWidget;
@@ -154,42 +136,42 @@ TupPaintAreaStatus::TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent) 
 
     rotLayout->addWidget(rotateLabel);
 
-    k->rotation = new QComboBox();
-    k->rotation->setDuplicatesEnabled(false);
-    k->rotation->setEditable(true);
+    rotationCombo = new QComboBox();
+    rotationCombo->setDuplicatesEnabled(false);
+    rotationCombo->setEditable(true);
 
     for (int i = 0; i < 360; i+=30)
-         k->rotation->addItem(QString::number(i), i);
+         rotationCombo->addItem(QString::number(i), i);
 
-    k->rotation->setValidator(new QIntValidator(-360, 360, this));
-    rotLayout->addWidget(k->rotation);
+    rotationCombo->setValidator(new QIntValidator(-360, 360, this));
+    rotLayout->addWidget(rotationCombo);
     addPermanentWidget(rotContainer);
-    connect(k->rotation, SIGNAL(activated(const QString &)), this, SLOT(applyRotation(const QString &)));
+    connect(rotationCombo, SIGNAL(activated(const QString &)), this, SLOT(applyRotation(const QString &)));
 
-    k->antialiasHint = new QCheckBox;
-    k->antialiasHint->setIcon(QIcon(QPixmap(THEME_DIR + "icons/antialiasing.png")));
-    k->antialiasHint->setToolTip(tr("Antialiasing"));
-    k->antialiasHint->setCheckable(true);
-    k->antialiasHint->setChecked(true);
-    k->antialiasHint->setFixedWidth(36);
-    k->antialiasHint->setFixedHeight(23);
-    addPermanentWidget(k->antialiasHint);
+    antialiasHint = new QCheckBox;
+    antialiasHint->setIcon(QIcon(QPixmap(THEME_DIR + "icons/antialiasing.png")));
+    antialiasHint->setToolTip(tr("Antialiasing"));
+    antialiasHint->setCheckable(true);
+    antialiasHint->setChecked(true);
+    antialiasHint->setFixedWidth(36);
+    antialiasHint->setFixedHeight(23);
+    addPermanentWidget(antialiasHint);
 
-    connect(k->antialiasHint, SIGNAL(clicked()), this, SLOT(selectAntialiasingHint()));
+    connect(antialiasHint, SIGNAL(clicked()), this, SLOT(selectAntialiasingHint()));
 
-    k->contourStatus = new TupBrushStatus(tr("Contour Color"), TColorCell::Contour, QPixmap(THEME_DIR + "icons/contour_color.png"));
-    k->contourStatus->setTooltip(tr("Contour Color"));
-    addPermanentWidget(k->contourStatus);
+    contourStatus = new TupBrushStatus(tr("Contour Color"), TColorCell::Contour, QPixmap(THEME_DIR + "icons/contour_color.png"));
+    contourStatus->setTooltip(tr("Contour Color"));
+    addPermanentWidget(contourStatus);
 
-    k->fillStatus = new TupBrushStatus(tr("Fill Color"), TColorCell::Inner, QPixmap(THEME_DIR + "icons/fill_color.png"));
-    k->fillStatus->setTooltip(tr("Fill Color"));
-    addPermanentWidget(k->fillStatus);
+    fillStatus = new TupBrushStatus(tr("Fill Color"), TColorCell::Inner, QPixmap(THEME_DIR + "icons/fill_color.png"));
+    fillStatus->setTooltip(tr("Fill Color"));
+    addPermanentWidget(fillStatus);
 
-    k->contourStatus->setColor(pen);
-    k->fillStatus->setColor(brush);
+    contourStatus->setColor(pen);
+    fillStatus->setColor(brush);
 
-    k->toolStatus = new TupToolStatus;
-    addPermanentWidget(k->toolStatus);
+    toolStatus = new TupToolStatus;
+    addPermanentWidget(toolStatus);
     QWidget *empty2 = new QWidget();
     empty2->setFixedWidth(5);
     addPermanentWidget(empty2);
@@ -199,22 +181,21 @@ TupPaintAreaStatus::TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent) 
 
 TupPaintAreaStatus::~TupPaintAreaStatus()
 {
-    delete k;
 }
 
 void TupPaintAreaStatus::selectAntialiasingHint()
 {
-    emit antialiasChanged(k->antialiasHint->isChecked());
+    emit antialiasChanged(antialiasHint->isChecked());
 }
 
 void TupPaintAreaStatus::setPen(const QPen &pen)
 {
-    k->contourStatus->setColor(pen);
+    contourStatus->setColor(pen);
 }
 
 void TupPaintAreaStatus::setBrush(const QBrush &brush)
 {
-    k->fillStatus->setColor(brush);
+    fillStatus->setColor(brush);
 }
 
 void TupPaintAreaStatus::applyRotation(const QString &text)
@@ -238,8 +219,8 @@ void TupPaintAreaStatus::applyZoom(const QString &text)
             input = list.at(0).toInt();
     }
 
-    qreal factor = (qreal)input / (qreal)k->scaleFactor;
-    k->scaleFactor = input;
+    qreal factor = (qreal)input / (qreal)scaleFactor;
+    scaleFactor = input;
 
     emit zoomChanged(factor);
 }
@@ -250,38 +231,38 @@ void TupPaintAreaStatus::setZoomPercent(const QString &percent)
     applyZoom(percent);
 }
 
-void TupPaintAreaStatus::setRotationAngle(const QString &angle)
+void TupPaintAreaStatus::setRotationAngle(const QString &degree)
 {
-    updateRotationField(angle);
-    applyRotation(angle);
+    updateRotationField(degree);
+    applyRotation(degree);
 }
 
 void TupPaintAreaStatus::updateZoomField(const QString &text)
 {
-    int index = k->zoom->findText(text);
+    int index = zoomCombo->findText(text);
     if (index != -1)
-        k->zoom->setCurrentIndex(index);
+        zoomCombo->setCurrentIndex(index);
     else
-        k->zoom->setEditText(text);
+        zoomCombo->setEditText(text);
 }
 
 void TupPaintAreaStatus::updateRotationField(const QString &text)
 {
-    int index = k->rotation->findText(text);
+    int index = rotationCombo->findText(text);
     if (index != -1)
-        k->rotation->setCurrentIndex(index);
+        rotationCombo->setCurrentIndex(index);
     else
-        k->rotation->setEditText(text);
+        rotationCombo->setEditText(text);
 }
 
 qreal TupPaintAreaStatus::currentZoomFactor()
 {
-    return k->scaleFactor;
+    return scaleFactor;
 }
 
 void TupPaintAreaStatus::updateZoomFactor(double factor) 
 {
-    double newFactor = k->scaleFactor * factor;
+    double newFactor = scaleFactor * factor;
     QString number = QString::number(newFactor);
     int index = number.indexOf(".");
     if (index != -1)
@@ -289,32 +270,32 @@ void TupPaintAreaStatus::updateZoomFactor(double factor)
 
     updateZoomField(number);
 
-    k->scaleFactor = newFactor;
+    scaleFactor = newFactor;
 }
 
 void TupPaintAreaStatus::updateTool(const QString &label, const QPixmap &pixmap)
 {
-    k->toolStatus->updateTooltip(label);
-    k->toolStatus->updatePixmap(pixmap);
+    toolStatus->updateTooltip(label);
+    toolStatus->updatePixmap(pixmap);
 }
 
 void TupPaintAreaStatus::updateFrameIndex(int index)
 {
     index++;
-    k->currentFrame = index;
+    currentFrame = index;
 
     // tError() << "updateFrameIndex() -> " << index;
 
     QString text = QString::number(index); 
-    k->frameField->setText(text);
+    frameField->setText(text);
 }
 
 void TupPaintAreaStatus::updateFramePointer()
 {
-    QString text = k->frameField->text();
+    QString text = frameField->text();
 
     if (text.length() == 0) {
-        k->frameField->setText(QString::number(k->currentFrame));
+        frameField->setText(QString::number(currentFrame));
         return;
     }
 
@@ -322,40 +303,40 @@ void TupPaintAreaStatus::updateFramePointer()
     int index = text.toInt(&ok);   
     if (ok) {
         if (index < 1 || index > 999) {
-            k->frameField->setText(QString::number(k->currentFrame));
+            frameField->setText(QString::number(currentFrame));
             return;
         }
 
-        if (k->currentFrame != index)
+        if (currentFrame != index)
             emit newFramePointer(index);
     } else {
-        k->frameField->setText(QString::number(k->currentFrame));
+        frameField->setText(QString::number(currentFrame));
     }
 }
 
 void TupPaintAreaStatus::setFramePointer(int index)
 {
-    k->currentFrame = index;
-    k->frameField->setText(QString::number(k->currentFrame));
+    currentFrame = index;
+    frameField->setText(QString::number(currentFrame));
 }
 
 void TupPaintAreaStatus::updateRotationAngle(int angle)
 {
-    k->angle = angle;
+    angle = angle;
     QString text = QString::number(angle); 
-    int index = k->rotation->findText(text);
+    int index = rotationCombo->findText(text);
 
-    k->rotation->blockSignals(true);
+    rotationCombo->blockSignals(true);
     if (index != -1)
-        k->rotation->setCurrentIndex(index);
+        rotationCombo->setCurrentIndex(index);
     else
-        k->rotation->setEditText(text);
-    k->rotation->blockSignals(false);
+        rotationCombo->setEditText(text);
+    rotationCombo->blockSignals(false);
 }
 
 void TupPaintAreaStatus::enableFullScreenFeature(bool flag)
 {
-    k->fullScreenButton->setEnabled(flag);
+    fullScreenButton->setEnabled(flag);
 }
 
 void TupPaintAreaStatus::showPos(const QPointF &point)

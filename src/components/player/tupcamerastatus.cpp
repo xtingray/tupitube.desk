@@ -39,7 +39,6 @@
 
 #include <QHBoxLayout>
 
-//TupCameraStatus::TupCameraStatus(TupCameraWidget *camera, bool isNetworked, QWidget *parent) : QFrame(parent)
 TupCameraStatus::TupCameraStatus(bool isNetworked, QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
@@ -78,8 +77,6 @@ TupCameraStatus::TupCameraStatus(bool isNetworked, QWidget *parent) : QFrame(par
     fpsBox = new QSpinBox();
     fpsBox->setMinimum(1);
     fpsBox->setValue(24);
-
-    // connect(fpsBox, SIGNAL(valueChanged(int)), camera, SLOT(setFPS(int)));
     connect(fpsBox, SIGNAL(valueChanged(int)), this, SIGNAL(fpsChanged(int)));
 
     sceneInfoLayout->addWidget(fpsText, 1);
@@ -91,10 +88,7 @@ TupCameraStatus::TupCameraStatus(bool isNetworked, QWidget *parent) : QFrame(par
     loopBox->setToolTip(tr("Loop"));
     loopBox->setIcon(QPixmap(THEME_DIR + "icons/loop.png"));
     loopBox->setFocusPolicy(Qt::NoFocus);
-
     loopBox->setShortcut(QKeySequence(tr("Ctrl+L")));
-
-    // connect(loopBox, SIGNAL(clicked()), camera, SLOT(setLoop()));
     connect(loopBox, SIGNAL(clicked()), this, SIGNAL(loopChanged()));
 
     TCONFIG->beginGroup("AnimationParameters");
@@ -118,8 +112,6 @@ TupCameraStatus::TupCameraStatus(bool isNetworked, QWidget *parent) : QFrame(par
     exportButton->setIcon(QIcon(THEME_DIR + "icons/export_button.png"));
     exportButton->setFocusPolicy(Qt::NoFocus);
     exportButton->setToolTip(tr("Export Project as Video File"));
-
-    // connect(exportButton, SIGNAL(pressed()), camera, SLOT(exportDialog()));
     connect(exportButton, SIGNAL(pressed()), this, SIGNAL(exportChanged()));
     sceneInfoLayout->addWidget(exportButton, 1);
 
@@ -128,8 +120,6 @@ TupCameraStatus::TupCameraStatus(bool isNetworked, QWidget *parent) : QFrame(par
         QPushButton *postButton = new QPushButton(tr("Post"));
         postButton->setIcon(QIcon(THEME_DIR + "icons/import_project.png"));
         postButton->setFocusPolicy(Qt::NoFocus);
-
-        // connect(postButton, SIGNAL(pressed()), camera, SLOT(postDialog()));
         connect(postButton, SIGNAL(pressed()), this, SIGNAL(postChanged()));
         sceneInfoLayout->addWidget(postButton, 1);
     }

@@ -161,8 +161,18 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         QPoint itemPoint(const QString &xml);
         void multipasteObject(int pasteTotal);
 
-        struct Private;
-        Private *const k;
+        TupProject *project;
+        int globalSceneIndex;
+        QStringList copiesXml;
+        QString currentTool;
+        bool deleteMode;
+        TupProject::Mode spaceMode;
+        QPointF oldPosition;
+        QPointF position;
+        bool menuOn;
+        QString copyFrameName;
+        bool copyIsValid;
+        bool canvasEnabled;
 };
 
 #endif

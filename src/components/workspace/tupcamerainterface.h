@@ -37,10 +37,13 @@
 #define TUPCAMERAINTERFACE_H
 
 #include "tglobal.h"
+#include "tupcamerawindow.h"
+#include "tupcolorwidget.h"
 
 #include <QFrame>
 #include <QCloseEvent>
 #include <QComboBox>
+#include <QStackedWidget>
 
 class TUPITUBE_EXPORT TupCameraInterface : public QFrame
 {
@@ -73,8 +76,18 @@ class TUPITUBE_EXPORT TupCameraInterface : public QFrame
     private:
         QSize setBestResolution(QList<QSize> resolutions, QSize cameraSize);
         QString randomPath();
-        struct Private;
-        Private *const k;
+
+        QStackedWidget *widgetStack;
+        TupCameraWindow *currentCamera;
+        QPushButton *gridButton;
+        QPushButton *safeAreaButton;
+        QPushButton *historyButton;
+        QWidget *gridWidget;
+        QWidget *historyWidget;
+        int counter;
+        QColor gridColor;
+        TupColorWidget *colorCell;
+        QLabel *counterLabel;
 };
 
 #endif

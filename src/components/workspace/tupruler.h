@@ -52,23 +52,23 @@
 class TUPITUBE_EXPORT TupRuler : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY(qreal origin READ origin WRITE setOrigin)
-    Q_PROPERTY(qreal rulerZoom READ rulerZoom WRITE setRulerZoom)
+    Q_PROPERTY(qreal getOrigin READ getOrigin WRITE setOrigin)
+    Q_PROPERTY(qreal getRulerZoom READ getRulerZoom WRITE setRulerZoom)
 
     public:
         enum Transformation { None = 1, Rotation, Scale };
-        TupRuler(Qt::Orientation rulerType, QWidget *parent);
+        TupRuler(Qt::Orientation getRulerType, QWidget *parent);
         ~TupRuler();
 
         QSize minimumSizeHint() const;
-        Qt::Orientation rulerType() const;
-        qreal origin() const;
-        qreal rulerZoom() const;
+        Qt::Orientation getRulerType() const;
+        qreal getOrigin() const;
+        qreal getRulerZoom() const;
         void updateCurrentTransformation(Transformation current);
 
     public slots:
-        void setOrigin(const qreal origin);
-        void setRulerZoom(const qreal rulerZoom);
+        void setOrigin(const qreal getOrigin);
+        void setRulerZoom(const qreal getRulerZoom);
         void movePointers(const QPointF pos);
 
     protected:
@@ -82,8 +82,13 @@ class TUPITUBE_EXPORT TupRuler : public QWidget
         void drawSimpleRuler(QPainter *painter, QRectF rulerRect, qreal startMark, qreal endMark, qreal step);
 
     private:
-        struct Private;
-        Private *const k;
+        Qt::Orientation rulerType;
+        qreal origin;
+        qreal oldPos;
+        qreal rulerZoom;
+        qreal currentZoomFactor;
+        QPointF cursorPos;
+        QPolygonF arrow;
+        Transformation currentTransformation;
 };
-
 #endif

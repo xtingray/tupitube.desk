@@ -36,10 +36,7 @@
 #ifndef TUPCAMERASTATUS_H
 #define TUPCAMERASTATUS_H
 
-// #include "tupcamerawidget.h"
-// #include "tupexportwidget.h"
 #include "tconfig.h"
-// #include "tseparator.h"
 #include "timagebutton.h"
 #include "tupproject.h"
 
@@ -49,14 +46,11 @@
 #include <QSpinBox>
 #include <QCheckBox>
 
-class TupCameraWidget;
-
 class TUPITUBE_EXPORT TupCameraStatus : public QFrame
 {
     Q_OBJECT
 
     public:
-        // TupCameraStatus(TupCameraWidget *camera = 0, bool isNetworked = false, QWidget *parent = 0);
         TupCameraStatus(bool isNetworked = false, QWidget *parent = 0);
         ~TupCameraStatus();
 

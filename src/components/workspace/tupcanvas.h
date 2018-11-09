@@ -39,38 +39,19 @@
 #include "tglobal.h"
 #include "tapplicationproperties.h"
 #include "tapplication.h"
+
 #include "tupgraphicsscene.h"
 #include "tupcanvasview.h"
-#include "tuponiondialog.h"
-#include "tuppendialog.h"
-#include "timagebutton.h"
 #include "tupbrushmanager.h"
 #include "tupprojectrequest.h"
 #include "tuprequestbuilder.h"
 #include "tupproject.h"
-#include "tuptoolplugin.h"
 
 #include <QFrame>
 #include <QPointF>
 #include <QSize>
 #include <QCloseEvent>
 #include <QColor>
-#include <QPen>
-#include <QStringList>
-#include <QDialog>
-#include <QBoxLayout>
-#include <QIcon>
-#include <QGraphicsView>
-#include <QColorDialog>
-#include <QToolBar>
-#include <QAction>
-#include <QSlider>
-#include <QLabel>
-#include <QFont>
-#include <QDesktopWidget>
-#include <QFileDialog>
-#include <QMessageBox>
-#include <QBuffer>
 
 class TUPITUBE_EXPORT TupCanvas : public QFrame
 {
@@ -87,12 +68,6 @@ class TUPITUBE_EXPORT TupCanvas : public QFrame
 
    protected:
         void closeEvent(QCloseEvent *event);
-
-   private:
-        enum UserHand { Right = 0, Left };
-        TupCanvasView *graphicsView;
-        struct Private;
-        Private *const k;
 
    public slots:
         void colorDialog(const QColor &current);
@@ -132,6 +107,20 @@ class TUPITUBE_EXPORT TupCanvas : public QFrame
         void goToFrame(int frame, int layer, int scene);
         void rightClick();
         void closeHugeCanvas();
+
+    private:
+        enum UserHand { Right = 0, Left };
+        TupCanvasView *graphicsView;
+
+        QColor currentColor;
+        TupBrushManager *brushManager;
+        int frameIndex;
+        int layerIndex;
+        int sceneIndex;
+        QSize size;
+        TupGraphicsScene *scene;
+        TupProject *project;
+        UserHand hand;
 };
 
 #endif
