@@ -325,6 +325,15 @@ QString TupCameraInterface::randomPath()
 
 void TupCameraInterface::takePicture()
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupCameraInterface::takePicture()]";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
     currentCamera->takePicture(counter);
     counterLabel->setText(QString::number(counter));
     counter++;

@@ -45,7 +45,7 @@ TupCameraWindow::TupCameraWindow(QCamera *input, const QSize &camSize, const QSi
 {
     setFixedSize(displaySize + QSize(1, 1));
 
-    dir = path;
+    picturesPath = path;
     camera = input;
     imageCapture = capture;
     camera->setCaptureMode(QCamera::CaptureStillImage);
@@ -114,7 +114,7 @@ void TupCameraWindow::reset()
     if (camera->state() == QCamera::ActiveState)
         camera->stop();
 
-    QDir dir(dir);
+    QDir dir(picturesPath);
     foreach (QString file, dir.entryList(QStringList() << "*.jpg")) {
              QString absolute = dir.absolutePath() + "/" + file;
              QFile::remove(absolute);
@@ -184,7 +184,7 @@ void TupCameraWindow::takePicture(int i)
         prev += "00";
     if (i >= 10 && i < 100)
         prev += "0";
-    QString imagePath = dir + "/" + prev + QString::number(i) + ".jpg";
+    QString imagePath = picturesPath + "/" + prev + QString::number(i) + ".jpg";
 
     // on half pressed shutter button
     camera->searchAndLock();

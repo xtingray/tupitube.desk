@@ -1916,8 +1916,8 @@ void TupDocumentView::cameraInterface()
 
         TupCameraDialog *cameraDialog = new TupCameraDialog(devicesCombo, projectSize, resolutions);
         cameraDialog->show();
-        cameraDialog->move((int) (desktop.screenGeometry().width() - cameraDialog->width())/2,
-                           (int) (desktop.screenGeometry().height() - cameraDialog->height())/2);
+        cameraDialog->move(static_cast<int> (desktop.screenGeometry().width() - cameraDialog->width())/2,
+                           static_cast<int> (desktop.screenGeometry().height() - cameraDialog->height())/2);
 
         if (cameraDialog->exec() == QDialog::Accepted) {
             cameraMode = true;
@@ -1939,8 +1939,8 @@ void TupDocumentView::cameraInterface()
                     connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
                     connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode())); 
                     dialog->show();
-                    dialog->move((int) (desktop.screenGeometry().width() - dialog->width())/2 ,
-                                 (int) (desktop.screenGeometry().height() - dialog->height())/2);
+                    dialog->move(static_cast<int> (desktop.screenGeometry().width() - dialog->width())/2 ,
+                                 static_cast<int> (desktop.screenGeometry().height() - dialog->height())/2);
                 } else {
                     TupCameraInterface *dialog = new TupCameraInterface(resolution, cameraDevices, devicesCombo, cameraDialog->cameraIndex(),
                                                                         cameraSize, photoCounter);
@@ -1948,18 +1948,19 @@ void TupDocumentView::cameraInterface()
                     connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
                     connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode())); 
                     dialog->show();
-                    dialog->move((int) (desktop.screenGeometry().width() - dialog->width())/2 ,
-                                 (int) (desktop.screenGeometry().height() - dialog->height())/2);
+                    dialog->move(static_cast<int> (desktop.screenGeometry().width() - dialog->width())/2 ,
+                                 static_cast<int> (desktop.screenGeometry().height() - dialog->height())/2);
                 }
             } else { // UI for reflex cameras
                 int index = cameraDialog->cameraIndex();
-                TupReflexInterface *dialog = new TupReflexInterface(devicesCombo->itemText(index), resolution, cameraDevices.at(index), cameraSize, photoCounter);
+                TupReflexInterface *dialog = new TupReflexInterface(devicesCombo->itemText(index), resolution, cameraDevices.at(index),
+                                                                    cameraSize, photoCounter);
 
                 connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
                 connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode())); 
                 dialog->show();
-                dialog->move((int) (desktop.screenGeometry().width() - dialog->width())/2 ,
-                             (int) (desktop.screenGeometry().height() - dialog->height())/2);
+                dialog->move(static_cast<int> (desktop.screenGeometry().width() - dialog->width())/2 ,
+                             static_cast<int> (desktop.screenGeometry().height() - dialog->height())/2);
             }
 
             QApplication::restoreOverrideCursor();
@@ -1990,9 +1991,9 @@ void TupDocumentView::resizeProjectDimension(const QSize dimension)
     double proportion = 1;
 
     if (pWidth > pHeight)
-        proportion = (double) width / (double) pWidth;
+        proportion = static_cast<double> (width) / static_cast<double> (pWidth);
     else
-        proportion = (double) height / (double) pHeight;
+        proportion = static_cast<double> (height) / static_cast<double> (pHeight);
 
     if (proportion <= 0.5) {
         setZoomPercent("20");
@@ -2028,11 +2029,11 @@ void TupDocumentView::insertPictureInFrame(int id, const QString path)
         resized.save(path, "JPG", 100);
     } 
 
-    QFile f(path);
-    QFileInfo fileInfo(f);
+    QFile imgFile(path);
+    QFileInfo fileInfo(imgFile);
     QString key = fileInfo.fileName().toLower();
 
-    if (f.open(QIODevice::ReadOnly)) {
+    if (imgFile.open(QIODevice::ReadOnly)) {
         if (id > 1) {
             int layerIndex = paintArea->currentLayerIndex();
             int frameIndex = paintArea->currentFrameIndex() + 1;
@@ -2050,8 +2051,8 @@ void TupDocumentView::insertPictureInFrame(int id, const QString path)
             emit requestTriggered(&request);
         } 
 
-        QByteArray data = f.readAll();
-        f.close();
+        QByteArray data = imgFile.readAll();
+        imgFile.close();
 
         TupLibrary *library = project->library();
         while(library->exists(key)) {

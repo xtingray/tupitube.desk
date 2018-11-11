@@ -47,7 +47,7 @@ class TUPITUBE_EXPORT TupCameraWindow: public QWidget, public VideoIF
         QCamera *camera;
         QCameraImageCapture *imageCapture;
         TupVideoSurface *videoSurface;
-        QString dir;
+        QString picturesPath;
         int counter;
 };
 

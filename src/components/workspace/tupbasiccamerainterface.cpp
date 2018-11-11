@@ -84,8 +84,8 @@ TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QBy
         QByteArray device = cameraDevices.at(0);
         QCamera *camera = new QCamera(device);
         QCameraImageCapture *imageCapture = new QCameraImageCapture(camera);
-        connect(imageCapture, SIGNAL(imageSaved(int, const QString)), this, SLOT(imageSavedFromCamera(int, const QString)));
-
+        connect(imageCapture, SIGNAL(imageSaved(int, const QString)),
+                this, SLOT(imageSavedFromCamera(int, const QString)));
         QCameraViewfinder *viewfinder = new QCameraViewfinder;
         viewfinder->setFixedSize(displaySize);
         camera->setViewfinder(viewfinder);
