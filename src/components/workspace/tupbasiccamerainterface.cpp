@@ -223,6 +223,15 @@ QString TupBasicCameraInterface::randomPath()
 
 void TupBasicCameraInterface::takePicture()
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupBasicCameraInterface::takePicture()]";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
     QString prev = "pic";
     if (counter < 10)
         prev += "00";
@@ -253,6 +262,14 @@ void TupBasicCameraInterface::changeCameraDevice(int index)
 
 void TupBasicCameraInterface::imageSavedFromCamera(int id, const QString folder)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupBasicCameraInterface::imageSavedFromCamera()]";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+
     Q_UNUSED(id);
 
     if (folder.isEmpty())
@@ -260,4 +277,5 @@ void TupBasicCameraInterface::imageSavedFromCamera(int id, const QString folder)
 
     emit pictureHasBeenSelected(counter, folder);
     counter++;
+    QApplication::restoreOverrideCursor();
 }

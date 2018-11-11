@@ -42,6 +42,7 @@
 
 #include <QDialog>
 #include <QLineEdit>
+#include <QTextEdit>
 
 class TUPITUBE_EXPORT TupImageDialog : public QDialog
 {

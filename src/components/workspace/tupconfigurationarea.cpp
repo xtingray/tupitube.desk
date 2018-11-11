@@ -41,6 +41,7 @@
 #include <QPainter>
 #include <QStyle>
 #include <QStyleOptionButton>
+#include <QMouseEvent>
 
 TupConfigurationArea::TupConfigurationArea(QWidget *parent) : QDockWidget(parent)
 {

@@ -38,7 +38,6 @@
 #include <QVBoxLayout>
 #include <QIcon>
 #include <QLabel>
-#include <QTextEdit>
 #include <QPushButton>
 #include <QLocale>
 
