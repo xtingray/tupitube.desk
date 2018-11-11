@@ -41,13 +41,7 @@
 #include "tconfig.h"
 
 #include <QDialog>
-#include <QVBoxLayout>
-#include <QIcon>
-#include <QLabel>
 #include <QLineEdit>
-#include <QTextEdit>
-#include <QPushButton>
-#include <QLocale>
 
 class TUPITUBE_EXPORT TupImageDialog : public QDialog
 {
@@ -56,6 +50,7 @@ class TUPITUBE_EXPORT TupImageDialog : public QDialog
     public:
         TupImageDialog(QWidget *parent=0);
         ~TupImageDialog();
+
         QString imageTitle() const;
         QString imageTopics() const;
         QString imageDescription() const;
@@ -66,8 +61,9 @@ class TUPITUBE_EXPORT TupImageDialog : public QDialog
         void resetTopicColor(const QString &);
 
     private:
-        struct Private;
-        Private *const k;
+        QLineEdit *titleEdit;
+        QLineEdit *topicEdit;
+        QTextEdit *descText;
 };
 
 #endif

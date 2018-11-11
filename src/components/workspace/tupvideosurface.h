@@ -65,7 +65,7 @@ class TUPITUBE_EXPORT TupVideoSurface: public QAbstractVideoSurface
         void drawActionSafeArea(bool flag);
         void setLastImage(const QImage &image);
         void showHistory(bool flag);
-        void updateImagesOpacity(double opacity);
+        void updateImagesOpacity(double transparency);
         void updateImagesDepth(int depth);
         void updateGridSpacing(int space);
         void updateGridColor(const QColor color);
@@ -73,8 +73,33 @@ class TUPITUBE_EXPORT TupVideoSurface: public QAbstractVideoSurface
 
     private:
         void calculateImageDepth();
-        struct Private;
-        Private *const k;
+
+        QWidget* targetWidget;
+        VideoIF* videoIF;
+        QVideoFrame frame;
+        QImage::Format imageFormat;
+        QSize displaySize;
+        QList<QImage> history;
+        int widgetWidth;
+        int widgetHeight;
+
+        bool isScaled;
+        bool showPrevious;
+        bool safeArea;
+        bool grid;
+        int opacity;
+        int historySize;
+        int gridSpace;
+        int historyInit;
+        int historyEnd;
+        qreal rotation;
+
+        QPen gridAxesPen;
+        QPen gridPen;
+        QPen whitePen;
+        QPen grayPen;
+        QPen greenThickPen;
+        QPen greenThinPen;
 };
 
 #endif // TUPVIDEOSURFACE_H

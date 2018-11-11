@@ -38,8 +38,6 @@
 #include <QCameraImageCapture>
 #include <QLabel>
 #include <QBoxLayout>
-#include <QDir>
-#include <QCheckBox>
 #include <QPushButton>
 
 TupCameraDialog::TupCameraDialog(QComboBox *devices, const QSize dimension, QList<QSize> resList,

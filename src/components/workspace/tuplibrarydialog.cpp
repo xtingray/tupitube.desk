@@ -34,25 +34,23 @@
  ***************************************************************************/
 
 #include "tuplibrarydialog.h"
+#include "tformfactory.h"
+#include "tosd.h"
 
-struct TupLibraryDialog::Private
-{
-    QToolBox *toolBox;
-    QMap<QGraphicsItem *, QLineEdit *> symbolNames;
-    QMap<int, QLineEdit *> tabs;
-    TupLibrary *library;
-};
+#include <QVBoxLayout>
+#include <QDialogButtonBox>
+#include <QHBoxLayout>
 
-TupLibraryDialog::TupLibraryDialog(TupLibrary *library) : QDialog(), k(new Private)
+TupLibraryDialog::TupLibraryDialog(TupLibrary *assets) : QDialog()
 {
-    k->library = library;
+    library = assets;
     setWindowTitle(tr("Library Object"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/polyline.png")));
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    k->toolBox = new QToolBox;
-    layout->addWidget(k->toolBox);
+    toolBox = new QToolBox;
+    layout->addWidget(toolBox);
 
     QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok 
                                 | QDialogButtonBox::Cancel, Qt::Horizontal);
@@ -64,7 +62,6 @@ TupLibraryDialog::TupLibraryDialog(TupLibrary *library) : QDialog(), k(new Priva
 
 TupLibraryDialog::~TupLibraryDialog()
 {
-    delete k;
 }
 
 void TupLibraryDialog::addItem(QGraphicsItem *item)
@@ -83,24 +80,24 @@ void TupLibraryDialog::addItem(QGraphicsItem *item)
     QLayout *grid = TFormFactory::makeGrid(QStringList() << tr("Name"), QWidgetList() << name);
     layout->addLayout(grid);
 
-    int index = k->toolBox->addItem(container, tr("Item %1").arg(k->toolBox->count()+1));
-    k->symbolNames.insert(item, name);
-    k->tabs.insert(index, name);
+    int index = toolBox->addItem(container, tr("Item %1").arg(toolBox->count()+1));
+    symbolNames.insert(item, name);
+    tabs.insert(index, name);
 }
 
 QString TupLibraryDialog::symbolName(QGraphicsItem *item) const
 {
-    return k->symbolNames[item]->text();
+    return symbolNames[item]->text();
 }
 
 void TupLibraryDialog::checkNames()
 {
     QList<QString> objects;
-    for (int i = 0; i < k->toolBox->count(); i++) {
-         QString name = k->tabs[i]->text();
+    for (int i = 0; i < toolBox->count(); i++) {
+         QString name = tabs[i]->text();
          if (name.isEmpty()) {
-             k->toolBox->setCurrentIndex(i);
-             k->tabs[i]->setFocus();
+             toolBox->setCurrentIndex(i);
+             tabs[i]->setFocus();
              TOsd::self()->display(tr("Error"), tr("Library object's name is missing!"), TOsd::Error);
              return;
          } else {
@@ -109,7 +106,7 @@ void TupLibraryDialog::checkNames()
     }
 
     for (int i=0; i<objects.size(); i++) {
-         if (k->library->exists(objects.at(i))) {
+         if (library->exists(objects.at(i))) {
              TOsd::self()->display(tr("Error"), tr("Object's name already exists. Pick a new one!"), TOsd::Error);
              return;
          }

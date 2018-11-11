@@ -42,43 +42,27 @@
 #include "tupexportinterface.h"
 #include "tapplicationproperties.h"
 #include "tconfig.h"
-#include "tseparator.h"
-#include "talgorithm.h"
-#include "tosd.h"
 
 #include <QDialog>
 #include <QColor>
 #include <QSize>
 #include <QIcon>
-#include <QListWidgetItem>
-#include <QPrinter>
-#include <QDialog>
-#include <QDialogButtonBox>
-#include <QPixmap>
 #include <QBoxLayout>
-#include <QListWidget>
 #include <QLabel>
 #include <QLineEdit>
 #include <QTextEdit>
-#include <QDir>
-#include <QPushButton>
-#include <QPainter>
-#include <QFileDialog>
-#include <QDesktopWidget>
+#include <QListWidgetItem>
 #include <QLocale>
-#include <QPrintDialog>
-#include <QTextBrowser>
-#include <QComboBox>
 
 class TUPITUBE_EXPORT TupStoryBoardDialog : public QDialog
 {
     Q_OBJECT
 
     public:
+        enum DocType { HTML = 1, PDF };
         TupStoryBoardDialog(bool isNetworked, TupExportInterface *imagePlugin, const QColor &color, 
                             const QSize &size, TupScene *scene, int sceneIndex, TupLibrary *library, QWidget *parent);
         ~TupStoryBoardDialog();
-        enum DocType { HTML = 1, PDF };
 
     private slots:
         void updateForm(QListWidgetItem *current, QListWidgetItem *previous);
@@ -114,8 +98,39 @@ class TUPITUBE_EXPORT TupStoryBoardDialog : public QDialog
         void createHTMLFiles(const QString &path, DocType type);
         void cleanDirectory(const QString &path);
  
-        struct Private;
-        Private *const k;
+        bool isNetworked;
+        TupExportInterface *imagePlugin;
+        QColor bgColor;
+        QSize size;
+        QSize scaledSize;
+        int sceneIndex;
+        TupScene *scene;
+
+        TupStoryboard *storyboard;
+        int currentIndex;
+        QString path;
+
+        QBoxLayout *layout;
+        QVBoxLayout *formLayout;
+
+        QWidget *storyPanel;
+        QWidget *scenePanel;
+
+        QListWidget *list;
+        QLabel *screenLabel;
+
+        QLineEdit *titleEdit;
+        QLineEdit *topicsEdit;
+        QLineEdit *authorEdit;
+        QTextEdit *summaryEdit;
+
+        QLabel *sceneLabel;
+        QLineEdit *sceneTitleEdit;
+        QLineEdit *sceneDurationEdit;
+        QTextEdit *sceneDescriptionEdit;
+
+        QLocale utf;
+        TupLibrary *library;
 };
 
 #endif

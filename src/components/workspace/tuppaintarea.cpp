@@ -35,6 +35,10 @@
 
 #include "tuppaintarea.h"
 #include "toptionaldialog.h"
+#include "tuppaintareaevent.h"
+#include "tosd.h"
+#include "tupitemgroup.h"
+#include "tuppixmapitem.h"
 
 TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent) : TupPaintAreaBase(parent, work->dimension(), work->library())
 {

@@ -35,7 +35,7 @@
 
 #include "tupcolorwidget.h"
 
-TupColorWidget::TupColorWidget(const QBrush color) : m_brush(color)
+TupColorWidget::TupColorWidget(const QBrush color) : gBrush(color)
 {
     setFixedSize(20, 20);
 }
@@ -52,7 +52,7 @@ QSize TupColorWidget::sizeHint() const
 
 void TupColorWidget::setBrush(const QBrush &brush)
 {
-    m_brush = brush;
+    gBrush = brush;
     update();
 }
 
@@ -61,9 +61,9 @@ void TupColorWidget::paintEvent(QPaintEvent *event)
     Q_UNUSED(event);
 
     QPainter painter(this);
-    painter.fillRect(rect(), m_brush);
+    painter.fillRect(rect(), gBrush);
     QColor color = Qt::black;
-    if (m_brush.color() == Qt::black)
+    if (gBrush.color() == Qt::black)
         color = Qt::white;
     painter.setPen(QPen(color));
     painter.drawRect(0, 0, 20, 20);
@@ -77,5 +77,5 @@ void TupColorWidget::mousePressEvent(QMouseEvent *event)
 
 QColor TupColorWidget::color()
 {
-    return m_brush.color();
+    return gBrush.color();
 }

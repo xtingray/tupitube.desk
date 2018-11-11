@@ -35,15 +35,15 @@
 
 #include "tuppapagayodialog.h"
 #include "tconfig.h"
+#include "tosd.h"
 
-struct TupPapagayoDialog::Private
-{
-    QLineEdit *filePath;
-    QLineEdit *imagesPath;
-    QLineEdit *soundPath;
-};
+#include <QBoxLayout>
+#include <QDialogButtonBox>
+#include <QCheckBox>
+#include <QPushButton>
+#include <QFileDialog>
 
-TupPapagayoDialog::TupPapagayoDialog() : QDialog(), k(new Private)
+TupPapagayoDialog::TupPapagayoDialog() : QDialog()
 {
     setWindowTitle(tr("Import Papagayo project"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/papagayo.png")));
@@ -67,16 +67,16 @@ TupPapagayoDialog::TupPapagayoDialog() : QDialog(), k(new Private)
     buttonsLayout->addWidget(imagesButton);
     buttonsLayout->addWidget(soundButton);
 
-    k->filePath = new QLineEdit();
-    k->filePath->setReadOnly(true);
-    k->imagesPath = new QLineEdit();
-    k->imagesPath->setReadOnly(true);
-    k->soundPath = new QLineEdit();
-    k->soundPath->setReadOnly(true);
+    filePath = new QLineEdit();
+    filePath->setReadOnly(true);
+    imagesPath = new QLineEdit();
+    imagesPath->setReadOnly(true);
+    soundPath = new QLineEdit();
+    soundPath->setReadOnly(true);
 
-    textLayout->addWidget(k->filePath);
-    textLayout->addWidget(k->imagesPath);
-    textLayout->addWidget(k->soundPath);
+    textLayout->addWidget(filePath);
+    textLayout->addWidget(imagesPath);
+    textLayout->addWidget(soundPath);
 
     blockLayout->addLayout(buttonsLayout);
     blockLayout->addLayout(textLayout);
@@ -93,7 +93,6 @@ TupPapagayoDialog::TupPapagayoDialog() : QDialog(), k(new Private)
 
 TupPapagayoDialog::~TupPapagayoDialog()
 {
-    delete k;
 }
 
 void TupPapagayoDialog::openFileDialog()
@@ -103,7 +102,7 @@ void TupPapagayoDialog::openFileDialog()
     QString file = QFileDialog::getOpenFileName(this, tr("Load Papagayo project"), path, tr("Papagayo Project (*.pgo)"));
 
     if (!file.isEmpty()) {
-        k->filePath->setText(file);
+        filePath->setText(file);
         setDefaultPath(file);
     }
 }
@@ -115,7 +114,7 @@ void TupPapagayoDialog::openImagesDialog()
     QString dir = QFileDialog::getExistingDirectory(this, tr("Choose the images directory..."), path, 
                                                     QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
     if (!dir.isEmpty()) {
-        k->imagesPath->setText(dir);
+        imagesPath->setText(dir);
         saveDefaultPath(dir);
     }
 }
@@ -127,24 +126,24 @@ void TupPapagayoDialog::openSoundDialog()
     QString file = QFileDialog::getOpenFileName(this, tr("Load sound file"), path, tr("Sound file (*.ogg *.wav *.mp3)"));
 
     if (!file.isEmpty()) {
-        k->soundPath->setText(file);
+        soundPath->setText(file);
         setDefaultPath(file);
     }
 }
 
 void TupPapagayoDialog::checkRecords()
 {
-    if (k->filePath->text().length() == 0) {
+    if (filePath->text().length() == 0) {
         TOsd::self()->display(tr("Error"), tr("PGO path is unset!"), TOsd::Error);
         return;
     }
 
-    if (k->imagesPath->text().length() == 0) {
+    if (imagesPath->text().length() == 0) {
         TOsd::self()->display(tr("Error"), tr("Images directory is unset!"), TOsd::Error);
         return;
     }
 
-    if (k->soundPath->text().length() == 0) {
+    if (soundPath->text().length() == 0) {
         TOsd::self()->display(tr("Error"), tr("Sound path is unset!"), TOsd::Error);
         return;
     }
@@ -154,17 +153,17 @@ void TupPapagayoDialog::checkRecords()
 
 QString TupPapagayoDialog::getPGOFile() const
 {
-    return k->filePath->text();
+    return filePath->text();
 }
 
 QString TupPapagayoDialog::getImagesFile() const
 {
-    return k->imagesPath->text();
+    return imagesPath->text();
 }
 
 QString TupPapagayoDialog::getSoundFile() const
 {
-    return k->soundPath->text();
+    return soundPath->text();
 }
 
 void TupPapagayoDialog::setDefaultPath(const QString &path)

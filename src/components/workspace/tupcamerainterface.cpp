@@ -36,7 +36,6 @@
 #include "tupcamerainterface.h"
 #include "tupapplication.h"
 #include "tapplicationproperties.h"
-#include "tseparator.h"
 #include "talgorithm.h"
 #include "tosd.h"
 
@@ -44,7 +43,6 @@
 #include <QIcon>
 #include <QDir>
 #include <QDesktopWidget>
-#include <QPushButton>
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QColorDialog>

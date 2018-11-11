@@ -35,6 +35,9 @@
 
 #include "tupbrushstatus.h"
 
+#include <QHBoxLayout>
+#include <QLabel>
+
 TupBrushStatus::TupBrushStatus(const QString &label, TColorCell::FillType context, const QPixmap &pix)
 {
     QHBoxLayout *layout = new QHBoxLayout(this);

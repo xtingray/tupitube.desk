@@ -46,8 +46,6 @@
 #include <QDir>
 #include <QHBoxLayout>
 
-// class TupColorWidget;
-
 class TUPITUBE_EXPORT TupToolStatus : public QWidget
 {
     Q_OBJECT

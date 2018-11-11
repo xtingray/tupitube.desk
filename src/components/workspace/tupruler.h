@@ -39,13 +39,10 @@
 #include "tglobal.h"
 
 #include <QWidget>
-#include <QMouseEvent>
 #include <QPaintEvent>
-#include <QPainter>
 #include <QRectF>
 #include <QPoint>
 #include <QSize>
-#include <cmath>
 
 #define RULER_BREADTH 20
 

@@ -38,14 +38,12 @@
 
 #include "tglobal.h"
 #include "tupgraphicsscene.h"
-// #include "tuppaintareabase.h"
 
 #include <QGraphicsView>
 #include <QPainter>
 #include <QRectF>
 #include <QMouseEvent>
 #include <QKeyEvent>
-#include <cmath>
 
 class TUPITUBE_EXPORT TupCanvasView : public QGraphicsView
 {
@@ -72,8 +70,16 @@ class TUPITUBE_EXPORT TupCanvasView : public QGraphicsView
 
     private:
         void updateCenter(const QPoint point);
-        struct Private;
-        Private *const k;
+
+        TupGraphicsScene *scene;
+        QSize screenSize;
+        QSize projectSize;
+        QColor bg;
+        bool spaceBar;
+        QRectF drawingRect;
+
+        QPoint initPoint;
+        QPoint centerPoint;
 };
 
 #endif

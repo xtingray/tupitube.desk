@@ -35,28 +35,24 @@
 
 #include "tuppapagayoimporter.h" 
 
-struct TupPapagayoImporter::Private
-{
-    bool isValid;
-    int framesCount;
-    int fps;
-    TupLipSync *lipsync;
-};
+#include <QFile>
+#include <QFileInfo>
+#include <QTextStream>
 
 TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &projectSize, const QString &extension, 
-                                         int initFrame) : QObject(), k(new Private)
+                                         int initFrame) : QObject()
 {
     int framesTotal = 0;
-    k->framesCount = 0;
-    k->isValid = true;
+    framesCount = 0;
+    isValid = true;
     QFile input(file);
 
     QFileInfo info(file);
     QString name = info.fileName().toLower();
-    k->lipsync = new TupLipSync();
-    k->lipsync->setName(name);
-    k->lipsync->setInitFrame(initFrame);
-    k->lipsync->setPicsExtension(extension);
+    lipsync = new TupLipSync();
+    lipsync->setName(name);
+    lipsync->setInitFrame(initFrame);
+    lipsync->setPicsExtension(extension);
 
     if (input.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream stream(&input);
@@ -69,7 +65,7 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                    case 0:
                    {
                        if (!line.startsWith("lipsync version")) {
-                           k->isValid = false;      
+                           isValid = false;
                            return;
                        }
                    } 
@@ -78,15 +74,15 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                    case 1:
                    {
                        // Load audio file
-                       k->lipsync->setSoundFile(line.trimmed());
+                       lipsync->setSoundFile(line.trimmed());
                    }
                    break;
                    */
                    case 2:
                    {
                        // FPS 
-                       k->fps = line.trimmed().toInt();
-                       k->lipsync->setFPS(k->fps);
+                       fps = line.trimmed().toInt();
+                       lipsync->setFPS(fps);
                    }
                    break;
                    case 3:
@@ -194,28 +190,28 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                       }
 
                       if (w == numWords - 1) {
-                          if (lastFrame > k->framesCount)
-                              k->framesCount = lastFrame;
+                          if (lastFrame > framesCount)
+                              framesCount = lastFrame;
                       }
                       phrase->addWord(word);
                  } // for w
-                 phrase->setEndFrame(k->framesCount);
+                 phrase->setEndFrame(framesCount);
                  voice->addPhrase(phrase); 
             }
-            k->lipsync->addVoice(voice);
+            lipsync->addVoice(voice);
         }
 
-        k->framesCount++;
-        if (framesTotal > k->framesCount) {
-            k->framesCount = framesTotal;
-            k->lipsync->setFramesCount(framesTotal);
+        framesCount++;
+        if (framesTotal > framesCount) {
+            framesCount = framesTotal;
+            lipsync->setFramesCount(framesTotal);
         } else {
-            k->lipsync->setFramesCount(k->framesCount);
+            lipsync->setFramesCount(framesCount);
         }
 
-        k->lipsync->verifyStructure();
+        lipsync->verifyStructure();
     } else {
-        k->isValid = false;
+        isValid = false;
         #ifdef TUP_DEBUG
             QString msg = "TupPapagayoImporter() - Fatal Error: Insufficient permissions to load file! -> " + file;
             #ifdef Q_OS_WIN
@@ -236,18 +232,18 @@ TupPapagayoImporter::~TupPapagayoImporter()
 
 void TupPapagayoImporter::setSoundFile(const QString &soundFile)
 {
-    k->lipsync->setSoundFile(soundFile);
+    lipsync->setSoundFile(soundFile);
 }
 
 bool TupPapagayoImporter::fileIsValid()
 {
-    return k->isValid;
+    return isValid;
 }
 
 QString TupPapagayoImporter::file2Text() const
 {
     QDomDocument document;
-    QDomElement root = k->lipsync->toXml(document);
+    QDomElement root = lipsync->toXml(document);
 
     QString xml;
     {
@@ -258,14 +254,12 @@ QString TupPapagayoImporter::file2Text() const
     return xml;
 }
 
-int TupPapagayoImporter::framesCount()
+int TupPapagayoImporter::getFrameCount()
 {
-    return k->framesCount;
+    return framesCount;
 }
 
-int TupPapagayoImporter::fps()
+int TupPapagayoImporter::getFps()
 {
-    return k->fps;
+    return fps;
 }
-
-

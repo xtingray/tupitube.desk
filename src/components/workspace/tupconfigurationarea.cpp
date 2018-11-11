@@ -35,16 +35,10 @@
 
 #include "tupconfigurationarea.h"
 
-#include <QPushButton>
-#include <QLabel>
-#include <QTextBrowser>
 #include <QMainWindow>
-#include <QMouseEvent>
 #include <QApplication>
-#include <QPushButton>
 #include <QToolTip>
 #include <QPainter>
-#include <QPainterPath>
 #include <QStyle>
 #include <QStyleOptionButton>
 

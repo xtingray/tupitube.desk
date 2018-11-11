@@ -43,6 +43,7 @@
 #include <QDialog>
 #include <QCamera>
 #include <QComboBox>
+#include <QCheckBox>
 
 class TUPITUBE_EXPORT TupCameraDialog : public QDialog
 {

@@ -38,15 +38,10 @@
 
 #include "tglobal.h"
 #include "tcolorcell.h"
-#include "tseparator.h"
 
 #include <QPixmap>
 #include <QPen>
 #include <QBrush>
-#include <QColor>
-#include <QLabel>
-#include <QHBoxLayout>
-#include <QColorDialog>
 
 class TupColorWidget;
 

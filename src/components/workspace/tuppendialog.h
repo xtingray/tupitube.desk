@@ -73,8 +73,11 @@ class TUPITUBE_EXPORT TupPenDialog : public QDialog
         void setButtonsPanel();
         void modifySize(int value);
 
-        struct Private;
-        Private *const k;
+        QVBoxLayout *innerLayout;
+        TupPenThicknessWidget *thickPreview;
+        TupBrushManager *brushManager;
+        QLabel *sizeLabel;
+        int currentSize;
 };
 
 #endif

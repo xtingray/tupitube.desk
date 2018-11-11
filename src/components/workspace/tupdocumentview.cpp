@@ -55,6 +55,18 @@
 #include "tuplibrary.h"
 #include "tuppapagayoimporter.h"
 #include "tuppapagayodialog.h"
+#include "tcolorcell.h"
+#include "tosd.h"
+#include "tupfilterinterface.h"
+
+#include <QDir>
+#include <QApplication>
+#include <QToolBar>
+#include <QPixmap>
+#include <QDesktopWidget>
+#include <QGridLayout>
+#include <QCameraImageCapture>
+#include <QCamera>
 
 TupDocumentView::TupDocumentView(TupProject *work, QWidget *parent, bool netFlag, const QStringList &users) :
                                  QMainWindow(parent)
@@ -88,7 +100,6 @@ TupDocumentView::TupDocumentView(TupProject *work, QWidget *parent, bool netFlag
     actionGroup = new QActionGroup(this);
     actionGroup->setExclusive(true);
 
-    // QFrame *frame = new QFrame(this, Qt::FramelessWindowHint);
     QWidget *workspace = new QWidget;
     QGridLayout *layout = new QGridLayout(workspace);
 
@@ -2154,7 +2165,7 @@ void TupDocumentView::importPapagayoLipSync()
                         TupScene *scene = project->sceneAt(sceneIndex);
                         if (scene) {
                             int sceneFrames = scene->framesCount();
-                            int lipSyncFrames = currentIndex + parser->framesCount();
+                            int lipSyncFrames = currentIndex + parser->getFrameCount();
 
                             if (lipSyncFrames > sceneFrames) {
                                 int layersCount = scene->layersCount();
@@ -2176,7 +2187,7 @@ void TupDocumentView::importPapagayoLipSync()
                         if (currentTool->name().compare(tr("Papagayo Lip-sync")) != 0)
                             papagayoAction->trigger();
 
-                        emit updateFPS(parser->fps()); 
+                        emit updateFPS(parser->getFps()); 
 
                         TOsd::self()->display(tr("Information"), tr("Papagayo file has been imported successfully"));
                     } else {

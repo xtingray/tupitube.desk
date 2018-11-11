@@ -38,15 +38,9 @@
 
 #include "tglobal.h"
 #include "tapplicationproperties.h"
-#include "tosd.h"
 
 #include <QDialog>
-#include <QBoxLayout>
-#include <QDialogButtonBox>
 #include <QLineEdit>
-#include <QCheckBox>
-#include <QPushButton>
-#include <QFileDialog>
 
 class TUPITUBE_EXPORT TupPapagayoDialog : public QDialog
 {
@@ -55,6 +49,7 @@ class TUPITUBE_EXPORT TupPapagayoDialog : public QDialog
     public:
         TupPapagayoDialog();
         ~TupPapagayoDialog();
+
         QString getPGOFile() const;
         QString getImagesFile() const;
         QString getSoundFile() const;
@@ -68,8 +63,10 @@ class TUPITUBE_EXPORT TupPapagayoDialog : public QDialog
     private:
         void setDefaultPath(const QString &path);
         void saveDefaultPath(const QString &dir);
-        struct Private;
-        Private *const k;
+
+        QLineEdit *filePath;
+        QLineEdit *imagesPath;
+        QLineEdit *soundPath;
 };
 
 #endif

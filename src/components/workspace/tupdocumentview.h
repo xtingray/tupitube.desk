@@ -40,12 +40,8 @@
 #include "tupdocumentruler.h"
 #include "tuppaintarea.h"
 #include "tactionmanager.h"
-#include "tosd.h"
-#include "tupfilterinterface.h"
-#include "tuptoolinterface.h"
 #include "tupconfigurationarea.h"
 #include "tupstoryboard.h"
-#include "tcolorcell.h"
 #include "tupbrushmanager.h"
 #include "tupproject.h"
 #include "tupcanvas.h"
@@ -54,29 +50,14 @@
 #include "tupexportinterface.h"
 
 #include <QMainWindow>
-#include <QLayout>
-#include <QStatusBar>
-#include <QMenuBar>
-#include <QPixmap>
 #include <QActionGroup>
-#include <QDockWidget>
 #include <QTimer>
-#include <QApplication>
 #include <QCursor>
 #include <QAction>
 #include <QActionGroup>
-#include <QToolBar>
 #include <QMenu>
-#include <QDir>
-#include <QPluginLoader>
 #include <QSpinBox>
-#include <QFrame>
-#include <QGridLayout>
 #include <QComboBox>
-#include <QDesktopWidget>
-#include <QMessageBox>
-#include <QCamera>
-#include <QCameraImageCapture>
 
 class TupProjectRequest;
 class TupProject;

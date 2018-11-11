@@ -39,9 +39,6 @@
 #include "tglobal.h"
 #include "tuplipsync.h"
 
-#include <QFile>
-#include <QFileInfo>
-#include <QTextStream>
 #include <QSize>
 
 class TUPITUBE_EXPORT TupPapagayoImporter : public QObject
@@ -51,15 +48,18 @@ class TUPITUBE_EXPORT TupPapagayoImporter : public QObject
     public:
         TupPapagayoImporter(const QString &file, const QSize &projectSize, const QString &extension, int initFrame);
         ~TupPapagayoImporter();
+
         void setSoundFile(const QString &soundFile);
         bool fileIsValid();
         QString file2Text() const;
-        int framesCount();
-        int fps();
+        int getFrameCount();
+        int getFps();
 
     private:
-        struct Private;
-        Private *const k;
+        bool isValid;
+        int framesCount;
+        int fps;
+        TupLipSync *lipsync;
 };
 
 #endif

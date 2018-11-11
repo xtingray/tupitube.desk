@@ -34,93 +34,72 @@
  ***************************************************************************/
 
 #include "tupstoryboarddialog.h"
+#include "tseparator.h"
+#include "talgorithm.h"
+#include "tosd.h"
 
-struct TupStoryBoardDialog::Private
+#include <QPainter>
+#include <QFileDialog>
+#include <QDir>
+#include <QDesktopWidget>
+#include <QPrintDialog>
+#include <QTextBrowser>
+#include <QDialogButtonBox>
+#include <QPrinter>
+#include <QPixmap>
+#include <QPushButton>
+#include <QListWidget>
+
+TupStoryBoardDialog::TupStoryBoardDialog(bool network, TupExportInterface *plugin, const QColor &color,
+                                         const QSize &pSize, TupScene *pScene, int sIndex, TupLibrary *assets,
+                                         QWidget *parent) : QDialog(parent)
 {
-    bool isNetworked;
-    TupExportInterface *imagePlugin;
-    QColor bgColor;
-    QSize size;
-    QSize scaledSize;
-    int sceneIndex;
-    TupScene *scene;
-
-    TupStoryboard *storyboard;
-    int currentIndex;
-    QString path;
-
-    QBoxLayout *layout;
-    QVBoxLayout *formLayout;
-
-    QWidget *storyPanel;
-    QWidget *scenePanel;
-
-    QListWidget *list;
-    QLabel *screenLabel;
-
-    QLineEdit *titleEdit;
-    QLineEdit *topicsEdit;
-    QLineEdit *authorEdit;
-    QTextEdit *summaryEdit;
-
-    QLabel *sceneLabel;
-    QLineEdit *sceneTitleEdit;
-    QLineEdit *sceneDurationEdit;
-    QTextEdit *sceneDescriptionEdit;
-
-    QLocale utf;
-    TupLibrary *library;
-};
-
-TupStoryBoardDialog::TupStoryBoardDialog(bool isNetworked, TupExportInterface *imagePlugin, const QColor &color, 
-                                         const QSize &size, TupScene *scene, int sceneIndex, TupLibrary *library, QWidget *parent) : QDialog(parent), k(new Private)
-{
-    k->isNetworked = isNetworked;
-    k->imagePlugin = imagePlugin;
-    k->bgColor = color;
-    k->size = size;
-    k->scene = scene;
-    k->sceneIndex = sceneIndex;
-    k->storyboard = k->scene->storyboard();
-    k->library = library;
-    k->utf = QLocale(QLocale::AnyLanguage, QLocale::AnyCountry);
+    isNetworked = network;
+    imagePlugin = plugin;
+    bgColor = color;
+    size = pSize;
+    scene = pScene;
+    sceneIndex = sIndex;
+    storyboard = scene->storyboard();
+    library = assets;
+    utf = QLocale(QLocale::AnyLanguage, QLocale::AnyCountry);
 
     QDesktopWidget desktop;
-    k->scaledSize = QSize();
+    scaledSize = QSize();
 
-    if (size.width() > size.height()) {
-        if (k->size.width() + 500 > desktop.screenGeometry().width()) {
+    if (pSize.width() > pSize.height()) {
+        if (size.width() + 500 > desktop.screenGeometry().width()) {
             int w = desktop.screenGeometry().width() - 500;
-            int h = (k->size.height() * w) / k->size.width(); 
-            k->scaledSize.setWidth(w);                                     
-            k->scaledSize.setHeight(h);
+            int h = (size.height() * w) / size.width();
+            scaledSize.setWidth(w);
+            scaledSize.setHeight(h);
         } else {
-            k->scaledSize = k->size; 
+            scaledSize = size;
         }
     } else {
-        if (k->size.height() + 400 > desktop.screenGeometry().height()) {
+        if (size.height() + 400 > desktop.screenGeometry().height()) {
             int h = desktop.screenGeometry().height() - 400;
-            int w = (k->size.width() * h) / k->size.height();
-            k->scaledSize.setWidth(w);
-            k->scaledSize.setHeight(h);
+            int w = (size.width() * h) / size.height();
+            scaledSize.setWidth(w);
+            scaledSize.setHeight(h);
         } else {
-            k->scaledSize = k->size;
+            scaledSize = size;
         }
     }
 
-    if (k->scaledSize.height() + 400 > desktop.screenGeometry().height()) {
+    if (scaledSize.height() + 400 > desktop.screenGeometry().height()) {
         int h = desktop.screenGeometry().height() - 400;
-        int w = (k->size.width() * h) / k->size.height();
-        k->scaledSize.setWidth(w);
-        k->scaledSize.setHeight(h);
+        int w = (size.width() * h) / size.height();
+        scaledSize.setWidth(w);
+        scaledSize.setHeight(h);
     }
 
     setModal(true);
     setWindowTitle(tr("Storyboard Settings"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/storyboard.png")));
 
-    k->layout = new QHBoxLayout(this);
-    k->formLayout = new QVBoxLayout;
+    layout = new QHBoxLayout(this);
+    formLayout = new QVBoxLayout;
 
     setListComponent();
     setPreviewScreen();
@@ -144,7 +123,7 @@ TupStoryBoardDialog::TupStoryBoardDialog(bool isNetworked, TupExportInterface *i
     buttonBox->addButton(pdfButton, QDialogButtonBox::ActionRole);
     buttonBox->addButton(htmlButton, QDialogButtonBox::ActionRole);
 
-    if (k->isNetworked) {
+    if (isNetworked) {
         QPushButton *postButton = new QPushButton(tr("&Post"));
         connect(postButton, SIGNAL(clicked()), this, SLOT(postStoryboardAtServer()));
         buttonBox->addButton(postButton, QDialogButtonBox::ActionRole);
@@ -152,10 +131,10 @@ TupStoryBoardDialog::TupStoryBoardDialog(bool isNetworked, TupExportInterface *i
 
     buttonBox->addButton(closeButton, QDialogButtonBox::ActionRole);
 
-    k->formLayout->addWidget(new TSeparator());
-    k->formLayout->addWidget(buttonBox);
+    formLayout->addWidget(new TSeparator());
+    formLayout->addWidget(buttonBox);
 
-    k->layout->addLayout(k->formLayout);
+    layout->addLayout(formLayout);
 
     thumbnailGenerator();
 }
@@ -166,37 +145,37 @@ TupStoryBoardDialog::~TupStoryBoardDialog()
 
 void TupStoryBoardDialog::setListComponent()
 {
-    k->list = new QListWidget(this);
-    k->list->setViewMode(QListView::IconMode);
-    k->list->setWrapping(false);
-    k->list->setFlow(QListView::TopToBottom);
-    k->list->setIconSize(QSize(96, (k->scaledSize.height() * 96) / k->scaledSize.width()));
-    k->list->setMovement(QListView::Static);
-    k->list->setFixedWidth(130);
-    k->list->setSpacing(12);
+    list = new QListWidget(this);
+    list->setViewMode(QListView::IconMode);
+    list->setWrapping(false);
+    list->setFlow(QListView::TopToBottom);
+    list->setIconSize(QSize(96, (scaledSize.height() * 96) / scaledSize.width()));
+    list->setMovement(QListView::Static);
+    list->setFixedWidth(130);
+    list->setSpacing(12);
 
-    k->layout->addWidget(k->list);
+    layout->addWidget(list);
 
-    connect(k->list, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
+    connect(list, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
             this, SLOT(updateForm(QListWidgetItem *, QListWidgetItem*)));
 }
 
 void TupStoryBoardDialog::setPreviewScreen()
 {
-    QPixmap pixmap = QPixmap(k->scaledSize.width(), k->scaledSize.height());
+    QPixmap pixmap = QPixmap(scaledSize.width(), scaledSize.height());
     pixmap.fill();
 
-    k->screenLabel = new QLabel;
-    k->screenLabel->setAlignment(Qt::AlignHCenter);
-    k->screenLabel->setPixmap(pixmap);
-    k->formLayout->addWidget(k->screenLabel);
+    screenLabel = new QLabel;
+    screenLabel->setAlignment(Qt::AlignHCenter);
+    screenLabel->setPixmap(pixmap);
+    formLayout->addWidget(screenLabel);
 }
 
 void TupStoryBoardDialog::setStoryForm()
 {
-    k->storyPanel = new QWidget;
+    storyPanel = new QWidget;
 
-    QBoxLayout *sceneLayout = new QBoxLayout(QBoxLayout::TopToBottom, k->storyPanel);
+    QBoxLayout *sceneLayout = new QBoxLayout(QBoxLayout::TopToBottom, storyPanel);
 
     QFont font = this->font();
     font.setPointSize(10);
@@ -206,108 +185,108 @@ void TupStoryBoardDialog::setStoryForm()
     mainTitle->setAlignment(Qt::AlignHCenter);
 
     QLabel *titleLabel = new QLabel(tr("Title"));
-    k->titleEdit = new QLineEdit("");
-    k->titleEdit->setLocale(k->utf);
+    titleEdit = new QLineEdit("");
+    titleEdit->setLocale(utf);
 
-    titleLabel->setBuddy(k->titleEdit);
+    titleLabel->setBuddy(titleEdit);
 
     QLabel *authorLabel = new QLabel(tr("Author"));
-    k->authorEdit = new QLineEdit("");
-    k->authorEdit->setLocale(k->utf);
-    authorLabel->setBuddy(k->authorEdit);
+    authorEdit = new QLineEdit("");
+    authorEdit->setLocale(utf);
+    authorLabel->setBuddy(authorEdit);
 
     QLabel *summaryLabel = new QLabel(tr("Summary"));
-    k->summaryEdit = new QTextEdit;
-    k->summaryEdit->setLocale(k->utf);
-    k->summaryEdit->setAcceptRichText(false);
-    k->summaryEdit->setFixedHeight(80);
-    k->summaryEdit->setText("");
+    summaryEdit = new QTextEdit;
+    summaryEdit->setLocale(utf);
+    summaryEdit->setAcceptRichText(false);
+    summaryEdit->setFixedHeight(80);
+    summaryEdit->setText("");
 
     QHBoxLayout *topLayout = new QHBoxLayout;
     topLayout->addWidget(titleLabel);
-    topLayout->addWidget(k->titleEdit);
+    topLayout->addWidget(titleEdit);
 
     QHBoxLayout *middleLayout = new QHBoxLayout;
     middleLayout->addWidget(authorLabel);
-    middleLayout->addWidget(k->authorEdit);
+    middleLayout->addWidget(authorEdit);
 
     sceneLayout->addWidget(mainTitle);
     sceneLayout->addLayout(topLayout);
 
-    if (k->isNetworked) {
+    if (isNetworked) {
         QLabel *topicsLabel = new QLabel(tr("Topics"));
-        k->topicsEdit = new QLineEdit("");
-        k->topicsEdit->setLocale(k->utf);
-        topicsLabel->setBuddy(k->topicsEdit);
+        topicsEdit = new QLineEdit("");
+        topicsEdit->setLocale(utf);
+        topicsLabel->setBuddy(topicsEdit);
 
         QHBoxLayout *topicsLayout = new QHBoxLayout;
         topicsLayout->addWidget(topicsLabel);
-        topicsLayout->addWidget(k->topicsEdit);
+        topicsLayout->addWidget(topicsEdit);
 
         sceneLayout->addLayout(topicsLayout);
     }
 
     sceneLayout->addLayout(middleLayout);
     sceneLayout->addWidget(summaryLabel);
-    sceneLayout->addWidget(k->summaryEdit);
+    sceneLayout->addWidget(summaryEdit);
 
-    k->formLayout->addWidget(k->storyPanel);
+    formLayout->addWidget(storyPanel);
 }
 
 void TupStoryBoardDialog::setSceneForm()
 {
-    k->scenePanel = new QWidget;
+    scenePanel = new QWidget;
 
-    QBoxLayout *sceneLayout = new QBoxLayout(QBoxLayout::TopToBottom, k->scenePanel);
+    QBoxLayout *sceneLayout = new QBoxLayout(QBoxLayout::TopToBottom, scenePanel);
     sceneLayout->setAlignment(Qt::AlignVCenter | Qt::AlignBottom);
 
     QFont font = this->font();
     font.setPointSize(10);
     font.setBold(true);
-    k->sceneLabel = new QLabel(tr("Scene Information"));
-    k->sceneLabel->setFont(font);
-    k->sceneLabel->setAlignment(Qt::AlignHCenter);
+    sceneLabel = new QLabel(tr("Scene Information"));
+    sceneLabel->setFont(font);
+    sceneLabel->setAlignment(Qt::AlignHCenter);
 
     QLabel *titleLabel = new QLabel(tr("Title"));
-    k->sceneTitleEdit = new QLineEdit("");
-    k->sceneTitleEdit->setLocale(k->utf);
-    titleLabel->setBuddy(k->sceneTitleEdit);
+    sceneTitleEdit = new QLineEdit("");
+    sceneTitleEdit->setLocale(utf);
+    titleLabel->setBuddy(sceneTitleEdit);
 
     QLabel *durationLabel = new QLabel(tr("Duration"));
-    k->sceneDurationEdit = new QLineEdit("");
-    k->sceneDurationEdit->setLocale(k->utf);
-    durationLabel->setBuddy(k->sceneDurationEdit);
+    sceneDurationEdit = new QLineEdit("");
+    sceneDurationEdit->setLocale(utf);
+    durationLabel->setBuddy(sceneDurationEdit);
 
     QLabel *descLabel = new QLabel(tr("Description"));
 
-    k->sceneDescriptionEdit = new QTextEdit;
-    k->sceneDescriptionEdit->setLocale(k->utf);
-    k->sceneDescriptionEdit->setAcceptRichText(false);
-    k->sceneDescriptionEdit->setFixedHeight(80);
-    k->sceneDescriptionEdit->setText("");
+    sceneDescriptionEdit = new QTextEdit;
+    sceneDescriptionEdit->setLocale(utf);
+    sceneDescriptionEdit->setAcceptRichText(false);
+    sceneDescriptionEdit->setFixedHeight(80);
+    sceneDescriptionEdit->setText("");
 
     QHBoxLayout *topLayout = new QHBoxLayout;
     topLayout->addWidget(titleLabel);
-    topLayout->addWidget(k->sceneTitleEdit);
+    topLayout->addWidget(sceneTitleEdit);
 
     QHBoxLayout *middleLayout = new QHBoxLayout;
     middleLayout->addWidget(durationLabel);
-    middleLayout->addWidget(k->sceneDurationEdit);
+    middleLayout->addWidget(sceneDurationEdit);
 
-    sceneLayout->addWidget(k->sceneLabel);
+    sceneLayout->addWidget(sceneLabel);
     sceneLayout->addLayout(topLayout);
     sceneLayout->addLayout(middleLayout);
     sceneLayout->addWidget(descLabel);
-    sceneLayout->addWidget(k->sceneDescriptionEdit);
+    sceneLayout->addWidget(sceneDescriptionEdit);
 
-    k->formLayout->addWidget(k->scenePanel);
+    formLayout->addWidget(scenePanel);
 
-    k->scenePanel->hide();
+    scenePanel->hide();
 }
 
 void TupStoryBoardDialog::addScene(const QString &label, const QIcon &icon)
 {
-    QListWidgetItem *sceneItem = new QListWidgetItem(k->list);
+    QListWidgetItem *sceneItem = new QListWidgetItem(list);
     sceneItem->setIcon(icon);
     sceneItem->setText(label);
     sceneItem->setTextAlignment(Qt::AlignHCenter);
@@ -319,7 +298,7 @@ void TupStoryBoardDialog::addScene(const QString &label, const QIcon &icon)
 
 void TupStoryBoardDialog::thumbnailGenerator()
 {
-    int height = (k->scaledSize.height() * 96) / k->scaledSize.width();
+    int height = (scaledSize.height() * 96) / scaledSize.width();
     QPixmap pixmap = QPixmap(96, height); 
     pixmap.fill();
 
@@ -339,26 +318,26 @@ void TupStoryBoardDialog::thumbnailGenerator()
     QIcon icon = QIcon(pixmap); 
     addScene(tr("Cover"), icon);
 
-    int framesCount = k->scene->framesCount();
-    if (k->storyboard->size() == 0)
-        k->storyboard->init(0, framesCount);
+    int framesCount = scene->framesCount();
+    if (storyboard->size() == 0)
+        storyboard->init(0, framesCount);
 
-    k->path = QDir::tempPath() + "/" + TAlgorithm::randomString(8) + "/";
-    QDir().mkpath(k->path);
+    path = QDir::tempPath() + "/" + TAlgorithm::randomString(8) + "/";
+    QDir().mkpath(path);
 
     for (int i=0; i < framesCount; i++) {
-         QString fileName = k->path + "scene" + QString::number(i);
-         bool isOk = k->imagePlugin->exportFrame(i, k->bgColor, fileName, k->scene, k->size, k->library);
+         QString fileName = path + "scene" + QString::number(i);
+         bool isOk = imagePlugin->exportFrame(i, bgColor, fileName, scene, size, library);
          fileName += ".png";
          QPixmap resized(fileName);
-         resized = resized.scaledToWidth(k->scaledSize.width(), Qt::SmoothTransformation);
+         resized = resized.scaledToWidth(scaledSize.width(), Qt::SmoothTransformation);
          resized.save(fileName);
 
          if (isOk) {
              QPixmap pixmap(fileName);
              QPainter painter(&pixmap);
              painter.setPen(Qt::darkGray);
-             QRectF rectangle(0, 0, k->scaledSize.width()-1, k->scaledSize.height()-1);
+             QRectF rectangle(0, 0, scaledSize.width()-1, scaledSize.height()-1);
              painter.drawRect(rectangle);
              pixmap.scaledToWidth(96, Qt::SmoothTransformation);
 
@@ -371,86 +350,86 @@ void TupStoryBoardDialog::thumbnailGenerator()
 
 void TupStoryBoardDialog::updateForm(QListWidgetItem *current, QListWidgetItem *previous)
 {
-    int previousIndex = k->list->row(previous);
-    k->currentIndex = k->list->row(current);
+    int previousIndex = list->row(previous);
+    currentIndex = list->row(current);
     QPixmap pixmap;
 
-    if (k->currentIndex > 0) {
-        int index = k->currentIndex - 1;
-        k->sceneLabel->setText(tr("Scene No %1 - Information").arg(QString::number(index)));
-        QString fileName = k->path + "scene" + QString::number(index) + ".png";
+    if (currentIndex > 0) {
+        int index = currentIndex - 1;
+        sceneLabel->setText(tr("Scene No %1 - Information").arg(QString::number(index)));
+        QString fileName = path + "scene" + QString::number(index) + ".png";
         pixmap = QPixmap(fileName);
 
         if (previousIndex == 0) {
-            k->storyPanel->hide();
-            k->scenePanel->show();
+            storyPanel->hide();
+            scenePanel->show();
 
-            k->storyboard->setStoryTitle(getStoryTitle());
+            storyboard->setStoryTitle(getStoryTitle());
 
-            if (k->isNetworked)
-                k->storyboard->setStoryTopics(getStoryTopics());
+            if (isNetworked)
+                storyboard->setStoryTopics(getStoryTopics());
             else
-                k->storyboard->setStoryTopics(""); 
+                storyboard->setStoryTopics("");
 
-            k->storyboard->setStoryAuthor(getStoryAuthor());
-            k->storyboard->setStorySummary(getStorySummary());
+            storyboard->setStoryAuthor(getStoryAuthor());
+            storyboard->setStorySummary(getStorySummary());
         } else {
             previousIndex--;
-            k->storyboard->setSceneTitle(previousIndex, getSceneTitle());
-            k->storyboard->setSceneDuration(previousIndex, getSceneDuration());
-            k->storyboard->setSceneDescription(previousIndex, getSceneDescription());
+            storyboard->setSceneTitle(previousIndex, getSceneTitle());
+            storyboard->setSceneDuration(previousIndex, getSceneDuration());
+            storyboard->setSceneDescription(previousIndex, getSceneDescription());
         }
 
-        k->sceneTitleEdit->setText(k->storyboard->sceneTitle(index));
-        k->sceneDurationEdit->setText(k->storyboard->sceneDuration(index));
-        k->sceneDescriptionEdit->setPlainText(k->storyboard->sceneDescription(index));
+        sceneTitleEdit->setText(storyboard->sceneTitle(index));
+        sceneDurationEdit->setText(storyboard->sceneDuration(index));
+        sceneDescriptionEdit->setPlainText(storyboard->sceneDescription(index));
 
     } else {
         if (previousIndex != 0) {
-            pixmap = QPixmap(k->scaledSize.width(), k->scaledSize.height());
+            pixmap = QPixmap(scaledSize.width(), scaledSize.height());
             pixmap.fill();
 
             QPainter painter(&pixmap);
             painter.setPen(Qt::black);
             QFont font = this->font();
-            int fontSize = k->scaledSize.width()*30/520;
+            int fontSize = scaledSize.width()*30/520;
             font.setPointSize(fontSize);
             font.setBold(true);
             painter.setFont(font);
-            // painter.setFont(QFont("Arial", k->scaledSize.width()*30/520, QFont::Bold));
+            // painter.setFont(QFont("Arial", scaledSize.width()*30/520, QFont::Bold));
 
-            QRectF rect(QPointF(0, (k->scaledSize.height()-150)/2), QSizeF(k->scaledSize.width(), 150));
+            QRectF rect(QPointF(0, (scaledSize.height()-150)/2), QSizeF(scaledSize.width(), 150));
             painter.drawText(rect, Qt::AlignCenter, tr("Storyboard"));
             painter.setPen(Qt::lightGray);
-            QRectF rectangle(5, 5, k->scaledSize.width() - 10, k->scaledSize.height() - 10);
+            QRectF rectangle(5, 5, scaledSize.width() - 10, scaledSize.height() - 10);
             painter.drawRect(rectangle);
 
-            k->scenePanel->hide();
-            k->storyPanel->show();
+            scenePanel->hide();
+            storyPanel->show();
 
             if (previousIndex > 0) {
-                k->storyboard->setSceneTitle(previousIndex - 1, getSceneTitle());
-                k->storyboard->setSceneDuration(previousIndex - 1, getSceneDuration());
-                k->storyboard->setSceneDescription(previousIndex - 1, getSceneDescription());
+                storyboard->setSceneTitle(previousIndex - 1, getSceneTitle());
+                storyboard->setSceneDuration(previousIndex - 1, getSceneDuration());
+                storyboard->setSceneDescription(previousIndex - 1, getSceneDescription());
             }
 
-            k->titleEdit->setText(k->storyboard->storyTitle());
+            titleEdit->setText(storyboard->storyTitle());
 
-            if (k->isNetworked)
-                k->topicsEdit->setText(k->storyboard->storyTopics());
+            if (isNetworked)
+                topicsEdit->setText(storyboard->storyTopics());
 
-            k->authorEdit->setText(k->storyboard->storyAuthor());
-            k->summaryEdit->setPlainText(k->storyboard->storySummary());
+            authorEdit->setText(storyboard->storyAuthor());
+            summaryEdit->setPlainText(storyboard->storySummary());
         }
     }
 
-    k->screenLabel->setPixmap(pixmap);
+    screenLabel->setPixmap(pixmap);
 }
 
 void TupStoryBoardDialog::createHTMLFiles(const QString &path, DocType type)
 {
-    if (k->scaledSize.width() <= 520) {
-        QDir directory(k->path);
+    if (scaledSize.width() <= 520) {
+        QDir directory(path);
         QStringList files = directory.entryList();
         for (int i = 0; i < files.size(); ++i) {
              QString file = files.at(i).toLocal8Bit().constData();
@@ -458,15 +437,15 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &path, DocType type)
                  QString target = path + "/" + file;
                  if (QFile::exists(target))
                      QFile::remove(target);       
-                 QFile::copy(k->path + file, target);
+                 QFile::copy(path + file, target);
              }
         }
     } else {
-        QDir directory(k->path);
+        QDir directory(path);
         QStringList files = directory.entryList();
         for (int i = 0; i < files.size(); ++i) {
              QString file = files.at(i).toLocal8Bit().constData();
-             QPixmap pixmap(k->path + file); 
+             QPixmap pixmap(path + file);
              QString destination = path + "/" + file;
              if (QFile::exists(destination))
                  QFile::remove(destination); 
@@ -494,7 +473,7 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &path, DocType type)
     QTextStream out(&file);
     out << "<html>\n";
     out << "<head>\n";
-    QString record = k->storyboard->storyTitle();
+    QString record = storyboard->storyTitle();
     if (record.length() == 0)
         record = "&nbsp;";
     out << "<title>" << record << "</title>\n";
@@ -509,21 +488,21 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &path, DocType type)
     out << "     </div>\n";
     out << "<div id=\"item\">\n";
     out << "     <div id=\"item-header\">Author:</div>\n";
-    record = k->storyboard->storyAuthor();
+    record = storyboard->storyAuthor();
     if (record.length() == 0)
         record = "&nbsp;";
     out << "     <div id=\"item-data\">" << record << "</div>\n";
     out << "</div>\n";
     out << "<div id=\"item\">\n";
     out << "     <div id=\"item-header\">Summary:</div>\n";
-    record = k->storyboard->storySummary();
+    record = storyboard->storySummary();
     if (record.length() == 0)
         record = "&nbsp;";
     out << "     <div id=\"item-data\">" << record << "</div>\n";
     out << "</div>\n";
     out << "<div id=\"item\">\n";
     out << "     <div id=\"item-header\">Scenes Total:</div>\n";
-    out << "     <div id=\"item-data\">" << QString::number(k->storyboard->size()) << "</div>\n";
+    out << "     <div id=\"item-data\">" << QString::number(storyboard->size()) << "</div>\n";
     out << "</div>\n";
     out << "</div>\n";
     if (type == PDF) {
@@ -531,7 +510,7 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &path, DocType type)
         out << "</div>\n";
     }
 
-    int scenes = k->storyboard->size();
+    int scenes = storyboard->size();
     for (int i=0; i < scenes; i++) {
          out << "<div id=\"scene\">\n";
          QString image = "<img src=\"scene" + QString::number(i) + ".png\" />\n";
@@ -539,21 +518,21 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &path, DocType type)
          out << "<div id=\"paragraph\">\n";
          out << "<div id=\"scene-item\">\n";
          out << " <div id=\"scene-header\">Title:</div>\n";
-         record = k->storyboard->sceneTitle(i);
+         record = storyboard->sceneTitle(i);
          if (record.length() == 0)
              record = "&nbsp;";
          out << " <div id=\"scene-data\">" << record << "</div>\n";
          out << "</div>\n";
          out << "<div id=\"scene-item\">\n";
          out << " <div id=\"scene-header\">Duration:</div>\n";
-         record = k->storyboard->sceneDuration(i);
+         record = storyboard->sceneDuration(i);
          if (record.length() == 0)
              record = "&nbsp;";
          out << " <div id=\"scene-data\">" << record << "</div>\n";
          out << "</div>\n";
          out << "<div id=\"scene-item\">\n";
          out << " <div id=\"scene-header\">Description:</div>\n";
-         record = k->storyboard->sceneDescription(i);
+         record = storyboard->sceneDescription(i);
          if (record.length() == 0)
              record = "&nbsp;";
          out << " <div id=\"scene-data\">" << record << "</div>\n";
@@ -561,7 +540,7 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &path, DocType type)
          out << "</div>\n";
          out << "</div>\n";
          if (type == PDF) {
-             if (i < (k->storyboard->size() - 1)) {
+             if (i < (storyboard->size() - 1)) {
                  out << "<div id=\"page-break\">\n";
                  out << "</div>\n";
              }
@@ -640,72 +619,72 @@ void TupStoryBoardDialog::postStoryboardAtServer()
     saveLastComponent();
 
     // SQA: This "save call" line should be enhanced
-    emit updateStoryboard(k->storyboard, k->sceneIndex);
+    emit updateStoryboard(storyboard, sceneIndex);
 
-    emit postStoryboard(k->sceneIndex);
+    emit postStoryboard(sceneIndex);
 }
 
 void TupStoryBoardDialog::saveLastComponent()
 {
-    if (k->currentIndex == 0) {
-        k->storyboard->setStoryTitle(getStoryTitle());
-        k->storyboard->setStoryAuthor(getStoryAuthor());
-        if (k->isNetworked)
-            k->storyboard->setStoryTopics(getStoryTopics());
+    if (currentIndex == 0) {
+        storyboard->setStoryTitle(getStoryTitle());
+        storyboard->setStoryAuthor(getStoryAuthor());
+        if (isNetworked)
+            storyboard->setStoryTopics(getStoryTopics());
         else
-            k->storyboard->setStoryTopics("");
-        k->storyboard->setStorySummary(getStorySummary());
+            storyboard->setStoryTopics("");
+        storyboard->setStorySummary(getStorySummary());
     } else {
-        k->storyboard->setSceneTitle(k->currentIndex - 1, getSceneTitle());
-        k->storyboard->setSceneDuration(k->currentIndex - 1, getSceneDuration());
-        k->storyboard->setSceneDescription(k->currentIndex - 1, getSceneDescription());
+        storyboard->setSceneTitle(currentIndex - 1, getSceneTitle());
+        storyboard->setSceneDuration(currentIndex - 1, getSceneDuration());
+        storyboard->setSceneDescription(currentIndex - 1, getSceneDescription());
     }
 }
 
 void TupStoryBoardDialog::closeDialog()
 {
     saveLastComponent();
-    cleanDirectory(k->path);
+    cleanDirectory(path);
 
-    if (k->isNetworked)
-        emit updateStoryboard(k->storyboard, k->sceneIndex);
+    if (isNetworked)
+        emit updateStoryboard(storyboard, sceneIndex);
 
     close();
 }
 
 QString TupStoryBoardDialog::getStoryTitle() const
 {
-    return QString::fromUtf8(k->titleEdit->text().toUtf8());
+    return QString::fromUtf8(titleEdit->text().toUtf8());
 }
 
 QString TupStoryBoardDialog::getStoryAuthor() const
 {
-    return QString::fromUtf8(k->authorEdit->text().toUtf8());
+    return QString::fromUtf8(authorEdit->text().toUtf8());
 }
 
 QString TupStoryBoardDialog::getStoryTopics() const
 {
-    return QString::fromUtf8(k->topicsEdit->text().toUtf8());
+    return QString::fromUtf8(topicsEdit->text().toUtf8());
 }
 
 QString TupStoryBoardDialog::getStorySummary() const
 {
-    return QString::fromUtf8(k->summaryEdit->toPlainText().toUtf8());
+    return QString::fromUtf8(summaryEdit->toPlainText().toUtf8());
 }
 
 QString TupStoryBoardDialog::getSceneTitle() const
 {
-    return QString::fromUtf8(k->sceneTitleEdit->text().toUtf8());
+    return QString::fromUtf8(sceneTitleEdit->text().toUtf8());
 }
 
 QString TupStoryBoardDialog::getSceneDuration() const
 {
-    return QString::fromUtf8(k->sceneDurationEdit->text().toUtf8());
+    return QString::fromUtf8(sceneDurationEdit->text().toUtf8());
 }
 
 QString TupStoryBoardDialog::getSceneDescription() const
 {
-    return QString::fromUtf8(k->sceneDescriptionEdit->toPlainText().toUtf8());
+    return QString::fromUtf8(sceneDescriptionEdit->toPlainText().toUtf8());
 }
 
 void TupStoryBoardDialog::exportStoyrboard(const QString &type)
@@ -717,15 +696,24 @@ void TupStoryBoardDialog::exportStoyrboard(const QString &type)
     }
 }
 
-void TupStoryBoardDialog::cleanDirectory(const QString &path)
+void TupStoryBoardDialog::cleanDirectory(const QString &folder)
 {
-    QDir dir(path);
+    QDir dir(folder);
     QStringList files = dir.entryList();
     for (int i = 0; i < files.size(); ++i) {
          QString file = files.at(i).toLocal8Bit().constData();
          if (file != "." && file != "..")
-             QFile::remove(path + file);
+             QFile::remove(folder + file);
     }
-    dir.rmdir(path);
-}
 
+    if (!dir.rmdir(folder)) {
+        #ifdef TUP_DEBUG
+            QString msg = "TupStoryBoardDialog::cleanDirectory() - Can't remove path -> " + folder;
+            #ifdef Q_OS_WIN
+                qDebug() << msg;
+            #else
+                tError() << msg;
+            #endif
+        #endif
+    }
+}

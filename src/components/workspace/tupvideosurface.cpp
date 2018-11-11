@@ -38,72 +38,42 @@
 #include <QScreen>
 #include <QGuiApplication>
 
-struct TupVideoSurface::Private
+TupVideoSurface::TupVideoSurface(QWidget *widget, VideoIF *target, const QSize &size, bool scaleFlag,
+                                 int orientation, QObject *parent) : QAbstractVideoSurface(parent)
 {
-    QWidget* targetWidget;
-    VideoIF* videoIF;
-    QVideoFrame frame;
-    QImage::Format imageFormat;
-    QSize displaySize;
-    QList<QImage> history;
-    int widgetWidth;
-    int widgetHeight;
+    setNativeResolution(size);
 
-    bool isScaled;
-    bool showPrevious;
-    bool safeArea;
-    bool grid;
-    int opacity;
-    int historySize;
-    int gridSpace;
-    int historyInit;
-    int historyEnd;
-    qreal rotation;
+    isScaled = scaleFlag;
+    targetWidget = widget;
+    videoIF = target;
+    imageFormat = QImage::Format_Invalid;
+    displaySize = size;
+    safeArea = false;
+    grid = false;
+    showPrevious = false;
+    opacity = 127;
+    historySize = 1;
+    gridSpace = 10;
+    historyInit = 0;
+    historyEnd = 0;
 
-    QPen gridAxesPen;
-    QPen gridPen;
-    QPen whitePen;
-    QPen grayPen;
-    QPen greenThickPen;
-    QPen greenThinPen;
-};
+    gridPen = QPen(QColor(0, 0, 180, 50), 1);
+    gridAxesPen = QPen(QColor(0, 135, 0, 150), 1);
+    whitePen = QPen(QColor(255, 255, 255, 255), 1);
+    grayPen = QPen(QColor(150, 150, 150, 255), 1);
+    greenThickPen = QPen(QColor(0, 135, 0, 255), 3);
+    greenThinPen = QPen(QColor(0, 135, 0, 255), 1);
 
-TupVideoSurface::TupVideoSurface(QWidget *widget, VideoIF *target, const QSize &displaySize, bool isScaled, 
-                                 int orientation, QObject *parent) : QAbstractVideoSurface(parent), k(new Private)
-{
-    setNativeResolution(displaySize);
-
-    k->isScaled = isScaled;
-    k->targetWidget = widget;
-    k->videoIF = target;
-    k->imageFormat = QImage::Format_Invalid;
-    k->displaySize = displaySize;
-    k->safeArea = false;
-    k->grid = false;
-    k->showPrevious = false;
-    k->opacity = 127;
-    k->historySize = 1; 
-    k->gridSpace = 10;
-    k->historyInit = 0;
-    k->historyEnd = 0;
-
-    k->gridPen = QPen(QColor(0, 0, 180, 50), 1);
-    k->gridAxesPen = QPen(QColor(0, 135, 0, 150), 1);
-    k->whitePen = QPen(QColor(255, 255, 255, 255), 1);
-    k->grayPen = QPen(QColor(150, 150, 150, 255), 1);
-    k->greenThickPen = QPen(QColor(0, 135, 0, 255), 3);
-    k->greenThinPen = QPen(QColor(0, 135, 0, 255), 1);
-
-    QRect rect = k->targetWidget->rect();
-    k->widgetWidth = rect.size().width();
-    k->widgetHeight = rect.size().height();
+    QRect rect = targetWidget->rect();
+    widgetWidth = rect.size().width();
+    widgetHeight = rect.size().height();
 
     const QScreen *screen = QGuiApplication::primaryScreen();
 
     #ifdef TUP_DEBUG
-        QString msg1 = "TupVideoSurface() - k->isScaled: " + QString::number(k->isScaled);
-        QString msg2 = "TupVideoSurface() - k->displaySize: " + QString::number(displaySize.width()) + ", " + QString::number(displaySize.height());
-        QString msg3 = "TupVideoSurface() - k->widgetSize: " + QString::number(k->widgetWidth) + ", " + QString::number(k->widgetHeight);
+        QString msg1 = "TupVideoSurface() - isScaled: " + QString::number(isScaled);
+        QString msg2 = "TupVideoSurface() - displaySize: " + QString::number(size.width()) + ", " + QString::number(size.height());
+        QString msg3 = "TupVideoSurface() - widgetSize: " + QString::number(widgetWidth) + ", " + QString::number(widgetHeight);
         QString msg4 = "TupVideoSurface() - Screen Orientation: " + QString::number(screen->nativeOrientation());
 
         #ifdef Q_OS_WIN
@@ -120,7 +90,7 @@ TupVideoSurface::TupVideoSurface(QWidget *widget, VideoIF *target, const QSize &
     #endif
 
     const int screenAngle = screen->angleBetween(screen->nativeOrientation(), screen->orientation());
-    k->rotation = (360 - orientation + screenAngle) % 360; 
+    rotation = (360 - orientation + screenAngle) % 360;
 }
 
 TupVideoSurface::~TupVideoSurface()
@@ -129,11 +99,11 @@ TupVideoSurface::~TupVideoSurface()
 
 bool TupVideoSurface::start(const QVideoSurfaceFormat &format)
 {
-    const QImage::Format imageFormat = QVideoFrame::imageFormatFromPixelFormat(format.pixelFormat());
+    const QImage::Format imgFormat = QVideoFrame::imageFormatFromPixelFormat(format.pixelFormat());
     const QSize size = format.frameSize();
 
-    if (imageFormat != QImage::Format_Invalid && !size.isEmpty()) {
-        k->imageFormat = imageFormat;
+    if (imgFormat != QImage::Format_Invalid && !size.isEmpty()) {
+        imageFormat = imgFormat;
         QAbstractVideoSurface::start(format);
         return true;
     } else {
@@ -141,56 +111,56 @@ bool TupVideoSurface::start(const QVideoSurfaceFormat &format)
     }
 }
 
-bool TupVideoSurface::present(const QVideoFrame &frame)
+bool TupVideoSurface::present(const QVideoFrame &vFrame)
 {
-    k->frame = frame;
-    if (surfaceFormat().pixelFormat() != k->frame.pixelFormat() ||
-        surfaceFormat().frameSize() != k->frame.size()) {
+    frame = vFrame;
+    if (surfaceFormat().pixelFormat() != frame.pixelFormat() ||
+        surfaceFormat().frameSize() != frame.size()) {
         stop();
         return false;
     } else {
-        k->videoIF->updateVideo();
+        videoIF->updateVideo();
         return true;
     }
 }
 
 void TupVideoSurface::paint(QPainter *painter)
 {
-    if (k->frame.map(QAbstractVideoBuffer::ReadOnly)) {
-        int width = k->frame.width();
-        int height = k->frame.height();
-        QImage image(k->frame.bits(), width, height, k->frame.bytesPerLine(), k->imageFormat);
+    if (frame.map(QAbstractVideoBuffer::ReadOnly)) {
+        int width = frame.width();
+        int height = frame.height();
+        QImage image(frame.bits(), width, height, frame.bytesPerLine(), imageFormat);
 
-        if (k->isScaled) {
-            width = (k->displaySize.width() * height) / k->displaySize.height();
+        if (isScaled) {
+            width = (displaySize.width() * height) / displaySize.height();
             int posX = (image.width() - width)/2;
             int posY = 0;
             if (width > image.width()) {
                 width = image.width();
-                height = (k->displaySize.height() * width) / k->displaySize.width();
+                height = (displaySize.height() * width) / displaySize.width();
                 posX = 0;
                 posY = (image.height() - height)/2;
             }
             QImage mask = image.copy(posX, posY, width, height);
-            image = mask.scaledToWidth(k->displaySize.width(), Qt::SmoothTransformation);
+            image = mask.scaledToWidth(displaySize.width(), Qt::SmoothTransformation);
 
             width = image.width();
             height = image.height();
         }
 
-        QPoint leftTop((qAbs(k->widgetWidth - width))/2, (qAbs(k->widgetHeight - height))/2);
+        QPoint leftTop((qAbs(widgetWidth - width))/2, (qAbs(widgetHeight - height))/2);
 
         if (!image.isNull()) {
-            if (k->rotation != 0)
+            if (rotation != 0)
                 image = image.mirrored();
-                // image = image.transformed(QTransform().rotate(k->rotation));
+                // image = image.transformed(QTransform().rotate(rotation));
 
             painter->drawImage(leftTop, image);
         }
 
-        if (k->showPrevious && !k->history.empty() && k->historySize > 0) {
-            for (int i=k->historyInit; i <= k->historyEnd; i++) {
-                 QImage image = k->history.at(i);
+        if (showPrevious && !history.empty() && historySize > 0) {
+            for (int i=historyInit; i <= historyEnd; i++) {
+                 QImage image = history.at(i);
                  image = image.scaledToWidth(width, Qt::SmoothTransformation);
 
                  QPixmap transparent(QSize(width, height));
@@ -201,7 +171,7 @@ void TupVideoSurface::paint(QPainter *painter)
                  p.setCompositionMode(QPainter::CompositionMode_Source);
                  p.drawPixmap(0, 0, QPixmap::fromImage(image));
                  p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
-                 p.fillRect(transparent.rect(), QColor(0, 0, 0, k->opacity));
+                 p.fillRect(transparent.rect(), QColor(0, 0, 0, opacity));
                  p.end();
 
                  transparent = transparent.scaledToWidth(width, Qt::SmoothTransformation);
@@ -209,40 +179,40 @@ void TupVideoSurface::paint(QPainter *painter)
             }
         }
 
-        int midX = k->displaySize.width() / 2;
-        int midY = k->displaySize.height() / 2;
+        int midX = displaySize.width() / 2;
+        int midY = displaySize.height() / 2;
 
         int minX = midX - (width/2);
         int maxX = midX + (width/2);
         int minY = midY - (height/2);
         int maxY = midY + (height/2);
 
-        if (k->grid) {
-            painter->setPen(k->gridPen);
+        if (grid) {
+            painter->setPen(gridPen);
 
-            int initX = midX - k->gridSpace;
-            for (int i=initX; i > minX; i -= k->gridSpace)
+            int initX = midX - gridSpace;
+            for (int i=initX; i > minX; i -= gridSpace)
                  painter->drawLine(i, minY, i, maxY);
 
-            initX = midX + k->gridSpace;
-            for (int i=initX; i < maxX; i += k->gridSpace)
+            initX = midX + gridSpace;
+            for (int i=initX; i < maxX; i += gridSpace)
                  painter->drawLine(i, minY, i, maxY);
 
-            int initY = midY - k->gridSpace;
-            for (int i=initY; i > minY; i -= k->gridSpace)
+            int initY = midY - gridSpace;
+            for (int i=initY; i > minY; i -= gridSpace)
                  painter->drawLine(minX, i, maxX, i);
 
-            initY = midY + k->gridSpace;
-            for (int i=initY; i < maxY; i += k->gridSpace)
+            initY = midY + gridSpace;
+            for (int i=initY; i < maxY; i += gridSpace)
                  painter->drawLine(minX, i, maxX, i);
 
-            painter->setPen(k->gridAxesPen);
+            painter->setPen(gridAxesPen);
             painter->drawLine(midX, minY, midX, maxY);
             painter->drawLine(minX, midY, maxX, midY);
         }
 
-        if (k->safeArea) {
-            painter->setPen(k->whitePen);
+        if (safeArea) {
+            painter->setPen(whitePen);
             int outerBorder = width/19;
             int innerBorder = width/6;
 
@@ -258,7 +228,7 @@ void TupVideoSurface::paint(QPainter *painter)
             QPointF right = rectRight - QPointF(outerBorder, outerBorder);
             QRectF outerRect(left, right);
 
-            painter->setPen(k->grayPen);
+            painter->setPen(grayPen);
             painter->drawRect(outerRect);
 
             int leftY = left.y();
@@ -266,7 +236,7 @@ void TupVideoSurface::paint(QPainter *painter)
             int rightY = right.y();
             int rightX = right.x();
 
-            painter->setPen(k->greenThickPen);
+            painter->setPen(greenThickPen);
             painter->drawLine(QPoint(hSpace, leftY - 8), QPoint(hSpace, leftY + 8));
             painter->drawLine(QPoint(hSpace - 5, leftY), QPoint(hSpace + 5, leftY));
             painter->drawLine(QPoint(hSpace2, leftY - 8), QPoint(hSpace2, leftY + 8));
@@ -287,7 +257,7 @@ void TupVideoSurface::paint(QPainter *painter)
             painter->drawLine(QPoint(rightX - 8, vSpace2), QPoint(rightX + 8, vSpace2));
             painter->drawLine(QPoint(rightX, vSpace2 - 5), QPoint(rightX, vSpace2 + 5));
 
-            painter->setPen(k->greenThinPen);
+            painter->setPen(greenThinPen);
 
             left = rectLeft + QPointF(innerBorder, innerBorder);
             right = rectRight - QPointF(innerBorder, innerBorder);
@@ -296,7 +266,7 @@ void TupVideoSurface::paint(QPainter *painter)
             painter->drawRect(innerRect);
         }
 
-        k->frame.unmap();
+        frame.unmap();
     }
 }
 
@@ -316,89 +286,89 @@ QList<QVideoFrame::PixelFormat> TupVideoSurface::supportedPixelFormats(QAbstract
 
 void TupVideoSurface::drawGrid(bool flag)
 {
-    k->grid = flag;
-    k->videoIF->updateVideo();
+    grid = flag;
+    videoIF->updateVideo();
 }
 
 void TupVideoSurface::drawActionSafeArea(bool flag)
 {
-    k->safeArea = flag;
-    k->videoIF->updateVideo();
+    safeArea = flag;
+    videoIF->updateVideo();
 }
 
 void TupVideoSurface::setLastImage(const QImage &image)
 {
-    if (k->isScaled) {
+    if (isScaled) {
         int height = image.height();
-        int width = (k->displaySize.width() * height) / k->displaySize.height();
+        int width = (displaySize.width() * height) / displaySize.height();
         int posX = (image.width() - width)/2;
         int posY = 0;
         if (width > image.width()) {
             width = image.width();
-            height = (k->displaySize.height() * width) / k->displaySize.width();
+            height = (displaySize.height() * width) / displaySize.width();
             posX = 0;
             posY = (image.height() - height)/2;
         }
         QImage mask = image.copy(posX, posY, width, height);
-        QImage pic = mask.scaledToWidth(k->displaySize.width(), Qt::SmoothTransformation);
-        k->history << pic;
+        QImage pic = mask.scaledToWidth(displaySize.width(), Qt::SmoothTransformation);
+        history << pic;
     } else {
-        k->history << image; 
+        history << image;
     }
 
-    if (k->history.count() > 5)
-        k->history.removeFirst();
+    if (history.count() > 5)
+        history.removeFirst();
 
     calculateImageDepth();
 }
 
 void TupVideoSurface::showHistory(bool flag)
 {
-    k->showPrevious = flag;
-    k->videoIF->updateVideo();
+    showPrevious = flag;
+    videoIF->updateVideo();
 }
 
-void TupVideoSurface::updateImagesOpacity(double opacity)
+void TupVideoSurface::updateImagesOpacity(double factor)
 {
-    k->opacity = (int) (255*opacity);
-    k->videoIF->updateVideo();
+    opacity = static_cast<int> (255 * factor);
+    videoIF->updateVideo();
 }
 
 void TupVideoSurface::updateImagesDepth(int depth)
 {
-    k->historySize = depth;
+    historySize = depth;
     calculateImageDepth();
-    k->videoIF->updateVideo();
+    videoIF->updateVideo();
 }
 
 void TupVideoSurface::updateGridSpacing(int space)
 {
-    k->gridSpace = space;
-    k->videoIF->updateVideo();
+    gridSpace = space;
+    videoIF->updateVideo();
 }
 
 void TupVideoSurface::calculateImageDepth()
 {
-    int times = k->historySize;
-    int limit = k->history.count();
+    int times = historySize;
+    int limit = history.count();
     if (times > limit)
         times = limit;
-    k->historyInit = limit - times;
-    k->historyEnd = limit-1;
+    historyInit = limit - times;
+    historyEnd = limit - 1;
 }
 
 void TupVideoSurface::updateGridColor(const QColor color)
 {
     QColor gridColor = color;
     gridColor.setAlpha(50);
-    k->gridPen = QPen(gridColor);
-    k->videoIF->updateVideo();
+    gridPen = QPen(gridColor);
+    videoIF->updateVideo();
 }
 
 void TupVideoSurface::flipSurface()
 {
-    if (k->rotation == 0)
-        k->rotation = 180;
+    if (rotation == 0)
+        rotation = 180;
     else
-        k->rotation = 0;
+        rotation = 0;
 }

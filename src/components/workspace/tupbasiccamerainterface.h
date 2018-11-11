@@ -52,8 +52,9 @@ class TUPITUBE_EXPORT TupBasicCameraInterface : public QFrame
     Q_OBJECT
 
     public:
-        TupBasicCameraInterface(const QString &title, QList<QByteArray> cameraDevices, QComboBox *devicesCombo, int cameraIndex, 
-                           const QSize cameraSize = QSize(), int counter = 1, QWidget *parent = 0);
+        TupBasicCameraInterface(const QString &title, QList<QByteArray> cameraDevices,
+                                QComboBox *devicesCombo, int cameraIndex, const QSize cameraSize = QSize(),
+                                int counter = 1, QWidget *parent = 0);
         ~TupBasicCameraInterface();
 
     protected:
@@ -61,13 +62,13 @@ class TUPITUBE_EXPORT TupBasicCameraInterface : public QFrame
 
     signals:
         void projectSizeHasChanged(const QSize size);
-        void pictureHasBeenSelected(int id, const QString path);
+        void pictureHasBeenSelected(int id, const QString folder);
         void closed();
 
     private slots:
         void changeCameraDevice(int index);
         void takePicture();
-        void imageSavedFromCamera(int id, const QString path);
+        void imageSavedFromCamera(int id, const QString folder);
 
     private:
         QString randomPath();

@@ -38,17 +38,12 @@
 
 #include "tglobal.h"
 #include "tupitempreview.h"
-#include "tformfactory.h"
 #include "tapplicationproperties.h"
 #include "tuplibrary.h"
-#include "tosd.h"
 
 #include <QDialog>
-#include <QVBoxLayout>
-#include <QDialogButtonBox>
 #include <QToolBox>
 #include <QGraphicsItem>
-#include <QHBoxLayout>
 #include <QLineEdit>
 #include <QMap>
 
@@ -67,8 +62,10 @@ class TUPITUBE_EXPORT TupLibraryDialog : public QDialog
         void checkNames();
 
     private:
-        struct Private;
-        Private *const k;
+        QToolBox *toolBox;
+        QMap<QGraphicsItem *, QLineEdit *> symbolNames;
+        QMap<int, QLineEdit *> tabs;
+        TupLibrary *library;
 };
 
 #endif

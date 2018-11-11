@@ -34,6 +34,9 @@
  ***************************************************************************/
 
 #include "tupruler.h" 
+#include <cmath>
+
+#include <QPainter>
 
 TupRuler::TupRuler(Qt::Orientation type, QWidget *parent) : QWidget(parent)
 {

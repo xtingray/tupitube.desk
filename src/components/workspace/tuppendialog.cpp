@@ -35,29 +35,20 @@
 
 #include "tuppendialog.h"
 
-struct TupPenDialog::Private
-{
-    QVBoxLayout *innerLayout;
-    TupPenThicknessWidget *thickPreview;
-    TupBrushManager *brushManager;
-    QLabel *sizeLabel;
-    int currentSize;
-};
-
-TupPenDialog::TupPenDialog(TupBrushManager *brushManager, QWidget *parent) : QDialog(parent), k(new Private)
+TupPenDialog::TupPenDialog(TupBrushManager *manager, QWidget *parent) : QDialog(parent)
 {
     setModal(true);
     setWindowTitle(tr("Pen Size"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/brush.png")));
 
-    k->brushManager = brushManager;
-    k->currentSize = k->brushManager->penWidth();
+    brushManager = manager;
+    currentSize = brushManager->penWidth();
 
     QBoxLayout *layout = new QHBoxLayout(this);
     layout->setContentsMargins(3, 3, 3, 3);
     layout->setSpacing(2);
 
-    k->innerLayout = new QVBoxLayout;
+    innerLayout = new QVBoxLayout;
 
     setBrushCanvas();
     setButtonsPanel();
@@ -70,10 +61,10 @@ TupPenDialog::TupPenDialog(TupBrushManager *brushManager, QWidget *parent) : QDi
     QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Horizontal, this);
     buttonBox->addButton(closeButton, QDialogButtonBox::ActionRole);
 
-    k->innerLayout->addWidget(new TSeparator());
-    k->innerLayout->addWidget(buttonBox);
+    innerLayout->addWidget(new TSeparator());
+    innerLayout->addWidget(buttonBox);
 
-    layout->addLayout(k->innerLayout);
+    layout->addLayout(innerLayout);
 }
 
 TupPenDialog::~TupPenDialog()
@@ -87,12 +78,12 @@ QSize TupPenDialog::sizeHint() const
 
 void TupPenDialog::setBrushCanvas()
 {
-    k->thickPreview = new TupPenThicknessWidget(this);
-    k->thickPreview->setColor(k->brushManager->penColor());
-    k->thickPreview->setBrush(k->brushManager->brush().style());
-    k->thickPreview->render(k->currentSize);
+    thickPreview = new TupPenThicknessWidget(this);
+    thickPreview->setColor(brushManager->penColor());
+    thickPreview->setBrush(brushManager->brush().style());
+    thickPreview->render(currentSize);
     
-    k->innerLayout->addWidget(k->thickPreview);
+    innerLayout->addWidget(thickPreview);
 }
 
 void TupPenDialog::setButtonsPanel()
@@ -105,13 +96,13 @@ void TupPenDialog::setButtonsPanel()
     minus->setToolTip(tr("-1"));
     connect(minus, SIGNAL(clicked()), this, SLOT(onePointLess()));
 
-    k->sizeLabel = new QLabel(QString::number(k->currentSize));
-    k->sizeLabel->setAlignment(Qt::AlignHCenter);
+    sizeLabel = new QLabel(QString::number(currentSize));
+    sizeLabel->setAlignment(Qt::AlignHCenter);
     QFont font = this->font();
     font.setPointSize(24);
     font.setBold(true);
-    k->sizeLabel->setFont(font);
-    k->sizeLabel->setFixedWidth(100);
+    sizeLabel->setFont(font);
+    sizeLabel->setFixedWidth(100);
 
     TImageButton *plus = new TImageButton(QPixmap(THEME_DIR + "icons/plus_sign_medium.png"), 40, this, true);
     plus->setToolTip(tr("+1"));
@@ -124,11 +115,11 @@ void TupPenDialog::setButtonsPanel()
     QBoxLayout *layout = new QHBoxLayout;
     layout->addWidget(minus5);
     layout->addWidget(minus);
-    layout->addWidget(k->sizeLabel);
+    layout->addWidget(sizeLabel);
     layout->addWidget(plus);
     layout->addWidget(plus5);
 
-    k->innerLayout->addLayout(layout);
+    innerLayout->addLayout(layout);
 }
 
 void TupPenDialog::fivePointsLess()
@@ -153,16 +144,15 @@ void TupPenDialog::fivePointsMore()
 
 void TupPenDialog::modifySize(int value)
 {
-    k->currentSize += value;
-    if (k->currentSize > 100)
-        k->currentSize = 100;
+    currentSize += value;
+    if (currentSize > 100)
+        currentSize = 100;
 
-    if (k->currentSize < 1)
-        k->currentSize = 1;
+    if (currentSize < 1)
+        currentSize = 1;
 
-    k->thickPreview->render(k->currentSize);
-    k->sizeLabel->setText(QString::number(k->currentSize));
+    thickPreview->render(currentSize);
+    sizeLabel->setText(QString::number(currentSize));
 
-    emit updatePen(k->currentSize);
+    emit updatePen(currentSize);
 }
-

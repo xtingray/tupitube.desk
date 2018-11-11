@@ -37,9 +37,6 @@
 #define TUPPAINTAREASTATUS_H
 
 #include "tglobal.h"
-#include "tseparator.h"
-#include "tupbrushmanager.h"
-#include "tcolorcell.h"
 #include "tupbrushstatus.h"
 #include "tuptoolstatus.h"
 

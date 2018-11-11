@@ -57,7 +57,7 @@ class TUPITUBE_EXPORT TupImageDevice : public QWidget
         virtual void paintEvent(QPaintEvent *e);
 
     private:
-        QImage m_image;
+        QImage image;
 };
 
 #endif

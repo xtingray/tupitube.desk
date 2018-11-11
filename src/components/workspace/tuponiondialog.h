@@ -38,16 +38,12 @@
 
 #include "tglobal.h"
 #include "tapplicationproperties.h"
-#include "tseparator.h"
 #include "tuppenthicknesswidget.h"
-#include "timagebutton.h"
 
 #include <QDialog>
 #include <QColor>
 #include <QBoxLayout>
 #include <QLabel>
-#include <QDialogButtonBox>
-#include <cmath>
 
 class TUPITUBE_EXPORT TupOnionDialog : public QDialog
 {
@@ -73,8 +69,11 @@ class TUPITUBE_EXPORT TupOnionDialog : public QDialog
         void setButtonsPanel();
         void modifySize(double value);
 
-        struct Private;
-        Private *const k;
+        QVBoxLayout *innerLayout;
+        TupPenThicknessWidget *opacityPreview;
+        QLabel *sizeLabel;
+        QColor color;
+        double currentOpacity;
 };
 
 #endif

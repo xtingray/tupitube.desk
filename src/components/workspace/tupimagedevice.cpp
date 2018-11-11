@@ -45,8 +45,8 @@ TupImageDevice::TupImageDevice(QWidget *parent) : QWidget(parent)
         #endif
     #endif
 
-    m_image = QImage(300,300, QImage::Format_RGB32);
-    m_image.fill(Qt::white);
+    image = QImage(300,300, QImage::Format_RGB32);
+    image.fill(Qt::white);
 
     // setAttribute(Qt::WA_PaintOnScreen);
     // setAttribute(Qt::WA_NoSystemBackground);
@@ -76,5 +76,5 @@ void TupImageDevice::paintEvent(QPaintEvent *)
 {
     // qDebug("TupImageDevice: Paint event #####################################################");
     QPainter p(this);
-    p.drawImage(0, 0, m_image);
+    p.drawImage(0, 0, image);
 }

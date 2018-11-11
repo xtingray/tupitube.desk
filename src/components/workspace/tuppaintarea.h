@@ -42,7 +42,6 @@
 #include "tupgraphicsscene.h"
 #include "tupbrushmanager.h"
 #include "tupinputdeviceinformation.h"
-#include "tuppaintareaevent.h"
 #include "tuppaintarearotator.h"
 #include "tupimagedevice.h"
 #include "tupgraphicsscene.h"
@@ -57,12 +56,9 @@
 #include "tupscene.h"
 #include "tuplayer.h"
 #include "tupsvgitem.h"
-#include "tuppixmapitem.h"
 #include "node.h"
 #include "tcontrolnode.h"
 #include "tupproject.h"
-#include "tosd.h"
-#include "tupitemgroup.h"
 
 #include <QGraphicsScene>
 #include <QMouseEvent>

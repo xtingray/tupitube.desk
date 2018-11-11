@@ -66,7 +66,7 @@ TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QBy
     int desktopWidth = desktop.screenGeometry().width();
 
     if (cameraSize.width() > desktopWidth) {
-        int width = desktopWidth/2;
+        int width = desktopWidth / 2;
         int height = width * cameraSize.height() / cameraSize.width();
         displaySize = QSize(width, height);
     } else {
@@ -98,7 +98,8 @@ TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QBy
              QByteArray device = cameraDevices.at(i);
              QCamera *camera = new QCamera(device); 
              QCameraImageCapture *imageCapture = new QCameraImageCapture(camera);
-             connect(imageCapture, SIGNAL(imageSaved(int, const QString)), this, SLOT(imageSavedFromCamera(int, const QString)));
+             connect(imageCapture, SIGNAL(imageSaved(int, const QString)),
+                     this, SLOT(imageSavedFromCamera(int, const QString)));
 
              QCameraViewfinder *viewfinder = new QCameraViewfinder;
              viewfinder->setFixedSize(displaySize);
@@ -181,8 +182,8 @@ void TupBasicCameraInterface::closeEvent(QCloseEvent *event)
 
     QDir dir(path);
     foreach (QString file, dir.entryList(QStringList() << "*.jpg")) {
-             QString absolute = dir.absolutePath() + "/" + file;
-             QFile::remove(absolute);
+        QString absolute = dir.absolutePath() + "/" + file;
+        QFile::remove(absolute);
     }
 
     if (! dir.rmdir(dir.absolutePath())) {
@@ -250,13 +251,13 @@ void TupBasicCameraInterface::changeCameraDevice(int index)
     currentCamera->start();
 }
 
-void TupBasicCameraInterface::imageSavedFromCamera(int id, const QString path)
+void TupBasicCameraInterface::imageSavedFromCamera(int id, const QString folder)
 {
     Q_UNUSED(id);
 
-    if (path.isEmpty())
+    if (folder.isEmpty())
         return;
 
-    emit pictureHasBeenSelected(counter, path);
+    emit pictureHasBeenSelected(counter, folder);
     counter++;
 }

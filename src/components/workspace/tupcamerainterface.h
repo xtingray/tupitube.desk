@@ -44,6 +44,7 @@
 #include <QCloseEvent>
 #include <QComboBox>
 #include <QStackedWidget>
+#include <QPushButton>
 
 class TUPITUBE_EXPORT TupCameraInterface : public QFrame
 {

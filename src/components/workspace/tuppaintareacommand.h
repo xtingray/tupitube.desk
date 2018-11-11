@@ -39,13 +39,9 @@
 #include "tglobal.h"
 #include "tuppaintarea.h"
 #include "tuppaintareaevent.h"
-#include "tupbrushmanager.h"
 
 #include <QUndoCommand>
 #include <QVariant>
-
-// class TupPaintArea;
-// class TupPaintAreaEvent;
 
 class TUPITUBE_EXPORT TupPaintAreaCommand : public QUndoCommand
 {
@@ -57,8 +53,9 @@ class TUPITUBE_EXPORT TupPaintAreaCommand : public QUndoCommand
         void redo();
 
     private:
-        struct Private;
-        Private *const k;
+        TupPaintArea *paintArea;
+        TupPaintAreaEvent *event;
+        QVariant oldData;
 };
 
 #endif

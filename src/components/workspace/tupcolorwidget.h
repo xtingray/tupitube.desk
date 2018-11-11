@@ -38,10 +38,10 @@
 
 #include "tglobal.h"
 
+#include <QWidget>
 #include <QBrush>
 #include <QSize>
 #include <QPaintEvent>
-#include <QWidget>
 #include <QPainter>
 
 class TUPITUBE_EXPORT TupColorWidget : public QWidget
@@ -49,7 +49,7 @@ class TUPITUBE_EXPORT TupColorWidget : public QWidget
     Q_OBJECT
 
     public:
-        TupColorWidget(const QBrush m_brush = Qt::transparent);
+        TupColorWidget(const QBrush gBrush = Qt::transparent);
         ~TupColorWidget();
         void setBrush(const QBrush &brush);
         QSize sizeHint() const;
@@ -63,7 +63,7 @@ class TUPITUBE_EXPORT TupColorWidget : public QWidget
         void clicked();        
 
     private:
-        QBrush m_brush;
+        QBrush gBrush;
 };
 
 #endif

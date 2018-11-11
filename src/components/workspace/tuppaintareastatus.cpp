@@ -34,6 +34,8 @@
  ***************************************************************************/
 
 #include "tuppaintareastatus.h"
+#include "tcolorcell.h"
+#include "tupbrushmanager.h"
 
 #include <QHBoxLayout>
 

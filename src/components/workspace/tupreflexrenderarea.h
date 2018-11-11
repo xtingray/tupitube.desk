@@ -38,7 +38,6 @@
 
 #include "tglobal.h"
 
-#include <QBrush>
 #include <QPen>
 #include <QPixmap>
 #include <QWidget>
@@ -58,7 +57,7 @@ class TUPITUBE_EXPORT TupReflexRenderArea : public QWidget
         void updateGridSpacing(int space);
         void updateGridColor(const QColor color);
         void showHistory(bool flag);
-        void updateImagesOpacity(double opacity);
+        void updateImagesOpacity(double factor);
         void updateImagesDepth(int depth);
 
         void addPixmap(const QString &path);
@@ -67,8 +66,25 @@ class TUPITUBE_EXPORT TupReflexRenderArea : public QWidget
         void paintEvent(QPaintEvent *event) override;
 
     private:
-        struct Private;
-        Private *const k;
+        QSize size;
+        int width;
+        int height;
+        QList<QPixmap> stack;
+
+        QPen gridAxesPen;
+        QPen gridPen;
+        QPen whitePen;
+        QPen grayPen;
+        QPen greenThickPen;
+        QPen greenThinPen;
+
+        bool isSafeAreaEnabled;
+        bool isGridEnabled;
+        int gridSpace;
+        int historySize;
+
+        bool showPrevious;
+        double opacity;
 };
 
 #endif // TUPREFLEXRENDERAREA_H

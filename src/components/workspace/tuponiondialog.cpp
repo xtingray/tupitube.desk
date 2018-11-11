@@ -34,30 +34,27 @@
  ***************************************************************************/
 
 #include "tuponiondialog.h"
+#include "timagebutton.h"
+#include "tseparator.h"
 
-struct TupOnionDialog::Private
-{
-    QVBoxLayout *innerLayout;
-    TupPenThicknessWidget *opacityPreview;
-    QLabel *sizeLabel;
-    QColor color;
-    double currentOpacity;
-};
+#include <QDialogButtonBox>
+#include <cmath>
 
-TupOnionDialog::TupOnionDialog(const QColor &color, double opacity, QWidget *parent) : QDialog(parent), k(new Private)
+TupOnionDialog::TupOnionDialog(const QColor &brushColor, double opacity,
+                               QWidget *parent) : QDialog(parent)
 {
     setModal(true);
     setWindowTitle(tr("Onion Skin Factor"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/onion.png")));
 
-    k->color = color;
-    k->currentOpacity = opacity;
+    color = brushColor;
+    currentOpacity = opacity;
 
     QBoxLayout *layout = new QHBoxLayout(this);
     layout->setContentsMargins(3, 3, 3, 3);
     layout->setSpacing(2);
 
-    k->innerLayout = new QVBoxLayout;
+    innerLayout = new QVBoxLayout;
 
     setOpacityCanvas();
     setButtonsPanel();
@@ -70,10 +67,10 @@ TupOnionDialog::TupOnionDialog(const QColor &color, double opacity, QWidget *par
     QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Horizontal, this);
     buttonBox->addButton(closeButton, QDialogButtonBox::ActionRole);
 
-    k->innerLayout->addWidget(new TSeparator());
-    k->innerLayout->addWidget(buttonBox);
+    innerLayout->addWidget(new TSeparator());
+    innerLayout->addWidget(buttonBox);
 
-    layout->addLayout(k->innerLayout);
+    layout->addLayout(innerLayout);
 }
 
 TupOnionDialog::~TupOnionDialog()
@@ -87,12 +84,12 @@ QSize TupOnionDialog::sizeHint() const
 
 void TupOnionDialog::setOpacityCanvas()
 {
-    k->opacityPreview = new TupPenThicknessWidget(this);
-    k->opacityPreview->setColor(k->color);
-    k->opacityPreview->setBrush(Qt::SolidPattern);
-    k->opacityPreview->render(k->currentOpacity);
+     opacityPreview = new TupPenThicknessWidget(this);
+     opacityPreview->setColor(color);
+     opacityPreview->setBrush(Qt::SolidPattern);
+     opacityPreview->render(currentOpacity);
     
-    k->innerLayout->addWidget(k->opacityPreview);
+    innerLayout->addWidget( opacityPreview);
 }
 
 void TupOnionDialog::setButtonsPanel()
@@ -105,17 +102,17 @@ void TupOnionDialog::setButtonsPanel()
     minus->setToolTip(tr("-0.01"));
     connect(minus, SIGNAL(clicked()), this, SLOT(onePointLess()));
 
-    QString number = QString::number(k->currentOpacity);
+    QString number = QString::number(currentOpacity);
     if (number.length() == 3)
         number = number + "0";
 
-    k->sizeLabel = new QLabel(number);
-    k->sizeLabel->setAlignment(Qt::AlignHCenter);
+    sizeLabel = new QLabel(number);
+    sizeLabel->setAlignment(Qt::AlignHCenter);
     QFont font = this->font();
     font.setPointSize(24);
     font.setBold(true);
-    k->sizeLabel->setFont(font);
-    k->sizeLabel->setFixedWidth(100);
+    sizeLabel->setFont(font);
+    sizeLabel->setFixedWidth(100);
 
     TImageButton *plus = new TImageButton(QPixmap(THEME_DIR + "icons/plus_sign_medium.png"), 40, this, true);
     plus->setToolTip(tr("+0.01"));
@@ -128,11 +125,11 @@ void TupOnionDialog::setButtonsPanel()
     QBoxLayout *layout = new QHBoxLayout;
     layout->addWidget(minus5);
     layout->addWidget(minus);
-    layout->addWidget(k->sizeLabel);
+    layout->addWidget(sizeLabel);
     layout->addWidget(plus);
     layout->addWidget(plus5);
 
-    k->innerLayout->addLayout(layout);
+    innerLayout->addLayout(layout);
 }
 
 void TupOnionDialog::fivePointsLess()
@@ -157,27 +154,27 @@ void TupOnionDialog::fivePointsMore()
 
 void TupOnionDialog::modifySize(double value)
 {
-    k->currentOpacity = (100 * k->currentOpacity)/100;
-    k->currentOpacity += value;
+    currentOpacity = (100 * currentOpacity)/100;
+    currentOpacity += value;
 
-    if (k->currentOpacity > 1)
-        k->currentOpacity = 1;
+    if (currentOpacity > 1)
+        currentOpacity = 1;
 
-    if (k->currentOpacity < 0)
-        k->currentOpacity = 0;
+    if (currentOpacity < 0)
+        currentOpacity = 0;
 
-    if (k->currentOpacity == 0) {
-        k->sizeLabel->setText("0.00");
-    } else if (k->currentOpacity == 1) {
-        k->sizeLabel->setText("1.00");
+    if (currentOpacity == 0) {
+        sizeLabel->setText("0.00");
+    } else if (currentOpacity == 1) {
+        sizeLabel->setText("1.00");
     } else {
-        QString number = QString::number(k->currentOpacity);
+        QString number = QString::number(currentOpacity);
         if (number.length() == 3)
             number = number + "0";
-        k->sizeLabel->setText(number);
+        sizeLabel->setText(number);
     }
 
-    k->opacityPreview->render(k->currentOpacity);
+     opacityPreview->render(currentOpacity);
 
-    emit updateOpacity(k->currentOpacity);
+    emit updateOpacity(currentOpacity);
 }

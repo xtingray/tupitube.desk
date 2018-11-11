@@ -37,10 +37,13 @@
 #define TUPREFLEXINTERFACE_H
 
 #include "tglobal.h"
+#include "tupreflexrenderarea.h"
+#include "tupcolorwidget.h"
 
 #include <QDialog>
 #include <QCloseEvent>
 #include <QCamera>
+#include <QCameraImageCapture>
 
 class TUPITUBE_EXPORT TupReflexInterface : public QDialog
 {
@@ -75,8 +78,23 @@ class TUPITUBE_EXPORT TupReflexInterface : public QDialog
     private:
         void randomPath();
 
-        struct Private;
-        Private *const k;
+        QCamera *camera;
+        QCameraImageCapture *imageCapture;
+        int counter;
+        QString path;
+
+        TupReflexRenderArea *screen;
+
+        QPushButton *clickButton;
+        QPushButton *safeAreaButton;
+        QPushButton *gridButton;
+
+        QWidget *gridWidget;
+        QColor gridColor;
+        TupColorWidget *colorCell;
+
+        QPushButton *historyButton;
+        QWidget *historyWidget;
 };
 
 #endif
