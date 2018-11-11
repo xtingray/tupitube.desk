@@ -37,14 +37,17 @@
 #define TUPANIMATIONRENDERER_H
 
 #include "tglobal.h"
+#include "tupgraphicsscene.h"
+#include "tupscene.h"
+#include "tuplibrary.h"
 
 #include <QColor>
 #include <QSize>
 #include <QPainter>
 
-class QPainter;
-class TupScene;
-class TupLibrary;
+// class QPainter;
+// class TupScene;
+// class TupLibrary;
 
 class TUPITUBE_EXPORT TupAnimationRenderer
 {
@@ -58,12 +61,16 @@ class TUPITUBE_EXPORT TupAnimationRenderer
         void renderPhotogram(int index);
         void render(QPainter *painter);
 
-        int currentPhotogram() const;
-        int totalPhotograms() const;
+        int getCurrentPhotogram() const;
+        int getTotalPhotograms() const;
 
     private:
-        struct Private;
-        Private *const k;
+        int calculateTotalPhotograms(TupScene *scene);
+
+        TupGraphicsScene *gScene;
+        int totalPhotograms;
+        int currentPhotogram;
+        QColor bgColor;
 };
 
 #endif

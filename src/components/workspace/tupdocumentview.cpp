@@ -218,12 +218,12 @@ void TupDocumentView::goToFrame(int index)
 
 void TupDocumentView::drawGrid()
 {
-    paintArea->drawGrid(!paintArea->gridFlag());
+    paintArea->drawGrid(!paintArea->getGridState());
 }
 
 void TupDocumentView::drawActionSafeArea()
 {
-    paintArea->drawActionSafeArea(!paintArea->actionSafeAreaFlag());
+    paintArea->drawActionSafeArea(!paintArea->getSafeAreaState());
 }
 
 void TupDocumentView::updateRotationAngleFromRulers(int angle)
@@ -1592,7 +1592,7 @@ void TupDocumentView::showFullScreen()
         scaleFactor = (double) (screenH - 50) / (double) projectSize.height();
 
     fullScreen = new TupCanvas(this, Qt::Window|Qt::FramelessWindowHint, paintArea->graphicsScene(),
-                                  paintArea->centerPoint(), QSize(screenW, screenH), project, scaleFactor,
+                                  paintArea->getCenterPoint(), QSize(screenW, screenH), project, scaleFactor,
                                   viewAngle, brushManager());
 
     fullScreen->updateCursor(currentTool->cursor());

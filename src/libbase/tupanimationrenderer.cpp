@@ -34,50 +34,23 @@
  ***************************************************************************/
 
 #include "tupanimationrenderer.h"
-#include "tupgraphicsscene.h"
 #include "tuplayer.h"
 #include "tupframe.h"
-#include "tupscene.h"
 #include "tupgraphicobject.h"
 
-struct TupAnimationRenderer::Private
+TupAnimationRenderer::TupAnimationRenderer(const QColor color, TupLibrary *library)
 {
-    TupGraphicsScene *scene;
-    int totalPhotograms;
-    int currentPhotogram;
-    QColor bgColor;
-
-    Private() : scene(0), totalPhotograms(-1), currentPhotogram(0) {}
-    ~Private() {
-         delete scene;
-    }
-
-    int calculateTotalPhotograms(TupScene *scene);
-};
-
-TupAnimationRenderer::TupAnimationRenderer(const QColor color, TupLibrary *library) : k(new Private)
-{
-    k->bgColor = color;
-    k->scene = new TupGraphicsScene;
-    k->scene->setLibrary(library);
-    k->scene->setBackgroundBrush(k->bgColor);
+    bgColor = color;
+    gScene = new TupGraphicsScene;
+    gScene->setLibrary(library);
+    gScene->setBackgroundBrush(bgColor);
 }
 
 TupAnimationRenderer::~TupAnimationRenderer()
 {
-    #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupAnimationRenderer()]";
-        #else
-            TEND;
-        #endif
-    #endif
-
-    // SQA: Check why this instruction crashes the application 
-    // delete k;
 }
 
-int TupAnimationRenderer::Private::calculateTotalPhotograms(TupScene *scene)
+int TupAnimationRenderer::calculateTotalPhotograms(TupScene *scene)
 {
     Layers layers = scene->layers();
 
@@ -95,26 +68,26 @@ int TupAnimationRenderer::Private::calculateTotalPhotograms(TupScene *scene)
 
 void TupAnimationRenderer::setScene(TupScene *scene, QSize dimension)
 {
-    k->scene->setCurrentScene(scene);
-    k->scene->setSceneRect(QRectF(QPointF(0,0), dimension));
+    gScene->setCurrentScene(scene);
+    gScene->setSceneRect(QRectF(QPointF(0,0), dimension));
 
     // k->scene->drawPhotogram(0, false); // ### SQA: Why whithout this doesn't work?
-    k->currentPhotogram = -1;
+    currentPhotogram = -1;
 
-    k->totalPhotograms = k->calculateTotalPhotograms(scene);
+    totalPhotograms = calculateTotalPhotograms(scene);
 }
 
 bool TupAnimationRenderer::nextPhotogram()
 {
-    if (k->totalPhotograms < 0) 
+    if (totalPhotograms < 0)
         return false;
 
-    k->currentPhotogram++;
+    currentPhotogram++;
 
-    if (k->currentPhotogram == k->totalPhotograms)
+    if (currentPhotogram == totalPhotograms)
         return false;
 
-    k->scene->drawPhotogram(k->currentPhotogram, false);
+    gScene->drawPhotogram(currentPhotogram, false);
 
     return true;
 }
@@ -129,7 +102,7 @@ void TupAnimationRenderer::renderPhotogram(int index)
     #endif
 #endif
 
-    k->scene->drawPhotogram(index, false);
+    gScene->drawPhotogram(index, false);
 }
 
 void TupAnimationRenderer::render(QPainter *painter)
@@ -142,16 +115,16 @@ void TupAnimationRenderer::render(QPainter *painter)
     #endif
 #endif
 
-    k->scene->render(painter, k->scene->sceneRect().toRect(), 
-                     k->scene->sceneRect().toRect(), Qt::IgnoreAspectRatio);
+    gScene->render(painter, gScene->sceneRect().toRect(),
+                     gScene->sceneRect().toRect(), Qt::IgnoreAspectRatio);
 }
 
-int TupAnimationRenderer::currentPhotogram() const
+int TupAnimationRenderer::getCurrentPhotogram() const
 {
-    return k->currentPhotogram;
+    return currentPhotogram;
 }
 
-int TupAnimationRenderer::totalPhotograms() const
+int TupAnimationRenderer::getTotalPhotograms() const
 {
-    return k->totalPhotograms;
+    return totalPhotograms;
 }

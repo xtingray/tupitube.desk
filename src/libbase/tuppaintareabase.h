@@ -38,25 +38,13 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
+#include "tuprotationdial.h"
+#include "tupbrushmanager.h"
+#include "tupproject.h"
 
 #include <QGraphicsView>
-#include <QGraphicsScene>
 #include <QMouseEvent>
-#include <QGraphicsSceneMouseEvent>
 #include <QGraphicsRectItem>
-#include <QPolygon>
-#include <QApplication>
-#include <QTimer>
-#include <QStyleOptionGraphicsItem>
-#include <QClipboard>
-
-#include <cmath>
-
-class QGraphicsRectItem;
-class TupBrushManager;
-class TupInputDeviceInformation;
-class TupProject;
-class TupPaintAreaRotator;
 
 class TUPITUBE_EXPORT TupPaintAreaBase : public QGraphicsView
 {
@@ -72,8 +60,8 @@ class TUPITUBE_EXPORT TupPaintAreaBase : public QGraphicsView
         void drawActionSafeArea(bool draw);
         void setTool(TupToolPlugin *tool);
 
-        bool gridFlag() const;
-        bool actionSafeAreaFlag() const;
+        bool getGridState() const;
+        bool getSafeAreaState() const;
 
         void scaleView(qreal scaleFactor);
         void setRotationAngle(int angle);
@@ -81,10 +69,10 @@ class TUPITUBE_EXPORT TupPaintAreaBase : public QGraphicsView
 
         TupBrushManager *brushManager() const;
 
-        QRectF drawingRect() const;
+        QRectF getDrawingRect() const;
         TupGraphicsScene *graphicsScene() const;
         QPointF viewPosition();
-        QPointF centerPoint() const;
+        QPointF getCenterPoint() const;
 
         void updateDimension(const QSize dimension);
         void updateGridParameters();
@@ -126,8 +114,31 @@ class TUPITUBE_EXPORT TupPaintAreaBase : public QGraphicsView
         virtual bool canPaint() const;
 
     private:
-        struct Private;
-        Private *const k;
+        QGraphicsRectItem *grid;
+        QRectF drawingRect;
+        QPointF position;
+        QColor bgcolor;
+
+        bool gridEnabled;
+        bool safeAreaEnabled;
+        double angle;
+
+        QStringList copiesXml;
+        TupGraphicsScene *gScene;
+
+        QPen greenThickPen;
+        QPen grayPen;
+        QPen greenBoldPen;
+        QPen greenThinPen;
+        QPen blackPen;
+        bool spaceBar;
+        QPen gridPen;
+        int gridSeparation;
+
+        QPoint initPoint;
+        QPoint centerPoint;
+
+        TupRotationDial *dial;
 };
 
 #endif
