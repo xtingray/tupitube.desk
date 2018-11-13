@@ -41,6 +41,7 @@
 #include <QDialog>
 #include <QKeyEvent>
 #include <QDial>
+#include <QLabel>
 
 class TUPITUBE_EXPORT TupRotationDial : public QDialog
 {

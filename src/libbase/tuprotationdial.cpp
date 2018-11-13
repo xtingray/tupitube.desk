@@ -36,7 +36,6 @@
 #include "tuprotationdial.h"
 
 #include <QBoxLayout>
-#include <QLabel>
 
 TupRotationDial::TupRotationDial(QWidget *parent) : QDialog(parent, Qt::CustomizeWindowHint)
 {
@@ -57,7 +56,7 @@ TupRotationDial::TupRotationDial(QWidget *parent) : QDialog(parent, Qt::Customiz
 	
     QFont f = font();
     f.setBold(true);
-    f.setPointSize(f.pointSizeF() + 5);
+    f.setPointSize(static_cast<int>(f.pointSizeF()) + 5);
     label->setFont(f);
     layout->addWidget(label);
 }
