@@ -417,7 +417,7 @@ void TupDocumentView::createLateralToolBar()
 void TupDocumentView::loadPlugins()
 {
     bool imagePluginLoaded = false; 
-    foreach (QObject *plugin, TupPluginManager::instance()->formats()) {
+    foreach (QObject *plugin, TupPluginManager::instance()->getFormats()) {
         if (plugin) {
             TupExportInterface *exporter = qobject_cast<TupExportInterface *>(plugin);
             if (exporter) {
@@ -453,7 +453,7 @@ void TupDocumentView::loadPlugins()
     QVector<TAction*> brushTools(3);
     QVector<TAction*> tweenTools(7);
 
-    foreach (QObject *plugin, TupPluginManager::instance()->tools()) {
+    foreach (QObject *plugin, TupPluginManager::instance()->getTools()) {
              TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(plugin);
 
              if (tool->toolType() != TupToolInterface::Tweener && tool->toolType() != TupToolInterface::LipSync) {
@@ -620,7 +620,7 @@ void TupDocumentView::loadPlugins()
     miscMenu->addAction(actionManager->find("storyboard"));
     miscMenu->addAction(actionManager->find("papagayo"));
 
-    foreach (QObject *plugin, TupPluginManager::instance()->filters()) {
+    foreach (QObject *plugin, TupPluginManager::instance()->getFilters()) {
              AFilterInterface *filterInterface = qobject_cast<AFilterInterface *>(plugin);
              QStringList::iterator it;
              QStringList keys = filterInterface->keys();

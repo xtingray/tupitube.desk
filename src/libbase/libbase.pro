@@ -40,7 +40,7 @@ HEADERS += tupexportinterface.h \
            tupgraphicsscene.h \
            tupguideline.h \
            tupanimationrenderer.h \
-           tupwebhunter.h \
+           # tupwebhunter.h \
            tuprotationdial.h
 
 SOURCES += tupexportpluginobject.cpp \
@@ -52,7 +52,7 @@ SOURCES += tupexportpluginobject.cpp \
            tupgraphicsscene.cpp \
            tupguideline.cpp \
            tupanimationrenderer.cpp \
-           tupwebhunter.cpp \
+           # tupwebhunter.cpp \
            tuprotationdial.cpp
 
 FRAMEWORK_DIR = "../framework"

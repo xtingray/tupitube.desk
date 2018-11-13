@@ -38,17 +38,11 @@
 #include "tuptoolinterface.h"
 #include "tupexportinterface.h"
 
+#include <QDir>
+
 TupPluginManager *TupPluginManager::s_instance = 0;
 
-struct TupPluginManager::Private
-{
-    QObjectList tools;
-    QObjectList filters;
-    QObjectList formats;
-    QList<QPluginLoader *> loaders;
-};
-
-TupPluginManager::TupPluginManager(QObject *parent) : QObject(parent), k(new Private)
+TupPluginManager::TupPluginManager(QObject *parent) : QObject(parent)
 {
 }
 
@@ -76,9 +70,9 @@ void TupPluginManager::loadPlugins()
         #endif
     #endif
 
-    k->filters.clear();
-    k->tools.clear();
-    k->formats.clear();
+    filters.clear();
+    tools.clear();
+    formats.clear();
     
     QDir pluginDirectory = QDir(kAppProp->pluginDir());
 
@@ -98,20 +92,20 @@ void TupPluginManager::loadPlugins()
                  AFilterInterface *filter = qobject_cast<AFilterInterface *>(plugin);
                  
                  if (filter) {
-                     k->filters << plugin;
+                     filters << plugin;
                  } else {
                      TupToolInterface *tool = qobject_cast<TupToolInterface *>(plugin);
                      if (tool) {
-                         k->tools << plugin;
+                         tools << plugin;
                      } else {
                          TupExportInterface *exporter = qobject_cast<TupExportInterface *>(plugin); 
                          if (exporter) {
-                             k->formats << plugin;
+                             formats << plugin;
                          }
                      } 
                  }
 
-                 k->loaders << loader;
+                 loaders << loader;
              } else {
                  #ifdef TUP_DEBUG
                      QString msg = "TupPluginManager::loadPlugins() - Cannot load plugin, error was: " + loader->errorString();
@@ -136,24 +130,23 @@ void TupPluginManager::unloadPlugins()
         #endif
     #endif
 
-    foreach (QPluginLoader *loader, k->loaders) {
+    foreach (QPluginLoader *loader, loaders) {
              delete loader->instance();
              delete loader;
     }
 }
 
-QObjectList TupPluginManager::tools() const
+QObjectList TupPluginManager::getTools() const
 {
-    return k->tools;
+    return tools;
 }
 
-QObjectList TupPluginManager::filters() const
+QObjectList TupPluginManager::getFilters() const
 {
-    return k->filters;
+    return filters;
 }
 
-QObjectList TupPluginManager::formats() const
+QObjectList TupPluginManager::getFormats() const
 {
-    return k->formats;
+    return formats;
 }
-

@@ -125,7 +125,7 @@ TupExportWidget::~TupExportWidget()
 void TupExportWidget::loadPlugins()
 {
     QList<TupExportInterface *> pluginList;
-    foreach (QObject *plugin, TupPluginManager::instance()->formats()) {
+    foreach (QObject *plugin, TupPluginManager::instance()->getFormats()) {
         if (plugin) {
             TupExportInterface *exporter = qobject_cast<TupExportInterface *>(plugin);
             if (exporter) {

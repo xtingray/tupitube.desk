@@ -37,10 +37,18 @@
 #define TUPGRAPHICSSCENE_H
 
 #include "tglobal.h"
+#include "tuptoolplugin.h"
 #include "tupsvgitem.h"
 #include "tupproject.h"
 #include "tupprojectresponse.h"
 #include "tupinputdeviceinformation.h"
+#include "tupguideline.h"
+#include "tupbrushmanager.h"
+#include "tupscene.h"
+#include "tuplayer.h"
+#include "tupframe.h"
+#include "tupgraphicobject.h"
+#include "tuplibrary.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsItem>
@@ -50,15 +58,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
 #include <QDesktopWidget>
-
-class TupFrame;
-class TupGraphicObject;
-class TupScene;
-class TupToolPlugin;
-class TupBrushManager;
-class QMouseEvent;
-// class TupItemResponse;
-// class TupLayerResponse;
+#include <QMouseEvent>
 
 class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
 {
@@ -69,10 +69,10 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
 
         TupGraphicsScene();
         ~TupGraphicsScene();
-        
+
         void setCurrentFrame(int layer, int frame);
         
-        void setCurrentScene(TupScene *scene);
+        void setCurrentScene(TupScene *currentScene);
         void drawCurrentPhotogram();
         
         void drawPhotogram(int photogram, bool drawContext);
@@ -89,16 +89,16 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
 
         void updateLayerVisibility(int layerIndex, bool visible);
         
-        TupScene *scene() const;
+        TupScene *currentScene() const;
         
         TupFrame *currentFrame();
         
         void setTool(TupToolPlugin *tool);
         TupToolPlugin *currentTool() const;
         
-        bool isDrawing() const;
+        bool userIsDrawing() const;
         
-        TupBrushManager *brushManager() const;
+        TupBrushManager *getBrushManager() const;
         
         void itemResponse(TupItemResponse *event);
         void frameResponse(TupFrameResponse *event);
@@ -113,13 +113,13 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
 
         void includeObject(QGraphicsItem *object, bool isPolyLine = false);
 
-        TupProject::Mode spaceContext();
+        TupProject::Mode getSpaceContext();
         void setSpaceMode(TupProject::Mode mode);
 
-        void setOnionFactor(double opacity);
-        double opacity();
+        void setOnionFactor(double getOpacity);
+        double getOpacity();
 
-        int framesCount();
+        int getFramesCount();
 
         void setLibrary(TupLibrary *library);
         void resetCurrentTool(); 
@@ -136,12 +136,12 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         void showInfoWidget();
 
     private:
-        void addFrame(TupFrame *frame, double opacity = 1.0, Context mode = Current);
-        void addGraphicObject(TupGraphicObject *object, TupFrame::FrameType frameType, double opacity = 1.0, bool tweenInAdvance = false);
-        void processNativeObject(TupGraphicObject *object, TupFrame::FrameType frameType, double opacity, Context mode);
-        void processSVGObject(TupSvgItem *svg, TupFrame::FrameType frameType, double opacity, Context mode);
+        void addFrame(TupFrame *frame, double getOpacity = 1.0, Context mode = Current);
+        void addGraphicObject(TupGraphicObject *object, TupFrame::FrameType frameType, double getOpacity = 1.0, bool tweenInAdvance = false);
+        void processNativeObject(TupGraphicObject *object, TupFrame::FrameType frameType, double getOpacity, Context mode);
+        void processSVGObject(TupSvgItem *svg, TupFrame::FrameType frameType, double getOpacity, Context mode);
 
-        void addSvgObject(TupSvgItem *svgItem, TupFrame::FrameType frameType, double opacity = 1.0, bool tweenInAdvance = false);
+        void addSvgObject(TupSvgItem *svgItem, TupFrame::FrameType frameType, double getOpacity = 1.0, bool tweenInAdvance = false);
         void addTweeningObjects(int indexLayer, int photogram);
         void addSvgTweeningObjects(int indexLayer, int photogram);
         void addLipSyncObjects(TupLayer *layer, int photogram, int zLevel);
@@ -164,8 +164,39 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         virtual bool event(QEvent *event);
 
     private:
-        struct Private;
-        Private *const k;
+        TupToolPlugin *gTool;
+        TupScene *gScene;
+        double gOpacity;
+
+        struct OnionSkin
+         {
+            int previous;
+            int next;
+            QHash<QGraphicsItem *, bool> accessMap;
+         } onionSkin;
+
+        struct FramePosition
+         {
+            int layer;
+            int frame;
+         } framePosition;
+
+        TupBrushManager *brushManager;
+        TupInputDeviceInformation *inputInformation;
+
+        bool isDrawing;
+
+        QList<TupLineGuide *> lines;
+        TupProject::Mode spaceContext;
+        TupLibrary *library;
+        double layerOnProcessOpacity;
+        int frameOnProcess;
+        int layerOnProcess;
+
+        int zLevel;
+
+        bool loadingProject;
+        QGraphicsPixmapItem *dynamicBg;
 };
 
 #endif

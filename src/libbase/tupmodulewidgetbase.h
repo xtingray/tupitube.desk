@@ -37,18 +37,11 @@
 #define TUPMODULEWIDGETBASE_H
 
 #include "tglobal.h"
-#include "tosd.h"
 #include "tupprojectresponse.h"
 #include "tupabstractprojectresponsehandler.h"
 
-#include <QLayout>
-#include <QSizePolicy> 
-#include <QObject>
-#include <QEvent>
-#include <QDockWidget>
-#include <QEvent>
+#include <QWidget>
 #include <QBoxLayout>
-#include <QDialog>
 
 class TUPITUBE_EXPORT TupModuleWidgetBase : public QWidget, public TupAbstractProjectResponseHandler
 {
@@ -78,8 +71,8 @@ class TUPITUBE_EXPORT TupModuleWidgetBase : public QWidget, public TupAbstractPr
         void postPage(QWidget *widget);
 
     private:
-        struct Private;
-        Private *const k;
+        QBoxLayout *container;
+        QObjectList childs;
 };
 
 #endif

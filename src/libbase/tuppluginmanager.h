@@ -40,9 +40,6 @@
 
 #include <QObject>
 #include <QPluginLoader>
-#include <QDir>
-
-class QPluginLoader;
 
 class TUPITUBE_EXPORT TupPluginManager : public QObject
 {
@@ -61,13 +58,15 @@ class TUPITUBE_EXPORT TupPluginManager : public QObject
         void loadPlugins();
         void unloadPlugins();
         
-        QObjectList tools() const;
-        QObjectList filters() const;
-        QObjectList formats() const;
+        QObjectList getTools() const;
+        QObjectList getFilters() const;
+        QObjectList getFormats() const;
 
     private:
-        struct Private;
-        Private *const k;
+        QObjectList tools;
+        QObjectList filters;
+        QObjectList formats;
+        QList<QPluginLoader *> loaders;
 };
 
 #endif

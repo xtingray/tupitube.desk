@@ -35,33 +35,26 @@
 
 #include "tupmodulewidgetbase.h"
 
-struct TupModuleWidgetBase::Private
-{
-    QBoxLayout *container;
-    QObjectList childs;
-};
-
 TupModuleWidgetBase::TupModuleWidgetBase(QWidget *parent, const char *name) :
-                                         QWidget(parent), TupAbstractProjectResponseHandler(), k(new Private)
+                                         QWidget(parent), TupAbstractProjectResponseHandler()
 {
     setObjectName(name);
-    k->container = new QVBoxLayout(this);
+    container = new QVBoxLayout(this);
 }
 
 TupModuleWidgetBase::~TupModuleWidgetBase()
 {
-    delete k;
 }
 
 void TupModuleWidgetBase::addChild(QWidget* child, Qt::Alignment alignment)
 {
-    k->childs.append(child);
-    k->container->addWidget(child, 0, alignment);
+    childs.append(child);
+    container->addWidget(child, 0, alignment);
 }
 
 QBoxLayout *TupModuleWidgetBase::boxLayout()
 {
-    return k->container;
+    return container;
 }
 
 bool TupModuleWidgetBase::handleProjectResponse(TupProjectResponse *response)

@@ -70,7 +70,7 @@ void NodesTool::init(TupGraphicsScene *scene)
         }
     }
 
-    k->baseZValue = (2*ZLAYER_LIMIT) + (k->scene->scene()->layersCount() * ZLAYER_LIMIT); 
+    k->baseZValue = (2*ZLAYER_LIMIT) + (k->scene->currentScene()->layersCount() * ZLAYER_LIMIT); 
 }
 
 QStringList NodesTool::keys() const
@@ -132,7 +132,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                                           scene->currentSceneIndex(),
                                           k->currentLayer, k->currentFrame,
                                           itemIndex, coord,
-                                          scene->spaceContext(), TupLibraryObject::Item,
+                                          scene->getSpaceContext(), TupLibraryObject::Item,
                                           TupProjectRequest::Ungroup);
                 emit requested(&event);
             }
@@ -155,7 +155,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                         QString path = qgraphicsitem_cast<TupPathItem *>(item)->pathToString();
                         TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
                                                   k->currentLayer, k->currentFrame, position,
-                                                  QPointF(), scene->spaceContext(), TupLibraryObject::Item,
+                                                  QPointF(), scene->getSpaceContext(), TupLibraryObject::Item,
                                                   TupProjectRequest::EditNodes, path);
                         emit requested(&event);
                         k->nodeGroup->clearChangedNodes();
@@ -205,7 +205,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                         QString path = qgraphicsitem_cast<TupPathItem *>(item)->pathToString();
                         TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
                                                   k->currentLayer, k->currentFrame, position,
-                                                  QPointF(), scene->spaceContext(), TupLibraryObject::Item,
+                                                  QPointF(), scene->getSpaceContext(), TupLibraryObject::Item,
                                                   TupProjectRequest::EditNodes, path);
                         emit requested(&event);
                         k->nodeGroup->clearChangedNodes();
@@ -261,7 +261,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
 TupFrame* NodesTool::currentFrame()
 {
     TupFrame *frame = 0;
-    if (k->scene->spaceContext() == TupProject::FRAMES_EDITION) {
+    if (k->scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
         frame = k->scene->currentFrame();
         k->currentLayer = k->scene->currentLayerIndex();
         k->currentFrame = k->scene->currentFrameIndex();
@@ -269,11 +269,11 @@ TupFrame* NodesTool::currentFrame()
         k->currentLayer = -1;
         k->currentFrame = -1;
 
-        TupScene *tupScene = k->scene->scene();
+        TupScene *tupScene = k->scene->currentScene();
         TupBackground *bg = tupScene->background();
-        if (k->scene->spaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
+        if (k->scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
             frame = bg->staticFrame();
-        } else if (k->scene->spaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+        } else if (k->scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
                    frame = bg->dynamicFrame();
         }
     }

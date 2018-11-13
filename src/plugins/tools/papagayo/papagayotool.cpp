@@ -87,7 +87,7 @@ void PapagayoTool::init(TupGraphicsScene *scene)
 {
     k->scene = scene;
     k->mode = TupToolPlugin::View;
-    k->baseZValue = (2*ZLAYER_LIMIT) + (scene->scene()->layersCount() * ZLAYER_LIMIT);
+    k->baseZValue = (2*ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
 
     k->initScene = k->scene->currentSceneIndex();
 
@@ -95,7 +95,7 @@ void PapagayoTool::init(TupGraphicsScene *scene)
 
     k->configurator->resetUI();
 
-    QList<QString> lipSyncList = k->scene->scene()->getLipSyncNames();
+    QList<QString> lipSyncList = k->scene->currentScene()->getLipSyncNames();
     if (lipSyncList.size() > 0)
         k->configurator->loadLipSyncList(lipSyncList);
 }
@@ -216,7 +216,7 @@ void PapagayoTool::updateScene(TupGraphicsScene *scene)
 
 void PapagayoTool::editLipSyncSelection(const QString &name)
 {
-    TupScene *scene = k->scene->scene();
+    TupScene *scene = k->scene->currentScene();
     k->currentLipSync = scene->getLipSync(name);
 
     k->configurator->openLipSyncProperties(k->currentLipSync);
@@ -261,7 +261,7 @@ void PapagayoTool::updateOriginPoint(const QPointF &point)
     k->mouth->setPos(k->origin - k->mouthOffset);
     k->currentLipSync->updateMouthPosition(k->currentMouthIndex, point, k->scene->currentFrameIndex());
 
-    TupScene *scene = k->scene->scene();
+    TupScene *scene = k->scene->currentScene();
     scene->updateLipSync(k->currentLipSync);
 
     k->configurator->setPos(point);
@@ -274,7 +274,7 @@ void PapagayoTool::addTarget(const QString &id, int index)
     k->currentMouth = id;
     k->currentMouthIndex = index;
 
-    TupScene *scene = k->scene->scene();
+    TupScene *scene = k->scene->currentScene();
     int initLayer = scene->getLipSyncLayerIndex(k->currentLipSync->name());
     int initFrame = k->currentLipSync->initFrame();
 
@@ -383,7 +383,7 @@ void PapagayoTool::updateInitFrame(int index)
     removeTarget();
     k->currentLipSync->setInitFrame(index);
 
-    TupScene *scene = k->scene->scene();
+    TupScene *scene = k->scene->currentScene();
     scene->updateLipSync(k->currentLipSync);
 
     int sceneFrames = scene->framesCount();

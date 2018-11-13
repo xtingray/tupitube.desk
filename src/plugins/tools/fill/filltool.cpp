@@ -114,7 +114,7 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
             int currentFrame;
             TupFrame *frame;
 
-            if (scene->spaceContext() == TupProject::FRAMES_EDITION) {
+            if (scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
                 frame = scene->currentFrame();
                 itemIndex = frame->indexOf(item);
                 currentLayer = scene->currentLayerIndex();
@@ -122,11 +122,11 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
             } else {
                 currentLayer = -1;
                 currentFrame = -1;
-                TupBackground *bg = scene->scene()->background();
-                if (scene->spaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
+                TupBackground *bg = scene->currentScene()->background();
+                if (scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                     itemIndex = frame->indexOf(item);
-                } else if (scene->spaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                } else if (scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
                     frame = bg->dynamicFrame();
                     itemIndex = frame->indexOf(item);
                 }
@@ -186,7 +186,7 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                     TupProjectRequest event = TupRequestBuilder::createItemRequest(
                                               scene->currentSceneIndex(), currentLayer,
                                               currentFrame, itemIndex, QPointF(),
-                                              scene->spaceContext(), TupLibraryObject::Item,
+                                              scene->getSpaceContext(), TupLibraryObject::Item,
                                               action, doc.toString());
 
                     emit requested(&event);

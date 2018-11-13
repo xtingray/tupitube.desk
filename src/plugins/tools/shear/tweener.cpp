@@ -103,14 +103,14 @@ void Tweener::init(TupGraphicsScene *scene)
 
     k->mode = TupToolPlugin::View;
     k->editMode = TupToolPlugin::None;
-    k->baseZValue = (2*ZLAYER_LIMIT) + (scene->scene()->layersCount() * ZLAYER_LIMIT);
+    k->baseZValue = (2*ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
     k->initFrame = k->scene->currentFrameIndex();
     k->initLayer = k->scene->currentLayerIndex();
     k->initScene = k->scene->currentSceneIndex();
 
     k->configurator->resetUI();
 
-    QList<QString> tweenList = k->scene->scene()->getTweenNames(TupItemTweener::Shear);
+    QList<QString> tweenList = k->scene->currentScene()->getTweenNames(TupItemTweener::Shear);
     if (tweenList.size() > 0) {
         k->configurator->loadTweenList(tweenList);
         setCurrentTween(tweenList.at(0));
@@ -315,7 +315,7 @@ void Tweener::updateScene(TupGraphicsScene *scene)
 
 void Tweener::setCurrentTween(const QString &name)
 {
-    TupScene *scene = k->scene->scene();
+    TupScene *scene = k->scene->currentScene();
     k->currentTween = scene->tween(name, TupItemTweener::Shear);
 
     if (k->currentTween)
@@ -325,7 +325,7 @@ void Tweener::setCurrentTween(const QString &name)
 int Tweener::framesCount()
 {
     int total = 1;
-    TupLayer *layer = k->scene->scene()->layerAt(k->scene->currentLayerIndex());
+    TupLayer *layer = k->scene->currentScene()->layerAt(k->scene->currentLayerIndex());
     if (layer)
         total = layer->framesCount();
 
@@ -435,7 +435,7 @@ void Tweener::applyTween()
         return;
     }
 
-    if (!k->scene->scene()->tweenExists(name, TupItemTweener::Shear)) {
+    if (!k->scene->currentScene()->tweenExists(name, TupItemTweener::Shear)) {
         k->initFrame = k->scene->currentFrameIndex();
         k->initLayer = k->scene->currentLayerIndex();
         k->initScene = k->scene->currentSceneIndex();
@@ -458,7 +458,7 @@ void Tweener::applyTween()
                                                k->initLayer,
                                                k->initFrame,
                                                objectIndex,
-                                               QPointF(), k->scene->spaceContext(), type,
+                                               QPointF(), k->scene->getSpaceContext(), type,
                                                TupProjectRequest::SetTween,
                                                k->configurator->tweenToXml(k->initScene, k->initLayer, k->initFrame, origin));
                  emit requested(&request);
@@ -473,7 +473,7 @@ void Tweener::applyTween()
 
         foreach (QGraphicsItem *item, k->objects) {
                  TupLibraryObject::Type type = TupLibraryObject::Item;
-                 TupScene *scene = k->scene->scene();
+                 TupScene *scene = k->scene->currentScene();
                  TupLayer *layer = scene->layerAt(k->currentTween->initLayer());
                  TupFrame *frame = layer->frameAt(k->currentTween->initFrame());
                  int objectIndex = frame->indexOf(item);
@@ -501,7 +501,7 @@ void Tweener::applyTween()
                          dom.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(dom));
 
                      TupProjectRequest request = TupRequestBuilder::createItemRequest(k->initScene, k->initLayer, k->initFrame, 
-                                                                                      0, QPointF(), k->scene->spaceContext(), 
+                                                                                      0, QPointF(), k->scene->getSpaceContext(), 
                                                                                       type, TupProjectRequest::Add, dom.toString());
                      emit requested(&request);
 
@@ -509,7 +509,7 @@ void Tweener::applyTween()
                                                                    k->initLayer,
                                                                    k->currentTween->initFrame(),
                                                                    objectIndex, QPointF(), 
-                                                                   k->scene->spaceContext(), type,
+                                                                   k->scene->getSpaceContext(), type,
                                                                    TupProjectRequest::Remove);
                      emit requested(&request);
 
@@ -530,7 +530,7 @@ void Tweener::applyTween()
                                             k->initLayer,
                                             k->initFrame,
                                             objectIndex,
-                                            QPointF(), k->scene->spaceContext(), 
+                                            QPointF(), k->scene->getSpaceContext(), 
                                             type, TupProjectRequest::SetTween,
                                             k->configurator->tweenToXml(k->initScene, k->initLayer, k->initFrame, origin));
                  emit requested(&request);
@@ -542,7 +542,7 @@ void Tweener::applyTween()
 
     int framesNumber = framesCount();
     int total = k->initFrame + k->configurator->totalSteps() - 1;
-    int layersCount = k->scene->scene()->layersCount();
+    int layersCount = k->scene->currentScene()->layersCount();
     TupProjectRequest request;
 
     if (total > framesNumber) {
@@ -569,7 +569,7 @@ void Tweener::applyTween()
 
 void Tweener::removeTweenFromProject(const QString &name)
 {
-    TupScene *scene = k->scene->scene();
+    TupScene *scene = k->scene->currentScene();
     bool removed = scene->removeTween(name, TupItemTweener::Shear);
 
     if (removed) {
@@ -664,7 +664,7 @@ void Tweener::updateMode(TupToolPlugin::Mode mode)
             }
 
             if (k->objects.isEmpty()) {
-                k->objects = k->scene->scene()->getItemsFromTween(k->currentTween->name(), TupItemTweener::Shear);
+                k->objects = k->scene->currentScene()->getItemsFromTween(k->currentTween->name(), TupItemTweener::Shear);
                 k->origin = k->currentTween->transformOriginPoint();
             }
 

@@ -240,7 +240,7 @@ void TupCanvas::penDialog()
 void TupCanvas::onionDialog()
 {
     QDesktopWidget desktop;
-    TupOnionDialog *dialog = new TupOnionDialog(brushManager->penColor(), scene->opacity(), this);
+    TupOnionDialog *dialog = new TupOnionDialog(brushManager->penColor(), scene->getOpacity(), this);
     connect(dialog, SIGNAL(updateOpacity(double)), this, SLOT(setOnionOpacity(double)));
 
     QApplication::restoreOverrideCursor();

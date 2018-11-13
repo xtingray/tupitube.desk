@@ -35,22 +35,13 @@
  ***************************************************************************/
 
 #include "tuptoolplugin.h"
-#include "tupbrushmanager.h"
-#include "tupinputdeviceinformation.h"
-#include "tupgraphicsscene.h"
 
-struct TupToolPlugin::Private
-{
-    QString currentTool;
-};
-
-TupToolPlugin::TupToolPlugin(QObject * parent) : QObject(parent), k(new Private)
+TupToolPlugin::TupToolPlugin(QObject * parent) : QObject(parent) // , k(new Private)
 {
 }
 
 TupToolPlugin::~TupToolPlugin()
 {
-    delete k;
 }
 
 void TupToolPlugin::init(TupGraphicsScene *scene)
@@ -65,18 +56,18 @@ void TupToolPlugin::updateScene(TupGraphicsScene *scene)
 
 void TupToolPlugin::setName(const QString &tool)
 {
-    k->currentTool = tool;
+    currentTool = tool;
 }
 
 QString TupToolPlugin::name() const
 {
-    return k->currentTool;
+    return currentTool;
 }
 
 void TupToolPlugin::begin()
 {
 #ifdef TUP_DEBUG
-    QString msg = "TupToolPlugin::begin() - Begin: " + k->currentTool;
+    QString msg = "TupToolPlugin::begin() - Begin: " + currentTool;
     #ifdef Q_OS_WIN
         qWarning() << msg;
     #else
@@ -88,7 +79,7 @@ void TupToolPlugin::begin()
 void TupToolPlugin::end()
 {
 #ifdef TUP_DEBUG
-    QString msg = "TupToolPlugin::end() - End: " + k->currentTool;
+    QString msg = "TupToolPlugin::end() - End: " + currentTool;
     #ifdef Q_OS_WIN
         qWarning() << msg;
     #else
@@ -165,12 +156,6 @@ void TupToolPlugin::updateZoomFactor(qreal factor)
 {
     Q_UNUSED(factor);
 }
-
-/*
-void TupToolPlugin::autoZoom()
-{
-}
-*/
 
 void TupToolPlugin::setProjectSize(const QSize size)
 {
@@ -325,13 +310,6 @@ void TupToolPlugin::setActiveView(const QString &viewID)
     Q_UNUSED(viewID);
 }
 
-/*
-void TupToolPlugin::addNewItem(const QString &id)
-{
-    Q_UNUSED(id);
-}
-*/
-
 void TupToolPlugin::setCurrentItem(const QString &id)
 {
     Q_UNUSED(id);
@@ -349,4 +327,3 @@ void TupToolPlugin::setColorMode(TColorCell::FillType mode)
 {
     Q_UNUSED(mode);
 }
-

@@ -243,7 +243,7 @@ void PolyLineTool::release(const TupInputDeviceInformation *input, TupBrushManag
         TupProjectRequest request = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(), 
                                                        scene->currentLayerIndex(), 
                                                        scene->currentFrameIndex(), 
-                                                       0, QPointF(), scene->spaceContext(), TupLibraryObject::Item, 
+                                                       0, QPointF(), scene->getSpaceContext(), TupLibraryObject::Item, 
                                                        TupProjectRequest::Add, doc.toString());
         emit requested(&request);
  
@@ -278,10 +278,10 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
     TupLayer *layer = 0;
     TupFrame *frame = 0;
 
-    TupProject *project = k->scene->scene()->project();
+    TupProject *project = k->scene->currentScene()->project();
     scene = project->sceneAt(response->sceneIndex());
     if (scene) {
-        if (k->scene->spaceContext() == TupProject::FRAMES_EDITION) {
+        if (k->scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
             layer = scene->layerAt(response->layerIndex());
             if (layer) {
                 frame = layer->frameAt(response->frameIndex());
@@ -310,7 +310,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
         } else {
             TupBackground *bg = scene->background();
             if (bg) {
-                if (k->scene->spaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
+                if (k->scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
                     TupFrame *frame = bg->staticFrame();
                     if (frame) {
                         item = frame->item(response->itemIndex());
@@ -324,7 +324,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
                            #endif
                         #endif
                     }
-                } else if (k->scene->spaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                } else if (k->scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
                            TupFrame *frame = bg->dynamicFrame();
                            if (frame) {
                                item = frame->item(response->itemIndex());
@@ -494,12 +494,12 @@ void PolyLineTool::nodeChanged()
     if (k->nodeGroup) {
         if (!k->nodeGroup->changedNodes().isEmpty()) {
             int position = -1;
-            if (k->scene->spaceContext() == TupProject::FRAMES_EDITION) {
+            if (k->scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
                 position = k->scene->currentFrame()->indexOf(k->nodeGroup->parentItem());
             } else {
-                TupBackground *bg = k->scene->scene()->background();
+                TupBackground *bg = k->scene->currentScene()->background();
                 if (bg) {
-                    if (k->scene->spaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
+                    if (k->scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
                         TupFrame *frame = bg->staticFrame();
                         if (frame) {
                             position = frame->indexOf(k->nodeGroup->parentItem());
@@ -514,7 +514,7 @@ void PolyLineTool::nodeChanged()
                             #endif
                             return;
                         }
-                    } else if (k->scene->spaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                    } else if (k->scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
                                TupFrame *frame = bg->dynamicFrame();
                                if (frame) {
                                    position = frame->indexOf(k->nodeGroup->parentItem());
@@ -556,7 +556,7 @@ void PolyLineTool::nodeChanged()
                 if (pathItem) {
                     QString path = pathItem->pathToString();
                     TupProjectRequest event = TupRequestBuilder::createItemRequest(k->scene->currentSceneIndex(), k->scene->currentLayerIndex(), k->scene->currentFrameIndex(), 
-                                              position, QPointF(), k->scene->spaceContext(), TupLibraryObject::Item, TupProjectRequest::EditNodes, path);
+                                              position, QPointF(), k->scene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::EditNodes, path);
                     emit requested(&event);
                     // k->nodeGroup->restoreItem();
                 }

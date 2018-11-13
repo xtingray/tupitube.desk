@@ -37,8 +37,10 @@
 #define TUPROTATIONDIAL_H
 
 #include "tglobal.h"
+
 #include <QDialog>
 #include <QKeyEvent>
+#include <QDial>
 
 class TUPITUBE_EXPORT TupRotationDial : public QDialog
 {
@@ -47,6 +49,7 @@ class TUPITUBE_EXPORT TupRotationDial : public QDialog
     public:
         TupRotationDial(QWidget *parent);
         ~TupRotationDial();
+
         void setAngle(int angle);
 
     protected:
@@ -59,8 +62,8 @@ class TUPITUBE_EXPORT TupRotationDial : public QDialog
         void updateAngle(int angle);
 
     private:
-        struct Private;
-        Private *const k;
+        QDial *dial;
+        QLabel *label;
 };
 
 #endif

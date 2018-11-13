@@ -98,7 +98,7 @@ void SelectionTool::init(TupGraphicsScene *scene)
 
     clearSelection();
     k->scene->clearSelection();
-    k->nodeZValue = (2*ZLAYER_LIMIT) + (scene->scene()->layersCount() * ZLAYER_LIMIT);
+    k->nodeZValue = (2*ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
     initItems(scene);
 }
 
@@ -292,7 +292,7 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
 TupFrame* SelectionTool::currentFrame()
 {
     TupFrame *frame = 0;
-    if (k->scene->spaceContext() == TupProject::FRAMES_EDITION) {
+    if (k->scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
         frame = k->scene->currentFrame();
         k->currentLayer = k->scene->currentLayerIndex();
         k->currentFrame = k->scene->currentFrameIndex();
@@ -300,11 +300,11 @@ TupFrame* SelectionTool::currentFrame()
         k->currentLayer = -1;
         k->currentFrame = -1;
 
-        TupScene *tupScene = k->scene->scene();
+        TupScene *tupScene = k->scene->currentScene();
         TupBackground *bg = tupScene->background();
-        if (k->scene->spaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
+        if (k->scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
             frame = bg->staticFrame();
-        } else if (k->scene->spaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+        } else if (k->scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
             frame = bg->dynamicFrame();
         }
     }
@@ -315,10 +315,10 @@ TupFrame* SelectionTool::currentFrame()
 TupFrame* SelectionTool::frameAt(int sceneIndex, int layerIndex, int frameIndex)
 {
     TupFrame *frame = 0;
-    TupProject *project = k->scene->scene()->project();
+    TupProject *project = k->scene->currentScene()->project();
     TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
-        if (k->scene->spaceContext() == TupProject::FRAMES_EDITION) {
+        if (k->scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
             TupLayer *layer = scene->layerAt(layerIndex);
             if (layer) {
                 frame = layer->frameAt(frameIndex);
@@ -334,9 +334,9 @@ TupFrame* SelectionTool::frameAt(int sceneIndex, int layerIndex, int frameIndex)
             }
         } else {
             TupBackground *bg = scene->background();
-            if (k->scene->spaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
+            if (k->scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
                 frame = bg->staticFrame();
-            } else if (k->scene->spaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+            } else if (k->scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
                 frame = bg->dynamicFrame();
                 bg->scheduleRender(true);
             }
@@ -693,7 +693,7 @@ void SelectionTool::applyFlip(Settings::Flip flip)
                     k->scene->currentSceneIndex(),
                     k->currentLayer, k->currentFrame,
                     position, QPointF(), 
-                    k->scene->spaceContext(), type,
+                    k->scene->getSpaceContext(), type,
                     TupProjectRequest::Transform, doc.toString());
                     emit requested(&event);
             }
@@ -719,7 +719,7 @@ void SelectionTool::applyOrderAction(Settings::Order action)
 
         TupProjectRequest event = TupRequestBuilder::createItemRequest(k->scene->currentSceneIndex(),
                                   k->currentLayer, k->currentFrame, position, QPointF(),
-                                  k->scene->spaceContext(), type, TupProjectRequest::Move, action);
+                                  k->scene->getSpaceContext(), type, TupProjectRequest::Move, action);
         emit requested(&event);
     }
 }
@@ -774,7 +774,7 @@ void SelectionTool::applyGroupAction(Settings::Group action)
 
             TupProjectRequest event = TupRequestBuilder::createItemRequest(k->scene->currentSceneIndex(),
                                       k->currentLayer, k->currentFrame,
-                                      position, QPointF(), k->scene->spaceContext(),
+                                      position, QPointF(), k->scene->getSpaceContext(),
                                       TupLibraryObject::Item, TupProjectRequest::Group, items);
             emit requested(&event);
         } else if (total == 1) {
@@ -797,7 +797,7 @@ void SelectionTool::applyGroupAction(Settings::Group action)
                                               k->scene->currentSceneIndex(),
                                               k->currentLayer, k->currentFrame,
                                               itemIndex, QPointF(),
-                                              k->scene->spaceContext(), TupLibraryObject::Item,
+                                              k->scene->getSpaceContext(), TupLibraryObject::Item,
                                               TupProjectRequest::Ungroup);
                     emit requested(&event);
                 }
@@ -1076,7 +1076,7 @@ void SelectionTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
     if (position >= 0) {
         TupProjectRequest event = TupRequestBuilder::createItemRequest(
                           k->scene->currentSceneIndex(), k->currentLayer, k->currentFrame,
-                          position, QPointF(), k->scene->spaceContext(), type,
+                          position, QPointF(), k->scene->getSpaceContext(), type,
                           TupProjectRequest::Transform, doc.toString());
 
         emit requested(&event);

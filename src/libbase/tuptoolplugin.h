@@ -41,22 +41,20 @@
 #include "taction.h"
 #include "tupprojectresponse.h"
 #include "tcolorcell.h"
+#include "tupbrushmanager.h"
+#include "tupinputdeviceinformation.h"
 
 #include <QObject>
 #include <QSize>
-#include <QGraphicsView>
 #include <QCursor>
 #include <QMenu>
 
 class TupGraphicsScene;
-class QGraphicsView;
-class TupInputDeviceInformation;
-class TupBrushManager;
 
 class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
 {
     Q_OBJECT
-    Q_INTERFACES(TupToolInterface);
+    Q_INTERFACES(TupToolInterface)
     
     public:
 
@@ -109,14 +107,12 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
         virtual void resizeNodes(qreal factor);
         virtual void updateZoomFactor(qreal factor);
 
-        // virtual void autoZoom();
         virtual void setProjectSize(const QSize size);
 
         virtual TupToolPlugin::Mode currentMode();
         virtual TupToolPlugin::EditMode currentEditMode();
 
         virtual void setActiveView(const QString &viewID);
-        // virtual void addNewItem(const QString &id);
         virtual void setCurrentItem(const QString &id);
 
         virtual void updateWorkSpaceContext();
@@ -133,9 +129,7 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
         void end();
         
     private:
-        struct Private;
-        Private *const k;
+        QString currentTool;
 };
 
 #endif
-

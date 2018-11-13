@@ -78,7 +78,7 @@ void Tweener::init(TupGraphicsScene *scene)
 
     k->configurator->resetUI();
 
-    QList<QString> tweenList = k->scene->scene()->getTweenNames(TupItemTweener::Coloring);
+    QList<QString> tweenList = k->scene->currentScene()->getTweenNames(TupItemTweener::Coloring);
     if (tweenList.size() > 0) {
         k->configurator->loadTweenList(tweenList);
         setCurrentTween(tweenList.at(0));
@@ -294,7 +294,7 @@ void Tweener::updateScene(TupGraphicsScene *scene)
 
 void Tweener::setCurrentTween(const QString &name)
 {
-    TupScene *scene = k->scene->scene();
+    TupScene *scene = k->scene->currentScene();
     k->currentTween = scene->tween(name, TupItemTweener::Coloring);
     if (k->currentTween)
         k->configurator->setCurrentTween(k->currentTween);
@@ -303,7 +303,7 @@ void Tweener::setCurrentTween(const QString &name)
 int Tweener::framesCount()
 {
     int total = 1;
-    TupLayer *layer = k->scene->scene()->layerAt(k->scene->currentLayerIndex());
+    TupLayer *layer = k->scene->currentScene()->layerAt(k->scene->currentLayerIndex());
     if (layer)
         total = layer->framesCount();
 
@@ -411,7 +411,7 @@ void Tweener::applyTween()
         return;
     }
 
-    if (!k->scene->scene()->tweenExists(name, TupItemTweener::Coloring)) {
+    if (!k->scene->currentScene()->tweenExists(name, TupItemTweener::Coloring)) {
         k->initFrame = k->scene->currentFrameIndex();
         k->initLayer = k->scene->currentLayerIndex();
         k->initScene = k->scene->currentSceneIndex();
@@ -432,7 +432,7 @@ void Tweener::applyTween()
 
                  TupProjectRequest request = TupRequestBuilder::createItemRequest(
                                              k->initScene, k->initLayer, k->initFrame,
-                                             objectIndex, QPointF(), k->scene->spaceContext(),
+                                             objectIndex, QPointF(), k->scene->getSpaceContext(),
                                              type, TupProjectRequest::SetTween,
                                              k->configurator->tweenToXml(k->initScene, k->initLayer, k->initFrame));
                  emit requested(&request);
@@ -451,7 +451,7 @@ void Tweener::applyTween()
                  // TupProject *project = k->scene->scene()->project();
                  // TupScene *scene = project->scene(k->initScene);
 
-                 TupScene *scene = k->scene->scene();
+                 TupScene *scene = k->scene->currentScene();
                  TupLayer *layer = scene->layerAt(k->initLayer);
                  TupFrame *frame = layer->frameAt(k->currentTween->initFrame());
                  int objectIndex = -1;
@@ -472,7 +472,7 @@ void Tweener::applyTween()
                          dom.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(dom));
 
                      TupProjectRequest request = TupRequestBuilder::createItemRequest(k->initScene, k->initLayer, k->initFrame,
-                                                                                      0, QPointF(), k->scene->spaceContext(),
+                                                                                      0, QPointF(), k->scene->getSpaceContext(),
                                                                                       type, TupProjectRequest::Add,
                                                                                       dom.toString());
                      emit requested(&request);
@@ -480,7 +480,7 @@ void Tweener::applyTween()
                      request = TupRequestBuilder::createItemRequest(k->initScene, k->initLayer,
                                                                     k->currentTween->initFrame(),
                                                                     objectIndex, QPointF(), 
-                                                                    k->scene->spaceContext(), type,
+                                                                    k->scene->getSpaceContext(), type,
                                                                     TupProjectRequest::Remove);
                      emit requested(&request);
 
@@ -496,7 +496,7 @@ void Tweener::applyTween()
 
                  TupProjectRequest request = TupRequestBuilder::createItemRequest(
                                              k->initScene, k->initLayer, k->initFrame,
-                                             objectIndex, QPointF(), k->scene->spaceContext(),
+                                             objectIndex, QPointF(), k->scene->getSpaceContext(),
                                              type, TupProjectRequest::SetTween,
                                              k->configurator->tweenToXml(k->initScene, k->initLayer, k->initFrame));
                  emit requested(&request);
@@ -508,7 +508,7 @@ void Tweener::applyTween()
 
     int total = k->initFrame + k->configurator->totalSteps();
     int framesNumber = framesCount();
-    int layersCount = k->scene->scene()->layersCount();
+    int layersCount = k->scene->currentScene()->layersCount();
     TupProjectRequest request;
 
     if (total >= framesNumber) {
@@ -536,7 +536,7 @@ void Tweener::applyTween()
 
 void Tweener::removeTweenFromProject(const QString &name)
 {
-    TupScene *scene = k->scene->scene();
+    TupScene *scene = k->scene->currentScene();
     bool removed = scene->removeTween(name, TupItemTweener::Coloring);
 
     if (removed) {
@@ -585,7 +585,7 @@ void Tweener::updateMode(TupToolPlugin::Mode mode)
             }
 
             if (k->objects.isEmpty())
-                k->objects = k->scene->scene()->getItemsFromTween(k->currentTween->name(), TupItemTweener::Coloring);
+                k->objects = k->scene->currentScene()->getItemsFromTween(k->currentTween->name(), TupItemTweener::Coloring);
         } else {
             #ifdef TUP_DEBUG
                 QString msg = "Tweener::updateMode() - Current tween pointer is NULL!";

@@ -110,7 +110,7 @@ void TupSymbolEditor::loadTools()
     QActionGroup *group = new QActionGroup(this);
     group->setExclusive(true);
     
-    foreach (QObject *plugin, TupPluginManager::instance()->tools()) {
+    foreach (QObject *plugin, TupPluginManager::instance()->getTools()) {
              TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(plugin);
         
              QStringList::iterator it;

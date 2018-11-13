@@ -36,16 +36,9 @@
 #include "tuprotationdial.h"
 
 #include <QBoxLayout>
-#include <QDial>
 #include <QLabel>
 
-struct TupRotationDial::Private
-{
-    QDial *dial;
-    QLabel *label;
-};
-
-TupRotationDial::TupRotationDial(QWidget *parent) : QDialog(parent, Qt::CustomizeWindowHint), k(new Private)
+TupRotationDial::TupRotationDial(QWidget *parent) : QDialog(parent, Qt::CustomizeWindowHint)
 {
     setModal(true);
 	#ifndef Q_OS_WIN
@@ -53,20 +46,20 @@ TupRotationDial::TupRotationDial(QWidget *parent) : QDialog(parent, Qt::Customiz
 	#endif
 
     QBoxLayout *layout = new QVBoxLayout(this);
-    k->dial = new QDial;
-    connect(k->dial, SIGNAL(valueChanged(int)), this, SLOT(updateAngle(int)));
-    k->dial->setRange(0, 360);
-    layout->addWidget(k->dial);
+    dial = new QDial;
+    connect(dial, SIGNAL(valueChanged(int)), this, SLOT(updateAngle(int)));
+    dial->setRange(0, 360);
+    layout->addWidget(dial);
 	
-    k->label = new QLabel;
-    k->label->setAttribute(Qt::WA_TranslucentBackground);
-    k->label->setAlignment(Qt::AlignHCenter);
+    label = new QLabel;
+    label->setAttribute(Qt::WA_TranslucentBackground);
+    label->setAlignment(Qt::AlignHCenter);
 	
     QFont f = font();
     f.setBold(true);
     f.setPointSize(f.pointSizeF() + 5);
-    k->label->setFont(f);
-    layout->addWidget(k->label);
+    label->setFont(f);
+    layout->addWidget(label);
 }
 
 TupRotationDial::~TupRotationDial()
@@ -75,14 +68,14 @@ TupRotationDial::~TupRotationDial()
 
 void TupRotationDial::updateAngle(int angle)
 {
-    k->label->setText(QString::number(angle));
+    label->setText(QString::number(angle));
     emit valueChanged(angle);
 }
 
 void TupRotationDial::setAngle(int angle)
 {
-    k->dial->setSliderPosition(angle);
-    k->label->setText(QString::number(angle)); 
+    dial->setSliderPosition(angle);
+    label->setText(QString::number(angle));
 }
 
 void TupRotationDial::keyReleaseEvent(QKeyEvent *event)

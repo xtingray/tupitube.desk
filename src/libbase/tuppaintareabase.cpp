@@ -256,7 +256,7 @@ void TupPaintAreaBase::keyPressEvent(QKeyEvent *event)
         return;
     }
 
-    if (!gScene->isDrawing() && (event->modifiers () == (Qt::AltModifier | Qt::ControlModifier))) {
+    if (!gScene->userIsDrawing() && (event->modifiers () == (Qt::AltModifier | Qt::ControlModifier))) {
         QDesktopWidget desktop;
         dial->setAngle(angle);
         dial->show();
@@ -357,7 +357,7 @@ void TupPaintAreaBase::drawBackground(QPainter *painter, const QRectF &rect)
 
 void TupPaintAreaBase::drawForeground(QPainter *painter, const QRectF &rect)
 {
-    TupScene *currentScene = gScene->scene();
+    TupScene *currentScene = gScene->currentScene();
 
     if (!currentScene) {
         drawPadLock(painter, rect, tr("No Scene!"));
@@ -535,7 +535,7 @@ void TupPaintAreaBase::setZoom(qreal scaleFactor)
 
 TupBrushManager *TupPaintAreaBase::brushManager() const
 {
-    return gScene->brushManager();
+    return gScene->getBrushManager();
 }
 
 QRectF TupPaintAreaBase::getDrawingRect() const

@@ -92,10 +92,10 @@ void PencilTool::init(TupGraphicsScene *scene)
     #endif
 
     k->scene = scene;
-    k->brushManager = k->scene->brushManager();
+    k->brushManager = k->scene->getBrushManager();
     k->input = k->scene->inputDeviceInformation();
     k->resize = false;
-    k->circleZValue = (2*ZLAYER_LIMIT) + (scene->scene()->layersCount() * ZLAYER_LIMIT);
+    k->circleZValue = (2*ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
 
     TCONFIG->beginGroup("BrushParameters");
     k->penWidth = TCONFIG->value("Thickness", 3).toInt();
@@ -179,7 +179,7 @@ void PencilTool::release(const TupInputDeviceInformation *input, TupBrushManager
             QDomDocument doc;
             doc.appendChild(blackEllipse->toXml(doc));
             TupProjectRequest request = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(), scene->currentLayerIndex(), scene->currentFrameIndex(),
-                                                                             0, point, scene->spaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
+                                                                             0, point, scene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
                                                                              doc.toString());
             emit requested(&request);
             return;
@@ -195,7 +195,7 @@ void PencilTool::release(const TupInputDeviceInformation *input, TupBrushManager
         doc.appendChild(k->item->toXml(doc));
 
         TupProjectRequest request = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(), scene->currentLayerIndex(), scene->currentFrameIndex(), 
-                                                                         0, QPoint(), scene->spaceContext(), TupLibraryObject::Item, TupProjectRequest::Add, 
+                                                                         0, QPoint(), scene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::Add, 
                                                                          doc.toString());
         emit requested(&request);
     }

@@ -34,63 +34,18 @@
  ***************************************************************************/
 
 #include "tupgraphicsscene.h"
-#include "tupscene.h"
-#include "tuplayer.h"
-#include "tupgraphicobject.h"
 #include "tupitemgroup.h"
 #include "tupprojectloader.h"
 #include "tupitemfactory.h"
-#include "tuptoolplugin.h"
 #include "tupinputdeviceinformation.h"
-#include "tupbrushmanager.h"
-#include "tupframe.h"
 #include "tupitemtweener.h"
 #include "tupgraphiclibraryitem.h"
 #include "tuppathitem.h"
 #include "tuplineitem.h"
 #include "tuprectitem.h"
 #include "tupellipseitem.h"
-#include "tupguideline.h"
-#include "tuplibrary.h"
 
-struct TupGraphicsScene::Private
-{
-    TupToolPlugin *tool;
-    TupScene *scene;
-    double opacity;
-
-    struct OnionSkin
-     {
-        int previous;
-        int next;
-        QHash<QGraphicsItem *, bool> accessMap;
-     } onionSkin;
-
-    struct FramePosition
-     {
-        int layer;
-        int frame;
-     } framePosition;
-
-    TupBrushManager *brushManager;
-    TupInputDeviceInformation *inputInformation;
-
-    bool isDrawing;
-
-    QList<TupLineGuide *> lines;
-    TupProject::Mode spaceContext;   
-    TupLibrary *library;
-    double layerOnProcessOpacity;
-    int frameOnProcess;
-    int layerOnProcess;
-
-    int zLevel;
-
-    bool loadingProject;
-    QGraphicsPixmapItem *dynamicBg;
-};
-
-TupGraphicsScene::TupGraphicsScene() : QGraphicsScene(), k(new Private)
+TupGraphicsScene::TupGraphicsScene() : QGraphicsScene()
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -100,22 +55,22 @@ TupGraphicsScene::TupGraphicsScene() : QGraphicsScene(), k(new Private)
         #endif
     #endif
 
-    k->loadingProject = true;
-    k->dynamicBg = new QGraphicsPixmapItem;
+    loadingProject = true;
+    dynamicBg = new QGraphicsPixmapItem;
 
     setItemIndexMethod(QGraphicsScene::NoIndex);
 
-    k->framePosition.layer = -1;
-    k->framePosition.frame = -1;
-    k->spaceContext = TupProject::FRAMES_EDITION;
+    framePosition.layer = -1;
+    framePosition.frame = -1;
+    spaceContext = TupProject::FRAMES_EDITION;
 
-    k->onionSkin.next = 0;
-    k->onionSkin.previous = 0;
-    k->tool = 0;
-    k->isDrawing = false;
+    onionSkin.next = 0;
+    onionSkin.previous = 0;
+    gTool = 0;
+    isDrawing = false;
 
-    k->inputInformation = new TupInputDeviceInformation(this);
-    k->brushManager = new TupBrushManager(this);
+    inputInformation = new TupInputDeviceInformation(this);
+    brushManager = new TupBrushManager(this);
 }
 
 TupGraphicsScene::~TupGraphicsScene()
@@ -141,8 +96,6 @@ TupGraphicsScene::~TupGraphicsScene()
              delete item; 
              item = NULL;
     }
-
-    delete k;
 }
 
 void TupGraphicsScene::updateLayerVisibility(int layerIndex, bool visible)
@@ -155,10 +108,10 @@ void TupGraphicsScene::updateLayerVisibility(int layerIndex, bool visible)
         #endif
     #endif
 
-    if (!k->scene)
+    if (!gScene)
         return;
 
-    if (TupLayer *layer = k->scene->layerAt(layerIndex))
+    if (TupLayer *layer = gScene->layerAt(layerIndex))
         layer->setVisible(visible);
 }
 
@@ -172,14 +125,14 @@ void TupGraphicsScene::setCurrentFrame(int layer, int frame)
         #endif
     #endif
 
-    if ((frame != k->framePosition.frame && k->framePosition.frame >= 0) ||
-        (layer != k->framePosition.layer && k->framePosition.layer >= 0)) {
-        if (k->tool->name().compare(tr("PolyLine")) == 0 || k->tool->toolType() == TupToolInterface::Tweener)
-            k->tool->aboutToChangeScene(this);
+    if ((frame != framePosition.frame && framePosition.frame >= 0) ||
+        (layer != framePosition.layer && framePosition.layer >= 0)) {
+        if (gTool->name().compare(tr("PolyLine")) == 0 || gTool->toolType() == TupToolInterface::Tweener)
+            gTool->aboutToChangeScene(this);
     }
 
-    k->framePosition.layer = layer;
-    k->framePosition.frame = frame;
+    framePosition.layer = layer;
+    framePosition.frame = frame;
 
     foreach (QGraphicsView *view, views())
         view->setDragMode(QGraphicsView::NoDrag);
@@ -195,25 +148,25 @@ void TupGraphicsScene::drawCurrentPhotogram()
         #endif
     #endif
 
-    if (k->loadingProject)
+    if (loadingProject)
         return;
 
-    TupLayer *layer = k->scene->layerAt(k->framePosition.layer);
+    TupLayer *layer = gScene->layerAt(framePosition.layer);
     if (layer) {
         int frames = layer->framesCount();
 
-        if (k->framePosition.frame >= frames)
-            k->framePosition.frame = frames - 1;
+        if (framePosition.frame >= frames)
+            framePosition.frame = frames - 1;
 
-        if (k->spaceContext == TupProject::FRAMES_EDITION) {
-            drawPhotogram(k->framePosition.frame, true);
+        if (spaceContext == TupProject::FRAMES_EDITION) {
+            drawPhotogram(framePosition.frame, true);
         } else {
             cleanWorkSpace();
-            drawSceneBackground(k->framePosition.frame);
+            drawSceneBackground(framePosition.frame);
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupGraphicsScene::drawCurrentPhotogram() - Fatal error: Invalid layer index -> " + QString::number(k->framePosition.layer);
+            QString msg = "TupGraphicsScene::drawCurrentPhotogram() - Fatal error: Invalid layer index -> " + QString::number(framePosition.layer);
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else
@@ -233,7 +186,7 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
         #endif
     #endif
 
-    if (photogram < 0 || !k->scene) 
+    if (photogram < 0 || !gScene)
         return;
 
     cleanWorkSpace();
@@ -241,13 +194,13 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
     drawSceneBackground(photogram);
 
     // Drawing frames from every layer
-    for (int i=0; i < k->scene->layersCount(); i++) {
-         TupLayer *layer = k->scene->layerAt(i);
+    for (int i=0; i < gScene->layersCount(); i++) {
+         TupLayer *layer = gScene->layerAt(i);
          if (layer) {
-             k->layerOnProcess = i;
-             k->layerOnProcessOpacity = layer->opacity();
+             layerOnProcess = i;
+             layerOnProcessOpacity = layer->opacity();
              int framesCount = layer->framesCount();
-             k->zLevel = (i + 2)*ZLAYER_LIMIT;
+             zLevel = (i + 2)*ZLAYER_LIMIT;
 
              if (photogram < framesCount) {
                  TupFrame *mainFrame = layer->frameAt(photogram);
@@ -255,20 +208,20 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
 
                  if (mainFrame) {
                      if (layer->isVisible()) {
-                         int maximum = qMax(k->onionSkin.previous, k->onionSkin.next);
-                         double opacityFactor = k->opacity / (double)maximum;
-                         double opacity = k->opacity + ((maximum - k->onionSkin.previous)*opacityFactor);
+                         int maximum = qMax(onionSkin.previous, onionSkin.next);
+                         double opacityFactor = gOpacity / (double)maximum;
+                         double opacity = gOpacity + ((maximum - onionSkin.previous)*opacityFactor);
                          if (drawContext) {
                              // Painting previous frames
-                             if (k->onionSkin.previous > 0 && photogram > 0) {
-                                 int limit = photogram - k->onionSkin.previous;
+                             if (onionSkin.previous > 0 && photogram > 0) {
+                                 int limit = photogram - onionSkin.previous;
                                  if (limit < 0) 
                                      limit = 0;
 
                                  for (int frameIndex = limit; frameIndex < photogram; frameIndex++) {
                                      TupFrame *frame = layer->frameAt(frameIndex);
                                      if (frame) {
-                                         k->frameOnProcess = frameIndex;
+                                         frameOnProcess = frameIndex;
                                          addFrame(frame, opacity, Previous);
                                      }
                                      opacity += opacityFactor;
@@ -277,24 +230,24 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
                          }
 
                          // Painting current frame
-                         k->frameOnProcess = photogram;
+                         frameOnProcess = photogram;
                          addTweeningObjects(i, photogram);
                          addSvgTweeningObjects(i, photogram);
                          addFrame(mainFrame);
 
                          if (drawContext) {
                              // Painting next frames
-                             if (k->onionSkin.next > 0 && framesCount > photogram + 1) {
-                                 opacity = k->opacity + (opacityFactor*(maximum - 1));
+                             if (onionSkin.next > 0 && framesCount > photogram + 1) {
+                                 opacity = gOpacity + (opacityFactor*(maximum - 1));
 
-                                 int limit = photogram + k->onionSkin.next;
+                                 int limit = photogram + onionSkin.next;
                                  if (limit >= framesCount)
                                      limit = framesCount - 1;
 
                                  for (int frameIndex = photogram+1; frameIndex <= limit; frameIndex++) {
                                      TupFrame * frame = layer->frameAt(frameIndex);
                                      if (frame) {
-                                         k->frameOnProcess = frameIndex;
+                                         frameOnProcess = frameIndex;
                                          addFrame(frame, opacity, Next);
                                      }
                                      opacity -= opacityFactor;
@@ -302,15 +255,15 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
                              }
                          }
 
-                         addLipSyncObjects(layer, photogram, k->zLevel);
+                         addLipSyncObjects(layer, photogram, zLevel);
                      }
                  }
              }
          }
     }
 
-    if (k->tool)
-        k->tool->updateScene(this);
+    if (gTool)
+        gTool->updateScene(this);
 }
 
 void TupGraphicsScene::drawSceneBackground(int photogram)
@@ -323,11 +276,11 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
         #endif
     #endif
 
-    Q_CHECK_PTR(k->scene);
+    Q_CHECK_PTR(gScene);
 
-    if (!k->scene) {
+    if (!gScene) {
         #ifdef TUP_DEBUG
-            QString msg = "TupGraphicsScene::drawSceneBackground() - Warning: k->scene is NULL!";
+            QString msg = "TupGraphicsScene::drawSceneBackground() - Warning: gScene is NULL!";
             #ifdef Q_OS_WIN
                 qWarning() << msg;
             #else
@@ -337,13 +290,13 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
         return;
     }
 
-    TupBackground *bg = k->scene->background();
+    TupBackground *bg = gScene->background();
     if (bg) {
-        if (k->spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+        if (spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION) {
             if (!bg->dynamicBgIsEmpty()) {
                 TupFrame *frame = bg->dynamicFrame();
                 if (frame) {
-                    k->zLevel = 0;
+                    zLevel = 0;
                     addFrame(frame, frame->opacity());
                 }
             } else {
@@ -363,12 +316,12 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
                     bg->renderDynamicView();
 
                 QPixmap pixmap = bg->dynamicView(photogram);
-                k->dynamicBg = new QGraphicsPixmapItem(pixmap);
-                k->dynamicBg->setZValue(0);
+                dynamicBg = new QGraphicsPixmapItem(pixmap);
+                dynamicBg->setZValue(0);
                 TupFrame *frame = bg->dynamicFrame();
                 if (frame) 
-                    k->dynamicBg->setOpacity(frame->opacity());
-                addItem(k->dynamicBg);
+                    dynamicBg->setOpacity(frame->opacity());
+                addItem(dynamicBg);
             } else {
                 #ifdef TUP_DEBUG
                     QString msg = "TupGraphicsScene::drawSceneBackground() - Dynamic background frame is empty";
@@ -384,7 +337,7 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
         if (!bg->staticBgIsEmpty()) {
             TupFrame *frame = bg->staticFrame();
             if (frame) {
-                k->zLevel = ZLAYER_LIMIT;
+                zLevel = ZLAYER_LIMIT;
                 addFrame(frame, frame->opacity());
             }
             return;
@@ -401,7 +354,7 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
     }
 }
 
-void TupGraphicsScene::addFrame(TupFrame *frame, double opacity, Context mode)
+void TupGraphicsScene::addFrame(TupFrame *frame, double opacityFactor, Context mode)
 {
     /*
     #ifdef TUP_DEBUG
@@ -425,13 +378,13 @@ void TupGraphicsScene::addFrame(TupFrame *frame, double opacity, Context mode)
 
     if (objectsCount > 0 && svgCount == 0) {
         foreach (TupGraphicObject *object, objects)
-                 processNativeObject(object, frameType, opacity, mode);
+                 processNativeObject(object, frameType, opacityFactor, mode);
         return;
     }
 
     if (svgCount > 0 && objectsCount == 0) {
         foreach (TupSvgItem *svg, svgItems)
-                 processSVGObject(svg, frameType, opacity, mode);
+                 processSVGObject(svg, frameType, opacityFactor, mode);
         return;
     }
 
@@ -441,47 +394,50 @@ void TupGraphicsScene::addFrame(TupFrame *frame, double opacity, Context mode)
 
         if (objectZValue < svgZValue) {
             TupGraphicObject *object = objects.takeFirst();
-            processNativeObject(object, frameType, opacity, mode);
+            processNativeObject(object, frameType, opacityFactor, mode);
         } else {  
             TupSvgItem *svg = svgItems.takeFirst();
-            processSVGObject(svg, frameType, opacity, mode);
+            processSVGObject(svg, frameType, opacityFactor, mode);
         }
 
         if (objects.isEmpty()) {
             foreach (TupSvgItem *svg, svgItems)
-                processSVGObject(svg, frameType, opacity, mode);
+                processSVGObject(svg, frameType, opacityFactor, mode);
             return;
         } else {
             if (svgItems.isEmpty()) {
                 foreach (TupGraphicObject *object, objects)
-                    processNativeObject(object, frameType, opacity, mode);
+                    processNativeObject(object, frameType, opacityFactor, mode);
                 return;
             }
         }
     } while (true);
 }
 
-void TupGraphicsScene::processNativeObject(TupGraphicObject *object, TupFrame::FrameType frameType, double opacity, Context mode)
+void TupGraphicsScene::processNativeObject(TupGraphicObject *object, TupFrame::FrameType frameType,
+                                           double opacityFactor, Context mode)
 {
     if (mode != TupGraphicsScene::Current) {
         if (!object->hasTween())
-            addGraphicObject(object, frameType, opacity);
+            addGraphicObject(object, frameType, opacityFactor);
     } else {
-        addGraphicObject(object, frameType,  opacity);
+        addGraphicObject(object, frameType,  opacityFactor);
     }
 }
 
-void TupGraphicsScene::processSVGObject(TupSvgItem *svg, TupFrame::FrameType frameType, double opacity, Context mode)
+void TupGraphicsScene::processSVGObject(TupSvgItem *svg, TupFrame::FrameType frameType,
+                                        double opacityFactor, Context mode)
 {
     if (mode != TupGraphicsScene::Current) {
         if (!svg->hasTween())
-            addSvgObject(svg, frameType, opacity);
+            addSvgObject(svg, frameType, opacityFactor);
     } else {
-        addSvgObject(svg, frameType, opacity);
+        addSvgObject(svg, frameType, opacityFactor);
     }
 }
 
-void TupGraphicsScene::addGraphicObject(TupGraphicObject *object, TupFrame::FrameType frameType, double opacity, bool tweenInAdvance)
+void TupGraphicsScene::addGraphicObject(TupGraphicObject *object, TupFrame::FrameType frameType,
+                                        double opacityFactor, bool tweenInAdvance)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -506,15 +462,15 @@ void TupGraphicsScene::addGraphicObject(TupGraphicObject *object, TupFrame::Fram
         */
 
         if (frameType == TupFrame::Regular) {
-            if (k->framePosition.layer == k->layerOnProcess && k->framePosition.frame == k->frameOnProcess)
-                k->onionSkin.accessMap.insert(item, true);
+            if (framePosition.layer == layerOnProcess && framePosition.frame == frameOnProcess)
+                onionSkin.accessMap.insert(item, true);
             else
-                k->onionSkin.accessMap.insert(item, false);
+                onionSkin.accessMap.insert(item, false);
         } else {
-            if (k->spaceContext == TupProject::STATIC_BACKGROUND_EDITION || k->spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION)
-                k->onionSkin.accessMap.insert(item, true);
+            if (spaceContext == TupProject::STATIC_BACKGROUND_EDITION || spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION)
+                onionSkin.accessMap.insert(item, true);
             else
-                k->onionSkin.accessMap.insert(item, false);
+                onionSkin.accessMap.insert(item, false);
         }
 
         if (TupItemGroup *group = qgraphicsitem_cast<TupItemGroup *>(item))
@@ -522,20 +478,21 @@ void TupGraphicsScene::addGraphicObject(TupGraphicObject *object, TupFrame::Fram
 
         item->setSelected(false);
         if (frameType == TupFrame::Regular)
-            item->setOpacity(opacity * k->layerOnProcessOpacity);
+            item->setOpacity(opacityFactor * layerOnProcessOpacity);
         else
-            item->setOpacity(opacity);
+            item->setOpacity(opacityFactor);
 
         if (!object->hasTween() || !tweenInAdvance) {
-            item->setZValue(k->zLevel);
-            k->zLevel++;
+            item->setZValue(zLevel);
+            zLevel++;
         }
 
         addItem(item);
     }
 }
 
-void TupGraphicsScene::addSvgObject(TupSvgItem *svgItem, TupFrame::FrameType frameType, double opacity, bool tweenInAdvance)
+void TupGraphicsScene::addSvgObject(TupSvgItem *svgItem, TupFrame::FrameType frameType,
+                                    double opacityFactor, bool tweenInAdvance)
 {
     /*
     #ifdef TUP_DEBUG
@@ -550,33 +507,33 @@ void TupGraphicsScene::addSvgObject(TupSvgItem *svgItem, TupFrame::FrameType fra
     if (svgItem) {
         svgItem->setSelected(false);
         if (frameType == TupFrame::Regular) {
-            if (k->framePosition.layer == k->layerOnProcess && k->framePosition.frame == k->frameOnProcess)
-                k->onionSkin.accessMap.insert(svgItem, true);
+            if (framePosition.layer == layerOnProcess && framePosition.frame == frameOnProcess)
+                onionSkin.accessMap.insert(svgItem, true);
             else
-                k->onionSkin.accessMap.insert(svgItem, false);
+                onionSkin.accessMap.insert(svgItem, false);
         } else {
-            if (k->spaceContext == TupProject::STATIC_BACKGROUND_EDITION || k->spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION)
-                k->onionSkin.accessMap.insert(svgItem, true);
+            if (spaceContext == TupProject::STATIC_BACKGROUND_EDITION || spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION)
+                onionSkin.accessMap.insert(svgItem, true);
             else
-                k->onionSkin.accessMap.insert(svgItem, false);
+                onionSkin.accessMap.insert(svgItem, false);
         }
 
-        TupLayer *layer = k->scene->layerAt(k->framePosition.layer);
+        TupLayer *layer = gScene->layerAt(framePosition.layer);
         if (layer) {
-            TupFrame *frame = layer->frameAt(k->framePosition.frame);
+            TupFrame *frame = layer->frameAt(framePosition.frame);
             if (frame) {
                 if (frameType == TupFrame::Regular)
-                    svgItem->setOpacity(opacity * k->layerOnProcessOpacity);
+                    svgItem->setOpacity(opacityFactor * layerOnProcessOpacity);
                 else
-                    svgItem->setOpacity(opacity);
+                    svgItem->setOpacity(opacityFactor);
 
                 // SQA: Experimental code related to interactive features
                 // if (svgItem->symbolName().compare("dollar.svg")==0)
                 //     connect(svgItem, SIGNAL(enabledChanged()), this, SIGNAL(showInfoWidget()));
 
                 if (!svgItem->hasTween() || !tweenInAdvance) {
-                    svgItem->setZValue(k->zLevel);
-                    k->zLevel++;
+                    svgItem->setZValue(zLevel);
+                    zLevel++;
                 }
 
                 // SQA: Pending to implement SVG group support
@@ -584,7 +541,7 @@ void TupGraphicsScene::addSvgObject(TupSvgItem *svgItem, TupFrame::FrameType fra
                 addItem(svgItem);
             } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupGraphicsScene::addSvgObject() - Error: Frame #" + QString::number(k->framePosition.frame) + " NO available!";
+                    QString msg = "TupGraphicsScene::addSvgObject() - Error: Frame #" + QString::number(framePosition.frame) + " NO available!";
                     #ifdef Q_OS_WIN
                         qDebug() << msg;
                     #else
@@ -594,7 +551,7 @@ void TupGraphicsScene::addSvgObject(TupSvgItem *svgItem, TupFrame::FrameType fra
             }
         } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupGraphicsScene::addSvgObject() - Error: Layer #" + QString::number(k->framePosition.layer) + " NO available!";
+                    QString msg = "TupGraphicsScene::addSvgObject() - Error: Layer #" + QString::number(framePosition.layer) + " NO available!";
                     #ifdef Q_OS_WIN
                         qDebug() << msg;
                     #else
@@ -624,7 +581,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
         #endif
     #endif
 
-    QList<TupGraphicObject *> tweenList = k->scene->tweeningGraphicObjects(layerIndex);
+    QList<TupGraphicObject *> tweenList = gScene->tweeningGraphicObjects(layerIndex);
     int total = tweenList.count();
 
     #ifdef TUP_DEBUG
@@ -867,7 +824,7 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
     #endif
     */
 
-    QList<TupSvgItem *> svgList = k->scene->tweeningSvgObjects(indexLayer);
+    QList<TupSvgItem *> svgList = gScene->tweeningSvgObjects(indexLayer);
 
     for (int i=0; i < svgList.count(); i++) {
          TupSvgItem *object = svgList.at(i);
@@ -971,7 +928,7 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
     }
 }
 
-void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zLevel)
+void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zValue)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -991,7 +948,7 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zLe
 
              if ((photogram >= initFrame) && (photogram <= initFrame + lipSync->framesCount())) {
                  QString name = lipSync->name();
-                 TupLibraryFolder *folder = k->library->getFolder(name);
+                 TupLibraryFolder *folder = library->getFolder(name);
                  if (folder) {
                      QList<TupVoice *> voices = lipSync->voices();
                      int voicesTotal = voices.count();
@@ -1012,7 +969,7 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zLe
                                          int hDelta = item->boundingRect().height()/2;
                                          item->setPos(pos.x()-wDelta, pos.y()-hDelta);
                                          item->setToolTip(tr("lipsync:") + name + ":" + QString::number(j));
-                                         item->setZValue(zLevel);
+                                         item->setZValue(zValue);
                                          addItem(item);
                                      }
                                  } else {
@@ -1047,7 +1004,7 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zLe
                                          int hDelta = item->boundingRect().height()/2;
                                          item->setPos(pos.x()-wDelta, pos.y()-hDelta);
                                          item->setToolTip(tr("lipsync:") + name + ":" + QString::number(j));
-                                         item->setZValue(zLevel);
+                                         item->setZValue(zValue);
                                          addItem(item);
                                      }
                                  } else {
@@ -1099,19 +1056,19 @@ void TupGraphicsScene::cleanWorkSpace()
     #endif
     */
 
-    if (k->dynamicBg) {
-        delete k->dynamicBg;
-        k->dynamicBg = NULL;
+    if (dynamicBg) {
+        delete dynamicBg;
+        dynamicBg = NULL;
     }
 
-    k->onionSkin.accessMap.clear();
+    onionSkin.accessMap.clear();
 
     foreach (QGraphicsItem *item, items()) {
         if (item->scene() == this)
             removeItem(item);
     }
 
-    foreach (TupLineGuide *line, k->lines)
+    foreach (TupLineGuide *line, lines)
         addItem(line);
 }
 
@@ -1127,7 +1084,7 @@ int TupGraphicsScene::currentFrameIndex() const
     #endif
     */
 
-    return k->framePosition.frame;
+    return framePosition.frame;
 }
 
 int TupGraphicsScene::currentLayerIndex() const
@@ -1142,7 +1099,7 @@ int TupGraphicsScene::currentLayerIndex() const
     #endif
     */
 
-    return k->framePosition.layer;
+    return framePosition.layer;
 }
 
 int TupGraphicsScene::currentSceneIndex() const
@@ -1157,7 +1114,7 @@ int TupGraphicsScene::currentSceneIndex() const
     #endif
     */
 
-    if (!k->scene) {
+    if (!gScene) {
         #ifdef TUP_DEBUG
             QString msg = "TupGraphicsScene::currentSceneIndex() - Error: Scene index is -1";
             #ifdef Q_OS_WIN
@@ -1169,7 +1126,7 @@ int TupGraphicsScene::currentSceneIndex() const
         return -1;
     }
 
-    return k->scene->objectIndex();
+    return gScene->objectIndex();
 }
 
 void TupGraphicsScene::setNextOnionSkinCount(int n)
@@ -1184,9 +1141,9 @@ void TupGraphicsScene::setNextOnionSkinCount(int n)
     #endif
     */
 
-    k->onionSkin.next = n;
+    onionSkin.next = n;
 
-    if (k->spaceContext == TupProject::FRAMES_EDITION)
+    if (spaceContext == TupProject::FRAMES_EDITION)
         drawCurrentPhotogram();
 }
 
@@ -1202,9 +1159,9 @@ void TupGraphicsScene::setPreviousOnionSkinCount(int n)
     #endif
     */
 
-    k->onionSkin.previous = n;
+    onionSkin.previous = n;
 
-    if (k->spaceContext == TupProject::FRAMES_EDITION)
+    if (spaceContext == TupProject::FRAMES_EDITION)
         drawCurrentPhotogram();
 }
 
@@ -1220,17 +1177,17 @@ TupFrame *TupGraphicsScene::currentFrame()
     #endif
     */
 
-    if (k->scene) {
-        if (k->scene->layersCount() > 0) {
-            if (k->framePosition.layer < k->scene->layersCount()) {
-                TupLayer *layer = k->scene->layerAt(k->framePosition.layer);
+    if (gScene) {
+        if (gScene->layersCount() > 0) {
+            if (framePosition.layer < gScene->layersCount()) {
+                TupLayer *layer = gScene->layerAt(framePosition.layer);
                 Q_CHECK_PTR(layer);
                 if (layer) {
                     if (!layer->frames().isEmpty())
-                        return layer->frameAt(k->framePosition.frame);
+                        return layer->frameAt(framePosition.frame);
                 } else {
                     #ifdef TUP_DEBUG
-                        QString msg = "TupGraphicsScene::currentFrame - No layer available at -> " + QString::number(k->framePosition.frame); 
+                        QString msg = "TupGraphicsScene::currentFrame - No layer available at -> " + QString::number(framePosition.frame);
                         #ifdef Q_OS_WIN
                             qDebug() << msg;
                         #else
@@ -1239,10 +1196,10 @@ TupFrame *TupGraphicsScene::currentFrame()
                     #endif
                 }
             } else {
-                TupLayer *layer = k->scene->layerAt(k->scene->layersCount() - 1);
+                TupLayer *layer = gScene->layerAt(gScene->layersCount() - 1);
                 if (layer) {
                     if (!layer->frames().isEmpty())
-                        return layer->frameAt(k->framePosition.frame);
+                        return layer->frameAt(framePosition.frame);
                 }
             }
 
@@ -1253,7 +1210,7 @@ TupFrame *TupGraphicsScene::currentFrame()
     return 0;
 }
 
-void TupGraphicsScene::setCurrentScene(TupScene *scene)
+void TupGraphicsScene::setCurrentScene(TupScene *pScene)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -1263,26 +1220,26 @@ void TupGraphicsScene::setCurrentScene(TupScene *scene)
         #endif
     #endif
 
-    Q_CHECK_PTR(scene);
+    Q_CHECK_PTR(pScene);
 
     setCurrentFrame(0, 0);
 
-    if (k->tool)
-        k->tool->aboutToChangeScene(this);
+    if (gTool)
+        gTool->aboutToChangeScene(this);
 
-    qDeleteAll(k->lines);
-    k->lines.clear();
+    qDeleteAll(lines);
+    lines.clear();
 
     cleanWorkSpace();
-    k->scene = scene;
+    gScene = pScene;
 
-    if (k->spaceContext == TupProject::FRAMES_EDITION)
+    if (spaceContext == TupProject::FRAMES_EDITION)
         drawCurrentPhotogram();
     else
-        drawSceneBackground(k->framePosition.frame);
+        drawSceneBackground(framePosition.frame);
 }
 
-TupScene *TupGraphicsScene::scene() const
+TupScene *TupGraphicsScene::currentScene() const
 {
     /*
     #ifdef TUP_DEBUG
@@ -1294,13 +1251,13 @@ TupScene *TupGraphicsScene::scene() const
     #endif
     */
 
-    if (k->scene)
-        return k->scene;
+    if (gScene)
+        return gScene;
     else
         return 0;
 }
 
-void TupGraphicsScene::setTool(TupToolPlugin *tool)
+void TupGraphicsScene::setTool(TupToolPlugin *plugin)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -1310,18 +1267,18 @@ void TupGraphicsScene::setTool(TupToolPlugin *tool)
         #endif
     #endif
 
-    if (k->spaceContext == TupProject::FRAMES_EDITION) {
+    if (spaceContext == TupProject::FRAMES_EDITION) {
         drawCurrentPhotogram();
     } else {
         cleanWorkSpace();
-        drawSceneBackground(k->framePosition.frame);
+        drawSceneBackground(framePosition.frame);
     }
 
-    if (k->tool)
-        k->tool->aboutToChangeTool();
+    if (gTool)
+        gTool->aboutToChangeTool();
 
-    k->tool = tool;
-    k->tool->init(this);
+    gTool = plugin;
+    gTool->init(this);
 }
 
 TupToolPlugin *TupGraphicsScene::currentTool() const
@@ -1336,7 +1293,7 @@ TupToolPlugin *TupGraphicsScene::currentTool() const
     #endif
     */
 
-    return k->tool;
+    return gTool;
 }
 
 void TupGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -1352,26 +1309,26 @@ void TupGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     */
 
     QGraphicsScene::mousePressEvent(event);
-    k->inputInformation->updateFromMouseEvent(event);
-    k->isDrawing = false;
+    inputInformation->updateFromMouseEvent(event);
+    isDrawing = false;
 
     // This condition locks all the tools while workspace is rotated 
     if ((event->buttons() != Qt::LeftButton) || (event->modifiers () != (Qt::ShiftModifier | Qt::ControlModifier))) {
-        if (k->tool) {      
-            if (k->tool->toolType() == TupToolPlugin::Brush && event->isAccepted())
+        if (gTool) {
+            if (gTool->toolType() == TupToolPlugin::Brush && event->isAccepted())
                 return;
 
-            if (k->tool->toolType() == TupToolPlugin::Tweener && event->isAccepted()) {
-                if (k->tool->currentEditMode() == TupToolPlugin::Properties)
+            if (gTool->toolType() == TupToolPlugin::Tweener && event->isAccepted()) {
+                if (gTool->currentEditMode() == TupToolPlugin::Properties)
                     return;
             } 
 
             // If there's no frame... the tool is disabled 
             if (currentFrame()) {
                 if (event->buttons() == Qt::LeftButton) {
-                    k->tool->begin();
-                    k->isDrawing = true;
-                    k->tool->press(k->inputInformation, k->brushManager, this);
+                    gTool->begin();
+                    isDrawing = true;
+                    gTool->press(inputInformation, brushManager, this);
                 } 
             } 
         }
@@ -1393,10 +1350,10 @@ void TupGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     QGraphicsScene::mouseMoveEvent(event);
     mouseMoved(event);
 
-    if (k->tool) {
-        QString tool = k->tool->name();
+    if (gTool) {
+        QString tool = gTool->name();
         if (tool.compare(tr("Line")) == 0 || tool.compare(tr("PolyLine")) == 0)
-            k->tool->updatePos(event->scenePos());
+            gTool->updatePos(event->scenePos());
     }
 }
 
@@ -1412,10 +1369,10 @@ void TupGraphicsScene::mouseMoved(QGraphicsSceneMouseEvent *event)
     #endif
     */
 
-    k->inputInformation->updateFromMouseEvent(event);
+    inputInformation->updateFromMouseEvent(event);
 
-    if (k->tool && k->isDrawing)
-        k->tool->move(k->inputInformation, k->brushManager,  this);
+    if (gTool && isDrawing)
+        gTool->move(inputInformation, brushManager,  this);
 }
 
 void TupGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
@@ -1450,8 +1407,8 @@ void TupGraphicsScene::mouseReleased(QGraphicsSceneMouseEvent *event)
     #endif
     */
 
-    if (k->tool) {
-        if (k->tool->toolType() == TupToolInterface::Brush) {
+    if (gTool) {
+        if (gTool->toolType() == TupToolInterface::Brush) {
             if (event->button() == Qt::RightButton) 
                 return;
         }
@@ -1471,16 +1428,16 @@ void TupGraphicsScene::mouseReleased(QGraphicsSceneMouseEvent *event)
         }
     }
 
-    k->inputInformation->updateFromMouseEvent(event);
+    inputInformation->updateFromMouseEvent(event);
 
-    if (k->isDrawing) {
-        if (k->tool) {
-            k->tool->release(k->inputInformation, k->brushManager, this);
-            k->tool->end();
+    if (isDrawing) {
+        if (gTool) {
+            gTool->release(inputInformation, brushManager, this);
+            gTool->end();
         }
     } 
 
-    k->isDrawing = false;
+    isDrawing = false;
 }
 
 void TupGraphicsScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
@@ -1497,16 +1454,16 @@ void TupGraphicsScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
     QGraphicsScene::mouseDoubleClickEvent(event);
 
-    k->inputInformation->updateFromMouseEvent(event);
+    inputInformation->updateFromMouseEvent(event);
 
-    if (k->tool)
-        k->tool->doubleClick(k->inputInformation, this);
+    if (gTool)
+        gTool->doubleClick(inputInformation, this);
 }
 
 void TupGraphicsScene::keyPressEvent(QKeyEvent *event)
 {
-    if (k->tool) {
-        k->tool->keyPressEvent(event);
+    if (gTool) {
+        gTool->keyPressEvent(event);
         
         if (event->isAccepted())
             return;
@@ -1517,8 +1474,8 @@ void TupGraphicsScene::keyPressEvent(QKeyEvent *event)
 
 void TupGraphicsScene::keyReleaseEvent(QKeyEvent *event)
 {
-    if (k->tool) {
-        k->tool->keyReleaseEvent(event);
+    if (gTool) {
+        gTool->keyReleaseEvent(event);
 
         if (event->isAccepted())
             return;
@@ -1544,7 +1501,7 @@ void TupGraphicsScene::dragEnterEvent(QGraphicsSceneDragDropEvent * event)
     }
 
     if (line)
-        k->lines << line;
+        lines << line;
 }
 
 // TODO: Check this code, not sure whether it does something or it is helping :S
@@ -1553,16 +1510,16 @@ void  TupGraphicsScene::dragLeaveEvent(QGraphicsSceneDragDropEvent * event)
 {
     Q_UNUSED(event);
 
-    removeItem(k->lines.last());
-    delete k->lines.takeLast();
+    removeItem(lines.last());
+    delete lines.takeLast();
 }
 
 // TODO: Check this code, not sure whether it does something or it is helping :S
 
 void TupGraphicsScene::dragMoveEvent(QGraphicsSceneDragDropEvent * event)
 {
-    if (!k->lines.isEmpty())
-        k->lines.last()->setPos(event->scenePos());
+    if (!lines.isEmpty())
+        lines.last()->setPos(event->scenePos());
 }
 
 // TODO: Check this code, not sure whether it does something or it is helping :S
@@ -1571,10 +1528,10 @@ void TupGraphicsScene::dropEvent(QGraphicsSceneDragDropEvent * event)
 {
     Q_UNUSED(event);
 
-    if (k->tool) {
-        if (k->tool->toolType() == TupToolPlugin::ObjectsTool) {
-            k->lines.last()->setEnabledSyncCursor(false);
-            k->lines.last()->setFlag(QGraphicsItem::ItemIsMovable, true);
+    if (gTool) {
+        if (gTool->toolType() == TupToolPlugin::ObjectsTool) {
+            lines.last()->setEnabledSyncCursor(false);
+            lines.last()->setFlag(QGraphicsItem::ItemIsMovable, true);
         }
     }
 }
@@ -1597,8 +1554,8 @@ void TupGraphicsScene::sceneResponse(TupSceneResponse *event)
     #endif
     */
 
-    if (k->tool)
-        k->tool->sceneResponse(event);
+    if (gTool)
+        gTool->sceneResponse(event);
 }
 
 void TupGraphicsScene::layerResponse(TupLayerResponse *event)
@@ -1613,8 +1570,8 @@ void TupGraphicsScene::layerResponse(TupLayerResponse *event)
     #endif
     */
 
-    if (k->tool)
-        k->tool->layerResponse(event);
+    if (gTool)
+        gTool->layerResponse(event);
 }
 
 void TupGraphicsScene::frameResponse(TupFrameResponse *event)
@@ -1629,8 +1586,8 @@ void TupGraphicsScene::frameResponse(TupFrameResponse *event)
     #endif
     */
 
-    if (k->tool)
-        k->tool->frameResponse(event);
+    if (gTool)
+        gTool->frameResponse(event);
 }
 
 void TupGraphicsScene::itemResponse(TupItemResponse *event)
@@ -1645,18 +1602,18 @@ void TupGraphicsScene::itemResponse(TupItemResponse *event)
     #endif
     */
    
-    if (k->tool) 
-        k->tool->itemResponse(event);
+    if (gTool)
+        gTool->itemResponse(event);
 }
 
-bool TupGraphicsScene::isDrawing() const
+bool TupGraphicsScene::userIsDrawing() const
 {
-    return k->isDrawing;
+    return isDrawing;
 }
 
-TupBrushManager *TupGraphicsScene::brushManager() const
+TupBrushManager *TupGraphicsScene::getBrushManager() const
 {
-    return k->brushManager;
+    return brushManager;
 }
 
 void TupGraphicsScene::setSelectionRange()
@@ -1669,13 +1626,13 @@ void TupGraphicsScene::setSelectionRange()
         #endif
     #endif
 
-    if (k->onionSkin.accessMap.empty() || k->tool->toolType() == TupToolInterface::Tweener)
+    if (onionSkin.accessMap.empty() || gTool->toolType() == TupToolInterface::Tweener)
         return;
 
-    QHash<QGraphicsItem *, bool>::iterator it = k->onionSkin.accessMap.begin();
-    QString tool = k->tool->name();
+    QHash<QGraphicsItem *, bool>::iterator it = onionSkin.accessMap.begin();
+    QString tool = gTool->name();
     if (tool.compare(tr("Object Selection")) == 0 || tool.compare(tr("Nodes Selection")) == 0) {
-        while (it != k->onionSkin.accessMap.end()) {
+        while (it != onionSkin.accessMap.end()) {
             if (!it.value() || it.key()->toolTip().length() > 0) {
                 it.key()->setAcceptedMouseButtons(Qt::NoButton);
                 it.key()->setFlag(QGraphicsItem::ItemIsSelectable, false);
@@ -1693,7 +1650,7 @@ void TupGraphicsScene::setSelectionRange()
             ++it;
         }
     } else {
-        while (it != k->onionSkin.accessMap.end()) {
+        while (it != onionSkin.accessMap.end()) {
             it.key()->setAcceptedMouseButtons(Qt::NoButton);
             it.key()->setFlag(QGraphicsItem::ItemIsSelectable, false);
             it.key()->setFlag(QGraphicsItem::ItemIsMovable, false);
@@ -1712,8 +1669,8 @@ void TupGraphicsScene::enableItemsForSelection()
         #endif
     #endif
 
-    QHash<QGraphicsItem *, bool>::iterator it = k->onionSkin.accessMap.begin();
-    while (it != k->onionSkin.accessMap.end()) {
+    QHash<QGraphicsItem *, bool>::iterator it = onionSkin.accessMap.begin();
+    while (it != onionSkin.accessMap.end()) {
            if (it.value() && it.key()->toolTip().length() == 0)
                it.key()->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
            ++it;
@@ -1739,22 +1696,22 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
                 qDebug() << msg;
             #else
                 tError() << msg;
-                tWarning() << "Space Context: " << k->spaceContext;
+                tWarning() << "Space Context: " << spaceContext;
             #endif
         #endif
 
         return;
     }
 
-    if (k->spaceContext == TupProject::FRAMES_EDITION) {
-        TupLayer *layer = k->scene->layerAt(k->framePosition.layer);
+    if (spaceContext == TupProject::FRAMES_EDITION) {
+        TupLayer *layer = gScene->layerAt(framePosition.layer);
         if (layer) {
-            TupFrame *frame = layer->frameAt(k->framePosition.frame);
+            TupFrame *frame = layer->frameAt(framePosition.frame);
             if (frame) {
                 // SQA: The constant 100 assumes than 100 items have been created per frame
-                int zLevel = (k->scene->framesCount()*100) + frame->getTopZLevel();
+                int zValue = (gScene->framesCount()*100) + frame->getTopZLevel();
                 if (isPolyLine) // SQA: Polyline hack
-                    zLevel--;
+                    zValue--;
 
                 qreal opacity = layer->opacity(); 
                 if (opacity >= 0 && opacity <= 1) {
@@ -1770,24 +1727,24 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
                     #endif
                 }
 
-                object->setZValue(zLevel);
+                object->setZValue(zValue);
                 addItem(object);
-                k->zLevel++;
+                zLevel++;
             }
         }
     } else {
-        TupBackground *bg = k->scene->background();
+        TupBackground *bg = gScene->background();
         if (bg) {
             TupFrame *frame = new TupFrame;
-            if (k->spaceContext == TupProject::STATIC_BACKGROUND_EDITION) {
+            if (spaceContext == TupProject::STATIC_BACKGROUND_EDITION) {
                 frame = bg->staticFrame();
-            } else if (k->spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+            } else if (spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION) {
                 frame = bg->dynamicFrame();
             }
 
             if (frame) {
-                int zLevel = frame->getTopZLevel();
-                object->setZValue(zLevel);
+                int zValue = frame->getTopZLevel();
+                object->setZValue(zValue);
                 addItem(object);
             }
         }
@@ -1797,42 +1754,42 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
 void TupGraphicsScene::removeScene()
 {
     cleanWorkSpace();
-    k->scene = 0;
+    gScene = 0;
 }
 
-TupProject::Mode TupGraphicsScene::spaceContext()
+TupProject::Mode TupGraphicsScene::getSpaceContext()
 {
-    return k->spaceContext;
+    return spaceContext;
 }
 
 void TupGraphicsScene::setSpaceMode(TupProject::Mode mode)
 {
-    k->spaceContext = mode;    
+    spaceContext = mode;
 }
 
 void TupGraphicsScene::setOnionFactor(double opacity)
 {
-    k->opacity = opacity;
+    gOpacity = opacity;
 
-    if (k->spaceContext == TupProject::FRAMES_EDITION)
+    if (spaceContext == TupProject::FRAMES_EDITION)
         drawCurrentPhotogram();
 }
 
-double TupGraphicsScene::opacity()
+double TupGraphicsScene::getOpacity()
 {
-    return k->opacity;
+    return gOpacity;
 }
 
-int TupGraphicsScene::framesCount() 
+int TupGraphicsScene::getFramesCount()
 {
-    TupLayer *layer = k->scene->layerAt(k->framePosition.layer);
+    TupLayer *layer = gScene->layerAt(framePosition.layer);
     if (layer)
         return layer->framesCount();
     else
         return -1;
 }
 
-void TupGraphicsScene::setLibrary(TupLibrary *library)
+void TupGraphicsScene::setLibrary(TupLibrary *assets)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -1842,21 +1799,21 @@ void TupGraphicsScene::setLibrary(TupLibrary *library)
         #endif
     #endif
 
-    k->library = library;
+    library = assets;
 }
 
 void TupGraphicsScene::resetCurrentTool() 
 {
-    k->tool->init(this);
+    gTool->init(this);
 }
 
 TupInputDeviceInformation * TupGraphicsScene::inputDeviceInformation()
 {
-    return k->inputInformation;
+    return inputInformation;
 }
 
 void TupGraphicsScene::updateLoadingFlag(bool flag)
 {
-    k->loadingProject = flag;
+    loadingProject = flag;
 }
 

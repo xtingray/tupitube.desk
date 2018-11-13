@@ -300,7 +300,7 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
     #endif
 
     TupGraphicsScene *guiScene = graphicsScene();
-    if (!guiScene->scene()) {
+    if (!guiScene->currentScene()) {
         #ifdef TUP_DEBUG
             QString msg = "TupPaintArea::frameResponse() - Fatal error: No TupScene available!";
             #ifdef Q_OS_WIN
@@ -312,7 +312,7 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
         return;
     }
 
-    if (!guiScene->isDrawing()) {
+    if (!guiScene->userIsDrawing()) {
         switch (response->action()) {
             case TupProjectRequest::PasteSelection:
             case TupProjectRequest::RemoveSelection:
@@ -383,7 +383,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
     #endif
 
     TupGraphicsScene *guiScene = graphicsScene();
-    if (!guiScene->scene())
+    if (!guiScene->currentScene())
         return;
 
     int frameIndex = guiScene->currentFrameIndex();
@@ -488,10 +488,10 @@ void TupPaintArea::sceneResponse(TupSceneResponse *event)
 
     TupGraphicsScene *guiScene = graphicsScene();
 
-    if (!guiScene->scene())
+    if (!guiScene->currentScene())
         return;
 
-    if (!guiScene->isDrawing()) {
+    if (!guiScene->userIsDrawing()) {
         switch(event->action()) {
             case TupProjectRequest::Select:
               {
@@ -562,10 +562,10 @@ void TupPaintArea::itemResponse(TupItemResponse *response)
     #endif
 
     TupGraphicsScene *guiScene = graphicsScene();
-    if (!guiScene->scene())
+    if (!guiScene->currentScene())
         return;
 
-    if (!guiScene->isDrawing()) {
+    if (!guiScene->userIsDrawing()) {
         switch(response->action()) {
             case TupProjectRequest::Transform:
               {
@@ -639,10 +639,10 @@ void TupPaintArea::libraryResponse(TupLibraryResponse *request)
 
     TupGraphicsScene *guiScene = graphicsScene();
 
-    if (!guiScene->scene())
+    if (!guiScene->currentScene())
         return;
 
-    if (!guiScene->isDrawing()) {
+    if (!guiScene->userIsDrawing()) {
         int frameIndex = guiScene->currentFrameIndex();
         switch (request->action()) {
             case TupProjectRequest::InsertSymbolIntoFrame:
@@ -690,7 +690,7 @@ bool TupPaintArea::canPaint() const
 {
     TupGraphicsScene *guiScene = graphicsScene();
 
-    if (guiScene->scene()) {
+    if (guiScene->currentScene()) {
         if (guiScene->currentFrameIndex() >= 0 && guiScene->currentLayerIndex() >= 0) 
             return true;
     }
@@ -744,7 +744,7 @@ void TupPaintArea::deleteItems()
                              itemIndex = currentScene->currentFrame()->indexOf(item);
                          }
                      } else {
-                         TupBackground *bg = currentScene->scene()->background();
+                         TupBackground *bg = currentScene->currentScene()->background();
                          if (bg) {
                              TupFrame *frame;
                              if (spaceMode == TupProject::STATIC_BACKGROUND_EDITION)
@@ -1387,7 +1387,7 @@ void TupPaintArea::goOneFrameBack()
 void TupPaintArea::goOneFrameForward()
 {
     TupGraphicsScene *scene = graphicsScene();
-    int framesCount = scene->framesCount();
+    int framesCount = scene->getFramesCount();
     int frameIndex = scene->currentFrameIndex() + 1;
 
     if (frameIndex == framesCount) {
@@ -1531,7 +1531,7 @@ void TupPaintArea::goOneLayerForward()
     int frameIndex = gScene->currentFrameIndex();
 
     layerIndex++;
-    TupScene *scene = gScene->scene();
+    TupScene *scene = gScene->currentScene();
     if (layerIndex < scene->layersCount())
         goToFrame(frameIndex, layerIndex, sceneIndex);
 }

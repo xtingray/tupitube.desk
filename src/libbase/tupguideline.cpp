@@ -35,16 +35,15 @@
 
 #include "tupguideline.h"
 
-struct TupLineGuide::Private
-{
-    Qt::Orientation orientation;
-    bool enabled;
-};
+#include <QApplication>
+#include <QCursor>
+#include <QGraphicsScene>
+#include <QGraphicsView>
 
-TupLineGuide::TupLineGuide(Qt::Orientation orientation): QGraphicsItem(0), k(new Private)
+TupLineGuide::TupLineGuide(Qt::Orientation direction): QGraphicsItem(0)
 {
-    k->orientation = orientation;
-    k->enabled = true;
+    orientation = direction;
+    enabled = true;
     // setAcceptsHoverEvents(true);
     // setAcceptedMouseButtons(0);
     // setFlag(QGraphicsItem::ItemIsFocusable, false);
@@ -56,7 +55,7 @@ TupLineGuide::~TupLineGuide()
 
 QRectF TupLineGuide::boundingRect() const
 {
-    if (k->orientation == Qt::Vertical)
+    if (orientation == Qt::Vertical)
         return QRectF(QPointF(0,0), QSizeF(5, scene()->height()));
     else
         return QRectF(QPointF(0,0), QSizeF(scene()->width(), 5));
@@ -65,7 +64,7 @@ QRectF TupLineGuide::boundingRect() const
 void TupLineGuide::paint(QPainter * painter, const QStyleOptionGraphicsItem * , QWidget *)
 {
     painter->setPen(QPen(Qt::black, 1, Qt::DashLine));
-    if (k->orientation == Qt::Vertical) {
+    if (orientation == Qt::Vertical) {
         painter->drawLine((int)boundingRect().center().x(), 0, (int)boundingRect().center().x(), 
                                             (int)boundingRect().height());
     } else {
@@ -74,15 +73,15 @@ void TupLineGuide::paint(QPainter * painter, const QStyleOptionGraphicsItem * , 
     }
 }
 
-void TupLineGuide::setEnabledSyncCursor(bool enabled)
+void TupLineGuide::setEnabledSyncCursor(bool flag)
 {
-    k->enabled = enabled;
+    enabled = flag;
 }
 
 QVariant TupLineGuide::itemChange(GraphicsItemChange change, const QVariant & value)
 {
     if (change == ItemPositionChange) {
-        if (k->orientation == Qt::Vertical)
+        if (orientation == Qt::Vertical)
             return QPointF(value.toPointF().x(), 0);
         else
             return QPointF(0, value.toPointF().y());
@@ -108,15 +107,15 @@ void TupLineGuide::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
  }
 */
 
-void TupLineGuide::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
+void TupLineGuide::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (k->enabled)
+    if (enabled)
         syncCursor();
     else
-        setPos(e->scenePos());
+        setPos(event->scenePos());
 }
 
-bool TupLineGuide::sceneEvent(QEvent *e)
+bool TupLineGuide::sceneEvent(QEvent *event)
 {
 /*
      switch(e->type())
@@ -139,7 +138,7 @@ bool TupLineGuide::sceneEvent(QEvent *e)
      }
 */
     
-    return QGraphicsItem::sceneEvent(e);
+    return QGraphicsItem::sceneEvent(event);
 }
 
 void TupLineGuide::syncCursor()
@@ -147,19 +146,19 @@ void TupLineGuide::syncCursor()
     QPointF globalPos;
     if (scene()) {
         foreach (QGraphicsView *view, scene()->views())
-                 globalPos = view->viewport()->mapToGlobal(scenePos().toPoint() + view->mapFromScene(QPointF(0,0))) ;
+            globalPos = view->viewport()->mapToGlobal(scenePos().toPoint() + view->mapFromScene(QPointF(0, 0))) ;
     }
     
     double distance;
-    if (k->orientation == Qt::Vertical)
-        distance = globalPos.x()+ 2 - QCursor::pos().x();
+    if (orientation == Qt::Vertical)
+        distance = globalPos.x() + 2 - QCursor::pos().x();
     else
         distance = globalPos.y() + 2 - QCursor::pos().y();
     
     if (-QApplication::startDragDistance() < distance && distance < QApplication::startDragDistance()) {
-        if (k->orientation == Qt::Vertical)
-            QCursor::setPos((int)globalPos.x()+2, (int)QCursor::pos().y());
+        if (orientation == Qt::Vertical)
+            QCursor::setPos((int)globalPos.x() + 2, (int)QCursor::pos().y());
         else
-            QCursor::setPos((int)QCursor::pos().x(), (int)globalPos.y()+2);
+            QCursor::setPos((int)QCursor::pos().x(), (int)globalPos.y() + 2);
     }
 }

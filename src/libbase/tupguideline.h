@@ -39,12 +39,8 @@
 #include "tglobal.h"
 
 #include <QGraphicsItem>
-#include <QGraphicsScene>
 #include <QPainter>
-#include <QCursor>
 #include <QGraphicsSceneMouseEvent>
-#include <QGraphicsView>
-#include <QApplication>
 
 class TUPITUBE_EXPORT TupLineGuide : public QGraphicsItem
 {
@@ -54,21 +50,19 @@ class TUPITUBE_EXPORT TupLineGuide : public QGraphicsItem
         
         QRectF boundingRect() const;
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
-        
         void setEnabledSyncCursor(bool enabled);
         
     protected:
-        QVariant itemChange(GraphicsItemChange change, const QVariant & value);
-        
+        QVariant itemChange(GraphicsItemChange change, const QVariant &value);
         // void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
-        void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
-        
-        bool sceneEvent(QEvent *e);
-        
+        void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+        bool sceneEvent(QEvent *event);
+
     private:
-        struct Private;
-        Private * const k;
         void syncCursor();
+
+        Qt::Orientation orientation;
+        bool enabled;
 };
 
 #endif

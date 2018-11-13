@@ -64,6 +64,6 @@ class TUPITUBE_EXPORT AFilterInterface
         virtual QHash<QString, TAction *>actions() = 0;
 };
 
-Q_DECLARE_INTERFACE(AFilterInterface, "com.maefloresta.tupi.AFilterInterface/0.1");
+Q_DECLARE_INTERFACE(AFilterInterface, "com.maefloresta.tupi.AFilterInterface/0.1")
 
 #endif

@@ -105,7 +105,7 @@ void Tweener::init(TupGraphicsScene *scene)
     k->pathAdded = false;
     delete k->group;
     k->group = 0;
-    k->baseZValue = (2*ZLAYER_LIMIT) + (scene->scene()->layersCount() * ZLAYER_LIMIT);
+    k->baseZValue = (2*ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
 
     k->scene = scene;
     k->objects.clear();
@@ -119,7 +119,7 @@ void Tweener::init(TupGraphicsScene *scene)
 
     k->configurator->resetUI();
 
-    QList<QString> tweenList = k->scene->scene()->getTweenNames(TupItemTweener::Composed);
+    QList<QString> tweenList = k->scene->currentScene()->getTweenNames(TupItemTweener::Composed);
     if (tweenList.size() > 0) {
         k->configurator->loadTweenList(tweenList);
         setCurrentTween(tweenList.at(0));
@@ -490,7 +490,7 @@ void Tweener::applyTween()
         tFatal() << "Tweener::applyTween() - Tween " << name << " is NOT NEW!!!";
     */
   
-    if (!k->scene->scene()->tweenExists(name, TupItemTweener::Composed)) {
+    if (!k->scene->currentScene()->tweenExists(name, TupItemTweener::Composed)) {
         foreach (QGraphicsItem *item, k->objects) {   
                  TupLibraryObject::Type type = TupLibraryObject::Item;
                  int objectIndex = k->scene->currentFrame()->indexOf(item); 
@@ -517,7 +517,7 @@ void Tweener::applyTween()
                                             k->scene->currentLayerIndex(),
                                             k->startPoint,
                                             objectIndex,
-                                            QPointF(), k->scene->spaceContext(), 
+                                            QPointF(), k->scene->getSpaceContext(), 
                                             type, TupProjectRequest::SetTween, 
                                             k->configurator->tweenToXml(k->startPoint, point));
                  emit requested(&request);
@@ -546,7 +546,7 @@ void Tweener::applyTween()
         foreach (QGraphicsItem *item, k->objects) {
 
                  TupLibraryObject::Type type = TupLibraryObject::Item;
-                 TupScene *scene = k->scene->scene();
+                 TupScene *scene = k->scene->currentScene();
                  TupLayer *layer = scene->layerAt(k->scene->currentLayerIndex());
                  TupFrame *frame = layer->frameAt(k->currentTween->initFrame());
                  int objectIndex = frame->indexOf(item);
@@ -576,7 +576,7 @@ void Tweener::applyTween()
                      TupProjectRequest request = TupRequestBuilder::createItemRequest(k->scene->currentSceneIndex(), 
                                                                                     k->scene->currentLayerIndex(), 
                                                                                     k->startPoint, -1, 
-                                                                                    QPointF(), k->scene->spaceContext(),
+                                                                                    QPointF(), k->scene->getSpaceContext(),
                                                                                     type, TupProjectRequest::Add, 
                                                                                     dom.toString());
                      emit requested(&request);
@@ -585,7 +585,7 @@ void Tweener::applyTween()
                                                                    k->scene->currentLayerIndex(),
                                                                    k->currentTween->initFrame(),
                                                                    objectIndex, QPointF(), 
-                                                                   k->scene->spaceContext(), type,
+                                                                   k->scene->getSpaceContext(), type,
                                                                    TupProjectRequest::Remove);
                      emit requested(&request);
 
@@ -603,7 +603,7 @@ void Tweener::applyTween()
                                             k->scene->currentLayerIndex(),
                                             k->startPoint,
                                             objectIndex,
-                                            QPointF(), k->scene->spaceContext(), 
+                                            QPointF(), k->scene->getSpaceContext(), 
                                             type, TupProjectRequest::SetTween,
                                             k->configurator->tweenToXml(k->startPoint, point));
                  emit requested(&request);
@@ -749,7 +749,7 @@ int Tweener::maxZValue()
 
 void Tweener::removeTweenFromProject(const QString &name)
 {
-    TupScene *scene = k->scene->scene();
+    TupScene *scene = k->scene->currentScene();
     bool removed = scene->removeTween(name, TupItemTweener::Composed);
 
     if (removed) {
@@ -782,7 +782,7 @@ void Tweener::setCurrentTween(const QString &name)
 {
     // tFatal() << "Tweener::setCurrentTween(Tweener::setCurrentTween() - Updating tweener: " << name;
 
-    TupScene *scene = k->scene->scene();
+    TupScene *scene = k->scene->currentScene();
     k->currentTween = scene->tween(name, TupItemTweener::Composed);
     if (k->currentTween) {
         k->configurator->setCurrentTween(k->currentTween);
@@ -803,7 +803,7 @@ void Tweener::setEditEnv()
 
     k->mode = TweenerPanel::Edit;
 
-    TupScene *scene = k->scene->scene();
+    TupScene *scene = k->scene->currentScene();
     k->objects = scene->getItemsFromTween(k->currentTween->name(), TupItemTweener::Composed);
     QGraphicsItem *item = k->objects.at(0);
     QRectF rect = item->sceneBoundingRect();
@@ -838,7 +838,7 @@ void Tweener::setEditEnv()
 int Tweener::framesCount()
 {
     int total = 1;
-    TupLayer *layer = k->scene->scene()->layerAt(k->scene->currentLayerIndex());
+    TupLayer *layer = k->scene->currentScene()->layerAt(k->scene->currentLayerIndex());
     if (layer)
         total = layer->framesCount();
 

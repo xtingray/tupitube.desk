@@ -45,10 +45,6 @@
 #include <QSize>
 #include <QPainter>
 
-// class QPainter;
-// class TupScene;
-// class TupLibrary;
-
 class TUPITUBE_EXPORT TupAnimationRenderer
 {
     public:

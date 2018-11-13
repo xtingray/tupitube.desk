@@ -104,14 +104,14 @@ void Tweener::init(TupGraphicsScene *scene)
 
     k->mode = TupToolPlugin::View;
     k->editMode = TupToolPlugin::None;
-    k->baseZValue = (2*ZLAYER_LIMIT) + (scene->scene()->layersCount() * ZLAYER_LIMIT);
+    k->baseZValue = (2*ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
     k->initFrame = k->scene->currentFrameIndex();
     k->initLayer = k->scene->currentLayerIndex();
     k->initScene = k->scene->currentSceneIndex();
 
     k->configurator->resetUI();
 
-    QList<QString> tweenList = k->scene->scene()->getTweenNames(TupItemTweener::Rotation);
+    QList<QString> tweenList = k->scene->currentScene()->getTweenNames(TupItemTweener::Rotation);
     if (tweenList.size() > 0) {
         k->configurator->loadTweenList(tweenList);
         QString tweenName = tweenList.at(0);
@@ -319,7 +319,7 @@ void Tweener::updateScene(TupGraphicsScene *scene)
 
 void Tweener::setCurrentTween(const QString &name)
 {
-    TupScene *scene = k->scene->scene();
+    TupScene *scene = k->scene->currentScene();
     k->currentTween = scene->tween(name, TupItemTweener::Rotation);
 
     if (k->currentTween)
@@ -329,7 +329,7 @@ void Tweener::setCurrentTween(const QString &name)
 int Tweener::framesCount()
 {
     int total = 1;
-    TupLayer *layer = k->scene->scene()->layerAt(k->scene->currentLayerIndex());
+    TupLayer *layer = k->scene->currentScene()->layerAt(k->scene->currentLayerIndex());
     if (layer)
         total = layer->framesCount();
 
@@ -438,7 +438,7 @@ void Tweener::applyTween()
         return;
     }
 
-    if (!k->scene->scene()->tweenExists(name, TupItemTweener::Rotation)) {
+    if (!k->scene->currentScene()->tweenExists(name, TupItemTweener::Rotation)) {
         k->initFrame = k->scene->currentFrameIndex();
         k->initLayer = k->scene->currentLayerIndex();
         k->initScene = k->scene->currentSceneIndex();
@@ -459,7 +459,7 @@ void Tweener::applyTween()
 
                  TupProjectRequest request = TupRequestBuilder::createItemRequest(
                                              k->initScene, k->initLayer, k->initFrame,
-                                             objectIndex, QPointF(), k->scene->spaceContext(), type,
+                                             objectIndex, QPointF(), k->scene->getSpaceContext(), type,
                                              TupProjectRequest::SetTween,
                                              k->configurator->tweenToXml(k->initScene, k->initLayer, k->initFrame, origin));
                  emit requested(&request);
@@ -478,7 +478,7 @@ void Tweener::applyTween()
                  // TupProject *project = k->scene->scene()->project();
                  // TupScene *scene = project->scene(k->initScene);
 
-                 TupScene *scene = k->scene->scene();
+                 TupScene *scene = k->scene->currentScene();
                  TupLayer *layer = scene->layerAt(k->initLayer);
                  TupFrame *frame = layer->frameAt(k->currentTween->initFrame());
                  int objectIndex = -1;
@@ -502,13 +502,13 @@ void Tweener::applyTween()
                          dom.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(dom));
 
                      TupProjectRequest request = TupRequestBuilder::createItemRequest(k->initScene, k->initLayer, k->initFrame, 
-                                                                                      0, QPointF(), k->scene->spaceContext(), 
+                                                                                      0, QPointF(), k->scene->getSpaceContext(), 
                                                                                       type, TupProjectRequest::Add, dom.toString());
                      emit requested(&request);
 
                      request = TupRequestBuilder::createItemRequest(k->initScene, k->initLayer,
                                                                     k->currentTween->initFrame(),
-                                                                    objectIndex, QPointF(), k->scene->spaceContext(),
+                                                                    objectIndex, QPointF(), k->scene->getSpaceContext(),
                                                                     type, TupProjectRequest::Remove);
                      emit requested(&request);
 
@@ -524,7 +524,7 @@ void Tweener::applyTween()
 
                  TupProjectRequest request = TupRequestBuilder::createItemRequest(
                                              k->initScene, k->initLayer, k->initFrame,
-                                             objectIndex, QPointF(), k->scene->spaceContext(), 
+                                             objectIndex, QPointF(), k->scene->getSpaceContext(), 
                                              type, TupProjectRequest::SetTween,
                                              k->configurator->tweenToXml(k->initScene, k->initLayer, k->initFrame, origin));
                  emit requested(&request);
@@ -536,7 +536,7 @@ void Tweener::applyTween()
 
     int total = k->initFrame + k->configurator->totalSteps();
     int framesNumber = framesCount();
-    int layersCount = k->scene->scene()->layersCount();
+    int layersCount = k->scene->currentScene()->layersCount();
     TupProjectRequest request;
 
     if (total >= framesNumber) {
@@ -563,7 +563,7 @@ void Tweener::applyTween()
 
 void Tweener::removeTweenFromProject(const QString &name)
 {
-    TupScene *scene = k->scene->scene();
+    TupScene *scene = k->scene->currentScene();
     bool removed = scene->removeTween(name, TupItemTweener::Rotation);
 
     if (removed) {
@@ -658,7 +658,7 @@ void Tweener::updateMode(TupToolPlugin::Mode mode)
             }
 
             if (k->objects.isEmpty()) {
-                k->objects = k->scene->scene()->getItemsFromTween(k->currentTween->name(), TupItemTweener::Rotation);
+                k->objects = k->scene->currentScene()->getItemsFromTween(k->currentTween->name(), TupItemTweener::Rotation);
                 k->origin = k->currentTween->transformOriginPoint();
             }
         } else {
