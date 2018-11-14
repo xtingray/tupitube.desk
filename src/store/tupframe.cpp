@@ -1708,6 +1708,14 @@ void TupFrame::checkBrushStatus(int itemIndex)
 
 void TupFrame::setBrushAtItem(int itemIndex, const QString &xml)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupFrame::setBrushAtItem()]";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+
     TupGraphicObject *object = k->graphics.at(itemIndex);
     object->setBrush(xml);
 }

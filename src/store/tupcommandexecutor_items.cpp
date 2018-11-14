@@ -1272,7 +1272,7 @@ bool TupCommandExecutor::setBrush(TupItemResponse *response)
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-                           frame = bg->dynamicFrame();
+                    frame = bg->dynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
                         QString msg = "TupCommandExecutor::setBrush() - Error: Invalid mode!";
@@ -1286,7 +1286,7 @@ bool TupCommandExecutor::setBrush(TupItemResponse *response)
                 }
 
                 if (frame) {
-                    TupPathItem *item = qgraphicsitem_cast<TupPathItem *>(frame->item(itemIndex));
+                    QGraphicsItem *item = frame->item(itemIndex);
                     if (item) {
                         if (response->mode() == TupProjectResponse::Do)
                             frame->setBrushAtItem(itemIndex, xml);
@@ -1386,7 +1386,7 @@ bool TupCommandExecutor::setPen(TupItemResponse *response)
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-                           frame = bg->dynamicFrame();
+                    frame = bg->dynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
                         QString msg = "TupCommandExecutor::setPen() - Error: Invalid mode!";
@@ -1400,7 +1400,7 @@ bool TupCommandExecutor::setPen(TupItemResponse *response)
                 }
 
                 if (frame) {
-                    TupPathItem *item = qgraphicsitem_cast<TupPathItem *>(frame->item(itemIndex));
+                    QGraphicsItem *item = frame->item(itemIndex);
                     if (item) {
                         if (response->mode() == TupProjectResponse::Do)
                             frame->setPenAtItem(itemIndex, xml);

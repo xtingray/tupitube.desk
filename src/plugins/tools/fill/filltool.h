@@ -89,7 +89,7 @@ class TUPITUBE_PLUGIN FillTool : public TupToolPlugin
         virtual void keyPressEvent(QKeyEvent *event);
         virtual QCursor cursor() const;
 
-        void setColorMode(TColorCell::FillType mode);
+        void setColorMode(TColorCell::FillType colorMode);
 
     signals:
         void closeHugeCanvas();
@@ -99,14 +99,11 @@ class TUPITUBE_PLUGIN FillTool : public TupToolPlugin
         void setupActions();
 
     private:
-        struct Private;
-        Private *const k;
- 
-    /*       
-    private:
-        QMap<QString, TAction *> m_actions;
-        TupGraphicsScene *m_scene;
-    */
+        QMap<QString, TAction *> fillActions;
+        TupGraphicsScene *gScene;
+        QCursor insideCursor;
+        QCursor contourCursor;
+        TColorCell::FillType mode;
 };
 
 #endif
