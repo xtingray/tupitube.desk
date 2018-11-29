@@ -105,16 +105,17 @@ class TUPITUBE_EXPORT TupProjectRequest
             CopySelection = 25,
             Paste = 26,
             PasteSelection = 27,
+            ReverseSelection = 28,
 
             // scenes
-            GetInfo = 28, 
-            BgColor = 29,
+            GetInfo = 29,
+            BgColor = 30,
 
             // layer
-            AddLipSync = 30,
-            UpdateLipSync = 31,
-            RemoveLipSync = 32,
-            UpdateOpacity = 33 
+            AddLipSync = 31,
+            UpdateLipSync = 32,
+            RemoveLipSync = 33,
+            UpdateOpacity = 34 
         };
         
         enum Part

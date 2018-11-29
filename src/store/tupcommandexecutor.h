@@ -122,13 +122,14 @@ class TUPITUBE_EXPORT TupCommandExecutor : public QObject
         bool copyFrameSelection(TupFrameResponse *response);
         // bool pasteFrame( TupFrameResponse *response);
         bool pasteFrameSelection(TupFrameResponse *response);
+        bool reverseFrameSelection(TupFrameResponse *response);
         bool resetScene(TupSceneResponse *response);
 
         void setBgColor(TupSceneResponse *response);
-        
+
     signals:
         void responsed(TupProjectResponse *response);
-        
+
     private:
         TupProject *m_project;
         QList<QString> selectionFramesCopy;

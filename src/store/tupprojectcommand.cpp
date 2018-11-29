@@ -110,43 +110,43 @@ TupProjectCommand::TupProjectCommand(TupCommandExecutor *executor, TupProjectRes
 void TupProjectCommand::initText()
 {
     switch (k->response->part()) {
-            case TupProjectRequest::Frame:
-             {
-                 setText(actionString(k->response->action()) + " frame");
-             }
-             break;
-            case TupProjectRequest::Layer:
-             {
-                 setText(actionString(k->response->action()) + " layer");
-             }
-             break;
-            case TupProjectRequest::Scene:
-             {
-                 setText(actionString(k->response->action()) + " scene");
-             }
-            break;
-            case TupProjectRequest::Item:
-             {
-                 setText(actionString(k->response->action()) + " item");
-             }
-            break;
-            case TupProjectRequest::Library:
-             {
-                 setText(actionString(k->response->action()) + " symbol");
-             }
-            break;
-            default:
-             {				  
-                 #ifdef TUP_DEBUG
-                     QString msg = "TProjectCommand::initText() - Error: can't handle ID: " + QString::number(k->response->part());
-                     #ifdef Q_OS_WIN
-                         qDebug() << msg;
-                     #else
-                         tError() << msg;
-                     #endif
+        case TupProjectRequest::Frame:
+        {
+            setText(actionString(k->response->action()) + " frame");
+        }
+        break;
+        case TupProjectRequest::Layer:
+        {
+            setText(actionString(k->response->action()) + " layer");
+        }
+        break;
+        case TupProjectRequest::Scene:
+        {
+            setText(actionString(k->response->action()) + " scene");
+        }
+        break;
+        case TupProjectRequest::Item:
+        {
+            setText(actionString(k->response->action()) + " item");
+        }
+        break;
+        case TupProjectRequest::Library:
+        {
+            setText(actionString(k->response->action()) + " symbol");
+        }
+        break;
+        default:
+        {				  
+            #ifdef TUP_DEBUG
+                QString msg = "TProjectCommand::initText() - Error: can't handle ID: " + QString::number(k->response->part());
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError() << msg;
                 #endif
-             }
-            break;
+            #endif
+        }
+        break;
     }
 }
 
@@ -167,6 +167,11 @@ QString TupProjectCommand::actionString(int action)
         case TupProjectRequest::Move:
         {
             return QObject::tr("move");
+        }
+        break;
+        case TupProjectRequest::ReverseSelection:
+        {
+            return QObject::tr("reverse");
         }
         break;
         case TupProjectRequest::Lock:
@@ -403,6 +408,11 @@ void TupProjectCommand::frameCommand()
             case TupProjectRequest::Move:
             {
                  k->executor->moveFrame(response);
+            }
+            break;
+            case TupProjectRequest::ReverseSelection:
+            {
+                 k->executor->reverseFrameSelection(response);
             }
             break;
             /*

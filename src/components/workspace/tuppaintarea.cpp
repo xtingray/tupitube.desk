@@ -316,6 +316,7 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
         switch (response->action()) {
             case TupProjectRequest::PasteSelection:
             case TupProjectRequest::RemoveSelection:
+            case TupProjectRequest::ReverseSelection:
             case TupProjectRequest::Exchange:
               {
                   if (spaceMode == TupProject::FRAMES_EDITION)

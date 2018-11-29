@@ -625,3 +625,59 @@ bool TupCommandExecutor::pasteFrameSelection(TupFrameResponse *response)
 
     return false;
 }
+
+bool TupCommandExecutor::reverseFrameSelection(TupFrameResponse *response)
+{
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupCommandExecutor::reverseFrameSelection()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
+    selectionFramesCopy.clear();
+    int sceneIndex = response->sceneIndex();
+    QString selection = response->arg().toString();
+    QStringList params = selection.split(",");
+
+    if (params.count() == 4) {
+        TupScene *scene = m_project->sceneAt(sceneIndex);
+        if (scene) {
+            int initLayer = params.at(0).toInt();
+            int endLayer = params.at(1).toInt();
+            int initFrame = params.at(2).toInt();
+            int endFrame = params.at(3).toInt();
+            int iterations = (endFrame - initFrame) / 2;
+
+            for (int i=initLayer; i<=endLayer; i++) {
+                 TupLayer *layer = scene->layerAt(i);
+                 if (layer) {
+                     int indexA = initFrame;
+                     int indexB = endFrame;
+                     for (int j=0; j<iterations; j++) {
+                         if (!layer->exchangeFrame(indexA, indexB)) {
+                             #ifdef TUP_DEBUG
+                                 QString msg = "TupCommandExecutor::reverseFrameSelection() - Fatal error while exchanging frames!";
+                                 #ifdef Q_OS_WIN
+                                     qDebug() << msg;
+                                 #else
+                                     tError() << msg;
+                                 #endif
+                             #endif
+                             return false;
+                         }
+                         indexA++;
+                         indexB--;
+                     }
+                 } else {
+                     return false;
+                 }
+            }
+            emit responsed(response);
+            return true;
+        }
+    }
+
+    return false;
+}

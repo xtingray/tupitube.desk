@@ -2986,9 +2986,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.3643883"
-     inkscape:cx="623.71179"
-     inkscape:cy="619.24906"
+     inkscape:zoom="0.59109708"
+     inkscape:cx="141.33476"
+     inkscape:cy="572.64312"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -3130,7 +3130,7 @@
     </g>
     <g
        id="g9837"
-       transform="translate(19.057125,-254.94308)">
+       transform="translate(19.057125,-238.94597)">
       <g
          transform="matrix(2.9172006,0,0,2.9172006,146.82421,639.15203)"
          id="g4814">
@@ -7060,7 +7060,7 @@
     </g>
     <g
        id="g9843"
-       transform="translate(19.057123,-254.94306)">
+       transform="translate(19.057123,-238.94595)">
       <g
          transform="matrix(2.9172006,0,0,2.9172006,143.68558,630.06286)"
          id="g4810">
@@ -7086,7 +7086,7 @@
     </g>
     <g
        id="g9848"
-       transform="translate(19.057123,-254.94304)">
+       transform="translate(19.057123,-238.94593)">
       <g
          transform="matrix(2.9172006,0,0,2.9172006,135.43448,628.96693)"
          id="g4806">
@@ -7112,7 +7112,7 @@
     </g>
     <g
        id="g9853"
-       transform="translate(19.057128,-254.94301)">
+       transform="translate(19.057128,-238.9459)">
       <g
          transform="matrix(2.9172006,0,0,2.9172006,135.43449,636.12209)"
          id="g4802">
@@ -7138,7 +7138,7 @@
     </g>
     <g
        id="g9858"
-       transform="translate(19.05712,-254.94308)">
+       transform="translate(19.05712,-238.94597)">
       <g
          transform="matrix(2.9172006,0,0,2.9172006,115.10083,639.1518)"
          id="g4794">
@@ -16316,6 +16316,80 @@
          id="rect8098"
          d="m 656.14067,475.57937 11.95124,6.23354 -11.95124,6.23354 z"
          style="opacity:1;fill:#008700;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    </g>
+    <g
+       transform="translate(-262.48476,-115.85608)"
+       id="g8214">
+      <g
+         style="fill:#000000;fill-opacity:1"
+         inkscape:export-ydpi="64.029999"
+         inkscape:export-xdpi="64.029999"
+         transform="matrix(0.74225704,0,0,0.74225704,136.88597,136.4757)"
+         id="g9196-7-0-4">
+        <path
+           style="fill:#008700;fill-opacity:1;stroke:none"
+           d="m 225.42017,707.38195 1.27128,-43.34781 3.83613,-0.0883 0.26582,24.76315 10.93025,-0.24871 z"
+           id="path5233-7-6-2-4"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cccccc"
+           inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/move_frame_down.png"
+           inkscape:export-xdpi="170"
+           inkscape:export-ydpi="170" />
+      </g>
+      <g
+         style="fill:#000000;fill-opacity:1"
+         inkscape:export-ydpi="64.029999"
+         inkscape:export-xdpi="64.029999"
+         transform="matrix(-0.74225704,0,0,-0.74225704,467.61606,1154.3534)"
+         id="g9196-7-0-4-9">
+        <path
+           style="fill:#008700;fill-opacity:1;stroke:none"
+           d="m 225.42017,707.38195 1.27128,-43.34781 3.83613,-0.0883 0.26582,24.76315 10.93025,-0.24871 z"
+           id="path5233-7-6-2-4-6"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cccccc"
+           inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/move_frame_down.png"
+           inkscape:export-xdpi="170"
+           inkscape:export-ydpi="170" />
+      </g>
+    </g>
+    <g
+       transform="matrix(0.02937618,0.99956843,-0.99956843,0.02937618,718.26533,206.59873)"
+       id="g8214-6"
+       inkscape:export-xdpi="123"
+       inkscape:export-ydpi="123">
+      <g
+         style="fill:#000000;fill-opacity:1"
+         inkscape:export-ydpi="64.029999"
+         inkscape:export-xdpi="64.029999"
+         transform="matrix(0.74225704,0,0,0.74225704,136.88597,136.4757)"
+         id="g9196-7-0-4-5">
+        <path
+           style="fill:#008700;fill-opacity:1;stroke:none"
+           d="m 225.42017,707.38195 1.27128,-43.34781 3.83613,-0.0883 0.26582,24.76315 10.93025,-0.24871 z"
+           id="path5233-7-6-2-4-1"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cccccc"
+           inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/move_frame_down.png"
+           inkscape:export-xdpi="170"
+           inkscape:export-ydpi="170" />
+      </g>
+      <g
+         style="fill:#000000;fill-opacity:1"
+         inkscape:export-ydpi="64.029999"
+         inkscape:export-xdpi="64.029999"
+         transform="matrix(-0.74225704,0,0,-0.74225704,467.61606,1154.3534)"
+         id="g9196-7-0-4-9-2">
+        <path
+           style="fill:#008700;fill-opacity:1;stroke:none"
+           d="m 225.42017,707.38195 1.27128,-43.34781 3.83613,-0.0883 0.26582,24.76315 10.93025,-0.24871 z"
+           id="path5233-7-6-2-4-6-2"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cccccc"
+           inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/move_frame_down.png"
+           inkscape:export-xdpi="170"
+           inkscape:export-ydpi="170" />
+      </g>
     </g>
   </g>
 </svg>

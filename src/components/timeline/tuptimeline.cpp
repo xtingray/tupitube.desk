@@ -50,7 +50,7 @@
 
 struct TupTimeLine::Private
 {
-    Private() : scenesContainer(0), actionBar(0), selectedLayer(-1), library(0) {}
+    // Private() : scenesContainer(0), actionBar(0), selectedLayer(-1), library(0) {}
     
     TupSceneContainer *scenesContainer;
     TupTimeLineTable *currentTable;
@@ -84,7 +84,12 @@ TupTimeLine::TupTimeLine(TupProject *project, QWidget *parent) : TupModuleWidget
 
     QList<TupProjectActionBar::Action> actions;
     actions << TupProjectActionBar::InsertFrame << TupProjectActionBar::ExtendFrame << TupProjectActionBar::RemoveFrame; 
-    actions << TupProjectActionBar::MoveFrameBackward << TupProjectActionBar::MoveFrameForward;
+
+    actions << TupProjectActionBar::MoveFrameBackward
+            << TupProjectActionBar::MoveFrameForward
+            << TupProjectActionBar::ReverseFrameSelection;
+
+    actions << TupProjectActionBar::Separator;
     actions << TupProjectActionBar::CopyFrame << TupProjectActionBar::PasteFrame;
     actions << TupProjectActionBar::Separator;
     actions << TupProjectActionBar::InsertLayer << TupProjectActionBar::RemoveLayer;
@@ -476,6 +481,14 @@ void TupTimeLine::libraryResponse(TupLibraryResponse *response)
 
 void TupTimeLine::requestCommand(int action)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupTimeLine::requestCommand()]";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+
     int sceneIndex = k->scenesContainer->currentIndex();
     if (sceneIndex < 0) {
         #ifdef TUP_DEBUG
@@ -563,7 +576,6 @@ void TupTimeLine::requestCommand(int action)
 
 bool TupTimeLine::requestFrameAction(int action, int frameIndex, int layerIndex, int sceneIndex, const QVariant &arg)
 {
-    /*
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupTimeLine::requestFrameAction()]";
@@ -571,7 +583,6 @@ bool TupTimeLine::requestFrameAction(int action, int frameIndex, int layerIndex,
             T_FUNCINFO;
         #endif
     #endif
-    */
 
     Q_UNUSED(frameIndex);
     Q_UNUSED(arg);
@@ -619,7 +630,6 @@ bool TupTimeLine::requestFrameAction(int action, int frameIndex, int layerIndex,
         {
             TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, currentFrame, TupProjectRequest::Exchange, currentFrame - 1);
             emit requestTriggered(&request);
-
             return true;
         }
         break;
@@ -634,21 +644,24 @@ bool TupTimeLine::requestFrameAction(int action, int frameIndex, int layerIndex,
 
             TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, currentFrame, TupProjectRequest::Exchange, currentFrame + 1);
             emit requestTriggered(&request);
-
+            return true;
+        }
+        break;
+        case TupProjectActionBar::ReverseFrameSelection:
+        {
+            requestReverseFrameSelection();
             return true;
         }
         break;
         case TupProjectActionBar::CopyFrame:
         {
             requestCopyFrameSelection();
-
             return true;
         }
         break;
         case TupProjectActionBar::PasteFrame:
         {
             requestPasteSelectionInCurrentFrame();
-
             return true;
         }
         break;
@@ -957,5 +970,33 @@ void TupTimeLine::requestPasteSelectionInCurrentFrame()
         TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, currentFrame,
                                                                           TupProjectRequest::PasteSelection);
         emit requestTriggered(&request);
+    }
+}
+
+void TupTimeLine::requestReverseFrameSelection()
+{
+    int sceneIndex = k->scenesContainer->currentIndex();
+    int layerIndex = framesTable(sceneIndex)->currentLayer();
+    int currentFrame = framesTable(sceneIndex)->currentColumn();
+
+    QList<int> coords = framesTable(sceneIndex)->currentSelection();
+    if (coords.count() == 4) {
+        if (coords.at(1) != coords.at(3)) {
+            QString selection = QString::number(coords.at(0)) + "," + QString::number(coords.at(1)) + ","
+                                + QString::number(coords.at(2)) + "," + QString::number(coords.at(3));
+
+            TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, currentFrame,
+                                                                              TupProjectRequest::ReverseSelection, selection);
+            emit requestTriggered(&request);
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            QString msg = "TupTimeLine::requestReverseFrameSelection() - Selection must include at least 2 frames of the same layer";
+            #ifdef Q_OS_WIN
+                qDebug() << msg;
+            #else
+                tWarning() << msg;
+            #endif
+        #endif
     }
 }

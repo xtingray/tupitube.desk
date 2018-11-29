@@ -49,6 +49,7 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
     public:
         TupTimeLine(TupProject *project, QWidget *parent = 0);
         ~TupTimeLine();
+
         void initLayerVisibility();
         void closeAllScenes();
         
@@ -88,6 +89,8 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
         void requestSceneSelection(int sceneIndex);
         
     private:
+        void requestReverseFrameSelection();
+
         struct Private;
         Private *const k;
 };

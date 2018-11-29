@@ -81,10 +81,18 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *project) : TupMo
     addChild(k->actionBar, Qt::AlignCenter);
 
     QList<TupProjectActionBar::Action> frameActions;
-    frameActions << TupProjectActionBar::InsertFrame << TupProjectActionBar::ExtendFrame << TupProjectActionBar::RemoveFrame;
+    frameActions << TupProjectActionBar::InsertFrame
+                 << TupProjectActionBar::ExtendFrame
+                 << TupProjectActionBar::RemoveFrame;
+
     frameActions << TupProjectActionBar::Separator;
-    frameActions << TupProjectActionBar::MoveFrameBackward << TupProjectActionBar::MoveFrameForward; 
+
+    frameActions << TupProjectActionBar::MoveFrameBackward
+                 << TupProjectActionBar::MoveFrameForward
+                 << TupProjectActionBar::ReverseFrameSelection;
+
     frameActions << TupProjectActionBar::Separator;
+
     frameActions << TupProjectActionBar::CopyFrame;
     frameActions << TupProjectActionBar::PasteFrame;
 
@@ -279,13 +287,13 @@ void TupExposureSheet::applyAction(int action)
                {
                  insertFrames(1);
                }
-               break;
+            break;
 
             case TupProjectActionBar::ExtendFrame:
                {
                  extendFrameForward(k->currentTable->currentLayer(), k->currentTable->currentFrame());
                }
-               break;
+            break;
 
             case TupProjectActionBar::RemoveFrame:
                {
@@ -312,7 +320,7 @@ void TupExposureSheet::applyAction(int action)
                      emit requestTriggered(&request);
                  }
                }
-               break;
+            break;
 
             case TupProjectActionBar::MoveFrameBackward:
                {
@@ -324,7 +332,7 @@ void TupExposureSheet::applyAction(int action)
                      emit requestTriggered(&request);
                  }
                }
-               break;
+            break;
 
             case TupProjectActionBar::MoveFrameForward:
                {
@@ -338,19 +346,45 @@ void TupExposureSheet::applyAction(int action)
                                              TupProjectRequest::Exchange, destination);
                  emit requestTriggered(&request);
                }
-               break;
+            break;
+
+            case TupProjectActionBar::ReverseFrameSelection:
+               {
+                  QList<int> coords = k->currentTable->currentSelection();
+                  if (coords.count() == 4) {
+                      if (coords.at(1) != coords.at(3)) {
+                          QString selection = QString::number(coords.at(0)) + "," + QString::number(coords.at(1)) + ","
+                                              + QString::number(coords.at(2)) + "," + QString::number(coords.at(3));
+                          TupProjectRequest request = TupRequestBuilder::createFrameRequest(k->scenesContainer->currentIndex(),
+                                                                         k->currentTable->currentLayer(),
+                                                                         k->currentTable->currentFrame(),
+                                                                         TupProjectRequest::ReverseSelection, selection);
+                          emit requestTriggered(&request);
+                      } else {
+                          #ifdef TUP_DEBUG
+                              QString msg = "TupExposureSheet::applyAction() - Selection must include at least 2 frames of the same layer";
+                              #ifdef Q_OS_WIN
+                                  qDebug() << msg;
+                              #else
+                                  tWarning() << msg;
+                              #endif
+                          #endif
+                      }
+                  }
+               }
+            break;
 
             case TupProjectActionBar::CopyFrame:
                {
                  requestCopyFrameSelection();
                }
-               break;
+            break;
 
             case TupProjectActionBar::PasteFrame:
                {
                  requestPasteSelectionInCurrentFrame();
                }
-               break;
+            break;
 
             case TupProjectActionBar::InsertLayer:
                {
@@ -366,7 +400,7 @@ void TupExposureSheet::applyAction(int action)
                       emit requestTriggered(&request);
                  }
                }
-               break;
+            break;
 
             case TupProjectActionBar::RemoveLayer:
                {
@@ -375,7 +409,7 @@ void TupExposureSheet::applyAction(int action)
                                                                                    TupProjectRequest::Remove);
                  emit requestTriggered(&request);
                }
-               break;
+            break;
 
             case TupProjectActionBar::InsertScene:
                {
@@ -392,7 +426,7 @@ void TupExposureSheet::applyAction(int action)
                  request = TupRequestBuilder::createSceneRequest(sceneTarget, TupProjectRequest::Select);
                  emit requestTriggered(&request);
                }
-               break;
+            break;
 
             case TupProjectActionBar::RemoveScene:
                {
@@ -413,7 +447,7 @@ void TupExposureSheet::applyAction(int action)
                      emit requestTriggered(&request);
                  }
                }
-               break;
+            break;
     }
 }
 
@@ -1079,6 +1113,11 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
                               removeBlock(table, layerIndex, frameIndex, layersTotal, framesTotal);
                           }
                       }
+                  }
+                break;
+                case TupProjectRequest::ReverseSelection:
+                  {
+                      tError() << "TupExposureSheet::frameResponse() - Tracing ReverseSelection action!";
                   }
                 break;
         }

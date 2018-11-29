@@ -37,7 +37,7 @@
 
 struct TupProjectActionBar::Private
 {
-    Private(Qt::Orientation orientation) : orientation(orientation), isAnimated(true) {}
+    // Private(Qt::Orientation orientation) : orientation(orientation), isAnimated(true) {}
     QString container;
     Qt::Orientation orientation;
     int fixedSize;
@@ -46,9 +46,12 @@ struct TupProjectActionBar::Private
     bool isAnimated;
 };
 
-TupProjectActionBar::TupProjectActionBar(const QString &container, QList<Action> actions, Qt::Orientation orientation, QWidget *parent) : QWidget(parent), k(new Private(orientation))
+TupProjectActionBar::TupProjectActionBar(const QString &container, QList<Action> actions, 
+                                         Qt::Orientation orientation, QWidget *parent) : QWidget(parent), k(new Private)
+                                         // Qt::Orientation orientation, QWidget *parent) : QWidget(parent), k(new Private(orientation))
 {
     k->container = container;
+    k->orientation = orientation;
     connect(&k->actions, SIGNAL(buttonClicked(int)), this, SLOT(emitActionSelected(int)));
     setup(actions);
     setFixedSize(22);
@@ -58,9 +61,9 @@ TupProjectActionBar::~TupProjectActionBar()
 {
 }
 
-void TupProjectActionBar::setFixedSize(int s)
+void TupProjectActionBar::setFixedSize(int size)
 {
-    k->fixedSize = s;
+    k->fixedSize = size;
 }
 
 void TupProjectActionBar::setup(QList<Action> actions)
@@ -68,18 +71,18 @@ void TupProjectActionBar::setup(QList<Action> actions)
     QBoxLayout *mainLayout = 0;
     
     switch (k->orientation) {
-            case Qt::Vertical:
-            {
-                 mainLayout = new QBoxLayout(QBoxLayout::LeftToRight, this);
-                 k->buttonLayout = new QBoxLayout(QBoxLayout::TopToBottom);
-            }
-            break;
-            case Qt::Horizontal:
-            {
-                 mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
-                 k->buttonLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-            }
-            break;
+        case Qt::Vertical:
+        {
+            mainLayout = new QBoxLayout(QBoxLayout::LeftToRight, this);
+            k->buttonLayout = new QBoxLayout(QBoxLayout::TopToBottom);
+        }
+        break;
+        case Qt::Horizontal:
+        {
+            mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
+            k->buttonLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+        }
+        break;
     }
     
     mainLayout->setSpacing(0);
@@ -156,6 +159,25 @@ void TupProjectActionBar::setup(QList<Action> actions)
             button->setShortcut(QKeySequence(tr("F9")));
 
             k->actions.addButton(button, MoveFrameForward);
+
+            k->buttonLayout->addWidget(button);
+            button->setAnimated(k->isAnimated);
+        }
+
+        if (action == ReverseFrameSelection) {
+            TImageButton *button = 0;
+
+            if (k->container.compare("Exposure") == 0) {
+                button = new TImageButton(QIcon(THEME_DIR + "icons/reverse_v.png"), size);
+            } else {
+                if (k->container.compare("TimeLine") == 0)
+                    button = new TImageButton(QIcon(THEME_DIR + "icons/reverse_h.png"), size);
+            }
+
+            button->setToolTip(tr("Reverse frame selection"));
+            // button->setShortcut(QKeySequence(tr("F9")));
+
+            k->actions.addButton(button, ReverseFrameSelection);
 
             k->buttonLayout->addWidget(button);
             button->setAnimated(k->isAnimated);
@@ -324,4 +346,3 @@ void TupProjectActionBar::emitActionSelected(int action)
     
     emit actionSelected(action);
 }
-
