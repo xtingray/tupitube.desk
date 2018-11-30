@@ -1416,8 +1416,17 @@ void TupMainWindow::showWebMessage()
 
 void TupMainWindow::setUpdateFlag(bool flag)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupMainWindow::setUpdateFlag()] flag -> " << flag;
+    #else
+        T_FUNCINFO << "flag -> " << flag;
+    #endif
+#endif
+
     TCONFIG->beginGroup("General");
     TCONFIG->setValue("NotifyUpdate", flag);
+    TCONFIG->sync();
 }
 
 void TupMainWindow::dragEnterEvent(QDragEnterEvent *e)
