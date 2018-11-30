@@ -648,7 +648,10 @@ bool TupCommandExecutor::reverseFrameSelection(TupFrameResponse *response)
             int endLayer = params.at(1).toInt();
             int initFrame = params.at(2).toInt();
             int endFrame = params.at(3).toInt();
-            int iterations = (endFrame - initFrame) / 2;
+            int segment = endFrame - initFrame;
+            int iterations = 1;
+            if (segment > 1)
+                iterations = segment / 2;
 
             for (int i=initLayer; i<=endLayer; i++) {
                  TupLayer *layer = scene->layerAt(i);
