@@ -351,22 +351,37 @@ void TupTwitter::checkSoftwareUpdates(QByteArray array)
         QDomNode n = root.firstChild();
 
         while (!n.isNull()) {
-               QDomElement e = n.toElement();
-               if (!e.isNull()) {
-                   if (e.tagName() == "branch") {
-                       k->version = e.text();
-                       if (k->version.compare(kAppProp->version())!=0)
-                           k->update = true;
-                   } else if (e.tagName() == "rev") {
-                              k->revision = e.text();
-                              if (k->revision.compare(kAppProp->revision())!=0)
-                                  k->update = true;
-                   } else if (e.tagName() == "codeName") {
-                              k->codeName = e.text();
-                   }
-               }
-               n = n.nextSibling();
+            QDomElement e = n.toElement();
+            if (!e.isNull()) {
+                if (e.tagName() == "branch") {
+                    k->version = e.text();
+                    if (k->version.compare(kAppProp->version())!=0)
+                        k->update = true;
+                } else if (e.tagName() == "rev") {
+                    k->revision = e.text();
+                    if (k->revision.compare(kAppProp->revision())!=0)
+                        k->update = true;
+                } else if (e.tagName() == "codeName") {
+                    k->codeName = e.text();
+                }
+            }
+            n = n.nextSibling();
         }
+
+        #ifdef TUP_DEBUG
+            QString msg1 = "TupTwitter::checkSoftwareUpdates() - Update Flag: " + QString::number(k->update);
+            QString msg2 = "Server Version: " + k->version + " - Revision: " + k->revision + " - Code Name: " + k->codeName;
+            QString msg3 = "Local Version: " + kAppProp->version() + " - Revision: " + kAppProp->revision();
+            #ifdef Q_OS_WIN
+                qWarning() << msg1;
+                qWarning() << msg2;
+                qWarning() << msg3;
+            #else
+                tWarning() << msg1;
+                tWarning() << msg2;
+                tWarning() << msg3;
+            #endif
+        #endif
 
         emit newUpdate(k->update);
     }

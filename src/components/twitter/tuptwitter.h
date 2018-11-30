@@ -50,6 +50,7 @@ class TUPITUBE_EXPORT TupTwitter : public QWidget
     public:
         TupTwitter(QWidget *parent=0);
         ~TupTwitter();
+
         void start();
 
     private slots:
