@@ -448,46 +448,51 @@
     </message>
     <message>
         <location filename="../../../store/tupprojectcommand.cpp" line="174"/>
+        <source>reverse</source>
+        <translation>reverse</translation>
+    </message>
+    <message>
+        <location filename="../../../store/tupprojectcommand.cpp" line="179"/>
         <source>lock</source>
         <translation>trancar</translation>
     </message>
     <message>
-        <location filename="../../../store/tupprojectcommand.cpp" line="179"/>
+        <location filename="../../../store/tupprojectcommand.cpp" line="184"/>
         <source>rename</source>
         <translation>renomear</translation>
     </message>
     <message>
-        <location filename="../../../store/tupprojectcommand.cpp" line="184"/>
+        <location filename="../../../store/tupprojectcommand.cpp" line="189"/>
         <source>select</source>
         <translation>selecionar</translation>
     </message>
     <message>
-        <location filename="../../../store/tupprojectcommand.cpp" line="189"/>
+        <location filename="../../../store/tupprojectcommand.cpp" line="194"/>
         <source>edit node</source>
         <translation>editar nó</translation>
     </message>
     <message>
-        <location filename="../../../store/tupprojectcommand.cpp" line="194"/>
+        <location filename="../../../store/tupprojectcommand.cpp" line="199"/>
         <source>pen</source>
         <translation>pen</translation>
     </message>
     <message>
-        <location filename="../../../store/tupprojectcommand.cpp" line="199"/>
+        <location filename="../../../store/tupprojectcommand.cpp" line="204"/>
         <source>brush</source>
         <translation>brush</translation>
     </message>
     <message>
-        <location filename="../../../store/tupprojectcommand.cpp" line="204"/>
+        <location filename="../../../store/tupprojectcommand.cpp" line="209"/>
         <source>view</source>
         <translation>ver</translation>
     </message>
     <message>
-        <location filename="../../../store/tupprojectcommand.cpp" line="209"/>
+        <location filename="../../../store/tupprojectcommand.cpp" line="214"/>
         <source>transform</source>
         <translation>transformar</translation>
     </message>
     <message>
-        <location filename="../../../store/tupprojectcommand.cpp" line="214"/>
+        <location filename="../../../store/tupprojectcommand.cpp" line="219"/>
         <source>convert</source>
         <translation>converter</translation>
     </message>
@@ -2823,101 +2828,101 @@ Por favor, renomeie o ficheiro do projeto</translation>
         <translation>Folha de Exposição</translation>
     </message>
     <message>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="124"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="132"/>
         <source>actions</source>
         <translation>ações</translation>
     </message>
     <message>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="125"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="133"/>
         <source>Insert</source>
         <translation>Inserir</translation>
     </message>
     <message>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="127"/>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="1250"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="135"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="1317"/>
         <source>1 frame</source>
         <translation>1 quadro</translation>
     </message>
     <message>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="131"/>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="1255"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="139"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="1322"/>
         <source>5 frames</source>
         <translation>5 quadros</translation>
     </message>
     <message>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="135"/>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="1260"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="143"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="1327"/>
         <source>10 frames</source>
         <translation>10 quadros</translation>
     </message>
     <message>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="139"/>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="1265"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="147"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="1332"/>
         <source>20 frames</source>
         <translation>20 quadros</translation>
     </message>
     <message>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="143"/>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="1270"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="151"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="1337"/>
         <source>50 frames</source>
         <translation>50 quadros</translation>
     </message>
     <message>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="147"/>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="1275"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="155"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="1342"/>
         <source>100 frames</source>
         <translation>100 quadros</translation>
     </message>
     <message>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="155"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="163"/>
         <source>Remove frame</source>
         <translation>Remover quadro</translation>
     </message>
     <message>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="160"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="168"/>
         <source>Clear frame</source>
         <translation>Limpar quadro</translation>
     </message>
     <message>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="165"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="173"/>
         <source>Copy frame</source>
         <translation>Copiar quadro</translation>
     </message>
     <message>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="170"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="178"/>
         <source>Paste frame</source>
         <translation>Colar quadro</translation>
     </message>
     <message>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="359"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="393"/>
         <source>Layer %1</source>
         <translation>Camada %1</translation>
     </message>
     <message>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="365"/>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="389"/>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="504"/>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="655"/>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="931"/>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="949"/>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="1410"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="399"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="423"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="538"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="689"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="965"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="983"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="1477"/>
         <source>Frame</source>
         <translation>Quadro</translation>
     </message>
     <message>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="383"/>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="651"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="417"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="685"/>
         <source>Scene %1</source>
         <translation>Cena %1</translation>
     </message>
     <message>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="386"/>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="654"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="420"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="688"/>
         <source>Layer 1</source>
         <translation>Camada 1</translation>
     </message>
     <message>
-        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="412"/>
+        <location filename="../../../components/exposure/tupexposuresheet.cpp" line="446"/>
         <source>Scene 1</source>
         <translation>Cena 1</translation>
     </message>
@@ -4590,21 +4595,21 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
     </message>
     <message>
         <location filename="../../../components/workspace/tuppaintarea.cpp" line="166"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="711"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="712"/>
         <source>Nodes Selection</source>
         <translation>Seleção de Nodos</translation>
     </message>
     <message>
         <location filename="../../../components/workspace/tuppaintarea.cpp" line="175"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="606"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1318"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="607"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1319"/>
         <source>PolyLine</source>
         <translation>PoliLinha</translation>
     </message>
     <message>
         <location filename="../../../components/workspace/tuppaintarea.cpp" line="185"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="659"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="711"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="660"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="712"/>
         <source>Object Selection</source>
         <translation>Seleção de Objetos</translation>
     </message>
@@ -4694,20 +4699,20 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
         <translation>Para frente um nível</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="971"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1349"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1397"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1412"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="972"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1350"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1398"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1413"/>
         <source>Frame</source>
         <translation>Quadro</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1469"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1470"/>
         <source>Do you want to remove this frame?</source>
         <translation>Deseja remover este quadro?</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1469"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1470"/>
         <source>Confirmation</source>
         <translation>Confirmação</translation>
     </message>
@@ -4722,14 +4727,14 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
         <translation>Adicionar à biblioteca...</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1088"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1125"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1089"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1126"/>
         <source>Error</source>
         <translation>Erro</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1088"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1125"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1089"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1126"/>
         <source>No items selected</source>
         <translation>Nenhum item selecionado</translation>
     </message>
@@ -5081,99 +5086,104 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
 <context>
     <name>TupProjectActionBar</name>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="185"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="207"/>
         <source>F5</source>
         <translation>F5</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="196"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="218"/>
         <source>F6</source>
         <translation>F6</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="156"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="159"/>
         <source>F9</source>
         <translation>F9</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="96"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="99"/>
         <source>Insert frame</source>
         <translation>Inserir quadro</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="137"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="140"/>
         <source>F8</source>
         <translation>F8</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="184"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="206"/>
         <source>Insert layer</source>
         <translation>Inserir camada</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="195"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="217"/>
         <source>Remove layer</source>
         <translation>Remover camada</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="117"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="120"/>
         <source>Remove frame</source>
         <translation>Remover quadro</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="106"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="109"/>
         <source>Extend frame</source>
         <translation>Estender quadro</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="136"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="139"/>
         <source>Move frame backward</source>
         <translation>Mover quadro para trás</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="155"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="158"/>
         <source>Move frame forward</source>
         <translation>Mover quadro para frente</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="166"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="177"/>
+        <source>Reverse frame selection</source>
+        <translation>Reverter a seleção de quadros</translation>
+    </message>
+    <message>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="188"/>
         <source>Copy frame</source>
         <translation>Copiar quadro</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="175"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="197"/>
         <source>Paste frame</source>
         <translation>Colar quadro</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="206"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="228"/>
         <source>Insert scene</source>
         <translation>Inserir cena</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="216"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="238"/>
         <source>Remove scene</source>
         <translation>Remover cena</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="268"/>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="289"/>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="309"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="290"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="311"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="331"/>
         <source>Confirmation</source>
         <translation>Confirmação</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="268"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="290"/>
         <source>Do you want to remove current selection?</source>
         <translation>Deseja remover a seleção atual?</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="289"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="311"/>
         <source>Do you want to remove this layer?</source>
         <translation>Deseja remover esta camada?</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="309"/>
+        <location filename="../../../libtupi/tupprojectactionbar.cpp" line="331"/>
         <source>Do you want to remove this scene?</source>
         <translation>Deseja remover esta cena?</translation>
     </message>
@@ -5586,38 +5596,38 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
         <translation>Linha de Tempo</translation>
     </message>
     <message>
-        <location filename="../../../components/timeline/tuptimeline.cpp" line="316"/>
-        <location filename="../../../components/timeline/tuptimeline.cpp" line="671"/>
+        <location filename="../../../components/timeline/tuptimeline.cpp" line="321"/>
+        <location filename="../../../components/timeline/tuptimeline.cpp" line="684"/>
         <source>Layer %1</source>
         <translation>Camada %1</translation>
     </message>
     <message>
-        <location filename="../../../components/timeline/tuptimeline.cpp" line="319"/>
-        <location filename="../../../components/timeline/tuptimeline.cpp" line="588"/>
-        <location filename="../../../components/timeline/tuptimeline.cpp" line="592"/>
-        <location filename="../../../components/timeline/tuptimeline.cpp" line="597"/>
-        <location filename="../../../components/timeline/tuptimeline.cpp" line="631"/>
-        <location filename="../../../components/timeline/tuptimeline.cpp" line="675"/>
-        <location filename="../../../components/timeline/tuptimeline.cpp" line="680"/>
-        <location filename="../../../components/timeline/tuptimeline.cpp" line="715"/>
-        <location filename="../../../components/timeline/tuptimeline.cpp" line="821"/>
+        <location filename="../../../components/timeline/tuptimeline.cpp" line="324"/>
+        <location filename="../../../components/timeline/tuptimeline.cpp" line="599"/>
+        <location filename="../../../components/timeline/tuptimeline.cpp" line="603"/>
+        <location filename="../../../components/timeline/tuptimeline.cpp" line="608"/>
+        <location filename="../../../components/timeline/tuptimeline.cpp" line="641"/>
+        <location filename="../../../components/timeline/tuptimeline.cpp" line="688"/>
+        <location filename="../../../components/timeline/tuptimeline.cpp" line="693"/>
+        <location filename="../../../components/timeline/tuptimeline.cpp" line="728"/>
+        <location filename="../../../components/timeline/tuptimeline.cpp" line="834"/>
         <source>Frame</source>
         <translation>Quadro</translation>
     </message>
     <message>
-        <location filename="../../../components/timeline/tuptimeline.cpp" line="734"/>
+        <location filename="../../../components/timeline/tuptimeline.cpp" line="747"/>
         <source>Scene 1</source>
         <translation>Cena 1</translation>
     </message>
     <message>
-        <location filename="../../../components/timeline/tuptimeline.cpp" line="221"/>
-        <location filename="../../../components/timeline/tuptimeline.cpp" line="709"/>
+        <location filename="../../../components/timeline/tuptimeline.cpp" line="226"/>
+        <location filename="../../../components/timeline/tuptimeline.cpp" line="722"/>
         <source>Scene %1</source>
         <translation>Cena %1</translation>
     </message>
     <message>
-        <location filename="../../../components/timeline/tuptimeline.cpp" line="224"/>
-        <location filename="../../../components/timeline/tuptimeline.cpp" line="712"/>
+        <location filename="../../../components/timeline/tuptimeline.cpp" line="229"/>
+        <location filename="../../../components/timeline/tuptimeline.cpp" line="725"/>
         <source>Layer 1</source>
         <translation>Camada 1</translation>
     </message>

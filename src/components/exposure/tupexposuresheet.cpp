@@ -1117,7 +1117,35 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
                 break;
                 case TupProjectRequest::ReverseSelection:
                   {
-                      tError() << "TupExposureSheet::frameResponse() - Tracing ReverseSelection action!";
+                      QString selection = response->arg().toString();
+                      QStringList params = selection.split(",");
+                      if (params.count() == 4) {
+                          int initLayer = params.at(0).toInt();
+                          int endLayer = params.at(1).toInt();
+                          int initFrame = params.at(2).toInt();
+                          int endFrame = params.at(3).toInt();
+                          int iterations = (endFrame - initFrame) / 2;
+                          for (int i=initLayer; i<=endLayer; i++) {
+                              int indexA = initFrame;
+                              int indexB = endFrame;
+                              for (int j=0; j<iterations; j++) {
+                                  QString cellA = k->currentTable->frameName(i, indexA);
+                                  QString cellB = k->currentTable->frameName(i, indexB);
+                                  TupExposureTable::FrameType stateA = k->currentTable->frameState(i, indexA);
+                                  TupExposureTable::FrameType stateB = k->currentTable->frameState(i, indexB);
+                                  if (cellA.compare(cellB) != 0) {
+                                      k->currentTable->setFrameName(i, indexA, cellB);
+                                      k->currentTable->setFrameName(i, indexB, cellA);
+                                  }
+                                  if (stateA != stateB) {
+                                      k->currentTable->updateFrameState(i, indexA, stateB);
+                                      k->currentTable->updateFrameState(i, indexB, stateA);
+                                  }
+                                  indexA++;
+                                  indexB--;
+                              }
+                          }
+                      }
                   }
                 break;
         }
