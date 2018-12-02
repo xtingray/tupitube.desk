@@ -230,6 +230,14 @@ void TupLibraryWidget::resetGUI()
 
 void TupLibraryWidget::setLibrary(TupLibrary *library)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupLibraryWidget::setLibrary()]";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+
     k->library = library;
     k->project = library->project(); 
 }

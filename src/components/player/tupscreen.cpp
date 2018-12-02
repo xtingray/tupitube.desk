@@ -52,6 +52,8 @@ TupScreen::TupScreen(TupProject *work, const QSize viewSize, bool sizeChanged, Q
 
     project = work;
     library = work->library();
+    QList<QPair<int, QString> > effectsList = library->soundEffectList();
+
     isScaled = sizeChanged;
     screenDimension = viewSize;
 
@@ -862,6 +864,17 @@ void TupScreen::loadSoundRecords()
     TupScene *scene = project->sceneAt(sceneIndex);
     // Loading lipSync sounds
     if (scene) {
+        #ifdef TUP_DEBUG
+            QString msg1 = "TupScreen::loadSoundRecords() - Loading lip-sync files...";
+            QString msg2 = "Total -> " + QString::number(scene->lipSyncTotal());
+            #ifdef Q_OS_WIN
+                qDebug() << msg1;
+                qDebug() << msg2;
+            #else
+                tWarning() << msg1;
+                tWarning() << msg2;
+            #endif
+        #endif
         if (scene->lipSyncTotal() > 0) {
             soundRecords.clear();
             Mouths mouths = scene->getLipSyncList();
@@ -887,6 +900,18 @@ void TupScreen::loadSoundRecords()
     QList<QPair<int, QString> > effectsList = library->soundEffectList();
     int size = effectsList.count();
 
+#ifdef TUP_DEBUG
+    QString msg1 = "TupScreen::loadSoundRecords() - Loading sound effects...";
+    QString msg2 = "Files Total -> " + QString::number(size);
+    #ifdef Q_OS_WIN
+        qDebug() << msg1;
+        qDebug() << msg2;
+    #else
+        tWarning() << msg1;
+        tWarning() << msg2;
+    #endif
+#endif
+
     for (int i=0; i<size; i++)  {
         QPair<int, QString> sound = effectsList.at(i);
         soundRecords << sound;
@@ -896,12 +921,28 @@ void TupScreen::loadSoundRecords()
 
 void TupScreen::playSoundAt(int frame)
 {
+/*
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupScreen::playSoundAt()]";
+    #else
+        T_FUNCINFO << "frame -> " << frame;
+    #endif
+#endif
+*/
     int size = soundRecords.count();
-
     for (int i=0; i<size; i++) {
         QPair<int, QString> soundRecord = soundRecords.at(i);
         if (frame == soundRecord.first) {
             if (i < soundPlayer.count()) {
+                #ifdef TUP_DEBUG
+                    QString msg = "TupScreen::playSoundAt() - Playing file -> " + soundRecord.second;
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg;
+                    #else
+                        tWarning() << msg;
+                    #endif
+                #endif
                 soundPlayer.at(i)->setMedia(QUrl::fromLocalFile(soundRecord.second));
                 soundPlayer.at(i)->play();
             } else { 

@@ -1816,4 +1816,3 @@ void TupGraphicsScene::updateLoadingFlag(bool flag)
 {
     loadingProject = flag;
 }
-

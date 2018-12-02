@@ -600,6 +600,7 @@ void TupLibraryFolder::loadItem(const QString &folder, QDomNode xml)
         case TupLibraryObject::Sound:
         {
             object->loadDataFromPath(k->project->dataDir());
+            tError() << "isSoundEffect? -> " << object->isSoundEffect();
 
             if (object->isSoundEffect()) {
                 QPair<int, QString> soundRecord;
