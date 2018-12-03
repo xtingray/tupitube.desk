@@ -1044,10 +1044,9 @@ void TupMainWindow::saveProject()
         }
         m_actionManager->enable("save_project", true);
         m_actionManager->enable("save_project_as", true);
-        QApplication::restoreOverrideCursor();
-
         if (isSaveDialogOpen)
             isSaveDialogOpen = false;
+        QApplication::restoreOverrideCursor();
     } else {
         TupSavePackage package(lastSave);
         netProjectManager->sendPackage(package);

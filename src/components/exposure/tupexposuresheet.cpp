@@ -267,7 +267,7 @@ void TupExposureSheet::applyAction(int action)
     #endif
 
     k->currentTable = k->scenesContainer->getCurrentTable();
-    if (k->currentTable == 0) {
+    if (!k->currentTable) {
         #ifdef TUP_DEBUG
             QString msg = "TupExposureSheet::applyAction: No layer view!!";
             #ifdef Q_OS_WIN
@@ -794,7 +794,6 @@ void TupExposureSheet::layerResponse(TupLayerResponse *response)
                      framesTable->setLockLayer(layerIndex, response->arg().toBool());
                  }
                 */
-                break;
                 case TupProjectRequest::Select:
                  {
                      setScene(sceneIndex);
@@ -802,12 +801,13 @@ void TupExposureSheet::layerResponse(TupLayerResponse *response)
                      framesTable->selectFrame(layerIndex, 0);
                      framesTable->blockSignals(false);
 
-                     if (k->previousScene != sceneIndex || k->previousLayer != layerIndex) {
+                     if ((k->previousScene != sceneIndex) || (k->previousLayer != layerIndex)) {
                          k->previousScene = sceneIndex;
                          k->previousLayer = layerIndex;
                          updateLayerOpacity(sceneIndex, layerIndex);
                      }
                  }
+                break;
                 case TupProjectRequest::View:
                  {
                      framesTable->setLayerVisibility(layerIndex, response->arg().toBool());
@@ -975,7 +975,6 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
                       }
                       return;
                   }
-                break;
                 case TupProjectRequest::Reset:
                   {
                       if (response->mode() == TupProjectResponse::Do || response->mode() == TupProjectResponse::Redo) {
@@ -1000,7 +999,6 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
 
                       return;
                   }
-                break;
                 case TupProjectRequest::Exchange:
                   {
                       table->exchangeFrame(layerIndex, frameIndex, layerIndex, response->arg().toInt(), response->external());
@@ -1127,7 +1125,7 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
                           int segment = endFrame - initFrame;
                           int iterations = 1;
                           if (segment > 1)
-                              iterations = segment / 2;
+                              iterations = (segment + 1) / 2;
 
                           for (int i=initLayer; i<=endLayer; i++) {
                               int indexA = initFrame;

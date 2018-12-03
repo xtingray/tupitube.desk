@@ -485,8 +485,8 @@ void TupMainWindow::changePerspective(int index)
     #endif
 
     if (index == 4) { // Player
+        m_libraryWidget->stopSoundPlayer();
         setCurrentTab(1);
-        // QTimer::singleShot(0, this, SLOT(doPlay()));
     } else {
         setCurrentTab(index);
     }

@@ -299,6 +299,7 @@ void TupLibraryObject::fromXml(const QString &xml)
                 case TupLibraryObject::Sound:
                      {
                          k->isSoundEffect = objectTag.attribute("soundEffect").toInt() ? true : false;
+                         tError() << "fromXml() - k->isSoundEffect -> " << k->isSoundEffect;
                          k->playAt = objectTag.attribute("playAt").toInt();
                          k->dataPath = objectTag.attribute("path");
                      }
@@ -316,7 +317,6 @@ void TupLibraryObject::fromXml(const QString &xml)
 
                          return;
                      }
-                break;
         }
     }
 }
@@ -359,6 +359,7 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
             break;
             case Sound:
             {
+                tError() << "k->isSoundEffect : " << k->isSoundEffect;
                 object.setAttribute("soundEffect", k->isSoundEffect);
                 object.setAttribute("playAt", k->playAt);
                 object.setAttribute("path", path);
@@ -367,7 +368,6 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
             default:
             {
             }
-            break;
     }
     
     return object;
@@ -425,7 +425,6 @@ bool TupLibraryObject::loadRawData(const QByteArray &data)
             {
                  return false;
             }
-            break;
     }
     
     return true;
@@ -467,7 +466,6 @@ bool TupLibraryObject::loadDataFromPath(const QString &dataDir)
             break;
             default: 
                  return false; 
-            break;
     }
 
     k->dataPath = dataDir + path + k->dataPath;
@@ -547,7 +545,6 @@ bool TupLibraryObject::loadData(const QString &path)
             break;
             default:
                  return false;
-            break;
     }
 
     return true;
@@ -742,7 +739,6 @@ bool TupLibraryObject::saveData(const QString &dataDir)
                         tError() << msg;
                     #endif
                 #endif
-            break;
     }
 
     return false;
@@ -750,6 +746,15 @@ bool TupLibraryObject::saveData(const QString &dataDir)
 
 void TupLibraryObject::setSoundEffectFlag(bool flag)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "TupLibraryObject::setSoundEffectFlag(bool)";
+    #else
+        T_FUNCINFO;
+        tWarning() << "flag -> " << flag;
+    #endif
+#endif
+
     k->isSoundEffect = flag;
 }
 

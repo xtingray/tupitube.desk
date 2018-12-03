@@ -1642,9 +1642,12 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                             case TupLibraryObject::Sound:
                                {
                                  TupLibraryObject *object = k->library->getObject(id);
-                                 if (object)
-                                     object->setSoundEffectFlag(k->isEffectSound);
-                                 k->isEffectSound = false;
+                                 if (object) {
+                                     if (k->isEffectSound) {
+                                         object->setSoundEffectFlag(true);
+                                         k->isEffectSound = false;
+                                     }
+                                 }
 
                                  item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
                                  k->libraryTree->setCurrentItem(item);
@@ -2204,4 +2207,10 @@ void TupLibraryWidget::updateSoundTiming(int frame)
         k->library->updateEffectSoundList(k->currentSound->dataPath(), frame);
         emit soundUpdated();
     }
+}
+
+void TupLibraryWidget::stopSoundPlayer()
+{
+    if (k->display)
+        k->display->stopSoundPlayer();
 }

@@ -651,7 +651,14 @@ bool TupCommandExecutor::reverseFrameSelection(TupFrameResponse *response)
             int segment = endFrame - initFrame;
             int iterations = 1;
             if (segment > 1)
-                iterations = segment / 2;
+                iterations = (segment + 1) / 2;
+
+            /*
+            tError() << "TupCommandExecutor::reverseFrameSelection() - initFrame: " << initFrame;
+            tError() << "TupCommandExecutor::reverseFrameSelection() - endFrame: " << endFrame;
+            tError() << "TupCommandExecutor::reverseFrameSelection() - segment: " << segment;
+            tError() << "TupCommandExecutor::reverseFrameSelection() - iterations: " << iterations;
+            */
 
             for (int i=initLayer; i<=endLayer; i++) {
                  TupLayer *layer = scene->layerAt(i);
@@ -659,6 +666,7 @@ bool TupCommandExecutor::reverseFrameSelection(TupFrameResponse *response)
                      int indexA = initFrame;
                      int indexB = endFrame;
                      for (int j=0; j<iterations; j++) {
+                         // tError() << "TupCommandExecutor::reverseFrameSelection() - reversing -> " << indexA << ":"<<indexB;
                          if (!layer->exchangeFrame(indexA, indexB)) {
                              #ifdef TUP_DEBUG
                                  QString msg = "TupCommandExecutor::reverseFrameSelection() - Fatal error while exchanging frames!";

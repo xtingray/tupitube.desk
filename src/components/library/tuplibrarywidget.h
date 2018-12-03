@@ -95,6 +95,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void resetGUI();
         void setLibrary(TupLibrary *library);
         void setNetworking(bool isNetworked);
+        void stopSoundPlayer();
 
     protected:
         virtual void sceneResponse(TupSceneResponse *response);

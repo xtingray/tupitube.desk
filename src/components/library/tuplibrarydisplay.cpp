@@ -96,3 +96,11 @@ void TupLibraryDisplay::showSoundPlayer()
         k->soundPlayer->show();
     }
 }
+
+void TupLibraryDisplay::stopSoundPlayer()
+{
+    if (k->soundPlayer->isVisible()) {
+        if (k->soundPlayer->isPlaying())
+            k->soundPlayer->stopFile();
+    }
+}

@@ -151,10 +151,15 @@ void TupSoundPlayer::playFile()
 
         k->player->play();
     } else {
-        k->playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/play_small.png")));
-        k->playing = false;
-        k->player->pause();
+        stopFile();
     }
+}
+
+void TupSoundPlayer::stopFile()
+{
+    k->playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/play_small.png")));
+    k->playing = false;
+    k->player->pause();
 }
 
 void TupSoundPlayer::positionChanged(qint64 value)
@@ -203,4 +208,9 @@ void TupSoundPlayer::stateChanged(QMediaPlayer::State state)
 void TupSoundPlayer::updateSoundPos(int pos)
 {
     k->player->setPosition(pos*1000);
+}
+
+bool TupSoundPlayer::isPlaying()
+{
+    return k->playing;
 }
