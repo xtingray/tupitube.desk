@@ -167,6 +167,7 @@ void TupMainWindow::setupMenu()
     m_fileMenu = menuBar()->addMenu(tr("&File"));
     m_fileMenu->addAction(m_actionManager->find("new_project"));
     m_fileMenu->addAction(m_actionManager->find("open_project"));
+    m_fileMenu->addAction(m_actionManager->find("open_demo"));
 
     // SQA: This code has been disabled temporary
     // m_fileMenu->addAction(m_actionManager->find("opennetproject"));
@@ -321,6 +322,11 @@ void TupMainWindow::setupFileActions()
 					 SLOT(importProjectToServer()), m_actionManager);
     m_actionManager->insert(importNetFile, "exportprojectserver", "file");
     */
+
+    TAction *openDemo = new TAction(QPixmap(THEME_DIR + "icons/open.png"), tr("Open Example"), tr(""),
+                    this, SLOT(openExample()), m_actionManager);
+    m_actionManager->insert(openDemo, "open_demo", "file");
+    openDemo->setStatusTip(tr("Open example project"));
 
     TAction *save = new TAction(QPixmap(THEME_DIR + "icons/save.png"), tr( "Save Project" ),
 				QKeySequence(tr("Ctrl+S")), this, SLOT(saveProject()), m_actionManager);

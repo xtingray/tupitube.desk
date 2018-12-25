@@ -710,6 +710,13 @@ void TupMainWindow::openProject()
     openProject(package);
 }
 
+void TupMainWindow::openExample()
+{
+    QString example = SHARE_DIR + "data/html/examples/example.tup";
+    if (m_fileName.compare(example) != 0)
+        openProject(example);
+}
+
 void TupMainWindow::openProject(const QString &path)
 {
     #ifdef TUP_DEBUG
