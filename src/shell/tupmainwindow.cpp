@@ -712,9 +712,17 @@ void TupMainWindow::openProject()
 
 void TupMainWindow::openExample()
 {
+#ifdef Q_OS_WIN
+    QString example = SHARE_DIR + "html/examples/example.tup";
+#else
     QString example = SHARE_DIR + "data/html/examples/example.tup";
-    if (m_fileName.compare(example) != 0)
-        openProject(example);
+#endif
+    if (QFile::exists(example)) {
+        if (m_fileName.compare(example) != 0)
+            openProject(example);
+    } else {
+        TOsd::self()->display(tr("Error"), tr("Cannot open project!"), TOsd::Error);
+    }
 }
 
 void TupMainWindow::openProject(const QString &path)

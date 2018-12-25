@@ -1,7 +1,7 @@
 [Setup]
 SetupIconFile=bin\raw\icon\tupitube.ico
 AppName=TupiTube Desk
-AppVersion=0.2.11
+AppVersion=0.2.12
 AppPublisher=MaeFloresta
 AppPublisherURL=https://www.maefloresta.com/
 DefaultDirName={pf}\TupiTube

@@ -299,7 +299,7 @@ void TupLibraryObject::fromXml(const QString &xml)
                 case TupLibraryObject::Sound:
                      {
                          k->isSoundEffect = objectTag.attribute("soundEffect").toInt() ? true : false;
-                         tError() << "fromXml() - k->isSoundEffect -> " << k->isSoundEffect;
+                         // tError() << "fromXml() - k->isSoundEffect -> " << k->isSoundEffect;
                          k->playAt = objectTag.attribute("playAt").toInt();
                          k->dataPath = objectTag.attribute("path");
                      }
@@ -359,7 +359,7 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
             break;
             case Sound:
             {
-                tError() << "k->isSoundEffect : " << k->isSoundEffect;
+                // tError() << "k->isSoundEffect : " << k->isSoundEffect;
                 object.setAttribute("soundEffect", k->isSoundEffect);
                 object.setAttribute("playAt", k->playAt);
                 object.setAttribute("path", path);
@@ -731,6 +731,7 @@ bool TupLibraryObject::saveData(const QString &dataDir)
             }
 
             default: 
+			{
                 #ifdef TUP_DEBUG
                     QString msg = "TupLibraryObject::saveData() - Fatal Error: Type is not supported -> " + QString::number(k->type);
                     #ifdef Q_OS_WIN
@@ -739,6 +740,7 @@ bool TupLibraryObject::saveData(const QString &dataDir)
                         tError() << msg;
                     #endif
                 #endif
+			}
     }
 
     return false;
