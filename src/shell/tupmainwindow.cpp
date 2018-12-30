@@ -721,6 +721,14 @@ void TupMainWindow::openExample()
         if (m_fileName.compare(example) != 0)
             openProject(example);
     } else {
+        #ifdef TUP_DEBUG
+            QString msg = "TupMainWindow::openExample() - Fatal Error: Couldn't open example file -> " + QString(example);
+            #ifdef Q_OS_WIN
+                qDebug() << msg;
+            #else
+                tError() << msg;
+            #endif
+        #endif
         TOsd::self()->display(tr("Error"), tr("Cannot open project!"), TOsd::Error);
     }
 }

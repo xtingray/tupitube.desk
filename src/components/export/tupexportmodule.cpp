@@ -186,6 +186,7 @@ void TupExportModule::setCurrentFormat(int currentFormat, const QString &value)
     m_currentFormat = TupExportInterface::Format(currentFormat);
     extension = value;
     filename = path;
+    filename = QDir::fromNativeSeparators(filename);
 
     if (m_currentFormat == TupExportInterface::APNG || (m_currentFormat != TupExportInterface::PNG 
         && m_currentFormat != TupExportInterface::JPEG && m_currentFormat != TupExportInterface::SVG)) { // Animated Image or Animation
@@ -242,8 +243,8 @@ void TupExportModule::chooseFile()
 
         m_filePath->setText(filename);
 
-        int last = filename.lastIndexOf("/");
-        QString dir = filename.left(last);
+        QFileInfo fileInfo(filename);
+        QString dir = fileInfo.dir().absolutePath();
 
         TCONFIG->beginGroup("General");
         TCONFIG->setValue("DefaultPath", dir);
@@ -298,14 +299,23 @@ void TupExportModule::exportIt()
         isArray = true;
         name = m_prefix->text();
         path = m_filePath->text();
+        path = QDir::fromNativeSeparators(path);
 
         if (name.length() == 0) {
-            TOsd::self()->display(tr("Error"), tr("Images name prefix can't be empty! Please, type a prefix."), TOsd::Error);
+            TOsd::self()->display(tr("Error"), tr("Images name prefix is unset! Please, type a prefix."), TOsd::Error);
             return;
         }
 
-        if (path.length() == 0)
-            path = QDir::homePath();
+        if (path.length() == 0) {
+            TOsd::self()->display(tr("Error"), tr("Images path can't be unset! Please, choose one."), TOsd::Error);
+            return;
+        }
+
+        QDir dir(path);
+        if (!dir.exists()) {
+            TOsd::self()->display(tr("Error"), tr("Images path doesn't exist! Please, choose another."), TOsd::Error);
+            return;
+        }
 
         filename = path + "/" + name;
 
@@ -319,13 +329,14 @@ void TupExportModule::exportIt()
         }
     } else { // Animation or Animated Image
         filename = m_filePath->text();
+        filename = QDir::fromNativeSeparators(filename);
 
         if (filename.length() == 0) {
-            TOsd::self()->display(tr("Error"), tr("Directory doesn't exist! Please, choose another path."), TOsd::Error);
+            TOsd::self()->display(tr("Error"), tr("Animation path is unset! Please, choose one."), TOsd::Error);
 
             #ifdef TUP_DEBUG
                 QString file = path.toLocal8Bit();
-                QString msg = "TupExportModule::exportIt() - [Tracer 01] Fatal Error: Directory doesn't exist! -> " + file;
+                QString msg = "TupExportModule::exportIt() - [Tracer 01] Fatal Error: Animation path is unset! -> " + file;
                 #ifdef Q_OS_WIN
                     qDebug() << msg;
                 #else
@@ -335,17 +346,29 @@ void TupExportModule::exportIt()
             return;
         }
 
+        QFileInfo fileInfo(filename);
+        name = fileInfo.completeBaseName();
+        path = fileInfo.dir().absolutePath();
+
+        /*
         int indexPath = filename.lastIndexOf("/");
         int indexFile = filename.length() - indexPath;
         name = filename.right(indexFile - 1);
         path = filename.left(indexPath + 1);
+        */
 
-        if (!name.toLower().endsWith(extension))    
+        if (!name.toLower().endsWith(extension))
             name += extension;
 
         if (path.length() == 0) {
-            path = QDir::homePath();
-            filename = path + "/" + name;
+            TOsd::self()->display(tr("Error"), tr("Animation path can't be unset! Please, choose one."), TOsd::Error);
+            return;
+        }
+
+        QDir dir(path);
+        if (!dir.exists()) {
+            TOsd::self()->display(tr("Error"), tr("Animation path doesn't exist! Please, choose another."), TOsd::Error);
+            return;
         }
 
         if (!browserWasOpened) {
@@ -361,6 +384,7 @@ void TupExportModule::exportIt()
         }
     }
 
+    /*
     QDir directory(path);
     if (!directory.exists()) {
         TOsd::self()->display(tr("Error"), tr("Directory doesn't exist! Please, choose another path."), TOsd::Error);
@@ -375,7 +399,6 @@ void TupExportModule::exportIt()
         #endif
         return;
     } else {
-        // if (m_currentFormat == TupExportInterface::JPEG || m_currentFormat == TupExportInterface::PNG || m_currentFormat == TupExportInterface::SVG) { // Images Array
         if (imageFormats.contains(m_currentFormat)) {
             QFileInfo dir(path);
             if (!dir.isReadable() || !dir.isWritable()) {
@@ -391,6 +414,23 @@ void TupExportModule::exportIt()
             }
             file.remove();
         }
+    }
+    */
+
+    if (imageFormats.contains(m_currentFormat)) {
+        QFileInfo dir(path);
+        if (!dir.isReadable() || !dir.isWritable()) {
+            TOsd::self()->display(tr("Error"), tr("Insufficient permissions. Please, choose another directory."), TOsd::Error);
+            return;
+        }
+    } else {
+        QFile file(filename);
+        if (!file.open(QIODevice::ReadWrite)) {
+            file.remove();
+            TOsd::self()->display(tr("Error"), tr("Insufficient permissions. Please, choose another path."), TOsd::Error);
+            return;
+        }
+        file.remove();
     }
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
