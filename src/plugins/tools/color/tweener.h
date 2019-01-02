@@ -82,8 +82,8 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
     public:
         Tweener();
         virtual ~Tweener();
-        virtual void init(TupGraphicsScene *scene);
 
+        virtual void init(TupGraphicsScene *scene);
         virtual QStringList keys() const;
         virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
@@ -103,16 +103,8 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         virtual void layerResponse(const TupLayerResponse *event);
         virtual void frameResponse(const TupFrameResponse *event);
 
-    private:
-        void setupActions();
-        int framesCount();
-        void clearSelection();
-        void disableSelection();
-        void removeTweenFromProject(const QString &name);
-
-    private:
-        struct Private;
-        Private *const k;
+    signals:
+        void tweenRemoved();
 
     private slots:
         void setCurrentTween(const QString &name);
@@ -123,6 +115,16 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         void applyReset();
         void applyTween();
         void removeTween(const QString &name);
+
+    private:
+        void setupActions();
+        int framesCount();
+        void clearSelection();
+        void disableSelection();
+        void removeTweenFromProject(const QString &name);
+
+        struct Private;
+        Private *const k;
 };
 
 #endif

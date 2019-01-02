@@ -89,6 +89,9 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         void resizeNodes(qreal scaleFactor);
         void updateZoomFactor(qreal scaleFactor);
 
+    signals:
+        void tweenRemoved();
+
     private:
         void setupActions();
         int framesCount();

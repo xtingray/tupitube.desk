@@ -281,7 +281,7 @@ void TupFrame::fromXml(const QString &xml)
                               }
 
                               tweener->fromXml(newDoc);
-                              last->setTween(tweener);
+                              last->addTween(tweener);
                               scene()->addTweenObject(k->layer->layerIndex(), last);
                           } else {
                               QString newDoc;
@@ -332,7 +332,7 @@ void TupFrame::fromXml(const QString &xml)
                                               ts << n2;
                                           }
                                           tweener->fromXml(newDoc);
-                                          svg->setTween(tweener);
+                                          svg->addTween(tweener);
                                           scene()->addTweenObject(k->layer->layerIndex(), svg);
                                       }
                                       n2 = n2.nextSibling(); 
@@ -402,7 +402,7 @@ QDomElement TupFrame::toXml(QDomDocument &doc) const
 
     do {
            int objectZValue = itemList.at(0)->itemZValue();
-           int svgZValue = svgList.at(0)->zValue();
+           int svgZValue = static_cast<int> (svgList.at(0)->zValue());
 
            if (objectZValue < svgZValue) {
                TupGraphicObject *object = itemList.takeFirst();
@@ -556,10 +556,10 @@ void TupFrame::insertObject(int position, TupGraphicObject *object, const QStrin
     }
 
     QGraphicsItem *item = object->item();
-    int itemLevel =  item->zValue();
+    int itemLevel =  static_cast<int> (item->zValue());
 
     for (int i=0; i < k->svg.size(); ++i) {
-         int zLevel = k->svg.at(i)->zValue();
+         int zLevel = static_cast<int> (k->svg.at(i)->zValue());
          if (zLevel < itemLevel)
              k->svg.at(i)->setZValue(zLevel + 1);
     }
@@ -579,11 +579,11 @@ void TupFrame::insertSvg(int position, TupSvgItem *item, const QString &label)
     k->svgIndexes.insert(position, label);
 
     for (int i=position+1; i < k->svg.size(); ++i) {
-         int zLevel = k->svg.at(i)->zValue();
+         int zLevel = static_cast<int> (k->svg.at(i)->zValue());
          k->svg.at(i)->setZValue(zLevel + 1);
     }
 
-    int itemLevel = item->zValue();
+    int itemLevel = static_cast<int> (item->zValue());
 
     for (int i=0; i < k->graphics.size(); ++i) {
          int zLevel = k->graphics.at(i)->itemZValue();
@@ -604,7 +604,7 @@ int TupFrame::createItemGroup(int position, QList<int> group)
         #endif
     #endif
 
-    int zBase = this->item(position)->zValue();
+    int zBase = static_cast<int> (this->item(position)->zValue());
     TupItemGroup *itemGroup = new TupItemGroup;
 
     foreach (int index, group) {
@@ -1124,7 +1124,7 @@ bool TupFrame::removeGraphicAt(int position)
 
     TupGraphicObject *object = k->graphics.at(position);
     if (object) {
-        if (object->hasTween())
+        if (object->hasTweens())
             this->scene()->removeTweenObject(k->layer->layerIndex(), object);
 
         int zLimit = k->graphics.at(position)->itemZValue();

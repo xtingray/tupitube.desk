@@ -79,9 +79,9 @@ Tweener::Tweener() : TupToolPlugin(), k(new Private)
 {
     setupActions();
 
-    k->configurator = 0;
+    k->configurator = nullptr;
     k->framesCount = 1;
-    k->target = 0;
+    k->target = nullptr;
 }
 
 Tweener::~Tweener()
@@ -98,7 +98,7 @@ void Tweener::init(TupGraphicsScene *scene)
 
     if (k->target) {
         k->scene->removeItem(k->target);
-        k->target = 0;
+        k->target = nullptr;
     }
 
     k->mode = TupToolPlugin::View;
@@ -184,6 +184,27 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
         if (k->editMode == TupToolPlugin::Selection) {
             if (scene->selectedItems().size() > 0) {
                 k->objects = scene->selectedItems();
+                foreach (QGraphicsItem *item, k->objects) {
+                    QString tip = item->toolTip();
+                    if (tip.contains(tr("Shear"))) {
+                        QDesktopWidget desktop;
+                        QMessageBox msgBox;
+                        msgBox.setWindowTitle(tr("Warning"));
+                        msgBox.setIcon(QMessageBox::Warning);
+                        msgBox.setText(tr("The selected items already have this kind of tween assigned."));
+                        msgBox.setInformativeText(tr("Please, edit the previous tween of these objects."));
+                        msgBox.addButton(QString(tr("Accept")), QMessageBox::AcceptRole);
+                        msgBox.show();
+                        msgBox.move(static_cast<int>((desktop.screenGeometry().width() - msgBox.width())/2),
+                                    static_cast<int>((desktop.screenGeometry().height() - msgBox.height())/2));
+                        msgBox.exec();
+
+                        k->objects.clear();
+                        scene->clearSelection();
+                        return;
+                    }
+                }
+
                 k->configurator->notifySelection(true);
                 QGraphicsItem *item = k->objects.at(0);
                 QRectF rect = item->sceneBoundingRect();
@@ -246,7 +267,7 @@ void Tweener::aboutToChangeTool()
 
     if (k->editMode == TupToolPlugin::Properties) {
         k->scene->removeItem(k->target);
-        k->target = 0;
+        k->target = nullptr;
     }
 }
 
@@ -338,8 +359,8 @@ void Tweener::clearSelection()
 {
     if (k->objects.size() > 0) {
         foreach (QGraphicsItem *item, k->objects) {
-                 if (item->isSelected())
-                     item->setSelected(false);
+            if (item->isSelected())
+                item->setSelected(false);
         }
         k->objects.clear();
         k->configurator->notifySelection(false);
@@ -351,11 +372,11 @@ void Tweener::clearSelection()
 void Tweener::disableSelection()
 {
     foreach (QGraphicsView *view, k->scene->views()) {
-             view->setDragMode (QGraphicsView::NoDrag);
-             foreach (QGraphicsItem *item, view->scene()->items()) {
-                      item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-                      item->setFlag(QGraphicsItem::ItemIsMovable, false);
-             }
+        view->setDragMode (QGraphicsView::NoDrag);
+        foreach (QGraphicsItem *item, view->scene()->items()) {
+            item->setFlag(QGraphicsItem::ItemIsSelectable, false);
+            item->setFlag(QGraphicsItem::ItemIsMovable, false);
+        }
     }
 }
 
@@ -383,16 +404,15 @@ void Tweener::setSelection()
 
     k->scene->enableItemsForSelection();
     foreach (QGraphicsView *view, k->scene->views())
-             view->setDragMode(QGraphicsView::RubberBandDrag);
+        view->setDragMode(QGraphicsView::RubberBandDrag);
     // When Object selection is enabled, previous selection is set
     if (k->objects.size() > 0) {
         foreach (QGraphicsItem *item, k->objects) {
-                 item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
-                 item->setSelected(true);
+            item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+            item->setSelected(true);
         }
         k->configurator->notifySelection(true);
     }
-
 }
 
 void Tweener::setPropertiesMode()
@@ -409,7 +429,7 @@ void Tweener::applyReset()
 {
     if ((k->mode == TupToolPlugin::Edit || k->mode == TupToolPlugin::Add) && k->editMode == TupToolPlugin::Properties) {
         k->scene->removeItem(k->target);
-        k->target = 0;
+        k->target = nullptr;
     }
 
     disableSelection();
@@ -571,15 +591,26 @@ void Tweener::removeTweenFromProject(const QString &name)
 {
     TupScene *scene = k->scene->currentScene();
     bool removed = scene->removeTween(name, TupItemTweener::Shear);
-
     if (removed) {
         foreach (QGraphicsView * view, k->scene->views()) {
-                 foreach (QGraphicsItem *item, view->scene()->items()) {
-                          QString tip = item->toolTip();
-                          if (tip.startsWith(tr("Shear Tween") + ": " + name))
-                              item->setToolTip("");
-                 }
+            foreach (QGraphicsItem *item, view->scene()->items()) {
+                QString tip = item->toolTip();
+                if (tip.compare("Tweens: " + tr("Shear")) == 0) {
+                    item->setToolTip("");
+                    item->setTransform(initialStep());
+                } else {
+                    if (tip.contains(tr("Shear"))) {
+                        tip = tip.replace(tr("Shear") + ",", "");
+                        tip = tip.replace(tr("Shear"), "");
+                        if (tip.endsWith(","))
+                            tip.chop(1);
+                        item->setToolTip(tip);
+                        item->setTransform(initialStep());
+                    }
+                }
+            }
         }
+        emit tweenRemoved();
     } else {
         #ifdef TUP_DEBUG
             QString msg = "Tweener::removeTweenFromProject() - Shear tween couldn't be removed -> " + name;
@@ -590,6 +621,17 @@ void Tweener::removeTweenFromProject(const QString &name)
             #endif
         #endif
     }
+}
+
+QTransform Tweener::initialStep()
+{
+    TupTweenerStep *step = k->currentTween->stepAt(0);
+    double shearX = step->verticalShear();
+    double shearY = step->horizontalShear();
+    QTransform transform;
+    transform.shear(shearX, shearY);
+
+    return transform;
 }
 
 void Tweener::removeTween(const QString &name)

@@ -291,7 +291,8 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
     #ifdef TUP_DEBUG
         QString msg = "TupPaintArea::frameResponse() - [" + QString::number(response->sceneIndex()) 
                       + ", " + QString::number(response->layerIndex()) + ", " 
-                      + QString::number(response->frameIndex()) + "] | request -> " + QString::number(response->action());
+                      + QString::number(response->frameIndex()) + "] | request -> "
+                      + QString::number(response->action());
         #ifdef Q_OS_WIN
             qDebug() << msg;
         #else
@@ -604,7 +605,8 @@ void TupPaintArea::itemResponse(TupItemResponse *response)
 
                   viewport()->update(scene()->sceneRect().toRect());
 
-                  if (guiScene->currentTool()->toolType() != TupToolInterface::Tweener && currentTool.compare(tr("PolyLine")) != 0)
+                  if (guiScene->currentTool()->toolType() != TupToolInterface::Tweener
+                      && currentTool.compare(tr("PolyLine")) != 0)
                       guiScene->resetCurrentTool();
               }
             break;

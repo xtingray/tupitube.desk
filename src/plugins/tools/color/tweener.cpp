@@ -55,7 +55,7 @@ struct Tweener::Private
 Tweener::Tweener() : TupToolPlugin(), k(new Private)
 {
     setupActions();
-    k->configurator = 0;
+    k->configurator = nullptr;
 }
 
 Tweener::~Tweener()
@@ -153,19 +153,40 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
             if (scene->selectedItems().size() > 0) {
                 k->objects = scene->selectedItems();
                 foreach (QGraphicsItem *item, k->objects) {
-                         if (TupGraphicLibraryItem *libraryItem = qgraphicsitem_cast<TupGraphicLibraryItem *>(item)) {
-                              if (libraryItem->type() == TupLibraryObject::Image) {
-                                  clearSelection();
-                                  TOsd::self()->display(tr("Error"), tr("Coloring Tween can't be applied to raster images"), TOsd::Error);
-                                  return;
-                              }
-                         }
+                    QString tip = item->toolTip();
+                    if (tip.contains(tr("Coloring"))) {
+                        QDesktopWidget desktop;
+                        QMessageBox msgBox;
+                        msgBox.setWindowTitle(tr("Warning"));
+                        msgBox.setIcon(QMessageBox::Warning);
+                        msgBox.setText(tr("The selected items already have this kind of tween assigned."));
+                        msgBox.setInformativeText(tr("Please, edit the previous tween of these objects."));
+                        msgBox.addButton(QString(tr("Accept")), QMessageBox::AcceptRole);
+                        msgBox.show();
+                        msgBox.move(static_cast<int>((desktop.screenGeometry().width() - msgBox.width())/2),
+                                    static_cast<int>((desktop.screenGeometry().height() - msgBox.height())/2));
+                        msgBox.exec();
 
-                         if (qgraphicsitem_cast<TupSvgItem *>(item)) {
-                             clearSelection();         
-                             TOsd::self()->display(tr("Error"), tr("Coloring Tween can't be applied to SVG files"), TOsd::Error);
-                             return;
+                        k->objects.clear();
+                        scene->clearSelection();
+                        return;
+                    }
+                }
+
+                foreach (QGraphicsItem *item, k->objects) {
+                    if (TupGraphicLibraryItem *libraryItem = qgraphicsitem_cast<TupGraphicLibraryItem *>(item)) {
+                        if (libraryItem->type() == TupLibraryObject::Image) {
+                            clearSelection();
+                            TOsd::self()->display(tr("Error"), tr("Coloring Tween can't be applied to raster images"), TOsd::Error);
+                            return;
                          }
+                    }
+
+                    if (qgraphicsitem_cast<TupSvgItem *>(item)) {
+                        clearSelection();
+                        TOsd::self()->display(tr("Error"), tr("Coloring Tween can't be applied to SVG files"), TOsd::Error);
+                        return;
+                    }
                 }
 
                 QGraphicsItem *item = k->objects.at(0);
@@ -173,11 +194,11 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(item)) {
                     color = path->pen().color();
                 } else if (TupEllipseItem *ellipse = qgraphicsitem_cast<TupEllipseItem *>(item)) {
-                           color = ellipse->pen().color();
+                    color = ellipse->pen().color();
                 } else if (TupLineItem *line = qgraphicsitem_cast<TupLineItem *>(item)) {
-                           color = line->pen().color();
+                    color = line->pen().color();
                 } else if (TupRectItem *rect = qgraphicsitem_cast<TupRectItem *>(item)) {
-                           color = rect->pen().color();
+                    color = rect->pen().color();
                 }
 
                 k->configurator->setInitialColor(color);
@@ -316,8 +337,8 @@ void Tweener::clearSelection()
 {
     if (k->objects.size() > 0) {
         foreach (QGraphicsItem *item, k->objects) {
-                 if (item->isSelected())
-                     item->setSelected(false);
+            if (item->isSelected())
+                item->setSelected(false);
         }
         k->objects.clear();
         k->configurator->notifySelection(false);
@@ -329,11 +350,11 @@ void Tweener::clearSelection()
 void Tweener::disableSelection()
 {
     foreach (QGraphicsView *view, k->scene->views()) {
-             view->setDragMode (QGraphicsView::NoDrag);
-             foreach (QGraphicsItem *item, view->scene()->items()) {
-                      item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-                      item->setFlag(QGraphicsItem::ItemIsMovable, false);
-             }
+        view->setDragMode (QGraphicsView::NoDrag);
+        foreach (QGraphicsItem *item, view->scene()->items()) {
+            item->setFlag(QGraphicsItem::ItemIsSelectable, false);
+            item->setFlag(QGraphicsItem::ItemIsMovable, false);
+        }
     }
 }
 
@@ -355,23 +376,23 @@ void Tweener::setSelection()
 
     k->scene->enableItemsForSelection();
     foreach (QGraphicsView *view, k->scene->views())
-             view->setDragMode(QGraphicsView::RubberBandDrag);
+        view->setDragMode(QGraphicsView::RubberBandDrag);
     // When Object selection is enabled, previous selection is set
     if (k->objects.size() > 0) {
         foreach (QGraphicsItem *item, k->objects) {
-                 item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
-                 item->setSelected(true);
+            item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+            item->setSelected(true);
         }
         QGraphicsItem *item = k->objects.at(0);
         QColor color = QColor();
         if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(item)) {
             color = path->pen().color();
         } else if (TupEllipseItem *ellipse = qgraphicsitem_cast<TupEllipseItem *>(item)) {
-                   color = ellipse->pen().color();
+            color = ellipse->pen().color();
         } else if (TupLineItem *line = qgraphicsitem_cast<TupLineItem *>(item)) {
-                   color = line->pen().color();
+            color = line->pen().color();
         } else if (TupRectItem *rect = qgraphicsitem_cast<TupRectItem *>(item)) {
-                   color = rect->pen().color(); 
+            color = rect->pen().color();
         }
         k->configurator->setInitialColor(color);
         k->configurator->notifySelection(true);
@@ -538,15 +559,24 @@ void Tweener::removeTweenFromProject(const QString &name)
 {
     TupScene *scene = k->scene->currentScene();
     bool removed = scene->removeTween(name, TupItemTweener::Coloring);
-
     if (removed) {
         foreach (QGraphicsView * view, k->scene->views()) {
-                 foreach (QGraphicsItem *item, view->scene()->items()) {
-                          QString tip = item->toolTip();
-                          if (tip.startsWith(tr("Coloring Tween") + ": " + name))
-                              item->setToolTip("");
-                 }
+            foreach (QGraphicsItem *item, view->scene()->items()) {
+                QString tip = item->toolTip();
+                if (tip.compare("Tweens: " + tr("Coloring")) == 0) {
+                    item->setToolTip("");
+                } else {
+                    if (tip.contains(tr("Coloring"))) {
+                        tip = tip.replace(tr("Coloring") + ",", "");
+                        tip = tip.replace(tr("Coloring"), "");
+                        if (tip.endsWith(","))
+                            tip.chop(1);
+                        item->setToolTip(tip);
+                    }
+                }
+            }
         }
+        emit tweenRemoved();
     } else {
         #ifdef TUP_DEBUG
             QString msg = "Tweener::removeTweenFromProject() - Coloring tween couldn't be removed -> " + name;

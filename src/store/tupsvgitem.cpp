@@ -37,31 +37,16 @@
 #include "tupserializer.h"
 #include "tuplayer.h"
 
-struct TupSvgItem::Private
-{
-    QString name;
-    QString path;
-    QString data;
-    TupFrame *frame;
-    TupItemTweener *tween;
-    bool hasTween;
-    QPointF lastTweenPos;
-
-    QStringList doList;
-    QStringList undoList;
-};
-
-TupSvgItem::TupSvgItem(QGraphicsItem * parent) : QGraphicsSvgItem(parent), k(new Private)
+TupSvgItem::TupSvgItem(QGraphicsItem * parent) : QGraphicsSvgItem(parent)
 {
     setAcceptHoverEvents(true);
 }
 
-TupSvgItem::TupSvgItem(const QString &file, TupFrame *frame) : QGraphicsSvgItem(file), k(new Private)
+TupSvgItem::TupSvgItem(const QString &file, TupFrame *currentFrame) : QGraphicsSvgItem(file)
 {
     setAcceptHoverEvents(true);
-    k->path = file;
-    k->frame = frame;
-    k->hasTween = false;
+    path = file;
+    tupFrame = currentFrame;
 }
 
 TupSvgItem::~TupSvgItem()
@@ -71,46 +56,58 @@ TupSvgItem::~TupSvgItem()
 
 void TupSvgItem::setSymbolName(const QString &symbolName)
 {
-    k->name = symbolName;
+    name = symbolName;
 }
 
 QString TupSvgItem::symbolName() const
 {
-    return k->name;
+    return name;
 }
 
 QString TupSvgItem::itemPath() const
 {
-    return k->path;
+    return path;
 }
 
 TupFrame *TupSvgItem::frame() const
 {
-    return k->frame;
+    return tupFrame;
 }
 
 int TupSvgItem::frameIndex()
 {
-    return k->frame->index();
+    return tupFrame->index();
 }
 
 bool TupSvgItem::layerIsVisible()
 {
-    TupLayer *layer = k->frame->layer();
+    TupLayer *layer = tupFrame->layer();
     if (layer->isVisible())
         return true;
 
     return false;
 }
 
-TupItemTweener *TupSvgItem::tween() const
+TupItemTweener* TupSvgItem::tween(const QString &id) const
 {
-    return k->tween;
+    int total = tweens.count();
+    for(int i=0; i < total; i++) {
+        TupItemTweener *tween = tweens.at(i);
+        if (tween->name().compare(id) == 0)
+            return tween;
+    }
+
+    return NULL;
+}
+
+QList<TupItemTweener *> TupSvgItem::tweensList() const
+{
+    return tweens;
 }
 
 void TupSvgItem::rendering()
 {
-    QByteArray stream = k->data.toLocal8Bit(); 
+    QByteArray stream = data.toLocal8Bit();
     renderer()->load(stream);
 }
 
@@ -121,7 +118,7 @@ void TupSvgItem::fromXml(const QString &xml)
 
 QDomElement TupSvgItem::toXml(QDomDocument &doc) const
 {
-    if (k->name.length() == 0) {
+    if (name.length() == 0) {
         #ifdef TUP_DEBUG
             QString msg = "TupFrame::fromXml() - Error: Object ID is null!";
             #ifdef Q_OS_WIN
@@ -133,40 +130,44 @@ QDomElement TupSvgItem::toXml(QDomDocument &doc) const
     }
 
     QDomElement root = doc.createElement("svg");
-    root.setAttribute("id", k->name);
+    root.setAttribute("id", name);
     root.appendChild(TupSerializer::properties(this, doc));
 
-    if (k->hasTween)
-        root.appendChild(k->tween->toXml(doc));
+    int total = tweens.count();
+    for(int i=0; i < total; i++)
+        root.appendChild(tweens.at(i)->toXml(doc));
 
     return root;
 }
 
-void TupSvgItem::setTween(TupItemTweener *tween)
+void TupSvgItem::addTween(TupItemTweener *itemTween)
 {
-    k->tween = tween;
-    k->hasTween = true;
+    tweens << itemTween;
 }
 
-bool TupSvgItem::hasTween()
+bool TupSvgItem::hasTweens()
 {
-    return k->hasTween;
+    return !tweens.isEmpty();
 }
 
-void TupSvgItem::removeTween()
+void TupSvgItem::removeTween(int index)
 {
-    k->tween = 0; 
-    k->hasTween = false;
+    tweens.removeAt(index);
+}
+
+void TupSvgItem::removeAllTweens()
+{
+    tweens.clear();
 }
 
 void TupSvgItem::setLastTweenPos(QPointF point)
 {
-    k->lastTweenPos = point;
+    lastTweenPosition = point;
 }
 
 QPointF TupSvgItem::lastTweenPos()
 {
-    return k->lastTweenPos;
+    return lastTweenPosition;
 }
 
 void TupSvgItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
@@ -206,27 +207,27 @@ void TupSvgItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
 bool TupSvgItem::transformationIsNotEdited()
 {
-    return k->doList.isEmpty() && k->undoList.isEmpty();
+    return doList.isEmpty() && undoList.isEmpty();
 }
 
 void TupSvgItem::saveInitTransformation()
 {
     QDomDocument doc;
     doc.appendChild(TupSerializer::properties(this, doc));
-    k->doList << doc.toString();
+    doList << doc.toString();
 }
 
 void TupSvgItem::storeItemTransformation(const QString &properties)
 {
-    k->doList << properties;
+    doList << properties;
 }
 
 void TupSvgItem::undoTransformation()
 {
-    if (k->doList.count() > 1) {
-        k->undoList << k-> doList.takeLast();
-        if (!k->doList.isEmpty()) {
-            QString properties = k->doList.last();
+    if (doList.count() > 1) {
+        undoList << doList.takeLast();
+        if (!doList.isEmpty()) {
+            QString properties = doList.last();
             QDomDocument doc;
             doc.setContent(properties);
             TupSerializer::loadProperties(this, doc.documentElement());
@@ -236,9 +237,9 @@ void TupSvgItem::undoTransformation()
 
 void TupSvgItem::redoTransformation()
 {
-    if (!k->undoList.isEmpty()) {
-        QString properties = k->undoList.takeLast();
-        k->doList << properties;
+    if (!undoList.isEmpty()) {
+        QString properties = undoList.takeLast();
+        doList << properties;
         QDomDocument doc;
         doc.setContent(properties);
         TupSerializer::loadProperties(this, doc.documentElement());

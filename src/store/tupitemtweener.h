@@ -61,8 +61,8 @@ class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSeriali
              Shear = 3,
              Opacity = 4,
              Coloring = 5,
-             Composed = 6, 
-             Papagayo = 7
+             // Composed = 6,
+             Papagayo = 6
         };
 
         enum RotationType { Continuos = 0, Partial };

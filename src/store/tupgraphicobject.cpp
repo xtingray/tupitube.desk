@@ -36,29 +36,9 @@
 #include "tupgraphicobject.h"
 #include "tuplayer.h"
 #include "tupscene.h"
-#include "tupitemtweener.h"
 #include "tupserializer.h"
 
-struct TupGraphicObject::Private
-{
-    QString name;
-    QGraphicsItem *item;
-    bool hasTween;
-    TupItemTweener *tween;
-    TupFrame *frame;
-    QPointF lastTweenPos;
-
-    QStringList transformDoList;
-    QStringList transformUndoList;
-
-    QStringList brushDoList;
-    QStringList brushUndoList;
-
-    QStringList penDoList;
-    QStringList penUndoList;
-};
-
-TupGraphicObject::TupGraphicObject(QGraphicsItem *item, TupFrame *parent) : QObject(parent), k(new Private)
+TupGraphicObject::TupGraphicObject(QGraphicsItem *graphic, TupFrame *parent) : QObject(parent)
 {
     /*
     #ifdef TUP_DEBUG
@@ -70,10 +50,8 @@ TupGraphicObject::TupGraphicObject(QGraphicsItem *item, TupFrame *parent) : QObj
     #endif	
     */
 
-    k->item = item;
-    k->tween = 0;
-    k->frame = parent;
-    k->hasTween = false;
+    graphicItem = graphic;
+    tupFrame = parent;
 
     initItemData();
 }
@@ -89,8 +67,6 @@ TupGraphicObject::~TupGraphicObject()
         #endif
     #endif	
     */
-
-    delete k;
 }
 
 void TupGraphicObject::fromXml(const QString &xml)
@@ -102,19 +78,20 @@ QDomElement TupGraphicObject::toXml(QDomDocument &doc) const
 {
     QDomElement object = doc.createElement("object");
 
-    if (TupAbstractSerializable *serialData = dynamic_cast<TupAbstractSerializable *>(k->item))
+    if (TupAbstractSerializable *serialData = dynamic_cast<TupAbstractSerializable *>(graphicItem))
         object.appendChild(serialData->toXml(doc));
 
-    if (k->tween)
-        object.appendChild(k->tween->toXml(doc));
+    int total = tweens.count();
+    for(int i=0; i < total; i++)
+        object.appendChild(tweens.at(i)->toXml(doc));
 
     return object;
 }
 
-void TupGraphicObject::setItem(QGraphicsItem *item)
+void TupGraphicObject::setItem(QGraphicsItem *graphic)
 {
-    if (item) {
-        k->item = item;
+    if (graphic) {
+        graphicItem = graphic;
         initItemData();
     } else {
         #ifdef TUP_DEBUG
@@ -130,77 +107,101 @@ void TupGraphicObject::setItem(QGraphicsItem *item)
 
 QGraphicsItem *TupGraphicObject::item() const
 {
-    return k->item;
+    return graphicItem;
 }
 
-void TupGraphicObject::setObjectName(const QString &name)
+void TupGraphicObject::setObjectName(const QString &objectName)
 {
-    k->name = name;
+    name = objectName;
 }
 
 QString TupGraphicObject::objectName() const
 {
-    return k->name;
+    return name;
 }
 
 void TupGraphicObject::initItemData()
 {
-    if (! k->item->data(ScaleX).isValid())
-        k->item->setData(ScaleX, 1.0);
+    if (! graphicItem->data(ScaleX).isValid())
+        graphicItem->setData(ScaleX, 1.0);
 
-    if (! k->item->data(ScaleY).isValid())
-        k->item->setData(ScaleY, 1.0);
+    if (! graphicItem->data(ScaleY).isValid())
+        graphicItem->setData(ScaleY, 1.0);
 
-    if (! k->item->data(Rotate).isValid())
-        k->item->setData(Rotate, 0.0);
+    if (! graphicItem->data(Rotate).isValid())
+        graphicItem->setData(Rotate, 0.0);
 
-    if (! k->item->data(TranslateX).isValid())
-        k->item->setData(TranslateX, 0.0);
+    if (! graphicItem->data(TranslateX).isValid())
+        graphicItem->setData(TranslateX, 0.0);
 
-    if (! k->item->data(TranslateY).isValid())
-        k->item->setData(TranslateY, 0.0);
+    if (! graphicItem->data(TranslateY).isValid())
+        graphicItem->setData(TranslateY, 0.0);
 }
 
-void TupGraphicObject::setTween(TupItemTweener *tween)
+void TupGraphicObject::addTween(TupItemTweener *itemTween)
 {
-    k->tween = tween;
-    k->hasTween = true;
+    int total = tweens.count();
+    for(int i=0; i < total; i++) {
+        TupItemTweener *tween = tweens.at(i);
+        if (tween->type() == itemTween->type()) {
+            tweens[i] = itemTween;
+            return;
+        }
+    }
+
+    tweens << itemTween;
 }
 
-bool TupGraphicObject::hasTween() const
+bool TupGraphicObject::hasTweens()
 {
-    return k->hasTween;
+    return !tweens.isEmpty();
 }
 
-void TupGraphicObject::removeTween()
+void TupGraphicObject::removeTween(int index)
 {
-    k->tween = 0;
-    k->hasTween = false;
+    tweens.removeAt(index);
 }
 
-TupItemTweener *TupGraphicObject::tween() const
+void TupGraphicObject::removeAllTweens()
 {
-    return k->tween;
+    tweens.clear();
+}
+
+TupItemTweener *TupGraphicObject::tween(const QString &id) const
+{
+    int total = tweens.count();
+    for(int i=0; i < total; i++) {
+        TupItemTweener *tween = tweens.at(i);
+        if (tween->name().compare(id) == 0)
+            return tween;
+    }
+
+    return NULL;
+}
+
+QList<TupItemTweener *> TupGraphicObject::tweensList() const
+{
+    return tweens;
 }
 
 TupFrame *TupGraphicObject::frame() const
 {
-    return k->frame;
+    return tupFrame;
 }
 
-void TupGraphicObject::setFrame(TupFrame *frame) 
+void TupGraphicObject::setFrame(TupFrame *currentFrame)
 {
-    k->frame = frame;
+    tupFrame = currentFrame;
 }
 
 int TupGraphicObject::frameIndex()
 {
-    return k->frame->index();
+    return tupFrame->index();
 }
 
 bool TupGraphicObject::layerIsVisible()
 {
-    TupLayer *layer = k->frame->layer();
+    TupLayer *layer = tupFrame->layer();
     if (layer->isVisible())
         return true;
 
@@ -209,89 +210,90 @@ bool TupGraphicObject::layerIsVisible()
 
 int TupGraphicObject::objectIndex() const
 {
-    return k->frame->indexOf(const_cast<TupGraphicObject *>(this));
+    return tupFrame->indexOf(const_cast<TupGraphicObject *>(this));
 }
 
 void TupGraphicObject::setLastTweenPos(QPointF point)
 {
-    k->lastTweenPos = point;
+    lastTweenPosition = point;
 }
 
 QPointF TupGraphicObject::lastTweenPos()
 {   
-    return k->lastTweenPos;
+    return lastTweenPosition;
 }
 
 void TupGraphicObject::setItemZValue(int value)
 {
-    k->item->setZValue(value);
+    graphicItem->setZValue(value);
 }
 
 int TupGraphicObject::itemZValue()
 {
-    return k->item->zValue();
+    int value = static_cast<int> (graphicItem->zValue());
+    return value;
 }
 
 bool TupGraphicObject::transformationIsNotEdited()
 {
-    return k->transformDoList.isEmpty() && k->transformUndoList.isEmpty();
+    return transformDoList.isEmpty() && transformUndoList.isEmpty();
 }
 
 void TupGraphicObject::saveInitTransformation()
 {
     QDomDocument doc;
-    doc.appendChild(TupSerializer::properties(k->item, doc));
-    k->transformDoList << doc.toString();
+    doc.appendChild(TupSerializer::properties(graphicItem, doc));
+    transformDoList << doc.toString();
 }
 
 void TupGraphicObject::storeItemTransformation(const QString &properties)
 {
-    k->transformDoList << properties;
+    transformDoList << properties;
 }
 
 void TupGraphicObject::undoTransformation()
 {
-    if (k->transformDoList.count() > 1) {
-        k->transformUndoList << k->transformDoList.takeLast();
-        if (!k->transformDoList.isEmpty()) {
-            QString properties = k->transformDoList.last();
+    if (transformDoList.count() > 1) {
+        transformUndoList << transformDoList.takeLast();
+        if (!transformDoList.isEmpty()) {
+            QString properties = transformDoList.last();
             QDomDocument doc;
             doc.setContent(properties);
-            TupSerializer::loadProperties(k->item, doc.documentElement());
+            TupSerializer::loadProperties(graphicItem, doc.documentElement());
         }
     }
 }
 
 void TupGraphicObject::redoTransformation()
 {
-    if (!k->transformUndoList.isEmpty()) {
-        QString properties = k->transformUndoList.takeLast();
-        k->transformDoList << properties;
+    if (!transformUndoList.isEmpty()) {
+        QString properties = transformUndoList.takeLast();
+        transformDoList << properties;
         QDomDocument doc;
         doc.setContent(properties);
-        TupSerializer::loadProperties(k->item, doc.documentElement());
+        TupSerializer::loadProperties(graphicItem, doc.documentElement());
     }
 }
 
 bool TupGraphicObject::brushIsNotEdited()
 {
-    return k->brushDoList.isEmpty() && k->brushUndoList.isEmpty();
+    return brushDoList.isEmpty() && brushUndoList.isEmpty();
 }
 
 void TupGraphicObject::saveInitBrush()
 {
-    if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(k->item)) {
+    if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(graphicItem)) {
         QBrush brush = shape->brush();
         QDomDocument doc; 
         doc.appendChild(TupSerializer::brush(&brush, doc));
-        k->brushDoList << doc.toString();
+        brushDoList << doc.toString();
     }
 }
 
 void TupGraphicObject::setBrush(const QString &xml)
 {
-    if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(k->item)) {
-        k->brushDoList << xml;
+    if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(graphicItem)) {
+        brushDoList << xml;
         QBrush brush;
         QDomDocument doc;
         doc.setContent(xml);
@@ -303,10 +305,10 @@ void TupGraphicObject::setBrush(const QString &xml)
 
 void TupGraphicObject::redoBrushAction()
 {
-    if (!k->brushUndoList.isEmpty()) {
-        if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(k->item)) {
-            QString xml = k->brushUndoList.takeLast();
-            k->brushDoList << xml;
+    if (!brushUndoList.isEmpty()) {
+        if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(graphicItem)) {
+            QString xml = brushUndoList.takeLast();
+            brushDoList << xml;
             QBrush brush;
             QDomDocument doc;
             doc.setContent(xml);
@@ -319,11 +321,11 @@ void TupGraphicObject::redoBrushAction()
 
 void TupGraphicObject::undoBrushAction()
 {
-    if (k->brushDoList.count() > 1) {
-        if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(k->item)) {
-            k->brushUndoList << k->brushDoList.takeLast();
-            if (!k->brushDoList.isEmpty()) {
-                QString xml = k->brushDoList.last();
+    if (brushDoList.count() > 1) {
+        if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(graphicItem)) {
+            brushUndoList << brushDoList.takeLast();
+            if (!brushDoList.isEmpty()) {
+                QString xml = brushDoList.last();
                 QBrush brush;
                 QDomDocument doc;
                 doc.setContent(xml);
@@ -337,38 +339,38 @@ void TupGraphicObject::undoBrushAction()
 
 bool TupGraphicObject::penIsNotEdited()
 {
-    return k->penDoList.isEmpty() && k->penUndoList.isEmpty();
+    return penDoList.isEmpty() && penUndoList.isEmpty();
 }
 
 void TupGraphicObject::saveInitPen()
 {
-    if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(k->item)) {
+    if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(graphicItem)) {
         QPen pen = shape->pen();
         QDomDocument doc;
         doc.appendChild(TupSerializer::pen(&pen, doc));
-        k->penDoList << doc.toString();
+        penDoList << doc.toString();
     }
 }
 
 void TupGraphicObject::setPen(const QString &xml)
 {
-    if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(k->item)) {
+    if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(graphicItem)) {
         QPen pen;
         QDomDocument doc;
         doc.setContent(xml);
 
         TupSerializer::loadPen(pen, doc.documentElement());
         shape->setPen(pen);
-        k->penDoList << xml;
+        penDoList << xml;
     }
 }
 
 void TupGraphicObject::redoPenAction()
 {
-    if (!k->penUndoList.isEmpty()) {
-        if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(k->item)) {
-            QString xml = k->penUndoList.takeLast();
-            k->penDoList << xml;
+    if (!penUndoList.isEmpty()) {
+        if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(graphicItem)) {
+            QString xml = penUndoList.takeLast();
+            penDoList << xml;
             QPen pen;
             QDomDocument doc;
             doc.setContent(xml);
@@ -381,11 +383,11 @@ void TupGraphicObject::redoPenAction()
 
 void TupGraphicObject::undoPenAction()
 {
-    if (k->penDoList.count() > 1) {
-        if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(k->item)) {
-            k->penUndoList << k->penDoList.takeLast();
-            if (!k->penDoList.isEmpty()) {
-                QString xml = k->penDoList.last();
+    if (penDoList.count() > 1) {
+        if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(graphicItem)) {
+            penUndoList << penDoList.takeLast();
+            if (!penDoList.isEmpty()) {
+                QString xml = penDoList.last();
                 QPen pen;
                 QDomDocument doc;
                 doc.setContent(xml);
@@ -396,7 +398,6 @@ void TupGraphicObject::undoPenAction()
         }
     }
 }
-
 
 QString TupGraphicObject::toString() const
 {

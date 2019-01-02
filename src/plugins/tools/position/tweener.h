@@ -85,20 +85,8 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         void resizeNodes(qreal scaleFactor);
         void updateZoomFactor(qreal scaleFactor);
 
-    private:
-        int framesCount();
-        void setupActions();
-        QString pathToCoords();
-        void clearSelection();
-        void disableSelection();
-        void removeTweenFromProject(const QString &name);
-        void resetGUI();
-        void removeTweenPoints();
-        void paintTweenPoints();
-
-    private:
-        struct Private;
-        Private *const k;
+    signals:
+        void tweenRemoved();
 
     private slots:
         void applyReset();
@@ -114,6 +102,20 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
 
     public slots:
         void updatePath();
+
+    private:
+        int framesCount();
+        void setupActions();
+        QString pathToCoords();
+        void clearSelection();
+        void disableSelection();
+        void removeTweenFromProject(const QString &name);
+        void resetGUI();
+        void removeTweenPoints();
+        void paintTweenPoints();
+
+        struct Private;
+        Private *const k;
 };
 
 #endif

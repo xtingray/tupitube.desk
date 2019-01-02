@@ -70,7 +70,7 @@ Tweener::Tweener() : TupToolPlugin(), k(new Private)
 {
     setupActions();
 
-    k->configurator = 0;
+    k->configurator = nullptr;
     k->initFrame = 0;
 }
 
@@ -168,6 +168,27 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
         if (k->editMode == TupToolPlugin::Selection) {
             if (scene->selectedItems().size() > 0) {
                 k->objects = scene->selectedItems();
+                foreach (QGraphicsItem *item, k->objects) {
+                    QString tip = item->toolTip();
+                    if (tip.contains(tr("Opacity"))) {
+                        QDesktopWidget desktop;
+                        QMessageBox msgBox;
+                        msgBox.setWindowTitle(tr("Warning"));
+                        msgBox.setIcon(QMessageBox::Warning);
+                        msgBox.setText(tr("The selected items already have this kind of tween assigned."));
+                        msgBox.setInformativeText(tr("Please, edit the previous tween of these objects."));
+                        msgBox.addButton(QString(tr("Accept")), QMessageBox::AcceptRole);
+                        msgBox.show();
+                        msgBox.move(static_cast<int>((desktop.screenGeometry().width() - msgBox.width())/2),
+                                    static_cast<int>((desktop.screenGeometry().height() - msgBox.height())/2));
+                        msgBox.exec();
+
+                        k->objects.clear();
+                        scene->clearSelection();
+                        return;
+                    }
+                }
+
                 k->configurator->notifySelection(true);
             }
         }
@@ -302,8 +323,8 @@ void Tweener::clearSelection()
 {
     if (k->objects.size() > 0) {
         foreach (QGraphicsItem *item, k->objects) {
-                 if (item->isSelected())
-                     item->setSelected(false);
+            if (item->isSelected())
+                item->setSelected(false);
         }
         k->objects.clear();
         k->configurator->notifySelection(false);
@@ -315,11 +336,11 @@ void Tweener::clearSelection()
 void Tweener::disableSelection()
 {
     foreach (QGraphicsView *view, k->scene->views()) {
-             view->setDragMode (QGraphicsView::NoDrag);
-             foreach (QGraphicsItem *item, view->scene()->items()) {
-                      item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-                      item->setFlag(QGraphicsItem::ItemIsMovable, false);
-             }
+         view->setDragMode (QGraphicsView::NoDrag);
+         foreach (QGraphicsItem *item, view->scene()->items()) {
+             item->setFlag(QGraphicsItem::ItemIsSelectable, false);
+             item->setFlag(QGraphicsItem::ItemIsMovable, false);
+         }
     }
 }
 
@@ -341,12 +362,12 @@ void Tweener::setSelection()
 
     k->scene->enableItemsForSelection();
     foreach (QGraphicsView *view, k->scene->views())
-             view->setDragMode(QGraphicsView::RubberBandDrag);
+        view->setDragMode(QGraphicsView::RubberBandDrag);
     // When Object selection is enabled, previous selection is set
     if (k->objects.size() > 0) {
         foreach (QGraphicsItem *item, k->objects) {
-                 item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
-                 item->setSelected(true);
+            item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+            item->setSelected(true);
         }
         k->configurator->notifySelection(true);
     }
@@ -487,7 +508,7 @@ void Tweener::applyTween()
         for (int i = framesNumber; i < total; i++) {
              for (int j = 0; j < layersCount; j++) {
                   request = TupRequestBuilder::createFrameRequest(k->initScene, j, i,
-                                                                  TupProjectRequest::Add, tr("Frame"));
+                                               TupProjectRequest::Add, tr("Frame"));
                   emit requested(&request);
              }
         }
@@ -513,12 +534,24 @@ void Tweener::removeTweenFromProject(const QString &name)
 
     if (removed) {
         foreach (QGraphicsView * view, k->scene->views()) {
-                 foreach (QGraphicsItem *item, view->scene()->items()) {
-                          QString tip = item->toolTip();
-                          if (tip.startsWith(tr("Opacity Tween") + ": " + name))
-                              item->setToolTip("");
-                 }
+            foreach (QGraphicsItem *item, view->scene()->items()) {
+                QString tip = item->toolTip();
+                if (tip.compare("Tweens: " + tr("Opacity")) == 0) {
+                    item->setToolTip("");
+                    item->setRotation(0);
+                } else {
+                    if (tip.contains(tr("Opacity"))) {
+                        tip = tip.replace(tr("Opacity") + ",", "");
+                        tip = tip.replace(tr("Opacity"), "");
+                        if (tip.endsWith(","))
+                            tip.chop(1);
+                        item->setToolTip(tip);
+                        item->setRotation(0);
+                    }
+                }
+            }
         }
+        emit tweenRemoved();
     } else {
         #ifdef TUP_DEBUG
             QString msg = "Tweener::removeTweenFromProject() - Opacity tween couldn't be removed -> " + name;

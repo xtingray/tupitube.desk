@@ -82,7 +82,7 @@ TupDocumentView::TupDocumentView(TupProject *work, QWidget *parent, bool netFlag
     setWindowIcon(QPixmap(THEME_DIR + "icons/animation_mode.png"));
 
     project = work;
-    currentTool = 0;
+    currentTool = NULL;
     onionEnabled = true;
     fullScreenOn = false;
     viewAngle = 0;
@@ -539,7 +539,6 @@ void TupDocumentView::loadPlugins()
                                  {
                                    if (toolName.compare(tr("Position Tween")) == 0) {
                                        tweenTools[0] = action;
-
                                        motionMenu->setDefaultAction(action);
                                    }
 
@@ -558,10 +557,15 @@ void TupDocumentView::loadPlugins()
                                    if (toolName.compare(tr("Coloring Tween")) == 0)
                                        tweenTools[5] = action;
 
+                                   TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(action->parent());
+                                   connect(tool, SIGNAL(tweenRemoved()), this, SLOT(updatePaintArea()));
+
+                                   /*
                                    if (toolName.compare(tr("Composed Tween")) == 0) {
                                        action->setDisabled(true);
                                        tweenTools[6] = action;
                                    }
+                                   */
                                  }
                                  break;
                               case TupToolInterface::Selection:

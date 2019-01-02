@@ -39,13 +39,11 @@
 #include "tglobal.h"
 #include "tupabstractserializable.h"
 #include "tupframe.h"
+#include "tupitemtweener.h"
 
 #include <QObject>
 #include <QMatrix>
 #include <QGraphicsItem>
-
-class QGraphicsItem;
-class TupItemTweener;
 
 class TUPITUBE_EXPORT TupGraphicObject : public QObject, public TupAbstractSerializable
 {
@@ -55,17 +53,20 @@ class TUPITUBE_EXPORT TupGraphicObject : public QObject, public TupAbstractSeria
         TupGraphicObject(QGraphicsItem *item, TupFrame *parent);
         ~TupGraphicObject();
 
-        void setItem(QGraphicsItem *item);
+        void setItem(QGraphicsItem *currentItem);
         QGraphicsItem *item() const;
         
-        void setObjectName(const QString &name);
+        void setObjectName(const QString &objectName);
         QString objectName() const;
-        
-        void setTween(TupItemTweener *tween);
-        bool hasTween() const;
-        void removeTween();
-        TupItemTweener *tween() const;
-        
+
+        void addTween(TupItemTweener *itemTween);
+
+        bool hasTweens();
+        void removeTween(int index);
+        void removeAllTweens();
+        TupItemTweener *tween(const QString &id) const;
+        QList<TupItemTweener *> tweensList() const;
+
         TupFrame *frame() const;
         int objectIndex() const;
         void setFrame(TupFrame *frame);
@@ -105,9 +106,21 @@ class TUPITUBE_EXPORT TupGraphicObject : public QObject, public TupAbstractSeria
         
     private:
         void initItemData();
-        
-        struct Private;
-        Private *const k;
-};
 
+        QGraphicsItem *graphicItem;
+        QList<TupItemTweener*> tweens;
+
+        QString name;
+        TupFrame *tupFrame;
+        QPointF lastTweenPosition;
+
+        QStringList transformDoList;
+        QStringList transformUndoList;
+
+        QStringList brushDoList;
+        QStringList brushUndoList;
+
+        QStringList penDoList;
+        QStringList penUndoList;
+};
 #endif

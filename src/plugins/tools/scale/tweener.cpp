@@ -78,7 +78,7 @@ Tweener::Tweener() : TupToolPlugin(), k(new Private)
 {
     setupActions();
 
-    k->configurator = 0;
+    k->configurator = nullptr;
     k->initFrame = 0;
     // k->target = 0;
 }
@@ -181,6 +181,27 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
         if (k->editMode == TupToolPlugin::Selection) {
             if (scene->selectedItems().size() > 0) {
                 k->objects = scene->selectedItems();
+                foreach (QGraphicsItem *item, k->objects) {
+                    QString tip = item->toolTip();
+                    if (tip.contains(tr("Scale"))) {
+                        QDesktopWidget desktop;
+                        QMessageBox msgBox;
+                        msgBox.setWindowTitle(tr("Warning"));
+                        msgBox.setIcon(QMessageBox::Warning);
+                        msgBox.setText(tr("The selected items already have this kind of tween assigned."));
+                        msgBox.setInformativeText(tr("Please, edit the previous tween of these objects."));
+                        msgBox.addButton(QString(tr("Accept")), QMessageBox::AcceptRole);
+                        msgBox.show();
+                        msgBox.move(static_cast<int>((desktop.screenGeometry().width() - msgBox.width())/2),
+                                    static_cast<int>((desktop.screenGeometry().height() - msgBox.height())/2));
+                        msgBox.exec();
+
+                        k->objects.clear();
+                        scene->clearSelection();
+                        return;
+                    }
+                }
+
                 k->configurator->notifySelection(true);
                 QGraphicsItem *item = k->objects.at(0);
                 QRectF rect = item->sceneBoundingRect();
@@ -280,31 +301,30 @@ void Tweener::updateScene(TupGraphicsScene *scene)
        //     k->scene->addItem(k->target);
        // }
     } else if (k->mode == TupToolPlugin::Add) {
-               int total = framesCount();
+        int total = framesCount();
 
-               if (k->editMode == TupToolPlugin::Properties) {
-                   if (total > k->configurator->startComboSize()) {
-                       k->configurator->activateMode(TupToolPlugin::Selection);
-                       clearSelection();
-                       setSelection();
-                   } 
-               } else if (k->editMode == TupToolPlugin::Selection) {
-                          if (scene->currentFrameIndex() != k->initFrame)
-                              clearSelection();
-                          k->initFrame = scene->currentFrameIndex();
-                          setSelection();
-               }
+        if (k->editMode == TupToolPlugin::Properties) {
+            if (total > k->configurator->startComboSize()) {
+                k->configurator->activateMode(TupToolPlugin::Selection);
+                clearSelection();
+                setSelection();
+            }
+        } else if (k->editMode == TupToolPlugin::Selection) {
+            if (scene->currentFrameIndex() != k->initFrame)
+                clearSelection();
+            k->initFrame = scene->currentFrameIndex();
+            setSelection();
+        }
 
-               if (k->configurator->startComboSize() < total) {
-                   k->configurator->initStartCombo(total, k->initFrame);
-               } else {
-                   if (scene->currentFrameIndex() != k->initFrame)
-                       k->configurator->setStartFrame(scene->currentFrameIndex());
-               }
-
+        if (k->configurator->startComboSize() < total) {
+            k->configurator->initStartCombo(total, k->initFrame);
+        } else {
+            if (scene->currentFrameIndex() != k->initFrame)
+                k->configurator->setStartFrame(scene->currentFrameIndex());
+        }
     } else {
-             if (scene->currentFrameIndex() != k->initFrame)
-                 k->configurator->setStartFrame(scene->currentFrameIndex());
+       if (scene->currentFrameIndex() != k->initFrame)
+           k->configurator->setStartFrame(scene->currentFrameIndex());
     }
 }
 
@@ -333,8 +353,8 @@ void Tweener::clearSelection()
 {
     if (k->objects.size() > 0) {
         foreach (QGraphicsItem *item, k->objects) {
-                 if (item->isSelected())
-                     item->setSelected(false);
+            if (item->isSelected())
+                item->setSelected(false);
         }
         k->objects.clear();
         k->configurator->notifySelection(false);
@@ -346,11 +366,11 @@ void Tweener::clearSelection()
 void Tweener::disableSelection()
 {
     foreach (QGraphicsView *view, k->scene->views()) {
-             view->setDragMode (QGraphicsView::NoDrag);
-             foreach (QGraphicsItem *item, view->scene()->items()) {
-                      item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-                      item->setFlag(QGraphicsItem::ItemIsMovable, false);
-             }
+        view->setDragMode (QGraphicsView::NoDrag);
+        foreach (QGraphicsItem *item, view->scene()->items()) {
+            item->setFlag(QGraphicsItem::ItemIsSelectable, false);
+            item->setFlag(QGraphicsItem::ItemIsMovable, false);
+        }
     }
 }
 
@@ -358,31 +378,17 @@ void Tweener::disableSelection()
 
 void Tweener::setSelection()
 {
-    // if (k->editMode == TupToolPlugin::Properties)
-    //     k->scene->removeItem(k->target);
-
     k->editMode = TupToolPlugin::Selection;
-
-    /*
-    int bottomBoundary = (2*ZLAYER_LIMIT) + (k->initLayer*ZLAYER_LIMIT);
-    int topBoundary = bottomBoundary + ZLAYER_LIMIT;
-    foreach (QGraphicsView * view, k->scene->views()) {
-             view->setDragMode(QGraphicsView::RubberBandDrag);
-             foreach (QGraphicsItem *item, view->scene()->items()) {
-                      if ((item->zValue() >= bottomBoundary) && (item->zValue() < topBoundary) && (item->toolTip().length()==0))
-                          item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
-             }
-    }
-    */
 
     k->scene->enableItemsForSelection();
     foreach (QGraphicsView *view, k->scene->views())
-             view->setDragMode(QGraphicsView::RubberBandDrag);
+        view->setDragMode(QGraphicsView::RubberBandDrag);
+
     // When Object selection is enabled, previous selection is set
     if (k->objects.size() > 0) {
         foreach (QGraphicsItem *item, k->objects) {
-                 item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
-                 item->setSelected(true);
+            item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+            item->setSelected(true);
         }
         k->configurator->notifySelection(true);
     }
@@ -432,25 +438,25 @@ void Tweener::applyTween()
         k->initScene = k->scene->currentSceneIndex();
 
         foreach (QGraphicsItem *item, k->objects) {
-                 TupLibraryObject::Type type = TupLibraryObject::Item;
-                 int objectIndex = k->scene->currentFrame()->indexOf(item);
-                 // QRectF rect = item->sceneBoundingRect();
-                 QPointF origin = item->mapFromParent(k->origin);
+            TupLibraryObject::Type type = TupLibraryObject::Item;
+            int objectIndex = k->scene->currentFrame()->indexOf(item);
+            // QRectF rect = item->sceneBoundingRect();
+            QPointF origin = item->mapFromParent(k->origin);
 
-                 if (TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item)) {
-                     type = TupLibraryObject::Svg;
-                     objectIndex = k->scene->currentFrame()->indexOf(svg);
-                 } else {
-                     if (qgraphicsitem_cast<TupPathItem *>(item))
-                         origin = k->origin;
-                 }
+            if (TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item)) {
+                type = TupLibraryObject::Svg;
+                objectIndex = k->scene->currentFrame()->indexOf(svg);
+            } else {
+                if (qgraphicsitem_cast<TupPathItem *>(item))
+                    origin = k->origin;
+            }
 
-                 TupProjectRequest request = TupRequestBuilder::createItemRequest(
-                                             k->initScene, k->initLayer, k->initFrame,
-                                             objectIndex, QPointF(), k->scene->getSpaceContext(), 
-                                             type, TupProjectRequest::SetTween,
-                                             k->configurator->tweenToXml(k->initScene, k->initLayer, k->initFrame, origin));
-                 emit requested(&request);
+            TupProjectRequest request = TupRequestBuilder::createItemRequest(
+                                        k->initScene, k->initLayer, k->initFrame,
+                                        objectIndex, QPointF(), k->scene->getSpaceContext(),
+                                        type, TupProjectRequest::SetTween,
+                                        k->configurator->tweenToXml(k->initScene, k->initLayer, k->initFrame, origin));
+            emit requested(&request);
         }
     } else {
         removeTweenFromProject(name);
@@ -553,12 +559,24 @@ void Tweener::removeTweenFromProject(const QString &name)
 
     if (removed) {
         foreach (QGraphicsView * view, k->scene->views()) {
-                 foreach (QGraphicsItem *item, view->scene()->items()) {
-                          QString tip = item->toolTip();
-                          if (tip.startsWith(tr("Scale Tween") + ": " + name))
-                              item->setToolTip("");
-             }
+            foreach (QGraphicsItem *item, view->scene()->items()) {
+                QString tip = item->toolTip();
+                if (tip.compare("Tweens: " + tr("Scale")) == 0) {
+                    item->setToolTip("");
+                    item->setTransform(initialStep());
+                } else {
+                    if (tip.contains(tr("Scale"))) {
+                        tip = tip.replace(tr("Scale") + ",", "");
+                        tip = tip.replace(tr("Scale"), "");
+                        if (tip.endsWith(","))
+                            tip.chop(1);
+                        item->setToolTip(tip);
+                        item->setTransform(initialStep());
+                    }
+                }
+            }
         }
+        emit tweenRemoved();
     } else {
         #ifdef TUP_DEBUG
             QString msg = "Tweener::removeTweenFromProject() - Scale tween couldn't be removed -> " + name;
@@ -569,6 +587,17 @@ void Tweener::removeTweenFromProject(const QString &name)
             #endif
         #endif
     }
+}
+
+QTransform Tweener::initialStep()
+{
+    TupTweenerStep *step = k->currentTween->stepAt(0);
+    double scaleX = step->verticalScale();
+    double scaleY = step->horizontalScale();
+    QTransform transform;
+    transform.scale(scaleX, scaleY);
+
+    return transform;
 }
 
 void Tweener::removeTween(const QString &name)

@@ -553,17 +553,19 @@ QList<TupSvgItem *> TupLayer::tweeningSvgObjects() const
 bool TupLayer::tweenExists(const QString &name, TupItemTweener::Type type)
 {
     foreach (TupGraphicObject *object, k->tweeningGraphicObjects) {
-             if (TupItemTweener *tween = object->tween()) {
-                 if ((tween->name().compare(name) == 0) && (tween->type() == type))
-                     return true;
-             }
+        QList<TupItemTweener *> list = object->tweensList();
+        foreach(TupItemTweener *tween, list) {
+            if ((tween->name().compare(name) == 0) && (tween->type() == type))
+                return true;
+        }
     }
 
     foreach (TupSvgItem *object, k->tweeningSvgObjects) {
-             if (TupItemTweener *tween = object->tween()) {
-                 if ((tween->name().compare(name) == 0) && (tween->type() == type))
-                     return true;
-             }
+        QList<TupItemTweener *> list = object->tweensList();
+        foreach(TupItemTweener *tween, list) {
+            if ((tween->name().compare(name) == 0) && (tween->type() == type))
+                return true;
+        }
     }
 
     return false;
@@ -580,23 +582,31 @@ bool TupLayer::removeTween(const QString &name, TupItemTweener::Type type)
     #endif
 
     foreach (TupGraphicObject *object, k->tweeningGraphicObjects) {
-             if (TupItemTweener *tween = object->tween()) {
-                 if ((tween->name().compare(name) == 0) && (tween->type() == type)) {
-                     object->removeTween();
-                     removeTweenObject(object);
-                     return true;
-                 }
-             }
+        QList<TupItemTweener *> list = object->tweensList();
+        int total = list.count();
+        for (int i=0; i < total; i++) {
+            TupItemTweener *tween = list.at(i);
+            if ((tween->name().compare(name) == 0) && (tween->type() == type)) {
+                object->removeTween(i);
+                if (total == 1)
+                    removeTweenObject(object);
+                return true;
+            }
+        }
     }
 
     foreach (TupSvgItem *object, k->tweeningSvgObjects) {
-             if (TupItemTweener *tween = object->tween()) {
-                 if ((tween->name().compare(name) == 0) && (tween->type() == type)) {
-                     object->removeTween();
-                     removeTweenObject(object);
-                     return true;
-                 }
-             }
+        QList<TupItemTweener *> list = object->tweensList();
+        int total = list.count();
+        for (int i=0; i < total; i++) {
+            TupItemTweener *tween = list.at(i);
+            if ((tween->name().compare(name) == 0) && (tween->type() == type)) {
+                object->removeTween(i);
+                if (total == 1)
+                    removeTweenObject(object);
+                return true;
+            }
+        }
     }
 
     return false;
@@ -605,30 +615,30 @@ bool TupLayer::removeTween(const QString &name, TupItemTweener::Type type)
 void TupLayer::removeAllTweens()
 {
     foreach (TupGraphicObject *object, k->tweeningGraphicObjects) {
-             object->removeTween();
-             removeTweenObject(object);
+        object->removeAllTweens();
+        removeTweenObject(object);
     }
 
     foreach (TupSvgItem *object, k->tweeningSvgObjects) {
-             object->removeTween();
-             removeTweenObject(object);
+        object->removeAllTweens();
+        removeTweenObject(object);
     }
 }
 
 void TupLayer::removeTweensFromFrame(int frameIndex)
 {
     foreach (TupGraphicObject *object, k->tweeningGraphicObjects) {
-             if (object->frame()->index() == frameIndex) {
-                 object->removeTween();
-                 removeTweenObject(object);
-             }
+        if (object->frame()->index() == frameIndex) {
+            object->removeAllTweens();
+            removeTweenObject(object);
+        }
     }
 
     foreach (TupSvgItem *object, k->tweeningSvgObjects) {
-             if (object->frame()->index() == frameIndex) {
-                 object->removeTween();
-                 removeTweenObject(object);
-             }
+        if (object->frame()->index() == frameIndex) {
+            object->removeAllTweens();
+            removeTweenObject(object);
+        }
     }
 }
 

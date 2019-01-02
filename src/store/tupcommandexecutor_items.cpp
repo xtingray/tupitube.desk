@@ -164,7 +164,7 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
         } else { 
             TupBackground *bg = scene->background();
             if (bg) {
-                TupFrame *frame = 0;
+                TupFrame *frame = NULL;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
@@ -332,7 +332,7 @@ bool TupCommandExecutor::removeItem(TupItemResponse *response)
         } else {
             TupBackground *bg = scene->background();
             if (bg) {
-                TupFrame *frame = 0;
+                TupFrame *frame = NULL;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
@@ -437,7 +437,7 @@ bool TupCommandExecutor::moveItem(TupItemResponse *response)
         } else {
             TupBackground *bg = scene->background();
             if (bg) {
-                TupFrame *frame = 0;
+                TupFrame *frame = NULL;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
@@ -525,7 +525,7 @@ bool TupCommandExecutor::groupItems(TupItemResponse *response)
         } else {
             TupBackground *bg = scene->background();
             if (bg) {
-                TupFrame *frame = 0;
+                TupFrame *frame = NULL;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
@@ -632,7 +632,7 @@ bool TupCommandExecutor::ungroupItems(TupItemResponse *response)
         } else {
             TupBackground *bg = scene->background();
             if (bg) {
-                TupFrame *frame = 0;
+                TupFrame *frame = NULL;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
@@ -718,29 +718,24 @@ static QGraphicsItem *convert(QGraphicsItem *item, int toType)
                  TupPathItem *path = TupItemConverter::convertToPath(item);
                  return path;
             }
-            break;
             case TupRectItem::Type: // Rect
             {
                  TupRectItem *rect = TupItemConverter::convertToRect(item);
                  return rect;
             }
-            break;
             case TupEllipseItem::Type: // Ellipse
             {
                  TupEllipseItem *ellipse = TupItemConverter::convertToEllipse(item);
                  return ellipse;
             }
-            break;
             case TupProxyItem::Type:
             {
                  return new TupProxyItem(item);
             }
-            break;
             case TupLineItem::Type:
             {
                  return TupItemConverter::convertToLine(item);
             }
-            break;
             default:
             {
             #ifdef TUP_DEBUG
@@ -752,10 +747,9 @@ static QGraphicsItem *convert(QGraphicsItem *item, int toType)
                 #endif
             #endif
             }
-            break;
     }
 
-    return 0;
+    return NULL;
 }
 
 bool TupCommandExecutor::convertItem(TupItemResponse *response)
@@ -1170,7 +1164,7 @@ bool TupCommandExecutor::setTween(TupItemResponse *response)
                 if (itemType == TupLibraryObject::Item) {
                     TupGraphicObject *object = frame->graphicAt(itemIndex);
                     if (object) {
-                        object->setTween(tween);
+                        object->addTween(tween);
                         scene->addTweenObject(layerIndex, object);
                     } else {
                         #ifdef TUP_DEBUG
@@ -1186,11 +1180,12 @@ bool TupCommandExecutor::setTween(TupItemResponse *response)
                 } else {
                     TupSvgItem *svg = frame->svgAt(itemIndex); 
                     if (svg) {
-                        svg->setTween(tween);
+                        svg->addTween(tween);
                         scene->addTweenObject(layerIndex, svg);
                     } else {
                         #ifdef TUP_DEBUG
-                            QString msg = "TupCommandExecutor::setTween() - Error: Invalid svg index -> " + QString::number(itemIndex);
+                            QString msg = "TupCommandExecutor::setTween() - Error: Invalid svg index -> "
+                                    + QString::number(itemIndex);
                             #ifdef Q_OS_WIN
                                 qDebug() << msg;
                             #else

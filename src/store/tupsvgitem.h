@@ -38,9 +38,7 @@
 
 #include "tglobal.h"
 #include "tupabstractserializable.h"
-// #include "tglobal.h"
 #include "tupitemtweener.h"
-#include "tupframe.h"
 
 #include <QGraphicsSvgItem>
 #include <QGraphicsSceneHoverEvent>
@@ -52,8 +50,8 @@ class TupFrame;
 class TUPITUBE_EXPORT TupSvgItem : public QGraphicsSvgItem, public TupAbstractSerializable
 {
     public:
-        TupSvgItem(QGraphicsItem * parent = 0);
-        TupSvgItem(const QString &file, TupFrame *frame = 0);
+        TupSvgItem(QGraphicsItem * parent = NULL);
+        TupSvgItem(const QString &file, TupFrame *frame = NULL);
         ~TupSvgItem();
 
         void setSymbolName(const QString &symbolName);
@@ -63,11 +61,13 @@ class TUPITUBE_EXPORT TupSvgItem : public QGraphicsSvgItem, public TupAbstractSe
         int frameIndex();
         bool layerIsVisible();
 
-        TupItemTweener *tween() const;
-        void removeTween();
+        TupItemTweener* tween(const QString &name) const;
+        QList<TupItemTweener *> tweensList() const;
+        void removeTween(int index);
+        void removeAllTweens();
         void rendering();
-        void setTween(TupItemTweener *tween);
-        bool hasTween();
+        void addTween(TupItemTweener *itemTween);
+        bool hasTweens();
         void setLastTweenPos(QPointF point);
         QPointF lastTweenPos();
 
@@ -88,8 +88,16 @@ class TUPITUBE_EXPORT TupSvgItem : public QGraphicsSvgItem, public TupAbstractSe
     //     void openInfoWidget();
 
     private:
-        struct Private;
-        Private *const k;
+        QString name;
+        QString path;
+        QString data;
+        TupFrame *tupFrame;
+
+        QList<TupItemTweener*> tweens;
+        QPointF lastTweenPosition;
+
+        QStringList doList;
+        QStringList undoList;
 };
 
 #endif

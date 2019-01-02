@@ -271,7 +271,7 @@ TupLayer *TupScene::layerAt(int position) const
                 tError() << msg3;
             #endif
         #endif
-        return 0;
+        return NULL;
     }
 
     return k->layers.value(position);
@@ -539,21 +539,23 @@ QList<TupSvgItem *> TupScene::tweeningSvgObjects(int layerIndex) const
 bool TupScene::tweenExists(const QString &name, TupItemTweener::Type type)
 {
     foreach(TupLayer *layer, k->layers) {
-            QList<TupGraphicObject *> objectList = layer->tweeningGraphicObjects(); 
-            foreach (TupGraphicObject *object, objectList) {
-                     if (TupItemTweener *tween = object->tween()) {
-                         if ((tween->name().compare(name) == 0) && (tween->type() == type))
-                             return true;
-                     }
+        QList<TupGraphicObject *> objectList = layer->tweeningGraphicObjects();
+        foreach (TupGraphicObject *object, objectList) {
+            QList<TupItemTweener *> list = object->tweensList();
+            foreach(TupItemTweener *tween, list) {
+                if ((tween->name().compare(name) == 0) && (tween->type() == type))
+                    return true;
             }
+        }
 
-            QList<TupSvgItem *> svgList = layer->tweeningSvgObjects();
-            foreach (TupSvgItem *object, svgList) {
-                     if (TupItemTweener *tween = object->tween()) {
-                         if ((tween->name().compare(name) == 0) && (tween->type() == type))
-                             return true;
-                     }
+        QList<TupSvgItem *> svgList = layer->tweeningSvgObjects();
+        foreach (TupSvgItem *object, svgList) {
+            QList<TupItemTweener *> list = object->tweensList();
+            foreach(TupItemTweener *tween, list) {
+                if ((tween->name().compare(name) == 0) && (tween->type() == type))
+                    return true;
             }
+        }
     }
 
     return false;
@@ -570,27 +572,35 @@ bool TupScene::removeTween(const QString &name, TupItemTweener::Type type)
     #endif
 
     foreach(TupLayer *layer, k->layers) {
-            QList<TupGraphicObject *> objectList = layer->tweeningGraphicObjects();
-            foreach (TupGraphicObject *object, objectList) {
-                     if (TupItemTweener *tween = object->tween()) {
-                         if ((tween->name().compare(name) == 0) && (tween->type() == type)) {
-                             object->removeTween();
-                             removeTweenObject(layer->layerIndex(), object);
-                             return true;
-                         }
-                     }
+        QList<TupGraphicObject *> objectList = layer->tweeningGraphicObjects();
+        foreach (TupGraphicObject *object, objectList) {
+            QList<TupItemTweener *> list = object->tweensList();
+            int total = list.count();
+            for (int i=0; i < total; i++) {
+                 TupItemTweener *tween = list.at(i);
+                 if ((tween->name().compare(name) == 0) && (tween->type() == type)) {
+                     object->removeTween(i);
+                     if (total == 1)
+                         removeTweenObject(layer->layerIndex(), object);
+                     return true;
+                 }
             }
+        }
 
-            QList<TupSvgItem *> svgList = layer->tweeningSvgObjects();
-            foreach (TupSvgItem *object, svgList) {
-                     if (TupItemTweener *tween = object->tween()) {
-                         if ((tween->name().compare(name) == 0) && (tween->type() == type)) {
-                             object->removeTween();
-                             removeTweenObject(layer->layerIndex(), object);
-                             return true;
-                         }
-                     }
+        QList<TupSvgItem *> svgList = layer->tweeningSvgObjects();
+        foreach (TupSvgItem *object, svgList) {
+            QList<TupItemTweener *> list = object->tweensList();
+            int total = list.count();
+            for (int i=0; i < total; i++) {
+                 TupItemTweener *tween = list.at(i);
+                 if ((tween->name().compare(name) == 0) && (tween->type() == type)) {
+                     object->removeTween(i);
+                     if (total == 1)
+                         removeTweenObject(layer->layerIndex(), object);
+                     return true;
+                 }
             }
+        }
     }
 
     return false;
@@ -629,45 +639,49 @@ void TupScene::removeTweensFromFrame(int layerIndex, int frameIndex)
 TupItemTweener *TupScene::tween(const QString &name, TupItemTweener::Type type)
 {
     foreach(TupLayer *layer, k->layers) {
-            QList<TupGraphicObject *> objectList = layer->tweeningGraphicObjects();
-            foreach (TupGraphicObject *object, objectList) {
-                     if (TupItemTweener *tween = object->tween()) {
-                         if ((tween->name().compare(name) == 0) && (tween->type() == type))
-                             return tween;
-                     }
+        QList<TupGraphicObject *> objectList = layer->tweeningGraphicObjects();
+        foreach (TupGraphicObject *object, objectList) {
+            QList<TupItemTweener *> list = object->tweensList();
+            foreach(TupItemTweener *tween, list) {
+                if ((tween->name().compare(name) == 0) && (tween->type() == type))
+                    return tween;
             }
+        }
 
-            QList<TupSvgItem *> svgList = layer->tweeningSvgObjects();
-            foreach (TupSvgItem *object, svgList) {
-                     if (TupItemTweener *tween = object->tween()) {
-                         if ((tween->name().compare(name) == 0) && (tween->type() == type))
-                             return tween;
-                     }
+        QList<TupSvgItem *> svgList = layer->tweeningSvgObjects();
+        foreach (TupSvgItem *object, svgList) {
+            QList<TupItemTweener *> list = object->tweensList();
+            foreach(TupItemTweener *tween, list) {
+                if ((tween->name().compare(name) == 0) && (tween->type() == type))
+                    return tween;
             }
+        }
     }
 
-    return 0;
+    return NULL;
 }
 
 QList<QString> TupScene::getTweenNames(TupItemTweener::Type type)
 {
     QList<QString> names;
     foreach(TupLayer *layer, k->layers) {
-            QList<TupGraphicObject *> objectList = layer->tweeningGraphicObjects();
-            foreach (TupGraphicObject *object, objectList) {
-                     if (TupItemTweener *tween = object->tween()) {
-                         if (tween->type() == type && !names.contains(tween->name()))
-                             names.append(tween->name());
-                     }
+        QList<TupGraphicObject *> objectList = layer->tweeningGraphicObjects();
+        foreach (TupGraphicObject *object, objectList) {
+            QList<TupItemTweener *> list = object->tweensList();
+            foreach(TupItemTweener *tween, list) {
+                if (tween->type() == type && !names.contains(tween->name()))
+                    names.append(tween->name());
             }
+        }
 
-            QList<TupSvgItem *> svgList = layer->tweeningSvgObjects();
-            foreach (TupSvgItem *object, svgList) {
-                     if (TupItemTweener *tween = object->tween()) {
-                         if (tween->type() == type && !names.contains(tween->name()))
-                             names.append(tween->name());
-                     } 
+        QList<TupSvgItem *> svgList = layer->tweeningSvgObjects();
+        foreach (TupSvgItem *object, svgList) {
+            QList<TupItemTweener *> list = object->tweensList();
+            foreach(TupItemTweener *tween, list) {
+                if (tween->type() == type && !names.contains(tween->name()))
+                     names.append(tween->name());
             }
+        }
     }
 
     return names;
@@ -677,21 +691,23 @@ QList<QGraphicsItem *> TupScene::getItemsFromTween(const QString &name, TupItemT
 {
     QList<QGraphicsItem *> items;
     foreach(TupLayer *layer, k->layers) {
-            QList<TupGraphicObject *> objectList = layer->tweeningGraphicObjects();
-            foreach (TupGraphicObject *object, objectList) {
-                     if (TupItemTweener *tween = object->tween()) {
-                         if ((tween->name().compare(name) == 0) && (tween->type() == type))
-                             items.append(object->item());
-                     }
+        QList<TupGraphicObject *> objectList = layer->tweeningGraphicObjects();
+        foreach (TupGraphicObject *object, objectList) {
+            QList<TupItemTweener *> list = object->tweensList();
+            foreach(TupItemTweener *tween, list) {
+                if ((tween->name().compare(name) == 0) && (tween->type() == type))
+                    items.append(object->item());
             }
+        }
 
-            QList<TupSvgItem *> svgList = layer->tweeningSvgObjects();
-            foreach (TupSvgItem *object, svgList) {
-                     if (TupItemTweener *tween = object->tween()) {
-                         if ((tween->name().compare(name) == 0) && (tween->type() == type))
-                             items.append(object);
-                     }
+        QList<TupSvgItem *> svgList = layer->tweeningSvgObjects();
+        foreach (TupSvgItem *object, svgList) {
+            QList<TupItemTweener *> list = object->tweensList();
+            foreach(TupItemTweener *tween, list) {
+                if ((tween->name().compare(name) == 0) && (tween->type() == type))
+                    items.append(object);
             }
+        }
     }
 
     return items;
