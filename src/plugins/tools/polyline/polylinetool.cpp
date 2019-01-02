@@ -72,9 +72,9 @@ struct PolyLineTool::Private
 
 PolyLineTool::PolyLineTool(): k(new Private)
 {
-    k->configurator = 0;
-    k->nodeGroup = 0;
-    k->item = 0;
+    k->configurator = nullptr;
+    k->nodeGroup = nullptr;
+    k->item = nullptr;
     k->cutterOn = false;
     k->movingOn = false;
 
@@ -165,6 +165,7 @@ void PolyLineTool::press(const TupInputDeviceInformation *input, TupBrushManager
 
         k->item = new TupPathItem();
         k->item->setPen(brushManager->pen());
+        k->item->setBrush(brushManager->brush());
         k->item->setPath(k->path);
     } else { // This condition happens from the second point of the polyline and until the last one
         if (k->item) {
@@ -251,7 +252,8 @@ void PolyLineTool::release(const TupInputDeviceInformation *input, TupBrushManag
     } else {
         if (k->item) {
             if (!k->nodeGroup) {
-                k->nodeGroup = new TNodeGroup(k->item, k->scene, TNodeGroup::Polyline, k->item->zValue() + 1);
+                k->nodeGroup = new TNodeGroup(k->item, k->scene, TNodeGroup::Polyline,
+                                              static_cast<int>(k->item->zValue() + 1));
                 connect(k->nodeGroup, SIGNAL(nodeReleased()), this, SLOT(nodeChanged()));
             } else {
                 k->nodeGroup->createNodes(k->item);
@@ -273,10 +275,10 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
         #endif
     #endif
 
-    QGraphicsItem *item = 0;
-    TupScene *scene = 0;
-    TupLayer *layer = 0;
-    TupFrame *frame = 0;
+    QGraphicsItem *item = nullptr;
+    TupScene *scene = nullptr;
+    TupLayer *layer = nullptr;
+    TupFrame *frame = nullptr;
 
     TupProject *project = k->scene->currentScene()->project();
     scene = project->sceneAt(response->sceneIndex());
@@ -463,7 +465,7 @@ void PolyLineTool::initEnv()
 
     if (k->item) {
         clearSelection();
-        k->item = 0;
+        k->item = nullptr;
     }
 
     k->begin = true;
@@ -614,8 +616,8 @@ void PolyLineTool::aboutToChangeScene(TupGraphicsScene *)
 
 void PolyLineTool::aboutToChangeTool()
 {
-    k->nodeGroup = 0;
-    k->item = 0;
+    k->nodeGroup = nullptr;
+    k->item = nullptr;
 }
 
 void PolyLineTool::saveConfig()
@@ -643,7 +645,7 @@ void PolyLineTool::clearSelection()
 {
     if (k->nodeGroup) {
         k->nodeGroup->clear();
-        k->nodeGroup = 0;
+        k->nodeGroup = nullptr;
     }
 }
 

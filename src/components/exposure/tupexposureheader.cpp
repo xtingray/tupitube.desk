@@ -100,8 +100,13 @@ void TupExposureHeader::hideTitleEditor()
 
 void TupExposureHeader::insertSection(int section, const QString &text)
 {
+    setToolTip(text);
+    QString title = text;
+    if (title.length() > 6)
+        title = title.left(3) + "...";
+
     ExposureLayerItem layer;
-    layer.title = text;
+    layer.title = title;
     layer.lastFrame = 0;
     layer.isVisible = true;
     layer.isLocked = false;
@@ -111,7 +116,12 @@ void TupExposureHeader::insertSection(int section, const QString &text)
 
 void TupExposureHeader::setSectionTitle(int section, const QString &text)
 {
-    m_sections[section].title = text;
+    setToolTip(text);
+    QString title = text;
+    if (title.length() > 6)
+        title = title.left(3) + "...";
+
+    m_sections[section].title = title;
     updateSection(section);
 }
 

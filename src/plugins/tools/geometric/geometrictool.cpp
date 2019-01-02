@@ -99,7 +99,7 @@ void GeometricTool::init(TupGraphicsScene *scene)
 
     k->scene = scene;
     delete k->path;
-    k->path = 0;
+    k->path = nullptr;
     k->proportion = false;
     k->side = false;
 
