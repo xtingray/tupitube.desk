@@ -66,7 +66,7 @@ TupGraphicsScene::TupGraphicsScene() : QGraphicsScene()
 
     onionSkin.next = 0;
     onionSkin.previous = 0;
-    gTool = NULL;
+    gTool = nullptr;
     isDrawing = false;
 
     inputInformation = new TupInputDeviceInformation(this);
@@ -87,14 +87,10 @@ TupGraphicsScene::~TupGraphicsScene()
     clearSelection();
 
     // SQA: Check if these instructions are actually required
-    // foreach (QGraphicsView *view, this->views())
-    //          view->setScene(0);
-
-    // SQA: Check if these instructions are actually required
     foreach (QGraphicsItem *item, items()) {
         removeItem(item);
         delete item;
-        item = NULL;
+        item = nullptr;
     }
 }
 
@@ -281,7 +277,7 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
 
     if (!gScene) {
         #ifdef TUP_DEBUG
-            QString msg = "TupGraphicsScene::drawSceneBackground() - Warning: gScene is NULL!";
+            QString msg = "TupGraphicsScene::drawSceneBackground() - Warning: gScene is nullptr!";
             #ifdef Q_OS_WIN
                 qWarning() << msg;
             #else
@@ -607,9 +603,6 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
 
              if (origin == photogram) {
                  TupTweenerStep *stepItem = tween->stepAt(0);
-                 // QString tip = object->item()->toolTip();
-                 // object->item()->setToolTip(tween->tweenType() + ": " + tween->name() + tr("/Step: 0"));
-
                  if (stepItem->has(TupTweenerStep::Position)) {
                      QPointF point = QPoint(-adjustX, -adjustY);
                      object->setLastTweenPos(stepItem->position() + point);
@@ -673,8 +666,6 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
              } else if ((origin < photogram) && (photogram < origin + tween->frames())) {
                  int step = photogram - origin;
                  TupTweenerStep *stepItem = tween->stepAt(step);
-                 // object->item()->setToolTip(tween->tweenType() + ": " + tween->name() + tr("/Step: ") + QString::number(step));
-
                  if (stepItem->has(TupTweenerStep::Position)) {
                      qreal dx = stepItem->position().x() - (object->lastTweenPos().x() + adjustX);
                      qreal dy = stepItem->position().y() - (object->lastTweenPos().y() + adjustY);
@@ -788,7 +779,6 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
 
              if (origin == photogram) {
                  TupTweenerStep *stepItem = tween->stepAt(0);
-                 // object->setToolTip(tween->tweenType() + ": " + tween->name() + tr("/Step: 0"));
 
                  if (stepItem->has(TupTweenerStep::Position)) {
                      object->setPos(tween->transformOriginPoint());
@@ -820,7 +810,6 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
              } else if ((origin < photogram) && (photogram < origin + tween->frames())) {
                  int step = photogram - origin;
                  TupTweenerStep *stepItem = tween->stepAt(step);
-                 // object->setToolTip(tween->tweenType() + ": " + tween->name() + tr("/Step: ") + QString::number(step));
 
                  if (stepItem->has(TupTweenerStep::Position)) {
                      qreal dx = stepItem->position().x() - (object->lastTweenPos().x() + adjustX);
@@ -924,7 +913,8 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
                                      }
                                  } else {
                                      #ifdef TUP_DEBUG
-                                         QString msg = "TupGraphicsScene::addLipSyncObjects() - Warning: Can't find phoneme image -> " + imgName;
+                                         QString msg = "TupGraphicsScene::addLipSyncObjects() - Warning: Can't find phoneme image -> "
+                                                 + imgName;
                                          #ifdef Q_OS_WIN
                                              qDebug() << msg;
                                          #else
@@ -959,7 +949,8 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
                                      }
                                  } else {
                                      #ifdef TUP_DEBUG
-                                         QString msg = "TupGraphicsScene::addLipSyncObjects() - Warning: Can't find phoneme image -> " + imgName;
+                                         QString msg = "TupGraphicsScene::addLipSyncObjects() - Warning: Can't find phoneme image -> "
+                                                 + imgName;
                                          #ifdef Q_OS_WIN
                                              qDebug() << msg;
                                          #else
@@ -970,7 +961,8 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
                              }
                          } else {
                              #ifdef TUP_DEBUG
-                                 QString msg = "TupGraphicsScene::addLipSyncObjects() - No lipsync phoneme in voice at position: " + QString::number(j) + " - looking for index: " + QString::number(index);
+                                 QString msg = "TupGraphicsScene::addLipSyncObjects() - No lipsync phoneme in voice at position: "
+                                         + QString::number(j) + " - looking for index: " + QString::number(index);
                                  #ifdef Q_OS_WIN
                                      qDebug() << msg;
                                  #else
@@ -981,7 +973,8 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
                      }
                  } else {
                      #ifdef TUP_DEBUG
-                         QString msg = "TupGraphicsScene::addLipSyncObjects() - Folder with lipsync mouths is not available -> " + name;
+                         QString msg = "TupGraphicsScene::addLipSyncObjects() - Folder with lipsync mouths is not available -> "
+                                 + name;
                          #ifdef Q_OS_WIN
                              qDebug() << msg;
                          #else
@@ -1008,7 +1001,7 @@ void TupGraphicsScene::cleanWorkSpace()
 
     if (dynamicBg) {
         delete dynamicBg;
-        dynamicBg = NULL;
+        dynamicBg = nullptr;
     }
 
     onionSkin.accessMap.clear();
@@ -1137,7 +1130,8 @@ TupFrame *TupGraphicsScene::currentFrame()
                         return layer->frameAt(framePosition.frame);
                 } else {
                     #ifdef TUP_DEBUG
-                        QString msg = "TupGraphicsScene::currentFrame - No layer available at -> " + QString::number(framePosition.frame);
+                        QString msg = "TupGraphicsScene::currentFrame - No layer available at -> "
+                                + QString::number(framePosition.frame);
                         #ifdef Q_OS_WIN
                             qDebug() << msg;
                         #else
@@ -1157,7 +1151,7 @@ TupFrame *TupGraphicsScene::currentFrame()
 
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void TupGraphicsScene::setCurrentScene(TupScene *pScene)
@@ -1204,7 +1198,7 @@ TupScene *TupGraphicsScene::currentScene() const
     if (gScene)
         return gScene;
     else
-        return NULL;
+        return nullptr;
 }
 
 void TupGraphicsScene::setTool(TupToolPlugin *plugin)
@@ -1642,7 +1636,7 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
 
     if (!object) {
         #ifdef TUP_DEBUG
-            QString msg = "TupGraphicsScene::includeObject() - Fatal Error: Graphic item is NULL!";
+            QString msg = "TupGraphicsScene::includeObject() - Fatal Error: Graphic item is nullptr!";
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else
@@ -1669,7 +1663,8 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
                     object->setOpacity(opacity);
                 } else {
                     #ifdef TUP_DEBUG
-                        QString msg = "TupGraphicsScene::includeObject() - Fatal Error: Opacity value is invalid -> " + QString::number(opacity);
+                        QString msg = "TupGraphicsScene::includeObject() - Fatal Error: Opacity value is invalid -> "
+                                + QString::number(opacity);
                         #ifdef Q_OS_WIN
                             qDebug() << msg;
                         #else
@@ -1705,7 +1700,7 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
 void TupGraphicsScene::removeScene()
 {
     cleanWorkSpace();
-    gScene = NULL;
+    gScene = nullptr;
 }
 
 TupProject::Mode TupGraphicsScene::getSpaceContext()
