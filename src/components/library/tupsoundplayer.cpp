@@ -68,6 +68,7 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent), k(new Private)
     QLabel *frameLabel = new QLabel(tr("Play at frame:") + " ");
     QSpinBox *frameBox = new QSpinBox();
     frameBox->setMinimum(1);
+    frameBox->setMaximum(999);
     frameBox->setValue(1);
     connect(frameBox, SIGNAL(valueChanged(int)), this, SIGNAL(frameUpdated(int)));
 
@@ -165,7 +166,7 @@ void TupSoundPlayer::stopFile()
 void TupSoundPlayer::positionChanged(qint64 value)
 {
     qint64 currentInfo = value / 1000;
-    k->slider->setValue(currentInfo);
+    k->slider->setValue(static_cast<int>(currentInfo));
     QString time;
 
     if (currentInfo || k->duration) {
@@ -183,7 +184,7 @@ void TupSoundPlayer::durationChanged(qint64 value)
 {
     k->duration = value/1000;
     k->slider->setMinimum(0);
-    k->slider->setMaximum(k->duration);
+    k->slider->setMaximum(static_cast<int>(k->duration));
 
     k->soundTotalTime = QTime((k->duration/3600)%60, (k->duration/60)%60, k->duration%60, (k->duration*1000)%1000);
     QString format = "mm:ss";
