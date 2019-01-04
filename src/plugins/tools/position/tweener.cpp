@@ -56,6 +56,8 @@
 #include "tupscene.h"
 #include "tuplayer.h"
 
+#include <QMessageBox>
+
 struct Tweener::Private
 {
     QMap<QString, TAction *> actions;

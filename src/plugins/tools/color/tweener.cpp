@@ -35,6 +35,8 @@
 
 #include "tweener.h"
 
+#include <QMessageBox>
+
 struct Tweener::Private
 {
     QMap<QString, TAction *> actions;
