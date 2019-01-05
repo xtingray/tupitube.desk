@@ -61,7 +61,7 @@ class TUPITUBE_EXPORT TupExposureHeader: public QHeaderView
     Q_OBJECT
 
     public:
-        TupExposureHeader(QWidget * parent = 0);
+        TupExposureHeader(QWidget * parent = nullptr);
         ~TupExposureHeader();
         void paintSection(QPainter *painter, const QRect & rect, int section) const;
         void insertSection(int section, const QString &text);
@@ -71,7 +71,7 @@ class TUPITUBE_EXPORT TupExposureHeader: public QHeaderView
         void setLockFlag(int section, bool lock);
         bool sectionIsMoving();
         void setSectionVisibility(int section, bool visibility);
-        int sectionsTotal();
+        int columnsTotal();
         int currentSectionIndex();
 
         void setLastFrame(int section, int num);

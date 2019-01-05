@@ -110,7 +110,7 @@ void TupTimeLineHeader::paintSection(QPainter * painter, const QRect & rect, int
     y = rect.y();
 
     QRectF viewRect = QRectF(0, 0, 13, 7); 
-    int viewY = (rect.height() - viewRect.height())/2;
+    int viewY = static_cast<int>((rect.height() - viewRect.height())/2);
     if (k->layers[index].isVisible)
         painter->drawPixmap(QPointF(rect.x() + 90, viewY + y), k->viewIconOn, viewRect);
     else
@@ -250,4 +250,9 @@ void TupTimeLineHeader::moveHeaderSection(int position, int newPosition, bool is
 bool TupTimeLineHeader::sectionIsMoving()
 {
     return k->sectionOnMotion;
+}
+
+int TupTimeLineHeader::columnsTotal()
+{
+    return k->layers.size();
 }

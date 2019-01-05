@@ -98,7 +98,7 @@ void TupPaintArea::setCurrentScene(int index)
             if (project->scenesCount() == 1) {
                 setDragMode(QGraphicsView::NoDrag);
                 globalSceneIndex = 0;
-                graphicsScene()->setCurrentScene(0);
+                graphicsScene()->setCurrentScene(nullptr);
             } else {
                 #ifdef TUP_DEBUG
                     QString msg1 = "TupPaintArea::setCurrentScene() - [ Fatal Error ] -  No scenes available. Invalid index -> " + QString::number(index);
@@ -399,7 +399,6 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
               }
               return;
           }
-        break;
         case TupProjectRequest::Remove:
           {
               TupScene *scene = project->sceneAt(globalSceneIndex);
@@ -962,32 +961,35 @@ void TupPaintArea::multipasteObject(int pasteTotal)
 
              TupScene *scene = project->sceneAt(currentScene->currentSceneIndex());
              if (scene) {
-                 int framesCount = scene->framesCount();
-                 int currentFrame = currentScene->currentFrameIndex();
-                 int newFrameIndex = currentFrame + pasteTotal;
-                 int distance = framesCount - (newFrameIndex + 1);
+                 TupLayer *layer = scene->layerAt(currentScene->currentLayerIndex());
+                 if (layer) {
+                     int framesCount = layer->framesCount();
+                     int currentFrame = currentScene->currentFrameIndex();
+                     int newFrameIndex = currentFrame + pasteTotal;
+                     int distance = framesCount - (newFrameIndex + 1);
                  
-                 if (distance < 0) {
-                     for (int i=framesCount; i<=newFrameIndex; i++) {
-                          TupProjectRequest request = TupRequestBuilder::createFrameRequest(globalSceneIndex,
-                                                      currentScene->currentLayerIndex(), i, TupProjectRequest::Add, 
-                                                      tr("Frame"));
-                          emit requestTriggered(&request);
+                     if (distance < 0) {
+                         for (int i=framesCount; i<=newFrameIndex; i++) {
+                              TupProjectRequest request = TupRequestBuilder::createFrameRequest(globalSceneIndex,
+                                                          currentScene->currentLayerIndex(), i, TupProjectRequest::Add,
+                                                          tr("Frame"));
+                              emit requestTriggered(&request);
+                         }
                      }
-                 }
 
-                 if (xml.startsWith("<svg")) {
-                     type = TupLibraryObject::Svg;
-                     total = currentScene->currentFrame()->svgItemsCount();
-                 }
+                     if (xml.startsWith("<svg")) {
+                         type = TupLibraryObject::Svg;
+                         total = currentScene->currentFrame()->svgItemsCount();
+                     }
 
-                 int limit = currentFrame + pasteTotal;
-                 for (int i=currentFrame+1; i<=limit; i++) {
-                      TupProjectRequest event = TupRequestBuilder::createItemRequest(globalSceneIndex,
-                                                                   currentScene->currentLayerIndex(),
-                                                                   i, total, itemPoint(xml), spaceMode, type,
-                                                                   TupProjectRequest::Add, xml);
-                      emit requestTriggered(&event);
+                     int limit = currentFrame + pasteTotal;
+                     for (int i=currentFrame+1; i<=limit; i++) {
+                         TupProjectRequest event = TupRequestBuilder::createItemRequest(globalSceneIndex,
+                                                                      currentScene->currentLayerIndex(),
+                                                                      i, total, itemPoint(xml), spaceMode, type,
+                                                                      TupProjectRequest::Add, xml);
+                         emit requestTriggered(&event);
+                     }
                  }
              }
      }
@@ -1002,8 +1004,8 @@ QPoint TupPaintArea::itemPoint(const QString &xml)
     int n = end - init;
     QString string = xml.mid(init, n);
     QStringList list = string.split(",");
-    int x = list.at(0).toFloat();
-    int y = list.at(1).toFloat();
+    int x = static_cast<int> (list.at(0).toFloat());
+    int y = static_cast<int> (list.at(1).toFloat());
 
     return QPoint(x, y);
 }
@@ -1472,8 +1474,8 @@ void TupPaintArea::removeCurrentFrame()
         TOptionalDialog dialog(tr("Do you want to remove this frame?"), tr("Confirmation"), this);
         dialog.setModal(true);
         QDesktopWidget desktop;
-        dialog.move((int) (desktop.screenGeometry().width() - dialog.sizeHint().width())/2,
-                    (int) (desktop.screenGeometry().height() - dialog.sizeHint().height())/2);
+        dialog.move(static_cast<int> ((desktop.screenGeometry().width() - dialog.sizeHint().width())/2),
+                    static_cast<int> ((desktop.screenGeometry().height() - dialog.sizeHint().height())/2));
 
         if (dialog.exec() == QDialog::Rejected)
             return;

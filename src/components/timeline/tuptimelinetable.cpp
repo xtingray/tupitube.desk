@@ -41,8 +41,9 @@
 class TupTimeLineTableItemDelegate : public QItemDelegate
 {
     public:
-        TupTimeLineTableItemDelegate(QObject * parent = 0);
+        TupTimeLineTableItemDelegate(QObject * parent = nullptr);
         ~TupTimeLineTableItemDelegate();
+
         virtual void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
 
     private:
@@ -651,6 +652,17 @@ void TupTimeLineTable::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_C) {
         if (event->modifiers() == Qt::ControlModifier)
             emit selectionCopied();
+        return;
+    }
+
+    if ((event->key() == Qt::Key_A) && (event->modifiers() == Qt::ControlModifier)) {
+        clearSelection();
+        for (int i = 0; i < k->layersColumn->columnsTotal(); i++) {
+            int frames = k->layersColumn->lastFrame(i);
+            for (int j = 0; j < frames; j++)
+                selectFrame(j, i);
+        }
+        emit selectionCopied();
         return;
     }
 

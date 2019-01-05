@@ -39,7 +39,7 @@
 class TUPITUBE_EXPORT TupExposureVerticalHeader : public QHeaderView
 {
     public:
-        TupExposureVerticalHeader(QWidget * parent = 0);
+        TupExposureVerticalHeader(QWidget * parent = nullptr);
         ~TupExposureVerticalHeader();
         void paintSection(QPainter *painter, const QRect & rect, int logicalIndex) const;
 };
@@ -95,7 +95,7 @@ void TupExposureVerticalHeader::paintSection(QPainter * painter, const QRect & r
 class TupExposureItemDelegate : public QItemDelegate
 {
     public:
-        TupExposureItemDelegate(QObject * parent = 0);
+        TupExposureItemDelegate(QObject * parent = nullptr);
         ~TupExposureItemDelegate();
         virtual void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
 
@@ -223,7 +223,7 @@ TupExposureTable::TupExposureTable(QWidget * parent) : QTableWidget(parent), k(n
     setSelectionBehavior(QAbstractItemView::SelectItems);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
 
-    k->singleMenu = 0;
+    k->singleMenu = nullptr;
 }
 
 void TupExposureTable::requestFrameRenaming(QTableWidgetItem *item)
@@ -736,7 +736,7 @@ void TupExposureTable::mouseDoubleClickEvent(QMouseEvent *event)
 void TupExposureTable::commitData(QWidget *editor)
 {
     QLineEdit *lineEdit = qobject_cast<QLineEdit *>(editor);
-    QTableWidget::commitData(0); // Don't rename
+    QTableWidget::commitData(nullptr); // Don't rename
 
     if (lineEdit)
         emit frameRenamed(currentLayer(), currentFrame(), lineEdit->text());
@@ -744,7 +744,7 @@ void TupExposureTable::commitData(QWidget *editor)
 
 int TupExposureTable::layersCount()
 {
-    return k->header->sectionsTotal();
+    return k->header->columnsTotal();
 }
 
 int TupExposureTable::framesCount()
@@ -778,8 +778,19 @@ void TupExposureTable::keyPressEvent(QKeyEvent *event)
         return;
     }
 
+    if ((event->key() == Qt::Key_A) && (event->modifiers() == Qt::ControlModifier)) {
+        clearSelection();
+        for (int i = 0; i < k->header->columnsTotal(); i++) {
+            int frames = k->header->lastFrame(i);
+            for (int j = 0; j < frames; j++)
+                selectFrame(i, j);
+        }
+        emit selectionCopied();
+        return;
+    }
+
     if (event->key() == Qt::Key_Up || event->key() == Qt::Key_PageUp) {
-        int row = currentRow()-1;
+        int row = currentRow() - 1;
         if (row > -1) {
             if (event->modifiers() == Qt::ControlModifier)
                 emit selectionRemoved();
@@ -906,5 +917,3 @@ void TupExposureTable::updateSceneView(int layerIndex, int frameIndex)
 {
     scrollToItem(item(frameIndex, layerIndex));
 }
-
-

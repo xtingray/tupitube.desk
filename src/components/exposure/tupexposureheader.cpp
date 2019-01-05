@@ -221,8 +221,7 @@ void TupExposureHeader::mousePressEvent(QMouseEvent *event)
         } else {
             if (m_currentSection != section)
                 emit headerSelectionChanged(section);
-
-            QHeaderView::mousePressEvent(event);
+            // QHeaderView::mousePressEvent(event);
         }
     } else {
         #ifdef TUP_DEBUG
@@ -301,7 +300,7 @@ void TupExposureHeader::updateSelection(int section)
     updateSection(section);
 }
 
-int TupExposureHeader::sectionsTotal()
+int TupExposureHeader::columnsTotal()
 {
     return m_sections.size();
 }

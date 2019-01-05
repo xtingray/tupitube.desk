@@ -73,6 +73,7 @@ class TUPITUBE_EXPORT TupTimeLineHeader : public QHeaderView
         int currentSectionIndex();
         void moveHeaderSection(int position, int newPosition, bool isLocalRequest);
         bool sectionIsMoving();
+        int columnsTotal();
 
     protected:
         void paintSection(QPainter *painter, const QRect & rect, int index) const;
