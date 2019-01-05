@@ -40,7 +40,7 @@
 
 struct TupLibraryWidget::Private
 {
-    Private() : library(0)
+    Private() : library(nullptr)
     {
        currentFrame.frame = 0;
        currentFrame.layer = 0;
@@ -429,7 +429,7 @@ void TupLibraryWidget::insertObjectInWorkspace()
     int objectType = k->libraryTree->itemType();
     TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::InsertSymbolIntoFrame, key,
                                 TupLibraryObject::Type(objectType), k->project->spaceContext(), 
-                                0, QString(), k->currentFrame.scene, k->currentFrame.layer, k->currentFrame.frame);
+                                nullptr, QString(), k->currentFrame.scene, k->currentFrame.layer, k->currentFrame.frame);
 
     emit requestTriggered(&request);
 }
@@ -446,8 +446,8 @@ void TupLibraryWidget::removeCurrentItem()
         TOptionalDialog dialog(tr("Do you want to remove this object from Library?"), tr("Confirmation"), this);
         dialog.setModal(true);
         QDesktopWidget desktop;
-        dialog.move((int) (desktop.screenGeometry().width() - dialog.sizeHint().width())/2,
-                    (int) (desktop.screenGeometry().height() - dialog.sizeHint().height())/2);
+        dialog.move(static_cast<int> ((desktop.screenGeometry().width() - dialog.sizeHint().width())/2),
+                    static_cast<int> ((desktop.screenGeometry().height() - dialog.sizeHint().height())/2));
 
         if (dialog.exec() == QDialog::Rejected)
             return;
@@ -548,39 +548,37 @@ void TupLibraryWidget::cloneObject(QTreeWidgetItem* item)
             item->setFlags(item->flags() | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
 
             switch (object->type()) {
-                    case TupLibraryObject::Item:
-                         {
-                             item->setIcon(0, QIcon(THEME_DIR + "icons/drawing_object.png"));
-                             k->libraryTree->setCurrentItem(item);
-                             previewItem(item);
-                         }
-                         break;
-                    case TupLibraryObject::Image:
-                         {
-                             item->setIcon(0, QIcon(THEME_DIR + "icons/bitmap.png"));
-                             k->libraryTree->setCurrentItem(item);
-                             previewItem(item);
-                         }
-                         break;
-                    case TupLibraryObject::Svg:
-                         {
-                             item->setIcon(0, QIcon(THEME_DIR + "icons/svg.png"));
-                             k->libraryTree->setCurrentItem(item);
-                             previewItem(item);
-                         }
-                         break;
-                    case TupLibraryObject::Sound:
-                         {
-                             item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
-                             previewItem(item);
-                         }
-                         break;
-                    default:
-                         {
-                         }
-                         break;
+                case TupLibraryObject::Item:
+                    {
+                        item->setIcon(0, QIcon(THEME_DIR + "icons/drawing_object.png"));
+                        k->libraryTree->setCurrentItem(item);
+                        previewItem(item);
+                    }
+                    break;
+                case TupLibraryObject::Image:
+                    {
+                        item->setIcon(0, QIcon(THEME_DIR + "icons/bitmap.png"));
+                        k->libraryTree->setCurrentItem(item);
+                        previewItem(item);
+                    }
+                    break;
+                case TupLibraryObject::Svg:
+                    {
+                        item->setIcon(0, QIcon(THEME_DIR + "icons/svg.png"));
+                        k->libraryTree->setCurrentItem(item);
+                        previewItem(item);
+                    }
+                    break;
+                case TupLibraryObject::Sound:
+                    {
+                        item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
+                        previewItem(item);
+                    }
+                    break;
+                default:
+                    {
+                    }
             }
-
         } else {
             #ifdef TUP_DEBUG
                 QString msg = "TupLibraryWidget::cloneObject() - Fatal Error: Object doesn't exist! [ " + id + " ]";
@@ -1062,8 +1060,8 @@ void TupLibraryWidget::importBitmap(const QString &image)
             msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
             msgBox.setDefaultButton(QMessageBox::Ok);
             msgBox.show();
-            msgBox.move((int) (desktop.screenGeometry().width() - msgBox.width())/2,
-                        (int) (desktop.screenGeometry().height() - msgBox.height())/2);
+            msgBox.move(static_cast<int> ((desktop.screenGeometry().width() - msgBox.width())/2),
+                        static_cast<int> ((desktop.screenGeometry().height() - msgBox.height())/2));
 
             int answer = msgBox.exec();
 
@@ -1146,7 +1144,8 @@ void TupLibraryWidget::importSvg(const QString &svgPath)
             QString msg1 = "TupLibraryWidget::importSvg() - Inserting SVG into project: " + k->project->projectName();
             int projectWidth = k->project->dimension().width();
             int projectHeight = k->project->dimension().height();
-            QString msg2 = "TupLibraryWidget::importSvg() - Project Size: [" + QString::number(projectWidth) + QString(", ") + QString::number(projectHeight) + QString("]"); 
+            QString msg2 = "TupLibraryWidget::importSvg() - Project Size: [" + QString::number(projectWidth) + QString(", ")
+                    + QString::number(projectHeight) + QString("]");
 
             #ifdef Q_OS_WIN
                 qDebug() << msg1;
@@ -1156,7 +1155,6 @@ void TupLibraryWidget::importSvg(const QString &svgPath)
                 tFatal() << msg2;
             #endif
         #endif
-
 
         int i = 0;
         while (k->library->exists(key)) {
@@ -1205,7 +1203,8 @@ void TupLibraryWidget::importNativeObject(const QString &object)
         file.close();
 
         #ifdef TUP_DEBUG
-            QString msg1 = "TupLibraryWidget::importNativeObject() - Inserting native object into project: " + k->project->projectName();
+            QString msg1 = "TupLibraryWidget::importNativeObject() - Inserting native object into project: "
+                           + k->project->projectName();
             #ifdef Q_OS_WIN
                 qDebug() << msg1;
             #else
@@ -1321,8 +1320,8 @@ void TupLibraryWidget::importBitmapSequence()
             msgBox.setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
             msgBox.setDefaultButton(QMessageBox::Ok);
             msgBox.show();
-            msgBox.move((int) (desktop.screenGeometry().width() - msgBox.width())/2, 
-                        (int) (desktop.screenGeometry().height() - msgBox.height())/2);
+            msgBox.move(static_cast<int> ((desktop.screenGeometry().width() - msgBox.width())/2),
+                        static_cast<int> ((desktop.screenGeometry().height() - msgBox.height())/2));
 
             int answer = msgBox.exec();
             if (answer == QMessageBox::Ok) {
@@ -1339,13 +1338,13 @@ void TupLibraryWidget::importBitmapSequence()
                 QProgressDialog progressDialog(this, Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::Dialog);
                 progressDialog.setFont(font);
                 progressDialog.setLabelText(tr("Loading images..."));
-                progressDialog.setCancelButton(0);
+                progressDialog.setCancelButton(nullptr);
                 progressDialog.setRange(1, filesTotal);
                 progressDialog.show();
                 int index = 1;
 
-                progressDialog.move((int) (desktop.screenGeometry().width() - progressDialog.width())/2 , 
-                                    (int) (desktop.screenGeometry().height() - progressDialog.height())/2);
+                progressDialog.move(static_cast<int> ((desktop.screenGeometry().width() - progressDialog.width())/2),
+                                    static_cast<int> ((desktop.screenGeometry().height() - progressDialog.height())/2));
 
                 TupLibraryFolder *folder = new TupLibraryFolder(directory, k->project);
                 k->library->addFolder(folder);
@@ -1455,8 +1454,8 @@ void TupLibraryWidget::importSvgSequence()
             msgBox.setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
             msgBox.setDefaultButton(QMessageBox::Ok);
             msgBox.show();
-            msgBox.move((int) (desktop.screenGeometry().width() - msgBox.width())/2, 
-                        (int) (desktop.screenGeometry().height() - msgBox.height())/2);
+            msgBox.move(static_cast<int> ((desktop.screenGeometry().width() - msgBox.width())/2),
+                        static_cast<int> ((desktop.screenGeometry().height() - msgBox.height())/2));
 
             int answer = msgBox.exec();
 
@@ -1473,13 +1472,13 @@ void TupLibraryWidget::importSvgSequence()
                 QProgressDialog progressDialog(this, Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::Dialog);
                 progressDialog.setFont(font);
                 progressDialog.setLabelText(tr("Loading SVG files..."));
-                progressDialog.setCancelButton(0);
+                progressDialog.setCancelButton(nullptr);
                 progressDialog.setRange(1, filesTotal);
                 progressDialog.show();
                 int index = 1;
 
-                progressDialog.move((int) (desktop.screenGeometry().width() - progressDialog.width())/2 , 
-                                    (int) (desktop.screenGeometry().height() - progressDialog.height())/2);
+                progressDialog.move(static_cast<int> ((desktop.screenGeometry().width() - progressDialog.width())/2),
+                                    static_cast<int> ((desktop.screenGeometry().height() - progressDialog.height())/2));
 
                 TupLibraryFolder *folder = new TupLibraryFolder(directory, k->project);
                 k->library->addFolder(folder);
@@ -1531,7 +1530,7 @@ void TupLibraryWidget::importSvgSequence()
     }
 }
 
-void TupLibraryWidget::importSound()
+void TupLibraryWidget::importSoundFile()
 {
     TCONFIG->beginGroup("General");
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
@@ -1547,6 +1546,8 @@ void TupLibraryWidget::importSound()
         QFile file(path);
         QFileInfo fileInfo(file);
         QString key = fileInfo.fileName().toLower();
+        key = key.replace("(","_");
+        key = key.replace(")","_");
 
         if (file.open(QIODevice::ReadOnly)) {
             QByteArray data = file.readAll();
@@ -1566,13 +1567,13 @@ void TupLibraryWidget::importSound()
 void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
 {
     switch (response->action()) {
-            case TupProjectRequest::Select:
-            {
-                 k->currentFrame.frame = 0;
-                 k->currentFrame.layer = 0;
-                 k->currentFrame.scene = response->sceneIndex();
-            }
-            break;
+        case TupProjectRequest::Select:
+        {
+            k->currentFrame.frame = 0;
+            k->currentFrame.layer = 0;
+            k->currentFrame.scene = response->sceneIndex();
+        }
+        break;
     }
 }
 
@@ -1728,7 +1729,8 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
             default:
               {
                  #ifdef TUP_DEBUG
-                     QString msg = "TupLibraryWidget::libraryResponse() - Unknown/Unhandled project action: " + QString::number(response->action());
+                     QString msg = "TupLibraryWidget::libraryResponse() - Unknown/Unhandled project action: "
+                             + QString::number(response->action());
                      #ifdef Q_OS_WIN
                          qDebug() << msg;
                      #else
@@ -1779,7 +1781,7 @@ void TupLibraryWidget::importLibraryObject()
     }
 
     if (option.compare(tr("Sound File")) == 0) {
-        importSound();
+        importSoundFile();
         return;
     }
 }

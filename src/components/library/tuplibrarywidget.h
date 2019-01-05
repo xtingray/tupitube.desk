@@ -132,7 +132,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void importSvg(const QString &svgPath);
         void importBitmapSequence();
         void importSvgSequence();
-        void importSound();
+        void importSoundFile();
 
     signals:
         void requestCurrentGraphic();
