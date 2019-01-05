@@ -437,6 +437,7 @@ void TupTimeLineTable::pasteFrameSelection(int layerIndex, int frameIndex, int l
 
     generateFrames(layerIndex, layers, frames);
 
+    clearSelection();
     blockSignals(true);
     setCurrentItem(item(layerIndex, frameIndex + (frames - 1)));
     blockSignals(false);
@@ -659,8 +660,8 @@ void TupTimeLineTable::keyPressEvent(QKeyEvent *event)
         clearSelection();
         for (int i = 0; i < k->layersColumn->columnsTotal(); i++) {
             int frames = k->layersColumn->lastFrame(i);
-            for (int j = 0; j < frames; j++)
-                selectFrame(j, i);
+            for (int j = 0; j <= frames; j++)
+                selectFrame(i, j);
         }
         emit selectionCopied();
         return;

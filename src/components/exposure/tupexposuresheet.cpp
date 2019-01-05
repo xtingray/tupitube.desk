@@ -1105,8 +1105,11 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
                                       }
                                   }
                               }
+
                               table->clearSelection();
+                              table->blockSignals(true);
                               table->selectFrame(layerIndex, frameLimit-1);
+                              table->blockSignals(false);
                           } else {
                               removeBlock(table, layerIndex, frameIndex, layersTotal, framesTotal);
                           }
