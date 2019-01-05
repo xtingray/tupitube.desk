@@ -40,12 +40,14 @@
 
 struct TupLibraryWidget::Private
 {
+    /*
     Private() : library(nullptr)
     {
        currentFrame.frame = 0;
        currentFrame.layer = 0;
        currentFrame.scene = 0;
     }
+    */
 
     TupLibrary *library;
     TupProject *project;
@@ -1021,6 +1023,8 @@ void TupLibraryWidget::importBitmap(const QString &image)
     if (file.open(QIODevice::ReadOnly)) {
         QFileInfo fileInfo(file);
         QString key = fileInfo.fileName().toLower();
+        key = key.replace("(","_");
+        key = key.replace(")","_");
         int index = key.lastIndexOf(".");
 
         QString name = key.mid(0, index);
@@ -1028,7 +1032,6 @@ void TupLibraryWidget::importBitmap(const QString &image)
             name = key.mid(0, 30);
 
         QString extension = key.mid(index, key.length() - index);
-
         QByteArray data = file.readAll();
         file.close();
 
@@ -1129,6 +1132,8 @@ void TupLibraryWidget::importSvg(const QString &svgPath)
     if (file.open(QIODevice::ReadOnly)) {
         QFileInfo fileInfo(file);
         QString key = fileInfo.fileName().toLower();
+        key = key.replace("(","_");
+        key = key.replace(")","_");
 
         int index = key.lastIndexOf(".");
         QString name = key.mid(0, index);
@@ -1199,6 +1204,8 @@ void TupLibraryWidget::importNativeObject(const QString &object)
     if (file.open(QIODevice::ReadOnly)) {
         QFileInfo fileInfo(file);
         QString key = fileInfo.fileName().toLower();
+        key = key.replace("(","_");
+        key = key.replace(")","_");
         QByteArray data = file.readAll();
         file.close();
 
@@ -1360,6 +1367,8 @@ void TupLibraryWidget::importBitmapSequence()
                      if (extension.compare("JPEG")==0 || extension.compare("JPG")==0 || extension.compare("PNG")==0 || extension.compare("GIF")==0 ||
                          extension.compare("XPM")==0) {
                          QString symName = fileInfo.fileName().toLower();
+                         symName = symName.replace("(","_");
+                         symName = symName.replace(")","_");
 
                          if (file.open(QIODevice::ReadOnly)) {
                              QByteArray data = file.readAll();
@@ -1492,7 +1501,9 @@ void TupLibraryWidget::importSvgSequence()
                      QFileInfo fileInfo(file);
                      QString extension = fileInfo.suffix().toUpper();
                      if (extension.compare("SVG")==0) {
-                         QString symName = fileInfo.fileName().toLower();    
+                         QString symName = fileInfo.fileName().toLower();
+                         symName = symName.replace("(","_");
+                         symName = symName.replace(")","_");
 
                          if (file.open(QIODevice::ReadOnly)) {
                              QByteArray data = file.readAll();
