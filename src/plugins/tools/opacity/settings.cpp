@@ -381,22 +381,22 @@ QString Settings::currentTweenName() const
 void Settings::emitOptionChanged(int option)
 {
     switch (option) {
-            case 0:
-             {
-                 activeInnerForm(false);
-                 emit clickedSelect();
-             }
-            break;
-            case 1:
-             {
-                 if (k->selectionDone) {
-                     activeInnerForm(true);
-                     emit clickedDefineProperties();
-                 } else {
-                     k->options->setCurrentIndex(0);
-                     TOsd::self()->display(tr("Info"), tr("Select objects for Tweening first!"), TOsd::Info);
-                 }
-             }
+        case 0:
+        {
+            activeInnerForm(false);
+            emit clickedSelect();
+        }
+        break;
+        case 1:
+        {
+            if (k->selectionDone) {
+                activeInnerForm(true);
+                emit clickedDefineProperties();
+            } else {
+                k->options->setCurrentIndex(0);
+                TOsd::self()->display(tr("Info"), tr("Select objects for Tweening first!"), TOsd::Info);
+            }
+        }
     }
 }
 
@@ -440,7 +440,7 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     else
         root.setAttribute("opacityReverseLoop", "0");
 
-    double delta = (double)(initFactor - endFactor)/(double)(iterations - 1);
+    double delta = static_cast<double>(initFactor - endFactor) / static_cast<double>(iterations - 1);
     double reference = 0;
 
     int cycle = 1;
@@ -506,8 +506,18 @@ void Settings::checkFramesRange()
     int end = k->comboEnd->value();
 
     if (begin > end) {
-        k->comboEnd->setValue(k->comboEnd->maximum() - 1);
-        end = k->comboEnd->value();
+        // k->comboEnd->setValue(k->comboEnd->maximum() - 1);
+        // end = k->comboEnd->value();
+
+        k->comboInit->blockSignals(true);
+        k->comboEnd->blockSignals(true);
+        int tmp = end;
+        end = begin;
+        begin = tmp;
+        k->comboInit->setValue(begin);
+        k->comboEnd->setValue(end);
+        k->comboInit->blockSignals(false);
+        k->comboEnd->blockSignals(false);
     }
 
     k->totalSteps = end - begin + 1;

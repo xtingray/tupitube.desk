@@ -528,9 +528,21 @@ void Settings::checkFramesRange()
     int begin = k->comboInit->value();
     int end = k->comboEnd->value();
 
+    tError() << "-> begin: " << begin;
+    tError() << "-> end: " << end;
+
     if (begin > end) {
-        k->comboEnd->setValue(k->comboEnd->maximum() - 1);
-        end = k->comboEnd->value();
+        // k->comboEnd->setValue(k->comboEnd->maximum() - 1);
+        // end = k->comboEnd->value();
+        k->comboInit->blockSignals(true);
+        k->comboEnd->blockSignals(true);
+        int tmp = end;
+        end = begin;
+        begin = tmp;
+        k->comboInit->setValue(begin);
+        k->comboEnd->setValue(end);
+        k->comboInit->blockSignals(false);
+        k->comboEnd->blockSignals(false);
     }
 
     k->totalSteps = end - begin + 1;

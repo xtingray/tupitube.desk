@@ -749,8 +749,17 @@ void Settings::checkFramesRange()
     int end = k->endFrame->value();
        
     if (begin > end) {
-        k->endFrame->setValue(k->endFrame->maximum() - 1);
-        end = k->endFrame->value();
+        // k->endFrame->setValue(k->endFrame->maximum() - 1);
+        // end = k->endFrame->value();
+        k->initFrame->blockSignals(true);
+        k->endFrame->blockSignals(true);
+        int tmp = end;
+        end = begin;
+        begin = tmp;
+        k->initFrame->setValue(begin);
+        k->endFrame->setValue(end);
+        k->initFrame->blockSignals(false);
+        k->endFrame->blockSignals(false);
     }
 
     k->totalSteps = end - begin + 1;
