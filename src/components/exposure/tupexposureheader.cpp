@@ -221,7 +221,8 @@ void TupExposureHeader::mousePressEvent(QMouseEvent *event)
         } else {
             if (m_currentSection != section)
                 emit headerSelectionChanged(section);
-            // QHeaderView::mousePressEvent(event);
+            // This line enables layers swapping
+            QHeaderView::mousePressEvent(event);
         }
     } else {
         #ifdef TUP_DEBUG
