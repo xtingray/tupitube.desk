@@ -171,7 +171,7 @@ QDomElement TupSerializer::gradient(const QGradient *gradient, QDomDocument &doc
 
 QGradient * TupSerializer::createGradient(const QXmlAttributes &atts)
 {
-    QGradient *result = 0;
+    QGradient *result = nullptr;
 
     switch (atts.value("type").toInt()) {
         case QGradient::LinearGradient:
@@ -197,13 +197,13 @@ QGradient * TupSerializer::createGradient(const QXmlAttributes &atts)
         break;
         case QGradient::NoGradient:
         {
-            result = 0;
+            result = nullptr;
         }
         break;
     }
     
     if (!result)
-        return 0;
+        return nullptr;
 
     result->setSpread(QGradient::Spread(atts.value("spread").toInt()));
 
