@@ -89,8 +89,8 @@ class TUPITUBE_PLUGIN Settings : public QWidget
     private slots:
         void applyTween();
         void emitOptionChanged(int option);
-        void checkBottomLimit(int index);
-        void checkTopLimit(int index);
+        // void checkBottomLimit(int index);
+        // void checkTopLimit(int index);
         void updateLoopCheckbox(int state);
         void updateReverseCheckbox(int state);
         void setInitialColor();

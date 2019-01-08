@@ -59,7 +59,7 @@ class TUPITUBE_PLUGIN Settings : public QWidget
     Q_OBJECT
 
     public:
-        Settings(QWidget *parent = 0);
+        Settings(QWidget *parent = nullptr);
         ~Settings();
 
         void setParameters(const QString &name, int framesCount, int startFrame);
@@ -79,10 +79,10 @@ class TUPITUBE_PLUGIN Settings : public QWidget
     private slots:
         void applyTween();
         void emitOptionChanged(int option);
-        void checkTopLimit(int index);
+        // void checkTopLimit(int index);
         void updateLoopCheckbox(int state);
         void updateReverseCheckbox(int state);
-        void updateLastFrame();
+        // void updateLastFrame();
         
     signals:
         void clickedSelect();

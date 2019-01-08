@@ -613,8 +613,12 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
                      object->item()->setRotation(angle);
                  } else if (stepItem->has(TupTweenerStep::Scale)) {
                      QPointF point = tween->transformOriginPoint();
+                     tError() << "Transform Origin Point: " << point;
+                     tError() << "Position: " << object->item()->pos();
+                     QDomDocument doc;
+                     doc.appendChild(dynamic_cast<TupAbstractSerializable *>(object->item())->toXml(doc));
+                     tError() << "DOC: " << doc.toString();
                      object->item()->setTransformOriginPoint(point);
-
                      QTransform transform = object->item()->transform();
                      transform.reset();
                      object->item()->setTransform(transform);

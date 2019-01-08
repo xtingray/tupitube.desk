@@ -81,11 +81,11 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         void applyTween();
         void emitOptionChanged(int option);
         // void checkBottomLimit(int index);
-        void checkTopLimit(int index);
-        void updateTotalSteps(const QString &text);
+        // void checkTopLimit(int index);
+        // void updateTotalSteps(const QString &text);
         void updateLoopCheckbox(int state);
         void updateReverseCheckbox(int state);
-        void updateLastFrame();
+        // void updateLastFrame();
         
     signals:
         void clickedSelect();

@@ -379,7 +379,7 @@ void TupMainWindow::setupFileActions()
 
 void TupMainWindow::openStore()
 {
-    QDesktopServices::openUrl(QString("https://store.maefloresta.com"));
+    QDesktopServices::openUrl(QString("https://store.maefloresta.com/?desk"));
 }
 
 void TupMainWindow::setPreferencesAction()

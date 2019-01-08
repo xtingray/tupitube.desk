@@ -145,7 +145,7 @@ void Settings::setInnerForm()
     k->initFrame = new QSpinBox();
     k->initFrame->setEnabled(false);
     k->initFrame->setMaximum(999);
-    connect(k->initFrame, SIGNAL(valueChanged(int)), this, SLOT(updateLastFrame()));
+    // connect(k->initFrame, SIGNAL(valueChanged(int)), this, SLOT(updateLastFrame()));
  
     QLabel *endingLabel = new QLabel(tr("Ending at frame") + ": ");
     endingLabel->setAlignment(Qt::AlignVCenter);
@@ -154,7 +154,7 @@ void Settings::setInnerForm()
     k->endFrame->setEnabled(true);
     k->endFrame->setValue(1);
     k->endFrame->setMaximum(999);
-    connect(k->endFrame, SIGNAL(valueChanged(int)), this, SLOT(checkTopLimit(int)));
+    // connect(k->endFrame, SIGNAL(valueChanged(int)), this, SLOT(checkTopLimit(int)));
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
@@ -403,7 +403,7 @@ void Settings::setParameters(TupItemTweener *currentTween)
 
     k->endFrame->setValue(currentTween->initFrame() + currentTween->frames());
 
-    checkFramesRange();
+    // checkFramesRange();
 
     k->rotationTypeCombo->setCurrentIndex(currentTween->tweenRotationType());
     k->degreesPerFrame->setValue(currentTween->tweenRotateSpeed());
@@ -528,6 +528,7 @@ void Settings::applyTween()
     if (!k->initFrame->isEnabled())
         k->initFrame->setEnabled(true);
 
+    checkFramesRange();
     emit clickedApplyTween();
 }
 
@@ -586,7 +587,7 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     root.setAttribute("initLayer", currentLayer);
     root.setAttribute("initScene", currentScene);
     
-    checkFramesRange();
+    // checkFramesRange();
     root.setAttribute("frames", k->totalSteps);
 
     root.setAttribute("origin", QString::number(point.x()) + "," + QString::number(point.y()));
@@ -731,17 +732,21 @@ void Settings::refreshForm(int type)
     }
 }
 
+/*
 void Settings::checkTopLimit(int index)
 {
     Q_UNUSED(index);
     checkFramesRange();
 }
+*/
 
+/*
 void Settings::updateLastFrame()
 {
     int end = k->initFrame->value() + k->totalSteps - 1;
     k->endFrame->setValue(end);
 }
+*/
 
 void Settings::checkFramesRange()
 {
@@ -782,11 +787,13 @@ void Settings::updateReverseCheckbox(int state)
         k->reverseLoopBox->setChecked(false);
 }
 
+/*
 void Settings::updateTotalSteps(const QString &text)
 {
     Q_UNUSED(text);
     checkFramesRange();
 }
+*/
 
 void Settings::checkRange(int index)
 {

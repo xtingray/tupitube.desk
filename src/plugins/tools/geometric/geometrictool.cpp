@@ -73,8 +73,8 @@ struct GeometricTool::Private
 
 GeometricTool::GeometricTool() : k(new Private)
 {
-    k->scene = 0;
-    k->path = 0;
+    k->scene = nullptr;
+    k->path = nullptr;
     setupActions();
 }
 
@@ -451,7 +451,7 @@ void GeometricTool::endItem()
                                   TupProjectRequest::Add, doc.toString());
 
         emit requested(&event);
-        k->path = 0;
+        k->path = nullptr;
     }
 }
 

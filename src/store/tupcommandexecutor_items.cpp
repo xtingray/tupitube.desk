@@ -164,7 +164,7 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
         } else { 
             TupBackground *bg = scene->background();
             if (bg) {
-                TupFrame *frame = NULL;
+                TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
@@ -332,7 +332,7 @@ bool TupCommandExecutor::removeItem(TupItemResponse *response)
         } else {
             TupBackground *bg = scene->background();
             if (bg) {
-                TupFrame *frame = NULL;
+                TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
@@ -437,7 +437,7 @@ bool TupCommandExecutor::moveItem(TupItemResponse *response)
         } else {
             TupBackground *bg = scene->background();
             if (bg) {
-                TupFrame *frame = NULL;
+                TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
@@ -632,7 +632,7 @@ bool TupCommandExecutor::ungroupItems(TupItemResponse *response)
         } else {
             TupBackground *bg = scene->background();
             if (bg) {
-                TupFrame *frame = NULL;
+                TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
@@ -749,7 +749,7 @@ static QGraphicsItem *convert(QGraphicsItem *item, int toType)
             }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 bool TupCommandExecutor::convertItem(TupItemResponse *response)
@@ -805,7 +805,7 @@ bool TupCommandExecutor::convertItem(TupItemResponse *response)
         } else {
             TupBackground *bg = scene->background();
             if (bg) {
-                TupFrame *frame = 0;
+                TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
@@ -930,7 +930,7 @@ bool TupCommandExecutor::transformItem(TupItemResponse *response)
         } else {
             TupBackground *bg = scene->background();
             if (bg) {
-                TupFrame *frame = 0;
+                TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
@@ -1064,7 +1064,7 @@ bool TupCommandExecutor::setPathItem(TupItemResponse *response)
         } else {
             TupBackground *bg = scene->background();
             if (bg) {
-                TupFrame *frame = 0;
+                TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
@@ -1263,7 +1263,7 @@ bool TupCommandExecutor::setBrush(TupItemResponse *response)
         } else {
             TupBackground *bg = scene->background();
             if (bg) {
-                TupFrame *frame = 0;
+                TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
@@ -1377,7 +1377,7 @@ bool TupCommandExecutor::setPen(TupItemResponse *response)
         } else {
             TupBackground *bg = scene->background();
             if (bg) {
-                TupFrame *frame = 0;
+                TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {

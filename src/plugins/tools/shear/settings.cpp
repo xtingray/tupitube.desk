@@ -141,7 +141,7 @@ void Settings::setInnerForm()
     k->comboInit = new QSpinBox;
     k->comboInit->setEnabled(false);
     k->comboInit->setMaximum(999);
-    connect(k->comboInit, SIGNAL(valueChanged(int)), this, SLOT(updateLastFrame()));
+    // connect(k->comboInit, SIGNAL(valueChanged(int)), this, SLOT(updateLastFrame()));
 
     QLabel *endingLabel = new QLabel(tr("Ending at frame") + ": ");
     endingLabel->setAlignment(Qt::AlignVCenter);
@@ -150,7 +150,7 @@ void Settings::setInnerForm()
     k->comboEnd->setEnabled(true);
     k->comboEnd->setValue(1);
     k->comboEnd->setMaximum(999);
-    connect(k->comboEnd, SIGNAL(valueChanged(int)), this, SLOT(checkTopLimit(int)));
+    // connect(k->comboEnd, SIGNAL(valueChanged(int)), this, SLOT(checkTopLimit(int)));
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
@@ -294,7 +294,7 @@ void Settings::setParameters(TupItemTweener *currentTween)
     k->comboInit->setValue(currentTween->initFrame() + 1);
     k->comboEnd->setValue(currentTween->initFrame() + currentTween->frames());
 
-    checkFramesRange();
+    // checkFramesRange();
 
     k->comboAxes->setCurrentIndex(currentTween->tweenShearAxes());
     k->comboFactor->setValue(currentTween->tweenShearFactor());
@@ -365,6 +365,8 @@ void Settings::applyTween()
     if (!k->comboInit->isEnabled())
         k->comboInit->setEnabled(true);
 
+    checkFramesRange();
+
     emit clickedApplyTween();
 }
 
@@ -415,7 +417,7 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     root.setAttribute("initLayer", currentLayer);
     root.setAttribute("initScene", currentScene);
    
-    checkFramesRange();
+    // checkFramesRange();
     root.setAttribute("frames", k->totalSteps);
     root.setAttribute("origin", QString::number(point.x()) + "," + QString::number(point.y()));
     k->shearAxes = TupItemTweener::TransformAxes(k->comboAxes->currentIndex());
@@ -516,17 +518,21 @@ void Settings::checkBottomLimit(int index)
 }
 */
 
+/*
 void Settings::checkTopLimit(int index)
 {
     Q_UNUSED(index);
     checkFramesRange();
 }
+*/
 
+/*
 void Settings::updateLastFrame()
 {
     int end = k->comboInit->value() + k->totalSteps - 1;
     k->comboEnd->setValue(end);
 }
+*/
 
 void Settings::checkFramesRange()
 {
@@ -550,6 +556,10 @@ void Settings::checkFramesRange()
 
     k->totalSteps = end - begin + 1;
     k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
+
+    int iterations = k->comboIterations->value();
+    if (iterations > k->totalSteps)
+        k->comboIterations->setValue(k->totalSteps);
 }
 
 void Settings::updateLoopCheckbox(int state)
@@ -568,8 +578,10 @@ void Settings::updateReverseCheckbox(int state)
         k->reverseLoopBox->setChecked(false);
 }
 
+/*
 void Settings::updateTotalSteps(const QString &text)
 {
     Q_UNUSED(text);
     checkFramesRange();
 }
+*/

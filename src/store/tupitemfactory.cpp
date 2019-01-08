@@ -65,10 +65,10 @@ struct TupItemFactory::Private
 
 TupItemFactory::TupItemFactory() : TXmlParserBase(), k(new Private)
 {
-    k->item = 0;
+    k->item = nullptr;
     k->addToGroup = false;
     k->isLoading = false;
-    k->library = 0;
+    k->library = nullptr;
 }
 
 TupItemFactory::~TupItemFactory()
@@ -83,7 +83,7 @@ void TupItemFactory::setLibrary(const TupLibrary *library)
 
 QGraphicsItem* TupItemFactory::createItem(const QString &root)
 {
-    QGraphicsItem* item = 0;
+    QGraphicsItem* item = nullptr;
     k->type = TupItemFactory::Vectorial;
 
     if (root == "path") {
@@ -137,7 +137,8 @@ bool TupItemFactory::startTag(const QString& qname, const QXmlAttributes& atts)
             k->objects.push(k->item);
         }
     } else if (qname == "rect") {
-               QRectF rect(atts.value("x").toDouble(), atts.value("y").toDouble(), atts.value("width").toDouble(), atts.value("height").toDouble());
+               QRectF rect(atts.value("x").toDouble(), atts.value("y").toDouble(), atts.value("width").toDouble(),
+                           atts.value("height").toDouble());
 
                if (k->addToGroup) {
                    TupRectItem *item = qgraphicsitem_cast<TupRectItem *>(createItem(qname));
@@ -151,7 +152,6 @@ bool TupItemFactory::startTag(const QString& qname, const QXmlAttributes& atts)
                }
     } else if (qname == "ellipse") {
                QRectF rect(QPointF(0, 0), QSizeF(2 * atts.value("rx").toDouble(), 2 * atts.value("ry").toDouble()));
-
                if (k->addToGroup) {
                    TupEllipseItem *item = qgraphicsitem_cast<TupEllipseItem *>(createItem(qname));
                    item->setRect(rect);
@@ -436,10 +436,10 @@ bool TupItemFactory::loadItem(QGraphicsItem *item, const QString &xml)
 
 QGraphicsItem *TupItemFactory::create(const QString &xml)
 {
-    if (loadItem(0, xml))
+    if (loadItem(nullptr, xml))
         return k->item;
 
-    return 0;
+    return nullptr;
 }
 
 QString TupItemFactory::itemID(const QString &xml)
@@ -461,4 +461,3 @@ QString TupItemFactory::itemID(const QString &xml)
 TupItemFactory::Type TupItemFactory::type() {
     return k->type;
 }
-

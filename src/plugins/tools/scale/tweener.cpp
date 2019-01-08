@@ -453,6 +453,8 @@ void Tweener::applyTween()
                     origin = k->origin;
             }
 
+            tError() << "STAR: " << item->pos();
+
             TupProjectRequest request = TupRequestBuilder::createItemRequest(
                                         k->initScene, k->initLayer, k->initFrame,
                                         objectIndex, QPointF(), k->scene->getSpaceContext(),

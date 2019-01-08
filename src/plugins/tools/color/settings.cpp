@@ -137,7 +137,7 @@ void Settings::setInnerForm()
     k->comboInit = new QSpinBox;
     k->comboInit->setEnabled(false);
     k->comboInit->setMaximum(999);
-    connect(k->comboInit, SIGNAL(valueChanged(int)), this, SLOT(checkBottomLimit()));
+    // connect(k->comboInit, SIGNAL(valueChanged(int)), this, SLOT(checkBottomLimit()));
 
     QLabel *endingLabel = new QLabel(tr("Ending at frame") + ": ");
     endingLabel->setAlignment(Qt::AlignVCenter);
@@ -146,7 +146,7 @@ void Settings::setInnerForm()
     k->comboEnd->setEnabled(true);
     k->comboEnd->setMaximum(999);
     k->comboEnd->setValue(1);
-    connect(k->comboEnd, SIGNAL(valueChanged(int)), this, SLOT(checkTopLimit(int)));
+    // connect(k->comboEnd, SIGNAL(valueChanged(int)), this, SLOT(checkTopLimit(int)));
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
@@ -307,7 +307,7 @@ void Settings::setParameters(TupItemTweener *currentTween)
     int lastFrame = currentTween->initFrame() + currentTween->frames();
     k->comboEnd->setValue(lastFrame);
 
-    checkFramesRange();
+    // checkFramesRange();
 
     updateColor(currentTween->tweenInitialColor(), k->initColorButton);
     updateColor(currentTween->tweenEndingColor(), k->endColorButton);
@@ -367,21 +367,22 @@ void Settings::setEditMode()
 void Settings::applyTween()
 {
     if (!k->selectionDone) {
-       TOsd::self()->display(tr("Info"), tr("You must select at least one object!"), TOsd::Info);
-       return;
+        TOsd::self()->display(tr("Info"), tr("You must select at least one object!"), TOsd::Info);
+        return;
     }
 
     if (!k->propertiesDone) {
-       TOsd::self()->display(tr("Info"), tr("You must set Tween properties first!"), TOsd::Info);
-       return;
+        TOsd::self()->display(tr("Info"), tr("You must set Tween properties first!"), TOsd::Info);
+        return;
     }
 
     // SQA: Verify Tween is really well applied before call setEditMode!
     setEditMode();
 
     if (!k->comboInit->isEnabled())
-       k->comboInit->setEnabled(true);
+        k->comboInit->setEnabled(true);
 
+    checkFramesRange();
     emit clickedApplyTween();
 }
 
@@ -447,7 +448,7 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
 
     root.setAttribute("fillType", k->fillTypeCombo->currentIndex());
   
-    checkFramesRange();
+    // checkFramesRange();
     root.setAttribute("frames", k->totalSteps);
     root.setAttribute("origin", "0,0");
 
@@ -558,17 +559,21 @@ void Settings::activatePropertiesMode(TupToolPlugin::EditMode mode)
     k->options->setCurrentIndex(mode);
 }
 
+/*
 void Settings::checkBottomLimit(int index)
 {
     emit startingPointChanged(index);
     checkFramesRange();
 }
+*/
 
+/*
 void Settings::checkTopLimit(int index)
 {
     Q_UNUSED(index);
     checkFramesRange();
 }
+*/
 
 void Settings::checkFramesRange()
 {
