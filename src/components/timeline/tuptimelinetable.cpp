@@ -41,10 +41,10 @@
 class TupTimeLineTableItemDelegate : public QItemDelegate
 {
     public:
-        TupTimeLineTableItemDelegate(QObject * parent = nullptr);
+        TupTimeLineTableItemDelegate(QObject *parent = nullptr);
         ~TupTimeLineTableItemDelegate();
 
-        virtual void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+        virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
     private:
         struct Private;
@@ -692,8 +692,8 @@ void TupTimeLineTable::keyPressEvent(QKeyEvent *event)
     }
 
     if (event->key() == Qt::Key_Right || event->key() == Qt::Key_PageDown) {
-        int limit = columnCount()-1;
-        int next = currentColumn()+1;
+        int limit = columnCount() - 1;
+        int next = currentColumn() + 1;
         if (next <= limit) { 
             if (event->modifiers() == Qt::ControlModifier)
                 emit frameExtended(currentRow(), currentColumn());
@@ -704,7 +704,7 @@ void TupTimeLineTable::keyPressEvent(QKeyEvent *event)
     }    
 
     if (event->key() == Qt::Key_Left || event->key() == Qt::Key_PageUp) {
-        int next = currentColumn()-1;
+        int next = currentColumn() - 1;
         if (next >= 0) { 
             if (event->modifiers() == Qt::ControlModifier)
                 emit selectionRemoved();
@@ -718,7 +718,7 @@ void TupTimeLineTable::keyPressEvent(QKeyEvent *event)
     }
 
     if (event->key() == Qt::Key_Up) {
-        int next = currentRow()-1;
+        int next = currentRow() - 1;
         if (next >= 0) 
             setCurrentCell(next, currentColumn());
         return;

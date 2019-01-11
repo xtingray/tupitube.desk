@@ -98,10 +98,9 @@ void TupTimeLineRuler::paintSection(QPainter *painter, const QRect & rect, int l
         QFontMetrics fm(font);
 
         QString number = QString::number(logicalIndex);
-	
         painter->setFont(font);	
-        painter->drawText((int)(rect.center().x() - (fm.width(number)/2)), 
-                          (int)(rect.center().y() + (fm.height()/2)) - 2, number);
+        painter->drawText((rect.center().x() - (fm.width(number)/2)),
+                          (rect.center().y() + (fm.height()/2)) - 2, number);
     }
 
     QPen pen = painter->pen();

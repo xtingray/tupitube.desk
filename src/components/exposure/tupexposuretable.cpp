@@ -818,8 +818,21 @@ void TupExposureTable::keyPressEvent(QKeyEvent *event)
     }
 
     if (event->key() == Qt::Key_C) {
-        if (event->modifiers() == Qt::ControlModifier)
+        if (event->modifiers() == Qt::ControlModifier) {
             emit selectionCopied();
+        } else {
+            if (event->modifiers() == Qt::AltModifier) {
+                clearSelection();
+                int layer = currentLayer();
+                int frames = k->header->lastFrame(layer);
+                tError() << "TEST!";
+                tError() << "FRAMES: " << frames;
+                tError() << "LAYER: " << layer;
+                for (int j = 0; j < frames; j++)
+                    selectFrame(layer, j);
+                emit selectionCopied();
+            }
+        }
         return;
     }
 

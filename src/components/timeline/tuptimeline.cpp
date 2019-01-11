@@ -77,7 +77,7 @@ TupTimeLine::TupTimeLine(TupProject *project, QWidget *parent) : TupModuleWidget
 
     k->project = project;
     k->library = k->project->library();
-    k->currentTable = 0;
+    k->currentTable = nullptr;
     k->doSelection = false;
 
     // SQA: Pending to add the feature "Layer Opacity" as part of this action bar
@@ -126,7 +126,7 @@ TupTimeLineTable *TupTimeLine::framesTable(int sceneIndex)
     if (framesTable)
         return framesTable;
  
-    return 0;
+    return nullptr;
 }
 
 void TupTimeLine::addScene(int sceneIndex, const QString &name)
@@ -205,15 +205,13 @@ void TupTimeLine::sceneResponse(TupSceneResponse *response)
         {
             if (response->mode() == TupProjectResponse::Do) {
                 addScene(sceneIndex, response->arg().toString());
-                return;
             } else { 
                 k->scenesContainer->restoreScene(sceneIndex, response->arg().toString());
                 TupProjectRequest request = TupRequestBuilder::createSceneRequest(sceneIndex, TupProjectRequest::Select);
                 emit requestTriggered(&request);
-                return;
             }
+            return;
         }
-        break;
         case TupProjectRequest::Remove:
         {
             removeScene(sceneIndex);
@@ -313,7 +311,6 @@ void TupTimeLine::layerResponse(TupLayerResponse *response)
                     return; 
                 }
             }
-            break;
             case TupProjectRequest::Remove:
             {
                 framesTable->removeLayer(layerIndex);
@@ -336,8 +333,8 @@ void TupTimeLine::layerResponse(TupLayerResponse *response)
             {
                 // SQA: Pending for implementation
             }
-            */
             break;
+            */
             case TupProjectRequest::Rename:
             {
                 framesTable->setLayerName(layerIndex, response->arg().toString());
@@ -613,26 +610,22 @@ bool TupTimeLine::requestFrameAction(int action, int frameIndex, int layerIndex,
             selectFrame(layerIndex, lastFrame + 1);
             return true;
         }
-        break;
         case TupProjectActionBar::ExtendFrame:
         {
             extendFrameForward(layerIndex, currentFrame);
             return true;
         }
-        break;
         case TupProjectActionBar::RemoveFrame:
         {
             requestRemoveFrame(true);
             return true;
         }
-        break;
         case TupProjectActionBar::MoveFrameBackward:
         {
             TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, currentFrame, TupProjectRequest::Exchange, currentFrame - 1);
             emit requestTriggered(&request);
             return true;
         }
-        break;
         case TupProjectActionBar::MoveFrameForward:
         {
             int lastFrame = framesTable(sceneIndex)->lastFrameByLayer(layerIndex);
@@ -646,25 +639,21 @@ bool TupTimeLine::requestFrameAction(int action, int frameIndex, int layerIndex,
             emit requestTriggered(&request);
             return true;
         }
-        break;
         case TupProjectActionBar::ReverseFrameSelection:
         {
             requestReverseFrameSelection();
             return true;
         }
-        break;
         case TupProjectActionBar::CopyFrame:
         {
             requestCopyFrameSelection();
             return true;
         }
-        break;
         case TupProjectActionBar::PasteFrame:
         {
             requestPasteSelectionInCurrentFrame();
             return true;
         }
-        break;
         default:
             // Do nothing
         break;
@@ -697,7 +686,6 @@ bool TupTimeLine::requestLayerAction(int action, int layerIndex, int sceneIndex,
 
             return true;
         }
-        break;
         case TupProjectActionBar::RemoveLayer:
         {
             request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex, TupProjectRequest::Remove, arg);
@@ -705,7 +693,6 @@ bool TupTimeLine::requestLayerAction(int action, int layerIndex, int sceneIndex,
 
             return true;
         }
-        break;
     }
     
     return false;
@@ -733,7 +720,6 @@ bool TupTimeLine::requestSceneAction(int action, int sceneIndex, const QVariant 
             
             return true;
         }
-        break;
         case TupProjectActionBar::RemoveScene:
         {
             int scenesTotal = k->scenesContainer->count();
@@ -750,7 +736,6 @@ bool TupTimeLine::requestSceneAction(int action, int sceneIndex, const QVariant 
 
             return true;
         }
-        break;
         case TupProjectActionBar::MoveSceneUp:
         {
             request = TupRequestBuilder::createSceneRequest(sceneIndex, TupProjectRequest::Move, sceneIndex + 1);
@@ -758,7 +743,6 @@ bool TupTimeLine::requestSceneAction(int action, int sceneIndex, const QVariant 
 
             return true;
         }
-        break;
         case TupProjectActionBar::MoveSceneDown:
         {
             request = TupRequestBuilder::createSceneRequest(sceneIndex, TupProjectRequest::Move, sceneIndex - 1);
@@ -766,7 +750,6 @@ bool TupTimeLine::requestSceneAction(int action, int sceneIndex, const QVariant 
 
             return true;
         }
-        break;
         default:
             // Do nothing
         break;

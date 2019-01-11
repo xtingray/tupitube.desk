@@ -47,7 +47,7 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
     Q_OBJECT
 
     public:
-        TupTimeLine(TupProject *project, QWidget *parent = 0);
+        TupTimeLine(TupProject *project, QWidget *parent = nullptr);
         ~TupTimeLine();
 
         void initLayerVisibility();
