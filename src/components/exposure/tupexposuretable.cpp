@@ -825,13 +825,22 @@ void TupExposureTable::keyPressEvent(QKeyEvent *event)
                 clearSelection();
                 int layer = currentLayer();
                 int frames = k->header->lastFrame(layer);
-                tError() << "TEST!";
-                tError() << "FRAMES: " << frames;
-                tError() << "LAYER: " << layer;
                 for (int j = 0; j < frames; j++)
-                    selectFrame(layer, j);
+                    selectionModel()->select(model()->index(j, layer), QItemSelectionModel::Select);
                 emit selectionCopied();
             }
+        }
+        return;
+    }
+
+    if (event->key() == Qt::Key_R) {
+        if (event->modifiers() == Qt::AltModifier) {
+            clearSelection();
+            int columns = k->header->columnsTotal();
+            int frame = currentFrame();
+            for (int j = 0; j < columns; j++)
+                selectionModel()->select(model()->index(frame, j), QItemSelectionModel::Select);
+            emit selectionCopied();
         }
         return;
     }
@@ -851,15 +860,15 @@ void TupExposureTable::keyPressEvent(QKeyEvent *event)
     }
 
     if (event->key() == Qt::Key_Right) {
-        int limit = columnCount()-1;
-        int next = currentColumn()+1;
+        int limit = columnCount() - 1;
+        int next = currentColumn() + 1;
         if (next <= limit)
             setCurrentCell(currentRow(), next);
         return;
     }
 
     if (event->key() == Qt::Key_Left) {
-        int column = currentColumn()-1;
+        int column = currentColumn() - 1;
         if (column > -1)
             setCurrentCell(currentRow(), column);
         return;

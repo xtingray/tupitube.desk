@@ -97,6 +97,7 @@ class TUPITUBE_EXPORT TupTimeLineTable : public QTableWidget
         int lastFrameByLayer(int layerIndex);
         void updateLayerHeader(int layerIndex);
         int currentLayer();
+        int currentFrame();
         int layersCount();
 
         // Frames

@@ -374,6 +374,11 @@ int TupTimeLineTable::currentLayer()
     return currentRow();
 }
 
+int TupTimeLineTable::currentFrame()
+{
+    return currentColumn();
+}
+
 int TupTimeLineTable::layersCount()
 {
     return rowCount();
@@ -651,8 +656,31 @@ void TupTimeLineTable::keyPressEvent(QKeyEvent *event)
         return;
 
     if (event->key() == Qt::Key_C) {
-        if (event->modifiers() == Qt::ControlModifier)
+        if (event->modifiers() == Qt::ControlModifier) {
             emit selectionCopied();
+        } else {
+            if (event->modifiers() == Qt::AltModifier) {
+                clearSelection();
+                int layer = currentLayer();
+                int frames = k->layersColumn->lastFrame(layer);
+                for (int j = 0; j < frames; j++)
+                    selectionModel()->select(model()->index(layer, j), QItemSelectionModel::Select);
+                emit selectionCopied();
+            }
+        }
+
+        return;
+    }
+
+    if (event->key() == Qt::Key_R) {
+        if (event->modifiers() == Qt::AltModifier) {
+            clearSelection();
+            int columns = k->layersColumn->columnsTotal();
+            int frame = currentFrame();
+            for (int j = 0; j < columns; j++)
+                selectionModel()->select(model()->index(j, frame), QItemSelectionModel::Select);
+            emit selectionCopied();
+        }
         return;
     }
 
