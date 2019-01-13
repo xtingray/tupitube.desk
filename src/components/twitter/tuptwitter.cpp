@@ -72,6 +72,14 @@ struct TupTwitter::Private
 
 TupTwitter::TupTwitter(QWidget *parent) : QWidget(parent), k(new Private)
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "TupTwitter() - SSL version use for build: " << QSslSocket::sslLibraryBuildVersionString();
+        qDebug() << "TupTwitter() - SSL version use for run-time: " << QSslSocket::sslLibraryVersionNumber();
+        qDebug() << "TupTwitter() - Library Paths: " << QCoreApplication::libraryPaths();
+    #endif
+    */
+
     k->update = false;
     TCONFIG->beginGroup("General");
     k->themeName = TCONFIG->value("Theme", "Light").toString();

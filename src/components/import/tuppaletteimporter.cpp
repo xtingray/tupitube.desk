@@ -272,6 +272,15 @@ bool TupPaletteImporter::importGimpPalette(const QString &file)
 
 bool TupPaletteImporter::saveFile(const QString &path)
 {
+    #ifdef TUP_DEBUG
+        QString msg = "TupMainWindow::saveFile() - Saving palette -> " + path;
+        #ifdef Q_OS_WIN
+           qWarning() << msg;
+        #else
+           tWarning() << msg;
+        #endif
+    #endif
+
     if (k->paletteName.isNull()) {
         #ifdef TUP_DEBUG
             QString msg = "TupPaletteImporter::saveFile() - Fatal Error: Palette name is null!";

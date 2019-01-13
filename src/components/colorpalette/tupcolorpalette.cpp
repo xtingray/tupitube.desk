@@ -49,6 +49,17 @@
 #include "tupgradientcreator.h"
 #include "tvhbox.h"
 
+#include <QBoxLayout>
+#include <QPushButton>
+#include <QLineEdit>
+#include <QFrame>
+#include <QToolTip>
+#include <QComboBox>
+#include <QGroupBox>
+#include <QSplitter>
+#include <QMenu>
+#include <QTabWidget>
+
 struct TupColorPalette::Private
 {
     QSplitter *splitter;
@@ -130,28 +141,28 @@ TupColorPalette::~TupColorPalette()
     #endif
 
     delete k->paletteContainer;
-    k->paletteContainer = NULL;
+    k->paletteContainer = nullptr;
 
     delete k->colorForm;
-    k->colorForm = NULL;
+    k->colorForm = nullptr;
 
     delete k->colorPickerArea;
-    k->colorPickerArea = NULL;
+    k->colorPickerArea = nullptr;
 
     delete k->luminancePicker;
-    k->luminancePicker = NULL;
+    k->luminancePicker = nullptr;
 
     delete k->gradientManager;
-    k->gradientManager = NULL;
+    k->gradientManager = nullptr;
 
     delete k->contourColor;
-    k->contourColor = NULL;
+    k->contourColor = nullptr;
 
     delete k->fillColor;
-    k->fillColor = NULL;
+    k->fillColor = nullptr;
 
     delete k->bgColor;
-    k->bgColor = NULL;
+    k->bgColor = nullptr;
 
     delete k;
 }

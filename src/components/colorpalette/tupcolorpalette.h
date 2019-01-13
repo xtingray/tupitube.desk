@@ -40,17 +40,6 @@
 #include "tupmodulewidgetbase.h"
 #include "tcolorcell.h"
 
-#include <QBoxLayout>
-#include <QPushButton>
-#include <QLineEdit>
-#include <QFrame>
-#include <QToolTip>
-#include <QComboBox>
-#include <QGroupBox>
-#include <QSplitter>
-#include <QMenu>
-#include <QTabWidget>
-
 class TUPITUBE_EXPORT TupColorPalette : public TupModuleWidgetBase
 {
     Q_OBJECT
@@ -58,7 +47,7 @@ class TUPITUBE_EXPORT TupColorPalette : public TupModuleWidgetBase
     public:
         enum BrushType { Solid = 0, Gradient };
 
-        TupColorPalette(QWidget *parent = 0);
+        TupColorPalette(QWidget *parent = nullptr);
         ~TupColorPalette();
 
         // SQA: change this for QBrush

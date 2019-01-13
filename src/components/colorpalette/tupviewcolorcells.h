@@ -56,8 +56,9 @@ class TUPITUBE_EXPORT TupViewColorCells : public QFrame
     Q_OBJECT
 
     public:
-        TupViewColorCells(QWidget *parent = 0);
+        TupViewColorCells(QWidget *parent = nullptr);
         virtual ~TupViewColorCells();
+
         void readPaletteFile(const QString &file);
         void setColor(const QBrush & brush);
         void clearSelection();

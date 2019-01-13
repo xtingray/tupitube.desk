@@ -176,8 +176,8 @@ _EOH_
     end
 
     config.addDefine('VERSION=\\\\\"0.2\\\\\"')
-    config.addDefine('CODE_NAME=\\\\\"Bagual\\\\\"')
-    config.addDefine('REVISION=\\\\\"12\\\\\"')
+    config.addDefine('CODE_NAME=\\\\\"Garapa\\\\\"')
+    config.addDefine('REVISION=\\\\\"13\\\\\"')
     config.addDefine('CONFIG_VERSION=\\\\\"2\\\\\"')
 
     if File.exists?('/etc/canaima_version')

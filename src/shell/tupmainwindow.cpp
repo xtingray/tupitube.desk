@@ -877,7 +877,7 @@ void TupMainWindow::importPalettes()
             bool ok = importer.import(*file, TupPaletteImporter::Gimp);
             if (ok) {
                 QString home = getenv("HOME");
-                QString path = home + "/.tupi/palettes";
+                QString path = home + "/.tupitube/palettes";
                 ok = importer.saveFile(path);
                 if (ok) {
                     m_colorPalette->parsePaletteFile(importer.filePath());

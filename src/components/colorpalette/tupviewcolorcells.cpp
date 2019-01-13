@@ -58,7 +58,7 @@ struct TupViewColorCells::Private
 TupViewColorCells::TupViewColorCells(QWidget *parent) : QFrame(parent), k(new Private)
 {
     k->numColorRecent = 0;
-    k->currentCell = 0;
+    k->currentCell = nullptr;
     k->layout = new QVBoxLayout;
     k->layout->setMargin(0);
     k->layout->setSpacing(0);
@@ -185,7 +185,6 @@ void TupViewColorCells::readPalettes(const QString &paletteDir)
     #endif
 
     QDir dir(paletteDir);
-
     if (dir.exists()) {
         QStringList files = dir.entryList(QStringList() << "*.tpal");
         QStringList::ConstIterator it = files.begin();
@@ -196,13 +195,24 @@ void TupViewColorCells::readPalettes(const QString &paletteDir)
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupViewColorCells::readPalettes() - Error: Invalid path -> " + paletteDir;
+            QString msg = "TupViewColorCells::readPalettes() - Error: Palettes path doesn't exist -> " + paletteDir;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else
                 tError("palette") << msg;
             #endif
-        #endif	
+        #endif
+
+        if (dir.mkpath(paletteDir)) {
+            #ifdef TUP_DEBUG
+                QString msg = "TupViewColorCells::readPalettes() - Creating path -> " + paletteDir;
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError("palette") << msg;
+                #endif
+            #endif
+        }
 	}
 }
 
@@ -210,14 +220,25 @@ void TupViewColorCells::readPaletteFile(const QString &paletteFile)
 {
     TupPaletteParser parser;
     QFile file(paletteFile);
-    if (parser.parse(&file)) {
-        QList<QBrush> brushes = parser.brushes();
-        QString name = parser.paletteName();
-        bool editable = parser.paletteIsEditable();
-        addPalette(name, brushes, editable);
+    if (file.exists()) {
+        if (parser.parse(&file)) {
+            QList<QBrush> brushes = parser.brushes();
+            QString name = parser.paletteName();
+            bool editable = parser.paletteIsEditable();
+            addPalette(name, brushes, editable);
+        } else {
+            #ifdef TUP_DEBUG
+                QString msg = "TupViewColorCells::readPaletteFile() - Fatal error while parsing palette file: " + paletteFile;
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError() << msg;
+                #endif
+            #endif
+        }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupViewColorCells::readPaletteFile() - Fatal error while parsing palette file: " + paletteFile;
+            QString msg = "TupViewColorCells::readPaletteFile() - Fatal error: palette file doesn't exist! -> " + paletteFile;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else

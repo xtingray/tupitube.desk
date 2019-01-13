@@ -531,8 +531,8 @@ void TupDocumentView::loadPlugins()
                                    if (toolName.compare(tr("Ellipse")) == 0)
                                        brushTools[1] = action;
 
-                                   if (toolName.compare(tr("Text")) == 0)
-                                       textAction = action;
+                                   // if (toolName.compare(tr("Text")) == 0)
+                                   //     textAction = action;
                                  }
                                  break;
                               case TupToolInterface::Tweener:
