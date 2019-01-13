@@ -647,8 +647,10 @@ void TupTimeLineTable::mouseMoveEvent(QMouseEvent *event)
 
 void TupTimeLineTable::keyPressEvent(QKeyEvent *event)
 {
-    // tError() << "TupTimeLineTable::keyPressEvent() - event->key() -> " << event->key();
-    // tError() << "TupTimeLineTable::keyPressEvent() - event->modifiers() -> " << event->modifiers();
+    /*
+    tError() << "TupTimeLineTable::keyPressEvent() - event->key() -> " << event->key();
+    tError() << "TupTimeLineTable::keyPressEvent() - event->modifiers() -> " << event->modifiers();
+    */
 
     // SQA: Check if this piece of code is obsolete 
     // Fn + Left/Right arrow
@@ -663,7 +665,7 @@ void TupTimeLineTable::keyPressEvent(QKeyEvent *event)
                 clearSelection();
                 int layer = currentLayer();
                 int frames = k->layersColumn->lastFrame(layer);
-                for (int j = 0; j < frames; j++)
+                for (int j = 0; j <= frames; j++)
                     selectionModel()->select(model()->index(layer, j), QItemSelectionModel::Select);
                 emit selectionCopied();
             }
