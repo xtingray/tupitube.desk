@@ -45,6 +45,14 @@
 #include "tuprectitem.h"
 #include "tupellipseitem.h"
 
+#include <QSvgRenderer>
+#include <QGraphicsView>
+#include <QStyleOptionGraphicsItem>
+#include <QGraphicsSceneMouseEvent>
+#include <QKeyEvent>
+#include <QDesktopWidget>
+#include <QMouseEvent>
+
 TupGraphicsScene::TupGraphicsScene() : QGraphicsScene()
 {
     #ifdef TUP_DEBUG
@@ -613,9 +621,13 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
                      object->item()->setRotation(angle);
                  } else if (stepItem->has(TupTweenerStep::Scale)) {
                      QPointF point = tween->transformOriginPoint();
-                     object->item()->setTransformOriginPoint(point);
-                     QTransform transform = object->item()->transform();
-                     transform.reset();
+                     double scaleX = tween->initXScaleValue();
+                     double scaleY = tween->initYScaleValue();
+                     QTransform transform;
+                     transform.translate(point.x(), point.y());
+                     transform.scale(scaleX, scaleY);
+                     transform.translate(-point.x(), -point.y());
+
                      object->item()->setTransform(transform);
                  } else if (stepItem->has(TupTweenerStep::Shear)) {
                      QTransform transform;
@@ -783,29 +795,27 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
                      object->setPos(tween->transformOriginPoint());
                      QPointF offset = QPoint(-adjustX, -adjustY);
                      object->setLastTweenPos(stepItem->position() + offset);
-                 }
-
-                 if (stepItem->has(TupTweenerStep::Rotation)) {
+                 } else if (stepItem->has(TupTweenerStep::Rotation)) {
                      double angle = stepItem->rotation();
                      object->setTransformOriginPoint(tween->transformOriginPoint());
                      object->setRotation(angle);
-                 }
-
-                 if (stepItem->has(TupTweenerStep::Scale)) {
+                 } else if (stepItem->has(TupTweenerStep::Scale)) {
                      QPointF point = tween->transformOriginPoint();
-                     object->setTransformOriginPoint(point);
-                     object->setScale(1.0);
-                 }
+                     double scaleX = tween->initXScaleValue();
+                     double scaleY = tween->initYScaleValue();
+                     QTransform transform;
+                     transform.translate(point.x(), point.y());
+                     transform.scale(scaleX, scaleY);
+                     transform.translate(-point.x(), -point.y());
 
-                 if (stepItem->has(TupTweenerStep::Shear)) {
+                     object->setTransform(transform);
+                 } else if (stepItem->has(TupTweenerStep::Shear)) {
                      QTransform transform;
                      transform.shear(0, 0);
                      object->setTransform(transform);
-                 }
-
-                 if (stepItem->has(TupTweenerStep::Opacity))
+                 } else if (stepItem->has(TupTweenerStep::Opacity)) {
                      object->setOpacity(stepItem->opacity());
-
+                 }
              } else if ((origin < photogram) && (photogram < origin + tween->frames())) {
                  int step = photogram - origin;
                  TupTweenerStep *stepItem = tween->stepAt(step);
@@ -816,14 +826,10 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
                      object->moveBy(dx, dy);
                      QPointF offset = QPoint(-adjustX, -adjustY);
                      object->setLastTweenPos(stepItem->position() + offset);
-                 }
-
-                 if (stepItem->has(TupTweenerStep::Rotation)) {
+                 } else if (stepItem->has(TupTweenerStep::Rotation)) {
                      double angle = stepItem->rotation();
                      object->setRotation(angle);
-                 }
-
-                 if (stepItem->has(TupTweenerStep::Scale)) {
+                 } else if (stepItem->has(TupTweenerStep::Scale)) {
                      QPointF point = tween->transformOriginPoint();
 
                      double scaleX = stepItem->horizontalScale();
@@ -834,9 +840,7 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
                      transform.translate(-point.x(), -point.y());
 
                      object->setTransform(transform);
-                 }
-
-                 if (stepItem->has(TupTweenerStep::Shear)) {
+                 } else if (stepItem->has(TupTweenerStep::Shear)) {
                      QPointF point = tween->transformOriginPoint();
 
                      double shearX = stepItem->horizontalShear();

@@ -240,22 +240,22 @@ void Settings::updateSteps(const QGraphicsPathItem *path)
 void Settings::emitOptionChanged(int option)
 {
     switch (option) {
-            case 0:
-             {
-                 activeInnerForm(false);
-                 emit clickedSelect();
-             }
-            break;
-            case 1:
-             {
-                 if (k->selectionDone) {
-                     activeInnerForm(true);
-                     emit clickedCreatePath();
-                 } else {
-                     k->options->setCurrentIndex(0);
-                     TOsd::self()->display(tr("Info"), tr("Select objects for Tweening first!"), TOsd::Info);   
-                 }
-             }
+        case 0:
+        {
+            activeInnerForm(false);
+            emit clickedSelect();
+        }
+        break;
+        case 1:
+        {
+            if (k->selectionDone) {
+                activeInnerForm(true);
+                emit clickedCreatePath();
+            } else {
+                k->options->setCurrentIndex(0);
+                TOsd::self()->display(tr("Info"), tr("Select objects for Tweening first!"), TOsd::Info);
+            }
+        }
     }
 }
 

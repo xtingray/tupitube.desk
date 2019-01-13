@@ -38,16 +38,7 @@
 
 #include "tglobal.h"
 #include "settings.h"
-
-#include <QFrame>
-#include <QLabel>
-#include <QBoxLayout>
-#include <QGraphicsPathItem>
-#include <QListWidgetItem>
-
-// class QGraphicsPathItem;
-// class QListWidgetItem;
-class TupItemTweener;
+#include "tupitemtweener.h"
 
 /**
  * @author Gustav Gonzalez 
@@ -60,7 +51,7 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
     public:
         enum GuiState { Manager = 1, Properties };
 
-        Configurator(QWidget *parent = 0);
+        Configurator(QWidget *parent = nullptr);
         ~Configurator();
 
         void loadTweenList(QList<QString> tweenList);
@@ -79,7 +70,8 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void closeSettingsPanel();
         TupToolPlugin::Mode mode();
         void resetUI();
-        QString tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point);
+        QString tweenToXml(int currentScene, int currentLayer, int currentFrame,
+                           QPointF point, double initialXScaleFactor, double initialYScaleFactor);
         
     private slots:
         void applyItem();

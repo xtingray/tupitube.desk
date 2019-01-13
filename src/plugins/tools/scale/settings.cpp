@@ -35,11 +35,19 @@
 
 #include "settings.h"
 #include "tradiobuttongroup.h"
-#include "tupitemtweener.h"
 #include "tuptweenerstep.h"
 #include "timagebutton.h"
 #include "tseparator.h"
 #include "tosd.h"
+
+#include <QLabel>
+#include <QLineEdit>
+#include <QBoxLayout>
+#include <QComboBox>
+#include <QSpinBox>
+#include <QDoubleSpinBox>
+#include <QCheckBox>
+#include <QDir>
 
 struct Settings::Private
 {
@@ -392,26 +400,27 @@ QString Settings::currentTweenName() const
 void Settings::emitOptionChanged(int option)
 {
     switch (option) {
-            case 0:
-             {
-                 activeInnerForm(false);
-                 emit clickedSelect();
-             }
-            break;
-            case 1:
-             {
-                 if (k->selectionDone) {
-                     activeInnerForm(true);
-                     emit clickedDefineProperties();
-                 } else {
-                     k->options->setCurrentIndex(0);
-                     TOsd::self()->display(tr("Info"), tr("Select objects for Tweening first!"), TOsd::Info);
-                 }
-             }
+        case 0:
+        {
+            activeInnerForm(false);
+            emit clickedSelect();
+        }
+        break;
+        case 1:
+        {
+            if (k->selectionDone) {
+                activeInnerForm(true);
+                emit clickedDefineProperties();
+            } else {
+                k->options->setCurrentIndex(0);
+                TOsd::self()->display(tr("Info"), tr("Select objects for Tweening first!"), TOsd::Info);
+            }
+        }
     }
 }
 
-QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point)
+QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point,
+                             double initialXScaleFactor, double initialYScaleFactor)
 {
     QDomDocument doc;
 
@@ -424,6 +433,8 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
 
     // checkFramesRange();
     root.setAttribute("frames", k->totalSteps);
+    root.setAttribute("initXScaleFactor", QString::number(initialXScaleFactor));
+    root.setAttribute("initYScaleFactor", QString::number(initialYScaleFactor));
     root.setAttribute("origin", QString::number(point.x()) + "," + QString::number(point.y()));
     k->scaleAxes = TupItemTweener::TransformAxes(k->comboAxes->currentIndex());
     root.setAttribute("scaleAxes", k->scaleAxes);
@@ -454,47 +465,53 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     double factorY = 1.0;
     double scaleX = 1.0;
     double scaleY = 1.0;
+    double lastScaleX = 1.0;
+    double lastScaleY = 1.0;
 
     if (k->scaleAxes == TupItemTweener::XY) {
         factorX = factor;
         factorY = factor;
     } else if (k->scaleAxes == TupItemTweener::X) {
-               factorX = factor;
+        factorX = factor;
     } else {
         factorY = factor;
     }
 
     int cycle = 1;
-    int reverseTop = (iterations*2)-2;
+    int reverseTop = (iterations * 2) - 2;
 
     for (int i=0; i < k->totalSteps; i++) {
          if (cycle <= iterations) {
              if (cycle == 1) {
-                 scaleX = 1.0;
-                 scaleY = 1.0;
+                 scaleX = initialXScaleFactor;
+                 scaleY = initialYScaleFactor;
              } else {
                  scaleX *= factorX;
                  scaleY *= factorY;
+                 lastScaleX = scaleX;
+                 lastScaleY = scaleY;
              }
              cycle++;
          } else {
              // if repeat option is enabled
              if (loop) {
                  cycle = 2;
-                 scaleX = 1.0;
-                 scaleY = 1.0;
+                 scaleX = initialXScaleFactor;
+                 scaleY = initialYScaleFactor;
+                 lastScaleX = scaleX;
+                 lastScaleY = scaleY;
              } else if (reverse) { // if reverse option is enabled
-                        scaleX /= factorX;
-                        scaleY /= factorY;
-
-                        if (cycle < reverseTop)
-                            cycle++;
-                        else
-                            cycle = 1;
-
+                 scaleX /= factorX;
+                 scaleY /= factorY;
+                 lastScaleX = scaleX;
+                 lastScaleY = scaleY;
+                 if (cycle < reverseTop)
+                     cycle++;
+                 else
+                     cycle = 1;
              } else { // If cycle is done and no loop and no reverse
-                 scaleX = 1.0;
-                 scaleY = 1.0;
+                 scaleX = lastScaleX;
+                 scaleY = lastScaleY;
              }
          }
 

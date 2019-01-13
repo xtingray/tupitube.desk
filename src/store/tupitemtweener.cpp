@@ -64,6 +64,8 @@ struct TupItemTweener::Private
 
     // Scale Tween
     TupItemTweener::TransformAxes scaleAxes;
+    double initialXScaleFactor;
+    double initialYScaleFactor;
     double scaleFactor;
     int scaleIterations;
     int scaleLoop;
@@ -110,6 +112,8 @@ struct TupItemTweener::Private
 TupItemTweener::TupItemTweener() : k(new Private)
 {
     k->frames = 0;
+    k->initialXScaleFactor = 1;
+    k->initialYScaleFactor = 1;
 }
 
 TupItemTweener::~TupItemTweener()
@@ -153,6 +157,12 @@ void TupItemTweener::addStep(const TupTweenerStep &step)
 
 TupTweenerStep * TupItemTweener::stepAt(int index)
 {
+    return k->step(index);
+}
+
+TupTweenerStep * TupItemTweener::lastStep()
+{
+    int index = k->steps.size() - 1;
     return k->step(index);
 }
 
@@ -216,6 +226,16 @@ QPointF TupItemTweener::transformOriginPoint()
     return k->originPoint;
 }
 
+double TupItemTweener::initXScaleValue()
+{
+    return k->initialXScaleFactor;
+}
+
+double TupItemTweener::initYScaleValue()
+{
+    return k->initialYScaleFactor;
+}
+
 void TupItemTweener::fromXml(const QString &xml)
 {
     #ifdef TUP_DEBUG
@@ -266,6 +286,8 @@ void TupItemTweener::fromXml(const QString &xml)
             }
         } else if (k->type == TupItemTweener::Scale) {
             k->scaleAxes = TupItemTweener::TransformAxes(root.attribute("scaleAxes").toInt());
+            k->initialXScaleFactor = root.attribute("initXScaleFactor").toDouble();
+            k->initialYScaleFactor = root.attribute("initYScaleFactor").toDouble();
             k->scaleFactor = root.attribute("scaleFactor").toDouble();
             k->scaleIterations = root.attribute("scaleIterations").toInt();
             k->scaleLoop = root.attribute("scaleLoop").toInt();
@@ -304,7 +326,6 @@ void TupItemTweener::fromXml(const QString &xml)
         }
 
         QDomNode node = root.firstChildElement("step");
-
         while (!node.isNull()) {
                QDomElement e = node.toElement();
 
@@ -370,6 +391,8 @@ QDomElement TupItemTweener::toXml(QDomDocument &doc) const
         }
     } else if (k->type == TupItemTweener::Scale) {
         root.setAttribute("scaleAxes", QString::number(k->scaleAxes));
+        root.setAttribute("initXScaleFactor", QString::number(k->initialXScaleFactor));
+        root.setAttribute("initYScaleFactor", QString::number(k->initialYScaleFactor));
         root.setAttribute("scaleFactor", QString::number(k->scaleFactor));
         root.setAttribute("scaleIterations", QString::number(k->scaleIterations));
         root.setAttribute("scaleLoop", QString::number(k->scaleLoop));

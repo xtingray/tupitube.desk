@@ -68,6 +68,8 @@ struct Tweener::Private
     int initScene;
 
     QPointF origin;
+    double initialXScaleFactor;
+    double initialYScaleFactor;
     // Target *target;
 
     TupToolPlugin::Mode mode;
@@ -123,8 +125,8 @@ void Tweener::init(TupGraphicsScene *scene)
 
 void Tweener::updateStartPoint(int index)
 {
-     if (k->initFrame != index && index >= 0)
-         k->initFrame = index;
+    if (k->initFrame != index && index >= 0)
+        k->initFrame = index;
 }
 
 /* This method returns the plugin name */
@@ -181,7 +183,23 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
 
     if (scene->currentFrameIndex() == k->initFrame) {
         if (k->editMode == TupToolPlugin::Selection) {
+            #ifdef TUP_DEBUG
+                QString msg = "Scale Tweener::release() - Tracing selection mode";
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError() << msg;
+                #endif
+            #endif
             if (scene->selectedItems().size() > 0) {
+                #ifdef TUP_DEBUG
+                    QString msg = "Scale Tweener::release() - selection size -> " + QString::number(scene->selectedItems().size());
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg;
+                    #else
+                        tError() << msg;
+                    #endif
+                #endif
                 k->objects = scene->selectedItems();
                 foreach (QGraphicsItem *item, k->objects) {
                     QString tip = item->toolTip();
@@ -204,10 +222,31 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                     }
                 }
 
+                #ifdef TUP_DEBUG
+                    QString msg1 = "Scale Tweener::release() - Notifying selection...";
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg1;
+                    #else
+                        tError() << msg1;
+                    #endif
+                #endif
                 k->configurator->notifySelection(true);
+
                 QGraphicsItem *item = k->objects.at(0);
+                QTransform transform = item->transform();
+                k->initialXScaleFactor = transform.m11();
+                k->initialYScaleFactor = transform.m22();
                 QRectF rect = item->sceneBoundingRect();
                 k->origin = rect.center();
+            } else {
+                #ifdef TUP_DEBUG
+                    QString msg = "Scale Tweener::release() - Selection mode: no items selected";
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg;
+                    #else
+                        tError() << msg;
+                    #endif
+                #endif
             }
         }
     }
@@ -458,7 +497,8 @@ void Tweener::applyTween()
                                         k->initScene, k->initLayer, k->initFrame,
                                         objectIndex, QPointF(), k->scene->getSpaceContext(),
                                         type, TupProjectRequest::SetTween,
-                                        k->configurator->tweenToXml(k->initScene, k->initLayer, k->initFrame, origin));
+                                        k->configurator->tweenToXml(k->initScene, k->initLayer, k->initFrame,
+                                                                    origin, k->initialXScaleFactor, k->initialYScaleFactor));
             emit requested(&request);
         }
     } else { // Tween already exists
@@ -518,7 +558,8 @@ void Tweener::applyTween()
                                              k->initScene, k->initLayer, k->initFrame,
                                              objectIndex, QPointF(), k->scene->getSpaceContext(), 
                                              type, TupProjectRequest::SetTween,
-                                             k->configurator->tweenToXml(k->initScene, k->initLayer, k->initFrame, origin));
+                                             k->configurator->tweenToXml(k->initScene, k->initLayer, k->initFrame,
+                                                                         origin, k->initialXScaleFactor, k->initialYScaleFactor));
                  emit requested(&request);
         }
 

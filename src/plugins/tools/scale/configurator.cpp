@@ -38,8 +38,13 @@
 #include "tseparator.h"
 #include "tweenmanager.h"
 #include "buttonspanel.h"
-#include "tupitemtweener.h"
 #include "tosd.h"
+
+#include <QBoxLayout>
+#include <QFrame>
+#include <QLabel>
+#include <QGraphicsPathItem>
+#include <QListWidgetItem>
 
 struct Configurator::Private
 {
@@ -195,9 +200,11 @@ int Configurator::startComboSize()
     return k->settingsPanel->startComboSize();
 }
 
-QString Configurator::tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point)
+QString Configurator::tweenToXml(int currentScene, int currentLayer, int currentFrame,
+                                 QPointF point, double initialXScaleFactor, double initialYScaleFactor)
 {
-    return k->settingsPanel->tweenToXml(currentScene, currentLayer, currentFrame, point);
+    return k->settingsPanel->tweenToXml(currentScene, currentLayer, currentFrame, point,
+                                        initialXScaleFactor, initialYScaleFactor);
 }
 
 int Configurator::totalSteps()
@@ -230,14 +237,11 @@ void Configurator::editTween()
 
     activeTweenManagerPanel(false);
 
-    // k->mode = TupToolPlugin::Edit;
     k->state = Configurator::Properties;
 
     k->settingsPanel->notifySelection(true);
     k->settingsPanel->setParameters(k->currentTween);
     activePropertiesPanel(true);
-
-    // emit setMode(k->mode);
 }
 
 void Configurator::removeTween()

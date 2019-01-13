@@ -52,13 +52,6 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsItem>
-#include <QSvgRenderer>
-#include <QGraphicsView>
-#include <QStyleOptionGraphicsItem>
-#include <QGraphicsSceneMouseEvent>
-#include <QKeyEvent>
-#include <QDesktopWidget>
-#include <QMouseEvent>
 
 class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
 {

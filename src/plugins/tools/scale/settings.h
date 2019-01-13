@@ -38,18 +38,9 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
+#include "tupitemtweener.h"
 
 #include <QWidget>
-#include <QLabel>
-#include <QLineEdit>
-#include <QBoxLayout>
-#include <QComboBox>
-#include <QSpinBox>
-#include <QDoubleSpinBox>
-#include <QCheckBox>
-#include <QDir>
-
-class TupItemTweener;
 
 /**
  * @author Gustav Gonzalez 
@@ -60,7 +51,7 @@ class TUPITUBE_PLUGIN Settings : public QWidget
     Q_OBJECT
 
     public:
-        Settings(QWidget *parent = 0);
+        Settings(QWidget *parent = nullptr);
         ~Settings();
 
         void setParameters(const QString &name, int framesCount, int startFrame);
@@ -75,7 +66,8 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         int startComboSize();
         QString currentTweenName() const;
         void activateMode(TupToolPlugin::EditMode mode);
-        QString tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point);
+        QString tweenToXml(int currentScene, int currentLayer, int currentFrame,
+                           QPointF point, double initialXFactor, double initialYFactor);
 
     private slots:
         void applyTween();

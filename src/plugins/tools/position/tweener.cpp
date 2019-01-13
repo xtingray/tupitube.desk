@@ -235,6 +235,14 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
 
     if (scene->currentFrameIndex() == k->initFrame) {
         if (k->editMode == TupToolPlugin::Properties) {
+            #ifdef TUP_DEBUG
+                QString msg = "Position Tweener::release() - Tracing properties mode";
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError() << msg;
+                #endif
+            #endif
             if (k->nodesGroup) {
                 QString route = pathToCoords();
                 foreach (QGraphicsItem *item, k->objects) {
@@ -280,8 +288,25 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 updateTweenPoints();
             }
         } else { // Selection mode
+            #ifdef TUP_DEBUG
+                QString msg = "Position Tweener::release() - Tracing selection mode";
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError() << msg;
+                #endif
+            #endif
             if (scene->selectedItems().size() > 0) {
-                k->objects = scene->selectedItems();                
+                #ifdef TUP_DEBUG
+                    QString msg = "Position Tweener::release() - selection size -> " + QString::number(scene->selectedItems().size());
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg;
+                    #else
+                        tError() << msg;
+                    #endif
+                #endif
+
+                k->objects = scene->selectedItems();
                 foreach (QGraphicsItem *item, k->objects) {
                     QString tip = item->toolTip();
                     if (tip.contains(tr("Position"))) {
@@ -303,6 +328,14 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                     }
                 }
 
+                #ifdef TUP_DEBUG
+                    QString msg1 = "Position Tweener::release() - Notifying selection...";
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg1;
+                    #else
+                        tError() << msg1;
+                    #endif
+                #endif
                 k->configurator->notifySelection(true);
 
                 QGraphicsItem *item = k->objects.at(0);
@@ -335,7 +368,16 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
 
                     // k->firstNode = newPos;
                 }
-            } 
+            } else {
+                #ifdef TUP_DEBUG
+                    QString msg = "Position Tweener::release() - Selection mode: no items selected";
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg;
+                    #else
+                        tError() << msg;
+                    #endif
+                #endif
+            }
         }
     } 
 }

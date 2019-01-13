@@ -152,7 +152,23 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
 
     if (scene->currentFrameIndex() == k->initFrame) {
         if (k->editMode == TupToolPlugin::Selection) {
+            #ifdef TUP_DEBUG
+                QString msg = "Color Tweener::release() - Tracing selection mode";
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError() << msg;
+                #endif
+            #endif
             if (scene->selectedItems().size() > 0) {
+                #ifdef TUP_DEBUG
+                    QString msg = "Color Tweener::release() - selection size -> " + QString::number(scene->selectedItems().size());
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg;
+                    #else
+                        tError() << msg;
+                    #endif
+                #endif
                 k->objects = scene->selectedItems();
                 foreach (QGraphicsItem *item, k->objects) {
                     QString tip = item->toolTip();
@@ -204,8 +220,26 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 }
 
                 k->configurator->setInitialColor(color);
+
+                #ifdef TUP_DEBUG
+                    QString msg1 = "Shear Tweener::release() - Notifying selection...";
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg1;
+                    #else
+                        tError() << msg1;
+                    #endif
+                #endif
                 k->configurator->notifySelection(true);
             }
+        } else {
+            #ifdef TUP_DEBUG
+                QString msg = "Shear Tweener::release() - Selection mode: no items selected";
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError() << msg;
+                #endif
+            #endif
         }
     }
 }

@@ -46,7 +46,7 @@
 #include <QGraphicsItem>
 #include <QHash>
 
-class QGraphicsItem;
+// class QGraphicsItem;
 class QGraphicsPathItem;
 
 class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSerializable
@@ -85,7 +85,8 @@ class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSeriali
         
         void addStep(const TupTweenerStep &step);
         TupTweenerStep *stepAt(int index);
-        
+        TupTweenerStep *lastStep();
+
         void setFrames(int frames);
 
         int frames() const;
@@ -93,6 +94,8 @@ class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSeriali
         int initLayer();
         int initScene();
         QPointF transformOriginPoint();
+        double initXScaleValue();
+        double initYScaleValue();
         
         void setStep(int step);
         

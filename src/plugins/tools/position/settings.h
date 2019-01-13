@@ -56,7 +56,7 @@ class TUPITUBE_PLUGIN Settings : public QWidget
     Q_OBJECT
 
     public:
-        Settings(QWidget *parent = 0);
+        Settings(QWidget *parent = nullptr);
         ~Settings();
 
         void setParameters(const QString &name, int framesCount, int startFrame);
@@ -96,6 +96,7 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         void setInnerForm();
         void activeInnerForm(bool enable);
         void setEditMode();
+
         struct Private;
         Private *const k;
 };
