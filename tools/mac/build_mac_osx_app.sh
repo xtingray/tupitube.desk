@@ -98,4 +98,4 @@ for lib in ${LIBS[@]}; do
 done
 
 macdeployqt TupiTube.app -dmg -libpath=/usr/local/lib
-mv TupiTube.dmg TupiTube_Desk_$TUPITUBE_VERSION.dmg
+mv TupiTube.dmg tupitube_desk_$TUPITUBE_VERSION.dmg
