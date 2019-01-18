@@ -69,7 +69,7 @@ struct Settings::Private
     TupItemTweener::TransformAxes scaleAxes;
     QComboBox *comboAxes;
     QDoubleSpinBox *comboFactor;
-    QSpinBox *comboIterations; 
+    QSpinBox *iterationsCombo; 
 
     QCheckBox *loopBox;
     QCheckBox *reverseLoopBox;
@@ -210,10 +210,10 @@ void Settings::setInnerForm()
     speedLayout->addWidget(speedLabel);
     speedLayout->addWidget(k->comboFactor);
 
-    k->comboIterations = new QSpinBox;
-    k->comboIterations->setEnabled(true);
-    k->comboIterations->setMinimum(1);
-    k->comboIterations->setMaximum(999);
+    k->iterationsCombo = new QSpinBox;
+    k->iterationsCombo->setEnabled(true);
+    k->iterationsCombo->setMinimum(1);
+    k->iterationsCombo->setMaximum(999);
 
     QLabel *iterationsLabel = new QLabel(tr("Iterations") + ": ");
     iterationsLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -222,7 +222,7 @@ void Settings::setInnerForm()
     iterationsLayout->setMargin(0);
     iterationsLayout->setSpacing(0);
     iterationsLayout->addWidget(iterationsLabel);
-    iterationsLayout->addWidget(k->comboIterations);
+    iterationsLayout->addWidget(k->iterationsCombo);
 
     k->loopBox = new QCheckBox(tr("Loop"), k->innerPanel);
     connect(k->loopBox, SIGNAL(stateChanged(int)), this, SLOT(updateReverseCheckbox(int)));
@@ -310,7 +310,7 @@ void Settings::setParameters(TupItemTweener *currentTween)
     k->comboAxes->setCurrentIndex(currentTween->tweenScaleAxes());
     k->comboFactor->setValue(currentTween->tweenScaleFactor());
 
-    k->comboIterations->setValue(currentTween->tweenScaleIterations());
+    k->iterationsCombo->setValue(currentTween->tweenScaleIterations());
 
     k->loopBox->setChecked(currentTween->tweenScaleLoop());
     k->reverseLoopBox->setChecked(currentTween->tweenScaleReverseLoop());
@@ -442,10 +442,10 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     double factor = k->comboFactor->value();
     root.setAttribute("scaleFactor", QString::number(factor));
 
-    int iterations = k->comboIterations->value();
+    int iterations = k->iterationsCombo->value();
     if (iterations == 0) {
         iterations = 1;
-        k->comboIterations->setValue(iterations);
+        k->iterationsCombo->setValue(iterations);
     }
     root.setAttribute("scaleIterations", iterations);
 
@@ -566,9 +566,9 @@ void Settings::checkFramesRange()
     k->totalSteps = end - begin + 1;
     k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
 
-    int iterations = k->comboIterations->value();
+    int iterations = k->iterationsCombo->value();
     if (iterations > k->totalSteps)
-        k->comboIterations->setValue(k->totalSteps);
+        k->iterationsCombo->setValue(k->totalSteps);
 }
 
 void Settings::updateLoopCheckbox(int state)

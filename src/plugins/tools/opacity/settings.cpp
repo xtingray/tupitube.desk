@@ -57,7 +57,7 @@ struct Settings::Private
     QDoubleSpinBox *comboInitFactor;
     QDoubleSpinBox *comboEndFactor;
 
-    QSpinBox *comboIterations;
+    QSpinBox *iterationsCombo;
 
     QCheckBox *loopBox;
     QCheckBox *reverseLoopBox;
@@ -203,9 +203,10 @@ void Settings::setInnerForm()
     opacityEndLayout->addWidget(opacityEndLabel);
     opacityEndLayout->addWidget(k->comboEndFactor);
 
-    k->comboIterations = new QSpinBox;
-    k->comboIterations->setEnabled(true);
-    k->comboIterations->setMinimum(1);
+    k->iterationsCombo = new QSpinBox;
+    k->iterationsCombo->setEnabled(true);
+    k->iterationsCombo->setMinimum(1);
+    k->iterationsCombo->setMaximum(999);
 
     QLabel *iterationsLabel = new QLabel(tr("Iterations") + ": ");
     iterationsLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -214,7 +215,7 @@ void Settings::setInnerForm()
     iterationsLayout->setMargin(0);
     iterationsLayout->setSpacing(0);
     iterationsLayout->addWidget(iterationsLabel);
-    iterationsLayout->addWidget(k->comboIterations);
+    iterationsLayout->addWidget(k->iterationsCombo);
 
     k->loopBox = new QCheckBox(tr("Loop"), k->innerPanel);
     connect(k->loopBox, SIGNAL(stateChanged(int)), this, SLOT(updateReverseCheckbox(int)));
@@ -294,7 +295,7 @@ void Settings::setParameters(TupItemTweener *currentTween)
 
     k->comboInitFactor->setValue(currentTween->tweenOpacityInitialFactor());
     k->comboEndFactor->setValue(currentTween->tweenOpacityEndingFactor());
-    k->comboIterations->setValue(currentTween->tweenOpacityIterations());
+    k->iterationsCombo->setValue(currentTween->tweenOpacityIterations());
     k->loopBox->setChecked(currentTween->tweenOpacityLoop());
     k->reverseLoopBox->setChecked(currentTween->tweenOpacityReverseLoop());
 }
@@ -422,10 +423,10 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     double endFactor = k->comboEndFactor->value();
     root.setAttribute("endOpacityFactor", QString::number(endFactor));
 
-    int iterations = k->comboIterations->value();
+    int iterations = k->iterationsCombo->value();
     if (iterations == 0) {
         iterations = 1;
-        k->comboIterations->setValue(1);
+        k->iterationsCombo->setValue(1);
     }
     root.setAttribute("opacityIterations", iterations);
 
@@ -526,9 +527,9 @@ void Settings::checkFramesRange()
     k->totalSteps = end - begin + 1;
     k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
 
-    int iterations = k->comboIterations->value();
+    int iterations = k->iterationsCombo->value();
     if (iterations > k->totalSteps)
-        k->comboIterations->setValue(k->totalSteps);
+        k->iterationsCombo->setValue(k->totalSteps);
 }
 
 void Settings::updateLoopCheckbox(int state)

@@ -54,7 +54,7 @@ struct Settings::Private
     QPushButton *endColorButton;
     QColor endingColor;
 
-    QSpinBox *comboIterations;
+    QSpinBox *iterationsCombo;
 
     QCheckBox *loopBox;
     QCheckBox *reverseLoopBox;
@@ -215,9 +215,10 @@ void Settings::setInnerForm()
     coloringEndLayout->addWidget(coloringEndLabel);
     coloringEndLayout->addWidget(k->endColorButton);
 
-    k->comboIterations = new QSpinBox;
-    k->comboIterations->setEnabled(true);
-    k->comboIterations->setMinimum(1);
+    k->iterationsCombo = new QSpinBox;
+    k->iterationsCombo->setEnabled(true);
+    k->iterationsCombo->setMinimum(1);
+    k->iterationsCombo->setMaximum(999);
 
     QLabel *iterationsLabel = new QLabel(tr("Iterations") + ": ");
     iterationsLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -226,7 +227,7 @@ void Settings::setInnerForm()
     iterationsLayout->setMargin(0);
     iterationsLayout->setSpacing(0);
     iterationsLayout->addWidget(iterationsLabel);
-    iterationsLayout->addWidget(k->comboIterations);
+    iterationsLayout->addWidget(k->iterationsCombo);
 
     k->loopBox = new QCheckBox(tr("Loop"), k->innerPanel);
     connect(k->loopBox, SIGNAL(stateChanged(int)), this, SLOT(updateReverseCheckbox(int)));
@@ -314,7 +315,7 @@ void Settings::setParameters(TupItemTweener *currentTween)
 
     int iterations = currentTween->tweenColorIterations();
 
-    k->comboIterations->setValue(iterations);
+    k->iterationsCombo->setValue(iterations);
 
     k->loopBox->setChecked(currentTween->tweenColorLoop());
     k->reverseLoopBox->setChecked(currentTween->tweenColorReverseLoop());
@@ -468,10 +469,10 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
                        + "," + QString::number(endingBlue);
     root.setAttribute("endingColor", colorText);
 
-    int iterations = k->comboIterations->value();
+    int iterations = k->iterationsCombo->value();
     if (iterations == 0) {
        iterations = 1;
-       k->comboIterations->setValue(1);
+       k->iterationsCombo->setValue(1);
     }
     root.setAttribute("colorIterations", iterations);
 
