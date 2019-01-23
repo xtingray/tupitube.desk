@@ -78,7 +78,9 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         void updateLoopCheckbox(int state);
         void updateReverseCheckbox(int state);
         // void updateLastFrame();
-        
+        void updateRangeFromInit(int begin);
+        void updateRangeFromEnd(int end);
+
     signals:
         void clickedSelect();
         void clickedDefineProperties();

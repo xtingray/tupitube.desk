@@ -148,7 +148,7 @@ void Settings::setInnerForm()
     k->comboInit = new QSpinBox();
     k->comboInit->setEnabled(false);
     k->comboInit->setMaximum(999);
-    // connect(k->comboInit, SIGNAL(valueChanged(int)), this, SLOT(updateLastFrame()));
+    connect(k->comboInit, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromInit(int)));
 
     QLabel *endingLabel = new QLabel(tr("Ending at frame") + ": ");
     endingLabel->setAlignment(Qt::AlignVCenter);
@@ -157,7 +157,7 @@ void Settings::setInnerForm()
     k->comboEnd->setEnabled(true);
     k->comboEnd->setValue(1);
     k->comboEnd->setMaximum(999);
-    // connect(k->comboEnd, SIGNAL(valueChanged(int)), this, SLOT(checkTopLimit(int)));
+    connect(k->comboEnd, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromEnd(int)));
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
@@ -304,6 +304,16 @@ void Settings::setParameters(TupItemTweener *currentTween)
     k->comboInit->setValue(currentTween->initFrame() + 1);
 
     k->comboEnd->setValue(currentTween->initFrame() + currentTween->frames());
+
+    /*
+    int begin = k->comboInit->value();
+    int end = k->comboEnd->value();
+    k->totalSteps = end - begin + 1;
+    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
+    */
+
+    int end = k->comboEnd->value();
+    updateRangeFromEnd(end);
 
     // checkFramesRange();
 
@@ -594,3 +604,17 @@ void Settings::updateTotalSteps(const QString &text)
     checkFramesRange();
 }
 */
+
+void Settings::updateRangeFromInit(int begin)
+{
+    int end = k->comboEnd->value();
+    k->totalSteps = end - begin + 1;
+    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
+}
+
+void Settings::updateRangeFromEnd(int end) 
+{
+    int begin = k->comboInit->value();
+    k->totalSteps = end - begin + 1;
+    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
+}
