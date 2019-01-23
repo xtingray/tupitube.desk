@@ -145,6 +145,7 @@ void Settings::setInnerForm()
     k->initFrame = new QSpinBox();
     k->initFrame->setEnabled(false);
     k->initFrame->setMaximum(999);
+    connect(k->initFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromInit(int)));
     // connect(k->initFrame, SIGNAL(valueChanged(int)), this, SLOT(updateLastFrame()));
  
     QLabel *endingLabel = new QLabel(tr("Ending at frame") + ": ");
@@ -154,6 +155,7 @@ void Settings::setInnerForm()
     k->endFrame->setEnabled(true);
     k->endFrame->setValue(1);
     k->endFrame->setMaximum(999);
+    connect(k->endFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromEnd(int)));
     // connect(k->endFrame, SIGNAL(valueChanged(int)), this, SLOT(checkTopLimit(int)));
 
     QHBoxLayout *startLayout = new QHBoxLayout;
@@ -404,6 +406,8 @@ void Settings::setParameters(TupItemTweener *currentTween)
     k->endFrame->setValue(currentTween->initFrame() + currentTween->frames());
 
     // checkFramesRange();
+    int end = k->endFrame->value();
+    updateRangeFromEnd(end);
 
     k->rotationTypeCombo->setCurrentIndex(currentTween->tweenRotationType());
     k->degreesPerFrame->setValue(currentTween->tweenRotateSpeed());
@@ -808,4 +812,18 @@ void Settings::checkRange(int index)
         else
             k->rangeEnd->setValue(k->rangeEnd->value() + 1);
     }
+}
+
+void Settings::updateRangeFromInit(int begin)
+{
+    int end = k->endFrame->value();
+    k->totalSteps = end - begin + 1;
+    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
+}
+
+void Settings::updateRangeFromEnd(int end)
+{
+    int begin = k->initFrame->value();
+    k->totalSteps = end - begin + 1;
+    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
 }

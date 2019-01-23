@@ -35,11 +35,18 @@
 
 #include "settings.h"
 #include "tradiobuttongroup.h"
-#include "tupitemtweener.h"
 #include "tuptweenerstep.h"
 #include "timagebutton.h"
 #include "tseparator.h"
 #include "tosd.h"
+
+#include <QLabel>
+#include <QLineEdit>
+#include <QBoxLayout>
+#include <QSpinBox>
+#include <QDoubleSpinBox>
+#include <QCheckBox>
+#include <QDir>
 
 struct Settings::Private
 {
@@ -49,8 +56,8 @@ struct Settings::Private
 
     QLineEdit *input;
 
-    QSpinBox *comboInit;
-    QSpinBox *comboEnd;
+    QSpinBox *initFrame;
+    QSpinBox *endFrame;
 
     TRadioButtonGroup *options;
 
@@ -135,33 +142,33 @@ void Settings::setInnerForm()
     QLabel *startingLabel = new QLabel(tr("Starting at frame") + ": ");
     startingLabel->setAlignment(Qt::AlignVCenter);
 
-    k->comboInit = new QSpinBox;
-    k->comboInit->setEnabled(false);
-    k->comboInit->setMaximum(999);
-    // connect(k->comboInit, SIGNAL(valueChanged(int)), this, SLOT(updateLastFrame()));
+    k->initFrame = new QSpinBox;
+    k->initFrame->setEnabled(false);
+    k->initFrame->setMaximum(999);
+    connect(k->initFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromInit(int)));
 
     QLabel *endingLabel = new QLabel(tr("Ending at frame") + ": ");
     endingLabel->setAlignment(Qt::AlignVCenter);
 
-    k->comboEnd = new QSpinBox;
-    k->comboEnd->setEnabled(true);
-    k->comboEnd->setMaximum(999);
-    k->comboEnd->setValue(1);
-    // connect(k->comboEnd, SIGNAL(valueChanged(int)), this, SLOT(checkTopLimit(int)));
+    k->endFrame = new QSpinBox;
+    k->endFrame->setEnabled(true);
+    k->endFrame->setMaximum(999);
+    k->endFrame->setValue(1);
+    connect(k->endFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromEnd(int)));
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
     startLayout->setMargin(0);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
-    startLayout->addWidget(k->comboInit);
+    startLayout->addWidget(k->initFrame);
 
     QHBoxLayout *endLayout = new QHBoxLayout;
     endLayout->setAlignment(Qt::AlignHCenter);
     endLayout->setMargin(0);
     endLayout->setSpacing(0);
     endLayout->addWidget(endingLabel);
-    endLayout->addWidget(k->comboEnd);
+    endLayout->addWidget(k->endFrame);
 
     k->totalLabel = new QLabel(tr("Frames Total") + ": 1");
     k->totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
@@ -267,6 +274,8 @@ void Settings::activeInnerForm(bool enable)
     }
 }
 
+// Adding new Tween
+
 void Settings::setParameters(const QString &name, int framesCount, int initFrame)
 {
     k->mode = TupToolPlugin::Add;
@@ -280,6 +289,8 @@ void Settings::setParameters(const QString &name, int framesCount, int initFrame
     initStartCombo(framesCount, initFrame);
 }
 
+// Editing current Tween
+
 void Settings::setParameters(TupItemTweener *currentTween)
 {
     setEditMode();
@@ -287,11 +298,12 @@ void Settings::setParameters(TupItemTweener *currentTween)
 
     k->input->setText(currentTween->name());
 
-    k->comboInit->setEnabled(true);
-    k->comboInit->setValue(currentTween->initFrame() + 1);
-    k->comboEnd->setValue(currentTween->initFrame() + currentTween->frames());
+    k->initFrame->setEnabled(true);
+    k->initFrame->setValue(currentTween->initFrame() + 1);
+    k->endFrame->setValue(currentTween->initFrame() + currentTween->frames());
 
-    // checkFramesRange();
+    int end = k->endFrame->value();
+    updateRangeFromEnd(end);
 
     k->comboInitFactor->setValue(currentTween->tweenOpacityInitialFactor());
     k->comboEndFactor->setValue(currentTween->tweenOpacityEndingFactor());
@@ -302,38 +314,38 @@ void Settings::setParameters(TupItemTweener *currentTween)
 
 void Settings::initStartCombo(int framesCount, int currentIndex)
 {
-    k->comboInit->clear();
-    k->comboEnd->clear();
+    k->initFrame->clear();
+    k->endFrame->clear();
 
-    k->comboInit->setMinimum(1);
-    k->comboInit->setMaximum(framesCount);
-    k->comboInit->setValue(currentIndex + 1);
+    k->initFrame->setMinimum(1);
+    k->initFrame->setMaximum(framesCount);
+    k->initFrame->setValue(currentIndex + 1);
 
-    k->comboEnd->setMinimum(1);
-    k->comboEnd->setValue(framesCount);
+    k->endFrame->setMinimum(1);
+    k->endFrame->setValue(framesCount);
 }
 
 void Settings::setStartFrame(int currentIndex)
 {
-    k->comboInit->setValue(currentIndex + 1);
-    int end = k->comboEnd->value();
+    k->initFrame->setValue(currentIndex + 1);
+    int end = k->endFrame->value();
     if (end < currentIndex+1)
-        k->comboEnd->setValue(currentIndex + 1);
+        k->endFrame->setValue(currentIndex + 1);
 }
 
 int Settings::startFrame()
 {
-    return k->comboInit->value() - 1;
+    return k->initFrame->value() - 1;
 }
 
 int Settings::startComboSize()
 {
-    return k->comboInit->maximum();
+    return k->initFrame->maximum();
 }
 
 int Settings::totalSteps()
 {
-    return k->comboEnd->value() - (k->comboInit->value() - 1);
+    return k->endFrame->value() - (k->initFrame->value() - 1);
 }
 
 void Settings::setEditMode()
@@ -359,8 +371,8 @@ void Settings::applyTween()
     // SQA: Verify Tween is really well applied before call setEditMode!
     setEditMode();
 
-    if (!k->comboInit->isEnabled())
-        k->comboInit->setEnabled(true);
+    if (!k->initFrame->isEnabled())
+        k->initFrame->setEnabled(true);
 
     checkFramesRange();
     emit clickedApplyTween();
@@ -413,7 +425,6 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     root.setAttribute("initLayer", currentLayer);
     root.setAttribute("initScene", currentScene);
   
-    // checkFramesRange();
     root.setAttribute("frames", k->totalSteps);
     root.setAttribute("origin", "0,0");
 
@@ -453,7 +464,7 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
              if (cycle == 1) {
                  reference = initFactor;
              } else if (cycle == iterations) {
-                        reference = endFactor;
+                 reference = endFactor;
              } else {
                  reference -= delta;
              }
@@ -464,11 +475,11 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
                  cycle = 2;
                  reference = initFactor;
              } else if (reverse) { // if reverse option is enabled
-                        reference += delta;
-                        if (cycle < reverseTop)
-                            cycle++;
-                        else
-                            cycle = 1;
+                 reference += delta;
+                 if (cycle < reverseTop)
+                     cycle++;
+                 else
+                     cycle = 1;
 
              } else { // If cycle is done and no loop and no reverse
                  reference = initFactor;
@@ -490,38 +501,21 @@ void Settings::activateMode(TupToolPlugin::EditMode mode)
     k->options->setCurrentIndex(mode);
 }
 
-/*
-void Settings::updateLastFrame()
-{
-    int end = k->comboInit->value() + k->totalSteps - 1;
-    k->comboEnd->setValue(end);
-}
-
-void Settings::checkTopLimit(int index)
-{
-    Q_UNUSED(index);
-    checkFramesRange();
-}
-*/
-
 void Settings::checkFramesRange()
 {
-    int begin = k->comboInit->value();
-    int end = k->comboEnd->value();
+    int begin = k->initFrame->value();
+    int end = k->endFrame->value();
 
     if (begin > end) {
-        // k->comboEnd->setValue(k->comboEnd->maximum() - 1);
-        // end = k->comboEnd->value();
-
-        k->comboInit->blockSignals(true);
-        k->comboEnd->blockSignals(true);
+        k->initFrame->blockSignals(true);
+        k->endFrame->blockSignals(true);
         int tmp = end;
         end = begin;
         begin = tmp;
-        k->comboInit->setValue(begin);
-        k->comboEnd->setValue(end);
-        k->comboInit->blockSignals(false);
-        k->comboEnd->blockSignals(false);
+        k->initFrame->setValue(begin);
+        k->endFrame->setValue(end);
+        k->initFrame->blockSignals(false);
+        k->endFrame->blockSignals(false);
     }
 
     k->totalSteps = end - begin + 1;
@@ -546,4 +540,18 @@ void Settings::updateReverseCheckbox(int state)
 
     if (k->reverseLoopBox->isChecked() && k->loopBox->isChecked())
         k->reverseLoopBox->setChecked(false);
+}
+
+void Settings::updateRangeFromInit(int begin)
+{
+    int end = k->endFrame->value();
+    k->totalSteps = end - begin + 1;
+    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
+}
+
+void Settings::updateRangeFromEnd(int end)
+{
+    int begin = k->initFrame->value();
+    k->totalSteps = end - begin + 1;
+    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
 }

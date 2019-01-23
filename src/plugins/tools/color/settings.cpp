@@ -34,6 +34,21 @@
  ***************************************************************************/
 
 #include "settings.h"
+#include "tradiobuttongroup.h"
+#include "tuptweenerstep.h"
+#include "timagebutton.h"
+#include "tseparator.h"
+#include "tosd.h"
+
+#include <QPushButton>
+#include <QLabel>
+#include <QLineEdit>
+#include <QBoxLayout>
+#include <QSpinBox>
+#include <QCheckBox>
+#include <QColorDialog>
+#include <QDir>
+#include <QComboBox>
 
 struct Settings::Private
 {
@@ -43,8 +58,8 @@ struct Settings::Private
 
     QLineEdit *input;
 
-    QSpinBox *comboInit;
-    QSpinBox *comboEnd;
+    QSpinBox *initFrame;
+    QSpinBox *endFrame;
 
     TRadioButtonGroup *options;
 
@@ -134,33 +149,33 @@ void Settings::setInnerForm()
     QLabel *startingLabel = new QLabel(tr("Starting at frame") + ": ");
     startingLabel->setAlignment(Qt::AlignVCenter);
 
-    k->comboInit = new QSpinBox;
-    k->comboInit->setEnabled(false);
-    k->comboInit->setMaximum(999);
-    // connect(k->comboInit, SIGNAL(valueChanged(int)), this, SLOT(checkBottomLimit()));
+    k->initFrame = new QSpinBox;
+    k->initFrame->setEnabled(false);
+    k->initFrame->setMaximum(999);
+    connect(k->initFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromInit(int)));
 
     QLabel *endingLabel = new QLabel(tr("Ending at frame") + ": ");
     endingLabel->setAlignment(Qt::AlignVCenter);
 
-    k->comboEnd = new QSpinBox;
-    k->comboEnd->setEnabled(true);
-    k->comboEnd->setMaximum(999);
-    k->comboEnd->setValue(1);
-    // connect(k->comboEnd, SIGNAL(valueChanged(int)), this, SLOT(checkTopLimit(int)));
+    k->endFrame = new QSpinBox;
+    k->endFrame->setEnabled(true);
+    k->endFrame->setMaximum(999);
+    k->endFrame->setValue(1);
+    connect(k->endFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromEnd(int)));
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
     startLayout->setMargin(0);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
-    startLayout->addWidget(k->comboInit);
+    startLayout->addWidget(k->initFrame);
 
     QHBoxLayout *endLayout = new QHBoxLayout;
     endLayout->setAlignment(Qt::AlignHCenter);
     endLayout->setMargin(0);
     endLayout->setSpacing(0);
     endLayout->addWidget(endingLabel);
-    endLayout->addWidget(k->comboEnd);
+    endLayout->addWidget(k->endFrame);
 
     k->totalLabel = new QLabel(tr("Frames Total") + ": 1");
     k->totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
@@ -253,8 +268,6 @@ void Settings::setInnerForm()
 
     innerLayout->addSpacing(10);
     innerLayout->addWidget(new TSeparator(Qt::Horizontal));
-
-    // innerLayout->addWidget(typeLabel);
     innerLayout->addLayout(fillLayout);
 
     innerLayout->addLayout(coloringInitLayout);
@@ -282,6 +295,8 @@ void Settings::activeInnerForm(bool enable)
     }
 }
 
+// Adding new Tween
+
 void Settings::setParameters(const QString &name, int framesCount, int initFrame)
 {
     k->mode = TupToolPlugin::Add;
@@ -295,6 +310,8 @@ void Settings::setParameters(const QString &name, int framesCount, int initFrame
     initStartCombo(framesCount, initFrame);
 }
 
+// Editing current Tween
+
 void Settings::setParameters(TupItemTweener *currentTween)
 {
     setEditMode();
@@ -302,13 +319,14 @@ void Settings::setParameters(TupItemTweener *currentTween)
 
     k->input->setText(currentTween->name());
 
-    k->comboInit->setEnabled(true);
-    k->comboInit->setValue(currentTween->initFrame() + 1);
+    k->initFrame->setEnabled(true);
+    k->initFrame->setValue(currentTween->initFrame() + 1);
 
     int lastFrame = currentTween->initFrame() + currentTween->frames();
-    k->comboEnd->setValue(lastFrame);
+    k->endFrame->setValue(lastFrame);
 
-    // checkFramesRange();
+    int end = k->endFrame->value();
+    updateRangeFromEnd(end);
 
     updateColor(currentTween->tweenInitialColor(), k->initColorButton);
     updateColor(currentTween->tweenEndingColor(), k->endColorButton);
@@ -323,38 +341,38 @@ void Settings::setParameters(TupItemTweener *currentTween)
 
 void Settings::initStartCombo(int framesCount, int currentIndex)
 {
-    k->comboInit->clear();
-    k->comboEnd->clear();
+    k->initFrame->clear();
+    k->endFrame->clear();
 
-    k->comboInit->setMinimum(1);
-    k->comboInit->setMaximum(framesCount);
-    k->comboInit->setValue(currentIndex + 1);
+    k->initFrame->setMinimum(1);
+    k->initFrame->setMaximum(framesCount);
+    k->initFrame->setValue(currentIndex + 1);
 
-    k->comboEnd->setMinimum(1);
-    k->comboEnd->setValue(framesCount);
+    k->endFrame->setMinimum(1);
+    k->endFrame->setValue(framesCount);
 }
 
 void Settings::setStartFrame(int currentIndex)
 {
-    k->comboInit->setValue(currentIndex + 1);
-    int end = k->comboEnd->value();
+    k->initFrame->setValue(currentIndex + 1);
+    int end = k->endFrame->value();
     if (end < currentIndex+1)
-       k->comboEnd->setValue(currentIndex + 1);
+       k->endFrame->setValue(currentIndex + 1);
 }
 
 int Settings::startFrame()
 {
-    return k->comboInit->value() - 1;
+    return k->initFrame->value() - 1;
 }
 
 int Settings::startComboSize()
 {
-    return k->comboInit->maximum();
+    return k->initFrame->maximum();
 }
 
 int Settings::totalSteps()
 {
-    return k->comboEnd->value() - (k->comboInit->value() - 1);
+    return k->endFrame->value() - (k->initFrame->value() - 1);
 }
 
 void Settings::setEditMode()
@@ -380,8 +398,8 @@ void Settings::applyTween()
     // SQA: Verify Tween is really well applied before call setEditMode!
     setEditMode();
 
-    if (!k->comboInit->isEnabled())
-        k->comboInit->setEnabled(true);
+    if (!k->initFrame->isEnabled())
+        k->initFrame->setEnabled(true);
 
     checkFramesRange();
     emit clickedApplyTween();
@@ -417,22 +435,22 @@ QString Settings::currentTweenName() const
 void Settings::emitOptionChanged(int option)
 {
     switch (option) {
-           case 0:
-            {
-                activeInnerForm(false);
-                emit clickedSelect();
+        case 0:
+        {
+            activeInnerForm(false);
+            emit clickedSelect();
+        }
+        break;
+        case 1:
+        {
+            if (k->selectionDone) {
+                activeInnerForm(true);
+                emit clickedDefineProperties();
+            } else {
+                k->options->setCurrentIndex(0);
+                TOsd::self()->display(tr("Info"), tr("Select objects for Tweening first!"), TOsd::Info);
             }
-           break;
-           case 1:
-            {
-                if (k->selectionDone) {
-                    activeInnerForm(true);
-                    emit clickedDefineProperties();
-                } else {
-                    k->options->setCurrentIndex(0);
-                    TOsd::self()->display(tr("Info"), tr("Select objects for Tweening first!"), TOsd::Info);
-                }
-            }
+        }
     }
 }
 
@@ -448,8 +466,6 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     root.setAttribute("initScene", currentScene);
 
     root.setAttribute("fillType", k->fillTypeCombo->currentIndex());
-  
-    // checkFramesRange();
     root.setAttribute("frames", k->totalSteps);
     root.setAttribute("origin", "0,0");
 
@@ -488,9 +504,9 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     else
        root.setAttribute("colorReverseLoop", "0");
 
-    double redDelta = (double)(initialRed - endingRed)/(double)(iterations - 1);
-    double greenDelta = (double)(initialGreen - endingGreen)/(double)(iterations - 1);
-    double blueDelta = (double)(initialBlue - endingBlue)/(double)(iterations - 1); 
+    double redDelta = static_cast<double>(initialRed - endingRed) / static_cast<double>(iterations - 1);
+    double greenDelta = static_cast<double>(initialGreen - endingGreen) / static_cast<double>(iterations - 1);
+    double blueDelta = static_cast<double>(initialBlue - endingBlue)/ static_cast<double>(iterations - 1);
 
     double redReference = 0;
     double greenReference = 0;
@@ -506,9 +522,9 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
                 greenReference = initialGreen;
                 blueReference = initialBlue;
             } else if (cycle == iterations) {
-                       redReference = endingRed;
-                       greenReference = endingGreen;
-                       blueReference = endingBlue;
+                redReference = endingRed;
+                greenReference = endingGreen;
+                blueReference = endingBlue;
             } else {
                 redReference -= redDelta;
                 greenReference -= greenDelta;
@@ -523,15 +539,14 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
                 greenReference = initialGreen;
                 blueReference = initialBlue;
             } else if (reverse) { // if reverse option is enabled
-                       redReference += redDelta;
-                       greenReference += greenDelta;
-                       blueReference += blueDelta;
+                redReference += redDelta;
+                greenReference += greenDelta;
+                blueReference += blueDelta;
 
-                       if (cycle < reverseTop)
-                           cycle++;
-                       else 
-                           cycle = 1;
-
+                if (cycle < reverseTop)
+                    cycle++;
+                else
+                    cycle = 1;
             } else { // If cycle is done and no loop and no reverse 
                 redReference = initialRed;
                 greenReference = initialGreen;
@@ -540,7 +555,8 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
         }
 
         TupTweenerStep *step = new TupTweenerStep(i);
-        QColor color = QColor(redReference, greenReference, blueReference);
+        QColor color = QColor(static_cast<int> (redReference), static_cast<int> (greenReference),
+                              static_cast<int> (blueReference));
         step->setColor(color);
         root.appendChild(step->toXml(doc));
     }
@@ -560,40 +576,21 @@ void Settings::activatePropertiesMode(TupToolPlugin::EditMode mode)
     k->options->setCurrentIndex(mode);
 }
 
-/*
-void Settings::checkBottomLimit(int index)
-{
-    emit startingPointChanged(index);
-    checkFramesRange();
-}
-*/
-
-/*
-void Settings::checkTopLimit(int index)
-{
-    Q_UNUSED(index);
-    checkFramesRange();
-}
-*/
-
 void Settings::checkFramesRange()
 {
-    int begin = k->comboInit->value();
-    int end = k->comboEnd->value();
+    int begin = k->initFrame->value();
+    int end = k->endFrame->value();
 
     if (begin > end) {
-       // k->comboEnd->setValue(k->comboEnd->maximum() - 1);
-       // end = k->comboEnd->value();
-
-       k->comboInit->blockSignals(true);
-       k->comboEnd->blockSignals(true);
+       k->initFrame->blockSignals(true);
+       k->endFrame->blockSignals(true);
        int tmp = end;
        end = begin;
        begin = tmp;
-       k->comboInit->setValue(begin);
-       k->comboEnd->setValue(end);
-       k->comboInit->blockSignals(false);
-       k->comboEnd->blockSignals(false);
+       k->initFrame->setValue(begin);
+       k->endFrame->setValue(end);
+       k->initFrame->blockSignals(false);
+       k->endFrame->blockSignals(false);
     }
 
     k->totalSteps = end - begin + 1;
@@ -629,3 +626,16 @@ void Settings::updateColor(QColor color, QPushButton *colorButton)
     }
 }
 
+void Settings::updateRangeFromInit(int begin)
+{
+    int end = k->endFrame->value();
+    k->totalSteps = end - begin + 1;
+    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
+}
+
+void Settings::updateRangeFromEnd(int end)
+{
+    int begin = k->initFrame->value();
+    k->totalSteps = end - begin + 1;
+    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
+}

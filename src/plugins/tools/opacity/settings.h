@@ -38,17 +38,9 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
+#include "tupitemtweener.h"
 
 #include <QWidget>
-#include <QLabel>
-#include <QLineEdit>
-#include <QBoxLayout>
-#include <QSpinBox>
-#include <QDoubleSpinBox>
-#include <QCheckBox>
-#include <QDir>
-
-class TupItemTweener;
 
 /**
  * @author Gustav Gonzalez 
@@ -79,11 +71,11 @@ class TUPITUBE_PLUGIN Settings : public QWidget
     private slots:
         void applyTween();
         void emitOptionChanged(int option);
-        // void checkTopLimit(int index);
         void updateLoopCheckbox(int state);
         void updateReverseCheckbox(int state);
-        // void updateLastFrame();
-        
+        void updateRangeFromInit(int begin);
+        void updateRangeFromEnd(int end);
+
     signals:
         void clickedSelect();
         void clickedDefineProperties();

@@ -86,6 +86,8 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         // void updateTotalSteps(const QString &text);
         void checkRange(int index);
         // void updateLastFrame();
+        void updateRangeFromInit(int begin);
+        void updateRangeFromEnd(int end);
         
     signals:
         void clickedSelect();
