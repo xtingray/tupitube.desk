@@ -137,15 +137,16 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent), k(new Private
     QString colorName = TCONFIG->value("BackgroundDefaultColor", "#ffffff").toString();
 
     k->color = QColor(colorName);
+
+    QString textColor = "black";
     k->colorButton = new QPushButton();
     k->colorButton->setText(tr("Background"));
     k->colorButton->setToolTip(tr("Click here to change background color"));
-    k->colorButton->setStyleSheet("QPushButton { background-color: " + k->color.name() + "; color: black; }");
-
+    k->colorButton->setStyleSheet("QPushButton { background-color: " + k->color.name()
+                                  + "; color: " + labelColor() + "; }");
     connect(k->colorButton, SIGNAL(clicked()), this, SLOT(setBgColor()));
-	
-    QBoxLayout *fpsLayout = new QBoxLayout(QBoxLayout::LeftToRight);
 
+    QBoxLayout *fpsLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     QLabel *label = new QLabel(tr("FPS"));
     k->fps = new QSpinBox();
     k->fps->setValue(24);
@@ -337,13 +338,12 @@ void TupNewProject::focusProjectLabel()
 void TupNewProject::setBgColor()
 {
      k->color = QColorDialog::getColor(k->color, this);
+     QString labelColor = "black";
 
      if (k->color.isValid()) {
          k->colorButton->setText(k->color.name());
-         QString text = "white";
-         if (k->color.red() > 50 && k->color.green() > 50 && k->color.blue() > 50)
-             text = "black"; 
-         k->colorButton->setStyleSheet("QPushButton { background-color: " + k->color.name() + "; color: " + text + "; }");
+         k->colorButton->setStyleSheet("QPushButton { background-color: " + k->color.name()
+                                       + "; color: " + this->labelColor() + "; }");
      } else {
          k->color = QColor("#fff");
          k->colorButton->setText(tr("White"));
@@ -414,4 +414,12 @@ void TupNewProject::updateFormatCombo()
     k->presets->blockSignals(true);
     k->presets->setCurrentIndex(0);
     k->presets->blockSignals(false);
+}
+
+QString TupNewProject::labelColor() const
+{
+    QString text = "white";
+    if (k->color.red() > 50 && k->color.green() > 50 && k->color.blue() > 50)
+        text = "black";
+    return text;
 }
