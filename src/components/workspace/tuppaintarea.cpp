@@ -955,45 +955,51 @@ void TupPaintArea::multipasteObject(int pasteTotal)
     if (!menuOn)
         position = viewPosition();
    
+    int layerIndex = currentScene->currentLayerIndex();
+    int limit = 0;
     foreach (QString xml, copiesXml) {
-             TupLibraryObject::Type type = TupLibraryObject::Item;
-             int total = currentScene->currentFrame()->graphicItemsCount();
+        TupLibraryObject::Type type = TupLibraryObject::Item;
+        int total = currentScene->currentFrame()->graphicItemsCount();
 
-             TupScene *scene = project->sceneAt(currentScene->currentSceneIndex());
-             if (scene) {
-                 TupLayer *layer = scene->layerAt(currentScene->currentLayerIndex());
-                 if (layer) {
-                     int framesCount = layer->framesCount();
-                     int currentFrame = currentScene->currentFrameIndex();
-                     int newFrameIndex = currentFrame + pasteTotal;
-                     int distance = framesCount - (newFrameIndex + 1);
+        TupScene *scene = project->sceneAt(currentScene->currentSceneIndex());
+        if (scene) {
+            TupLayer *layer = scene->layerAt(currentScene->currentLayerIndex());
+            if (layer) {
+                int framesCount = layer->framesCount();
+                int currentFrame = currentScene->currentFrameIndex();
+                int newFrameIndex = currentFrame + pasteTotal;
+                int distance = framesCount - (newFrameIndex + 1);
                  
-                     if (distance < 0) {
-                         for (int i=framesCount; i<=newFrameIndex; i++) {
-                              TupProjectRequest request = TupRequestBuilder::createFrameRequest(globalSceneIndex,
-                                                          currentScene->currentLayerIndex(), i, TupProjectRequest::Add,
-                                                          tr("Frame"));
-                              emit requestTriggered(&request);
-                         }
-                     }
+                if (distance < 0) {
+                    for (int i=framesCount; i<=newFrameIndex; i++) {
+                        TupProjectRequest request = TupRequestBuilder::createFrameRequest(globalSceneIndex,
+                                                    layerIndex, i, TupProjectRequest::Add,
+                                                    tr("Frame"));
+                        emit requestTriggered(&request);
+                    }
+                }
 
-                     if (xml.startsWith("<svg")) {
-                         type = TupLibraryObject::Svg;
-                         total = currentScene->currentFrame()->svgItemsCount();
-                     }
+                if (xml.startsWith("<svg")) {
+                    type = TupLibraryObject::Svg;
+                    total = currentScene->currentFrame()->svgItemsCount();
+                }
 
-                     int limit = currentFrame + pasteTotal;
-                     for (int i=currentFrame+1; i<=limit; i++) {
-                         TupProjectRequest event = TupRequestBuilder::createItemRequest(globalSceneIndex,
-                                                                      currentScene->currentLayerIndex(),
-                                                                      i, total, itemPoint(xml), spaceMode, type,
-                                                                      TupProjectRequest::Add, xml);
-                         emit requestTriggered(&event);
-                     }
-                 }
-             }
+                limit = currentFrame + pasteTotal;
+                for (int i=currentFrame+1; i<=limit; i++) {
+                    TupProjectRequest event = TupRequestBuilder::createItemRequest(globalSceneIndex,
+                                                                 layerIndex, i, total, itemPoint(xml), spaceMode, type,
+                                                                 TupProjectRequest::Add, xml);
+                    emit requestTriggered(&event);
+                }
+            }
+         }
      }
 
+     QString selection = QString::number(layerIndex) + "," + QString::number(layerIndex) + ","
+                         + QString::number(limit) + "," + QString::number(limit);
+     TupProjectRequest request = TupRequestBuilder::createFrameRequest(globalSceneIndex, currentScene->currentLayerIndex(), limit,
+                                                                       TupProjectRequest::Select, selection);
+     emit localRequestTriggered(&request);
      menuOn = false;
 }
 
@@ -1351,7 +1357,8 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
         int layerIndex = gScene->currentLayerIndex();
         int frameIndex = gScene->currentFrameIndex() + 1;
 
-        TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex, TupProjectRequest::Add, tr("Frame"));
+        TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex,
+                                                                          TupProjectRequest::Add, tr("Frame"));
         emit requestTriggered(&request);
 
         QString selection = QString::number(layerIndex) + "," + QString::number(layerIndex) + ","
