@@ -326,7 +326,7 @@ bool TupLibraryFolder::exists(const QString &id)
     }
 
     #ifdef TUP_DEBUG
-        QString msg = "TupLibraryFolder::exists() - [ Fatal Error ] - Object doesn't exist -> " + id;
+        QString msg = "TupLibraryFolder::exists() - [ Error ] - Object doesn't exist -> " + id;
         #ifdef Q_OS_WIN
             qWarning() << msg;
         #else
