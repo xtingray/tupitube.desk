@@ -73,8 +73,9 @@ class TupNewProject : public TabDialog
                       FORMAT_1080
                     };
 
-        TupNewProject(QWidget *parent = 0);
+        TupNewProject(QWidget *parent = nullptr);
         ~TupNewProject();
+
         TupProjectManagerParams *parameters();
         bool useNetwork() const;
         void focusProjectLabel();
@@ -95,6 +96,8 @@ class TupNewProject : public TabDialog
         void enableNetOptions(bool isEnabled);
 
     private:
+        QString labelColor() const;
+
         struct Private;
         Private *const k;
 };
