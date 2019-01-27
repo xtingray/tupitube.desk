@@ -40,17 +40,13 @@
 #include "tapplicationproperties.h"
 
 #include <QWidget>
-#include <QListWidget>
-#include <QToolButton>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
 
 class T_GUI_EXPORT TItemSelector : public QWidget
 {
     Q_OBJECT
 
     public:
-        TItemSelector(QWidget *parent = 0);
+        TItemSelector(QWidget *parent = nullptr);
         ~TItemSelector();
         
         void setItems(const QStringList &items);

@@ -94,22 +94,22 @@ TupCameraWidget::~TupCameraWidget()
 
     if (cameraBar) {
         delete cameraBar;
-        cameraBar = NULL;
+        cameraBar = nullptr;
     }
 
     if (progressBar) {
        delete progressBar;
-       progressBar = NULL;
+       progressBar = nullptr;
     }
 
     if (status) {
         delete status;
-        status = NULL;
+        status = nullptr;
     }
 
     if (screen) {
         delete screen;
-        screen = NULL;
+        screen = nullptr;
     }
 
     // delete k;
@@ -494,8 +494,8 @@ void TupCameraWidget::exportDialog()
     QDesktopWidget desktop;
     TupExportWidget *exportWidget = new TupExportWidget(project, this);
     exportWidget->show();
-    exportWidget->move((int) (desktop.screenGeometry().width() - exportWidget->width())/2, 
-                       (int) (desktop.screenGeometry().height() - exportWidget->height())/2);
+    exportWidget->move(static_cast<int> ((desktop.screenGeometry().width() - exportWidget->width()) / 2),
+                       static_cast<int> ((desktop.screenGeometry().height() - exportWidget->height()) / 2));
     exportWidget->exec();
 }
 
@@ -505,8 +505,8 @@ void TupCameraWidget::postDialog()
 
     TupExportWidget *exportWidget = new TupExportWidget(project, this, false);
     exportWidget->show();
-    exportWidget->move((int) (desktop.screenGeometry().width() - exportWidget->width())/2,
-                       (int) (desktop.screenGeometry().height() - exportWidget->height())/2);
+    exportWidget->move(static_cast<int> ((desktop.screenGeometry().width() - exportWidget->width()) / 2),
+                       static_cast<int> ((desktop.screenGeometry().height() - exportWidget->height()) / 2));
     exportWidget->exec();
 
     if (exportWidget->isComplete() != QDialog::Rejected) {

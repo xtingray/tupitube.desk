@@ -102,11 +102,11 @@ TupScreen::~TupScreen()
     soundPlayer.clear();
 
     delete timer;
-    timer = NULL;
+    timer = nullptr;
     delete playBackTimer;
-    playBackTimer = NULL;
+    playBackTimer = nullptr;
     delete renderer;
-    renderer = NULL;
+    renderer = nullptr;
 
     // delete k;
 }
@@ -612,7 +612,7 @@ void TupScreen::render()
 
         renderer->render(painter);
         delete painter;
-        painter = NULL;
+        painter = nullptr;
 
         if (isScaled)
             photograms << renderized.scaledToWidth(screenDimension.width(), Qt::SmoothTransformation);
@@ -627,7 +627,7 @@ void TupScreen::render()
     renderControl.replace(sceneIndex, true);
 
     delete renderer;
-    renderer = NULL;
+    renderer = nullptr;
 
     emit isRendering(0); 
 }
@@ -736,7 +736,7 @@ TupScene *TupScreen::currentScene()
         } 
     }
 
-    return 0;
+    return nullptr;
 }
 
 // Update and paint the first image of the current scene
@@ -806,10 +806,10 @@ void TupScreen::updateFirstFrame()
             firstShoot = true;
 
             delete painter;
-            painter = NULL;
+            painter = nullptr;
 
             delete renderer;
-            renderer = NULL;
+            renderer = nullptr;
         } else {
             #ifdef TUP_DEBUG
                 QString msg = "TupScreen::updateFirstFrame() - [ Fatal Error ] - Null scene at index: " + QString::number(sceneIndex);

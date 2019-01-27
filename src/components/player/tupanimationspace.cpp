@@ -58,10 +58,10 @@ TupAnimationspace::~TupAnimationspace()
     #endif
 
     delete playerInterface;
-    playerInterface = NULL;
+    playerInterface = nullptr;
 
     delete container;
-    container = NULL;
+    container = nullptr;
 }
 
 void TupAnimationspace::setCameraWidget(TupCameraWidget *playerUI) 

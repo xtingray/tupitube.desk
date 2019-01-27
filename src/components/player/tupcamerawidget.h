@@ -49,14 +49,12 @@
 #include <QLabel>
 #include <QCheckBox>
 
-// class TupCameraStatus;
-
 class TUPITUBE_EXPORT TupCameraWidget : public QFrame
 {
     Q_OBJECT
 
     public:
-        TupCameraWidget(TupProject *work, bool isNetworked = false, QWidget *parent = 0);
+        TupCameraWidget(TupProject *work, bool isNetworked = false, QWidget *parent = nullptr);
         ~TupCameraWidget();
 
         void updateFirstFrame();

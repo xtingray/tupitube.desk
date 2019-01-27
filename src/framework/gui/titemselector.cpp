@@ -35,6 +35,11 @@
 
 #include "titemselector.h"
 
+#include <QListWidget>
+#include <QToolButton>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+
 struct TItemSelector::Private
 {
     QListWidget *available;
@@ -75,7 +80,6 @@ TItemSelector::TItemSelector(QWidget *parent) : QWidget(parent), k(new Private)
     setLayout(layout);
 }
 
-
 TItemSelector::~TItemSelector()
 {
     delete k;
@@ -103,9 +107,10 @@ void TItemSelector::removeCurrent()
 {
     int row = k->selected->currentRow();
     if (row >= 0) {
-        QListWidgetItem *item = k->selected->takeItem(row);
-        k->available->addItem(item);
+        // QListWidgetItem *item = k->selected->takeItem(row);
+        // k->available->addItem(item);
 
+        k->selected->takeItem(row);
         emit changed();
     }
 }
@@ -196,4 +201,3 @@ void TItemSelector::reset()
     k->selected->clear();
     emit changed();
 }
-

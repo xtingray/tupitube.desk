@@ -56,8 +56,9 @@ class TUPITUBE_EXPORT TupExportWizard : public QDialog
     Q_OBJECT
 
     public:
-        TupExportWizard(QWidget *parent = 0);
+        TupExportWizard(QWidget *parent = nullptr);
         ~TupExportWizard();
+
         TupExportWizardPage *addPage(TupExportWizardPage *page);
         void showPage(int index);
         void showPage(TupExportWizardPage *page);
@@ -98,7 +99,7 @@ class TUPITUBE_EXPORT TupExportWizardPage : public TVHBox
     Q_OBJECT
 
     public:
-        TupExportWizardPage(const QString &title, QWidget *parent = 0);
+        TupExportWizardPage(const QString &title, QWidget *parent = nullptr);
         virtual ~TupExportWizardPage();
         virtual bool isComplete() const = 0;
         virtual void reset() = 0;

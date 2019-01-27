@@ -179,7 +179,7 @@ void TupCameraStatus::setScenes(TupProject *project)
          if (scene)
              scenes << scene->sceneName();
     }
-    scenes.sort(Qt::CaseSensitive);
+    // scenes.sort(Qt::CaseSensitive);
     scenesCombo->addItems(scenes);
 }
 

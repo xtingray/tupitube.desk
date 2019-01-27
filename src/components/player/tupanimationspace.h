@@ -46,8 +46,9 @@ class TUPITUBE_EXPORT TupAnimationspace : public QMainWindow
     Q_OBJECT
 
     public:
-        TupAnimationspace(TupCameraWidget *playerUI, QWidget *parent = 0);
+        TupAnimationspace(TupCameraWidget *playerUI, QWidget *parent = nullptr);
         ~TupAnimationspace();
+
         void setCameraWidget(TupCameraWidget *playerUI);
 
     protected:

@@ -51,7 +51,7 @@ class TUPITUBE_EXPORT TupCameraStatus : public QFrame
     Q_OBJECT
 
     public:
-        TupCameraStatus(bool isNetworked = false, QWidget *parent = 0);
+        TupCameraStatus(bool isNetworked = false, QWidget *parent = nullptr);
         ~TupCameraStatus();
 
         void setScenes(TupProject *project);
