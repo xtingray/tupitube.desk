@@ -4,10 +4,13 @@
  *   Project Website: http://www.maefloresta.com                           *
  *                                                                         *
  *   Developers:                                                           *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco Rodríguez                                         *
  *   2012:                                                                 *
- *    Gustavo Gonzalez / @xtingray                                         *
  *    Andres Calderon / @andresfcalderon                                   *
  *    Antonio Vanegas / @hpsaturn                                          *
+ *   2010:                                                                 *
+ *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
  *   TupiTube Desk is a fork of the KTooN project                          *
  *   KTooN's versions:                                                     *
@@ -40,8 +43,10 @@
 #include "tglobal.h"
 
 #include <QBrush>
-#include <QSize>
+#include <QDebug>
+#include <QPainter>
 #include <QPaintEvent>
+#include <QSize>
 #include <QWidget>
 
 class TUPITUBE_EXPORT TColorCell : public QWidget
@@ -50,7 +55,7 @@ class TUPITUBE_EXPORT TColorCell : public QWidget
 
     public:
         enum FillType {Contour = 0, Inner, Background, Basic, PreviousFrames, NextFrames, Layers};
-        TColorCell(FillType index, const QBrush &brush, const QSize &size);
+        TColorCell(FillType typeIndex, const QBrush &b, const QSize &dimension);
         ~TColorCell();
         QSize sizeHint() const;
         QBrush brush();
@@ -58,7 +63,7 @@ class TUPITUBE_EXPORT TColorCell : public QWidget
         void setEnabled(bool isEnabled);
         void setChecked(bool isChecked);
         bool isChecked();
-        void setBrush(const QBrush &brush);
+        void setBrush(const QBrush &b);
         void click();
 
     protected:
@@ -69,8 +74,13 @@ class TUPITUBE_EXPORT TColorCell : public QWidget
         void clicked(TColorCell::FillType index);
 
     private:
-        struct Private;
-        Private *const k;
+        bool checked;
+        bool enabled;
+        FillType index;
+        QBrush cellBrush;
+        QSize size;
+        QString themeName;
+
 };
 
 #endif

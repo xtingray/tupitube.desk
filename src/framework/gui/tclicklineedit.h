@@ -5,6 +5,8 @@
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco Rodríguez                                         *
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
@@ -58,8 +60,8 @@ class T_GUI_EXPORT TClickLineEdit : public QLineEdit
         virtual void focusOutEvent(QFocusEvent *ev);
     
     private:
-        struct Private;
-        Private *const k;
+        QString message;
+        bool drawClickMsg;
 };
 
 #endif

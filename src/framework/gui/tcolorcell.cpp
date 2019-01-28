@@ -4,10 +4,13 @@
  *   Project Website: http://www.maefloresta.com                           *
  *                                                                         *
  *   Developers:                                                           *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco Rodríguez                                         *
  *   2012:                                                                 *
- *    Gustavo Gonzalez / @xtingray                                         *
  *    Andres Calderon / @andresfcalderon                                   *
  *    Antonio Vanegas / @hpsaturn                                          *
+ *   2010:                                                                 *
+ *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
  *   TupiTube Desk is a fork of the KTooN project                          *
  *   KTooN's versions:                                                     *
@@ -38,30 +41,17 @@
 #include "tconfig.h"
 // #include "tapplicationproperties.h"
 
-#include <QPainter>
-#include <QDebug>
-
-struct TColorCell::Private
-{
-    QBrush brush;
-    FillType index;
-    bool enabled;
-    bool checked;
-    QSize size;
-    QString themeName;
-};
-
-TColorCell::TColorCell(FillType index, const QBrush &brush, const QSize &size) : k(new Private)
+TColorCell::TColorCell(FillType typeIndex, const QBrush &b, const QSize &dimension)
 {
     TCONFIG->beginGroup("General");
-    k->themeName = TCONFIG->value("Theme", "Light").toString();
+    themeName = TCONFIG->value("Theme", "Light").toString();
 
-    k->index = index;
-    k->enabled = true;
-    k->checked = false;
-    k->brush = brush;
-    k->size = size;
-    setFixedSize(k->size);
+    index = typeIndex;
+    enabled = true;
+    checked = false;
+    cellBrush = b;
+    size = dimension;
+    setFixedSize(size);
 }
 
 TColorCell::~TColorCell()
@@ -70,7 +60,7 @@ TColorCell::~TColorCell()
 
 QSize TColorCell::sizeHint() const 
 {
-    return k->size;
+    return size;
 }
 
 void TColorCell::paintEvent(QPaintEvent *event)
@@ -78,7 +68,8 @@ void TColorCell::paintEvent(QPaintEvent *event)
     Q_UNUSED(event);
 
     QPainter painter(this);
-    painter.fillRect(rect(), k->brush);
+    painter.fillRect(rect(), cellBrush);
+    
     /*
     if (k->brush.color() == Qt::transparent) {
         QImage transparent(THEME_DIR + "icons/trans_big.png");
@@ -89,12 +80,15 @@ void TColorCell::paintEvent(QPaintEvent *event)
     */
 
     QRect border = rect();
-    if (k->enabled) {
-        if (k->checked) {
+    if (enabled) {
+    
+        if (checked) {
+
             QColor borderColor1 = QColor(200, 200, 200); 
             QColor borderColor2 = QColor(190, 190, 190);
             QColor borderColor3 = QColor(150, 150, 150);
-            if (k->themeName.compare("Dark") == 0) {
+            
+            if (themeName.compare("Dark") == 0) {
                 borderColor1 = QColor(120, 120, 120);
                 borderColor2 = QColor(110, 110, 110);
                 borderColor3 = QColor(70, 70, 70);
@@ -107,15 +101,15 @@ void TColorCell::paintEvent(QPaintEvent *event)
             painter.setPen(QPen(borderColor3, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
             painter.drawRect(border);
         } else {
-            QRect frame = QRect(border.topLeft(), QSize(k->size.width()-1, k->size.height()-1));
-            if (k->brush.color() == Qt::transparent)
+            QRect frame = QRect(border.topLeft(), QSize(size.width()-1, size.height()-1));
+            if (cellBrush.color() == Qt::transparent)
                 painter.setPen(QPen(QColor(30, 30, 30), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
             else
                 painter.setPen(QPen(QColor(190, 190, 190), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
             painter.drawRect(frame);
         }
     } else {
-        QRect frame = QRect(border.topLeft(), QSize(k->size.width()-1, k->size.height()-1));
+        QRect frame = QRect(border.topLeft(), QSize(size.width()-1, size.height()-1));
         painter.setPen(QPen(QColor(190, 190, 190), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         painter.drawRect(frame);
     }
@@ -129,42 +123,41 @@ void TColorCell::mousePressEvent(QMouseEvent *event)
 
 void TColorCell::click()
 {
-    if (k->enabled) {
+    if (enabled) {
         setChecked(true);
-        emit clicked(k->index);
+        emit clicked(index);
     }
 }
 
 void TColorCell::setEnabled(bool isEnabled)
 {
-    k->enabled = isEnabled;
+    enabled = isEnabled;
     update();
 }
 
 QColor TColorCell::color()
 {
-    return k->brush.color();
+    return cellBrush.color();
 }
 
 QBrush TColorCell::brush()
 {
-    return k->brush;
+    return cellBrush;
 }
 
 void TColorCell::setChecked(bool isChecked)
 {
-    k->checked = isChecked;
+    checked = isChecked;
     update();
 }
 
 bool TColorCell::isChecked()
 {
-    return k->checked;
+    return checked;
 }
 
-void TColorCell::setBrush(const QBrush &brush) 
+void TColorCell::setBrush(const QBrush &b) 
 {
-    k->brush = brush;
+    cellBrush = b;
     update();
 }
-

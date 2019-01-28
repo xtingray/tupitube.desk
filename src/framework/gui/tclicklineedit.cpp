@@ -5,6 +5,8 @@
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco Rodríguez                                         *
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
@@ -35,15 +37,9 @@
 
 #include "tclicklineedit.h"
 
-struct TClickLineEdit::Private
+TClickLineEdit::TClickLineEdit(const QString &msg, QWidget *parent) : QLineEdit(parent)
 {
-    QString clickMessage;
-    bool drawClickMsg;
-};
-
-TClickLineEdit::TClickLineEdit(const QString &msg, QWidget *parent) : QLineEdit(parent), k(new Private)
-{
-    k->drawClickMsg = true;
+    drawClickMsg = true;
     setClickMessage(msg);
     
     setFocusPolicy(Qt::ClickFocus);
@@ -53,23 +49,23 @@ TClickLineEdit::TClickLineEdit(const QString &msg, QWidget *parent) : QLineEdit(
 
 TClickLineEdit::~TClickLineEdit()
 {
-    delete k;
+
 }
 
 void TClickLineEdit::setClickMessage(const QString &msg)
 {
-    k->clickMessage = msg;
+    message = msg;
     repaint();
 }
 
 QString TClickLineEdit::clickMessage() const
 {
-    return k->clickMessage;
+    return message;
 }
 
 void TClickLineEdit::setText(const QString &txt)
 {
-    k->drawClickMsg = txt.isEmpty();
+    drawClickMsg = txt.isEmpty();
     repaint();
     QLineEdit::setText(txt);
 }
@@ -79,21 +75,21 @@ void TClickLineEdit::paintEvent(QPaintEvent *event)
     QLineEdit::paintEvent(event);
     
     QPainter p(this);
-    if (k->drawClickMsg == true && !hasFocus()) {
+    if (drawClickMsg == true && !hasFocus()) {
         QPen tmp = p.pen();
         p.setPen(palette().color(QPalette::Disabled, QPalette::Text));
         QRect cr = contentsRect();
         
         cr.adjust(3, 0, 0 ,0);
-        p.drawText(cr, Qt::AlignVCenter, k->clickMessage);
+        p.drawText(cr, Qt::AlignVCenter, message);
         p.setPen(tmp);
     }
 }
 
 void TClickLineEdit::focusInEvent(QFocusEvent *event)
 {
-    if (k->drawClickMsg == true) {
-        k->drawClickMsg = false;
+    if (drawClickMsg == true) {
+        drawClickMsg = false;
         repaint();
     }
     QLineEdit::focusInEvent(event);
@@ -102,7 +98,7 @@ void TClickLineEdit::focusInEvent(QFocusEvent *event)
 void TClickLineEdit::focusOutEvent(QFocusEvent *event)
 {
     if (text().isEmpty()) {
-        k->drawClickMsg = true;
+        drawClickMsg = true;
         repaint();
     }
     QLineEdit::focusOutEvent(event);
