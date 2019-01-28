@@ -1,10 +1,12 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                *
+ *   Project TUPITUBE DESK                                                 *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco Rodríguez                                         *
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
@@ -40,6 +42,7 @@
 #include "tapplicationproperties.h"
 
 #include <QWidget>
+#include <QListWidget>
 
 class T_GUI_EXPORT TItemSelector : public QWidget
 {
@@ -71,8 +74,8 @@ class T_GUI_EXPORT TItemSelector : public QWidget
         void changed();
         
     private:
-        struct Private;
-        Private *const k;
+        QListWidget *available;
+        QListWidget *selected;
 };
 
 #endif

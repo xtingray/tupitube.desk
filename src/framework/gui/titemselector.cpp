@@ -1,10 +1,12 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                *
+ *   Project TUPITUBE DESK                                                 *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco Rodríguez                                         *
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
@@ -35,23 +37,16 @@
 
 #include "titemselector.h"
 
-#include <QListWidget>
 #include <QToolButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-struct TItemSelector::Private
+TItemSelector::TItemSelector(QWidget *parent) : QWidget(parent)
 {
-    QListWidget *available;
-    QListWidget *selected;
-};
-
-TItemSelector::TItemSelector(QWidget *parent) : QWidget(parent), k(new Private)
-{
-    k->available = new QListWidget;
+    available = new QListWidget;
 
     QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget(k->available);
+    layout->addWidget(available);
 
     QVBoxLayout *controlBox = new QVBoxLayout;
     controlBox->setSpacing(0);
@@ -74,29 +69,29 @@ TItemSelector::TItemSelector(QWidget *parent) : QWidget(parent), k(new Private)
 
     layout->addLayout(controlBox);
 
-    k->selected = new QListWidget;
-    layout->addWidget(k->selected);
+    selected = new QListWidget;
+    layout->addWidget(selected);
 
     setLayout(layout);
 }
 
 TItemSelector::~TItemSelector()
 {
-    delete k;
+
 }
 
 void TItemSelector::selectFirstItem() {
-     if (k->available->item(0)) {
-         k->available->setCurrentRow(0);
+     if (available->item(0)) {
+         available->setCurrentRow(0);
          emit changed();
      }
 }
 
 void TItemSelector::addCurrent()
 {
-    int row = k->available->currentRow();
+    int row = available->currentRow();
     if (row >= 0) {
-        QListWidgetItem *item = k->available->currentItem();
+        QListWidgetItem *item = available->currentItem();
         addSelectedItem(item->text());
 
         emit changed();
@@ -105,23 +100,23 @@ void TItemSelector::addCurrent()
 
 void TItemSelector::removeCurrent()
 {
-    int row = k->selected->currentRow();
+    int row = selected->currentRow();
     if (row >= 0) {
-        // QListWidgetItem *item = k->selected->takeItem(row);
-        // k->available->addItem(item);
+        // QListWidgetItem *item = selected->takeItem(row);
+        // available->addItem(item);
 
-        k->selected->takeItem(row);
+        selected->takeItem(row);
         emit changed();
     }
 }
 
 void TItemSelector::upCurrent()
 {
-    int row = k->selected->currentRow();
+    int row = selected->currentRow();
     if (row >= 0) {
-        QListWidgetItem *item = k->selected->takeItem(row);
-        k->selected->insertItem(row-1, item);
-        k->selected->setCurrentItem(item);
+        QListWidgetItem *item = selected->takeItem(row);
+        selected->insertItem(row-1, item);
+        selected->setCurrentItem(item);
 
         emit changed();
     }
@@ -129,11 +124,11 @@ void TItemSelector::upCurrent()
 
 void TItemSelector::downCurrent()
 {
-    int row = k->selected->currentRow();
+    int row = selected->currentRow();
     if (row >= 0) {
-        QListWidgetItem *item = k->selected->takeItem(row);
-        k->selected->insertItem(row+1,item);
-        k->selected->setCurrentItem(item);
+        QListWidgetItem *item = selected->takeItem(row);
+        selected->insertItem(row+1,item);
+        selected->setCurrentItem(item);
 
         emit changed();
     }
@@ -141,14 +136,14 @@ void TItemSelector::downCurrent()
 
 void TItemSelector::setItems(const QStringList &items)
 {
-    k->available->clear();
+    available->clear();
     addItems(items);
 }
 
 int TItemSelector::addItem(const QString &itemLabel)
 {
-    QListWidgetItem *item = new QListWidgetItem(itemLabel, k->available);
-    int index = k->available->count() - 1;
+    QListWidgetItem *item = new QListWidgetItem(itemLabel, available);
+    int index = available->count() - 1;
     item->setData(4321, index);
 
     return index;
@@ -156,7 +151,7 @@ int TItemSelector::addItem(const QString &itemLabel)
 
 void TItemSelector::addSelectedItem(const QString &itemLabel)
 {
-    QListWidgetItem *item = new QListWidgetItem(itemLabel, k->selected);
+    QListWidgetItem *item = new QListWidgetItem(itemLabel, selected);
     QStringList params = itemLabel.split(":");
     int index = params.at(0).toInt() - 1;
     item->setData(4321, index);
@@ -171,8 +166,8 @@ void TItemSelector::addItems(const QStringList &items)
 QStringList TItemSelector::selectedItems() const
 {
     QStringList items;
-    for (int row = 0; row < k->selected->count(); row++) {
-         QListWidgetItem *item = k->selected->item(row);
+    for (int row = 0; row < selected->count(); row++) {
+         QListWidgetItem *item = selected->item(row);
          items << item->text();
     }
 
@@ -182,8 +177,8 @@ QStringList TItemSelector::selectedItems() const
 QList<int> TItemSelector::selectedIndexes() const
 {
     QList<int> indexes;
-    for (int row = 0; row < k->selected->count(); row++) {
-         QListWidgetItem *item = k->selected->item(row);
+    for (int row = 0; row < selected->count(); row++) {
+         QListWidgetItem *item = selected->item(row);
          indexes << item->data(4321).toInt();
     }
 
@@ -192,12 +187,12 @@ QList<int> TItemSelector::selectedIndexes() const
 
 void TItemSelector::clear()
 {
-    k->available->clear();
+    available->clear();
     reset();
 }
 
 void TItemSelector::reset()
 {
-    k->selected->clear();
+    selected->clear();
     emit changed();
 }
