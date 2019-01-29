@@ -138,7 +138,7 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent), k(new Private
 
     k->color = QColor(colorName);
 
-    QString textColor = "black";
+    // QString textColor = "black";
     k->colorButton = new QPushButton();
     k->colorButton->setText(tr("Background"));
     k->colorButton->setToolTip(tr("Click here to change background color"));
