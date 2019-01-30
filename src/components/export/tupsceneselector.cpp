@@ -38,7 +38,7 @@
 TupSceneSelector::TupSceneSelector(const TupExportWidget *widget) : TupExportWizardPage(tr("Select Scenes"))
 {
     setTag("SCENE");
-    m_selector = new TItemSelector;
+    m_selector = new TItemSelector(tr("Add Scene"), tr("Remove Scene"));
 
     connect(m_selector, SIGNAL(changed()), this, SLOT(updateState()));
     connect(widget, SIGNAL(updateScenes()), this, SLOT(updateScenesList()));

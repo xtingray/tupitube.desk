@@ -49,7 +49,8 @@ class T_GUI_EXPORT TItemSelector : public QWidget
     Q_OBJECT
 
     public:
-        TItemSelector(QWidget *parent = nullptr);
+        TItemSelector(const QString &topLabel, const QString &bottomLabel,
+                      QWidget *parent = nullptr);
         ~TItemSelector();
         
         void setItems(const QStringList &items);

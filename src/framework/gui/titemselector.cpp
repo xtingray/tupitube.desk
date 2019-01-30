@@ -41,7 +41,8 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-TItemSelector::TItemSelector(QWidget *parent) : QWidget(parent)
+TItemSelector::TItemSelector(const QString &topLabel, const QString &bottomLabel,
+                             QWidget *parent) : QWidget(parent)
 {
     available = new QListWidget;
 
@@ -54,6 +55,7 @@ TItemSelector::TItemSelector(QWidget *parent) : QWidget(parent)
     controlBox->addStretch();
 
     QToolButton *nextButton = new QToolButton;
+    nextButton->setToolTip(topLabel);
     nextButton->setIcon(QPixmap(THEME_DIR + "icons/select_scene.png"));
     connect(nextButton, SIGNAL(clicked()), this, SLOT(addCurrent()));
 
@@ -61,6 +63,7 @@ TItemSelector::TItemSelector(QWidget *parent) : QWidget(parent)
     controlBox->setSpacing(5);
 
     QToolButton *previousButton = new QToolButton;
+    previousButton->setToolTip(bottomLabel);
     previousButton->setIcon(QPixmap(THEME_DIR + "icons/unselect_scene.png"));
     connect(previousButton, SIGNAL(clicked()), this, SLOT(removeCurrent()));
 
@@ -102,9 +105,6 @@ void TItemSelector::removeCurrent()
 {
     int row = selected->currentRow();
     if (row >= 0) {
-        // QListWidgetItem *item = selected->takeItem(row);
-        // available->addItem(item);
-
         selected->takeItem(row);
         emit changed();
     }
