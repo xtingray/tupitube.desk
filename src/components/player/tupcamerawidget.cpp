@@ -352,6 +352,15 @@ void TupCameraWidget::doPlayBack()
 
 void TupCameraWidget::doPause()
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupCameraWidget::doPause()]";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+
+    cameraBar->updatePlayButton();
     screen->pause();
 }
 

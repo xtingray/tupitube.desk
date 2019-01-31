@@ -48,7 +48,9 @@ class TUPITUBE_EXPORT TupCameraBar : public QFrame
     public:
         TupCameraBar(QWidget *parent = 0);
         ~TupCameraBar();
-        void setPalette(const QPalette &);
+
+        void updatePlayButton();
+        // void setPalette(const QPalette &);
 
     signals:
         void playBack();
@@ -65,6 +67,7 @@ class TUPITUBE_EXPORT TupCameraBar : public QFrame
         TImageButton *pauseButton;
         TImageButton *stopButton;
         TImageButton *ffButton;
+        bool playOn;
 };
 
 #endif

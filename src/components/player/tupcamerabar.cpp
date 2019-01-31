@@ -49,6 +49,7 @@ TupCameraBar::TupCameraBar(QWidget *parent) : QFrame(parent)
         #endif
     #endif
 
+    playOn = false;
     setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
     setMidLineWidth(2);
     setLineWidth(1);
@@ -103,6 +104,18 @@ TupCameraBar::~TupCameraBar()
     #endif
 }
 
+/*
 void TupCameraBar::setPalette(const QPalette &)
 {
+}
+*/
+
+void TupCameraBar::updatePlayButton()
+{
+    playOn = !playOn;
+    QString pic = "";
+    if (playOn)
+        pic = "_on";
+
+    playButton->setIcon(QPixmap(THEME_DIR + "icons/play" + pic + ".png"));
 }

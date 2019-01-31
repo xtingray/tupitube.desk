@@ -91,6 +91,7 @@ void TupAnimationspace::keyPressEvent(QKeyEvent *event)
 #endif
 
     switch (event->key()) {
+        case Qt::Key_P:
         case Qt::Key_Space:
           {
               playerInterface->doPause();
