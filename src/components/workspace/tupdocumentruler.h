@@ -48,7 +48,7 @@ class TUPITUBE_EXPORT TupDocumentRuler : public TRulerBase
     Q_OBJECT
 
     public:
-        TupDocumentRuler(Qt::Orientation orientation=Qt::Horizontal, QWidget *parent = 0);
+        TupDocumentRuler(Qt::Orientation ruleDirection=Qt::Horizontal, QWidget *parent = 0);
         ~TupDocumentRuler();
 
     protected:

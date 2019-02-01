@@ -1,10 +1,12 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                *
+ *   Project TUPITUBE DESK                                                 *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco Rodríguez                                         *
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
@@ -35,72 +37,55 @@
 
 #include "trulerbase.h"
 
-struct TRulerBase::Private
+TRulerBase::TRulerBase(Qt::Orientation direction, QWidget *parent) : QFrame(parent)
 {
-    int position;
-    int separation;
-    int width; 
-    int height;
-    bool drawPointer;
+    position = 0;
+    ruleDirection = direction;
+    drawPointer = false;
+    ruleSeparation = 10;
 
-    Qt::Orientation orientation;
+    ruleZero = QPointF(0,0);
+    pArrow = QPolygonF(3);
 
-    QMenu *menu;
-    QPointF zero;
-    QPolygonF pArrow;
+    sFactor = 1.0;
 
-    double scaleFactor;
-};
-
-TRulerBase::TRulerBase(Qt::Orientation orientation, QWidget *parent) : QFrame(parent), k(new Private)
-{
-    k->position = 0;
-    k->orientation = orientation;
-    k->drawPointer = false;
-    k->separation = 10;
-
-    k->zero = QPointF(0,0);
-    k->pArrow = QPolygonF(3);
-
-    k->scaleFactor = 1.0;
-
-    if (k->orientation == Qt::Horizontal) {
+    if (ruleDirection == Qt::Horizontal) {
 
         setMaximumHeight(20);
         setMinimumHeight(20);
 
-        k->width = width();
-        k->height = height();
+        ruleWidth = width();
+        ruleHeight = height();
 
-        k->pArrow << QPointF(0.0, 0.0);
-        k->pArrow << QPointF(5.0, 5.0);
-        k->pArrow << QPointF(10.0, 0.0);
+        pArrow << QPointF(0.0, 0.0);
+        pArrow << QPointF(5.0, 5.0);
+        pArrow << QPointF(10.0, 0.0);
 
-        k->pArrow.translate(0,13);
+        pArrow.translate(0,13);
 
     } else {
 
         setMaximumWidth(20);
         setMinimumWidth(20);
 
-        k->width = height();
-        k->height =  width();
+        ruleWidth = height();
+        ruleHeight =  width();
 
-        k->pArrow << QPointF(0.0, 0.0);
-        k->pArrow << QPointF(5.0, 5.0);
-        k->pArrow << QPointF(0.0, 10.0);
+        pArrow << QPointF(0.0, 0.0);
+        pArrow << QPointF(5.0, 5.0);
+        pArrow << QPointF(0.0, 10.0);
 
-        k->pArrow.translate(13,0);
+        pArrow.translate(13,0);
     }
 
     setMouseTracking(true);
 
     connect(this, SIGNAL(displayMenu(TRulerBase *, QPoint)), this, SLOT(showMenu(TRulerBase *, QPoint)));
 
-    k->menu = new QMenu(this);
+    menu = new QMenu(this);
 
-    QAction *to5 = k->menu->addAction(tr("Change scale to 5..."));
-    QAction *to10 = k->menu->addAction(tr("Change scale to 10..."));
+    QAction *to5 = menu->addAction(tr("Change scale to 5..."));
+    QAction *to10 = menu->addAction(tr("Change scale to 10..."));
 
     connect(to5, SIGNAL(triggered()), this, SLOT(changeScaleTo5pts()));
     connect(to10, SIGNAL(triggered()), this, SLOT(changeScaleTo10pts()));
@@ -109,24 +94,24 @@ TRulerBase::TRulerBase(Qt::Orientation orientation, QWidget *parent) : QFrame(pa
 
 TRulerBase::~TRulerBase()
 {
-    delete k;
+    // delete k;
 }
 
 void TRulerBase::paintEvent(QPaintEvent *)
 {
     QPainter p(this);
 
-    if (k->orientation == Qt::Vertical)
-        p.scale(1.0, k->scaleFactor);
+    if (ruleDirection == Qt::Vertical)
+        p.scale(1.0, sFactor);
     else
-        p.scale(k->scaleFactor, 1.0);
+        p.scale(sFactor, 1.0);
 
     drawScale(&p);
     p.setBrush(palette ().color(QPalette::Foreground));
 
     p.save();
 
-    p.drawConvexPolygon(k->pArrow);
+    p.drawConvexPolygon(pArrow);
     p.restore();
 
     p.end();
@@ -142,45 +127,45 @@ void TRulerBase::drawScale(QPainter *painter)
 
     int fact = 1;
 
-    if (k->orientation == Qt::Horizontal) {
-        painter->translate(k->zero.x(), 0);
+    if (ruleDirection == Qt::Horizontal) {
+        painter->translate(ruleZero.x(), 0);
         painter->drawLine(-390, height()-1, width(), height()-1);
     } else {
         painter->drawLine(width()-1, 0, width()-1, height());
         fact = -1;
-        painter->translate(0, k->zero.y());
+        painter->translate(0, ruleZero.y());
         painter->rotate(90);
     }
 
-    int ypos = k->height*fact;
-    int ytext = k->height/2;
+    int ypos = ruleHeight*fact;
+    int ytext = ruleHeight/2;
 
-    for (int i = 0; i < k->width; i += k->separation) {
+    for (int i = 0; i < ruleWidth; i += ruleSeparation) {
          QSize sizeFont = fm.size(Qt::TextSingleLine, QString::number(i));
          if (i % 100 == 0) { // FIX ME
              painter->drawLine (i, ypos, i, 0);
              int dx = i + 3;
-             if (k->orientation == Qt::Vertical)
+             if (ruleDirection == Qt::Vertical)
                  painter->drawText(QPoint(dx, ytext - sizeFont.height()), QString::number(i));
              else
                  painter->drawText(QPoint(dx, ytext), QString::number(i));
          } else {
-                 painter->drawLine (i, ypos, i, ypos - k->height/4*fact);
+                 painter->drawLine (i, ypos, i, ypos - ruleHeight/4*fact);
          }
     }
 
-   for (int i = 0; i > -390 ; i -= k->separation) {
+   for (int i = 0; i > -390 ; i -= ruleSeparation) {
          //cout << "Var: " << i << endl;
          QSize sizeFont = fm.size (Qt::TextSingleLine, QString::number(i));
          if (i % 100  == 0) { // FIX ME
              painter->drawLine(i, ypos, i, 0);
              int dx = i + 3;
-             if (k->orientation == Qt::Vertical)
+             if (ruleDirection == Qt::Vertical)
                  painter->drawText(QPoint(dx, ytext - sizeFont.height()), QString::number(i));
              else
                  painter->drawText(QPoint(dx, ytext), QString::number(i));
          } else {
-             painter->drawLine(i, ypos, i, ypos - k->height/4*fact);
+             painter->drawLine(i, ypos, i, ypos - ruleHeight/4*fact);
          }
     }
 
@@ -189,12 +174,12 @@ void TRulerBase::drawScale(QPainter *painter)
 
 void TRulerBase::resizeEvent(QResizeEvent *)
 {
-    if (k->orientation == Qt::Horizontal) {
-        k->width = width();
-        k->height = height();
-    } else if (k->orientation == Qt::Vertical) {
-        k->width = height();
-        k->height =  width();
+    if (ruleDirection == Qt::Horizontal) {
+        ruleWidth = width();
+        ruleHeight = height();
+    } else if (ruleDirection == Qt::Vertical) {
+        ruleWidth = height();
+        ruleHeight =  width();
     }
 
     update();
@@ -202,20 +187,20 @@ void TRulerBase::resizeEvent(QResizeEvent *)
 
 void TRulerBase::mouseMoveEvent(QMouseEvent *event)
 {
-    if (k->drawPointer)
+    if (drawPointer)
         movePointers(event->pos());
 }
 
 void TRulerBase::setDrawPointer(bool flag)
 {
-    k->drawPointer = flag;
+    drawPointer = flag;
     update();
 }
 
 void TRulerBase::setSeparation(int sep)
 {
     if (sep > 0 && sep <= 10000) {
-        k->separation = sep;
+        ruleSeparation = sep;
         update();
     } else {
         #ifdef TUP_DEBUG
@@ -237,30 +222,30 @@ void TRulerBase::mousePressEvent(QMouseEvent *event)
 
 Qt::Orientation TRulerBase::orientation()
 {
-    return k->orientation;
+    return ruleDirection;
 }
 
 int TRulerBase::separation() const
 {
-    return k->separation;
+    return ruleSeparation;
 }
 
 double TRulerBase::scaleFactor() const
 {
-    return k->scaleFactor;
+    return sFactor;
 }
 
 void TRulerBase::showMenu(TRulerBase *ruler, QPoint pos)
 {
     if (ruler)
-        k->menu->popup(pos);
+        menu->popup(pos);
 }
 
 void TRulerBase::slide(int value)
 {
-    int distance = -value + k->height;
+    int distance = -value + ruleHeight;
 
-    if (k->orientation == Qt::Horizontal)
+    if (ruleDirection == Qt::Horizontal)
         move(distance, pos().y());
     else
         move(pos().x(), distance);
@@ -268,31 +253,31 @@ void TRulerBase::slide(int value)
 
 QPointF TRulerBase::zero() const
 {
-    return k->zero;
+    return ruleZero;
 }
 
 void TRulerBase::translateArrow(double dx, double dy)
 {
-    k->pArrow.translate(dx, dy);
+    pArrow.translate(dx, dy);
 }
 
 void TRulerBase::setZeroAt(const QPointF & pos)
 {
-    k->zero = pos;
+    ruleZero = pos;
     update();
 }
 
 void TRulerBase::scale(double factor)
 {
-    k->scaleFactor = factor;
+    sFactor = factor;
     update();
 }
 
 QSize TRulerBase::sizeHint() const
 {
-    int distance = k->width/3;
+    int distance = ruleWidth/3;
 
-    if (k->orientation == Qt::Horizontal)
+    if (ruleDirection == Qt::Horizontal)
         return QSize(distance, height());
 
     return QSize(width(), distance);
