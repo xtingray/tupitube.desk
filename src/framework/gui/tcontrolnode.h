@@ -5,6 +5,8 @@
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco Rodríguez                                         *
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
@@ -69,7 +71,7 @@ class T_GUI_EXPORT TControlNode : public QGraphicsItem
         
         void setLeft(TControlNode *left);
         void setRight(TControlNode *right);
-        void setCentralNode(TControlNode *centralNode);
+        void setCentralNode(TControlNode *node);
         int index() const;
         
         void setGraphicParent(QGraphicsItem * newParent);
@@ -99,8 +101,16 @@ class T_GUI_EXPORT TControlNode : public QGraphicsItem
         void showBrothers(bool show);
         
     private:
-        struct Private;
-        Private *const k;
+        // struct Private;
+        // Private *const k;
+        int nodeIndex;
+        bool unchanged;
+        QGraphicsItem *itemParent;
+        QGraphicsScene *globalScene;
+        TControlNode *cNode;
+        TControlNode *leftNode;
+        TControlNode *rightNode;
+        TNodeGroup *nodeGroup;
 };
 
 #endif
