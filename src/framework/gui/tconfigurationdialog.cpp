@@ -1,10 +1,12 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                *
+ *   Project TUPITUBE DESK                                                 *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco Rodríguez                                         *
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
@@ -35,37 +37,29 @@
 
 #include "tconfigurationdialog.h"
 
-////////////////
-
-struct TConfigurationDialog::Private
-{
-    QListWidget *list;
-    QStackedWidget *pageArea;
-};
-
-TConfigurationDialog::TConfigurationDialog(QWidget *parent) : QDialog(parent), k(new Private)
+TConfigurationDialog::TConfigurationDialog(QWidget *parent) : QDialog(parent)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     QHBoxLayout *pagesLayout = new QHBoxLayout;
     
-    k->list = new QListWidget(this);
-    k->list->setFlow(QListView::TopToBottom);
-    k->list->setWrapping(false);
-    k->list->setViewMode(QListView::IconMode);
-    k->list->setIconSize(QSize(96, 84));
-    k->list->setMovement(QListView::Static);
-    k->list->setSpacing(10);
+    list = new QListWidget(this);
+    list->setFlow(QListView::TopToBottom);
+    list->setWrapping(false);
+    list->setViewMode(QListView::IconMode);
+    list->setIconSize(QSize(96, 84));
+    list->setMovement(QListView::Static);
+    list->setSpacing(10);
     
-    connect(k->list, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(changePage(QListWidgetItem *, QListWidgetItem*)));
+    connect(list, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(changePage(QListWidgetItem *, QListWidgetItem *)));
 
     QWidget *widget = new QWidget;
     widget->setFixedWidth(130);
     QVBoxLayout *listLayout = new QVBoxLayout(widget);
-    listLayout->addWidget(k->list);
+    listLayout->addWidget(list);
 
-    k->pageArea = new QStackedWidget;
+    pageArea = new QStackedWidget;
     pagesLayout->addWidget(widget);
-    pagesLayout->addWidget(k->pageArea, 1);
+    pagesLayout->addWidget(pageArea, 1);
 
     mainLayout->addLayout(pagesLayout);
     
@@ -79,22 +73,24 @@ TConfigurationDialog::TConfigurationDialog(QWidget *parent) : QDialog(parent), k
 
 TConfigurationDialog::~TConfigurationDialog()
 {
+    delete list;
+    delete pageArea;
 }
 
 void TConfigurationDialog::addPage(QWidget *page, const QString &label, const QIcon &icon)
 {
-    QListWidgetItem *pageItem = new QListWidgetItem(k->list);
+    QListWidgetItem *pageItem = new QListWidgetItem(list);
     pageItem->setIcon(icon);
     pageItem->setText(label);
     pageItem->setTextAlignment(Qt::AlignHCenter);
     pageItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     
-    k->pageArea->addWidget(page);
+    pageArea->addWidget(page);
 }
 
 QWidget *TConfigurationDialog::currentPage() const
 {
-    return k->pageArea->currentWidget();
+    return pageArea->currentWidget();
 }
 
 void TConfigurationDialog::apply()
@@ -106,10 +102,10 @@ void TConfigurationDialog::changePage(QListWidgetItem *current, QListWidgetItem 
     if (!current)
         current = previous;
     
-    k->pageArea->setCurrentIndex(k->list->row(current));
+    pageArea->setCurrentIndex(list->row(current));
 }
 
 void TConfigurationDialog::setCurrentItem(int row)
 {
-   k->list->setCurrentRow(row);
+   list->setCurrentRow(row);
 }
