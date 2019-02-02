@@ -36,7 +36,7 @@
 #include "tupapplication.h"
 #include "tupmainwindow.h"
 #include "tapplicationproperties.h"
-#include "tcollapsiblewidget.h"
+// #include "tcollapsiblewidget.h"
 #include "talgorithm.h"
 
 #ifdef TUP_DEBUG
