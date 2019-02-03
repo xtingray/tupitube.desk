@@ -1,6 +1,7 @@
+REM Developed by Santiago Paz Mendieta
+
 Set fileSystem = CreateObject("Scripting.FileSystemObject")
 
-zlibDir = "c:\GnuWin32\bin"
 quazipDir = "c:\Quazip\lib"
 sourceDir = "c:\devel\sources\tupitube.desk\src"
 tupiDir = "c:\tupitube"
@@ -50,7 +51,6 @@ fileSystem.CopyFile sourceDir & "\components\timeline\release\tupitimeline.dll",
 fileSystem.CopyFile sourceDir & "\components\twitter\release\tupitwitter.dll", tupiDir & "\lib\tupitwitter.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\common\release\tupiplugincommon.dll", tupiDir & "\lib\tupiplugincommon.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\color\release\tupicoloringtool.dll", tupiDir & "\plugins\tupicoloringtool.dll"
-fileSystem.CopyFile sourceDir & "\plugins\tools\composed\release\tupicomposedtool.dll", tupiDir & "\plugins\tupicomposedtool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\fill\release\tupifilltool.dll", tupiDir & "\plugins\tupifilltool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\geometric\release\tupigeometrictool.dll", tupiDir & "\plugins\tupigeometrictool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\ink\release\tupiinktool.dll", tupiDir & "\plugins\tupiinktool.dll"
@@ -67,7 +67,6 @@ fileSystem.CopyFile sourceDir & "\plugins\tools\shear\release\tupisheartool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\export\imageplugin\release\tupiimageplugin.dll", tupiDir & "\plugins\tupiimageplugin.dll"
 fileSystem.CopyFile sourceDir & "\plugins\export\libavplugin\release\tupilibavplugin.dll", tupiDir & "\plugins\tupilibavplugin.dll"
 
-fileSystem.CopyFile "c:\GnuWin32\bin\zlib1.dll", tupiDir & "\lib\libav\"
 fileSystem.CopyFile "c:\devel\sources\platforms\qwindows.dll", tupiDir & "\bin\raw\platforms\qwindows.dll"
 
 fileSystem.CopyFolder sourceDir & "\shell\data", tupiDir & "\data"

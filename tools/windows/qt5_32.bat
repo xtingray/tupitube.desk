@@ -1,3 +1,5 @@
+REM Developed by Santiago Paz Mendieta
+
 copy C:\Qt\Qt5.11.2\5.11.2\mingw53_32\bin\libgcc_s_dw2-1.dll C:\devel\sources\qt5
 copy "C:\Qt\Qt5.11.2\5.11.2\mingw53_32\bin\libstdc++-6.dll" C:\devel\sources\qt5
 copy C:\Qt\Qt5.11.2\5.11.2\mingw53_32\bin\libwinpthread-1.dll C:\devel\sources\qt5
