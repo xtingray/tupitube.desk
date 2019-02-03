@@ -5,6 +5,8 @@
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco Rodríguez                                         *
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
@@ -36,31 +38,19 @@
 #include "tcontrolnode.h"
 #include "tnodegroup.h"
 
-struct TControlNode::Private
+TControlNode::TControlNode(int index, TNodeGroup *group, const QPointF & pos, 
+                           QGraphicsItem *graphicParent, QGraphicsScene *gScene, int level) : 
+                           QGraphicsItem()
+// QGraphicsItem(0, scene), k(new Private)
 {
-    int index;
-    QGraphicsItem *graphicParent;
-    TControlNode *centralNode;
-    TControlNode *leftNode;
-    TControlNode *rightNode;
-    bool unchanged;
-    TNodeGroup *nodeGroup;
-    QGraphicsScene *scene;
-};
-
-TControlNode::TControlNode(int index, TNodeGroup *nodeGroup, const QPointF & pos, 
-                           QGraphicsItem *graphicParent, QGraphicsScene *scene, int level) : 
-                           QGraphicsItem(), k(new Private)
-                           // QGraphicsItem(0, scene), k(new Private)
-{
-    k->index  = index;
-    k->graphicParent = 0;
-    k->leftNode = 0;
-    k->rightNode = 0;
-    k->centralNode = 0;
-    k->unchanged = true;
-    k->nodeGroup = nodeGroup;
-    k->scene = scene;
+    nodeIndex  = index;
+    itemParent = 0;
+    leftNode = 0;
+    rightNode = 0;
+    cNode = 0;
+    unchanged = true;
+    nodeGroup = group;
+    globalScene = gScene;
     
     QGraphicsItem::setCursor(QCursor(Qt::PointingHandCursor));
     setFlag(ItemIsSelectable, true);
@@ -73,7 +63,13 @@ TControlNode::TControlNode(int index, TNodeGroup *nodeGroup, const QPointF & pos
 }
 
 TControlNode::~TControlNode()
-{    
+{
+    delete itemParent;
+    delete globalScene;
+    delete cNode;
+    delete leftNode;
+    delete rightNode;
+    delete nodeGroup;
 }
 
 void TControlNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *w)
@@ -87,7 +83,7 @@ void TControlNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 
     QColor color;
 
-    if (k->centralNode) {
+    if (cNode) {
         color = QColor("white");
     } else {
         color = QColor(55, 155, 55);
@@ -107,14 +103,14 @@ void TControlNode::paintLinesToChildNodes(QPainter *painter)
     painter->setPen(QPen(QColor(Qt::gray)));
     painter->setRenderHint(QPainter::Antialiasing, true);
 
-    if (k->rightNode) {
-        if (k->rightNode->isVisible())
-            painter->drawLine(inverted.map(pos()), inverted.map(k->rightNode->pos()));
+    if (rightNode) {
+        if (rightNode->isVisible())
+            painter->drawLine(inverted.map(pos()), inverted.map(rightNode->pos()));
     }
 
-    if (k->leftNode) {
-        if (k->leftNode->isVisible())
-            painter->drawLine(inverted.map(pos()), inverted.map(k->leftNode->pos()));
+    if (leftNode) {
+        if (leftNode->isVisible())
+            painter->drawLine(inverted.map(pos()), inverted.map(leftNode->pos()));
     }
     
     painter->restore();
@@ -125,14 +121,14 @@ QRectF TControlNode::boundingRect() const
     QSizeF size(10, 10);
     QRectF rect(QPointF(-size.width()/2, -size.height()/2), size);
 
-    if (k->rightNode) {
-        if (k->rightNode->isVisible())
-            rect = rect.united(k->rightNode->boundingRect());
+    if (rightNode) {
+        if (rightNode->isVisible())
+            rect = rect.united(rightNode->boundingRect());
     }
 
-    if (k->leftNode) {
-        if (k->leftNode->isVisible())
-           rect = rect.united(k->leftNode->boundingRect());
+    if (leftNode) {
+        if (leftNode->isVisible())
+           rect = rect.united(leftNode->boundingRect());
     }
 
     return rect;
@@ -141,40 +137,40 @@ QRectF TControlNode::boundingRect() const
 QVariant TControlNode::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     if (change == QGraphicsItem::ItemPositionChange) {
-        if (!k->unchanged) {
-            if (qgraphicsitem_cast<QGraphicsPathItem*>(k->graphicParent)) {
+        if (!unchanged) {
+            if (qgraphicsitem_cast<QGraphicsPathItem*>(itemParent)) {
                 QPointF diff = value.toPointF() - pos();
-                if (k->leftNode)
-                    k->leftNode->moveBy(diff.x(), diff.y());
+                if (leftNode)
+                    leftNode->moveBy(diff.x(), diff.y());
 
-                if (k->rightNode)
-                    k->rightNode->moveBy(diff.x(), diff.y());
+                if (rightNode)
+                    rightNode->moveBy(diff.x(), diff.y());
 
-                QPointF scenePos = k->graphicParent->mapFromScene(value.toPointF());
+                QPointF scenePos = itemParent->mapFromScene(value.toPointF());
 
-                if (k->nodeGroup)
-                    k->nodeGroup->moveElementTo(k->index, scenePos);
+                if (nodeGroup)
+                    nodeGroup->moveElementTo(nodeIndex, scenePos);
            } 
         } else {
-           k->unchanged = false;
+           unchanged = false;
         }
     } else if (change == QGraphicsItem::ItemSelectedChange) {
                if (value.toBool()) {
-                   k->graphicParent->setSelected(true);
+                   itemParent->setSelected(true);
                    showChildNodes(true);
                } else {
-                   if (k->leftNode) {
-                       if (k->leftNode->isSelected())
-                           k->leftNode->setVisible(true);
+                   if (leftNode) {
+                       if (leftNode->isSelected())
+                           leftNode->setVisible(true);
                        else
-                           k->leftNode->setVisible(false);
+                           leftNode->setVisible(false);
                    }
 
-                   if (k->rightNode) {
-                       if (k->rightNode->isSelected())
-                           k->rightNode->setVisible(true);
+                   if (rightNode) {
+                       if (rightNode->isSelected())
+                           rightNode->setVisible(true);
                        else
-                           k->rightNode->setVisible(false);
+                           rightNode->setVisible(false);
                    }
                    update();
                }
@@ -185,25 +181,25 @@ QVariant TControlNode::itemChange(GraphicsItemChange change, const QVariant &val
 
 void TControlNode::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (k->centralNode) {
+    if (cNode) {
         setSelected(true);
-        k->centralNode->setSelected(true);
+        cNode->setSelected(true);
 
-        if (k->centralNode->left()) {
-            if (k->centralNode->left() != this)
-                k->centralNode->left()->setSelected(false);
+        if (cNode->left()) {
+            if (cNode->left() != this)
+                cNode->left()->setSelected(false);
         }
 
-        if (k->centralNode->right()) {
-            if (k->centralNode->right() != this)
-                k->centralNode->right()->setSelected(false);
+        if (cNode->right()) {
+            if (cNode->right() != this)
+                cNode->right()->setSelected(false);
         }
 
     } else {
         setSeletedChilds(false);
     }
 
-    k->graphicParent->setSelected(true);
+    itemParent->setSelected(true);
     showChildNodes(true);
   
     // These instructions are required for painting updates
@@ -211,7 +207,7 @@ void TControlNode::mousePressEvent(QGraphicsSceneMouseEvent *event)
     event->accept();
 
     // SQA: Possible code for the future
-    // k->nodeGroup->emitNodeClicked(Pressed);
+    // nodeGroup->emitNodeClicked(Pressed);
 }
 
 void TControlNode::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
@@ -226,7 +222,7 @@ void TControlNode::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     Q_UNUSED(event);
 
-    k->nodeGroup->emitNodeClicked(Released);
+    nodeGroup->emitNodeClicked(Released);
 
     // SQA: Why this instruction makes the system crash in Qt 4.7? 
     // QGraphicsItem::mouseReleaseEvent(event);
@@ -252,82 +248,84 @@ void TControlNode::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
 
 void TControlNode::setLeft(TControlNode *left)
 {
-    if (k->leftNode)
-        delete k->leftNode;
+    // SQA: check if this condition is required
+    if (leftNode)
+        delete leftNode;
 
-    k->leftNode = left;
-    k->leftNode->setVisible(false);
-    k->leftNode->setCentralNode(this);
-    k->leftNode->setZValue(zValue()+1);
+    leftNode = left;
+    leftNode->setVisible(false);
+    leftNode->setCentralNode(this);
+    leftNode->setZValue(zValue()+1);
 }
 
 void TControlNode::setRight(TControlNode *right)
 {
+    // SQA: check if this condition is required
     if (right)
-        delete k->rightNode;
+        delete rightNode;
 
-    k->rightNode = right;
-    k->rightNode->setVisible(false);
-    k->rightNode->setCentralNode(this);
-    k->rightNode->setZValue(zValue()+2);
+    rightNode = right;
+    rightNode->setVisible(false);
+    rightNode->setCentralNode(this);
+    rightNode->setZValue(zValue()+2);
 }
 
-void TControlNode::setCentralNode(TControlNode *centralNode)
+void TControlNode::setCentralNode(TControlNode *node)
 {
-    k->centralNode = centralNode;
+    cNode = node;
 }
 
 void TControlNode::showChildNodes(bool visible)
 {
-    if (k->leftNode)
-        k->leftNode->setVisible(visible);
+    if (leftNode)
+        leftNode->setVisible(visible);
 
-    if (k->rightNode)
-        k->rightNode->setVisible(visible);
+    if (rightNode)
+        rightNode->setVisible(visible);
 }
 
 void TControlNode::setSeletedChilds(bool select)
 {
-    if (k->leftNode)
-        k->leftNode->setSelected(select);
+    if (leftNode)
+        leftNode->setSelected(select);
 
-    if (k->rightNode)
-        k->rightNode->setSelected(select);
+    if (rightNode)
+        rightNode->setSelected(select);
 }
 
 TControlNode *TControlNode::left()
 {
-    return k->leftNode;
+    return leftNode;
 }
 
 TControlNode *TControlNode::right()
 {
-    return k->rightNode;
+    return rightNode;
 }
 
 TControlNode *TControlNode::centralNode()
 {
-    return k->centralNode;
+    return cNode;
 }
 
 int TControlNode::index() const
 {
-    return k->index;
+    return nodeIndex;
 }
 
 void TControlNode::setGraphicParent(QGraphicsItem *newParent)
 {
-    k->graphicParent = newParent;
+    itemParent = newParent;
 }
 
 QGraphicsItem * TControlNode::graphicParent()
 {
-    return k->graphicParent;
+    return itemParent;
 }
 
 void TControlNode::hasChanged(bool unchanged)
 {
-    k->unchanged = unchanged;
+    unchanged = unchanged;
 }
 
 void TControlNode::resize(qreal factor)

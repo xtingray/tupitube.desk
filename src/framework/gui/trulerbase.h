@@ -1,10 +1,12 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                *
+ *   Project TUPITUBE DESK                                                 *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco Rodríguez                                         *
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
@@ -55,7 +57,7 @@ class T_GUI_EXPORT TRulerBase : public QFrame
     Q_OBJECT
     
     public:
-        TRulerBase(Qt::Orientation orientation=Qt::Horizontal, QWidget *parent = 0);
+        TRulerBase(Qt::Orientation direction=Qt::Horizontal, QWidget *parent = 0);
         virtual ~TRulerBase();
         
         // const double unitGetRatioFromIndex(const int index);
@@ -78,11 +80,25 @@ class T_GUI_EXPORT TRulerBase : public QFrame
         
     private:
         enum { ChangeScaleToFive, ChangeScaleToTen };
-        
-        struct Private;
-        Private *const k;
-        
-    signals:
+
+        bool drawPointer;
+        int position;
+        int ruleSeparation;
+        int ruleWidth;
+        int ruleHeight;
+
+        Qt::Orientation ruleDirection;
+        QPointF ruleZero;
+        QPolygonF pArrow;
+
+        QMenu *menu;
+
+        double sFactor;
+
+        // struct Private;
+        // Private *const k;
+
+signals:
         void displayMenu(TRulerBase *, QPoint pos);
         
     protected:
