@@ -1,3 +1,5 @@
+REM Developed by Santiago Paz Mendieta
+
 Set fileSystem = CreateObject("Scripting.FileSystemObject")
 
 quazipDir = "c:\Quazip\lib"

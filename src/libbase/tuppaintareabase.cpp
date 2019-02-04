@@ -75,6 +75,7 @@ TupPaintAreaBase::TupPaintAreaBase(QWidget *parent, QSize dimension, TupLibrary 
     greenBoldPen = QPen(QColor(0, 135, 0, 255), 3);
     greenThinPen = QPen(QColor(0, 135, 0, 255), 1);
     blackPen = QPen(QColor(0, 0, 0, 180), 2);
+    dotPen = QPen(QColor(150, 150, 150, 255), 1, Qt::DashLine);
 
     gridEnabled = false;
     safeAreaEnabled = false;
@@ -83,6 +84,7 @@ TupPaintAreaBase::TupPaintAreaBase(QWidget *parent, QSize dimension, TupLibrary 
 
     drawingRect = QRectF(QPointF(0, 0), dimension);
     centerPoint = drawingRect.center().toPoint();
+    target = drawingRect.width() * (0.02);
 
     gScene->setSceneRect(drawingRect);
     setScene(gScene);
@@ -385,6 +387,7 @@ void TupPaintAreaBase::drawForeground(QPainter *painter, const QRectF &rect)
                                 painter->drawRect(drawingRect);
 
                                 int w = drawingRect.width();
+                                int h = drawingRect.height();
                                 int outerBorder = w/19;
                                 int innerBorder = w/6;
 
@@ -429,8 +432,16 @@ void TupPaintAreaBase::drawForeground(QPainter *painter, const QRectF &rect)
                                 left = drawingRect.topLeft() + QPointF(innerBorder, innerBorder);
                                 right = drawingRect.bottomRight() - QPointF(innerBorder, innerBorder);
                                 QRectF innerRect(left, right);
+                                painter->drawRect(innerRect);
 
-                                painter->drawRect(innerRect); 
+                                painter->setPen(dotPen);
+                                int middleX = w/2;
+                                int middleY = h/2;
+                                painter->drawLine(QPoint(0, middleY), QPoint(w, middleY));
+                                painter->drawLine(QPoint(middleX, 0), QPoint(middleX, h));
+                                QRect rect(QPoint(middleX - target, middleY - target),
+                                           QPoint(middleX + target, middleY + target));
+                                painter->drawRect(rect);
                             }
                         }
                     } 
