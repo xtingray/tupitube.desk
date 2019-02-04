@@ -53,7 +53,6 @@ TControlNode::TControlNode(int index, TNodeGroup *group, const QPointF & pos,
 
     nodeGroup = group;
     globalScene = gScene;
-    dd
     QGraphicsItem::setCursor(QCursor(Qt::PointingHandCursor));
     setFlag(ItemIsSelectable, true);
     setFlag(ItemIsMovable, true);
