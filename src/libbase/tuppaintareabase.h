@@ -133,6 +133,8 @@ class TUPITUBE_EXPORT TupPaintAreaBase : public QGraphicsView
         QPen blackPen;
         bool spaceBar;
         QPen gridPen;
+        QPen dotPen;
+        int target;
         int gridSeparation;
 
         QPoint initPoint;
