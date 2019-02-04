@@ -101,8 +101,6 @@ class T_GUI_EXPORT TControlNode : public QGraphicsItem
         void showBrothers(bool show);
         
     private:
-        // struct Private;
-        // Private *const k;
         int nodeIndex;
         bool unchanged;
         QGraphicsItem *itemParent;

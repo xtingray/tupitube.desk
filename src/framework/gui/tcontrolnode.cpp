@@ -44,11 +44,13 @@ TControlNode::TControlNode(int index, TNodeGroup *group, const QPointF & pos,
 // QGraphicsItem(0, scene), k(new Private)
 {
     nodeIndex  = index;
-    itemParent = 0;
-    leftNode = 0;
-    rightNode = 0;
-    cNode = 0;
     unchanged = true;
+
+    itemParent = nullptr;
+    leftNode = nullptr;
+    rightNode = nullptr;
+    cNode = nullptr;
+
     nodeGroup = group;
     globalScene = gScene;
     
@@ -64,12 +66,12 @@ TControlNode::TControlNode(int index, TNodeGroup *group, const QPointF & pos,
 
 TControlNode::~TControlNode()
 {
-    delete itemParent;
-    delete globalScene;
-    delete cNode;
-    delete leftNode;
-    delete rightNode;
-    delete nodeGroup;
+    // delete itemParent;
+    // delete globalScene;
+    // delete cNode;
+    // delete leftNode;
+    // delete rightNode;
+    // delete nodeGroup;
 }
 
 void TControlNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *w)
@@ -154,6 +156,7 @@ QVariant TControlNode::itemChange(GraphicsItemChange change, const QVariant &val
         } else {
            unchanged = false;
         }
+
     } else if (change == QGraphicsItem::ItemSelectedChange) {
                if (value.toBool()) {
                    itemParent->setSelected(true);
