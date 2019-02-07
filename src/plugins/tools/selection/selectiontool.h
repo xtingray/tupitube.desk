@@ -98,6 +98,7 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
     private slots:
         void initItems(TupGraphicsScene *scene);
         void syncNodes();
+        void applyAlignAction(Settings::Align align);
         void applyFlip(Settings::Flip flip);
         void applyOrderAction(Settings::Order order);
         void applyGroupAction(Settings::Group action);

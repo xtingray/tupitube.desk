@@ -54,6 +54,7 @@ class TUPITUBE_PLUGIN Settings : public QWidget
     Q_OBJECT
 
     public:
+        enum Align { hAlign = 1, vAlign, totalAlign };
         enum Flip { Vertical = 1, Horizontal, Crossed };
         enum Order { ToBack = 0, ToFront, ToBackOneLevel, ToFrontOneLevel };
         enum Group { GroupItems = 0, UngroupItems };
@@ -65,11 +66,11 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         void setPos(int x, int y);
         void setProportionState(int flag);
         bool formIsVisible();
-
         // void setRotationAngle(int angle);
         // void setScaleFactor(double factor);
 
      signals:
+        void callAlignAction(Settings::Align align);
         void callFlip(Settings::Flip flip);
         void callOrderAction(Settings::Order action);
         void callGroupAction(Settings::Group action);
@@ -83,6 +84,9 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         void updateScaleFactor(double x, double y);
 
      private slots:
+        void alignObjectHorizontally();
+        void alignObjectVertically();
+        void alignObjectAbsolutely();
         void vFlip();
         void hFlip();
         void cFlip();

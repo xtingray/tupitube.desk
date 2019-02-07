@@ -78,6 +78,31 @@ Settings::Settings(QWidget *parent) : QWidget(parent), k(new Private)
     k->formPanel = new QWidget;
     QBoxLayout *formLayout = new QBoxLayout(QBoxLayout::TopToBottom, k->formPanel);
 
+    QLabel *alignLabel = new QLabel(tr("Alignment"));
+    alignLabel->setAlignment(Qt::AlignHCenter);
+    formLayout->addWidget(alignLabel);
+
+    QBoxLayout *alignLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    alignLayout->setMargin(0);
+    alignLayout->setSpacing(0);
+
+    TImageButton *hAlignButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/h_center.png"), 22);
+    hAlignButton->setToolTip(tr("Horizontal Center"));
+    TImageButton *vAlignButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/v_center.png"), 22);
+    vAlignButton->setToolTip(tr("Vertical Center"));
+    TImageButton *aAlignButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/a_center.png"), 22);
+    aAlignButton->setToolTip(tr("Absolute Center"));
+    connect(hAlignButton, SIGNAL(clicked()), this, SLOT(alignObjectHorizontally()));
+    connect(vAlignButton, SIGNAL(clicked()), this, SLOT(alignObjectVertically()));
+    connect(aAlignButton, SIGNAL(clicked()), this, SLOT(alignObjectAbsolutely()));
+
+    alignLayout->addWidget(hAlignButton);
+    alignLayout->addWidget(vAlignButton);
+    alignLayout->addWidget(aAlignButton);
+
+    formLayout->addLayout(alignLayout);
+    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+
     QLabel *flips = new QLabel(tr("Flips"));
     flips->setAlignment(Qt::AlignHCenter);
     formLayout->addWidget(flips);
@@ -501,4 +526,19 @@ void Settings::setProportionState(int flag)
 bool Settings::formIsVisible()
 {
     return k->formIsVisible;
+}
+
+void Settings::alignObjectHorizontally()
+{
+    emit callAlignAction(Settings::hAlign);
+}
+
+void Settings::alignObjectVertically()
+{
+    emit callAlignAction(Settings::vAlign);
+}
+
+void Settings::alignObjectAbsolutely()
+{
+    emit callAlignAction(Settings::totalAlign);
 }

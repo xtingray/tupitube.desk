@@ -449,28 +449,28 @@
     <name>SelectionTool</name>
     <message>
         <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="133"/>
-        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="369"/>
+        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="368"/>
         <source>Selection</source>
         <translation>Seleção</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="365"/>
-        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="367"/>
+        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="364"/>
+        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="366"/>
         <source>Object Selection</source>
         <translation>Seleção de Objetos</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="366"/>
+        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="365"/>
         <source>O</source>
         <translation>O</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="732"/>
+        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="757"/>
         <source>Error</source>
         <translation>Erro</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="732"/>
+        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="757"/>
         <source>SVG objects can&apos;t be grouped/ungrouped yet</source>
         <translation>Objetos SVG ainda não podem ser agrupados/desagrupados</translation>
     </message>
@@ -842,136 +842,156 @@
     </message>
     <message>
         <location filename="../../../plugins/tools/selection/settings.cpp" line="81"/>
+        <source>Alignment</source>
+        <translation>Alinhamento</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="90"/>
+        <source>Horizontal Center</source>
+        <translation>Centralizar Horizontalmente</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="92"/>
+        <source>Vertical Center</source>
+        <translation>Centralizar Verticalmente</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="94"/>
+        <source>Absolute Center</source>
+        <translation>Centralizar</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="106"/>
         <source>Flips</source>
         <translation>Inversões</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="90"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="115"/>
         <source>Horizontal Flip</source>
         <translation>Inverter Horizontalmente</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="92"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="117"/>
         <source>Vertical Flip</source>
         <translation>Inverter Verticalmente</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="94"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="119"/>
         <source>Crossed Flip</source>
         <translation>Inverter Cruzado</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="106"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="131"/>
         <source>Order</source>
         <translation>Ordem</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="115"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="140"/>
         <source>Send object to back</source>
         <translation>Enviar objeto para trás</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="118"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="143"/>
         <source>Send object to back one level</source>
         <translation>Enviar objeto para trás um nível</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="121"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="146"/>
         <source>Send object to front</source>
         <translation>Enviar objeto para frente</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="124"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="149"/>
         <source>Send object to front one level</source>
         <translation>Enviar objeto para frente um nível</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="141"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="166"/>
         <source>Group</source>
         <translation>Grupo</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="150"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="175"/>
         <source>Group Objects</source>
         <translation>Agrupar Objetos</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="153"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="178"/>
         <source>Ungroup Objects</source>
         <translation>Desagrupar Objetos</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="166"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="191"/>
         <source>Position</source>
         <translation>Posição</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="203"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="228"/>
         <source>Rotation</source>
         <translation>Rotação</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="207"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="232"/>
         <source>Angle</source>
         <translation>Ângulo</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="223"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="248"/>
         <source>Scale</source>
         <translation>Escala</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="259"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="284"/>
         <source>Proportion</source>
         <translation>Proporção</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="274"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="299"/>
         <source>Show Tips</source>
         <translation>Exibir Dicas</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="275"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="300"/>
         <source>A little help for the Selection tool</source>
         <translation>Uma pequena ajuda para a ferramenta de Seleção</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="289"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="314"/>
         <source>Rotation mode</source>
         <translation>Modo de rotação</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="289"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="314"/>
         <source>Double Click on any node or Shortcut Alt + R</source>
         <translation>Clique duas vezes em qualquer nodo ou atalho Alt + R</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="290"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="315"/>
         <source>Arrows</source>
         <translation>Setas</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="290"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="315"/>
         <source>Movement on selection</source>
         <translation>Movimento da seleção</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="291"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="316"/>
         <source>Shift + Arrows</source>
         <translation>Shift + Setas</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="291"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="316"/>
         <source>Slow movement on selection</source>
         <translation>Movimento lento da seleção</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="292"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="317"/>
         <source>Ctrl + Arrows</source>
         <translation>Ctrl + Setas</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="292"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="317"/>
         <source>Fast movement on selection</source>
         <translation>Movimento rápido da seleção</translation>
     </message>
@@ -1022,12 +1042,12 @@
         <translation>Definir dimensões de largura/altura proporcionais</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="293"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="318"/>
         <source>Proportional scaling on selection</source>
         <translation>Escalar proporcionalmente a seleção</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="293"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="318"/>
         <location filename="../../../plugins/tools/geometric/settings.cpp" line="82"/>
         <source>Ctrl + Left Mouse Button</source>
         <translation>Ctrl + Botão Esquerdo do Mouse</translation>
@@ -1053,15 +1073,15 @@
         <translation>Posição da Boca</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="170"/>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="227"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="195"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="252"/>
         <location filename="../../../plugins/tools/papagayo/settings.cpp" line="167"/>
         <source>X</source>
         <translation>X</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="178"/>
-        <location filename="../../../plugins/tools/selection/settings.cpp" line="243"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="203"/>
+        <location filename="../../../plugins/tools/selection/settings.cpp" line="268"/>
         <location filename="../../../plugins/tools/papagayo/settings.cpp" line="175"/>
         <source>Y</source>
         <translation>Y</translation>
@@ -1249,12 +1269,12 @@
 <context>
     <name>TRulerBase</name>
     <message>
-        <location filename="../../../framework/gui/trulerbase.cpp" line="102"/>
+        <location filename="../../../framework/gui/trulerbase.cpp" line="87"/>
         <source>Change scale to 5...</source>
         <translation>Alterar escala para 5...</translation>
     </message>
     <message>
-        <location filename="../../../framework/gui/trulerbase.cpp" line="103"/>
+        <location filename="../../../framework/gui/trulerbase.cpp" line="88"/>
         <source>Change scale to 10...</source>
         <translation>Alterar escala para 10...</translation>
     </message>
@@ -1507,32 +1527,32 @@
 <context>
     <name>TupCameraBar</name>
     <message>
-        <location filename="../../../components/player/tupcamerabar.cpp" line="63"/>
+        <location filename="../../../components/player/tupcamerabar.cpp" line="64"/>
         <source>Rewind</source>
         <translation>Recuar</translation>
     </message>
     <message>
-        <location filename="../../../components/player/tupcamerabar.cpp" line="68"/>
+        <location filename="../../../components/player/tupcamerabar.cpp" line="69"/>
         <source>Play in reverse</source>
         <translation>Reproduzir em reverso</translation>
     </message>
     <message>
-        <location filename="../../../components/player/tupcamerabar.cpp" line="73"/>
+        <location filename="../../../components/player/tupcamerabar.cpp" line="74"/>
         <source>Play</source>
         <translation>Reproduzir</translation>
     </message>
     <message>
-        <location filename="../../../components/player/tupcamerabar.cpp" line="78"/>
+        <location filename="../../../components/player/tupcamerabar.cpp" line="79"/>
         <source>Pause</source>
         <translation>Pausa</translation>
     </message>
     <message>
-        <location filename="../../../components/player/tupcamerabar.cpp" line="83"/>
+        <location filename="../../../components/player/tupcamerabar.cpp" line="84"/>
         <source>Stop</source>
         <translation>Parar</translation>
     </message>
     <message>
-        <location filename="../../../components/player/tupcamerabar.cpp" line="88"/>
+        <location filename="../../../components/player/tupcamerabar.cpp" line="89"/>
         <source>Forward</source>
         <translation>Avançar</translation>
     </message>
@@ -1766,7 +1786,7 @@
     </message>
     <message>
         <location filename="../../../components/player/tupcamerawidget.cpp" line="223"/>
-        <location filename="../../../components/player/tupcamerawidget.cpp" line="458"/>
+        <location filename="../../../components/player/tupcamerawidget.cpp" line="467"/>
         <source>secs</source>
         <translation>segundos</translation>
     </message>
@@ -4683,22 +4703,22 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
 <context>
     <name>TupPaintAreaBase</name>
     <message>
-        <location filename="../../../libbase/tuppaintareabase.cpp" line="363"/>
+        <location filename="../../../libbase/tuppaintareabase.cpp" line="365"/>
         <source>No Scene!</source>
         <translation>Não existem Cenas!</translation>
     </message>
     <message>
-        <location filename="../../../libbase/tuppaintareabase.cpp" line="370"/>
+        <location filename="../../../libbase/tuppaintareabase.cpp" line="372"/>
         <source>Locked!</source>
         <translation>Bloqueado!</translation>
     </message>
     <message>
-        <location filename="../../../libbase/tuppaintareabase.cpp" line="439"/>
+        <location filename="../../../libbase/tuppaintareabase.cpp" line="450"/>
         <source>No Frames!</source>
         <translation>Não existem Quadros!</translation>
     </message>
     <message>
-        <location filename="../../../libbase/tuppaintareabase.cpp" line="442"/>
+        <location filename="../../../libbase/tuppaintareabase.cpp" line="453"/>
         <source>No Layers!</source>
         <translation>Não existem Camadas!</translation>
     </message>

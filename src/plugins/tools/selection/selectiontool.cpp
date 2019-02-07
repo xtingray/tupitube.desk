@@ -228,7 +228,6 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
     Q_UNUSED(brushManager);
 
     k->selectedObjects = scene->selectedItems();
-
     if (k->selectedObjects.count() > 0) {
         panel->enableFormControls(true);
         k->activeSelection = true;
@@ -383,6 +382,7 @@ QWidget *SelectionTool::configurator()
 {
     if (!panel) {
         panel = new Settings;
+        connect(panel, SIGNAL(callAlignAction(Settings::Align)), this, SLOT(applyAlignAction(Settings::Align)));
         connect(panel, SIGNAL(callFlip(Settings::Flip)), this, SLOT(applyFlip(Settings::Flip)));
         connect(panel, SIGNAL(callOrderAction(Settings::Order)), this, SLOT(applyOrderAction(Settings::Order)));
         connect(panel, SIGNAL(callGroupAction(Settings::Group)), this, SLOT(applyGroupAction(Settings::Group)));
@@ -659,6 +659,31 @@ void SelectionTool::keyReleaseEvent(QKeyEvent *event)
 bool SelectionTool::selectionIsActive()
 {
     return k->activeSelection;
+}
+
+void SelectionTool::applyAlignAction(Settings::Align align)
+{
+    QGraphicsView *view = k->scene->views().at(0);
+    QRectF rect = view->sceneRect();
+    QPointF center = rect.center();
+    QPointF distance;
+    foreach (NodeManager *manager, k->nodeManagers) {
+        QGraphicsItem *item = manager->parentItem();
+        QRectF rect = item->boundingRect();
+        QPointF objectPos = rect.center();
+        if (align == Settings::hAlign) {
+            int y = center.y() - objectPos.y();
+            item->setPos(item->pos().x(), y);
+        } else if (align == Settings::vAlign) {
+            int x = center.x() - objectPos.x();
+            item->setPos(x, item->pos().y());
+        } else if (align == Settings::totalAlign) {
+            distance = center - objectPos;
+            item->setPos(distance.x(), distance.y());
+        }
+        manager->syncNodesFromParent();
+        requestTransformation(manager->parentItem(), k->frame);
+    }
 }
 
 void SelectionTool::applyFlip(Settings::Flip flip)
@@ -1082,7 +1107,8 @@ void SelectionTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
         emit requested(&event);
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "SelectionTool::requestTransformation() - Fatal Error: Invalid item position !!! [ " + QString::number(position) + " ]";
+            QString msg = "SelectionTool::requestTransformation() - Fatal Error: Invalid item position !!! [ "
+                    + QString::number(position) + " ]";
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else

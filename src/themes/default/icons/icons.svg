@@ -2986,9 +2986,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.3643883"
-     inkscape:cx="240.986"
-     inkscape:cy="1211.9921"
+     inkscape:zoom="3.34375"
+     inkscape:cx="183.71085"
+     inkscape:cy="504.22673"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -3130,7 +3130,7 @@
     </g>
     <g
        id="g9837"
-       transform="translate(19.057125,-238.94597)">
+       transform="translate(19.057125,-204.94597)">
       <g
          transform="matrix(2.9172006,0,0,2.9172006,146.82421,639.15203)"
          id="g4814">
@@ -3152,7 +3152,7 @@
              inkscape:export-filename="/media/windows/linux/xtingray/tupi/sources/tupi/src/themes/default/icons/line_style01.png"
              inkscape:connector-curvature="0"
              id="path4639"
-             d="m 4.2456671,58.700379 139.9705929,0"
+             d="M 4.2456671,58.700379 H 144.21626"
              style="fill:none;stroke:#008700;stroke-width:4.95940208px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
         </g>
       </g>
@@ -7062,7 +7062,7 @@
     </g>
     <g
        id="g9843"
-       transform="translate(19.057123,-238.94595)">
+       transform="translate(19.057123,-204.94595)">
       <g
          transform="matrix(2.9172006,0,0,2.9172006,143.68558,630.06286)"
          id="g4810">
@@ -7078,7 +7078,7 @@
            inkscape:export-ydpi="93.218567" />
         <path
            style="fill:none;stroke:#008700;stroke-width:4.95900011;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:19.83600044, 9.91800022;stroke-dashoffset:0;stroke-opacity:1"
-           d="m 5.3215779,78.057428 139.9705821,0"
+           d="M 5.3215779,78.057428 H 145.29216"
            id="path4639-2"
            inkscape:connector-curvature="0"
            inkscape:export-filename="/media/windows/linux/xtingray/tupi/sources/tupi/src/themes/default/icons/line_style02.png"
@@ -7088,7 +7088,7 @@
     </g>
     <g
        id="g9848"
-       transform="translate(19.057123,-238.94593)">
+       transform="translate(19.057123,-204.94593)">
       <g
          transform="matrix(2.9172006,0,0,2.9172006,135.43448,628.96693)"
          id="g4806">
@@ -7104,7 +7104,7 @@
            inkscape:export-ydpi="93.218567" />
         <path
            style="fill:none;stroke:#008700;stroke-width:4.95900011;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:4.95900011, 9.91800022;stroke-dashoffset:14.87699986;stroke-opacity:1"
-           d="m 8.1500096,94.674439 139.9705804,0"
+           d="M 8.1500096,94.674439 H 148.12059"
            id="path4639-2-5"
            inkscape:connector-curvature="0"
            inkscape:export-filename="/media/windows/linux/xtingray/tupi/sources/tupi/src/themes/default/icons/line_style03.png"
@@ -7114,7 +7114,7 @@
     </g>
     <g
        id="g9853"
-       transform="translate(19.057128,-238.9459)">
+       transform="translate(19.057128,-204.9459)">
       <g
          transform="matrix(2.9172006,0,0,2.9172006,135.43449,636.12209)"
          id="g4802">
@@ -7130,7 +7130,7 @@
            inkscape:export-ydpi="93.218567" />
         <path
            style="fill:none;stroke:#008700;stroke-width:4.95900011;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:19.83600044, 9.91800022, 4.95900011, 9.91800022;stroke-dashoffset:14.87699986;stroke-opacity:1"
-           d="m 8.1500094,108.46302 139.9705706,0"
+           d="M 8.1500094,108.46302 H 148.12058"
            id="path4639-2-5-4"
            inkscape:connector-curvature="0"
            inkscape:export-filename="/media/windows/linux/xtingray/tupi/sources/tupi/src/themes/default/icons/line_style04.png"
@@ -7140,7 +7140,7 @@
     </g>
     <g
        id="g9858"
-       transform="translate(19.05712,-238.94597)">
+       transform="translate(19.05712,-204.94597)">
       <g
          transform="matrix(2.9172006,0,0,2.9172006,115.10083,639.1518)"
          id="g4794">
@@ -7166,7 +7166,7 @@
              inkscape:export-filename="/media/windows/linux/xtingray/tupi/sources/tupi/src/themes/default/icons/line_style04.png"
              inkscape:connector-curvature="0"
              id="path4639-2-5-4-5"
-             d="m 9.210674,123.57743 45.970566,0"
+             d="M 9.210674,123.57743 H 55.18124"
              style="fill:none;stroke:#008700;stroke-width:4.95900011;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:19.83600044, 9.91800022, 4.95900011, 9.91800022;stroke-dashoffset:41.6556015;stroke-opacity:1" />
           <path
              sodipodi:nodetypes="cc"
@@ -7175,7 +7175,7 @@
              inkscape:export-filename="/media/windows/linux/xtingray/tupi/sources/tupi/src/themes/default/icons/line_style04.png"
              inkscape:connector-curvature="0"
              id="path4639-2-5-4-5-2"
-             d="m 55.452217,123.57743 45.970563,0"
+             d="M 55.452217,123.57743 H 101.42278"
              style="fill:none;stroke:#008700;stroke-width:4.95900011;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:19.83600044, 9.91800022, 4.95900011, 9.91800022;stroke-dashoffset:28.2663002;stroke-opacity:1" />
           <path
              sodipodi:nodetypes="cc"
@@ -7184,7 +7184,7 @@
              inkscape:export-filename="/media/windows/linux/xtingray/tupi/sources/tupi/src/themes/default/icons/line_style04.png"
              inkscape:connector-curvature="0"
              id="path4639-2-5-4-5-2-0"
-             d="m 115.02989,123.57743 45.97056,0"
+             d="m 115.02989,123.57743 h 45.97056"
              style="fill:none;stroke:#008700;stroke-width:4.95900011;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:19.83600044, 9.91800022, 4.95900011, 9.91800022;stroke-dashoffset:28.2663002;stroke-opacity:1" />
           <path
              sodipodi:nodetypes="cc"
@@ -7193,7 +7193,7 @@
              inkscape:export-filename="/media/windows/linux/xtingray/tupi/sources/tupi/src/themes/default/icons/line_style04.png"
              inkscape:connector-curvature="0"
              id="path4639-2-5-4-5-2-0-8"
-             d="m 100.10847,123.57743 9.97056,0"
+             d="m 100.10847,123.57743 h 9.97056"
              style="fill:none;stroke:#008700;stroke-width:4.95900011;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:19.83600044, 9.91800022, 4.95900011, 9.91800022;stroke-dashoffset:28.2663002;stroke-opacity:1" />
         </g>
       </g>
@@ -16395,5 +16395,101 @@
            inkscape:export-ydpi="170" />
       </g>
     </g>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#008700;stroke-opacity:1"
+       id="rect12105-6"
+       width="24.250029"
+       height="24.250029"
+       x="514.91882"
+       y="-169.42482"
+       transform="rotate(90)"
+       inkscape:export-xdpi="121.66"
+       inkscape:export-ydpi="121.66" />
+    <rect
+       style="fill:#008700;fill-opacity:1;stroke:#008700;stroke-width:0.68961573;stroke-opacity:1"
+       id="rect15833-5"
+       width="5.3321571"
+       height="3.2954543"
+       x="154.63371"
+       y="525.39612"
+       inkscape:export-xdpi="121.66"
+       inkscape:export-ydpi="121.66" />
+    <g
+       transform="translate(-267.28457,-119.87396)"
+       id="g16011"
+       inkscape:export-xdpi="123"
+       inkscape:export-ydpi="123">
+      <rect
+         y="634.54846"
+         x="381.62024"
+         height="24.250029"
+         width="24.250029"
+         id="rect12105"
+         style="fill:none;fill-opacity:1;stroke:#008700;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="888.16077"
+         inkscape:export-xdpi="888.16077"
+         inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/to_back.png"
+         sodipodi:nodetypes="ccccc"
+         inkscape:connector-curvature="0"
+         id="path7032-6-3-6-0-9-9-97-7-3-2-4-8-8-3-3"
+         d="m 381.53337,647.2365 -0.006,-1.12601 24.42446,-1.2e-4 0.0113,1.12622 z"
+         style="fill:#008700;fill-opacity:1;stroke:none;stroke-width:1.08298731;stroke-opacity:1" />
+      <rect
+         y="645.02576"
+         x="391.07916"
+         height="3.2954543"
+         width="5.3321571"
+         id="rect15833-5-9"
+         style="fill:#008700;fill-opacity:1;stroke:none;stroke-width:0.68961573;stroke-opacity:1" />
+    </g>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#008700;stroke-opacity:1"
+       id="rect12105-6-7"
+       width="24.250029"
+       height="24.250029"
+       x="515.211"
+       y="-201.17934"
+       transform="rotate(90)"
+       inkscape:export-xdpi="121.66"
+       inkscape:export-ydpi="121.66"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/a_center.png" />
+    <rect
+       style="fill:#008700;fill-opacity:1;stroke:#008700;stroke-width:0.68961573;stroke-opacity:1"
+       id="rect15833-5-3"
+       width="5.3321571"
+       height="3.2954543"
+       x="186.38823"
+       y="525.68829"
+       inkscape:export-xdpi="121.66"
+       inkscape:export-ydpi="121.66"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/a_center.png" />
+    <path
+       inkscape:export-ydpi="121.66"
+       inkscape:export-xdpi="121.66"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/to_back.png"
+       sodipodi:nodetypes="ccccc"
+       inkscape:connector-curvature="0"
+       id="path7032-6-3-6-0-9-9-97-7-3-2-4-8-8-3-3-8"
+       d="m 157.86282,539.25568 -1.12601,0.006 -1.2e-4,-24.42446 1.12622,-0.0113 z"
+       style="fill:#008700;fill-opacity:1;stroke:none;stroke-width:1.08298731" />
+    <path
+       inkscape:export-ydpi="121.66"
+       inkscape:export-xdpi="121.66"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/a_center.png"
+       sodipodi:nodetypes="ccccc"
+       inkscape:connector-curvature="0"
+       id="path7032-6-3-6-0-9-9-97-7-3-2-4-8-8-3-3-8-8"
+       d="m 189.61733,539.54785 -1.12601,0.006 -1.2e-4,-24.42446 1.12622,-0.0113 z"
+       style="fill:#008700;fill-opacity:1;stroke:none;stroke-width:1.08298731" />
+    <path
+       inkscape:export-ydpi="121.66"
+       inkscape:export-xdpi="121.66"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/a_center.png"
+       sodipodi:nodetypes="ccccc"
+       inkscape:connector-curvature="0"
+       id="path7032-6-3-6-0-9-9-97-7-3-2-4-8-8-3-3-8-6"
+       d="m 201.26619,526.77295 0.006,1.12601 -24.42446,1.2e-4 -0.0113,-1.12622 z"
+       style="fill:#008700;fill-opacity:1;stroke:none;stroke-width:1.08298731" />
   </g>
 </svg>
