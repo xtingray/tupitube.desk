@@ -51,17 +51,17 @@ TupCameraStatus::TupCameraStatus(bool isNetworked, QWidget *parent) : QFrame(par
 
     framesTotal = 1;
     mute = false;
-
     setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
-
     QBoxLayout *sceneInfoLayout = new QBoxLayout(QBoxLayout::LeftToRight, parent);
 
     QLabel *sceneNameText = new QLabel("<B>" + tr("Scene") + ":</B> ");
     scenesCombo = new QComboBox();
+    scenesCombo->setStyleSheet("combobox-popup: 0;");
+    scenesCombo->setMaxVisibleItems(5);
     connect(scenesCombo, SIGNAL(activated(int)), this, SIGNAL(sceneIndexChanged(int)));
 
     sceneInfoLayout->addWidget(sceneNameText, 1);
-    sceneInfoLayout->addWidget(scenesCombo, 1);
+    sceneInfoLayout->addWidget(scenesCombo);
     sceneInfoLayout->addSpacing(15);
 
     QLabel *label = new QLabel("<B>" + tr("Frames Total") + ":</B> ");
@@ -69,7 +69,6 @@ TupCameraStatus::TupCameraStatus(bool isNetworked, QWidget *parent) : QFrame(par
 
     sceneInfoLayout->addWidget(label, 1);
     sceneInfoLayout->addWidget(framesCount, 1);
-
     sceneInfoLayout->addSpacing(15);
 
     QLabel *fpsText = new QLabel("<B>" + tr("FPS") + ":</B> ");
@@ -181,6 +180,7 @@ void TupCameraStatus::setScenes(TupProject *project)
     }
     // scenes.sort(Qt::CaseSensitive);
     scenesCombo->addItems(scenes);
+    scenesCombo->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 }
 
 void TupCameraStatus::setFramesTotal(const QString &frames)
