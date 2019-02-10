@@ -264,8 +264,10 @@ a:hover {
 }
 
 .twitter_tweet {
-     /* background-color:#fff; */
+     background-color:#fff;
      color:#000000;
+     padding:10px;
+     border-radius:5px;
      text-align:justify;
      text-decoration:none;
      font-family:"Arial", Times, serif;
