@@ -322,9 +322,9 @@ void TupPaintAreaStatus::setFramePointer(int index)
     frameField->setText(QString::number(currentFrame));
 }
 
-void TupPaintAreaStatus::updateRotationAngle(int angle)
+void TupPaintAreaStatus::updateRotationAngle(int degrees)
 {
-    angle = angle;
+    angle = degrees;
     QString text = QString::number(angle); 
     int index = rotationCombo->findText(text);
 

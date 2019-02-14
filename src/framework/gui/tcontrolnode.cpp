@@ -325,9 +325,9 @@ QGraphicsItem * TControlNode::graphicParent()
     return itemParent;
 }
 
-void TControlNode::hasChanged(bool unchanged)
+void TControlNode::hasChanged(bool noChange)
 {
-    unchanged = unchanged;
+    unchanged = noChange;
 }
 
 void TControlNode::resize(qreal factor)
