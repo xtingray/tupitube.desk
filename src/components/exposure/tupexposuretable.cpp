@@ -765,10 +765,13 @@ int TupExposureTable::framesCountAtLayer(int layer)
 void TupExposureTable::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Return) {
-        if (!k->isEditing)
+        if (!k->isEditing && !k->header->layerNameEdited()) {
             emit newPerspective(4);
-        else
+        } else {
             k->isEditing = false; 
+            if (k->header->layerNameEdited())
+                k->header->updateLayerNameFlag(false);
+        }
 
         return;
     }

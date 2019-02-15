@@ -36,10 +36,14 @@
 #include "tupexposureheader.h"
 #include "tconfig.h"
 
+#include <QMenu>
+#include <QMap>
+
 TupExposureHeader::TupExposureHeader(QWidget * parent) : QHeaderView(Qt::Horizontal, parent), m_editedSection(-1), m_sectionOnMotion(false)
 {
     setSectionsClickable(true);
     setSectionsMovable(true);
+    isEditing = false;
 
     TCONFIG->beginGroup("General");
     themeName = TCONFIG->value("Theme", "Light").toString();
@@ -92,21 +96,24 @@ void TupExposureHeader::hideTitleEditor()
 {
     m_editor->hide();
 
-    if (m_editedSection != -1 && m_editor->isModified())
+    if (m_editedSection != -1 && m_editor->isModified()) {
+        isEditing = true;
         emit nameChanged(m_editedSection, m_editor->text());
+    }
 
     m_editedSection = -1;
 }
 
 void TupExposureHeader::insertSection(int section, const QString &text)
 {
-    setToolTip(text);
-    QString title = text;
-    if (title.length() > 6)
-        title = title.left(3) + "...";
+    // setToolTip(text);
+    QString shortTitle = text;
+    if (shortTitle.length() > 6)
+        shortTitle = shortTitle.left(3) + "...";
 
     ExposureLayerItem layer;
-    layer.title = title;
+    layer.title = text;
+    layer.shortTitle = shortTitle;
     layer.lastFrame = 0;
     layer.isVisible = true;
     layer.isLocked = false;
@@ -117,11 +124,12 @@ void TupExposureHeader::insertSection(int section, const QString &text)
 void TupExposureHeader::setSectionTitle(int section, const QString &text)
 {
     setToolTip(text);
-    QString title = text;
-    if (title.length() > 6)
-        title = title.left(3) + "...";
+    QString shortTitle = text;
+    if (shortTitle.length() > 6)
+        shortTitle = shortTitle.left(3) + "...";
 
-    m_sections[section].title = title;
+    m_sections[section].title = text;
+    m_sections[section].shortTitle = shortTitle;
     updateSection(section);
 }
 
@@ -257,7 +265,7 @@ void TupExposureHeader::paintSection(QPainter *painter, const QRect & rect, int 
 
     style()->drawControl(QStyle::CE_HeaderSection, &headerOption, painter);
 
-    QString text = m_sections[section].title;
+    QString text = m_sections[section].shortTitle;
     QFont font = this->font();
     font.setPointSize(8);
     QFontMetrics fm(font);
@@ -298,6 +306,7 @@ void TupExposureHeader::paintSection(QPainter *painter, const QRect & rect, int 
 void TupExposureHeader::updateSelection(int section)
 {
     m_currentSection = section;
+    setToolTip(m_sections[section].title);
     updateSection(section);
 }
 
@@ -309,6 +318,16 @@ int TupExposureHeader::columnsTotal()
 int TupExposureHeader::currentSectionIndex()
 {
     return m_currentSection;
+}
+
+bool TupExposureHeader::layerNameEdited()
+{
+    return isEditing;
+}
+
+void TupExposureHeader::updateLayerNameFlag(bool flag)
+{
+    isEditing = flag;
 }
 
 // #include "tupexposuretable.moc"

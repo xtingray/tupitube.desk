@@ -41,16 +41,15 @@
 #include <QHeaderView>
 #include <QPainter>
 #include <QStyleOptionButton>
-#include <QMap>
 #include <QList>
 #include <QItemDelegate>
 #include <QLineEdit>
 #include <QMouseEvent>
-#include <QMenu>
 
 struct ExposureLayerItem
 {
     QString title;
+    QString shortTitle;
     int lastFrame;
     bool isVisible;
     bool isLocked;
@@ -63,7 +62,7 @@ class TUPITUBE_EXPORT TupExposureHeader: public QHeaderView
     public:
         TupExposureHeader(QWidget * parent = nullptr);
         ~TupExposureHeader();
-        void paintSection(QPainter *painter, const QRect & rect, int section) const;
+
         void insertSection(int section, const QString &text);
         void setSectionTitle(int section, const QString &text);
         void removeSection(int section);
@@ -77,8 +76,12 @@ class TUPITUBE_EXPORT TupExposureHeader: public QHeaderView
         void setLastFrame(int section, int num);
         int lastFrame(int section);
 
+        bool layerNameEdited();
+        void updateLayerNameFlag(bool flag);
+
     protected:
         virtual void mousePressEvent(QMouseEvent * event);
+        virtual void paintSection(QPainter *painter, const QRect & rect, int section) const;
 
     public slots:
         void updateSelection(int section);
@@ -100,6 +103,7 @@ class TUPITUBE_EXPORT TupExposureHeader: public QHeaderView
         bool m_sectionOnMotion;
         int m_currentSection;
         QString themeName;
+        bool isEditing;
 };
 
 #endif
