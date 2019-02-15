@@ -106,7 +106,6 @@ void TupExposureHeader::hideTitleEditor()
 
 void TupExposureHeader::insertSection(int section, const QString &text)
 {
-    // setToolTip(text);
     QString shortTitle = text;
     if (shortTitle.length() > 6)
         shortTitle = shortTitle.left(3) + "...";
@@ -123,7 +122,6 @@ void TupExposureHeader::insertSection(int section, const QString &text)
 
 void TupExposureHeader::setSectionTitle(int section, const QString &text)
 {
-    setToolTip(text);
     QString shortTitle = text;
     if (shortTitle.length() > 6)
         shortTitle = shortTitle.left(3) + "...";
@@ -306,7 +304,6 @@ void TupExposureHeader::paintSection(QPainter *painter, const QRect & rect, int 
 void TupExposureHeader::updateSelection(int section)
 {
     m_currentSection = section;
-    setToolTip(m_sections[section].title);
     updateSection(section);
 }
 
