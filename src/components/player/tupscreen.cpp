@@ -249,11 +249,8 @@ void TupScreen::play()
     currentFramePosition = 0;
 
     if (!timer->isActive()) {
-        if (!renderControl.at(sceneIndex)) {
-            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+        if (!renderControl.at(sceneIndex))
             render();
-            QApplication::restoreOverrideCursor();
-        }
 
         // No frames to play
         if (photograms.count() == 1)

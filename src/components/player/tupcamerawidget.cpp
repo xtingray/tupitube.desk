@@ -359,13 +359,14 @@ void TupCameraWidget::doPause()
         T_FUNCINFO;
     #endif
 #endif
-
-    cameraBar->updatePlayButton();
+    bool playOn = screen->isPlaying();
+    cameraBar->updatePlayButton(!playOn);
     screen->pause();
 }
 
 void TupCameraWidget::doStop()
 {
+    cameraBar->updatePlayButton(false);
     screen->stop();
 }
 
@@ -553,11 +554,13 @@ void TupCameraWidget::updateFirstFrame()
 void TupCameraWidget::updateProgressBar(int advance)
 {
     if (advance == 0) {
+        QApplication::restoreOverrideCursor();
         titleWidget->setVisible(true);
         progressBar->setVisible(false);
     }
 
     if (advance == 1) {
+        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
         titleWidget->setVisible(false);
         progressBar->setVisible(true);
     }
