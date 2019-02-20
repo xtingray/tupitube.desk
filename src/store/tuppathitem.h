@@ -69,7 +69,7 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
         virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
         
     private:
-        bool m_dragOver;
+        bool dragOver;
         QList<QString> undoList;
         QList<QString> doList;
 };

@@ -758,12 +758,12 @@ void TupExposureSheet::layerResponse(TupLayerResponse *response)
                          if (scene) {
                              TupLayer *layer = scene->layerAt(layerIndex); 
                              if (layer) {
-                                 framesTable->insertLayer(layerIndex, layer->layerName());
-                                 QList<TupFrame *> frames = layer->frames();
+                                 framesTable->insertLayer(layerIndex, layer->getLayerName());
+                                 QList<TupFrame *> frames = layer->getFrames();
                                  int total = frames.count();
                                  for(int i=0; i<total; i++) {
                                      TupFrame *frame = frames.at(i);
-                                     framesTable->insertFrame(layerIndex, i, frame->frameName(), response->external());
+                                     framesTable->insertFrame(layerIndex, i, frame->getFrameName(), response->external());
                                      if (!frame->isEmpty())
                                          framesTable->updateFrameState(layerIndex, i, TupExposureTable::Used);
                                  }
@@ -871,7 +871,7 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
                               if (layer) {
                                   TupFrame *frame = layer->frameAt(frameIndex);
                                   if (frame) {
-                                      table->insertFrame(layerIndex, frameIndex, frame->frameName(), response->external());
+                                      table->insertFrame(layerIndex, frameIndex, frame->getFrameName(), response->external());
                                       if (!frame->isEmpty())
                                           table->updateFrameState(layerIndex, frameIndex, TupExposureTable::Used);
                                   }
@@ -991,7 +991,7 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
                                       if (frame->isEmpty())
                                           state = TupExposureTable::Empty;
                                       table->updateFrameState(layerIndex, frameIndex, state);
-                                      table->setFrameName(layerIndex, frameIndex, frame->frameName());
+                                      table->setFrameName(layerIndex, frameIndex, frame->getFrameName());
                                   }
                               }
                           }
@@ -1401,7 +1401,7 @@ double TupExposureSheet::getLayerOpacity(int sceneIndex, int layerIndex)
     if (scene) {
         TupLayer *layer = scene->layerAt(layerIndex);
         if (layer) {
-            opacity = layer->opacity();
+            opacity = layer->getOpacity();
         } else {
             #ifdef TUP_DEBUG
                 QString msg = "TupExposureSheet::getLayerOpacity() - Fatal Error: No layer at index -> " + QString::number(layerIndex);
@@ -1443,7 +1443,7 @@ void TupExposureSheet::initLayerVisibility()
              int layers = scene->layersCount();
              for (int layerIndex=0; layerIndex < layers; layerIndex++) {
                   TupLayer *layer = scene->layerAt(layerIndex);
-                  k->scenesContainer->getTable(sceneIndex)->setLayerVisibility(layerIndex, layer->isVisible());
+                  k->scenesContainer->getTable(sceneIndex)->setLayerVisibility(layerIndex, layer->isLayerVisible());
              }
          }
     }

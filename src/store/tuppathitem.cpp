@@ -38,7 +38,7 @@
 #include "tupgraphicalgorithm.h"
 #include "tupserializer.h"
 
-TupPathItem::TupPathItem(QGraphicsItem *parent) : QGraphicsPathItem(parent), m_dragOver(false)
+TupPathItem::TupPathItem(QGraphicsItem *parent) : QGraphicsPathItem(parent), dragOver(false)
 {
     setAcceptDrops(true);
 }
@@ -110,7 +110,7 @@ void TupPathItem::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
     if (event->mimeData()->hasColor()) {
         event->setAccepted(true);
-        m_dragOver = true;
+        dragOver = true;
         update();
     } else {
         event->setAccepted(false);
@@ -120,13 +120,13 @@ void TupPathItem::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 void TupPathItem::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
 {
     Q_UNUSED(event);
-    m_dragOver = false;
+    dragOver = false;
     update();
 }
 
 void TupPathItem::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
-    m_dragOver = false;
+    dragOver = false;
 
     if (event->mimeData()->hasColor()) {
         // setBrush(QBrush(qVariantValue<QColor>(event->mimeData()->colorData())));

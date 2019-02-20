@@ -73,23 +73,23 @@ class TUPITUBE_EXPORT TupFrame : public QObject, public TupAbstractSerializable
         ~TupFrame();
        
         void setFrameName(const QString &name);
-        QString frameName() const;
+        QString getFrameName() const;
 
         void setDynamicDirection(const QString &direction);
         void setDynamicShift(const QString &shift);
         TupBackground::Direction dynamicDirection() const;
         int dynamicShift() const;
 
-        void setLocked(bool isLocked);
-        bool isLocked() const;
+        void setLocked(bool isFrameLocked);
+        bool isFrameLocked() const;
        
-        void setVisible(bool isVisible);
-        bool isVisible() const;
+        void setVisible(bool isFrameVisible);
+        bool isFrameVisible() const;
 
-        void setOpacity(double opacity);
-        double opacity(); 
+        void setFrameOpacity(double frameOpacity);
+        double frameOpacity();
 
-        TupFrame::FrameType type();
+        TupFrame::FrameType frameType();
       
         void addLibraryItem(const QString &id, TupGraphicLibraryItem *libraryItem);
         void addItem(const QString &id, QGraphicsItem *item);
@@ -101,7 +101,7 @@ class TUPITUBE_EXPORT TupFrame : public QObject, public TupAbstractSerializable
         void updateSvgIdFromFrame(const QString &oldId, const QString &newId);
 
         void replaceItem(int position, QGraphicsItem *item);
-        bool moveItem(TupLibraryObject::Type type, int currentPosition, int action);
+        bool moveItem(TupLibraryObject::Type frameType, int currentPosition, int action);
       
         bool removeGraphic(int position);
         bool removeGraphicAt(int position);
@@ -116,7 +116,7 @@ class TUPITUBE_EXPORT TupFrame : public QObject, public TupAbstractSerializable
 
         void setGraphics(GraphicObjects objects);       
         void setSvgObjects(SvgObjects objects);
-        GraphicObjects graphics() const;
+        GraphicObjects graphicItems() const;
         SvgObjects svgItems() const; 
        
         TupGraphicObject *graphicAt(int position) const;
@@ -126,9 +126,9 @@ class TUPITUBE_EXPORT TupFrame : public QObject, public TupAbstractSerializable
         int createItemGroup(int position, QList<int> group);
         QList<QGraphicsItem *> splitGroup(int position);
              
-        TupLayer *layer() const;
-        TupScene *scene() const;
-        TupProject *project() const;
+        TupLayer *parentLayer() const;
+        TupScene *parentScene() const;
+        TupProject *parentProject() const;
        
         int indexOf(TupGraphicObject *object) const;
         int indexOf(QGraphicsItem *item) const;
@@ -138,7 +138,7 @@ class TUPITUBE_EXPORT TupFrame : public QObject, public TupAbstractSerializable
        
         void reset();
         void clear();
-        int graphicItemsCount();
+        int graphicsCount();
         int svgItemsCount();
         int itemsTotalCount();
 
@@ -174,8 +174,31 @@ class TUPITUBE_EXPORT TupFrame : public QObject, public TupAbstractSerializable
        void insertObject(int position, TupGraphicObject *object, const QString &label);
        void insertSvg(int position, TupSvgItem *item, const QString &label);
 
-       struct Private;
-       Private *const k;
+       TupLayer *layer;
+       QString frameName;
+       FrameType type;
+       bool isLocked;
+       bool isVisible;
+
+       QString direction;
+       QString shift;
+
+       GraphicObjects graphics;
+       QList<QString> objectIndexes;
+
+       GraphicObjects itemsUndoList;
+       QList<QString> objectUndoIndexes;
+       QList<int> objectUndoPos;
+
+       SvgObjects svg;
+       QList<QString> svgIndexes;
+
+       SvgObjects svgUndoList;
+       QList<QString> svgUndoIndexes;
+       QList<int> svgUndoPos;
+
+       int zLevelIndex;
+       double opacity;
 };
 
 #endif

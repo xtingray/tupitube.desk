@@ -59,24 +59,24 @@ class TUPITUBE_EXPORT TupLayer : public QObject, public TupAbstractSerializable
 
     public:
         TupLayer();
-        TupLayer(TupScene *scene, int index = 0);
+        TupLayer(TupScene *parentScene, int index = 0);
         ~TupLayer();
         
-        Frames frames();
-        void setFrames(const Frames &frames);
+        Frames getFrames();
+        void setFrames(const Frames &getFrames);
         void setFrame(int index, TupFrame *frame);
         
         void setLayerName(const QString &name);
-        QString layerName() const;
+        QString getLayerName() const;
         
-        void setLocked(bool isLocked);
-        bool isLocked() const;
+        void setLocked(bool isLayerLocked);
+        bool isLayerLocked() const;
 
-        void setVisible(bool isVisible);
-        bool isVisible() const;
+        void setLayerVisibility(bool isLayerVisible);
+        bool isLayerVisible() const;
 
-        void setOpacity(qreal opacity);
-        qreal opacity();
+        void setOpacity(qreal getOpacity);
+        qreal getOpacity();
         
         TupFrame *createFrame(QString name, int position, bool loaded = false);
         bool restoreFrame(int index);
@@ -95,11 +95,11 @@ class TUPITUBE_EXPORT TupLayer : public QObject, public TupAbstractSerializable
         TupLipSync *createLipSync(const QString &name, const QString &soundFile, int initFrame);
         void addLipSync(TupLipSync *lipsync);
         int lipSyncCount();
-        Mouths lipSyncList();
+        Mouths getLipSyncList();
         bool removeLipSync(const QString &name);
         
-        TupScene *scene() const;
-        TupProject *project() const;
+        TupScene *parentScene() const;
+        TupProject *parentProject() const;
 
         void updateLayerIndex(int index);
         int layerIndex();
@@ -113,8 +113,8 @@ class TUPITUBE_EXPORT TupLayer : public QObject, public TupAbstractSerializable
         void updateTweenObject(int index, TupSvgItem *object);
         void removeTweenObject(TupGraphicObject *object);
         void removeTweenObject(TupSvgItem *object);
-        QList<TupGraphicObject *> tweeningGraphicObjects() const;
-        QList<TupSvgItem *> tweeningSvgObjects() const;
+        QList<TupGraphicObject *> getTweeningGraphicObjects() const;
+        QList<TupSvgItem *> getTweeningSvgObjects() const;
         bool tweenExists(const QString &name, TupItemTweener::Type type);
         bool removeTween(const QString &name, TupItemTweener::Type type);
         void removeAllTweens();
@@ -126,8 +126,23 @@ class TUPITUBE_EXPORT TupLayer : public QObject, public TupAbstractSerializable
         virtual QDomElement toXml(QDomDocument &doc) const;
         
     private:
-        struct Private;
-        Private *const k;
+        // struct Private;
+        // Private *const k;
+
+        TupScene *scene;
+        Frames frames;
+        Frames undoFrames;
+        Frames resettedFrames;
+        Mouths lipsyncList;
+        bool isVisible;
+        QString layerName;
+        int framesCounter;
+        bool isLocked;
+        int index;
+        qreal opacity;
+
+        QList<TupGraphicObject *> tweeningGraphicObjects;
+        QList<TupSvgItem *> tweeningSvgObjects;
 };
 
 #endif

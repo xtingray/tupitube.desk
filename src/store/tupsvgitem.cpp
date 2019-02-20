@@ -81,8 +81,8 @@ int TupSvgItem::frameIndex()
 
 bool TupSvgItem::layerIsVisible()
 {
-    TupLayer *layer = tupFrame->layer();
-    if (layer->isVisible())
+    TupLayer *layer = tupFrame->parentLayer();
+    if (layer->isLayerVisible())
         return true;
 
     return false;

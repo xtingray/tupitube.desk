@@ -159,22 +159,22 @@ void TupBackground::clear()
 
 void TupBackground::setDynamicOpacity(double opacity)
 {
-    dynamicBg->setOpacity(opacity);
+    dynamicBg->setFrameOpacity(opacity);
 }
 
 double TupBackground::dynamicOpacity()
 {
-    return dynamicBg->opacity();
+    return dynamicBg->frameOpacity();
 }
 
 void TupBackground::setStaticOpacity(double opacity)
 {
-    staticBg->setOpacity(opacity);
+    staticBg->setFrameOpacity(opacity);
 }
 
 double TupBackground::staticOpacity()
 {
-    return staticBg->opacity();
+    return staticBg->frameOpacity();
 }
 
 void TupBackground::renderDynamicView()

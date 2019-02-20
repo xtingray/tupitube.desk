@@ -40,7 +40,7 @@
 #include "tupprojectrequest.h"
 #include "tupprojectresponse.h"
 
-TupCommandExecutor::TupCommandExecutor(TupProject *project) : QObject(project), m_project(project)
+TupCommandExecutor::TupCommandExecutor(TupProject *animation) : QObject(animation), project(animation)
 {
 }
 
@@ -50,7 +50,7 @@ TupCommandExecutor::~TupCommandExecutor()
 
 void TupCommandExecutor::getScenes(TupSceneResponse *response)
 {
-    response->setScenes(m_project->scenes());
+    response->setScenes(project->scenes());
     emit responsed(response);
 }
 
@@ -70,13 +70,13 @@ bool TupCommandExecutor::createScene(TupSceneResponse *response)
         return false;
 
     if (response->mode() == TupProjectResponse::Do) {
-        TupScene *scene = m_project->createScene(name, pos);
+        TupScene *scene = project->createScene(name, pos);
         if (!scene) 
             return false;
     }
 
     if (response->mode() == TupProjectResponse::Redo || response->mode() == TupProjectResponse::Undo) { 
-        bool success = m_project->restoreScene(pos);
+        bool success = project->restoreScene(pos);
         if (!success)
             return false;
     }
@@ -96,14 +96,14 @@ bool TupCommandExecutor::removeScene(TupSceneResponse *response)
     #endif
 
     int pos = response->sceneIndex();
-    TupScene *scene = m_project->sceneAt(pos);
+    TupScene *scene = project->sceneAt(pos);
     if (scene) {
         QDomDocument document;
         document.appendChild(scene->toXml(document));
         response->setState(document.toString());
         response->setArg(scene->getSceneName());
         
-        if (m_project->removeScene(pos)) {
+        if (project->removeScene(pos)) {
             emit responsed(response);
             return true;
         } 
@@ -125,7 +125,7 @@ bool TupCommandExecutor::moveScene(TupSceneResponse *response)
 {
     int pos = response->sceneIndex();
     int newPos = response->arg().toInt();
-    if (m_project->moveScene(pos, newPos)) {
+    if (project->moveScene(pos, newPos)) {
         emit responsed(response);
         return true;
     }
@@ -147,7 +147,7 @@ bool TupCommandExecutor::lockScene(TupSceneResponse *response)
         #endif
     #endif  
 
-    TupScene *scene = m_project->sceneAt(pos);
+    TupScene *scene = project->sceneAt(pos);
     if (scene) {
         scene->setSceneLocked(lock);
         emit responsed(response);
@@ -162,7 +162,7 @@ bool TupCommandExecutor::renameScene(TupSceneResponse *response)
     int pos = response->sceneIndex();
     QString newName = response->arg().toString();
 
-    TupScene *scene = m_project->sceneAt(pos);
+    TupScene *scene = project->sceneAt(pos);
     if (scene) {
         scene->setSceneName(newName);
         emit responsed(response);
@@ -182,7 +182,7 @@ bool TupCommandExecutor::setSceneVisibility(TupSceneResponse *response)
     int pos = response->sceneIndex();
     bool view = response->arg().toBool();
     
-    TupScene *scene = m_project->sceneAt(pos);
+    TupScene *scene = project->sceneAt(pos);
     if (scene) {
         scene->setVisibility(view);
         emit responsed(response);
@@ -205,17 +205,17 @@ bool TupCommandExecutor::resetScene(TupSceneResponse *response)
     int pos = response->sceneIndex();
     QString newName = response->arg().toString();
 
-    TupScene *scene = m_project->sceneAt(pos);
+    TupScene *scene = project->sceneAt(pos);
     if (scene) {
         if (response->mode() == TupProjectResponse::Do || response->mode() == TupProjectResponse::Redo) {
-            if (m_project->resetScene(pos, newName)) {
+            if (project->resetScene(pos, newName)) {
                 emit responsed(response);
                 return true;
             }
         }
 
         if (response->mode() == TupProjectResponse::Undo) {
-            QString oldName = m_project->recoverScene(pos);
+            QString oldName = project->recoverScene(pos);
             response->setArg(oldName);
             emit responsed(response);
             return true;
@@ -237,7 +237,7 @@ bool TupCommandExecutor::resetScene(TupSceneResponse *response)
 void TupCommandExecutor::setBgColor(TupSceneResponse *response)
 {
     QString colorName = response->arg().toString();
-    m_project->setBgColor(QColor(colorName));
+    project->setBgColor(QColor(colorName));
 
     emit responsed(response);
 }

@@ -55,7 +55,7 @@ bool TupCommandExecutor::createLayer(TupLayerResponse *response)
     QString name = response->arg().toString();
     QString state = response->state();
 
-    TupScene *scene = m_project->sceneAt(scenePosition);
+    TupScene *scene = project->sceneAt(scenePosition);
     if (scene) {
         if (response->mode() == TupProjectResponse::Do) {
             TupLayer *layer = scene->createLayer(name, position);
@@ -89,14 +89,14 @@ bool TupCommandExecutor::removeLayer(TupLayerResponse *response)
     int scenePos = response->sceneIndex();
     int position = response->layerIndex();
 
-    TupScene *scene = m_project->sceneAt(scenePos);
+    TupScene *scene = project->sceneAt(scenePos);
     if (scene) {
         TupLayer *layer = scene->layerAt(position);
         if (layer) {
             QDomDocument document;
             document.appendChild(layer->toXml(document));
             response->setState(document.toString());
-            response->setArg(layer->layerName());
+            response->setArg(layer->getLayerName());
 
             if (scene->removeLayer(position)) {
                 emit responsed(response);
@@ -114,7 +114,7 @@ bool TupCommandExecutor::moveLayer(TupLayerResponse *response)
     int position = response->layerIndex();
     int newPosition = response->arg().toInt();
 
-    TupScene *scene = m_project->sceneAt(scenePos);
+    TupScene *scene = project->sceneAt(scenePos);
 
     if (!scene)
         return false;
@@ -143,7 +143,7 @@ bool TupCommandExecutor::lockLayer(TupLayerResponse *response)
     int position = response->layerIndex();
     bool lock = response->arg().toBool();
 
-    TupScene *scene = m_project->sceneAt(scenePos);
+    TupScene *scene = project->sceneAt(scenePos);
 
     if (!scene)
         return false;
@@ -176,7 +176,7 @@ bool TupCommandExecutor::renameLayer(TupLayerResponse *response)
 
     // QString oldName;
 
-    TupScene *scene = m_project->sceneAt(scenePos);
+    TupScene *scene = project->sceneAt(scenePos);
 
     if (!scene)
         return false;
@@ -184,7 +184,7 @@ bool TupCommandExecutor::renameLayer(TupLayerResponse *response)
     TupLayer *layer = scene->layerAt(position);
 
     if (layer) {
-        QString current = layer->layerName();
+        QString current = layer->getLayerName();
         layer->setLayerName(newName);
 
         emit responsed(response);
@@ -209,7 +209,7 @@ bool TupCommandExecutor::setLayerVisibility(TupLayerResponse *response)
     int position = response->layerIndex();
     bool view = response->arg().toBool();
 
-    TupScene *scene = m_project->sceneAt(scenePos);
+    TupScene *scene = project->sceneAt(scenePos);
 
     if (!scene)
         return false;
@@ -217,7 +217,7 @@ bool TupCommandExecutor::setLayerVisibility(TupLayerResponse *response)
     TupLayer *layer = scene->layerAt(position);
 
     if (layer) {
-        layer->setVisible(view);
+        layer->setLayerVisibility(view);
         responsed(response);
 
         return true;
@@ -241,7 +241,7 @@ bool TupCommandExecutor::addLipSync(TupLayerResponse *response)
     int position = response->layerIndex();
     QString xml = response->arg().toString();
 
-    TupScene *scene = m_project->sceneAt(scenePos);
+    TupScene *scene = project->sceneAt(scenePos);
 
     if (!scene)
         return false;
@@ -274,7 +274,7 @@ bool TupCommandExecutor::updateLipSync(TupLayerResponse *response)
     int scenePos = response->sceneIndex();
     QString xml = response->arg().toString();
 
-    TupScene *scene = m_project->sceneAt(scenePos);
+    TupScene *scene = project->sceneAt(scenePos);
 
     if (!scene)
         return false;
@@ -303,7 +303,7 @@ bool TupCommandExecutor::removeLipSync(TupLayerResponse *response)
     int scenePos = response->sceneIndex();
     QString name = response->arg().toString();
 
-    TupScene *scene = m_project->sceneAt(scenePos);
+    TupScene *scene = project->sceneAt(scenePos);
 
     if (!scene)
         return false;

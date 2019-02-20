@@ -56,7 +56,7 @@ TupSoundLayer::~TupSoundLayer()
 
 void TupSoundLayer::fromSymbol(const QString &symbolName)
 {
-    TupLibrary *library = project()->library();
+    TupLibrary *library = parentProject()->library();
     
     if (TupLibraryObject *object = library->getObject(symbolName)) {
         if (object->type() == TupLibraryObject::Sound) {
@@ -92,7 +92,7 @@ void TupSoundLayer::fromXml(const QString &xml)
         return;
     
     QDomElement root = document.documentElement();
-    setLayerName(root.attribute("name", layerName()));
+    setLayerName(root.attribute("name", getLayerName()));
     
     fromSymbol(root.attribute("symbol"));
 }
@@ -100,7 +100,7 @@ void TupSoundLayer::fromXml(const QString &xml)
 QDomElement TupSoundLayer::toXml(QDomDocument &doc) const
 {
     QDomElement root = doc.createElement("soundlayer");
-    root.setAttribute("name", layerName());
+    root.setAttribute("name", getLayerName());
     root.setAttribute("symbol", k->symbolName);
     
     return root;

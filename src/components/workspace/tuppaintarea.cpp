@@ -140,7 +140,7 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
 
     TupFrame *frame = graphicsScene()->currentFrame();
     if (frame) {
-        if (frame->isLocked()) {
+        if (frame->isFrameLocked()) {
             #ifdef TUP_DEBUG
                 QString msg = "TupPaintArea::mousePressEvent() - Frame is locked!";
                 #ifdef Q_OS_WIN
@@ -909,7 +909,7 @@ void TupPaintArea::pasteItems()
         foreach (QString xml, copiesXml) {
             TupFrame *frame = currentScene->currentFrame();
             if (frame) {
-                int total = frame->graphicItemsCount();
+                int total = frame->graphicsCount();
                 TupLibraryObject::Type type = TupLibraryObject::Item;
 
                 if (xml.startsWith("<svg")) {
@@ -959,7 +959,7 @@ void TupPaintArea::multipasteObject(int pasteTotal)
     int limit = 0;
     foreach (QString xml, copiesXml) {
         TupLibraryObject::Type type = TupLibraryObject::Item;
-        int total = currentScene->currentFrame()->graphicItemsCount();
+        int total = currentScene->currentFrame()->graphicsCount();
 
         TupScene *scene = project->sceneAt(currentScene->currentSceneIndex());
         if (scene) {
@@ -1428,7 +1428,7 @@ void TupPaintArea::copyCurrentFrame()
         if (layer) {
             TupFrame *frame = layer->frameAt(frameIndex);
             if (frame) {
-                copyFrameName = frame->frameName();
+                copyFrameName = frame->getFrameName();
                 TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex, TupProjectRequest::Copy);
                 emit localRequestTriggered(&request);
                 copyIsValid = true;

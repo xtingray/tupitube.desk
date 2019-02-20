@@ -47,6 +47,7 @@ class TUPITUBE_EXPORT TupEllipseItem: public TupAbstractSerializable, public QGr
         TupEllipseItem(QGraphicsItem *parent = 0);
         TupEllipseItem(const QRectF &rect, QGraphicsItem *parent = 0);
         ~TupEllipseItem();
+
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
         bool contains(const QPointF & point) const;
@@ -57,7 +58,7 @@ class TUPITUBE_EXPORT TupEllipseItem: public TupAbstractSerializable, public QGr
         virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
           
     private:
-        bool m_dragOver;
+        bool dragOver;
 };
 
 #endif

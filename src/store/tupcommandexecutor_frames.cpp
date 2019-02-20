@@ -56,7 +56,7 @@ bool TupCommandExecutor::createFrame(TupFrameResponse *response)
     int pos = response->frameIndex();
     QString name = response->arg().toString();
 
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
         scene->insertStoryBoardScene(pos);
         TupLayer *layer = scene->layerAt(layerIndex);
@@ -96,7 +96,7 @@ bool TupCommandExecutor::removeFrame(TupFrameResponse *response)
     int layerIndex = response->layerIndex();
     int pos = response->frameIndex();
 
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
         scene->removeStoryBoardScene(pos);
         TupLayer *layer = scene->layerAt(layerIndex);
@@ -143,7 +143,7 @@ bool TupCommandExecutor::removeFrameSelection(TupFrameResponse *response)
     int layers = params.at(0).toInt();  
     int frames = params.at(1).toInt();
 
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
         int layersTotal = layerIndex + layers;
         for (int i=layerIndex; i<layersTotal; i++) {
@@ -235,7 +235,7 @@ bool TupCommandExecutor::resetFrame(TupFrameResponse *response)
     int layerIndex = response->layerIndex();
     int pos = response->frameIndex();
    
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
         scene->resetStoryBoardScene(pos);
         TupLayer *layer = scene->layerAt(layerIndex);
@@ -267,7 +267,7 @@ bool TupCommandExecutor::moveFrame(TupFrameResponse *response)
     int pos = response->frameIndex();
     int newPosition = response->arg().toInt();
 
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
         scene->moveStoryBoardScene(pos, newPosition); 
         TupLayer *layer = scene->layerAt(layerIndex);
@@ -299,7 +299,7 @@ bool TupCommandExecutor::exchangeFrame(TupFrameResponse *response)
     int pos = response->frameIndex();
     int newPosition = response->arg().toInt();
 
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
         scene->moveStoryBoardScene(pos, newPosition);
         TupLayer *layer = scene->layerAt(layerIndex);
@@ -364,13 +364,13 @@ bool TupCommandExecutor::renameFrame(TupFrameResponse *response)
     int pos = response->frameIndex();
     QString newName = response->arg().toString();
 
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
         TupLayer *layer = scene->layerAt(layerIndex);
         if (layer) {
             TupFrame *frame = layer->frameAt(pos);
             if (frame) { 
-                QString oldName = frame->frameName();
+                QString oldName = frame->getFrameName();
                 if (oldName.compare(newName) != 0)
                     frame->setFrameName(newName);
         
@@ -401,7 +401,7 @@ bool TupCommandExecutor::selectFrame(TupFrameResponse *response)
     if (sceneIndex < 0 || pos < 0)
         return false;
 
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
         TupLayer *layer = scene->layerAt(layerIndex);
         if (layer) {
@@ -436,7 +436,7 @@ bool TupCommandExecutor::setFrameVisibility(TupFrameResponse *response)
     int layerIndex = response->layerIndex();
     int pos = response->frameIndex();
     bool view = response->arg().toBool();
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
 
     if (scene) {
         TupLayer *layer = scene->layerAt(layerIndex);
@@ -469,7 +469,7 @@ bool TupCommandExecutor::extendFrame(TupFrameResponse *response)
     int pos = response->frameIndex();
     int times = response->arg().toInt();
 
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
         TupLayer *layer = scene->layerAt(layerIndex);
         if (layer) {
@@ -514,7 +514,7 @@ bool TupCommandExecutor::copyFrameSelection(TupFrameResponse *response)
         int initFrame = params.at(2).toInt();
         int endFrame = params.at(3).toInt();
 
-        TupScene *scene = m_project->sceneAt(sceneIndex);
+        TupScene *scene = project->sceneAt(sceneIndex);
         if (scene) {
             for (int i=initLayer; i<=endLayer; i++) {
                  TupLayer *layer = scene->layerAt(i);
@@ -560,7 +560,7 @@ bool TupCommandExecutor::pasteFrameSelection(TupFrameResponse *response)
         int layerLimit = layerIndex + (copyParams.at(1).toInt() - copyParams.at(0).toInt()) + 1;
         int frameLimit = pos + (copyParams.at(3).toInt() - copyParams.at(2).toInt()) + 1;
 
-        TupScene *scene = m_project->sceneAt(sceneIndex);
+        TupScene *scene = project->sceneAt(sceneIndex);
         if (scene) {
             if (response->mode() == TupProjectResponse::Do || response->mode() == TupProjectResponse::Redo) {
                 int index = 0;
@@ -642,7 +642,7 @@ bool TupCommandExecutor::reverseFrameSelection(TupFrameResponse *response)
     QStringList params = selection.split(",");
 
     if (params.count() == 4) {
-        TupScene *scene = m_project->sceneAt(sceneIndex);
+        TupScene *scene = project->sceneAt(sceneIndex);
         if (scene) {
             int initLayer = params.at(0).toInt();
             int endLayer = params.at(1).toInt();

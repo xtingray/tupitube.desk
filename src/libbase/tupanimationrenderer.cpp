@@ -60,7 +60,7 @@ int TupAnimationRenderer::calculateTotalPhotograms(TupScene *scene)
     for (int i = 0; i < totalLayers; i++) {
          TupLayer *layer = layers.at(i);
          if (layer)
-             total = qMax(total, layer->frames().count());
+             total = qMax(total, layer->getFrames().count());
     }
 
     return total;

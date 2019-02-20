@@ -55,13 +55,13 @@ bool TupCommandExecutor::createSymbol(TupLibraryResponse *response)
     #endif
 
     if (response->symbolType() == TupLibraryObject::Folder) {
-        if (m_project->addFolder(response->arg().toString())) {
+        if (project->addFolder(response->arg().toString())) {
             emit responsed(response);
             return true;
         }
     } else {
         if (response->mode() == TupProjectResponse::Do) {
-            if (m_project->createSymbol(response->symbolType(), response->arg().toString(), response->data(), response->parent())) {
+            if (project->createSymbol(response->symbolType(), response->arg().toString(), response->data(), response->parent())) {
                 emit responsed(response);
                 return true;
             } 
@@ -86,18 +86,18 @@ bool TupCommandExecutor::removeSymbol(TupLibraryResponse *response)
     #endif
 
     if (response->symbolType() == TupLibraryObject::Folder) {
-        if (m_project->removeFolder(response->arg().toString())) {
+        if (project->removeFolder(response->arg().toString())) {
             emit responsed(response);
             return true;
         }
     } else {
         if (response->symbolType() == TupLibraryObject::Sound) {
-            if (m_project->removeSound(response->arg().toString())) {
+            if (project->removeSound(response->arg().toString())) {
                 emit responsed(response);
                 return true;
             }
         } else {
-            if (m_project->removeSymbol(response->arg().toString(), response->symbolType())) {
+            if (project->removeSymbol(response->arg().toString(), response->symbolType())) {
                 emit responsed(response);
                 return true;
             }
@@ -120,8 +120,8 @@ bool TupCommandExecutor::insertSymbolIntoFrame(TupLibraryResponse *response)
         #endif
     #endif
 
-    if (m_project->scenesCount() > 0) {
-        if (m_project->insertSymbolIntoFrame(response->spaceMode(), response->arg().toString(), 
+    if (project->scenesCount() > 0) {
+        if (project->insertSymbolIntoFrame(response->spaceMode(), response->arg().toString(), 
             response->sceneIndex(), response->layerIndex(), response->frameIndex())) {
             emit responsed(response);
             return true;
@@ -152,9 +152,9 @@ bool TupCommandExecutor::removeSymbolFromFrame(TupLibraryResponse *response)
         #endif
     #endif
 
-    if (m_project->scenesCount() > 0) {
-        if (m_project->removeSymbolFromFrame(response->arg().toString(), response->symbolType())) {
-            TupScene *scene = m_project->sceneAt(response->sceneIndex());
+    if (project->scenesCount() > 0) {
+        if (project->removeSymbolFromFrame(response->arg().toString(), response->symbolType())) {
+            TupScene *scene = project->sceneAt(response->sceneIndex());
             if (scene) {
                 TupLayer *layer = scene->layerAt(response->layerIndex());
                 if (layer) {

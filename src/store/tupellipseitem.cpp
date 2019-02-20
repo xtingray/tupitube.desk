@@ -44,12 +44,12 @@
 #include <QPainter>
 #include <QPainterPath>
 
-TupEllipseItem::TupEllipseItem(QGraphicsItem *parent): QGraphicsEllipseItem(parent), m_dragOver(false)
+TupEllipseItem::TupEllipseItem(QGraphicsItem *parent): QGraphicsEllipseItem(parent), dragOver(false)
 {
     setAcceptDrops(true);
 }
 
-TupEllipseItem::TupEllipseItem(const QRectF &rect, QGraphicsItem *parent): QGraphicsEllipseItem(rect, parent), m_dragOver(false)
+TupEllipseItem::TupEllipseItem(const QRectF &rect, QGraphicsItem *parent): QGraphicsEllipseItem(rect, parent), dragOver(false)
 {
     setAcceptDrops(true);
 }
@@ -119,7 +119,7 @@ void TupEllipseItem::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
     if (event->mimeData()->hasColor()) {
         event->setAccepted(true);
-        m_dragOver = true;
+        dragOver = true;
         update();
     } else {
         event->setAccepted(false);
@@ -129,13 +129,13 @@ void TupEllipseItem::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 void TupEllipseItem::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
 {
     Q_UNUSED(event);
-    m_dragOver = false;
+    dragOver = false;
     update();
 }
 
 void TupEllipseItem::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
-    m_dragOver = false;
+    dragOver = false;
     if (event->mimeData()->hasColor()) {
         // setBrush(QBrush(qVariantValue<QColor>(event->mimeData()->colorData())));
         QVariant color = event->mimeData()->colorData();

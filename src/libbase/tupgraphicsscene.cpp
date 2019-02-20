@@ -116,7 +116,7 @@ void TupGraphicsScene::updateLayerVisibility(int layerIndex, bool visible)
         return;
 
     if (TupLayer *layer = gScene->layerAt(layerIndex))
-        layer->setVisible(visible);
+        layer->setLayerVisibility(visible);
 }
 
 void TupGraphicsScene::setCurrentFrame(int layer, int frame)
@@ -203,7 +203,7 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
          TupLayer *layer = gScene->layerAt(i);
          if (layer) {
              layerOnProcess = i;
-             layerOnProcessOpacity = layer->opacity();
+             layerOnProcessOpacity = layer->getOpacity();
              int framesCount = layer->framesCount();
              zLevel = (i + 2) * ZLAYER_LIMIT;
 
@@ -212,7 +212,7 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
                  QString currentFrame = "";
 
                  if (mainFrame) {
-                     if (layer->isVisible()) {
+                     if (layer->isLayerVisible()) {
                          int maximum = qMax(onionSkin.previous, onionSkin.next);
                          double opacityFactor = gOpacity / static_cast<double>(maximum);
                          double opacity = gOpacity + ((maximum - onionSkin.previous) * opacityFactor);
@@ -302,7 +302,7 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
                 TupFrame *frame = bg->dynamicFrame();
                 if (frame) {
                     zLevel = 0;
-                    addFrame(frame, frame->opacity());
+                    addFrame(frame, frame->frameOpacity());
                 }
             } else {
                 #ifdef TUP_DEBUG
@@ -325,7 +325,7 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
                 dynamicBg->setZValue(0);
                 TupFrame *frame = bg->dynamicFrame();
                 if (frame) 
-                    dynamicBg->setOpacity(frame->opacity());
+                    dynamicBg->setOpacity(frame->frameOpacity());
                 addItem(dynamicBg);
             } else {
                 #ifdef TUP_DEBUG
@@ -343,7 +343,7 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
             TupFrame *frame = bg->staticFrame();
             if (frame) {
                 zLevel = ZLAYER_LIMIT;
-                addFrame(frame, frame->opacity());
+                addFrame(frame, frame->frameOpacity());
             }
             return;
         } else {
@@ -371,8 +371,8 @@ void TupGraphicsScene::addFrame(TupFrame *frame, double opacityFactor, Context m
     #endif
     */
 
-    TupFrame::FrameType frameType = frame->type();
-    QList<TupGraphicObject *> objects = frame->graphics(); 
+    TupFrame::FrameType frameType = frame->frameType();
+    QList<TupGraphicObject *> objects = frame->graphicItems(); 
     QList<TupSvgItem *> svgItems = frame->svgItems();
 
     int objectsCount = objects.count();
@@ -881,7 +881,7 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
     #endif
 
     if (layer->lipSyncCount() > 0) {
-        Mouths mouths = layer->lipSyncList();
+        Mouths mouths = layer->getLipSyncList();
         int total = mouths.count();
 
         for (int i=0; i<total; i++) {
@@ -1129,7 +1129,7 @@ TupFrame *TupGraphicsScene::currentFrame()
                 TupLayer *layer = gScene->layerAt(framePosition.layer);
                 Q_CHECK_PTR(layer);
                 if (layer) {
-                    if (!layer->frames().isEmpty())
+                    if (!layer->getFrames().isEmpty())
                         return layer->frameAt(framePosition.frame);
                 } else {
                     #ifdef TUP_DEBUG
@@ -1145,7 +1145,7 @@ TupFrame *TupGraphicsScene::currentFrame()
             } else {
                 TupLayer *layer = gScene->layerAt(gScene->layersCount() - 1);
                 if (layer) {
-                    if (!layer->frames().isEmpty())
+                    if (!layer->getFrames().isEmpty())
                         return layer->frameAt(framePosition.frame);
                 }
             }
@@ -1362,7 +1362,7 @@ void TupGraphicsScene::mouseReleased(QGraphicsSceneMouseEvent *event)
     }
 
     if (currentFrame()) {
-        if (currentFrame()->isLocked()) {
+        if (currentFrame()->isFrameLocked()) {
             #ifdef TUP_DEBUG
                 QString msg = "TupGraphicsScene::mouseReleased() - Frame is locked!";
                 #ifdef Q_OS_WIN
@@ -1661,7 +1661,7 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
                 if (isPolyLine) // SQA: Polyline hack
                     zValue--;
 
-                qreal opacity = layer->opacity(); 
+                qreal opacity = layer->getOpacity(); 
                 if (opacity >= 0 && opacity <= 1) {
                     object->setOpacity(opacity);
                 } else {

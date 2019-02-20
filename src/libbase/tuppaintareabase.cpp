@@ -368,7 +368,7 @@ void TupPaintAreaBase::drawForeground(QPainter *painter, const QRectF &rect)
             if (currentScene->framesCount() > 0) {
                 if (TupFrame *frame = gScene->currentFrame()) {
                     if (frame) {
-                        if (frame->isLocked()) {
+                        if (frame->isFrameLocked()) {
                             drawPadLock(painter, rect, tr("Locked!"));
                         } else {
                             // if enabled draw grid
@@ -496,7 +496,7 @@ bool TupPaintAreaBase::canPaint() const
     if (gScene) {
         TupFrame *frame = gScene->currentFrame();
         if (frame) {
-            return !frame->isLocked();
+            return !frame->isFrameLocked();
         }
     } else {
         #ifdef TUP_DEBUG

@@ -301,8 +301,8 @@ void TupTimeLine::layerResponse(TupLayerResponse *response)
                     if (scene) {
                         TupLayer *layer = scene->layerAt(layerIndex);
                         if (layer) {
-                            framesTable->insertLayer(layerIndex, layer->layerName());
-                            QList<TupFrame *> frames = layer->frames();
+                            framesTable->insertLayer(layerIndex, layer->getLayerName());
+                            QList<TupFrame *> frames = layer->getFrames();
                             int total = frames.count();
                             for (int i=0; i<total; i++)
                                 framesTable->insertFrame(layerIndex);
@@ -920,7 +920,7 @@ void TupTimeLine::initLayerVisibility()
              int layers = scene->layersCount();
              for (int layerIndex=0; layerIndex < layers; layerIndex++) {
                   TupLayer *layer = scene->layerAt(layerIndex);
-                  k->scenesContainer->getTable(sceneIndex)->setLayerVisibility(layerIndex, layer->isVisible());
+                  k->scenesContainer->getTable(sceneIndex)->setLayerVisibility(layerIndex, layer->isLayerVisible());
              }
          }
     }

@@ -131,7 +131,7 @@ class TUPITUBE_EXPORT TupCommandExecutor : public QObject
         void responsed(TupProjectResponse *response);
 
     private:
-        TupProject *m_project;
+        TupProject *project;
         QList<QString> selectionFramesCopy;
         QStringList copyParams;
 };

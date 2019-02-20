@@ -79,7 +79,7 @@ void TupBackgroundScene::cleanWorkSpace()
 void TupBackgroundScene::addFrame(TupFrame *frame)
 {
     if (frame) {
-        for (int i = 0; i < frame->graphicItemsCount(); i++) {
+        for (int i = 0; i < frame->graphicsCount(); i++) {
              TupGraphicObject *object = frame->graphicAt(i);
              addGraphicObject(object);
         }

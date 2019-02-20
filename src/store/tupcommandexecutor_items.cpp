@@ -90,7 +90,7 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
     }
     */
 
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
         if (mode == TupProject::FRAMES_EDITION) {
             TupLayer *layer = scene->layerAt(layerIndex);
@@ -120,7 +120,7 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
                         if (response->mode() == TupProjectResponse::Do) {
                             QGraphicsItem *item = frame->createItem(point, xml);
                             if (item) {
-                                response->setItemIndex(frame->graphicItemsCount()-1);
+                                response->setItemIndex(frame->graphicsCount()-1);
                             } else {
                                 #ifdef TUP_DEBUG
                                     QString msg = "TupCommandExecutor::createItem() - Error: QGraphicsItem object is invalid!";
@@ -278,7 +278,7 @@ bool TupCommandExecutor::removeItem(TupItemResponse *response)
     TupLibraryObject::Type type = response->itemType();
     TupProject::Mode mode = response->spaceMode();
 
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
 
     if (scene) {
         if (mode == TupProject::FRAMES_EDITION) {
@@ -420,7 +420,7 @@ bool TupCommandExecutor::moveItem(TupItemResponse *response)
         // action = ???;
     }
     
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
     
     if (scene) {
         if (mode == TupProject::FRAMES_EDITION) {
@@ -504,7 +504,7 @@ bool TupCommandExecutor::groupItems(TupItemResponse *response)
     TupProject::Mode mode = response->spaceMode();
     QString strList = response->arg().toString();
 
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
     
     if (scene) {
         if (mode == TupProject::FRAMES_EDITION) {
@@ -596,7 +596,7 @@ bool TupCommandExecutor::ungroupItems(TupItemResponse *response)
     int itemIndex = response->itemIndex();
     TupProject::Mode mode = response->spaceMode();
     
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
         if (mode == TupProject::FRAMES_EDITION) {
             TupLayer *layer = scene->layerAt(layerIndex);
@@ -769,7 +769,7 @@ bool TupCommandExecutor::convertItem(TupItemResponse *response)
     TupProject::Mode mode = response->spaceMode();
     int toType = response->arg().toInt();
     
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
 
     if (scene) {
         if (mode == TupProject::FRAMES_EDITION) {
@@ -897,7 +897,7 @@ bool TupCommandExecutor::transformItem(TupItemResponse *response)
     TupLibraryObject::Type type = response->itemType();
     QString xml = response->arg().toString();
 
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
         if (mode == TupProject::FRAMES_EDITION) {
             TupLayer *layer = scene->layerAt(layerIndex);
@@ -1027,7 +1027,7 @@ bool TupCommandExecutor::setPathItem(TupItemResponse *response)
     int itemIndex = response->itemIndex();
     TupProject::Mode mode = response->spaceMode();
     QString route = response->arg().toString();
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
     
     if (scene) {
         if (mode == TupProject::FRAMES_EDITION) {
@@ -1152,7 +1152,7 @@ bool TupCommandExecutor::setTween(TupItemResponse *response)
     TupLibraryObject::Type itemType = response->itemType();
     int itemIndex = response->itemIndex();
     QString xml = response->arg().toString();
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
     
     if (scene) {
         TupLayer *layer = scene->layerAt(layerIndex);
@@ -1236,7 +1236,7 @@ bool TupCommandExecutor::setBrush(TupItemResponse *response)
     int itemIndex = response->itemIndex();
     TupProject::Mode mode = response->spaceMode();
     QString xml = response->arg().toString();
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
 
     if (scene) {
         if (mode == TupProject::FRAMES_EDITION) {
@@ -1350,7 +1350,7 @@ bool TupCommandExecutor::setPen(TupItemResponse *response)
     TupProject::Mode mode = response->spaceMode();
 
     QString xml = response->arg().toString();
-    TupScene *scene = m_project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(sceneIndex);
 
     if (scene) {
         if (mode == TupProject::FRAMES_EDITION) {

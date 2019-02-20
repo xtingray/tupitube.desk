@@ -148,7 +148,7 @@ TupLayer *TupScene::createLayer(QString name, int position, bool loaded)
     layers.insert(position, layer);
 
     if (loaded)
-        TupProjectLoader::createLayer(project()->visualIndexOf(this), position, layer->layerName(), project());
+        TupProjectLoader::createLayer(project()->visualIndexOf(this), position, layer->getLayerName(), project());
 
     return layer;
 }
@@ -190,7 +190,7 @@ TupSoundLayer *TupScene::createSoundLayer(int position, bool loaded)
     soundLayers.insert(position, layer);
 
     if (loaded)
-        TupProjectLoader::createSoundLayer(objectIndex(), position, layer->layerName(), project());
+        TupProjectLoader::createSoundLayer(objectIndex(), position, layer->getLayerName(), project());
 
     return layer;
 }
@@ -397,7 +397,7 @@ bool TupScene::moveLayer(int from, int to)
     TupLayer *destinyLayer = layers[to];
     destinyLayer->updateLayerIndex(from + 1); 
 
-    Frames frames = sourceLayer->frames(); 
+    Frames frames = sourceLayer->getFrames(); 
     int totalFrames = frames.size();
     int zLevelIndex = (to + 2)*ZLAYER_LIMIT;
     for (int i = 0; i < totalFrames; i++) {
@@ -405,7 +405,7 @@ bool TupScene::moveLayer(int from, int to)
          frame->updateZLevel(zLevelIndex);
     }
 
-    frames = destinyLayer->frames(); 
+    frames = destinyLayer->getFrames(); 
     totalFrames = frames.size();
     zLevelIndex = (from + 2)*ZLAYER_LIMIT;
     for (int i = 0; i < totalFrames; i++) {
@@ -493,7 +493,7 @@ QList<TupGraphicObject *> TupScene::getTweeningGraphicObjects(int layerIndex) co
     QList<TupGraphicObject *> list;
     TupLayer *layer = layerAt(layerIndex);
     if (layer)
-        list = layer->tweeningGraphicObjects();
+        list = layer->getTweeningGraphicObjects();
 
     return list;
 }
@@ -514,7 +514,7 @@ QList<TupSvgItem *> TupScene::getTweeningSvgObjects(int layerIndex) const
     QList<TupSvgItem *> list;
     TupLayer *layer = layerAt(layerIndex);
     if (layer)
-        list = layer->tweeningSvgObjects();
+        list = layer->getTweeningSvgObjects();
 
     return list;
 }
@@ -522,7 +522,7 @@ QList<TupSvgItem *> TupScene::getTweeningSvgObjects(int layerIndex) const
 bool TupScene::tweenExists(const QString &name, TupItemTweener::Type type)
 {
     foreach(TupLayer *layer, layers) {
-        QList<TupGraphicObject *> objectList = layer->tweeningGraphicObjects();
+        QList<TupGraphicObject *> objectList = layer->getTweeningGraphicObjects();
         foreach (TupGraphicObject *object, objectList) {
             QList<TupItemTweener *> list = object->tweensList();
             foreach(TupItemTweener *tween, list) {
@@ -531,7 +531,7 @@ bool TupScene::tweenExists(const QString &name, TupItemTweener::Type type)
             }
         }
 
-        QList<TupSvgItem *> svgList = layer->tweeningSvgObjects();
+        QList<TupSvgItem *> svgList = layer->getTweeningSvgObjects();
         foreach (TupSvgItem *object, svgList) {
             QList<TupItemTweener *> list = object->tweensList();
             foreach(TupItemTweener *tween, list) {
@@ -555,7 +555,7 @@ bool TupScene::removeTween(const QString &name, TupItemTweener::Type type)
     #endif
 
     foreach(TupLayer *layer, layers) {
-        QList<TupGraphicObject *> objectList = layer->tweeningGraphicObjects();
+        QList<TupGraphicObject *> objectList = layer->getTweeningGraphicObjects();
         foreach (TupGraphicObject *object, objectList) {
             QList<TupItemTweener *> list = object->tweensList();
             int total = list.count();
@@ -570,7 +570,7 @@ bool TupScene::removeTween(const QString &name, TupItemTweener::Type type)
             }
         }
 
-        QList<TupSvgItem *> svgList = layer->tweeningSvgObjects();
+        QList<TupSvgItem *> svgList = layer->getTweeningSvgObjects();
         foreach (TupSvgItem *object, svgList) {
             QList<TupItemTweener *> list = object->tweensList();
             int total = list.count();
@@ -622,7 +622,7 @@ void TupScene::removeTweensFromFrame(int layerIndex, int frameIndex)
 TupItemTweener *TupScene::tween(const QString &name, TupItemTweener::Type type)
 {
     foreach(TupLayer *layer, layers) {
-        QList<TupGraphicObject *> objectList = layer->tweeningGraphicObjects();
+        QList<TupGraphicObject *> objectList = layer->getTweeningGraphicObjects();
         foreach (TupGraphicObject *object, objectList) {
             QList<TupItemTweener *> list = object->tweensList();
             foreach(TupItemTweener *tween, list) {
@@ -631,7 +631,7 @@ TupItemTweener *TupScene::tween(const QString &name, TupItemTweener::Type type)
             }
         }
 
-        QList<TupSvgItem *> svgList = layer->tweeningSvgObjects();
+        QList<TupSvgItem *> svgList = layer->getTweeningSvgObjects();
         foreach (TupSvgItem *object, svgList) {
             QList<TupItemTweener *> list = object->tweensList();
             foreach(TupItemTweener *tween, list) {
@@ -648,7 +648,7 @@ QList<QString> TupScene::getTweenNames(TupItemTweener::Type type)
 {
     QList<QString> names;
     foreach(TupLayer *layer, layers) {
-        QList<TupGraphicObject *> objectList = layer->tweeningGraphicObjects();
+        QList<TupGraphicObject *> objectList = layer->getTweeningGraphicObjects();
         foreach (TupGraphicObject *object, objectList) {
             QList<TupItemTweener *> list = object->tweensList();
             foreach(TupItemTweener *tween, list) {
@@ -657,7 +657,7 @@ QList<QString> TupScene::getTweenNames(TupItemTweener::Type type)
             }
         }
 
-        QList<TupSvgItem *> svgList = layer->tweeningSvgObjects();
+        QList<TupSvgItem *> svgList = layer->getTweeningSvgObjects();
         foreach (TupSvgItem *object, svgList) {
             QList<TupItemTweener *> list = object->tweensList();
             foreach(TupItemTweener *tween, list) {
@@ -674,7 +674,7 @@ QList<QGraphicsItem *> TupScene::getItemsFromTween(const QString &name, TupItemT
 {
     QList<QGraphicsItem *> items;
     foreach(TupLayer *layer, layers) {
-        QList<TupGraphicObject *> objectList = layer->tweeningGraphicObjects();
+        QList<TupGraphicObject *> objectList = layer->getTweeningGraphicObjects();
         foreach (TupGraphicObject *object, objectList) {
             QList<TupItemTweener *> list = object->tweensList();
             foreach(TupItemTweener *tween, list) {
@@ -683,7 +683,7 @@ QList<QGraphicsItem *> TupScene::getItemsFromTween(const QString &name, TupItemT
             }
         }
 
-        QList<TupSvgItem *> svgList = layer->tweeningSvgObjects();
+        QList<TupSvgItem *> svgList = layer->getTweeningSvgObjects();
         foreach (TupSvgItem *object, svgList) {
             QList<TupItemTweener *> list = object->tweensList();
             foreach(TupItemTweener *tween, list) {
@@ -804,7 +804,7 @@ QList<QString> TupScene::getLipSyncNames()
 
     foreach (TupLayer *layer, layers) {
         if (layer->lipSyncCount() > 0) {
-            Mouths mouths = layer->lipSyncList();
+            Mouths mouths = layer->getLipSyncList();
             foreach (TupLipSync *lipsync, mouths)
                 names << lipsync->name();
         }
@@ -817,7 +817,7 @@ bool TupScene::lipSyncExists(const QString &name)
 {
     foreach (TupLayer *layer, layers) {
         if (layer->lipSyncCount() > 0) {
-            Mouths mouths = layer->lipSyncList();
+            Mouths mouths = layer->getLipSyncList();
             foreach (TupLipSync *lipsync, mouths) {
                 if (lipsync->name().compare(name) == 0)
                     return true;
@@ -833,7 +833,7 @@ int TupScene::getLipSyncLayerIndex(const QString &name)
     int index = 0;
     foreach (TupLayer *layer, layers) {
         if (layer->lipSyncCount() > 0) {
-            Mouths mouths = layer->lipSyncList();
+            Mouths mouths = layer->getLipSyncList();
             foreach (TupLipSync *lipsync, mouths) {
                 if (lipsync->name().compare(name) == 0)
                     break;
@@ -851,7 +851,7 @@ TupLipSync * TupScene::getLipSync(const QString &name)
 
     foreach (TupLayer *layer, layers) {
         if (layer->lipSyncCount() > 0) {
-            Mouths mouths = layer->lipSyncList();
+            Mouths mouths = layer->getLipSyncList();
             foreach (TupLipSync *lipsync, mouths) {
                 if (lipsync->name().compare(name) == 0)
                     return lipsync;
@@ -868,7 +868,7 @@ bool TupScene::updateLipSync(TupLipSync *lipsync)
 
     foreach (TupLayer *layer, layers) {
         if (layer->lipSyncCount() > 0) {
-            Mouths mouths = layer->lipSyncList();
+            Mouths mouths = layer->getLipSyncList();
             foreach (TupLipSync *record, mouths) {
                 if (record->name().compare(name) == 0) {
                     record = lipsync;
@@ -905,7 +905,7 @@ Mouths TupScene::getLipSyncList()
     Mouths list;
     foreach (TupLayer *layer, layers) {
         if (layer->lipSyncCount() > 0) {
-            Mouths mouths = layer->lipSyncList();
+            Mouths mouths = layer->getLipSyncList();
             list.append(mouths);
         }
     }

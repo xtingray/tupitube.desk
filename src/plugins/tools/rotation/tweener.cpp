@@ -556,7 +556,7 @@ void Tweener::applyTween()
 
                      frame = layer->frameAt(k->initFrame);
                      if (type == TupLibraryObject::Item) {
-                         objectIndex = frame->graphicItemsCount() - 1;
+                         objectIndex = frame->graphicsCount() - 1;
                          newList.append(frame->graphicAt(objectIndex)->item());
                      } else {
                          objectIndex = frame->svgItemsCount() - 1;

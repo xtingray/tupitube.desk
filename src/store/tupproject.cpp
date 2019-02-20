@@ -617,9 +617,9 @@ bool TupProject::removeSymbol(const QString &name, TupLibraryObject::Type type)
          int totalLayers = scene->getLayers().size();
          for (int j = 0; j < totalLayers; j++) {
               TupLayer *layer = scene->getLayers().at(j);
-              int totalFrames = layer->frames().size();
+              int totalFrames = layer->getFrames().size();
               for (int t = 0; t < totalFrames; t++) {
-                   TupFrame *frame = layer->frames().at(t);
+                   TupFrame *frame = layer->getFrames().at(t);
                    if (type != TupLibraryObject::Svg)
                        frame->removeImageItemFromFrame(name);
                    else
@@ -856,9 +856,9 @@ bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::Ty
          int totalLayers = scene->getLayers().size();
          for (int j = 0; j < totalLayers; j++) {
               TupLayer *layer = scene->getLayers().at(j);
-              int totalFrames = layer->frames().size(); 
+              int totalFrames = layer->getFrames().size(); 
               for (int t = 0; t < totalFrames; t++) {
-                   TupFrame *frame = layer->frames().at(t);
+                   TupFrame *frame = layer->getFrames().at(t);
                    if (type != TupLibraryObject::Svg)
                        frame->removeImageItemFromFrame(name);
                    else
@@ -904,9 +904,9 @@ bool TupProject::updateSymbolId(TupLibraryObject::Type type, const QString &oldI
          int layersCount = scene->getLayers().size();
          for (int j = 0; j < layersCount; j++) {
               TupLayer *layer = scene->getLayers().at(j);
-              int framesCount = layer->frames().size();  
+              int framesCount = layer->getFrames().size();  
               for (int t = 0; t < framesCount; t++) {
-                   TupFrame *frame = layer->frames().at(t); 
+                   TupFrame *frame = layer->getFrames().at(t); 
                    if (type != TupLibraryObject::Svg)
                        frame->updateIdFromFrame(oldId, newId);
                    else 
@@ -945,9 +945,9 @@ void TupProject::reloadLibraryItem(TupLibraryObject::Type type, const QString &i
          int layersCount = scene->getLayers().size();
          for (int j = 0; j < layersCount; j++) {
               TupLayer *layer = scene->getLayers().at(j);
-              int framesCount = layer->frames().size();
+              int framesCount = layer->getFrames().size();
               for (int t = 0; t < framesCount; t++) {
-                   TupFrame *frame = layer->frames().at(t);
+                   TupFrame *frame = layer->getFrames().at(t);
                    if (type == TupLibraryObject::Svg)
                        frame->reloadSVGItem(id, object);
                    else
