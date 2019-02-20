@@ -40,14 +40,9 @@
 #include "tuptweenerstep.h"
 
 #include <QObject>
-#include <QMatrix>
 #include <QPointF>
 #include <QColor>
-#include <QGraphicsItem>
-#include <QHash>
-
-// class QGraphicsItem;
-class QGraphicsPathItem;
+#include <QGraphicsPathItem>
 
 class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSerializable
 {
@@ -61,7 +56,6 @@ class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSeriali
              Shear = 3,
              Opacity = 4,
              Coloring = 5,
-             // Composed = 6,
              Papagayo = 6
         };
 
@@ -103,7 +97,7 @@ class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSeriali
         QDomElement toXml(QDomDocument &doc) const;
 
         QGraphicsPathItem *graphicsPath() const;
-        void setGraphicsPath(const QString &path);
+        void setGraphicsPath(const QString &tweenPath);
 
         QList<int> getIntervals();
         QString tweenTypeToString();
@@ -144,11 +138,8 @@ class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSeriali
         bool contains(TupItemTweener::Type getType);
         
     private:
-        struct Private;
-        Private *const k;
-
         QString tweenName;
-        TupItemTweener::Type type;
+        TupItemTweener::Type tweenType;
         int initFrame;
         int initLayer;
         int initScene;
@@ -157,7 +148,7 @@ class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSeriali
         QPointF originPoint;
 
         // Position Tween
-        QString path;
+        QString tweenPath;
         QString intervals;
 
         // Rotation Tween
