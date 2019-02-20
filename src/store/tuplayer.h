@@ -126,9 +126,6 @@ class TUPITUBE_EXPORT TupLayer : public QObject, public TupAbstractSerializable
         virtual QDomElement toXml(QDomDocument &doc) const;
         
     private:
-        // struct Private;
-        // Private *const k;
-
         TupScene *scene;
         Frames frames;
         Frames undoFrames;

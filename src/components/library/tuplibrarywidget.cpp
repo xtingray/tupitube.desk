@@ -241,7 +241,7 @@ void TupLibraryWidget::setLibrary(TupLibrary *library)
 #endif
 
     k->library = library;
-    k->project = library->project(); 
+    k->project = library->getProject(); 
 }
 
 void TupLibraryWidget::setNetworking(bool isNetworked)
@@ -1629,7 +1629,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                                  item->setIcon(0, QIcon(THEME_DIR + "icons/drawing_object.png"));
                                  k->libraryTree->setCurrentItem(item);
                                  previewItem(item);
-                                 if (!k->isNetworked && !k->library->loadingProject())
+                                 if (!k->isNetworked && !k->library->isLoadingProject())
                                      insertObjectInWorkspace();
                                }
                             break;
@@ -1638,7 +1638,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                                  item->setIcon(0, QIcon(THEME_DIR + "icons/bitmap.png"));
                                  k->libraryTree->setCurrentItem(item);
                                  previewItem(item);
-                                 if (!k->isNetworked && !folderName.endsWith(".pgo") && !k->library->loadingProject())
+                                 if (!k->isNetworked && !folderName.endsWith(".pgo") && !k->library->isLoadingProject())
                                      insertObjectInWorkspace();
                                }
                             break;
@@ -1647,7 +1647,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                                  item->setIcon(0, QIcon(THEME_DIR + "icons/svg.png"));
                                  k->libraryTree->setCurrentItem(item);
                                  previewItem(item);
-                                 if (!k->isNetworked && !k->library->loadingProject())
+                                 if (!k->isNetworked && !k->library->isLoadingProject())
                                      insertObjectInWorkspace();
                                }
                             break;
@@ -2007,7 +2007,7 @@ void TupLibraryWidget::updateItemFromSaveAction()
         #endif
     #endif
 
-    LibraryObjects collection = k->library->objects();
+    LibraryObjects collection = k->library->getObjects();
     QMapIterator<QString, TupLibraryObject *> i(collection);
     while (i.hasNext()) {
            i.next();

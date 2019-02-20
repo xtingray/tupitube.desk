@@ -37,27 +37,7 @@
 #include "tupscene.h"
 #include "tupprojectloader.h"
 
-/*
-struct TupLayer::Private
-{
-    // TupScene *scene;
-    // Frames frames;
-    Frames undoFrames;
-    Frames resettedFrames;
-    Mouths lipsyncList;
-    bool isVisible;
-    QString layerName;
-    // int framesCounter;
-    bool isLocked;
-    int index;
-    qreal opacity;
-
-    QList<TupGraphicObject *> tweeningGraphicObjects;
-    QList<TupSvgItem *> tweeningSvgObjects;
-};
-*/
-
-TupLayer::TupLayer(TupScene *parentScene, int pos) //: k(new Private)
+TupLayer::TupLayer(TupScene *parentScene, int pos)
 {
     scene = parentScene;
     index = pos;
@@ -74,8 +54,6 @@ TupLayer::~TupLayer()
     lipsyncList.clear();
     tweeningGraphicObjects.clear();
     tweeningSvgObjects.clear();
-
-    // delete k;
 }
 
 Frames TupLayer::getFrames()

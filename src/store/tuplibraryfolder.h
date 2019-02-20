@@ -61,50 +61,50 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
     Q_OBJECT
     
     public:
-        TupLibraryFolder(const QString &id, TupProject *project, QObject *parent = 0);
+        TupLibraryFolder(const QString &getId, TupProject *getProject, QObject *parent = 0);
         ~TupLibraryFolder();
         
-        void setId(const QString &id);
-        QString id() const;
+        void setId(const QString &getId);
+        QString getId() const;
         
         TupLibraryObject *createSymbol(TupLibraryObject::Type type, const QString &name, const QByteArray &data = QByteArray(), const QString &folder = QString(), bool loaded = false);
         
         bool addObject(TupLibraryObject *object); 
         bool addObject(const QString &folderName, TupLibraryObject *object);
 
-        bool reloadObject(const QString &id);
+        bool reloadObject(const QString &getId);
 
         bool addFolder(TupLibraryFolder *folder);
 
-        bool removeObject(const QString &id, bool absolute);
+        bool removeObject(const QString &getId, bool absolute);
 
-        bool removeFolder(const QString &id);
+        bool removeFolder(const QString &getId);
 
         bool renameObject(const QString &folder, const QString &oldId, const QString &newId);
         bool renameFolder(const QString &oldId, const QString &newId);
         
-        bool moveObject(const QString &id, const QString &folder);
-        bool moveObjectToRoot(const QString &id);
+        bool moveObject(const QString &getId, const QString &folder);
+        bool moveObjectToRoot(const QString &getId);
 
-        bool exists(const QString &id);
+        bool exists(const QString &getId);
         
-        TupLibraryObject *getObject(const QString &id) const;
+        TupLibraryObject *getObject(const QString &getId) const;
         
-        Folders folders() const;
-        LibraryObjects objects() const;
+        Folders getFolders() const;
+        LibraryObjects getObjects() const;
         
         int objectsCount() const;
         int foldersCount() const;
         
-        TupProject *project() const;
+        TupProject *getProject() const;
         void reset();
 
-        TupLibraryFolder *getFolder(const QString &id) const;
-        bool folderExists(const QString &id) const;
+        TupLibraryFolder *getFolder(const QString &getId) const;
+        bool folderExists(const QString &getId) const;
 
         void updatePaths(const QString &newPath);
 
-        bool loadingProject();
+        bool isLoadingProject();
 
         QList<QPair<int, QString> > soundEffectList();
 
@@ -118,8 +118,12 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
         void loadObjects(const QString &folder, const QString &xml);
         void loadItem(const QString &folder, QDomNode xml);
 
-        struct Private;
-        Private *const k;
+        QString id;
+        Folders folders;
+        LibraryObjects objects;
+        TupProject *project;
+        bool loadingProject;
+        QList<QPair<int, QString> > soundRecords;
 };
 
 #endif

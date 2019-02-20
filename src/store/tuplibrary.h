@@ -46,7 +46,7 @@ class TupProject;
 
 class TUPITUBE_EXPORT TupLibrary : public TupLibraryFolder
 {
-    Q_OBJECT;
+    Q_OBJECT
     
     public:
         enum Class
@@ -55,7 +55,7 @@ class TUPITUBE_EXPORT TupLibrary : public TupLibraryFolder
             Folder
         };
 
-        TupLibrary(const QString &id, TupProject *parent = 0);
+        TupLibrary(const QString &getId, TupProject *parent = 0);
         ~TupLibrary();
         
     public:
