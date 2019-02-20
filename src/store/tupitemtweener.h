@@ -73,8 +73,8 @@ class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSeriali
         TupItemTweener();
         ~TupItemTweener();
 
-        QString name();
-        TupItemTweener::Type type();
+        QString getTweenName();
+        TupItemTweener::Type getType();
         
         void setPosAt(int step, const QPointF & point);
         void setRotationAt(int step, double angle);
@@ -87,12 +87,12 @@ class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSeriali
         TupTweenerStep *stepAt(int index);
         TupTweenerStep *lastStep();
 
-        void setFrames(int frames);
+        void setFrames(int getFrames);
 
-        int frames() const;
-        int initFrame();
-        int initLayer();
-        int initScene();
+        int getFrames() const;
+        int getInitFrame();
+        int getInitLayer();
+        int getInitScene();
         QPointF transformOriginPoint();
         double initXScaleValue();
         double initYScaleValue();
@@ -105,8 +105,8 @@ class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSeriali
         QGraphicsPathItem *graphicsPath() const;
         void setGraphicsPath(const QString &path);
 
-        QList<int> intervals();
-        QString tweenType();
+        QList<int> getIntervals();
+        QString tweenTypeToString();
 
         TupItemTweener::RotationType tweenRotationType();
         double tweenRotateSpeed();
@@ -141,11 +141,79 @@ class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSeriali
         int tweenColorLoop();
         int tweenColorReverseLoop();
 
-        bool contains(TupItemTweener::Type type);
+        bool contains(TupItemTweener::Type getType);
         
     private:
         struct Private;
         Private *const k;
+
+        QString tweenName;
+        TupItemTweener::Type type;
+        int initFrame;
+        int initLayer;
+        int initScene;
+
+        int frames;
+        QPointF originPoint;
+
+        // Position Tween
+        QString path;
+        QString intervals;
+
+        // Rotation Tween
+        TupItemTweener::RotationType rotationType;
+        TupItemTweener::RotateDirection rotateDirection;
+        double rotateSpeed;
+        int rotateLoop;
+        int rotateReverseLoop;
+        int rotateStartDegree;
+        int rotateEndDegree;
+
+        // Scale Tween
+        TupItemTweener::TransformAxes scaleAxes;
+        double initialXScaleFactor;
+        double initialYScaleFactor;
+        double scaleFactor;
+        int scaleIterations;
+        int scaleLoop;
+        int scaleReverseLoop;
+
+        // Shear Tween
+        TupItemTweener::TransformAxes shearAxes;
+        double shearFactor;
+        int shearIterations;
+        int shearLoop;
+        int shearReverseLoop;
+
+        // Opacity Tween
+        double initOpacityFactor;
+        double endOpacityFactor;
+        int opacityIterations;
+        int opacityLoop;
+        int opacityReverseLoop;
+
+        // Color Tween
+        FillType colorFillType;
+        QColor initialColor;
+        QColor endingColor;
+        int colorIterations;
+        int colorLoop;
+        int colorReverseLoop;
+
+        QList<TupItemTweener::Type> tweenList;
+
+        QHash<int, TupTweenerStep *> steps; // TODO: remove when Qt 4.3
+
+        inline TupTweenerStep *step(int step)
+        {
+            TupTweenerStep *currentStep = steps[step];
+            if (!currentStep) {
+                currentStep = new TupTweenerStep(step);
+                steps.insert(step, currentStep);
+            }
+
+            return currentStep;
+        }
 };
 
 #endif

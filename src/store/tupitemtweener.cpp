@@ -40,7 +40,7 @@ struct TupItemTweener::Private
 {
     /* Private() : frames(0) {} */
     
-    QString name;
+    QString tweenName;
     TupItemTweener::Type type;
     int initFrame;
     int initLayer;
@@ -122,12 +122,12 @@ TupItemTweener::~TupItemTweener()
     delete k;
 }
 
-QString TupItemTweener::name()
+QString TupItemTweener::getTweenName()
 {
-    return k->name;
+    return k->tweenName;
 }
 
-TupItemTweener::Type TupItemTweener::type()
+TupItemTweener::Type TupItemTweener::getType()
 {
     return k->type;
 }
@@ -196,27 +196,27 @@ void TupItemTweener::setColorAt(int index, const QColor &color)
     k->step(index)->setColor(color);
 }
 
-void TupItemTweener::setFrames(int frames)
+void TupItemTweener::setFrames(int length)
 {
-    k->frames = frames;
+    k->frames = length;
 }
 
-int TupItemTweener::frames() const
+int TupItemTweener::getFrames() const
 {
     return k->frames;
 }
 
-int TupItemTweener::initFrame()
+int TupItemTweener::getInitFrame()
 {
     return k->initFrame;
 }
 
-int TupItemTweener::initLayer()
+int TupItemTweener::getInitLayer()
 {
     return k->initLayer;
 }
 
-int TupItemTweener::initScene()
+int TupItemTweener::getInitScene()
 {
     return k->initScene;
 }
@@ -254,7 +254,7 @@ void TupItemTweener::fromXml(const QString &xml)
     if (doc.setContent(xml)) {
         QDomElement root = doc.documentElement();
 
-        k->name = root.attribute("name");
+        k->tweenName = root.attribute("name");
         k->type = TupItemTweener::Type(root.attribute("type").toInt());
 
         k->initFrame = root.attribute("initFrame").toInt();
@@ -353,7 +353,7 @@ void TupItemTweener::fromXml(const QString &xml)
 QDomElement TupItemTweener::toXml(QDomDocument &doc) const
 {
     #ifdef TUP_DEBUG
-        QString msg1 = "TupItemTweener::toXml() - Saving tween: " + k->name;
+        QString msg1 = "TupItemTweener::toXml() - Saving tween: " + k->tweenName;
         QString msg2 = "TupItemTweener::toXml() - Type: " + QString::number(k->type);
         #ifdef Q_OS_WIN
            qWarning() << msg1;
@@ -365,7 +365,7 @@ QDomElement TupItemTweener::toXml(QDomDocument &doc) const
     #endif
 
     QDomElement root = doc.createElement("tweening");
-    root.setAttribute("name", k->name);
+    root.setAttribute("name", k->tweenName);
     root.setAttribute("type", k->type);
 
     root.setAttribute("initFrame", QString::number(k->initFrame));
@@ -439,12 +439,12 @@ QGraphicsPathItem *TupItemTweener::graphicsPath() const
     return item;
 }
 
-void TupItemTweener::setGraphicsPath(const QString &path)
+void TupItemTweener::setGraphicsPath(const QString &route)
 {
-    k->path = path;
+    k->path = route;
 }
 
-QList<int> TupItemTweener::intervals()
+QList<int> TupItemTweener::getIntervals()
 {
     QList<int> sections;
     QStringList list = k->intervals.split(",");
@@ -454,7 +454,7 @@ QList<int> TupItemTweener::intervals()
     return sections;
 }
 
-QString TupItemTweener::tweenType()
+QString TupItemTweener::tweenTypeToString()
 {
     QString type = ""; 
     switch (k->type) {

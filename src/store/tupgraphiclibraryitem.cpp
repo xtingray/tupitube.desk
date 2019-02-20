@@ -37,40 +37,29 @@
 #include "tupserializer.h"
 #include "tupitemgroup.h"
 
-struct TupGraphicLibraryItem::Private
-{
-    QString symbolName;
-    QString symbolPath;
-    QString svgContent;
-    // QList<QGraphicsItem *> items;
-    TupLibraryObject::Type itemType;
-};
-
-TupGraphicLibraryItem::TupGraphicLibraryItem() : TupProxyItem(), k(new Private)
+TupGraphicLibraryItem::TupGraphicLibraryItem() : TupProxyItem()
 {
 }
 
-TupGraphicLibraryItem::TupGraphicLibraryItem(TupLibraryObject *object) : TupProxyItem(), k(new Private)
+TupGraphicLibraryItem::TupGraphicLibraryItem(TupLibraryObject *object) : TupProxyItem()
 {
     setObject(object);
-    k->itemType = object->type();
+    itemType = object->type();
 }
 
 TupGraphicLibraryItem::~TupGraphicLibraryItem()
 {
-    // qDeleteAll(k->items);
-    delete k;
 }
 
-TupLibraryObject::Type TupGraphicLibraryItem::itemType()
+TupLibraryObject::Type TupGraphicLibraryItem::getItemType()
 {
-    return k->itemType;
+    return itemType;
 }
 
 QDomElement TupGraphicLibraryItem::toXml(QDomDocument &doc) const
 {
     QDomElement library = doc.createElement("symbol");
-    library.setAttribute("id", k->symbolName);
+    library.setAttribute("id", symbolName);
     library.appendChild(TupSerializer::properties(this, doc));
     
     return library;
@@ -104,8 +93,8 @@ void TupGraphicLibraryItem::setObject(TupLibraryObject *object)
         #endif
     #endif
 
-    k->symbolName = object->symbolName();
-    k->symbolPath = object->dataPath();
+    symbolName = object->symbolName();
+    symbolPath = object->dataPath();
     switch(object->type()) {
         case TupLibraryObject::Item:
         case TupLibraryObject::Text:
@@ -126,26 +115,25 @@ void TupGraphicLibraryItem::setObject(TupLibraryObject *object)
 
 void TupGraphicLibraryItem::setSymbolName(const QString &name)
 {
-    k->symbolName = name;
+    symbolName = name;
 }
 
-QString TupGraphicLibraryItem::symbolName() const
+QString TupGraphicLibraryItem::getSymbolName() const
 {
-    return k->symbolName;
+    return symbolName;
 }
 
 void TupGraphicLibraryItem::setSvgContent(const QString &path)
 {
-    k->svgContent = path;
+    svgContent = path;
 }
 
-QString TupGraphicLibraryItem::svgContent()
+QString TupGraphicLibraryItem::getSvgContent()
 {
-   return k->svgContent;
+   return svgContent;
 }
 
-QString TupGraphicLibraryItem::symbolPath() const
+QString TupGraphicLibraryItem::getSymbolPath() const
 {
-    return k->symbolPath;
+    return symbolPath;
 }
-

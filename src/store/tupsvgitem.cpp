@@ -93,7 +93,7 @@ TupItemTweener* TupSvgItem::tween(const QString &id) const
     int total = tweens.count();
     for(int i=0; i < total; i++) {
         TupItemTweener *tween = tweens.at(i);
-        if (tween->name().compare(id) == 0)
+        if (tween->getTweenName().compare(id) == 0)
             return tween;
     }
 

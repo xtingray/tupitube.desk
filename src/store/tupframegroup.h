@@ -47,7 +47,6 @@ class TUPITUBE_EXPORT TupFrameGroup : public TupFrame
         
         void addFrame(TupFrame *frame);
         
-        
     private:
         QList<TupFrame *> m_frames;
 };

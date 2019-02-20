@@ -1239,7 +1239,7 @@ QGraphicsItem *TupFrame::createItem(QPointF coords, const QString &xml, bool loa
         graphicItem->setPos(coords);
         QString id = "path";
         if (library) {
-            if (itemFactory.type() == TupItemFactory::Library)
+            if (itemFactory.getType() == TupItemFactory::Library)
                 id = itemFactory.itemID(xml);
         }
 

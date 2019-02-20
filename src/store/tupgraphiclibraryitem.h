@@ -43,8 +43,6 @@
 
 #include <QGraphicsTextItem>
 
-// class TupLibraryObject;
-
 class TUPITUBE_EXPORT TupGraphicLibraryItem : public TupProxyItem, public TupAbstractSerializable
 {
     public:
@@ -52,23 +50,25 @@ class TUPITUBE_EXPORT TupGraphicLibraryItem : public TupProxyItem, public TupAbs
         TupGraphicLibraryItem(TupLibraryObject *object);
         ~TupGraphicLibraryItem();
 
-        TupLibraryObject::Type itemType();
+        TupLibraryObject::Type getItemType();
         
         QDomElement toXml(QDomDocument &doc) const;
         void fromXml(const QString &xml);
         
         void setSymbolName(const QString &name);
-        QString symbolName() const;
-        QString symbolPath() const;
+        QString getSymbolName() const;
+        QString getSymbolPath() const;
         
         void setObject(TupLibraryObject *object);
 
         void setSvgContent(const QString &path);
-        QString svgContent();
+        QString getSvgContent();
         
     private:
-        struct Private;
-        Private *const k;
+        QString symbolName;
+        QString symbolPath;
+        QString svgContent;
+        TupLibraryObject::Type itemType;
 };
 
 #endif

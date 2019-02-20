@@ -470,7 +470,7 @@ void Tweener::applyTween()
         QList<QGraphicsItem *> newList;
 
         k->initFrame = k->configurator->startFrame();
-        k->initLayer = k->currentTween->initLayer();
+        k->initLayer = k->currentTween->getInitLayer();
         k->initScene = k->scene->currentSceneIndex();
 
         foreach (QGraphicsItem *item, k->objects) {
@@ -481,7 +481,7 @@ void Tweener::applyTween()
 
                  TupScene *scene = k->scene->currentScene();
                  TupLayer *layer = scene->layerAt(k->initLayer);
-                 TupFrame *frame = layer->frameAt(k->currentTween->initFrame());
+                 TupFrame *frame = layer->frameAt(k->currentTween->getInitFrame());
                  int objectIndex = -1;
                  TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
 
@@ -492,7 +492,7 @@ void Tweener::applyTween()
                      objectIndex = frame->indexOf(item);
                  }
 
-                 if (k->initFrame != k->currentTween->initFrame()) {
+                 if (k->initFrame != k->currentTween->getInitFrame()) {
                      QDomDocument dom;
                      if (type == TupLibraryObject::Svg)
                          dom.appendChild(svg->toXml(dom));
@@ -507,7 +507,7 @@ void Tweener::applyTween()
 
                      request = TupRequestBuilder::createItemRequest(k->scene->currentSceneIndex(),
                                                                    k->scene->currentLayerIndex(),
-                                                                   k->currentTween->initFrame(),
+                                                                   k->currentTween->getInitFrame(),
                                                                    objectIndex, QPointF(),    
                                                                    k->scene->getSpaceContext(), type,
                                                                    TupProjectRequest::Remove);
@@ -612,9 +612,9 @@ void Tweener::updateMode(TupToolPlugin::Mode mode)
 
     if (k->mode == TupToolPlugin::Edit) {
         if (k->currentTween) {
-            k->initScene = k->currentTween->initScene();
-            k->initLayer = k->currentTween->initLayer();
-            k->initFrame = k->currentTween->initFrame();
+            k->initScene = k->currentTween->getInitScene();
+            k->initLayer = k->currentTween->getInitLayer();
+            k->initFrame = k->currentTween->getInitFrame();
 
             if (k->initFrame != k->scene->currentFrameIndex() || k->initLayer != k->scene->currentLayerIndex()) {
                 QString selection = QString::number(k->initLayer) + "," + QString::number(k->initLayer) + ","
@@ -626,7 +626,7 @@ void Tweener::updateMode(TupToolPlugin::Mode mode)
             }
 
             if (k->objects.isEmpty())
-                k->objects = k->scene->currentScene()->getItemsFromTween(k->currentTween->name(), TupItemTweener::Opacity);
+                k->objects = k->scene->currentScene()->getItemsFromTween(k->currentTween->getTweenName(), TupItemTweener::Opacity);
         } else {
             #ifdef TUP_DEBUG
                 QString msg = "Tweener::updateMode() - Current tween pointer is NULL!";

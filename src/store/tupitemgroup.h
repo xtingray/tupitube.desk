@@ -56,8 +56,7 @@ class TUPITUBE_EXPORT TupItemGroup: public TupAbstractSerializable, public QGrap
     //     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
         
     private:
-        struct Private;
-        Private *const k;
+        QList<QGraphicsItem *> children;
 };
 
 #endif

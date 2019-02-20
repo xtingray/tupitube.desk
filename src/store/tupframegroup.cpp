@@ -48,5 +48,3 @@ void TupFrameGroup::addFrame(TupFrame *frame)
     if (! m_frames.contains(frame) && frame != this)
         m_frames << frame;
 }
-
-

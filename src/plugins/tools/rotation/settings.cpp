@@ -398,12 +398,12 @@ void Settings::setParameters(TupItemTweener *currentTween)
     setEditMode();
     activateMode(TupToolPlugin::Properties);
 
-    k->input->setText(currentTween->name());
+    k->input->setText(currentTween->getTweenName());
 
     k->initFrame->setEnabled(true);
-    k->initFrame->setValue(currentTween->initFrame());
+    k->initFrame->setValue(currentTween->getInitFrame());
 
-    k->endFrame->setValue(currentTween->initFrame() + currentTween->frames());
+    k->endFrame->setValue(currentTween->getInitFrame() + currentTween->getFrames());
 
     // checkFramesRange();
     int end = k->endFrame->value();

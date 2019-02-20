@@ -674,7 +674,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
                  } else if (stepItem->has(TupTweenerStep::Opacity)) {
                      object->item()->setOpacity(stepItem->opacity());
                  }
-             } else if ((origin < photogram) && (photogram < origin + tween->frames())) {
+             } else if ((origin < photogram) && (photogram < origin + tween->getFrames())) {
                  int step = photogram - origin;
                  TupTweenerStep *stepItem = tween->stepAt(step);
                  if (stepItem->has(TupTweenerStep::Position)) {
@@ -756,9 +756,9 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
 
              QString tip = object->item()->toolTip();
              if (tip.length() == 0) {
-                 object->item()->setToolTip("Tweens: " + tween->tweenType());
-             } else if (!tip.contains(tween->tweenType())) {
-                 tip += "," + tween->tweenType();
+                 object->item()->setToolTip("Tweens: " + tween->tweenTypeToString());
+             } else if (!tip.contains(tween->tweenTypeToString())) {
+                 tip += "," + tween->tweenTypeToString();
                  object->item()->setToolTip(tip);
              }
          }
@@ -816,7 +816,7 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
                  } else if (stepItem->has(TupTweenerStep::Opacity)) {
                      object->setOpacity(stepItem->opacity());
                  }
-             } else if ((origin < photogram) && (photogram < origin + tween->frames())) {
+             } else if ((origin < photogram) && (photogram < origin + tween->getFrames())) {
                  int step = photogram - origin;
                  TupTweenerStep *stepItem = tween->stepAt(step);
 
@@ -861,9 +861,9 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
 
              QString tip = object->toolTip();
              if (tip.length() == 0) {
-                 object->setToolTip("Tweens: " + tween->tweenType());
-             } else if (!tip.contains(tween->tweenType())) {
-                 tip += "," + tween->tweenType();
+                 object->setToolTip("Tweens: " + tween->tweenTypeToString());
+             } else if (!tip.contains(tween->tweenTypeToString())) {
+                 tip += "," + tween->tweenTypeToString();
                  object->setToolTip(tip);
              }
          }

@@ -38,6 +38,7 @@
 
 #include "tglobal.h"
 #include "txmlparserbase.h"
+#include "tupitemgroup.h"
 
 #include <QStack>
 #include <QPen>
@@ -61,7 +62,7 @@ class TUPITUBE_EXPORT TupItemFactory : public TXmlParserBase
     	void setLibrary(const TupLibrary *library);
     	
     	bool startTag(const QString& qname, const QXmlAttributes& atts);
-    	void text(const QString &ch);
+        void text(const QString &input);
     	
     	bool endTag(const QString& qname);
     	
@@ -70,7 +71,7 @@ class TUPITUBE_EXPORT TupItemFactory : public TXmlParserBase
 
         QString itemID(const QString &xml);
 
-        TupItemFactory::Type type();
+        TupItemFactory::Type getType();
     	
     private:
     	void setItemPen(const QPen &pen);
@@ -83,8 +84,17 @@ class TUPITUBE_EXPORT TupItemFactory : public TXmlParserBase
     	QGraphicsItem* createItem(const QString &xml);
     	
     private:
-    	struct Private;
-    	Private *const k;
+        QGraphicsItem *item;
+        QGradient *gradient;
+        QString loading; // brush or pen
+
+        QStack<TupItemGroup *> groups;
+        QStack<QGraphicsItem *> objects;
+        bool addToGroup;
+        bool isLoading;
+        QString textReaded;
+        const TupLibrary *library;
+        TupItemFactory::Type type;
 };
 
 #endif

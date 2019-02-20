@@ -116,7 +116,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
         }
 
         if (TupGraphicLibraryItem *libraryItem = qgraphicsitem_cast<TupGraphicLibraryItem *>(selectedItem)) {
-            if (libraryItem->itemType() == TupLibraryObject::Image) {
+            if (libraryItem->getItemType() == TupLibraryObject::Image) {
                 TOsd::self()->display(tr("Error"), tr("Images have no nodes!"), TOsd::Error);
                 return;
             }

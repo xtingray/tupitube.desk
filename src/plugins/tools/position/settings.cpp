@@ -197,12 +197,12 @@ void Settings::setParameters(TupItemTweener *currentTween)
     notifySelection(true);
     activateMode(TupToolPlugin::Properties);
 
-    k->input->setText(currentTween->name());
+    k->input->setText(currentTween->getTweenName());
     k->comboInit->setEnabled(true);
 
-    initStartCombo(currentTween->frames(), currentTween->initFrame());
+    initStartCombo(currentTween->getFrames(), currentTween->getInitFrame());
 
-    k->stepViewer->loadPath(currentTween->graphicsPath(), currentTween->intervals());
+    k->stepViewer->loadPath(currentTween->graphicsPath(), currentTween->getIntervals());
     k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->stepViewer->totalSteps()));
 }
 

@@ -1088,7 +1088,7 @@ void SelectionTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
         position = frame->indexOf(svg);
     } else {
         if (TupGraphicLibraryItem *libraryItem = qgraphicsitem_cast<TupGraphicLibraryItem *>(item)) {
-            if (libraryItem->itemType() == TupLibraryObject::Image)
+            if (libraryItem->getItemType() == TupLibraryObject::Image)
                 type = TupLibraryObject::Image;
             else
                 type = TupLibraryObject::Item;

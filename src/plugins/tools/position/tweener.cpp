@@ -544,9 +544,9 @@ void Tweener::setSelection()
             QString selection = QString::number(k->initLayer) + "," + QString::number(k->initLayer) + ","
                                 + QString::number(k->initFrame) + "," + QString::number(k->initFrame);
 
-            TupProjectRequest request = TupRequestBuilder::createFrameRequest(k->currentTween->initScene(),
-                                                                              k->currentTween->initLayer(),
-                                                                              k->currentTween->initFrame(), 
+            TupProjectRequest request = TupRequestBuilder::createFrameRequest(k->currentTween->getInitScene(),
+                                                                              k->currentTween->getInitLayer(),
+                                                                              k->currentTween->getInitFrame(), 
                                                                               TupProjectRequest::Select, selection);
             emit requested(&request);
         }
@@ -719,14 +719,14 @@ void Tweener::applyTween()
         QList<QGraphicsItem *> newList;
 
         k->initFrame = k->configurator->startFrame();
-        k->initLayer = k->currentTween->initLayer();
-        k->initScene = k->currentTween->initScene();
+        k->initLayer = k->currentTween->getInitLayer();
+        k->initScene = k->currentTween->getInitScene();
 
         foreach (QGraphicsItem *item, k->objects) {
                  TupLibraryObject::Type type = TupLibraryObject::Item;
                  TupScene *scene = k->scene->currentScene();
                  TupLayer *layer = scene->layerAt(k->initLayer);
-                 TupFrame *frame = layer->frameAt(k->currentTween->initFrame());
+                 TupFrame *frame = layer->frameAt(k->currentTween->getInitFrame());
                  int objectIndex = frame->indexOf(item);
 
                  /*
@@ -743,7 +743,7 @@ void Tweener::applyTween()
                      objectIndex = frame->indexOf(svg);
                  }
 
-                 if (k->initFrame != k->currentTween->initFrame()) {
+                 if (k->initFrame != k->currentTween->getInitFrame()) {
                      QDomDocument dom;
                      if (type == TupLibraryObject::Svg)
                          dom.appendChild(svg->toXml(dom));
@@ -756,9 +756,9 @@ void Tweener::applyTween()
                                                  TupProjectRequest::Add, dom.toString());
                      emit requested(&request);
 
-                     request = TupRequestBuilder::createItemRequest(k->currentTween->initScene(), 
-                               k->currentTween->initLayer(),
-                               k->currentTween->initFrame(),
+                     request = TupRequestBuilder::createItemRequest(k->currentTween->getInitScene(), 
+                               k->currentTween->getInitLayer(),
+                               k->currentTween->getInitFrame(),
                                objectIndex, QPointF(), 
                                k->scene->getSpaceContext(), type,
                                TupProjectRequest::Remove);
@@ -1010,9 +1010,9 @@ void Tweener::setEditEnv()
         #endif
     #endif
 
-    k->initFrame = k->currentTween->initFrame();
-    k->initLayer = k->currentTween->initLayer();
-    k->initScene = k->currentTween->initScene();
+    k->initFrame = k->currentTween->getInitFrame();
+    k->initLayer = k->currentTween->getInitLayer();
+    k->initScene = k->currentTween->getInitScene();
 
     if (k->initFrame != k->scene->currentFrameIndex() || k->initLayer != k->scene->currentLayerIndex() || k->initScene != k->scene->currentSceneIndex()) {
         QString selection = QString::number(k->initLayer) + "," + QString::number(k->initLayer) + ","
@@ -1025,7 +1025,7 @@ void Tweener::setEditEnv()
     k->mode = TupToolPlugin::Edit;
 
     TupScene *scene = k->scene->currentScene();
-    k->objects = scene->getItemsFromTween(k->currentTween->name(), TupItemTweener::Position);
+    k->objects = scene->getItemsFromTween(k->currentTween->getTweenName(), TupItemTweener::Position);
 
     if (!k->objects.isEmpty()) {
         QGraphicsItem *item = k->objects.at(0);
@@ -1053,7 +1053,7 @@ void Tweener::setEditEnv()
         setTweenPath();
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "Tweener::setEditEnv() - Fatal Error: Position tween wasn't found -> " + k->currentTween->name();
+            QString msg = "Tweener::setEditEnv() - Fatal Error: Position tween wasn't found -> " + k->currentTween->getTweenName();
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else

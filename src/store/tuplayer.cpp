@@ -535,7 +535,7 @@ bool TupLayer::tweenExists(const QString &name, TupItemTweener::Type type)
     foreach (TupGraphicObject *object, tweeningGraphicObjects) {
         QList<TupItemTweener *> list = object->tweensList();
         foreach(TupItemTweener *tween, list) {
-            if ((tween->name().compare(name) == 0) && (tween->type() == type))
+            if ((tween->getTweenName().compare(name) == 0) && (tween->getType() == type))
                 return true;
         }
     }
@@ -543,7 +543,7 @@ bool TupLayer::tweenExists(const QString &name, TupItemTweener::Type type)
     foreach (TupSvgItem *object, tweeningSvgObjects) {
         QList<TupItemTweener *> list = object->tweensList();
         foreach(TupItemTweener *tween, list) {
-            if ((tween->name().compare(name) == 0) && (tween->type() == type))
+            if ((tween->getTweenName().compare(name) == 0) && (tween->getType() == type))
                 return true;
         }
     }
@@ -566,7 +566,7 @@ bool TupLayer::removeTween(const QString &name, TupItemTweener::Type type)
         int total = list.count();
         for (int i=0; i < total; i++) {
             TupItemTweener *tween = list.at(i);
-            if ((tween->name().compare(name) == 0) && (tween->type() == type)) {
+            if ((tween->getTweenName().compare(name) == 0) && (tween->getType() == type)) {
                 object->removeTween(i);
                 if (total == 1)
                     removeTweenObject(object);
@@ -580,7 +580,7 @@ bool TupLayer::removeTween(const QString &name, TupItemTweener::Type type)
         int total = list.count();
         for (int i=0; i < total; i++) {
             TupItemTweener *tween = list.at(i);
-            if ((tween->name().compare(name) == 0) && (tween->type() == type)) {
+            if ((tween->getTweenName().compare(name) == 0) && (tween->getType() == type)) {
                 object->removeTween(i);
                 if (total == 1)
                     removeTweenObject(object);

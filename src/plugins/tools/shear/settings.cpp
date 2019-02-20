@@ -297,11 +297,11 @@ void Settings::setParameters(TupItemTweener *currentTween)
     setEditMode();
     activateMode(TupToolPlugin::Properties);
 
-    k->input->setText(currentTween->name());
+    k->input->setText(currentTween->getTweenName());
 
     k->initFrame->setEnabled(true);
-    k->initFrame->setValue(currentTween->initFrame() + 1);
-    k->endFrame->setValue(currentTween->initFrame() + currentTween->frames());
+    k->initFrame->setValue(currentTween->getInitFrame() + 1);
+    k->endFrame->setValue(currentTween->getInitFrame() + currentTween->getFrames());
 
     int end = k->endFrame->value();
     updateRangeFromEnd(end);

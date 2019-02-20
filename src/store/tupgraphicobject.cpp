@@ -143,7 +143,7 @@ void TupGraphicObject::addTween(TupItemTweener *itemTween)
     int total = tweens.count();
     for(int i=0; i < total; i++) {
         TupItemTweener *tween = tweens.at(i);
-        if (tween->type() == itemTween->type()) {
+        if (tween->getType() == itemTween->getType()) {
             tweens[i] = itemTween;
             return;
         }
@@ -172,7 +172,7 @@ TupItemTweener *TupGraphicObject::tween(const QString &id) const
     int total = tweens.count();
     for(int i=0; i < total; i++) {
         TupItemTweener *tween = tweens.at(i);
-        if (tween->name().compare(id) == 0)
+        if (tween->getTweenName().compare(id) == 0)
             return tween;
     }
 
