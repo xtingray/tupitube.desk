@@ -76,19 +76,19 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
         ~TupScene();
 
         void setSceneName(const QString &name);
-        QString sceneName() const;
+        QString getSceneName() const;
 
         void setBgColor(const QColor bgColor);
 
-        void setLocked(bool isLocked);
-        bool isLocked() const;
+        void setSceneLocked(bool isSceneLocked);
+        bool isSceneLocked() const;
 
-        void setVisible(bool isVisible);
-        bool isVisible() const;
+        void setVisibility(bool isSceneViisible);
+        bool isSceneViisible() const;
 
-        Layers layers() const;
+        Layers getLayers() const;
         int layersCount() const;
-        SoundLayers soundLayers() const;
+        SoundLayers getSoundLayers() const;
 
         void setBasicStructure();
 
@@ -132,14 +132,14 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
         // int getTotalTweens();
 
         // QList<TupGraphicObject *> tweeningGraphicObjects() const;
-        QList<TupGraphicObject *> tweeningGraphicObjects(int layerIndex) const;
+        QList<TupGraphicObject *> getTweeningGraphicObjects(int layerIndex) const;
 
         // QList<TupSvgItem *> tweeningSvgObjects() const;
-        QList<TupSvgItem *> tweeningSvgObjects(int layerIndex) const; 
+        QList<TupSvgItem *> getTweeningSvgObjects(int layerIndex) const;
 
         int framesCount();
 
-        TupBackground *background();
+        TupBackground *sceneBackground();
 
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
@@ -148,8 +148,8 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
         void reset(const QString &name);
         void clear();
 
-        void setStoryboard(TupStoryboard *storyboard);
-        TupStoryboard * storyboard();
+        void setStoryboard(TupStoryboard *storyboardStructure);
+        TupStoryboard * storyboardStructure();
 
         void insertStoryBoardScene(int index);
         void appendStoryBoardScene();
@@ -169,8 +169,20 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
     private:
         void removeTweensFromLayer(int layerIndex);
 
-        struct Private;
-        Private *const k;
+        QSize dimension;
+        QColor bgColor;
+        TupStoryboard *storyboard;
+        TupBackground *background;
+        Layers layers;
+        Layers undoLayers;
+        SoundLayers soundLayers;
+        QString sceneName;
+        bool isLocked;
+        int layerCount;
+        bool isVisible;
+
+        QList<TupGraphicObject *> tweeningGraphicObjects;
+        QList<TupSvgItem *> tweeningSvgObjects;
 };
 
 #endif

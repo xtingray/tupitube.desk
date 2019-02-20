@@ -101,7 +101,7 @@ bool TupCommandExecutor::removeScene(TupSceneResponse *response)
         QDomDocument document;
         document.appendChild(scene->toXml(document));
         response->setState(document.toString());
-        response->setArg(scene->sceneName());
+        response->setArg(scene->getSceneName());
         
         if (m_project->removeScene(pos)) {
             emit responsed(response);
@@ -149,7 +149,7 @@ bool TupCommandExecutor::lockScene(TupSceneResponse *response)
 
     TupScene *scene = m_project->sceneAt(pos);
     if (scene) {
-        scene->setLocked(lock);
+        scene->setSceneLocked(lock);
         emit responsed(response);
         return true;
     }
@@ -184,7 +184,7 @@ bool TupCommandExecutor::setSceneVisibility(TupSceneResponse *response)
     
     TupScene *scene = m_project->sceneAt(pos);
     if (scene) {
-        scene->setVisible(view);
+        scene->setVisibility(view);
         emit responsed(response);
         return true;
     }

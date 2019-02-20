@@ -60,7 +60,7 @@ TupStoryBoardDialog::TupStoryBoardDialog(bool network, TupExportInterface *plugi
     size = pSize;
     scene = pScene;
     sceneIndex = sIndex;
-    storyboard = scene->storyboard();
+    storyboard = scene->storyboardStructure();
     library = assets;
     utf = QLocale(QLocale::AnyLanguage, QLocale::AnyCountry);
 

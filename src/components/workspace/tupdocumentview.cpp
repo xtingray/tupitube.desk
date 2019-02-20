@@ -1131,7 +1131,7 @@ double TupDocumentView::backgroundOpacity(TupFrame::FrameType type)
     int sceneIndex = paintArea->currentSceneIndex();
     TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
-        TupBackground *bg = scene->background();
+        TupBackground *bg = scene->sceneBackground();
         if (bg) {
             if (type == TupFrame::StaticBg) {
                 opacity = bg->staticOpacity();
@@ -1463,7 +1463,7 @@ void TupDocumentView::setSpaceContext()
         int sceneIndex = paintArea->currentSceneIndex();
         TupScene *scene = project->sceneAt(sceneIndex);
         if (scene) {
-            TupBackground *bg = scene->background();
+            TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 int direction = bg->dyanmicDirection();
                 dirCombo->setCurrentIndex(direction);
@@ -1786,7 +1786,7 @@ void TupDocumentView::updateStaticOpacity(double opacity)
     int sceneIndex = paintArea->currentSceneIndex();
     TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
-        TupBackground *bg = scene->background();
+        TupBackground *bg = scene->sceneBackground();
         if (bg) {
             bg->setStaticOpacity(opacity);
             TupProject::Mode mode = TupProject::Mode(spaceModeCombo->currentIndex());
@@ -1810,7 +1810,7 @@ void TupDocumentView::updateDynamicOpacity(double opacity)
    int sceneIndex = paintArea->currentSceneIndex();
    TupScene *scene = project->sceneAt(sceneIndex);
    if (scene) {
-       TupBackground *bg = scene->background();
+       TupBackground *bg = scene->sceneBackground();
        if (bg) {
            bg->setDynamicOpacity(opacity);
            paintArea->updatePaintArea();
@@ -1824,7 +1824,7 @@ void TupDocumentView::setBackgroundDirection(int direction)
    int sceneIndex = paintArea->currentSceneIndex();
    TupScene *scene = project->sceneAt(sceneIndex);
    if (scene) {
-       TupBackground *bg = scene->background();
+       TupBackground *bg = scene->sceneBackground();
        if (bg)
            bg->setDynamicDirection(direction);
    }
@@ -1836,7 +1836,7 @@ void TupDocumentView::updateBackgroundShiftProperty(int shift)
    int sceneIndex = paintArea->currentSceneIndex();
    TupScene *scene = project->sceneAt(sceneIndex);
    if (scene) {
-       TupBackground *bg = scene->background();
+       TupBackground *bg = scene->sceneBackground();
        if (bg)
            bg->setDynamicShift(shift);
    }
@@ -1848,7 +1848,7 @@ void TupDocumentView::renderDynamicBackground()
    TupScene *scene = project->sceneAt(sceneIndex);
 
    if (scene) {
-       TupBackground *bg = scene->background();
+       TupBackground *bg = scene->sceneBackground();
        if (bg)
            bg->renderDynamicView();
    }

@@ -75,7 +75,7 @@ void TupSceneSelector::setScenes(const QList<TupScene *> &scenes)
         int pos = 1;
         foreach (TupScene *scene, scenes) {
                  #ifdef TUP_DEBUG
-                     QString msg = "TupSceneSelector::setScenes() - Adding " + scene->sceneName();
+                     QString msg = "TupSceneSelector::setScenes() - Adding " + scene->getSceneName();
                      #ifdef Q_OS_WIN
                          qWarning() << msg;
                      #else
@@ -83,7 +83,7 @@ void TupSceneSelector::setScenes(const QList<TupScene *> &scenes)
                      #endif
                  #endif
 
-                 m_selector->addItem(QString("%1: ").arg(pos) + scene->sceneName());
+                 m_selector->addItem(QString("%1: ").arg(pos) + scene->getSceneName());
                  pos++;
         }
 
@@ -99,8 +99,8 @@ void TupSceneSelector::setScenes(const QList<TupScene *> &scenes)
         m_selector->selectFirstItem();
     } else {
         TupScene *scene = scenes.first();
-        m_selector->addItem(QString("1: ") + scene->sceneName());
-        m_selector->addSelectedItem(QString("1: ") + scene->sceneName());
+        m_selector->addItem(QString("1: ") + scene->getSceneName());
+        m_selector->addSelectedItem(QString("1: ") + scene->getSceneName());
     }
 }
 

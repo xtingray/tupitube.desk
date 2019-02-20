@@ -324,4 +324,3 @@ TupProject * TupBackground::project()
 {
     return scene()->project();
 }
-

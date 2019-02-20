@@ -310,7 +310,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
                 #endif
             }
         } else {
-            TupBackground *bg = scene->background();
+            TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 if (k->scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
                     TupFrame *frame = bg->staticFrame();
@@ -499,7 +499,7 @@ void PolyLineTool::nodeChanged()
             if (k->scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
                 position = k->scene->currentFrame()->indexOf(k->nodeGroup->parentItem());
             } else {
-                TupBackground *bg = k->scene->currentScene()->background();
+                TupBackground *bg = k->scene->currentScene()->sceneBackground();
                 if (bg) {
                     if (k->scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
                         TupFrame *frame = bg->staticFrame();

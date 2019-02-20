@@ -668,7 +668,7 @@ void TupExposureSheet::sceneResponse(TupSceneResponse *response)
                 if (response->mode() == TupProjectResponse::Redo || response->mode() == TupProjectResponse::Undo) {
                     TupScene *scene = k->project->sceneAt(sceneIndex);
                     if (scene)
-                        k->scenesContainer->restoreScene(sceneIndex, scene->sceneName());
+                        k->scenesContainer->restoreScene(sceneIndex, scene->getSceneName());
                     return;
                 }
             }

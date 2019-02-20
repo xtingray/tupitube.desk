@@ -52,6 +52,7 @@ class TUPITUBE_EXPORT TupBackgroundScene : public QGraphicsScene
     public:
         TupBackgroundScene(const QSize dimension, const QColor color, TupFrame *background);
         ~TupBackgroundScene();
+
         void renderView(QPainter *painter);
 
     private:
@@ -61,8 +62,7 @@ class TUPITUBE_EXPORT TupBackgroundScene : public QGraphicsScene
         void addGraphicObject(TupGraphicObject *object);
         void addSvgObject(TupSvgItem *svgItem);
 
-        struct Private;
-        Private *const k;
+        TupFrame *bg;
 };
 
 #endif

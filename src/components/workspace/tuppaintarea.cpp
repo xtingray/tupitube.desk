@@ -746,7 +746,7 @@ void TupPaintArea::deleteItems()
                              itemIndex = currentScene->currentFrame()->indexOf(item);
                          }
                      } else {
-                         TupBackground *bg = currentScene->currentScene()->background();
+                         TupBackground *bg = currentScene->currentScene()->sceneBackground();
                          if (bg) {
                              TupFrame *frame;
                              if (spaceMode == TupProject::STATIC_BACKGROUND_EDITION)

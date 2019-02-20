@@ -246,7 +246,7 @@ TupScene *TupProject::createScene(QString name, int position, bool loaded)
     scene->setSceneName(name);
     
     if (loaded)
-        TupProjectLoader::createScene(scene->sceneName(), position, this);
+        TupProjectLoader::createScene(scene->getSceneName(), position, this);
 
     return scene;
 }
@@ -356,7 +356,7 @@ QString TupProject::recoverScene(int pos) const
     TupScene *scene = k->undoScenes.takeLast();
     if (scene) {
         k->scenes[pos] = scene;
-        return scene->sceneName();
+        return scene->getSceneName();
     }
 
     return "";
@@ -590,7 +590,7 @@ bool TupProject::removeSymbol(const QString &name, TupLibraryObject::Type type)
     for (int i = 0; i < totalScenes; i++) {
          TupScene *scene = k->scenes.at(i);
 
-         TupBackground *bg = scene->background();
+         TupBackground *bg = scene->sceneBackground();
          if (bg) {
              TupFrame *frame = bg->staticFrame();
              if (frame) {
@@ -614,9 +614,9 @@ bool TupProject::removeSymbol(const QString &name, TupLibraryObject::Type type)
              }
          }
 
-         int totalLayers = scene->layers().size();
+         int totalLayers = scene->getLayers().size();
          for (int j = 0; j < totalLayers; j++) {
-              TupLayer *layer = scene->layers().at(j);
+              TupLayer *layer = scene->getLayers().at(j);
               int totalFrames = layer->frames().size();
               for (int t = 0; t < totalFrames; t++) {
                    TupFrame *frame = layer->frames().at(t);
@@ -687,14 +687,14 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
             else
                 return false;
         } else if (spaceMode == TupProject::STATIC_BACKGROUND_EDITION) { 
-            TupBackground *bg = scene->background();
+            TupBackground *bg = scene->sceneBackground();
 
             if (bg)
                 frame = bg->staticFrame();
             else
                 return false;
         } else if (spaceMode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-            TupBackground *bg = scene->background();
+            TupBackground *bg = scene->sceneBackground();
 
             if (bg) {
                 frame = bg->dynamicFrame();
@@ -783,7 +783,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                         break;
                         case TupLibraryObject::Sound:
                         {
-                             TupSoundLayer *sound = scene->createSoundLayer(scene->soundLayers().count());
+                             TupSoundLayer *sound = scene->createSoundLayer(scene->getSoundLayers().count());
                              sound->fromSymbol(object->symbolName());
                         }
                         break;
@@ -853,9 +853,9 @@ bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::Ty
     int totalScenes = k->scenes.size(); 
     for (int i = 0; i < totalScenes; i++) {
          TupScene *scene =  k->scenes.at(i);
-         int totalLayers = scene->layers().size();
+         int totalLayers = scene->getLayers().size();
          for (int j = 0; j < totalLayers; j++) {
-              TupLayer *layer = scene->layers().at(j);
+              TupLayer *layer = scene->getLayers().at(j);
               int totalFrames = layer->frames().size(); 
               for (int t = 0; t < totalFrames; t++) {
                    TupFrame *frame = layer->frames().at(t);
@@ -866,7 +866,7 @@ bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::Ty
               }
          }
 
-         TupBackground *bg = scene->background();
+         TupBackground *bg = scene->sceneBackground();
          if (bg) {
              TupFrame *frame = bg->staticFrame();
              if (frame) {
@@ -901,9 +901,9 @@ bool TupProject::updateSymbolId(TupLibraryObject::Type type, const QString &oldI
     int scenesCount = k->scenes.size();
     for (int i = 0; i < scenesCount; i++) {
          TupScene *scene = k->scenes.at(i);
-         int layersCount = scene->layers().size();
+         int layersCount = scene->getLayers().size();
          for (int j = 0; j < layersCount; j++) {
-              TupLayer *layer = scene->layers().at(j);
+              TupLayer *layer = scene->getLayers().at(j);
               int framesCount = layer->frames().size();  
               for (int t = 0; t < framesCount; t++) {
                    TupFrame *frame = layer->frames().at(t); 
@@ -914,7 +914,7 @@ bool TupProject::updateSymbolId(TupLibraryObject::Type type, const QString &oldI
               }
          }
 
-         TupBackground *bg = scene->background();
+         TupBackground *bg = scene->sceneBackground();
          if (bg) {
              TupFrame *frame = bg->staticFrame();
              if (frame) {
@@ -942,9 +942,9 @@ void TupProject::reloadLibraryItem(TupLibraryObject::Type type, const QString &i
     int scenesCount = k->scenes.size();
     for (int i = 0; i < scenesCount; i++) {
          TupScene *scene = k->scenes.at(i);
-         int layersCount = scene->layers().size();
+         int layersCount = scene->getLayers().size();
          for (int j = 0; j < layersCount; j++) {
-              TupLayer *layer = scene->layers().at(j);
+              TupLayer *layer = scene->getLayers().at(j);
               int framesCount = layer->frames().size();
               for (int t = 0; t < framesCount; t++) {
                    TupFrame *frame = layer->frames().at(t);
@@ -955,7 +955,7 @@ void TupProject::reloadLibraryItem(TupLibraryObject::Type type, const QString &i
               }
          }
 
-         TupBackground *bg = scene->background();
+         TupBackground *bg = scene->sceneBackground();
          if (bg) {
              TupFrame *frame = bg->staticFrame();
              if (frame) {

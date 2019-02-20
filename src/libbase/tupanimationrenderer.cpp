@@ -52,7 +52,7 @@ TupAnimationRenderer::~TupAnimationRenderer()
 
 int TupAnimationRenderer::calculateTotalPhotograms(TupScene *scene)
 {
-    Layers layers = scene->layers();
+    Layers layers = scene->getLayers();
 
     int total = 0;
 

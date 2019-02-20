@@ -162,7 +162,7 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
                 return false;
             }
         } else { 
-            TupBackground *bg = scene->background();
+            TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
@@ -330,7 +330,7 @@ bool TupCommandExecutor::removeItem(TupItemResponse *response)
                 }
             }
         } else {
-            TupBackground *bg = scene->background();
+            TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
@@ -435,7 +435,7 @@ bool TupCommandExecutor::moveItem(TupItemResponse *response)
                 }
             } 
         } else {
-            TupBackground *bg = scene->background();
+            TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
@@ -523,7 +523,7 @@ bool TupCommandExecutor::groupItems(TupItemResponse *response)
                 }
             }
         } else {
-            TupBackground *bg = scene->background();
+            TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = NULL;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
@@ -630,7 +630,7 @@ bool TupCommandExecutor::ungroupItems(TupItemResponse *response)
                 }
             }
         } else {
-            TupBackground *bg = scene->background();
+            TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
@@ -803,7 +803,7 @@ bool TupCommandExecutor::convertItem(TupItemResponse *response)
                 }
             }
         } else {
-            TupBackground *bg = scene->background();
+            TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
@@ -928,7 +928,7 @@ bool TupCommandExecutor::transformItem(TupItemResponse *response)
                 }
             }
         } else {
-            TupBackground *bg = scene->background();
+            TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
@@ -1062,7 +1062,7 @@ bool TupCommandExecutor::setPathItem(TupItemResponse *response)
                 }
             }
         } else {
-            TupBackground *bg = scene->background();
+            TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
@@ -1261,7 +1261,7 @@ bool TupCommandExecutor::setBrush(TupItemResponse *response)
                 }
             }
         } else {
-            TupBackground *bg = scene->background();
+            TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
@@ -1375,7 +1375,7 @@ bool TupCommandExecutor::setPen(TupItemResponse *response)
                 }
             }
         } else {
-            TupBackground *bg = scene->background();
+            TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {

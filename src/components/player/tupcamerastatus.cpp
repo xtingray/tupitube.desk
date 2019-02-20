@@ -176,7 +176,7 @@ void TupCameraStatus::setScenes(TupProject *project)
     for (int i = 0; i < scenesCount; i++) {
          TupScene *scene = project->scenes().at(i);
          if (scene)
-             scenes << scene->sceneName();
+             scenes << scene->getSceneName();
     }
     // scenes.sort(Qt::CaseSensitive);
     scenesCombo->addItems(scenes);

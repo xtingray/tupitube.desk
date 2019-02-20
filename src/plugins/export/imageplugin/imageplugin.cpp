@@ -123,7 +123,7 @@ bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, 
                 generator.setViewBox(QRect(0, 0, size.width(), size.height()));
                 QFileInfo info(path);
                 generator.setTitle(info.fileName());
-                generator.setDescription(scene->sceneName());
+                generator.setDescription(scene->getSceneName());
 
                 QPainter painter;
                 painter.begin(&generator);
@@ -184,7 +184,7 @@ bool ImagePlugin::exportFrame(int frameIndex, const QColor color, const QString 
         generator.setViewBox(QRect(0, 0, size.width(), size.height()));
         QFileInfo info(path);
         generator.setTitle(info.fileName());
-        generator.setDescription(scene->sceneName());
+        generator.setDescription(scene->getSceneName());
 
         QPainter painter;
         painter.begin(&generator);

@@ -35,16 +35,11 @@
 
 #include "tupbackgroundscene.h"
 
-struct TupBackgroundScene::Private
-{
-    TupFrame *bg;
-};
-
-TupBackgroundScene::TupBackgroundScene(const QSize dimension, const QColor color, TupFrame *background) : QGraphicsScene(), k(new Private)
+TupBackgroundScene::TupBackgroundScene(const QSize dimension, const QColor color, TupFrame *background) : QGraphicsScene()
 {
     setSceneRect(QRectF(QPointF(0,0), dimension));
     setBackgroundBrush(color);
-    k->bg = background;
+    bg = background;
     drawScene();
 }
 
@@ -54,18 +49,16 @@ TupBackgroundScene::~TupBackgroundScene()
     clearSelection();
 
     foreach (QGraphicsView *view, this->views())
-             view->setScene(0);
+        view->setScene(0);
 
     foreach (QGraphicsItem *item, items())
-             removeItem(item);
-
-    delete k;
+        removeItem(item);
 }
 
 void TupBackgroundScene::drawScene()
 {
     cleanWorkSpace();
-    addFrame(k->bg);
+    addFrame(bg);
     update();
 }
 
@@ -78,8 +71,8 @@ void TupBackgroundScene::renderView(QPainter *painter)
 void TupBackgroundScene::cleanWorkSpace()
 {
     foreach (QGraphicsItem *item, items()) {
-             if (item->scene() == this)
-                 removeItem(item);
+        if (item->scene() == this)
+            removeItem(item);
     }
 }
 
@@ -114,4 +107,3 @@ void TupBackgroundScene::addSvgObject(TupSvgItem *svgItem)
         addItem(svgItem);
     }
 }
-

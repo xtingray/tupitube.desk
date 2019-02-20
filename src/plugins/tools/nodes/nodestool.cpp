@@ -270,7 +270,7 @@ TupFrame* NodesTool::currentFrame()
         k->currentFrame = -1;
 
         TupScene *tupScene = k->scene->currentScene();
-        TupBackground *bg = tupScene->background();
+        TupBackground *bg = tupScene->sceneBackground();
         if (k->scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
             frame = bg->staticFrame();
         } else if (k->scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {

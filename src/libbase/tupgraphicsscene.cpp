@@ -295,7 +295,7 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
         return;
     }
 
-    TupBackground *bg = gScene->background();
+    TupBackground *bg = gScene->sceneBackground();
     if (bg) {
         if (spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION) {
             if (!bg->dynamicBgIsEmpty()) {
@@ -588,7 +588,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
         #endif
     #endif
 
-    QList<TupGraphicObject *> tweenList = gScene->tweeningGraphicObjects(layerIndex);
+    QList<TupGraphicObject *> tweenList = gScene->getTweeningGraphicObjects(layerIndex);
     int total = tweenList.count();
 
     #ifdef TUP_DEBUG
@@ -777,7 +777,7 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
     #endif
     */
 
-    QList<TupSvgItem *> svgList = gScene->tweeningSvgObjects(indexLayer);
+    QList<TupSvgItem *> svgList = gScene->getTweeningSvgObjects(indexLayer);
 
     for (int i=0; i < svgList.count(); i++) {
          TupSvgItem *object = svgList.at(i);
@@ -1682,7 +1682,7 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
             }
         }
     } else {
-        TupBackground *bg = gScene->background();
+        TupBackground *bg = gScene->sceneBackground();
         if (bg) {
             TupFrame *frame = new TupFrame;
             if (spaceContext == TupProject::STATIC_BACKGROUND_EDITION) {
