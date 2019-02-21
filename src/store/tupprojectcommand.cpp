@@ -41,14 +41,9 @@
 #include "tupprojectresponse.h"
 #include "tupsvg2qt.h"
 
-struct TupProjectCommand::Private 
-{
-    TupCommandExecutor *executor;
-    TupProjectResponse *response;
-    bool executed;
-};
+#include <QVariant>
 
-TupProjectCommand::TupProjectCommand(TupCommandExecutor *executor, const TupProjectRequest *request) : QUndoCommand(), k(new Private())
+TupProjectCommand::TupProjectCommand(TupCommandExecutor *exec, const TupProjectRequest *request) : QUndoCommand()
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -71,12 +66,12 @@ TupProjectCommand::TupProjectCommand(TupCommandExecutor *executor, const TupProj
         return;
     }
 
-    k->executor = executor;
-    k->executed = false;
-    k->response = parser.response();
-    k->response->setExternal(request->isExternal());
+    executor = exec;
+    executed = false;
+    response = parser.response();
+    response->setExternal(request->isExternal());
 
-    if (!k->response) {
+    if (!response) {
         #ifdef TUP_DEBUG
             QString msg = "TupProjectCommand::TupProjectCommand() - Unparsed response!";
             #ifdef Q_OS_WIN
@@ -90,7 +85,7 @@ TupProjectCommand::TupProjectCommand(TupCommandExecutor *executor, const TupProj
     initText();
 }
 
-TupProjectCommand::TupProjectCommand(TupCommandExecutor *executor, TupProjectResponse *response) : QUndoCommand(), k(new Private)
+TupProjectCommand::TupProjectCommand(TupCommandExecutor *exec, TupProjectResponse *res) : QUndoCommand()
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -100,45 +95,45 @@ TupProjectCommand::TupProjectCommand(TupCommandExecutor *executor, TupProjectRes
         #endif
     #endif
 	
-    k->executor = executor;
-    k->response = response;
-    k->executed = false;
+    executor = exec;
+    response = res;
+    executed = false;
 
     initText();
 }
 
 void TupProjectCommand::initText()
 {
-    switch (k->response->part()) {
+    switch (response->part()) {
         case TupProjectRequest::Frame:
         {
-            setText(actionString(k->response->action()) + " frame");
+            setText(actionString(response->action()) + " frame");
         }
         break;
         case TupProjectRequest::Layer:
         {
-            setText(actionString(k->response->action()) + " layer");
+            setText(actionString(response->action()) + " layer");
         }
         break;
         case TupProjectRequest::Scene:
         {
-            setText(actionString(k->response->action()) + " scene");
+            setText(actionString(response->action()) + " scene");
         }
         break;
         case TupProjectRequest::Item:
         {
-            setText(actionString(k->response->action()) + " item");
+            setText(actionString(response->action()) + " item");
         }
         break;
         case TupProjectRequest::Library:
         {
-            setText(actionString(k->response->action()) + " symbol");
+            setText(actionString(response->action()) + " symbol");
         }
         break;
         default:
         {				  
             #ifdef TUP_DEBUG
-                QString msg = "TProjectCommand::initText() - Error: can't handle ID: " + QString::number(k->response->part());
+                QString msg = "TProjectCommand::initText() - Error: can't handle ID: " + QString::number(response->part());
                 #ifdef Q_OS_WIN
                     qDebug() << msg;
                 #else
@@ -226,8 +221,7 @@ QString TupProjectCommand::actionString(int action)
 
 TupProjectCommand::~TupProjectCommand()
 {
-    delete k->response;
-    delete k;
+    delete response;
 }
 
 void TupProjectCommand::redo()
@@ -235,22 +229,22 @@ void TupProjectCommand::redo()
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupProjectCommand::redo()] - Executing REDO action...";
-            qDebug() << "[TupProjectCommand::redo()] - k->response->part(): " << k->response->part();
+            qDebug() << "[TupProjectCommand::redo()] - response->part(): " << response->part();
         #else
             T_FUNCINFO;
             tWarning() << "[TupProjectCommand::redo()] - Executing REDO action...";
-            tWarning() << k->response->part();
+            tWarning() << response->part();
         #endif
     #endif
 	
-    if (k->executed) {
-        k->response->setMode(TupProjectResponse::Redo);
+    if (executed) {
+        response->setMode(TupProjectResponse::Redo);
     } else {
-        k->response->setMode(TupProjectResponse::Do);
-        k->executed = true;
+        response->setMode(TupProjectResponse::Do);
+        executed = true;
     }
     
-    switch (k->response->part()) {
+    switch (response->part()) {
             case TupProjectRequest::Project:
             {
                 #ifdef TUP_DEBUG
@@ -313,8 +307,8 @@ void TupProjectCommand::undo()
         #endif
     #endif
 
-    k->response->setMode(TupProjectResponse::Undo);
-    switch (k->response->part()) {
+    response->setMode(TupProjectResponse::Undo);
+    switch (response->part()) {
             case TupProjectRequest::Project:
             {
                  #ifdef TUP_DEBUG
@@ -377,86 +371,86 @@ void TupProjectCommand::frameCommand()
         #endif
     #endif
 
-    TupFrameResponse *response = static_cast<TupFrameResponse *>(k->response);
+    TupFrameResponse *res = static_cast<TupFrameResponse *>(response);
 
-    switch (response->action()) {
+    switch (res->action()) {
             case TupProjectRequest::Add:
             {
-                 k->executor->createFrame(response);
+                 executor->createFrame(res);
             }
             break;
             case TupProjectRequest::Remove:
             {
-                 k->executor->removeFrame(response);
+                 executor->removeFrame(res);
             }
             break;
             case TupProjectRequest::RemoveSelection:
             {
-                 k->executor->removeFrameSelection(response);
+                 executor->removeFrameSelection(res);
             }
             break;
             case TupProjectRequest::Reset:
             {
-                 k->executor->resetFrame(response);
+                 executor->resetFrame(res);
             }
             break;
             case TupProjectRequest::Exchange:
             {
-                 k->executor->exchangeFrame(response);
+                 executor->exchangeFrame(res);
             }
             break;
             case TupProjectRequest::Move:
             {
-                 k->executor->moveFrame(response);
+                 executor->moveFrame(res);
             }
             break;
             case TupProjectRequest::ReverseSelection:
             {
-                 k->executor->reverseFrameSelection(response);
+                 executor->reverseFrameSelection(res);
             }
             break;
             /*
             case TupProjectRequest::Lock:
             {
-                 k->executor->lockFrame(response);
+                 executor->lockFrame(res);
             }
             break;
             */
             case TupProjectRequest::Rename:
             {
-                 k->executor->renameFrame(response);
+                 executor->renameFrame(res);
             }
             break;
             case TupProjectRequest::Select:
             {
-                 k->executor->selectFrame(response);
+                 executor->selectFrame(res);
             }
             break;
             case TupProjectRequest::View:
             {
-                 k->executor->setFrameVisibility(response);
+                 executor->setFrameVisibility(res);
             }
             break;
             case TupProjectRequest::Extend:
             {
-                 k->executor->extendFrame(response);
+                 executor->extendFrame(res);
             }
             break;
             /*
             case TupProjectRequest::Paste:
             {
-                 k->executor->pasteFrame(response);
+                 executor->pasteFrame(res);
             }
             break;
             */
             case TupProjectRequest::CopySelection:
             {
-                 k->executor->copyFrameSelection(response);
+                 executor->copyFrameSelection(res);
             }
             break;
             case TupProjectRequest::PasteSelection:
             {
-                 k->executor->pasteFrameSelection(response);
+                 executor->pasteFrameSelection(res);
             }
             break;
             default: 
@@ -476,57 +470,57 @@ void TupProjectCommand::frameCommand()
 
 void TupProjectCommand::layerCommand()
 {
-    TupLayerResponse *response = static_cast<TupLayerResponse *>(k->response);
+    TupLayerResponse *res = static_cast<TupLayerResponse *>(response);
 
-    switch (response->action()) {
+    switch (res->action()) {
             case TupProjectRequest::Add:
             {
-                 k->executor->createLayer(response);
+                 executor->createLayer(res);
             }
             break;
             case TupProjectRequest::AddLipSync:
             {
-                 k->executor->addLipSync(response);
+                 executor->addLipSync(res);
             }
             break;
             case TupProjectRequest::UpdateLipSync:
             {
-                 k->executor->updateLipSync(response);
+                 executor->updateLipSync(res);
             }
             break;
             case TupProjectRequest::Remove:
             {
-                 k->executor->removeLayer(response);
+                 executor->removeLayer(res);
             }
             break;
             case TupProjectRequest::RemoveLipSync:
             {
-                 k->executor->removeLipSync(response);
+                 executor->removeLipSync(res);
             }
             break;
             case TupProjectRequest::Move:
             {
-                 k->executor->moveLayer(response);
+                 executor->moveLayer(res);
             }
             break;
             case TupProjectRequest::Lock:
             {
-                 k->executor->lockLayer(response);
+                 executor->lockLayer(res);
             }
             break;
             case TupProjectRequest::Rename:
             {
-                 k->executor->renameLayer(response);
+                 executor->renameLayer(res);
             }
             break;
             case TupProjectRequest::Select:
             {
-                 k->executor->selectLayer(response);
+                 executor->selectLayer(res);
             }
             break;
             case TupProjectRequest::View:
             {
-                 k->executor->setLayerVisibility(response);
+                 executor->setLayerVisibility(res);
             }
             break;
             default: 
@@ -546,58 +540,58 @@ void TupProjectCommand::layerCommand()
 
 void TupProjectCommand::sceneCommand()
 {
-    TupSceneResponse *response = static_cast<TupSceneResponse *>(k->response);
+    TupSceneResponse *res = static_cast<TupSceneResponse *>(response);
 
-    switch (response->action()) {
+    switch (res->action()) {
 	    // SQA: Check if this case is valid 
             case TupProjectRequest::GetInfo:
             {
-                 k->executor->getScenes(response);
+                 executor->getScenes(res);
             }
 	    break;
             case TupProjectRequest::Add:
             {
-                 k->executor->createScene(response);
+                 executor->createScene(res);
             }
             break;
             case TupProjectRequest::Remove:
             {
-                 k->executor->removeScene(response);
+                 executor->removeScene(res);
             }
             break;
             case TupProjectRequest::Reset:
             {
-                 k->executor->resetScene(response);
+                 executor->resetScene(res);
             }
             break;
             case TupProjectRequest::Move:
             {
-                 k->executor->moveScene(response);
+                 executor->moveScene(res);
             }
             break;
             case TupProjectRequest::Lock:
             {
-                 k->executor->lockScene(response);
+                 executor->lockScene(res);
             }
             break;
             case TupProjectRequest::Rename:
             {
-                 k->executor->renameScene(response);
+                 executor->renameScene(res);
             }
             break;
             case TupProjectRequest::Select:
             {
-                 k->executor->selectScene(response);
+                 executor->selectScene(res);
             }
             break;
             case TupProjectRequest::View:
             {
-                 k->executor->setSceneVisibility(response);
+                 executor->setSceneVisibility(res);
             }
             break;
             case TupProjectRequest::BgColor:
             {
-                 k->executor->setBgColor(response);
+                 executor->setBgColor(res);
             }
             break;
 
@@ -628,22 +622,22 @@ void TupProjectCommand::itemCommand()
     #endif
     */
 
-    TupItemResponse *response = static_cast<TupItemResponse *>(k->response);
+    TupItemResponse *res = static_cast<TupItemResponse *>(response);
 
-    switch (response->action()) {
+    switch (res->action()) {
             case TupProjectRequest::Add:
             {
-                 k->executor->createItem(response);
+                 executor->createItem(res);
             }
             break;
             case TupProjectRequest::Remove:
             {
-                 k->executor->removeItem(response);
+                 executor->removeItem(res);
             }
             break;
             case TupProjectRequest::Move:
             {
-                 k->executor->moveItem(response);
+                 executor->moveItem(res);
             }
             break;
             case TupProjectRequest::Lock:
@@ -656,22 +650,22 @@ void TupProjectCommand::itemCommand()
             break;
             case TupProjectRequest::Convert:
             {
-                 k->executor->convertItem(response);
+                 executor->convertItem(res);
             }
             break;
             case TupProjectRequest::EditNodes:
             {
-                 k->executor->setPathItem(response);
+                 executor->setPathItem(res);
             }
             break;
             case TupProjectRequest::Pen:
             {
-                 k->executor->setPen(response);
+                 executor->setPen(res);
             }
             break;
             case TupProjectRequest::Brush:
             {
-                 k->executor->setBrush(response);
+                 executor->setBrush(res);
             }
             break;
             /*
@@ -686,27 +680,27 @@ void TupProjectCommand::itemCommand()
             */
             case TupProjectRequest::Transform:
             {
-                 k->executor->transformItem(response);
+                 executor->transformItem(res);
             }
             break;
             case TupProjectRequest::Group:
             {
-                 k->executor->groupItems(response);
+                 executor->groupItems(res);
             }
             break;
             case TupProjectRequest::Ungroup:
             {
-                 k->executor->ungroupItems(response);
+                 executor->ungroupItems(res);
             }
             break;
             case TupProjectRequest::SetTween:
             {
-                 k->executor->setTween(response);
+                 executor->setTween(res);
             }
             break;
             case TupProjectRequest::UpdateTweenPath:
             {
-                 k->executor->updateTweenPath(response);
+                 executor->updateTweenPath(res);
             }
             break;
             default: 
@@ -734,30 +728,30 @@ void TupProjectCommand::libraryCommand()
         #endif
     #endif
     
-    TupLibraryResponse *response = static_cast<TupLibraryResponse *>(k->response);
+    TupLibraryResponse *res = static_cast<TupLibraryResponse *>(response);
 
-    switch (response->action()) {
+    switch (res->action()) {
             case TupProjectRequest::Add:
             {
-                 k->executor->createSymbol(response);
+                 executor->createSymbol(res);
             }
             break;
 
             case TupProjectRequest::Remove:
             {
-                 k->executor->removeSymbol(response);
+                 executor->removeSymbol(res);
             }
             break;
 
             case TupProjectRequest::InsertSymbolIntoFrame:
             {
-                 k->executor->insertSymbolIntoFrame(response);
+                 executor->insertSymbolIntoFrame(res);
             }
             break;
 
             case TupProjectRequest::RemoveSymbolFromFrame:
             {
-                 k->executor->removeSymbolFromFrame(response);
+                 executor->removeSymbolFromFrame(res);
             }
             break;
 
@@ -782,8 +776,8 @@ void TupProjectCommand::paintAreaCommand()
 	
     /*
      if (redo)
-         k->executor->reemitEvent(response);
+         executor->reemitEvent(response);
      else
-         k->executor->reemitEvent(response);
+         executor->reemitEvent(response);
     */
 }

@@ -80,7 +80,7 @@ void TupMainWindow::createGUI()
 
     // Adding the objects library widget to the left side of the interface
     m_libraryWidget = new TupLibraryWidget(this);
-    m_libraryWidget->setLibrary(m_projectManager->project()->getLibrary());
+    m_libraryWidget->setLibrary(m_projectManager->getProject()->getLibrary());
 
     libraryView = addToolView(m_libraryWidget, Qt::LeftDockWidgetArea, Animation, "Library", QKeySequence(tr("Shift+L")));
     connect(libraryView, SIGNAL(visibilityChanged(bool)), this, SLOT(updateLibraryPanelStatus(bool)));
@@ -122,7 +122,7 @@ void TupMainWindow::createGUI()
     connectWidgetToLocalManager(m_scenes);
 
     // Adding the exposure sheet to the right side of the interface
-    m_exposureSheet = new TupExposureSheet(this, m_projectManager->project());
+    m_exposureSheet = new TupExposureSheet(this, m_projectManager->getProject());
     connect(m_exposureSheet, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
 
     exposureView = addToolView(m_exposureSheet, Qt::RightDockWidgetArea, Animation, "Exposure Sheet", QKeySequence(tr("Shift+E")));
@@ -135,7 +135,7 @@ void TupMainWindow::createGUI()
     connectWidgetToLocalManager(m_exposureSheet);
 
     // Adding the time line widget to the bottom side of the interface
-    m_timeLine = new TupTimeLine(m_projectManager->project());
+    m_timeLine = new TupTimeLine(m_projectManager->getProject());
     connect(m_timeLine, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
 
     timeView = addToolView(m_timeLine, Qt::BottomDockWidgetArea, Animation, "Time Line", QKeySequence(tr("Shift+T")));

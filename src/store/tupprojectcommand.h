@@ -39,7 +39,6 @@
 #include "tglobal.h"
 
 #include <QUndoCommand>
-#include <QVariant>
 
 class TupProject;
 class TupProjectRequest;
@@ -70,8 +69,9 @@ class TUPITUBE_EXPORT TupProjectCommand : public QUndoCommand
         void initText();
         
     private:
-        struct Private;
-        Private *const k;
+        TupCommandExecutor *executor;
+        TupProjectResponse *response;
+        bool executed;
 };
 
 #endif

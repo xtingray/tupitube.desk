@@ -318,7 +318,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         // Setting undo/redo actions
         setUndoRedoActions();
 
-        animationTab = new TupDocumentView(m_projectManager->project(), this, isNetworked, users);
+        animationTab = new TupDocumentView(m_projectManager->getProject(), this, isNetworked, users);
 
         TCONFIG->beginGroup("Network");
         QString server = TCONFIG->value("Server").toString();
@@ -351,7 +351,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         int height = animationTab->workSpaceSize().height();
         animationTab->setWorkSpaceSize(width, height);
 
-        TupProject *project = m_projectManager->project();
+        TupProject *project = m_projectManager->getProject();
         int pWidth = project->getDimension().width();
         int pHeight = project->getDimension().height();
 
@@ -372,7 +372,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         }
 
         // TupCamera Widget
-        cameraWidget = new TupCameraWidget(m_projectManager->project(), isNetworked);
+        cameraWidget = new TupCameraWidget(m_projectManager->getProject(), isNetworked);
         connect(cameraWidget, SIGNAL(projectAuthorUpdated(const QString &)), this, SLOT(updateProjectAuthor(const QString &)));
         connectWidgetToManager(cameraWidget);
 
@@ -411,7 +411,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         // m_brushWidget->setThickness(thickness);
 
         if (TupMainWindow::requestType == OpenLocalProject || TupMainWindow::requestType == OpenNetProject)
-            TOsd::self()->display(tr("Information"), tr("Project <b>%1</b> opened!").arg(m_projectManager->project()->getName()));
+            TOsd::self()->display(tr("Information"), tr("Project <b>%1</b> opened!").arg(m_projectManager->getProject()->getName()));
 
         m_exposureSheet->setScene(0);
         connect(this, SIGNAL(tabHasChanged(int)), this, SLOT(updateCurrentTab(int)));
@@ -502,7 +502,7 @@ bool TupMainWindow::closeProject()
     if (!m_projectManager->isOpen())
         return true;
 
-    if (m_projectManager->isModified()) {
+    if (m_projectManager->isProjectModified()) {
         QDesktopWidget desktop;
         QMessageBox msgBox;
         msgBox.setWindowTitle(tr("Question"));
@@ -760,7 +760,7 @@ void TupMainWindow::openProject(const QString &path)
                 m_fileName = path;
 
             TupMainWindow::requestType = OpenLocalProject;
-            projectName = m_projectManager->project()->getName();
+            projectName = m_projectManager->getProject()->getName();
             updateRecentProjectList();
             updateOpenRecentMenu(m_recentProjectsMenu, m_recentProjects);
 
@@ -770,7 +770,7 @@ void TupMainWindow::openProject(const QString &path)
 
             m_exposureSheet->updateFramesState();
 
-            author = m_projectManager->project()->getAuthor();
+            author = m_projectManager->getProject()->getAuthor();
             if (author.length() <= 0)
                 author = "Anonymous";
 
@@ -1262,7 +1262,7 @@ void TupMainWindow::exportProject()
 {
     QDesktopWidget desktop;
 
-    exportWidget = new TupExportWidget(m_projectManager->project(), this);
+    exportWidget = new TupExportWidget(m_projectManager->getProject(), this);
     connect(exportWidget, SIGNAL(isDone()), animationTab, SLOT(updatePaintArea()));
     exportWidget->show();
     exportWidget->move(static_cast<int>((desktop.screenGeometry().width() - exportWidget->width())/2),
@@ -1272,7 +1272,7 @@ void TupMainWindow::exportProject()
 
 void TupMainWindow::callSave()
 {
-    if (m_projectManager->isModified())
+    if (m_projectManager->isProjectModified())
         saveProject();
 }
 
@@ -1409,7 +1409,7 @@ void TupMainWindow::resizeProjectDimension(const QSize dimension)
     m_projectManager->updateProjectDimension(dimension);
     disconnectWidgetToManager(cameraWidget);
     delete cameraWidget; 
-    cameraWidget = new TupCameraWidget(m_projectManager->project(), isNetworked);
+    cameraWidget = new TupCameraWidget(m_projectManager->getProject(), isNetworked);
     connect(cameraWidget, SIGNAL(projectAuthorUpdated(const QString &)), this, SLOT(updateProjectAuthor(const QString &)));
     connectWidgetToManager(cameraWidget);
 

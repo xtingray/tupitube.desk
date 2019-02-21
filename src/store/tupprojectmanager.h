@@ -61,17 +61,17 @@ class TUPITUBE_EXPORT TupProjectManager : public QObject
         TupProjectManager(QObject *parent = 0);
         virtual ~TupProjectManager();
 
-        void setParams(TupProjectManagerParams *params);
-        TupProjectManagerParams *params() const;
+        void setParams(TupProjectManagerParams *getParams);
+        TupProjectManagerParams *getParams() const;
 
         virtual void setupNewProject();
         virtual void closeProject();
 
         bool isOpen() const;
-        bool isModified() const;
-        TupProject *project();
-        void setHandler(TupAbstractProjectHandler *handler, bool isNetworked);
-        TupAbstractProjectHandler *handler() const;
+        bool isProjectModified() const;
+        TupProject *getProject();
+        void setHandler(TupAbstractProjectHandler *getHandler, bool isNetworked);
+        TupAbstractProjectHandler *getHandler() const;
 
         void createCommand(TupProjectCommand *command);
         void clearUndoStack();
@@ -101,8 +101,17 @@ class TUPITUBE_EXPORT TupProjectManager : public QObject
         void requestOpenProject(const QString& filename);
 
     private:
-        class Private;
-        Private *const k;
+        bool isModified;
+        int sceneIndex;
+        int layerIndex;
+        int frameIndex;
+        bool isNetworked;
+
+        TupProject *project;
+        QUndoStack *undoStack;
+        TupAbstractProjectHandler *handler;
+        TupProjectManagerParams *params;
+        TupCommandExecutor *commandExecutor;
 };
 
 #endif

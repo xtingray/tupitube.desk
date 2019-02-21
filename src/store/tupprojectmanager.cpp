@@ -51,34 +51,7 @@
 
 // This class handles the current animation project 
 
-class TupProjectManager::Private
-{
-    public:
-        Private() : handler(0), params(0)
-        {
-        }
-        ~Private()
-        {
-           delete handler;
-           delete undoStack;
-           delete commandExecutor;
-           delete params;
-        }
-
-    public:
-        TupProject *project;
-        bool isModified;
-        int sceneIndex;
-        int layerIndex;
-        int frameIndex;
-        TupAbstractProjectHandler *handler;
-        QUndoStack *undoStack;
-        TupCommandExecutor *commandExecutor;
-        TupProjectManagerParams *params;
-        bool isNetworked;
-};
-
-TupProjectManager::TupProjectManager(QObject *parent) : QObject(parent), k(new Private())
+TupProjectManager::TupProjectManager(QObject *parent) : QObject(parent)
 {	
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -88,15 +61,15 @@ TupProjectManager::TupProjectManager(QObject *parent) : QObject(parent), k(new P
         #endif
     #endif
     
-    k->isModified = false;
-    k->handler = 0;
+    isModified = false;
+    handler = 0;
 
-    k->project = new TupProject(this);
-    k->undoStack = new QUndoStack(this);
-    k->commandExecutor = new TupCommandExecutor(k->project);
+    project = new TupProject(this);
+    undoStack = new QUndoStack(this);
+    commandExecutor = new TupCommandExecutor(project);
 
-    connect(k->commandExecutor, SIGNAL(responsed(TupProjectResponse*)), this, SLOT(emitResponse(TupProjectResponse *)));
-    connect(k->project, SIGNAL(responsed(TupProjectResponse*)), this, SIGNAL(responsed(TupProjectResponse *)));
+    connect(commandExecutor, SIGNAL(responsed(TupProjectResponse*)), this, SLOT(emitResponse(TupProjectResponse *)));
+    connect(project, SIGNAL(responsed(TupProjectResponse*)), this, SIGNAL(responsed(TupProjectResponse *)));
 }
 
 TupProjectManager::~TupProjectManager()
@@ -109,47 +82,50 @@ TupProjectManager::~TupProjectManager()
         #endif
     #endif
 
-    delete k;
+    delete handler;
+    delete undoStack;
+    delete params;
+    delete commandExecutor;
 }
 
-void TupProjectManager::setParams(TupProjectManagerParams *params)
+void TupProjectManager::setParams(TupProjectManagerParams *parameters)
 {
-    if (k->params) 
-        delete k->params;
+    if (params)
+        delete params;
 
-    k->params = params;
-    k->handler->initialize(k->params);
+    params = parameters;
+    handler->initialize(params);
 }
 
-TupProjectManagerParams *TupProjectManager::params() const
+TupProjectManagerParams *TupProjectManager::getParams() const
 {
-    return k->params;
+    return params;
 }
 
-void TupProjectManager::setHandler(TupAbstractProjectHandler *handler, bool isNetworked)
+void TupProjectManager::setHandler(TupAbstractProjectHandler *pHandler, bool networked)
 {
-    if (k->handler) {
-        disconnect(k->handler, SIGNAL(sendCommand(const TupProjectRequest *, bool)), 
+    if (handler) {
+        disconnect(handler, SIGNAL(sendCommand(const TupProjectRequest *, bool)),
                    this, SLOT(createCommand(const TupProjectRequest *, bool)));
-        disconnect(k->handler, SIGNAL(sendLocalCommand(const TupProjectRequest *)), 
+        disconnect(handler, SIGNAL(sendLocalCommand(const TupProjectRequest *)),
                    this, SLOT(handleLocalRequest(const TupProjectRequest *)));
-        delete k->handler;
-        k->handler = 0;
+        delete handler;
+        handler = 0;
     }
 
-    k->handler = handler;
-    k->handler->setParent(this);
-    k->handler->setProject(k->project);
+    handler = pHandler;
+    handler->setParent(this);
+    handler->setProject(project);
 
-    connect(k->handler, SIGNAL(sendCommand(const TupProjectRequest *, bool)), this, SLOT(createCommand(const TupProjectRequest *, bool)));
-    connect(k->handler, SIGNAL(sendLocalCommand(const TupProjectRequest *)), this, SLOT(handleLocalRequest(const TupProjectRequest *)));
+    connect(handler, SIGNAL(sendCommand(const TupProjectRequest *, bool)), this, SLOT(createCommand(const TupProjectRequest *, bool)));
+    connect(handler, SIGNAL(sendLocalCommand(const TupProjectRequest *)), this, SLOT(handleLocalRequest(const TupProjectRequest *)));
 
-    k->isNetworked = isNetworked;
+    isNetworked = networked;
 }
 
-TupAbstractProjectHandler *TupProjectManager::handler() const
+TupAbstractProjectHandler *TupProjectManager::getHandler() const
 {
-    return k->handler;
+    return handler;
 }
 
 void TupProjectManager::setupNewProject()
@@ -162,7 +138,7 @@ void TupProjectManager::setupNewProject()
         #endif
     #endif
 	
-    if (!k->handler || !k->params) {
+    if (!handler || !params) {
         #ifdef TUP_DEBUG
             QString msg = "TupProjectManager::setupNewProject() - Error: No handler available or no params!";
             #ifdef Q_OS_WIN
@@ -176,15 +152,15 @@ void TupProjectManager::setupNewProject()
 
     closeProject();
 
-    k->project->setProjectName(k->params->projectName());
-    k->project->setAuthor(k->params->author());
-    k->project->setTags(k->params->tags());
-    k->project->setDescription(k->params->description());
-    k->project->setBgColor(k->params->bgColor());
-    k->project->setDimension(k->params->dimension());
-    k->project->setFPS(k->params->fps());
+    project->setProjectName(params->projectName());
+    project->setAuthor(params->author());
+    project->setTags(params->tags());
+    project->setDescription(params->description());
+    project->setBgColor(params->bgColor());
+    project->setDimension(params->dimension());
+    project->setFPS(params->fps());
 
-    if (! k->handler->setupNewProject(k->params)) {
+    if (! handler->setupNewProject(params)) {
         #ifdef TUP_DEBUG
             QString msg = "TupProjectManager::setupNewProject() - Error: Project params misconfiguration";
             #ifdef Q_OS_WIN
@@ -196,13 +172,13 @@ void TupProjectManager::setupNewProject()
         return;
     }
 
-    if (!k->isNetworked) {
-        QString projectPath = CACHE_DIR + k->params->projectName(); 
+    if (!isNetworked) {
+        QString projectPath = CACHE_DIR + params->projectName();
         QDir projectDir(projectPath); 
         if (projectDir.exists())
             removeProjectPath(projectPath);
 
-        k->project->setDataDir(projectPath);
+        project->setDataDir(projectPath);
 
         TupProjectRequest request = TupRequestBuilder::createSceneRequest(0, TupProjectRequest::Add, tr("Scene %1").arg(1));
         handleProjectRequest(&request);
@@ -225,18 +201,18 @@ void TupProjectManager::closeProject()
         #endif
     #endif
 
-    if (!k->handler)
+    if (!handler)
         return;
 
-    if (k->project->isProjectOpen()) {
-        if (!k->handler->closeProject())
+    if (project->isProjectOpen()) {
+        if (!handler->closeProject())
             return;
-        k->project->clear();
+        project->clear();
     }
 
-    k->project->setOpen(false);
-    k->isModified = false;
-    k->undoStack->clear();
+    project->setOpen(false);
+    isModified = false;
+    undoStack->clear();
 }
 
 bool TupProjectManager::saveProject(const QString &fileName)
@@ -249,15 +225,15 @@ bool TupProjectManager::saveProject(const QString &fileName)
         #endif
     #endif
 
-    bool result = k->handler->saveProject(fileName, k->project);
-    k->isModified = !result;
+    bool result = handler->saveProject(fileName, project);
+    isModified = !result;
 
     return result;
 }
 
 bool TupProjectManager::loadProject(const QString &fileName)
 {
-    if (! k->handler) {
+    if (! handler) {
         #ifdef TUP_DEBUG
             QString msg = "TupProjectManager::loadProject() - Fatal Error: No project handler available!";
             #ifdef Q_OS_WIN
@@ -270,11 +246,11 @@ bool TupProjectManager::loadProject(const QString &fileName)
         return false;
     }
 
-    bool ok = k->handler->loadProject(fileName, k->project);
+    bool ok = handler->loadProject(fileName, project);
 
     if (ok) {
-        k->project->setOpen(true);
-        k->isModified = false;
+        project->setOpen(true);
+        isModified = false;
     } else {
         #ifdef TUP_DEBUG
             QString msg = "TupProjectManager::loadProject() - Fatal Error: Can't load project -> " + fileName;
@@ -293,25 +269,25 @@ bool TupProjectManager::loadProject(const QString &fileName)
 
 bool TupProjectManager::isOpen() const
 {
-    return k->project->isProjectOpen();
+    return project->isProjectOpen();
 }
 
-bool TupProjectManager::isModified() const
+bool TupProjectManager::isProjectModified() const
 {
-    return k->isModified;
+    return isModified;
 }
 
 void TupProjectManager::undoModified()
 {
-    k->isModified = false;
+    isModified = false;
 }
 
 bool TupProjectManager::isValid() const
 {
-    if (!k->handler) 
+    if (!handler)
         return false;
 
-    return k->handler->isValid();
+    return handler->isValid();
 }
 
 /**
@@ -336,8 +312,8 @@ void TupProjectManager::handleProjectRequest(const TupProjectRequest *request)
 
     // SQA: the handler must advise when to build the command
     
-    if (k->handler) {
-        k->handler->handleProjectRequest(request);
+    if (handler) {
+        handler->handleProjectRequest(request);
     } else {
 	#ifdef TUP_DEBUG
             QString msg = "TupProjectManager::handleProjectRequest() - Error: No handler available";
@@ -364,17 +340,17 @@ void TupProjectManager::handleLocalRequest(const TupProjectRequest *request)
 
     if (parser.parse(request->xml())) {
         if (TupFrameResponse *response = static_cast<TupFrameResponse *>(parser.response())) {
-            k->sceneIndex = response->sceneIndex();
-            k->layerIndex = response->layerIndex();
-            k->frameIndex = response->frameIndex();
+            sceneIndex = response->sceneIndex();
+            layerIndex = response->layerIndex();
+            frameIndex = response->frameIndex();
 
             /*
             if (response->action() == TupProjectRequest::Copy) {
-                TupScene *scene = k->project->sceneAt(k->sceneIndex);
+                TupScene *scene = project->sceneAt(sceneIndex);
                 if (scene) {
-                    TupLayer *layer = scene->layerAt(k->layerIndex);
+                    TupLayer *layer = scene->layerAt(layerIndex);
                     if (layer) {
-                        TupFrame *frame = layer->frameAt(k->frameIndex);
+                        TupFrame *frame = layer->frameAt(frameIndex);
                         if (frame) {
                             QDomDocument doc;
                             doc.appendChild(frame->toXml(doc));
@@ -395,15 +371,15 @@ void TupProjectManager::handleLocalRequest(const TupProjectRequest *request)
 
             if (response->action() == TupProjectRequest::UpdateOpacity) {
                 double opacity = response->arg().toReal();
-                TupScene *scene = k->project->sceneAt(k->sceneIndex);
+                TupScene *scene = project->sceneAt(sceneIndex);
                 if (scene) {
-                    TupLayer *layer = scene->layerAt(k->layerIndex);
+                    TupLayer *layer = scene->layerAt(layerIndex);
                     if (layer) {
                         layer->setOpacity(opacity);
                     } else {
                         #ifdef TUP_DEBUG
                             QString msg = "TupProjectManager::handleLocalRequest() - Fatal Error: "
-                                          " Layer pointer is NULL [index = " +  QString::number(k->layerIndex) + "]";
+                                          " Layer pointer is NULL [index = " +  QString::number(layerIndex) + "]";
                             #ifdef Q_OS_WIN
                                 qDebug() << msg;
                             #else
@@ -441,9 +417,9 @@ void TupProjectManager::createCommand(const TupProjectRequest *request, bool add
     #endif		
 
     if (request->isValid()) {
-        TupProjectCommand *command = new TupProjectCommand(k->commandExecutor, request);
+        TupProjectCommand *command = new TupProjectCommand(commandExecutor, request);
         if (addToStack)
-            k->undoStack->push(command);
+            undoStack->push(command);
         else  
             command->redo();
     } else {
@@ -460,27 +436,27 @@ void TupProjectManager::createCommand(const TupProjectRequest *request, bool add
 
 void TupProjectManager::createCommand(TupProjectCommand *command)
 {
-    k->undoStack->push(command);
+    undoStack->push(command);
 }
 
-TupProject *TupProjectManager::project()
+TupProject *TupProjectManager::getProject()
 {
-    return k->project;
+    return project;
 }
 
 void TupProjectManager::undo()
 {
-    k->undoStack->undo();
+    undoStack->undo();
 }
 
 void TupProjectManager::redo()
 {
-    k->undoStack->redo();    
+    undoStack->redo();
 }
 
 void TupProjectManager::clearUndoStack()
 {
-    k->undoStack->clear();
+    undoStack->clear();
 }
 
 void TupProjectManager::emitResponse(TupProjectResponse *response)
@@ -494,13 +470,13 @@ void TupProjectManager::emitResponse(TupProjectResponse *response)
     #endif	
 
     if (response->action() != TupProjectRequest::Select)
-        k->isModified = true;
+        isModified = true;
 
-    if (!k->handler) {
+    if (!handler) {
         // SQA: Check if this is the right way to handle this condition 
         emit responsed(response);
-    } else if (k->isNetworked) {
-               if (k->handler->commandExecuted(response))
+    } else if (isNetworked) {
+               if (handler->commandExecuted(response))
                    emit responsed(response);
     } else { // Local request
         emit responsed(response);
@@ -509,7 +485,7 @@ void TupProjectManager::emitResponse(TupProjectResponse *response)
 
 void TupProjectManager::setOpen(bool isOpen)
 {
-    k->project->setOpen(isOpen);
+    project->setOpen(isOpen);
 }
 
 bool TupProjectManager::removeProjectPath(const QString &projectPath)
@@ -556,5 +532,5 @@ bool TupProjectManager::removeProjectPath(const QString &projectPath)
 
 void TupProjectManager::updateProjectDimension(const QSize size)
 {
-    k->project->setDimension(size);
+    project->setDimension(size);
 }

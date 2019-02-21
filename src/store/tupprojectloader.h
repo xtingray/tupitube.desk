@@ -39,8 +39,6 @@
 #include "tglobal.h"
 #include "tuplibraryobject.h"
 
-#include <QString>
-
 class TupProject;
 
 class TUPITUBE_EXPORT TupProjectLoader
