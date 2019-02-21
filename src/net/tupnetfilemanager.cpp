@@ -58,7 +58,7 @@ bool TupNetFileManager::save(const QString &_filename, TupProject *project)
     QDomElement root = doc.createElement("NetProject");
     
     QDomElement projectElement = doc.createElement("project");
-    projectElement.setAttribute("name", project->projectName());
+    projectElement.setAttribute("name", project->getName());
     
     root.appendChild(projectElement);
     

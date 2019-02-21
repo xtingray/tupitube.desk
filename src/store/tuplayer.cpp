@@ -220,7 +220,7 @@ bool TupLayer::removeLipSync(const QString &name)
     int size = lipsyncList.size();
     for (int i = 0; i < size; i++) {
          TupLipSync *lipsync = lipsyncList.at(i);
-         if (lipsync->name().compare(name) == 0) {
+         if (lipsync->getLipSyncName().compare(name) == 0) {
              lipsyncList.removeAt(i);
              return true;
          }

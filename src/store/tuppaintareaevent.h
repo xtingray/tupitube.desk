@@ -52,17 +52,17 @@ class TUPITUBE_EXPORT TupPaintAreaEvent
              ChangeBgColor
           };
 
-        TupPaintAreaEvent(Action action, const QVariant &data);
+        TupPaintAreaEvent(Action act, const QVariant &variant);
         virtual ~TupPaintAreaEvent();
 
-        Action action() const;
-        QVariant data() const;
+        Action getAction() const;
+        QVariant getData() const;
 
         virtual TupPaintAreaEvent *clone() const;
 
     private:
-        Action m_action;
-        QVariant m_data;
+        Action action;
+        QVariant data;
 };
 
 #endif

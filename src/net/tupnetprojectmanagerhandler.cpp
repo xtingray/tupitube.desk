@@ -406,7 +406,7 @@ void TupNetProjectManagerHandler::handlePackage(const QString &root, const QStri
                            bool isOk = manager->load(file.fileName(), k->project);
                            if (isOk) {
                                k->projectIsOpen = true;
-                               emit openNewArea(k->project->projectName(), parser.partners());
+                               emit openNewArea(k->project->getName(), parser.partners());
                            } else {
                                #ifdef TUP_DEBUG
                                    QString msg = "TupNetProjectManagerHandler::handlePackage() - Error: Net project can't be opened";

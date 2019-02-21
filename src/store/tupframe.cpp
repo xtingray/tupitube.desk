@@ -278,10 +278,10 @@ void TupFrame::fromXml(const QString &xml)
                } else if (e.tagName() == "svg") {
                           QString symbol = e.attribute("id");
                           if (symbol.length() > 0) {
-                              TupLibraryObject *object = parentProject()->library()->getObject(symbol);
+                              TupLibraryObject *object = parentProject()->getLibrary()->getObject(symbol);
 
                               if (object) {
-                                  QString path(object->dataPath());
+                                  QString path(object->getDataPath());
                                   QDomNode n2 = e.firstChild();
                                   TupSvgItem *svg = new TupSvgItem();
 
@@ -1230,7 +1230,7 @@ QGraphicsItem *TupFrame::createItem(QPointF coords, const QString &xml, bool loa
     TupItemFactory itemFactory;
     // SQA: Refactor the code related to the library variable within this class
 
-    TupLibrary *library = parentProject()->library();
+    TupLibrary *library = parentProject()->getLibrary();
     if (library)
         itemFactory.setLibrary(library);
 
@@ -1293,9 +1293,9 @@ TupSvgItem *TupFrame::createSvgItem(QPointF coords, const QString &xml, bool loa
 
     QDomElement root = document.documentElement();
     QString id = root.attribute("id");
-    TupLibraryObject *object = parentProject()->library()->getObject(id);
+    TupLibraryObject *object = parentProject()->getLibrary()->getObject(id);
     if (object) {
-        QString path = object->dataPath();
+        QString path = object->getDataPath();
         TupSvgItem *item = new TupSvgItem(path, this);
         if (item) {
             item->setSymbolName(id);
@@ -1553,10 +1553,10 @@ void TupFrame::reloadSVGItem(const QString &id, TupLibraryObject *object)
             if (svgIndexes.at(i).compare(id) == 0) {
                 TupSvgItem *oldItem = svg.value(i);
                 if (oldItem) {
-                    QString path = object->dataPath();
+                    QString path = object->getDataPath();
 
                     TupSvgItem *item = new TupSvgItem(path, this);
-                    item->setSymbolName(object->symbolName());
+                    item->setSymbolName(object->getSymbolName());
                     item->setTransform(oldItem->transform());
                     item->setPos(oldItem->pos());
                     item->setEnabled(true);

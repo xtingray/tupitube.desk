@@ -71,6 +71,7 @@ class TUPITUBE_EXPORT TupWord : public QObject, public TupAbstractSerializable
         TupWord();
         TupWord(int index);
         ~TupWord();
+
         void setInitFrame(int index);
         int initFrame();
         void setEndFrame(int index);
@@ -95,6 +96,7 @@ class TUPITUBE_EXPORT TupPhrase : public QObject, public TupAbstractSerializable
         TupPhrase();
         TupPhrase(int index);
         ~TupPhrase();
+
         void setInitFrame(int index);
         int initFrame();
         void setEndFrame(int index);
@@ -119,6 +121,7 @@ class TUPITUBE_EXPORT TupVoice : public QObject, public TupAbstractSerializable
         TupVoice();
         TupVoice(const QString &label, QPointF pos);
         ~TupVoice();
+
         void setVoiceTitle(const QString &label);
         QString voiceTitle() const;
         void setMouthPos(QPointF pos);
@@ -149,33 +152,39 @@ class TUPITUBE_EXPORT TupLipSync : public QObject, public TupAbstractSerializabl
 {
     public:
         TupLipSync();
-        TupLipSync(const QString &name, const QString &soundFile, int initFrame);
+        TupLipSync(const QString &getLipSyncName, const QString &getSoundFile, int getInitFrame);
         ~TupLipSync();
+
         void addPhrase(TupPhrase *phrase);
-        QString name() const;
-        void setName(const QString &title);
+        QString getLipSyncName() const;
+        void setLipSyncName(const QString &title);
         void setPicsExtension(const QString &extension);
-        QString picExtension() const;
-        QString soundFile() const;
+        QString getPicExtension() const;
+        QString getSoundFile() const;
         void setSoundFile(const QString &file);
-        int fps();
+        int getFPS();
         void setFPS(int fps);
-        int initFrame();
-	void setInitFrame(int frame);
-        int framesCount();
-        void setFramesCount(int framesCount);
+        int getInitFrame();
+        void setInitFrame(int frame);
+        int getFramesCount();
+        void setFramesCount(int getFramesCount);
         void addVoice(TupVoice *voice);
         TupVoice *voiceAt(int index);
-        QList<TupVoice *> voices();
+        QList<TupVoice *> getVoices();
         void updateMouthPosition(int mouthIndex, QPointF point, int frame);
         void verifyStructure();
 
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
 
-    private:
-        struct Private;
-        Private *const k;
+    private:        
+        QString lipSyncName;
+        QString soundFile;
+        QString extension;
+        int fps;
+        int initFrame;
+        int framesCount;
+        QList<TupVoice *> voices;
 };
 
 #endif

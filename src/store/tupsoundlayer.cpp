@@ -56,12 +56,12 @@ TupSoundLayer::~TupSoundLayer()
 
 void TupSoundLayer::fromSymbol(const QString &symbolName)
 {
-    TupLibrary *library = parentProject()->library();
+    TupLibrary *library = parentProject()->getLibrary();
     
     if (TupLibraryObject *object = library->getObject(symbolName)) {
-        if (object->type() == TupLibraryObject::Sound) {
+        if (object->getType() == TupLibraryObject::Sound) {
             k->symbolName = symbolName;
-            k->filePath = object->dataPath();
+            k->filePath = object->getDataPath();
             // k->playerId = TAudioPlayer::instance()->load(k->filePath);
         }
     }

@@ -51,7 +51,7 @@ TupScreen::TupScreen(TupProject *work, const QSize viewSize, bool sizeChanged, Q
     #endif
 
     project = work;
-    library = work->library();
+    library = work->getLibrary();
     QList<QPair<int, QString> > effectsList = library->soundEffectList();
 
     isScaled = sizeChanged;
@@ -599,11 +599,11 @@ void TupScreen::render()
 
     photograms.clear();
 
-    renderer = new TupAnimationRenderer(project->bgColor(), library);
-    renderer->setScene(scene, project->dimension());
+    renderer = new TupAnimationRenderer(project->getBgColor(), library);
+    renderer->setScene(scene, project->getDimension());
     int i = 1;
     while (renderer->nextPhotogram()) {
-        renderized = QImage(project->dimension(), QImage::Format_RGB32);
+        renderized = QImage(project->getDimension(), QImage::Format_RGB32);
         painter = new QPainter(&renderized);
         painter->setRenderHint(QPainter::Antialiasing);
 
@@ -781,11 +781,11 @@ void TupScreen::updateFirstFrame()
         if (scene) { 
             loadSoundRecords();
 
-            renderer = new TupAnimationRenderer(project->bgColor(), library);
-            renderer->setScene(scene, project->dimension());
+            renderer = new TupAnimationRenderer(project->getBgColor(), library);
+            renderer->setScene(scene, project->getDimension());
             renderer->renderPhotogram(0);
 
-            renderized = QImage(project->dimension(), QImage::Format_RGB32);
+            renderized = QImage(project->getDimension(), QImage::Format_RGB32);
 
             QPainter *painter = new QPainter(&renderized);
             painter->setRenderHint(QPainter::Antialiasing);
@@ -877,13 +877,13 @@ void TupScreen::loadSoundRecords()
             Mouths mouths = scene->getLipSyncList();
             int i = 0;
             foreach(TupLipSync *lipsync, mouths) {
-                TupLibraryFolder *folder = library->getFolder(lipsync->name());
+                TupLibraryFolder *folder = library->getFolder(lipsync->getLipSyncName());
                 if (folder) {
-                    TupLibraryObject *sound = folder->getObject(lipsync->soundFile());
+                    TupLibraryObject *sound = folder->getObject(lipsync->getSoundFile());
                     if (sound) {
                         QPair<int, QString> soundRecord;
-                        soundRecord.first = lipsync->initFrame();
-                        soundRecord.second = sound->dataPath();
+                        soundRecord.first = lipsync->getInitFrame();
+                        soundRecord.second = sound->getDataPath();
 
                         soundRecords << soundRecord;
                         soundPlayer << new QMediaPlayer();

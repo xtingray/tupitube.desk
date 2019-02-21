@@ -73,7 +73,7 @@ TupExportWidget::TupExportWidget(TupProject *project, QWidget *parent, bool isLo
         addPage(k->pluginPage);
 
         k->scenesPage = new TupSceneSelector(this);
-        k->scenesPage->setScenes(project->scenes());
+        k->scenesPage->setScenes(project->getScenes());
         addPage(k->scenesPage);
 
         k->animationExport = new TupExportModule(project, TupExportWidget::Animation, tr("Export To Video File"), this);
@@ -101,7 +101,7 @@ TupExportWidget::TupExportWidget(TupProject *project, QWidget *parent, bool isLo
         setWindowIcon(QIcon(THEME_DIR + "icons/net_document.png"));
 
         k->scenesPage = new TupSceneSelector(this);
-        k->scenesPage->setScenes(project->scenes());
+        k->scenesPage->setScenes(project->getScenes());
         addPage(k->scenesPage);
 
         k->videoProperties = new TupVideoProperties(this);

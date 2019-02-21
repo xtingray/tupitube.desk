@@ -78,7 +78,7 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
     else // Animation or AnimatedImage
         filePathLayout->addWidget(new QLabel(tr("File: ")));
 
-    QString prefix = m_project->projectName() + "_img";
+    QString prefix = m_project->getName() + "_img";
     m_prefix = new QLineEdit(prefix);
     m_filePath = new QLineEdit;
 
@@ -125,7 +125,7 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
     QHBoxLayout *configureLayout = new QHBoxLayout(configure);
     configureLayout->addStretch();
 
-    dimension = m_project->dimension();
+    dimension = m_project->getDimension();
     int maxDimension = dimension.width();
     if (maxDimension < dimension.height())
         maxDimension = dimension.height();
@@ -137,7 +137,7 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
     m_fps = new QSpinBox;
     m_fps->setMinimum(0);
     m_fps->setMaximum(100);
-    m_fps->setValue(m_project->fps());
+    m_fps->setValue(m_project->getFPS());
 
     configureLayout->addWidget(m_size);
     configureLayout->addWidget(new QWidget());
@@ -193,7 +193,7 @@ void TupExportModule::setCurrentFormat(int currentFormat, const QString &value)
         if (!filename.endsWith("/"))
             filename += "/";
 
-        filename += m_project->projectName();
+        filename += m_project->getName();
         filename += extension;
         m_size->setVisible(false);
     } else { // Images Array
@@ -484,7 +484,7 @@ void TupExportModule::exportIt()
                 newHeight = height;
             }
 
-            QColor color = m_project->bgColor();
+            QColor color = m_project->getBgColor();
             if (m_currentFormat == TupExportInterface::PNG || m_currentFormat == TupExportInterface::SVG) {
                 if (transparency)
                     color.setAlpha(0);
@@ -494,7 +494,7 @@ void TupExportModule::exportIt()
 
             done = m_currentExporter->exportToFormat(color, filename, scenes, m_currentFormat, 
                                       QSize(width, height), QSize(newWidth, newHeight), m_fps->value(),
-                                      m_project->library());
+                                      m_project->getLibrary());
         }
     } else {
         TOsd::self()->display(tr("Error"), tr("Format problem. TupiTube Internal error."), TOsd::Error);

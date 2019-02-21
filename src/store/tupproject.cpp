@@ -46,26 +46,7 @@
 #include "tupprojectresponse.h"
 #include "tupprojectloader.h"
 
-struct TupProject::Private
-{
-    QString name;
-    QString author;
-    QString tags;
-    QColor bgColor;
-    QString description;
-    QSize dimension;
-    int fps;
-    QString cachePath; 
-
-    Scenes scenes;
-    Scenes undoScenes;
-    int sceneCounter;
-    TupLibrary *library;
-    bool isOpen;
-    TupProject::Mode spaceMode;
-};
-
-TupProject::TupProject(QObject *parent) : QObject(parent), k(new Private)
+TupProject::TupProject(QObject *parent) : QObject(parent)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -75,13 +56,13 @@ TupProject::TupProject(QObject *parent) : QObject(parent), k(new Private)
         #endif
     #endif    
     
-    k->spaceMode = TupProject::NONE;
-    k->bgColor = QColor("#fff");
-    k->tags = tr("#animation #2D");
-    k->sceneCounter = 0;
-    k->isOpen = false;
-    k->library = new TupLibrary("library", this);
-    k->cachePath = "";
+    spaceMode = TupProject::NONE;
+    bgColor = QColor("#fff");
+    projectTags = tr("#animation #2D");
+    sceneCounter = 0;
+    isOpen = false;
+    library = new TupLibrary("library", this);
+    cachePath = "";
 }
 
 TupProject::~TupProject()
@@ -94,9 +75,8 @@ TupProject::~TupProject()
         #endif
     #endif    
         
-    // deleteDataDir(k->cachePath);
-    k->scenes.clear();
-    delete k;
+    // deleteDataDir(cachePath);
+    scenesList.clear();
 }
 
 void TupProject::loadLibrary(const QString &filename)
@@ -112,7 +92,7 @@ void TupProject::loadLibrary(const QString &filename)
     QFile file(filename);
 
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        k->library->fromXml(QString::fromLocal8Bit(file.readAll()));
+        library->fromXml(QString::fromLocal8Bit(file.readAll()));
         file.close();
     } else {               
         #ifdef TUP_DEBUG
@@ -128,103 +108,103 @@ void TupProject::loadLibrary(const QString &filename)
 
 void TupProject::clear()
 {
-    for (int i=0; i<k->scenes.count(); i++) {
-         TupScene *scene = k->scenes.takeAt(i);
+    for (int i=0; i<scenesList.count(); i++) {
+         TupScene *scene = scenesList.takeAt(i);
          scene->clear();
          delete scene;
          scene = NULL;
     }
 
-    k->scenes.clear();
-    k->sceneCounter = 0;
+    scenesList.clear();
+    sceneCounter = 0;
 
-    // deleteDataDir(k->cachePath);
+    // deleteDataDir(cachePath);
 }
 
 void TupProject::setProjectName(const QString &name)
 {
-    k->name = name;
+    projectName = name;
 }
 
 void TupProject::setAuthor(const QString &author)
 {
-    k->author = author;
+    projectAuthor = author;
 }
 
 void TupProject::setTags(const QString &tags)
 {
-    k->tags = tags;
+    projectTags = tags;
 }
 
 void TupProject::setBgColor(const QColor color)
 {
-    k->bgColor = color;
+    bgColor = color;
 
-    int totalScenes = k->scenes.size();
+    int totalScenes = scenesList.size();
     for (int i = 0; i < totalScenes; i++) {
-         TupScene *scene = k->scenes.at(i);
+         TupScene *scene = scenesList.at(i);
          scene->setBgColor(color);
     }
 }
 
 void TupProject::setDescription(const QString &description)
 {
-    k->description = description;
+    projectDesc = description;
 }
 
-void TupProject::setDimension(const QSize dimension)
+void TupProject::setDimension(const QSize size)
 {
-    k->dimension = dimension;
+    dimension = size;
 }
 
-void TupProject::setFPS(const int fps)
+void TupProject::setFPS(const int value)
 {
-    k->fps = fps;
+    fps = value;
 }
 
 void TupProject::setDataDir(const QString &path)
 {
-    k->cachePath = path;
+    cachePath = path;
 }
 
-QString TupProject::projectName() const
+QString TupProject::getName() const
 {
-    return k->name;
+    return projectName;
 }
 
-QString TupProject::author() const
+QString TupProject::getAuthor() const
 {
-    return k->author;
+    return projectAuthor;
 }
 
-QString TupProject::tags() const
+QString TupProject::getTags() const
 {
-    return k->tags;
+    return projectTags;
 }
 
-QColor TupProject::bgColor() const
+QColor TupProject::getBgColor() const
 {
-    return k->bgColor;
+    return bgColor;
 }
 
-QString TupProject::description() const
+QString TupProject::getDescription() const
 {
-    return k->description;
+    return projectDesc;
 }
 
-QSize TupProject::dimension() const
+QSize TupProject::getDimension() const
 {
-    return k->dimension;
+    return dimension;
 }
 
-int TupProject::fps() const
+int TupProject::getFPS() const
 {
-    return k->fps;
+    return fps;
 }
 
-QString TupProject::dataDir() const
+QString TupProject::getDataDir() const
 {
-    return k->cachePath;
+    return cachePath;
 }
 
 TupScene *TupProject::createScene(QString name, int position, bool loaded)
@@ -237,12 +217,12 @@ TupScene *TupProject::createScene(QString name, int position, bool loaded)
         #endif
     #endif
 
-    if (position < 0 || position > k->scenes.count())
+    if (position < 0 || position > scenesList.count())
         return 0;
 
-    TupScene *scene = new TupScene(this, k->dimension, k->bgColor);
-    k->scenes.insert(position, scene);
-    k->sceneCounter++;
+    TupScene *scene = new TupScene(this, dimension, bgColor);
+    scenesList.insert(position, scene);
+    sceneCounter++;
     scene->setSceneName(name);
     
     if (loaded)
@@ -253,16 +233,16 @@ TupScene *TupProject::createScene(QString name, int position, bool loaded)
 
 void TupProject::updateScene(int position, TupScene *scene)
 {
-    k->scenes.insert(position, scene);
+    scenesList.insert(position, scene);
 }
 
 bool TupProject::restoreScene(int position)
 {
-    if (k->undoScenes.count() > 0) {
-        TupScene *scene = k->undoScenes.takeLast();
+    if (undoScenes.count() > 0) {
+        TupScene *scene = undoScenes.takeLast();
         if (scene) {
-            k->scenes.insert(position, scene);
-            k->sceneCounter++;
+            scenesList.insert(position, scene);
+            sceneCounter++;
             return true;
         }
         return false;
@@ -283,7 +263,7 @@ bool TupProject::removeScene(int pos)
     
     TupScene *toRemove = sceneAt(pos);
     if (toRemove) {
-        QString path = dataDir() + "/scene" + QString::number(pos) + ".tps";
+        QString path = getDataDir() + "/scene" + QString::number(pos) + ".tps";
         if (QFile::exists(path)) {
             if (!QFile::remove(path)) {
                 #ifdef TUP_DEBUG
@@ -299,17 +279,17 @@ bool TupProject::removeScene(int pos)
             }
         }
 
-        int total = k->sceneCounter - 1;
+        int total = sceneCounter - 1;
         if (pos < total) {
             for (int i=pos + 1; i<=total; i++) {
-                 QString oldName = dataDir() + "/scene" + QString::number(i) + ".tps";  
-                 QString newName = dataDir() + "/scene" + QString::number(i-1) + ".tps";
+                 QString oldName = getDataDir() + "/scene" + QString::number(i) + ".tps";
+                 QString newName = getDataDir() + "/scene" + QString::number(i-1) + ".tps";
                  QFile::rename(oldName, newName); 
             }
         }
 
-        k->undoScenes << k->scenes.takeAt(pos);
-        k->sceneCounter--;
+        undoScenes << scenesList.takeAt(pos);
+        sceneCounter--;
 
         return true;
     } 
@@ -329,12 +309,12 @@ bool TupProject::resetScene(int pos, const QString &newName)
    
     TupScene *scene = sceneAt(pos);
     if (scene) {
-        k->undoScenes << k->scenes.takeAt(pos);
+        undoScenes << scenesList.takeAt(pos);
 
-        TupScene *basic = new TupScene(this, k->dimension, "#ffffff");
+        TupScene *basic = new TupScene(this, dimension, "#ffffff");
         basic->setSceneName(newName);
         basic->setBasicStructure();
-        k->scenes.insert(pos, basic);
+        scenesList.insert(pos, basic);
 
         return true;
     } else {
@@ -351,11 +331,11 @@ bool TupProject::resetScene(int pos, const QString &newName)
     return false;
 }
 
-QString TupProject::recoverScene(int pos) const
+QString TupProject::recoverScene(int pos)
 {
-    TupScene *scene = k->undoScenes.takeLast();
+    TupScene *scene = undoScenes.takeLast();
     if (scene) {
-        k->scenes[pos] = scene;
+        scenesList[pos] = scene;
         return scene->getSceneName();
     }
 
@@ -376,8 +356,8 @@ bool TupProject::moveScene(int position, int newPosition)
         return false;
     }
 
-    TupScene *scene = k->scenes.takeAt(position);
-    k->scenes.insert(newPosition, scene);
+    TupScene *scene = scenesList.takeAt(position);
+    scenesList.insert(newPosition, scene);
 
     return true;
 }
@@ -404,12 +384,12 @@ TupScene *TupProject::sceneAt(int position) const
         return 0;
     }
 
-    return k->scenes.value(position);
+    return scenesList.value(position);
 }
 
 int TupProject::visualIndexOf(TupScene *scene) const
 {
-    return k->scenes.indexOf(scene);
+    return scenesList.indexOf(scene);
 }
 
 void TupProject::fromXml(const QString &xml)
@@ -428,7 +408,7 @@ void TupProject::fromXml(const QString &xml)
 
            if (!e.isNull()) {
                if (e.tagName() == "project") {
-                   setProjectName(e.attribute("name", projectName()));
+                   setProjectName(e.attribute("name", getName()));
                    QDomNode n1 = e.firstChild();
                    e = n1.toElement();
 
@@ -486,36 +466,36 @@ QDomElement TupProject::toXml(QDomDocument &doc) const
     tupi.setAttribute("version", "1");
 
     QDomElement project = doc.createElement("project");
-    project.setAttribute("name", k->name);
+    project.setAttribute("name", projectName);
 
     QDomElement meta = doc.createElement("meta");
 
     QDomElement author = doc.createElement("author");
-    author.appendChild(doc.createTextNode(k->author));
+    author.appendChild(doc.createTextNode(projectAuthor));
 
     QDomElement tags = doc.createElement("tags");
-    tags.appendChild(doc.createTextNode(k->tags));
+    tags.appendChild(doc.createTextNode(projectTags));
 
     QDomElement description = doc.createElement("description");
-    description.appendChild(doc.createTextNode(k->description));
+    description.appendChild(doc.createTextNode(projectDesc));
 
     QDomElement color = doc.createElement("bgcolor");
-    color.appendChild(doc.createTextNode(k->bgColor.name()));
+    color.appendChild(doc.createTextNode(bgColor.name()));
 
     QDomElement size = doc.createElement("dimension");
-    QString xy = QString::number(k->dimension.width()) + "," + QString::number(k->dimension.height());
+    QString xy = QString::number(dimension.width()) + "," + QString::number(dimension.height());
     size.appendChild(doc.createTextNode(xy));
 
-    QDomElement fps = doc.createElement("fps");
-    QString frames = QString::number(k->fps);
-    fps.appendChild(doc.createTextNode(frames));
+    QDomElement fpsElement = doc.createElement("fps");
+    QString frames = QString::number(fps);
+    fpsElement.appendChild(doc.createTextNode(frames));
 
     meta.appendChild(author);
     meta.appendChild(tags);
     meta.appendChild(color);
     meta.appendChild(description);
     meta.appendChild(size);
-    meta.appendChild(fps);
+    meta.appendChild(fpsElement);
 
     project.appendChild(meta);
     tupi.appendChild(project);
@@ -523,9 +503,9 @@ QDomElement TupProject::toXml(QDomDocument &doc) const
     return tupi;
 }
 
-Scenes TupProject::scenes() const
+Scenes TupProject::getScenes() const
 {
-    return k->scenes;
+    return scenesList;
 }
 
 bool TupProject::createSymbol(int type, const QString &name, const QByteArray &data, const QString &folder)
@@ -538,7 +518,7 @@ bool TupProject::createSymbol(int type, const QString &name, const QByteArray &d
         #endif
     #endif
    
-    if (!k->isOpen) {        
+    if (!isOpen) {
         #ifdef TUP_DEBUG
             QString msg = "TupProject::createSymbol() - Fatal error: project is NOT open!";
             #ifdef Q_OS_WIN
@@ -551,7 +531,7 @@ bool TupProject::createSymbol(int type, const QString &name, const QByteArray &d
         return false;
     }
 
-    if (k->library->createSymbol(TupLibraryObject::Type(type), name, data, folder) == 0) {
+    if (library->createSymbol(TupLibraryObject::Type(type), name, data, folder) == 0) {
         #ifdef TUP_DEBUG
             QString msg = "TupProject::createSymbol() - Fatal error: object can't be created. Data is NULL!";
             #ifdef Q_OS_WIN
@@ -586,9 +566,9 @@ bool TupProject::removeSymbol(const QString &name, TupLibraryObject::Type type)
         #endif
     #endif    
     
-    int totalScenes = k->scenes.size();
+    int totalScenes = scenesList.size();
     for (int i = 0; i < totalScenes; i++) {
-         TupScene *scene = k->scenes.at(i);
+         TupScene *scene = scenesList.at(i);
 
          TupBackground *bg = scene->sceneBackground();
          if (bg) {
@@ -628,7 +608,7 @@ bool TupProject::removeSymbol(const QString &name, TupLibraryObject::Type type)
          }
     }
 
-    return k->library->removeObject(name, true);
+    return library->removeObject(name, true);
 }
 
 bool TupProject::addFolder(const QString &name)
@@ -643,7 +623,7 @@ bool TupProject::addFolder(const QString &name)
 
     TupLibraryFolder *folder = new TupLibraryFolder(name, this);
 
-    return k->library->addFolder(folder);
+    return library->addFolder(folder);
 }
 
 bool TupProject::removeFolder(const QString &name)
@@ -656,12 +636,12 @@ bool TupProject::removeFolder(const QString &name)
         #endif
     #endif
 
-    return k->library->removeFolder(name);
+    return library->removeFolder(name);
 }
 
 bool TupProject::removeSound(const QString &name)
 {
-    return k->library->removeObject(name, true);
+    return library->removeObject(name, true);
 }
 
 bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString &name, int sceneIndex, 
@@ -715,9 +695,9 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
         }
 
         if (frame) {
-            TupLibraryObject *object = k->library->getObject(name);
+            TupLibraryObject *object = library->getObject(name);
             if (object) {
-                switch (object->type()) {
+                switch (object->getType()) {
                         case TupLibraryObject::Item:
                         {
                              TupGraphicLibraryItem *libraryItem = new TupGraphicLibraryItem(object);
@@ -732,8 +712,8 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                              int imageW = libraryItem->boundingRect().width();
                              int imageH = libraryItem->boundingRect().height();
 
-                             if (k->dimension.width() > imageW && k->dimension.height() > imageH)
-                                 libraryItem->moveBy((k->dimension.width() - imageW)/2, (k->dimension.height() - imageH)/2);
+                             if (dimension.width() > imageW && dimension.height() > imageH)
+                                 libraryItem->moveBy((dimension.width() - imageW)/2, (dimension.height() - imageH)/2);
                              else
                                  libraryItem->moveBy(0, 0);
 
@@ -744,18 +724,18 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                         break;
                         case TupLibraryObject::Svg:
                         {
-                             QString path(object->dataPath());
+                             QString path(object->getDataPath());
                              TupSvgItem *svgItem = new TupSvgItem(path, frame);
                              svgItem->setSymbolName(name);
 
                              int svgW = svgItem->boundingRect().width();
                              int svgH = svgItem->boundingRect().height();
 
-                             if (k->dimension.width() > svgW && k->dimension.height() > svgH) {
-                                 svgItem->moveBy((k->dimension.width() - svgW)/2, (k->dimension.height() - svgH)/2);
+                             if (dimension.width() > svgW && dimension.height() > svgH) {
+                                 svgItem->moveBy((dimension.width() - svgW)/2, (dimension.height() - svgH)/2);
                              } else {
-                                 qreal factorW = ((qreal)k->dimension.width())/((qreal)svgW);
-                                 qreal factorH = ((qreal)k->dimension.height())/((qreal)svgH);
+                                 qreal factorW = ((qreal)dimension.width())/((qreal)svgW);
+                                 qreal factorH = ((qreal)dimension.height())/((qreal)svgH);
 
                                  if (factorW < factorH)                           
                                      svgItem->setScale(factorW);
@@ -784,7 +764,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                         case TupLibraryObject::Sound:
                         {
                              TupSoundLayer *sound = scene->createSoundLayer(scene->getSoundLayers().count());
-                             sound->fromSymbol(object->symbolName());
+                             sound->fromSymbol(object->getSymbolName());
                         }
                         break;
                         default:
@@ -850,9 +830,9 @@ bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::Ty
     if (type == TupLibraryObject::Folder)
         return true;
 
-    int totalScenes = k->scenes.size(); 
+    int totalScenes = scenesList.size();
     for (int i = 0; i < totalScenes; i++) {
-         TupScene *scene =  k->scenes.at(i);
+         TupScene *scene =  scenesList.at(i);
          int totalLayers = scene->getLayers().size();
          for (int j = 0; j < totalLayers; j++) {
               TupLayer *layer = scene->getLayers().at(j);
@@ -891,16 +871,16 @@ bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::Ty
          }
     }
 
-    // k->library->removeObject(name, true);
+    // library->removeObject(name, true);
 
     return true;
 }
 
 bool TupProject::updateSymbolId(TupLibraryObject::Type type, const QString &oldId, const QString &newId)
 {
-    int scenesCount = k->scenes.size();
+    int scenesCount = scenesList.size();
     for (int i = 0; i < scenesCount; i++) {
-         TupScene *scene = k->scenes.at(i);
+         TupScene *scene = scenesList.at(i);
          int layersCount = scene->getLayers().size();
          for (int j = 0; j < layersCount; j++) {
               TupLayer *layer = scene->getLayers().at(j);
@@ -939,9 +919,9 @@ bool TupProject::updateSymbolId(TupLibraryObject::Type type, const QString &oldI
 
 void TupProject::reloadLibraryItem(TupLibraryObject::Type type, const QString &id, TupLibraryObject *object)
 {
-    int scenesCount = k->scenes.size();
+    int scenesCount = scenesList.size();
     for (int i = 0; i < scenesCount; i++) {
-         TupScene *scene = k->scenes.at(i);
+         TupScene *scene = scenesList.at(i);
          int layersCount = scene->getLayers().size();
          for (int j = 0; j < layersCount; j++) {
               TupLayer *layer = scene->getLayers().at(j);
@@ -951,7 +931,7 @@ void TupProject::reloadLibraryItem(TupLibraryObject::Type type, const QString &i
                    if (type == TupLibraryObject::Svg)
                        frame->reloadSVGItem(id, object);
                    else
-                       frame->reloadGraphicItem(id, object->dataPath());
+                       frame->reloadGraphicItem(id, object->getDataPath());
               }
          }
 
@@ -962,7 +942,7 @@ void TupProject::reloadLibraryItem(TupLibraryObject::Type type, const QString &i
                  if (type == TupLibraryObject::Svg)
                      frame->reloadSVGItem(id, object);
                  else
-                     frame->reloadGraphicItem(id, object->dataPath());
+                     frame->reloadGraphicItem(id, object->getDataPath());
              }
 
              frame = bg->dynamicFrame();
@@ -970,15 +950,15 @@ void TupProject::reloadLibraryItem(TupLibraryObject::Type type, const QString &i
                  if (type == TupLibraryObject::Svg)
                      frame->reloadSVGItem(id, object);
                  else
-                     frame->reloadGraphicItem(id, object->dataPath());
+                     frame->reloadGraphicItem(id, object->getDataPath());
              }
          }
     }
 }
 
-TupLibrary *TupProject::library()
+TupLibrary *TupProject::getLibrary()
 {
-    return k->library;
+    return library;
 }
 
 void TupProject::emitResponse(TupProjectResponse *response)
@@ -988,12 +968,12 @@ void TupProject::emitResponse(TupProjectResponse *response)
 
 void TupProject::setOpen(bool open)
 {
-    k->isOpen = open;
+    isOpen = open;
 }
 
-bool TupProject::isOpen()
+bool TupProject::isProjectOpen()
 {
-    return k->isOpen;
+    return isOpen;
 }
 
 /*
@@ -1044,21 +1024,21 @@ bool TupProject::deleteDataDir(const QString &path)
 
 int TupProject::scenesCount() const
 {
-    return k->scenes.count();
+    return scenesList.count();
 }
 
 void TupProject::updateSpaceContext(TupProject::Mode mode)
 {
-    k->spaceMode = mode; 
+    spaceMode = mode;
 }
 
 TupProject::Mode TupProject::spaceContext()
 {
-    return k->spaceMode;
+    return spaceMode;
 }
 
 void TupProject::importLayer(int sceneIndex, const QString &layer)
 {
-    TupScene *scene = k->scenes.at(sceneIndex);
+    TupScene *scene = scenesList.at(sceneIndex);
     scene->addLayer(layer);
 }

@@ -228,7 +228,7 @@ void TupProjectManager::closeProject()
     if (!k->handler)
         return;
 
-    if (k->project->isOpen()) {
+    if (k->project->isProjectOpen()) {
         if (!k->handler->closeProject())
             return;
         k->project->clear();
@@ -293,7 +293,7 @@ bool TupProjectManager::loadProject(const QString &fileName)
 
 bool TupProjectManager::isOpen() const
 {
-    return k->project->isOpen();
+    return k->project->isProjectOpen();
 }
 
 bool TupProjectManager::isModified() const

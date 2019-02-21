@@ -48,7 +48,7 @@ TupPaintAreaCommand::~TupPaintAreaCommand()
 
 void TupPaintAreaCommand::undo()
 {
-    switch(event->action()) {
+    switch(event->getAction()) {
            case TupPaintAreaEvent::ChangePen:
                 {
                   paintArea->brushManager()->setPen(qvariant_cast<QPen>(oldData));
@@ -81,11 +81,11 @@ void TupPaintAreaCommand::undo()
 
 void TupPaintAreaCommand::redo()
 {
-    switch (event->action()) {
+    switch (event->getAction()) {
             case TupPaintAreaEvent::ChangePen:
                  {
                    oldData = paintArea->brushManager()->pen();
-                   QPen pen = qvariant_cast<QPen>(event->data());
+                   QPen pen = qvariant_cast<QPen>(event->getData());
                    if (!pen.color().isValid()) {
                        QPen old = paintArea->brushManager()->pen();
                        pen.setColor(old.color());
@@ -97,25 +97,25 @@ void TupPaintAreaCommand::redo()
             case TupPaintAreaEvent::ChangePenColor:
                  {
                    oldData = paintArea->brushManager()->pen().color();
-                   paintArea->brushManager()->setPenColor(qvariant_cast<QColor>(event->data()));
+                   paintArea->brushManager()->setPenColor(qvariant_cast<QColor>(event->getData()));
                  }
                  break;
             case TupPaintAreaEvent::ChangePenThickness:
                  {
                    oldData = paintArea->brushManager()->pen().width();
-                   paintArea->brushManager()->setPenWidth(qvariant_cast<int>(event->data()));
+                   paintArea->brushManager()->setPenWidth(qvariant_cast<int>(event->getData()));
                  }
                  break;
             case TupPaintAreaEvent::ChangeBrush:
                  {
                    oldData = paintArea->brushManager()->brush();
-                   paintArea->brushManager()->setBrush(qvariant_cast<QBrush>(event->data()));
+                   paintArea->brushManager()->setBrush(qvariant_cast<QBrush>(event->getData()));
                  }
                  break;
             case TupPaintAreaEvent::ChangeBgColor:
                  {
                    oldData = paintArea->brushManager()->bgColor();
-                   paintArea->brushManager()->setBgColor(qvariant_cast<QColor>(event->data()));
+                   paintArea->brushManager()->setBgColor(qvariant_cast<QColor>(event->getData()));
                  }
                  break;
             default: 

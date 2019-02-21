@@ -533,96 +533,85 @@ QDomElement TupVoice::toXml(QDomDocument &doc) const
     return root;
 }
 
-struct TupLipSync::Private
-{
-    QString name;
-    QString soundFile;
-    QString extension;
-    int fps;
-    int initFrame;
-    int framesCount;
-    QList<TupVoice *> voices;
-};
-
-TupLipSync::TupLipSync() : QObject(), k(new Private)
+TupLipSync::TupLipSync() : QObject()
 {
 }
 
-TupLipSync::TupLipSync(const QString &name, const QString &soundFile, int initFrame) : QObject(), k(new Private)
+TupLipSync::TupLipSync(const QString &name, const QString &sound, int init) : QObject()
 {
-    k->name = name;
-    k->soundFile = soundFile;
-    k->initFrame = initFrame;
+    lipSyncName = name;
+    soundFile = sound;
+    initFrame = init;
 }
 
 TupLipSync::~TupLipSync()
 {
 }
 
-QString TupLipSync::name() const
+QString TupLipSync::getLipSyncName() const
 {
-    return k->name;
+    return lipSyncName;
 }
 
-void TupLipSync::setName(const QString &title)
+void TupLipSync::setLipSyncName(const QString &title)
 {
-    k->name = title;
+    lipSyncName = title;
 }
 
-void TupLipSync::setPicsExtension(const QString &extension)
+void TupLipSync::setPicsExtension(const QString &format)
 {
-    k->extension = extension;
+    extension = format;
 }
 
-QString TupLipSync::picExtension() const
+QString TupLipSync::getPicExtension() const
 {
-    return k->extension;
+    return extension;
 }
 
-QString TupLipSync::soundFile() const
+QString TupLipSync::getSoundFile() const
 {
-    return k->soundFile;
+    return soundFile;
 }
 
 void TupLipSync::setSoundFile(const QString &file)
 {
-    k->soundFile = file;
+    soundFile = file;
 }
 
-int TupLipSync::fps()
+int TupLipSync::getFPS()
 {
-    return k->fps;
+    return fps;
 }
 
 void TupLipSync::setFPS(int fps)
 {
-    k->fps = fps;
+    fps = fps;
 }
 
-int TupLipSync::initFrame()
+int TupLipSync::getInitFrame()
 {
-    return k->initFrame;
+    return initFrame;
 }
 
 void TupLipSync::setInitFrame(int frame)
 {
-    k->initFrame = frame;
+    initFrame = frame;
 }
 
-int TupLipSync::framesCount()
+int TupLipSync::getFramesCount()
 {
-    return k->framesCount;
+    return framesCount;
 }
 
-void TupLipSync::setFramesCount(int framesCount)
+void TupLipSync::setFramesCount(int count)
 {
-    k->framesCount = framesCount;
+    framesCount = count;
 }
 
 void TupLipSync::addVoice(TupVoice *voice)
 {
     if (voice)
-        k->voices << voice;
+        voices << voice;
 }
 
 void TupLipSync::fromXml(const QString &xml)
@@ -647,12 +636,12 @@ void TupLipSync::fromXml(const QString &xml)
     }
 
     QDomElement root = document.documentElement();
-    k->name = root.attribute("name");
-    k->soundFile = root.attribute("soundFile");
-    k->initFrame = root.attribute("initFrame").toInt();
-    k->framesCount = root.attribute("framesTotal").toInt();
-    k->extension = root.attribute("extension");
-    k->fps = root.attribute("fps").toInt();
+    lipSyncName = root.attribute("name");
+    soundFile = root.attribute("soundFile");
+    initFrame = root.attribute("initFrame").toInt();
+    framesCount = root.attribute("framesTotal").toInt();
+    extension = root.attribute("extension");
+    fps = root.attribute("fps").toInt();
 
     QDomNode n = root.firstChild();
 
@@ -674,7 +663,7 @@ void TupLipSync::fromXml(const QString &xml)
                    }
 
                    voice->fromXml(newDoc);
-                   k->voices << voice;
+                   voices << voice;
                }
            }
            n = n.nextSibling();
@@ -684,38 +673,38 @@ void TupLipSync::fromXml(const QString &xml)
 QDomElement TupLipSync::toXml(QDomDocument &doc) const
 {
     QDomElement root = doc.createElement("lipsync");
-    root.setAttribute("name", k->name);
-    root.setAttribute("soundFile", k->soundFile);
-    root.setAttribute("initFrame", k->initFrame);
-    root.setAttribute("framesTotal", k->framesCount);
-    root.setAttribute("extension", k->extension);
-    root.setAttribute("fps", k->fps);
+    root.setAttribute("name", lipSyncName);
+    root.setAttribute("soundFile", soundFile);
+    root.setAttribute("initFrame", initFrame);
+    root.setAttribute("framesTotal", framesCount);
+    root.setAttribute("extension", extension);
+    root.setAttribute("fps", fps);
 
-    int total = k->voices.size();
+    int total = voices.size();
     for(int i=0; i<total; i++) {
-        TupVoice *voice = k->voices.at(i);
+        TupVoice *voice = voices.at(i);
         root.appendChild(voice->toXml(doc));
     }
 
     return root;
 }
 
-QList<TupVoice *> TupLipSync::voices()
+QList<TupVoice *> TupLipSync::getVoices()
 {
-    return k->voices;
+    return voices;
 }
 
 TupVoice * TupLipSync::voiceAt(int index)
 {
-    if (index >= 0 && index < k->voices.count())
-        return k->voices.at(index);
+    if (index >= 0 && index < voices.count())
+        return voices.at(index);
 
     return 0;
 }
 
 void TupLipSync::updateMouthPosition(int mouthIndex, QPointF point, int frame)
 {
-    TupVoice *voice = k->voices.at(mouthIndex);
+    TupVoice *voice = voices.at(mouthIndex);
     if (voice)
         voice->updateMouthPos(point, frame);
 }
@@ -730,9 +719,9 @@ void TupLipSync::verifyStructure()
         #endif
     #endif
 
-    for (int frame=0; frame < k->framesCount; frame++) {
+    for (int frame=0; frame < framesCount; frame++) {
          bool found = false;
-         foreach (TupVoice *voice, k->voices) {
+         foreach (TupVoice *voice, voices) {
              foreach (TupPhrase *phrase, voice->getPhrases()) {
                  if (phrase->contains(frame)) {
                      int i = -1;

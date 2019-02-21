@@ -99,7 +99,7 @@ TupSymbolEditor::~TupSymbolEditor()
 
 void TupSymbolEditor::setSymbol(TupLibraryObject *object)
 {
-    if (QGraphicsItem *item = qvariant_cast<QGraphicsItem *>(object->data())) {
+    if (QGraphicsItem *item = qvariant_cast<QGraphicsItem *>(object->getData())) {
         k->symbol = object;
         k->scene->addItem(item);
     }

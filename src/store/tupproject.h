@@ -42,11 +42,7 @@
 #include "tuplibraryobject.h"
 
 #include <QObject>
-#include <QDomDocument>
-#include <QDomElement>
 #include <QSize>
-#include <QDir>
-#include <QGraphicsView>
 
 class TupScene;
 class TupLayer;
@@ -63,7 +59,6 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
     Q_OBJECT
 
     public:
-
         enum Mode 
         {
             FRAMES_EDITION = 0,
@@ -76,38 +71,38 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         ~TupProject();
 
         void setProjectName(const QString &name);
-        void setAuthor(const QString &author);
-        void setTags(const QString &tags);
+        void setAuthor(const QString &getAuthor);
+        void setTags(const QString &getTags);
         void setBgColor(const QColor color);
-        void setDescription(const QString &description);
-        void setDimension(const QSize dimension);
-        void setFPS(const int fps);	
+        void setDescription(const QString &getDescription);
+        void setDimension(const QSize getDimension);
+        void setFPS(const int value);
 
-        QString projectName() const;
-        QString author() const;
-        QString tags() const;
-        QColor bgColor() const;
-        QString description() const;
-        QSize dimension() const;
-        int fps() const;
+        QString getName() const;
+        QString getAuthor() const;
+        QString getTags() const;
+        QColor getBgColor() const;
+        QString getDescription() const;
+        QSize getDimension() const;
+        int getFPS() const;
 
         // bool deleteDataDir(const QString &path);
 
         void setDataDir(const QString &path);
-        QString dataDir() const;
+        QString getDataDir() const;
 
         TupScene *sceneAt(int pos) const;
 
         int visualIndexOf(TupScene *scene) const;
 
-        Scenes scenes() const;
+        Scenes getScenes() const;
 
         TupScene *createScene(QString name, int pos, bool loaded = false);
         void updateScene(int pos, TupScene *scene);
         bool restoreScene(int pos);
         bool removeScene(int pos);
         bool resetScene(int pos, const QString &newName);
-        QString recoverScene(int pos) const;
+        QString recoverScene(int pos);
         bool moveScene(int pos, int newPos);
 
         bool createSymbol(int type, const QString &name, const QByteArray &data, const QString &folder = QString());
@@ -126,14 +121,14 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         void clear();
         void loadLibrary(const QString &filename);
 
-        TupLibrary *library();
+        TupLibrary *getLibrary();
         void emitResponse(TupProjectResponse *response);
 
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
 
         void setOpen(bool open);
-        bool isOpen();
+        bool isProjectOpen();
         int scenesCount() const;
 
         void updateSpaceContext(TupProject::Mode mode);
@@ -145,8 +140,22 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         void responsed(TupProjectResponse *response);
 
     private:
-        struct Private;
-        Private *const k;
+        QString projectName;
+        QString projectAuthor;
+        QString projectTags;
+        QColor bgColor;
+        QString projectDesc;
+        QSize dimension;
+        int fps;
+        QString cachePath;
+
+        Scenes scenesList;
+        Scenes undoScenes;
+
+        int sceneCounter;
+        TupLibrary *library;
+        bool isOpen;
+        TupProject::Mode spaceMode;
 };
 
 #endif

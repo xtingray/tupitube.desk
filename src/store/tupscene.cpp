@@ -48,7 +48,7 @@ TupScene::TupScene(TupProject *parent, const QSize size, const QColor color) : Q
     isLocked = false;
     layerCount = 0;
     isVisible = true;
-    storyboard = new TupStoryboard(parent->author());
+    storyboard = new TupStoryboard(parent->getAuthor());
     background = new TupBackground(this, size, color);
 }
 
@@ -806,7 +806,7 @@ QList<QString> TupScene::getLipSyncNames()
         if (layer->lipSyncCount() > 0) {
             Mouths mouths = layer->getLipSyncList();
             foreach (TupLipSync *lipsync, mouths)
-                names << lipsync->name();
+                names << lipsync->getLipSyncName();
         }
     }
 
@@ -819,7 +819,7 @@ bool TupScene::lipSyncExists(const QString &name)
         if (layer->lipSyncCount() > 0) {
             Mouths mouths = layer->getLipSyncList();
             foreach (TupLipSync *lipsync, mouths) {
-                if (lipsync->name().compare(name) == 0)
+                if (lipsync->getLipSyncName().compare(name) == 0)
                     return true;
             }
         }
@@ -835,7 +835,7 @@ int TupScene::getLipSyncLayerIndex(const QString &name)
         if (layer->lipSyncCount() > 0) {
             Mouths mouths = layer->getLipSyncList();
             foreach (TupLipSync *lipsync, mouths) {
-                if (lipsync->name().compare(name) == 0)
+                if (lipsync->getLipSyncName().compare(name) == 0)
                     break;
                 index++;
             }
@@ -853,7 +853,7 @@ TupLipSync * TupScene::getLipSync(const QString &name)
         if (layer->lipSyncCount() > 0) {
             Mouths mouths = layer->getLipSyncList();
             foreach (TupLipSync *lipsync, mouths) {
-                if (lipsync->name().compare(name) == 0)
+                if (lipsync->getLipSyncName().compare(name) == 0)
                     return lipsync;
             }
         }
@@ -864,13 +864,13 @@ TupLipSync * TupScene::getLipSync(const QString &name)
 
 bool TupScene::updateLipSync(TupLipSync *lipsync)
 {
-    QString name = lipsync->name();
+    QString name = lipsync->getLipSyncName();
 
     foreach (TupLayer *layer, layers) {
         if (layer->lipSyncCount() > 0) {
             Mouths mouths = layer->getLipSyncList();
             foreach (TupLipSync *record, mouths) {
-                if (record->name().compare(name) == 0) {
+                if (record->getLipSyncName().compare(name) == 0) {
                     record = lipsync;
                     return true;
                 }

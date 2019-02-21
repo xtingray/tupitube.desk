@@ -172,9 +172,9 @@ void TupCameraStatus::setScenes(TupProject *project)
         scenesCombo->clear();
 
     QStringList scenes;
-    int scenesCount = project->scenes().size();
+    int scenesCount = project->getScenes().size();
     for (int i = 0; i < scenesCount; i++) {
-         TupScene *scene = project->scenes().at(i);
+         TupScene *scene = project->getScenes().at(i);
          if (scene)
              scenes << scene->getSceneName();
     }

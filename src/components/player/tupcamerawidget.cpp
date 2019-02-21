@@ -137,10 +137,10 @@ void TupCameraWidget::addVideoHeader()
 
     setProgressBar();
 
-    projectLabel = new QLabel(project->projectName() + " ");
+    projectLabel = new QLabel(project->getName() + " ");
     projectLabel->setFont(font);
 
-    setDimensionLabel(project->dimension());
+    setDimensionLabel(project->getDimension());
 
     QWidget *scaleWidget = new QWidget();
     QHBoxLayout *scaleLayout = new QHBoxLayout(scaleWidget);
@@ -267,7 +267,7 @@ void TupCameraWidget::addStatusPanel(bool isNetworked)
         connect(status, SIGNAL(postChanged()), this, SLOT(postDialog()));
 
     updateFramesTotal(0);
-    int fps = project->fps();
+    int fps = project->getFPS();
     fpsDelta = 1.0/fps;
     status->setFPS(fps);
     setLoop();
@@ -291,7 +291,7 @@ void TupCameraWidget::setDimensionLabel(const QSize dimension)
     isScaled = false;
 
     if (projectWidth <= screenWidth && projectHeight <= screenHeight) {
-        playerDimension = project->dimension();
+        playerDimension = project->getDimension();
         scale += "1:1";
     } else {
         double proportion = 1;
@@ -492,7 +492,7 @@ void TupCameraWidget::updateFramesTotal(int sceneIndex)
         framesTotal = scene->framesCount();
         status->setFramesTotal(QString::number(framesTotal));
         progressBar->setRange(0, framesTotal);
-        setDuration(project->fps());
+        setDuration(project->getFPS());
     }
 }
 
@@ -582,8 +582,8 @@ void TupCameraWidget::updateSoundItems()
 
 void TupCameraWidget::infoDialog()
 {
-    TupInfoDialog *settings = new TupInfoDialog(project->tags(),
-                                                        project->author(), project->description(),
+    TupInfoDialog *settings = new TupInfoDialog(project->getTags(),
+                                                        project->getAuthor(), project->getDescription(),
                                                         this);
     connect(settings, SIGNAL(dataSent(const QString &, const QString &, const QString &)), 
             this, SLOT(saveProjectInfo(const QString &, const QString &, const QString &)));

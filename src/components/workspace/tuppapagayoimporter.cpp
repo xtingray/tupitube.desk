@@ -50,7 +50,7 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
     QFileInfo info(file);
     QString name = info.fileName().toLower();
     lipsync = new TupLipSync();
-    lipsync->setName(name);
+    lipsync->setLipSyncName(name);
     lipsync->setInitFrame(initFrame);
     lipsync->setPicsExtension(extension);
 

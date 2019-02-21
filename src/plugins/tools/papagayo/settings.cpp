@@ -226,12 +226,12 @@ void Settings::setInnerForm()
 
 void Settings::openLipSyncProperties(TupLipSync *lipsync)
 {
-    k->name = lipsync->name();
-    k->initFrame = lipsync->initFrame();
-    k->framesCount = lipsync->framesCount();
+    k->name = lipsync->getLipSyncName();
+    k->initFrame = lipsync->getInitFrame();
+    k->framesCount = lipsync->getFramesCount();
 
     k->lipSyncName->setText(k->name);
-    k->fpsLabel->setText(tr("Lip-Sync FPS") + ": " + QString::number(lipsync->fps()));
+    k->fpsLabel->setText(tr("Lip-Sync FPS") + ": " + QString::number(lipsync->getFPS()));
 
     k->comboInit->setEnabled(true);
     k->comboInit->setValue(k->initFrame + 1);
@@ -243,7 +243,7 @@ void Settings::openLipSyncProperties(TupLipSync *lipsync)
     disconnect(k->mouthsList, SIGNAL(currentRowChanged(int)), this, SLOT(setCurrentMouth(int)));
     k->mouthsList->clear();
 
-    k->voices = lipsync->voices();
+    k->voices = lipsync->getVoices();
     int total = k->voices.size();
     if (total > 0) {
         for (int i=0; i < total; i++) {

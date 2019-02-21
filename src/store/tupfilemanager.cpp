@@ -63,13 +63,13 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 
     QFileInfo info(fileName);
     QString name = info.baseName();	
-    QString oldDirName = CACHE_DIR + project->projectName();
+    QString oldDirName = CACHE_DIR + project->getName();
     QDir projectDir(oldDirName);
 
-    if (name.compare(project->projectName()) != 0) {
+    if (name.compare(project->getName()) != 0) {
         project->setProjectName(name);
         projectDir.setPath(CACHE_DIR + name);    
-        project->library()->updatePaths(CACHE_DIR + name);
+        project->getLibrary()->updatePaths(CACHE_DIR + name);
         if (!projectDir.exists()) {
             if (projectDir.rename(oldDirName, projectDir.path())) {
                 #ifdef TUP_DEBUG
@@ -156,9 +156,9 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
     // Save scenes
     {
      int index = 0;
-     int totalScenes = project->scenes().size();
+     int totalScenes = project->getScenes().size();
      for (int i = 0; i < totalScenes; i++) {
-          TupScene *scene = project->scenes().at(i);
+          TupScene *scene = project->getScenes().at(i);
           QDomDocument doc;
           doc.appendChild(scene->toXml(doc));
           QString scenePath = projectDir.path() + "/scene" + QString::number(index) + ".tps";
@@ -191,7 +191,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
          QTextStream ts(&lbr);
 
          QDomDocument doc;
-         doc.appendChild(project->library()->toXml(doc));
+         doc.appendChild(project->getLibrary()->toXml(doc));
 
          ts << doc.toString();
          lbr.close();

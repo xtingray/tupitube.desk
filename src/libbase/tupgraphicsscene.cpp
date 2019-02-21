@@ -886,13 +886,13 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
 
         for (int i=0; i<total; i++) {
              TupLipSync *lipSync = mouths.at(i);
-             int initFrame = lipSync->initFrame();
+             int initFrame = lipSync->getInitFrame();
 
-             if ((photogram >= initFrame) && (photogram <= initFrame + lipSync->framesCount())) {
-                 QString name = lipSync->name();
+             if ((photogram >= initFrame) && (photogram <= initFrame + lipSync->getFramesCount())) {
+                 QString name = lipSync->getLipSyncName();
                  TupLibraryFolder *folder = library->getFolder(name);
                  if (folder) {
-                     QList<TupVoice *> voices = lipSync->voices();
+                     QList<TupVoice *> voices = lipSync->getVoices();
                      int voicesTotal = voices.count();
                      for(int j=0; j<voicesTotal; j++) {
                          TupVoice *voice = voices.at(j);
@@ -901,7 +901,7 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
                              // Adding phoneme image
                              TupPhoneme *phoneme = voice->getPhonemeAt(index);
                              if (phoneme) {
-                                 QString imgName = phoneme->value() + lipSync->picExtension();
+                                 QString imgName = phoneme->value() + lipSync->getPicExtension();
                                  TupLibraryObject *image = folder->getObject(imgName);
                                  if (image) {
                                      TupGraphicLibraryItem *item = new TupGraphicLibraryItem(image);
@@ -937,7 +937,7 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
                                  #endif
 
                                  // Adding rest phoneme to cover empty frame
-                                 QString imgName = "rest" + lipSync->picExtension();
+                                 QString imgName = "rest" + lipSync->getPicExtension();
                                  TupLibraryObject *image = folder->getObject(imgName);
                                  if (image) {
                                      TupGraphicLibraryItem *item = new TupGraphicLibraryItem(image);

@@ -352,8 +352,8 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         animationTab->setWorkSpaceSize(width, height);
 
         TupProject *project = m_projectManager->project();
-        int pWidth = project->dimension().width();
-        int pHeight = project->dimension().height();
+        int pWidth = project->getDimension().width();
+        int pHeight = project->getDimension().height();
 
         double proportion = 1;
         if (pWidth > pHeight)
@@ -403,7 +403,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         m_projectManager->undoModified();
         m_colorPalette->init();
-        m_colorPalette->setBgColor(project->bgColor());
+        m_colorPalette->setBgColor(project->getBgColor());
 
         TCONFIG->beginGroup("BrushParameters");
         int thickness = TCONFIG->value("Thickness", 3).toInt();
@@ -411,7 +411,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         // m_brushWidget->setThickness(thickness);
 
         if (TupMainWindow::requestType == OpenLocalProject || TupMainWindow::requestType == OpenNetProject)
-            TOsd::self()->display(tr("Information"), tr("Project <b>%1</b> opened!").arg(m_projectManager->project()->projectName()));
+            TOsd::self()->display(tr("Information"), tr("Project <b>%1</b> opened!").arg(m_projectManager->project()->getName()));
 
         m_exposureSheet->setScene(0);
         connect(this, SIGNAL(tabHasChanged(int)), this, SLOT(updateCurrentTab(int)));
@@ -760,7 +760,7 @@ void TupMainWindow::openProject(const QString &path)
                 m_fileName = path;
 
             TupMainWindow::requestType = OpenLocalProject;
-            projectName = m_projectManager->project()->projectName();
+            projectName = m_projectManager->project()->getName();
             updateRecentProjectList();
             updateOpenRecentMenu(m_recentProjectsMenu, m_recentProjects);
 
@@ -770,7 +770,7 @@ void TupMainWindow::openProject(const QString &path)
 
             m_exposureSheet->updateFramesState();
 
-            author = m_projectManager->project()->author();
+            author = m_projectManager->project()->getAuthor();
             if (author.length() <= 0)
                 author = "Anonymous";
 
@@ -1166,11 +1166,11 @@ void TupMainWindow::createPaintCommand(const TupPaintAreaEvent *event)
         m_projectManager->createCommand((TupProjectCommand *) command);
 
         // Updating color on the Pen module interface
-        if (event->action() == TupPaintAreaEvent::ChangePenColor)
-            m_brushWidget->setPenColor(qvariant_cast<QColor>(event->data()));
+        if (event->getAction() == TupPaintAreaEvent::ChangePenColor)
+            m_brushWidget->setPenColor(qvariant_cast<QColor>(event->getData()));
 
-        if (event->action() == TupPaintAreaEvent::ChangePenThickness)
-            m_brushWidget->setPenThickness(qvariant_cast<int>(event->data()));
+        if (event->getAction() == TupPaintAreaEvent::ChangePenThickness)
+            m_brushWidget->setPenThickness(qvariant_cast<int>(event->getData()));
     } 
 }
 

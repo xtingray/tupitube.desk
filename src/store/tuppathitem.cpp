@@ -133,9 +133,9 @@ void TupPathItem::dropEvent(QGraphicsSceneDragDropEvent *event)
         QVariant color = event->mimeData()->colorData();
         setBrush(QBrush(color.value<QColor>()));
     } else if (event->mimeData()->hasImage()) {
-               // setBrush(QBrush(qVariantValue<QPixmap>(event->mimeData()->imageData())));
-               QVariant pixmap = event->mimeData()->imageData();
-               setBrush(QBrush(pixmap.value<QPixmap>()));
+        // setBrush(QBrush(qVariantValue<QPixmap>(event->mimeData()->imageData())));
+        QVariant pixmap = event->mimeData()->imageData();
+        setBrush(QBrush(pixmap.value<QPixmap>()));
     }
 
     update();

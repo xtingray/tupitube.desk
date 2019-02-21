@@ -35,7 +35,7 @@
 
 #include "tuppaintareaevent.h"
 
-TupPaintAreaEvent::TupPaintAreaEvent(Action action, const QVariant &data) : m_action(action), m_data(data)
+TupPaintAreaEvent::TupPaintAreaEvent(Action act, const QVariant &variant) : action(act), data(variant)
 {
 }
 
@@ -43,19 +43,18 @@ TupPaintAreaEvent::~TupPaintAreaEvent()
 {
 }
 
-TupPaintAreaEvent::Action TupPaintAreaEvent::action() const
+TupPaintAreaEvent::Action TupPaintAreaEvent::getAction() const
 {
-    return m_action;
+    return action;
 }
 
-QVariant TupPaintAreaEvent::data() const
+QVariant TupPaintAreaEvent::getData() const
 {
-    return m_data;
+    return data;
 }
 
 TupPaintAreaEvent *TupPaintAreaEvent::clone() const
 {
-    TupPaintAreaEvent *event = new TupPaintAreaEvent(action(), data());	
-
+    TupPaintAreaEvent *event = new TupPaintAreaEvent(action, data);
     return event;
 }

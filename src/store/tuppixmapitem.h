@@ -40,7 +40,7 @@
 #include "tupabstractserializable.h"
 
 #include <QGraphicsPixmapItem>
-#include <QPixmap>
+// #include <QPixmap>
 
 class TUPITUBE_EXPORT TupPixmapItem : public QGraphicsPixmapItem, public TupAbstractSerializable
 {

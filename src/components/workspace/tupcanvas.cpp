@@ -65,12 +65,12 @@ TupCanvas::TupCanvas(QWidget *parent, Qt::WindowFlags flags, TupGraphicsScene *g
     hand = Right;
     scene = gScene;
   
-    size = work->dimension();
+    size = work->getDimension();
     currentColor = manager->penColor();
     brushManager = manager;
     project = work;
 
-    graphicsView = new TupCanvasView(this, gScene, screenSize, size, work->bgColor());
+    graphicsView = new TupCanvasView(this, gScene, screenSize, size, work->getBgColor());
     connect(graphicsView, SIGNAL(rightClick()), this, SIGNAL(rightClick()));
     connect(graphicsView, SIGNAL(zoomIn()), this, SLOT(wakeUpZoomIn()));
     connect(graphicsView, SIGNAL(zoomOut()), this, SLOT(wakeUpZoomOut()));

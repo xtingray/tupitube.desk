@@ -110,12 +110,12 @@ void TupPaletteDocument::addGradient(const QGradient &gradient)
     QGradientStops stops = gradient.stops();
     
     foreach (QGradientStop stop, stops) {
-             QDomElement stopElement = createElement("Stop");
-             stopElement.setAttribute("value", stop.first);
-             stopElement.setAttribute("colorName", stop.second.name());
-             stopElement.setAttribute("alpha", stop.second.alpha());
+        QDomElement stopElement = createElement("Stop");
+        stopElement.setAttribute("value", stop.first);
+        stopElement.setAttribute("colorName", stop.second.name());
+        stopElement.setAttribute("alpha", stop.second.alpha());
         
-             element.appendChild(stopElement);
+        element.appendChild(stopElement);
     }
     
     documentElement().appendChild(element);
@@ -124,9 +124,9 @@ void TupPaletteDocument::addGradient(const QGradient &gradient)
 void TupPaletteDocument::setElements(const QList<QBrush > &brushes)
 {
     foreach (QBrush brush, brushes) {
-             if (brush.gradient())
-                 addGradient(*brush.gradient());
-             else
-                 addColor(brush.color());
+        if (brush.gradient())
+            addGradient(*brush.gradient());
+        else
+            addColor(brush.color());
     }
 }

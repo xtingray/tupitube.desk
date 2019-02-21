@@ -44,7 +44,7 @@ TupGraphicLibraryItem::TupGraphicLibraryItem() : TupProxyItem()
 TupGraphicLibraryItem::TupGraphicLibraryItem(TupLibraryObject *object) : TupProxyItem()
 {
     setObject(object);
-    itemType = object->type();
+    itemType = object->getType();
 }
 
 TupGraphicLibraryItem::~TupGraphicLibraryItem()
@@ -89,23 +89,23 @@ void TupGraphicLibraryItem::setObject(TupLibraryObject *object)
         #ifdef Q_OS_WIN
             qWarning() << "TupGraphicLibraryItem::setObject() - object->symbolName(): " << object->symbolName();
         #else
-            T_FUNCINFOX("library") << object->symbolName();
+            T_FUNCINFOX("library") << object->getSymbolName();
         #endif
     #endif
 
-    symbolName = object->symbolName();
-    symbolPath = object->dataPath();
-    switch(object->type()) {
+    symbolName = object->getSymbolName();
+    symbolPath = object->getDataPath();
+    switch(object->getType()) {
         case TupLibraryObject::Item:
         case TupLibraryObject::Text:
         case TupLibraryObject::Image:
         {
-             setItem(qvariant_cast<QGraphicsItem *>(object->data()));
+             setItem(qvariant_cast<QGraphicsItem *>(object->getData()));
         }
         break;
         case TupLibraryObject::Svg:
         {
-             setSvgContent(object->dataPath());
+             setSvgContent(object->getDataPath());
         }
         break;
         default: 

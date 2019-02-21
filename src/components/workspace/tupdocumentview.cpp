@@ -149,7 +149,7 @@ TupDocumentView::TupDocumentView(TupProject *work, QWidget *parent, bool netFlag
 
     connect(paintArea, SIGNAL(frameChanged(int)), status, SLOT(updateFrameIndex(int)));
     connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), status, SLOT(showPos(const QPointF &)));
-    brushManager()->initBgColor(project->bgColor());
+    brushManager()->initBgColor(project->getBgColor());
 
     connect(brushManager(), SIGNAL(penChanged(const QPen &)), this, SLOT(updatePen(const QPen &)));
     connect(brushManager(), SIGNAL(brushChanged(const QBrush &)), this, SLOT(updateBrush(const QBrush &)));
@@ -989,7 +989,7 @@ void TupDocumentView::selectTool()
                      status->enableFullScreenFeature(true);
 
                      if (toolName.compare(tr("Shift"))==0) {
-                         tool->setProjectSize(project->dimension());
+                         tool->setProjectSize(project->getDimension());
                          if (fullScreenOn)
                              tool->setActiveView("FULL_SCREEN");
                          else
@@ -1589,7 +1589,7 @@ void TupDocumentView::showFullScreen()
     cacheScaleFactor = nodesScaleFactor;
     qreal scaleFactor = 1;
 
-    QSize projectSize = project->dimension();
+    QSize projectSize = project->getDimension();
     if (projectSize.width() < projectSize.height())
         scaleFactor = (double) (screenW - 50) / (double) projectSize.width();
     else
@@ -1691,8 +1691,8 @@ void TupDocumentView::exportImage()
     QString fileName = QFileDialog::getSaveFileName(this, tr("Export Frame As"), QDir::homePath(),
                                                         tr("Images") + " (*.png *.jpg *.svg)");
     if (!fileName.isNull()) {
-        bool isOk = imagePlugin->exportFrame(frameIndex, project->bgColor(), fileName, project->sceneAt(sceneIndex),
-                                                project->dimension(), project->library());
+        bool isOk = imagePlugin->exportFrame(frameIndex, project->getBgColor(), fileName, project->sceneAt(sceneIndex),
+                                                project->getDimension(), project->getLibrary());
         updatePaintArea();
         if (isOk)
             TOsd::self()->display(tr("Information"), tr("Frame has been exported successfully"));
@@ -1728,8 +1728,8 @@ void TupDocumentView::storyboardSettings()
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    TupStoryBoardDialog *storySettings = new TupStoryBoardDialog(isNetworked, imagePlugin, project->bgColor(), project->dimension(),
-                                                                 project->sceneAt(sceneIndex), currentSceneIndex(), project->library(), this);
+    TupStoryBoardDialog *storySettings = new TupStoryBoardDialog(isNetworked, imagePlugin, project->getBgColor(), project->getDimension(),
+                                                                 project->sceneAt(sceneIndex), currentSceneIndex(), project->getLibrary(), this);
     connect(storySettings, SIGNAL(updateStoryboard(TupStoryboard *, int)), this, SLOT(sendStoryboard(TupStoryboard *, int)));
 
     if (isNetworked)
@@ -1916,7 +1916,7 @@ void TupDocumentView::cameraInterface()
         */
 
         QDesktopWidget desktop;
-        QSize projectSize = project->dimension();
+        QSize projectSize = project->getDimension();
 
         TupCameraDialog *cameraDialog = new TupCameraDialog(devicesCombo, projectSize, resolutions);
         cameraDialog->show();
@@ -2058,7 +2058,7 @@ void TupDocumentView::insertPictureInFrame(int id, const QString path)
         QByteArray data = imgFile.readAll();
         imgFile.close();
 
-        TupLibrary *library = project->library();
+        TupLibrary *library = project->getLibrary();
         while(library->exists(key)) {
               id++;
               QString prev = "pic";
@@ -2122,7 +2122,7 @@ void TupDocumentView::importPapagayoLipSync()
                     }
 
                     int currentIndex = paintArea->currentFrameIndex();
-                    TupPapagayoImporter *parser = new TupPapagayoImporter(file, project->dimension(), extension, currentIndex);
+                    TupPapagayoImporter *parser = new TupPapagayoImporter(file, project->getDimension(), extension, currentIndex);
                     if (parser->fileIsValid()) {
                         int layerIndex = paintArea->currentLayerIndex();
                         QString mouthPath = imagesDir;
@@ -2266,14 +2266,14 @@ void TupDocumentView::updatePerspective()
 
 void TupDocumentView::resetWorkSpaceTransformations()
 {
-    paintArea->resetWorkSpaceCenter(project->dimension());
+    paintArea->resetWorkSpaceCenter(project->getDimension());
     status->setRotationAngle("0");
     status->setZoomPercent("100");
 }
 
 QColor TupDocumentView::projectBGColor() const
 {
-    return project->bgColor();
+    return project->getBgColor();
 }
 
 void TupDocumentView::updateWorkspace()

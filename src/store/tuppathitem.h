@@ -44,7 +44,7 @@
 #include <QGraphicsSceneDragDropEvent>
 #include <QPainter>
 #include <QPainterPath>
-#include <QCursor>
+// #include <QCursor>
 
 class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGraphicsPathItem
 {

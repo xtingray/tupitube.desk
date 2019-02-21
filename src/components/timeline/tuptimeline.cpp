@@ -76,7 +76,7 @@ TupTimeLine::TupTimeLine(TupProject *project, QWidget *parent) : TupModuleWidget
     setWindowIcon(QPixmap(THEME_DIR + "icons/time_line.png"));
 
     k->project = project;
-    k->library = k->project->library();
+    k->library = k->project->getLibrary();
     k->currentTable = nullptr;
     k->doSelection = false;
 

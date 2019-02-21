@@ -50,7 +50,7 @@ TupCommandExecutor::~TupCommandExecutor()
 
 void TupCommandExecutor::getScenes(TupSceneResponse *response)
 {
-    response->setScenes(project->scenes());
+    response->setScenes(project->getScenes());
     emit responsed(response);
 }
 

@@ -40,7 +40,7 @@
 #include "tupitemgroup.h"
 #include "tuppixmapitem.h"
 
-TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent) : TupPaintAreaBase(parent, work->dimension(), work->library())
+TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent) : TupPaintAreaBase(parent, work->getDimension(), work->getLibrary())
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -59,7 +59,7 @@ TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent) : TupPaintAreaBase
     copyIsValid = false;
     currentTool = tr("Pencil");
 
-    setBgColor(work->bgColor());
+    setBgColor(work->getBgColor());
 
     setCurrentScene(0);
     graphicsScene()->setCurrentFrame(0, 0);
@@ -1100,7 +1100,7 @@ void TupPaintArea::addSelectedItemsToLibrary()
         return;
     }
 
-    TupLibraryDialog dialog(project->library());
+    TupLibraryDialog dialog(project->getLibrary());
     foreach (QGraphicsItem *item, selected)
         dialog.addItem(item);
 

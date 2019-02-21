@@ -61,33 +61,33 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         };
         
         TupLibraryObject(QObject *parent = 0);
-        TupLibraryObject(const QString &name, const QString &folder, TupLibraryObject::Type type, QObject *parent = 0);
+        TupLibraryObject(const QString &name, const QString &getFolder, TupLibraryObject::Type getType, QObject *parent = 0);
         ~TupLibraryObject();
         
-        void setType(TupLibraryObject::Type type);
-        TupLibraryObject::Type type() const;
+        void setType(TupLibraryObject::Type getType);
+        TupLibraryObject::Type getType() const;
         
-        void setData(const QVariant &data);
-        QVariant data() const;
+        void setData(const QVariant &getData);
+        QVariant getData() const;
        
         void setDataPath(const QString &path);
-        QString dataPath() const;
+        QString getDataPath() const;
         
         void setSymbolName(const QString &name);
-        QString symbolName() const;
+        QString getSymbolName() const;
 
-        void setFolder(const QString &folder);
-        QString folder() const;
+        void setFolder(const QString &getFolder);
+        QString getFolder() const;
 
-        void updateFolder(const QString &folder);
+        void updateFolder(const QString &getFolder);
 
         int frameToPlay();
         void updateFrameToPlay(int frame);
 
-        QString smallId() const;
-        QString extension() const;
+        QString getSmallId() const;
+        QString getExtension() const;
         
-        bool loadRawData(const QByteArray &data);
+        bool loadRawData(const QByteArray &getData);
         bool loadDataFromPath(const QString &dataDir);
         bool loadData(const QString &path);
         
@@ -101,8 +101,17 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         virtual QDomElement toXml(QDomDocument &doc) const;
         
     private:
-        struct Private;
-        Private *const k;
+        TupLibraryObject::Type objectType;
+        QVariant data;
+        QString dataPath;
+        QString symbolName;
+        QString folder;
+        QString smallId;
+        QString extension;
+        QByteArray rawData;
+
+        bool objectHasSoundEffect;
+        int playAt;
 };
 
 #endif
