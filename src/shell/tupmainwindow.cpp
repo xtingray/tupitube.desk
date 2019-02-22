@@ -669,7 +669,7 @@ void TupMainWindow::setupNetworkProject(TupProjectManagerParams *params)
 
         m_projectManager->setHandler(netProjectManager, true);
         m_projectManager->setParams(params);
-        author = params->author();
+        author = params->getAuthor();
     }
 }
 
@@ -687,8 +687,8 @@ void TupMainWindow::setupLocalProject(TupProjectManagerParams *params)
         isNetworked = false;
         m_projectManager->setHandler(new TupLocalProjectManagerHandler, false);
         m_projectManager->setParams(params);
-        projectName = params->projectName();
-        author = params->author();
+        projectName = params->getProjectManager();
+        author = params->getAuthor();
         setWindowTitle(tr("TupiTube Desk") +  " - " + projectName + " [ " + tr("by") + " " + author + " ]");
     }
 }

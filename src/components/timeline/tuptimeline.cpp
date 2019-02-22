@@ -194,19 +194,19 @@ void TupTimeLine::sceneResponse(TupSceneResponse *response)
             qDebug() << "[TupTimeLine::sceneResponse()]";
         #else
             T_FUNCINFO;
-            T_FUNCINFO << "response->action() -> " << response->action();
+            T_FUNCINFO << "response->action() -> " << response->getAction();
         #endif
     #endif
 
-    int sceneIndex = response->sceneIndex();
+    int sceneIndex = response->getSceneIndex();
 
-    switch (response->action()) {
+    switch (response->getAction()) {
         case TupProjectRequest::Add:
         {
-            if (response->mode() == TupProjectResponse::Do) {
-                addScene(sceneIndex, response->arg().toString());
+            if (response->getMode() == TupProjectResponse::Do) {
+                addScene(sceneIndex, response->getArg().toString());
             } else { 
-                k->scenesContainer->restoreScene(sceneIndex, response->arg().toString());
+                k->scenesContainer->restoreScene(sceneIndex, response->getArg().toString());
                 TupProjectRequest request = TupRequestBuilder::createSceneRequest(sceneIndex, TupProjectRequest::Select);
                 emit requestTriggered(&request);
             }
@@ -219,7 +219,7 @@ void TupTimeLine::sceneResponse(TupSceneResponse *response)
         break;
         case TupProjectRequest::Reset:
         {
-            if (response->mode() == TupProjectResponse::Do || response->mode() == TupProjectResponse::Redo) {
+            if (response->getMode() == TupProjectResponse::Do || response->getMode() == TupProjectResponse::Redo) {
                 k->scenesContainer->removeScene(sceneIndex, true);
                 addScene(sceneIndex, tr("Scene %1").arg(sceneIndex + 1));
 
@@ -232,7 +232,7 @@ void TupTimeLine::sceneResponse(TupSceneResponse *response)
                 k->currentTable->blockSignals(false);
             } else {
                 k->scenesContainer->removeScene(sceneIndex, false);
-                k->scenesContainer->restoreScene(sceneIndex, response->arg().toString());
+                k->scenesContainer->restoreScene(sceneIndex, response->getArg().toString());
 
                 k->currentTable = k->scenesContainer->getTable(sceneIndex);
                 k->currentTable->blockSignals(true);
@@ -255,7 +255,7 @@ void TupTimeLine::sceneResponse(TupSceneResponse *response)
         */
         case TupProjectRequest::Rename:
         {
-            k->scenesContainer->renameScene(sceneIndex, response->arg().toString());
+            k->scenesContainer->renameScene(sceneIndex, response->getArg().toString());
         }
         break;
         case TupProjectRequest::Select:
@@ -265,7 +265,7 @@ void TupTimeLine::sceneResponse(TupSceneResponse *response)
         break;
         default:
             #ifdef TUP_DEBUG
-                QString msg = "TupTimeLine::sceneResponse : Unknown action -> " + QString::number(response->action());
+                QString msg = "TupTimeLine::sceneResponse : Unknown action -> " + QString::number(response->getAction());
                 #ifdef Q_OS_WIN
                     qDebug() << msg;
                 #else
@@ -286,15 +286,15 @@ void TupTimeLine::layerResponse(TupLayerResponse *response)
         #endif
     #endif
 
-    int sceneIndex = response->sceneIndex();
+    int sceneIndex = response->getSceneIndex();
     TupTimeLineTable *framesTable = this->framesTable(sceneIndex);
     if (framesTable) {
-        int layerIndex = response->layerIndex();
-        switch (response->action()) {
+        int layerIndex = response->getLayerIndex();
+        switch (response->getAction()) {
             case TupProjectRequest::Add:
             {
-                if (response->mode() == TupProjectResponse::Do) {
-                    framesTable->insertLayer(layerIndex, response->arg().toString());
+                if (response->getMode() == TupProjectResponse::Do) {
+                    framesTable->insertLayer(layerIndex, response->getArg().toString());
                     return;
                 } else {
                     TupScene *scene = k->project->sceneAt(sceneIndex);
@@ -325,7 +325,7 @@ void TupTimeLine::layerResponse(TupLayerResponse *response)
             break;
             case TupProjectRequest::Move:
             {
-                framesTable->moveLayer(layerIndex, response->arg().toInt());
+                framesTable->moveLayer(layerIndex, response->getArg().toInt());
             }
             break;
             /*
@@ -337,12 +337,12 @@ void TupTimeLine::layerResponse(TupLayerResponse *response)
             */
             case TupProjectRequest::Rename:
             {
-                framesTable->setLayerName(layerIndex, response->arg().toString());
+                framesTable->setLayerName(layerIndex, response->getArg().toString());
             }
             break;
             case TupProjectRequest::View:
             {
-                framesTable->setLayerVisibility(layerIndex, response->arg().toBool());
+                framesTable->setLayerVisibility(layerIndex, response->getArg().toBool());
             }
             break;
         }
@@ -359,12 +359,12 @@ void TupTimeLine::frameResponse(TupFrameResponse *response)
         #endif
     #endif
 
-    TupTimeLineTable *framesTable = this->framesTable(response->sceneIndex());
+    TupTimeLineTable *framesTable = this->framesTable(response->getSceneIndex());
     if (framesTable) {
-        int layerIndex = response->layerIndex();
-        int frameIndex = response->frameIndex();
+        int layerIndex = response->getLayerIndex();
+        int frameIndex = response->getFrameIndex();
 
-        switch (response->action()) {
+        switch (response->getAction()) {
             case TupProjectRequest::Add:
               {
                   framesTable->insertFrame(layerIndex);
@@ -377,8 +377,8 @@ void TupTimeLine::frameResponse(TupFrameResponse *response)
             break;
             case TupProjectRequest::RemoveSelection:
               {
-                  QString selection = response->arg().toString();
-                  if (response->mode() == TupProjectResponse::Do || response->mode() == TupProjectResponse::Redo) {
+                  QString selection = response->getArg().toString();
+                  if (response->getMode() == TupProjectResponse::Do || response->getMode() == TupProjectResponse::Redo) {
                       QStringList blocks = selection.split(":");
                       QStringList params = blocks.at(0).split(",");
                       int layers = params.at(0).toInt();
@@ -393,13 +393,13 @@ void TupTimeLine::frameResponse(TupFrameResponse *response)
             break;
             case TupProjectRequest::Exchange:
               {
-                  framesTable->exchangeFrame(frameIndex, layerIndex, response->arg().toInt(), layerIndex);
+                  framesTable->exchangeFrame(frameIndex, layerIndex, response->getArg().toInt(), layerIndex);
               }
             break;
             case TupProjectRequest::Extend:
               {
-                  int times = response->arg().toInt();
-                  if (response->mode() == TupProjectResponse::Do || response->mode() == TupProjectResponse::Redo) {
+                  int times = response->getArg().toInt();
+                  if (response->getMode() == TupProjectResponse::Do || response->getMode() == TupProjectResponse::Redo) {
                       for (int i=0; i<times; i++)
                           framesTable->insertFrame(layerIndex);
                   } else {
@@ -409,7 +409,7 @@ void TupTimeLine::frameResponse(TupFrameResponse *response)
             break;
             case TupProjectRequest::Select:
               {
-                  QString selection = response->arg().toString();
+                  QString selection = response->getArg().toString();
                   k->selectedLayer = layerIndex;
 
                   framesTable->selectFrame(layerIndex, frameIndex, selection);
@@ -417,14 +417,14 @@ void TupTimeLine::frameResponse(TupFrameResponse *response)
             break;
             case TupProjectRequest::CopySelection:
               {
-                  if (response->mode() == TupProjectResponse::Do)
-                      k->frameSelection = response->arg().toString();
+                  if (response->getMode() == TupProjectResponse::Do)
+                      k->frameSelection = response->getArg().toString();
               }
             break;
             case TupProjectRequest::PasteSelection:
               {
                   if (!k->frameSelection.isEmpty()) {
-                      QString selection = response->arg().toString();
+                      QString selection = response->getArg().toString();
                       QStringList params = selection.split(",");
                       if (params.count() == 4) {
                           QList<int> coords;
@@ -433,7 +433,7 @@ void TupTimeLine::frameResponse(TupFrameResponse *response)
 
                           int layers = coords.at(1) - coords.at(0) + 1;
                           int frames = coords.at(3) - coords.at(2) + 1;
-                          if (response->mode() == TupProjectResponse::Do || response->mode() == TupProjectResponse::Redo)
+                          if (response->getMode() == TupProjectResponse::Do || response->getMode() == TupProjectResponse::Redo)
                               framesTable->pasteFrameSelection(layerIndex, frameIndex, layers, frames);
                           else
                               framesTable->removeFrameSelection(layerIndex, frameIndex, layers, frames);
@@ -458,14 +458,14 @@ void TupTimeLine::libraryResponse(TupLibraryResponse *response)
         #endif
     #endif
 
-    if (response->action() == TupProjectRequest::InsertSymbolIntoFrame) {
+    if (response->getAction() == TupProjectRequest::InsertSymbolIntoFrame) {
         switch (response->symbolType()) {
             case TupLibraryObject::Sound:
             {
-                TupTimeLineTable *framesTable = this->framesTable(response->sceneIndex());
+                TupTimeLineTable *framesTable = this->framesTable(response->getSceneIndex());
                 if (framesTable) {
-                    framesTable->insertSoundLayer(response->layerIndex() + 1, response->arg().toString());
-                    framesTable->insertFrame(response->layerIndex() + 1);
+                    framesTable->insertSoundLayer(response->getLayerIndex() + 1, response->getArg().toString());
+                    framesTable->insertFrame(response->getLayerIndex() + 1);
                 }
             }
             break;

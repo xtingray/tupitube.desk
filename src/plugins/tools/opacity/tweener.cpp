@@ -642,28 +642,28 @@ void Tweener::updateMode(TupToolPlugin::Mode mode)
 
 void Tweener::sceneResponse(const TupSceneResponse *event)
 {
-    if ((event->action() == TupProjectRequest::Remove || event->action() == TupProjectRequest::Reset)
-        && (k->scene->currentSceneIndex() == event->sceneIndex())) {
+    if ((event->getAction() == TupProjectRequest::Remove || event->getAction() == TupProjectRequest::Reset)
+        && (k->scene->currentSceneIndex() == event->getSceneIndex())) {
         init(k->scene);
     }
 
-    if (event->action() == TupProjectRequest::Select)
+    if (event->getAction() == TupProjectRequest::Select)
         init(k->scene);
 }
 
 void Tweener::layerResponse(const TupLayerResponse *event)
 {
-    if (event->action() == TupProjectRequest::Remove)
+    if (event->getAction() == TupProjectRequest::Remove)
         init(k->scene);
 }
 
 void Tweener::frameResponse(const TupFrameResponse *event)
 {
-    if (event->action() == TupProjectRequest::Remove && k->scene->currentLayerIndex() == event->layerIndex())
+    if (event->getAction() == TupProjectRequest::Remove && k->scene->currentLayerIndex() == event->getLayerIndex())
         init(k->scene);
 
-    if (event->action() == TupProjectRequest::Select) {
-        if (k->initLayer != event->layerIndex() || k->initScene != event->sceneIndex())
+    if (event->getAction() == TupProjectRequest::Select) {
+        if (k->initLayer != event->getLayerIndex() || k->initScene != event->getSceneIndex())
             init(k->scene);
     }
 }

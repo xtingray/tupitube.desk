@@ -229,16 +229,16 @@ void TupScenesWidget::sceneResponse(TupSceneResponse *e)
             qDebug() << "SHOW_VAR: " << e->action();
         #else
             T_FUNCINFOX("scenes");
-            SHOW_VAR(e->action());
+            SHOW_VAR(e->getAction());
         #endif
     #endif
 
-    int index = e->sceneIndex();
+    int index = e->getSceneIndex();
 
-    switch (e->action()) {
+    switch (e->getAction()) {
             case TupProjectRequest::Add:
              {
-               k->scenesTable->insertScene(index, e->arg().toString());
+               k->scenesTable->insertScene(index, e->getArg().toString());
              }
             break;
             case TupProjectRequest::Remove:
@@ -248,12 +248,12 @@ void TupScenesWidget::sceneResponse(TupSceneResponse *e)
             break;
             case TupProjectRequest::Reset:
              {
-               k->scenesTable->renameScene(index, e->arg().toString());
+               k->scenesTable->renameScene(index, e->getArg().toString());
              }
             break;
             case TupProjectRequest::Rename:
              {
-               k->scenesTable->renameScene(index, e->arg().toString());
+               k->scenesTable->renameScene(index, e->getArg().toString());
              }
             break;
             case TupProjectRequest::Select:

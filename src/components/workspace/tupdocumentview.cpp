@@ -1093,7 +1093,7 @@ void TupDocumentView::selectToolFromMenu(QAction *action)
 bool TupDocumentView::handleProjectResponse(TupProjectResponse *response)
 {
     if (TupFrameResponse *frameResponse = static_cast<TupFrameResponse *>(response)) {
-        switch (frameResponse->action()) {
+        switch (frameResponse->getAction()) {
             case TupProjectRequest::Add:
                 if (cameraMode)
                     QApplication::restoreOverrideCursor();

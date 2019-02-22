@@ -512,9 +512,9 @@ void TupScreen::sceneResponse(TupSceneResponse *event)
         #endif
     #endif
 
-    int index = event->sceneIndex();
+    int index = event->getSceneIndex();
 
-    switch (event->action()) {
+    switch (event->getAction()) {
         case TupProjectRequest::Add:
           {
               addPhotogramsArray(index);

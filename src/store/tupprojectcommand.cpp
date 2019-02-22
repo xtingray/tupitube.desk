@@ -54,7 +54,7 @@ TupProjectCommand::TupProjectCommand(TupCommandExecutor *exec, const TupProjectR
     #endif
 
     TupRequestParser parser;
-    if (!parser.parse(request->xml())) {
+    if (!parser.parse(request->getXml())) {
         #ifdef TUP_DEBUG
             QString msg = "TupProjectCommand::TupProjectCommand(): - Fatal error: request xml can't be parsed!";
             #ifdef Q_OS_WIN
@@ -69,7 +69,7 @@ TupProjectCommand::TupProjectCommand(TupCommandExecutor *exec, const TupProjectR
     executor = exec;
     executed = false;
     response = parser.response();
-    response->setExternal(request->isExternal());
+    response->setExternal(request->isRequestExternal());
 
     if (!response) {
         #ifdef TUP_DEBUG
@@ -104,36 +104,36 @@ TupProjectCommand::TupProjectCommand(TupCommandExecutor *exec, TupProjectRespons
 
 void TupProjectCommand::initText()
 {
-    switch (response->part()) {
+    switch (response->getPart()) {
         case TupProjectRequest::Frame:
         {
-            setText(actionString(response->action()) + " frame");
+            setText(actionString(response->getAction()) + " frame");
         }
         break;
         case TupProjectRequest::Layer:
         {
-            setText(actionString(response->action()) + " layer");
+            setText(actionString(response->getAction()) + " layer");
         }
         break;
         case TupProjectRequest::Scene:
         {
-            setText(actionString(response->action()) + " scene");
+            setText(actionString(response->getAction()) + " scene");
         }
         break;
         case TupProjectRequest::Item:
         {
-            setText(actionString(response->action()) + " item");
+            setText(actionString(response->getAction()) + " item");
         }
         break;
         case TupProjectRequest::Library:
         {
-            setText(actionString(response->action()) + " symbol");
+            setText(actionString(response->getAction()) + " symbol");
         }
         break;
         default:
         {				  
             #ifdef TUP_DEBUG
-                QString msg = "TProjectCommand::initText() - Error: can't handle ID: " + QString::number(response->part());
+                QString msg = "TProjectCommand::initText() - Error: can't handle ID: " + QString::number(response->getPart());
                 #ifdef Q_OS_WIN
                     qDebug() << msg;
                 #else
@@ -233,7 +233,7 @@ void TupProjectCommand::redo()
         #else
             T_FUNCINFO;
             tWarning() << "[TupProjectCommand::redo()] - Executing REDO action...";
-            tWarning() << response->part();
+            tWarning() << response->getPart();
         #endif
     #endif
 	
@@ -244,7 +244,7 @@ void TupProjectCommand::redo()
         executed = true;
     }
     
-    switch (response->part()) {
+    switch (response->getPart()) {
             case TupProjectRequest::Project:
             {
                 #ifdef TUP_DEBUG
@@ -308,7 +308,7 @@ void TupProjectCommand::undo()
     #endif
 
     response->setMode(TupProjectResponse::Undo);
-    switch (response->part()) {
+    switch (response->getPart()) {
             case TupProjectRequest::Project:
             {
                  #ifdef TUP_DEBUG
@@ -373,7 +373,7 @@ void TupProjectCommand::frameCommand()
 
     TupFrameResponse *res = static_cast<TupFrameResponse *>(response);
 
-    switch (res->action()) {
+    switch (res->getAction()) {
             case TupProjectRequest::Add:
             {
                  executor->createFrame(res);
@@ -472,7 +472,7 @@ void TupProjectCommand::layerCommand()
 {
     TupLayerResponse *res = static_cast<TupLayerResponse *>(response);
 
-    switch (res->action()) {
+    switch (res->getAction()) {
             case TupProjectRequest::Add:
             {
                  executor->createLayer(res);
@@ -542,7 +542,7 @@ void TupProjectCommand::sceneCommand()
 {
     TupSceneResponse *res = static_cast<TupSceneResponse *>(response);
 
-    switch (res->action()) {
+    switch (res->getAction()) {
 	    // SQA: Check if this case is valid 
             case TupProjectRequest::GetInfo:
             {
@@ -624,7 +624,7 @@ void TupProjectCommand::itemCommand()
 
     TupItemResponse *res = static_cast<TupItemResponse *>(response);
 
-    switch (res->action()) {
+    switch (res->getAction()) {
             case TupProjectRequest::Add:
             {
                  executor->createItem(res);
@@ -730,7 +730,7 @@ void TupProjectCommand::libraryCommand()
     
     TupLibraryResponse *res = static_cast<TupLibraryResponse *>(response);
 
-    switch (res->action()) {
+    switch (res->getAction()) {
             case TupProjectRequest::Add:
             {
                  executor->createSymbol(res);

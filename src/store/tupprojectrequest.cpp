@@ -82,61 +82,49 @@ QString TupProjectRequestArgument::toString()
     return m_value;
 }
 
-struct TupProjectRequest::Private
-{
-    Private(const QString &xml) : xml(xml), id(Project), isExternal(false) 
-     {
-     }
-
-    QString xml;
-    int id;
-    bool isExternal;
-};
-
-TupProjectRequest::TupProjectRequest(const QString &xml) : k(new Private(xml))
+TupProjectRequest::TupProjectRequest(const QString &data) : xml(data)
 {
 }
 
 TupProjectRequest::~TupProjectRequest()
 {
-    delete k;
 }
 
-void TupProjectRequest::setId(int id)
+void TupProjectRequest::setId(int code)
 {
-    k->id = id;
+    id = code;
 }
 
-int TupProjectRequest::id() const
+int TupProjectRequest::getId() const
 {
-    return k->id;
+    return id;
 }
 
 bool TupProjectRequest::isValid() const
 {
-     return !k->xml.isEmpty(); // TODO: Variable must contain a XML string
+     return !xml.isEmpty(); // TODO: Variable must contain a XML string
 }
 
-QString TupProjectRequest::xml() const
+QString TupProjectRequest::getXml() const
 {
-     return k->xml;
+     return xml;
 }
 
 void TupProjectRequest::setExternal(bool b)
 {
-     k->isExternal = b;
+     isExternal = b;
 }
 
-bool TupProjectRequest::isExternal() const
+bool TupProjectRequest::isRequestExternal() const
 {
-     return k->isExternal;
+     return isExternal;
 }
 
 TupProjectRequest &TupProjectRequest::operator=(const TupProjectRequest &other)
 {
-    k->xml = other.k->xml;
-    k->id = other.k->id;
-    k->isExternal = other.k->isExternal;
+    xml = other.xml;
+    id = other.id;
+    isExternal = other.isExternal;
 
     return *this;
 }

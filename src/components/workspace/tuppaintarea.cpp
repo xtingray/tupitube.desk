@@ -289,10 +289,10 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
 void TupPaintArea::frameResponse(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupPaintArea::frameResponse() - [" + QString::number(response->sceneIndex()) 
-                      + ", " + QString::number(response->layerIndex()) + ", " 
-                      + QString::number(response->frameIndex()) + "] | request -> "
-                      + QString::number(response->action());
+        QString msg = "TupPaintArea::frameResponse() - [" + QString::number(response->getSceneIndex()) 
+                      + ", " + QString::number(response->getLayerIndex()) + ", " 
+                      + QString::number(response->getFrameIndex()) + "] | request -> "
+                      + QString::number(response->getAction());
         #ifdef Q_OS_WIN
             qDebug() << msg;
         #else
@@ -314,7 +314,7 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
     }
 
     if (!guiScene->userIsDrawing()) {
-        switch (response->action()) {
+        switch (response->getAction()) {
             case TupProjectRequest::PasteSelection:
             case TupProjectRequest::RemoveSelection:
             case TupProjectRequest::ReverseSelection:
@@ -329,16 +329,16 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
             case TupProjectRequest::Paste:
             case TupProjectRequest::Reset:
               {
-                  if (response->action() == TupProjectRequest::Select) {
-                      if (guiScene->currentFrameIndex() != response->frameIndex())
-                          emit frameChanged(response->frameIndex());
+                  if (response->getAction() == TupProjectRequest::Select) {
+                      if (guiScene->currentFrameIndex() != response->getFrameIndex())
+                          emit frameChanged(response->getFrameIndex());
                   } else {
-                      emit frameChanged(response->frameIndex());
+                      emit frameChanged(response->getFrameIndex());
                   }
-                  guiScene->setCurrentFrame(response->layerIndex(), response->frameIndex());
+                  guiScene->setCurrentFrame(response->getLayerIndex(), response->getFrameIndex());
 
                   if (spaceMode == TupProject::FRAMES_EDITION) {
-                      guiScene->drawPhotogram(response->frameIndex(), true);
+                      guiScene->drawPhotogram(response->getFrameIndex(), true);
                   } else {
                       guiScene->cleanWorkSpace();
                       guiScene->drawSceneBackground(guiScene->currentFrameIndex());
@@ -350,7 +350,7 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
             break;
             default:
               #ifdef TUP_DEBUG
-                  QString msg = "TupPaintArea::frameResponse() - Action not recognized -> " + QString::number(response->action());
+                  QString msg = "TupPaintArea::frameResponse() - Action not recognized -> " + QString::number(response->getAction());
                   #ifdef Q_OS_WIN
                       qDebug() << msg;
                   #else
@@ -376,7 +376,7 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
 void TupPaintArea::layerResponse(TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupPaintArea::layerResponse() - [" + QString::number(response->sceneIndex()) + ", " + QString::number(response->layerIndex()) + "]";
+        QString msg = "TupPaintArea::layerResponse() - [" + QString::number(response->getSceneIndex()) + ", " + QString::number(response->getLayerIndex()) + "]";
         #ifdef Q_OS_WIN
             qDebug() << msg;
         #else
@@ -390,10 +390,10 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
 
     int frameIndex = guiScene->currentFrameIndex();
 
-    switch (response->action()) {
+    switch (response->getAction()) {
         case TupProjectRequest::Add:
           {
-              if (response->mode() == TupProjectResponse::Redo || response->mode() == TupProjectResponse::Undo) {
+              if (response->getMode() == TupProjectResponse::Redo || response->getMode() == TupProjectResponse::Undo) {
                   if (spaceMode == TupProject::FRAMES_EDITION)
                       guiScene->drawCurrentPhotogram();
               }
@@ -404,10 +404,10 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
               TupScene *scene = project->sceneAt(globalSceneIndex);
 
               if (scene->layersCount() > 1) {
-                  if (response->layerIndex() != 0)
-                      guiScene->setCurrentFrame(response->layerIndex() - 1, frameIndex);
+                  if (response->getLayerIndex() != 0)
+                      guiScene->setCurrentFrame(response->getLayerIndex() - 1, frameIndex);
                   else
-                      guiScene->setCurrentFrame(response->layerIndex() + 1, frameIndex);
+                      guiScene->setCurrentFrame(response->getLayerIndex() + 1, frameIndex);
 
                   if (spaceMode == TupProject::FRAMES_EDITION) {
                       guiScene->drawCurrentPhotogram();
@@ -438,7 +438,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
         break;
         case TupProjectRequest::TupProjectRequest::View:
           {
-              guiScene->updateLayerVisibility(response->layerIndex(), response->arg().toBool());
+              guiScene->updateLayerVisibility(response->getLayerIndex(), response->getArg().toBool());
               if (spaceMode == TupProject::FRAMES_EDITION) {
                   guiScene->drawCurrentPhotogram();
               } else {
@@ -450,7 +450,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
         break;
         case TupProjectRequest::TupProjectRequest::Move:
           {
-              guiScene->setCurrentFrame(response->arg().toInt(), frameIndex);
+              guiScene->setCurrentFrame(response->getArg().toInt(), frameIndex);
               if (spaceMode == TupProject::FRAMES_EDITION) {
                   guiScene->drawCurrentPhotogram();
               } else {
@@ -479,7 +479,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
 void TupPaintArea::sceneResponse(TupSceneResponse *event)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupPaintArea::sceneResponse() - [" + QString::number(event->sceneIndex()) + "]";
+        QString msg = "TupPaintArea::sceneResponse() - [" + QString::number(event->getSceneIndex()) + "]";
         #ifdef Q_OS_WIN
             qDebug() << msg;
         #else
@@ -493,31 +493,31 @@ void TupPaintArea::sceneResponse(TupSceneResponse *event)
         return;
 
     if (!guiScene->userIsDrawing()) {
-        switch(event->action()) {
+        switch(event->getAction()) {
             case TupProjectRequest::Select:
               {
-                  if (event->sceneIndex() >= 0) {
+                  if (event->getSceneIndex() >= 0) {
                       if (project->scenesCount() == 1)
                           setCurrentScene(0);
                       else
-                          setCurrentScene(event->sceneIndex());
+                          setCurrentScene(event->getSceneIndex());
                   }
               }
             break;
             case TupProjectRequest::Remove:
               {
                   if (project->scenesCount() > 0)
-                      setCurrentScene(event->sceneIndex() - 1);
+                      setCurrentScene(event->getSceneIndex() - 1);
               }
             break;
             case TupProjectRequest::Reset:
               {
-                  setCurrentScene(event->sceneIndex());
+                  setCurrentScene(event->getSceneIndex());
               }
             break;
             case TupProjectRequest::BgColor:
               {
-                  QString colorName = event->arg().toString();
+                  QString colorName = event->getArg().toString();
                   QColor color(colorName);
                   setBgColor(color);
               }
@@ -552,9 +552,9 @@ void TupPaintArea::sceneResponse(TupSceneResponse *event)
 void TupPaintArea::itemResponse(TupItemResponse *response)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupPaintArea::itemResponse() - [" + QString::number(response->sceneIndex()) 
-                      + ", " + QString::number(response->layerIndex()) + ", " 
-                      + QString::number(response->frameIndex()) + "]";
+        QString msg = "TupPaintArea::itemResponse() - [" + QString::number(response->getSceneIndex()) 
+                      + ", " + QString::number(response->getLayerIndex()) + ", " 
+                      + QString::number(response->getFrameIndex()) + "]";
         #ifdef Q_OS_WIN
             qDebug() << msg;
         #else
@@ -567,7 +567,7 @@ void TupPaintArea::itemResponse(TupItemResponse *response)
         return;
 
     if (!guiScene->userIsDrawing()) {
-        switch(response->action()) {
+        switch(response->getAction()) {
             case TupProjectRequest::Transform:
               {
                   viewport()->update();
@@ -631,7 +631,7 @@ void TupPaintArea::projectResponse(TupProjectResponse *)
 void TupPaintArea::libraryResponse(TupLibraryResponse *request)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupPaintArea::libraryResponse() - Request Action: " + QString::number(request->action());
+        QString msg = "TupPaintArea::libraryResponse() - Request Action: " + QString::number(request->getAction());
         #ifdef Q_OS_WIN
             qDebug() << msg;
         #else
@@ -646,7 +646,7 @@ void TupPaintArea::libraryResponse(TupLibraryResponse *request)
 
     if (!guiScene->userIsDrawing()) {
         int frameIndex = guiScene->currentFrameIndex();
-        switch (request->action()) {
+        switch (request->getAction()) {
             case TupProjectRequest::InsertSymbolIntoFrame:
               {
                   if (spaceMode == TupProject::FRAMES_EDITION) {

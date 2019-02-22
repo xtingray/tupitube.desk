@@ -122,7 +122,7 @@ void TupNetProjectManagerHandler::handleProjectRequest(const TupProjectRequest* 
 
     if (k->socket->state() == QAbstractSocket::ConnectedState) {
         #ifdef TUP_DEBUG
-            QString msg = "TupNetProjectManagerHandler::handleProjectRequest() - SENDING PACKAGE: " + request->xml();
+            QString msg = "TupNetProjectManagerHandler::handleProjectRequest() - SENDING PACKAGE: " + request->getXml();
             #ifdef Q_OS_WIN
                 qWarning() << msg;
             #else
@@ -132,10 +132,10 @@ void TupNetProjectManagerHandler::handleProjectRequest(const TupProjectRequest* 
 
         if (request->isValid()) {
             emit sendCommand(request, true);
-            k->socket->send(request->xml());
+            k->socket->send(request->getXml());
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "TupNetProjectManagerHandler::handleProjectRequest() - INVALID REQUEST! ID: " + QString::number(request->id());
+                QString msg = "TupNetProjectManagerHandler::handleProjectRequest() - INVALID REQUEST! ID: " + QString::number(request->getId());
                 #ifdef Q_OS_WIN
                     qDebug() << msg;
                 #else
@@ -156,7 +156,7 @@ bool TupNetProjectManagerHandler::commandExecuted(TupProjectResponse *response)
         #endif
     #endif
 
-    if (response->mode() == TupProjectResponse::Do) {
+    if (response->getMode() == TupProjectResponse::Do) {
         k->doAction = true;
         return true;
     } 
@@ -164,12 +164,12 @@ bool TupNetProjectManagerHandler::commandExecuted(TupProjectResponse *response)
     TupProjectRequest request = TupRequestBuilder::fromResponse(response);
     k->doAction = false;
 
-    if (response->mode() != TupProjectResponse::Undo && response->mode() != TupProjectResponse::Redo) {
+    if (response->getMode() != TupProjectResponse::Undo && response->getMode() != TupProjectResponse::Redo) {
         handleProjectRequest(&request);
     } else { 
         if (k->socket->state() == QAbstractSocket::ConnectedState) {
             if (request.isValid())
-                k->socket->send(request.xml());
+                k->socket->send(request.getXml());
         }
     }
 
@@ -260,11 +260,11 @@ bool TupNetProjectManagerHandler::setupNewProject(TupProjectManagerParams *param
         #ifdef Q_OS_WIN
            qWarning() << "netparams->projectName() : " << netparams->projectName();
         #else
-           SHOW_VAR(netparams->projectName());
+           SHOW_VAR(netparams->getProjectManager());
         #endif
     #endif    
 
-    k->projectName = netparams->projectName();
+    k->projectName = netparams->getProjectManager();
     // k->author = netparams->author();
    
     /* 
@@ -275,10 +275,10 @@ bool TupNetProjectManagerHandler::setupNewProject(TupProjectManagerParams *param
     }
     */
 
-    QString dimension = QString::number(netparams->dimension().width()) + "," + QString::number(netparams->dimension().height()); 
+    QString dimension = QString::number(netparams->getDimension().width()) + "," + QString::number(netparams->getDimension().height()); 
 
-    TupNewProjectPackage newProjectPackage(netparams->projectName(), netparams->author(), netparams->description(),
-                                           netparams->bgColor().name(), dimension, QString::number(netparams->fps()));
+    TupNewProjectPackage newProjectPackage(netparams->getProjectManager(), netparams->getAuthor(), netparams->getDescription(),
+                                           netparams->getBgColor().name(), dimension, QString::number(netparams->getFPS()));
     k->socket->send(newProjectPackage);
     
     return true;
@@ -330,10 +330,10 @@ void TupNetProjectManagerHandler::handlePackage(const QString &root, const QStri
                        k->ownPackage = false;
 
                    if (k->ownPackage && !k->doAction) {
-                       if (parser.response()->part() == TupProjectRequest::Item) {
+                       if (parser.response()->getPart() == TupProjectRequest::Item) {
                            TupItemResponse *response = static_cast<TupItemResponse *>(parser.response());
-                           TupProjectRequest request = TupRequestBuilder::createFrameRequest(response->sceneIndex(), 
-                                                      response->layerIndex(), response->frameIndex(), TupProjectRequest::Select);
+                           TupProjectRequest request = TupRequestBuilder::createFrameRequest(response->getSceneIndex(), 
+                                                      response->getLayerIndex(), response->getFrameIndex(), TupProjectRequest::Select);
                            request.setExternal(!k->ownPackage);
                            emit sendLocalCommand(&request);
                        }

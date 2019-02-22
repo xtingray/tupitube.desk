@@ -433,24 +433,24 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
         #endif
     #endif
 
-    if (response->action() == TupProjectRequest::Remove) {
+    if (response->getAction() == TupProjectRequest::Remove) {
         if (k->nodeManagers.count() == 1)
             panel->enableFormControls(false);
         return;
     }
 
     QGraphicsItem *item = 0;
-    TupFrame *frame = frameAt(response->sceneIndex(), response->layerIndex(), response->frameIndex());
+    TupFrame *frame = frameAt(response->getSceneIndex(), response->getLayerIndex(), response->getFrameIndex());
     if (frame) {
-        if (response->itemType() == TupLibraryObject::Svg && frame->svgItemsCount() > 0) {
-            item = frame->svgAt(response->itemIndex());
+        if (response->getItemType() == TupLibraryObject::Svg && frame->svgItemsCount() > 0) {
+            item = frame->svgAt(response->getItemIndex());
         } else if (frame->graphicsCount() > 0) {
-            item = frame->item(response->itemIndex());
+            item = frame->item(response->getItemIndex());
         }
     } else {
         #ifdef TUP_DEBUG
             QString msg = "SelectionTool::itemResponse - Fatal Error: frame is NULL! (index: " 
-                          + QString::number(response->frameIndex()) + ")";
+                          + QString::number(response->getFrameIndex()) + ")";
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else
@@ -465,7 +465,7 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
     updateItemScale();
 
 #ifdef TUP_DEBUG
-    QString msg = "SelectionTool::itemResponse() - response->action() -> " + QString::number(response->action());
+    QString msg = "SelectionTool::itemResponse() - response->action() -> " + QString::number(response->getAction());
     #ifdef Q_OS_WIN
         qDebug() << msg;
     #else
@@ -473,7 +473,7 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
     #endif
 #endif
 
-    switch (response->action()) {
+    switch (response->getAction()) {
         case TupProjectRequest::Transform:
         {
             if (item) {
@@ -523,7 +523,7 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
             k->nodeManagers.clear();
             k->selectedObjects.clear();
 
-            QString list = response->arg().toString();
+            QString list = response->getArg().toString();
             QString::const_iterator itr = list.constBegin();
             QList<int> positions = TupSvg2Qt::parseIntList(++itr);
             qSort(positions.begin(), positions.end());
@@ -855,7 +855,7 @@ void SelectionTool::updateZoomFactor(qreal scaleFactor)
 
 void SelectionTool::sceneResponse(const TupSceneResponse *event)
 {
-    if (event->action() == TupProjectRequest::Select)
+    if (event->getAction() == TupProjectRequest::Select)
         initItems(k->scene);
 }
 

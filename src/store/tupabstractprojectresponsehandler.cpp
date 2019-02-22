@@ -58,7 +58,7 @@ bool TupAbstractProjectResponseHandler::handleResponse(TupProjectResponse *respo
     #endif
     */
 
-    switch (response->part()) {
+    switch (response->getPart()) {
             case TupProjectRequest::Item:
             {
                  itemResponse(static_cast<TupItemResponse *>(response));
@@ -92,7 +92,7 @@ bool TupAbstractProjectResponseHandler::handleResponse(TupProjectResponse *respo
             default:
             {
                  #ifdef TUP_DEBUG
-                     QString msg = "TupAbstractProjectResponseHandler::handleResponse() - Error: Unknown project response: " + QString::number(response->part());
+                     QString msg = "TupAbstractProjectResponseHandler::handleResponse() - Error: Unknown project response: " + QString::number(response->getPart());
                      #ifdef Q_OS_WIN
                          qDebug() << msg;
                      #else
