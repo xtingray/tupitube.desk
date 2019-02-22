@@ -37,7 +37,11 @@
 #define TUPCOLORFORM_H
 
 #include "tglobal.h"
+#include "tupformitem.h"
+
 #include <QWidget>
+#include <QSlider>
+#include <QLabel>
 
 class TUPITUBE_EXPORT TupColorForm : public QWidget
 {
@@ -46,10 +50,6 @@ class TUPITUBE_EXPORT TupColorForm : public QWidget
     public:
         TupColorForm(QWidget *parent = 0);
         ~TupColorForm();
-
-    private:
-       struct Private;
-       Private *const k;
 
     private:
        void setupForm();
@@ -67,6 +67,17 @@ class TUPITUBE_EXPORT TupColorForm : public QWidget
        void hueChanged(int);
        void saturationChanged(int);
        void valueChanged(int);
+
+    private:
+       TupFormItem *valueR;
+       TupFormItem *valueG;
+       TupFormItem *valueB;
+       TupFormItem *valueH;
+       TupFormItem *valueS;
+       TupFormItem *valueV;
+
+       QLabel *alphaCounter;
+       QSlider *alphaSlider;
 };
 
 #endif

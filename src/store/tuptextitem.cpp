@@ -40,7 +40,7 @@
 #include <QFocusEvent>
 #include <QTimer>
 
-TupTextItem::TupTextItem(QGraphicsItem *parent) : QGraphicsTextItem(parent), m_flags(flags()), m_isEditable(false)
+TupTextItem::TupTextItem(QGraphicsItem *parent) : QGraphicsTextItem(parent), textFlags(flags()), isEditable(false)
 {
     setOpenExternalLinks(true);
     setEditable(false);
@@ -71,10 +71,10 @@ QDomElement TupTextItem::toXml(QDomDocument &doc) const
 
 void TupTextItem::setEditable(bool editable)
 {
-    m_isEditable = editable;
+    isEditable = editable;
     
     if (editable) {
-        m_flags = flags(); // save flags
+        textFlags = flags(); // save flags
         setTextInteractionFlags(Qt::TextEditorInteraction);
         setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsFocusable);
         setFocus(Qt::MouseFocusReason);
@@ -87,14 +87,14 @@ void TupTextItem::setEditable(bool editable)
 
 void TupTextItem::toggleEditable()
 {
-    setEditable(!m_isEditable);
+    setEditable(!isEditable);
 }
 
 void TupTextItem::focusOutEvent(QFocusEvent * event)
 {
     QGraphicsTextItem::focusOutEvent(event);
 
-    if (textInteractionFlags() & Qt::TextEditorInteraction && m_isEditable) {
+    if (textInteractionFlags() & Qt::TextEditorInteraction && isEditable) {
         QTimer::singleShot(0, this, SLOT(toggleEditable()));
         emit edited();
     }

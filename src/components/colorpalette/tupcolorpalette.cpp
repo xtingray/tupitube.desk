@@ -42,11 +42,6 @@
 #include "tcolorcell.h"
 #include "tconfig.h"
 #include "tuppaintareaevent.h"
-#include "tupcolorform.h"
-#include "tupviewcolorcells.h"
-#include "tupcolorpicker.h"
-#include "tslider.h"
-#include "tupgradientcreator.h"
 #include "tvhbox.h"
 
 #include <QBoxLayout>
@@ -56,7 +51,6 @@
 #include <QToolTip>
 #include <QComboBox>
 #include <QGroupBox>
-#include <QSplitter>
 #include <QMenu>
 #include <QTabWidget>
 

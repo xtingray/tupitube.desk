@@ -34,33 +34,18 @@
  ***************************************************************************/
 
 #include "tupcolorform.h"
-#include "tupformitem.h"
 #include "tseparator.h"
 #include "tdoublecombobox.h"
 
 #include <QHBoxLayout>
-#include <QLabel>
+// #include <QLabel>
 #include <QCheckBox>
 #include <QDoubleSpinBox>
 #include <QGridLayout>
 #include <QLineEdit>
-#include <QSlider>
 #include <cmath>
 
-struct TupColorForm::Private
-{
-    TupFormItem *valueR; 
-    TupFormItem *valueG;
-    TupFormItem *valueB;
-    TupFormItem *valueH;
-    TupFormItem *valueS;
-    TupFormItem *valueV; 
-
-    QLabel *alphaCounter;
-    QSlider *alphaSlider;
-};
-
-TupColorForm::TupColorForm(QWidget *parent) : QWidget(parent), k(new Private)
+TupColorForm::TupColorForm(QWidget *parent) : QWidget(parent)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -89,50 +74,50 @@ void TupColorForm::setupForm()
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     QGridLayout *gridLayout = new QGridLayout;
-    k->valueR = new TupFormItem("R");
-    connect(k->valueR, SIGNAL(editingFinished()), this, SLOT(syncRgbValues()));
+    valueR = new TupFormItem("R");
+    connect(valueR, SIGNAL(editingFinished()), this, SLOT(syncRgbValues()));
 
-    k->valueG = new TupFormItem("G");
-    connect(k->valueG, SIGNAL(editingFinished()), this, SLOT(syncRgbValues()));
+    valueG = new TupFormItem("G");
+    connect(valueG, SIGNAL(editingFinished()), this, SLOT(syncRgbValues()));
 
-    k->valueB = new TupFormItem("B");
-    connect(k->valueB, SIGNAL(editingFinished()), this, SLOT(syncRgbValues()));
+    valueB = new TupFormItem("B");
+    connect(valueB, SIGNAL(editingFinished()), this, SLOT(syncRgbValues()));
 
-    k->valueH = new TupFormItem("H");
-    k->valueH->setMax(359);
-    connect(k->valueH, SIGNAL(editingFinished()), this, SLOT(syncHsvValues()));
+    valueH = new TupFormItem("H");
+    valueH->setMax(359);
+    connect(valueH, SIGNAL(editingFinished()), this, SLOT(syncHsvValues()));
 
-    k->valueS = new TupFormItem("S");
-    connect(k->valueS, SIGNAL(editingFinished()), this, SLOT(syncHsvValues()));
+    valueS = new TupFormItem("S");
+    connect(valueS, SIGNAL(editingFinished()), this, SLOT(syncHsvValues()));
 
-    k->valueV = new TupFormItem("V");
-    connect(k->valueV, SIGNAL(editingFinished()), this, SLOT(syncHsvValues()));
+    valueV = new TupFormItem("V");
+    connect(valueV, SIGNAL(editingFinished()), this, SLOT(syncHsvValues()));
 
-    gridLayout->addWidget(k->valueR, 0, 0, Qt::AlignTop | Qt::AlignLeft);
-    gridLayout->addWidget(k->valueG, 1, 0, Qt::AlignTop | Qt::AlignLeft);
-    gridLayout->addWidget(k->valueB, 2, 0, Qt::AlignTop | Qt::AlignLeft);
-    gridLayout->addWidget(k->valueH, 0, 1, Qt::AlignTop | Qt::AlignLeft);
-    gridLayout->addWidget(k->valueS, 1, 1, Qt::AlignTop | Qt::AlignLeft);
-    gridLayout->addWidget(k->valueV, 2, 1, Qt::AlignTop | Qt::AlignLeft);
+    gridLayout->addWidget(valueR, 0, 0, Qt::AlignTop | Qt::AlignLeft);
+    gridLayout->addWidget(valueG, 1, 0, Qt::AlignTop | Qt::AlignLeft);
+    gridLayout->addWidget(valueB, 2, 0, Qt::AlignTop | Qt::AlignLeft);
+    gridLayout->addWidget(valueH, 0, 1, Qt::AlignTop | Qt::AlignLeft);
+    gridLayout->addWidget(valueS, 1, 1, Qt::AlignTop | Qt::AlignLeft);
+    gridLayout->addWidget(valueV, 2, 1, Qt::AlignTop | Qt::AlignLeft);
 
     QLabel *alphaLabel = new QLabel(tr("Alpha (Transparency)"));
     alphaLabel->setAlignment(Qt::AlignHCenter);
 
-    k->alphaSlider = new QSlider(Qt::Horizontal); 
-    k->alphaSlider->setMinimum(0);
-    k->alphaSlider->setMaximum(255);
-    k->alphaSlider->setSingleStep(1);
-    k->alphaSlider->setValue(255);
-    connect(k->alphaSlider, SIGNAL(valueChanged(int)), this, SLOT(updateAlphaValue(int)));
+    alphaSlider = new QSlider(Qt::Horizontal);
+    alphaSlider->setMinimum(0);
+    alphaSlider->setMaximum(255);
+    alphaSlider->setSingleStep(1);
+    alphaSlider->setValue(255);
+    connect(alphaSlider, SIGNAL(valueChanged(int)), this, SLOT(updateAlphaValue(int)));
 
-    k->alphaCounter = new QLabel("255");
-    k->alphaCounter->setAlignment(Qt::AlignHCenter);
+    alphaCounter = new QLabel("255");
+    alphaCounter->setAlignment(Qt::AlignHCenter);
 
     layout->addLayout(gridLayout);
     layout->addWidget(new TSeparator(Qt::Horizontal));
     layout->addWidget(alphaLabel);
-    layout->addWidget(k->alphaSlider);
-    layout->addWidget(k->alphaCounter);
+    layout->addWidget(alphaSlider);
+    layout->addWidget(alphaCounter);
 }
 
 void TupColorForm::setColor(const QBrush &brush)
@@ -140,32 +125,32 @@ void TupColorForm::setColor(const QBrush &brush)
     QColor color = brush.color();
 
     blockSignals(true);
-    k->valueR->setValue(color.red());
-    k->valueG->setValue(color.green());
-    k->valueB->setValue(color.blue());
-    k->valueH->setValue(color.hue());
-    k->valueS->setValue(color.saturation());
-    k->valueV->setValue(color.value());
+    valueR->setValue(color.red());
+    valueG->setValue(color.green());
+    valueB->setValue(color.blue());
+    valueH->setValue(color.hue());
+    valueS->setValue(color.saturation());
+    valueV->setValue(color.value());
 
-    k->alphaCounter->setText(QString::number(color.alpha()));
-    k->alphaSlider->blockSignals(true);
-    k->alphaSlider->setValue(color.alpha());
-    k->alphaSlider->blockSignals(false);
+    alphaCounter->setText(QString::number(color.alpha()));
+    alphaSlider->blockSignals(true);
+    alphaSlider->setValue(color.alpha());
+    alphaSlider->blockSignals(false);
     blockSignals(false);
 }
 
 void TupColorForm::syncRgbValues()
 {
-    int r = k->valueR->value();
-    int g = k->valueG->value();
-    int b = k->valueB->value();
-    int a = k->alphaSlider->value();
+    int r = valueR->getValue();
+    int g = valueG->getValue();
+    int b = valueB->getValue();
+    int a = alphaSlider->value();
 
     QColor color = QColor::fromRgb(r, g, b, a);
     blockSignals(true);
-    k->valueH->setValue(color.hue());
-    k->valueS->setValue(color.saturation());
-    k->valueV->setValue(color.value());
+    valueH->setValue(color.hue());
+    valueS->setValue(color.saturation());
+    valueV->setValue(color.value());
     blockSignals(false);
 
     emit brushChanged(color);
@@ -173,16 +158,16 @@ void TupColorForm::syncRgbValues()
 
 void TupColorForm::syncHsvValues()
 {
-    int h = k->valueH->value();
-    int s = k->valueS->value();
-    int v = k->valueV->value();
-    int a = k->alphaSlider->value();
+    int h = valueH->getValue();
+    int s = valueS->getValue();
+    int v = valueV->getValue();
+    int a = alphaSlider->value();
 
     QColor color = QColor::fromHsv(h, s, v, a);
     blockSignals(true);
-    k->valueR->setValue(color.red());
-    k->valueG->setValue(color.green());
-    k->valueB->setValue(color.blue());
+    valueR->setValue(color.red());
+    valueG->setValue(color.green());
+    valueB->setValue(color.blue());
     blockSignals(false);
 
     emit brushChanged(color);
@@ -190,6 +175,6 @@ void TupColorForm::syncHsvValues()
 
 void TupColorForm::updateAlphaValue(int alpha)
 {
-    k->alphaCounter->setText(QString::number(alpha));
+    alphaCounter->setText(QString::number(alpha));
     syncRgbValues();
 }

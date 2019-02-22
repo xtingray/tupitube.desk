@@ -53,17 +53,21 @@ class TUPITUBE_EXPORT TupPaletteParser : public TXmlParserBase
          TupPaletteParser();
          ~TupPaletteParser();
 
-         QList<QBrush> brushes() const;
-         QString paletteName() const;
+         QList<QBrush> getBrushes() const;
+         QString getPaletteName() const;
          bool paletteIsEditable() const;
 
          bool startTag(const QString &tag, const QXmlAttributes &atts);
          bool endTag(const QString &tag);
-         void text(const QString& text );
+         void text(const QString &text);
 
      private:
-         struct Private;
-         Private *const k;
+         QString paletteName;
+         bool isEditable;
+         QList<QBrush> brushes;
+
+         QGradientStops gradientStops;
+         QGradient *gradient;
 };
 
 #endif

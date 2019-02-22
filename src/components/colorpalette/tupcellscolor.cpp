@@ -35,61 +35,51 @@
 
 #include "tupcellscolor.h"
 
-struct TupCellsColor::Private
+TupCellsColor::TupCellsColor(QWidget *parent, Type colorType) : TCellView(16, parent)
 {
-    TupCellsColor::Type type;
-    QString name;
-    bool readOnly;
-    QPoint startDragPosition;
-};
-
-TupCellsColor::TupCellsColor(QWidget *parent, Type type) : TCellView(16, parent), k(new Private)
-{
-    k->type = type;
-    k->readOnly = false;
+    type = colorType;
+    readOnly = false;
     setAcceptDrops(true);
 }
 
 TupCellsColor::~TupCellsColor()
 {
-    delete k;
 }
-
 
 void TupCellsColor::setReadOnly(bool enable)
 {
-    k->readOnly = enable;
+    readOnly = enable;
 }
 
 bool TupCellsColor::isReadOnly()
 {
-    return k->readOnly;
+    return readOnly;
 }
 
-void TupCellsColor::setType(Type type)
+void TupCellsColor::setType(Type colorType)
 {
-    k->type = type;
+    type = colorType;
 }
 
-int TupCellsColor::type()
+int TupCellsColor::getType()
 {
-    return k->type;
+    return type;
 }
 
-QString TupCellsColor::name() const
+QString TupCellsColor::getName() const
 {
-    return k->name;
+    return name;
 }
 
-void TupCellsColor::setName(const QString& name)
+void TupCellsColor::setName(const QString& colorName)
 {
-    k->name = name;
+    name = colorName;
 }
 
 void TupCellsColor::save( const QString &path)
 {
     QFile save(path);
-    TupPaletteDocument document(k->name, true);
+    TupPaletteDocument document(name, true);
 
     for (int i = 0; i < columnCount() ; i++) {
          for (int  j = 0; j < rowCount() ; j++) {
@@ -147,14 +137,14 @@ void TupCellsColor::dropEvent(QDropEvent *event)
 void TupCellsColor::mousePressEvent(QMouseEvent* e)
 {
     TCellView::mousePressEvent(e);
-    k->startDragPosition = e->pos();
+    startDragPosition = e->pos();
 }
 
 void TupCellsColor::mouseMoveEvent(QMouseEvent* e)
 {
     TCellView::mouseMoveEvent(e);
 
-    if ((e->pos() - k->startDragPosition).manhattanLength() <  QApplication::startDragDistance() || !currentItem())
+    if ((e->pos() - startDragPosition).manhattanLength() <  QApplication::startDragDistance() || !currentItem())
         return;
 
     QDrag *drag = new QDrag(this);
@@ -172,4 +162,3 @@ void TupCellsColor::mouseMoveEvent(QMouseEvent* e)
     drag->setMimeData(mimeData);
     drag->setPixmap(pix);
 }
-

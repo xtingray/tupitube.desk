@@ -37,29 +37,31 @@
 #define TUPFORMITEM_H
 
 #include "tglobal.h"
+
 #include <QWidget> 
+#include <QSpinBox>
 
 class TUPITUBE_EXPORT TupFormItem : public QWidget
 {
     Q_OBJECT
 
     public:
-        TupFormItem(const QString &text = QString::null, QWidget *parent = 0);
+        TupFormItem(const QString &text = QString::null, QWidget *parent = nullptr);
         ~TupFormItem();
-        int  value();
+
+        int  getValue();
         void setMax(int);
         void setRange(int minimum, int maximum);
         void setSuffix(const QString &suffix);
-
-    private:
-        struct Private;
-        Private *const k;
 
     public slots:
         void setValue(int val);
 
     signals:
         void editingFinished();
+
+    private:
+        QSpinBox *value;
 };
 
 #endif

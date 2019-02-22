@@ -613,10 +613,10 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
                  TupTweenerStep *stepItem = tween->stepAt(0);
                  if (stepItem->has(TupTweenerStep::Position)) {
                      QPointF point = QPoint(-adjustX, -adjustY);
-                     object->setLastTweenPos(stepItem->position() + point);
+                     object->setLastTweenPos(stepItem->getPosition() + point);
                      object->item()->setPos(tween->transformOriginPoint());
                  } else if (stepItem->has(TupTweenerStep::Rotation)) {
-                     double angle = stepItem->rotation();
+                     double angle = stepItem->getRotation();
                      object->item()->setTransformOriginPoint(tween->transformOriginPoint());
                      object->item()->setRotation(angle);
                  } else if (stepItem->has(TupTweenerStep::Scale)) {
@@ -635,7 +635,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
                      object->item()->setTransform(transform);
                  } else if (stepItem->has(TupTweenerStep::Coloring)) {
                      if (tween->tweenColorFillType() == TupItemTweener::Line || tween->tweenColorFillType() == TupItemTweener::FillAll) {
-                         QColor itemColor = stepItem->color();
+                         QColor itemColor = stepItem->getColor();
                          if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(object->item())) {
                              QPen pen = path->pen();
                              pen.setColor(itemColor);
@@ -656,7 +656,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
                      }
 
                      if (tween->tweenColorFillType() == TupItemTweener::Internal || tween->tweenColorFillType() == TupItemTweener::FillAll) {
-                         QColor itemColor = stepItem->color();
+                         QColor itemColor = stepItem->getColor();
                          if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(object->item())) {
                              QBrush brush = path->brush();
                              brush.setColor(itemColor);
@@ -672,19 +672,19 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
                          }
                      }
                  } else if (stepItem->has(TupTweenerStep::Opacity)) {
-                     object->item()->setOpacity(stepItem->opacity());
+                     object->item()->setOpacity(stepItem->getOpacity());
                  }
              } else if ((origin < photogram) && (photogram < origin + tween->getFrames())) {
                  int step = photogram - origin;
                  TupTweenerStep *stepItem = tween->stepAt(step);
                  if (stepItem->has(TupTweenerStep::Position)) {
-                     qreal dx = stepItem->position().x() - (object->lastTweenPos().x() + adjustX);
-                     qreal dy = stepItem->position().y() - (object->lastTweenPos().y() + adjustY);
+                     qreal dx = stepItem->getPosition().x() - (object->lastTweenPos().x() + adjustX);
+                     qreal dy = stepItem->getPosition().y() - (object->lastTweenPos().y() + adjustY);
                      object->item()->moveBy(dx, dy);
                      QPointF point = QPoint(-adjustX, -adjustY);
-                     object->setLastTweenPos(stepItem->position() + point);
+                     object->setLastTweenPos(stepItem->getPosition() + point);
                  } else if (stepItem->has(TupTweenerStep::Rotation)) {
-                     double angle = stepItem->rotation();
+                     double angle = stepItem->getRotation();
                      object->item()->setRotation(angle);
                  } else if (stepItem->has(TupTweenerStep::Scale)) {
                      QPointF point = tween->transformOriginPoint();
@@ -710,7 +710,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
                      object->item()->setTransform(transform);
                  } else if (stepItem->has(TupTweenerStep::Coloring)) {
                      if (tween->tweenColorFillType() == TupItemTweener::Line || tween->tweenColorFillType() == TupItemTweener::FillAll) {
-                         QColor itemColor = stepItem->color();
+                         QColor itemColor = stepItem->getColor();
                          if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(object->item())) {
                              QPen pen = path->pen();
                              pen.setColor(itemColor);
@@ -731,7 +731,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
                      }
 
                      if (tween->tweenColorFillType() == TupItemTweener::Internal || tween->tweenColorFillType() == TupItemTweener::FillAll) {
-                         QColor itemColor = stepItem->color();
+                         QColor itemColor = stepItem->getColor();
                          if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(object->item())) {
                              QBrush brush = path->brush();
                              brush.setColor(itemColor);
@@ -751,7 +751,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
                  addGraphicObject(object, TupFrame::Regular, 1.0, true);
 
                  if (stepItem->has(TupTweenerStep::Opacity))
-                     object->item()->setOpacity(stepItem->opacity());
+                     object->item()->setOpacity(stepItem->getOpacity());
              }
 
              QString tip = object->item()->toolTip();
@@ -794,9 +794,9 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
                  if (stepItem->has(TupTweenerStep::Position)) {
                      object->setPos(tween->transformOriginPoint());
                      QPointF offset = QPoint(-adjustX, -adjustY);
-                     object->setLastTweenPos(stepItem->position() + offset);
+                     object->setLastTweenPos(stepItem->getPosition() + offset);
                  } else if (stepItem->has(TupTweenerStep::Rotation)) {
-                     double angle = stepItem->rotation();
+                     double angle = stepItem->getRotation();
                      object->setTransformOriginPoint(tween->transformOriginPoint());
                      object->setRotation(angle);
                  } else if (stepItem->has(TupTweenerStep::Scale)) {
@@ -814,20 +814,20 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
                      transform.shear(0, 0);
                      object->setTransform(transform);
                  } else if (stepItem->has(TupTweenerStep::Opacity)) {
-                     object->setOpacity(stepItem->opacity());
+                     object->setOpacity(stepItem->getOpacity());
                  }
              } else if ((origin < photogram) && (photogram < origin + tween->getFrames())) {
                  int step = photogram - origin;
                  TupTweenerStep *stepItem = tween->stepAt(step);
 
                  if (stepItem->has(TupTweenerStep::Position)) {
-                     qreal dx = stepItem->position().x() - (object->lastTweenPos().x() + adjustX);
-                     qreal dy = stepItem->position().y() - (object->lastTweenPos().y() + adjustY);
+                     qreal dx = stepItem->getPosition().x() - (object->lastTweenPos().x() + adjustX);
+                     qreal dy = stepItem->getPosition().y() - (object->lastTweenPos().y() + adjustY);
                      object->moveBy(dx, dy);
                      QPointF offset = QPoint(-adjustX, -adjustY);
-                     object->setLastTweenPos(stepItem->position() + offset);
+                     object->setLastTweenPos(stepItem->getPosition() + offset);
                  } else if (stepItem->has(TupTweenerStep::Rotation)) {
-                     double angle = stepItem->rotation();
+                     double angle = stepItem->getRotation();
                      object->setRotation(angle);
                  } else if (stepItem->has(TupTweenerStep::Scale)) {
                      QPointF point = tween->transformOriginPoint();
@@ -856,7 +856,7 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
                  addSvgObject(object, TupFrame::Regular, 1.0, true);
 
                  if (stepItem->has(TupTweenerStep::Opacity))
-                     object->setOpacity(stepItem->opacity());
+                     object->setOpacity(stepItem->getOpacity());
              }
 
              QString tip = object->toolTip();

@@ -56,27 +56,27 @@ class TUPITUBE_EXPORT TupTweenerStep : public TupAbstractSerializable
              Coloring = 32
         };
         
-        TupTweenerStep(int index);
+        TupTweenerStep(int getIndex);
         ~TupTweenerStep();
         
         void setPosition(const QPointF &pos);
         void setRotation(double angle);
         void setScale(double sx, double sy);
         void setShear(double sh, double sv);
-        void setOpacity(double opacity);
-        void setColor(const QColor &color);
+        void setOpacity(double getOpacity);
+        void setColor(const QColor &getColor);
         
-        QPointF position() const;
-        double rotation() const;
+        QPointF getPosition() const;
+        double getRotation() const;
         double horizontalScale() const;
         double verticalScale() const;
         double horizontalShear() const;
         double verticalShear() const;
-        double opacity() const;
-        QColor color() const;
+        double getOpacity() const;
+        QColor getColor() const;
         
         bool has(Type type) const;
-        int index() const;
+        int getIndex() const;
     
         virtual QDomElement toXml(QDomDocument& doc) const;
         virtual void fromXml(const QString& xml);
@@ -84,6 +84,19 @@ class TUPITUBE_EXPORT TupTweenerStep : public TupAbstractSerializable
     private:
         struct Private;
         Private *const k;
+
+        QPointF position;
+        double rotation;
+        double opacity;
+        QColor color;
+
+        struct PairF {
+            double x;
+            double y;
+        } shear, scale;
+
+        int flags;
+        int index;
 };
 
 #endif

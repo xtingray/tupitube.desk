@@ -39,6 +39,13 @@
 #include "tglobal.h"
 #include "tupmodulewidgetbase.h"
 #include "tcolorcell.h"
+#include "tupcolorform.h"
+#include "tupcolorpicker.h"
+#include "tupviewcolorcells.h"
+#include "tslider.h"
+#include "tupgradientcreator.h"
+
+#include <QSplitter>
 
 class TUPITUBE_EXPORT TupColorPalette : public TupModuleWidgetBase
 {
@@ -92,6 +99,32 @@ class TUPITUBE_EXPORT TupColorPalette : public TupModuleWidgetBase
 
         struct Private;
         Private *const k;
+
+        QSplitter *splitter;
+        QTabWidget *tab;
+
+        TupViewColorCells *paletteContainer;
+        TupColorForm *colorForm;
+        TupColorPicker *colorPickerArea;
+        TSlider *luminancePicker;
+        TupGradientCreator *gradientManager;
+
+        QLineEdit *htmlField;
+        QLineEdit *bgHtmlField;
+
+        QBrush currentContourBrush;
+        QBrush currentFillBrush;
+
+        TColorCell *contourColor;
+        TColorCell *fillColor;
+        TColorCell *bgColor;
+
+        bool flagGradient;
+        BrushType type;
+
+        TColorCell::FillType currentSpace;
+        TupColorPalette::BrushType fgType;
+        TupColorPalette::BrushType bgType;
 };
 
 #endif

@@ -49,7 +49,7 @@ class TUPITUBE_EXPORT TupTextItem : public QGraphicsTextItem, public TupAbstract
     Q_OBJECT
 
     public:
-        TupTextItem(QGraphicsItem *parent = 0);
+        TupTextItem(QGraphicsItem *parent = nullptr);
         ~TupTextItem();
         
         virtual void fromXml(const QString &xml);
@@ -68,8 +68,8 @@ class TUPITUBE_EXPORT TupTextItem : public QGraphicsTextItem, public TupAbstract
         virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
         
     private:
-        GraphicsItemFlags m_flags;
-        bool m_isEditable;
+        GraphicsItemFlags textFlags;
+        bool isEditable;
 };
 
 #endif

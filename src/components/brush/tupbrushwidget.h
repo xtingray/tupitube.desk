@@ -59,7 +59,7 @@ class TUPITUBE_EXPORT TupBrushWidget : public TupModuleWidgetBase
     public:
         TupBrushWidget(QWidget *parent = 0);
         ~TupBrushWidget();
-        QPen pen() const;
+        QPen getPen() const;
         void setPenThickness(int thickness);
         
     private:
@@ -89,9 +89,21 @@ class TUPITUBE_EXPORT TupBrushWidget : public TupModuleWidgetBase
         void paintAreaEventTriggered(const TupPaintAreaEvent *event);
 
     private:
-        struct Private;
-        Private *const k;
+        TEditSpinBox *thickness;
 
+        QPushButton *roundCapButton;
+        QPushButton *flatCapButton;
+        QPushButton *squareCapButton;
+
+        QPushButton *miterJoinButton;
+        QPushButton *bevelJoinButton;
+        QPushButton *roundJoinButton;
+
+        QComboBox *style;
+        QListWidget *brushesList;
+        QPen pen;
+        QBrush brush;
+        TupPenThicknessWidget *thickPreview;
 };
 
 #endif

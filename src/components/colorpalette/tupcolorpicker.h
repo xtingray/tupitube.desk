@@ -56,17 +56,17 @@ class TUPITUBE_EXPORT TupColorPicker : public QFrame
     public:
         TupColorPicker(QWidget* parent);
         ~TupColorPicker();
-        int hue();
-        int saturation();
+        int getHue();
+        int getSaturation();
         void clearSelection();
 
     public slots:
-        void setColor(int hue, int saturation);
-        void setHUE(int hue);
-        void setSaturation(int saturation);
+        void setColor(int getHue, int getSaturation);
+        void setHUE(int getHue);
+        void setSaturation(int getSaturation);
 
     signals:
-        void newColor(int hue, int saturation);
+        void newColor(int getHue, int getSaturation);
 
     protected:
         QSize sizeHint() const;
@@ -75,13 +75,17 @@ class TUPITUBE_EXPORT TupColorPicker : public QFrame
         void mousePressEvent(QMouseEvent *);
 
     private:
-        struct Private;
-        Private *const k;
-
         QPoint colorPoint();
         int huePoint(const QPoint &pt);
         int saturationPoint(const QPoint &pt);
         void setColor(const QPoint &pt);
+
+        int hue;
+        int saturation;
+        QPixmap *pix;
+        int pWidth;
+        int pHeight;
+        bool target;
 };
 
 #endif

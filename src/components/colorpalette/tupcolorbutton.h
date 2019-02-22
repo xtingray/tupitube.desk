@@ -50,7 +50,7 @@ class TUPITUBE_EXPORT TupColorButton : public QWidget
     Q_OBJECT
 
     public:
-        TupColorButton(int index, const QString &name, const QBrush &brush, const QSize &size, const QString &buttonParams);
+        TupColorButton(int getIndex, const QString &name, const QBrush &brush, const QSize &size, const QString &buttonParams);
         ~TupColorButton();
         QSize sizeHint() const;
         QColor color();
@@ -58,7 +58,7 @@ class TUPITUBE_EXPORT TupColorButton : public QWidget
         bool isSelected();
         void setBrush(const QBrush &brush);
         void setEditable(bool flag);
-        int index();
+        int getIndex();
 
     protected:
         void paintEvent(QPaintEvent *painter);
@@ -66,8 +66,8 @@ class TUPITUBE_EXPORT TupColorButton : public QWidget
         void mouseDoubleClickEvent(QMouseEvent *event);
 
     signals:
-        void clicked(int index);
-        void doubledClicked(int index);
+        void clicked(int getIndex);
+        void doubledClicked(int getIndex);
 
     private:
         struct Private;
@@ -75,6 +75,13 @@ class TUPITUBE_EXPORT TupColorButton : public QWidget
         int border1;
         int border2;
         int border3;
+
+        QBrush brush;
+        int index;
+        bool editable;
+        bool selected;
+        QSize size;
+        QString themeName;
 };
 
 #endif

@@ -34,27 +34,18 @@
  ***************************************************************************/
 
 #include "tupcolorbuttonpanel.h"
-#include "tupcolorbutton.h"
 #include "timagebutton.h"
 
 #include <QBoxLayout>
 #include <QColorDialog>
 #include <QDebug>
 
-struct TupColorButtonPanel::Private
+TupColorButtonPanel::TupColorButtonPanel(Qt::BrushStyle bStyle, const QSize &baseColorCellSize, int sp,
+                                         const QString &buttonParams, QWidget *parent) : QWidget(parent)
 {
-    QList<TupColorButton *> baseColors;
-    Qt::BrushStyle style;
-    int currentColorIndex;
-    TupColorButton *trans;
-};
-
-TupColorButtonPanel::TupColorButtonPanel(Qt::BrushStyle style, const QSize &baseColorCellSize, int spacing,
-                                         const QString &buttonParams, QWidget *parent) : QWidget(parent), k(new Private)
-{
-    k->style = style;
-    k->currentColorIndex = -1;
-    this->spacing = spacing;
+    style = bStyle;
+    currentColorIndex = -1;
+    spacing = sp;
 
     setPanel(baseColorCellSize, buttonParams);
 }
@@ -65,55 +56,55 @@ void TupColorButtonPanel::setPanel(const QSize &cellSize, const QString &buttonP
     QString colorName = TCONFIG->value("BarColor0", "transparent").toString(); 
     QColor color0 = QColor(colorName);
 
-    QBrush transBrush(color0, k->style);
-    k->trans = new TupColorButton(0, tr("Transparent"), transBrush, cellSize, buttonParams);
-    connect(k->trans, &TupColorButton::clicked, this, &TupColorButtonPanel::updateSelection);
-    k->baseColors << k->trans;
+    QBrush transBrush(color0, style);
+    trans = new TupColorButton(0, tr("Transparent"), transBrush, cellSize, buttonParams);
+    connect(trans, &TupColorButton::clicked, this, &TupColorButtonPanel::updateSelection);
+    baseColors << trans;
 
     TCONFIG->beginGroup("ColorPalette");
     colorName = TCONFIG->value("BarColor1", "#000").toString(); 
     QColor color1 = QColor(colorName);
 
-    QBrush blackBrush(color1, k->style);
+    QBrush blackBrush(color1, style);
     TupColorButton *black = new TupColorButton(1, tr("Black"), blackBrush, cellSize, buttonParams);
     connect(black, &TupColorButton::clicked, this, &TupColorButtonPanel::updateSelection);
-    k->baseColors << black;
+    baseColors << black;
 
     TCONFIG->beginGroup("ColorPalette");
     colorName = TCONFIG->value("BarColor2", "#fff").toString(); 
     QColor color2 = QColor(colorName);
 
-    QBrush whiteBrush(color2, k->style);
+    QBrush whiteBrush(color2, style);
     TupColorButton *white = new TupColorButton(2, tr("White"), whiteBrush, cellSize, buttonParams);
     connect(white, &TupColorButton::clicked, this, &TupColorButtonPanel::updateSelection);
-    k->baseColors << white;
+    baseColors << white;
 
     TCONFIG->beginGroup("ColorPalette");
     colorName = TCONFIG->value("BarColor3", "#f00").toString();               
     QColor color3 = QColor(colorName);
 
-    QBrush redBrush(color3, k->style);
+    QBrush redBrush(color3, style);
     TupColorButton *red = new TupColorButton(3, tr("Red"), redBrush, cellSize, buttonParams);
     connect(red, &TupColorButton::clicked, this, &TupColorButtonPanel::updateSelection);
-    k->baseColors << red;
+    baseColors << red;
 
     TCONFIG->beginGroup("ColorPalette");
     colorName = TCONFIG->value("BarColor4", "#0f0").toString();
     QColor color4 = QColor(colorName);
 
-    QBrush greenBrush(color4, k->style);
+    QBrush greenBrush(color4, style);
     TupColorButton *green = new TupColorButton(4, tr("Green"), greenBrush, cellSize, buttonParams);
     connect(green, &TupColorButton::clicked, this, &TupColorButtonPanel::updateSelection);
-    k->baseColors << green;
+    baseColors << green;
 
     TCONFIG->beginGroup("ColorPalette");
     colorName = TCONFIG->value("BarColor5", "#00f").toString();
     QColor color5 = QColor(colorName);
 
-    QBrush blueBrush(color5, k->style);
+    QBrush blueBrush(color5, style);
     TupColorButton *blue = new TupColorButton(5, tr("Blue"), blueBrush, cellSize, buttonParams);
     connect(blue, &TupColorButton::clicked, this, &TupColorButtonPanel::updateSelection);
-    k->baseColors << blue;
+    baseColors << blue;
 
     TImageButton *settings = new TImageButton(QPixmap(THEME_DIR + "icons/settings.png"), 22, this, true);
     settings->setToolTip(tr("Customize Colors Bar"));
@@ -129,7 +120,7 @@ void TupColorButtonPanel::setPanel(const QSize &cellSize, const QString &buttonP
 
     bottomLayout->setSpacing(spacing);
 
-    bottomLayout->addWidget(k->trans);
+    bottomLayout->addWidget(trans);
     bottomLayout->addWidget(black);
     bottomLayout->addWidget(white);
     bottomLayout->addWidget(red);
@@ -145,15 +136,15 @@ TupColorButtonPanel::~TupColorButtonPanel()
 
 void TupColorButtonPanel::updateSelection(int index)
 {
-    if (index != k->currentColorIndex) {
-        if (k->currentColorIndex >= 0) {
-            TupColorButton *button = (TupColorButton *) k->baseColors.at(k->currentColorIndex);
+    if (index != currentColorIndex) {
+        if (currentColorIndex >= 0) {
+            TupColorButton *button = (TupColorButton *) baseColors.at(currentColorIndex);
             button->setState(false);
         }
 
-        TupColorButton *selection = (TupColorButton *) k->baseColors.at(index);
+        TupColorButton *selection = (TupColorButton *) baseColors.at(index);
         QColor color = selection->color();
-        k->currentColorIndex = index;
+        currentColorIndex = index;
 
         emit clickColor(color);
     }
@@ -161,42 +152,42 @@ void TupColorButtonPanel::updateSelection(int index)
 
 void TupColorButtonPanel::setState(int index, bool isSelected)
 {
-    if (index != k->currentColorIndex && k->currentColorIndex >= 0) {
-        TupColorButton *button = (TupColorButton *) k->baseColors.at(k->currentColorIndex);
+    if (index != currentColorIndex && currentColorIndex >= 0) {
+        TupColorButton *button = (TupColorButton *) baseColors.at(currentColorIndex);
         button->setState(isSelected);
     }
 }
 
 void TupColorButtonPanel::resetPanel()
 {
-    if (k->currentColorIndex >= 0) {
-        TupColorButton *button = (TupColorButton *) k->baseColors.at(k->currentColorIndex);
+    if (currentColorIndex >= 0) {
+        TupColorButton *button = (TupColorButton *) baseColors.at(currentColorIndex);
         button->setState(false);
-        k->currentColorIndex = -1; 
+        currentColorIndex = -1;
     }
 }
 
 void TupColorButtonPanel::enableTransparentColor(bool flag)
 {
-    k->trans->setVisible(flag);
+    trans->setVisible(flag);
 }
 
 void TupColorButtonPanel::customizeColors()
 {
     TupColorButton *button;
 
-    if (k->currentColorIndex == -1) {
-        button = k->trans;
+    if (currentColorIndex == -1) {
+        button = trans;
         button->setState(true);
-        k->currentColorIndex = 0;
+        currentColorIndex = 0;
     } else {
-        button = (TupColorButton *) k->baseColors.at(k->currentColorIndex);
+        button = (TupColorButton *) baseColors.at(currentColorIndex);
     }
 
     QColor color = QColorDialog::getColor(button->color(), this);
     if (color.isValid()) {
         button->setBrush(QBrush(color));
-        QString index = QString::number(k->currentColorIndex);
+        QString index = QString::number(currentColorIndex);
         TCONFIG->beginGroup("ColorPalette");
         TCONFIG->setValue("BarColor" + index, color.name());
         TCONFIG->sync();
@@ -207,9 +198,9 @@ void TupColorButtonPanel::customizeColors()
 
 void TupColorButtonPanel::resetColors()
 {
-    foreach(TupColorButton *button, k->baseColors) {    
+    foreach(TupColorButton *button, baseColors) {
         button->setState(false);
-        int index = button->index();
+        int index = button->getIndex();
         QString number = QString::number(index);
 
         if (index == 0) {

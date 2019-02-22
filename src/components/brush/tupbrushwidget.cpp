@@ -35,26 +35,7 @@
 
 #include "tupbrushwidget.h"
 
-struct TupBrushWidget::Private
-{
-    TEditSpinBox *thickness;
-
-    QPushButton *roundCapButton;
-    QPushButton *flatCapButton;
-    QPushButton *squareCapButton;
-
-    QPushButton *miterJoinButton;
-    QPushButton *bevelJoinButton;
-    QPushButton *roundJoinButton;
-
-    QComboBox *style;
-    QListWidget *brushesList;
-    QPen pen;
-    QBrush brush;
-    TupPenThicknessWidget *thickPreview;
-};
-
-TupBrushWidget::TupBrushWidget(QWidget *parent) : TupModuleWidgetBase(parent), k(new Private)
+TupBrushWidget::TupBrushWidget(QWidget *parent) : TupModuleWidgetBase(parent)
 {
     setWindowTitle(tr("Brush Properties"));
 
@@ -63,17 +44,17 @@ TupBrushWidget::TupBrushWidget(QWidget *parent) : TupModuleWidgetBase(parent), k
     if (thicknessValue > 100)
         thicknessValue = 3;
 
-    k->thickPreview = new TupPenThicknessWidget(this);
-    k->thickPreview->render(thicknessValue);
+    thickPreview = new TupPenThicknessWidget(this);
+    thickPreview->render(thicknessValue);
 
-    k->thickness = new TEditSpinBox(thicknessValue, 1, 100, 1, tr("Thickness"));
-    k->thickness->setValue(thicknessValue);
+    thickness = new TEditSpinBox(thicknessValue, 1, 100, 1, tr("Thickness"));
+    thickness->setValue(thicknessValue);
 
-    connect(k->thickness, SIGNAL(valueChanged(int)), this, SLOT(setThickness(int)));
-    connect(k->thickness, SIGNAL(valueChanged(int)), k->thickPreview, SLOT(render(int)));
+    connect(thickness, SIGNAL(valueChanged(int)), this, SLOT(setThickness(int)));
+    connect(thickness, SIGNAL(valueChanged(int)), thickPreview, SLOT(render(int)));
 
-    addChild(k->thickPreview);
-    addChild(k->thickness);
+    addChild(thickPreview);
+    addChild(thickness);
 
     QWidget *space = new QWidget(this);
     space->setFixedHeight(5);
@@ -85,23 +66,23 @@ TupBrushWidget::TupBrushWidget(QWidget *parent) : TupModuleWidgetBase(parent), k
     QWidget *styleWidget = new QWidget(this);
     QBoxLayout *styleLayout = new QHBoxLayout(styleWidget);
 
-    k->style = new QComboBox();
-    k->style->setIconSize(QSize(145, 13));
-    k->style->setFixedWidth(180);
+    style = new QComboBox();
+    style->setIconSize(QSize(145, 13));
+    style->setFixedWidth(180);
 
     int flag = Qt::SolidLine;
-    k->style->addItem(QIcon(THEME_DIR + "icons/line_style01.png"), "", QVariant(flag));
+    style->addItem(QIcon(THEME_DIR + "icons/line_style01.png"), "", QVariant(flag));
     flag = Qt::DashLine;
-    k->style->addItem(QIcon(THEME_DIR + "icons/line_style02.png"), "", QVariant(flag));
+    style->addItem(QIcon(THEME_DIR + "icons/line_style02.png"), "", QVariant(flag));
     flag = Qt::DotLine;
-    k->style->addItem(QIcon(THEME_DIR + "icons/line_style03.png"), "", QVariant(flag));
+    style->addItem(QIcon(THEME_DIR + "icons/line_style03.png"), "", QVariant(flag));
     flag = Qt::DashDotLine;
-    k->style->addItem(QIcon(THEME_DIR + "icons/line_style04.png"), "", QVariant(flag));
+    style->addItem(QIcon(THEME_DIR + "icons/line_style04.png"), "", QVariant(flag));
     flag = Qt::DashDotDotLine;
-    k->style->addItem(QIcon(THEME_DIR + "icons/line_style05.png"), "", QVariant(flag));
+    style->addItem(QIcon(THEME_DIR + "icons/line_style05.png"), "", QVariant(flag));
 
-    styleLayout->addWidget(k->style);
-    connect(k->style, SIGNAL(currentIndexChanged(int)), this, SLOT(setStyle(int)));
+    styleLayout->addWidget(style);
+    connect(style, SIGNAL(currentIndexChanged(int)), this, SLOT(setStyle(int)));
 
     addChild(styleWidget);
 
@@ -115,30 +96,30 @@ TupBrushWidget::TupBrushWidget(QWidget *parent) : TupModuleWidgetBase(parent), k
     QWidget *capWidget = new QWidget(this);
     QBoxLayout *capLayout = new QHBoxLayout(capWidget);
 
-    k->roundCapButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/round_cap.png")), "");
-    k->roundCapButton->setToolTip(tr("Round"));
-    k->roundCapButton->setIconSize(QSize(30, 15));
-    k->roundCapButton->setCheckable(true);
+    roundCapButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/round_cap.png")), "");
+    roundCapButton->setToolTip(tr("Round"));
+    roundCapButton->setIconSize(QSize(30, 15));
+    roundCapButton->setCheckable(true);
 
-    connect(k->roundCapButton, SIGNAL(clicked()), this, SLOT(enableRoundCapStyle()));
+    connect(roundCapButton, SIGNAL(clicked()), this, SLOT(enableRoundCapStyle()));
 
-    k->squareCapButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/square_cap.png")), "");
-    k->squareCapButton->setToolTip(tr("Square"));
-    k->squareCapButton->setIconSize(QSize(33, 15));
-    k->squareCapButton->setCheckable(true);
+    squareCapButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/square_cap.png")), "");
+    squareCapButton->setToolTip(tr("Square"));
+    squareCapButton->setIconSize(QSize(33, 15));
+    squareCapButton->setCheckable(true);
 
-    connect(k->squareCapButton, SIGNAL(clicked()), this, SLOT(enableSquareCapStyle()));
+    connect(squareCapButton, SIGNAL(clicked()), this, SLOT(enableSquareCapStyle()));
 
-    k->flatCapButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/flat_cap.png")), "");
-    k->flatCapButton->setToolTip(tr("Flat"));
-    k->flatCapButton->setIconSize(QSize(27, 15));
-    k->flatCapButton->setCheckable(true);
+    flatCapButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/flat_cap.png")), "");
+    flatCapButton->setToolTip(tr("Flat"));
+    flatCapButton->setIconSize(QSize(27, 15));
+    flatCapButton->setCheckable(true);
 
-    connect(k->flatCapButton, SIGNAL(clicked()), this, SLOT(enableFlatCapStyle()));
+    connect(flatCapButton, SIGNAL(clicked()), this, SLOT(enableFlatCapStyle()));
 
-    capLayout->addWidget(k->roundCapButton);
-    capLayout->addWidget(k->squareCapButton);
-    capLayout->addWidget(k->flatCapButton);
+    capLayout->addWidget(roundCapButton);
+    capLayout->addWidget(squareCapButton);
+    capLayout->addWidget(flatCapButton);
     addChild(capWidget);
 
     space = new QWidget(this);
@@ -151,30 +132,30 @@ TupBrushWidget::TupBrushWidget(QWidget *parent) : TupModuleWidgetBase(parent), k
     QWidget *joinWidget = new QWidget(this);
     QBoxLayout *joinLayout = new QHBoxLayout(joinWidget);
 
-    k->roundJoinButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/round_join.png")), "");
-    k->roundJoinButton->setToolTip(tr("Round"));
-    k->roundJoinButton->setIconSize(QSize(30, 15));
-    k->roundJoinButton->setCheckable(true);
+    roundJoinButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/round_join.png")), "");
+    roundJoinButton->setToolTip(tr("Round"));
+    roundJoinButton->setIconSize(QSize(30, 15));
+    roundJoinButton->setCheckable(true);
 
-    connect(k->roundJoinButton, SIGNAL(clicked()), this, SLOT(enableRoundJoinStyle()));
+    connect(roundJoinButton, SIGNAL(clicked()), this, SLOT(enableRoundJoinStyle()));
 
-    k->bevelJoinButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/bevel_join.png")), "");
-    k->bevelJoinButton->setToolTip(tr("Bevel"));
-    k->bevelJoinButton->setIconSize(QSize(33, 15));
-    k->bevelJoinButton->setCheckable(true);
+    bevelJoinButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/bevel_join.png")), "");
+    bevelJoinButton->setToolTip(tr("Bevel"));
+    bevelJoinButton->setIconSize(QSize(33, 15));
+    bevelJoinButton->setCheckable(true);
 
-    connect(k->bevelJoinButton, SIGNAL(clicked()), this, SLOT(enableBevelJoinStyle()));
+    connect(bevelJoinButton, SIGNAL(clicked()), this, SLOT(enableBevelJoinStyle()));
 
-    k->miterJoinButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/miter_join.png")), "");
-    k->miterJoinButton->setToolTip(tr("Miter"));
-    k->miterJoinButton->setIconSize(QSize(27, 15));
-    k->miterJoinButton->setCheckable(true);
+    miterJoinButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/miter_join.png")), "");
+    miterJoinButton->setToolTip(tr("Miter"));
+    miterJoinButton->setIconSize(QSize(27, 15));
+    miterJoinButton->setCheckable(true);
 
-    connect(k->miterJoinButton, SIGNAL(clicked()), this, SLOT(enableMiterJoinStyle()));
+    connect(miterJoinButton, SIGNAL(clicked()), this, SLOT(enableMiterJoinStyle()));
 
-    joinLayout->addWidget(k->roundJoinButton);
-    joinLayout->addWidget(k->bevelJoinButton);
-    joinLayout->addWidget(k->miterJoinButton);
+    joinLayout->addWidget(roundJoinButton);
+    joinLayout->addWidget(bevelJoinButton);
+    joinLayout->addWidget(miterJoinButton);
     addChild(joinWidget);
 
     space = new QWidget(this);
@@ -199,44 +180,42 @@ TupBrushWidget::~TupBrushWidget()
         #else
             TEND;
         #endif
-    #endif 
-		
-    delete k;
+    #endif
 }
 
-void TupBrushWidget::setThickness(int thickness)
+void TupBrushWidget::setThickness(int width)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupBrushWidget::setThickness()]";
         #else
-            T_FUNCINFO << "thickness: " << thickness;
+            T_FUNCINFO << "thickness: " << width;
         #endif
     #endif
 
-    if (thickness > 0) {
-        k->pen.setWidth(thickness);
+    if (width > 0) {
+        pen.setWidth(width);
         TCONFIG->beginGroup("BrushParameters");
-        TCONFIG->setValue("Thickness", thickness);
+        TCONFIG->setValue("Thickness", width);
         updatePenProperties();
     }
 }
 
-void TupBrushWidget::setStyle(int style)
+void TupBrushWidget::setStyle(int styleCode)
 {
-    k->pen.setStyle(Qt::PenStyle(k->style->itemData(style).toInt()));
+    pen.setStyle(Qt::PenStyle(style->itemData(styleCode).toInt()));
     updatePenProperties();
 }
 
 void TupBrushWidget::setBrushStyle(QListWidgetItem *item)
 {
     if (item->toolTip().compare("TexturePattern") == 0) {
-        k->brush = QBrush(QPixmap(THEME_DIR + "icons/brush_15.png"));
-        k->thickPreview->setBrush(24);
+        brush = QBrush(QPixmap(THEME_DIR + "icons/brush_15.png"));
+        thickPreview->setBrush(24);
     } else {
-        int index = k->brushesList->row(item);
-        k->thickPreview->setBrush(index+1);
-        k->brush.setStyle(Qt::BrushStyle(index+1));
+        int index = brushesList->row(item);
+        thickPreview->setBrush(index+1);
+        brush.setStyle(Qt::BrushStyle(index+1));
     }
 
     updatePenProperties();
@@ -244,43 +223,43 @@ void TupBrushWidget::setBrushStyle(QListWidgetItem *item)
 
 void TupBrushWidget::setPenColor(const QColor color)
 {
-    k->brush.setColor(color);
-    k->thickPreview->setColor(color);
+    brush.setColor(color);
+    thickPreview->setColor(color);
 }
 
-void TupBrushWidget::setPenThickness(int thickness)
+void TupBrushWidget::setPenThickness(int width)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupBrushWidget::setPenThickness()]";
         #else
-            T_FUNCINFO << "thickness: " << thickness;
+            T_FUNCINFO << "thickness: " << width;
         #endif
     #endif
 
-    k->pen.setWidth(thickness);
+    pen.setWidth(width);
     TCONFIG->beginGroup("BrushParameters");
-    TCONFIG->setValue("Thickness", thickness);
-    k->thickPreview->render(thickness);
+    TCONFIG->setValue("Thickness", width);
+    thickPreview->render(width);
 
-    k->thickness->blockSignals(true);
-    k->thickness->setValue(thickness);
-    k->thickness->blockSignals(false);
+    thickness->blockSignals(true);
+    thickness->setValue(width);
+    thickness->blockSignals(false);
 }
 
-void TupBrushWidget::setBrush(const QBrush brush)
+void TupBrushWidget::setBrush(const QBrush b)
 {
-    k->brush = brush;
-    k->thickPreview->setBrush(brush);
+    brush = b;
+    thickPreview->setBrush(b);
 }
 
-void TupBrushWidget::init(int thickness)
+void TupBrushWidget::init(int width)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupBrushWidget::init()]";
         #else
-            T_FUNCINFO << "thickness: " << thickness;
+            T_FUNCINFO << "thickness: " << width;
         #endif
     #endif
 
@@ -289,246 +268,246 @@ void TupBrushWidget::init(int thickness)
 
     enableRoundCapStyle();
     enableRoundJoinStyle();
-    k->style->setCurrentIndex(0);
+    style->setCurrentIndex(0);
 
-    QListWidgetItem *first = k->brushesList->item(0);
-    k->brushesList->setCurrentItem(first);
+    QListWidgetItem *first = brushesList->item(0);
+    brushesList->setCurrentItem(first);
     setBrushStyle(first);
     blockSignals(false);
 
-    setThickness(thickness);
+    setThickness(width);
 }
 
-QPen TupBrushWidget::pen() const
+QPen TupBrushWidget::getPen() const
 {
-    return k->pen;
+    return pen;
 }
 
 void TupBrushWidget::updatePenProperties()
 {
-    k->pen.setBrush(k->brush);
+    pen.setBrush(brush);
 
-    TupPaintAreaEvent event(TupPaintAreaEvent::ChangePen, k->pen);
+    TupPaintAreaEvent event(TupPaintAreaEvent::ChangePen, pen);
     emit paintAreaEventTriggered(&event);
 }
 
 void TupBrushWidget::updateBrushProperties()
 {
-    TupPaintAreaEvent event(TupPaintAreaEvent::ChangeBrush, k->brush);
+    TupPaintAreaEvent event(TupPaintAreaEvent::ChangeBrush, brush);
     emit paintAreaEventTriggered(&event);
 }
 
 void TupBrushWidget::addBrushesList()
 {
-    k->brushesList = new QListWidget(this);
-    k->brushesList->setViewMode(QListView::IconMode);
-    k->brushesList->setFlow(QListView::LeftToRight);
-    k->brushesList->setMovement(QListView::Static);
+    brushesList = new QListWidget(this);
+    brushesList->setViewMode(QListView::IconMode);
+    brushesList->setFlow(QListView::LeftToRight);
+    brushesList->setMovement(QListView::Static);
 
-    QListWidgetItem *brushItem = new QListWidgetItem(k->brushesList);
+    QListWidgetItem *brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush_01.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("Solid");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    brushItem = new QListWidgetItem(k->brushesList);
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush_02.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("Dense1Pattern");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    brushItem = new QListWidgetItem(k->brushesList);
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush_03.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("Dense2Pattern");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    brushItem = new QListWidgetItem(k->brushesList);
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush_04.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("Dense3Pattern");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    brushItem = new QListWidgetItem(k->brushesList);
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush_05.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("Dense4Pattern");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    brushItem = new QListWidgetItem(k->brushesList);
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush_06.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("Dense5Pattern");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    brushItem = new QListWidgetItem(k->brushesList);
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush_07.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("Dense6Pattern");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    brushItem = new QListWidgetItem(k->brushesList);
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush_08.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("Dense7Pattern");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    brushItem = new QListWidgetItem(k->brushesList);
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush_09.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("HotPattern");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    brushItem = new QListWidgetItem(k->brushesList);
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush_10.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("VerPattern");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    brushItem = new QListWidgetItem(k->brushesList);
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush_11.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("CrossPattern");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    brushItem = new QListWidgetItem(k->brushesList);
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush_12.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("BDiagPattern");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    brushItem = new QListWidgetItem(k->brushesList);
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush_13.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("FDiagPattern");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    brushItem = new QListWidgetItem(k->brushesList);
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush_14.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("DiagCrossPattern");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
     /*
-    brushItem = new QListWidgetItem(k->brushesList);
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush_15.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("TexturePattern");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    brushItem = new QListWidgetItem(k->brushesList);
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("LinearGradientPattern");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    brushItem = new QListWidgetItem(k->brushesList);
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("ConicalGradientPattern");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    brushItem = new QListWidgetItem(k->brushesList);
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("RadialGradientPattern");
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     */
 
-    k->brushesList->setFixedWidth(255);
-    k->brushesList->setFixedHeight(63);
+    brushesList->setFixedWidth(255);
+    brushesList->setFixedHeight(63);
 
-    addChild(k->brushesList);
-    connect(k->brushesList, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(setBrushStyle(QListWidgetItem *)));
+    addChild(brushesList);
+    connect(brushesList, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(setBrushStyle(QListWidgetItem *)));
 }
 
 void TupBrushWidget::enableRoundCapStyle()
 {
-    if (!k->roundCapButton->isDown())
-        k->roundCapButton->setChecked(true);
+    if (!roundCapButton->isDown())
+        roundCapButton->setChecked(true);
 
-    if (k->squareCapButton->isChecked())
-        k->squareCapButton->setChecked(false);
+    if (squareCapButton->isChecked())
+        squareCapButton->setChecked(false);
 
-    if (k->flatCapButton->isChecked())
-        k->flatCapButton->setChecked(false);
+    if (flatCapButton->isChecked())
+        flatCapButton->setChecked(false);
 
-    k->pen.setCapStyle(Qt::RoundCap);
+    pen.setCapStyle(Qt::RoundCap);
 
     updatePenProperties();
 }
 
 void TupBrushWidget::enableSquareCapStyle()
 {
-    if (!k->squareCapButton->isDown())
-        k->squareCapButton->setChecked(true);
+    if (!squareCapButton->isDown())
+        squareCapButton->setChecked(true);
 
-    if (k->roundCapButton->isChecked())
-        k->roundCapButton->setChecked(false);
+    if (roundCapButton->isChecked())
+        roundCapButton->setChecked(false);
 
-    if (k->flatCapButton->isChecked())
-        k->flatCapButton->setChecked(false);
+    if (flatCapButton->isChecked())
+        flatCapButton->setChecked(false);
 
-    k->pen.setCapStyle(Qt::SquareCap);
+    pen.setCapStyle(Qt::SquareCap);
     updatePenProperties();
 }
 
 void TupBrushWidget::enableFlatCapStyle()
 {
-    if (!k->flatCapButton->isDown())
-        k->flatCapButton->setChecked(true);
+    if (!flatCapButton->isDown())
+        flatCapButton->setChecked(true);
 
-    if (k->roundCapButton->isChecked())
-        k->roundCapButton->setChecked(false);
+    if (roundCapButton->isChecked())
+        roundCapButton->setChecked(false);
 
-    if (k->squareCapButton->isChecked())
-        k->squareCapButton->setChecked(false);
+    if (squareCapButton->isChecked())
+        squareCapButton->setChecked(false);
 
-    k->pen.setCapStyle(Qt::FlatCap);
+    pen.setCapStyle(Qt::FlatCap);
     updatePenProperties();
 }
 
 void TupBrushWidget::enableRoundJoinStyle()
 {
-    if (!k->roundJoinButton->isDown())
-        k->roundJoinButton->setChecked(true);
+    if (!roundJoinButton->isDown())
+        roundJoinButton->setChecked(true);
 
-    if (k->miterJoinButton->isChecked())
-        k->miterJoinButton->setChecked(false);
+    if (miterJoinButton->isChecked())
+        miterJoinButton->setChecked(false);
 
-    if (k->bevelJoinButton->isChecked())
-        k->bevelJoinButton->setChecked(false);
+    if (bevelJoinButton->isChecked())
+        bevelJoinButton->setChecked(false);
 
-    k->pen.setJoinStyle(Qt::RoundJoin);
+    pen.setJoinStyle(Qt::RoundJoin);
     updatePenProperties();
 }
 
 void TupBrushWidget::enableMiterJoinStyle()
 {
-    if (!k->miterJoinButton->isDown())
-        k->miterJoinButton->setChecked(true);
+    if (!miterJoinButton->isDown())
+        miterJoinButton->setChecked(true);
 
-    if (k->bevelJoinButton->isChecked())
-        k->bevelJoinButton->setChecked(false);
+    if (bevelJoinButton->isChecked())
+        bevelJoinButton->setChecked(false);
 
-    if (k->roundJoinButton->isChecked())
-        k->roundJoinButton->setChecked(false);
+    if (roundJoinButton->isChecked())
+        roundJoinButton->setChecked(false);
 
-    k->pen.setJoinStyle(Qt::MiterJoin);
+    pen.setJoinStyle(Qt::MiterJoin);
     updatePenProperties();
 }
 
 void TupBrushWidget::enableBevelJoinStyle()
 {
-    if (!k->bevelJoinButton->isDown())
-        k->bevelJoinButton->setChecked(true);
+    if (!bevelJoinButton->isDown())
+        bevelJoinButton->setChecked(true);
 
-    if (k->miterJoinButton->isChecked())
-        k->miterJoinButton->setChecked(false);
+    if (miterJoinButton->isChecked())
+        miterJoinButton->setChecked(false);
     
-    if (k->roundJoinButton->isChecked())
-        k->roundJoinButton->setChecked(false);
+    if (roundJoinButton->isChecked())
+        roundJoinButton->setChecked(false);
 
-    k->pen.setJoinStyle(Qt::BevelJoin);
+    pen.setJoinStyle(Qt::BevelJoin);
     updatePenProperties();
 }

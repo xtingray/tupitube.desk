@@ -42,6 +42,7 @@
 #include "tupcellscolor.h"
 #include "tuppaletteparser.h"
 #include "tapplicationproperties.h"
+#include "tupcolorbuttonpanel.h"
 
 #include <QFrame>
 #include <QComboBox>
@@ -88,9 +89,19 @@ class TUPITUBE_EXPORT TupViewColorCells : public QFrame
         void readPalettes(const QString &paletteDir);
         void addPalette(TupCellsColor *palette);
 
-        struct Private;
-        Private *const k;
+        QComboBox *chooserPalette;
+        QStackedWidget *containerPalette;
 
+        TupCellsColor *defaultPalette;
+        TupCellsColor *qtColorPalette;
+        TupCellsColor *customColorPalette;
+        TupCellsColor *customGradientPalette;
+
+        int numColorRecent;
+        QBrush currentColor;
+        QTableWidgetItem* currentCell;
+        QVBoxLayout *viewLayout;
+        TupColorButtonPanel *buttonPanel;
 };
 
 #endif

@@ -90,8 +90,8 @@ TupProjectManager::~TupProjectManager()
 
 void TupProjectManager::setParams(TupProjectManagerParams *parameters)
 {
-    if (params)
-        delete params;
+    // if (params)
+    //     delete params;
 
     params = parameters;
     handler->initialize(params);

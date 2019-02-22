@@ -37,6 +37,7 @@
 #define TUPCOLORBUTTONPANEL_H
 
 #include "tglobal.h"
+#include "tupcolorbutton.h"
 
 #include <QWidget>
 
@@ -48,6 +49,7 @@ class TUPITUBE_EXPORT TupColorButtonPanel : public QWidget
         TupColorButtonPanel(Qt::BrushStyle style, const QSize &baseColorCellSize, int spacing,
                             const QString &buttonParams, QWidget *parent = 0);
         ~TupColorButtonPanel();
+
         void resetPanel();
         void enableTransparentColor(bool flag);
 
@@ -63,8 +65,10 @@ class TUPITUBE_EXPORT TupColorButtonPanel : public QWidget
        void setPanel(const QSize &cellSize, const QString &buttonParams);
        void setState(int index, bool isSelected);
 
-       struct Private;
-       Private *const k;
+       QList<TupColorButton *> baseColors;
+       Qt::BrushStyle style;
+       int currentColorIndex;
+       TupColorButton *trans;
        int spacing;
 };
 

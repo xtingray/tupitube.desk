@@ -36,7 +36,7 @@
 
 #include "tuptoolplugin.h"
 
-TupToolPlugin::TupToolPlugin(QObject * parent) : QObject(parent) // , k(new Private)
+TupToolPlugin::TupToolPlugin(QObject * parent) : QObject(parent)
 {
 }
 

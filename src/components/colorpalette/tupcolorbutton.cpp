@@ -48,14 +48,14 @@ struct TupColorButton::Private
     QString themeName;
 };
 
-TupColorButton::TupColorButton(int index, const QString &name, const QBrush &brush, const QSize &size,
+TupColorButton::TupColorButton(int index, const QString &name, const QBrush &colorBrush, const QSize &dimension,
                                const QString &params) : k(new Private)
 {
-    k->index = index;
-    k->editable = true;
-    k->selected = false;
-    k->brush = brush;
-    k->size = size;
+    index = index;
+    editable = true;
+    selected = false;
+    brush = colorBrush;
+    size = dimension;
 
     TCONFIG->beginGroup("General");
     k->themeName = TCONFIG->value("Theme", "Light").toString();
@@ -67,7 +67,7 @@ TupColorButton::TupColorButton(int index, const QString &name, const QBrush &bru
     border2 = values.at(1).toInt();
     border3 = values.at(2).toInt();
 
-    setFixedSize(k->size);
+    setFixedSize(size);
 }
 
 TupColorButton::~TupColorButton()
@@ -76,7 +76,7 @@ TupColorButton::~TupColorButton()
 
 QSize TupColorButton::sizeHint() const
 {
-    return k->size;
+    return size;
 }
 
 void TupColorButton::paintEvent(QPaintEvent *event)
@@ -84,19 +84,19 @@ void TupColorButton::paintEvent(QPaintEvent *event)
     Q_UNUSED(event);
 
     QPainter painter(this);
-    painter.fillRect(rect(), k->brush);
+    painter.fillRect(rect(), brush);
 
     /*
-    if (k->brush.color() == Qt::transparent) { 
+    if (brush.color() == Qt::transparent) {
         QImage transparent(THEME_DIR + "icons/trans_small.png");
         painter.drawImage(rect().topLeft(), transparent);
     } else {
-        painter.fillRect(rect(), k->brush);
+        painter.fillRect(rect(), brush);
     }
     */
 
     QRect border = rect();
-    if (k->selected && k->editable) {
+    if (selected && editable) {
         QColor borderColor1 = QColor(200, 200, 200);
         QColor borderColor2 = QColor(190, 190, 190);
         QColor borderColor3 = QColor(150, 150, 150);
@@ -113,7 +113,7 @@ void TupColorButton::paintEvent(QPaintEvent *event)
         painter.setPen(QPen(borderColor3, border3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         painter.drawRect(border);
     } else {
-        if (k->brush.color() == Qt::transparent) 
+        if (brush.color() == Qt::transparent)
             painter.setPen(QPen(QColor(30, 30, 30), border3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         else
             painter.setPen(QPen(QColor(190, 190, 190), border3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -125,7 +125,7 @@ void TupColorButton::mousePressEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
 
-    emit clicked(k->index);
+    emit clicked(index);
     setState(true);
 }
 
@@ -133,37 +133,37 @@ void TupColorButton::mouseDoubleClickEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
 	
-    emit doubledClicked(k->index);
+    emit doubledClicked(index);
 }
 
 QColor TupColorButton::color()
 {
-    return k->brush.color();
+    return brush.color();
 }
 
 void TupColorButton::setState(bool isSelected)
 {
-    k->selected = isSelected;
+    selected = isSelected;
     update();
 }
 
 bool TupColorButton::isSelected()
 {
-    return k->selected;
+    return selected;
 }
 
-void TupColorButton::setBrush(const QBrush &brush)
+void TupColorButton::setBrush(const QBrush &cBrush)
 {
-    k->brush = brush;
+    brush = cBrush;
     update();
 }
 
 void TupColorButton::setEditable(bool flag)
 {
-    k->editable = flag;
+    editable = flag;
 }
 
-int TupColorButton::index()
+int TupColorButton::getIndex()
 {
-    return k->index;
+    return index;
 }

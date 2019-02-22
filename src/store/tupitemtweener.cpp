@@ -60,13 +60,13 @@ TupItemTweener::Type TupItemTweener::getType()
 
 void TupItemTweener::addStep(const TupTweenerStep &step)
 {
-    int counter = step.index();
+    int counter = step.getIndex();
 
     if (step.has(TupTweenerStep::Position))
-        setPosAt(counter, step.position());
+        setPosAt(counter, step.getPosition());
 
     if (step.has(TupTweenerStep::Rotation)) 
-        setRotationAt(counter, step.rotation());
+        setRotationAt(counter, step.getRotation());
     
     if (step.has(TupTweenerStep::Scale))
         setScaleAt(counter, step.horizontalScale(), step.verticalScale());
@@ -75,10 +75,10 @@ void TupItemTweener::addStep(const TupTweenerStep &step)
         setShearAt(counter, step.horizontalShear(), step.verticalShear());
     
     if (step.has(TupTweenerStep::Opacity))
-        setOpacityAt(counter, step.opacity());
+        setOpacityAt(counter, step.getOpacity());
 
     if (step.has(TupTweenerStep::Coloring))
-        setColorAt(counter, step.color());
+        setColorAt(counter, step.getColor());
 }
 
 TupTweenerStep * TupItemTweener::stepAt(int index)

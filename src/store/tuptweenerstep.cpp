@@ -53,8 +53,7 @@ struct TupTweenerStep::Private
     int index;
 };
 
-TupTweenerStep::TupTweenerStep(int index)
- : TupAbstractSerializable(), k(new Private)
+TupTweenerStep::TupTweenerStep(int index): TupAbstractSerializable(), k(new Private)
 {
     k->index = index;
     k->flags = None;
@@ -108,12 +107,12 @@ bool TupTweenerStep::has(Type type) const
     return k->flags & type;
 }
 
-int TupTweenerStep::index() const
+int TupTweenerStep::getIndex() const
 {
     return k->index;
 }
 
-QPointF TupTweenerStep::position() const
+QPointF TupTweenerStep::getPosition() const
 {
     return k->position;
 }
@@ -138,17 +137,17 @@ double TupTweenerStep::verticalShear() const
     return k->shear.y;
 }
 
-double TupTweenerStep::rotation() const
+double TupTweenerStep::getRotation() const
 {
     return k->rotation;
 }
 
-double TupTweenerStep::opacity() const
+double TupTweenerStep::getOpacity() const
 {
     return k->opacity;
 }
 
-QColor TupTweenerStep::color() const
+QColor TupTweenerStep::getColor() const
 {
     return k->color;
 }

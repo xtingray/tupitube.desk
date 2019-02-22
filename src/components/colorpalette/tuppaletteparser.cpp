@@ -35,49 +35,32 @@
 
 #include "tuppaletteparser.h"
 
-struct TupPaletteParser::Private
+TupPaletteParser::TupPaletteParser(): TXmlParserBase()
 {
-    QString root, qname;
-    QString paletteName;
-    bool isEditable;
-    QList<QBrush> brushes;
-
-    QGradientStops gradientStops;
-    QGradient *gradient;
-
-    ~Private()
-     {
-       delete gradient;
-     }
-};
-
-TupPaletteParser::TupPaletteParser(): TXmlParserBase(), k(new Private)
-{
-     k->paletteName = "";
-     k->isEditable = false;
-     k->gradient = 0;
+     paletteName = "";
+     isEditable = false;
+     gradient = nullptr;
 }
 
 TupPaletteParser::~TupPaletteParser()
 {
-     delete k;
 }
 
 bool TupPaletteParser::startTag(const QString &tag, const QXmlAttributes &atts)
 {
     if (root() == "Palette") {
         if (tag == root()) {
-            k->paletteName = atts.value("name");
+            paletteName = atts.value("name");
             if (atts.value("editable") == "true")
-                k->isEditable = true;
+                isEditable = true;
             else
-                k->isEditable = false;
+                isEditable = false;
         } else if (tag == "Color") {
                    QColor c = QColor(atts.value("colorName"));
                    c.setAlpha( atts.value("alpha").toInt() );
 
                    if (c.isValid()) {
-                       k->brushes << c;
+                       brushes << c;
                    } else {
                    #ifdef TUP_DEBUG
                        QString msg = "TupPaletteParser::startTag() - Error: Invalid color!";
@@ -89,11 +72,11 @@ bool TupPaletteParser::startTag(const QString &tag, const QXmlAttributes &atts)
                    #endif 					
                    }
         } else if (tag == "Gradient") {
-                   if (k->gradient) 
-                       delete k->gradient;
+                   if (gradient)
+                       delete gradient;
 
-                   k->gradient = 0;
-                   k->gradientStops.clear();
+                   gradient = 0;
+                   gradientStops.clear();
 
                    QGradient::Type type = QGradient::Type(atts.value("type").toInt());
                    QGradient::Spread spread = QGradient::Spread(atts.value("spread").toInt());
@@ -101,21 +84,21 @@ bool TupPaletteParser::startTag(const QString &tag, const QXmlAttributes &atts)
                    switch (type) {
                            case QGradient::LinearGradient:
                              {
-                               k->gradient = new QLinearGradient(atts.value("startX").toDouble(),
+                               gradient = new QLinearGradient(atts.value("startX").toDouble(),
                                              atts.value("startY").toDouble(),atts.value("finalX").toDouble(), 
                                              atts.value("finalY").toDouble());
                              }
                              break;
                            case QGradient::RadialGradient:
                              {
-                               k->gradient = new QRadialGradient(atts.value("centerX").toDouble(),
+                               gradient = new QRadialGradient(atts.value("centerX").toDouble(),
                                              atts.value("centerY").toDouble(), atts.value("radius").toDouble(),
                                              atts.value("focalX").toDouble(),atts.value("focalY").toDouble() );
                              }
                              break;
                            case QGradient::ConicalGradient:
                              {
-                               k->gradient = new QConicalGradient(atts.value("centerX").toDouble(),
+                               gradient = new QConicalGradient(atts.value("centerX").toDouble(),
                                              atts.value("centerY").toDouble(),atts.value("angle").toDouble());
                              }
                              break;
@@ -132,12 +115,12 @@ bool TupPaletteParser::startTag(const QString &tag, const QXmlAttributes &atts)
                              }
                            break;
                    }
-                   k->gradient->setSpread(spread);
+                   gradient->setSpread(spread);
         } else if (tag == "Stop") {
                    QColor c(atts.value("colorName") );
                    c.setAlpha(atts.value("alpha").toInt());
-                   // k->gradientStops << qMakePair(atts.value("value").toDouble(), c);	
-                   k->gradientStops << qMakePair((qreal)(atts.value("value").toDouble()), c);
+                   // gradientStops << qMakePair(atts.value("value").toDouble(), c);
+                   gradientStops << qMakePair((qreal)(atts.value("value").toDouble()), c);
         }
      }
 
@@ -147,10 +130,10 @@ bool TupPaletteParser::startTag(const QString &tag, const QXmlAttributes &atts)
 bool TupPaletteParser::endTag(const QString& tag)
 {
     if (root() == "Palette") {
-        if (tag == "Gradient" && k->gradient) {
-            k->gradient->setStops(k->gradientStops);
-            k->brushes << *k->gradient;
-            k->gradientStops.clear(); 
+        if (tag == "Gradient" && gradient) {
+            gradient->setStops(gradientStops);
+            brushes << *gradient;
+            gradientStops.clear();
         }
     }
 
@@ -162,17 +145,17 @@ void TupPaletteParser::text(const QString& )
 
 }
 
-QList<QBrush> TupPaletteParser::brushes() const
+QList<QBrush> TupPaletteParser::getBrushes() const
 {
-    return k->brushes;
+    return brushes;
 }
 
-QString TupPaletteParser::paletteName() const
+QString TupPaletteParser::getPaletteName() const
 {
-    return k->paletteName;
+    return paletteName;
 }
 
 bool TupPaletteParser::paletteIsEditable() const
 {
-    return k->isEditable;
+    return isEditable;
 }
