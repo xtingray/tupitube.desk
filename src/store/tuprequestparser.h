@@ -39,6 +39,7 @@
 #include "tglobal.h"
 #include "tupxmlparserbase.h"
 #include "tupprojectrequest.h"
+#include "tupprojectresponse.h"
 
 #include <QXmlSimpleReader>
 #include <QXmlInputSource>
@@ -56,12 +57,12 @@ class TUPITUBE_EXPORT TupRequestParser : public TupXmlParserBase
         bool startTag(const QString& qname, const QXmlAttributes& atts);
         bool endTag(const QString& qname);
         void text(const QString & ch);
-        TupProjectResponse *response() const;
-        QString sign() const;
+        TupProjectResponse *getResponse() const;
+        QString getSign() const;
         
     private:
-        struct Private;
-        Private *const k;
+        QString sign;
+        TupProjectResponse *response;
 };
 
 #endif

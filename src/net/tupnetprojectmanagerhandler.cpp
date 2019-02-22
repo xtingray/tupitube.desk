@@ -324,14 +324,14 @@ void TupNetProjectManagerHandler::handlePackage(const QString &root, const QStri
                TupRequestParser parser;
 
                if (parser.parse(package)) {
-                   if (parser.sign() == k->sign)
+                   if (parser.getSign() == k->sign)
                        k->ownPackage = true;
                    else
                        k->ownPackage = false;
 
                    if (k->ownPackage && !k->doAction) {
-                       if (parser.response()->getPart() == TupProjectRequest::Item) {
-                           TupItemResponse *response = static_cast<TupItemResponse *>(parser.response());
+                       if (parser.getResponse()->getPart() == TupProjectRequest::Item) {
+                           TupItemResponse *response = static_cast<TupItemResponse *>(parser.getResponse());
                            TupProjectRequest request = TupRequestBuilder::createFrameRequest(response->getSceneIndex(), 
                                                       response->getLayerIndex(), response->getFrameIndex(), TupProjectRequest::Select);
                            request.setExternal(!k->ownPackage);
@@ -339,7 +339,7 @@ void TupNetProjectManagerHandler::handlePackage(const QString &root, const QStri
                        }
                        return;
                    } else {
-                       TupProjectRequest request = TupRequestBuilder::fromResponse(parser.response());
+                       TupProjectRequest request = TupRequestBuilder::fromResponse(parser.getResponse());
                        request.setExternal(!k->ownPackage);
                        emitRequest(&request, k->doAction && k->ownPackage);
                    }

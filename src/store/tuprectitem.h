@@ -51,8 +51,8 @@ class TUPITUBE_EXPORT TupRectItem : public QGraphicsRectItem, public TupAbstract
         TupRectItem(QGraphicsItem * parent = 0);
         TupRectItem(const QRectF& rect, QGraphicsItem * parent = 0);
         ~TupRectItem();
+
         bool contains(const QPointF & point) const;
-        
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
         
@@ -62,7 +62,7 @@ class TUPITUBE_EXPORT TupRectItem : public QGraphicsRectItem, public TupAbstract
         virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
         
     private:
-        bool m_dragOver;
+        bool dragOver;
 };
 
 #endif

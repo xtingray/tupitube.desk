@@ -68,7 +68,7 @@ TupProjectCommand::TupProjectCommand(TupCommandExecutor *exec, const TupProjectR
 
     executor = exec;
     executed = false;
-    response = parser.response();
+    response = parser.getResponse();
     response->setExternal(request->isRequestExternal());
 
     if (!response) {

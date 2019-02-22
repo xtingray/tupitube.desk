@@ -48,7 +48,7 @@ class TUPITUBE_EXPORT TupSoundLayer : public TupLayer
         ~TupSoundLayer();
         
         void fromSymbol(const QString &symbolName);
-        QString filePath() const;
+        QString getFilePath() const;
         
         void play();
         void stop();
@@ -57,8 +57,9 @@ class TUPITUBE_EXPORT TupSoundLayer : public TupLayer
         QDomElement toXml(QDomDocument &doc) const;
         
     private:
-        struct Private;
-        Private *const k;
+        QString filePath;
+        QString symbolName;
+        int playerId;
 };
 
 #endif

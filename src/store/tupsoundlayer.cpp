@@ -39,37 +39,30 @@
 #include "tupproject.h"
 #include "tuplibraryobject.h"
 
-struct TupSoundLayer::Private
-{
-    QString filePath, symbolName;
-    int playerId;
-};
-
-TupSoundLayer::TupSoundLayer(TupScene *parent) : TupLayer(parent), k(new Private)
+TupSoundLayer::TupSoundLayer(TupScene *parent) : TupLayer(parent)
 {
 }
 
 TupSoundLayer::~TupSoundLayer()
 {
-    delete k;
 }
 
-void TupSoundLayer::fromSymbol(const QString &symbolName)
+void TupSoundLayer::fromSymbol(const QString &symbol)
 {
     TupLibrary *library = parentProject()->getLibrary();
     
     if (TupLibraryObject *object = library->getObject(symbolName)) {
         if (object->getType() == TupLibraryObject::Sound) {
-            k->symbolName = symbolName;
-            k->filePath = object->getDataPath();
-            // k->playerId = TAudioPlayer::instance()->load(k->filePath);
+            symbolName = symbol;
+            filePath = object->getDataPath();
+            // k->playerId = TAudioPlayer::instance()->load(filePath);
         }
     }
 }
 
-QString TupSoundLayer::filePath() const
+QString TupSoundLayer::getFilePath() const
 {
-    return k->filePath;
+    return filePath;
 }
 
 void TupSoundLayer::play()
@@ -101,7 +94,7 @@ QDomElement TupSoundLayer::toXml(QDomDocument &doc) const
 {
     QDomElement root = doc.createElement("soundlayer");
     root.setAttribute("name", getLayerName());
-    root.setAttribute("symbol", k->symbolName);
+    root.setAttribute("symbol", symbolName);
     
     return root;
 }

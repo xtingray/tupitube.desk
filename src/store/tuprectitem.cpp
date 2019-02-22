@@ -79,7 +79,7 @@ void TupRectItem::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
     if (event->mimeData()->hasColor()) {
         event->setAccepted(true);
-        m_dragOver = true;
+        dragOver = true;
         update();
     } else {
         event->setAccepted(false);
@@ -89,13 +89,13 @@ void TupRectItem::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 void TupRectItem::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
 {
     Q_UNUSED(event);
-    m_dragOver = false;
+    dragOver = false;
     update();
 }
 
 void TupRectItem::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
-    m_dragOver = false;
+    dragOver = false;
     if (event->mimeData()->hasColor()) {
         // setBrush(QBrush(qVariantValue<QColor>(event->mimeData()->colorData())));
         QVariant color = event->mimeData()->colorData();

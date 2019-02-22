@@ -357,7 +357,8 @@ void TupSerializer::loadFont(QFont &font, const QDomElement &e)
 
 void TupSerializer::loadFont(QFont &font, const QXmlAttributes &atts)
 {
-    font = QFont(atts.value("family"), atts.value("pointSize", "-1").toInt(), atts.value("weight", "-1").toInt(), atts.value( "italic", "0").toInt());
+    font = QFont(atts.value("family"), atts.value("pointSize", "-1").toInt(), atts.value("weight", "-1").toInt(),
+                 atts.value( "italic", "0").toInt());
     
     font.setBold(atts.value("bold", "0").toInt());
     font.setStyle(QFont::Style(atts.value("style").toInt()));

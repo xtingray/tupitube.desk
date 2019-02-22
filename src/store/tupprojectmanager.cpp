@@ -339,7 +339,7 @@ void TupProjectManager::handleLocalRequest(const TupProjectRequest *request)
     TupRequestParser parser;
 
     if (parser.parse(request->getXml())) {
-        if (TupFrameResponse *response = static_cast<TupFrameResponse *>(parser.response())) {
+        if (TupFrameResponse *response = static_cast<TupFrameResponse *>(parser.getResponse())) {
             sceneIndex = response->getSceneIndex();
             layerIndex = response->getLayerIndex();
             frameIndex = response->getFrameIndex();
@@ -391,8 +391,8 @@ void TupProjectManager::handleLocalRequest(const TupProjectRequest *request)
             }
         }
 
-        parser.response()->setExternal(request->isRequestExternal());
-        emit responsed(parser.response());
+        parser.getResponse()->setExternal(request->isRequestExternal());
+        emit responsed(parser.getResponse());
     }
 }
 
