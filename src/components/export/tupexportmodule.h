@@ -37,7 +37,6 @@
 #define TUPEXPORTMODULE_H
 
 #include "tglobal.h"
-#include "tupexportwidget.h"
 #include "tupexportinterface.h"
 #include "tupexportwizard.h"
 #include "tupproject.h"
@@ -52,7 +51,8 @@ class TUPITUBE_EXPORT TupExportModule : public TupExportWizardPage
     Q_OBJECT
 
     public:
-        TupExportModule(TupProject *project, TupExportWidget::OutputFormat output, QString title, const TupExportWidget *widget);
+        enum OutputFormat { Animation = 0, ImagesArray, AnimatedImage };
+        TupExportModule(TupProject *project, OutputFormat output, QString title);
         ~TupExportModule();
 
         bool isComplete() const;
@@ -85,7 +85,6 @@ class TUPITUBE_EXPORT TupExportModule : public TupExportWizardPage
         QList<int> m_indexes;
         TupExportInterface *m_currentExporter;
         TupExportInterface::Format m_currentFormat;
-        TupExportWidget::OutputFormat output;
 
         TupProject *m_project;
         QLineEdit *m_filePath;

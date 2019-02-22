@@ -35,14 +35,14 @@
 
 #include "tupvideoproperties.h"
 
-TupVideoProperties::TupVideoProperties(const TupExportWidget *widget) : TupExportWizardPage(tr("Set Animation Properties"))
+TupVideoProperties::TupVideoProperties() : TupExportWizardPage(tr("Set Animation Properties"))
 {
     setTag("PROPERTIES");
 
     QLocale utf(QLocale::AnyLanguage, QLocale::AnyCountry);
     isOk = false;
 
-    connect(widget, SIGNAL(saveVideoToServer()), this, SLOT(postIt()));
+    // connect(widget, SIGNAL(saveVideoToServer()), this, SLOT(postIt()));
 
     QWidget *container = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout(container);

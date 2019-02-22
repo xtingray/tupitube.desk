@@ -35,42 +35,30 @@
 
 #include "tupexportwizard.h"
 
-struct TupExportWizard::Private
-{
-    QStackedWidget *history;
-    QPushButton *cancelButton;
-    QPushButton *backButton;
-    QPushButton *nextButton;
-    QHBoxLayout *buttonLayout;
-    QVBoxLayout *mainLayout;
-    QString format;
-    int formatCode;
-};
-
-TupExportWizard::TupExportWizard(QWidget *parent) : QDialog(parent), k(new Private)
+TupExportWizard::TupExportWizard(QWidget *parent) : QDialog(parent)
 {
     setModal(true);
 
-    k->cancelButton = new QPushButton(tr("Cancel"));
-    k->backButton = new QPushButton(tr("Back"));
-    k->nextButton = new QPushButton(tr("Next"));
+    cancelButton = new QPushButton(tr("Cancel"));
+    backButton = new QPushButton(tr("Back"));
+    nextButton = new QPushButton(tr("Next"));
 
-    connect(k->cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
-    connect(k->backButton, SIGNAL(clicked()), this, SLOT(back()));
-    connect(k->nextButton, SIGNAL(clicked()), this, SLOT(next()));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
+    connect(backButton, SIGNAL(clicked()), this, SLOT(back()));
+    connect(nextButton, SIGNAL(clicked()), this, SLOT(next()));
 
-    k->buttonLayout = new QHBoxLayout;
-    k->buttonLayout->addStretch(1);
-    k->buttonLayout->addWidget(k->cancelButton);
-    k->buttonLayout->addWidget(k->backButton);
-    k->buttonLayout->addWidget(k->nextButton);
+    buttonLayout = new QHBoxLayout;
+    buttonLayout->addStretch(1);
+    buttonLayout->addWidget(cancelButton);
+    buttonLayout->addWidget(backButton);
+    buttonLayout->addWidget(nextButton);
 
-    k->history = new QStackedWidget;
+    history = new QStackedWidget;
 
-    k->mainLayout = new QVBoxLayout;
-    k->mainLayout->addWidget(k->history);
-    k->mainLayout->addLayout(k->buttonLayout);
-    setLayout(k->mainLayout);
+    mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(history);
+    mainLayout->addLayout(buttonLayout);
+    setLayout(mainLayout);
 }
 
 TupExportWizard::~TupExportWizard()
@@ -80,18 +68,18 @@ TupExportWizard::~TupExportWizard()
 TupExportWizardPage *TupExportWizard::addPage(TupExportWizardPage *newPage)
 {
     QString tag = newPage->getTag();
-    newPage->setParent(k->history);
+    newPage->setParent(history);
     newPage->show();
 
-    k->history->addWidget(newPage);
+    history->addWidget(newPage);
 
-    if (k->history->count() == 1) { // First Page
+    if (history->count() == 1) { // First Page
         newPage->setFocus();
-        k->backButton->setEnabled(false);
-        k->nextButton->setDefault(true);
+        backButton->setEnabled(false);
+        nextButton->setDefault(true);
     } 
 
-    // k->nextButton->setEnabled(newPage->isComplete());
+    // nextButton->setEnabled(newPage->isComplete());
 
     connect(newPage, SIGNAL(completed()), this, SLOT(pageCompleted()));
     connect(newPage, SIGNAL(emptyField()), this, SLOT(disableButton()));
@@ -111,12 +99,12 @@ TupExportWizardPage *TupExportWizard::addPage(TupExportWizardPage *newPage)
 
 void TupExportWizard::showPage(TupExportWizardPage *page)
 {
-    k->history->setCurrentWidget(page);
+    history->setCurrentWidget(page);
 }
 
 void TupExportWizard::showPage(int index)
 {
-    k->history->setCurrentIndex(index);
+    history->setCurrentIndex(index);
 }
 
 void TupExportWizard::cancel()
@@ -126,32 +114,32 @@ void TupExportWizard::cancel()
 
 void TupExportWizard::back()
 {
-    TupExportWizardPage *current = qobject_cast<TupExportWizardPage *>(k->history->currentWidget());
+    TupExportWizardPage *current = qobject_cast<TupExportWizardPage *>(history->currentWidget());
     QString tag = current->getTag();
 
     if (current)
         current->aboutToBackPage();
 
     if (tag.compare("ANIMATED_IMAGE") == 0) {
-        k->history->setCurrentIndex(k->history->currentIndex()-3);
+        history->setCurrentIndex(history->currentIndex()-3);
     } else if (tag.compare("IMAGES_ARRAY") == 0) {
-               k->history->setCurrentIndex(k->history->currentIndex()-2);
+               history->setCurrentIndex(history->currentIndex()-2);
     } else if (tag.compare("ANIMATION") == 0 || tag.compare("SCENE") == 0) {
-               k->history->setCurrentIndex(k->history->currentIndex()-1);
+               history->setCurrentIndex(history->currentIndex()-1);
     }
 
     if (tag.compare("SCENE") == 0 || tag.compare("PROPERTIES") == 0)
-        k->backButton->setEnabled(false);
+        backButton->setEnabled(false);
 
-    k->nextButton->setEnabled(true);
+    nextButton->setEnabled(true);
 
     if (tag.compare("ANIMATION") == 0 || tag.compare("IMAGES_ARRAY") == 0 || tag.compare("ANIMATED_IMAGE") == 0 || tag.compare("PROPERTIES") == 0) 
-        k->nextButton->setText(tr("Next"));
+        nextButton->setText(tr("Next"));
 }
 
 void TupExportWizard::next()
 {
-    TupExportWizardPage *current = qobject_cast<TupExportWizardPage *>(k->history->currentWidget());
+    TupExportWizardPage *current = qobject_cast<TupExportWizardPage *>(history->currentWidget());
 
     if (current)
         current->aboutToNextPage();
@@ -159,8 +147,8 @@ void TupExportWizard::next()
     QString tag = current->getTag();
 
     if (tag.compare("PLUGIN") == 0) {
-        k->backButton->setEnabled(true);
-        k->history->setCurrentIndex(k->history->currentIndex()+1);
+        backButton->setEnabled(true);
+        history->setCurrentIndex(history->currentIndex()+1);
     }
 
     if (tag.compare("ANIMATION") == 0)
@@ -176,18 +164,18 @@ void TupExportWizard::next()
         emit saveVideoToServer();
 
     if (tag.compare("SCENE") == 0)  {
-        k->nextButton->setText(tr("Export")); 
-        k->backButton->setEnabled(true);
+        nextButton->setText(tr("Export"));
+        backButton->setEnabled(true);
 
-        if (k->formatCode == 4096) { // ANIMATED PNG
+        if (formatCode == 4096) { // ANIMATED PNG
             emit setAnimatedImageFileName();
-            k->history->setCurrentIndex(k->history->currentIndex()+3);
-        } else if (k->format.compare(".jpeg") == 0 || k->format.compare(".png") == 0 || k->format.compare(".svg") == 0) { // Images Array
+            history->setCurrentIndex(history->currentIndex()+3);
+        } else if (format.compare(".jpeg") == 0 || format.compare(".png") == 0 || format.compare(".svg") == 0) { // Images Array
                    emit setImagesArrayFileName();
-                   k->history->setCurrentIndex(k->history->currentIndex()+2);
+                   history->setCurrentIndex(history->currentIndex()+2);
         } else {
             emit setAnimationFileName();
-            k->history->setCurrentIndex(k->history->currentIndex()+1); // ANIMATION 
+            history->setCurrentIndex(history->currentIndex()+1); // ANIMATION
         }
     } 
 
@@ -196,27 +184,27 @@ void TupExportWizard::next()
 
 void TupExportWizard::pageCompleted()
 {
-    TupExportWizardPage *current = qobject_cast<TupExportWizardPage *>(k->history->currentWidget());
+    TupExportWizardPage *current = qobject_cast<TupExportWizardPage *>(history->currentWidget());
     QString tag = current->getTag();
 
     if (tag.compare("SCENE") == 0 || tag.compare("PLUGIN") == 0) {
-        k->nextButton->setEnabled(current->isComplete());
+        nextButton->setEnabled(current->isComplete());
     } else {
         if (tag.compare("IMAGES_ARRAY") == 0 || tag.compare("ANIMATION") == 0 || tag.compare("ANIMATED_IMAGE") == 0)
-            k->nextButton->setText(tr("Export"));
+            nextButton->setText(tr("Export"));
         if (tag.compare("PROPERTIES") == 0)
-            k->nextButton->setText(tr("Post"));
-        k->nextButton->setEnabled(true);
+            nextButton->setText(tr("Post"));
+        nextButton->setEnabled(true);
     }
 
-    if (k->history->currentIndex() == 1)
+    if (history->currentIndex() == 1)
         emit updateScenes();
 }
 
 void TupExportWizard::disableButton() 
 {
-    if (k->nextButton->isEnabled())
-        k->nextButton->setEnabled(false);
+    if (nextButton->isEnabled())
+        nextButton->setEnabled(false);
 }
 
 void TupExportWizard::closeDialog()
@@ -227,31 +215,23 @@ void TupExportWizard::closeDialog()
 
 void TupExportWizard::setFormat(int code, const QString &extension)
 {
-    k->formatCode = code;
-    k->format = extension;
+    formatCode = code;
+    format = extension;
 }
 
-struct TupExportWizardPage::Private
-{
-    QFrame *container;
-    QGridLayout *layout;
-    QLabel *image;
-    QString tag;
-};
-
-TupExportWizardPage::TupExportWizardPage(const QString &title, QWidget *parent) : TVHBox(parent), k(new Private)
+TupExportWizardPage::TupExportWizardPage(const QString &title, QWidget *parent) : TVHBox(parent)
 {
     TVHBox *boxTitle = new TVHBox(this, Qt::Vertical);
     new QLabel(title, boxTitle);
     new TSeparator(boxTitle);
     boxLayout()->setAlignment(boxTitle, Qt::AlignTop);
 
-    k->container = new QFrame(this);
-    k->layout = new QGridLayout(k->container);
+    container = new QFrame(this);
+    layout = new QGridLayout(container);
 
-    k->image = new QLabel;
-    k->layout->addWidget(k->image, 0, 0, Qt::AlignLeft);
-    k->image->hide();
+    image = new QLabel;
+    layout->addWidget(image, 0, 0, Qt::AlignLeft);
+    image->hide();
 
     new TSeparator(this);
 
@@ -260,23 +240,23 @@ TupExportWizardPage::TupExportWizardPage(const QString &title, QWidget *parent) 
 
 void TupExportWizardPage::setPixmap(const QPixmap &pixmap)
 {
-    k->image->setPixmap(pixmap);
-    k->image->show();
+    image->setPixmap(pixmap);
+    image->show();
 }
 
 void TupExportWizardPage::setWidget(QWidget *w)
 {
-    k->layout->addWidget(w, 0, 1);
+    layout->addWidget(w, 0, 1);
 }
 
 void TupExportWizardPage::setTag(const QString &label)
 {
-    k->tag = label;
+    tag = label;
 }
 
 const QString TupExportWizardPage::getTag()
 {
-    return k->tag;
+    return tag;
 }
 
 TupExportWizardPage::~TupExportWizardPage() 

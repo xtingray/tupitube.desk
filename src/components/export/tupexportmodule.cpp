@@ -35,12 +35,13 @@
 
 #include "tupexportmodule.h"
 #include "tconfig.h"
+#include "tosd.h"
 
 #include <QGroupBox>
 #include <QFileDialog>
 
-TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFormat outputFormat, 
-                                 QString title, const TupExportWidget *widget) : TupExportWizardPage(title), m_currentExporter(0), 
+TupExportModule::TupExportModule(TupProject *project, OutputFormat output,
+                                 QString title) : TupExportWizardPage(title), m_currentExporter(nullptr),
                                  m_currentFormat(TupExportInterface::NONE), m_project(project)
 {
     #ifdef TUP_DEBUG
@@ -51,15 +52,14 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
         #endif
     #endif
 
-    output = outputFormat;
     transparency = false;
     browserWasOpened = false;
 
-    if (output == TupExportWidget::Animation) {
+    if (output == Animation) {
         setTag("ANIMATION");
-    } else if (output == TupExportWidget::ImagesArray) {
+    } else if (output == ImagesArray) {
         setTag("IMAGES_ARRAY");
-    } else if (output == TupExportWidget::AnimatedImage) {
+    } else if (output == AnimatedImage) {
         setTag("ANIMATED_IMAGE");
     }
 
@@ -73,7 +73,7 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
     QHBoxLayout *prefixLayout = new QHBoxLayout;
     prefixLayout->addWidget(new QLabel(tr("Image Name Prefix: ")));
     QHBoxLayout *filePathLayout = new QHBoxLayout;
-    if (output == TupExportWidget::ImagesArray)
+    if (output == ImagesArray)
         filePathLayout->addWidget(new QLabel(tr("Directory: ")));
     else // Animation or AnimatedImage
         filePathLayout->addWidget(new QLabel(tr("File: ")));
@@ -84,21 +84,8 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
 
     connect(m_filePath, SIGNAL(textChanged(const QString &)), this, SLOT(updateState(const QString &)));
 
-    if (output == TupExportWidget::Animation) {
-        connect(widget, SIGNAL(exportAnimation()), this, SLOT(exportIt()));
-        connect(widget, SIGNAL(setAnimationFileName()), this, SLOT(updateNameField()));
-    }
-
-    if (output == TupExportWidget::AnimatedImage) {
-        connect(widget, SIGNAL(exportAnimatedImage()), this, SLOT(exportIt()));
-        connect(widget, SIGNAL(setAnimatedImageFileName()), this, SLOT(updateNameField()));
-    }
-
-    if (output == TupExportWidget::ImagesArray) {
+    if (output == ImagesArray)
         connect(m_prefix, SIGNAL(textChanged(const QString &)), this, SLOT(updateState(const QString &)));
-        connect(widget, SIGNAL(exportImagesArray()), this, SLOT(exportIt()));
-        connect(widget, SIGNAL(setImagesArrayFileName()), this, SLOT(updateNameField()));
-    } 
 
     filePathLayout->addWidget(m_filePath);
 
@@ -106,14 +93,14 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
     button->setIcon(QIcon(THEME_DIR + "icons/open.png"));
     button->setToolTip(tr("Choose another path"));
 
-    if (output == TupExportWidget::ImagesArray)
+    if (output == ImagesArray)
         connect(button, SIGNAL(clicked()), this, SLOT(chooseDirectory()));
     else
         connect(button, SIGNAL(clicked()), this, SLOT(chooseFile()));
 
     filePathLayout->addWidget(button);
 
-    if (output == TupExportWidget::ImagesArray) {
+    if (output == ImagesArray) {
         prefixLayout->addWidget(m_prefix);
         prefixLayout->addWidget(new QLabel(tr("i.e. ") + "<B>" + prefix + "</B>01.png / jpeg / svg"));
         layout->addLayout(prefixLayout);
@@ -142,7 +129,7 @@ TupExportModule::TupExportModule(TupProject *project, TupExportWidget::OutputFor
     configureLayout->addWidget(m_size);
     configureLayout->addWidget(new QWidget());
 
-    if (output == TupExportWidget::ImagesArray) {
+    if (output == ImagesArray) {
         connect(bgTransparency, SIGNAL(toggled(bool)), this, SLOT(enableTransparency(bool)));
         configureLayout->addWidget(bgTransparency);
     } else {
@@ -537,4 +524,3 @@ QList<TupScene *> TupExportModule::scenesToExport() const
 
     return scenes;
 }
-

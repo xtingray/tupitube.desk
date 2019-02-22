@@ -39,7 +39,7 @@
 #include "tglobal.h"
 #include "tupexportinterface.h"
 #include "tupexportwizard.h"
-#include "tupexportwidget.h"
+// #include "tupexportwidget.h"
 #include "titemselector.h"
 
 #include <QListWidget>
@@ -50,7 +50,7 @@ class TUPITUBE_EXPORT TupSceneSelector : public TupExportWizardPage
     Q_OBJECT
 
     public:
-        TupSceneSelector(const TupExportWidget *widget);
+        TupSceneSelector();
         ~TupSceneSelector();
 
         bool isComplete() const;

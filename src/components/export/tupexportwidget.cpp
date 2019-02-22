@@ -35,25 +35,7 @@
 
 #include "tupexportwidget.h"
 
-#include "tuppluginselector.h"
-#include "tupsceneselector.h"
-#include "tupexportmodule.h"
-#include "tupvideoproperties.h"
-
-struct TupExportWidget::Private
-{
-    TupPluginSelector *pluginPage;
-    TupSceneSelector *scenesPage;
-    TupExportModule *animationExport;
-    TupExportModule *imagesArrayExport;
-    TupExportModule *animatedImageExport;
-    TupVideoProperties *videoProperties;
-
-    const TupProject *project;
-    QHash<QString, TupExportInterface *> plugins;
-};
-
-TupExportWidget::TupExportWidget(TupProject *project, QWidget *parent, bool isLocal) : TupExportWizard(parent), k(new Private)
+TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, bool isLocal) : TupExportWizard(parent)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -63,51 +45,60 @@ TupExportWidget::TupExportWidget(TupProject *project, QWidget *parent, bool isLo
         #endif
     #endif
 
-    k->project = project;
+    project = work;
 
     if (isLocal) {
         setWindowTitle(tr("Export To Video"));
         setWindowIcon(QIcon(THEME_DIR + "icons/export_wi.png"));
 
-        k->pluginPage = new TupPluginSelector();
-        addPage(k->pluginPage);
+        pluginPage = new TupPluginSelector();
+        addPage(pluginPage);
 
-        k->scenesPage = new TupSceneSelector(this);
-        k->scenesPage->setScenes(project->getScenes());
-        addPage(k->scenesPage);
+        scenesPage = new TupSceneSelector();
+        scenesPage->setScenes(work->getScenes());
+        connect(this, SIGNAL(updateScenes()), scenesPage, SLOT(updateScenesList()));
+        addPage(scenesPage);
 
-        k->animationExport = new TupExportModule(project, TupExportWidget::Animation, tr("Export To Video File"), this);
-        addPage(k->animationExport);
+        animationExport = new TupExportModule(work, TupExportModule::Animation, tr("Export To Video File"));
+        connect(this, SIGNAL(exportAnimation()), animationExport, SLOT(exportIt()));
+        connect(this, SIGNAL(setAnimationFileName()), animationExport, SLOT(updateNameField()));
+        addPage(animationExport);
 
-        k->imagesArrayExport = new TupExportModule(project, TupExportWidget::ImagesArray, tr("Export To Image Sequence"), this);
-        addPage(k->imagesArrayExport);
+        imagesArrayExport = new TupExportModule(work, TupExportModule::ImagesArray, tr("Export To Image Sequence"));
+        connect(this, SIGNAL(exportImagesArray()), imagesArrayExport, SLOT(exportIt()));
+        connect(this, SIGNAL(setImagesArrayFileName()), imagesArrayExport, SLOT(updateNameField()));
+        addPage(imagesArrayExport);
 
-        k->animatedImageExport = new TupExportModule(project, TupExportWidget::AnimatedImage, tr("Export To Animated Image"), this);
-        addPage(k->animatedImageExport);
+        animatedImageExport = new TupExportModule(work, TupExportModule::AnimatedImage, tr("Export To Animated Image"));
+        connect(this, SIGNAL(exportAnimatedImage()), animatedImageExport, SLOT(exportIt()));
+        connect(this, SIGNAL(setAnimatedImageFileName()), animatedImageExport, SLOT(updateNameField()));
+        addPage(animatedImageExport);
 
-        connect(k->pluginPage, SIGNAL(selectedPlugin(const QString &)), this, SLOT(setExporter(const QString &)));
-        connect(k->pluginPage, SIGNAL(animationFormatSelected(int, const QString &)), k->animationExport, SLOT(setCurrentFormat(int, const QString &)));
-        connect(k->pluginPage, SIGNAL(imagesArrayFormatSelected(int, const QString &)), k->imagesArrayExport, SLOT(setCurrentFormat(int, const QString &)));
-        connect(k->pluginPage, SIGNAL(animatedImageFormatSelected(int, const QString &)), k->animatedImageExport, SLOT(setCurrentFormat(int, const QString &)));
+        connect(pluginPage, SIGNAL(selectedPlugin(const QString &)), this, SLOT(setExporter(const QString &)));
+        connect(pluginPage, SIGNAL(animationFormatSelected(int, const QString &)), animationExport, SLOT(setCurrentFormat(int, const QString &)));
+        connect(pluginPage, SIGNAL(imagesArrayFormatSelected(int, const QString &)), imagesArrayExport, SLOT(setCurrentFormat(int, const QString &)));
+        connect(pluginPage, SIGNAL(animatedImageFormatSelected(int, const QString &)), animatedImageExport, SLOT(setCurrentFormat(int, const QString &)));
 
-        connect(k->scenesPage, SIGNAL(selectedScenes(const QList<int> &)), k->animationExport, SLOT(setScenesIndexes(const QList<int> &)));
-        connect(k->scenesPage, SIGNAL(selectedScenes(const QList<int> &)), k->imagesArrayExport, SLOT(setScenesIndexes(const QList<int> &)));
-        connect(k->scenesPage, SIGNAL(selectedScenes(const QList<int> &)), k->animatedImageExport, SLOT(setScenesIndexes(const QList<int> &)));
+        connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)), animationExport, SLOT(setScenesIndexes(const QList<int> &)));
+        connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)), imagesArrayExport, SLOT(setScenesIndexes(const QList<int> &)));
+        connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)), animatedImageExport, SLOT(setScenesIndexes(const QList<int> &)));
 
         loadPlugins();
-        k->pluginPage->selectFirstItem();
+        pluginPage->selectFirstItem();
     } else {
         setWindowTitle(tr("Post Animation In TupiTube"));
         setWindowIcon(QIcon(THEME_DIR + "icons/net_document.png"));
 
-        k->scenesPage = new TupSceneSelector(this);
-        k->scenesPage->setScenes(project->getScenes());
-        addPage(k->scenesPage);
+        scenesPage = new TupSceneSelector();
+        scenesPage->setScenes(work->getScenes());
+        connect(this, SIGNAL(updateScenes()), scenesPage, SLOT(updateScenesList()));
+        addPage(scenesPage);
 
-        k->videoProperties = new TupVideoProperties(this);
-        addPage(k->videoProperties);
+        videoProperties = new TupVideoProperties();
+        connect(this, SIGNAL(saveVideoToServer()), videoProperties, SLOT(postIt()));
+        addPage(videoProperties);
 
-        connect(k->scenesPage, SIGNAL(selectedScenes(const QList<int> &)), k->videoProperties, SLOT(setScenesIndexes(const QList<int> &)));
+        connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)), videoProperties, SLOT(setScenesIndexes(const QList<int> &)));
     }
 }
 
@@ -160,21 +151,21 @@ void TupExportWidget::loadPlugins()
 
     for (int i=0; i<pluginList.size(); i++) {
          TupExportInterface *exporter = pluginList.at(i);
-         k->pluginPage->addPlugin(exporter->key());
-         k->plugins.insert(exporter->key(), exporter);
+         pluginPage->addPlugin(exporter->key());
+         plugins.insert(exporter->key(), exporter);
     }
 }
 
 void TupExportWidget::setExporter(const QString &plugin)
 {
-    if (k->plugins.contains(plugin)) {
-        TupExportInterface* currentExporter = k->plugins[plugin];
-        k->pluginPage->setFormats(currentExporter->availableFormats());
+    if (plugins.contains(plugin)) {
+        TupExportInterface* currentExporter = plugins[plugin];
+        pluginPage->setFormats(currentExporter->availableFormats());
 
         if (currentExporter)
-            k->animationExport->setCurrentExporter(currentExporter);
+            animationExport->setCurrentExporter(currentExporter);
 
-        k->imagesArrayExport->setCurrentExporter(currentExporter);
+        imagesArrayExport->setCurrentExporter(currentExporter);
     } else {
         #ifdef TUP_DEBUG
             QString msg = "TupExportWidget::setExporter() - [ Fatal Error ] - Can't load export plugin -> " + plugin;
@@ -189,25 +180,25 @@ void TupExportWidget::setExporter(const QString &plugin)
 
 QString TupExportWidget::videoTitle() const
 {
-    return k->videoProperties->title();
+    return videoProperties->title();
 }
 
 QString TupExportWidget::videoTopics() const
 {
-    return k->videoProperties->topics();
+    return videoProperties->topics();
 }
 
 QString TupExportWidget::videoDescription() const
 {
-    return k->videoProperties->description();
+    return videoProperties->description();
 }
 
 QList<int> TupExportWidget::videoScenes() const
 {
-    return k->videoProperties->scenesList();
+    return videoProperties->scenesList();
 }
 
 bool TupExportWidget::isComplete()
 {
-    return k->videoProperties->isComplete();
+    return videoProperties->isComplete();
 }

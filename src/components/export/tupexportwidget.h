@@ -42,6 +42,11 @@
 #include "tuppluginmanager.h"
 #include "tosd.h"
 
+#include "tuppluginselector.h"
+#include "tupsceneselector.h"
+#include "tupexportmodule.h"
+#include "tupvideoproperties.h"
+
 class TUPITUBE_EXPORT TupExportWidget : public TupExportWizard
 {
     Q_OBJECT
@@ -50,6 +55,7 @@ class TUPITUBE_EXPORT TupExportWidget : public TupExportWizard
         enum OutputFormat { Animation = 0, ImagesArray, AnimatedImage };
         TupExportWidget(TupProject *project, QWidget *parent = 0, bool isLocal = true);
         ~TupExportWidget();
+
         QString videoTitle() const;
         QString videoTopics() const;
         QString videoDescription() const;
@@ -63,8 +69,15 @@ class TUPITUBE_EXPORT TupExportWidget : public TupExportWizard
         void loadPlugins();
 		
     private:
-        struct Private;
-        Private *const k;
+        TupPluginSelector *pluginPage;
+        TupSceneSelector *scenesPage;
+        TupExportModule *animationExport;
+        TupExportModule *imagesArrayExport;
+        TupExportModule *animatedImageExport;
+        TupVideoProperties *videoProperties;
+
+        const TupProject *project;
+        QHash<QString, TupExportInterface *> plugins;
 };
 
 #endif

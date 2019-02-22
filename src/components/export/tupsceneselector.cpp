@@ -35,13 +35,13 @@
 
 #include "tupsceneselector.h"
 
-TupSceneSelector::TupSceneSelector(const TupExportWidget *widget) : TupExportWizardPage(tr("Select Scenes"))
+TupSceneSelector::TupSceneSelector() : TupExportWizardPage(tr("Select Scenes"))
 {
     setTag("SCENE");
     m_selector = new TItemSelector(tr("Add Scene"), tr("Remove Scene"));
 
     connect(m_selector, SIGNAL(changed()), this, SLOT(updateState()));
-    connect(widget, SIGNAL(updateScenes()), this, SLOT(updateScenesList()));
+    // connect(widget, SIGNAL(updateScenes()), this, SLOT(updateScenesList()));
 
     setWidget(m_selector);
 }

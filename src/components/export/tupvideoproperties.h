@@ -38,7 +38,7 @@
 
 #include "tglobal.h"
 #include "tupexportwizard.h"
-#include "tupexportwidget.h"
+// #include "tupexportwidget.h"
 
 #include <QLineEdit>
 #include <QTextEdit>
@@ -48,7 +48,7 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
     Q_OBJECT
 
     public:
-        TupVideoProperties(const TupExportWidget *widget);
+        TupVideoProperties();
         ~TupVideoProperties();
 
         bool isComplete() const;
