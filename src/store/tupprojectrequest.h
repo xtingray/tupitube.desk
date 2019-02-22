@@ -128,23 +128,24 @@ class TUPITUBE_EXPORT TupProjectRequest
             Library
         };
         
-        TupProjectRequest(const QString &xml = 0);
+        TupProjectRequest(const QString &data = 0);
         virtual ~TupProjectRequest();
         
-        void setId(int id);
-        virtual int id() const;
+        void setId(int getId);
+        virtual int getId() const;
         virtual bool isValid() const;
         
-        QString xml() const;
+        QString getXml() const;
         
         void setExternal(bool b);
-        bool isExternal() const;
+        bool isRequestExternal() const;
         
         TupProjectRequest &operator = (const TupProjectRequest &other);
 
     private:
-        struct Private;
-        Private *const k;
+        QString xml;
+        int id;
+        bool isExternal;
 };
 
 #endif

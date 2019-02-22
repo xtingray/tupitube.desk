@@ -66,14 +66,14 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
         #endif
     #endif        
     
-    int sceneIndex = response->sceneIndex();
-    int layerIndex = response->layerIndex();
-    int frameIndex = response->frameIndex();
-    TupLibraryObject::Type type = response->itemType(); 
+    int sceneIndex = response->getSceneIndex();
+    int layerIndex = response->getLayerIndex();
+    int frameIndex = response->getFrameIndex();
+    TupLibraryObject::Type type = response->getItemType(); 
     QPointF point = response->position();
 
     TupProject::Mode mode = response->spaceMode();
-    QString xml = response->arg().toString();
+    QString xml = response->getArg().toString();
 
     /*
     if (xml.isEmpty()) {
@@ -98,7 +98,7 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
                 TupFrame *frame = layer->frameAt(frameIndex);
                 if (frame) {
                     if (type == TupLibraryObject::Svg) {
-                        if (response->mode() == TupProjectResponse::Do) {
+                        if (response->getMode() == TupProjectResponse::Do) {
                             TupSvgItem *svg = frame->createSvgItem(point, xml);
                             if (svg) {
                                 response->setItemIndex(frame->svgItemsCount()-1);
@@ -117,7 +117,7 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
                             frame->restoreSvg();
                         }
                     } else {
-                        if (response->mode() == TupProjectResponse::Do) {
+                        if (response->getMode() == TupProjectResponse::Do) {
                             QGraphicsItem *item = frame->createItem(point, xml);
                             if (item) {
                                 response->setItemIndex(frame->graphicsCount()-1);
@@ -183,7 +183,7 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
 
                 if (frame) {
                     if (type == TupLibraryObject::Svg) {
-                        if (response->mode() == TupProjectResponse::Do) {
+                        if (response->getMode() == TupProjectResponse::Do) {
                             TupSvgItem *svg = frame->createSvgItem(point, xml);
                             if (svg) {
                                 response->setItemIndex(frame->indexOf(svg));
@@ -202,7 +202,7 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
                             frame->restoreSvg();
                         }
                     } else { 
-                        if (response->mode() == TupProjectResponse::Do) {
+                        if (response->getMode() == TupProjectResponse::Do) {
                             QGraphicsItem *item = frame->createItem(point, xml);
                             if (item) {
                                 response->setItemIndex(frame->indexOf(item));
@@ -272,10 +272,10 @@ bool TupCommandExecutor::removeItem(TupItemResponse *response)
         #endif
     #endif    
 
-    int sceneIndex = response->sceneIndex();
-    int layerIndex = response->layerIndex();
-    int frameIndex = response->frameIndex();
-    TupLibraryObject::Type type = response->itemType();
+    int sceneIndex = response->getSceneIndex();
+    int layerIndex = response->getLayerIndex();
+    int frameIndex = response->getFrameIndex();
+    TupLibraryObject::Type type = response->getItemType();
     TupProject::Mode mode = response->spaceMode();
 
     TupScene *scene = project->sceneAt(sceneIndex);
@@ -289,15 +289,15 @@ bool TupCommandExecutor::removeItem(TupItemResponse *response)
 
                 if (frame) {
                     if (type == TupLibraryObject::Svg) {
-                        frame->removeSvg(response->itemIndex());
+                        frame->removeSvg(response->getItemIndex());
 
                         response->setFrameState(frame->isEmpty());
                         emit responsed(response);
                         return true;
                     } else {
-                        TupGraphicObject *object = frame->graphicAt(response->itemIndex());
+                        TupGraphicObject *object = frame->graphicAt(response->getItemIndex());
                         if (object) {
-                            frame->removeGraphic(response->itemIndex());
+                            frame->removeGraphic(response->getItemIndex());
 
                             // if (object->hasTween()) 
                             //     scene->removeTweenObject(layerIndex, object);
@@ -307,7 +307,7 @@ bool TupCommandExecutor::removeItem(TupItemResponse *response)
                             return true;
                         } else {
                             #ifdef TUP_DEBUG
-                                QString msg = "TupCommandExecutor::removeItem() - Error: Invalid object index (value: " + QString::number(response->itemIndex()) + ")";
+                                QString msg = "TupCommandExecutor::removeItem() - Error: Invalid object index (value: " + QString::number(response->getItemIndex()) + ")";
                                 #ifdef Q_OS_WIN
                                     qDebug() << msg;
                                 #else
@@ -351,9 +351,9 @@ bool TupCommandExecutor::removeItem(TupItemResponse *response)
 
                 if (frame) {
                     if (type == TupLibraryObject::Svg) 
-                        frame->removeSvg(response->itemIndex());
+                        frame->removeSvg(response->getItemIndex());
                     else
-                        frame->removeGraphic(response->itemIndex());
+                        frame->removeGraphic(response->getItemIndex());
 
                     emit responsed(response);
                     return true;
@@ -406,15 +406,15 @@ bool TupCommandExecutor::moveItem(TupItemResponse *response)
         #endif
     #endif    
 
-    int sceneIndex = response->sceneIndex();
-    int layerIndex = response->layerIndex();
-    int frameIndex = response->frameIndex();
-    int objectIndex = response->itemIndex();
-    int action = response->arg().toInt();
-    TupLibraryObject::Type type = response->itemType();
+    int sceneIndex = response->getSceneIndex();
+    int layerIndex = response->getLayerIndex();
+    int frameIndex = response->getFrameIndex();
+    int objectIndex = response->getItemIndex();
+    int action = response->getArg().toInt();
+    TupLibraryObject::Type type = response->getItemType();
     TupProject::Mode mode = response->spaceMode();
 
-    if (response->mode() == TupProjectResponse::Undo) {
+    if (response->getMode() == TupProjectResponse::Undo) {
         // SQA: Recalculate the variable values based on the action code 
         // objectIndex = ???;
         // action = ???;
@@ -497,12 +497,12 @@ bool TupCommandExecutor::groupItems(TupItemResponse *response)
         #endif
     #endif
 
-    int sceneIndex = response->sceneIndex();
-    int layerIndex = response->layerIndex();
-    int frameIndex = response->frameIndex();
-    int itemIndex = response->itemIndex();
+    int sceneIndex = response->getSceneIndex();
+    int layerIndex = response->getLayerIndex();
+    int frameIndex = response->getFrameIndex();
+    int itemIndex = response->getItemIndex();
     TupProject::Mode mode = response->spaceMode();
-    QString strList = response->arg().toString();
+    QString strList = response->getArg().toString();
 
     TupScene *scene = project->sceneAt(sceneIndex);
     
@@ -590,10 +590,10 @@ bool TupCommandExecutor::ungroupItems(TupItemResponse *response)
         #endif
     #endif
 
-    int sceneIndex = response->sceneIndex();
-    int layerIndex = response->layerIndex();
-    int frameIndex = response->frameIndex();
-    int itemIndex = response->itemIndex();
+    int sceneIndex = response->getSceneIndex();
+    int layerIndex = response->getLayerIndex();
+    int frameIndex = response->getFrameIndex();
+    int itemIndex = response->getItemIndex();
     TupProject::Mode mode = response->spaceMode();
     
     TupScene *scene = project->sceneAt(sceneIndex);
@@ -762,12 +762,12 @@ bool TupCommandExecutor::convertItem(TupItemResponse *response)
         #endif
     #endif
 
-    int sceneIndex = response->sceneIndex();
-    int layerIndex = response->layerIndex();
-    int frameIndex = response->frameIndex();
-    int itemIndex = response->itemIndex();
+    int sceneIndex = response->getSceneIndex();
+    int layerIndex = response->getLayerIndex();
+    int frameIndex = response->getFrameIndex();
+    int itemIndex = response->getItemIndex();
     TupProject::Mode mode = response->spaceMode();
-    int toType = response->arg().toInt();
+    int toType = response->getArg().toInt();
     
     TupScene *scene = project->sceneAt(sceneIndex);
 
@@ -889,13 +889,13 @@ bool TupCommandExecutor::transformItem(TupItemResponse *response)
         #endif
     #endif
 
-    int sceneIndex = response->sceneIndex();
-    int layerIndex = response->layerIndex();
-    int frameIndex = response->frameIndex();
-    int itemIndex = response->itemIndex();
+    int sceneIndex = response->getSceneIndex();
+    int layerIndex = response->getLayerIndex();
+    int frameIndex = response->getFrameIndex();
+    int itemIndex = response->getItemIndex();
     TupProject::Mode mode = response->spaceMode();
-    TupLibraryObject::Type type = response->itemType();
-    QString xml = response->arg().toString();
+    TupLibraryObject::Type type = response->getItemType();
+    QString xml = response->getArg().toString();
 
     TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
@@ -911,13 +911,13 @@ bool TupCommandExecutor::transformItem(TupItemResponse *response)
                         item = frame->item(itemIndex);
 
                     if (item) {
-                        if (response->mode() == TupProjectResponse::Do)
+                        if (response->getMode() == TupProjectResponse::Do)
                             frame->storeItemTransformation(type, itemIndex, xml);
 
-                        if (response->mode() == TupProjectResponse::Undo)
+                        if (response->getMode() == TupProjectResponse::Undo)
                             frame->undoTransformation(type, itemIndex);
 
-                        if (response->mode() == TupProjectResponse::Redo)
+                        if (response->getMode() == TupProjectResponse::Redo)
                             frame->redoTransformation(type, itemIndex);
 
                         response->setArg(xml);
@@ -955,13 +955,13 @@ bool TupCommandExecutor::transformItem(TupItemResponse *response)
                         item = frame->item(itemIndex);
 
                     if (item) {
-                        if (response->mode() == TupProjectResponse::Do)
+                        if (response->getMode() == TupProjectResponse::Do)
                             frame->storeItemTransformation(type, itemIndex, xml);
 
-                        if (response->mode() == TupProjectResponse::Undo)
+                        if (response->getMode() == TupProjectResponse::Undo)
                             frame->undoTransformation(type, itemIndex);
 
-                        if (response->mode() == TupProjectResponse::Redo)
+                        if (response->getMode() == TupProjectResponse::Redo)
                             frame->redoTransformation(type, itemIndex);
 
                         response->setArg(xml);
@@ -1017,16 +1017,16 @@ bool TupCommandExecutor::setPathItem(TupItemResponse *response)
             qDebug() << response->arg().toString();
         #else
             T_FUNCINFOX("items");
-            SHOW_VAR(response->arg().toString());
+            SHOW_VAR(response->getArg().toString());
         #endif
     #endif
     
-    int sceneIndex = response->sceneIndex();
-    int layerIndex = response->layerIndex();
-    int frameIndex = response->frameIndex();
-    int itemIndex = response->itemIndex();
+    int sceneIndex = response->getSceneIndex();
+    int layerIndex = response->getLayerIndex();
+    int frameIndex = response->getFrameIndex();
+    int itemIndex = response->getItemIndex();
     TupProject::Mode mode = response->spaceMode();
-    QString route = response->arg().toString();
+    QString route = response->getArg().toString();
     TupScene *scene = project->sceneAt(sceneIndex);
     
     if (scene) {
@@ -1037,13 +1037,13 @@ bool TupCommandExecutor::setPathItem(TupItemResponse *response)
                 if (frame) {
                     TupPathItem *item = qgraphicsitem_cast<TupPathItem *>(frame->item(itemIndex));
                     if (item) {
-                        if (response->mode() == TupProjectResponse::Do)
+                        if (response->getMode() == TupProjectResponse::Do)
                             item->setPathFromString(route);
 
-                        if (response->mode() == TupProjectResponse::Redo)
+                        if (response->getMode() == TupProjectResponse::Redo)
                             item->redoPath();
 
-                        if (response->mode() == TupProjectResponse::Undo)
+                        if (response->getMode() == TupProjectResponse::Undo)
                             item->undoPath();
 
                         emit responsed(response);
@@ -1084,13 +1084,13 @@ bool TupCommandExecutor::setPathItem(TupItemResponse *response)
                 if (frame) {
                     TupPathItem *item = qgraphicsitem_cast<TupPathItem *>(frame->item(itemIndex));
                     if (item) {
-                        if (response->mode() == TupProjectResponse::Do)
+                        if (response->getMode() == TupProjectResponse::Do)
                             item->setPathFromString(route);
 
-                        if (response->mode() == TupProjectResponse::Redo)
+                        if (response->getMode() == TupProjectResponse::Redo)
                             item->redoPath();
 
-                        if (response->mode() == TupProjectResponse::Undo)
+                        if (response->getMode() == TupProjectResponse::Undo)
                             item->undoPath();
 
                         emit responsed(response);
@@ -1146,12 +1146,12 @@ bool TupCommandExecutor::setTween(TupItemResponse *response)
         #endif
     #endif
 
-    int sceneIndex = response->sceneIndex();
-    int layerIndex = response->layerIndex();
-    int frameIndex = response->frameIndex();
-    TupLibraryObject::Type itemType = response->itemType();
-    int itemIndex = response->itemIndex();
-    QString xml = response->arg().toString();
+    int sceneIndex = response->getSceneIndex();
+    int layerIndex = response->getLayerIndex();
+    int frameIndex = response->getFrameIndex();
+    TupLibraryObject::Type itemType = response->getItemType();
+    int itemIndex = response->getItemIndex();
+    QString xml = response->getArg().toString();
     TupScene *scene = project->sceneAt(sceneIndex);
     
     if (scene) {
@@ -1230,12 +1230,12 @@ bool TupCommandExecutor::setBrush(TupItemResponse *response)
         #endif
     #endif
 
-    int sceneIndex = response->sceneIndex();
-    int layerIndex = response->layerIndex();
-    int frameIndex = response->frameIndex();
-    int itemIndex = response->itemIndex();
+    int sceneIndex = response->getSceneIndex();
+    int layerIndex = response->getLayerIndex();
+    int frameIndex = response->getFrameIndex();
+    int itemIndex = response->getItemIndex();
     TupProject::Mode mode = response->spaceMode();
-    QString xml = response->arg().toString();
+    QString xml = response->getArg().toString();
     TupScene *scene = project->sceneAt(sceneIndex);
 
     if (scene) {
@@ -1246,13 +1246,13 @@ bool TupCommandExecutor::setBrush(TupItemResponse *response)
                 if (frame) {
                     QGraphicsItem *item = frame->item(itemIndex);
                     if (item) {
-                        if (response->mode() == TupProjectResponse::Do)
+                        if (response->getMode() == TupProjectResponse::Do)
                             frame->setBrushAtItem(itemIndex, xml);
 
-                        if (response->mode() == TupProjectResponse::Redo)
+                        if (response->getMode() == TupProjectResponse::Redo)
                             frame->redoBrushAction(itemIndex);
 
-                        if (response->mode() == TupProjectResponse::Undo)
+                        if (response->getMode() == TupProjectResponse::Undo)
                             frame->undoBrushAction(itemIndex);
 
                         emit responsed(response);
@@ -1283,13 +1283,13 @@ bool TupCommandExecutor::setBrush(TupItemResponse *response)
                 if (frame) {
                     QGraphicsItem *item = frame->item(itemIndex);
                     if (item) {
-                        if (response->mode() == TupProjectResponse::Do)
+                        if (response->getMode() == TupProjectResponse::Do)
                             frame->setBrushAtItem(itemIndex, xml);
 
-                        if (response->mode() == TupProjectResponse::Redo)
+                        if (response->getMode() == TupProjectResponse::Redo)
                             frame->redoBrushAction(itemIndex);
 
-                        if (response->mode() == TupProjectResponse::Undo)
+                        if (response->getMode() == TupProjectResponse::Undo)
                             frame->undoBrushAction(itemIndex);
 
                         emit responsed(response);
@@ -1343,13 +1343,13 @@ bool TupCommandExecutor::setPen(TupItemResponse *response)
         #endif
     #endif
 
-    int sceneIndex = response->sceneIndex();
-    int layerIndex = response->layerIndex();
-    int frameIndex = response->frameIndex();
-    int itemIndex = response->itemIndex();
+    int sceneIndex = response->getSceneIndex();
+    int layerIndex = response->getLayerIndex();
+    int frameIndex = response->getFrameIndex();
+    int itemIndex = response->getItemIndex();
     TupProject::Mode mode = response->spaceMode();
 
-    QString xml = response->arg().toString();
+    QString xml = response->getArg().toString();
     TupScene *scene = project->sceneAt(sceneIndex);
 
     if (scene) {
@@ -1360,13 +1360,13 @@ bool TupCommandExecutor::setPen(TupItemResponse *response)
                 if (frame) {
                     QGraphicsItem *item = frame->item(itemIndex);
                     if (item) {
-                        if (response->mode() == TupProjectResponse::Do)
+                        if (response->getMode() == TupProjectResponse::Do)
                             frame->setPenAtItem(itemIndex, xml);
 
-                        if (response->mode() == TupProjectResponse::Redo)
+                        if (response->getMode() == TupProjectResponse::Redo)
                             frame->redoPenAction(itemIndex);
 
-                        if (response->mode() == TupProjectResponse::Undo)
+                        if (response->getMode() == TupProjectResponse::Undo)
                             frame->undoPenAction(itemIndex);
 
                         emit responsed(response);
@@ -1397,13 +1397,13 @@ bool TupCommandExecutor::setPen(TupItemResponse *response)
                 if (frame) {
                     QGraphicsItem *item = frame->item(itemIndex);
                     if (item) {
-                        if (response->mode() == TupProjectResponse::Do)
+                        if (response->getMode() == TupProjectResponse::Do)
                             frame->setPenAtItem(itemIndex, xml);
 
-                        if (response->mode() == TupProjectResponse::Redo)
+                        if (response->getMode() == TupProjectResponse::Redo)
                             frame->redoPenAction(itemIndex);
 
-                        if (response->mode() == TupProjectResponse::Undo)
+                        if (response->getMode() == TupProjectResponse::Undo)
                             frame->undoPenAction(itemIndex);
 
                         emit responsed(response);

@@ -342,18 +342,18 @@ void PapagayoTool::removeTarget()
 
 void PapagayoTool::sceneResponse(const TupSceneResponse *event)
 {
-    if ((event->action() == TupProjectRequest::Remove || event->action() == TupProjectRequest::Reset)
-        && (k->scene->currentSceneIndex() == event->sceneIndex()))
+    if ((event->getAction() == TupProjectRequest::Remove || event->getAction() == TupProjectRequest::Reset)
+        && (k->scene->currentSceneIndex() == event->getSceneIndex()))
         init(k->scene);
 
-    if (event->action() == TupProjectRequest::Select)
+    if (event->getAction() == TupProjectRequest::Select)
         init(k->scene);
 }
 
 void PapagayoTool::layerResponse(const TupLayerResponse *event)
 {
-    if (event->action() == TupProjectRequest::AddLipSync) {
-        QString xml = event->arg().toString();
+    if (event->getAction() == TupProjectRequest::AddLipSync) {
+        QString xml = event->getArg().toString();
         k->currentLipSync = new TupLipSync();
         k->currentLipSync->fromXml(xml);
         k->configurator->addLipSyncRecord(k->currentLipSync->getLipSyncName());
@@ -362,9 +362,9 @@ void PapagayoTool::layerResponse(const TupLayerResponse *event)
 
 void PapagayoTool::frameResponse(const TupFrameResponse *event)
 {
-    if (event->action() == TupProjectRequest::Select) {
+    if (event->getAction() == TupProjectRequest::Select) {
         if (k->mode == TupToolPlugin::Edit) {
-            int frameIndex = event->frameIndex();
+            int frameIndex = event->getFrameIndex();
             int lastFrame = k->currentLipSync->getInitFrame() + k->currentLipSync->getFramesCount() - 1;
             if (frameIndex >= k->currentLipSync->getInitFrame() && frameIndex <= lastFrame)
                 setTargetEnvironment();

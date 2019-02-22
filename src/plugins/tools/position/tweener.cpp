@@ -1110,12 +1110,12 @@ void Tweener::sceneResponse(const TupSceneResponse *response)
         #endif
     #endif
 
-    if ((response->action() == TupProjectRequest::Remove || response->action() == TupProjectRequest::Reset)
-        && (k->scene->currentSceneIndex() == response->sceneIndex())) {
+    if ((response->getAction() == TupProjectRequest::Remove || response->getAction() == TupProjectRequest::Reset)
+        && (k->scene->currentSceneIndex() == response->getSceneIndex())) {
         init(k->scene);
     }
 
-    if (response->action() == TupProjectRequest::Select)
+    if (response->getAction() == TupProjectRequest::Select)
         init(k->scene);
 }
 
@@ -1129,7 +1129,7 @@ void Tweener::layerResponse(const TupLayerResponse *response)
         #endif
     #endif
 
-    if (response->action() == TupProjectRequest::Remove)
+    if (response->getAction() == TupProjectRequest::Remove)
         init(k->scene);        
 }
 
@@ -1139,23 +1139,23 @@ void Tweener::frameResponse(const TupFrameResponse *response)
         #ifdef Q_OS_WIN
             qDebug() << "[Tweener::frameResponse()] " << response->frameIndex();
         #else
-            T_FUNCINFO << response->frameIndex();
+            T_FUNCINFO << response->getFrameIndex();
         #endif
     #endif
 
-    if (response->action() == TupProjectRequest::Remove && k->scene->currentLayerIndex() == response->layerIndex()) {
+    if (response->getAction() == TupProjectRequest::Remove && k->scene->currentLayerIndex() == response->getLayerIndex()) {
         k->isPathInScene = false;
         init(k->scene);
         return;
     }
 
-    if (response->action() == TupProjectRequest::Select) {
+    if (response->getAction() == TupProjectRequest::Select) {
         if (k->mode == TupToolPlugin::Edit) {
             if (k->editMode == TupToolPlugin::Properties)
                 paintTweenPoints();
         }
 
-        if (k->initLayer != response->layerIndex() || k->initScene != response->sceneIndex()) {
+        if (k->initLayer != response->getLayerIndex() || k->initScene != response->getSceneIndex()) {
             resetGUI();
             init(k->scene);
         }
@@ -1168,12 +1168,12 @@ void Tweener::itemResponse(const TupItemResponse *response)
         #ifdef Q_OS_WIN
             qDebug() << "[Tweener::itemResponse()] " << response->itemIndex();
         #else
-            T_FUNCINFO << " - item index: " << response->itemIndex();
+            T_FUNCINFO << " - item index: " << response->getItemIndex();
         #endif
     #endif
 
-    if (response->action() == TupProjectRequest::UpdateTweenPath) {
-        if (response->mode() == TupProjectResponse::Undo) { 
+    if (response->getAction() == TupProjectRequest::UpdateTweenPath) {
+        if (response->getMode() == TupProjectResponse::Undo) { 
             if (!k->doList.isEmpty()) {
                 k->undoList << k->doList.last();
                 k->doList.removeLast();
@@ -1219,7 +1219,7 @@ void Tweener::itemResponse(const TupItemResponse *response)
             }
         }
 
-        if (response->mode() == TupProjectResponse::Redo) {
+        if (response->getMode() == TupProjectResponse::Redo) {
             if (!k->undoList.isEmpty()) {
                 k->doList << k->undoList.last();
                 k->undoList.removeLast();

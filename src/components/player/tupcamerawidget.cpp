@@ -391,9 +391,9 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
     #endif
 
     if (TupSceneResponse *sceneResponse = static_cast<TupSceneResponse *>(response)) {
-        int index = sceneResponse->sceneIndex();
+        int index = sceneResponse->getSceneIndex();
 
-        switch (sceneResponse->action()) {
+        switch (sceneResponse->getAction()) {
             case TupProjectRequest::Add:
             {
                  status->setScenes(project);
@@ -440,7 +440,7 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
             {
                  #ifdef TUP_DEBUG
                      QString msg = "TupCameraWidget::handleProjectResponse() - Unknown/Unhandled project action: " 
-                                   + QString::number(sceneResponse->action());
+                                   + QString::number(sceneResponse->getAction());
                      #ifdef Q_OS_WIN
                          qDebug() << msg;
                      #else

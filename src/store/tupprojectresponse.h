@@ -52,41 +52,45 @@ class TUPITUBE_EXPORT TupProjectResponse
                Undo
              };
 
-        TupProjectResponse(int part, int action);
+        TupProjectResponse(int getPart, int getAction);
         virtual ~TupProjectResponse();
 
-        int part() const;
-        int action() const;
+        int getPart() const;
+        int getAction() const;
 
         int originalAction() const;
 
         void setArg(const QString &value);
-        void setData(const QByteArray &data);
-        void setMode(Mode mode);
+        void setData(const QByteArray &getData);
+        void setMode(Mode getMode);
 
         void setExternal(bool e);
         bool external() const;
 
-        Mode mode() const;
+        Mode getMode() const;
 
-        TupProjectRequestArgument arg() const;
-        QByteArray data() const;
+        TupProjectRequestArgument getArg() const;
+        QByteArray getData() const;
 
     private:
-        class Private;
-        Private *const k;
+        int part;
+        int action;
+        TupProjectRequestArgument arg;
+        QByteArray data;
+        Mode mode;
+        bool isExternal;
 };
 
 class TUPITUBE_EXPORT TupSceneResponse : public TupProjectResponse
 {
     public:
-        TupSceneResponse(int part, int action);
+        TupSceneResponse(int getPart, int getAction);
         ~TupSceneResponse();
-        int sceneIndex() const;
+        int getSceneIndex() const;
         void setSceneIndex(int index);
 
-        void setState(const QString &state);
-        QString state() const;
+        void setState(const QString &getState);
+        QString getState() const;
         void setScenes(Scenes scenes);
 
     private:
@@ -98,9 +102,9 @@ class TUPITUBE_EXPORT TupSceneResponse : public TupProjectResponse
 class TUPITUBE_EXPORT TupLayerResponse : public TupSceneResponse
 {
     public:
-        TupLayerResponse(int part, int action);
+        TupLayerResponse(int getPart, int getAction);
         ~TupLayerResponse();
-        int layerIndex() const;
+        int getLayerIndex() const;
         void setLayerIndex(int index);
 
     private:
@@ -110,12 +114,12 @@ class TUPITUBE_EXPORT TupLayerResponse : public TupSceneResponse
 class TUPITUBE_EXPORT TupFrameResponse : public TupLayerResponse
 {
     public:
-        TupFrameResponse(int part, int action);
+        TupFrameResponse(int getPart, int getAction);
         ~TupFrameResponse();
-        int frameIndex() const;
+        int getFrameIndex() const;
         void setFrameIndex(int index);
         bool frameIsEmpty();
-        void setFrameState(bool state);
+        void setFrameState(bool getState);
 
     private:
         int m_frameIndex;
@@ -125,19 +129,19 @@ class TUPITUBE_EXPORT TupFrameResponse : public TupLayerResponse
 class TUPITUBE_EXPORT TupItemResponse : public TupFrameResponse
 {
     public:
-        TupItemResponse(int part, int action);
+        TupItemResponse(int getPart, int getAction);
         ~TupItemResponse();
-        int itemIndex() const;
+        int getItemIndex() const;
         void setItemIndex(int index);
-        TupLibraryObject::Type itemType() const;
+        TupLibraryObject::Type getItemType() const;
         void setItemType(TupLibraryObject::Type type);
         QPointF position() const;
         void setPosX(double coord);
         void setPosY(double coord);
         TupProject::Mode spaceMode();
-        void setSpaceMode(TupProject::Mode mode);
+        void setSpaceMode(TupProject::Mode getMode);
         bool frameIsEmpty();
-        void setFrameState(bool state);
+        void setFrameState(bool getState);
 
     private:
         int m_itemIndex;
@@ -151,16 +155,16 @@ class TUPITUBE_EXPORT TupItemResponse : public TupFrameResponse
 class TUPITUBE_EXPORT TupLibraryResponse : public TupFrameResponse
 {
     public:
-        TupLibraryResponse(int part, int action);
+        TupLibraryResponse(int getPart, int getAction);
         ~TupLibraryResponse();
         void setSymbolType(TupLibraryObject::Type symtype);
         TupLibraryObject::Type symbolType() const;
         void setParent(const QString top);
-        QString parent() const;
-        TupProject::Mode spaceMode();
-        void setSpaceMode(TupProject::Mode mode);
+        QString getParent() const;
+        TupProject::Mode getSpaceMode();
+        void setSpaceMode(TupProject::Mode getMode);
         bool frameIsEmpty();
-        void setFrameState(bool state);
+        void setFrameState(bool getState);
 
     private:
         TupLibraryObject::Type m_symbolType;

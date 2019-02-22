@@ -293,17 +293,17 @@ void NodesTool::itemResponse(const TupItemResponse *response)
 
     QGraphicsItem *item = 0;
 
-    if (response->action() != TupProjectRequest::Remove) {
+    if (response->getAction() != TupProjectRequest::Remove) {
         TupFrame *frame = currentFrame();
-        if (response->action() == TupProjectRequest::Ungroup) {
+        if (response->getAction() == TupProjectRequest::Ungroup) {
             QPointF point = response->position();
             item = k->scene->itemAt(point, QTransform());
         } else {
-            item = frame->item(response->itemIndex());
+            item = frame->item(response->getItemIndex());
         }
     }
 
-    switch (response->action()) {
+    switch (response->getAction()) {
             case TupProjectRequest::Convert:
             {
                  if (item) {

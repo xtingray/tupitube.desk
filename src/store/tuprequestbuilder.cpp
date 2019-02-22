@@ -240,37 +240,37 @@ TupProjectRequest TupRequestBuilder::fromResponse(TupProjectResponse *response)
 {
     TupProjectRequest request;
 
-    switch (response->part()) {
+    switch (response->getPart()) {
             case TupProjectRequest::Item:
                  {
-                    request = TupRequestBuilder::createItemRequest(static_cast<TupItemResponse*> (response)->sceneIndex(), static_cast<TupItemResponse*> (response)->layerIndex(), 
-                                                                  static_cast<TupItemResponse*> (response)->frameIndex(), static_cast<TupItemResponse*> (response)->itemIndex(), 
+                    request = TupRequestBuilder::createItemRequest(static_cast<TupItemResponse*> (response)->getSceneIndex(), static_cast<TupItemResponse*> (response)->getLayerIndex(), 
+                                                                  static_cast<TupItemResponse*> (response)->getFrameIndex(), static_cast<TupItemResponse*> (response)->getItemIndex(), 
                                                                   static_cast<TupItemResponse*> (response)->position(), TupProject::Mode(static_cast<TupItemResponse*> (response)->spaceMode()), 
-                                                                  TupLibraryObject::Type(static_cast<TupItemResponse*> (response)->itemType()), response->action(), response->arg().toString(), 
-                                                                  response->data());
+                                                                  TupLibraryObject::Type(static_cast<TupItemResponse*> (response)->getItemType()), response->getAction(), response->getArg().toString(), 
+                                                                  response->getData());
                  }
             break;
             case TupProjectRequest::Frame:
                  {
-                    request = TupRequestBuilder::createFrameRequest(static_cast<TupFrameResponse*> (response)->sceneIndex(), static_cast<TupFrameResponse*> (response)->layerIndex(), static_cast<TupFrameResponse*> (response)->frameIndex(), response->action(), response->arg().toString(), response->data());
+                    request = TupRequestBuilder::createFrameRequest(static_cast<TupFrameResponse*> (response)->getSceneIndex(), static_cast<TupFrameResponse*> (response)->getLayerIndex(), static_cast<TupFrameResponse*> (response)->getFrameIndex(), response->getAction(), response->getArg().toString(), response->getData());
                  }
             break;
             case TupProjectRequest::Layer:
                  {
-                    request = TupRequestBuilder::createLayerRequest(static_cast<TupLayerResponse*> (response)->sceneIndex(), static_cast<TupLayerResponse*> (response)->layerIndex(), response->action(), response->arg().toString(), response->data());
+                    request = TupRequestBuilder::createLayerRequest(static_cast<TupLayerResponse*> (response)->getSceneIndex(), static_cast<TupLayerResponse*> (response)->getLayerIndex(), response->getAction(), response->getArg().toString(), response->getData());
                  }
             break;
             case TupProjectRequest::Scene:
                  {
-                    request = TupRequestBuilder::createSceneRequest(static_cast<TupSceneResponse*> (response)->sceneIndex(), response->action(), response->arg().toString(), response->data());
+                    request = TupRequestBuilder::createSceneRequest(static_cast<TupSceneResponse*> (response)->getSceneIndex(), response->getAction(), response->getArg().toString(), response->getData());
                  }
             break;
             case TupProjectRequest::Library:
                  {
-                    request = TupRequestBuilder::createLibraryRequest(response->action(), response->arg().toString(), TupLibraryObject::Type(static_cast<TupLibraryResponse*>(response)->symbolType()), 
-                                                                     TupProject::Mode(static_cast<TupLibraryResponse*>(response)->spaceMode()), response->data(), static_cast<TupLibraryResponse*>(response)->parent(), 
-                                                                     static_cast<TupLibraryResponse*>(response)->sceneIndex(), static_cast<TupLibraryResponse*>(response)->layerIndex(),  
-                                                                     static_cast<TupLibraryResponse*>(response)->frameIndex());
+                    request = TupRequestBuilder::createLibraryRequest(response->getAction(), response->getArg().toString(), TupLibraryObject::Type(static_cast<TupLibraryResponse*>(response)->symbolType()), 
+                                                                     TupProject::Mode(static_cast<TupLibraryResponse*>(response)->getSpaceMode()), response->getData(), static_cast<TupLibraryResponse*>(response)->getParent(), 
+                                                                     static_cast<TupLibraryResponse*>(response)->getSceneIndex(), static_cast<TupLibraryResponse*>(response)->getLayerIndex(),  
+                                                                     static_cast<TupLibraryResponse*>(response)->getFrameIndex());
                  }
             break;
             default:

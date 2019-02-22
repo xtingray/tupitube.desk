@@ -49,29 +49,34 @@ class TUPITUBE_EXPORT TupProjectManagerParams
         virtual ~TupProjectManagerParams();
 
         void setProjectName(const QString &name);
-        QString projectName() const;
+        QString getProjectManager() const;
 
-        void setAuthor(const QString &author);
-        QString author() const;
+        void setAuthor(const QString &getAuthor);
+        QString getAuthor() const;
 
-        void setTags(const QString &tags);
-        QString tags() const;
+        void setTags(const QString &getTags);
+        QString getTags() const;
 
-        void setDescription(const QString &description);
-        QString description() const;
+        void setDescription(const QString &getDescription);
+        QString getDescription() const;
 
         void setBgColor(const QColor color);
-        QColor bgColor();
+        QColor getBgColor();
 
-        void setDimension(const QSize &dimension);
-        QSize dimension() const;
+        void setDimension(const QSize &getDimension);
+        QSize getDimension() const;
 
-        void setFPS(const int fps);
-        int fps() const;
+        void setFPS(const int getFPS);
+        int getFPS() const;
 
     private:
-        struct Private;
-        Private *const k;
+        QString projectName;
+        QString author;
+        QString tags;
+        QColor bgColor;
+        QString description;
+        QSize dimension;
+        int fps;
 };
 
 #endif

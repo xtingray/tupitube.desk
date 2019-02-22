@@ -50,18 +50,18 @@ bool TupCommandExecutor::createSymbol(TupLibraryResponse *response)
             qDebug() << "TupCommandExecutor::createSymbol()";
         #else
             T_FUNCINFO;
-            tFatal() << "Creating object: " + response->arg().toString();
+            tFatal() << "Creating object: " + response->getArg().toString();
         #endif
     #endif
 
     if (response->symbolType() == TupLibraryObject::Folder) {
-        if (project->addFolder(response->arg().toString())) {
+        if (project->addFolder(response->getArg().toString())) {
             emit responsed(response);
             return true;
         }
     } else {
-        if (response->mode() == TupProjectResponse::Do) {
-            if (project->createSymbol(response->symbolType(), response->arg().toString(), response->data(), response->parent())) {
+        if (response->getMode() == TupProjectResponse::Do) {
+            if (project->createSymbol(response->symbolType(), response->getArg().toString(), response->getData(), response->getParent())) {
                 emit responsed(response);
                 return true;
             } 
@@ -86,18 +86,18 @@ bool TupCommandExecutor::removeSymbol(TupLibraryResponse *response)
     #endif
 
     if (response->symbolType() == TupLibraryObject::Folder) {
-        if (project->removeFolder(response->arg().toString())) {
+        if (project->removeFolder(response->getArg().toString())) {
             emit responsed(response);
             return true;
         }
     } else {
         if (response->symbolType() == TupLibraryObject::Sound) {
-            if (project->removeSound(response->arg().toString())) {
+            if (project->removeSound(response->getArg().toString())) {
                 emit responsed(response);
                 return true;
             }
         } else {
-            if (project->removeSymbol(response->arg().toString(), response->symbolType())) {
+            if (project->removeSymbol(response->getArg().toString(), response->symbolType())) {
                 emit responsed(response);
                 return true;
             }
@@ -112,7 +112,7 @@ bool TupCommandExecutor::removeSymbol(TupLibraryResponse *response)
 bool TupCommandExecutor::insertSymbolIntoFrame(TupLibraryResponse *response)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupCommandExecutor::insertSymbolIntoFrame() - Adding symbol to project: " + response->arg().toString();
+        QString msg = "TupCommandExecutor::insertSymbolIntoFrame() - Adding symbol to project: " + response->getArg().toString();
         #ifdef Q_OS_WIN
             qDebug() << msg;
         #else
@@ -121,8 +121,8 @@ bool TupCommandExecutor::insertSymbolIntoFrame(TupLibraryResponse *response)
     #endif
 
     if (project->scenesCount() > 0) {
-        if (project->insertSymbolIntoFrame(response->spaceMode(), response->arg().toString(), 
-            response->sceneIndex(), response->layerIndex(), response->frameIndex())) {
+        if (project->insertSymbolIntoFrame(response->getSpaceMode(), response->getArg().toString(), 
+            response->getSceneIndex(), response->getLayerIndex(), response->getFrameIndex())) {
             emit responsed(response);
             return true;
         } 
@@ -153,12 +153,12 @@ bool TupCommandExecutor::removeSymbolFromFrame(TupLibraryResponse *response)
     #endif
 
     if (project->scenesCount() > 0) {
-        if (project->removeSymbolFromFrame(response->arg().toString(), response->symbolType())) {
-            TupScene *scene = project->sceneAt(response->sceneIndex());
+        if (project->removeSymbolFromFrame(response->getArg().toString(), response->symbolType())) {
+            TupScene *scene = project->sceneAt(response->getSceneIndex());
             if (scene) {
-                TupLayer *layer = scene->layerAt(response->layerIndex());
+                TupLayer *layer = scene->layerAt(response->getLayerIndex());
                 if (layer) {
-                    TupFrame *frame = layer->frameAt(response->frameIndex());
+                    TupFrame *frame = layer->frameAt(response->getFrameIndex());
                     if (frame) 
                         response->setFrameState(frame->isEmpty());
                 }

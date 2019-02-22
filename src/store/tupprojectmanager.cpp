@@ -152,13 +152,13 @@ void TupProjectManager::setupNewProject()
 
     closeProject();
 
-    project->setProjectName(params->projectName());
-    project->setAuthor(params->author());
-    project->setTags(params->tags());
-    project->setDescription(params->description());
-    project->setBgColor(params->bgColor());
-    project->setDimension(params->dimension());
-    project->setFPS(params->fps());
+    project->setProjectName(params->getProjectManager());
+    project->setAuthor(params->getAuthor());
+    project->setTags(params->getTags());
+    project->setDescription(params->getDescription());
+    project->setBgColor(params->getBgColor());
+    project->setDimension(params->getDimension());
+    project->setFPS(params->getFPS());
 
     if (! handler->setupNewProject(params)) {
         #ifdef TUP_DEBUG
@@ -173,7 +173,7 @@ void TupProjectManager::setupNewProject()
     }
 
     if (!isNetworked) {
-        QString projectPath = CACHE_DIR + params->projectName();
+        QString projectPath = CACHE_DIR + params->getProjectManager();
         QDir projectDir(projectPath); 
         if (projectDir.exists())
             removeProjectPath(projectPath);
@@ -306,7 +306,7 @@ void TupProjectManager::handleProjectRequest(const TupProjectRequest *request)
             T_FUNCINFO;
             // SQA: Enable these lines only for hard/tough debugging
             tWarning() << "Package: ";
-            tWarning() << request->xml();			
+            tWarning() << request->getXml();
         #endif
     #endif
 
@@ -338,11 +338,11 @@ void TupProjectManager::handleLocalRequest(const TupProjectRequest *request)
 
     TupRequestParser parser;
 
-    if (parser.parse(request->xml())) {
-        if (TupFrameResponse *response = static_cast<TupFrameResponse *>(parser.response())) {
-            sceneIndex = response->sceneIndex();
-            layerIndex = response->layerIndex();
-            frameIndex = response->frameIndex();
+    if (parser.parse(request->getXml())) {
+        if (TupFrameResponse *response = static_cast<TupFrameResponse *>(parser.getResponse())) {
+            sceneIndex = response->getSceneIndex();
+            layerIndex = response->getLayerIndex();
+            frameIndex = response->getFrameIndex();
 
             /*
             if (response->action() == TupProjectRequest::Copy) {
@@ -369,8 +369,8 @@ void TupProjectManager::handleLocalRequest(const TupProjectRequest *request)
             } else if (response->action() == TupProjectRequest::UpdateOpacity) {
             */
 
-            if (response->action() == TupProjectRequest::UpdateOpacity) {
-                double opacity = response->arg().toReal();
+            if (response->getAction() == TupProjectRequest::UpdateOpacity) {
+                double opacity = response->getArg().toReal();
                 TupScene *scene = project->sceneAt(sceneIndex);
                 if (scene) {
                     TupLayer *layer = scene->layerAt(layerIndex);
@@ -391,8 +391,8 @@ void TupProjectManager::handleLocalRequest(const TupProjectRequest *request)
             }
         }
 
-        parser.response()->setExternal(request->isExternal());
-        emit responsed(parser.response());
+        parser.getResponse()->setExternal(request->isRequestExternal());
+        emit responsed(parser.getResponse());
     }
 }
 
@@ -412,7 +412,7 @@ void TupProjectManager::createCommand(const TupProjectRequest *request, bool add
             qDebug() << "[TupProjectManager::createCommand(()]";
         #else
             T_FUNCINFO;
-            tWarning() << request->xml();
+            tWarning() << request->getXml();
         #endif
     #endif		
 
@@ -465,11 +465,11 @@ void TupProjectManager::emitResponse(TupProjectResponse *response)
         #ifdef Q_OS_WIN
             qDebug() << "[TupProjectManager::emitResponse()] - response->action(): " << response->action();
         #else
-            T_FUNCINFO << response->action();
+            T_FUNCINFO << response->getAction();
         #endif
     #endif	
 
-    if (response->action() != TupProjectRequest::Select)
+    if (response->getAction() != TupProjectRequest::Select)
         isModified = true;
 
     if (!handler) {

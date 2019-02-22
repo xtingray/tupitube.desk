@@ -84,8 +84,15 @@ class TUPITUBE_EXPORT TupStoryboard : public QObject, public TupAbstractSerializ
         
     private:
         QString cleanString(QString input) const;
-        struct Private;
-        Private *const k;
+
+        QString title;
+        QString author;
+        QString topics;
+        QString summary;
+
+        QList<QString> scene;
+        QList<QString> duration;
+        QList<QString> description;
 };
 
 #endif

@@ -1577,12 +1577,12 @@ void TupLibraryWidget::importSoundFile()
 
 void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
 {
-    switch (response->action()) {
+    switch (response->getAction()) {
         case TupProjectRequest::Select:
         {
             k->currentFrame.frame = 0;
             k->currentFrame.layer = 0;
-            k->currentFrame.scene = response->sceneIndex();
+            k->currentFrame.scene = response->getSceneIndex();
         }
         break;
     }
@@ -1592,16 +1592,16 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
 {
     RETURN_IF_NOT_LIBRARY;
 
-    switch (response->action()) {
+    switch (response->getAction()) {
             case TupProjectRequest::Add:
               {
                  if (response->symbolType() == TupLibraryObject::Folder) {
-                     k->libraryTree->createFolder(response->arg().toString());
+                     k->libraryTree->createFolder(response->getArg().toString());
                      return;
                  }
 
-                 QString folderName = response->parent(); 
-                 QString id = response->arg().toString();
+                 QString folderName = response->getParent(); 
+                 QString id = response->getArg().toString();
 
                  int index = id.lastIndexOf(".");
                  QString name = id.mid(0, index);
@@ -1710,7 +1710,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
             break;
             case TupProjectRequest::Remove:
               {
-                 QString id = response->arg().toString();
+                 QString id = response->getArg().toString();
                  QTreeWidgetItemIterator it(k->libraryTree);
                  while ((*it)) {
                         // If target is NOT a folder
@@ -1741,7 +1741,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
               {
                  #ifdef TUP_DEBUG
                      QString msg = "TupLibraryWidget::libraryResponse() - Unknown/Unhandled project action: "
-                             + QString::number(response->action());
+                             + QString::number(response->getAction());
                      #ifdef Q_OS_WIN
                          qDebug() << msg;
                      #else
@@ -1755,10 +1755,10 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
 
 void TupLibraryWidget::frameResponse(TupFrameResponse *response)
 {
-    if (response->action() == TupProjectRequest::Select) {
-        k->currentFrame.frame = response->frameIndex();
-        k->currentFrame.layer = response->layerIndex();
-        k->currentFrame.scene = response->sceneIndex();
+    if (response->getAction() == TupProjectRequest::Select) {
+        k->currentFrame.frame = response->getFrameIndex();
+        k->currentFrame.layer = response->getLayerIndex();
+        k->currentFrame.scene = response->getSceneIndex();
     }
 }
 

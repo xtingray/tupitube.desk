@@ -64,18 +64,18 @@ bool TupCommandExecutor::createScene(TupSceneResponse *response)
         #endif
     #endif
 
-    int pos = response->sceneIndex();
-    QString name = response->arg().toString();
+    int pos = response->getSceneIndex();
+    QString name = response->getArg().toString();
     if (pos < 0)
         return false;
 
-    if (response->mode() == TupProjectResponse::Do) {
+    if (response->getMode() == TupProjectResponse::Do) {
         TupScene *scene = project->createScene(name, pos);
         if (!scene) 
             return false;
     }
 
-    if (response->mode() == TupProjectResponse::Redo || response->mode() == TupProjectResponse::Undo) { 
+    if (response->getMode() == TupProjectResponse::Redo || response->getMode() == TupProjectResponse::Undo) { 
         bool success = project->restoreScene(pos);
         if (!success)
             return false;
@@ -95,7 +95,7 @@ bool TupCommandExecutor::removeScene(TupSceneResponse *response)
         #endif
     #endif
 
-    int pos = response->sceneIndex();
+    int pos = response->getSceneIndex();
     TupScene *scene = project->sceneAt(pos);
     if (scene) {
         QDomDocument document;
@@ -123,8 +123,8 @@ bool TupCommandExecutor::removeScene(TupSceneResponse *response)
 
 bool TupCommandExecutor::moveScene(TupSceneResponse *response)
 {
-    int pos = response->sceneIndex();
-    int newPos = response->arg().toInt();
+    int pos = response->getSceneIndex();
+    int newPos = response->getArg().toInt();
     if (project->moveScene(pos, newPos)) {
         emit responsed(response);
         return true;
@@ -135,8 +135,8 @@ bool TupCommandExecutor::moveScene(TupSceneResponse *response)
 
 bool TupCommandExecutor::lockScene(TupSceneResponse *response)
 {
-    int pos = response->sceneIndex();
-    bool lock = response->arg().toBool();
+    int pos = response->getSceneIndex();
+    bool lock = response->getArg().toBool();
 
     #ifdef TUP_DEBUG
         QString msg = "TupCommandExecutor::lockScene() - Scene is locked: " + QString::number(lock);
@@ -159,8 +159,8 @@ bool TupCommandExecutor::lockScene(TupSceneResponse *response)
 
 bool TupCommandExecutor::renameScene(TupSceneResponse *response)
 {
-    int pos = response->sceneIndex();
-    QString newName = response->arg().toString();
+    int pos = response->getSceneIndex();
+    QString newName = response->getArg().toString();
 
     TupScene *scene = project->sceneAt(pos);
     if (scene) {
@@ -179,8 +179,8 @@ void TupCommandExecutor::selectScene(TupSceneResponse *response)
 
 bool TupCommandExecutor::setSceneVisibility(TupSceneResponse *response)
 {
-    int pos = response->sceneIndex();
-    bool view = response->arg().toBool();
+    int pos = response->getSceneIndex();
+    bool view = response->getArg().toBool();
     
     TupScene *scene = project->sceneAt(pos);
     if (scene) {
@@ -202,19 +202,19 @@ bool TupCommandExecutor::resetScene(TupSceneResponse *response)
         #endif
     #endif
 
-    int pos = response->sceneIndex();
-    QString newName = response->arg().toString();
+    int pos = response->getSceneIndex();
+    QString newName = response->getArg().toString();
 
     TupScene *scene = project->sceneAt(pos);
     if (scene) {
-        if (response->mode() == TupProjectResponse::Do || response->mode() == TupProjectResponse::Redo) {
+        if (response->getMode() == TupProjectResponse::Do || response->getMode() == TupProjectResponse::Redo) {
             if (project->resetScene(pos, newName)) {
                 emit responsed(response);
                 return true;
             }
         }
 
-        if (response->mode() == TupProjectResponse::Undo) {
+        if (response->getMode() == TupProjectResponse::Undo) {
             QString oldName = project->recoverScene(pos);
             response->setArg(oldName);
             emit responsed(response);
@@ -236,7 +236,7 @@ bool TupCommandExecutor::resetScene(TupSceneResponse *response)
 
 void TupCommandExecutor::setBgColor(TupSceneResponse *response)
 {
-    QString colorName = response->arg().toString();
+    QString colorName = response->getArg().toString();
     project->setBgColor(QColor(colorName));
 
     emit responsed(response);

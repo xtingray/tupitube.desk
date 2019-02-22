@@ -35,18 +35,7 @@
 
 #include "tupprojectmanagerparams.h"
 
-struct TupProjectManagerParams::Private
-{
-    QString projectName;
-    QString author;
-    QString tags;
-    QColor bgcolor;
-    QString description;
-    QSize dimension;
-    int fps;
-};
-
-TupProjectManagerParams::TupProjectManagerParams(): k(new Private)
+TupProjectManagerParams::TupProjectManagerParams()
 {
 }
 
@@ -56,70 +45,70 @@ TupProjectManagerParams::~TupProjectManagerParams()
 
 void TupProjectManagerParams::setProjectName(const QString &name)
 {
-    k->projectName = name;
+    projectName = name;
 }
 
-QString TupProjectManagerParams::projectName() const
+QString TupProjectManagerParams::getProjectManager() const
 {
-    return k->projectName;
+    return projectName;
 }
 
-void TupProjectManagerParams::setAuthor(const QString &author)
+void TupProjectManagerParams::setAuthor(const QString &auth)
 {
-    k->author = author;
+    author = auth;
 }
 
-QString TupProjectManagerParams::author() const
+QString TupProjectManagerParams::getAuthor() const
 {
-    return k->author;
+    return author;
 }
 
-void TupProjectManagerParams::setTags(const QString &tags)
+void TupProjectManagerParams::setTags(const QString &topics)
 {
-    k->tags = tags;
+    tags = topics;
 }
 
-QString TupProjectManagerParams::tags() const
+QString TupProjectManagerParams::getTags() const
 {
-    return k->tags;
+    return tags;
 }
 
 void TupProjectManagerParams::setBgColor(const QColor color)
 {
-    k->bgcolor = color;
+    bgColor = color;
 }
 
-QColor TupProjectManagerParams::bgColor()
+QColor TupProjectManagerParams::getBgColor()
 {
-    return k->bgcolor;
+    return bgColor;
 }
 
-void TupProjectManagerParams::setDescription(const QString &description)
+void TupProjectManagerParams::setDescription(const QString &desc)
 {
-    k->description = description;
+    description = desc;
 }
 
-QString TupProjectManagerParams::description() const
+QString TupProjectManagerParams::getDescription() const
 {
-    return k->description;
+    return description;
 }
 
-void TupProjectManagerParams::setDimension(const QSize &dimension)
+void TupProjectManagerParams::setDimension(const QSize &size)
 {
-    k->dimension = dimension;
+    dimension = size;
 }
 
-QSize TupProjectManagerParams::dimension() const
+QSize TupProjectManagerParams::getDimension() const
 {
-    return k->dimension;
+    return dimension;
 }
 
-void TupProjectManagerParams::setFPS(const int fps)
+void TupProjectManagerParams::setFPS(const int speed)
 {
-    k->fps = fps;
+    fps = speed;
 }
 
-int TupProjectManagerParams::fps() const
+int TupProjectManagerParams::getFPS() const
 {
-    return k->fps;
+    return fps;
 }

@@ -50,20 +50,20 @@ bool TupCommandExecutor::createLayer(TupLayerResponse *response)
         #endif
     #endif
 
-    int scenePosition = response->sceneIndex();
-    int position = response->layerIndex();
-    QString name = response->arg().toString();
-    QString state = response->state();
+    int scenePosition = response->getSceneIndex();
+    int position = response->getLayerIndex();
+    QString name = response->getArg().toString();
+    QString state = response->getState();
 
     TupScene *scene = project->sceneAt(scenePosition);
     if (scene) {
-        if (response->mode() == TupProjectResponse::Do) {
+        if (response->getMode() == TupProjectResponse::Do) {
             TupLayer *layer = scene->createLayer(name, position);
             if (!layer) 
                 return false;
         }
 
-        if (response->mode() == TupProjectResponse::Redo || response->mode() == TupProjectResponse::Undo) {
+        if (response->getMode() == TupProjectResponse::Redo || response->getMode() == TupProjectResponse::Undo) {
             bool success = scene->restoreLayer(position);
             if (!success)
                 return false;
@@ -86,8 +86,8 @@ bool TupCommandExecutor::removeLayer(TupLayerResponse *response)
         #endif
     #endif
 
-    int scenePos = response->sceneIndex();
-    int position = response->layerIndex();
+    int scenePos = response->getSceneIndex();
+    int position = response->getLayerIndex();
 
     TupScene *scene = project->sceneAt(scenePos);
     if (scene) {
@@ -110,9 +110,9 @@ bool TupCommandExecutor::removeLayer(TupLayerResponse *response)
 
 bool TupCommandExecutor::moveLayer(TupLayerResponse *response)
 {
-    int scenePos = response->sceneIndex();
-    int position = response->layerIndex();
-    int newPosition = response->arg().toInt();
+    int scenePos = response->getSceneIndex();
+    int position = response->getLayerIndex();
+    int newPosition = response->getArg().toInt();
 
     TupScene *scene = project->sceneAt(scenePos);
 
@@ -139,9 +139,9 @@ bool TupCommandExecutor::moveLayer(TupLayerResponse *response)
 
 bool TupCommandExecutor::lockLayer(TupLayerResponse *response)
 {
-    int scenePos = response->sceneIndex();
-    int position = response->layerIndex();
-    bool lock = response->arg().toBool();
+    int scenePos = response->getSceneIndex();
+    int position = response->getLayerIndex();
+    bool lock = response->getArg().toBool();
 
     TupScene *scene = project->sceneAt(scenePos);
 
@@ -161,9 +161,9 @@ bool TupCommandExecutor::lockLayer(TupLayerResponse *response)
 
 bool TupCommandExecutor::renameLayer(TupLayerResponse *response)
 {
-    int scenePos = response->sceneIndex();
-    int position = response->layerIndex();
-    QString newName = response->arg().toString();
+    int scenePos = response->getSceneIndex();
+    int position = response->getLayerIndex();
+    QString newName = response->getArg().toString();
 	
     #ifdef TUP_DEBUG
         QString msg = "TupCommandExecutor::renameLayer() - Renaming layer to: " + newName;
@@ -205,9 +205,9 @@ bool TupCommandExecutor::selectLayer(TupLayerResponse *response)
 
 bool TupCommandExecutor::setLayerVisibility(TupLayerResponse *response)
 {
-    int scenePos = response->sceneIndex();
-    int position = response->layerIndex();
-    bool view = response->arg().toBool();
+    int scenePos = response->getSceneIndex();
+    int position = response->getLayerIndex();
+    bool view = response->getArg().toBool();
 
     TupScene *scene = project->sceneAt(scenePos);
 
@@ -237,9 +237,9 @@ bool TupCommandExecutor::addLipSync(TupLayerResponse *response)
         #endif
     #endif
 
-    int scenePos = response->sceneIndex();
-    int position = response->layerIndex();
-    QString xml = response->arg().toString();
+    int scenePos = response->getSceneIndex();
+    int position = response->getLayerIndex();
+    QString xml = response->getArg().toString();
 
     TupScene *scene = project->sceneAt(scenePos);
 
@@ -271,8 +271,8 @@ bool TupCommandExecutor::updateLipSync(TupLayerResponse *response)
         #endif
     #endif
 
-    int scenePos = response->sceneIndex();
-    QString xml = response->arg().toString();
+    int scenePos = response->getSceneIndex();
+    QString xml = response->getArg().toString();
 
     TupScene *scene = project->sceneAt(scenePos);
 
@@ -300,8 +300,8 @@ bool TupCommandExecutor::removeLipSync(TupLayerResponse *response)
         #endif
     #endif
 
-    int scenePos = response->sceneIndex();
-    QString name = response->arg().toString();
+    int scenePos = response->getSceneIndex();
+    QString name = response->getArg().toString();
 
     TupScene *scene = project->sceneAt(scenePos);
 

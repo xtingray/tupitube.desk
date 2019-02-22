@@ -35,38 +35,23 @@
 
 #include "tupprojectresponse.h"
 
-class TupProjectResponse::Private
-{
-    public:
-        Private(int part, int action) : part(part), action(action), isExternal(false) {}
-
-        int part;
-        int action;
-        TupProjectRequestArgument arg;
-        QByteArray data;
-        Mode mode;
-
-        bool isExternal;
-};
-
-TupProjectResponse::TupProjectResponse(int part, int action) : k(new Private(part, action))
+TupProjectResponse::TupProjectResponse(int p, int a) : part(p), action(a)
 {
 }
 
 TupProjectResponse::~TupProjectResponse()
 {
-    delete k;
 }
 
-int TupProjectResponse::part() const
+int TupProjectResponse::getPart() const
 {
-    return k->part;
+    return part;
 }
 
-int TupProjectResponse::action() const
+int TupProjectResponse::getAction() const
 {
-    if (k->mode == Undo) {
-        switch (k->action) {
+    if (mode == Undo) {
+        switch (action) {
             case TupProjectRequest::Add:
                  {
                     return TupProjectRequest::Remove;
@@ -95,11 +80,11 @@ int TupProjectResponse::action() const
             default:
                  {
                     #ifdef TUP_DEBUG
-                        QString msg = "TupProjectResponse::action() - Returning same action as UNDO respoonse -> " + QString::number(k->action);
+                        QString msg = "TupProjectResponse::action() - Returning same action as UNDO respoonse -> " + QString::number(action);
                         #ifdef Q_OS_WIN
-                        qDebug() << msg;
+                            qDebug() << msg;
                         #else
-                        tWarning() << msg;
+                            tWarning() << msg;
                         #endif
                     #endif
                  }
@@ -107,52 +92,52 @@ int TupProjectResponse::action() const
         }
     }
 
-    return k->action;
+    return action;
 }
 
 int TupProjectResponse::originalAction() const
 {
-    return k->action;
+    return action;
 }
 
-void TupProjectResponse::setMode(Mode mode)
+void TupProjectResponse::setMode(Mode value)
 {
-    k->mode = mode;
+    mode = value;
 }
 
-void TupProjectResponse::setExternal(bool e)
+void TupProjectResponse::setExternal(bool ext)
 {
-    k->isExternal = e;
+    isExternal = ext;
 }
 
 bool TupProjectResponse::external() const
 {
-    return k->isExternal;
+    return isExternal;
 }
 
-TupProjectResponse::Mode TupProjectResponse::mode() const
+TupProjectResponse::Mode TupProjectResponse::getMode() const
 {
-    return k->mode;
+    return mode;
 }
 
 void TupProjectResponse::setArg(const QString &value)
 {
-    k->arg = value;
+    arg = value;
 }
 
-void TupProjectResponse::setData(const QByteArray &data)
+void TupProjectResponse::setData(const QByteArray &input)
 {
-    k->data = data;
+    data = input;
 }
 
-TupProjectRequestArgument TupProjectResponse::arg() const
+TupProjectRequestArgument TupProjectResponse::getArg() const
 {
-    return k->arg;
+    return arg;
 }
 
-QByteArray TupProjectResponse::data() const
+QByteArray TupProjectResponse::getData() const
 {
-    return k->data;
+    return data;
 }
 
 // SCENE
@@ -165,7 +150,7 @@ TupSceneResponse::~TupSceneResponse()
 {
 }
 
-int TupSceneResponse::sceneIndex() const
+int TupSceneResponse::getSceneIndex() const
 {
     return m_sceneIndex;
 }
@@ -180,7 +165,7 @@ void TupSceneResponse::setState(const QString &state)
     m_state = state;
 }
 
-QString TupSceneResponse::state() const
+QString TupSceneResponse::getState() const
 {
     return m_state;
 }
@@ -200,7 +185,7 @@ TupLayerResponse::~TupLayerResponse()
 {
 }
 
-int TupLayerResponse::layerIndex() const
+int TupLayerResponse::getLayerIndex() const
 {
     return m_layerIndex;
 }
@@ -220,7 +205,7 @@ TupFrameResponse::~TupFrameResponse()
 {
 }
 
-int TupFrameResponse::frameIndex() const
+int TupFrameResponse::getFrameIndex() const
 {
     return m_frameIndex;
 }
@@ -250,7 +235,7 @@ TupItemResponse::~TupItemResponse()
 {
 }
 
-int TupItemResponse::itemIndex() const
+int TupItemResponse::getItemIndex() const
 {
     return m_itemIndex;
 }
@@ -260,7 +245,7 @@ void TupItemResponse::setItemIndex(int index)
     m_itemIndex = index;
 }
 
-TupLibraryObject::Type TupItemResponse::itemType() const
+TupLibraryObject::Type TupItemResponse::getItemType() const
 {
     return m_itemType;
 }
@@ -328,12 +313,12 @@ void TupLibraryResponse::setParent(const QString top)
     parentNode = top;
 }
 
-QString TupLibraryResponse::parent() const
+QString TupLibraryResponse::getParent() const
 {
     return parentNode;
 }
 
-TupProject::Mode TupLibraryResponse::spaceMode()
+TupProject::Mode TupLibraryResponse::getSpaceMode()
 {
     return m_mode;
 }

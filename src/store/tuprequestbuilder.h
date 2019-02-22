@@ -40,7 +40,6 @@
 #include "tuplibraryobject.h"
 #include "tupproject.h"
 
-#include <QString>
 #include <QDomDocument>
 #include <QVariant>
 

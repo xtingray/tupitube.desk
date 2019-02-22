@@ -281,14 +281,14 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
     TupFrame *frame = nullptr;
 
     TupProject *project = k->scene->currentScene()->project();
-    scene = project->sceneAt(response->sceneIndex());
+    scene = project->sceneAt(response->getSceneIndex());
     if (scene) {
         if (k->scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
-            layer = scene->layerAt(response->layerIndex());
+            layer = scene->layerAt(response->getLayerIndex());
             if (layer) {
-                frame = layer->frameAt(response->frameIndex());
+                frame = layer->frameAt(response->getFrameIndex());
                 if (frame) {
-                    item = frame->item(response->itemIndex());
+                    item = frame->item(response->getItemIndex());
                 } else {
                     #ifdef TUP_DEBUG
                         QString msg = "PolyLineTool::itemResponse() - Fatal Error: Frame variable is NULL!";
@@ -315,7 +315,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
                 if (k->scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
                     TupFrame *frame = bg->staticFrame();
                     if (frame) {
-                        item = frame->item(response->itemIndex());
+                        item = frame->item(response->getItemIndex());
                     } else {
                         #ifdef TUP_DEBUG
                            QString msg = "PolyLineTool::itemResponse() - Fatal Error: Static bg frame variable is NULL!";
@@ -329,7 +329,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
                 } else if (k->scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
                            TupFrame *frame = bg->dynamicFrame();
                            if (frame) {
-                               item = frame->item(response->itemIndex());
+                               item = frame->item(response->getItemIndex());
                            } else {
                                #ifdef TUP_DEBUG
                                    QString msg = "PolyLineTool::itemResponse() - Fatal Error: Dynamic bg frame variable is NULL!";
@@ -372,7 +372,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
         #endif
     }
 
-    switch (response->action()) {
+    switch (response->getAction()) {
         case TupProjectRequest::Add:
         {
             if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(item)) {
