@@ -43,6 +43,8 @@
 #include <QImage>
 #include <QPixmap>
 
+typedef QList<TupFrame *> Frames;
+
 class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializable
 {
     Q_OBJECT
@@ -88,6 +90,9 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         TupFrame *dynamicBg;
         QImage raster;
         bool noRender;
+
+        Frames dynamicFrames;
+        Frames staticFrames;
 };
 
 #endif

@@ -142,6 +142,8 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         void selectToolFromMenu(QAction *action);
         // void callAutoSave();
         void sendStoryboard(TupStoryboard *storyboard, int sceneIndex);
+
+        void setDynamicBgLayer(int layer);
         void updateStaticOpacity(double opacity);
         void updateDynamicOpacity(double opacity);
 
@@ -216,6 +218,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         QSpinBox *prevOnionSkinSpin;
         QSpinBox *nextOnionSkinSpin;
 
+        QComboBox *dynamicBgLayersCombo;
         QComboBox *dirCombo;
         QSpinBox *shiftSpin;
 

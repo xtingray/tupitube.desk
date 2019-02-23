@@ -1239,6 +1239,20 @@ void TupDocumentView::createToolBar()
 
     staticPropertiesBar->setVisible(false);
 
+    QLabel *layersLabel = new QLabel();
+    QPixmap layersPix(THEME_DIR + "icons/bg_layers.png");
+    layersLabel->setToolTip(tr("Dynamic Bg Layer"));
+    layersLabel->setPixmap(layersPix);
+
+    dynamicBgLayersCombo = new QComboBox;
+    dynamicBgLayersCombo->setToolTip(tr("Dynamic Bg Layer"));
+    dynamicBgLayersCombo->addItem(tr("Dynamic Layer") + " 1");
+    dynamicBgLayersCombo->addItem(tr("Dynamic Layer") + " 2");
+    dynamicBgLayersCombo->addItem(tr("Dynamic Layer") + " 3");
+    dynamicBgLayersCombo->addItem(tr("Dynamic Layer") + " 4");
+    dynamicBgLayersCombo->addItem(tr("Dynamic Layer") + " 5");
+    connect(dynamicBgLayersCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setDynamicBgLayer(int)));
+
     QLabel *dirLabel = new QLabel();
     QPixmap dirPix(THEME_DIR + "icons/mov_orientation.png");
     dirLabel->setToolTip(tr("Movement Orientation"));
@@ -1266,6 +1280,12 @@ void TupDocumentView::createToolBar()
     empty7->setFixedWidth(5);
     QWidget *empty8 = new QWidget();
     empty8->setFixedWidth(5);
+    QWidget *empty9 = new QWidget();
+    empty9->setFixedWidth(5);
+    QWidget *empty10 = new QWidget();
+    empty10->setFixedWidth(5);
+    QWidget *empty11 = new QWidget();
+    empty11->setFixedWidth(5);
 
     QLabel *shiftLabel = new QLabel();
     QPixmap shiftPix(THEME_DIR + "icons/shift_length.png");
@@ -1290,26 +1310,37 @@ void TupDocumentView::createToolBar()
     dynamicOpacityBox->setToolTip(tr("Dynamic BG Opacity"));
     connect(dynamicOpacityBox, SIGNAL(valueChanged(double)), this, SLOT(updateDynamicOpacity(double)));
 
-    dynamicPropertiesBar->addWidget(dirLabel);
+    dynamicPropertiesBar->addWidget(layersLabel);
     dynamicPropertiesBar->addWidget(empty2);
-    dynamicPropertiesBar->addWidget(dirCombo);
+    dynamicPropertiesBar->addWidget(dynamicBgLayersCombo);
     dynamicPropertiesBar->addWidget(empty3);
     dynamicPropertiesBar->addSeparator();
     dynamicPropertiesBar->addWidget(empty4);
-    dynamicPropertiesBar->addWidget(shiftLabel);
+    dynamicPropertiesBar->addWidget(dirLabel);
     dynamicPropertiesBar->addWidget(empty5);
-    dynamicPropertiesBar->addWidget(shiftSpin);
+    dynamicPropertiesBar->addWidget(dirCombo);
     dynamicPropertiesBar->addWidget(empty6);
     dynamicPropertiesBar->addSeparator();
     dynamicPropertiesBar->addWidget(empty7);
-    dynamicPropertiesBar->addWidget(dynamicOpacityLabel);
+    dynamicPropertiesBar->addWidget(shiftLabel);
     dynamicPropertiesBar->addWidget(empty8);
+    dynamicPropertiesBar->addWidget(shiftSpin);
+    dynamicPropertiesBar->addWidget(empty9);
+    dynamicPropertiesBar->addSeparator();
+    dynamicPropertiesBar->addWidget(empty10);
+    dynamicPropertiesBar->addWidget(dynamicOpacityLabel);
+    dynamicPropertiesBar->addWidget(empty11);
     dynamicPropertiesBar->addWidget(dynamicOpacityBox);
 
     dynamicPropertiesBar->setVisible(false);
 
     addToolBar(staticPropertiesBar);
     addToolBar(dynamicPropertiesBar);
+}
+
+void TupDocumentView::setDynamicBgLayer(int layer)
+{
+    tError() << "TupDocumentView::setDynamicBgLayer() - Loading Dynamic Bg Layer -> " << layer;
 }
 
 void TupDocumentView::closeArea()

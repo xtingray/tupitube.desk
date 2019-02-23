@@ -44,11 +44,20 @@ TupBackground::TupBackground(TupScene *parent, const QSize size, const QColor co
     dimension = size;
     bgColor = color;
     noRender = true;
+
+    /*
     dynamicBg = new TupFrame(this, "landscape_dynamic");
     dynamicBg->setDynamicDirection("0");
     dynamicBg->setDynamicShift("5");
 
     staticBg = new TupFrame(this, "landscape_static");
+    */
+
+    for(int i=0; i<5; i++)
+        dynamicFrames << new TupFrame(this, TupFrame::DynamicBg, i);
+
+    for(int i=5; i<10; i++)
+        staticFrames << new TupFrame(this, TupFrame::StaticBg, i);
 }
 
 TupBackground::~TupBackground()
@@ -122,8 +131,19 @@ QDomElement TupBackground::toXml(QDomDocument &doc) const
     QDomElement root = doc.createElement("background");
     doc.appendChild(root);
 
-    root.appendChild(dynamicBg->toXml(doc));
-    root.appendChild(staticBg->toXml(doc));
+    // root.appendChild(dynamicBg->toXml(doc));
+    // root.appendChild(staticBg->toXml(doc));
+
+    QDomElement dynamicRoot = doc.createElement("dynamic_landscape");
+    for(int i=0; i<5; i++) { // Dynamic Layers
+
+    }
+    root.appendChild(dynamicRoot);
+    QDomElement staticRoot = doc.createElement("static_landscape");
+    for(int i=0; i<5; i++) { // Static Layers
+
+    }
+    root.appendChild(staticRoot);
 
     return root;
 }

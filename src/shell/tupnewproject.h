@@ -70,6 +70,7 @@ class TupNewProject : public TabDialog
                       FORMAT_480,
                       FORMAT_576,
                       FORMAT_720,
+                      FORMAT_MOBILE,
                       FORMAT_1080
                     };
 

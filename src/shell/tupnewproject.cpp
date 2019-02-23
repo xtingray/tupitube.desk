@@ -120,6 +120,7 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent), k(new Private
     k->presets->addItem(tr("480 (PAL DV/DVD) - 25"));
     k->presets->addItem(tr("576 (PAL DV/DVD) - 25"));
     k->presets->addItem(tr("720 (HD) - 24"));
+    k->presets->addItem(tr("1080 (Mobile) - 24"));
     k->presets->addItem(tr("1080 (Full HD) - 24"));
 
     connect(k->presets, SIGNAL(currentIndexChanged(int)), this, SLOT(setPresets(int)));
@@ -389,6 +390,13 @@ void TupNewProject::setPresets(int index)
            {
                k->size->setX(1280);
                k->size->setY(720);
+               k->fps->setValue(24);
+           }
+           break;
+           case FORMAT_MOBILE:
+           {
+               k->size->setX(1080);
+               k->size->setY(1080);
                k->fps->setValue(24);
            }
            break;
