@@ -76,10 +76,16 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         void updateSoundPos(int pos);
 
     private:
-        struct Private;
-        Private *const k;
+        QMediaPlayer *player;
+        QSlider *slider;
+        QLabel *timer;
+        TImageButton *playButton;
+        bool playing;
+        qint64 duration;
+        QTime soundTotalTime;
+        QString totalTime;
+
+        QWidget *frameWidget;
 };
 
 #endif
-
-

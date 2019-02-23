@@ -37,33 +37,19 @@
 
 #include <QSpinBox>
 
-struct TupSoundPlayer::Private
-{
-    QMediaPlayer *player;
-    QSlider *slider;
-    QLabel *timer;
-    TImageButton *playButton;
-    bool playing;
-    qint64 duration;
-    QTime soundTotalTime;
-    QString totalTime;
-
-    QWidget *frameWidget;
-};
-
-TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent), k(new Private)
+TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
 {
     setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
     setMidLineWidth(2);
     setLineWidth(1);
 
-    k->playing = false;
-    k->player = new QMediaPlayer;
-    connect(k->player, SIGNAL(positionChanged(qint64)), SLOT(positionChanged(qint64)));
-    connect(k->player, SIGNAL(durationChanged(qint64)), SLOT(durationChanged(qint64)));
-    connect(k->player, SIGNAL(stateChanged(QMediaPlayer::State)), SLOT(stateChanged(QMediaPlayer::State)));
+    playing = false;
+    player = new QMediaPlayer;
+    connect(player, SIGNAL(positionChanged(qint64)), SLOT(positionChanged(qint64)));
+    connect(player, SIGNAL(durationChanged(qint64)), SLOT(durationChanged(qint64)));
+    connect(player, SIGNAL(stateChanged(QMediaPlayer::State)), SLOT(stateChanged(QMediaPlayer::State)));
 
-    k->frameWidget = new QWidget;
+    frameWidget = new QWidget;
 
     QLabel *frameLabel = new QLabel(tr("Play at frame:") + " ");
     QSpinBox *frameBox = new QSpinBox();
@@ -72,49 +58,49 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent), k(new Private)
     frameBox->setValue(1);
     connect(frameBox, SIGNAL(valueChanged(int)), this, SIGNAL(frameUpdated(int)));
 
-    QBoxLayout *effectLayout = new QBoxLayout(QBoxLayout::LeftToRight, k->frameWidget);
+    QBoxLayout *effectLayout = new QBoxLayout(QBoxLayout::LeftToRight, frameWidget);
     effectLayout->addStretch();
     effectLayout->addWidget(frameLabel);
     effectLayout->addWidget(frameBox);
     effectLayout->addStretch();
 
     /*
-    k->lipSyncWidget = new QWidget;
-    QBoxLayout *lipLayout = new QBoxLayout(QBoxLayout::LeftToRight, k->lipSyncWidget);
+    lipSyncWidget = new QWidget;
+    QBoxLayout *lipLayout = new QBoxLayout(QBoxLayout::LeftToRight, lipSyncWidget);
     lipLayout->addStretch();
     lipLayout->addWidget(new QLabel(tr("Papagayo Lip-Sync Sound")));
     lipLayout->addStretch();
     */
 
-    k->timer = new QLabel("");
+    timer = new QLabel("");
     QBoxLayout *timerLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     timerLayout->addStretch();
-    timerLayout->addWidget(k->timer);
+    timerLayout->addWidget(timer);
     timerLayout->addStretch();
     timerLayout->setContentsMargins(0, 0, 0, 0);
 
-    k->slider = new QSlider(Qt::Horizontal, this);
-    // k->slider->setRange(0, k->player->duration() / 1000);
-    connect(k->slider, SIGNAL(sliderMoved(int)), this, SLOT(updateSoundPos(int)));
+    slider = new QSlider(Qt::Horizontal, this);
+    // slider->setRange(0, player->duration() / 1000);
+    connect(slider, SIGNAL(sliderMoved(int)), this, SLOT(updateSoundPos(int)));
 
     QBoxLayout *sliderLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    sliderLayout->addWidget(k->slider);
+    sliderLayout->addWidget(slider);
     sliderLayout->setContentsMargins(0, 0, 0, 0);
 
-    k->playButton = new TImageButton(QPixmap(THEME_DIR + "icons/play_small.png"), 33, this, true);
-    k->playButton->setToolTip(tr("Play"));
-    connect(k->playButton, SIGNAL(clicked()), this, SLOT(playFile()));
+    playButton = new TImageButton(QPixmap(THEME_DIR + "icons/play_small.png"), 33, this, true);
+    playButton->setToolTip(tr("Play"));
+    connect(playButton, SIGNAL(clicked()), this, SLOT(playFile()));
 
     QBoxLayout *buttonLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     buttonLayout->addStretch();
-    buttonLayout->addWidget(k->playButton);
+    buttonLayout->addWidget(playButton);
     buttonLayout->addStretch();
     buttonLayout->setContentsMargins(0, 0, 0, 0);
 
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->addSpacing(5);
-    layout->addWidget(k->frameWidget);
-    // layout->addWidget(k->lipSyncWidget);
+    layout->addWidget(frameWidget);
+    // layout->addWidget(lipSyncWidget);
     layout->addLayout(timerLayout);
     layout->addLayout(sliderLayout);
     layout->addLayout(buttonLayout);
@@ -124,7 +110,6 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent), k(new Private)
 
 TupSoundPlayer::~TupSoundPlayer()
 {
-    delete k;
 }
 
 QSize TupSoundPlayer::sizeHint() const
@@ -134,23 +119,23 @@ QSize TupSoundPlayer::sizeHint() const
 
 void TupSoundPlayer::setSoundObject(const QString &path)
 {
-    k->player->setMedia(QUrl::fromLocalFile(path)); 
+    player->setMedia(QUrl::fromLocalFile(path));
 }
 
 void TupSoundPlayer::playFile()
 {
-    if (!k->playing) {
-        k->playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/pause.png")));
-        k->playing = true;
-        k->player->setVolume(60);
+    if (!playing) {
+        playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/pause.png")));
+        playing = true;
+        player->setVolume(60);
 
         QString initTime = "00:00";
-        if (k->duration > 3600)
+        if (duration > 3600)
             initTime = "00:00:00";
-        initTime = initTime + " / " + k->totalTime;
-        k->timer->setText(initTime);
+        initTime = initTime + " / " + totalTime;
+        timer->setText(initTime);
 
-        k->player->play();
+        player->play();
     } else {
         stopFile();
     }
@@ -158,60 +143,60 @@ void TupSoundPlayer::playFile()
 
 void TupSoundPlayer::stopFile()
 {
-    k->playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/play_small.png")));
-    k->playing = false;
-    k->player->pause();
+    playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/play_small.png")));
+    playing = false;
+    player->pause();
 }
 
 void TupSoundPlayer::positionChanged(qint64 value)
 {
     qint64 currentInfo = value / 1000;
-    k->slider->setValue(static_cast<int>(currentInfo));
+    slider->setValue(static_cast<int>(currentInfo));
     QString time;
 
-    if (currentInfo || k->duration) {
+    if (currentInfo || duration) {
         QTime currentTime((currentInfo/3600)%60, (currentInfo/60)%60, currentInfo%60, (currentInfo*1000)%1000);
         QString format = "mm:ss";
-        if (k->duration > 3600)
+        if (duration > 3600)
             format = "hh:mm:ss";
-        time = currentTime.toString(format) + " / " + k->totalTime;
+        time = currentTime.toString(format) + " / " + totalTime;
     }
 
-    k->timer->setText(time);
+    timer->setText(time);
 }
 
 void TupSoundPlayer::durationChanged(qint64 value)
 {
-    k->duration = value/1000;
-    k->slider->setMinimum(0);
-    k->slider->setMaximum(static_cast<int>(k->duration));
+    duration = value/1000;
+    slider->setMinimum(0);
+    slider->setMaximum(static_cast<int>(duration));
 
-    k->soundTotalTime = QTime((k->duration/3600)%60, (k->duration/60)%60, k->duration%60, (k->duration*1000)%1000);
+    soundTotalTime = QTime((duration/3600)%60, (duration/60)%60, duration%60, (duration*1000)%1000);
     QString format = "mm:ss";
-    if (k->duration > 3600)
+    if (duration > 3600)
         format = "hh:mm:ss";
-    k->totalTime = k->soundTotalTime.toString(format);
+    totalTime = soundTotalTime.toString(format);
 }
 
 void TupSoundPlayer::stateChanged(QMediaPlayer::State state)
 {
     if (state == QMediaPlayer::StoppedState) {
-        k->slider->setValue(0);
-        k->playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/play_small.png")));
-        k->playing = false;
+        slider->setValue(0);
+        playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/play_small.png")));
+        playing = false;
         QString init = "00:00";
-        if (k->duration > 3600)
+        if (duration > 3600)
             init = "00:00:00";
-        k->timer->setText(init + " / " + k->totalTime);
+        timer->setText(init + " / " + totalTime);
     }
 }
 
 void TupSoundPlayer::updateSoundPos(int pos)
 {
-    k->player->setPosition(pos*1000);
+    player->setPosition(pos*1000);
 }
 
 bool TupSoundPlayer::isPlaying()
 {
-    return k->playing;
+    return playing;
 }

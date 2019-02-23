@@ -41,12 +41,9 @@
 #include "tapplicationproperties.h"
 
 #include <QDialog>
-#include <QFormLayout>
 #include <QLineEdit>
-#include <QComboBox>
 #include <QSpinBox>
-#include <QDialogButtonBox>
-#include <QFile>
+#include <QComboBox>
 
 /**
  * @author Gustav Gonzalez
@@ -62,11 +59,11 @@ class TUPITUBE_EXPORT TupNewItemDialog : public QDialog
         TupNewItemDialog(QString &name, DialogType type, QSize size);
         ~TupNewItemDialog();
 
-        QString itemName() const;
+        QString getItemName() const;
         QSize itemSize() const;
         QString itemExtension() const;
-        QColor background() const;
-        QString software() const;
+        QColor getBackground() const;
+        QString getSoftware() const;
 
     private slots:
         void checkValues();
@@ -75,8 +72,18 @@ class TUPITUBE_EXPORT TupNewItemDialog : public QDialog
         void updateEditor(const QString &editor);
 
     private:
-        struct Private;
-        Private *const k;
+        QLineEdit *itemName;
+        QComboBox *extension;
+        QSpinBox *width;
+        QSpinBox *height;
+        QComboBox *background;
+        QComboBox *editor;
+        QString name;
+        QString software;
+        QString fileExtension;
+        QSize size;
+        QColor colors[3];
+        QColor bg;
 };
 
 #endif

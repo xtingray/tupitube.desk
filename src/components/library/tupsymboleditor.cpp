@@ -35,13 +35,6 @@
 
 #include "tupsymboleditor.h"
 
-class TUPITUBE_EXPORT View : public QGraphicsView
-{
-    public:
-        View();
-        ~View();
-};
-
 View::View()
 {
 }
@@ -50,58 +43,42 @@ View::~View()
 {
 }
 
-struct TupSymbolEditor::Private
-{
-    View *view;
-    QGraphicsScene *scene;
-    
-    TupLibraryObject *symbol;
-    
-    QToolBar *selectionTools;
-    QToolBar *fillTools;
-    QToolBar *viewTools;
-    QToolBar *brushTools;
-};
-
-TupSymbolEditor::TupSymbolEditor(QWidget *parent) : QMainWindow(parent), k(new Private)
+TupSymbolEditor::TupSymbolEditor(QWidget *parent) : QMainWindow(parent)
 {
     setWindowTitle(tr("Symbol editor"));
     
-    k->view = new View;
-    k->view->setRenderHints(QPainter::Antialiasing);
+    view = new View;
+    view->setRenderHints(QPainter::Antialiasing);
     
-    k->scene = new QGraphicsScene;
-    k->view->setScene(k->scene);
+    scene = new QGraphicsScene;
+    view->setScene(scene);
     
-    setCentralWidget(k->view);
+    setCentralWidget(view);
     
-    k->brushTools = new QToolBar(tr("Brushes"));
-    addToolBar(Qt::BottomToolBarArea, k->brushTools);
+    brushTools = new QToolBar(tr("Brushes"));
+    addToolBar(Qt::BottomToolBarArea, brushTools);
     
-    k->selectionTools = new QToolBar(tr("Selection"));
-    addToolBar(Qt::BottomToolBarArea, k->selectionTools);
+    selectionTools = new QToolBar(tr("Selection"));
+    addToolBar(Qt::BottomToolBarArea, selectionTools);
     
-    k->fillTools = new QToolBar(tr("Fill"));
-    addToolBar(Qt::BottomToolBarArea, k->fillTools);
+    fillTools = new QToolBar(tr("Fill"));
+    addToolBar(Qt::BottomToolBarArea, fillTools);
     
-    k->viewTools = new QToolBar(tr("View"));
-    addToolBar(Qt::BottomToolBarArea, k->viewTools);
+    viewTools = new QToolBar(tr("View"));
+    addToolBar(Qt::BottomToolBarArea, viewTools);
     
     QTimer::singleShot(0, this, SLOT(loadTools()));
 }
 
-
 TupSymbolEditor::~TupSymbolEditor()
 {
-    delete k;
 }
-
 
 void TupSymbolEditor::setSymbol(TupLibraryObject *object)
 {
     if (QGraphicsItem *item = qvariant_cast<QGraphicsItem *>(object->getData())) {
-        k->symbol = object;
-        k->scene->addItem(item);
+        symbol = object;
+        scene->addItem(item);
     }
 }
 
@@ -133,22 +110,22 @@ void TupSymbolEditor::loadTools()
                       switch (tool->toolType()) {
                               case TupToolInterface::Selection:
                               {
-                                   k->selectionTools->addAction(act);
+                                   selectionTools->addAction(act);
                               }
                               break;
                               case TupToolInterface::Fill:
                               {
-                                   k->fillTools->addAction(act);
+                                   fillTools->addAction(act);
                               }
                               break;
                               case TupToolInterface::View:
                               {
-                                   k->viewTools->addAction(act);
+                                   viewTools->addAction(act);
                               }
                               break;
                               case TupToolInterface::Brush:
                               {
-                                   k->brushTools->addAction(act);
+                                   brushTools->addAction(act);
                               }
                               break;
                       }

@@ -35,6 +35,9 @@
 
 #include "tupsceneselector.h"
 
+#include <QListWidget>
+#include <QListWidgetItem>
+
 TupSceneSelector::TupSceneSelector() : TupExportWizardPage(tr("Select Scenes"))
 {
     setTag("SCENE");
@@ -118,4 +121,3 @@ void TupSceneSelector::updateScenesList()
 {
     // SQA: Pending code right over here
 }
-

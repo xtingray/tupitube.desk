@@ -35,82 +35,69 @@
 
 #include "tupnewitemdialog.h"
 
-struct TupNewItemDialog::Private
+#include <QDialogButtonBox>
+#include <QFormLayout>
+
+TupNewItemDialog::TupNewItemDialog(QString &item, DialogType type, QSize size) : QDialog()
 {
-    QLineEdit *itemName;
-    QComboBox *extension;
-    QSpinBox *width;
-    QSpinBox *height;
-    QComboBox *background;
-    QComboBox *editor;
-    QString name;
-    QString software;
-    QString fileExtension;
-    QSize size;
-    QColor colors[3];
-    QColor bg;
-};
+    name = item;
 
-TupNewItemDialog::TupNewItemDialog(QString &name, DialogType type, QSize size) : QDialog(), k(new Private)
-{
-    k->name = name;
+    colors[0] = Qt::transparent;
+    colors[1] = Qt::white;
+    colors[2] = Qt::black;
 
-    k->colors[0] = Qt::transparent;
-    k->colors[1] = Qt::white;
-    k->colors[2] = Qt::black;
-
-    k->extension = new QComboBox();
-    k->editor = new QComboBox();
+    extension = new QComboBox();
+    editor = new QComboBox();
 
     if (type == Raster) {
         setWindowTitle(tr("Create new raster item"));
         setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/bitmap.png")));
-        k->extension->addItem("PNG");
-        k->extension->addItem("JPG");
-        k->fileExtension = "PNG"; 
+        extension->addItem("PNG");
+        extension->addItem("JPG");
+        fileExtension = "PNG";
 
-        k->background = new QComboBox();
-        k->background->addItem(tr("Transparent"));
-        k->background->addItem(tr("White"));
-        k->background->addItem(tr("Black"));
-        k->bg = Qt::transparent;
+        background = new QComboBox();
+        background->addItem(tr("Transparent"));
+        background->addItem(tr("White"));
+        background->addItem(tr("Black"));
+        bg = Qt::transparent;
 
 #ifdef Q_OS_UNIX
         if (QFile::exists("/usr/bin/gimp"))
-            k->editor->addItem("Gimp");
+            editor->addItem("Gimp");
         if (QFile::exists("/usr/bin/krita"))
-            k->editor->addItem("Krita");
+            editor->addItem("Krita");
         if (QFile::exists("/usr/bin/mypaint"))
-            k->editor->addItem("MyPaint");
+            editor->addItem("MyPaint");
 #endif
     } else {
         setWindowTitle(tr("Create new vector item"));
         setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/svg.png")));
-        k->extension->addItem("SVG");
-        k->editor->addItem("Inkscape");
-        k->fileExtension = "SVG";
-        k->software = "Inkscape";
+        extension->addItem("SVG");
+        editor->addItem("Inkscape");
+        fileExtension = "SVG";
+        software = "Inkscape";
     }
 
-    k->software = k->editor->currentText();
+    software = editor->currentText();
 
-    connect(k->extension, SIGNAL(currentIndexChanged(int)), this, SLOT(updateExtension(int)));
-    connect(k->editor, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(updateEditor(const QString &)));
+    connect(extension, SIGNAL(currentIndexChanged(int)), this, SLOT(updateExtension(int)));
+    connect(editor, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(updateEditor(const QString &)));
 
     QFormLayout *formLayout = new QFormLayout;
 
-    k->itemName = new QLineEdit;
-    k->itemName->setText(name);
+    itemName = new QLineEdit;
+    itemName->setText(item);
 
-    k->width = new QSpinBox;
-    k->width->setMaximum(size.width());
-    k->width->setMinimumWidth(60);
-    k->width->setValue(50);
+    width = new QSpinBox;
+    width->setMaximum(size.width());
+    width->setMinimumWidth(60);
+    width->setValue(50);
 
-    k->height = new QSpinBox;
-    k->height->setMaximum(size.height());
-    k->height->setMinimumWidth(60);
-    k->height->setValue(50);
+    height = new QSpinBox;
+    height->setMaximum(size.height());
+    height->setMinimumWidth(60);
+    height->setValue(50);
 
     QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok
                                 | QDialogButtonBox::Cancel, Qt::Horizontal);
@@ -120,17 +107,17 @@ TupNewItemDialog::TupNewItemDialog(QString &name, DialogType type, QSize size) :
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     buttonsLayout->addWidget(buttons);
 
-    formLayout->addRow(tr("&Name:"), k->itemName);
-    formLayout->addRow(tr("&Extension:"), k->extension);
-    formLayout->addRow(tr("&Width:"), k->width);
-    formLayout->addRow(tr("&Height:"), k->height);
+    formLayout->addRow(tr("&Name:"), itemName);
+    formLayout->addRow(tr("&Extension:"), extension);
+    formLayout->addRow(tr("&Width:"), width);
+    formLayout->addRow(tr("&Height:"), height);
 
     if (type == Raster) {
-        formLayout->addRow(tr("&Background:"), k->background);
-        connect(k->background, SIGNAL(currentIndexChanged(int)), this, SLOT(updateBackground(int)));
+        formLayout->addRow(tr("&Background:"), background);
+        connect(background, SIGNAL(currentIndexChanged(int)), this, SLOT(updateBackground(int)));
     }
 
-    formLayout->addRow(tr("&Open it with:"), k->editor);
+    formLayout->addRow(tr("&Open it with:"), editor);
     formLayout->addRow(buttonsLayout);
 
     setLayout(formLayout);
@@ -138,101 +125,100 @@ TupNewItemDialog::TupNewItemDialog(QString &name, DialogType type, QSize size) :
 
 TupNewItemDialog::~TupNewItemDialog()
 {
-    delete k;
 }
 
 void TupNewItemDialog::checkValues()
 {
-    QString name = k->itemName->text();
-    if (name.length() == 0) {
-        name = TAlgorithm::randomString(8);
-        k->itemName->setText(name);
+    QString text = itemName->text();
+    if (text.length() == 0) {
+        text = TAlgorithm::randomString(8);
+        itemName->setText(text);
         return;
     }
 
     bool alert = false;
 
-    if (k->width->value() == 0) {
-        k->width->setValue(100);
+    if (width->value() == 0) {
+        width->setValue(100);
         alert = true;
     }
 
-    if (k->height->value() == 0) {
-        k->height->setValue(100);
+    if (height->value() == 0) {
+        height->setValue(100);
         alert = true;
     }
 
     if (alert)
         return;
 
-    name.replace(" ", "_");
-    name.replace(".", "_");
-    k->name = name;
-    k->size.setWidth(k->width->value());
-    k->size.setHeight(k->height->value());
+    text.replace(" ", "_");
+    text.replace(".", "_");
+    name = text;
+    size.setWidth(width->value());
+    size.setHeight(height->value());
 
     accept();
 }
 
 void TupNewItemDialog::updateExtension(int index)
 {
-    k->fileExtension = k->extension->itemText(index);
+    fileExtension = extension->itemText(index);
 
-    if (index == 1 || (index == 0 && k->software.compare("MyPaint") == 0)) {
-        if (k->background->itemText(0).compare(tr("Transparent")) == 0)
-            k->background->removeItem(0);
+    if (index == 1 || (index == 0 && software.compare("MyPaint") == 0)) {
+        if (background->itemText(0).compare(tr("Transparent")) == 0)
+            background->removeItem(0);
     } else {
-        if (k->background->count() == 2)
-            k->background->insertItem(0, tr("Transparent"));
+        if (background->count() == 2)
+            background->insertItem(0, tr("Transparent"));
     }
 }
 
 void TupNewItemDialog::updateBackground(int index)
 {
-    if (k->software.compare("MyPaint") == 0)
-        k->bg = k->colors[index+1];
+    if (software.compare("MyPaint") == 0)
+        bg = colors[index+1];
     else    
-        k->bg = k->colors[index];
+        bg = colors[index];
 }
 
 void TupNewItemDialog::updateEditor(const QString &editor)
 {
-    if (k->fileExtension.compare("SVG") == 0) {
-        k->software = "Inkscape";
+    if (fileExtension.compare("SVG") == 0) {
+        software = "Inkscape";
     } else {
-        k->software = editor;
+        software = editor;
         if (editor.compare("MyPaint") == 0) {
-            if (k->background->itemText(0).compare(tr("Transparent")) == 0)
-                k->background->removeItem(0);
+            if (background->itemText(0).compare(tr("Transparent")) == 0)
+                background->removeItem(0);
         } else {
-            if (k->background->count() == 2)
-                k->background->insertItem(0, tr("Transparent"));
+            if (background->count() == 2)
+                background->insertItem(0, tr("Transparent"));
         }
     }
 
 }
 
-QString TupNewItemDialog::itemName() const
+QString TupNewItemDialog::getItemName() const
 {
-    return k->name;
+    return name;
 }
 
 QSize TupNewItemDialog::itemSize() const
 {
-    return k->size;
+    return size;
 }
 
 QString TupNewItemDialog::itemExtension() const
 {
-    return k->fileExtension;
+    return fileExtension;
 }
 
-QColor TupNewItemDialog::background() const
+QColor TupNewItemDialog::getBackground() const
 {
-    return k->bg;
+    return bg;
 }
 
-QString TupNewItemDialog::software() const
+QString TupNewItemDialog::getSoftware() const
 {
-    return k->software;
+    return software;
 }

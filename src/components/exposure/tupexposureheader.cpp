@@ -326,5 +326,3 @@ void TupExposureHeader::updateLayerNameFlag(bool flag)
 {
     isEditing = flag;
 }
-
-// #include "tupexposuretable.moc"

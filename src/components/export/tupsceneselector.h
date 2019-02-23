@@ -42,9 +42,6 @@
 // #include "tupexportwidget.h"
 #include "titemselector.h"
 
-#include <QListWidget>
-#include <QListWidgetItem>
-
 class TUPITUBE_EXPORT TupSceneSelector : public TupExportWizardPage
 {
     Q_OBJECT

@@ -50,15 +50,6 @@
 #include "tuplayer.h"
 #include "tupframe.h"
 
-#include <QButtonGroup>
-#include <QGroupBox>
-#include <QPushButton>
-#include <QListWidget>
-#include <QList>
-#include <QActionGroup>
-#include <QToolTip>
-#include <QPixmap>
-#include <QHBoxLayout>
 #include <QList>
 #include <QMenu>
 
@@ -67,7 +58,7 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
     Q_OBJECT
 
     public:
-        TupExposureSheet(QWidget *parent = 0, TupProject *project = 0);
+        TupExposureSheet(QWidget *parent = nullptr, TupProject *project = nullptr);
         ~TupExposureSheet();
 
         void updateFramesState();
@@ -76,8 +67,6 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
         void initLayerVisibility();
 
     private:
-        struct Private;
-        Private * const k;
         void createMenuForAFrame();
         // void createMenuForSelection();
         void requestExtendCurrentFrame(int times);
@@ -127,6 +116,20 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
         // SQA: Pending features
         // void exportCurrentLayer();
         // void importCurrentLayer();
+
+    private:
+        TupProject *project;
+        TupSceneTabWidget *scenesContainer;
+        TupExposureTable *currentTable;
+        TupProjectActionBar *actionBar;
+        QMenu *singleMenu;
+        // QMenu *multipleMenu;
+        bool localRequest;
+        int previousScene;
+        int previousLayer;
+
+        QList<QString> framesList;
+        QList<TupExposureTable::FrameType> statesList;
 };
 
 #endif

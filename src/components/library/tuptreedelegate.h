@@ -41,7 +41,6 @@
 #include <QItemDelegate>
 #include <QRegExp>
 #include <QtGui>
-#include <QLineEdit>
 
 class TUPITUBE_EXPORT TupTreeDelegate : public QItemDelegate
 {

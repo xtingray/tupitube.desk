@@ -618,8 +618,11 @@ void TupLibraryFolder::loadItem(const QString &folder, QDomNode xml)
 
 void TupLibraryFolder::reset()
 {
-    objects.clear();
-    folders.clear();
+    if (!objects.isEmpty())
+        objects.clear();
+
+    if (!folders.isEmpty())
+        folders.clear();
 }
 
 void TupLibraryFolder::updatePaths(const QString &newPath)

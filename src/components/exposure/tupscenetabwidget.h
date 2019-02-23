@@ -84,9 +84,11 @@ class T_GUI_EXPORT TupSceneTabWidget : public QFrame
         // void importActionCalled();
 
     private:
-        struct Private;
-        Private *const k;
-
+        QList<TupExposureTable *> tables;
+        QList<TupExposureTable *> undoTables;
+        QTabWidget *tabber;
+        QList<QDoubleSpinBox *> opacityControl;
+        QList<QDoubleSpinBox *> undoOpacities;
 };
 
 #endif

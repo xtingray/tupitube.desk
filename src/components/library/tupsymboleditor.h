@@ -50,6 +50,13 @@
 
 class TupLibraryObject;
 
+class TUPITUBE_EXPORT View : public QGraphicsView
+{
+    public:
+        View();
+        ~View();
+};
+
 class TUPITUBE_EXPORT TupSymbolEditor : public QMainWindow
 {
     Q_OBJECT
@@ -65,8 +72,15 @@ class TUPITUBE_EXPORT TupSymbolEditor : public QMainWindow
         void selectTool();
         
     private:
-        struct Private;
-        Private *const k;
+        View *view;
+        QGraphicsScene *scene;
+
+        TupLibraryObject *symbol;
+
+        QToolBar *selectionTools;
+        QToolBar *fillTools;
+        QToolBar *viewTools;
+        QToolBar *brushTools;
 };
 
 #endif

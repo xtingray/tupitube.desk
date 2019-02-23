@@ -880,7 +880,7 @@ void TupMainWindow::importPalettes()
                 QString path = home + "/.tupitube/palettes";
                 ok = importer.saveFile(path);
                 if (ok) {
-                    m_colorPalette->parsePaletteFile(importer.filePath());
+                    m_colorPalette->parsePaletteFile(importer.getFilePath());
                 } else {
                     #ifdef TUP_DEBUG
                         QString msg = "TupMainWindow::importPalettes() - Fatal Error: Couldn't import file -> " + QString(*file);

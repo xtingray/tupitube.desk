@@ -36,23 +36,14 @@
 #include "tupscenetabwidget.h"
 #include "timagebutton.h"
 
-struct TupSceneTabWidget::Private
-{
-    QList<TupExposureTable *> tables;
-    QList<TupExposureTable *> undoTables;
-    QTabWidget *tabber;
-    QList<QDoubleSpinBox *> opacityControl;
-    QList<QDoubleSpinBox *> undoOpacities;
-};
-
-TupSceneTabWidget::TupSceneTabWidget(QWidget *parent) : QFrame(parent), k(new Private)
+TupSceneTabWidget::TupSceneTabWidget(QWidget *parent) : QFrame(parent)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setMargin(1);
 
-    k->tabber = new QTabWidget;
-    connect(k->tabber, SIGNAL(currentChanged(int)), this, SIGNAL(currentChanged(int)));
-    layout->addWidget(k->tabber);
+    tabber = new QTabWidget;
+    connect(tabber, SIGNAL(currentChanged(int)), this, SIGNAL(currentChanged(int)));
+    layout->addWidget(tabber);
 
     setLayout(layout);
 }
@@ -63,12 +54,12 @@ TupSceneTabWidget::~TupSceneTabWidget()
 
 void TupSceneTabWidget::removeAllTabs()
 {
-    int count = k->tabber->count();
+    int count = tabber->count();
     for (int i = 0; i < count; i++)
-         delete k->tabber->currentWidget();
+         delete tabber->currentWidget();
 
-    k->tables.clear();
-    k->opacityControl.clear();
+    tables.clear();
+    opacityControl.clear();
 }
 
 void TupSceneTabWidget::addScene(int index, const QString &name, TupExposureTable *table) 
@@ -92,7 +83,7 @@ void TupSceneTabWidget::addScene(int index, const QString &name, TupExposureTabl
     opacitySpinBox->setToolTip(tr("Current Layer Opacity"));
     connect(opacitySpinBox, SIGNAL(valueChanged(double)), this, SIGNAL(updateLayerOpacity(double)));
 
-    k->opacityControl << opacitySpinBox;
+    opacityControl << opacitySpinBox;
 
     toolsLayout->addWidget(header);
     toolsLayout->addWidget(opacitySpinBox);
@@ -115,8 +106,8 @@ void TupSceneTabWidget::addScene(int index, const QString &name, TupExposureTabl
     layout->addWidget(table);
     frame->setLayout(layout);
 
-    k->tables.insert(index, table);
-    k->tabber->insertTab(index, frame, name);
+    tables.insert(index, table);
+    tabber->insertTab(index, frame, name);
 }
 
 void TupSceneTabWidget::restoreScene(int index, const QString &name)
@@ -133,9 +124,9 @@ void TupSceneTabWidget::restoreScene(int index, const QString &name)
     header->setToolTip(tr("Current Layer Opacity"));
     header->setPixmap(pix);
 
-    TupExposureTable *table = k->undoTables.takeLast();
-    QDoubleSpinBox *opacitySpinBox = k->undoOpacities.takeLast();
-    k->opacityControl << opacitySpinBox;
+    TupExposureTable *table = undoTables.takeLast();
+    QDoubleSpinBox *opacitySpinBox = undoOpacities.takeLast();
+    opacityControl << opacitySpinBox;
 
     toolsLayout->addWidget(header);
     toolsLayout->addWidget(opacitySpinBox);
@@ -144,37 +135,37 @@ void TupSceneTabWidget::restoreScene(int index, const QString &name)
     layout->addWidget(table);
     frame->setLayout(layout);
 
-    k->tables.insert(index, table);
-    k->tabber->insertTab(index, frame, name);
+    tables.insert(index, table);
+    tabber->insertTab(index, frame, name);
 }
 
 void TupSceneTabWidget::removeScene(int index, bool withBackup) 
 {
     if (withBackup) {
-        k->undoTables << k->tables.takeAt(index);
-        k->undoOpacities << k->opacityControl.takeAt(index);
+        undoTables << tables.takeAt(index);
+        undoOpacities << opacityControl.takeAt(index);
     } else {
-        k->tables.takeAt(index);
+        tables.takeAt(index);
     }
 
     blockSignals(true);
-    k->tabber->removeTab(index);
+    tabber->removeTab(index);
     blockSignals(false);
 }
 
 /*
 void TupSceneTabWidget::removeCleanScene(int index)
 {
-    k->tables.takeAt(index);
+    tables.takeAt(index);
     blockSignals(true);
-    k->tabber->removeTab(index);
+    tabber->removeTab(index);
     blockSignals(false);
 }
 */
 
 void TupSceneTabWidget::renameScene(int index, const QString &name)
 {
-    k->tabber->setTabText(index, name);
+    tabber->setTabText(index, name);
 }
 
 TupExposureTable* TupSceneTabWidget::getCurrentTable() 
@@ -186,7 +177,7 @@ TupExposureTable* TupSceneTabWidget::getCurrentTable()
 TupExposureTable* TupSceneTabWidget::getTable(int index)
 {
     if (isTableIndexValid(index)) {
-        TupExposureTable *table = k->tables.at(index);
+        TupExposureTable *table = tables.at(index);
 
         if (table) {
             return table;
@@ -216,18 +207,18 @@ TupExposureTable* TupSceneTabWidget::getTable(int index)
 
 void TupSceneTabWidget::setCurrentIndex(int index)
 {
-    k->tabber->setCurrentIndex(index);
+    tabber->setCurrentIndex(index);
 }
 
 int TupSceneTabWidget::currentIndex()
 {
-    int index = k->tabber->currentIndex();
+    int index = tabber->currentIndex();
     return index;
 }
 
 bool TupSceneTabWidget::isTableIndexValid(int index)
 {
-    if (index > -1 && index < k->tables.count())
+    if (index > -1 && index < tables.count())
         return true;
 
     return false;
@@ -235,18 +226,18 @@ bool TupSceneTabWidget::isTableIndexValid(int index)
 
 int TupSceneTabWidget::count()
 {
-    return k->tables.count();
+    return tables.count();
 }
 
 void TupSceneTabWidget::setLayerOpacity(int sceneIndex, double opacity)
 {
-    k->opacityControl.at(sceneIndex)->setValue(opacity);
+    opacityControl.at(sceneIndex)->setValue(opacity);
 }
 
 void TupSceneTabWidget::setLayerVisibility(int sceneIndex, int layerIndex, bool visibility)
 {
     if (isTableIndexValid(sceneIndex)) {
-        TupExposureTable *table = k->tables.at(sceneIndex);
+        TupExposureTable *table = tables.at(sceneIndex);
         table->setLayerVisibility(layerIndex, visibility);
     } else {
         #ifdef TUP_DEBUG

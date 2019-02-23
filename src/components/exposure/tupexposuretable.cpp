@@ -100,19 +100,13 @@ class TupExposureItemDelegate : public QItemDelegate
         virtual void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
 
     private:
-        struct Private;
-        Private *const k;
+        QString themeName;
 };
 
-struct TupExposureItemDelegate::Private
-{
-    QString themeName;
-};
-
-TupExposureItemDelegate::TupExposureItemDelegate(QObject * parent) :  QItemDelegate(parent), k(new Private)
+TupExposureItemDelegate::TupExposureItemDelegate(QObject * parent) :  QItemDelegate(parent)
 {
     TCONFIG->beginGroup("General");
-    k->themeName = TCONFIG->value("Theme", "Light").toString();
+    themeName = TCONFIG->value("Theme", "Light").toString();
 }
 
 TupExposureItemDelegate::~TupExposureItemDelegate()
@@ -140,7 +134,7 @@ void TupExposureItemDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 
         if ((item->data(TupExposureTable::IsEmpty).toInt() == TupExposureTable::Empty)) {
             QColor color(100, 100, 100, 30);
-            if (k->themeName.compare("Dark") == 0)
+            if (themeName.compare("Dark") == 0)
                 color = QColor(120, 120, 120);
 
             QPen pen(color);
@@ -158,12 +152,12 @@ void TupExposureItemDelegate::paint(QPainter *painter, const QStyleOptionViewIte
             path.lineTo(x + w - 8, y); 
 
             QColor color(0, 102, 255, 80);
-            if (k->themeName.compare("Dark") == 0)
+            if (themeName.compare("Dark") == 0)
                 color = QColor(0, 0, 0, 60);
 
             painter->fillPath(path, QBrush(color));
 
-            if (k->themeName.compare("Dark") == 0) {
+            if (themeName.compare("Dark") == 0) {
                 QPen pen(QColor(100, 100, 100));
                 painter->setPen(pen);
                 painter->drawPath(path);
@@ -174,30 +168,19 @@ void TupExposureItemDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 
 ////////////////////////
 
-struct TupExposureTable::Private
-{
-    TupExposureHeader *header;
-    QMenu *singleMenu;
-    // QMenu *multipleMenu;
-    bool removingLayer;
-    bool isLocalRequest;
-    QString themeName;
-    bool isEditing;
-};
-
-TupExposureTable::TupExposureTable(QWidget * parent) : QTableWidget(parent), k(new Private)
+TupExposureTable::TupExposureTable(QWidget *parent) : QTableWidget(parent)
 {
     TCONFIG->beginGroup("General");
-    k->themeName = TCONFIG->value("Theme", "Light").toString();
+    themeName = TCONFIG->value("Theme", "Light").toString();
 
-    k->isLocalRequest = false;
-    k->isEditing = false;
+    isLocalRequest = false;
+    isEditing = false;
 
     TupExposureVerticalHeader *verticalHeader = new TupExposureVerticalHeader(this);
     setVerticalHeader(verticalHeader);
 
     setItemDelegate(new TupExposureItemDelegate(this));
-    k->removingLayer = false;
+    removingLayer = false;
 
     QTableWidgetItem *prototype = new QTableWidgetItem();
     prototype->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable);
@@ -210,12 +193,12 @@ TupExposureTable::TupExposureTable(QWidget * parent) : QTableWidget(parent), k(n
     for(int i=0; i < 100; i++)
         setRowHeight(i, 20);
 
-    k->header = new TupExposureHeader(this);
-    connect(k->header, SIGNAL(visibilityChanged(int, bool)), this, SIGNAL(layerVisibilityChanged(int, bool)));
-    connect(k->header, SIGNAL(nameChanged(int, const QString &)), this, SIGNAL(layerNameChanged(int, const QString & )));
-    connect(k->header, SIGNAL(sectionMoved(int, int, int)), this, SLOT(requestLayerMove(int, int, int)));
-    connect(k->header, SIGNAL(headerSelectionChanged(int)), this, SLOT(updateLayerSelection(int)));
-    setHorizontalHeader(k->header);
+    header = new TupExposureHeader(this);
+    connect(header, SIGNAL(visibilityChanged(int, bool)), this, SIGNAL(layerVisibilityChanged(int, bool)));
+    connect(header, SIGNAL(nameChanged(int, const QString &)), this, SIGNAL(layerNameChanged(int, const QString & )));
+    connect(header, SIGNAL(sectionMoved(int, int, int)), this, SLOT(requestLayerMove(int, int, int)));
+    connect(header, SIGNAL(headerSelectionChanged(int)), this, SLOT(updateLayerSelection(int)));
+    setHorizontalHeader(header);
 
     connect(this, SIGNAL(cellClicked(int, int)), this, SLOT(markUsedFrames(int, int)));
     connect(this, SIGNAL(currentCellChanged(int, int, int, int)), this, SLOT(requestFrameSelection(int, int, int, int)));
@@ -223,7 +206,7 @@ TupExposureTable::TupExposureTable(QWidget * parent) : QTableWidget(parent), k(n
     setSelectionBehavior(QAbstractItemView::SelectItems);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
 
-    k->singleMenu = nullptr;
+    singleMenu = nullptr;
 }
 
 void TupExposureTable::requestFrameRenaming(QTableWidgetItem *item)
@@ -242,23 +225,23 @@ void TupExposureTable::requestFrameSelection(int currentSelectedRow, int current
         #endif
     #endif
 
-    if (!k->removingLayer) { 
+    if (!removingLayer) {
         QTableWidgetItem *frame = item(currentSelectedRow, currentColumn);
         if (frame) {
             if (previousColumn != currentColumn || previousRow != currentSelectedRow)
                 emit frameSelected(currentLayer(), currentRow());
 
             if ((previousColumn != currentColumn) || (columnCount() == 1))
-                k->header->updateSelection(currentColumn);
+                header->updateSelection(currentColumn);
         }
     } else { // A layer is being removed
-        k->removingLayer = false;
+        removingLayer = false;
         selectFrame(currentColumn, currentSelectedRow);
 
         if (previousColumn == 0)
-            k->header->updateSelection(0);
+            header->updateSelection(0);
         else
-            k->header->updateSelection(currentColumn);
+            header->updateSelection(currentColumn);
     }
 }
 
@@ -266,7 +249,7 @@ void TupExposureTable::requestLayerMove(int logicalIndex, int oldVisualIndex, in
 {
     Q_UNUSED(logicalIndex);
 
-    if (!k->header->sectionIsMoving()) {
+    if (!header->sectionIsMoving()) {
         int distance = newVisualIndex - oldVisualIndex;
         if (distance > 0) {
             if (distance > 1)
@@ -277,7 +260,7 @@ void TupExposureTable::requestLayerMove(int logicalIndex, int oldVisualIndex, in
                 newVisualIndex = oldVisualIndex - 1;
         }
 
-        k->isLocalRequest = true;
+        isLocalRequest = true;
         emit layerMoved(oldVisualIndex, newVisualIndex);
     }
 }
@@ -289,7 +272,6 @@ void TupExposureTable::updateLayerSelection(int layerIndex)
 
 TupExposureTable::~TupExposureTable()
 {
-    delete k;
 }
 
 QString TupExposureTable::frameName(int layerIndex, int frameIndex)
@@ -315,7 +297,7 @@ void TupExposureTable::setFrameName(int layerIndex, int frameIndex, const QStrin
 
 void TupExposureTable::setLayerName(int layerIndex, const QString & name)
 {
-    k->header->setSectionTitle(k->header->logicalIndex(layerIndex), name);
+    header->setSectionTitle(header->logicalIndex(layerIndex), name);
 }
 
 bool TupExposureTable::layerIndexIsValid(int layerIndex)
@@ -376,8 +358,8 @@ void TupExposureTable::selectFrame(int layerIndex, int frameIndex)
         #endif
     #endif
 
-    if (k->header->currentSectionIndex() != layerIndex)
-        k->header->updateSelection(layerIndex);
+    if (header->currentSectionIndex() != layerIndex)
+        header->updateSelection(layerIndex);
 
     setCurrentCell(frameIndex, layerIndex);
 }
@@ -407,8 +389,8 @@ void TupExposureTable::selectFrame(int layerIndex, int frameIndex, const QString
         return;
     }
 
-    if (k->header->currentSectionIndex() != layerIndex)
-        k->header->updateSelection(layerIndex);
+    if (header->currentSectionIndex() != layerIndex)
+        header->updateSelection(layerIndex);
 
     QStringList coords = selection.split(",");
     if (coords.count() == 4) {
@@ -444,13 +426,13 @@ void TupExposureTable::updateSelection(int layerIndex, int frameIndex)
 
 void TupExposureTable::setSinglePopUpMenu(QMenu *single)
 {
-    k->singleMenu = single;
-    // k->multipleMenu = multiple;
+    singleMenu = single;
+    // multipleMenu = multiple;
 }
 
 int TupExposureTable::currentLayer() const
 {
-    return k->header->visualIndex(currentColumn());
+    return header->visualIndex(currentColumn());
 }
 
 int TupExposureTable::currentFrame() const
@@ -477,7 +459,7 @@ void TupExposureTable::insertLayer(int index, const QString & name)
 {
     insertColumn(index);
     setColumnWidth(index, 70);
-    k->header->insertSection(index, name);
+    header->insertSection(index, name);
 }
 
 void TupExposureTable::insertFrame(int layerIndex, int frameIndex, const QString &name, bool external)
@@ -493,7 +475,7 @@ void TupExposureTable::insertFrame(int layerIndex, int frameIndex, const QString
     QTableWidgetItem *frame = new QTableWidgetItem;
 
     QColor color = Qt::transparent;
-    if (k->themeName.compare("Dark") == 0)
+    if (themeName.compare("Dark") == 0)
         frame->setForeground(Qt::black);
     frame->setBackgroundColor(color);
 
@@ -505,17 +487,17 @@ void TupExposureTable::insertFrame(int layerIndex, int frameIndex, const QString
     frame->setData(IsEmpty, Empty);
     frame->setTextAlignment(Qt::AlignCenter);
 
-    int logicalIndex = k->header->logicalIndex(layerIndex);
-    k->header->setLastFrame(logicalIndex, k->header->lastFrame(logicalIndex) + 1);
-    setItem(k->header->lastFrame(logicalIndex)-1, logicalIndex, frame);
+    int logicalIndex = header->logicalIndex(layerIndex);
+    header->setLastFrame(logicalIndex, header->lastFrame(logicalIndex) + 1);
+    setItem(header->lastFrame(logicalIndex)-1, logicalIndex, frame);
 
-    int init = k->header->lastFrame(logicalIndex)-1;
+    int init = header->lastFrame(logicalIndex)-1;
     for (int i=init; i>frameIndex; i--)
         exchangeFrame(layerIndex, i, layerIndex, i-1, external);
 
-    if (k->header->lastFrame(logicalIndex) == rowCount()) {
-        setRowCount(k->header->lastFrame(logicalIndex) + 100);
-        int last = k->header->lastFrame(logicalIndex);
+    if (header->lastFrame(logicalIndex) == rowCount()) {
+        setRowCount(header->lastFrame(logicalIndex) + 100);
+        int last = header->lastFrame(logicalIndex);
         for (int i=last; i < last + 100; i++)
              setRowHeight(i, 20);
     }
@@ -524,21 +506,21 @@ void TupExposureTable::insertFrame(int layerIndex, int frameIndex, const QString
 /*
 void TupExposureTable::setLockLayer(int layerIndex, bool locked)
 {
-    k->header->setLockFlag(layerIndex, locked);
+    header->setLockFlag(layerIndex, locked);
 }
 */
 
 void TupExposureTable::setLayerVisibility(int visualIndex, bool visibility)
 {
-    k->header->setSectionVisibility(k->header->logicalIndex(visualIndex), visibility);
+    header->setSectionVisibility(header->logicalIndex(visualIndex), visibility);
 }
 
 void TupExposureTable::removeLayer(int layerIndex)
 {
     setUpdatesEnabled(false);
 
-    k->removingLayer = true;
-    k->header->removeSection(layerIndex);
+    removingLayer = true;
+    header->removeSection(layerIndex);
     removeColumn(layerIndex);
 
     setUpdatesEnabled(true);
@@ -549,7 +531,7 @@ void TupExposureTable::removeFrame(int layerIndex, int frameIndex)
     QTableWidgetItem *item = takeItem(frameIndex, layerIndex);
 
     if (item) {
-        k->header->setLastFrame(layerIndex, k->header->lastFrame(layerIndex)-1);
+        header->setLastFrame(layerIndex, header->lastFrame(layerIndex)-1);
     } else {
         #ifdef TUP_DEBUG
             QString msg = "TupExposureTable::removeFrame() - No item available at [" + QString::number(layerIndex) + ", " + QString::number(frameIndex) + "]";
@@ -605,11 +587,11 @@ void TupExposureTable::exchangeFrame(int oldPosLayer, int oldPosFrame, int newPo
 
 void TupExposureTable::moveLayer(int oldPosLayer, int newPosLayer)
 {
-    k->header->moveHeaderSection(oldPosLayer, newPosLayer, k->isLocalRequest);
-    if (k->isLocalRequest)
-        k->isLocalRequest = false;
+    header->moveHeaderSection(oldPosLayer, newPosLayer, isLocalRequest);
+    if (isLocalRequest)
+        isLocalRequest = false;
 
-    for (int frameIndex = 0; frameIndex < k->header->lastFrame(oldPosLayer); frameIndex++)
+    for (int frameIndex = 0; frameIndex < header->lastFrame(oldPosLayer); frameIndex++)
          exchangeFrame(oldPosLayer, frameIndex, newPosLayer, frameIndex, true);
 
     blockSignals(true);
@@ -627,7 +609,7 @@ void TupExposureTable::markUsedFrames(int frameIndex, int layerIndex)
         #endif
     #endif
 
-    int lastFrame = k->header->lastFrame(layerIndex); 
+    int lastFrame = header->lastFrame(layerIndex);
 
     if (frameIndex >= lastFrame) {
         int used = usedFrames(layerIndex);
@@ -649,7 +631,7 @@ void TupExposureTable::markNextFrame(int frameIndex, int layerIndex)
         #endif
     #endif
 
-    int lastFrame = k->header->lastFrame(layerIndex);
+    int lastFrame = header->lastFrame(layerIndex);
 
     if (frameIndex >= lastFrame) {
         int used = usedFrames(layerIndex);
@@ -662,7 +644,7 @@ void TupExposureTable::markNextFrame(int frameIndex, int layerIndex)
 
 int TupExposureTable::usedFrames(int column) const
 {
-    return k->header->lastFrame(column);
+    return header->lastFrame(column);
 }
 
 bool TupExposureTable::edit(const QModelIndex & index, EditTrigger trigger, QEvent *event)
@@ -684,17 +666,17 @@ void TupExposureTable::mousePressEvent(QMouseEvent *event)
     int frameIndex = rowAt(event->y());
     int layerIndex = currentLayer();
     if (event->button() == Qt::RightButton) {
-        if (frameIndex <= k->header->lastFrame(layerIndex)) {
+        if (frameIndex <= header->lastFrame(layerIndex)) {
             int frames = selectedItems().count();
             if (frames == 1) {
-                if (k->singleMenu)
-                    k->singleMenu->exec(event->globalPos());
+                if (singleMenu)
+                    singleMenu->exec(event->globalPos());
             }
             /* SQA: PopUp menu for multiple selection
             } else if (frames > 1) {
-                if (k->multipleMenu) {
+                if (multipleMenu) {
                     // clearFocus();
-                    k->multipleMenu->exec(event->globalPos());
+                    multipleMenu->exec(event->globalPos());
                 }
             }
             */
@@ -714,7 +696,7 @@ void TupExposureTable::mouseMoveEvent(QMouseEvent *event)
 
     if (!layers.isEmpty()) {
         for (int j=layers.at(0); j<=layerIndex; j++) {
-            int top = k->header->lastFrame(j);
+            int top = header->lastFrame(j);
             if (frameIndex >= top) {
                 for (int i=top; i<=frameIndex; i++)
                     emit frameUsed(j, i);
@@ -728,7 +710,7 @@ void TupExposureTable::mouseMoveEvent(QMouseEvent *event)
 void TupExposureTable::mouseDoubleClickEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
-        k->isEditing = true;
+        isEditing = true;
 
     QTableWidget::mouseDoubleClickEvent(event);
 }
@@ -744,33 +726,33 @@ void TupExposureTable::commitData(QWidget *editor)
 
 int TupExposureTable::layersCount()
 {
-    return k->header->columnsTotal();
+    return header->columnsTotal();
 }
 
 int TupExposureTable::framesCount()
 {
-    return k->header->lastFrame(0);
+    return header->lastFrame(0);
 }
 
 int TupExposureTable::framesCountAtCurrentLayer()
 {
-    return k->header->lastFrame(currentLayer());
+    return header->lastFrame(currentLayer());
 }
 
 int TupExposureTable::framesCountAtLayer(int layer)
 {
-    return k->header->lastFrame(layer);
+    return header->lastFrame(layer);
 }
 
 void TupExposureTable::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Return) {
-        if (!k->isEditing && !k->header->layerNameEdited()) {
+        if (!isEditing && !header->layerNameEdited()) {
             emit newPerspective(4);
         } else {
-            k->isEditing = false; 
-            if (k->header->layerNameEdited())
-                k->header->updateLayerNameFlag(false);
+            isEditing = false;
+            if (header->layerNameEdited())
+                header->updateLayerNameFlag(false);
         }
 
         return;
@@ -783,8 +765,8 @@ void TupExposureTable::keyPressEvent(QKeyEvent *event)
 
     if ((event->key() == Qt::Key_A) && (event->modifiers() == Qt::ControlModifier)) {
         clearSelection();
-        for (int i = 0; i < k->header->columnsTotal(); i++) {
-            int frames = k->header->lastFrame(i);
+        for (int i = 0; i < header->columnsTotal(); i++) {
+            int frames = header->lastFrame(i);
             for (int j = 0; j < frames; j++)
                 selectFrame(i, j);
         }
@@ -807,7 +789,7 @@ void TupExposureTable::keyPressEvent(QKeyEvent *event)
     }
 
     if (event->key() == Qt::Key_Down || event->key() == Qt::Key_PageDown) {
-        int framesCount = k->header->lastFrame(currentLayer());
+        int framesCount = header->lastFrame(currentLayer());
         int next = currentRow() + 1;
         if (event->modifiers() == Qt::ControlModifier) {
             emit frameExtended(currentLayer(), currentFrame());
@@ -827,7 +809,7 @@ void TupExposureTable::keyPressEvent(QKeyEvent *event)
             if (event->modifiers() == Qt::AltModifier) {
                 clearSelection();
                 int layer = currentLayer();
-                int frames = k->header->lastFrame(layer);
+                int frames = header->lastFrame(layer);
                 for (int j = 0; j < frames; j++)
                     selectionModel()->select(model()->index(j, layer), QItemSelectionModel::Select);
                 emit selectionCopied();
@@ -839,7 +821,7 @@ void TupExposureTable::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_R) {
         if (event->modifiers() == Qt::AltModifier) {
             clearSelection();
-            int columns = k->header->columnsTotal();
+            int columns = header->columnsTotal();
             int frame = currentFrame();
             for (int j = 0; j < columns; j++)
                 selectionModel()->select(model()->index(frame, j), QItemSelectionModel::Select);
@@ -912,7 +894,7 @@ void TupExposureTable::reset()
     for (int i=1; i < rows;  i++)
          takeItem(i, 0);
 
-    k->header->setLastFrame(0, 1);
+    header->setLastFrame(0, 1);
 }
 
 QList<int> TupExposureTable::currentSelection()

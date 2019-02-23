@@ -56,13 +56,15 @@ class TUPITUBE_EXPORT TupPaletteImporter
 
         bool import(const QString &file, PaletteType type);
         bool saveFile(const QString &path);
-        QString filePath() const;
+        QString getFilePath() const;
 
     private:
         bool importGimpPalette(const QString &file);
         QStringList getColorArray(const QString &line);
-        struct Private;
-        Private *const k;
+
+        TupPaletteDocument *document;
+        QString paletteName;
+        QString filePath;
 };
 
 #endif

@@ -86,9 +86,6 @@ class TUPITUBE_EXPORT TupExportWizard : public QDialog
         void isDone();
 
     private:
-        // struct Private;
-        // Private *const k;
-
         QStackedWidget *history;
         QPushButton *cancelButton;
         QPushButton *backButton;
@@ -128,9 +125,6 @@ class TUPITUBE_EXPORT TupExportWizardPage : public TVHBox
         // void formatSelected(int format, const QString &extension);
 
     private:
-        // struct Private;
-        // Private *const k;
-
         QFrame *container;
         QGridLayout *layout;
         QLabel *image;

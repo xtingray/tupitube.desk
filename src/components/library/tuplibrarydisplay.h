@@ -41,8 +41,6 @@
 #include "tupsoundplayer.h"
 
 #include <QWidget>
-#include <QBoxLayout>
-#include <QGraphicsItem>
 
 /**
  * @author Gustav Gonzalez
@@ -68,8 +66,8 @@ class TUPITUBE_EXPORT TupLibraryDisplay : public QWidget
         void frameUpdated(int frame);
 
     private:
-        struct Private;
-        Private *const k;
+        TupItemPreview *previewPanel;
+        TupSoundPlayer *soundPlayer;
 };
 
 #endif

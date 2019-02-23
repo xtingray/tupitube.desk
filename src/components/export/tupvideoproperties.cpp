@@ -146,7 +146,8 @@ void TupVideoProperties::postIt()
 void TupVideoProperties::resetTitleColor(const QString &)
 {
     QPalette palette = titleEdit->palette();
-    if (titleEdit->text().length() > 0 && titleEdit->text().compare(tr("Set a title for the picture here!")) != 0)
+    if (titleEdit->text().length() > 0
+        && titleEdit->text().compare(tr("Set a title for the picture here!")) != 0)
         palette.setBrush(QPalette::Base, Qt::white);
     else
         palette.setBrush(QPalette::Base, QColor(255, 140, 138));

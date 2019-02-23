@@ -153,8 +153,31 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void importNativeObject(const QString &object);
         QStringList naturalSort(QStringList photograms);
 
-        struct Private;
-        Private *const k;
+        TupLibrary *library;
+        TupProject *project;
+        TupLibraryDisplay *display;
+        TupItemManager *libraryTree;
+        int childCount;
+        QDir libraryDir;
+        QComboBox *itemType;
+        int currentPlayerId;
+        QString oldId;
+        bool renaming;
+        bool mkdir;
+        bool isNetworked;
+        QTreeWidgetItem *lastItemEdited;
+        QTreeWidgetItem *currentItemDisplayed;
+        QFileSystemWatcher *watcher;
+        QList<QString> editorItems;
+        bool isEffectSound;
+        TupLibraryObject *currentSound;
+
+        struct Frame
+        {
+           int scene;
+           int layer;
+           int frame;
+        } currentFrame;
 };
 
 #endif

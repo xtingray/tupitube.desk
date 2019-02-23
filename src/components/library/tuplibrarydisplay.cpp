@@ -35,21 +35,18 @@
 
 #include "tuplibrarydisplay.h"
 
-struct TupLibraryDisplay::Private
-{
-    TupItemPreview *previewPanel;
-    TupSoundPlayer *soundPlayer;
-};
+#include <QBoxLayout>
+#include <QGraphicsItem>
 
-TupLibraryDisplay::TupLibraryDisplay() : QWidget(), k(new Private)
+TupLibraryDisplay::TupLibraryDisplay() : QWidget()
 {
-    k->previewPanel = new TupItemPreview(this);
-    k->soundPlayer = new TupSoundPlayer(this);
-    connect(k->soundPlayer, SIGNAL(frameUpdated(int)), this, SIGNAL(frameUpdated(int)));
+    previewPanel = new TupItemPreview(this);
+    soundPlayer = new TupSoundPlayer(this);
+    connect(soundPlayer, SIGNAL(frameUpdated(int)), this, SIGNAL(frameUpdated(int)));
 
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
-    layout->addWidget(k->previewPanel);
-    layout->addWidget(k->soundPlayer);
+    layout->addWidget(previewPanel);
+    layout->addWidget(soundPlayer);
     layout->setContentsMargins(0, 0, 0, 0);
  
     showDisplay();
@@ -57,7 +54,6 @@ TupLibraryDisplay::TupLibraryDisplay() : QWidget(), k(new Private)
 
 TupLibraryDisplay::~TupLibraryDisplay()
 {
-    delete k;
 }
 
 QSize TupLibraryDisplay::sizeHint() const
@@ -67,40 +63,40 @@ QSize TupLibraryDisplay::sizeHint() const
 
 void TupLibraryDisplay::reset()
 {
-    k->soundPlayer->hide();
-    k->previewPanel->reset();
+    soundPlayer->hide();
+    previewPanel->reset();
 }
 
 void TupLibraryDisplay::render(QGraphicsItem *item)
 {
-    k->previewPanel->render(item);
+    previewPanel->render(item);
 }
 
 void TupLibraryDisplay::showDisplay()
 {
-    if (!k->previewPanel->isVisible()) {
-        k->previewPanel->show();
-        k->soundPlayer->hide();
+    if (!previewPanel->isVisible()) {
+        previewPanel->show();
+        soundPlayer->hide();
     }
 }
 
 void TupLibraryDisplay::setSoundObject(const QString &path)
 {
-    k->soundPlayer->setSoundObject(path);
+    soundPlayer->setSoundObject(path);
 }
 
 void TupLibraryDisplay::showSoundPlayer()
 {
-    if (!k->soundPlayer->isVisible()) {
-        k->previewPanel->hide();
-        k->soundPlayer->show();
+    if (!soundPlayer->isVisible()) {
+        previewPanel->hide();
+        soundPlayer->show();
     }
 }
 
 void TupLibraryDisplay::stopSoundPlayer()
 {
-    if (k->soundPlayer->isVisible()) {
-        if (k->soundPlayer->isPlaying())
-            k->soundPlayer->stopFile();
+    if (soundPlayer->isVisible()) {
+        if (soundPlayer->isPlaying())
+            soundPlayer->stopFile();
     }
 }
