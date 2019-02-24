@@ -105,7 +105,7 @@ void Tweener::init(TupGraphicsScene *scene)
 
     k->mode = TupToolPlugin::View;
     k->editMode = TupToolPlugin::None;
-    k->baseZValue = (2*ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
+    k->baseZValue = ZLAYER_BASE + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
     k->initFrame = k->scene->currentFrameIndex();
     k->initLayer = k->scene->currentLayerIndex();
     k->initScene = k->scene->currentSceneIndex();
@@ -425,7 +425,7 @@ void Tweener::setSelection()
     k->editMode = TupToolPlugin::Selection;
 
     /*
-    int bottomBoundary = (2*ZLAYER_LIMIT) + (k->scene->currentLayerIndex()*ZLAYER_LIMIT);
+    int bottomBoundary = (ZLAYER_BASE) + (k->scene->currentLayerIndex()*ZLAYER_LIMIT);
     int topBoundary = bottomBoundary + ZLAYER_LIMIT;
     foreach (QGraphicsView * view, k->scene->views()) {
              view->setDragMode(QGraphicsView::RubberBandDrag);

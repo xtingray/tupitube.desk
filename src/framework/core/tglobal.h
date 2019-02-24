@@ -86,3 +86,6 @@ namespace TupiTube
 #endif
 
 #define ZLAYER_LIMIT 10000
+#define BG_LAYERS 5
+#define BG_LAYERS_TOTAL 10
+#define ZLAYER_BASE 100000 // BG_MODES * BG_LAYERS * ZLAYER_LIMIT

@@ -70,7 +70,7 @@ void NodesTool::init(TupGraphicsScene *scene)
         }
     }
 
-    k->baseZValue = (2*ZLAYER_LIMIT) + (k->scene->currentScene()->layersCount() * ZLAYER_LIMIT); 
+    k->baseZValue = ZLAYER_BASE + (k->scene->currentScene()->layersCount() * ZLAYER_LIMIT);
 }
 
 QStringList NodesTool::keys() const
@@ -272,9 +272,9 @@ TupFrame* NodesTool::currentFrame()
         TupScene *tupScene = k->scene->currentScene();
         TupBackground *bg = tupScene->sceneBackground();
         if (k->scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
-            frame = bg->staticFrame();
+            frame = bg->getCurrentStaticFrame();
         } else if (k->scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-                   frame = bg->dynamicFrame();
+            frame = bg->getCurrentDynamicFrame();
         }
     }
 

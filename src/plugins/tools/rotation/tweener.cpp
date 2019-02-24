@@ -106,7 +106,7 @@ void Tweener::init(TupGraphicsScene *scene)
 
     k->mode = TupToolPlugin::View;
     k->editMode = TupToolPlugin::None;
-    k->baseZValue = (2*ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
+    k->baseZValue = ZLAYER_BASE + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
     k->initFrame = k->scene->currentFrameIndex();
     k->initLayer = k->scene->currentLayerIndex();
     k->initScene = k->scene->currentSceneIndex();

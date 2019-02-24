@@ -209,6 +209,12 @@ TupExposureTable::TupExposureTable(QWidget *parent) : QTableWidget(parent)
     singleMenu = nullptr;
 }
 
+TupExposureTable::~TupExposureTable()
+{
+    delete header;
+    // delete singleMenu;
+}
+
 void TupExposureTable::requestFrameRenaming(QTableWidgetItem *item)
 {
     QModelIndex index = indexFromItem(item);
@@ -268,10 +274,6 @@ void TupExposureTable::requestLayerMove(int logicalIndex, int oldVisualIndex, in
 void TupExposureTable::updateLayerSelection(int layerIndex)
 {
     selectFrame(layerIndex, currentRow());
-}
-
-TupExposureTable::~TupExposureTable()
-{
 }
 
 QString TupExposureTable::frameName(int layerIndex, int frameIndex)

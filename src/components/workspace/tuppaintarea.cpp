@@ -750,9 +750,9 @@ void TupPaintArea::deleteItems()
                          if (bg) {
                              TupFrame *frame;
                              if (spaceMode == TupProject::STATIC_BACKGROUND_EDITION)
-                                 frame = bg->staticFrame();
+                                 frame = bg->getCurrentStaticFrame();
                              else
-                                 frame = bg->dynamicFrame();
+                                 frame = bg->getCurrentDynamicFrame();
 
                              if (frame) {
                                  if (svg) {

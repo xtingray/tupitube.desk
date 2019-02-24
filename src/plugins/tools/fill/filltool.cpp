@@ -115,10 +115,10 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                 currentFrame = -1;
                 TupBackground *bg = scene->currentScene()->sceneBackground();
                 if (scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
-                    frame = bg->staticFrame();
+                    frame = bg->getCurrentStaticFrame();
                     itemIndex = frame->indexOf(item);
                 } else if (scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-                    frame = bg->dynamicFrame();
+                    frame = bg->getCurrentDynamicFrame();
                     itemIndex = frame->indexOf(item);
                 }
             }

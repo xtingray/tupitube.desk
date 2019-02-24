@@ -40,12 +40,12 @@
 #include <QColorDialog>
 #include <QDebug>
 
-TupColorButtonPanel::TupColorButtonPanel(Qt::BrushStyle bStyle, const QSize &baseColorCellSize, int sp,
+TupColorButtonPanel::TupColorButtonPanel(Qt::BrushStyle bStyle, const QSize &baseColorCellSize, int span,
                                          const QString &buttonParams, QWidget *parent) : QWidget(parent)
 {
     style = bStyle;
     currentColorIndex = -1;
-    spacing = sp;
+    spacing = span;
 
     setPanel(baseColorCellSize, buttonParams);
 }
@@ -136,6 +136,12 @@ TupColorButtonPanel::~TupColorButtonPanel()
 
 void TupColorButtonPanel::updateSelection(int index)
 {
+    /*
+    tError() << "updateSelection() - index: " << index;
+    tError() << "updateSelection() - currentColorIndex: " << currentColorIndex;
+    tError() << "baseColor.size(): " << baseColors.count();
+    */
+
     if (index != currentColorIndex) {
         if (currentColorIndex >= 0) {
             TupColorButton *button = (TupColorButton *) baseColors.at(currentColorIndex);

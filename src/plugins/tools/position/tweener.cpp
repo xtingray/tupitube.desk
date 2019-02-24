@@ -142,7 +142,7 @@ void Tweener::init(TupGraphicsScene *scene)
 
     k->scene = scene;
     k->objects.clear();
-    k->baseZValue = (2*ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
+    k->baseZValue = ZLAYER_BASE + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
 
     k->pathOffset = QPointF(0, 0); 
     k->firstNode = QPointF(0, 0);

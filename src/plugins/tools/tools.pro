@@ -16,7 +16,6 @@ SUBDIRS += common \
            shear \
            opacity \
            color \
-           # composed \
            papagayo
 
 CONFIG += ordered warn_on

@@ -44,24 +44,19 @@ TupBackground::TupBackground(TupScene *parent, const QSize size, const QColor co
     dimension = size;
     bgColor = color;
     noRender = true;
+    currentDynamicLayer = 0;
+    currentStaticLayer = 0;
 
-    /*
-    dynamicBg = new TupFrame(this, "landscape_dynamic");
-    dynamicBg->setDynamicDirection("0");
-    dynamicBg->setDynamicShift("5");
-
-    staticBg = new TupFrame(this, "landscape_static");
-    */
-
-    for(int i=0; i<5; i++)
+    for(int i=0; i<BG_LAYERS; i++) {
         dynamicFrames << new TupFrame(this, TupFrame::DynamicBg, i);
-
-    for(int i=5; i<10; i++)
         staticFrames << new TupFrame(this, TupFrame::StaticBg, i);
+    }
 }
 
 TupBackground::~TupBackground()
 {
+    dynamicFrames.clear();
+    staticFrames.clear();
 }
 
 void TupBackground::setBgColor(const QColor color)
@@ -71,10 +66,85 @@ void TupBackground::setBgColor(const QColor color)
 
 void TupBackground::fromXml(const QString &xml)
 {
+    if (xml.contains("<dynamic_landscape>"))
+        loadBgLayers(xml);
+    else
+        loadLegacyBgLayers(xml); // Source File < 0.2.14
+}
+
+void TupBackground::loadBgLayers(const QString &xml)
+{
     QDomDocument document;
-    if (! document.setContent(xml))
+    if (!document.setContent(xml))
         return;
 
+    dynamicFrames.clear();
+    staticFrames.clear();
+
+    QDomElement root = document.documentElement();
+    QDomNode n = root.firstChild();
+    while (!n.isNull()) {
+        QDomElement e = n.toElement();
+        if (e.tagName() == "dynamic_landscape") {
+            QDomNode n2 = e.firstChild();
+            int index = 0;
+            while (!n2.isNull()) {
+                QDomElement e1 = n2.toElement();
+                if (e1.tagName() == "frame") {
+                    TupFrame *frame = new TupFrame(this, TupFrame::DynamicBg, index);
+                    if (frame) {
+                       QString newDoc;
+                       {
+                           QTextStream ts(&newDoc);
+                           ts << n2;
+                       }
+                       frame->fromXml(newDoc);
+                       dynamicFrames << frame;
+                       index++;
+                    }
+                }
+                n2 = n2.nextSibling();
+            }
+        }
+        if (e.tagName() == "static_landscape") {
+            QDomNode n2 = e.firstChild();
+            int index = 0;
+            while (!n2.isNull()) {
+                QDomElement e1 = n2.toElement();
+                if (e1.tagName() == "frame") {
+                    TupFrame *frame = new TupFrame(this, TupFrame::StaticBg, index);
+                    if (frame) {
+                       QString newDoc;
+                       {
+                           QTextStream ts(&newDoc);
+                           ts << n2;
+                       }
+                       frame->fromXml(newDoc);
+                       staticFrames << frame;
+                       index++;
+                    }
+                }
+                n2 = n2.nextSibling();
+            }
+        }
+        n = n.nextSibling();
+    }
+
+    // if (!dynamicBgIsEmpty())
+    //     renderDynamicViews();
+}
+
+void TupBackground::loadLegacyBgLayers(const QString &xml)
+{
+    QDomDocument document;
+    if (!document.setContent(xml))
+        return;
+
+    dynamicFrames.clear();
+    staticFrames.clear();
+
+    TupFrame *staticBg;
+    TupFrame *dynamicBg;
     QDomElement root = document.documentElement();
     QDomNode n = root.firstChild();
 
@@ -84,8 +154,7 @@ void TupBackground::fromXml(const QString &xml)
            if (e.tagName() == "frame") {
                QString type = e.attribute("name", "none");
                if (type == "landscape_static") {
-                   staticBg = new TupFrame(this, "landscape_static");
-
+                   staticBg = new TupFrame(this, TupFrame::StaticBg, 0);
                    if (staticBg) {
                        QString newDoc;
                        {
@@ -96,8 +165,7 @@ void TupBackground::fromXml(const QString &xml)
                        staticBg->fromXml(newDoc);
                    }
                } else if (type == "landscape_dynamic") {
-                   dynamicBg = new TupFrame(this, "landscape_dynamic");
-
+                   dynamicBg = new TupFrame(this, TupFrame::DynamicBg, 0);
                    if (dynamicBg) {
                        QString newDoc;
                        {
@@ -106,9 +174,6 @@ void TupBackground::fromXml(const QString &xml)
                        }
 
                        dynamicBg->fromXml(newDoc);
-                       if (!dynamicBg->isEmpty()) {
-                           renderDynamicView();
-                       }
                    }
                } else {
                    #ifdef TUP_DEBUG
@@ -124,6 +189,17 @@ void TupBackground::fromXml(const QString &xml)
 
            n = n.nextSibling();
     }
+
+    dynamicFrames << dynamicBg;
+    staticFrames << staticBg;
+
+    for(int i=1; i<BG_LAYERS; i++) {
+        dynamicFrames << new TupFrame(this, TupFrame::DynamicBg, i);
+        staticFrames << new TupFrame(this, TupFrame::StaticBg, i);
+    }
+
+    // if (!dynamicBgIsEmpty())
+    //     renderDynamicViews();
 }
 
 QDomElement TupBackground::toXml(QDomDocument &doc) const
@@ -131,73 +207,110 @@ QDomElement TupBackground::toXml(QDomDocument &doc) const
     QDomElement root = doc.createElement("background");
     doc.appendChild(root);
 
-    // root.appendChild(dynamicBg->toXml(doc));
-    // root.appendChild(staticBg->toXml(doc));
-
     QDomElement dynamicRoot = doc.createElement("dynamic_landscape");
-    for(int i=0; i<5; i++) { // Dynamic Layers
-
-    }
+    for(int i=0; i<BG_LAYERS; i++) // Dynamic Layers
+        dynamicRoot.appendChild(dynamicFrames.at(i)->toXml(doc));
     root.appendChild(dynamicRoot);
-    QDomElement staticRoot = doc.createElement("static_landscape");
-    for(int i=0; i<5; i++) { // Static Layers
 
-    }
+    QDomElement staticRoot = doc.createElement("static_landscape");
+    for(int i=0; i<BG_LAYERS; i++) // Static Layers
+        staticRoot.appendChild(staticFrames.at(i)->toXml(doc));
     root.appendChild(staticRoot);
 
     return root;
 }
 
+TupFrame * TupBackground::getCurrentDynamicFrame()
+{
+    return dynamicFrames.at(currentDynamicLayer);
+}
+
+void TupBackground::setCurrentDynamicLayer(int layer)
+{
+    currentDynamicLayer = layer;
+}
+
+int TupBackground::getCurrentDynamicLayer()
+{
+    return currentDynamicLayer;
+}
+
+TupFrame * TupBackground::getCurrentStaticFrame()
+{
+    return staticFrames.at(currentStaticLayer);
+}
+
+void TupBackground::setCurrentStaticLayer(int layer)
+{
+    currentStaticLayer = layer;
+}
+
 bool TupBackground::dynamicBgIsEmpty()
 {
-    return dynamicBg->isEmpty();
+    foreach(TupFrame *frame, dynamicFrames) {
+        if (!frame->isEmpty())
+            return false;
+    }
+    return true;
+}
+
+bool TupBackground::dynamicLayerIsEmpty(int layer)
+{
+    return dynamicFrames.at(layer)->isEmpty();
 }
 
 bool TupBackground::staticBgIsEmpty()
 {
-    return staticBg->isEmpty();
+    foreach(TupFrame *frame, staticFrames) {
+        if (!frame->isEmpty())
+            return false;
+    }
+    return true;
 }
 
-TupFrame *TupBackground::staticFrame()
+TupFrame *TupBackground::staticFrame(int layer)
 {
-    return staticBg;
+    return staticFrames.at(layer);
 }
 
-TupFrame* TupBackground::dynamicFrame()
+TupFrame* TupBackground::dynamicFrame(int layer)
 {
-    return dynamicBg;
+    return dynamicFrames.at(layer);
 }
 
 void TupBackground::clear()
 {
-    if (staticBg)
-        staticBg->clear();
+    for(int i=0; i<BG_LAYERS; i++) // Static Layers
+        staticFrames.at(i)->clear();
 
-    if (dynamicBg)
-        dynamicBg->clear();
+    for(int i=0; i<BG_LAYERS; i++) // Dynamic Layers
+        dynamicFrames.at(i)->clear();
+
+    rasterBg.clear();
+    noRender = true;
 }
 
-void TupBackground::setDynamicOpacity(double opacity)
+void TupBackground::setDynamicOpacity(int layer, double opacity)
 {
-    dynamicBg->setFrameOpacity(opacity);
+    dynamicFrames.at(layer)->setFrameOpacity(opacity);
 }
 
-double TupBackground::dynamicOpacity()
+double TupBackground::dynamicOpacity(int layer)
 {
-    return dynamicBg->frameOpacity();
+    return dynamicFrames.at(layer)->frameOpacity();
 }
 
-void TupBackground::setStaticOpacity(double opacity)
+void TupBackground::setStaticOpacity(int layer, double opacity)
 {
-    staticBg->setFrameOpacity(opacity);
+    staticFrames.at(layer)->setFrameOpacity(opacity);
 }
 
-double TupBackground::staticOpacity()
+double TupBackground::staticOpacity(int layer)
 {
-    return staticBg->frameOpacity();
+    return staticFrames.at(layer)->frameOpacity();
 }
 
-void TupBackground::renderDynamicView()
+void TupBackground::renderDynamicViews()
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -205,50 +318,84 @@ void TupBackground::renderDynamicView()
         #else
             T_FUNCINFO;
         #endif
-    #endif 
-	
-    TupBackgroundScene *bgScene = new TupBackgroundScene(dimension, bgColor, dynamicBg);
-    QImage image(dimension, QImage::Format_ARGB32);
-    {
-        QPainter *painter = new QPainter(&image);
-        painter->setRenderHint(QPainter::Antialiasing, true);
-        bgScene->renderView(painter);
+    #endif
 
-        delete painter;
-        painter = NULL;
+    rasterBg.clear();
+    /*
+    for(int i=0; i<BG_LAYERS; i++) {
+        tError() << "TupBackground::renderDynamicView() - Blank image at " << i;
+        tError() << "Frame Dynamic Direction -> " << dynamicFrames.at(i)->dynamicDirection();
+        tError() << "Frame is Empty? -> " << dynamicFrames.at(i)->isEmpty();
+        rasterBg << QImage();
+    }
+    */
+
+    for(int i=0; i<BG_LAYERS; i++) {
+        tError() << "Frame Dynamic Direction -> " << dynamicFrames.at(i)->dynamicDirection();
+        bool isEmpty = dynamicFrames.at(i)->isEmpty();
+        if (!isEmpty) {
+            tError() << "TupBackground::renderDynamicView() - Rendering view at " << i;
+            QColor bg = Qt::transparent;
+            if (i == 0)
+                bg = bgColor;
+            TupBackgroundScene *bgScene = new TupBackgroundScene(dimension, bg, dynamicFrames.at(i));
+            QImage image(dimension, QImage::Format_ARGB32);
+            {
+                QPainter *painter = new QPainter(&image);
+                painter->setRenderHint(QPainter::Antialiasing, true);
+                bgScene->renderView(painter);
+
+                delete painter;
+                painter = NULL;
+            }
+
+            int width = dimension.width();
+            int height = dimension.height();
+
+            QImage background(width*2, height*2, QImage::Format_ARGB32);
+            QPainter *canvas = new QPainter(&background);
+            canvas->drawImage(0, 0, image);
+            canvas->drawImage(width, 0, image);
+            canvas->drawImage(0, height, image);
+            rasterBg << background;
+
+            delete bgScene;
+            bgScene = NULL;
+            delete canvas;
+            canvas = NULL;
+        } else {
+            tError() << "TupBackground::renderDynamicView() - Blank image at " << i;
+            rasterBg << QImage();
+        }
     }
 
-    int width = dimension.width();
-    int height = dimension.height();
-
-    QImage background(width*2, height*2, QImage::Format_ARGB32);
-    QPainter *canvas = new QPainter(&background);
-    canvas->drawImage(0, 0, image);
-    canvas->drawImage(width, 0, image);
-    canvas->drawImage(0, height, image);
-    setDynamicRaster(background);
-
     noRender = false;
-
-    delete bgScene;
-    bgScene = NULL;
-    delete canvas;
-    canvas = NULL;
 }
 
-QPixmap TupBackground::dynamicView(int frameIndex)
+QPixmap TupBackground::dynamicView(int layer, int frameIndex)
 {
+    if (!dynamicFrames.at(layer))
+        tError() << "TupBackground::dynamicView() - Frame is NULL at layer -> " << layer;
+    else
+        tError() << "TupBackground::dynamicView() - Frame is OK -> " << layer;
+
+    tError() << "TupBackground::dynamicView() - layer: " << layer;
+    tError() << "TupBackground::dynamicView() - layers total: " << dynamicFrames.size();
+
+    if (dynamicFrames.at(layer)->isEmpty())
+        return QPixmap();
+
     int posX = 0;
     int posY = 0;
-    int shift = dyanmicShift();
+    int shift = dynamicShift(layer);
 
-    TupBackground::Direction direction = dynamicBg->dynamicDirection();
+    TupBackground::Direction direction = dynamicFrames.at(layer)->dynamicDirection();
     switch (direction) {
             case TupBackground::Right:
             {
                 int delta = dimension.width() / shift;
                 if (delta > frameIndex) {
-                    posX = dimension.width() - frameIndex*shift;
+                    posX = dimension.width() - (frameIndex * shift);
                 } else {
                     int mod = fmod(frameIndex, delta);
                     posX = dimension.width() - (mod * shift);
@@ -259,7 +406,7 @@ QPixmap TupBackground::dynamicView(int frameIndex)
             {
                 int delta = dimension.width() / shift;
                 if (delta > frameIndex) {
-                    posX = frameIndex*shift;
+                    posX = frameIndex * shift;
                 } else {
                     int mod = fmod(frameIndex, delta);
                     posX = mod * shift;
@@ -270,7 +417,7 @@ QPixmap TupBackground::dynamicView(int frameIndex)
             {
                 int delta = dimension.height() / shift;
                 if (delta > frameIndex) {
-                    posY = frameIndex*shift;
+                    posY = frameIndex * shift;
                 } else {
                     int mod = fmod(frameIndex, delta);
                     posY = mod * shift;
@@ -281,7 +428,7 @@ QPixmap TupBackground::dynamicView(int frameIndex)
             {
                 int delta = dimension.height() / shift;
                 if (delta > frameIndex) {
-                    posY = dimension.height() - frameIndex*shift;
+                    posY = dimension.height() - (frameIndex * shift);
                 } else {
                     int mod = fmod(frameIndex, delta);
                     posY = dimension.height() - (mod * shift);
@@ -290,7 +437,7 @@ QPixmap TupBackground::dynamicView(int frameIndex)
             break;
     }
 
-    QImage view = raster.copy(posX, posY, dimension.width(), dimension.height()); 
+    QImage view = rasterBg.at(layer).copy(posX, posY, dimension.width(), dimension.height());
 
     return QPixmap::fromImage(view);
 }
@@ -305,34 +452,29 @@ void TupBackground::scheduleRender(bool status)
     noRender = status;
 }
 
-void TupBackground::setDynamicRaster(QImage bg)
+QImage TupBackground::dynamicRaster(int layer)
 {
-    raster = bg;
+    return rasterBg[layer];
 }
 
-QImage TupBackground::dynamicRaster()
+void TupBackground::setDynamicDirection(int layer, int direction)
 {
-    return raster;
+    dynamicFrames.at(layer)->setDynamicDirection(QString::number(direction));
 }
 
-void TupBackground::setDynamicDirection(int direction)
+void TupBackground::setDynamicShift(int layer, int shift)
 {
-    dynamicBg->setDynamicDirection(QString::number(direction));
+    dynamicFrames.at(layer)->setDynamicShift(QString::number(shift));
 }
 
-void TupBackground::setDynamicShift(int shift)
+TupBackground::Direction TupBackground::dynamicDirection(int layer)
 {
-    dynamicBg->setDynamicShift(QString::number(shift));
+    return dynamicFrames.at(layer)->dynamicDirection();
 }
 
-TupBackground::Direction TupBackground::dyanmicDirection()
+int TupBackground::dynamicShift(int layer)
 {
-    return dynamicBg->dynamicDirection();
-}
-
-int TupBackground::dyanmicShift()
-{
-    return dynamicBg->dynamicShift();
+    return dynamicFrames.at(layer)->dynamicShift();
 }
 
 TupScene * TupBackground::scene()

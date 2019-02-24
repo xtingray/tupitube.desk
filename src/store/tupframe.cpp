@@ -81,15 +81,16 @@ TupFrame::TupFrame(TupBackground *bg, FrameType frameType, int index) : QObject(
     isLocked = false;
     isVisible = true;
     opacity = 1.0;
-    zLevelIndex = index * ZLAYER_LIMIT;
-    shift = "0";
+    frameName = QString::number(index + 1);
 
     if (frameType == DynamicBg) {
-        direction = "5";
-        frameName = QString::number(index + 1);
+        shift = "5";
+        direction = "0";
+        zLevelIndex = index * ZLAYER_LIMIT;
     } else {
+        shift = "0";
         direction = "-1";
-        frameName = QString::number(index - 4);
+        zLevelIndex = (index + 5) * ZLAYER_LIMIT;
     }
 }
 

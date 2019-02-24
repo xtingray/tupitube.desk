@@ -48,10 +48,10 @@ struct TupColorButton::Private
     QString themeName;
 };
 
-TupColorButton::TupColorButton(int index, const QString &name, const QBrush &colorBrush, const QSize &dimension,
+TupColorButton::TupColorButton(int colorIndex, const QString &name, const QBrush &colorBrush, const QSize &dimension,
                                const QString &params) : k(new Private)
 {
-    index = index;
+    index = colorIndex;
     editable = true;
     selected = false;
     brush = colorBrush;

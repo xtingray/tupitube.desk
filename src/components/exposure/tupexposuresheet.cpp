@@ -114,6 +114,15 @@ TupExposureSheet::~TupExposureSheet()
             TEND;
         #endif
     #endif
+
+    delete project;
+    delete scenesContainer;
+    delete currentTable;
+    delete actionBar;
+    delete singleMenu;
+
+    framesList.clear();
+    statesList.clear();
 }
 
 void TupExposureSheet::createMenuForAFrame()

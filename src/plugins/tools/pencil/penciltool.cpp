@@ -95,13 +95,13 @@ void PencilTool::init(TupGraphicsScene *scene)
     k->brushManager = k->scene->getBrushManager();
     k->input = k->scene->inputDeviceInformation();
     k->resize = false;
-    k->circleZValue = (2*ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
+    k->circleZValue = ZLAYER_BASE + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
 
     TCONFIG->beginGroup("BrushParameters");
     k->penWidth = TCONFIG->value("Thickness", 3).toInt();
 
     foreach (QGraphicsView * view, scene->views())
-             view->setDragMode(QGraphicsView::NoDrag);
+        view->setDragMode(QGraphicsView::NoDrag);
 }
 
 QStringList PencilTool::keys() const

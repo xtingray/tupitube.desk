@@ -44,6 +44,7 @@
 #include <QPixmap>
 
 typedef QList<TupFrame *> Frames;
+typedef QList<QImage> Images;
 
 class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializable
 {
@@ -54,29 +55,36 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         TupBackground(TupScene *parent, const QSize dimension, const QColor bgColor);
         ~TupBackground();
 
-        TupFrame* staticFrame();
-        TupFrame* dynamicFrame(); 
+        TupFrame* staticFrame(int layer);
+        TupFrame* dynamicFrame(int layer);
+
+        TupFrame * getCurrentDynamicFrame();
+        void setCurrentDynamicLayer(int layer);
+        int getCurrentDynamicLayer();
+        TupFrame * getCurrentStaticFrame();
+        void setCurrentStaticLayer(int layer);
 
         void setBgColor(const QColor color);
         void clear();
 
-        void renderDynamicView();
-        QPixmap dynamicView(int frameIndex);
-        void setDynamicDirection(int direction);
-        void setDynamicShift(int shift);
-        Direction dyanmicDirection();
-        int dyanmicShift();
-        void setDynamicRaster(QImage bg);
-        QImage dynamicRaster();
+        void renderDynamicViews();
+        QPixmap dynamicView(int layer, int frameIndex);
+        void setDynamicDirection(int layer, int direction);
+        void setDynamicShift(int layer, int shift);
+        Direction dynamicDirection(int layer);
+        int dynamicShift(int layer);
+        QImage dynamicRaster(int layer);
         bool dynamicBgIsEmpty();
+        bool dynamicLayerIsEmpty(int layer);
+
         bool rasterRenderIsPending();
         void scheduleRender(bool status);
-        void setDynamicOpacity(double opacity);
-        double dynamicOpacity();
+        void setDynamicOpacity(int layer, double opacity);
+        double dynamicOpacity(int layer);
 
         bool staticBgIsEmpty();
-        void setStaticOpacity(double opacity);
-        double staticOpacity();
+        void setStaticOpacity(int layer, double opacity);
+        double staticOpacity(int layer);
         TupScene * scene();
         TupProject * project();
 
@@ -84,15 +92,18 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         virtual QDomElement toXml(QDomDocument &doc) const;
 
     private:
+        void loadBgLayers(const QString &xml);
+        void loadLegacyBgLayers(const QString &xml);
+
         QSize dimension;
         QColor bgColor;
-        TupFrame *staticBg;
-        TupFrame *dynamicBg;
-        QImage raster;
         bool noRender;
 
         Frames dynamicFrames;
         Frames staticFrames;
+        Images rasterBg;
+        int currentDynamicLayer;
+        int currentStaticLayer;
 };
 
 #endif

@@ -618,9 +618,7 @@ void TupMainWindow::resetUI()
     m_fileName = QString();
 
     enableToolViews(false);
-
     setUpdatesEnabled(true);
-
     setWindowTitle(tr("TupiTube Desk"));
 
     if (isNetworked) { 

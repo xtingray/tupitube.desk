@@ -56,6 +56,12 @@ TupScene::~TupScene()
 {
     delete storyboard;
     delete background;
+
+    tweeningGraphicObjects.clear();
+    tweeningSvgObjects.clear();
+    layers.clear();
+    undoLayers.clear();
+    soundLayers.clear();
 }
 
 void TupScene::setSceneName(const QString &name)

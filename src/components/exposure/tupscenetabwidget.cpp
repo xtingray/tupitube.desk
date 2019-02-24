@@ -50,6 +50,12 @@ TupSceneTabWidget::TupSceneTabWidget(QWidget *parent) : QFrame(parent)
 
 TupSceneTabWidget::~TupSceneTabWidget()
 {
+    tables.clear();
+    undoTables.clear();
+    opacityControl.clear();
+    undoOpacities.clear();
+
+    delete tabber;
 }
 
 void TupSceneTabWidget::removeAllTabs()

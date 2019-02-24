@@ -59,6 +59,8 @@ TupExposureHeader::TupExposureHeader(QWidget * parent) : QHeaderView(Qt::Horizon
 
 TupExposureHeader::~TupExposureHeader()
 {
+    m_sections.clear();
+    delete m_editor;
 }
 
 void TupExposureHeader::notifyVisibilityChange(int section)

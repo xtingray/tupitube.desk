@@ -117,7 +117,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         // void updatePenThickness(int size);
         void updateOnionOpacity(double opacity);
         void setBackgroundDirection(int direction);
-        void updateBackgroundShiftProperty(int shift);
+        void updateBgShiftProperty(int shift);
         void renderDynamicBackground();
         void fullScreenRightClick();
         void cameraInterface();
@@ -211,6 +211,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         
         QToolBar *barGrid;
         QToolBar *toolbar;
+        TupBackground *bg;
         QToolBar *dynamicPropertiesBar;
         QToolBar *staticPropertiesBar;
 
@@ -221,6 +222,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         QComboBox *dynamicBgLayersCombo;
         QComboBox *dirCombo;
         QSpinBox *shiftSpin;
+        QDoubleSpinBox *dynamicOpacityBox;
 
         bool onionEnabled;
         int prevOnionValue;
