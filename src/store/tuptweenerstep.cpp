@@ -37,6 +37,7 @@
 
 #include <QVector>
 
+/*
 struct TupTweenerStep::Private
 {
     QPointF position;
@@ -52,154 +53,155 @@ struct TupTweenerStep::Private
     int flags;
     int index;
 };
+*/
 
-TupTweenerStep::TupTweenerStep(int index): TupAbstractSerializable(), k(new Private)
+TupTweenerStep::TupTweenerStep(int idx): TupAbstractSerializable() // , k(new Private)
 {
-    k->index = index;
-    k->flags = None;
+    index = idx;
+    flags = None;
 }
 
 TupTweenerStep::~TupTweenerStep()
 {
-    delete k;
+    // delete k;
 }
 
 void TupTweenerStep::setPosition(const QPointF &pos)
 {
-    k->position = pos;
-    k->flags |= Position;
+    position = pos;
+    flags |= Position;
 }
 
 void TupTweenerStep::setRotation(double angle)
 {
-    k->rotation = angle;
-    k->flags |= Rotation;
+    rotation = angle;
+    flags |= Rotation;
 }
 
 void TupTweenerStep::setScale(double sx, double sy)
 {
-    k->scale.x = sx;
-    k->scale.y = sy;
-    k->flags |= Scale;
+    scale.x = sx;
+    scale.y = sy;
+    flags |= Scale;
 }
 
 void TupTweenerStep::setShear(double sh, double sv)
 {
-    k->shear.x = sh;
-    k->shear.y = sv;
-    k->flags |= Shear;
+    shear.x = sh;
+    shear.y = sv;
+    flags |= Shear;
 }
 
-void TupTweenerStep::setOpacity(double opacity)
+void TupTweenerStep::setOpacity(double factor)
 {
-    k->opacity = opacity;
-    k->flags |= Opacity;
+    opacity = factor;
+    flags |= Opacity;
 }
 
-void TupTweenerStep::setColor(const QColor &color)
+void TupTweenerStep::setColor(const QColor &c)
 {
-    k->color = color;
-    k->flags |= Coloring;
+    color = c;
+    flags |= Coloring;
 }
 
 bool TupTweenerStep::has(Type type) const
 {
-    return k->flags & type;
+    return flags & type;
 }
 
 int TupTweenerStep::getIndex() const
 {
-    return k->index;
+    return index;
 }
 
 QPointF TupTweenerStep::getPosition() const
 {
-    return k->position;
+    return position;
 }
 
 double TupTweenerStep::horizontalScale() const
 {
-    return k->scale.x;
+    return scale.x;
 }
 
 double TupTweenerStep::verticalScale() const
 {
-    return k->scale.y;
+    return scale.y;
 }
 
 double TupTweenerStep::horizontalShear() const
 {
-    return k->shear.x;
+    return shear.x;
 }
 
 double TupTweenerStep::verticalShear() const
 {
-    return k->shear.y;
+    return shear.y;
 }
 
 double TupTweenerStep::getRotation() const
 {
-    return k->rotation;
+    return rotation;
 }
 
 double TupTweenerStep::getOpacity() const
 {
-    return k->opacity;
+    return opacity;
 }
 
 QColor TupTweenerStep::getColor() const
 {
-    return k->color;
+    return color;
 }
 
 QDomElement TupTweenerStep::toXml(QDomDocument& doc) const
 {
     QDomElement step = doc.createElement("step");
-    step.setAttribute("value", k->index);
+    step.setAttribute("value", index);
     
     if (this->has(TupTweenerStep::Position)) {
         QDomElement e = doc.createElement("position");
-        e.setAttribute("x", QString::number(k->position.x()));
-        e.setAttribute("y", QString::number(k->position.y()));
+        e.setAttribute("x", QString::number(position.x()));
+        e.setAttribute("y", QString::number(position.y()));
 
         step.appendChild(e);
     }
 
     if (this->has(TupTweenerStep::Rotation)) {
         QDomElement e = doc.createElement("rotation");
-        e.setAttribute("angle", QString::number(k->rotation));
+        e.setAttribute("angle", QString::number(rotation));
     
         step.appendChild(e);
     }
     
     if (this->has(TupTweenerStep::Scale)) {
         QDomElement e = doc.createElement("scale");
-        e.setAttribute("sx", QString::number(k->scale.x));
-        e.setAttribute("sy", QString::number(k->scale.y));
+        e.setAttribute("sx", QString::number(scale.x));
+        e.setAttribute("sy", QString::number(scale.y));
         
         step.appendChild(e);
     }
     
     if (this->has(TupTweenerStep::Shear)) {
         QDomElement e = doc.createElement("shear");
-        e.setAttribute("sh", QString::number(k->shear.x));
-        e.setAttribute("sv", QString::number(k->shear.y));
+        e.setAttribute("sh", QString::number(shear.x));
+        e.setAttribute("sv", QString::number(shear.y));
         
         step.appendChild(e);
     }
     
     if (this->has(TupTweenerStep::Opacity)) {
         QDomElement e = doc.createElement("opacity");
-        e.setAttribute("opacity", QString::number(k->opacity));
+        e.setAttribute("opacity", QString::number(opacity));
 
         step.appendChild(e);
     }
 
     if (this->has(TupTweenerStep::Coloring)) {
         QDomElement e = doc.createElement("color");
-        QString red = QString::number(k->color.red());
-        QString green = QString::number(k->color.green());
-        QString blue = QString::number(k->color.blue());
+        QString red = QString::number(color.red());
+        QString green = QString::number(color.green());
+        QString blue = QString::number(color.blue());
 
         e.setAttribute("red", red);
         e.setAttribute("green", green);
@@ -218,7 +220,7 @@ void TupTweenerStep::fromXml(const QString& xml)
     if (doc.setContent(xml)) {
         QDomElement root = doc.documentElement();
         QDomNode node = root.firstChild();
-        k->index = root.attribute("value").toInt();
+        index = root.attribute("value").toInt();
         
         while (!node.isNull()) {
                QDomElement e = node.toElement();

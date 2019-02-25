@@ -1838,7 +1838,7 @@ void TupLibraryWidget::refreshItem(QTreeWidgetItem *item)
 
             if (oldId.compare(newId) != 0) {
                 newId = verifyNameAvailability(newId, extension, false);
-                QString oldId = oldId + "." + extension.toLower();
+                QString oldRef = oldId + "." + extension.toLower();
                 item->setText(1, newId);
 
                 newId = newId + "." + extension.toLower();
@@ -1846,9 +1846,9 @@ void TupLibraryWidget::refreshItem(QTreeWidgetItem *item)
 
                 QTreeWidgetItem *parent = item->parent();
                 if (parent) 
-                    library->renameObject(parent->text(1), oldId, newId);
+                    library->renameObject(parent->text(1), oldRef, newId);
                 else
-                    library->renameObject("", oldId, newId);
+                    library->renameObject("", oldRef, newId);
 
                 TupLibraryObject::Type type = TupLibraryObject::Image;
                 if (extension.compare("SVG")==0)
@@ -1856,7 +1856,7 @@ void TupLibraryWidget::refreshItem(QTreeWidgetItem *item)
                 if (extension.compare("TOBJ")==0)
                     type = TupLibraryObject::Item;
 
-                project->updateSymbolId(type, oldId, newId);
+                project->updateSymbolId(type, oldRef, newId);
             }
         }
 

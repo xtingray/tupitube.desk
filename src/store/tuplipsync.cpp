@@ -583,9 +583,9 @@ int TupLipSync::getFPS()
     return fps;
 }
 
-void TupLipSync::setFPS(int fps)
+void TupLipSync::setFPS(int speed)
 {
-    fps = fps;
+    fps = speed;
 }
 
 int TupLipSync::getInitFrame()

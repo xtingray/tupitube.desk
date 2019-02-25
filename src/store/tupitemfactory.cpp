@@ -407,9 +407,9 @@ QBrush TupItemFactory::itemBrush() const
     return Qt::transparent;
 }
 
-bool TupItemFactory::loadItem(QGraphicsItem *item, const QString &xml)
+bool TupItemFactory::loadItem(QGraphicsItem *object, const QString &xml)
 {
-    item = item;
+    item = object;
     isLoading = true;
     bool ok = parse(xml);
     isLoading = false;

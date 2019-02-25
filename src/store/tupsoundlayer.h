@@ -59,7 +59,7 @@ class TUPITUBE_EXPORT TupSoundLayer : public TupLayer
     private:
         QString filePath;
         QString symbolName;
-        int playerId;
+        // int playerId;
 };
 
 #endif

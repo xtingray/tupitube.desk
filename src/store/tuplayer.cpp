@@ -92,9 +92,9 @@ QString TupLayer::getLayerName() const
     return layerName;
 }
 
-void TupLayer::setLocked(bool isLocked)
+void TupLayer::setLocked(bool locked)
 {
-    isLocked = isLocked;
+    isLocked = locked;
 }
 
 bool TupLayer::isLayerLocked() const

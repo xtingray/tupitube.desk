@@ -163,7 +163,7 @@ class TUPITUBE_EXPORT TupLipSync : public QObject, public TupAbstractSerializabl
         QString getSoundFile() const;
         void setSoundFile(const QString &file);
         int getFPS();
-        void setFPS(int fps);
+        void setFPS(int speed);
         int getInitFrame();
         void setInitFrame(int frame);
         int getFramesCount();
