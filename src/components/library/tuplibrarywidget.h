@@ -90,10 +90,11 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
     Q_OBJECT
 
     public:
-        TupLibraryWidget(QWidget *parent = 0);
+        TupLibraryWidget(QWidget *parent = nullptr);
         ~TupLibraryWidget();
+
         void resetGUI();
-        void setLibrary(TupLibrary *library);
+        void setLibrary(TupLibrary *assets);
         void setNetworking(bool isNetworked);
         void stopSoundPlayer();
 

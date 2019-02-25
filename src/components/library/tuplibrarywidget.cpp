@@ -195,7 +195,7 @@ void TupLibraryWidget::resetGUI()
         libraryTree->cleanUI();
 }
 
-void TupLibraryWidget::setLibrary(TupLibrary *library)
+void TupLibraryWidget::setLibrary(TupLibrary *assets)
 {
 #ifdef TUP_DEBUG
     #ifdef Q_OS_WIN
@@ -205,13 +205,13 @@ void TupLibraryWidget::setLibrary(TupLibrary *library)
     #endif
 #endif
 
-    library = library;
+    library = assets;
     project = library->getProject();
 }
 
-void TupLibraryWidget::setNetworking(bool isNetworked)
+void TupLibraryWidget::setNetworking(bool netOn)
 {
-    isNetworked = isNetworked;
+    isNetworked = netOn;
 }
 
 void TupLibraryWidget::addFolder(const QString &folderName)
