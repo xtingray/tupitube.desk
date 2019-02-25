@@ -68,7 +68,7 @@ class TUPITUBE_EXPORT TupFrame : public QObject, public TupAbstractSerializable
 
         TupFrame();
         TupFrame(TupLayer *parent);
-        TupFrame(TupBackground *bg, FrameType type, int index);
+        TupFrame(TupBackground *bg, const QString &label);
        
         ~TupFrame();
        

@@ -72,25 +72,25 @@ TupFrame::TupFrame(TupLayer *parent) : QObject(parent)
     direction = "-1";
     shift = "0";
 
-    zLevelIndex = (layer->layerIndex() + 10) * ZLAYER_LIMIT; // Layers levels starts from 11
+    zLevelIndex = (layer->layerIndex() + 2)*ZLAYER_LIMIT; // Layers levels starts from 2
 }
 
-TupFrame::TupFrame(TupBackground *bg, FrameType frameType, int index) : QObject(bg)
+TupFrame::TupFrame(TupBackground *bg, const QString &label) : QObject(bg)
 {
-    type = frameType;
+    frameName = label;
     isLocked = false;
     isVisible = true;
     opacity = 1.0;
-    frameName = QString::number(index + 1);
 
-    if (frameType == DynamicBg) {
-        shift = "5";
-        direction = "0";
-        zLevelIndex = index * ZLAYER_LIMIT;
+    direction = "-1";
+    shift = "0";
+
+    if (frameName.compare("landscape_dynamic") == 0) {
+        zLevelIndex = 0;
+        type = DynamicBg;
     } else {
-        shift = "0";
-        direction = "-1";
-        zLevelIndex = (index + 5) * ZLAYER_LIMIT;
+        zLevelIndex = ZLAYER_LIMIT;
+        type = StaticBg;
     }
 }
 

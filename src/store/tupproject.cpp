@@ -75,9 +75,8 @@ TupProject::~TupProject()
         #endif
     #endif    
         
+    // deleteDataDir(cachePath);
     scenesList.clear();
-    undoScenes.clear();
-    delete library;
 }
 
 void TupProject::loadLibrary(const QString &filename)
@@ -573,27 +572,25 @@ bool TupProject::removeSymbol(const QString &name, TupLibraryObject::Type type)
 
          TupBackground *bg = scene->sceneBackground();
          if (bg) {
-             for (int i=0; i<BG_LAYERS; i++) {
-                 TupFrame *frame = bg->staticFrame(i);
-                 if (frame) {
-                     if (type != TupLibraryObject::Svg)
-                         frame->removeImageItemFromFrame(name);
-                     else
-                         frame->removeSvgItemFromFrame(name);
-                 }
+             TupFrame *frame = bg->staticFrame();
+             if (frame) {
+                 if (type != TupLibraryObject::Svg)
+                     frame->removeImageItemFromFrame(name);
+                 else
+                     frame->removeSvgItemFromFrame(name);
+             } 
 
-                 frame = bg->dynamicFrame(i);
-                 if (frame) {
-                     bool found = false;
+             frame = bg->dynamicFrame();
+             if (frame) {
+                 bool found = false;
 
-                     if (type != TupLibraryObject::Svg)
-                         found = frame->removeImageItemFromFrame(name);
-                     else
-                         found = frame->removeSvgItemFromFrame(name);
+                 if (type != TupLibraryObject::Svg)
+                     found = frame->removeImageItemFromFrame(name);
+                 else
+                     found = frame->removeSvgItemFromFrame(name);
 
-                     if (found)
-                         bg->scheduleRender(true);
-                 }
+                 if (found)
+                     bg->scheduleRender(true);
              }
          }
 
@@ -673,14 +670,14 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
             TupBackground *bg = scene->sceneBackground();
 
             if (bg)
-                frame = bg->getCurrentStaticFrame();
+                frame = bg->staticFrame();
             else
                 return false;
         } else if (spaceMode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
             TupBackground *bg = scene->sceneBackground();
 
             if (bg) {
-                frame = bg->getCurrentDynamicFrame();
+                frame = bg->dynamicFrame();
                 bg->scheduleRender(true);
             } else {
                 return false;
@@ -851,27 +848,25 @@ bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::Ty
 
          TupBackground *bg = scene->sceneBackground();
          if (bg) {
-             for (int i=0; i<BG_LAYERS; i++) {
-                 TupFrame *frame = bg->staticFrame(i);
-                 if (frame) {
-                     if (type == TupLibraryObject::Svg)
-                         frame->removeSvgItemFromFrame(name);
-                     else
-                         frame->removeImageItemFromFrame(name);
-                 }
+             TupFrame *frame = bg->staticFrame();
+             if (frame) {
+                 if (type == TupLibraryObject::Svg)
+                     frame->removeSvgItemFromFrame(name);
+                 else
+                     frame->removeImageItemFromFrame(name);
+             }
 
-                 frame = bg->dynamicFrame(i);
-                 if (frame) {
-                    bool found = false;
+             frame = bg->dynamicFrame();
+             if (frame) {
+                 bool found = false;
 
-                    if (type == TupLibraryObject::Svg)
-                        found = frame->removeSvgItemFromFrame(name);
-                    else
-                        found = frame->removeImageItemFromFrame(name);
+                 if (type == TupLibraryObject::Svg)
+                     found = frame->removeSvgItemFromFrame(name);
+                 else
+                     found = frame->removeImageItemFromFrame(name);
 
-                    if (found)
-                        bg->scheduleRender(true);
-                 }
+                 if (found)
+                     bg->scheduleRender(true);
              }
          }
     }
@@ -901,22 +896,20 @@ bool TupProject::updateSymbolId(TupLibraryObject::Type type, const QString &oldI
 
          TupBackground *bg = scene->sceneBackground();
          if (bg) {
-             for (int i=0; i<BG_LAYERS; i++) {
-                 TupFrame *frame = bg->staticFrame(i);
-                 if (frame) {
-                     if (type != TupLibraryObject::Svg)
-                         frame->updateIdFromFrame(oldId, newId);
-                     else
-                         frame->updateSvgIdFromFrame(oldId, newId);
-                 }
+             TupFrame *frame = bg->staticFrame();
+             if (frame) {
+                 if (type != TupLibraryObject::Svg)
+                     frame->updateIdFromFrame(oldId, newId);
+                 else
+                     frame->updateSvgIdFromFrame(oldId, newId);
+             }
 
-                 frame = bg->dynamicFrame(i);
-                 if (frame) {
-                     if (type != TupLibraryObject::Svg)
-                         frame->updateIdFromFrame(oldId, newId);
-                     else
-                         frame->updateSvgIdFromFrame(oldId, newId);
-                 }
+             frame = bg->dynamicFrame();
+             if (frame) {
+                 if (type != TupLibraryObject::Svg)
+                     frame->updateIdFromFrame(oldId, newId);
+                 else
+                     frame->updateSvgIdFromFrame(oldId, newId);
              }
          }
     }
@@ -944,22 +937,20 @@ void TupProject::reloadLibraryItem(TupLibraryObject::Type type, const QString &i
 
          TupBackground *bg = scene->sceneBackground();
          if (bg) {
-             for (int i= 0; i<BG_LAYERS; i++) {
-                 TupFrame *frame = bg->staticFrame(i);
-                 if (frame) {
-                     if (type == TupLibraryObject::Svg)
-                         frame->reloadSVGItem(id, object);
-                     else
-                         frame->reloadGraphicItem(id, object->getDataPath());
-                 }
+             TupFrame *frame = bg->staticFrame();
+             if (frame) {
+                 if (type == TupLibraryObject::Svg)
+                     frame->reloadSVGItem(id, object);
+                 else
+                     frame->reloadGraphicItem(id, object->getDataPath());
+             }
 
-                 frame = bg->dynamicFrame(i);
-                 if (frame) {
-                     if (type == TupLibraryObject::Svg)
-                         frame->reloadSVGItem(id, object);
-                     else
-                         frame->reloadGraphicItem(id, object->getDataPath());
-                 }
+             frame = bg->dynamicFrame();
+             if (frame) {
+                 if (type == TupLibraryObject::Svg)
+                     frame->reloadSVGItem(id, object);
+                 else
+                     frame->reloadGraphicItem(id, object->getDataPath());
              }
          }
     }
@@ -984,6 +975,52 @@ bool TupProject::isProjectOpen()
 {
     return isOpen;
 }
+
+/*
+bool TupProject::deleteDataDir(const QString &path)
+{
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupProject::deleteDataDir()]";
+        #else
+            T_FUNCINFO;
+            tWarning() << "Removing project path: " << path;
+        #endif
+    #endif
+
+    QDir dir(path);
+    if (dir.exists()) {
+        QStringList contentList = dir.entryList();
+        foreach (QString item, contentList) {
+            QString absolute = dir.absolutePath() + "/" + item;
+            QFileInfo itemInfo(absolute);
+            if (itemInfo.isFile()) {
+                tError() << "FILE: " << absolute;
+                // dir.remove(absolute); 
+            } else {
+                if (!absolute.endsWith(".")) {
+                    tError() << "DIR: " << absolute;
+                    // deleteDataDir(absolute);
+                }
+            }
+        } 
+        // dir.rmdir(path);
+        tError() << "path: " << path;
+        return true;
+    } else {
+        #ifdef TUP_DEBUG
+            QString msg = "TupProject::deleteDataDir() - Warning: directory doesn't exist -> " + path;
+            #ifdef Q_OS_WIN
+                qWarning() << msg;
+            #else
+                tWarning() << msg;
+            #endif
+        #endif
+    }
+
+    return false;
+}
+*/
 
 int TupProject::scenesCount() const
 {

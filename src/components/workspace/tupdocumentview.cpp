@@ -189,6 +189,8 @@ TupDocumentView::~TupDocumentView()
         delete configurationArea;
         configurationArea = NULL;
     }
+
+    // delete k;
 }
 
 void TupDocumentView::setWorkSpaceSize(int width, int height)
@@ -623,26 +625,26 @@ void TupDocumentView::loadPlugins()
     miscMenu->addAction(actionManager->find("papagayo"));
 
     foreach (QObject *plugin, TupPluginManager::instance()->getFilters()) {
-        AFilterInterface *filterInterface = qobject_cast<AFilterInterface *>(plugin);
-        QStringList::iterator it;
-        QStringList keys = filterInterface->keys();
+             AFilterInterface *filterInterface = qobject_cast<AFilterInterface *>(plugin);
+             QStringList::iterator it;
+             QStringList keys = filterInterface->keys();
 
-        for (it = keys.begin(); it != keys.end(); ++it) {
-             #ifdef TUP_DEBUG
-                 QString msg = "TupDocumentView::loadPlugins() - Filter Loaded: " + *it;
-                 #ifdef Q_OS_WIN
-                     qDebug() << msg;
-                 #else
-                     tDebug("plugins") << msg;
-                 #endif
-             #endif
+             for (it = keys.begin(); it != keys.end(); ++it) {
+                  #ifdef TUP_DEBUG
+                      QString msg = "TupDocumentView::loadPlugins() - Filter Loaded: " + *it;
+                      #ifdef Q_OS_WIN
+                          qDebug() << msg;
+                      #else
+                          tDebug("plugins") << msg;
+                      #endif
+                  #endif
 
-             TAction *filter = filterInterface->actions()[*it];
-             if (filter) {
-                 connect(filter, SIGNAL(triggered()), this, SLOT(applyFilter()));
-                 filterMenu->addAction(filter);
+                  TAction *filter = filterInterface->actions()[*it];
+                  if (filter) {
+                      connect(filter, SIGNAL(triggered()), this, SLOT(applyFilter()));
+                      filterMenu->addAction(filter);
+                  }
              }
-        }
     }
 
     toolbar->addAction(pencilAction);
@@ -1129,12 +1131,12 @@ double TupDocumentView::backgroundOpacity(TupFrame::FrameType type)
     int sceneIndex = paintArea->currentSceneIndex();
     TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
-        bg = scene->sceneBackground();
+        TupBackground *bg = scene->sceneBackground();
         if (bg) {
             if (type == TupFrame::StaticBg) {
-                opacity = bg->staticOpacity(0);
+                opacity = bg->staticOpacity();
             } else if (type == TupFrame::DynamicBg) {
-                opacity = bg->dynamicOpacity(0);
+                       opacity = bg->dynamicOpacity();
             }
         }
     }
@@ -1237,17 +1239,6 @@ void TupDocumentView::createToolBar()
 
     staticPropertiesBar->setVisible(false);
 
-    QLabel *layersLabel = new QLabel();
-    QPixmap layersPix(THEME_DIR + "icons/bg_layers.png");
-    layersLabel->setToolTip(tr("Dynamic Bg Layer"));
-    layersLabel->setPixmap(layersPix);
-
-    dynamicBgLayersCombo = new QComboBox;
-    dynamicBgLayersCombo->setToolTip(tr("Dynamic Bg Layer"));
-    for(int i=0; i<BG_LAYERS; i++)
-        dynamicBgLayersCombo->addItem(tr("Dynamic Layer") + " " + QString::number(i + 1));
-    connect(dynamicBgLayersCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setDynamicBgLayer(int)));
-
     QLabel *dirLabel = new QLabel();
     QPixmap dirPix(THEME_DIR + "icons/mov_orientation.png");
     dirLabel->setToolTip(tr("Movement Orientation"));
@@ -1275,12 +1266,6 @@ void TupDocumentView::createToolBar()
     empty7->setFixedWidth(5);
     QWidget *empty8 = new QWidget();
     empty8->setFixedWidth(5);
-    QWidget *empty9 = new QWidget();
-    empty9->setFixedWidth(5);
-    QWidget *empty10 = new QWidget();
-    empty10->setFixedWidth(5);
-    QWidget *empty11 = new QWidget();
-    empty11->setFixedWidth(5);
 
     QLabel *shiftLabel = new QLabel();
     QPixmap shiftPix(THEME_DIR + "icons/shift_length.png");
@@ -1291,62 +1276,40 @@ void TupDocumentView::createToolBar()
     shiftSpin->setSingleStep(1);
     shiftSpin->setRange(1, 1000);
     shiftSpin->setToolTip(tr("Shift Length"));
-    connect(shiftSpin, SIGNAL(valueChanged(int)), this, SLOT(updateBgShiftProperty(int)));
+    connect(shiftSpin, SIGNAL(valueChanged(int)), this, SLOT(updateBackgroundShiftProperty(int)));
 
     QLabel *dynamicOpacityLabel = new QLabel();
     QPixmap dynamicPix(THEME_DIR + "icons/bg_opacity.png");
     dynamicOpacityLabel->setToolTip(tr("Dynamic BG Opacity"));
     dynamicOpacityLabel->setPixmap(dynamicPix);
 
-    dynamicOpacityBox = new QDoubleSpinBox(this);
+    QDoubleSpinBox *dynamicOpacityBox = new QDoubleSpinBox(this);
     dynamicOpacityBox->setRange(0.1, 1.0);
     dynamicOpacityBox->setSingleStep(0.1);
     dynamicOpacityBox->setValue(backgroundOpacity(TupFrame::DynamicBg));
     dynamicOpacityBox->setToolTip(tr("Dynamic BG Opacity"));
     connect(dynamicOpacityBox, SIGNAL(valueChanged(double)), this, SLOT(updateDynamicOpacity(double)));
 
-    dynamicPropertiesBar->addWidget(layersLabel);
+    dynamicPropertiesBar->addWidget(dirLabel);
     dynamicPropertiesBar->addWidget(empty2);
-    dynamicPropertiesBar->addWidget(dynamicBgLayersCombo);
+    dynamicPropertiesBar->addWidget(dirCombo);
     dynamicPropertiesBar->addWidget(empty3);
     dynamicPropertiesBar->addSeparator();
     dynamicPropertiesBar->addWidget(empty4);
-    dynamicPropertiesBar->addWidget(dirLabel);
+    dynamicPropertiesBar->addWidget(shiftLabel);
     dynamicPropertiesBar->addWidget(empty5);
-    dynamicPropertiesBar->addWidget(dirCombo);
+    dynamicPropertiesBar->addWidget(shiftSpin);
     dynamicPropertiesBar->addWidget(empty6);
     dynamicPropertiesBar->addSeparator();
     dynamicPropertiesBar->addWidget(empty7);
-    dynamicPropertiesBar->addWidget(shiftLabel);
-    dynamicPropertiesBar->addWidget(empty8);
-    dynamicPropertiesBar->addWidget(shiftSpin);
-    dynamicPropertiesBar->addWidget(empty9);
-    dynamicPropertiesBar->addSeparator();
-    dynamicPropertiesBar->addWidget(empty10);
     dynamicPropertiesBar->addWidget(dynamicOpacityLabel);
-    dynamicPropertiesBar->addWidget(empty11);
+    dynamicPropertiesBar->addWidget(empty8);
     dynamicPropertiesBar->addWidget(dynamicOpacityBox);
 
     dynamicPropertiesBar->setVisible(false);
 
     addToolBar(staticPropertiesBar);
     addToolBar(dynamicPropertiesBar);
-}
-
-void TupDocumentView::setDynamicBgLayer(int layer)
-{
-    tError() << "TupDocumentView::setDynamicBgLayer() - Loading Dynamic Bg Layer -> " << layer;
-    bg->setCurrentDynamicLayer(layer);
-    int direction = bg->dynamicDirection(layer);
-    dirCombo->setCurrentIndex(direction);
-    int shift = bg->dynamicShift(layer);
-    tError() << "SHIFT: " << shift;
-    shiftSpin->setValue(shift);
-    double opacity = bg->dynamicOpacity(layer);
-    tError() << "Opacity: " << opacity;
-    dynamicOpacityBox->setValue(opacity);
-
-    paintArea->updatePaintArea();
 }
 
 void TupDocumentView::closeArea()
@@ -1500,11 +1463,12 @@ void TupDocumentView::setSpaceContext()
         int sceneIndex = paintArea->currentSceneIndex();
         TupScene *scene = project->sceneAt(sceneIndex);
         if (scene) {
-            bg = scene->sceneBackground();
+            TupBackground *bg = scene->sceneBackground();
             if (bg) {
-                bg->setCurrentDynamicLayer(0);
-                dynamicBgLayersCombo->setCurrentIndex(0);
-                setDynamicBgLayer(0);
+                int direction = bg->dyanmicDirection();
+                dirCombo->setCurrentIndex(direction);
+                int shift = bg->dyanmicShift();
+                shiftSpin->setValue(shift);
             }
         }
         staticPropertiesBar->setVisible(false);
@@ -1822,9 +1786,9 @@ void TupDocumentView::updateStaticOpacity(double opacity)
     int sceneIndex = paintArea->currentSceneIndex();
     TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
-        bg = scene->sceneBackground();
+        TupBackground *bg = scene->sceneBackground();
         if (bg) {
-            bg->setStaticOpacity(0, opacity);
+            bg->setStaticOpacity(opacity);
             TupProject::Mode mode = TupProject::Mode(spaceModeCombo->currentIndex());
             if (mode == TupProject::FRAMES_EDITION || mode == TupProject::STATIC_BACKGROUND_EDITION)
                 paintArea->updatePaintArea();
@@ -1846,10 +1810,9 @@ void TupDocumentView::updateDynamicOpacity(double opacity)
    int sceneIndex = paintArea->currentSceneIndex();
    TupScene *scene = project->sceneAt(sceneIndex);
    if (scene) {
-       bg = scene->sceneBackground();
+       TupBackground *bg = scene->sceneBackground();
        if (bg) {
-           int index = dynamicBgLayersCombo->currentIndex();
-           bg->setDynamicOpacity(index, opacity);
+           bg->setDynamicOpacity(opacity);
            paintArea->updatePaintArea();
        }
    }
@@ -1861,26 +1824,21 @@ void TupDocumentView::setBackgroundDirection(int direction)
    int sceneIndex = paintArea->currentSceneIndex();
    TupScene *scene = project->sceneAt(sceneIndex);
    if (scene) {
-       bg = scene->sceneBackground();
-       if (bg) {
-           int index = dynamicBgLayersCombo->currentIndex();
-           bg->setDynamicDirection(index, direction);
-       }
+       TupBackground *bg = scene->sceneBackground();
+       if (bg)
+           bg->setDynamicDirection(direction);
    }
 }
 
 // SQA: This method must support multi-user notifications (pending)
-void TupDocumentView::updateBgShiftProperty(int shift)
+void TupDocumentView::updateBackgroundShiftProperty(int shift)
 {
    int sceneIndex = paintArea->currentSceneIndex();
    TupScene *scene = project->sceneAt(sceneIndex);
    if (scene) {
-       bg = scene->sceneBackground();
-       if (bg) {
-           int index = dynamicBgLayersCombo->currentIndex();
-           bg->setDynamicShift(index, shift);
-           tError() << "updateBgShiftProperty() -> " << index << ":" << shift;
-       }
+       TupBackground *bg = scene->sceneBackground();
+       if (bg)
+           bg->setDynamicShift(shift);
    }
 }
 
@@ -1888,12 +1846,11 @@ void TupDocumentView::renderDynamicBackground()
 {
    int sceneIndex = paintArea->currentSceneIndex();
    TupScene *scene = project->sceneAt(sceneIndex);
+
    if (scene) {
-       bg = scene->sceneBackground();
-       if (bg) {
-           tError() << "TupDocumentView::renderDynamicBackground() - Rendering Dynamic Bg!";
-           bg->renderDynamicViews();
-       }
+       TupBackground *bg = scene->sceneBackground();
+       if (bg)
+           bg->renderDynamicView();
    }
 }
 

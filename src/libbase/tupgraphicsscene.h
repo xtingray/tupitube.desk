@@ -185,8 +185,6 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         double layerOnProcessOpacity;
         int frameOnProcess;
         int layerOnProcess;
-        int currentBgLayer;
-        int bgLayerInProcess;
 
         int zLevel;
 

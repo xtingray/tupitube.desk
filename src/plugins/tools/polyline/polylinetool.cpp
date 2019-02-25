@@ -313,7 +313,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
             TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 if (k->scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
-                    TupFrame *frame = bg->getCurrentStaticFrame();
+                    TupFrame *frame = bg->staticFrame();
                     if (frame) {
                         item = frame->item(response->getItemIndex());
                     } else {
@@ -327,7 +327,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
                         #endif
                     }
                 } else if (k->scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-                           TupFrame *frame = bg->getCurrentDynamicFrame();
+                           TupFrame *frame = bg->dynamicFrame();
                            if (frame) {
                                item = frame->item(response->getItemIndex());
                            } else {
@@ -502,7 +502,7 @@ void PolyLineTool::nodeChanged()
                 TupBackground *bg = k->scene->currentScene()->sceneBackground();
                 if (bg) {
                     if (k->scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
-                        TupFrame *frame = bg->getCurrentStaticFrame();
+                        TupFrame *frame = bg->staticFrame();
                         if (frame) {
                             position = frame->indexOf(k->nodeGroup->parentItem());
                         } else {
@@ -517,7 +517,7 @@ void PolyLineTool::nodeChanged()
                             return;
                         }
                     } else if (k->scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-                               TupFrame *frame = bg->getCurrentDynamicFrame();
+                               TupFrame *frame = bg->dynamicFrame();
                                if (frame) {
                                    position = frame->indexOf(k->nodeGroup->parentItem());
                                } else {

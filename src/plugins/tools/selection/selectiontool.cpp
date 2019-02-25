@@ -98,8 +98,7 @@ void SelectionTool::init(TupGraphicsScene *scene)
 
     clearSelection();
     k->scene->clearSelection();
-    // k->nodeZValue = (2 * ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
-    k->nodeZValue = ZLAYER_BASE + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
+    k->nodeZValue = (2*ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
     initItems(scene);
 }
 
@@ -114,7 +113,7 @@ void SelectionTool::initItems(TupGraphicsScene *scene)
     #endif
 
     foreach (QGraphicsView *view, scene->views())
-        view->setDragMode(QGraphicsView::RubberBandDrag);
+             view->setDragMode(QGraphicsView::RubberBandDrag);
 
     panel->enableFormControls(false);
 }
@@ -303,9 +302,9 @@ TupFrame* SelectionTool::currentFrame()
         TupScene *tupScene = k->scene->currentScene();
         TupBackground *bg = tupScene->sceneBackground();
         if (k->scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
-            frame = bg->getCurrentStaticFrame();
+            frame = bg->staticFrame();
         } else if (k->scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-            frame = bg->getCurrentDynamicFrame();
+            frame = bg->dynamicFrame();
         }
     }
 
@@ -335,9 +334,9 @@ TupFrame* SelectionTool::frameAt(int sceneIndex, int layerIndex, int frameIndex)
         } else {
             TupBackground *bg = scene->sceneBackground();
             if (k->scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
-                frame = bg->getCurrentStaticFrame();
+                frame = bg->staticFrame();
             } else if (k->scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-                frame = bg->getCurrentDynamicFrame();
+                frame = bg->dynamicFrame();
                 bg->scheduleRender(true);
             }
        }
