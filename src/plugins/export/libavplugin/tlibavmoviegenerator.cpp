@@ -376,6 +376,8 @@ AVStream * TLibavMovieGenerator::Private::addVideoStream(AVFormatContext *oc, AV
         c->pix_fmt = AV_PIX_FMT_RGB24;
     } else {
         c->pix_fmt = AV_PIX_FMT_YUV420P;
+        if (codec_id == AV_CODEC_ID_H264)
+            av_opt_set(c->priv_data, "preset", "slow", 0);
     }
 
     if (c->codec_id == AV_CODEC_ID_MPEG2VIDEO) {
