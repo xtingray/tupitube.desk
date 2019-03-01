@@ -55,7 +55,6 @@ int TupAnimationRenderer::calculateTotalPhotograms(TupScene *scene)
     Layers layers = scene->getLayers();
 
     int total = 0;
-
     int totalLayers = layers.size();
     for (int i = 0; i < totalLayers; i++) {
          TupLayer *layer = layers.at(i);
@@ -71,10 +70,17 @@ void TupAnimationRenderer::setScene(TupScene *scene, QSize dimension)
     gScene->setCurrentScene(scene);
     gScene->setSceneRect(QRectF(QPointF(0,0), dimension));
 
-    // k->scene->drawPhotogram(0, false); // ### SQA: Why whithout this doesn't work?
     currentPhotogram = -1;
-
     totalPhotograms = calculateTotalPhotograms(scene);
+
+    #ifdef TUP_DEBUG
+        QString msg = "TupAnimationRenderer::setScene() - Photograms Total: " + QString::number(totalPhotograms);
+        #ifdef Q_OS_WIN
+            qDebug() << msg;
+        #else
+            tWarning() << msg;
+        #endif
+    #endif
 }
 
 bool TupAnimationRenderer::nextPhotogram()

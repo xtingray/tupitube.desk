@@ -304,7 +304,6 @@ bool TLibavMovieGenerator::beginVideo()
 AVStream * TLibavMovieGenerator::Private::addVideoStream(AVFormatContext *oc, AVCodec **codec, enum AVCodecID codec_id, 
                                  const QString &movieFile, int width, int height, int fps)
 {
-    /*
     #ifdef TUP_DEBUG
         QString msg = "TLibavMovieGenerator::addVideoStream() - codec_id: " + QString::number(codec_id);
         #ifdef Q_OS_WIN
@@ -313,7 +312,6 @@ AVStream * TLibavMovieGenerator::Private::addVideoStream(AVFormatContext *oc, AV
             tWarning() << msg;
         #endif
     #endif
-    */
 
     AVCodecContext *c;
     AVStream *st;
@@ -367,6 +365,7 @@ AVStream * TLibavMovieGenerator::Private::addVideoStream(AVFormatContext *oc, AV
     c->height = height; 
 
     c->gop_size = 12;
+    c->max_b_frames = 0;
 
     c->time_base.num = 1;
     c->time_base.den = fps;
@@ -738,7 +737,16 @@ bool TLibavMovieGenerator::Private::writeVideoFrame(const QString &movieFile, co
 
         // Write the compressed frame to the media file. 
         ret = av_interleaved_write_frame(oc, &pkt);
+        av_free_packet(&pkt);
     } else {
+        #ifdef TUP_DEBUG
+            QString msg = QString("") + "TLibavMovieGenerator::writeVideoFrame() - Frame ignored! -> " + QString::number(frameCount);
+            #ifdef Q_OS_WIN
+                qDebug() << msg;
+            #else
+                tWarning() << msg;
+            #endif
+        #endif
         ret = 0;
     }
 

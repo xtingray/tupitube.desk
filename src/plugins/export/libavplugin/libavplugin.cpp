@@ -165,7 +165,17 @@ bool LibavPlugin::exportToFormat(const QColor color, const QString &filePath, co
         painter.setRenderHint(QPainter::Antialiasing, true);
         foreach (TupScene *scene, scenes) {
             renderer.setScene(scene, size);
+            int i = 0;
             while (renderer.nextPhotogram()) {
+                #ifdef TUP_DEBUG
+                    QString msg = "LibavPlugin::exportToFormat() - Rendering frame -> " + QString::number(i);
+                    i++;
+                    #ifdef Q_OS_WIN 
+                        qDebug() << msg;
+                    #else
+                        tWarning() << msg;
+                    #endif
+                #endif
                 renderer.render(&painter);
                 generator->nextFrame();
                 generator->reset();

@@ -48,7 +48,7 @@
 class TUPITUBE_EXPORT TupAnimationRenderer
 {
     public:
-        TupAnimationRenderer(const QColor color, TupLibrary *library=0);
+        TupAnimationRenderer(const QColor color, TupLibrary *library = nullptr);
         ~TupAnimationRenderer();
 
         void setScene(TupScene *scene, QSize dimension);
