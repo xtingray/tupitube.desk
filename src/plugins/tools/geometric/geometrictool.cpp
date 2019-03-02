@@ -131,6 +131,17 @@ void GeometricTool::setupActions()
     k->actions.insert(tr("Line"), action3);
 }
 
+QBrush GeometricTool::setLiteBrush(QColor c, Qt::BrushStyle style)
+{
+    QBrush brush;
+    QColor color = c;
+    color.setAlpha(50);
+    brush.setColor(color);
+    brush.setStyle(style);
+
+    return brush;
+}
+
 void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
     #ifdef TUP_DEBUG
@@ -145,18 +156,25 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
     Q_UNUSED(brushManager);
 
     if (input->buttons() == Qt::LeftButton) {
+        fillBrush = brushManager->brush();
         if (name() == tr("Rectangle")) {
             k->added = false;
             k->rect = new TupRectItem(QRectF(input->pos(), QSize(0,0)));
             k->rect->setPen(brushManager->pen());
-            k->rect->setBrush(brushManager->brush());
+            if (brushManager->brush().color().alpha() > 0)
+                k->rect->setBrush(setLiteBrush(brushManager->brush().color(), brushManager->brush().style()));
+            else
+                k->rect->setBrush(brushManager->brush());
 
             k->currentPoint = input->pos();
         } else if (name() == tr("Ellipse")) {
             k->added = false;
             k->ellipse = new TupEllipseItem(QRectF(input->pos(), QSize(0,0)));
             k->ellipse->setPen(brushManager->pen());
-            k->ellipse->setBrush(brushManager->brush());
+            if (brushManager->brush().color().alpha() > 0)
+                k->ellipse->setBrush(setLiteBrush(brushManager->brush().color(), brushManager->brush().style()));
+            else
+                k->ellipse->setBrush(brushManager->brush());
 
             k->currentPoint = input->pos();
         } else if (name() == tr("Line")) {
@@ -169,7 +187,10 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
             } else {
                 k->path = new TupPathItem;
                 k->path->setPen(brushManager->pen());
-                k->path->setBrush(brushManager->brush());
+                if (brushManager->brush().color().alpha() > 0)
+                   k->path->setBrush(setLiteBrush(brushManager->brush().color(), brushManager->brush().style()));
+                else
+                   k->path->setBrush(brushManager->brush());
 
                 QPainterPath path;
                 path.moveTo(k->currentPoint);
@@ -177,9 +198,16 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
                 scene->includeObject(k->path);
 
                 k->line = new TupLineItem();
-                k->line->setPen(brushManager->pen());
-                k->line->setLine(QLineF(input->pos().x(), input->pos().y(), input->pos().x(), input->pos().y()));
+                if (brushManager->pen().color().alpha() == 0) {
+                    QPen pen;
+                    pen.setWidth(1);
+                    pen.setBrush(QBrush(Qt::black));
+                    k->line->setPen(pen);
+                } else {
+                    k->line->setPen(brushManager->pen());
+                }
 
+                k->line->setLine(QLineF(input->pos().x(), input->pos().y(), input->pos().x(), input->pos().y()));
                 scene->includeObject(k->line);
             }
         }
@@ -336,9 +364,11 @@ void GeometricTool::release(const TupInputDeviceInformation *input, TupBrushMana
     QPointF point;
 
     if (name() == tr("Rectangle")) {
+        k->rect->setBrush(fillBrush);
         doc.appendChild(dynamic_cast<TupAbstractSerializable *>(k->rect)->toXml(doc));
         point = k->rect->pos();
     } else if (name() == tr("Ellipse")) {
+        k->ellipse->setBrush(fillBrush);
         doc.appendChild(dynamic_cast<TupAbstractSerializable *>(k->ellipse)->toXml(doc));
         QRectF rect = k->ellipse->rect();
         point = rect.topLeft();
@@ -423,9 +453,9 @@ QCursor GeometricTool::cursor() const
     if (name() == tr("Rectangle")) {
         return k->squareCursor;
     } else if (name() == tr("Ellipse")) {
-               return k->circleCursor;
+        return k->circleCursor;
     } else if (name() == tr("Line")) {
-               return k->lineCursor;
+        return k->lineCursor;
     }
 
     return QCursor(Qt::ArrowCursor);
@@ -442,6 +472,7 @@ void GeometricTool::endItem()
     #endif
 
     if (k->path) {
+        k->path->setBrush(fillBrush);
         QDomDocument doc;
         doc.appendChild(dynamic_cast<TupAbstractSerializable *>(k->path)->toXml(doc));
         QPointF point = QPointF(0, 0);

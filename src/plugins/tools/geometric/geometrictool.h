@@ -51,6 +51,7 @@
 #include <QImage>
 #include <QPaintDevice>
 #include <QGraphicsView>
+// #include <QBrush>
 
 class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
 {
@@ -96,8 +97,10 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
         void setupActions();
 
     private:
+        QBrush setLiteBrush(QColor c, Qt::BrushStyle style);
         struct Private;
         Private *const k;
+        QBrush fillBrush;
 
     /*
     private:
