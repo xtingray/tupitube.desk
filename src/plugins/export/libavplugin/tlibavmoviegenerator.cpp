@@ -364,11 +364,13 @@ AVStream * TLibavMovieGenerator::Private::addVideoStream(AVFormatContext *oc, AV
     c->width = width;  
     c->height = height; 
 
-    c->gop_size = 12;
+    // c->gop_size = 12;
+    c->gop_size = 0;
     c->max_b_frames = 0;
 
-    c->time_base.num = 1;
-    c->time_base.den = fps;
+    // c->time_base.num = 1;
+    // c->time_base.den = fps;
+    c->time_base = (AVRational){1,fps};
 
     if (movieFile.endsWith("gif", Qt::CaseInsensitive)) {
         st->time_base.num = 1;
@@ -376,8 +378,12 @@ AVStream * TLibavMovieGenerator::Private::addVideoStream(AVFormatContext *oc, AV
         c->pix_fmt = AV_PIX_FMT_RGB24;
     } else {
         c->pix_fmt = AV_PIX_FMT_YUV420P;
+        /*
         if (codec_id == AV_CODEC_ID_H264)
-            av_opt_set(c->priv_data, "preset", "slow", 0);
+            av_opt_set(c->priv_data, "tune", "zerolatency", 0); 
+            // av_opt_set(c->priv_data, "vprofile", "baseline", 0);
+            // av_opt_set(c->priv_data, "preset", "slow", 0);
+        */
     }
 
     if (c->codec_id == AV_CODEC_ID_MPEG2VIDEO) {
@@ -501,8 +507,14 @@ bool TLibavMovieGenerator::Private::openVideo(AVCodec *codec, AVStream *st)
     int ret;
     AVCodecContext *c = st->codec;
 
+    // AVDictionary *opts;
+    // if (c->codec_id == AV_CODEC_ID_H264)
+    //     av_opt_set(&opts, "tune", "zerolatency", 0);
+
     // Open the codec
     ret = avcodec_open2(c, codec, NULL);
+    // ret = avcodec_open2(c, codec, &opts);
+
     if (ret < 0) {
         QString errorMsg = "Sorry, the video codec required is not installed in your system.";
         #ifdef TUP_DEBUG
