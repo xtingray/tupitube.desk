@@ -76,17 +76,17 @@ TupColorPicker::~TupColorPicker()
 
 QPoint TupColorPicker::colorPoint()
 { 
-    return QPoint((360-hue)*(pWidth-1)/360, (255-saturation)*(pHeight-1)/255);
+    return QPoint((360 - hue)*(pWidth - 1)/360, (255 - saturation)*(pHeight - 1)/255);
 }
 
 int TupColorPicker::huePoint(const QPoint &pt)
 { 
-    return 360 - pt.x()*360/(pWidth-1);
+    return 360 - ((pt.x() * 360) / (pWidth - 1));
 }
 
 int TupColorPicker::saturationPoint(const QPoint &pt)
 { 
-    return 255 - pt.y()*255/(pHeight-1);
+    return 255 - ((pt.y() * 255) / (pHeight - 1));
 }
 
 void TupColorPicker::setColor(const QPoint &pt)
@@ -100,7 +100,7 @@ void TupColorPicker::clearSelection()
     target = false;
     QRect rect(colorPoint(), QSize(20,20));
     rect = rect.united(QRect(colorPoint(), QSize(20, 20)));
-    rect.translate(contentsRect().x()-9, contentsRect().y()-9);
+    rect.translate(contentsRect().x() - 9, contentsRect().y() - 9);
 
     repaint(rect);
 }
@@ -110,47 +110,47 @@ QSize TupColorPicker::sizeHint() const
     return QSize(pWidth + 2*frameWidth(), pHeight + 2*frameWidth());
 }
 
-void TupColorPicker::setColor(int hue, int saturation)
+void TupColorPicker::setColor(int localHue, int localSat)
 {
-    int nhue = qMin(qMax(0, hue), 359);
-    int nsat = qMin(qMax(0, saturation), 255);
+    int nhue = qMin(qMax(0, localHue), 359);
+    int nsat = qMin(qMax(0, localSat), 255);
 
     if (nhue == hue && nsat == saturation)
         return;
 
-    QRect rect(colorPoint(), QSize(20,20));
+    QRect rect(colorPoint(), QSize(20, 20));
     hue = nhue;
     saturation = nsat;
-    rect = rect.united(QRect(colorPoint(), QSize(20,20)));
-    rect.translate(contentsRect().x()-9, contentsRect().y()-9);
+    rect = rect.united(QRect(colorPoint(), QSize(20, 20)));
+    rect.translate(contentsRect().x() - 9, contentsRect().y() - 9);
 
     repaint(rect);
 }
 
-void TupColorPicker::setHUE(int hue)
+void TupColorPicker::setHUE(int localHue)
 {
-    int newHue = qMin(qMax(0, hue), 359);
+    int newHue = qMin(qMax(0, localHue), 359);
     if (newHue == hue)
         return;
 
     QRect rect(colorPoint(), QSize(20, 20));
     hue = newHue;
     rect = rect.united(QRect(colorPoint(), QSize(20, 20)));
-    rect.translate(contentsRect().x()-9, contentsRect().y()-9);
+    rect.translate(contentsRect().x() - 9, contentsRect().y() - 9);
 
     repaint(rect);
 }
 
-void TupColorPicker::setSaturation(int saturation)
+void TupColorPicker::setSaturation(int localSat)
 {
-    int newSat = qMin(qMax(0, saturation), 255);
+    int newSat = qMin(qMax(0, localSat), 255);
     if (newSat == saturation)
         return;
 
-    QRect rect(colorPoint(), QSize(20,20));
+    QRect rect(colorPoint(), QSize(20, 20));
     saturation = newSat;
-    rect = rect.united(QRect(colorPoint(), QSize(20,20)));
-    rect.translate(contentsRect().x()-9, contentsRect().y()-9);
+    rect = rect.united(QRect(colorPoint(), QSize(20, 20)));
+    rect.translate(contentsRect().x() - 9, contentsRect().y() - 9);
 
     repaint(rect);
 }
@@ -180,7 +180,7 @@ void TupColorPicker::paintEvent(QPaintEvent*)
 
     if (target) {
         painter.setPen(Qt::white);
-        painter.drawRect(point.x()-4, point.y()-4, 10, 10);
+        painter.drawRect(point.x() - 4, point.y() - 4, 10, 10);
     }
 }
 
