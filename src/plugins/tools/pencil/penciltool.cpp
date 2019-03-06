@@ -120,8 +120,14 @@ void PencilTool::press(const TupInputDeviceInformation *input, TupBrushManager *
         k->oldPos = input->pos();
 
         k->item = new TupPathItem();
-        k->item->setPen(brushManager->pen());
-
+        if (brushManager->pen().color().alpha() == 0) {
+            QPen pen;
+            pen.setWidth(1);
+            pen.setBrush(QBrush(Qt::black));
+            k->item->setPen(pen);
+        } else {
+            k->item->setPen(brushManager->pen());
+        }
         scene->includeObject(k->item);
     }
 }
