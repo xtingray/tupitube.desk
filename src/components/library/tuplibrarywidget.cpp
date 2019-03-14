@@ -980,6 +980,14 @@ void TupLibraryWidget::importBitmapGroup()
 
 void TupLibraryWidget::importBitmap(const QString &image)
 {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupLibraryWidget::importBitmap()]";
+    #else
+        T_FUNCINFO;
+    #endif
+#endif
+
     if (image.isEmpty())
         return;
 
@@ -1720,7 +1728,17 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
 
 void TupLibraryWidget::frameResponse(TupFrameResponse *response)
 {
-    if (response->getAction() == TupProjectRequest::Select) {
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupLibraryWidget::frameResponse()]";
+    #else
+        T_FUNCINFO << "frameIndex: " << response->getFrameIndex();
+        T_FUNCINFO << "action: " << response->getAction();
+    #endif
+#endif
+
+    if (response->getAction() == TupProjectRequest::Add
+        || response->getAction() == TupProjectRequest::Select) {
         currentFrame.frame = response->getFrameIndex();
         currentFrame.layer = response->getLayerIndex();
         currentFrame.scene = response->getSceneIndex();
