@@ -147,7 +147,7 @@ void TupToolPlugin::updatePos(QPointF pos)
     Q_UNUSED(pos);
 }
 
-void TupToolPlugin::resizeNodes(qreal factor)
+void TupToolPlugin::resizeNode(qreal factor)
 {
     Q_UNUSED(factor);
 }

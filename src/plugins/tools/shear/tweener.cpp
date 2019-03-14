@@ -70,6 +70,7 @@ struct Tweener::Private
 
     QPointF origin;
     Target *target;
+    qreal realFactor;
 
     TupToolPlugin::Mode mode;
     TupToolPlugin::EditMode editMode;
@@ -309,6 +310,8 @@ void Tweener::aboutToChangeTool()
 
 void Tweener::setupActions()
 {
+    k->realFactor = 1;
+
     TAction *translater = new TAction(QPixmap(kAppProp->themeDir() + "icons/shear_tween.png"), 
                                       tr("Shear Tween"), this);
     translater->setCursor(QCursor(kAppProp->themeDir() + "cursors/tweener.png", 0, 0));
@@ -686,6 +689,7 @@ void Tweener::addTarget()
         k->target = new Target(k->origin, k->baseZValue);
         connect(k->target, SIGNAL(positionUpdated(const QPointF &)), this, SLOT(updateOriginPoint(const QPointF &)));
         k->scene->addItem(k->target);
+        k->target->resizeNode(k->realFactor);
     } else {
         if (k->mode == TupToolPlugin::Edit) {
             if (!k->objects.isEmpty()) {
@@ -695,6 +699,7 @@ void Tweener::addTarget()
                     k->target = new Target(k->origin, k->baseZValue);
                     connect(k->target, SIGNAL(positionUpdated(const QPointF &)), this, SLOT(updateOriginPoint(const QPointF &)));
                     k->scene->addItem(k->target);
+                    k->target->resizeNode(k->realFactor);
                 } else {
                     #ifdef TUP_DEBUG
                         QString msg = "Tweener::addTarget() - Current tween pointer is NULL!";
@@ -783,4 +788,16 @@ void Tweener::frameResponse(const TupFrameResponse *event)
         if (k->initLayer != event->getLayerIndex() || k->initScene != event->getSceneIndex())
             init(k->scene);
     }
+}
+
+void Tweener::resizeNode(qreal scaleFactor)
+{
+    k->realFactor = scaleFactor;
+    if (k->target)
+        k->target->resizeNode(scaleFactor);
+}
+
+void Tweener::updateZoomFactor(qreal scaleFactor)
+{
+    k->realFactor = scaleFactor;
 }

@@ -300,8 +300,8 @@ void TupDocumentView::updateNodesScale(qreal factor)
         QString toolName = currentTool->name();
         if (toolName.compare(tr("Object Selection")) == 0 || toolName.compare(tr("Nodes Selection")) == 0 || 
             toolName.compare(tr("PolyLine")) == 0 || toolName.compare(tr("Position Tween")) == 0 ||
-            toolName.compare(tr("Rotation Tween")) == 0)
-            currentTool->resizeNodes(1 / nodesScaleFactor);
+            toolName.compare(tr("Rotation Tween")) == 0 || toolName.compare(tr("Shear Tween")) == 0)
+            currentTool->resizeNode(1 / nodesScaleFactor);
     }
 }
 
@@ -1031,7 +1031,7 @@ void TupDocumentView::selectTool()
 
         if (toolName.compare(tr("Object Selection")) == 0 || toolName.compare(tr("Nodes Selection")) == 0 ||
             toolName.compare(tr("PolyLine")) == 0 || toolName.compare(tr("Position Tween")) == 0 ||
-            toolName.compare(tr("Rotation Tween")) == 0)
+            toolName.compare(tr("Rotation Tween")) == 0 || toolName.compare(tr("Shear Tween")) == 0)
             tool->updateZoomFactor(1 / nodesScaleFactor);
     } else {
         #ifdef TUP_DEBUG

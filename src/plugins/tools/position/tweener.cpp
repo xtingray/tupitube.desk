@@ -167,8 +167,19 @@ void Tweener::init(TupGraphicsScene *scene)
 
 void Tweener::updateStartFrame(int index)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[Tweener::updateStartFrame()]";
+        #else
+            T_FUNCINFO << "index: " << index;
+        #endif
+    #endif
+
+    if (index == 1)
+        index--;
+
     if (k->initFrame != index && index >= 0)
-        k->initFrame = index - 1;
+        k->initFrame = index;
 }
 
 // This method returns the plugin name
@@ -365,8 +376,6 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                     int distanceY = static_cast<int> (newPos.y() - oldPos.y());
                     k->path->moveBy(distanceX, distanceY);
                     k->pathOffset = QPointF(distanceX, distanceY);
-
-                    // k->firstNode = newPos;
                 }
             } else {
                 #ifdef TUP_DEBUG
@@ -379,7 +388,18 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 #endif
             }
         }
-    } 
+    } else {
+        #ifdef TUP_DEBUG
+            QString msg = "Position Tweener::release() - scene->currentFrameIndex() != k->initFrame";
+            #ifdef Q_OS_WIN
+                qDebug() << msg;
+            #else
+                tError() << msg;
+                tError() << "scene->currentFrameIndex() -> " << scene->currentFrameIndex();
+                tError() << "k->initFrame -> " << k->initFrame;
+            #endif
+        #endif
+    }
 }
 
 // This method returns the list of actions defined in this plugin
@@ -1315,7 +1335,7 @@ void Tweener::updateTweenPoints()
     paintTweenPoints();
 }
 
-void Tweener::resizeNodes(qreal scaleFactor)
+void Tweener::resizeNode(qreal scaleFactor)
 {
     k->realFactor = scaleFactor;
     if (k->nodesGroup)

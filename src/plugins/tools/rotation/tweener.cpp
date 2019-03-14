@@ -764,7 +764,7 @@ TupToolPlugin::EditMode Tweener::currentEditMode()
     return k->editMode;
 }
 
-void Tweener::resizeNodes(qreal scaleFactor)
+void Tweener::resizeNode(qreal scaleFactor)
 {
     k->realFactor = scaleFactor;
     if (k->target)

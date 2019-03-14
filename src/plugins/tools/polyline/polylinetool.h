@@ -77,7 +77,7 @@ class TUPITUBE_PLUGIN PolyLineTool : public TupToolPlugin
         virtual void saveConfig();
         virtual QCursor cursor() const;
 
-        void resizeNodes(qreal scaleFactor);
+        void resizeNode(qreal scaleFactor);
         void updateZoomFactor(qreal scaleFactor);
         void clearSelection();
         void updatePos(QPointF pos);

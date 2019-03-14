@@ -629,7 +629,7 @@ QCursor PolyLineTool::cursor() const
     return k->cursor;
 }
 
-void PolyLineTool::resizeNodes(qreal scaleFactor)
+void PolyLineTool::resizeNode(qreal scaleFactor)
 {
     k->realFactor = scaleFactor;
     if (k->nodeGroup)

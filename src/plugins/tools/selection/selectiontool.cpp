@@ -841,7 +841,7 @@ QCursor SelectionTool::cursor() const
     return QCursor(Qt::ArrowCursor);
 }
 
-void SelectionTool::resizeNodes(qreal scaleFactor)
+void SelectionTool::resizeNode(qreal scaleFactor)
 {
     k->realFactor = scaleFactor;
     foreach (NodeManager *manager, k->nodeManagers)

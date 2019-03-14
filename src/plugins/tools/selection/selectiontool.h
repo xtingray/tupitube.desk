@@ -87,7 +87,7 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         virtual void saveConfig();
         QCursor cursor() const;
 
-        void resizeNodes(qreal scaleFactor);
+        void resizeNode(qreal scaleFactor);
         void updateZoomFactor(qreal scaleFactor);
         void clearSelection();
 

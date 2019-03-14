@@ -447,7 +447,7 @@ QCursor NodesTool::cursor() const
     return QCursor(Qt::ArrowCursor);
 }
 
-void NodesTool::resizeNodes(qreal scaleFactor)
+void NodesTool::resizeNode(qreal scaleFactor)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN

@@ -86,7 +86,7 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         virtual TupToolPlugin::Mode currentMode();
         virtual TupToolPlugin::EditMode currentEditMode();
 
-        void resizeNodes(qreal scaleFactor);
+        void resizeNode(qreal scaleFactor);
         void updateZoomFactor(qreal scaleFactor);
 
     signals:

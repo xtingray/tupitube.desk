@@ -82,6 +82,9 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         virtual void layerResponse(const TupLayerResponse *event);
         virtual void frameResponse(const TupFrameResponse *event);
 
+        void resizeNode(qreal scaleFactor);
+        void updateZoomFactor(qreal scaleFactor);
+
     signals:
         void tweenRemoved();
 
