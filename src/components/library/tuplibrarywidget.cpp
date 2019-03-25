@@ -959,7 +959,7 @@ void TupLibraryWidget::createVectorObject()
     }
 }
 
-void TupLibraryWidget::importBitmapGroup()
+void TupLibraryWidget::importImageGroup()
 {
     TCONFIG->beginGroup("General");
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
@@ -972,17 +972,17 @@ void TupLibraryWidget::importBitmapGroup()
         QStringList files = dialog.selectedFiles();
         int size = files.size();
         for (int i = 0; i < size; ++i)
-             importBitmap(files.at(i));
+             importImage(files.at(i));
 
         setDefaultPath(files.at(0));
     }
 }
 
-void TupLibraryWidget::importBitmap(const QString &image)
+void TupLibraryWidget::importImage(const QString &image)
 {
 #ifdef TUP_DEBUG
     #ifdef Q_OS_WIN
-        qDebug() << "[TupLibraryWidget::importBitmap()]";
+        qDebug() << "[TupLibraryWidget::importImage()]";
     #else
         T_FUNCINFO;
     #endif
@@ -1016,12 +1016,12 @@ void TupLibraryWidget::importBitmap(const QString &image)
 
         #ifdef TUP_DEBUG
             #ifdef Q_OS_WIN
-               qDebug() << "TupLibraryWidget::importBitmap() - Image filename: " << key << " | Raw Size: " << data.size();
-               qDebug() << "TupLibraryWidget::importBitmap() - Image Size: " << "[" << picWidth << ", " << picHeight << "]"
+               qDebug() << "TupLibraryWidget::importImage() - Image filename: " << key << " | Raw Size: " << data.size();
+               qDebug() << "TupLibraryWidget::importImage() - Image Size: " << "[" << picWidth << ", " << picHeight << "]"
                         << " | Project Size: " << "[" << projectWidth << ", " << projectHeight << "]";
             #else
-               tFatal() << "TupLibraryWidget::importBitmap() - Image filename: " << key << " | Raw Size: " << data.size();
-               tFatal() << "TupLibraryWidget::importBitmap() - Image Size: " << "[" << picWidth << ", " << picHeight << "]"
+               tFatal() << "TupLibraryWidget::importImage() - Image filename: " << key << " | Raw Size: " << data.size();
+               tFatal() << "TupLibraryWidget::importImage() - Image Size: " << "[" << picWidth << ", " << picHeight << "]"
                         << " | Project Size: " << "[" << projectWidth << ", " << projectHeight << "]";
             #endif
         #endif
@@ -1243,7 +1243,7 @@ QStringList TupLibraryWidget::naturalSort(QStringList photograms)
     return photograms;
 }
 
-void TupLibraryWidget::importBitmapSequence()
+void TupLibraryWidget::importImageSequence()
 {
     TCONFIG->beginGroup("General");
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
@@ -1750,12 +1750,12 @@ void TupLibraryWidget::importLibraryObject()
     QString option = itemType->currentText();
 
     if (option.compare(tr("Image")) == 0) {
-        importBitmapGroup();
+        importImageGroup();
         return;
     }
 
     if (option.compare(tr("Image Sequence")) == 0) {
-        importBitmapSequence();
+        importImageSequence();
         return;
     }
 

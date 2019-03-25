@@ -88,11 +88,11 @@ void TupMainWindow::createGUI()
     m_actionManager->insert(libraryView->toggleViewAction(), "show_library");
     addToPerspective(libraryView->toggleViewAction(), Animation);
 
-    new TAction(QPixmap(THEME_DIR + "icons/bitmap.png"), tr("Bitmap"), QKeySequence(tr("Alt+B")), m_libraryWidget, SLOT(importBitmapGroup()),
-		m_actionManager, "importBitmap");
+    new TAction(QPixmap(THEME_DIR + "icons/bitmap.png"), tr("Image"), QKeySequence(tr("Alt+B")), m_libraryWidget, SLOT(importImage()),
+        m_actionManager, "importImageGroup");
 
-    new TAction(QPixmap(THEME_DIR + "icons/bitmap_array.png"), tr("Bitmap Sequence"), QKeySequence(tr("Alt+Shift+B")), 
-		m_libraryWidget, SLOT(importBitmapSequence()), m_actionManager, "importBitmapSequence");
+    new TAction(QPixmap(THEME_DIR + "icons/bitmap_array.png"), tr("Image Sequence"), QKeySequence(tr("Alt+Shift+B")),
+        m_libraryWidget, SLOT(importImageSequence()), m_actionManager, "importImageSequence");
 
     new TAction(QPixmap(THEME_DIR + "icons/svg.png"), tr("SVG File"), QKeySequence(tr("Alt+S")), m_libraryWidget, SLOT(importSvgGroup()),
 		m_actionManager, "importSvg");
@@ -211,8 +211,8 @@ void TupMainWindow::setupMenu()
     m_insertMenu = menuBar()->addMenu(tr("&Import"));
 
     // Adding Options import bitmap and import audio file
-    m_insertMenu->addAction(m_actionManager->find("importBitmap"));
-    m_insertMenu->addAction(m_actionManager->find("importBitmapSequence"));
+    m_insertMenu->addAction(m_actionManager->find("importImageGroup"));
+    m_insertMenu->addAction(m_actionManager->find("importImageSequence"));
     m_insertMenu->addAction(m_actionManager->find("importSvg"));
     m_insertMenu->addAction(m_actionManager->find("importSvgSequence"));
     // m_insertMenu->addAction(m_actionManager->find("importAudioFile"));
@@ -292,7 +292,7 @@ void TupMainWindow::setMenuItemsContext(bool flag)
     m_actionManager->enable("close_project", flag);
     m_actionManager->enable("hideaction", flag);
     m_actionManager->enable("export", flag);
-    m_actionManager->enable("importBitmap", flag);
+    m_actionManager->enable("importImage", flag);
 
     // m_settingsMenu->setEnabled(flag);
     m_insertMenu->setEnabled(flag);

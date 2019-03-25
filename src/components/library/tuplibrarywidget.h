@@ -127,11 +127,11 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
 
     public slots:
         void addFolder(const QString &folderName = QString());
-        void importBitmapGroup();
-        void importBitmap(const QString &image);
+        void importImageGroup();
+        void importImage(const QString &image);
         void importSvgGroup();
         void importSvg(const QString &svgPath);
-        void importBitmapSequence();
+        void importImageSequence();
         void importSvgSequence();
         void importSoundFile();
 
