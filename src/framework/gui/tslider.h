@@ -75,7 +75,22 @@ class TUPITUBE_EXPORT TSlider : public QGraphicsView
        void calculateNewPosition(int pos);
        void calculateColor(int value);
        struct Private;
-       Private *const k;
+
+       int minRange;
+       int maxRange;
+       QColor startColor;
+       QColor endColor;
+       QImage *image;
+       int imageW;
+       int imageH;
+
+       int value;
+       bool enabled;
+       Qt::Orientation sliderOrientation;
+       TSlider::Mode sliderMode;
+       Qt::BrushStyle sliderStyle;
+       double sliderOpacity;
+       int currentBase;
 };
 
 #endif

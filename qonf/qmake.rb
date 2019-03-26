@@ -87,25 +87,24 @@ class QMake
 
         minver = minqtversion.split(".")
 
-        version.size.times { |i|
-            if i == 0
-                if Integer(version[i]) < Integer(minver[i])
-                    return false 
-                end
-            end
+        print $endl
+        print "version 1 -> #{version[0]}" << $endl
+        print "minver 1 -> #{minver[0]}" << $endl
+        if Integer(version[0]) < Integer(minver[0])
+            return false 
+        end
 
-            if i == 1
-                if Integer(version[i]) < Integer(minver[i])
-                    return false
-                end
-            end
+        print "version 2 -> #{version[1]}" << $endl
+        print "minver 2 -> #{minver[1]}" << $endl
+        if Integer(version[1]) < Integer(minver[1])
+            return false
+        end
 
-            if i == 2
-                if Integer(version[i]) < Integer(minver[i])
-                    return false
-                end
-            end
-        }
+        print "version 3 -> #{version[2]}" << $endl
+        print "minver 3 -> #{minver[2]}" << $endl
+        if Integer(version[2]) < Integer(minver[2])
+            return false
+        end
                 
         @path = command
 

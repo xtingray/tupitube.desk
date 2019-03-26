@@ -71,11 +71,11 @@ void TColorCell::paintEvent(QPaintEvent *event)
     painter.fillRect(rect(), cellBrush);
     
     /*
-    if (k->brush.color() == Qt::transparent) {
+    if (k-brush.color() == Qt::transparent) {
         QImage transparent(THEME_DIR + "icons/trans_big.png");
         painter.drawImage(rect().topLeft(), transparent);
     } else {
-        painter.fillRect(rect(), k->brush);
+        painter.fillRect(rect(), k-brush);
     }
     */
 

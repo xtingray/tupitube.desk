@@ -40,54 +40,35 @@
 #include <QDesktopWidget>
 #include <QDebug>
 
-struct TSlider::Private
-{
-    int min;
-    int max;
-    QColor startColor;
-    QColor endColor;
-    QImage *image;
-    int imageW;
-    int imageH;
-
-    int value;
-    bool enabled;
-    Qt::Orientation orientation;
-    TSlider::Mode mode;
-    Qt::BrushStyle style;
-    double opacity;
-    int currentBase;
-};
-
-TSlider::TSlider(Qt::Orientation orientation, TSlider::Mode mode, const QColor &start, const QColor &end, QWidget *parent) : QGraphicsView(parent), k(new Private)
+TSlider::TSlider(Qt::Orientation orientation, TSlider::Mode mode, const QColor &start, const QColor &end, QWidget *parent) : QGraphicsView(parent)
 {
     setStyleSheet("* { background-color: rgba(255,255,255,0); border: 1px solid rgb(170,170,170); }");
 
-    k->orientation = orientation; 
-    k->mode = mode;
-    k->startColor = start;
-    k->endColor = end;
-    k->value = 0;
-    k->enabled = true;
+    sliderOrientation = orientation;
+    sliderMode = mode;
+    startColor = start;
+    endColor = end;
+    value = 0;
+    enabled = true;
 
-    if (k->orientation == Qt::Vertical) {
-        k->image = new QImage(THEME_DIR + "icons/slider_vertical.png");
-        k->imageW = k->image->width();
-        k->imageH = k->image->height();
-        setFixedWidth(k->imageW + 2);
+    if (sliderOrientation == Qt::Vertical) {
+        image = new QImage(THEME_DIR + "icons/slider_vertical.png");
+        imageW = image->width();
+        imageH = image->height();
+        setFixedWidth(imageW + 2);
     } else {
-        k->image = new QImage(THEME_DIR + "icons/slider_horizontal.png");
-        k->imageW = k->image->width();
-        k->imageH = k->image->height();
-        setFixedHeight(k->imageH + 2);
+        image = new QImage(THEME_DIR + "icons/slider_horizontal.png");
+        imageW = image->width();
+        imageH = image->height();
+        setFixedHeight(imageH + 2);
     }
 
     setUpdatesEnabled(true);
 
-    if (k->orientation == Qt::Vertical)
-        k->currentBase = viewport()->height();
+    if (sliderOrientation == Qt::Vertical)
+        currentBase = viewport()->height();
     else
-        k->currentBase = viewport()->width();
+        currentBase = viewport()->width();
 }
 
 TSlider::~TSlider()
@@ -96,35 +77,35 @@ TSlider::~TSlider()
 
 void TSlider::setBrushSettings(Qt::BrushStyle style, double opacity)
 {
-    k->style = style;
-    k->opacity = opacity;
+    sliderStyle = style;
+    sliderOpacity = opacity;
 }
 
 void TSlider::setRange(int min, int max)
 {
-    k->min = min;
-    k->max = max;
+    minRange = min;
+    maxRange = max;
 }
 
 void TSlider::setValue(int value)
 {
-    if (k->orientation == Qt::Vertical) {
+    if (sliderOrientation == Qt::Vertical) {
         int height = viewport()->height();
-        if (value == k->max) {
-            k->value = height - k->image->height()/2;
-        } else if (value == k->min) {
-            k->value = 0;
+        if (value == maxRange) {
+            value = height - image->height()/2;
+        } else if (value == minRange) {
+            value = 0;
         } else {
-            k->value = height*value/k->max;
+            value = height*value/maxRange;
         }
     } else {
         int width = viewport()->width();
-        if (value == k->max) {
-            k->value = width - k->image->width()/2;
-        } else if (value == k->min) {
-            k->value = 0;
+        if (value == maxRange) {
+            value = width - image->width()/2;
+        } else if (value == minRange) {
+            value = 0;
         } else {
-            k->value = width*value/k->max;
+            value = width*value/maxRange;
         }
     }
 
@@ -133,30 +114,30 @@ void TSlider::setValue(int value)
 
 void TSlider::setEnabled(bool flag)
 {
-    k->enabled = flag;
+    enabled = flag;
     this->update();
 }
 
 bool TSlider::isEnabled()
 {
-    return k->enabled;
+    return enabled;
 }
 
 void TSlider::setColors(const QColor &start, const QColor &end)
 {
-    k->startColor = start;
-    k->endColor = end;
+    startColor = start;
+    endColor = end;
 
     this->update();
 }
 
 void TSlider::mousePressEvent(QMouseEvent *event)
 {
-    if (!k->enabled)
+    if (!enabled)
         return;
 
     int pos = -1;
-    if (k->orientation == Qt::Vertical)
+    if (sliderOrientation == Qt::Vertical)
         pos = event->y();
     else
         pos = event->x();
@@ -166,11 +147,11 @@ void TSlider::mousePressEvent(QMouseEvent *event)
 
 void TSlider::mouseMoveEvent(QMouseEvent *event)
 {
-    if (!k->enabled) 
+    if (!enabled)
         return;
 
     int pos = -1;
-    if (k->orientation == Qt::Vertical) 
+    if (sliderOrientation == Qt::Vertical)
         pos = event->y();
     else
         pos = event->x();
@@ -181,45 +162,45 @@ void TSlider::mouseMoveEvent(QMouseEvent *event)
 void TSlider::calculateNewPosition(int pos)
 {
     int length = -1;
-    k->value = pos;
+    value = pos;
 
-    if (k->orientation == Qt::Vertical) {
+    if (sliderOrientation == Qt::Vertical) {
         length = viewport()->height();
-        if (pos > (length - k->image->height())) {
+        if (pos > (length - image->height())) {
             this->update();
-            if (k->mode == Color)
-                calculateColor(k->min);
+            if (sliderMode == Color)
+                calculateColor(minRange);
             else
-                emit valueChanged(k->min);
+                emit valueChanged(minRange);
             return;
         }
     } else {
         length = viewport()->width();
-        if (pos > (length - k->image->width())) {
+        if (pos > (length - image->width())) {
             this->update();
-            if (k->mode == Color) 
-                calculateColor(k->max);
+            if (sliderMode == Color)
+                calculateColor(maxRange);
             else
-                emit valueChanged(k->max);
+                emit valueChanged(maxRange);
             return;
         }
     }
 
     int value = -1;
-    if (k->orientation == Qt::Vertical) 
-        value = k->min + (k->max - k->min) * (1.0 - float(pos)/float(length));
+    if (sliderOrientation == Qt::Vertical)
+        value = minRange + (maxRange - minRange) * (1.0 - float(pos)/float(length));
     else 
-        value = k->min + (k->max - k->min) * (float(pos)/float(length));
+        value = minRange + (maxRange - minRange) * (float(pos)/float(length));
 
-    if (k->value < 0)
-        k->value = 0;
+    if (value < 0)
+        value = 0;
 
-    if (value < k->min)
-        value = k->min;
+    if (value < minRange)
+        value = minRange;
 
     this->update();
 
-    if (k->mode == Color) 
+    if (sliderMode == Color)
         calculateColor(value);
     else
         emit valueChanged(value);
@@ -227,9 +208,9 @@ void TSlider::calculateNewPosition(int pos)
 
 void TSlider::calculateColor(int value)
 {
-    int r = k->endColor.red();
-    int g = k->endColor.green();
-    int b = k->endColor.blue();
+    int r = endColor.red();
+    int g = endColor.green();
+    int b = endColor.blue();
 
     r = (r*value)/100;
     g = (g*value)/100;
@@ -243,7 +224,7 @@ void TSlider::paintScales()
 {
     QPainter painter(viewport());
 
-    if (!k->enabled) {
+    if (!enabled) {
         QColor color(232, 232, 232);
         painter.setPen(color);
         painter.setBrush(color);
@@ -254,20 +235,20 @@ void TSlider::paintScales()
     int width = viewport()->width();
     int height = viewport()->height();
     int length = viewport()->width();
-    if (k->orientation == Qt::Vertical)
+    if (sliderOrientation == Qt::Vertical)
         length = viewport()->height();
     int segments = 32;
     int delta = length/(segments-1);
 
-    if (k->mode == Color) {
+    if (sliderMode == Color) {
         for (int section=0; section<=segments; section++) {
              QColor color;
              int r;
              int g;
              int b;
-             r = section*(k->endColor.red() - k->startColor.red()) / segments + k->startColor.red();
-             g = section*(k->endColor.green() - k->startColor.green()) / segments + k->startColor.green();
-             b = section*(k->endColor.blue() - k->startColor.blue()) / segments + k->startColor.blue();
+             r = section*(endColor.red() - startColor.red()) / segments + startColor.red();
+             g = section*(endColor.green() - startColor.green()) / segments + startColor.green();
+             b = section*(endColor.blue() - startColor.blue()) / segments + startColor.blue();
 
              if ((r > -1 && r < 256) && (g > -1 && g < 256) && (b > -1 && b < 256)) {
                  color.setRed(r);
@@ -277,21 +258,21 @@ void TSlider::paintScales()
                  painter.setPen(color);
                  painter.setBrush(color);
 
-                 if (k->orientation == Qt::Vertical)
-                     painter.drawRect((width - k->imageW)/2, section*delta, k->imageW, delta);
+                 if (sliderOrientation == Qt::Vertical)
+                     painter.drawRect((width - imageW)/2, section*delta, imageW, delta);
                  else 
-                     painter.drawRect(section*delta, (height - k->imageH)/2, delta, k->imageH);
+                     painter.drawRect(section*delta, (height - imageH)/2, delta, imageH);
             }
         }
-    } else if (k->mode == Size) {
+    } else if (sliderMode == Size) {
                painter.setPen(QColor(232, 232, 232));
-               painter.setBrush(QBrush(k->endColor, k->style));
-               painter.setOpacity(k->opacity);
+               painter.setBrush(QBrush(endColor, sliderStyle));
+               painter.setOpacity(sliderOpacity);
                painter.setRenderHint(QPainter::Antialiasing);
 
                QPainterPath path;
 
-               if (k->orientation == Qt::Vertical) {
+               if (sliderOrientation == Qt::Vertical) {
                    path = QPainterPath(QPointF(0, 0));
                    path.lineTo(QPointF(0, height));
                    path.lineTo(QPointF(width, height));
@@ -305,71 +286,71 @@ void TSlider::paintScales()
 
                painter.drawPath(path);
                painter.setOpacity(1.0);
-    } else if (k->mode == Opacity) {
+    } else if (sliderMode == Opacity) {
                double opacityDelta = 1.0/32; 
                double opacity = 0;
                for (int section=0; section<=segments; section++) {
                     painter.setPen(QColor(232, 232, 232));
-                    painter.setBrush(k->endColor);
+                    painter.setBrush(endColor);
                     painter.setOpacity(opacity);
                     opacity += opacityDelta;
 
-                    if (k->orientation == Qt::Vertical) {
-                        painter.drawRect((width - k->imageW)/2, section*delta, k->imageW, delta);
+                    if (sliderOrientation == Qt::Vertical) {
+                        painter.drawRect((width - imageW)/2, section*delta, imageW, delta);
                      } else {
-                        painter.drawRect(section*delta, (height - k->imageH)/2, delta, k->imageH);
+                        painter.drawRect(section*delta, (height - imageH)/2, delta, imageH);
                      }
                }
                painter.setOpacity(1.0);
-    } else if (k->mode == FPS) {
+    } else if (sliderMode == FPS) {
         for (int section=0; section<=segments; section++) {
              painter.setPen(QColor(232, 232, 232));
-             painter.setBrush(k->endColor);
+             painter.setBrush(endColor);
              painter.setOpacity(1.0);
-             if (k->orientation == Qt::Vertical) {
-                 painter.drawRect((width - k->imageW)/2, section*delta, k->imageW, delta);
+             if (sliderOrientation == Qt::Vertical) {
+                 painter.drawRect((width - imageW)/2, section*delta, imageW, delta);
               } else {
-                 painter.drawRect(section*delta, (height - k->imageH)/2, delta, k->imageH);
+                 painter.drawRect(section*delta, (height - imageH)/2, delta, imageH);
               }
         }
     }
 
     // Drawing selector image
-    if (k->orientation == Qt::Vertical) {
+    if (sliderOrientation == Qt::Vertical) {
         int h = viewport()->height();
 
-        if (k->value >= h || k->currentBase != h) {
-            k->value = (k->value * h)/k->currentBase;
-            k->currentBase = h;
+        if (value >= h || currentBase != h) {
+            value = (value * h)/currentBase;
+            currentBase = h;
         }
 
-        painter.drawImage((width/2)-(k->imageW/2), k->value, *k->image);
+        painter.drawImage((width/2)-(imageW/2), value, *image);
 
-        int x = (width/2)-(k->imageW/2);
-        int middle = k->imageH/2;
-        if (k->value <= middle) {
-            painter.drawImage(x, k->value, *k->image);
-        } else if (k->value >= (h - middle)) {
-            painter.drawImage(x, h - k->imageH, *k->image);
+        int x = (width/2)-(imageW/2);
+        int middle = imageH/2;
+        if (value <= middle) {
+            painter.drawImage(x, value, *image);
+        } else if (value >= (h - middle)) {
+            painter.drawImage(x, h - imageH, *image);
         } else {
-            painter.drawImage(x, k->value - middle, *k->image);
+            painter.drawImage(x, value - middle, *image);
         }
     } else {
         int w = viewport()->width();
 
-        if (k->value >= w || k->currentBase != w) {
-            k->value = (k->value * w)/k->currentBase;
-            k->currentBase = w;
+        if (value >= w || currentBase != w) {
+            value = (value * w)/currentBase;
+            currentBase = w;
         }
 
-        int y = (height/2)-(k->imageH/2);
-        int middle = k->imageW/2; 
-        if (k->value <= middle) {
-            painter.drawImage(k->value, y, *k->image);
-        } else if (k->value >= (w - middle)) {
-            painter.drawImage(w - k->imageW, y, *k->image);
+        int y = (height/2)-(imageH/2);
+        int middle = imageW/2;
+        if (value <= middle) {
+            painter.drawImage(value, y, *image);
+        } else if (value >= (w - middle)) {
+            painter.drawImage(w - imageW, y, *image);
         } else {
-            painter.drawImage(k->value - middle, y, *k->image);
+            painter.drawImage(value - middle, y, *image);
         }
     }
 }
