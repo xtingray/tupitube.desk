@@ -73,6 +73,7 @@ TSlider::TSlider(Qt::Orientation orientation, TSlider::Mode mode, const QColor &
 
 TSlider::~TSlider()
 {
+    delete image;
 }
 
 void TSlider::setBrushSettings(Qt::BrushStyle style, double opacity)

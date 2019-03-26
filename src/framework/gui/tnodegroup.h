@@ -52,7 +52,7 @@ class T_GUI_EXPORT TNodeGroup : public QObject
     public:
         enum GroupType { Polyline, LineSelection, PositionTween, ComposedTween };
 
-        TNodeGroup(QGraphicsItem *parent, QGraphicsScene *scene, GroupType type, int level);
+        TNodeGroup(QGraphicsItem *parent, QGraphicsScene *nodeScene, GroupType nodeType, int nodeLevel);
         ~TNodeGroup();
 
         void clear();
@@ -85,8 +85,14 @@ class T_GUI_EXPORT TNodeGroup : public QObject
         void resizeNodes(qreal scaleFactor);
         
     private:
-        struct Private;
-        Private *const k;
+        QList<TControlNode*> nodes;
+        QGraphicsItem *nodeParentItem;
+        QPainterPath path;
+        QPointF pos;
+        QHash<int, QPointF> hashChangedNodes;
+        QGraphicsScene *nodeScene;
+        GroupType nodeType;
+        int nodeLevel;
         
     signals:
         void itemChanged(QGraphicsItem *item);

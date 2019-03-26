@@ -35,19 +35,7 @@
 
 #include "tnodegroup.h"
 
-struct TNodeGroup::Private
-{
-    QList<TControlNode*> nodes;
-    QGraphicsItem *parentItem;
-    QPainterPath path;
-    QPointF pos;
-    QHash<int, QPointF> changedNodes;
-    QGraphicsScene *scene;
-    GroupType type;
-    int level;
-};
-
-TNodeGroup::TNodeGroup(QGraphicsItem *parent, QGraphicsScene *scene, GroupType type, int level): k(new Private)
+TNodeGroup::TNodeGroup(QGraphicsItem *parent, QGraphicsScene *scene, GroupType type, int level)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -57,10 +45,10 @@ TNodeGroup::TNodeGroup(QGraphicsItem *parent, QGraphicsScene *scene, GroupType t
         #endif
     #endif
 
-    k->parentItem = parent;
-    k->scene = scene;
-    k->type = type;
-    k->level = level;
+    nodeParentItem = parent;
+    nodeScene = scene;
+    nodeType = type;
+    nodeLevel = level;
     
     if (QGraphicsPathItem *pathItem = qgraphicsitem_cast<QGraphicsPathItem *>(parent))
         createNodes(pathItem);
@@ -68,7 +56,7 @@ TNodeGroup::TNodeGroup(QGraphicsItem *parent, QGraphicsScene *scene, GroupType t
 
 QGraphicsItem *TNodeGroup::parentItem()
 {
-    return k->parentItem;
+    return nodeParentItem;
 }
 
 TNodeGroup::~TNodeGroup()
@@ -81,21 +69,22 @@ TNodeGroup::~TNodeGroup()
         #endif
     #endif
 
-    delete k;
+    delete nodeParentItem;
+    delete nodeScene;
 }
 
 void TNodeGroup::clear()
 {
-    if (k->nodes.isEmpty())
+    if (nodes.isEmpty())
         return;
 
-    foreach (TControlNode *node, k->nodes) {
+    foreach (TControlNode *node, nodes) {
              if (node)
-                 k->scene->removeItem(node);
+                 nodeScene->removeItem(node);
     }
 
-    k->nodes.clear();
-    k->parentItem->update();
+    nodes.clear();
+    nodeParentItem->update();
 }
 
 void TNodeGroup::syncNodes(const QPainterPath &path)
@@ -108,10 +97,10 @@ void TNodeGroup::syncNodes(const QPainterPath &path)
         #endif
     #endif
 
-    if (k->nodes.isEmpty())
+    if (nodes.isEmpty())
         return;
 
-    foreach (TControlNode *node, k->nodes) {
+    foreach (TControlNode *node, nodes) {
              if (node) {
                  node->hasChanged(true);
                  node->setPos(path.elementAt(node->index()));
@@ -129,9 +118,9 @@ void TNodeGroup::syncNodesFromParent()
         #endif
     #endif
 
-    if (k->parentItem) {
-        if (qgraphicsitem_cast<QGraphicsPathItem *>(k->parentItem))
-            syncNodes(k->parentItem->sceneMatrix().map(qgraphicsitem_cast<QGraphicsPathItem *>(k->parentItem)->path()));
+    if (nodeParentItem) {
+        if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem))
+            syncNodes(nodeParentItem->sceneMatrix().map(qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)->path()));
     }
 }
 
@@ -145,8 +134,8 @@ void TNodeGroup::setParentItem(QGraphicsItem *newParent)
         #endif
     #endif
 
-    k->parentItem = newParent;
-    foreach (TControlNode *node, k->nodes) {
+    nodeParentItem = newParent;
+    foreach (TControlNode *node, nodes) {
              if (node)
                  node->setGraphicParent(newParent);
     }
@@ -164,63 +153,63 @@ void TNodeGroup::moveElementTo(int index, const QPointF& pos)
     #endif
     */
 
-    if (k->parentItem) {
-        QPainterPath path = qgraphicsitem_cast<QGraphicsPathItem *>(k->parentItem)->path();
+    if (nodeParentItem) {
+        QPainterPath path = qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)->path();
         path.setElementPositionAt(index, pos.x(), pos.y());
-        qgraphicsitem_cast<QGraphicsPathItem *>(k->parentItem)->setPath(path);
+        qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)->setPath(path);
 
-        k->changedNodes.insert(index, pos);
-        emit itemChanged(k->parentItem);
+        hashChangedNodes.insert(index, pos);
+        emit itemChanged(nodeParentItem);
     }
 }
 
 QHash<int, QPointF> TNodeGroup::changedNodes()
 {
-    return k->changedNodes;
+    return hashChangedNodes;
 }
 
 bool TNodeGroup::hasChangedNodes()
 {
-    return k->changedNodes.count() > 0;
+    return hashChangedNodes.count() > 0;
 }
 
 void TNodeGroup::clearChangedNodes()
 {
-    if (!k->changedNodes.isEmpty())
-        k->changedNodes.clear();
+    if (!hashChangedNodes.isEmpty())
+        hashChangedNodes.clear();
 }
 
 void TNodeGroup::restoreItem()
 {
-    qgraphicsitem_cast<QGraphicsPathItem *>(k->parentItem)->setPath(k->path);
-    k->parentItem->setPos(k->pos);
+    qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)->setPath(path);
+    nodeParentItem->setPos(pos);
 }
 
 void TNodeGroup::show()
 {
-    foreach (TControlNode *node, k->nodes) {
-             if (qgraphicsitem_cast<QGraphicsPathItem *>(k->parentItem)) {
+    foreach (TControlNode *node, nodes) {
+             if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)) {
                  if (!node->scene())
-                     k->scene->addItem(node);
+                     nodeScene->addItem(node);
              }
     }
 }
 
 void TNodeGroup::saveParentProperties()
 {
-    if (qgraphicsitem_cast<QGraphicsPathItem *>(k->parentItem)) {
-        k->path = qgraphicsitem_cast<QGraphicsPathItem *>(k->parentItem)->path();
-        k->pos = k->parentItem->scenePos();
+    if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)) {
+        path = qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)->path();
+        pos = nodeParentItem->scenePos();
     }
 }
 
 int TNodeGroup::removeSelectedNodes()
 {
     int count = 0;
-    foreach (TControlNode *node, k->nodes) {
+    foreach (TControlNode *node, nodes) {
              if (node->isSelected()) {
                  count++;
-                 k->nodes.removeAll(node);
+                 nodes.removeAll(node);
                  // SQA: recreate the path
              }
     }
@@ -239,8 +228,8 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
     #endif
 
     if (pathItem) {
-        qDeleteAll(k->nodes);
-        k->nodes.clear();
+        qDeleteAll(nodes);
+        nodes.clear();
         
         QPainterPath path = pathItem->sceneMatrix().map(pathItem->path());
         saveParentProperties();
@@ -253,38 +242,38 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
                    if (index - 2 < 0) 
                        continue;
                    if (path.elementAt(index-2).type == QPainterPath::CurveToElement) {
-                       TControlNode *node = new TControlNode(index, this, path.elementAt(index), pathItem, k->scene, k->level);
+                       TControlNode *node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
                        QPainterPath::Element e1 = path.elementAt(index-1);
-                       node->setLeft(new TControlNode(index-1, this, e1, pathItem, k->scene, k->level));
+                       node->setLeft(new TControlNode(index-1, this, e1, pathItem, nodeScene, nodeLevel));
                     
                        if (index+1 < path.elementCount()) {
                            QPainterPath::Element e2 = path.elementAt(index+1);
                            if (e2.type == QPainterPath::CurveToElement) {
-                               node->setRight(new TControlNode(index+1, this, e2, pathItem, k->scene, k->level));
-                               k->nodes << node->right();
+                               node->setRight(new TControlNode(index+1, this, e2, pathItem, nodeScene, nodeLevel));
+                               nodes << node->right();
                                index++;
                            }
                        }
-                       k->nodes << node;
-                       k->nodes << node->left();
+                       nodes << node;
+                       nodes << node->left();
                    }
                } else if ((e.type == QPainterPath::LineToElement || e.type == QPainterPath::MoveToElement)) {
                           TControlNode *node;
                           if (index+1 < path.elementCount()) {
                               if (path.elementAt(index+1).type == QPainterPath::CurveToElement) {
-                                  node = new TControlNode(index, this, path.elementAt(index), pathItem, k->scene, k->level);
-                                  node->setRight(new TControlNode(index+1, this, path.elementAt(index+1), pathItem, k->scene));
+                                  node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
+                                  node->setRight(new TControlNode(index+1, this, path.elementAt(index+1), pathItem, nodeScene));
                         
                                   index++;
-                                  k->nodes << node;
-                                  k->nodes << node->right();
+                                  nodes << node;
+                                  nodes << node->right();
                               } else {
-                                  node = new TControlNode(index, this, path.elementAt(index), pathItem, k->scene, k->level);
-                                  k->nodes << node;
+                                  node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
+                                  nodes << node;
                               }
                } else {
-                    node = new TControlNode(index, this, path.elementAt(index), pathItem, k->scene, k->level);
-                    k->nodes << node;
+                    node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
+                    nodes << node;
                }
             }
             index++;
@@ -328,13 +317,13 @@ void TNodeGroup::emitNodeClicked(TControlNode::State state)
 
 void TNodeGroup::expandAllNodes()
 {
-    foreach (TControlNode *node, k->nodes)
+    foreach (TControlNode *node, nodes)
         node->showChildNodes(true);
 }
 
 bool TNodeGroup::isSelected()
 {
-    foreach (TControlNode *node, k->nodes) {
+    foreach (TControlNode *node, nodes) {
         if (node->isSelected())
             return true;
     }
@@ -344,12 +333,12 @@ bool TNodeGroup::isSelected()
 
 int TNodeGroup::size()
 {
-    return k->nodes.count();
+    return nodes.count();
 }
 
 void TNodeGroup::resizeNodes(qreal scaleFactor)
 {
-    foreach (TControlNode *node, k->nodes) {
+    foreach (TControlNode *node, nodes) {
         if (node)
             node->resize(scaleFactor);
     }
