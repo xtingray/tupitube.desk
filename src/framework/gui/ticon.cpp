@@ -35,14 +35,9 @@
 
 #include "ticon.h"
 
-struct TIcon::Private
+TIcon::TIcon(const QPixmap &pixmap, const QBrush &brush) : QIcon(pixmap)
 {
-    QBrush brush;
-};
-
-TIcon::TIcon(const QPixmap &pixmap, const QBrush &brush) : QIcon(pixmap), k(new Private)
-{
-    k->brush = brush;
+    iconBrush = brush;
 }
 
 TIcon::~TIcon()
@@ -51,12 +46,12 @@ TIcon::~TIcon()
 
 QBrush TIcon::currentBrush() const
 {
-    return k->brush;
+    return iconBrush;
 }
 
 QColor TIcon::currentColor() const
 {
-    return k->brush.color();
+    return iconBrush.color();
 }
 
 void TIcon::paint(QPainter *painter, const QRect &rect, Qt::Alignment alignment, Mode mode, State state) const
@@ -66,5 +61,5 @@ void TIcon::paint(QPainter *painter, const QRect &rect, Qt::Alignment alignment,
     Q_UNUSED(state);
 
     painter->setPen(QPen(Qt::black));
-    painter->fillRect(rect, k->brush);
+    painter->fillRect(rect, iconBrush);
 }

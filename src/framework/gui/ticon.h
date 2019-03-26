@@ -48,7 +48,7 @@ class T_GUI_EXPORT TIcon : public QIcon
 {
     public:
 
-        TIcon(const QPixmap &pixmap, const QBrush &brush);
+        TIcon(const QPixmap &pixmap, const QBrush &iconBrush);
         ~TIcon();
 
         QBrush currentBrush() const;
@@ -56,8 +56,7 @@ class T_GUI_EXPORT TIcon : public QIcon
 
     private:
         void paint(QPainter *painter, const QRect &rect, Qt::Alignment alignment = Qt::AlignCenter, Mode mode = Normal, State state = Off) const;
-        struct Private;
-        Private *const k;
+        QBrush iconBrush;
 };
 
 #endif
