@@ -45,38 +45,29 @@
 #include "tcolorarrow.xpm"
 #include "tcolorreset.xpm"
 
-struct TDualColorButton::Private
+TDualColorButton::TDualColorButton(QWidget *parent) : QWidget(parent)
 {
-    QPixmap arrowBitmap;
-    QPixmap resetPixmap;
-    QBrush fgBrush;
-    QBrush bgBrush;
-    ColorSpace currentSpace;
-};
+    arrowBitmap = QPixmap((const char **)dcolorarrow_bits);
+    resetPixmap = QPixmap((const char **)dcolorreset_xpm);
 
-TDualColorButton::TDualColorButton(QWidget *parent) : QWidget(parent), k(new Private)
-{
-    k->arrowBitmap = QPixmap((const char **)dcolorarrow_bits);
-    k->resetPixmap = QPixmap((const char **)dcolorreset_xpm);
-
-    k->fgBrush = QBrush(Qt::black, Qt::SolidPattern);
-    k->bgBrush = QBrush(QColor(0, 0, 0, 0), Qt::SolidPattern);
+    fgBrush = QBrush(Qt::black, Qt::SolidPattern);
+    bgBrush = QBrush(QColor(0, 0, 0, 0), Qt::SolidPattern);
 	
-    k->currentSpace = Foreground;
+    currentSpace = Foreground;
 
     if (sizeHint().isValid())
         setMinimumSize(sizeHint());
 }
 
-TDualColorButton::TDualColorButton(const QBrush &fgColor, const QBrush &bgColor, QWidget *parent) : QWidget(parent), k(new Private)
+TDualColorButton::TDualColorButton(const QBrush &fgColor, const QBrush &bgColor, QWidget *parent) : QWidget(parent)
 {
-    k->arrowBitmap = QPixmap((const char **)dcolorarrow_bits);
-    k->resetPixmap = QPixmap((const char **)dcolorreset_xpm);
+    arrowBitmap = QPixmap((const char **)dcolorarrow_bits);
+    resetPixmap = QPixmap((const char **)dcolorreset_xpm);
 
-    k->fgBrush = fgColor;
-    k->bgBrush = bgColor;
+    fgBrush = fgColor;
+    bgBrush = bgColor;
 
-    k->currentSpace = Foreground;
+    currentSpace = Foreground;
 
     if (sizeHint().isValid())
         setMinimumSize(sizeHint());
@@ -88,22 +79,22 @@ TDualColorButton::~TDualColorButton()
 
 QBrush TDualColorButton::foreground() const
 {
-    return k->fgBrush;
+    return fgBrush;
 }
 
 QBrush TDualColorButton::background() const
 {
-    return k->bgBrush;
+    return bgBrush;
 }
 
 TDualColorButton::ColorSpace TDualColorButton::current() const
 {
-    return k->currentSpace;
+    return currentSpace;
 }
 
 QBrush TDualColorButton::currentColor() const
 {
-    return (k->currentSpace == Background ? k->bgBrush : k->fgBrush);
+    return (currentSpace == Background ? bgBrush : fgBrush);
 }
 
 QSize TDualColorButton::sizeHint() const
@@ -113,29 +104,29 @@ QSize TDualColorButton::sizeHint() const
 
 void TDualColorButton::setForeground(const QBrush &c)
 {
-    k->fgBrush = c;
+    fgBrush = c;
     update();
 }
 
 void TDualColorButton::setBackground(const QBrush &c)
 {
-    k->bgBrush = c;
+    bgBrush = c;
     update();
 }
 
 void TDualColorButton::setCurrentColor(const QBrush &c)
 {
-    if (k->currentSpace == Background)
-        k->bgBrush = c;
+    if (currentSpace == Background)
+        bgBrush = c;
     else
-        k->fgBrush = c;
+        fgBrush = c;
 
     update();
 }
 
 void TDualColorButton::setCurrent(ColorSpace s)
 {
-    k->currentSpace = s;
+    currentSpace = s;
     update();
 }
 
@@ -155,15 +146,15 @@ void TDualColorButton::paintEvent(QPaintEvent *)
 
     QBrush defBrush = pal.color(QPalette::Button);
 
-    QBrush bgAdjusted = k->bgBrush;
-    QBrush fgAdjusted = k->fgBrush;
+    QBrush bgAdjusted = bgBrush;
+    QBrush fgAdjusted = fgBrush;
 
-    qDrawShadeRect(&painter, bgRect, pal, k->currentSpace == Background, 2, 0, isEnabled() ? &bgAdjusted: &defBrush);
-    qDrawShadeRect(&painter, fgRect,  pal, k->currentSpace == Foreground, 2, 0, isEnabled() ? &fgAdjusted : &defBrush);
+    qDrawShadeRect(&painter, bgRect, pal, currentSpace == Background, 2, 0, isEnabled() ? &bgAdjusted: &defBrush);
+    qDrawShadeRect(&painter, fgRect,  pal, currentSpace == Foreground, 2, 0, isEnabled() ? &fgAdjusted : &defBrush);
 
     painter.setPen(QPen(palette().shadow().color()));
-    painter.drawPixmap(fgRect.right() + 2, 0, k->arrowBitmap);
-    painter.drawPixmap(0, fgRect.bottom() + 2, k->resetPixmap);
+    painter.drawPixmap(fgRect.right() + 2, 0, arrowBitmap);
+    painter.drawPixmap(0, fgRect.bottom() + 2, resetPixmap);
 }
 
 void TDualColorButton::mousePressEvent(QMouseEvent *event)
@@ -174,19 +165,19 @@ void TDualColorButton::mousePressEvent(QMouseEvent *event)
     metrics(fgRect, bgRect);
 
     if (fgRect.contains(mPos)) {
-        k->currentSpace = Foreground;
+        currentSpace = Foreground;
         emit selectionChanged(Foreground);
     } else if (bgRect.contains(mPos)) {
-        k->currentSpace = Background;
+        currentSpace = Background;
         emit selectionChanged(Background);
     } else if (event->pos().x() > fgRect.width()) {
-        QBrush tmpBrush = k->fgBrush;
-        k->fgBrush = k->bgBrush;
-        k->bgBrush = tmpBrush;
+        QBrush tmpBrush = fgBrush;
+        fgBrush = bgBrush;
+        bgBrush = tmpBrush;
         emit switchColors();
     } else if (event->pos().x() < bgRect.x()) {
-        k->fgBrush.setColor(Qt::black);
-        k->bgBrush.setColor(QColor(0,0,0,0));
+        fgBrush.setColor(Qt::black);
+        bgBrush.setColor(QColor(0,0,0,0));
         emit resetColors();
     }
 

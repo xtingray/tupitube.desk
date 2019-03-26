@@ -82,8 +82,11 @@ class T_GUI_EXPORT TDualColorButton : public QWidget
         virtual void mousePressEvent(QMouseEvent *ev);
 
     private:
-        struct Private;
-        Private *const k;
+        QPixmap arrowBitmap;
+        QPixmap resetPixmap;
+        QBrush fgBrush;
+        QBrush bgBrush;
+        ColorSpace currentSpace;
 };
 
 #endif
