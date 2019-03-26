@@ -86,8 +86,9 @@ class T_GUI_EXPORT TDoubleComboBox : public QComboBox
         void editingFinished();
     
     private:
-        struct Private;
-        Private *const k;
+        bool checkShowAsPercent;
+        QDoubleValidator *validator;
+        QLineEdit *editor;
 };
 
 #endif

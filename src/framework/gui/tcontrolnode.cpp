@@ -236,7 +236,7 @@ void TControlNode::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
     /* SQA: Check if this code is required for other features than Position tween
     foreach (QGraphicsItem *item, scene()->selectedItems()) {
              if (qgraphicsitem_cast<TControlNode*>(item)) {
-                 if (!k->centralNode) { 
+                 if (!k-centralNode) {
                      if (item != this)
                          item->moveBy(event->pos().x(), event->pos().y());
                  }

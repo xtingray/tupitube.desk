@@ -38,22 +38,14 @@
 #define PERCENT(v) (v * 100.0) / maximum()
 #define VALUE(p) (p * maximum()) / 100.0
 
-struct TDoubleComboBox::Private
+TDoubleComboBox::TDoubleComboBox(double min, double max, QWidget *parent) : QComboBox(parent)
 {
-    bool showAsPercent;
-    QDoubleValidator *validator;
-    QLineEdit *editor;
-};
-
-TDoubleComboBox::TDoubleComboBox(double min, double max, QWidget *parent)
- : QComboBox(parent), k(new Private)
-{
-    k->validator = new QDoubleValidator(this);
-    k->editor = new QLineEdit;
-    k->editor->setValidator(k->validator);
-    setLineEdit(k->editor);
+    validator = new QDoubleValidator(this);
+    editor = new QLineEdit;
+    editor->setValidator(validator);
+    setLineEdit(editor);
     
-    setValidator(k->validator);
+    setValidator(validator);
     setMinimum(min);
     setMaximum(max);
 
@@ -64,28 +56,29 @@ TDoubleComboBox::TDoubleComboBox(double min, double max, QWidget *parent)
     connect(this, SIGNAL(highlighted(int)), this, SLOT(emitHighlighted(int)));
     connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(emitCurrentIndexChanged(int)));
     
-    connect(k->editor, SIGNAL(editingFinished()), this, SIGNAL(editingFinished()));
-    connect(k->editor, SIGNAL(returnPressed()), this, SIGNAL(editingFinished()));
+    connect(editor, SIGNAL(editingFinished()), this, SIGNAL(editingFinished()));
+    connect(editor, SIGNAL(returnPressed()), this, SIGNAL(editingFinished()));
     
-    k->showAsPercent = false;
+    checkShowAsPercent = false;
     
     setDecimals(2);
 }
 
 TDoubleComboBox::~TDoubleComboBox()
 {
-    delete k;
+    delete validator;
+    delete editor;
 }
 
 void TDoubleComboBox::setShowAsPercent(bool p)
 {
-    if (k->showAsPercent == p) 
+    if (checkShowAsPercent == p)
         return;
     
-    k->showAsPercent = p;
+    checkShowAsPercent = p;
     
     for (int index = 0; index < count(); index++) {
-         if (k->showAsPercent) {
+         if (checkShowAsPercent) {
              setItemText(index, QString::number(PERCENT(itemText(index).toDouble())));
          } else {
              double value = VALUE(itemText(index).toDouble());
@@ -96,43 +89,43 @@ void TDoubleComboBox::setShowAsPercent(bool p)
 
 bool TDoubleComboBox::showAsPercent() const
 {
-    return k->showAsPercent;
+    return checkShowAsPercent;
 }
 
 void TDoubleComboBox::setDecimals(int n)
 {
-    k->validator->setDecimals(n);
+    validator->setDecimals(n);
 }
 
 int TDoubleComboBox::decimals() const
 {
-    return k->validator->decimals();
+    return validator->decimals();
 }
 
 void TDoubleComboBox::setMaximum(double max)
 {
-    k->validator->setTop(max);
+    validator->setTop(max);
 }
 
 void TDoubleComboBox::setMinimum(double min)
 {
-    k->validator->setBottom(min);
+    validator->setBottom(min);
 }
 
 double TDoubleComboBox::maximum() const
 {
-    return k->validator->top();
+    return validator->top();
 }
 
 double TDoubleComboBox::minimum() const
 {
-    return k->validator->bottom();
+    return validator->bottom();
 }
 
 void TDoubleComboBox::addValue(double v)
 {
     if (minimum() < v && v < maximum()) {
-        if (k->showAsPercent)
+        if (checkShowAsPercent)
             addItem(QString::number(PERCENT(v)));
         else
             addItem(QString::number(v));
@@ -142,7 +135,7 @@ void TDoubleComboBox::addValue(double v)
 void TDoubleComboBox::addPercent(double p)
 {
     if (p >= 0 && p <= 100) {
-        if (k->showAsPercent)
+        if (checkShowAsPercent)
             addItem(QString::number(p));
         else
             addItem(QString::number(VALUE(p)));
@@ -166,7 +159,7 @@ void TDoubleComboBox::emitCurrentIndexChanged(int index)
 
 double TDoubleComboBox::value()
 {
-    if (k->showAsPercent)
+    if (checkShowAsPercent)
         return (VALUE(currentText().toDouble()));
     
     return currentText().toDouble();
@@ -174,7 +167,7 @@ double TDoubleComboBox::value()
 
 void TDoubleComboBox::setValue(int index, double v)
 {
-    if (k->showAsPercent)
+    if (checkShowAsPercent)
         setItemText(index, QString::number(PERCENT(v)));
     else
         setItemText(index, QString::number(v));
@@ -182,7 +175,7 @@ void TDoubleComboBox::setValue(int index, double v)
 
 void TDoubleComboBox::setPercent(int index, double p)
 {
-    if (k->showAsPercent)
+    if (checkShowAsPercent)
         setItemText(index, QString::number(p));
     else
         setItemText(index, QString::number(VALUE(p)));
@@ -190,7 +183,7 @@ void TDoubleComboBox::setPercent(int index, double p)
 
 double TDoubleComboBox::percent()
 {
-    if (k->showAsPercent)
+    if (checkShowAsPercent)
         return currentText().toDouble();
     
     return PERCENT(currentText().toDouble());
