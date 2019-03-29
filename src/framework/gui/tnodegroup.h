@@ -83,7 +83,12 @@ class T_GUI_EXPORT TNodeGroup : public QObject
         bool isSelected();
         int size();
         void resizeNodes(qreal scaleFactor);
-        
+
+    signals:
+        void itemChanged(QGraphicsItem *item);
+        void nodePressed();
+        void nodeReleased();
+
     private:
         QList<TControlNode*> nodes;
         QGraphicsItem *nodeParentItem;
@@ -93,11 +98,6 @@ class T_GUI_EXPORT TNodeGroup : public QObject
         QGraphicsScene *nodeScene;
         GroupType nodeType;
         int nodeLevel;
-        
-    signals:
-        void itemChanged(QGraphicsItem *item);
-        void nodePressed();
-        void nodeReleased(); 
 };
 
 #endif

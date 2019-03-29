@@ -79,8 +79,8 @@ void TNodeGroup::clear()
         return;
 
     foreach (TControlNode *node, nodes) {
-             if (node)
-                 nodeScene->removeItem(node);
+        if (node)
+            nodeScene->removeItem(node);
     }
 
     nodes.clear();
@@ -101,10 +101,10 @@ void TNodeGroup::syncNodes(const QPainterPath &path)
         return;
 
     foreach (TControlNode *node, nodes) {
-             if (node) {
-                 node->hasChanged(true);
-                 node->setPos(path.elementAt(node->index()));
-             }
+        if (node) {
+            node->hasChanged(true);
+            node->setPos(path.elementAt(node->index()));
+        }
     }
 }
 
@@ -136,8 +136,8 @@ void TNodeGroup::setParentItem(QGraphicsItem *newParent)
 
     nodeParentItem = newParent;
     foreach (TControlNode *node, nodes) {
-             if (node)
-                 node->setGraphicParent(newParent);
+        if (node)
+            node->setGraphicParent(newParent);
     }
 }
 
@@ -188,10 +188,10 @@ void TNodeGroup::restoreItem()
 void TNodeGroup::show()
 {
     foreach (TControlNode *node, nodes) {
-             if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)) {
-                 if (!node->scene())
-                     nodeScene->addItem(node);
-             }
+        if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)) {
+            if (!node->scene())
+                nodeScene->addItem(node);
+        }
     }
 }
 
@@ -207,11 +207,11 @@ int TNodeGroup::removeSelectedNodes()
 {
     int count = 0;
     foreach (TControlNode *node, nodes) {
-             if (node->isSelected()) {
-                 count++;
-                 nodes.removeAll(node);
-                 // SQA: recreate the path
-             }
+        if (node->isSelected()) {
+            count++;
+            nodes.removeAll(node);
+            // SQA: recreate the path
+        }
     }
     
     return count;
@@ -236,45 +236,45 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
         int index = 0;
         
         while (index < path.elementCount()) {
-               QPainterPath::Element e = path.elementAt(index);
+            QPainterPath::Element e = path.elementAt(index);
             
-               if (e.type == QPainterPath::CurveToDataElement) {
-                   if (index - 2 < 0) 
-                       continue;
-                   if (path.elementAt(index-2).type == QPainterPath::CurveToElement) {
-                       TControlNode *node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
-                       QPainterPath::Element e1 = path.elementAt(index-1);
-                       node->setLeft(new TControlNode(index-1, this, e1, pathItem, nodeScene, nodeLevel));
+            if (e.type == QPainterPath::CurveToDataElement) {
+                if (index - 2 < 0)
+                    continue;
+                if (path.elementAt(index-2).type == QPainterPath::CurveToElement) {
+                    TControlNode *node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
+                    QPainterPath::Element e1 = path.elementAt(index-1);
+                    node->setLeft(new TControlNode(index-1, this, e1, pathItem, nodeScene, nodeLevel));
                     
-                       if (index+1 < path.elementCount()) {
-                           QPainterPath::Element e2 = path.elementAt(index+1);
-                           if (e2.type == QPainterPath::CurveToElement) {
-                               node->setRight(new TControlNode(index+1, this, e2, pathItem, nodeScene, nodeLevel));
-                               nodes << node->right();
-                               index++;
-                           }
-                       }
-                       nodes << node;
-                       nodes << node->left();
-                   }
-               } else if ((e.type == QPainterPath::LineToElement || e.type == QPainterPath::MoveToElement)) {
-                          TControlNode *node;
-                          if (index+1 < path.elementCount()) {
-                              if (path.elementAt(index+1).type == QPainterPath::CurveToElement) {
-                                  node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
-                                  node->setRight(new TControlNode(index+1, this, path.elementAt(index+1), pathItem, nodeScene));
+                    if (index+1 < path.elementCount()) {
+                        QPainterPath::Element e2 = path.elementAt(index+1);
+                        if (e2.type == QPainterPath::CurveToElement) {
+                            node->setRight(new TControlNode(index+1, this, e2, pathItem, nodeScene, nodeLevel));
+                            nodes << node->right();
+                            index++;
+                        }
+                    }
+                    nodes << node;
+                    nodes << node->left();
+                }
+            } else if ((e.type == QPainterPath::LineToElement || e.type == QPainterPath::MoveToElement)) {
+                TControlNode *node;
+                if (index+1 < path.elementCount()) {
+                    if (path.elementAt(index+1).type == QPainterPath::CurveToElement) {
+                        node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
+                        node->setRight(new TControlNode(index+1, this, path.elementAt(index+1), pathItem, nodeScene));
                         
-                                  index++;
-                                  nodes << node;
-                                  nodes << node->right();
-                              } else {
-                                  node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
-                                  nodes << node;
-                              }
-               } else {
+                        index++;
+                        nodes << node;
+                        nodes << node->right();
+                    } else {
+                        node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
+                        nodes << node;
+                    }
+                } else {
                     node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
                     nodes << node;
-               }
+                }
             }
             index++;
         }

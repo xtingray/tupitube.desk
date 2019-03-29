@@ -57,6 +57,7 @@ class TUPITUBE_EXPORT TColorCell : public QWidget
         enum FillType {Contour = 0, Inner, Background, Basic, PreviousFrames, NextFrames, Layers};
         TColorCell(FillType typeIndex, const QBrush &b, const QSize &dimension);
         ~TColorCell();
+
         QSize sizeHint() const;
         QBrush brush();
         QColor color();
@@ -80,7 +81,6 @@ class TUPITUBE_EXPORT TColorCell : public QWidget
         QBrush cellBrush;
         QSize size;
         QString themeName;
-
 };
 
 #endif
