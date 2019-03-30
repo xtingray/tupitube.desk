@@ -88,7 +88,7 @@ void TupMainWindow::createGUI()
     m_actionManager->insert(libraryView->toggleViewAction(), "show_library");
     addToPerspective(libraryView->toggleViewAction(), Animation);
 
-    new TAction(QPixmap(THEME_DIR + "icons/bitmap.png"), tr("Image"), QKeySequence(tr("Alt+B")), m_libraryWidget, SLOT(importImage()),
+    new TAction(QPixmap(THEME_DIR + "icons/bitmap.png"), tr("Image"), QKeySequence(tr("Alt+B")), m_libraryWidget, SLOT(importImageGroup()),
         m_actionManager, "importImageGroup");
 
     new TAction(QPixmap(THEME_DIR + "icons/bitmap_array.png"), tr("Image Sequence"), QKeySequence(tr("Alt+Shift+B")),
@@ -292,7 +292,7 @@ void TupMainWindow::setMenuItemsContext(bool flag)
     m_actionManager->enable("close_project", flag);
     m_actionManager->enable("hideaction", flag);
     m_actionManager->enable("export", flag);
-    m_actionManager->enable("importImage", flag);
+    m_actionManager->enable("importImageGroup", flag);
 
     // m_settingsMenu->setEnabled(flag);
     m_insertMenu->setEnabled(flag);
