@@ -5,6 +5,9 @@
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>               *
  *                                                                        *
  *   Developers:                                                          *
+ *                                                                        *
+ *   2019:                                                                *
+ *    Alejandro Carrasco                                                  *
  *   2010:                                                                *
  *    Gustavo Gonzalez / xtingray                                         *
  *                                                                        *
@@ -50,160 +53,138 @@
 #include <QDir>
 #include <QComboBox>
 
-struct Settings::Private
+Settings::Settings(QWidget *parent) : QWidget(parent)
 {
-    QWidget *innerPanel;
-    QBoxLayout *layout;
-    TupToolPlugin::Mode mode;
+    selectionDone = false;
+    totalStepsCount = 0;
 
-    QLineEdit *input;
-
-    QSpinBox *initFrame;
-    QSpinBox *endFrame;
-
-    TRadioButtonGroup *options;
-
-    QComboBox *fillTypeCombo;
-    QPushButton *initColorButton;
-    QColor initialColor;
-    QPushButton *endColorButton;
-    QColor endingColor;
-
-    QSpinBox *iterationsCombo;
-
-    QCheckBox *loopBox;
-    QCheckBox *reverseLoopBox;
-
-    QLabel *totalLabel;
-    int totalSteps;
-
-    bool selectionDone;
-    bool propertiesDone;
-
-    TImageButton *apply;
-    TImageButton *remove;
-
-    TupItemTweener::FillType fillType;
-};
-
-Settings::Settings(QWidget *parent) : QWidget(parent), k(new Private)
-{
-    k->selectionDone = false;
-    k->totalSteps = 0;
-
-    k->layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
-    k->layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
+    layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
+    layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
 
     QLabel *nameLabel = new QLabel(tr("Name") + ": ");
-    k->input = new QLineEdit;
+    input = new QLineEdit;
 
     QHBoxLayout *nameLayout = new QHBoxLayout;
     nameLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
     nameLayout->setMargin(0);
     nameLayout->setSpacing(0);
     nameLayout->addWidget(nameLabel);
-    nameLayout->addWidget(k->input);
+    nameLayout->addWidget(input);
 
-    k->options = new TRadioButtonGroup(tr("Options"), Qt::Vertical);
-    k->options->addItem(tr("Select object"), 0);
-    k->options->addItem(tr("Set Properties"), 1);
-    connect(k->options, SIGNAL(clicked(int)), this, SLOT(emitOptionChanged(int)));
+    options = new TRadioButtonGroup(tr("Options"), Qt::Vertical);
+    options->addItem(tr("Select object"), 0);
+    options->addItem(tr("Set Properties"), 1);
+    connect(options, SIGNAL(clicked(int)), this, SLOT(emitOptionChanged(int)));
 
-    k->apply = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/save.png"), 22);
-    connect(k->apply, SIGNAL(clicked()), this, SLOT(applyTween()));
+    apply = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/save.png"), 22);
+    connect(apply, SIGNAL(clicked()), this, SLOT(applyTween()));
 
-    k->remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close.png"), 22);
-    connect(k->remove, SIGNAL(clicked()), this, SIGNAL(clickedResetTween()));
+    remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close.png"), 22);
+    connect(remove, SIGNAL(clicked()), this, SIGNAL(clickedResetTween()));
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     buttonsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     buttonsLayout->setMargin(0);
     buttonsLayout->setSpacing(10);
-    buttonsLayout->addWidget(k->apply);
-    buttonsLayout->addWidget(k->remove);
+    buttonsLayout->addWidget(apply);
+    buttonsLayout->addWidget(remove);
 
-    k->layout->addLayout(nameLayout);
-    k->layout->addWidget(k->options);
+    layout->addLayout(nameLayout);
+    layout->addWidget(options);
 
     setInnerForm();
 
-    k->layout->addSpacing(10);
-    k->layout->addLayout(buttonsLayout);
-    k->layout->setSpacing(5);
+    layout->addSpacing(10);
+    layout->addLayout(buttonsLayout);
+    layout->setSpacing(5);
 
     activatePropertiesMode(TupToolPlugin::Selection);
 }
 
 Settings::~Settings()
 {
-    delete k;
+    delete innerPanel;
+    delete layout;
+    delete input;
+    delete initFrame;
+    delete endFrame;
+    delete options;
+    delete fillTypeCombo;
+    delete initColorButton;
+    delete endColorButton;
+    delete iterationsCombo;
+    delete loopBox;
+    delete reverseLoopBox;
+    delete totalLabel;
+    delete apply;
+    delete remove;
 }
 
 void Settings::setInnerForm()
 {
-    k->innerPanel = new QWidget;
+    innerPanel = new QWidget;
 
-    QBoxLayout *innerLayout = new QBoxLayout(QBoxLayout::TopToBottom, k->innerPanel);
+    QBoxLayout *innerLayout = new QBoxLayout(QBoxLayout::TopToBottom, innerPanel);
     innerLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
 
     QLabel *startingLabel = new QLabel(tr("Starting at frame") + ": ");
     startingLabel->setAlignment(Qt::AlignVCenter);
 
-    k->initFrame = new QSpinBox;
-    k->initFrame->setEnabled(false);
-    k->initFrame->setMaximum(999);
-    connect(k->initFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromInit(int)));
+    initFrame = new QSpinBox;
+    initFrame->setEnabled(false);
+    initFrame->setMaximum(999);
+    connect(initFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromInit(int)));
 
     QLabel *endingLabel = new QLabel(tr("Ending at frame") + ": ");
     endingLabel->setAlignment(Qt::AlignVCenter);
 
-    k->endFrame = new QSpinBox;
-    k->endFrame->setEnabled(true);
-    k->endFrame->setMaximum(999);
-    k->endFrame->setValue(1);
-    connect(k->endFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromEnd(int)));
+    endFrame = new QSpinBox;
+    endFrame->setEnabled(true);
+    endFrame->setMaximum(999);
+    endFrame->setValue(1);
+    connect(endFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromEnd(int)));
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
     startLayout->setMargin(0);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
-    startLayout->addWidget(k->initFrame);
+    startLayout->addWidget(initFrame);
 
     QHBoxLayout *endLayout = new QHBoxLayout;
     endLayout->setAlignment(Qt::AlignHCenter);
     endLayout->setMargin(0);
     endLayout->setSpacing(0);
     endLayout->addWidget(endingLabel);
-    endLayout->addWidget(k->endFrame);
+    endLayout->addWidget(endFrame);
 
-    k->totalLabel = new QLabel(tr("Frames Total") + ": 1");
-    k->totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
+    totalLabel = new QLabel(tr("Frames Total") + ": 1");
+    totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     QHBoxLayout *totalLayout = new QHBoxLayout;
     totalLayout->setAlignment(Qt::AlignHCenter);
     totalLayout->setMargin(0);
     totalLayout->setSpacing(0);
-    totalLayout->addWidget(k->totalLabel);
+    totalLayout->addWidget(totalLabel);
 
-    k->initialColor = QColor("#fff");
-    k->initColorButton = new QPushButton();
-    k->initColorButton->setText(tr("White"));
-    k->initColorButton->setPalette(QPalette(k->initialColor));
-    k->initColorButton->setAutoFillBackground(true);
-    connect(k->initColorButton, SIGNAL(clicked()), this, SLOT(setInitialColor()));
+    initialColor = QColor("#fff");
+    initColorButton = new QPushButton();
+    initColorButton->setText(tr("White"));
+    initColorButton->setPalette(QPalette(initialColor));
+    initColorButton->setAutoFillBackground(true);
+    connect(initColorButton, SIGNAL(clicked()), this, SLOT(setInitialColor()));
 
     QLabel *typeLabel = new QLabel(tr("Fill Type") + ": ");
     typeLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    k->fillTypeCombo = new QComboBox();
-    k->fillTypeCombo->addItem(tr("Line Fill"));
-    k->fillTypeCombo->addItem(tr("Internal Fill"));
-    k->fillTypeCombo->addItem(tr("Line & Internal Fill"));
+    fillTypeCombo = new QComboBox();
+    fillTypeCombo->addItem(tr("Line Fill"));
+    fillTypeCombo->addItem(tr("Internal Fill"));
+    fillTypeCombo->addItem(tr("Line & Internal Fill"));
     QHBoxLayout *fillLayout = new QHBoxLayout;
     fillLayout->setAlignment(Qt::AlignHCenter);
     fillLayout->setMargin(0);
     fillLayout->setSpacing(0);
     fillLayout->addWidget(typeLabel);
-    fillLayout->addWidget(k->fillTypeCombo);
+    fillLayout->addWidget(fillTypeCombo);
 
     QLabel *coloringInitLabel = new QLabel(tr("Initial Color") + ": ");
     coloringInitLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -212,14 +193,14 @@ void Settings::setInnerForm()
     coloringInitLayout->setMargin(0);
     coloringInitLayout->setSpacing(0);
     coloringInitLayout->addWidget(coloringInitLabel);
-    coloringInitLayout->addWidget(k->initColorButton);
+    coloringInitLayout->addWidget(initColorButton);
 
-    k->endingColor = QColor("#fff");
-    k->endColorButton = new QPushButton();
-    k->endColorButton->setText(tr("White"));
-    k->endColorButton->setPalette(QPalette(k->endingColor));
-    k->endColorButton->setAutoFillBackground(true);
-    connect(k->endColorButton, SIGNAL(clicked()), this, SLOT(setEndingColor()));
+    endingColor = QColor("#fff");
+    endColorButton = new QPushButton();
+    endColorButton->setText(tr("White"));
+    endColorButton->setPalette(QPalette(endingColor));
+    endColorButton->setAutoFillBackground(true);
+    connect(endColorButton, SIGNAL(clicked()), this, SLOT(setEndingColor()));
 
     QLabel *coloringEndLabel = new QLabel(tr("Ending Color") + ": ");
     coloringEndLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -228,12 +209,12 @@ void Settings::setInnerForm()
     coloringEndLayout->setMargin(0);
     coloringEndLayout->setSpacing(0);
     coloringEndLayout->addWidget(coloringEndLabel);
-    coloringEndLayout->addWidget(k->endColorButton);
+    coloringEndLayout->addWidget(endColorButton);
 
-    k->iterationsCombo = new QSpinBox;
-    k->iterationsCombo->setEnabled(true);
-    k->iterationsCombo->setMinimum(1);
-    k->iterationsCombo->setMaximum(999);
+    iterationsCombo = new QSpinBox;
+    iterationsCombo->setEnabled(true);
+    iterationsCombo->setMinimum(1);
+    iterationsCombo->setMaximum(999);
 
     QLabel *iterationsLabel = new QLabel(tr("Iterations") + ": ");
     iterationsLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -242,25 +223,25 @@ void Settings::setInnerForm()
     iterationsLayout->setMargin(0);
     iterationsLayout->setSpacing(0);
     iterationsLayout->addWidget(iterationsLabel);
-    iterationsLayout->addWidget(k->iterationsCombo);
+    iterationsLayout->addWidget(iterationsCombo);
 
-    k->loopBox = new QCheckBox(tr("Loop"), k->innerPanel);
-    connect(k->loopBox, SIGNAL(stateChanged(int)), this, SLOT(updateReverseCheckbox(int)));
+    loopBox = new QCheckBox(tr("Loop"), innerPanel);
+    connect(loopBox, SIGNAL(stateChanged(int)), this, SLOT(updateReverseCheckbox(int)));
 
     QVBoxLayout *loopLayout = new QVBoxLayout;
     loopLayout->setAlignment(Qt::AlignHCenter);
     loopLayout->setMargin(0);
     loopLayout->setSpacing(0);
-    loopLayout->addWidget(k->loopBox);
+    loopLayout->addWidget(loopBox);
 
-    k->reverseLoopBox = new QCheckBox(tr("Loop with Reverse"), k->innerPanel);
-    connect(k->reverseLoopBox, SIGNAL(stateChanged(int)), this, SLOT(updateLoopCheckbox(int)));
+    reverseLoopBox = new QCheckBox(tr("Loop with Reverse"), innerPanel);
+    connect(reverseLoopBox, SIGNAL(stateChanged(int)), this, SLOT(updateLoopCheckbox(int)));
 
     QVBoxLayout *reverseLayout = new QVBoxLayout;
     reverseLayout->setAlignment(Qt::AlignHCenter);
     reverseLayout->setMargin(0);
     reverseLayout->setSpacing(0);
-    reverseLayout->addWidget(k->reverseLoopBox);
+    reverseLayout->addWidget(reverseLoopBox);
 
     innerLayout->addLayout(startLayout);
     innerLayout->addLayout(endLayout);
@@ -279,19 +260,19 @@ void Settings::setInnerForm()
 
     innerLayout->addWidget(new TSeparator(Qt::Horizontal));
 
-    k->layout->addWidget(k->innerPanel);
+    layout->addWidget(innerPanel);
 
     activeInnerForm(false);
 }
 
 void Settings::activeInnerForm(bool enable)
 {
-    if (enable && !k->innerPanel->isVisible()) {
-       k->propertiesDone = true;
-       k->innerPanel->show();
+    if (enable && !innerPanel->isVisible()) {
+       propertiesDone = true;
+       innerPanel->show();
     } else {
-       k->propertiesDone = false;
-       k->innerPanel->hide();
+       propertiesDone = false;
+       innerPanel->hide();
     }
 }
 
@@ -299,13 +280,13 @@ void Settings::activeInnerForm(bool enable)
 
 void Settings::setParameters(const QString &name, int framesCount, int initFrame)
 {
-    k->mode = TupToolPlugin::Add;
-    k->input->setText(name);
+    mode = TupToolPlugin::Add;
+    input->setText(name);
 
     activatePropertiesMode(TupToolPlugin::Selection);
-    k->apply->setToolTip(tr("Save Tween"));
-    k->remove->setIcon(QPixmap(kAppProp->themeDir() + "icons/close.png"));
-    k->remove->setToolTip(tr("Cancel Tween"));
+    apply->setToolTip(tr("Save Tween"));
+    remove->setIcon(QPixmap(kAppProp->themeDir() + "icons/close.png"));
+    remove->setToolTip(tr("Cancel Tween"));
 
     initStartCombo(framesCount, initFrame);
 }
@@ -317,80 +298,80 @@ void Settings::setParameters(TupItemTweener *currentTween)
     setEditMode();
     activatePropertiesMode(TupToolPlugin::Properties);
 
-    k->input->setText(currentTween->getTweenName());
+    input->setText(currentTween->getTweenName());
 
-    k->initFrame->setEnabled(true);
-    k->initFrame->setValue(currentTween->getInitFrame() + 1);
+    initFrame->setEnabled(true);
+    initFrame->setValue(currentTween->getInitFrame() + 1);
 
     int lastFrame = currentTween->getInitFrame() + currentTween->getFrames();
-    k->endFrame->setValue(lastFrame);
+    endFrame->setValue(lastFrame);
 
-    int end = k->endFrame->value();
+    int end = endFrame->value();
     updateRangeFromEnd(end);
 
-    updateColor(currentTween->tweenInitialColor(), k->initColorButton);
-    updateColor(currentTween->tweenEndingColor(), k->endColorButton);
+    updateColor(currentTween->tweenInitialColor(), initColorButton);
+    updateColor(currentTween->tweenEndingColor(), endColorButton);
 
     int iterations = currentTween->tweenColorIterations();
 
-    k->iterationsCombo->setValue(iterations);
+    iterationsCombo->setValue(iterations);
 
-    k->loopBox->setChecked(currentTween->tweenColorLoop());
-    k->reverseLoopBox->setChecked(currentTween->tweenColorReverseLoop());
+    loopBox->setChecked(currentTween->tweenColorLoop());
+    reverseLoopBox->setChecked(currentTween->tweenColorReverseLoop());
 }
 
 void Settings::initStartCombo(int framesCount, int currentIndex)
 {
-    k->initFrame->clear();
-    k->endFrame->clear();
+    initFrame->clear();
+    endFrame->clear();
 
-    k->initFrame->setMinimum(1);
-    k->initFrame->setMaximum(framesCount);
-    k->initFrame->setValue(currentIndex + 1);
+    initFrame->setMinimum(1);
+    initFrame->setMaximum(framesCount);
+    initFrame->setValue(currentIndex + 1);
 
-    k->endFrame->setMinimum(1);
-    k->endFrame->setValue(framesCount);
+    endFrame->setMinimum(1);
+    endFrame->setValue(framesCount);
 }
 
 void Settings::setStartFrame(int currentIndex)
 {
-    k->initFrame->setValue(currentIndex + 1);
-    int end = k->endFrame->value();
+    initFrame->setValue(currentIndex + 1);
+    int end = endFrame->value();
     if (end < currentIndex+1)
-       k->endFrame->setValue(currentIndex + 1);
+       endFrame->setValue(currentIndex + 1);
 }
 
 int Settings::startFrame()
 {
-    return k->initFrame->value() - 1;
+    return initFrame->value() - 1;
 }
 
 int Settings::startComboSize()
 {
-    return k->initFrame->maximum();
+    return initFrame->maximum();
 }
 
 int Settings::totalSteps()
 {
-    return k->endFrame->value() - (k->initFrame->value() - 1);
+    return endFrame->value() - (initFrame->value() - 1);
 }
 
 void Settings::setEditMode()
 {
-    k->mode = TupToolPlugin::Edit;
-    k->apply->setToolTip(tr("Update Tween"));
-    k->remove->setIcon(QPixmap(kAppProp->themeDir() + "icons/close_properties.png"));
-    k->remove->setToolTip(tr("Close Tween Properties"));
+    mode = TupToolPlugin::Edit;
+    apply->setToolTip(tr("Update Tween"));
+    remove->setIcon(QPixmap(kAppProp->themeDir() + "icons/close_properties.png"));
+    remove->setToolTip(tr("Close Tween Properties"));
 }
 
 void Settings::applyTween()
 {
-    if (!k->selectionDone) {
+    if (!selectionDone) {
         TOsd::self()->display(tr("Info"), tr("You must select at least one object!"), TOsd::Info);
         return;
     }
 
-    if (!k->propertiesDone) {
+    if (!propertiesDone) {
         TOsd::self()->display(tr("Info"), tr("You must set Tween properties first!"), TOsd::Info);
         return;
     }
@@ -398,8 +379,8 @@ void Settings::applyTween()
     // SQA: Verify Tween is really well applied before call setEditMode!
     setEditMode();
 
-    if (!k->initFrame->isEnabled())
-        k->initFrame->setEnabled(true);
+    if (!initFrame->isEnabled())
+        initFrame->setEnabled(true);
 
     checkFramesRange();
     emit clickedApplyTween();
@@ -407,27 +388,27 @@ void Settings::applyTween()
 
 void Settings::notifySelection(bool flag)
 {
-    k->selectionDone = flag;
+    selectionDone = flag;
 }
 
 void Settings::setInitialColor()
 {
-    k->initialColor = QColorDialog::getColor(k->initialColor, this);
-    updateColor(k->initialColor, k->initColorButton);
+    initialColor = QColorDialog::getColor(initialColor, this);
+    updateColor(initialColor, initColorButton);
 }
 
 void Settings::setInitialColor(QColor color) {
-    k->initialColor = color;
-    k->endingColor = QColor("#fff");
-    updateColor(k->initialColor, k->initColorButton);
-    updateColor(k->endingColor, k->endColorButton);
+    initialColor = color;
+    endingColor = QColor("#fff");
+    updateColor(initialColor, initColorButton);
+    updateColor(endingColor, endColorButton);
 }
 
 QString Settings::currentTweenName() const
 {
-    QString tweenName = k->input->text();
+    QString tweenName = input->text();
     if (tweenName.length() > 0)
-       k->input->setFocus();
+       input->setFocus();
 
     return tweenName;
 }
@@ -443,11 +424,11 @@ void Settings::emitOptionChanged(int option)
         break;
         case 1:
         {
-            if (k->selectionDone) {
+            if (selectionDone) {
                 activeInnerForm(true);
                 emit clickedDefineProperties();
             } else {
-                k->options->setCurrentIndex(0);
+                options->setCurrentIndex(0);
                 TOsd::self()->display(tr("Info"), tr("Select objects for Tweening first!"), TOsd::Info);
             }
         }
@@ -465,40 +446,40 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     root.setAttribute("initLayer", currentLayer);
     root.setAttribute("initScene", currentScene);
 
-    root.setAttribute("fillType", k->fillTypeCombo->currentIndex());
-    root.setAttribute("frames", k->totalSteps);
+    root.setAttribute("fillType", fillTypeCombo->currentIndex());
+    root.setAttribute("frames", totalStepsCount);
     root.setAttribute("origin", "0,0");
 
-    int initialRed = k->initialColor.red();
-    int initialGreen = k->initialColor.green();
-    int initialBlue = k->initialColor.blue();
+    int initialRed = initialColor.red();
+    int initialGreen = initialColor.green();
+    int initialBlue = initialColor.blue();
 
     QString colorText = QString::number(initialRed) + "," + QString::number(initialGreen)
                        + "," + QString::number(initialBlue);
     root.setAttribute("initialColor", colorText);
 
-    int endingRed = k->endingColor.red();
-    int endingGreen = k->endingColor.green();
-    int endingBlue = k->endingColor.blue();
+    int endingRed = endingColor.red();
+    int endingGreen = endingColor.green();
+    int endingBlue = endingColor.blue();
 
     colorText = QString::number(endingRed) + "," + QString::number(endingGreen)
                        + "," + QString::number(endingBlue);
     root.setAttribute("endingColor", colorText);
 
-    int iterations = k->iterationsCombo->value();
+    int iterations = iterationsCombo->value();
     if (iterations == 0) {
        iterations = 1;
-       k->iterationsCombo->setValue(1);
+       iterationsCombo->setValue(1);
     }
     root.setAttribute("colorIterations", iterations);
 
-    bool loop = k->loopBox->isChecked();
+    bool loop = loopBox->isChecked();
     if (loop)
        root.setAttribute("colorLoop", "1");
     else
        root.setAttribute("colorLoop", "0");
 
-    bool reverse = k->reverseLoopBox->isChecked();
+    bool reverse = reverseLoopBox->isChecked();
     if (reverse)
        root.setAttribute("colorReverseLoop", "1");
     else
@@ -515,7 +496,7 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     int cycle = 1;
     int reverseTop = (iterations*2)-2;
 
-    for (int i=0; i < k->totalSteps; i++) {
+    for (int i=0; i < totalStepsCount; i++) {
         if (cycle <= iterations) {
             if (cycle == 1) {
                 redReference = initialRed;
@@ -568,53 +549,53 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
 
 void Settings::activateMode(TupToolPlugin::EditMode mode)
 {
-    k->options->setCurrentIndex(mode);
+    options->setCurrentIndex(mode);
 }
 
 void Settings::activatePropertiesMode(TupToolPlugin::EditMode mode)
 {
-    k->options->setCurrentIndex(mode);
+    options->setCurrentIndex(mode);
 }
 
 void Settings::checkFramesRange()
 {
-    int begin = k->initFrame->value();
-    int end = k->endFrame->value();
+    int begin = initFrame->value();
+    int end = endFrame->value();
 
     if (begin > end) {
-       k->initFrame->blockSignals(true);
-       k->endFrame->blockSignals(true);
+       initFrame->blockSignals(true);
+       endFrame->blockSignals(true);
        int tmp = end;
        end = begin;
        begin = tmp;
-       k->initFrame->setValue(begin);
-       k->endFrame->setValue(end);
-       k->initFrame->blockSignals(false);
-       k->endFrame->blockSignals(false);
+       initFrame->setValue(begin);
+       endFrame->setValue(end);
+       initFrame->blockSignals(false);
+       endFrame->blockSignals(false);
     }
 
-    k->totalSteps = end - begin + 1;
-    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
+    totalStepsCount = end - begin + 1;
+    totalLabel->setText(tr("Frames Total") + ": " + QString::number(totalStepsCount));
 }
 
 void Settings::updateLoopCheckbox(int state)
 {
     Q_UNUSED(state);
-    if (k->reverseLoopBox->isChecked() && k->loopBox->isChecked())
-       k->loopBox->setChecked(false);
+    if (reverseLoopBox->isChecked() && loopBox->isChecked())
+       loopBox->setChecked(false);
 }
 
 void Settings::updateReverseCheckbox(int state)
 {
     Q_UNUSED(state);
-    if (k->reverseLoopBox->isChecked() && k->loopBox->isChecked())
-       k->reverseLoopBox->setChecked(false);
+    if (reverseLoopBox->isChecked() && loopBox->isChecked())
+       reverseLoopBox->setChecked(false);
 }
 
 void Settings::setEndingColor()
 {
-    k->endingColor = QColorDialog::getColor(k->endingColor, this);
-    updateColor(k->endingColor, k->endColorButton);
+    endingColor = QColorDialog::getColor(endingColor, this);
+    updateColor(endingColor, endColorButton);
 }
 
 void Settings::updateColor(QColor color, QPushButton *colorButton)
@@ -628,14 +609,14 @@ void Settings::updateColor(QColor color, QPushButton *colorButton)
 
 void Settings::updateRangeFromInit(int begin)
 {
-    int end = k->endFrame->value();
-    k->totalSteps = end - begin + 1;
-    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
+    int end = endFrame->value();
+    totalStepsCount = end - begin + 1;
+    totalLabel->setText(tr("Frames Total") + ": " + QString::number(totalStepsCount));
 }
 
 void Settings::updateRangeFromEnd(int end)
 {
-    int begin = k->initFrame->value();
-    k->totalSteps = end - begin + 1;
-    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
+    int begin = initFrame->value();
+    totalStepsCount = end - begin + 1;
+    totalLabel->setText(tr("Frames Total") + ": " + QString::number(totalStepsCount));
 }

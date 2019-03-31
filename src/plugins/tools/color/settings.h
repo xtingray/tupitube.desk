@@ -40,7 +40,13 @@
 #include "tuptoolplugin.h"
 #include "tupitemtweener.h"
 
+#include <QComboBox>
+#include <QHBoxLayout>
+#include <QSpinBox>
 #include <QWidget>
+#include <timagebutton.h>
+#include <tradiobuttongroup.h>
+
 
 /**
  * @author Gustav Gonzalez 
@@ -94,8 +100,38 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         void checkFramesRange();
         void updateColor(QColor color, QPushButton *colorButton);
 
-        struct Private;
-        Private *const k;
+        QWidget *innerPanel;
+        QBoxLayout *layout;
+        TupToolPlugin::Mode mode;
+
+        QLineEdit *input;
+
+        QSpinBox *initFrame;
+        QSpinBox *endFrame;
+
+        TRadioButtonGroup *options;
+
+        QComboBox *fillTypeCombo;
+        QPushButton *initColorButton;
+        QColor initialColor;
+        QPushButton *endColorButton;
+        QColor endingColor;
+
+        QSpinBox *iterationsCombo;
+
+        QCheckBox *loopBox;
+        QCheckBox *reverseLoopBox;
+
+        QLabel *totalLabel;
+        int totalStepsCount;
+
+        bool selectionDone;
+        bool propertiesDone;
+
+        TImageButton *apply;
+        TImageButton *remove;
+
+        TupItemTweener::FillType fillType;
 };
 
 #endif
