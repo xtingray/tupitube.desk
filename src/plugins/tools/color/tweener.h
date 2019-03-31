@@ -5,6 +5,9 @@
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
+ *                                                                         *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco                                                   *
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
@@ -123,8 +126,19 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         void disableSelection();
         void removeTweenFromProject(const QString &name);
 
-        struct Private;
-        Private *const k;
+        QMap<QString, TAction *> actionsMap;
+        Configurator *tweenerConfigurator;
+
+        TupGraphicsScene *scene;
+        QList<QGraphicsItem *> objects;
+
+        TupItemTweener *currentTween;
+        int initFrame;
+        int initLayer;
+        int initScene;
+
+        TupToolPlugin::Mode mode;
+        TupToolPlugin::EditMode editMode;
 };
 
 #endif
