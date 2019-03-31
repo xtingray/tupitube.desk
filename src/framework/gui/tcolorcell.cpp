@@ -81,9 +81,7 @@ void TColorCell::paintEvent(QPaintEvent *event)
 
     QRect border = rect();
     if (enabled) {
-    
         if (checked) {
-
             QColor borderColor1 = QColor(200, 200, 200); 
             QColor borderColor2 = QColor(190, 190, 190);
             QColor borderColor3 = QColor(150, 150, 150);

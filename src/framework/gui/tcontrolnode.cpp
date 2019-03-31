@@ -39,9 +39,7 @@
 #include "tnodegroup.h"
 
 TControlNode::TControlNode(int index, TNodeGroup *group, const QPointF & pos, 
-                           QGraphicsItem *graphicParent, QGraphicsScene *gScene, int level) : 
-                           QGraphicsItem()
-// QGraphicsItem(0, scene), k(new Private)
+                           QGraphicsItem *graphicParent, QGraphicsScene *gScene, int level): QGraphicsItem()
 {
     nodeIndex  = index;
     unchanged = true;
@@ -65,12 +63,6 @@ TControlNode::TControlNode(int index, TNodeGroup *group, const QPointF & pos,
 
 TControlNode::~TControlNode()
 {
-    // delete itemParent;
-    // delete globalScene;
-    // delete cNode;
-    // delete leftNode;
-    // delete rightNode;
-    // delete nodeGroup;
 }
 
 void TControlNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *w)
@@ -157,25 +149,25 @@ QVariant TControlNode::itemChange(GraphicsItemChange change, const QVariant &val
         }
 
     } else if (change == QGraphicsItem::ItemSelectedChange) {
-               if (value.toBool()) {
-                   itemParent->setSelected(true);
-                   showChildNodes(true);
-               } else {
-                   if (leftNode) {
-                       if (leftNode->isSelected())
-                           leftNode->setVisible(true);
-                       else
-                           leftNode->setVisible(false);
-                   }
+        if (value.toBool()) {
+            itemParent->setSelected(true);
+            showChildNodes(true);
+        } else {
+            if (leftNode) {
+                if (leftNode->isSelected())
+                    leftNode->setVisible(true);
+                else
+                    leftNode->setVisible(false);
+            }
 
-                   if (rightNode) {
-                       if (rightNode->isSelected())
-                           rightNode->setVisible(true);
-                       else
-                           rightNode->setVisible(false);
-                   }
-                   update();
-               }
+            if (rightNode) {
+                if (rightNode->isSelected())
+                    rightNode->setVisible(true);
+                else
+                    rightNode->setVisible(false);
+            }
+            update();
+        }
     }
 
     return QGraphicsItem::itemChange(change, value);

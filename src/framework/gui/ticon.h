@@ -55,7 +55,8 @@ class T_GUI_EXPORT TIcon : public QIcon
         QColor currentColor() const;
 
     private:
-        void paint(QPainter *painter, const QRect &rect, Qt::Alignment alignment = Qt::AlignCenter, Mode mode = Normal, State state = Off) const;
+        void paint(QPainter *painter, const QRect &rect, Qt::Alignment alignment = Qt::AlignCenter,
+                   Mode mode = Normal, State state = Off) const;
         QBrush iconBrush;
 };
 

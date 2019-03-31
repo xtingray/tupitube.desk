@@ -65,7 +65,7 @@ bool TActionManager::insert(QAction *action, const QString &_id, const QString &
     QAction *a = (m_actionContainer[container])[id];
     if (a == action) {
         #ifdef TUP_DEBUG
-            QString msg = "TActionManager::insert() - Fatal Error: Cannot insert action with id -> " + id;;
+            QString msg = "TActionManager::insert() - Fatal Error: Cannot insert action with id -> " + id;
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else
@@ -105,12 +105,12 @@ QAction *TActionManager::take(QAction* action, const QString &container)
         if (m_actionContainer[container].contains(id))
             a = m_actionContainer[container].take(id);
     } else {
-            foreach (QString key, m_actionContainer.keys()) {
-                     if (m_actionContainer[key].contains(id)) {
-                         a = m_actionContainer[key].take(id);
-                         break;
-                     }
+        foreach (QString key, m_actionContainer.keys()) {
+            if (m_actionContainer[key].contains(id)) {
+                a = m_actionContainer[key].take(id);
+                break;
             }
+        }
     }
 
     if (!a || a != action)
@@ -134,10 +134,10 @@ QAction *TActionManager::find(const QString &_id, const QString &container) cons
             action = m_actionContainer[container][id];
     } else {
         foreach (QString key, m_actionContainer.keys()) {
-                 if (m_actionContainer[key].contains(id)) {
-                     action = m_actionContainer[key][id];
-                     break;
-                 }
+            if (m_actionContainer[key].contains(id)) {
+                action = m_actionContainer[key][id];
+                break;
+            }
         }
     }
 
@@ -198,7 +198,7 @@ QMenuBar *TActionManager::setupMenuBar(QMenuBar *menuBar, const QStringList &con
     }
 
     foreach (QString container, containers)
-             menuBar->addMenu(setupMenu(0, container, clear));
+        menuBar->addMenu(setupMenu(0, container, clear));
 
     return menuBar;
 }
@@ -212,8 +212,8 @@ QMenu *TActionManager::setupMenu(QMenu *menu, const QString &container, bool cle
         menu->clear();
 
     foreach (QAction *a, m_actionContainer[container]) {
-             if (a)
-                 menu->addAction(a);
+       if (a)
+           menu->addAction(a);
     }
 
     return menu;
@@ -228,8 +228,8 @@ QToolBar *TActionManager::setupToolBar(QToolBar *toolBar, const QString &contain
         toolBar->clear();
 
     foreach (QAction *a, m_actionContainer[container]) {
-             if (a)
-                 toolBar->addAction(a);
+        if (a)
+            toolBar->addAction(a);
     }
 
     if (m_actionContainer.count() == 0)
