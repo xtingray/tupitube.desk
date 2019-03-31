@@ -5,6 +5,9 @@
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
+ *                                                                         *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco                                                   *
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
@@ -86,8 +89,11 @@ class TUPITUBE_EXPORT TweenManager: public QWidget
     private:
         bool itemExists(const QString &name);
 
-        struct Private;
-        Private *const k;
+        QLineEdit *input;
+        QListWidget *tweensList;
+        TImageButton *addButton;
+
+        QString target;
 };
 
 #endif

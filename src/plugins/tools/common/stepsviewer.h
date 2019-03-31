@@ -5,6 +5,9 @@
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
+ *                                                                         *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco                                                   *
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
@@ -55,7 +58,7 @@ class TUPITUBE_EXPORT StepsViewer : public QTableWidget
     Q_OBJECT
 
     public:
-        StepsViewer(QWidget *parent = 0);
+        StepsViewer(QWidget *parent = nullptr);
         ~StepsViewer();
         void setPath(const QGraphicsPathItem *pathItem);
         
@@ -88,8 +91,23 @@ class TUPITUBE_EXPORT StepsViewer : public QTableWidget
         void loadTweenPoints();
         void updateSegments();
 
-        struct Private;
-        Private *const k;
+        QList<int> frames;
+        QList<int> undoFrames;
+
+        QList<Segment> pointBlocks;
+
+        QList<Segment> segments;
+        QList<Segment> undoSegments;
+
+        QPainterPath path;
+
+        int records;
+        QList<QPointF> keys;
+        QPolygonF points;
+        QList<QPointF> tweenPointsList;
+
+        QList<TPushButton*> *plusButton;
+        QList<TPushButton*> *minusButton;
 
     signals:
         void updateTable();

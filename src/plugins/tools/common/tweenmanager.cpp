@@ -5,6 +5,9 @@
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
+ *                                                                         *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco                                                   *
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
@@ -35,74 +38,68 @@
 
 #include "tweenmanager.h"
 
-struct TweenManager::Private
-{
-    QLineEdit *input;
-    QListWidget *tweensList;
-    TImageButton *addButton;
-
-    QString target;
-};
-
-TweenManager::TweenManager(QWidget *parent) : QWidget(parent), k(new Private)
+TweenManager::TweenManager(QWidget *parent) : QWidget(parent)
 {
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
 
-    k->input = new QLineEdit;
-    k->addButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/plus_sign.png"), 22);
-    k->addButton->setToolTip(tr("Create a new Tween"));
-    connect(k->input, SIGNAL(returnPressed()), this, SLOT(addTween()));
-    connect(k->addButton, SIGNAL(clicked()), this, SLOT(addTween()));
+    input = new QLineEdit;
+    addButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/plus_sign.png"), 22);
+    addButton->setToolTip(tr("Create a new Tween"));
+    connect(input, SIGNAL(returnPressed()), this, SLOT(addTween()));
+    connect(addButton, SIGNAL(clicked()), this, SLOT(addTween()));
 
     QHBoxLayout *lineLayout = new QHBoxLayout;
     lineLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
     lineLayout->setMargin(0);
     lineLayout->setSpacing(0);
-    lineLayout->addWidget(k->input);
-    lineLayout->addWidget(k->addButton);
+    lineLayout->addWidget(input);
+    lineLayout->addWidget(addButton);
 
     layout->addLayout(lineLayout);
 
     QBoxLayout *listLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     listLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
 
-    k->tweensList = new QListWidget;
-    k->tweensList->setContextMenuPolicy(Qt::CustomContextMenu);
-    k->tweensList->setViewMode(QListView::ListMode);
-    k->tweensList->setFlow(QListView::TopToBottom);
-    k->tweensList->setMovement(QListView::Static);
-    k->tweensList->setFixedHeight(68);
-    connect(k->tweensList, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showMenu(const QPoint &)));
-    connect(k->tweensList, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(updateTweenData(QListWidgetItem *)));
-    connect(k->tweensList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(editTween(QListWidgetItem *)));
+    tweensList = new QListWidget;
+    tweensList->setContextMenuPolicy(Qt::CustomContextMenu);
+    tweensList->setViewMode(QListView::ListMode);
+    tweensList->setFlow(QListView::TopToBottom);
+    tweensList->setMovement(QListView::Static);
+    tweensList->setFixedHeight(68);
+    connect(tweensList, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showMenu(const QPoint &)));
+    connect(tweensList, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(updateTweenData(QListWidgetItem *)));
+    connect(tweensList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(editTween(QListWidgetItem *)));
 
-    listLayout->addWidget(k->tweensList);
+    listLayout->addWidget(tweensList);
 
     layout->addLayout(listLayout);
 }
 
 TweenManager::~TweenManager()
 {
+    delete input;
+    delete tweensList;
+    delete addButton;
 }
 
 void TweenManager::loadTweenList(QList<QString> tweenList)
 {
-    k->tweensList->clear();
+    tweensList->clear();
 
     for (int i=0; i < tweenList.size(); i++) {
-        QListWidgetItem *tweenerItem = new QListWidgetItem(k->tweensList);
+        QListWidgetItem *tweenerItem = new QListWidgetItem(tweensList);
         tweenerItem->setText(tweenList.at(i));
         tweenerItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     }
 
-    k->tweensList->setCurrentRow(0);
+    tweensList->setCurrentRow(0);
 }
 
 bool TweenManager::itemExists(const QString &name)
 {
-     for (int i=0; i < k->tweensList->count(); i++) {
-          QListWidgetItem *item = k->tweensList->item(i);
+     for (int i=0; i < tweensList->count(); i++) {
+          QListWidgetItem *item = tweensList->item(i);
           if (name.compare(item->text()) == 0)
               return true;
      }
@@ -112,15 +109,15 @@ bool TweenManager::itemExists(const QString &name)
 
 void TweenManager::addTween()
 {
-    QString name = k->input->text();
+    QString name = input->text();
 
     if (name.length() > 0) {
         if (!itemExists(name)) {
-            QListWidgetItem *tweenerItem = new QListWidgetItem(k->tweensList);
+            QListWidgetItem *tweenerItem = new QListWidgetItem(tweensList);
             tweenerItem->setText(name);
             tweenerItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-            k->input->clear();
-            k->tweensList->setCurrentItem(tweenerItem);
+            input->clear();
+            tweensList->setCurrentItem(tweenerItem);
 
             emit addNewTween(name);
         } else {
@@ -134,9 +131,9 @@ void TweenManager::addTween()
                    num = "0" + QString::number(i);
 
                QString name = "tween" + num; 
-               QList<QListWidgetItem *> items = k->tweensList->findItems(name, Qt::MatchExactly);
+               QList<QListWidgetItem *> items = tweensList->findItems(name, Qt::MatchExactly);
                if (items.count() == 0) {
-                   k->input->setText(name);
+                   input->setText(name);
                    break;
                }
                i++;
@@ -146,7 +143,7 @@ void TweenManager::addTween()
 
 void TweenManager::editTween()
 {
-    QListWidgetItem *item = k->tweensList->currentItem();
+    QListWidgetItem *item = tweensList->currentItem();
     emit editCurrentTween(item->text());
 }
 
@@ -159,19 +156,19 @@ void TweenManager::removeTween()
 {
     removeItemFromList();
 
-    emit removeCurrentTween(k->target);
+    emit removeCurrentTween(target);
 }
 
 void TweenManager::removeItemFromList()
 {
-    QListWidgetItem *item = k->tweensList->currentItem();
-    k->tweensList->takeItem(k->tweensList->row(item));
-    k->target = item->text();
+    QListWidgetItem *item = tweensList->currentItem();
+    tweensList->takeItem(tweensList->row(item));
+    target = item->text();
 }
 
 void TweenManager::showMenu(const QPoint &point)
 {
-    if (k->tweensList->count() > 0) {
+    if (tweensList->count() > 0) {
         QAction *edit = new QAction(tr("Edit"), this);
         connect(edit, SIGNAL(triggered()), this, SLOT(editTween()));
         QAction *remove = new QAction(tr("Remove"), this);
@@ -181,7 +178,7 @@ void TweenManager::showMenu(const QPoint &point)
         menu->addAction(edit);
         menu->addAction(remove);
 
-        QPoint globalPos = k->tweensList->mapToGlobal(point);
+        QPoint globalPos = tweensList->mapToGlobal(point);
         menu->exec(globalPos);
     }
 }
@@ -193,26 +190,26 @@ void TweenManager::updateTweenData(QListWidgetItem *item)
 
 void TweenManager::resetUI()
 {
-    k->input->clear();
+    input->clear();
 
-    if (k->tweensList->count() > 0)
-        k->tweensList->clear();
+    if (tweensList->count() > 0)
+        tweensList->clear();
 }
 
 QString TweenManager::currentTweenName() const
 {
-    QListWidgetItem *item = k->tweensList->currentItem();
+    QListWidgetItem *item = tweensList->currentItem();
     return item->text();
 }
 
 int TweenManager::listSize()
 {
-    return k->tweensList->count();
+    return tweensList->count();
 }
 
 void TweenManager::updateTweenName(const QString &name)
 {
-    QListWidgetItem *item = k->tweensList->currentItem();
+    QListWidgetItem *item = tweensList->currentItem();
     item->setText(name);
-    k->target = name;
+    target = name;
 }
