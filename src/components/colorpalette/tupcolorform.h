@@ -72,6 +72,7 @@ class TUPITUBE_EXPORT TupColorForm : public QWidget
        TupFormItem *valueR;
        TupFormItem *valueG;
        TupFormItem *valueB;
+
        TupFormItem *valueH;
        TupFormItem *valueS;
        TupFormItem *valueV;

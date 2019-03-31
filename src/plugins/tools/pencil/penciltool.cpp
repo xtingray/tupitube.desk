@@ -36,32 +36,12 @@
 #include "penciltool.h"
 #include "tuppaintareaevent.h"
 
-#include <QGraphicsEllipseItem> 
+#include <QGraphicsView>
 
-struct PencilTool::Private
+PencilTool::PencilTool() : TupToolPlugin()
 {
-    QPointF firstPoint;
-    QPointF oldPos;
-    QPainterPath path;
-    Settings *configurator;
-    QMap<QString, TAction *> actions;
-    TupPathItem *item;
-    QCursor cursor;
-    TupGraphicsScene *scene;
-    TupBrushManager *brushManager;
-    TupInputDeviceInformation *input;
-
-    bool resize;
-    QGraphicsEllipseItem *penCircle;
-    int circleZValue;
-    QPointF penCirclePos;
-    int penWidth;
-};
-
-PencilTool::PencilTool() : TupToolPlugin(), k(new Private)
-{
-    k->configurator = 0;
-    k->item = 0;
+    configPanel = 0;
+    item = 0;
 
     setupActions();
 }
@@ -72,16 +52,16 @@ PencilTool::~PencilTool()
 
 void PencilTool::setupActions()
 {
-    k->cursor = QCursor(kAppProp->themeDir() + "cursors/pencil.png", 0, 15);
+    penCursor = QCursor(kAppProp->themeDir() + "cursors/pencil.png", 0, 15);
     TAction *pencil = new TAction(QPixmap(kAppProp->themeDir() + "icons/pencil.png"), tr("Pencil"), this);
     pencil->setShortcut(QKeySequence(tr("P")));
     pencil->setToolTip(tr("Pencil") + " - " + "P");
-    pencil->setCursor(k->cursor);
+    pencil->setCursor(penCursor);
 
-    k->actions.insert(tr("Pencil"), pencil);
+    penActions.insert(tr("Pencil"), pencil);
 }
 
-void PencilTool::init(TupGraphicsScene *scene)
+void PencilTool::init(TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -91,16 +71,16 @@ void PencilTool::init(TupGraphicsScene *scene)
         #endif
     #endif
 
-    k->scene = scene;
-    k->brushManager = k->scene->getBrushManager();
-    k->input = k->scene->inputDeviceInformation();
-    k->resize = false;
-    k->circleZValue = ZLAYER_BASE + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
+    scene = gScene;
+    brushManager = scene->getBrushManager();
+    input = scene->inputDeviceInformation();
+    resize = false;
+    circleZValue = ZLAYER_BASE + (gScene->currentScene()->layersCount() * ZLAYER_LIMIT);
 
     TCONFIG->beginGroup("BrushParameters");
-    k->penWidth = TCONFIG->value("Thickness", 3).toInt();
+    penWidth = TCONFIG->value("Thickness", 3).toInt();
 
-    foreach (QGraphicsView * view, scene->views())
+    foreach (QGraphicsView * view, gScene->views())
         view->setDragMode(QGraphicsView::NoDrag);
 }
 
@@ -109,68 +89,69 @@ QStringList PencilTool::keys() const
     return QStringList() << tr("Pencil");
 }
 
-void PencilTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
+void PencilTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
-    if (!k->resize) {
-        k->firstPoint = input->pos();
+    if (!resize) {
+        firstPoint = input->pos();
 
-        k->path = QPainterPath();
-        k->path.moveTo(k->firstPoint);
+        path = QPainterPath();
+        path.moveTo(firstPoint);
 
-        k->oldPos = input->pos();
+        oldPos = input->pos();
 
-        k->item = new TupPathItem();
+        item = new TupPathItem();
         if (brushManager->pen().color().alpha() == 0) {
             QPen pen;
             pen.setWidth(1);
             pen.setBrush(QBrush(Qt::black));
-            k->item->setPen(pen);
+            item->setPen(pen);
         } else {
-            k->item->setPen(brushManager->pen());
+            item->setPen(brushManager->pen());
         }
-        scene->includeObject(k->item);
+        gScene->includeObject(item);
     }
 }
 
-void PencilTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
+void PencilTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     Q_UNUSED(brushManager);
-    Q_UNUSED(scene);
+    Q_UNUSED(gScene);
 
-    if (k->resize) {
+    if (resize) {
         QPointF point = input->pos();
-        QPointF result = k->penCirclePos - point;
-        k->penWidth = sqrt(pow(result.x(), 2) + pow(result.y(), 2));
+        QPointF result = penCirclePos - point;
+        penWidth = sqrt(pow(result.x(), 2) + pow(result.y(), 2));
 
-        QPointF topLeft(k->penCirclePos.x() - (k->penWidth/2), k->penCirclePos.y() - (k->penWidth/2));
-        QSize size(k->penWidth, k->penWidth);
+        QPointF topLeft(penCirclePos.x() - (penWidth/2), penCirclePos.y() - (penWidth/2));
+        QSize size(penWidth, penWidth);
         QRectF rect(topLeft, size);
-        k->penCircle->setRect(rect);
+        penCircle->setRect(rect);
     } else {
-        if (!k->item)
+        if (!item)
             return;
 
         QPointF lastPoint = input->pos();
 
-        k->path.moveTo(k->oldPos);
-        k->path.lineTo(lastPoint);
+        path.moveTo(oldPos);
+        path.lineTo(lastPoint);
 
-        k->item->setPath(k->path);
-        k->oldPos = lastPoint;
+        item->setPath(path);
+        oldPos = lastPoint;
     }
 }
 
-void PencilTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
+void PencilTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     Q_UNUSED(brushManager);
 
-    if (!k->resize) {
-        if (!k->item)
+    if (!resize) {
+        if (!item)
             return;
 
-        if (k->firstPoint == input->pos() && k->path.elementCount() == 1) {
+        // Drawing a point
+        if (firstPoint == input->pos() && path.elementCount() == 1) {
             QPointF currentPoint = input->pos();
-            scene->removeItem(k->item);
+            gScene->removeItem(item);
  
             qreal radius = brushManager->pen().width();
             QPointF distance((radius + 2)/2, (radius + 2)/2);
@@ -178,30 +159,31 @@ void PencilTool::release(const TupInputDeviceInformation *input, TupBrushManager
             TupEllipseItem *blackEllipse = new TupEllipseItem(QRectF(currentPoint - distance, QSize(radius + 2, radius + 2)));
             blackEllipse->setPen(inkPen);
             blackEllipse->setBrush(inkPen.brush());
-            scene->includeObject(blackEllipse);
+            gScene->includeObject(blackEllipse);
 
             QPointF point = currentPoint - distance;
 
             QDomDocument doc;
             doc.appendChild(blackEllipse->toXml(doc));
-            TupProjectRequest request = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(), scene->currentLayerIndex(), scene->currentFrameIndex(),
-                                                                             0, point, scene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
+            TupProjectRequest request = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(), gScene->currentLayerIndex(), gScene->currentFrameIndex(),
+                                                                             0, point, gScene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
                                                                              doc.toString());
             emit requested(&request);
             return;
         } else {
-            double smoothness = k->configurator->smoothness();
-            smoothPath(k->path, smoothness);
+            double smoothness = configPanel->smoothness();
+            smoothPath(path, smoothness);
         }
 
-        k->item->setBrush(brushManager->brush());
-        k->item->setPath(k->path);
+        item->setPen(brushManager->pen());
+        item->setBrush(brushManager->brush());
+        item->setPath(path);
 
         QDomDocument doc;
-        doc.appendChild(k->item->toXml(doc));
+        doc.appendChild(item->toXml(doc));
 
-        TupProjectRequest request = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(), scene->currentLayerIndex(), scene->currentFrameIndex(), 
-                                                                         0, QPoint(), scene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::Add, 
+        TupProjectRequest request = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(), gScene->currentLayerIndex(), gScene->currentFrameIndex(),
+                                                                         0, QPoint(), gScene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
                                                                          doc.toString());
         emit requested(&request);
     }
@@ -234,7 +216,7 @@ void PencilTool::smoothPath(QPainterPath &path, double smoothness, int from, int
 
 QMap<QString, TAction *> PencilTool::actions() const
 {
-    return k->actions;
+    return penActions;
 }
 
 int PencilTool::toolType() const
@@ -242,12 +224,12 @@ int PencilTool::toolType() const
     return TupToolInterface::Brush;
 }
 
-QWidget *PencilTool::configurator() 
+QWidget *PencilTool::configurator()
 {
-    if (! k->configurator)
-        k->configurator = new Settings;
+    if (!configPanel)
+        configPanel = new Settings;
 
-    return k->configurator;
+    return configPanel;
 }
 
 void PencilTool::aboutToChangeTool() 
@@ -256,9 +238,9 @@ void PencilTool::aboutToChangeTool()
 
 void PencilTool::saveConfig()
 {
-    if (k->configurator) {
+    if (configPanel) {
         TCONFIG->beginGroup("PencilTool");
-        TCONFIG->setValue("Smoothness", k->configurator->smoothness());
+        TCONFIG->setValue("Smoothness", configPanel->smoothness());
     }
 }
 
@@ -273,15 +255,15 @@ void PencilTool::keyPressEvent(QKeyEvent *event)
     #endif
 
     if (event->modifiers() == Qt::ShiftModifier) {
-        k->resize = true;
-        k->input = k->scene->inputDeviceInformation();
-        int diameter = k->brushManager->penWidth();
+        resize = true;
+        input = scene->inputDeviceInformation();
+        int diameter = brushManager->penWidth();
         int radius = diameter/2;
-        k->penCirclePos = k->input->pos();
+        penCirclePos = input->pos();
 
-        k->penCircle = new QGraphicsEllipseItem(k->penCirclePos.x() - radius, k->penCirclePos.y() - radius, diameter, diameter);
-        k->penCircle->setZValue(k->circleZValue);
-        k->scene->addItem(k->penCircle);
+        penCircle = new QGraphicsEllipseItem(penCirclePos.x() - radius, penCirclePos.y() - radius, diameter, diameter);
+        penCircle->setZValue(circleZValue);
+        scene->addItem(penCircle);
         return;
     }
 
@@ -307,20 +289,20 @@ void PencilTool::keyReleaseEvent(QKeyEvent *event)
 
     Q_UNUSED(event);
 
-    if (k->resize) {
-        k->resize = false;
-        k->scene->removeItem(k->penCircle);
+    if (resize) {
+        resize = false;
+        scene->removeItem(penCircle);
 
         TCONFIG->beginGroup("BrushParameters");
-        TCONFIG->setValue("Thickness", k->penWidth);
+        TCONFIG->setValue("Thickness", penWidth);
 
-        emit penWidthChanged(k->penWidth);
+        emit penWidthChanged(penWidth);
     }
 }
 
 QCursor PencilTool::cursor() const
 {
-    return k->cursor;
+    return penCursor;
 }
 
 void PencilTool::sceneResponse(const TupSceneResponse *event)

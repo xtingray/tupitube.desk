@@ -38,18 +38,8 @@
 #include <QPainter>
 #include <QDebug>
 
-struct TupColorButton::Private
-{
-    QBrush brush;
-    int index;
-    bool editable;
-    bool selected;
-    QSize size;
-    QString themeName;
-};
-
 TupColorButton::TupColorButton(int colorIndex, const QString &name, const QBrush &colorBrush, const QSize &dimension,
-                               const QString &params) : k(new Private)
+                               const QString &params)
 {
     index = colorIndex;
     editable = true;
@@ -58,7 +48,7 @@ TupColorButton::TupColorButton(int colorIndex, const QString &name, const QBrush
     size = dimension;
 
     TCONFIG->beginGroup("General");
-    k->themeName = TCONFIG->value("Theme", "Light").toString();
+    themeName = TCONFIG->value("Theme", "Light").toString();
 
     setToolTip(name);
 
@@ -100,7 +90,7 @@ void TupColorButton::paintEvent(QPaintEvent *event)
         QColor borderColor1 = QColor(200, 200, 200);
         QColor borderColor2 = QColor(190, 190, 190);
         QColor borderColor3 = QColor(150, 150, 150);
-        if (k->themeName.compare("Dark") == 0) {
+        if (themeName.compare("Dark") == 0) {
             borderColor1 = QColor(120, 120, 120);
             borderColor2 = QColor(110, 110, 110);
             borderColor3 = QColor(70, 70, 70);

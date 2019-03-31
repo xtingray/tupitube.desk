@@ -62,7 +62,7 @@
 #include <QPainterPath>
 #include <QMatrix>
 #include <QGraphicsLineItem>
-#include <QGraphicsView>
+#include <QGraphicsEllipseItem>
 
 class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
 {
@@ -101,8 +101,22 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
         void penWidthChanged(int width);
 
     private:
-        struct Private;
-        Private *const k;
+        QPointF firstPoint;
+        QPointF oldPos;
+        QPainterPath path;
+        Settings *configPanel;
+        QMap<QString, TAction *> penActions;
+        TupPathItem *item;
+        QCursor penCursor;
+        TupGraphicsScene *scene;
+        TupBrushManager *brushManager;
+        TupInputDeviceInformation *input;
+
+        bool resize;
+        QGraphicsEllipseItem *penCircle;
+        int circleZValue;
+        QPointF penCirclePos;
+        int penWidth;
 };
 
 #endif

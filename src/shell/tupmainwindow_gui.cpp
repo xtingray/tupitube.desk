@@ -57,7 +57,7 @@ void TupMainWindow::createGUI()
     addSpecialButton(hideAction);
 
     // Adding the color palette to the left side of the interface 
-    m_colorPalette = new TupColorPalette;
+    m_colorPalette = new TupColorPaletteWidget;
     connect(m_colorPalette, SIGNAL(colorSpaceChanged(TColorCell::FillType)), this, SLOT(updateFillTool(TColorCell::FillType)));
 
     colorView = addToolView(m_colorPalette, Qt::LeftDockWidgetArea, Animation, "Color Palette", QKeySequence(tr("Shift+P")));

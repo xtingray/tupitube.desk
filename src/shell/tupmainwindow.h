@@ -44,7 +44,7 @@
 // Modules
 #include "tupexposuresheet.h"
 #include "tupbrushwidget.h"
-#include "tupcolorpalette.h"
+#include "tupcolorpalettewidget.h"
 #include "tupsceneswidget.h"
 #include "tuplibrarywidget.h"
 #include "tuptimeline.h"
@@ -246,7 +246,7 @@ class TupMainWindow : public TabbedMainWindow
         TupTimeLine *m_timeLine;
 
         TupLibraryWidget *m_libraryWidget;
-        TupColorPalette *m_colorPalette;
+        TupColorPaletteWidget *m_colorPalette;
         TupBrushWidget *m_brushWidget;
         ToolView *exposureView;
         ToolView *colorView;

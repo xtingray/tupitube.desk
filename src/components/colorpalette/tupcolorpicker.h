@@ -89,4 +89,3 @@ class TUPITUBE_EXPORT TupColorPicker : public QFrame
 };
 
 #endif
-

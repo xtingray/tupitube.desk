@@ -46,16 +46,17 @@
 #include "tupgradientcreator.h"
 
 #include <QSplitter>
+#include <QTabWidget>
 
-class TUPITUBE_EXPORT TupColorPalette : public TupModuleWidgetBase
+class TUPITUBE_EXPORT TupColorPaletteWidget : public TupModuleWidgetBase
 {
     Q_OBJECT
 
     public:
         enum BrushType { Solid = 0, Gradient };
 
-        TupColorPalette(QWidget *parent = nullptr);
-        ~TupColorPalette();
+        TupColorPaletteWidget(QWidget *parent = nullptr);
+        ~TupColorPaletteWidget();
 
         // SQA: change this for QBrush
         QPair<QColor, QColor> color();
@@ -97,9 +98,6 @@ class TUPITUBE_EXPORT TupColorPalette : public TupModuleWidgetBase
         void setGlobalColors(const QBrush &brush);
         void updateLuminancePicker(const QColor &color);
 
-        struct Private;
-        Private *const k;
-
         QSplitter *splitter;
         QTabWidget *tab;
 
@@ -115,16 +113,16 @@ class TUPITUBE_EXPORT TupColorPalette : public TupModuleWidgetBase
         QBrush currentContourBrush;
         QBrush currentFillBrush;
 
-        TColorCell *contourColor;
-        TColorCell *fillColor;
+        TColorCell *contourColorCell;
+        TColorCell *fillColorCell;
         TColorCell *bgColor;
 
         bool flagGradient;
         BrushType type;
 
         TColorCell::FillType currentSpace;
-        TupColorPalette::BrushType fgType;
-        TupColorPalette::BrushType bgType;
+        TupColorPaletteWidget::BrushType fgType;
+        TupColorPaletteWidget::BrushType bgType;
 };
 
 #endif

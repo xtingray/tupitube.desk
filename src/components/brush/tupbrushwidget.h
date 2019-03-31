@@ -59,6 +59,7 @@ class TUPITUBE_EXPORT TupBrushWidget : public TupModuleWidgetBase
     public:
         TupBrushWidget(QWidget *parent = 0);
         ~TupBrushWidget();
+
         QPen getPen() const;
         void setPenThickness(int thickness);
         

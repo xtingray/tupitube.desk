@@ -50,7 +50,8 @@ class TUPITUBE_EXPORT TupColorButton : public QWidget
     Q_OBJECT
 
     public:
-        TupColorButton(int colorIndex, const QString &name, const QBrush &brush, const QSize &size, const QString &buttonParams);
+        TupColorButton(int colorIndex, const QString &name, const QBrush &brush,
+                       const QSize &size, const QString &buttonParams);
         ~TupColorButton();
 
         QSize sizeHint() const;
@@ -71,8 +72,6 @@ class TUPITUBE_EXPORT TupColorButton : public QWidget
         void doubledClicked(int index);
 
     private:
-        struct Private;
-        Private *const k;
         int border1;
         int border2;
         int border3;

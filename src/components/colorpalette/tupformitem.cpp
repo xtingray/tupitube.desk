@@ -84,4 +84,3 @@ void TupFormItem::setSuffix(const QString &suffix)
 {
     value->setSuffix(suffix);
 }
-

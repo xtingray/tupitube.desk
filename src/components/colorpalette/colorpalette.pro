@@ -15,7 +15,7 @@ target.path = /lib/
 CONFIG += dll warn_on
 
 HEADERS += tupcolorpicker.h \
-           tupcolorpalette.h \
+           tupcolorpalettewidget.h \
            tupviewcolorcells.h \
            tupcellscolor.h \
            tuppaletteparser.h \
@@ -25,7 +25,7 @@ HEADERS += tupcolorpicker.h \
            tupcolorbuttonpanel.h
 
 SOURCES += tupcolorpicker.cpp \
-           tupcolorpalette.cpp \
+           tupcolorpalettewidget.cpp \
            tupviewcolorcells.cpp \
            tupcellscolor.cpp \
            tuppaletteparser.cpp \
