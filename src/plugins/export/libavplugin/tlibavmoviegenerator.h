@@ -39,13 +39,30 @@
 #include "tglobal.h"
 #include "tmoviegenerator.h"
 
+#ifdef __cplusplus
+extern "C" {
+#include "libavutil/channel_layout.h"
+#include "libavutil/mathematics.h"
+#include "libavutil/opt.h"
+#include "libavformat/avformat.h"
+#include "libavresample/avresample.h"
+// #include "libswscale/swscale.h"
+}
+#endif
+
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55,28,1)
+#define av_frame_alloc  avcodec_alloc_frame
+#endif
+
+#define STREAM_DURATION 4.73684
+
 class TUPITUBE_PLUGIN TLibavMovieGenerator : public TMovieGenerator
 {
     public:
-        // TLibavMovieGenerator(TMovieGeneratorInterface::Format format, int width, int height, int fps = 24, double duration = 0);
         TLibavMovieGenerator(TMovieGeneratorInterface::Format format, const QSize &size, int fps = 24,
                              double duration = 0);
         ~TLibavMovieGenerator();
+
         virtual bool validMovieHeader();
         virtual QString getErrorMsg() const;
         void saveMovie(const QString &filename);
@@ -57,8 +74,34 @@ class TUPITUBE_PLUGIN TLibavMovieGenerator : public TMovieGenerator
         virtual void endVideo();
 
     private:
-        struct Private;
-        Private *const k;
+        bool openVideo(AVCodec *codec, AVStream *st);
+        AVStream * addVideoStream(AVFormatContext *oc, AVCodec **codec, enum AVCodecID codec_id,
+                                  const QString &movieFile, int width, int height, int fps);
+        bool writeVideoFrame(const QString &movieFile, const QImage &image);
+        void RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint iRGBIncrement,
+                          bool bSwapRGB, int width, int height);
+        void chooseFileExtension(int format);
+        void closeVideo(AVStream *st);
+
+        AVFrame *videoFrame;
+        QString errorMsg;
+        int frameCount;
+        AVStream *video_st;
+        AVFormatContext *oc;
+        AVOutputFormat *fmt;
+
+        QString movieFile;
+        int fps;
+        double streamDuration;
+        bool exception;
+
+        bool hasSounds;
+        AVFrame *audioFrame;
+        AVFrame *tmpAudioFrame;
+        int64_t next_pts;
+        float t;
+        float tincr;
+        float tincr2;
 };
 
 #endif

@@ -222,4 +222,3 @@ QString ImagePlugin::getExceptionMsg() const {
 }
 
 // Q_EXPORT_PLUGIN(ImagePlugin);
-

@@ -58,6 +58,7 @@ class TUPITUBE_EXPORT APNGPlugin : public TupExportPluginObject
     public:
         APNGPlugin();
         virtual ~APNGPlugin();
+
         virtual QString key() const;
         TupExportInterface::Formats availableFormats();
 
