@@ -40,6 +40,8 @@
 #include "tuptoolplugin.h"
 #include "settings.h"
 #include "tupprojectresponse.h"
+#include "configurator.h"
+#include "mouthtarget.h"
 
 #include <QPointF>
 #include <QKeySequence>
@@ -107,6 +109,27 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
 
         struct Private;
         Private *const k;
+
+        QMap<QString, TAction *> pgActions;
+        Configurator *configPanel;
+
+        TupGraphicsScene *scene;
+
+        TupLipSync *currentLipSync;
+        int initScene;
+
+        QPointF origin;
+        MouthTarget *target;
+
+        TupToolPlugin::Mode mode;
+
+        int baseZValue;
+
+        QGraphicsItem *mouth;
+        QPointF mouthOffset;
+        QString currentMouth;
+        int currentMouthIndex;
+        bool targetIncluded;
 };
 
 #endif

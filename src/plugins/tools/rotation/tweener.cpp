@@ -53,32 +53,7 @@
 
 #include <QMessageBox>
 
-struct Tweener::Private
-{
-    /*
-    QMap<QString, TAction *> rotateActions;
-    Configurator *configPanel;
-
-    TupGraphicsScene *scene;
-    QList<QGraphicsItem *> objects;
-
-    TupItemTweener *currentTween;
-    int initFrame;
-    int initLayer;
-    int initScene;
-
-    QPointF origin;
-    Target *target;
-    qreal realFactor;
-
-    TupToolPlugin::Mode mode;
-    TupToolPlugin::EditMode editMode;
-
-    int baseZValue;
-    */
-};
-
-Tweener::Tweener() : TupToolPlugin(), k(new Private)
+Tweener::Tweener() : TupToolPlugin()
 {
     setupActions();
 
@@ -89,14 +64,13 @@ Tweener::Tweener() : TupToolPlugin(), k(new Private)
 
 Tweener::~Tweener()
 {
-    delete k;
 }
 
 /* This method initializes the plugin */
 
-void Tweener::init(TupGraphicsScene *scene)
+void Tweener::init(TupGraphicsScene *gScene)
 {
-    scene = scene;
+    scene = gScene;
     objects.clear();
 
     if (target) {

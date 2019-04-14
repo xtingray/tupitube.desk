@@ -39,8 +39,14 @@
 #include "tglobal.h"
 #include "tuptoolplugin.h"
 #include "tupitemtweener.h"
+#include "tradiobuttongroup.h"
+#include "tuptweenerstep.h"
+#include "timagebutton.h"
 
 #include <QWidget>
+#include <QComboBox>
+#include <QSpinBox>
+#include <QDoubleSpinBox>
 
 /**
  * @author Gustav Gonzalez 
@@ -89,8 +95,35 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         void setEditMode();
         void checkFramesRange();
 
-        struct Private;
-        Private *const k;
+        QWidget *innerPanel;
+        QWidget *rangePanel;
+        QWidget *clockPanel;
+
+        QBoxLayout *layout;
+        TupToolPlugin::Mode mode;
+        QLineEdit *input;
+        TRadioButtonGroup *options;
+
+        QSpinBox *initFrameSpin;
+        QSpinBox *endFrameSpin;
+
+        QLabel *totalLabel;
+        int stepsCounter;
+
+        TupItemTweener::TransformAxes shearAxes;
+        QComboBox *comboAxes;
+
+        QDoubleSpinBox *comboFactor;
+        QSpinBox *iterationsCombo;
+
+        QCheckBox *loopBox;
+        QCheckBox *reverseLoopBox;
+
+        bool selectionDone;
+        bool propertiesDone;
+
+        TImageButton *apply;
+        TImageButton *remove;
 };
 
 #endif

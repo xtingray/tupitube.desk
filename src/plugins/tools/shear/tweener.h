@@ -48,7 +48,6 @@
 #include <QMatrix>
 #include <QGraphicsView>
 #include <QDomDocument>
-#include <QDir>
 
 /**
  * @author Gustav Gonzalez 

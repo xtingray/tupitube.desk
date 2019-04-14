@@ -51,8 +51,9 @@
 #include "tuplayer.h"
 
 #include <QMessageBox>
+#include <QDir>
 
-Tweener::Tweener() : TupToolPlugin()
+Tweener::Tweener(): TupToolPlugin()
 {
     setupActions();
 

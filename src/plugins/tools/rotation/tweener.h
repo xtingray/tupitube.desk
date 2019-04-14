@@ -115,9 +115,6 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         void updateOriginPoint(const QPointF &point);
 
     private:
-        struct Private;
-        Private *const k;
-
         QMap<QString, TAction *> rotateActions;
         Configurator *configPanel;
 

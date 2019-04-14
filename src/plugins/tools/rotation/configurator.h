@@ -38,6 +38,9 @@
 
 #include "tglobal.h"
 #include "settings.h"
+#include "tweenmanager.h"
+#include "buttonspanel.h"
+#include "tupitemtweener.h"
 
 #include <QFrame>
 #include <QLabel>
@@ -105,8 +108,19 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void setButtonsPanel();
         void activePropertiesPanel(bool enable);
 
-        struct Private;
-        Private *const k;
+        QBoxLayout *layout;
+        QBoxLayout *settingsLayout;
+        Settings *settingsPanel;
+        TweenManager *tweenManager;
+        ButtonsPanel *controlPanel;
+
+        TupItemTweener *currentTween;
+
+        int framesCount;
+        int currentFrame;
+
+        TupToolPlugin::Mode currentMode;
+        GuiState state;
 };
 
 #endif

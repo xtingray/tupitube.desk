@@ -43,6 +43,7 @@
 #include "tupgraphicsscene.h"
 #include "settings.h"
 #include "tupprojectresponse.h"
+#include "tupellipseitem.h"
 
 #include <QObject>
 #include <QPointF>
@@ -114,14 +115,28 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         void updateItemRotation();
         void updateItemScale();
         void removeTarget();
-        TupFrame* currentFrame();
+        TupFrame* getCurrentFrame();
         TupFrame* frameAt(int sceneIndex, int layerIndex, int frameIndex);
         void requestTransformation(QGraphicsItem *item, TupFrame *frame);
 
-        struct Private;
-        Private *const k;
         Settings *panel;
+        QMap<QString, TAction *> selectActions;
+        QList<QGraphicsItem *> selectedObjects;
+        QList<NodeManager*> nodeManagers;
+        TupGraphicsScene *scene;
+        bool activeSelection;
+        qreal realFactor;
+        int nodeZValue;
 
+        TupEllipseItem *center;
+        QGraphicsLineItem *target1;
+        QGraphicsLineItem *target2;
+        bool targetIsIncluded;
+        QString key;
+
+        int currentLayer;
+        int currentFrame;
+        TupFrame *frame;
 };
 
 #endif

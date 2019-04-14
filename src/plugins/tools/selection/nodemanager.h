@@ -50,6 +50,7 @@ class TUPITUBE_PLUGIN NodeManager : public QObject
     public:
         NodeManager(QGraphicsItem *parent, QGraphicsScene *scene, int zValue);
         ~NodeManager();
+
         void syncNodes(const QRectF &rect);
         void syncNodesFromParent();
         QGraphicsItem *parentItem() const;
@@ -71,7 +72,7 @@ class TUPITUBE_PLUGIN NodeManager : public QObject
         
         void toggleAction();
         
-        void setActionNode(Node::ActionNode action);
+        void setActionNode(Node::NodeAction action);
         
         void setVisible(bool visible);
         
@@ -88,8 +89,18 @@ class TUPITUBE_PLUGIN NodeManager : public QObject
         void scaleUpdated(double x, double y);
 
     private:
-        struct Private;
-        Private *const k;
+        QHash<Node::NodeType, Node *> nodes;
+        QGraphicsItem *parent;
+        QGraphicsScene *scene;
+
+        QTransform origTransform;
+        QPointF origPos;
+
+        bool pressed;
+        bool proportional;
+        qreal rotationValue;
+        double scaleX;
+        double scaleY;
 };
 
 #endif

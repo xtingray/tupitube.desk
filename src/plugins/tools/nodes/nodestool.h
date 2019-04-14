@@ -50,10 +50,6 @@
 #include "tupserializer.h"
 #include "tupinputdeviceinformation.h"
 #include "tupgraphicsscene.h"
-#include "tupprojectrequest.h"
-#include "tupprojectresponse.h"
-#include "tuprequestbuilder.h"
-#include "tupproxyitem.h"
 #include "tuplibraryobject.h"
 #include "tupitemgroup.h"
 #include "tosd.h"
@@ -110,11 +106,16 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
     private:
         // void reset(TupGraphicsScene *scene);
         void setupActions();
-        TupFrame* currentFrame();
-        
-    private:
-        struct Private;
-        Private *const k;
+        TupFrame* getCurrentFrame();
+
+        QMap<QString, TAction *> nodesActions;
+        TNodeGroup *nodeGroup;
+        TupGraphicsScene *scene;
+        int baseZValue;
+        qreal realFactor;
+        bool activeSelection;
+        int currentLayer;
+        int currentFrame;
 };
 
 #endif

@@ -118,9 +118,6 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         void removeTweenPoints();
         void paintTweenPoints();
 
-        struct Private;
-        Private *const k;
-
         QMap<QString, TAction *> posActions;
         Configurator *configPanel;
 

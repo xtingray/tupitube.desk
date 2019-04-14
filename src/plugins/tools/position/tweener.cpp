@@ -54,11 +54,7 @@
 
 #include <QMessageBox>
 
-struct Tweener::Private
-{
-};
-
-Tweener::Tweener() : TupToolPlugin(), k(new Private)
+Tweener::Tweener() : TupToolPlugin()
 {
     setupActions();
 
@@ -75,7 +71,6 @@ Tweener::Tweener() : TupToolPlugin(), k(new Private)
 
 Tweener::~Tweener()
 {
-    delete k;
 }
 
 // This method initialize the context of the plugin

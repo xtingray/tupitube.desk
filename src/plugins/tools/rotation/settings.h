@@ -38,6 +38,8 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
+#include "tradiobuttongroup.h"
+#include "timagebutton.h"
 
 #include <QWidget>
 #include <QLabel>
@@ -104,8 +106,36 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         void setEditMode();
         void checkFramesRange();
 
-        struct Private;
-        Private *const k;
+        QWidget *innerPanel;
+        QWidget *rangePanel;
+
+        QBoxLayout *layout;
+        TupToolPlugin::Mode mode;
+
+        QLineEdit *input;
+        TRadioButtonGroup *options;
+        QSpinBox *initFrame;
+        QSpinBox *endFrame;
+
+        QComboBox *rotationTypeCombo;
+        TupItemTweener::RotationType rotationType;
+
+        QSpinBox *rangeStart;
+        QSpinBox *rangeEnd;
+
+        QDoubleSpinBox *degreesPerFrame;
+
+        QCheckBox *rangeLoopBox;
+        QCheckBox *reverseLoopBox;
+        QLabel *totalLabel;
+        QComboBox *clockCombo;
+        int stepsCounter;
+
+        bool selectionDone;
+        bool propertiesDone;
+
+        TImageButton *apply;
+        TImageButton *remove;
 };
 
 #endif

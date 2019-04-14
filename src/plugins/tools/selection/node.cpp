@@ -39,19 +39,8 @@
 
 #include <cmath> // fabs
 
-struct Node::Private
-{
-    TypeNode typeNode;
-    ActionNode action;
-    ActionNode generalState; 
-    QGraphicsItem *parent;
-    NodeManager *manager;
-    QSizeF size;
-    QPointF oldPoint;
-};
-
-Node::Node(TypeNode node, ActionNode action, const QPointF &pos, NodeManager *manager, 
-           QGraphicsItem *parent, int zValue) : QGraphicsItem(0), k(new Private)
+Node::Node(NodeType nType, NodeAction actionValue, const QPointF &pos, NodeManager *mngr,
+           QGraphicsItem *parentItem, int zValue) : QGraphicsItem(0)
 {
     QGraphicsItem::setCursor(QCursor(Qt::PointingHandCursor));
     setFlag(ItemIsSelectable, false);
@@ -59,19 +48,18 @@ Node::Node(TypeNode node, ActionNode action, const QPointF &pos, NodeManager *ma
     setFlag(ItemIsFocusable, true);
     setPos(pos);
 
-    k->typeNode = node;
-    k->action = action;
-    k->manager = manager;
-    k->parent = parent;
-    k->size = QSizeF(10, 10);
-    k->generalState = Scale;
+    node = nType;
+    action = actionValue;
+    manager = mngr;
+    parent = parentItem;
+    size = QSizeF(10, 10);
+    generalState = Scale;
 
     setZValue(zValue);
 }
 
 Node::~Node()
 {
-    delete k;
 }
 
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *w)
@@ -81,8 +69,8 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     
     QColor color;
    
-    if (k->typeNode != Center) {
-        if (k->action == Rotate) {
+    if (node != Center) {
+        if (action == Rotate) {
             color = QColor(255, 102, 0);
             color.setAlpha(180);
         } else {
@@ -90,7 +78,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
             color.setAlpha(200);
         }
     } else {
-        if (k->generalState == Scale) {
+        if (generalState == Scale) {
             color = QColor(150, 150, 150);
         } else {
            color = QColor(255, 0, 0);
@@ -105,11 +93,11 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     /* SQA: Code for debugging purposes
     #ifdef TUP_DEBUG
         painter->setFont(QFont(painter->font().family(), 5));
-        painter->drawText(square, QString::number(k->typeNode));
+        painter->drawText(square, QString::number(type));
     #endif
     */
 
-    if (k->typeNode == Center) {
+    if (node == Center) {
         painter->save();
         color = QColor("white");
         color.setAlpha(220);
@@ -128,7 +116,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 QRectF Node::boundingRect() const
 {
-    QRectF rect(QPointF(-k->size.width()/2, -k->size.height()/2), k->size);
+    QRectF rect(QPointF(-size.width()/2, -size.height()/2), size);
     return rect;
 }
 
@@ -147,8 +135,8 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
     if (change == ItemSelectedChange) {
         setVisible(true);
         if (value.toBool())
-            k->parent->setSelected(true);
-        k->manager->show();
+            parent->setSelected(true);
+        manager->show();
     }
 
     return QGraphicsItem::itemChange(change, value);
@@ -164,10 +152,10 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
         #endif
     #endif
 
-    k->oldPoint = event->scenePos();
+    oldPoint = event->scenePos();
 
-    if (k->manager) 
-        k->manager->setPressedStatus(true);
+    if (manager)
+        manager->setPressedStatus(true);
 
     QGraphicsItem::mousePressEvent(event);
 }
@@ -183,31 +171,31 @@ void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     #endif
 
     QGraphicsItem::mouseReleaseEvent(event);
-    k->parent->setSelected(true);
+    parent->setSelected(true);
 
-    if (k->manager)
-        k->manager->setPressedStatus(false);
+    if (manager)
+        manager->setPressedStatus(false);
 }
 
 void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QPointF newPos(event->scenePos());
 
-    if (k->typeNode == Center) {
-        k->parent->moveBy(newPos.x() - scenePos().x(), newPos.y() - scenePos().y());
+    if (node == Center) {
+        parent->moveBy(newPos.x() - scenePos().x(), newPos.y() - scenePos().y());
         QGraphicsItem::mouseMoveEvent(event);
         return;
     } else {
-        if (k->action == Scale) {
-            QPointF center = k->parent->boundingRect().center();
-            QPointF distance = k->parent->mapToScene(center) - newPos;
+        if (action == Scale) {
+            QPointF center = parent->boundingRect().center();
+            QPointF distance = parent->mapToScene(center) - newPos;
 
-            qreal w = k->parent->boundingRect().width() / 2;
-            qreal h = k->parent->boundingRect().height() / 2;
+            qreal w = parent->boundingRect().width() / 2;
+            qreal h = parent->boundingRect().height() / 2;
 
             /*
-            double scaleX = k->parent->data(TupGraphicObject::ScaleX).toDouble();
-            double scaleY = k->parent->data(TupGraphicObject::ScaleY).toDouble();
+            double scaleX = parent->data(TupGraphicObject::ScaleX).toDouble();
+            double scaleY = parent->data(TupGraphicObject::ScaleY).toDouble();
             tError() << "Node::mouseMoveEvent() - scaleX: " << scaleX;
             tError() << "Node::mouseMoveEvent() - scaleY: " << scaleY;
             */
@@ -215,24 +203,24 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             qreal sx = fabs(distance.x()) / w;
             qreal sy = fabs(distance.y()) / h;
 
-            if (k->manager->proportionalScale())
+            if (manager->proportionalScale())
                 sy = sx;
-            k->manager->scale(sx, sy);
-        } else if (k->action == Rotate) {
+            manager->scale(sx, sy);
+        } else if (action == Rotate) {
             QPointF p1 = newPos;
-            QPointF p2 = k->parent->sceneBoundingRect().center();
+            QPointF p2 = parent->sceneBoundingRect().center();
 
             QLineF line(p2, p1);
-            QLineF lineRef(p2, k->oldPoint);
-            qreal angle = k->parent->data(TupGraphicObject::Rotate).toReal() + (lineRef.angle() - line.angle());
+            QLineF lineRef(p2, oldPoint);
+            qreal angle = parent->data(TupGraphicObject::Rotate).toReal() + (lineRef.angle() - line.angle());
 
             if (angle < 0)
                 angle = 360 - fabs(angle);
             if (angle > 359)
                 angle = 0;
 
-            k->manager->rotate(angle);
-            k->oldPoint = newPos;
+            manager->rotate(angle);
+            oldPoint = newPos;
         }
     }
 }
@@ -247,39 +235,39 @@ void Node::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         #endif
     #endif
 
-    k->manager->toggleAction();
+    manager->toggleAction();
     QGraphicsItem::mouseDoubleClickEvent(event);
 }
 
-int Node::typeNode() const
+int Node::nodeType() const
 {
-    return k->typeNode;
+    return node;
 }
 
-void Node::setAction(ActionNode action)
+void Node::setAction(NodeAction nAction)
 {
-    if (k->typeNode != Center)
-        k->action = action;
+    if (node != Center)
+        action = nAction;
     else
-        k->action = Scale;
+        action = Scale;
 
-    if (k->generalState == Scale)
-        k->generalState = Rotate;
+    if (generalState == Scale)
+        generalState = Rotate;
     else
-        k->generalState = Scale;
+        generalState = Scale;
 
     update();
 }
 
-int Node::actionNode()
+int Node::nodeAction()
 {
-    return k->action;
+    return action;
 }
 
 void Node::keyReleaseEvent(QKeyEvent *event)
 {
     Q_UNUSED(event);
-    k->manager->setProportion(false);
+    manager->setProportion(false);
 }
 
 void Node::resize(qreal factor)
