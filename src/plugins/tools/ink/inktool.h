@@ -74,7 +74,7 @@ class TUPITUBE_PLUGIN InkTool : public TupToolPlugin
         virtual void aboutToChangeTool();
         virtual void saveConfig();
         virtual void keyPressEvent(QKeyEvent *event);
-        virtual QCursor cursor() const;
+        virtual QCursor polyCursor() const;
 
     signals:
         void closeHugeCanvas();
@@ -89,34 +89,34 @@ class TUPITUBE_PLUGIN InkTool : public TupToolPlugin
         void updateSizeToleranceVar(int value);
 
     private:
-        struct Private;
-        Private *const k;
+        QPointF firstPoint;
+        QPointF oldPos;
 
-    /*        
-    private:
-        QPointF m_firstPoint;
-        QPointF m_oldPos;
         QPointF previewPoint;
         QPointF oldPosRight;
         QPointF oldPosLeft;
         QPointF connector;
-        QPainterPath m_path;
-        QPainterPath pathRight; 
-        QPainterPath pathLeft;
-        Configurator *m_configurator;
-        QMap<QString, TAction *> m_actions;
-        TupPathItem *m_item;
-        TupPathItem *itemRight;
-        TupPathItem *itemLeft;
+
+        QPainterPath path;
+        QPainterPath inkPath;
+        QList<QPointF> leftPoints;
+
+        Configurator *configPanel;
+        QMap<QString, TAction *> inkActions;
+
+        TupPathItem *item;
+
         int dotsCounter;
         qreal penWidth;
         qreal oldSlope;
-        int spacing;
-        qreal tolerance;
-        qreal widthVar; 
         int arrowSize;
         int firstArrow;
-    */
+        QCursor inkCursor;
+
+        int spacing;
+        qreal tolerance;
+        qreal widthVar;
+        qreal smoothness;
 };
 
 #endif

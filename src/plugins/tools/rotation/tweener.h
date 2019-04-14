@@ -40,6 +40,8 @@
 #include "tuptoolplugin.h"
 #include "settings.h"
 #include "tupprojectresponse.h"
+#include "configurator.h"
+#include "target.h"
 
 #include <QPointF>
 #include <QKeySequence>
@@ -62,6 +64,7 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
     public:
         Tweener();
         virtual ~Tweener();
+
         virtual void init(TupGraphicsScene *scene);
 
         virtual QStringList keys() const;
@@ -100,10 +103,6 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         void addTarget();
         void removeTweenFromProject(const QString &name);
 
-    private:
-        struct Private;
-        Private *const k;
-
     private slots:
         void setSelection();
         void setPropertiesMode();
@@ -114,6 +113,30 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         void updateStartPoint(int index);
         void setCurrentTween(const QString &name);
         void updateOriginPoint(const QPointF &point);
+
+    private:
+        struct Private;
+        Private *const k;
+
+        QMap<QString, TAction *> rotateActions;
+        Configurator *configPanel;
+
+        TupGraphicsScene *scene;
+        QList<QGraphicsItem *> objects;
+
+        TupItemTweener *currentTween;
+        int initFrame;
+        int initLayer;
+        int initScene;
+
+        QPointF origin;
+        Target *target;
+        qreal realFactor;
+
+        TupToolPlugin::Mode mode;
+        TupToolPlugin::EditMode editMode;
+
+        int baseZValue;
 };
 
 #endif

@@ -55,6 +55,7 @@ class TUPITUBE_PLUGIN Configurator : public QWidget
 
         Configurator(QWidget *parent = 0);
         ~Configurator();
+
         int spacingValue();
         qreal sizeToleranceValue();
         double smoothness() const;

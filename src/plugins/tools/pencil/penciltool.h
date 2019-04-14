@@ -73,17 +73,17 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
         PencilTool();
         virtual ~PencilTool();
         
-        virtual void init(TupGraphicsScene *scene);
+        virtual void init(TupGraphicsScene *gScene);
         virtual QStringList keys() const;
-        virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
-        virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
-        virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
+        virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene);
+        virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene);
+        virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene);
         virtual QMap<QString, TAction *>actions() const;
         int toolType() const;
         virtual QWidget *configurator();
         virtual void aboutToChangeTool();
         virtual void saveConfig();
-        virtual QCursor cursor() const;
+        virtual QCursor polyCursor() const;
         virtual void sceneResponse(const TupSceneResponse *event);
 
     protected:

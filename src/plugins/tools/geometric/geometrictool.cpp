@@ -37,7 +37,6 @@
 #include "tuprectitem.h"
 #include "tupellipseitem.h"
 #include "tuplineitem.h"
-#include "tuppathitem.h"
 #include "tuplibraryobject.h"
 #include "tupinputdeviceinformation.h"
 #include "tupgraphicsscene.h"
@@ -47,34 +46,10 @@
 #include "tupprojectrequest.h"
 #include "tupbrushmanager.h"
 
-struct GeometricTool::Private
+GeometricTool::GeometricTool()
 {
-    TupRectItem *rect;
-    TupEllipseItem *ellipse;
-    TupLineItem *line;
-    TupPathItem *path;
-    TupGraphicsScene *scene;
-    Settings *configurator;
-    bool added;
-    QPointF currentPoint;
-    QPointF lastPoint;
-    QMap<QString, TAction *> actions;
-
-    bool proportion;
-    bool side;
-    int xSideLength;
-    int ySideLength;
-
-    QGraphicsItem *item;
-    QCursor squareCursor;
-    QCursor circleCursor;
-    QCursor lineCursor;
-};
-
-GeometricTool::GeometricTool() : k(new Private)
-{
-    k->scene = nullptr;
-    k->path = nullptr;
+    scene = nullptr;
+    path = nullptr;
     setupActions();
 }
 
@@ -87,7 +62,7 @@ QStringList GeometricTool::keys() const
     return QStringList() << tr("Rectangle") << tr("Ellipse") << tr("Line");
 }
 
-void GeometricTool::init(TupGraphicsScene *scene)
+void GeometricTool::init(TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -97,11 +72,11 @@ void GeometricTool::init(TupGraphicsScene *scene)
         #endif
     #endif
 
-    k->scene = scene;
-    delete k->path;
-    k->path = nullptr;
-    k->proportion = false;
-    k->side = false;
+    scene = gScene;
+    delete path;
+    path = nullptr;
+    proportion = false;
+    side = false;
 
     foreach (QGraphicsView *view, scene->views())
         view->setDragMode(QGraphicsView::NoDrag);
@@ -111,24 +86,24 @@ void GeometricTool::setupActions()
 {
     TAction *action1 = new TAction(QIcon(kAppProp->themeDir() + "icons/square.png"), tr("Rectangle"), this);
     action1->setShortcut(QKeySequence(tr("R")));
-    k->squareCursor = QCursor(kAppProp->themeDir() + "cursors/square.png", 0, 0);
-    action1->setCursor(k->squareCursor);
+    squareCursor = QCursor(kAppProp->themeDir() + "cursors/square.png", 0, 0);
+    action1->setCursor(squareCursor);
     
-    k->actions.insert(tr("Rectangle"), action1);
+    geoActions.insert(tr("Rectangle"), action1);
     
     TAction *action2 = new TAction(QIcon(kAppProp->themeDir() + "icons/ellipse.png"), tr("Ellipse"), this);
     action2->setShortcut(QKeySequence(tr("C")));
-    k->circleCursor = QCursor(kAppProp->themeDir() + "cursors/circle.png", 2, 2);
-    action2->setCursor(k->circleCursor);
+    circleCursor = QCursor(kAppProp->themeDir() + "cursors/circle.png", 2, 2);
+    action2->setCursor(circleCursor);
     
-    k->actions.insert(tr("Ellipse"), action2);
+    geoActions.insert(tr("Ellipse"), action2);
     
     TAction *action3 = new TAction(QIcon(kAppProp->themeDir() + "icons/line.png"), tr("Line"), this);
     action3->setShortcut(QKeySequence(tr("L")));
-    k->lineCursor = QCursor(kAppProp->themeDir() + "cursors/line.png", 0, 15);
-    action3->setCursor(k->lineCursor);
+    lineCursor = QCursor(kAppProp->themeDir() + "cursors/line.png", 0, 15);
+    action3->setCursor(lineCursor);
 
-    k->actions.insert(tr("Line"), action3);
+    geoActions.insert(tr("Line"), action3);
 }
 
 QBrush GeometricTool::setLiteBrush(QColor c, Qt::BrushStyle style)
@@ -142,7 +117,7 @@ QBrush GeometricTool::setLiteBrush(QColor c, Qt::BrushStyle style)
     return brush;
 }
 
-void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
+void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -158,63 +133,63 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
     if (input->buttons() == Qt::LeftButton) {
         fillBrush = brushManager->brush();
         if (name() == tr("Rectangle")) {
-            k->added = false;
-            k->rect = new TupRectItem(QRectF(input->pos(), QSize(0,0)));
-            k->rect->setPen(brushManager->pen());
+            added = false;
+            rect = new TupRectItem(QRectF(input->pos(), QSize(0,0)));
+            rect->setPen(brushManager->pen());
             if (brushManager->brush().color().alpha() > 0)
-                k->rect->setBrush(setLiteBrush(brushManager->brush().color(), brushManager->brush().style()));
+                rect->setBrush(setLiteBrush(brushManager->brush().color(), brushManager->brush().style()));
             else
-                k->rect->setBrush(brushManager->brush());
+                rect->setBrush(brushManager->brush());
 
-            k->currentPoint = input->pos();
+            currentPoint = input->pos();
         } else if (name() == tr("Ellipse")) {
-            k->added = false;
-            k->ellipse = new TupEllipseItem(QRectF(input->pos(), QSize(0,0)));
-            k->ellipse->setPen(brushManager->pen());
+            added = false;
+            ellipse = new TupEllipseItem(QRectF(input->pos(), QSize(0,0)));
+            ellipse->setPen(brushManager->pen());
             if (brushManager->brush().color().alpha() > 0)
-                k->ellipse->setBrush(setLiteBrush(brushManager->brush().color(), brushManager->brush().style()));
+                ellipse->setBrush(setLiteBrush(brushManager->brush().color(), brushManager->brush().style()));
             else
-                k->ellipse->setBrush(brushManager->brush());
+                ellipse->setBrush(brushManager->brush());
 
-            k->currentPoint = input->pos();
+            currentPoint = input->pos();
         } else if (name() == tr("Line")) {
-            k->currentPoint = input->pos();
+            currentPoint = input->pos();
 
-            if (k->path) {
-                QPainterPath path = k->path->path();
-                path.cubicTo(k->lastPoint, k->lastPoint, k->lastPoint);
-                k->path->setPath(path);
+            if (path) {
+                QPainterPath painterPath = path->path();
+                painterPath.cubicTo(lastPoint, lastPoint, lastPoint);
+                path->setPath(painterPath);
             } else {
-                k->path = new TupPathItem;
-                k->path->setPen(brushManager->pen());
+                path = new TupPathItem;
+                path->setPen(brushManager->pen());
                 if (brushManager->brush().color().alpha() > 0)
-                   k->path->setBrush(setLiteBrush(brushManager->brush().color(), brushManager->brush().style()));
+                   path->setBrush(setLiteBrush(brushManager->brush().color(), brushManager->brush().style()));
                 else
-                   k->path->setBrush(brushManager->brush());
+                   path->setBrush(brushManager->brush());
 
-                QPainterPath path;
-                path.moveTo(k->currentPoint);
-                k->path->setPath(path);
-                scene->includeObject(k->path);
+                QPainterPath painterPath;
+                painterPath.moveTo(currentPoint);
+                path->setPath(painterPath);
+                gScene->includeObject(path);
 
-                k->line = new TupLineItem();
+                line = new TupLineItem();
                 if (brushManager->pen().color().alpha() == 0) {
                     QPen pen;
                     pen.setWidth(1);
                     pen.setBrush(QBrush(Qt::black));
-                    k->line->setPen(pen);
+                    line->setPen(pen);
                 } else {
-                    k->line->setPen(brushManager->pen());
+                    line->setPen(brushManager->pen());
                 }
 
-                k->line->setLine(QLineF(input->pos().x(), input->pos().y(), input->pos().x(), input->pos().y()));
-                scene->includeObject(k->line);
+                line->setLine(QLineF(input->pos().x(), input->pos().y(), input->pos().x(), input->pos().y()));
+                gScene->includeObject(line);
             }
         }
     }
 }
 
-void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
+void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     /*
     #ifdef TUP_DEBUG
@@ -227,27 +202,27 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
     */
 
     Q_UNUSED(brushManager);
-    Q_UNUSED(scene);
+    Q_UNUSED(gScene);
     
     if (name() == tr("Rectangle") || name() == tr("Ellipse")) {
-        if (!k->added) {
+        if (!added) {
             if (name() == tr("Rectangle"))
-                scene->includeObject(k->rect);
+                gScene->includeObject(rect);
             else
-                scene->includeObject(k->ellipse);
-            k->added = true;
+                gScene->includeObject(ellipse);
+            added = true;
         }
 
         int xMouse = static_cast<int> (input->pos().x());
         int yMouse = static_cast<int> (input->pos().y());
-        int xInit = static_cast<int> (k->currentPoint.x());
-        int yInit = static_cast<int> (k->currentPoint.y());
+        int xInit = static_cast<int> (currentPoint.x());
+        int yInit = static_cast<int> (currentPoint.y());
 
-        QRectF rect;
+        QRectF rectVar;
         if (name() == tr("Rectangle"))
-            rect = k->rect->rect();
+            rectVar = rect->rect();
         else
-            rect = k->ellipse->rect();
+            rectVar = ellipse->rect();
 
         int width = abs(xMouse - xInit);
         int height = abs(yMouse - yInit);
@@ -255,7 +230,7 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
         if (width <= height)
             xWins = true;
 
-        if (k->proportion) {
+        if (proportion) {
             QPointF target;
             if (xMouse >= xInit) {
                 if (yMouse >= yInit) {
@@ -264,14 +239,14 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
                     else
                         target = QPointF(xInit + height, yInit + height);
 
-                    rect.setBottomRight(target);
+                    rectVar.setBottomRight(target);
                 } else {
                     if (xWins)
                         target = QPointF(xInit + width, yInit - width);
                     else
                         target = QPointF(xInit + height, yInit - height);
 
-                    rect.setTopRight(target);
+                    rectVar.setTopRight(target);
                 }
             } else {
                 if (yMouse >= yInit) {
@@ -280,74 +255,74 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
                     else
                         target = QPointF(xInit - height, yInit + height);
 
-                    rect.setBottomLeft(target);
+                    rectVar.setBottomLeft(target);
                 } else {
                     if (xWins)
                         target = QPointF(xInit - width, yInit - width);
                     else
                         target = QPointF(xInit - height, yInit - height);
 
-                    rect.setTopLeft(target);
+                    rectVar.setTopLeft(target);
                 }
             }            
         } else {
-            if (k->side) {
+            if (side) {
                 QPointF target;
                 if (xMouse >= xInit) {
                     if (yMouse >= yInit) { // Right-Down
                         if (xWins) // Y > X
-                            target = QPointF(xInit + k->xSideLength, yInit + height);
+                            target = QPointF(xInit + xSideLength, yInit + height);
                         else // X > Y
-                            target = QPointF(xInit + width, yInit + k->ySideLength);
-                        rect.setBottomRight(target);
+                            target = QPointF(xInit + width, yInit + ySideLength);
+                        rectVar.setBottomRight(target);
                     } else { // Right-Up
                         if (xWins) // Y > X
-                            target = QPointF(xInit + k->xSideLength, yInit - height);
+                            target = QPointF(xInit + xSideLength, yInit - height);
                         else // X > Y
-                            target = QPointF(xInit + width, yInit - k->ySideLength);
-                        rect.setTopRight(target);
+                            target = QPointF(xInit + width, yInit - ySideLength);
+                        rectVar.setTopRight(target);
                     }
                 } else {
                     if (yMouse >= yInit) { // Left-Down
                         if (xWins) // Y > X
-                            target = QPointF(xInit - k->xSideLength, yInit + height);
+                            target = QPointF(xInit - xSideLength, yInit + height);
                         else // X > Y
-                            target = QPointF(xInit - width, yInit + k->ySideLength);
-                        rect.setBottomLeft(target);
+                            target = QPointF(xInit - width, yInit + ySideLength);
+                        rectVar.setBottomLeft(target);
                     } else { // Left-Up
                         if (xWins) // Y > X
-                            target = QPointF(xInit - k->xSideLength, yInit - height);
+                            target = QPointF(xInit - xSideLength, yInit - height);
                         else // X > Y
-                            target = QPointF(xInit - width, yInit - k->ySideLength);
-                        rect.setTopLeft(target);
+                            target = QPointF(xInit - width, yInit - ySideLength);
+                        rectVar.setTopLeft(target);
                     }
                 }
             } else {
-                k->xSideLength = static_cast<int> (abs(xInit - input->pos().x()));
-                k->ySideLength = static_cast<int> (abs(yInit - input->pos().y()));
+                xSideLength = static_cast<int> (abs(xInit - input->pos().x()));
+                ySideLength = static_cast<int> (abs(yInit - input->pos().y()));
 
                 if (xMouse >= xInit) {
                     if (yMouse >= yInit)
-                        rect.setBottomRight(input->pos());
+                        rectVar.setBottomRight(input->pos());
                     else
-                        rect.setTopRight(input->pos());
+                        rectVar.setTopRight(input->pos());
                 } else {
                     if (yMouse >= yInit)
-                        rect.setBottomLeft(input->pos());
+                        rectVar.setBottomLeft(input->pos());
                     else
-                        rect.setTopLeft(input->pos());
+                        rectVar.setTopLeft(input->pos());
                 }
             }
         }
 
         if (name() == tr("Rectangle"))
-            k->rect->setRect(rect);
+            rect->setRect(rectVar);
         else
-            k->ellipse->setRect(rect);
+            ellipse->setRect(rectVar);
     } 
 }
 
-void GeometricTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
+void GeometricTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -364,27 +339,27 @@ void GeometricTool::release(const TupInputDeviceInformation *input, TupBrushMana
     QPointF point;
 
     if (name() == tr("Rectangle")) {
-        k->rect->setBrush(fillBrush);
-        doc.appendChild(dynamic_cast<TupAbstractSerializable *>(k->rect)->toXml(doc));
-        point = k->rect->pos();
+        rect->setBrush(fillBrush);
+        doc.appendChild(dynamic_cast<TupAbstractSerializable *>(rect)->toXml(doc));
+        point = rect->pos();
     } else if (name() == tr("Ellipse")) {
-        k->ellipse->setBrush(fillBrush);
-        doc.appendChild(dynamic_cast<TupAbstractSerializable *>(k->ellipse)->toXml(doc));
-        QRectF rect = k->ellipse->rect();
+        ellipse->setBrush(fillBrush);
+        doc.appendChild(dynamic_cast<TupAbstractSerializable *>(ellipse)->toXml(doc));
+        QRectF rect = ellipse->rect();
         point = rect.topLeft();
     } else if (name() == tr("Line")) {
         return;
     }
 
-    TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(), scene->currentLayerIndex(), 
-                              scene->currentFrameIndex(), 0, point, scene->getSpaceContext(), TupLibraryObject::Item, 
+    TupProjectRequest event = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(), gScene->currentLayerIndex(),
+                              gScene->currentFrameIndex(), 0, point, gScene->getSpaceContext(), TupLibraryObject::Item,
                               TupProjectRequest::Add, doc.toString());
     emit requested(&event);
 }
 
 QMap<QString, TAction *> GeometricTool::actions() const
 {
-    return k->actions;
+    return geoActions;
 }
 
 int GeometricTool::toolType() const
@@ -399,10 +374,10 @@ QWidget *GeometricTool::configurator()
     if (name() == tr("Rectangle"))
         toolType = Settings::Rectangle;
     else if (name() == tr("Ellipse"))
-             toolType = Settings::Ellipse;
+        toolType = Settings::Ellipse;
 
-    k->configurator = new Settings(toolType);
-    return k->configurator;
+    configPanel = new Settings(toolType);
+    return configPanel;
 }
 
 void GeometricTool::aboutToChangeScene(TupGraphicsScene *scene)
@@ -427,9 +402,9 @@ void GeometricTool::keyPressEvent(QKeyEvent *event)
         emit closeHugeCanvas();
         return;
     } else if (event->key() == Qt::Key_Control) {
-        k->proportion = true;
+        proportion = true;
     } else if (event->key() == Qt::Key_Shift) {
-        k->side = true;
+        side = true;
     } else if (event->key() == Qt::Key_X) {
         if (name() == tr("Line"))
             endItem();
@@ -443,19 +418,19 @@ void GeometricTool::keyPressEvent(QKeyEvent *event)
 void GeometricTool::keyReleaseEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Shift)
-        k->side = false;
+        side = false;
     else if (event->key() == Qt::Key_Control)
-        k->proportion = false;
+        proportion = false;
 }
 
-QCursor GeometricTool::cursor() const
+QCursor GeometricTool::polyCursor() const
 {
     if (name() == tr("Rectangle")) {
-        return k->squareCursor;
+        return squareCursor;
     } else if (name() == tr("Ellipse")) {
-        return k->circleCursor;
+        return circleCursor;
     } else if (name() == tr("Line")) {
-        return k->lineCursor;
+        return lineCursor;
     }
 
     return QCursor(Qt::ArrowCursor);
@@ -471,52 +446,52 @@ void GeometricTool::endItem()
         #endif
     #endif
 
-    if (k->path) {
-        k->path->setBrush(fillBrush);
+    if (path) {
+        path->setBrush(fillBrush);
         QDomDocument doc;
-        doc.appendChild(dynamic_cast<TupAbstractSerializable *>(k->path)->toXml(doc));
+        doc.appendChild(dynamic_cast<TupAbstractSerializable *>(path)->toXml(doc));
         QPointF point = QPointF(0, 0);
 
-        TupProjectRequest event = TupRequestBuilder::createItemRequest(k->scene->currentSceneIndex(), k->scene->currentLayerIndex(),
-                                  k->scene->currentFrameIndex(), 0, point, k->scene->getSpaceContext(), TupLibraryObject::Item, 
+        TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(), scene->currentLayerIndex(),
+                                  scene->currentFrameIndex(), 0, point, scene->getSpaceContext(), TupLibraryObject::Item,
                                   TupProjectRequest::Add, doc.toString());
 
         emit requested(&event);
-        k->path = nullptr;
+        path = nullptr;
     }
 }
 
 void GeometricTool::updatePos(QPointF pos)
 {
-    if (k->path) {
-        QLineF line;
-        if (k->proportion) {
-            qreal dx = pos.x() - k->currentPoint.x();
-            qreal dy = pos.y() - k->currentPoint.y();
+    if (path) {
+        QLineF lineVar;
+        if (proportion) {
+            qreal dx = pos.x() - currentPoint.x();
+            qreal dy = pos.y() - currentPoint.y();
             qreal m = fabs(dx/dy);
 
             if (m > 1) {
-                line = QLineF(k->currentPoint.x(), k->currentPoint.y(), pos.x(), k->currentPoint.y());
-                k->lastPoint = QPointF(pos.x(), k->currentPoint.y());
+                lineVar = QLineF(currentPoint.x(), currentPoint.y(), pos.x(), currentPoint.y());
+                lastPoint = QPointF(pos.x(), currentPoint.y());
             } else {
-                line = QLineF(k->currentPoint.x(), k->currentPoint.y(), k->currentPoint.x(), pos.y());
-                k->lastPoint = QPointF(k->currentPoint.x(), pos.y());
+                lineVar = QLineF(currentPoint.x(), currentPoint.y(), currentPoint.x(), pos.y());
+                lastPoint = QPointF(currentPoint.x(), pos.y());
             }
 
         } else {
-            line = QLineF(k->currentPoint, pos);
-            k->lastPoint = pos;
+            lineVar = QLineF(currentPoint, pos);
+            lastPoint = pos;
         }
-        if (k->line)
-            k->line->setLine(line);
+        if (line)
+            line->setLine(lineVar);
     }
 }
 
 /*
-void GeometricTool::doubleClick(const TupInputDeviceInformation *input, TupGraphicsScene *scene)
+void GeometricTool::doubleClick(const TupInputDeviceInformation *input, TupGraphicsScene *gScene)
 {
     Q_UNUSED(input);
-    Q_UNUSED(scene);
+    Q_UNUSED(gScene);
 
     endItem();
 }
@@ -526,19 +501,19 @@ void GeometricTool::sceneResponse(const TupSceneResponse *event)
 {
     Q_UNUSED(event);
     if (name() == tr("Line")) 
-        init(k->scene);
+        init(scene);
 }
 
 void GeometricTool::layerResponse(const TupLayerResponse *event)
 {
     Q_UNUSED(event);
     if (name() == tr("Line")) 
-        init(k->scene);
+        init(scene);
 }
 
 void GeometricTool::frameResponse(const TupFrameResponse *event)
 {
     Q_UNUSED(event);
     if (name() == tr("Line")) 
-        init(k->scene);
+        init(scene);
 }

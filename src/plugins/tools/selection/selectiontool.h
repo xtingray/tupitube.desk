@@ -85,7 +85,7 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         
         virtual void itemResponse(const TupItemResponse *event);
         virtual void saveConfig();
-        QCursor cursor() const;
+        QCursor polyCursor() const;
 
         void resizeNode(qreal scaleFactor);
         void updateZoomFactor(qreal scaleFactor);

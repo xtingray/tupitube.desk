@@ -53,6 +53,7 @@ class TheoraPlugin : public TupExportPluginObject
     public:
         TheoraPlugin();
         virtual ~TheoraPlugin();
+
         virtual QString key() const;
         TupExportInterface::Formats availableFormats();
 

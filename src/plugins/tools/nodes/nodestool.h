@@ -97,7 +97,7 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
         virtual void itemResponse(const TupItemResponse *event);
         virtual void keyPressEvent(QKeyEvent *event);
         virtual void saveConfig();
-        virtual QCursor cursor() const;
+        virtual QCursor polyCursor() const;
 
         void resizeNode(qreal scaleFactor);
         void updateZoomFactor(qreal scaleFactor);

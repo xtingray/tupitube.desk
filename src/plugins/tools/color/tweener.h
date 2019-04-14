@@ -126,8 +126,8 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         void disableSelection();
         void removeTweenFromProject(const QString &name);
 
-        QMap<QString, TAction *> actionsMap;
-        Configurator *tweenerConfigurator;
+        QMap<QString, TAction *> colorActions;
+        Configurator *configPanel;
 
         TupGraphicsScene *scene;
         QList<QGraphicsItem *> objects;

@@ -1599,7 +1599,7 @@ void TupDocumentView::showFullScreen()
                                   paintArea->getCenterPoint(), QSize(screenW, screenH), project, scaleFactor,
                                   viewAngle, brushManager());
 
-    fullScreen->updateCursor(currentTool->cursor());
+    fullScreen->updateCursor(currentTool->polyCursor());
 
     QString toolName = currentTool->name();
     if (toolName.compare(tr("Shift")) == 0)

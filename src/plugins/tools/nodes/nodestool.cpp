@@ -37,7 +37,7 @@
 
 struct NodesTool::Private
 {
-    QMap<QString, TAction *> actions;
+    QMap<QString, TAction *> nodesActions;
     TNodeGroup *nodeGroup;
     TupGraphicsScene *scene;
     int baseZValue;
@@ -411,12 +411,12 @@ void NodesTool::setupActions()
     nodes->setShortcut(QKeySequence(tr("N")));
     nodes->setToolTip(tr("Nodes Selection") + " - " + "N");
 
-    k->actions.insert(tr("Nodes Selection"), nodes);
+    k->nodesActions.insert(tr("Nodes Selection"), nodes);
 }
 
 QMap<QString, TAction *> NodesTool::actions() const
 {
-    return k->actions;
+    return k->nodesActions;
 }
 
 int NodesTool::toolType() const
@@ -424,7 +424,7 @@ int NodesTool::toolType() const
     return TupToolInterface::Selection;
 }
 
-QWidget *NodesTool::configurator() 
+QWidget *NodesTool::configurator()
 {
     return 0;
 }
@@ -442,7 +442,7 @@ void NodesTool::saveConfig()
 {
 }
 
-QCursor NodesTool::cursor() const
+QCursor NodesTool::polyCursor() const
 {
     return QCursor(Qt::ArrowCursor);
 }

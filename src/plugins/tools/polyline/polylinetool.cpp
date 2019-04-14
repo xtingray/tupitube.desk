@@ -45,45 +45,20 @@
 #include "tupbrushmanager.h"
 #include "tupprojectresponse.h"
 
-struct PolyLineTool::Private
+PolyLineTool::PolyLineTool()
 {
-    bool begin;
-    QPointF center;
-    QPointF right;
-    QPointF mirror;
-    QPointF lastPoint; 
-    
-    TNodeGroup *nodeGroup;
-    QPainterPath path;
-    
-    QMap<QString, TAction *> actions;
-    
-    TupPathItem *item;
-    TupGraphicsScene *scene;
-    
-    QGraphicsLineItem *line1;
-    QGraphicsLineItem *line2;
-    Settings *configurator;
-    QCursor cursor;
-    qreal realFactor;
-    bool cutterOn;
-    bool movingOn;
-};
+    configPanel = nullptr;
+    nodeGroup = nullptr;
+    pathItem = nullptr;
+    cutterOn = false;
+    movingOn = false;
 
-PolyLineTool::PolyLineTool(): k(new Private)
-{
-    k->configurator = nullptr;
-    k->nodeGroup = nullptr;
-    k->item = nullptr;
-    k->cutterOn = false;
-    k->movingOn = false;
-
-    k->cursor = QCursor(kAppProp->themeDir() + "cursors/polyline.png", 4, 4);
+    polyCursor = QCursor(kAppProp->themeDir() + "cursors/polyline.png", 4, 4);
     
-    k->line1 = new QGraphicsLineItem(0, 0, 0, 0);
-    k->line1->setPen(QPen(QColor(55, 177, 50)));
-    k->line2 = new QGraphicsLineItem(0, 0, 0, 0);
-    k->line2->setPen(QPen(QColor(55, 177, 50)));
+    line1 = new QGraphicsLineItem(0, 0, 0, 0);
+    line1->setPen(QPen(QColor(55, 177, 50)));
+    line2 = new QGraphicsLineItem(0, 0, 0, 0);
+    line2->setPen(QPen(QColor(55, 177, 50)));
     
     setupActions();
 }
@@ -97,14 +72,14 @@ void PolyLineTool::setupActions()
     TAction *polyline = new TAction(QIcon(kAppProp->themeDir() + "/icons/polyline.png"), tr("PolyLine"), this);
     polyline->setShortcut(QKeySequence(tr("S")));
     polyline->setToolTip(tr("PolyLine") + " - " + "S");
-    polyline->setCursor(k->cursor);
+    polyline->setCursor(polyCursor);
 
-    k->actions.insert(tr("PolyLine"), polyline);
+    polyActions.insert(tr("PolyLine"), polyline);
 }
 
 QMap<QString, TAction *> PolyLineTool::actions() const
 {
-    return k->actions;
+    return polyActions;
 }
 
 void PolyLineTool::init(TupGraphicsScene *scene)
@@ -118,7 +93,7 @@ void PolyLineTool::init(TupGraphicsScene *scene)
     #endif
 
     if (scene) {
-        k->scene = scene;
+        scene = scene;
     } else {
         #ifdef TUP_DEBUG
             QString msg = "PolyLineTool::init() - Fatal Error: TupGraphicsScene variable is NULL!";
@@ -135,7 +110,7 @@ void PolyLineTool::init(TupGraphicsScene *scene)
     foreach (QGraphicsView *view, scene->views())
              view->setDragMode(QGraphicsView::NoDrag);
 
-    k->cutterOn = false;
+    cutterOn = false;
     initEnv();
 }
 
@@ -144,7 +119,7 @@ QStringList PolyLineTool::keys() const
     return QStringList() << tr("PolyLine");
 }
 
-void PolyLineTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
+void PolyLineTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -154,75 +129,75 @@ void PolyLineTool::press(const TupInputDeviceInformation *input, TupBrushManager
         #endif
     #endif
 
-    if (k->cutterOn)
+    if (cutterOn)
         return;
 
     // scene->clearSelection();
 
-    if (k->begin) { // This condition happens only in the beginning of the polyline 
-        k->path = QPainterPath();
-        k->path.moveTo(input->pos());
+    if (begin) { // This condition happens only in the beginning of the polyline
+        path = QPainterPath();
+        path.moveTo(input->pos());
 
-        k->item = new TupPathItem();
-        k->item->setPen(brushManager->pen());
-        k->item->setBrush(brushManager->brush());
-        k->item->setPath(k->path);
+        pathItem = new TupPathItem();
+        pathItem->setPen(brushManager->pen());
+        pathItem->setBrush(brushManager->brush());
+        pathItem->setPath(path);
     } else { // This condition happens from the second point of the polyline and until the last one
-        if (k->item) {
-            if (!scene->items().contains(k->item))
-                scene->includeObject(k->item, true); // SQA: Polyline hack
+        if (pathItem) {
+            if (!gScene->items().contains(pathItem))
+                gScene->includeObject(pathItem, true); // SQA: Polyline hack
 
-            if (k->movingOn) {
-                k->path.cubicTo(k->right, k->mirror, input->pos());
-                k->movingOn = false;
+            if (movingOn) {
+                path.cubicTo(right, mirror, input->pos());
+                movingOn = false;
             } else {
-                k->path.cubicTo(k->lastPoint, k->lastPoint, k->lastPoint);
+                path.cubicTo(lastPoint, lastPoint, lastPoint);
             }
-            k->item->setPath(k->path);
+            pathItem->setPath(path);
         }
     }
     
-    k->center = input->pos();
+    center = input->pos();
     
-    if (!scene->items().contains(k->line1))
-        scene->includeObject(k->line1); 
+    if (!gScene->items().contains(line1))
+        gScene->includeObject(line1);
 
-    if (!scene->items().contains(k->line2))
-        scene->includeObject(k->line2);
+    if (!gScene->items().contains(line2))
+        gScene->includeObject(line2);
 }
 
-void PolyLineTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
+void PolyLineTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     Q_UNUSED(brushManager);
-    Q_UNUSED(scene);
+    Q_UNUSED(gScene);
 
-    if (k->cutterOn)
+    if (cutterOn)
         return;
 
-    k->movingOn = true;
-    k->mirror = k->center - (input->pos() - k->center);
-    if (k->begin) {
-        k->right = input->pos();
+    movingOn = true;
+    mirror = center - (input->pos() - center);
+    if (begin) {
+        right = input->pos();
     } else {
-        for (int i=k->path.elementCount()-1; i>=0; i--) {
-             if (k->path.elementAt(i).type == QPainterPath::CurveToElement) {
-                 k->right = input->pos();
-                 if (k->path.elementAt(i + 1).type == QPainterPath::CurveToDataElement)
-                     k->path.setElementPositionAt(i + 1, k->mirror.x(), k->mirror.y());
+        for (int i=path.elementCount()-1; i>=0; i--) {
+             if (path.elementAt(i).type == QPainterPath::CurveToElement) {
+                 right = input->pos();
+                 if (path.elementAt(i + 1).type == QPainterPath::CurveToDataElement)
+                     path.setElementPositionAt(i + 1, mirror.x(), mirror.y());
                  break;
              }
         }
     }
 
-    if (k->item)    
-        k->item->setPath(k->path);
-    if (k->line1)
-        k->line1->setLine(QLineF(k->mirror, k->center));
-    if (k->line2)
-        k->line2->setLine(QLineF(k->right, k->center));
+    if (pathItem)
+        pathItem->setPath(path);
+    if (line1)
+        line1->setLine(QLineF(mirror, center));
+    if (line2)
+        line2->setLine(QLineF(right, center));
 }
 
-void PolyLineTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
+void PolyLineTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -235,32 +210,32 @@ void PolyLineTool::release(const TupInputDeviceInformation *input, TupBrushManag
     Q_UNUSED(input);
     Q_UNUSED(brushManager);
 
-    if (k->cutterOn)
+    if (cutterOn)
         return;
 
-    if (k->begin && k->item) {
+    if (begin && pathItem) {
         QDomDocument doc;
-        doc.appendChild(k->item->toXml(doc));
-        TupProjectRequest request = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(), 
-                                                       scene->currentLayerIndex(), 
-                                                       scene->currentFrameIndex(), 
-                                                       0, QPointF(), scene->getSpaceContext(), TupLibraryObject::Item, 
+        doc.appendChild(pathItem->toXml(doc));
+        TupProjectRequest request = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(),
+                                                       gScene->currentLayerIndex(),
+                                                       gScene->currentFrameIndex(),
+                                                       0, QPointF(), gScene->getSpaceContext(), TupLibraryObject::Item,
                                                        TupProjectRequest::Add, doc.toString());
         emit requested(&request);
  
-        k->begin = false;
+        begin = false;
     } else {
-        if (k->item) {
-            if (!k->nodeGroup) {
-                k->nodeGroup = new TNodeGroup(k->item, k->scene, TNodeGroup::Polyline,
-                                              static_cast<int>(k->item->zValue() + 1));
-                connect(k->nodeGroup, SIGNAL(nodeReleased()), this, SLOT(nodeChanged()));
+        if (pathItem) {
+            if (!nodeGroup) {
+                nodeGroup = new TNodeGroup(pathItem, scene, TNodeGroup::Polyline,
+                                              static_cast<int>(pathItem->zValue() + 1));
+                connect(nodeGroup, SIGNAL(nodeReleased()), this, SLOT(nodeChanged()));
             } else {
-                k->nodeGroup->createNodes(k->item);
+                nodeGroup->createNodes(pathItem);
             }
 
-            k->nodeGroup->show();
-            k->nodeGroup->resizeNodes(k->realFactor);
+            nodeGroup->show();
+            nodeGroup->resizeNodes(realFactor);
         }
     }
 }
@@ -276,15 +251,15 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
     #endif
 
     QGraphicsItem *item = nullptr;
-    TupScene *scene = nullptr;
+    TupScene *sceneVar = nullptr;
     TupLayer *layer = nullptr;
     TupFrame *frame = nullptr;
 
-    TupProject *project = k->scene->currentScene()->project();
-    scene = project->sceneAt(response->getSceneIndex());
-    if (scene) {
-        if (k->scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
-            layer = scene->layerAt(response->getLayerIndex());
+    TupProject *project = scene->currentScene()->project();
+    sceneVar = project->sceneAt(response->getSceneIndex());
+    if (sceneVar) {
+        if (scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
+            layer = sceneVar->layerAt(response->getLayerIndex());
             if (layer) {
                 frame = layer->frameAt(response->getFrameIndex());
                 if (frame) {
@@ -310,9 +285,9 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
                 #endif
             }
         } else {
-            TupBackground *bg = scene->sceneBackground();
+            TupBackground *bg = sceneVar->sceneBackground();
             if (bg) {
-                if (k->scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
+                if (scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
                     TupFrame *frame = bg->staticFrame();
                     if (frame) {
                         item = frame->item(response->getItemIndex());
@@ -326,7 +301,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
                            #endif
                         #endif
                     }
-                } else if (k->scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                } else if (scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
                            TupFrame *frame = bg->dynamicFrame();
                            if (frame) {
                                item = frame->item(response->getItemIndex());
@@ -376,10 +351,10 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
         case TupProjectRequest::Add:
         {
             if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(item)) {
-                if (k->item != path) {
-                    k->item = path;
-                    if (k->nodeGroup)
-                        k->nodeGroup->setParentItem(path);
+                if (item != path) {
+                    item = path;
+                    if (nodeGroup)
+                        nodeGroup->setParentItem(path);
                 }
             }
         }
@@ -388,25 +363,25 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
         {
             // SQA: Is this code doing something for real?
             /*
-            if (item == k->item) {
-                k->path = QPainterPath();
-                delete k->item;
-                k->item = 0;
-                delete k->nodeGroup;
-                k->nodeGroup = 0;
+            if (item == item) {
+                path = QPainterPath();
+                delete item;
+                item = 0;
+                delete nodeGroup;
+                nodeGroup = 0;
             }
             */
         }
         break;
         case TupProjectRequest::EditNodes:
         {
-            if (item && k->nodeGroup) {
-                if (qgraphicsitem_cast<QGraphicsPathItem *>(k->nodeGroup->parentItem()) == item) {
-                    k->nodeGroup->show();
-                    k->nodeGroup->syncNodesFromParent();
-                    k->nodeGroup->saveParentProperties();
+            if (item && nodeGroup) {
+                if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeGroup->parentItem()) == item) {
+                    nodeGroup->show();
+                    nodeGroup->syncNodesFromParent();
+                    nodeGroup->saveParentProperties();
 
-                    k->path = k->item->path();
+                    path = pathItem->path();
                 }
             } else {
                 #ifdef TUP_DEBUG
@@ -438,8 +413,8 @@ void PolyLineTool::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_F11 || event->key() == Qt::Key_Escape) {
         emit closeHugeCanvas();
     } else if (event->key() == Qt::Key_X) {
-               k->cutterOn = true;
-               initEnv();
+        cutterOn = true;
+        initEnv();
     } else {
         QPair<int, int> flags = TupToolPlugin::setKeyAction(event->key(), event->modifiers());
         if (flags.first != -1 && flags.second != -1)
@@ -450,7 +425,7 @@ void PolyLineTool::keyPressEvent(QKeyEvent *event)
 void PolyLineTool::keyReleaseEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_X)
-        k->cutterOn = false;
+        cutterOn = false;
 }
 
 void PolyLineTool::initEnv()
@@ -463,23 +438,23 @@ void PolyLineTool::initEnv()
         #endif
     #endif
 
-    if (k->item) {
+    if (pathItem) {
         clearSelection();
-        k->item = nullptr;
+        pathItem = nullptr;
     }
 
-    k->begin = true;
-    k->movingOn = false;
-    k->path = QPainterPath();
+    begin = true;
+    movingOn = false;
+    path = QPainterPath();
 
-    if (k->line1) {
-        if (k->scene->items().contains(k->line1))
-            k->scene->removeItem(k->line1);
+    if (line1) {
+        if (scene->items().contains(line1))
+            scene->removeItem(line1);
     }
 
-    if (k->line2) {
-        if (k->scene->items().contains(k->line2))
-            k->scene->removeItem(k->line2);
+    if (line2) {
+        if (scene->items().contains(line2))
+            scene->removeItem(line2);
     }
 }
 
@@ -493,18 +468,18 @@ void PolyLineTool::nodeChanged()
         #endif
     #endif
 
-    if (k->nodeGroup) {
-        if (!k->nodeGroup->changedNodes().isEmpty()) {
+    if (nodeGroup) {
+        if (!nodeGroup->changedNodes().isEmpty()) {
             int position = -1;
-            if (k->scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
-                position = k->scene->currentFrame()->indexOf(k->nodeGroup->parentItem());
+            if (scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
+                position = scene->currentFrame()->indexOf(nodeGroup->parentItem());
             } else {
-                TupBackground *bg = k->scene->currentScene()->sceneBackground();
+                TupBackground *bg = scene->currentScene()->sceneBackground();
                 if (bg) {
-                    if (k->scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
+                    if (scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
                         TupFrame *frame = bg->staticFrame();
                         if (frame) {
-                            position = frame->indexOf(k->nodeGroup->parentItem());
+                            position = frame->indexOf(nodeGroup->parentItem());
                         } else {
                             #ifdef TUP_DEBUG
                                 QString msg = "PolyLineTool::nodeChanged() - Fatal Error: Static bg frame is NULL!";
@@ -516,10 +491,10 @@ void PolyLineTool::nodeChanged()
                             #endif
                             return;
                         }
-                    } else if (k->scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                    } else if (scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
                                TupFrame *frame = bg->dynamicFrame();
                                if (frame) {
-                                   position = frame->indexOf(k->nodeGroup->parentItem());
+                                   position = frame->indexOf(nodeGroup->parentItem());
                                } else {
                                    #ifdef TUP_DEBUG
                                        QString msg = "PolyLineTool::nodeChanged() - Fatal Error: Dynamic bg frame is NULL!";
@@ -554,13 +529,13 @@ void PolyLineTool::nodeChanged()
             }
 
             if (position >= 0) {
-                TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(k->nodeGroup->parentItem());
+                TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem());
                 if (pathItem) {
                     QString path = pathItem->pathToString();
-                    TupProjectRequest event = TupRequestBuilder::createItemRequest(k->scene->currentSceneIndex(), k->scene->currentLayerIndex(), k->scene->currentFrameIndex(), 
-                                              position, QPointF(), k->scene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::EditNodes, path);
+                    TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(), scene->currentLayerIndex(), scene->currentFrameIndex(),
+                                              position, QPointF(), scene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::EditNodes, path);
                     emit requested(&event);
-                    // k->nodeGroup->restoreItem();
+                    // nodeGroup->restoreItem();
                 }
             } else {
                 #ifdef TUP_DEBUG
@@ -602,12 +577,12 @@ int PolyLineTool::toolType() const
     return TupToolInterface::Brush;
 }
 
-QWidget *PolyLineTool::configurator() 
+QWidget *PolyLineTool::configurator()
 {
-    if (! k->configurator)
-        k->configurator = new Settings;
+    if (! configPanel)
+        configPanel = new Settings;
 
-    return k->configurator;
+    return configPanel;
 }
 
 void PolyLineTool::aboutToChangeScene(TupGraphicsScene *)
@@ -616,8 +591,8 @@ void PolyLineTool::aboutToChangeScene(TupGraphicsScene *)
 
 void PolyLineTool::aboutToChangeTool()
 {
-    k->nodeGroup = nullptr;
-    k->item = nullptr;
+    nodeGroup = nullptr;
+    pathItem = nullptr;
 }
 
 void PolyLineTool::saveConfig()
@@ -626,30 +601,30 @@ void PolyLineTool::saveConfig()
 
 QCursor PolyLineTool::cursor() const
 {
-    return k->cursor;
+    return polyCursor;
 }
 
 void PolyLineTool::resizeNode(qreal scaleFactor)
 {
-    k->realFactor = scaleFactor;
-    if (k->nodeGroup)
-        k->nodeGroup->resizeNodes(scaleFactor);
+    realFactor = scaleFactor;
+    if (nodeGroup)
+        nodeGroup->resizeNodes(scaleFactor);
 }
 
 void PolyLineTool::updateZoomFactor(qreal scaleFactor)
 {
-    k->realFactor = scaleFactor;
+    realFactor = scaleFactor;
 }
 
 void PolyLineTool::clearSelection()
 {
-    if (k->nodeGroup) {
-        k->nodeGroup->clear();
-        k->nodeGroup = nullptr;
+    if (nodeGroup) {
+        nodeGroup->clear();
+        nodeGroup = nullptr;
     }
 }
 
 void PolyLineTool::updatePos(QPointF pos)
 {
-    k->lastPoint = pos;
+    lastPoint = pos;
 }

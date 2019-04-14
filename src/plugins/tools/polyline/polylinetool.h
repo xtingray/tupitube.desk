@@ -96,8 +96,28 @@ class TUPITUBE_PLUGIN PolyLineTool : public TupToolPlugin
         
     private:
         void setupActions();
-        struct Private;
-        Private * const k;
+
+        bool begin;
+        QPointF center;
+        QPointF right;
+        QPointF mirror;
+        QPointF lastPoint;
+
+        TNodeGroup *nodeGroup;
+        QPainterPath path;
+
+        QMap<QString, TAction *> polyActions;
+
+        TupPathItem *pathItem;
+        TupGraphicsScene *scene;
+
+        QGraphicsLineItem *line1;
+        QGraphicsLineItem *line2;
+        Settings *configPanel;
+        QCursor polyCursor;
+        qreal realFactor;
+        bool cutterOn;
+        bool movingOn;
 };
 
 #endif

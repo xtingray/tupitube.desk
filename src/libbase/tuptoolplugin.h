@@ -101,7 +101,7 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
         virtual void updatePos(QPointF pos);
 
         virtual QMenu *menu() const;
-        virtual QCursor cursor() const;
+        virtual QCursor polyCursor() const;
         QPair<int, int> setKeyAction(int key, Qt::KeyboardModifiers modifiers);
 
         virtual void resizeNode(qreal factor);

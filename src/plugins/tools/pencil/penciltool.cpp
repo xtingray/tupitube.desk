@@ -38,7 +38,7 @@
 
 #include <QGraphicsView>
 
-PencilTool::PencilTool() : TupToolPlugin()
+PencilTool::PencilTool(): TupToolPlugin()
 {
     configPanel = 0;
     item = 0;
@@ -197,13 +197,13 @@ void PencilTool::smoothPath(QPainterPath &path, double smoothness, int from, int
     QPolygonF::iterator pointIt;
 
     while (it != polygons.end()) {
-           pointIt = (*it).begin();
+        pointIt = (*it).begin();
 
-           while (pointIt <= (*it).end()-2) {
-                  polygon << (*pointIt);
-                  pointIt += 2;
-           }
-           ++it;
+        while (pointIt <= (*it).end()-2) {
+            polygon << (*pointIt);
+            pointIt += 2;
+        }
+        ++it;
     }
 
     if (smoothness > 0) {
@@ -300,7 +300,7 @@ void PencilTool::keyReleaseEvent(QKeyEvent *event)
     }
 }
 
-QCursor PencilTool::cursor() const
+QCursor PencilTool::polyCursor() const
 {
     return penCursor;
 }

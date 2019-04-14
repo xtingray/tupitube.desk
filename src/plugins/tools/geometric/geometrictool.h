@@ -40,6 +40,7 @@
 #include "tuptoolplugin.h"
 #include "tuprectitem.h"
 #include "tupellipseitem.h"
+#include "tuppathitem.h"
 #include "tuplineitem.h"
 #include "settings.h"
 
@@ -51,7 +52,6 @@
 #include <QImage>
 #include <QPaintDevice>
 #include <QGraphicsView>
-// #include <QBrush>
 
 class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
 {
@@ -83,7 +83,7 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
         void aboutToChangeScene(TupGraphicsScene *scene);
         virtual void aboutToChangeTool();
         virtual void saveConfig();
-        virtual QCursor cursor() const;
+        virtual QCursor polyCursor() const;
         void updatePos(QPointF pos);
 
     public slots:
@@ -98,22 +98,28 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
 
     private:
         QBrush setLiteBrush(QColor c, Qt::BrushStyle style);
-        struct Private;
-        Private *const k;
-        QBrush fillBrush;
 
-    /*
-    private:
-        TupRectItem *m_rect;
-        TupEllipseItem *m_ellipse;
-        TupLineItem *m_line;
-        Settings *m_configurator;
+        QBrush fillBrush;
+        TupRectItem *rect;
+        TupEllipseItem *ellipse;
+        TupLineItem *line;
+        TupPathItem *path;
+        TupGraphicsScene *scene;
+        Settings *configPanel;
         bool added;
-        QPointF firstPoint;
-        QMap<QString, TAction *> m_actions;
+        QPointF currentPoint;
+        QPointF lastPoint;
+        QMap<QString, TAction *> geoActions;
+
         bool proportion;
-        QGraphicsItem *m_item;
-    */
+        bool side;
+        int xSideLength;
+        int ySideLength;
+
+        QGraphicsItem *item;
+        QCursor squareCursor;
+        QCursor circleCursor;
+        QCursor lineCursor;
 };
 
 #endif

@@ -378,7 +378,7 @@ int SelectionTool::toolType() const
     return TupToolInterface::Selection;
 }
 
-QWidget *SelectionTool::configurator() 
+QWidget *SelectionTool::configurator()
 {
     if (!panel) {
         panel = new Settings;
@@ -836,7 +836,7 @@ void SelectionTool::applyGroupAction(Settings::Group action)
     }
 }
 
-QCursor SelectionTool::cursor() const
+QCursor SelectionTool::polyCursor() const
 {
     return QCursor(Qt::ArrowCursor);
 }

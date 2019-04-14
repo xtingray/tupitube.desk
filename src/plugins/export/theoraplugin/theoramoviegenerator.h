@@ -77,8 +77,23 @@ class TUPITUBE_EXPORT TheoraMovieGenerator : public TMovieGenerator
         void writeTheoraFrame(unsigned long w, unsigned long h, unsigned char *yuv, int last);
         unsigned char clamp(double d);
 
-        struct Private;
-        Private *const k;
+        int fps;
+        unsigned int width;
+        unsigned int height;
+        double streamDuration;
+        int frames;
+        int framesCounter;
+        QString movieFile;
+        bool exception;
+        const char *errorMsg;
+
+        FILE *ogg_fp;
+        ogg_stream_state ogg_os;
+        ogg_packet op;
+        ogg_page og;
+        th_enc_ctx *td;
+        th_info ti;
+        th_comment tc;
 };
 
 #endif

@@ -59,8 +59,8 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
     public:
         PapagayoTool();
         virtual ~PapagayoTool();
-        virtual void init(TupGraphicsScene *scene);
 
+        virtual void init(TupGraphicsScene *scene);
         virtual QStringList keys() const;
         virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);

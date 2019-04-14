@@ -137,7 +137,7 @@ void TupToolPlugin::saveConfig()
 {
 }
 
-QCursor TupToolPlugin::cursor() const
+QCursor TupToolPlugin::polyCursor() const
 {
     return QCursor(Qt::ArrowCursor); 
 }

@@ -40,6 +40,10 @@
 #include "tuptoolplugin.h"
 #include "settings.h"
 #include "tupprojectresponse.h"
+#include "tnodegroup.h"
+#include "configurator.h"
+#include "tupellipseitem.h"
+#include "taction.h"
 
 #include <QPointF>
 #include <QKeySequence>
@@ -116,6 +120,36 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
 
         struct Private;
         Private *const k;
+
+        QMap<QString, TAction *> posActions;
+        Configurator *configPanel;
+
+        TupGraphicsScene *scene;
+        QGraphicsPathItem *path;
+        QList<QPainterPath> doList;
+        QList<QPainterPath> undoList;
+
+        QList<QGraphicsItem *> objects;
+
+        TupItemTweener *currentTween;
+        TNodeGroup *nodesGroup;
+        qreal realFactor;
+
+        bool isPathInScene;
+        int initFrame;
+        int initLayer;
+        int initScene;
+
+        TupToolPlugin::Mode mode;
+        TupToolPlugin::EditMode editMode;
+
+        QPointF itemObjectReference;
+        QPointF pathOffset;
+        QPointF firstNode;
+        QPointF objectPos;
+        QList<TupEllipseItem *> dots;
+
+        int baseZValue;
 };
 
 #endif

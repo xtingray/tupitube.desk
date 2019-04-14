@@ -60,8 +60,8 @@ class TUPITUBE_EXPORT StepsViewer : public QTableWidget
     public:
         StepsViewer(QWidget *parent = nullptr);
         ~StepsViewer();
-        void setPath(const QGraphicsPathItem *pathItem);
-        
+
+        void setPath(const QGraphicsPathItem *pathItem);        
         QVector<TupTweenerStep *> steps();
         int totalSteps();
         void clearInterface();

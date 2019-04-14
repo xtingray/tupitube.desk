@@ -58,9 +58,9 @@ FillTool::~FillTool()
 {
 }
 
-void FillTool::init(TupGraphicsScene *scene)
+void FillTool::init(TupGraphicsScene *gScene)
 {
-    gScene = scene;
+    scene = gScene;
 
     TCONFIG->beginGroup("ColorPalette");
     int colorMode = TCONFIG->value("CurrentColorMode", 0).toInt();
@@ -84,7 +84,7 @@ void FillTool::setupActions()
     fillActions.insert(tr("Fill Tool"), action1);
 }
 
-void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
+void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -98,26 +98,26 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
         // SQA: Enhance this plugin to support several items with one click 
         // QList<QGraphicsItem *> list = scene->items(input->pos(), Qt::IntersectsItemShape, Qt::DescendingOrder, QTransform());
 
-        QGraphicsItem *item = scene->itemAt(input->pos(), QTransform());
+        QGraphicsItem *item = gScene->itemAt(input->pos(), QTransform());
         if (item) {
             int itemIndex = -1;
             int currentLayer;
             int currentFrame;
             TupFrame *frame;
 
-            if (scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
-                frame = scene->currentFrame();
+            if (gScene->getSpaceContext() == TupProject::FRAMES_EDITION) {
+                frame = gScene->currentFrame();
                 itemIndex = frame->indexOf(item);
-                currentLayer = scene->currentLayerIndex();
-                currentFrame = scene->currentFrameIndex();
+                currentLayer = gScene->currentLayerIndex();
+                currentFrame = gScene->currentFrameIndex();
             } else {
                 currentLayer = -1;
                 currentFrame = -1;
-                TupBackground *bg = scene->currentScene()->sceneBackground();
-                if (scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
+                TupBackground *bg = gScene->currentScene()->sceneBackground();
+                if (gScene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                     itemIndex = frame->indexOf(item);
-                } else if (scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                } else if (gScene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
                     frame = bg->dynamicFrame();
                     itemIndex = frame->indexOf(item);
                 }
@@ -175,9 +175,9 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                     }
 
                     TupProjectRequest event = TupRequestBuilder::createItemRequest(
-                                              scene->currentSceneIndex(), currentLayer,
+                                              gScene->currentSceneIndex(), currentLayer,
                                               currentFrame, itemIndex, QPointF(),
-                                              scene->getSpaceContext(), TupLibraryObject::Item,
+                                              gScene->getSpaceContext(), TupLibraryObject::Item,
                                               action, doc.toString());
 
                     emit requested(&event);
@@ -235,7 +235,7 @@ void FillTool::aboutToChangeScene(TupGraphicsScene *)
 
 void FillTool::aboutToChangeTool() 
 {
-    foreach (QGraphicsItem *item, gScene->items()) {
+    foreach (QGraphicsItem *item, scene->items()) {
         item->setFlag(QGraphicsItem::ItemIsSelectable, false);
         item->setFlag(QGraphicsItem::ItemIsFocusable, false);
     }
@@ -272,7 +272,7 @@ void FillTool::keyPressEvent(QKeyEvent *event)
     }
 }
 
-QCursor FillTool::cursor() const
+QCursor FillTool::polyCursor() const
 {
     if (mode == TColorCell::Inner) {
         return insideCursor;

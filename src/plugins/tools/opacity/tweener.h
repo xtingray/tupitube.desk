@@ -37,6 +37,8 @@
 #define OPACITYTWEENER_H
 
 #include "tglobal.h"
+#include "configurator.h"
+#include "taction.h"
 #include "tuptoolplugin.h"
 #include "settings.h"
 #include "tupprojectresponse.h"
@@ -61,8 +63,8 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
     public:
         Tweener();
         virtual ~Tweener();
-        virtual void init(TupGraphicsScene *scene);
 
+        virtual void init(TupGraphicsScene *scene);
         virtual QStringList keys() const;
         virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
@@ -104,6 +106,20 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
 
         struct Private;
         Private *const k;
+
+        QMap<QString, TAction *> opacityActions;
+        Configurator *configPanel;
+
+        TupGraphicsScene *scene;
+        QList<QGraphicsItem *> objects;
+
+        TupItemTweener *currentTween;
+        int initFrame;
+        int initLayer;
+        int initScene;
+
+        TupToolPlugin::Mode mode;
+        TupToolPlugin::EditMode editMode;
 };
 
 #endif
