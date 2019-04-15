@@ -35,21 +35,13 @@
 
 #include "tuppaintareapreferences.h"
 
-#include <QSpinBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
 #include <QColorDialog>
 
-struct TupPaintAreaPreferences::Private
-{
-    QColor gridColor; 
-    QPushButton *gridColorButton;
-    QSpinBox *gridSeparation;
-};
-
-TupPaintAreaPreferences::TupPaintAreaPreferences(QWidget *parent) : QWidget(parent),  k(new Private)
+TupPaintAreaPreferences::TupPaintAreaPreferences(QWidget *parent) : QWidget(parent)
 {
     setupPage();
 }
@@ -81,24 +73,24 @@ void TupPaintAreaPreferences::setupPage()
 
     TCONFIG->beginGroup("PaintArea");
     QString colorName = TCONFIG->value("GridColor").toString();
-    k->gridColor = QColor(colorName);
+    gridColor = QColor(colorName);
     int separation = TCONFIG->value("GridSeparation").toInt();
 
     QGridLayout *gridForm = new QGridLayout;
 
     gridForm->addWidget(new QLabel(tr("Grid Color:")), 0, 0, Qt::AlignLeft);
-    k->gridColorButton = new QPushButton;
-    k->gridColorButton->setText(k->gridColor.name());
-    k->gridColorButton->setStyleSheet("* { background-color: " + k->gridColor.name() + " }");
-    connect(k->gridColorButton, SIGNAL(clicked()), this, SLOT(setGridColor()));
-    gridForm->addWidget(k->gridColorButton, 0, 1, Qt::AlignLeft);
+    gridColorButton = new QPushButton;
+    gridColorButton->setText(gridColor.name());
+    gridColorButton->setStyleSheet("* { background-color: " + gridColor.name() + " }");
+    connect(gridColorButton, SIGNAL(clicked()), this, SLOT(setGridColor()));
+    gridForm->addWidget(gridColorButton, 0, 1, Qt::AlignLeft);
 
     gridForm->addWidget(new QLabel(tr("Grid Separation:")), 1, 0, Qt::AlignLeft);
-    k->gridSeparation = new QSpinBox(this);
-    k->gridSeparation->setMinimum(5);
-    k->gridSeparation->setMaximum(30);
-    k->gridSeparation->setValue(separation);
-    gridForm->addWidget(k->gridSeparation, 1, 1, Qt::AlignLeft);
+    gridSeparation = new QSpinBox(this);
+    gridSeparation->setMinimum(5);
+    gridSeparation->setMaximum(30);
+    gridSeparation->setValue(separation);
+    gridForm->addWidget(gridSeparation, 1, 1, Qt::AlignLeft);
 
     pageLayout->addLayout(gridForm);
 
@@ -111,21 +103,21 @@ void TupPaintAreaPreferences::setupPage()
 void TupPaintAreaPreferences::saveValues()
 {
     TCONFIG->beginGroup("PaintArea");
-    TCONFIG->setValue("GridColor", k->gridColor.name());
-    TCONFIG->setValue("GridSeparation", k->gridSeparation->value());
+    TCONFIG->setValue("GridColor", gridColor.name());
+    TCONFIG->setValue("GridSeparation", gridSeparation->value());
     TCONFIG->sync();
 }
 
 void TupPaintAreaPreferences::setGridColor()
 {
-     k->gridColor = QColorDialog::getColor(k->gridColor, this);
+     gridColor = QColorDialog::getColor(gridColor, this);
 
-     if (k->gridColor.isValid()) {
-         k->gridColorButton->setText(k->gridColor.name());
-         k->gridColorButton->setStyleSheet("QPushButton { background-color: " + k->gridColor.name() + " }");
+     if (gridColor.isValid()) {
+         gridColorButton->setText(gridColor.name());
+         gridColorButton->setStyleSheet("QPushButton { background-color: " + gridColor.name() + " }");
      } else {
-         k->gridColor = QColor("#fff");
-         k->gridColorButton->setText(tr("White"));
-         k->gridColorButton->setStyleSheet("QPushButton { background-color: #fff }");
+         gridColor = QColor("#fff");
+         gridColorButton->setText(tr("White"));
+         gridColorButton->setStyleSheet("QPushButton { background-color: #fff }");
      }
 }

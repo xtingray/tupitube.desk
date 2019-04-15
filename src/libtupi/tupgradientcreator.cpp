@@ -35,18 +35,7 @@
 
 #include "tupgradientcreator.h"
 
-struct TupGradientCreator::Private
-{
-    TupGradientSelector *selector;
-    TupGradientViewer *viewer;
-    QComboBox *type;
-    QComboBox *spread;
-    QSpinBox *radius;
-    QSpinBox *angle;
-    SpinControl *spinControl;
-};
-
-TupGradientCreator::TupGradientCreator(QWidget *parent) : QFrame(parent), k(new Private)
+TupGradientCreator::TupGradientCreator(QWidget *parent) : QFrame(parent)
 {
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::LeftToRight);
 
@@ -56,49 +45,49 @@ TupGradientCreator::TupGradientCreator(QWidget *parent) : QFrame(parent), k(new 
     
     QBoxLayout *selectorAndViewer = new QBoxLayout(QBoxLayout::TopToBottom);
     
-    k->selector = new TupGradientSelector(this);
-    k->viewer = new TupGradientViewer(this);
+    selector = new TupGradientSelector(this);
+    viewer = new TupGradientViewer(this);
     
-    connect(k->viewer, SIGNAL(gradientChanged()), this, SLOT(emitGradientChanged()));
+    connect(viewer, SIGNAL(gradientChanged()), this, SLOT(emitGradientChanged()));
     layout->addLayout(selectorAndViewer);
     
-    selectorAndViewer->addWidget(k->viewer);
-    selectorAndViewer->addWidget(k->selector);
+    selectorAndViewer->addWidget(viewer);
+    selectorAndViewer->addWidget(selector);
     selectorAndViewer->addStretch(2);
     
-    connect(k->selector, SIGNAL(gradientChanged(const QGradientStops&)),this, SLOT(changeGradientStops(const QGradientStops&)));
-    connect(k->selector, SIGNAL(arrowAdded()), this, SIGNAL(controlArrowAdded()));
+    connect(selector, SIGNAL(gradientChanged(const QGradientStops&)),this, SLOT(changeGradientStops(const QGradientStops&)));
+    connect(selector, SIGNAL(arrowAdded()), this, SIGNAL(controlArrowAdded()));
     
     QBoxLayout *subLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     layout->addLayout(subLayout);
     
-    k->type = new QComboBox(this);
+    type = new QComboBox(this);
     QStringList list;
     list << tr("Linear") << tr("Radial") << tr("Conical");
-    k->type->addItems(list);
-    connect(k->type, SIGNAL(activated(int)),this, SLOT(changeType(int)));
-    subLayout->addWidget(k->type);
+    type->addItems(list);
+    connect(type, SIGNAL(activated(int)),this, SLOT(changeType(int)));
+    subLayout->addWidget(type);
     
-    k->spread = new QComboBox(this);
+    spread = new QComboBox(this);
     list.clear();
     list << tr("Pad") << tr("Reflect") << tr("Repeat");
-    k->spread->addItems(list);
-    connect(k->spread, SIGNAL(activated(int)),this, SLOT(changeSpread(int)));
-    subLayout->addWidget(k->spread);
+    spread->addItems(list);
+    connect(spread, SIGNAL(activated(int)),this, SLOT(changeSpread(int)));
+    subLayout->addWidget(spread);
     
-    k->spinControl = new SpinControl(this);
+    spinControl = new SpinControl(this);
     
-    connect(k->spinControl, SIGNAL(angleChanged(int)), k->viewer, SLOT(changeAngle(int)));
-    connect(k->spinControl, SIGNAL(radiusChanged(int)), k->viewer, SLOT(changeRadius(int)));
-    subLayout->addWidget(k->spinControl);
+    connect(spinControl, SIGNAL(angleChanged(int)), viewer, SLOT(changeAngle(int)));
+    connect(spinControl, SIGNAL(radiusChanged(int)), viewer, SLOT(changeRadius(int)));
+    subLayout->addWidget(spinControl);
     
     subLayout->setSpacing(2);
     subLayout->setMargin(2);
     
     setFrameStyle(QFrame::StyledPanel);
     
-    k->spinControl->setSpin(QGradient::Type(0));
-    k->spinControl->setRadius(50);
+    spinControl->setSpin(QGradient::Type(0));
+    spinControl->setRadius(50);
     
     subLayout->addStretch(2);
 }
@@ -113,23 +102,23 @@ void TupGradientCreator::setCurrentColor(const QColor &color)
 
     // SQA: This code has been disabled temporarily 
     /*
-    k->selector->setCurrentColor(color);
-    k->viewer->createGradient();
+    selector->setCurrentColor(color);
+    viewer->createGradient();
     */
 
-    // emit gradientChanged(QBrush(k->viewer->gradient()));
+    // emit gradientChanged(QBrush(viewer->gradient()));
 }
 
 int TupGradientCreator::gradientType()
 {
-    return k->type->currentIndex();
+    return type->currentIndex();
 }
 
 void TupGradientCreator::changeType(int type)
 {
-    k->viewer->changeType(type);
+    viewer->changeType(type);
     
-    k->spinControl->setSpin( QGradient::Type(type));
+    spinControl->setSpin( QGradient::Type(type));
     adjustSize();
 
     emitGradientChanged();
@@ -137,33 +126,33 @@ void TupGradientCreator::changeType(int type)
 
 void TupGradientCreator::changeSpread(int spread)
 {
-    k->viewer->setSpread(spread);
+    viewer->setSpread(spread);
 
     emitGradientChanged();
 }
 
 void TupGradientCreator::changeGradientStops(const QGradientStops& stops)
 {
-    k->viewer->changeGradientStops(stops);
+    viewer->changeGradientStops(stops);
 
-    emit gradientChanged(k->viewer->gradient());
+    emit gradientChanged(viewer->gradient());
 }
 
-void TupGradientCreator::setGradient(const QBrush & brush)
+void TupGradientCreator::setGradient(const QBrush &brush)
 {
     const QGradient *gradient = brush.gradient();
 
     if (gradient) {
-        k->type->setCurrentIndex(gradient->type());
-        k->spread->setCurrentIndex(gradient->spread());
-        k->selector->setStops(gradient->stops());
-        k->viewer->setGradient(gradient);
-        k->spinControl->setSpin(gradient->type());
+        type->setCurrentIndex(gradient->type());
+        spread->setCurrentIndex(gradient->spread());
+        selector->setStops(gradient->stops());
+        viewer->setGradient(gradient);
+        spinControl->setSpin(gradient->type());
 
         if (gradient->type() == QGradient::RadialGradient) {
-            k->spinControl->setRadius((int) static_cast<const QRadialGradient*>(gradient)->radius());
+            spinControl->setRadius((int) static_cast<const QRadialGradient*>(gradient)->radius());
         } else if (gradient->type() == QGradient::ConicalGradient) {
-                   k->spinControl->setAngle((int) static_cast<const QConicalGradient*>(gradient)->angle());
+                   spinControl->setAngle((int) static_cast<const QConicalGradient*>(gradient)->angle());
         }
     } else {
         #ifdef TUP_DEBUG
@@ -179,14 +168,14 @@ void TupGradientCreator::setGradient(const QBrush & brush)
 
 void TupGradientCreator::emitGradientChanged()
 {
-    k->viewer->changeGradientStops(k->selector->gradientStops());
+    viewer->changeGradientStops(selector->gradientStops());
 
-    emit gradientChanged(k->viewer->gradient());
+    emit gradientChanged(viewer->gradient());
 }
 
 QBrush TupGradientCreator::currentGradient()
 {
-    return QBrush(k->viewer->gradient());
+    return QBrush(viewer->gradient());
 }
 
 QSize TupGradientCreator::sizeHint() const

@@ -38,13 +38,16 @@
 
 #include "tglobal.h"
 #include "tconfigurationdialog.h"
+#include "tupgeneralpreferences.h"
+#include "tuppaintareapreferences.h"
+#include "tupthemepreferences.h"
 
 class TUPITUBE_EXPORT TupPreferencesDialog : public TConfigurationDialog
 {
     Q_OBJECT
     
     public:
-        TupPreferencesDialog(QWidget *parent=0);
+        TupPreferencesDialog(QWidget *parent = nullptr);
         ~TupPreferencesDialog();
 
     protected:
@@ -57,8 +60,9 @@ class TUPITUBE_EXPORT TupPreferencesDialog : public TConfigurationDialog
         void timerChanged();
 
     private:
-        struct Private;
-        Private *const k;
+        TupGeneralPreferences *general;
+        TupThemePreferences *theme;
+        TupPaintAreaPreferences *workspace;
 };
 
 #endif

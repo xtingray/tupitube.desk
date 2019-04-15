@@ -39,6 +39,7 @@
 #include "tglobal.h"
 #include <QLineEdit>
 #include <QGridLayout>
+#include <QCheckBox>
 
 class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
 {
@@ -48,13 +49,20 @@ class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
         enum Group { Startup = 0, Confirm, Player };
         TupGeneralPreferences();
         ~TupGeneralPreferences();
+
         void saveValues();
 
     private:
         QGridLayout * createForm(const QString &group, Group groupTag,
                                  QStringList keys, QStringList labels);
-        struct Private;
-        Private *const k;
+
+        QStringList startup;
+        QStringList confirmation;
+        QStringList player;
+
+        QList<QCheckBox *> startupList;
+        QList<QCheckBox *> confirmList;
+        QList<QCheckBox *> playerList;
 };
 
 #endif

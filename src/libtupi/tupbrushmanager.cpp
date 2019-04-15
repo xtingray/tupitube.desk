@@ -35,99 +35,90 @@
 
 #include "tupbrushmanager.h"
 
-struct TupBrushManager::Private
-{
-    Private() : pen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap)), brush(Qt::transparent) {}
-    QPen pen;
-    QBrush brush;
-    QColor bgColor;
-};
-
-TupBrushManager::TupBrushManager(QObject * parent) : QObject(parent), k(new Private)
+TupBrushManager::TupBrushManager(QObject * parent) : QObject(parent)
 {
 }
 
-TupBrushManager::TupBrushManager(const QPen &pen, const QBrush &brush, QObject * parent) : QObject(parent), k(new Private)
+TupBrushManager::TupBrushManager(const QPen &qPen, const QBrush &qBrush, QObject * parent) : QObject(parent)
 {
-    k->pen = pen;
-    k->brush = brush;
+    gPen = qPen;
+    gBrush = qBrush;
 }
 
 TupBrushManager::~TupBrushManager()
 {
-    delete k;
 }
 
 QPen TupBrushManager::pen() const
 {
-    return k->pen;
+    return gPen;
 }
 
-void TupBrushManager::setPen(const QPen &pen)
+void TupBrushManager::setPen(const QPen &qPen)
 {
-    k->pen = pen;
-    emit penChanged(k->pen);
+    gPen = qPen;
+    emit penChanged(gPen);
 }
 
 void TupBrushManager::setPenColor(const QColor &color)
 {
-    QBrush brush = k->pen.brush();
+    QBrush brush = gPen.brush();
     brush.setColor(color);
-    k->pen.setBrush(brush);
+    gPen.setBrush(brush);
 
-    emit penChanged(k->pen);
+    emit penChanged(gPen);
 }
 
 void TupBrushManager::setPenWidth(int width)
 {
-    return k->pen.setWidth(width);
+    return gPen.setWidth(width);
 }
 
 QBrush TupBrushManager::brush() const
 {
-    return k->brush;
+    return gBrush;
 }
 
 void TupBrushManager::setBrush(const QBrush &brush)
 {
-    k->brush = brush;
+    gBrush = brush;
 
     emit brushChanged(brush);
 }
 
 void TupBrushManager::initBgColor(const QColor &color)
 {
-    k->bgColor = color;
+    penBgColor = color;
 }
 
 void TupBrushManager::setBgColor(const QColor &color)
 {
-    k->bgColor = color;
+    penBgColor = color;
 
     emit bgColorChanged(color);
 }
 
 QColor TupBrushManager::bgColor()
 {
-    return k->bgColor;
+    return penBgColor;
 }
 
 int TupBrushManager::penWidth() const
 {
-    return k->pen.width();
+    return gPen.width();
 }
 
 QColor TupBrushManager::penColor() const
 {
-    return k->pen.color();
+    return gPen.color();
 }
 
 QBrush TupBrushManager::penBrush() const
 {
-    return k->pen.brush();
+    return gPen.brush();
 }
 
 QBrush TupBrushManager::brushColor() const
 {
-    return k->brush.color();
+    return gBrush.color();
 }

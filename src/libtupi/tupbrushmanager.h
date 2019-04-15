@@ -47,8 +47,8 @@ class TUPITUBE_EXPORT TupBrushManager : public QObject
     Q_OBJECT
 
     public:
-        TupBrushManager(QObject * parent = 0);
-        TupBrushManager(const QPen &pen, const QBrush &brush, QObject * parent = 0);
+        TupBrushManager(QObject * parent = nullptr);
+        TupBrushManager(const QPen &pen, const QBrush &brush, QObject * parent = nullptr);
         ~TupBrushManager();
 
         QPen pen() const;        
@@ -74,8 +74,9 @@ class TUPITUBE_EXPORT TupBrushManager : public QObject
         void bgColorChanged(const QColor color);
         
     private:
-        struct Private;
-        Private *const k;
+        QPen gPen;
+        QBrush gBrush;
+        QColor penBgColor;
 };
 
 #endif

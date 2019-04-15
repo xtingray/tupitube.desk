@@ -38,15 +38,8 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QRadioButton>
 
-struct TupThemePreferences::Private
-{
-    QRadioButton *lightTheme;
-    QRadioButton *darkTheme;
-};
-
-TupThemePreferences::TupThemePreferences(QWidget *parent) : QWidget(parent),  k(new Private)
+TupThemePreferences::TupThemePreferences(QWidget *parent) : QWidget(parent)
 {
     setupPage();
 }
@@ -71,18 +64,18 @@ void TupThemePreferences::setupPage()
 
     pageLayout->addSpacing(15);
 
-    k->lightTheme = new QRadioButton(tr("Light Theme"), this);
-    pageLayout->addWidget(k->lightTheme);
+    lightTheme = new QRadioButton(tr("Light Theme"), this);
+    pageLayout->addWidget(lightTheme);
 
-    k->darkTheme = new QRadioButton(tr("Dark Theme"), this);
-    pageLayout->addWidget(k->darkTheme);
+    darkTheme = new QRadioButton(tr("Dark Theme"), this);
+    pageLayout->addWidget(darkTheme);
 
     TCONFIG->beginGroup("General");
     QString themeName = TCONFIG->value("Theme", "Light").toString();
     if (themeName.compare("Light") == 0)
-        k->lightTheme->setChecked(true);
+        lightTheme->setChecked(true);
     else
-        k->darkTheme->setChecked(true);
+        darkTheme->setChecked(true);
 
     pageLayout->addSpacing(15);
 
@@ -98,7 +91,7 @@ void TupThemePreferences::setupPage()
 void TupThemePreferences::saveValues()
 {
     TCONFIG->beginGroup("General");
-    if (k->lightTheme->isChecked())
+    if (lightTheme->isChecked())
         TCONFIG->setValue("Theme", "Light");
     else
         TCONFIG->setValue("Theme", "Dark");

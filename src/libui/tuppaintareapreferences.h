@@ -40,6 +40,7 @@
 #include "tconfig.h"
 
 #include <QWidget>
+#include <QSpinBox>
 
 class TUPITUBE_EXPORT TupPaintAreaPreferences : public QWidget
 {
@@ -58,8 +59,9 @@ class TUPITUBE_EXPORT TupPaintAreaPreferences : public QWidget
         void setupPage();
         
     private:
-        struct Private;
-        Private *const k;
+        QColor gridColor;
+        QPushButton *gridColorButton;
+        QSpinBox *gridSeparation;
 };
 
 #endif

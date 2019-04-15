@@ -64,18 +64,14 @@ class TUPITUBE_EXPORT TupGradientCreator : public QFrame
         QBrush currentGradient();
         virtual QSize sizeHint () const;
 
-    private:
-        struct Private;
-        Private *const k;
-
-    /*
-    private:
-        TupGradientSelector *m_selector;
-        TupGradientViewer *m_viewer;
-        QComboBox *m_type, *m_spread ;
-        QSpinBox *m_radius, *m_angle;
-        SpinControl *m_spinControl;
-    */
+    private:        
+        TupGradientSelector *selector;
+        TupGradientViewer *viewer;
+        QComboBox *type;
+        QComboBox *spread;
+        QSpinBox *radius;
+        QSpinBox *angle;
+        SpinControl *spinControl;
         
     public slots:
         void changeType(int type);

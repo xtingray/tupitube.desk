@@ -40,21 +40,24 @@
 #include "tcolorbutton.h"
 #include "tconfig.h"
 
+#include <QRadioButton>
+
 class TUPITUBE_EXPORT TupThemePreferences : public QWidget
 {
     Q_OBJECT
 
     public:
-        TupThemePreferences(QWidget *parent = 0);
+        TupThemePreferences(QWidget *parent = nullptr);
         ~TupThemePreferences();
+
         void saveValues();        
         
     private:
         void setupPage();
         
     private:
-        struct Private;
-        Private *const k;
+        QRadioButton *lightTheme;
+        QRadioButton *darkTheme;
 };
 
 #endif
