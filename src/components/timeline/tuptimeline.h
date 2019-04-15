@@ -38,6 +38,7 @@
 
 #include "tglobal.h"
 #include "tupmodulewidgetbase.h"
+#include "tupscenecontainer.h"
 #include "tupproject.h"
 #include "tuptimelinetable.h"
 #include "tuprequestbuilder.h"
@@ -93,6 +94,16 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
 
         struct Private;
         Private *const k;
+
+        TupSceneContainer *scenesContainer;
+        TupTimeLineTable *currentTable;
+        TupProjectActionBar *actionBar;
+        int selectedLayer;
+        TupProject *project;
+        TupLibrary *library;
+        QString frameSelection;
+        bool doSelection;
+
 };
 
 #endif

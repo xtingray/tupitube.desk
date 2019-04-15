@@ -35,13 +35,7 @@
 
 #include "tupscenecontainer.h"
 
-struct TupSceneContainer::Private
-{
-    QList<TupTimeLineTable *> scenes;
-    QList<TupTimeLineTable *> undoScenes;
-};
-
-TupSceneContainer::TupSceneContainer(QWidget *parent) : QTabWidget(parent), k(new Private)
+TupSceneContainer::TupSceneContainer(QWidget *parent) : QTabWidget(parent)
 {
 }
 
@@ -59,23 +53,23 @@ void TupSceneContainer::addScene(int sceneIndex, TupTimeLineTable *framesTable, 
         #endif
     #endif
 
-    k->scenes << framesTable; 
+    scenes << framesTable;
     QTabWidget::insertTab(sceneIndex, framesTable, sceneName);
 }
 
 void TupSceneContainer::restoreScene(int sceneIndex, const QString &sceneName)
 {
-    TupTimeLineTable *framesTable = k->undoScenes.takeLast();
-    k->scenes << framesTable;
+    TupTimeLineTable *framesTable = undoScenes.takeLast();
+    scenes << framesTable;
     QTabWidget::insertTab(sceneIndex, framesTable, sceneName);
 }
 
 void TupSceneContainer::removeScene(int sceneIndex, bool withBackup)
 {
     if (withBackup)
-        k->undoScenes << k->scenes.takeAt(sceneIndex);  
+        undoScenes << scenes.takeAt(sceneIndex);
     else
-        k->scenes.takeAt(sceneIndex);
+        scenes.takeAt(sceneIndex);
 
     QTabWidget::removeTab(sceneIndex);
 }
@@ -88,32 +82,32 @@ void TupSceneContainer::renameScene(int index, const QString &name)
 void TupSceneContainer::removeAllScenes()
 {
     clear();
-    k->scenes.clear();
-    k->undoScenes.clear();
+    scenes.clear();
+    undoScenes.clear();
 }
 
 TupTimeLineTable * TupSceneContainer::currentScene()
 {
     int index = currentIndex();
-    TupTimeLineTable *framesTable = k->scenes.at(index);
+    TupTimeLineTable *framesTable = scenes.at(index);
 
     return framesTable;
 }
 
 TupTimeLineTable * TupSceneContainer::getTable(int index)
 {
-    TupTimeLineTable *framesTable = k->scenes.at(index);
+    TupTimeLineTable *framesTable = scenes.at(index);
     return framesTable;
 }
 
 int TupSceneContainer::count()
 {
-    return k->scenes.count();
+    return scenes.count();
 }
 
 bool TupSceneContainer::isTableIndexValid(int index)
 {
-    if (index > -1 && index < k->scenes.count())
+    if (index > -1 && index < scenes.count())
         return true;
 
     return false;

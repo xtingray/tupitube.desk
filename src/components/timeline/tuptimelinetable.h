@@ -145,8 +145,19 @@ class TUPITUBE_EXPORT TupTimeLineTable : public QTableWidget
         void newPerspective(int);
         
     private:
-        struct Private;
-        Private *const k;
+        int rectWidth;
+        int rectHeight;
+
+        int sceneIndex;
+        int layerIndex;
+        int frameIndex;
+
+        TupTimeLineRuler *ruler;
+        TupTimeLineHeader *layersColumn;
+
+        bool removingLayer;
+        bool removingFrame;
+        bool isLocalRequest;
 };
 
 #endif

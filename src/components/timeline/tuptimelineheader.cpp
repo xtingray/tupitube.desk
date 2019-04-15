@@ -36,39 +36,26 @@
 #include "tuptimelineheader.h"
 #include "tconfig.h"
 
-struct TupTimeLineHeader::Private
-{
-    QPixmap lockIcon;
-    QPixmap viewIconOn;
-    QPixmap viewIconOff;
-    int currentLayer;
-    QList<TimeLineLayerItem> layers;
-    QLineEdit *editor;
-    int editorSection;
-    bool sectionOnMotion;
-    QString themeName;
-};
-
-TupTimeLineHeader::TupTimeLineHeader(QWidget * parent) : QHeaderView(Qt::Vertical, parent), k(new Private)
+TupTimeLineHeader::TupTimeLineHeader(QWidget * parent) : QHeaderView(Qt::Vertical, parent)
 {
     TCONFIG->beginGroup("General");
-    k->themeName = TCONFIG->value("Theme", "Light").toString();
+    themeName = TCONFIG->value("Theme", "Light").toString();
 
     setSectionsClickable(true);
     setSectionsMovable(true);
     setFixedWidth(115);
-    k->viewIconOn = QPixmap(THEME_DIR + "icons/show_layer.png");
-    k->viewIconOff = QPixmap(THEME_DIR + "icons/hide_layer.png");
+    viewIconOn = QPixmap(THEME_DIR + "icons/show_layer.png");
+    viewIconOff = QPixmap(THEME_DIR + "icons/hide_layer.png");
 
     connect(this, SIGNAL(sectionDoubleClicked(int)), this, SLOT(showTitleEditor(int)));
 
-    k->editorSection = -1;
+    editorSection = -1;
 
-    k->editor = new QLineEdit(this);
-    k->editor->setFocusPolicy(Qt::ClickFocus);
-    k->editor->setInputMask("");
-    connect(k->editor, SIGNAL(editingFinished()), this, SLOT(hideTitleEditor()));
-    k->editor->hide();
+    editor = new QLineEdit(this);
+    editor->setFocusPolicy(Qt::ClickFocus);
+    editor->setInputMask("");
+    connect(editor, SIGNAL(editingFinished()), this, SLOT(hideTitleEditor()));
+    editor->hide();
 }
 
 TupTimeLineHeader::~TupTimeLineHeader()
@@ -90,9 +77,9 @@ void TupTimeLineHeader::paintSection(QPainter * painter, const QRect & rect, int
 
     style()->drawControl(QStyle::CE_HeaderSection, &headerOption, painter);
 
-    if (k->currentLayer == index) {
+    if (currentLayer == index) {
         QColor color(0, 136, 0, 40);
-        if (k->themeName.compare("Dark") == 0)
+        if (themeName.compare("Dark") == 0)
             color = QColor(120, 120, 120, 80);
 
         painter->fillRect(rect, color);
@@ -105,16 +92,16 @@ void TupTimeLineHeader::paintSection(QPainter * painter, const QRect & rect, int
     int y = rect.normalized().bottomLeft().y() - (1 + (rect.normalized().height() - fm.height())/2);
     painter->setFont(font);
     painter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
-    painter->drawText(10, y, k->layers[index].title);
+    painter->drawText(10, y, layers[index].title);
 
     y = rect.y();
 
     QRectF viewRect = QRectF(0, 0, 13, 7); 
     int viewY = static_cast<int>((rect.height() - viewRect.height())/2);
-    if (k->layers[index].isVisible)
-        painter->drawPixmap(QPointF(rect.x() + 90, viewY + y), k->viewIconOn, viewRect);
+    if (layers[index].isVisible)
+        painter->drawPixmap(QPointF(rect.x() + 90, viewY + y), viewIconOn, viewRect);
     else
-        painter->drawPixmap(QPointF(rect.x() + 90, viewY + y), k->viewIconOff, viewRect);
+        painter->drawPixmap(QPointF(rect.x() + 90, viewY + y), viewIconOff, viewRect);
 
     painter->restore();
 }
@@ -124,21 +111,21 @@ void TupTimeLineHeader::mousePressEvent(QMouseEvent *event)
     QPoint point = event->pos();
     int section = logicalIndexAt(point);
 
-    if (section != k->currentLayer)
+    if (section != currentLayer)
         emit headerSelectionChanged(section);
 
     int y = sectionViewportPosition(section);
     QRect rect(90, y, 20, sectionSize(section));
     if (rect.contains(point))
-        emit visibilityChanged(section, !k->layers[section].isVisible);
+        emit visibilityChanged(section, !layers[section].isVisible);
 
     QHeaderView::mousePressEvent(event);
 }
 
 void TupTimeLineHeader::updateSelection(int index)
 {
-    if (k->currentLayer != index) {
-        k->currentLayer = index;
+    if (currentLayer != index) {
+        currentLayer = index;
         updateSection(index);
     }
 }
@@ -152,20 +139,20 @@ void TupTimeLineHeader::insertSection(int index, const QString &name)
     layer.isLocked = false;
     layer.isSound = false;
 
-    k->layers.insert(index, layer);
+    layers.insert(index, layer);
 }
 
 void TupTimeLineHeader::setSectionVisibility(int index, bool visibility)
 {
-    if (index >= 0 && index < k->layers.count()) {
-        k->layers[index].isVisible = visibility;
+    if (index >= 0 && index < layers.count()) {
+        layers[index].isVisible = visibility;
         updateSection(index);
     }
 }
 
 void TupTimeLineHeader::setSectionTitle(int index, const QString &name)
 {
-    k->layers[index].title = name;
+    layers[index].title = name;
     updateSection(index);
 }
 
@@ -174,35 +161,35 @@ void TupTimeLineHeader::showTitleEditor(int index)
     if (index >= 0) {
         QFont font = this->font();
         font.setPointSize(7);
-        k->editor->setFont(font);
+        editor->setFont(font);
         int x = sectionViewportPosition(index);
-        k->editor->setGeometry(0, x, width(), sectionSize(index));
-        k->editorSection = index;
-        k->editor->setText(k->layers[index].title);
-        k->editor->show();
-        k->editor->setFocus();
+        editor->setGeometry(0, x, width(), sectionSize(index));
+        editorSection = index;
+        editor->setText(layers[index].title);
+        editor->show();
+        editor->setFocus();
     }
 }
 
 void TupTimeLineHeader::hideTitleEditor()
 {
-    k->editor->hide();
+    editor->hide();
 
-    if (k->editorSection != -1 && k->editor->isModified())
-        emit nameChanged(k->editorSection, k->editor->text());
+    if (editorSection != -1 && editor->isModified())
+        emit nameChanged(editorSection, editor->text());
 
-    k->editorSection = -1;
+    editorSection = -1;
 }
 
 void TupTimeLineHeader::removeSection(int index)
 {
-    k->layers.removeAt(index);
+    layers.removeAt(index);
 }
 
 int TupTimeLineHeader::lastFrame(int index)
 {
-    if (index > -1 && index < k->layers.count())
-        return k->layers[index].lastFrame;
+    if (index > -1 && index < layers.count())
+        return layers[index].lastFrame;
 
     return -1;
 }
@@ -210,49 +197,49 @@ int TupTimeLineHeader::lastFrame(int index)
 void TupTimeLineHeader::updateLastFrame(int index, bool addition)
 {
     if (addition)
-        k->layers[index].lastFrame++;
+        layers[index].lastFrame++;
     else
-        k->layers[index].lastFrame--;
+        layers[index].lastFrame--;
 }
 
 void TupTimeLineHeader::resetLastFrame(int index)
 {
-    k->layers[index].lastFrame = -1;
+    layers[index].lastFrame = -1;
 }
 
 bool TupTimeLineHeader::isSound(int index)
 {
-    return k->layers[index].isSound;
+    return layers[index].isSound;
 }
 
 void TupTimeLineHeader::setSoundFlag(int index, bool flag)
 {
-    k->layers[index].isSound = flag;
+    layers[index].isSound = flag;
 }
 
 int TupTimeLineHeader::currentSectionIndex()
 {
-    return k->currentLayer;
+    return currentLayer;
 }
 
 void TupTimeLineHeader::moveHeaderSection(int position, int newPosition, bool isLocalRequest)
 {
     if (isLocalRequest) {
-        k->sectionOnMotion = true;
+        sectionOnMotion = true;
         moveSection(visualIndex(position), visualIndex(newPosition));
-        k->layers.swap(position, newPosition);
-        k->sectionOnMotion = false;
+        layers.swap(position, newPosition);
+        sectionOnMotion = false;
     } else {
-        k->layers.swap(position, newPosition);
+        layers.swap(position, newPosition);
     }
 }
 
 bool TupTimeLineHeader::sectionIsMoving()
 {
-    return k->sectionOnMotion;
+    return sectionOnMotion;
 }
 
 int TupTimeLineHeader::columnsTotal()
 {
-    return k->layers.size();
+    return layers.size();
 }

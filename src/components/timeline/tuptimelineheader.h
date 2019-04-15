@@ -92,8 +92,15 @@ class TUPITUBE_EXPORT TupTimeLineHeader : public QHeaderView
         void nameChanged(int section, const QString &name);
 
     private:
-        struct Private;
-        Private *const k;
+        QPixmap lockIcon;
+        QPixmap viewIconOn;
+        QPixmap viewIconOff;
+        int currentLayer;
+        QList<TimeLineLayerItem> layers;
+        QLineEdit *editor;
+        int editorSection;
+        bool sectionOnMotion;
+        QString themeName;
 };
 
 #endif

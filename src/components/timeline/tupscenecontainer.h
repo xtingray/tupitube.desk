@@ -72,8 +72,8 @@ class T_GUI_EXPORT TupSceneContainer : public QTabWidget
     #endif
 
     private:
-        struct Private;
-        Private *const k;
+        QList<TupTimeLineTable *> scenes;
+        QList<TupTimeLineTable *> undoScenes;
 };
 
 #endif
