@@ -96,12 +96,15 @@ class TUPITUBE_PLUGIN TLibavMovieGenerator : public TMovieGenerator
         bool exception;
 
         bool hasSounds;
+        int64_t next_pts;
+
+        /*
         AVFrame *audioFrame;
         AVFrame *tmpAudioFrame;
-        int64_t next_pts;
         float t;
         float tincr;
         float tincr2;
+        */
 };
 
 #endif

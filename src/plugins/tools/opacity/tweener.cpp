@@ -83,9 +83,9 @@ Tweener::~Tweener()
 
 /* This method initializes the plugin */
 
-void Tweener::init(TupGraphicsScene *scene)
+void Tweener::init(TupGraphicsScene *gScene)
 {
-    scene = scene;
+    scene = gScene;
     objects.clear();
 
     mode = TupToolPlugin::View;
@@ -606,9 +606,9 @@ void Tweener::removeTween(const QString &name)
     applyReset();
 }
 
-void Tweener::updateMode(TupToolPlugin::Mode mode)
+void Tweener::updateMode(TupToolPlugin::Mode currentMode)
 {
-    mode = mode;
+    mode = currentMode;
 
     if (mode == TupToolPlugin::Edit) {
         if (currentTween) {

@@ -104,9 +104,9 @@ void Configurator::activePropertiesPanel(bool enable)
         settingsPanel->hide();
 }
 
-void Configurator::setCurrentTween(TupItemTweener *currentTween)
+void Configurator::setCurrentTween(TupItemTweener *tween)
 {
-    currentTween = currentTween;
+    currentTween = tween;
 }
 
 void Configurator::setTweenManagerPanel()
@@ -151,10 +151,10 @@ void Configurator::activeButtonsPanel(bool enable)
         controlPanel->hide();
 }
 
-void Configurator::initStartCombo(int framesCount, int currentFrame)
+void Configurator::initStartCombo(int frames, int frameIndex)
 {
-    framesCount = framesCount;
-    currentFrame = currentFrame;
+    framesCount = frames;
+    currentFrame = frameIndex;
     settingsPanel->initStartCombo(framesCount, currentFrame);
 }
 

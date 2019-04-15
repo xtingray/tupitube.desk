@@ -925,9 +925,9 @@ void Tweener::updateScene(TupGraphicsScene *scene)
     }
 }
 
-void Tweener::updateMode(TupToolPlugin::Mode modeVar)
+void Tweener::updateMode(TupToolPlugin::Mode currentMode)
 {
-    mode = modeVar;
+    mode = currentMode;
 
     if (mode == TupToolPlugin::Edit)
         setEditEnv();

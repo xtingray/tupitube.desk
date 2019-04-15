@@ -82,7 +82,7 @@ QMap<QString, TAction *> PolyLineTool::actions() const
     return polyActions;
 }
 
-void PolyLineTool::init(TupGraphicsScene *scene)
+void PolyLineTool::init(TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -92,8 +92,8 @@ void PolyLineTool::init(TupGraphicsScene *scene)
         #endif
     #endif
 
-    if (scene) {
-        scene = scene;
+    if (gScene) {
+        scene = gScene;
     } else {
         #ifdef TUP_DEBUG
             QString msg = "PolyLineTool::init() - Fatal Error: TupGraphicsScene variable is NULL!";

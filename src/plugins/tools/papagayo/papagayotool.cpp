@@ -83,9 +83,9 @@ PapagayoTool::~PapagayoTool()
 
 /* This method initializes the plugin */
 
-void PapagayoTool::init(TupGraphicsScene *scene)
+void PapagayoTool::init(TupGraphicsScene *gScene)
 {
-    scene = scene;
+    scene = gScene;
     mode = TupToolPlugin::View;
     baseZValue = ZLAYER_BASE + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
 

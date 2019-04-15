@@ -645,9 +645,9 @@ void Tweener::addTarget()
 }
 */
 
-void Tweener::updateMode(TupToolPlugin::Mode mode)
+void Tweener::updateMode(TupToolPlugin::Mode currentMode)
 {
-    mode = mode;
+    mode = currentMode;
 
     if (mode == TupToolPlugin::Edit) {
         if (currentTween) {
