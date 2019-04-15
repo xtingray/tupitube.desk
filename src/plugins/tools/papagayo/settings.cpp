@@ -34,106 +34,77 @@
  ***************************************************************************/
 
 #include "settings.h"
-#include "tuplipsync.h"
 #include "timagebutton.h"
 
-struct Settings::Private
+Settings::Settings(QWidget *parent) : QWidget(parent)
 {
-    QWidget *innerPanel;
-    QBoxLayout *layout;
-
-    QLabel *lipSyncName;
-    QLabel *fpsLabel;
-    QSpinBox *comboInit;
-
-    QLabel *endingLabel;
-    QLabel *totalLabel;
-
-    QListWidget *mouthsList;
-    QList<TupVoice *> voices;
-
-    QTextEdit *textArea;
-
-    // QString phoneme;
-    QLabel *phonemeLabel;
-    QSpinBox *xPosField;
-    QSpinBox *yPosField;
-
-    QString name;
-    int initFrame;
-    int framesCount;
-};
-
-Settings::Settings(QWidget *parent) : QWidget(parent), k(new Private)
-{
-    k->layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
-    k->layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
+    layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
+    layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
 
     setInnerForm();
 }
 
 Settings::~Settings()
 {
-    delete k;
 }
 
 void Settings::setInnerForm()
 {
-    k->innerPanel = new QWidget;
+    innerPanel = new QWidget;
 
-    QBoxLayout *innerLayout = new QBoxLayout(QBoxLayout::TopToBottom, k->innerPanel);
+    QBoxLayout *innerLayout = new QBoxLayout(QBoxLayout::TopToBottom, innerPanel);
     innerLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
 
     QLabel *nameLabel = new QLabel(tr("Editing") + ": ");
-    k->lipSyncName = new QLabel;
+    lipSyncName = new QLabel;
 
     QHBoxLayout *nameLayout = new QHBoxLayout;
     nameLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
     nameLayout->setMargin(0);
     nameLayout->setSpacing(0);
     nameLayout->addWidget(nameLabel);
-    nameLayout->addWidget(k->lipSyncName);
+    nameLayout->addWidget(lipSyncName);
 
-    k->fpsLabel = new QLabel;
+    fpsLabel = new QLabel;
 
     QHBoxLayout *fpsLayout = new QHBoxLayout;
     fpsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
     fpsLayout->setMargin(0);
     fpsLayout->setSpacing(0);
-    fpsLayout->addWidget(k->fpsLabel);
+    fpsLayout->addWidget(fpsLabel);
 
     QLabel *startingLabel = new QLabel(tr("Starting at frame") + ": ");
     startingLabel->setAlignment(Qt::AlignVCenter);
 
-    k->comboInit = new QSpinBox();
-    k->comboInit->setEnabled(false);
-    k->comboInit->setMinimum(1);
-    k->comboInit->setMaximum(999);
-    connect(k->comboInit, SIGNAL(valueChanged(int)), this, SLOT(updateInitFrame(int)));
+    comboInit = new QSpinBox();
+    comboInit->setEnabled(false);
+    comboInit->setMinimum(1);
+    comboInit->setMaximum(999);
+    connect(comboInit, SIGNAL(valueChanged(int)), this, SLOT(updateInitFrame(int)));
  
-    k->endingLabel = new QLabel;
-    k->endingLabel->setAlignment(Qt::AlignVCenter);
+    endingLabel = new QLabel;
+    endingLabel->setAlignment(Qt::AlignVCenter);
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
     startLayout->setMargin(0);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
-    startLayout->addWidget(k->comboInit);
+    startLayout->addWidget(comboInit);
 
     QHBoxLayout *endLayout = new QHBoxLayout;
     endLayout->setAlignment(Qt::AlignHCenter);
     endLayout->setMargin(0);
     endLayout->setSpacing(0);
-    endLayout->addWidget(k->endingLabel);
+    endLayout->addWidget(endingLabel);
 
-    k->totalLabel = new QLabel;
-    k->totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
+    totalLabel = new QLabel;
+    totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     QHBoxLayout *totalLayout = new QHBoxLayout;
     totalLayout->setAlignment(Qt::AlignHCenter);
     totalLayout->setMargin(0);
     totalLayout->setSpacing(0);
-    totalLayout->addWidget(k->totalLabel);
+    totalLayout->addWidget(totalLabel);
 
     QBoxLayout *listLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     listLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
@@ -141,25 +112,25 @@ void Settings::setInnerForm()
     QLabel *mouthsLabel = new QLabel(tr("Mouths") + ": ");
     mouthsLabel->setAlignment(Qt::AlignHCenter);
 
-    k->mouthsList = new QListWidget;
-    k->mouthsList->setContextMenuPolicy(Qt::CustomContextMenu);
-    k->mouthsList->setViewMode(QListView::ListMode);
-    k->mouthsList->setFlow(QListView::TopToBottom);
-    k->mouthsList->setMovement(QListView::Static);
-    k->mouthsList->setFixedHeight(68);
+    mouthsList = new QListWidget;
+    mouthsList->setContextMenuPolicy(Qt::CustomContextMenu);
+    mouthsList->setViewMode(QListView::ListMode);
+    mouthsList->setFlow(QListView::TopToBottom);
+    mouthsList->setMovement(QListView::Static);
+    mouthsList->setFixedHeight(68);
 
     listLayout->addWidget(mouthsLabel);
-    listLayout->addWidget(k->mouthsList);
+    listLayout->addWidget(mouthsList);
 
     QLabel *textLabel = new QLabel(tr("Text") + ": ");
     textLabel->setAlignment(Qt::AlignHCenter);
 
-    k->textArea = new QTextEdit;
-    k->textArea->setReadOnly(true);
+    textArea = new QTextEdit;
+    textArea->setReadOnly(true);
 
-    // k->phonemeLabel = new QLabel(tr("Current Phoneme") + ": " + k->phoneme);
-    k->phonemeLabel = new QLabel;
-    k->phonemeLabel->setAlignment(Qt::AlignHCenter);
+    // phonemeLabel = new QLabel(tr("Current Phoneme") + ": " + phoneme);
+    phonemeLabel = new QLabel;
+    phonemeLabel->setAlignment(Qt::AlignHCenter);
 
     QLabel *mouthPosLabel = new QLabel(tr("Current Mouth Position") + ": ");
     mouthPosLabel->setAlignment(Qt::AlignHCenter);
@@ -167,30 +138,30 @@ void Settings::setInnerForm()
     QLabel *xLabel = new QLabel(tr("X") + ": ");
     xLabel->setMaximumWidth(20);
 
-    k->xPosField = new QSpinBox;
-    k->xPosField->setMinimum(-5000);
-    k->xPosField->setMaximum(5000);
-    connect(k->xPosField, SIGNAL(valueChanged(int)), this, SIGNAL(xPosChanged(int)));
+    xPosField = new QSpinBox;
+    xPosField->setMinimum(-5000);
+    xPosField->setMaximum(5000);
+    connect(xPosField, SIGNAL(valueChanged(int)), this, SIGNAL(xPosChanged(int)));
 
     QLabel *yLabel = new QLabel(tr("Y") + ": ");
     yLabel->setMaximumWidth(20);
 
-    k->yPosField = new QSpinBox;
-    k->yPosField->setMinimum(-5000);
-    k->yPosField->setMaximum(5000);
-    connect(k->yPosField, SIGNAL(valueChanged(int)), this, SIGNAL(yPosChanged(int)));
+    yPosField = new QSpinBox;
+    yPosField->setMinimum(-5000);
+    yPosField->setMaximum(5000);
+    connect(yPosField, SIGNAL(valueChanged(int)), this, SIGNAL(yPosChanged(int)));
 
     QBoxLayout *xLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     xLayout->setMargin(0);
     xLayout->setSpacing(0);
     xLayout->addWidget(xLabel);
-    xLayout->addWidget(k->xPosField);
+    xLayout->addWidget(xPosField);
 
     QBoxLayout *yLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     yLayout->setMargin(0);
     yLayout->setSpacing(0);
     yLayout->addWidget(yLabel);
-    yLayout->addWidget(k->yPosField);
+    yLayout->addWidget(yPosField);
 
     TImageButton *remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close_properties.png"), 22);
     remove->setToolTip(tr("Close properties"));
@@ -209,8 +180,8 @@ void Settings::setInnerForm()
     innerLayout->addLayout(totalLayout);
     innerLayout->addLayout(listLayout);
     innerLayout->addWidget(textLabel);
-    innerLayout->addWidget(k->textArea);
-    innerLayout->addWidget(k->phonemeLabel);
+    innerLayout->addWidget(textArea);
+    innerLayout->addWidget(phonemeLabel);
     innerLayout->addWidget(mouthPosLabel);
     innerLayout->addLayout(xLayout);
     innerLayout->addLayout(yLayout);
@@ -219,54 +190,54 @@ void Settings::setInnerForm()
     innerLayout->addLayout(buttonsLayout);
     innerLayout->addSpacing(5);
 
-    k->layout->addWidget(k->innerPanel);
+    layout->addWidget(innerPanel);
 }
 
 // Editing new LipSync 
 
 void Settings::openLipSyncProperties(TupLipSync *lipsync)
 {
-    k->name = lipsync->getLipSyncName();
-    k->initFrame = lipsync->getInitFrame();
-    k->framesCount = lipsync->getFramesCount();
+    name = lipsync->getLipSyncName();
+    initFrame = lipsync->getInitFrame();
+    framesCount = lipsync->getFramesCount();
 
-    k->lipSyncName->setText(k->name);
-    k->fpsLabel->setText(tr("Lip-Sync FPS") + ": " + QString::number(lipsync->getFPS()));
+    lipSyncName->setText(name);
+    fpsLabel->setText(tr("Lip-Sync FPS") + ": " + QString::number(lipsync->getFPS()));
 
-    k->comboInit->setEnabled(true);
-    k->comboInit->setValue(k->initFrame + 1);
+    comboInit->setEnabled(true);
+    comboInit->setValue(initFrame + 1);
 
-    int endIndex = k->initFrame + k->framesCount;
-    k->endingLabel->setText(tr("Ending at frame") + ": " + QString::number(endIndex));
-    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->framesCount));
+    int endIndex = initFrame + framesCount;
+    endingLabel->setText(tr("Ending at frame") + ": " + QString::number(endIndex));
+    totalLabel->setText(tr("Frames Total") + ": " + QString::number(framesCount));
 
-    disconnect(k->mouthsList, SIGNAL(currentRowChanged(int)), this, SLOT(setCurrentMouth(int)));
-    k->mouthsList->clear();
+    disconnect(mouthsList, SIGNAL(currentRowChanged(int)), this, SLOT(setCurrentMouth(int)));
+    mouthsList->clear();
 
-    k->voices = lipsync->getVoices();
-    int total = k->voices.size();
+    voices = lipsync->getVoices();
+    int total = voices.size();
     if (total > 0) {
         for (int i=0; i < total; i++) {
-             QListWidgetItem *item = new QListWidgetItem(k->mouthsList);
+             QListWidgetItem *item = new QListWidgetItem(mouthsList);
              item->setText(tr("mouth") + "_" + QString::number(i));
              item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
         }
 
-        TupVoice *voice = k->voices.at(0);
-        k->textArea->setText(voice->text());
+        TupVoice *voice = voices.at(0);
+        textArea->setText(voice->text());
 
-        connect(k->mouthsList, SIGNAL(currentRowChanged(int)), this, SLOT(setCurrentMouth(int)));
-        k->mouthsList->setCurrentRow(0);
+        connect(mouthsList, SIGNAL(currentRowChanged(int)), this, SLOT(setCurrentMouth(int)));
+        mouthsList->setCurrentRow(0);
     }
 }
 
 void Settings::setCurrentMouth(int index) 
 {
     QString tail = ":" + QString::number(index);
-    QString id = "lipsync:" + k->name + tail;
+    QString id = "lipsync:" + name + tail;
 
-    TupVoice *voice = k->voices.at(index);
-    k->textArea->setText(voice->text());
+    TupVoice *voice = voices.at(index);
+    textArea->setText(voice->text());
 
     emit selectMouth(id, index);
 }
@@ -275,16 +246,16 @@ void Settings::updateInitFrame(int index)
 {
     int frame = index - 1;
 
-    if (frame != k->initFrame) {
-        k->initFrame = frame;
+    if (frame != initFrame) {
+        initFrame = frame;
         emit initFrameHasChanged(frame);
     }
 }
 
 void Settings::updateInterfaceRecords()
 {
-    int endIndex = k->initFrame + k->framesCount;
-    k->endingLabel->setText(tr("Ending at frame") + ": " + QString::number(endIndex));
+    int endIndex = initFrame + framesCount;
+    endingLabel->setText(tr("Ending at frame") + ": " + QString::number(endIndex));
 }
 
 void Settings::setPos(const QPointF &point) 
@@ -292,17 +263,17 @@ void Settings::setPos(const QPointF &point)
     qreal x = point.x();
     qreal y = point.y();
 
-    k->xPosField->blockSignals(true);
-    k->yPosField->blockSignals(true);
+    xPosField->blockSignals(true);
+    yPosField->blockSignals(true);
 
-    k->xPosField->setValue(x);
-    k->yPosField->setValue(y);
+    xPosField->setValue(x);
+    yPosField->setValue(y);
 
-    k->xPosField->blockSignals(false);
-    k->yPosField->blockSignals(false);
+    xPosField->blockSignals(false);
+    yPosField->blockSignals(false);
 }
 
 void Settings::setPhoneme(const QString &phoneme)
 {
-    k->phonemeLabel->setText(tr("Current Phoneme") + ": " + "<b>" + phoneme + "</b>");
+    phonemeLabel->setText(tr("Current Phoneme") + ": " + "<b>" + phoneme + "</b>");
 }

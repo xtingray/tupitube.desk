@@ -44,6 +44,7 @@
 #include <QTextEdit>
 #include <QSpinBox>
 #include <QDir>
+#include <QCheckBox>
 
 /**
  * @author Gustav Gonzalez 
@@ -105,8 +106,23 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         void enableProportion(int flag);
 
     private:
-        struct Private;
-        Private *const k;
+        QWidget *help;
+        QSpinBox *xPosField;
+        QSpinBox *yPosField;
+        QSpinBox *angleField;
+        QDoubleSpinBox *factorXField;
+        QDoubleSpinBox *factorYField;
+        QCheckBox *propCheck;
+
+        QPushButton *tips;
+        QWidget *formPanel;
+        int currentX;
+        int currentY;
+        int currentAngle;
+        double currentXFactor;
+        double currentYFactor;
+        QTextEdit *textArea;
+        bool isVisible;
 };
 
 #endif

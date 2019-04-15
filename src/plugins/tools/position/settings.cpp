@@ -34,148 +34,127 @@
  ***************************************************************************/
 
 #include "settings.h"
-#include "tradiobuttongroup.h"
-#include "timagebutton.h"
 #include "tupitemtweener.h"
-#include "stepsviewer.h"
 #include "tuptweenerstep.h"
 #include "tosd.h"
 
-struct Settings::Private
+Settings::Settings(QWidget *parent) : QWidget(parent)
 {
-    QWidget *innerPanel;
-    QBoxLayout *layout; 
+    selectionDone = false;
 
-    QLineEdit *input;
-    TRadioButtonGroup *options;
-    StepsViewer *stepViewer;
-    QSpinBox *comboInit;
-    QLabel *totalLabel;
-    bool selectionDone;
-    TupToolPlugin::Mode mode; 
-
-    TImageButton *apply;
-    TImageButton *remove;
-};
-
-Settings::Settings(QWidget *parent) : QWidget(parent), k(new Private)
-{
-    k->selectionDone = false;
-
-    k->layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
-    k->layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
+    layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
+    layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
 
     QLabel *nameLabel = new QLabel(tr("Name") + ": ");
-    k->input = new QLineEdit;
+    input = new QLineEdit;
 
     QHBoxLayout *nameLayout = new QHBoxLayout;
     nameLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
     nameLayout->setMargin(0);
     nameLayout->setSpacing(0);
     nameLayout->addWidget(nameLabel);
-    nameLayout->addWidget(k->input);
+    nameLayout->addWidget(input);
 
-    k->options = new TRadioButtonGroup(tr("Options"), Qt::Vertical);
-    k->options->addItem(tr("Select Objects"), 0);
-    k->options->addItem(tr("Set Path Properties"), 1);
-    connect(k->options, SIGNAL(clicked(int)), this, SLOT(emitOptionChanged(int)));
+    options = new TRadioButtonGroup(tr("Options"), Qt::Vertical);
+    options->addItem(tr("Select Objects"), 0);
+    options->addItem(tr("Set Path Properties"), 1);
+    connect(options, SIGNAL(clicked(int)), this, SLOT(emitOptionChanged(int)));
 
-    k->apply = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/save.png"), 22);
-    connect(k->apply, SIGNAL(clicked()), this, SLOT(applyTween()));
+    apply = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/save.png"), 22);
+    connect(apply, SIGNAL(clicked()), this, SLOT(applyTween()));
 
-    k->remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close.png"), 22);
-    connect(k->remove, SIGNAL(clicked()), this, SIGNAL(clickedResetTween()));
+    remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close.png"), 22);
+    connect(remove, SIGNAL(clicked()), this, SIGNAL(clickedResetTween()));
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     buttonsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     buttonsLayout->setMargin(0);
     buttonsLayout->setSpacing(10);
-    buttonsLayout->addWidget(k->apply);
-    buttonsLayout->addWidget(k->remove);
+    buttonsLayout->addWidget(apply);
+    buttonsLayout->addWidget(remove);
 
-    k->layout->addLayout(nameLayout);
-    k->layout->addWidget(k->options);
+    layout->addLayout(nameLayout);
+    layout->addWidget(options);
 
     setInnerForm();
 
-    k->layout->addSpacing(10);
-    k->layout->addLayout(buttonsLayout);
-    k->layout->setSpacing(5);
+    layout->addSpacing(10);
+    layout->addLayout(buttonsLayout);
+    layout->setSpacing(5);
 
     activateMode(TupToolPlugin::Selection);
 }
 
 Settings::~Settings()
 {
-    delete k;
 }
 
 void Settings::setInnerForm()
 {
-    k->innerPanel = new QWidget; 
+    innerPanel = new QWidget;
 
-    QBoxLayout *innerLayout = new QBoxLayout(QBoxLayout::TopToBottom, k->innerPanel);
+    QBoxLayout *innerLayout = new QBoxLayout(QBoxLayout::TopToBottom, innerPanel);
     innerLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
 
     QLabel *startingLabel = new QLabel(tr("Starting at frame") + ": ");
     startingLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    k->comboInit = new QSpinBox();
+    comboInit = new QSpinBox();
 
-    connect(k->comboInit, SIGNAL(valueChanged(int)), this, SIGNAL(startingFrameChanged(int)));
+    connect(comboInit, SIGNAL(valueChanged(int)), this, SIGNAL(startingFrameChanged(int)));
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
     startLayout->setMargin(0);
     startLayout->setSpacing(0);
-    startLayout->addWidget(k->comboInit);
+    startLayout->addWidget(comboInit);
 
-    k->stepViewer = new StepsViewer;
-    connect(k->stepViewer, SIGNAL(totalHasChanged(int)), this, SLOT(updateTotalLabel(int)));
+    stepViewer = new StepsViewer;
+    connect(stepViewer, SIGNAL(totalHasChanged(int)), this, SLOT(updateTotalLabel(int)));
 
-    k->totalLabel = new QLabel(tr("Frames Total") + ": 0");
-    k->totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
+    totalLabel = new QLabel(tr("Frames Total") + ": 0");
+    totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     QHBoxLayout *totalLayout = new QHBoxLayout;
     totalLayout->setAlignment(Qt::AlignHCenter);
     totalLayout->setMargin(0);
     totalLayout->setSpacing(0);
-    totalLayout->addWidget(k->totalLabel);
+    totalLayout->addWidget(totalLabel);
 
     innerLayout->addWidget(startingLabel);
     innerLayout->addLayout(startLayout);
-    innerLayout->addWidget(k->stepViewer);
+    innerLayout->addWidget(stepViewer);
 
     innerLayout->addLayout(totalLayout);
 
-    k->layout->addWidget(k->innerPanel);
+    layout->addWidget(innerPanel);
 
     activeInnerForm(false);
 }
 
 void Settings::activeInnerForm(bool enable)
 {
-    if (enable && !k->innerPanel->isVisible())
-        k->innerPanel->show();
+    if (enable && !innerPanel->isVisible())
+        innerPanel->show();
     else
-        k->innerPanel->hide();
+        innerPanel->hide();
 }
 
 // Adding new Tween
 
 void Settings::setParameters(const QString &name, int framesCount, int startFrame)
 {
-    k->mode = TupToolPlugin::Add;
-    k->input->setText(name);
+    mode = TupToolPlugin::Add;
+    input->setText(name);
 
     activateMode(TupToolPlugin::Selection);
-    k->stepViewer->clearInterface();
-    k->totalLabel->setText(tr("Frames Total") + ": 0");
+    stepViewer->clearInterface();
+    totalLabel->setText(tr("Frames Total") + ": 0");
 
-    k->comboInit->setEnabled(false);
-    k->apply->setToolTip(tr("Save Tween"));
-    k->apply->setEnabled(false);
+    comboInit->setEnabled(false);
+    apply->setToolTip(tr("Save Tween"));
+    apply->setEnabled(false);
 
-    k->remove->setIcon(QPixmap(kAppProp->themeDir() + "icons/close.png"));
-    k->remove->setToolTip(tr("Cancel Tween"));
+    remove->setIcon(QPixmap(kAppProp->themeDir() + "icons/close.png"));
+    remove->setToolTip(tr("Cancel Tween"));
 
     initStartCombo(framesCount, startFrame);
 }
@@ -197,43 +176,43 @@ void Settings::setParameters(TupItemTweener *currentTween)
     notifySelection(true);
     activateMode(TupToolPlugin::Properties);
 
-    k->input->setText(currentTween->getTweenName());
-    k->comboInit->setEnabled(true);
+    input->setText(currentTween->getTweenName());
+    comboInit->setEnabled(true);
 
     initStartCombo(currentTween->getFrames(), currentTween->getInitFrame());
 
-    k->stepViewer->loadPath(currentTween->graphicsPath(), currentTween->getIntervals());
-    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->stepViewer->totalSteps()));
+    stepViewer->loadPath(currentTween->graphicsPath(), currentTween->getIntervals());
+    totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepViewer->totalSteps()));
 }
 
 void Settings::initStartCombo(int framesCount, int currentIndex)
 {
-    k->comboInit->clear();
-    k->comboInit->setMinimum(1);
-    k->comboInit->setMaximum(framesCount);
-    k->comboInit->setValue(currentIndex);
+    comboInit->clear();
+    comboInit->setMinimum(1);
+    comboInit->setMaximum(framesCount);
+    comboInit->setValue(currentIndex);
 }
 
 void Settings::setStartFrame(int currentIndex)
 {
-    k->comboInit->setValue(currentIndex);
+    comboInit->setValue(currentIndex);
 }
 
 int Settings::startFrame()
 {
-    return k->comboInit->value() - 1;
+    return comboInit->value() - 1;
 }
 
 int Settings::startComboSize()
 {
-    return k->comboInit->maximum();
+    return comboInit->maximum();
 }
 
 void Settings::updateSteps(const QGraphicsPathItem *path)
 {
     if (path) {
-        k->stepViewer->setPath(path);
-        k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->stepViewer->totalSteps()));
+        stepViewer->setPath(path);
+        totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepViewer->totalSteps()));
     }
 }
 
@@ -248,11 +227,11 @@ void Settings::emitOptionChanged(int option)
         break;
         case 1:
         {
-            if (k->selectionDone) {
+            if (selectionDone) {
                 activeInnerForm(true);
                 emit clickedCreatePath();
             } else {
-                k->options->setCurrentIndex(0);
+                options->setCurrentIndex(0);
                 TOsd::self()->display(tr("Info"), tr("Select objects for Tweening first!"), TOsd::Info);
             }
         }
@@ -269,12 +248,12 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     root.setAttribute("initFrame", currentFrame);
     root.setAttribute("initLayer", currentLayer);
     root.setAttribute("initScene", currentScene);
-    root.setAttribute("frames", k->stepViewer->totalSteps());
+    root.setAttribute("frames", stepViewer->totalSteps());
     root.setAttribute("origin", QString::number(point.x()) + "," + QString::number(point.y()));
     root.setAttribute("coords", path);
-    root.setAttribute("intervals", k->stepViewer->intervals());
+    root.setAttribute("intervals", stepViewer->intervals());
 
-    foreach (TupTweenerStep *step, k->stepViewer->steps())
+    foreach (TupTweenerStep *step, stepViewer->steps())
         root.appendChild(step->toXml(doc));
 
     doc.appendChild(root);
@@ -284,22 +263,22 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
 
 int Settings::totalSteps()
 {
-    return k->stepViewer->totalSteps();
+    return stepViewer->totalSteps();
 }
 
 QList<QPointF> Settings::tweenPoints()
 {
-    return k->stepViewer->tweenPoints();
+    return stepViewer->tweenPoints();
 }
 
 void Settings::activateMode(TupToolPlugin::EditMode mode)
 {
-    k->options->setCurrentIndex(mode);
+    options->setCurrentIndex(mode);
 }
 
 void Settings::clearData()
 {
-    k->stepViewer->clearInterface();
+    stepViewer->clearInterface();
 }
 
 void Settings::notifySelection(bool flag)
@@ -312,13 +291,13 @@ void Settings::notifySelection(bool flag)
         #endif
     #endif
 
-    k->selectionDone = flag;
+    selectionDone = flag;
 }
 
 void Settings::applyTween()
 {
-    if (!k->selectionDone) {
-        k->options->setCurrentIndex(0);
+    if (!selectionDone) {
+        options->setCurrentIndex(0);
         TOsd::self()->display(tr("Info"), tr("You must select at least one object!"), TOsd::Info);
         return;
     }
@@ -333,46 +312,46 @@ void Settings::applyTween()
     // SQA: Verify if Tween is already saved before calling setEditMode!
     setEditMode();
 
-    if (!k->comboInit->isEnabled())
-        k->comboInit->setEnabled(true);
+    if (!comboInit->isEnabled())
+        comboInit->setEnabled(true);
 
     emit clickedApplyTween();
 }
 
 void Settings::setEditMode()
 {
-    k->mode = TupToolPlugin::Edit;
-    k->apply->setToolTip(tr("Update Tween"));
-    k->remove->setIcon(QPixmap(kAppProp->themeDir() + "icons/close_properties.png"));
-    k->remove->setToolTip(tr("Close Tween Properties"));
+    mode = TupToolPlugin::Edit;
+    apply->setToolTip(tr("Update Tween"));
+    remove->setIcon(QPixmap(kAppProp->themeDir() + "icons/close_properties.png"));
+    remove->setToolTip(tr("Close Tween Properties"));
 }
 
 QString Settings::currentTweenName() const
 {
-    QString tweenName = k->input->text();
+    QString tweenName = input->text();
     if (tweenName.length() > 0)
-        k->input->setFocus();
+        input->setFocus();
 
     return tweenName;
 }
 
 void Settings::updateTotalLabel(int total)
 {
-    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(total));
+    totalLabel->setText(tr("Frames Total") + ": " + QString::number(total));
     emit framesTotalChanged(); 
 }
 
 void Settings::undoSegment(const QPainterPath path)
 {
-    k->stepViewer->undoSegment(path);
+    stepViewer->undoSegment(path);
 }
 
 void Settings::redoSegment(const QPainterPath path)
 {
-    k->stepViewer->redoSegment(path);
+    stepViewer->redoSegment(path);
 }
 
 void Settings::enableSaveOption(bool flag)
 {
-    k->apply->setEnabled(flag);
+    apply->setEnabled(flag);
 }

@@ -107,9 +107,6 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
         void setupActions();
         void removeTarget();
 
-        struct Private;
-        Private *const k;
-
         QMap<QString, TAction *> pgActions;
         Configurator *configPanel;
 

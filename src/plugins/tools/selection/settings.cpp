@@ -40,30 +40,7 @@
 #include "timagebutton.h"
 #include "tseparator.h"
 
-#include <QCheckBox>
-
-struct Settings::Private
-{
-    QWidget *help;
-    QSpinBox *xPosField;
-    QSpinBox *yPosField;
-    QSpinBox *angleField;
-    QDoubleSpinBox *factorXField;
-    QDoubleSpinBox *factorYField;
-    QCheckBox *propCheck;
-
-    QPushButton *tips;
-    QWidget *formPanel;
-    int currentX;
-    int currentY;
-    int currentAngle;
-    double currentXFactor;
-    double currentYFactor;
-    QTextEdit *textArea;
-    bool formIsVisible;
-};
-
-Settings::Settings(QWidget *parent) : QWidget(parent), k(new Private)
+Settings::Settings(QWidget *parent) : QWidget(parent)
 {
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 
@@ -75,8 +52,8 @@ Settings::Settings(QWidget *parent) : QWidget(parent), k(new Private)
     mainLayout->addWidget(toolTitle);
     mainLayout->addWidget(new TSeparator(Qt::Horizontal));
 
-    k->formPanel = new QWidget;
-    QBoxLayout *formLayout = new QBoxLayout(QBoxLayout::TopToBottom, k->formPanel);
+    formPanel = new QWidget;
+    QBoxLayout *formLayout = new QBoxLayout(QBoxLayout::TopToBottom,formPanel);
 
     QLabel *alignLabel = new QLabel(tr("Alignment"));
     alignLabel->setAlignment(Qt::AlignHCenter);
@@ -195,24 +172,24 @@ Settings::Settings(QWidget *parent) : QWidget(parent), k(new Private)
     QLabel *xLabel = new QLabel(tr("X") + ": ");
     xLabel->setMaximumWidth(20);
 
-    k->xPosField = new QSpinBox;
-    k->xPosField->setMinimum(-5000);
-    k->xPosField->setMaximum(5000);
-    connect(k->xPosField, SIGNAL(valueChanged(int)), this, SLOT(notifyXMovement(int))); 
+    xPosField = new QSpinBox;
+    xPosField->setMinimum(-5000);
+    xPosField->setMaximum(5000);
+    connect(xPosField, SIGNAL(valueChanged(int)), this, SLOT(notifyXMovement(int)));
 
     QLabel *yLabel = new QLabel(tr("Y") + ": ");
     yLabel->setMaximumWidth(20);
 
-    k->yPosField = new QSpinBox;
-    k->yPosField->setMinimum(-5000);
-    k->yPosField->setMaximum(5000);
-    connect(k->yPosField, SIGNAL(valueChanged(int)), this, SLOT(notifyYMovement(int)));
+    yPosField = new QSpinBox;
+    yPosField->setMinimum(-5000);
+    yPosField->setMaximum(5000);
+    connect(yPosField, SIGNAL(valueChanged(int)), this, SLOT(notifyYMovement(int)));
 
     QBoxLayout *xLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     xLayout->setMargin(0);
     xLayout->setSpacing(0);
     xLayout->addWidget(xLabel);
-    xLayout->addWidget(k->xPosField);
+    xLayout->addWidget(xPosField);
 
     formLayout->addLayout(xLayout);
 
@@ -220,7 +197,7 @@ Settings::Settings(QWidget *parent) : QWidget(parent), k(new Private)
     yLayout->setMargin(0);
     yLayout->setSpacing(0);
     yLayout->addWidget(yLabel);
-    yLayout->addWidget(k->yPosField);
+    yLayout->addWidget(yPosField);
 
     formLayout->addLayout(yLayout);
     formLayout->addWidget(new TSeparator(Qt::Horizontal));
@@ -231,16 +208,16 @@ Settings::Settings(QWidget *parent) : QWidget(parent), k(new Private)
 
     QLabel *angleLabel = new QLabel(tr("Angle") + ": ");
 
-    k->angleField = new QSpinBox;
-    k->angleField->setMinimum(0);
-    k->angleField->setMaximum(360);
-    connect(k->angleField, SIGNAL(valueChanged(int)), this, SLOT(notifyRotation(int)));
+    angleField = new QSpinBox;
+    angleField->setMinimum(0);
+    angleField->setMaximum(360);
+    connect(angleField, SIGNAL(valueChanged(int)), this, SLOT(notifyRotation(int)));
 
     QBoxLayout *angleLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     angleLayout->setMargin(0);
     angleLayout->setSpacing(0);
     angleLayout->addWidget(angleLabel);
-    angleLayout->addWidget(k->angleField);
+    angleLayout->addWidget(angleField);
 
     formLayout->addLayout(angleLayout);
     formLayout->addWidget(new TSeparator(Qt::Horizontal));
@@ -250,79 +227,79 @@ Settings::Settings(QWidget *parent) : QWidget(parent), k(new Private)
     formLayout->addWidget(scale);
 
     QLabel *factorXLabel = new QLabel(tr("X") + ": ");
-    k->factorXField = new QDoubleSpinBox;
-    k->factorXField->setDecimals(2);
-    k->factorXField->setMinimum(0.01);
-    k->factorXField->setMaximum(10);
-    k->factorXField->setSingleStep(0.01);
-    connect(k->factorXField, SIGNAL(valueChanged(double)), this, SLOT(notifyXScale(double)));
+    factorXField = new QDoubleSpinBox;
+    factorXField->setDecimals(2);
+    factorXField->setMinimum(0.01);
+    factorXField->setMaximum(10);
+    factorXField->setSingleStep(0.01);
+    connect(factorXField, SIGNAL(valueChanged(double)), this, SLOT(notifyXScale(double)));
 
     QBoxLayout *factorXLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     factorXLayout->setMargin(0);
     factorXLayout->setSpacing(0);
     factorXLayout->addWidget(factorXLabel);
-    factorXLayout->addWidget(k->factorXField);
+    factorXLayout->addWidget(factorXField);
 
     formLayout->addLayout(factorXLayout);
 
     QLabel *factorYLabel = new QLabel(tr("Y") + ": ");
-    k->factorYField = new QDoubleSpinBox;
-    k->factorYField->setDecimals(2);
-    k->factorYField->setMinimum(0.01);
-    k->factorYField->setMaximum(10);
-    k->factorYField->setSingleStep(0.01);
-    connect(k->factorYField, SIGNAL(valueChanged(double)), this, SLOT(notifyYScale(double)));
+    factorYField = new QDoubleSpinBox;
+    factorYField->setDecimals(2);
+    factorYField->setMinimum(0.01);
+    factorYField->setMaximum(10);
+    factorYField->setSingleStep(0.01);
+    connect(factorYField, SIGNAL(valueChanged(double)), this, SLOT(notifyYScale(double)));
 
     QBoxLayout *factorYLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     factorYLayout->setMargin(0);
     factorYLayout->setSpacing(0);
     factorYLayout->addWidget(factorYLabel);
-    factorYLayout->addWidget(k->factorYField);
+    factorYLayout->addWidget(factorYField);
 
     formLayout->addLayout(factorYLayout);
 
-    k->propCheck = new QCheckBox(tr("Proportion"), this);
-    // k->propCheck->setChecked(true);
-    connect(k->propCheck, SIGNAL(stateChanged(int)), this, SLOT(enableProportion(int)));
-    formLayout->addWidget(k->propCheck);
-    formLayout->setAlignment(k->propCheck, Qt::AlignHCenter);
+    propCheck = new QCheckBox(tr("Proportion"), this);
+    //propCheck->setChecked(true);
+    connect(propCheck, SIGNAL(stateChanged(int)), this, SLOT(enableProportion(int)));
+    formLayout->addWidget(propCheck);
+    formLayout->setAlignment(propCheck, Qt::AlignHCenter);
 
-    formLayout->addWidget(k->propCheck);
-    formLayout->setAlignment(k->propCheck, Qt::AlignHCenter);
+    formLayout->addWidget(propCheck);
+    formLayout->setAlignment(propCheck, Qt::AlignHCenter);
 
-    formLayout->addWidget(k->formPanel);
-    k->formPanel->setVisible(false);
+    formLayout->addWidget(formPanel);
+    formPanel->setVisible(false);
 
-    mainLayout->addWidget(k->formPanel);
+    mainLayout->addWidget(formPanel);
 
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
-    k->tips = new QPushButton(tr("Show Tips"));
-    k->tips->setToolTip(tr("A little help for the Selection tool")); 
-    layout->addWidget(k->tips);
-    connect(k->tips, SIGNAL(clicked()), this, SLOT(openTipPanel())); 
+    tips = new QPushButton(tr("Show Tips"));
+    tips->setToolTip(tr("A little help for the Selection tool"));
+    layout->addWidget(tips);
+    connect(tips, SIGNAL(clicked()), this, SLOT(openTipPanel()));
 
     mainLayout->addLayout(layout);
 
-    k->help = new QWidget(this);
-    k->help->hide();
-    QBoxLayout *helpLayout = new QBoxLayout(QBoxLayout::TopToBottom, k->help);
+    help = new QWidget(this);
+    help->hide();
+    QBoxLayout *helpLayout = new QBoxLayout(QBoxLayout::TopToBottom,help);
 
     int h = height();
-    k->textArea = new QTextEdit; 
+    textArea = new QTextEdit;
 
     // SQA: Check this code with several screen resolutions. It must looks good with everyone! 
-    k->textArea->setHtml("<p><b>" + tr("Double Click on any node or Shortcut Alt + R") + ":</b> " + tr("Rotation mode") + "</p>"); 
-    k->textArea->append("<p><b>" + tr("Arrows") + ":</b> " +  tr("Movement on selection") + "</p>");
-    k->textArea->append("<p><b>" + tr("Shift + Arrows") + ":</b> " +  tr("Slow movement on selection") + "</p>");
-    k->textArea->append("<p><b>" + tr("Ctrl + Arrows") + ":</b> " +  tr("Fast movement on selection") + "</p>");
-    k->textArea->append("<p><b>" + tr("Ctrl + Left Mouse Button") + ":</b> " +  tr("Proportional scaling on selection") + "</p>");
+    textArea->setHtml("<p><b>" + tr("Double Click on any node or Shortcut Alt + R") + ":</b> " + tr("Rotation mode") + "</p>");
+    textArea->append("<p><b>" + tr("Arrows") + ":</b> " +  tr("Movement on selection") + "</p>");
+    textArea->append("<p><b>" + tr("Shift + Arrows") + ":</b> " +  tr("Slow movement on selection") + "</p>");
+    textArea->append("<p><b>" + tr("Ctrl + Arrows") + ":</b> " +  tr("Fast movement on selection") + "</p>");
+    textArea->append("<p><b>" + tr("Ctrl + Left Mouse Button") + ":</b> " +  tr("Proportional scaling on selection") + "</p>");
 
-    k->help->setFixedHeight(h);
-    helpLayout->addWidget(k->textArea); 
+    help->setFixedHeight(h);
+    helpLayout->addWidget(textArea);
 
-    mainLayout->addWidget(k->help);
+    mainLayout->addWidget(help);
     mainLayout->addStretch(2);
-    k->formIsVisible = false;
+    isVisible = false;
 }
 
 Settings::~Settings()
@@ -376,41 +353,41 @@ void Settings::ungroupItems()
 
 void Settings::openTipPanel()
 {
-    if (k->help->isVisible()) {
-        k->help->hide();
-        if (k->formIsVisible) {
-            if (!k->formPanel->isVisible())
-                k->formPanel->show();
-        }
+    if (help->isVisible()) {
+       help->hide();
+       if (isVisible) {
+           if (!formPanel->isVisible())
+               formPanel->show();
+       }
     } else {
-        if (k->formPanel->isVisible())
-            k->formPanel->hide();
-        k->help->show();
+       if (formPanel->isVisible())
+           formPanel->hide();
+       help->show();
     }
 }
 
 void Settings::enableFormControls(bool flag)
 {
     if (flag) {
-        if (k->help->isVisible())
-            k->help->hide();
+        if (help->isVisible())
+           help->hide();
     }
-    k->formIsVisible = flag;
-    k->formPanel->setVisible(flag);
+    isVisible = flag;
+    formPanel->setVisible(flag);
 }
 
 void Settings::setPos(int x, int y)
 {
-    k->xPosField->blockSignals(true);
-    k->yPosField->blockSignals(true);
+   xPosField->blockSignals(true);
+   yPosField->blockSignals(true);
 
-    k->xPosField->setValue(x);
-    k->yPosField->setValue(y);
-    k->currentX = x;
-    k->currentY = y;
+   xPosField->setValue(x);
+   yPosField->setValue(y);
+   currentX = x;
+   currentY = y;
 
-    k->xPosField->blockSignals(false);
-    k->yPosField->blockSignals(false);
+   xPosField->blockSignals(false);
+   yPosField->blockSignals(false);
 }
 
 void Settings::updateRotationAngle(int angle)
@@ -423,14 +400,14 @@ void Settings::updateRotationAngle(int angle)
     #endif
 #endif
 
-    k->angleField->blockSignals(true);
+    angleField->blockSignals(true);
 
     if (angle > 359)
         angle = 0;
-    k->angleField->setValue(angle);
-    k->currentAngle = angle;
+    angleField->setValue(angle);
+    currentAngle = angle;
 
-    k->angleField->blockSignals(false);
+    angleField->blockSignals(false);
 }
 
 void Settings::updateScaleFactor(double x, double y)
@@ -447,69 +424,69 @@ void Settings::updateScaleFactor(double x, double y)
     #endif
 #endif
 
-    k->factorXField->blockSignals(true);
-    k->factorYField->blockSignals(true);
+   factorXField->blockSignals(true);
+   factorYField->blockSignals(true);
 
-    k->currentXFactor = x;
-    k->factorXField->setValue(x);
+   currentXFactor = x;
+   factorXField->setValue(x);
 
-    k->currentYFactor = y;
-    k->factorYField->setValue(y);
+   currentYFactor = y;
+   factorYField->setValue(y);
 
-    k->factorXField->blockSignals(false);
-    k->factorYField->blockSignals(false);
+   factorXField->blockSignals(false);
+   factorYField->blockSignals(false);
 }
 
 void Settings::notifyXMovement(int x)
 {
-    emit positionUpdated(x - k->currentX, 0);
-    k->currentX = k->xPosField->value();
+    emit positionUpdated(x -currentX, 0);
+    currentX =xPosField->value();
 }
 
 void Settings::notifyYMovement(int y)
 {
-    emit positionUpdated(0, y - k->currentY);
-    k->currentY = k->yPosField->value();
+    emit positionUpdated(0, y -currentY);
+    currentY =yPosField->value();
 }
 
 void Settings::notifyRotation(int angle)
 {
     if (angle == 360) {
         angle = 0;
-        k->angleField->setValue(0);
+        angleField->setValue(0);
     }
     emit rotationUpdated(angle);
-    k->currentAngle = k->angleField->value();
+    currentAngle =angleField->value();
 }
 
 void Settings::notifyXScale(double factor)
 {
-    if (k->propCheck->isChecked()) {
-        k->currentYFactor = factor;
-        k->factorYField->setValue(factor);
+    if (propCheck->isChecked()) {
+        currentYFactor = factor;
+        factorYField->setValue(factor);
     }
 
-    emit scaleUpdated(factor, k->currentYFactor);
-    k->currentXFactor = factor;
+    emit scaleUpdated(factor,currentYFactor);
+    currentXFactor = factor;
 }
 
 void Settings::notifyYScale(double factor)
 {
-    if (k->propCheck->isChecked()) {
-        k->currentXFactor = factor;
-        k->factorXField->setValue(factor);
+    if (propCheck->isChecked()) {
+       currentXFactor = factor;
+       factorXField->setValue(factor);
     }
 
-    emit scaleUpdated(k->currentXFactor, factor);
-    k->currentYFactor = factor;
+    emit scaleUpdated(currentXFactor, factor);
+    currentYFactor = factor;
 }
 
 void Settings::enableProportion(int flag)
 {
     bool enable = false;
     if (flag == Qt::Checked) {
-        double factor = k->factorXField->value();
-        k->factorYField->setValue(factor);
+        double factor =factorXField->value();
+        factorYField->setValue(factor);
         emit scaleUpdated(factor, factor);
         enable = true;
     }
@@ -518,14 +495,14 @@ void Settings::enableProportion(int flag)
 
 void Settings::setProportionState(int flag)
 {
-    k->propCheck->blockSignals(true);
-    k->propCheck->setChecked(flag);
-    k->propCheck->blockSignals(false);
+    propCheck->blockSignals(true);
+    propCheck->setChecked(flag);
+    propCheck->blockSignals(false);
 }
 
 bool Settings::formIsVisible()
 {
-    return k->formIsVisible;
+    return isVisible;
 }
 
 void Settings::alignObjectHorizontally()

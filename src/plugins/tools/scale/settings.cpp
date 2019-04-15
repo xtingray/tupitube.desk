@@ -34,157 +34,119 @@
  ***************************************************************************/
 
 #include "settings.h"
-#include "tradiobuttongroup.h"
 #include "tuptweenerstep.h"
-#include "timagebutton.h"
 #include "tseparator.h"
 #include "tosd.h"
 
 #include <QLabel>
 #include <QLineEdit>
-#include <QBoxLayout>
-#include <QComboBox>
-#include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QCheckBox>
 #include <QDir>
 
-struct Settings::Private
+Settings::Settings(QWidget *parent) : QWidget(parent)
 {
-    QWidget *innerPanel;
-    QWidget *rangePanel;
-    QWidget *clockPanel;
+    scaleAxes = TupItemTweener::XY;
+    selectionDone = false;
+    stepsCounter = 0;
 
-    QBoxLayout *layout;
-    TupToolPlugin::Mode mode;
-    QLineEdit *input;
-    TRadioButtonGroup *options;
-
-    QSpinBox *initFrame;
-    QSpinBox *endFrame;
-
-    QLabel *totalLabel;
-    int totalSteps;
-
-    TupItemTweener::TransformAxes scaleAxes;
-    QComboBox *comboAxes;
-    QDoubleSpinBox *comboFactor;
-    QSpinBox *iterationsCombo; 
-
-    QCheckBox *loopBox;
-    QCheckBox *reverseLoopBox;
-
-    bool selectionDone;
-    bool propertiesDone;
-
-    TImageButton *apply;
-    TImageButton *remove;
-};
-
-Settings::Settings(QWidget *parent) : QWidget(parent), k(new Private)
-{
-    k->scaleAxes = TupItemTweener::XY;
-    k->selectionDone = false;
-    k->totalSteps = 0;
-
-    k->layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
-    k->layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
+    layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
+    layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
 
     QLabel *nameLabel = new QLabel(tr("Name") + ": ");
-    k->input = new QLineEdit;
+    input = new QLineEdit;
 
     QHBoxLayout *nameLayout = new QHBoxLayout;
     nameLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
     nameLayout->setMargin(0);
     nameLayout->setSpacing(0);
     nameLayout->addWidget(nameLabel);
-    nameLayout->addWidget(k->input);
+    nameLayout->addWidget(input);
 
-    k->options = new TRadioButtonGroup(tr("Options"), Qt::Vertical);
-    k->options->addItem(tr("Select object"), 0);
-    k->options->addItem(tr("Set Properties"), 1);
-    connect(k->options, SIGNAL(clicked(int)), this, SLOT(emitOptionChanged(int)));
+    options = new TRadioButtonGroup(tr("Options"), Qt::Vertical);
+    options->addItem(tr("Select object"), 0);
+    options->addItem(tr("Set Properties"), 1);
+    connect(options, SIGNAL(clicked(int)), this, SLOT(emitOptionChanged(int)));
 
-    k->apply = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/save.png"), 22);
-    connect(k->apply, SIGNAL(clicked()), this, SLOT(applyTween()));
+    apply = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/save.png"), 22);
+    connect(apply, SIGNAL(clicked()), this, SLOT(applyTween()));
 
-    k->remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close.png"), 22);
-    connect(k->remove, SIGNAL(clicked()), this, SIGNAL(clickedResetTween()));
+    remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close.png"), 22);
+    connect(remove, SIGNAL(clicked()), this, SIGNAL(clickedResetTween()));
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     buttonsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     buttonsLayout->setMargin(0);
     buttonsLayout->setSpacing(10);
-    buttonsLayout->addWidget(k->apply);
-    buttonsLayout->addWidget(k->remove);
+    buttonsLayout->addWidget(apply);
+    buttonsLayout->addWidget(remove);
 
-    k->layout->addLayout(nameLayout);
-    k->layout->addWidget(k->options);
+    layout->addLayout(nameLayout);
+    layout->addWidget(options);
 
     setInnerForm();
 
-    k->layout->addSpacing(10);
-    k->layout->addLayout(buttonsLayout);
-    k->layout->setSpacing(5);
+    layout->addSpacing(10);
+    layout->addLayout(buttonsLayout);
+    layout->setSpacing(5);
 
     activateMode(TupToolPlugin::Selection);
 }
 
 Settings::~Settings()
 {
-    delete k;
 }
 
 void Settings::setInnerForm()
 {
-    k->innerPanel = new QWidget;
+    innerPanel = new QWidget;
 
-    QBoxLayout *innerLayout = new QBoxLayout(QBoxLayout::TopToBottom, k->innerPanel);
+    QBoxLayout *innerLayout = new QBoxLayout(QBoxLayout::TopToBottom, innerPanel);
     innerLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
 
     QLabel *startingLabel = new QLabel(tr("Starting at frame") + ": ");
     startingLabel->setAlignment(Qt::AlignVCenter);
 
-    k->initFrame = new QSpinBox();
-    k->initFrame->setEnabled(false);
-    k->initFrame->setMaximum(999);
-    connect(k->initFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromInit(int)));
+    initFrameSpin = new QSpinBox();
+    initFrameSpin->setEnabled(false);
+    initFrameSpin->setMaximum(999);
+    connect(initFrameSpin, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromInit(int)));
 
     QLabel *endingLabel = new QLabel(tr("Ending at frame") + ": ");
     endingLabel->setAlignment(Qt::AlignVCenter);
 
-    k->endFrame = new QSpinBox();
-    k->endFrame->setEnabled(true);
-    k->endFrame->setValue(1);
-    k->endFrame->setMaximum(999);
-    connect(k->endFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromEnd(int)));
+    endFrameSpin = new QSpinBox();
+    endFrameSpin->setEnabled(true);
+    endFrameSpin->setValue(1);
+    endFrameSpin->setMaximum(999);
+    connect(endFrameSpin, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromEnd(int)));
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
     startLayout->setMargin(0);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
-    startLayout->addWidget(k->initFrame);
+    startLayout->addWidget(initFrameSpin);
 
     QHBoxLayout *endLayout = new QHBoxLayout;
     endLayout->setAlignment(Qt::AlignHCenter);
     endLayout->setMargin(0);
     endLayout->setSpacing(0);
     endLayout->addWidget(endingLabel);
-    endLayout->addWidget(k->endFrame);
+    endLayout->addWidget(endFrameSpin);
 
-    k->totalLabel = new QLabel(tr("Frames Total") + ": 1");
-    k->totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
+    totalLabel = new QLabel(tr("Frames Total") + ": 1");
+    totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     QHBoxLayout *totalLayout = new QHBoxLayout;
     totalLayout->setAlignment(Qt::AlignHCenter);
     totalLayout->setMargin(0);
     totalLayout->setSpacing(0);
-    totalLayout->addWidget(k->totalLabel);
+    totalLayout->addWidget(totalLabel);
 
-    k->comboAxes = new QComboBox();
-    k->comboAxes->addItem(tr("Width & Height"));
-    k->comboAxes->addItem(tr("Only Width"));
-    k->comboAxes->addItem(tr("Only Height"));
+    comboAxes = new QComboBox();
+    comboAxes->addItem(tr("Width & Height"));
+    comboAxes->addItem(tr("Only Width"));
+    comboAxes->addItem(tr("Only Height"));
     QLabel *axesLabel = new QLabel(tr("Scale in") + ": ");
     axesLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     QHBoxLayout *axesLayout = new QHBoxLayout;
@@ -192,14 +154,14 @@ void Settings::setInnerForm()
     axesLayout->setMargin(0);
     axesLayout->setSpacing(0);
     axesLayout->addWidget(axesLabel);
-    axesLayout->addWidget(k->comboAxes);
+    axesLayout->addWidget(comboAxes);
 
-    k->comboFactor = new QDoubleSpinBox;
-    k->comboFactor->setDecimals(2);
-    k->comboFactor->setMinimum(0.0);
-    k->comboFactor->setMaximum(10);
-    k->comboFactor->setSingleStep(0.05);
-    k->comboFactor->setValue(1.10);
+    comboFactor = new QDoubleSpinBox;
+    comboFactor->setDecimals(2);
+    comboFactor->setMinimum(0.0);
+    comboFactor->setMaximum(10);
+    comboFactor->setSingleStep(0.05);
+    comboFactor->setValue(1.10);
 
     QLabel *speedLabel = new QLabel(tr("Scaling Factor") + ": ");
     speedLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -208,12 +170,12 @@ void Settings::setInnerForm()
     speedLayout->setMargin(0);
     speedLayout->setSpacing(0);
     speedLayout->addWidget(speedLabel);
-    speedLayout->addWidget(k->comboFactor);
+    speedLayout->addWidget(comboFactor);
 
-    k->iterationsCombo = new QSpinBox;
-    k->iterationsCombo->setEnabled(true);
-    k->iterationsCombo->setMinimum(1);
-    k->iterationsCombo->setMaximum(999);
+    iterationsCombo = new QSpinBox;
+    iterationsCombo->setEnabled(true);
+    iterationsCombo->setMinimum(1);
+    iterationsCombo->setMaximum(999);
 
     QLabel *iterationsLabel = new QLabel(tr("Iterations") + ": ");
     iterationsLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -222,25 +184,25 @@ void Settings::setInnerForm()
     iterationsLayout->setMargin(0);
     iterationsLayout->setSpacing(0);
     iterationsLayout->addWidget(iterationsLabel);
-    iterationsLayout->addWidget(k->iterationsCombo);
+    iterationsLayout->addWidget(iterationsCombo);
 
-    k->loopBox = new QCheckBox(tr("Loop"), k->innerPanel);
-    connect(k->loopBox, SIGNAL(stateChanged(int)), this, SLOT(updateReverseCheckbox(int)));
+    loopBox = new QCheckBox(tr("Loop"), innerPanel);
+    connect(loopBox, SIGNAL(stateChanged(int)), this, SLOT(updateReverseCheckbox(int)));
 
     QVBoxLayout *loopLayout = new QVBoxLayout;
     loopLayout->setAlignment(Qt::AlignHCenter);
     loopLayout->setMargin(0);
     loopLayout->setSpacing(0);
-    loopLayout->addWidget(k->loopBox);
+    loopLayout->addWidget(loopBox);
 
-    k->reverseLoopBox = new QCheckBox(tr("Loop with Reverse"), k->innerPanel);
-    connect(k->reverseLoopBox, SIGNAL(stateChanged(int)), this, SLOT(updateLoopCheckbox(int)));
+    reverseLoopBox = new QCheckBox(tr("Loop with Reverse"), innerPanel);
+    connect(reverseLoopBox, SIGNAL(stateChanged(int)), this, SLOT(updateLoopCheckbox(int)));
 
     QVBoxLayout *reverseLayout = new QVBoxLayout;
     reverseLayout->setAlignment(Qt::AlignHCenter);
     reverseLayout->setMargin(0);
     reverseLayout->setSpacing(0);
-    reverseLayout->addWidget(k->reverseLoopBox);
+    reverseLayout->addWidget(reverseLoopBox);
 
     innerLayout->addLayout(startLayout);
     innerLayout->addLayout(endLayout);
@@ -257,19 +219,19 @@ void Settings::setInnerForm()
 
     innerLayout->addWidget(new TSeparator(Qt::Horizontal));
 
-    k->layout->addWidget(k->innerPanel);
+    layout->addWidget(innerPanel);
 
     activeInnerForm(false);
 }
 
 void Settings::activeInnerForm(bool enable)
 {
-    if (enable && !k->innerPanel->isVisible()) {
-        k->propertiesDone = true;
-        k->innerPanel->show();
+    if (enable && !innerPanel->isVisible()) {
+        propertiesDone = true;
+        innerPanel->show();
     } else {
-        k->propertiesDone = false;
-        k->innerPanel->hide();
+        propertiesDone = false;
+        innerPanel->hide();
     }
 }
 
@@ -279,16 +241,16 @@ void Settings::setParameters(const QString &name, int framesCount, int initFrame
 {
     Q_UNUSED(framesCount);
 
-    k->mode = TupToolPlugin::Add;
-    k->input->setText(name);
+    mode = TupToolPlugin::Add;
+    input->setText(name);
 
     activateMode(TupToolPlugin::Selection);
-    k->apply->setToolTip(tr("Save Tween"));
-    k->remove->setIcon(QPixmap(kAppProp->themeDir() + "icons/close.png"));
-    k->remove->setToolTip(tr("Cancel Tween"));
+    apply->setToolTip(tr("Save Tween"));
+    remove->setIcon(QPixmap(kAppProp->themeDir() + "icons/close.png"));
+    remove->setToolTip(tr("Cancel Tween"));
 
-    k->initFrame->setValue(initFrame + 1);
-    k->initFrame->setEnabled(false);
+    initFrameSpin->setValue(initFrame + 1);
+    initFrameSpin->setEnabled(false);
 }
 
 // Editing new Tween
@@ -298,86 +260,86 @@ void Settings::setParameters(TupItemTweener *currentTween)
     setEditMode();
     activateMode(TupToolPlugin::Properties);
 
-    k->input->setText(currentTween->getTweenName());
+    input->setText(currentTween->getTweenName());
 
-    k->initFrame->setEnabled(true);
-    k->initFrame->setValue(currentTween->getInitFrame() + 1);
+    initFrameSpin->setEnabled(true);
+    initFrameSpin->setValue(currentTween->getInitFrame() + 1);
 
-    k->endFrame->setValue(currentTween->getInitFrame() + currentTween->getFrames());
+    endFrameSpin->setValue(currentTween->getInitFrame() + currentTween->getFrames());
 
     /*
-    int begin = k->comboInit->value();
-    int end = k->comboEnd->value();
-    k->totalSteps = end - begin + 1;
-    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
+    int begin = comboInit->value();
+    int end = comboEnd->value();
+    totalSteps = end - begin + 1;
+    totalLabel->setText(tr("Frames Total") + ": " + QString::number(totalSteps));
     */
 
-    int end = k->endFrame->value();
+    int end = endFrameSpin->value();
     updateRangeFromEnd(end);
 
     // checkFramesRange();
 
-    k->comboAxes->setCurrentIndex(currentTween->tweenScaleAxes());
-    k->comboFactor->setValue(currentTween->tweenScaleFactor());
+    comboAxes->setCurrentIndex(currentTween->tweenScaleAxes());
+    comboFactor->setValue(currentTween->tweenScaleFactor());
 
-    k->iterationsCombo->setValue(currentTween->tweenScaleIterations());
+    iterationsCombo->setValue(currentTween->tweenScaleIterations());
 
-    k->loopBox->setChecked(currentTween->tweenScaleLoop());
-    k->reverseLoopBox->setChecked(currentTween->tweenScaleReverseLoop());
+    loopBox->setChecked(currentTween->tweenScaleLoop());
+    reverseLoopBox->setChecked(currentTween->tweenScaleReverseLoop());
 }
 
 void Settings::initStartCombo(int framesCount, int currentIndex)
 {
-    k->initFrame->clear();
-    k->endFrame->clear();
+    initFrameSpin->clear();
+    endFrameSpin->clear();
 
-    k->initFrame->setMinimum(1);
-    k->initFrame->setMaximum(framesCount);
-    k->initFrame->setValue(currentIndex + 1);
+    initFrameSpin->setMinimum(1);
+    initFrameSpin->setMaximum(framesCount);
+    initFrameSpin->setValue(currentIndex + 1);
 
-    k->endFrame->setMinimum(1);
-    k->endFrame->setValue(framesCount);
+    endFrameSpin->setMinimum(1);
+    endFrameSpin->setValue(framesCount);
 }
 
 void Settings::setStartFrame(int currentIndex)
 {
-    k->initFrame->setValue(currentIndex + 1);
-    int end = k->endFrame->value();
+    initFrameSpin->setValue(currentIndex + 1);
+    int end = endFrameSpin->value();
     if (end < currentIndex+1)
-        k->endFrame->setValue(currentIndex + 1);
+        endFrameSpin->setValue(currentIndex + 1);
 }
 
 int Settings::startFrame()
 {
-    return k->initFrame->value() - 1;
+    return initFrameSpin->value() - 1;
 }
 
 int Settings::startComboSize()
 {
-    return k->initFrame->maximum();
+    return initFrameSpin->maximum();
 }
 
 int Settings::totalSteps()
 {
-    return k->endFrame->value() - (k->initFrame->value() - 1);
+    return endFrameSpin->value() - (initFrameSpin->value() - 1);
 }
 
 void Settings::setEditMode()
 {
-    k->mode = TupToolPlugin::Edit;
-    k->apply->setToolTip(tr("Update Tween"));
-    k->remove->setIcon(QPixmap(kAppProp->themeDir() + "icons/close_properties.png"));
-    k->remove->setToolTip(tr("Close Tween Properties"));
+    mode = TupToolPlugin::Edit;
+    apply->setToolTip(tr("Update Tween"));
+    remove->setIcon(QPixmap(kAppProp->themeDir() + "icons/close_properties.png"));
+    remove->setToolTip(tr("Close Tween Properties"));
 }
 
 void Settings::applyTween()
 {
-    if (!k->selectionDone) {
+    if (!selectionDone) {
         TOsd::self()->display(tr("Info"), tr("You must select at least one object!"), TOsd::Info);
         return;
     }
 
-    if (!k->propertiesDone) {
+    if (!propertiesDone) {
         TOsd::self()->display(tr("Info"), tr("You must set Tween properties first!"), TOsd::Info);
         return;
     }
@@ -385,8 +347,8 @@ void Settings::applyTween()
     // SQA: Verify Tween is really well applied before call setEditMode!
     setEditMode();
 
-    if (!k->initFrame->isEnabled())
-        k->initFrame->setEnabled(true);
+    if (!initFrameSpin->isEnabled())
+        initFrameSpin->setEnabled(true);
 
     checkFramesRange();
 
@@ -395,14 +357,14 @@ void Settings::applyTween()
 
 void Settings::notifySelection(bool flag)
 {
-    k->selectionDone = flag;
+    selectionDone = flag;
 }
 
 QString Settings::currentTweenName() const
 {
-    QString tweenName = k->input->text();
+    QString tweenName = input->text();
     if (tweenName.length() > 0)
-        k->input->setFocus();
+        input->setFocus();
 
     return tweenName;
 }
@@ -418,11 +380,11 @@ void Settings::emitOptionChanged(int option)
         break;
         case 1:
         {
-            if (k->selectionDone) {
+            if (selectionDone) {
                 activeInnerForm(true);
                 emit clickedDefineProperties();
             } else {
-                k->options->setCurrentIndex(0);
+                options->setCurrentIndex(0);
                 TOsd::self()->display(tr("Info"), tr("Select objects for Tweening first!"), TOsd::Info);
             }
         }
@@ -442,30 +404,30 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     root.setAttribute("initScene", currentScene);
 
     // checkFramesRange();
-    root.setAttribute("frames", k->totalSteps);
+    root.setAttribute("frames", stepsCounter);
     root.setAttribute("initXScaleFactor", QString::number(initialXScaleFactor));
     root.setAttribute("initYScaleFactor", QString::number(initialYScaleFactor));
     root.setAttribute("origin", QString::number(point.x()) + "," + QString::number(point.y()));
-    k->scaleAxes = TupItemTweener::TransformAxes(k->comboAxes->currentIndex());
-    root.setAttribute("scaleAxes", k->scaleAxes);
+    scaleAxes = TupItemTweener::TransformAxes(comboAxes->currentIndex());
+    root.setAttribute("scaleAxes", scaleAxes);
 
-    double factor = k->comboFactor->value();
+    double factor = comboFactor->value();
     root.setAttribute("scaleFactor", QString::number(factor));
 
-    int iterations = k->iterationsCombo->value();
+    int iterations = iterationsCombo->value();
     if (iterations == 0) {
         iterations = 1;
-        k->iterationsCombo->setValue(iterations);
+        iterationsCombo->setValue(iterations);
     }
     root.setAttribute("scaleIterations", iterations);
 
-    bool loop = k->loopBox->isChecked();
+    bool loop = loopBox->isChecked();
     if (loop)
         root.setAttribute("scaleLoop", "1");
     else
         root.setAttribute("scaleLoop", "0");
 
-    bool reverse = k->reverseLoopBox->isChecked();
+    bool reverse = reverseLoopBox->isChecked();
     if (reverse)
         root.setAttribute("scaleReverseLoop", "1");
     else
@@ -478,10 +440,10 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     double lastScaleX = 1.0;
     double lastScaleY = 1.0;
 
-    if (k->scaleAxes == TupItemTweener::XY) {
+    if (scaleAxes == TupItemTweener::XY) {
         factorX = factor;
         factorY = factor;
-    } else if (k->scaleAxes == TupItemTweener::X) {
+    } else if (scaleAxes == TupItemTweener::X) {
         factorX = factor;
     } else {
         factorY = factor;
@@ -490,7 +452,7 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     int cycle = 1;
     int reverseTop = (iterations * 2) - 2;
 
-    for (int i=0; i < k->totalSteps; i++) {
+    for (int i=0; i < stepsCounter; i++) {
          if (cycle <= iterations) {
              if (cycle == 1) {
                  scaleX = initialXScaleFactor;
@@ -537,14 +499,14 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
 
 void Settings::activateMode(TupToolPlugin::EditMode mode)
 {
-    k->options->setCurrentIndex(mode);
+    options->setCurrentIndex(mode);
 }
 
 /*
 void Settings::updateLastFrame()
 {
-    int end = k->comboInit->value() + k->totalSteps - 1;
-    k->comboEnd->setValue(end);
+    int end = comboInit->value() + totalSteps - 1;
+    comboEnd->setValue(end);
 }
 
 void Settings::checkTopLimit(int index)
@@ -556,45 +518,45 @@ void Settings::checkTopLimit(int index)
 
 void Settings::checkFramesRange()
 {
-    int begin = k->initFrame->value();
-    int end = k->endFrame->value();
+    int begin = initFrameSpin->value();
+    int end = endFrameSpin->value();
 
     if (begin > end) {
-        // k->comboEnd->setValue(k->comboEnd->maximum() - 1);
-        // end = k->comboEnd->value();
-        k->initFrame->blockSignals(true);
-        k->endFrame->blockSignals(true);
+        // comboEnd->setValue(comboEnd->maximum() - 1);
+        // end = comboEnd->value();
+        initFrameSpin->blockSignals(true);
+        endFrameSpin->blockSignals(true);
         int tmp = end;
         end = begin;
         begin = tmp;
-        k->initFrame->setValue(begin);
-        k->endFrame->setValue(end);
-        k->initFrame->blockSignals(false);
-        k->endFrame->blockSignals(false);
+        initFrameSpin->setValue(begin);
+        endFrameSpin->setValue(end);
+        initFrameSpin->blockSignals(false);
+        endFrameSpin->blockSignals(false);
     }
 
-    k->totalSteps = end - begin + 1;
-    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
+    stepsCounter = end - begin + 1;
+    totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepsCounter));
 
-    int iterations = k->iterationsCombo->value();
-    if (iterations > k->totalSteps)
-        k->iterationsCombo->setValue(k->totalSteps);
+    int iterations = iterationsCombo->value();
+    if (iterations > stepsCounter)
+        iterationsCombo->setValue(stepsCounter);
 }
 
 void Settings::updateLoopCheckbox(int state)
 {
     Q_UNUSED(state);
 
-    if (k->reverseLoopBox->isChecked() && k->loopBox->isChecked())
-        k->loopBox->setChecked(false);
+    if (reverseLoopBox->isChecked() && loopBox->isChecked())
+        loopBox->setChecked(false);
 }
 
 void Settings::updateReverseCheckbox(int state)
 {
     Q_UNUSED(state);
 
-    if (k->reverseLoopBox->isChecked() && k->loopBox->isChecked())
-        k->reverseLoopBox->setChecked(false);
+    if (reverseLoopBox->isChecked() && loopBox->isChecked())
+        reverseLoopBox->setChecked(false);
 }
 
 /*
@@ -607,14 +569,14 @@ void Settings::updateTotalSteps(const QString &text)
 
 void Settings::updateRangeFromInit(int begin)
 {
-    int end = k->endFrame->value();
-    k->totalSteps = end - begin + 1;
-    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
+    int end = endFrameSpin->value();
+    stepsCounter = end - begin + 1;
+    totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepsCounter));
 }
 
 void Settings::updateRangeFromEnd(int end) 
 {
-    int begin = k->initFrame->value();
-    k->totalSteps = end - begin + 1;
-    k->totalLabel->setText(tr("Frames Total") + ": " + QString::number(k->totalSteps));
+    int begin = initFrameSpin->value();
+    stepsCounter = end - begin + 1;
+    totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepsCounter));
 }

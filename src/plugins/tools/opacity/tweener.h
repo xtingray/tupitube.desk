@@ -104,9 +104,6 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         void disableSelection();
         void removeTweenFromProject(const QString &name);
 
-        struct Private;
-        Private *const k;
-
         QMap<QString, TAction *> opacityActions;
         Configurator *configPanel;
 

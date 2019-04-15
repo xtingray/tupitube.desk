@@ -38,13 +38,12 @@
 
 #include "tglobal.h"
 #include "settings.h"
+#include "lipsyncmanager.h"
 
 #include <QFrame>
 #include <QLabel>
 #include <QBoxLayout>
 #include <QListWidgetItem>
-
-class TupLipSync;
 
 /**
  * @author Gustav Gonzalez 
@@ -92,8 +91,9 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void setLipSyncManagerPanel();
         void activeLipSyncManagerPanel(bool enable);
 
-        struct Private;
-        Private *const k;
+        QBoxLayout *settingsLayout;
+        Settings *settingsPanel;
+        LipSyncManager *manager;
 };
 
 #endif

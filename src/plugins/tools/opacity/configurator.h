@@ -37,14 +37,16 @@
 #define CONFIGURATOR_H
 
 #include "settings.h"
+#include "tweenmanager.h"
+#include "buttonspanel.h"
+#include "tupitemtweener.h"
 
 #include <QFrame>
 #include <QLabel>
 #include <QBoxLayout>
-
-class QGraphicsPathItem;
-class QListWidgetItem;
-class TupItemTweener;
+#include <QListWidgetItem>
+#include <QGraphicsPathItem>
+#include <QListWidgetItem>
 
 /**
  * @author Gustav Gonzalez 
@@ -104,8 +106,19 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void activeTweenManagerPanel(bool enable);
         void setButtonsPanel();
 
-        struct Private;
-        Private *const k;
+        QBoxLayout *layout;
+        QBoxLayout *settingsLayout;
+        Settings *settingsPanel;
+        TweenManager *tweenManager;
+        ButtonsPanel *controlPanel;
+
+        TupItemTweener *currentTween;
+
+        int framesCount;
+        int currentFrame;
+
+        TupToolPlugin::Mode currentMode;
+        GuiState state;
 };
 
 #endif

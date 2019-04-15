@@ -38,6 +38,9 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
+#include "tradiobuttongroup.h"
+#include "timagebutton.h"
+#include "stepsviewer.h"
 
 #include <QWidget>
 #include <QLabel>
@@ -47,7 +50,7 @@
 #include <QBoxLayout>
 #include <QHeaderView>
 #include <QGraphicsPathItem>
-#include <QDir>
+// #include <QDir>
 
 class TupItemTweener;
 
@@ -97,8 +100,19 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         void activeInnerForm(bool enable);
         void setEditMode();
 
-        struct Private;
-        Private *const k;
+        QWidget *innerPanel;
+        QBoxLayout *layout;
+
+        QLineEdit *input;
+        TRadioButtonGroup *options;
+        StepsViewer *stepViewer;
+        QSpinBox *comboInit;
+        QLabel *totalLabel;
+        bool selectionDone;
+        TupToolPlugin::Mode mode;
+
+        TImageButton *apply;
+        TImageButton *remove;
 };
 
 #endif

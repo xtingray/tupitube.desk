@@ -35,17 +35,11 @@
 
 #include "lipsyncmanager.h"
 
-struct LipSyncManager::Private
-{
-    QListWidget *lipSyncList;
-    TImageButton *addButton;
-    TImageButton *editButton;
-    TImageButton *delButton;
+#include <QHBoxLayout>
+#include <QLineEdit>
+#include <QListWidgetItem>
 
-    QString target;
-};
-
-LipSyncManager::LipSyncManager(QWidget *parent) : QWidget(parent), k(new Private)
+LipSyncManager::LipSyncManager(QWidget *parent) : QWidget(parent)
 {
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
@@ -53,34 +47,34 @@ LipSyncManager::LipSyncManager(QWidget *parent) : QWidget(parent), k(new Private
     QBoxLayout *listLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     listLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
 
-    k->lipSyncList = new QListWidget;
-    k->lipSyncList->setContextMenuPolicy(Qt::CustomContextMenu);
-    k->lipSyncList->setViewMode(QListView::ListMode);
-    k->lipSyncList->setFlow(QListView::TopToBottom);
-    k->lipSyncList->setMovement(QListView::Static);
-    k->lipSyncList->setFixedHeight(68);
+    lipSyncList = new QListWidget;
+    lipSyncList->setContextMenuPolicy(Qt::CustomContextMenu);
+    lipSyncList->setViewMode(QListView::ListMode);
+    lipSyncList->setFlow(QListView::TopToBottom);
+    lipSyncList->setMovement(QListView::Static);
+    lipSyncList->setFixedHeight(68);
 
-    listLayout->addWidget(k->lipSyncList);
+    listLayout->addWidget(lipSyncList);
 
-    k->addButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/plus_sign.png"), 22);
-    k->addButton->setToolTip(tr("Import LipSync"));
-    connect(k->addButton, SIGNAL(clicked()), this, SIGNAL(importLipSync()));
+    addButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/plus_sign.png"), 22);
+    addButton->setToolTip(tr("Import LipSync"));
+    connect(addButton, SIGNAL(clicked()), this, SIGNAL(importLipSync()));
 
-    k->editButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/edit_sign.png"), 22);
-    k->editButton->setToolTip(tr("Edit LipSync"));
-    connect(k->editButton, SIGNAL(clicked()), this, SLOT(editLipSync()));
+    editButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/edit_sign.png"), 22);
+    editButton->setToolTip(tr("Edit LipSync"));
+    connect(editButton, SIGNAL(clicked()), this, SLOT(editLipSync()));
 
-    k->delButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/minus_sign.png"), 22);
-    k->delButton->setToolTip(tr("Remove LipSync"));
-    connect(k->delButton, SIGNAL(clicked()), this, SLOT(removeLipSync()));
+    delButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/minus_sign.png"), 22);
+    delButton->setToolTip(tr("Remove LipSync"));
+    connect(delButton, SIGNAL(clicked()), this, SLOT(removeLipSync()));
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->setAlignment(Qt::AlignHCenter);
     buttonLayout->setMargin(0);
     buttonLayout->setSpacing(0);
-    buttonLayout->addWidget(k->addButton);
-    buttonLayout->addWidget(k->editButton);
-    buttonLayout->addWidget(k->delButton);
+    buttonLayout->addWidget(addButton);
+    buttonLayout->addWidget(editButton);
+    buttonLayout->addWidget(delButton);
 
     layout->addLayout(listLayout);
     layout->addLayout(buttonLayout);
@@ -92,22 +86,22 @@ LipSyncManager::~LipSyncManager()
 
 void LipSyncManager::loadLipSyncList(QList<QString> list)
 {
-    k->lipSyncList->clear();
+    lipSyncList->clear();
 
     int total = list.size();
     for (int i=0; i < total; i++) {
-        QListWidgetItem *item = new QListWidgetItem(k->lipSyncList);
+        QListWidgetItem *item = new QListWidgetItem(lipSyncList);
         item->setText(list.at(i));
         item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     }
 
-    k->lipSyncList->setCurrentRow(0);
+    lipSyncList->setCurrentRow(0);
 }
 
 bool LipSyncManager::itemExists(const QString &name)
 {
-    for (int i=0; i < k->lipSyncList->count(); i++) {
-         QListWidgetItem *item = k->lipSyncList->item(i);
+    for (int i=0; i < lipSyncList->count(); i++) {
+         QListWidgetItem *item = lipSyncList->item(i);
          if (name.compare(item->text()) == 0)
              return true;
     }
@@ -117,8 +111,8 @@ bool LipSyncManager::itemExists(const QString &name)
 
 void LipSyncManager::editLipSync()
 {
-    if (k->lipSyncList->count() > 0) {
-        QListWidgetItem *item = k->lipSyncList->currentItem();
+    if (lipSyncList->count() > 0) {
+        QListWidgetItem *item = lipSyncList->currentItem();
         if (item)
             emit editCurrentLipSync(item->text());
     }
@@ -126,31 +120,31 @@ void LipSyncManager::editLipSync()
 
 void LipSyncManager::removeLipSync()
 {
-    if (k->lipSyncList->count() > 0) {
-        QListWidgetItem *item = k->lipSyncList->currentItem();
+    if (lipSyncList->count() > 0) {
+        QListWidgetItem *item = lipSyncList->currentItem();
         if (item) {
-            k->lipSyncList->takeItem(k->lipSyncList->row(item));
-            k->target = item->text();
-            emit removeCurrentLipSync(k->target);
+            lipSyncList->takeItem(lipSyncList->row(item));
+            target = item->text();
+            emit removeCurrentLipSync(target);
         }
     }
 }
 
 void LipSyncManager::resetUI()
 {
-    if (k->lipSyncList->count() > 0)
-        k->lipSyncList->clear();
+    if (lipSyncList->count() > 0)
+        lipSyncList->clear();
 }
 
 QString LipSyncManager::currentLipSyncName() const
 {
-    QListWidgetItem *item = k->lipSyncList->currentItem();
+    QListWidgetItem *item = lipSyncList->currentItem();
     return item->text();
 }
 
 int LipSyncManager::listSize()
 {
-    return k->lipSyncList->count();
+    return lipSyncList->count();
 }
 
 void LipSyncManager::addNewRecord(const QString &name)
@@ -158,9 +152,9 @@ void LipSyncManager::addNewRecord(const QString &name)
     QFont f = font();
     f.setPointSize(8);
 
-    QListWidgetItem *item = new QListWidgetItem(k->lipSyncList);
+    QListWidgetItem *item = new QListWidgetItem(lipSyncList);
     item->setText(name);
     item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    k->lipSyncList->setCurrentItem(item);
+    lipSyncList->setCurrentItem(item);
 }

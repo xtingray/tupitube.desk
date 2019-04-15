@@ -42,33 +42,7 @@
 #include "tupprojectrequest.h"
 #include "tupscene.h"
 
-struct PapagayoTool::Private
-{
-    /*
-    QMap<QString, TAction *> pgActions;
-    Configurator *configPanel;
-
-    TupGraphicsScene *scene;
-
-    TupLipSync *currentLipSync;
-    int initScene;
-
-    QPointF origin;
-    MouthTarget *target;
-
-    TupToolPlugin::Mode mode;
-
-    int baseZValue;
-
-    QGraphicsItem *mouth;
-    QPointF mouthOffset;
-    QString currentMouth;
-    int currentMouthIndex;
-    bool targetIncluded;
-    */
-};
-
-PapagayoTool::PapagayoTool() : TupToolPlugin(), k(new Private)
+PapagayoTool::PapagayoTool() : TupToolPlugin()
 {
     setupActions();
     configPanel = 0;
@@ -78,7 +52,6 @@ PapagayoTool::PapagayoTool() : TupToolPlugin(), k(new Private)
 
 PapagayoTool::~PapagayoTool()
 {
-    delete k;
 }
 
 /* This method initializes the plugin */

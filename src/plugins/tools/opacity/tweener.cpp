@@ -49,26 +49,7 @@
 
 #include <QMessageBox>
 
-struct Tweener::Private
-{
-    /*
-    QMap<QString, TAction *> opacityActions;
-    Configurator *configPanel;
-
-    TupGraphicsScene *scene;
-    QList<QGraphicsItem *> objects;
-
-    TupItemTweener *currentTween;
-    int initFrame;
-    int initLayer;
-    int initScene;
-
-    TupToolPlugin::Mode mode;
-    TupToolPlugin::EditMode editMode;
-    */
-};
-
-Tweener::Tweener() : TupToolPlugin(), k(new Private)
+Tweener::Tweener() : TupToolPlugin()
 {
     setupActions();
 
@@ -78,7 +59,6 @@ Tweener::Tweener() : TupToolPlugin(), k(new Private)
 
 Tweener::~Tweener()
 {
-    delete k;
 }
 
 /* This method initializes the plugin */

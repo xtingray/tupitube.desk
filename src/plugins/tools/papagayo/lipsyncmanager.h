@@ -37,17 +37,12 @@
 #define LIPSYNCMANAGER_H
 
 #include "tglobal.h"
+#include "tapplication.h"
 #include "timagebutton.h"
 #include "tosd.h"
 
 #include <QWidget>
-#include <QHBoxLayout>
-#include <QBoxLayout>
-#include <QLineEdit>
 #include <QListWidget>
-#include <QListWidgetItem>
-#include <QMenu>
-#include <QDir>
 
 /**
  * @author Gustav Gonzalez 
@@ -60,6 +55,7 @@ class TUPITUBE_PLUGIN LipSyncManager: public QWidget
     public:
         LipSyncManager(QWidget *parent = 0);
         ~LipSyncManager();
+
         void loadLipSyncList(QList<QString> list);
         void resetUI();
         QString currentLipSyncName() const;
@@ -78,8 +74,11 @@ class TUPITUBE_PLUGIN LipSyncManager: public QWidget
     private:
         bool itemExists(const QString &name);
 
-        struct Private;
-        Private *const k;
+        QListWidget *lipSyncList;
+        TImageButton *addButton;
+        TImageButton *editButton;
+        TImageButton *delButton;
+        QString target;
 };
 
 #endif

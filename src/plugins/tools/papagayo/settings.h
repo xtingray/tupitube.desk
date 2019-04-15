@@ -38,6 +38,7 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
+#include "tuplipsync.h"
 
 #include <QWidget>
 #include <QLabel>
@@ -46,7 +47,7 @@
 #include <QListWidget>
 #include <QTextEdit>
 
-class TupLipSync;
+// class TupLipSync;
 
 /**
  * @author Gustav Gonzalez 
@@ -80,8 +81,29 @@ class TUPITUBE_PLUGIN Settings : public QWidget
     private:
         void setInnerForm();
 
-        struct Private;
-        Private *const k;
+        QWidget *innerPanel;
+        QBoxLayout *layout;
+
+        QLabel *lipSyncName;
+        QLabel *fpsLabel;
+        QSpinBox *comboInit;
+
+        QLabel *endingLabel;
+        QLabel *totalLabel;
+
+        QListWidget *mouthsList;
+        QList<TupVoice *> voices;
+
+        QTextEdit *textArea;
+
+        // QString phoneme;
+        QLabel *phonemeLabel;
+        QSpinBox *xPosField;
+        QSpinBox *yPosField;
+
+        QString name;
+        int initFrame;
+        int framesCount;
 };
 
 #endif

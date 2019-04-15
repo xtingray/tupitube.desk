@@ -36,16 +36,8 @@
 #include "configurator.h"
 #include "tapplicationproperties.h"
 #include "tseparator.h"
-#include "lipsyncmanager.h"
 
-struct Configurator::Private
-{
-    QBoxLayout *settingsLayout;
-    Settings *settingsPanel;
-    LipSyncManager *manager;
-};
-
-Configurator::Configurator(QWidget *parent) : QFrame(parent), k(new Private)
+Configurator::Configurator(QWidget *parent) : QFrame(parent)
 {
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
@@ -58,38 +50,37 @@ Configurator::Configurator(QWidget *parent) : QFrame(parent), k(new Private)
     layout->addWidget(toolTitle);
     layout->addWidget(new TSeparator(Qt::Horizontal));
 
-    k->settingsLayout = new QBoxLayout(QBoxLayout::TopToBottom);
-    k->settingsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    k->settingsLayout->setMargin(0);
-    k->settingsLayout->setSpacing(0);
+    settingsLayout = new QBoxLayout(QBoxLayout::TopToBottom);
+    settingsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    settingsLayout->setMargin(0);
+    settingsLayout->setSpacing(0);
 
     setLipSyncManagerPanel();
     setPropertiesPanel();
 
-    layout->addLayout(k->settingsLayout);
+    layout->addLayout(settingsLayout);
     layout->addStretch(2);
 }
 
 Configurator::~Configurator()
 {
-    delete k;
 }
 
 void Configurator::loadLipSyncList(QList<QString> list)
 {
-    k->manager->loadLipSyncList(list);
+    manager->loadLipSyncList(list);
 }
 
 void Configurator::setPropertiesPanel()
 {
-    k->settingsPanel = new Settings(this);
-    connect(k->settingsPanel, SIGNAL(selectMouth(const QString &, int)), this, SIGNAL(selectMouth(const QString &, int)));
-    connect(k->settingsPanel, SIGNAL(closeLipSyncProperties()), this, SLOT(closeSettingsPanel())); 
-    connect(k->settingsPanel, SIGNAL(initFrameHasChanged(int)), this, SIGNAL(initFrameHasChanged(int)));
-    connect(k->settingsPanel, SIGNAL(xPosChanged(int)), this, SIGNAL(xPosChanged(int)));
-    connect(k->settingsPanel, SIGNAL(yPosChanged(int)), this, SIGNAL(yPosChanged(int)));
+    settingsPanel = new Settings(this);
+    connect(settingsPanel, SIGNAL(selectMouth(const QString &, int)), this, SIGNAL(selectMouth(const QString &, int)));
+    connect(settingsPanel, SIGNAL(closeLipSyncProperties()), this, SLOT(closeSettingsPanel()));
+    connect(settingsPanel, SIGNAL(initFrameHasChanged(int)), this, SIGNAL(initFrameHasChanged(int)));
+    connect(settingsPanel, SIGNAL(xPosChanged(int)), this, SIGNAL(xPosChanged(int)));
+    connect(settingsPanel, SIGNAL(yPosChanged(int)), this, SIGNAL(yPosChanged(int)));
 
-    k->settingsLayout->addWidget(k->settingsPanel);
+    settingsLayout->addWidget(settingsPanel);
 
     activePropertiesPanel(false);
 }
@@ -97,32 +88,32 @@ void Configurator::setPropertiesPanel()
 void Configurator::activePropertiesPanel(bool enable)
 {
     if (enable)
-        k->settingsPanel->show();
+        settingsPanel->show();
     else
-        k->settingsPanel->hide();
+        settingsPanel->hide();
 }
 
 void Configurator::setLipSyncManagerPanel()
 {
-    k->manager = new LipSyncManager(this);
-    connect(k->manager, SIGNAL(importLipSync()), this, SIGNAL(importLipSync()));
-    connect(k->manager, SIGNAL(editCurrentLipSync(const QString &)), this, SLOT(editCurrentLipSync(const QString &)));
-    connect(k->manager, SIGNAL(removeCurrentLipSync(const QString &)), this, SIGNAL(removeCurrentLipSync(const QString &)));
+    manager = new LipSyncManager(this);
+    connect(manager, SIGNAL(importLipSync()), this, SIGNAL(importLipSync()));
+    connect(manager, SIGNAL(editCurrentLipSync(const QString &)), this, SLOT(editCurrentLipSync(const QString &)));
+    connect(manager, SIGNAL(removeCurrentLipSync(const QString &)), this, SIGNAL(removeCurrentLipSync(const QString &)));
 
-    k->settingsLayout->addWidget(k->manager);
+    settingsLayout->addWidget(manager);
 }
 
 void Configurator::activeLipSyncManagerPanel(bool enable)
 {
     if (enable)
-        k->manager->show();
+        manager->show();
     else
-        k->manager->hide();
+        manager->hide();
 }
 
 void Configurator::addLipSyncRecord(const QString &name)
 {
-    k->manager->addNewRecord(name);
+    manager->addNewRecord(name);
 }
 
 void Configurator::editCurrentLipSync(const QString &name)
@@ -135,12 +126,12 @@ void Configurator::editCurrentLipSync(const QString &name)
 
 void Configurator::openLipSyncProperties(TupLipSync *lipsync)
 {
-    k->settingsPanel->openLipSyncProperties(lipsync);
+    settingsPanel->openLipSyncProperties(lipsync);
 }
 
 void Configurator::resetUI()
 {
-    k->manager->resetUI();
+    manager->resetUI();
     closeSettingsPanel();
 }
 
@@ -158,15 +149,15 @@ void Configurator::closePanels()
 
 void Configurator::updateInterfaceRecords()
 {
-    k->settingsPanel->updateInterfaceRecords();
+    settingsPanel->updateInterfaceRecords();
 }
 
 void Configurator::setPos(const QPointF &point)
 {
-    k->settingsPanel->setPos(point);
+    settingsPanel->setPos(point);
 }
 
 void Configurator::setPhoneme(const QString &phoneme)
 {
-    k->settingsPanel->setPhoneme(phoneme);
+    settingsPanel->setPhoneme(phoneme);
 }
