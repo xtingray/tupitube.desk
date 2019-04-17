@@ -53,8 +53,6 @@ TupBackgroundScene::~TupBackgroundScene()
 
     foreach (QGraphicsItem *item, items())
         removeItem(item);
-
-    delete bg;
 }
 
 void TupBackgroundScene::drawScene()
