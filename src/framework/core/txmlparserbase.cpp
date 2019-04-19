@@ -35,23 +35,12 @@
 
 #include "txmlparserbase.h"
 
-struct TXmlParserBase::Private
-{
-    QString currentTag;
-    QString root;
-    bool isParsing;
-    bool readText;
-    bool ignore;
-    QString document;
-};
-
-TXmlParserBase::TXmlParserBase() : QXmlDefaultHandler(), k(new Private)
+TXmlParserBase::TXmlParserBase() : QXmlDefaultHandler()
 {
 }
 
 TXmlParserBase::~TXmlParserBase()
 {
-    delete k;
 }
 
 void TXmlParserBase::initialize()
@@ -60,11 +49,11 @@ void TXmlParserBase::initialize()
 
 bool TXmlParserBase::startDocument()
 {
-    k->isParsing = true;
-    k->currentTag = QString();
-    k->root = QString();
-    k->readText = false;
-    k->ignore = false;
+    isParsing = true;
+    tag = QString();
+    docRoot = QString();
+    readText = false;
+    ignore = false;
     
     initialize();
 
@@ -73,54 +62,51 @@ bool TXmlParserBase::startDocument()
 
 bool TXmlParserBase::endDocument()
 {
-    k->isParsing = false;
+    isParsing = false;
     return true;
 }
 
 bool TXmlParserBase::startElement(const QString& , const QString& , const QString& qname, const QXmlAttributes& atts)
 {
-    if (k->ignore) 
+    if (ignore)
         return true;
     
-    if (k->root.isEmpty())
-        k->root = qname;
+    if (docRoot.isEmpty())
+        docRoot = qname;
     
-    bool r = startTag(qname, atts);
-    
-    k->currentTag = qname;
+    bool r = startTag(qname, atts);   
+    tag = qname;
     
     return r;
 }
 
-
-bool TXmlParserBase::endElement(const QString&, const QString& , const QString& qname)
+bool TXmlParserBase::endElement(const QString &, const QString &, const QString &qname)
 {
     return endTag(qname);
 }
 
-
-bool TXmlParserBase::characters(const QString & ch)
+bool TXmlParserBase::characters(const QString &ch)
 {
-    if (k->ignore) 
+    if (ignore)
         return true;
     
-    if (k->readText) {
+    if (readText) {
         text(ch.simplified());
-        k->readText = false;
+        readText = false;
     }
     
     return true;
 }
 
-bool TXmlParserBase::error(const QXmlParseException & exception)
+bool TXmlParserBase::error(const QXmlParseException &exception)
 {
 #ifdef TUP_DEBUG	
     #ifdef Q_OS_WIN
         qWarning() << exception.lineNumber() << "x" << exception.columnNumber() << ": " << exception.message();
-        qWarning() << __PRETTY_FUNCTION__ << " Document: " << k->document;
+        qWarning() << __PRETTY_FUNCTION__ << " Document: " << document;
     #else
         tWarning() << exception.lineNumber() << "x" << exception.columnNumber() << ": " << exception.message();
-        tWarning() << __PRETTY_FUNCTION__ << " Document: " << k->document;
+        tWarning() << __PRETTY_FUNCTION__ << " Document: " << document;
     #endif
 #else
      Q_UNUSED(exception);
@@ -129,15 +115,15 @@ bool TXmlParserBase::error(const QXmlParseException & exception)
     return true;
 }
 
-bool TXmlParserBase::fatalError(const QXmlParseException & exception)
+bool TXmlParserBase::fatalError(const QXmlParseException &exception)
 {
 #ifdef TUP_DEBUG
     #ifdef Q_OS_WIN
         qWarning() << exception.lineNumber() << "x" << exception.columnNumber() << ": " << exception.message();
-        qWarning() << __PRETTY_FUNCTION__ << " Document: " << k->document;
+        qWarning() << __PRETTY_FUNCTION__ << " Document: " << document;
     #else
         tWarning() << exception.lineNumber() << "x" << exception.columnNumber() << ": " << exception.message();
-        tWarning() << __PRETTY_FUNCTION__ << " Document: " << k->document;
+        tWarning() << __PRETTY_FUNCTION__ << " Document: " << document;
     #endif
 #else
      Q_UNUSED(exception);
@@ -148,22 +134,22 @@ bool TXmlParserBase::fatalError(const QXmlParseException & exception)
 
 void TXmlParserBase::setReadText(bool read)
 {
-    k->readText = read;
+    readText = read;
 }
 
-void TXmlParserBase::setIgnore(bool ignore)
+void TXmlParserBase::setIgnore(bool flag)
 {
-    k->ignore = ignore;
+    ignore = flag;
 }
 
 QString TXmlParserBase::currentTag() const
 {
-    return k->currentTag;
+    return tag;
 }
 
 QString TXmlParserBase::root() const
 {
-    return k->root;
+    return docRoot;
 }
 
 bool TXmlParserBase::parse(const QString &doc)
@@ -176,7 +162,7 @@ bool TXmlParserBase::parse(const QString &doc)
     QXmlInputSource xmlsource;
     xmlsource.setData(doc);
     
-    k->document = doc;
+    document = doc;
     
     return reader.parse(&xmlsource);
 }

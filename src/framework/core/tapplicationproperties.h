@@ -80,8 +80,17 @@ class T_CORE_EXPORT TApplicationProperties
     private:
         static TApplicationProperties *s_instance;
 
-    struct Private;
-        Private *const k;
+        QString homePath;
+        QString binPath;
+        QString sharePath;
+        QString dataPath;
+        QString themePath;
+        QString repositoryPath;
+        QString pluginPath;
+        QString versionStr;
+        QString codeNameStr;
+        QString revisionStr;
+        QString cachePath;
 };
 
 #define kAppProp TApplicationProperties::instance()
