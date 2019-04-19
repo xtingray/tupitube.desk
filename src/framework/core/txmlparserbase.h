@@ -43,11 +43,10 @@
 class T_CORE_EXPORT TXmlParserBase : public QXmlDefaultHandler
 {
     public:
+        TXmlParserBase();
         ~TXmlParserBase();
         
     protected:
-        TXmlParserBase();
-        
         bool startDocument();
         bool endDocument();
         
@@ -75,8 +74,13 @@ class T_CORE_EXPORT TXmlParserBase : public QXmlDefaultHandler
         bool parse(QFile *file);
         
     private:
-        struct Private;
-        Private *const k;
+
+        QString tag;
+        QString docRoot;
+        bool isParsing;
+        bool readText;
+        bool ignore;
+        QString document;
 };
 
 #endif

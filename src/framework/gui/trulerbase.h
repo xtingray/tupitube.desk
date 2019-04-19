@@ -90,13 +90,8 @@ class T_GUI_EXPORT TRulerBase : public QFrame
         Qt::Orientation ruleDirection;
         QPointF ruleZero;
         QPolygonF pArrow;
-
         QMenu *menu;
-
         double sFactor;
-
-        // struct Private;
-        // Private *const k;
 
 signals:
         void displayMenu(TRulerBase *, QPoint pos);
