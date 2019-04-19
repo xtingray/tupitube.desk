@@ -37,14 +37,9 @@
 
 // SQA: Add support for renaming and moving objects from the list
 
-struct TupScenesList::Private
+TupScenesList::TupScenesList(QWidget *parent) : TreeListWidget(parent)
 {
-   int scenesCount;
-};
-
-TupScenesList::TupScenesList(QWidget *parent) : TreeListWidget(parent), k(new Private)
-{
-    k->scenesCount = 0;
+    scenesCountRegister = 0;
     setHeaderLabels(QStringList() << "");
     // header()->setResizeMode(QHeaderView::ResizeToContents);
     header()->setSectionResizeMode(QHeaderView::ResizeToContents);
@@ -61,7 +56,7 @@ TupScenesList::~TupScenesList()
 
 void TupScenesList::insertScene(int index, const QString &name)
 {
-    k->scenesCount++;
+    scenesCountRegister++;
     QTreeWidgetItem *newScene = new QTreeWidgetItem(this);
     newScene->setText(0, name);
     newScene->setFlags(newScene->flags() | Qt::ItemIsEditable);
@@ -77,7 +72,7 @@ int TupScenesList::removeCurrentScene()
 
     if (currentItem()) {
         delete currentItem();
-        k->scenesCount--;
+        scenesCountRegister--;
         return index;
     }
 
@@ -86,7 +81,7 @@ int TupScenesList::removeCurrentScene()
 
 void TupScenesList::removeScene(int index)
 {
-    k->scenesCount--;
+    scenesCountRegister--;
     delete topLevelItem(index);
 }
 
@@ -148,7 +143,7 @@ QString TupScenesList::nameCurrentScene()
 
 int TupScenesList::scenesCount()
 {
-    return k->scenesCount;
+    return scenesCountRegister;
 }
 
 void TupScenesList::mouseDoubleClickEvent(QMouseEvent *event)
@@ -187,7 +182,7 @@ void TupScenesList::resetUI()
 
     // blockSignals(true);
     clearSelection();
-    k->scenesCount = 0;
+    scenesCountRegister = 0;
     clear();
     // blockSignals(false);
 }
