@@ -39,108 +39,110 @@ TApplicationProperties *TApplicationProperties::s_instance = nullptr;
 
 TApplicationProperties::TApplicationProperties()
 {
+    // empty
 }
 
 TApplicationProperties::~TApplicationProperties()
 {
+    // empty
 }
 
 void TApplicationProperties::setHomeDir(const QString &path)
 {
-    homePath = path;
+    appHomeDir = path;
 }
 
 void TApplicationProperties::setBinDir(const QString &path)
 {
-    binPath = path;
+    appBinDir = path;
 }
 
 void TApplicationProperties::setShareDir(const QString &path)
 {
-    sharePath = path;
+    appShareDir = path;
 }
 
 void TApplicationProperties::setDataDir(const QString &path)
 {
-    dataPath = path;
+    appDataDir = path;
 }
 
 void TApplicationProperties::setThemeDir(const QString &path)
 {
-    themePath = path;
+    appThemeDir = path;
 }
 
 void TApplicationProperties::setPluginDir(const QString &path)
 {
-    pluginPath = path;
+    appPluginDir = path;
 }
 
 void TApplicationProperties::setCacheDir(const QString &path)
 {
-    cachePath = path;
+    appCacheDir = path;
 }
 
 void TApplicationProperties::setRepositoryDir(const QString &path)
 {
-    repositoryPath = path;
+    appRepositoryDir = path;
 }
 
 void TApplicationProperties::setVersion(const QString &version)
 {
-    versionStr = version;
+    appVersion = version;
 }
 
 void TApplicationProperties::setCodeName(const QString &code)
 {
-    codeNameStr = code;
+    appCodeName = code;
 }
 
 void TApplicationProperties::setRevision(const QString &revision)
 {
-    revisionStr = revision;
+    appRevision = revision;
 }
 
 QString TApplicationProperties::homeDir() const
 {
-    return homePath + "/";
+    return appHomeDir + "/";
 }
 
 QString TApplicationProperties::binDir() const
 {
-    return binPath + "/";
+    return appBinDir + "/";
 }
 
 QString TApplicationProperties::shareDir() const
 {
-    if (sharePath.isEmpty())
-        return homePath + "/share";
+    if (appShareDir.isEmpty())
+        return appHomeDir + "/share";
 
-    return sharePath + "/";
+    return appShareDir + "/";
 }
 
 QString TApplicationProperties::dataDir() const
 {
-    if (dataPath.isEmpty()) {
+    if (appDataDir.isEmpty()) {
         QString locale = QString(QLocale::system().name()).left(2);
         if (locale.length() < 2)
             locale = "en";
-        return sharePath + "/data/xml/" + locale + "/";
+        return appShareDir + "/data/xml/" + locale + "/";
     }
 
-    return dataPath;
+    return appDataDir;
 }
 
 QString TApplicationProperties::themeDir() const
 {
-    if (themePath.isEmpty())
-        return sharePath + "/themes/default/";
+    if (appThemeDir.isEmpty())
+        return appShareDir + "/themes/default/";
 
-    return themePath;
+    return appThemeDir;
 }
 
 QString TApplicationProperties::pluginDir() const
 {
-    return pluginPath + "/";
+    return appPluginDir + "/";
 }
 
 QString TApplicationProperties::configDir() const
@@ -150,27 +152,27 @@ QString TApplicationProperties::configDir() const
 
 QString TApplicationProperties::cacheDir() const
 {
-    return cachePath + "/";
+    return appCacheDir + "/";
 }
 
 QString TApplicationProperties::repositoryDir() const
 {
-    return repositoryPath + "/";
+    return appRepositoryDir + "/";
 }
 
 QString TApplicationProperties::version() const
 {
-    return versionStr;
+    return appVersion;
 }
 
 QString TApplicationProperties::codeName() const
 {
-    return codeNameStr;
+    return appCodeName;
 }
 
 QString TApplicationProperties::revision() const
 {
-    return revisionStr;
+    return appRevision;
 }
 
 TApplicationProperties *TApplicationProperties::instance()
@@ -179,3 +181,4 @@ TApplicationProperties *TApplicationProperties::instance()
         s_instance = new TApplicationProperties;
     return s_instance;
 }
+
