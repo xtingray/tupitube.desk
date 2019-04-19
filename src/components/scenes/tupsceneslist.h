@@ -85,8 +85,7 @@ class TUPITUBE_EXPORT TupScenesList : public TreeListWidget
         void changeCurrentScene();
 
     private:
-        struct Private;
-        Private *const k;
+        int scenesCountRegister;
 };
 
 #endif
