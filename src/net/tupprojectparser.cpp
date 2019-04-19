@@ -35,18 +35,14 @@
 
 #include "tupprojectparser.h"
 
-struct TupProjectParser::Private
+TupProjectParser::TupProjectParser(): TupXmlParserBase()
 {
-    QByteArray data;
-    QStringList users; 
-};
-
-TupProjectParser::TupProjectParser(): TupXmlParserBase() , k(new Private())
-{
+    // empty
 }
 
 TupProjectParser::~TupProjectParser()
 {
+    // empty
 }
 
 bool TupProjectParser::startTag(const QString &tag, const QXmlAttributes &atts)
@@ -74,19 +70,19 @@ bool TupProjectParser::endTag(const QString &tag)
 void TupProjectParser::text(const QString &text)
 {
     if (currentTag() == "users")
-        k->users = text.split(",");
+        users = text.split(",");
 
     if (currentTag() == "data")
-        k->data = QByteArray::fromBase64(text.toLocal8Bit());
+        dataBox = QByteArray::fromBase64(text.toLocal8Bit());
 }
 
 QByteArray TupProjectParser::data()
 {
-    return k->data;
+    return dataBox;
 }
 
 QStringList TupProjectParser::partners() const
 {
-    return k->users;
+    return users;
 }
 
