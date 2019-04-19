@@ -43,33 +43,7 @@
 
 //SQA: Add a field to define the project description 
 
-struct TupNewProject::Private
-{
-    QLineEdit *projectName;
-    QLineEdit *authorName;
-    QLineEdit *tags;
-    QLineEdit *description;
-
-    QColor color;
-    QPushButton *colorButton;
-    QSpinBox *fps;
-
-    QComboBox *presets;
-    TXYSpinBox *size;
-    bool useNetwork;
-
-    QGroupBox *netOptions;
-    QBoxLayout *netLayout;
-
-    QLineEdit *server;
-    QSpinBox *port;
-    QLineEdit *login;
-    QLineEdit *password;
-
-    QCheckBox *storePassword;
-};
-
-TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent), k(new Private)
+TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent)
 {
     setWindowIcon(QPixmap(THEME_DIR + "icons/new.png"));
 
@@ -82,30 +56,30 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent), k(new Private
     QLabel *nameLabel = new QLabel(tr("Project Name"), infoContainer);
     layout->addWidget(nameLabel, 0, 0);
 
-    k->projectName = new QLineEdit(infoContainer);
-    k->projectName->setText(tr("my_project"));
-    layout->addWidget(k->projectName, 0, 1);
+    projectName = new QLineEdit(infoContainer);
+    projectName->setText(tr("my_project"));
+    layout->addWidget(projectName, 0, 1);
 
     QLabel *authorLabel = new QLabel(tr("Author"), infoContainer);
     layout->addWidget(authorLabel, 1, 0);
 
-    k->authorName = new QLineEdit(infoContainer);
-    k->authorName->setText(tr("Your name"));
-    layout->addWidget(k->authorName, 1, 1);
+    authorName = new QLineEdit(infoContainer);
+    authorName->setText(tr("Your name"));
+    layout->addWidget(authorName, 1, 1);
 
     QLabel *tagsLabel = new QLabel(tr("Tags"), infoContainer);
     layout->addWidget(tagsLabel, 2, 0);
 
-    k->tags = new QLineEdit(infoContainer);
-    k->tags->setText(tr("#animation #2D"));
-    layout->addWidget(k->tags, 2, 1);
+    tags = new QLineEdit(infoContainer);
+    tags->setText(tr("#animation #2D"));
+    layout->addWidget(tags, 2, 1);
 
     QLabel *descLabel = new QLabel(tr("Description"), infoContainer);
     layout->addWidget(descLabel, 3, 0);
 
-    k->description = new QLineEdit(infoContainer);
-    k->description->setText(tr("Just for fun!"));
-    layout->addWidget(k->description, 3, 1);
+    description = new QLineEdit(infoContainer);
+    description->setText(tr("Just for fun!"));
+    layout->addWidget(description, 3, 1);
 
     QBoxLayout *presetsLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     QLabel *presetsLabel = new QLabel(tr("Presets") + " ");
@@ -113,20 +87,20 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent), k(new Private
     TCONFIG->beginGroup("PaintArea");
     int presetIndex = TCONFIG->value("DefaultFormat", 3).toInt();
 
-    k->presets = new QComboBox();
-    k->presets->addItem(tr("Free Format"));
-    k->presets->addItem(tr("520x380 - 24"));
-    k->presets->addItem(tr("640x480 - 24"));
-    k->presets->addItem(tr("480 (PAL DV/DVD) - 25"));
-    k->presets->addItem(tr("576 (PAL DV/DVD) - 25"));
-    k->presets->addItem(tr("720 (HD) - 24"));
-    k->presets->addItem(tr("1080 (Mobile) - 24"));
-    k->presets->addItem(tr("1080 (Full HD) - 24"));
+    presets = new QComboBox();
+    presets->addItem(tr("Free Format"));
+    presets->addItem(tr("520x380 - 24"));
+    presets->addItem(tr("640x480 - 24"));
+    presets->addItem(tr("480 (PAL DV/DVD) - 25"));
+    presets->addItem(tr("576 (PAL DV/DVD) - 25"));
+    presets->addItem(tr("720 (HD) - 24"));
+    presets->addItem(tr("1080 (Mobile) - 24"));
+    presets->addItem(tr("1080 (Full HD) - 24"));
 
-    connect(k->presets, SIGNAL(currentIndexChanged(int)), this, SLOT(setPresets(int)));
+    connect(presets, SIGNAL(currentIndexChanged(int)), this, SLOT(setPresets(int)));
 
     presetsLayout->addWidget(presetsLabel);
-    presetsLayout->addWidget(k->presets);
+    presetsLayout->addWidget(presets);
     layout->addLayout(presetsLayout, 4, 0, 1, 2, Qt::AlignCenter);
 
     QGroupBox *renderAndFps= new QGroupBox(tr("Options"));
@@ -137,37 +111,37 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent), k(new Private
     TCONFIG->beginGroup("PaintArea");
     QString colorName = TCONFIG->value("BackgroundDefaultColor", "#ffffff").toString();
 
-    k->color = QColor(colorName);
+    color = QColor(colorName);
 
     // QString textColor = "black";
-    k->colorButton = new QPushButton();
-    k->colorButton->setText(tr("Background"));
-    k->colorButton->setToolTip(tr("Click here to change background color"));
-    k->colorButton->setStyleSheet("QPushButton { background-color: " + k->color.name()
+    colorButton = new QPushButton();
+    colorButton->setText(tr("Background"));
+    colorButton->setToolTip(tr("Click here to change background color"));
+    colorButton->setStyleSheet("QPushButton { background-color: " + color.name()
                                   + "; color: " + labelColor() + "; }");
-    connect(k->colorButton, SIGNAL(clicked()), this, SLOT(setBgColor()));
+    connect(colorButton, SIGNAL(clicked()), this, SLOT(setBgColor()));
 
     QBoxLayout *fpsLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     QLabel *label = new QLabel(tr("FPS"));
-    k->fps = new QSpinBox();
-    k->fps->setValue(24);
+    fps = new QSpinBox();
+    fps->setValue(24);
 
     fpsLayout->addWidget(label);
-    fpsLayout->addWidget(k->fps);
-    subLayout->addWidget(k->colorButton);
+    fpsLayout->addWidget(fps);
+    subLayout->addWidget(colorButton);
     subLayout->addLayout(fpsLayout);
 
-    k->size = new TXYSpinBox(tr("Dimension"), infoContainer);
-    k->size->setMinimum(50);
-    k->size->setMaximum(15000);
-    k->size->setX(520);
-    k->size->setY(380);
+    size = new TXYSpinBox(tr("Dimension"), infoContainer);
+    size->setMinimum(50);
+    size->setMaximum(15000);
+    size->setX(520);
+    size->setY(380);
 
-    connect(k->size, SIGNAL(valuesHaveChanged()), this, SLOT(updateFormatCombo()));
+    connect(size, SIGNAL(valuesHaveChanged()), this, SLOT(updateFormatCombo()));
 
     QWidget *panel = new QWidget;
     QVBoxLayout *sizeLayout = new QVBoxLayout(panel);
-    sizeLayout->addWidget(k->size);
+    sizeLayout->addWidget(size);
 
     layout->addWidget(panel, 5, 0);
     layout->addWidget(renderAndFps, 5, 1);
@@ -181,8 +155,8 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent), k(new Private
     addTab(infoContainer, tr("Project Info"));
 
     QFrame *netContainer = new QFrame();
-    k->netLayout = new QBoxLayout(QBoxLayout::TopToBottom, netContainer);
-    k->netLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    netLayout = new QBoxLayout(QBoxLayout::TopToBottom, netContainer);
+    netLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
 
     setupNetOptions();
 
@@ -191,18 +165,18 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent), k(new Private
     enableNetOptions(false);
 
     if (presetIndex >= 0)
-        k->presets->setCurrentIndex(presetIndex);
+        presets->setCurrentIndex(presetIndex);
 }
 
 TupNewProject::~TupNewProject()
 {
-    if (k->useNetwork) {
+    if (enableUseNetwork) {
         TConfig *config = kApp->config("Network");
-        config->setValue("Server", k->server->text());
-        config->setValue("Port", k->port->value());
-        config->setValue("Login", k->login->text());
-        if (k->storePassword->isChecked()) {
-            config->setValue("Password", k->password->text());
+        config->setValue("Server", server->text());
+        config->setValue("Port", port->value());
+        config->setValue("Login", username->text());
+        if (storePassword->isChecked()) {
+            config->setValue("Password", password->text());
             config->setValue("StorePassword", "1");
         } else {
             config->setValue("Password", "");
@@ -210,115 +184,133 @@ TupNewProject::~TupNewProject()
         }
     }
 
-    delete k;
+    /*
+    SQA: delete this variables causes the app to crash when it creates a project
+
+    delete projectName;
+    delete authorName;
+    delete tags;
+    delete description;
+    delete colorButton;
+    delete fps;
+    delete presets;
+    delete size;
+    delete netOptions;
+    delete netLayout;
+    delete server;
+    delete port;
+    delete username;
+    delete password;
+    delete storePassword;
+    */
 }
 
 void TupNewProject::setupNetOptions()
 {
-    k->server = new QLineEdit;
-    k->port = new QSpinBox;
-    k->port->setMinimum(1024);
-    k->port->setMaximum(65000);
+    server = new QLineEdit;
+    port = new QSpinBox;
+    port->setMinimum(1024);
+    port->setMaximum(65000);
 
-    k->login = new QLineEdit;
-    k->password = new QLineEdit;
+    username = new QLineEdit;
+    password = new QLineEdit;
 
     TConfig *config = kApp->config("Network");
 
-    k->server->setText(config->value("Server", "tupitu.be").toString());
-    k->port->setValue(config->value("Port", 8080).toInt());
+    server->setText(config->value("Server", "tupitu.be").toString());
+    port->setValue(config->value("Port", 8080).toInt());
 
-    k->login->setText(config->value("Login", "").toString());
-    k->password->setText(config->value("Password", "").toString());
+    username->setText(config->value("Login", "").toString());
+    password->setText(config->value("Password", "").toString());
 
-    k->password->setEchoMode(QLineEdit::Password);
+    password->setEchoMode(QLineEdit::Password);
 
     QPlainTextEdit *text = new QPlainTextEdit;
     text->setMaximumHeight(70);
     text->appendPlainText(QString("This feature allows you to work with another artists") 
                            + QString(" around the Internet on the same project in real time."));
     text->setEnabled(false);
-    k->netLayout->addWidget(text);
+    netLayout->addWidget(text);
 
-    k->netOptions = new QGroupBox(tr("Settings"));
-    QVBoxLayout *layout = new QVBoxLayout(k->netOptions);
+    netOptions = new QGroupBox(tr("Settings"));
+    QVBoxLayout *layout = new QVBoxLayout(netOptions);
     layout->addLayout(TFormFactory::makeGrid(QStringList() << tr("Username") << tr("Password") << tr("Server") << tr("Port"), 
-                         QWidgetList() << k->login << k->password << k->server << k->port));
+                         QWidgetList() << username << password << server << port));
 
-    k->netLayout->addWidget(k->netOptions);
+    netLayout->addWidget(netOptions);
 
-    k->storePassword = new QCheckBox(tr("Store password"));
-    k->storePassword->setChecked(TCONFIG->value("StorePassword").toInt());
-    k->netLayout->addWidget(k->storePassword);
+    storePassword = new QCheckBox(tr("Store password"));
+    storePassword->setChecked(TCONFIG->value("StorePassword").toInt());
+    netLayout->addWidget(storePassword);
 }
 
 TupProjectManagerParams *TupNewProject::parameters()
 {
-    if (k->useNetwork) {
+    if (enableUseNetwork) {
         TupNetProjectManagerParams *params = new TupNetProjectManagerParams;
-        params->setProjectName(k->projectName->text());
-        params->setAuthor(k->authorName->text());
-        params->setTags(k->tags->text());
-        params->setDescription(k->description->text());
-        params->setBgColor(k->color);
-        const QSize size(k->size->x(), k->size->y());
-        params->setDimension(size);
-        params->setFPS(k->fps->value());
+        params->setProjectName(projectName->text());
+        params->setAuthor(authorName->text());
+        params->setTags(tags->text());
+        params->setDescription(description->text());
+        params->setBgColor(color);
+        const QSize projectSize(size->x(), size->y());
+        params->setDimension(projectSize);
+        params->setFPS(fps->value());
 
         // Network settings
-        params->setServer(k->server->text());
-        params->setPort(k->port->value());
-        params->setLogin(k->login->text());
-        params->setPassword(k->password->text());
+        params->setServer(server->text());
+        params->setPort(port->value());
+        params->setLogin(username->text());
+        params->setPassword(password->text());
 
         return params;
     }
 
     TupProjectManagerParams *params = new TupProjectManagerParams;
-    params->setProjectName(k->projectName->text());
-    params->setAuthor(k->authorName->text());
-    params->setTags(k->tags->text());
-    params->setDescription(k->description->text());
-    params->setBgColor(k->color);
-    const QSize size(k->size->x(), k->size->y());
-    params->setDimension(size);
-    params->setFPS(k->fps->value());
+    params->setProjectName(projectName->text());
+    params->setAuthor(authorName->text());
+    params->setTags(tags->text());
+    params->setDescription(description->text());
+    params->setBgColor(color);
+    const QSize projectSize(size->x(), size->y());
+    params->setDimension(projectSize);
+    params->setFPS(fps->value());
 
     return params;
 }
 
 bool TupNewProject::useNetwork() const
 {
-    return k->useNetwork;
+    return enableUseNetwork;
 }
 
 void TupNewProject::ok()
 {
-    if (k->projectName->text().isEmpty()) {
+    if (projectName->text().isEmpty()) {
         TOsd::self()->display(tr("Error"), tr("Please, set a name for the project"), TOsd::Error);
         return;
     }
 
-    if (k->useNetwork) {
-        if (k->login->text().isEmpty()) {
+    if (enableUseNetwork) {
+        if (username->text().isEmpty()) {
             TOsd::self()->display(tr("Error"), tr("Please, fill in your username"), TOsd::Error);
             return;
         }
 
-        if (k->password->text().isEmpty()) {
+        if (password->text().isEmpty()) {
             TOsd::self()->display(tr("Error"), tr("Please, fill in your password"), TOsd::Error);
             return;
         }
 
-        if (k->server->text().isEmpty()) {
+        if (server->text().isEmpty()) {
             TOsd::self()->display(tr("Error"), tr("Please, fill in the server name or IP"), TOsd::Error);
             return;
         }
     }
 
     TCONFIG->beginGroup("PaintArea");
-    TCONFIG->setValue("BackgroundDefaultColor", k->color.name());
-    TCONFIG->setValue("DefaultFormat", k->presets->currentIndex());
+    TCONFIG->setValue("BackgroundDefaultColor", color.name());
+    TCONFIG->setValue("DefaultFormat", presets->currentIndex());
     TCONFIG->sync();
 
     TabDialog::ok();
@@ -326,108 +318,110 @@ void TupNewProject::ok()
 
 void TupNewProject::enableNetOptions(bool isEnabled)
 {
-    k->useNetwork = isEnabled;
+    enableUseNetwork = isEnabled;
     enableTab(1, isEnabled);
 }
 
 void TupNewProject::focusProjectLabel() 
 {
-    k->projectName->setFocus();
-    k->projectName->selectAll();
+    projectName->setFocus();
+    projectName->selectAll();
 }
 
 void TupNewProject::setBgColor()
 {
-     k->color = QColorDialog::getColor(k->color, this);
-     QString labelColor = "black";
+    color = QColorDialog::getColor(color, this);
 
-     if (k->color.isValid()) {
-         k->colorButton->setText(k->color.name());
-         k->colorButton->setStyleSheet("QPushButton { background-color: " + k->color.name()
-                                       + "; color: " + this->labelColor() + "; }");
+    // SQA: what is this?
+    QString labelColorStr = "black";
+
+     if (color.isValid()) {
+         colorButton->setText(color.name());
+         colorButton->setStyleSheet("QPushButton { background-color: " + color.name()
+                                       + "; color: " + labelColor() + "; }");
      } else {
-         k->color = QColor("#fff");
-         k->colorButton->setText(tr("White"));
-         k->colorButton->setStyleSheet("QPushButton { background-color: #fff }; color: black;");
+         color = QColor("#fff");
+         colorButton->setText(tr("White"));
+         colorButton->setStyleSheet("QPushButton { background-color: #fff }; color: black;");
      }
 }
 
 void TupNewProject::setPresets(int index)
 {
-    k->size->blockSignals(true);
+    size->blockSignals(true);
 
     switch(index) {
            case FREE: 
            case FORMAT_520:
            {
-               k->size->setX(520);
-               k->size->setY(380);
-               k->fps->setValue(24);
+               size->setX(520);
+               size->setY(380);
+               fps->setValue(24);
            }
            break;
            case FORMAT_640:
            {
-               k->size->setX(640);
-               k->size->setY(480);
-               k->fps->setValue(24);
+               size->setX(640);
+               size->setY(480);
+               fps->setValue(24);
            }
            break;
            case FORMAT_480:
            {
-               k->size->setX(720);
-               k->size->setY(480);
-               k->fps->setValue(25);
+               size->setX(720);
+               size->setY(480);
+               fps->setValue(25);
            }
            break;
            case FORMAT_576:
            {
-               k->size->setX(720);
-               k->size->setY(576);
-               k->fps->setValue(25);
+               size->setX(720);
+               size->setY(576);
+               fps->setValue(25);
            }
            break;
            case FORMAT_720:
            {
-               k->size->setX(1280);
-               k->size->setY(720);
-               k->fps->setValue(24);
+               size->setX(1280);
+               size->setY(720);
+               fps->setValue(24);
            }
            break;
            case FORMAT_MOBILE:
            {
-               k->size->setX(1080);
-               k->size->setY(1080);
-               k->fps->setValue(24);
+               size->setX(1080);
+               size->setY(1080);
+               fps->setValue(24);
            }
            break;
            case FORMAT_1080:
            {
-               k->size->setX(1920);
-               k->size->setY(1080);
-               k->fps->setValue(24);
+               size->setX(1920);
+               size->setY(1080);
+               fps->setValue(24);
            }
            break;
     }
 
-    k->size->blockSignals(false);
+    size->blockSignals(false);
 }
 
 QString TupNewProject::login() const
 {
-    return k->login->text();
+    return username->text();
 }
 
 void TupNewProject::updateFormatCombo()
 {
-    k->presets->blockSignals(true);
-    k->presets->setCurrentIndex(0);
-    k->presets->blockSignals(false);
+    presets->blockSignals(true);
+    presets->setCurrentIndex(0);
+    presets->blockSignals(false);
 }
 
 QString TupNewProject::labelColor() const
 {
     QString text = "white";
-    if (k->color.red() > 50 && k->color.green() > 50 && k->color.blue() > 50)
+    if (color.red() > 50 && color.green() > 50 && color.blue() > 50)
         text = "black";
     return text;
 }

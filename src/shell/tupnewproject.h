@@ -99,8 +99,28 @@ class TupNewProject : public TabDialog
     private:
         QString labelColor() const;
 
-        struct Private;
-        Private *const k;
+        QLineEdit *projectName;
+        QLineEdit *authorName;
+        QLineEdit *tags;
+        QLineEdit *description;
+
+        QColor color;
+        QPushButton *colorButton;
+        QSpinBox *fps;
+
+        QComboBox *presets;
+        TXYSpinBox *size;
+        bool enableUseNetwork;
+
+        QGroupBox *netOptions;
+        QBoxLayout *netLayout;
+
+        QLineEdit *server;
+        QSpinBox *port;
+        QLineEdit *username;
+        QLineEdit *password;
+
+        QCheckBox *storePassword;
 };
 
 #endif
