@@ -35,128 +35,114 @@
 
 #include "tapplicationproperties.h"
 
-TApplicationProperties *TApplicationProperties::s_instance = 0;
+TApplicationProperties *TApplicationProperties::s_instance = nullptr;
 
-struct TApplicationProperties::Private
+TApplicationProperties::TApplicationProperties()
 {
-    QString homeDir;
-    QString binDir;
-    QString shareDir;
-    QString dataDir;
-    QString themeDir;
-    QString repositoryDir;
-    QString pluginDir;
-    QString version;
-    QString codeName;
-    QString revision;
-    QString cacheDir;
-};
-
-TApplicationProperties::TApplicationProperties() : k(new Private)
-{
+    // empty
 }
 
 TApplicationProperties::~TApplicationProperties()
 {
-    delete k;
+    // empty
 }
 
 void TApplicationProperties::setHomeDir(const QString &path)
 {
-    k->homeDir = path;
+    appHomeDir = path;
 }
 
 void TApplicationProperties::setBinDir(const QString &path)
 {
-    k->binDir = path;
+    appBinDir = path;
 }
 
 void TApplicationProperties::setShareDir(const QString &path)
 {
-    k->shareDir = path;
+    appShareDir = path;
 }
 
 void TApplicationProperties::setDataDir(const QString &path)
 {
-    k->dataDir = path;
+    appDataDir = path;
 }
 
 void TApplicationProperties::setThemeDir(const QString &path)
 {
-    k->themeDir = path;
+    appThemeDir = path;
 }
 
 void TApplicationProperties::setPluginDir(const QString &path)
 {
-    k->pluginDir = path;
+    appPluginDir = path;
 }
 
 void TApplicationProperties::setCacheDir(const QString &path)
 {
-    k->cacheDir = path;
+    appCacheDir = path;
 }
 
 void TApplicationProperties::setRepositoryDir(const QString &path)
 {
-    k->repositoryDir = path;
+    appRepositoryDir = path;
 }
 
 void TApplicationProperties::setVersion(const QString &version)
 {
-    k->version = version;
+    appVersion = version;
 }
 
 void TApplicationProperties::setCodeName(const QString &code)
 {
-    k->codeName = code;
+    appCodeName = code;
 }
 
 void TApplicationProperties::setRevision(const QString &revision)
 {
-    k->revision = revision;
+    appRevision = revision;
 }
 
 QString TApplicationProperties::homeDir() const
 {
-    return k->homeDir + "/";
+    return appHomeDir + "/";
 }
 
 QString TApplicationProperties::binDir() const
 {
-    return k->binDir + "/";
+    return appBinDir + "/";
 }
 
 QString TApplicationProperties::shareDir() const
 {
-    if (k->shareDir.isEmpty())
-        return k->homeDir + "/share";
+    if (appShareDir.isEmpty())
+        return appHomeDir + "/share";
 
-    return k->shareDir + "/";
+    return appShareDir + "/";
 }
 
 QString TApplicationProperties::dataDir() const
 {
-    if (k->dataDir.isEmpty()) {
+    if (appDataDir.isEmpty()) {
         QString locale = QString(QLocale::system().name()).left(2);
         if (locale.length() < 2)
             locale = "en";
-        return k->shareDir + "/data/xml/" + locale + "/";
+        return appShareDir + "/data/xml/" + locale + "/";
     }
 
-    return k->dataDir;
+    return appDataDir;
 }
 
 QString TApplicationProperties::themeDir() const
 {
-    if (k->themeDir.isEmpty())
-        return k->shareDir + "/themes/default/";
+    if (appThemeDir.isEmpty())
+        return appShareDir + "/themes/default/";
 
-    return k->themeDir;
+    return appThemeDir;
 }
 
 QString TApplicationProperties::pluginDir() const
 {
-    return k->pluginDir + "/";
+    return appPluginDir + "/";
 }
 
 QString TApplicationProperties::configDir() const
@@ -166,27 +152,27 @@ QString TApplicationProperties::configDir() const
 
 QString TApplicationProperties::cacheDir() const
 {
-    return k->cacheDir + "/";
+    return appCacheDir + "/";
 }
 
 QString TApplicationProperties::repositoryDir() const
 {
-    return k->repositoryDir + "/";
+    return appRepositoryDir + "/";
 }
 
 QString TApplicationProperties::version() const
 {
-    return k->version;
+    return appVersion;
 }
 
 QString TApplicationProperties::codeName() const
 {
-    return k->codeName;
+    return appCodeName;
 }
 
 QString TApplicationProperties::revision() const
 {
-    return k->revision;
+    return appRevision;
 }
 
 TApplicationProperties *TApplicationProperties::instance()
