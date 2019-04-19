@@ -35,7 +35,7 @@
 
 #include "tapplicationproperties.h"
 
-TApplicationProperties *TApplicationProperties::s_instance = 0;
+TApplicationProperties *TApplicationProperties::s_instance = nullptr;
 
 TApplicationProperties::TApplicationProperties()
 {

@@ -66,8 +66,9 @@ class TUPITUBE_EXPORT TupTwitterWidget : public QWidget
         void keyPressEvent(QKeyEvent *event); 
 
     private:
-        struct Private;
-        Private *const k;
+        QSplitter *separator;
+        QTextBrowser *pageArea;
+        QTextDocument *document;
 };
 
 #endif

@@ -35,16 +35,7 @@
 
 #include "tupsceneswidget.h"
 
-struct TupScenesWidget::Private
-{
-    QButtonGroup *buttonGroup;
-    TupScenesList *scenesTable;
-
-    bool renaming;
-    QString oldId;
-};
-
-TupScenesWidget::TupScenesWidget(QWidget *parent) : TupModuleWidgetBase(parent, "TupScenesWidget"), k(new Private)
+TupScenesWidget::TupScenesWidget(QWidget *parent) : TupModuleWidgetBase(parent, "TupScenesWidget")
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -70,7 +61,8 @@ TupScenesWidget::~TupScenesWidget()
         #endif
     #endif
 
-    delete k;
+    delete buttonGroup;
+    delete scenesTable;
 }
 
 void TupScenesWidget::setupButtons()
@@ -90,22 +82,22 @@ void TupScenesWidget::setupButtons()
 
 void TupScenesWidget::setupTableScenes()
 {
-    k->scenesTable = new TupScenesList(this);
+    scenesTable = new TupScenesList(this);
 
-    TreeWidgetSearchLine *searcher = new TreeWidgetSearchLine(this, k->scenesTable);
+    TreeWidgetSearchLine *searcher = new TreeWidgetSearchLine(this, scenesTable);
     searcher->setClickMessage(tr("Filter here..."));
 
     addChild(searcher);
-    addChild(k->scenesTable);
+    addChild(scenesTable);
 
     // SQA: All these connections are really necessary? Please check! 
 
-    connect(k->scenesTable, SIGNAL(changeCurrent(int)), this, SLOT(selectScene(int)));
+    connect(scenesTable, SIGNAL(changeCurrent(int)), this, SLOT(selectScene(int)));
 
-    connect(k->scenesTable, SIGNAL(itemRenamed(QTreeWidgetItem *)), this,
+    connect(scenesTable, SIGNAL(itemRenamed(QTreeWidgetItem *)), this,
             SLOT(renameObject(QTreeWidgetItem*)));
 
-    connect(k->scenesTable, SIGNAL(itemChanged(QTreeWidgetItem*, int)), this,
+    connect(scenesTable, SIGNAL(itemChanged(QTreeWidgetItem*, int)), this,
                                    SLOT(refreshItem(QTreeWidgetItem*)));
 }
 
@@ -137,7 +129,7 @@ void TupScenesWidget::selectScene(int index)
         #endif
     #endif
 
-    if (k->scenesTable->scenesCount() > 1) {
+    if (scenesTable->scenesCount() > 1) {
         TupProjectRequest event = TupRequestBuilder::createSceneRequest(index, TupProjectRequest::Select);
         emit localRequestTriggered(&event);
     }
@@ -153,11 +145,11 @@ void TupScenesWidget::emitRequestInsertScene()
         #endif
     #endif
 
-    int index = k->scenesTable->scenesCount();
+    int index = scenesTable->scenesCount();
     int label = index + 1;
     QString name = tr("Scene %1").arg(label);
 
-    while (k->scenesTable->nameExists(name)) {
+    while (scenesTable->nameExists(name)) {
            label++;
            name = tr("Scene %1").arg(label);
     }
@@ -186,9 +178,9 @@ void TupScenesWidget::emitRequestRemoveScene()
         #endif
     #endif
 
-    int index = k->scenesTable->currentSceneIndex();
+    int index = scenesTable->currentSceneIndex();
 
-    if (k->scenesTable->scenesCount() == 1) {
+    if (scenesTable->scenesCount() == 1) {
         TupProjectRequest event = TupRequestBuilder::createSceneRequest(index, TupProjectRequest::Reset, 
                                                                       tr("Scene %1").arg(1));
         emit requestTriggered(&event);
@@ -196,7 +188,7 @@ void TupScenesWidget::emitRequestRemoveScene()
         TupProjectRequest event = TupRequestBuilder::createSceneRequest(index, TupProjectRequest::Remove);
         emit requestTriggered(&event);
 
-        if (k->scenesTable->scenesCount() == index)
+        if (scenesTable->scenesCount() == index)
             index--;
 
         if (index >= 0) {
@@ -217,7 +209,7 @@ void TupScenesWidget::closeAllScenes()
     #endif
 
     blockSignals(true);
-    k->scenesTable->resetUI();
+    scenesTable->resetUI();
     blockSignals(false);
 }
 
@@ -238,28 +230,28 @@ void TupScenesWidget::sceneResponse(TupSceneResponse *e)
     switch (e->getAction()) {
             case TupProjectRequest::Add:
              {
-               k->scenesTable->insertScene(index, e->getArg().toString());
+               scenesTable->insertScene(index, e->getArg().toString());
              }
             break;
             case TupProjectRequest::Remove:
              {
-               k->scenesTable->removeScene(index);
+               scenesTable->removeScene(index);
              }
             break;
             case TupProjectRequest::Reset:
              {
-               k->scenesTable->renameScene(index, e->getArg().toString());
+               scenesTable->renameScene(index, e->getArg().toString());
              }
             break;
             case TupProjectRequest::Rename:
              {
-               k->scenesTable->renameScene(index, e->getArg().toString());
+               scenesTable->renameScene(index, e->getArg().toString());
              }
             break;
             case TupProjectRequest::Select:
              {
-               if (k->scenesTable->currentSceneIndex() != index)
-                   k->scenesTable->selectScene(index);
+               if (scenesTable->currentSceneIndex() != index)
+                   scenesTable->selectScene(index);
              }
             break;
             default: 
@@ -270,18 +262,18 @@ void TupScenesWidget::sceneResponse(TupSceneResponse *e)
 void TupScenesWidget::renameObject(QTreeWidgetItem* item)
 {
     if (item) {
-        k->renaming = true;
-        k->oldId = item->text(1);
-        k->scenesTable->editItem(item, 0);
+        renaming = true;
+        oldId = item->text(1);
+        scenesTable->editItem(item, 0);
     } 
 }
 
 void TupScenesWidget::refreshItem(QTreeWidgetItem *item)
 {
-    if (k->renaming) {
-        TupProjectRequest event = TupRequestBuilder::createSceneRequest(k->scenesTable->currentSceneIndex(), 
+    if (renaming) {
+        TupProjectRequest event = TupRequestBuilder::createSceneRequest(scenesTable->currentSceneIndex(),
                                                                       TupProjectRequest::Rename, item->text(0));
         emit requestTriggered(&event);
-        k->renaming = false;
+        renaming = false;
     }
 }

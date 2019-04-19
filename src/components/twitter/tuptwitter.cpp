@@ -52,25 +52,7 @@ QString TupTwitter::TUPITUBE_VIDEOS = QString("updates/videos.xml");
 QString TupTwitter::TUPITUBE_IMAGES = QString("updates/images/");
 QString TupTwitter::BROWSER_FINGERPRINT = QString("Tupi_Browser 2.0");
 
-struct TupTwitter::Private
-{
-    QNetworkAccessManager *manager;
-    QNetworkRequest request;
-    QNetworkReply *reply;
-
-    QString version;
-    QString revision;
-    QString codeName;
-    QString word;
-    QString url;
-    QString webMsg;
-    bool update;
-    bool showAds;
-    QString themeName;
-    QString locale;
-};
-
-TupTwitter::TupTwitter(QWidget *parent) : QWidget(parent), k(new Private)
+TupTwitter::TupTwitter(QWidget *parent) : QWidget(parent)
 {
     /*
     #ifdef TUP_DEBUG
@@ -80,19 +62,19 @@ TupTwitter::TupTwitter(QWidget *parent) : QWidget(parent), k(new Private)
     #endif
     */
 
-    k->update = false;
+    update = false;
     TCONFIG->beginGroup("General");
-    k->themeName = TCONFIG->value("Theme", "Light").toString();
-    k->showAds = TCONFIG->value("ShowAds", true).toBool();
+    themeName = TCONFIG->value("Theme", "Light").toString();
+    showAds = TCONFIG->value("ShowAds", true).toBool();
 
-    k->locale = QString(QLocale::system().name()).left(2);
-    if (k->locale.length() < 2) {
-        k->locale = "en";
+    locale = QString(QLocale::system().name()).left(2);
+    if (locale.length() < 2) {
+        locale = "en";
     } else {
         QList<QString> localeSupport;
         localeSupport << "en" << "es" << "pt";
-        if (!localeSupport.contains(k->locale))
-            k->locale = "en";
+        if (!localeSupport.contains(locale))
+            locale = "en";
     }
 }
 
@@ -109,15 +91,15 @@ void TupTwitter::start()
         #endif
     #endif
 
-    k->manager = new QNetworkAccessManager(this);
-    connect(k->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(closeRequest(QNetworkReply*)));
+    manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(closeRequest(QNetworkReply*)));
 
-    k->request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
-    k->request.setUrl(QUrl(url));
-    k->request.setRawHeader("User-Agent", BROWSER_FINGERPRINT.toLatin1());
+    request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+    request.setUrl(QUrl(url));
+    request.setRawHeader("User-Agent", BROWSER_FINGERPRINT.toLatin1());
 
-    k->reply = k->manager->get(k->request);
-    connect(k->reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    reply = manager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 TupTwitter::~TupTwitter()
@@ -130,11 +112,10 @@ TupTwitter::~TupTwitter()
         #endif
     #endif
 
-    delete k->manager;
-    k->manager = NULL;
-    delete k->reply;
-    k->reply = NULL;
-    delete k;
+    delete manager;
+    manager = nullptr;
+    delete reply;
+    reply = nullptr;
 }
 
 void TupTwitter::requestFile(const QString &target)
@@ -148,9 +129,9 @@ void TupTwitter::requestFile(const QString &target)
         #endif
     #endif
 
-    k->request.setUrl(QUrl(target));
-    k->request.setRawHeader("User-Agent", BROWSER_FINGERPRINT.toLatin1());
-    k->reply = k->manager->get(k->request);
+    request.setUrl(QUrl(target));
+    request.setRawHeader("User-Agent", BROWSER_FINGERPRINT.toLatin1());
+    reply = manager->get(request);
 }
 
 void TupTwitter::closeRequest(QNetworkReply *reply)
@@ -226,10 +207,10 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
                             #endif
                         #endif
                     }
-                    requestFile(MAEFLORESTA_URL + TUPITUBE_WEB_MSG + k->locale + ".html");
+                    requestFile(MAEFLORESTA_URL + TUPITUBE_WEB_MSG + locale + ".html");
                 } else {
                     if (answer.startsWith("<webmsg>")) { // Getting web msg
-                        if (k->showAds) {
+                        if (showAds) {
                             saveFile(answer, "webmsg.html");
                             if (answer.contains("<image>")) {
                                 QString code = getImageCode(answer) + ".png";
@@ -246,8 +227,8 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
                     } else {
                         if (answer.startsWith("<youtube>")) { // Getting video list
                             saveFile(answer, "videos.xml");
-                            k->reply->deleteLater();
-                            k->manager->deleteLater();
+                            reply->deleteLater();
+                            manager->deleteLater();
                         } else {
                             #ifdef TUP_DEBUG
                                 QString msg = "TupTwitter::closeRequest() - Network Error: Invalid data!";
@@ -362,23 +343,23 @@ void TupTwitter::checkSoftwareUpdates(QByteArray array)
             QDomElement e = n.toElement();
             if (!e.isNull()) {
                 if (e.tagName() == "branch") {
-                    k->version = e.text();
-                    if (k->version.compare(kAppProp->version())!=0)
-                        k->update = true;
+                    version = e.text();
+                    if (version.compare(kAppProp->version())!=0)
+                        update = true;
                 } else if (e.tagName() == "rev") {
-                    k->revision = e.text();
-                    if (k->revision.compare(kAppProp->revision())!=0)
-                        k->update = true;
+                    revision = e.text();
+                    if (revision.compare(kAppProp->revision())!=0)
+                        update = true;
                 } else if (e.tagName() == "codeName") {
-                    k->codeName = e.text();
+                    codeName = e.text();
                 }
             }
             n = n.nextSibling();
         }
 
         #ifdef TUP_DEBUG
-            QString msg1 = "TupTwitter::checkSoftwareUpdates() - Update Flag: " + QString::number(k->update);
-            QString msg2 = "Server Version: " + k->version + " - Revision: " + k->revision + " - Code Name: " + k->codeName;
+            QString msg1 = "TupTwitter::checkSoftwareUpdates() - Update Flag: " + QString::number(update);
+            QString msg2 = "Server Version: " + version + " - Revision: " + revision + " - Code Name: " + codeName;
             QString msg3 = "Local Version: " + kAppProp->version() + " - Revision: " + kAppProp->revision();
             #ifdef Q_OS_WIN
                 qWarning() << msg1;
@@ -391,7 +372,7 @@ void TupTwitter::checkSoftwareUpdates(QByteArray array)
             #endif
         #endif
 
-        emit newUpdate(k->update);
+        emit newUpdate(update);
     }
 }
 
@@ -415,7 +396,7 @@ void TupTwitter::formatStatus(QByteArray array)
     html += "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:tupitube.css\">\n";
     html += "</head>\n";
 
-    if (k->themeName.compare("Dark") == 0) {
+    if (themeName.compare("Dark") == 0) {
         html += "<body class=\"twitter_gray\">\n";
         html += "<div class=\"tupi_background5\">";
     } else {
@@ -426,15 +407,15 @@ void TupTwitter::formatStatus(QByteArray array)
     html += "<center><img src=\"file:maefloresta.png\" alt=\"maefloresta\"/></center>\n";
     html += "<div class=\"twitter_headline\"><center>&nbsp;&nbsp;@tupitube</center></div></div>\n";
     QString css = "twitter_tupi_version";  
-    if (k->update)
+    if (update)
         css = "twitter_tupi_update"; 
 
     html += "<div class=\"" + css + "\"><center>\n";
-    html += tr("Latest Version") + ": <b>" + k->version + "</b> &nbsp;&nbsp;&nbsp;"; 
-    html += tr("Revision") + ": <b>" + k->revision + "</b> &nbsp;&nbsp;&nbsp;";
-    html += tr("Code Name") + ": <b>" + k->codeName + "</b>";
+    html += tr("Latest Version") + ": <b>" + version + "</b> &nbsp;&nbsp;&nbsp;";
+    html += tr("Revision") + ": <b>" + revision + "</b> &nbsp;&nbsp;&nbsp;";
+    html += tr("Code Name") + ": <b>" + codeName + "</b>";
 
-    if (k->update)
+    if (update)
         html += "&nbsp;&nbsp;&nbsp;<b>[</b> <a href=\"https://www.maefloresta.com\">" + tr("It's time to upgrade! Click here!") + "</a>  <b>]</b>"; 
 
     html += "</center></div>\n";

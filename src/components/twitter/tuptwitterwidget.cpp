@@ -35,26 +35,19 @@
 
 #include "tuptwitterwidget.h"
 
-struct TupTwitterWidget::Private
-{
-    QSplitter *separator;
-    QTextBrowser *pageArea;
-    QTextDocument *document;
-};
-
-TupTwitterWidget::TupTwitterWidget(QWidget *parent) : QWidget(parent), k(new Private)
+TupTwitterWidget::TupTwitterWidget(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle(tr("News!"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/news_mode.png")));
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setMargin(15);
-    k->separator = new QSplitter(this);
-    layout->addWidget(k->separator);
+    separator = new QSplitter(this);
+    layout->addWidget(separator);
 
-    k->pageArea = new QTextBrowser(k->separator);
-    k->document = new QTextDocument(k->pageArea);
-    k->pageArea->setDocument(k->document);
+    pageArea = new QTextBrowser(separator);
+    document = new QTextDocument(pageArea);
+    pageArea->setDocument(document);
 }
 
 TupTwitterWidget::~TupTwitterWidget()
@@ -66,8 +59,6 @@ TupTwitterWidget::~TupTwitterWidget()
             TEND;
         #endif
     #endif
-
-    delete k;
 }
 
 void TupTwitterWidget::setSource(const QString &filePath)
@@ -82,9 +73,9 @@ void TupTwitterWidget::setSource(const QString &filePath)
 
     path << resources + "css";
     path << resources + "images";
-    k->pageArea->setSearchPaths(path);
-    k->pageArea->setOpenExternalLinks(true);
-    k->pageArea->setSource(QUrl::fromLocalFile(filePath));
+    pageArea->setSearchPaths(path);
+    pageArea->setOpenExternalLinks(true);
+    pageArea->setSource(QUrl::fromLocalFile(filePath));
 }
 
 void TupTwitterWidget::keyPressEvent(QKeyEvent *event) {
