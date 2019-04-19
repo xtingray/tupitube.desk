@@ -90,8 +90,11 @@ class TUPITUBE_EXPORT TupScenesWidget : public TupModuleWidgetBase
         void selectScene(int index);
 
     private:
-        struct Private;
-        Private *const k;
+        QButtonGroup *buttonGroup;
+        TupScenesList *scenesTable;
+
+        bool renaming;
+        QString oldId;
 };
 
 #endif
