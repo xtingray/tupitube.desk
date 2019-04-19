@@ -80,17 +80,17 @@ class T_CORE_EXPORT TApplicationProperties
     private:
         static TApplicationProperties *s_instance;
 
-        QString appHomeDir;
-        QString appBinDir;
-        QString appShareDir;
-        QString appDataDir;
-        QString appThemeDir;
-        QString appRepositoryDir;
-        QString appPluginDir;
-        QString appVersion;
-        QString appCodeName;
-        QString appRevision;
-        QString appCacheDir;
+        QString homePath;
+        QString binPath;
+        QString sharePath;
+        QString dataPath;
+        QString themePath;
+        QString repositoryPath;
+        QString pluginPath;
+        QString versionStr;
+        QString codeNameStr;
+        QString revisionStr;
+        QString cachePath;
 };
 
 #define kAppProp TApplicationProperties::instance()
@@ -105,4 +105,3 @@ class T_CORE_EXPORT TApplicationProperties
 #define REPOSITORY_DIR kAppProp->repositoryDir()
 
 #endif
-
