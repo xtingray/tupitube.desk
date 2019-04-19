@@ -52,8 +52,8 @@ class TUPITUBE_EXPORT TupProjectParser : public TupXmlParserBase
         QStringList partners() const;
      
     private:
-        struct Private;
-        Private *const k;
+        QByteArray dataBox;
+        QStringList users;
 };
 
 #endif
