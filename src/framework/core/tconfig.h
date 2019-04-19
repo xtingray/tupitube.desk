@@ -84,8 +84,16 @@ class T_CORE_EXPORT TConfig : public QObject
     private:
         static TConfig *m_instance;
 
-        class Private;
-        Private * const k;
+        QDomDocument domDocument;
+        QString path;
+
+        bool isFirstTime;
+        bool isConfigOk;
+        QDir configDirectory;
+
+        QHash<QString, QDomElement> groups;
+        QDomElement currentElementsGroup;
+        QString lastGroup;
 };
 
 #define TCONFIG TConfig::instance()

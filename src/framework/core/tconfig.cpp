@@ -35,24 +35,9 @@
 
 #include "tconfig.h"
 
-class TConfig::Private
-{
-    public:
-        QDomDocument document;
-        QString path;
+TConfig* TConfig::m_instance = nullptr;
 
-        bool firstTime;
-        bool isOk;
-        QDir configDirectory;
-
-        QHash<QString, QDomElement> groups;
-        QDomElement currentGroup;
-        QString lastGroup;
-};
-
-TConfig* TConfig::m_instance = 0;
-
-TConfig::TConfig() : QObject(), k(new Private)
+TConfig::TConfig() : QObject()
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -63,12 +48,12 @@ TConfig::TConfig() : QObject(), k(new Private)
     #endif
 
     QString base = QDir::homePath() + "/";
-    k->configDirectory.setPath(base + "." + QCoreApplication::applicationName());
+    configDirectory.setPath(base + "." + QCoreApplication::applicationName());
 
-    if (!k->configDirectory.exists()) {
-        k->firstTime = true;
+    if (!configDirectory.exists()) {
+        isFirstTime = true;
         #ifdef TUP_DEBUG
-            QString msg = "TConfig::TConfig() - Config file doesn't exist. Creating path: " + k->configDirectory.path();
+            QString msg = "TConfig::TConfig() - Config file doesn't exist. Creating path: " + configDirectory.path();
             #ifdef Q_OS_WIN
                 qWarning() << msg;
             #else
@@ -76,9 +61,9 @@ TConfig::TConfig() : QObject(), k(new Private)
             #endif
         #endif
 
-        if (!k->configDirectory.mkdir(k->configDirectory.path())) {
+        if (!configDirectory.mkdir(configDirectory.path())) {
             #ifdef TUP_DEBUG
-                QString msg = "TConfig::TConfig() - Fatal Error: Can't create path -> " + k->configDirectory.path();
+                QString msg = "TConfig::TConfig() - Fatal Error: Can't create path -> " + configDirectory.path();
                 #ifdef Q_OS_WIN
                     qDebug() << msg;
                 #else
@@ -87,10 +72,10 @@ TConfig::TConfig() : QObject(), k(new Private)
             #endif
         }
     } else {
-        k->firstTime = false;
+        isFirstTime = false;
     }
 
-    k->path = k->configDirectory.path() + "/" + QCoreApplication::applicationName().toLower() + ".cfg";
+    path = configDirectory.path() + "/" + QCoreApplication::applicationName().toLower() + ".cfg";
     checkConfigFile();
 }
 
@@ -118,16 +103,16 @@ TConfig *TConfig::instance()
 
 void TConfig::checkConfigFile()
 {
-    QFile config(k->path);
-    k->isOk = false;
+    QFile config(path);
+    isConfigOk = false;
 
     if (config.exists()) {
         QString errorMsg = "";
         int errorLine = 0;
         int errorColumn = 0;
 
-        k->isOk = k->document.setContent(&config, &errorMsg, &errorLine, &errorColumn);
-        if (!k->isOk) {
+        isConfigOk = domDocument.setContent(&config, &errorMsg, &errorLine, &errorColumn);
+        if (!isConfigOk) {
             #ifdef TUP_DEBUG
                 QString msg1 = "TConfig::checkConfigFile() - Fatal Error: Configuration file is corrupted - Line: " + QString::number(errorLine) + " - Column: " + QString::number(errorColumn);
                 QString msg2 = "TConfig::checkConfigFile() - Message: " + errorMsg;
@@ -141,64 +126,64 @@ void TConfig::checkConfigFile()
             #endif
         } else {
             if (configVersion() < QString(CONFIG_VERSION).toInt())
-                k->isOk = false;
+                isConfigOk = false;
         }
 
         config.close();
     }
 
-    if (!k->isOk)
+    if (!isConfigOk)
         initConfigFile();
 }
 
 void TConfig::initConfigFile()
 {
-    k->document.clear();
-    QDomProcessingInstruction header = k->document.createProcessingInstruction("xml","version=\"1.0\" encoding=\"UTF-8\"");
-    k->document.appendChild(header);
+    domDocument.clear();
+    QDomProcessingInstruction header = domDocument.createProcessingInstruction("xml","version=\"1.0\" encoding=\"UTF-8\"");
+    domDocument.appendChild(header);
 
-    QDomElement root = k->document.createElement("Config");
+    QDomElement root = domDocument.createElement("Config");
     root.setAttribute("version", CONFIG_VERSION);
-    k->document.appendChild(root);
+    domDocument.appendChild(root);
 
-    k->firstTime = true;
-    k->isOk = true;
+    isFirstTime = true;
+    isConfigOk = true;
 }
 
 int TConfig::configVersion()
 {
-   QDomElement root = k->document.documentElement();
-   int version = root.attribute("version", 0).toInt();
+   QDomElement root = domDocument.documentElement();
+   int version = root.attribute("version", nullptr).toInt();
 
    return version;
 }
 
 bool TConfig::firstTime()
 {
-    return k->firstTime;
+    return isFirstTime;
 }
 
 bool TConfig::isOk()
 {
-    return k->isOk;
+    return isConfigOk;
 }
 
 QDomDocument TConfig::document()
 {
-    return k->document;
+    return domDocument;
 }
 
 void TConfig::sync()
 {
-    QFile file(k->path);
+    QFile file(path);
 
     if (file.open(QIODevice::WriteOnly)) {
         QTextStream st(&file);
-        st << k->document.toString() << endl;
-        k->isOk = true;
+        st << domDocument.toString() << endl;
+        isConfigOk = true;
         file.close();
     } else {
-        k->isOk = false;
+        isConfigOk = false;
     }
 
     checkConfigFile();
@@ -210,29 +195,29 @@ void TConfig::beginGroup(const QString & prefix)
     stripped.replace(' ', "_");
     stripped.replace('\n', "");
 
-    k->lastGroup = k->currentGroup.tagName();
+    lastGroup = currentElementsGroup.tagName();
 
-    if (k->groups.contains(stripped)) {
-        k->currentGroup = k->groups[stripped];
+    if (groups.contains(stripped)) {
+        currentElementsGroup = groups[stripped];
     } else {
-        k->currentGroup = find(k->document.documentElement(), stripped);
+        currentElementsGroup = find(domDocument.documentElement(), stripped);
 
-        if (k->currentGroup.isNull()) {
-            k->currentGroup = k->document.createElement(stripped);
-            k->document.documentElement().appendChild(k->currentGroup);
+        if (currentElementsGroup.isNull()) {
+            currentElementsGroup = domDocument.createElement(stripped);
+            domDocument.documentElement().appendChild(currentElementsGroup);
         }
     }
 }
 
 void TConfig::endGroup()
 {
-    if (!k->lastGroup.isEmpty())
-        beginGroup(k->lastGroup);
+    if (!lastGroup.isEmpty())
+        beginGroup(lastGroup);
 }
 
 void TConfig::setValue(const QString & key, const QVariant & value)
 {
-    QDomElement element = find(k->currentGroup, key);
+    QDomElement element = find(currentElementsGroup, key);
 
     if (!element.isNull()) {
         if (value.canConvert(QVariant::StringList)) {
@@ -242,7 +227,7 @@ void TConfig::setValue(const QString & key, const QVariant & value)
             element.setAttribute("value", value.toString());
         }
     } else {
-        element = k->document.createElement(key);
+        element = domDocument.createElement(key);
 
         if (value.canConvert(QVariant::StringList)) {
             QStringList list = value.toStringList();
@@ -251,13 +236,13 @@ void TConfig::setValue(const QString & key, const QVariant & value)
             element.setAttribute("value", value.toString());
         }
 
-        k->currentGroup.appendChild(element);
+        currentElementsGroup.appendChild(element);
     }
 }
 
 QVariant TConfig::value(const QString & key, const QVariant & defaultValue) const
 {
-   QDomElement element = find(k->currentGroup, key); // Current group or root?
+   QDomElement element = find(currentElementsGroup, key); // Current group or root?
 	
    if (element.isNull())
        return defaultValue;
@@ -294,5 +279,5 @@ QDomElement TConfig::find(const QDomElement &element, const QString &key) const
 
 QString TConfig::currentGroup()
 {
-    return k->lastGroup;
+    return lastGroup;
 }
