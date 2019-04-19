@@ -76,8 +76,20 @@ class TUPITUBE_EXPORT TupTwitter : public QWidget
         static QString TUPITUBE_IMAGES;
         static QString BROWSER_FINGERPRINT;
 
-        struct Private;
-        Private *const k;
+        QNetworkAccessManager *manager;
+        QNetworkRequest request;
+        QNetworkReply *reply;
+
+        QString version;
+        QString revision;
+        QString codeName;
+        QString word;
+        QString url;
+        QString webMsg;
+        bool update;
+        bool showAds;
+        QString themeName;
+        QString locale;
 };
 
 #endif
