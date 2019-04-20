@@ -48,7 +48,7 @@ class TUPITUBE_EXPORT TupSocketBase : public QTcpSocket
     Q_OBJECT
 
     public:
-        TupSocketBase(QObject *parent = 0);
+        TupSocketBase(QObject *parent = nullptr);
         ~TupSocketBase();
         
         void send(const QString &str);
@@ -64,8 +64,7 @@ class TUPITUBE_EXPORT TupSocketBase : public QTcpSocket
         void clearQueue();
         
     private:
-        struct Private;
-        Private *const k;
+        QQueue<QString> queue;
         
 };
 

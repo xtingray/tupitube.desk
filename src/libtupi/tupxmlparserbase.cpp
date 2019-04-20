@@ -35,23 +35,12 @@
 
 #include "tupxmlparserbase.h"
 
-struct TupXmlParserBase::Private
-{
-    QString currentTag;
-    QString root;
-    bool isParsing;
-    bool readText;
-    bool ignore;
-    QString document;
-};
-
-TupXmlParserBase::TupXmlParserBase() : QXmlDefaultHandler(), k(new Private)
+TupXmlParserBase::TupXmlParserBase() : QXmlDefaultHandler()
 {
 }
 
 TupXmlParserBase::~TupXmlParserBase()
 {
-    delete k;
 }
 
 void TupXmlParserBase::initialize()
@@ -60,11 +49,11 @@ void TupXmlParserBase::initialize()
 
 bool TupXmlParserBase::startDocument()
 {
-    k->isParsing = true;
-    k->currentTag = QString();
-    k->root = QString();
-    k->readText = false;
-    k->ignore = false;
+    isParsing = true;
+    gTag = QString();
+    rootStr = QString();
+    readText = false;
+    ignore = false;
 
     initialize();
     return true;
@@ -72,20 +61,20 @@ bool TupXmlParserBase::startDocument()
 
 bool TupXmlParserBase::endDocument()
 {
-    k->isParsing = false;
+    isParsing = false;
     return true;
 }
 
 bool TupXmlParserBase::startElement(const QString& , const QString& , const QString& qname, const QXmlAttributes& atts)
 {
-     if (k->ignore) 
+     if (ignore)
          return true;
 	
-     if (k->root.isEmpty())
-         k->root = qname;
+     if (rootStr.isEmpty())
+         rootStr = qname;
 
      bool r = startTag(qname, atts);
-     k->currentTag = qname;
+     gTag = qname;
 
      return r;
 }
@@ -97,12 +86,12 @@ bool TupXmlParserBase::endElement(const QString&, const QString& , const QString
 
 bool TupXmlParserBase::characters(const QString & ch)
 {
-     if (k->ignore) 
+     if (ignore)
          return true;
 
-     if (k->readText) {
+     if (readText) {
          text(ch.simplified());
-         k->readText = false;
+         readText = false;
      }
 
      return true;
@@ -116,7 +105,7 @@ bool TupXmlParserBase::error(const QXmlParseException & exception)
         qDebug() << msg1;
     #else
 	    tWarning() << exception.lineNumber() << "x" << exception.columnNumber() << ": " << exception.message();
-        tWarning() << __PRETTY_FUNCTION__ << " Document: " << k->document;		
+        tWarning() << __PRETTY_FUNCTION__ << " Document: " << document;
         #endif
 #else
      Q_UNUSED(exception);
@@ -132,7 +121,7 @@ bool TupXmlParserBase::fatalError(const QXmlParseException & exception)
         qDebug() << msg1;
     #else
         tFatal() << exception.lineNumber() << "x" << exception.columnNumber() << ": " << exception.message();
-        tWarning() << __PRETTY_FUNCTION__ << " Document: " << k->document;	
+        tWarning() << __PRETTY_FUNCTION__ << " Document: " << document;
     #endif
 #else
      Q_UNUSED(exception);
@@ -143,23 +132,22 @@ bool TupXmlParserBase::fatalError(const QXmlParseException & exception)
 
 void TupXmlParserBase::setReadText(bool read)
 {
-     k->readText = read;
+     readText = read;
 }
 
 void TupXmlParserBase::setIgnore(bool ignore)
 {
-     k->ignore = ignore;
+     ignore = ignore;
 }
 
 QString TupXmlParserBase::currentTag() const
 {
-     return k->currentTag;
+     return gTag;
 }
 
 QString TupXmlParserBase::root() const
-
 {
-     return k->root;
+     return rootStr;
 }
 
 bool TupXmlParserBase::parse(const QString &doc)
@@ -172,7 +160,7 @@ bool TupXmlParserBase::parse(const QString &doc)
      QXmlInputSource xmlsource;
      xmlsource.setData(doc);
 
-     k->document = doc;
+     document = doc;
 
      return reader.parse(&xmlsource);
 }

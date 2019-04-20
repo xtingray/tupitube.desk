@@ -35,12 +35,7 @@
 
 #include "tupsocketbase.h"
 
-struct TupSocketBase::Private
-{
-    QQueue<QString> queue;
-};
-
-TupSocketBase::TupSocketBase(QObject *parent) : QTcpSocket(parent), k(new Private)
+TupSocketBase::TupSocketBase(QObject *parent) : QTcpSocket(parent)
 {
     connect(this, SIGNAL(readyRead ()), this, SLOT(readFromServer()));
     connect(this, SIGNAL(connected()), this, SLOT(sendQueue()));
@@ -49,14 +44,13 @@ TupSocketBase::TupSocketBase(QObject *parent) : QTcpSocket(parent), k(new Privat
 
 TupSocketBase::~TupSocketBase()
 {
-    delete k;
 }
 
 void TupSocketBase::sendQueue()
 {
-    while (k->queue.count() > 0) {
+    while (queue.count() > 0) {
         if (state() == QAbstractSocket::ConnectedState)
-            send(k->queue.dequeue());
+            send(queue.dequeue());
         else 
             break;
     }
@@ -64,7 +58,7 @@ void TupSocketBase::sendQueue()
 
 void TupSocketBase::clearQueue()
 {
-    k->queue.clear();
+    queue.clear();
 }
 
 void TupSocketBase::send(const QString &message)
@@ -75,7 +69,7 @@ void TupSocketBase::send(const QString &message)
         // stream << message.toLocal8Bit().toBase64() << "%%" << endl;
         stream << message.toUtf8().toBase64() << "%%" << endl;
     } else {
-        k->queue.enqueue(message);
+        queue.enqueue(message);
     }
 }
 
@@ -105,4 +99,3 @@ void TupSocketBase::readFromServer()
     if (this->canReadLine()) 
         readFromServer();
 }
-

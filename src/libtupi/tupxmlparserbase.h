@@ -73,8 +73,12 @@ class TUPITUBE_EXPORT TupXmlParserBase : public QXmlDefaultHandler
         bool parse(QFile *file);
 
     private:
-        struct Private;
-        Private *const k;
+        QString gTag;
+        QString rootStr;
+        bool isParsing;
+        bool readText;
+        bool ignore;
+        QString document;
 };
 
 #endif

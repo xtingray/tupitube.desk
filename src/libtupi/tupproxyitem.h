@@ -66,10 +66,7 @@ class TUPITUBE_EXPORT TupProxyItem : public QGraphicsItem
         int type() const { return Type; }
         
     private:
-        struct Private;
-        Private *const k;
+        QGraphicsItem *realItem;
 };
 
 #endif
-
-
