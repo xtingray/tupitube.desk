@@ -35,20 +35,7 @@
 
 #include "tuplistprojectdialog.h"
 
-struct TupListProjectDialog::Private
-{
-    QTreeWidget *works;
-    QTreeWidget *contributions;
-    QList<QString> workList;
-    QList<QString> contribList;
-    QList<QString> authors;
-    int index;
-    QString filename;
-    QString owner;
-    bool isMine;
-};
-
-TupListProjectDialog::TupListProjectDialog(int works, int contributions, const QString &serverName) : QDialog(), k(new Private)
+TupListProjectDialog::TupListProjectDialog(int projects, int collabs, const QString &serverName) : QDialog()
 {
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/open.png")));
     setWindowTitle(tr("Projects List from Server") + " - [ " + serverName  + " ]");
@@ -57,18 +44,18 @@ TupListProjectDialog::TupListProjectDialog(int works, int contributions, const Q
     QVBoxLayout *layout = new QVBoxLayout(this);
     setLayout(layout);
 
-    if (works > 0) {
-        k->works = tree(true);
-        connect(k->works, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(updateWorkTree()));
-        connect(k->works, SIGNAL(itemSelectionChanged()), this, SLOT(updateWorkTree()));
-        connect(k->works, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(execAccept(QTreeWidgetItem *, int)));
+    if (projects > 0) {
+        works = tree(true);
+        connect(works, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(updateWorkTree()));
+        connect(works, SIGNAL(itemSelectionChanged()), this, SLOT(updateWorkTree()));
+        connect(works, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(execAccept(QTreeWidgetItem *, int)));
     }
 
-    if (contributions > 0) {
-        k->contributions = tree(false);
-        connect(k->contributions, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(updateContribTree()));
-        connect(k->contributions, SIGNAL(itemSelectionChanged()), this, SLOT(updateContribTree()));
-        connect(k->contributions, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(execAccept(QTreeWidgetItem *, int)));
+    if (collabs > 0) {
+        contributions = tree(false);
+        connect(contributions, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(updateContribTree()));
+        connect(contributions, SIGNAL(itemSelectionChanged()), this, SLOT(updateContribTree()));
+        connect(contributions, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(execAccept(QTreeWidgetItem *, int)));
     }
 
     QHBoxLayout *search = new QHBoxLayout;
@@ -79,34 +66,34 @@ TupListProjectDialog::TupListProjectDialog(int works, int contributions, const Q
     QLabel *worksLabel = new QLabel(tr("My works:"));
     QLabel *contribLabel = new QLabel(tr("My contributions:"));
 
-    if (works > 0 && contributions > 0) {
+    if (projects > 0 && collabs > 0) {
         QList<QTreeWidget *> trees;
-        trees << k->works << k->contributions;
+        trees << works << contributions;
         searchLine = new TreeWidgetSearchLine(this, trees);
         search->addWidget(searchLine);
         search->addWidget(button);
 
         layout->addLayout(search);
         layout->addWidget(worksLabel);
-        layout->addWidget(k->works);
+        layout->addWidget(works);
         layout->addWidget(contribLabel);
-        layout->addWidget(k->contributions);
-    } else if (works > 0) {
-               searchLine = new TreeWidgetSearchLine(this, k->works);
+        layout->addWidget(contributions);
+    } else if (projects > 0) {
+               searchLine = new TreeWidgetSearchLine(this, works);
                search->addWidget(searchLine);
                search->addWidget(button);
 
                layout->addLayout(search);
                layout->addWidget(worksLabel);
-               layout->addWidget(k->works);
-    } else if (contributions > 0) {
-               searchLine = new TreeWidgetSearchLine(this, k->contributions);
+               layout->addWidget(works);
+    } else if (collabs > 0) {
+               searchLine = new TreeWidgetSearchLine(this, contributions);
                search->addWidget(searchLine);
                search->addWidget(button);
 
                layout->addLayout(search);
                layout->addWidget(contribLabel);
-               layout->addWidget(k->contributions);
+               layout->addWidget(contributions);
     }
 
     connect(button, SIGNAL(clicked()), searchLine, SLOT(clear()));
@@ -124,7 +111,7 @@ TupListProjectDialog::TupListProjectDialog(int works, int contributions, const Q
     layout->addLayout(buttons);
 
     setMinimumWidth(615); 
-    k->index = 0;
+    index = 0;
 }
 
 TupListProjectDialog::~TupListProjectDialog()
@@ -156,30 +143,30 @@ QTreeWidget *TupListProjectDialog::tree(bool myWorks)
     return tree;
 }
 
-void TupListProjectDialog::addWork(const QString &filename, const QString &name, const QString &description, const QString &date)
+void TupListProjectDialog::addWork(const QString &project, const QString &name, const QString &description, const QString &date)
 {
-    k->workList.append(filename);
+    workList.append(project);
 
-    QTreeWidgetItem *item = new QTreeWidgetItem(k->works);
+    QTreeWidgetItem *item = new QTreeWidgetItem(works);
     item->setText(0, name);
     item->setText(1, description);
     item->setText(2, date);
 
-    if (k->index == 0) {
-        k->isMine = true;
-        k->works->setCurrentItem(item);
-        k->filename = filename;
+    if (index == 0) {
+        isMine = true;
+        works->setCurrentItem(item);
+        filename = project;
     }
 
-    k->index++;
+    index++;
 }
 
 void TupListProjectDialog::addContribution(const QString &filename, const QString &name, const QString &author, const QString &description, const QString &date)
 {
-    k->contribList.append(filename);
-    k->authors.append(author);
+    contribList.append(filename);
+    authors.append(author);
 
-    QTreeWidgetItem *item = new QTreeWidgetItem(k->contributions);
+    QTreeWidgetItem *item = new QTreeWidgetItem(contributions);
     item->setText(0, name);
     item->setText(1, author);
     item->setText(2, description);
@@ -188,12 +175,12 @@ void TupListProjectDialog::addContribution(const QString &filename, const QStrin
 
 QString TupListProjectDialog::projectID() const
 {
-    return k->filename;
+    return filename;
 }
 
 QString TupListProjectDialog::owner() const
 {
-    return k->owner;
+    return user;
 }
 
 void TupListProjectDialog::execAccept(QTreeWidgetItem *item, int index)
@@ -206,29 +193,29 @@ void TupListProjectDialog::execAccept(QTreeWidgetItem *item, int index)
 
 void TupListProjectDialog::updateWorkTree()
 {
-    if (k->works->hasFocus()) {
-        if (k->contribList.size() > 0)
-            k->contributions->clearSelection();
-        int index = k->works->currentIndex().row(); 
-        k->filename = k->workList.at(index);
-        k->isMine = true;
+    if (works->hasFocus()) {
+        if (contribList.size() > 0)
+            contributions->clearSelection();
+        int index = works->currentIndex().row();
+        filename = workList.at(index);
+        isMine = true;
     }
 }
 
 void TupListProjectDialog::updateContribTree()
 {
-    if (k->contributions->hasFocus()) {
-        if (k->workList.size() > 0)
-            k->works->clearSelection();
-        int index = k->contributions->currentIndex().row();
-        k->isMine = false;
-        k->filename = k->contribList.at(index);
-        k->owner = k->authors.at(index);
+    if (contributions->hasFocus()) {
+        if (workList.size() > 0)
+            works->clearSelection();
+        int index = contributions->currentIndex().row();
+        isMine = false;
+        filename = contribList.at(index);
+        user = authors.at(index);
     }
 }
 
 bool TupListProjectDialog::workIsMine()
 {
-    return k->isMine;
+    return isMine;
 }
 

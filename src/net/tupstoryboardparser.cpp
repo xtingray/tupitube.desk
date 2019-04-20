@@ -35,34 +35,26 @@
 
 #include "tupstoryboardparser.h"
 
-struct TupStoryboardParser::Private
+TupStoryboardParser::TupStoryboardParser(const QString &package)
 {
-    QDomDocument request;
-    int sceneIndex;
-    int checksum;
-    QString storyboard;
-};
+    index = -1;
+    hash = 0;
+    storyboard = "";
 
-TupStoryboardParser::TupStoryboardParser(const QString &package) : k(new Private())
-{
-    k->sceneIndex = -1;
-    k->checksum = 0;
-    k->storyboard = "";
-
-    if (k->request.setContent(package)) {
-        QDomElement root = k->request.documentElement();
+    if (requestDoc.setContent(package)) {
+        QDomElement root = requestDoc.documentElement();
         QDomNode n = root.firstChild();
         while (!n.isNull()) {
                QDomElement e = n.toElement();
                if (e.tagName() == "sceneIndex") {
-                   k->sceneIndex = e.text().toInt();
-                   k->checksum++;
+                   index = e.text().toInt();
+                   hash++;
                } else if (e.tagName() == "storyboard") {
                           QString input = "";
                           QTextStream text(&input);
                           text << n;
-                          k->storyboard = input;
-                          k->checksum++;
+                          storyboard = input;
+                          hash++;
                }
                n = n.nextSibling();
         }
@@ -71,12 +63,11 @@ TupStoryboardParser::TupStoryboardParser(const QString &package) : k(new Private
 
 TupStoryboardParser::~TupStoryboardParser()
 {
-    delete k;
 }
 
 bool TupStoryboardParser::checksum()
 {
-    if (k->checksum == 2)
+    if (hash == 2)
         return true;
 
     return false;
@@ -84,15 +75,15 @@ bool TupStoryboardParser::checksum()
 
 int TupStoryboardParser::sceneIndex()
 {
-    return k->sceneIndex;
+    return index;
 }
 
 QString TupStoryboardParser::storyboardXml() const
 {
-    return k->storyboard;
+    return storyboard;
 }
 
 QDomDocument TupStoryboardParser::request() const
 {
-    return k->request;
+    return requestDoc;
 }

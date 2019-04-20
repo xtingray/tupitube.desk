@@ -51,8 +51,6 @@
 #include <QLabel>
 #include <QTreeWidgetItem>
 
-// class QTreeWidgetItem;
-
 class TUPITUBE_EXPORT TupListProjectDialog : public QDialog
 {
     Q_OBJECT
@@ -60,8 +58,10 @@ class TUPITUBE_EXPORT TupListProjectDialog : public QDialog
     public:
         TupListProjectDialog(int works, int contributions, const QString &serverName);
         ~TupListProjectDialog();
-        void addWork(const QString &filename, const QString &name, const QString &description, const QString &date);
-        void addContribution(const QString &filename, const QString &name, const QString &author, const QString &description, const QString &date);
+
+        void addWork(const QString &filename, const QString &name, const QString &desc, const QString &date);
+        void addContribution(const QString &project, const QString &name, const QString &author, const QString &desc,
+                             const QString &date);
         QString projectID() const;
         QString owner() const;
         bool workIsMine();
@@ -73,8 +73,16 @@ class TUPITUBE_EXPORT TupListProjectDialog : public QDialog
     
     private:
         QTreeWidget *tree(bool myWorks);
-        struct Private;
-        Private *const k;
+
+        QTreeWidget *works;
+        QTreeWidget *contributions;
+        QList<QString> workList;
+        QList<QString> contribList;
+        QList<QString> authors;
+        int index;
+        QString filename;
+        QString user;
+        bool isMine;
 };
 
 #endif

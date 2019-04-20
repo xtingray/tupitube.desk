@@ -35,34 +35,26 @@
 
 #include "tupnewprojectpackage.h"
 
-struct TupNewProjectPackage::Private
-{
-    QDomText name;
-    QDomText author;
-    QDomText description;
-    QDomText bgcolor;
-    QDomText dimension;
-    QDomText fps;
-};
-
-TupNewProjectPackage::TupNewProjectPackage(const QString & name, const QString & author, const QString & description, const QString & bgcolor, const QString & dimension, const QString & fps): QDomDocument(), k(new Private)
+TupNewProjectPackage::TupNewProjectPackage(const QString &pName, const QString &user, const QString &desc,
+                                           const QString &bg, const QString &size, const QString &speed):
+                                           QDomDocument()
 {
     QDomElement root = createElement("project_new");
     root.setAttribute("version", "0");
     
-    k->name = createTextNode(name);
-    k->author = createTextNode(author);
-    k->description = createTextNode(description);
-    k->bgcolor = createTextNode(bgcolor);
-    k->dimension = createTextNode(dimension);
-    k->fps = createTextNode(fps);
+    name = createTextNode(pName);
+    author = createTextNode(user);
+    description = createTextNode(desc);
+    bgcolor = createTextNode(bg);
+    dimension = createTextNode(size);
+    fps = createTextNode(speed);
     
-    root.appendChild(createElement("name")).appendChild(k->name);
-    root.appendChild(createElement("author")).appendChild(k->author);
-    root.appendChild(createElement("description")).appendChild(k->description);
-    root.appendChild(createElement("bgcolor")).appendChild(k->bgcolor);
-    root.appendChild(createElement("dimension")).appendChild(k->dimension);
-    root.appendChild(createElement("fps")).appendChild(k->fps);
+    root.appendChild(createElement("name")).appendChild(name);
+    root.appendChild(createElement("author")).appendChild(author);
+    root.appendChild(createElement("description")).appendChild(description);
+    root.appendChild(createElement("bgcolor")).appendChild(bgcolor);
+    root.appendChild(createElement("dimension")).appendChild(dimension);
+    root.appendChild(createElement("fps")).appendChild(fps);
 
     appendChild(root);
 }
@@ -71,32 +63,32 @@ TupNewProjectPackage::~TupNewProjectPackage()
 {
 }
 
-void TupNewProjectPackage::setName(const QString & name)
+void TupNewProjectPackage::setName(const QString &pName)
 {
-    k->name.setData(name);
+    name.setData(pName);
 }
 
-void TupNewProjectPackage::setAuthor(const QString & author)
+void TupNewProjectPackage::setAuthor(const QString &user)
 {
-    k->author.setData(author);
+    author.setData(user);
 }
 
-void TupNewProjectPackage::setDescription(const QString & description)
+void TupNewProjectPackage::setDescription(const QString &desc)
 {
-    k->description.setData(description);
+    description.setData(desc);
 }
 
-void TupNewProjectPackage::setBgColor(const QString & bgcolor)
+void TupNewProjectPackage::setBgColor(const QString &bg)
 {
-    k->bgcolor.setData(bgcolor);
+    bgcolor.setData(bg);
 }
 
-void TupNewProjectPackage::setDimension(const QString & dimension)
+void TupNewProjectPackage::setDimension(const QString &size)
 {
-    k->dimension.setData(dimension);
+    dimension.setData(size);
 }
 
-void TupNewProjectPackage::setFps(const QString & fps)
+void TupNewProjectPackage::setFps(const QString &speed)
 {
-    k->fps.setData(fps);
+    fps.setData(speed);
 }

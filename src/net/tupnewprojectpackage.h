@@ -43,21 +43,25 @@
 class TUPITUBE_EXPORT TupNewProjectPackage : public QDomDocument
 {
     public:
-        TupNewProjectPackage(const QString & name, const QString & author, const QString & description, 
-                            const QString & bgcolor, const QString & dimension, const QString & fps);
+        TupNewProjectPackage(const QString &name, const QString &author, const QString &description,
+                            const QString &bgcolor, const QString &dimension, const QString &fps);
 
         ~TupNewProjectPackage();
         
-        void setName(const QString & name);
-        void setAuthor(const QString & author);
-        void setDescription(const QString & description);
-        void setBgColor(const QString & bgcolor);
-        void setDimension(const QString & dimension);
-        void setFps(const QString & fps);
+        void setName(const QString &name);
+        void setAuthor(const QString &author);
+        void setDescription(const QString &description);
+        void setBgColor(const QString &bgcolor);
+        void setDimension(const QString &dimension);
+        void setFps(const QString &fps);
         
     private:
-        struct Private;
-        Private *const k;
+        QDomText name;
+        QDomText author;
+        QDomText description;
+        QDomText bgcolor;
+        QDomText dimension;
+        QDomText fps;
 };
 
 #endif

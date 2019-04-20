@@ -51,8 +51,9 @@ class TUPITUBE_EXPORT TupNotice: public QWidget
     Q_OBJECT
 
     public:
-        TupNotice(QWidget *parent = 0);
+        TupNotice(QWidget *parent = nullptr);
         ~TupNotice();
+
         void addMessage(const QString &message);
         
     signals:
@@ -61,9 +62,8 @@ class TUPITUBE_EXPORT TupNotice: public QWidget
     protected slots:
         // void sendMessage();
         
-    private:
-        struct Private;
-        Private *const k;
+    private:        
+        QTextEdit *browser;
 };
 
 #endif

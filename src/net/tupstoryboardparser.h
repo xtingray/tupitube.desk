@@ -51,14 +51,17 @@ class TUPITUBE_EXPORT TupStoryboardParser
     public:
         TupStoryboardParser(const QString &package);
         ~TupStoryboardParser();
+
         bool checksum();
         int sceneIndex();
         QString storyboardXml() const;
         QDomDocument request() const;
 
      private:
-        struct Private;
-        Private *const k;
+        QDomDocument requestDoc;
+        int index;
+        int hash;
+        QString storyboard;
 };
 
 #endif

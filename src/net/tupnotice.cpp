@@ -35,31 +35,16 @@
 
 #include "tupnotice.h"
 
-struct TupNotice::Private
-{
-    public:
-        Private()
-        {
-        }
-        
-        ~Private()
-        {
-            delete browser;
-        }
-        
-        QTextEdit *browser;
-};
-
-TupNotice::TupNotice(QWidget *parent) : QWidget(parent), k(new Private())
+TupNotice::TupNotice(QWidget *parent): QWidget(parent)
 {
     setAttribute(Qt::WA_DeleteOnClose);
     QGridLayout *layout = new QGridLayout(this);
     
     setWindowTitle(tr("Notices"));
     
-    k->browser = new QTextEdit;
-    k->browser->setReadOnly(true);
-    layout->addWidget(k->browser, 0, 0);
+    browser = new QTextEdit;
+    browser->setReadOnly(true);
+    layout->addWidget(browser, 0, 0);
 
     /*    
     QHBoxLayout *box = new QHBoxLayout;
@@ -79,7 +64,6 @@ TupNotice::TupNotice(QWidget *parent) : QWidget(parent), k(new Private())
 
 TupNotice::~TupNotice()
 {
-    delete k;
 }
 
 void TupNotice::addMessage(const QString &message)
@@ -98,7 +82,7 @@ void TupNotice::addMessage(const QString &message)
     QString record = "[" + h + ":" + min + "]";
 
     QString css = "font-size: 12px;";
-    k->browser->append("<div style=\"" + css + "\">" + record + " * " + message + "</div>");
+    browser->append("<div style=\"" + css + "\">" + record + " * " + message + "</div>");
 }
 
 /*
