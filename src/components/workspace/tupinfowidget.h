@@ -38,10 +38,6 @@
 
 #include "tglobal.h"
 #include "tapplicationproperties.h"
-#include "tseparator.h"
-#include "timagebutton.h"
-#include "tpushbutton.h"
-#include "tupwebhunter.h"
 
 #include <QWidget>
 #include <QVBoxLayout>
@@ -79,8 +75,10 @@ class TUPITUBE_EXPORT TupInfoWidget : public QWidget
         void getCurrencyConversionFromNet(const QString &money1, const QString &money2);
         void updateMoneyTable();
 
-        struct Private;
-        Private *const k;
+        QVBoxLayout *innerLayout;
+        QString currentCurrency;
+        QList<QString> currencyList;
+        QTableWidget *table;
 };
 
 #endif

@@ -37,7 +37,6 @@
 #define TUPDOCUMENTVIEW_H
 
 #include "tglobal.h"
-#include "tupdocumentruler.h"
 #include "tuppaintarea.h"
 #include "tactionmanager.h"
 #include "tupconfigurationarea.h"

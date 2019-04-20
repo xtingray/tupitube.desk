@@ -34,43 +34,39 @@
  ***************************************************************************/
 
 #include "tupinfowidget.h"
+#include "tseparator.h"
+#include "timagebutton.h"
+#include "tpushbutton.h"
+#include "tupwebhunter.h"
 
-struct TupInfoWidget::Private
+TupInfoWidget::TupInfoWidget(QWidget *parent) : QWidget(parent)
 {
-    QVBoxLayout *innerLayout;
-    QString currentCurrency;
-    QList<QString> currencyList;
-    QTableWidget *table;
-};
+    currencyList << "ARS";
+    currencyList << "AUD";
+    currencyList << "BRL";
+    currencyList << "CAD";
+    currencyList << "CNY";
+    currencyList << "COP";
+    currencyList << "EUR";
+    currencyList << "MXN";
+    currencyList << "NZD";
+    currencyList << "NIO";
+    currencyList << "NOK";
+    currencyList << "PAB";
+    currencyList << "PEN";
+    currencyList << "PKR";
+    currencyList << "SEK";
+    currencyList << "TWD";
+    currencyList << "USD";
+    currencyList << "UYU";
 
-TupInfoWidget::TupInfoWidget(QWidget *parent) : QWidget(parent), k(new Private)
-{
-    k->currencyList << "ARS";
-    k->currencyList << "AUD";
-    k->currencyList << "BRL";
-    k->currencyList << "CAD";
-    k->currencyList << "CNY";
-    k->currencyList << "COP";
-    k->currencyList << "EUR";
-    k->currencyList << "MXN";
-    k->currencyList << "NZD";
-    k->currencyList << "NIO";
-    k->currencyList << "NOK";
-    k->currencyList << "PAB";
-    k->currencyList << "PEN";
-    k->currencyList << "PKR";
-    k->currencyList << "SEK";
-    k->currencyList << "TWD";
-    k->currencyList << "USD";
-    k->currencyList << "UYU";
-
-    k->currentCurrency = k->currencyList.at(k->currencyList.indexOf("USD"));
+    currentCurrency = currencyList.at(currencyList.indexOf("USD"));
 
     QBoxLayout *layout = new QHBoxLayout(this);
     layout->setContentsMargins(5, 5, 5, 5);
     layout->setSpacing(2);
 
-    k->innerLayout = new QVBoxLayout;
+    innerLayout = new QVBoxLayout;
 
     setUIContext();
 
@@ -89,10 +85,10 @@ TupInfoWidget::TupInfoWidget(QWidget *parent) : QWidget(parent), k(new Private)
     buttonBox->addButton(linksButton, QDialogButtonBox::ActionRole);
     buttonBox->addButton(closeButton, QDialogButtonBox::ActionRole);
 
-    k->innerLayout->addWidget(new TSeparator());
-    k->innerLayout->addWidget(buttonBox);
+    innerLayout->addWidget(new TSeparator());
+    innerLayout->addWidget(buttonBox);
 
-    layout->addLayout(k->innerLayout);
+    layout->addLayout(innerLayout);
 }
 
 TupInfoWidget::~TupInfoWidget()
@@ -101,21 +97,21 @@ TupInfoWidget::~TupInfoWidget()
 
 void TupInfoWidget::setUIContext()
 {
-    k->table = new QTableWidget(k->currencyList.count() - 1, 2);
-    k->table->setSelectionMode(QAbstractItemView::SingleSelection);
-    k->table->horizontalHeader()->hide();
-    k->table->verticalHeader()->hide();
+    table = new QTableWidget(currencyList.count() - 1, 2);
+    table->setSelectionMode(QAbstractItemView::SingleSelection);
+    table->horizontalHeader()->hide();
+    table->verticalHeader()->hide();
 
-    k->table->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    k->table->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    table->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    table->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    k->table->setMaximumWidth(250);
-    k->table->setMaximumHeight((k->currencyList.count() - 1)*30);
+    table->setMaximumWidth(250);
+    table->setMaximumHeight((currencyList.count() - 1)*30);
 
-    // k->table->verticalHeader()->setResizeMode(QHeaderView::Stretch);
-    // k->table->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    k->table->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    k->table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    // table->verticalHeader()->setResizeMode(QHeaderView::Stretch);
+    // table->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    table->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     QBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setContentsMargins(1, 1, 1, 1);
@@ -132,11 +128,11 @@ void TupInfoWidget::setUIContext()
     QLabel *currencyLabel = new QLabel(tr("Currency"));
     QComboBox *currency = new QComboBox();
 
-    for (int i=0; i<k->currencyList.count(); i++)
-         currency->addItem(tr("%1").arg(k->currencyList.at(i)));
+    for (int i=0; i<currencyList.count(); i++)
+         currency->addItem(tr("%1").arg(currencyList.at(i)));
 
     connect(currency, SIGNAL(currentIndexChanged(int)), this, SLOT(setCurrentCurrency(int)));
-    currency->setCurrentIndex(k->currencyList.indexOf("USD"));
+    currency->setCurrentIndex(currencyList.indexOf("USD"));
 
     currencyLabel->setBuddy(currency);
 
@@ -167,19 +163,19 @@ void TupInfoWidget::setUIContext()
     mainLayout->addWidget(titleLabel);
     mainLayout->addLayout(currencyLayout);
     mainLayout->addLayout(sourceLayout);
-    mainLayout->addWidget(k->table);
+    mainLayout->addWidget(table);
     mainLayout->addLayout(checkerLayout);
 
-    k->innerLayout->addLayout(mainLayout);
+    innerLayout->addLayout(mainLayout);
 
     getDataFromNet();
 }
 
 void TupInfoWidget::getDataFromNet()
 {
-    for (int i=0; i<k->currencyList.count(); i++) {
-         if (k->currencyList.at(i).compare(k->currentCurrency) != 0)
-             getCurrencyConversionFromNet(k->currentCurrency, k->currencyList.at(i));
+    for (int i=0; i<currencyList.count(); i++) {
+         if (currencyList.at(i).compare(currentCurrency) != 0)
+             getCurrencyConversionFromNet(currentCurrency, currencyList.at(i));
     }
 }
 
@@ -204,8 +200,8 @@ void TupInfoWidget::updateObjectInformation(const QString &data)
     QString currency = parts.at(0);
     QString value = parts.at(1);
 
-    for (int i=0; i < k->table->rowCount(); i++) {
-         QTableWidgetItem *item = k->table->item(i, 0);
+    for (int i=0; i < table->rowCount(); i++) {
+         QTableWidgetItem *item = table->item(i, 0);
          QString label = item->text();
          if (label.compare(currency) == 0) {
              double number = value.toDouble();
@@ -213,29 +209,29 @@ void TupInfoWidget::updateObjectInformation(const QString &data)
                  value = "UNAVAILABLE";
              }
              QTableWidgetItem *label = new QTableWidgetItem("  " + tr("%1").arg(value));
-             k->table->setItem(i, 1, label);
+             table->setItem(i, 1, label);
          }
     }
 }
 
 void TupInfoWidget::setCurrentCurrency(int index)
 {
-    k->currentCurrency = k->currencyList.at(index);
+    currentCurrency = currencyList.at(index);
     updateMoneyTable();
 }
 
 void TupInfoWidget::updateMoneyTable()
 {
     int j = 0;
-    for (int i=0; i<k->currencyList.count(); i++) {
-         if (k->currencyList.at(i).compare(k->currentCurrency) != 0) {
-             QTableWidgetItem *label = new QTableWidgetItem(tr("%1").arg(k->currencyList.at(i)));
+    for (int i=0; i<currencyList.count(); i++) {
+         if (currencyList.at(i).compare(currentCurrency) != 0) {
+             QTableWidgetItem *label = new QTableWidgetItem(tr("%1").arg(currencyList.at(i)));
              label->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
              QTableWidgetItem *empty = new QTableWidgetItem(tr(""));
              empty->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
-             k->table->setItem(j, 0, label);
-             k->table->setItem(j, 1, empty);
+             table->setItem(j, 0, label);
+             table->setItem(j, 1, empty);
              j++;
          }
     }
