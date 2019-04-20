@@ -35,42 +35,22 @@
 
 #include "tupconnectdialog.h"
 
-struct TupConnectDialog::Private
-{
-    public:
-        Private() {}
-        ~Private()
-        {
-            delete login;
-            delete password;
-            delete server;
-            delete port;
-        }
-        
-        QLineEdit *login;
-        QLineEdit *password;
-        QLineEdit *server;
-        QSpinBox *port;
-        
-        QCheckBox *storePassword;
-};
-
-TupConnectDialog::TupConnectDialog(QWidget *parent) : QDialog(parent), k(new Private())
+TupConnectDialog::TupConnectDialog(QWidget *parent): QDialog(parent)
 {
     setWindowTitle(tr("Connection Dialog"));
-    k->login = new QLineEdit;
-    k->password = new QLineEdit;
-    k->password->setEchoMode(QLineEdit::Password);
+    loginLine = new QLineEdit;
+    passwdLine = new QLineEdit;
+    passwdLine->setEchoMode(QLineEdit::Password);
     
-    k->server = new QLineEdit;
-    k->port = new QSpinBox;
-    k->port->setMinimum(1);
-    k->port->setMaximum(65000);
+    serverLine = new QLineEdit;
+    portBox = new QSpinBox;
+    portBox->setMinimum(1);
+    portBox->setMaximum(65000);
     
-    QGridLayout *layout = TFormFactory::makeGrid(QStringList() << tr("Login") << tr("Password") << tr("Server") << tr("Port"), QWidgetList() << k->login << k->password << k->server << k->port);
+    QGridLayout *layout = TFormFactory::makeGrid(QStringList() << tr("Login") << tr("Password") << tr("Server") << tr("Port"), QWidgetList() << loginLine << passwdLine << serverLine << portBox);
     
-    k->storePassword = new QCheckBox(tr("Store password"));
-    layout->addWidget(k->storePassword, 5, 1);
+    storePasswdBox = new QCheckBox(tr("Store password"));
+    layout->addWidget(storePasswdBox, 5, 1);
     
     QDialogButtonBox *box = new QDialogButtonBox;
     
@@ -96,65 +76,65 @@ TupConnectDialog::~TupConnectDialog()
 
 void TupConnectDialog::setServer(const QString &server)
 {
-    k->server->setText(server);
+    serverLine->setText(server);
 }
 
 void TupConnectDialog::setPort(int port)
 {
-    k->port->setValue(port);
+    portBox->setValue(port);
 }
 
 QString TupConnectDialog::login() const
 {
-    return k->login->text();
+    return loginLine->text();
 }
 
 QString TupConnectDialog::password() const
 {
-    return k->password->text();
+    return passwdLine->text();
 }
 
 QString TupConnectDialog::server() const
 {
-    return k->server->text();
+    return serverLine->text();
 }
 
 int TupConnectDialog::port() const
 {
-    return k->port->value();
+    return portBox->value();
 }
 
 void TupConnectDialog::loadSettings()
 {
     TCONFIG->beginGroup("Network");
-    k->server->setText(TCONFIG->value("Server", "tupitu.be").toString());
-    k->port->setValue(TCONFIG->value("Port", 5000).toInt());
-    k->login->setText(TCONFIG->value("Login", QString::fromLocal8Bit(::getenv("USER"))).toString());
-    k->password->setText(TCONFIG->value("Password", "").toString());
+    serverLine->setText(TCONFIG->value("Server", "tupitu.be").toString());
+    portBox->setValue(TCONFIG->value("Port", 5000).toInt());
+    loginLine->setText(TCONFIG->value("Login", QString::fromLocal8Bit(::getenv("USER"))).toString());
+    passwdLine->setText(TCONFIG->value("Password", "").toString());
     
-    k->storePassword->setChecked(TCONFIG->value("StorePassword").toInt());
+    storePasswdBox->setChecked(TCONFIG->value("StorePassword").toInt());
 }
 
 void TupConnectDialog::saveSettings()
 {
     TCONFIG->beginGroup("Network");
     
-    TCONFIG->setValue("Server", k->server->text());
-    TCONFIG->setValue("Port", k->port->value());
-    TCONFIG->setValue("Login", k->login->text());
+    TCONFIG->setValue("Server", serverLine->text());
+    TCONFIG->setValue("Port", portBox->value());
+    TCONFIG->setValue("Login", loginLine->text());
     
-    if (k->storePassword->isChecked())
-        TCONFIG->setValue("Password", k->password->text());
+    if (storePasswdBox->isChecked())
+        TCONFIG->setValue("Password", passwdLine->text());
     else 
         TCONFIG->setValue("Password", "");
     
-    TCONFIG->setValue("StorePassword", k->storePassword->isChecked() ? 1 : 0);
+    TCONFIG->setValue("StorePassword", storePasswdBox->isChecked() ? 1 : 0);
     TCONFIG->sync();
 }
 
 void TupConnectDialog::accept()
 {
-    if (k->password->text().isEmpty()) {
+    if (passwdLine->text().isEmpty()) {
         TOsd::self()->display(tr("Error"), tr("Please, fill in your password"), TOsd::Error);
         return;
     }

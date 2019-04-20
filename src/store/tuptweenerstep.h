@@ -82,9 +82,6 @@ class TUPITUBE_EXPORT TupTweenerStep : public TupAbstractSerializable
         virtual void fromXml(const QString& xml);
         
     private:
-        // struct Private;
-        // Private *const k;
-
         QPointF position;
         double rotation;
         double opacity;

@@ -77,8 +77,11 @@ class TUPITUBE_EXPORT TupConnectDialog : public QDialog
         void saveSettings();
         
     private:
-        struct Private;
-        Private *const k;
+        QLineEdit *loginLine;
+        QLineEdit *passwdLine;
+        QLineEdit *serverLine;
+        QSpinBox *portBox;
+        QCheckBox *storePasswdBox;
 };
 
 #endif

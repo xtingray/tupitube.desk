@@ -35,60 +35,38 @@
 
 #include "tupchat.h"
 
-struct TupChat::Private
-{
-    public:
-        Private()
-        {
-        }
-        
-        ~Private()
-        {
-            delete lineEdit;
-            delete browser;
-        }
-        
-        QLineEdit *lineEdit;
-        QTextBrowser *browser;
-        QPushButton *send;
-        QList<QString> *lines;
-        int cursorDown; 
-        int cursorUp;
-};
-
-TupChat::TupChat(QWidget *parent) : QWidget(parent), k(new Private)
+TupChat::TupChat(QWidget *parent) : QWidget(parent)
 {
     setAttribute(Qt::WA_DeleteOnClose);
     QGridLayout *layout = new QGridLayout(this);
     
     setWindowTitle("chat");
     
-    k->browser = new QTextBrowser;
-    k->browser->setOpenExternalLinks(true);
-    layout->addWidget(k->browser, 0, 0);
+    browser = new QTextBrowser;
+    browser->setOpenExternalLinks(true);
+    layout->addWidget(browser, 0, 0);
     
     QHBoxLayout *box = new QHBoxLayout;
     
-    k->lineEdit = new QLineEdit;
-    box->addWidget(k->lineEdit);
+    lineEdit = new QLineEdit;
+    box->addWidget(lineEdit);
     
-    k->send = new QPushButton(tr("Send"));
-    box->addWidget(k->send);
+    send = new QPushButton(tr("Send"));
+    box->addWidget(send);
     
     layout->addLayout(box, 1, 0);
 
-    k->lines = new QList<QString>();
-    k->lines->append("");
-    k->cursorDown = 0;
-    k->cursorUp = 0;
+    lines = new QList<QString>();
+    lines->append("");
+    cursorDown = 0;
+    cursorUp = 0;
     
-    connect(k->lineEdit, SIGNAL(returnPressed()), k->send, SLOT(animateClick()));
-    connect(k->send, SIGNAL(clicked()), this, SLOT(sendMessage()));
+    connect(lineEdit, SIGNAL(returnPressed()), send, SLOT(animateClick()));
+    connect(send, SIGNAL(clicked()), this, SLOT(sendMessage()));
 }
 
 TupChat::~TupChat()
 {
-    delete k;
 }
 
 void TupChat::addMessage(const QString &from, const QString &message)
@@ -109,7 +87,7 @@ void TupChat::addMessage(const QString &from, const QString &message)
     QString msg = formatMessage(message);
 
     QString css = "font-size: 12px;"; 
-    k->browser->append("<div style=\"" + css + "\">" + record + " " + QString("<b>%1:</b>").arg(from) + " " + msg + "</div>");
+    browser->append("<div style=\"" + css + "\">" + record + " " + QString("<b>%1:</b>").arg(from) + " " + msg + "</div>");
 }
 
 QString TupChat::formatMessage(const QString &msg)
@@ -155,19 +133,19 @@ QString TupChat::formatMessage(const QString &msg)
 
 void TupChat::sendMessage()
 {
-    QString text = k->lineEdit->text();
-    k->lineEdit->clear();
+    QString text = lineEdit->text();
+    lineEdit->clear();
 
     if (!text.isEmpty()) {
         if (text.toLower().indexOf("<") != -1 && text.toLower().indexOf(">") != -1) {
             QString css = "font-size: 10px;";
-            k->browser->append("<div style=\"" + css + "\">" + "<b>" + tr("Error:") + "</b> " 
+            browser->append("<div style=\"" + css + "\">" + "<b>" + tr("Error:") + "</b> "
                                + tr("Invalid Message. It won't be sent. Please, don't use HTML tags") 
                                + "</div>");
         } else {
-            k->lines->append(text);
-            k->cursorUp = k->lines->size()-1;
-            k->cursorDown = k->cursorUp;
+            lines->append(text);
+            cursorUp = lines->size()-1;
+            cursorDown = cursorUp;
             emit requestSendMessage(text);
         }
     }
@@ -176,41 +154,41 @@ void TupChat::sendMessage()
 void TupChat::keyPressEvent(QKeyEvent *event)
 {
     switch (event->key()) {
-            case (Qt::Key_Up):
-                  if ((k->cursorDown >= 0) && (k->cursorDown <= k->lines->size()-1)) {
-                       QString text = k->lines->at(k->cursorDown);
-                       if (!text.isNull()) {
-                           k->lineEdit->setText(text);
-                           if (k->cursorDown == 0) {
-                               k->cursorUp = k->cursorDown + 1;
-                               k->cursorDown = k->lines->size() - 1;
-                           } else { 
-                               if (k->cursorDown == k->lines->size() - 1)
-                                   k->cursorUp = 0;
-                               else
-                                   k->cursorUp = k->cursorDown + 1;
-                               k->cursorDown--;
-                           }
-                      }
-                  }
-            break;
-            case (Qt::Key_Down):
-                  if ((k->cursorUp >= 0) && (k->cursorUp <= k->lines->size()-1)) {
-                       QString text = k->lines->at(k->cursorUp);
-                       if (!text.isNull()) {
-                           k->lineEdit->setText(text);
-                           if (k->cursorUp == k->lines->size() - 1) {
-                               k->cursorUp = 0;
-                               k->cursorDown = k->lines->size() - 2;
-                           } else {
-                               if (k->cursorUp == 0)
-                                   k->cursorDown = k->lines->size() - 1;
-                               else
-                                   k->cursorDown = k->cursorUp - 1;
-                               k->cursorUp++;
-                           }
-                       }
-                  }
-            break;
+        case (Qt::Key_Up):
+            if ((cursorDown >= 0) && (cursorDown <= lines->size()-1)) {
+                QString text = lines->at(cursorDown);
+                if (!text.isNull()) {
+                    lineEdit->setText(text);
+                    if (cursorDown == 0) {
+                        cursorUp = cursorDown + 1;
+                        cursorDown = lines->size() - 1;
+                    } else {
+                        if (cursorDown == lines->size() - 1)
+                            cursorUp = 0;
+                        else
+                            cursorUp = cursorDown + 1;
+                        cursorDown--;
+                    }
+                }
+            }
+        break;
+        case (Qt::Key_Down):
+            if ((cursorUp >= 0) && (cursorUp <= lines->size()-1)) {
+                QString text = lines->at(cursorUp);
+                if (!text.isNull()) {
+                    lineEdit->setText(text);
+                    if (cursorUp == lines->size() - 1) {
+                        cursorUp = 0;
+                        cursorDown = lines->size() - 2;
+                    } else {
+                        if (cursorUp == 0)
+                            cursorDown = lines->size() - 1;
+                        else
+                            cursorDown = cursorUp - 1;
+                        cursorUp++;
+                    }
+                }
+            }
+        break;
     }
 }

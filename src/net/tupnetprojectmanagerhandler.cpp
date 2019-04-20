@@ -35,28 +35,7 @@
 
 #include "tupnetprojectmanagerhandler.h"
 
-struct TupNetProjectManagerHandler::Private
-{
-    TupNetProjectManagerParams *params;
-    TupNetSocket *socket;
-    QString projectName;
-    QString username;
-    TupProject *project;
-    
-    QString sign;
-    bool ownPackage;
-    bool doAction;
-    
-    QTabWidget *communicationModule;
-    TupChat *chat;
-    TupNotice *notices;
-
-    bool projectIsOpen; 
-    bool dialogIsOpen;
-    TupListProjectDialog *dialog;
-};
-
-TupNetProjectManagerHandler::TupNetProjectManagerHandler(QObject *parent) : TupAbstractProjectHandler(parent), k(new Private)
+TupNetProjectManagerHandler::TupNetProjectManagerHandler(QObject *parent) : TupAbstractProjectHandler(parent)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -66,29 +45,29 @@ TupNetProjectManagerHandler::TupNetProjectManagerHandler(QObject *parent) : TupA
         #endif
     #endif
 
-    k->socket = new TupNetSocket(this);
-    connect(k->socket, SIGNAL(disconnected()), this, SLOT(connectionLost()));
+    socket = new TupNetSocket(this);
+    connect(socket, SIGNAL(disconnected()), this, SLOT(connectionLost()));
 
-    k->project = 0;
-    k->params = 0;
-    k->ownPackage = false;
-    k->doAction = true;
-    k->projectIsOpen = false;
-    k->dialogIsOpen = false;
+    project = nullptr;
+    params = nullptr;
+    ownPackage = false;
+    doAction = true;
+    projectIsOpen = false;
+    dialogIsOpen = false;
     
-    k->communicationModule = new QTabWidget;
-    k->communicationModule->setWindowTitle(tr("Communications"));
-    k->communicationModule->setWindowIcon(QPixmap(THEME_DIR + "icons/chat.png"));
+    communicationModule = new QTabWidget;
+    communicationModule->setWindowTitle(tr("Communications"));
+    communicationModule->setWindowIcon(QPixmap(THEME_DIR + "icons/chat.png"));
 
-    k->chat = new TupChat;
-    k->communicationModule->addTab(k->chat, tr("Chat"));
+    chat = new TupChat;
+    communicationModule->addTab(chat, tr("Chat"));
     
-    connect(k->chat, SIGNAL(requestSendMessage(const QString&)), this, SLOT(sendChatMessage(const QString&)));
+    connect(chat, SIGNAL(requestSendMessage(const QString&)), this, SLOT(sendChatMessage(const QString&)));
     
-    k->notices = new TupNotice;
-    k->communicationModule->addTab(k->notices, tr("Notices"));
+    notices = new TupNotice;
+    communicationModule->addTab(notices, tr("Notices"));
     
-    // connect(k->notices, SIGNAL(requestSendMessage(const QString&)), this, SLOT(sendNoticeMessage(const QString&)));
+    // connect(notices, SIGNAL(requestSendMessage(const QString&)), this, SLOT(sendNoticeMessage(const QString&)));
 }
 
 TupNetProjectManagerHandler::~TupNetProjectManagerHandler()
@@ -102,8 +81,7 @@ TupNetProjectManagerHandler::~TupNetProjectManagerHandler()
     #endif
 
 
-    k->chat->close();
-    delete k;
+    chat->close();
 }
 
 void TupNetProjectManagerHandler::handleProjectRequest(const TupProjectRequest* request)
@@ -120,7 +98,7 @@ void TupNetProjectManagerHandler::handleProjectRequest(const TupProjectRequest* 
     // SQA: Save a copy of the events or queued packages and resend to the GUI when the "Ok" package 
     // comes from the server 
 
-    if (k->socket->state() == QAbstractSocket::ConnectedState) {
+    if (socket->state() == QAbstractSocket::ConnectedState) {
         #ifdef TUP_DEBUG
             QString msg = "TupNetProjectManagerHandler::handleProjectRequest() - SENDING PACKAGE: " + request->getXml();
             #ifdef Q_OS_WIN
@@ -132,7 +110,7 @@ void TupNetProjectManagerHandler::handleProjectRequest(const TupProjectRequest* 
 
         if (request->isValid()) {
             emit sendCommand(request, true);
-            k->socket->send(request->getXml());
+            socket->send(request->getXml());
         } else {
             #ifdef TUP_DEBUG
                 QString msg = "TupNetProjectManagerHandler::handleProjectRequest() - INVALID REQUEST! ID: " + QString::number(request->getId());
@@ -157,19 +135,19 @@ bool TupNetProjectManagerHandler::commandExecuted(TupProjectResponse *response)
     #endif
 
     if (response->getMode() == TupProjectResponse::Do) {
-        k->doAction = true;
+        doAction = true;
         return true;
     } 
 
     TupProjectRequest request = TupRequestBuilder::fromResponse(response);
-    k->doAction = false;
+    doAction = false;
 
     if (response->getMode() != TupProjectResponse::Undo && response->getMode() != TupProjectResponse::Redo) {
         handleProjectRequest(&request);
     } else { 
-        if (k->socket->state() == QAbstractSocket::ConnectedState) {
+        if (socket->state() == QAbstractSocket::ConnectedState) {
             if (request.isValid())
-                k->socket->send(request.getXml());
+                socket->send(request.getXml());
         }
     }
 
@@ -190,7 +168,7 @@ bool TupNetProjectManagerHandler::saveProject(const QString &fileName, TupProjec
     Q_UNUSED(project);
 
     /*
-    TupiNetFileManager manager(k->params->server(), k->params->port());
+    TupiNetFileManager manager(params->server(), params->port());
     return manager.save(fileName, project);
     */
 
@@ -204,10 +182,10 @@ bool TupNetProjectManagerHandler::loadProject(const QString &fileName, TupProjec
     Q_UNUSED(project);
 
     /*
-    if (k->socket->state() != QAbstractSocket::ConnectedState)
+    if (socket->state() != QAbstractSocket::ConnectedState)
         return false;
     
-    return loadProjectFromServer(k->params->projectName());
+    return loadProjectFromServer(params->projectName());
     */
 
     return true;
@@ -216,20 +194,20 @@ bool TupNetProjectManagerHandler::loadProject(const QString &fileName, TupProjec
 void TupNetProjectManagerHandler::loadProjectFromServer(const QString &projectID, const QString &owner)
 {
     TupOpenPackage package(projectID, owner);
-    k->socket->send(package);
+    socket->send(package);
 }
 
 void TupNetProjectManagerHandler::initialize(TupProjectManagerParams *params)
 {
-    TupNetProjectManagerParams *netparams = dynamic_cast<TupNetProjectManagerParams*>(params);
+    TupNetProjectManagerParams *netParams = dynamic_cast<TupNetProjectManagerParams*>(params);
 
-    if (!netparams) 
+    if (!netParams)
         return;
     
-    k->params = netparams;
+    // params = netParams;
     
     #ifdef TUP_DEBUG
-        QString msg = "TupNetProjectManagerHandler::initialize() - Connecting to " + netparams->server() + ":" + QString::number(netparams->port());
+        QString msg = "TupNetProjectManagerHandler::initialize() - Connecting to " + netParams->server() + ":" + QString::number(netParams->port());
         #ifdef Q_OS_WIN
             qWarning() << msg;
         #else
@@ -237,13 +215,13 @@ void TupNetProjectManagerHandler::initialize(TupProjectManagerParams *params)
         #endif
     #endif
 
-    k->socket->connectToHost(k->params->server(), k->params->port());
-    bool connected = k->socket->waitForConnected(1000);
+    socket->connectToHost(netParams->server(), netParams->port());
+    bool connected = socket->waitForConnected(1000);
 
     if (connected) {
-        TupConnectPackage connectPackage(k->params->server(), k->params->login(), k->params->password());
-        k->socket->send(connectPackage);
-        k->username = k->params->login();
+        TupConnectPackage connectPackage(netParams->server(), netParams->login(), netParams->password());
+        socket->send(connectPackage);
+        username = netParams->login();
     } else {
         TOsd::self()->display(tr("Error"), tr("Unable to connect to server"), TOsd::Error);
     }
@@ -251,42 +229,41 @@ void TupNetProjectManagerHandler::initialize(TupProjectManagerParams *params)
 
 bool TupNetProjectManagerHandler::setupNewProject(TupProjectManagerParams *params)
 {
-    TupNetProjectManagerParams *netparams = dynamic_cast<TupNetProjectManagerParams*>(params);
+    TupNetProjectManagerParams *netParams = dynamic_cast<TupNetProjectManagerParams*>(params);
     
-    if (!netparams) 
+    if (!netParams)
         return false;
     
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
-           qWarning() << "netparams->projectName() : " << netparams->projectName();
+           qWarning() << "netParams->projectName() : " << netParams->projectName();
         #else
-           SHOW_VAR(netparams->getProjectManager());
+           SHOW_VAR(netParams->getProjectManager());
         #endif
     #endif    
 
-    k->projectName = netparams->getProjectManager();
-    // k->author = netparams->author();
-   
+    projectName = netParams->getProjectManager();
+    // author = netParams->author();
     /* 
-    if (! k->socket->isOpen()) {
+    if (! socket->isOpen()) {
         bool connected = initialize(params);
         if (!connected) 
             return false;
     }
     */
 
-    QString dimension = QString::number(netparams->getDimension().width()) + "," + QString::number(netparams->getDimension().height()); 
+    QString dimension = QString::number(netParams->getDimension().width()) + "," + QString::number(netParams->getDimension().height());
 
-    TupNewProjectPackage newProjectPackage(netparams->getProjectManager(), netparams->getAuthor(), netparams->getDescription(),
-                                           netparams->getBgColor().name(), dimension, QString::number(netparams->getFPS()));
-    k->socket->send(newProjectPackage);
+    TupNewProjectPackage newProjectPackage(netParams->getProjectManager(), netParams->getAuthor(), netParams->getDescription(),
+                                           netParams->getBgColor().name(), dimension, QString::number(netParams->getFPS()));
+    socket->send(newProjectPackage);
     
     return true;
 }
 
 bool TupNetProjectManagerHandler::closeProject()
 {
-    k->projectIsOpen = false;
+    projectIsOpen = false;
 
     closeConnection();
 
@@ -318,30 +295,30 @@ void TupNetProjectManagerHandler::handlePackage(const QString &root, const QStri
         QMessageBox msgBox;
         msgBox.setWindowTitle(tr("Fatal Error"));
         msgBox.setIcon(QMessageBox::Critical);
-        msgBox.setText(tr("User \"%1\" is disabled.\nPlease, contact the animation server admin to get access.").arg(k->params->login()));
+        msgBox.setText(tr("User \"%1\" is disabled.\nPlease, contact the animation server admin to get access.").arg(params->login()));
         msgBox.exec();
     } else if (root == "project_request") {
                TupRequestParser parser;
 
                if (parser.parse(package)) {
-                   if (parser.getSign() == k->sign)
-                       k->ownPackage = true;
+                   if (parser.getSign() == sign)
+                       ownPackage = true;
                    else
-                       k->ownPackage = false;
+                       ownPackage = false;
 
-                   if (k->ownPackage && !k->doAction) {
+                   if (ownPackage && !doAction) {
                        if (parser.getResponse()->getPart() == TupProjectRequest::Item) {
                            TupItemResponse *response = static_cast<TupItemResponse *>(parser.getResponse());
                            TupProjectRequest request = TupRequestBuilder::createFrameRequest(response->getSceneIndex(), 
                                                       response->getLayerIndex(), response->getFrameIndex(), TupProjectRequest::Select);
-                           request.setExternal(!k->ownPackage);
+                           request.setExternal(!ownPackage);
                            emit sendLocalCommand(&request);
                        }
                        return;
                    } else {
                        TupProjectRequest request = TupRequestBuilder::fromResponse(parser.getResponse());
-                       request.setExternal(!k->ownPackage);
-                       emitRequest(&request, k->doAction && k->ownPackage);
+                       request.setExternal(!ownPackage);
+                       emitRequest(&request, doAction && ownPackage);
                    }
 
                } else { // SQA: show error 
@@ -360,9 +337,9 @@ void TupNetProjectManagerHandler::handlePackage(const QString &root, const QStri
 
                if (parser.checksum()) {
                    if ((parser.sceneIndex() >= 0) && (parser.storyboardXml().length() > 0)) {
-                       TupStoryboard *storyboard = new TupStoryboard(k->username);
+                       TupStoryboard *storyboard = new TupStoryboard(username);
                        storyboard->fromXml(parser.storyboardXml());
-                       k->project->sceneAt(parser.sceneIndex())->setStoryboard(storyboard);
+                       project->sceneAt(parser.sceneIndex())->setStoryboard(storyboard);
                    } else {
                        #ifdef TUP_DEBUG
                            QString msg = "ProjectManager::handlePackage() - [ Fatal Error ] - Can't parse project_storyboard package";
@@ -388,7 +365,7 @@ void TupNetProjectManagerHandler::handlePackage(const QString &root, const QStri
                // Checking the package
                TupAckParser parser;
                if (parser.parse(package)) {
-                   k->sign = parser.sign();
+                   sign = parser.sign();
                    // TOsd::self()->display(tr("Information"), tr("Login successful!")); 
                    // TOsd::self()->display(tr("Information"), parser.motd());
                    emit authenticationSuccessful(); 
@@ -401,12 +378,12 @@ void TupNetProjectManagerHandler::handlePackage(const QString &root, const QStri
                        file.write(parser.data());
                        file.flush();
             
-                       if (k->project) {
+                       if (project) {
                            TupFileManager *manager = new TupFileManager;
-                           bool isOk = manager->load(file.fileName(), k->project);
+                           bool isOk = manager->load(file.fileName(), project);
                            if (isOk) {
-                               k->projectIsOpen = true;
-                               emit openNewArea(k->project->getName(), parser.partners());
+                               projectIsOpen = true;
+                               emit openNewArea(project->getName(), parser.partners());
                            } else {
                                #ifdef TUP_DEBUG
                                    QString msg = "TupNetProjectManagerHandler::handlePackage() - Error: Net project can't be opened";
@@ -436,35 +413,35 @@ void TupNetProjectManagerHandler::handlePackage(const QString &root, const QStri
                    int works = parser.workSize();
                    int contributions = parser.contributionSize();
                    if ((works + contributions) > 0) {
-                       k->dialog = new TupListProjectDialog(works, contributions, k->params->server());
+                       dialog = new TupListProjectDialog(works, contributions, params->server());
                        QDesktopWidget desktop;
-                       k->dialog->show();
-                       k->dialog->move((int) (desktop.screenGeometry().width() - k->dialog->width())/2,
-                                       (int) (desktop.screenGeometry().height() - k->dialog->height())/2);
-                       k->dialogIsOpen = true;
+                       dialog->show();
+                       dialog->move((int) (desktop.screenGeometry().width() - dialog->width())/2,
+                                       (int) (desktop.screenGeometry().height() - dialog->height())/2);
+                       dialogIsOpen = true;
 
                        foreach (TupProjectListParser::ProjectInfo info, parser.works())
-                                k->dialog->addWork(info.file, info.name, info.description, info.date);
+                                dialog->addWork(info.file, info.name, info.description, info.date);
 
                        foreach (TupProjectListParser::ProjectInfo info, parser.contributions())
-                                k->dialog->addContribution(info.file, info.name, info.author, info.description, info.date);
+                                dialog->addContribution(info.file, info.name, info.author, info.description, info.date);
 
-                       if (k->dialog->exec() == QDialog::Accepted && !k->dialog->projectID().isEmpty()) {
+                       if (dialog->exec() == QDialog::Accepted && !dialog->projectID().isEmpty()) {
                            #ifdef TUP_DEBUG
-                               QString msg = "TupNetProjectManagerHandler::handlePackage() - opening project -> " + k->dialog->projectID();
+                               QString msg = "TupNetProjectManagerHandler::handlePackage() - opening project -> " + dialog->projectID();
                                #ifdef Q_OS_WIN
                                    qWarning() << msg;
                                #else
                                    tWarning() << msg;
                                #endif
                            #endif
-                           k->dialogIsOpen = false;
-                           if (k->dialog->workIsMine())
-                               loadProjectFromServer(k->dialog->projectID(), k->username);
+                           dialogIsOpen = false;
+                           if (dialog->workIsMine())
+                               loadProjectFromServer(dialog->projectID(), username);
                            else
-                               loadProjectFromServer(k->dialog->projectID(), k->dialog->owner());
+                               loadProjectFromServer(dialog->projectID(), dialog->owner());
                        } else {
-                           k->dialogIsOpen = false;
+                           dialogIsOpen = false;
                            closeConnection();
                        }
                    } else {
@@ -512,7 +489,7 @@ void TupNetProjectManagerHandler::handlePackage(const QString &root, const QStri
     } else if (root == "communication_chat") {
                TupCommunicationParser parser;
                if (parser.parse(package)) {
-                   k->chat->addMessage(parser.login(), parser.message());
+                   chat->addMessage(parser.login(), parser.message());
                }
     } else if (root == "communication_notice") {
                TupCommunicationParser parser;
@@ -527,7 +504,7 @@ void TupNetProjectManagerHandler::handlePackage(const QString &root, const QStri
                        message = "<b>" + login + "</b>" + " has joined the project";
 
                    TOsd::self()->display(tr("Notice"), message);
-                   k->notices->addMessage(message);
+                   notices->addMessage(message);
                } 
     } else if (root == "communication_wall") {
                TupCommunicationParser parser;
@@ -551,23 +528,23 @@ void TupNetProjectManagerHandler::handlePackage(const QString &root, const QStri
 
 bool TupNetProjectManagerHandler::isValid() const
 {
-    return k->socket->state() == QAbstractSocket::ConnectedState;
+    return socket->state() == QAbstractSocket::ConnectedState;
 }
 
 void TupNetProjectManagerHandler::sendPackage(const QDomDocument &doc)
 {
     // tError() << "TupNetProjectManagerHandler::sendPackage() - xml: " << doc.toString();
-    k->socket->send(doc);
+    socket->send(doc);
 }
 
 QTabWidget *TupNetProjectManagerHandler::communicationWidget()
 {
-    return k->communicationModule;
+    return communicationModule;
 }
 
 void TupNetProjectManagerHandler::setProject(TupProject *project)
 {
-    k->project = project;
+    project = project;
 }
 
 void TupNetProjectManagerHandler::sendChatMessage(const QString & message)
@@ -588,21 +565,21 @@ void TupNetProjectManagerHandler::connectionLost()
     #endif
 
 
-    if (k->dialogIsOpen) {
-        if (k->dialog) {
-            if (k->dialog->isVisible())
-                k->dialog->close();
+    if (dialogIsOpen) {
+        if (dialog) {
+            if (dialog->isVisible())
+                dialog->close();
         }
         emit connectionHasBeenLost();
-    } else if (k->projectIsOpen) {
+    } else if (projectIsOpen) {
                emit connectionHasBeenLost();
     }
 }
 
 void TupNetProjectManagerHandler::closeConnection()
 {
-    if (k->socket->isOpen())
-        k->socket->close();
+    if (socket->isOpen())
+        socket->close();
 }
 
 void TupNetProjectManagerHandler::sendExportImageRequest(int frameIndex, int sceneIndex, 

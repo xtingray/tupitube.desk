@@ -51,12 +51,8 @@ class TUPITUBE_EXPORT TupAckParser : public TupXmlParserBase
         virtual void text(const QString &msg);
         
         QString sign() const;
-        // QString motd() const;
         
     private:
-        // struct Private;
-        // Private *const k;
-
         QString signCode;
 };
 

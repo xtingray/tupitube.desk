@@ -37,25 +37,7 @@
 
 #include <QVector>
 
-/*
-struct TupTweenerStep::Private
-{
-    QPointF position;
-    double rotation;
-    double opacity;
-    QColor color;
-    
-    struct PairF {
-        double x;
-        double y;
-    } shear, scale;
-    
-    int flags;
-    int index;
-};
-*/
-
-TupTweenerStep::TupTweenerStep(int idx): TupAbstractSerializable() // , k(new Private)
+TupTweenerStep::TupTweenerStep(int idx): TupAbstractSerializable()
 {
     index = idx;
     flags = None;
@@ -63,7 +45,6 @@ TupTweenerStep::TupTweenerStep(int idx): TupAbstractSerializable() // , k(new Pr
 
 TupTweenerStep::~TupTweenerStep()
 {
-    // delete k;
 }
 
 void TupTweenerStep::setPosition(const QPointF &pos)
@@ -223,26 +204,26 @@ void TupTweenerStep::fromXml(const QString& xml)
         index = root.attribute("value").toInt();
         
         while (!node.isNull()) {
-               QDomElement e = node.toElement();
-               if (!e.isNull()) {
-                   if (e.tagName() == "position") {
-                       setPosition(QPointF(e.attribute("x").toDouble(), e.attribute("y").toDouble()));
-                   } else if (e.tagName() == "rotation") {
-                              setRotation(e.attribute("angle").toDouble());
-                   } else if (e.tagName() == "scale") {
-                              setScale(e.attribute("sx").toDouble(), e.attribute("sy").toDouble());
-                   } else if (e.tagName() == "shear") {
-                              setShear(e.attribute("sh").toDouble(), e.attribute("sv").toDouble());
-                   } else if (e.tagName() == "opacity") {
-                              setOpacity(e.attribute("opacity").toDouble());
-                   } else if (e.tagName() == "color") {
-                              int red = e.attribute("red").toInt();
-                              int green = e.attribute("green").toInt();
-                              int blue = e.attribute("blue").toInt();
-                              setColor(QColor(red, green, blue));
-                   }
-               }
-               node = node.nextSibling();
+            QDomElement e = node.toElement();
+            if (!e.isNull()) {
+                if (e.tagName() == "position") {
+                    setPosition(QPointF(e.attribute("x").toDouble(), e.attribute("y").toDouble()));
+                } else if (e.tagName() == "rotation") {
+                    setRotation(e.attribute("angle").toDouble());
+                } else if (e.tagName() == "scale") {
+                    setScale(e.attribute("sx").toDouble(), e.attribute("sy").toDouble());
+                } else if (e.tagName() == "shear") {
+                    setShear(e.attribute("sh").toDouble(), e.attribute("sv").toDouble());
+                } else if (e.tagName() == "opacity") {
+                    setOpacity(e.attribute("opacity").toDouble());
+                } else if (e.tagName() == "color") {
+                    int red = e.attribute("red").toInt();
+                    int green = e.attribute("green").toInt();
+                    int blue = e.attribute("blue").toInt();
+                    setColor(QColor(red, green, blue));
+                }
+            }
+            node = node.nextSibling();
         }
     }
 }

@@ -35,14 +35,7 @@
 
 #include "tupprojectlistparser.h"
 
-struct TupProjectListParser::Private
-{
-    QList<TupProjectListParser::ProjectInfo> works;
-    QList<TupProjectListParser::ProjectInfo> contributions;
-    bool pivot; 
-};
-
-TupProjectListParser::TupProjectListParser() : TupXmlParserBase(), k( new Private())
+TupProjectListParser::TupProjectListParser() : TupXmlParserBase()
 {
 }
 
@@ -54,22 +47,22 @@ bool TupProjectListParser::startTag(const QString &tag, const QXmlAttributes &at
 {
     if (root() == "server_projectlist") {
         if (tag == "works") {
-            k->pivot = false;
+            pivot = false;
         } else if (tag == "contributions") {
-            k->pivot = true;
+            pivot = true;
         } else if (tag == "project") {
-                   ProjectInfo info;
-                   info.file = atts.value("filename");
-                   info.name = atts.value("name");
-                   info.description = atts.value("description");
-                   info.date = atts.value("date");
+            ProjectInfo info;
+            info.file = atts.value("filename");
+            info.name = atts.value("name");
+            info.description = atts.value("description");
+            info.date = atts.value("date");
 
-                   if (k->pivot) {
-                       info.author = atts.value("author");
-                       k->contributions << info;
-                   } else {
-                       k->works << info;
-                   }
+            if (pivot) {
+                info.author = atts.value("author");
+                contribList << info;
+            } else {
+                worksList << info;
+            }
         }
     }
 
@@ -83,27 +76,27 @@ bool TupProjectListParser::endTag(const QString &tag)
     return true;
 }
 
-void TupProjectListParser::text(const QString &text)
+void TupProjectListParser::text(const QString &textStr)
 {
-    Q_UNUSED(text); 
+    Q_UNUSED(textStr);
 }
 
 QList<TupProjectListParser::ProjectInfo> TupProjectListParser::works()
 {
-    return k->works;
+    return worksList;
 }
 
 QList<TupProjectListParser::ProjectInfo> TupProjectListParser::contributions()
 {
-    return k->contributions;
+    return contribList;
 }
 
 int TupProjectListParser::workSize()
 {
-    return k->works.count();
+    return worksList.count();
 }
 
 int TupProjectListParser::contributionSize()
 {
-    return k->contributions.count();
+    return contribList.count();
 }

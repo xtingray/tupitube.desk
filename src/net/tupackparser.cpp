@@ -35,20 +35,12 @@
 
 #include "tupackparser.h"
 
-/*
-struct TupAckParser::Private
-{
-    QString signCode;
-};
-*/
-
-TupAckParser::TupAckParser() : TupXmlParserBase() //, k(new Private())
+TupAckParser::TupAckParser() : TupXmlParserBase()
 {
 }
 
 TupAckParser::~TupAckParser()
 {
-    // delete k;
 }
 
 bool TupAckParser::startTag(const QString &tag, const QXmlAttributes &atts)

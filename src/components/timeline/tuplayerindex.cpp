@@ -42,7 +42,7 @@
 class TUPITUBE_EXPORT TupLayerIndexHeader : public QHeaderView
 {
     public:
-        TupLayerIndexHeader(QWidget * parent = 0);
+        TupLayerIndexHeader(QWidget * parent = nullptr);
         ~TupLayerIndexHeader();
         void paintSection(QPainter *painter, const QRect & rect, int logicalIndex) const;
 
@@ -53,11 +53,11 @@ class TUPITUBE_EXPORT TupLayerIndexHeader : public QHeaderView
     */
 };
 
-TupLayerIndexHeader::TupLayerIndexHeader(QWidget * parent) : QHeaderView(Qt::Horizontal , parent)
+TupLayerIndexHeader::TupLayerIndexHeader(QWidget * parent) : QHeaderView(Qt::Horizontal, parent)
 {
-    //setClickable(true);
+    // setClickable(true);
     setCascadingSectionResizes(true);
-    //setMaximumHeight(20);
+    // setMaximumHeight(20);
     setFixedHeight(26);
 }
 
@@ -85,7 +85,7 @@ void TupLayerIndexHeader::paintSection(QPainter * painter, const QRect & rect, i
     
     style()->drawControl(QStyle::CE_HeaderSection, &headerOption, painter);
     
-    //painter->drawRect(rect.normalized().adjusted(0, 1, 0, -1));
+    // painter->drawRect(rect.normalized().adjusted(0, 1, 0, -1));
     
     QString text = model()->headerData(logicalIndex, orientation(), Qt::DisplayRole).toString();;
     
@@ -97,7 +97,7 @@ void TupLayerIndexHeader::paintSection(QPainter * painter, const QRect & rect, i
     QFontMetrics fm(font);
     
     int x = rect.x() + (sectionSize(logicalIndex) - fm.width( text ))/2;
-    //int y = fm.height() + (rect.y() / 2);
+    // int y = fm.height() + (rect.y() / 2);
     int y = 17;
     painter->setFont(font); 
     painter->drawText(x, y, text);
@@ -108,7 +108,7 @@ void TupLayerIndexHeader::paintSection(QPainter * painter, const QRect & rect, i
 class TupLayerIndexItemDelegate : public QItemDelegate
 {
     public:
-        TupLayerIndexItemDelegate(QObject * parent = 0);
+        TupLayerIndexItemDelegate(QObject * parent = nullptr);
         ~TupLayerIndexItemDelegate();
         virtual void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
 };
@@ -138,16 +138,7 @@ void TupLayerIndexItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 
 ////////////////////////////////
 
-struct TupLayerIndex::Private
-{
-    Private() : allSelected(false), allVisible(true), allLock(false), rowHeight(20), sceneIndex(0) {}
-    
-    bool allSelected, allVisible, allLock;
-    int rowHeight;
-    int sceneIndex;
-};
-
-TupLayerIndex::TupLayerIndex(int sceneIndex, QWidget *parent) : QTableWidget(0, 1, parent), k(new Private)
+TupLayerIndex::TupLayerIndex(int index, QWidget *parent) : QTableWidget(0, 1, parent)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -157,7 +148,7 @@ TupLayerIndex::TupLayerIndex(int sceneIndex, QWidget *parent) : QTableWidget(0, 
         #endif
     #endif
 
-    k->sceneIndex = sceneIndex;
+    sceneIndex = index;
     setSelectionMode(QAbstractItemView::SingleSelection);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff); 
@@ -187,8 +178,6 @@ TupLayerIndex::~TupLayerIndex()
             TEND;
         #endif
     #endif
-
-    delete k;
 }
 
 void TupLayerIndex::insertLayer(int position, const QString &name)
@@ -250,12 +239,12 @@ void TupLayerIndex::fixSize()
     horizontalHeader()->resizeSection(0, 196);
 
     for (int row = 0; row < rowCount(); row++)
-         verticalHeader()->resizeSection(row, k->rowHeight);
+         verticalHeader()->resizeSection(row, rowHeight);
 }
 
 void TupLayerIndex::setRowHeight(int rowHeight)
 {
-    k->rowHeight = rowHeight;
+    rowHeight = rowHeight;
 }
 
 void TupLayerIndex::commitData(QWidget *editor)
@@ -275,7 +264,6 @@ void TupLayerIndex::moveLayer(int position, int newPosition)
     
     verticalHeader()->moveSection((position), (newPosition));
 }
-
 
 void TupLayerIndex::lockLayer(int position, bool locked)
 {
@@ -318,5 +306,5 @@ void TupLayerIndex::refresh()
     // int w = width();
     // int h = height();
     // tFatal() << "Updating TupLayerIndex interface - Size: " << w << " : " << h;
-    //repaint(0, 0, width(), height());
+    // repaint(0, 0, width(), height());
 }

@@ -58,11 +58,11 @@ class TUPITUBE_EXPORT TupNetProjectManagerParams : public TupProjectManagerParam
         int port() const;
 
     private:
-        QString m_login;
-        QString m_password;
-        QString m_server;
+        QString loginStr;
+        QString passwdStr;
+        QString serverStr;
 
-        int m_port;
+        int portValue;
 };
 
 #endif

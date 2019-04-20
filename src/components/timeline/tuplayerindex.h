@@ -99,19 +99,16 @@ class TUPITUBE_EXPORT TupLayerIndex : public QTableWidget
     protected slots:
         void commitData(QWidget * editor);
         void setLocalRequest(int row, int column);
-
-        //void emitSelectionSignal();
-        
+ 
     signals:
         void requestRenameEvent(int layerPosition, const QString &newName);
         void localRequest();
         void layerVisibility(int sceneIndex, int layerIndex, bool checked);
 
-        // void requestTriggered(const TupProjectRequest *event);
-        
     private:
-        struct Private;
-        Private *const k;
+        bool allSelected, allVisible, allLock;
+        int rowHeight;
+        int sceneIndex;
 };
 
 #endif

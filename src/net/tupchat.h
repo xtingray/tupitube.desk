@@ -53,7 +53,7 @@ class TUPITUBE_EXPORT TupChat : public QWidget
     Q_OBJECT
     
     public:
-        TupChat(QWidget *parent = 0);
+        TupChat(QWidget *parent = nullptr);
         ~TupChat();
         
         void addMessage(const QString &from, const QString &message);
@@ -69,8 +69,13 @@ class TUPITUBE_EXPORT TupChat : public QWidget
         
     private:
         QString formatMessage(const QString &msg);
-        struct Private;
-        Private *const k;
+
+        QLineEdit *lineEdit;
+        QTextBrowser *browser;
+        QPushButton *send;
+        QList<QString> *lines;
+        int cursorDown;
+        int cursorUp;
 };
 
 #endif

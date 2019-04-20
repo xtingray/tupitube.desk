@@ -76,10 +76,11 @@
 #include <QDesktopWidget>
 #include <QMessageBox>
 
+class TupNetSocket;
+
 /*
 class TupChat;
 class TupProjectCommand;
-class TupNetSocket;
 class TupNetProjectManagerParams;
 */
 
@@ -88,7 +89,7 @@ class TUPITUBE_EXPORT TupNetProjectManagerHandler : public TupAbstractProjectHan
     Q_OBJECT
 
     public:
-        TupNetProjectManagerHandler(QObject *parent = 0);
+        TupNetProjectManagerHandler(QObject *parent = nullptr);
         ~TupNetProjectManagerHandler();
 
         virtual void initialize(TupProjectManagerParams *params);
@@ -127,8 +128,23 @@ class TUPITUBE_EXPORT TupNetProjectManagerHandler : public TupAbstractProjectHan
         void emitRequest(TupProjectRequest *request, bool toStack);
         void setProject(TupProject *project);
 
-        struct Private;
-        Private *const k;
+        TupNetProjectManagerParams *params;
+        TupNetSocket *socket;
+        QString projectName;
+        QString username;
+        TupProject *project;
+
+        QString sign;
+        bool ownPackage;
+        bool doAction;
+
+        QTabWidget *communicationModule;
+        TupChat *chat;
+        TupNotice *notices;
+
+        bool projectIsOpen;
+        bool dialogIsOpen;
+        TupListProjectDialog *dialog;
 };
 
 #endif

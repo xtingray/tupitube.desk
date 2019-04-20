@@ -64,9 +64,9 @@ class TUPITUBE_EXPORT TupProjectListParser : public TupXmlParserBase
         int contributionSize();
         
     private:
-        struct Private;
-        Private *const k;
-
+        QList<TupProjectListParser::ProjectInfo> worksList;
+        QList<TupProjectListParser::ProjectInfo> contribList;
+        bool pivot;
 };
 
 #endif

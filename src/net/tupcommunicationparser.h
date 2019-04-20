@@ -44,6 +44,7 @@ class TUPITUBE_EXPORT TupCommunicationParser : public TupXmlParserBase
     public:
         TupCommunicationParser();
         ~TupCommunicationParser();
+
         virtual bool startTag(const QString &tag, const QXmlAttributes &atts);
         virtual bool endTag(const QString &tag);
         virtual void text(const QString &text);
@@ -54,8 +55,9 @@ class TUPITUBE_EXPORT TupCommunicationParser : public TupXmlParserBase
         int state(); 
         
     private:
-        struct Private;
-        Private *const k;
+        QString messageStr;
+        QString loginStr;
+        int stateValue;
 };
 
 #endif

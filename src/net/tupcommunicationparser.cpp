@@ -35,34 +35,25 @@
 
 #include "tupcommunicationparser.h"
 
-struct TupCommunicationParser::Private
+TupCommunicationParser::TupCommunicationParser(): TupXmlParserBase()
 {
-    QString message;
-    QString login;
-    int state;
-};
-
-TupCommunicationParser::TupCommunicationParser() : TupXmlParserBase(), k(new Private())
-{
-    
 }
 
 TupCommunicationParser::~TupCommunicationParser()
 {
-    
 }
 
 bool TupCommunicationParser::startTag(const QString &tag, const QXmlAttributes &atts)
 {
     if (root() == "communication_chat" || root() == "communication_wall") {
         if (tag == "message") {
-            k->message = atts.value("text");
-            k->login = atts.value("from");
+            messageStr = atts.value("text");
+            loginStr = atts.value("from");
         }
     } else if (root() == "communication_notice") {
         if (tag == "notice") {
-            k->login = atts.value("login");
-            k->state = atts.value("state").toInt();
+            loginStr = atts.value("login");
+            stateValue = atts.value("state").toInt();
         }
     }
     
@@ -80,16 +71,15 @@ void TupCommunicationParser::text(const QString &)
 
 QString TupCommunicationParser::message() const
 {
-    return k->message;
+    return messageStr;
 }
 
 QString TupCommunicationParser::login() const
 {
-    return k->login;
+    return loginStr;
 }
 
 int TupCommunicationParser::state()
 {
-    return k->state;
+    return stateValue;
 }
-
