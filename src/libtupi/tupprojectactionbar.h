@@ -48,10 +48,6 @@
 #include <QVBoxLayout>
 #include <QVariant>
 #include <QSpacerItem>
-#include <QDesktopWidget>
-
-class TImageButton;
-class QBoxLayout;
 
 class TUPITUBE_EXPORT TupProjectActionBar : public QWidget
 {
@@ -91,10 +87,11 @@ class TUPITUBE_EXPORT TupProjectActionBar : public QWidget
             SceneActions = InsertScene | RemoveScene | MoveSceneUp | MoveSceneDown
         };
         
-        TupProjectActionBar(const QString &container = QString(), QList<Action> actions = QList<Action>(), Qt::Orientation orientation = Qt::Horizontal, QWidget *parent = 0);
+        TupProjectActionBar(const QString &container = QString(), QList<Action> actions = QList<Action>(),
+                            Qt::Orientation orientation = Qt::Horizontal, QWidget *parent = 0);
         ~TupProjectActionBar();
-        void setFixedSize(int s);
-        
+
+        void setFixedSize(int size);
         void insertSeparator(int position);
         void insertBlankSpace(int position);
         
@@ -110,8 +107,12 @@ class TUPITUBE_EXPORT TupProjectActionBar : public QWidget
         void setup(QList<Action> actions);
         
     private:
-        struct Private;
-        Private *const k;
+        QString container;
+        Qt::Orientation orientation;
+        int fixedSize;
+        QButtonGroup actions;
+        QBoxLayout *buttonLayout;
+        bool isAnimated;
 };
 
 #endif
