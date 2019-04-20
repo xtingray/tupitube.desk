@@ -35,15 +35,10 @@
 
 #include "tuptoolsdialog.h"
 
-struct TupToolsDialog::Private
-{
-    QHBoxLayout *layout;
-};
-
-TupToolsDialog::TupToolsDialog(QList<QString> tools, QWidget *parent) : QDialog(parent), k(new Private)
+TupToolsDialog::TupToolsDialog(QList<QString> tools, QWidget *parent) : QDialog(parent)
 {
     setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::ToolTip);
-    k->layout = new QHBoxLayout(this);
+    layout = new QHBoxLayout(this);
     setToolsPanel(tools);
 }
 
@@ -59,15 +54,15 @@ void TupToolsDialog::setToolsPanel(QList<QString> tools)
             pencil->setToolTip(tr("Pencil"));
             connect(pencil, SIGNAL(clicked()), this, SLOT(wakeUpPencil()));
 
-            k->layout->addWidget(pencil);
+            layout->addWidget(pencil);
         }
 
         if (tools.at(i).compare("InkTool") == 0) {
             TImageButton *ink = new TImageButton(QPixmap(THEME_DIR + "icons/ink_big.png"), 60, this, true);
-            ink->setToolTip(tr("Ink"));
+            insetToolTip(tr("Ink"));
             connect(ink, SIGNAL(clicked()), this, SLOT(wakeUpInk()));
 
-            k->layout->addWidget(ink);
+            layout->addWidget(ink);
         }
 
         if (tools.at(i).compare("PolyLineTool") == 0) {
@@ -75,7 +70,7 @@ void TupToolsDialog::setToolsPanel(QList<QString> tools)
             polyline->setToolTip(tr("Polyline"));
             connect(polyline, SIGNAL(clicked()), this, SLOT(wakeUpPolyline()));
 
-            k->layout->addWidget(polyline);
+            layout->addWidget(polyline);
         }
 
         if (tools.at(i).compare("EllipseTool") == 0) {
@@ -83,7 +78,7 @@ void TupToolsDialog::setToolsPanel(QList<QString> tools)
             ellipse->setToolTip(tr("Ellipse"));
             connect(ellipse, SIGNAL(clicked()), this, SLOT(wakeUpEllipse()));
 
-            k->layout->addWidget(ellipse);
+            layout->addWidget(ellipse);
         }
 
         if (tools.at(i).compare("RectangleTool") == 0) {
@@ -91,7 +86,7 @@ void TupToolsDialog::setToolsPanel(QList<QString> tools)
             rectangle->setToolTip(tr("Rectangle"));
             connect(rectangle, SIGNAL(clicked()), this, SLOT(wakeUpRectangle()));
 
-            k->layout->addWidget(rectangle);
+            layout->addWidget(rectangle);
         }
 
         if (tools.at(i).compare("ObjectsTool") == 0) {
@@ -99,7 +94,7 @@ void TupToolsDialog::setToolsPanel(QList<QString> tools)
             objects->setToolTip(tr("Object Selection"));
             connect(objects, SIGNAL(clicked()), this, SLOT(wakeUpObjectSelection()));
 
-            k->layout->addWidget(objects);
+            layout->addWidget(objects);
         }
 
 
@@ -108,7 +103,7 @@ void TupToolsDialog::setToolsPanel(QList<QString> tools)
             nodes->setToolTip(tr("Nodes Selection"));
             connect(nodes, SIGNAL(clicked()), this, SLOT(wakeUpNodeSelection()));
 
-            k->layout->addWidget(nodes);
+            layout->addWidget(nodes);
         }
 
         if (tools.at(i).compare("ColorTool") == 0) {
@@ -116,7 +111,7 @@ void TupToolsDialog::setToolsPanel(QList<QString> tools)
             colors->setToolTip(tr("Color Palette"));
             connect(colors, SIGNAL(clicked()), this, SIGNAL(openColorDialog()));
 
-            k->layout->addWidget(colors);
+            layout->addWidget(colors);
         }
 
         if (tools.at(i).compare("PenSize") == 0) {
@@ -124,7 +119,7 @@ void TupToolsDialog::setToolsPanel(QList<QString> tools)
             pen->setToolTip(tr("Pen Size"));
             connect(pen, SIGNAL(clicked()), this, SIGNAL(openPenDialog()));
 
-            k->layout->addWidget(pen);
+            layout->addWidget(pen);
         }
 
         if (tools.at(i).compare("Opacity") == 0) {
@@ -132,7 +127,7 @@ void TupToolsDialog::setToolsPanel(QList<QString> tools)
             opacity->setToolTip(tr("Opacity Value"));
             connect(opacity, SIGNAL(clicked()), this, SIGNAL(openOpacityDialog()));
 
-            k->layout->addWidget(opacity);
+            layout->addWidget(opacity);
         }
     }
 }
@@ -185,6 +180,4 @@ void TupToolsDialog::wakeUpNodeSelection()
     emit isClosed();
     close();
 }
-
-
 

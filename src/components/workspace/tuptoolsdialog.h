@@ -72,8 +72,8 @@ class TUPITUBE_EXPORT TupToolsDialog : public QDialog
 
     private:
         void setToolsPanel(QList<QString> tools);
-        struct Private;
-        Private *const k;
+
+        QHBoxLayout *layout;
 };
 
 #endif

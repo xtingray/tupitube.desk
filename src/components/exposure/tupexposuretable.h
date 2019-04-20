@@ -153,9 +153,6 @@ class TUPITUBE_EXPORT TupExposureTable : public QTableWidget
         bool frameIndexIsValid(int frameIndex);
         void markNextFrame(int frameIndex, int layerIndex);
 
-        // struct Private;
-        // Private *const k;
-
         TupExposureHeader *header;
         QMenu *singleMenu;
         // QMenu *multipleMenu;

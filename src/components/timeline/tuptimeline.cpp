@@ -47,22 +47,7 @@
 
 #define RETURN_IF_NOT_LIBRARY if (!library) return;
 
-struct TupTimeLine::Private
-{
-    // Private() : scenesContainer(0), actionBar(0), selectedLayer(-1), library(0) {}
-    /*
-    TupSceneContainer *scenesContainer;
-    TupTimeLineTable *currentTable;
-    TupProjectActionBar *actionBar;
-    int selectedLayer; 
-    TupProject *project;
-    TupLibrary *library;
-    QString frameSelection;
-    bool doSelection;
-    */
-};
-
-TupTimeLine::TupTimeLine(TupProject *projectData, QWidget *parent) : TupModuleWidgetBase(parent, "TupTimeLine"), k(new Private)
+TupTimeLine::TupTimeLine(TupProject *projectData, QWidget *parent) : TupModuleWidgetBase(parent, "TupTimeLine")
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -116,8 +101,6 @@ TupTimeLine::~TupTimeLine()
             TEND;
         #endif
     #endif
-
-    delete k;
 }
 
 TupTimeLineTable *TupTimeLine::framesTable(int sceneIndex)

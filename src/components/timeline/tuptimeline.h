@@ -92,9 +92,6 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
     private:
         void requestReverseFrameSelection();
 
-        struct Private;
-        Private *const k;
-
         TupSceneContainer *scenesContainer;
         TupTimeLineTable *currentTable;
         TupProjectActionBar *actionBar;
@@ -103,7 +100,6 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
         TupLibrary *library;
         QString frameSelection;
         bool doSelection;
-
 };
 
 #endif
