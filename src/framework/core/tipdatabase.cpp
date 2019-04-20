@@ -39,89 +39,79 @@
 #include <QFile>
 #include <QList>
 
-struct TipDatabase::Private
-{
-    QList<QString> tips;
-    int currentTipIndex;
-
-    QList<QString> videos;
-    int currentVideoIndex;
-};
-
-TipDatabase::TipDatabase(const QString &videoPath, const QString &tipPath, QWidget *parent) : QWidget(parent), k(new Private)
+TipDatabase::TipDatabase(const QString &videoPath, const QString &tipPath, QWidget *parent) : QWidget(parent)
 {
     loadVideos(videoPath);
-    if (!k->videos.isEmpty())
-        k->currentVideoIndex = TAlgorithm::random() % k->videos.count();
+    if (!videos.isEmpty())
+        currentVideoIndex = TAlgorithm::random() % videos.count();
 
     loadTips(tipPath);
-    if (!k->tips.isEmpty())
-        k->currentTipIndex = TAlgorithm::random() % k->tips.count();
+    if (!tips.isEmpty())
+        currentTipIndex = TAlgorithm::random() % tips.count();
 }
 
 TipDatabase::~TipDatabase()
 {
-    delete k;
 }
 
 QString TipDatabase::video() const
 {
-    if (k->currentVideoIndex >= 0 && k->currentVideoIndex < k->videos.count())
-        return k->videos[k->currentVideoIndex];
+    if (currentVideoIndex >= 0 && currentVideoIndex < videos.count())
+        return videos[currentVideoIndex];
 
     return "";
 }
 
 QString TipDatabase::tip() const
 {
-    if (k->currentTipIndex >= 0 && k->currentTipIndex < k->tips.count())
-        return k->tips[k->currentTipIndex];
+    if (currentTipIndex >= 0 && currentTipIndex < tips.count())
+        return tips[currentTipIndex];
 
     return "";
 }
 
 void TipDatabase::nextVideo()
 {
-    if (k->videos.isEmpty())
+    if (videos.isEmpty())
         return;
 
-    k->currentVideoIndex += 1;
+    currentVideoIndex += 1;
 
-    if (k->currentVideoIndex >= (int) k->videos.count())
-        k->currentVideoIndex = 0;
+    if (currentVideoIndex >= (int) videos.count())
+        currentVideoIndex = 0;
 }
 
 void TipDatabase::nextTip()
 {
-    if (k->tips.isEmpty())
+    if (tips.isEmpty())
         return;
 
-    k->currentTipIndex += 1;
+    currentTipIndex += 1;
 
-    if (k->currentTipIndex >= (int) k->tips.count())
-        k->currentTipIndex = 0;
+    if (currentTipIndex >= (int) tips.count())
+        currentTipIndex = 0;
 }
 
 void TipDatabase::previousVideo()
 {
-    if (k->videos.isEmpty())
+    if (videos.isEmpty())
         return;
 
-    k->currentVideoIndex -= 1;
+    currentVideoIndex -= 1;
 
-    if (k->currentVideoIndex < 0)
-        k->currentVideoIndex = k->videos.count() - 1;
+    if (currentVideoIndex < 0)
+        currentVideoIndex = videos.count() - 1;
 }
 
 void TipDatabase::prevTip()
 {
-    if (k->tips.isEmpty())
+    if (tips.isEmpty())
         return;
 
-    k->currentTipIndex -= 1;
+    currentTipIndex -= 1;
 
-    if (k->currentTipIndex < 0)
-        k->currentTipIndex = k->tips.count() - 1;
+    if (currentTipIndex < 0)
+        currentTipIndex = tips.count() - 1;
 }
 
 void TipDatabase::loadVideos(const QString &videoPath)
@@ -215,7 +205,7 @@ void TipDatabase::loadVideos(const QString &videoPath)
                 record += "\n</body>\n";
                 record += "</html>";
 
-                k->videos << record;
+                videos << record;
             }
         }
         node = node.nextSibling();
@@ -272,7 +262,7 @@ void TipDatabase::loadTips(const QString &tipPath)
                 record += e.text();
                 record += "\n</body>\n";
                 record += "</html>";
-                k->tips << record;
+                tips << record;
             }
         }
         n = n.nextSibling();
@@ -282,5 +272,5 @@ void TipDatabase::loadTips(const QString &tipPath)
 
 int TipDatabase::videosCount()
 {
-    return k->videos.count();
+    return videos.count();
 }

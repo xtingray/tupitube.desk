@@ -62,8 +62,10 @@ class T_CORE_EXPORT TipDatabase : public QWidget
         void loadTips(const QString &tipPath);
 
     private:
-        struct Private;
-        Private *const k;
+        QList<QString> tips;
+        int currentTipIndex;
+        QList<QString> videos;
+        int currentVideoIndex;
 };
 
 #endif

@@ -74,7 +74,6 @@ class TUPITUBE_EXPORT TSlider : public QGraphicsView
     private:
        void calculateNewPosition(int pos);
        void calculateColor(int value);
-       struct Private;
 
        int minRange;
        int maxRange;
