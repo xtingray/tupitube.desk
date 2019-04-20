@@ -71,8 +71,9 @@ class TUPITUBE_EXPORT TupWebHunter : public QObject
 
     private:
         static QString BROWSER_FINGERPRINT;
-        struct Private;
-        Private *const k;
+        DataType type;
+        QString url;
+        QString currency;
 };
 
 #endif

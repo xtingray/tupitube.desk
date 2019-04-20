@@ -37,24 +37,17 @@
 
 QString TupWebHunter::BROWSER_FINGERPRINT = QString("Tupi_Browser 1.0");
 
-struct TupWebHunter::Private
+TupWebHunter::TupWebHunter(DataType dataType, const QString &urlStr, QList<QString> params)
 {
-    DataType type;
-    QString url;
-    QString currency;
-};
+    type = dataType;
+    url = urlStr;
 
-TupWebHunter::TupWebHunter(DataType type, const QString &url, QList<QString> params) : k(new Private)
-{
-    k->type = type;
-    k->url = url;
-
-    if (k->type == Currency) {
+    if (type == Currency) {
         QString money1 = params.at(0);
         QString money2 = params.at(1); 
-        k->url.replace("1", money1); 
-        k->url.replace("2", money2);
-        k->currency = money2;
+        url.replace("1", money1); 
+        url.replace("2", money2);
+        currency = money2;
     }
 }
 
@@ -64,7 +57,7 @@ void TupWebHunter::start()
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(closeRequest(QNetworkReply*)));
 
     QNetworkRequest request;
-    request.setUrl(QUrl(k->url));
+    request.setUrl(QUrl(url));
     // request.setRawHeader("User-Agent", BROWSER_FINGERPRINT.toAscii());
     request.setRawHeader("User-Agent", BROWSER_FINGERPRINT.toLatin1());
 
@@ -81,22 +74,22 @@ void TupWebHunter::closeRequest(QNetworkReply *reply)
     QByteArray array = reply->readAll();
     QString answer(array);
 
-    if (k->type == Currency) {
+    if (type == Currency) {
         answer = answer.mid(answer.indexOf("\n"), answer.length()).trimmed();
 
         QDomDocument doc;
         if (doc.setContent(answer)) {
             QDomElement root = doc.documentElement();
             if (!root.text().isNull())
-                emit dataReady(k->currency + ":" + root.text());
+                emit dataReady(currency + ":" + root.text());
         }
     }
 }
 
 void TupWebHunter::slotError(QNetworkReply::NetworkError error)
 {
-    if (k->type == Currency)
-        emit dataReady(k->currency + ":UNAVAILABLE");
+    if (type == Currency)
+        emit dataReady(currency + ":UNAVAILABLE");
     else
         emit dataReady(tr("Information Temporarily Unavailable"));
 

@@ -57,8 +57,9 @@ class TUPITUBE_EXPORT TupPaintAreaRotator : public QObject
         void applyRotation();
         
     private:
-        struct Private;
-        Private *const k;
+        int rotationAngle;
+        TupPaintAreaBase *view;
+        QTimer timer;
 };
 
 #endif

@@ -61,18 +61,18 @@ class TUPITUBE_PLUGIN ShiftTool: public TupToolPlugin
         ShiftTool();
         ~ShiftTool();
 
-        virtual void init(TupGraphicsScene *scene);
+        virtual void init(TupGraphicsScene *gScene);
         virtual QStringList keys() const;
         
-        virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
-        virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
-        virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
+        virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene);
+        virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene);
+        virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene);
 
         virtual QMap<QString, TAction *> actions() const;
         int toolType() const;
         
         virtual QWidget *configurator();
-        virtual void aboutToChangeScene(TupGraphicsScene *scene);
+        virtual void aboutToChangeScene(TupGraphicsScene *gScene);
         virtual void aboutToChangeTool();
         virtual void saveConfig();
         virtual void keyPressEvent(QKeyEvent *event);
@@ -90,8 +90,14 @@ class TUPITUBE_PLUGIN ShiftTool: public TupToolPlugin
         void setupActions();
 
     private:
-        struct Private;
-        Private *const k;
+        QMap<QString, TAction *> shiftActions;
+        QGraphicsRectItem *rect;
+        bool added;
+        QPointF currentCenter;
+        QPointF firstPoint;
+        TupGraphicsScene *scene;
+        QCursor shiftCursor;
+        QSize projectSize;
 };
 
 #endif

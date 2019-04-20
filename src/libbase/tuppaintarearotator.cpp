@@ -36,36 +36,27 @@
 #include "tuppaintarearotator.h"
 #include "tuppaintareabase.h"
 
-struct TupPaintAreaRotator::Private
+TupPaintAreaRotator::TupPaintAreaRotator(QObject *parent, TupPaintAreaBase *baseView) : QObject(parent)
 {
-    int rotationAngle;
-    TupPaintAreaBase *view;
-    
-    QTimer timer;
-};
-
-TupPaintAreaRotator::TupPaintAreaRotator(QObject *parent, TupPaintAreaBase *view) : QObject(parent), k(new Private)
-{
-    k->view = view;
-    connect(&k->timer, SIGNAL(timeout()), this, SLOT(applyRotation()));
+    view = baseView;
+    connect(&timer, SIGNAL(timeout()), this, SLOT(applyRotation()));
 }
 
 TupPaintAreaRotator::~TupPaintAreaRotator()
 {
-    delete k;
 }
 
 void TupPaintAreaRotator::rotateTo(int angle)
 {
-    k->rotationAngle = angle;
+    rotationAngle = angle;
     
-    if (!k->timer.isActive())
-        k->timer.start(50);
+    if (!timer.isActive())
+        timer.start(50);
 }
 
 void TupPaintAreaRotator::applyRotation()
 {
-    k->view->setRotationAngle(k->rotationAngle);
-    k->timer.stop();
+    view->setRotationAngle(rotationAngle);
+    timer.stop();
 }
 

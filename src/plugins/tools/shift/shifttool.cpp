@@ -42,26 +42,11 @@
 #include "tupinputdeviceinformation.h"
 #include "tupgraphicsscene.h"
 
-struct ShiftTool::Private
+ShiftTool::ShiftTool()
 {
-    QString activeView;
-    QMap<QString, TAction *> actions;
-    QGraphicsRectItem *rect;
-    bool added;
-    QPointF currentCenter;
-    QPointF firstPoint;
-    TupGraphicsScene *scene;
-    // ZoomConfigurator *configurator;
-    QCursor shiftCursor;
-    QSize projectSize;
-};
-
-ShiftTool::ShiftTool() : k(new Private)
-{
-    k->activeView = "WORKSPACE";
-    k->rect = 0;
-    k->scene = 0;
-    // k->configurator = 0;
+    activeView = "WORKSPACE";
+    rect = 0;
+    scene = 0;
 
     setupActions();
 }
@@ -70,20 +55,9 @@ ShiftTool::~ShiftTool()
 {
 }
 
-void ShiftTool::init(TupGraphicsScene *scene)
+void ShiftTool::init(TupGraphicsScene *gScene)
 {
-    k->scene = scene;
-
-    /*
-    foreach (QGraphicsView *view, scene->views()) {
-             k->currentCenter =  view->sceneRect().center();
-             view->setDragMode(QGraphicsView::NoDrag);
-             foreach (QGraphicsItem *item, scene->items()) {
-                      item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-                      item->setFlag(QGraphicsItem::ItemIsMovable, false);
-             }
-    }
-    */
+    scene = gScene;
 }
 
 QStringList ShiftTool::keys() const
@@ -97,59 +71,59 @@ void ShiftTool::setupActions()
     shiftAction->setShortcut(QKeySequence(tr("H")));
     shiftAction->setToolTip(tr("Shift") + " - " + "H");
 
-    k->shiftCursor = QCursor(kAppProp->themeDir() + "cursors/shift.png");
-    shiftAction->setCursor(k->shiftCursor);
+    shiftCursor = QCursor(kAppProp->themeDir() + "cursors/shift.png");
+    shiftAction->setCursor(shiftCursor);
 
-    k->actions.insert(tr("Shift"), shiftAction);
+    shiftActions.insert(tr("Shift"), shiftAction);
 }
 
-void ShiftTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
+void ShiftTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     Q_UNUSED(input);
     Q_UNUSED(brushManager);
-    Q_UNUSED(scene);
+    Q_UNUSED(gScene);
 
-    k->added = false;
-    k->rect = new QGraphicsRectItem(QRectF(input->pos(), QSize(0,0)));
-    k->rect->setPen(QPen(Qt::red, 1, Qt::SolidLine));
+    added = false;
+    rect = new QGraphicsRectItem(QRectF(input->pos(), QSize(0,0)));
+    rect->setPen(QPen(Qt::red, 1, Qt::SolidLine));
 
-    k->firstPoint = input->pos();
+    firstPoint = input->pos();
 }
 
-void ShiftTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
+void ShiftTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     Q_UNUSED(input);
     Q_UNUSED(brushManager);
 
     if (name() == tr("Shift")) 
-        k->scene = scene; // <- SQA: Trace this variable
+        scene = gScene; // <- SQA: Trace this variable
 }
 
-void ShiftTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
+void ShiftTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     Q_UNUSED(brushManager);
 
     if (name() == tr("Shift")) {
-        k->currentCenter = input->pos();
-        foreach (QGraphicsView *view, scene->views()) {
-                 if (k->activeView.compare(view->accessibleName()) == 0) {
-                     view->centerOn(k->currentCenter);
-                     view->setSceneRect(input->pos().x() - (k->projectSize.width()/2), input->pos().y() - (k->projectSize.height()/2),
-                                        k->projectSize.width(), k->projectSize.height());
-                     break;
-                 }  
+        currentCenter = input->pos();
+        foreach (QGraphicsView *view, gScene->views()) {
+            if (activeView.compare(view->accessibleName()) == 0) {
+                view->centerOn(currentCenter);
+                view->setSceneRect(input->pos().x() - (projectSize.width()/2), input->pos().y() - (projectSize.height()/2),
+                                   projectSize.width(), projectSize.height());
+                break;
+            }  
         }
     } 
 }
 
 void ShiftTool::setProjectSize(const QSize size)
 {
-    k->projectSize = size;
+    projectSize = size;
 }
 
 QMap<QString, TAction *> ShiftTool::actions() const
 {
-    return k->actions;
+    return shiftActions;
 }
 
 int ShiftTool::toolType() const
@@ -159,15 +133,6 @@ int ShiftTool::toolType() const
 
 QWidget *ShiftTool::configurator()
 {
-    /*
-    if (name() != tr("Shift")) {
-        if (! k->configurator)
-            k->configurator = new ZoomConfigurator;
-
-        return k->configurator;
-    }
-    */
-
     return 0;
 }
 
@@ -178,8 +143,8 @@ void ShiftTool::aboutToChangeScene(TupGraphicsScene *)
 void ShiftTool::aboutToChangeTool()
 {
     if (name() == tr("Shift")) {
-       if (k->scene) {
-           foreach (QGraphicsView * view, k->scene->views())
+       if (scene) {
+           foreach (QGraphicsView * view, scene->views())
                     view->setDragMode(QGraphicsView::NoDrag);
        }
     }
@@ -187,12 +152,6 @@ void ShiftTool::aboutToChangeTool()
 
 void ShiftTool::saveConfig()
 {
-/*
-    if (k->configurator) {
-        TCONFIG->beginGroup("ZoomTool");
-        TCONFIG->setValue("zoomFactor", k->configurator->getFactor());
-    }
-*/
 }
 
 void ShiftTool::keyPressEvent(QKeyEvent *event)
@@ -209,12 +168,12 @@ void ShiftTool::keyPressEvent(QKeyEvent *event)
 QCursor ShiftTool::cursor() const
 {
    if (name() == tr("Shift"))
-       return k->shiftCursor;
+       return shiftCursor;
 
    return QCursor(Qt::ArrowCursor);
 }
 
 void ShiftTool::setActiveView(const QString &viewID)
 {
-    k->activeView = viewID;
+    activeView = viewID;
 }

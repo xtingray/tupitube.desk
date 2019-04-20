@@ -61,7 +61,7 @@ class TUPITUBE_EXPORT SchemeTool : public TupToolPlugin
 
     public:
         SchemeTool();
-        virtual ~SchemeTool();
+        ~SchemeTool();
         
         virtual void init(TupGraphicsScene *scene);
         virtual QStringList keys() const;
@@ -89,23 +89,18 @@ class TUPITUBE_EXPORT SchemeTool : public TupToolPlugin
         void updateSizeToleranceVar(int value);
 
     private:
-        struct Private;
-        Private *const k;
-
-    /*        
-    private:
-        QPointF m_firstPoint;
-        QPointF m_oldPos;
+        QPointF firstPoint;
+        QPointF oldPos;
         QPointF previewPoint;
         QPointF oldPosRight;
         QPointF oldPosLeft;
         QPointF connector;
-        QPainterPath m_path;
-        QPainterPath pathRight; 
+        QPainterPath path;
+        QPainterPath pathRight;
         QPainterPath pathLeft;
-        Configurator *m_configurator;
-        QMap<QString, TAction *> m_actions;
-        TupPathItem *m_item;
+        Configurator *configPanel;
+        QMap<QString, TAction *> schemeActions;
+        TupPathItem *item;
         TupPathItem *itemRight;
         TupPathItem *itemLeft;
         int dotsCounter;
@@ -113,10 +108,10 @@ class TUPITUBE_EXPORT SchemeTool : public TupToolPlugin
         qreal oldSlope;
         int spacing;
         qreal tolerance;
-        qreal widthVar; 
+        qreal widthVar;
         int arrowSize;
         int firstArrow;
-    */
+        QCursor schemeCursor;
 };
 
 #endif
