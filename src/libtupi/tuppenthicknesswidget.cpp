@@ -35,54 +35,45 @@
 
 #include "tuppenthicknesswidget.h"
 
-struct TupPenThicknessWidget::Private
-{
-    int thickness;
-    double opacity;
-    int brush;
-    QColor color;
-    QBrush currentBrush;
-};
-
-TupPenThicknessWidget::TupPenThicknessWidget(QWidget *parent) : QWidget(parent), k(new Private)
+TupPenThicknessWidget::TupPenThicknessWidget(QWidget *parent) : QWidget(parent)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    k->opacity = 1.0;
-    k->thickness = 100;
+    opacity = 1.0;
+    thickness = 100;
 }
 
 TupPenThicknessWidget::~TupPenThicknessWidget()
 {
 }
 
-void TupPenThicknessWidget::render(int thickness)
+void TupPenThicknessWidget::render(int width)
 {
-    k->thickness = thickness;
+    thickness = width;
     update();
 }
 
-void TupPenThicknessWidget::render(double opacity)
+void TupPenThicknessWidget::render(double transp)
 {
-    k->opacity = opacity;
+    opacity = transp;
     update();
 }
 
-void TupPenThicknessWidget::setColor(const QColor color)
+void TupPenThicknessWidget::setColor(const QColor c)
 {
-    k->color = color;
+    color = c;
     update();
 }
 
 void TupPenThicknessWidget::setBrush(int index)
 {
-    k->brush = index;
+    brushStyle = index;
     update();
 }
 
-void TupPenThicknessWidget::setBrush(const QBrush brush)
+void TupPenThicknessWidget::setBrush(const QBrush b)
 {
-    k->currentBrush = brush;
-    k->brush = -1;
+    currentBrush = b;
+    brushStyle = -1;
 }
 
 QSize TupPenThicknessWidget::minimumSizeHint() const
@@ -109,17 +100,17 @@ void TupPenThicknessWidget::paintEvent(QPaintEvent *)
      painter.translate(width() / 2, height() / 2);
 
      QBrush brush;
-     Qt::BrushStyle style = Qt::BrushStyle(k->brush);
+     Qt::BrushStyle style = Qt::BrushStyle(brushStyle);
      
      if (style != Qt::TexturePattern) {  
-         if (k->brush != -1) {
+         if (brushStyle != -1) {
              // tFatal() << "TupPenThicknessWidget::paintEvent() - Setting pre-def brush";
-             brush = QBrush(Qt::BrushStyle(k->brush));
-             brush.setColor(k->color);
+             brush = QBrush(Qt::BrushStyle(brushStyle));
+             brush.setColor(color);
          } else {
-             if (k->currentBrush.gradient()) {
+             if (currentBrush.gradient()) {
                  // tFatal() << "TupPenThicknessWidget::paintEvent() - Setting gradient brush";
-                 brush = k->currentBrush;
+                 brush = currentBrush;
              } else {
                 #ifdef TUP_DEBUG
                     QString msg = "TupPenThicknessWidget::paintEvent() - Warning! NO gradient!";
@@ -135,8 +126,8 @@ void TupPenThicknessWidget::paintEvent(QPaintEvent *)
          QPen pen(Qt::NoPen);
          painter.setPen(pen);
          painter.setBrush(brush);
-         painter.setOpacity(k->opacity);
-         painter.drawEllipse(-(k->thickness/2), -(k->thickness/2), k->thickness, k->thickness);
+         painter.setOpacity(opacity);
+         painter.drawEllipse(-(thickness/2), -(thickness/2), thickness, thickness);
      } else {
          QPixmap pixmap(THEME_DIR + "icons/brush_15.png");
          painter.drawPixmap(-(pixmap.width()/2), -(pixmap.height()/2), pixmap);  

@@ -37,115 +37,95 @@
 
 // Mouse/tablet events manager
 
-struct TupInputDeviceInformation::Private
+TupInputDeviceInformation::TupInputDeviceInformation(QObject *parent) : QObject(parent)
 {
-    struct TabletInfo
-    {
-        double pressure;
-        double rotation;
-        double tangentialPressure;
-    } tabletInfo;
+    mouseInfo.button = Qt::NoButton;
+    mouseInfo.buttons = Qt::NoButton;
     
-    struct MouseInfo
-    {
-        Qt::MouseButton button;
-        Qt::MouseButtons buttons;
-    } mouseInfo;
+    tabletInfo.pressure = -1;
+    tabletInfo.rotation = 0;
+    tabletInfo.tangentialPressure = -1;
     
-    QPointF position;
-    Qt::KeyboardModifiers keyModifiers;
-};
-
-TupInputDeviceInformation::TupInputDeviceInformation(QObject *parent) : QObject(parent), k(new Private)
-{
-    k->mouseInfo.button = Qt::NoButton;
-    k->mouseInfo.buttons = Qt::NoButton;
-    
-    k->tabletInfo.pressure = -1;
-    k->tabletInfo.rotation = 0;
-    k->tabletInfo.tangentialPressure = -1;
-    
-    k->keyModifiers = Qt::NoModifier;
+    modifiers = Qt::NoModifier;
 }
 
 TupInputDeviceInformation::~TupInputDeviceInformation()
 {
-    delete k;
 }
 
 void TupInputDeviceInformation::updateFromMouseEvent(QGraphicsSceneMouseEvent *event)
 {
-    k->mouseInfo.button = event->button();
-    k->mouseInfo.buttons = event->buttons();
+    mouseInfo.button = event->button();
+    mouseInfo.buttons = event->buttons();
     
-    k->position = event->scenePos();
+    position = event->scenePos();
     
-    k->keyModifiers = event->modifiers();
+    modifiers = event->modifiers();
     
-    k->tabletInfo.pressure = -1;
-    k->tabletInfo.rotation = 0;
-    k->tabletInfo.tangentialPressure = -1;
+    tabletInfo.pressure = -1;
+    tabletInfo.rotation = 0;
+    tabletInfo.tangentialPressure = -1;
 }
 
 void TupInputDeviceInformation::updateFromMouseEvent(QMouseEvent *event)
 {
-    k->mouseInfo.button = event->button();
-    k->mouseInfo.buttons = event->buttons();
+    mouseInfo.button = event->button();
+    mouseInfo.buttons = event->buttons();
     
-    k->position = event->pos();
+    position = event->pos();
     
-    k->keyModifiers = event->modifiers();
+    modifiers = event->modifiers();
     
-    k->tabletInfo.pressure = -1;
-    k->tabletInfo.rotation = 0;
-    k->tabletInfo.tangentialPressure = -1;
+    tabletInfo.pressure = -1;
+    tabletInfo.rotation = 0;
+    tabletInfo.tangentialPressure = -1;
 }
 
 void TupInputDeviceInformation::updateFromTabletEvent(QTabletEvent *event)
 {
     // tError() << "updateFromTabletEvent() - Pressure: " << event->pressure();
 
-    k->tabletInfo.pressure = event->pressure();
-    k->tabletInfo.rotation = event->rotation();
-    k->tabletInfo.tangentialPressure = event->tangentialPressure();
+    tabletInfo.pressure = event->pressure();
+    tabletInfo.rotation = event->rotation();
+    tabletInfo.tangentialPressure = event->tangentialPressure();
     
-    k->position = event->pos();
+    position = event->pos();
     
-    k->keyModifiers = event->modifiers();
+    modifiers = event->modifiers();
 }
 
 double TupInputDeviceInformation::pressure() const
 {
-    //tError() << "TupInputDeviceInformation::pressure() - Testing pressure: " << k->tabletInfo.pressure;
-    return k->tabletInfo.pressure;
+    //tError() << "TupInputDeviceInformation::pressure() - Testing pressure: " << tabletInfo.pressure;
+    return tabletInfo.pressure;
 }
 
 double TupInputDeviceInformation::rotation() const
 {
-    return k->tabletInfo.rotation;
+    return tabletInfo.rotation;
 }
 
 double TupInputDeviceInformation::tangentialPressure() const
 {
-    return k->tabletInfo.tangentialPressure;
+    return tabletInfo.tangentialPressure;
 }
 
 Qt::MouseButton TupInputDeviceInformation::button() const
 {
-    return k->mouseInfo.button;
+    return mouseInfo.button;
 }
 
 Qt::MouseButtons TupInputDeviceInformation::buttons() const
 {
-    return k->mouseInfo.buttons;
+    return mouseInfo.buttons;
 }
 
 QPointF TupInputDeviceInformation::pos() const
 {
-    return k->position;
+    return position;
 }
 
 Qt::KeyboardModifiers TupInputDeviceInformation::keyModifiers() const
 {
-    return k->keyModifiers;
+    return modifiers;
 }

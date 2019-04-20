@@ -36,43 +36,35 @@
 #include "tupitempreview.h"
 #include <QGraphicsItemGroup>
 
-struct TupItemPreview::Private
+TupItemPreview::TupItemPreview(QWidget *parent) : QWidget(parent)
 {
-    TupProxyItem *proxy;
-    QGraphicsTextItem *item;
-};
-
-TupItemPreview::TupItemPreview(QWidget *parent) : QWidget(parent), k(new Private)
-{
-    k->item = new QGraphicsTextItem;
+    item = new QGraphicsTextItem;
     reset();
 }
 
 TupItemPreview::~TupItemPreview()
 {
-    if (k->item) {
-        delete k->item;
-        k->item = NULL;
+    if (item) {
+        delete item;
+        item = NULL;
     }
 
-    if (k->proxy) {
-        delete k->proxy;
-        k->proxy = NULL;
+    if (proxy) {
+        delete proxy;
+        proxy = NULL;
     }
-
-    delete k;
 }
 
 void TupItemPreview::reset()
 {
-    k->proxy = NULL;
-    if (k->item) {
-        delete k->item;
-        k->item = NULL;
+    proxy = NULL;
+    if (item) {
+        delete item;
+        item = NULL;
     }
 
-    k->item = new QGraphicsTextItem(tr("Library is empty :("));
-    render(k->item);
+    item = new QGraphicsTextItem(tr("Library is empty :("));
+    render(item);
 }
 
 QSize TupItemPreview::sizeHint() const
@@ -82,10 +74,10 @@ QSize TupItemPreview::sizeHint() const
 
 void TupItemPreview::render(QGraphicsItem *item)
 {
-    if (!k->proxy)
-        k->proxy = new TupProxyItem(item);
+    if (!proxy)
+        proxy = new TupProxyItem(item);
     else
-        k->proxy->setItem(item);
+        proxy->setItem(item);
     
     update();
 }
@@ -95,16 +87,16 @@ void TupItemPreview::paintEvent(QPaintEvent *)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     
-    if (k->proxy) {
+    if (proxy) {
         QStyleOptionGraphicsItem opt;
         opt.state = QStyle::State_None;
-        if (k->proxy->isEnabled())
+        if (proxy->isEnabled())
             opt.state |= QStyle::State_Enabled;
-        opt.exposedRect = QRectF(QPointF(0,0), k->proxy->boundingRect().size());
+        opt.exposedRect = QRectF(QPointF(0,0), proxy->boundingRect().size());
         opt.levelOfDetail = 1;
         opt.palette = palette();
         
-        QTransform matrix = k->proxy->sceneTransform();
+        QTransform matrix = proxy->sceneTransform();
         painter.setTransform(matrix);
 
         QRectF rectangle(QPointF(0,0), size()); 
@@ -117,13 +109,13 @@ void TupItemPreview::paintEvent(QPaintEvent *)
         int newPosX = 0;
         int newPosY = 0;
 
-        if (QGraphicsPathItem *path = qgraphicsitem_cast<QGraphicsPathItem *>(k->proxy->item())) {
+        if (QGraphicsPathItem *path = qgraphicsitem_cast<QGraphicsPathItem *>(proxy->item())) {
             isNative = true;
             itemWidth = path->path().boundingRect().width();
             itemHeight = path->path().boundingRect().height();
             newPosX = -path->path().boundingRect().topLeft().x();
             newPosY = -path->path().boundingRect().topLeft().y();
-        } else if (QGraphicsItemGroup *group = qgraphicsitem_cast<QGraphicsItemGroup *>(k->proxy->item())) {
+        } else if (QGraphicsItemGroup *group = qgraphicsitem_cast<QGraphicsItemGroup *>(proxy->item())) {
                    isNative = true;
                    itemWidth = group->boundingRect().width();
                    itemHeight = group->boundingRect().height();
@@ -207,7 +199,7 @@ void TupItemPreview::paintEvent(QPaintEvent *)
                 }
         }
 
-        k->proxy->paint(&painter, &opt, this); // paint isn't const...
+        proxy->paint(&painter, &opt, this); // paint isn't const...
     } else {
         #ifdef TUP_DEBUG
             #ifdef Q_OS_WIN

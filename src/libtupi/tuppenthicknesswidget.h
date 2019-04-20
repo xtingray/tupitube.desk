@@ -55,7 +55,7 @@ class TUPITUBE_EXPORT TupPenThicknessWidget : public QWidget
     Q_OBJECT
 
     public:
-        TupPenThicknessWidget(QWidget *parent = 0);
+        TupPenThicknessWidget(QWidget *parent = nullptr);
         ~TupPenThicknessWidget();
 
         QSize minimumSizeHint() const;
@@ -73,8 +73,11 @@ class TUPITUBE_EXPORT TupPenThicknessWidget : public QWidget
         void paintEvent(QPaintEvent *e);
    
     private:
-        struct Private;
-        Private *const k;
+        int thickness;
+        double opacity;
+        int brushStyle;
+        QColor color;
+        QBrush currentBrush;
 };
 
 #endif

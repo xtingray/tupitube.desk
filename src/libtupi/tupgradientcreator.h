@@ -72,19 +72,19 @@ class TUPITUBE_EXPORT TupGradientCreator : public QFrame
         QSpinBox *radius;
         QSpinBox *angle;
         SpinControl *spinControl;
-        
-    public slots:
-        void changeType(int type);
-        void changeSpread(int spread);
-        void changeGradientStops( const QGradientStops& );
-        void setGradient(const QBrush & gradient);
-        
+
     private slots:
         void emitGradientChanged();
         
     signals:
         void gradientChanged(const QBrush &);
         void controlArrowAdded();
+
+    public slots:
+        void changeType(int type);
+        void changeSpread(int spread);
+        void changeGradientStops( const QGradientStops& );
+        void setGradient(const QBrush & gradient);
 };
 
 class TUPITUBE_EXPORT SpinControl: public QGroupBox

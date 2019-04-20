@@ -44,14 +44,10 @@
 #include <QMouseEvent>
 #include <QTabletEvent>
 
-class QGraphicsSceneMouseEvent;
-class QMouseEvent;
-class QTabletEvent;
-
 class TUPITUBE_EXPORT TupInputDeviceInformation : public QObject
 {
     public:
-        TupInputDeviceInformation(QObject *parent = 0);
+        TupInputDeviceInformation(QObject *parent = nullptr);
         ~TupInputDeviceInformation();
         
         void updateFromMouseEvent(QGraphicsSceneMouseEvent *event);
@@ -68,8 +64,21 @@ class TUPITUBE_EXPORT TupInputDeviceInformation : public QObject
         Qt::KeyboardModifiers keyModifiers() const;
         
     private:
-        struct Private;
-        Private *const k;
+        struct TabletInfo
+        {
+            double pressure;
+            double rotation;
+            double tangentialPressure;
+        } tabletInfo;
+
+        struct MouseInfo
+        {
+            Qt::MouseButton button;
+            Qt::MouseButtons buttons;
+        } mouseInfo;
+
+        QPointF position;
+        Qt::KeyboardModifiers modifiers;
 };
 
 #endif

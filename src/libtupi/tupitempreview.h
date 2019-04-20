@@ -46,17 +46,15 @@
 #include <QStyleOptionGraphicsItem>
 #include <QGraphicsSvgItem>
 
-class QGraphicsItem;
-
 class TUPITUBE_EXPORT TupItemPreview : public QWidget
 {
     Q_OBJECT
     
     public:
-        TupItemPreview(QWidget *parent = 0);
+        TupItemPreview(QWidget *parent = nullptr);
         ~TupItemPreview();
-        void reset();
-        
+
+        void reset();        
         void render(QGraphicsItem *item);
         QSize sizeHint() const;
         
@@ -64,8 +62,8 @@ class TUPITUBE_EXPORT TupItemPreview : public QWidget
         void paintEvent(QPaintEvent *e);
         
     private:
-        struct Private;
-        Private *const k;
+        TupProxyItem *proxy;
+        QGraphicsTextItem *item;
 };
 
 #endif

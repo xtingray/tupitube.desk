@@ -35,18 +35,12 @@
 
 #include "tuppackagehandler.h"
 
-struct TupPackageHandler::Private
-{
-    QString importedProjectPath;
-};
-
-TupPackageHandler::TupPackageHandler() : k(new Private)
+TupPackageHandler::TupPackageHandler()
 {
 }
 
 TupPackageHandler::~TupPackageHandler()
 {
-    delete k;
 }
 
 bool TupPackageHandler::makePackage(const QString &projectPath, const QString &packagePath)
@@ -201,8 +195,8 @@ bool TupPackageHandler::importPackage(const QString &packagePath)
 {
     /* SQA: Handy code to include in the future
     QFileInfo file(packagePath);
-    k->importedProjectPath = CACHE_DIR + file.baseName();
-    QStringList list = JlCompress::extractDir(packagePath, k->importedProjectPath);
+    gPath = CACHE_DIR + file.baseName();
+    QStringList list = JlCompress::extractDir(packagePath, gPath);
     if (list.size() == 0) {
         #ifdef TUP_DEBUG
             QString msg = "TupPackageHandler::importPackage() - Project file is empty! -> " + packagePath;
@@ -276,7 +270,7 @@ bool TupPackageHandler::importPackage(const QString &packagePath)
                name.remove(name.count()-1, 1);
 
            if (name.endsWith(".tpp"))
-               k->importedProjectPath = QFileInfo(name).path();
+               gPath = QFileInfo(name).path();
         
            if (file.getZipError()!=UNZ_OK) {           
                #ifdef TUP_DEBUG
@@ -404,13 +398,13 @@ bool TupPackageHandler::createPath(const QString &filePath)
 
 QString TupPackageHandler::importedProjectPath() const
 {
-    return k->importedProjectPath;
+    return gPath;
 }
 
 QString TupPackageHandler::projectDirectory() const
 {
-    int index = k->importedProjectPath.lastIndexOf("/");
-    QString directory = k->importedProjectPath.right(k->importedProjectPath.length() - (index + 1));
+    int index = gPath.lastIndexOf("/");
+    QString directory = gPath.right(gPath.length() - (index + 1));
 
     return directory;
 }

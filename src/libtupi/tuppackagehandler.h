@@ -49,8 +49,6 @@
 #include <QFileInfo>
 #include <QDir>
 
-// class QuaZip;
-
 class TUPITUBE_EXPORT TupPackageHandler
 {
     public:
@@ -70,8 +68,7 @@ class TUPITUBE_EXPORT TupPackageHandler
         bool createPath(const QString &filePath);
         
     private:
-        struct Private;
-        Private *const k;
+        QString gPath;
 };
 
 #endif
