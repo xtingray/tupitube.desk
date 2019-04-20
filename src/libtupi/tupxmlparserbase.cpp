@@ -135,9 +135,9 @@ void TupXmlParserBase::setReadText(bool read)
      readText = read;
 }
 
-void TupXmlParserBase::setIgnore(bool ignore)
+void TupXmlParserBase::setIgnore(bool flag)
 {
-     ignore = ignore;
+     ignore = flag;
 }
 
 QString TupXmlParserBase::currentTag() const

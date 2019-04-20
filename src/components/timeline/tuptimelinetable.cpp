@@ -167,10 +167,10 @@ bool TupTimeLineTableItem::isSound()
 
 //// TupTimeLineTable
 
-TupTimeLineTable::TupTimeLineTable(int sceneIndex, QWidget *parent) : QTableWidget(0, 200, parent)
+TupTimeLineTable::TupTimeLineTable(int index, QWidget *parent) : QTableWidget(0, 200, parent)
 {
     isLocalRequest = false;
-    sceneIndex = sceneIndex;
+    sceneIndex = index;
     frameIndex = 0;
     layerIndex = 0;
 

@@ -167,17 +167,17 @@ void Configurator::activeButtonsPanel(bool enable)
         controlPanel->hide();
 }
 
-void Configurator::initStartCombo(int framesCount, int currentFrame)
+void Configurator::initStartCombo(int frames, int frameIndex)
 {
-    framesCount = framesCount;
-    currentFrame = currentFrame;
+    framesCount = frames;
+    currentFrame = frameIndex;
     settingsPanel->initStartCombo(framesCount, currentFrame);
 }
 
 void Configurator::setStartFrame(int currentIndex)
 {
     currentFrame = currentIndex;
-    settingsPanel->setStartFrame(currentIndex);
+    settingsPanel->setStartFrame(currentFrame);
 }
 
 int Configurator::startFrame()

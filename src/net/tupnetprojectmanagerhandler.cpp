@@ -542,12 +542,12 @@ QTabWidget *TupNetProjectManagerHandler::communicationWidget()
     return communicationModule;
 }
 
-void TupNetProjectManagerHandler::setProject(TupProject *project)
+void TupNetProjectManagerHandler::setProject(TupProject *work)
 {
-    project = project;
+    project = work;
 }
 
-void TupNetProjectManagerHandler::sendChatMessage(const QString & message)
+void TupNetProjectManagerHandler::sendChatMessage(const QString &message)
 {
     TupChatPackage package(message);
     sendPackage(package);
