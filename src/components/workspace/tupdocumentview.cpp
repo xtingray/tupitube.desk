@@ -68,7 +68,7 @@
 #include <QCameraImageCapture>
 #include <QCamera>
 
-TupDocumentView::TupDocumentView(TupProject *work, QWidget *parent, bool netFlag, const QStringList &users) :
+TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringList &users, QWidget *parent):
                                  QMainWindow(parent)
 {
     #ifdef TUP_DEBUG
@@ -90,6 +90,7 @@ TupDocumentView::TupDocumentView(TupProject *work, QWidget *parent, bool netFlag
     onLineUsers = users;
     dynamicFlag = false;
     staticFlag = false;
+    colorSpace = TColorCell::Contour;
 
     cameraMode = false;
     photoCounter = 1;
@@ -189,8 +190,6 @@ TupDocumentView::~TupDocumentView()
         delete configurationArea;
         configurationArea = NULL;
     }
-
-    // delete k;
 }
 
 void TupDocumentView::setWorkSpaceSize(int width, int height)
@@ -625,26 +624,26 @@ void TupDocumentView::loadPlugins()
     miscMenu->addAction(actionManager->find("papagayo"));
 
     foreach (QObject *plugin, TupPluginManager::instance()->getFilters()) {
-             AFilterInterface *filterInterface = qobject_cast<AFilterInterface *>(plugin);
-             QStringList::iterator it;
-             QStringList keys = filterInterface->keys();
+        AFilterInterface *filterInterface = qobject_cast<AFilterInterface *>(plugin);
+        QStringList::iterator it;
+        QStringList keys = filterInterface->keys();
 
-             for (it = keys.begin(); it != keys.end(); ++it) {
-                  #ifdef TUP_DEBUG
-                      QString msg = "TupDocumentView::loadPlugins() - Filter Loaded: " + *it;
-                      #ifdef Q_OS_WIN
-                          qDebug() << msg;
-                      #else
-                          tDebug("plugins") << msg;
-                      #endif
-                  #endif
+        for (it = keys.begin(); it != keys.end(); ++it) {
+            #ifdef TUP_DEBUG
+                QString msg = "TupDocumentView::loadPlugins() - Filter Loaded: " + *it;
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tDebug("plugins") << msg;
+                #endif
+            #endif
 
-                  TAction *filter = filterInterface->actions()[*it];
-                  if (filter) {
-                      connect(filter, SIGNAL(triggered()), this, SLOT(applyFilter()));
-                      filterMenu->addAction(filter);
-                  }
-             }
+            TAction *filter = filterInterface->actions()[*it];
+            if (filter) {
+                connect(filter, SIGNAL(triggered()), this, SLOT(applyFilter()));
+                filterMenu->addAction(filter);
+            }
+        }
     }
 
     toolbar->addAction(pencilAction);
@@ -698,9 +697,7 @@ void TupDocumentView::loadPlugin(int menu, int index)
         #endif
     #endif
 
-    TAction *action = 0;
-    // TColorCell::FillType fillMode;
-
+    TAction *action = nullptr;
     switch (menu) {
         case TupToolPlugin::Arrows:
             {
@@ -933,81 +930,95 @@ void TupDocumentView::selectTool()
         int minWidth = 0;
 
         switch (tool->toolType()) {
-                case TupToolInterface::Brush: 
-                     status->enableFullScreenFeature(true);
-                     if (toolName.compare(tr("Pencil")) == 0 || toolName.compare(tr("PolyLine")) == 0) {
-                         minWidth = 130;
-                         if (toolName.compare(tr("Pencil")) == 0)
-                             connect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
-                     } else if (toolName.compare(tr("Text"))==0) {
-                                minWidth = 350;
-                     } else { 
-                         if (toolName.compare(tr("Rectangle"))==0 || toolName.compare(tr("Ellipse"))==0 || toolName.compare(tr("Line"))==0) { 
-                             minWidth = 130;
-                             shapesMenu->setDefaultAction(action);
-                             shapesMenu->setActiveAction(action);
+            case TupToolInterface::Brush:
+            {
+                status->enableFullScreenFeature(true);
+                if (toolName.compare(tr("Pencil")) == 0 || toolName.compare(tr("PolyLine")) == 0) {
+                    minWidth = 130;
+                    if (toolName.compare(tr("Pencil")) == 0)
+                        connect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
+                } else if (toolName.compare(tr("Text"))==0) {
+                    minWidth = 350;
+                } else {
+                    if (toolName.compare(tr("Rectangle")) == 0 || toolName.compare(tr("Ellipse")) == 0 ||
+                        toolName.compare(tr("Line")) == 0) {
+                        minWidth = 130;
+                        shapesMenu->setDefaultAction(action);
+                        shapesMenu->setActiveAction(action);
 
-                             if (!action->icon().isNull())
-                                 shapesMenu->menuAction()->setIcon(action->icon());
-                         }
-                     }
-                     /* SQA: Enable it only for debugging
-                     if (toolName.compare(tr("Scheme"))==0)
-                         minWidth = 130;
-                     */
-                     break;
-                     
-                case TupToolInterface::Tweener:
-                     status->enableFullScreenFeature(false);
-                     minWidth = 220;
-                     motionMenu->setDefaultAction(action);
-                     motionMenu->setActiveAction(action);
-                     if (!action->icon().isNull())
-                         motionMenu->menuAction()->setIcon(action->icon());
-                     break;
-                case TupToolInterface::Fill:
-                     {
-                         emit fillToolEnabled();
+                        if (!action->icon().isNull())
+                            shapesMenu->menuAction()->setIcon(action->icon());
+                    }
+                }
+                /*
+                    SQA: Enable it only for debugging
+                    if (toolName.compare(tr("Scheme"))==0)
+                        minWidth = 130;
+                */
+            }
+            break;
+            case TupToolInterface::Tweener:
+            {
+                status->enableFullScreenFeature(false);
+                minWidth = 220;
+                motionMenu->setDefaultAction(action);
+                motionMenu->setActiveAction(action);
+                if (!action->icon().isNull())
+                    motionMenu->menuAction()->setIcon(action->icon());
+            }
+            break;
+            case TupToolInterface::Fill:
+            {
+                QString cursorIcon = "line_fill.png";
+                if (colorSpace == TColorCell::Background) {
+                    TCONFIG->beginGroup("ColorPalette");
+                    TCONFIG->setValue("CurrentColorMode", TColorCell::Contour);
 
-                         QCursor cursor = QCursor(kAppProp->themeDir() + "cursors/internal_fill.png", 0, 11);
-                         paintArea->viewport()->setCursor(cursor);
-                         status->enableFullScreenFeature(true);
+                    emit colorModeChanged(TColorCell::Contour);
+                } else {
+                    if (colorSpace == TColorCell::Inner)
+                        cursorIcon = "internal_fill.png";
+                }
+                QCursor cursor = QCursor(kAppProp->themeDir() + "cursors/" + cursorIcon, 0, 11);
+                paintArea->viewport()->setCursor(cursor);
+                status->enableFullScreenFeature(true);
 
-                         currentTool->setColorMode(TColorCell::Inner);
-                         fillAction->trigger();
-                     }
-                     break;
-                case TupToolInterface::Selection:
-                     status->enableFullScreenFeature(true);
-                     if (toolName.compare(tr("Object Selection"))==0) {
-                         minWidth = 130;
-                         connect(paintArea, SIGNAL(itemAddedOnSelection(TupGraphicsScene *)),
-                                 tool, SLOT(initItems(TupGraphicsScene *)));
-                     } 
-                     break;
-                case TupToolInterface::View:
-                     status->enableFullScreenFeature(true);
+                fillAction->trigger();
+            }
+            break;
+            case TupToolInterface::Selection:
+            {
+                status->enableFullScreenFeature(true);
+                if (toolName.compare(tr("Object Selection")) == 0) {
+                    minWidth = 130;
+                    connect(paintArea, SIGNAL(itemAddedOnSelection(TupGraphicsScene *)),
+                            tool, SLOT(initItems(TupGraphicsScene *)));
+                }
+            }
+            break;
+            case TupToolInterface::View:
+            {
+                status->enableFullScreenFeature(true);
+                if (toolName.compare(tr("Shift")) == 0) {
+                    tool->setProjectSize(project->getDimension());
+                    if (fullScreenOn)
+                        tool->setActiveView("FULL_SCREEN");
+                    else
+                        tool->setActiveView("WORKSPACE");
+                }
+            }
+            break;
+            case TupToolInterface::LipSync:
+            {
+                status->enableFullScreenFeature(false);
+                minWidth = 220;
+                connect(currentTool, SIGNAL(importLipSync()), this, SLOT(importPapagayoLipSync()));
 
-                     if (toolName.compare(tr("Shift"))==0) {
-                         tool->setProjectSize(project->getDimension());
-                         if (fullScreenOn)
-                             tool->setActiveView("FULL_SCREEN");
-                         else
-                             tool->setActiveView("WORKSPACE");
-                     }
-                     break;
-                case TupToolInterface::LipSync:
-                     status->enableFullScreenFeature(false);
-                     minWidth = 220;
-                     connect(currentTool, SIGNAL(importLipSync()), this, SLOT(importPapagayoLipSync()));
-
-                     miscMenu->setDefaultAction(action);
-                     miscMenu->setActiveAction(action);
-                     if (!action->icon().isNull())
-                         miscMenu->menuAction()->setIcon(action->icon());
-                     break;
-                default:
-                     break;
+                miscMenu->setDefaultAction(action);
+                miscMenu->setActiveAction(action);
+                if (!action->icon().isNull())
+                    miscMenu->menuAction()->setIcon(action->icon());
+            }
         }
 
         QWidget *toolConfigurator = tool->configurator();
@@ -2307,14 +2318,21 @@ void TupDocumentView::updateCameraMode()
 void TupDocumentView::setFillTool(TColorCell::FillType type)
 {
     if (currentTool) {
-        if (currentTool->toolType() == TupToolInterface::Fill) {
-            currentTool->setColorMode(type);
-            QString icon = "internal_fill.png";
-            if (type == TColorCell::Contour)
-                icon = "line_fill.png";
+        colorSpace = type;
+        if (colorSpace == TColorCell::Background) {
+            // Call Pencil plugin here
+            if (currentTool->toolType() == TupToolInterface::Fill)
+                pencilAction->trigger();
+        } else {
+            if (currentTool->toolType() == TupToolInterface::Fill) {
+                currentTool->setColorMode(type);
+                QString icon = "internal_fill.png";
+                if (type == TColorCell::Contour)
+                    icon = "line_fill.png";
 
-            QCursor cursor = QCursor(kAppProp->themeDir() + "cursors/" + icon, 0, 11);
-            paintArea->viewport()->setCursor(cursor);
+                QCursor cursor = QCursor(kAppProp->themeDir() + "cursors/" + icon, 0, 11);
+                paintArea->viewport()->setCursor(cursor);
+            }
         }
     }
 }

@@ -72,7 +72,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
     public:
         enum DockType { None = 0, ExposureSheet, TimeLine };
 
-        TupDocumentView(TupProject *work, QWidget *parent = 0, bool netFlag = true, const QStringList &users = QStringList());
+        TupDocumentView(TupProject *work, bool netFlag = true, const QStringList &users = QStringList(), QWidget *parent = nullptr);
         ~TupDocumentView();
 
         void setWorkSpaceSize(int width, int height);
@@ -186,6 +186,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         void fillColorChanged(const QColor &color);
         void bgColorChanged(const QColor &color);
         void penWidthChanged(int width);
+        void colorModeChanged(TColorCell::FillType mode);
         void fillToolEnabled();
 
     private:
@@ -266,6 +267,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
 
         DockType currentDock;
         bool cameraMode;
+        TColorCell::FillType colorSpace;
 };
 
 #endif

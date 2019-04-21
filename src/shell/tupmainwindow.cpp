@@ -318,7 +318,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         // Setting undo/redo actions
         setUndoRedoActions();
 
-        animationTab = new TupDocumentView(m_projectManager->getProject(), this, isNetworked, users);
+        animationTab = new TupDocumentView(m_projectManager->getProject(), isNetworked, users, this);
 
         TCONFIG->beginGroup("Network");
         QString server = TCONFIG->value("Server").toString();
@@ -341,8 +341,8 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(animationTab, SIGNAL(contourColorChanged(const QColor &)), m_colorPalette, SLOT(updateContourColor(const QColor &))); 
         connect(animationTab, SIGNAL(fillColorChanged(const QColor &)), m_colorPalette, SLOT(updateFillColor(const QColor &)));
         connect(animationTab, SIGNAL(bgColorChanged(const QColor &)), m_colorPalette, SLOT(updateBgColor(const QColor &)));
+        connect(animationTab, SIGNAL(colorModeChanged(TColorCell::FillType)), m_colorPalette, SLOT(checkColorButton(TColorCell::FillType)));
         connect(animationTab, SIGNAL(penWidthChanged(int)), this, SLOT(updatePenThickness(int)));
-        connect(animationTab, SIGNAL(fillToolEnabled()), m_colorPalette, SLOT(clickFillButton()));
         connect(this, SIGNAL(activeDockChanged(TupDocumentView::DockType)), animationTab, SLOT(updateActiveDock(TupDocumentView::DockType)));
 
         animationTab->setAntialiasing(true);

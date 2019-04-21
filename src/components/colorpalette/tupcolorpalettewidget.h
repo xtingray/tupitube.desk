@@ -68,8 +68,8 @@ class TUPITUBE_EXPORT TupColorPaletteWidget : public TupModuleWidgetBase
         void updateContourColor(const QColor &color);
         void updateFillColor(const QColor &color);
         void updateBgColor(const QColor &color);
-        void updateColorMode(TColorCell::FillType flag);
-        void clickFillButton();
+        void updateColorMode(TColorCell::FillType mode);
+        void checkColorButton(TColorCell::FillType mode);
 
     private slots:
         void initBg();

@@ -300,11 +300,11 @@ void TupColorPaletteWidget::updateColorMode(TColorCell::FillType type)
 
         color = brush.color();
         htmlField->setText(color.name());
-        TCONFIG->beginGroup("ColorPalette");
-        TCONFIG->setValue("CurrentColorMode", type);
-
-        emit colorSpaceChanged(type);
     }
+
+    TCONFIG->beginGroup("ColorPalette");
+    TCONFIG->setValue("CurrentColorMode", type);
+    emit colorSpaceChanged(type);
 
     if (fgType == Solid && tab->currentIndex() != 0) {
         tab->setCurrentIndex(0);
@@ -315,6 +315,25 @@ void TupColorPaletteWidget::updateColorMode(TColorCell::FillType type)
     updateLuminancePicker(color);
     colorForm->setColor(color);
     gradientManager->setCurrentColor(color);
+}
+
+void TupColorPaletteWidget::checkColorButton(TColorCell::FillType type)
+{
+#ifdef TUP_DEBUG
+    #ifdef Q_OS_WIN
+        qDebug() << "[TupColorPaletteWidget::checkColorButton()] - type: " << type;
+    #else
+        T_FUNCINFOX("tools") << type;
+    #endif
+#endif
+
+    if (type == TColorCell::Contour) {
+        contourColorCell->click();
+    } else if (type == TColorCell::Inner) {
+        fillColorCell->click();
+    } else if (type == TColorCell::Background) {
+        bgColor->click();
+    }
 }
 
 void TupColorPaletteWidget::setupMainPalette()
@@ -384,19 +403,19 @@ void TupColorPaletteWidget::setColorOnAppFromHTML(const QBrush& brush)
         // if (type == Solid)
         //     outlineAndFillColors->setCurrentColor(color);
     } else if (brush.gradient()) {
-               QGradient gradient(*brush.gradient());
-               // changeBrushType(tr("Gradient"));
+          QGradient gradient(*brush.gradient());
+          // changeBrushType(tr("Gradient"));
 
-               paletteContainer->setColor(gradient);
-               // outlineAndFillColors->setCurrentColor(gradient);
-               if (sender() != gradientManager)
-                   gradientManager->setGradient(gradient);
+          paletteContainer->setColor(gradient);
+          // outlineAndFillColors->setCurrentColor(gradient);
+          if (sender() != gradientManager)
+              gradientManager->setGradient(gradient);
 
-               // SQA: Gradient issue pending for revision
-               // tFatal() << "TupColorPaletteWidget::setColor() - Sending gradient value!";
-               // TupPaintAreaEvent event(TupPaintAreaEvent::ChangeBrush, brush);
-               // emit paintAreaEventTriggered(&event);
-               // return;
+          // SQA: Gradient issue pending for revision
+          // tFatal() << "TupColorPaletteWidget::setColor() - Sending gradient value!";
+          // TupPaintAreaEvent event(TupPaintAreaEvent::ChangeBrush, brush);
+          // emit paintAreaEventTriggered(&event);
+          // return;
     }
 
     if (currentSpace == TColorCell::Background) {
@@ -758,10 +777,4 @@ void TupColorPaletteWidget::updateBgColor(const QColor &color)
         bgColor->setBrush(QBrush(color));
         updateColorMode(TColorCell::Background);
     }
-}
-
-void TupColorPaletteWidget::clickFillButton()
-{
-    if (!fillColorCell->isChecked())
-        fillColorCell->click();
 }
