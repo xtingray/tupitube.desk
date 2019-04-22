@@ -87,7 +87,7 @@ void TupGraphicLibraryItem::setObject(TupLibraryObject *object)
     
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
-            qWarning() << "TupGraphicLibraryItem::setObject() - object->symbolName(): " << object->symbolName();
+            qWarning() << "TupGraphicLibraryItem::setObject() - object->symbolName(): " << object->getSymbolName();
         #else
             T_FUNCINFOX("library") << object->getSymbolName();
         #endif

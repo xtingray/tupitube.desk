@@ -1119,7 +1119,7 @@ void Tweener::frameResponse(const TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::frameResponse()] " << response->frameIndex();
+            qDebug() << "[Tweener::frameResponse()] " << response->getFrameIndex();
         #else
             T_FUNCINFO << response->getFrameIndex();
         #endif
@@ -1148,7 +1148,7 @@ void Tweener::itemResponse(const TupItemResponse *response)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::itemResponse()] " << response->itemIndex();
+            qDebug() << "[Tweener::itemResponse()] " << response->getItemIndex();
         #else
             T_FUNCINFO << " - item index: " << response->getItemIndex();
         #endif

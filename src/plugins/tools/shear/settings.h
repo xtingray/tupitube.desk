@@ -47,6 +47,9 @@
 #include <QComboBox>
 #include <QSpinBox>
 #include <QDoubleSpinBox>
+#include <QLabel>
+#include <QCheckBox>
+#include <QLineEdit>
 
 /**
  * @author Gustav Gonzalez 

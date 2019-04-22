@@ -48,6 +48,7 @@
 #include <QSpinBox>
 #include <QLineEdit>
 #include <QCheckBox>
+#include <QLabel>
 
 /**
  * @author Gustav Gonzalez 

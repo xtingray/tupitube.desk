@@ -45,6 +45,7 @@
 #include <QSpinBox>
 #include <QDir>
 #include <QCheckBox>
+#include <QPushButton>
 
 /**
  * @author Gustav Gonzalez 

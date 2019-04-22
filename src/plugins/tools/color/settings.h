@@ -39,13 +39,18 @@
 #include "tglobal.h"
 #include "tuptoolplugin.h"
 #include "tupitemtweener.h"
+#include "timagebutton.h"
+#include "tradiobuttongroup.h"
 
+#include <QBoxLayout>
 #include <QComboBox>
-#include <QHBoxLayout>
 #include <QSpinBox>
 #include <QWidget>
-#include <timagebutton.h>
-#include <tradiobuttongroup.h>
+#include <QCheckBox>
+#include <QLabel>
+#include <QSpinBox>
+#include <QLineEdit>
+#include <QPushButton>
 
 
 /**

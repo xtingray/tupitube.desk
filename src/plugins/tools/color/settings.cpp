@@ -43,15 +43,8 @@
 #include "tseparator.h"
 #include "tosd.h"
 
-#include <QPushButton>
-#include <QLabel>
-#include <QLineEdit>
-#include <QBoxLayout>
-#include <QSpinBox>
-#include <QCheckBox>
 #include <QColorDialog>
 #include <QDir>
-#include <QComboBox>
 
 Settings::Settings(QWidget *parent) : QWidget(parent)
 {

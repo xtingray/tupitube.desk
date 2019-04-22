@@ -229,7 +229,7 @@ void TupProjectCommand::redo()
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupProjectCommand::redo()] - Executing REDO action...";
-            qDebug() << "[TupProjectCommand::redo()] - response->part(): " << response->part();
+            qDebug() << "[TupProjectCommand::redo()] - response->getPart(): " << response->getPart();
         #else
             T_FUNCINFO;
             tWarning() << "[TupProjectCommand::redo()] - Executing REDO action...";

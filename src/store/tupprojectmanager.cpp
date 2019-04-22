@@ -463,7 +463,7 @@ void TupProjectManager::emitResponse(TupProjectResponse *response)
 {	
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
-            qDebug() << "[TupProjectManager::emitResponse()] - response->action(): " << response->action();
+            qDebug() << "[TupProjectManager::emitResponse()] - response->action(): " << response->getAction();
         #else
             T_FUNCINFO << response->getAction();
         #endif

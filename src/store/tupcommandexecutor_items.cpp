@@ -1014,7 +1014,7 @@ bool TupCommandExecutor::setPathItem(TupItemResponse *response)
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupCommandExecutor::setPathItem()]";
-            qDebug() << response->arg().toString();
+            qDebug() << response->getArg().toString();
         #else
             T_FUNCINFOX("items");
             SHOW_VAR(response->getArg().toString());

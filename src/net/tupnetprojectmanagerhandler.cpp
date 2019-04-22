@@ -236,7 +236,7 @@ bool TupNetProjectManagerHandler::setupNewProject(TupProjectManagerParams *param
     
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
-           qWarning() << "netParams->projectName() : " << netParams->projectName();
+           qWarning() << "netParams->projectName() : " << netParams->getProjectManager();
         #else
            SHOW_VAR(netParams->getProjectManager());
         #endif
