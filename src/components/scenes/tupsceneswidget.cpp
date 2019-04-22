@@ -218,7 +218,7 @@ void TupScenesWidget::sceneResponse(TupSceneResponse *e)
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupScenesWidget::sceneResponse()]";
-            qDebug() << "SHOW_VAR: " << e->action();
+            qDebug() << "SHOW_VAR: " << e->getAction();
         #else
             T_FUNCINFOX("scenes");
             SHOW_VAR(e->getAction());

@@ -41,13 +41,14 @@
 
 #include <QWidget>
 #include <QSpinBox>
+#include <QPushButton>
 
 class TUPITUBE_EXPORT TupPaintAreaPreferences : public QWidget
 {
     Q_OBJECT
 
     public:
-        TupPaintAreaPreferences(QWidget *parent = 0);
+        TupPaintAreaPreferences(QWidget *parent = nullptr);
         ~TupPaintAreaPreferences();
 
         void saveValues();        

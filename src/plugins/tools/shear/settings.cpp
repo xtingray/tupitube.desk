@@ -37,10 +37,6 @@
 #include "tseparator.h"
 #include "tosd.h"
 
-#include <QLabel>
-#include <QLineEdit>
-// #include <QBoxLayout>
-#include <QCheckBox>
 #include <QDir>
 
 Settings::Settings(QWidget *parent) : QWidget(parent)

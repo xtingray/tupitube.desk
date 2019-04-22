@@ -38,8 +38,6 @@
 #include "tseparator.h"
 #include "tosd.h"
 
-#include <QLabel>
-
 Settings::Settings(QWidget *parent) : QWidget(parent)
 {
     selectionDone = false;
