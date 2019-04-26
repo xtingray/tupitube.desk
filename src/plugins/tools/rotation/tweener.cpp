@@ -465,22 +465,22 @@ void Tweener::applyTween()
         foreach (QGraphicsItem *item, objects) {
             TupLibraryObject::Type type = TupLibraryObject::Item;
             int objectIndex = -1;
-            QPointF origin = item->mapFromParent(origin);
+            QPointF pos = item->mapFromParent(origin);
 
             if (TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item)) {
-                     type = TupLibraryObject::Svg;
-                     objectIndex = scene->currentFrame()->indexOf(svg);
+                type = TupLibraryObject::Svg;
+                objectIndex = scene->currentFrame()->indexOf(svg);
             } else {
-                     objectIndex = scene->currentFrame()->indexOf(item);
-                     if (qgraphicsitem_cast<TupPathItem *>(item))
-                         origin = origin;
+                objectIndex = scene->currentFrame()->indexOf(item);
+                if (qgraphicsitem_cast<TupPathItem *>(item))
+                    pos = origin;
             }
 
             TupProjectRequest request = TupRequestBuilder::createItemRequest(
                                         initScene, initLayer, initFrame,
                                         objectIndex, QPointF(), scene->getSpaceContext(), type,
                                         TupProjectRequest::SetTween,
-                                        configPanel->tweenToXml(initScene, initLayer, initFrame, origin));
+                                        configPanel->tweenToXml(initScene, initLayer, initFrame, pos));
             emit requested(&request);
         }
     } else { // Tween already exists
