@@ -40,8 +40,8 @@
 #include "tupformitem.h"
 
 #include <QWidget>
-#include <QSlider>
 #include <QLabel>
+#include <QSpinBox>
 
 class TUPITUBE_EXPORT TupColorForm : public QWidget
 {
@@ -77,8 +77,7 @@ class TUPITUBE_EXPORT TupColorForm : public QWidget
        TupFormItem *valueS;
        TupFormItem *valueV;
 
-       QLabel *alphaCounter;
-       QSlider *alphaSlider;
+       QSpinBox *alphaBox;
 };
 
 #endif

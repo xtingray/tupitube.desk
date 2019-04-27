@@ -46,7 +46,6 @@
 
 #include <QBoxLayout>
 #include <QPushButton>
-#include <QLineEdit>
 #include <QFrame>
 #include <QToolTip>
 #include <QComboBox>

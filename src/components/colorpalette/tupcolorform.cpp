@@ -38,12 +38,11 @@
 #include "tdoublecombobox.h"
 
 #include <QHBoxLayout>
-// #include <QLabel>
 #include <QCheckBox>
 #include <QDoubleSpinBox>
 #include <QGridLayout>
 #include <QLineEdit>
-#include <cmath>
+// #include <cmath>
 
 TupColorForm::TupColorForm(QWidget *parent) : QWidget(parent)
 {
@@ -103,21 +102,16 @@ void TupColorForm::setupForm()
     QLabel *alphaLabel = new QLabel(tr("Alpha (Transparency)"));
     alphaLabel->setAlignment(Qt::AlignHCenter);
 
-    alphaSlider = new QSlider(Qt::Horizontal);
-    alphaSlider->setMinimum(0);
-    alphaSlider->setMaximum(255);
-    alphaSlider->setSingleStep(1);
-    alphaSlider->setValue(255);
-    connect(alphaSlider, SIGNAL(valueChanged(int)), this, SLOT(updateAlphaValue(int)));
-
-    alphaCounter = new QLabel("255");
-    alphaCounter->setAlignment(Qt::AlignHCenter);
+    alphaBox = new QSpinBox();
+    alphaBox->setMinimum(0);
+    alphaBox->setMaximum(255);
+    alphaBox->setValue(255);
+    connect(alphaBox, SIGNAL(valueChanged(int)), this, SLOT(updateAlphaValue(int)));
 
     layout->addLayout(gridLayout);
     layout->addWidget(new TSeparator(Qt::Horizontal));
     layout->addWidget(alphaLabel);
-    layout->addWidget(alphaSlider);
-    layout->addWidget(alphaCounter);
+    layout->addWidget(alphaBox);
 }
 
 void TupColorForm::setColor(const QBrush &brush)
@@ -132,10 +126,9 @@ void TupColorForm::setColor(const QBrush &brush)
     valueS->setValue(color.saturation());
     valueV->setValue(color.value());
 
-    alphaCounter->setText(QString::number(color.alpha()));
-    alphaSlider->blockSignals(true);
-    alphaSlider->setValue(color.alpha());
-    alphaSlider->blockSignals(false);
+    alphaBox->blockSignals(true);
+    alphaBox->setValue(color.alpha());
+    alphaBox->blockSignals(false);
     blockSignals(false);
 }
 
@@ -144,7 +137,7 @@ void TupColorForm::syncRgbValues()
     int r = valueR->getValue();
     int g = valueG->getValue();
     int b = valueB->getValue();
-    int a = alphaSlider->value();
+    int a = alphaBox->value();
 
     QColor color = QColor::fromRgb(r, g, b, a);
     blockSignals(true);
@@ -161,7 +154,7 @@ void TupColorForm::syncHsvValues()
     int h = valueH->getValue();
     int s = valueS->getValue();
     int v = valueV->getValue();
-    int a = alphaSlider->value();
+    int a = alphaBox->value();
 
     QColor color = QColor::fromHsv(h, s, v, a);
     blockSignals(true);
@@ -175,6 +168,6 @@ void TupColorForm::syncHsvValues()
 
 void TupColorForm::updateAlphaValue(int alpha)
 {
-    alphaCounter->setText(QString::number(alpha));
+    Q_UNUSED(alpha);
     syncRgbValues();
 }

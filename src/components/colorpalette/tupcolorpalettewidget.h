@@ -47,6 +47,7 @@
 
 #include <QSplitter>
 #include <QTabWidget>
+#include <QLineEdit>
 
 class TUPITUBE_EXPORT TupColorPaletteWidget : public TupModuleWidgetBase
 {
