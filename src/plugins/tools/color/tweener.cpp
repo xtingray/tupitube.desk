@@ -463,23 +463,23 @@ void Tweener::applyTween()
         initScene = scene->currentSceneIndex();
 
         foreach (QGraphicsItem *item, objects) {
-                 TupLibraryObject::Type type = TupLibraryObject::Item;
-                 int objectIndex = -1;
+            TupLibraryObject::Type type = TupLibraryObject::Item;
+            int objectIndex = -1;
 
-                 if (TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item)) {
-                     type = TupLibraryObject::Svg;
-                     objectIndex = scene->currentFrame()->indexOf(svg);
-                 } else {
-                     objectIndex = scene->currentFrame()->indexOf(item);
-                 }
+            if (TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item)) {
+                type = TupLibraryObject::Svg;
+                objectIndex = scene->currentFrame()->indexOf(svg);
+            } else {
+                objectIndex = scene->currentFrame()->indexOf(item);
+            }
 
-                 QString xml = configPanel->tweenToXml(initScene, initLayer, initFrame);
-                 TupProjectRequest request = TupRequestBuilder::createItemRequest(
-                                             initScene, initLayer, initFrame,
-                                             objectIndex, QPointF(), scene->getSpaceContext(),
-                                             type, TupProjectRequest::SetTween,
-                                             configPanel->tweenToXml(initScene, initLayer, initFrame));
-                 emit requested(&request);
+            // QString xml = configPanel->tweenToXml(initScene, initLayer, initFrame);
+            TupProjectRequest request = TupRequestBuilder::createItemRequest(
+                                        initScene, initLayer, initFrame,
+                                        objectIndex, QPointF(), scene->getSpaceContext(),
+                                        type, TupProjectRequest::SetTween,
+                                        configPanel->tweenToXml(initScene, initLayer, initFrame));
+            emit requested(&request);
         }
     } else { // Tween already exists
         removeTweenFromProject(name);

@@ -522,9 +522,9 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
                 else
                     cycle = 1;
             } else { // If cycle is done and no loop and no reverse 
-                redReference = initialRed;
-                greenReference = initialGreen;
-                blueReference = initialBlue;
+                redReference = endingRed;
+                greenReference = endingGreen;
+                blueReference = endingBlue;
             }
         }
 
@@ -595,9 +595,17 @@ void Settings::updateColor(QColor color, QPushButton *colorButton)
 {
     if (color.isValid()) {
         colorButton->setText(color.name());
-        colorButton->setPalette(QPalette(color));
-        colorButton->setAutoFillBackground(true);
+        colorButton->setStyleSheet("QPushButton { background-color: " + color.name()
+                                    + "; color: " + labelColor(color) + "; }");
     }
+}
+
+QString Settings::labelColor(QColor color) const
+{
+    QString text = "white";
+    if (color.red() > 50 && color.green() > 50 && color.blue() > 50)
+        text = "black";
+    return text;
 }
 
 void Settings::updateRangeFromInit(int begin)

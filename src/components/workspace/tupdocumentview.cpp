@@ -145,7 +145,6 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     connect(status, SIGNAL(gridClicked()), this, SLOT(drawGrid()));
     connect(status, SIGNAL(angleChanged(int)), this, SLOT(setRotationAngle(int)));
     connect(status, SIGNAL(zoomChanged(qreal)), this, SLOT(setZoomFactor(qreal)));
-    connect(status, SIGNAL(antialiasChanged(bool)), this, SLOT(setAntialiasing(bool)));
     connect(status, SIGNAL(fullClicked()), this, SLOT(showFullScreen()));
 
     connect(paintArea, SIGNAL(frameChanged(int)), status, SLOT(updateFrameIndex(int)));

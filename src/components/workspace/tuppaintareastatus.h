@@ -65,7 +65,7 @@ class TUPITUBE_EXPORT TupPaintAreaStatus : public QStatusBar
         void setFramePointer(int index);
 
     public slots:
-        void selectAntialiasingHint();
+        // void selectAntialiasingHint();
         void applyZoom(const QString &text);
         void setPen(const QPen &pen);
         void setBrush(const QBrush  &brush);
@@ -94,7 +94,6 @@ class TUPITUBE_EXPORT TupPaintAreaStatus : public QStatusBar
         QLineEdit *frameField;
         QComboBox *zoomCombo;
         QComboBox *rotationCombo;
-        QCheckBox *antialiasHint;
 
         TupBrushStatus *contourStatus;
         TupBrushStatus *fillStatus;

@@ -150,17 +150,6 @@ TupPaintAreaStatus::TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent) 
     addPermanentWidget(rotContainer);
     connect(rotationCombo, SIGNAL(activated(const QString &)), this, SLOT(applyRotation(const QString &)));
 
-    antialiasHint = new QCheckBox;
-    antialiasHint->setIcon(QIcon(QPixmap(THEME_DIR + "icons/antialiasing.png")));
-    antialiasHint->setToolTip(tr("Antialiasing"));
-    antialiasHint->setCheckable(true);
-    antialiasHint->setChecked(true);
-    antialiasHint->setFixedWidth(36);
-    antialiasHint->setFixedHeight(23);
-    addPermanentWidget(antialiasHint);
-
-    connect(antialiasHint, SIGNAL(clicked()), this, SLOT(selectAntialiasingHint()));
-
     contourStatus = new TupBrushStatus(tr("Contour Color"), TColorCell::Contour, QPixmap(THEME_DIR + "icons/contour_color.png"));
     contourStatus->setTooltip(tr("Contour Color"));
     addPermanentWidget(contourStatus);
@@ -183,11 +172,6 @@ TupPaintAreaStatus::TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent) 
 
 TupPaintAreaStatus::~TupPaintAreaStatus()
 {
-}
-
-void TupPaintAreaStatus::selectAntialiasingHint()
-{
-    emit antialiasChanged(antialiasHint->isChecked());
 }
 
 void TupPaintAreaStatus::setPen(const QPen &pen)

@@ -52,7 +52,6 @@
 #include <QLineEdit>
 #include <QPushButton>
 
-
 /**
  * @author Gustav Gonzalez 
 */
@@ -104,6 +103,7 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         void setEditMode();
         void checkFramesRange();
         void updateColor(QColor color, QPushButton *colorButton);
+        QString labelColor(QColor color) const;
 
         QWidget *innerPanel;
         QBoxLayout *layout;
