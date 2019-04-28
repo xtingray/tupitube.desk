@@ -184,16 +184,18 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
 
     if (currentTool.compare(tr("Object Selection")) == 0) {
         if (event->buttons() == Qt::RightButton) {
+            /*
             // If a node is the target... abort!
-            if (qgraphicsitem_cast<Node *>(scene()->itemAt(mapToScene(event->pos()), QTransform())))
+            if (qgraphicsitem_cast<Node *>(scene()->itemAt(mapToScene(event->pos()), QTransform()))) {
+                #ifdef TUP_DEBUG
+                    QString msg = "TupPaintArea::mousePressEvent() - Node is the target - Aborting right menu!";
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg;
+                    #else
+                        tFatal() << msg;
+                    #endif
+                #endif
                 return;
-
-            /* SQA: This code seems to be useless
-            if (QGraphicsItem *item = scene()->itemAt(mapToScene(event->pos()), QTransform())) {
-                if (item->opacity() == 1) // If target is part of the current frame
-                    item->setFlag(QGraphicsItem::ItemIsSelectable, true);
-                else 
-                    return; // If target is NOT part of the current frame
             }
             */
 
