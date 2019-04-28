@@ -1334,7 +1334,6 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
         return;
     }
 
-    /*
     if (event->key() == Qt::Key_PageUp) {
         if (event->modifiers() == Qt::ControlModifier)
             removeCurrentFrame();
@@ -1350,7 +1349,6 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
             goOneFrameForward();
         return;
     }
-    */
 
     // Redundant shortcut for "Add Frame" feature (as 9)
     if (event->key() == Qt::Key_Insert) {

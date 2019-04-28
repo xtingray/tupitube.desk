@@ -91,6 +91,7 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     dynamicFlag = false;
     staticFlag = false;
     colorSpace = TColorCell::Contour;
+    currentDock = ExposureSheet;
 
     cameraMode = false;
     photoCounter = 1;
@@ -693,6 +694,7 @@ void TupDocumentView::loadPlugin(int menu, int index)
             T_FUNCINFO;
             tWarning() << "Menu: " << menu;
             tWarning() << "Index: " << index;
+            tWarning() << "currentDock: " << currentDock;
         #endif
     #endif
 
@@ -2304,9 +2306,18 @@ void TupDocumentView::updateBrush(const QBrush &brush)
     emit fillColorChanged(brush.color());
 }
 
-void TupDocumentView::updateActiveDock(TupDocumentView::DockType currentDock)
+void TupDocumentView::updateActiveDock(TupDocumentView::DockType dock)
 {
-    currentDock = DockType(currentDock);
+    #ifdef TUP_DEBUG
+        QString msg = "TupDocumentView::updateActiveDock() - currentDock: " + QString::number(dock);
+        #ifdef Q_OS_WIN
+            qDebug() << msg;
+        #else
+            tWarning() << msg;
+        #endif
+    #endif
+
+    currentDock = dock;
 }
 
 void TupDocumentView::updateCameraMode()
