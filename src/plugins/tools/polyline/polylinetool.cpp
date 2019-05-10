@@ -65,6 +65,7 @@ PolyLineTool::PolyLineTool()
 
 PolyLineTool::~PolyLineTool()
 {
+    delete configPanel;
 }
 
 void PolyLineTool::setupActions()
@@ -108,7 +109,7 @@ void PolyLineTool::init(TupGraphicsScene *gScene)
     }
 
     foreach (QGraphicsView *view, scene->views())
-             view->setDragMode(QGraphicsView::NoDrag);
+        view->setDragMode(QGraphicsView::NoDrag);
 
     cutterOn = false;
     initEnv();
@@ -180,12 +181,12 @@ void PolyLineTool::move(const TupInputDeviceInformation *input, TupBrushManager 
         right = input->pos();
     } else {
         for (int i=path.elementCount()-1; i>=0; i--) {
-             if (path.elementAt(i).type == QPainterPath::CurveToElement) {
-                 right = input->pos();
-                 if (path.elementAt(i + 1).type == QPainterPath::CurveToDataElement)
-                     path.setElementPositionAt(i + 1, mirror.x(), mirror.y());
-                 break;
-             }
+            if (path.elementAt(i).type == QPainterPath::CurveToElement) {
+                right = input->pos();
+                if (path.elementAt(i + 1).type == QPainterPath::CurveToDataElement)
+                    path.setElementPositionAt(i + 1, mirror.x(), mirror.y());
+                break;
+            }
         }
     }
 
@@ -227,7 +228,7 @@ void PolyLineTool::release(const TupInputDeviceInformation *input, TupBrushManag
     } else {
         if (pathItem) {
             if (!nodeGroup) {
-                nodeGroup = new TNodeGroup(pathItem, scene, TNodeGroup::Polyline,
+                nodeGroup = new TNodeGroup(pathItem, gScene, TNodeGroup::Polyline,
                                               static_cast<int>(pathItem->zValue() + 1));
                 connect(nodeGroup, SIGNAL(nodeReleased()), this, SLOT(nodeChanged()));
             } else {
@@ -350,13 +351,13 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
     switch (response->getAction()) {
         case TupProjectRequest::Add:
         {
-            if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(item)) {
-                if (item != path) {
-                    item = path;
+            if (TupPathItem *pItem = qgraphicsitem_cast<TupPathItem *>(item)) {
+                if (pathItem != pItem) {
+                    pathItem = pItem;
                     if (nodeGroup)
-                        nodeGroup->setParentItem(path);
+                        nodeGroup->setParentItem(pItem);
                 }
-            }
+            }            
         }
         break;
         case TupProjectRequest::Remove:
@@ -529,13 +530,12 @@ void PolyLineTool::nodeChanged()
             }
 
             if (position >= 0) {
-                TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem());
-                if (pathItem) {
-                    QString path = pathItem->pathToString();
+                TupPathItem *pItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem());
+                if (pItem) {
+                    QString pathStr = pItem->pathToString();
                     TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(), scene->currentLayerIndex(), scene->currentFrameIndex(),
-                                              position, QPointF(), scene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::EditNodes, path);
+                                              position, QPointF(), scene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::EditNodes, pathStr);
                     emit requested(&event);
-                    // nodeGroup->restoreItem();
                 }
             } else {
                 #ifdef TUP_DEBUG
@@ -579,7 +579,7 @@ int PolyLineTool::toolType() const
 
 QWidget *PolyLineTool::configurator()
 {
-    if (! configPanel)
+    if (!configPanel)
         configPanel = new Settings;
 
     return configPanel;
