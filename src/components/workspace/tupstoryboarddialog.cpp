@@ -5,11 +5,12 @@
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco Rodríguez                                         *
  *   2010:                                                                 *
  *    Gustavo Gonzalez                                                     *
  *                                                                         *
  *   KTooN's versions:                                                     * 
- *                                                                         *
  *   2006:                                                                 *
  *    David Cuadrado                                                       *
  *    Jorge Cuadrado                                                       *
@@ -326,6 +327,7 @@ void TupStoryBoardDialog::thumbnailGenerator()
     QDir().mkpath(path);
 
     for (int i=0; i < framesCount; i++) {
+
          QString fileName = path + "scene" + QString::number(i);
          bool isOk = imagePlugin->exportFrame(i, bgColor, fileName, scene, size, library);
          fileName += ".png";
@@ -342,7 +344,7 @@ void TupStoryBoardDialog::thumbnailGenerator()
              pixmap.scaledToWidth(96, Qt::SmoothTransformation);
 
              QIcon icon(pixmap);
-             QString label = tr("Scene") + " " + QString::number(i);  
+             QString label = tr("Scene") + " " + QString::number(i);
              addScene(label, icon);
          }
     }
@@ -426,15 +428,16 @@ void TupStoryBoardDialog::updateForm(QListWidgetItem *current, QListWidgetItem *
     screenLabel->setPixmap(pixmap);
 }
 
-void TupStoryBoardDialog::createHTMLFiles(const QString &path, DocType type)
+void TupStoryBoardDialog::createHTMLFiles(const QString &savePath, DocType type)
 {
     if (scaledSize.width() <= 520) {
         QDir directory(path);
+        tError() << "el path del scaled if es: " << savePath;
         QStringList files = directory.entryList();
         for (int i = 0; i < files.size(); ++i) {
              QString file = files.at(i).toLocal8Bit().constData();
              if (file != "." && file != "..") {
-                 QString target = path + "/" + file;
+                 QString target = savePath + "/" + file;
                  if (QFile::exists(target))
                      QFile::remove(target);       
                  QFile::copy(path + file, target);
@@ -442,11 +445,13 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &path, DocType type)
         }
     } else {
         QDir directory(path);
+        tError() << "el path del scaled else es: " << savePath;
         QStringList files = directory.entryList();
         for (int i = 0; i < files.size(); ++i) {
              QString file = files.at(i).toLocal8Bit().constData();
              QPixmap pixmap(path + file);
-             QString destination = path + "/" + file;
+             QString destination = savePath + "/" + file;
+
              if (QFile::exists(destination))
                  QFile::remove(destination); 
 
@@ -459,11 +464,11 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &path, DocType type)
     QString base = kAppProp->shareDir() + "data/storyboard/";
 
     if (type == HTML) 
-        QFile::copy(base + "tupi.html.css", path + "/tupitube.css");
+        QFile::copy(base + "tupi.html.css", savePath + "/tupitube.css");
     else
-        QFile::copy(base + "tupi.pdf.css", path + "/tupitube.css");
+        QFile::copy(base + "tupi.pdf.css", savePath + "/tupitube.css");
 
-    QString index = path + "/index.html";
+    QString index = savePath + "/index.html";
 
     if (QFile::exists(index))
         QFile::remove(index);  
@@ -558,6 +563,7 @@ void TupStoryBoardDialog::exportAsHTML()
 
     QString path = QFileDialog::getExistingDirectory(this, tr("Choose a directory..."), QDir::homePath(),
                                                      QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
     if (!path.isEmpty()) {
         createHTMLFiles(path, HTML);
         TOsd::self()->display(tr("Info"), tr("Storyboard exported successfully!"), TOsd::Info);
@@ -569,6 +575,7 @@ void TupStoryBoardDialog::exportAsPDF()
     saveLastComponent();
 
     QString path = QDir::tempPath() + "/" + TAlgorithm::randomString(8) + "/";
+
     QDir().mkpath(path);
     if (!path.isEmpty())
         createHTMLFiles(path, PDF);
@@ -687,6 +694,7 @@ QString TupStoryBoardDialog::getSceneDescription() const
     return QString::fromUtf8(sceneDescriptionEdit->toPlainText().toUtf8());
 }
 
+// SQA ¿quien usa este método? & error de gramática
 void TupStoryBoardDialog::exportStoyrboard(const QString &type)
 {
     if (type.compare(tr("PDF")) == 0) {
