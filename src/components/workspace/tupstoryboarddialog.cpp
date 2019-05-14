@@ -431,29 +431,35 @@ void TupStoryBoardDialog::updateForm(QListWidgetItem *current, QListWidgetItem *
 void TupStoryBoardDialog::createHTMLFiles(const QString &savePath, DocType type)
 {
     if (scaledSize.width() <= 520) {
+
+        // find all .png files in path (var) directory
         QDir directory(path);
-        tError() << "el path del scaled if es: " << savePath;
+        directory.setNameFilters(QStringList()<<"*.png");
         QStringList files = directory.entryList();
+
+        // copy all .png files
         for (int i = 0; i < files.size(); ++i) {
              QString file = files.at(i).toLocal8Bit().constData();
-             if (file != "." && file != "..") {
-                 QString target = savePath + "/" + file;
-                 if (QFile::exists(target))
-                     QFile::remove(target);       
-                 QFile::copy(path + file, target);
-             }
+             QString target = savePath + "/" + file;
+
+             if (QFile::exists(target)) QFile::remove(target);
+             QFile::copy(path + file, target);
         }
+
     } else {
+
+        // find all .png files in path (var) directory
         QDir directory(path);
-        tError() << "el path del scaled else es: " << savePath;
+        directory.setNameFilters(QStringList()<<"*.png");
         QStringList files = directory.entryList();
+
+        // scale and copy all .png files
         for (int i = 0; i < files.size(); ++i) {
              QString file = files.at(i).toLocal8Bit().constData();
              QPixmap pixmap(path + file);
              QString destination = savePath + "/" + file;
 
-             if (QFile::exists(destination))
-                 QFile::remove(destination); 
+             if (QFile::exists(destination)) QFile::remove(destination);
 
              QPixmap resized;
              resized = pixmap.scaledToWidth(520, Qt::SmoothTransformation);
