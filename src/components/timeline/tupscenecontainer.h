@@ -48,8 +48,9 @@ class T_GUI_EXPORT TupSceneContainer : public QTabWidget
     Q_OBJECT
 
     public:
-        TupSceneContainer(QWidget *parent = 0);
+        TupSceneContainer(QWidget *parent = nullptr);
         ~TupSceneContainer();
+
         void addScene(int sceneIndex, TupTimeLineTable *framesTable, const QString &title);
         void restoreScene(int sceneIndex, const QString &title);
         void removeScene(int sceneIndex, bool withBackup);

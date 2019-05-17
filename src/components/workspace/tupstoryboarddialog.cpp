@@ -327,7 +327,6 @@ void TupStoryBoardDialog::thumbnailGenerator()
     QDir().mkpath(path);
 
     for (int i=0; i < framesCount; i++) {
-
          QString fileName = path + "scene" + QString::number(i);
          bool isOk = imagePlugin->exportFrame(i, bgColor, fileName, scene, size, library);
          fileName += ".png";
@@ -434,7 +433,7 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &savePath, DocType type)
 
         // find all .png files in path (var) directory
         QDir directory(path);
-        directory.setNameFilters(QStringList()<<"*.png");
+        directory.setNameFilters(QStringList() << "*.png");
         QStringList files = directory.entryList();
 
         // copy all .png files
@@ -706,7 +705,7 @@ void TupStoryBoardDialog::exportStoyrboard(const QString &type)
     if (type.compare(tr("PDF")) == 0) {
         exportAsPDF();
     } else if (type.compare(tr("Html")) == 0) {
-               exportAsHTML();
+        exportAsHTML();
     }
 }
 

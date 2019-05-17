@@ -66,6 +66,14 @@ void TupSceneContainer::restoreScene(int sceneIndex, const QString &sceneName)
 
 void TupSceneContainer::removeScene(int sceneIndex, bool withBackup)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupSceneContainer::removeScene()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
     if (withBackup)
         undoScenes << scenes.takeAt(sceneIndex);
     else
