@@ -62,7 +62,7 @@ TupProjectManager::TupProjectManager(QObject *parent) : QObject(parent)
     #endif
     
     isModified = false;
-    handler = 0;
+    handler = nullptr;
 
     project = new TupProject(this);
     undoStack = new QUndoStack(this);
