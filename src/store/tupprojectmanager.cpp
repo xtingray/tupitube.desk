@@ -62,7 +62,7 @@ TupProjectManager::TupProjectManager(QObject *parent) : QObject(parent)
     #endif
     
     isModified = false;
-    handler = 0;
+    handler = nullptr;
 
     project = new TupProject(this);
     undoStack = new QUndoStack(this);
@@ -110,15 +110,17 @@ void TupProjectManager::setHandler(TupAbstractProjectHandler *pHandler, bool net
         disconnect(handler, SIGNAL(sendLocalCommand(const TupProjectRequest *)),
                    this, SLOT(handleLocalRequest(const TupProjectRequest *)));
         delete handler;
-        handler = 0;
+        handler = nullptr;
     }
 
     handler = pHandler;
     handler->setParent(this);
     handler->setProject(project);
 
-    connect(handler, SIGNAL(sendCommand(const TupProjectRequest *, bool)), this, SLOT(createCommand(const TupProjectRequest *, bool)));
-    connect(handler, SIGNAL(sendLocalCommand(const TupProjectRequest *)), this, SLOT(handleLocalRequest(const TupProjectRequest *)));
+    connect(handler, SIGNAL(sendCommand(const TupProjectRequest *, bool)),
+            this, SLOT(createCommand(const TupProjectRequest *, bool)));
+    connect(handler, SIGNAL(sendLocalCommand(const TupProjectRequest *)),
+            this, SLOT(handleLocalRequest(const TupProjectRequest *)));
 
     isNetworked = networked;
 }
@@ -160,7 +162,7 @@ void TupProjectManager::setupNewProject()
     project->setDimension(params->getDimension());
     project->setFPS(params->getFPS());
 
-    if (! handler->setupNewProject(params)) {
+    if (!handler->setupNewProject(params)) {
         #ifdef TUP_DEBUG
             QString msg = "TupProjectManager::setupNewProject() - Error: Project params misconfiguration";
             #ifdef Q_OS_WIN
@@ -315,7 +317,7 @@ void TupProjectManager::handleProjectRequest(const TupProjectRequest *request)
     if (handler) {
         handler->handleProjectRequest(request);
     } else {
-	#ifdef TUP_DEBUG
+        #ifdef TUP_DEBUG
             QString msg = "TupProjectManager::handleProjectRequest() - Error: No handler available";
             #ifdef Q_OS_WIN
                 qDebug() << msg;
@@ -418,10 +420,30 @@ void TupProjectManager::createCommand(const TupProjectRequest *request, bool add
 
     if (request->isValid()) {
         TupProjectCommand *command = new TupProjectCommand(commandExecutor, request);
-        if (addToStack)
-            undoStack->push(command);
-        else  
-            command->redo();
+        if (command) {
+            if (addToStack) {
+                undoStack->push(command);
+                #ifdef TUP_DEBUG
+                    QString msg = "TupProjectManager::createCommand() * command counter: " + QString::number(undoStack->count());
+                    #ifdef Q_OS_WIN
+                        qWarning() << msg;
+                    #else
+                        tWarning() << msg;
+                    #endif
+                #endif
+            } else {
+                command->redo();
+            }
+        } else {
+        #ifdef TUP_DEBUG
+            QString msg = "TupProjectManager::createCommand() - Invalid command";
+            #ifdef Q_OS_WIN
+                qWarning() << msg;
+            #else
+                tWarning() << msg;
+            #endif
+        #endif
+        }
     } else {
         #ifdef TUP_DEBUG
             QString msg = "TupProjectManager::createCommand() - Invalid request";
@@ -437,6 +459,14 @@ void TupProjectManager::createCommand(const TupProjectRequest *request, bool add
 void TupProjectManager::createCommand(TupProjectCommand *command)
 {
     undoStack->push(command);
+    #ifdef TUP_DEBUG
+        QString msg = "TupProjectManager::createCommand() - command counter: " + QString::number(undoStack->count());
+        #ifdef Q_OS_WIN
+            qWarning() << msg;
+        #else
+            tWarning() << msg;
+        #endif
+    #endif
 }
 
 TupProject *TupProjectManager::getProject()
@@ -446,12 +476,50 @@ TupProject *TupProjectManager::getProject()
 
 void TupProjectManager::undo()
 {
-    undoStack->undo();
+    if (undoStack->count() > 0) {
+        if (undoStack->canUndo()) {
+            /*
+            qDebug() << "";
+            qDebug() << "TupProjectManager::undo() - count: " << undoStack->count();
+            qDebug() << "TupProjectManager::undo() - undo text: " << undoStack->undoText();
+            qDebug() << "";
+            */
+            undoStack->undo();
+        } else {
+        #ifdef TUP_DEBUG
+            QString msg = "TupProjectManager::undo() - No undo actions available!";
+            #ifdef Q_OS_WIN
+                qWarning() << msg;
+            #else
+                tWarning() << msg;
+            #endif
+        #endif
+        }
+    }
 }
 
 void TupProjectManager::redo()
 {
-    undoStack->redo();
+    if (undoStack->count() > 0) {
+       if (undoStack->canRedo()) {
+           /*
+           qDebug() << "";
+           qDebug() << "TupProjectManager::redo() - count: " << undoStack->count();
+           qDebug() << "TupProjectManager::redo() - redo text: " << undoStack->redoText();
+           qDebug() << "";
+           */
+           undoStack->redo();
+       } else {
+       #ifdef TUP_DEBUG
+           QString msg = "TupProjectManager::redo() - No redo actions available!";
+           #ifdef Q_OS_WIN
+               qWarning() << msg;
+           #else
+               tWarning() << msg;
+           #endif
+       #endif
+       }
+   }
 }
 
 void TupProjectManager::clearUndoStack()
@@ -476,8 +544,8 @@ void TupProjectManager::emitResponse(TupProjectResponse *response)
         // SQA: Check if this is the right way to handle this condition 
         emit responsed(response);
     } else if (isNetworked) {
-               if (handler->commandExecuted(response))
-                   emit responsed(response);
+        if (handler->commandExecuted(response))
+            emit responsed(response);
     } else { // Local request
         emit responsed(response);
     }

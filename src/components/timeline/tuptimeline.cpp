@@ -296,13 +296,14 @@ void TupTimeLine::layerResponse(TupLayerResponse *response)
             }
             case TupProjectRequest::Remove:
             {
+                framesTable->removeLayer(layerIndex);
                 if (framesTable->layersCount() == 0) {
-                    if (scenesContainer->count() > 1) {
-                        TupProjectRequest request = TupRequestBuilder::createSceneRequest(sceneIndex, TupProjectRequest::Remove);
-                        emit requestTriggered(&request);
-                    }
-                } else {
-                    framesTable->removeLayer(layerIndex);
+                    TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, 0, TupProjectRequest::Add,
+                                                                                      tr("Layer %1").arg(1));
+                    emit requestTriggered(&request);
+
+                    request = TupRequestBuilder::createFrameRequest(sceneIndex, 0, 0, TupProjectRequest::Add, tr("Frame"));
+                    emit requestTriggered(&request);
                 }
             }
             break;
@@ -356,12 +357,7 @@ void TupTimeLine::frameResponse(TupFrameResponse *response)
             break;
             case TupProjectRequest::Remove:
               {
-                  if ((scenesContainer->count() > 1) && (framesTable->layersCount() == 1) && frameIndex == 0) {
-                      TupProjectRequest request = TupRequestBuilder::createSceneRequest(sceneIndex, TupProjectRequest::Remove);
-                      emit requestTriggered(&request);
-                  } else {
-                      framesTable->removeFrame(layerIndex, frameIndex);
-                  }
+                  framesTable->removeFrame(layerIndex, frameIndex);
               }
             break;
             case TupProjectRequest::RemoveSelection:

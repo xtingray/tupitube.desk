@@ -720,6 +720,19 @@ void TupExposureSheet::sceneResponse(TupSceneResponse *response)
         break;
         case TupProjectRequest::Select:
             {
+                setScene(sceneIndex);
+                if (currentTable && scenesContainer) {
+                    scenesContainer->blockSignals(true);
+                    currentTable->selectFrame(0, 0);
+                    scenesContainer->blockSignals(false);
+                    if (previousScene != sceneIndex) {
+                        previousScene = sceneIndex;
+                        previousLayer = 0;
+                        updateLayerOpacity(sceneIndex, 0);
+                    }
+                }
+
+                /*
                 if (response->getMode() == TupProjectResponse::Do || response->getMode() == TupProjectResponse::Redo) {
                     setScene(sceneIndex);
                     if (currentTable && scenesContainer) {
@@ -736,6 +749,7 @@ void TupExposureSheet::sceneResponse(TupSceneResponse *response)
                     tError() << "*** Tracing UNDO action";
                     tError() << "";
                 }
+                */
             }
         break;
     }

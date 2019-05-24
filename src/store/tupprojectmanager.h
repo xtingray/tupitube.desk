@@ -58,7 +58,7 @@ class TUPITUBE_EXPORT TupProjectManager : public QObject
     Q_OBJECT
 
     public:
-        TupProjectManager(QObject *parent = 0);
+        TupProjectManager(QObject *parent = nullptr);
         virtual ~TupProjectManager();
 
         void setParams(TupProjectManagerParams *getParams);
@@ -98,7 +98,7 @@ class TUPITUBE_EXPORT TupProjectManager : public QObject
 
     signals:
         void responsed(TupProjectResponse *reponse);
-        void requestOpenProject(const QString& filename);
+        void requestOpenProject(const QString &filename);
 
     private:
         bool isModified;
