@@ -875,8 +875,16 @@ void TupTimeLine::extendFrameForward(int layerIndex, int frameIndex)
 
 void TupTimeLine::requestSceneSelection(int sceneIndex)
 {
+    tError() << "entra en TupTimeLine 882 :: request selection"; // borrame
     if (scenesContainer->count() > 1) {
-        TupProjectRequest request = TupRequestBuilder::createSceneRequest(sceneIndex, TupProjectRequest::Select);
+
+        int previewFrameIndex = scenesContainer->currentScene()->currentFrame();
+        int previewLayerIndex = scenesContainer->currentScene()->currentLayer();
+        int previewSceneIndex = scenesContainer->currentIndex();
+
+        QString args = QString::number(previewSceneIndex) + ":" + QString::number(previewLayerIndex) + ":" + QString::number(previewFrameIndex);
+        tError() << "entra en tuptimeline -> args: " << args; // borrame
+        TupProjectRequest request = TupRequestBuilder::createSceneRequest(sceneIndex, TupProjectRequest::Select, args);
         emit localRequestTriggered(&request);
     }
 }

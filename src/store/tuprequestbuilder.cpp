@@ -169,6 +169,7 @@ TupProjectRequest TupRequestBuilder::createSceneRequest(int sceneIndex, int acti
     action.setAttribute("id", actionId);
     action.setAttribute("arg", arg.toString());
     action.setAttribute("part", TupProjectRequest::Scene);
+    tError() << "entra en tuprequestbuilder -> " << arg.toString();
 
     TupRequestBuilder::appendData(doc, action, data);
 
