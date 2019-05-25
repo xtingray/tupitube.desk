@@ -1048,10 +1048,11 @@ void TupLibraryWidget::importImage(const QString &image)
                 const char* ext = ba.data();
                 if (pixmap->loadFromData(data, ext)) {
                     QPixmap newpix;
-                    if (picWidth > projectWidth)
+                    if (picWidth > picHeight) {
                         newpix = QPixmap(pixmap->scaledToWidth(projectWidth, Qt::SmoothTransformation));
-                    else
+                    } else {
                         newpix = QPixmap(pixmap->scaledToHeight(projectHeight, Qt::SmoothTransformation));
+                    }
                     QBuffer buffer(&data);
                     buffer.open(QIODevice::WriteOnly);
                     newpix.save(&buffer, ext);
@@ -1353,8 +1354,11 @@ void TupLibraryWidget::importImageSequence()
                                  QByteArray ba = extension.toLatin1();
                                  const char* ext = ba.data();
                                  if (pixmap->loadFromData(data, ext)) {
-                                     int width = projectWidth;
-                                     QPixmap newpix(pixmap->scaledToWidth(width, Qt::SmoothTransformation));
+                                     QPixmap newpix;
+                                     if (picWidth > picHeight)
+                                         newpix = QPixmap(pixmap->scaledToWidth(projectWidth, Qt::SmoothTransformation));
+                                     else
+                                         newpix = QPixmap(pixmap->scaledToHeight(projectHeight, Qt::SmoothTransformation));
                                      QBuffer buffer(&data);
                                      buffer.open(QIODevice::WriteOnly);
                                      newpix.save(&buffer, ext);

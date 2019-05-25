@@ -531,7 +531,7 @@ bool TupProject::createSymbol(int type, const QString &name, const QByteArray &d
         return false;
     }
 
-    if (library->createSymbol(TupLibraryObject::Type(type), name, data, folder) == 0) {
+    if (library->createSymbol(TupLibraryObject::Type(type), name, data, folder) == nullptr) {
         #ifdef TUP_DEBUG
             QString msg = "TupProject::createSymbol() - Fatal error: object can't be created. Data is NULL!";
             #ifdef Q_OS_WIN
@@ -655,7 +655,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
         #endif
     #endif        
     
-    TupFrame *frame = 0;
+    TupFrame *frame = nullptr;
     TupScene *scene = this->sceneAt(sceneIndex);
 
     if (scene) {
@@ -709,13 +709,17 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                         case TupLibraryObject::Image:
                         {
                              TupGraphicLibraryItem *libraryItem = new TupGraphicLibraryItem(object);
-                             int imageW = libraryItem->boundingRect().width();
-                             int imageH = libraryItem->boundingRect().height();
+                             int imageW = static_cast<int>(libraryItem->boundingRect().width());
+                             int imageH = static_cast<int> (libraryItem->boundingRect().height());
 
-                             if (dimension.width() > imageW && dimension.height() > imageH)
-                                 libraryItem->moveBy((dimension.width() - imageW)/2, (dimension.height() - imageH)/2);
-                             else
-                                 libraryItem->moveBy(0, 0);
+                             qreal xPos = 0;
+                             qreal yPos = 0;
+                             if (dimension.width() > imageW)
+                                 xPos = (dimension.width() - imageW) / 2;
+                             if (dimension.height() > imageH)
+                                 yPos = (dimension.height() - imageH) / 2;
+
+                             libraryItem->moveBy(xPos, yPos);
 
                              int zLevel = frame->getTopZLevel();
                              libraryItem->setZValue(zLevel);
