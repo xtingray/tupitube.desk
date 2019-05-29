@@ -62,7 +62,6 @@ Tweener::~Tweener()
 }
 
 /* This method initializes the plugin */
-
 void Tweener::init(TupGraphicsScene *gScene)
 {
     scene = gScene;
@@ -286,28 +285,27 @@ void Tweener::updateScene(TupGraphicsScene *gScene)
         if (configPanel->startComboSize() < framesNumber)
             configPanel->initStartCombo(framesNumber, initFrame);
     } else if (mode == TupToolPlugin::Add) {
-               int total = framesCount();
+        int total = framesCount();
 
-               if (editMode == TupToolPlugin::Properties) {
-                   if (total > configPanel->startComboSize()) {
-                       configPanel->activateMode(TupToolPlugin::Selection);
-                       clearSelection();
-                       setSelection();
-                   }
-               } else if (editMode == TupToolPlugin::Selection) {
-                          if (gScene->currentFrameIndex() != initFrame)
-                              clearSelection();
-                          initFrame = gScene->currentFrameIndex();
-                          setSelection();
-               }
-
-               if (configPanel->startComboSize() < total) {
-                   configPanel->initStartCombo(total, initFrame);
-               } else {
+        if (editMode == TupToolPlugin::Properties) {
+            if (total > configPanel->startComboSize()) {
+                configPanel->activateMode(TupToolPlugin::Selection);
+                clearSelection();
+                setSelection();
+            }
+        } else if (editMode == TupToolPlugin::Selection) {
                    if (gScene->currentFrameIndex() != initFrame)
-                       configPanel->setStartFrame(gScene->currentFrameIndex());
-               }
+                       clearSelection();
+                   initFrame = gScene->currentFrameIndex();
+                   setSelection();
+        }
 
+        if (configPanel->startComboSize() < total) {
+            configPanel->initStartCombo(total, initFrame);
+        } else {
+            if (gScene->currentFrameIndex() != initFrame)
+                configPanel->setStartFrame(gScene->currentFrameIndex());
+        }
     } else {
         if (gScene->currentFrameIndex() != initFrame)
             configPanel->setStartFrame(gScene->currentFrameIndex());
@@ -362,18 +360,6 @@ void Tweener::disableSelection()
 void Tweener::setSelection()
 {
     editMode = TupToolPlugin::Selection;
-
-    /*
-    int bottomBoundary = ZLAYER_BASE + (initLayer*ZLAYER_LIMIT);
-    int topBoundary = bottomBoundary + ZLAYER_LIMIT;
-    foreach (QGraphicsView *view, scene->views()) {
-             view->setDragMode(QGraphicsView::RubberBandDrag);
-             foreach (QGraphicsItem *item, view->scene()->items()) {
-                      if ((item->zValue() >= bottomBoundary) && (item->zValue() < topBoundary) && (item->toolTip().length()==0))
-                          item->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
-             }
-    }
-    */
 
     scene->enableItemsForSelection();
     foreach (QGraphicsView *view, scene->views())
@@ -522,11 +508,11 @@ void Tweener::applyTween()
 
     if (total >= framesNumber) {
         for (int i = framesNumber; i < total; i++) {
-             for (int j = 0; j < layersCount; j++) {
-                  request = TupRequestBuilder::createFrameRequest(initScene, j, i,
-                                               TupProjectRequest::Add, tr("Frame"));
-                  emit requested(&request);
-             }
+            for (int j = 0; j < layersCount; j++) {
+                request = TupRequestBuilder::createFrameRequest(initScene, j, i,
+                                             TupProjectRequest::Add, tr("Frame"));
+                emit requested(&request);
+            }
         }
     }
 

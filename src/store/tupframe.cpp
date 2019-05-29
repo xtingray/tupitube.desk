@@ -1079,6 +1079,14 @@ void TupFrame::restoreGraphic()
 
 bool TupFrame::removeGraphicAt(int position)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupFrame::removeGrahpicAt()]";
+        #else
+            T_FUNCINFO << position;
+        #endif
+    #endif
+
     if ((position < 0) || (position >= graphics.size())) {
         #ifdef TUP_DEBUG
             QString msg = "TupFrame::removeGraphicAt() - Fatal Error: invalid object index! [ " + QString::number(position) + " ]";

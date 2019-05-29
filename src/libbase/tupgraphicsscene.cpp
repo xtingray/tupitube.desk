@@ -610,6 +610,14 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
              int adjustY = static_cast<int> (object->item()->boundingRect().height())/2;
 
              if (origin == photogram) {
+                 #ifdef TUP_DEBUG
+                     QString msg = "Adding FIRST tween transformation - photogram -> " + QString::number(photogram);
+                     #ifdef Q_OS_WIN
+                         qDebug() << msg;
+                     #else
+                         tWarning() << msg;
+                     #endif
+                 #endif
                  TupTweenerStep *stepItem = tween->stepAt(0);
                  if (stepItem->has(TupTweenerStep::Position)) {
                      QPointF point = QPoint(-adjustX, -adjustY);
@@ -774,7 +782,6 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
 
 void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
 {
-    /*
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TupGraphicsScene::addSvgTweeningObjects()]";
@@ -782,7 +789,6 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
             T_FUNCINFO;
         #endif
     #endif
-    */
 
     QList<TupSvgItem *> svgList = gScene->getTweeningSvgObjects(indexLayer);
 
@@ -796,6 +802,15 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
              int adjustY = static_cast<int> (object->boundingRect().height()/2);
 
              if (origin == photogram) {
+                 #ifdef TUP_DEBUG
+                     QString msg = "Adding FIRST SVG tween transformation - photogram -> " + QString::number(photogram);
+                     #ifdef Q_OS_WIN
+                         qDebug() << msg;
+                     #else
+                         tWarning() << msg;
+                     #endif
+                 #endif
+
                  TupTweenerStep *stepItem = tween->stepAt(0);
 
                  if (stepItem->has(TupTweenerStep::Position)) {
@@ -824,6 +839,15 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
                      object->setOpacity(stepItem->getOpacity());
                  }
              } else if ((origin < photogram) && (photogram < origin + tween->getFrames())) {
+                 #ifdef TUP_DEBUG
+                     QString msg = "Adding SVG tween transformation - photogram -> " + QString::number(photogram);
+                     #ifdef Q_OS_WIN
+                         qDebug() << msg;
+                     #else
+                         tWarning() << msg;
+                     #endif
+                 #endif
+
                  int step = photogram - origin;
                  TupTweenerStep *stepItem = tween->stepAt(step);
 

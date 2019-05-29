@@ -1038,10 +1038,10 @@ void TupLibraryWidget::importImage(const QString &image)
             msgBox.show();
             msgBox.move(static_cast<int> ((desktop.screenGeometry().width() - msgBox.width())/2),
                         static_cast<int> ((desktop.screenGeometry().height() - msgBox.height())/2));
-
             int answer = msgBox.exec();
 
             if (answer == QMessageBox::Yes) {
+                msgBox.close();
                 pixmap = new QPixmap();
                 QString extension = fileInfo.suffix().toUpper();
                 QByteArray ba = extension.toLatin1();
@@ -1306,6 +1306,7 @@ void TupLibraryWidget::importImageSequence()
 
             int answer = msgBox.exec();
             if (answer == QMessageBox::Ok) {
+                msgBox.close();
                 verifyFramesAvailability(filesTotal);
 
                 QString directory = source.dirName();
@@ -1313,6 +1314,7 @@ void TupLibraryWidget::importImageSequence()
 
                 QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
+                /*
                 QFont font = this->font();
                 font.setPointSize(8);
 
@@ -1326,6 +1328,8 @@ void TupLibraryWidget::importImageSequence()
 
                 progressDialog.move(static_cast<int> ((desktop.screenGeometry().width() - progressDialog.width())/2),
                                     static_cast<int> ((desktop.screenGeometry().height() - progressDialog.height())/2));
+
+                */
 
                 TupLibraryFolder *folder = new TupLibraryFolder(directory, project);
                 library->addFolder(folder);
@@ -1374,9 +1378,11 @@ void TupLibraryWidget::importImageSequence()
                                  emit requestTriggered(&request);
                              }
 
+                             /*
                              progressDialog.setLabelText(tr("Loading image #%1").arg(index));
                              progressDialog.setValue(index);
                              index++;
+                             */
                          } else {
                              QMessageBox::critical(this, tr("ERROR!"), tr("ERROR: Can't open file %1. Please, check file permissions and try again.").arg(symName), QMessageBox::Ok);
                              QApplication::restoreOverrideCursor();
@@ -1446,12 +1452,14 @@ void TupLibraryWidget::importSvgSequence()
             int answer = msgBox.exec();
 
             if (answer == QMessageBox::Ok) {
+                msgBox.close();
                 verifyFramesAvailability(filesTotal);
                 QString directory = source.dirName();
                 libraryTree->createFolder(directory);
 
                 QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
+                /*
                 QFont font = this->font();
                 font.setPointSize(8);
 
@@ -1465,6 +1473,7 @@ void TupLibraryWidget::importSvgSequence()
 
                 progressDialog.move(static_cast<int> ((desktop.screenGeometry().width() - progressDialog.width())/2),
                                     static_cast<int> ((desktop.screenGeometry().height() - progressDialog.height())/2));
+                */
 
                 TupLibraryFolder *folder = new TupLibraryFolder(directory, project);
                 library->addFolder(folder);
@@ -1495,9 +1504,11 @@ void TupLibraryWidget::importSvgSequence()
                                  emit requestTriggered(&request);
                              }
 
+                             /*
                              progressDialog.setLabelText(tr("Loading SVG file #%1").arg(index));
                              progressDialog.setValue(index);
                              index++;
+                             */
                          } else {
                              QMessageBox::critical(this, tr("ERROR!"), tr("ERROR: Can't open file %1. Please, check file permissions and try again.").arg(symName), QMessageBox::Ok);
                              QApplication::restoreOverrideCursor();

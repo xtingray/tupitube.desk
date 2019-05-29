@@ -145,7 +145,7 @@ TupLayer *TupScene::createLayer(QString name, int position, bool loaded)
             #endif
         #endif    
         
-        return 0;
+        return nullptr;
     }
 
     layerCount++;
@@ -185,7 +185,7 @@ TupSoundLayer *TupScene::createSoundLayer(int position, bool loaded)
                 tError() << msg;
             #endif
         #endif        
-        return 0;
+        return nullptr;
     }
 
     TupSoundLayer *layer = new TupSoundLayer(this);
@@ -260,7 +260,7 @@ TupLayer *TupScene::layerAt(int position) const
                 tError() << msg3;
             #endif
         #endif
-        return NULL;
+        return nullptr;
     }
 
     return layers.value(position);
@@ -277,7 +277,7 @@ TupSoundLayer *TupScene::soundLayer(int position) const
                T_FUNCINFO << msg;
             #endif
         #endif
-        return 0;
+        return nullptr;
     }
 
     return soundLayers.value(position);
@@ -647,7 +647,7 @@ TupItemTweener *TupScene::tween(const QString &name, TupItemTweener::Type type)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 QList<QString> TupScene::getTweenNames(TupItemTweener::Type type)
@@ -753,14 +753,14 @@ void TupScene::clear()
     if (background) {
         background->clear();
         delete background;
-        background = NULL;
+        background = nullptr;
     }
 
     for (int i=0; i<layers.count(); i++) {
          TupLayer *layer = layers.takeAt(i);
          layer->clear();
          delete layer;
-         layer = NULL;
+         layer = nullptr;
     }
 
     layerCount = 1;
@@ -853,7 +853,7 @@ int TupScene::getLipSyncLayerIndex(const QString &name)
 
 TupLipSync * TupScene::getLipSync(const QString &name)
 {
-    TupLipSync *project = 0;
+    TupLipSync *project = nullptr;
 
     foreach (TupLayer *layer, layers) {
         if (layer->lipSyncCount() > 0) {

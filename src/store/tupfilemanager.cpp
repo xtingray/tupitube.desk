@@ -65,12 +65,13 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
     QString name = info.baseName();	
     QString oldDirName = CACHE_DIR + project->getName();
     QDir projectDir(oldDirName);
-
+    // Project name has been changed by the user
     if (name.compare(project->getName()) != 0) {
         project->setProjectName(name);
         projectDir.setPath(CACHE_DIR + name);    
         project->getLibrary()->updatePaths(CACHE_DIR + name);
         if (!projectDir.exists()) {
+            // Update the cache path with new project's name
             if (projectDir.rename(oldDirName, projectDir.path())) {
                 #ifdef TUP_DEBUG
                     QString msg = "TupFileManager::save() - Directory renamed to -> " + projectDir.path(); 
@@ -81,7 +82,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                     #endif
                 #endif
             } else {
-                // SQA: Check if these lines are really needed
+                // If rename action fails, then try to create new project's path
                 if (!projectDir.mkdir(projectDir.path())) {
                     #ifdef TUP_DEBUG
                         QString msg = "TupFileManager::save() - Error: Can't create path -> " + projectDir.path();
@@ -105,6 +106,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
             }
         }
     } else {
+        // If project's path doesn't exist, create it
         if (!projectDir.exists()) {
             if (!projectDir.mkdir(projectDir.path())) {
                 #ifdef TUP_DEBUG

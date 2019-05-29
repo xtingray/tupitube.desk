@@ -112,7 +112,7 @@ void TupProject::clear()
          TupScene *scene = scenesList.takeAt(i);
          scene->clear();
          delete scene;
-         scene = NULL;
+         scene = nullptr;
     }
 
     scenesList.clear();
@@ -218,7 +218,7 @@ TupScene *TupProject::createScene(QString name, int position, bool loaded)
     #endif
 
     if (position < 0 || position > scenesList.count())
-        return 0;
+        return nullptr;
 
     TupScene *scene = new TupScene(this, dimension, bgColor);
     scenesList.insert(position, scene);
@@ -381,7 +381,7 @@ TupScene *TupProject::sceneAt(int position) const
                 tError() << msg;
             #endif
         #endif
-        return 0;
+        return nullptr;
     }
 
     return scenesList.value(position);
@@ -732,22 +732,30 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                              TupSvgItem *svgItem = new TupSvgItem(path, frame);
                              svgItem->setSymbolName(name);
 
-                             int svgW = svgItem->boundingRect().width();
-                             int svgH = svgItem->boundingRect().height();
-
-                             if (dimension.width() > svgW && dimension.height() > svgH) {
-                                 svgItem->moveBy((dimension.width() - svgW)/2, (dimension.height() - svgH)/2);
-                             } else {
-                                 qreal factorW = ((qreal)dimension.width())/((qreal)svgW);
-                                 qreal factorH = ((qreal)dimension.height())/((qreal)svgH);
-
-                                 if (factorW < factorH)                           
+                             int svgW = static_cast<int> (svgItem->boundingRect().width());
+                             int svgH = static_cast<int> (svgItem->boundingRect().height());
+                             if (dimension.width() < svgW || dimension.height() < svgH) {
+                                 qreal factorW = static_cast<qreal>(dimension.width()) / static_cast<qreal>(svgW);
+                                 qreal factorH = static_cast<qreal>(dimension.height()) / static_cast<qreal>(svgH);
+                                 if (svgW < svgH) {
                                      svgItem->setScale(factorW);
-                                 else
+                                     svgW = static_cast<int> (svgW * factorW);
+                                     svgH = static_cast<int> (svgH * factorW);
+                                 } else {
                                      svgItem->setScale(factorH);
-
-                                 svgItem->moveBy(0, 0);
+                                     svgW = static_cast<int> (svgW * factorH);
+                                     svgH = static_cast<int> (svgH * factorH);
+                                 }
                              }
+
+                             qreal xPos = 0;
+                             qreal yPos = 0;
+                             if (dimension.width() > svgW)
+                                 xPos = (dimension.width() - svgW) / 2;
+                             if (dimension.height() > svgH)
+                                 yPos = (dimension.height() - svgH) / 2;
+
+                             svgItem->moveBy(xPos, yPos);
 
                              int zLevel = frame->getTopZLevel();
                              svgItem->setZValue(zLevel);

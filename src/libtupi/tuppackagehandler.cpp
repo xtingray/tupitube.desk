@@ -141,8 +141,17 @@ bool TupPackageHandler::compress(QuaZip *zip, const QString &path)
         }
 
         QString cleanPath = stripRepositoryFromPath(filePath);
-        if (!outFile.open(QIODevice::WriteOnly, QuaZipNewInfo(cleanPath, cleanPath))) 
+        if (!outFile.open(QIODevice::WriteOnly, QuaZipNewInfo(cleanPath, cleanPath))) {
+            #ifdef TUP_DEBUG
+                QString msg = "TupPackageHandler::compress() - Error while opening QuaZipFile";
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError() << msg;
+                #endif
+            #endif
             return false;
+        }
 
         inFile.setFileName(filePath);
 
@@ -393,7 +402,7 @@ bool TupPackageHandler::createPath(const QString &filePath)
     else 
         return true;
     
-    return false;
+    // return false;
 }
 
 QString TupPackageHandler::importedProjectPath() const

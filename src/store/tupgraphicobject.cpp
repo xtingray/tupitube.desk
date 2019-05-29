@@ -143,12 +143,15 @@ void TupGraphicObject::addTween(TupItemTweener *itemTween)
     int total = tweens.count();
     for(int i=0; i < total; i++) {
         TupItemTweener *tween = tweens.at(i);
+        qDebug() << "TupGraphicObject::addTween() - Tween type: " << itemTween->getType();
         if (tween->getType() == itemTween->getType()) {
+            qDebug() << "TupGraphicObject::addTween() - Updating tween...";
             tweens[i] = itemTween;
             return;
         }
     }
 
+    qDebug() << "TupGraphicObject::addTween() - Adding tween...";
     tweens << itemTween;
 }
 
@@ -176,7 +179,7 @@ TupItemTweener *TupGraphicObject::tween(const QString &id) const
             return tween;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 QList<TupItemTweener *> TupGraphicObject::tweensList() const

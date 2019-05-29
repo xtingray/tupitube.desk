@@ -59,7 +59,6 @@ Tweener::Tweener() : TupToolPlugin()
 
     configPanel = nullptr;
     initFrame = 0;
-    // target = 0;
 }
 
 Tweener::~Tweener()
@@ -71,8 +70,6 @@ void Tweener::init(TupGraphicsScene *gScene)
 {
     scene = gScene;
     objects.clear();
-    // if (target)
-    //     scene->removeItem(target);
 
     mode = TupToolPlugin::View;
     editMode = TupToolPlugin::None;
@@ -412,17 +409,12 @@ void Tweener::setPropertiesMode()
 {
     editMode = TupToolPlugin::Properties;
     disableSelection();
-
-    // addTarget();
 }
 
 /* This method resets this plugin */
 
 void Tweener::applyReset()
 {
-    // if ((mode == TupToolPlugin::Edit || mode == TupToolPlugin::Add) && editMode == TupToolPlugin::Properties)
-    //     scene->removeItem(target);
-
     disableSelection();
     clearSelection();
 
@@ -455,7 +447,6 @@ void Tweener::applyTween()
         foreach (QGraphicsItem *item, objects) {
             TupLibraryObject::Type type = TupLibraryObject::Item;
             int objectIndex = scene->currentFrame()->indexOf(item);
-            // QRectF rect = item->sceneBoundingRect();
             QPointF pos = item->mapFromParent(origin);
 
             if (TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item)) {
@@ -483,57 +474,57 @@ void Tweener::applyTween()
         initScene = scene->currentSceneIndex();
 
         foreach (QGraphicsItem *item, objects) {
-                 TupLibraryObject::Type type = TupLibraryObject::Item;
+            TupLibraryObject::Type type = TupLibraryObject::Item;
 
-                 TupScene *sceneData = scene->currentScene();
-                 TupLayer *layer = sceneData->layerAt(initLayer);
-                 TupFrame *frame = layer->frameAt(currentTween->getInitFrame());
-                 int objectIndex = frame->indexOf(item);
+            TupScene *sceneData = scene->currentScene();
+            TupLayer *layer = sceneData->layerAt(initLayer);
+            TupFrame *frame = layer->frameAt(currentTween->getInitFrame());
+            int objectIndex = frame->indexOf(item);
 
-                 QRectF rect = item->sceneBoundingRect();
-                 QPointF origin = item->mapFromParent(rect.center());
+            QRectF rect = item->sceneBoundingRect();
+            QPointF origin = item->mapFromParent(rect.center());
  
-                 TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
-                 if (svg) {
-                     type = TupLibraryObject::Svg;
-                     objectIndex = frame->indexOf(svg);
-                 }
+            TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
+            if (svg) {
+                type = TupLibraryObject::Svg;
+                objectIndex = frame->indexOf(svg);
+            }
 
-                 if (initFrame != currentTween->getInitFrame()) {
-                     QDomDocument dom;
-                     if (type == TupLibraryObject::Svg)
-                         dom.appendChild(svg->toXml(dom));
-                     else
-                         dom.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(dom));
+            if (initFrame != currentTween->getInitFrame()) {
+                QDomDocument dom;
+                if (type == TupLibraryObject::Svg)
+                    dom.appendChild(svg->toXml(dom));
+                else
+                    dom.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(dom));
 
-                     TupProjectRequest request = TupRequestBuilder::createItemRequest(initScene, initLayer, initFrame,
-                                                                                      0, item->pos(), scene->getSpaceContext(),
-                                                                                      type, TupProjectRequest::Add, dom.toString());
-                     emit requested(&request);
+                TupProjectRequest request = TupRequestBuilder::createItemRequest(initScene, initLayer, initFrame,
+                                                                                 0, item->pos(), scene->getSpaceContext(),
+                                                                                 type, TupProjectRequest::Add, dom.toString());
+                emit requested(&request);
 
-                     request = TupRequestBuilder::createItemRequest(initScene, initLayer,
-                                                                    currentTween->getInitFrame(),
-                                                                    objectIndex, QPointF(), scene->getSpaceContext(),
-                                                                    type, TupProjectRequest::Remove);
-                     emit requested(&request);
+                request = TupRequestBuilder::createItemRequest(initScene, initLayer,
+                                                               currentTween->getInitFrame(),
+                                                               objectIndex, QPointF(), scene->getSpaceContext(),
+                                                               type, TupProjectRequest::Remove);
+                emit requested(&request);
 
-                     frame = layer->frameAt(initFrame);
-                     if (type == TupLibraryObject::Item) {
-                         objectIndex = frame->graphicsCount() - 1;
-                         newList.append(frame->graphicAt(objectIndex)->item());
-                     } else {
-                         objectIndex = frame->svgItemsCount() - 1;
-                         newList.append(frame->svgAt(objectIndex));
-                     }
-                 }
+                frame = layer->frameAt(initFrame);
+                if (type == TupLibraryObject::Item) {
+                    objectIndex = frame->graphicsCount() - 1;
+                    newList.append(frame->graphicAt(objectIndex)->item());
+                } else {
+                    objectIndex = frame->svgItemsCount() - 1;
+                    newList.append(frame->svgAt(objectIndex));
+                }
+            }
 
-                 TupProjectRequest request = TupRequestBuilder::createItemRequest(
-                                             initScene, initLayer, initFrame,
-                                             objectIndex, QPointF(), scene->getSpaceContext(),
-                                             type, TupProjectRequest::SetTween,
-                                             configPanel->tweenToXml(initScene, initLayer, initFrame,
-                                                                         origin, initialXScaleFactor, initialYScaleFactor));
-                 emit requested(&request);
+            TupProjectRequest request = TupRequestBuilder::createItemRequest(
+                                        initScene, initLayer, initFrame,
+                                        objectIndex, QPointF(), scene->getSpaceContext(),
+                                        type, TupProjectRequest::SetTween,
+                                        configPanel->tweenToXml(initScene, initLayer, initFrame,
+                                                                origin, initialXScaleFactor, initialYScaleFactor));
+            emit requested(&request);
         }
 
         if (newList.size() > 0)
@@ -627,23 +618,6 @@ void Tweener::updateOriginPoint(const QPointF &point)
 {
     origin = point;
 }
-
-/*
-void Tweener::addTarget()
-{
-    if (mode == TupToolPlugin::Add) {
-        target = new Target(origin, baseZValue, scene);
-        connect(target, SIGNAL(positionUpdated(const QPointF &)), this, SLOT(updateOriginPoint(const QPointF &)));
-    } else {
-        if (objects.size() > 0) {
-            QGraphicsItem *item = objects.at(0);
-            origin = item->mapToParent(currentTween->transformOriginPoint());
-            target = new Target(origin, baseZValue, scene);
-            connect(target, SIGNAL(positionUpdated(const QPointF &)), this, SLOT(updateOriginPoint(const QPointF &)));
-        }
-    }
-}
-*/
 
 void Tweener::updateMode(TupToolPlugin::Mode currentMode)
 {

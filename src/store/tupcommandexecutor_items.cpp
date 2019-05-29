@@ -525,7 +525,7 @@ bool TupCommandExecutor::groupItems(TupItemResponse *response)
         } else {
             TupBackground *bg = scene->sceneBackground();
             if (bg) {
-                TupFrame *frame = NULL;
+                TupFrame *frame = nullptr;
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
@@ -636,7 +636,7 @@ bool TupCommandExecutor::ungroupItems(TupItemResponse *response)
                 if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
                     frame = bg->staticFrame();
                 } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-                           frame = bg->dynamicFrame();
+                    frame = bg->dynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
                         QString msg = "TupCommandExecutor::ungroupItems() - Error: Invalid mode!";

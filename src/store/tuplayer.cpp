@@ -132,7 +132,7 @@ TupFrame *TupLayer::createFrame(QString name, int position, bool loaded)
     */
 
     if (position < 0)
-        return 0;
+        return nullptr;
 
     TupFrame *frame = new TupFrame(this);
     framesCounter++;
@@ -280,7 +280,7 @@ void TupLayer::clear()
          TupFrame *frame = frames.takeAt(i);
          frame->clear();
          delete frame;
-         frame = NULL;
+         frame = nullptr;
     }
     
     layerName = "";
@@ -373,7 +373,7 @@ TupFrame *TupLayer::frameAt(int position) const
             #endif
         #endif    
 
-        return 0;
+        return nullptr;
     }
 
     return frames.value(position);
@@ -490,6 +490,14 @@ int TupLayer::framesCount() const
 
 void TupLayer::addTweenObject(TupGraphicObject *object)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+           qDebug() << "[TupLayer::addTweenObject()]";
+        #else
+           T_FUNCINFO;
+        #endif
+    #endif
+
     tweeningGraphicObjects << object;
 }
 
@@ -500,6 +508,14 @@ void TupLayer::addTweenObject(TupSvgItem *object)
 
 void TupLayer::updateTweenObject(int index, TupGraphicObject *object)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+           qDebug() << "[TupLayer::updateTweenObject()]";
+        #else
+           T_FUNCINFO;
+        #endif
+    #endif
+
     tweeningGraphicObjects.replace(index, object);
 }
 
@@ -510,6 +526,14 @@ void TupLayer::updateTweenObject(int index, TupSvgItem *object)
 
 void TupLayer::removeTweenObject(TupGraphicObject *object)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+           qDebug() << "[TupLayer::removeTweenObject()]";
+        #else
+           T_FUNCINFO;
+        #endif
+    #endif
+
     if (tweeningGraphicObjects.size() > 0)
         tweeningGraphicObjects.removeAll(object);
 }
@@ -522,6 +546,14 @@ void TupLayer::removeTweenObject(TupSvgItem *object)
 
 QList<TupGraphicObject *> TupLayer::getTweeningGraphicObjects() const
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+           qDebug() << "[TupLayer::getTweeningGraphicObjects()]";
+        #else
+           T_FUNCINFO;
+        #endif
+    #endif
+
     return tweeningGraphicObjects;
 }
 
@@ -532,6 +564,14 @@ QList<TupSvgItem *> TupLayer::getTweeningSvgObjects() const
 
 bool TupLayer::tweenExists(const QString &name, TupItemTweener::Type type)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+           qDebug() << "[TupLayer::tweenExists()]";
+        #else
+           T_FUNCINFO;
+        #endif
+    #endif
+
     foreach (TupGraphicObject *object, tweeningGraphicObjects) {
         QList<TupItemTweener *> list = object->tweensList();
         foreach(TupItemTweener *tween, list) {
@@ -557,7 +597,7 @@ bool TupLayer::removeTween(const QString &name, TupItemTweener::Type type)
         #ifdef Q_OS_WIN
             qDebug() << "[TupLayer::removeTween()]";
         #else
-            T_FUNCINFO;
+            T_FUNCINFO << "name: " << name << " | type: " << type;
         #endif
     #endif
 
@@ -594,6 +634,14 @@ bool TupLayer::removeTween(const QString &name, TupItemTweener::Type type)
 
 void TupLayer::removeAllTweens()
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+           qDebug() << "[TupLayer::removeAllTweens()]";
+        #else
+           T_FUNCINFO;
+        #endif
+    #endif
+
     foreach (TupGraphicObject *object, tweeningGraphicObjects) {
         object->removeAllTweens();
         removeTweenObject(object);
@@ -607,6 +655,14 @@ void TupLayer::removeAllTweens()
 
 void TupLayer::removeTweensFromFrame(int frameIndex)
 {
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+           qDebug() << "[TupLayer::removeTweensFromFrame()]";
+        #else
+           T_FUNCINFO;
+        #endif
+    #endif
+
     foreach (TupGraphicObject *object, tweeningGraphicObjects) {
         if (object->frame()->index() == frameIndex) {
             object->removeAllTweens();
