@@ -780,17 +780,17 @@ void TupDocumentView::loadPlugin(int menu, int index)
                         break;
                         case TupToolPlugin::RectangleTool:
                         {
-                            action = (TAction *) brushActions[0];
+                            action = static_cast<TAction *> (brushActions[0]);
                         }
                         break;
                         case TupToolPlugin::EllipseTool:
                         {
-                            action = (TAction *) brushActions[1];
+                            action = static_cast<TAction *> (brushActions[1]);
                         }
                         break;
                         case TupToolPlugin::LineTool:
                         {
-                            action = (TAction *) brushActions[2];
+                            action = static_cast<TAction *> (brushActions[2]);
                         }
                         break;
                     }
@@ -850,7 +850,6 @@ void TupDocumentView::loadPlugin(int menu, int index)
                     #endif
                     return;
                 }
-            break;
     }
 
     if (action) {
@@ -1148,7 +1147,7 @@ double TupDocumentView::backgroundOpacity(TupFrame::FrameType type)
             if (type == TupFrame::StaticBg) {
                 opacity = bg->staticOpacity();
             } else if (type == TupFrame::DynamicBg) {
-                       opacity = bg->dynamicOpacity();
+                opacity = bg->dynamicOpacity();
             }
         }
     }
@@ -1332,7 +1331,7 @@ void TupDocumentView::closeArea()
     if (configurationArea->isVisible())
         configurationArea->close();
 
-    paintArea->setScene(0);
+    paintArea->setScene(nullptr);
     close();
 }
 
@@ -1450,6 +1449,16 @@ void TupDocumentView::saveTimer()
 void TupDocumentView::setSpaceContext()
 {
     TupProject::Mode mode = TupProject::Mode(spaceModeCombo->currentIndex());
+    if (currentTool) {
+        if (((currentTool->toolType() == TupToolInterface::Tweener)
+            || (currentTool->toolType() == TupToolInterface::LipSync))
+            && (mode != TupProject::FRAMES_EDITION)) {
+            pencilAction->trigger();
+        } else {
+            currentTool->init(paintArea->graphicsScene());
+        }
+    }
+
     if (mode == TupProject::FRAMES_EDITION) {
         if (dynamicFlag) {
             dynamicFlag = false;
@@ -1490,14 +1499,6 @@ void TupDocumentView::setSpaceContext()
 
     paintArea->updateSpaceContext();
     paintArea->updatePaintArea();
-
-   if (currentTool) {
-       currentTool->init(paintArea->graphicsScene());
-       if (((currentTool->toolType() == TupToolInterface::Tweener) || (currentTool->toolType() == TupToolInterface::LipSync))
-           && (mode != TupProject::FRAMES_EDITION)) {
-           pencilAction->trigger();
-       }
-   }
 
    emit modeHasChanged(mode);
 }

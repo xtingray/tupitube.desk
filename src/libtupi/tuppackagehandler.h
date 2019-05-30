@@ -38,16 +38,6 @@
 
 #include "tglobal.h"
 #include "tapplicationproperties.h"
-#include "quazip/quazip.h"
-#include "quazip/quazipfile.h"
-
-// SQA: Pending to enable in the future
-// #include "quazip/JlCompress.h"
-
-#include <QString>
-#include <QFile>
-#include <QFileInfo>
-#include <QDir>
 
 class TUPITUBE_EXPORT TupPackageHandler
 {
@@ -61,14 +51,10 @@ class TUPITUBE_EXPORT TupPackageHandler
         
         QString importedProjectPath() const;
         QString projectDirectory() const;
-        
-    private:
-        bool compress(QuaZip *zip, const QString &path);
-        QString stripRepositoryFromPath(QString path);
-        bool createPath(const QString &filePath);
-        
+
     private:
         QString gPath;
+        QString projectDir;
 };
 
 #endif

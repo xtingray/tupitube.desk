@@ -978,7 +978,7 @@ void TupLibraryWidget::importImageGroup()
     }
 }
 
-void TupLibraryWidget::importImage(const QString &image)
+void TupLibraryWidget::importImage(const QString &imagePath)
 {
 #ifdef TUP_DEBUG
     #ifdef Q_OS_WIN
@@ -988,13 +988,13 @@ void TupLibraryWidget::importImage(const QString &image)
     #endif
 #endif
 
-    if (image.isEmpty())
+    if (imagePath.isEmpty())
         return;
 
-    QFile file(image);
+    QFile imageFile(imagePath);
 
-    if (file.open(QIODevice::ReadOnly)) {
-        QFileInfo fileInfo(file);
+    if (imageFile.open(QIODevice::ReadOnly)) {
+        QFileInfo fileInfo(imageFile);
         QString key = fileInfo.fileName().toLower();
         key = key.replace("(","_");
         key = key.replace(")","_");
@@ -1005,10 +1005,10 @@ void TupLibraryWidget::importImage(const QString &image)
             name = key.mid(0, 30);
 
         QString extension = key.mid(index, key.length() - index);
-        QByteArray data = file.readAll();
-        file.close();
+        QByteArray data = imageFile.readAll();
+        imageFile.close();
 
-        QPixmap *pixmap = new QPixmap(image);
+        QPixmap *pixmap = new QPixmap(imagePath);
         int picWidth = pixmap->width();
         int picHeight = pixmap->height();
         int projectWidth = project->getDimension().width();
@@ -1049,9 +1049,9 @@ void TupLibraryWidget::importImage(const QString &image)
                 if (pixmap->loadFromData(data, ext)) {
                     QPixmap newpix;
                     if (picWidth > picHeight) {
-                        newpix = QPixmap(pixmap->scaledToWidth(projectWidth, Qt::SmoothTransformation));
-                    } else {
                         newpix = QPixmap(pixmap->scaledToHeight(projectHeight, Qt::SmoothTransformation));
+                    } else {
+                        newpix = QPixmap(pixmap->scaledToWidth(projectWidth, Qt::SmoothTransformation));
                     }
                     QBuffer buffer(&data);
                     buffer.open(QIODevice::WriteOnly);
@@ -1073,7 +1073,7 @@ void TupLibraryWidget::importImage(const QString &image)
 
         data.clear();
     } else {
-        TOsd::self()->display(tr("Error"), tr("Cannot open file: %1").arg(image), TOsd::Error);
+        TOsd::self()->display(tr("Error"), tr("Cannot open file: %1").arg(imagePath), TOsd::Error);
     }
 }
 

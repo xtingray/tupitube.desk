@@ -73,7 +73,7 @@ TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::Type type, co
                 tError() << msg;
             #endif
         #endif
-        return 0;
+        return nullptr;
     }
 
     if (data.isEmpty()) {
@@ -85,7 +85,7 @@ TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::Type type, co
                 tError() << msg;
             #endif
         #endif
-        return 0;
+        return nullptr;
     }
 
     TupLibraryObject *object = new TupLibraryObject(name, folder, type, this);
@@ -101,7 +101,7 @@ TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::Type type, co
         #endif
 
         delete object;
-        return 0;
+        return nullptr;
     }
 
     bool ret;
@@ -135,7 +135,7 @@ TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::Type type, co
         #endif
     #endif
 
-    return 0;
+    return nullptr;
 }
 
 bool TupLibraryFolder::addObject(TupLibraryObject *object)
@@ -347,7 +347,7 @@ TupLibraryObject *TupLibraryFolder::getObject(const QString &key) const
         #endif
     #endif
     
-    return 0;
+    return nullptr;
 }
 
 TupLibraryFolder *TupLibraryFolder::getFolder(const QString &key) const
@@ -374,7 +374,7 @@ TupLibraryFolder *TupLibraryFolder::getFolder(const QString &key) const
         #endif
     #endif
    
-    return 0;
+    return nullptr;
 }
 
 bool TupLibraryFolder::folderExists(const QString &key) const
