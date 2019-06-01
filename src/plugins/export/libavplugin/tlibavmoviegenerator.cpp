@@ -34,12 +34,16 @@
  ***************************************************************************/
 
 #define INT64_C
-#define __STDC_CONSTANT_MACROS
+// #define __STDC_CONSTANT_MACROS
 #include <stdint.h>
 
 #include "tlibavmoviegenerator.h"
 #include "talgorithm.h"
+
 #include <QDir>
+
+// Handy documentation about Libav library
+// https://github.com/leandromoreira/ffmpeg-libav-tutorial
 
 TLibavMovieGenerator::TLibavMovieGenerator(TMovieGeneratorInterface::Format format, const QSize &size, 
                       int fpsParam, double duration) : TMovieGenerator(size.width(), size.height())
@@ -61,7 +65,7 @@ TLibavMovieGenerator::~TLibavMovieGenerator()
 bool TLibavMovieGenerator::beginVideo()
 {
     int ret;
-    AVCodec *video_codec = 0;
+    AVCodec *video_codec = nullptr;
     // AVCodec *audio_codec = 0;
     QString errorDetail = "This is not a problem directly related to <b>TupiTube Desk</b>. "
                           "Please, check your libav installation and codec support. "
@@ -69,7 +73,7 @@ bool TLibavMovieGenerator::beginVideo()
 
     av_register_all();
 
-    fmt = av_guess_format(NULL, movieFile.toLocal8Bit().data(), NULL);
+    fmt = av_guess_format("ffh264", movieFile.toLocal8Bit().data(), nullptr);
     if (!fmt) {
         #ifdef TUP_DEBUG
             QString msg = QString("") + "TLibavMovieGenerator::beginVideo() - Can't guess format. Selecting MPEG by default...";
@@ -80,7 +84,7 @@ bool TLibavMovieGenerator::beginVideo()
             #endif
         #endif
 
-        fmt = av_guess_format("mpeg", NULL, NULL);
+        fmt = av_guess_format("mpeg", nullptr, nullptr);
     }
 
     if (!fmt) {
@@ -108,7 +112,7 @@ bool TLibavMovieGenerator::beginVideo()
         return false;
     }
 
-    video_st = NULL;
+    video_st = nullptr;
     if (fmt->video_codec != AV_CODEC_ID_NONE)
         video_st = addVideoStream(oc, &video_codec, fmt->video_codec, movieFile, width(), height(), fps);
 
@@ -200,7 +204,7 @@ bool TLibavMovieGenerator::beginVideo()
         }
     }
 
-    avformat_write_header(oc, NULL);
+    avformat_write_header(oc, nullptr);
 
     if (videoFrame)
         videoFrame->pts = 0;
@@ -223,6 +227,7 @@ AVStream * TLibavMovieGenerator::addVideoStream(AVFormatContext *oc, AVCodec **c
     #endif
 
     AVCodecContext *c;
+    // AVCodecParameters *c;
     AVStream *st;
     QString errorMsg = "";
 
@@ -242,7 +247,7 @@ AVStream * TLibavMovieGenerator::addVideoStream(AVFormatContext *oc, AVCodec **c
             #endif
         #endif
 
-        return NULL;
+        return nullptr;
     }
 
     st = avformat_new_stream(oc, *codec);
@@ -257,9 +262,9 @@ AVStream * TLibavMovieGenerator::addVideoStream(AVFormatContext *oc, AVCodec **c
             #endif
         #endif
 
-        return NULL;
+        return nullptr;
     }
-    st->id = oc->nb_streams-1;
+    st->id = static_cast<int>(oc->nb_streams - 1);
 
     c = st->codec;
     c->codec_id = codec_id;
@@ -277,9 +282,9 @@ AVStream * TLibavMovieGenerator::addVideoStream(AVFormatContext *oc, AVCodec **c
     c->gop_size = 0;
     c->max_b_frames = 0;
 
-    // c->time_base.num = 1;
-    // c->time_base.den = fps;
-    c->time_base = (AVRational){1,fps};
+    c->time_base.num = 1;
+    c->time_base.den = fps;
+    // c->time_base = (AVRational){1,fps};
 
     if (movieFile.endsWith("gif", Qt::CaseInsensitive)) {
         st->time_base.num = 1;
@@ -421,7 +426,7 @@ bool TLibavMovieGenerator::openVideo(AVCodec *codec, AVStream *st)
     //     av_opt_set(&opts, "tune", "zerolatency", 0);
 
     // Open the codec
-    ret = avcodec_open2(c, codec, NULL);
+    ret = avcodec_open2(c, codec, nullptr);
     // ret = avcodec_open2(c, codec, &opts);
 
     if (ret < 0) {
@@ -562,14 +567,15 @@ bool TLibavMovieGenerator::openAudio(AVCodec *codec, AVStream *st)
 */
 
 #define RGBtoYUV(r, g, b, y, u, v) \
-  y = (uint8_t)(((int)30*r + (int)59*g + (int)11*b)/100); \
-  u = (uint8_t)(((int)-17*r - (int)33*g + (int)50*b + 12800)/100); \
-  v = (uint8_t)(((int)50*r - (int)42*g - (int)8*b + 12800)/100);
+  y = static_cast<uint8_t> ((static_cast<int>(30*r) + static_cast<int>(59*g) + static_cast<int>(11*b))/100); \
+  u = static_cast<uint8_t> ((static_cast<int>(-17*r) - static_cast<int>(33*g) + static_cast<int>(50*b) + 12800)/100); \
+  v = static_cast<uint8_t> ((static_cast<int>(50*r) - static_cast<int>(42*g) - static_cast<int>(8*b) + 12800)/100);
 
-void TLibavMovieGenerator::RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint iRGBIncrement, bool bSwapRGB, int width, int height)
+void TLibavMovieGenerator::RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint iRGBIncrement,
+                                        bool bSwapRGB, int width, int height)
 {
-    const unsigned iPlaneSize = width * height;
-    const unsigned iHalfWidth = width >> 1;
+    const unsigned iPlaneSize = static_cast<const unsigned int> (width * height);
+    const unsigned iHalfWidth = static_cast<const unsigned int> (width >> 1);
 
     // get pointers to the data
     uint8_t *yplane  = bufferYUV;
@@ -587,11 +593,11 @@ void TLibavMovieGenerator::RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *buffe
     }
  
     for (int y = 0; y < height; y++) {
-         uint8_t *yline  = yplane + (y * width);
-         uint8_t *uline  = uplane + ((y >> 1) * iHalfWidth);
-         uint8_t *vline  = vplane + ((y >> 1) * iHalfWidth);
+         uint8_t *yline = yplane + (y * width);
+         uint8_t *uline = uplane + (static_cast<unsigned int>(y >> 1) * iHalfWidth);
+         uint8_t *vline = vplane + (static_cast<unsigned int>(y >> 1) * iHalfWidth);
 
-         for (int x=0; x<width; x+=2) {
+         for (int x = 0; x < width; x += 2) {
               RGBtoYUV(bufferRGBIndex[iRGBIdx[0]], bufferRGBIndex[iRGBIdx[1]], bufferRGBIndex[iRGBIdx[2]], *yline, *uline, *vline);
               bufferRGBIndex += iRGBIncrement;
               yline++;
@@ -622,7 +628,7 @@ bool TLibavMovieGenerator::writeVideoFrame(const QString &movieFile, const QImag
     int got_output;
     AVPacket pkt;
     av_init_packet(&pkt);
-    pkt.data = NULL; // packet data will be allocated by the encoder
+    pkt.data = nullptr; // packet data will be allocated by the encoder
     pkt.size = 0;
 
     if (movieFile.endsWith("gif", Qt::CaseInsensitive)) {
@@ -630,8 +636,8 @@ bool TLibavMovieGenerator::writeVideoFrame(const QString &movieFile, const QImag
         avpicture_fill((AVPicture *)videoFrame, img.bits(), AV_PIX_FMT_RGB24, w, h);
     } else { 
         int size = avpicture_get_size(AV_PIX_FMT_YUV420P, w, h);
-        uint8_t *pic_dat = (uint8_t *) av_malloc(size);
-        RGBtoYUV420P(image.bits(), pic_dat, image.depth()/8, true, w, h);
+        uint8_t *pic_dat = static_cast<uint8_t *> (av_malloc(static_cast<size_t>(size)));
+        RGBtoYUV420P(image.bits(), pic_dat, static_cast<uint>(image.depth()/8), true, w, h);
         avpicture_fill((AVPicture *)videoFrame, pic_dat, AV_PIX_FMT_YUV420P, w, h);
         // videoFrame->pts += av_rescale_q(1, video_st->codec->time_base, video_st->time_base);
         videoFrame->pts += av_rescale_q(1, video_st->time_base, video_st->time_base);

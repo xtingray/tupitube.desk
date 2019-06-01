@@ -66,7 +66,7 @@ int main()
     c->time_base.den = 24;
     c->time_base.num = 1;
     c->gop_size = 12;
-    c->pix_fmt = PIX_FMT_YUV420P;
+    c->pix_fmt = AV_PIX_FMT_YUV420P;
 
     av_free(oc);
 
