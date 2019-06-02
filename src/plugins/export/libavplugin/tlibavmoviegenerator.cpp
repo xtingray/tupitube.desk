@@ -44,6 +44,7 @@
 
 // Handy documentation about Libav library
 // https://github.com/leandromoreira/ffmpeg-libav-tutorial
+// http://libav-users.943685.n4.nabble.com/Save-AVFrame-to-jpg-file-td2314979.html
 
 TLibavMovieGenerator::TLibavMovieGenerator(TMovieGeneratorInterface::Format format, const QSize &size, 
                       int fpsParam, double duration) : TMovieGenerator(size.width(), size.height())

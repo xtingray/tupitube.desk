@@ -841,10 +841,10 @@ void TupPaintArea::copyItems()
         #endif
     #endif
 
-    copiesXml.clear();
     QList<QGraphicsItem *> selected = scene()->selectedItems();
 
     if (!selected.isEmpty()) {
+        copiesXml.clear();
         foreach (QGraphicsItem *item, selected) {
              if (qgraphicsitem_cast<TControlNode *> (item))
                  selected.removeOne(item);
