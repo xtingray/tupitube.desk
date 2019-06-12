@@ -96,14 +96,14 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
 
     if (input->buttons() == Qt::LeftButton) {
         // SQA: Enhance this plugin to support several items with one click 
-        // QList<QGraphicsItem *> list = scene->items(input->pos(), Qt::IntersectsItemShape, Qt::DescendingOrder, QTransform());
-
-        QGraphicsItem *item = gScene->itemAt(input->pos(), QTransform());
+        QList<QGraphicsItem *> list = scene->items(input->pos(), Qt::IntersectsItemShape, Qt::DescendingOrder, QTransform());
+        foreach(QGraphicsItem *item, list) {
+        // QGraphicsItem *item = gScene->itemAt(input->pos(), QTransform());
         if (item) {
             int itemIndex = -1;
             int currentLayer;
             int currentFrame;
-            TupFrame *frame;
+            TupFrame *frame = new TupFrame;
 
             if (gScene->getSpaceContext() == TupProject::FRAMES_EDITION) {
                 frame = gScene->currentFrame();
@@ -181,6 +181,7 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                                               action, doc.toString());
 
                     emit requested(&event);
+                    return;
                 } else {
                     #ifdef TUP_DEBUG
                         QString msg = "FillTool::press() - Fatal Error: QAbstractGraphicsShapeItem cast has failed!";
@@ -191,6 +192,15 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                         #endif
                     #endif
                 }
+            } else {
+                #ifdef TUP_DEBUG
+                    QString msg = "FillTool::press() - Error: item is not available at the current frame";
+                    #ifdef Q_OS_WIN
+                        qDebug() << msg;
+                    #else
+                        tError() << msg;
+                    #endif
+                #endif
             }
         } else {
             #ifdef TUP_DEBUG
@@ -202,6 +212,7 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                 #endif
             #endif
             return;
+        }
         }
     }
 }

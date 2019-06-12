@@ -89,7 +89,6 @@ bool TupPackageHandler::importPackage(const QString &packagePath)
 
     QFileInfo file(packagePath);
     projectDir = file.baseName();
-    gPath = CACHE_DIR + file.baseName();
     QStringList list = JlCompress::extractDir(packagePath, CACHE_DIR);
     if (list.size() == 0) {
         #ifdef TUP_DEBUG
@@ -103,6 +102,10 @@ bool TupPackageHandler::importPackage(const QString &packagePath)
 
         return false;
     }
+
+    QString path = list.at(0);
+    int index = path.indexOf("/", CACHE_DIR.length());
+    gPath = path.left(index);
 
     return true;
 }

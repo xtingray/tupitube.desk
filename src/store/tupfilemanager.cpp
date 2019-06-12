@@ -243,7 +243,7 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
         #ifdef Q_OS_WIN
             qDebug() << "[TupFileManager::load()] - fileName: " + fileName;
         #else
-            T_FUNCINFO << fileName; 
+            T_FUNCINFO << "filename: " << fileName;
         #endif
     #endif
 
