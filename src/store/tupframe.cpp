@@ -69,8 +69,8 @@ TupFrame::TupFrame(TupLayer *parent) : QObject(parent)
     isLocked = false;
     isVisible = true;
 
-    direction = "-1";
-    shift = "0";
+    direction = "0";
+    shift = "5";
 
     zLevelIndex = (layer->layerIndex() + 2)*ZLAYER_LIMIT; // Layers levels starts from 2
 }
@@ -82,8 +82,8 @@ TupFrame::TupFrame(TupBackground *bg, const QString &label) : QObject(bg)
     isVisible = true;
     opacity = 1.0;
 
-    direction = "-1";
-    shift = "0";
+    direction = "0";
+    shift = "5";
 
     if (frameName.compare("landscape_dynamic") == 0) {
         zLevelIndex = 0;
@@ -148,14 +148,27 @@ void TupFrame::setDynamicShift(const QString &pixels)
 
 TupBackground::Direction TupFrame::dynamicDirection() const
 {
-    qDebug() << "TupFrame::dynamicDirection() - direction: " << direction;
-    return TupBackground::Direction(direction.toInt());
+#ifdef TUP_DEBUG
+    qDebug() << "[TupFrame::dynamicDirection()] " << direction;
+#endif
+    bool ok;
+    int value = direction.toInt(&ok);
+    if (ok)
+        return TupBackground::Direction(value);
+
+    return TupBackground::Direction(0);
 }
 
 int TupFrame::dynamicShift() const
 {
-    qDebug() << "TupFrame::dynamicShift() - shift: " << shift;
-    return shift.toInt();
+#ifdef TUP_DEBUG
+    qDebug() << "[TupFrame::dynamicShift()] " << shift;
+#endif
+    bool ok;
+    int value = shift.toInt(&ok);
+    if (ok)
+        return value;
+    return 5;
 }
 
 void TupFrame::setLocked(bool locked)

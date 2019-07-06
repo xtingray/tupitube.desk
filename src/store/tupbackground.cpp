@@ -222,6 +222,13 @@ QPixmap TupBackground::dynamicView(int frameIndex)
     int posX = 0;
     int posY = 0;
     int shift = dyanmicShift();
+    if (shift == 0)
+        shift = 5;
+
+#ifdef TUP_DEBUG
+    qDebug() << "[TupBackground::dynamicView()] - shift: " << shift;
+    qDebug() << "[TupBackground::dynamicView()] - frameIndex: " << frameIndex;
+#endif
 
     TupBackground::Direction direction = dynamicBg->dynamicDirection();
     switch (direction) {
@@ -229,7 +236,7 @@ QPixmap TupBackground::dynamicView(int frameIndex)
             {
                 int delta = dimension.width() / shift;
                 if (delta > frameIndex) {
-                    posX = dimension.width() - frameIndex*shift;
+                    posX = dimension.width() - frameIndex * shift;
                 } else {
                     int mod = static_cast<int> (fmod(frameIndex, delta));
                     posX = dimension.width() - (mod * shift);
@@ -240,7 +247,7 @@ QPixmap TupBackground::dynamicView(int frameIndex)
             {
                 int delta = dimension.width() / shift;
                 if (delta > frameIndex) {
-                    posX = frameIndex*shift;
+                    posX = frameIndex * shift;
                 } else {
                     int mod = static_cast<int> (fmod(frameIndex, delta));
                     posX = mod * shift;
@@ -251,7 +258,7 @@ QPixmap TupBackground::dynamicView(int frameIndex)
             {
                 int delta = dimension.height() / shift;
                 if (delta > frameIndex) {
-                    posY = frameIndex*shift;
+                    posY = frameIndex * shift;
                 } else {
                     int mod = static_cast<int> (fmod(frameIndex, delta));
                     posY = mod * shift;
