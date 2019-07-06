@@ -55,12 +55,24 @@ TupCameraWidget::TupCameraWidget(TupProject *work, bool isNetworked, QWidget *pa
 
     QDesktopWidget desktop;
 
+    QSize projectSize = work->getDimension();
+    double factor = static_cast<double>(projectSize.width()) / static_cast<double>(projectSize.height());
     int percent = 40;
     int height = desktop.screenGeometry().height();
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraWidget::()] - screen height: " << height;
+        qDebug() << "[TupCameraWidget::()] - factor: " << factor;
+    #endif
+
     if (height <= 700)
         percent = 30;
-    if (height >= 1080)
-        percent = 60;
+    if (height >= 1080) {
+        if (factor < 1.4)
+            percent = 45;
+        else
+            percent = 55;
+    }
 
     int desktopWidth = (percent * desktop.screenGeometry().width()) / 100;
     int desktopHeight = (percent * height) / 100;
@@ -232,6 +244,7 @@ void TupCameraWidget::addTimerPanel()
 void TupCameraWidget::addAnimationDisplay()
 {
     screen = new TupScreen(project, playerDimension, isScaled);
+    screen->setFixedSize(playerDimension);
     connect(screen, SIGNAL(isRendering(int)), this, SLOT(updateProgressBar(int)));
     connect(screen, SIGNAL(frameChanged(int)), this, SLOT(updateTimerPanel(int)));
 
@@ -290,17 +303,19 @@ void TupCameraWidget::setDimensionLabel(const QSize dimension)
     QString scale = "<b>[</b> " + tr("Scale") + " ";
     isScaled = false;
 
+    // The project dimension fits within the interface
     if (projectWidth <= screenWidth && projectHeight <= screenHeight) {
         playerDimension = project->getDimension();
         scale += "1:1";
-    } else {
+    } else { // Project dimension is too huge. Player display must be scaled
         double proportion = 1;
 
+        // If the project is wider than higher
         if (projectWidth > projectHeight) {
             int newH = (projectHeight*screenWidth)/projectWidth;
             playerDimension = QSize(screenWidth, newH);
             proportion = static_cast<double>(projectWidth) / static_cast<double>(screenWidth);
-        } else { // projectHeight > projectWidth
+        } else { // Project is higher than wider
             int newW = (projectWidth*screenHeight)/projectHeight;
             playerDimension = QSize(newW, screenHeight);
             proportion = static_cast<double>(projectHeight) / static_cast<double>(screenHeight);

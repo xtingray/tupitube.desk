@@ -46,7 +46,7 @@ TupScreen::TupScreen(TupProject *work, const QSize viewSize, bool sizeChanged, Q
         #ifdef Q_OS_WIN
             qDebug() << "[TupScreen()]";
         #else
-            TINIT;
+            TINIT << "viewSize" << viewSize;
         #endif
     #endif
 
@@ -578,7 +578,8 @@ void TupScreen::render()
     TupScene *scene = project->sceneAt(sceneIndex);
     if (!scene) {
         #ifdef TUP_DEBUG
-            QString msg = "TupScreen::render() - [ Fatal Error ] - Scene is NULL! -> index: " + QString::number(sceneIndex);
+            QString msg = "TupScreen::render() - [ Fatal Error ] - Scene is NULL! -> index: "
+                          + QString::number(sceneIndex);
             #ifdef Q_OS_WIN
                 qDebug() << msg;
             #else
