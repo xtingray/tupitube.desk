@@ -132,6 +132,11 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
     }
 
     {
+     #ifdef TUP_DEBUG
+         QString msg = "TupFileManager::save() - source files path -> " + projectDir.path();
+         qDebug() << msg;
+     #endif
+
      // Save project
      QFile projectFile(projectDir.path() + "/project.tpp");
 
