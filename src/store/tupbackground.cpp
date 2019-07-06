@@ -44,6 +44,7 @@ TupBackground::TupBackground(TupScene *parent, const QSize size, const QColor co
     dimension = size;
     bgColor = color;
     noRender = true;
+
     dynamicBg = new TupFrame(this, "landscape_dynamic");
     dynamicBg->setDynamicDirection("0");
     dynamicBg->setDynamicShift("5");
@@ -195,7 +196,7 @@ void TupBackground::renderDynamicView()
         bgScene->renderView(painter);
 
         delete painter;
-        painter = NULL;
+        painter = nullptr;
     }
 
     int width = dimension.width();
@@ -211,9 +212,9 @@ void TupBackground::renderDynamicView()
     noRender = false;
 
     delete bgScene;
-    bgScene = NULL;
+    bgScene = nullptr;
     delete canvas;
-    canvas = NULL;
+    canvas = nullptr;
 }
 
 QPixmap TupBackground::dynamicView(int frameIndex)
@@ -230,7 +231,7 @@ QPixmap TupBackground::dynamicView(int frameIndex)
                 if (delta > frameIndex) {
                     posX = dimension.width() - frameIndex*shift;
                 } else {
-                    int mod = fmod(frameIndex, delta);
+                    int mod = static_cast<int> (fmod(frameIndex, delta));
                     posX = dimension.width() - (mod * shift);
                 }
             }
@@ -241,7 +242,7 @@ QPixmap TupBackground::dynamicView(int frameIndex)
                 if (delta > frameIndex) {
                     posX = frameIndex*shift;
                 } else {
-                    int mod = fmod(frameIndex, delta);
+                    int mod = static_cast<int> (fmod(frameIndex, delta));
                     posX = mod * shift;
                 }
             }
@@ -252,7 +253,7 @@ QPixmap TupBackground::dynamicView(int frameIndex)
                 if (delta > frameIndex) {
                     posY = frameIndex*shift;
                 } else {
-                    int mod = fmod(frameIndex, delta);
+                    int mod = static_cast<int> (fmod(frameIndex, delta));
                     posY = mod * shift;
                 }
             }
@@ -263,7 +264,7 @@ QPixmap TupBackground::dynamicView(int frameIndex)
                 if (delta > frameIndex) {
                     posY = dimension.height() - frameIndex*shift;
                 } else {
-                    int mod = fmod(frameIndex, delta);
+                    int mod = static_cast<int> (fmod(frameIndex, delta));
                     posY = dimension.height() - (mod * shift);
                 }
             }
