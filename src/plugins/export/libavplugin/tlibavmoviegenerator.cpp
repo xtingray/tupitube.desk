@@ -314,7 +314,7 @@ AVStream * TLibavMovieGenerator::addVideoStream(AVFormatContext *oc, AVCodec **c
     }
 
     if (oc->oformat->flags & AVFMT_GLOBALHEADER)
-        c->flags |= CODEC_FLAG_GLOBAL_HEADER;
+        c->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
     return st;
 }

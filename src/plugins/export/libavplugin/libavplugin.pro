@@ -11,7 +11,7 @@ unix {
 
 win32 {
     include(../../../../win.pri)
-    include(../../../../libav.win.pri)	
+    include(../../../../libav.win.pri)
 }
 
 mac {

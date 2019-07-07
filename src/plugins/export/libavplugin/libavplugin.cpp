@@ -67,18 +67,14 @@ TMovieGeneratorInterface::Format LibavPlugin::videoFormat(TupExportInterface::Fo
             {
                 return TLibavMovieGenerator::MP4;
             }
-        break;
         case TupExportInterface::GIF:
             {
                 return TLibavMovieGenerator::GIF;
             }
-        break;
         case TupExportInterface::AVI:
             {
                 return TLibavMovieGenerator::AVI;
             }
-        break;
-
         /* SQA: MPEG codec was removed because it crashes. Check the issue
         case TupExportInterface::MPEG:
             {
@@ -86,18 +82,14 @@ TMovieGeneratorInterface::Format LibavPlugin::videoFormat(TupExportInterface::Fo
             }
         break;
         */
-
         case TupExportInterface::MOV:
             {
                 return TLibavMovieGenerator::MOV;
             }
-        break;
         case TupExportInterface::WEBM:
             {
                 return TLibavMovieGenerator::WEBM;
             }
-        break;
-
         /* SQA: Obsolete formats
         case TupExportInterface::SWF:
             {
@@ -110,7 +102,6 @@ TMovieGeneratorInterface::Format LibavPlugin::videoFormat(TupExportInterface::Fo
             }
         break;
         */
-
         case TupExportInterface::PNG:
         case TupExportInterface::JPEG:
         case TupExportInterface::XPM:
@@ -123,10 +114,9 @@ TMovieGeneratorInterface::Format LibavPlugin::videoFormat(TupExportInterface::Fo
             {
                 return TLibavMovieGenerator::NONE;
             }
-        break;
     }
 
-    return TLibavMovieGenerator::NONE;
+    // return TLibavMovieGenerator::NONE;
 }
 
 bool LibavPlugin::exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes, TupExportInterface::Format fmt, 
@@ -136,7 +126,7 @@ bool LibavPlugin::exportToFormat(const QColor color, const QString &filePath, co
 
     qreal duration = 0;
     foreach (TupScene *scene, scenes)
-        duration += (qreal) scene->framesCount() / (qreal) fps;
+        duration += static_cast<qreal>(scene->framesCount()) / static_cast<qreal>(fps);
 
     TMovieGeneratorInterface::Format format = videoFormat(fmt);
     if (format == TLibavMovieGenerator::NONE)

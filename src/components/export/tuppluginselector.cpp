@@ -138,10 +138,12 @@ void TupPluginSelector::setFormats(TupExportInterface::Formats formats)
         format->setData(3124, TupExportInterface::AVI);
     }
 
+    /* SQA: Unstable format
     if (formats & TupExportInterface::WEBM) {
         QListWidgetItem *format = new QListWidgetItem(tr("WEBM Video"), m_formatList);
         format->setData(3124, TupExportInterface::WEBM);
     }
+    */
 
     /* SQA: Obsolete format
     if (formats & TupExportInterface::SWF) {

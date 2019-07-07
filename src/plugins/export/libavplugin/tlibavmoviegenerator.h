@@ -44,6 +44,7 @@ extern "C" {
 #include "libavutil/channel_layout.h"
 #include "libavutil/mathematics.h"
 #include "libavutil/opt.h"
+#include "libavcodec/avcodec.h"
 #include "libavformat/avformat.h"
 #include "libavresample/avresample.h"
 // #include "libswscale/swscale.h"
