@@ -235,7 +235,11 @@ bool TupProjectManager::saveProject(const QString &fileName)
 
 bool TupProjectManager::loadProject(const QString &fileName)
 {
-    if (! handler) {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProjectManager::loadProject()] - fileName: " << fileName;
+    #endif
+
+    if (!handler) {
         #ifdef TUP_DEBUG
             QString msg = "TupProjectManager::loadProject() - Fatal Error: No project handler available!";
             #ifdef Q_OS_WIN

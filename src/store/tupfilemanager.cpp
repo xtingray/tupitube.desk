@@ -53,12 +53,7 @@ TupFileManager::~TupFileManager()
 bool TupFileManager::save(const QString &fileName, TupProject *project)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupFileManager::save() - Saving file -> " + fileName;
-            #ifdef Q_OS_WIN
-                qWarning() << msg;
-            #else
-                tWarning() << msg;
-        #endif
+        qWarning() << "TupFileManager::save() - Saving file -> " << fileName;
     #endif
 
     QFileInfo info(fileName);
@@ -75,32 +70,20 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
             if (projectDir.rename(oldDirName, projectDir.path())) {
                 #ifdef TUP_DEBUG
                     QString msg = "TupFileManager::save() - Directory renamed to -> " + projectDir.path(); 
-                    #ifdef Q_OS_WIN
-                        qWarning() << msg;
-                    #else
-                        tWarning() << msg;
-                    #endif
+                    qDebug() << msg;
                 #endif
             } else {
                 // If rename action fails, then try to create new project's path
                 if (!projectDir.mkdir(projectDir.path())) {
                     #ifdef TUP_DEBUG
                         QString msg = "TupFileManager::save() - Error: Can't create path -> " + projectDir.path();
-                        #ifdef Q_OS_WIN
-                            qDebug() << msg;
-                        #else
-                            tError() << msg;
-                        #endif
+                        qWarning() << msg;
                     #endif
                     return false;
                 } else {
                     #ifdef TUP_DEBUG
                         QString msg = "TupFileManager::save() - Directory was created successfully -> " + projectDir.path();
-                        #ifdef Q_OS_WIN
-                            qWarning() << msg;
-                        #else
-                            tWarning() << msg;
-                        #endif
+                        qDebug() << msg;
                     #endif
                 }
             }
@@ -111,21 +94,13 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
             if (!projectDir.mkdir(projectDir.path())) {
                 #ifdef TUP_DEBUG
                     QString msg = "TupFileManager::save() - Error: Can't create path -> " + projectDir.path();
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qWarning() << msg;
                 #endif
                 return false;
             } else {
                 #ifdef TUP_DEBUG
                     QString msg = "TupFileManager::save() - Directory was created successfully -> " + projectDir.path();
-                    #ifdef Q_OS_WIN
-                        qWarning() << msg;
-                    #else
-                        tWarning() << msg;
-                    #endif
+                    qDebug() << msg;
                 #endif
             }
         }
@@ -141,6 +116,10 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
      QFile projectFile(projectDir.path() + "/project.tpp");
 
      if (projectFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+         #ifdef TUP_DEBUG
+             QString msg = "TupFileManager::save() - Saving config file (TPP)";
+             qDebug() << msg;
+         #endif
          QTextStream ts(&projectFile);
          QDomDocument doc;
          project->setProjectName(name);
@@ -150,11 +129,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
      } else {
          #ifdef TUP_DEBUG
              QString msg = "TupFileManager::save() - Error: Can't create file -> " + projectDir.path() + "/project.tpp";
-             #ifdef Q_OS_WIN
-                 qDebug() << msg;
-             #else
-                 tError() << msg;
-             #endif
+             qWarning() << msg;
          #endif
          return false;
      }
@@ -164,7 +139,11 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
     {
      int index = 0;
      int totalScenes = project->getScenes().size();
-     for (int i = 0; i < totalScenes; i++) {
+     for (int i=0; i<totalScenes; i++) {
+          #ifdef TUP_DEBUG
+              QString msg = "TupFileManager::save() - Saving scene file " + QString::number(i);
+              qDebug() << msg;
+          #endif
           TupScene *scene = project->getScenes().at(i);
           QDomDocument doc;
           doc.appendChild(scene->toXml(doc));
@@ -179,11 +158,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
           } else {
               #ifdef TUP_DEBUG
                   QString msg = "TupFileManager::save() - Error: Can't create file -> " + scenePath;
-                  #ifdef Q_OS_WIN
-                      qDebug() << msg;
-                  #else
-                      tError() << msg;
-                  #endif
+                  qWarning() << msg;
               #endif
               return false;
           }
@@ -195,8 +170,11 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
      QFile lbr(projectDir.path() + "/library.tpl");
 
      if (lbr.open(QIODevice::WriteOnly | QIODevice::Text)) {
+         #ifdef TUP_DEBUG
+             QString msg = "TupFileManager::save() - Saving library file (TPL)";
+             qDebug() << msg;
+         #endif
          QTextStream ts(&lbr);
-
          QDomDocument doc;
          doc.appendChild(project->getLibrary()->toXml(doc));
 
@@ -205,11 +183,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
      } else {
          #ifdef TUP_DEBUG
              QString msg = "TupFileManager::save() - Error: Can't create file -> " + projectDir.path() + "/library.tpl";
-             #ifdef Q_OS_WIN
-                 qDebug() << msg;
-             #else
-                 tError() << msg;
-             #endif
+             qWarning() << msg;
          #endif
          return false;
      }

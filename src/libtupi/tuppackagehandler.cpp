@@ -51,28 +51,22 @@ bool TupPackageHandler::makePackage(const QString &projectPath, const QString &p
     #ifdef TUP_DEBUG
         QString msg1 = "TupPackageHandler::makePackage() - projectPath -> " + projectPath;
         QString msg2 = "TupPackageHandler::makePackage() - packagePath -> " + packagePath;
-        #ifdef Q_OS_WIN
-            qWarning() << msg1;
-            qWarning() << msg2;
-        #else
-            tWarning() << msg1;
-            tWarning() << msg2;
-        #endif
+        qWarning() << msg1;
+        qWarning() << msg2;
     #endif
 
     if (!QFile::exists(projectPath)) {        
         #ifdef TUP_DEBUG
             QString msg = "TupPackageHandler::makePackage() - Project path doesn't exist -> " + projectPath;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qWarning() << msg;
         #endif
 
         return false;
     }
 
+    #ifdef TUP_DEBUG
+        qDebug() << "TupPackageHandler::makePackage() - Calling JlCompress library...";
+    #endif
     return JlCompress::compressDir(packagePath, projectPath, true);
 }
 
@@ -80,11 +74,7 @@ bool TupPackageHandler::importPackage(const QString &packagePath)
 {
     #ifdef TUP_DEBUG
         QString msg = "TupPackageHandler::importPackage() - packagePath -> " + packagePath;
-        #ifdef Q_OS_WIN
-            qWarning() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qDebug() << msg;
     #endif
 
     QFileInfo file(packagePath);
@@ -112,6 +102,11 @@ bool TupPackageHandler::importPackage(const QString &packagePath)
 
 QString TupPackageHandler::importedProjectPath() const
 {
+    #ifdef TUP_DEBUG
+        QString msg = "TupPackageHandler::importedProjectPath() - project path -> " + gPath;
+        qDebug() << msg;
+    #endif
+
     return gPath;
 }
 

@@ -140,6 +140,10 @@ void TupLocalProjectManagerHandler::handleProjectRequest(const TupProjectRequest
 
 bool TupLocalProjectManagerHandler::saveProject(const QString &fileName, TupProject *project)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLocalProjectManagerHandler::saveProject()] - fileName: " << fileName;
+    #endif
+
     bool result = false;
     QString file = fileName;
 
@@ -155,6 +159,10 @@ bool TupLocalProjectManagerHandler::saveProject(const QString &fileName, TupProj
 
 bool TupLocalProjectManagerHandler::loadProject(const QString &fileName, TupProject *project)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLocalProjectManagerHandler::loadProject()] - fileName: " << fileName;
+    #endif
+
     bool result = false;
 
     TupFileManager *manager = new TupFileManager;
@@ -166,5 +174,4 @@ bool TupLocalProjectManagerHandler::loadProject(const QString &fileName, TupProj
 
 void TupLocalProjectManagerHandler::setProject(TupProject *)
 {
-
 }
