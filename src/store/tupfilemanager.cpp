@@ -141,24 +141,29 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
      int totalScenes = project->getScenes().size();
      for (int i=0; i<totalScenes; i++) {
           #ifdef TUP_DEBUG
-              QString msg = "TupFileManager::save() - Saving scene file " + QString::number(i);
-              qDebug() << msg;
+              qDebug() << "TupFileManager::save() - Saving scene file " << QString::number(i);
           #endif
           TupScene *scene = project->getScenes().at(i);
-          QDomDocument doc;
-          doc.appendChild(scene->toXml(doc));
-          QString scenePath = projectDir.path() + "/scene" + QString::number(index) + ".tps";
-          QFile sceneFile(scenePath);
+          if (scene) {
+              QDomDocument doc;
+              doc.appendChild(scene->toXml(doc));
+              QString scenePath = projectDir.path() + "/scene" + QString::number(index) + ".tps";
+              QFile sceneFile(scenePath);
 
-          if (sceneFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-              QTextStream st(&sceneFile);
-              st << doc.toString();
-              index += 1;
-              sceneFile.close();
+              if (sceneFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                  QTextStream st(&sceneFile);
+                  st << doc.toString();
+                  index += 1;
+                  sceneFile.close();
+              } else {
+                  #ifdef TUP_DEBUG
+                      qWarning() << "TupFileManager::save() - Error: Can't create file -> " << scenePath;
+                  #endif
+                  return false;
+              }
           } else {
               #ifdef TUP_DEBUG
-                  QString msg = "TupFileManager::save() - Error: Can't create file -> " + scenePath;
-                  qWarning() << msg;
+                  qWarning() << "TupFileManager::save() - Error: Can't find scene at index -> " << i;
               #endif
               return false;
           }
