@@ -60,6 +60,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
     QString name = info.baseName();	
     QString oldDirName = CACHE_DIR + project->getName();
     QDir projectDir(oldDirName);
+
     // Project name has been changed by the user
     if (name.compare(project->getName()) != 0) {
         project->setProjectName(name);
@@ -69,21 +70,18 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
             // Update the cache path with new project's name
             if (projectDir.rename(oldDirName, projectDir.path())) {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupFileManager::save() - Directory renamed to -> " + projectDir.path(); 
-                    qDebug() << msg;
+                    qDebug() << "TupFileManager::save() - Directory renamed to -> " << projectDir.path();
                 #endif
             } else {
                 // If rename action fails, then try to create new project's path
                 if (!projectDir.mkdir(projectDir.path())) {
                     #ifdef TUP_DEBUG
-                        QString msg = "TupFileManager::save() - Error: Can't create path -> " + projectDir.path();
-                        qWarning() << msg;
+                        qWarning() << "TupFileManager::save() - Error: Can't create path -> " << projectDir.path();
                     #endif
                     return false;
                 } else {
                     #ifdef TUP_DEBUG
-                        QString msg = "TupFileManager::save() - Directory was created successfully -> " + projectDir.path();
-                        qDebug() << msg;
+                        qDebug() << "TupFileManager::save() - Directory was created successfully -> " << projectDir.path();
                     #endif
                 }
             }
@@ -93,14 +91,12 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
         if (!projectDir.exists()) {
             if (!projectDir.mkdir(projectDir.path())) {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupFileManager::save() - Error: Can't create path -> " + projectDir.path();
-                    qWarning() << msg;
+                    qWarning() << "TupFileManager::save() - Error: Can't create path -> " << projectDir.path();
                 #endif
                 return false;
             } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupFileManager::save() - Directory was created successfully -> " + projectDir.path();
-                    qDebug() << msg;
+                    qDebug() << "TupFileManager::save() - Directory was created successfully -> " << projectDir.path();
                 #endif
             }
         }
@@ -108,8 +104,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 
     {
      #ifdef TUP_DEBUG
-         QString msg = "TupFileManager::save() - source files path -> " + projectDir.path();
-         qDebug() << msg;
+         qDebug() << "TupFileManager::save() - source files path -> " << projectDir.path();
      #endif
 
      // Save project
@@ -117,8 +112,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 
      if (projectFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
          #ifdef TUP_DEBUG
-             QString msg = "TupFileManager::save() - Saving config file (TPP)";
-             qDebug() << msg;
+             qDebug() << "TupFileManager::save() - Saving config file (TPP)";
          #endif
          QTextStream ts(&projectFile);
          QDomDocument doc;
@@ -128,8 +122,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
          projectFile.close();
      } else {
          #ifdef TUP_DEBUG
-             QString msg = "TupFileManager::save() - Error: Can't create file -> " + projectDir.path() + "/project.tpp";
-             qWarning() << msg;
+             qWarning() << "TupFileManager::save() - Error: Can't create file -> " << projectDir.path() << "/project.tpp";
          #endif
          return false;
      }
@@ -137,33 +130,27 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 
     // Save scenes
     {
-     int index = 0;
      int totalScenes = project->getScenes().size();
+     int index = 0;
+     QDomDocument doc;
+     QString scenePath;
+
      for (int i=0; i<totalScenes; i++) {
           #ifdef TUP_DEBUG
               qDebug() << "TupFileManager::save() - Saving scene file " << QString::number(i);
           #endif
-          TupScene *scene = project->getScenes().at(i);
-          if (scene) {
-              QDomDocument doc;
-              doc.appendChild(scene->toXml(doc));
-              QString scenePath = projectDir.path() + "/scene" + QString::number(index) + ".tps";
-              QFile sceneFile(scenePath);
-
-              if (sceneFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-                  QTextStream st(&sceneFile);
-                  st << doc.toString();
-                  index += 1;
-                  sceneFile.close();
-              } else {
-                  #ifdef TUP_DEBUG
-                      qWarning() << "TupFileManager::save() - Error: Can't create file -> " << scenePath;
-                  #endif
-                  return false;
-              }
+          doc.appendChild(project->getScenes().at(i)->toXml(doc));
+          scenePath = projectDir.path() + "/scene" + QString::number(index) + ".tps";
+          QFile sceneFile(scenePath);
+          if (sceneFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+              QTextStream st(&sceneFile);
+              st << doc.toString();
+              index += 1;
+              doc.clear();
+              sceneFile.close();
           } else {
               #ifdef TUP_DEBUG
-                  qWarning() << "TupFileManager::save() - Error: Can't find scene at index -> " << i;
+                  qWarning() << "TupFileManager::save() - Error: Can't create file -> " << scenePath;
               #endif
               return false;
           }
@@ -172,19 +159,19 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 
     {
      // Save library
-     QFile lbr(projectDir.path() + "/library.tpl");
+     QFile library(projectDir.path() + "/library.tpl");
 
-     if (lbr.open(QIODevice::WriteOnly | QIODevice::Text)) {
+     if (library.open(QIODevice::WriteOnly | QIODevice::Text)) {
          #ifdef TUP_DEBUG
              QString msg = "TupFileManager::save() - Saving library file (TPL)";
              qDebug() << msg;
          #endif
-         QTextStream ts(&lbr);
+         QTextStream ts(&library);
          QDomDocument doc;
          doc.appendChild(project->getLibrary()->toXml(doc));
 
          ts << doc.toString();
-         lbr.close();
+         library.close();
      } else {
          #ifdef TUP_DEBUG
              QString msg = "TupFileManager::save() - Error: Can't create file -> " + projectDir.path() + "/library.tpl";
@@ -194,28 +181,35 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
      }
     }
 
-    TupPackageHandler packageHandler;
-    bool ok = packageHandler.makePackage(projectDir.path(), fileName);
 
-    if (ok) {
+    {
         #ifdef TUP_DEBUG
-            QString msg = "TupFileManager::save() - Project saved at -> " + fileName;
-            #ifdef Q_OS_WIN
-                qWarning() << msg;
-            #else
-                tWarning() << msg;
-            #endif
+            QString msg = "TupFileManager::save() - Creating TUP file...";
+            qDebug() << msg;
         #endif
-    } else {
-        #ifdef TUP_DEBUG
-            QString msg = "TupFileManager::save() - Error: Project couldn't be saved at -> " + fileName;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
+        TupPackageHandler packageHandler;
+        bool ok = packageHandler.makePackage(projectDir.path(), fileName);
+
+        if (ok) {
+            #ifdef TUP_DEBUG
+                QString msg = "TupFileManager::save() - Project saved at -> " + fileName;
+                #ifdef Q_OS_WIN
+                    qWarning() << msg;
+                #else
+                    tWarning() << msg;
+                #endif
             #endif
-        #endif
-        return false;
+        } else {
+            #ifdef TUP_DEBUG
+                QString msg = "TupFileManager::save() - Error: Project couldn't be saved at -> " + fileName;
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError() << msg;
+                #endif
+            #endif
+            return false;
+        }
     }
 
     return ok;
@@ -244,17 +238,10 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
                 QString msg1 = "TupFileManager::load() - Error while open .tpp file. Name: " + pfile.fileName();
                 QString msg2 = "TupFileManager::load() - Path: " + projectDir.path();
                 QString msg3 = "TupFileManager::load() - Error Description: " + pfile.errorString(); 
-                #ifdef Q_OS_WIN
-                    qDebug() << msg1;
-                    qDebug() << msg2;
-                    qDebug() << msg3;
-                #else
-                    tError() << msg1;
-                    tError() << msg2;
-                    tError() << msg3;
-                #endif
+                qWarning() << msg1;
+                qWarning() << msg2;
+                qWarning() << msg3;
             #endif
-
             return false;
         }
 
@@ -262,39 +249,37 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
         project->loadLibrary(projectDir.path() + "/library.tpl");
 
         QStringList scenes = projectDir.entryList(QStringList() << "*.tps", QDir::Readable | QDir::Files);
+        QFile *file;
+        QDomDocument doc;
+        QString xml;
+        QDomElement root;
+
         if (scenes.count() > 0) {
             int index = 0;
             foreach (QString scenePath, scenes) {
-                     scenePath = projectDir.path() + "/" + scenePath;
-                     QFile file(scenePath);
+                scenePath = projectDir.path() + "/" + scenePath;
+                file = new QFile(scenePath);
 					 
-                     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-                         QString xml = QString::fromLocal8Bit(file.readAll());
-                         QDomDocument document;
-                         if (! document.setContent(xml))
-                             return false;
-                         QDomElement root = document.documentElement();
-                         TupScene *scene = project->createScene(root.attribute("name"), index, true);
-                         scene->fromXml(xml);
-                         index += 1;
-                         file.close();
-                     } else {
-                         #ifdef TUP_DEBUG
-                             QString msg = "TupFileManager::load() - Error: Can't open file -> " + scenePath;
-                             #ifdef Q_OS_WIN
-                                 qDebug() << msg;
-                             #else
-                                 tError() << msg;
-                             #endif
-                         #endif
-                         return false;
-                     }
+                if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
+                    xml = QString::fromLocal8Bit(file->readAll());
+                    if (!doc.setContent(xml))
+                        return false;
+
+                    root = doc.documentElement();
+                    project->createScene(root.attribute("name"), index, true)->fromXml(xml);
+                    index += 1;
+                    doc.clear();
+                    file->close();
+                    delete file;
+                } else {
+                    #ifdef TUP_DEBUG
+                        qWarning() << "TupFileManager::load() - Error: Can't open file -> " << scenePath;
+                    #endif
+                    return false;
+                }
             }
-
             project->setOpen(true);
-
             return true;
-
         } else {
             #ifdef TUP_DEBUG
                 QString msg = "TupFileManager::load() - Error: No scene files found (*.tps)";

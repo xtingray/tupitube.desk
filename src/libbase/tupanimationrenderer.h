@@ -61,8 +61,6 @@ class TUPITUBE_EXPORT TupAnimationRenderer
         int getTotalPhotograms() const;
 
     private:
-        int calculateTotalPhotograms(TupScene *scene);
-
         TupGraphicsScene *gScene;
         int totalPhotograms;
         int currentPhotogram;

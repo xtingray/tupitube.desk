@@ -50,28 +50,13 @@ TupAnimationRenderer::~TupAnimationRenderer()
 {
 }
 
-int TupAnimationRenderer::calculateTotalPhotograms(TupScene *scene)
-{
-    Layers layers = scene->getLayers();
-
-    int total = 0;
-    int totalLayers = layers.size();
-    for (int i = 0; i < totalLayers; i++) {
-         TupLayer *layer = layers.at(i);
-         if (layer)
-             total = qMax(total, layer->getFrames().count());
-    }
-
-    return total;
-}
-
 void TupAnimationRenderer::setScene(TupScene *scene, QSize dimension)
 {
     gScene->setCurrentScene(scene);
     gScene->setSceneRect(QRectF(QPointF(0,0), dimension));
 
     currentPhotogram = -1;
-    totalPhotograms = calculateTotalPhotograms(scene);
+    totalPhotograms = scene->totalPhotograms(); // calculateTotalPhotograms(scene);
 
     #ifdef TUP_DEBUG
         QString msg = "TupAnimationRenderer::setScene() - Photograms Total: " + QString::number(totalPhotograms);
@@ -122,7 +107,7 @@ void TupAnimationRenderer::render(QPainter *painter)
 #endif
 
     gScene->render(painter, gScene->sceneRect().toRect(),
-                     gScene->sceneRect().toRect(), Qt::IgnoreAspectRatio);
+                   gScene->sceneRect().toRect(), Qt::IgnoreAspectRatio);
 }
 
 int TupAnimationRenderer::getCurrentPhotogram() const

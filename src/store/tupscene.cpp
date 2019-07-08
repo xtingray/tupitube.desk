@@ -371,14 +371,12 @@ QDomElement TupScene::toXml(QDomDocument &doc) const
 
     int total = layers.size();
     for (int i = 0; i < total; ++i) {
-         TupLayer *layer = layers.at(i);
-         root.appendChild(layer->toXml(doc));
+        root.appendChild(layers.at(i)->toXml(doc));
     }
 
     total = soundLayers.size();
     for (int i = 0; i < total; ++i) {
-         TupSoundLayer *sound  = soundLayers.at(i);
-         root.appendChild(sound->toXml(doc));
+         root.appendChild(soundLayers.at(i)->toXml(doc));
     }
 
     return root;
@@ -917,4 +915,14 @@ Mouths TupScene::getLipSyncList()
     }
 
     return list;
+}
+
+int TupScene::totalPhotograms()
+{
+    int total = 0;
+    int totalLayers = layers.size();
+    for (int i = 0; i < totalLayers; i++)
+        total = qMax(total, layers.at(i)->getFrames().count());
+
+    return total;
 }

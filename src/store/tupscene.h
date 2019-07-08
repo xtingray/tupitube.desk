@@ -165,6 +165,7 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
         bool removeLipSync(const QString &name);
         int lipSyncTotal();
         Mouths getLipSyncList();
+        int totalPhotograms();
 
     private:
         void removeTweensFromLayer(int layerIndex);

@@ -439,14 +439,12 @@ QDomElement TupLayer::toXml(QDomDocument &doc) const
     doc.appendChild(root);
     int framesCounter = frames.size();
     for (int i = 0; i < framesCounter; i++) {
-         TupFrame *frame = frames.at(i);
-         root.appendChild(frame->toXml(doc));
+        root.appendChild(frames.at(i)->toXml(doc));
     }
 
     int lipsyncTotal = lipsyncList.size();
     for (int i = 0; i < lipsyncTotal; i++) {
-         TupLipSync *lipSync = lipsyncList.at(i);
-         root.appendChild(lipSync->toXml(doc));
+        root.appendChild(lipsyncList.at(i)->toXml(doc));
     }
 
     return root;

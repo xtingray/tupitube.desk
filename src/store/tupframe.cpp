@@ -371,13 +371,13 @@ QDomElement TupFrame::toXml(QDomDocument &doc) const
 
     if (objectsCount > 0 && svgCount == 0) {
         foreach (TupGraphicObject *object, graphics)
-                 root.appendChild(object->toXml(doc));
+            root.appendChild(object->toXml(doc));
         return root;
     }
 
     if (svgCount > 0 && objectsCount == 0) {
         foreach (TupSvgItem *svg, svg)
-                 root.appendChild(svg->toXml(doc));
+            root.appendChild(svg->toXml(doc));
         return root;
     }
 
@@ -389,21 +389,23 @@ QDomElement TupFrame::toXml(QDomDocument &doc) const
            int svgZValue = static_cast<int> (svgList.at(0)->zValue());
 
            if (objectZValue < svgZValue) {
-               TupGraphicObject *object = itemList.takeFirst();
-               root.appendChild(object->toXml(doc));
+               // TupGraphicObject *object = itemList.takeFirst();
+               // root.appendChild(object->toXml(doc));
+               root.appendChild(itemList.takeFirst()->toXml(doc));
            } else { 
-               TupSvgItem *svg = svgList.takeFirst();
-               root.appendChild(svg->toXml(doc));
+               // TupSvgItem *svg = svgList.takeFirst();
+               // root.appendChild(svg->toXml(doc));
+               root.appendChild(svgList.takeFirst()->toXml(doc));
            }
 
            if (itemList.isEmpty()) {
                foreach (TupSvgItem *svg, svgList) 
-                        root.appendChild(svg->toXml(doc));
+                   root.appendChild(svg->toXml(doc));
                break;
            } else {
                if (svgList.isEmpty()) {
                    foreach (TupGraphicObject *object, itemList)
-                            root.appendChild(object->toXml(doc));
+                       root.appendChild(object->toXml(doc));
                    break;
                }
            }
