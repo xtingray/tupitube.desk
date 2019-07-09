@@ -69,6 +69,8 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void loadSoundRecords();
         int currentSceneFrames();
         bool isPlaying();
+        void clearPhotograms();
+        void clearScenesArrays();
 
     public slots:
         void render();
@@ -107,7 +109,6 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
     private:
         void stopAnimation();
         void initPhotogramsArray();
-        void clearPhotograms();
         void addPhotogramsArray(int index);
         void updateFirstFrame();
         void playSoundAt(int frame);

@@ -95,12 +95,7 @@ TupScreen::~TupScreen()
     newList.clear();
 
     clearPhotograms();
-
-    for (int i=0; i<animationList.count(); i++) {
-        for (int j=0; j<animationList[i].count(); j++)
-            animationList[i][j] = QImage();
-    }
-    animationList.clear();
+    clearScenesArrays();
 
     renderControl.clear();
     soundPlayer.clear();
@@ -143,6 +138,15 @@ void TupScreen::clearPhotograms()
     for (int i=0; i<photograms.count(); i++)
         photograms[i] = QImage();
     photograms.clear();
+}
+
+void TupScreen::clearScenesArrays()
+{
+    for (int i=0; i<animationList.count(); i++) {
+        for (int j=0; j<animationList[i].count(); j++)
+            animationList[i][j] = QImage();
+    }
+    animationList.clear();
 }
 
 void TupScreen::initPhotogramsArray()

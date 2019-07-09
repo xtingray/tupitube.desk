@@ -60,6 +60,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
     QString name = info.baseName();	
     QString oldDirName = CACHE_DIR + project->getName();
     QDir projectDir(oldDirName);
+    bool ok;
 
     // Project name has been changed by the user
     if (name.compare(project->getName()) != 0) {
@@ -181,14 +182,13 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
      }
     }
 
-
     {
         #ifdef TUP_DEBUG
             QString msg = "TupFileManager::save() - Creating TUP file...";
             qDebug() << msg;
         #endif
         TupPackageHandler packageHandler;
-        bool ok = packageHandler.makePackage(projectDir.path(), fileName);
+        ok = packageHandler.makePackage(projectDir.path(), fileName);
 
         if (ok) {
             #ifdef TUP_DEBUG

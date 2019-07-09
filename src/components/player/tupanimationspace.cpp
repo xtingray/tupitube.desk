@@ -118,6 +118,7 @@ void TupAnimationspace::keyPressEvent(QKeyEvent *event)
           {
               playOn = false;
               playerInterface->doStop();
+              playerInterface->clearMemory();
               emit newPerspective(0);
           }
         break;

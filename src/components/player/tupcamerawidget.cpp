@@ -120,11 +120,10 @@ TupCameraWidget::~TupCameraWidget()
     }
 
     if (screen) {
+        screen->clearPhotograms();
         delete screen;
         screen = nullptr;
     }
-
-    // delete k;
 }
 
 void TupCameraWidget::addVideoHeader()
@@ -613,4 +612,10 @@ void TupCameraWidget::saveProjectInfo(const QString &tags, const QString &author
     project->setAuthor(author);
     emit projectAuthorUpdated(author);
     project->setDescription(description);
+}
+
+void TupCameraWidget::clearMemory()
+{
+    screen->clearPhotograms();
+    screen->clearScenesArrays();
 }

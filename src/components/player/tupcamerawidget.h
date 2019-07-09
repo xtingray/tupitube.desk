@@ -60,6 +60,7 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         void updateFirstFrame();
         QSize sizeHint() const;
         void updateScenes(int sceneIndex);
+        void clearMemory();
 
     private slots:
         void setLoop();
