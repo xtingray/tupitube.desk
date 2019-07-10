@@ -556,7 +556,7 @@ void TupCameraWidget::selectScene(int index)
 
 void TupCameraWidget::updateScenes(int sceneIndex)
 {
-    screen->resetPhotograms(sceneIndex);
+    screen->resetSceneFromList(sceneIndex);
 }
 
 void TupCameraWidget::updateFirstFrame()
@@ -617,5 +617,4 @@ void TupCameraWidget::saveProjectInfo(const QString &tags, const QString &author
 void TupCameraWidget::clearMemory()
 {
     screen->clearPhotograms();
-    screen->clearScenesArrays();
 }

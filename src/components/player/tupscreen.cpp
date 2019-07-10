@@ -109,7 +109,7 @@ TupScreen::~TupScreen()
 }
 
 // Clean a photogram array if the scene has changed
-void TupScreen::resetPhotograms(int scene)
+void TupScreen::resetSceneFromList(int scene)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -120,11 +120,9 @@ void TupScreen::resetPhotograms(int scene)
     #endif
 
     if (scene > -1) {
-        if (!renderControl.isEmpty()) {
-            if (renderControl.at(scene)) {
-                renderControl.replace(scene, false);
-                animationList.replace(scene, newList);
-            }
+        if (renderControl.at(scene)) {
+            renderControl.replace(scene, false);
+            animationList.replace(scene, newList);
         }
     } else {
         initPhotogramsArray();
@@ -142,6 +140,7 @@ void TupScreen::clearPhotograms()
 
 void TupScreen::clearScenesArrays()
 {
+    renderControl.clear();
     for (int i=0; i<animationList.count(); i++) {
         for (int j=0; j<animationList[i].count(); j++)
             animationList[i][j] = QImage();
