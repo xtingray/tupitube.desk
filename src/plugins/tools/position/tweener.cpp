@@ -56,6 +56,10 @@
 
 Tweener::Tweener() : TupToolPlugin()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Tweener::Tweener()]";
+    #endif
+
     setupActions();
 
     isPathInScene = false;
@@ -78,13 +82,11 @@ Tweener::~Tweener()
 void Tweener::init(TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::init()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[Tweener::init()]";
     #endif
 
+    doList.clear();
+    undoList.clear();
     dots.clear();
 
     if (isPathInScene) {
@@ -463,6 +465,10 @@ void Tweener::resetGUI()
 
 void Tweener::setupActions()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Tweener::setupActions()]";
+    #endif
+
     realFactor = 1;
 
     TAction *action = new TAction(QPixmap(kAppProp->themeDir() + "icons/position_tween.png"), tr("Position Tween"), this);
