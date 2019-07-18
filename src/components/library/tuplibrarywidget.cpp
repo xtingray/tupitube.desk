@@ -571,73 +571,90 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
         #endif
     #endif
 
-    QString id = item->text(3);
-    TupLibraryObject *object = library->getObject(id);
-    if (object) {
-        QString path = object->getDataPath();
-        if (path.length() > 0) {
-            TupLibraryObject::Type type = object->getType();
-            QString fileExtension = object->getExtension();
-            QString filter;
+    if (item) {
+        QString id = item->text(3);
+        TupLibraryObject *object = library->getObject(id);
+        if (object) {
+            QString path = object->getDataPath();
+            if (path.length() > 0) {
+                TupLibraryObject::Type type = object->getType();
+                QString fileExtension = object->getExtension();
+                QString filter;
 
-            if (type == TupLibraryObject::Image) {
-                filter = tr("Images") + " ";
-                if (fileExtension.compare("PNG") == 0)
-                    filter += "(*.png)"; 
-                if ((fileExtension.compare("JPG") == 0) || (fileExtension.compare("JPEG") == 0))
-                    filter += "(*.jpg *.jpeg)";
-                if (fileExtension.compare("GIF") == 0)
-                    filter += "(*.gif)";
-                if (fileExtension.compare("XPM") == 0)
-                    filter += "(*.xpm)";
-                if (fileExtension.compare("SVG") == 0)
-                    filter += "(*.svg)";
-            } else if (type == TupLibraryObject::Sound) {
-                       filter = tr("Sounds") + " ";
-                       if (fileExtension.compare("OGG") == 0)
-                           filter += "(*.ogg)";
-                       if (fileExtension.compare("MP3") == 0)
-                           filter += "(*.mp3)";
-                       if (fileExtension.compare("WAV") == 0)
-                           filter += "(*.wav)";
-            } else if (type == TupLibraryObject::Item) {
-                       filter = tr("Native Objects") + " " + "(*.tobj)";
-            }
+                if (type == TupLibraryObject::Image) {
+                    filter = tr("Images") + " ";
+                    if (fileExtension.compare("PNG") == 0)
+                        filter += "(*.png)";
+                    if ((fileExtension.compare("JPG") == 0) || (fileExtension.compare("JPEG") == 0))
+                        filter += "(*.jpg *.jpeg)";
+                    if (fileExtension.compare("GIF") == 0)
+                        filter += "(*.gif)";
+                    if (fileExtension.compare("XPM") == 0)
+                        filter += "(*.xpm)";
+                    if (fileExtension.compare("SVG") == 0)
+                        filter += "(*.svg)";
+                } else if (type == TupLibraryObject::Sound) {
+                           filter = tr("Sounds") + " ";
+                           if (fileExtension.compare("OGG") == 0)
+                               filter += "(*.ogg)";
+                           if (fileExtension.compare("MP3") == 0)
+                               filter += "(*.mp3)";
+                           if (fileExtension.compare("WAV") == 0)
+                               filter += "(*.wav)";
+                } else if (type == TupLibraryObject::Item) {
+                           filter = tr("Native Objects") + " " + "(*.tobj)";
+                }
 
-            TCONFIG->beginGroup("General");
-            QString defaultPath = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
-            QString target = QFileDialog::getSaveFileName(this, tr("Export object..."), defaultPath + "/" + id , filter);
+                TCONFIG->beginGroup("General");
+                QString defaultPath = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
+                QString target = QFileDialog::getSaveFileName(this, tr("Export object..."), defaultPath + "/" + id , filter);
 
-            if (target.isEmpty())
-                return;
+                if (target.isEmpty())
+                    return;
 
-            QString filename = target.toUpper();
-            if (type == TupLibraryObject::Image) {
-                if (fileExtension.compare("PNG") == 0 && !filename.endsWith(".PNG"))
-                    target += ".png";
-                if ((fileExtension.compare("JPG") == 0) && (!filename.endsWith(".JPG") || !filename.endsWith(".JPEG")))
-                    target += ".jpg";
-                if (fileExtension.compare("GIF") == 0 && !filename.endsWith(".GIF"))
-                    target += ".gif";
-                if (fileExtension.compare("XPM") == 0 && !filename.endsWith(".XPM"))
-                    target += ".xpm";
-                if (fileExtension.compare("SVG") == 0 && !filename.endsWith(".SVG"))
-                    target += ".svg";
-            } else if (type == TupLibraryObject::Sound) {
-                       if (fileExtension.compare("OGG") == 0 && !filename.endsWith(".OGG"))
-                           target += ".ogg";
-                       if (fileExtension.compare("MP3") == 0 && !filename.endsWith(".MP3"))
-                           target += ".mp3";
-                       if (fileExtension.compare("WAV") == 0 && !filename.endsWith(".WAV"))
-                           target += ".wav";
-            } else if (type == TupLibraryObject::Item && !filename.endsWith(".TOBJ")) {
-                       target += ".tobj";
-            }
+                QString filename = target.toUpper();
+                if (type == TupLibraryObject::Image) {
+                    if (fileExtension.compare("PNG") == 0 && !filename.endsWith(".PNG"))
+                        target += ".png";
+                    if ((fileExtension.compare("JPG") == 0) && (!filename.endsWith(".JPG") || !filename.endsWith(".JPEG")))
+                        target += ".jpg";
+                    if (fileExtension.compare("GIF") == 0 && !filename.endsWith(".GIF"))
+                        target += ".gif";
+                    if (fileExtension.compare("XPM") == 0 && !filename.endsWith(".XPM"))
+                        target += ".xpm";
+                    if (fileExtension.compare("SVG") == 0 && !filename.endsWith(".SVG"))
+                        target += ".svg";
+                } else if (type == TupLibraryObject::Sound) {
+                           if (fileExtension.compare("OGG") == 0 && !filename.endsWith(".OGG"))
+                               target += ".ogg";
+                           if (fileExtension.compare("MP3") == 0 && !filename.endsWith(".MP3"))
+                               target += ".mp3";
+                           if (fileExtension.compare("WAV") == 0 && !filename.endsWith(".WAV"))
+                               target += ".wav";
+                } else if (type == TupLibraryObject::Item && !filename.endsWith(".TOBJ")) {
+                           target += ".tobj";
+                }
 
-            if (QFile::exists(target)) {
-                if (!QFile::remove(target)) {
+                if (QFile::exists(target)) {
+                    if (!QFile::remove(target)) {
+                        #ifdef TUP_DEBUG
+                            QString msg = "TupLibraryWidget::exportObject() - Fatal Error: Destination path already exists! [ " + id + " ]";
+                            #ifdef Q_OS_WIN
+                                qDebug() << msg;
+                            #else
+                                tError() << msg;
+                            #endif
+                        #endif
+                        return;
+                    }
+                }
+
+                if (QFile::copy(path, target)) {
+                    setDefaultPath(target);
+                    TOsd::self()->display(tr("Info"), tr("Item exported successfully!"), TOsd::Info);
+                } else {
                     #ifdef TUP_DEBUG
-                        QString msg = "TupLibraryWidget::exportObject() - Fatal Error: Destination path already exists! [ " + id + " ]";
+                        QString msg = "TupLibraryWidget::exportObject() - Error: Object file couldn't be exported! [ " + id + " ]";
                         #ifdef Q_OS_WIN
                             qDebug() << msg;
                         #else
@@ -646,14 +663,9 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
                     #endif
                     return;
                 }
-            }
-
-            if (QFile::copy(path, target)) {
-                setDefaultPath(target);
-                TOsd::self()->display(tr("Info"), tr("Item exported successfully!"), TOsd::Info);
             } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupLibraryWidget::exportObject() - Error: Object file couldn't be exported! [ " + id + " ]";
+                    QString msg = "TupLibraryWidget::exportObject() - Error: Object path is null! [ " + id + " ]";
                     #ifdef Q_OS_WIN
                         qDebug() << msg;
                     #else
@@ -664,7 +676,7 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
             }
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "TupLibraryWidget::exportObject() - Error: Object path is null! [ " + id + " ]";
+                QString msg = "TupLibraryWidget::exportObject() - Error: Object doesn't exist! [ " + id + " ]";
                 #ifdef Q_OS_WIN
                     qDebug() << msg;
                 #else
@@ -673,16 +685,6 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
             #endif
             return;
         }
-    } else {
-        #ifdef TUP_DEBUG
-            QString msg = "TupLibraryWidget::exportObject() - Error: Object doesn't exist! [ " + id + " ]";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
-        #endif
-        return;
     }
 }
 
@@ -1338,6 +1340,7 @@ void TupLibraryWidget::importImageSequence()
 
                 int initFrame = currentFrame.frame;
                 int filesTotal = photograms.size();
+                QPixmap newpix;
                 for (int i = 0; i < filesTotal; i++) {
                      QFile file(photograms.at(i));
                      QFileInfo fileInfo(file);
@@ -1358,7 +1361,6 @@ void TupLibraryWidget::importImageSequence()
                                  QByteArray ba = extension.toLatin1();
                                  const char* ext = ba.data();
                                  if (pixmap->loadFromData(data, ext)) {
-                                     QPixmap newpix;
                                      if (picWidth > picHeight)
                                          newpix = QPixmap(pixmap->scaledToWidth(projectWidth, Qt::SmoothTransformation));
                                      else
@@ -1482,6 +1484,7 @@ void TupLibraryWidget::importSvgSequence()
 
                 int initFrame = currentFrame.frame;
                 filesTotal = photograms.size();
+                QByteArray data;
                 for (int i = 0; i < filesTotal; ++i) {
                      QFile file(photograms.at(i));
                      QFileInfo fileInfo(file);
@@ -1492,7 +1495,7 @@ void TupLibraryWidget::importSvgSequence()
                          symName = symName.replace(")","_");
 
                          if (file.open(QIODevice::ReadOnly)) {
-                             QByteArray data = file.readAll();
+                             data = file.readAll();
                              file.close();
 
                              TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, symName,
@@ -1797,6 +1800,9 @@ void TupLibraryWidget::importLibraryObject()
 
 void TupLibraryWidget::refreshItem(QTreeWidgetItem *item)
 {
+    if (!item)
+        return;
+
     if (mkdir) {
         mkdir = false;
 
@@ -2133,8 +2139,9 @@ QString TupLibraryWidget::verifyNameAvailability(QString &name, QString &extensi
     QList<QTreeWidgetItem *> list = libraryTree->findItems(name, Qt::MatchExactly, 1);
     if (list.size() > limit) {
         int total = 0;
+        QTreeWidgetItem *node;
         for (int i=0; i<list.size(); i++) {
-             QTreeWidgetItem *node = list.at(i);
+             node = list.at(i);
              if (node->text(2).compare(extension) == 0)
                  total++;
         }

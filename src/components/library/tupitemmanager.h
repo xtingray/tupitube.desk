@@ -52,8 +52,9 @@ class TUPITUBE_EXPORT TupItemManager : public TreeListWidget
     Q_OBJECT
 
     public:
-        TupItemManager(QWidget *parent = 0);
+        TupItemManager(QWidget *parent = nullptr);
         ~TupItemManager();
+
         QTreeWidgetItem *currentFolder();
         void setCurrentFolder(QTreeWidgetItem *cf);
         void removeCurrentFolder();

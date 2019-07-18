@@ -40,7 +40,7 @@
  * Here is where folder methods are defined for the Library widget.
  **/
 
-TupItemManager::TupItemManager(QWidget *parent) : TreeListWidget(parent), m_currentFolder(0)
+TupItemManager::TupItemManager(QWidget *parent) : TreeListWidget(parent), m_currentFolder(nullptr)
 {
     currentSelection = "";
     setHeaderLabels(QStringList() << "" << "");
@@ -97,7 +97,7 @@ QTreeWidgetItem *TupItemManager::getFolder(const QString &folderName)
              return node; 
     }
 
-    return 0;
+    return nullptr;
 }
 
 QString TupItemManager::oldFolder()
@@ -329,35 +329,36 @@ void TupItemManager::mousePressEvent(QMouseEvent *event)
                    // SQA: This code doesn't work well at all. Reengineering is urgently required right here!
                    // If the node has a parent, get the parent's name
                    QTreeWidgetItem *top = item->parent(); 
-                   if (top)
+                   if (top) {
                        parentNode = top->text(1);
 
-                   // For directories, get the children
-                   nodeChildren.clear();
-                   if (item->text(2).length()==0 && item->childCount() > 0) {
-                       for (int i=0;i<item->childCount();i++) {
-                            QTreeWidgetItem *node = item->child(i);
-                            nodeChildren << node;
+                       // For directories, get the children
+                       nodeChildren.clear();
+                       if (item->text(2).length()==0 && item->childCount() > 0) {
+                           for (int i=0;i<item->childCount();i++) {
+                                QTreeWidgetItem *node = item->child(i);
+                                nodeChildren << node;
+                           }
                        }
-                   } 
 
-                   QPixmap pixmap = item->icon(0).pixmap(15, 15);
+                       QPixmap pixmap = item->icon(0).pixmap(15, 15);
 
-                   QByteArray itemData;
-                   QDataStream dataStream(&itemData, QIODevice::WriteOnly);
-                   dataStream << pixmap << item->text(1) << item->text(2) << item->text(3);
+                       QByteArray itemData;
+                       QDataStream dataStream(&itemData, QIODevice::WriteOnly);
+                       dataStream << pixmap << item->text(1) << item->text(2) << item->text(3);
 
-                   QMimeData *mimeData = new QMimeData;
-                   mimeData->setData("application/x-dnditemdata", itemData);
+                       QMimeData *mimeData = new QMimeData;
+                       mimeData->setData("application/x-dnditemdata", itemData);
 
-                   QDrag *drag = new QDrag(this);
-                   drag->setMimeData(mimeData);
-                   drag->setPixmap(pixmap);
+                       QDrag *drag = new QDrag(this);
+                       drag->setMimeData(mimeData);
+                       drag->setPixmap(pixmap);
 
-                   if (drag->start(Qt::MoveAction) == Qt::MoveAction)
-                       delete takeTopLevelItem(indexOfTopLevelItem(item));
+                       if (drag->start(Qt::MoveAction) == Qt::MoveAction)
+                           delete takeTopLevelItem(indexOfTopLevelItem(item));
+                   }
         }
-    } else {
+    } else { // If no item was selected
         if (event->buttons() == Qt::RightButton) {
             QMenu *menu = new QMenu(tr("Options"));
 
@@ -457,7 +458,6 @@ void TupItemManager::dropEvent(QDropEvent *event)
              }
 
          } else {
-
              if (parentNode.length() > 0) {
                  QList<QTreeWidgetItem *> nodes = findItems(parentNode, Qt::MatchExactly, 1);
                  for (int i = 0; i < nodes.size(); ++i) {

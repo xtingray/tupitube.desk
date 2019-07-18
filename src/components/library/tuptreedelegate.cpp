@@ -57,7 +57,7 @@ QWidget *TupTreeDelegate::createEditor(QWidget *parent,
         const QModelIndex &index) const
 {
     if (index.column() != 1)
-        return 0;
+        return nullptr;
 
     QVariant originalValue = index.model()->data(index, Qt::DisplayRole);
     QLineEdit *lineEdit = new QLineEdit(parent);
