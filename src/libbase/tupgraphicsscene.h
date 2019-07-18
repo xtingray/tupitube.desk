@@ -159,6 +159,8 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
     private:
         TupToolPlugin *gTool;
         TupScene *gScene;
+        TupBackground *background;
+        QPixmap dynamicPixmap;
         double gOpacity;
 
         struct OnionSkin

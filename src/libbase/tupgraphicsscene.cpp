@@ -199,8 +199,12 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
     drawSceneBackground(photogram);
 
     // Drawing frames from every layer
-    for (int i=0; i < gScene->layersCount(); i++) {
-         TupLayer *layer = gScene->layerAt(i);
+    int layersTotal = gScene->layersCount();
+    TupLayer *layer;
+    TupFrame *mainFrame;
+    TupFrame *frame;
+    for (int i=0; i < layersTotal; i++) {
+         layer = gScene->layerAt(i);
          if (layer) {
              layerOnProcess = i;
              layerOnProcessOpacity = layer->getOpacity();
@@ -208,7 +212,7 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
              zLevel = (i + 2) * ZLAYER_LIMIT;
 
              if (photogram < framesCount) {
-                 TupFrame *mainFrame = layer->frameAt(photogram);
+                 mainFrame = layer->frameAt(photogram);
                  QString currentFrame = "";
 
                  if (mainFrame) {
@@ -224,7 +228,7 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
                                      limit = 0;
 
                                  for (int frameIndex = limit; frameIndex < photogram; frameIndex++) {
-                                     TupFrame *frame = layer->frameAt(frameIndex);
+                                     frame = layer->frameAt(frameIndex);
                                      if (frame) {
                                          frameOnProcess = frameIndex;
                                          addFrame(frame, opacity, Previous);
@@ -250,7 +254,7 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
                                      limit = framesCount - 1;
 
                                  for (int frameIndex = photogram+1; frameIndex <= limit; frameIndex++) {
-                                     TupFrame * frame = layer->frameAt(frameIndex);
+                                     frame = layer->frameAt(frameIndex);
                                      if (frame) {
                                          frameOnProcess = frameIndex;
                                          addFrame(frame, opacity, Next);
@@ -295,11 +299,12 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
         return;
     }
 
-    TupBackground *bg = gScene->sceneBackground();
-    if (bg) {
+    // background = gScene->sceneBackground();
+    if (background) {
+        TupFrame *frame;
         if (spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-            if (!bg->dynamicBgIsEmpty()) {
-                TupFrame *frame = bg->dynamicFrame();
+            if (!background->dynamicBgIsEmpty()) {
+                frame = background->dynamicFrame();
                 if (frame) {
                     zLevel = 0;
                     addFrame(frame, frame->frameOpacity());
@@ -316,17 +321,18 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
             }
             return;
         } else {
-            if (!bg->dynamicBgIsEmpty()) {
-                if (bg->rasterRenderIsPending()) 
-                    bg->renderDynamicView();
+            if (!background->dynamicBgIsEmpty()) {
+                if (background->rasterRenderIsPending())
+                    background->renderDynamicView();
 
-                QPixmap pixmap = bg->dynamicView(photogram);
-                dynamicBg = new QGraphicsPixmapItem(pixmap);
+                dynamicPixmap = background->dynamicView(photogram);
+                dynamicBg = new QGraphicsPixmapItem(dynamicPixmap);
                 dynamicBg->setZValue(0);
-                TupFrame *frame = bg->dynamicFrame();
+                frame = background->dynamicFrame();
                 if (frame) 
                     dynamicBg->setOpacity(frame->frameOpacity());
                 addItem(dynamicBg);
+                dynamicBg = nullptr;
             } else {
                 #ifdef TUP_DEBUG
                     QString msg = "TupGraphicsScene::drawSceneBackground() - Dynamic background frame is empty";
@@ -339,8 +345,8 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
             }
         }
 
-        if (!bg->staticBgIsEmpty()) {
-            TupFrame *frame = bg->staticFrame();
+        if (!background->staticBgIsEmpty()) {
+            frame = background->staticFrame();
             if (frame) {
                 zLevel = ZLAYER_LIMIT;
                 addFrame(frame, frame->frameOpacity());
@@ -393,15 +399,17 @@ void TupGraphicsScene::addFrame(TupFrame *frame, double opacityFactor, Context m
         return;
     }
 
+    TupGraphicObject *object;
+    TupSvgItem *svg;
     do {
         int objectZValue = objects.at(0)->itemZValue();  
         int svgZValue = static_cast<int> (svgItems.at(0)->zValue());
 
         if (objectZValue < svgZValue) {
-            TupGraphicObject *object = objects.takeFirst();
+            object = objects.takeFirst();
             processNativeObject(object, frameType, opacityFactor, mode);
         } else {  
-            TupSvgItem *svg = svgItems.takeFirst();
+            svg = svgItems.takeFirst();
             processSVGObject(svg, frameType, opacityFactor, mode);
         }
 
@@ -600,8 +608,10 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
         #endif
     #endif
 
+    TupGraphicObject *object;
+    TupTweenerStep *stepItem;
     for (int i=0; i < total; i++) {
-         TupGraphicObject *object = tweenList.at(i);
+         object = tweenList.at(i);
          int origin = object->frameIndex();
 
          QList<TupItemTweener *> list = object->tweensList();
@@ -618,7 +628,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
                          tWarning() << msg;
                      #endif
                  #endif
-                 TupTweenerStep *stepItem = tween->stepAt(0);
+                 stepItem = tween->stepAt(0);
                  if (stepItem->has(TupTweenerStep::Position)) {
                      QPointF point = QPoint(-adjustX, -adjustY);
                      object->setLastTweenPos(stepItem->getPosition() + point);
@@ -692,7 +702,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
                      #endif
                  #endif
                  int step = photogram - origin;
-                 TupTweenerStep *stepItem = tween->stepAt(step);
+                 stepItem = tween->stepAt(step);
                  if (stepItem->has(TupTweenerStep::Position)) {
                      qreal dx = stepItem->getPosition().x() - (object->lastTweenPos().x() + adjustX);
                      qreal dy = stepItem->getPosition().y() - (object->lastTweenPos().y() + adjustY);
@@ -791,9 +801,10 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
     #endif
 
     QList<TupSvgItem *> svgList = gScene->getTweeningSvgObjects(indexLayer);
-
+    TupSvgItem *object;
+    TupTweenerStep *stepItem;
     for (int i=0; i < svgList.count(); i++) {
-         TupSvgItem *object = svgList.at(i);
+         object = svgList.at(i);
          int origin = object->frameIndex();
 
          QList<TupItemTweener *> list = object->tweensList();
@@ -811,7 +822,7 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
                      #endif
                  #endif
 
-                 TupTweenerStep *stepItem = tween->stepAt(0);
+                 stepItem = tween->stepAt(0);
 
                  if (stepItem->has(TupTweenerStep::Position)) {
                      object->setPos(tween->transformOriginPoint());
@@ -849,7 +860,7 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
                  #endif
 
                  int step = photogram - origin;
-                 TupTweenerStep *stepItem = tween->stepAt(step);
+                 stepItem = tween->stepAt(step);
 
                  if (stepItem->has(TupTweenerStep::Position)) {
                      qreal dx = stepItem->getPosition().x() - (object->lastTweenPos().x() + adjustX);
@@ -915,27 +926,33 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
         Mouths mouths = layer->getLipSyncList();
         int total = mouths.count();
 
+        TupLipSync *lipSync;
+        TupLibraryFolder *folder;
+        TupVoice *voice;
+        TupPhoneme *phoneme;
+        TupLibraryObject *mouthImg;
+        TupGraphicLibraryItem *item;
         for (int i=0; i<total; i++) {
-             TupLipSync *lipSync = mouths.at(i);
+             lipSync = mouths.at(i);
              int initFrame = lipSync->getInitFrame();
 
              if ((photogram >= initFrame) && (photogram <= initFrame + lipSync->getFramesCount())) {
                  QString name = lipSync->getLipSyncName();
-                 TupLibraryFolder *folder = library->getFolder(name);
+                 folder = library->getFolder(name);
                  if (folder) {
                      QList<TupVoice *> voices = lipSync->getVoices();
                      int voicesTotal = voices.count();
                      for(int j=0; j<voicesTotal; j++) {
-                         TupVoice *voice = voices.at(j);
+                         voice = voices.at(j);
                          int index = photogram - initFrame; 
                          if (voice->contains(index)) {
                              // Adding phoneme image
-                             TupPhoneme *phoneme = voice->getPhonemeAt(index);
+                             phoneme = voice->getPhonemeAt(index);
                              if (phoneme) {
                                  QString imgName = phoneme->value() + lipSync->getPicExtension();
-                                 TupLibraryObject *image = folder->getObject(imgName);
-                                 if (image) {
-                                     TupGraphicLibraryItem *item = new TupGraphicLibraryItem(image);
+                                 mouthImg = folder->getObject(imgName);
+                                 if (mouthImg) {
+                                     item = new TupGraphicLibraryItem(mouthImg);
                                      if (item) {
                                          QPointF pos = phoneme->position();
                                          int wDelta = static_cast<int> (item->boundingRect().width()/2);
@@ -969,9 +986,9 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
 
                                  // Adding rest phoneme to cover empty frame
                                  QString imgName = "rest" + lipSync->getPicExtension();
-                                 TupLibraryObject *image = folder->getObject(imgName);
-                                 if (image) {
-                                     TupGraphicLibraryItem *item = new TupGraphicLibraryItem(image);
+                                 mouthImg = folder->getObject(imgName);
+                                 if (mouthImg) {
+                                     item = new TupGraphicLibraryItem(mouthImg);
                                      if (item) {
                                          QPointF pos = voice->mouthPos();
                                          int wDelta = static_cast<int> (item->boundingRect().width()/2);
@@ -1191,11 +1208,7 @@ TupFrame *TupGraphicsScene::currentFrame()
 void TupGraphicsScene::setCurrentScene(TupScene *pScene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupGraphicsScene::setCurrentScene()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupGraphicsScene::setCurrentScene()]";
     #endif
 
     Q_CHECK_PTR(pScene);
@@ -1210,6 +1223,7 @@ void TupGraphicsScene::setCurrentScene(TupScene *pScene)
 
     cleanWorkSpace();
     gScene = pScene;
+    background = gScene->sceneBackground();
 
     if (spaceContext == TupProject::FRAMES_EDITION)
         drawCurrentPhotogram();
@@ -1431,7 +1445,6 @@ void TupGraphicsScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     */
 
     QGraphicsScene::mouseDoubleClickEvent(event);
-
     inputInformation->updateFromMouseEvent(event);
 
     if (gTool)
@@ -1713,13 +1726,13 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
             }
         }
     } else {
-        TupBackground *bg = gScene->sceneBackground();
-        if (bg) {
+        // TupBackground *bg = gScene->sceneBackground();
+        if (background) {
             TupFrame *frame = new TupFrame;
             if (spaceContext == TupProject::STATIC_BACKGROUND_EDITION) {
-                frame = bg->staticFrame();
+                frame = background->staticFrame();
             } else if (spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-                frame = bg->dynamicFrame();
+                frame = background->dynamicFrame();
             }
 
             if (frame) {
