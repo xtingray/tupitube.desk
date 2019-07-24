@@ -1211,24 +1211,23 @@ void TupGraphicsScene::setCurrentScene(TupScene *pScene)
         qDebug() << "[TupGraphicsScene::setCurrentScene()]";
     #endif
 
-    Q_CHECK_PTR(pScene);
+    // Q_CHECK_PTR(pScene);
+    if (pScene) {
+        setCurrentFrame(0, 0);
+        if (gTool)
+            gTool->aboutToChangeScene(this);
+        qDeleteAll(lines);
+        lines.clear();
 
-    setCurrentFrame(0, 0);
+        cleanWorkSpace();
+        gScene = pScene;
+        background = gScene->sceneBackground();
 
-    if (gTool)
-        gTool->aboutToChangeScene(this);
-
-    qDeleteAll(lines);
-    lines.clear();
-
-    cleanWorkSpace();
-    gScene = pScene;
-    background = gScene->sceneBackground();
-
-    if (spaceContext == TupProject::FRAMES_EDITION)
-        drawCurrentPhotogram();
-    else
-        drawSceneBackground(framePosition.frame);
+        if (spaceContext == TupProject::FRAMES_EDITION)
+            drawCurrentPhotogram();
+        else
+            drawSceneBackground(framePosition.frame);
+    }
 }
 
 TupScene *TupGraphicsScene::currentScene() const
