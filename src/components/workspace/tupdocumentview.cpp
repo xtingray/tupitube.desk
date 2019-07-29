@@ -82,7 +82,7 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     setWindowIcon(QPixmap(THEME_DIR + "icons/animation_mode.png"));
 
     project = work;
-    currentTool = NULL;
+    currentTool = nullptr;
     onionEnabled = true;
     fullScreenOn = false;
     viewAngle = 0;
@@ -183,12 +183,12 @@ TupDocumentView::~TupDocumentView()
 
     if (paintArea) {
         delete paintArea;
-        paintArea = NULL;
+        paintArea = nullptr;
     }
 
     if (configurationArea) {
         delete configurationArea;
-        configurationArea = NULL;
+        configurationArea = nullptr;
     }
 }
 
@@ -1604,9 +1604,9 @@ void TupDocumentView::showFullScreen()
 
     QSize projectSize = project->getDimension();
     if (projectSize.width() < projectSize.height())
-        scaleFactor = (double) (screenW - 50) / (double) projectSize.width();
+        scaleFactor = static_cast<double>(screenW - 50) / static_cast<double>(projectSize.width());
     else
-        scaleFactor = (double) (screenH - 50) / (double) projectSize.height();
+        scaleFactor = static_cast<double>(screenH - 50) / static_cast<double>(projectSize.height());
 
     fullScreen = new TupCanvas(this, Qt::Window|Qt::FramelessWindowHint, paintArea->graphicsScene(),
                                   paintArea->getCenterPoint(), QSize(screenW, screenH), project, scaleFactor,
@@ -1675,7 +1675,7 @@ void TupDocumentView::closeFullScreen()
         fullScreenOn = false;
         currentTool->init(paintArea->graphicsScene());
 
-        fullScreen = 0;
+        fullScreen = nullptr;
 
         QString toolName = currentTool->name();
         if (toolName.compare(tr("Shift")) == 0) 
@@ -1722,8 +1722,8 @@ void TupDocumentView::postImage()
     TupImageDialog *dialog = new TupImageDialog(this);
     dialog->show();
     QDesktopWidget desktop;
-    dialog->move((int) (desktop.screenGeometry().width() - dialog->width())/2 ,
-                 (int) (desktop.screenGeometry().height() - dialog->height())/2);
+    dialog->move(static_cast<int>((desktop.screenGeometry().width() - dialog->width())/2),
+                 static_cast<int>((desktop.screenGeometry().height() - dialog->height())/2));
 
     if (dialog->exec() != QDialog::Rejected) {
         QString title = dialog->imageTitle();
@@ -1751,8 +1751,8 @@ void TupDocumentView::storyboardSettings()
     QApplication::restoreOverrideCursor();
 
     storySettings->show();
-    storySettings->move((int) (desktop.screenGeometry().width() - storySettings->width())/2 ,
-                        (int) (desktop.screenGeometry().height() - storySettings->height())/2);
+    storySettings->move(static_cast<int>((desktop.screenGeometry().width() - storySettings->width())/2),
+                        static_cast<int>((desktop.screenGeometry().height() - storySettings->height())/2));
 }
 
 void TupDocumentView::sendStoryboard(TupStoryboard *storyboard, int sceneIndex)

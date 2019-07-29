@@ -466,8 +466,6 @@ void Tweener::applyTween()
             TupLibraryObject::Type type = TupLibraryObject::Item;
             int objectIndex = -1;
             QPointF pos = item->mapFromParent(origin);
-            qDebug() << "TRACK pos: " << pos;
-            qDebug() << "TRACK origin: " << origin;
 
             if (TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item)) {
                 type = TupLibraryObject::Svg;

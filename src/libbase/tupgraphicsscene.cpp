@@ -589,23 +589,14 @@ void TupGraphicsScene::addSvgObject(TupSvgItem *svgItem, TupFrame::FrameType fra
 void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupGraphicsScene::addTweeningObjects()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupGraphicsScene::addTweeningObjects()]";
     #endif
 
     QList<TupGraphicObject *> tweenList = gScene->getTweeningGraphicObjects(layerIndex);
     int total = tweenList.count();
 
     #ifdef TUP_DEBUG
-        QString msg = "Tween list size: " + QString::number(total);
-        #ifdef Q_OS_WIN
-            qDebug() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qWarning() << "Tween list size: " << QString::number(total);
     #endif
 
     TupGraphicObject *object;
@@ -621,12 +612,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
 
              if (origin == photogram) {
                  #ifdef TUP_DEBUG
-                     QString msg = "Adding FIRST tween transformation - photogram -> " + QString::number(photogram);
-                     #ifdef Q_OS_WIN
-                         qDebug() << msg;
-                     #else
-                         tWarning() << msg;
-                     #endif
+                     qWarning() << "Adding FIRST tween transformation - photogram -> " << QString::number(photogram);
                  #endif
                  stepItem = tween->stepAt(0);
                  if (stepItem->has(TupTweenerStep::Position)) {
@@ -694,12 +680,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
                  }
              } else if ((origin < photogram) && (photogram < origin + tween->getFrames())) {
                  #ifdef TUP_DEBUG
-                     QString msg = "Adding tween transformation - photogram -> " + QString::number(photogram);
-                     #ifdef Q_OS_WIN
-                         qDebug() << msg;
-                     #else
-                         tWarning() << msg;
-                     #endif
+                     qWarning() << "Adding tween transformation - photogram -> " << QString::number(photogram);
                  #endif
                  int step = photogram - origin;
                  stepItem = tween->stepAt(step);
@@ -773,6 +754,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram)
                          }
                      }
                  }
+                 // Including object into the scene
                  addGraphicObject(object, TupFrame::Regular, 1.0, true);
 
                  if (stepItem->has(TupTweenerStep::Opacity))
