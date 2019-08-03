@@ -1103,6 +1103,10 @@ void TupDocumentView::selectToolFromMenu(QAction *action)
 
 bool TupDocumentView::handleProjectResponse(TupProjectResponse *response)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "TupDocumentView::handleProjectResponse()" << response;
+    #endif
+
     if (TupFrameResponse *frameResponse = static_cast<TupFrameResponse *>(response)) {
         switch (frameResponse->getAction()) {
             case TupProjectRequest::Add:
