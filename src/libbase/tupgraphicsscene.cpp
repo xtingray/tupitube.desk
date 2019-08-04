@@ -285,7 +285,7 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
         #endif
     #endif
 
-    Q_CHECK_PTR(gScene);
+    // Q_CHECK_PTR(gScene);
 
     if (!gScene) {
         #ifdef TUP_DEBUG
@@ -1157,7 +1157,7 @@ TupFrame *TupGraphicsScene::currentFrame()
         if (gScene->layersCount() > 0) {
             if (framePosition.layer < gScene->layersCount()) {
                 TupLayer *layer = gScene->layerAt(framePosition.layer);
-                Q_CHECK_PTR(layer);
+                // Q_CHECK_PTR(layer);
                 if (layer) {
                     if (!layer->getFrames().isEmpty())
                         return layer->frameAt(framePosition.frame);

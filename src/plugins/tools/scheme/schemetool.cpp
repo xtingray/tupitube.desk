@@ -86,14 +86,14 @@ void SchemeTool::init(TupGraphicsScene *scene)
     scene->includeObject(textItem);
 
     foreach (QGraphicsView * view, scene->views()) {
-             view->setDragMode(QGraphicsView::NoDrag);
-             Q_CHECK_PTR(view->scene());
-             if (QGraphicsScene *scene = qobject_cast<QGraphicsScene *>(view->scene())) {
-                 foreach (QGraphicsItem *item, scene->items()) {
-                          item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-                          item->setFlag(QGraphicsItem::ItemIsMovable, false);
-                 }
-             }
+        view->setDragMode(QGraphicsView::NoDrag);
+        // Q_CHECK_PTR(view->scene());
+        if (QGraphicsScene *scene = qobject_cast<QGraphicsScene *>(view->scene())) {
+            foreach (QGraphicsItem *item, scene->items()) {
+                item->setFlag(QGraphicsItem::ItemIsSelectable, false);
+                item->setFlag(QGraphicsItem::ItemIsMovable, false);
+            }
+        }
     }
 }
 

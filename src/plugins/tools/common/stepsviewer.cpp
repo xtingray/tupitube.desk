@@ -654,6 +654,8 @@ void StepsViewer::undoSegment(const QPainterPath painterPath)
         minusButton->removeLast();
 
     removeRow(rowCount()-1);
+
+    emit totalHasChanged(totalSteps());
 }
 
 void StepsViewer::redoSegment(const QPainterPath painterPath)
