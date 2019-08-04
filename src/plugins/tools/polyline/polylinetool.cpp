@@ -289,7 +289,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
             TupBackground *bg = sceneVar->sceneBackground();
             if (bg) {
                 if (scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
-                    TupFrame *frame = bg->staticFrame();
+                    frame = bg->staticFrame();
                     if (frame) {
                         item = frame->item(response->getItemIndex());
                     } else {
@@ -303,7 +303,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
                         #endif
                     }
                 } else if (scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-                           TupFrame *frame = bg->dynamicFrame();
+                           frame = bg->dynamicFrame();
                            if (frame) {
                                item = frame->item(response->getItemIndex());
                            } else {
@@ -362,16 +362,8 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
         break;
         case TupProjectRequest::Remove:
         {
-            // SQA: Is this code doing something for real?
-            /*
-            if (item == item) {
-                path = QPainterPath();
-                delete item;
-                item = 0;
-                delete nodeGroup;
-                nodeGroup = 0;
-            }
-            */
+            // Undo Action
+            initEnv();
         }
         break;
         case TupProjectRequest::EditNodes:
