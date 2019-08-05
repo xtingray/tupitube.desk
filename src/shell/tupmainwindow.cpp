@@ -90,7 +90,8 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(nullptr), 
     #endif
 
     // Naming the main window
-    setWindowTitle("TupiTube Desk");
+    appTitle = "TupiTube Desk | Community";
+    setWindowTitle(appTitle);
     setWindowIcon(QIcon(THEME_DIR + "icons/about.png"));
     setObjectName("TupMainWindow_");
     setAcceptDrops(true);
@@ -271,7 +272,7 @@ void TupMainWindow::createNewNetProject(const QString &title, const QStringList 
 {
     isNetworked = true;
     projectName = title;
-    setWindowTitle(tr("TupiTube Desk") + " - " + projectName + " " + tr("[ by %1 | net mode ]").arg(netUser));
+    setWindowTitle(appTitle + " - " + projectName + " " + tr("[ by %1 | net mode ]").arg(netUser));
 
     if (m_viewChat) {
         removeToolView(m_viewChat);
@@ -619,7 +620,7 @@ void TupMainWindow::resetUI()
 
     enableToolViews(false);
     setUpdatesEnabled(true);
-    setWindowTitle(tr("TupiTube Desk"));
+    setWindowTitle(appTitle);
 
     if (isNetworked) { 
         m_viewChat->expandDock(false);
@@ -687,7 +688,7 @@ void TupMainWindow::setupLocalProject(TupProjectManagerParams *params)
         m_projectManager->setParams(params);
         projectName = params->getProjectManager();
         author = params->getAuthor();
-        setWindowTitle(tr("TupiTube Desk") +  " - " + projectName + " [ " + tr("by") + " " + author + " ]");
+        setWindowTitle(appTitle +  " - " + projectName + " [ " + tr("by") + " " + author + " ]");
     }
 }
 
@@ -772,7 +773,7 @@ void TupMainWindow::openProject(const QString &path)
             if (author.length() <= 0)
                 author = "Anonymous";
 
-            setWindowTitle(tr("TupiTube Desk") + " - " + projectName + " [ " + tr("by") + " " + author + " ]");
+            setWindowTitle(appTitle + " - " + projectName + " [ " + tr("by") + " " + author + " ]");
             setWorkSpace();
 
             m_exposureSheet->updateLayerOpacity(0, 0);
@@ -1012,7 +1013,7 @@ void TupMainWindow::saveAs()
     if (isNetworked) {
         isNetworked = false;
         m_projectManager->setHandler(new TupLocalProjectManagerHandler, false);
-        setWindowTitle(tr("TupiTube Desk") + " - " + projectName + " [ " + tr("by") + " " + author + " ]");
+        setWindowTitle(appTitle + " - " + projectName + " [ " + tr("by") + " " + author + " ]");
     }
 
     saveProject();
@@ -1052,7 +1053,7 @@ void TupMainWindow::saveProject()
             int indexDot = name.lastIndexOf(".");
             name = name.left(indexDot);
 
-            setWindowTitle(tr("TupiTube Desk") +  " - " + name + " [ " + tr("by") +  " " +  author + " ]");
+            setWindowTitle(appTitle + " - " + name + " [ " + tr("by") +  " " +  author + " ]");
 
             int last = m_fileName.lastIndexOf("/");
             QString dir = m_fileName.left(last);
@@ -1463,5 +1464,5 @@ void TupMainWindow::dropEvent(QDropEvent *e)
 void TupMainWindow::updateProjectAuthor(const QString &artist)
 {
     author = artist;
-    setWindowTitle(tr("TupiTube Desk") +  " - " + projectName + " [ " + tr("by") + " " + author + " ]");
+    setWindowTitle(appTitle +  " - " + projectName + " [ " + tr("by") + " " + author + " ]");
 }

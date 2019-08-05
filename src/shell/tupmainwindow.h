@@ -210,6 +210,7 @@ class TupMainWindow : public TabbedMainWindow
         void doPlay();
 
     private:
+        QString appTitle;
         TupProjectManager *m_projectManager;
         QString m_fileName;
         bool lastSave;
