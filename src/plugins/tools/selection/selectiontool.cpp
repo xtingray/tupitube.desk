@@ -51,7 +51,7 @@
 #include "tupprojectresponse.h"
 #include "tosd.h"
 
-SelectionTool::SelectionTool(): panel(0)
+SelectionTool::SelectionTool(): panel(nullptr)
 {
     setupActions();
 }
@@ -267,7 +267,7 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
 
 TupFrame* SelectionTool::getCurrentFrame()
 {
-    TupFrame *frame = 0;
+    TupFrame *frame = nullptr;
     if (scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
         frame = scene->currentFrame();
         currentLayer = scene->currentLayerIndex();
@@ -290,7 +290,7 @@ TupFrame* SelectionTool::getCurrentFrame()
 
 TupFrame* SelectionTool::frameAt(int sceneIndex, int layerIndex, int frameIndex)
 {
-    TupFrame *frame = 0;
+    TupFrame *frame = nullptr;
     TupProject *project = scene->currentScene()->project();
     TupScene *sceneData = project->sceneAt(sceneIndex);
     if (sceneData) {
@@ -416,7 +416,7 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
         return;
     }
 
-    QGraphicsItem *item = 0;
+    QGraphicsItem *item = nullptr;
     TupFrame *frame = frameAt(response->getSceneIndex(), response->getLayerIndex(), response->getFrameIndex());
     if (frame) {
         if (response->getItemType() == TupLibraryObject::Svg && frame->svgItemsCount() > 0) {
@@ -480,16 +480,23 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
         {
             nodeManagers.clear();
             selectedObjects.clear();
+            /*
+            if (item && (dynamic_cast<TupAbstractSerializable* > (item))) {
+                if (item->group())
+                    item = qgraphicsitem_cast<QGraphicsItem *>(item->group());
+            }
 
             selectedObjects << item;
             item->setSelected(true);
             NodeManager *manager = new NodeManager(item, scene, nodeZValue);
             connect(manager, SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
             connect(manager, SIGNAL(scaleUpdated(double, double)), panel, SLOT(updateScaleFactor(double, double)));
+            manager->show();
             manager->resizeNodes(realFactor);
             nodeManagers << manager;
 
             syncNodes();
+            */
         }
         break;
         case TupProjectRequest::Ungroup:
@@ -500,6 +507,7 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
             nodeManagers.clear();
             selectedObjects.clear();
 
+            /*
             QString list = response->getArg().toString();
             QString::const_iterator itr = list.constBegin();
             QList<int> positions = TupSvg2Qt::parseIntList(++itr);
@@ -513,12 +521,14 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
                     NodeManager *manager = new NodeManager(graphic, scene, nodeZValue);
                     connect(manager, SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
                     connect(manager, SIGNAL(scaleUpdated(double, double)), panel, SLOT(updateScaleFactor(double, double)));
+                    // manager->show();
                     manager->resizeNodes(realFactor);
                     nodeManagers << manager;
                 }
             }
 
             syncNodes();
+            */
         }
         break;
         default:
@@ -649,10 +659,10 @@ void SelectionTool::applyAlignAction(Settings::Align align)
         QRectF rect = item->boundingRect();
         QPointF objectPos = rect.center();
         if (align == Settings::hAlign) {
-            int y = center.y() - objectPos.y();
+            int y = static_cast<int>(center.y() - objectPos.y());
             item->setPos(item->pos().x(), y);
         } else if (align == Settings::vAlign) {
-            int x = center.x() - objectPos.x();
+            int x = static_cast<int>(center.x() - objectPos.x());
             item->setPos(x, item->pos().y());
         } else if (align == Settings::totalAlign) {
             distance = center - objectPos;
@@ -838,13 +848,13 @@ void SelectionTool::sceneResponse(const TupSceneResponse *event)
 
 void SelectionTool::updateItemPosition() 
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[SelectionTool::updateItemPosition()]";
-    #else
-        T_FUNCINFOX("tools");
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[SelectionTool::updateItemPosition()]";
+        #else
+            T_FUNCINFOX("tools");
+        #endif
     #endif
-#endif
 
     if (nodeManagers.count() == 1) {
         NodeManager *manager = nodeManagers.first();
@@ -1056,7 +1066,6 @@ void SelectionTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
     QDomDocument doc;
     doc.appendChild(TupSerializer::properties(item, doc));
     TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
-
     int position = -1;
     TupLibraryObject::Type type;
 

@@ -131,8 +131,10 @@ void TupGraphicsScene::setCurrentFrame(int layer, int frame)
 
     if ((frame != framePosition.frame && framePosition.frame >= 0) ||
         (layer != framePosition.layer && framePosition.layer >= 0)) {
-        if (gTool->name().compare(tr("PolyLine")) == 0 || gTool->toolType() == TupToolInterface::Tweener)
-            gTool->aboutToChangeScene(this);
+        if (gTool) {
+            if (gTool->name().compare(tr("PolyLine")) == 0 || gTool->toolType() == TupToolInterface::Tweener)
+                gTool->aboutToChangeScene(this);
+        }
     }
 
     framePosition.layer = layer;

@@ -58,6 +58,8 @@ TupFrame::TupFrame()
     type = Regular;
     isLocked = false;
     isVisible = true;
+    graphics = GraphicObjects();
+    svg = SvgObjects();
 }
 
 TupFrame::TupFrame(TupLayer *parent) : QObject(parent)
@@ -68,6 +70,8 @@ TupFrame::TupFrame(TupLayer *parent) : QObject(parent)
 
     isLocked = false;
     isVisible = true;
+    graphics = GraphicObjects();
+    svg = SvgObjects();
 
     direction = "0";
     shift = "5";
@@ -81,6 +85,8 @@ TupFrame::TupFrame(TupBackground *bg, const QString &label) : QObject(bg)
     isLocked = false;
     isVisible = true;
     opacity = 1.0;
+    graphics = GraphicObjects();
+    svg = SvgObjects();
 
     direction = "0";
     shift = "5";
