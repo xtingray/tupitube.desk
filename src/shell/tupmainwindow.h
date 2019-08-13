@@ -135,6 +135,7 @@ class TupMainWindow : public TabbedMainWindow
         void resetUI();
         void updateRecentProjectList();
         void saveDefaultPath(const QString &dir);
+        bool cancelChanges();
 
     protected:
         #if defined(Q_OS_MAC)
@@ -156,6 +157,7 @@ class TupMainWindow : public TabbedMainWindow
         void setWorkSpace(const QStringList &users = QStringList());
         void createNewLocalProject();
         void newProject();
+        void closeInterface();
         bool closeProject();
         void unexpectedClose();
         void openProject();

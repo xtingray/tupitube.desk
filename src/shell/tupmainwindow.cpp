@@ -466,6 +466,9 @@ void TupMainWindow::newProject()
         #endif
     #endif
 
+    if (cancelChanges())
+        return;
+
     TupNewProject *wizard = new TupNewProject(this);
     QDesktopWidget desktop;
     wizard->show();
@@ -487,22 +490,8 @@ void TupMainWindow::newProject()
     delete wizard;
 }
 
-bool TupMainWindow::closeProject()
+bool TupMainWindow::cancelChanges()
 {
-    #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupMainWindow::closeProject()]";
-        #else
-            T_FUNCINFO;
-        #endif
-    #endif
-
-    if (!mainToolBar->isVisible())
-        hideTopPanels();
-
-    if (!m_projectManager->isOpen())
-        return true;
-
     if (m_projectManager->isProjectModified()) {
         QDesktopWidget desktop;
         QMessageBox msgBox;
@@ -514,24 +503,57 @@ bool TupMainWindow::closeProject()
         msgBox.addButton(QString(tr("Save")), QMessageBox::AcceptRole);
         msgBox.addButton(QString(tr("Discard")), QMessageBox::NoRole);
         msgBox.addButton(QString(tr("Cancel")), QMessageBox::DestructiveRole);
-
         msgBox.show();
         msgBox.move(static_cast<int>((desktop.screenGeometry().width() - msgBox.width())/2),
                     static_cast<int>((desktop.screenGeometry().height() - msgBox.height())/2));
 
         int ret = msgBox.exec();
-
         switch (ret) {
             case QMessageBox::AcceptRole:
                  lastSave = true;
                  saveProject();
-                 break;
-            case QMessageBox::DestructiveRole:
                  return false;
-            case QMessageBox::NoRole:
-                 break;
+            case QMessageBox::DestructiveRole:
+                 return true;
         }
     }
+
+    return false;
+}
+
+void TupMainWindow::closeInterface()
+{
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupMainWindow::closeInterface()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
+    if (cancelChanges())
+        return;
+
+    closeProject();
+}
+
+bool TupMainWindow::closeProject()
+{
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[TupMainWindow::closeProject()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
+    // SQA: Verify this conditional
+    if (!m_projectManager->isOpen())
+        return true;
+
+    if (!mainToolBar->isVisible())
+        hideTopPanels();
+
     resetUI();
 
     return true;
@@ -694,6 +716,9 @@ void TupMainWindow::setupLocalProject(TupProjectManagerParams *params)
 
 void TupMainWindow::openProject()
 {
+    if (cancelChanges())
+        return;
+
     TCONFIG->beginGroup("General");
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
 
@@ -708,6 +733,9 @@ void TupMainWindow::openProject()
 
 void TupMainWindow::openExample()
 {
+    if (cancelChanges())
+        return;
+
 #ifdef Q_OS_WIN
     QString example = SHARE_DIR + "html/examples/example.tup";
 #else

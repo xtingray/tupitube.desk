@@ -339,7 +339,7 @@ void TupMainWindow::setupFileActions()
     m_actionManager->insert(saveAs, "save_project_as", "file");
 
     TAction *close = new TAction(QPixmap(THEME_DIR + "icons/close.png"), tr("Cl&ose Project"), QKeySequence(tr("Ctrl+W")),
-				 this, SLOT(closeProject()), m_actionManager);
+                 this, SLOT(closeInterface()), m_actionManager);
     close->setStatusTip(tr("Close active project"));
     m_actionManager->insert(close, "close_project", "file");
 
