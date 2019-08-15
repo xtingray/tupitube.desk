@@ -1112,9 +1112,6 @@ bool TupDocumentView::handleProjectResponse(TupProjectResponse *response)
             case TupProjectRequest::Add:
                 if (cameraMode)
                     QApplication::restoreOverrideCursor();
-            break;
-            default:
-            break;
         }
     }
 

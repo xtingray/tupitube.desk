@@ -856,6 +856,7 @@ void Tweener::updatePath()
             }
         }
 
+        doList << path->path();
         configPanel->updateSteps(path);
         updateTweenPoints();
     }
