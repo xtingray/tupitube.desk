@@ -39,22 +39,30 @@
 #include "zlib.h"
 */
 
+#include <QCameraInfo>
 #include <QCamera>
 #include <QCameraImageCapture>
 #include <QCameraViewfinder>
 
 int main()
 {
-    QByteArray cameraDevice = QCamera::availableDevices()[0];
-    QCamera *camera = new QCamera(cameraDevice);
-    QCameraViewfinder *viewFinder = new QCameraViewfinder();
-    camera->setViewfinder(viewFinder);
+    // QByteArray cameraDevice = QCamera::availableDevices()[0];
 
-    camera->setCaptureMode(QCamera::CaptureStillImage);
-    new QCameraImageCapture(camera);
+    QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
+    // foreach (const QCameraInfo &cameraInfo, cameras)
+    //     qDebug() << cameraInfo.deviceName();
 
-    if (camera->state() == QCamera::ActiveState)
-        camera->stop();
+    if (cameras.length() > 0) {
+        QCamera *camera = new QCamera(cameras.at(0));
+        QCameraViewfinder *viewFinder = new QCameraViewfinder();
+        camera->setViewfinder(viewFinder);
+
+        camera->setCaptureMode(QCamera::CaptureStillImage);
+        new QCameraImageCapture(camera);
+
+        if (camera->state() == QCamera::ActiveState)
+            camera->stop();
  
-    camera->start();
+        camera->start();
+    }
 }

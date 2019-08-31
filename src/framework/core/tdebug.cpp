@@ -405,15 +405,17 @@ TDebug& TDebug::operator << (const QImage& p)
 
     return *this;
 }
-
 TDebug& TDebug::operator << (const QRegion & reg) 
 {
     *this<< "[ ";
 
-    QVector<QRect> rs = reg.rects();
+    // QVector<QRect> rs = reg.rects();
+    QRegion::const_iterator rs;
+    for (rs = reg.begin(); rs != reg.end(); ++rs)
+         *this << QString("[%1,%2 - %3x%4] ").arg(rs->x()).arg(rs->y()).arg(rs->width()).arg(rs->height());
 
-    for (int i=0;i<rs.size();++i)
-         *this << QString("[%1,%2 - %3x%4] ").arg(rs[i].x()).arg(rs[i].y()).arg(rs[i].width()).arg(rs[i].height()) ;
+    // for (int i=0;i<rs.size();++i)
+    //      *this << QString("[%1,%2 - %3x%4] ").arg(rs[i].x()).arg(rs[i].y()).arg(rs[i].width()).arg(rs[i].height()) ;
 
     *this <<"]";
 
