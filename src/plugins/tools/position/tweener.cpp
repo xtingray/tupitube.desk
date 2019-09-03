@@ -704,23 +704,23 @@ void Tweener::applyTween()
         initScene = scene->currentSceneIndex();
 
         foreach (QGraphicsItem *item, objects) {
-                 TupLibraryObject::Type type = TupLibraryObject::Item;
-                 int objectIndex = scene->currentFrame()->indexOf(item);
-                 QPointF point = item->pos();
+            TupLibraryObject::Type type = TupLibraryObject::Item;
+            int objectIndex = scene->currentFrame()->indexOf(item);
+            QPointF point = item->pos();
 
-                 if (TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item)) {
-                     type = TupLibraryObject::Svg;
-                     objectIndex = scene->currentFrame()->indexOf(svg);
-                 }
+            if (TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item)) {
+                type = TupLibraryObject::Svg;
+                objectIndex = scene->currentFrame()->indexOf(svg);
+            }
 
-                 QString route = pathToCoords();
-                 TupProjectRequest request = TupRequestBuilder::createItemRequest(
-                                             initScene, initLayer, initFrame,
-                                             objectIndex,
-                                             QPointF(), scene->getSpaceContext(), type,
-                                             TupProjectRequest::SetTween, 
-                                             configPanel->tweenToXml(initScene, initLayer, initFrame, point, route));
-                 emit requested(&request);
+            QString route = pathToCoords();
+            TupProjectRequest request = TupRequestBuilder::createItemRequest(
+                                        initScene, initLayer, initFrame,
+                                        objectIndex,
+                                        QPointF(), scene->getSpaceContext(), type,
+                                        TupProjectRequest::SetTween,
+                                        configPanel->tweenToXml(initScene, initLayer, initFrame, point, route));
+            emit requested(&request);
         }
     } else { // Tween already exists
         removeTweenFromProject(name);
@@ -731,69 +731,69 @@ void Tweener::applyTween()
         initScene = currentTween->getInitScene();
 
         foreach (QGraphicsItem *item, objects) {
-                 TupLibraryObject::Type type = TupLibraryObject::Item;
-                 TupScene *sceneData = scene->currentScene();
-                 TupLayer *layer = sceneData->layerAt(initLayer);
-                 TupFrame *frame = layer->frameAt(currentTween->getInitFrame());
-                 int objectIndex = frame->indexOf(item);
+            TupLibraryObject::Type type = TupLibraryObject::Item;
+            TupScene *sceneData = scene->currentScene();
+            TupLayer *layer = sceneData->layerAt(initLayer);
+            TupFrame *frame = layer->frameAt(currentTween->getInitFrame());
+            int objectIndex = frame->indexOf(item);
 
-                 /*
-                 QPainterPath path = path->path();
-                 QPolygonF points = path.toFillPolygon(); 
-                 QPointF point = points.at(0) - QPointF(item->boundingRect().width(), item->boundingRect().height());
-                 */
+            /*
+            QPainterPath path = path->path();
+            QPolygonF points = path.toFillPolygon();
+            QPointF point = points.at(0) - QPointF(item->boundingRect().width(), item->boundingRect().height());
+            */
 
-                 QPointF point = item->pos();
-                 TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item); 
+            QPointF point = item->pos();
+            TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
 
-                 if (svg) {
-                     type = TupLibraryObject::Svg;
-                     objectIndex = frame->indexOf(svg);
-                 }
+            if (svg) {
+                type = TupLibraryObject::Svg;
+                objectIndex = frame->indexOf(svg);
+            }
 
-                 if (initFrame != currentTween->getInitFrame()) {
-                     QDomDocument dom;
-                     if (type == TupLibraryObject::Svg)
-                         dom.appendChild(svg->toXml(dom));
-                     else
-                         dom.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(dom));
+            if (initFrame != currentTween->getInitFrame()) {
+                QDomDocument dom;
+                if (type == TupLibraryObject::Svg)
+                    dom.appendChild(svg->toXml(dom));
+                else
+                    dom.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(dom));
 
-                     TupProjectRequest request = TupRequestBuilder::createItemRequest(initScene, initLayer,
-                                                 initFrame, 0, item->pos(),
-                                                 scene->getSpaceContext(), type,
-                                                 TupProjectRequest::Add, dom.toString());
-                     emit requested(&request);
+                TupProjectRequest request = TupRequestBuilder::createItemRequest(initScene, initLayer,
+                                            initFrame, 0, item->pos(),
+                                            scene->getSpaceContext(), type,
+                                            TupProjectRequest::Add, dom.toString());
+                emit requested(&request);
 
-                     request = TupRequestBuilder::createItemRequest(currentTween->getInitScene(),
-                               currentTween->getInitLayer(),
-                               currentTween->getInitFrame(),
-                               objectIndex, QPointF(), 
-                               scene->getSpaceContext(), type,
-                               TupProjectRequest::Remove);
-                     emit requested(&request);
+                request = TupRequestBuilder::createItemRequest(currentTween->getInitScene(),
+                          currentTween->getInitLayer(),
+                          currentTween->getInitFrame(),
+                          objectIndex, QPointF(),
+                          scene->getSpaceContext(), type,
+                          TupProjectRequest::Remove);
+                emit requested(&request);
 
-                     frame = layer->frameAt(initFrame);
-                     if (type == TupLibraryObject::Item) {
-                         objectIndex = frame->graphicsCount() - 1;
-                         newList.append(frame->graphicAt(objectIndex)->item());
-                     } else {
-                         objectIndex = frame->svgItemsCount() - 1;
-                         newList.append(frame->svgAt(objectIndex));
-                     }
-                 }
+                frame = layer->frameAt(initFrame);
+                if (type == TupLibraryObject::Item) {
+                    objectIndex = frame->graphicsCount() - 1;
+                    newList.append(frame->graphicAt(objectIndex)->item());
+                } else {
+                    objectIndex = frame->svgItemsCount() - 1;
+                    newList.append(frame->svgAt(objectIndex));
+                }
+            }
 
-                 QString route = pathToCoords();
-                 TupProjectRequest request = TupRequestBuilder::createItemRequest(
-                                             initScene, initLayer, initFrame,
-                                             objectIndex,
-                                             QPointF(), scene->getSpaceContext(), type,
-                                             TupProjectRequest::SetTween,
-                                             configPanel->tweenToXml(initScene, initLayer, initFrame, point, route));
-                 emit requested(&request);
-        }
+            QString route = pathToCoords();
+            TupProjectRequest request = TupRequestBuilder::createItemRequest(
+                                        initScene, initLayer, initFrame,
+                                        objectIndex,
+                                        QPointF(), scene->getSpaceContext(), type,
+                                        TupProjectRequest::SetTween,
+                                        configPanel->tweenToXml(initScene, initLayer, initFrame, point, route));
+            emit requested(&request);
+       }
 
-        if (newList.size() > 0)
-            objects = newList;
+       if (newList.size() > 0)
+           objects = newList;
     }
 
     int framesNumber = framesCount();
@@ -1182,95 +1182,101 @@ void Tweener::itemResponse(const TupItemResponse *response)
         #endif
     #endif
 
-    if (response->getAction() == TupProjectRequest::UpdateTweenPath) {
-        if (response->getMode() == TupProjectResponse::Undo) { 
-            if (!doList.isEmpty()) {
-                undoList << doList.last();
-                doList.removeLast();
-                scene->removeItem(path);
+    if (editMode == TupToolPlugin::Properties) {
+        if (response->getAction() == TupProjectRequest::UpdateTweenPath) {
+            if (response->getMode() == TupProjectResponse::Undo) {
+                if (!doList.isEmpty()) {
+                    undoList << doList.last();
+                    doList.removeLast();
+                    scene->removeItem(path);
 
-                if (nodesGroup) {
-                    nodesGroup->clear();
-                    nodesGroup = nullptr;
+                    if (nodesGroup) {
+                        nodesGroup->clear();
+                        nodesGroup = nullptr;
+                    }
+                    removeTweenPoints();
+
+                    QPainterPath painterPath;
+                    if (doList.isEmpty()) {
+                        path = new QGraphicsPathItem;
+                        path->setZValue(baseZValue);
+
+                        QColor color(55, 155, 55, 200);
+                        QPen pen(QBrush(color), 2, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
+                        path->setPen(pen);
+
+                        painterPath.moveTo(firstNode);
+                        path->setPath(painterPath);
+                        scene->addItem(path);
+
+                        configPanel->enableSaveOption(false);
+                    } else {
+                        painterPath = doList.last();
+                        path->setPath(painterPath);
+                        scene->addItem(path);
+                    }
+
+                    nodesGroup = new TNodeGroup(path, scene, TNodeGroup::PositionTween, baseZValue);
+                    connect(nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath()));
+                    nodesGroup->createNodes(path);
+
+                    nodesGroup->show();
+                    nodesGroup->resizeNodes(realFactor);
+                    nodesGroup->expandAllNodes();
+
+                    if (configPanel->stepsTotal() == nodesGroup->mainNodesCount())
+                        configPanel->undoSegment(painterPath);
+                    else
+                        configPanel->updateSegments(painterPath);
+
+                    /*
+                    qDebug() << "Main Nodes size: " << nodesGroup->mainNodesCount();
+                    qDebug() << "Nodes Total: " << nodesGroup->nodesTotalCount();
+                    qDebug() << "Config panel: " << configPanel->stepsTotal();
+                    */
+
+                    paintTweenPoints();
                 }
-                removeTweenPoints();
-
-                QPainterPath painterPath;
-                if (doList.isEmpty()) {
-                    path = new QGraphicsPathItem;
-                    path->setZValue(baseZValue);
-
-                    QColor color(55, 155, 55, 200);
-                    QPen pen(QBrush(color), 2, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
-                    path->setPen(pen);
-
-                    painterPath.moveTo(firstNode);
-                    path->setPath(painterPath);
-                    scene->addItem(path);
-
-                    configPanel->enableSaveOption(false);
-                } else {
-                    painterPath = doList.last();
-                    path->setPath(painterPath);
-                    scene->addItem(path);
-                }
-
-                nodesGroup = new TNodeGroup(path, scene, TNodeGroup::PositionTween, baseZValue);
-                connect(nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath()));
-                nodesGroup->createNodes(path);
-
-                nodesGroup->show();
-                nodesGroup->resizeNodes(realFactor);
-                nodesGroup->expandAllNodes();
-
-                if (configPanel->stepsTotal() == nodesGroup->mainNodesCount())
-                    configPanel->undoSegment(painterPath);
-                else
-                    configPanel->updateSegments(painterPath);
-
-                qDebug() << "Main Nodes size: " << nodesGroup->mainNodesCount();
-                qDebug() << "Nodes Total: " << nodesGroup->nodesTotalCount();
-                qDebug() << "Config panel: " << configPanel->stepsTotal();
-
-                paintTweenPoints();
             }
-        }
 
-        if (response->getMode() == TupProjectResponse::Redo) {
-            if (!undoList.isEmpty()) {
-                doList << undoList.last();
-                undoList.removeLast();
-                scene->removeItem(path);
+            if (response->getMode() == TupProjectResponse::Redo) {
+                if (!undoList.isEmpty()) {
+                    doList << undoList.last();
+                    undoList.removeLast();
+                    scene->removeItem(path);
 
-                if (nodesGroup) {
-                    nodesGroup->clear();
-                    nodesGroup = nullptr;
-                    // disconnect(nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath()));
+                    if (nodesGroup) {
+                        nodesGroup->clear();
+                        nodesGroup = nullptr;
+                        // disconnect(nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath()));
+                    }
+                    removeTweenPoints();
+
+                    QPainterPath painterPath = doList.last();
+                    path->setPath(painterPath);
+                    scene->addItem(path);
+
+                    nodesGroup = new TNodeGroup(path, scene, TNodeGroup::PositionTween, baseZValue);
+                    connect(nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath()));
+                    nodesGroup->createNodes(path);
+
+                    nodesGroup->show();
+                    nodesGroup->resizeNodes(realFactor);
+                    nodesGroup->expandAllNodes();
+
+                    if (configPanel->stepsTotal() < (nodesGroup->mainNodesCount()-1))
+                        configPanel->redoSegment(painterPath);
+                    else
+                        configPanel->updateSegments(painterPath);
+
+                    /*
+                    qDebug() << "Main Nodes size: " << nodesGroup->mainNodesCount();
+                    qDebug() << "Nodes Total: " << nodesGroup->nodesTotalCount();
+                    qDebug() << "Config panel: " << configPanel->stepsTotal();
+                    */
+
+                    paintTweenPoints();
                 }
-                removeTweenPoints();
-
-                QPainterPath painterPath = doList.last();
-                path->setPath(painterPath);
-                scene->addItem(path);
-
-                nodesGroup = new TNodeGroup(path, scene, TNodeGroup::PositionTween, baseZValue);
-                connect(nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath()));
-                nodesGroup->createNodes(path);
-
-                nodesGroup->show();
-                nodesGroup->resizeNodes(realFactor);
-                nodesGroup->expandAllNodes();
-
-                if (configPanel->stepsTotal() < (nodesGroup->mainNodesCount()-1))
-                    configPanel->redoSegment(painterPath);
-                else
-                    configPanel->updateSegments(painterPath);
-
-                qDebug() << "Main Nodes size: " << nodesGroup->mainNodesCount();
-                qDebug() << "Nodes Total: " << nodesGroup->nodesTotalCount();
-                qDebug() << "Config panel: " << configPanel->stepsTotal();
-
-                paintTweenPoints();
             }
         }
     }
@@ -1351,4 +1357,3 @@ void Tweener::updateZoomFactor(qreal scaleFactor)
 {
     realFactor = scaleFactor;
 }
-
