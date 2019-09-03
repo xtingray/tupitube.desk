@@ -65,7 +65,7 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
     public:
         enum GuiState { Manager = 1, Properties };
 
-        Configurator(QWidget *parent = 0);
+        Configurator(QWidget *parent = nullptr);
         ~Configurator();
 
         void loadTweenList(QList<QString> tweenList);
@@ -99,6 +99,8 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
 
         void undoSegment(const QPainterPath path);
         void redoSegment(const QPainterPath path);
+        int stepsTotal();
+        void updateSegments(const QPainterPath path);
 
         void enableSaveOption(bool flag);
 

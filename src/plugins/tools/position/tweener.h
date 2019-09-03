@@ -49,7 +49,6 @@
 #include <QKeySequence>
 #include <QGraphicsPathItem>
 #include <QPainterPath>
-#include <QMatrix>
 #include <QGraphicsLineItem>
 #include <QGraphicsView>
 #include <QDomDocument>
@@ -117,6 +116,7 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         void resetGUI();
         void removeTweenPoints();
         void paintTweenPoints();
+        void updateTweenPath();
 
         QMap<QString, TAction *> posActions;
         Configurator *configPanel;

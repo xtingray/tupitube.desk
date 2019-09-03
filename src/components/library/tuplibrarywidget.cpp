@@ -56,6 +56,8 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     setWindowIcon(QPixmap(THEME_DIR + "icons/library.png"));
     setWindowTitle(tr("Library"));
 
+    screen = QGuiApplication::screens().at(0);
+
     libraryDir = QDir(CONFIG_DIR + "libraries");
 
     display = new TupLibraryDisplay();
@@ -412,9 +414,15 @@ void TupLibraryWidget::removeCurrentItem()
     if (ask) {
         TOptionalDialog dialog(tr("Do you want to remove this object from Library?"), tr("Confirmation"), this);
         dialog.setModal(true);
-        QDesktopWidget desktop;
+        // QDesktopWidget desktop;
+
+        /*
         dialog.move(static_cast<int> ((desktop.screenGeometry().width() - dialog.sizeHint().width())/2),
                     static_cast<int> ((desktop.screenGeometry().height() - dialog.sizeHint().height())/2));
+        */
+
+        dialog.move(static_cast<int> ((screen->geometry().width() - dialog.sizeHint().width()) / 2),
+                    static_cast<int> ((screen->geometry().height() - dialog.sizeHint().height()) / 2));
 
         if (dialog.exec() == QDialog::Rejected)
             return;
@@ -1029,7 +1037,7 @@ void TupLibraryWidget::importImage(const QString &imagePath)
         #endif
 
         if (picWidth > projectWidth || picHeight > projectHeight) {
-            QDesktopWidget desktop;
+            // QDesktopWidget desktop;
             QMessageBox msgBox;
             msgBox.setWindowTitle(tr("Information"));
             msgBox.setIcon(QMessageBox::Question);
@@ -1038,8 +1046,15 @@ void TupLibraryWidget::importImage(const QString &imagePath)
             msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
             msgBox.setDefaultButton(QMessageBox::Ok);
             msgBox.show();
+
+            /*
             msgBox.move(static_cast<int> ((desktop.screenGeometry().width() - msgBox.width())/2),
                         static_cast<int> ((desktop.screenGeometry().height() - msgBox.height())/2));
+            */
+
+            msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
+                        static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
+
             int answer = msgBox.exec();
 
             if (answer == QMessageBox::Yes) {
@@ -1239,7 +1254,7 @@ QStringList TupLibraryWidget::naturalSort(QStringList photograms)
     for (int i = photograms.size()-1; i >= 0; i--) {
          for (int j = 1; j <= i; j++) {
               if (coll.compare(photograms.at(j-1), photograms.at(j)) > 0)
-                  photograms.swap(j-1, j);
+                  photograms.swapItemsAt(j-1, j);
          }
     }
 
@@ -1294,7 +1309,7 @@ void TupLibraryWidget::importImageSequence()
                 resize = true;
             }
 
-            QDesktopWidget desktop;
+            // QDesktopWidget desktop;
             QMessageBox msgBox;
             msgBox.setWindowTitle(tr("Information"));  
             msgBox.setIcon(QMessageBox::Question);
@@ -1303,8 +1318,14 @@ void TupLibraryWidget::importImageSequence()
             msgBox.setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
             msgBox.setDefaultButton(QMessageBox::Ok);
             msgBox.show();
+
+            /*
             msgBox.move(static_cast<int> ((desktop.screenGeometry().width() - msgBox.width())/2),
                         static_cast<int> ((desktop.screenGeometry().height() - msgBox.height())/2));
+            */
+
+            msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
+                        static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
 
             int answer = msgBox.exec();
             if (answer == QMessageBox::Ok) {
@@ -1315,23 +1336,6 @@ void TupLibraryWidget::importImageSequence()
                 libraryTree->createFolder(directory);
 
                 QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-
-                /*
-                QFont font = this->font();
-                font.setPointSize(8);
-
-                QProgressDialog progressDialog(this, Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::Dialog);
-                progressDialog.setFont(font);
-                progressDialog.setLabelText(tr("Loading images..."));
-                progressDialog.setCancelButton(nullptr);
-                progressDialog.setRange(1, filesTotal);
-                progressDialog.show();
-                int index = 1;
-
-                progressDialog.move(static_cast<int> ((desktop.screenGeometry().width() - progressDialog.width())/2),
-                                    static_cast<int> ((desktop.screenGeometry().height() - progressDialog.height())/2));
-
-                */
 
                 TupLibraryFolder *folder = new TupLibraryFolder(directory, project);
                 library->addFolder(folder);
@@ -1439,7 +1443,7 @@ void TupLibraryWidget::importSvgSequence()
         if (svgCounter > 0) {
             QString text = tr("%1 SVG files will be loaded.").arg(svgCounter);
 
-            QDesktopWidget desktop;
+            // QDesktopWidget desktop;
             QMessageBox msgBox;
             msgBox.setWindowTitle(tr("Information"));  
             msgBox.setIcon(QMessageBox::Question);
@@ -1448,8 +1452,15 @@ void TupLibraryWidget::importSvgSequence()
             msgBox.setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
             msgBox.setDefaultButton(QMessageBox::Ok);
             msgBox.show();
+
+            /*
             msgBox.move(static_cast<int> ((desktop.screenGeometry().width() - msgBox.width())/2),
                         static_cast<int> ((desktop.screenGeometry().height() - msgBox.height())/2));
+            */
+
+            msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
+                        static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
+
 
             int answer = msgBox.exec();
 
@@ -1460,22 +1471,6 @@ void TupLibraryWidget::importSvgSequence()
                 libraryTree->createFolder(directory);
 
                 QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-
-                /*
-                QFont font = this->font();
-                font.setPointSize(8);
-
-                QProgressDialog progressDialog(this, Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::Dialog);
-                progressDialog.setFont(font);
-                progressDialog.setLabelText(tr("Loading SVG files..."));
-                progressDialog.setCancelButton(nullptr);
-                progressDialog.setRange(1, filesTotal);
-                progressDialog.show();
-                int index = 1;
-
-                progressDialog.move(static_cast<int> ((desktop.screenGeometry().width() - progressDialog.width())/2),
-                                    static_cast<int> ((desktop.screenGeometry().height() - progressDialog.height())/2));
-                */
 
                 TupLibraryFolder *folder = new TupLibraryFolder(directory, project);
                 library->addFolder(folder);

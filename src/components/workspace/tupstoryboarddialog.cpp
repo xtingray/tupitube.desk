@@ -42,7 +42,8 @@
 #include <QPainter>
 #include <QFileDialog>
 #include <QDir>
-#include <QDesktopWidget>
+// #include <QDesktopWidget>
+#include <QScreen>
 #include <QPrintDialog>
 #include <QTextBrowser>
 #include <QDialogButtonBox>
@@ -65,12 +66,13 @@ TupStoryBoardDialog::TupStoryBoardDialog(bool network, TupExportInterface *plugi
     library = assets;
     utf = QLocale(QLocale::AnyLanguage, QLocale::AnyCountry);
 
-    QDesktopWidget desktop;
+    // QDesktopWidget desktop;
+    QScreen *screen = QGuiApplication::screens().at(0);
     scaledSize = QSize();
 
     if (pSize.width() > pSize.height()) {
-        if (size.width() + 500 > desktop.screenGeometry().width()) {
-            int w = desktop.screenGeometry().width() - 500;
+        if (size.width() + 500 > screen->geometry().width()) {
+            int w = screen->geometry().width() - 500;
             int h = (size.height() * w) / size.width();
             scaledSize.setWidth(w);
             scaledSize.setHeight(h);
@@ -78,8 +80,8 @@ TupStoryBoardDialog::TupStoryBoardDialog(bool network, TupExportInterface *plugi
             scaledSize = size;
         }
     } else {
-        if (size.height() + 400 > desktop.screenGeometry().height()) {
-            int h = desktop.screenGeometry().height() - 400;
+        if (size.height() + 400 > screen->geometry().height()) {
+            int h = screen->geometry().height() - 400;
             int w = (size.width() * h) / size.height();
             scaledSize.setWidth(w);
             scaledSize.setHeight(h);
@@ -88,8 +90,8 @@ TupStoryBoardDialog::TupStoryBoardDialog(bool network, TupExportInterface *plugi
         }
     }
 
-    if (scaledSize.height() + 400 > desktop.screenGeometry().height()) {
-        int h = desktop.screenGeometry().height() - 400;
+    if (scaledSize.height() + 400 > screen->geometry().height()) {
+        int h = screen->geometry().height() - 400;
         int w = (size.width() * h) / size.height();
         scaledSize.setWidth(w);
         scaledSize.setHeight(h);

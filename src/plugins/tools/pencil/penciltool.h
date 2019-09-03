@@ -60,7 +60,6 @@
 #include <QKeySequence>
 #include <QGraphicsPathItem>
 #include <QPainterPath>
-#include <QMatrix>
 #include <QGraphicsLineItem>
 #include <QGraphicsEllipseItem>
 

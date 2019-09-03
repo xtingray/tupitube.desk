@@ -36,6 +36,7 @@
 #include "tupcameradialog.h"
 
 #include <QCameraImageCapture>
+#include <QCameraInfo>
 #include <QLabel>
 #include <QBoxLayout>
 #include <QPushButton>
@@ -178,8 +179,8 @@ void TupCameraDialog::changeCameraDevice(const QString &reference)
 
 void TupCameraDialog::setCamera(const QString &reference)
 {
-    foreach(const QByteArray &deviceName, QCamera::availableDevices()) {
-        QString description = camera->deviceDescription(deviceName);
+    foreach(const QCameraInfo &deviceName, QCameraInfo::availableCameras()) {
+        QString description = deviceName.description();
         if (description.compare(reference) == 0) {
             camera = new QCamera(deviceName);
             break;

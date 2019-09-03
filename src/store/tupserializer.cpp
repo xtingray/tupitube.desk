@@ -49,7 +49,7 @@ QDomElement TupSerializer::properties(const QGraphicsItem *item, QDomDocument &d
 {
     QDomElement properties = doc.createElement("properties");
     
-    QString strMatrix = "matrix(";
+    QString matrixStr = "matrix(";
     QTransform m = item->transform();
     qreal a = m.m11();
     qreal b = m.m12();
@@ -58,9 +58,9 @@ QDomElement TupSerializer::properties(const QGraphicsItem *item, QDomDocument &d
     qreal e = m.dx();
     qreal f = m.dy();
     
-    strMatrix += QString::number(a) + "," + QString::number(b) + "," + QString::number(c) + "," + QString::number(d) + "," + QString::number(e) + "," + QString::number(f) + ")" ; 
+    matrixStr += QString::number(a) + "," + QString::number(b) + "," + QString::number(c) + "," + QString::number(d) + "," + QString::number(e) + "," + QString::number(f) + ")" ; 
 
-    properties.setAttribute("transform", strMatrix);
+    properties.setAttribute("transform", matrixStr);
     properties.setAttribute("rotation", item->data(TupGraphicObject::Rotate).toInt());
     double sx = item->data(TupGraphicObject::ScaleX).toDouble();
     properties.setAttribute("scale_x", QString::number(sx));
@@ -75,9 +75,8 @@ QDomElement TupSerializer::properties(const QGraphicsItem *item, QDomDocument &d
 
 void TupSerializer::loadProperties(QGraphicsItem *item, const QXmlAttributes &atts)
 {
-    QMatrix matrix;
-    TupSvg2Qt::svgmatrix2qtmatrix(atts.value("transform"), matrix);
-    QTransform transform(matrix);
+    QTransform transform;
+    TupSvg2Qt::svgmatrix2qtmatrix(atts.value("transform"), transform);
     item->setTransform(transform);
 
     QPointF pos;
@@ -96,9 +95,8 @@ void TupSerializer::loadProperties(QGraphicsItem *item, const QXmlAttributes &at
 void TupSerializer::loadProperties(QGraphicsItem *item, const QDomElement &element)
 {
     if (element.tagName() == "properties") {
-        QMatrix matrix;
-        TupSvg2Qt::svgmatrix2qtmatrix(element.attribute("transform"), matrix);
-        QTransform transform(matrix);
+        QTransform transform;
+        TupSvg2Qt::svgmatrix2qtmatrix(element.attribute("transform"), transform);
         item->setTransform(transform); 
 
         QPointF pos;
@@ -223,18 +221,18 @@ QDomElement TupSerializer::brush(const QBrush *brush, QDomDocument &doc)
         brushElement.setAttribute("alpha", brush->color().alpha());
     }
     
-    QString strMatrix = "matrix(";
-    QMatrix m = brush->matrix();
-    qreal a = m.m11();
-    qreal b = m.m12();
-    qreal c = m.m21();
-    qreal d = m.m22();
-    qreal e = m.dx();
-    qreal f = m.dy();
+    QString matrixStr = "matrix(";
+    QTransform t = brush->transform(); 
+    qreal a = t.m11();
+    qreal b = t.m12();
+    qreal c = t.m21();
+    qreal d = t.m22();
+    qreal e = t.dx();
+    qreal f = t.dy();
     
-    strMatrix += QString::number(a) + "," +QString::number(b) + "," + QString::number(c) + "," + QString::number(d) + "," + QString::number(e) + "," + QString::number(f) + ")"; 
+    matrixStr += QString::number(a) + "," + QString::number(b) + "," + QString::number(c) + "," + QString::number(d) + "," + QString::number(e) + "," + QString::number(f) + ")"; 
     
-    brushElement.setAttribute("transform", strMatrix);
+    brushElement.setAttribute("transform", matrixStr);
 
     return brushElement;
 }
@@ -251,9 +249,9 @@ void TupSerializer::loadBrush(QBrush &brush, const QXmlAttributes &atts)
         brush.setColor(Qt::transparent);
     }
     
-    QMatrix matrix;
-    TupSvg2Qt::svgmatrix2qtmatrix(atts.value("transform"), matrix);
-    brush.setMatrix(matrix);
+    QTransform transform;
+    TupSvg2Qt::svgmatrix2qtmatrix(atts.value("transform"), transform);
+    brush.setTransform(transform);
 }
 
 void TupSerializer::loadBrush(QBrush &brush, const QDomElement &element)
@@ -268,9 +266,9 @@ void TupSerializer::loadBrush(QBrush &brush, const QDomElement &element)
         brush.setColor(Qt::transparent);
     }
 
-    QMatrix matrix;
-    TupSvg2Qt::svgmatrix2qtmatrix(element.attribute("transform"), matrix);
-    brush.setMatrix(matrix);
+    QTransform transform;
+    TupSvg2Qt::svgmatrix2qtmatrix(element.attribute("transform"), transform);
+    brush.setTransform(transform);
 }
 
 QDomElement TupSerializer::pen(const QPen *pen, QDomDocument &doc)

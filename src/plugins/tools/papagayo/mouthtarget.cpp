@@ -67,7 +67,7 @@ void MouthTarget::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
     QRectF square = boundingRect();
     painter->setBrush(color);
-    painter->drawRoundRect(square);
+    painter->drawRoundedRect(square, 1, 1, Qt::AbsoluteSize);
 
     painter->save();
     color = QColor("white");

@@ -1,7 +1,7 @@
 QT += opengl core gui svg xml network
 CONFIG += plugin warn_on
 TEMPLATE = lib
-TARGET = tupilibavplugin
+TARGET = tupiffmpegplugin
 
 unix {
     !include(../../../../tupiglobal.pri) {
@@ -11,7 +11,7 @@ unix {
 
 win32 {
     include(../../../../win.pri)
-    include(../../../../libav.win.pri)
+    include(../../../../ffmpeg.win.pri)
 }
 
 mac {
@@ -21,11 +21,11 @@ mac {
 INSTALLS += target
 target.path = /plugins/
 
-HEADERS += tlibavmoviegenerator.h \
-           libavplugin.h
+HEADERS += tffmpegmoviegenerator.h \
+           ffmpegplugin.h
 
-SOURCES += tlibavmoviegenerator.cpp \
-           libavplugin.cpp
+SOURCES += tffmpegmoviegenerator.cpp \
+           ffmpegplugin.cpp
 
 FRAMEWORK_DIR = "../../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

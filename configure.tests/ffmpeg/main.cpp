@@ -41,34 +41,33 @@ extern "C" {
 }
 #endif
 
-#include <iostream>
-
 int main()
 {
-    av_register_all();
+    AVOutputFormat *format = av_guess_format("ffh264", NULL, NULL);
 
-    #if defined(K_LUCID)
-        AVOutputFormat *fmt = guess_format("mpeg", NULL, NULL);
-    #else
-        AVOutputFormat *fmt = av_guess_format("mpeg", NULL, NULL);
-    #endif
+    AVFormatContext *formatContext = avformat_alloc_context();
+    formatContext->oformat = format;
 
-    AVFormatContext *oc = avformat_alloc_context();
-    oc->oformat = fmt;
+    AVCodecContext *codecContext;
+    AVStream *stream;
 
-    AVCodecContext *c;
-    AVStream *st;
+    stream = avformat_new_stream(formatContext, 0);
 
-    // st = av_new_stream(oc, 0);
-    st = avformat_new_stream(oc, 0);
+    AVCodec *codec = avcodec_find_encoder(stream->codecpar->codec_id);
+    if (!codec) {
+        av_log(NULL, AV_LOG_ERROR, "Failed to find decoder for stream\n");
+        return AVERROR_DECODER_NOT_FOUND;
+    }
 
-    c = st->codec;
-    c->time_base.den = 24;
-    c->time_base.num = 1;
-    c->gop_size = 12;
-    c->pix_fmt = AV_PIX_FMT_YUV420P;
+    codecContext = avcodec_alloc_context3(codec);
+    codecContext->time_base.den = 24;
+    codecContext->time_base.num = 1;
+    codecContext->gop_size = 12;
+    codecContext->pix_fmt = AV_PIX_FMT_YUV420P;
 
-    av_free(oc);
+    av_free(formatContext);
+    av_free(codecContext);
+    av_free(stream);
 
     return 0;
 }

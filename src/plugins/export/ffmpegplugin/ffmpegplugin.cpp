@@ -33,22 +33,22 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "libavplugin.h"
+#include "ffmpegplugin.h"
 
-LibavPlugin::LibavPlugin()
+FFmpegPlugin::FFmpegPlugin()
 {
 }
 
-LibavPlugin::~LibavPlugin()
+FFmpegPlugin::~FFmpegPlugin()
 {
 }
 
-QString LibavPlugin::key() const
+QString FFmpegPlugin::key() const
 {
     return tr("Video Formats");
 }
 
-TupExportInterface::Formats LibavPlugin::availableFormats()
+TupExportInterface::Formats FFmpegPlugin::availableFormats()
 {
     // SQA: MPEG codec was removed because it crashes. Check the issue.
     // TupExportInterface::MPEG 
@@ -60,45 +60,45 @@ TupExportInterface::Formats LibavPlugin::availableFormats()
            TupExportInterface::MOV | TupExportInterface::GIF;
 }
 
-TMovieGeneratorInterface::Format LibavPlugin::videoFormat(TupExportInterface::Format format)
+TMovieGeneratorInterface::Format FFmpegPlugin::videoFormat(TupExportInterface::Format format)
 {
     switch (format) {
         case TupExportInterface::MP4:
             {
-                return TLibavMovieGenerator::MP4;
+                return TFFmpegMovieGenerator::MP4;
             }
         case TupExportInterface::GIF:
             {
-                return TLibavMovieGenerator::GIF;
+                return TFFmpegMovieGenerator::GIF;
             }
         case TupExportInterface::AVI:
             {
-                return TLibavMovieGenerator::AVI;
+                return TFFmpegMovieGenerator::AVI;
             }
         /* SQA: MPEG codec was removed because it crashes. Check the issue
         case TupExportInterface::MPEG:
             {
-                return TLibavMovieGenerator::MPEG;
+                return TFFmpegMovieGenerator::MPEG;
             }
         break;
         */
         case TupExportInterface::MOV:
             {
-                return TLibavMovieGenerator::MOV;
+                return TFFmpegMovieGenerator::MOV;
             }
         case TupExportInterface::WEBM:
             {
-                return TLibavMovieGenerator::WEBM;
+                return TFFmpegMovieGenerator::WEBM;
             }
         /* SQA: Obsolete formats
         case TupExportInterface::SWF:
             {
-                return TLibavMovieGenerator::SWF;
+                return TFFmpegMovieGenerator::SWF;
             }
         break;
         case TupExportInterface::ASF:
             {
-                return TLibavMovieGenerator::ASF;
+                return TFFmpegMovieGenerator::ASF;
             }
         break;
         */
@@ -108,18 +108,18 @@ TMovieGeneratorInterface::Format LibavPlugin::videoFormat(TupExportInterface::Fo
         // case TupExportInterface::SMIL:
         case TupExportInterface::NONE:
             {
-                return TLibavMovieGenerator::NONE;
+                return TFFmpegMovieGenerator::NONE;
             }
         default:
             {
-                return TLibavMovieGenerator::NONE;
+                return TFFmpegMovieGenerator::NONE;
             }
     }
 
-    // return TLibavMovieGenerator::NONE;
+    // return TFFmpegMovieGenerator::NONE;
 }
 
-bool LibavPlugin::exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes, TupExportInterface::Format fmt, 
+bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes, TupExportInterface::Format fmt, 
                                  const QSize &size, const QSize &newSize, int fps, TupLibrary *library)
 {
     Q_UNUSED(newSize);
@@ -129,17 +129,17 @@ bool LibavPlugin::exportToFormat(const QColor color, const QString &filePath, co
         duration += static_cast<qreal>(scene->framesCount()) / static_cast<qreal>(fps);
 
     TMovieGeneratorInterface::Format format = videoFormat(fmt);
-    if (format == TLibavMovieGenerator::NONE)
+    if (format == TFFmpegMovieGenerator::NONE)
         return false;
 
-    // SQA: Get sound files from library and pass them as QList to TLibavMovieGenerator 
-    TLibavMovieGenerator *generator = new TLibavMovieGenerator(format, size, fps, duration);
+    // SQA: Get sound files from library and pass them as QList to TFFmpegMovieGenerator 
+    TFFmpegMovieGenerator *generator = new TFFmpegMovieGenerator(format, size, fps, duration);
     TupAnimationRenderer renderer(color, library);
     {
         if (!generator->validMovieHeader()) {
             errorMsg = generator->getErrorMsg();
             #ifdef TUP_DEBUG
-                QString msg = "LibavPlugin::exportToFormat() - [ Fatal Error ] - Can't create video -> " + filePath;
+                QString msg = "FFmpegPlugin::exportToFormat() - [ Fatal Error ] - Can't create video -> " + filePath;
                 #ifdef Q_OS_WIN
                     qDebug() << msg;
                 #else
@@ -158,7 +158,7 @@ bool LibavPlugin::exportToFormat(const QColor color, const QString &filePath, co
             int i = 0;
             while (renderer.nextPhotogram()) {
                 #ifdef TUP_DEBUG
-                    QString msg = "LibavPlugin::exportToFormat() - Rendering frame -> " + QString::number(i);
+                    QString msg = "FFmpegPlugin::exportToFormat() - Rendering frame -> " + QString::number(i);
                     i++;
                     #ifdef Q_OS_WIN 
                         qDebug() << msg;
@@ -179,7 +179,7 @@ bool LibavPlugin::exportToFormat(const QColor color, const QString &filePath, co
     return true;
 }
 
-bool LibavPlugin::exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene, const QSize &size, TupLibrary *library)
+bool FFmpegPlugin::exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene, const QSize &size, TupLibrary *library)
 {
     Q_UNUSED(frameIndex);
     Q_UNUSED(color);
@@ -191,6 +191,6 @@ bool LibavPlugin::exportFrame(int frameIndex, const QColor color, const QString 
     return false;
 }
 
-QString LibavPlugin::getExceptionMsg() const {
+QString FFmpegPlugin::getExceptionMsg() const {
     return errorMsg;
 }

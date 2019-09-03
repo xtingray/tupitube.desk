@@ -40,6 +40,8 @@
 #include "tupitemgroup.h"
 #include "tuppixmapitem.h"
 
+#include <QScreen>
+
 TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent) : TupPaintAreaBase(parent, work->getDimension(), work->getLibrary())
 {
     #ifdef TUP_DEBUG
@@ -878,7 +880,7 @@ void TupPaintArea::copyItems()
 
                 opt.exposedRect = item->boundingRect();
                 opt.levelOfDetail = 1;
-                opt.matrix = item->sceneMatrix();
+                // opt.transform = item->sceneTransform();
                 opt.palette = palette();
 
                 item->paint(&painter, &opt, this);
@@ -1480,9 +1482,15 @@ void TupPaintArea::removeCurrentFrame()
     if (ask) {
         TOptionalDialog dialog(tr("Do you want to remove this frame?"), tr("Confirmation"), this);
         dialog.setModal(true);
-        QDesktopWidget desktop;
+        // QDesktopWidget desktop;
+        /*
         dialog.move(static_cast<int> ((desktop.screenGeometry().width() - dialog.sizeHint().width())/2),
                     static_cast<int> ((desktop.screenGeometry().height() - dialog.sizeHint().height())/2));
+        */
+
+        QScreen *screen = QGuiApplication::screens().at(0);
+        dialog.move(static_cast<int> ((screen->geometry().width() - dialog.sizeHint().width()) / 2),
+                    static_cast<int> ((screen->geometry().height() - dialog.sizeHint().height()) / 2));
 
         if (dialog.exec() == QDialog::Rejected)
             return;

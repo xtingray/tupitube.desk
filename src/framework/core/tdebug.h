@@ -65,7 +65,7 @@
 #include <QWidget>
 #include <QMessageBox>
 #include <QSyntaxHighlighter>
-#include <QMatrix>
+#include <QTransform>
 #include <QDesktopWidget>
 #include <QScrollBar>
 #include <QDebug>
@@ -118,7 +118,7 @@ class QVariant;
 class QPixmap;
 class QIcon;
 class QImage;
-class QMatrix;
+class QTransform;
 
 class QLinearGradient;
 class QRadialGradient;
@@ -371,7 +371,7 @@ class T_CORE_EXPORT TDebug
         TDebug& operator << (const QRadialGradient &);
         TDebug& operator << (const QConicalGradient &);
         TDebug& operator << (const QGradient *);
-        TDebug& operator << (const QMatrix &);
+        TDebug& operator << (const QTransform &);
         
         // static QTextBrowser *browser(QWidget *parent, int width);
         static QTextEdit *browser(QWidget *parent, int width);

@@ -40,5 +40,5 @@ module RQonf
     CONFIG["libdir"] = "/usr/local/tupitube.desk/lib"
     CONFIG["includedir"] = "/usr/local/tupitube.desk/include"
     CONFIG["sharedir"] = "/usr/local/tupitube.desk/share"
-    CONFIG["libavdir"] = "/usr"
+    CONFIG["ffmpegdir"] = "/usr"
 end

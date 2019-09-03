@@ -15,10 +15,7 @@ installed the next list of dependencies in your computer:
     * Qt: The full development toolkit used to create TupiTube 
     * ruby: A script language used to do the configuration process previous 
       to the compilation
-    * libavcodec-dev: A subcomponent of the project libav, to deal with 
-      video manipulation
-    * libavformat-dev: A subcomponent of the project libav, to deal with 
-      video manipulation
+    * ffmpeg: A powerful library to encode and decode video files
     * zlib-dev: A file-compression library
     * quazip: A very handy API to deal with zip files
 
@@ -28,7 +25,7 @@ these are the commands they should run to install TupiTube dependencies:
 - Open a terminal (from Aplications -> Accesories) and type:
    % sudo apt-get install build-essential    [Press enter]
    % sudo apt-get install ruby    [Press enter]
-   % sudo apt-get install libavcodec-dev libavformat-dev    [Press enter]
+   % sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev    [Press enter]
    % sudo apt-get install libqt5-gui qt5-qmake qt5-dev-tools    [Press enter]
    % sudo apt-get install zlib1g-dev    [Press enter]
    % sudo apt-get install libquazip0-dev    [Press enter]

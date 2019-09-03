@@ -415,7 +415,8 @@ bool TupScene::moveLayer(int from, int to)
          TupFrame *frame = frames.at(i);
          frame->updateZLevel(zLevelIndex);
     }
-    layers.swap(from, to);
+    // layers.swap(from, to);
+    layers.swapItemsAt(from, to);
 
     return true;
 }

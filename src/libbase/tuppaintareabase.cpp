@@ -52,6 +52,7 @@
 #include <QApplication>
 #include <cmath>
 #include <QGraphicsSceneMouseEvent>
+#include <QScreen>
 
 TupPaintAreaBase::TupPaintAreaBase(QWidget *parent, QSize dimension, TupLibrary *library) : QGraphicsView(parent)
 {
@@ -262,8 +263,16 @@ void TupPaintAreaBase::keyPressEvent(QKeyEvent *event)
         QDesktopWidget desktop;
         dial->setAngle(angle);
         dial->show();
+
+        /*
         dial->move((int) (desktop.screenGeometry().width() - dial->sizeHint().width())/2,
                       (int) (desktop.screenGeometry().height() - dial->sizeHint().height())/2);
+        */
+
+        QScreen *screen = QGuiApplication::screens().at(0);
+        dial->move(static_cast<int> ((screen->geometry().width() - dial->sizeHint().width()) / 2),
+                   static_cast<int> ((screen->geometry().height() - dial->sizeHint().height()) / 2));
+
         return;
     }
 

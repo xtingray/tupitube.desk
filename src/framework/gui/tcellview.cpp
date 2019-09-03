@@ -61,7 +61,6 @@ void TCellViewItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem
     Q_ASSERT(model);
 
     QVariant value;
-
     QStyleOptionViewItem opt = option;
 
     // do layout
@@ -76,10 +75,10 @@ void TCellViewItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem
     if (value.isValid()) {
         QBrush brush = qvariant_cast<QBrush>(value);
         if (brush.gradient()) {
-            QMatrix m;
-            m.translate(option.rect.topLeft().x(), option.rect.topLeft().y());
-            m.scale((float)(option.rect.width())/100.0 , (float)(option.rect.height())/100.0);
-            brush.setMatrix(m);
+            QTransform t;
+            t.translate(option.rect.topLeft().x(), option.rect.topLeft().y());
+            t.scale((float)(option.rect.width())/100.0, (float)(option.rect.height()) / 100.0);
+            brush.setTransform(t);
             painter->fillRect(option.rect, brush);
         } else {
             painter->fillRect(option.rect, brush);

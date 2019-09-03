@@ -61,7 +61,8 @@ void TFlatButton::paintEvent(QPaintEvent *)
     QLinearGradient gradient(start, rect.bottomLeft());
     gradient.setSpread(QGradient::ReflectSpread);
     gradient.setColorAt(0, palette().button().color());
-    gradient.setColorAt(1, palette().background().color());
+    // gradient.setColorAt(1, palette().background().color());
+    gradient.setColorAt(1, palette().window().color()); 
     
     painter.fillRect(rect, QBrush(gradient));
     

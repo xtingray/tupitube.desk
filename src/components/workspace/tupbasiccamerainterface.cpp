@@ -42,9 +42,10 @@
 #include <QDir>
 #include <QBoxLayout>
 #include <QPushButton>
-#include <QDesktopWidget>
+#include <QScreen>
+// #include <QDesktopWidget>
 
-TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QByteArray> cameraDevices, QComboBox *devicesCombo,
+TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QCameraInfo> cameraDevices, QComboBox *devicesCombo,
                                                  int cameraIndex, const QSize cameraSize, int i, QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
@@ -62,8 +63,9 @@ TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QBy
     path = randomPath();
     QSize displaySize = cameraSize;
     widgetStack = new QStackedWidget();
-    QDesktopWidget desktop;
-    int desktopWidth = desktop.screenGeometry().width();
+    // QDesktopWidget desktop;
+    QScreen *screen = QGuiApplication::screens().at(0);
+    int desktopWidth = screen->geometry().width();
 
     if (cameraSize.width() > desktopWidth) {
         int width = desktopWidth / 2;
@@ -81,7 +83,7 @@ TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QBy
     }
 
     if (cameraDevices.count() == 1) {
-        QByteArray device = cameraDevices.at(0);
+        QCameraInfo device = cameraDevices.at(0);
         QCamera *camera = new QCamera(device);
         QCameraImageCapture *imageCapture = new QCameraImageCapture(camera);
         connect(imageCapture, SIGNAL(imageSaved(int, const QString)),
@@ -95,7 +97,7 @@ TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QBy
         widgetStack->addWidget(viewfinder);
     } else {
         for (int i=0; i < cameraDevices.size(); i++) {
-             QByteArray device = cameraDevices.at(i);
+             QCameraInfo device = cameraDevices.at(i);
              QCamera *camera = new QCamera(device); 
              QCameraImageCapture *imageCapture = new QCameraImageCapture(camera);
              connect(imageCapture, SIGNAL(imageSaved(int, const QString)),

@@ -227,10 +227,10 @@ void TupTimeLineHeader::moveHeaderSection(int position, int newPosition, bool is
     if (isLocalRequest) {
         sectionOnMotion = true;
         moveSection(visualIndex(position), visualIndex(newPosition));
-        layers.swap(position, newPosition);
+        layers.swapItemsAt(position, newPosition);
         sectionOnMotion = false;
     } else {
-        layers.swap(position, newPosition);
+        layers.swapItemsAt(position, newPosition);
     }
 }
 

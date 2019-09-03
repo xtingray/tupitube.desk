@@ -6,7 +6,7 @@
  *                                                                         *
  *   Developers:                                                           *
  *   2010:                                                                 *
- *    Gustavo Gonzalez / xtingray                                          *
+ *    Gustav Gonzalez / xtingray                                           *
  *                                                                         *
  *   KTooN's versions:                                                     * 
  *                                                                         *
@@ -33,40 +33,79 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef LIBAVPLUGIN_H
-#define LIBAVPLUGIN_H
+#ifndef TFFMPEGMOVIEGENERATOR_H
+#define TFFMPEGMOVIEGENERATOR_H
 
 #include "tglobal.h"
-#include "tupexportpluginobject.h"
-#include "tupexportinterface.h"
-#include "tmoviegeneratorinterface.h"
-#include "tlibavmoviegenerator.h"
-#include "tuplayer.h"
-#include "tupanimationrenderer.h"
+#include "tmoviegenerator.h"
 
-#include <QImage>
-#include <QPainter>
+#ifdef __cplusplus
+extern "C" {
+#include "libavutil/channel_layout.h"
+#include "libavutil/mathematics.h"
+#include "libavutil/opt.h"
+#include "libavcodec/avcodec.h"
+#include "libavformat/avformat.h"
+#include "libavresample/avresample.h"
+// #include "libswscale/swscale.h"
+}
+#endif
 
-class TUPITUBE_PLUGIN LibavPlugin : public TupExportPluginObject
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55,28,1)
+#define av_frame_alloc  avcodec_alloc_frame
+#endif
+
+#define STREAM_DURATION 4.73684
+
+class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
 {
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "com.maefloresta.tupi.TupToolInterface" FILE "libavplugin.json")
-
     public:
-        LibavPlugin();
-        virtual ~LibavPlugin();
-        virtual QString key() const;
-        TupExportInterface::Formats availableFormats();
+        TFFmpegMovieGenerator(TMovieGeneratorInterface::Format format, const QSize &size, int fps = 24,
+                             double duration = 0);
+        ~TFFmpegMovieGenerator();
 
-        virtual bool exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes, TupExportInterface::Format format, 
-                                    const QSize &size, const QSize &newSize, int fps, TupLibrary *library);
-        virtual bool exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene, const QSize &size, TupLibrary *library);
+        virtual bool validMovieHeader();
+        virtual QString getErrorMsg() const;
+        void saveMovie(const QString &filename);
 
-        virtual QString getExceptionMsg() const;
-        QString errorMsg;
+    protected:
+        void createMovieFile(const QString &fileName);
+        virtual void handle(const QImage &image);
+        virtual bool beginVideo();
+        virtual void endVideo();
 
     private:
-        TMovieGeneratorInterface::Format videoFormat(TupExportInterface::Format format);
+        bool openVideo(AVCodec *codec, AVStream *st);
+        AVStream * addVideoStream(AVFormatContext *oc, AVCodec **codec, enum AVCodecID codec_id,
+                                  const QString &movieFile, int width, int height, int fps);
+        bool writeVideoFrame(const QString &movieFile, const QImage &image);
+        void RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint iRGBIncrement,
+                          bool bSwapRGB, int width, int height);
+        void chooseFileExtension(int format);
+        void closeVideo(AVStream *st);
+
+        AVFrame *videoFrame;
+        AVStream *video_st;
+        AVFormatContext *oc;
+        AVOutputFormat *fmt;
+
+        QString errorMsg;
+        int frameCount;
+        QString movieFile;
+        int fps;
+        double streamDuration;
+        bool exception;
+
+        bool hasSounds;
+        int64_t next_pts;
+
+        /*
+        AVFrame *audioFrame;
+        AVFrame *tmpAudioFrame;
+        float t;
+        float tincr;
+        float tincr2;
+        */
 };
 
 #endif

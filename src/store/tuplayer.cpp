@@ -328,7 +328,8 @@ bool TupLayer::exchangeFrame(int from, int to)
         return false;
     }
 
-    frames.swap(from, to);
+    // frames.swap(from, to);
+    frames.swapItemsAt(from, to);
 
     return true;
 }

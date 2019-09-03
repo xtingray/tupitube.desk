@@ -42,12 +42,13 @@
 #include <QBoxLayout>
 #include <QIcon>
 #include <QDir>
-#include <QDesktopWidget>
+// #include <QDesktopWidget>
+#include <QScreen>
 #include <QPushButton>
 #include <QSpinBox>
 #include <QColorDialog>
 
-TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString &resolution, QByteArray cameraDevice, 
+TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString &resolution, QCameraInfo cameraDevice, 
                                        const QSize cameraSize, int i, QWidget *parent) : QDialog(parent)
 {
     #ifdef TUP_DEBUG
@@ -66,8 +67,9 @@ TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString 
     counter = i;
 
     QSize displaySize = cameraSize;
-    QDesktopWidget desktop;
-    int desktopWidth = desktop.screenGeometry().width();
+    // QDesktopWidget desktop;
+    QScreen *screen = QGuiApplication::screens().at(0);
+    int desktopWidth = screen->geometry().width();
 
     if (cameraSize.width() > desktopWidth) {
         int width = desktopWidth / 2;
@@ -93,7 +95,7 @@ TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString 
     connect(camera, SIGNAL(error(QCamera::Error)), this, SLOT(error(QCamera::Error)));
     connect(imageCapture, SIGNAL(imageSaved(int, const QString)), this, SLOT(imageSavedFromCamera(int, const QString)));
 
-    screen = new TupReflexRenderArea(displaySize);
+    cameraScreen = new TupReflexRenderArea(displaySize);
 
     QWidget *menuWidget = new QWidget;
     QBoxLayout *menuLayout = new QBoxLayout(QBoxLayout::TopToBottom, menuWidget);
@@ -219,7 +221,7 @@ TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString 
     menuLayout->addStretch();
 
     QBoxLayout *dialogLayout = new QBoxLayout(QBoxLayout::LeftToRight, this); 
-    dialogLayout->addWidget(screen);
+    dialogLayout->addWidget(cameraScreen);
     dialogLayout->addWidget(menuWidget);
 }
 
@@ -297,8 +299,8 @@ void TupReflexInterface::reset()
 
     QDir dir(path);
     foreach (QString file, dir.entryList(QStringList() << "*.jpg")) {
-             QString absolute = dir.absolutePath() + "/" + file;
-             QFile::remove(absolute);
+        QString absolute = dir.absolutePath() + "/" + file;
+        QFile::remove(absolute);
     }
 
     if (!dir.rmdir(dir.absolutePath())) {
@@ -369,7 +371,7 @@ void TupReflexInterface::imageSavedFromCamera(int id, const QString folder)
         return;
 
     emit pictureHasBeenSelected(counter, folder);
-    screen->addPixmap(folder);
+    cameraScreen->addPixmap(folder);
 
     if (!historyButton->isVisible())
         historyButton->setVisible(true);
@@ -377,43 +379,43 @@ void TupReflexInterface::imageSavedFromCamera(int id, const QString folder)
 
 void TupReflexInterface::enableActionSafeArea()
 {
-    screen->enableSafeArea(safeAreaButton->isChecked());
+    cameraScreen->enableSafeArea(safeAreaButton->isChecked());
 }
 
 void TupReflexInterface::enableGrid()
 {
     bool flag = gridButton->isChecked();
     gridWidget->setVisible(flag);
-    screen->enableGrid(flag);
+    cameraScreen->enableGrid(flag);
 }
 
 void TupReflexInterface::updateColour()
 {
     QColor color = QColorDialog::getColor(gridColor, this);
     if (color.isValid()) {
-        screen->updateGridColor(color);
+        cameraScreen->updateGridColor(color);
         colorCell->setBrush(QBrush(color));
     }
 }
 
 void TupReflexInterface::updateGridSpacing(int space)
 {
-    screen->updateGridSpacing(space);
+    cameraScreen->updateGridSpacing(space);
 }
 
 void TupReflexInterface::showHistory()
 {
     bool flag = historyButton->isChecked();
     historyWidget->setVisible(flag);
-    screen->showHistory(flag);
+    cameraScreen->showHistory(flag);
 }
 
 void TupReflexInterface::updateImagesOpacity(double opacity)
 {
-    screen->updateImagesOpacity(opacity);
+    cameraScreen->updateImagesOpacity(opacity);
 }
 
 void TupReflexInterface::updateImagesDepth(int depth)
 {
-    screen->updateImagesDepth(depth);
+    cameraScreen->updateImagesDepth(depth);
 }

@@ -41,7 +41,7 @@
 
 #include <QMainWindow>
 #include <QApplication>
-#include <QDesktopWidget>
+// #include <QDesktopWidget>
 
 TupCameraWidget::TupCameraWidget(TupProject *work, bool isNetworked, QWidget *parent) : QFrame(parent)
 {
@@ -53,12 +53,13 @@ TupCameraWidget::TupCameraWidget(TupProject *work, bool isNetworked, QWidget *pa
         #endif
     #endif
 
-    QDesktopWidget desktop;
+    // QDesktopWidget desktop;
+    screen = QGuiApplication::screens().at(0);
 
     QSize projectSize = work->getDimension();
     double factor = static_cast<double>(projectSize.width()) / static_cast<double>(projectSize.height());
     int percent = 40;
-    int height = desktop.screenGeometry().height();
+    int height = screen->geometry().height();
 
     #ifdef TUP_DEBUG
         qDebug() << "[TupCameraWidget::()] - screen height: " << height;
@@ -74,7 +75,7 @@ TupCameraWidget::TupCameraWidget(TupProject *work, bool isNetworked, QWidget *pa
             percent = 55;
     }
 
-    int desktopWidth = (percent * desktop.screenGeometry().width()) / 100;
+    int desktopWidth = (percent * screen->geometry().width()) / 100;
     int desktopHeight = (percent * height) / 100;
     screenDimension = QSize(desktopWidth, desktopHeight);
 
@@ -119,10 +120,10 @@ TupCameraWidget::~TupCameraWidget()
         status = nullptr;
     }
 
-    if (screen) {
-        screen->clearPhotograms();
-        delete screen;
-        screen = nullptr;
+    if (previewScreen) {
+        previewScreen->clearPhotograms();
+        delete previewScreen;
+        previewScreen = nullptr;
     }
 }
 
@@ -242,12 +243,12 @@ void TupCameraWidget::addTimerPanel()
 
 void TupCameraWidget::addAnimationDisplay()
 {
-    screen = new TupScreen(project, playerDimension, isScaled);
-    screen->setFixedSize(playerDimension);
-    connect(screen, SIGNAL(isRendering(int)), this, SLOT(updateProgressBar(int)));
-    connect(screen, SIGNAL(frameChanged(int)), this, SLOT(updateTimerPanel(int)));
+    previewScreen = new TupScreen(project, playerDimension, isScaled);
+    previewScreen->setFixedSize(playerDimension);
+    connect(previewScreen, SIGNAL(isRendering(int)), this, SLOT(updateProgressBar(int)));
+    connect(previewScreen, SIGNAL(frameChanged(int)), this, SLOT(updateTimerPanel(int)));
 
-    layout->addWidget(screen, 0, Qt::AlignCenter);
+    layout->addWidget(previewScreen, 0, Qt::AlignCenter);
 }
 
 void TupCameraWidget::addControlsBar()
@@ -256,10 +257,10 @@ void TupCameraWidget::addControlsBar()
 
     connect(cameraBar, SIGNAL(play()), this, SLOT(doPlay()));
     connect(cameraBar, SIGNAL(playBack()), this, SLOT(doPlayBack()));
-    connect(cameraBar, SIGNAL(pause()), screen, SLOT(pause()));
-    connect(cameraBar, SIGNAL(stop()), screen, SLOT(stop()));
-    connect(cameraBar, SIGNAL(ff()), screen, SLOT(nextFrame()));
-    connect(cameraBar, SIGNAL(rew()), screen, SLOT(previousFrame()));
+    connect(cameraBar, SIGNAL(pause()), previewScreen, SLOT(pause()));
+    connect(cameraBar, SIGNAL(stop()), previewScreen, SLOT(stop()));
+    connect(cameraBar, SIGNAL(ff()), previewScreen, SLOT(nextFrame()));
+    connect(cameraBar, SIGNAL(rew()), previewScreen, SLOT(previousFrame()));
 
     layout->addWidget(cameraBar, 0, Qt::AlignCenter);
 }
@@ -269,7 +270,7 @@ void TupCameraWidget::addStatusPanel(bool isNetworked)
     status = new TupCameraStatus(isNetworked);
     status->setScenes(project);
     connect(status, SIGNAL(sceneIndexChanged(int)), this, SLOT(selectScene(int)));
-    connect(status, SIGNAL(muteEnabled(bool)), screen, SLOT(enableMute(bool)));
+    connect(status, SIGNAL(muteEnabled(bool)), previewScreen, SLOT(enableMute(bool)));
     // connect(status, SIGNAL(fpsChanged(int)), this, SLOT(setFPS(int)));
     // connect(status, SIGNAL(fpsChanged(int)), this, SLOT(setDuration(int)));
     connect(status, SIGNAL(fpsChanged(int)), this, SLOT(updateFPS(int)));
@@ -311,11 +312,11 @@ void TupCameraWidget::setDimensionLabel(const QSize dimension)
 
         // If the project is wider than higher
         if (projectWidth > projectHeight) {
-            int newH = (projectHeight*screenWidth)/projectWidth;
+            int newH = (projectHeight * screenWidth) / projectWidth;
             playerDimension = QSize(screenWidth, newH);
             proportion = static_cast<double>(projectWidth) / static_cast<double>(screenWidth);
         } else { // Project is higher than wider
-            int newW = (projectWidth*screenHeight)/projectHeight;
+            int newW = (projectWidth * screenHeight) / projectHeight;
             playerDimension = QSize(newW, screenHeight);
             proportion = static_cast<double>(projectHeight) / static_cast<double>(screenHeight);
         }
@@ -333,7 +334,7 @@ void TupCameraWidget::setDimensionLabel(const QSize dimension)
 
 void TupCameraWidget::setLoop()
 {
-    screen->setLoop(status->isLooping());
+    previewScreen->setLoop(status->isLooping());
 }
 
 QSize TupCameraWidget::sizeHint() const
@@ -352,16 +353,16 @@ void TupCameraWidget::doPlay()
     #endif
 #endif
 
-    screen->play();
+    previewScreen->play();
     bool flag = false;
-    if (screen->currentSceneFrames() > 1)
+    if (previewScreen->currentSceneFrames() > 1)
         flag = true;
     status->enableExportButton(flag);
 }
 
 void TupCameraWidget::doPlayBack()
 {
-    screen->playBack();
+    previewScreen->playBack();
 }
 
 void TupCameraWidget::doPause()
@@ -373,25 +374,25 @@ void TupCameraWidget::doPause()
         T_FUNCINFO;
     #endif
 #endif
-    bool playOn = screen->isPlaying();
+    bool playOn = previewScreen->isPlaying();
     cameraBar->updatePlayButton(!playOn);
-    screen->pause();
+    previewScreen->pause();
 }
 
 void TupCameraWidget::doStop()
 {
     cameraBar->updatePlayButton(false);
-    screen->stop();
+    previewScreen->stop();
 }
 
 void TupCameraWidget::nextFrame()
 {
-    screen->nextFrame();
+    previewScreen->nextFrame();
 }
 
 void TupCameraWidget::previousFrame()
 {
-    screen->previousFrame();
+    previewScreen->previousFrame();
 }
 
 bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
@@ -466,13 +467,13 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
         }
     }
 
-    return screen->handleResponse(response);
+    return previewScreen->handleResponse(response);
 }
 
 void TupCameraWidget::setFPS(int fps)
 {
     project->setFPS(fps);
-    screen->setFPS(fps);
+    previewScreen->setFPS(fps);
     fpsDelta = 1.0/fps;
 }
 
@@ -495,7 +496,7 @@ void TupCameraWidget::setStatusFPS(int fps)
     status->blockSignals(false);
 
     project->setFPS(fps);
-    screen->setFPS(fps);
+    previewScreen->setFPS(fps);
     setDuration(fps);
 }
 
@@ -512,25 +513,25 @@ void TupCameraWidget::updateFramesTotal(int sceneIndex)
 
 void TupCameraWidget::exportDialog()
 {
-    if (screen->isPlaying())
-        screen->pause();
+    if (previewScreen->isPlaying())
+        previewScreen->pause();
 
-    QDesktopWidget desktop;
+    // QDesktopWidget desktop;
     TupExportWidget *exportWidget = new TupExportWidget(project, this);
     exportWidget->show();
-    exportWidget->move(static_cast<int> ((desktop.screenGeometry().width() - exportWidget->width()) / 2),
-                       static_cast<int> ((desktop.screenGeometry().height() - exportWidget->height()) / 2));
+    exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),
+                       static_cast<int> ((screen->geometry().height() - exportWidget->height()) / 2));
     exportWidget->exec();
 }
 
 void TupCameraWidget::postDialog()
 {
-    QDesktopWidget desktop;
+    // QDesktopWidget desktop;
 
     TupExportWidget *exportWidget = new TupExportWidget(project, this, false);
     exportWidget->show();
-    exportWidget->move(static_cast<int> ((desktop.screenGeometry().width() - exportWidget->width()) / 2),
-                       static_cast<int> ((desktop.screenGeometry().height() - exportWidget->height()) / 2));
+    exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),
+                       static_cast<int> ((screen->geometry().height() - exportWidget->height()) / 2));
     exportWidget->exec();
 
     if (exportWidget->isComplete() != QDialog::Rejected) {
@@ -543,25 +544,25 @@ void TupCameraWidget::postDialog()
 
 void TupCameraWidget::selectScene(int index)
 {
-    if (index != screen->currentSceneIndex()) {
+    if (index != previewScreen->currentSceneIndex()) {
         TupProjectRequest event = TupRequestBuilder::createSceneRequest(index, TupProjectRequest::Select);
         emit requestTriggered(&event);
 
         doStop();
-        screen->updateSceneIndex(index);
-        screen->updateAnimationArea();
+        previewScreen->updateSceneIndex(index);
+        previewScreen->updateAnimationArea();
         doPlay();
     }
 }
 
 void TupCameraWidget::updateScenes(int sceneIndex)
 {
-    screen->resetSceneFromList(sceneIndex);
+    previewScreen->resetSceneFromList(sceneIndex);
 }
 
 void TupCameraWidget::updateFirstFrame()
 {
-    screen->updateAnimationArea();
+    previewScreen->updateAnimationArea();
     currentFrameBox->setText("1");
 }
 
@@ -591,7 +592,7 @@ void TupCameraWidget::updateTimerPanel(int currentFrame)
 
 void TupCameraWidget::updateSoundItems()
 {
-    screen->loadSoundRecords();
+    previewScreen->loadSoundRecords();
 }
 
 void TupCameraWidget::infoDialog()
@@ -616,5 +617,5 @@ void TupCameraWidget::saveProjectInfo(const QString &tags, const QString &author
 
 void TupCameraWidget::clearMemory()
 {
-    screen->clearPhotograms();
+    previewScreen->clearPhotograms();
 }

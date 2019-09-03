@@ -38,6 +38,8 @@
 #include "tupcrashhandler.h"
 #include "tupcrashwidget.h"
 
+#include <QScreen>
+
 TupCrashHandler *TupCrashHandler::m_instance = 0;
 
 void crashTrapper(int sig);
@@ -302,13 +304,14 @@ void crashTrapper(int sig)
         execInfo = runCommand("file " + BIN_DIR + "tupi.bin");
 
         // Widget
-        QDesktopWidget desktop;
+        // QDesktopWidget desktop;
+        QScreen *screen = QGuiApplication::screens().at(0);
         TupCrashWidget widget(sig);
         widget.setPid(::getpid());
         widget.addBacktracePage(execInfo, bt);
         widget.exec();
-        widget.move((int) (desktop.screenGeometry().width() - widget.width())/2,
-                    (int) (desktop.screenGeometry().height() - widget.height())/2);
+        widget.move((int) (screen->geometry().width() - widget.width()) / 2,
+                    (int) (screen->geometry().height() - widget.height()) / 2);
 
         if (!isActive)
             application->exec();

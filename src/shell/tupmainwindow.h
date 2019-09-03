@@ -79,7 +79,9 @@
 #include <QKeySequence>
 #include <QTextBrowser>
 #include <QToolBar>
-#include <QDesktopWidget>
+// #include <QDesktopWidget>
+#include <QScreen>
+
 
 #include <QDragEnterEvent>
 #include <QDropEvent>
@@ -218,6 +220,7 @@ class TupMainWindow : public TabbedMainWindow
         bool lastSave;
 
     private:
+        QScreen *screen;
         TupDocumentView *animationTab;
         TupAnimationspace *playerTab;
         TupTwitterWidget *newsTab;

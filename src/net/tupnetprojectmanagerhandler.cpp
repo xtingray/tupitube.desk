@@ -35,6 +35,8 @@
 
 #include "tupnetprojectmanagerhandler.h"
 
+#include <QScreen>
+
 TupNetProjectManagerHandler::TupNetProjectManagerHandler(QObject *parent) : TupAbstractProjectHandler(parent)
 {
     #ifdef TUP_DEBUG
@@ -416,8 +418,16 @@ void TupNetProjectManagerHandler::handlePackage(const QString &root, const QStri
                        dialog = new TupListProjectDialog(works, contributions, params->server());
                        QDesktopWidget desktop;
                        dialog->show();
+
+                       /*
                        dialog->move((int) (desktop.screenGeometry().width() - dialog->width())/2,
                                        (int) (desktop.screenGeometry().height() - dialog->height())/2);
+                       */
+
+                       QScreen *screen = QGuiApplication::screens().at(0);
+                       dialog->move(static_cast<int> ((screen->geometry().width() - dialog->width()) / 2),
+                                    static_cast<int> ((screen->geometry().height() - dialog->height()) / 2));
+
                        dialogIsOpen = true;
 
                        foreach (TupProjectListParser::ProjectInfo info, parser.works())

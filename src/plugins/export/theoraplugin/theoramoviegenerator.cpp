@@ -363,7 +363,7 @@ unsigned char TheoraMovieGenerator::clamp(double d)
 void TheoraMovieGenerator::handle(const QImage &image)
 {
     framesCounter++;
-    QByteArray imageBytes((char *) image.bits(), image.byteCount());
+    QByteArray imageBytes((char *) image.bits(), image.sizeInBytes());
 
     unsigned char *yuv = (unsigned char *) malloc(width * height * 3);
     unsigned int x;

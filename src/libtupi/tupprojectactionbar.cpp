@@ -35,7 +35,8 @@
 
 #include "tupprojectactionbar.h"
 
-#include <QDesktopWidget>
+// #include <QDesktopWidget>
+#include <QScreen>
 
 TupProjectActionBar::TupProjectActionBar(const QString &tag, QList<Action> actionsList,
                                          Qt::Orientation direction, QWidget *parent) : QWidget(parent)
@@ -269,6 +270,10 @@ TImageButton *TupProjectActionBar::button(Action action)
 
 void TupProjectActionBar::emitActionSelected(int action)
 {
+    QScreen *screen = QGuiApplication::screens().at(0); 
+    int screenW = screen->geometry().width();
+    int screenH = screen->geometry().height();
+
     switch(action)
     {
         case RemoveFrame:
@@ -279,9 +284,9 @@ void TupProjectActionBar::emitActionSelected(int action)
             if (ask) {
                 TOptionalDialog dialog(tr("Do you want to remove current selection?"), tr("Confirmation"), this);
                 dialog.setModal(true);
-                QDesktopWidget desktop;
-                dialog.move((int) (desktop.screenGeometry().width() - dialog.sizeHint().width())/2,
-                            (int) (desktop.screenGeometry().height() - dialog.sizeHint().height())/2);
+
+                move(static_cast<int> ((screenW - dialog.sizeHint().width()) / 2),
+                     static_cast<int> ((screenH - dialog.sizeHint().height()) / 2));
 
                 if (dialog.exec() == QDialog::Rejected)
                     return;
@@ -299,9 +304,9 @@ void TupProjectActionBar::emitActionSelected(int action)
 
             if (ask) {
                 TOptionalDialog dialog(tr("Do you want to remove this layer?"), tr("Confirmation"), this);
-                QDesktopWidget desktop;
-                dialog.move((int) (desktop.screenGeometry().width() - dialog.sizeHint().width())/2,
-                            (int) (desktop.screenGeometry().height() - dialog.sizeHint().height())/2);
+
+                move(static_cast<int> ((screenW - dialog.sizeHint().width()) / 2),
+                     static_cast<int> ((screenH - dialog.sizeHint().height()) / 2));
 
                 if (dialog.exec() == QDialog::Rejected)
                     return;
@@ -319,9 +324,9 @@ void TupProjectActionBar::emitActionSelected(int action)
 
             if (ask) {
                 TOptionalDialog dialog(tr("Do you want to remove this scene?"), tr("Confirmation"), this);
-                QDesktopWidget desktop;
-                dialog.move((int) (desktop.screenGeometry().width() - dialog.sizeHint().width())/2,
-                            (int) (desktop.screenGeometry().height() - dialog.sizeHint().height())/2);
+
+                move(static_cast<int> ((screenW - dialog.sizeHint().width()) / 2),
+                     static_cast<int> ((screenH - dialog.sizeHint().height()) / 2));
 
                 if (dialog.exec() == QDialog::Rejected)
                     return;

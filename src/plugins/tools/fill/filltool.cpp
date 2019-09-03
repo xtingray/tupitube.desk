@@ -254,7 +254,7 @@ void FillTool::aboutToChangeTool()
 
 QPainterPath FillTool::mapPath(const QPainterPath &path, const QPointF &pos)
 {
-    QMatrix transform;
+    QTransform transform;
     transform.translate(pos.x(), pos.y());
     
     QPainterPath painter = transform.map(path);

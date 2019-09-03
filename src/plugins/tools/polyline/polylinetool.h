@@ -47,7 +47,6 @@
 #include <QGraphicsPathItem>
 #include <QGraphicsLineItem>
 #include <QPainterPath>
-#include <QMatrix>
 #include <QDir>
 
 class TUPITUBE_PLUGIN PolyLineTool : public TupToolPlugin

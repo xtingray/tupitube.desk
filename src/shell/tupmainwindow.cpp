@@ -95,6 +95,7 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(nullptr), 
     setWindowIcon(QIcon(THEME_DIR + "icons/about.png"));
     setObjectName("TupMainWindow_");
     setAcceptDrops(true);
+    screen = QGuiApplication::screens().at(0);
 
     isNetworked = false;
     exportWidget = nullptr;
@@ -470,10 +471,17 @@ void TupMainWindow::newProject()
         return;
 
     TupNewProject *wizard = new TupNewProject(this);
-    QDesktopWidget desktop;
+    // QDesktopWidget desktop;
     wizard->show();
+
+    /*
     wizard->move(static_cast<int>((desktop.screenGeometry().width() - wizard->width())/2),
                  static_cast<int>((desktop.screenGeometry().height() - wizard->height())/2));
+    */
+
+    wizard->move(static_cast<int> ((screen->geometry().width() - wizard->width()) / 2),
+                 static_cast<int> ((screen->geometry().height() - wizard->height()) / 2));
+
     wizard->focusProjectLabel();
 
     if (wizard->exec() != QDialog::Rejected) {
@@ -493,7 +501,7 @@ void TupMainWindow::newProject()
 bool TupMainWindow::cancelChanges()
 {
     if (m_projectManager->isProjectModified()) {
-        QDesktopWidget desktop;
+        // QDesktopWidget desktop;
         QMessageBox msgBox;
         msgBox.setWindowTitle(tr("Question"));
         msgBox.setIcon(QMessageBox::Question);
@@ -504,8 +512,14 @@ bool TupMainWindow::cancelChanges()
         msgBox.addButton(QString(tr("Discard")), QMessageBox::NoRole);
         msgBox.addButton(QString(tr("Cancel")), QMessageBox::DestructiveRole);
         msgBox.show();
+
+        /*
         msgBox.move(static_cast<int>((desktop.screenGeometry().width() - msgBox.width())/2),
                     static_cast<int>((desktop.screenGeometry().height() - msgBox.height())/2));
+        */
+
+        msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
+                     static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
 
         int ret = msgBox.exec();
         switch (ret) {
@@ -658,10 +672,16 @@ void TupMainWindow::resetUI()
 void TupMainWindow::setupNetworkProject()
 {
     TupConnectDialog *netDialog = new TupConnectDialog(this);
-    QDesktopWidget desktop;
+    // QDesktopWidget desktop;
     netDialog->show();
+
+    /*
     netDialog->move(static_cast<int>((desktop.screenGeometry().width() - netDialog->width())/2),
                     static_cast<int>((desktop.screenGeometry().height() - netDialog->height())/2));
+    */
+
+    netDialog->move(static_cast<int> ((screen->geometry().width() - netDialog->width()) / 2),
+                    static_cast<int> ((screen->geometry().height() - netDialog->height()) / 2));
 
     TupNetProjectManagerParams *params = new TupNetProjectManagerParams();
 
@@ -850,9 +870,14 @@ void TupMainWindow::preferences()
     TupPreferencesDialog *dialog = new TupPreferencesDialog(this);
     dialog->show();
 
+    /*
     QDesktopWidget desktop;
     dialog->move(static_cast<int>((desktop.screenGeometry().width() - dialog->width())/2),
                  static_cast<int>((desktop.screenGeometry().height() - dialog->height())/2));
+    */
+
+    dialog->move(static_cast<int> ((screen->geometry().width() - dialog->width()) / 2),
+                 static_cast<int> ((screen->geometry().height() - dialog->height()) / 2));
 
     if (dialog->exec() == QDialog::Accepted) {
         if (animationTab)
@@ -880,9 +905,14 @@ void TupMainWindow::showTipDialog()
     TipDialog *tipDialog = new TipDialog(labels, videos, DATA_DIR + "tips.xml", this);
     tipDialog->show();
 
+    /*
     QDesktopWidget desktop;
     tipDialog->move(static_cast<int> ((desktop.screenGeometry().width() - tipDialog->width())/2),
                     static_cast<int> ((desktop.screenGeometry().height() - tipDialog->height())/2));
+    */
+
+    tipDialog->move(static_cast<int> ((screen->geometry().width() - tipDialog->width()) / 2),
+                    static_cast<int> ((screen->geometry().height() - tipDialog->height()) / 2));
 }
 
 void TupMainWindow::openYouTubeChannel()
@@ -1287,13 +1317,20 @@ void TupMainWindow::updateCurrentTab(int index)
 
 void TupMainWindow::exportProject()
 {
-    QDesktopWidget desktop;
+    // QDesktopWidget desktop;
 
     exportWidget = new TupExportWidget(m_projectManager->getProject(), this);
     connect(exportWidget, SIGNAL(isDone()), animationTab, SLOT(updatePaintArea()));
     exportWidget->show();
+
+    /*
     exportWidget->move(static_cast<int>((desktop.screenGeometry().width() - exportWidget->width())/2),
                        static_cast<int>((desktop.screenGeometry().height() - exportWidget->height())/2));
+    */
+
+    exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),
+                       static_cast<int> ((screen->geometry().height() - exportWidget->height()) / 2));
+
     exportWidget->exec();
 }
 
@@ -1377,7 +1414,7 @@ void TupMainWindow::unexpectedClose()
     if (m_projectManager->isOpen())
         resetUI();
 
-    QDesktopWidget desktop;
+    // QDesktopWidget desktop;
     QMessageBox msgBox;
     msgBox.setWindowTitle(tr("Fatal Error"));
     msgBox.setIcon(QMessageBox::Critical);
@@ -1387,8 +1424,14 @@ void TupMainWindow::unexpectedClose()
     msgBox.addButton(QString(tr("Close")), QMessageBox::DestructiveRole);
 
     msgBox.show();
+
+    /*
     msgBox.move(static_cast<int>((desktop.screenGeometry().width() - msgBox.width())/2),
                 static_cast<int>((desktop.screenGeometry().height() - msgBox.height())/2));
+    */
+
+    msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
+                 static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
 
     msgBox.exec();
 }
@@ -1455,9 +1498,12 @@ void TupMainWindow::showWebMessage()
     TMsgDialog *msgDialog = new TMsgDialog(webContent, webMsgSize, isImageMsg, this);
     msgDialog->show();
 
-    QDesktopWidget desktop;
-    msgDialog->move(static_cast<int>((desktop.screenGeometry().width() - msgDialog->width())/2),
-                    static_cast<int>((desktop.screenGeometry().height() - msgDialog->height())/2));
+    // QDesktopWidget desktop;
+    // msgDialog->move(static_cast<int>((desktop.screenGeometry().width() - msgDialog->width())/2),
+    //                 static_cast<int>((desktop.screenGeometry().height() - msgDialog->height())/2));
+
+    msgDialog->move(static_cast<int> ((screen->geometry().width() - msgDialog->width()) / 2),
+                    static_cast<int> ((screen->geometry().height() - msgDialog->height()) / 2));
 }
 
 void TupMainWindow::setUpdateFlag(bool flag)

@@ -53,6 +53,7 @@
 #include "tuplayer.h"
 
 #include <QMessageBox>
+#include <QScreen> 
 
 Tweener::Tweener() : TupToolPlugin()
 {
@@ -219,6 +220,8 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 #endif
             #endif
             if (nodesGroup) {
+                updateTweenPath();
+                /*
                 QString route = pathToCoords();
                 foreach (QGraphicsItem *item, objects) {
                     TupLibraryObject::Type type = TupLibraryObject::Item;
@@ -230,6 +233,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                     emit requested(&request);
                 }
                 doList << path->path();
+                */
 
                 nodesGroup->createNodes(path);
                 nodesGroup->show();
@@ -285,7 +289,8 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 foreach (QGraphicsItem *item, objects) {
                     QString tip = item->toolTip();
                     if (tip.contains(tr("Position"))) {
-                        QDesktopWidget desktop;
+                        // QDesktopWidget desktop;
+                        QScreen *screen = QGuiApplication::screens().at(0);
                         QMessageBox msgBox;
                         msgBox.setWindowTitle(tr("Warning"));
                         msgBox.setIcon(QMessageBox::Warning);
@@ -293,8 +298,8 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                         msgBox.setInformativeText(tr("Please, edit the previous tween of these objects."));
                         msgBox.addButton(QString(tr("Accept")), QMessageBox::AcceptRole);
                         msgBox.show();
-                        msgBox.move(static_cast<int>((desktop.screenGeometry().width() - msgBox.width())/2),
-                                    static_cast<int>((desktop.screenGeometry().height() - msgBox.height())/2));
+                        msgBox.move(static_cast<int>((screen->geometry().width() - msgBox.width()) / 2),
+                                    static_cast<int>((screen->geometry().height() - msgBox.height()) / 2));
                         msgBox.exec();
 
                         objects.clear();
@@ -364,6 +369,21 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
             #endif
         #endif
     }
+}
+
+void Tweener::updateTweenPath()
+{
+    QString route = pathToCoords();
+    foreach (QGraphicsItem *item, objects) {
+        TupLibraryObject::Type type = TupLibraryObject::Item;
+        int objectIndex = scene->currentFrame()->indexOf(item);
+        TupProjectRequest request = TupRequestBuilder::createItemRequest(
+                                    initScene, initLayer, initFrame, objectIndex,
+                                    QPointF(), scene->getSpaceContext(), type,
+                                    TupProjectRequest::UpdateTweenPath, route);
+        emit requested(&request);
+    }
+    doList << path->path();
 }
 
 // This method returns the list of actions defined in this plugin
@@ -857,6 +877,7 @@ void Tweener::updatePath()
         }
 
         doList << path->path();
+
         configPanel->updateSteps(path);
         updateTweenPoints();
     }
@@ -1171,7 +1192,6 @@ void Tweener::itemResponse(const TupItemResponse *response)
                 if (nodesGroup) {
                     nodesGroup->clear();
                     nodesGroup = nullptr;
-                    // disconnect(nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath()));
                 }
                 removeTweenPoints();
 
@@ -1203,7 +1223,15 @@ void Tweener::itemResponse(const TupItemResponse *response)
                 nodesGroup->resizeNodes(realFactor);
                 nodesGroup->expandAllNodes();
 
-                configPanel->undoSegment(painterPath);
+                if (configPanel->stepsTotal() == nodesGroup->mainNodesCount())
+                    configPanel->undoSegment(painterPath);
+                else
+                    configPanel->updateSegments(painterPath);
+
+                qDebug() << "Main Nodes size: " << nodesGroup->mainNodesCount();
+                qDebug() << "Nodes Total: " << nodesGroup->nodesTotalCount();
+                qDebug() << "Config panel: " << configPanel->stepsTotal();
+
                 paintTweenPoints();
             }
         }
@@ -1233,7 +1261,15 @@ void Tweener::itemResponse(const TupItemResponse *response)
                 nodesGroup->resizeNodes(realFactor);
                 nodesGroup->expandAllNodes();
 
-                configPanel->redoSegment(painterPath);
+                if (configPanel->stepsTotal() < (nodesGroup->mainNodesCount()-1))
+                    configPanel->redoSegment(painterPath);
+                else
+                    configPanel->updateSegments(painterPath);
+
+                qDebug() << "Main Nodes size: " << nodesGroup->mainNodesCount();
+                qDebug() << "Nodes Total: " << nodesGroup->nodesTotalCount();
+                qDebug() << "Config panel: " << configPanel->stepsTotal();
+
                 paintTweenPoints();
             }
         }
@@ -1291,7 +1327,7 @@ void Tweener::paintTweenPoints()
     } 
 
     if (nodesGroup) {
-        if (nodesGroup->size() == 4)
+        if (nodesGroup->nodesTotalCount() == 4)
             configPanel->enableSaveOption(true);
     } else {
         configPanel->enableSaveOption(false);
@@ -1315,3 +1351,4 @@ void Tweener::updateZoomFactor(qreal scaleFactor)
 {
     realFactor = scaleFactor;
 }
+

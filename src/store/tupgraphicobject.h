@@ -42,7 +42,6 @@
 #include "tupitemtweener.h"
 
 #include <QObject>
-#include <QMatrix>
 #include <QGraphicsItem>
 
 class TUPITUBE_EXPORT TupGraphicObject : public QObject, public TupAbstractSerializable

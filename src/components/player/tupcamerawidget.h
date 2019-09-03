@@ -48,6 +48,7 @@
 #include <QProgressBar>
 #include <QLabel>
 #include <QCheckBox>
+#include <QScreen>
 
 class TUPITUBE_EXPORT TupCameraWidget : public QFrame
 {
@@ -106,7 +107,8 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         void setDimensionLabel(const QSize dimension);
 
         QBoxLayout *layout;
-        TupScreen *screen;
+        QScreen *screen;
+        TupScreen *previewScreen;
         QSize screenDimension;
         TupCameraBar *cameraBar;
         QProgressBar *progressBar;

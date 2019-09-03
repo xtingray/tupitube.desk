@@ -68,7 +68,7 @@ void Target::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 
     QRectF square = boundingRect();
     painter->setBrush(color);
-    painter->drawRoundRect(square);
+    painter->drawRoundedRect(square, 2, 2, Qt::RelativeSize);
 
     painter->save();
     color = QColor("white");

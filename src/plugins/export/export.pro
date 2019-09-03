@@ -16,8 +16,8 @@ SUBDIRS += imageplugin
 # SMIL plugin will be disabled temporary 
 # smileplugin 
 
-contains(DEFINES, HAVE_LIBAV) {
-        SUBDIRS += libavplugin 
+contains(DEFINES, HAVE_FFMPEG) {
+        SUBDIRS += ffmpegplugin 
 }
 
 contains(DEFINES, HAVE_THEORA) {

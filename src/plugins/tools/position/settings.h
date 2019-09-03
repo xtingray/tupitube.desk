@@ -77,10 +77,12 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         void notifySelection(bool flag);
         int startComboSize();
         QString currentTweenName() const;
+        void updateSegments(const QPainterPath path);
 
         void undoSegment(const QPainterPath path);
         void redoSegment(const QPainterPath path);
         void enableSaveOption(bool flag);
+        int stepsTotal(); 
 
     private slots:
         void emitOptionChanged(int option);

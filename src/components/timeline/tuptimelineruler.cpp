@@ -99,7 +99,10 @@ void TupTimeLineRuler::paintSection(QPainter *painter, const QRect & rect, int l
 
         QString number = QString::number(logicalIndex);
         painter->setFont(font);	
-        painter->drawText((rect.center().x() - (fm.width(number)/2)),
+        // painter->drawText((rect.center().x() - (fm.width(number)/2)),
+        //                   (rect.center().y() + (fm.height()/2)) - 2, number);
+
+        painter->drawText((rect.center().x() - (fm.horizontalAdvance(number)/2)),
                           (rect.center().y() + (fm.height()/2)) - 2, number);
     }
 

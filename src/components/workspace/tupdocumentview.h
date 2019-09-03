@@ -57,6 +57,7 @@
 #include <QMenu>
 #include <QSpinBox>
 #include <QComboBox>
+#include <QScreen>
 
 class TupProjectRequest;
 class TupProject;
@@ -206,6 +207,7 @@ class TUPITUBE_EXPORT TupDocumentView : public QMainWindow
         TupPaintArea *paintArea;
         TupProject *project;
         QSize wsDimension;
+        QScreen *screen;
         
         QToolBar *barGrid;
         QToolBar *toolbar;

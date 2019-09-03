@@ -445,7 +445,7 @@ class QTreeWidgetWorkaround : public QTreeWidget
         }
 };
 
-void TreeWidgetSearchLine::rowsInserted(const QModelIndex & parent, int start, int end) const
+void TreeWidgetSearchLine::rowsInserted(const QModelIndex &parent, int start, int end) const
 {
     QAbstractItemModel* model = qobject_cast<QAbstractItemModel*>(sender());
 
@@ -453,19 +453,22 @@ void TreeWidgetSearchLine::rowsInserted(const QModelIndex & parent, int start, i
         return;
 
     QTreeWidget* widget = 0L;
-    foreach (QTreeWidget* tree, k->treeWidgets)
-             if (tree->model() == model) {
-                 widget = tree;
-                 break;
-             }
+    foreach (QTreeWidget* tree, k->treeWidgets) {
+        if (tree->model() == model) {
+            widget = tree;
+            break;
+        }
+    }
 
     if (!widget) 
         return;
 
     QTreeWidgetWorkaround* widgetWorkaround = static_cast<QTreeWidgetWorkaround *>( widget );
     for (int i = start; i <= end; ++i) {
-         if (QTreeWidgetItem* item = widgetWorkaround->itemFromIndex(model->index(i, 0, parent)))
-             item->treeWidget()->setItemHidden(item, !itemMatches(item, text()));
+        if (QTreeWidgetItem* item = widgetWorkaround->itemFromIndex(model->index(i, 0, parent))) {
+            item->setHidden(!itemMatches(item, text()));
+            // item->treeWidget()->setItemHidden(item, !itemMatches(item, text()));
+        }
     }
 }
 
@@ -490,7 +493,8 @@ void TreeWidgetSearchLine::checkItemParentsNotVisible(QTreeWidget *treeWidget)
 
     for (; *it; ++it) {
          QTreeWidgetItem *item = *it;
-         item->treeWidget()->setItemHidden(item, !itemMatches(item, k->search));
+         item->treeWidget()->setHidden(!itemMatches(item, k->search));
+         // item->treeWidget()->setItemHidden(item, !itemMatches(item, k->search));
     }
 }
 
@@ -508,7 +512,7 @@ void TreeWidgetSearchLine::checkItemParentsNotVisible(QTreeWidget *treeWidget)
 
 bool TreeWidgetSearchLine::checkItemParentsVisible(QTreeWidgetItem* item)
 {
-    QTreeWidget* treeWidget = item->treeWidget();
+    // QTreeWidget* treeWidget = item->treeWidget();
 
     bool childMatch = false;
     for (int i = 0; i < item->childCount(); ++i)
@@ -516,11 +520,13 @@ bool TreeWidgetSearchLine::checkItemParentsVisible(QTreeWidgetItem* item)
 
     // Should this item be shown? It should if any children should be, or if it matches.
     if (childMatch || itemMatches(item, k->search)) {
-        treeWidget->setItemHidden(item, false);
+        item->setHidden(false);
+        // treeWidget->setItemHidden(item, false);
         return true;
     }
 
-    treeWidget->setItemHidden(item, true);
+    // treeWidget->setItemHidden(item, true);
+    item->setHidden(true);
 
     return false;
 }

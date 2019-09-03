@@ -42,35 +42,7 @@
 #include "tglobal.h"
 #include "tuptoolplugin.h"
 #include "settings.h"
-#include "tupprojectresponse.h"
 #include "configurator.h"
-#include "tupgraphiclibraryitem.h"
-#include "tglobal.h"
-#include "taction.h"
-#include "tosd.h"
-#include "tupinputdeviceinformation.h"
-#include "tupbrushmanager.h"
-#include "tupgraphicsscene.h"
-#include "tupgraphicobject.h"
-#include "tuppathitem.h"
-#include "tupellipseitem.h"
-#include "tuplineitem.h"
-#include "tuprectitem.h"
-#include "tuppixmapitem.h"
-#include "tupsvgitem.h"
-#include "tupitemtweener.h"
-#include "tuprequestbuilder.h"
-#include "tupprojectrequest.h"
-#include "tuplibraryobject.h"
-#include "tupscene.h"
-#include "tuplayer.h"
-
-#include <QPointF>
-#include <QKeySequence>
-#include <QMatrix>
-#include <QGraphicsView>
-#include <QDomDocument>
-#include <QDir>
 
 /**
  * @author Gustav Gonzalez 

@@ -1,15 +1,15 @@
 TEMPLATE = app
 CONFIG -= moc
-TARGET = libav 
+TARGET = ffmpeg 
 
 macx {
     CONFIG -= app_bundle
     CONFIG += warn_on static console
 }
 
-INCLUDEPATH += .
+INCLUDEPATH += . /usr/local/ffmpeg/include
 DEFINES += __STDC_CONSTANT_MACROS
-LIBS += -lavformat -lavcodec -lavutil -lavresample #-lswscale
+LIBS += -L/usr/local/ffmpeg/lib -lavformat -lavcodec -lavutil -lavresample -lswresample #-lswscale
 
 # Input
 SOURCES += main.cpp

@@ -63,10 +63,11 @@
 #include <QApplication>
 #include <QToolBar>
 #include <QPixmap>
-#include <QDesktopWidget>
+// #include <QDesktopWidget>
 #include <QGridLayout>
 #include <QCameraImageCapture>
 #include <QCamera>
+#include <QCameraInfo>
 
 TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringList &users, QWidget *parent):
                                  QMainWindow(parent)
@@ -96,6 +97,7 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     cameraMode = false;
     photoCounter = 1;
     nodesScaleFactor = 1;
+    screen = QGuiApplication::screens().at(0);
 
     actionManager = new TActionManager(this);
 
@@ -1596,9 +1598,11 @@ void TupDocumentView::showFullScreen()
 
     fullScreenOn = true;
 
-    QDesktopWidget desktop;
-    int screenW = desktop.screenGeometry().width();
-    int screenH = desktop.screenGeometry().height();
+    // QDesktopWidget desktop;
+    // int screenW = desktop.screenGeometry().width();
+    // int screenH = desktop.screenGeometry().height();
+    int screenW = screen->geometry().width();
+    int screenH = screen->geometry().height();
 
     cacheScaleFactor = nodesScaleFactor;
     qreal scaleFactor = 1;
@@ -1722,9 +1726,9 @@ void TupDocumentView::postImage()
 
     TupImageDialog *dialog = new TupImageDialog(this);
     dialog->show();
-    QDesktopWidget desktop;
-    dialog->move(static_cast<int>((desktop.screenGeometry().width() - dialog->width())/2),
-                 static_cast<int>((desktop.screenGeometry().height() - dialog->height())/2));
+    // QDesktopWidget desktop;
+    dialog->move(static_cast<int>((screen->geometry().width() - dialog->width())/2),
+                 static_cast<int>((screen->geometry().height() - dialog->height())/2));
 
     if (dialog->exec() != QDialog::Rejected) {
         QString title = dialog->imageTitle();
@@ -1737,7 +1741,7 @@ void TupDocumentView::postImage()
 
 void TupDocumentView::storyboardSettings()
 {
-    QDesktopWidget desktop;
+    // QDesktopWidget desktop;
     int sceneIndex = paintArea->graphicsScene()->currentSceneIndex();
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
@@ -1752,8 +1756,8 @@ void TupDocumentView::storyboardSettings()
     QApplication::restoreOverrideCursor();
 
     storySettings->show();
-    storySettings->move(static_cast<int>((desktop.screenGeometry().width() - storySettings->width())/2),
-                        static_cast<int>((desktop.screenGeometry().height() - storySettings->height())/2));
+    storySettings->move(static_cast<int>((screen->geometry().width() - storySettings->width())/2),
+                        static_cast<int>((screen->geometry().height() - storySettings->height())/2));
 }
 
 void TupDocumentView::sendStoryboard(TupStoryboard *storyboard, int sceneIndex)
@@ -1884,13 +1888,17 @@ void TupDocumentView::cameraInterface()
         return;
     }
 
-    int camerasTotal = QCamera::availableDevices().count();
+    // int camerasTotal = QCamera::availableDevices().count();
+    int camerasTotal = QCameraInfo::availableCameras().count();
     if (camerasTotal > 0) {
-        QList<QByteArray> cameraDevices;
+        // QList<QByteArray> cameraDevices;
+        QList<QCameraInfo> cameraDevices;
         QComboBox *devicesCombo = new QComboBox;
-        foreach(const QByteArray &deviceName, QCamera::availableDevices()) {
-            QCamera *device = new QCamera(deviceName);
-            QString description = device->deviceDescription(deviceName);
+        // foreach(const QByteArray &deviceName, QCamera::availableDevices()) {
+        foreach(QCameraInfo deviceName, QCameraInfo::availableCameras()) { 
+            // QCamera *device = new QCamera(deviceName);
+            // QString description = device->deviceDescription(deviceName);
+            QString description = deviceName.description();
             bool found = false;
             for (int i=0; i<devicesCombo->count(); i++) {
                 QString item = devicesCombo->itemText(i);
@@ -1906,7 +1914,7 @@ void TupDocumentView::cameraInterface()
         }
 
         /* SQA: This lines should be enabled in some point at the future
-        QByteArray cameraDevice = cameraDevices[0];
+        QCameraInfo cameraDevice = cameraDevices[0];
         QCamera *camera = new QCamera(cameraDevice);
         camera->load();
         tError() << "TupDocumentView::cameraInterface() - Camera status: " << camera->status();
@@ -1929,13 +1937,13 @@ void TupDocumentView::cameraInterface()
         resolutions << QSize(160, 120);
         */
 
-        QDesktopWidget desktop;
+        // QDesktopWidget desktop;
         QSize projectSize = project->getDimension();
 
         TupCameraDialog *cameraDialog = new TupCameraDialog(devicesCombo, projectSize, resolutions);
         cameraDialog->show();
-        cameraDialog->move(static_cast<int> (desktop.screenGeometry().width() - cameraDialog->width())/2,
-                           static_cast<int> (desktop.screenGeometry().height() - cameraDialog->height())/2);
+        cameraDialog->move(static_cast<int> (screen->geometry().width() - cameraDialog->width())/2,
+                           static_cast<int> (screen->geometry().height() - cameraDialog->height())/2);
 
         if (cameraDialog->exec() == QDialog::Accepted) {
             cameraMode = true;
@@ -1957,8 +1965,8 @@ void TupDocumentView::cameraInterface()
                     connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
                     connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode())); 
                     dialog->show();
-                    dialog->move(static_cast<int> (desktop.screenGeometry().width() - dialog->width())/2 ,
-                                 static_cast<int> (desktop.screenGeometry().height() - dialog->height())/2);
+                    dialog->move(static_cast<int> (screen->geometry().width() - dialog->width()) / 2,
+                                 static_cast<int> (screen->geometry().height() - dialog->height()) / 2);
                 } else {
                     TupCameraInterface *dialog = new TupCameraInterface(resolution, cameraDevices, devicesCombo, cameraDialog->cameraIndex(),
                                                                         cameraSize, photoCounter);
@@ -1966,8 +1974,8 @@ void TupDocumentView::cameraInterface()
                     connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
                     connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode())); 
                     dialog->show();
-                    dialog->move(static_cast<int> (desktop.screenGeometry().width() - dialog->width())/2 ,
-                                 static_cast<int> (desktop.screenGeometry().height() - dialog->height())/2);
+                    dialog->move(static_cast<int> (screen->geometry().width() - dialog->width()) / 2,
+                                 static_cast<int> (screen->geometry().height() - dialog->height()) / 2);
                 }
             } else { // UI for reflex cameras
                 int index = cameraDialog->cameraIndex();
@@ -1977,8 +1985,8 @@ void TupDocumentView::cameraInterface()
                 connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
                 connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode())); 
                 dialog->show();
-                dialog->move(static_cast<int> (desktop.screenGeometry().width() - dialog->width())/2 ,
-                             static_cast<int> (desktop.screenGeometry().height() - dialog->height())/2);
+                dialog->move(static_cast<int> (screen->geometry().width() - dialog->width()) / 2,
+                             static_cast<int> (screen->geometry().height() - dialog->height()) / 2);
             }
 
             QApplication::restoreOverrideCursor();

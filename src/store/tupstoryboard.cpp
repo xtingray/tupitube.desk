@@ -87,9 +87,9 @@ void TupStoryboard::appendScene()
 void TupStoryboard::moveScene(int oldIndex, int newIndex)
 {
     if (oldIndex >= 0 && oldIndex < scene.size() && newIndex >= 0 && newIndex < scene.size()) {
-        scene.swap(oldIndex, newIndex);
-        duration.swap(oldIndex, newIndex);
-        description.swap(oldIndex, newIndex);
+        scene.swapItemsAt(oldIndex, newIndex);
+        duration.swapItemsAt(oldIndex, newIndex);
+        description.swapItemsAt(oldIndex, newIndex);
     }
 }
 

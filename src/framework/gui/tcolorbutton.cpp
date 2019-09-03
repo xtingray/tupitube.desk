@@ -105,7 +105,8 @@ void TColorButton::paintEvent(QPaintEvent *)
  */
 void TColorButton::showEditor()
 {
-    QColor c = QColorDialog::getColor( palette().background().color(), this);
+    // QColor c = QColorDialog::getColor(palette().background().color(), this);
+    QColor c = QColorDialog::getColor(palette().window().color(), this);
 
     if (!c.isValid())
         return;
@@ -151,7 +152,8 @@ void TColorButton::mouseMoveEvent(QMouseEvent* e)
     drag->setMimeData(mimeData);
     drag->setPixmap(pix);
         
-    drag->start(Qt::MoveAction);
+    // drag->start(Qt::MoveAction);
+    drag->exec(Qt::MoveAction);
 }
 
 /*

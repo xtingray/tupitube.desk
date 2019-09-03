@@ -38,7 +38,34 @@
 
 #include "tweener.h"
 
+#include "taction.h"
+#include "tosd.h"
+#include "tupinputdeviceinformation.h"
+#include "tupbrushmanager.h"
+#include "tupgraphicsscene.h"
+#include "tupgraphicobject.h"
+#include "tuppathitem.h"
+#include "tupellipseitem.h"
+#include "tuplineitem.h"
+#include "tuprectitem.h"
+#include "tuppixmapitem.h"
+#include "tupsvgitem.h"
+#include "tupitemtweener.h"
+#include "tuprequestbuilder.h"
+#include "tupprojectrequest.h"
+#include "tuplibraryobject.h"
+#include "tupscene.h"
+#include "tuplayer.h"
+#include "tupprojectresponse.h"
+#include "tupgraphiclibraryitem.h"
+
 #include <QMessageBox>
+#include <QScreen>
+#include <QPointF>
+#include <QKeySequence>
+#include <QGraphicsView>
+#include <QDomDocument>
+#include <QDir>
 
 Tweener::Tweener() : TupToolPlugin()
 {
@@ -161,7 +188,8 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 foreach (QGraphicsItem *item, objects) {
                     QString tip = item->toolTip();
                     if (tip.contains(tr("Coloring"))) {
-                        QDesktopWidget desktop;
+                        // QDesktopWidget desktop;
+                        QScreen *screen = QGuiApplication::screens().at(0);
                         QMessageBox msgBox;
                         msgBox.setWindowTitle(tr("Warning"));
                         msgBox.setIcon(QMessageBox::Warning);
@@ -169,8 +197,8 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                         msgBox.setInformativeText(tr("Please, edit the previous tween of these objects."));
                         msgBox.addButton(QString(tr("Accept")), QMessageBox::AcceptRole);
                         msgBox.show();
-                        msgBox.move(static_cast<int>((desktop.screenGeometry().width() - msgBox.width())/2),
-                                    static_cast<int>((desktop.screenGeometry().height() - msgBox.height())/2));
+                        msgBox.move(static_cast<int>((screen->geometry().width() - msgBox.width())/2),
+                                    static_cast<int>((screen->geometry().height() - msgBox.height())/2));
                         msgBox.exec();
 
                         objects.clear();

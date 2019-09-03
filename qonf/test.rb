@@ -84,12 +84,12 @@ class Test
                    extraLib = "-L/usr/lib64 "
                 end
 
-                if File.dirname(@rules).end_with?("libav")  
-                   if conf.hasArgument?("with-libav")
-                      libavDir = conf.argumentValue("with-libav")
-                      libavLib = libavDir + "/lib"
-                      extraLib += "-L#{libavLib}"
-                      extraInclude = libavDir + "/include"
+                if File.dirname(@rules).end_with?("ffmpeg")  
+                   if conf.hasArgument?("with-ffmpeg")
+                      ffmpegDir = conf.argumentValue("with-ffmpeg")
+                      ffmpegLib = ffmpegDir + "/lib"
+                      extraLib += "-L#{ffmpegLib}"
+                      extraInclude = ffmpegDir + "/include"
                       qmakeLine = "'LIBS += #{extraLib}'";
                       qmakeLine += " 'INCLUDEPATH += #{extraInclude}'";
                    end

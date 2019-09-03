@@ -36,6 +36,8 @@
 #include "tosd.h"
 #include "tconfig.h"
 
+#include <QScreen>
+
 TOsd *TOsd::s_osd = 0;
 
 TOsd::TOsd(QWidget * parent) : QWidget(parent), m_timer(0)
@@ -78,11 +80,12 @@ void TOsd::display(const QString &title, const QString &message, Level level, in
     htmlMessage.replace('\n', "<br/>");
     QString tail = title + "</b></font><br><font style=\"font-size:11px\">" + htmlMessage + "</font>";
 
-    QBrush background = palette().background();
-    QBrush foreground = palette().foreground();
+    // QBrush background = palette().background();
+    QBrush background = palette().window();
+    // QBrush foreground = palette().foreground();
+    QBrush foreground = palette().windowText();
 
     if (level != None) {
-  
         switch (level) {
                 case Info:
                    {
@@ -137,9 +140,14 @@ void TOsd::display(const QString &title, const QString &message, Level level, in
     int width = (int)textSize.width() + 10;
     int height = (int)textSize.height() + 10;
 
-    QDesktopWidget desktop;
-    move((int) (desktop.screenGeometry().width() - textSize.width()) - 25, 
-                (int) (desktop.screenGeometry().height() - textSize.height()) - 45);
+    // QDesktopWidget desktop;
+    // move((int) (desktop.screenGeometry().width() - textSize.width()) - 25, 
+    //            (int) (desktop.screenGeometry().height() - textSize.height()) - 45);
+
+
+    QScreen *screen = QGuiApplication::screens().at(0);
+    move(static_cast<int> ((screen->geometry().width() - textSize.width()) - 25),
+         static_cast<int> ((screen->geometry().height() - textSize.height()) - 45));
 
     QRect geometry(0, 0, width + 10, height + 8);
     QRect geometry2(0, 0, width + 9, height + 7);
@@ -214,22 +222,26 @@ void TOsd::animate()
         if (m_animator->on)
             background = Qt::red;
         else
-            background = palette().background();
+            background = palette().window();
+            // background = palette().background();
     } else if (m_animator->level == Warning) {
                if (m_animator->on)
                    background = QColor("orange");
                else
-                   background = palette().background();
+                   background = palette().window();
+                   // background = palette().background();
     } else if (m_animator->level == Fatal) {
                if (m_animator->on)
                    background = Qt::magenta;
                else
-                   background = palette().background();
+                   background = palette().window();
+                   // background = palette().background();
     }
 
     m_animator->on = m_animator->on ? false : true;
 
-    drawPixmap(background, palette().foreground());
+    // drawPixmap(background, palette().foreground());
+    drawPixmap(background, palette().windowText()); 
 
     repaint();
 }
@@ -278,7 +290,8 @@ void TOsd::drawPixmap(const QBrush &background, const QBrush &foreground)
     bufferPainter.drawRoundedRect(0, 0, width + 8, height + 6, 1, 1, Qt::AbsoluteSize);
 
     // draw shadow and text
-    bufferPainter.setPen(palette().background().color().dark(115));
+    // bufferPainter.setPen(palette().background().color().dark(115));
+    bufferPainter.setPen(palette().window().color().darker(115));
     bufferPainter.translate(5 + textXOffset + shadowOffset, 1);
 
     m_document->drawContents(&bufferPainter,QRect(0,0, textRect.width(), textRect.height()));

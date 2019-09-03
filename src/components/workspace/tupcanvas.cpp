@@ -70,6 +70,8 @@ TupCanvas::TupCanvas(QWidget *parent, Qt::WindowFlags flags, TupGraphicsScene *g
     brushManager = manager;
     project = work;
 
+    screen = QGuiApplication::screens().at(0);
+
     graphicsView = new TupCanvasView(this, gScene, screenSize, size, work->getBgColor());
     connect(graphicsView, SIGNAL(rightClick()), this, SIGNAL(rightClick()));
     connect(graphicsView, SIGNAL(zoomIn()), this, SLOT(wakeUpZoomIn()));
@@ -226,28 +228,28 @@ void TupCanvas::colorDialog()
 
 void TupCanvas::penDialog()
 {
-    QDesktopWidget desktop;
+    // QDesktopWidget desktop;
     TupPenDialog *dialog = new TupPenDialog(brushManager, this);
     connect(dialog, SIGNAL(updatePen(int)), this, SIGNAL(penWidthChangedFromFullScreen(int)));
 
     QApplication::restoreOverrideCursor();
 
     dialog->show();
-    dialog->move((int) (desktop.screenGeometry().width() - dialog->width())/2 ,
-                        (int) (desktop.screenGeometry().height() - dialog->height())/2);
+    dialog->move(static_cast<int> ((screen->geometry().width() - dialog->width()) / 2),
+                 static_cast<int> ((screen->geometry().height() - dialog->height()) / 2));
 }
 
 void TupCanvas::onionDialog()
 {
-    QDesktopWidget desktop;
+    // QDesktopWidget desktop;
     TupOnionDialog *dialog = new TupOnionDialog(brushManager->penColor(), scene->getOpacity(), this);
     connect(dialog, SIGNAL(updateOpacity(double)), this, SLOT(setOnionOpacity(double)));
 
     QApplication::restoreOverrideCursor();
 
     dialog->show();
-    dialog->move((int) (desktop.screenGeometry().width() - dialog->width())/2 ,
-                        (int) (desktop.screenGeometry().height() - dialog->height())/2);
+    dialog->move(static_cast<int> ((screen->geometry().width() - dialog->width()) / 2),
+                 static_cast<int> ((screen->geometry().height() - dialog->height()) / 2));
 }
 
 void TupCanvas::setOnionOpacity(double opacity)
@@ -325,7 +327,7 @@ void TupCanvas::wakeUpLibrary()
             int projectHeight = size.height();
 
             if (picWidth > projectWidth || picHeight > projectHeight) {
-                QDesktopWidget desktop;
+                // QDesktopWidget desktop;
                 QMessageBox msgBox;
                 msgBox.setWindowTitle(tr("Information"));
                 msgBox.setIcon(QMessageBox::Question);
@@ -334,8 +336,8 @@ void TupCanvas::wakeUpLibrary()
                 msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
                 msgBox.setDefaultButton(QMessageBox::Ok);
                 msgBox.show();
-                msgBox.move((int) (desktop.screenGeometry().width() - msgBox.width())/2,
-                            (int) (desktop.screenGeometry().height() - msgBox.height())/2);
+                msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
+                            static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
 
                 int answer = msgBox.exec();
 

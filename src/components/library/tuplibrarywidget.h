@@ -54,6 +54,7 @@
 #include "talgorithm.h"
 #include "toptionaldialog.h"
 
+#include <QScreen>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 #include <QMap>
@@ -154,6 +155,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void importNativeObject(const QString &object);
         QStringList naturalSort(QStringList photograms);
 
+        QScreen *screen;
         TupLibrary *library;
         TupProject *project;
         TupLibraryDisplay *display;

@@ -44,6 +44,7 @@
 #include <QComboBox>
 #include <QCloseEvent>
 #include <QCamera>
+#include <QCameraInfo>
 #include <QCameraViewfinder>
 #include <QCameraImageCapture>
 
@@ -52,9 +53,9 @@ class TUPITUBE_EXPORT TupBasicCameraInterface : public QFrame
     Q_OBJECT
 
     public:
-        TupBasicCameraInterface(const QString &title, QList<QByteArray> cameraDevices,
+        TupBasicCameraInterface(const QString &title, QList<QCameraInfo> cameraDevices,
                                 QComboBox *devicesCombo, int cameraIndex, const QSize cameraSize = QSize(),
-                                int counter = 1, QWidget *parent = 0);
+                                int counter = 1, QWidget *parent = nullptr);
         ~TupBasicCameraInterface();
 
     protected:

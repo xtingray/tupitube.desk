@@ -43,13 +43,6 @@
 #include "settings.h"
 #include "tupprojectresponse.h"
 
-#include <QPointF>
-#include <QKeySequence>
-#include <QMatrix>
-#include <QGraphicsView>
-#include <QDomDocument>
-#include <QDir>
-
 /**
  * @author Gustav Gonzalez 
  * 

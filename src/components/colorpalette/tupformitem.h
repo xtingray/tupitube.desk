@@ -46,7 +46,7 @@ class TUPITUBE_EXPORT TupFormItem : public QWidget
     Q_OBJECT
 
     public:
-        TupFormItem(const QString &text = QString::null, QWidget *parent = nullptr);
+        TupFormItem(const QString &text = QString(), QWidget *parent = nullptr);
         ~TupFormItem();
 
         int  getValue();

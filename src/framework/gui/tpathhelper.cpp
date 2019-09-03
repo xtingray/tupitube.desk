@@ -35,6 +35,8 @@
 
 #include "tpathhelper.h"
 
+#include <QTransform>
+
 TPathHelper::TPathHelper()
 {
 }
@@ -48,7 +50,7 @@ QPainterPath TPathHelper::toRect(const QPainterPath &p, const QRect &rect, float
     QPainterPath path;
     
     QRectF br = p.boundingRect();
-    QMatrix matrix;
+    QTransform t;
     
     float sx = 1, sy = 1;
 
@@ -59,17 +61,16 @@ QPainterPath TPathHelper::toRect(const QPainterPath &p, const QRect &rect, float
         sy = static_cast<float>(rect.height()-offset) / static_cast<float>(br.height());
     
     float factor = qMin(sx, sy);
-    matrix.scale(factor, factor);
-    path = matrix.map(p);
-    
-    matrix.reset();
+    t.scale(factor, factor);
+    path = t.map(p);
+ 
+    t.reset();
     
     QPointF pos = path.boundingRect().topLeft();
-    
     float tx = offset/2-pos.x(), ty = offset/2-pos.y();
-    
-    matrix.translate(tx, ty);
-    return matrix.map(path);
+    t.translate(tx, ty);
+
+    return t.map(path);
 }
 
 QList<QPainterPath> TPathHelper::toRect(const QList<QPainterPath> &l, const QRect &rect, float offset)
@@ -81,7 +82,7 @@ QList<QPainterPath> TPathHelper::toRect(const QList<QPainterPath> &l, const QRec
              br = br | in.boundingRect().toRect();
     
     foreach (QPainterPath path, l) {
-             QMatrix matrix;
+             QTransform t;
              float sx = 1, sy = 1;
 
              if (rect.width() < br.width())
@@ -91,17 +92,16 @@ QList<QPainterPath> TPathHelper::toRect(const QList<QPainterPath> &l, const QRec
                  sy = static_cast<float>(rect.height()-offset) / static_cast<float>(br.height());
         
              float factor = qMin(sx, sy);
-             matrix.scale(factor, factor);
-             path = matrix.map(path);
+             t.scale(factor, factor);
+             path = t.map(path);
         
-             matrix.reset();
+             t.reset();
         
              QPointF pos = path.boundingRect().topLeft();
-        
-             float tx = offset/2-pos.x(), ty = offset/2-pos.y();
-        
-             matrix.translate(tx, ty);
-             returnList << matrix.map(path);
+             float tx = offset/2-pos.x();
+             float ty = offset/2-pos.y();
+             t.translate(tx, ty);
+             returnList << t.map(path);
     }
     
     return returnList;

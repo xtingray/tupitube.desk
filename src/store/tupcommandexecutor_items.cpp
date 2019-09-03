@@ -514,7 +514,10 @@ bool TupCommandExecutor::groupItems(TupItemResponse *response)
                 if (frame) {
                     QString::const_iterator itr = strList.constBegin();
                     QList<int> positions = TupSvg2Qt::parseIntList(++itr);
-                    qSort(positions.begin(), positions.end());
+
+                    // qSort(positions.begin(), positions.end());
+                    std::sort(positions.begin(), positions.end()); 
+
                     int position = frame->createItemGroup(itemIndex, positions);
                     response->setItemIndex(position);
                 
@@ -545,7 +548,10 @@ bool TupCommandExecutor::groupItems(TupItemResponse *response)
                 if (frame) {
                     QString::const_iterator itr = strList.constBegin();
                     QList<int> positions = TupSvg2Qt::parseIntList(++itr);
-                    qSort(positions.begin(), positions.end());
+
+                    // qSort(positions.begin(), positions.end());
+                    std::sort(positions.begin(), positions.end());
+
                     int position = frame->createItemGroup(itemIndex, positions);
                     response->setItemIndex(position);
 

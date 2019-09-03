@@ -50,7 +50,6 @@
 #include <QLinearGradient>
 #include <QPainterPath>
 #include <qdrawutil.h>
-#include <QMatrix>
 #include <QPolygon>
 #include <QList>
 
@@ -91,10 +90,9 @@ class TUPITUBE_EXPORT TupGradientSelector : public QAbstractSlider
 
             void moveArrow(const QPoint &pos)
             {   
-               QMatrix matrix;
-               matrix.translate(pos.x() - m_form.currentPosition().x(), 0);
-   
-               m_form = matrix.map(m_form);
+               QTransform t;
+               t.translate(pos.x() - m_form.currentPosition().x(), 0);
+               m_form = t.map(m_form); 
             }
 
             QPainterPath form()
@@ -114,10 +112,9 @@ class TUPITUBE_EXPORT TupGradientSelector : public QAbstractSlider
 
             void moveVertical(const QPoint &pos)
             {
-               QMatrix matrix;
-               matrix.translate(0, pos.y() - m_form.currentPosition().y());
-   
-               m_form = matrix.map(m_form);
+               QTransform t;
+               t.translate(0, pos.y() - m_form.currentPosition().y());
+               m_form = t.map(m_form);
             }
 
             QPainterPath m_form;

@@ -88,7 +88,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
     QRectF square = boundingRect();
     painter->setBrush(color);
-    painter->drawRoundRect(square);
+    painter->drawRoundedRect(square, 2, 2, Qt::RelativeSize);
 
     /* SQA: Code for debugging purposes
     #ifdef TUP_DEBUG

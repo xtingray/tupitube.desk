@@ -354,7 +354,7 @@ void TupItemManager::mousePressEvent(QMouseEvent *event)
                        drag->setMimeData(mimeData);
                        drag->setPixmap(pixmap);
 
-                       if (drag->start(Qt::MoveAction) == Qt::MoveAction)
+                       if (drag->exec(Qt::MoveAction) == Qt::MoveAction)
                            delete takeTopLevelItem(indexOfTopLevelItem(item));
                    }
         }

@@ -545,12 +545,12 @@ TDebug& TDebug::operator << (const QGradient *g)
     return *this;
 }
 
-TDebug& TDebug::operator << (const QMatrix &m)
+TDebug& TDebug::operator << (const QTransform &t)
 {
     *this << "\n";
-    *this << "|" << m.m11() << "\t" << m.m12() << "\t" << 0 << "\t|\n";
-    *this << "|" << m.m21() << "\t" << m.m22() << "\t" << 0<< "\t|\n";
-    *this << "|" << m.dx() << "\t" << m.dy() << "\t" << 1<< "\t|\n";
+    *this << "|" << t.m11() << "\t" << t.m12() << "\t" << 0 << "\t|\n";
+    *this << "|" << t.m21() << "\t" << t.m22() << "\t" << 0<< "\t|\n";
+    *this << "|" << t.dx() << "\t" << t.dy() << "\t" << 1<< "\t|\n";
 
     return *this;
 }

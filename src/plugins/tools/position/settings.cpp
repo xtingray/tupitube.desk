@@ -355,3 +355,13 @@ void Settings::enableSaveOption(bool flag)
 {
     apply->setEnabled(flag);
 }
+
+int Settings::stepsTotal() 
+{
+    return stepViewer->rowCount();
+}
+
+void Settings::updateSegments(const QPainterPath path)
+{
+    stepViewer->updateSegments(path);
+}

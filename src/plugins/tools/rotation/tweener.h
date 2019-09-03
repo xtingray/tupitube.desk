@@ -45,7 +45,6 @@
 
 #include <QPointF>
 #include <QKeySequence>
-#include <QMatrix>
 #include <QGraphicsView>
 #include <QDomDocument>
 #include <QDir>

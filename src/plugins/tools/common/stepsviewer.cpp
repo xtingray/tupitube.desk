@@ -688,6 +688,27 @@ void StepsViewer::redoSegment(const QPainterPath painterPath)
     addTableRow(rowCount(), frames.last());
 }
 
+void StepsViewer::updateSegments(const QPainterPath painterPath)
+{
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[StepsViewer::undoSegment()]";
+        #else
+            T_FUNCINFO;
+        #endif
+    #endif
+
+    path = painterPath;
+
+    points = path.toFillPolygon();
+    if (!points.isEmpty())
+        points.removeLast();
+
+    calculateKeys();
+    calculateGroups();
+    updateSegments();
+}
+
 void StepsViewer::updateSegments()
 {
     int total = frames.count();

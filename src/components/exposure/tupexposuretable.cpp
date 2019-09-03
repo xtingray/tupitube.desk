@@ -82,7 +82,7 @@ void TupExposureVerticalHeader::paintSection(QPainter * painter, const QRect & r
     font.setPointSize(7);
     QFontMetrics fm(font);
 
-    int x = rect.normalized().x() + ((rect.normalized().width() - fm.width(text))/2);
+    int x = rect.normalized().x() + ((rect.normalized().width() - fm.horizontalAdvance(text))/2);
     int y = rect.normalized().bottomLeft().y() - (1 + (rect.normalized().height() - fm.height())/2);
 
     painter->setFont(font);
@@ -479,7 +479,7 @@ void TupExposureTable::insertFrame(int layerIndex, int frameIndex, const QString
     QColor color = Qt::transparent;
     if (themeName.compare("Dark") == 0)
         frame->setForeground(Qt::black);
-    frame->setBackgroundColor(color);
+    frame->setBackground(color);
 
     QFont font = this->font();
     font.setPointSize(7);

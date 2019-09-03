@@ -666,7 +666,7 @@ bool TupSvg2Qt::parseBrush(QBrush &brush, const QXmlAttributes &attributes)
     return false;
 }
 
-bool TupSvg2Qt::svgmatrix2qtmatrix(const QString &data, QMatrix &matrix)
+bool TupSvg2Qt::svgmatrix2qtmatrix(const QString &data, QTransform &transform)
 {
     if (data.isEmpty()) 
         return false;
@@ -674,8 +674,7 @@ bool TupSvg2Qt::svgmatrix2qtmatrix(const QString &data, QMatrix &matrix)
     QString::const_iterator itr = data.constBegin();
 
     while (itr != data.constEnd()) {
-
-           if ((*itr) == QLatin1Char('m')) {  //matrix
+           if ((*itr) == QLatin1Char('m')) {  // matrix
                QString temp(QLatin1String("m"));
                int remains = 6;
                while (remains--) {
@@ -686,12 +685,12 @@ bool TupSvg2Qt::svgmatrix2qtmatrix(const QString &data, QMatrix &matrix)
                       ++itr;
                }
             
-               ++itr;// '('
+               ++itr; // '('
                QList<qreal> points = parseNumbersList(itr);
                ++itr; // ')'
 
                Q_ASSERT(points.count() == 6);
-               matrix = matrix * QMatrix(points[0], points[1],points[2], points[3], points[4], points[5]);
+               transform = transform * QTransform(points[0], points[1], points[2], points[3], points[4], points[5]);
            }
     }
     

@@ -46,14 +46,15 @@
 #include <QStackedWidget>
 #include <QLabel>
 #include <QPushButton>
+#include <QCameraInfo>
 
 class TUPITUBE_EXPORT TupCameraInterface : public QFrame
 {
     Q_OBJECT
 
     public:
-        TupCameraInterface(const QString &title, QList<QByteArray> cameraDevices, QComboBox *devicesCombo, int cameraIndex, 
-                           const QSize cameraSize = QSize(), int counter = 1, QWidget *parent = 0);
+        TupCameraInterface(const QString &title, QList<QCameraInfo> cameraDevices, QComboBox *devicesCombo, int cameraIndex, 
+                           const QSize cameraSize = QSize(), int counter = 1, QWidget *parent = nullptr);
         ~TupCameraInterface();
 
     protected:

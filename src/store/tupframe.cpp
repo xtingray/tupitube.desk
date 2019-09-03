@@ -844,8 +844,13 @@ bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int
                         if (downzValue == (zLimit - 1)) {
                             svg.at(currentIndex)->setZValue(downzValue);
                             svg.at(currentIndex - 1)->setZValue(zLimit);
-                            svg.swap(currentIndex, currentIndex -1);
-                            svgIndexes.swap(currentIndex, currentIndex -1);
+
+                            // svg.swap(currentIndex, currentIndex - 1);
+                            // svgIndexes.swap(currentIndex, currentIndex - 1);
+
+                            svg.swapItemsAt(currentIndex, currentIndex - 1);
+                            svgIndexes.swapItemsAt(currentIndex, currentIndex - 1);
+
                             return true;
                         } else {
                             for (int i=0; i < graphics.size(); ++i) {
@@ -902,8 +907,13 @@ bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int
                         if (downzValue == (zLimit - 1)) {
                             graphics.at(currentIndex)->setItemZValue(downzValue);
                             graphics.at(currentIndex - 1)->setItemZValue(zLimit);
-                            graphics.swap(currentIndex, currentIndex - 1);
-                            objectIndexes.swap(currentIndex, currentIndex - 1);
+
+                            // graphics.swap(currentIndex, currentIndex - 1);
+                            // objectIndexes.swap(currentIndex, currentIndex - 1);
+
+                            graphics.swapItemsAt(currentIndex, currentIndex - 1);
+                            objectIndexes.swapItemsAt(currentIndex, currentIndex - 1);
+
                             return true;
                         } else {
                             for (int i=0; i < svg.size(); ++i) {
@@ -968,8 +978,13 @@ bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int
                         if (upZValue == (zLimit + 1)) {
                             svg.at(currentIndex)->setZValue(upZValue);
                             svg.at(currentIndex + 1)->setZValue(zLimit);
-                            svg.swap(currentIndex, currentIndex + 1);
-                            svgIndexes.swap(currentIndex, currentIndex + 1);
+
+                            // svg.swap(currentIndex, currentIndex + 1);
+                            // svgIndexes.swap(currentIndex, currentIndex + 1);
+
+                            svg.swapItemsAt(currentIndex, currentIndex + 1);
+                            svgIndexes.swapItemsAt(currentIndex, currentIndex + 1);
+
                             return true;
                         } else {
                             for (int i=0; i < graphics.size(); ++i) {
@@ -1026,8 +1041,13 @@ bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int
                         if (upZValue == (zLimit + 1)) {
                             graphics.at(currentIndex)->setItemZValue(upZValue);
                             graphics.at(currentIndex + 1)->setItemZValue(zLimit);
-                            graphics.swap(currentIndex, currentIndex + 1);
-                            objectIndexes.swap(currentIndex, currentIndex + 1);
+
+                            // graphics.swap(currentIndex, currentIndex + 1);
+                            // objectIndexes.swap(currentIndex, currentIndex + 1);
+
+                            graphics.swapItemsAt(currentIndex, currentIndex + 1);
+                            objectIndexes.swapItemsAt(currentIndex, currentIndex + 1);
+
                             return true;
                         } else {
                             for (int i=0; i < svg.size(); ++i) {

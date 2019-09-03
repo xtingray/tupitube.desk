@@ -51,7 +51,8 @@ TupItemConverter::~TupItemConverter()
 
 void TupItemConverter::copyProperties(QGraphicsItem *src, QGraphicsItem *dest)
 {
-    dest->setMatrix(src->matrix());
+    // dest->setMatrix(src->matrix());
+    dest->setTransform(src->transform());
     dest->setPos(src->scenePos());
     dest->setFlags(src->flags() );
     dest->setSelected(src->isSelected());

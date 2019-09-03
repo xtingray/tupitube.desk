@@ -375,3 +375,13 @@ void Configurator::enableSaveOption(bool flag)
 {
     settingsPanel->enableSaveOption(flag);
 }
+
+int Configurator::stepsTotal()
+{
+    return settingsPanel->stepsTotal();
+}
+
+void Configurator::updateSegments(const QPainterPath path)
+{
+    settingsPanel->updateSegments(path);
+}

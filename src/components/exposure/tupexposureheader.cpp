@@ -149,10 +149,10 @@ void TupExposureHeader::moveHeaderSection(int position, int newPosition, bool is
     if (isLocalRequest) {
         m_sectionOnMotion = true;
         moveSection(visualIndex(position), visualIndex(newPosition));
-        m_sections.swap(position, newPosition);
+        m_sections.swapItemsAt(position, newPosition);
         m_sectionOnMotion = false;
     } else {
-        m_sections.swap(position, newPosition);
+        m_sections.swapItemsAt(position, newPosition);
     }
 }
 
@@ -220,7 +220,7 @@ void TupExposureHeader::mousePressEvent(QMouseEvent *event)
         font.setPointSize(8);
         QFontMetrics fm(font);
         QString text = m_sections[section].title;
-        int w = fm.width(text);
+        int w = fm.horizontalAdvance(text);
         int limit = sectionSize(section)/2 - w/2;
 
         QRect rect(x + limit - 12, 3, 12, height()-3);
@@ -290,7 +290,7 @@ void TupExposureHeader::paintSection(QPainter *painter, const QRect & rect, int 
     }
 
     int buttonWidth = 12;
-    int width = (rect.normalized().width() - (fm.width(text) + buttonWidth) + 4)/ 2;
+    int width = (rect.normalized().width() - (fm.horizontalAdvance(text) + buttonWidth) + 4)/ 2;
     int x = rect.normalized().x() + width + buttonWidth;
     int y = rect.normalized().bottomLeft().y() - (1 + (rect.normalized().height() - fm.height())/2);
 

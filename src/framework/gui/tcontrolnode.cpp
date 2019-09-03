@@ -85,12 +85,13 @@ void TControlNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 
     painter->setBrush(color);
     paintLinesToChildNodes(painter);
-    painter->drawRoundRect(boundingRect());
+    // painter->drawRoundRect(boundingRect()); 
+    painter->drawRoundedRect(boundingRect(), 1, 1, Qt::AbsoluteSize);
 }
 
 void TControlNode::paintLinesToChildNodes(QPainter *painter)
 {
-    QMatrix inverted = sceneMatrix().inverted();
+    QTransform inverted = sceneTransform().inverted();
     painter->save();
     
     painter->setPen(QPen(QColor(Qt::gray)));

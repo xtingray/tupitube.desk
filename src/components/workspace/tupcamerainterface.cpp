@@ -42,14 +42,15 @@
 #include <QBoxLayout>
 #include <QIcon>
 #include <QDir>
-#include <QDesktopWidget>
+// #include <QDesktopWidget>
+#include <QScreen>
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QColorDialog>
 #include <QCamera>
 #include <QCameraImageCapture>
 
-TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> cameraDevices, QComboBox *devicesCombo, int cameraIndex, 
+TupCameraInterface::TupCameraInterface(const QString &title, QList<QCameraInfo> cameraDevices, QComboBox *devicesCombo, int cameraIndex, 
                                        const QSize cameraSize, int i, QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
@@ -67,8 +68,9 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
 
     widgetStack = new QStackedWidget();
     QSize displaySize = cameraSize;
-    QDesktopWidget desktop;
-    int desktopWidth = desktop.screenGeometry().width();
+    // QDesktopWidget desktop;
+    QScreen *screen = QGuiApplication::screens().at(0);
+    int desktopWidth = screen->geometry().width();
 
     if (cameraSize.width() > desktopWidth) { // If camera resolution is bigger than screen resolution
         int width = desktopWidth/2;
@@ -88,7 +90,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
     QString path = randomPath();
 
     if (cameraDevices.count() == 1) { // Only one camera was detected
-        QByteArray device = cameraDevices.at(0);
+        QCameraInfo device = cameraDevices.at(0);
         QCamera *camera = new QCamera(device);
         QCameraImageCapture *imageCapture = new QCameraImageCapture(camera);
 
@@ -98,7 +100,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QByteArray> c
         widgetStack->addWidget(cameraWindow);
     } else {
         for (int i=0; i < cameraDevices.size(); i++) {
-             QByteArray device = cameraDevices.at(i);
+             QCameraInfo device = cameraDevices.at(i);
              QCamera *camera = new QCamera(device); 
              QCameraImageCapture *imageCapture = new QCameraImageCapture(camera);
 

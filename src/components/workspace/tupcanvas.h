@@ -52,6 +52,7 @@
 #include <QSize>
 #include <QCloseEvent>
 #include <QColor>
+#include <QScreen>
 
 class TUPITUBE_EXPORT TupCanvas : public QFrame
 {
@@ -111,6 +112,7 @@ class TUPITUBE_EXPORT TupCanvas : public QFrame
     private:
         enum UserHand { Right = 0, Left };
         TupCanvasView *graphicsView;
+        QScreen *screen;
 
         QColor currentColor;
         TupBrushManager *brushManager;

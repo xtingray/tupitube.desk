@@ -120,7 +120,8 @@ void TNodeGroup::syncNodesFromParent()
 
     if (nodeParentItem) {
         if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem))
-            syncNodes(nodeParentItem->sceneMatrix().map(qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)->path()));
+            syncNodes(nodeParentItem->sceneTransform().map(qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)->path()));
+            // syncNodes(nodeParentItem->sceneMatrix().map(qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)->path()));
     }
 }
 
@@ -231,10 +232,11 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
         qDeleteAll(nodes);
         nodes.clear();
         
-        QPainterPath path = pathItem->sceneMatrix().map(pathItem->path());
+        // QPainterPath path = pathItem->sceneMatrix().map(pathItem->path());
+        QPainterPath path = pathItem->sceneTransform().map(pathItem->path());
         saveParentProperties();
         int index = 0;
-        
+ 
         while (index < path.elementCount()) {
             QPainterPath::Element e = path.elementAt(index);
             
@@ -243,13 +245,13 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
                     continue;
                 if (path.elementAt(index-2).type == QPainterPath::CurveToElement) {
                     TControlNode *node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
-                    QPainterPath::Element e1 = path.elementAt(index-1);
-                    node->setLeft(new TControlNode(index-1, this, e1, pathItem, nodeScene, nodeLevel));
+                    QPainterPath::Element e1 = path.elementAt(index - 1);
+                    node->setLeft(new TControlNode(index - 1, this, e1, pathItem, nodeScene, nodeLevel));
                     
                     if (index+1 < path.elementCount()) {
                         QPainterPath::Element e2 = path.elementAt(index+1);
                         if (e2.type == QPainterPath::CurveToElement) {
-                            node->setRight(new TControlNode(index+1, this, e2, pathItem, nodeScene, nodeLevel));
+                            node->setRight(new TControlNode(index + 1, this, e2, pathItem, nodeScene, nodeLevel));
                             nodes << node->right();
                             index++;
                         }
@@ -262,7 +264,7 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
                 if (index+1 < path.elementCount()) {
                     if (path.elementAt(index+1).type == QPainterPath::CurveToElement) {
                         node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
-                        node->setRight(new TControlNode(index+1, this, path.elementAt(index+1), pathItem, nodeScene));
+                        node->setRight(new TControlNode(index + 1, this, path.elementAt(index + 1), pathItem, nodeScene));
                         
                         index++;
                         nodes << node;
@@ -331,9 +333,14 @@ bool TNodeGroup::isSelected()
     return false;
 }
 
-int TNodeGroup::size()
+int TNodeGroup::nodesTotalCount()
 {
     return nodes.count();
+}
+
+int TNodeGroup::mainNodesCount()
+{
+    return (nodes.count()/3) + 1;
 }
 
 void TNodeGroup::resizeNodes(qreal scaleFactor)

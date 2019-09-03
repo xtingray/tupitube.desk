@@ -57,8 +57,8 @@ void TToolBox::createIcon()
     
     QPainter p(&pixmap);
     
-    p.fillRect(pixmap.rect(), palette().background());
-    p.setBrush(palette().foreground());
+    p.fillRect(pixmap.rect(), palette().window());
+    p.setBrush(palette().windowText());
     p.translate(pixmap.width()/3, 5);
     p.drawConvexPolygon(m_pArrow);
 
@@ -76,8 +76,8 @@ void TToolBox::createIcon()
     
     QPainter p2(&pixmap2);
     
-    p2.fillRect(pixmap2.rect(), palette().background());
-    p2.setBrush(palette().foreground());
+    p2.fillRect(pixmap2.rect(), palette().window());
+    p2.setBrush(palette().windowText());
     p2.translate(pixmap2.width()/3, 5);
     p2.drawConvexPolygon(m_pArrow);
 

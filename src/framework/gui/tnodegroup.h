@@ -81,7 +81,8 @@ class T_GUI_EXPORT TNodeGroup : public QObject
 
         void expandAllNodes();
         bool isSelected();
-        int size();
+        int nodesTotalCount();
+        int mainNodesCount(); 
         void resizeNodes(qreal scaleFactor);
 
     signals:
