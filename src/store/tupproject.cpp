@@ -254,25 +254,16 @@ bool TupProject::restoreScene(int position)
 bool TupProject::removeScene(int pos)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProject::removeScene()]";
-        #else
-            T_FUNCINFO;
-        #endif
-    #endif        
-    
+        qInfo() << "[TupProject::removeScene()] - scene index: " + QString::number(pos);
+    #endif
+
     TupScene *toRemove = sceneAt(pos);
     if (toRemove) {
         QString path = getDataDir() + "/scene" + QString::number(pos) + ".tps";
         if (QFile::exists(path)) {
             if (!QFile::remove(path)) {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupProject::removeScene() - Error removing file " + path;
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qCritical() << "TupProject::removeScene() - Error removing file " + path;
                 #endif
             
                 return false;

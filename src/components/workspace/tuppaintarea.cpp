@@ -483,40 +483,43 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
 void TupPaintArea::sceneResponse(TupSceneResponse *event)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupPaintArea::sceneResponse() - [" + QString::number(event->getSceneIndex()) + "]";
-        #ifdef Q_OS_WIN
-            qDebug() << msg;
-        #else
-            tDebug() << msg;
-        #endif
+        qInfo() << "TupPaintArea::sceneResponse() - [" + QString::number(event->getSceneIndex()) + "]";
     #endif
 
     TupGraphicsScene *guiScene = graphicsScene();
-
     if (!guiScene->currentScene())
         return;
 
     if (!guiScene->userIsDrawing()) {
+        int sceneIndex = event->getSceneIndex();
         switch(event->getAction()) {
             case TupProjectRequest::Select:
               {
-                  if (event->getSceneIndex() >= 0) {
+                  if (sceneIndex >= 0) {
                       if (project->scenesCount() == 1)
                           setCurrentScene(0);
                       else
-                          setCurrentScene(event->getSceneIndex());
+                          setCurrentScene(sceneIndex);
                   }
               }
             break;
             case TupProjectRequest::Remove:
               {
-                  if (project->scenesCount() > 0)
-                      setCurrentScene(event->getSceneIndex() - 1);
+                  if (project->scenesCount() > 0) {
+                      if (project->scenesCount() == 1) {
+                          setCurrentScene(0);
+                      } else {
+                          if (sceneIndex == (project->scenesCount() - 1))
+                              setCurrentScene(sceneIndex - 1);
+                          else
+                              setCurrentScene(sceneIndex);
+                      }
+                  }
               }
             break;
             case TupProjectRequest::Reset:
               {
-                  setCurrentScene(event->getSceneIndex());
+                  setCurrentScene(sceneIndex);
               }
             break;
             case TupProjectRequest::BgColor:

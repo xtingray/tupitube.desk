@@ -102,22 +102,17 @@ bool TupCommandExecutor::removeScene(TupSceneResponse *response)
         document.appendChild(scene->toXml(document));
         response->setState(document.toString());
         response->setArg(scene->getSceneName());
-        
+
         if (project->removeScene(pos)) {
             emit responsed(response);
             return true;
         } 
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupCommandExecutor::removeScene() - Fatal Error: No scene at index -> " + QString::number(pos);
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError("library") << msg;
-            #endif
+            qWarning() << "TupCommandExecutor::removeScene() - Fatal Error: No scene at index -> " + QString::number(pos);
         #endif
     }
-    
+
     return false;
 }
 

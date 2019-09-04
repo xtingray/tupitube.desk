@@ -152,11 +152,7 @@ void TupTimeLine::addScene(int sceneIndex, const QString &name)
 void TupTimeLine::removeScene(int sceneIndex)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupTimeLine::removeScene()]";
-        #else
-            T_FUNCINFO << "sceneIndex -> " << sceneIndex;
-        #endif
+        qInfo() << "[TupTimeLine::removeScene()] - sceneIndex -> " << sceneIndex;
     #endif
 
     if (sceneIndex >= 0 && sceneIndex < scenesContainer->count())
@@ -165,9 +161,9 @@ void TupTimeLine::removeScene(int sceneIndex)
 
 void TupTimeLine::closeAllScenes()
 {
-    blockSignals(true);
+    // blockSignals(true);
     scenesContainer->removeAllScenes();
-    blockSignals(false);
+    // blockSignals(false);
 }
 
 void TupTimeLine::sceneResponse(TupSceneResponse *response)
@@ -860,11 +856,7 @@ void TupTimeLine::requestRemoveFrame(bool flag)
 void TupTimeLine::extendFrameForward(int layerIndex, int frameIndex)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::copyFrameSelection()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qInfo() << "[TupCommandExecutor::copyFrameSelection()]";
     #endif
 
     int sceneIndex = scenesContainer->currentIndex();
@@ -876,7 +868,6 @@ void TupTimeLine::extendFrameForward(int layerIndex, int frameIndex)
 void TupTimeLine::requestSceneSelection(int sceneIndex)
 {
     if (scenesContainer->count() > 1) {
-
         int previewFrameIndex = scenesContainer->currentScene()->currentFrame();
         int previewLayerIndex = scenesContainer->currentScene()->currentLayer();
         int previewSceneIndex = scenesContainer->currentIndex();

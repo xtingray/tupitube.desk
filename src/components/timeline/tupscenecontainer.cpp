@@ -89,15 +89,20 @@ void TupSceneContainer::renameScene(int index, const QString &name)
 
 void TupSceneContainer::removeAllScenes()
 {
+    blockSignals(true);
     clear();
     scenes.clear();
     undoScenes.clear();
+    blockSignals(false);
 }
 
 TupTimeLineTable * TupSceneContainer::currentScene()
 {
     int index = currentIndex();
-    TupTimeLineTable *framesTable = scenes.at(index);
+    TupTimeLineTable *framesTable = nullptr;
+
+    if (index < scenes.size())
+        framesTable = scenes.at(index);
 
     return framesTable;
 }
