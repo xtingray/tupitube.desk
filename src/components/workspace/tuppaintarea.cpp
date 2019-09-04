@@ -850,16 +850,28 @@ void TupPaintArea::copyItems()
 
     if (!selected.isEmpty()) {
         copiesXml.clear();
-        foreach (QGraphicsItem *item, selected) {
-             if (qgraphicsitem_cast<TControlNode *> (item))
-                 selected.removeOne(item);
-        }
 
         TupGraphicsScene* currentScene = graphicsScene();
-
         if (currentScene) {
             oldPosition = selected.at(0)->boundingRect().topLeft();
-            foreach (QGraphicsItem *item, selected) {
+            int size = selected.size();
+
+            for (int i=0; i<size-1; i++) {
+                qreal iLevel = selected.at(i)->zValue();
+                for (int j=i+1; j<size; j++) {
+                    qreal jLevel = selected.at(j)->zValue();
+                    if (jLevel < iLevel) {
+                        selected.swapItemsAt(i, j);
+                        iLevel = jLevel;
+                    }
+                }
+            }
+
+            for (int i=0; i<size; i++) {
+                QGraphicsItem *item = selected.at(i);
+                if (qgraphicsitem_cast<TControlNode *> (item))
+                    continue;
+
                 QDomDocument dom;
                 dom.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(dom));
                 copiesXml << dom.toString();
@@ -913,7 +925,9 @@ void TupPaintArea::pasteItems()
         if (!menuOn)
             position = viewPosition();
     
-        foreach (QString xml, copiesXml) {
+        // foreach (QString xml, copiesXml) {
+        for (int i=0; i<copiesXml.size(); i++) {
+            QString xml = copiesXml.at(i);
             TupFrame *frame = currentScene->currentFrame();
             if (frame) {
                 int total = frame->graphicsCount();
