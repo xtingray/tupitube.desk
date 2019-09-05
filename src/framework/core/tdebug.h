@@ -146,7 +146,7 @@ enum DebugOutput
     TBrowserOutput
 };
 
-#if !defined(K_NODEBUG)
+#if !defined(TUP_NODEBUG)
 class T_CORE_EXPORT TDebug
 {
     public:
@@ -449,7 +449,7 @@ inline TDebug tWarning(int area, int output = TDefault)
     return TDebug(TWarningMsg, QString::number(area), DebugOutput(output));
 }
 
-#else // K_NODEBUG
+#else // TUP_NODEBUG
 
 class TNDebug
 {
@@ -487,7 +487,7 @@ inline TNDebug tDebug(const QString &, int = TDefault)
 #define tError tDebug
 #define tWarning tDebug
 
-#endif // K_NODEBUG
+#endif // TUP_NODEBUG
 
 #ifdef __GNUC__
 #define tfDebug tDebug() << __FILE__ << ":" <<__FUNCTION__ << ":: "

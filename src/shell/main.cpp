@@ -78,8 +78,8 @@ int main(int argc, char ** argv)
 
     // Setting TupiTube Desk version values
     kAppProp->setVersion(VERSION);
-    kAppProp->setCodeName(CODE_NAME);
     kAppProp->setRevision(REVISION);
+    kAppProp->setCodeName(CODE_NAME);
 
     // Defining TupiTube Desk global variables
     QDir appDirPath(QApplication::applicationDirPath());

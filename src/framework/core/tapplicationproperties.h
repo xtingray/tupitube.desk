@@ -59,8 +59,8 @@ class T_CORE_EXPORT TApplicationProperties
         void setCacheDir(const QString &path);
         void setRepositoryDir(const QString &path);
         void setVersion(const QString &version);
-        void setCodeName(const QString &code);
         void setRevision(const QString &revision);
+        void setCodeName(const QString &code);
 
         virtual QString homeDir() const;
         virtual QString binDir() const;
@@ -72,8 +72,8 @@ class T_CORE_EXPORT TApplicationProperties
         virtual QString cacheDir() const;
         virtual QString repositoryDir() const;
         virtual QString version() const;
-        virtual QString codeName() const;
         virtual QString revision() const;
+        virtual QString codeName() const;
 
         static TApplicationProperties *instance();
 		

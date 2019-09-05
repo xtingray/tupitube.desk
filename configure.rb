@@ -97,7 +97,7 @@ _EOH_
        end
 
        config.addOption("release")
-       config.addDefine("K_NODEBUG")
+       config.addDefine("TUP_NODEBUG")
        print "[ \033[91mOFF\033[0m ]\n"
     end
 
@@ -175,9 +175,9 @@ _EOH_
        config.addDefine("ADD_HEADERS");
     end
 
-    config.addDefine('VERSION=\\\\\"0.2\\\\\"')
-    config.addDefine('CODE_NAME=\\\\\"Garapa\\\\\"')
-    config.addDefine('REVISION=\\\\\"13\\\\\"')
+    config.addDefine('VERSION=\\\\\"Community\\\\\"')
+    config.addDefine('REVISION=\\\\\"I\\\\\"')
+    config.addDefine('CODE_NAME=\\\\\"Free_Version\\\\\"')
     config.addDefine('CONFIG_VERSION=\\\\\"2\\\\\"')
 
     if File.exists?('/etc/canaima_version')

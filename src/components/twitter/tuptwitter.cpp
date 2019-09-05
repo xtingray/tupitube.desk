@@ -413,7 +413,7 @@ void TupTwitter::formatStatus(QByteArray array)
     html += "<div class=\"" + css + "\"><center>\n";
     html += tr("Latest Version") + ": <b>" + version + "</b> &nbsp;&nbsp;&nbsp;";
     html += tr("Revision") + ": <b>" + revision + "</b> &nbsp;&nbsp;&nbsp;";
-    html += tr("Code Name") + ": <b>" + codeName + "</b>";
+    html += tr("Description") + ": <b>" + codeName + "</b>";
 
     if (update)
         html += "&nbsp;&nbsp;&nbsp;<b>[</b> <a href=\"https://www.maefloresta.com\">" + tr("It's time to upgrade! Click here!") + "</a>  <b>]</b>"; 

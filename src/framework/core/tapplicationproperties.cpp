@@ -90,14 +90,14 @@ void TApplicationProperties::setVersion(const QString &version)
     versionStr = version;
 }
 
-void TApplicationProperties::setCodeName(const QString &code)
-{
-    codeNameStr = code;
-}
-
 void TApplicationProperties::setRevision(const QString &revision)
 {
     revisionStr = revision;
+}
+
+void TApplicationProperties::setCodeName(const QString &code)
+{
+    codeNameStr = code;
 }
 
 QString TApplicationProperties::homeDir() const
