@@ -49,7 +49,7 @@ class TUPITUBE_EXPORT TupLineGuide : public QGraphicsItem
         ~TupLineGuide();
         
         QRectF boundingRect() const;
-        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
         void setEnabledSyncCursor(bool enabled);
         
     protected:

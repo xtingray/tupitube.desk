@@ -45,10 +45,10 @@ class TUPITUBE_EXPORT TupExportPluginObject : public QObject, public TupExportIn
 {
     Q_OBJECT
 
-    Q_INTERFACES(TupExportInterface);
+    Q_INTERFACES(TupExportInterface)
     
     public:
-        TupExportPluginObject(QObject *parent = 0);
+        TupExportPluginObject(QObject *parent = nullptr);
         ~TupExportPluginObject();
 };
 

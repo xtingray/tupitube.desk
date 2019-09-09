@@ -48,10 +48,10 @@ class TUPITUBE_EXPORT TupModuleWidgetBase : public QWidget, public TupAbstractPr
     Q_OBJECT
     
     public:
-        TupModuleWidgetBase(QWidget *parent, const char *name = 0);
+        TupModuleWidgetBase(QWidget *parent, const char *name = nullptr);
         ~TupModuleWidgetBase();
 
-        virtual void addChild(QWidget *child, Qt::Alignment alignment = 0);
+        virtual void addChild(QWidget *child, Qt::Alignment alignment = Qt::AlignCenter);
         QBoxLayout *boxLayout();
 
     public slots:

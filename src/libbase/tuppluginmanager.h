@@ -46,7 +46,7 @@ class TUPITUBE_EXPORT TupPluginManager : public QObject
     Q_OBJECT
 
     private:
-        TupPluginManager(QObject *parent = 0);
+        TupPluginManager(QObject *parent = nullptr);
         
     public:
         ~TupPluginManager();

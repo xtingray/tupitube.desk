@@ -67,7 +67,7 @@ TupPaintAreaBase::TupPaintAreaBase(QWidget *parent, QSize dimension, TupLibrary 
     gScene = new TupGraphicsScene();
     gScene->setLibrary(library);
 
-    grid = 0;
+    grid = nullptr;
     updateGridParameters();
 
     greenThickPen = QPen(QColor(0, 135, 0, 255), 2);
@@ -85,7 +85,7 @@ TupPaintAreaBase::TupPaintAreaBase(QWidget *parent, QSize dimension, TupLibrary 
 
     drawingRect = QRectF(QPointF(0, 0), dimension);
     centerPoint = drawingRect.center().toPoint();
-    target = drawingRect.width() * (0.02);
+    target = static_cast<int> (drawingRect.width() * (0.02));
 
     gScene->setSceneRect(drawingRect);
     setScene(gScene);
@@ -261,7 +261,7 @@ void TupPaintAreaBase::keyPressEvent(QKeyEvent *event)
 
     if (!gScene->userIsDrawing() && (event->modifiers () == (Qt::AltModifier | Qt::ControlModifier))) {
         QDesktopWidget desktop;
-        dial->setAngle(angle);
+        dial->setAngle(static_cast<int>(angle));
         dial->show();
 
         /*
@@ -345,7 +345,7 @@ bool TupPaintAreaBase::viewportEvent(QEvent *event)
 
 void TupPaintAreaBase::wheelEvent(QWheelEvent *event)
 {
-    scaleView(pow((double)2, event->delta() / 520.0));
+    scaleView(pow(2.0, event->delta() / 520.0));
 }
 
 void TupPaintAreaBase::drawBackground(QPainter *painter, const QRectF &rect)
@@ -383,8 +383,8 @@ void TupPaintAreaBase::drawForeground(QPainter *painter, const QRectF &rect)
                             // if enabled draw grid
                             if (gridEnabled) {
                                 painter->setPen(gridPen);
-                                int maxX = drawingRect.width() + 100;
-                                int maxY = drawingRect.height() + 100;
+                                int maxX = static_cast<int> (drawingRect.width() + 100);
+                                int maxY = static_cast<int> (drawingRect.height() + 100);
                                 for (int i = -100; i <= maxX; i += gridSeparation)
                                      painter->drawLine(i, -100, i, maxY);
                                 for (int i = -100; i <= maxY; i += gridSeparation)
@@ -395,20 +395,20 @@ void TupPaintAreaBase::drawForeground(QPainter *painter, const QRectF &rect)
                                 painter->setPen(greenThickPen);
                                 painter->drawRect(drawingRect);
 
-                                int w = drawingRect.width();
-                                int h = drawingRect.height();
-                                int outerBorder = w/19;
-                                int innerBorder = w/6;
+                                int w = static_cast<int> (drawingRect.width());
+                                int h = static_cast<int> (drawingRect.height());
+                                int outerBorder = w / 19;
+                                int innerBorder = w / 6;
 
-                                int hSpace = w/3;
-                                int vSpace = drawingRect.height()/3;
+                                int hSpace = w / 3;
+                                int vSpace = static_cast<int> (drawingRect.height() / 3);
 
                                 QPointF left = drawingRect.topLeft() + QPointF(outerBorder, outerBorder);
                                 QPointF right = drawingRect.bottomRight() - QPointF(outerBorder, outerBorder);
-                                int leftX = left.x();
-                                int leftY = left.y();
-                                int rightX = right.x();
-                                int rightY = right.y();
+                                int leftX = static_cast<int> (left.x());
+                                int leftY = static_cast<int> (left.y());
+                                int rightX = static_cast<int> (right.x());
+                                int rightY = static_cast<int> (right.y());
 
                                 QRectF outerRect(left, right);
 
@@ -476,11 +476,11 @@ void TupPaintAreaBase::drawPadLock(QPainter *painter, const QRectF &rect, QStrin
 
     QRectF shore = fm.boundingRect(text);
 
-    int middleX = gScene->sceneRect().topRight().x() - gScene->sceneRect().topLeft().x();
-    int middleY = gScene->sceneRect().bottomLeft().y() - gScene->sceneRect().topLeft().y();
+    int middleX = static_cast<int> (gScene->sceneRect().topRight().x() - gScene->sceneRect().topLeft().x());
+    int middleY = static_cast<int> (gScene->sceneRect().bottomLeft().y() - gScene->sceneRect().topLeft().y());
 
-    int x = (middleX - shore.width()) / 2;
-    int y = (middleY - shore.height()) / 2;
+    int x = static_cast<int> ((middleX - shore.width()) / 2);
+    int y = static_cast<int> ((middleY - shore.height()) / 2);
     painter->drawText(x, y, text);
 
     x = (middleX - 20) / 2;

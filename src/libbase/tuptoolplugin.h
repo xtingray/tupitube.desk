@@ -61,7 +61,8 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
         enum MenuIndex { InvalidMenu = -1, BrushesMenu = 0, SelectionMenu, FillMenu, ZoomMenu, TweenerMenu, Arrows, ColorMenu };
         enum BrushTools { InvalidBrush = -1, PencilTool = 0, InkTool, SchemeTool, EraserTool, PolyLineTool, LineTool, RectangleTool, 
                           EllipseTool, TextTool };
-        enum ArrowTools { InvalidKey = -1, RightArrow, LeftArrow, UpArrow, DownArrow, QuickCopyRight, QuickCopyDown, DeleteUp, DeleteLeft, Delete };
+        enum ArrowTools { InvalidKey = -1, RightArrow, LeftArrow, UpArrow, DownArrow, QuickCopyRight, QuickCopyDown, DeleteUp,
+                          DeleteLeft, Delete };
         enum SelectTools { InvalidSelection = -1, NodesTool = 0, ObjectsTool };
         enum FillTools { InvalidFill = -1, FillTool = 0, ContourFill };
         enum ColorTools { InvalidColor = -1, ColorTool = 0 };
@@ -69,15 +70,15 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
         enum Mode { Add = 1, Edit, View };
         enum EditMode { Selection = 0, Properties, None };
 
-        explicit TupToolPlugin(QObject *parent = 0);
+        explicit TupToolPlugin(QObject *parent = nullptr);
         ~TupToolPlugin();
-        
+
         void setName(const QString &tool);
         QString name() const;
-        
+
         virtual void init(TupGraphicsScene *scene);
         virtual void updateScene(TupGraphicsScene *scene);
-        
+
         virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene) = 0;
         virtual void doubleClick(const TupInputDeviceInformation *input, TupGraphicsScene *scene);
         virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene) = 0;

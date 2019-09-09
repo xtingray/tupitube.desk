@@ -40,7 +40,7 @@
 
 #include <QDir>
 
-TupPluginManager *TupPluginManager::s_instance = 0;
+TupPluginManager *TupPluginManager::s_instance = nullptr;
 
 TupPluginManager::TupPluginManager(QObject *parent) : QObject(parent)
 {
@@ -77,45 +77,45 @@ void TupPluginManager::loadPlugins()
     QDir pluginDirectory = QDir(kAppProp->pluginDir());
 
     foreach (QString fileName, pluginDirectory.entryList(QStringList() << "*.so" << "*.dll" << "*.dylib", QDir::Files)) {
-             QPluginLoader *loader = new QPluginLoader(pluginDirectory.absoluteFilePath(fileName));
-             QObject *plugin = qobject_cast<QObject*>(loader->instance());
+        QPluginLoader *loader = new QPluginLoader(pluginDirectory.absoluteFilePath(fileName));
+        QObject *plugin = qobject_cast<QObject*>(loader->instance());
 
-             #ifdef TUP_DEBUG
-                 #ifdef Q_OS_WIN
-                     qWarning() << "TupPluginManager::loadPlugins() - Trying to load plugin from: " << fileName;
-                 #else
-                     tWarning("plugins") << "*** Trying to load plugin from: " << fileName;
-                 #endif
-             #endif
-        
-             if (plugin) {
-                 AFilterInterface *filter = qobject_cast<AFilterInterface *>(plugin);
-                 
-                 if (filter) {
-                     filters << plugin;
-                 } else {
-                     TupToolInterface *tool = qobject_cast<TupToolInterface *>(plugin);
-                     if (tool) {
-                         tools << plugin;
-                     } else {
-                         TupExportInterface *exporter = qobject_cast<TupExportInterface *>(plugin); 
-                         if (exporter) {
-                             formats << plugin;
-                         }
-                     } 
-                 }
+        #ifdef TUP_DEBUG
+            #ifdef Q_OS_WIN
+                qWarning() << "TupPluginManager::loadPlugins() - Trying to load plugin from: " << fileName;
+            #else
+                tWarning("plugins") << "*** Trying to load plugin from: " << fileName;
+            #endif
+        #endif
 
-                 loaders << loader;
-             } else {
-                 #ifdef TUP_DEBUG
-                     QString msg = "TupPluginManager::loadPlugins() - Cannot load plugin, error was: " + loader->errorString();
-                     #ifdef Q_OS_WIN
-                         qDebug() << msg;
-                     #else
-                         tError() << msg;
-                     #endif
-                 #endif
-             }
+        if (plugin) {
+            AFilterInterface *filter = qobject_cast<AFilterInterface *>(plugin);
+
+            if (filter) {
+                filters << plugin;
+            } else {
+                TupToolInterface *tool = qobject_cast<TupToolInterface *>(plugin);
+                if (tool) {
+                    tools << plugin;
+                } else {
+                    TupExportInterface *exporter = qobject_cast<TupExportInterface *>(plugin);
+                    if (exporter) {
+                        formats << plugin;
+                    }
+                }
+            }
+
+            loaders << loader;
+        } else {
+            #ifdef TUP_DEBUG
+                QString msg = "TupPluginManager::loadPlugins() - Cannot load plugin, error was: " + loader->errorString();
+                #ifdef Q_OS_WIN
+                    qDebug() << msg;
+                #else
+                    tError() << msg;
+                #endif
+            #endif
+        }
     }
 }
 
@@ -131,8 +131,8 @@ void TupPluginManager::unloadPlugins()
     #endif
 
     foreach (QPluginLoader *loader, loaders) {
-             delete loader->instance();
-             delete loader;
+        delete loader->instance();
+        delete loader;
     }
 }
 

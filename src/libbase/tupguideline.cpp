@@ -40,7 +40,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 
-TupLineGuide::TupLineGuide(Qt::Orientation direction): QGraphicsItem(0)
+TupLineGuide::TupLineGuide(Qt::Orientation direction): QGraphicsItem(nullptr)
 {
     orientation = direction;
     enabled = true;
@@ -65,11 +65,13 @@ void TupLineGuide::paint(QPainter * painter, const QStyleOptionGraphicsItem * , 
 {
     painter->setPen(QPen(Qt::black, 1, Qt::DashLine));
     if (orientation == Qt::Vertical) {
-        painter->drawLine((int)boundingRect().center().x(), 0, (int)boundingRect().center().x(), 
-                                            (int)boundingRect().height());
+        painter->drawLine(static_cast<int>(boundingRect().center().x()), 0,
+                          static_cast<int>(boundingRect().center().x()),
+                          static_cast<int> (boundingRect().height()));
     } else {
-        painter->drawLine( 0, (int)boundingRect().center().y(), (int)boundingRect().width(), 
-        (int)boundingRect().center().y());
+        painter->drawLine(0, static_cast<int>(boundingRect().center().y()),
+                          static_cast<int> (boundingRect().width()),
+                          static_cast<int> (boundingRect().center().y()));
     }
 }
 
@@ -146,7 +148,8 @@ void TupLineGuide::syncCursor()
     QPointF globalPos;
     if (scene()) {
         foreach (QGraphicsView *view, scene()->views())
-            globalPos = view->viewport()->mapToGlobal(scenePos().toPoint() + view->mapFromScene(QPointF(0, 0))) ;
+            globalPos = view->viewport()->mapToGlobal(scenePos().toPoint()
+                                                      + view->mapFromScene(QPointF(0, 0))) ;
     }
     
     double distance;
@@ -157,8 +160,10 @@ void TupLineGuide::syncCursor()
     
     if (-QApplication::startDragDistance() < distance && distance < QApplication::startDragDistance()) {
         if (orientation == Qt::Vertical)
-            QCursor::setPos((int)globalPos.x() + 2, (int)QCursor::pos().y());
+            QCursor::setPos(static_cast<int> (globalPos.x() + 2),
+                            static_cast<int> (QCursor::pos().y()));
         else
-            QCursor::setPos((int)QCursor::pos().x(), (int)globalPos.y() + 2);
+            QCursor::setPos(static_cast<int> (QCursor::pos().x()),
+                            static_cast<int> (globalPos.y() + 2));
     }
 }
