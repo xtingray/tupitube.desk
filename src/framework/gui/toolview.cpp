@@ -65,11 +65,7 @@ TViewButton *ToolView::button() const
 void ToolView::expandDock(bool flag)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[ToolView::expandDock()]";
-        #else
-            T_FUNCINFO << flag;
-        #endif
+        qInfo() << "[ToolView::expandDock()] - flag: " << flag;
     #endif
 
     expanded = flag;
@@ -83,17 +79,17 @@ void ToolView::expandDock(bool flag)
 
 bool ToolView::isExpanded()
 {
+    #ifdef TUP_DEBUG
+        qInfo() << "[ToolView::isExpanded()] - expanded: " << expanded;
+    #endif
+
     return expanded;
 }
 
 void ToolView::setExpandingFlag() 
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[ToolView::setExpandingFlag()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qInfo() << "[ToolView::setExpandingFlag()]";
     #endif
 
     if (expanded)
@@ -102,9 +98,9 @@ void ToolView::setExpandingFlag()
         expanded = true;
 }
 
-void ToolView::setDescription(const QString &description)
+void ToolView::setDescription(const QString &desc)
 {
-    currentButton->setStatusTip(description);
+    currentButton->setStatusTip(desc);
 }
 
 void ToolView::setShortcut(QKeySequence shortcut)
@@ -131,13 +127,6 @@ QString ToolView::getObjectID()
 {
     return objectName();
 }
-
-/*
-bool ToolView::isChecked()
-{
-    return currentButton->isChecked();
-}
-*/
 
 QString ToolView::title() const
 {

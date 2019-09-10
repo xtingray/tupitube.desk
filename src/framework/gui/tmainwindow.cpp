@@ -40,6 +40,7 @@ class T_GUI_EXPORT DefaultSettings : public TMainWindowAbstractSettings
     public:
         DefaultSettings(QObject *parent);
         ~DefaultSettings();
+
         void save(TMainWindow *window);
         void restore(TMainWindow *window);
 };
@@ -55,12 +56,7 @@ DefaultSettings::~DefaultSettings()
 void DefaultSettings::save(TMainWindow *window)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TMainWindow::DefaultSettings::save() - Saving UI settings [ " + qApp->applicationName() + " ]";
-        #ifdef Q_OS_WIN
-            qWarning() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qWarning() << "TMainWindow::DefaultSettings::save() - Saving UI settings [ " + qApp->applicationName() + " ]";
     #endif
 
     QSettings settings(qApp->applicationName(), "ideality", this);
@@ -72,12 +68,14 @@ void DefaultSettings::save(TMainWindow *window)
         foreach (ToolView *view, toolViews[bar]) {
             settings.beginGroup(view->objectName());
             settings.setValue("area", int(view->button()->area()));
-            // settings.setValue("size", view->fixedSize());
             settings.setValue("style", view->button()->toolButtonStyle());
-            // settings.setValue("sensibility", view->button()->isSensible());
             settings.setValue("visible", view->isVisible());
             settings.setValue("floating", view->isFloating());
             settings.setValue("position", view->pos());
+
+            // settings.setValue("size", view->fixedSize());
+            // settings.setValue("sensibility", view->button()->isSensible());
+
             settings.endGroup();
         }
     }
@@ -92,12 +90,7 @@ void DefaultSettings::save(TMainWindow *window)
 void DefaultSettings::restore(TMainWindow *window)
 {
     #ifdef TUP_DEBUG
-	QString msg = "TMainWindow::DefaultSettings::restore() - Restoring UI settings [ " + qApp->applicationName() + " ]";
-        #ifdef Q_OS_WIN
-            qWarning() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+	qWarning() << "TMainWindow::DefaultSettings::restore() - Restoring UI settings [ " + qApp->applicationName() + " ]";
     #endif
 
     QSettings settings(qApp->applicationName(), "ideality", this);
@@ -199,11 +192,7 @@ void TMainWindow::addSpecialButton(TAction *action)
 ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int perspective, const QString &code, QKeySequence shortcut)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TMainWindow::addToolView()]";
-        #else
-            T_FUNCINFO << "- component: " << code;
-        #endif
+        qInfo() << "[TMainWindow::addToolView()] - code: " << code;
     #endif
 
     ToolView *toolView = new ToolView(widget->windowTitle(), widget->windowIcon(), code);
@@ -219,7 +208,7 @@ ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int
 
     addDockWidget(area, toolView);
     // SQA: This line is a hack to avoid self-resizing docks issue
-    resizeDocks({toolView}, {40}, Qt::Horizontal);
+    // resizeDocks({toolView}, {40}, Qt::Horizontal);
 
     m_toolViews[m_buttonBars[toToolBarArea(area)]] << toolView;
 
@@ -240,11 +229,7 @@ ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int
 void TMainWindow::removeToolView(ToolView *view)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TMainWindow::removeToolView()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qInfo() << "[TMainWindow::removeToolView()]";
     #endif
 
     bool findIt = false;
@@ -275,11 +260,7 @@ void TMainWindow::removeToolView(ToolView *view)
 void TMainWindow::enableToolViews(bool flag)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TMainWindow::enableToolViews()]";
-        #else
-            T_FUNCINFO << flag;
-        #endif
+        qInfo() << "[TMainWindow::enableToolViews()] - enable: " << flag;
     #endif
 
     foreach (TButtonBar *bar, m_buttonBars.values()) {
@@ -297,11 +278,7 @@ void TMainWindow::enableToolViews(bool flag)
 void TMainWindow::moveToolView(ToolView *view, Qt::DockWidgetArea newPlace)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TMainWindow::moveToolView()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qInfo() << "[TMainWindow::moveToolView()]";
     #endif
 
     if (toDockWidgetArea(view->button()->area()) == newPlace || newPlace == Qt::AllDockWidgetAreas || newPlace == 0)

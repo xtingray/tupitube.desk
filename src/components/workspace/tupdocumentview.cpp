@@ -2319,12 +2319,7 @@ void TupDocumentView::updateBrush(const QBrush &brush)
 void TupDocumentView::updateActiveDock(TupDocumentView::DockType dock)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupDocumentView::updateActiveDock() - currentDock: " + QString::number(dock);
-        #ifdef Q_OS_WIN
-            qDebug() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qInfo() << "TupDocumentView::updateActiveDock() - currentDock: " + QString::number(dock);
     #endif
 
     currentDock = dock;

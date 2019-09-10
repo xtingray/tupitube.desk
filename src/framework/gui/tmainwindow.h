@@ -70,7 +70,7 @@ class T_GUI_EXPORT TMainWindow : public QMainWindow
            None = 0, DefaultPerspective
          };
 
-        TMainWindow(QWidget *parent = 0);
+        TMainWindow(QWidget *parent = nullptr);
         ~TMainWindow();
 
         ToolView *addToolView(QWidget *widget, Qt::DockWidgetArea area, int perspective = DefaultPerspective, const QString &code = QString(), QKeySequence shortcut = QKeySequence(""));
