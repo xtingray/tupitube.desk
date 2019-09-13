@@ -122,7 +122,7 @@ void TButtonBar::removeButton(TViewButton *viewButton)
 
     m_buttons.removeButton(viewButton);
     removeAction(m_actionForWidget[viewButton]);
-    viewButton->setParent(0);
+    viewButton->setParent(nullptr);
 
     if (isEmpty()) 
         hide();
@@ -157,11 +157,7 @@ void TButtonBar::enable(TViewButton *view)
 void TButtonBar::closeOtherPanels(QAbstractButton *source)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TButtonBar::closeOtherPanels()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qInfo() << "[TButtonBar::closeOtherPanels()]";
     #endif
 
     /*
@@ -178,6 +174,7 @@ void TButtonBar::closeOtherPanels(QAbstractButton *source)
         if (source != button) {
             if (button->toolView()->isVisible()) {
                 button->blockSignals(true);
+                qDebug() << "1 Tracing toggleView action!";
                 button->toggleView();
                 button->blockSignals(false);
                 break;
@@ -185,6 +182,7 @@ void TButtonBar::closeOtherPanels(QAbstractButton *source)
         }
     }
 
+    qDebug() << "2 Tracing toggleView action!";
     static_cast<TViewButton *>(source)->toggleView();
 
     // setUpdatesEnabled(true);

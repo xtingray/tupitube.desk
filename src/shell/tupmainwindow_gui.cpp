@@ -585,7 +585,7 @@ void TupMainWindow::checkExposureVisibility(bool visible)
 
 void TupMainWindow::updateFillTool(TColorCell::FillType type)
 {
-    Q_UNUSED(type);
+    // Q_UNUSED(type);
 
     if (animationTab)
         animationTab->setFillTool(type);

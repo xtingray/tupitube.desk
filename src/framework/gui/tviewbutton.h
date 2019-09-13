@@ -55,8 +55,8 @@ class T_GUI_EXPORT TViewButton : public QToolButton
     Q_OBJECT
 
     public:
-        TViewButton(Qt::ToolBarArea area, ToolView *toolView, QWidget * parent = 0);
-        TViewButton(ToolView *toolView, QWidget *parent = 0);
+        // TViewButton(Qt::ToolBarArea area, ToolView *toolView, QWidget * parent = nullptr);
+        TViewButton(ToolView *toolView, QWidget *parent = nullptr);
         ~TViewButton();
 
         void setArea(Qt::ToolBarArea area);

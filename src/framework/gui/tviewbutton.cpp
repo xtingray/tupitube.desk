@@ -36,10 +36,12 @@
 #include "tviewbutton.h"
 #include "toolview.h"
 
+/*
 TViewButton::TViewButton(Qt::ToolBarArea area, ToolView *toolView, QWidget * parent) : QToolButton(parent), m_area(area), m_toolView(toolView)
 {
     setup();
 }
+*/
 
 TViewButton::TViewButton(ToolView *toolView, QWidget *parent) : QToolButton(parent), m_area(Qt::LeftToolBarArea), m_toolView(toolView)
 {
@@ -78,11 +80,7 @@ void TViewButton::mousePressEvent(QMouseEvent *event)
 void TViewButton::toggleView()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[ToolView::toggleView()]";
-        #else
-            T_FUNCINFO;
-        #endif
+       qInfo() << "[ToolView::toggleView()]";
     #endif
 
     /*
@@ -92,6 +90,7 @@ void TViewButton::toggleView()
     */
 
     m_toolView->setUpdatesEnabled(false);
+    qDebug() << "Trigerring toggle view button...";
     m_toolView->toggleViewAction()->trigger();
     m_toolView->setUpdatesEnabled(true);
 
