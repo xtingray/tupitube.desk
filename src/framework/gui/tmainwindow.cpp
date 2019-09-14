@@ -101,10 +101,6 @@ void DefaultSettings::restore(TMainWindow *window)
     foreach (TButtonBar *bar, buttonBars.values()) {
         foreach (ToolView *view, toolViews[bar]) {
             settings.beginGroup(view->objectName());
-
-            // Restore position
-            Qt::DockWidgetArea area = Qt::DockWidgetArea(settings.value("area", 0).toInt());
-            window->moveToolView(view, area);
             view->button()->setToolButtonStyle(Qt::ToolButtonStyle(settings.value("style", 
                                                int(view->button()->toolButtonStyle())).toInt()));
 
@@ -137,12 +133,12 @@ void DefaultSettings::restore(TMainWindow *window)
     settings.endGroup();
 }
 
-TMainWindow::TMainWindow(QWidget *parent) : QMainWindow(parent), m_forRelayout(nullptr),
-                                            m_currentPerspective(DefaultPerspective), m_autoRestore(false)
+TMainWindow::TMainWindow(QWidget *parent): QMainWindow(parent), m_forRelayout(nullptr),
+                                           perspective(DefaultPerspective), m_autoRestore(false)
 {
     setObjectName("TMainWindow");
 
-    m_settings = new DefaultSettings(this);
+    settings = new DefaultSettings(this);
 
     specialToolBar = new QToolBar(tr("Show Top Panel"), this);
     specialToolBar->setIconSize(QSize(9, 5));
@@ -153,7 +149,7 @@ TMainWindow::TMainWindow(QWidget *parent) : QMainWindow(parent), m_forRelayout(n
     addButtonBar(Qt::TopToolBarArea);
     addButtonBar(Qt::BottomToolBarArea);
 
-    setDockNestingEnabled(false);
+    setDockNestingEnabled(true);
 }
 
 TMainWindow::~TMainWindow()
@@ -194,8 +190,7 @@ ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int
 
     addDockWidget(area, toolView);
     // SQA: This line is a hack to avoid self-resizing docks issue
-    resizeDocks({toolView}, {40}, Qt::Horizontal);
-    resizeDocks({toolView}, {40}, Qt::Vertical);
+    // resizeDocks({toolView}, {40}, Qt::Horizontal);
 
     m_toolViews[m_buttonBars[toToolBarArea(area)]] << toolView;
 
@@ -233,10 +228,10 @@ void TMainWindow::removeToolView(ToolView *view)
         removeDockWidget(view);
 }
 
-void TMainWindow::enableToolViews(bool flag)
+void TMainWindow::enableToolViews(bool isEnabled)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TMainWindow::enableToolViews() - enable: " << flag;
+        qDebug() << "TMainWindow::enableToolViews() - enable: " << isEnabled;
     #endif
 
     foreach (TButtonBar *bar, m_buttonBars.values()) {
@@ -245,26 +240,13 @@ void TMainWindow::enableToolViews(bool flag)
 
         while (it != views.end()) {
             ToolView *view = *it;
-            view->enableButton(flag);
+            view->enableButton(isEnabled);
             ++it;
         }
     }
 }
 
-void TMainWindow::moveToolView(ToolView *view, Qt::DockWidgetArea newPlace)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "TMainWindow::moveToolView()";
-    #endif
-
-    if (toDockWidgetArea(view->button()->area()) == newPlace || newPlace == Qt::AllDockWidgetAreas || newPlace == 0)
-        return;
-
-    addDockWidget(newPlace, view);
-    m_forRelayout = view;
-}
-
-void TMainWindow::addToPerspective(QWidget *widget, int perspective)
+void TMainWindow::addToPerspective(QWidget *widget, int workSpace)
 {
     #ifdef TUP_DEBUG
         qDebug() << "TMainWindow::addToPerspective()";
@@ -276,9 +258,9 @@ void TMainWindow::addToPerspective(QWidget *widget, int perspective)
     }
 
     if (!m_managedWidgets.contains(widget)) {
-        m_managedWidgets.insert(widget, perspective);
+        m_managedWidgets.insert(widget, workSpace);
 
-        if (!(perspective & m_currentPerspective)) 
+        if (!(workSpace & perspective))
             widget->hide();
     }
 }
@@ -293,27 +275,27 @@ void TMainWindow::removeFromPerspective(QWidget *widget)
 }
 
 // Add action list to perspective
-void TMainWindow::addToPerspective(const QList<QAction *> &actions, int perspective)
+void TMainWindow::addToPerspective(const QList<QAction *> &actions, int workSpace)
 {
     #ifdef TUP_DEBUG
         qDebug() << "TMainWindow::addToPerspective()";
     #endif
 
     foreach (QAction *action, actions)
-        addToPerspective(action, perspective);
+        addToPerspective(action, workSpace);
 }
 
 // Add action to perspective
-void TMainWindow::addToPerspective(QAction *action, int perspective)
+void TMainWindow::addToPerspective(QAction *action, int workSpace)
 {
     #ifdef TUP_DEBUG
         qDebug() << "TMainWindow::addToFromPerspective()";
     #endif
 
     if (!m_managedActions.contains(action)) {
-        m_managedActions.insert(action, perspective);
+        m_managedActions.insert(action, workSpace);
 
-        if (!(perspective & m_currentPerspective))
+        if (!(workSpace & perspective))
             action->setVisible(false);
     }
 }
@@ -385,16 +367,16 @@ Qt::ToolBarArea TMainWindow::toToolBarArea(Qt::DockWidgetArea area)
     return Qt::LeftToolBarArea;
 }
 
-void TMainWindow::setCurrentPerspective(int workspace)
+void TMainWindow::setCurrentPerspective(int workSpace)
 {
     #ifdef TUP_DEBUG
         qDebug() << "TMainWindow::setCurrentPerspective()";
     #endif
 
-    if (m_currentPerspective == workspace)
+    if (perspective == workSpace)
         return;
 
-    if (workspace != 1)
+    if (workSpace != 1)
         specialToolBar->setVisible(false);
     else
         specialToolBar->setVisible(true);
@@ -407,7 +389,7 @@ void TMainWindow::setCurrentPerspective(int workspace)
         foreach (ToolView *view, views) {
             TButtonBar *bar = m_buttonBars[view->button()->area()];
 
-            if (view->perspective() & workspace) {
+            if (view->perspective() & workSpace) {
                 bar->enable(view->button());
                 if (view->isExpanded()) {
                     view->blockSignals(true);
@@ -441,13 +423,13 @@ void TMainWindow::setCurrentPerspective(int workspace)
             barIt.key()->hide();
     }
 
-    m_currentPerspective = workspace;
-    emit perspectiveChanged(m_currentPerspective);
+    perspective = workSpace;
+    emit perspectiveChanged(perspective);
 }
 
 int TMainWindow::currentPerspective() const
 {
-    return m_currentPerspective;
+    return perspective;
 }
 
 // if autoRestore is true, the widgets will be loaded when main window is showed (position and properties)
@@ -461,12 +443,12 @@ bool TMainWindow::autoRestore() const
     return m_autoRestore;
 }
 
-void TMainWindow::setSettingsHandler(TMainWindowAbstractSettings *settings)
+void TMainWindow::setSettingsHandler(TMainWindowAbstractSettings *config)
 {
-    delete m_settings;
+    delete settings;
 
-    m_settings = settings;
-    m_settings->setParent(this);
+    settings = config;
+    settings->setParent(this);
 }
 
 void TMainWindow::closeEvent(QCloseEvent *e)
@@ -490,8 +472,8 @@ void TMainWindow::showEvent(QShowEvent *e)
     if (!m_autoRestore) {
         m_autoRestore = true;
         restoreGUI();
-        int cwsp = m_currentPerspective;
-        m_currentPerspective -= 1;
+        int cwsp = perspective;
+        perspective -= 1;
         setCurrentPerspective(cwsp);
     }
 }
@@ -502,7 +484,7 @@ void TMainWindow::saveGUI()
         qDebug() << "TMainWindow::saveGUI()";
     #endif
 
-    m_settings->save(this);
+    settings->save(this);
 }
 
 void TMainWindow::restoreGUI()
@@ -512,7 +494,7 @@ void TMainWindow::restoreGUI()
     #endif
 
     setUpdatesEnabled(false);
-    m_settings->restore(this);
+    settings->restore(this);
     setUpdatesEnabled(true);
 }
 

@@ -36,7 +36,7 @@
 #include "tviewbutton.h"
 #include "toolview.h"
 
-TViewButton::TViewButton(ToolView *toolView, QWidget *parent) : QToolButton(parent), m_area(Qt::LeftToolBarArea), m_toolView(toolView)
+TViewButton::TViewButton(ToolView *toolView, QWidget *parent): QToolButton(parent), m_area(Qt::LeftToolBarArea), m_toolView(toolView)
 {
     setText(m_toolView->windowTitle());
     setIcon(m_toolView->windowIcon());

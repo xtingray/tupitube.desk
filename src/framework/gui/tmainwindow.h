@@ -78,23 +78,21 @@ class T_GUI_EXPORT TMainWindow : public QMainWindow
 
         void removeToolView(ToolView *view);
 
-        // FIXME: remove tool view
-        void moveToolView(ToolView *view, Qt::DockWidgetArea newPlace);
-
         void addToPerspective(QWidget *widget, int perspective = DefaultPerspective);
         void removeFromPerspective(QWidget *widget);
+        void setCurrentPerspective(int wsp);
+        int currentPerspective() const;
 
         void addToPerspective(QAction *action, int perspective);
         void addToPerspective(const QList<QAction *> &actions, int perspective);
         void removeFromPerspective(QAction *action);
-        void setCurrentPerspective(int wsp);
-        int currentPerspective() const;
+
         void enableToolViews(bool flag);
 
         void setAutoRestore(bool autoRestore);
         bool autoRestore() const;
 
-        void setSettingsHandler(TMainWindowAbstractSettings *settings);
+        void setSettingsHandler(TMainWindowAbstractSettings *config);
         void restoreGUI();
         void saveGUI();
 
@@ -128,9 +126,9 @@ class T_GUI_EXPORT TMainWindow : public QMainWindow
         QHash<QAction *, int> m_managedActions;
         QToolBar *specialToolBar;
 
-        int m_currentPerspective;
+        int perspective;
 
-        TMainWindowAbstractSettings *m_settings;
+        TMainWindowAbstractSettings *settings;
         bool m_autoRestore;
 };
 

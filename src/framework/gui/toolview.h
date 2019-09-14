@@ -42,8 +42,6 @@
 #include <QDockWidget>
 #include <QIcon>
 #include <QKeySequence>
-#include <QAction>
-#include <QMouseEvent>
 
 class T_GUI_EXPORT ToolView: public QDockWidget
 {
@@ -53,21 +51,20 @@ class T_GUI_EXPORT ToolView: public QDockWidget
         ToolView(const QString &title, const QIcon &icon = QIcon(), const QString &code = QString(), QWidget *parent = nullptr);
         virtual ~ToolView();
 
-        QString title() const;
-        void setDescription(const QString &desc);
+        void setShortcut(QKeySequence shortcut);
+
         TViewButton *button() const;
+        void enableButton(bool flag);
+
         void expandDock(bool flag);
         bool isExpanded();
         void setExpandingFlag();
+
         void setPerspective(int wsp);
         int perspective() const;
-        void enableButton(bool flag);
-        QString getObjectID();
-        void setShortcut(QKeySequence shortcut);
 
     private:
         TViewButton *currentButton;
-        QString name;
         int currentPerspective;
         bool expanded;
 };

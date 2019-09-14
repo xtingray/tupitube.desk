@@ -82,11 +82,7 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(nullptr), 
                m_viewChat(nullptr), m_exposureSheet(nullptr), m_scenes(nullptr), isSaveDialogOpen(false), internetOn(false)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupMainWindow()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "TupMainWindow()";
     #endif
 
     // Naming the main window
@@ -232,11 +228,7 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(nullptr), 
 TupMainWindow::~TupMainWindow()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupMainWindow()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "~TupMainWindow()";
     #endif
 
     QClipboard *clipboard = QApplication::clipboard();
@@ -294,11 +286,7 @@ void TupMainWindow::createNewNetProject(const QString &title, const QStringList 
 void TupMainWindow::setWorkSpace(const QStringList &users)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupMainWindow::setWorkSpace()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupMainWindow::setWorkSpace()";
     #endif
 
     TCONFIG->beginGroup("General");
@@ -538,11 +526,7 @@ bool TupMainWindow::cancelChanges()
 void TupMainWindow::closeInterface()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupMainWindow::closeInterface()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupMainWindow::closeInterface()";
     #endif
 
     if (cancelChanges())
@@ -554,11 +538,7 @@ void TupMainWindow::closeInterface()
 bool TupMainWindow::closeProject()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupMainWindow::closeProject()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupMainWindow::closeProject()";
     #endif
 
     // SQA: Verify this conditional
@@ -717,11 +697,7 @@ void TupMainWindow::setupNetworkProject(TupProjectManagerParams *params)
 void TupMainWindow::setupLocalProject(TupProjectManagerParams *params)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupMainWindow::setupLocalProject()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupMainWindow::setupLocalProject()";
     #endif
 
     if (closeProject()) {
@@ -780,12 +756,7 @@ void TupMainWindow::openExample()
 void TupMainWindow::openProject(const QString &path)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupMainWindow::openProject() - Opening project: " + path;
-        #ifdef Q_OS_WIN
-           qWarning() << msg;
-        #else
-           tWarning() << msg;
-        #endif
+        qWarning() << "TupMainWindow::openProject() - Opening project: " + path;
     #endif
 
     if (path.isEmpty() || !path.endsWith(".tup"))
@@ -1166,13 +1137,9 @@ bool TupMainWindow::event(QEvent *event)
 
 void TupMainWindow::closeEvent(QCloseEvent *event)
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[TupMainWindow::closeEvent(QCloseEvent)]";
-    #else
-        T_FUNCINFO;
+    #ifdef TUP_DEBUG
+        qDebug() << "TupMainWindow::closeEvent(QCloseEvent)";
     #endif
-#endif
 
     QString lastProject = m_fileName;
 
@@ -1196,11 +1163,7 @@ void TupMainWindow::closeEvent(QCloseEvent *event)
 void TupMainWindow::createPaintCommand(const TupPaintAreaEvent *event)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupMainWindow::createPaintCommand()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupMainWindow::createPaintCommand()";
     #endif
 
     if (!animationTab) {
@@ -1234,11 +1197,7 @@ void TupMainWindow::createPaintCommand(const TupPaintAreaEvent *event)
 void TupMainWindow::updatePenColor(const QColor &color)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupMainWindow::updatePenColor()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupMainWindow::updatePenColor()";
     #endif
 
     TupPaintAreaEvent *event = new TupPaintAreaEvent(TupPaintAreaEvent::ChangePenColor, color);
@@ -1248,11 +1207,7 @@ void TupMainWindow::updatePenColor(const QColor &color)
 void TupMainWindow::updatePenThickness(int thickness)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupMainWindow::updatePenThickness()]";
-        #else
-            T_FUNCINFO << "thickness: " << thickness;
-        #endif
+        qDebug() << "TupMainWindow::updatePenThickness()" << thickness;
     #endif
 
     TupPaintAreaEvent *event = new TupPaintAreaEvent(TupPaintAreaEvent::ChangePenThickness, thickness);
@@ -1266,13 +1221,9 @@ void TupMainWindow::addPage(QWidget *widget)
 
 void TupMainWindow::updateCurrentTab(int index)
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[TupMainWindow::updateCurrentTab()]";
-    #else
-        T_FUNCINFO << index;
+    #ifdef TUP_DEBUG
+        qDebug() << "TupMainWindow::updateCurrentTab()";
     #endif
-#endif
 
     if (index == 1) {  // Player mode 
         lastTab = 1;
@@ -1323,11 +1274,6 @@ void TupMainWindow::exportProject()
     connect(exportWidget, SIGNAL(isDone()), animationTab, SLOT(updatePaintArea()));
     exportWidget->show();
 
-    /*
-    exportWidget->move(static_cast<int>((desktop.screenGeometry().width() - exportWidget->width())/2),
-                       static_cast<int>((desktop.screenGeometry().height() - exportWidget->height())/2));
-    */
-
     exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),
                        static_cast<int> ((screen->geometry().height() - exportWidget->height()) / 2));
 
@@ -1342,13 +1288,9 @@ void TupMainWindow::callSave()
 
 void TupMainWindow::restoreFramesMode(TupProject::Mode mode)
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[TupMainWindow::restoreFramesMode()]" << mode;
-    #else
-        T_FUNCINFO << "mode: " << mode << " - currentDock: " << currentDock;
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::restoreFramesMode()]" << mode << " - currentDock: " << currentDock;
     #endif
-#endif
 
     contextMode = mode;
     if (contextMode == TupProject::FRAMES_EDITION) {
@@ -1383,29 +1325,29 @@ void TupMainWindow::requestProject()
     if (TupMainWindow::requestType == NewNetProject) {
         m_projectManager->setupNewProject();
     } else if (TupMainWindow::requestType == OpenNetProject) {
-               TupListProjectsPackage package;
-               netProjectManager->sendPackage(package);
+        TupListProjectsPackage package;
+        netProjectManager->sendPackage(package);
     } else if (TupMainWindow::requestType == ImportProjectToNet) {
-               const char *home = getenv("HOME");
-               QString file = QFileDialog::getOpenFileName(this, tr("Import project package"),
-                                                           home, tr("TupiTube Project Package (*.tup)"));
-               if (file.length() > 0) {
-                   QFile project(file);
-                   if (project.exists()) {
-                       if (project.size() > 0) {
-                           TupImportProjectPackage package(file);
-                           netProjectManager->sendPackage(package);
-                        } else {
-                           TOsd::self()->display(tr("Error"), tr("Can't import project. File is empty!"), TOsd::Error);
-                           netProjectManager->closeProject();
-                        }
-                   } else {
-                        TOsd::self()->display(tr("Error"), tr("Can't save the project. File doesn't exist!"), TOsd::Error);
-                        netProjectManager->closeProject();
-                   }
-               } else {
-                   netProjectManager->closeProject();
-               }
+        const char *home = getenv("HOME");
+        QString file = QFileDialog::getOpenFileName(this, tr("Import project package"),
+                                                   home, tr("TupiTube Project Package (*.tup)"));
+        if (file.length() > 0) {
+            QFile project(file);
+            if (project.exists()) {
+                if (project.size() > 0) {
+                    TupImportProjectPackage package(file);
+                    netProjectManager->sendPackage(package);
+                 } else {
+                    TOsd::self()->display(tr("Error"), tr("Can't import project. File is empty!"), TOsd::Error);
+                    netProjectManager->closeProject();
+                 }
+            } else {
+                 TOsd::self()->display(tr("Error"), tr("Can't save the project. File doesn't exist!"), TOsd::Error);
+                 netProjectManager->closeProject();
+            }
+        } else {
+            netProjectManager->closeProject();
+        }
     }
 }
 
@@ -1420,16 +1362,9 @@ void TupMainWindow::unexpectedClose()
     msgBox.setIcon(QMessageBox::Critical);
     msgBox.setText(tr("The connection to the server has been lost."));
     msgBox.setInformativeText(tr("Please, try to connect again in a while"));
-
     msgBox.addButton(QString(tr("Close")), QMessageBox::DestructiveRole);
 
     msgBox.show();
-
-    /*
-    msgBox.move(static_cast<int>((desktop.screenGeometry().width() - msgBox.width())/2),
-                static_cast<int>((desktop.screenGeometry().height() - msgBox.height())/2));
-    */
-
     msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
                  static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
 
@@ -1445,11 +1380,7 @@ void TupMainWindow::netProjectSaved()
 void TupMainWindow::updatePlayer(bool removeAction)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupMainWindow::updatePlayer()]";
-        #else
-            T_FUNCINFO << removeAction;
-        #endif
+        qDebug() << "TupMainWindow::updatePlayer()";
     #endif
 
     if (!removeAction)
@@ -1498,23 +1429,15 @@ void TupMainWindow::showWebMessage()
     TMsgDialog *msgDialog = new TMsgDialog(webContent, webMsgSize, isImageMsg, this);
     msgDialog->show();
 
-    // QDesktopWidget desktop;
-    // msgDialog->move(static_cast<int>((desktop.screenGeometry().width() - msgDialog->width())/2),
-    //                 static_cast<int>((desktop.screenGeometry().height() - msgDialog->height())/2));
-
     msgDialog->move(static_cast<int> ((screen->geometry().width() - msgDialog->width()) / 2),
                     static_cast<int> ((screen->geometry().height() - msgDialog->height()) / 2));
 }
 
 void TupMainWindow::setUpdateFlag(bool flag)
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
+    #ifdef TUP_DEBUG
         qDebug() << "[TupMainWindow::setUpdateFlag()] flag -> " << flag;
-    #else
-        T_FUNCINFO << "flag -> " << flag;
     #endif
-#endif
 
     TCONFIG->beginGroup("General");
     TCONFIG->setValue("NotifyUpdate", flag);

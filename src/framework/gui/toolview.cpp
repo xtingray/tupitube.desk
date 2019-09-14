@@ -45,7 +45,6 @@ ToolView::ToolView(const QString &title, const QIcon &icon, const QString &code,
     currentButton->setToolTip(title);
 
     setObjectName("ToolView-" + code);
-    name = title;
     expanded = false;
 }
 
@@ -92,19 +91,14 @@ void ToolView::setExpandingFlag()
         expanded = true;
 }
 
-void ToolView::setDescription(const QString &desc)
-{
-    currentButton->setStatusTip(desc);
-}
-
 void ToolView::setShortcut(QKeySequence shortcut)
 {
     currentButton->setShortcut(shortcut);
 }
 
-void ToolView::setPerspective(int wsp)
+void ToolView::setPerspective(int wSpace)
 {
-    currentPerspective = wsp;
+    currentPerspective = wSpace;
 }
 
 int ToolView::perspective() const
@@ -115,14 +109,4 @@ int ToolView::perspective() const
 void ToolView::enableButton(bool flag)
 {
     currentButton->setEnabled(flag);
-}
-
-QString ToolView::getObjectID() 
-{
-    return objectName();
-}
-
-QString ToolView::title() const
-{
-    return name;
 }
