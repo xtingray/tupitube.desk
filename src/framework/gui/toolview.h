@@ -38,23 +38,19 @@
 
 #include "tglobal.h"
 #include "tviewbutton.h"
-#include "tmainwindow.h"
 
 #include <QDockWidget>
 #include <QIcon>
 #include <QKeySequence>
 #include <QAction>
-#include <QMainWindow>
 #include <QMouseEvent>
-#include <QLayout>
-#include <QEvent>
 
-class T_GUI_EXPORT ToolView : public QDockWidget
+class T_GUI_EXPORT ToolView: public QDockWidget
 {
     Q_OBJECT
 
     public:
-        ToolView(const QString &title, const QIcon &icon = QIcon(), const QString &code = QString(), QWidget * parent = nullptr);
+        ToolView(const QString &title, const QIcon &icon = QIcon(), const QString &code = QString(), QWidget *parent = nullptr);
         virtual ~ToolView();
 
         QString title() const;
@@ -68,9 +64,6 @@ class T_GUI_EXPORT ToolView : public QDockWidget
         void enableButton(bool flag);
         QString getObjectID();
         void setShortcut(QKeySequence shortcut);
-
-    private:
-        void setup(const QString &label);
 
     private:
         TViewButton *currentButton;

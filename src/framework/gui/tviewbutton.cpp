@@ -36,22 +36,8 @@
 #include "tviewbutton.h"
 #include "toolview.h"
 
-/*
-TViewButton::TViewButton(Qt::ToolBarArea area, ToolView *toolView, QWidget * parent) : QToolButton(parent), m_area(area), m_toolView(toolView)
-{
-    setup();
-}
-*/
-
 TViewButton::TViewButton(ToolView *toolView, QWidget *parent) : QToolButton(parent), m_area(Qt::LeftToolBarArea), m_toolView(toolView)
 {
-    setup();
-}
-
-void TViewButton::setup()
-{
-    // setAutoRaise(true);
-    // setFocusPolicy(Qt::NoFocus);
     setText(m_toolView->windowTitle());
     setIcon(m_toolView->windowIcon());
 }
@@ -80,42 +66,15 @@ void TViewButton::mousePressEvent(QMouseEvent *event)
 void TViewButton::toggleView()
 {
     #ifdef TUP_DEBUG
-       qInfo() << "[ToolView::toggleView()]";
+       qDebug() << "[ToolView::toggleView()]";
     #endif
 
-    /*
-    QMainWindow *mw = static_cast<QMainWindow *>(m_toolView->parentWidget());
-    if (mw)
-        mw->setUpdatesEnabled(false);
-    */
-
     m_toolView->setUpdatesEnabled(false);
-    qDebug() << "Trigerring toggle view button...";
     m_toolView->toggleViewAction()->trigger();
     m_toolView->setUpdatesEnabled(true);
-
-    /*
-    if (mw)
-        mw->setUpdatesEnabled(true);
-    */
 }
 
 ToolView *TViewButton::toolView() const
 {
     return m_toolView;
 }
-
-/*
-void TViewButton::setActivated(bool flag)
-{
-    #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TViewButton::setActivated()]";
-        #else
-            T_FUNCINFO << flag;
-        #endif
-    #endif
-
-    toggled(flag);
-}
-*/

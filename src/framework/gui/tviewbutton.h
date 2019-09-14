@@ -39,14 +39,8 @@
 #include "tglobal.h"
 
 #include <QToolButton>
-#include <QStyleOptionToolButton>
 #include <QToolBar>
-#include <QStylePainter>
-#include <QMenu>
-#include <QIcon>
 #include <QMouseEvent>
-#include <QMainWindow>
-#include <QTimer>
 
 class ToolView;
 
@@ -55,16 +49,12 @@ class T_GUI_EXPORT TViewButton : public QToolButton
     Q_OBJECT
 
     public:
-        // TViewButton(Qt::ToolBarArea area, ToolView *toolView, QWidget * parent = nullptr);
         TViewButton(ToolView *toolView, QWidget *parent = nullptr);
         ~TViewButton();
 
         void setArea(Qt::ToolBarArea area);
         Qt::ToolBarArea area() const;
-        // void setActivated(bool flag);
         ToolView *toolView() const;
-        void setup();
-        void setFlag(bool value);
 
     protected:
         virtual void mousePressEvent(QMouseEvent *);
@@ -74,8 +64,6 @@ class T_GUI_EXPORT TViewButton : public QToolButton
 
     private:
         Qt::ToolBarArea m_area;
-        class Animator;
-        QPalette m_palette;
         ToolView *m_toolView;
 };
 

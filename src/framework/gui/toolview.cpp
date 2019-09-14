@@ -35,26 +35,22 @@
 
 #include "toolview.h"
 
-ToolView::ToolView(const QString &title, const QIcon &icon, const QString &code, QWidget *parent) : 
+ToolView::ToolView(const QString &title, const QIcon &icon, const QString &code, QWidget *parent):
                    QDockWidget(title, parent), currentPerspective(0)
 {
     setFeatures(QDockWidget::NoDockWidgetFeatures);
     setWindowIcon(icon);
-    setup(title);
-    setObjectName("ToolView-" + code);
 
+    currentButton = new TViewButton(this);
+    currentButton->setToolTip(title);
+
+    setObjectName("ToolView-" + code);
     name = title;
     expanded = false;
 }
 
 ToolView::~ToolView()
 {
-}
-
-void ToolView::setup(const QString &label)
-{
-    currentButton = new TViewButton(this);
-    currentButton->setToolTip(label);
 }
 
 TViewButton *ToolView::button() const
@@ -65,7 +61,7 @@ TViewButton *ToolView::button() const
 void ToolView::expandDock(bool flag)
 {
     #ifdef TUP_DEBUG
-        qInfo() << "[ToolView::expandDock()] - flag: " << flag;
+        qDebug() << "ToolView::expandDock() - flag: " << flag;
     #endif
 
     expanded = flag;
@@ -73,14 +69,12 @@ void ToolView::expandDock(bool flag)
         show();
     else 
         close();
-
-    // currentButton->setActivated(flag);
 }
 
 bool ToolView::isExpanded()
 {
     #ifdef TUP_DEBUG
-        qInfo() << "[ToolView::isExpanded()] - expanded: " << expanded;
+        qDebug() << "ToolView::isExpanded() - expanded: " << expanded;
     #endif
 
     return expanded;
@@ -89,7 +83,7 @@ bool ToolView::isExpanded()
 void ToolView::setExpandingFlag() 
 {
     #ifdef TUP_DEBUG
-        qInfo() << "[ToolView::setExpandingFlag()]";
+        qDebug() << "ToolView::setExpandingFlag()";
     #endif
 
     if (expanded)

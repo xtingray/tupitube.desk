@@ -542,7 +542,7 @@ void TupMainWindow::hideTopPanels()
 void TupMainWindow::checkTimeLineVisibility(bool visible)
 {
     #ifdef TUP_DEBUG
-        qInfo() << "[TupMainWindow::checkTimeLineVisibility(bool)] - visible: " << visible;
+        qDebug() << "[TupMainWindow::checkTimeLineVisibility(bool)] - visible: " << visible;
     #endif
 
     if (visible) {
@@ -566,7 +566,7 @@ void TupMainWindow::checkTimeLineVisibility(bool visible)
 void TupMainWindow::checkExposureVisibility(bool visible)
 {
     #ifdef TUP_DEBUG
-        qInfo() << "[TupMainWindow::checkExposureVisibility(bool)] - visible: " << visible;
+        qDebug() << "TupMainWindow::checkExposureVisibility(bool) - visible: " << visible;
     #endif
 
     if (visible) {

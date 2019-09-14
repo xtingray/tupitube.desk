@@ -73,7 +73,8 @@ class T_GUI_EXPORT TMainWindow : public QMainWindow
         TMainWindow(QWidget *parent = nullptr);
         ~TMainWindow();
 
-        ToolView *addToolView(QWidget *widget, Qt::DockWidgetArea area, int perspective = DefaultPerspective, const QString &code = QString(), QKeySequence shortcut = QKeySequence(""));
+        ToolView *addToolView(QWidget *widget, Qt::DockWidgetArea area, int perspective = DefaultPerspective,
+                              const QString &code = QString(), QKeySequence shortcut = QKeySequence(""));
 
         void removeToolView(ToolView *view);
 
@@ -92,8 +93,6 @@ class T_GUI_EXPORT TMainWindow : public QMainWindow
 
         void setAutoRestore(bool autoRestore);
         bool autoRestore() const;
-
-        virtual QMenu *createPopupMenu();
 
         void setSettingsHandler(TMainWindowAbstractSettings *settings);
         void restoreGUI();

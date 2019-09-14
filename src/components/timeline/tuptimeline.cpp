@@ -50,11 +50,7 @@
 TupTimeLine::TupTimeLine(TupProject *projectData, QWidget *parent) : TupModuleWidgetBase(parent, "TupTimeLine")
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupTimeLine()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "TupTimeLine()";
     #endif
     
     setWindowTitle(tr("Time Line"));
@@ -95,11 +91,7 @@ TupTimeLine::TupTimeLine(TupProject *projectData, QWidget *parent) : TupModuleWi
 TupTimeLine::~TupTimeLine()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupTimeLine()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "~TupTimeLine()";
     #endif
 }
 
@@ -115,11 +107,7 @@ TupTimeLineTable *TupTimeLine::framesTable(int sceneIndex)
 void TupTimeLine::addScene(int sceneIndex, const QString &name)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupTimeLine::addScene()]";
-        #else
-            T_FUNCINFO << "sceneIndex -> " << sceneIndex;
-        #endif
+        qDebug() << "TupTimeLine::addScene()";
     #endif
 
     if (sceneIndex < 0 || sceneIndex > scenesContainer->count()) {
