@@ -44,16 +44,10 @@
 #include "taction.h"
 
 #include <QMainWindow>
-#include <QHash>
+#include <QApplication>
 #include <QMap>
 #include <QKeySequence>
-#include <QTimer>
-#include <QMenu>
-#include <QApplication>
-#include <QDesktopWidget>
 #include <QSettings>
-#include <QHashIterator>
-#include <QMenuBar>
 #include <QCloseEvent>
 
 class TButtonBar;

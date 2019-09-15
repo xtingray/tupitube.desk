@@ -58,6 +58,7 @@ class T_GUI_EXPORT TabbedMainWindow : public TMainWindow
 
         void addWidget(QWidget *widget, bool persistant = true, int perspective = All);
         void removeWidget(QWidget *widget, bool force = false);
+        void removeAllWidgets();
 
         QTabWidget *tabWidget() const;
         void setCurrentTab(int index);

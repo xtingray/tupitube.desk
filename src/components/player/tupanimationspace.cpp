@@ -35,9 +35,7 @@
 
 #include "tupanimationspace.h"
 
-#include <QBoxLayout>
-
-TupAnimationspace::TupAnimationspace(TupCameraWidget *playerUI, QWidget *parent) : QMainWindow(parent)
+TupAnimationspace::TupAnimationspace(TupCameraWidget *playerUI, QWidget *parent): QWidget(parent)
 {
     // TODO: Try a nice dark color for this window
     // setStyleSheet("QMainWindow { background-color: #d0d0d0; }");
@@ -50,28 +48,18 @@ TupAnimationspace::TupAnimationspace(TupCameraWidget *playerUI, QWidget *parent)
 TupAnimationspace::~TupAnimationspace()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupCameraWidget()]";
-        #else
-            TEND;
-        #endif
+         qDebug() << "[~TupCameraWidget()]";
     #endif
 
     delete playerInterface;
     playerInterface = nullptr;
-
-    delete container;
-    container = nullptr;
 }
 
 void TupAnimationspace::setCameraWidget(TupCameraWidget *playerUI) 
 {
-    container = new QWidget();
-    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, container);
+    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     playerInterface = playerUI;
     layout->addWidget(playerInterface, 0, Qt::AlignCenter);
-    container->setLayout(layout);
-    setCentralWidget(container);
 }
 
 void TupAnimationspace::mousePressEvent(QMouseEvent *event)
@@ -82,13 +70,9 @@ void TupAnimationspace::mousePressEvent(QMouseEvent *event)
 
 void TupAnimationspace::keyPressEvent(QKeyEvent *event) 
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
+    #ifdef TUP_DEBUG
         qDebug() << "[TupAnimationspace::keyPressEvent(QKeyEvent)]";
-    #else
-        T_FUNCINFO << event->key();
     #endif
-#endif
 
     switch (event->key()) {
         case Qt::Key_P:

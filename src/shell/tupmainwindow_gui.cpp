@@ -143,12 +143,13 @@ void TupMainWindow::createGUI()
     connectWidgetToManager(m_timeLine);
     connectWidgetToLocalManager(m_timeLine);
 
-    /* SQA Code
+    /*
+    // SQA Code
     QListWidget *list = new QListWidget();
     list->addItems(QStringList() << "Hello! I am the bottom dock! ;)");
 
     timeView = addToolView(list, Qt::BottomDockWidgetArea, Animation, "Time Line", QKeySequence(tr("Shift+T")));
-    connect(timeView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkExposureVisibility(bool)));
+    // connect(timeView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkExposureVisibility(bool)));
 
     m_actionManager->insert(timeView->toggleViewAction(), "show_timeline");
     addToPerspective(timeView->toggleViewAction(), Animation);

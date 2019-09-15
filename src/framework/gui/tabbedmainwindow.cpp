@@ -76,6 +76,14 @@ void TabbedMainWindow::removeWidget(QWidget *widget, bool force)
     pages.removeAll(widget);
 }
 
+void TabbedMainWindow::removeAllWidgets()
+{
+    persistentWidgets.clear();
+    currentTab->clear();
+    tabs.clear();
+    pages.clear();
+}
+
 int TabbedMainWindow::tabCount()
 {
     return pages.count();

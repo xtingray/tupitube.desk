@@ -104,13 +104,8 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(nullptr), 
             setStyleSheet(styleSheet);
         file.close();
     } else {
-        #ifdef TUP_DEBUG
-            QString msg = "TupMainWindow::TupMainWindow() - theme file doesn't exist -> " + QString(THEME_DIR + "config/ui.qss"); 
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+        #ifdef TUP_DEBUG 
+            qWarning() << "TupMainWindow::TupMainWindow() - theme file doesn't exist -> " + QString(THEME_DIR + "config/ui.qss");
         #endif
     }
         
@@ -174,12 +169,7 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(nullptr), 
             }
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "TupMainWindow() - Fatal error parsing file -> " + webMsgPath;
-                #ifdef Q_OS_WIN
-                    qWarning() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qWarning() << "TupMainWindow() - Fatal error parsing file -> " + webMsgPath;
             #endif
         }
     }
@@ -244,11 +234,7 @@ TupMainWindow::~TupMainWindow()
 void TupMainWindow::createNewLocalProject()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupMainWindow::createNewLocalProject()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupMainWindow::createNewLocalProject()";
     #endif
 
     TupMainWindow::requestType = NewLocalProject;
@@ -319,8 +305,12 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
             connect(animationTab, SIGNAL(postStoryboard(int)), netProjectManager, SLOT(postStoryboardRequest(int))); 
         }
 
-        animationTab->setWindowTitle(tr("Animation"));
-        addWidget(animationTab);
+        QWidget *animationWidget = new QWidget();
+        animationWidget->setWindowTitle(tr("Animation"));
+        animationWidget->setWindowIcon(QPixmap(THEME_DIR + "icons/animation_mode.png"));
+        QBoxLayout *tabLayout = new QBoxLayout(QBoxLayout::TopToBottom, animationWidget);
+        tabLayout->addWidget(animationTab);
+        addWidget(animationWidget);
 
         connectWidgetToManager(animationTab);
         connectWidgetToLocalManager(animationTab);
@@ -382,6 +372,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         playerTab->setWindowTitle(tr("Player"));
         connect(playerTab, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
         addWidget(playerTab);
+
         connect(animationTab, SIGNAL(updateFPS(int)), cameraWidget, SLOT(setStatusFPS(int)));
 
         exposureView->expandDock(true);
@@ -407,6 +398,9 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(this, SIGNAL(tabHasChanged(int)), this, SLOT(updateCurrentTab(int)));
 
         m_projectManager->clearUndoStack();
+
+        if (internetOn && newsTab)
+            addWidget(newsTab);
     }
 }
 
@@ -416,12 +410,7 @@ void TupMainWindow::addTwitterPage()
         QString twitterPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/twitter.html";
         if (QFile::exists(twitterPath)) {
             #ifdef TUP_DEBUG
-                QString msg = "TupMainWindow::addTwitterPage() - Loading page -> " + twitterPath;
-                #ifdef Q_OS_WIN
-                    qWarning() << msg;
-                #else
-                    tWarning() << msg;
-                #endif
+                qDebug() << "TupMainWindow::addTwitterPage() - Loading page -> " + twitterPath;
             #endif
 
             internetOn = true;
@@ -433,12 +422,7 @@ void TupMainWindow::addTwitterPage()
             helpAction->setEnabled(true);
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "TupMainWindow::addTwitterPage() - Warning: Couldn't load page -> " + twitterPath;
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tWarning() << msg;
-                #endif
+               qWarning() << "TupMainWindow::addTwitterPage() - Warning: Couldn't load page -> " + twitterPath;
             #endif
         }
     }
@@ -447,25 +431,14 @@ void TupMainWindow::addTwitterPage()
 void TupMainWindow::newProject()
 {
     #ifdef TUP_DEBUG
-        QString msg = "Creating new project...";
-        #ifdef Q_OS_WIN
-           qWarning() << msg;
-        #else
-           tWarning() << msg;
-        #endif
+        qWarning() << "Creating new project...";
     #endif
 
     if (cancelChanges())
         return;
 
     TupNewProject *wizard = new TupNewProject(this);
-    // QDesktopWidget desktop;
     wizard->show();
-
-    /*
-    wizard->move(static_cast<int>((desktop.screenGeometry().width() - wizard->width())/2),
-                 static_cast<int>((desktop.screenGeometry().height() - wizard->height())/2));
-    */
 
     wizard->move(static_cast<int> ((screen->geometry().width() - wizard->width()) / 2),
                  static_cast<int> ((screen->geometry().height() - wizard->height()) / 2));
@@ -489,7 +462,6 @@ void TupMainWindow::newProject()
 bool TupMainWindow::cancelChanges()
 {
     if (m_projectManager->isProjectModified()) {
-        // QDesktopWidget desktop;
         QMessageBox msgBox;
         msgBox.setWindowTitle(tr("Question"));
         msgBox.setIcon(QMessageBox::Question);
@@ -500,11 +472,6 @@ bool TupMainWindow::cancelChanges()
         msgBox.addButton(QString(tr("Discard")), QMessageBox::NoRole);
         msgBox.addButton(QString(tr("Cancel")), QMessageBox::DestructiveRole);
         msgBox.show();
-
-        /*
-        msgBox.move(static_cast<int>((desktop.screenGeometry().width() - msgBox.width())/2),
-                    static_cast<int>((desktop.screenGeometry().height() - msgBox.height())/2));
-        */
 
         msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
                      static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
@@ -556,11 +523,7 @@ bool TupMainWindow::closeProject()
 void TupMainWindow::resetUI()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupMainWindow::resetUI()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupMainWindow::resetUI()]";
     #endif
 
     setCurrentTab(0);
@@ -579,33 +542,7 @@ void TupMainWindow::resetUI()
     if (animationTab)
         animationTab->closeArea();
 
-    if (lastTab == 0) {
-        if (internetOn)
-            removeWidget(newsTab, true);
-
-        removeWidget(playerTab, true);
-        removeWidget(animationTab, true);
-    } else {
-        if (lastTab == 1) {
-            if (internetOn)
-                removeWidget(newsTab, true);
-
-            removeWidget(animationTab, true);
-            removeWidget(playerTab, true);
-        } else if (lastTab == 2) {
-            removeWidget(animationTab, true);
-            removeWidget(playerTab, true);
-
-            if (internetOn)
-                removeWidget(newsTab, true);
-        } else if (lastTab == 3) {
-            removeWidget(animationTab, true);
-            removeWidget(playerTab, true);
-
-            if (internetOn)
-                removeWidget(newsTab, true);
-        }
-    }
+    removeAllWidgets();
 
     if (internetOn) { 
         delete newsTab;
@@ -652,13 +589,7 @@ void TupMainWindow::resetUI()
 void TupMainWindow::setupNetworkProject()
 {
     TupConnectDialog *netDialog = new TupConnectDialog(this);
-    // QDesktopWidget desktop;
     netDialog->show();
-
-    /*
-    netDialog->move(static_cast<int>((desktop.screenGeometry().width() - netDialog->width())/2),
-                    static_cast<int>((desktop.screenGeometry().height() - netDialog->height())/2));
-    */
 
     netDialog->move(static_cast<int> ((screen->geometry().width() - netDialog->width()) / 2),
                     static_cast<int> ((screen->geometry().height() - netDialog->height()) / 2));
@@ -742,12 +673,7 @@ void TupMainWindow::openExample()
             openProject(example);
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupMainWindow::openExample() - Fatal Error: Couldn't open example file -> " + QString(example);
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupMainWindow::openExample() - Fatal Error: Couldn't open example file -> " + QString(example);
         #endif
         TOsd::self()->display(tr("Error"), tr("Cannot open project!"), TOsd::Error);
     }
@@ -841,12 +767,6 @@ void TupMainWindow::preferences()
     TupPreferencesDialog *dialog = new TupPreferencesDialog(this);
     dialog->show();
 
-    /*
-    QDesktopWidget desktop;
-    dialog->move(static_cast<int>((desktop.screenGeometry().width() - dialog->width())/2),
-                 static_cast<int>((desktop.screenGeometry().height() - dialog->height())/2));
-    */
-
     dialog->move(static_cast<int> ((screen->geometry().width() - dialog->width()) / 2),
                  static_cast<int> ((screen->geometry().height() - dialog->height()) / 2));
 
@@ -875,12 +795,6 @@ void TupMainWindow::showTipDialog()
 
     TipDialog *tipDialog = new TipDialog(labels, videos, DATA_DIR + "tips.xml", this);
     tipDialog->show();
-
-    /*
-    QDesktopWidget desktop;
-    tipDialog->move(static_cast<int> ((desktop.screenGeometry().width() - tipDialog->width())/2),
-                    static_cast<int> ((desktop.screenGeometry().height() - tipDialog->height())/2));
-    */
 
     tipDialog->move(static_cast<int> ((screen->geometry().width() - tipDialog->width()) / 2),
                     static_cast<int> ((screen->geometry().height() - tipDialog->height()) / 2));
@@ -911,23 +825,13 @@ void TupMainWindow::importPalettes()
                     m_colorPalette->parsePaletteFile(importer.getFilePath());
                 } else {
                     #ifdef TUP_DEBUG
-                        QString msg = "TupMainWindow::importPalettes() - Fatal Error: Couldn't import file -> " + QString(*file);
-                        #ifdef Q_OS_WIN
-                            qDebug() << msg;
-                        #else
-                            tError() << msg;
-                        #endif
+                        qDebug() << "TupMainWindow::importPalettes() - Fatal Error: Couldn't import file -> " + QString(*file);
                     #endif
                     isOk = false;
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupMainWindow::importPalettes() - Fatal Error: Couldn't import palette -> " + QString(*file);
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "TupMainWindow::importPalettes() - Fatal Error: Couldn't import palette -> " + QString(*file);
                 #endif
                 isOk = false;
             }
@@ -983,11 +887,7 @@ void TupMainWindow::connectWidgetToPaintArea(QWidget *widget)
 void TupMainWindow::saveAs()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupMainWindow::saveAs()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupMainWindow::saveAs()";
     #endif
 
     TCONFIG->beginGroup("General");
@@ -1016,12 +916,7 @@ void TupMainWindow::saveAs()
         TOsd::self()->display(tr("Error"), tr("Directory does not exist! Please, choose another path."), TOsd::Error);
         #ifdef TUP_DEBUG
             QString file = path.toLocal8Bit();
-            QString msg = "TupMainWindow::saveAs() - Fatal Error: Directory doesn't exist! -> " + file;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupMainWindow::saveAs() - Fatal Error: Directory doesn't exist! -> " + file;
         #endif
         return;
     } else {
@@ -1051,11 +946,7 @@ void TupMainWindow::saveAs()
 void TupMainWindow::saveProject()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupMainWindow::saveProject()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupMainWindow::saveProject()";
     #endif
 
     if (!isNetworked) {
@@ -1168,12 +1059,7 @@ void TupMainWindow::createPaintCommand(const TupPaintAreaEvent *event)
 
     if (!animationTab) {
         #ifdef TUP_DEBUG
-            QString msg = "TupMainWindow::createPaintCommand() - No animation tab... aborting!"; 
-            #ifdef Q_OS_WIN
-               qDebug() << msg;
-            #else
-               tFatal() << msg;
-            #endif
+            qDebug() << "TupMainWindow::createPaintCommand() - No animation tab... aborting!";
         #endif
         return;
     }

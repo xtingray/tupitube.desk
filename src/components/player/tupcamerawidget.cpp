@@ -41,19 +41,13 @@
 
 #include <QMainWindow>
 #include <QApplication>
-// #include <QDesktopWidget>
 
 TupCameraWidget::TupCameraWidget(TupProject *work, bool isNetworked, QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCameraWidget()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "TupCameraWidget()";
     #endif
 
-    // QDesktopWidget desktop;
     screen = QGuiApplication::screens().at(0);
 
     QSize projectSize = work->getDimension();
@@ -98,11 +92,7 @@ TupCameraWidget::TupCameraWidget(TupProject *work, bool isNetworked, QWidget *pa
 TupCameraWidget::~TupCameraWidget()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupCameraWidget()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "~TupCameraWidget()";
     #endif
 
     if (cameraBar) {
@@ -271,8 +261,6 @@ void TupCameraWidget::addStatusPanel(bool isNetworked)
     status->setScenes(project);
     connect(status, SIGNAL(sceneIndexChanged(int)), this, SLOT(selectScene(int)));
     connect(status, SIGNAL(muteEnabled(bool)), previewScreen, SLOT(enableMute(bool)));
-    // connect(status, SIGNAL(fpsChanged(int)), this, SLOT(setFPS(int)));
-    // connect(status, SIGNAL(fpsChanged(int)), this, SLOT(setDuration(int)));
     connect(status, SIGNAL(fpsChanged(int)), this, SLOT(updateFPS(int)));
     connect(status, SIGNAL(loopChanged()), this, SLOT(setLoop()));
     connect(status, SIGNAL(exportChanged()), this, SLOT(exportDialog()));
@@ -345,13 +333,9 @@ QSize TupCameraWidget::sizeHint() const
 
 void TupCameraWidget::doPlay()
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[TupCameraWidget::doPlay()]";
-    #else
-        T_FUNCINFO;
+    #ifdef TUP_DEBUG
+        qDebug() << "TupCameraWidget::doPlay()";
     #endif
-#endif
 
     previewScreen->play();
     bool flag = false;
@@ -367,13 +351,10 @@ void TupCameraWidget::doPlayBack()
 
 void TupCameraWidget::doPause()
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[TupCameraWidget::doPause()]";
-    #else
-        T_FUNCINFO;
+    #ifdef TUP_DEBUG
+        qDebug() << "TupCameraWidget::doPause()";
     #endif
-#endif
+
     bool playOn = previewScreen->isPlaying();
     cameraBar->updatePlayButton(!playOn);
     previewScreen->pause();
@@ -398,11 +379,7 @@ void TupCameraWidget::previousFrame()
 bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCameraWidget::handleProjectResponse()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupCameraWidget::handleProjectResponse()";
     #endif
 
     if (TupSceneResponse *sceneResponse = static_cast<TupSceneResponse *>(response)) {
@@ -456,11 +433,7 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
                  #ifdef TUP_DEBUG
                      QString msg = "TupCameraWidget::handleProjectResponse() - Unknown/Unhandled project action: " 
                                    + QString::number(sceneResponse->getAction());
-                     #ifdef Q_OS_WIN
-                         qDebug() << msg;
-                     #else
-                         tFatal() << msg;
-                     #endif
+                     qDebug() << msg;
                  #endif
             }
             break;
@@ -516,7 +489,6 @@ void TupCameraWidget::exportDialog()
     if (previewScreen->isPlaying())
         previewScreen->pause();
 
-    // QDesktopWidget desktop;
     TupExportWidget *exportWidget = new TupExportWidget(project, this);
     exportWidget->show();
     exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),
@@ -526,8 +498,6 @@ void TupCameraWidget::exportDialog()
 
 void TupCameraWidget::postDialog()
 {
-    // QDesktopWidget desktop;
-
     TupExportWidget *exportWidget = new TupExportWidget(project, this, false);
     exportWidget->show();
     exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),

@@ -41,7 +41,7 @@
 
 #include <QMainWindow>
 
-class TUPITUBE_EXPORT TupAnimationspace : public QMainWindow
+class TUPITUBE_EXPORT TupAnimationspace : public QWidget
 {
     Q_OBJECT
 
@@ -60,7 +60,6 @@ class TUPITUBE_EXPORT TupAnimationspace : public QMainWindow
 
     private:
         TupCameraWidget *playerInterface;
-        QWidget *container;
         bool playOn;
 };
 
