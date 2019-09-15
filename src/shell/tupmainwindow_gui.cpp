@@ -143,6 +143,17 @@ void TupMainWindow::createGUI()
     connectWidgetToManager(m_timeLine);
     connectWidgetToLocalManager(m_timeLine);
 
+    /* SQA Code
+    QListWidget *list = new QListWidget();
+    list->addItems(QStringList() << "Hello! I am the bottom dock! ;)");
+
+    timeView = addToolView(list, Qt::BottomDockWidgetArea, Animation, "Time Line", QKeySequence(tr("Shift+T")));
+    connect(timeView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkExposureVisibility(bool)));
+
+    m_actionManager->insert(timeView->toggleViewAction(), "show_timeline");
+    addToPerspective(timeView->toggleViewAction(), Animation);
+    */
+
     /* SQA: Define if scripting support should be enabled
     // Adding the script editor to the bottom side, if kinas was enabled
 #ifdef ENABLE_KINAS
@@ -404,7 +415,7 @@ void TupMainWindow::setupToolBar()
 {
     mainToolBar = new QToolBar(tr("Actions Bar"), this);
     mainToolBar->setIconSize(QSize(22, 22));
-    addToolBar(Qt::TopToolBarArea, mainToolBar);
+    mainToolBar->setMovable(false);
 
     mainToolBar->addAction(m_actionManager->find("new_project"));
     mainToolBar->addAction(m_actionManager->find("open_project"));
@@ -420,6 +431,8 @@ void TupMainWindow::setupToolBar()
     bool showAds = TCONFIG->value("ShowAds", true).toBool();
     if (showAds)
         mainToolBar->addAction(m_actionManager->find("visit_store"));
+
+    addToolBar(Qt::TopToolBarArea, mainToolBar);
 }
 
 void TupMainWindow::updateOpenRecentMenu(QMenu *menu, QStringList recents)

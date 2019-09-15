@@ -61,7 +61,7 @@ class T_GUI_EXPORT TButtonBar : public QToolBar
     Q_OBJECT
 
     public:
-        TButtonBar(Qt::ToolBarArea area, QWidget *parent = 0);
+        TButtonBar(Qt::ToolBarArea area, QWidget *parent = nullptr);
         ~TButtonBar();
 
         void addButton(TViewButton *viewButton);

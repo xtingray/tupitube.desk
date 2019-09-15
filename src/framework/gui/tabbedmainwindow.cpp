@@ -37,41 +37,15 @@
 
 // TabbedMainWindow
 
-/**
- * Construct a tabbed main window.
- * @param parent 
- * @return 
- */
-TabbedMainWindow::TabbedMainWindow(QWidget *parent) : TMainWindow(parent)
+TabbedMainWindow::TabbedMainWindow(QWidget *parent): TMainWindow(parent)
 {
     currentTab = new QTabWidget;
-    setupTabWidget(currentTab);
+    connect(currentTab, SIGNAL(currentChanged(int)), this, SLOT(emitWidgetChanged(int)));
     setCentralWidget(currentTab);
 }
 
-/**
- * Destructor
- * @return 
- */
 TabbedMainWindow::~TabbedMainWindow()
 {
-}
-
-/**
- * Setup the tab widget.
- * @param w 
- */
-void TabbedMainWindow::setupTabWidget(QTabWidget *widget)
-{
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[TabbedMainWindow::setupTabWidget()]";
-    #else
-        T_FUNCINFO;
-    #endif
-#endif
-
-    connect(widget, SIGNAL(currentChanged(int)), this, SLOT(emitWidgetChanged(int)));
 }
 
 void TabbedMainWindow::addWidget(QWidget *widget, bool persistant, int perspective)
@@ -86,10 +60,6 @@ void TabbedMainWindow::addWidget(QWidget *widget, bool persistant, int perspecti
     tabs[widget] = perspective;
 }
 
-/**
- * Remove a widget from the window.
- * @param widget 
- */
 void TabbedMainWindow::removeWidget(QWidget *widget, bool force)
 {
     if (force) 
@@ -111,9 +81,7 @@ int TabbedMainWindow::tabCount()
     return pages.count();
 }
 
-/**
- * Close the current tab.
- */
+// Close the current tab.
 void TabbedMainWindow::closeCurrentTab()
 {
     int index = currentTab->currentIndex();
@@ -121,34 +89,7 @@ void TabbedMainWindow::closeCurrentTab()
         removeWidget(currentTab->widget(index));
 }
 
-/**
- * Sets other tab widget.
- * @param w 
- */
-void TabbedMainWindow::setTabWidget(QTabWidget *widget)
-{
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[TabbedMainWindow::setTabWidget()]";
-    #else
-        T_FUNCINFO;
-    #endif
-#endif
-
-    currentTab->close();
-    setupTabWidget(widget);
-
-    delete currentTab;
-    currentTab = 0;
-
-    setCentralWidget(widget);
-    currentTab = widget;
-}
-
-/**
- * Return the current tab widget.
- * @return 
- */
+// Return the current tab widget.
 QTabWidget *TabbedMainWindow::tabWidget() const
 {
     return currentTab;
@@ -156,13 +97,9 @@ QTabWidget *TabbedMainWindow::tabWidget() const
 
 void TabbedMainWindow::emitWidgetChanged(int index)
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[TabbedMainWindow::emitWidgetChanged()]";
-    #else
-        T_FUNCINFO << index;
+    #ifdef TUP_DEBUG
+        qDebug() << "TabbedMainWindow::emitWidgetChanged()";
     #endif
-#endif
 
     if (index != -1) {
         switch (index) {
@@ -185,13 +122,9 @@ void TabbedMainWindow::emitWidgetChanged(int index)
 
 void TabbedMainWindow::setCurrentTab(int index)
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[TabbedMainWindow::setCurrentTab()]";
-    #else
-        T_FUNCINFO << index;
+    #ifdef TUP_DEBUG
+        qDebug() << "TabbedMainWindow::setCurrentTab() - index: " << index;
     #endif
-#endif
 
     if (index != -1)
         currentTab->setCurrentIndex(index);

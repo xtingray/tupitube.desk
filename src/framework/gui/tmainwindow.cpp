@@ -137,11 +137,11 @@ TMainWindow::TMainWindow(QWidget *parent): QMainWindow(parent), m_forRelayout(nu
                                            perspective(DefaultPerspective), m_autoRestore(false)
 {
     setObjectName("TMainWindow");
-
     settings = new DefaultSettings(this);
 
     specialToolBar = new QToolBar(tr("Show Top Panel"), this);
     specialToolBar->setIconSize(QSize(9, 5));
+    specialToolBar->setMovable(false);
 
     addToolBar(Qt::LeftToolBarArea, specialToolBar);
     addButtonBar(Qt::LeftToolBarArea);
@@ -149,7 +149,7 @@ TMainWindow::TMainWindow(QWidget *parent): QMainWindow(parent), m_forRelayout(nu
     addButtonBar(Qt::TopToolBarArea);
     addButtonBar(Qt::BottomToolBarArea);
 
-    setDockNestingEnabled(true);
+    setDockNestingEnabled(false);
 }
 
 TMainWindow::~TMainWindow()
@@ -180,19 +180,17 @@ ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int
     #endif
 
     ToolView *toolView = new ToolView(widget->windowTitle(), widget->windowIcon(), code);
-
     toolView->setShortcut(shortcut);
     toolView->setWidget(widget);
     toolView->setPerspective(perspective);
     toolView->button()->setArea(toToolBarArea(area));
 
     m_buttonBars[toToolBarArea(area)]->addButton(toolView->button());
+    m_toolViews[m_buttonBars[toToolBarArea(area)]] << toolView;
 
     addDockWidget(area, toolView);
     // SQA: This line is a hack to avoid self-resizing docks issue
-    // resizeDocks({toolView}, {40}, Qt::Horizontal);
-
-    m_toolViews[m_buttonBars[toToolBarArea(area)]] << toolView;
+    // resizeDocks({toolView}, {200}, Qt::Horizontal);
 
     return toolView;
 }

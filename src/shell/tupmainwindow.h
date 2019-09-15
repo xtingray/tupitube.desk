@@ -79,10 +79,7 @@
 #include <QKeySequence>
 #include <QTextBrowser>
 #include <QToolBar>
-// #include <QDesktopWidget>
 #include <QScreen>
-
-
 #include <QDragEnterEvent>
 #include <QDropEvent>
 

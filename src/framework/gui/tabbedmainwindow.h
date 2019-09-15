@@ -39,17 +39,12 @@
 #include "tmainwindow.h"
 
 #include <QTabWidget>
-#include <QToolButton>
-#include <QPainter>
-#include <QWheelEvent>
-#include <QTabBar>
 
 class T_GUI_EXPORT TabbedMainWindow : public TMainWindow
 {
     Q_OBJECT
 
     public:
-
         enum Perspective {
              Animation = 0x01,
              Player = 0x02,
@@ -58,18 +53,15 @@ class T_GUI_EXPORT TabbedMainWindow : public TMainWindow
              All = Animation | Player | Help | News
         };
 
-        TabbedMainWindow(QWidget *parent = 0);
+        TabbedMainWindow(QWidget *parent = nullptr);
         ~TabbedMainWindow();
 
         void addWidget(QWidget *widget, bool persistant = true, int perspective = All);
         void removeWidget(QWidget *widget, bool force = false);
-        void setTabWidget(QTabWidget *w);
+
         QTabWidget *tabWidget() const;
         void setCurrentTab(int index);
         int tabCount(); 
-
-    protected:
-        virtual void setupTabWidget(QTabWidget *w);
 
     protected slots:
         void closeCurrentTab();
@@ -77,7 +69,7 @@ class T_GUI_EXPORT TabbedMainWindow : public TMainWindow
     signals:
         void widgetChanged(QWidget *widget);
         void tabHasChanged(int);
-		
+
     private slots:
         void emitWidgetChanged(int index);
 

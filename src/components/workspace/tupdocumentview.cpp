@@ -394,6 +394,7 @@ void TupDocumentView::createLateralToolBar()
 {
     toolbar = new QToolBar(tr("Draw tools"), this);
     toolbar->setIconSize(QSize(16, 16));
+    toolbar->setMovable(false);
     addToolBar(Qt::LeftToolBarArea, toolbar);
     connect(toolbar, SIGNAL(actionTriggered(QAction *)), this, SLOT(selectToolFromMenu(QAction *)));
 
