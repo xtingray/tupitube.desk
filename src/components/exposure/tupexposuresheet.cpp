@@ -45,11 +45,7 @@
 TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModuleWidgetBase(parent, "Exposure Sheet")
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupExposureSheet()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "TupExposureSheet()";
     #endif
 
     project = work;
@@ -108,11 +104,7 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModul
 TupExposureSheet::~TupExposureSheet()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupExposureSheet()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "~TupExposureSheet()";
     #endif
 
     delete project;

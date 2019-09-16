@@ -59,7 +59,7 @@ void TupProjectActionBar::setFixedSize(int size)
 
 void TupProjectActionBar::setup(QList<Action> actionsList)
 {
-    QBoxLayout *mainLayout = 0;
+    QBoxLayout *mainLayout = nullptr;
     
     switch (orientation) {
         case Qt::Vertical:
@@ -119,7 +119,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
         }
 
         if (action == MoveFrameBackward) {
-            TImageButton *button = 0;
+            TImageButton *button = nullptr;
             if (container.compare("Exposure") == 0) {
                 button = new TImageButton(QIcon(THEME_DIR + "icons/move_frame_up.png"), size);
             } else {
@@ -137,7 +137,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
         }
 
         if (action == MoveFrameForward) {
-            TImageButton *button = 0;
+            TImageButton *button = nullptr;
 
             if (container.compare("Exposure") == 0) {
                 button = new TImageButton(QIcon(THEME_DIR + "icons/move_frame_down.png"), size);
@@ -156,7 +156,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
         }
 
         if (action == ReverseFrameSelection) {
-            TImageButton *button = 0;
+            TImageButton *button = nullptr;
 
             if (container.compare("Exposure") == 0) {
                 button = new TImageButton(QIcon(THEME_DIR + "icons/reverse_v.png"), size);
@@ -285,8 +285,8 @@ void TupProjectActionBar::emitActionSelected(int action)
                 TOptionalDialog dialog(tr("Do you want to remove current selection?"), tr("Confirmation"), this);
                 dialog.setModal(true);
 
-                move(static_cast<int> ((screenW - dialog.sizeHint().width()) / 2),
-                     static_cast<int> ((screenH - dialog.sizeHint().height()) / 2));
+                dialog.move(static_cast<int> ((screenW - dialog.sizeHint().width()) / 2),
+                            static_cast<int> ((screenH - dialog.sizeHint().height()) / 2));
 
                 if (dialog.exec() == QDialog::Rejected)
                     return;
@@ -305,8 +305,8 @@ void TupProjectActionBar::emitActionSelected(int action)
             if (ask) {
                 TOptionalDialog dialog(tr("Do you want to remove this layer?"), tr("Confirmation"), this);
 
-                move(static_cast<int> ((screenW - dialog.sizeHint().width()) / 2),
-                     static_cast<int> ((screenH - dialog.sizeHint().height()) / 2));
+                dialog.move(static_cast<int> ((screenW - dialog.sizeHint().width()) / 2),
+                            static_cast<int> ((screenH - dialog.sizeHint().height()) / 2));
 
                 if (dialog.exec() == QDialog::Rejected)
                     return;
@@ -325,8 +325,8 @@ void TupProjectActionBar::emitActionSelected(int action)
             if (ask) {
                 TOptionalDialog dialog(tr("Do you want to remove this scene?"), tr("Confirmation"), this);
 
-                move(static_cast<int> ((screenW - dialog.sizeHint().width()) / 2),
-                     static_cast<int> ((screenH - dialog.sizeHint().height()) / 2));
+                dialog.move(static_cast<int> ((screenW - dialog.sizeHint().width()) / 2),
+                            static_cast<int> ((screenH - dialog.sizeHint().height()) / 2));
 
                 if (dialog.exec() == QDialog::Rejected)
                     return;

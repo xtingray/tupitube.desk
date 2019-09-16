@@ -88,7 +88,7 @@ class TUPITUBE_EXPORT TupProjectActionBar : public QWidget
         };
         
         TupProjectActionBar(const QString &container = QString(), QList<Action> actions = QList<Action>(),
-                            Qt::Orientation orientation = Qt::Horizontal, QWidget *parent = 0);
+                            Qt::Orientation orientation = Qt::Horizontal, QWidget *parent = nullptr);
         ~TupProjectActionBar();
 
         void setFixedSize(int size);
