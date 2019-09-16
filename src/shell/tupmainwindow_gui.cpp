@@ -492,12 +492,7 @@ void TupMainWindow::changePerspective(QAction *action)
 void TupMainWindow::changePerspective(int index)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupMainWindow::changePerspective(int)]";
-        #else
-            T_FUNCINFO << index;
-            tWarning() << "Updating QMainWindow interface...";
-        #endif
+        qDebug() << "TupMainWindow::changePerspective(int) - Updating QMainWindow interface...";
     #endif
 
     if (index == 4) { // Player

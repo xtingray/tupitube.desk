@@ -34,7 +34,6 @@
  ***************************************************************************/
 
 #include "tupanimationspace.h"
-
 TupAnimationspace::TupAnimationspace(TupCameraWidget *playerUI, QWidget *parent): QWidget(parent)
 {
     // TODO: Try a nice dark color for this window
@@ -57,9 +56,10 @@ TupAnimationspace::~TupAnimationspace()
 
 void TupAnimationspace::setCameraWidget(TupCameraWidget *playerUI) 
 {
-    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     playerInterface = playerUI;
+    QVBoxLayout *layout = new QVBoxLayout();
     layout->addWidget(playerInterface, 0, Qt::AlignCenter);
+    setLayout(layout);
 }
 
 void TupAnimationspace::mousePressEvent(QMouseEvent *event)

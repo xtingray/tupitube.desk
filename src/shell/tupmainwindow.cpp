@@ -356,6 +356,9 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(cameraWidget, SIGNAL(projectAuthorUpdated(const QString &)), this, SLOT(updateProjectAuthor(const QString &)));
         connectWidgetToManager(cameraWidget);
 
+        // Player widget must be hidden while the Player tab is not visible
+        cameraWidget->setVisible(false);
+
         connect(m_libraryWidget, SIGNAL(soundUpdated()), cameraWidget, SLOT(updateSoundItems()));
 
         m_libraryWidget->setNetworking(isNetworked);
@@ -369,7 +372,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         playerTab = new TupAnimationspace(cameraWidget);
         playerTab->setWindowIcon(QIcon(THEME_DIR + "icons/play_small.png"));
-        playerTab->setWindowTitle(tr("Player"));
+        playerTab->setWindowTitle(tr("Player"));                    
         connect(playerTab, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
         addWidget(playerTab);
 
@@ -1114,6 +1117,7 @@ void TupMainWindow::updateCurrentTab(int index)
     if (index == 1) {  // Player mode 
         lastTab = 1;
         updatePlayer();
+        cameraWidget->setVisible(true);
         cameraWidget->updateFirstFrame();
         cameraWidget->setFocus();
 
@@ -1123,6 +1127,7 @@ void TupMainWindow::updateCurrentTab(int index)
             QTimer::singleShot(0, this, SLOT(doPlay()));
     } else {
         if (index == 0) { // Animation mode
+            cameraWidget->setVisible(false);
             animationTab->updatePerspective(); // Just for Papagayo UI
 
             if (lastTab == 1)
@@ -1146,6 +1151,7 @@ void TupMainWindow::updateCurrentTab(int index)
             animationTab->updatePaintArea();
             lastTab = 0;
         } else {
+            cameraWidget->setVisible(false);
             if (index == 3)
                 lastTab = 3;
         }
