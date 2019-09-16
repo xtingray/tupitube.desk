@@ -47,7 +47,7 @@ class TUPITUBE_EXPORT TupTimeLineRuler : public QHeaderView
     Q_OBJECT
 
     public:
-        TupTimeLineRuler(QWidget *parent = 0);
+        TupTimeLineRuler(QWidget *parent = nullptr);
         ~TupTimeLineRuler();
 
     protected:

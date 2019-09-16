@@ -41,9 +41,7 @@
 #include "tuplayer.h"
 #include "tuplibrary.h"
 
-#include <QStackedWidget>
 #include <QList>
-#include <QHeaderView>
 
 #define RETURN_IF_NOT_LIBRARY if (!library) return;
 
@@ -140,7 +138,7 @@ void TupTimeLine::addScene(int sceneIndex, const QString &name)
 void TupTimeLine::removeScene(int sceneIndex)
 {
     #ifdef TUP_DEBUG
-        qInfo() << "[TupTimeLine::removeScene()] - sceneIndex -> " << sceneIndex;
+        qDebug() << "TupTimeLine::removeScene() - sceneIndex -> " << sceneIndex;
     #endif
 
     if (sceneIndex >= 0 && sceneIndex < scenesContainer->count())
@@ -157,12 +155,7 @@ void TupTimeLine::closeAllScenes()
 void TupTimeLine::sceneResponse(TupSceneResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupTimeLine::sceneResponse()]";
-        #else
-            T_FUNCINFO;
-            T_FUNCINFO << "response->action() -> " << response->getAction();
-        #endif
+        qDebug() << "TupTimeLine::sceneResponse() - response->action() -> " << response->getAction();
     #endif
 
     int sceneIndex = response->getSceneIndex();
@@ -246,11 +239,7 @@ void TupTimeLine::sceneResponse(TupSceneResponse *response)
 void TupTimeLine::layerResponse(TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupTimeLine::layerResponse()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupTimeLine::layerResponse()";
     #endif
 
     int sceneIndex = response->getSceneIndex();
@@ -731,11 +720,7 @@ void TupTimeLine::requestLayerVisibilityAction(int layerIndex, bool isVisible)
 {
     /*
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupTimeLine::requestLayerVisibilityAction()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupTimeLine::requestLayerVisibilityAction()";
     #endif
     */
 
@@ -749,12 +734,7 @@ void TupTimeLine::requestLayerRenameAction(int layerIndex, const QString &name)
 {
     /*
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupTimeLine::requestLayerRenameAction()]";
-            qDebug() << "name: " << name;
-        #else
-            T_FUNCINFO << name;
-        #endif
+        qDebug() << "[TupTimeLine::requestLayerRenameAction()] - name: " << name;
     #endif
     */
 
@@ -767,11 +747,7 @@ void TupTimeLine::requestLayerRenameAction(int layerIndex, const QString &name)
 void TupTimeLine::selectFrame(int layerIndex, int frameIndex)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupTimeLine::selectFrame()]";
-        #else
-            T_FUNCINFO << "layerIndex, frameIndex -> (" << layerIndex << ", " << frameIndex << ")";
-        #endif
+        qDebug() << "TupTimeLine::selectFrame() - layerIndex, frameIndex -> (" << layerIndex << ", " << frameIndex << ")";
     #endif
 
     int sceneIndex = scenesContainer->currentIndex();
@@ -844,7 +820,7 @@ void TupTimeLine::requestRemoveFrame(bool flag)
 void TupTimeLine::extendFrameForward(int layerIndex, int frameIndex)
 {
     #ifdef TUP_DEBUG
-        qInfo() << "[TupCommandExecutor::copyFrameSelection()]";
+        qDebug() << "TupCommandExecutor::copyFrameSelection()";
     #endif
 
     int sceneIndex = scenesContainer->currentIndex();
@@ -876,11 +852,7 @@ void TupTimeLine::requestLayerMove(int oldLayerIndex, int newLayerIndex)
 void TupTimeLine::initLayerVisibility()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "TupTimeLine::initLayerVisibility()";
-        #else
-            T_FUNCINFO << "TupTimeLine::initLayerVisibility()";
-        #endif
+        T_FUNCINFO << "TupTimeLine::initLayerVisibility()";
     #endif
 
     int scenes = project->scenesCount();
@@ -944,12 +916,7 @@ void TupTimeLine::requestReverseFrameSelection()
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupTimeLine::requestReverseFrameSelection() - Selection must include at least 2 frames of the same layer";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tWarning() << msg;
-            #endif
+            qDebug() << "TupTimeLine::requestReverseFrameSelection() - Selection must include at least 2 frames of the same layer";
         #endif
     }
 }

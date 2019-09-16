@@ -59,11 +59,13 @@ class TUPITUBE_EXPORT TupTimeLineHeader : public QHeaderView
     Q_OBJECT
 
     public:
-        TupTimeLineHeader(QWidget * parent = 0);
+        TupTimeLineHeader(QWidget * parent = nullptr);
         ~TupTimeLineHeader();
+
         void insertSection(int index, const QString &name);
         void setSectionVisibility(int index, bool visibility);
         void setSectionTitle(int index, const QString &name);
+
         void removeSection(int index);
         int  lastFrame(int index);
         void updateLastFrame(int index, bool addition);

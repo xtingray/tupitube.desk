@@ -45,6 +45,7 @@ class TupTimeLineTableItemDelegate : public QItemDelegate
         ~TupTimeLineTableItemDelegate();
 
         virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+        // virtual QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex &index) const;
 
     private:
         QString themeName;
@@ -59,6 +60,13 @@ TupTimeLineTableItemDelegate::TupTimeLineTableItemDelegate(QObject *parent) : QI
 TupTimeLineTableItemDelegate::~TupTimeLineTableItemDelegate()
 {
 }
+
+/*
+QSize TupTimeLineTableItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex &index) const
+{
+    return QSize(5, 10);
+}
+*/
 
 void TupTimeLineTableItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
@@ -98,6 +106,7 @@ void TupTimeLineTableItemDelegate::paint(QPainter *painter, const QStyleOptionVi
     if (option.showDecorationSelected && (option.state & QStyle::State_Selected)) {
         painter->save();
 
+        // Painting a selected cell
         QColor color(0, 136, 0, 180);
         if (themeName.compare("Dark") == 0)
             color = QColor(80, 80, 80, 180);
@@ -107,21 +116,23 @@ void TupTimeLineTableItemDelegate::paint(QPainter *painter, const QStyleOptionVi
     }
     
     // Draw attributes
-    int offset = option.rect.width() - 5;
-
     if (item && index.isValid()) {
+        int offset = option.rect.width() / 3;
+        // int offset = 2;
         if (item->isUsed()) {
             painter->save();
-            painter->setBrush(Qt::black);
+            QColor gray(80, 80, 80);
+            painter->setPen(QPen(gray, 1, Qt::SolidLine));
+            painter->setBrush(gray);
             painter->setRenderHint(QPainter::Antialiasing, true);
             
             if (!item->isSound()) {
                 if (item->isLocked()) {
                     painter->setPen(QPen(Qt::red, 1, Qt::SolidLine));
                     painter->setBrush(Qt::red);
-                } 
+                }
                 painter->drawEllipse(option.rect.x() + ((option.rect.width() - offset)/2), 
-                                     option.rect.y() + ((option.rect.height() + offset)/2), 
+                                     option.rect.y() + ((option.rect.height() - offset)/2),
                                      offset, offset);
             } else {
                 painter->setBrush(QColor(0, 136, 0));
@@ -169,6 +180,8 @@ bool TupTimeLineTableItem::isSound()
 
 TupTimeLineTable::TupTimeLineTable(int index, QWidget *parent) : QTableWidget(0, 200, parent)
 {
+    setItemSize(5, 5);
+
     isLocalRequest = false;
     sceneIndex = index;
     frameIndex = 0;
@@ -212,9 +225,6 @@ void TupTimeLineTable::setup()
 
     setHorizontalHeader(ruler);
     setVerticalHeader(layersColumn);
-
-    // setItemSize(10, 25);
-    setItemSize(10, 20);
     
     ruler->setSectionResizeMode(QHeaderView::Custom);
     layersColumn->setSectionResizeMode(QHeaderView::Custom);
@@ -335,8 +345,10 @@ void TupTimeLineTable::exchangeFrame(int currentFrameIndex, int currentLayerInde
 
 void TupTimeLineTable::setLayerVisibility(int layerIndex, bool isVisible)
 {
-    if (layersColumn)
+    if (layersColumn) {
+        clearSelection();
         layersColumn->setSectionVisibility(layerIndex, isVisible);
+    }
 }
 
 void TupTimeLineTable::setLayerName(int layerIndex, const QString &name)
@@ -624,8 +636,8 @@ void TupTimeLineTable::mouseMoveEvent(QMouseEvent *event)
 void TupTimeLineTable::keyPressEvent(QKeyEvent *event)
 {
     /*
-    tError() << "TupTimeLineTable::keyPressEvent() - event->key() -> " << event->key();
-    tError() << "TupTimeLineTable::keyPressEvent() - event->modifiers() -> " << event->modifiers();
+      qDebug() << "TupTimeLineTable::keyPressEvent() - event->key() -> " << event->key();
+      qDebug() << "TupTimeLineTable::keyPressEvent() - event->modifiers() -> " << event->modifiers();
     */
 
     // SQA: Check if this piece of code is obsolete 

@@ -39,28 +39,20 @@
 TupTimeLineRuler::TupTimeLineRuler(QWidget *parent) : QHeaderView(Qt::Horizontal, parent)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupTimeLineRuler()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "TupTimeLineRuler()";
     #endif
 
     TCONFIG->beginGroup("General");
     themeName = TCONFIG->value("Theme", "Light").toString();
 
     setHighlightSections(true);
-    setStyleSheet("QHeaderView { background-color: #CCCCCC; }");
+    setStyleSheet("QHeaderView { background-color: #cccccc; }");
 }
 
 TupTimeLineRuler::~TupTimeLineRuler()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupTimeLineRuler()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "~TupTimeLineRuler()";
     #endif
 }
 
@@ -74,12 +66,14 @@ void TupTimeLineRuler::paintSection(QPainter *painter, const QRect & rect, int l
     QModelIndex currentSelection = currentIndex(); 
     int column = currentSelection.row(); 
 
+    // Cell is selected
     if (selectionModel()->isSelected(model()->index(column, logicalIndex))) {
-        QBrush brush(QColor(0, 135, 0, 80));
+        QBrush brush(QColor(0, 135, 0, 80)); // Light Green
         painter->fillRect(rect, brush);
     } else {
-        if ((logicalIndex + 1) == 1 || (logicalIndex+1) % 5 == 0) {
-            QBrush brush(QColor(150, 150, 150, 255));
+        // Cell contains a number
+        if ((logicalIndex + 1) == 1 || (logicalIndex + 1) % 5 == 0) {
+            QBrush brush(QColor(150, 150, 150, 255)); // Gray
             painter->fillRect(rect, brush);
         }
     }
@@ -92,6 +86,7 @@ void TupTimeLineRuler::paintSection(QPainter *painter, const QRect & rect, int l
     painter->drawLine(x, bottomY, x, bottomY - 6);
     painter->drawLine(x, topY, x, topY + 4);
 
+    // Drawing numbers on the ruler
     if (logicalIndex == 1 || logicalIndex % 5 == 0) {
         QFont font = this->font();
         font.setPointSize(7);
@@ -99,15 +94,13 @@ void TupTimeLineRuler::paintSection(QPainter *painter, const QRect & rect, int l
 
         QString number = QString::number(logicalIndex);
         painter->setFont(font);	
-        // painter->drawText((rect.center().x() - (fm.width(number)/2)),
-        //                   (rect.center().y() + (fm.height()/2)) - 2, number);
-
         painter->drawText((rect.center().x() - (fm.horizontalAdvance(number)/2)),
                           (rect.center().y() + (fm.height()/2)) - 2, number);
     }
 
     QPen pen = painter->pen();
-    pen.setWidth(4);
+    pen.setWidth(1);
+    pen.setColor(QColor(150, 150, 150));
     painter->setPen(pen); 
     painter->drawLine(rect.bottomLeft(), rect.bottomRight());
 

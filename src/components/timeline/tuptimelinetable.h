@@ -72,12 +72,12 @@ class TupTimeLineRuler;
 
 class TUPITUBE_EXPORT TupTimeLineTable : public QTableWidget
 {
-    Q_OBJECT;
+    Q_OBJECT
     
     friend class TupTimeLineTableItemDelegate;
     
     public:
-        TupTimeLineTable(int sceneIndex = 0, QWidget *parent = 0);
+        TupTimeLineTable(int sceneIndex = 0, QWidget *parent = nullptr);
         ~TupTimeLineTable();
         
         bool isSoundLayer(int row);
