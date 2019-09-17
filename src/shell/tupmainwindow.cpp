@@ -139,7 +139,7 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(nullptr), 
     }
 
     // Processing web msg content
-    bool showWebMsg = false;
+    // bool showWebMsg = false;
     isImageMsg = false;
     webContent = "";
     if (!fileContent.isEmpty()) {
@@ -149,13 +149,7 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(nullptr), 
             QDomNode n = root.firstChild();
             while (!n.isNull()) {
                 QDomElement e = n.toElement();
-                if (e.tagName() == "show") {
-                    QString flag = e.text();
-                    if (flag.compare("true") == 0)
-                        showWebMsg = true;
-                    else
-                        break;
-                } else if (e.tagName() == "size") {
+                if (e.tagName() == "size") {
                     QStringList numbers = e.text().split(",");
                     if (numbers.size() == 2)
                         webMsgSize = QSize(numbers.at(0).toInt(), numbers.at(1).toInt());
@@ -164,7 +158,6 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(nullptr), 
                 } else if (e.tagName() == "image") {
                     isImageMsg = true;
                 }
-
                 n = n.nextSibling();
             }
         } else {
@@ -174,22 +167,7 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(nullptr), 
         }
     }
 
-    if (showWebMsg) {
-        QTimer::singleShot(0, this, SLOT(showWebMessage()));
-    } else {
-        TCONFIG->beginGroup("General");
-        bool update = TCONFIG->value("NotifyUpdate", false).toBool();
-
-        if (update)
-            QDesktopServices::openUrl(QString(MAEFLORESTA_URL) + QString("downloads"));
-
-        // Check if user wants to see a TupiTube tip for every time he launches the program
-        bool showTips = TCONFIG->value("ShowTipOfDay", true).toBool();
-
-        // If option is enabled, then, show a little dialog with a nice tip
-        if (showTips)
-            QTimer::singleShot(0, this, SLOT(showTipDialog()));
-    }
+    QTimer::singleShot(0, this, SLOT(showWebMessage()));
 
     // Time to load plugins... 
     TupPluginManager::instance()->loadPlugins();
