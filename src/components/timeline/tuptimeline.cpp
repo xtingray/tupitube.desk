@@ -852,7 +852,7 @@ void TupTimeLine::requestLayerMove(int oldLayerIndex, int newLayerIndex)
 void TupTimeLine::initLayerVisibility()
 {
     #ifdef TUP_DEBUG
-        T_FUNCINFO << "TupTimeLine::initLayerVisibility()";
+        qDebug() << "TupTimeLine::initLayerVisibility()";
     #endif
 
     int scenes = project->scenesCount();
