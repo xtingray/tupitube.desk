@@ -59,9 +59,11 @@ TViewButton *ToolView::button() const
 
 void ToolView::expandDock(bool flag)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "ToolView::expandDock() - flag: " << flag;
     #endif
+    */
 
     expanded = flag;
     if (flag)

@@ -46,7 +46,7 @@
 
 QString TupTwitter::IS_HOST_UP_URL = QString("updates/test.xml");
 QString TupTwitter::USER_TIMELINE_URL = QString("updates/tweets.php");
-QString TupTwitter::TUPITUBE_VERSION_URL = QString("updates/current_version.xml");
+QString TupTwitter::TUPITUBE_VERSION_URL = QString("updates/community_version.xml");
 QString TupTwitter::TUPITUBE_WEB_MSG = QString("updates/web_msg.");
 QString TupTwitter::TUPITUBE_VIDEOS = QString("updates/videos.xml");
 QString TupTwitter::TUPITUBE_IMAGES = QString("updates/images/");
