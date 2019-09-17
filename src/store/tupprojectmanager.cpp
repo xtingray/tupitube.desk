@@ -54,11 +54,7 @@
 TupProjectManager::TupProjectManager(QObject *parent) : QObject(parent)
 {	
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProjectManager()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "TupProjectManager()";
     #endif
     
     isModified = false;
@@ -75,11 +71,7 @@ TupProjectManager::TupProjectManager(QObject *parent) : QObject(parent)
 TupProjectManager::~TupProjectManager()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupProjectManager()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "~TupProjectManager()";
     #endif
 
     delete handler;
@@ -133,21 +125,12 @@ TupAbstractProjectHandler *TupProjectManager::getHandler() const
 void TupProjectManager::setupNewProject()
 {	
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProjectManager::setupNewProject()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupProjectManager::setupNewProject()";
     #endif
-	
+
     if (!handler || !params) {
         #ifdef TUP_DEBUG
-            QString msg = "TupProjectManager::setupNewProject() - Error: No handler available or no params!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupProjectManager::setupNewProject() - Error: No handler available or no params!";
         #endif
         return;
     }
@@ -164,13 +147,8 @@ void TupProjectManager::setupNewProject()
 
     if (!handler->setupNewProject(params)) {
         #ifdef TUP_DEBUG
-            QString msg = "TupProjectManager::setupNewProject() - Error: Project params misconfiguration";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
-        #endif		
+            qDebug() << "TupProjectManager::setupNewProject() - Error: Project params misconfiguration";
+        #endif
         return;
     }
 
@@ -196,11 +174,7 @@ void TupProjectManager::setupNewProject()
 void TupProjectManager::closeProject()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProjectManager::closeProject()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupProjectManager::closeProject()";
     #endif
 
     if (!handler)
@@ -220,11 +194,7 @@ void TupProjectManager::closeProject()
 bool TupProjectManager::saveProject(const QString &fileName)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProjectManager::saveProject()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupProjectManager::saveProject()";
     #endif
 
     bool result = handler->saveProject(fileName, project);
@@ -236,19 +206,13 @@ bool TupProjectManager::saveProject(const QString &fileName)
 bool TupProjectManager::loadProject(const QString &fileName)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProjectManager::loadProject()] - fileName: " << fileName;
+        qDebug() << "TupProjectManager::loadProject() - fileName: " << fileName;
     #endif
 
     if (!handler) {
         #ifdef TUP_DEBUG
-            QString msg = "TupProjectManager::loadProject() - Fatal Error: No project handler available!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
-        #endif		
-
+            qDebug() << "TupProjectManager::loadProject() - Fatal Error: No project handler available!";
+        #endif
         return false;
     }
 
@@ -259,12 +223,7 @@ bool TupProjectManager::loadProject(const QString &fileName)
         isModified = false;
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupProjectManager::loadProject() - Fatal Error: Can't load project -> " + fileName;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupProjectManager::loadProject() - Fatal Error: Can't load project -> " + fileName;
         #endif
     }
 
@@ -306,14 +265,8 @@ bool TupProjectManager::isValid() const
 void TupProjectManager::handleProjectRequest(const TupProjectRequest *request)
 {	
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProjectManager::handleProjectRequest()]";
-        #else
-            T_FUNCINFO;
-            // SQA: Enable these lines only for hard/tough debugging
-            tWarning() << "Package: ";
-            tWarning() << request->getXml();
-        #endif
+        qWarning() << "TupProjectManager::handleProjectRequest() - Package:";
+        qWarning() << request->getXml();
     #endif
 
     // SQA: the handler must advise when to build the command
@@ -322,12 +275,7 @@ void TupProjectManager::handleProjectRequest(const TupProjectRequest *request)
         handler->handleProjectRequest(request);
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupProjectManager::handleProjectRequest() - Error: No handler available";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupProjectManager::handleProjectRequest() - Error: No handler available";
         #endif
     }
 }
@@ -335,11 +283,7 @@ void TupProjectManager::handleProjectRequest(const TupProjectRequest *request)
 void TupProjectManager::handleLocalRequest(const TupProjectRequest *request)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProjectManager::handleLocalRequest()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupProjectManager::handleLocalRequest()";
     #endif	
 
     TupRequestParser parser;
@@ -386,11 +330,7 @@ void TupProjectManager::handleLocalRequest(const TupProjectRequest *request)
                         #ifdef TUP_DEBUG
                             QString msg = "TupProjectManager::handleLocalRequest() - Fatal Error: "
                                           " Layer pointer is NULL [index = " +  QString::number(layerIndex) + "]";
-                            #ifdef Q_OS_WIN
-                                qDebug() << msg;
-                            #else
-                                tError() << msg;
-                            #endif
+                            qDebug() << msg;
                         #endif
                     }
                 }
@@ -414,48 +354,32 @@ void TupProjectManager::handleLocalRequest(const TupProjectRequest *request)
 void TupProjectManager::createCommand(const TupProjectRequest *request, bool addToStack)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProjectManager::createCommand(()]";
-        #else
-            T_FUNCINFO;
-            tWarning() << request->getXml();
-        #endif
-    #endif		
+        qDebug() << "TupProjectManager::createCommand()";
+        qDebug() << request->getXml();
+    #endif
 
     if (request->isValid()) {
         TupProjectCommand *command = new TupProjectCommand(commandExecutor, request);
         if (command) {
             if (addToStack) {
                 undoStack->push(command);
+                /*
                 #ifdef TUP_DEBUG
                     QString msg = "TupProjectManager::createCommand() * command counter: " + QString::number(undoStack->count());
-                    #ifdef Q_OS_WIN
-                        qWarning() << msg;
-                    #else
-                        tWarning() << msg;
-                    #endif
+                    qWarning() << msg;
                 #endif
+                */
             } else {
                 command->redo();
             }
         } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupProjectManager::createCommand() - Invalid command";
-            #ifdef Q_OS_WIN
-                qWarning() << msg;
-            #else
-                tWarning() << msg;
-            #endif
+            qWarning() << "TupProjectManager::createCommand() - Invalid command";
         #endif
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupProjectManager::createCommand() - Invalid request";
-            #ifdef Q_OS_WIN
-                qWarning() << msg;
-            #else
-                tWarning() << msg;
-            #endif
+            qWarning() << "TupProjectManager::createCommand() - Invalid request";
         #endif
     }
 }
@@ -464,12 +388,7 @@ void TupProjectManager::createCommand(TupProjectCommand *command)
 {
     undoStack->push(command);
     #ifdef TUP_DEBUG
-        QString msg = "TupProjectManager::createCommand() - command counter: " + QString::number(undoStack->count());
-        #ifdef Q_OS_WIN
-            qWarning() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qWarning() << "TupProjectManager::createCommand() - command counter: " + QString::number(undoStack->count());
     #endif
 }
 
@@ -490,14 +409,9 @@ void TupProjectManager::undo()
             */
             undoStack->undo();
         } else {
-        #ifdef TUP_DEBUG
-            QString msg = "TupProjectManager::undo() - No undo actions available!";
-            #ifdef Q_OS_WIN
-                qWarning() << msg;
-            #else
-                tWarning() << msg;
+            #ifdef TUP_DEBUG
+                qWarning() << "TupProjectManager::undo() - No undo actions available!";
             #endif
-        #endif
         }
     }
 }
@@ -514,14 +428,9 @@ void TupProjectManager::redo()
            */
            undoStack->redo();
        } else {
-       #ifdef TUP_DEBUG
-           QString msg = "TupProjectManager::redo() - No redo actions available!";
-           #ifdef Q_OS_WIN
-               qWarning() << msg;
-           #else
-               tWarning() << msg;
+           #ifdef TUP_DEBUG
+               qWarning() << "TupProjectManager::redo() - No redo actions available!";
            #endif
-       #endif
        }
    }
 }
@@ -534,11 +443,7 @@ void TupProjectManager::clearUndoStack()
 void TupProjectManager::emitResponse(TupProjectResponse *response)
 {	
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProjectManager::emitResponse()] - response->action(): " << response->getAction();
-        #else
-            T_FUNCINFO << response->getAction();
-        #endif
+        qDebug() << "TupProjectManager::emitResponse() - response->action(): " << response->getAction();
     #endif	
 
     if (response->getAction() != TupProjectRequest::Select)
@@ -563,12 +468,7 @@ void TupProjectManager::setOpen(bool isOpen)
 bool TupProjectManager::removeProjectPath(const QString &projectPath)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProjectManager::removeProjectPath()]";
-        #else
-            T_FUNCINFO;
-            tWarning() << "Removing project path: " << projectPath;
-        #endif
+        qDebug() << "TupProjectManager::removeProjectPath() - Removing project path: " << projectPath;
     #endif
 
     bool result = true;
@@ -591,12 +491,7 @@ bool TupProjectManager::removeProjectPath(const QString &projectPath)
     }
 	
     #ifdef TUP_DEBUG
-        QString msg = "[TupProjectManager::removeProjectPath()] - Result -> " + QString::number(result);
-        #ifdef Q_OS_WIN
-            qWarning() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qWarning() << "TupProjectManager::removeProjectPath() - Result -> " + QString::number(result);
     #endif
 
     return result;

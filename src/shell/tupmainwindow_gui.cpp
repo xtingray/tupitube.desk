@@ -122,7 +122,7 @@ void TupMainWindow::createGUI()
     connect(m_exposureSheet, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
 
     exposureView = addToolView(m_exposureSheet, Qt::RightDockWidgetArea, Animation, "Exposure Sheet", QKeySequence(tr("Shift+E")));
-    connect(exposureView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkTimeLineVisibility(bool)));
+    // connect(exposureView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkTimeLineVisibility(bool)));
 
     m_actionManager->insert(exposureView->toggleViewAction(), "show_exposure");
     addToPerspective(exposureView->toggleViewAction(), Animation);
@@ -135,7 +135,7 @@ void TupMainWindow::createGUI()
     connect(m_timeLine, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
 
     timeView = addToolView(m_timeLine, Qt::BottomDockWidgetArea, Animation, "Time Line", QKeySequence(tr("Shift+T")));
-    connect(timeView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkExposureVisibility(bool)));
+    // connect(timeView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkExposureVisibility(bool)));
 
     m_actionManager->insert(timeView->toggleViewAction(), "show_timeline");
     addToPerspective(timeView->toggleViewAction(), Animation);

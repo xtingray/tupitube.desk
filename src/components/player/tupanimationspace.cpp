@@ -40,7 +40,7 @@ TupAnimationspace::TupAnimationspace(TupCameraWidget *playerUI, QWidget *parent)
     // setStyleSheet("QMainWindow { background-color: #d0d0d0; }");
 
     playerInterface = playerUI;
-    playOn = false;
+    playOn = false;    
     setCameraWidget(playerInterface);
 }
 

@@ -378,6 +378,9 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         connect(animationTab, SIGNAL(updateFPS(int)), cameraWidget, SLOT(setStatusFPS(int)));
 
+        connect(exposureView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkTimeLineVisibility(bool)));
+        connect(timeView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkExposureVisibility(bool)));
+
         exposureView->expandDock(true);
         currentDock = TupDocumentView::ExposureSheet;
 
@@ -526,10 +529,13 @@ bool TupMainWindow::closeProject()
 void TupMainWindow::resetUI()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupMainWindow::resetUI()]";
+        qDebug() << "TupMainWindow::resetUI()";
     #endif
 
     setCurrentTab(0);
+
+    disconnect(exposureView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkTimeLineVisibility(bool)));
+    disconnect(timeView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkExposureVisibility(bool)));
 
     colorView->expandDock(false);
     penView->expandDock(false);
@@ -1127,9 +1133,10 @@ void TupMainWindow::updateCurrentTab(int index)
             QTimer::singleShot(0, this, SLOT(doPlay()));
     } else {
         if (index == 0) { // Animation mode
-            cameraWidget->setVisible(false);
-            animationTab->updatePerspective(); // Just for Papagayo UI
+            if (playerTab)
+                cameraWidget->setVisible(false);
 
+            animationTab->updatePerspective(); // Just for Papagayo UI
             if (lastTab == 1)
                 cameraWidget->doStop();
 
