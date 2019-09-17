@@ -238,9 +238,9 @@ AVStream * TFFmpegMovieGenerator::addVideoStream(AVFormatContext *oc, AVCodec **
     }
 
     if (oc->oformat->flags & AVFMT_GLOBALHEADER)
-        c->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+        // c->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
         // SQA: Temporary code to support Libav
-        // c->flags |= CODEC_FLAG_GLOBAL_HEADER;
+        c->flags |= CODEC_FLAG_GLOBAL_HEADER;
 
     return st;
 }
