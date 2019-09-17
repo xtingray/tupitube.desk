@@ -72,9 +72,11 @@ void ToolView::expandDock(bool flag)
 
 bool ToolView::isExpanded()
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "ToolView::isExpanded() - expanded: " << expanded;
     #endif
+    */
 
     return expanded;
 }

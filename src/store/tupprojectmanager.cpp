@@ -387,9 +387,11 @@ void TupProjectManager::createCommand(const TupProjectRequest *request, bool add
 void TupProjectManager::createCommand(TupProjectCommand *command)
 {
     undoStack->push(command);
+    /*
     #ifdef TUP_DEBUG
         qWarning() << "TupProjectManager::createCommand() - command counter: " + QString::number(undoStack->count());
     #endif
+    */
 }
 
 TupProject *TupProjectManager::getProject()
