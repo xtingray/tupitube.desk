@@ -56,8 +56,9 @@ TupCameraWidget::TupCameraWidget(TupProject *work, bool isNetworked, QWidget *pa
     int height = screen->geometry().height();
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupCameraWidget::()] - screen height: " << height;
-        qDebug() << "[TupCameraWidget::()] - factor: " << factor;
+        qDebug() << "TupCameraWidget::() - screen height: " << height;
+        qDebug() << "TupCameraWidget::() - project height: " << projectSize.height();
+        qDebug() << "TupCameraWidget::() - factor: " << factor;
     #endif
 
     if (height <= 700)

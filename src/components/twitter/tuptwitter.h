@@ -48,7 +48,7 @@ class TUPITUBE_EXPORT TupTwitter : public QWidget
     Q_OBJECT
 
     public:
-        TupTwitter(QWidget *parent=0);
+        TupTwitter(QWidget *parent = nullptr);
         ~TupTwitter();
 
         void start();
