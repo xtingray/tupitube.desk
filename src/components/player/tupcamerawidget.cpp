@@ -61,7 +61,7 @@ TupCameraWidget::TupCameraWidget(TupProject *work, bool isNetworked, QWidget *pa
         qDebug() << "TupCameraWidget::() - factor: " << factor;
     #endif
 
-    if (height <= 700)
+    if (height <= 800)
         percent = 30;
     if (height >= 1080) {
         if (factor < 1.4)
