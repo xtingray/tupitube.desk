@@ -56,11 +56,7 @@
 TupGraphicsScene::TupGraphicsScene() : QGraphicsScene()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupGraphicsScene()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupGraphicsScene()";
     #endif
 
     loadingProject = true;
@@ -84,11 +80,7 @@ TupGraphicsScene::TupGraphicsScene() : QGraphicsScene()
 TupGraphicsScene::~TupGraphicsScene()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupGraphicsScene()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "~TupGraphicsScene()";
     #endif
 
     clearFocus();
@@ -105,11 +97,7 @@ TupGraphicsScene::~TupGraphicsScene()
 void TupGraphicsScene::updateLayerVisibility(int layerIndex, bool visible)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupGraphicsScene::updateLayerVisibility()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupGraphicsScene::updateLayerVisibility()]";
     #endif
 
     if (!gScene)
@@ -1218,11 +1206,7 @@ TupScene *TupGraphicsScene::currentScene() const
 {
     /*
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupGraphicsScene::scene()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupGraphicsScene::scene()";
     #endif
     */
 
@@ -1235,11 +1219,7 @@ TupScene *TupGraphicsScene::currentScene() const
 void TupGraphicsScene::setTool(TupToolPlugin *plugin)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupGraphicsScene::setTool()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupGraphicsScene::setTool()";
     #endif
 
     if (spaceContext == TupProject::FRAMES_EDITION) {
@@ -1260,11 +1240,7 @@ TupToolPlugin *TupGraphicsScene::currentTool() const
 {
     /*
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupGraphicsScene::currentTool()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupGraphicsScene::currentTool()]";
     #endif
     */
 

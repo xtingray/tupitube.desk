@@ -63,11 +63,7 @@ SelectionTool::~SelectionTool()
 void SelectionTool::init(TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[SelectionTool::init()]";
-        #else
-            T_FUNCINFOX("tools");
-        #endif
+        qDebug() << "SelectionTool::init()";
     #endif
 
     scene = gScene;
@@ -390,11 +386,7 @@ void SelectionTool::aboutToChangeScene(TupGraphicsScene *scene)
 void SelectionTool::aboutToChangeTool()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[SelectionTool::aboutToChangeTool()]";
-        #else
-            T_FUNCINFOX("tools");
-        #endif
+        qDebug() << "SelectionTool::aboutToChangeTool()";
     #endif
 
     init(scene);

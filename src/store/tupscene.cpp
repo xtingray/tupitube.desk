@@ -629,7 +629,7 @@ void TupScene::removeTweensFromFrame(int layerIndex, int frameIndex)
 
 TupItemTweener *TupScene::tween(const QString &name, TupItemTweener::Type type)
 {
-    if (layers.count()) {
+    if (!layers.isEmpty()) {
         foreach(TupLayer *layer, layers) {
             QList<TupGraphicObject *> objectList = layer->getTweeningGraphicObjects();
             foreach (TupGraphicObject *object, objectList) {
@@ -657,7 +657,7 @@ TupItemTweener *TupScene::tween(const QString &name, TupItemTweener::Type type)
 QList<QString> TupScene::getTweenNames(TupItemTweener::Type type)
 {
     QList<QString> names;
-    if (layers.count()) {
+    if (!layers.isEmpty()) {
         foreach(TupLayer *layer, layers) {
             QList<TupGraphicObject *> objectList = layer->getTweeningGraphicObjects();
             foreach (TupGraphicObject *object, objectList) {

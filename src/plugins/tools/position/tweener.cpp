@@ -58,7 +58,7 @@
 Tweener::Tweener() : TupToolPlugin()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[Tweener::Tweener()]";
+        qDebug() << "Tweener::Tweener()";
     #endif
 
     setupActions();
@@ -83,7 +83,7 @@ Tweener::~Tweener()
 void Tweener::init(TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[Tweener::init()]";
+        qDebug() << "Tweener::init()";
     #endif
 
     doList.clear();
@@ -91,11 +91,13 @@ void Tweener::init(TupGraphicsScene *gScene)
     dots.clear();
 
     if (isPathInScene) {
+        /*
         if (nodesGroup) {
             nodesGroup->clear();
             delete nodesGroup;
             nodesGroup = nullptr;
         }
+        */
 
         if (path) {
             delete path;
@@ -162,11 +164,7 @@ QStringList Tweener::keys() const
 void Tweener::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::press()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "Tweener::press()";
     #endif
 
     Q_UNUSED(brushManager);
@@ -199,11 +197,7 @@ void Tweener::move(const TupInputDeviceInformation *input, TupBrushManager *brus
 void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::release()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "Tweener::release()";
     #endif
 
     Q_UNUSED(input);
@@ -268,21 +262,11 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
             }
         } else { // Selection mode
             #ifdef TUP_DEBUG
-                QString msg = "Position Tweener::release() - Tracing selection mode";
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "Position Tweener::release() - Tracing selection mode";
             #endif
             if (gScene->selectedItems().size() > 0) {
                 #ifdef TUP_DEBUG
-                    QString msg = "Position Tweener::release() - selection size -> " + QString::number(gScene->selectedItems().size());
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "Position Tweener::release() - selection size -> " + QString::number(gScene->selectedItems().size());
                 #endif
 
                 objects = gScene->selectedItems();
@@ -309,12 +293,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 }
 
                 #ifdef TUP_DEBUG
-                    QString msg1 = "Position Tweener::release() - Notifying selection...";
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg1;
-                    #else
-                        tError() << msg1;
-                    #endif
+                    qDebug() << "Position Tweener::release() - Notifying selection...";
                 #endif
                 configPanel->notifySelection(true);
 
@@ -348,25 +327,15 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "Position Tweener::release() - Selection mode: no items selected";
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "Position Tweener::release() - Selection mode: no items selected";
                 #endif
             }
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "Position Tweener::release() - scene->currentFrameIndex() != initFrame";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-                tError() << "scene->currentFrameIndex() -> " << gScene->currentFrameIndex();
-                tError() << "initFrame -> " << initFrame;
-            #endif
+            qDebug() << "Position Tweener::release() - scene->currentFrameIndex() != initFrame";
+            qDebug() << "scene->currentFrameIndex() -> " << gScene->currentFrameIndex();
+            qDebug() << "initFrame -> " << initFrame;
         #endif
     }
 }
@@ -436,11 +405,7 @@ void Tweener::aboutToChangeScene(TupGraphicsScene *scene)
 void Tweener::aboutToChangeTool()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::aboutToChangeTool()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "Tweener::aboutToChangeTool()";
     #endif
 
     resetGUI();
@@ -449,11 +414,7 @@ void Tweener::aboutToChangeTool()
 void Tweener::resetGUI()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::resetGUI()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "Tweener::resetGUI()";
     #endif
 
     configPanel->clearData();
@@ -461,10 +422,7 @@ void Tweener::resetGUI()
     if (editMode == TupToolPlugin::Selection) {
         clearSelection();
         disableSelection();
-        return;
-    }
-
-    if (editMode == TupToolPlugin::Properties) {
+    } else if (editMode == TupToolPlugin::Properties) {
         if (path) {
             scene->removeItem(path);
             removeTweenPoints();
@@ -477,7 +435,6 @@ void Tweener::resetGUI()
             delete path;
             path = nullptr;
         }
-        return;
     }
 }
 
@@ -503,11 +460,7 @@ void Tweener::setupActions()
 void Tweener::setTweenPath()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::setTweenPath()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "Tweener::setTweenPath()";
     #endif
 
     if (path) {
@@ -540,11 +493,7 @@ void Tweener::setTweenPath()
 void Tweener::setSelection()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::setSelection()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "Tweener::setSelection()";
     #endif
 
     if (mode == TupToolPlugin::Edit) {
@@ -645,11 +594,7 @@ QString Tweener::pathToCoords()
 void Tweener::applyReset()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::applyReset()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "Tweener::applyReset()";
     #endif
 
     mode = TupToolPlugin::View;
@@ -682,11 +627,7 @@ void Tweener::applyReset()
 void Tweener::applyTween()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::applyTween()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "Tweener::applyTween()";
     #endif
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
@@ -847,11 +788,7 @@ void Tweener::applyTween()
 void Tweener::updatePath()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::updatePath()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "Tweener::updatePath()";
     #endif
 
     if (path) {
@@ -894,11 +831,7 @@ void Tweener::saveConfig()
 void Tweener::updateScene(TupGraphicsScene *scene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::updateScene()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "Tweener::updateScene()";
     #endif
 
     mode = configPanel->mode();
@@ -986,12 +919,7 @@ void Tweener::removeTweenFromProject(const QString &name)
         emit tweenRemoved();
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "Tweener::removeTweenFromProject() - Position tween couldn't be removed -> " + name;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "Tweener::removeTweenFromProject() - Position tween couldn't be removed -> " + name;
         #endif
     }
 }
@@ -1013,11 +941,7 @@ void Tweener::setCurrentTween(const QString &name)
 void Tweener::setEditEnv()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::setEditEnv()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "Tweener::setEditEnv()";
     #endif
 
     initFrame = currentTween->getInitFrame();
@@ -1113,11 +1037,7 @@ void Tweener::disableSelection()
 void Tweener::sceneResponse(const TupSceneResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::sceneResponse()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "Tweener::sceneResponse()";
     #endif
 
     if ((response->getAction() == TupProjectRequest::Remove || response->getAction() == TupProjectRequest::Reset)
@@ -1132,11 +1052,7 @@ void Tweener::sceneResponse(const TupSceneResponse *response)
 void Tweener::layerResponse(const TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::layerResponse()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "Tweener::layerResponse()";
     #endif
 
     if (response->getAction() == TupProjectRequest::Remove)
@@ -1146,11 +1062,7 @@ void Tweener::layerResponse(const TupLayerResponse *response)
 void Tweener::frameResponse(const TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::frameResponse()] " << response->getFrameIndex();
-        #else
-            T_FUNCINFO << response->getFrameIndex();
-        #endif
+        qDebug() << "Tweener::frameResponse() - index: " << response->getFrameIndex();
     #endif
 
     if (response->getAction() == TupProjectRequest::Remove && scene->currentLayerIndex() == response->getLayerIndex()) {
@@ -1175,11 +1087,7 @@ void Tweener::frameResponse(const TupFrameResponse *response)
 void Tweener::itemResponse(const TupItemResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::itemResponse()] " << response->getItemIndex();
-        #else
-            T_FUNCINFO << " - item index: " << response->getItemIndex();
-        #endif
+        qDebug() << "Tweener::itemResponse() - index: " << response->getItemIndex();
     #endif
 
     if (editMode == TupToolPlugin::Properties) {
@@ -1295,11 +1203,7 @@ TupToolPlugin::EditMode Tweener::currentEditMode()
 void Tweener::removeTweenPoints()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::removeTweenPoints()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "Tweener::removeTweenPoints()";
     #endif
 
     int total = dots.size();
@@ -1311,11 +1215,7 @@ void Tweener::removeTweenPoints()
 void Tweener::paintTweenPoints()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::paintTweenPoints()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "Tweener::paintTweenPoints()";
     #endif
 
     if (dots.isEmpty()) {

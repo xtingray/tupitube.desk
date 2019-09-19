@@ -57,11 +57,7 @@
 TupPaintAreaBase::TupPaintAreaBase(QWidget *parent, QSize dimension, TupLibrary *library) : QGraphicsView(parent)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintAreaBase::TupPaintAreaBase()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "TupPaintAreaBase::TupPaintAreaBase()";
     #endif
 
     gScene = new TupGraphicsScene();
@@ -131,23 +127,19 @@ void TupPaintAreaBase::setTool(TupToolPlugin *tool)
 {
     if (!scene()) {
         #ifdef TUP_DEBUG
-            QString msg = "TupPaintAreaBase::setTool() - Fatal Error: No scene available";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupPaintAreaBase::setTool() - Fatal Error: No scene available";
         #endif
         return;
     }
 
-    if (tool)
+    if (tool) {
         disconnect(tool, SIGNAL(requested(const TupProjectRequest *)), 
                    this, SIGNAL(requestTriggered(const TupProjectRequest *)));
 
-    gScene->setTool(tool);
-    connect(tool, SIGNAL(requested(const TupProjectRequest *)), 
-            this, SIGNAL(requestTriggered(const TupProjectRequest*)));
+        gScene->setTool(tool);
+        connect(tool, SIGNAL(requested(const TupProjectRequest *)), 
+                this, SIGNAL(requestTriggered(const TupProjectRequest*)));
+    }
 }
 
 bool TupPaintAreaBase::getGridState() const
