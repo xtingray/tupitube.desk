@@ -66,7 +66,7 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Cancel, parent)
     if (QString(QLocale::system().name()).length() > 1)
         lang = QString(QLocale::system().name()).left(2);
 
-    Qt::WindowFlags flags = 0;
+    Qt::WindowFlags flags = nullptr;
     flags = Qt::Dialog;
     flags |= Qt::CustomizeWindowHint;
     setWindowFlags(flags);
@@ -80,24 +80,14 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Cancel, parent)
 
     if (!file.open(QIODevice::ReadOnly)) {
         #ifdef TUP_DEBUG
-            QString msg = "TupAbout::TupAbout() - Fatal Error: Can't open \"credits.xml\" file";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupAbout::TupAbout() - Fatal Error: Can't open \"credits.xml\" file";
         #endif
         return;
     }
 
     if (!doc.setContent(&file)) {
         #ifdef TUP_DEBUG
-            QString msg = "TupAbout::TupAbout() - Fatal Error: File \"credits.xml\" is corrupt!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupAbout::TupAbout() - Fatal Error: File \"credits.xml\" is corrupt!";
         #endif
         file.close();
         return;
@@ -117,7 +107,7 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Cancel, parent)
     }
 
     TAnimWidget *credits = new TAnimWidget(QPixmap(THEME_DIR + "/images/credits.png"), creditsText);
-    addTab(credits, tr("Credits"));
+    addTab(credits, tr("About"));
 
     QPalette palette = credits->palette();
     palette.setColor(QPalette::Foreground, QColor(50, 50, 50, 255));
@@ -142,6 +132,7 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Cancel, parent)
 
     // TupiTube Description Tab 
 
+    /*
     QString tupiFile = QString() + "html/pages/tupi_short.html";
 #ifdef Q_OS_WIN
     QString tupiPath = SHARE_DIR + tupiFile;
@@ -155,8 +146,9 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Cancel, parent)
     tupiText->moveCursor(QTextCursor::Start);
 
     addTab(tupiText, tr("About"));
+    */
 
-    // 4: License Terms Tab
+    // License Terms Tab
 
     QString licenseFile = QString() + "html/pages/philosophy.html"; 
 #ifdef Q_OS_WIN

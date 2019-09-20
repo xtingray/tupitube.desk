@@ -36,7 +36,6 @@
 #include "tupapplication.h"
 #include "tupmainwindow.h"
 #include "tapplicationproperties.h"
-// #include "tcollapsiblewidget.h"
 #include "talgorithm.h"
 
 #ifdef TUP_DEBUG
@@ -166,12 +165,7 @@ int main(int argc, char ** argv)
     application.createCache(TCONFIG->value("Cache").toString());
 
 #ifdef TUP_DEBUG
-    QString debug = "main.cpp - CACHE path: " + TCONFIG->value("Cache").toString();
-    #ifdef Q_OS_WIN
-        qWarning() << debug;
-    #else
-        tWarning() << debug;
-    #endif
+    qWarning() << "main.cpp - CACHE path: " + TCONFIG->value("Cache").toString();
 #endif
 
     QStyle *style = QStyleFactory::create("fusion");
@@ -179,8 +173,7 @@ int main(int argc, char ** argv)
 
     // SQA: Add support for at least two languages for the next release 
     QList<QString> langSupport;
-    // langSupport << "es" << "fr" << "pt" << "zh";
-    langSupport << "es" << "fr" << "pt";
+    langSupport << "es" << "fr" << "pt" << "zh";
     if (locale.compare("en") != 0 && langSupport.contains(locale)) {
         #ifdef Q_OS_WIN
             QString langFile = kAppProp->shareDir() + "translations/tupi_" + locale + ".qm";
@@ -189,12 +182,7 @@ int main(int argc, char ** argv)
         #endif
 
         #ifdef TUP_DEBUG
-            QString msg = "main.cpp - Loading lang file -> " + langFile;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tWarning() << msg;
-            #endif
+            qWarning() << "main.cpp - Loading lang file -> " + langFile;
         #endif
 
         if (QFile::exists(langFile)) {
@@ -204,12 +192,7 @@ int main(int argc, char ** argv)
             application.installTranslator(translator);
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "main.cpp - Error: Can't open file -> " + langFile;
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "main.cpp - Error: Can't open file -> " + langFile;
             #endif    
         }
     }
@@ -222,12 +205,7 @@ int main(int argc, char ** argv)
 
     // Looking for plugins for TupiTube Desk
     #ifdef TUP_DEBUG
-        QString msg = "main.cpp - Loading plugins from: " + kAppProp->pluginDir();
-        #ifdef Q_OS_WIN
-            qWarning() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qWarning() << "main.cpp - Loading plugins from: " + kAppProp->pluginDir();
     #endif
     QApplication::addLibraryPath(kAppProp->pluginDir());
 
@@ -251,12 +229,7 @@ int main(int argc, char ** argv)
             QString project = QString(argv[1]);
 
             #ifdef TUP_DEBUG
-                QString msg = "main.cpp - Opening project -> " + project;
-                #ifdef Q_OS_WIN
-                   qWarning() << msg;
-                #else
-                   tWarning() << msg;
-                #endif
+                qWarning() << "main.cpp - Opening project -> " + project;
             #endif
 
             if (project.endsWith(".tup") || project.endsWith(".TUP"))
