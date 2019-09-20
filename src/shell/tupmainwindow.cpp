@@ -86,7 +86,7 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(nullptr), 
     #endif
 
     // Naming the main window
-    appTitle = "TupiTube Desk | Community";
+    appTitle = "TupiTube Desk | Artist";
     setWindowTitle(appTitle);
     setWindowIcon(QIcon(THEME_DIR + "icons/about.png"));
     setObjectName("TupMainWindow_");

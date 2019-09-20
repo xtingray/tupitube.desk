@@ -175,9 +175,9 @@ _EOH_
        config.addDefine("ADD_HEADERS");
     end
 
-    config.addDefine('VERSION=\\\\\"Community\\\\\"')
-    config.addDefine('REVISION=\\\\\"I\\\\\"')
-    config.addDefine('CODE_NAME=\\\\\"Free_Version\\\\\"')
+    config.addDefine('VERSION=\\\\\"Artist\\\\\"')
+    config.addDefine('REVISION=\\\\\"09-19\\\\\"')
+    config.addDefine('CODE_NAME=\\\\\"Cuore\\\\\"')
     config.addDefine('CONFIG_VERSION=\\\\\"2\\\\\"')
 
     if File.exists?('/etc/canaima_version')

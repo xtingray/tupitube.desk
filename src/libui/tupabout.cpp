@@ -149,7 +149,7 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Cancel, parent)
     */
 
     // License Terms Tab
-
+    /*
     QString licenseFile = QString() + "html/pages/philosophy.html"; 
 #ifdef Q_OS_WIN
     QString licensePath = SHARE_DIR + licenseFile;
@@ -163,6 +163,7 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Cancel, parent)
     licenseText->moveCursor(QTextCursor::Start);
     addTab(licenseText, tr("License Agreement"));
     setButtonText(Cancel, tr("Close"));
+    */
 }
 
 TupAbout::~TupAbout()
