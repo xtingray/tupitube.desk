@@ -56,8 +56,8 @@
 #include <QFile>
 #include <QDir>
 
-class QCheckBox;
-class QTextBrowser;
+// class QCheckBox;
+// class QTextBrowser;
 
 class T_GUI_EXPORT TipDialog : public QDialog
 {
@@ -65,7 +65,7 @@ class T_GUI_EXPORT TipDialog : public QDialog
 
     public:
         enum Tab { Animation = 0, Tip };
-        TipDialog(QStringList &labels, const QString &videos, const QString &tips, QWidget *parent = 0);
+        TipDialog(QStringList &labels, const QString &videos, const QString &tips, QWidget *parent = nullptr);
         ~TipDialog();
         
     private:
@@ -77,15 +77,18 @@ class T_GUI_EXPORT TipDialog : public QDialog
         void nextTip();
         
     private slots:
+        void updateShowOnStartFlag();
         void updateTabIndex(int index);
         void showPreviousItem();
         void showNextItem();
-        
+
     private:
         QTabWidget *tabWidget;
         QTextBrowser *videoBrowser;
         QTextBrowser *textBrowser;
         TipDatabase *recordsDatabase;
+        QCheckBox *showCheckBox;
+
         QStringList tags;
         int tabIndex;
 };

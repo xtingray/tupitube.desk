@@ -198,7 +198,6 @@ class TupMainWindow : public TabbedMainWindow
         void updateUsersOnLine(const QString &login, int state);
         void importPapagayoLipSync();
         void hideTopPanels();
-        void showWebMessage();
         void setUpdateFlag(bool flag);
         void checkTimeLineVisibility(bool visible);
         void checkExposureVisibility(bool visible);

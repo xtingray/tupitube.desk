@@ -35,6 +35,8 @@
 
 #include "tipdialog.h"
 
+#include <QCheckBox>
+
 TipDialog::TipDialog(QStringList &labels, const QString &videos, const QString &tips, QWidget *parent) : QDialog(parent)
 {
     setModal(true);
@@ -87,11 +89,14 @@ void TipDialog::setupGUI()
     
     layout->addWidget(tabWidget);
     layout->addWidget(new TSeparator);
+
+    showCheckBox = new QCheckBox(tr("Show this dialog on start"));
+    layout->addWidget(showCheckBox);
+    connect(showCheckBox, SIGNAL(clicked()), this, SLOT(updateShowOnStartFlag()));
     
     QHBoxLayout *buttonLayout = new QHBoxLayout;
-
     buttonLayout->addStretch(1);
-    
+
     QPushButton *prevButton = new QPushButton(tags.at(1));
     buttonLayout->addWidget(prevButton);
     connect(prevButton, SIGNAL(clicked()), this, SLOT(showPreviousItem()));
@@ -107,7 +112,10 @@ void TipDialog::setupGUI()
     connect(close, SIGNAL(clicked()), this, SLOT(accept()));
     
     layout->addLayout(buttonLayout);
-    
+
+    TCONFIG->beginGroup("General");
+    showCheckBox->setChecked(TCONFIG->value("ShowTipOfDay", true).toBool());
+
     setAttribute(Qt::WA_DeleteOnClose, true);
     
     nextTip();
@@ -115,6 +123,12 @@ void TipDialog::setupGUI()
 
 TipDialog::~TipDialog()
 {
+}
+
+void TipDialog::updateShowOnStartFlag()
+{
+    TCONFIG->beginGroup("General");
+    TCONFIG->setValue("ShowTipOfDay", showCheckBox->isChecked());
 }
 
 void TipDialog::showPreviousItem()

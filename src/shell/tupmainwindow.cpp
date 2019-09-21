@@ -126,48 +126,11 @@ TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(nullptr), 
     setupMenu();
     setupToolBar();
 
-    // SQA: Web announcement comes here
-    QString webMsgPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/webmsg.html";
-    QFile webMsgFile(webMsgPath);
-    QString fileContent = "";
-    if (webMsgFile.exists()) {
-        if (webMsgFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            QTextStream in(&webMsgFile);
-            while (!in.atEnd())
-                fileContent += in.readLine();
-        }
-    }
-
-    // Processing web msg content
-    // bool showWebMsg = false;
-    isImageMsg = false;
-    webContent = "";
-    if (!fileContent.isEmpty()) {
-        QDomDocument doc;
-        if (doc.setContent(fileContent)) {
-            QDomElement root = doc.documentElement();
-            QDomNode n = root.firstChild();
-            while (!n.isNull()) {
-                QDomElement e = n.toElement();
-                if (e.tagName() == "size") {
-                    QStringList numbers = e.text().split(",");
-                    if (numbers.size() == 2)
-                        webMsgSize = QSize(numbers.at(0).toInt(), numbers.at(1).toInt());
-                } else if (e.tagName() == "text") {
-                    webContent = e.text();
-                } else if (e.tagName() == "image") {
-                    isImageMsg = true;
-                }
-                n = n.nextSibling();
-            }
-        } else {
-            #ifdef TUP_DEBUG
-                qWarning() << "TupMainWindow() - Fatal error parsing file -> " + webMsgPath;
-            #endif
-        }
-    }
-
-    QTimer::singleShot(0, this, SLOT(showWebMessage()));
+    TCONFIG->beginGroup("General");
+    bool showTips = TCONFIG->value("ShowTipOfDay", true).toBool();
+    // If option is enabled, then, show a little dialog with a nice tip
+    if (showTips)
+        QTimer::singleShot(0, this, SLOT(showTipDialog()));
 
     // Time to load plugins... 
     TupPluginManager::instance()->loadPlugins();
@@ -1301,23 +1264,14 @@ void TupMainWindow::saveDefaultPath(const QString &dir)
     TCONFIG->sync();
 }
 
-void TupMainWindow::showWebMessage()
-{
-    TMsgDialog *msgDialog = new TMsgDialog(webContent, webMsgSize, isImageMsg, this);
-    msgDialog->show();
-
-    msgDialog->move(static_cast<int> ((screen->geometry().width() - msgDialog->width()) / 2),
-                    static_cast<int> ((screen->geometry().height() - msgDialog->height()) / 2));
-}
-
-void TupMainWindow::setUpdateFlag(bool flag)
+void TupMainWindow::setUpdateFlag(bool update)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupMainWindow::setUpdateFlag()] flag -> " << flag;
+        qDebug() << "TupMainWindow::setUpdateFlag() - update -> " << update;
     #endif
 
     TCONFIG->beginGroup("General");
-    TCONFIG->setValue("NotifyUpdate", flag);
+    TCONFIG->setValue("NotifyUpdate", update);
     TCONFIG->sync();
 }
 
