@@ -75,7 +75,7 @@
     <name>FFmpegPlugin</name>
     <message>
         <source>Video Formats</source>
-        <translation type="unfinished">视频格式</translation>
+        <translation>视频格式</translation>
     </message>
 </context>
 <context>
@@ -966,6 +966,10 @@
         <source>Animations</source>
         <translation>动画</translation>
     </message>
+    <message>
+        <source>Show this dialog on start</source>
+        <translation>在开始时显示此对话框</translation>
+    </message>
 </context>
 <context>
     <name>TreeWidgetSearchLine</name>
@@ -996,16 +1000,8 @@
         <translation>关于</translation>
     </message>
     <message>
-        <source>Close</source>
-        <translation>关闭</translation>
-    </message>
-    <message>
         <source>About TupiTube Desk</source>
         <translation>关于Muvizu Tupi</translation>
-    </message>
-    <message>
-        <source>License Agreement</source>
-        <translation>许可协议</translation>
     </message>
 </context>
 <context>
@@ -4228,7 +4224,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Description</source>
-        <translation type="unfinished">描述</translation>
+        <translation>描述</translation>
     </message>
 </context>
 <context>
