@@ -425,7 +425,6 @@ void TupExposureSheet::applyAction(int action)
 
                 TupProjectRequest request;
                 if (scenesTotal > 1) {
-                    qDebug() << "1 - Removing Scene: " << sceneIndex;
                     request = TupRequestBuilder::createSceneRequest(sceneIndex, TupProjectRequest::Remove);
                     emit requestTriggered(&request);
 
@@ -433,7 +432,6 @@ void TupExposureSheet::applyAction(int action)
                     request = TupRequestBuilder::createFrameRequest(sceneIndex - 1, 0, 0, TupProjectRequest::Select, selection);
                     emit requestTriggered(&request);
                 } else {
-                    qDebug() << "2 - Removing Scene: " << sceneIndex;
                     request = TupRequestBuilder::createSceneRequest(sceneIndex, TupProjectRequest::Reset, tr("Scene 1"));
                     emit requestTriggered(&request);
                 }

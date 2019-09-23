@@ -174,7 +174,6 @@ void TButtonBar::closeOtherPanels(QAbstractButton *source)
         if (source != button) {
             if (button->toolView()->isVisible()) {
                 button->blockSignals(true);
-                qDebug() << "1 Tracing toggleView action!";
                 button->toggleView();
                 button->blockSignals(false);
                 break;
@@ -182,7 +181,6 @@ void TButtonBar::closeOtherPanels(QAbstractButton *source)
         }
     }
 
-    qDebug() << "2 Tracing toggleView action!";
     static_cast<TViewButton *>(source)->toggleView();
 
     // setUpdatesEnabled(true);

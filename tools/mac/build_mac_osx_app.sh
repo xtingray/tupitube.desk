@@ -38,15 +38,15 @@
 #Usage:
 # ./tools/build_mac_osx_app.sh /Users/username/tupitube/sources/tupitube.desk /Users/username/tupitube/installer
 
-QT_PATH=/Users/xtingray/Qt5.11.1
-export PATH=$QT_PATH/5.11.1/clang_64/bin:$PATH
-export DYLD_LIBRARY_PATH=/usr/local/lib:$DYLD_LIBRARY_PATH:$QT_PATH/5.11.1/clang_64/lib
-export DYLD_FRAMEWORK_PATH=$QT_PATH/5.11.1/clang_64/lib
+QT_PATH=/Users/daniel/Qt5.13.1
+export PATH=$QT_PATH/5.13.1/clang_64/bin:$PATH
+export DYLD_LIBRARY_PATH=/usr/local/lib:$DYLD_LIBRARY_PATH:$QT_PATH/5.13.1/clang_64/lib
+export DYLD_FRAMEWORK_PATH=$QT_PATH/5.13.1/clang_64/lib
 
 TUPITUBE_GIT_REPOSITORY=$1
 INSTALLATION_PATH=$2
 INSTALLER_SCRIPT=$TUPITUBE_GIT_REPOSITORY/tools/mac/update_dylib_path.rb
-TUPITUBE_VERSION=0.2.12
+TUPITUBE_VERSION=Artist_09-19
 
 declare -a LIBS=('libtupifwcore.dylib' 'libtupifwgui.dylib' 'libtupigui.dylib' 'libtupistore.dylib' 'libtupi.dylib' \
 'libtupibase.dylib' 'libtupinet.dylib' 'libtupicolorpalette.1.dylib' 'libtupiworkspace.1.dylib' \
@@ -98,4 +98,4 @@ for lib in ${LIBS[@]}; do
 done
 
 macdeployqt TupiTube.app -dmg -libpath=/usr/local/lib
-mv TupiTube.dmg tupitube_desk_$TUPITUBE_VERSION.dmg
+mv TupiTube.dmg TupiTube_Desk_$TUPITUBE_VERSION.dmg
