@@ -1,7 +1,7 @@
 [Setup]
 SetupIconFile=bin\raw\icon\tupitube.ico
 AppName=TupiTube Desk
-AppVersion=0.2.13
+AppVersion=Artist 09-19
 AppPublisher=MaeFloresta
 AppPublisherURL=https://www.maefloresta.com/
 DefaultDirName={pf}\TupiTube
@@ -49,7 +49,7 @@ Name: "{app}\data\xml\pt"
 Name: "{app}\plugins"
 Name: "{app}\lib"
 Name: "{app}\lib\qt5"
-Name: "{app}\lib\libav"
+Name: "{app}\lib\ffmpeg"
 Name: "{app}\lib\ssl"
 
 [Files]
@@ -82,7 +82,7 @@ Source: "data\xml\pt\*"; DestDir: "{app}\data\xml\pt"
 Source: "plugins\*"; DestDir: "{app}\plugins"
 Source: "lib\*"; DestDir: "{app}\lib"
 Source: "lib\qt5\*"; DestDir: "{app}\lib\qt5"
-Source: "lib\libav\*"; DestDir: "{app}\lib\libav"
+Source: "lib\ffmpeg\*"; DestDir: "{app}\lib\ffmpeg"
 Source: "lib\ssl\*"; DestDir: "{app}\lib\ssl"
 
 [Registry]

@@ -68,7 +68,9 @@ bool TFFmpegMovieGenerator::beginVideo()
     int ret;
     AVCodec *video_codec = nullptr;
 
-    // av_register_all();
+	#ifdef Q_OS_WIN
+        av_register_all();
+	#endif
 
     fmt = av_guess_format("ffh264", movieFile.toLocal8Bit().data(), nullptr);
     if (!fmt) {
@@ -171,10 +173,8 @@ AVStream * TFFmpegMovieGenerator::addVideoStream(AVFormatContext *oc, AVCodec **
     if (!(*codec)) {
         errorMsg = "ffmpeg error: Could not find video encoder.";
         #ifdef TUP_DEBUG
-            QString msg1 = "TFFmpegMovieGenerator::addVideoStream() - " + errorMsg;
-            QString msg2 = "TFFmpegMovieGenerator::addVideoStream() - Unavailable Codec ID: " + QString::number(codec_id);
-            qCritical() << msg1;
-            qCritical() << msg2;
+            qCritical() << "TFFmpegMovieGenerator::addVideoStream() - " + errorMsg;
+            qCritical() << "TFFmpegMovieGenerator::addVideoStream() - Unavailable Codec ID: " + QString::number(codec_id);
         #endif
 
         return nullptr;
@@ -237,10 +237,14 @@ AVStream * TFFmpegMovieGenerator::addVideoStream(AVFormatContext *oc, AVCodec **
            c->mb_decision=2;
     }
 
-    if (oc->oformat->flags & AVFMT_GLOBALHEADER)
-        c->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
-        // SQA: Temporary code to support Libav
-        // c->flags |= CODEC_FLAG_GLOBAL_HEADER;
+    if (oc->oformat->flags & AVFMT_GLOBALHEADER) {
+        #ifdef Q_OS_WIN
+            // SQA: Temporary code to support Libav
+            c->flags |= CODEC_FLAG_GLOBAL_HEADER;
+        #else
+            c->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+        #endif
+    }
 
     return st;
 }

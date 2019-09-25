@@ -3,7 +3,7 @@ REM Developed by Santiago Paz Mendieta
 Set fileSystem = CreateObject("Scripting.FileSystemObject")
 
 quazipDir = "c:\Quazip\lib"
-sourceDir = "c:\devel\sources\tupitube.desk\src"
+sourceDir = "c:\devel\sources\tupitube.artist\src"
 tupiDir = "c:\tupitube"
 
 If fileSystem.FolderExists(tupiDir) Then
@@ -22,14 +22,14 @@ fileSystem.CreateFolder tupiDir & "\data"
 fileSystem.CreateFolder tupiDir & "\plugins"
 fileSystem.CreateFolder tupiDir & "\lib"
 fileSystem.CreateFolder tupiDir & "\lib\qt5"
-fileSystem.CreateFolder tupiDir & "\lib\libav"
+fileSystem.CreateFolder tupiDir & "\lib\ffmpeg"
 fileSystem.CreateFolder tupiDir & "\lib\ssl"
 
 fileSystem.CopyFile quazipDir & "\quazip.dll", tupiDir & "\lib\quazip.dll"
-fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\tupitube.iss", tupiDir & "\tupitube.iss"
-fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\tupitube.ico", tupiDir & "\bin\raw\icon\tupitube.ico"
-fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\TupiTube.bat", tupiDir & "\bin\TupiTube.bat"
-fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\TupiTube.debug.bat", tupiDir & "\bin\TupiTube.debug.bat"
+fileSystem.CopyFile "c:\devel\sources\tupitube.artist\tools\windows\tupitube.iss", tupiDir & "\tupitube.iss"
+fileSystem.CopyFile "c:\devel\sources\tupitube.artist\tools\windows\tupitube.ico", tupiDir & "\bin\raw\icon\tupitube.ico"
+fileSystem.CopyFile "c:\devel\sources\tupitube.artist\tools\windows\TupiTube.bat", tupiDir & "\bin\TupiTube.bat"
+fileSystem.CopyFile "c:\devel\sources\tupitube.artist\tools\windows\TupiTube.debug.bat", tupiDir & "\bin\TupiTube.debug.bat"
 fileSystem.CopyFile sourceDir & "\shell\release\tupitube.desk.exe", tupiDir & "\bin\raw\tupitube.desk.exe"
 fileSystem.CopyFile sourceDir & "\framework\core\release\tupifwcore.dll", tupiDir & "\lib\tupifwcore.dll"
 fileSystem.CopyFile sourceDir & "\framework\gui\release\tupifwgui.dll", tupiDir & "\lib\tupifwgui.dll"
@@ -65,7 +65,7 @@ fileSystem.CopyFile sourceDir & "\plugins\tools\scale\release\tupiscaletool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\selection\release\tupiselectiontool.dll", tupiDir & "\plugins\tupiselectiontool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\shear\release\tupisheartool.dll", tupiDir & "\plugins\tupisheartool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\export\imageplugin\release\tupiimageplugin.dll", tupiDir & "\plugins\tupiimageplugin.dll"
-fileSystem.CopyFile sourceDir & "\plugins\export\libavplugin\release\tupilibavplugin.dll", tupiDir & "\plugins\tupilibavplugin.dll"
+fileSystem.CopyFile sourceDir & "\plugins\export\ffmpegplugin\release\tupiffmpegplugin.dll", tupiDir & "\plugins\tupiffmpegplugin.dll"
 
 fileSystem.CopyFile "c:\devel\sources\platforms\qwindows.dll", tupiDir & "\bin\raw\platforms\qwindows.dll"
 
@@ -77,7 +77,7 @@ fileSystem.CopyFolder "c:\devel\sources\qt5", tupiDir & "\lib\qt5"
 fileSystem.CopyFolder "c:\devel\sources\imageformats", tupiDir & "\bin\raw\imageformats"
 fileSystem.CopyFolder "c:\devel\sources\mediaservice", tupiDir & "\bin\raw\mediaservice"
 fileSystem.CopyFolder "c:\devel\sources\audio", tupiDir & "\bin\raw\audio"
-fileSystem.CopyFolder "c:\devel\sources\libav", tupiDir & "\lib\libav"
+fileSystem.CopyFolder "c:\libav\bin", tupiDir & "\lib\ffmpeg"
 fileSystem.CopyFolder "c:\devel\sources\ssl", tupiDir & "\lib\ssl"
 
 MsgBox "Copy is done! :D"

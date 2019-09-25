@@ -46,10 +46,8 @@
 
 QString TupTwitter::IS_HOST_UP_URL = QString("updates/test.xml");
 QString TupTwitter::USER_TIMELINE_URL = QString("updates/tweets.php");
-QString TupTwitter::TUPITUBE_VERSION_URL = QString("updates/community_version.xml");
-QString TupTwitter::TUPITUBE_WEB_MSG = QString("updates/web_msg.");
+QString TupTwitter::TUPITUBE_VERSION_URL = QString("updates/artist_version.xml");
 QString TupTwitter::TUPITUBE_VIDEOS = QString("updates/videos.xml");
-QString TupTwitter::TUPITUBE_IMAGES = QString("updates/images/");
 QString TupTwitter::BROWSER_FINGERPRINT = QString("Tupi_Browser 2.0");
 
 TupTwitter::TupTwitter(QWidget *parent): QWidget(parent)
@@ -188,34 +186,18 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
                             qDebug() << "TupTwitter::closeRequest() - Network Error: Twitter output is NULL!";
                         #endif
                     }
-                    requestFile(MAEFLORESTA_URL + TUPITUBE_WEB_MSG + locale + ".html");
+                    // requestFile(MAEFLORESTA_URL + TUPITUBE_WEB_MSG + locale + ".html");
+					requestFile(MAEFLORESTA_URL + TUPITUBE_VIDEOS);
                 } else {
-                    if (answer.startsWith("<webmsg>")) { // Getting web msg
-                        if (showAds) {
-                            saveFile(answer, "webmsg.html");
-                            if (answer.contains("<image>")) {
-                                QString code = getImageCode(answer) + ".png";
-                                if (!code.isEmpty()) {
-                                    QString imgPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/images/" + code;
-                                    if (!QFile::exists(imgPath)) {
-                                        requestFile(MAEFLORESTA_URL + TUPITUBE_IMAGES + code);
-                                        return;
-                                    }
-                                }
-                            }
-                        }
-                        requestFile(MAEFLORESTA_URL + TUPITUBE_VIDEOS);
-                    } else {
-                        if (answer.startsWith("<youtube>")) { // Getting video list
-                            saveFile(answer, "videos.xml");
-                            reply->deleteLater();
-                            manager->deleteLater();
-                        } else {
-                            #ifdef TUP_DEBUG
-                                qDebug() << "TupTwitter::closeRequest() - Network Error: Invalid data!";
-                            #endif
-                        }
-                    }
+					if (answer.startsWith("<youtube>")) { // Getting video list
+						saveFile(answer, "videos.xml");
+						reply->deleteLater();
+						manager->deleteLater();
+					} else {
+						#ifdef TUP_DEBUG
+							qDebug() << "TupTwitter::closeRequest() - Network Error: Invalid data!";
+						#endif
+					}					
                 }
             }
         }
@@ -346,9 +328,11 @@ void TupTwitter::formatStatus(QByteArray array)
         html += "&nbsp;&nbsp;&nbsp;<b>[</b> <a href=\"https://www.maefloresta.com\">" + tr("It's time to upgrade! Click here!") + "</a>  <b>]</b>"; 
 
     html += "</center></div>\n";
+	/*
     html += "<div class=\"twitter_tupi_donation\"><center>\n";
     html += "<a href=\"https://www.patreon.com/maefloresta\">" + tr("Want to help us to make a better project? Click here!") + "</a>";
     html += "</center></div>\n";
+	*/
     html += tweets;
     html += "</body>\n";
     html += "</html>";
@@ -382,6 +366,7 @@ bool TupTwitter::saveFile(const QString &answer, const QString &fileName)
     return false;
 }
 
+/*
 QString TupTwitter::getImageCode(const QString &answer) const
 {
     QDomDocument doc;
@@ -394,3 +379,4 @@ QString TupTwitter::getImageCode(const QString &answer) const
 
     return "";
 }
+*/
