@@ -44,17 +44,16 @@
 #include <QGraphicsSceneDragDropEvent>
 #include <QPainter>
 #include <QPainterPath>
-// #include <QCursor>
 
 class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGraphicsPathItem
 {
     public:
-        TupPathItem(QGraphicsItem *parent = 0);
+        TupPathItem(QGraphicsItem *parent = nullptr);
         ~TupPathItem();
         
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
-        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
         bool contains(const QPointF &point) const;
         bool isNotEdited();
         void saveOriginalPath();

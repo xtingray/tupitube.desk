@@ -49,7 +49,7 @@ TupPathItem::~TupPathItem()
 
 void TupPathItem::fromXml(const QString &xml)
 {
-    Q_UNUSED(xml);
+    Q_UNUSED(xml)
 }
 
 QDomElement TupPathItem::toXml(QDomDocument &doc) const
@@ -70,12 +70,12 @@ QDomElement TupPathItem::toXml(QDomDocument &doc) const
     return root;
 }
 
-void TupPathItem::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
+void TupPathItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QGraphicsPathItem::paint(painter, option, widget);
 }
 
-bool TupPathItem::contains(const QPointF & point) const
+bool TupPathItem::contains(const QPointF &point) const
 {
     /*
     double thickness = 4;
@@ -119,7 +119,8 @@ void TupPathItem::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 
 void TupPathItem::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
+
     dragOver = false;
     update();
 }
