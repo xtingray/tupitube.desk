@@ -40,8 +40,8 @@
 
 PencilTool::PencilTool(): TupToolPlugin()
 {
-    configPanel = 0;
-    item = 0;
+    configPanel = nullptr;
+    item = nullptr;
 
     setupActions();
 }
@@ -64,11 +64,7 @@ void PencilTool::setupActions()
 void PencilTool::init(TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[PencilTool::init()]";
-        #else
-            T_FUNCINFOX("tools");
-        #endif
+        qDebug() << "PencilTool::init()";
     #endif
 
     scene = gScene;
@@ -80,8 +76,11 @@ void PencilTool::init(TupGraphicsScene *gScene)
     TCONFIG->beginGroup("BrushParameters");
     penWidth = TCONFIG->value("Thickness", 3).toInt();
 
-    foreach (QGraphicsView * view, gScene->views())
+    /*
+    foreach (QGraphicsView *view, gScene->views())
         view->setDragMode(QGraphicsView::NoDrag);
+    */
+    gScene->views().at(0)->setDragMode(QGraphicsView::NoDrag);
 }
 
 QStringList PencilTool::keys() const
@@ -114,13 +113,13 @@ void PencilTool::press(const TupInputDeviceInformation *input, TupBrushManager *
 
 void PencilTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
-    Q_UNUSED(brushManager);
-    Q_UNUSED(gScene);
+    Q_UNUSED(brushManager)
+    Q_UNUSED(gScene)
 
     if (resize) {
         QPointF point = input->pos();
         QPointF result = penCirclePos - point;
-        penWidth = sqrt(pow(result.x(), 2) + pow(result.y(), 2));
+        penWidth = static_cast<int>(sqrt(pow(result.x(), 2) + pow(result.y(), 2)));
 
         QPointF topLeft(penCirclePos.x() - (penWidth/2), penCirclePos.y() - (penWidth/2));
         QSize size(penWidth, penWidth);
@@ -142,7 +141,7 @@ void PencilTool::move(const TupInputDeviceInformation *input, TupBrushManager *b
 
 void PencilTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
-    Q_UNUSED(brushManager);
+    Q_UNUSED(brushManager)
 
     if (!resize) {
         if (!item)
@@ -156,7 +155,8 @@ void PencilTool::release(const TupInputDeviceInformation *input, TupBrushManager
             qreal radius = brushManager->pen().width();
             QPointF distance((radius + 2)/2, (radius + 2)/2);
             QPen inkPen(brushManager->penColor(), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-            TupEllipseItem *blackEllipse = new TupEllipseItem(QRectF(currentPoint - distance, QSize(radius + 2, radius + 2)));
+            TupEllipseItem *blackEllipse = new TupEllipseItem(QRectF(currentPoint - distance,
+                                                              QSize(static_cast<int>(radius + 2), static_cast<int>(radius + 2))));
             blackEllipse->setPen(inkPen);
             blackEllipse->setBrush(inkPen.brush());
             gScene->includeObject(blackEllipse);
@@ -207,7 +207,7 @@ void PencilTool::smoothPath(QPainterPath &path, double smoothness, int from, int
     }
 
     if (smoothness > 0) {
-        path = TupGraphicalAlgorithm::bezierFit(polygon, smoothness, from, to);
+        path = TupGraphicalAlgorithm::bezierFit(polygon, static_cast<float>(smoothness), from, to);
     } else {
         path = QPainterPath();
         path.addPolygon(polygon);
@@ -280,14 +280,10 @@ void PencilTool::keyPressEvent(QKeyEvent *event)
 void PencilTool::keyReleaseEvent(QKeyEvent *event) 
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[PencilTool::keyReleaseEvent()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "PencilTool::keyReleaseEvent()";
     #endif
 
-    Q_UNUSED(event);
+    Q_UNUSED(event)
 
     if (resize) {
         resize = false;
@@ -307,5 +303,5 @@ QCursor PencilTool::polyCursor() const
 
 void PencilTool::sceneResponse(const TupSceneResponse *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
 }

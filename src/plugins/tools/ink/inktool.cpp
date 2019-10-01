@@ -40,7 +40,6 @@
 #include "tupgraphicsscene.h"
 #include "tuprequestbuilder.h"
 #include "tupprojectrequest.h"
-#include "tuplibraryobject.h"
 #include "tupellipseitem.h"
 #include "tuplineitem.h"
 #include "tuptextitem.h"
@@ -83,9 +82,9 @@ void InkTool::init(TupGraphicsScene *gScene)
         widthVar = 1;
 		
     /*
-    tError() << "InkTool::init() - thickness: " << thickness;
-    tError() << "InkTool::init() - tolerance: " << tolerance;
-    tError() << "InkTool::init() - widthVar: " << widthVar;
+    qDebug() << "InkTool::init() - thickness: " << thickness;
+    qDebug() << "InkTool::init() - tolerance: " << tolerance;
+    qDebug() << "InkTool::init() - widthVar: " << widthVar;
     */
 }
 
@@ -104,11 +103,10 @@ void InkTool::press(const TupInputDeviceInformation *input, TupBrushManager *bru
     connector = firstPoint;
 
     path = QPainterPath();
-    path.setFillRule(Qt::OddEvenFill);
     path.moveTo(firstPoint);
 
     inkPath = QPainterPath();
-    // inkPath.setFillRule(Qt::OddEvenFill);
+    inkPath.setFillRule(Qt::WindingFill);
     inkPath.moveTo(firstPoint);
 
     leftPoints.clear();
@@ -136,17 +134,15 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
 
     dotsCounter++;
 
-    foreach (QGraphicsView * view, gScene->views())
-        view->setDragMode(QGraphicsView::NoDrag);
+    gScene->views().at(0)->setDragMode(QGraphicsView::NoDrag);
 
     QPointF currentPoint = input->pos();
-
     qreal my = currentPoint.y() - previewPoint.y();
     qreal mx = currentPoint.x() - previewPoint.x();
     qreal m;
 
     if (currentPoint != previewPoint) {
-        if (mx != 0)
+        if (static_cast<int>(mx) != 0)
             m = my / mx;
         else
             m = 100; // mx = 0 -> path is vertical | 100 == infinite
@@ -180,33 +176,27 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
             qreal x1 = 0;
             qreal y1 = 0;
 
-            if (m == 0) // path is horizontal
+            if (static_cast<int>(m) == 0) // path is horizontal
                 pm = 100; 
             else
                 pm = (-1) * (1/m);
 
             #ifdef TUP_DEBUG
-                   bool isNAN = false;
-                   if (m == 0) // path is horizontal
-                       isNAN = true;
-					   
-                   if (m == 100) { // path is vertical | 100 == infinite
-                       qDebug() << "InkTool::move() - M: NAN";
-                   } else {
-                       QString msg = "InkTool::move() - M: " + QString::number(m);
-                       #ifdef Q_OS_WIN
-                           qDebug() << msg;
-                       #else
-                           tError() << msg;
-                       #endif
-                   }
+                bool isNAN = false;
+                if (static_cast<int>(m) == 0) // path is horizontal
+                    isNAN = true;
 
-                   if (isNAN) {
-                       qDebug() << "InkTool::move() - M(inv): NAN";
-                   } else {
-                       QString msg = "InkTool::move() - M(inv): " + QString::number(pm);
-                       qDebug() << "InkTool::move() - M(inv): " + QString::number(pm);
-                   }
+                if (static_cast<int>(m) == 100) { // path is vertical | 100 == infinite
+                    qDebug() << "InkTool::move() - M: NAN";
+                } else {
+                    qDebug() << "InkTool::move() - M: " + QString::number(m);
+                }
+
+                if (isNAN) {
+                    qDebug() << "InkTool::move() - M(inv): NAN";
+                } else {
+                    qDebug() << "InkTool::move() - M(inv): " + QString::number(pm);
+                }
             #endif
 
             qreal hypotenuse;
@@ -260,7 +250,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                 qreal plus;
                 int random = rand() % 101;
 
-                if (tolerance == 0) {
+                if (static_cast<int>(tolerance) == 0) {
                     plus = 0;
                 } else if (tolerance < 1) {
                     if (widthVar > 0)
@@ -394,7 +384,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                     qreal endY = (m*(endX - currentPoint.x())) + currentPoint.y();
                     connector = QPoint(static_cast<int>(endX), static_cast<int>(endY));
                 }
-            } else if (previewPoint.x() == currentPoint.x()) {
+            } else if (static_cast<int>(previewPoint.x()) == static_cast<int>(currentPoint.x())) {
                        if (previewPoint.y() > currentPoint.y()) {
                            #ifdef TUP_DEBUG
                                qDebug() << "    -> InkTool::move() - Going up";
@@ -450,6 +440,7 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
     // int size = configPanel->borderSizeValue();
     // QPen inkPen(brushManager->penColor(), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 
+    // Drawing a point
     if (firstPoint == currentPoint && inkPath.elementCount() == 1) {
         qreal radius = brushManager->pen().width();
         QPointF distance((radius + 2)/2, (radius + 2)/2);
@@ -477,6 +468,7 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
 
     leftPoints << connector;
 
+    // Creating the whole shape of the line
     for (int i = leftPoints.size()-1; i > 0; i--) {
          inkPath.moveTo(leftPoints.at(i));
          inkPath.lineTo(leftPoints.at(i-1));
