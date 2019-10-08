@@ -59,6 +59,7 @@ class TUPITUBE_PLUGIN InkTool : public TupToolPlugin
     Q_PLUGIN_METADATA(IID "com.maefloresta.tupi.TupToolInterface" FILE "inktool.json")
     
     public:
+        enum Direction { None, Up, Down, Right, RightUp, RightDown, Left, LeftUp, LeftDown };
         InkTool();
         virtual ~InkTool();
         
@@ -81,29 +82,30 @@ class TUPITUBE_PLUGIN InkTool : public TupToolPlugin
         
     private:
         void setupActions();
-        void smoothPath(QPainterPath &path, double smoothness, int from = 0, int to = -1);
+        void smoothPath(QPainterPath &guidePainterPath, double smoothness, int from = 0, int to = -1);
 
     private slots:
-        void updateSpacingVar(int value);
-        void updateSizeToleranceVar(int value);
+        // void updateSpacingVar(int value);
+        // void updateSizeToleranceVar(int value);
 
     private:
         QPointF firstPoint;
         QPointF oldPos;
 
         QPointF previewPoint;
-        QPointF oldPosRight;
-        QPointF oldPosLeft;
-        QPointF connector;
+        QPointF firstHalfPrevious;
+        bool firstHalfOnTop;
+        QPointF secondHalfPrevious;
+        // QPointF connector;
 
-        QPainterPath path;
+        QPainterPath guidePainterPath;
         QPainterPath inkPath;
-        QList<QPointF> leftPoints;
+        QList<QPointF> shapePoints;
 
         Configurator *configPanel;
         QMap<QString, TAction *> inkActions;
 
-        TupPathItem *item;
+        TupPathItem *guidePath;
 
         int dotsCounter;
         qreal penWidth;
@@ -116,6 +118,8 @@ class TUPITUBE_PLUGIN InkTool : public TupToolPlugin
         qreal tolerance;
         qreal widthVar;
         qreal smoothness;
+
+        Direction previousDirection;
 };
 
 #endif

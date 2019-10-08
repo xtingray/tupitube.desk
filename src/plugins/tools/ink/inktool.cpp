@@ -50,7 +50,7 @@
 InkTool::InkTool()
 {
     configPanel = nullptr;
-    item = nullptr;
+    guidePath = nullptr;
     inkCursor = QCursor(kAppProp->themeDir() + "cursors/ink.png", 0, 16);
 
     setupActions();
@@ -64,28 +64,9 @@ void InkTool::init(TupGraphicsScene *gScene)
 {
     Q_UNUSED(gScene)
 
-    /*
-    spacing = configPanel->spacingValue();
-    tolerance = configPanel->sizeToleranceValue()/(qreal)100;
-    smoothness = 3;
-    */
-
     spacing = 1;
     tolerance = 0;
-    smoothness = 3;
-
-    TCONFIG->beginGroup("BrushParameters");
-    int thickness = TCONFIG->value("Thickness", 3).toInt();
-
-    widthVar = tolerance*thickness;
-    if (widthVar < 1)
-        widthVar = 1;
-		
-    /*
-    qDebug() << "InkTool::init() - thickness: " << thickness;
-    qDebug() << "InkTool::init() - tolerance: " << tolerance;
-    qDebug() << "InkTool::init() - widthVar: " << widthVar;
-    */
+    smoothness = 2;
 }
 
 QStringList InkTool::keys() const
@@ -95,34 +76,36 @@ QStringList InkTool::keys() const
 
 void InkTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
+    firstHalfOnTop = true;
+    previousDirection = None;
     oldSlope = 0;
-    penWidth = brushManager->pen().widthF()/2;
+    penWidth = brushManager->pen().widthF() / 2;
 
     dotsCounter = 1;
     firstPoint = input->pos();
-    connector = firstPoint;
 
-    path = QPainterPath();
-    path.moveTo(firstPoint);
+    guidePainterPath = QPainterPath();
+    guidePainterPath.moveTo(firstPoint);
 
     inkPath = QPainterPath();
     inkPath.setFillRule(Qt::WindingFill);
     inkPath.moveTo(firstPoint);
 
-    leftPoints.clear();
-    leftPoints << firstPoint;
+    shapePoints.clear();
+    shapePoints << firstPoint;
 
     oldPos = input->pos();
-    oldPosRight = input->pos();
-    oldPosLeft = input->pos();
+    firstHalfPrevious = input->pos();
+    secondHalfPrevious = input->pos();
     previewPoint = input->pos();
 
-    item = new TupPathItem();
+    // Guide line
+    guidePath = new TupPathItem();
     QColor color(55, 155, 55, 200);
     QPen pen(QBrush(color), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-    item->setPen(pen);
+    guidePath->setPen(pen);
 
-    gScene->includeObject(item);
+    gScene->includeObject(guidePath);
 
     firstArrow = rand() % 10 + 1;
     arrowSize = -1;
@@ -133,299 +116,945 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
     Q_UNUSED(brushManager)
 
     dotsCounter++;
-
     gScene->views().at(0)->setDragMode(QGraphicsView::NoDrag);
-
     QPointF currentPoint = input->pos();
-    qreal my = currentPoint.y() - previewPoint.y();
-    qreal mx = currentPoint.x() - previewPoint.x();
-    qreal m;
 
     if (currentPoint != previewPoint) {
-        if (static_cast<int>(mx) != 0)
+        qreal my = currentPoint.y() - previewPoint.y();
+        qreal mx = currentPoint.x() - previewPoint.x();
+        qreal m;
+
+        if (static_cast<int>(mx) != 0) // Calculating slope
             m = my / mx;
         else
             m = 100; // mx = 0 -> path is vertical | 100 == infinite
 
-        // path is the guideline to calculate the real QGraphicsPathItem
-        path.moveTo(previewPoint);
-        path.lineTo(currentPoint);
-        item->setPath(path);
+        // guidePath is the guideline to calculate the real QGraphicsPathItem
+        guidePainterPath.lineTo(currentPoint);
+        guidePath->setPath(guidePainterPath);
 
-        qreal slopeVar = std::abs(oldSlope - m);
+        // Calculating distance between current point and previous
         qreal distance = sqrt(pow(std::abs(currentPoint.x() - oldPos.x()), 2) + pow(std::abs(currentPoint.y() - oldPos.y()), 2));
 
-        // Time to calculate a new point of the QGraphicsPathItem
-        if ((dotsCounter > firstArrow) && ((dotsCounter % spacing == 0) || ((slopeVar >= 1) && (distance > 10)))) {
-            // Calculating the begining of the line (vertex "<")
-            if (arrowSize == -1) {
-                qreal pow1 = pow(currentPoint.x() - firstPoint.x(), 2);
-                qreal pow2 = pow(currentPoint.y() - firstPoint.y(), 2);
-                arrowSize = static_cast<int> (sqrt(pow1 + pow2));
-                if (arrowSize > 0)
-                    arrowSize = (rand() % arrowSize) + 1;
-                else
-                    arrowSize = 5;
-            }
-
-            oldSlope = m;
-
-            qreal pm;  
-            qreal x0 = 0;
-            qreal y0 = 0;
-            qreal x1 = 0;
-            qreal y1 = 0;
+        // Time to calculate a new point of the QGraphicsPathItem (stroke)
+        if (distance > 5) {
+            /*
+            qreal pm; // Perpendicular slope
 
             if (static_cast<int>(m) == 0) // path is horizontal
                 pm = 100; 
             else
                 pm = (-1) * (1/m);
+            */
 
             #ifdef TUP_DEBUG
+                /*
+                qDebug() << "";
+                qDebug() << "InkTool::move() - old slope: " << oldSlope;
+                qDebug() << "InkTool::move() - slope: " << m;
+
                 bool isNAN = false;
                 if (static_cast<int>(m) == 0) // path is horizontal
                     isNAN = true;
 
-                if (static_cast<int>(m) == 100) { // path is vertical | 100 == infinite
+                if (static_cast<int>(m) == 100) // path is vertical | 100 == infinite
                     qDebug() << "InkTool::move() - M: NAN";
-                } else {
+                else
                     qDebug() << "InkTool::move() - M: " + QString::number(m);
-                }
 
-                if (isNAN) {
+                if (isNAN)
                     qDebug() << "InkTool::move() - M(inv): NAN";
-                } else {
+                else
                     qDebug() << "InkTool::move() - M(inv): " + QString::number(pm);
-                }
+                */
             #endif
 
-            qreal hypotenuse;
+            QPointF firstHalfPoint;
+            QPointF secondHalfPoint;
 
-            if (fabs(pm) < 5) { // path's slope is close to 0
-                int cutter = static_cast<int>(penWidth);
-                bool found = false;
-                qreal limit = 0;
-                int iterations = 0;
+            double lineAngle = atan(m);
+            // qDebug() << "InkTool::move() - inv tan: " << lineAngle;
+            // double degrees = lineAngle * 180 / PI;
+            // qDebug() << "InkTool::move() - degrees: " << degrees;
+            double angle = 1.5708 - lineAngle;
+            // qDebug() << "InkTool::move() - angle: " << angle;
+            double deltaX = fabs(cos(angle) * penWidth);
+            // qDebug() << "InkTool::move() - deltaX: " << deltaX;
+            double deltaY = fabs(sin(angle) * penWidth);
+            // qDebug() << "InkTool::move() - deltaY: " << deltaY;
 
-                if (tolerance < 1) { // tolerance == decimal percent of tolerance [0.0 -> 1.0]
-                    while (!found) {
-                       iterations++;
-                       x0 = currentPoint.x() - cutter;
-                       y0 = (pm*(x0 - currentPoint.x())) + currentPoint.y();
-
-                       x1 = currentPoint.x() + cutter;
-                       y1 = (pm*(x1 - currentPoint.x())) + currentPoint.y();
-                       hypotenuse = sqrt(pow(x1 - x0, 2) + pow(y1 - y0, 2));
-
-                       limit = hypotenuse - brushManager->pen().widthF();
-
-                       if (fabs(limit) > widthVar) {
-                           if (limit > 0) {
-                               cutter -= static_cast<int>(0.2);
-                               if (cutter == 0)
-                                   found = true;
-                           } else {
-                               cutter += static_cast<int>(0.2);
-                           }
-                       } else {
-                           found = true;
-                       }
-
-                       if (iterations >10)
-                           found = true;
-                    }
-                } else {
-                    int random = rand() % 101;
-                    qreal plus = static_cast<qreal>(random) / static_cast<qreal>(100 * (penWidth*tolerance));
-
-                    x0 = currentPoint.x() - plus;
-                    y0 = (pm*(x0 - currentPoint.x())) + currentPoint.y();
-
-                    x1 = currentPoint.x() + plus;
-                    y1 = (pm*(x1 - currentPoint.x())) + currentPoint.y();
-                    hypotenuse = sqrt(pow(x1 - x0, 2) + pow(y1 - y0, 2));
-                }
-            } else { // Line's slope is 0 or closer to
-                qreal delta;
-                qreal plus;
-                int random = rand() % 101;
-
-                if (static_cast<int>(tolerance) == 0) {
-                    plus = 0;
-                } else if (tolerance < 1) {
-                    if (widthVar > 0)
-                        plus = rand() % static_cast<int>(widthVar);
-                    else
-                        plus = rand() % 5;
-                } else {
-                    plus = static_cast<qreal>(random) / static_cast<qreal>(100 * (penWidth*tolerance));
-                }
-
-                delta = penWidth + plus;
-
-                x0 = currentPoint.x();
-                y0 = currentPoint.y() - delta;
-
-                x1 = currentPoint.x();
-                y1 = currentPoint.y() + delta;
-
-                hypotenuse = fabs(y1 - y0);
-            }
-
-            QPointF right;
-            QPointF left;
-
+            qreal x0 = 0;
+            qreal y0 = 0;
+            qreal x1 = 0;
+            qreal y1 = 0;
             if (previewPoint.x() < currentPoint.x()) {
                 if (previewPoint.y() < currentPoint.y()) {
                     #ifdef TUP_DEBUG
-                        qDebug() << "    -> InkTool::move() - Going down-right";
+                        qDebug() << "    -> InkTool::move() - Going right-down";
                     #endif
 
-                    if (y0 > y1) {
-                        left = QPointF(x0, y0);
-                        right = QPointF(x1, y1);
-                    } else {
-                        left = QPointF(x1, y1);
-                        right = QPointF(x0, y0);
-                    }
+                    x0 = currentPoint.x() + deltaX;
+                    x1 = currentPoint.x() - deltaX;
+                    y0 = currentPoint.y() - deltaY;
+                    y1 = currentPoint.y() + deltaY;
 
-                    qreal endX = currentPoint.x() + arrowSize;
-                    qreal endY = (m*(endX - currentPoint.x())) + currentPoint.y();
-                    connector = QPoint(static_cast<int>(endX), static_cast<int>(endY));
+                    if (previousDirection == None)
+                        previousDirection = RightDown;
+
+                    switch(previousDirection) {
+                        case Up:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case Down:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case Right:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case RightUp:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case RightDown:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case Left:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+
+                                double xFix = firstHalfPrevious.x() - penWidth;
+                                double yFix = firstHalfPrevious.y();
+                                QPointF fixPoint = QPointF(xFix, yFix);
+
+                                inkPath.lineTo(fixPoint);
+                                inkPath.lineTo(fixPoint + QPointF(-penWidth, penWidth));
+                                shapePoints.removeAt(shapePoints.size() - 1);
+                                shapePoints.removeAt(shapePoints.size() - 1);
+
+                                firstHalfOnTop = false;
+                            } else {
+                                shapePoints.removeAt(shapePoints.size() - 1);
+                                shapePoints.removeAt(shapePoints.size() - 1);
+
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case LeftUp:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case LeftDown:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+
+                                double xFix = firstHalfPrevious.x() - penWidth;
+                                double yFix = firstHalfPoint.y() - fabs(firstHalfPoint.y() - firstHalfPrevious.y()) / 2;
+                                QPointF fixPoint = QPointF(xFix, yFix);
+
+                                inkPath.lineTo(fixPoint);
+                                shapePoints[shapePoints.size() - 1] = QPointF(secondHalfPrevious.x() + penWidth, secondHalfPrevious.y() - penWidth);
+
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+
+                                double yFix = secondHalfPoint.y() - fabs(secondHalfPoint.y() - secondHalfPrevious.y()) / 2;
+                                double xFix = secondHalfPrevious.x() - penWidth;
+                                QPointF fixPoint = QPointF(xFix, yFix);
+
+                                inkPath.lineTo(fixPoint);
+                                shapePoints.removeAt(shapePoints.size() - 1);
+                                shapePoints.removeAt(shapePoints.size() - 1);
+
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case None:
+                        break;
+                    }
+                    // qDebug() << "InkTool::move() - firstHalfOnTop: " << firstHalfOnTop;
+                    previousDirection = RightDown;
                 } else if (previewPoint.y() > currentPoint.y()) {
                     #ifdef TUP_DEBUG
-                        qDebug() << "    -> InkTool::move() - Going up-right";
+                        qDebug() << "    -> InkTool::move() - Going right-up";
                     #endif
 
-                    if (x0 > x1) {
-                        left = QPointF(x0, y0);
-                        right = QPointF(x1, y1);
-                    } else {
-                        left = QPointF(x1, y1);
-                        right = QPointF(x0, y0);
+                    x0 = currentPoint.x() - deltaX;
+                    x1 = currentPoint.x() + deltaX;
+                    y0 = currentPoint.y() - deltaY;
+                    y1 = currentPoint.y() + deltaY;
+
+                    if (previousDirection == None)
+                        previousDirection = RightUp;
+
+                    switch(previousDirection) {
+                        case Up:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case Down:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case Right:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case RightUp:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case RightDown:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case Left:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case LeftUp:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case LeftDown:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case None:
+                        break;
+                    }
+                    // qDebug() << "InkTool::move() - firstHalfOnTop: " << firstHalfOnTop;
+                    previousDirection = RightUp;
+                } else {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "    -> InkTool::move() - Going right";
+                    #endif
+
+                    x0 = currentPoint.x();
+                    y0 = currentPoint.y() - penWidth;
+                    x1 = currentPoint.x();
+                    y1 = currentPoint.y() + penWidth;
+
+                    if (previousDirection == None)
+                        previousDirection = Right;
+
+                    switch(previousDirection) {
+                        case Up:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case Down:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case Right:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case RightUp:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case RightDown:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case Left:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case LeftUp:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case LeftDown:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case None:
+                        break;
                     }
 
-                    qreal endX = currentPoint.x() + arrowSize;
-                    qreal endY = (m*(endX - currentPoint.x())) + currentPoint.y();
-                    connector = QPoint(static_cast<int>(endX), static_cast<int>(endY));
-                } else {
-                     #ifdef TUP_DEBUG
-                         qDebug() << "    -> InkTool::move() - Going right";
-                     #endif
-
-                     if (y0 > y1) {
-                         left = QPointF(x0, y0);
-                         right = QPointF(x1, y1);
-                     } else {
-                         left = QPointF(x1, y1);
-                         right = QPointF(x0, y0);
-                     }
-
-                     qreal endX = currentPoint.x() + arrowSize;
-                     qreal endY = (m*(endX - currentPoint.x())) + currentPoint.y();
-                     connector = QPoint(static_cast<int>(endX), static_cast<int>(endY));
+                    // qDebug() << "InkTool::move() - firstHalfOnTop: " << firstHalfOnTop;
+                    previousDirection = Right;
                 }
             } else if (previewPoint.x() > currentPoint.x()) {
                 if (previewPoint.y() < currentPoint.y()) {
                     #ifdef TUP_DEBUG
-                        qDebug() << "    -> InkTool::move() - Going down-left";
+                        qDebug() << "    -> InkTool::move() - Going left-down";
                     #endif
 
-                    if (y0 > y1) {
-                        right = QPointF(x0, y0);
-                        left = QPointF(x1, y1);
-                    } else {
-                        right = QPointF(x1, y1);
-                        left = QPointF(x0, y0);
+                    x0 = currentPoint.x() - deltaX;
+                    x1 = currentPoint.x() + deltaX;
+                    y0 = currentPoint.y() - deltaY;
+                    y1 = currentPoint.y() + deltaY;
+
+                    if (previousDirection == None)
+                        previousDirection = LeftDown;
+
+                    switch(previousDirection) {
+                        case Up:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case Down:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case Right:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case RightUp:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case RightDown:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case Left:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case LeftUp:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case LeftDown:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case None:
+                        break;
                     }
 
-                    qreal endX = currentPoint.x() - arrowSize;
-                    qreal endY = (m*(endX - currentPoint.x())) + currentPoint.y();
-                    connector = QPoint(static_cast<int>(endX), static_cast<int>(endY));
+                    // qDebug() << "InkTool::move() - firstHalfOnTop: " << firstHalfOnTop;
+                    previousDirection = LeftDown;
                 } else if (previewPoint.y() > currentPoint.y()) {
                     #ifdef TUP_DEBUG
-                        qDebug() << "    -> InkTool::move() - Going up-left";
+                        qDebug() << "    -> InkTool::move() - Going left-up";
                     #endif
 
-                    if (x0 > x1) {
-                        left = QPointF(x0, y0);
-                        right = QPointF(x1, y1);
-                    } else {
-                        if (x0 < x1) {
-                            left = QPointF(x1, y1);
-                            right = QPointF(x0, y0);
-                        } else { // x0 == x1
-                            if (y0 > y1) {
-                                left = QPointF(x1, y1);
-                                right = QPointF(x0, y0);
+                    x0 = currentPoint.x() + deltaX;
+                    x1 = currentPoint.x() - deltaX;
+                    y0 = currentPoint.y() - deltaY;
+                    y1 = currentPoint.y() + deltaY;
+
+                    if (previousDirection == None)
+                        previousDirection = LeftUp;
+
+                    switch(previousDirection) {
+                        case Up:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
                             } else {
-                                left = QPointF(x0, y0);
-                                right = QPointF(x1, y1);
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
                             }
-                        }
+                        break;
+                        case Down:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case Right:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case RightUp:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case RightDown:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case Left:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case LeftUp:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case LeftDown:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case None:
+                        break;
                     }
 
-                    qreal endX = currentPoint.x() - arrowSize;
-                    qreal endY = (m*(endX - currentPoint.x())) + currentPoint.y();
-                    connector = QPoint(static_cast<int>(endX), static_cast<int>(endY));
+                    // qDebug() << "InkTool::move() - firstHalfOnTop: " << firstHalfOnTop;
+                    previousDirection = LeftUp;
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "    -> InkTool::move() - Going left";
                     #endif
-                    if (y0 > y1) {
-                        right = QPointF(x0, y0);
-                        left = QPointF(x1, y1);
-                    } else {
-                        right = QPointF(x1, y1);
-                        left = QPointF(x0, y0);
+                    x0 = currentPoint.x();
+                    y0 = currentPoint.y() - penWidth;
+                    x1 = currentPoint.x();
+                    y1 = currentPoint.y() + penWidth;                    
+
+                    if (previousDirection == None)
+                        previousDirection = Left;
+
+                    switch(previousDirection) {
+                        case Up:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case Down:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case Right:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case RightUp:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case RightDown:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case Left:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case LeftUp:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case LeftDown:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case None:
+                        break;
                     }
 
-                    qreal endX = currentPoint.x() - arrowSize;
-                    qreal endY = (m*(endX - currentPoint.x())) + currentPoint.y();
-                    connector = QPoint(static_cast<int>(endX), static_cast<int>(endY));
+                    // qDebug() << "InkTool::move() - firstHalfOnTop: " << firstHalfOnTop;
+                    previousDirection = Left;
                 }
             } else if (static_cast<int>(previewPoint.x()) == static_cast<int>(currentPoint.x())) {
-                       if (previewPoint.y() > currentPoint.y()) {
-                           #ifdef TUP_DEBUG
-                               qDebug() << "    -> InkTool::move() - Going up";
-                           #endif
-                           if (x0 > x1) {
-                               left = QPointF(x0, y0);
-                               right = QPointF(x1, y1);
-                           } else {
-                               left = QPointF(x1, y1);
-                               right = QPointF(x0, y0);
-                           }
+                if (previewPoint.y() > currentPoint.y()) {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "    -> InkTool::move() - Going up";
+                    #endif
 
-                           qreal endX = currentPoint.x();
-                           qreal endY = currentPoint.y() - arrowSize;
-                           connector = QPoint(static_cast<int>(endX), static_cast<int>(endY));
-                       } else {
-                           #ifdef TUP_DEBUG
-                               qDebug() << "    -> InkTool::move() - Going down";
-                           #endif
-                           if (x0 > x1) {
-                               right = QPointF(x0, y0);
-                               left = QPointF(x1, y1);
-                           } else {
-                               right = QPointF(x1, y1);
-                               left = QPointF(x0, y0);
-                           }
+                    x0 = currentPoint.x() - penWidth;
+                    y0 = currentPoint.y();
+                    x1 = currentPoint.x() + penWidth;
+                    y1 = currentPoint.y();
 
-                           qreal endX = currentPoint.x();
-                           qreal endY = currentPoint.y() + arrowSize;
-                           connector = QPoint(static_cast<int>(endX), static_cast<int>(endY));
-                       }
-            }
+                    if (previousDirection == None)
+                        previousDirection = Up;
 
-            inkPath.moveTo(oldPosRight);
-            inkPath.lineTo(right);
-            oldPosRight = right;
+                    switch(previousDirection) {
+                        case Up:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case Down:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case Right:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case RightUp:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case RightDown:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case Left:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case LeftUp:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case LeftDown:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case None:
+                        break;
+                    }
 
-            oldPosLeft = left;
-            leftPoints << left;
+                    // qDebug() << "InkTool::move() - firstHalfOnTop: " << firstHalfOnTop;
+                    previousDirection = Up;
+                } else {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "    -> InkTool::move() - Going down";
+                    #endif
 
-            oldPos = currentPoint;
+                    x0 = currentPoint.x() - penWidth;
+                    y0 = currentPoint.y();
+                    x1 = currentPoint.x() + penWidth;
+                    y1 = currentPoint.y();
+
+                    if (previousDirection == None)
+                        previousDirection = Down;
+
+                    switch(previousDirection) {
+                        case Up:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case Down:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case Right:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case RightUp:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case RightDown:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case Left:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case LeftUp:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case LeftDown:
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case None:
+                        break;
+                    }
+
+                    // qDebug() << "InkTool::move() - firstHalfOnTop: " << firstHalfOnTop;
+                    previousDirection = Down;
+                }
+             }
+             /*
+             qDebug() << "";
+             qDebug() << "First Half Point: " << firstHalfPoint;
+             qDebug() << "Second Half Point: " << secondHalfPoint;
+             qDebug() << "deltaX: " << deltaX;
+             qDebug() << "deltaY: " << deltaY;
+
+             qDebug() << "Old Right: " << firstHalfPrevious;
+             distance = sqrt(pow(std::abs(firstHalfPoint.x() - firstHalfPrevious.x()), 2) + pow(std::abs(firstHalfPoint.y() - firstHalfPrevious.y()), 2));
+             qDebug() << "distance: " << distance;
+             qDebug() << "";
+
+             qreal firstHalfM = (y0 - firstHalfPrevious.y()) / (x0 - firstHalfPrevious.x());
+             qreal secondHalfM = (y1 - secondHalfPrevious.y()) / (x1 - secondHalfPrevious.x());
+             qDebug() << "*** firstHalfM: " << firstHalfM;
+             qDebug() << "*** secondHalfM: " << secondHalfM;
+
+             if ((firstHalfM < 0 && secondHalfM > 0) || (firstHalfM > 0 && secondHalfM < 0)) {
+                 qDebug() << "*** Exchanging sides!";
+                 firstHalfPoint = QPointF(x1, y1);
+                 secondHalfPoint = QPointF(x0, y0);
+             } else {
+                 qDebug() << "No exchanging call!";
+                 firstHalfPoint = QPointF(x0, y0);
+                 secondHalfPoint = QPointF(x1, y1);
+             }
+             */
+
+             inkPath.lineTo(firstHalfPoint);
+             firstHalfPrevious = firstHalfPoint;
+
+             secondHalfPrevious = secondHalfPoint;
+             shapePoints << secondHalfPoint;
+
+             oldPos = currentPoint;
+             oldSlope = m;
         }
     }
 
@@ -434,22 +1063,18 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
 
 void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
-    gScene->removeItem(item);
+    gScene->removeItem(guidePath);
     QPointF currentPoint = input->pos();
-    // qreal radius = brushManager->pen().width();
-    // int size = configPanel->borderSizeValue();
-    // QPen inkPen(brushManager->penColor(), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 
     // Drawing a point
-    if (firstPoint == currentPoint && inkPath.elementCount() == 1) {
-        qreal radius = brushManager->pen().width();
+    if (inkPath.elementCount() == 1) {
+        qreal radius = brushManager->pen().width(); // * 2;
         QPointF distance((radius + 2)/2, (radius + 2)/2);
         QPen inkPen(brushManager->penColor(), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-        TupEllipseItem *blackEllipse = new TupEllipseItem(QRectF(connector - distance,
-                                                                 QSize(static_cast<int>(radius + 2), static_cast<int>(radius + 2))));
+        TupEllipseItem *blackEllipse = new TupEllipseItem(QRectF(currentPoint - distance,
+                                                                 QSize(static_cast<int>(radius), static_cast<int>(radius))));
         blackEllipse->setPen(inkPen);
         blackEllipse->setBrush(inkPen.brush());
-        // blackEllipse->setBrush(brushManager->brush());
         gScene->includeObject(blackEllipse);
 
         QDomDocument doc;
@@ -461,38 +1086,21 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
         return;
     }
 
-    path.moveTo(oldPos);
-    path.lineTo(connector);
-    inkPath.moveTo(oldPosRight);
-    inkPath.lineTo(connector);
+    inkPath.lineTo(currentPoint);
 
-    leftPoints << connector;
+    // Creating the whole shape of the line (QPainterPath)
+    for (int i = shapePoints.size()-1; i > 0; i--)
+        inkPath.lineTo(shapePoints.at(i-1));
 
-    // Creating the whole shape of the line
-    for (int i = leftPoints.size()-1; i > 0; i--) {
-         inkPath.moveTo(leftPoints.at(i));
-         inkPath.lineTo(leftPoints.at(i-1));
-    }
-
-    inkPath.moveTo(leftPoints.at(0));
-    inkPath.lineTo(QPointF(0, 0));
-
-    // smoothPath(inkPath, configPanel->smoothness());
-    smoothPath(inkPath, smoothness);
+    // smoothPath(inkPath, smoothness);
 
     TupPathItem *stroke = new TupPathItem();
-    // stroke->setPen(QPen(Qt::NoPen));
-    stroke->setPen(QPen(brushManager->penColor()));
-
-    /*
-    if (configPanel->showBorder())
-        stroke->setPen(inkPen);
-    else
-        stroke->setPen(QPen(Qt::NoPen));
-    */
-
-    stroke->setBrush(brushManager->penColor());
     stroke->setPath(inkPath);
+    // Set border color for shape
+    stroke->setPen(QPen(brushManager->penColor()));
+    // Set fill color for shape
+    stroke->setBrush(brushManager->penColor());
+    // stroke->setPath(inkPath);
     gScene->includeObject(stroke);
 
     QDomDocument doc;
@@ -501,6 +1109,21 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
                                                                      0, QPointF(), gScene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
                                                                      doc.toString());
     emit requested(&request);
+
+    /*
+    TupPathItem *greenLine = new TupPathItem();
+    QColor color(55, 155, 55, 200);
+    QPen pen(QBrush(color), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+    greenLine->setPen(pen);
+    greenLine->setPath(guidePainterPath);
+    gScene->includeObject(greenLine);
+    QDomDocument data;
+    data.appendChild(greenLine->toXml(data));
+    request = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(), gScene->currentLayerIndex(), gScene->currentFrameIndex(),
+                                                   0, QPointF(), gScene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
+                                                   data.toString());
+    emit requested(&request);
+    */
 }
 
 void InkTool::setupActions()
@@ -554,15 +1177,19 @@ void InkTool::saveConfig()
     */
 }
 
+/*
 void InkTool::updateSpacingVar(int value)
 {
     spacing = value;
 }
+*/
 
+/*
 void InkTool::updateSizeToleranceVar(int value)
 {
     tolerance = static_cast<int>(value) / static_cast<int>(100);
 }
+*/
 
 void InkTool::smoothPath(QPainterPath &path, double smoothness, int from, int to)
 {

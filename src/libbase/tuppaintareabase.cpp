@@ -283,6 +283,12 @@ void TupPaintAreaBase::keyReleaseEvent(QKeyEvent *event)
 
 void TupPaintAreaBase::tabletEvent(QTabletEvent *event)
 {
+    /*
+    qDebug() << "TupPaintAreaBase::tabletEvent() - Pressure: " << event->pressure();
+    qDebug() << "TupPaintAreaBase::tabletEvent() - xTilt: " << event->xTilt();
+    qDebug() << "TupPaintAreaBase::tabletEvent() - yTilt: " << event->yTilt();
+    */
+
     QGraphicsView::tabletEvent(event);
 }
 

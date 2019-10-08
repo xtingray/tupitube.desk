@@ -290,6 +290,17 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
     TupPaintAreaBase::mousePressEvent(event);
 }
 
+/*
+void TupPaintArea::tabletEvent(QTabletEvent *event)
+{
+    qDebug() << "TupPaintArea::tabletEvent() - Pressure: " << event->pressure();
+    qDebug() << "TupPaintArea::tabletEvent() - xTilt: " << event->xTilt();
+    qDebug() << "TupPaintArea::tabletEvent() - yTilt: " << event->yTilt();
+
+    TupPaintAreaBase::tabletEvent(event);
+}
+*/
+
 void TupPaintArea::frameResponse(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
@@ -1247,7 +1258,7 @@ void TupPaintArea::setCurrentTool(QString tool)
             qDebug() << "SHOW_VAR : " << tool;
         #else
             T_FUNCINFO;
-            SHOW_VAR(tool);
+            SHOW_VAR(tool)
         #endif
     #endif
 
@@ -1578,17 +1589,6 @@ void TupPaintArea::goToScene(int sceneIndex)
     TupProjectRequest request = TupRequestBuilder::createSceneRequest(sceneIndex, TupProjectRequest::Select);
     emit localRequestTriggered(&request);
 }
-
-/*
-void TupPaintArea::tabletEvent(QTabletEvent *event)
-{
-    tError() << "TupPaintArea::tabletEvent() - Pressure: " << event->pressure();
-    tError() << "TupPaintArea::tabletEvent() - xTilt: " << event->xTilt();
-    tError() << "TupPaintArea::tabletEvent() - yTilt: " << event->yTilt();
-
-    TupPaintAreaBase::tabletEvent(event);
-}
-*/
 
 int TupPaintArea::currentSceneIndex()
 {

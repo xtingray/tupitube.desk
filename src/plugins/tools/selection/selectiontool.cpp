@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
  *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
@@ -78,11 +78,7 @@ void SelectionTool::init(TupGraphicsScene *gScene)
 void SelectionTool::initItems(TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[SelectionTool::initItems()]";
-        #else
-            T_FUNCINFOX("tools");
-        #endif
+        qDebug() << "[SelectionTool::initItems()]";
     #endif
 
     foreach (QGraphicsView *view, gScene->views())
@@ -109,14 +105,10 @@ QStringList SelectionTool::keys() const
 void SelectionTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[SelectionTool::press()]";
-        #else
-            T_FUNCINFOX("tools");
-        #endif
+        qDebug() << "[SelectionTool::press()]";
     #endif
 
-    Q_UNUSED(brushManager);
+    Q_UNUSED(brushManager)
 
     activeSelection = false;
     frame = getCurrentFrame();
@@ -181,7 +173,7 @@ void SelectionTool::press(const TupInputDeviceInformation *input, TupBrushManage
 
 void SelectionTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
-    Q_UNUSED(brushManager);
+    Q_UNUSED(brushManager)
 
     if (input->buttons() == Qt::LeftButton && gScene->selectedItems().count() > 0)
         QTimer::singleShot(0, this, SLOT(syncNodes()));
@@ -190,15 +182,11 @@ void SelectionTool::move(const TupInputDeviceInformation *input, TupBrushManager
 void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[SelectionTool::release()]";
-        #else
-            T_FUNCINFOX("tools");
-        #endif
+        qDebug() << "[SelectionTool::release()]";
     #endif
 
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
 
     selectedObjects = gScene->selectedItems();
     if (selectedObjects.count() > 0) {
@@ -371,14 +359,10 @@ QWidget *SelectionTool::configurator()
 void SelectionTool::aboutToChangeScene(TupGraphicsScene *scene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[SelectionTool::aboutToChangeScene()]";
-        #else
-            T_FUNCINFOX("tools");
-        #endif
+        qDebug() << "[SelectionTool::aboutToChangeScene()]";
     #endif
 
-    Q_UNUSED(scene);
+    Q_UNUSED(scene)
 
     clearSelection();
 }
@@ -395,11 +379,7 @@ void SelectionTool::aboutToChangeTool()
 void SelectionTool::itemResponse(const TupItemResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[SelectionTool::itemResponse()]";
-        #else
-            T_FUNCINFOX("tools");
-        #endif
+        qDebug() << "[SelectionTool::itemResponse()]";
     #endif
 
     if (response->getAction() == TupProjectRequest::Remove) {
@@ -434,12 +414,7 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
     updateItemScale();
 
 #ifdef TUP_DEBUG
-    QString msg = "SelectionTool::itemResponse() - response->action() -> " + QString::number(response->getAction());
-    #ifdef Q_OS_WIN
-        qDebug() << msg;
-    #else
-        tError() << msg;
-    #endif
+    qDebug() << "SelectionTool::itemResponse() - response->action() -> " + QString::number(response->getAction());
 #endif
 
     switch (response->getAction()) {
@@ -549,11 +524,7 @@ void SelectionTool::saveConfig()
 void SelectionTool::keyPressEvent(QKeyEvent *event)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[SelectionTool::keyPressEvent()]";
-        #else
-            T_FUNCINFOX("tools");
-        #endif
+        qDebug() << "[SelectionTool::keyPressEvent()]";
     #endif
 
     key = "NONE";
@@ -623,7 +594,7 @@ void SelectionTool::keyPressEvent(QKeyEvent *event)
 
 void SelectionTool::keyReleaseEvent(QKeyEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
 
     if (key.compare("CONTROL") == 0) {
         panel->setProportionState(false);
@@ -841,11 +812,7 @@ void SelectionTool::sceneResponse(const TupSceneResponse *event)
 void SelectionTool::updateItemPosition() 
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[SelectionTool::updateItemPosition()]";
-        #else
-            T_FUNCINFOX("tools");
-        #endif
+        qDebug() << "[SelectionTool::updateItemPosition()]";
     #endif
 
     if (nodeManagers.count() == 1) {
@@ -920,11 +887,7 @@ void SelectionTool::updateItemPosition()
 void SelectionTool::updateItemRotation()
 {
 #ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
         qDebug() << "[SelectionTool::updateItemRotation()]";
-    #else
-        T_FUNCINFOX("tools");
-    #endif
 #endif
 
     if (nodeManagers.count() > 0) {
@@ -938,11 +901,7 @@ void SelectionTool::updateItemRotation()
 void SelectionTool::updateItemScale()
 {
 #ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[SelectionTool::updateItemRotation()]";
-    #else
-        T_FUNCINFOX("tools");
-    #endif
+    qDebug() << "[SelectionTool::updateItemRotation()]";
 #endif
 
     if (nodeManagers.count() > 0) {
@@ -965,11 +924,7 @@ void SelectionTool::updateItemScale()
 void SelectionTool::updateItemPosition(int x, int y) 
 {
 #ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[SelectionTool::updateItemPosition(int, int)]";
-    #else
-        T_FUNCINFOX("tools");
-    #endif
+    qDebug() << "[SelectionTool::updateItemPosition(int, int)]";
 #endif
 
     if (nodeManagers.count() == 1) {
@@ -996,11 +951,7 @@ void SelectionTool::updateItemPosition(int x, int y)
 void SelectionTool::updateItemRotation(int angle)
 {
 #ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[SelectionTool::updateItemRotation(int)]";
-    #else
-        T_FUNCINFOX("tools");
-    #endif
+    qDebug() << "[SelectionTool::updateItemRotation(int)]";
 #endif
 
     if (nodeManagers.count() == 1) {
@@ -1022,11 +973,7 @@ void SelectionTool::updateItemRotation(int angle)
 void SelectionTool::updateItemScale(double xFactor, double yFactor)
 {
 #ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[SelectionTool::updateItemScale(float, float)]";
-    #else
-        T_FUNCINFOX("tools");
-    #endif
+    qDebug() << "[SelectionTool::updateItemScale(float, float)]";
 #endif
 
     if (nodeManagers.count() == 1) {
@@ -1048,11 +995,7 @@ void SelectionTool::updateItemScale(double xFactor, double yFactor)
 void SelectionTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
 {
 #ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[SelectionTool::requestTransformation(QGraphicsItem *, TupFrame *)]";
-    #else
-        T_FUNCINFOX("tools");
-    #endif
+    qDebug() << "[SelectionTool::requestTransformation(QGraphicsItem *, TupFrame *)]";
 #endif
 
     QDomDocument doc;

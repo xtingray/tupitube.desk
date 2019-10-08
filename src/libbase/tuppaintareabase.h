@@ -82,18 +82,18 @@ class TUPITUBE_EXPORT TupPaintAreaBase : public QGraphicsView
         void updateCenter(const QPoint point);
 
     protected:
-        virtual void mousePressEvent(QMouseEvent *event);
-        virtual void mouseMoveEvent(QMouseEvent *event);
-        virtual void mouseReleaseEvent(QMouseEvent *event);
-        virtual void keyPressEvent(QKeyEvent *event);
-        virtual void keyReleaseEvent(QKeyEvent *event);
+        virtual void mousePressEvent(QMouseEvent *event) override;
+        virtual void mouseMoveEvent(QMouseEvent *event) override;
+        virtual void mouseReleaseEvent(QMouseEvent *event) override;
+        virtual void keyPressEvent(QKeyEvent *event) override;
+        virtual void keyReleaseEvent(QKeyEvent *event) override;
 
-        virtual void tabletEvent(QTabletEvent *event);
-        virtual void enterEvent(QEvent *event);
-        virtual void leaveEvent(QEvent *event);
+        virtual void tabletEvent(QTabletEvent *event) override;
+        virtual void enterEvent(QEvent *event) override;
+        virtual void leaveEvent(QEvent *event) override;
 
-        virtual bool viewportEvent(QEvent *event);
-        virtual void wheelEvent(QWheelEvent *event);
+        virtual bool viewportEvent(QEvent *event) override;
+        virtual void wheelEvent(QWheelEvent *event) override;
 
     signals:
         void cursorPosition(const QPointF &pos);

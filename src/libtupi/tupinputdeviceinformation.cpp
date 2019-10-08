@@ -83,7 +83,7 @@ void TupInputDeviceInformation::updateFromMouseEvent(QMouseEvent *event)
 
 void TupInputDeviceInformation::updateFromTabletEvent(QTabletEvent *event)
 {
-    // tError() << "updateFromTabletEvent() - Pressure: " << event->pressure();
+    // qDebug() << "TupInputDeviceInformation::updateFromTabletEvent() - Pressure: " << event->pressure();
 
     tabletInfo.pressure = event->pressure();
     tabletInfo.rotation = event->rotation();
