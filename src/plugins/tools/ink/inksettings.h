@@ -33,31 +33,48 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#ifndef CONFIGURATOR_H
+#define CONFIGURATOR_H
 
 #include "tglobal.h"
-#include "tapplicationproperties.h"
 
+#include <QSpinBox>
+#include <QCheckBox>
 #include <QDoubleSpinBox>
-#include <QLabel>
-#include <QBoxLayout>
-#include <QTableWidget>
-#include <QTableWidgetItem>
-#include <QHeaderView>
-#include <QPushButton>
 
-class TUPITUBE_PLUGIN Settings : public QWidget
+/**
+ * @author Gustav Gonzalez 
+*/
+
+class TUPITUBE_PLUGIN InkSettings : public QWidget
 {
     Q_OBJECT
 
     public:
-        Settings(QWidget *parent = 0);
-        ~Settings();
-        double smoothness() const;
-        
+        enum Structure { Basic = 0, Axial, Organic };
+
+        InkSettings(QWidget *parent = nullptr);
+        ~InkSettings();
+
+    private slots:
+        void updateBorderOption(bool showBorder);
+        void updateFillOption(bool showFill);
+        void updateSmoothBox(bool enabled);
+
+    signals:
+        void borderUpdated(bool borderFlag);
+        void fillUpdated(bool fillFlag);
+        void borderSizeUpdated(int size);
+        void pressureUpdated(int sensibility);
+        void smoothnessUpdated(double smoothness);
+
     private:
-        QDoubleSpinBox *m_smoothness;
+        QSpinBox *pressureBox;
+        QCheckBox *borderOption;
+        QCheckBox *fillOption;
+        QSpinBox *borderSizeBox;
+        QCheckBox *smoothLabel;
+        QDoubleSpinBox *smoothBox;
 };
 
 #endif

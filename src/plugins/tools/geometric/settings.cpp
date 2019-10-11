@@ -37,7 +37,7 @@
 #include "tapplicationproperties.h"
 #include "tseparator.h"
 
-Settings::Settings(Settings::ToolType type, QWidget *parent) : QWidget(parent)
+PenSettings::PenSettings(PenSettings::ToolType type, QWidget *parent) : QWidget(parent)
 {
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
@@ -46,13 +46,13 @@ Settings::Settings(Settings::ToolType type, QWidget *parent) : QWidget(parent)
     toolTitle->setAlignment(Qt::AlignHCenter);
     QPixmap pic;
 
-    if (type == Settings::Rectangle) {
+    if (type == PenSettings::Rectangle) {
         pic = QPixmap(THEME_DIR + "icons/square.png");
         toolTitle->setToolTip(tr("Rectangle Properties"));
-    } else if (type == Settings::Ellipse) {
+    } else if (type == PenSettings::Ellipse) {
         pic = QPixmap(THEME_DIR + "icons/ellipse.png");
         toolTitle->setToolTip(tr("Ellipse Properties"));
-    } else if (type == Settings::Line) {
+    } else if (type == PenSettings::Line) {
         pic = QPixmap(THEME_DIR + "icons/line.png");
         toolTitle->setToolTip(tr("Line Properties"));
     }
@@ -75,7 +75,7 @@ Settings::Settings(Settings::ToolType type, QWidget *parent) : QWidget(parent)
     // textArea->setFont(font);
     // textArea->setFont(QFont("Arial", 8, QFont::Normal, false));
 
-    if (type == Settings::Line) {
+    if (type == PenSettings::Line) {
         textArea->append("<p><b>" + tr("Mouse Right Click or X Key") + ":</b> " +  tr("Close the line path") + "</p>");
         textArea->append("<p><b>" + tr("Shift") + ":</b> " +  tr("Align line to horizontal/vertical axis") + "</p>"); 
     } else {
@@ -90,7 +90,7 @@ Settings::Settings(Settings::ToolType type, QWidget *parent) : QWidget(parent)
     mainLayout->addStretch(2);
 }
 
-Settings::~Settings()
+PenSettings::~PenSettings()
 {
 }
 

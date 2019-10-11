@@ -40,7 +40,7 @@
 
 PencilTool::PencilTool(): TupToolPlugin()
 {
-    configPanel = nullptr;
+    settings = nullptr;
     item = nullptr;
 
     setupActions();
@@ -76,11 +76,8 @@ void PencilTool::init(TupGraphicsScene *gScene)
     TCONFIG->beginGroup("BrushParameters");
     penWidth = TCONFIG->value("Thickness", 3).toInt();
 
-    /*
     foreach (QGraphicsView *view, gScene->views())
         view->setDragMode(QGraphicsView::NoDrag);
-    */
-    gScene->views().at(0)->setDragMode(QGraphicsView::NoDrag);
 }
 
 QStringList PencilTool::keys() const
@@ -171,8 +168,8 @@ void PencilTool::release(const TupInputDeviceInformation *input, TupBrushManager
             emit requested(&request);
             return;
         } else {
-            double smoothness = configPanel->smoothness();
-            smoothPath(path, smoothness);
+            if (smoothness > 0)
+                smoothPath(path, smoothness);
         }
 
         item->setPen(brushManager->pen());
@@ -226,10 +223,17 @@ int PencilTool::toolType() const
 
 QWidget *PencilTool::configurator()
 {
-    if (!configPanel)
-        configPanel = new Settings;
+    if (!settings) {
+        settings = new PenSettings;
+        connect(settings, SIGNAL(smoothnessUpdated(double)), this, SLOT(updateSmoothness(double)));
+    }
 
-    return configPanel;
+    return settings;
+}
+
+void PencilTool::updateSmoothness(double value)
+{
+    smoothness = value;
 }
 
 void PencilTool::aboutToChangeTool() 
@@ -238,20 +242,16 @@ void PencilTool::aboutToChangeTool()
 
 void PencilTool::saveConfig()
 {
-    if (configPanel) {
+    if (settings) {
         TCONFIG->beginGroup("PencilTool");
-        TCONFIG->setValue("Smoothness", configPanel->smoothness());
+        TCONFIG->setValue("Smoothness", smoothness);
     }
 }
 
 void PencilTool::keyPressEvent(QKeyEvent *event)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[PencilTool::keyPressEvent()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "PencilTool::keyPressEvent()";
     #endif
 
     if (event->modifiers() == Qt::ShiftModifier) {

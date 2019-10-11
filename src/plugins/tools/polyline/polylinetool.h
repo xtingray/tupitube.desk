@@ -112,7 +112,7 @@ class TUPITUBE_PLUGIN PolyLineTool : public TupToolPlugin
 
         QGraphicsLineItem *line1;
         QGraphicsLineItem *line2;
-        Settings *configPanel;
+        PenSettings *configPanel;
         QCursor polyCursor;
         qreal realFactor;
         bool cutterOn;

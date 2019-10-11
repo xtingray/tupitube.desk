@@ -17,10 +17,10 @@ INSTALLS += target
 target.path = /plugins/
 
 HEADERS += inktool.h \
-           configurator.h
+           inksettings.h
 
 SOURCES += inktool.cpp \
-           configurator.cpp
+           inksettings.cpp
 
 FRAMEWORK_DIR = "../../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

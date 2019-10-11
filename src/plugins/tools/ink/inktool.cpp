@@ -64,9 +64,12 @@ void InkTool::init(TupGraphicsScene *gScene)
 {
     Q_UNUSED(gScene)
 
-    spacing = 1;
-    tolerance = 0;
-    smoothness = 2;
+    TCONFIG->beginGroup("InkTool");
+    sensibility = TCONFIG->value("Sensibility", 5).toInt();
+    smoothness = TCONFIG->value("Smoothness", 2).toDouble();
+    showBorder = TCONFIG->value("BorderEnabled", true).toBool();
+    showFill = TCONFIG->value("FillEnabled", true).toBool();
+    borderSize = TCONFIG->value("BorderSize", 1).toInt();
 }
 
 QStringList InkTool::keys() const
@@ -79,9 +82,9 @@ void InkTool::press(const TupInputDeviceInformation *input, TupBrushManager *bru
     firstHalfOnTop = true;
     previousDirection = None;
     oldSlope = 0;
-    penWidth = brushManager->pen().widthF() / 2;
+    initPenWidth = brushManager->pen().widthF() / 6;
+    penWidth = initPenWidth;
 
-    dotsCounter = 1;
     firstPoint = input->pos();
 
     guidePainterPath = QPainterPath();
@@ -115,7 +118,6 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
 {
     Q_UNUSED(brushManager)
 
-    dotsCounter++;
     gScene->views().at(0)->setDragMode(QGraphicsView::NoDrag);
     QPointF currentPoint = input->pos();
 
@@ -140,15 +142,12 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
         if (distance > 5) {
             /*
             qreal pm; // Perpendicular slope
-
             if (static_cast<int>(m) == 0) // path is horizontal
                 pm = 100; 
             else
                 pm = (-1) * (1/m);
-            */
 
             #ifdef TUP_DEBUG
-                /*
                 qDebug() << "";
                 qDebug() << "InkTool::move() - old slope: " << oldSlope;
                 qDebug() << "InkTool::move() - slope: " << m;
@@ -166,22 +165,24 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                     qDebug() << "InkTool::move() - M(inv): NAN";
                 else
                     qDebug() << "InkTool::move() - M(inv): " + QString::number(pm);
-                */
             #endif
+            */
 
             QPointF firstHalfPoint;
             QPointF secondHalfPoint;
 
             double lineAngle = atan(m);
-            // qDebug() << "InkTool::move() - inv tan: " << lineAngle;
-            // double degrees = lineAngle * 180 / PI;
-            // qDebug() << "InkTool::move() - degrees: " << degrees;
             double angle = 1.5708 - lineAngle;
-            // qDebug() << "InkTool::move() - angle: " << angle;
             double deltaX = fabs(cos(angle) * penWidth);
-            // qDebug() << "InkTool::move() - deltaX: " << deltaX;
             double deltaY = fabs(sin(angle) * penWidth);
-            // qDebug() << "InkTool::move() - deltaY: " << deltaY;
+
+            /*
+              qDebug() << "InkTool::move() - inv tan: " << lineAngle;
+              qDebug() << "InkTool::move() - degrees: " << degrees;
+              qDebug() << "InkTool::move() - angle: " << angle;
+              qDebug() << "InkTool::move() - deltaX: " << deltaX;
+              qDebug() << "InkTool::move() - deltaY: " << deltaY;
+            */
 
             qreal x0 = 0;
             qreal y0 = 0;
@@ -287,6 +288,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
 
+                                // SQA: Fixing acute angule cases
                                 double xFix = firstHalfPrevious.x() - penWidth;
                                 double yFix = firstHalfPoint.y() - fabs(firstHalfPoint.y() - firstHalfPrevious.y()) / 2;
                                 QPointF fixPoint = QPointF(xFix, yFix);
@@ -299,6 +301,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
 
+                                // SQA: Fixing acute angule cases
                                 double yFix = secondHalfPoint.y() - fabs(secondHalfPoint.y() - secondHalfPrevious.y()) / 2;
                                 double xFix = secondHalfPrevious.x() - penWidth;
                                 QPointF fixPoint = QPointF(xFix, yFix);
@@ -1068,13 +1071,35 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
 
     // Drawing a point
     if (inkPath.elementCount() == 1) {
-        qreal radius = brushManager->pen().width(); // * 2;
+        // Calculating pressure for the point
+        qreal pressCo = penPress * 10;
+        switch(sensibility) {
+            case 2:
+                pressCo += 0.2;
+            break;
+            case 3:
+                pressCo += 0.4;
+            break;
+            case 4:
+                pressCo += 0.6;
+            break;
+            case 5:
+                pressCo += 0.8;
+            break;
+        }
+
+        if (penPress > 0.4)
+            pressCo *= 0.4;
+
+        qreal radius = brushManager->pen().width() * pressCo;
         QPointF distance((radius + 2)/2, (radius + 2)/2);
-        QPen inkPen(brushManager->penColor(), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+        QPen inkPen(brushManager->penColor(), borderSize, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
         TupEllipseItem *blackEllipse = new TupEllipseItem(QRectF(currentPoint - distance,
                                                                  QSize(static_cast<int>(radius), static_cast<int>(radius))));
-        blackEllipse->setPen(inkPen);
-        blackEllipse->setBrush(inkPen.brush());
+        if (showBorder)
+            blackEllipse->setPen(inkPen);
+        if (showFill)
+            blackEllipse->setBrush(inkPen.brush());
         gScene->includeObject(blackEllipse);
 
         QDomDocument doc;
@@ -1092,15 +1117,29 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
     for (int i = shapePoints.size()-1; i > 0; i--)
         inkPath.lineTo(shapePoints.at(i-1));
 
-    // smoothPath(inkPath, smoothness);
+    if (smoothness > 0)
+        smoothPath(inkPath, smoothness);
 
     TupPathItem *stroke = new TupPathItem();
     stroke->setPath(inkPath);
-    // Set border color for shape
-    stroke->setPen(QPen(brushManager->penColor()));
-    // Set fill color for shape
-    stroke->setBrush(brushManager->penColor());
-    // stroke->setPath(inkPath);
+
+    qDebug() << "";
+    qDebug() << "showBorder: " << showBorder;
+    qDebug() << "showFill: " << showFill;
+    qDebug() << "smoothness: " << smoothness;
+    qDebug() << "borderSize: " << borderSize;
+    qDebug() << "pressure sensibility: " << sensibility;
+
+    if (showBorder) {
+        // Set border color for shape
+        stroke->setPen(QPen(brushManager->penColor(), borderSize));
+    }
+
+    if (showFill) {
+        // Set fill color for shape
+        stroke->setBrush(brushManager->penColor());
+    }
+
     gScene->includeObject(stroke);
 
     QDomDocument doc;
@@ -1148,13 +1187,14 @@ int InkTool::toolType() const
 
 QWidget *InkTool::configurator()
 {
-    /*
     if (!configPanel) {
-        configPanel = new configPanel;
-        connect(configPanel, SIGNAL(updateSpacing(int)), this, SLOT(updateSpacingVar(int)));
-        connect(configPanel, SIGNAL(updateSizeTolerance(int)), this, SLOT(updateSizeToleranceVar(int)));
+        configPanel = new InkSettings;
+        connect(configPanel, SIGNAL(borderUpdated(bool)), this, SLOT(updateBorderFlag(bool)));
+        connect(configPanel, SIGNAL(fillUpdated(bool)), this, SLOT(updateFillFlag(bool)));
+        connect(configPanel, SIGNAL(borderSizeUpdated(int)), this, SLOT(updateBorderSize(int)));
+        connect(configPanel, SIGNAL(pressureUpdated(int)), this, SLOT(updatePressure(int)));
+        connect(configPanel, SIGNAL(smoothnessUpdated(double)), this, SLOT(updateSmoothness(double)));
     }
-    */
 
     return configPanel;
 }
@@ -1165,31 +1205,40 @@ void InkTool::aboutToChangeTool()
 
 void InkTool::saveConfig()
 {
-    /*
     if (configPanel) {
         TCONFIG->beginGroup("InkTool");
-        TCONFIG->setValue("DotsSpacing", configPanel->spacingValue());
-        TCONFIG->setValue("Tolerance", configPanel->sizeToleranceValue());
-        TCONFIG->setValue("Smoothness", configPanel->smoothness());
-        TCONFIG->setValue("ShowBorder", configPanel->showBorder());
-        TCONFIG->setValue("BorderSize", configPanel->borderSizeValue());
+        TCONFIG->setValue("BorderEnabled", showBorder);
+        TCONFIG->setValue("BorderSize", borderSize);
+        TCONFIG->setValue("FillEnabled", showFill);
+        TCONFIG->setValue("Sensibility", sensibility);
+        TCONFIG->setValue("Smoothness", smoothness);
     }
-    */
 }
 
-/*
-void InkTool::updateSpacingVar(int value)
+void InkTool::updateBorderFlag(bool border)
 {
-    spacing = value;
+    showBorder = border;
 }
-*/
 
-/*
-void InkTool::updateSizeToleranceVar(int value)
+void InkTool::updateFillFlag(bool fill)
 {
-    tolerance = static_cast<int>(value) / static_cast<int>(100);
+    showFill = fill;
 }
-*/
+
+void InkTool::updateBorderSize(int size)
+{
+    borderSize = size;
+}
+
+void InkTool::updatePressure(int value)
+{
+    sensibility = value;
+}
+
+void InkTool::updateSmoothness(double value)
+{
+    smoothness = value;
+}
 
 void InkTool::smoothPath(QPainterPath &path, double smoothness, int from, int to)
 {
@@ -1229,4 +1278,20 @@ void InkTool::keyPressEvent(QKeyEvent *event)
 QCursor InkTool::polyCursor() const
 {
     return inkCursor;
+}
+
+void InkTool::updatePressure(qreal pressure)
+{
+    penPress = pressure;
+    double factor = sensibility;
+    if (sensibility > 1)
+        factor = sensibility + 1;
+
+    if (pressure <= 0.2) {
+        penWidth = initPenWidth / (3 + factor);
+    } else if (pressure > 0.2 && pressure < 0.6) {
+        penWidth = initPenWidth + (initPenWidth * pressure * (4 + factor));
+    } else if (pressure >= 0.6) {
+        penWidth = initPenWidth + (initPenWidth * pressure * (6 + factor));
+    }
 }

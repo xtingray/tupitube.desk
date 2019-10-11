@@ -100,6 +100,7 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
         virtual void keyReleaseEvent(QKeyEvent *event);
 
         virtual void updatePos(QPointF pos);
+        virtual void updatePressure(qreal pressure);
 
         virtual QMenu *menu() const;
         virtual QCursor polyCursor() const;

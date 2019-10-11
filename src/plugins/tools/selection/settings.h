@@ -51,7 +51,7 @@
  * @author Gustav Gonzalez 
 */
 
-class TUPITUBE_PLUGIN Settings : public QWidget
+class TUPITUBE_PLUGIN PenSettings : public QWidget
 {
     Q_OBJECT
 
@@ -61,8 +61,8 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         enum Order { ToBack = 0, ToFront, ToBackOneLevel, ToFrontOneLevel };
         enum Group { GroupItems = 0, UngroupItems };
 
-        Settings(QWidget *parent = 0);
-        ~Settings();
+        PenSettings(QWidget *parent = 0);
+        ~PenSettings();
 
         void enableFormControls(bool flag);
         void setPos(int x, int y);
@@ -72,10 +72,10 @@ class TUPITUBE_PLUGIN Settings : public QWidget
         // void setScaleFactor(double factor);
 
      signals:
-        void callAlignAction(Settings::Align align);
-        void callFlip(Settings::Flip flip);
-        void callOrderAction(Settings::Order action);
-        void callGroupAction(Settings::Group action);
+        void callAlignAction(PenSettings::Align align);
+        void callFlip(PenSettings::Flip flip);
+        void callOrderAction(PenSettings::Order action);
+        void callGroupAction(PenSettings::Group action);
         void positionUpdated(int x, int y);
         void rotationUpdated(int angle);
         void scaleUpdated(double xFactor, double yFactor);

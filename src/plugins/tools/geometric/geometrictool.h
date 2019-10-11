@@ -105,7 +105,7 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
         TupLineItem *line;
         TupPathItem *path;
         TupGraphicsScene *scene;
-        Settings *configPanel;
+        PenSettings *configPanel;
         bool added;
         QPointF currentPoint;
         QPointF lastPoint;

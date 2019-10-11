@@ -46,14 +46,14 @@
  * @author Gustav Gonzalez 
 */
 
-class TUPITUBE_PLUGIN Settings : public QWidget
+class TUPITUBE_PLUGIN PenSettings : public QWidget
 {
     Q_OBJECT
 
     public:
         enum ToolType { Rectangle = 1, Ellipse, Line };
-        Settings(Settings::ToolType type, QWidget *parent = 0);
-        ~Settings();
+        PenSettings(PenSettings::ToolType type, QWidget *parent = 0);
+        ~PenSettings();
 };
 
 #endif

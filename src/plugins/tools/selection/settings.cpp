@@ -40,7 +40,7 @@
 #include "timagebutton.h"
 #include "tseparator.h"
 
-Settings::Settings(QWidget *parent) : QWidget(parent)
+PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
 {
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 
@@ -302,56 +302,56 @@ Settings::Settings(QWidget *parent) : QWidget(parent)
     isVisible = false;
 }
 
-Settings::~Settings()
+PenSettings::~PenSettings()
 {
 }
 
-void Settings::hFlip()
+void PenSettings::hFlip()
 {
-    emit callFlip(Settings::Horizontal);
+    emit callFlip(PenSettings::Horizontal);
 }
 
-void Settings::vFlip()
+void PenSettings::vFlip()
 {
-    emit callFlip(Settings::Vertical);
+    emit callFlip(PenSettings::Vertical);
 }
 
-void Settings::cFlip()
+void PenSettings::cFlip()
 {
-    emit callFlip(Settings::Crossed);
+    emit callFlip(PenSettings::Crossed);
 }
 
-void Settings::sendToBack()
+void PenSettings::sendToBack()
 {
-    emit callOrderAction(Settings::ToBack);
+    emit callOrderAction(PenSettings::ToBack);
 }
 
-void Settings::sendToBackOneLevel()
+void PenSettings::sendToBackOneLevel()
 {
-    emit callOrderAction(Settings::ToBackOneLevel);
+    emit callOrderAction(PenSettings::ToBackOneLevel);
 }
 
-void Settings::sendToFront()
+void PenSettings::sendToFront()
 {
-    emit callOrderAction(Settings::ToFront);
+    emit callOrderAction(PenSettings::ToFront);
 }
 
-void Settings::sendToFrontOneLevel()
+void PenSettings::sendToFrontOneLevel()
 {
-    emit callOrderAction(Settings::ToFrontOneLevel);
+    emit callOrderAction(PenSettings::ToFrontOneLevel);
 }
 
-void Settings::groupItems()
+void PenSettings::groupItems()
 {
-    emit callGroupAction(Settings::GroupItems);
+    emit callGroupAction(PenSettings::GroupItems);
 }
 
-void Settings::ungroupItems()
+void PenSettings::ungroupItems()
 {
-    emit callGroupAction(Settings::UngroupItems);
+    emit callGroupAction(PenSettings::UngroupItems);
 }
 
-void Settings::openTipPanel()
+void PenSettings::openTipPanel()
 {
     if (help->isVisible()) {
        help->hide();
@@ -366,7 +366,7 @@ void Settings::openTipPanel()
     }
 }
 
-void Settings::enableFormControls(bool flag)
+void PenSettings::enableFormControls(bool flag)
 {
     if (flag) {
         if (help->isVisible())
@@ -376,7 +376,7 @@ void Settings::enableFormControls(bool flag)
     formPanel->setVisible(flag);
 }
 
-void Settings::setPos(int x, int y)
+void PenSettings::setPos(int x, int y)
 {
    xPosField->blockSignals(true);
    yPosField->blockSignals(true);
@@ -390,7 +390,7 @@ void Settings::setPos(int x, int y)
    yPosField->blockSignals(false);
 }
 
-void Settings::updateRotationAngle(int angle)
+void PenSettings::updateRotationAngle(int angle)
 {
 #ifdef TUP_DEBUG
     #ifdef Q_OS_WIN
@@ -410,7 +410,7 @@ void Settings::updateRotationAngle(int angle)
     angleField->blockSignals(false);
 }
 
-void Settings::updateScaleFactor(double x, double y)
+void PenSettings::updateScaleFactor(double x, double y)
 {
 #ifdef TUP_DEBUG
     QString msg1 = "Settings::updateScaleFactor() - x: " + QString::number(x);
@@ -437,19 +437,19 @@ void Settings::updateScaleFactor(double x, double y)
    factorYField->blockSignals(false);
 }
 
-void Settings::notifyXMovement(int x)
+void PenSettings::notifyXMovement(int x)
 {
     emit positionUpdated(x -currentX, 0);
     currentX =xPosField->value();
 }
 
-void Settings::notifyYMovement(int y)
+void PenSettings::notifyYMovement(int y)
 {
     emit positionUpdated(0, y -currentY);
     currentY =yPosField->value();
 }
 
-void Settings::notifyRotation(int angle)
+void PenSettings::notifyRotation(int angle)
 {
     if (angle == 360) {
         angle = 0;
@@ -459,7 +459,7 @@ void Settings::notifyRotation(int angle)
     currentAngle =angleField->value();
 }
 
-void Settings::notifyXScale(double factor)
+void PenSettings::notifyXScale(double factor)
 {
     if (propCheck->isChecked()) {
         currentYFactor = factor;
@@ -470,7 +470,7 @@ void Settings::notifyXScale(double factor)
     currentXFactor = factor;
 }
 
-void Settings::notifyYScale(double factor)
+void PenSettings::notifyYScale(double factor)
 {
     if (propCheck->isChecked()) {
        currentXFactor = factor;
@@ -481,7 +481,7 @@ void Settings::notifyYScale(double factor)
     currentYFactor = factor;
 }
 
-void Settings::enableProportion(int flag)
+void PenSettings::enableProportion(int flag)
 {
     bool enable = false;
     if (flag == Qt::Checked) {
@@ -493,29 +493,29 @@ void Settings::enableProportion(int flag)
     emit activateProportion(enable);
 }
 
-void Settings::setProportionState(int flag)
+void PenSettings::setProportionState(int flag)
 {
     propCheck->blockSignals(true);
     propCheck->setChecked(flag);
     propCheck->blockSignals(false);
 }
 
-bool Settings::formIsVisible()
+bool PenSettings::formIsVisible()
 {
     return isVisible;
 }
 
-void Settings::alignObjectHorizontally()
+void PenSettings::alignObjectHorizontally()
 {
-    emit callAlignAction(Settings::hAlign);
+    emit callAlignAction(PenSettings::hAlign);
 }
 
-void Settings::alignObjectVertically()
+void PenSettings::alignObjectVertically()
 {
-    emit callAlignAction(Settings::vAlign);
+    emit callAlignAction(PenSettings::vAlign);
 }
 
-void Settings::alignObjectAbsolutely()
+void PenSettings::alignObjectAbsolutely()
 {
-    emit callAlignAction(Settings::totalAlign);
+    emit callAlignAction(PenSettings::totalAlign);
 }

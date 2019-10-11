@@ -38,7 +38,7 @@
 #include "tuptweenerstep.h"
 #include "tosd.h"
 
-Settings::Settings(QWidget *parent) : QWidget(parent)
+PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
 {
     selectionDone = false;
 
@@ -85,11 +85,11 @@ Settings::Settings(QWidget *parent) : QWidget(parent)
     activateMode(TupToolPlugin::Selection);
 }
 
-Settings::~Settings()
+PenSettings::~PenSettings()
 {
 }
 
-void Settings::setInnerForm()
+void PenSettings::setInnerForm()
 {
     innerPanel = new QWidget;
 
@@ -130,7 +130,7 @@ void Settings::setInnerForm()
     activeInnerForm(false);
 }
 
-void Settings::activeInnerForm(bool enable)
+void PenSettings::activeInnerForm(bool enable)
 {
     if (enable && !innerPanel->isVisible())
         innerPanel->show();
@@ -140,7 +140,7 @@ void Settings::activeInnerForm(bool enable)
 
 // Adding new Tween
 
-void Settings::setParameters(const QString &name, int framesCount, int startFrame)
+void PenSettings::setParameters(const QString &name, int framesCount, int startFrame)
 {
     mode = TupToolPlugin::Add;
     input->setText(name);
@@ -161,7 +161,7 @@ void Settings::setParameters(const QString &name, int framesCount, int startFram
 
 // Load properties of currentTween 
 
-void Settings::setParameters(TupItemTweener *currentTween)
+void PenSettings::setParameters(TupItemTweener *currentTween)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -185,7 +185,7 @@ void Settings::setParameters(TupItemTweener *currentTween)
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepViewer->totalSteps()));
 }
 
-void Settings::initStartCombo(int framesCount, int currentIndex)
+void PenSettings::initStartCombo(int framesCount, int currentIndex)
 {
     comboInit->clear();
     comboInit->setMinimum(1);
@@ -193,22 +193,22 @@ void Settings::initStartCombo(int framesCount, int currentIndex)
     comboInit->setValue(currentIndex);
 }
 
-void Settings::setStartFrame(int currentIndex)
+void PenSettings::setStartFrame(int currentIndex)
 {
     comboInit->setValue(currentIndex);
 }
 
-int Settings::startFrame()
+int PenSettings::startFrame()
 {
     return comboInit->value() - 1;
 }
 
-int Settings::startComboSize()
+int PenSettings::startComboSize()
 {
     return comboInit->maximum();
 }
 
-void Settings::updateSteps(const QGraphicsPathItem *path)
+void PenSettings::updateSteps(const QGraphicsPathItem *path)
 {
     if (path) {
         stepViewer->setPath(path);
@@ -216,7 +216,7 @@ void Settings::updateSteps(const QGraphicsPathItem *path)
     }
 }
 
-void Settings::emitOptionChanged(int option)
+void PenSettings::emitOptionChanged(int option)
 {
     switch (option) {
         case 0:
@@ -238,7 +238,7 @@ void Settings::emitOptionChanged(int option)
     }
 }
 
-QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point, QString &path)
+QString PenSettings::tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point, QString &path)
 {
     QDomDocument doc;
 
@@ -261,27 +261,27 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     return doc.toString();
 }
 
-int Settings::totalSteps()
+int PenSettings::totalSteps()
 {
     return stepViewer->totalSteps();
 }
 
-QList<QPointF> Settings::tweenPoints()
+QList<QPointF> PenSettings::tweenPoints()
 {
     return stepViewer->tweenPoints();
 }
 
-void Settings::activateMode(TupToolPlugin::EditMode mode)
+void PenSettings::activateMode(TupToolPlugin::EditMode mode)
 {
     options->setCurrentIndex(mode);
 }
 
-void Settings::clearData()
+void PenSettings::clearData()
 {
     stepViewer->clearInterface();
 }
 
-void Settings::notifySelection(bool flag)
+void PenSettings::notifySelection(bool flag)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -294,7 +294,7 @@ void Settings::notifySelection(bool flag)
     selectionDone = flag;
 }
 
-void Settings::applyTween()
+void PenSettings::applyTween()
 {
     if (!selectionDone) {
         options->setCurrentIndex(0);
@@ -318,7 +318,7 @@ void Settings::applyTween()
     emit clickedApplyTween();
 }
 
-void Settings::setEditMode()
+void PenSettings::setEditMode()
 {
     mode = TupToolPlugin::Edit;
     apply->setToolTip(tr("Update Tween"));
@@ -326,7 +326,7 @@ void Settings::setEditMode()
     remove->setToolTip(tr("Close Tween Properties"));
 }
 
-QString Settings::currentTweenName() const
+QString PenSettings::currentTweenName() const
 {
     QString tweenName = input->text();
     if (tweenName.length() > 0)
@@ -335,33 +335,33 @@ QString Settings::currentTweenName() const
     return tweenName;
 }
 
-void Settings::updateTotalLabel(int total)
+void PenSettings::updateTotalLabel(int total)
 {
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(total));
     emit framesTotalChanged(); 
 }
 
-void Settings::undoSegment(const QPainterPath path)
+void PenSettings::undoSegment(const QPainterPath path)
 {
     stepViewer->undoSegment(path);
 }
 
-void Settings::redoSegment(const QPainterPath path)
+void PenSettings::redoSegment(const QPainterPath path)
 {
     stepViewer->redoSegment(path);
 }
 
-void Settings::enableSaveOption(bool flag)
+void PenSettings::enableSaveOption(bool flag)
 {
     apply->setEnabled(flag);
 }
 
-int Settings::stepsTotal() 
+int PenSettings::stepsTotal() 
 {
     return stepViewer->rowCount();
 }
 
-void Settings::updateSegments(const QPainterPath path)
+void PenSettings::updateSegments(const QPainterPath path)
 {
     stepViewer->updateSegments(path);
 }

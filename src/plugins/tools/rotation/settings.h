@@ -56,13 +56,13 @@ class TupItemTweener;
  * @author Gustav Gonzalez 
 */
 
-class TUPITUBE_PLUGIN Settings : public QWidget 
+class TUPITUBE_PLUGIN PenSettings : public QWidget 
 {
     Q_OBJECT
 
     public:
-        Settings(QWidget *parent = 0);
-        ~Settings();
+        PenSettings(QWidget *parent = 0);
+        ~PenSettings();
 
         void setParameters(const QString &name, int framesCount, int startFrame);
         void setParameters(TupItemTweener *currentTween);

@@ -73,7 +73,7 @@ void Configurator::loadLipSyncList(QList<QString> list)
 
 void Configurator::setPropertiesPanel()
 {
-    settingsPanel = new Settings(this);
+    settingsPanel = new PenSettings(this);
     connect(settingsPanel, SIGNAL(selectMouth(const QString &, int)), this, SIGNAL(selectMouth(const QString &, int)));
     connect(settingsPanel, SIGNAL(closeLipSyncProperties()), this, SLOT(closeSettingsPanel()));
     connect(settingsPanel, SIGNAL(initFrameHasChanged(int)), this, SIGNAL(initFrameHasChanged(int)));

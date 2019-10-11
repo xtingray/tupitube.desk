@@ -155,23 +155,13 @@ bool TupPaintAreaBase::getSafeAreaState() const
 void TupPaintAreaBase::mousePressEvent(QMouseEvent * event)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintAreaBase::mousePressEvent()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupPaintAreaBase::mousePressEvent()]";
     #endif
 
     if (!canPaint()) { 
         #ifdef TUP_DEBUG
-            QString msg = "TupPaintAreaBase::mousePressEvent() -> I can't paint right now!";
-            #ifdef Q_OS_WIN
-                qWarning() << msg;
-            #else
-                tWarning() << msg;
-            #endif
+            qWarning() << "TupPaintAreaBase::mousePressEvent() -> I can't paint right now!";
         #endif
-
         return;
     }
 
@@ -183,12 +173,7 @@ void TupPaintAreaBase::mouseMoveEvent(QMouseEvent *event)
 {
     if (!canPaint()) { 
         #ifdef TUP_DEBUG
-            QString msg = "TupPaintAreaBase::mouseMoveEvent() - Canvas is busy. Can't paint!";
-            #ifdef Q_OS_WIN
-                qWarning() << msg;
-            #else
-                tWarning() << msg;
-            #endif
+            qWarning() << "TupPaintAreaBase::mouseMoveEvent() - Canvas is busy. Can't paint!";
         #endif
 
         return;
@@ -281,26 +266,24 @@ void TupPaintAreaBase::keyReleaseEvent(QKeyEvent *event)
     QGraphicsView::keyReleaseEvent(event);
 }
 
+/*
 void TupPaintAreaBase::tabletEvent(QTabletEvent *event)
 {
-    /*
-    qDebug() << "TupPaintAreaBase::tabletEvent() - Pressure: " << event->pressure();
-    qDebug() << "TupPaintAreaBase::tabletEvent() - xTilt: " << event->xTilt();
-    qDebug() << "TupPaintAreaBase::tabletEvent() - yTilt: " << event->yTilt();
-    */
+    if (event->pressure() > 0) {
+        qDebug() << "TupPaintAreaBase::tabletEvent() - Pressure: " << event->pressure();
+        qDebug() << "TupPaintAreaBase::tabletEvent() - xTilt: " << event->xTilt();
+        qDebug() << "TupPaintAreaBase::tabletEvent() - yTilt: " << event->yTilt();
+    }
 
     QGraphicsView::tabletEvent(event);
 }
+*/
 
 void TupPaintAreaBase::enterEvent(QEvent *event)
 {
 /*
 #ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[TupPaintAreaBase::enterEvent(QEvent)";
-    #else
-        T_FUNCINFO;
-    #endif
+    qDebug() << "TupPaintAreaBase::enterEvent(QEvent)";
 #endif
 */
     if (!hasFocus())
@@ -313,11 +296,7 @@ void TupPaintAreaBase::leaveEvent(QEvent *event)
 {
 /*
 #ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[TupPaintAreaBase::leaveEvent(QEvent)";
-    #else
-        T_FUNCINFO;
-    #endif
+    qDebug() << "TupPaintAreaBase::leaveEvent(QEvent)";
 #endif
 */
     if (hasFocus())
@@ -330,11 +309,7 @@ bool TupPaintAreaBase::viewportEvent(QEvent *event)
 {
     /*
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintAreaBase::viewportEvent(QEvent)";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupPaintAreaBase::viewportEvent(QEvent)";
     #endif
     */
 
@@ -493,11 +468,7 @@ void TupPaintAreaBase::drawPadLock(QPainter *painter, const QRectF &rect, QStrin
 bool TupPaintAreaBase::canPaint() const
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintAreaBase::canPaint()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupPaintAreaBase::canPaint()";
     #endif
 
     if (gScene) {
@@ -507,12 +478,7 @@ bool TupPaintAreaBase::canPaint() const
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupPaintAreaBase::canPaint() - Warning: Scene is NULL!";
-            #ifdef Q_OS_WIN
-                qWarning() << msg;
-            #else
-                tWarning() << msg;
-            #endif
+            qWarning() << "TupPaintAreaBase::canPaint() - Warning: Scene is NULL!";
         #endif
     }
 

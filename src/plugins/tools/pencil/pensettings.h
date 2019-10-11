@@ -33,44 +33,33 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef CONFIGURATOR_H
-#define CONFIGURATOR_H
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
 #include "tglobal.h"
+#include "tapplicationproperties.h"
 
-#include <QSpinBox>
-#include <QCheckBox>
 #include <QDoubleSpinBox>
+#include <QCheckBox>
 
-/**
- * @author Gustav Gonzalez 
-*/
-
-class TUPITUBE_PLUGIN Configurator : public QWidget
+class TUPITUBE_PLUGIN PenSettings : public QWidget
 {
     Q_OBJECT
 
     public:
-        enum Structure { Basic = 0, Axial, Organic };
+        PenSettings(QWidget *parent = nullptr);
+        ~PenSettings();
 
-        Configurator(QWidget *parent = 0);
-        ~Configurator();
-
-        int spacingValue();
-        qreal sizeToleranceValue();
-        double smoothness() const;
-        bool showBorder();
-        int borderSizeValue();
+        // double smoothness() const;
 
     signals:
-        void updateSpacing(int value);
-        void updateSizeTolerance(int value);
+        void smoothnessUpdated(double value);
 
+    private slots:
+        void updateSmoothBox(bool enabled);
+        
     private:
-        QSpinBox *spacingBox;
-        QSpinBox *sizeBox;
-        QCheckBox *borderOption;
-        QSpinBox *borderSizeBox;
+        QCheckBox *smoothLabel;
         QDoubleSpinBox *smoothBox;
 };
 

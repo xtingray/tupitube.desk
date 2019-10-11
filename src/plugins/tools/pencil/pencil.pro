@@ -17,10 +17,10 @@ INSTALLS += target
 target.path = /plugins/
 
 HEADERS += penciltool.h \
-           settings.h
+           pensettings.h
 
 SOURCES += penciltool.cpp \
-           settings.cpp
+           pensetttings.cpp
 
 FRAMEWORK_DIR = "../../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

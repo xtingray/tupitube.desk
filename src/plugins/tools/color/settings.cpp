@@ -46,7 +46,7 @@
 #include <QColorDialog>
 #include <QDir>
 
-Settings::Settings(QWidget *parent) : QWidget(parent)
+PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
 {
     selectionDone = false;
     totalStepsCount = 0;
@@ -94,7 +94,7 @@ Settings::Settings(QWidget *parent) : QWidget(parent)
     activatePropertiesMode(TupToolPlugin::Selection);
 }
 
-Settings::~Settings()
+PenSettings::~PenSettings()
 {
     delete innerPanel;
     delete layout;
@@ -113,7 +113,7 @@ Settings::~Settings()
     delete remove;
 }
 
-void Settings::setInnerForm()
+void PenSettings::setInnerForm()
 {
     innerPanel = new QWidget;
 
@@ -258,7 +258,7 @@ void Settings::setInnerForm()
     activeInnerForm(false);
 }
 
-void Settings::activeInnerForm(bool enable)
+void PenSettings::activeInnerForm(bool enable)
 {
     if (enable && !innerPanel->isVisible()) {
        propertiesDone = true;
@@ -271,7 +271,7 @@ void Settings::activeInnerForm(bool enable)
 
 // Adding new Tween
 
-void Settings::setParameters(const QString &name, int framesCount, int initFrame)
+void PenSettings::setParameters(const QString &name, int framesCount, int initFrame)
 {
     mode = TupToolPlugin::Add;
     input->setText(name);
@@ -286,7 +286,7 @@ void Settings::setParameters(const QString &name, int framesCount, int initFrame
 
 // Editing current Tween
 
-void Settings::setParameters(TupItemTweener *currentTween)
+void PenSettings::setParameters(TupItemTweener *currentTween)
 {
     setEditMode();
     activatePropertiesMode(TupToolPlugin::Properties);
@@ -313,7 +313,7 @@ void Settings::setParameters(TupItemTweener *currentTween)
     reverseLoopBox->setChecked(currentTween->tweenColorReverseLoop());
 }
 
-void Settings::initStartCombo(int framesCount, int currentIndex)
+void PenSettings::initStartCombo(int framesCount, int currentIndex)
 {
     initFrame->clear();
     endFrame->clear();
@@ -326,7 +326,7 @@ void Settings::initStartCombo(int framesCount, int currentIndex)
     endFrame->setValue(framesCount);
 }
 
-void Settings::setStartFrame(int currentIndex)
+void PenSettings::setStartFrame(int currentIndex)
 {
     initFrame->setValue(currentIndex + 1);
     int end = endFrame->value();
@@ -334,22 +334,22 @@ void Settings::setStartFrame(int currentIndex)
        endFrame->setValue(currentIndex + 1);
 }
 
-int Settings::startFrame()
+int PenSettings::startFrame()
 {
     return initFrame->value() - 1;
 }
 
-int Settings::startComboSize()
+int PenSettings::startComboSize()
 {
     return initFrame->maximum();
 }
 
-int Settings::totalSteps()
+int PenSettings::totalSteps()
 {
     return endFrame->value() - (initFrame->value() - 1);
 }
 
-void Settings::setEditMode()
+void PenSettings::setEditMode()
 {
     mode = TupToolPlugin::Edit;
     apply->setToolTip(tr("Update Tween"));
@@ -357,7 +357,7 @@ void Settings::setEditMode()
     remove->setToolTip(tr("Close Tween Properties"));
 }
 
-void Settings::applyTween()
+void PenSettings::applyTween()
 {
     if (!selectionDone) {
         TOsd::self()->display(tr("Info"), tr("You must select at least one object!"), TOsd::Info);
@@ -379,25 +379,25 @@ void Settings::applyTween()
     emit clickedApplyTween();
 }
 
-void Settings::notifySelection(bool flag)
+void PenSettings::notifySelection(bool flag)
 {
     selectionDone = flag;
 }
 
-void Settings::setInitialColor()
+void PenSettings::setInitialColor()
 {
     initialColor = QColorDialog::getColor(initialColor, this);
     updateColor(initialColor, initColorButton);
 }
 
-void Settings::setInitialColor(QColor color) {
+void PenSettings::setInitialColor(QColor color) {
     initialColor = color;
     endingColor = QColor("#fff");
     updateColor(initialColor, initColorButton);
     updateColor(endingColor, endColorButton);
 }
 
-QString Settings::currentTweenName() const
+QString PenSettings::currentTweenName() const
 {
     QString tweenName = input->text();
     if (tweenName.length() > 0)
@@ -406,7 +406,7 @@ QString Settings::currentTweenName() const
     return tweenName;
 }
 
-void Settings::emitOptionChanged(int option)
+void PenSettings::emitOptionChanged(int option)
 {
     switch (option) {
         case 0:
@@ -428,7 +428,7 @@ void Settings::emitOptionChanged(int option)
     }
 }
 
-QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFrame)
+QString PenSettings::tweenToXml(int currentScene, int currentLayer, int currentFrame)
 {
     QDomDocument doc;
 
@@ -540,17 +540,17 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     return doc.toString();
 }
 
-void Settings::activateMode(TupToolPlugin::EditMode mode)
+void PenSettings::activateMode(TupToolPlugin::EditMode mode)
 {
     options->setCurrentIndex(mode);
 }
 
-void Settings::activatePropertiesMode(TupToolPlugin::EditMode mode)
+void PenSettings::activatePropertiesMode(TupToolPlugin::EditMode mode)
 {
     options->setCurrentIndex(mode);
 }
 
-void Settings::checkFramesRange()
+void PenSettings::checkFramesRange()
 {
     int begin = initFrame->value();
     int end = endFrame->value();
@@ -571,27 +571,27 @@ void Settings::checkFramesRange()
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(totalStepsCount));
 }
 
-void Settings::updateLoopCheckbox(int state)
+void PenSettings::updateLoopCheckbox(int state)
 {
     Q_UNUSED(state);
     if (reverseLoopBox->isChecked() && loopBox->isChecked())
        loopBox->setChecked(false);
 }
 
-void Settings::updateReverseCheckbox(int state)
+void PenSettings::updateReverseCheckbox(int state)
 {
     Q_UNUSED(state);
     if (reverseLoopBox->isChecked() && loopBox->isChecked())
        reverseLoopBox->setChecked(false);
 }
 
-void Settings::setEndingColor()
+void PenSettings::setEndingColor()
 {
     endingColor = QColorDialog::getColor(endingColor, this);
     updateColor(endingColor, endColorButton);
 }
 
-void Settings::updateColor(QColor color, QPushButton *colorButton)
+void PenSettings::updateColor(QColor color, QPushButton *colorButton)
 {
     if (color.isValid()) {
         colorButton->setText(color.name());
@@ -600,7 +600,7 @@ void Settings::updateColor(QColor color, QPushButton *colorButton)
     }
 }
 
-QString Settings::labelColor(QColor color) const
+QString PenSettings::labelColor(QColor color) const
 {
     QString text = "white";
     if (color.red() > 50 && color.green() > 50 && color.blue() > 50)
@@ -608,14 +608,14 @@ QString Settings::labelColor(QColor color) const
     return text;
 }
 
-void Settings::updateRangeFromInit(int begin)
+void PenSettings::updateRangeFromInit(int begin)
 {
     int end = endFrame->value();
     totalStepsCount = end - begin + 1;
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(totalStepsCount));
 }
 
-void Settings::updateRangeFromEnd(int end)
+void PenSettings::updateRangeFromEnd(int end)
 {
     int begin = initFrame->value();
     totalStepsCount = end - begin + 1;

@@ -108,7 +108,7 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
 
         QBoxLayout *layout;
         QBoxLayout *settingsLayout;
-        Settings *settingsPanel;
+        PenSettings *settingsPanel;
         TweenManager *tweenManager;
         ButtonsPanel *controlPanel;
 

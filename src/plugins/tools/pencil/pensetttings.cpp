@@ -33,23 +33,23 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "settings.h"
+#include "pensettings.h"
 #include "timagebutton.h"
 #include "tconfig.h"
 #include "tseparator.h"
 
-Settings::Settings(QWidget *parent) : QWidget(parent)
+#include <QBoxLayout>
+#include <QLabel>
+
+PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Settings()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "PenSettings()";
     #endif
 
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
+    layout->setAlignment(Qt::AlignHCenter);
 
     QLabel *toolTitle = new QLabel;
     toolTitle->setAlignment(Qt::AlignHCenter);
@@ -59,16 +59,18 @@ Settings::Settings(QWidget *parent) : QWidget(parent)
     layout->addWidget(toolTitle);
     layout->addWidget(new TSeparator(Qt::Horizontal));
 
-    QLabel *label = new QLabel(tr("Smoothness"));
-    label->setAlignment(Qt::AlignHCenter); 
-    layout->addWidget(label);
-    m_smoothness = new QDoubleSpinBox();
+    smoothLabel = new QCheckBox(tr("Smoothness"));
+    smoothLabel->setChecked(true);
+    connect(smoothLabel, SIGNAL(toggled(bool)), this, SLOT(updateSmoothBox(bool)));
+    layout->addWidget(smoothLabel);
 
-    m_smoothness->setDecimals(2);
-    m_smoothness->setSingleStep(0.1);
-    m_smoothness->setMinimum(0);
-    m_smoothness->setMaximum(20);
-    layout->addWidget(m_smoothness);
+    smoothBox = new QDoubleSpinBox();
+    smoothBox->setDecimals(2);
+    smoothBox->setSingleStep(0.1);
+    smoothBox->setMinimum(0);
+    smoothBox->setMaximum(20);
+    connect(smoothBox, SIGNAL(valueChanged(double)), this, SIGNAL(smoothnessUpdated(double)));
+    layout->addWidget(smoothBox);
 
     mainLayout->addLayout(layout);
 
@@ -76,14 +78,18 @@ Settings::Settings(QWidget *parent) : QWidget(parent)
 
     TCONFIG->beginGroup("PencilTool");
     double smoothness = TCONFIG->value("Smoothness", 4.0).toDouble();
-    m_smoothness->setValue(smoothness);
+    smoothBox->setValue(smoothness);
 }
 
-Settings::~Settings()
+PenSettings::~PenSettings()
 {
 }
 
-double Settings::smoothness() const
+void PenSettings::updateSmoothBox(bool enabled)
 {
-    return m_smoothness->value();
+    smoothBox->setEnabled(enabled);
+    if (!enabled)
+        emit smoothnessUpdated(0);
+    else
+        emit smoothnessUpdated(smoothBox->value());
 }

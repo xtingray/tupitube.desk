@@ -39,7 +39,7 @@
 
 #include <QDir>
 
-Settings::Settings(QWidget *parent) : QWidget(parent)
+PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
 {
     shearAxes = TupItemTweener::XY;
     selectionDone = false;
@@ -88,11 +88,11 @@ Settings::Settings(QWidget *parent) : QWidget(parent)
     activateMode(TupToolPlugin::Selection);
 }
 
-Settings::~Settings()
+PenSettings::~PenSettings()
 {
 }
 
-void Settings::setInnerForm()
+void PenSettings::setInnerForm()
 {
     innerPanel = new QWidget;
 
@@ -219,7 +219,7 @@ void Settings::setInnerForm()
     activeInnerForm(false);
 }
 
-void Settings::activeInnerForm(bool enable)
+void PenSettings::activeInnerForm(bool enable)
 {
     if (enable && !innerPanel->isVisible()) {
         propertiesDone = true;
@@ -232,7 +232,7 @@ void Settings::activeInnerForm(bool enable)
 
 // Adding new Tween
 
-void Settings::setParameters(const QString &name, int framesCount, int initFrame)
+void PenSettings::setParameters(const QString &name, int framesCount, int initFrame)
 {
     mode = TupToolPlugin::Add;
     input->setText(name);
@@ -248,7 +248,7 @@ void Settings::setParameters(const QString &name, int framesCount, int initFrame
 
 // Editing new Tween
 
-void Settings::setParameters(TupItemTweener *currentTween)
+void PenSettings::setParameters(TupItemTweener *currentTween)
 {
     setEditMode();
     activateMode(TupToolPlugin::Properties);
@@ -269,7 +269,7 @@ void Settings::setParameters(TupItemTweener *currentTween)
     reverseLoopBox->setChecked(currentTween->tweenShearReverseLoop());
 }
 
-void Settings::initStartCombo(int framesCount, int currentIndex)
+void PenSettings::initStartCombo(int framesCount, int currentIndex)
 {
     initFrameSpin->clear();
     endFrameSpin->clear();
@@ -282,7 +282,7 @@ void Settings::initStartCombo(int framesCount, int currentIndex)
     endFrameSpin->setValue(framesCount);
 }
 
-void Settings::setStartFrame(int currentIndex)
+void PenSettings::setStartFrame(int currentIndex)
 {
     initFrameSpin->setValue(currentIndex + 1);
     int end = endFrameSpin->value();
@@ -290,22 +290,22 @@ void Settings::setStartFrame(int currentIndex)
         endFrameSpin->setValue(currentIndex + 1);
 }
 
-int Settings::startFrame()
+int PenSettings::startFrame()
 {
     return initFrameSpin->value() - 1;
 }
 
-int Settings::startComboSize()
+int PenSettings::startComboSize()
 {
     return initFrameSpin->maximum();
 }
 
-int Settings::totalSteps()
+int PenSettings::totalSteps()
 {
     return endFrameSpin->value() - (initFrameSpin->value() - 1);
 }
 
-void Settings::setEditMode()
+void PenSettings::setEditMode()
 {
     mode = TupToolPlugin::Edit;
     apply->setToolTip(tr("Update Tween"));
@@ -313,7 +313,7 @@ void Settings::setEditMode()
     remove->setToolTip(tr("Close Tween Properties"));
 }
 
-void Settings::applyTween()
+void PenSettings::applyTween()
 {
     if (!selectionDone) {
         TOsd::self()->display(tr("Info"), tr("You must select at least one object!"), TOsd::Info);
@@ -336,12 +336,12 @@ void Settings::applyTween()
     emit clickedApplyTween();
 }
 
-void Settings::notifySelection(bool flag)
+void PenSettings::notifySelection(bool flag)
 {
     selectionDone = flag;
 }
 
-QString Settings::currentTweenName() const
+QString PenSettings::currentTweenName() const
 {
     QString tweenName = input->text();
     if (tweenName.length() > 0)
@@ -350,7 +350,7 @@ QString Settings::currentTweenName() const
     return tweenName;
 }
 
-void Settings::emitOptionChanged(int option)
+void PenSettings::emitOptionChanged(int option)
 {
     switch (option) {
         case 0:
@@ -372,7 +372,7 @@ void Settings::emitOptionChanged(int option)
     }
 }
 
-QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point)
+QString PenSettings::tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point)
 {
     QDomDocument doc;
 
@@ -467,12 +467,12 @@ QString Settings::tweenToXml(int currentScene, int currentLayer, int currentFram
     return doc.toString();
 }
 
-void Settings::activateMode(TupToolPlugin::EditMode mode)
+void PenSettings::activateMode(TupToolPlugin::EditMode mode)
 {
     options->setCurrentIndex(mode);
 }
 
-void Settings::checkFramesRange()
+void PenSettings::checkFramesRange()
 {
     int begin = initFrameSpin->value();
     int end = endFrameSpin->value();
@@ -497,7 +497,7 @@ void Settings::checkFramesRange()
         iterationsCombo->setValue(stepsCounter);
 }
 
-void Settings::updateLoopCheckbox(int state)
+void PenSettings::updateLoopCheckbox(int state)
 {
     Q_UNUSED(state);
 
@@ -505,7 +505,7 @@ void Settings::updateLoopCheckbox(int state)
         loopBox->setChecked(false);
 }
 
-void Settings::updateReverseCheckbox(int state)
+void PenSettings::updateReverseCheckbox(int state)
 {
     Q_UNUSED(state);
 
@@ -513,14 +513,14 @@ void Settings::updateReverseCheckbox(int state)
         reverseLoopBox->setChecked(false);
 }
 
-void Settings::updateRangeFromInit(int begin)
+void PenSettings::updateRangeFromInit(int begin)
 {
     int end = endFrameSpin->value();
     stepsCounter = end - begin + 1;
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepsCounter));
 }
 
-void Settings::updateRangeFromEnd(int end)
+void PenSettings::updateRangeFromEnd(int end)
 {
     int begin = initFrameSpin->value();
     stepsCounter = end - begin + 1;

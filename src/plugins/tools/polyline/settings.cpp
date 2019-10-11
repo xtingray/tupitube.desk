@@ -37,7 +37,7 @@
 #include "tapplicationproperties.h"
 #include "tseparator.h"
 
-Settings::Settings(QWidget *parent) : QWidget(parent)
+PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -72,7 +72,7 @@ Settings::Settings(QWidget *parent) : QWidget(parent)
     mainLayout->addStretch(2);
 }
 
-Settings::~Settings()
+PenSettings::~PenSettings()
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN

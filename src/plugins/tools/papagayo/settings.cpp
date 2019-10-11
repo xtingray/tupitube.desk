@@ -36,7 +36,7 @@
 #include "settings.h"
 #include "timagebutton.h"
 
-Settings::Settings(QWidget *parent) : QWidget(parent)
+PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
 {
     layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
@@ -44,11 +44,11 @@ Settings::Settings(QWidget *parent) : QWidget(parent)
     setInnerForm();
 }
 
-Settings::~Settings()
+PenSettings::~PenSettings()
 {
 }
 
-void Settings::setInnerForm()
+void PenSettings::setInnerForm()
 {
     innerPanel = new QWidget;
 
@@ -195,7 +195,7 @@ void Settings::setInnerForm()
 
 // Editing new LipSync 
 
-void Settings::openLipSyncProperties(TupLipSync *lipsync)
+void PenSettings::openLipSyncProperties(TupLipSync *lipsync)
 {
     name = lipsync->getLipSyncName();
     initFrame = lipsync->getInitFrame();
@@ -231,7 +231,7 @@ void Settings::openLipSyncProperties(TupLipSync *lipsync)
     }
 }
 
-void Settings::setCurrentMouth(int index) 
+void PenSettings::setCurrentMouth(int index) 
 {
     QString tail = ":" + QString::number(index);
     QString id = "lipsync:" + name + tail;
@@ -242,7 +242,7 @@ void Settings::setCurrentMouth(int index)
     emit selectMouth(id, index);
 }
 
-void Settings::updateInitFrame(int index)
+void PenSettings::updateInitFrame(int index)
 {
     int frame = index - 1;
 
@@ -252,13 +252,13 @@ void Settings::updateInitFrame(int index)
     }
 }
 
-void Settings::updateInterfaceRecords()
+void PenSettings::updateInterfaceRecords()
 {
     int endIndex = initFrame + framesCount;
     endingLabel->setText(tr("Ending at frame") + ": " + QString::number(endIndex));
 }
 
-void Settings::setPos(const QPointF &point) 
+void PenSettings::setPos(const QPointF &point) 
 {
     qreal x = point.x();
     qreal y = point.y();
@@ -273,7 +273,7 @@ void Settings::setPos(const QPointF &point)
     yPosField->blockSignals(false);
 }
 
-void Settings::setPhoneme(const QString &phoneme)
+void PenSettings::setPhoneme(const QString &phoneme)
 {
     phonemeLabel->setText(tr("Current Phoneme") + ": " + "<b>" + phoneme + "</b>");
 }

@@ -38,7 +38,7 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
-#include "settings.h"
+#include "pensettings.h"
 #include "tuppathitem.h"
 #include "tupprojectresponse.h"
 
@@ -55,13 +55,14 @@
 #include "tconfig.h"
 
 #include <QObject>
-#include <QSpinBox>
 #include <QPointF>
-#include <QKeySequence>
-#include <QGraphicsPathItem>
 #include <QPainterPath>
-#include <QGraphicsLineItem>
 #include <QGraphicsEllipseItem>
+
+// #include <QSpinBox>
+// #include <QKeySequence>
+// #include <QGraphicsPathItem>
+// #include <QGraphicsLineItem>
 
 class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
 {
@@ -99,11 +100,14 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
         void callForPlugin(int menu, int index);
         void penWidthChanged(int width);
 
+    private slots:
+        void updateSmoothness(double value);
+
     private:
         QPointF firstPoint;
         QPointF oldPos;
         QPainterPath path;
-        Settings *configPanel;
+        PenSettings *settings;
         QMap<QString, TAction *> penActions;
         TupPathItem *item;
         QCursor penCursor;
@@ -116,6 +120,7 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
         int circleZValue;
         QPointF penCirclePos;
         int penWidth;
+        double smoothness;
 };
 
 #endif

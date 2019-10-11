@@ -46,12 +46,12 @@ TupToolPlugin::~TupToolPlugin()
 
 void TupToolPlugin::init(TupGraphicsScene *scene)
 {
-    Q_UNUSED(scene);
+    Q_UNUSED(scene)
 }
 
 void TupToolPlugin::updateScene(TupGraphicsScene *scene)
 {
-    Q_UNUSED(scene);
+    Q_UNUSED(scene)
 }
 
 void TupToolPlugin::setName(const QString &tool)
@@ -67,45 +67,35 @@ QString TupToolPlugin::name() const
 void TupToolPlugin::begin()
 {
 #ifdef TUP_DEBUG
-    QString msg = "TupToolPlugin::begin() - Begin: " + currentTool;
-    #ifdef Q_OS_WIN
-        qWarning() << msg;
-    #else
-        tWarning() << msg;
-    #endif
+    qWarning() << "TupToolPlugin::begin() - Begin: " + currentTool;
 #endif
 }
 
 void TupToolPlugin::end()
 {
 #ifdef TUP_DEBUG
-    QString msg = "TupToolPlugin::end() - End: " + currentTool;
-    #ifdef Q_OS_WIN
-        qWarning() << msg;
-    #else
-        tWarning("tools") << msg;
-    #endif
+    qWarning() << "TupToolPlugin::end() - End: " + currentTool;
 #endif
 }
 
 void TupToolPlugin::sceneResponse(const TupSceneResponse *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
 }
 
 void TupToolPlugin::layerResponse(const TupLayerResponse *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
 }
 
 void TupToolPlugin::frameResponse(const TupFrameResponse *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
 }
 
 void TupToolPlugin::itemResponse(const TupItemResponse *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
 }
 
 void TupToolPlugin::doubleClick(const TupInputDeviceInformation *, TupGraphicsScene *)
@@ -114,17 +104,17 @@ void TupToolPlugin::doubleClick(const TupInputDeviceInformation *, TupGraphicsSc
 
 void TupToolPlugin::aboutToChangeScene(TupGraphicsScene *scene)
 {
-    Q_UNUSED(scene);
+    Q_UNUSED(scene)
 }
 
 void TupToolPlugin::keyPressEvent(QKeyEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
 }
 
 void TupToolPlugin::keyReleaseEvent(QKeyEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
 }
 
 QMenu *TupToolPlugin::menu() const
@@ -144,22 +134,22 @@ QCursor TupToolPlugin::polyCursor() const
 
 void TupToolPlugin::updatePos(QPointF pos)
 {
-    Q_UNUSED(pos);
+    Q_UNUSED(pos)
 }
 
 void TupToolPlugin::resizeNode(qreal factor)
 {
-    Q_UNUSED(factor);
+    Q_UNUSED(factor)
 }
 
 void TupToolPlugin::updateZoomFactor(qreal factor)
 {
-    Q_UNUSED(factor);
+    Q_UNUSED(factor)
 }
 
 void TupToolPlugin::setProjectSize(const QSize size)
 {
-    Q_UNUSED(size);
+    Q_UNUSED(size)
 }
 
 QPair<int, int> TupToolPlugin::setKeyAction(int key, Qt::KeyboardModifiers modifiers)
@@ -307,12 +297,12 @@ TupToolPlugin::EditMode TupToolPlugin::currentEditMode()
 
 void TupToolPlugin::setActiveView(const QString &viewID)
 {
-    Q_UNUSED(viewID);
+    Q_UNUSED(viewID)
 }
 
 void TupToolPlugin::setCurrentItem(const QString &id)
 {
-    Q_UNUSED(id);
+    Q_UNUSED(id)
 }
 
 void TupToolPlugin::updateWorkSpaceContext()
@@ -325,5 +315,10 @@ void TupToolPlugin::clearSelection()
 
 void TupToolPlugin::setColorMode(TColorCell::FillType mode)
 {
-    Q_UNUSED(mode);
+    Q_UNUSED(mode)
+}
+
+void TupToolPlugin::updatePressure(qreal pressure)
+{
+    Q_UNUSED(pressure)
 }

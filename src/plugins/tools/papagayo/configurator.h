@@ -92,7 +92,7 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void activeLipSyncManagerPanel(bool enable);
 
         QBoxLayout *settingsLayout;
-        Settings *settingsPanel;
+        PenSettings *settingsPanel;
         LipSyncManager *manager;
 };
 

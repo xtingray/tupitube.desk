@@ -38,7 +38,7 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
-#include "configurator.h"
+#include "inksettings.h"
 #include "tuppathitem.h"
 
 #include <QObject>
@@ -75,18 +75,22 @@ class TUPITUBE_PLUGIN InkTool : public TupToolPlugin
         virtual void saveConfig();
         virtual void keyPressEvent(QKeyEvent *event);
         virtual QCursor polyCursor() const;
+        void updatePressure(qreal pressure);
 
     signals:
         void closeHugeCanvas();
         void callForPlugin(int menu, int index);
         
+    private slots:
+        void updateBorderFlag(bool border);
+        void updateFillFlag(bool fill);
+        void updateBorderSize(int size);
+        void updatePressure(int value);
+        void updateSmoothness(double value);
+
     private:
         void setupActions();
         void smoothPath(QPainterPath &guidePainterPath, double smoothness, int from = 0, int to = -1);
-
-    private slots:
-        // void updateSpacingVar(int value);
-        // void updateSizeToleranceVar(int value);
 
     private:
         QPointF firstPoint;
@@ -96,28 +100,29 @@ class TUPITUBE_PLUGIN InkTool : public TupToolPlugin
         QPointF firstHalfPrevious;
         bool firstHalfOnTop;
         QPointF secondHalfPrevious;
-        // QPointF connector;
 
         QPainterPath guidePainterPath;
         QPainterPath inkPath;
         QList<QPointF> shapePoints;
 
-        Configurator *configPanel;
+        InkSettings *configPanel;
         QMap<QString, TAction *> inkActions;
 
         TupPathItem *guidePath;
 
-        int dotsCounter;
+        int borderSize;
+        qreal initPenWidth;
         qreal penWidth;
+        qreal penPress;
         qreal oldSlope;
         int arrowSize;
         int firstArrow;
         QCursor inkCursor;
 
-        int spacing;
-        qreal tolerance;
-        qreal widthVar;
-        qreal smoothness;
+        int sensibility;
+        double smoothness;
+        bool showBorder;
+        bool showFill;
 
         Direction previousDirection;
 };

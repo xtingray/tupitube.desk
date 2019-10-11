@@ -45,11 +45,7 @@
 TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent) : TupPaintAreaBase(parent, work->getDimension(), work->getLibrary())
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "TupPaintArea()";
     #endif
 
     setAccessibleName("WORKSPACE");
@@ -70,11 +66,7 @@ TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent) : TupPaintAreaBase
 TupPaintArea::~TupPaintArea()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupPaintArea()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "~TupPaintArea()";
     #endif
 
     graphicsScene()->clear();
@@ -84,11 +76,7 @@ TupPaintArea::~TupPaintArea()
 void TupPaintArea::setCurrentScene(int index)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea::setCurrentScene()]";
-        #else
-            T_FUNCINFO << "Scene index: " << index;
-        #endif
+        qDebug() << "TupPaintArea::setCurrentScene() - Scene index: " << index;
     #endif
 
     if (project->scenesCount() > 0) {
@@ -103,26 +91,14 @@ void TupPaintArea::setCurrentScene(int index)
                 graphicsScene()->setCurrentScene(nullptr);
             } else {
                 #ifdef TUP_DEBUG
-                    QString msg1 = "TupPaintArea::setCurrentScene() - [ Fatal Error ] -  No scenes available. Invalid index -> " + QString::number(index);
-                    QString msg2 = "TupPaintArea::setCurrentScene() - Scenes total -> " + QString::number(project->scenesCount());
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg1;
-                        qDebug() << msg2;
-                    #else
-                        tError() << msg1;
-                        tError() << msg2;
-                    #endif
+                    qDebug() << "TupPaintArea::setCurrentScene() - [ Fatal Error ] -  No scenes available. Invalid index -> " + QString::number(index);
+                    qDebug() << "TupPaintArea::setCurrentScene() - Scenes total -> " + QString::number(project->scenesCount());
                 #endif
             }
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupPaintArea::setCurrentScene() - No scenes available!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupPaintArea::setCurrentScene() - No scenes available!";
         #endif
     }
 }
@@ -130,11 +106,7 @@ void TupPaintArea::setCurrentScene(int index)
 void TupPaintArea::mousePressEvent(QMouseEvent *event)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea::mousePressEvent()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupPaintArea::mousePressEvent()";
     #endif
 
     if (!canvasEnabled)
@@ -144,23 +116,13 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
     if (frame) {
         if (frame->isFrameLocked()) {
             #ifdef TUP_DEBUG
-                QString msg = "TupPaintArea::mousePressEvent() - Frame is locked!";
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tFatal() << msg;
-                #endif
+                qDebug() << "TupPaintArea::mousePressEvent() - Frame is locked!";
             #endif
             return;
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupPaintArea::mousePressEvent() - Frame is NULL!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tFatal() << msg;
-            #endif
+            qDebug() << "TupPaintArea::mousePressEvent() - Frame is NULL!";
         #endif
         return;
     }
@@ -290,40 +252,29 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
     TupPaintAreaBase::mousePressEvent(event);
 }
 
-/*
 void TupPaintArea::tabletEvent(QTabletEvent *event)
 {
-    qDebug() << "TupPaintArea::tabletEvent() - Pressure: " << event->pressure();
-    qDebug() << "TupPaintArea::tabletEvent() - xTilt: " << event->xTilt();
-    qDebug() << "TupPaintArea::tabletEvent() - yTilt: " << event->yTilt();
+    if (currentTool.compare(tr("Ink")) == 0) {
+        if (event->pressure() > 0)
+            graphicsScene()->currentTool()->updatePressure(event->pressure());
+    }
 
     TupPaintAreaBase::tabletEvent(event);
 }
-*/
 
 void TupPaintArea::frameResponse(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupPaintArea::frameResponse() - [" + QString::number(response->getSceneIndex()) 
-                      + ", " + QString::number(response->getLayerIndex()) + ", " 
-                      + QString::number(response->getFrameIndex()) + "] | request -> "
-                      + QString::number(response->getAction());
-        #ifdef Q_OS_WIN
-            qDebug() << msg;
-        #else
-            tDebug() << msg;
-        #endif
+        qDebug() << "TupPaintArea::frameResponse() - [" + QString::number(response->getSceneIndex())
+                    + ", " + QString::number(response->getLayerIndex()) + ", "
+                    + QString::number(response->getFrameIndex()) + "] | request -> "
+                    + QString::number(response->getAction());
     #endif
 
     TupGraphicsScene *guiScene = graphicsScene();
     if (!guiScene->currentScene()) {
         #ifdef TUP_DEBUG
-            QString msg = "TupPaintArea::frameResponse() - Fatal error: No TupScene available!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupPaintArea::frameResponse() - Fatal error: No TupScene available!";
         #endif
         return;
     }
