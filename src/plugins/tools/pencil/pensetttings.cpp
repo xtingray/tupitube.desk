@@ -73,12 +73,7 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     layout->addWidget(smoothBox);
 
     mainLayout->addLayout(layout);
-
     mainLayout->addStretch(2);
-
-    TCONFIG->beginGroup("PencilTool");
-    double smoothness = TCONFIG->value("Smoothness", 4.0).toDouble();
-    smoothBox->setValue(smoothness);
 }
 
 PenSettings::~PenSettings()
@@ -92,4 +87,11 @@ void PenSettings::updateSmoothBox(bool enabled)
         emit smoothnessUpdated(0);
     else
         emit smoothnessUpdated(smoothBox->value());
+}
+
+void PenSettings::updateSmoothness(double value)
+{
+    smoothBox->blockSignals(true);
+    smoothBox->setValue(value);
+    smoothBox->blockSignals(false);
 }

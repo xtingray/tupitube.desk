@@ -43,6 +43,7 @@
 */
 
 #include "tupgraphicalgorithm.h"
+#include <cmath>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -537,18 +538,19 @@ QPointF *fitCubic(QPolygonF &points,int first,int last,FitVector tHat1,FitVector
     tHatCenter = computeCenterTangent(points, splitPoint);
 
     int w1,w2;
-    QPointF *cu1=NULL, *cu2=NULL;
+    QPointF *cu1 = nullptr;
+    QPointF *cu2 = nullptr;
     cu1 = fitCubic(points, first, splitPoint, tHat1, tHatCenter, error,w1);
 
     tHatCenter.negate();
     cu2 = fitCubic(points, splitPoint, last, tHatCenter, tHat2, error,w2);
 
-    QPointF *newcurve = new QPointF[w1+w2];
-    for (int i=0;i<w1;i++)
-         newcurve[i]=cu1[i];
+    QPointF *newcurve = new QPointF[w1 + w2];
+    for (int i = 0; i < w1; i++)
+         newcurve[i] = cu1[i];
 
-    for (int i=0;i<w2;i++)
-         newcurve[i+w1]=cu2[i];
+    for (int i = 0; i < w2; i++)
+         newcurve[i+w1] = cu2[i];
     
     delete[] cu1;
     delete[] cu2;
@@ -557,16 +559,16 @@ QPointF *fitCubic(QPolygonF &points,int first,int last,FitVector tHat1,FitVector
     return newcurve;
 }
 
-QPainterPath TupGraphicalAlgorithm::bezierFit(QPolygonF &points_,float error, int from, int to)
+QPainterPath TupGraphicalAlgorithm::bezierFit(QPolygonF &pPoints,float error, int from, int to)
 {
-    if (points_.count() < 3) {
+    if (pPoints.count() < 3) {
         QPainterPath ret;
-        ret.addPolygon(points_);
+        ret.addPolygon(pPoints);
 
         return ret;
     }
     
-    QPolygonF points = TupGraphicalAlgorithm::polygonFit(points_);
+    QPolygonF points = TupGraphicalAlgorithm::polygonFit(pPoints);
     
     FitVector tHat1, tHat2;
     
@@ -583,7 +585,7 @@ QPainterPath TupGraphicalAlgorithm::bezierFit(QPolygonF &points_,float error, in
     QPointF *curve;
     
     if (points.count() < MAXPOINTS) {
-        curve = fitCubic(points,from,to,tHat1,tHat2,error,width);
+        curve = fitCubic(points, from, to, tHat1, tHat2, error, width);
     } else {
         QPainterPath path;
         
@@ -602,14 +604,12 @@ QPainterPath TupGraphicalAlgorithm::bezierFit(QPolygonF &points_,float error, in
         
         return path;
     }
+
+    QPainterPath path = QPainterPath();
     
-    QPainterPath path;
-    
-    path = QPainterPath();
-    
-    if (width>3) {
+    if (width > 3) {
         path.moveTo(curve[0]);
-        
+
         for (int i = 0; i < width; i += 4)
              path.cubicTo( curve[i+1], curve[i+2], curve[i+3]);
     } else {

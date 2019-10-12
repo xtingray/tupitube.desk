@@ -49,7 +49,7 @@
 
 InkTool::InkTool()
 {
-    configPanel = nullptr;
+    settings = nullptr;
     guidePath = nullptr;
     inkCursor = QCursor(kAppProp->themeDir() + "cursors/ink.png", 0, 16);
 
@@ -1187,16 +1187,24 @@ int InkTool::toolType() const
 
 QWidget *InkTool::configurator()
 {
-    if (!configPanel) {
-        configPanel = new InkSettings;
-        connect(configPanel, SIGNAL(borderUpdated(bool)), this, SLOT(updateBorderFlag(bool)));
-        connect(configPanel, SIGNAL(fillUpdated(bool)), this, SLOT(updateFillFlag(bool)));
-        connect(configPanel, SIGNAL(borderSizeUpdated(int)), this, SLOT(updateBorderSize(int)));
-        connect(configPanel, SIGNAL(pressureUpdated(int)), this, SLOT(updatePressure(int)));
-        connect(configPanel, SIGNAL(smoothnessUpdated(double)), this, SLOT(updateSmoothness(double)));
+    if (!settings) {
+        settings = new InkSettings;
+        connect(settings, SIGNAL(borderUpdated(bool)), this, SLOT(updateBorderFlag(bool)));
+        connect(settings, SIGNAL(fillUpdated(bool)), this, SLOT(updateFillFlag(bool)));
+        connect(settings, SIGNAL(borderSizeUpdated(int)), this, SLOT(updateBorderSize(int)));
+        connect(settings, SIGNAL(pressureUpdated(int)), this, SLOT(updatePressure(int)));
+        connect(settings, SIGNAL(smoothnessUpdated(double)), this, SLOT(updateSmoothness(double)));
+
+        TCONFIG->beginGroup("InkTool PencilTool");
+        smoothness = TCONFIG->value("Smoothness", 4.0).toDouble();
+        if (smoothness == 0.0)
+            smoothness = 4.0;
+        settings->updateSmoothness(smoothness);
+
+        qDebug() << "InkTool::configurator() - smoothness: " << smoothness;
     }
 
-    return configPanel;
+    return settings;
 }
 
 void InkTool::aboutToChangeTool() 
@@ -1205,12 +1213,15 @@ void InkTool::aboutToChangeTool()
 
 void InkTool::saveConfig()
 {
-    if (configPanel) {
+    if (settings) {
         TCONFIG->beginGroup("InkTool");
         TCONFIG->setValue("BorderEnabled", showBorder);
         TCONFIG->setValue("BorderSize", borderSize);
         TCONFIG->setValue("FillEnabled", showFill);
         TCONFIG->setValue("Sensibility", sensibility);
+
+        if (smoothness == 0.0)
+            smoothness = 4.0;
         TCONFIG->setValue("Smoothness", smoothness);
     }
 }

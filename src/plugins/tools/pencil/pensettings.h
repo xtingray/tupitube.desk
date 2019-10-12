@@ -50,7 +50,7 @@ class TUPITUBE_PLUGIN PenSettings : public QWidget
         PenSettings(QWidget *parent = nullptr);
         ~PenSettings();
 
-        // double smoothness() const;
+        void updateSmoothness(double value);
 
     signals:
         void smoothnessUpdated(double value);
@@ -61,6 +61,7 @@ class TUPITUBE_PLUGIN PenSettings : public QWidget
     private:
         QCheckBox *smoothLabel;
         QDoubleSpinBox *smoothBox;
+        double smoothness;
 };
 
 #endif

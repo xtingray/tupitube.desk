@@ -37,6 +37,7 @@
 #include "tuppaintareaevent.h"
 
 #include <QGraphicsView>
+#include <cmath>
 
 PencilTool::PencilTool(): TupToolPlugin()
 {
@@ -93,7 +94,7 @@ void PencilTool::press(const TupInputDeviceInformation *input, TupBrushManager *
         path = QPainterPath();
         path.moveTo(firstPoint);
 
-        oldPos = input->pos();
+        previousPos = input->pos();
 
         item = new TupPathItem();
         if (brushManager->pen().color().alpha() == 0) {
@@ -128,11 +129,11 @@ void PencilTool::move(const TupInputDeviceInformation *input, TupBrushManager *b
 
         QPointF lastPoint = input->pos();
 
-        path.moveTo(oldPos);
+        path.moveTo(previousPos);
         path.lineTo(lastPoint);
 
         item->setPath(path);
-        oldPos = lastPoint;
+        previousPos = lastPoint;
     }
 }
 
@@ -226,6 +227,12 @@ QWidget *PencilTool::configurator()
     if (!settings) {
         settings = new PenSettings;
         connect(settings, SIGNAL(smoothnessUpdated(double)), this, SLOT(updateSmoothness(double)));
+
+        TCONFIG->beginGroup("PencilTool");
+        smoothness = TCONFIG->value("Smoothness", 4.0).toDouble();
+        if (smoothness == 0.0)
+            smoothness = 4.0;
+        settings->updateSmoothness(smoothness);
     }
 
     return settings;
@@ -234,6 +241,9 @@ QWidget *PencilTool::configurator()
 void PencilTool::updateSmoothness(double value)
 {
     smoothness = value;
+
+    TCONFIG->beginGroup("PencilTool");
+    TCONFIG->setValue("Smoothness", QString::number(smoothness, 'f', 2));
 }
 
 void PencilTool::aboutToChangeTool() 
@@ -243,8 +253,12 @@ void PencilTool::aboutToChangeTool()
 void PencilTool::saveConfig()
 {
     if (settings) {
+        settings = new PenSettings;
+        connect(settings, SIGNAL(smoothnessUpdated(double)), this, SLOT(updateSmoothness(double)));
+
         TCONFIG->beginGroup("PencilTool");
-        TCONFIG->setValue("Smoothness", smoothness);
+        TCONFIG->setValue("Smoothness", QString::number(smoothness, 'f', 2));
+        settings->updateSmoothness(smoothness);
     }
 }
 

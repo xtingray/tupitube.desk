@@ -42,7 +42,7 @@
 InkSettings::InkSettings(QWidget *parent) :QWidget(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "Ink InkSettings()";
+        qDebug() << "InkSettings()";
     #endif
 
     QFont titleFont = font(); 
@@ -53,7 +53,7 @@ InkSettings::InkSettings(QWidget *parent) :QWidget(parent)
     double smoothness = TCONFIG->value("Smoothness", 4.0).toDouble();
     bool showBorder = TCONFIG->value("BorderEnabled", true).toBool();
     bool showFill = TCONFIG->value("FillEnabled", true).toBool();
-    bool borderSize = TCONFIG->value("BorderSize", 1).toInt();
+    int borderSize = TCONFIG->value("BorderSize", 1).toInt();
 
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 
@@ -91,6 +91,9 @@ InkSettings::InkSettings(QWidget *parent) :QWidget(parent)
     borderSizeBox->setMinimum(1);
     borderSizeBox->setMaximum(10);
     borderSizeBox->setValue(borderSize);
+
+    qDebug() << "InkSettings() - borderSize: " <<  borderSize;
+
     connect(borderSizeBox, SIGNAL(valueChanged(int)), this, SIGNAL(borderSizeUpdated(int)));
     borderSizeLayout->addWidget(borderSizeBox);
     mainLayout->addLayout(borderSizeLayout);
@@ -158,4 +161,11 @@ void InkSettings::updateSmoothBox(bool enabled)
         emit smoothnessUpdated(0);
     else
         emit smoothnessUpdated(smoothBox->value());
+}
+
+void InkSettings::updateSmoothness(double value)
+{
+    smoothBox->blockSignals(true);
+    smoothBox->setValue(value);
+    smoothBox->blockSignals(false);
 }

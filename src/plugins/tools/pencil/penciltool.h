@@ -54,15 +54,9 @@
 #include "talgorithm.h"
 #include "tconfig.h"
 
-#include <QObject>
 #include <QPointF>
 #include <QPainterPath>
 #include <QGraphicsEllipseItem>
-
-// #include <QSpinBox>
-// #include <QKeySequence>
-// #include <QGraphicsPathItem>
-// #include <QGraphicsLineItem>
 
 class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
 {
@@ -105,7 +99,7 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
 
     private:
         QPointF firstPoint;
-        QPointF oldPos;
+        QPointF previousPos;
         QPainterPath path;
         PenSettings *settings;
         QMap<QString, TAction *> penActions;

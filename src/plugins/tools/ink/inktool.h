@@ -105,7 +105,7 @@ class TUPITUBE_PLUGIN InkTool : public TupToolPlugin
         QPainterPath inkPath;
         QList<QPointF> shapePoints;
 
-        InkSettings *configPanel;
+        InkSettings *settings;
         QMap<QString, TAction *> inkActions;
 
         TupPathItem *guidePath;

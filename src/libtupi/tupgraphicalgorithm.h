@@ -38,8 +38,6 @@
 
 #include "tglobal.h"
 
-#include <cmath>
-#include <QString>
 #include <QPolygon>
 #include <QPainterPath>
 
@@ -47,8 +45,8 @@ class TUPITUBE_EXPORT TupGraphicalAlgorithm
 {
     private:
         TupGraphicalAlgorithm() {}
-        ~TupGraphicalAlgorithm() {};
-        
+        ~TupGraphicalAlgorithm() {}
+
     public:
         static QPainterPath bezierFit(QPolygonF &points_, float error, int from = 0, int to = -1);
         static QPolygonF polygonFit(const QPolygonF &points);
