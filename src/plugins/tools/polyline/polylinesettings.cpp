@@ -33,77 +33,49 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#include "polylinesettings.h"
+#include "tapplicationproperties.h"
+#include "tseparator.h"
 
-#include "tglobal.h"
-#include "tuptoolplugin.h"
-#include "tuplipsync.h"
-
-#include <QWidget>
-#include <QLabel>
-#include <QBoxLayout>
-#include <QSpinBox>
-#include <QListWidget>
-#include <QTextEdit>
-
-// class TupLipSync;
-
-/**
- * @author Gustav Gonzalez 
-*/
-
-class TUPITUBE_PLUGIN PenSettings : public QWidget 
+PolylineSettings::PolylineSettings(QWidget *parent) : QWidget(parent)
 {
-    Q_OBJECT
+    #ifdef TUP_DEBUG
+        qDebug() << "PolylineSettings()";
+    #endif
 
-    public:
-        PenSettings(QWidget *parent = 0);
-        ~PenSettings();
+    QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
+    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
 
-        void openLipSyncProperties(TupLipSync *lipsync);
-        void updateInterfaceRecords();
+    QLabel *toolTitle = new QLabel;
+    toolTitle->setAlignment(Qt::AlignHCenter);
+    QPixmap pic(THEME_DIR + "icons/polyline.png");
+    toolTitle->setPixmap(pic.scaledToWidth(16, Qt::SmoothTransformation));
+    toolTitle->setToolTip(tr("PolyLine Properties"));
+    layout->addWidget(toolTitle);
+    layout->addWidget(new TSeparator(Qt::Horizontal));
 
-        void setPhoneme(const QString &phoneme);
-        void setPos(const QPointF &point);
+    QLabel *label = new QLabel(tr("Tips"));
+    label->setAlignment(Qt::AlignHCenter); 
+    layout->addWidget(label);
 
-    private slots:
-        void setCurrentMouth(int index);
-        void updateInitFrame(int index);
-        
-    signals:
-        void initFrameHasChanged(int index);
-        void selectMouth(const QString &id, int index);
-        void closeLipSyncProperties();
-        void xPosChanged(int x);
-        void yPosChanged(int y);
+    mainLayout->addLayout(layout);
 
-    private:
-        void setInnerForm();
+    QTextEdit *textArea = new QTextEdit; 
+    textArea->setFixedHeight(250);
+    textArea->setHtml("<p><b>" + tr("X Key or Right Mouse Button") + ":</b> " + tr("Close line") + "</p>"); 
+    mainLayout->addWidget(textArea);
+   
+    mainLayout->addStretch(2);
+}
 
-        QWidget *innerPanel;
-        QBoxLayout *layout;
+PolylineSettings::~PolylineSettings()
+{
+    #ifdef TUP_DEBUG
+        #ifdef Q_OS_WIN
+            qDebug() << "[~Settings()]";
+        #else
+            TEND;
+        #endif
+    #endif
+}
 
-        QLabel *lipSyncName;
-        QLabel *fpsLabel;
-        QSpinBox *comboInit;
-
-        QLabel *endingLabel;
-        QLabel *totalLabel;
-
-        QListWidget *mouthsList;
-        QList<TupVoice *> voices;
-
-        QTextEdit *textArea;
-
-        // QString phoneme;
-        QLabel *phonemeLabel;
-        QSpinBox *xPosField;
-        QSpinBox *yPosField;
-
-        QString name;
-        int initFrame;
-        int framesCount;
-};
-
-#endif

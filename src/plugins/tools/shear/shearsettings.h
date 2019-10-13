@@ -39,54 +39,49 @@
 #include "tglobal.h"
 #include "tuptoolplugin.h"
 #include "tupitemtweener.h"
-#include "timagebutton.h"
 #include "tradiobuttongroup.h"
+#include "tuptweenerstep.h"
+#include "timagebutton.h"
 
-#include <QBoxLayout>
+#include <QWidget>
 #include <QComboBox>
 #include <QSpinBox>
-#include <QWidget>
-#include <QCheckBox>
+#include <QDoubleSpinBox>
 #include <QLabel>
-#include <QSpinBox>
+#include <QCheckBox>
 #include <QLineEdit>
-#include <QPushButton>
 
 /**
  * @author Gustav Gonzalez 
 */
 
-class TUPITUBE_PLUGIN PenSettings : public QWidget 
+class TUPITUBE_PLUGIN ShearSettings : public QWidget 
 {
     Q_OBJECT
 
     public:
-        PenSettings(QWidget *parent = nullptr);
-        ~PenSettings();
+        ShearSettings(QWidget *parent = nullptr);
+        ~ShearSettings();
 
         void setParameters(const QString &name, int framesCount, int startFrame);
         void setParameters(TupItemTweener *currentTween);
         void initStartCombo(int totalFrames, int currentIndex);
         void setStartFrame(int currentIndex);
-        int startFrame();
 
         int totalSteps();
 
-        QString currentTweenName() const;
-        void activatePropertiesMode(TupToolPlugin::EditMode mode);
         void notifySelection(bool flag);
+        int startFrame();
         int startComboSize();
-        void setInitialColor(QColor color);
-		void activateMode(TupToolPlugin::EditMode mode);
-        QString tweenToXml(int currentScene, int currentLayer, int currentFrame);
+        QString currentTweenName() const;
+        void activateMode(TupToolPlugin::EditMode mode);
+        QString tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point);
 
     private slots:
         void applyTween();
         void emitOptionChanged(int option);
         void updateLoopCheckbox(int state);
         void updateReverseCheckbox(int state);
-        void setInitialColor();
-        void setEndingColor();
         void updateRangeFromInit(int begin);
         void updateRangeFromEnd(int end);
 
@@ -95,48 +90,43 @@ class TUPITUBE_PLUGIN PenSettings : public QWidget
         void clickedDefineProperties();
         void clickedApplyTween();
         void clickedResetTween();
-        void startingPointChanged(int index);
+        void initFrameChanged(int index);
         
     private:
         void setInnerForm();
         void activeInnerForm(bool enable);
         void setEditMode();
         void checkFramesRange();
-        void updateColor(QColor color, QPushButton *colorButton);
-        QString labelColor(QColor color) const;
 
         QWidget *innerPanel;
+        QWidget *rangePanel;
+        QWidget *clockPanel;
+
         QBoxLayout *layout;
         TupToolPlugin::Mode mode;
-
         QLineEdit *input;
-
-        QSpinBox *initFrame;
-        QSpinBox *endFrame;
-
         TRadioButtonGroup *options;
 
-        QComboBox *fillTypeCombo;
-        QPushButton *initColorButton;
-        QColor initialColor;
-        QPushButton *endColorButton;
-        QColor endingColor;
+        QSpinBox *initFrameSpin;
+        QSpinBox *endFrameSpin;
 
+        QLabel *totalLabel;
+        int stepsCounter;
+
+        TupItemTweener::TransformAxes shearAxes;
+        QComboBox *comboAxes;
+
+        QDoubleSpinBox *comboFactor;
         QSpinBox *iterationsCombo;
 
         QCheckBox *loopBox;
         QCheckBox *reverseLoopBox;
-
-        QLabel *totalLabel;
-        int totalStepsCount;
 
         bool selectionDone;
         bool propertiesDone;
 
         TImageButton *apply;
         TImageButton *remove;
-
-        TupItemTweener::FillType fillType;
 };
 
 #endif

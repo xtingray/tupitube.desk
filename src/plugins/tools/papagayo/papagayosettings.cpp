@@ -33,10 +33,10 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "settings.h"
+#include "papagayosettings.h"
 #include "timagebutton.h"
 
-PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
+PapagayoSettings::PapagayoSettings(QWidget *parent) : QWidget(parent)
 {
     layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
@@ -44,11 +44,11 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     setInnerForm();
 }
 
-PenSettings::~PenSettings()
+PapagayoSettings::~PapagayoSettings()
 {
 }
 
-void PenSettings::setInnerForm()
+void PapagayoSettings::setInnerForm()
 {
     innerPanel = new QWidget;
 
@@ -195,7 +195,7 @@ void PenSettings::setInnerForm()
 
 // Editing new LipSync 
 
-void PenSettings::openLipSyncProperties(TupLipSync *lipsync)
+void PapagayoSettings::openLipSyncProperties(TupLipSync *lipsync)
 {
     name = lipsync->getLipSyncName();
     initFrame = lipsync->getInitFrame();
@@ -231,7 +231,7 @@ void PenSettings::openLipSyncProperties(TupLipSync *lipsync)
     }
 }
 
-void PenSettings::setCurrentMouth(int index) 
+void PapagayoSettings::setCurrentMouth(int index) 
 {
     QString tail = ":" + QString::number(index);
     QString id = "lipsync:" + name + tail;
@@ -242,7 +242,7 @@ void PenSettings::setCurrentMouth(int index)
     emit selectMouth(id, index);
 }
 
-void PenSettings::updateInitFrame(int index)
+void PapagayoSettings::updateInitFrame(int index)
 {
     int frame = index - 1;
 
@@ -252,13 +252,13 @@ void PenSettings::updateInitFrame(int index)
     }
 }
 
-void PenSettings::updateInterfaceRecords()
+void PapagayoSettings::updateInterfaceRecords()
 {
     int endIndex = initFrame + framesCount;
     endingLabel->setText(tr("Ending at frame") + ": " + QString::number(endIndex));
 }
 
-void PenSettings::setPos(const QPointF &point) 
+void PapagayoSettings::setPos(const QPointF &point) 
 {
     qreal x = point.x();
     qreal y = point.y();
@@ -273,7 +273,7 @@ void PenSettings::setPos(const QPointF &point)
     yPosField->blockSignals(false);
 }
 
-void PenSettings::setPhoneme(const QString &phoneme)
+void PapagayoSettings::setPhoneme(const QString &phoneme)
 {
     phonemeLabel->setText(tr("Current Phoneme") + ": " + "<b>" + phoneme + "</b>");
 }

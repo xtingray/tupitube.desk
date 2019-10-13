@@ -6,7 +6,7 @@
  *                                                                         *
  *   Developers:                                                           *
  *   2010:                                                                 *
- *    Gustav Gonzalez / xtingray                                           *
+ *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
  *   KTooN's versions:                                                     * 
  *                                                                         *
@@ -38,92 +38,72 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
-#include "tupitemtweener.h"
-#include "timagebutton.h"
-#include "tradiobuttongroup.h"
+#include "tuplipsync.h"
 
 #include <QWidget>
-#include <QBoxLayout>
-#include <QDoubleSpinBox>
-#include <QSpinBox>
-#include <QLineEdit>
-#include <QCheckBox>
 #include <QLabel>
+#include <QBoxLayout>
+#include <QSpinBox>
+#include <QListWidget>
+#include <QTextEdit>
+
+// class TupLipSync;
 
 /**
  * @author Gustav Gonzalez 
 */
 
-class TUPITUBE_PLUGIN PenSettings : public QWidget 
+class TUPITUBE_PLUGIN PapagayoSettings : public QWidget 
 {
     Q_OBJECT
 
     public:
-        PenSettings(QWidget *parent = nullptr);
-        ~PenSettings();
+        PapagayoSettings(QWidget *parent = nullptr);
+        ~PapagayoSettings();
 
-        void setParameters(const QString &name, int framesCount, int startFrame);
-        void setParameters(TupItemTweener *currentTween);
-        void initStartCombo(int totalFrames, int currentIndex);
-        void setStartFrame(int currentIndex);
-        int startFrame();
+        void openLipSyncProperties(TupLipSync *lipsync);
+        void updateInterfaceRecords();
 
-        int totalSteps();
-
-        QString currentTweenName() const;
-        void activateMode(TupToolPlugin::EditMode mode);
-        void notifySelection(bool flag);
-        int startComboSize();
-        QString tweenToXml(int currentScene, int currentLayer, int currentFrame);
+        void setPhoneme(const QString &phoneme);
+        void setPos(const QPointF &point);
 
     private slots:
-        void applyTween();
-        void emitOptionChanged(int option);
-        void updateLoopCheckbox(int state);
-        void updateReverseCheckbox(int state);
-        void updateRangeFromInit(int begin);
-        void updateRangeFromEnd(int end);
-
-    signals:
-        void clickedSelect();
-        void clickedDefineProperties();
-        void clickedApplyTween();
-        void clickedResetTween();
-        void startingPointChanged(int index);
+        void setCurrentMouth(int index);
+        void updateInitFrame(int index);
         
+    signals:
+        void initFrameHasChanged(int index);
+        void selectMouth(const QString &id, int index);
+        void closeLipSyncProperties();
+        void xPosChanged(int x);
+        void yPosChanged(int y);
+
     private:
         void setInnerForm();
-        void activeInnerForm(bool enable);
-        void setEditMode();
-        void checkFramesRange();
 
         QWidget *innerPanel;
         QBoxLayout *layout;
-        TupToolPlugin::Mode mode;
 
-        QLineEdit *input;
+        QLabel *lipSyncName;
+        QLabel *fpsLabel;
+        QSpinBox *comboInit;
 
-        QSpinBox *initFrame;
-        QSpinBox *endFrame;
-
-        TRadioButtonGroup *options;
-
-        QDoubleSpinBox *comboInitFactor;
-        QDoubleSpinBox *comboEndFactor;
-
-        QSpinBox *iterationsCombo;
-
-        QCheckBox *loopBox;
-        QCheckBox *reverseLoopBox;
-
+        QLabel *endingLabel;
         QLabel *totalLabel;
-        int stepsCounter;
 
-        bool selectionDone;
-        bool propertiesDone;
+        QListWidget *mouthsList;
+        QList<TupVoice *> voices;
 
-        TImageButton *apply;
-        TImageButton *remove;
+        QTextEdit *textArea;
+
+        // QString phoneme;
+        QLabel *phonemeLabel;
+        QSpinBox *xPosField;
+        QSpinBox *yPosField;
+
+        QString name;
+        int initFrame;
+        int framesCount;
 };
 
 #endif

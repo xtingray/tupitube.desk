@@ -48,7 +48,8 @@ class TUPITUBE_EXPORT TupGraphicalAlgorithm
         ~TupGraphicalAlgorithm() {}
 
     public:
-        static QPainterPath bezierFit(QPolygonF &points_, float error, int from = 0, int to = -1);
+        static QPainterPath bezierFit(QPolygonF &points_, float error, int from = 0, int to = -1,
+                                      bool closePath = false);
         static QPolygonF polygonFit(const QPolygonF &points);
         static bool intersectLine(const QPointF &start, const QPointF& end, const QRectF& rect);
         static char calculateCode(const QPointF &point, const QRectF &window);

@@ -6,7 +6,7 @@
  *                                                                         *
  *   Developers:                                                           *
  *   2010:                                                                 *
- *    Gustavo Gonzalez / xtingray                                          *
+ *    Gustav Gonzalez / xtingray                                           *
  *                                                                         *
  *   KTooN's versions:                                                     * 
  *                                                                         *
@@ -38,29 +38,29 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
-#include "tradiobuttongroup.h"
+#include "tupitemtweener.h"
 #include "timagebutton.h"
-#include "stepsviewer.h"
+#include "tradiobuttongroup.h"
 
 #include <QWidget>
-#include <QLabel>
-#include <QLineEdit>
-#include <QListWidget>
-#include <QSpinBox>
 #include <QBoxLayout>
-#include <QHeaderView>
-#include <QGraphicsPathItem>
-// #include <QDir>
+#include <QSpinBox>
+#include <QComboBox>
+#include <QLabel>
+#include <QCheckBox>
+#include <QLineEdit>
 
-class TupItemTweener;
+/**
+ * @author Gustav Gonzalez 
+*/
 
-class TUPITUBE_PLUGIN PenSettings : public QWidget 
+class TUPITUBE_PLUGIN ScaleSettings : public QWidget 
 {
     Q_OBJECT
 
     public:
-        PenSettings(QWidget *parent = nullptr);
-        ~PenSettings();
+        ScaleSettings(QWidget *parent = nullptr);
+        ~ScaleSettings();
 
         void setParameters(const QString &name, int framesCount, int startFrame);
         void setParameters(TupItemTweener *currentTween);
@@ -68,50 +68,65 @@ class TUPITUBE_PLUGIN PenSettings : public QWidget
         void setStartFrame(int currentIndex);
         int startFrame();
 
-        void updateSteps(const QGraphicsPathItem *path);
-        QString tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point, QString &path);
         int totalSteps();
-        QList<QPointF> tweenPoints();
-        void activateMode(TupToolPlugin::EditMode mode);
-        void clearData();
+
         void notifySelection(bool flag);
         int startComboSize();
         QString currentTweenName() const;
-        void updateSegments(const QPainterPath path);
-
-        void undoSegment(const QPainterPath path);
-        void redoSegment(const QPainterPath path);
-        void enableSaveOption(bool flag);
-        int stepsTotal(); 
+        void activateMode(TupToolPlugin::EditMode mode);
+        QString tweenToXml(int currentScene, int currentLayer, int currentFrame,
+                           QPointF point, double initialXFactor, double initialYFactor);
 
     private slots:
-        void emitOptionChanged(int option);
         void applyTween();
-        void updateTotalLabel(int total);
-        
+        void emitOptionChanged(int option);
+        // void checkBottomLimit(int index);
+        // void checkTopLimit(int index);
+        // void updateTotalSteps(const QString &text);
+        void updateLoopCheckbox(int state);
+        void updateReverseCheckbox(int state);
+        // void updateLastFrame();
+        void updateRangeFromInit(int begin);
+        void updateRangeFromEnd(int end);
+
     signals:
-        void clickedCreatePath();
         void clickedSelect();
-        void clickedResetTween();
+        void clickedDefineProperties();
         void clickedApplyTween();
-        void startingFrameChanged(int);
-        void framesTotalChanged();
+        void clickedResetTween();
+        void startingPointChanged(int index);
         
     private:
         void setInnerForm();
         void activeInnerForm(bool enable);
         void setEditMode();
+        void checkFramesRange();
 
         QWidget *innerPanel;
-        QBoxLayout *layout;
+        QWidget *rangePanel;
+        QWidget *clockPanel;
 
+        QBoxLayout *layout;
+        TupToolPlugin::Mode mode;
         QLineEdit *input;
         TRadioButtonGroup *options;
-        StepsViewer *stepViewer;
-        QSpinBox *comboInit;
+
+        QSpinBox *initFrameSpin;
+        QSpinBox *endFrameSpin;
+
         QLabel *totalLabel;
+        int stepsCounter;
+
+        TupItemTweener::TransformAxes scaleAxes;
+        QComboBox *comboAxes;
+        QDoubleSpinBox *comboFactor;
+        QSpinBox *iterationsCombo;
+
+        QCheckBox *loopBox;
+        QCheckBox *reverseLoopBox;
+
         bool selectionDone;
-        TupToolPlugin::Mode mode;
+        bool propertiesDone;
 
         TImageButton *apply;
         TImageButton *remove;

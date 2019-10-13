@@ -17,10 +17,10 @@ INSTALLS += target
 target.path = /plugins/
 
 HEADERS += polylinetool.h \
-           settings.h
+           polylinesettings.h
 
 SOURCES += polylinetool.cpp \
-           settings.cpp
+           polylinesettings.cpp
 
 FRAMEWORK_DIR = "../../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

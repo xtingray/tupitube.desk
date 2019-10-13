@@ -40,7 +40,7 @@
 #include "configurator.h"
 #include "taction.h"
 #include "tuptoolplugin.h"
-#include "settings.h"
+#include "opacitysettings.h"
 #include "tupprojectresponse.h"
 
 /**

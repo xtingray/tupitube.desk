@@ -33,53 +33,88 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "settings.h"
-#include "tapplicationproperties.h"
-#include "tseparator.h"
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
-PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
+#include "tglobal.h"
+#include "tuptoolplugin.h"
+#include "tradiobuttongroup.h"
+#include "timagebutton.h"
+#include "stepsviewer.h"
+
+#include <QWidget>
+#include <QLabel>
+#include <QLineEdit>
+#include <QListWidget>
+#include <QSpinBox>
+#include <QBoxLayout>
+#include <QHeaderView>
+#include <QGraphicsPathItem>
+// #include <QDir>
+
+class TupItemTweener;
+
+class TUPITUBE_PLUGIN PosSettings : public QWidget 
 {
-    #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Settings()]";
-        #else
-            TINIT;
-        #endif
-    #endif
+    Q_OBJECT
 
-    QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
-    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
+    public:
+        PosSettings(QWidget *parent = nullptr);
+        ~PosSettings();
 
-    QLabel *toolTitle = new QLabel;
-    toolTitle->setAlignment(Qt::AlignHCenter);
-    QPixmap pic(THEME_DIR + "icons/polyline.png");
-    toolTitle->setPixmap(pic.scaledToWidth(16, Qt::SmoothTransformation));
-    toolTitle->setToolTip(tr("PolyLine Properties"));
-    layout->addWidget(toolTitle);
-    layout->addWidget(new TSeparator(Qt::Horizontal));
+        void setParameters(const QString &name, int framesCount, int startFrame);
+        void setParameters(TupItemTweener *currentTween);
+        void initStartCombo(int totalFrames, int currentIndex);
+        void setStartFrame(int currentIndex);
+        int startFrame();
 
-    QLabel *label = new QLabel(tr("Tips"));
-    label->setAlignment(Qt::AlignHCenter); 
-    layout->addWidget(label);
+        void updateSteps(const QGraphicsPathItem *path);
+        QString tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point, QString &path);
+        int totalSteps();
+        QList<QPointF> tweenPoints();
+        void activateMode(TupToolPlugin::EditMode mode);
+        void clearData();
+        void notifySelection(bool flag);
+        int startComboSize();
+        QString currentTweenName() const;
+        void updateSegments(const QPainterPath path);
 
-    mainLayout->addLayout(layout);
+        void undoSegment(const QPainterPath path);
+        void redoSegment(const QPainterPath path);
+        void enableSaveOption(bool flag);
+        int stepsTotal(); 
 
-    QTextEdit *textArea = new QTextEdit; 
-    textArea->setFixedHeight(250);
-    textArea->setHtml("<p><b>" + tr("X Key or Right Mouse Button") + ":</b> " + tr("Close line") + "</p>"); 
-    mainLayout->addWidget(textArea);
-   
-    mainLayout->addStretch(2);
-}
+    private slots:
+        void emitOptionChanged(int option);
+        void applyTween();
+        void updateTotalLabel(int total);
+        
+    signals:
+        void clickedCreatePath();
+        void clickedSelect();
+        void clickedResetTween();
+        void clickedApplyTween();
+        void startingFrameChanged(int);
+        void framesTotalChanged();
+        
+    private:
+        void setInnerForm();
+        void activeInnerForm(bool enable);
+        void setEditMode();
 
-PenSettings::~PenSettings()
-{
-    #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~Settings()]";
-        #else
-            TEND;
-        #endif
-    #endif
-}
+        QWidget *innerPanel;
+        QBoxLayout *layout;
 
+        QLineEdit *input;
+        TRadioButtonGroup *options;
+        StepsViewer *stepViewer;
+        QSpinBox *comboInit;
+        QLabel *totalLabel;
+        bool selectionDone;
+        TupToolPlugin::Mode mode;
+
+        TImageButton *apply;
+        TImageButton *remove;
+};
+
+#endif

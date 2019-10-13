@@ -37,7 +37,7 @@
 #define CONFIGURATOR_H
 
 #include "tglobal.h"
-#include "settings.h"
+#include "papagayosettings.h"
 #include "lipsyncmanager.h"
 
 #include <QFrame>
@@ -92,7 +92,7 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void activeLipSyncManagerPanel(bool enable);
 
         QBoxLayout *settingsLayout;
-        PenSettings *settingsPanel;
+        PapagayoSettings *settingsPanel;
         LipSyncManager *manager;
 };
 

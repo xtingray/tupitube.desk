@@ -37,6 +37,8 @@
 #include "tapplicationproperties.h"
 #include "tseparator.h"
 
+#include <QBoxLayout>
+
 Configurator::Configurator(QWidget *parent) : QFrame(parent)
 {
     framesCount = 1;
@@ -88,7 +90,7 @@ void Configurator::loadTweenList(QList<QString> tweenList)
 
 void Configurator::setPropertiesPanel()
 {
-    settingsPanel = new PenSettings(this);
+    settingsPanel = new ColorSettings(this);
 
     connect(settingsPanel, SIGNAL(startingPointChanged(int)), this, SIGNAL(startingPointChanged(int)));
     connect(settingsPanel, SIGNAL(clickedSelect()), this, SIGNAL(clickedSelect()));

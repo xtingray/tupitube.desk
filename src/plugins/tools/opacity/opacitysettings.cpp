@@ -33,15 +33,13 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "settings.h"
+#include "opacitysettings.h"
+#include "tuptweenerstep.h"
 #include "tseparator.h"
 #include "tosd.h"
 
-#include <QDir>
-
-PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
+OpacitySettings::OpacitySettings(QWidget *parent) : QWidget(parent)
 {
-    shearAxes = TupItemTweener::XY;
     selectionDone = false;
     stepsCounter = 0;
 
@@ -88,11 +86,11 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     activateMode(TupToolPlugin::Selection);
 }
 
-PenSettings::~PenSettings()
+OpacitySettings::~OpacitySettings()
 {
 }
 
-void PenSettings::setInnerForm()
+void OpacitySettings::setInnerForm()
 {
     innerPanel = new QWidget;
 
@@ -102,33 +100,33 @@ void PenSettings::setInnerForm()
     QLabel *startingLabel = new QLabel(tr("Starting at frame") + ": ");
     startingLabel->setAlignment(Qt::AlignVCenter);
 
-    initFrameSpin = new QSpinBox;
-    initFrameSpin->setEnabled(false);
-    initFrameSpin->setMaximum(999);
-    connect(initFrameSpin, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromInit(int)));
+    initFrame = new QSpinBox;
+    initFrame->setEnabled(false);
+    initFrame->setMaximum(999);
+    connect(initFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromInit(int)));
 
     QLabel *endingLabel = new QLabel(tr("Ending at frame") + ": ");
     endingLabel->setAlignment(Qt::AlignVCenter);
 
-    endFrameSpin = new QSpinBox;
-    endFrameSpin->setEnabled(true);
-    endFrameSpin->setValue(1);
-    endFrameSpin->setMaximum(999);
-    connect(endFrameSpin, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromEnd(int)));
+    endFrame = new QSpinBox;
+    endFrame->setEnabled(true);
+    endFrame->setMaximum(999);
+    endFrame->setValue(1);
+    connect(endFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromEnd(int)));
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
     startLayout->setMargin(0);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
-    startLayout->addWidget(initFrameSpin);
+    startLayout->addWidget(initFrame);
 
     QHBoxLayout *endLayout = new QHBoxLayout;
     endLayout->setAlignment(Qt::AlignHCenter);
     endLayout->setMargin(0);
     endLayout->setSpacing(0);
     endLayout->addWidget(endingLabel);
-    endLayout->addWidget(endFrameSpin);
+    endLayout->addWidget(endFrame);
 
     totalLabel = new QLabel(tr("Frames Total") + ": 1");
     totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
@@ -138,34 +136,37 @@ void PenSettings::setInnerForm()
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
 
-    comboAxes = new QComboBox();
-    comboAxes->addItem(tr("Width & Height"));
-    comboAxes->addItem(tr("Only Width"));
-    comboAxes->addItem(tr("Only Height"));
-    QLabel *axesLabel = new QLabel(tr("Shear in") + ": ");
-    axesLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    QHBoxLayout *axesLayout = new QHBoxLayout;
-    axesLayout->setAlignment(Qt::AlignHCenter);
-    axesLayout->setMargin(0);
-    axesLayout->setSpacing(0);
-    axesLayout->addWidget(axesLabel);
-    axesLayout->addWidget(comboAxes);
+    comboInitFactor = new QDoubleSpinBox;
+    comboInitFactor->setMinimum(0.00);
+    comboInitFactor->setMaximum(1.00);
+    comboInitFactor->setDecimals(2);
+    comboInitFactor->setSingleStep(0.05);
+    comboInitFactor->setValue(1.00);
 
-    comboFactor = new QDoubleSpinBox;
-    comboFactor->setMinimum(-9.0);
-    comboFactor->setMaximum(9.0);
-    comboFactor->setDecimals(2);
-    comboFactor->setSingleStep(0.05);
-    comboFactor->setValue(0.10);
+    QLabel *opacityInitLabel = new QLabel(tr("Initial Opacity") + ": ");
+    opacityInitLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    QHBoxLayout *opacityInitLayout = new QHBoxLayout;
+    opacityInitLayout->setAlignment(Qt::AlignHCenter);
+    opacityInitLayout->setMargin(0);
+    opacityInitLayout->setSpacing(0);
+    opacityInitLayout->addWidget(opacityInitLabel);
+    opacityInitLayout->addWidget(comboInitFactor);
 
-    QLabel *speedLabel = new QLabel(tr("Scaling Factor") + ": ");
-    speedLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    QHBoxLayout *speedLayout = new QHBoxLayout;
-    speedLayout->setAlignment(Qt::AlignHCenter);
-    speedLayout->setMargin(0);
-    speedLayout->setSpacing(0);
-    speedLayout->addWidget(speedLabel);
-    speedLayout->addWidget(comboFactor);
+    comboEndFactor = new QDoubleSpinBox;
+    comboEndFactor->setMinimum(0.00);
+    comboEndFactor->setMaximum(1.00);
+    comboEndFactor->setDecimals(2);
+    comboEndFactor->setSingleStep(0.05);
+    comboEndFactor->setValue(0.00);
+
+    QLabel *opacityEndLabel = new QLabel(tr("Ending Opacity") + ": ");
+    opacityEndLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    QHBoxLayout *opacityEndLayout = new QHBoxLayout;
+    opacityEndLayout->setAlignment(Qt::AlignHCenter);
+    opacityEndLayout->setMargin(0);
+    opacityEndLayout->setSpacing(0);
+    opacityEndLayout->addWidget(opacityEndLabel);
+    opacityEndLayout->addWidget(comboEndFactor);
 
     iterationsCombo = new QSpinBox;
     iterationsCombo->setEnabled(true);
@@ -203,11 +204,12 @@ void PenSettings::setInnerForm()
     innerLayout->addLayout(endLayout);
     innerLayout->addLayout(totalLayout);
 
-    innerLayout->addSpacing(15);
+    innerLayout->addSpacing(10);
     innerLayout->addWidget(new TSeparator(Qt::Horizontal));
 
-    innerLayout->addLayout(axesLayout);
-    innerLayout->addLayout(speedLayout);
+    innerLayout->addLayout(opacityInitLayout);
+    innerLayout->addLayout(opacityEndLayout);
+
     innerLayout->addLayout(iterationsLayout);
     innerLayout->addLayout(loopLayout);
     innerLayout->addLayout(reverseLayout);
@@ -219,7 +221,7 @@ void PenSettings::setInnerForm()
     activeInnerForm(false);
 }
 
-void PenSettings::activeInnerForm(bool enable)
+void OpacitySettings::activeInnerForm(bool enable)
 {
     if (enable && !innerPanel->isVisible()) {
         propertiesDone = true;
@@ -232,12 +234,11 @@ void PenSettings::activeInnerForm(bool enable)
 
 // Adding new Tween
 
-void PenSettings::setParameters(const QString &name, int framesCount, int initFrame)
+void OpacitySettings::setParameters(const QString &name, int framesCount, int initFrame)
 {
     mode = TupToolPlugin::Add;
     input->setText(name);
 
-    initFrameSpin->setEnabled(false);
     activateMode(TupToolPlugin::Selection);
     apply->setToolTip(tr("Save Tween"));
     remove->setIcon(QPixmap(kAppProp->themeDir() + "icons/close.png"));
@@ -246,66 +247,66 @@ void PenSettings::setParameters(const QString &name, int framesCount, int initFr
     initStartCombo(framesCount, initFrame);
 }
 
-// Editing new Tween
+// Editing current Tween
 
-void PenSettings::setParameters(TupItemTweener *currentTween)
+void OpacitySettings::setParameters(TupItemTweener *currentTween)
 {
     setEditMode();
     activateMode(TupToolPlugin::Properties);
 
     input->setText(currentTween->getTweenName());
 
-    initFrameSpin->setEnabled(true);
-    initFrameSpin->setValue(currentTween->getInitFrame() + 1);
-    endFrameSpin->setValue(currentTween->getInitFrame() + currentTween->getFrames());
+    initFrame->setEnabled(true);
+    initFrame->setValue(currentTween->getInitFrame() + 1);
+    endFrame->setValue(currentTween->getInitFrame() + currentTween->getFrames());
 
-    int end = endFrameSpin->value();
+    int end = endFrame->value();
     updateRangeFromEnd(end);
 
-    comboAxes->setCurrentIndex(currentTween->tweenShearAxes());
-    comboFactor->setValue(currentTween->tweenShearFactor());
-    iterationsCombo->setValue(currentTween->tweenShearIterations());
-    loopBox->setChecked(currentTween->tweenShearLoop());
-    reverseLoopBox->setChecked(currentTween->tweenShearReverseLoop());
+    comboInitFactor->setValue(currentTween->tweenOpacityInitialFactor());
+    comboEndFactor->setValue(currentTween->tweenOpacityEndingFactor());
+    iterationsCombo->setValue(currentTween->tweenOpacityIterations());
+    loopBox->setChecked(currentTween->tweenOpacityLoop());
+    reverseLoopBox->setChecked(currentTween->tweenOpacityReverseLoop());
 }
 
-void PenSettings::initStartCombo(int framesCount, int currentIndex)
+void OpacitySettings::initStartCombo(int framesCount, int currentIndex)
 {
-    initFrameSpin->clear();
-    endFrameSpin->clear();
+    initFrame->clear();
+    endFrame->clear();
 
-    initFrameSpin->setMinimum(1);
-    initFrameSpin->setMaximum(framesCount);
-    initFrameSpin->setValue(currentIndex + 1);
+    initFrame->setMinimum(1);
+    initFrame->setMaximum(framesCount);
+    initFrame->setValue(currentIndex + 1);
 
-    endFrameSpin->setMinimum(1);
-    endFrameSpin->setValue(framesCount);
+    endFrame->setMinimum(1);
+    endFrame->setValue(framesCount);
 }
 
-void PenSettings::setStartFrame(int currentIndex)
+void OpacitySettings::setStartFrame(int currentIndex)
 {
-    initFrameSpin->setValue(currentIndex + 1);
-    int end = endFrameSpin->value();
+    initFrame->setValue(currentIndex + 1);
+    int end = endFrame->value();
     if (end < currentIndex+1)
-        endFrameSpin->setValue(currentIndex + 1);
+        endFrame->setValue(currentIndex + 1);
 }
 
-int PenSettings::startFrame()
+int OpacitySettings::startFrame()
 {
-    return initFrameSpin->value() - 1;
+    return initFrame->value() - 1;
 }
 
-int PenSettings::startComboSize()
+int OpacitySettings::startComboSize()
 {
-    return initFrameSpin->maximum();
+    return initFrame->maximum();
 }
 
-int PenSettings::totalSteps()
+int OpacitySettings::totalSteps()
 {
-    return endFrameSpin->value() - (initFrameSpin->value() - 1);
+    return endFrame->value() - (initFrame->value() - 1);
 }
 
-void PenSettings::setEditMode()
+void OpacitySettings::setEditMode()
 {
     mode = TupToolPlugin::Edit;
     apply->setToolTip(tr("Update Tween"));
@@ -313,7 +314,7 @@ void PenSettings::setEditMode()
     remove->setToolTip(tr("Close Tween Properties"));
 }
 
-void PenSettings::applyTween()
+void OpacitySettings::applyTween()
 {
     if (!selectionDone) {
         TOsd::self()->display(tr("Info"), tr("You must select at least one object!"), TOsd::Info);
@@ -325,23 +326,22 @@ void PenSettings::applyTween()
         return;
     }
 
-    // SQA: Verify whether tween is really well applied before call setEditMode!
+    // SQA: Verify Tween is really well applied before call setEditMode!
     setEditMode();
 
-    if (!initFrameSpin->isEnabled())
-        initFrameSpin->setEnabled(true);
+    if (!initFrame->isEnabled())
+        initFrame->setEnabled(true);
 
     checkFramesRange();
-
     emit clickedApplyTween();
 }
 
-void PenSettings::notifySelection(bool flag)
+void OpacitySettings::notifySelection(bool flag)
 {
     selectionDone = flag;
 }
 
-QString PenSettings::currentTweenName() const
+QString OpacitySettings::currentTweenName() const
 {
     QString tweenName = input->text();
     if (tweenName.length() > 0)
@@ -350,7 +350,7 @@ QString PenSettings::currentTweenName() const
     return tweenName;
 }
 
-void PenSettings::emitOptionChanged(int option)
+void OpacitySettings::emitOptionChanged(int option)
 {
     switch (option) {
         case 0:
@@ -372,57 +372,47 @@ void PenSettings::emitOptionChanged(int option)
     }
 }
 
-QString PenSettings::tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point)
+QString OpacitySettings::tweenToXml(int currentScene, int currentLayer, int currentFrame)
 {
     QDomDocument doc;
 
     QDomElement root = doc.createElement("tweening");
     root.setAttribute("name", currentTweenName());
-    root.setAttribute("type", TupItemTweener::Shear);
+    root.setAttribute("type", TupItemTweener::Opacity);
     root.setAttribute("initFrame", currentFrame);
     root.setAttribute("initLayer", currentLayer);
     root.setAttribute("initScene", currentScene);
-   
+  
     root.setAttribute("frames", stepsCounter);
-    root.setAttribute("origin", QString::number(point.x()) + "," + QString::number(point.y()));
-    shearAxes = TupItemTweener::TransformAxes(comboAxes->currentIndex());
-    root.setAttribute("shearAxes", shearAxes);
+    root.setAttribute("origin", "0,0");
 
-    double factor = comboFactor->value();
-    root.setAttribute("shearFactor", QString::number(factor));
+    double initFactor = comboInitFactor->value();
+    root.setAttribute("initOpacityFactor", QString::number(initFactor));
+
+    double endFactor = comboEndFactor->value();
+    root.setAttribute("endOpacityFactor", QString::number(endFactor));
 
     int iterations = iterationsCombo->value();
     if (iterations == 0) {
         iterations = 1;
         iterationsCombo->setValue(1);
     }
-    root.setAttribute("shearIterations", iterations);
+    root.setAttribute("opacityIterations", iterations);
 
     bool loop = loopBox->isChecked();
     if (loop)
-        root.setAttribute("shearLoop", "1");
+        root.setAttribute("opacityLoop", "1");
     else
-        root.setAttribute("shearLoop", "0");
+        root.setAttribute("opacityLoop", "0");
 
     bool reverse = reverseLoopBox->isChecked();
     if (reverse)
-        root.setAttribute("shearReverseLoop", "1");
+        root.setAttribute("opacityReverseLoop", "1");
     else
-        root.setAttribute("shearReverseLoop", "0");
+        root.setAttribute("opacityReverseLoop", "0");
 
-    double factorX = 1.0;
-    double factorY = 1.0;
-    double shearX = 1.0;
-    double shearY = 1.0;
-
-    if (shearAxes == TupItemTweener::XY) {
-        factorX = factor;
-        factorY = factor;
-    } else if (shearAxes == TupItemTweener::X) {
-        factorX = factor;
-    } else {
-        factorY = factor;
-    }
+    double delta = static_cast<double>(initFactor - endFactor) / static_cast<double>(iterations - 1);
+    double reference = 0;
 
     int cycle = 1;
     int reverseTop = (iterations*2)-2;
@@ -430,35 +420,32 @@ QString PenSettings::tweenToXml(int currentScene, int currentLayer, int currentF
     for (int i=0; i < stepsCounter; i++) {
          if (cycle <= iterations) {
              if (cycle == 1) {
-                 shearX = 0;
-                 shearY = 0;
+                 reference = initFactor;
+             } else if (cycle == iterations) {
+                 reference = endFactor;
              } else {
-                 shearX += factorX;
-                 shearY += factorY;
+                 reference -= delta;
              }
              cycle++;
          } else {
              // if repeat option is enabled
              if (loop) {
                  cycle = 2;
-                 shearX = 0;
-                 shearY = 0;
+                 reference = initFactor;
              } else if (reverse) { // if reverse option is enabled
-                 shearX -= factorX;
-                 shearY -= factorY;
-
+                 reference += delta;
                  if (cycle < reverseTop)
                      cycle++;
                  else
                      cycle = 1;
+
              } else { // If cycle is done and no loop and no reverse
-                 shearX = 0;
-                 shearY = 0;
+                 reference = initFactor;
              }
          }
 
          TupTweenerStep *step = new TupTweenerStep(i);
-         step->setShear(shearX, shearY);
+         step->setOpacity(reference);
          root.appendChild(step->toXml(doc));
     }
 
@@ -467,26 +454,26 @@ QString PenSettings::tweenToXml(int currentScene, int currentLayer, int currentF
     return doc.toString();
 }
 
-void PenSettings::activateMode(TupToolPlugin::EditMode mode)
+void OpacitySettings::activateMode(TupToolPlugin::EditMode mode)
 {
     options->setCurrentIndex(mode);
 }
 
-void PenSettings::checkFramesRange()
+void OpacitySettings::checkFramesRange()
 {
-    int begin = initFrameSpin->value();
-    int end = endFrameSpin->value();
+    int begin = initFrame->value();
+    int end = endFrame->value();
 
     if (begin > end) {
-        initFrameSpin->blockSignals(true);
-        endFrameSpin->blockSignals(true);
+        initFrame->blockSignals(true);
+        endFrame->blockSignals(true);
         int tmp = end;
         end = begin;
         begin = tmp;
-        initFrameSpin->setValue(begin);
-        endFrameSpin->setValue(end);
-        initFrameSpin->blockSignals(false);
-        endFrameSpin->blockSignals(false);
+        initFrame->setValue(begin);
+        endFrame->setValue(end);
+        initFrame->blockSignals(false);
+        endFrame->blockSignals(false);
     }
 
     stepsCounter = end - begin + 1;
@@ -497,7 +484,7 @@ void PenSettings::checkFramesRange()
         iterationsCombo->setValue(stepsCounter);
 }
 
-void PenSettings::updateLoopCheckbox(int state)
+void OpacitySettings::updateLoopCheckbox(int state)
 {
     Q_UNUSED(state);
 
@@ -505,7 +492,7 @@ void PenSettings::updateLoopCheckbox(int state)
         loopBox->setChecked(false);
 }
 
-void PenSettings::updateReverseCheckbox(int state)
+void OpacitySettings::updateReverseCheckbox(int state)
 {
     Q_UNUSED(state);
 
@@ -513,16 +500,16 @@ void PenSettings::updateReverseCheckbox(int state)
         reverseLoopBox->setChecked(false);
 }
 
-void PenSettings::updateRangeFromInit(int begin)
+void OpacitySettings::updateRangeFromInit(int begin)
 {
-    int end = endFrameSpin->value();
+    int end = endFrame->value();
     stepsCounter = end - begin + 1;
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepsCounter));
 }
 
-void PenSettings::updateRangeFromEnd(int end)
+void OpacitySettings::updateRangeFromEnd(int end)
 {
-    int begin = initFrameSpin->value();
+    int begin = initFrame->value();
     stepsCounter = end - begin + 1;
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepsCounter));
 }

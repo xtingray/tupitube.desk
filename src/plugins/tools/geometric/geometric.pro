@@ -17,10 +17,10 @@ INSTALLS += target
 target.path = /plugins/
 
 HEADERS += geometrictool.h \
-           settings.h 
+           geometricsettings.h 
 
 SOURCES += geometrictool.cpp \
-           settings.cpp
+           geometricsettings.cpp
 
 FRAMEWORK_DIR = "../../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

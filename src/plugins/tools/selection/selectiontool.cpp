@@ -342,11 +342,11 @@ int SelectionTool::toolType() const
 QWidget *SelectionTool::configurator()
 {
     if (!panel) {
-        panel = new PenSettings;
-        connect(panel, SIGNAL(callAlignAction(PenSettings::Align)), this, SLOT(applyAlignAction(PenSettings::Align)));
-        connect(panel, SIGNAL(callFlip(PenSettings::Flip)), this, SLOT(applyFlip(PenSettings::Flip)));
-        connect(panel, SIGNAL(callOrderAction(PenSettings::Order)), this, SLOT(applyOrderAction(PenSettings::Order)));
-        connect(panel, SIGNAL(callGroupAction(PenSettings::Group)), this, SLOT(applyGroupAction(PenSettings::Group)));
+        panel = new SelectionSettings;
+        connect(panel, SIGNAL(callAlignAction(SelectionSettings::Align)), this, SLOT(applyAlignAction(SelectionSettings::Align)));
+        connect(panel, SIGNAL(callFlip(SelectionSettings::Flip)), this, SLOT(applyFlip(SelectionSettings::Flip)));
+        connect(panel, SIGNAL(callOrderAction(SelectionSettings::Order)), this, SLOT(applyOrderAction(SelectionSettings::Order)));
+        connect(panel, SIGNAL(callGroupAction(SelectionSettings::Group)), this, SLOT(applyGroupAction(SelectionSettings::Group)));
         connect(panel, SIGNAL(positionUpdated(int, int)), this, SLOT(updateItemPosition(int, int)));
         connect(panel, SIGNAL(rotationUpdated(int)), this, SLOT(updateItemRotation(int)));
         connect(panel, SIGNAL(scaleUpdated(double, double)), this, SLOT(updateItemScale(double, double)));
@@ -611,7 +611,7 @@ bool SelectionTool::selectionIsActive()
     return activeSelection;
 }
 
-void SelectionTool::applyAlignAction(PenSettings::Align align)
+void SelectionTool::applyAlignAction(SelectionSettings::Align align)
 {
     QGraphicsView *view = scene->views().at(0);
     QRectF rect = view->sceneRect();
@@ -621,13 +621,13 @@ void SelectionTool::applyAlignAction(PenSettings::Align align)
         QGraphicsItem *item = manager->parentItem();
         QRectF rect = item->boundingRect();
         QPointF objectPos = rect.center();
-        if (align == PenSettings::hAlign) {
+        if (align == SelectionSettings::hAlign) {
             int y = static_cast<int>(center.y() - objectPos.y());
             item->setPos(item->pos().x(), y);
-        } else if (align == PenSettings::vAlign) {
+        } else if (align == SelectionSettings::vAlign) {
             int x = static_cast<int>(center.x() - objectPos.x());
             item->setPos(x, item->pos().y());
-        } else if (align == PenSettings::totalAlign) {
+        } else if (align == SelectionSettings::totalAlign) {
             distance = center - objectPos;
             item->setPos(distance.x(), distance.y());
         }
@@ -636,17 +636,17 @@ void SelectionTool::applyAlignAction(PenSettings::Align align)
     }
 }
 
-void SelectionTool::applyFlip(PenSettings::Flip flip)
+void SelectionTool::applyFlip(SelectionSettings::Flip flip)
 {
     selectedObjects = scene->selectedItems();
 
     foreach (QGraphicsItem *item, selectedObjects) {
         foreach (NodeManager *manager, nodeManagers) {
-            if (flip == PenSettings::Horizontal)
+            if (flip == SelectionSettings::Horizontal)
                 manager->horizontalFlip();
-            else if (flip == PenSettings::Vertical)
+            else if (flip == SelectionSettings::Vertical)
                 manager->verticalFlip();
-            else if (flip == PenSettings::Crossed)
+            else if (flip == SelectionSettings::Crossed)
                 manager->crossedFlip();
 
             if (manager->isModified()) {
@@ -676,7 +676,7 @@ void SelectionTool::applyFlip(PenSettings::Flip flip)
     }
 }
 
-void SelectionTool::applyOrderAction(PenSettings::Order action)
+void SelectionTool::applyOrderAction(SelectionSettings::Order action)
 {
     selectedObjects = scene->selectedItems();
 
@@ -699,7 +699,7 @@ void SelectionTool::applyOrderAction(PenSettings::Order action)
     }
 }
 
-void SelectionTool::applyGroupAction(PenSettings::Group action)
+void SelectionTool::applyGroupAction(SelectionSettings::Group action)
 {
     foreach (QGraphicsItem *item, selectedObjects) {
         TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
@@ -711,7 +711,7 @@ void SelectionTool::applyGroupAction(PenSettings::Group action)
 
     TupFrame *frame = getCurrentFrame();
 
-    if (action == PenSettings::GroupItems) {
+    if (action == SelectionSettings::GroupItems) {
         selectedObjects = scene->selectedItems();
         int total = selectedObjects.count();
         if (total > 1) {
@@ -756,7 +756,7 @@ void SelectionTool::applyGroupAction(PenSettings::Group action)
             nodeManagers.clear();
             scene->drawCurrentPhotogram();
         }
-    } else if (action == PenSettings::UngroupItems) {
+    } else if (action == SelectionSettings::UngroupItems) {
         selectedObjects = scene->selectedItems();
         int total = selectedObjects.count();
 

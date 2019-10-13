@@ -369,14 +369,14 @@ int GeometricTool::toolType() const
         
 QWidget *GeometricTool::configurator()
 {
-    PenSettings::ToolType toolType = PenSettings::Line;
+    GeometricSettings::ToolType toolType = GeometricSettings::Line;
 
     if (name() == tr("Rectangle"))
-        toolType = PenSettings::Rectangle;
+        toolType = GeometricSettings::Rectangle;
     else if (name() == tr("Ellipse"))
-        toolType = PenSettings::Ellipse;
+        toolType = GeometricSettings::Ellipse;
 
-    configPanel = new PenSettings(toolType);
+    configPanel = new GeometricSettings(toolType);
     return configPanel;
 }
 

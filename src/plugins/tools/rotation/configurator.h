@@ -37,7 +37,7 @@
 #define CONFIGURATOR_H
 
 #include "tglobal.h"
-#include "settings.h"
+#include "rotationsettings.h"
 #include "tweenmanager.h"
 #include "buttonspanel.h"
 #include "tupitemtweener.h"
@@ -110,7 +110,7 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
 
         QBoxLayout *layout;
         QBoxLayout *settingsLayout;
-        PenSettings *settingsPanel;
+        RotationSettings *settingsPanel;
         TweenManager *tweenManager;
         ButtonsPanel *controlPanel;
 

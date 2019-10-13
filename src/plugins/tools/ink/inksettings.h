@@ -41,6 +41,7 @@
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QDoubleSpinBox>
+#include <QPushButton>
 
 /**
  * @author Gustav Gonzalez 
@@ -62,6 +63,7 @@ class TUPITUBE_PLUGIN InkSettings : public QWidget
         void updateBorderOption(bool showBorder);
         void updateFillOption(bool showFill);
         void updateSmoothBox(bool enabled);
+        void setBorderColor();
 
     signals:
         void borderUpdated(bool borderFlag);
@@ -71,12 +73,20 @@ class TUPITUBE_PLUGIN InkSettings : public QWidget
         void smoothnessUpdated(double smoothness);
 
     private:
+        void updateColor(QColor color, QPushButton *colorButton);
+        QString labelColor(QColor color) const;
+
         QSpinBox *pressureBox;
         QCheckBox *borderOption;
         QCheckBox *fillOption;
         QSpinBox *borderSizeBox;
         QCheckBox *smoothLabel;
         QDoubleSpinBox *smoothBox;
+
+        QColor borderColor;
+        QPushButton *borderColorButton;
+        QColor fillColor;
+        QPushButton *fillColorButton;
 };
 
 #endif

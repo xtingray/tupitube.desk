@@ -37,21 +37,105 @@
 #define SETTINGS_H
 
 #include "tglobal.h"
+#include "tuptoolplugin.h"
+#include "tradiobuttongroup.h"
+#include "timagebutton.h"
+
+#include <QWidget>
 #include <QLabel>
+#include <QLineEdit>
 #include <QBoxLayout>
-#include <QTextEdit>
+#include <QComboBox>
+#include <QSpinBox>
+#include <QCheckBox>
+#include <QDir>
+
+class TupItemTweener;
 
 /**
  * @author Gustav Gonzalez 
 */
 
-class TUPITUBE_PLUGIN PenSettings : public QWidget
+class TUPITUBE_PLUGIN RotationSettings : public QWidget 
 {
     Q_OBJECT
 
     public:
-        PenSettings(QWidget *parent = 0);
-        ~PenSettings();
+        RotationSettings(QWidget *parent = nullptr);
+        ~RotationSettings();
+
+        void setParameters(const QString &name, int framesCount, int startFrame);
+        void setParameters(TupItemTweener *currentTween);
+        void initStartCombo(int totalFrames, int currentIndex);
+        void setStartFrame(int currentIndex);
+        int startFrame();
+
+        int totalSteps();
+
+        void notifySelection(bool flag);
+        int startComboSize();
+        QString currentTweenName() const;
+        void activateMode(TupToolPlugin::EditMode mode);
+        QString tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point);
+
+    private slots:
+        void applyTween();
+        void emitOptionChanged(int option);
+        void refreshForm(int type);
+        // void checkTopLimit(int index);
+        void updateRangeCheckbox(int state);
+        void updateReverseCheckbox(int state);
+        // void updateTotalSteps(const QString &text);
+        void checkRange(int index);
+        // void updateLastFrame();
+        void updateRangeFromInit(int begin);
+        void updateRangeFromEnd(int end);
+        
+    signals:
+        void clickedSelect();
+        void clickedDefineAngle();
+        void clickedApplyTween();
+        void clickedResetTween();
+        void startingPointChanged(int index);
+        
+    private:
+        void setInnerForm();
+        void activeInnerForm(bool enable);
+        void setRangeForm();
+        void activeRangeForm(bool enable);
+        void setEditMode();
+        void checkFramesRange();
+
+        QWidget *innerPanel;
+        QWidget *rangePanel;
+
+        QBoxLayout *layout;
+        TupToolPlugin::Mode mode;
+
+        QLineEdit *input;
+        TRadioButtonGroup *options;
+        QSpinBox *initFrame;
+        QSpinBox *endFrame;
+
+        QComboBox *rotationTypeCombo;
+        TupItemTweener::RotationType rotationType;
+
+        QSpinBox *rangeStart;
+        QSpinBox *rangeEnd;
+
+        QDoubleSpinBox *degreesPerFrame;
+
+        QCheckBox *rangeLoopBox;
+        QCheckBox *reverseLoopBox;
+        QLabel *totalLabel;
+        QComboBox *clockCombo;
+        int stepsCounter;
+
+        bool selectionDone;
+        bool propertiesDone;
+
+        TImageButton *apply;
+        TImageButton *remove;
 };
 
 #endif

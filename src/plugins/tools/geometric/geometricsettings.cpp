@@ -33,97 +33,64 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef SETTINGS_H
-#define SETTINGS_H
-
-#include "tglobal.h"
+#include "geometricsettings.h"
 #include "tapplicationproperties.h"
+#include "tseparator.h"
 
-#include <QLabel>
-#include <QBoxLayout>
-#include <QTextEdit>
-#include <QSpinBox>
-#include <QDir>
-#include <QCheckBox>
-#include <QPushButton>
-
-/**
- * @author Gustav Gonzalez 
-*/
-
-class TUPITUBE_PLUGIN PenSettings : public QWidget
+GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *parent) : QWidget(parent)
 {
-    Q_OBJECT
+    QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
+    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
 
-    public:
-        enum Align { hAlign = 1, vAlign, totalAlign };
-        enum Flip { Vertical = 1, Horizontal, Crossed };
-        enum Order { ToBack = 0, ToFront, ToBackOneLevel, ToFrontOneLevel };
-        enum Group { GroupItems = 0, UngroupItems };
+    QLabel *toolTitle = new QLabel;
+    toolTitle->setAlignment(Qt::AlignHCenter);
+    QPixmap pic;
 
-        PenSettings(QWidget *parent = 0);
-        ~PenSettings();
+    if (type == GeometricSettings::Rectangle) {
+        pic = QPixmap(THEME_DIR + "icons/square.png");
+        toolTitle->setToolTip(tr("Rectangle Properties"));
+    } else if (type == GeometricSettings::Ellipse) {
+        pic = QPixmap(THEME_DIR + "icons/ellipse.png");
+        toolTitle->setToolTip(tr("Ellipse Properties"));
+    } else if (type == GeometricSettings::Line) {
+        pic = QPixmap(THEME_DIR + "icons/line.png");
+        toolTitle->setToolTip(tr("Line Properties"));
+    }
 
-        void enableFormControls(bool flag);
-        void setPos(int x, int y);
-        void setProportionState(int flag);
-        bool formIsVisible();
-        // void setRotationAngle(int angle);
-        // void setScaleFactor(double factor);
+    toolTitle->setPixmap(pic.scaledToWidth(16, Qt::SmoothTransformation));
+    layout->addWidget(toolTitle);
+    layout->addWidget(new TSeparator(Qt::Horizontal));
 
-     signals:
-        void callAlignAction(PenSettings::Align align);
-        void callFlip(PenSettings::Flip flip);
-        void callOrderAction(PenSettings::Order action);
-        void callGroupAction(PenSettings::Group action);
-        void positionUpdated(int x, int y);
-        void rotationUpdated(int angle);
-        void scaleUpdated(double xFactor, double yFactor);
-        void activateProportion(bool flag);
+    QLabel *label = new QLabel(tr("Tips"));
+    label->setAlignment(Qt::AlignHCenter); 
+    layout->addWidget(label);
 
-     public slots:
-        void updateRotationAngle(int angle);
-        void updateScaleFactor(double x, double y);
+    mainLayout->addLayout(layout);
 
-     private slots:
-        void alignObjectHorizontally();
-        void alignObjectVertically();
-        void alignObjectAbsolutely();
-        void vFlip();
-        void hFlip();
-        void cFlip();
-        void sendToBack();
-        void sendToBackOneLevel();
-        void sendToFront();
-        void sendToFrontOneLevel();
-        void openTipPanel();
-        void notifyXMovement(int x);
-        void notifyYMovement(int y);
-        void notifyRotation(int angle);
-        void notifyXScale(double factor);
-        void notifyYScale(double factor);
-        void groupItems();
-        void ungroupItems();
-        void enableProportion(int flag);
+    QTextEdit *textArea = new QTextEdit; 
 
-    private:
-        QWidget *help;
-        QSpinBox *xPosField;
-        QSpinBox *yPosField;
-        QSpinBox *angleField;
-        QDoubleSpinBox *factorXField;
-        QDoubleSpinBox *factorYField;
-        QCheckBox *propCheck;
+    // SQA: Check this code with several screen resolutions. It must looks good with everyone! 
+    // QFont font = this->font();
+    // font.setPointSize(8);
+    // textArea->setFont(font);
+    // textArea->setFont(QFont("Arial", 8, QFont::Normal, false));
 
-        QPushButton *tips;
-        QWidget *formPanel;
-        int currentX;
-        int currentY;
-        int currentAngle;
-        double currentXFactor;
-        double currentYFactor;
-        QTextEdit *textArea;
-        bool isVisible;
-};
+    if (type == GeometricSettings::Line) {
+        textArea->append("<p><b>" + tr("Mouse Right Click or X Key") + ":</b> " +  tr("Close the line path") + "</p>");
+        textArea->append("<p><b>" + tr("Shift") + ":</b> " +  tr("Align line to horizontal/vertical axis") + "</p>"); 
+    } else {
+        textArea->append("<p><b>" + tr("Ctrl + Left Mouse Button") + ":</b> " +  tr("Set width/height proportional dimensions") + "</p>");
+    }
 
-#endif
+    // QString text = textArea->document()->toPlainText();
+    // textArea->setFixedHeight(100);
+    // textArea->setFixedHeight(150);
+
+    mainLayout->addWidget(textArea);
+    mainLayout->addStretch(2);
+}
+
+GeometricSettings::~GeometricSettings()
+{
+}
+

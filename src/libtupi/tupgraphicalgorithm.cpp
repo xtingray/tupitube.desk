@@ -56,28 +56,29 @@ class FitVector
     public:
         FitVector(QPointF &p)
         {
-            m_X=p.x();
-            m_Y=p.y();
+            m_X = p.x();
+            m_Y = p.y();
         }
         
         FitVector()
         {
-            m_X=0;
-            m_Y=0;
+            m_X = 0;
+            m_Y = 0;
         }
     
         FitVector(QPointF &a, QPointF &b)
         {
-            m_X=a.x()-b.x();
-            m_Y=a.y()-b.y();
+            m_X = a.x() - b.x();
+            m_Y = a.y() - b.y();
         }
     
         void normalize()
         {
-            double len=length();
-            if(len==0.0f)
+            double len = length();
+            if (len == 0.0f)
                 return;
-            m_X/=len; m_Y/=len;
+            m_X /= len;
+            m_Y /= len;
         }
     
         void negate()
@@ -89,7 +90,7 @@ class FitVector
         void scale(double s)
         {
             double len = length();
-            if(len==0.0f)
+            if (len == 0.0f)
                 return;
             m_X *= s/len;
             m_Y *= s/len;
@@ -97,30 +98,30 @@ class FitVector
     
         double dot(FitVector &v)
         {
-            return ((m_X*v.m_X)+(m_Y*v.m_Y));
+            return (m_X * v.m_X) + (m_Y * v.m_Y);
         }
     
         double length()
         {
-            return (double) sqrt(m_X*m_X+m_Y*m_Y); 
+            return (double) sqrt(m_X*m_X + m_Y*m_Y);
         }
     
         QPointF operator+(QPointF &p)
         {
-            QPointF b(p.x()+m_X,p.y()+m_Y);
+            QPointF b(p.x() + m_X, p.y() + m_Y);
             return b;
         }
 
     public:
-        double m_X,m_Y;
+        double m_X, m_Y;
 };
 
 double distance(const QPointF& p1, const QPointF&  p2)
 {
-    double dx = (p1.x()-p2.x());
-    double dy = (p1.y()-p2.y());
+    double dx = (p1.x() - p2.x());
+    double dy = (p1.y() - p2.y());
 
-    return sqrt( dx*dx + dy*dy );
+    return sqrt(dx*dx + dy*dy);
 }
 
 FitVector computeLeftTangent(QPolygonF &points, int end)
@@ -133,7 +134,7 @@ FitVector computeLeftTangent(QPolygonF &points, int end)
 
 FitVector computeRightTangent(QPolygonF &points,int end)
 {
-    FitVector tHat1(points[end-1],points[end]);
+    FitVector tHat1(points[end-1], points[end]);
     tHat1.normalize();
 
     return tHat1;
@@ -149,7 +150,7 @@ double *chordLengthParameterize(QPolygonF points,int first,int last)
     int i;    
     double *u; /*  Parameterization */
 
-    u = new double[(last-first+1)];
+    u = new double[(last - first + 1)];
 
     u[0] = 0.0;
     for (i = first+1; i <= last; i++) 
@@ -355,7 +356,7 @@ QPointF bezierII(int degree,QPointF *V, double t)
     QPointF Q;            /* Point on curve at parameter t    */
     QPointF *Vtemp;        /* Local copy of control points        */
 
-    Vtemp = new QPointF[degree+1];
+    Vtemp = new QPointF[degree + 1];
     
     for (i = 0; i <= degree; i++) 
          Vtemp[i] = V[i];
@@ -481,7 +482,7 @@ QPointF *fitCubic(QPolygonF &points,int first,int last,FitVector tHat1,FitVector
     QPointF *curve;
     int i;
     width=0;
-    iterationError=error*error;
+    iterationError = error * error;
     nPts = last-first+1;
 
     if (nPts == 2) {
@@ -559,21 +560,22 @@ QPointF *fitCubic(QPolygonF &points,int first,int last,FitVector tHat1,FitVector
     return newcurve;
 }
 
-QPainterPath TupGraphicalAlgorithm::bezierFit(QPolygonF &pPoints,float error, int from, int to)
+QPainterPath TupGraphicalAlgorithm::bezierFit(QPolygonF &pPoints, float error, int from, int to,
+                                              bool closePath)
 {
     if (pPoints.count() < 3) {
         QPainterPath ret;
         ret.addPolygon(pPoints);
 
+        qDebug() << "TupGraphicalAlgorithm::bezierFit() - Flag 1";
         return ret;
     }
-    
-    QPolygonF points = TupGraphicalAlgorithm::polygonFit(pPoints);
-    
+
+    QPolygonF points = TupGraphicalAlgorithm::polygonFit(pPoints);    
     FitVector tHat1, tHat2;
-    
+
     if (to < 0)
-        to = points.count()-1;
+        to = points.count() - 1;
 
     if (from < 0)
         from = 0;
@@ -581,26 +583,26 @@ QPainterPath TupGraphicalAlgorithm::bezierFit(QPolygonF &pPoints,float error, in
     tHat1 = computeLeftTangent(points, from);
     tHat2 = computeRightTangent(points, to);
     
-    int width=0;
+    int width = 0;
     QPointF *curve;
     
     if (points.count() < MAXPOINTS) {
         curve = fitCubic(points, from, to, tHat1, tHat2, error, width);
     } else {
         QPainterPath path;
-        
-        QPolygonF tmp;
+        QPolygonF polygon;
+
         for (int i = from; i < to+1; i++) {
-             tmp << points[i];
+             polygon << points[i];
             
              if (i % 200 == 0) {
-                 path.addPolygon(tmp);
-                 tmp.clear();
+                 path.addPolygon(polygon);
+                 polygon.clear();
             }
         }
         
-        if ((to+1 - 200 ) % 200 != 0)
-            path.addPolygon(tmp);
+        if ((to + 1 - 200 ) % 200 != 0)
+            path.addPolygon(polygon);
         
         return path;
     }
@@ -611,11 +613,18 @@ QPainterPath TupGraphicalAlgorithm::bezierFit(QPolygonF &pPoints,float error, in
         path.moveTo(curve[0]);
 
         for (int i = 0; i < width; i += 4)
-             path.cubicTo( curve[i+1], curve[i+2], curve[i+3]);
+             path.cubicTo(curve[i + 1], curve[i + 2], curve[i + 3]);
     } else {
         path.addPolygon(points);
     }
-    
+
+    /*
+    QPainterPath::Element e = path.elementAt(0);
+    QPointF firstP(e.x, e.y);
+    path.lineTo(firstP);
+    */
+    if (closePath)
+        path.closeSubpath();
     delete[] curve;
 
     return path;

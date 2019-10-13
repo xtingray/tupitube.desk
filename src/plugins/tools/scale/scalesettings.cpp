@@ -33,13 +33,17 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "settings.h"
+#include "scalesettings.h"
 #include "tuptweenerstep.h"
 #include "tseparator.h"
 #include "tosd.h"
 
-PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
+#include <QDoubleSpinBox>
+#include <QDir>
+
+ScaleSettings::ScaleSettings(QWidget *parent) : QWidget(parent)
 {
+    scaleAxes = TupItemTweener::XY;
     selectionDone = false;
     stepsCounter = 0;
 
@@ -86,11 +90,11 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     activateMode(TupToolPlugin::Selection);
 }
 
-PenSettings::~PenSettings()
+ScaleSettings::~ScaleSettings()
 {
 }
 
-void PenSettings::setInnerForm()
+void ScaleSettings::setInnerForm()
 {
     innerPanel = new QWidget;
 
@@ -100,33 +104,33 @@ void PenSettings::setInnerForm()
     QLabel *startingLabel = new QLabel(tr("Starting at frame") + ": ");
     startingLabel->setAlignment(Qt::AlignVCenter);
 
-    initFrame = new QSpinBox;
-    initFrame->setEnabled(false);
-    initFrame->setMaximum(999);
-    connect(initFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromInit(int)));
+    initFrameSpin = new QSpinBox();
+    initFrameSpin->setEnabled(false);
+    initFrameSpin->setMaximum(999);
+    connect(initFrameSpin, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromInit(int)));
 
     QLabel *endingLabel = new QLabel(tr("Ending at frame") + ": ");
     endingLabel->setAlignment(Qt::AlignVCenter);
 
-    endFrame = new QSpinBox;
-    endFrame->setEnabled(true);
-    endFrame->setMaximum(999);
-    endFrame->setValue(1);
-    connect(endFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromEnd(int)));
+    endFrameSpin = new QSpinBox();
+    endFrameSpin->setEnabled(true);
+    endFrameSpin->setValue(1);
+    endFrameSpin->setMaximum(999);
+    connect(endFrameSpin, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromEnd(int)));
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
     startLayout->setMargin(0);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
-    startLayout->addWidget(initFrame);
+    startLayout->addWidget(initFrameSpin);
 
     QHBoxLayout *endLayout = new QHBoxLayout;
     endLayout->setAlignment(Qt::AlignHCenter);
     endLayout->setMargin(0);
     endLayout->setSpacing(0);
     endLayout->addWidget(endingLabel);
-    endLayout->addWidget(endFrame);
+    endLayout->addWidget(endFrameSpin);
 
     totalLabel = new QLabel(tr("Frames Total") + ": 1");
     totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
@@ -136,37 +140,34 @@ void PenSettings::setInnerForm()
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
 
-    comboInitFactor = new QDoubleSpinBox;
-    comboInitFactor->setMinimum(0.00);
-    comboInitFactor->setMaximum(1.00);
-    comboInitFactor->setDecimals(2);
-    comboInitFactor->setSingleStep(0.05);
-    comboInitFactor->setValue(1.00);
+    comboAxes = new QComboBox();
+    comboAxes->addItem(tr("Width & Height"));
+    comboAxes->addItem(tr("Only Width"));
+    comboAxes->addItem(tr("Only Height"));
+    QLabel *axesLabel = new QLabel(tr("Scale in") + ": ");
+    axesLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    QHBoxLayout *axesLayout = new QHBoxLayout;
+    axesLayout->setAlignment(Qt::AlignHCenter);
+    axesLayout->setMargin(0);
+    axesLayout->setSpacing(0);
+    axesLayout->addWidget(axesLabel);
+    axesLayout->addWidget(comboAxes);
 
-    QLabel *opacityInitLabel = new QLabel(tr("Initial Opacity") + ": ");
-    opacityInitLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    QHBoxLayout *opacityInitLayout = new QHBoxLayout;
-    opacityInitLayout->setAlignment(Qt::AlignHCenter);
-    opacityInitLayout->setMargin(0);
-    opacityInitLayout->setSpacing(0);
-    opacityInitLayout->addWidget(opacityInitLabel);
-    opacityInitLayout->addWidget(comboInitFactor);
+    comboFactor = new QDoubleSpinBox;
+    comboFactor->setDecimals(2);
+    comboFactor->setMinimum(0.0);
+    comboFactor->setMaximum(10);
+    comboFactor->setSingleStep(0.05);
+    comboFactor->setValue(1.10);
 
-    comboEndFactor = new QDoubleSpinBox;
-    comboEndFactor->setMinimum(0.00);
-    comboEndFactor->setMaximum(1.00);
-    comboEndFactor->setDecimals(2);
-    comboEndFactor->setSingleStep(0.05);
-    comboEndFactor->setValue(0.00);
-
-    QLabel *opacityEndLabel = new QLabel(tr("Ending Opacity") + ": ");
-    opacityEndLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    QHBoxLayout *opacityEndLayout = new QHBoxLayout;
-    opacityEndLayout->setAlignment(Qt::AlignHCenter);
-    opacityEndLayout->setMargin(0);
-    opacityEndLayout->setSpacing(0);
-    opacityEndLayout->addWidget(opacityEndLabel);
-    opacityEndLayout->addWidget(comboEndFactor);
+    QLabel *speedLabel = new QLabel(tr("Scaling Factor") + ": ");
+    speedLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    QHBoxLayout *speedLayout = new QHBoxLayout;
+    speedLayout->setAlignment(Qt::AlignHCenter);
+    speedLayout->setMargin(0);
+    speedLayout->setSpacing(0);
+    speedLayout->addWidget(speedLabel);
+    speedLayout->addWidget(comboFactor);
 
     iterationsCombo = new QSpinBox;
     iterationsCombo->setEnabled(true);
@@ -204,12 +205,11 @@ void PenSettings::setInnerForm()
     innerLayout->addLayout(endLayout);
     innerLayout->addLayout(totalLayout);
 
-    innerLayout->addSpacing(10);
+    innerLayout->addSpacing(15);
     innerLayout->addWidget(new TSeparator(Qt::Horizontal));
 
-    innerLayout->addLayout(opacityInitLayout);
-    innerLayout->addLayout(opacityEndLayout);
-
+    innerLayout->addLayout(axesLayout);
+    innerLayout->addLayout(speedLayout);
     innerLayout->addLayout(iterationsLayout);
     innerLayout->addLayout(loopLayout);
     innerLayout->addLayout(reverseLayout);
@@ -221,7 +221,7 @@ void PenSettings::setInnerForm()
     activeInnerForm(false);
 }
 
-void PenSettings::activeInnerForm(bool enable)
+void ScaleSettings::activeInnerForm(bool enable)
 {
     if (enable && !innerPanel->isVisible()) {
         propertiesDone = true;
@@ -234,8 +234,10 @@ void PenSettings::activeInnerForm(bool enable)
 
 // Adding new Tween
 
-void PenSettings::setParameters(const QString &name, int framesCount, int initFrame)
+void ScaleSettings::setParameters(const QString &name, int framesCount, int initFrame)
 {
+    Q_UNUSED(framesCount);
+
     mode = TupToolPlugin::Add;
     input->setText(name);
 
@@ -244,69 +246,82 @@ void PenSettings::setParameters(const QString &name, int framesCount, int initFr
     remove->setIcon(QPixmap(kAppProp->themeDir() + "icons/close.png"));
     remove->setToolTip(tr("Cancel Tween"));
 
-    initStartCombo(framesCount, initFrame);
+    initFrameSpin->setValue(initFrame + 1);
+    initFrameSpin->setEnabled(false);
 }
 
-// Editing current Tween
+// Editing new Tween
 
-void PenSettings::setParameters(TupItemTweener *currentTween)
+void ScaleSettings::setParameters(TupItemTweener *currentTween)
 {
     setEditMode();
     activateMode(TupToolPlugin::Properties);
 
     input->setText(currentTween->getTweenName());
 
-    initFrame->setEnabled(true);
-    initFrame->setValue(currentTween->getInitFrame() + 1);
-    endFrame->setValue(currentTween->getInitFrame() + currentTween->getFrames());
+    initFrameSpin->setEnabled(true);
+    initFrameSpin->setValue(currentTween->getInitFrame() + 1);
 
-    int end = endFrame->value();
+    endFrameSpin->setValue(currentTween->getInitFrame() + currentTween->getFrames());
+
+    /*
+    int begin = comboInit->value();
+    int end = comboEnd->value();
+    totalSteps = end - begin + 1;
+    totalLabel->setText(tr("Frames Total") + ": " + QString::number(totalSteps));
+    */
+
+    int end = endFrameSpin->value();
     updateRangeFromEnd(end);
 
-    comboInitFactor->setValue(currentTween->tweenOpacityInitialFactor());
-    comboEndFactor->setValue(currentTween->tweenOpacityEndingFactor());
-    iterationsCombo->setValue(currentTween->tweenOpacityIterations());
-    loopBox->setChecked(currentTween->tweenOpacityLoop());
-    reverseLoopBox->setChecked(currentTween->tweenOpacityReverseLoop());
+    // checkFramesRange();
+
+    comboAxes->setCurrentIndex(currentTween->tweenScaleAxes());
+    comboFactor->setValue(currentTween->tweenScaleFactor());
+
+    iterationsCombo->setValue(currentTween->tweenScaleIterations());
+
+    loopBox->setChecked(currentTween->tweenScaleLoop());
+    reverseLoopBox->setChecked(currentTween->tweenScaleReverseLoop());
 }
 
-void PenSettings::initStartCombo(int framesCount, int currentIndex)
+void ScaleSettings::initStartCombo(int framesCount, int currentIndex)
 {
-    initFrame->clear();
-    endFrame->clear();
+    initFrameSpin->clear();
+    endFrameSpin->clear();
 
-    initFrame->setMinimum(1);
-    initFrame->setMaximum(framesCount);
-    initFrame->setValue(currentIndex + 1);
+    initFrameSpin->setMinimum(1);
+    initFrameSpin->setMaximum(framesCount);
+    initFrameSpin->setValue(currentIndex + 1);
 
-    endFrame->setMinimum(1);
-    endFrame->setValue(framesCount);
+    endFrameSpin->setMinimum(1);
+    endFrameSpin->setValue(framesCount);
 }
 
-void PenSettings::setStartFrame(int currentIndex)
+void ScaleSettings::setStartFrame(int currentIndex)
 {
-    initFrame->setValue(currentIndex + 1);
-    int end = endFrame->value();
+    initFrameSpin->setValue(currentIndex + 1);
+    int end = endFrameSpin->value();
     if (end < currentIndex+1)
-        endFrame->setValue(currentIndex + 1);
+        endFrameSpin->setValue(currentIndex + 1);
 }
 
-int PenSettings::startFrame()
+int ScaleSettings::startFrame()
 {
-    return initFrame->value() - 1;
+    return initFrameSpin->value() - 1;
 }
 
-int PenSettings::startComboSize()
+int ScaleSettings::startComboSize()
 {
-    return initFrame->maximum();
+    return initFrameSpin->maximum();
 }
 
-int PenSettings::totalSteps()
+int ScaleSettings::totalSteps()
 {
-    return endFrame->value() - (initFrame->value() - 1);
+    return endFrameSpin->value() - (initFrameSpin->value() - 1);
 }
 
-void PenSettings::setEditMode()
+void ScaleSettings::setEditMode()
 {
     mode = TupToolPlugin::Edit;
     apply->setToolTip(tr("Update Tween"));
@@ -314,7 +329,7 @@ void PenSettings::setEditMode()
     remove->setToolTip(tr("Close Tween Properties"));
 }
 
-void PenSettings::applyTween()
+void ScaleSettings::applyTween()
 {
     if (!selectionDone) {
         TOsd::self()->display(tr("Info"), tr("You must select at least one object!"), TOsd::Info);
@@ -329,19 +344,20 @@ void PenSettings::applyTween()
     // SQA: Verify Tween is really well applied before call setEditMode!
     setEditMode();
 
-    if (!initFrame->isEnabled())
-        initFrame->setEnabled(true);
+    if (!initFrameSpin->isEnabled())
+        initFrameSpin->setEnabled(true);
 
     checkFramesRange();
+
     emit clickedApplyTween();
 }
 
-void PenSettings::notifySelection(bool flag)
+void ScaleSettings::notifySelection(bool flag)
 {
     selectionDone = flag;
 }
 
-QString PenSettings::currentTweenName() const
+QString ScaleSettings::currentTweenName() const
 {
     QString tweenName = input->text();
     if (tweenName.length() > 0)
@@ -350,7 +366,7 @@ QString PenSettings::currentTweenName() const
     return tweenName;
 }
 
-void PenSettings::emitOptionChanged(int option)
+void ScaleSettings::emitOptionChanged(int option)
 {
     switch (option) {
         case 0:
@@ -372,80 +388,104 @@ void PenSettings::emitOptionChanged(int option)
     }
 }
 
-QString PenSettings::tweenToXml(int currentScene, int currentLayer, int currentFrame)
+QString ScaleSettings::tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point,
+                             double initialXScaleFactor, double initialYScaleFactor)
 {
     QDomDocument doc;
 
     QDomElement root = doc.createElement("tweening");
     root.setAttribute("name", currentTweenName());
-    root.setAttribute("type", TupItemTweener::Opacity);
+    root.setAttribute("type", TupItemTweener::Scale);
     root.setAttribute("initFrame", currentFrame);
     root.setAttribute("initLayer", currentLayer);
     root.setAttribute("initScene", currentScene);
-  
+
+    // checkFramesRange();
     root.setAttribute("frames", stepsCounter);
-    root.setAttribute("origin", "0,0");
+    root.setAttribute("initXScaleFactor", QString::number(initialXScaleFactor));
+    root.setAttribute("initYScaleFactor", QString::number(initialYScaleFactor));
+    root.setAttribute("origin", QString::number(point.x()) + "," + QString::number(point.y()));
+    scaleAxes = TupItemTweener::TransformAxes(comboAxes->currentIndex());
+    root.setAttribute("scaleAxes", scaleAxes);
 
-    double initFactor = comboInitFactor->value();
-    root.setAttribute("initOpacityFactor", QString::number(initFactor));
-
-    double endFactor = comboEndFactor->value();
-    root.setAttribute("endOpacityFactor", QString::number(endFactor));
+    double factor = comboFactor->value();
+    root.setAttribute("scaleFactor", QString::number(factor));
 
     int iterations = iterationsCombo->value();
     if (iterations == 0) {
         iterations = 1;
-        iterationsCombo->setValue(1);
+        iterationsCombo->setValue(iterations);
     }
-    root.setAttribute("opacityIterations", iterations);
+    root.setAttribute("scaleIterations", iterations);
 
     bool loop = loopBox->isChecked();
     if (loop)
-        root.setAttribute("opacityLoop", "1");
+        root.setAttribute("scaleLoop", "1");
     else
-        root.setAttribute("opacityLoop", "0");
+        root.setAttribute("scaleLoop", "0");
 
     bool reverse = reverseLoopBox->isChecked();
     if (reverse)
-        root.setAttribute("opacityReverseLoop", "1");
+        root.setAttribute("scaleReverseLoop", "1");
     else
-        root.setAttribute("opacityReverseLoop", "0");
+        root.setAttribute("scaleReverseLoop", "0");
 
-    double delta = static_cast<double>(initFactor - endFactor) / static_cast<double>(iterations - 1);
-    double reference = 0;
+    double factorX = 1.0;
+    double factorY = 1.0;
+    double scaleX = 1.0;
+    double scaleY = 1.0;
+    double lastScaleX = 1.0;
+    double lastScaleY = 1.0;
+
+    if (scaleAxes == TupItemTweener::XY) {
+        factorX = factor;
+        factorY = factor;
+    } else if (scaleAxes == TupItemTweener::X) {
+        factorX = factor;
+    } else {
+        factorY = factor;
+    }
 
     int cycle = 1;
-    int reverseTop = (iterations*2)-2;
+    int reverseTop = (iterations * 2) - 2;
 
     for (int i=0; i < stepsCounter; i++) {
          if (cycle <= iterations) {
              if (cycle == 1) {
-                 reference = initFactor;
-             } else if (cycle == iterations) {
-                 reference = endFactor;
+                 scaleX = initialXScaleFactor;
+                 scaleY = initialYScaleFactor;
              } else {
-                 reference -= delta;
+                 scaleX *= factorX;
+                 scaleY *= factorY;
+                 lastScaleX = scaleX;
+                 lastScaleY = scaleY;
              }
              cycle++;
          } else {
              // if repeat option is enabled
              if (loop) {
                  cycle = 2;
-                 reference = initFactor;
+                 scaleX = initialXScaleFactor;
+                 scaleY = initialYScaleFactor;
+                 lastScaleX = scaleX;
+                 lastScaleY = scaleY;
              } else if (reverse) { // if reverse option is enabled
-                 reference += delta;
+                 scaleX /= factorX;
+                 scaleY /= factorY;
+                 lastScaleX = scaleX;
+                 lastScaleY = scaleY;
                  if (cycle < reverseTop)
                      cycle++;
                  else
                      cycle = 1;
-
              } else { // If cycle is done and no loop and no reverse
-                 reference = initFactor;
+                 scaleX = lastScaleX;
+                 scaleY = lastScaleY;
              }
          }
 
          TupTweenerStep *step = new TupTweenerStep(i);
-         step->setOpacity(reference);
+         step->setScale(scaleX, scaleY);
          root.appendChild(step->toXml(doc));
     }
 
@@ -454,26 +494,42 @@ QString PenSettings::tweenToXml(int currentScene, int currentLayer, int currentF
     return doc.toString();
 }
 
-void PenSettings::activateMode(TupToolPlugin::EditMode mode)
+void ScaleSettings::activateMode(TupToolPlugin::EditMode mode)
 {
     options->setCurrentIndex(mode);
 }
 
-void PenSettings::checkFramesRange()
+/*
+void Settings::updateLastFrame()
 {
-    int begin = initFrame->value();
-    int end = endFrame->value();
+    int end = comboInit->value() + totalSteps - 1;
+    comboEnd->setValue(end);
+}
+
+void Settings::checkTopLimit(int index)
+{
+    Q_UNUSED(index);
+    checkFramesRange();
+}
+*/
+
+void ScaleSettings::checkFramesRange()
+{
+    int begin = initFrameSpin->value();
+    int end = endFrameSpin->value();
 
     if (begin > end) {
-        initFrame->blockSignals(true);
-        endFrame->blockSignals(true);
+        // comboEnd->setValue(comboEnd->maximum() - 1);
+        // end = comboEnd->value();
+        initFrameSpin->blockSignals(true);
+        endFrameSpin->blockSignals(true);
         int tmp = end;
         end = begin;
         begin = tmp;
-        initFrame->setValue(begin);
-        endFrame->setValue(end);
-        initFrame->blockSignals(false);
-        endFrame->blockSignals(false);
+        initFrameSpin->setValue(begin);
+        endFrameSpin->setValue(end);
+        initFrameSpin->blockSignals(false);
+        endFrameSpin->blockSignals(false);
     }
 
     stepsCounter = end - begin + 1;
@@ -484,7 +540,7 @@ void PenSettings::checkFramesRange()
         iterationsCombo->setValue(stepsCounter);
 }
 
-void PenSettings::updateLoopCheckbox(int state)
+void ScaleSettings::updateLoopCheckbox(int state)
 {
     Q_UNUSED(state);
 
@@ -492,7 +548,7 @@ void PenSettings::updateLoopCheckbox(int state)
         loopBox->setChecked(false);
 }
 
-void PenSettings::updateReverseCheckbox(int state)
+void ScaleSettings::updateReverseCheckbox(int state)
 {
     Q_UNUSED(state);
 
@@ -500,16 +556,24 @@ void PenSettings::updateReverseCheckbox(int state)
         reverseLoopBox->setChecked(false);
 }
 
-void PenSettings::updateRangeFromInit(int begin)
+/*
+void Settings::updateTotalSteps(const QString &text)
 {
-    int end = endFrame->value();
+    Q_UNUSED(text);
+    checkFramesRange();
+}
+*/
+
+void ScaleSettings::updateRangeFromInit(int begin)
+{
+    int end = endFrameSpin->value();
     stepsCounter = end - begin + 1;
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepsCounter));
 }
 
-void PenSettings::updateRangeFromEnd(int end)
+void ScaleSettings::updateRangeFromEnd(int end) 
 {
-    int begin = initFrame->value();
+    int begin = initFrameSpin->value();
     stepsCounter = end - begin + 1;
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepsCounter));
 }

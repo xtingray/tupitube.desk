@@ -42,7 +42,7 @@
 #include "tupellipseitem.h"
 #include "tuppathitem.h"
 #include "tuplineitem.h"
-#include "settings.h"
+#include "geometricsettings.h"
 
 #include <QObject>
 #include <QLabel>
@@ -105,7 +105,7 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
         TupLineItem *line;
         TupPathItem *path;
         TupGraphicsScene *scene;
-        PenSettings *configPanel;
+        GeometricSettings *configPanel;
         bool added;
         QPointF currentPoint;
         QPointF lastPoint;

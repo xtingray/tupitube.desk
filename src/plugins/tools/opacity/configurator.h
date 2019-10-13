@@ -36,7 +36,7 @@
 #ifndef CONFIGURATOR_H
 #define CONFIGURATOR_H
 
-#include "settings.h"
+#include "opacitysettings.h"
 #include "tweenmanager.h"
 #include "buttonspanel.h"
 #include "tupitemtweener.h"
@@ -108,7 +108,7 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
 
         QBoxLayout *layout;
         QBoxLayout *settingsLayout;
-        PenSettings *settingsPanel;
+        OpacitySettings *settingsPanel;
         TweenManager *tweenManager;
         ButtonsPanel *controlPanel;
 

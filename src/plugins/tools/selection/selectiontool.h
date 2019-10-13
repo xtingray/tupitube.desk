@@ -41,7 +41,7 @@
 #include "tuppathitem.h"
 #include "tupproject.h"
 #include "tupgraphicsscene.h"
-#include "settings.h"
+#include "selectionsettings.h"
 #include "tupprojectresponse.h"
 #include "tupellipseitem.h"
 
@@ -99,10 +99,10 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
     private slots:
         void initItems(TupGraphicsScene *scene);
         void syncNodes();
-        void applyAlignAction(PenSettings::Align align);
-        void applyFlip(PenSettings::Flip flip);
-        void applyOrderAction(PenSettings::Order order);
-        void applyGroupAction(PenSettings::Group action);
+        void applyAlignAction(SelectionSettings::Align align);
+        void applyFlip(SelectionSettings::Flip flip);
+        void applyOrderAction(SelectionSettings::Order order);
+        void applyGroupAction(SelectionSettings::Group action);
         void updateItemPosition(int x, int y);
         void updateItemRotation(int angle);
         void updateItemScale(double xFactor, double yFactor);
@@ -119,7 +119,7 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         TupFrame* frameAt(int sceneIndex, int layerIndex, int frameIndex);
         void requestTransformation(QGraphicsItem *item, TupFrame *frame);
 
-        PenSettings *panel;
+        SelectionSettings *panel;
         QMap<QString, TAction *> selectActions;
         QList<QGraphicsItem *> selectedObjects;
         QList<NodeManager*> nodeManagers;

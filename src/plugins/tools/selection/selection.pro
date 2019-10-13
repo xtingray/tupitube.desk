@@ -19,12 +19,12 @@ target.path = /plugins/
 HEADERS += selectiontool.h \
            node.h \
            nodemanager.h \ 
-           settings.h
+           selectionsettings.h
 
 SOURCES += selectiontool.cpp \
            node.cpp \
            nodemanager.cpp \ 
-           settings.cpp
+           selectionsettings.cpp
 
 FRAMEWORK_DIR = "../../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

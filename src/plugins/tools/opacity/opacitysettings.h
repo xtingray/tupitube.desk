@@ -6,7 +6,7 @@
  *                                                                         *
  *   Developers:                                                           *
  *   2010:                                                                 *
- *    Gustavo Gonzalez / xtingray                                          *
+ *    Gustav Gonzalez / xtingray                                           *
  *                                                                         *
  *   KTooN's versions:                                                     * 
  *                                                                         *
@@ -33,27 +33,97 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef INFOPANEL_H
-#define INFOPANEL_H
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
 #include "tglobal.h"
+#include "tuptoolplugin.h"
+#include "tupitemtweener.h"
+#include "timagebutton.h"
+#include "tradiobuttongroup.h"
 
-#include <QLabel>
+#include <QWidget>
 #include <QBoxLayout>
-#include <QTextEdit>
+#include <QDoubleSpinBox>
+#include <QSpinBox>
+#include <QLineEdit>
+#include <QCheckBox>
+#include <QLabel>
 
 /**
  * @author Gustav Gonzalez 
 */
 
-class TUPITUBE_PLUGIN PenSettings : public QWidget
+class TUPITUBE_PLUGIN OpacitySettings : public QWidget 
 {
     Q_OBJECT
 
     public:
-        enum ToolType { Rectangle = 1, Ellipse, Line };
-        PenSettings(PenSettings::ToolType type, QWidget *parent = 0);
-        ~PenSettings();
+        OpacitySettings(QWidget *parent = nullptr);
+        ~OpacitySettings();
+
+        void setParameters(const QString &name, int framesCount, int startFrame);
+        void setParameters(TupItemTweener *currentTween);
+        void initStartCombo(int totalFrames, int currentIndex);
+        void setStartFrame(int currentIndex);
+        int startFrame();
+
+        int totalSteps();
+
+        QString currentTweenName() const;
+        void activateMode(TupToolPlugin::EditMode mode);
+        void notifySelection(bool flag);
+        int startComboSize();
+        QString tweenToXml(int currentScene, int currentLayer, int currentFrame);
+
+    private slots:
+        void applyTween();
+        void emitOptionChanged(int option);
+        void updateLoopCheckbox(int state);
+        void updateReverseCheckbox(int state);
+        void updateRangeFromInit(int begin);
+        void updateRangeFromEnd(int end);
+
+    signals:
+        void clickedSelect();
+        void clickedDefineProperties();
+        void clickedApplyTween();
+        void clickedResetTween();
+        void startingPointChanged(int index);
+        
+    private:
+        void setInnerForm();
+        void activeInnerForm(bool enable);
+        void setEditMode();
+        void checkFramesRange();
+
+        QWidget *innerPanel;
+        QBoxLayout *layout;
+        TupToolPlugin::Mode mode;
+
+        QLineEdit *input;
+
+        QSpinBox *initFrame;
+        QSpinBox *endFrame;
+
+        TRadioButtonGroup *options;
+
+        QDoubleSpinBox *comboInitFactor;
+        QDoubleSpinBox *comboEndFactor;
+
+        QSpinBox *iterationsCombo;
+
+        QCheckBox *loopBox;
+        QCheckBox *reverseLoopBox;
+
+        QLabel *totalLabel;
+        int stepsCounter;
+
+        bool selectionDone;
+        bool propertiesDone;
+
+        TImageButton *apply;
+        TImageButton *remove;
 };
 
 #endif

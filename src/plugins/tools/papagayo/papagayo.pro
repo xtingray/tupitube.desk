@@ -17,14 +17,14 @@ INSTALLS += target
 target.path = /plugins/
 
 HEADERS += mouthtarget.h \
-           settings.h \
+           papagayosettings.h \
            buttonspanel.h \
            configurator.h \
            lipsyncmanager.h \
            papagayotool.h 
 
 SOURCES += mouthtarget.cpp \
-           settings.cpp \
+           papagayosettings.cpp \
            buttonspanel.cpp \
            configurator.cpp \
            lipsyncmanager.cpp \

@@ -88,7 +88,7 @@ void Configurator::loadTweenList(QList<QString> tweenList)
 
 void Configurator::setPropertiesPanel()
 {
-    settingsPanel = new PenSettings(this);
+    settingsPanel = new ScaleSettings(this);
 
     connect(settingsPanel, SIGNAL(startingPointChanged(int)), this, SIGNAL(startingPointChanged(int)));
     connect(settingsPanel, SIGNAL(clickedSelect()), this, SIGNAL(clickedSelect()));

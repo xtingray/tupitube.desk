@@ -83,7 +83,7 @@ void Configurator::loadTweenList(QList<QString> tweenList)
 
 void Configurator::setPropertiesPanel()
 {
-    settingsPanel = new PenSettings(this);
+    settingsPanel = new ShearSettings(this);
 
     connect(settingsPanel, SIGNAL(initFrameChanged(int)), this, SIGNAL(initFrameChanged(int)));
     connect(settingsPanel, SIGNAL(clickedSelect()), this, SIGNAL(clickedSelect()));

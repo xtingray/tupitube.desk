@@ -104,26 +104,24 @@ void TupPenThicknessWidget::paintEvent(QPaintEvent *)
      
      if (style != Qt::TexturePattern) {  
          if (brushStyle != -1) {
-             // tFatal() << "TupPenThicknessWidget::paintEvent() - Setting pre-def brush";
+             // qDebug() << "TupPenThicknessWidget::paintEvent() - Setting pre-def brush";
              brush = QBrush(Qt::BrushStyle(brushStyle));
              brush.setColor(color);
          } else {
              if (currentBrush.gradient()) {
-                 // tFatal() << "TupPenThicknessWidget::paintEvent() - Setting gradient brush";
+                 // qDebug() << "TupPenThicknessWidget::paintEvent() - Setting gradient brush";
                  brush = currentBrush;
              } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupPenThicknessWidget::paintEvent() - Warning! NO gradient!";
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "TupPenThicknessWidget::paintEvent() - Warning! NO gradient!";
                 #endif
                 return;
              }
          }
+
          QPen pen(Qt::NoPen);
+         if (color == Qt::white)
+             pen = QPen(QColor(100, 100, 100), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
          painter.setPen(pen);
          painter.setBrush(brush);
          painter.setOpacity(opacity);

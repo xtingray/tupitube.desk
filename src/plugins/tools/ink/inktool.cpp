@@ -1093,9 +1093,9 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
 
         qreal radius = brushManager->pen().width() * pressCo;
         QPointF distance((radius + 2)/2, (radius + 2)/2);
+        QPointF center = currentPoint - distance;
         QPen inkPen(brushManager->penColor(), borderSize, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-        TupEllipseItem *blackEllipse = new TupEllipseItem(QRectF(currentPoint - distance,
-                                                                 QSize(static_cast<int>(radius), static_cast<int>(radius))));
+        TupEllipseItem *blackEllipse = new TupEllipseItem(QRectF(center, QSize(static_cast<int>(radius), static_cast<int>(radius))));
         if (showBorder)
             blackEllipse->setPen(inkPen);
         if (showFill)
@@ -1105,7 +1105,7 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
         QDomDocument doc;
         doc.appendChild(blackEllipse->toXml(doc));
         TupProjectRequest request = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(), gScene->currentLayerIndex(), gScene->currentFrameIndex(),
-                                                                         0, currentPoint, gScene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
+                                                                         0, center, gScene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
                                                                          doc.toString());
         emit requested(&request);
         return;
@@ -1137,7 +1137,8 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
 
     if (showFill) {
         // Set fill color for shape
-        stroke->setBrush(brushManager->penColor());
+        // stroke->setBrush(brushManager->penColor());
+        stroke->setBrush(brushManager->brush());
     }
 
     gScene->includeObject(stroke);
@@ -1268,7 +1269,7 @@ void InkTool::smoothPath(QPainterPath &path, double smoothness, int from, int to
     }
 
     if (smoothness > 0) {
-        path = TupGraphicalAlgorithm::bezierFit(pol, static_cast<float>(smoothness), from, to);
+        path = TupGraphicalAlgorithm::bezierFit(pol, static_cast<float>(smoothness), from, to, true);
     } else {
         path = QPainterPath();
         path.addPolygon(pol);

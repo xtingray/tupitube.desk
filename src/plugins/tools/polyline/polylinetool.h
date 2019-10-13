@@ -39,7 +39,7 @@
 #include "tglobal.h"
 #include "tuptoolplugin.h"
 #include "tuppathitem.h"
-#include "settings.h"
+#include "polylinesettings.h"
 #include "tcontrolnode.h"
 #include "tnodegroup.h"
 
@@ -112,7 +112,7 @@ class TUPITUBE_PLUGIN PolyLineTool : public TupToolPlugin
 
         QGraphicsLineItem *line1;
         QGraphicsLineItem *line2;
-        PenSettings *configPanel;
+        PolylineSettings *configPanel;
         QCursor polyCursor;
         qreal realFactor;
         bool cutterOn;

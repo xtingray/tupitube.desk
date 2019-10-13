@@ -33,7 +33,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "settings.h"
+#include "rotationsettings.h"
 #include "tupitemtweener.h"
 #include "tuptweenerstep.h"
 #include "tseparator.h"
@@ -41,7 +41,7 @@
 
 #include <math.h>
 
-PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
+RotationSettings::RotationSettings(QWidget *parent) : QWidget(parent)
 {
     selectionDone = false;
     propertiesDone = false;
@@ -91,11 +91,11 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     activateMode(TupToolPlugin::Selection);
 }
 
-PenSettings::~PenSettings()
+RotationSettings::~RotationSettings()
 {
 }
 
-void PenSettings::setInnerForm()
+void RotationSettings::setInnerForm()
 {
     innerPanel = new QWidget;
 
@@ -222,7 +222,7 @@ void PenSettings::setInnerForm()
     activeInnerForm(false);
 }
 
-void PenSettings::activeInnerForm(bool enable)
+void RotationSettings::activeInnerForm(bool enable)
 {
     if (enable && !innerPanel->isVisible()) {
         propertiesDone = true;
@@ -233,7 +233,7 @@ void PenSettings::activeInnerForm(bool enable)
     }
 }
 
-void PenSettings::setRangeForm()
+void RotationSettings::setRangeForm()
 {
     rangePanel = new QWidget;
     QBoxLayout *rangeLayout = new QBoxLayout(QBoxLayout::TopToBottom, rangePanel);
@@ -305,7 +305,7 @@ void PenSettings::setRangeForm()
     activeRangeForm(false);
 }
 
-void PenSettings::activeRangeForm(bool enable)
+void RotationSettings::activeRangeForm(bool enable)
 {
     if (enable && !rangePanel->isVisible())
         rangePanel->show();
@@ -315,7 +315,7 @@ void PenSettings::activeRangeForm(bool enable)
 
 // Adding new Tween
 
-void PenSettings::setParameters(const QString &name, int framesCount, int initFrame)
+void RotationSettings::setParameters(const QString &name, int framesCount, int initFrame)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -348,7 +348,7 @@ void PenSettings::setParameters(const QString &name, int framesCount, int initFr
 
 // Editing current Tween
 
-void PenSettings::setParameters(TupItemTweener *currentTween)
+void RotationSettings::setParameters(TupItemTweener *currentTween)
 {
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
@@ -385,7 +385,7 @@ void PenSettings::setParameters(TupItemTweener *currentTween)
     }
 }
 
-void PenSettings::initStartCombo(int framesCount, int currentIndex)
+void RotationSettings::initStartCombo(int framesCount, int currentIndex)
 {
     initFrame->clear();
     endFrame->clear();
@@ -398,7 +398,7 @@ void PenSettings::initStartCombo(int framesCount, int currentIndex)
     endFrame->setValue(framesCount);
 }
 
-void PenSettings::setStartFrame(int currentIndex)
+void RotationSettings::setStartFrame(int currentIndex)
 {
     initFrame->setValue(currentIndex + 1);
     int end = endFrame->value();
@@ -406,22 +406,22 @@ void PenSettings::setStartFrame(int currentIndex)
         endFrame->setValue(currentIndex + 1);
 }
 
-int PenSettings::startFrame()
+int RotationSettings::startFrame()
 {
     return initFrame->value() - 1;
 }
 
-int PenSettings::startComboSize()
+int RotationSettings::startComboSize()
 {
     return initFrame->maximum();
 }
 
-int PenSettings::totalSteps()
+int RotationSettings::totalSteps()
 {
     return endFrame->value() - (initFrame->value() - 1);
 }
 
-void PenSettings::setEditMode()
+void RotationSettings::setEditMode()
 {
     mode = TupToolPlugin::Edit;
     apply->setToolTip(tr("Update Tween"));
@@ -429,7 +429,7 @@ void PenSettings::setEditMode()
     remove->setToolTip(tr("Close Tween Properties"));
 }
 
-void PenSettings::applyTween()
+void RotationSettings::applyTween()
 {
     if (!selectionDone) {
         TOsd::self()->display(tr("Info"), tr("You must select at least one object!"), TOsd::Info); 
@@ -499,12 +499,12 @@ void PenSettings::applyTween()
     emit clickedApplyTween();
 }
 
-void PenSettings::notifySelection(bool flag)
+void RotationSettings::notifySelection(bool flag)
 {
     selectionDone = flag;
 }
 
-QString PenSettings::currentTweenName() const
+QString RotationSettings::currentTweenName() const
 {
     QString tweenName = input->text();
     if (tweenName.length() > 0)
@@ -513,7 +513,7 @@ QString PenSettings::currentTweenName() const
     return tweenName;
 }
 
-void PenSettings::emitOptionChanged(int option)
+void RotationSettings::emitOptionChanged(int option)
 {
     switch (option) {
         case 0:
@@ -543,7 +543,7 @@ void PenSettings::emitOptionChanged(int option)
     }
 }
 
-QString PenSettings::tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point)
+QString RotationSettings::tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point)
 {
     QDomDocument doc;
 
@@ -683,12 +683,12 @@ QString PenSettings::tweenToXml(int currentScene, int currentLayer, int currentF
     return doc.toString();
 }
 
-void PenSettings::activateMode(TupToolPlugin::EditMode mode)
+void RotationSettings::activateMode(TupToolPlugin::EditMode mode)
 {
     options->setCurrentIndex(mode);
 }
 
-void PenSettings::refreshForm(int type)
+void RotationSettings::refreshForm(int type)
 {
     if (type == 0) {
         rotationType = TupItemTweener::Continuos;
@@ -715,7 +715,7 @@ void Settings::updateLastFrame()
 }
 */
 
-void PenSettings::checkFramesRange()
+void RotationSettings::checkFramesRange()
 {
     int begin = initFrame->value();
     int end = endFrame->value();
@@ -738,7 +738,7 @@ void PenSettings::checkFramesRange()
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepsCounter));
 }
 
-void PenSettings::updateRangeCheckbox(int state)
+void RotationSettings::updateRangeCheckbox(int state)
 {
     Q_UNUSED(state);
 
@@ -746,7 +746,7 @@ void PenSettings::updateRangeCheckbox(int state)
         rangeLoopBox->setChecked(false);
 }
 
-void PenSettings::updateReverseCheckbox(int state)
+void RotationSettings::updateReverseCheckbox(int state)
 {
     Q_UNUSED(state);
 
@@ -762,7 +762,7 @@ void Settings::updateTotalSteps(const QString &text)
 }
 */
 
-void PenSettings::checkRange(int index)
+void RotationSettings::checkRange(int index)
 {
     Q_UNUSED(index);
 
@@ -777,14 +777,14 @@ void PenSettings::checkRange(int index)
     }
 }
 
-void PenSettings::updateRangeFromInit(int begin)
+void RotationSettings::updateRangeFromInit(int begin)
 {
     int end = endFrame->value();
     stepsCounter = end - begin + 1;
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepsCounter));
 }
 
-void PenSettings::updateRangeFromEnd(int end)
+void RotationSettings::updateRangeFromEnd(int end)
 {
     int begin = initFrame->value();
     stepsCounter = end - begin + 1;

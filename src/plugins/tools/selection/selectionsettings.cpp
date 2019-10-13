@@ -34,13 +34,13 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "settings.h"
+#include "selectionsettings.h"
 #include "tdebug.h"
 #include "tapplicationproperties.h"
 #include "timagebutton.h"
 #include "tseparator.h"
 
-PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
+SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
 {
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 
@@ -302,56 +302,56 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     isVisible = false;
 }
 
-PenSettings::~PenSettings()
+SelectionSettings::~SelectionSettings()
 {
 }
 
-void PenSettings::hFlip()
+void SelectionSettings::hFlip()
 {
-    emit callFlip(PenSettings::Horizontal);
+    emit callFlip(SelectionSettings::Horizontal);
 }
 
-void PenSettings::vFlip()
+void SelectionSettings::vFlip()
 {
-    emit callFlip(PenSettings::Vertical);
+    emit callFlip(SelectionSettings::Vertical);
 }
 
-void PenSettings::cFlip()
+void SelectionSettings::cFlip()
 {
-    emit callFlip(PenSettings::Crossed);
+    emit callFlip(SelectionSettings::Crossed);
 }
 
-void PenSettings::sendToBack()
+void SelectionSettings::sendToBack()
 {
-    emit callOrderAction(PenSettings::ToBack);
+    emit callOrderAction(SelectionSettings::ToBack);
 }
 
-void PenSettings::sendToBackOneLevel()
+void SelectionSettings::sendToBackOneLevel()
 {
-    emit callOrderAction(PenSettings::ToBackOneLevel);
+    emit callOrderAction(SelectionSettings::ToBackOneLevel);
 }
 
-void PenSettings::sendToFront()
+void SelectionSettings::sendToFront()
 {
-    emit callOrderAction(PenSettings::ToFront);
+    emit callOrderAction(SelectionSettings::ToFront);
 }
 
-void PenSettings::sendToFrontOneLevel()
+void SelectionSettings::sendToFrontOneLevel()
 {
-    emit callOrderAction(PenSettings::ToFrontOneLevel);
+    emit callOrderAction(SelectionSettings::ToFrontOneLevel);
 }
 
-void PenSettings::groupItems()
+void SelectionSettings::groupItems()
 {
-    emit callGroupAction(PenSettings::GroupItems);
+    emit callGroupAction(SelectionSettings::GroupItems);
 }
 
-void PenSettings::ungroupItems()
+void SelectionSettings::ungroupItems()
 {
-    emit callGroupAction(PenSettings::UngroupItems);
+    emit callGroupAction(SelectionSettings::UngroupItems);
 }
 
-void PenSettings::openTipPanel()
+void SelectionSettings::openTipPanel()
 {
     if (help->isVisible()) {
        help->hide();
@@ -366,7 +366,7 @@ void PenSettings::openTipPanel()
     }
 }
 
-void PenSettings::enableFormControls(bool flag)
+void SelectionSettings::enableFormControls(bool flag)
 {
     if (flag) {
         if (help->isVisible())
@@ -376,7 +376,7 @@ void PenSettings::enableFormControls(bool flag)
     formPanel->setVisible(flag);
 }
 
-void PenSettings::setPos(int x, int y)
+void SelectionSettings::setPos(int x, int y)
 {
    xPosField->blockSignals(true);
    yPosField->blockSignals(true);
@@ -390,7 +390,7 @@ void PenSettings::setPos(int x, int y)
    yPosField->blockSignals(false);
 }
 
-void PenSettings::updateRotationAngle(int angle)
+void SelectionSettings::updateRotationAngle(int angle)
 {
 #ifdef TUP_DEBUG
     #ifdef Q_OS_WIN
@@ -410,7 +410,7 @@ void PenSettings::updateRotationAngle(int angle)
     angleField->blockSignals(false);
 }
 
-void PenSettings::updateScaleFactor(double x, double y)
+void SelectionSettings::updateScaleFactor(double x, double y)
 {
 #ifdef TUP_DEBUG
     QString msg1 = "Settings::updateScaleFactor() - x: " + QString::number(x);
@@ -437,19 +437,19 @@ void PenSettings::updateScaleFactor(double x, double y)
    factorYField->blockSignals(false);
 }
 
-void PenSettings::notifyXMovement(int x)
+void SelectionSettings::notifyXMovement(int x)
 {
     emit positionUpdated(x -currentX, 0);
     currentX =xPosField->value();
 }
 
-void PenSettings::notifyYMovement(int y)
+void SelectionSettings::notifyYMovement(int y)
 {
     emit positionUpdated(0, y -currentY);
     currentY =yPosField->value();
 }
 
-void PenSettings::notifyRotation(int angle)
+void SelectionSettings::notifyRotation(int angle)
 {
     if (angle == 360) {
         angle = 0;
@@ -459,7 +459,7 @@ void PenSettings::notifyRotation(int angle)
     currentAngle =angleField->value();
 }
 
-void PenSettings::notifyXScale(double factor)
+void SelectionSettings::notifyXScale(double factor)
 {
     if (propCheck->isChecked()) {
         currentYFactor = factor;
@@ -470,7 +470,7 @@ void PenSettings::notifyXScale(double factor)
     currentXFactor = factor;
 }
 
-void PenSettings::notifyYScale(double factor)
+void SelectionSettings::notifyYScale(double factor)
 {
     if (propCheck->isChecked()) {
        currentXFactor = factor;
@@ -481,7 +481,7 @@ void PenSettings::notifyYScale(double factor)
     currentYFactor = factor;
 }
 
-void PenSettings::enableProportion(int flag)
+void SelectionSettings::enableProportion(int flag)
 {
     bool enable = false;
     if (flag == Qt::Checked) {
@@ -493,29 +493,29 @@ void PenSettings::enableProportion(int flag)
     emit activateProportion(enable);
 }
 
-void PenSettings::setProportionState(int flag)
+void SelectionSettings::setProportionState(int flag)
 {
     propCheck->blockSignals(true);
     propCheck->setChecked(flag);
     propCheck->blockSignals(false);
 }
 
-bool PenSettings::formIsVisible()
+bool SelectionSettings::formIsVisible()
 {
     return isVisible;
 }
 
-void PenSettings::alignObjectHorizontally()
+void SelectionSettings::alignObjectHorizontally()
 {
-    emit callAlignAction(PenSettings::hAlign);
+    emit callAlignAction(SelectionSettings::hAlign);
 }
 
-void PenSettings::alignObjectVertically()
+void SelectionSettings::alignObjectVertically()
 {
-    emit callAlignAction(PenSettings::vAlign);
+    emit callAlignAction(SelectionSettings::vAlign);
 }
 
-void PenSettings::alignObjectAbsolutely()
+void SelectionSettings::alignObjectAbsolutely()
 {
-    emit callAlignAction(PenSettings::totalAlign);
+    emit callAlignAction(SelectionSettings::totalAlign);
 }

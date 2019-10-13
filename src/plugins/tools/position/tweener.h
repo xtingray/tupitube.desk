@@ -38,7 +38,7 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
-#include "settings.h"
+#include "possettings.h"
 #include "tupprojectresponse.h"
 #include "tnodegroup.h"
 #include "configurator.h"

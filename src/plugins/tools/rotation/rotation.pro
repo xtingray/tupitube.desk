@@ -18,11 +18,11 @@ target.path = /plugins/
 
 HEADERS += tweener.h \
            configurator.h \
-           settings.h
+           rotationsettings.h
 
 SOURCES += tweener.cpp \
            configurator.cpp \
-           settings.cpp
+           rotationsettings.cpp
 
 FRAMEWORK_DIR = "../../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

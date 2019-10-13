@@ -38,7 +38,7 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
-#include "settings.h"
+#include "scalesettings.h"
 #include "tupprojectresponse.h"
 #include "configurator.h"
 

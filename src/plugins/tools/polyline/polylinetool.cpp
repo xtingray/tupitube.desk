@@ -464,7 +464,7 @@ int PolyLineTool::toolType() const
 QWidget *PolyLineTool::configurator()
 {
     if (!configPanel)
-        configPanel = new PenSettings;
+        configPanel = new PolylineSettings;
 
     return configPanel;
 }

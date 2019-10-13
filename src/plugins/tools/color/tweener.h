@@ -41,7 +41,7 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
-#include "settings.h"
+#include "colorsettings.h"
 #include "configurator.h"
 
 /**

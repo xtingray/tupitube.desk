@@ -38,7 +38,7 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
-#include "settings.h"
+#include "papagayosettings.h"
 #include "tupprojectresponse.h"
 #include "configurator.h"
 #include "mouthtarget.h"
