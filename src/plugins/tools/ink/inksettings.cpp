@@ -35,6 +35,8 @@
 
 #include "inksettings.h"
 #include "tconfig.h"
+#include "tapplicationproperties.h"
+#include "tseparator.h"
 
 #include <QLabel>
 #include <QBoxLayout>
@@ -58,6 +60,14 @@ InkSettings::InkSettings(QWidget *parent) :QWidget(parent)
 
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 
+    QLabel *toolTitle = new QLabel;
+    toolTitle->setAlignment(Qt::AlignHCenter);
+    QPixmap pic(THEME_DIR + "icons/ink.png");
+    toolTitle->setPixmap(pic.scaledToWidth(16, Qt::SmoothTransformation));
+    toolTitle->setToolTip(tr("Pencil Properties"));
+    mainLayout->addWidget(toolTitle);
+    mainLayout->addWidget(new TSeparator(Qt::Horizontal));
+
     QBoxLayout *borderLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     QLabel *appearanceLabel = new QLabel(tr("Appearance"));
     appearanceLabel->setFont(titleFont);
@@ -70,46 +80,10 @@ InkSettings::InkSettings(QWidget *parent) :QWidget(parent)
     connect(borderOption, SIGNAL(toggled(bool)), this, SLOT(updateBorderOption(bool)));
     mainLayout->addWidget(borderOption);
 
-    borderColor = QColor("#000");
-    borderColorButton = new QPushButton();
-    borderColorButton->setText(tr("Black"));
-    borderColorButton->setPalette(QPalette(borderColor));
-    borderColorButton->setAutoFillBackground(true);
-    connect(borderColorButton, SIGNAL(clicked()), this, SLOT(setBorderColor()));
-
-    QLabel *borderColorLabel = new QLabel(tr("Border Color") + ": ");
-    borderColorLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    QHBoxLayout *borderColorLayout = new QHBoxLayout;
-    borderColorLayout->setAlignment(Qt::AlignHCenter);
-    borderColorLayout->setMargin(0);
-    borderColorLayout->setSpacing(0);
-    borderColorLayout->addWidget(borderColorLabel);
-    borderColorLayout->addWidget(borderColorButton);
-
-    mainLayout->addLayout(borderColorLayout);
-
     fillOption = new QCheckBox(tr("Enable fill"));
     fillOption->setChecked(showFill);
     connect(fillOption, SIGNAL(toggled(bool)), this, SLOT(updateFillOption(bool)));
     mainLayout->addWidget(fillOption);
-
-    fillColor = QColor("#000");
-    fillColorButton = new QPushButton();
-    fillColorButton->setText(tr("Black"));
-    fillColorButton->setPalette(QPalette(borderColor));
-    fillColorButton->setAutoFillBackground(true);
-    connect(fillColorButton, SIGNAL(clicked()), this, SLOT(setBorderColor()));
-
-    QLabel *fillColorLabel = new QLabel(tr("Fill Color") + ": ");
-    fillColorLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    QHBoxLayout *fillColorLayout = new QHBoxLayout;
-    fillColorLayout->setAlignment(Qt::AlignHCenter);
-    fillColorLayout->setMargin(0);
-    fillColorLayout->setSpacing(0);
-    fillColorLayout->addWidget(fillColorLabel);
-    fillColorLayout->addWidget(fillColorButton);
-
-    mainLayout->addLayout(fillColorLayout);
 
     QBoxLayout *paramsLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     QLabel *paramsLabel = new QLabel(tr("Parameters"));
@@ -128,8 +102,6 @@ InkSettings::InkSettings(QWidget *parent) :QWidget(parent)
     borderSizeBox->setMinimum(1);
     borderSizeBox->setMaximum(10);
     borderSizeBox->setValue(borderSize);
-
-    qDebug() << "InkSettings() - borderSize: " <<  borderSize;
 
     connect(borderSizeBox, SIGNAL(valueChanged(int)), this, SIGNAL(borderSizeUpdated(int)));
     borderSizeLayout->addWidget(borderSizeBox);
@@ -206,29 +178,3 @@ void InkSettings::updateSmoothness(double value)
     smoothBox->setValue(value);
     smoothBox->blockSignals(false);
 }
-
-void InkSettings::setBorderColor()
-{
-    borderColor = QColorDialog::getColor(borderColor, this, tr("Pick Border Color"),
-                                         QColorDialog::ShowAlphaChannel);
-    updateColor(borderColor, borderColorButton);
-}
-
-void InkSettings::updateColor(QColor color, QPushButton *colorButton)
-{
-    if (color.isValid()) {
-        colorButton->setText(color.name());
-        colorButton->setStyleSheet("QPushButton { background-color: " + color.name()
-                                    + "; color: " + labelColor(color) + "; }");
-    }
-}
-
-QString InkSettings::labelColor(QColor color) const
-{
-    QString text = "white";
-    if (color.red() > 50 && color.green() > 50 && color.blue() > 50)
-        text = "black";
-    return text;
-}
-
-

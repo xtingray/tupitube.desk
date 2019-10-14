@@ -77,7 +77,8 @@ QStringList InkTool::keys() const
     return QStringList() << tr("Ink");
 }
 
-void InkTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
+void InkTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager,
+                    TupGraphicsScene *gScene)
 {
     firstHalfOnTop = true;
     previousDirection = None;
@@ -114,7 +115,8 @@ void InkTool::press(const TupInputDeviceInformation *input, TupBrushManager *bru
     arrowSize = -1;
 }
 
-void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
+void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager,
+                   TupGraphicsScene *gScene)
 {
     Q_UNUSED(brushManager)
 
@@ -1098,8 +1100,12 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
         TupEllipseItem *blackEllipse = new TupEllipseItem(QRectF(center, QSize(static_cast<int>(radius), static_cast<int>(radius))));
         if (showBorder)
             blackEllipse->setPen(inkPen);
-        if (showFill)
-            blackEllipse->setBrush(inkPen.brush());
+        if (showFill) {
+            Qt::BrushStyle style = brushManager->penBrush().style();
+            QBrush brush = brushManager->brush();
+            brush.setStyle(style);
+            blackEllipse->setBrush(brush);
+        }
         gScene->includeObject(blackEllipse);
 
         QDomDocument doc;
@@ -1137,8 +1143,12 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
 
     if (showFill) {
         // Set fill color for shape
-        // stroke->setBrush(brushManager->penColor());
-        stroke->setBrush(brushManager->brush());
+        Qt::BrushStyle style = brushManager->penBrush().style();
+        QBrush brush = brushManager->brush();
+        brush.setStyle(style);
+        if (!showBorder)
+            stroke->setPen(Qt::NoPen);
+        stroke->setBrush(brush);
     }
 
     gScene->includeObject(stroke);
