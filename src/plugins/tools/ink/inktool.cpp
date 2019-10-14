@@ -1104,6 +1104,8 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
             Qt::BrushStyle style = brushManager->penBrush().style();
             QBrush brush = brushManager->brush();
             brush.setStyle(style);
+            if (!showBorder)
+                blackEllipse->setPen(Qt::NoPen);
             blackEllipse->setBrush(brush);
         }
         gScene->includeObject(blackEllipse);
