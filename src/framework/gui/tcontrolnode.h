@@ -59,8 +59,8 @@ class T_GUI_EXPORT TControlNode : public QGraphicsItem
 {
     public:
         enum State { Pressed = 1, Released };
-        TControlNode(int index, TNodeGroup *nodeGroup, const QPointF & pos = QPoint(0,0),  
-                     QGraphicsItem * parent = 0, QGraphicsScene * scene = 0, int level = 0);
+        TControlNode(int index, TNodeGroup *nodeGroup, const QPointF & pos = QPoint(0, 0),
+                     QGraphicsItem * parent = nullptr, QGraphicsScene * scene = nullptr, int level = 0);
         
         ~TControlNode();
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *);
@@ -88,7 +88,7 @@ class T_GUI_EXPORT TControlNode : public QGraphicsItem
         QVariant itemChange(GraphicsItemChange change, const QVariant &value);
         void mousePressEvent(QGraphicsSceneMouseEvent *event);
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-        void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
+        void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
      
     private:
         void paintLinesToChildNodes(QPainter * painter);

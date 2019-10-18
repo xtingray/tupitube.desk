@@ -58,6 +58,7 @@ class TUPITUBE_PLUGIN InkSettings : public QWidget
         ~InkSettings();
 
         void updateSmoothness(double value);
+        bool smooothnessIsEnabled();
 
     private slots:
         void updateBorderOption(bool showBorder);

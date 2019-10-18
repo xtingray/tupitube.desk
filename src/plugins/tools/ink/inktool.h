@@ -90,13 +90,15 @@ class TUPITUBE_PLUGIN InkTool : public TupToolPlugin
 
     private:
         void setupActions();
-        void smoothPath(QPainterPath &guidePainterPath, double smoothness, int from = 0, int to = -1);
+        void smoothPath(QPainterPath &guidePainterPath, double smoothness, int from = 0,
+                        int to = -1, bool closePath = false);
+        void removeExtraPoints();
 
     private:
         QPointF firstPoint;
         QPointF oldPos;
 
-        QPointF previewPoint;
+        QPointF previousPoint;
         QPointF firstHalfPrevious;
         bool firstHalfOnTop;
         QPointF secondHalfPrevious;
@@ -114,7 +116,7 @@ class TUPITUBE_PLUGIN InkTool : public TupToolPlugin
         qreal initPenWidth;
         qreal penWidth;
         qreal penPress;
-        qreal oldSlope;
+        // qreal oldSlope;
         int arrowSize;
         int firstArrow;
         QCursor inkCursor;

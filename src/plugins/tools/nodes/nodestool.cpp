@@ -57,7 +57,7 @@ void NodesTool::init(TupGraphicsScene *gScene)
         scene->clearSelection();
         if (nodeGroup) {
             nodeGroup->clear();
-            nodeGroup = 0;
+            nodeGroup = nullptr;
         }
     }
 
@@ -71,29 +71,25 @@ QStringList NodesTool::keys() const
 
 void NodesTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
-    Q_UNUSED(gScene);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
+    Q_UNUSED(gScene)
 }
 
 void NodesTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
-    Q_UNUSED(gScene);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
+    Q_UNUSED(gScene)
 }
 
 void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[NodesTool::release()]";
-        #else
-            T_FUNCINFOX("tools");
-        #endif
+        qDebug() << "NodesTool::release()";
     #endif
 
-    Q_UNUSED(brushManager);
+    Q_UNUSED(brushManager)
 
     QList<QGraphicsItem *> currentSelection = gScene->selectedItems();
     if (!currentSelection.isEmpty()) {
@@ -243,7 +239,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                 #endif
             #endif
             nodeGroup->clear();
-            nodeGroup = 0;
+            nodeGroup = nullptr;
             activeSelection = false;
         }
     } 
@@ -251,7 +247,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
 
 TupFrame* NodesTool::getCurrentFrame()
 {
-    TupFrame *frame = 0;
+    TupFrame *frame = nullptr;
     if (scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
         frame = scene->currentFrame();
         currentLayer = scene->currentLayerIndex();
@@ -282,7 +278,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
         #endif
     #endif
 
-    QGraphicsItem *item = 0;
+    QGraphicsItem *item = nullptr;
 
     if (response->getAction() != TupProjectRequest::Remove) {
         TupFrame *frame = getCurrentFrame();
@@ -342,7 +338,6 @@ void NodesTool::itemResponse(const TupItemResponse *response)
             {
                  return;
             }
-            break;
             case TupProjectRequest::Ungroup:
             {
                  // reset(scene);
@@ -364,7 +359,6 @@ void NodesTool::itemResponse(const TupItemResponse *response)
 
                  return;
             }
-            break;
             default:
             {
                  #ifdef TUP_DEBUG
@@ -379,7 +373,6 @@ void NodesTool::itemResponse(const TupItemResponse *response)
                      }
                  }
             }
-            break;
     }
 }
 
@@ -417,12 +410,12 @@ int NodesTool::toolType() const
 
 QWidget *NodesTool::configurator()
 {
-    return 0;
+    return nullptr;
 }
 
 void NodesTool::aboutToChangeScene(TupGraphicsScene *scene)
 {
-    Q_UNUSED(scene);
+    Q_UNUSED(scene)
 }
 
 void NodesTool::aboutToChangeTool()
@@ -466,7 +459,7 @@ void NodesTool::clearSelection()
             activeSelection = false;
         if (nodeGroup) {
             nodeGroup->clear();
-            nodeGroup = 0;
+            nodeGroup = nullptr;
         }
     }
 }

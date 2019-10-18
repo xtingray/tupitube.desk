@@ -38,11 +38,7 @@
 TNodeGroup::TNodeGroup(QGraphicsItem *parent, QGraphicsScene *scene, GroupType type, int level)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TNodeGroup()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "TNodeGroup()";
     #endif
 
     nodeParentItem = parent;
@@ -62,11 +58,7 @@ QGraphicsItem *TNodeGroup::parentItem()
 TNodeGroup::~TNodeGroup()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TNodeGroup()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "[~TNodeGroup()]";
     #endif
 
     delete nodeParentItem;
@@ -90,11 +82,7 @@ void TNodeGroup::clear()
 void TNodeGroup::syncNodes(const QPainterPath &path)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TNodeGroup::syncNodes()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TNodeGroup::syncNodes()";
     #endif
 
     if (nodes.isEmpty())
@@ -111,11 +99,7 @@ void TNodeGroup::syncNodes(const QPainterPath &path)
 void TNodeGroup::syncNodesFromParent()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TNodeGroup::syncNodesFromParent()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TNodeGroup::syncNodesFromParent()";
     #endif
 
     if (nodeParentItem) {
@@ -128,11 +112,7 @@ void TNodeGroup::syncNodesFromParent()
 void TNodeGroup::setParentItem(QGraphicsItem *newParent)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TNodeGroup::setParentItem()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TNodeGroup::setParentItem()";
     #endif
 
     nodeParentItem = newParent;
@@ -146,11 +126,7 @@ void TNodeGroup::moveElementTo(int index, const QPointF& pos)
 {
     /*
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TNodeGroup::moveElementTo()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TNodeGroup::moveElementTo()]";
     #endif
     */
 
@@ -221,11 +197,7 @@ int TNodeGroup::removeSelectedNodes()
 void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TNodeGroup::createNodes()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TNodeGroup::createNodes()";
     #endif
 
     if (pathItem) {
@@ -243,12 +215,12 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
             if (e.type == QPainterPath::CurveToDataElement) {
                 if (index - 2 < 0)
                     continue;
-                if (path.elementAt(index-2).type == QPainterPath::CurveToElement) {
+                if (path.elementAt(index - 2).type == QPainterPath::CurveToElement) {
                     TControlNode *node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
                     QPainterPath::Element e1 = path.elementAt(index - 1);
                     node->setLeft(new TControlNode(index - 1, this, e1, pathItem, nodeScene, nodeLevel));
                     
-                    if (index+1 < path.elementCount()) {
+                    if (index + 1 < path.elementCount()) {
                         QPainterPath::Element e2 = path.elementAt(index+1);
                         if (e2.type == QPainterPath::CurveToElement) {
                             node->setRight(new TControlNode(index + 1, this, e2, pathItem, nodeScene, nodeLevel));
@@ -262,7 +234,7 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
             } else if ((e.type == QPainterPath::LineToElement || e.type == QPainterPath::MoveToElement)) {
                 TControlNode *node;
                 if (index+1 < path.elementCount()) {
-                    if (path.elementAt(index+1).type == QPainterPath::CurveToElement) {
+                    if (path.elementAt(index + 1).type == QPainterPath::CurveToElement) {
                         node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
                         node->setRight(new TControlNode(index + 1, this, path.elementAt(index + 1), pathItem, nodeScene));
                         
@@ -282,12 +254,7 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TNodeGroup::createNodes() - Fatal Error: Item is NULL!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TNodeGroup::createNodes() - Fatal Error: Item is NULL!";
         #endif
     }
 }
@@ -299,11 +266,7 @@ void TNodeGroup::addControlNode(TControlNode*)
 void TNodeGroup::emitNodeClicked(TControlNode::State state)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TNodeGroup::emitNodeClicked()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TNodeGroup::emitNodeClicked()";
     #endif
 
     /* SQA: Possible code for the future 

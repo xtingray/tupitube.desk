@@ -567,7 +567,6 @@ QPainterPath TupGraphicalAlgorithm::bezierFit(QPolygonF &pPoints, float error, i
         QPainterPath ret;
         ret.addPolygon(pPoints);
 
-        qDebug() << "TupGraphicalAlgorithm::bezierFit() - Flag 1";
         return ret;
     }
 
@@ -623,6 +622,7 @@ QPainterPath TupGraphicalAlgorithm::bezierFit(QPolygonF &pPoints, float error, i
     QPointF firstP(e.x, e.y);
     path.lineTo(firstP);
     */
+
     if (closePath)
         path.closeSubpath();
     delete[] curve;

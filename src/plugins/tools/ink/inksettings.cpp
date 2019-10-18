@@ -178,3 +178,8 @@ void InkSettings::updateSmoothness(double value)
     smoothBox->setValue(value);
     smoothBox->blockSignals(false);
 }
+
+bool InkSettings::smooothnessIsEnabled()
+{
+    return smoothLabel->isChecked();
+}

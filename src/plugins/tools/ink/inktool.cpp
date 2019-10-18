@@ -82,7 +82,7 @@ void InkTool::press(const TupInputDeviceInformation *input, TupBrushManager *bru
 {
     firstHalfOnTop = true;
     previousDirection = None;
-    oldSlope = 0;
+    // oldSlope = 0;
     initPenWidth = brushManager->pen().widthF() / 6;
     penWidth = initPenWidth;
 
@@ -101,7 +101,7 @@ void InkTool::press(const TupInputDeviceInformation *input, TupBrushManager *bru
     oldPos = input->pos();
     firstHalfPrevious = input->pos();
     secondHalfPrevious = input->pos();
-    previewPoint = input->pos();
+    previousPoint = input->pos();
 
     // Guide line
     guidePath = new TupPathItem();
@@ -123,9 +123,9 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
     gScene->views().at(0)->setDragMode(QGraphicsView::NoDrag);
     QPointF currentPoint = input->pos();
 
-    if (currentPoint != previewPoint) {
-        qreal my = currentPoint.y() - previewPoint.y();
-        qreal mx = currentPoint.x() - previewPoint.x();
+    if (currentPoint != previousPoint) {
+        qreal my = currentPoint.y() - previousPoint.y();
+        qreal mx = currentPoint.x() - previousPoint.x();
         qreal m;
 
         if (static_cast<int>(mx) != 0) // Calculating slope
@@ -142,7 +142,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
 
         // Time to calculate a new point of the QGraphicsPathItem (stroke)
         if (distance > 5) {
-            /*
+            /* SQA: Debugging code
             qreal pm; // Perpendicular slope
             if (static_cast<int>(m) == 0) // path is horizontal
                 pm = 100; 
@@ -178,7 +178,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
             double deltaX = fabs(cos(angle) * penWidth);
             double deltaY = fabs(sin(angle) * penWidth);
 
-            /*
+            /* SQA: Debugging code
               qDebug() << "InkTool::move() - inv tan: " << lineAngle;
               qDebug() << "InkTool::move() - degrees: " << degrees;
               qDebug() << "InkTool::move() - angle: " << angle;
@@ -190,8 +190,8 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
             qreal y0 = 0;
             qreal x1 = 0;
             qreal y1 = 0;
-            if (previewPoint.x() < currentPoint.x()) {
-                if (previewPoint.y() < currentPoint.y()) {
+            if (previousPoint.x() < currentPoint.x()) {
+                if (previousPoint.y() < currentPoint.y()) {
                     #ifdef TUP_DEBUG
                         qDebug() << "    -> InkTool::move() - Going right-down";
                     #endif
@@ -205,16 +205,17 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                         previousDirection = RightDown;
 
                     switch(previousDirection) {
-                        case Up:
+                        case Up: // to right-down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
+                                removeExtraPoints();
                             } else {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case Down:
+                        case Down: // to right-down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -225,7 +226,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case Right:
+                        case Right: // to right-down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -234,7 +235,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case RightUp:
+                        case RightUp: // to right-down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -243,7 +244,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case RightDown:
+                        case RightDown: // to right-down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -252,65 +253,53 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case Left:
-                            if (firstHalfOnTop) {
-                                firstHalfPoint = QPointF(x1, y1);
-                                secondHalfPoint = QPointF(x0, y0);
-
-                                double xFix = firstHalfPrevious.x() - penWidth;
-                                double yFix = firstHalfPrevious.y();
-                                QPointF fixPoint = QPointF(xFix, yFix);
-
-                                inkPath.lineTo(fixPoint);
-                                inkPath.lineTo(fixPoint + QPointF(-penWidth, penWidth));
-                                shapePoints.removeAt(shapePoints.size() - 1);
-                                shapePoints.removeAt(shapePoints.size() - 1);
-
-                                firstHalfOnTop = false;
-                            } else {
-                                shapePoints.removeAt(shapePoints.size() - 1);
-                                shapePoints.removeAt(shapePoints.size() - 1);
-
-                                firstHalfOnTop = true;
-                            }
-                        break;
-                        case LeftUp:
-                            if (firstHalfOnTop) {
-                                firstHalfPoint = QPointF(x1, y1);
-                                secondHalfPoint = QPointF(x0, y0);
-                                firstHalfOnTop = false;
-                            } else {
-                                firstHalfPoint = QPointF(x0, y0);
-                                secondHalfPoint = QPointF(x1, y1);
-                                firstHalfOnTop = true;
-                            }
-                        break;
-                        case LeftDown:
+                        case Left: // to right-down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
 
                                 // SQA: Fixing acute angule cases
-                                double xFix = firstHalfPrevious.x() - penWidth;
+                                double xFix = currentPoint.x() - penWidth;
+                                double yFix = previousPoint.y();
+                                QPointF fixPoint = QPointF(xFix, yFix);
+                                inkPath.lineTo(fixPoint);
+                                removeExtraPoints();
+
+                                firstHalfOnTop = false;
+                            } else {
+                                shapePoints.removeAt(shapePoints.size() - 1);
+                                shapePoints.removeAt(shapePoints.size() - 1);
+
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case LeftUp: // to right-down
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case LeftDown: // to right-down
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+
+                                // SQA: Fixing acute angule cases
+                                double xFix = currentPoint.x() - penWidth;
                                 double yFix = firstHalfPoint.y() - fabs(firstHalfPoint.y() - firstHalfPrevious.y()) / 2;
                                 QPointF fixPoint = QPointF(xFix, yFix);
-
                                 inkPath.lineTo(fixPoint);
-                                shapePoints[shapePoints.size() - 1] = QPointF(secondHalfPrevious.x() + penWidth, secondHalfPrevious.y() - penWidth);
+                                removeExtraPoints();
 
                                 firstHalfOnTop = false;
                             } else {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
-
-                                // SQA: Fixing acute angule cases
-                                double yFix = secondHalfPoint.y() - fabs(secondHalfPoint.y() - secondHalfPrevious.y()) / 2;
-                                double xFix = secondHalfPrevious.x() - penWidth;
-                                QPointF fixPoint = QPointF(xFix, yFix);
-
-                                inkPath.lineTo(fixPoint);
-                                shapePoints.removeAt(shapePoints.size() - 1);
-                                shapePoints.removeAt(shapePoints.size() - 1);
 
                                 firstHalfOnTop = true;
                             }
@@ -320,7 +309,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                     }
                     // qDebug() << "InkTool::move() - firstHalfOnTop: " << firstHalfOnTop;
                     previousDirection = RightDown;
-                } else if (previewPoint.y() > currentPoint.y()) {
+                } else if (previousPoint.y() > currentPoint.y()) {
                     #ifdef TUP_DEBUG
                         qDebug() << "    -> InkTool::move() - Going right-up";
                     #endif
@@ -334,7 +323,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                         previousDirection = RightUp;
 
                     switch(previousDirection) {
-                        case Up:
+                        case Up: // to right-up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -343,7 +332,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case Down:
+                        case Down: // to right-up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -354,7 +343,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case Right:
+                        case Right: // to right-up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -363,7 +352,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case RightUp:
+                        case RightUp: // to right-up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -372,27 +361,23 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case RightDown:
+                        case RightDown: // to right-up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
+
+                                // SQA: Fixing acute angule cases
+                                double yFix = previousPoint.y() - penWidth;
+                                double xFix = previousPoint.x();
+                                QPointF fixPoint = QPointF(xFix, yFix);
+                                inkPath.lineTo(fixPoint);
+                                removeExtraPoints();
                             } else {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case Left:
-                            if (firstHalfOnTop) {
-                                firstHalfPoint = QPointF(x1, y1);
-                                secondHalfPoint = QPointF(x0, y0);
-                                firstHalfOnTop = false;
-                            } else {
-                                firstHalfPoint = QPointF(x0, y0);
-                                secondHalfPoint = QPointF(x1, y1);
-                                firstHalfOnTop = true;
-                            }
-                        break;
-                        case LeftUp:
+                        case Left: // to right-up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -403,7 +388,18 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case LeftDown:
+                        case LeftUp: // to right-up
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case LeftDown: // to right-up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -417,7 +413,6 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                         case None:
                         break;
                     }
-                    // qDebug() << "InkTool::move() - firstHalfOnTop: " << firstHalfOnTop;
                     previousDirection = RightUp;
                 } else {
                     #ifdef TUP_DEBUG
@@ -433,7 +428,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                         previousDirection = Right;
 
                     switch(previousDirection) {
-                        case Up:
+                        case Up: // to right
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -442,7 +437,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case Down:
+                        case Down: // to right
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -453,7 +448,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case Right:
+                        case Right: // to right
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -462,7 +457,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case RightUp:
+                        case RightUp: // to right
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -471,7 +466,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case RightDown:
+                        case RightDown: // to right
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -480,7 +475,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case Left:
+                        case Left: // to right
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -491,7 +486,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case LeftUp:
+                        case LeftUp: // to right
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -502,11 +497,18 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case LeftDown:
+                        case LeftDown: // to right
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
                                 firstHalfOnTop = false;
+
+                                // SQA: Fixing acute angule cases
+                                double xFix = currentPoint.x() - penWidth;
+                                double yFix = firstHalfPoint.y() - fabs(firstHalfPoint.y() - firstHalfPrevious.y()) / 2;
+                                QPointF fixPoint = QPointF(xFix, yFix);
+                                inkPath.lineTo(fixPoint);
+                                removeExtraPoints();
                             } else {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -517,11 +519,10 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                         break;
                     }
 
-                    // qDebug() << "InkTool::move() - firstHalfOnTop: " << firstHalfOnTop;
                     previousDirection = Right;
                 }
-            } else if (previewPoint.x() > currentPoint.x()) {
-                if (previewPoint.y() < currentPoint.y()) {
+            } else if (previousPoint.x() > currentPoint.x()) {
+                if (previousPoint.y() < currentPoint.y()) {
                     #ifdef TUP_DEBUG
                         qDebug() << "    -> InkTool::move() - Going left-down";
                     #endif
@@ -535,7 +536,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                         previousDirection = LeftDown;
 
                     switch(previousDirection) {
-                        case Up:
+                        case Up: // to left-down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -546,7 +547,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case Down:
+                        case Down: // to left-down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -555,7 +556,25 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case Right:
+                        case Right: // to left-down
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+
+                                // SQA: Fixing acute angule cases
+                                double xFix = currentPoint.x() + penWidth;
+                                double yFix = currentPoint.y();
+                                QPointF fixPoint = QPointF(xFix, yFix);
+                                inkPath.lineTo(fixPoint);
+                                removeExtraPoints();
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case RightUp: // to left-down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -566,7 +585,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case RightUp:
+                        case RightDown: // to left-down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -577,18 +596,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case RightDown:
-                            if (firstHalfOnTop) {
-                                firstHalfPoint = QPointF(x1, y1);
-                                secondHalfPoint = QPointF(x0, y0);
-                                firstHalfOnTop = false;
-                            } else {
-                                firstHalfPoint = QPointF(x0, y0);
-                                secondHalfPoint = QPointF(x1, y1);
-                                firstHalfOnTop = true;
-                            }
-                        break;
-                        case Left:
+                        case Left: // to left-down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -597,7 +605,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case LeftUp:
+                        case LeftUp: // to left-down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -606,7 +614,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case LeftDown:
+                        case LeftDown: // to left-down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -619,9 +627,8 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                         break;
                     }
 
-                    // qDebug() << "InkTool::move() - firstHalfOnTop: " << firstHalfOnTop;
                     previousDirection = LeftDown;
-                } else if (previewPoint.y() > currentPoint.y()) {
+                } else if (previousPoint.y() > currentPoint.y()) {
                     #ifdef TUP_DEBUG
                         qDebug() << "    -> InkTool::move() - Going left-up";
                     #endif
@@ -635,7 +642,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                         previousDirection = LeftUp;
 
                     switch(previousDirection) {
-                        case Up:
+                        case Up: // to left-up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -646,7 +653,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case Down:
+                        case Down: // to left-up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -655,18 +662,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case Right:
-                            if (firstHalfOnTop) {
-                                firstHalfPoint = QPointF(x1, y1);
-                                secondHalfPoint = QPointF(x0, y0);
-                                firstHalfOnTop = false;
-                            } else {
-                                firstHalfPoint = QPointF(x0, y0);
-                                secondHalfPoint = QPointF(x1, y1);
-                                firstHalfOnTop = true;
-                            }
-                        break;
-                        case RightUp:
+                        case Right: // to left-up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -677,7 +673,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case RightDown:
+                        case RightUp: // to left-up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -688,7 +684,18 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case Left:
+                        case RightDown: // to left-up
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case Left: // to left-up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -697,7 +704,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case LeftUp:
+                        case LeftUp: // to left-up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -706,7 +713,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case LeftDown:
+                        case LeftDown: // to left-up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -719,7 +726,6 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                         break;
                     }
 
-                    // qDebug() << "InkTool::move() - firstHalfOnTop: " << firstHalfOnTop;
                     previousDirection = LeftUp;
                 } else {
                     #ifdef TUP_DEBUG
@@ -734,7 +740,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                         previousDirection = Left;
 
                     switch(previousDirection) {
-                        case Up:
+                        case Up: // to left
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -745,7 +751,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case Down:
+                        case Down: // to left
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -754,18 +760,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case Right:
-                            if (firstHalfOnTop) {
-                                firstHalfPoint = QPointF(x1, y1);
-                                secondHalfPoint = QPointF(x0, y0);
-                                firstHalfOnTop = false;
-                            } else {
-                                firstHalfPoint = QPointF(x0, y0);
-                                secondHalfPoint = QPointF(x1, y1);
-                                firstHalfOnTop = true;
-                            }
-                        break;
-                        case RightUp:
+                        case Right: // to left
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -776,7 +771,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case RightDown:
+                        case RightUp: // to left
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -787,7 +782,18 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case Left:
+                        case RightDown: // to left
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case Left: // to left
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -796,7 +802,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case LeftUp:
+                        case LeftUp: // to left
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -805,7 +811,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case LeftDown:
+                        case LeftDown: // to left
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -818,11 +824,10 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                         break;
                     }
 
-                    // qDebug() << "InkTool::move() - firstHalfOnTop: " << firstHalfOnTop;
                     previousDirection = Left;
                 }
-            } else if (static_cast<int>(previewPoint.x()) == static_cast<int>(currentPoint.x())) {
-                if (previewPoint.y() > currentPoint.y()) {
+            } else if (static_cast<int>(previousPoint.x()) == static_cast<int>(currentPoint.x())) {
+                if (previousPoint.y() > currentPoint.y()) {
                     #ifdef TUP_DEBUG
                         qDebug() << "    -> InkTool::move() - Going up";
                     #endif
@@ -836,7 +841,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                         previousDirection = Up;
 
                     switch(previousDirection) {
-                        case Up:
+                        case Up: // to up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -845,45 +850,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case Down:
-                            if (firstHalfOnTop) {
-                                firstHalfPoint = QPointF(x1, y1);
-                                secondHalfPoint = QPointF(x0, y0);
-                                firstHalfOnTop = false;
-                            } else {
-                                firstHalfPoint = QPointF(x0, y0);
-                                secondHalfPoint = QPointF(x1, y1);
-                                firstHalfOnTop = true;
-                            }
-                        break;
-                        case Right:
-                            if (firstHalfOnTop) {
-                                firstHalfPoint = QPointF(x0, y0);
-                                secondHalfPoint = QPointF(x1, y1);
-                            } else {
-                                firstHalfPoint = QPointF(x1, y1);
-                                secondHalfPoint = QPointF(x0, y0);
-                            }
-                        break;
-                        case RightUp:
-                            if (firstHalfOnTop) {
-                                firstHalfPoint = QPointF(x0, y0);
-                                secondHalfPoint = QPointF(x1, y1);
-                            } else {
-                                firstHalfPoint = QPointF(x1, y1);
-                                secondHalfPoint = QPointF(x0, y0);
-                            }
-                        break;
-                        case RightDown:
-                            if (firstHalfOnTop) {
-                                firstHalfPoint = QPointF(x0, y0);
-                                secondHalfPoint = QPointF(x1, y1);
-                            } else {
-                                firstHalfPoint = QPointF(x1, y1);
-                                secondHalfPoint = QPointF(x0, y0);
-                            }
-                        break;
-                        case Left:
+                        case Down: // to up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -894,7 +861,34 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case LeftUp:
+                        case Right: // to up
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case RightUp: // to up
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case RightDown: // to up
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                            } else {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                            }
+                        break;
+                        case Left: // to up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -905,7 +899,18 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case LeftDown:
+                        case LeftUp: // to up
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case LeftDown: // to up
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -920,7 +925,6 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                         break;
                     }
 
-                    // qDebug() << "InkTool::move() - firstHalfOnTop: " << firstHalfOnTop;
                     previousDirection = Up;
                 } else {
                     #ifdef TUP_DEBUG
@@ -936,7 +940,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                         previousDirection = Down;
 
                     switch(previousDirection) {
-                        case Up:
+                        case Up: // to down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -947,7 +951,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case Down:
+                        case Down: // to down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -956,18 +960,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case Right:
-                            if (firstHalfOnTop) {
-                                firstHalfPoint = QPointF(x1, y1);
-                                secondHalfPoint = QPointF(x0, y0);
-                                firstHalfOnTop = false;
-                            } else {
-                                firstHalfPoint = QPointF(x0, y0);
-                                secondHalfPoint = QPointF(x1, y1);
-                                firstHalfOnTop = true;
-                            }
-                        break;
-                        case RightUp:
+                        case Right: // to down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -978,7 +971,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case RightDown:
+                        case RightUp: // to down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x1, y1);
                                 secondHalfPoint = QPointF(x0, y0);
@@ -989,7 +982,18 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 firstHalfOnTop = true;
                             }
                         break;
-                        case Left:
+                        case RightDown: // to down
+                            if (firstHalfOnTop) {
+                                firstHalfPoint = QPointF(x1, y1);
+                                secondHalfPoint = QPointF(x0, y0);
+                                firstHalfOnTop = false;
+                            } else {
+                                firstHalfPoint = QPointF(x0, y0);
+                                secondHalfPoint = QPointF(x1, y1);
+                                firstHalfOnTop = true;
+                            }
+                        break;
+                        case Left: // to down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -998,7 +1002,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case LeftUp:
+                        case LeftUp: // to down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -1007,7 +1011,7 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                                 secondHalfPoint = QPointF(x0, y0);
                             }
                         break;
-                        case LeftDown:
+                        case LeftDown: // to down
                             if (firstHalfOnTop) {
                                 firstHalfPoint = QPointF(x0, y0);
                                 secondHalfPoint = QPointF(x1, y1);
@@ -1020,37 +1024,9 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
                         break;
                     }
 
-                    // qDebug() << "InkTool::move() - firstHalfOnTop: " << firstHalfOnTop;
                     previousDirection = Down;
                 }
              }
-             /*
-             qDebug() << "";
-             qDebug() << "First Half Point: " << firstHalfPoint;
-             qDebug() << "Second Half Point: " << secondHalfPoint;
-             qDebug() << "deltaX: " << deltaX;
-             qDebug() << "deltaY: " << deltaY;
-
-             qDebug() << "Old Right: " << firstHalfPrevious;
-             distance = sqrt(pow(std::abs(firstHalfPoint.x() - firstHalfPrevious.x()), 2) + pow(std::abs(firstHalfPoint.y() - firstHalfPrevious.y()), 2));
-             qDebug() << "distance: " << distance;
-             qDebug() << "";
-
-             qreal firstHalfM = (y0 - firstHalfPrevious.y()) / (x0 - firstHalfPrevious.x());
-             qreal secondHalfM = (y1 - secondHalfPrevious.y()) / (x1 - secondHalfPrevious.x());
-             qDebug() << "*** firstHalfM: " << firstHalfM;
-             qDebug() << "*** secondHalfM: " << secondHalfM;
-
-             if ((firstHalfM < 0 && secondHalfM > 0) || (firstHalfM > 0 && secondHalfM < 0)) {
-                 qDebug() << "*** Exchanging sides!";
-                 firstHalfPoint = QPointF(x1, y1);
-                 secondHalfPoint = QPointF(x0, y0);
-             } else {
-                 qDebug() << "No exchanging call!";
-                 firstHalfPoint = QPointF(x0, y0);
-                 secondHalfPoint = QPointF(x1, y1);
-             }
-             */
 
              inkPath.lineTo(firstHalfPoint);
              firstHalfPrevious = firstHalfPoint;
@@ -1059,11 +1035,11 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
              shapePoints << secondHalfPoint;
 
              oldPos = currentPoint;
-             oldSlope = m;
+             // oldSlope = m;
         }
     }
 
-    previewPoint = currentPoint;
+    previousPoint = currentPoint;
 }
 
 void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
@@ -1083,10 +1059,10 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 pressCo += 0.4;
             break;
             case 4:
-                pressCo += 0.6;
+                pressCo += 1.6;
             break;
             case 5:
-                pressCo += 0.8;
+                pressCo += 3.2;
             break;
         }
 
@@ -1125,18 +1101,20 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
     for (int i = shapePoints.size()-1; i > 0; i--)
         inkPath.lineTo(shapePoints.at(i-1));
 
-    if (smoothness > 0)
-        smoothPath(inkPath, smoothness);
+    if (settings->smooothnessIsEnabled() && smoothness > 0)
+        smoothPath(inkPath, smoothness, 0, -1, true);
 
     TupPathItem *stroke = new TupPathItem();
     stroke->setPath(inkPath);
 
+    /* SQA: Debugging code
     qDebug() << "";
     qDebug() << "showBorder: " << showBorder;
     qDebug() << "showFill: " << showFill;
     qDebug() << "smoothness: " << smoothness;
     qDebug() << "borderSize: " << borderSize;
     qDebug() << "pressure sensibility: " << sensibility;
+    */
 
     if (showBorder) {
         // Set border color for shape
@@ -1162,7 +1140,13 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
                                                                      doc.toString());
     emit requested(&request);
 
-    /*
+    /* SQA: Code for debugging
+    smoothPath(guidePainterPath, 2);
+
+    qDebug() << "";
+    qDebug() << "ELEMENT COUNT: " << guidePainterPath.elementCount();
+    qDebug() << "";
+
     TupPathItem *greenLine = new TupPathItem();
     QColor color(55, 155, 55, 200);
     QPen pen(QBrush(color), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
@@ -1176,6 +1160,14 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
                                                    data.toString());
     emit requested(&request);
     */
+}
+
+void InkTool::removeExtraPoints()
+{
+    if (shapePoints.size() > 3) {
+        for (int i=0; i<4; i++)
+            shapePoints.removeLast();
+    }
 }
 
 void InkTool::setupActions()
@@ -1213,8 +1205,6 @@ QWidget *InkTool::configurator()
         if (smoothness == 0.0)
             smoothness = 4.0;
         settings->updateSmoothness(smoothness);
-
-        qDebug() << "InkTool::configurator() - smoothness: " << smoothness;
     }
 
     return settings;
@@ -1264,7 +1254,7 @@ void InkTool::updateSmoothness(double value)
     smoothness = value;
 }
 
-void InkTool::smoothPath(QPainterPath &path, double smoothness, int from, int to)
+void InkTool::smoothPath(QPainterPath &path, double smoothness, int from, int to, bool closePath)
 {
     QPolygonF pol;
     QList<QPolygonF> polygons = path.toSubpathPolygons();
@@ -1281,7 +1271,7 @@ void InkTool::smoothPath(QPainterPath &path, double smoothness, int from, int to
     }
 
     if (smoothness > 0) {
-        path = TupGraphicalAlgorithm::bezierFit(pol, static_cast<float>(smoothness), from, to, true);
+        path = TupGraphicalAlgorithm::bezierFit(pol, static_cast<float>(smoothness), from, to, closePath);
     } else {
         path = QPainterPath();
         path.addPolygon(pol);
@@ -1305,14 +1295,14 @@ QCursor InkTool::polyCursor() const
 }
 
 void InkTool::updatePressure(qreal pressure)
-{
+{    
     penPress = pressure;
     double factor = sensibility;
     if (sensibility > 1)
-        factor = sensibility + 1;
+        factor = pow(sensibility, 2);
 
     if (pressure <= 0.2) {
-        penWidth = initPenWidth / (3 + factor);
+        penWidth = initPenWidth / (3 * factor);
     } else if (pressure > 0.2 && pressure < 0.6) {
         penWidth = initPenWidth + (initPenWidth * pressure * (4 + factor));
     } else if (pressure >= 0.6) {
