@@ -39,6 +39,7 @@
 #include "tglobal.h"
 #include <QLineEdit>
 #include <QGridLayout>
+#include <QComboBox>
 #include <QCheckBox>
 
 class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
@@ -52,13 +53,20 @@ class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
 
         void saveValues();
 
+    private slots:
+        void updateAppLang(int index);
+
     private:
+        int getLangIndex();
         QGridLayout * createForm(const QString &group, Group groupTag,
                                  QStringList keys, QStringList labels);
-
         QStringList startup;
         QStringList confirmation;
         QStringList player;
+
+        QComboBox *langCombo;
+        QList<QString> langSupport;
+        QString newLang;
 
         QList<QCheckBox *> startupList;
         QList<QCheckBox *> confirmList;

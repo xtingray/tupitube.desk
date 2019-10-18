@@ -36,9 +36,11 @@
 #include "tupgeneralpreferences.h"
 #include "tconfig.h"
 #include "tformfactory.h"
+#include "tosd.h"
 
 TupGeneralPreferences::TupGeneralPreferences()
 {
+    newLang = "";
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     startup << "OpenLastProject" << "ShowTipOfDay";
@@ -65,7 +67,7 @@ TupGeneralPreferences::TupGeneralPreferences()
     QGridLayout *playerForm = createForm("AnimationParameters", Player, player, labels);
 
     QWidget *widget = new QWidget;
-    QVBoxLayout *widgetLayout = new QVBoxLayout; 
+    QVBoxLayout *widgetLayout = new QVBoxLayout;
 
     QLabel *generalLabel = new QLabel(tr("General Preferences"));
     QFont labelFont = font();
@@ -80,6 +82,25 @@ TupGeneralPreferences::TupGeneralPreferences()
     labelFont.setBold(true);
     startupLabel->setFont(labelFont);
     widgetLayout->addWidget(startupLabel);
+
+    langSupport << "zh" << "en" << "fr" << "pt" << "es";
+    QLabel *langLabel = new QLabel(tr("Language:"));
+    langCombo = new QComboBox();
+    langCombo->addItem("中文");
+    langCombo->addItem("English");
+    langCombo->addItem("Français");
+    langCombo->addItem("Português");
+    langCombo->addItem("Español");
+
+    langCombo->setCurrentIndex(getLangIndex());
+    connect(langCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAppLang(int)));
+
+    QHBoxLayout *langLayout = new QHBoxLayout;
+    langLayout->addWidget(langLabel);
+    langLayout->addWidget(langCombo);
+    langLayout->addStretch();
+
+    widgetLayout->addLayout(langLayout);
     widgetLayout->addLayout(startupForm);
 
     widgetLayout->addSpacing(15);
@@ -149,5 +170,23 @@ void TupGeneralPreferences::saveValues()
     for (int i=0; i<total; i++)
          TCONFIG->setValue(player.at(i), playerList.at(i)->isChecked());
 
+    if (newLang.length() > 0) {
+        TCONFIG->beginGroup("General");
+        TCONFIG->setValue("Language", newLang);
+        TOsd::self()->display(tr("Warning"), tr("Please restart TupiTube"), TOsd::Warning);
+    }
+
     TCONFIG->sync();
+}
+
+int TupGeneralPreferences::getLangIndex()
+{
+    TCONFIG->beginGroup("General");
+    QString locale = TCONFIG->value("Language", "en").toString();
+    return langSupport.indexOf(locale);
+}
+
+void TupGeneralPreferences::updateAppLang(int index)
+{
+    newLang = langSupport.at(index);
 }

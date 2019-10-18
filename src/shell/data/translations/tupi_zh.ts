@@ -2590,6 +2590,18 @@ Please, rename the project&apos;s file</source>
         <source>Always open last project</source>
         <translation>总是打开最后一个项目</translation>
     </message>
+    <message>
+        <source>Language:</source>
+        <translation>语言</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>警告</translation>
+    </message>
+    <message>
+        <source>Please restart TupiTube</source>
+        <translation>请重新启动TupiTube</translation>
+    </message>
 </context>
 <context>
     <name>TupGradientCreator</name>

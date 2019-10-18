@@ -84,7 +84,7 @@ int main(int argc, char ** argv)
     QDir appDirPath(QApplication::applicationDirPath());
     TCONFIG->beginGroup("General");
 
-    if (TCONFIG->value("RandomSeed", 0).toDouble() == 0) {
+    if (TCONFIG->value("RandomSeed", 0).toDouble() == 0.0) {
         TAlgorithm::random(); 
         TCONFIG->setValue("ClientID", TAlgorithm::randomString(20));
     }
@@ -135,9 +135,22 @@ int main(int argc, char ** argv)
     kAppProp->setShareDir(QString::fromLocal8Bit(::getenv("TUPITUBE_SHARE")));
 #endif
 
-    QString locale = QString(QLocale::system().name()).left(2);
-    if (locale.length() < 2)
-        locale = "en";
+    QString locale = "";
+    QList<QString> langSupport;
+    langSupport << "es" << "fr" << "pt" << "zh";
+    if (TCONFIG->firstTime()) {
+        locale = QString(QLocale::system().name()).left(2);
+        if (locale.length() < 2) {
+            locale = "en";
+        } else {
+            if (locale.compare("en") != 0 && !langSupport.contains(locale))
+                locale = "en";
+        }
+        TCONFIG->beginGroup("General");
+        TCONFIG->setValue("Language", locale);
+    } else {
+        locale = TCONFIG->value("Language", "en").toString();
+    }
 
 #ifdef Q_OS_WIN
     QString xmlDir = kAppProp->shareDir() + "xml/";
@@ -171,10 +184,7 @@ int main(int argc, char ** argv)
     QStyle *style = QStyleFactory::create("fusion");
     QApplication::setStyle(style);
 
-    // SQA: Add support for at least two languages for the next release 
-    QList<QString> langSupport;
-    langSupport << "es" << "fr" << "pt" << "zh";
-    if (locale.compare("en") != 0 && langSupport.contains(locale)) {
+    if (locale.compare("en") != 0) {
         #ifdef Q_OS_WIN
             QString langFile = kAppProp->shareDir() + "translations/tupi_" + locale + ".qm";
         #else
@@ -193,7 +203,7 @@ int main(int argc, char ** argv)
         } else {
             #ifdef TUP_DEBUG
                 qDebug() << "main.cpp - Error: Can't open file -> " + langFile;
-            #endif    
+            #endif
         }
     }
 

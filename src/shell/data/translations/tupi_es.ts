@@ -3305,59 +3305,74 @@ Please, rename the project&apos;s file</source>
 <context>
     <name>TupGeneralPreferences</name>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="47"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="49"/>
         <source>Always open last project</source>
         <translation>Siempre abrir el último proyecto</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="47"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="49"/>
         <source>Show tip of the day</source>
         <translation>Mostrar el consejo del día</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="55"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="57"/>
         <source>Confirm &quot;Remove frame&quot; action</source>
         <translation>Confirmar la acción &quot;Remover marco&quot;</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="55"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="57"/>
         <source>Confirm &quot;Remove layer&quot; action</source>
         <translation>Confirmar la acción &quot;Remover capa&quot;</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="56"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="58"/>
         <source>Confirm &quot;Remove scene&quot; action</source>
         <translation>Confirmar la acción &quot;Remover escena&quot;</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="56"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="58"/>
         <source>Confirm &quot;Remove object&quot; action from library</source>
         <translation>Confirmar la acción &quot;Remover objeto&quot; de la librería</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="63"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="65"/>
         <source>Render and play project automatically</source>
         <translation>Renderizar y reproducir proyecto automáticamente</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="70"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="72"/>
         <source>General Preferences</source>
         <translation>Preferencias Generales</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="78"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="80"/>
         <source>On Startup</source>
         <translation>Al Inicio</translation>
     </message>
     <message>
         <location filename="../../../libui/tupgeneralpreferences.cpp" line="87"/>
+        <source>Language:</source>
+        <translation>Idioma:</translation>
+    </message>
+    <message>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="108"/>
         <source>Confirmation Dialogs</source>
         <translation>Diálogos de Confirmación</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="94"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="115"/>
         <source>On Player</source>
         <translation>Sobre el Reproductor</translation>
+    </message>
+    <message>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="176"/>
+        <source>Warning</source>
+        <translation>Advertencia</translation>
+    </message>
+    <message>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="176"/>
+        <source>Please restart TupiTube</source>
+        <translation>Por favor, reinicia TupiTube</translation>
     </message>
 </context>
 <context>

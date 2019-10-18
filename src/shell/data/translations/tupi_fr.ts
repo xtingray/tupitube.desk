@@ -3306,59 +3306,74 @@ SVP, renommer le fichier du projet</translation>
 <context>
     <name>TupGeneralPreferences</name>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="47"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="49"/>
         <source>Always open last project</source>
         <translation>Toujours ouvrir le dernier projet</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="47"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="49"/>
         <source>Show tip of the day</source>
         <translation>Montrer l&apos;astuce du jour</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="55"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="57"/>
         <source>Confirm &quot;Remove frame&quot; action</source>
         <translation>Confirmer l&apos;action &quot;Supprimer l&apos;image&quot;</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="55"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="57"/>
         <source>Confirm &quot;Remove layer&quot; action</source>
         <translation>Confirmer l&apos;action &quot;Supprimer le calque&quot;</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="56"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="58"/>
         <source>Confirm &quot;Remove scene&quot; action</source>
         <translation>Confirmer l&apos;action &quot;Supprimer la scène&quot;</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="56"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="58"/>
         <source>Confirm &quot;Remove object&quot; action from library</source>
         <translation>Confirmer l&apos;action &quot;Supprimer l&apos;objet&quot; de la bibliothèque</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="63"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="65"/>
         <source>Render and play project automatically</source>
         <translation>Rendre et lire le projet automatiquement</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="70"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="72"/>
         <source>General Preferences</source>
         <translation>Préférences générales</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="78"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="80"/>
         <source>On Startup</source>
         <translation>Au démarrage</translation>
     </message>
     <message>
         <location filename="../../../libui/tupgeneralpreferences.cpp" line="87"/>
+        <source>Language:</source>
+        <translation>Idiome:</translation>
+    </message>
+    <message>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="108"/>
         <source>Confirmation Dialogs</source>
         <translation>Dialogues de confirmation</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="94"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="115"/>
         <source>On Player</source>
         <translation>Sur le Lecteur Vidéo</translation>
+    </message>
+    <message>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="176"/>
+        <source>Warning</source>
+        <translation>Attention</translation>
+    </message>
+    <message>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="176"/>
+        <source>Please restart TupiTube</source>
+        <translation>Veuillez redémarrer TupiTube</translation>
     </message>
 </context>
 <context>
@@ -4323,7 +4338,7 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="90"/>
         <source>Image Sequence</source>
-        <translation>Séquence d'images</translation>
+        <translation>Séquence d&apos;images</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="209"/>
