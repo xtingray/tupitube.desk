@@ -75,12 +75,12 @@ InkSettings::InkSettings(QWidget *parent) :QWidget(parent)
     borderLayout->addWidget(appearanceLabel);
     mainLayout->addLayout(borderLayout);
 
-    borderOption = new QCheckBox(tr("Enable border"));
+    borderOption = new QCheckBox(tr("Enable Border"));
     borderOption->setChecked(showBorder);
     connect(borderOption, SIGNAL(toggled(bool)), this, SLOT(updateBorderOption(bool)));
     mainLayout->addWidget(borderOption);
 
-    fillOption = new QCheckBox(tr("Enable fill"));
+    fillOption = new QCheckBox(tr("Enable Fill"));
     fillOption->setChecked(showFill);
     connect(fillOption, SIGNAL(toggled(bool)), this, SLOT(updateFillOption(bool)));
     mainLayout->addWidget(fillOption);
