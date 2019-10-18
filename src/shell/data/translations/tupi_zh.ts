@@ -13,6 +13,109 @@
     </message>
 </context>
 <context>
+    <name>ColorSettings</name>
+    <message>
+        <source>Name</source>
+        <translation>名字</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>选项</translation>
+    </message>
+    <message>
+        <source>Select object</source>
+        <translation>选择物体</translation>
+    </message>
+    <message>
+        <source>Set Properties</source>
+        <translation>设置属性</translation>
+    </message>
+    <message>
+        <source>Starting at frame</source>
+        <translation>起始帧</translation>
+    </message>
+    <message>
+        <source>Ending at frame</source>
+        <translation>结束帧</translation>
+    </message>
+    <message>
+        <source>Frames Total</source>
+        <translation>总帧数</translation>
+    </message>
+    <message>
+        <source>White</source>
+        <translation>白色</translation>
+    </message>
+    <message>
+        <source>Fill Type</source>
+        <translation>文件类型</translation>
+    </message>
+    <message>
+        <source>Line Fill</source>
+        <translation>线性填充</translation>
+    </message>
+    <message>
+        <source>Internal Fill</source>
+        <translation>内部填充</translation>
+    </message>
+    <message>
+        <source>Line &amp; Internal Fill</source>
+        <translation>线性/内部 填充</translation>
+    </message>
+    <message>
+        <source>Initial Color</source>
+        <translation>初始颜色</translation>
+    </message>
+    <message>
+        <source>Ending Color</source>
+        <translation>结束颜色</translation>
+    </message>
+    <message>
+        <source>Iterations</source>
+        <translation>迭代次数</translation>
+    </message>
+    <message>
+        <source>Loop</source>
+        <translation>循环</translation>
+    </message>
+    <message>
+        <source>Loop with Reverse</source>
+        <translation>反向循环</translation>
+    </message>
+    <message>
+        <source>Save Tween</source>
+        <translation>保存补间动画</translation>
+    </message>
+    <message>
+        <source>Cancel Tween</source>
+        <translation>取消补间动画</translation>
+    </message>
+    <message>
+        <source>Update Tween</source>
+        <translation>更新补间动画</translation>
+    </message>
+    <message>
+        <source>Close Tween Properties</source>
+        <translation>关闭补间动画属性</translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation>信息</translation>
+    </message>
+    <message>
+        <source>You must select at least one object!</source>
+        <translation>您必须选择至少一个物体</translation>
+    </message>
+    <message>
+        <source>You must set Tween properties first!</source>
+        <translation>您必须先设置补间动画属性</translation>
+    </message>
+    <message>
+        <source>Select objects for Tweening first!</source>
+        <translation>首先为补间动画选择物体</translation>
+    </message>
+</context>
+<context>
     <name>Configurator</name>
     <message>
         <source>Opacity Tween Properties</source>
@@ -33,34 +136,6 @@
     <message>
         <source>Papagayo LipSync Files</source>
         <translation>Papagayo 唇形同步 文件</translation>
-    </message>
-    <message>
-        <source>Size Tolerance</source>
-        <translation>尺寸公差</translation>
-    </message>
-    <message>
-        <source>Border</source>
-        <translation>边框线</translation>
-    </message>
-    <message>
-        <source>Show border line</source>
-        <translation>显示边框线</translation>
-    </message>
-    <message>
-        <source>Smoothness</source>
-        <translation>平滑</translation>
-    </message>
-    <message>
-        <source>Parameters</source>
-        <translation>参数</translation>
-    </message>
-    <message>
-        <source>Dot Spacing</source>
-        <translation>点间距</translation>
-    </message>
-    <message>
-        <source>Border Size</source>
-        <translation>边框尺寸</translation>
     </message>
     <message>
         <source>Scale Tween Properties</source>
@@ -102,6 +177,49 @@
     </message>
 </context>
 <context>
+    <name>GeometricSettings</name>
+    <message>
+        <source>Rectangle Properties</source>
+        <translation>矩形属性</translation>
+    </message>
+    <message>
+        <source>Ellipse Properties</source>
+        <translation>椭圆属性</translation>
+    </message>
+    <message>
+        <source>Line Properties</source>
+        <translation>直线属性</translation>
+    </message>
+    <message>
+        <source>Tips</source>
+        <translation>提示</translation>
+    </message>
+    <message>
+        <source>Mouse Right Click or X Key</source>
+        <translation>鼠标右键或X键</translation>
+    </message>
+    <message>
+        <source>Close the line path</source>
+        <translation>关闭线路路径</translation>
+    </message>
+    <message>
+        <source>Shift</source>
+        <translation>Shift</translation>
+    </message>
+    <message>
+        <source>Align line to horizontal/vertical axis</source>
+        <translation>对齐线到水平/垂直轴</translation>
+    </message>
+    <message>
+        <source>Ctrl + Left Mouse Button</source>
+        <translation>Ctrl+鼠标左键</translation>
+    </message>
+    <message>
+        <source>Set width/height proportional dimensions</source>
+        <translation>设置宽度/高度尺寸成比例的尺寸</translation>
+    </message>
+</context>
+<context>
     <name>GeometricTool</name>
     <message>
         <source>C</source>
@@ -133,6 +251,41 @@
     <message>
         <source>Image Sequence</source>
         <translation>图像序列</translation>
+    </message>
+</context>
+<context>
+    <name>InkSettings</name>
+    <message>
+        <source>Pencil Properties</source>
+        <translation>铅笔属性</translation>
+    </message>
+    <message>
+        <source>Appearance</source>
+        <translation>出现</translation>
+    </message>
+    <message>
+        <source>Enable Border</source>
+        <translation>启用边框</translation>
+    </message>
+    <message>
+        <source>Enable Fill</source>
+        <translation>启用填充</translation>
+    </message>
+    <message>
+        <source>Parameters</source>
+        <translation>参数</translation>
+    </message>
+    <message>
+        <source>Border Size</source>
+        <translation>边框尺寸</translation>
+    </message>
+    <message>
+        <source>Pressure Sensibility</source>
+        <translation>压力感度</translation>
+    </message>
+    <message>
+        <source>Smoothness</source>
+        <translation>平滑</translation>
     </message>
 </context>
 <context>
@@ -189,6 +342,144 @@
     </message>
 </context>
 <context>
+    <name>OpacitySettings</name>
+    <message>
+        <source>Name</source>
+        <translation>名字</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>选项</translation>
+    </message>
+    <message>
+        <source>Select object</source>
+        <translation>选择物体</translation>
+    </message>
+    <message>
+        <source>Set Properties</source>
+        <translation>设置属性</translation>
+    </message>
+    <message>
+        <source>Starting at frame</source>
+        <translation>起始帧</translation>
+    </message>
+    <message>
+        <source>Ending at frame</source>
+        <translation>结束帧</translation>
+    </message>
+    <message>
+        <source>Frames Total</source>
+        <translation>总帧数</translation>
+    </message>
+    <message>
+        <source>Initial Opacity</source>
+        <translation>初始不透明度</translation>
+    </message>
+    <message>
+        <source>Ending Opacity</source>
+        <translation>结束不透明度</translation>
+    </message>
+    <message>
+        <source>Iterations</source>
+        <translation>迭代次数</translation>
+    </message>
+    <message>
+        <source>Loop</source>
+        <translation>循环</translation>
+    </message>
+    <message>
+        <source>Loop with Reverse</source>
+        <translation>反向循环</translation>
+    </message>
+    <message>
+        <source>Save Tween</source>
+        <translation>保存补间动画</translation>
+    </message>
+    <message>
+        <source>Cancel Tween</source>
+        <translation>取消补间动画</translation>
+    </message>
+    <message>
+        <source>Update Tween</source>
+        <translation>更新补间动画</translation>
+    </message>
+    <message>
+        <source>Close Tween Properties</source>
+        <translation>关闭补间动画属性</translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation>信息</translation>
+    </message>
+    <message>
+        <source>You must select at least one object!</source>
+        <translation>您必须选择至少一个物体</translation>
+    </message>
+    <message>
+        <source>You must set Tween properties first!</source>
+        <translation>您必须先设置补间动画属性</translation>
+    </message>
+    <message>
+        <source>Select objects for Tweening first!</source>
+        <translation>首先为补间动画选择物体</translation>
+    </message>
+</context>
+<context>
+    <name>PapagayoSettings</name>
+    <message>
+        <source>Editing</source>
+        <translation>编辑</translation>
+    </message>
+    <message>
+        <source>Starting at frame</source>
+        <translation>起始帧</translation>
+    </message>
+    <message>
+        <source>Mouths</source>
+        <translation>嘴</translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation>文本</translation>
+    </message>
+    <message>
+        <source>Current Mouth Position</source>
+        <translation>当前口令位置</translation>
+    </message>
+    <message>
+        <source>X</source>
+        <translation>X</translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation>Y</translation>
+    </message>
+    <message>
+        <source>Close properties</source>
+        <translation>关闭属性</translation>
+    </message>
+    <message>
+        <source>Lip-Sync FPS</source>
+        <translation>同步唇型每秒帧数</translation>
+    </message>
+    <message>
+        <source>Ending at frame</source>
+        <translation>结束帧</translation>
+    </message>
+    <message>
+        <source>Frames Total</source>
+        <translation>总帧数</translation>
+    </message>
+    <message>
+        <source>mouth</source>
+        <translation>嘴</translation>
+    </message>
+    <message>
+        <source>Current Phoneme</source>
+        <translation>当前 音素</translation>
+    </message>
+</context>
+<context>
     <name>PapagayoTool</name>
     <message>
         <source>Frame</source>
@@ -205,6 +496,17 @@
     <message>
         <source>Papagayo Lip-sync</source>
         <translation>Papagayo 唇型同步</translation>
+    </message>
+</context>
+<context>
+    <name>PenSettings</name>
+    <message>
+        <source>Pencil Properties</source>
+        <translation>铅笔属性</translation>
+    </message>
+    <message>
+        <source>Smoothness</source>
+        <translation>平滑</translation>
     </message>
 </context>
 <context>
@@ -227,6 +529,80 @@
     <message>
         <source>PolyLine</source>
         <translation>多段线</translation>
+    </message>
+</context>
+<context>
+    <name>PolylineSettings</name>
+    <message>
+        <source>PolyLine Properties</source>
+        <translation>多段线的属性</translation>
+    </message>
+    <message>
+        <source>Tips</source>
+        <translation>提示</translation>
+    </message>
+    <message>
+        <source>X Key or Right Mouse Button</source>
+        <translation>X键或鼠标右键</translation>
+    </message>
+    <message>
+        <source>Close line</source>
+        <translation>封闭线</translation>
+    </message>
+</context>
+<context>
+    <name>PosSettings</name>
+    <message>
+        <source>Name</source>
+        <translation>名字</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>选项</translation>
+    </message>
+    <message>
+        <source>Select Objects</source>
+        <translation>选择对象</translation>
+    </message>
+    <message>
+        <source>Set Path Properties</source>
+        <translation>设置路径属性</translation>
+    </message>
+    <message>
+        <source>Starting at frame</source>
+        <translation>起始帧</translation>
+    </message>
+    <message>
+        <source>Frames Total</source>
+        <translation>总帧数</translation>
+    </message>
+    <message>
+        <source>Save Tween</source>
+        <translation>保存补间动画</translation>
+    </message>
+    <message>
+        <source>Cancel Tween</source>
+        <translation>取消补间动画</translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation>信息</translation>
+    </message>
+    <message>
+        <source>Select objects for Tweening first!</source>
+        <translation>首先为补间动画选择物体</translation>
+    </message>
+    <message>
+        <source>You must select at least one object!</source>
+        <translation>您必须选择至少一个物体</translation>
+    </message>
+    <message>
+        <source>Update Tween</source>
+        <translation>更新补间动画</translation>
+    </message>
+    <message>
+        <source>Close Tween Properties</source>
+        <translation>关闭补间动画属性</translation>
     </message>
 </context>
 <context>
@@ -325,6 +701,367 @@
     </message>
 </context>
 <context>
+    <name>RotationSettings</name>
+    <message>
+        <source>Name</source>
+        <translation>名字</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>选项</translation>
+    </message>
+    <message>
+        <source>Select object</source>
+        <translation>选择物体</translation>
+    </message>
+    <message>
+        <source>Set Properties</source>
+        <translation>设置属性</translation>
+    </message>
+    <message>
+        <source>Starting at frame</source>
+        <translation>起始帧</translation>
+    </message>
+    <message>
+        <source>Ending at frame</source>
+        <translation>结束帧</translation>
+    </message>
+    <message>
+        <source>Frames Total</source>
+        <translation>总帧数</translation>
+    </message>
+    <message>
+        <source>Continuous</source>
+        <translation>连续</translation>
+    </message>
+    <message>
+        <source>Partial</source>
+        <translation>局部</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>类型</translation>
+    </message>
+    <message>
+        <source>Speed (Degrees/Frame)</source>
+        <translation>速度(度/帧)</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>方向</translation>
+    </message>
+    <message>
+        <source>Clockwise</source>
+        <translation>顺时针方向</translation>
+    </message>
+    <message>
+        <source>Counterclockwise</source>
+        <translation>逆时针方向</translation>
+    </message>
+    <message>
+        <source>Degrees Range</source>
+        <translation>度范围</translation>
+    </message>
+    <message>
+        <source>Start at</source>
+        <translation>起始于</translation>
+    </message>
+    <message>
+        <source>Finish at</source>
+        <translation>完成在</translation>
+    </message>
+    <message>
+        <source>Loop</source>
+        <translation>循环</translation>
+    </message>
+    <message>
+        <source>Loop with Reverse</source>
+        <translation>反向循环</translation>
+    </message>
+    <message>
+        <source>Save Tween</source>
+        <translation>保存补间动画</translation>
+    </message>
+    <message>
+        <source>Cancel Tween</source>
+        <translation>取消补间动画</translation>
+    </message>
+    <message>
+        <source>Update Tween</source>
+        <translation>更新补间动画</translation>
+    </message>
+    <message>
+        <source>Close Tween Properties</source>
+        <translation>关闭补间动画属性</translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation>信息</translation>
+    </message>
+    <message>
+        <source>You must select at least one object!</source>
+        <translation>您必须选择至少一个物体</translation>
+    </message>
+    <message>
+        <source>You must set Tween properties first!</source>
+        <translation>您必须先设置补间动画属性</translation>
+    </message>
+    <message>
+        <source>Angle range must be greater than 0!</source>
+        <translation>角度范围必须大于0</translation>
+    </message>
+    <message>
+        <source>Angle range must be greater than Speed!</source>
+        <translation>角度范围必须大于速度!</translation>
+    </message>
+    <message>
+        <source>Select objects for Tweening first!</source>
+        <translation>首先为补间动画选择物体</translation>
+    </message>
+</context>
+<context>
+    <name>ScaleSettings</name>
+    <message>
+        <source>Name</source>
+        <translation>名字</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>选项</translation>
+    </message>
+    <message>
+        <source>Select object</source>
+        <translation>选择物体</translation>
+    </message>
+    <message>
+        <source>Set Properties</source>
+        <translation>设置属性</translation>
+    </message>
+    <message>
+        <source>Starting at frame</source>
+        <translation>起始帧</translation>
+    </message>
+    <message>
+        <source>Ending at frame</source>
+        <translation>结束帧</translation>
+    </message>
+    <message>
+        <source>Frames Total</source>
+        <translation>总帧数</translation>
+    </message>
+    <message>
+        <source>Width &amp; Height</source>
+        <translation>宽度/高度</translation>
+    </message>
+    <message>
+        <source>Only Width</source>
+        <translation>仅宽度</translation>
+    </message>
+    <message>
+        <source>Only Height</source>
+        <translation>仅高度</translation>
+    </message>
+    <message>
+        <source>Scale in</source>
+        <translation>放大</translation>
+    </message>
+    <message>
+        <source>Scaling Factor</source>
+        <translation>缩放比例</translation>
+    </message>
+    <message>
+        <source>Iterations</source>
+        <translation>迭代次数</translation>
+    </message>
+    <message>
+        <source>Loop</source>
+        <translation>循环</translation>
+    </message>
+    <message>
+        <source>Loop with Reverse</source>
+        <translation>反向循环</translation>
+    </message>
+    <message>
+        <source>Save Tween</source>
+        <translation>保存补间动画</translation>
+    </message>
+    <message>
+        <source>Cancel Tween</source>
+        <translation>取消补间动画</translation>
+    </message>
+    <message>
+        <source>Update Tween</source>
+        <translation>更新补间动画</translation>
+    </message>
+    <message>
+        <source>Close Tween Properties</source>
+        <translation>关闭补间动画属性</translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation>信息</translation>
+    </message>
+    <message>
+        <source>You must select at least one object!</source>
+        <translation>您必须选择至少一个物体</translation>
+    </message>
+    <message>
+        <source>You must set Tween properties first!</source>
+        <translation>您必须先设置补间动画属性</translation>
+    </message>
+    <message>
+        <source>Select objects for Tweening first!</source>
+        <translation>首先为补间动画选择物体</translation>
+    </message>
+</context>
+<context>
+    <name>SelectionSettings</name>
+    <message>
+        <source>Selection Properties</source>
+        <translation>选择属性</translation>
+    </message>
+    <message>
+        <source>Alignment</source>
+        <translation>校准 排列</translation>
+    </message>
+    <message>
+        <source>Horizontal Center</source>
+        <translation>水平居中</translation>
+    </message>
+    <message>
+        <source>Vertical Center</source>
+        <translation>垂直居中</translation>
+    </message>
+    <message>
+        <source>Absolute Center</source>
+        <translation>完全居中</translation>
+    </message>
+    <message>
+        <source>Flips</source>
+        <translation>变图</translation>
+    </message>
+    <message>
+        <source>Horizontal Flip</source>
+        <translation>水平翻转</translation>
+    </message>
+    <message>
+        <source>Vertical Flip</source>
+        <translation>垂直翻转</translation>
+    </message>
+    <message>
+        <source>Crossed Flip</source>
+        <translation>交叉翻转</translation>
+    </message>
+    <message>
+        <source>Order</source>
+        <translation>顺序</translation>
+    </message>
+    <message>
+        <source>Send object to back</source>
+        <translation>向后端发送对象</translation>
+    </message>
+    <message>
+        <source>Send object to back one level</source>
+        <translation>将发送对象返回一级</translation>
+    </message>
+    <message>
+        <source>Send object to front</source>
+        <translation>向前端发送对象</translation>
+    </message>
+    <message>
+        <source>Send object to front one level</source>
+        <translation>将对象发送到前一个级别</translation>
+    </message>
+    <message>
+        <source>Group</source>
+        <translation>组</translation>
+    </message>
+    <message>
+        <source>Group Objects</source>
+        <translation>编组对象</translation>
+    </message>
+    <message>
+        <source>Ungroup Objects</source>
+        <translation>取消组对象</translation>
+    </message>
+    <message>
+        <source>Position</source>
+        <translation>位置</translation>
+    </message>
+    <message>
+        <source>X</source>
+        <translation>X</translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation>Y</translation>
+    </message>
+    <message>
+        <source>Rotation</source>
+        <translation>旋转</translation>
+    </message>
+    <message>
+        <source>Angle</source>
+        <translation>角度</translation>
+    </message>
+    <message>
+        <source>Scale</source>
+        <translation>比例</translation>
+    </message>
+    <message>
+        <source>Proportion</source>
+        <translation>面积</translation>
+    </message>
+    <message>
+        <source>Show Tips</source>
+        <translation>显示提示</translation>
+    </message>
+    <message>
+        <source>A little help for the Selection tool</source>
+        <translation>对选择工具有一点帮助。</translation>
+    </message>
+    <message>
+        <source>Double Click on any node or Shortcut Alt + R</source>
+        <translation>双击任意节点或快捷键Alt + R</translation>
+    </message>
+    <message>
+        <source>Rotation mode</source>
+        <translation>旋转模式</translation>
+    </message>
+    <message>
+        <source>Arrows</source>
+        <translation>箭头</translation>
+    </message>
+    <message>
+        <source>Movement on selection</source>
+        <translation>运动的选择</translation>
+    </message>
+    <message>
+        <source>Shift + Arrows</source>
+        <translation>Shift + 箭头</translation>
+    </message>
+    <message>
+        <source>Slow movement on selection</source>
+        <translation>选择缓慢运动</translation>
+    </message>
+    <message>
+        <source>Ctrl + Arrows</source>
+        <translation>Ctrl + 箭头</translation>
+    </message>
+    <message>
+        <source>Fast movement on selection</source>
+        <translation>选择快速运动</translation>
+    </message>
+    <message>
+        <source>Ctrl + Left Mouse Button</source>
+        <translation>Ctrl+鼠标左键</translation>
+    </message>
+    <message>
+        <source>Proportional scaling on selection</source>
+        <translation>选择比例缩放</translation>
+    </message>
+</context>
+<context>
     <name>SelectionTool</name>
     <message>
         <source>O</source>
@@ -348,306 +1085,34 @@
     </message>
 </context>
 <context>
-    <name>Settings</name>
-    <message>
-        <source>X</source>
-        <translation>X</translation>
-    </message>
-    <message>
-        <source>Y</source>
-        <translation>Y</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation>信息</translation>
-    </message>
-    <message>
-        <source>Loop</source>
-        <translation>循环</translation>
-    </message>
+    <name>ShearSettings</name>
     <message>
         <source>Name</source>
         <translation>名字</translation>
-    </message>
-    <message>
-        <source>Text</source>
-        <translation>文本</translation>
-    </message>
-    <message>
-        <source>Tips</source>
-        <translation>提示</translation>
-    </message>
-    <message>
-        <source>Type</source>
-        <translation>类型</translation>
-    </message>
-    <message>
-        <source>Angle</source>
-        <translation>角度</translation>
-    </message>
-    <message>
-        <source>Counterclockwise</source>
-        <translation>逆时针方向</translation>
-    </message>
-    <message>
-        <source>Flips</source>
-        <translation>变图</translation>
-    </message>
-    <message>
-        <source>Group</source>
-        <translation>组</translation>
-    </message>
-    <message>
-        <source>Order</source>
-        <translation>顺序</translation>
-    </message>
-    <message>
-        <source>Scale</source>
-        <translation>比例</translation>
-    </message>
-    <message>
-        <source>Shift</source>
-        <translation>Shift</translation>
-    </message>
-    <message>
-        <source>White</source>
-        <translation>白色</translation>
-    </message>
-    <message>
-        <source>mouth</source>
-        <translation>嘴</translation>
-    </message>
-    <message>
-        <source>Select object</source>
-        <translation>选择物体</translation>
-    </message>
-    <message>
-        <source>Fast movement on selection</source>
-        <translation>选择快速运动</translation>
-    </message>
-    <message>
-        <source>Frames Total</source>
-        <translation>总帧数</translation>
-    </message>
-    <message>
-        <source>Send object to back one level</source>
-        <translation>将发送对象返回一级</translation>
-    </message>
-    <message>
-        <source>Update Tween</source>
-        <translation>更新补间动画</translation>
-    </message>
-    <message>
-        <source>Line Properties</source>
-        <translation>直线属性</translation>
-    </message>
-    <message>
-        <source>Ending Opacity</source>
-        <translation>结束不透明度</translation>
-    </message>
-    <message>
-        <source>Fill Type</source>
-        <translation>文件类型</translation>
-    </message>
-    <message>
-        <source>Speed (Degrees/Frame)</source>
-        <translation>速度(度/帧)</translation>
-    </message>
-    <message>
-        <source>Line Fill</source>
-        <translation>线性填充</translation>
-    </message>
-    <message>
-        <source>Arrows</source>
-        <translation>箭头</translation>
-    </message>
-    <message>
-        <source>Close the line path</source>
-        <translation>关闭线路路径</translation>
-    </message>
-    <message>
-        <source>Only Height</source>
-        <translation>仅高度</translation>
-    </message>
-    <message>
-        <source>Send object to front one level</source>
-        <translation>将对象发送到前一个级别</translation>
-    </message>
-    <message>
-        <source>Align line to horizontal/vertical axis</source>
-        <translation>对齐线到水平/垂直轴</translation>
-    </message>
-    <message>
-        <source>Finish at</source>
-        <translation>完成在</translation>
-    </message>
-    <message>
-        <source>X Key or Right Mouse Button</source>
-        <translation>X键或鼠标右键</translation>
-    </message>
-    <message>
-        <source>Select objects for Tweening first!</source>
-        <translation>首先为补间动画选择物体</translation>
-    </message>
-    <message>
-        <source>Mouths</source>
-        <translation>嘴</translation>
-    </message>
-    <message>
-        <source>Clockwise</source>
-        <translation>顺时针方向</translation>
-    </message>
-    <message>
-        <source>Set Path Properties</source>
-        <translation>设置路径属性</translation>
-    </message>
-    <message>
-        <source>Horizontal Center</source>
-        <translation>水平居中</translation>
-    </message>
-    <message>
-        <source>A little help for the Selection tool</source>
-        <translation>对选择工具有一点帮助。</translation>
-    </message>
-    <message>
-        <source>Close Tween Properties</source>
-        <translation>关闭补间动画属性</translation>
-    </message>
-    <message>
-        <source>PolyLine Properties</source>
-        <translation>多段线的属性</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>选项</translation>
     </message>
     <message>
-        <source>Partial</source>
-        <translation>局部</translation>
-    </message>
-    <message>
-        <source>Show Tips</source>
-        <translation>显示提示</translation>
-    </message>
-    <message>
-        <source>Position</source>
-        <translation>位置</translation>
-    </message>
-    <message>
-        <source>Rotation</source>
-        <translation>旋转</translation>
-    </message>
-    <message>
-        <source>Smoothness</source>
-        <translation>平滑</translation>
-    </message>
-    <message>
-        <source>Initial Opacity</source>
-        <translation>初始不透明度</translation>
-    </message>
-    <message>
-        <source>You must set Tween properties first!</source>
-        <translation>您必须先设置补间动画属性</translation>
-    </message>
-    <message>
-        <source>Save Tween</source>
-        <translation>保存补间动画</translation>
-    </message>
-    <message>
-        <source>Proportion</source>
-        <translation>面积</translation>
-    </message>
-    <message>
-        <source>Angle range must be greater than 0!</source>
-        <translation>角度范围必须大于0</translation>
-    </message>
-    <message>
-        <source>Internal Fill</source>
-        <translation>内部填充</translation>
-    </message>
-    <message>
-        <source>Line &amp; Internal Fill</source>
-        <translation>线性/内部 填充</translation>
-    </message>
-    <message>
-        <source>Slow movement on selection</source>
-        <translation>选择缓慢运动</translation>
-    </message>
-    <message>
-        <source>Iterations</source>
-        <translation>迭代次数</translation>
-    </message>
-    <message>
-        <source>Current Mouth Position</source>
-        <translation>当前口令位置</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>方向</translation>
-    </message>
-    <message>
-        <source>Movement on selection</source>
-        <translation>运动的选择</translation>
-    </message>
-    <message>
-        <source>Close line</source>
-        <translation>封闭线</translation>
-    </message>
-    <message>
-        <source>Pencil Properties</source>
-        <translation>铅笔属性</translation>
-    </message>
-    <message>
-        <source>Scale in</source>
-        <translation>放大</translation>
-    </message>
-    <message>
-        <source>Select Objects</source>
-        <translation>选择对象</translation>
-    </message>
-    <message>
-        <source>Send object to back</source>
-        <translation>向后端发送对象</translation>
-    </message>
-    <message>
-        <source>Double Click on any node or Shortcut Alt + R</source>
-        <translation>双击任意节点或快捷键Alt + R</translation>
-    </message>
-    <message>
-        <source>Ctrl + Left Mouse Button</source>
-        <translation>Ctrl+鼠标左键</translation>
-    </message>
-    <message>
-        <source>Shift + Arrows</source>
-        <translation>Shift + 箭头</translation>
-    </message>
-    <message>
-        <source>Start at</source>
-        <translation>起始于</translation>
+        <source>Select object</source>
+        <translation>选择物体</translation>
     </message>
     <message>
         <source>Set Properties</source>
         <translation>设置属性</translation>
     </message>
     <message>
-        <source>Cancel Tween</source>
-        <translation>取消补间动画</translation>
+        <source>Starting at frame</source>
+        <translation>起始帧</translation>
     </message>
     <message>
-        <source>Continuous</source>
-        <translation>连续</translation>
+        <source>Ending at frame</source>
+        <translation>结束帧</translation>
     </message>
     <message>
-        <source>Ungroup Objects</source>
-        <translation>取消组对象</translation>
-    </message>
-    <message>
-        <source>Group Objects</source>
-        <translation>编组对象</translation>
-    </message>
-    <message>
-        <source>Vertical Flip</source>
-        <translation>垂直翻转</translation>
+        <source>Frames Total</source>
+        <translation>总帧数</translation>
     </message>
     <message>
         <source>Width &amp; Height</source>
@@ -658,116 +1123,60 @@
         <translation>仅宽度</translation>
     </message>
     <message>
-        <source>Lip-Sync FPS</source>
-        <translation>同步唇型每秒帧数</translation>
-    </message>
-    <message>
-        <source>Ellipse Properties</source>
-        <translation>椭圆属性</translation>
-    </message>
-    <message>
-        <source>Editing</source>
-        <translation>编辑</translation>
-    </message>
-    <message>
-        <source>Starting at frame</source>
-        <translation>起始帧</translation>
-    </message>
-    <message>
-        <source>Selection Properties</source>
-        <translation>选择属性</translation>
-    </message>
-    <message>
-        <source>Vertical Center</source>
-        <translation>垂直居中</translation>
-    </message>
-    <message>
-        <source>Scaling Factor</source>
-        <translation>缩放比例</translation>
-    </message>
-    <message>
-        <source>Ending at frame</source>
-        <translation>结束帧</translation>
-    </message>
-    <message>
-        <source>Rotation mode</source>
-        <translation>旋转模式</translation>
-    </message>
-    <message>
-        <source>You must select at least one object!</source>
-        <translation>您必须选择至少一个物体</translation>
-    </message>
-    <message>
-        <source>Ending Color</source>
-        <translation>结束颜色</translation>
-    </message>
-    <message>
-        <source>Send object to front</source>
-        <translation>向前端发送对象</translation>
-    </message>
-    <message>
-        <source>Initial Color</source>
-        <translation>初始颜色</translation>
-    </message>
-    <message>
-        <source>Ctrl + Arrows</source>
-        <translation>Ctrl + 箭头</translation>
-    </message>
-    <message>
-        <source>Proportional scaling on selection</source>
-        <translation>选择比例缩放</translation>
+        <source>Only Height</source>
+        <translation>仅高度</translation>
     </message>
     <message>
         <source>Shear in</source>
         <translation>切入</translation>
     </message>
     <message>
-        <source>Horizontal Flip</source>
-        <translation>水平翻转</translation>
+        <source>Scaling Factor</source>
+        <translation>缩放比例</translation>
     </message>
     <message>
-        <source>Absolute Center</source>
-        <translation>完全居中</translation>
+        <source>Iterations</source>
+        <translation>迭代次数</translation>
     </message>
     <message>
-        <source>Rectangle Properties</source>
-        <translation>矩形属性</translation>
+        <source>Loop</source>
+        <translation>循环</translation>
     </message>
     <message>
         <source>Loop with Reverse</source>
         <translation>反向循环</translation>
     </message>
     <message>
-        <source>Set width/height proportional dimensions</source>
-        <translation>设置宽度/高度尺寸成比例的尺寸</translation>
+        <source>Save Tween</source>
+        <translation>保存补间动画</translation>
     </message>
     <message>
-        <source>Current Phoneme</source>
-        <translation>当前 音素</translation>
+        <source>Cancel Tween</source>
+        <translation>取消补间动画</translation>
     </message>
     <message>
-        <source>Mouse Right Click or X Key</source>
-        <translation>鼠标右键或X键</translation>
+        <source>Update Tween</source>
+        <translation>更新补间动画</translation>
     </message>
     <message>
-        <source>Close properties</source>
-        <translation>关闭属性</translation>
+        <source>Close Tween Properties</source>
+        <translation>关闭补间动画属性</translation>
     </message>
     <message>
-        <source>Angle range must be greater than Speed!</source>
-        <translation>角度范围必须大于速度!</translation>
+        <source>Info</source>
+        <translation>信息</translation>
     </message>
     <message>
-        <source>Crossed Flip</source>
-        <translation>交叉翻转</translation>
+        <source>You must select at least one object!</source>
+        <translation>您必须选择至少一个物体</translation>
     </message>
     <message>
-        <source>Alignment</source>
-        <translation>校准 排列</translation>
+        <source>You must set Tween properties first!</source>
+        <translation>您必须先设置补间动画属性</translation>
     </message>
     <message>
-        <source>Degrees Range</source>
-        <translation>度范围</translation>
+        <source>Select objects for Tweening first!</source>
+        <translation>首先为补间动画选择物体</translation>
     </message>
 </context>
 <context>
@@ -2867,7 +3276,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Ctrl+Y</source>
-        <translation></translation>
+        <translation>Ctrl+Y</translation>
     </message>
     <message>
         <source>Ctrl+Z</source>
@@ -3495,6 +3904,10 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Confirmation</source>
         <translation>确认</translation>
+    </message>
+    <message>
+        <source>Ink</source>
+        <translation>墨水</translation>
     </message>
 </context>
 <context>
@@ -4213,10 +4626,6 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Latest Version</source>
         <translation>最新版本</translation>
-    </message>
-    <message>
-        <source>Want to help us to make a better project? Click here!</source>
-        <translation>想帮助我们做出更好的项目？ 点击这里!</translation>
     </message>
     <message>
         <source>Revision</source>
