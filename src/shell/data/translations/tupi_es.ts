@@ -503,7 +503,7 @@
         <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="507"/>
         <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="514"/>
         <source>Frames Total</source>
-        <translation></translation>
+        <translation>Total de Marcos</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="146"/>
@@ -629,7 +629,7 @@
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="212"/>
         <source>Frames Total</source>
-        <translation></translation>
+        <translation>Total de Marcos</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="222"/>
@@ -1547,7 +1547,7 @@
     <message>
         <location filename="../../../libtupi/tupgradientcreator.h" line="132"/>
         <source>Radius</source>
-        <translation></translation>
+        <translation>Radio</translation>
     </message>
     <message>
         <location filename="../../../libtupi/tupgradientcreator.h" line="141"/>
