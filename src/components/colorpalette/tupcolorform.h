@@ -42,25 +42,27 @@
 #include <QWidget>
 #include <QLabel>
 #include <QSpinBox>
+#include <QSlider>
 
-class TUPITUBE_EXPORT TupColorForm : public QWidget
+class TUPITUBE_EXPORT TupColorForm: public QWidget
 {
     Q_OBJECT
 
     public:
-        TupColorForm(QWidget *parent = 0);
+        TupColorForm(QWidget *parent = nullptr);
         ~TupColorForm();
 
     private:
        void setupForm();
 
     public slots:
-       void setColor(const QBrush & brush);
+       void setColor(const QBrush &);
 
     private slots:
        void syncRgbValues();
        void syncHsvValues();
-       void updateAlphaValue(int alpha);
+       void updateAlphaValueFromSpin(int alpha);
+       void updateAlphaValueFromSlider(int alpha);
 
     signals:
        void brushChanged(const QBrush &);
@@ -78,6 +80,7 @@ class TUPITUBE_EXPORT TupColorForm : public QWidget
        TupFormItem *valueV;
 
        QSpinBox *alphaBox;
+       QSlider *alphaSlider;
 };
 
 #endif

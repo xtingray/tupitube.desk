@@ -42,16 +42,11 @@
 #include <QDoubleSpinBox>
 #include <QGridLayout>
 #include <QLineEdit>
-// #include <cmath>
 
 TupColorForm::TupColorForm(QWidget *parent) : QWidget(parent)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupColorForm()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "TupColorForm()";
     #endif
 
     setupForm();
@@ -60,11 +55,7 @@ TupColorForm::TupColorForm(QWidget *parent) : QWidget(parent)
 TupColorForm::~TupColorForm()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupColorForm()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "~TupColorForm()";
     #endif
 }
 
@@ -106,12 +97,20 @@ void TupColorForm::setupForm()
     alphaBox->setMinimum(0);
     alphaBox->setMaximum(255);
     alphaBox->setValue(255);
-    connect(alphaBox, SIGNAL(valueChanged(int)), this, SLOT(updateAlphaValue(int)));
+    connect(alphaBox, SIGNAL(valueChanged(int)), this, SLOT(updateAlphaValueFromSpin(int)));
+
+    alphaSlider = new QSlider(Qt::Horizontal);
+    alphaSlider->setMinimum(0);
+    alphaSlider->setMaximum(255);
+    alphaSlider->setSingleStep(1);
+    alphaSlider->setValue(255);
+    connect(alphaSlider, SIGNAL(valueChanged(int)), this, SLOT(updateAlphaValueFromSlider(int)));
 
     layout->addLayout(gridLayout);
     layout->addWidget(new TSeparator(Qt::Horizontal));
     layout->addWidget(alphaLabel);
     layout->addWidget(alphaBox);
+    layout->addWidget(alphaSlider);
 }
 
 void TupColorForm::setColor(const QBrush &brush)
@@ -166,8 +165,22 @@ void TupColorForm::syncHsvValues()
     emit brushChanged(color);
 }
 
-void TupColorForm::updateAlphaValue(int alpha)
+void TupColorForm::updateAlphaValueFromSpin(int alpha)
 {
-    Q_UNUSED(alpha);
+    Q_UNUSED(alpha)
+    alphaSlider->blockSignals(true);
+    alphaSlider->setValue(alpha);
+    alphaSlider->blockSignals(false);
+
+    syncRgbValues();    
+}
+
+void TupColorForm::updateAlphaValueFromSlider(int alpha)
+{
+    Q_UNUSED(alpha)
+    alphaBox->blockSignals(true);
+    alphaBox->setValue(alpha);
+    alphaBox->blockSignals(false);
+
     syncRgbValues();
 }
