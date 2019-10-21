@@ -128,6 +128,10 @@ void TupColorForm::setColor(const QBrush &brush)
     alphaBox->blockSignals(true);
     alphaBox->setValue(color.alpha());
     alphaBox->blockSignals(false);
+
+    alphaSlider->blockSignals(true);
+    alphaSlider->setValue(color.alpha());
+    alphaSlider->blockSignals(false);
     blockSignals(false);
 }
 
