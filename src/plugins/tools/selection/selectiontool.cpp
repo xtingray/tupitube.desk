@@ -303,12 +303,7 @@ TupFrame* SelectionTool::frameAt(int sceneIndex, int layerIndex, int frameIndex)
        }
     } else {
        #ifdef TUP_DEBUG
-           QString msg = "SelectionTool::frameAt() - Fatal Error: Scene is NULL! -> " + QString::number(sceneIndex);
-           #ifdef Q_OS_WIN
-               qDebug() << msg;
-           #else
-               tError() << msg;
-           #endif
+           qDebug() << "SelectionTool::frameAt() - Fatal Error: Scene is NULL! -> " + QString::number(sceneIndex);
        #endif
     }
 
@@ -398,13 +393,8 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "SelectionTool::itemResponse - Fatal Error: frame is NULL! (index: " 
-                          + QString::number(response->getFrameIndex()) + ")";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "SelectionTool::itemResponse - Fatal Error: frame is NULL! (index: "
+                        + QString::number(response->getFrameIndex()) + ")";
         #endif
         return;
     }
@@ -413,9 +403,9 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
     updateItemRotation();
     updateItemScale();
 
-#ifdef TUP_DEBUG
-    qDebug() << "SelectionTool::itemResponse() - response->action() -> " + QString::number(response->getAction());
-#endif
+    #ifdef TUP_DEBUG
+        qDebug() << "SelectionTool::itemResponse() - response->action() -> " + QString::number(response->getAction());
+    #endif
 
     switch (response->getAction()) {
         case TupProjectRequest::Transform:
@@ -428,13 +418,8 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "SelectionTool::itemResponse - No item found";
-                        #ifdef Q_OS_WIN
-                            qDebug() << msg;
-                        #else
-                            tError() << msg;
-                        #endif
-                    #endif
+                    qDebug() << "SelectionTool::itemResponse - No item found";
+                #endif
             }
         }
         break;
@@ -613,22 +598,19 @@ bool SelectionTool::selectionIsActive()
 
 void SelectionTool::applyAlignAction(SelectionSettings::Align align)
 {
-    QGraphicsView *view = scene->views().at(0);
-    QRectF rect = view->sceneRect();
-    QPointF center = rect.center();
     QPointF distance;
     foreach (NodeManager *manager, nodeManagers) {
         QGraphicsItem *item = manager->parentItem();
         QRectF rect = item->boundingRect();
         QPointF objectPos = rect.center();
         if (align == SelectionSettings::hAlign) {
-            int y = static_cast<int>(center.y() - objectPos.y());
+            int y = static_cast<int>(wsCenter.y() - objectPos.y());
             item->setPos(item->pos().x(), y);
         } else if (align == SelectionSettings::vAlign) {
-            int x = static_cast<int>(center.x() - objectPos.x());
+            int x = static_cast<int>(wsCenter.x() - objectPos.x());
             item->setPos(x, item->pos().y());
         } else if (align == SelectionSettings::totalAlign) {
-            distance = center - objectPos;
+            distance = wsCenter - objectPos;
             item->setPos(distance.x(), distance.y());
         }
         manager->syncNodesFromParent();
@@ -732,12 +714,7 @@ void SelectionTool::applyGroupAction(SelectionSettings::Group action)
                         items += ", ";
                 } else {
                     #ifdef TUP_DEBUG
-                        QString msg = "SelectionTool::applyGroupAction() - Fatal Error: Index of item is invalid! -> -1";
-                        #ifdef Q_OS_WIN
-                            qDebug() << msg;
-                        #else
-                            tError() << msg;
-                        #endif
+                        qDebug() << "SelectionTool::applyGroupAction() - Fatal Error: Index of item is invalid! -> -1";
                     #endif
                 }
                 i++;
@@ -886,9 +863,9 @@ void SelectionTool::updateItemPosition()
 
 void SelectionTool::updateItemRotation()
 {
-#ifdef TUP_DEBUG
-        qDebug() << "[SelectionTool::updateItemRotation()]";
-#endif
+    #ifdef TUP_DEBUG
+            qDebug() << "[SelectionTool::updateItemRotation()]";
+    #endif
 
     if (nodeManagers.count() > 0) {
         NodeManager *manager = nodeManagers.first();
@@ -900,9 +877,9 @@ void SelectionTool::updateItemRotation()
 
 void SelectionTool::updateItemScale()
 {
-#ifdef TUP_DEBUG
-    qDebug() << "[SelectionTool::updateItemRotation()]";
-#endif
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::updateItemRotation()]";
+    #endif
 
     if (nodeManagers.count() > 0) {
         NodeManager *manager = nodeManagers.first();
@@ -923,9 +900,9 @@ void SelectionTool::updateItemScale()
 
 void SelectionTool::updateItemPosition(int x, int y) 
 {
-#ifdef TUP_DEBUG
-    qDebug() << "[SelectionTool::updateItemPosition(int, int)]";
-#endif
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::updateItemPosition(int, int)]";
+    #endif
 
     if (nodeManagers.count() == 1) {
         NodeManager *manager = nodeManagers.first();
@@ -950,9 +927,9 @@ void SelectionTool::updateItemPosition(int x, int y)
 
 void SelectionTool::updateItemRotation(int angle)
 {
-#ifdef TUP_DEBUG
-    qDebug() << "[SelectionTool::updateItemRotation(int)]";
-#endif
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::updateItemRotation(int)]";
+    #endif
 
     if (nodeManagers.count() == 1) {
         NodeManager *manager = nodeManagers.first();
@@ -972,9 +949,9 @@ void SelectionTool::updateItemRotation(int angle)
 
 void SelectionTool::updateItemScale(double xFactor, double yFactor)
 {
-#ifdef TUP_DEBUG
-    qDebug() << "[SelectionTool::updateItemScale(float, float)]";
-#endif
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::updateItemScale(float, float)]";
+    #endif
 
     if (nodeManagers.count() == 1) {
         NodeManager *manager = nodeManagers.first();
@@ -994,9 +971,9 @@ void SelectionTool::updateItemScale(double xFactor, double yFactor)
 
 void SelectionTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
 {
-#ifdef TUP_DEBUG
-    qDebug() << "[SelectionTool::requestTransformation(QGraphicsItem *, TupFrame *)]";
-#endif
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::requestTransformation(QGraphicsItem *, TupFrame *)]";
+    #endif
 
     QDomDocument doc;
     doc.appendChild(TupSerializer::properties(item, doc));
@@ -1028,13 +1005,8 @@ void SelectionTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
         emit requested(&event);
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "SelectionTool::requestTransformation() - Fatal Error: Invalid item position !!! [ "
-                    + QString::number(position) + " ]";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "SelectionTool::requestTransformation() - Fatal Error: Invalid item position !!! [ "
+                        + QString::number(position) + " ]";
         #endif
     }
 }
@@ -1065,4 +1037,9 @@ void SelectionTool::enableProportion(bool flag)
         foreach (NodeManager *nodeManager, nodeManagers)
             nodeManager->setProportion(flag);
     }
+}
+
+void SelectionTool::setProjectSize(const QSize size)
+{
+    wsCenter = QPoint(0, 0) + QPointF(size.width()/2, size.height()/2);
 }

@@ -63,7 +63,6 @@
 #include <QApplication>
 #include <QToolBar>
 #include <QPixmap>
-// #include <QDesktopWidget>
 #include <QGridLayout>
 #include <QCameraImageCapture>
 #include <QCamera>
@@ -73,11 +72,7 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
                                  QMainWindow(parent)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupDocumentView()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "TupDocumentView()";
     #endif
 
     setWindowIcon(QPixmap(THEME_DIR + "icons/animation_mode.png"));
@@ -993,6 +988,7 @@ void TupDocumentView::selectTool()
             {
                 status->enableFullScreenFeature(true);
                 if (toolName.compare(tr("Object Selection")) == 0) {
+                    tool->setProjectSize(project->getDimension());
                     minWidth = 130;
                     connect(paintArea, SIGNAL(itemAddedOnSelection(TupGraphicsScene *)),
                             tool, SLOT(initItems(TupGraphicsScene *)));

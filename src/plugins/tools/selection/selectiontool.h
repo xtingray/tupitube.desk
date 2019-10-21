@@ -91,6 +91,7 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         void resizeNode(qreal scaleFactor);
         void updateZoomFactor(qreal scaleFactor);
         void clearSelection();
+        virtual void setProjectSize(const QSize size);
 
     signals:
         void closeHugeCanvas();
@@ -137,6 +138,7 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         int currentLayer;
         int currentFrame;
         TupFrame *frame;
+        QPointF wsCenter;
 };
 
 #endif
