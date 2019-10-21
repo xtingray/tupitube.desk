@@ -64,12 +64,16 @@ void InkTool::init(TupGraphicsScene *gScene)
 {
     Q_UNUSED(gScene)
 
+    penPress = 0;
     TCONFIG->beginGroup("InkTool");
     sensibility = TCONFIG->value("Sensibility", 5).toInt();
     smoothness = TCONFIG->value("Smoothness", 2).toDouble();
     showBorder = TCONFIG->value("BorderEnabled", true).toBool();
     showFill = TCONFIG->value("FillEnabled", true).toBool();
     borderSize = TCONFIG->value("BorderSize", 1).toInt();
+
+    foreach (QGraphicsView *view, gScene->views())
+        view->setDragMode(QGraphicsView::NoDrag);
 }
 
 QStringList InkTool::keys() const
@@ -1296,6 +1300,10 @@ QCursor InkTool::polyCursor() const
 
 void InkTool::updatePressure(qreal pressure)
 {    
+    #ifdef TUP_DEBUG
+        qDebug() << "InkTool::updatePressure() - pressure: " << pressure;
+    #endif
+
     penPress = pressure;
     double factor = sensibility;
     if (sensibility > 1)
