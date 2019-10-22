@@ -1260,7 +1260,7 @@ void InkTool::updateSmoothness(double value)
 
 void InkTool::smoothPath(QPainterPath &path, double smoothness, int from, int to, bool closePath)
 {
-    QPolygonF pol;
+    QPolygonF polygonPoints;
     QList<QPolygonF> polygons = path.toSubpathPolygons();
     QList<QPolygonF>::iterator it = polygons.begin();
     QPolygonF::iterator pointIt;
@@ -1268,17 +1268,17 @@ void InkTool::smoothPath(QPainterPath &path, double smoothness, int from, int to
     while (it != polygons.end()) {
         pointIt = (*it).begin();
         while (pointIt <= (*it).end()-2) {
-            pol << (*pointIt);
+            polygonPoints << (*pointIt);
             pointIt += 2;
         }
         ++it;
     }
 
     if (smoothness > 0) {
-        path = TupGraphicalAlgorithm::bezierFit(pol, static_cast<float>(smoothness), from, to, closePath);
+        path = TupGraphicalAlgorithm::bezierFit(polygonPoints, static_cast<float>(smoothness), from, to, closePath);
     } else {
         path = QPainterPath();
-        path.addPolygon(pol);
+        path.addPolygon(polygonPoints);
     }
 }
 

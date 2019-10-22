@@ -454,14 +454,14 @@ double newtonRaphsonRootFind(QPointF *Q,QPointF P,double u)
  *   a better parameterization.
  *
  */
-double *reparameterize(QPolygonF points,int first,int last,double *u,QPointF *curve)
+double *reparameterize(QPolygonF points, int first, int last, double *u, QPointF *curve)
 {
     
     int nPts = last-first+1;
     int i;
     double *uPrime; /*  New parameter values */
 
-    uPrime = new double[nPts];
+    uPrime = new double[static_cast<unsigned long>(nPts)];
 
     for (i = first; i <= last; i++)
          uPrime[i-first] = newtonRaphsonRootFind(curve, points[i], u[i- first]);
@@ -469,7 +469,7 @@ double *reparameterize(QPolygonF points,int first,int last,double *u,QPointF *cu
     return (uPrime);
 }
 
-QPointF *fitCubic(QPolygonF &points,int first,int last,FitVector tHat1,FitVector tHat2,float error,int &width)
+QPointF *fitCubic(QPolygonF & points, int first, int last, FitVector tHat1, FitVector tHat2, float error, int & width)
 {
     double *u;
     double *uPrime;
@@ -477,13 +477,14 @@ QPointF *fitCubic(QPolygonF &points,int first,int last,FitVector tHat1,FitVector
     int splitPoint;
     int nPts;
     double iterationError;
-    int maxIterations=4;
+    int maxIterations = 4;
+
     FitVector tHatCenter;
     QPointF *curve;
     int i;
-    width=0;
-    iterationError = error * error;
-    nPts = last-first+1;
+    width = 0;
+    iterationError = static_cast<double>(error * error);
+    nPts = last - first + 1;
 
     if (nPts == 2) {
         double dist = distance(points[last], points[first]) / 3.0;
@@ -497,22 +498,21 @@ QPointF *fitCubic(QPolygonF &points,int first,int last,FitVector tHat1,FitVector
         tHat2.scale(dist);
         curve[1] = tHat1 + curve[0];
         curve[2] = tHat2 + curve[3];
-        width=4;    
+        width = 4;
 
         return curve;
     }
-    
+
     /*  Parameterize points, and attempt to fit curve */
     u = chordLengthParameterize(points, first, last);
     curve = generateBezier(points, first, last, u, tHat1, tHat2);
 
-
     /*  Find max deviation of points to fitted curve */
     maxError = computeMaxError(points, first, last, curve, u, &splitPoint);
 
-    if (maxError < error) {
+    if (static_cast<float>(maxError) < error) {
         delete[] u;
-        width=4;    
+        width = 4;
         return curve;
     }
 
@@ -523,9 +523,9 @@ QPointF *fitCubic(QPolygonF &points,int first,int last,FitVector tHat1,FitVector
              uPrime = reparameterize(points, first, last, u, curve);
              curve = generateBezier(points, first, last, uPrime, tHat1, tHat2);
              maxError = computeMaxError(points, first, last, curve, uPrime, &splitPoint);
-             if (maxError < error) {
+             if (static_cast<float>(maxError) < error) {
                  delete[] u;
-                 width=4;    
+                 width = 4;
                  return curve;
              }
              delete[] u;
@@ -538,26 +538,27 @@ QPointF *fitCubic(QPolygonF &points,int first,int last,FitVector tHat1,FitVector
     delete[] curve;
     tHatCenter = computeCenterTangent(points, splitPoint);
 
-    int w1,w2;
+    int w1;
+    int w2;
     QPointF *cu1 = nullptr;
     QPointF *cu2 = nullptr;
-    cu1 = fitCubic(points, first, splitPoint, tHat1, tHatCenter, error,w1);
+    cu1 = fitCubic(points, first, splitPoint, tHat1, tHatCenter, error, w1);
 
     tHatCenter.negate();
-    cu2 = fitCubic(points, splitPoint, last, tHatCenter, tHat2, error,w2);
+    cu2 = fitCubic(points, splitPoint, last, tHatCenter, tHat2, error, w2);
 
-    QPointF *newcurve = new QPointF[w1 + w2];
+    QPointF *newCurve = new QPointF[static_cast<unsigned long>(w1 + w2)];
     for (int i = 0; i < w1; i++)
-         newcurve[i] = cu1[i];
+         newCurve[i] = cu1[i];
 
     for (int i = 0; i < w2; i++)
-         newcurve[i+w1] = cu2[i];
-    
+         newCurve[i + w1] = cu2[i];
+
     delete[] cu1;
     delete[] cu2;
-    width=w1+w2;
+    width = w1 + w2;
 
-    return newcurve;
+    return newCurve;
 }
 
 QPainterPath TupGraphicalAlgorithm::bezierFit(QPolygonF &pPoints, float error, int from, int to,
@@ -571,7 +572,8 @@ QPainterPath TupGraphicalAlgorithm::bezierFit(QPolygonF &pPoints, float error, i
     }
 
     QPolygonF points = TupGraphicalAlgorithm::polygonFit(pPoints);    
-    FitVector tHat1, tHat2;
+    FitVector tHat1;
+    FitVector tHat2;
 
     if (to < 0)
         to = points.count() - 1;
@@ -616,12 +618,6 @@ QPainterPath TupGraphicalAlgorithm::bezierFit(QPolygonF &pPoints, float error, i
     } else {
         path.addPolygon(points);
     }
-
-    /*
-    QPainterPath::Element e = path.elementAt(0);
-    QPointF firstP(e.x, e.y);
-    path.lineTo(firstP);
-    */
 
     if (closePath)
         path.closeSubpath();
