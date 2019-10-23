@@ -235,7 +235,7 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
                                                                      doc.toString());
     emit requested(&request);
 
-    /* SQA: Code for debugging
+    // SQA: Code for debugging
     smoothPath(guidePainterPath, 2);
 
     qDebug() << "";
@@ -254,7 +254,6 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
                                                    0, QPointF(), gScene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
                                                    data.toString());
     emit requested(&request);
-    */
 }
 
 void InkTool::removeExtraPoints()
