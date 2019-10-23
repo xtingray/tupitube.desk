@@ -955,11 +955,11 @@ void TupMainWindow::openRecentProject()
 }
 
 // SQA: Check if this method is still used for something
-void TupMainWindow::showAnimationMenu(const QPoint &p)
+void TupMainWindow::showAnimationMenu(const QPoint &point)
 {
     QMenu *menu = new QMenu(tr("Animation"), playerTab);
     menu->addAction(tr("New camera"), this, SLOT(newViewCamera()));
-    menu->exec(p);
+    menu->exec(point);
     delete menu;
 }
 
@@ -979,12 +979,23 @@ bool TupMainWindow::event(QEvent *event)
 void TupMainWindow::closeEvent(QCloseEvent *event)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::closeEvent(QCloseEvent)";
+        qDebug() << "TupMainWindow::closeEvent(QCloseEvent) - event type: " << event->type();
     #endif
+
+    /*
+    QString newsPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/twitter.html";
+    if (QFile::exists(newsPath)) {
+        QFile file(newsPath);
+        file.remove();
+    }
+
+    TCONFIG->beginGroup("General");
+    TCONFIG->setValue("Recents", m_recentProjects);
+    */
 
     if (cancelChanges()) {
         event->ignore();
-        return;
+        // return;
     } else {
         QString newsPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/twitter.html";
         if (QFile::exists(newsPath)) {
@@ -995,7 +1006,7 @@ void TupMainWindow::closeEvent(QCloseEvent *event)
         TCONFIG->beginGroup("General");
         TCONFIG->setValue("Recents", m_recentProjects);
 
-        TMainWindow::closeEvent(event);
+        // TMainWindow::closeEvent(event);
     }
 }
 

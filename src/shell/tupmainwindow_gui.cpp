@@ -376,19 +376,13 @@ void TupMainWindow::setupFileActions()
 
     // Exit action
     TAction *exit = new TAction(QPixmap(THEME_DIR + "icons/exit.png"), tr("Quit"), QKeySequence(tr("Ctrl+Q")),
-                                this, SLOT(exitApp()), m_actionManager);
+                                qApp, SLOT(closeAllWindows()), m_actionManager);
 
     exit->setStatusTip(tr("Close application"));
     m_actionManager->insert(exit, "exit", "file");
 
     // when the last window is closed, the application should quit
     connect(qApp, SIGNAL(lastWindowClosed()), qApp, SLOT(quit()));
-}
-
-void TupMainWindow::exitApp()
-{
-    if (!cancelChanges())
-        qApp->closeAllWindows();
 }
 
 void TupMainWindow::openStore()
