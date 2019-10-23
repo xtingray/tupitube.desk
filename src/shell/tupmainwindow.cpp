@@ -984,6 +984,7 @@ void TupMainWindow::closeEvent(QCloseEvent *event)
 
     if (cancelChanges()) {
         event->ignore();
+		return;
     } else {
         QString newsPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/twitter.html";
         if (QFile::exists(newsPath)) {
