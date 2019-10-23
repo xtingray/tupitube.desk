@@ -90,6 +90,7 @@ class TUPITUBE_PLUGIN InkTool : public TupToolPlugin
 
     private:
         void setupActions();
+        void processPoint(QPointF currentPoint);
         void smoothPath(QPainterPath &guidePainterPath, double smoothness, int from = 0,
                         int to = -1, bool closePath = false);
         void removeExtraPoints();
