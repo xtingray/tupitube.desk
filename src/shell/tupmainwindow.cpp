@@ -995,6 +995,7 @@ void TupMainWindow::closeEvent(QCloseEvent *event)
         TCONFIG->beginGroup("General");
         TCONFIG->setValue("Recents", m_recentProjects);
 
+        resetUI();
         TMainWindow::closeEvent(event);
     }
 }

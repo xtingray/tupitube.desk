@@ -462,7 +462,7 @@ void TMainWindow::closeEvent(QCloseEvent *e)
 void TMainWindow::showEvent(QShowEvent *e)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TMainWindow::showEvent()";
+        qDebug() << "TMainWindow::showEvent() - m_autoRestore: " << m_autoRestore;
     #endif
 
     QMainWindow::showEvent(e);
