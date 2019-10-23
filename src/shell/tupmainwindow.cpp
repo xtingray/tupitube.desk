@@ -982,23 +982,21 @@ void TupMainWindow::closeEvent(QCloseEvent *event)
         qDebug() << "TupMainWindow::closeEvent(QCloseEvent)";
     #endif
 
-    QString lastProject = m_fileName;
-
-    if (!closeProject()) {
+    if (cancelChanges()) {
         event->ignore();
         return;
+    } else {
+        QString newsPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/twitter.html";
+        if (QFile::exists(newsPath)) {
+            QFile file(newsPath);
+            file.remove();
+        }
+
+        TCONFIG->beginGroup("General");
+        TCONFIG->setValue("Recents", m_recentProjects);
+
+        TMainWindow::closeEvent(event);
     }
-
-    QString newsPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/twitter.html";
-    if (QFile::exists(newsPath)) {
-        QFile file(newsPath);
-        file.remove();
-    }
-
-    TCONFIG->beginGroup("General");
-    TCONFIG->setValue("Recents", m_recentProjects);
-
-    TMainWindow::closeEvent(event);
 }
 
 void TupMainWindow::createPaintCommand(const TupPaintAreaEvent *event)

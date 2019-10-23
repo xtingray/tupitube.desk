@@ -208,6 +208,7 @@ class TupMainWindow : public TabbedMainWindow
         void updateLibraryPanelStatus(bool flag);
         void updateScenesPanelStatus(bool flag);
         void doPlay();
+        void exitApp();
 
     private:
         QString appTitle;
