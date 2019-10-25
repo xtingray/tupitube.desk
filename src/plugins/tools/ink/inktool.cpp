@@ -64,9 +64,9 @@ void InkTool::init(TupGraphicsScene *gScene)
 {
     Q_UNUSED(gScene)
 
-    penPress = 0;
+    penPress = 1;
     TCONFIG->beginGroup("InkTool");
-    sensibility = TCONFIG->value("Sensibility", 5).toInt();
+    sensibility = TCONFIG->value("Sensibility", 1).toInt();
     smoothness = TCONFIG->value("Smoothness", 2).toDouble();
     showBorder = TCONFIG->value("BorderEnabled", true).toBool();
     showFill = TCONFIG->value("FillEnabled", true).toBool();
@@ -153,7 +153,7 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
         // Drawing a stroke
         if (device == InkSettings::Mouse) {
             for (int i=0; i<guidePoints.size(); i++) {
-                qreal press = 5 + (rand() % 5);
+                qreal press = 3 + (rand() % 5);
                 processPoint(guidePoints.at(i), press);
             }
         } else {
@@ -162,32 +162,41 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
         }
     } else {
         // Drawing a point
-        qreal pressCo = penPress * 10;
-        switch(sensibility) {
-            case 2:
-                pressCo += 0.2;
-            break;
-            case 3:
-                pressCo += 0.4;
-            break;
-            case 4:
-                pressCo += 1.6;
-            break;
-            case 5:
-                pressCo += 3.2;
-            break;
+        qreal pressCo;
+        qreal radius;
+
+        if (device == InkSettings::Pen) {
+            qreal pressCo = penPress * 10;
+            switch(sensibility) {
+                case 2:
+                    pressCo += 0.2;
+                break;
+                case 3:
+                    pressCo += 0.4;
+                break;
+                case 4:
+                    pressCo += 1.6;
+                break;
+                case 5:
+                    pressCo += 3.2;
+                break;
+            }
+
+            if (penPress > 0.4)
+                pressCo *= 0.4;
+
+            radius = brushManager->pen().width() * pressCo;
+        } else {
+            pressCo = (rand() % 9) + 1;
+            radius = brushManager->pen().width() + pressCo; 
         }
 
-        if (penPress > 0.4)
-            pressCo *= 0.4;
-
-        qreal radius = (brushManager->pen().width() * pressCo);
-        qreal half = radius + 2;
-        half /= 2;
+        qreal half = (radius + 2) / 2;
         QPointF distance(half, half);
         QPointF center = currentPoint - distance;
         QPen inkPen(brushManager->penColor(), borderSize, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
         TupEllipseItem *blackEllipse = new TupEllipseItem(QRectF(center, QSize(static_cast<int>(radius), static_cast<int>(radius))));
+
         if (showBorder)
             blackEllipse->setPen(inkPen);
         if (showFill) {
