@@ -181,8 +181,10 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
         if (penPress > 0.4)
             pressCo *= 0.4;
 
-        qreal radius = brushManager->pen().width() * pressCo;
-        QPointF distance((radius + 2)/2, (radius + 2)/2);
+        qreal radius = (brushManager->pen().width() * pressCo);
+        qreal half = radius + 2;
+        half /= 2;
+        QPointF distance(half, half);
         QPointF center = currentPoint - distance;
         QPen inkPen(brushManager->penColor(), borderSize, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
         TupEllipseItem *blackEllipse = new TupEllipseItem(QRectF(center, QSize(static_cast<int>(radius), static_cast<int>(radius))));
