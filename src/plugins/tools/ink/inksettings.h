@@ -38,6 +38,7 @@
 
 #include "tglobal.h"
 
+#include <QComboBox>
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QDoubleSpinBox>
@@ -52,21 +53,25 @@ class TUPITUBE_PLUGIN InkSettings : public QWidget
     Q_OBJECT
 
     public:
-        enum Structure { Basic = 0, Axial, Organic };
+        // enum Structure { Basic = 0, Axial, Organic };
+        enum Device { Mouse = 0, Pen };
 
         InkSettings(QWidget *parent = nullptr);
         ~InkSettings();
 
         void updateSmoothness(double value);
         bool smooothnessIsEnabled();
+        Device currentDevice();
 
     private slots:
+        void updateDevice(int index);
         void updateBorderOption(bool showBorder);
         void updateFillOption(bool showFill);
         void updateSmoothBox(bool enabled);
         // void setBorderColor();
 
     signals:
+        void deviceUpdated(InkSettings::Device device);
         void borderUpdated(bool borderFlag);
         void fillUpdated(bool fillFlag);
         void borderSizeUpdated(int size);
@@ -74,6 +79,9 @@ class TUPITUBE_PLUGIN InkSettings : public QWidget
         void smoothnessUpdated(double smoothness);
 
     private:
+        Device device;
+        // QComboBox *deviceCombo;
+        QWidget *pressureWidget;
         QSpinBox *pressureBox;
         QCheckBox *borderOption;
         QCheckBox *fillOption;

@@ -1347,7 +1347,7 @@ void TupDocumentView::redo()
 
 void TupDocumentView::setCursor(const QCursor &cursor)
 {
-    Q_UNUSED(cursor);
+    Q_UNUSED(cursor)
  /*
     paintArea->setCursor(c);
  */
@@ -1411,13 +1411,9 @@ TupPaintAreaCommand *TupDocumentView::createPaintCommand(const TupPaintAreaEvent
 
 void TupDocumentView::updatePaintArea()
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[TupDocumentView::updatePaintArea()]";
-    #else
-        T_FUNCINFO;
+    #ifdef TUP_DEBUG
+        qDebug() << "TupDocumentView::updatePaintArea()";
     #endif
-#endif
 
     paintArea->updatePaintArea();
 }

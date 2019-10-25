@@ -84,6 +84,9 @@ QStringList InkTool::keys() const
 void InkTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager,
                     TupGraphicsScene *gScene)
 {
+    guidePoints.clear();
+    pointPress.clear();
+
     firstHalfOnTop = true;
     previousDirection = None;
     // oldSlope = 0;
@@ -105,7 +108,7 @@ void InkTool::press(const TupInputDeviceInformation *input, TupBrushManager *bru
     oldPos = input->pos();
     firstHalfPrevious = input->pos();
     secondHalfPrevious = input->pos();
-    previousPoint = input->pos();
+    oldPos = input->pos();
 
     // Guide line
     guidePath = new TupPathItem();
@@ -131,8 +134,10 @@ void InkTool::move(const TupInputDeviceInformation *input, TupBrushManager *brus
     guidePainterPath.lineTo(currentPoint);
     guidePath->setPath(guidePainterPath);
 
-    if (currentPoint != previousPoint)
-        processPoint(currentPoint);
+    if (currentPoint != previousPoint) {
+        pointPress << penWidth;
+        guidePoints << currentPoint;
+    }
 
     previousPoint = currentPoint;
 }
@@ -141,10 +146,22 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
 {
     gScene->removeItem(guidePath);
     QPointF currentPoint = input->pos();
+    qreal length = sqrt(pow(std::abs(firstPoint.x() - currentPoint.x()), 2)
+                        + pow(std::abs(firstPoint.y() - currentPoint.y()), 2));
 
-    // Drawing a point
-    if (inkPath.elementCount() == 1) {
-        // Calculating pressure for the point
+    if (length > 10) {
+        // Drawing a stroke
+        if (device == InkSettings::Mouse) {
+            for (int i=0; i<guidePoints.size(); i++) {
+                qreal press = 5 + (rand() % 5);
+                processPoint(guidePoints.at(i), press);
+            }
+        } else {
+            for (int i=0; i<guidePoints.size(); i++)
+                processPoint(guidePoints.at(i), pointPress.at(i));
+        }
+    } else {
+        // Drawing a point
         qreal pressCo = penPress * 10;
         switch(sensibility) {
             case 2:
@@ -211,13 +228,10 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
     qDebug() << "pressure sensibility: " << sensibility;
     */
 
-    if (showBorder) {
-        // Set border color for shape
+    if (showBorder) // Set border color for shape
         stroke->setPen(QPen(brushManager->penColor(), borderSize));
-    }
 
-    if (showFill) {
-        // Set fill color for shape
+    if (showFill) { // Set fill color for shape
         Qt::BrushStyle style = brushManager->penBrush().style();
         QBrush brush = brushManager->brush();
         brush.setStyle(style);
@@ -236,6 +250,7 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
     emit requested(&request);
 
     // SQA: Code for debugging
+    /*
     smoothPath(guidePainterPath, 2);
 
     qDebug() << "";
@@ -254,6 +269,7 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
                                                    0, QPointF(), gScene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
                                                    data.toString());
     emit requested(&request);
+    */
 }
 
 void InkTool::removeExtraPoints()
@@ -288,20 +304,28 @@ QWidget *InkTool::configurator()
 {
     if (!settings) {
         settings = new InkSettings;
-        connect(settings, SIGNAL(borderUpdated(bool)), this, SLOT(updateBorderFlag(bool)));
+        connect(settings, SIGNAL(deviceUpdated(InkSettings::Device)),
+                this, SLOT(setDevice(InkSettings::Device)));
+        connect(settings, SIGNAL(borderUpdated(bool)), this, SLOT(updateBorderFeature(bool)));
         connect(settings, SIGNAL(fillUpdated(bool)), this, SLOT(updateFillFlag(bool)));
         connect(settings, SIGNAL(borderSizeUpdated(int)), this, SLOT(updateBorderSize(int)));
         connect(settings, SIGNAL(pressureUpdated(int)), this, SLOT(updatePressure(int)));
         connect(settings, SIGNAL(smoothnessUpdated(double)), this, SLOT(updateSmoothness(double)));
 
-        TCONFIG->beginGroup("InkTool PencilTool");
+        TCONFIG->beginGroup("InkTool");
         smoothness = TCONFIG->value("Smoothness", 4.0).toDouble();
         if (smoothness == 0.0)
             smoothness = 4.0;
         settings->updateSmoothness(smoothness);
+        device = settings->currentDevice();
     }
 
     return settings;
+}
+
+void InkTool::setDevice(InkSettings::Device dev)
+{
+    device = dev;
 }
 
 void InkTool::aboutToChangeTool() 
@@ -323,7 +347,7 @@ void InkTool::saveConfig()
     }
 }
 
-void InkTool::updateBorderFlag(bool border)
+void InkTool::updateBorderFeature(bool border)
 {
     showBorder = border;
 }
@@ -365,7 +389,8 @@ void InkTool::smoothPath(QPainterPath &path, double smoothness, int from, int to
     }
 
     if (smoothness > 0) {
-        path = TupGraphicalAlgorithm::bezierFit(polygonPoints, static_cast<float>(smoothness), from, to, closePath);
+        path = TupGraphicalAlgorithm::bezierFit(polygonPoints, static_cast<float>(smoothness), from, to,
+                                                closePath);
     } else {
         path = QPainterPath();
         path.addPolygon(polygonPoints);
@@ -394,24 +419,29 @@ void InkTool::updatePressure(qreal pressure)
         qDebug() << "InkTool::updatePressure() - pressure: " << pressure;
     #endif
 
-    penPress = pressure;
-    double factor = sensibility;
-    if (sensibility > 1)
-        factor = pow(sensibility, 2);
+    if (device == InkSettings::Mouse) {
+        penWidth = 5 + (rand() % 5);
+        sensibility = 1;
+    } else {
+        penPress = pressure;
+        double factor = sensibility;
+        if (sensibility > 1)
+            factor = pow(sensibility, 2);
 
-    if (pressure <= 0.2) {
-        penWidth = initPenWidth / (3 * factor);
-    } else if (pressure > 0.2 && pressure < 0.6) {
-        penWidth = initPenWidth + (initPenWidth * pressure * (4 + factor));
-    } else if (pressure >= 0.6) {
-        penWidth = initPenWidth + (initPenWidth * pressure * (6 + factor));
+        if (pressure <= 0.2) {
+            penWidth = initPenWidth / (3 * factor);
+        } else if (pressure > 0.2 && pressure < 0.6) {
+            penWidth = initPenWidth + (initPenWidth * pressure * (4 + factor));
+        } else if (pressure >= 0.6) {
+            penWidth = initPenWidth + (initPenWidth * pressure * (6 + factor));
+        }
     }
 }
 
-void InkTool::processPoint(QPointF currentPoint)
+void InkTool::processPoint(QPointF currentPoint, qreal strokeWidth)
 {
-    qreal my = currentPoint.y() - previousPoint.y();
-    qreal mx = currentPoint.x() - previousPoint.x();
+    qreal my = currentPoint.y() - oldPos.y();
+    qreal mx = currentPoint.x() - oldPos.x();
     qreal m;
 
     if (static_cast<int>(mx) != 0) // Calculating slope
@@ -420,10 +450,11 @@ void InkTool::processPoint(QPointF currentPoint)
         m = 100; // mx = 0 -> path is vertical | 100 == infinite
 
     // Calculating distance between current point and previous
-    qreal distance = sqrt(pow(std::abs(currentPoint.x() - oldPos.x()), 2) + pow(std::abs(currentPoint.y() - oldPos.y()), 2));
+    qreal distance = sqrt(pow(std::abs(currentPoint.x() - oldPos.x()), 2)
+                          + pow(std::abs(currentPoint.y() - oldPos.y()), 2));
 
     // Time to calculate a new point of the QGraphicsPathItem (stroke)
-    if (distance > 0) {
+    if (distance > 5) {
         /* SQA: Debugging code
         qreal pm; // Perpendicular slope
         if (static_cast<int>(m) == 0) // path is horizontal
@@ -457,8 +488,8 @@ void InkTool::processPoint(QPointF currentPoint)
 
         double lineAngle = atan(m);
         double angle = 1.5708 - lineAngle;
-        double deltaX = fabs(cos(angle) * penWidth);
-        double deltaY = fabs(sin(angle) * penWidth);
+        double deltaX = fabs(cos(angle) * strokeWidth);
+        double deltaY = fabs(sin(angle) * strokeWidth);
 
         /* SQA: Debugging code
           qDebug() << "InkTool::move() - inv tan: " << lineAngle;
@@ -472,8 +503,8 @@ void InkTool::processPoint(QPointF currentPoint)
         qreal y0 = 0;
         qreal x1 = 0;
         qreal y1 = 0;
-        if (previousPoint.x() < currentPoint.x()) {
-            if (previousPoint.y() < currentPoint.y()) {
+        if (oldPos.x() < currentPoint.x()) {
+            if (oldPos.y() < currentPoint.y()) {
                 #ifdef TUP_DEBUG
                     qDebug() << "    -> InkTool::move() - Going right-down";
                 #endif
@@ -541,8 +572,8 @@ void InkTool::processPoint(QPointF currentPoint)
                             secondHalfPoint = QPointF(x0, y0);
 
                             // SQA: Fixing acute angule cases
-                            double xFix = currentPoint.x() - penWidth;
-                            double yFix = previousPoint.y();
+                            double xFix = currentPoint.x() - strokeWidth;
+                            double yFix = oldPos.y();
                             QPointF fixPoint = QPointF(xFix, yFix);
                             inkPath.lineTo(fixPoint);
                             removeExtraPoints();
@@ -572,7 +603,7 @@ void InkTool::processPoint(QPointF currentPoint)
                             secondHalfPoint = QPointF(x0, y0);
 
                             // SQA: Fixing acute angule cases
-                            double xFix = currentPoint.x() - penWidth;
+                            double xFix = currentPoint.x() - strokeWidth;
                             double yFix = firstHalfPoint.y() - fabs(firstHalfPoint.y() - firstHalfPrevious.y()) / 2;
                             QPointF fixPoint = QPointF(xFix, yFix);
                             inkPath.lineTo(fixPoint);
@@ -591,7 +622,7 @@ void InkTool::processPoint(QPointF currentPoint)
                 }
                 // qDebug() << "InkTool::move() - firstHalfOnTop: " << firstHalfOnTop;
                 previousDirection = RightDown;
-            } else if (previousPoint.y() > currentPoint.y()) {
+            } else if (oldPos.y() > currentPoint.y()) {
                 #ifdef TUP_DEBUG
                     qDebug() << "    -> InkTool::move() - Going right-up";
                 #endif
@@ -649,8 +680,8 @@ void InkTool::processPoint(QPointF currentPoint)
                             secondHalfPoint = QPointF(x1, y1);
 
                             // SQA: Fixing acute angule cases
-                            double yFix = previousPoint.y() - penWidth;
-                            double xFix = previousPoint.x();
+                            double yFix = oldPos.y() - strokeWidth;
+                            double xFix = oldPos.x();
                             QPointF fixPoint = QPointF(xFix, yFix);
                             inkPath.lineTo(fixPoint);
                             removeExtraPoints();
@@ -702,9 +733,9 @@ void InkTool::processPoint(QPointF currentPoint)
                 #endif
 
                 x0 = currentPoint.x();
-                y0 = currentPoint.y() - penWidth;
+                y0 = currentPoint.y() - strokeWidth;
                 x1 = currentPoint.x();
-                y1 = currentPoint.y() + penWidth;
+                y1 = currentPoint.y() + strokeWidth;
 
                 if (previousDirection == None)
                     previousDirection = Right;
@@ -786,7 +817,7 @@ void InkTool::processPoint(QPointF currentPoint)
                             firstHalfOnTop = false;
 
                             // SQA: Fixing acute angule cases
-                            double xFix = currentPoint.x() - penWidth;
+                            double xFix = currentPoint.x() - strokeWidth;
                             double yFix = firstHalfPoint.y() - fabs(firstHalfPoint.y() - firstHalfPrevious.y()) / 2;
                             QPointF fixPoint = QPointF(xFix, yFix);
                             inkPath.lineTo(fixPoint);
@@ -803,8 +834,8 @@ void InkTool::processPoint(QPointF currentPoint)
 
                 previousDirection = Right;
             }
-        } else if (previousPoint.x() > currentPoint.x()) {
-            if (previousPoint.y() < currentPoint.y()) {
+        } else if (oldPos.x() > currentPoint.x()) {
+            if (oldPos.y() < currentPoint.y()) {
                 #ifdef TUP_DEBUG
                     qDebug() << "    -> InkTool::move() - Going left-down";
                 #endif
@@ -845,7 +876,7 @@ void InkTool::processPoint(QPointF currentPoint)
                             firstHalfOnTop = false;
 
                             // SQA: Fixing acute angule cases
-                            double xFix = currentPoint.x() + penWidth;
+                            double xFix = currentPoint.x() + strokeWidth;
                             double yFix = currentPoint.y();
                             QPointF fixPoint = QPointF(xFix, yFix);
                             inkPath.lineTo(fixPoint);
@@ -910,7 +941,7 @@ void InkTool::processPoint(QPointF currentPoint)
                 }
 
                 previousDirection = LeftDown;
-            } else if (previousPoint.y() > currentPoint.y()) {
+            } else if (oldPos.y() > currentPoint.y()) {
                 #ifdef TUP_DEBUG
                     qDebug() << "    -> InkTool::move() - Going left-up";
                 #endif
@@ -1014,9 +1045,9 @@ void InkTool::processPoint(QPointF currentPoint)
                     qDebug() << "    -> InkTool::move() - Going left";
                 #endif
                 x0 = currentPoint.x();
-                y0 = currentPoint.y() - penWidth;
+                y0 = currentPoint.y() - strokeWidth;
                 x1 = currentPoint.x();
-                y1 = currentPoint.y() + penWidth;
+                y1 = currentPoint.y() + strokeWidth;
 
                 if (previousDirection == None)
                     previousDirection = Left;
@@ -1108,15 +1139,15 @@ void InkTool::processPoint(QPointF currentPoint)
 
                 previousDirection = Left;
             }
-        } else if (static_cast<int>(previousPoint.x()) == static_cast<int>(currentPoint.x())) {
-            if (previousPoint.y() > currentPoint.y()) {
+        } else if (static_cast<int>(oldPos.x()) == static_cast<int>(currentPoint.x())) {
+            if (oldPos.y() > currentPoint.y()) {
                 #ifdef TUP_DEBUG
                     qDebug() << "    -> InkTool::move() - Going up";
                 #endif
 
-                x0 = currentPoint.x() - penWidth;
+                x0 = currentPoint.x() - strokeWidth;
                 y0 = currentPoint.y();
-                x1 = currentPoint.x() + penWidth;
+                x1 = currentPoint.x() + strokeWidth;
                 y1 = currentPoint.y();
 
                 if (previousDirection == None)
@@ -1213,9 +1244,9 @@ void InkTool::processPoint(QPointF currentPoint)
                     qDebug() << "    -> InkTool::move() - Going down";
                 #endif
 
-                x0 = currentPoint.x() - penWidth;
+                x0 = currentPoint.x() - strokeWidth;
                 y0 = currentPoint.y();
-                x1 = currentPoint.x() + penWidth;
+                x1 = currentPoint.x() + strokeWidth;
                 y1 = currentPoint.y();
 
                 if (previousDirection == None)

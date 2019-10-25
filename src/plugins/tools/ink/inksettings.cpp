@@ -38,11 +38,10 @@
 #include "tapplicationproperties.h"
 #include "tseparator.h"
 
-#include <QLabel>
 #include <QBoxLayout>
-#include <QColorDialog>
+#include <QLabel>
 
-InkSettings::InkSettings(QWidget *parent) :QWidget(parent)
+InkSettings::InkSettings(QWidget *parent) : QWidget(parent)
 {
     #ifdef TUP_DEBUG
         qDebug() << "InkSettings()";
@@ -52,6 +51,7 @@ InkSettings::InkSettings(QWidget *parent) :QWidget(parent)
     titleFont.setBold(true);
 
     TCONFIG->beginGroup("InkTool");
+    device = Device(TCONFIG->value("Device", Pen).toInt());
     double sensibility = TCONFIG->value("Sensibility", 5).toInt();
     double smoothness = TCONFIG->value("Smoothness", 4.0).toDouble();
     bool showBorder = TCONFIG->value("BorderEnabled", true).toBool();
@@ -67,6 +67,21 @@ InkSettings::InkSettings(QWidget *parent) :QWidget(parent)
     toolTitle->setToolTip(tr("Pencil Properties"));
     mainLayout->addWidget(toolTitle);
     mainLayout->addWidget(new TSeparator(Qt::Horizontal));
+
+    QBoxLayout *deviceLayout = new QBoxLayout(QBoxLayout::TopToBottom);
+    QLabel *deviceLabel = new QLabel(tr("Device"));
+    deviceLabel->setFont(titleFont);
+    deviceLabel->setAlignment(Qt::AlignHCenter);
+
+    QComboBox *deviceCombo = new QComboBox();
+    deviceCombo->addItem(tr("Mouse"));
+    deviceCombo->addItem(tr("Pen"));
+    connect(deviceCombo, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(updateDevice(int)));
+
+    deviceLayout->addWidget(deviceLabel);
+    deviceLayout->addWidget(deviceCombo);
+    mainLayout->addLayout(deviceLayout);
 
     QBoxLayout *borderLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     QLabel *appearanceLabel = new QLabel(tr("Appearance"));
@@ -107,10 +122,12 @@ InkSettings::InkSettings(QWidget *parent) :QWidget(parent)
     borderSizeLayout->addWidget(borderSizeBox);
     mainLayout->addLayout(borderSizeLayout);
 
-    QBoxLayout *pressurreLayout = new QBoxLayout(QBoxLayout::TopToBottom);
-    QLabel *pressureLabel = new QLabel(tr("Pressure Sensibility"));
+    pressureWidget = new QWidget();
+    QBoxLayout *pressureLayout = new QBoxLayout(QBoxLayout::TopToBottom);
+    QLabel *pressureLabel = new QLabel(tr("Pressure Level"));
     pressureLabel->setAlignment(Qt::AlignHCenter);
-    pressurreLayout->addWidget(pressureLabel);
+    pressureLayout->addWidget(pressureLabel);
+    pressureWidget->setLayout(pressureLayout);
 
     pressureBox = new QSpinBox();
     pressureBox->setSingleStep(1);
@@ -118,8 +135,8 @@ InkSettings::InkSettings(QWidget *parent) :QWidget(parent)
     pressureBox->setMaximum(5);
     pressureBox->setValue(static_cast <int>(sensibility));
     connect(pressureBox, SIGNAL(valueChanged(int)), this, SIGNAL(pressureUpdated(int)));
-    pressurreLayout->addWidget(pressureBox);
-    mainLayout->addLayout(pressurreLayout);
+    pressureLayout->addWidget(pressureBox);
+    mainLayout->addWidget(pressureWidget);
 
     QBoxLayout *smoothLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     smoothLayout->setAlignment(Qt::AlignHCenter);
@@ -139,10 +156,33 @@ InkSettings::InkSettings(QWidget *parent) :QWidget(parent)
 
     mainLayout->addLayout(smoothLayout);
     mainLayout->addStretch(2);
+
+    if (device != Mouse)
+        deviceCombo->setCurrentIndex(device);
+    else
+        updateDevice(device);
 }
 
 InkSettings::~InkSettings()
 {
+}
+
+InkSettings::Device InkSettings::currentDevice()
+{
+    return device;
+}
+
+void InkSettings::updateDevice(int index)
+{
+    bool enabled = true;
+    if (index == 0)
+        enabled = false;
+
+    pressureWidget->setVisible(enabled);
+    TCONFIG->beginGroup("InkTool");
+    TCONFIG->setValue("Device", index);
+
+    emit deviceUpdated(Device(index));
 }
 
 void InkSettings::updateBorderOption(bool showBorder)

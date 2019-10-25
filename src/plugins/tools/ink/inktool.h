@@ -82,7 +82,8 @@ class TUPITUBE_PLUGIN InkTool : public TupToolPlugin
         void callForPlugin(int menu, int index);
         
     private slots:
-        void updateBorderFlag(bool border);
+        void setDevice(InkSettings::Device device);
+        void updateBorderFeature(bool border);
         void updateFillFlag(bool fill);
         void updateBorderSize(int size);
         void updatePressure(int value);
@@ -90,7 +91,7 @@ class TUPITUBE_PLUGIN InkTool : public TupToolPlugin
 
     private:
         void setupActions();
-        void processPoint(QPointF currentPoint);
+        void processPoint(QPointF currentPoint, qreal strokeWidth);
         void smoothPath(QPainterPath &guidePainterPath, double smoothness, int from = 0,
                         int to = -1, bool closePath = false);
         void removeExtraPoints();
@@ -106,7 +107,9 @@ class TUPITUBE_PLUGIN InkTool : public TupToolPlugin
 
         QPainterPath guidePainterPath;
         QPainterPath inkPath;
+        QList<QPointF> guidePoints;
         QList<QPointF> shapePoints;
+        QList<qreal> pointPress;
 
         InkSettings *settings;
         QMap<QString, TAction *> inkActions;
@@ -128,6 +131,7 @@ class TUPITUBE_PLUGIN InkTool : public TupToolPlugin
         bool showFill;
 
         Direction previousDirection;
+        InkSettings::Device device;
 };
 
 #endif
