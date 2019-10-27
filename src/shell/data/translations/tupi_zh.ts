@@ -280,12 +280,24 @@
         <translation>边框尺寸</translation>
     </message>
     <message>
-        <source>Pressure Sensibility</source>
-        <translation>压力感度</translation>
-    </message>
-    <message>
         <source>Smoothness</source>
         <translation>平滑</translation>
+    </message>
+    <message>
+        <source>Device</source>
+        <translation>设备</translation>
+    </message>
+    <message>
+        <source>Mouse</source>
+        <translation>电脑鼠标</translation>
+    </message>
+    <message>
+        <source>Pen</source>
+        <translation>笔桌</translation>
+    </message>
+    <message>
+        <source>Pressure Level</source>
+        <translation>压力等级</translation>
     </message>
 </context>
 <context>

@@ -80,7 +80,7 @@ class Config
         end
         
         File.open(path, "w") { |f|
-            f << "# Generated automatically at #{Time.now}! PLEASE DO NOT EDIT!"<< $endl
+            f << "# Generated automatically at #{Time.now}! PLEASE DO NOT EDIT!" << $endl
             if not @includePath.empty?
                 f << "INCLUDEPATH += " << @includePath.uniq.join(" ") << $endl
             end
@@ -109,14 +109,14 @@ class Config
         }
 
         File.open("src/framework/tupconfig.pri", "w") { |f|
-            # f << "# Generated automatically at #{Time.now}! PLEASE DO NOT EDIT!"<< $endl
+            f << "# Generated automatically at #{Time.now}! PLEASE DO NOT EDIT!" << $endl
             # f << "contains(DEFINES, HAVE_FFMPEG){" << $endl
             # f << "LIBS += -lavcodec -lavformat -lavutil -lswscale" << $endl
             # f << "}" << $endl
             if @defines.include? 'ADD_HEADERS'
                f << "DEFINES += ADD_HEADERS" << $endl
             end
-            f << $endl
+            # f << $endl
 
             if not @defines.empty?
                 f << "DEFINES += " << @defines.uniq.join(" ") << $endl
