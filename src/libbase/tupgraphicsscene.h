@@ -135,7 +135,7 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         void processSVGObject(TupSvgItem *svg, TupFrame::FrameType frameType, double getOpacity, Context mode);
 
         void addSvgObject(TupSvgItem *svgItem, TupFrame::FrameType frameType, double getOpacity = 1.0, bool tweenInAdvance = false);
-        void addTweeningObjects(int indexLayer, int photogram);
+        void addTweeningObjects(int indexLayer, int photogram, double opacity = 1, bool onProcess = true);
         void addSvgTweeningObjects(int indexLayer, int photogram);
         void addLipSyncObjects(TupLayer *layer, int photogram, int zLevel);
 

@@ -44,12 +44,7 @@ TupApplication::TupApplication(int &argc, char **argv) : TApplication(argc, argv
 TupApplication::~TupApplication()
 {
     #ifdef TUP_DEBUG
-        QString msg = "[Destroying ~TupApplication]";
-        #ifdef Q_OS_WIN
-           qDebug() << msg;
-        #else
-           tDebug() << msg;
-        #endif
+        qDebug() << "Destroying ~TupApplication";
     #endif
 }
 
@@ -58,22 +53,12 @@ void TupApplication::createCache(const QString &cacheDir)
     QDir cache(cacheDir);
     if (!cache.exists()) {
         #ifdef TUP_DEBUG
-           QString msg = "Initializing repository: " + cacheDir;
-           #ifdef Q_OS_WIN
-               qWarning() << msg;
-           #else
-               tWarning() << msg;
-           #endif
+            qWarning() << "Initializing repository: " + cacheDir;
         #endif
 
         if (!cache.mkdir(cacheDir)) {
             #ifdef TUP_DEBUG
-                QString msg = "TupApplication::createCache() - Fatal Error: Can't create project repository";
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "TupApplication::createCache() - Fatal Error: Can't create project repository";
             #endif
         }
     }

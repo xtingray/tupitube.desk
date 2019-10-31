@@ -97,7 +97,8 @@ void PosSettings::setInnerForm()
     innerLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
 
     QLabel *startingLabel = new QLabel(tr("Starting at frame") + ": ");
-    startingLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    endingLabel = new QLabel(tr("Ending at frame") + ": 0");
+    endingLabel->setAlignment(Qt::AlignHCenter);
     comboInit = new QSpinBox();
 
     connect(comboInit, SIGNAL(valueChanged(int)), this, SIGNAL(startingFrameChanged(int)));
@@ -106,6 +107,7 @@ void PosSettings::setInnerForm()
     startLayout->setAlignment(Qt::AlignHCenter);
     startLayout->setMargin(0);
     startLayout->setSpacing(0);
+    startLayout->addWidget(startingLabel);
     startLayout->addWidget(comboInit);
 
     stepViewer = new StepsViewer;
@@ -119,8 +121,8 @@ void PosSettings::setInnerForm()
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
 
-    innerLayout->addWidget(startingLabel);
     innerLayout->addLayout(startLayout);
+    innerLayout->addWidget(endingLabel);
     innerLayout->addWidget(stepViewer);
 
     innerLayout->addLayout(totalLayout);
@@ -164,11 +166,7 @@ void PosSettings::setParameters(const QString &name, int framesCount, int startF
 void PosSettings::setParameters(TupItemTweener *currentTween)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Settings::setParameters()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "Settings::setParameters()";
     #endif
 
     setEditMode();
@@ -190,12 +188,12 @@ void PosSettings::initStartCombo(int framesCount, int currentIndex)
     comboInit->clear();
     comboInit->setMinimum(1);
     comboInit->setMaximum(framesCount);
-    comboInit->setValue(currentIndex);
+    comboInit->setValue(currentIndex + 1);
 }
 
 void PosSettings::setStartFrame(int currentIndex)
 {
-    comboInit->setValue(currentIndex);
+    comboInit->setValue(currentIndex + 1);
 }
 
 int PosSettings::startFrame()
@@ -213,6 +211,7 @@ void PosSettings::updateSteps(const QGraphicsPathItem *path)
     if (path) {
         stepViewer->setPath(path);
         totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepViewer->totalSteps()));
+        endingLabel->setText(tr("Ending at frame") + ": " + QString::number(startFrame() + stepViewer->totalSteps()));
     }
 }
 
@@ -284,11 +283,7 @@ void PosSettings::clearData()
 void PosSettings::notifySelection(bool flag)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Settings::notifySelection()]";
-        #else
-            T_FUNCINFO << "selection is done? -> " << flag;
-        #endif
+        qDebug() << "Settings::notifySelection() - selection is done? -> " << flag;
     #endif
 
     selectionDone = flag;
@@ -337,6 +332,7 @@ QString PosSettings::currentTweenName() const
 
 void PosSettings::updateTotalLabel(int total)
 {
+    endingLabel->setText(tr("Ending at frame") + ": " + QString::number(startFrame() + stepViewer->totalSteps()));
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(total));
     emit framesTotalChanged(); 
 }

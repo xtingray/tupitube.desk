@@ -46,7 +46,7 @@
 
 #endif
 
-#include <QProgressBar>
+// #include <QProgressBar>
 #include <QLabel>
 #include <QTimer>
 #include <QStatusBar>

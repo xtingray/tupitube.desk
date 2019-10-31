@@ -105,6 +105,7 @@ class TUPITUBE_PLUGIN PosSettings : public QWidget
         QWidget *innerPanel;
         QBoxLayout *layout;
 
+        QLabel *endingLabel;
         QLineEdit *input;
         TRadioButtonGroup *options;
         StepsViewer *stepViewer;

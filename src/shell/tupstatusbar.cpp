@@ -35,8 +35,7 @@
 
 #include "tupstatusbar.h"
 
-TupStatusBar::TupStatusBar(QWidget *parent)
- : QStatusBar(parent)
+TupStatusBar::TupStatusBar(QWidget *parent): QStatusBar(parent)
 {
     setObjectName("TupStatusBar_");
 

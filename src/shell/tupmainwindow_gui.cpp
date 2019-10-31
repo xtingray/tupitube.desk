@@ -470,11 +470,7 @@ void TupMainWindow::updateOpenRecentMenu(QMenu *menu, QStringList recents)
 void TupMainWindow::changePerspective(QAction *action)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupMainWindow::changePerspective(QAction)]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupMainWindow::changePerspective(QAction)";
     #endif
 
     int perspective = action->data().toInt();
