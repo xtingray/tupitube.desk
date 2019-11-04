@@ -101,6 +101,8 @@ RasterMainWindow::RasterMainWindow(QWidget *parent): QMainWindow(parent)
 
 RasterMainWindow::~RasterMainWindow()
 {
+    canvas = nullptr;
+    delete canvas;
 }
 
 void RasterMainWindow::setTabletDevice(QTabletEvent* event)

@@ -24,13 +24,9 @@
 
 #include "tapplicationproperties.h"
 #include "mypaintview.h"
-static MypaintView *s_view = nullptr;
 
 MypaintView::MypaintView()
 {
-    assert(s_view == nullptr);
-    s_view = this;
-
     tableInUse = false;
 
     mypaint = MPHandler::handler();
@@ -52,7 +48,6 @@ MypaintView::MypaintView()
 
 MypaintView::~MypaintView()
 {
-    delete s_view;
 }
 
 void MypaintView::setSize(QSize size)

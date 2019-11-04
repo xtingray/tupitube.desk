@@ -1285,6 +1285,7 @@ void TupDocumentView::closeRasterWindow()
         rasterWindow->close();
         rasterWindowOn = false;
         rasterWindow = nullptr;
+        delete rasterWindow;
     }
 }
 
