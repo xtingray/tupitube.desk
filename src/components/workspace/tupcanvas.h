@@ -59,11 +59,12 @@ class TUPITUBE_EXPORT TupCanvas : public QFrame
     Q_OBJECT
 
     public:
-        TupCanvas(QWidget *parent=0, Qt::WindowFlags f=0, TupGraphicsScene *scene=0, 
+        TupCanvas(QWidget *parent = nullptr, Qt::WindowFlags f = nullptr, TupGraphicsScene *scene = nullptr,
                   const QPointF centerPoint = QPoint(0, 0) , const QSize &size = QSize(0, 0), 
-                  TupProject *project = 0, qreal scaleFactor = 1, int angle=0, 
-                  TupBrushManager *brushManager = 0);
+                  TupProject *project = nullptr, qreal scaleFactor = 1, int angle=0,
+                  TupBrushManager *brushManager = nullptr);
         ~TupCanvas();
+
         void updateCursor(const QCursor &cursor);
         void enableRubberBand();
 

@@ -85,9 +85,11 @@ QMap<QString, TAction *> PolyLineTool::actions() const
 
 void PolyLineTool::init(TupGraphicsScene *gScene)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "PolyLineTool::init()";
     #endif
+    */
 
     if (gScene) {
         scene = gScene;

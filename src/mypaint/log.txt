@@ -1,0 +1,266 @@
+cd json-c/ && ( test -e Makefile || /home/xtingray/Qt5.13.1/5.13.1/gcc_64/bin/qmake -o Makefile /home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/json-c/json-c.pro ) && make -f Makefile 
+make[1]: Entering directory '/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/json-c'
+gcc -c -pipe -std=c99 -D_XOPEN_SOURCE=600 -O2 -fPIC -Wall -W -D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -I. -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o arraylist.o arraylist.c
+gcc -c -pipe -std=c99 -D_XOPEN_SOURCE=600 -O2 -fPIC -Wall -W -D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -I. -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o debug.o debug.c
+gcc -c -pipe -std=c99 -D_XOPEN_SOURCE=600 -O2 -fPIC -Wall -W -D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -I. -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o json_c_version.o json_c_version.c
+gcc -c -pipe -std=c99 -D_XOPEN_SOURCE=600 -O2 -fPIC -Wall -W -D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -I. -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o json_object.o json_object.c
+In file included from json_inttypes.h:5:0,
+                 from json_object.h:24,
+                 from linkhash.h:16,
+                 from json_object.c:24:
+json_config.h:3:0: warning: "JSON_C_HAVE_INTTYPES_H" redefined
+ #define JSON_C_HAVE_INTTYPES_H
+ 
+In file included from json_object.c:13:0:
+config.h:132:0: note: this is the location of the previous definition
+ #define JSON_C_HAVE_INTTYPES_H 1
+ 
+json_object.c: In function ‘json_object_boolean_to_json_string’:
+json_object.c:450:31: warning: unused parameter ‘level’ [-Wunused-parameter]
+                           int level,
+                               ^~~~~
+json_object.c:451:31: warning: unused parameter ‘flags’ [-Wunused-parameter]
+                           int flags)
+                               ^~~~~
+json_object.c: In function ‘json_object_int_to_json_string’:
+json_object.c:492:27: warning: unused parameter ‘level’ [-Wunused-parameter]
+                       int level,
+                           ^~~~~
+json_object.c:493:27: warning: unused parameter ‘flags’ [-Wunused-parameter]
+                       int flags)
+                           ^~~~~
+json_object.c: In function ‘json_object_double_to_json_string’:
+json_object.c:583:30: warning: unused parameter ‘level’ [-Wunused-parameter]
+                          int level,
+                              ^~~~~
+json_object.c: In function ‘json_object_userdata_to_json_string’:
+json_object.c:652:30: warning: unused parameter ‘level’ [-Wunused-parameter]
+     struct printbuf *pb, int level, int flags)
+                              ^~~~~
+json_object.c:652:41: warning: unused parameter ‘flags’ [-Wunused-parameter]
+     struct printbuf *pb, int level, int flags)
+                                         ^~~~~
+json_object.c: In function ‘json_object_free_userdata’:
+json_object.c:659:52: warning: unused parameter ‘jso’ [-Wunused-parameter]
+ void json_object_free_userdata(struct json_object *jso, void *userdata)
+                                                    ^~~
+json_object.c: In function ‘json_object_string_to_json_string’:
+json_object.c:718:30: warning: unused parameter ‘level’ [-Wunused-parameter]
+                          int level,
+                              ^~~~~
+json_object.c:719:30: warning: unused parameter ‘flags’ [-Wunused-parameter]
+                          int flags)
+                              ^~~~~
+json_object.c: In function ‘json_object_get_int64’:
+json_object.c:572:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+         if (json_parse_int64(jso->o.c_string.str, &cint) == 0)
+            ^
+json_object.c:574:5: note: here
+     default:
+     ^~~~~~~
+gcc -c -pipe -std=c99 -D_XOPEN_SOURCE=600 -O2 -fPIC -Wall -W -D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -I. -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o json_object_iterator.o json_object_iterator.c
+json_object_iterator.c: In function ‘json_object_iter_end’:
+json_object_iterator.c:87:48: warning: unused parameter ‘obj’ [-Wunused-parameter]
+ json_object_iter_end(const struct json_object* obj)
+                                                ^~~
+gcc -c -pipe -std=c99 -D_XOPEN_SOURCE=600 -O2 -fPIC -Wall -W -D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -I. -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o json_tokener.o json_tokener.c
+In file included from json_inttypes.h:5:0,
+                 from json_tokener.c:29:
+json_config.h:3:0: warning: "JSON_C_HAVE_INTTYPES_H" redefined
+ #define JSON_C_HAVE_INTTYPES_H
+ 
+In file included from json_tokener.c:16:0:
+config.h:132:0: note: this is the location of the previous definition
+ #define JSON_C_HAVE_INTTYPES_H 1
+ 
+json_tokener.c: In function ‘json_tokener_parse_ex’:
+json_tokener.c:368:12: warning: implicit declaration of function ‘strncasecmp’; did you mean ‘strncmp’? [-Wimplicit-function-declaration]
+            strncasecmp(json_inf_str, infbuf, size_inf) == 0) ||
+            ^~~~~~~~~~~
+            strncmp
+json_tokener.c:304:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+         if (tok->flags & JSON_TOKENER_STRICT) {
+            ^
+json_tokener.c:309:7: note: here
+       case '"':
+       ^~~~
+gcc -c -pipe -std=c99 -D_XOPEN_SOURCE=600 -O2 -fPIC -Wall -W -D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -I. -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o json_util.o json_util.c
+In file included from json_inttypes.h:5:0,
+                 from json_util.c:58:
+json_config.h:3:0: warning: "JSON_C_HAVE_INTTYPES_H" redefined
+ #define JSON_C_HAVE_INTTYPES_H
+ 
+In file included from json_util.c:12:0:
+config.h:132:0: note: this is the location of the previous definition
+ #define JSON_C_HAVE_INTTYPES_H 1
+ 
+gcc -c -pipe -std=c99 -D_XOPEN_SOURCE=600 -O2 -fPIC -Wall -W -D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -I. -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o libjson.o libjson.c
+gcc -c -pipe -std=c99 -D_XOPEN_SOURCE=600 -O2 -fPIC -Wall -W -D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -I. -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o linkhash.o linkhash.c
+linkhash.c: In function ‘hashlittle’:
+linkhash.c:384:15: warning: this statement may fall through [-Wimplicit-fallthrough=]
+     case 12: c+=((uint32_t)k[11])<<24;
+              ~^~~~~~~~~~~~~~~~~~~~~~~
+linkhash.c:385:5: note: here
+     case 11: c+=((uint32_t)k[10])<<16;
+     ^~~~
+linkhash.c:385:15: warning: this statement may fall through [-Wimplicit-fallthrough=]
+     case 11: c+=((uint32_t)k[10])<<16;
+              ~^~~~~~~~~~~~~~~~~~~~~~~
+linkhash.c:386:5: note: here
+     case 10: c+=((uint32_t)k[9])<<8;
+     ^~~~
+linkhash.c:386:15: warning: this statement may fall through [-Wimplicit-fallthrough=]
+     case 10: c+=((uint32_t)k[9])<<8;
+              ~^~~~~~~~~~~~~~~~~~~~~
+linkhash.c:387:5: note: here
+     case 9 : c+=k[8];
+     ^~~~
+linkhash.c:387:15: warning: this statement may fall through [-Wimplicit-fallthrough=]
+     case 9 : c+=k[8];
+              ~^~~~~~
+linkhash.c:388:5: note: here
+     case 8 : b+=((uint32_t)k[7])<<24;
+     ^~~~
+linkhash.c:388:15: warning: this statement may fall through [-Wimplicit-fallthrough=]
+     case 8 : b+=((uint32_t)k[7])<<24;
+              ~^~~~~~~~~~~~~~~~~~~~~~
+linkhash.c:389:5: note: here
+     case 7 : b+=((uint32_t)k[6])<<16;
+     ^~~~
+linkhash.c:389:15: warning: this statement may fall through [-Wimplicit-fallthrough=]
+     case 7 : b+=((uint32_t)k[6])<<16;
+              ~^~~~~~~~~~~~~~~~~~~~~~
+linkhash.c:390:5: note: here
+     case 6 : b+=((uint32_t)k[5])<<8;
+     ^~~~
+linkhash.c:390:15: warning: this statement may fall through [-Wimplicit-fallthrough=]
+     case 6 : b+=((uint32_t)k[5])<<8;
+              ~^~~~~~~~~~~~~~~~~~~~~
+linkhash.c:391:5: note: here
+     case 5 : b+=k[4];
+     ^~~~
+linkhash.c:391:15: warning: this statement may fall through [-Wimplicit-fallthrough=]
+     case 5 : b+=k[4];
+              ~^~~~~~
+linkhash.c:392:5: note: here
+     case 4 : a+=((uint32_t)k[3])<<24;
+     ^~~~
+linkhash.c:392:15: warning: this statement may fall through [-Wimplicit-fallthrough=]
+     case 4 : a+=((uint32_t)k[3])<<24;
+              ~^~~~~~~~~~~~~~~~~~~~~~
+linkhash.c:393:5: note: here
+     case 3 : a+=((uint32_t)k[2])<<16;
+     ^~~~
+linkhash.c:393:15: warning: this statement may fall through [-Wimplicit-fallthrough=]
+     case 3 : a+=((uint32_t)k[2])<<16;
+              ~^~~~~~~~~~~~~~~~~~~~~~
+linkhash.c:394:5: note: here
+     case 2 : a+=((uint32_t)k[1])<<8;
+     ^~~~
+linkhash.c:394:15: warning: this statement may fall through [-Wimplicit-fallthrough=]
+     case 2 : a+=((uint32_t)k[1])<<8;
+              ~^~~~~~~~~~~~~~~~~~~~~
+linkhash.c:395:5: note: here
+     case 1 : a+=k[0];
+     ^~~~
+gcc -c -pipe -std=c99 -D_XOPEN_SOURCE=600 -O2 -fPIC -Wall -W -D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -I. -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o printbuf.o printbuf.c
+printbuf.c: In function ‘sprintbuf’:
+printbuf.c:170:16: warning: implicit declaration of function ‘vasprintf’; did you mean ‘vsprintf’? [-Wimplicit-function-declaration]
+     if((size = vasprintf(&t, msg, ap)) < 0) { va_end(ap); return -1; }
+                ^~~~~~~~~
+                vsprintf
+gcc -c -pipe -std=c99 -D_XOPEN_SOURCE=600 -O2 -fPIC -Wall -W -D_REENTRANT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -I. -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o random_seed.o random_seed.c
+rm -f libjson-c.a
+ar cqs libjson-c.a arraylist.o debug.o json_c_version.o json_object.o json_object_iterator.o json_tokener.o json_util.o libjson.o linkhash.o printbuf.o random_seed.o
+make[1]: Leaving directory '/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/json-c'
+cd libmypaint/ && ( test -e Makefile || /home/xtingray/Qt5.13.1/5.13.1/gcc_64/bin/qmake -o Makefile /home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/libmypaint/libmypaint.pro ) && make -f Makefile 
+make[1]: Entering directory '/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/libmypaint'
+gcc -c -pipe -std=c99 -O2 -fPIC -Wall -W -D_REENTRANT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -I../json-c -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o libmypaint.o libmypaint.c
+In file included from libmypaint.c:16:0:
+mypaint-brush.c: In function ‘count_dabs_to’:
+mypaint-brush.c:801:68: warning: unused parameter ‘pressure’ [-Wunused-parameter]
+   float count_dabs_to (MyPaintBrush *self, float x, float y, float pressure, float dt)
+                                                                    ^~~~~~~~
+In file included from libmypaint.c:17:0:
+mypaint-brush-settings.c: In function ‘mypaint_brush_setting_info_get_name’:
+mypaint-brush-settings.c:45:82: warning: unused parameter ‘self’ [-Wunused-parameter]
+ const gchar * mypaint_brush_setting_info_get_name(const MyPaintBrushSettingInfo *self)
+                                                                                  ^~~~
+mypaint-brush-settings.c: In function ‘mypaint_brush_setting_info_get_tooltip’:
+mypaint-brush-settings.c:50:85: warning: unused parameter ‘self’ [-Wunused-parameter]
+ const gchar * mypaint_brush_setting_info_get_tooltip(const MyPaintBrushSettingInfo *self)
+                                                                                     ^~~~
+In file included from libmypaint.c:20:0:
+mypaint-tiled-surface.c: In function ‘get_color’:
+mypaint-tiled-surface.c:630:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+     #pragma omp parallel for schedule(static) if (self->threadsafe_tile_requests && tiles_n > 3)
+ 
+mypaint-tiled-surface.c:660:0: warning: ignoring #pragma omp critical [-Wunknown-pragmas]
+             #pragma omp critical
+ 
+mypaint-tiled-surface.c:628:9: warning: unused variable ‘tiles_n’ [-Wunused-variable]
+     int tiles_n = (tx2 - tx1) * (ty2 - ty1);
+         ^~~~~~~
+rm -f liblibmypaint.a
+ar cqs liblibmypaint.a libmypaint.o
+make[1]: Leaving directory '/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/libmypaint'
+cd qtmypaint/ && ( test -e Makefile || /home/xtingray/Qt5.13.1/5.13.1/gcc_64/bin/qmake -o Makefile /home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/qtmypaint/qtmypaint.pro ) && make -f Makefile 
+make[1]: Entering directory '/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/qtmypaint'
+g++ -c -pipe -O2 -fPIC -Wall -W -D_REENTRANT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -I../json-c -I../libmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o mpbrush.o mpbrush.cpp
+g++ -c -pipe -O2 -fPIC -Wall -W -D_REENTRANT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -I../json-c -I../libmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o mphandler.o mphandler.cpp
+In file included from ../libmypaint/libmypaint.c:20:0,
+                 from mphandler.cpp:24:
+../libmypaint/mypaint-tiled-surface.c:630:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+     #pragma omp parallel for schedule(static) if (self->threadsafe_tile_requests && tiles_n > 3)
+ 
+../libmypaint/mypaint-tiled-surface.c:660:0: warning: ignoring #pragma omp critical [-Wunknown-pragmas]
+             #pragma omp critical
+ 
+In file included from ../libmypaint/libmypaint.c:16:0,
+                 from mphandler.cpp:24:
+../libmypaint/mypaint-brush.c: In function ‘float count_dabs_to(MyPaintBrush*, float, float, float, float)’:
+../libmypaint/mypaint-brush.c:801:68: warning: unused parameter ‘pressure’ [-Wunused-parameter]
+   float count_dabs_to (MyPaintBrush *self, float x, float y, float pressure, float dt)
+                                                                    ^~~~~~~~
+In file included from ../libmypaint/libmypaint.c:17:0,
+                 from mphandler.cpp:24:
+../libmypaint/mypaint-brush-settings.c: In function ‘const gchar* mypaint_brush_setting_info_get_name(const MyPaintBrushSettingInfo*)’:
+../libmypaint/mypaint-brush-settings.c:45:82: warning: unused parameter ‘self’ [-Wunused-parameter]
+ const gchar * mypaint_brush_setting_info_get_name(const MyPaintBrushSettingInfo *self)
+                                                                                  ^~~~
+../libmypaint/mypaint-brush-settings.c: In function ‘const gchar* mypaint_brush_setting_info_get_tooltip(const MyPaintBrushSettingInfo*)’:
+../libmypaint/mypaint-brush-settings.c:50:85: warning: unused parameter ‘self’ [-Wunused-parameter]
+ const gchar * mypaint_brush_setting_info_get_tooltip(const MyPaintBrushSettingInfo *self)
+                                                                                     ^~~~
+In file included from ../libmypaint/libmypaint.c:20:0,
+                 from mphandler.cpp:24:
+../libmypaint/mypaint-tiled-surface.c: In function ‘void get_color(MyPaintSurface*, float, float, float, float*, float*, float*, float*)’:
+../libmypaint/mypaint-tiled-surface.c:628:9: warning: unused variable ‘tiles_n’ [-Wunused-variable]
+     int tiles_n = (tx2 - tx1) * (ty2 - ty1);
+         ^~~~~~~
+g++ -c -pipe -O2 -fPIC -Wall -W -D_REENTRANT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -I../json-c -I../libmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o mpsurface.o mpsurface.cpp
+g++ -c -pipe -O2 -fPIC -Wall -W -D_REENTRANT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -I../json-c -I../libmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o mptile.o mptile.cpp
+g++ -pipe -O2 -fPIC -Wall -W -dM -E -o moc_predefs.h /home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/features/data/dummy.cpp
+/home/xtingray/Qt5.13.1/5.13.1/gcc_64/bin/moc -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB --include /home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/qtmypaint/moc_predefs.h -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -I/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/qtmypaint -I/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/json-c -I/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/libmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include mphandler.h -o moc_mphandler.cpp
+g++ -c -pipe -O2 -fPIC -Wall -W -D_REENTRANT -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -I../json-c -I../libmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o moc_mphandler.o moc_mphandler.cpp
+rm -f libQTMyPaint.a
+ar cqs libQTMyPaint.a mpbrush.o mphandler.o mpsurface.o mptile.o moc_mphandler.o
+make[1]: Leaving directory '/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/qtmypaint'
+cd raster/ && ( test -e Makefile || /home/xtingray/Qt5.13.1/5.13.1/gcc_64/bin/qmake -o Makefile /home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/raster/raster.pro ) && make -f Makefile 
+make[1]: Entering directory '/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/raster'
+g++ -c -pipe -O2 -D_REENTRANT -Wall -W -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -I../libmypaint -I../qtmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o main.o main.cpp
+g++ -c -pipe -O2 -D_REENTRANT -Wall -W -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -I../libmypaint -I../qtmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o mainwindow.o mainwindow.cpp
+g++ -c -pipe -O2 -D_REENTRANT -Wall -W -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -I../libmypaint -I../qtmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o mypaintview.o mypaintview.cpp
+g++ -c -pipe -O2 -D_REENTRANT -Wall -W -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -I../libmypaint -I../qtmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o rasterapp.o rasterapp.cpp
+g++ -c -pipe -O2 -D_REENTRANT -Wall -W -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -I../libmypaint -I../qtmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o mpbrushselector.o mpbrushselector.cpp
+/home/xtingray/Qt5.13.1/5.13.1/gcc_64/bin/rcc -name resources resources.qrc -o qrc_resources.cpp
+g++ -c -pipe -O2 -D_REENTRANT -Wall -W -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -I../libmypaint -I../qtmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o qrc_resources.o qrc_resources.cpp
+g++ -pipe -O2 -dM -E -o moc_predefs.h /home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/features/data/dummy.cpp
+/home/xtingray/Qt5.13.1/5.13.1/gcc_64/bin/moc -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB --include /home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/raster/moc_predefs.h -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -I/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/raster -I/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/libmypaint -I/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/qtmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindow.h -o moc_mainwindow.cpp
+g++ -c -pipe -O2 -D_REENTRANT -Wall -W -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -I../libmypaint -I../qtmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o moc_mainwindow.o moc_mainwindow.cpp
+/home/xtingray/Qt5.13.1/5.13.1/gcc_64/bin/moc -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB --include /home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/raster/moc_predefs.h -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -I/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/raster -I/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/libmypaint -I/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/qtmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include mypaintview.h -o moc_mypaintview.cpp
+g++ -c -pipe -O2 -D_REENTRANT -Wall -W -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -I../libmypaint -I../qtmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o moc_mypaintview.o moc_mypaintview.cpp
+/home/xtingray/Qt5.13.1/5.13.1/gcc_64/bin/moc -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB --include /home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/raster/moc_predefs.h -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -I/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/raster -I/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/libmypaint -I/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/qtmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include mpbrushselector.h -o moc_mpbrushselector.cpp
+g++ -c -pipe -O2 -D_REENTRANT -Wall -W -fPIC -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -I. -I../libmypaint -I../qtmypaint -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtWidgets -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtGui -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/xtingray/Qt5.13.1/5.13.1/gcc_64/mkspecs/linux-g++ -o moc_mpbrushselector.o moc_mpbrushselector.cpp
+g++ -Wl,-O1 -Wl,-rpath,/home/xtingray/Qt5.13.1/5.13.1/gcc_64/lib -o demo main.o mainwindow.o mypaintview.o rasterapp.o mpbrushselector.o qrc_resources.o moc_mainwindow.o moc_mypaintview.o moc_mpbrushselector.o   -L/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/raster/../qtmypaint/ -lQTMyPaint -L../json-c -ljson-c /home/xtingray/Qt5.13.1/5.13.1/gcc_64/lib/libQt5Widgets.so /home/xtingray/Qt5.13.1/5.13.1/gcc_64/lib/libQt5Gui.so /home/xtingray/Qt5.13.1/5.13.1/gcc_64/lib/libQt5Core.so -lGL -lpthread   
+make[1]: Leaving directory '/home/xtingray/tupitube/sources/tupitube.artist/src/mypaint/raster'

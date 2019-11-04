@@ -240,6 +240,7 @@ module RQonf
       launcher_prefix = @options['prefix']
       launcher_sharedir = @options['sharedir']
       launcher_libdir = @options['libdir']
+      launcher_rasterdir = @options['libdir'] + "/raster"
       launcher_bindir = @options['bindir']
 
       if @options['package-build'].nil? then
@@ -259,7 +260,7 @@ module RQonf
       newfile = "#!/bin/bash\n\n"
       newfile += "export TUPITUBE_HOME=\"" + launcher_prefix + "\"\n"
       newfile += "export TUPITUBE_SHARE=\"" + launcher_sharedir + "\"\n"
-      newfile += "export TUPITUBE_LIB=\"" + launcher_libdir + "\"\n"
+      newfile += "export TUPITUBE_LIB=\"" + launcher_libdir + ":" + launcher_rasterdir + "\"\n"
       newfile += "export TUPITUBE_PLUGIN=\"" + launcher_libdir + "/plugins\"\n"
       newfile += "export TUPITUBE_BIN=\"" + launcher_bindir + "\"\n\n"
 

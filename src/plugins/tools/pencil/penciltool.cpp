@@ -64,9 +64,11 @@ void PencilTool::setupActions()
 
 void PencilTool::init(TupGraphicsScene *gScene)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "PencilTool::init()";
     #endif
+    */
 
     scene = gScene;
     brushManager = scene->getBrushManager();

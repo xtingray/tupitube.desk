@@ -47,6 +47,7 @@
 #include "tupruler.h"
 #include "tuppaintareastatus.h"
 #include "tupexportinterface.h"
+#include "rastermainwindow.h"
 
 #include <QMainWindow>
 #include <QActionGroup>
@@ -123,6 +124,7 @@ class TUPITUBE_EXPORT TupDocumentView: public QMainWindow
         void cameraInterface();
         void insertPictureInFrame(int id, const QString path);
         void papagayoManager();
+        void openRasterMode();
 
     private slots: 
         // Plugins
@@ -148,6 +150,7 @@ class TUPITUBE_EXPORT TupDocumentView: public QMainWindow
         void updatePen(const QPen &pen);
         void updateBrush(const QBrush &brush);
         void updateCameraMode();
+        void closeRasterWindow();
 
     public slots:
         void undo();
@@ -228,6 +231,7 @@ class TUPITUBE_EXPORT TupDocumentView: public QMainWindow
         int viewAngle;
         int autoSaveTime;
         bool fullScreenOn;
+        bool rasterWindowOn;
         bool isNetworked;
         QStringList onLineUsers;
 
@@ -243,6 +247,7 @@ class TUPITUBE_EXPORT TupDocumentView: public QMainWindow
         TAction *papagayoAction;
 
         TupCanvas *fullScreen;
+        RasterMainWindow *rasterWindow;
 
         TupRuler *verticalRuler;
         TupRuler *horizontalRuler;

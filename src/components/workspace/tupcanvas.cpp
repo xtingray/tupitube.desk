@@ -52,11 +52,7 @@ TupCanvas::TupCanvas(QWidget *parent, Qt::WindowFlags flags, TupGraphicsScene *g
                    int angle, TupBrushManager *manager) : QFrame(parent, flags)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCanvas()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "TupCanvas()";
     #endif
 
     setWindowTitle("TupiTube Desk");

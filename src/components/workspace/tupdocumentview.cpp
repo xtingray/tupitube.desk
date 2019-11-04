@@ -81,6 +81,7 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     currentTool = nullptr;
     onionEnabled = true;
     fullScreenOn = false;
+    rasterWindowOn = false;
     viewAngle = 0;
     isNetworked = netFlag;
     onLineUsers = users;
@@ -168,11 +169,7 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
 TupDocumentView::~TupDocumentView()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupDocumentView()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "~TupDocumentView()";
     #endif
 
     if (currentTool)
@@ -419,12 +416,7 @@ void TupDocumentView::loadPlugins()
             TupExportInterface *exporter = qobject_cast<TupExportInterface *>(plugin);
             if (exporter) {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupDocumentView::loadPlugins() - plugin: " + exporter->key();
-                    #ifdef Q_OS_WIN
-                        qWarning() << msg;
-                    #else
-                        tWarning() << msg;
-                    #endif
+                    qWarning() << "TupDocumentView::loadPlugins() - plugin: " << exporter->key();
                 #endif
 
                 if (exporter->key().compare(tr("Image Sequence")) == 0) {
@@ -438,12 +430,7 @@ void TupDocumentView::loadPlugins()
 
     if (!imagePluginLoaded) {
         #ifdef TUP_DEBUG
-            QString msg = "TupDocumentView::loadPlugins() - Warning: Couldn't found plugin -> " + tr("Image Sequence");
-            #ifdef Q_OS_WIN
-                qWarning() << msg;
-            #else
-                tWarning() << msg;
-            #endif
+            qWarning() << "TupDocumentView::loadPlugins() - Warning: Couldn't found plugin -> " << tr("Image Sequence");
         #endif
     }
 
@@ -451,155 +438,145 @@ void TupDocumentView::loadPlugins()
     QVector<TAction*> tweenTools(7);
 
     foreach (QObject *plugin, TupPluginManager::instance()->getTools()) {
-             TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(plugin);
+        TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(plugin);
 
-             if (tool->toolType() != TupToolInterface::Tweener && tool->toolType() != TupToolInterface::LipSync) {
-                 connect(tool, SIGNAL(closeHugeCanvas()), this, SLOT(closeFullScreen()));
-                 connect(tool, SIGNAL(callForPlugin(int, int)), this, SLOT(loadPlugin(int, int)));
-             }
+        if (tool->toolType() != TupToolInterface::Tweener && tool->toolType() != TupToolInterface::LipSync) {
+         connect(tool, SIGNAL(closeHugeCanvas()), this, SLOT(closeFullScreen()));
+         connect(tool, SIGNAL(callForPlugin(int, int)), this, SLOT(loadPlugin(int, int)));
+        }
 
-             QStringList::iterator it;
-             QStringList keys = tool->keys();
+        QStringList::iterator it;
+        QStringList keys = tool->keys();
 
-             for (it = keys.begin(); it != keys.end(); ++it) {
-                  #ifdef TUP_DEBUG
-                      QString msg = "TupDocumentView::loadPlugins() - Tool Loaded: " + *it;
-                      #ifdef Q_OS_WIN
-                          qWarning() << msg;
-                      #else
-                          tWarning() << msg;
-                      #endif
-                  #endif
+        for (it = keys.begin(); it != keys.end(); ++it) {
+          #ifdef TUP_DEBUG
+              qWarning() << "TupDocumentView::loadPlugins() - Tool Loaded: " << *it;
+          #endif
 
-                  TAction *action = tool->actions()[*it];
+          TAction *action = tool->actions()[*it];
 
-                  if (action) {
-                      action->setIconVisibleInMenu(true);
-                      connect(action, SIGNAL(triggered()), this, SLOT(selectTool()));
-                      action->setParent(plugin);
-                      action->setCheckable(true);
-                      actionGroup->addAction(action);
+          if (action) {
+              action->setIconVisibleInMenu(true);
+              connect(action, SIGNAL(triggered()), this, SLOT(selectTool()));
+              action->setParent(plugin);
+              action->setCheckable(true);
+              actionGroup->addAction(action);
 
-                      QString toolName = action->text();
+              QString toolName = action->text();
 
-                      switch (tool->toolType()) {
-                              case TupToolInterface::Brush:
-                                 {
-                                   // SQA: Experimental plugin (enable it only for testing)
-                                   // if (toolName.compare(tr("Scheme")) == 0)
-                                   //     k->schemeAction = action;
+              switch (tool->toolType()) {
+                  case TupToolInterface::Brush:
+                  {
+                      // SQA: Experimental plugin (enable it only for testing)
+                      // if (toolName.compare(tr("Scheme")) == 0)
+                      //     k->schemeAction = action;
 
-                                   if (toolName.compare(tr("Pencil")) == 0)
-                                       pencilAction = action;
+                      if (toolName.compare(tr("Pencil")) == 0)
+                          pencilAction = action;
 
-                                   if (toolName.compare(tr("Ink")) == 0)
-                                       inkAction = action;
+                      if (toolName.compare(tr("Ink")) == 0)
+                          inkAction = action;
 
-                                   // SQA: This code has been disabled temporarily
-                                   /*
-                                   if (toolName.compare(tr("Eraser")) == 0) {
-                                       action->setDisabled(true);
-                                       brushTools[2] = action;
-                                   }
-                                   */
-
-                                   if (toolName.compare(tr("PolyLine")) == 0) {
-                                       polyLineAction = action;
-
-                                       TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(action->parent());
-                                       connect(paintArea, SIGNAL(closePolyLine()), tool, SLOT(initEnv()));
-                                       connect(this, SIGNAL(closePolyLine()), tool, SLOT(initEnv()));
-                                   }
-
-                                   if (toolName.compare(tr("Line")) == 0) {
-                                       brushTools[2] = action;
-
-                                       TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(action->parent());
-                                       connect(paintArea, SIGNAL(closeLine()), tool, SLOT(endItem()));
-                                       connect(this, SIGNAL(closeLine()), tool, SLOT(endItem()));
-                                   }
-
-                                   if (toolName.compare(tr("Rectangle")) == 0) {
-                                       brushTools[0] = action;
-
-                                       shapesMenu->setDefaultAction(action);
-                                   }
-
-                                   if (toolName.compare(tr("Ellipse")) == 0)
-                                       brushTools[1] = action;
-
-                                   // if (toolName.compare(tr("Text")) == 0)
-                                   //     textAction = action;
-                                 }
-                                 break;
-                              case TupToolInterface::Tweener:
-                                 {
-                                   if (toolName.compare(tr("Position Tween")) == 0) {
-                                       tweenTools[0] = action;
-                                       motionMenu->setDefaultAction(action);
-                                   }
-
-                                   if (toolName.compare(tr("Rotation Tween")) == 0)
-                                       tweenTools[1] = action;
-
-                                   if (toolName.compare(tr("Scale Tween")) == 0)
-                                       tweenTools[2] = action;
-
-                                   if (toolName.compare(tr("Shear Tween")) == 0)
-                                       tweenTools[3] = action;
-
-                                   if (toolName.compare(tr("Opacity Tween")) == 0)
-                                       tweenTools[4] = action;
-
-                                   if (toolName.compare(tr("Coloring Tween")) == 0)
-                                       tweenTools[5] = action;
-
-                                   TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(action->parent());
-                                   connect(tool, SIGNAL(tweenRemoved()), this, SLOT(updatePaintArea()));
-
-                                   /*
-                                   if (toolName.compare(tr("Composed Tween")) == 0) {
-                                       action->setDisabled(true);
-                                       tweenTools[6] = action;
-                                   }
-                                   */
-                                 }
-                                 break;
-                              case TupToolInterface::Selection:
-                                 {
-                                   if (toolName.compare(tr("Object Selection")) == 0)
-                                       selectionAction = action;
-
-                                   if (toolName.compare(tr("Nodes Selection")) == 0)
-                                       nodesAction = action;
-                                 }
-                                 break;
-                              case TupToolInterface::Fill:
-                                 {
-                                   if (toolName.compare(tr("Fill Tool")) == 0)
-                                       fillAction = action;
-                                 }
-                                 break;
-                               case TupToolInterface::LipSync:
-                                 {
-                                   if (toolName.compare(tr("Papagayo Lip-sync")) == 0)
-                                       papagayoAction = action;
-                                 }
-                                 break;
-                               default:
-                                 break;
+                      // SQA: This code has been disabled temporarily
+                      /*
+                      if (toolName.compare(tr("Eraser")) == 0) {
+                          action->setDisabled(true);
+                          brushTools[2] = action;
                       }
-                  } else {
-                      #ifdef TUP_DEBUG
-                          QString msg = "TupDocumentView::loadPlugins() - Fatal Error: Tool action is NULL -> " + *it;
-                          #ifdef Q_OS_WIN
-                              qDebug() << msg;
-                          #else
-                              tError() << msg;
-                          #endif
-                      #endif
+                      */
+
+                      if (toolName.compare(tr("PolyLine")) == 0) {
+                          polyLineAction = action;
+
+                          TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(action->parent());
+                          connect(paintArea, SIGNAL(closePolyLine()), tool, SLOT(initEnv()));
+                          connect(this, SIGNAL(closePolyLine()), tool, SLOT(initEnv()));
+                      }
+
+                      if (toolName.compare(tr("Line")) == 0) {
+                          brushTools[2] = action;
+
+                          TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(action->parent());
+                          connect(paintArea, SIGNAL(closeLine()), tool, SLOT(endItem()));
+                          connect(this, SIGNAL(closeLine()), tool, SLOT(endItem()));
+                      }
+
+                      if (toolName.compare(tr("Rectangle")) == 0) {
+                          brushTools[0] = action;
+
+                          shapesMenu->setDefaultAction(action);
+                      }
+
+                      if (toolName.compare(tr("Ellipse")) == 0)
+                          brushTools[1] = action;
+
+                      // if (toolName.compare(tr("Text")) == 0)
+                      //     textAction = action;
                   }
-             }
+                  break;
+                  case TupToolInterface::Tweener:
+                  {
+                      if (toolName.compare(tr("Position Tween")) == 0) {
+                          tweenTools[0] = action;
+                          motionMenu->setDefaultAction(action);
+                      }
+
+                      if (toolName.compare(tr("Rotation Tween")) == 0)
+                          tweenTools[1] = action;
+
+                      if (toolName.compare(tr("Scale Tween")) == 0)
+                          tweenTools[2] = action;
+
+                      if (toolName.compare(tr("Shear Tween")) == 0)
+                          tweenTools[3] = action;
+
+                      if (toolName.compare(tr("Opacity Tween")) == 0)
+                          tweenTools[4] = action;
+
+                      if (toolName.compare(tr("Coloring Tween")) == 0)
+                          tweenTools[5] = action;
+
+                      TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(action->parent());
+                      connect(tool, SIGNAL(tweenRemoved()), this, SLOT(updatePaintArea()));
+
+                      /*
+                      if (toolName.compare(tr("Composed Tween")) == 0) {
+                          action->setDisabled(true);
+                          tweenTools[6] = action;
+                      }
+                      */
+                  }
+                  break;
+                  case TupToolInterface::Selection:
+                  {
+                      if (toolName.compare(tr("Object Selection")) == 0)
+                          selectionAction = action;
+
+                      if (toolName.compare(tr("Nodes Selection")) == 0)
+                          nodesAction = action;
+                  }
+                  break;
+                  case TupToolInterface::Fill:
+                  {
+                      if (toolName.compare(tr("Fill Tool")) == 0)
+                          fillAction = action;
+                  }
+                  break;
+                  case TupToolInterface::LipSync:
+                  {
+                      if (toolName.compare(tr("Papagayo Lip-sync")) == 0)
+                          papagayoAction = action;
+                  }
+                  break;
+                  default:
+                  break;
+              } // end switch
+          } else {
+              #ifdef TUP_DEBUG
+                  qDebug() << "TupDocumentView::loadPlugins() - Fatal Error: Tool action is NULL -> " << *it;
+              #endif
+          }
+        }
     } // end foreach
 
     for (int i = 0; i < brushTools.size(); ++i)
@@ -628,12 +605,7 @@ void TupDocumentView::loadPlugins()
 
         for (it = keys.begin(); it != keys.end(); ++it) {
             #ifdef TUP_DEBUG
-                QString msg = "TupDocumentView::loadPlugins() - Filter Loaded: " + *it;
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tDebug("plugins") << msg;
-                #endif
+                qDebug() << "TupDocumentView::loadPlugins() - Filter Loaded: " << *it;
             #endif
 
             TAction *filter = filterInterface->actions()[*it];
@@ -686,14 +658,10 @@ void TupDocumentView::loadPlugins()
 void TupDocumentView::loadPlugin(int menu, int index)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupDocumentView::loadPlugin()]";
-        #else
-            T_FUNCINFO;
-            tWarning() << "Menu: " << menu;
-            tWarning() << "Index: " << index;
-            tWarning() << "currentDock: " << currentDock;
-        #endif
+        qWarning() << "TupDocumentView::loadPlugin()";
+        qWarning() << "Menu: " << menu;
+        qWarning() << "Index: " << index;
+        qWarning() << "currentDock: " << currentDock;
     #endif
 
     TAction *action = nullptr;
@@ -874,12 +842,7 @@ void TupDocumentView::loadPlugin(int menu, int index)
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupDocumentView::loadPlugin() - Error: Action pointer is NULL!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupDocumentView::loadPlugin() - Error: Action pointer is NULL!";
         #endif
         return;
     }
@@ -888,11 +851,7 @@ void TupDocumentView::loadPlugin(int menu, int index)
 void TupDocumentView::selectTool()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupDocumentView::selectTool()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupDocumentView::selectTool()";
     #endif
 
     TAction *action = qobject_cast<TAction *>(sender());
@@ -1045,12 +1004,7 @@ void TupDocumentView::selectTool()
             tool->updateZoomFactor(1 / nodesScaleFactor);
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupDocumentView::selectTool() - Fatal Error: Action from sender() is NULL";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupDocumentView::selectTool() - Fatal Error: Action from sender() is NULL";
         #endif
     }
 }
@@ -1058,11 +1012,7 @@ void TupDocumentView::selectTool()
 void TupDocumentView::selectToolFromMenu(QAction *action)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupDocumentView::selectToolFromMenu()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupDocumentView::selectToolFromMenu()";
     #endif
 
     QMenu *menu = qobject_cast<QMenu *>(action->parent());
@@ -1079,23 +1029,13 @@ void TupDocumentView::selectToolFromMenu(QAction *action)
                 tool->trigger();
             } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupDocumentView::selectToolFromMenu() - Default action is NULL";
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() <<  "TupDocumentView::selectToolFromMenu() - Default action is NULL";
                 #endif
             }
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupDocumentView::selectToolFromMenu() - Warning: Action with NO parent! Aborting...";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tFatal() << msg;
-            #endif
+            qDebug() << "TupDocumentView::selectToolFromMenu() - Warning: Action with NO parent! Aborting...";
         #endif
     } 
 }
@@ -1230,6 +1170,8 @@ void TupDocumentView::createToolBar()
     empty0->setFixedWidth(5);
     QWidget *empty1 = new QWidget();
     empty1->setFixedWidth(5);
+    QWidget *empty2 = new QWidget();
+    empty2->setFixedWidth(5);
 
     QLabel *staticOpacityLabel = new QLabel();
     QPixmap staticPix(THEME_DIR + "icons/bg_opacity.png");
@@ -1243,11 +1185,16 @@ void TupDocumentView::createToolBar()
     staticOpacityBox->setToolTip(tr("Static BG Opacity"));
     connect(staticOpacityBox, SIGNAL(valueChanged(double)), this, SLOT(updateStaticOpacity(double)));
 
+    QPushButton *rasterButton = new QPushButton(QIcon(THEME_DIR + "icons/raster_mode.png"), "", this);
+    rasterButton->setToolTip(tr("Raster Mode"));
+    connect(rasterButton, SIGNAL(clicked()), this, SLOT(openRasterMode()));
+
     staticPropertiesBar->addWidget(empty0);
     staticPropertiesBar->addWidget(staticOpacityLabel);
     staticPropertiesBar->addWidget(empty1);
     staticPropertiesBar->addWidget(staticOpacityBox);
-
+    staticPropertiesBar->addWidget(empty2);
+    staticPropertiesBar->addWidget(rasterButton);
     staticPropertiesBar->setVisible(false);
 
     QLabel *dirLabel = new QLabel();
@@ -1263,8 +1210,6 @@ void TupDocumentView::createToolBar()
     dirCombo->addItem(QIcon(THEME_DIR + "icons/mov_down.png"), "   " + tr("Down"));
     connect(dirCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setBackgroundDirection(int)));
 
-    QWidget *empty2 = new QWidget();
-    empty2->setFixedWidth(5);
     QWidget *empty3 = new QWidget();
     empty3->setFixedWidth(5);
     QWidget *empty4 = new QWidget();
@@ -1277,6 +1222,8 @@ void TupDocumentView::createToolBar()
     empty7->setFixedWidth(5);
     QWidget *empty8 = new QWidget();
     empty8->setFixedWidth(5);
+    QWidget *empty9 = new QWidget();
+    empty9->setFixedWidth(5);
 
     QLabel *shiftLabel = new QLabel();
     QPixmap shiftPix(THEME_DIR + "icons/shift_length.png");
@@ -1302,25 +1249,43 @@ void TupDocumentView::createToolBar()
     connect(dynamicOpacityBox, SIGNAL(valueChanged(double)), this, SLOT(updateDynamicOpacity(double)));
 
     dynamicPropertiesBar->addWidget(dirLabel);
-    dynamicPropertiesBar->addWidget(empty2);
-    dynamicPropertiesBar->addWidget(dirCombo);
     dynamicPropertiesBar->addWidget(empty3);
-    dynamicPropertiesBar->addSeparator();
+    dynamicPropertiesBar->addWidget(dirCombo);
     dynamicPropertiesBar->addWidget(empty4);
-    dynamicPropertiesBar->addWidget(shiftLabel);
-    dynamicPropertiesBar->addWidget(empty5);
-    dynamicPropertiesBar->addWidget(shiftSpin);
-    dynamicPropertiesBar->addWidget(empty6);
     dynamicPropertiesBar->addSeparator();
+    dynamicPropertiesBar->addWidget(empty5);
+    dynamicPropertiesBar->addWidget(shiftLabel);
+    dynamicPropertiesBar->addWidget(empty6);
+    dynamicPropertiesBar->addWidget(shiftSpin);
     dynamicPropertiesBar->addWidget(empty7);
-    dynamicPropertiesBar->addWidget(dynamicOpacityLabel);
+    dynamicPropertiesBar->addSeparator();
     dynamicPropertiesBar->addWidget(empty8);
+    dynamicPropertiesBar->addWidget(dynamicOpacityLabel);
+    dynamicPropertiesBar->addWidget(empty9);
     dynamicPropertiesBar->addWidget(dynamicOpacityBox);
 
     dynamicPropertiesBar->setVisible(false);
 
     addToolBar(staticPropertiesBar);
     addToolBar(dynamicPropertiesBar);
+}
+
+void TupDocumentView::openRasterMode()
+{
+    rasterWindow = new RasterMainWindow(this);
+    connect(rasterWindow, SIGNAL(closeWindow()), this, SLOT(closeRasterWindow()));
+    rasterWindowOn = true;
+    rasterWindow->showFullScreen();
+}
+
+void TupDocumentView::closeRasterWindow()
+{
+    if (rasterWindowOn) {
+        disconnect(rasterWindow, SIGNAL(closeWindow()), this, SLOT(closeRasterWindow()));
+        rasterWindow->close();
+        rasterWindowOn = false;
+        rasterWindow = nullptr;
+    }
 }
 
 void TupDocumentView::closeArea()
@@ -1757,12 +1722,7 @@ void TupDocumentView::sendStoryboard(TupStoryboard *storyboard, int sceneIndex)
 {
     if (isNetworked) {
         #ifdef TUP_DEBUG
-            QString msg = "TupDocumentView::sendStoryboard() - Sending storyboard...";
-            #ifdef Q_OS_WIN
-                qWarning() << msg;
-            #else
-                tWarning() << msg;
-            #endif
+            qWarning() << "TupDocumentView::sendStoryboard() - Sending storyboard...";
         #endif
         emit updateStoryboard(storyboard, sceneIndex);
     } else {
@@ -1787,11 +1747,7 @@ void TupDocumentView::updateUsersOnLine(const QString &login, int state)
 void TupDocumentView::updateStaticOpacity(double opacity)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupDocumentView::updateStaticOpacity()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupDocumentView::updateStaticOpacity()";
     #endif
 
     int sceneIndex = paintArea->currentSceneIndex();
@@ -1811,11 +1767,7 @@ void TupDocumentView::updateStaticOpacity(double opacity)
 void TupDocumentView::updateDynamicOpacity(double opacity)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupDocumentView::updateDynamicOpacity()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "TupDocumentView::updateDynamicOpacity()";
     #endif
 
    int sceneIndex = paintArea->currentSceneIndex();
@@ -1992,13 +1944,9 @@ void TupDocumentView::cameraInterface()
 
 void TupDocumentView::resizeProjectDimension(const QSize dimension)
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[TupMainWindow::resizeProjectDimension(QSize]";
-    #else
-        T_FUNCINFO << dimension;
+    #ifdef TUP_DEBUG
+       qDebug() << "TupMainWindow::resizeProjectDimension(QSize)";
     #endif
-#endif
 
     paintArea->updateDimension(dimension);
 
@@ -2017,11 +1965,11 @@ void TupDocumentView::resizeProjectDimension(const QSize dimension)
     if (proportion <= 0.5) {
         setZoomPercent("20");
     } else if (proportion > 0.5 && proportion <= 0.75) {
-               setZoomPercent("25");
+        setZoomPercent("25");
     } else if (proportion > 0.75 && proportion <= 1.5) {
-               setZoomPercent("50");
+        setZoomPercent("50");
     } else if (proportion > 1.5 && proportion < 2) {
-               setZoomPercent("75");
+        setZoomPercent("75");
     }
 
     emit projectSizeHasChanged(dimension);
@@ -2111,12 +2059,7 @@ void TupDocumentView::importPapagayoLipSync()
         if (scene->lipSyncExists(folder)) {
             TOsd::self()->display(tr("Error"), tr("Papagayo project already exists!\nPlease, rename the project's file"), TOsd::Error);
             #ifdef TUP_DEBUG
-                   QString msg = "TupDocumentView::importPapagayoLipSync() - Fatal Error: Papagayo file is invalid!";
-                   #ifdef Q_OS_WIN
-                       qDebug() << msg;
-                   #else
-                       tError() << msg;
-                   #endif
+                qDebug() << "TupDocumentView::importPapagayoLipSync() - Fatal Error: Papagayo file is invalid!";
             #endif
             QApplication::restoreOverrideCursor();
             return;
@@ -2213,45 +2156,25 @@ void TupDocumentView::importPapagayoLipSync()
                     } else {
                         TOsd::self()->display(tr("Error"), tr("Papagayo file is invalid!"), TOsd::Error);
                         #ifdef TUP_DEBUG
-                            QString msg = "TupDocumentView::importPapagayoLipSync() - Fatal Error: Papagayo file is invalid!";
-                            #ifdef Q_OS_WIN
-                                qDebug() << msg;
-                            #else
-                                tError() << msg;
-                            #endif
+                            qDebug() << "TupDocumentView::importPapagayoLipSync() - Fatal Error: Papagayo file is invalid!";
                         #endif
                     }
                 } else {
                     TOsd::self()->display(tr("Error"), tr("Images directory is empty!"), TOsd::Error);
                     #ifdef TUP_DEBUG
-                        QString msg = "TupDocumentView::importPapagayoLipSync() - Fatal Error: Images directory is empty!";
-                        #ifdef Q_OS_WIN
-                            qDebug() << msg;
-                        #else
-                            tError() << msg;
-                        #endif
+                        qDebug() << "TupDocumentView::importPapagayoLipSync() - Fatal Error: Images directory is empty!";
                     #endif
                 }
             } else {
                 TOsd::self()->display(tr("Error"), tr("Papagayo project is invalid!"), TOsd::Error);
                 #ifdef TUP_DEBUG
-                    QString msg = "TupDocumentView::importPapagayoLipSync() - Fatal Error: Papagayo file is invalid!";
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "TupDocumentView::importPapagayoLipSync() - Fatal Error: Papagayo file is invalid!";
                 #endif
             }
         } else {
             TOsd::self()->display(tr("Error"), tr("Papagayo project is invalid!"), TOsd::Error);
             #ifdef TUP_DEBUG
-                QString msg = "TupDocumentView::importPapagayoLipSync() - Fatal Error: Papagayo file doesn't exist!";
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "TupDocumentView::importPapagayoLipSync() - Fatal Error: Papagayo file doesn't exist!";
             #endif
         }
         QApplication::restoreOverrideCursor();

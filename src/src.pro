@@ -7,6 +7,7 @@ SUBDIRS += themes \
            libui \
            components \
            plugins \
+           mypaint \
            shell
 
 CONFIG += ordered warn_on

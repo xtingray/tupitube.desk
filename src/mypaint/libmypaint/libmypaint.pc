@@ -1,0 +1,12 @@
+prefix=./build
+exec_prefix=./build
+libdir=./build/lib
+includedir=./build/include
+
+Name: libmypaint
+Description: MyPaint brush engine library
+Version: 1.1
+Requires: json-c
+Cflags: -I${includedir}/libmypaint
+Libs: -L${libdir} -lmypaint -lm -fopenmp
+

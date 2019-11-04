@@ -2,6 +2,7 @@ QT += xml opengl svg
 
 INCLUDEPATH += ../plugins/tools/selection
 
+MYPAINT_DIR = ../mypaint
 COLORPALETTE_DIR = ../components/colorpalette
 PLAYER_DIR = ../components/player
 WORKSPACE_DIR = ../components/workspace
@@ -20,6 +21,7 @@ LIBTUPI_DIR = ../libtupi
 LIBBASE_DIR = ../libbase
 NET_DIR = ../net
 
+include($$MYPAINT_DIR/mypaint.pri)
 include($$COLORPALETTE_DIR/colorpalette.pri)
 include($$WORKSPACE_DIR/workspace.pri)
 include($$PLAYER_DIR/player.pri)

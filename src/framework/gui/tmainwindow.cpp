@@ -175,9 +175,11 @@ void TMainWindow::addSpecialButton(TAction *action)
 
 ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int perspective, const QString &code, QKeySequence shortcut)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "TMainWindow::addToolView() - code: " << code;
     #endif
+    */
 
     ToolView *toolView = new ToolView(widget->windowTitle(), widget->windowIcon(), code);
     toolView->setShortcut(shortcut);
@@ -451,9 +453,11 @@ void TMainWindow::setSettingsHandler(TMainWindowAbstractSettings *config)
 
 void TMainWindow::closeEvent(QCloseEvent *e)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "TMainWindow::closeEvent()";
     #endif
+    */
 
     saveGUI();
     QMainWindow::closeEvent(e);
@@ -461,9 +465,11 @@ void TMainWindow::closeEvent(QCloseEvent *e)
 
 void TMainWindow::showEvent(QShowEvent *e)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "TMainWindow::showEvent() - m_autoRestore: " << m_autoRestore;
     #endif
+    */
 
     QMainWindow::showEvent(e);
 

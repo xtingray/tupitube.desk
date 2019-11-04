@@ -6,8 +6,6 @@ TARGET = tupiworkspace
 INSTALLS += target
 target.path = /lib/
 
-INCLUDEPATH += /usr/include/qt5/QtMultimedia /usr/include/qt5/QtMultimediaWidgets
-
 CONFIG += dll warn_on
 
 HEADERS += tuppaintarea.h \
@@ -81,7 +79,12 @@ INCLUDEPATH += $$POLYLINE_DIR
 FRAMEWORK_DIR = "../../framework"
 include($$FRAMEWORK_DIR/framework.pri)
 
+MYPAINT_DIR = "../../mypaint"
+include($$MYPAINT_DIR/mypaint.pri)
+
 unix {
+    INCLUDEPATH += /usr/include/qt5/QtMultimedia /usr/include/qt5/QtMultimediaWidgets
+
     STORE_DIR = ../../store/
     INCLUDEPATH += $$STORE_DIR
     LIBS += -L$$STORE_DIR -ltupistore

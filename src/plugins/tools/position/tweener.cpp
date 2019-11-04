@@ -57,9 +57,11 @@
 
 Tweener::Tweener() : TupToolPlugin()
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "Tweener::Tweener()";
     #endif
+    */
 
     setupActions();
 
@@ -82,9 +84,11 @@ Tweener::~Tweener()
 
 void Tweener::init(TupGraphicsScene *gScene)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "Tweener::init()";
     #endif
+    */
 
     doList.clear();
     undoList.clear();
@@ -442,9 +446,11 @@ void Tweener::resetGUI()
 
 void Tweener::setupActions()
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[Tweener::setupActions()]";
     #endif
+    */
 
     realFactor = 1;
 
