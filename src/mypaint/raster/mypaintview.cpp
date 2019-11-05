@@ -48,7 +48,7 @@ MypaintView::MypaintView()
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    QCursor cursor = QCursor(THEME_DIR + "icons/cursor/pencil.png", 0, 11);
+    QCursor cursor = QCursor(THEME_DIR + "cursors/pencil.png", 0, 11);
     viewport()->setCursor(cursor);
 }
 
