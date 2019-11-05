@@ -37,7 +37,7 @@
 
 // TabbedMainWindow
 
-TabbedMainWindow::TabbedMainWindow(QWidget *parent): TMainWindow(parent)
+TabbedMainWindow::TabbedMainWindow(const QString &winKey, QWidget *parent): TMainWindow(winKey, parent)
 {
     currentTab = new QTabWidget;
     connect(currentTab, SIGNAL(currentChanged(int)), this, SLOT(emitWidgetChanged(int)));

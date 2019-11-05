@@ -35,7 +35,7 @@
 
 #include "tworkspacemainwindow.h"
 
-TWorkspaceMainWindow::TWorkspaceMainWindow(QWidget *parent) : TMainWindow(parent)
+TWorkspaceMainWindow::TWorkspaceMainWindow(QWidget *parent) : TMainWindow("workspace", parent)
 {
     mdiArea = new QMdiArea;
     setCentralWidget(mdiArea);

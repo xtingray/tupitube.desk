@@ -53,7 +53,7 @@ class T_GUI_EXPORT TabbedMainWindow : public TMainWindow
              All = Animation | Player | Help | News
         };
 
-        TabbedMainWindow(QWidget *parent = nullptr);
+        TabbedMainWindow(const QString &winKey, QWidget *parent = nullptr);
         ~TabbedMainWindow();
 
         void addWidget(QWidget *widget, bool persistant = true, int perspective = All);

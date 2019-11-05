@@ -41,8 +41,8 @@ class T_GUI_EXPORT DefaultSettings : public TMainWindowAbstractSettings
         DefaultSettings(QObject *parent);
         ~DefaultSettings();
 
-        void save(TMainWindow *window);
-        void restore(TMainWindow *window);
+        void save(const QString &winKey, TMainWindow *window);
+        void restore(const QString &winKey, TMainWindow *window);
 };
 
 DefaultSettings::DefaultSettings(QObject *parent) : TMainWindowAbstractSettings(parent)
@@ -53,13 +53,13 @@ DefaultSettings::~DefaultSettings()
 {
 }
 
-void DefaultSettings::save(TMainWindow *window)
+void DefaultSettings::save(const QString &winKey, TMainWindow *window)
 {
     #ifdef TUP_DEBUG
         qWarning() << "TMainWindow::DefaultSettings::save() - Saving UI settings [ " + qApp->applicationName() + " ]";
     #endif
 
-    QSettings settings(qApp->applicationName(), "ideality", this);
+    QSettings settings(qApp->applicationName(), winKey, this);
 
     QHash<Qt::ToolBarArea, TButtonBar *> buttonBars = window->buttonBars();
     QHash<TButtonBar *, QList<ToolView*> > toolViews = window->toolViews();
@@ -85,13 +85,13 @@ void DefaultSettings::save(TMainWindow *window)
     settings.endGroup();
 }
 
-void DefaultSettings::restore(TMainWindow *window)
+void DefaultSettings::restore(const QString &winKey, TMainWindow *window)
 {
     #ifdef TUP_DEBUG
         qWarning() << "TMainWindow::DefaultSettings::restore() - Restoring UI settings [ " + qApp->applicationName() + " ]";
     #endif
 
-    QSettings settings(qApp->applicationName(), "ideality", this);
+    QSettings settings(qApp->applicationName(), winKey, this);
 
     QHash<Qt::ToolBarArea, TButtonBar*> buttonBars = window->buttonBars();
     QHash<TButtonBar*, QList<ToolView*>> toolViews = window->toolViews();
@@ -133,10 +133,11 @@ void DefaultSettings::restore(TMainWindow *window)
     settings.endGroup();
 }
 
-TMainWindow::TMainWindow(QWidget *parent): QMainWindow(parent), m_forRelayout(nullptr),
-                                           perspective(DefaultPerspective), m_autoRestore(false)
+TMainWindow::TMainWindow(const QString &key, QWidget *parent): QMainWindow(parent), m_forRelayout(nullptr),
+                                                               perspective(DefaultPerspective), m_autoRestore(false)
 {
     setObjectName("TMainWindow");
+    winKey = key;
     settings = new DefaultSettings(this);
 
     specialToolBar = new QToolBar(tr("Show Top Panel"), this);
@@ -488,7 +489,7 @@ void TMainWindow::saveGUI()
         qDebug() << "TMainWindow::saveGUI()";
     #endif
 
-    settings->save(this);
+    settings->save(winKey, this);
 }
 
 void TMainWindow::restoreGUI()
@@ -498,7 +499,7 @@ void TMainWindow::restoreGUI()
     #endif
 
     setUpdatesEnabled(false);
-    settings->restore(this);
+    settings->restore(winKey, this);
     setUpdatesEnabled(true);
 }
 

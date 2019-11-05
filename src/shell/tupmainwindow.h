@@ -109,7 +109,7 @@ class TupMainWindow : public TabbedMainWindow
              ImportProjectToNet
         };
 
-        TupMainWindow();
+        TupMainWindow(const QString &winKey);
         ~TupMainWindow();
 
     private:

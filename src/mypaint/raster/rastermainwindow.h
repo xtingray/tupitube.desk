@@ -19,7 +19,8 @@
 #ifndef RASTERMAINWINDOW_H
 #define RASTERMAINWINDOW_H
 
-#include <QMainWindow>
+#include "tmainwindow.h"
+// #include <QMainWindow>
 #include <QDockWidget>
 #include <QPushButton>
 #include <QColorDialog>
@@ -27,19 +28,19 @@
 #include "mypaintview.h"
 #include "mpbrushselector.h"
 
-class RasterMainWindow : public QMainWindow
+class RasterMainWindow : public TMainWindow
 {
     Q_OBJECT
 
     public:
-        explicit RasterMainWindow(QWidget *parent = nullptr);
+        explicit RasterMainWindow(const QString &winKey, QWidget *parent = nullptr);
         ~RasterMainWindow();
 
          void setTabletDevice(QTabletEvent *event);
 
     public slots:
         void openProject();
-        void saveProject();
+        void exportProject();
 
     signals:
          void closeWindow();

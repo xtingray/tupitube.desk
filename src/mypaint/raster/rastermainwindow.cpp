@@ -26,23 +26,21 @@
 #include <QMenu>
 #include <QAction>
 
-RasterMainWindow::RasterMainWindow(QWidget *parent): QMainWindow(parent)
+RasterMainWindow::RasterMainWindow(const QString &winKey, QWidget *parent): TMainWindow(winKey, parent)
 {
-    /*
-    QAction *openAction = new QAction(tr("&Open"), this);
-    openAction->setShortcuts(QKeySequence::Open);
-    openAction->setStatusTip(tr("Open Image"));
-    connect(openAction, SIGNAL(triggered()), this, SLOT(openProject()));
+    QAction *exportAction = new QAction(tr("&Export as Image"), this);
+    exportAction->setShortcuts(QKeySequence::Open);
+    exportAction->setStatusTip(tr("Export as Image"));
+    connect(exportAction, SIGNAL(triggered()), this, SLOT(exportProject()));
 
-    QAction *exitAction = new QAction(tr("E&xit"), this);
-    exitAction->setShortcuts(QKeySequence::Quit);
-    exitAction->setStatusTip(tr("Exit the application"));
-    connect(exitAction, &QAction::triggered, this, &QWidget::close);
+    QAction *closeAction = new QAction(tr("Exit Raster Mode"), this);
+    closeAction->setShortcuts(QKeySequence::Quit);
+    closeAction->setStatusTip(tr("Exit Raster Mode"));
+    connect(closeAction, &QAction::triggered, this, &QWidget::close);
 
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(openAction);
-    fileMenu->addAction(exitAction);
-    */
+    fileMenu->addAction(exportAction);
+    fileMenu->addAction(closeAction);
 
     // Central widget:
     canvas = new MypaintView();
@@ -64,7 +62,7 @@ RasterMainWindow::RasterMainWindow(QWidget *parent): QMainWindow(parent)
     // Save
     saveBtn = new QPushButton("Save");
     toolsLayout->addWidget(saveBtn);
-    connect(saveBtn, SIGNAL(pressed()), this, SLOT(saveProject()));
+    connect(saveBtn, SIGNAL(pressed()), this, SLOT(exportProject()));
 
     // Clear
     clearBtn = new QPushButton("Clear");
@@ -72,7 +70,7 @@ RasterMainWindow::RasterMainWindow(QWidget *parent): QMainWindow(parent)
     connect(clearBtn, SIGNAL(pressed()), canvas, SLOT(clearCanvas()));
 
     // Color selector
-    colorBtn = new QPushButton("Click to select another brush color...");
+    colorBtn = new QPushButton("Color Palette");
     colorBtn->setMinimumHeight(60);
     colorBtn->setStyleSheet("color: white; background-color: black;");
 
@@ -85,13 +83,13 @@ RasterMainWindow::RasterMainWindow(QWidget *parent): QMainWindow(parent)
     QDockWidget* dockTools = new QDockWidget("Tools");
     dockTools->setWidget(toolsWidget);
 
-    addDockWidget(Qt::RightDockWidgetArea, dockTools);
+    // addDockWidget(Qt::LeftDockWidgetArea, dockTools);
 
     // Add a docked widget
     QDockWidget* dockBrush = new QDockWidget("Brush Library");
     brushesSelector = new MPBrushSelector(":brushes", nullptr);
     dockBrush->setWidget(brushesSelector);
-    addDockWidget(Qt::RightDockWidgetArea, dockBrush);
+    // addDockWidget(Qt::LeftDockWidgetArea, dockBrush);
 
     connect(brushesSelector, SIGNAL(brushSelected(const QByteArray&)),
             canvas, SLOT(loadBrush(const QByteArray&)));
@@ -122,11 +120,11 @@ void RasterMainWindow::openProject()
     canvas->loadFromFile(filePath);
 }
 
-void RasterMainWindow::saveProject()
+void RasterMainWindow::exportProject()
 {
     // Path
     QString initPath = QDir::homePath() + "/untitled.png";
-    QString filePath = QFileDialog::getSaveFileName(this, tr("Save Image"), initPath);
+    QString filePath = QFileDialog::getSaveFileName(this, tr("Export Image"), initPath);
     if (filePath.isEmpty())
         return; // false;
 

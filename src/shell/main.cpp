@@ -207,7 +207,7 @@ int main(int argc, char ** argv)
         }
     }
 
-    TupMainWindow *mainWindow = new TupMainWindow();
+    TupMainWindow *mainWindow = new TupMainWindow("ideality");
     mainWindow->showMaximized();
     #if defined(Q_OS_MAC)
         application.setMainWindow(mainWindow);

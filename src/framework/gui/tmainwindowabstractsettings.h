@@ -45,11 +45,11 @@ class TMainWindow;
 class T_GUI_EXPORT TMainWindowAbstractSettings : public QObject
 {
     public:
-        TMainWindowAbstractSettings(QObject *parent = 0) : QObject(parent) {}
+        TMainWindowAbstractSettings(QObject *parent = nullptr) : QObject(parent) {}
         ~TMainWindowAbstractSettings() {};
         
-        virtual void save(TMainWindow *w) = 0;
-        virtual void restore(TMainWindow *w) = 0;
+        virtual void save(const QString &winKey, TMainWindow *w) = 0;
+        virtual void restore(const QString &winKey, TMainWindow *w) = 0;
 };
 
 #endif

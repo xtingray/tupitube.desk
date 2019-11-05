@@ -66,7 +66,7 @@ class MypaintView : public QGraphicsView
     private:
         void updateCursor(const QTabletEvent *event);
 
-        QGraphicsScene gScene;
+        QGraphicsScene *gScene;
 
         QColor color;
         bool tableInUse;

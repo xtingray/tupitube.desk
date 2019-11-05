@@ -64,7 +64,7 @@ class T_GUI_EXPORT TMainWindow : public QMainWindow
            None = 0, DefaultPerspective
          };
 
-        TMainWindow(QWidget *parent = nullptr);
+        TMainWindow(const QString &key, QWidget *parent = nullptr);
         ~TMainWindow();
 
         ToolView *addToolView(QWidget *widget, Qt::DockWidgetArea area, int perspective = DefaultPerspective,
@@ -114,6 +114,7 @@ class T_GUI_EXPORT TMainWindow : public QMainWindow
         ToolView *m_forRelayout;
 
     private:
+        QString winKey;
         QHash<Qt::ToolBarArea, TButtonBar *> m_buttonBars;
         QHash<TButtonBar *, QList<ToolView*> > m_toolViews;
         QHash<QWidget *, int> m_managedWidgets;

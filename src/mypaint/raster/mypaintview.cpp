@@ -24,20 +24,26 @@
 
 #include "tapplicationproperties.h"
 #include "mypaintview.h"
+// static MypaintView* s_view = nullptr;
 
 MypaintView::MypaintView()
 {
+    // assert(s_view == nullptr);
+    // s_view = this;
+
     tableInUse = false;
 
     mypaint = MPHandler::handler();
+    mypaint->clearSurface();
 
     connect(mypaint, SIGNAL(newTile(MPSurface*, MPTile*)), this, SLOT(onNewTile(MPSurface*, MPTile*)));
     connect(mypaint, SIGNAL(updateTile(MPSurface*, MPTile*)), this, SLOT(onUpdateTile(MPSurface*, MPTile*)));
     connect(mypaint, SIGNAL(clearedSurface(MPSurface*)), this, SLOT(onClearedSurface(MPSurface*)));
 
     // Set scene
-    gScene.setSceneRect(this->rect());
-    setScene(&gScene);
+    gScene = new QGraphicsScene(this);
+    gScene->setSceneRect(this->rect());
+    setScene(gScene);
     setAlignment((Qt::AlignLeft | Qt::AlignTop));
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -69,7 +75,7 @@ void MypaintView::setTabletDevice(QTabletEvent* event)
 void MypaintView::onNewTile(MPSurface *surface, MPTile *tile)
 {
     Q_UNUSED(surface)
-    gScene.addItem(tile);
+    gScene->addItem(tile);
 }
 
 void MypaintView::onUpdateTile(MPSurface *surface, MPTile *tile)

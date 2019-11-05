@@ -78,7 +78,7 @@
 #include <QDesktopServices>
 #include <QFileOpenEvent>
 
-TupMainWindow::TupMainWindow() : TabbedMainWindow(), m_projectManager(nullptr), animationTab(nullptr), playerTab(nullptr),
+TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), m_projectManager(nullptr), animationTab(nullptr), playerTab(nullptr),
                m_viewChat(nullptr), m_exposureSheet(nullptr), m_scenes(nullptr), isSaveDialogOpen(false), internetOn(false)
 {
     #ifdef TUP_DEBUG

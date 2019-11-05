@@ -46,8 +46,9 @@ class T_GUI_EXPORT TWorkspaceMainWindow : public TMainWindow
     Q_OBJECT
 
     public:
-        TWorkspaceMainWindow(QWidget *parent = 0);
+        TWorkspaceMainWindow(QWidget *parent = nullptr);
         ~TWorkspaceMainWindow();
+
         void addWidget(QWidget *widget, int perspective = DefaultPerspective);
         void removeWidget(QWidget *widget);
 
