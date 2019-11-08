@@ -72,7 +72,7 @@ class MPSurface : public MyPaintTiledSurface
         QSize size();
 
         void clear();
-        QImage renderImage();
+        QImage renderImage(const QSize canvasSize);
 
         void loadImage(const QImage &image);
 

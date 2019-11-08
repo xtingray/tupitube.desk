@@ -16,12 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with QTMyPaint. If not, see <http://www.gnu.org/licenses/>.
 */
-#include "mphandler.h"
 
+#include "mphandler.h"
 #include "mypaint-brush.h"
 #include "mypaint-surface.h"
-
 #include "libmypaint.c"
+
+#include <QDebug>
 
 #define HAVE_JSON_C
 
@@ -60,8 +61,8 @@ MPHandler * MPHandler::handler()
 
 MPHandler::MPHandler()
 {
-    QSize defaultSize = QSize(  QTMYPAINT_SURFACE_WIDTH,
-                                QTMYPAINT_SURFACE_HEIGHT ) ;
+    QSize defaultSize = QSize(QTMYPAINT_SURFACE_WIDTH,
+                              QTMYPAINT_SURFACE_HEIGHT);
 
     m_brush = new MPBrush();
     m_surface = new MPSurface(defaultSize);
@@ -93,6 +94,7 @@ void MPHandler::hasClearedSurface(MPSurface *surface)
 
 void MPHandler::setSurfaceSize(QSize size)
 {
+    qDebug() << "MPHandler::setSurfaceSize() - Calling MPSurface::setSize() - size: " << size;
     m_surface->setSize(size);
 }
 
@@ -106,9 +108,9 @@ void MPHandler::clearSurface()
     m_surface->clear();
 }
 
-QImage MPHandler::renderImage()
+QImage MPHandler::renderImage(const QSize size)
 {
-    QImage image = m_surface->renderImage();
+    QImage image = m_surface->renderImage(size);
     return image;
 }
 

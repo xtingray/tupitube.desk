@@ -16,8 +16,8 @@
     You should have received a copy of the GNU General Public License
     along with QTMyPaint. If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef MPBRUSHSELECTOR_H
-#define MPBRUSHSELECTOR_H
+#ifndef RASTERBRUSHSELECTOR_H
+#define RASTERBRUSHSELECTOR_H
 
 #include <QTabWidget>
 #include <QMap>
@@ -25,17 +25,17 @@
 
 class QListWidgetItem;
 
-// MPBrushSelector is a TabWidget showing the various brushes (display the small screenshots)
+// RasterBrushSelector is a TabWidget showing the various brushes (display the small screenshots)
 // it allows the user to select it and emit a signal.
 // NOTE : The order is not properly kept as I did not realize the file order.conf
 //        was containing this information. Will be fixed soon.
 //
-class MPBrushSelector : public QTabWidget
+class RasterBrushSelector : public QTabWidget
 {
     Q_OBJECT
 
     public:
-      MPBrushSelector(const QString &brushLibPath, QWidget *parent = nullptr);
+      RasterBrushSelector(const QString &brushLibPath, QWidget *parent = nullptr);
 
       bool isValid() { return !brushLib.isEmpty(); }
 

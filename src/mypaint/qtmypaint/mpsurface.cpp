@@ -18,6 +18,7 @@
 */
 
 #include "mpsurface.h"
+#include <QDebug>
 
 static void freeTiledSurface(MyPaintSurface *surface)
 {
@@ -71,6 +72,9 @@ static void onTileRequestEnd(MyPaintTiledSurface *tiled_surface, MyPaintTileRequ
 
 MPSurface::MPSurface(QSize size)
 {
+    qDebug() << "MPSurface::MPSurface() - size: " << size;
+    qDebug() << "MPSurface::MPSurface() - calling resetSurface()";
+
     // Init callbacks
     this->onUpdateTileFunction = defaultUpdateFonction;
     this->onNewTileFunction = defaultUpdateFonction;
@@ -127,11 +131,15 @@ void MPSurface::setSize(QSize size)
     free(this->tile_buffer);
     free(this->null_tile);
 
+    qDebug() << "MPSurface::setSize() - size: " << size;
     resetSurface(size);
 }
 
 QSize MPSurface::size()
 {
+    qDebug() << "MPSurface::size() - width: " << width;
+    qDebug() << "MPSurface::size() - height: " << height;
+
     return QSize(width, height);
 }
 
@@ -158,14 +166,17 @@ void MPSurface::clear()
     this->onClearedSurfaceFunction(this);
 }
 
-QImage MPSurface::renderImage()
+QImage MPSurface::renderImage(const QSize canvasSize)
 {
-    QPixmap renderedImage = QPixmap(size());
+    qDebug() << "MPSurface::renderImage() - size: " << size();
+    // QPixmap renderedImage = QPixmap(size());
+    QPixmap renderedImage = QPixmap(canvasSize);
     //renderedImage = renderedImage.scaled(size());
     renderedImage.fill(QColor(Qt::transparent));
 
     QGraphicsScene surfaceScene;
-    surfaceScene.setSceneRect(QRect(QPoint(0,0), size()));
+    // surfaceScene.setSceneRect(QRect(QPoint(0,0), size()));
+    surfaceScene.setSceneRect(QRect(QPoint(0,0), canvasSize));
 
     QHashIterator<QPoint, MPTile*> i(m_Tiles);
     while (i.hasNext()) {
@@ -215,6 +226,8 @@ void MPSurface::resetNullTile()
 
 void MPSurface::resetSurface(QSize size)
 {
+    qDebug() << "*** MPSurface::resetSurface() - Updating size: " << size;
+
     width = size.width();
     height = size.height();
 

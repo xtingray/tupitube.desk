@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with QTMyPaint. If not, see <http://www.gnu.org/licenses/>.
 */
-#include "mpbrushselector.h"
+#include "rasterbrushselector.h"
 
 #include <QDir>
 #include <QListWidget>
@@ -26,7 +26,7 @@
 #define BRUSH_LIST        "brushes.conf"
 #define ICON_SZ           64
 
-MPBrushSelector::MPBrushSelector(const QString &brushLibPath, QWidget *parent): QTabWidget(parent), brushesPath(brushLibPath)
+RasterBrushSelector::RasterBrushSelector(const QString &brushLibPath, QWidget *parent): QTabWidget(parent), brushesPath(brushLibPath)
 {
     // First, we parse the "order.conf" file to fill m_brushLib
     QFile fileOrder(brushLibPath + QDir::separator() + BRUSH_LIST);
@@ -93,7 +93,7 @@ MPBrushSelector::MPBrushSelector(const QString &brushLibPath, QWidget *parent): 
     }
 }
 
-void MPBrushSelector::itemClicked(QListWidgetItem *item)
+void RasterBrushSelector::itemClicked(QListWidgetItem *item)
 {
     QListWidget* brushesList = item->listWidget();
     if (brushesList) {
@@ -118,7 +118,7 @@ void MPBrushSelector::itemClicked(QListWidgetItem *item)
     }
 }
 
-void MPBrushSelector::selectBrush (QString brushName)
+void RasterBrushSelector::selectBrush (QString brushName)
 {
     if (!isValid())
         return;

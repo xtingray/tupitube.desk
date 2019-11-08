@@ -33,79 +33,43 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TAPPLICATIONPROPERTIES_H
-#define TAPPLICATIONPROPERTIES_H
+#ifndef RASTERBRUSHESWIDGET_H
+#define RASTERBRUSHESWIDGET_H
 
 #include "tglobal.h"
+#include "tupmodulewidgetbase.h"
+#include "tconfig.h"
+#include "tuppaintareaevent.h"
 
-#include <QString>
-#include <QDir>
-#include <QLocale>
-#include <QApplication>
+#include <QTabWidget>
+#include <QListWidgetItem>
 
-class T_CORE_EXPORT TApplicationProperties
+class TUPITUBE_EXPORT RasterBrushesWidget : public TupModuleWidgetBase
 {
-    protected:
-        TApplicationProperties();
-        virtual ~TApplicationProperties();
+    Q_OBJECT
 
     public:
-        void setHomeDir(const QString &path);
-        void setBinDir(const QString &path);
-        void setShareDir(const QString &path);
-        void setDataDir(const QString &path);
-        void setThemeDir(const QString &path);
-        void setRasterDir(const QString &path);
-        void setPluginDir(const QString &path);
-        void setCacheDir(const QString &path);
-        void setRepositoryDir(const QString &path);
-        void setVersion(const QString &version);
-        void setRevision(const QString &revision);
-        void setCodeName(const QString &code);
+        RasterBrushesWidget(const QString &brushLibPath, QWidget *parent = nullptr);
+        ~RasterBrushesWidget();
 
-        virtual QString homeDir() const;
-        virtual QString binDir() const;
-        virtual QString shareDir() const;
-        virtual QString dataDir() const;
-        virtual QString themeDir() const;
-        virtual QString rasterDir() const;
-        virtual QString pluginDir() const;
-        virtual QString configDir() const;
-        virtual QString cacheDir() const;
-        virtual QString repositoryDir() const;
-        virtual QString version() const;
-        virtual QString revision() const;
-        virtual QString codeName() const;
+        bool isValid() { return !brushLib.isEmpty(); }
 
-        static TApplicationProperties *instance();
-		
+    public slots:
+        // Give the brush name (no extension) i.e. : "classic/blend+paint"
+        void selectBrush(QString brushName = QString());
+
+    signals:
+        void brushSelected(const QByteArray &content);
+
+    protected:
+        QMap<QString, QStringList> brushLib;
+        const QString brushesPath;
+
+    protected slots:
+        void itemClicked(QListWidgetItem *);
+
     private:
-        static TApplicationProperties *s_instance;
-
-        QString homePath;
-        QString binPath;
-        QString sharePath;
-        QString dataPath;
-        QString themePath;
-        QString rasterPath;
-        QString repositoryPath;
-        QString pluginPath;
-        QString versionStr;
-        QString codeNameStr;
-        QString revisionStr;
-        QString cachePath;
+        QTabWidget * tabWidget;
 };
-
-#define kAppProp TApplicationProperties::instance()
-#define HOME_DIR kAppProp->homeDir()
-#define BIN_DIR kAppProp->binDir()
-#define SHARE_DIR kAppProp->shareDir()
-#define DATA_DIR kAppProp->dataDir()
-#define THEME_DIR kAppProp->themeDir()
-#define RASTER_DIR kAppProp->rasterDir()
-#define CONFIG_DIR kAppProp->configDir()
-#define PLUGINS_DIR kAppProp->pluginDir()
-#define CACHE_DIR kAppProp->cacheDir()
-#define REPOSITORY_DIR kAppProp->repositoryDir()
 
 #endif

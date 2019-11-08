@@ -25,15 +25,18 @@
 #include <QPushButton>
 #include <QColorDialog>
 
-#include "mypaintview.h"
-#include "mpbrushselector.h"
+#include "rastercanvas.h"
+#include "rasterbrusheswidget.h"
+#include "rasterbrushselector.h"
 
 class RasterMainWindow : public TMainWindow
 {
     Q_OBJECT
 
     public:
-        explicit RasterMainWindow(const QString &winKey, QWidget *parent = nullptr);
+        enum Perspective { Raster = 0x01 };
+
+        explicit RasterMainWindow(TupProject *project, const QString &winKey, QWidget *parent = nullptr);
         ~RasterMainWindow();
 
          void setTabletDevice(QTabletEvent *event);
@@ -50,8 +53,10 @@ class RasterMainWindow : public TMainWindow
         void resizeEvent(QResizeEvent *event);
 
     private:
-        MypaintView *canvas;
-        MPBrushSelector *brushesSelector;
+        RasterCanvas *rasterCanvas;
+        RasterBrushesWidget *brushesWidget;
+        // RasterBrushSelector *brushesSelector;
+        ToolView *brushesView;
 
         QPushButton *colorBtn;
         QPushButton *clearBtn;

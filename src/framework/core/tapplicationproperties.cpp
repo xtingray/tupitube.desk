@@ -70,6 +70,11 @@ void TApplicationProperties::setThemeDir(const QString &path)
     themePath = path;
 }
 
+void TApplicationProperties::setRasterDir(const QString &path)
+{
+    rasterPath = path;
+}
+
 void TApplicationProperties::setPluginDir(const QString &path)
 {
     pluginPath = path;
@@ -136,6 +141,11 @@ QString TApplicationProperties::themeDir() const
         return sharePath + "/themes/default/";
 
     return themePath;
+}
+
+QString TApplicationProperties::rasterDir() const
+{
+    return rasterPath;
 }
 
 QString TApplicationProperties::pluginDir() const

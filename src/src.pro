@@ -1,9 +1,9 @@
 SUBDIRS += themes \
            framework \
-           mypaint \
            libtupi \
            store \
            libbase \
+           mypaint \
            net \
            libui \
            components \

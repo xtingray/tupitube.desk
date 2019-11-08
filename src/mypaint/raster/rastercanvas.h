@@ -17,28 +17,28 @@
     along with QTMyPaint. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MYPAINTVIEW_H
-#define MYPAINTVIEW_H
+#ifndef RASTERCANVAS_H
+#define RASTERCANVAS_H
 
-#include <QMainWindow>
 #include <QWidget>
 #include <QGraphicsView>
 #include <QMouseEvent>
 #include <QPushButton>
 #include <QColorDialog>
 
+#include "rastercanvasbase.h"
 #include "mphandler.h"
 #include "mpbrush.h"
 #include "mpsurface.h"
 #include "mptile.h"
 
-class MypaintView : public QGraphicsView
+class RasterCanvas : public RasterCanvasBase
 {
     Q_OBJECT
 
     public:
-        MypaintView();
-        ~MypaintView();
+        RasterCanvas(TupProject *project, QWidget *parent = nullptr);
+        ~RasterCanvas();
 
         void setSize(QSize size);
         void setTabletDevice(QTabletEvent *event);
@@ -64,13 +64,18 @@ class MypaintView : public QGraphicsView
         void loadBrush(const QByteArray &content);
 
     private:
+        void centerDrawingArea();
+        // void setCurrentScene(int index);
         void updateCursor(const QTabletEvent *event);
 
+        // TupProject *project;
         QGraphicsScene *gScene;
+        QRectF drawingRect;
+        int globalSceneIndex;
 
         QColor color;
         bool tableInUse;
-        MPHandler *mypaint;
+        MPHandler *myPaintCanvas;
 };
 
 #endif // MYPAINTVIEW_H

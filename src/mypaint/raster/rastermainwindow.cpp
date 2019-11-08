@@ -26,7 +26,7 @@
 #include <QMenu>
 #include <QAction>
 
-RasterMainWindow::RasterMainWindow(const QString &winKey, QWidget *parent): TMainWindow(winKey, parent)
+RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, QWidget *parent): TMainWindow(winKey, parent)
 {
     QAction *exportAction = new QAction(tr("&Export as Image"), this);
     exportAction->setShortcuts(QKeySequence::Open);
@@ -43,9 +43,18 @@ RasterMainWindow::RasterMainWindow(const QString &winKey, QWidget *parent): TMai
     fileMenu->addAction(closeAction);
 
     // Central widget:
-    canvas = new MypaintView();
-    setCentralWidget(canvas);
+    rasterCanvas = new RasterCanvas(project, this);
+    setCentralWidget(rasterCanvas);
 
+    qDebug() << "Brushes Path: " << RASTER_DIR + "brushes";
+    brushesWidget = new RasterBrushesWidget(RASTER_DIR + "brushes");
+    connect(brushesWidget, SIGNAL(brushSelected(const QByteArray&)),
+            rasterCanvas, SLOT(loadBrush(const QByteArray&)));
+
+    brushesView = addToolView(brushesWidget, Qt::LeftDockWidgetArea, Raster, "Brushes", QKeySequence(tr("Shift+B")));
+    // connect(brushesView, SIGNAL(visibilityChanged(bool)), this, SLOT(updatePenPanelStatus(bool)));
+
+    /*
     // Add tools:
     QWidget* toolsWidget = new QWidget();
     QVBoxLayout* toolsLayout = new QVBoxLayout();
@@ -55,57 +64,58 @@ RasterMainWindow::RasterMainWindow(const QString &winKey, QWidget *parent): TMai
     toolsLayout->setSizeConstraint(QLayout::SetFixedSize);
 
     // Open
-    openBtn = new QPushButton("Open");
+    openBtn = new QPushButton(tr("Open"));
     toolsLayout->addWidget(openBtn);
     connect(openBtn, SIGNAL(pressed()), this, SLOT(openProject()));
 
     // Save
-    saveBtn = new QPushButton("Save");
+    saveBtn = new QPushButton(tr("Save"));
     toolsLayout->addWidget(saveBtn);
     connect(saveBtn, SIGNAL(pressed()), this, SLOT(exportProject()));
 
     // Clear
-    clearBtn = new QPushButton("Clear");
+    clearBtn = new QPushButton(tr("Clear"));
     toolsLayout->addWidget(clearBtn);
-    connect(clearBtn, SIGNAL(pressed()), canvas, SLOT(clearCanvas()));
+    connect(clearBtn, SIGNAL(pressed()), rasterCanvas, SLOT(clearCanvas()));
 
     // Color selector
-    colorBtn = new QPushButton("Color Palette");
+    colorBtn = new QPushButton(tr("Color Palette"));
     colorBtn->setMinimumHeight(60);
     colorBtn->setStyleSheet("color: white; background-color: black;");
 
     toolsLayout->addWidget(colorBtn);
 
-    connect(colorBtn, SIGNAL(pressed()), canvas, SLOT(selectColor()));
+    connect(colorBtn, SIGNAL(pressed()), rasterCanvas, SLOT(selectColor()));
 
     toolsWidget->setLayout(toolsLayout);
 
-    QDockWidget* dockTools = new QDockWidget("Tools");
+    QDockWidget* dockTools = new QDockWidget(tr("Tools"));
     dockTools->setWidget(toolsWidget);
 
-    // addDockWidget(Qt::LeftDockWidgetArea, dockTools);
+    addDockWidget(Qt::LeftDockWidgetArea, dockTools);
 
     // Add a docked widget
-    QDockWidget* dockBrush = new QDockWidget("Brush Library");
-    brushesSelector = new MPBrushSelector(":brushes", nullptr);
+    QDockWidget* dockBrush = new QDockWidget(tr("Brush Library"));
+    brushesSelector = new RasterBrushSelector(RASTER_DIR + "brushes", nullptr);
     dockBrush->setWidget(brushesSelector);
-    // addDockWidget(Qt::LeftDockWidgetArea, dockBrush);
+    addDockWidget(Qt::LeftDockWidgetArea, dockBrush);
 
     connect(brushesSelector, SIGNAL(brushSelected(const QByteArray&)),
-            canvas, SLOT(loadBrush(const QByteArray&)));
+            rasterCanvas, SLOT(loadBrush(const QByteArray&)));
+    */
 
     tabletIsActive = false;
 }
 
 RasterMainWindow::~RasterMainWindow()
 {
-    canvas = nullptr;
-    delete canvas;
+    rasterCanvas = nullptr;
+    delete rasterCanvas;
 }
 
 void RasterMainWindow::setTabletDevice(QTabletEvent* event)
 {
-    canvas->setTabletDevice(event);
+    rasterCanvas->setTabletDevice(event);
 }
 
 void RasterMainWindow::openProject()
@@ -117,7 +127,7 @@ void RasterMainWindow::openProject()
     if (filePath.isEmpty())
         return; // false;
 
-    canvas->loadFromFile(filePath);
+    rasterCanvas->loadFromFile(filePath);
 }
 
 void RasterMainWindow::exportProject()
@@ -128,13 +138,13 @@ void RasterMainWindow::exportProject()
     if (filePath.isEmpty())
         return; // false;
 
-    canvas->saveToFile(filePath);
+    rasterCanvas->saveToFile(filePath);
 }
 
 void RasterMainWindow::resizeEvent(QResizeEvent *event)
 {
     Q_UNUSED(event)
-    canvas->setSize(this->centralWidget()->rect().size());
+    rasterCanvas->setSize(this->centralWidget()->rect().size());
 }
 
 void RasterMainWindow::keyPressEvent(QKeyEvent *event)

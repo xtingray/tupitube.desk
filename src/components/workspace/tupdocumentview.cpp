@@ -1272,7 +1272,7 @@ void TupDocumentView::createToolBar()
 
 void TupDocumentView::openRasterMode()
 {
-    rasterWindow = new RasterMainWindow("raster", this);
+    rasterWindow = new RasterMainWindow(project, "raster", this);
     connect(rasterWindow, SIGNAL(closeWindow()), this, SLOT(closeRasterWindow()));
     rasterWindowOn = true;
     rasterWindow->showFullScreen();

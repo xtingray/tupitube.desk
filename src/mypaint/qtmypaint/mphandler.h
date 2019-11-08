@@ -64,7 +64,7 @@ class MPHandler : public QObject
         QSize surfaceSize();
 
         void clearSurface();
-        QImage renderImage();
+        QImage renderImage(const QSize size);
 
         void loadImage(const QImage &image);
 

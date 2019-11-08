@@ -23,45 +23,53 @@
 #include <QCursor>
 
 #include "tapplicationproperties.h"
-#include "mypaintview.h"
-// static MypaintView* s_view = nullptr;
+#include "rastercanvas.h"
 
-MypaintView::MypaintView()
+// static RasterCanvas* s_view = nullptr;
+
+RasterCanvas::RasterCanvas(TupProject *project, QWidget *parent) : RasterCanvasBase(project->getDimension(), parent)
 {
     // assert(s_view == nullptr);
     // s_view = this;
 
+    setBgColor(project->getBgColor());
     tableInUse = false;
 
-    mypaint = MPHandler::handler();
-    mypaint->clearSurface();
+    myPaintCanvas = MPHandler::handler();
+    myPaintCanvas->clearSurface();
 
-    connect(mypaint, SIGNAL(newTile(MPSurface*, MPTile*)), this, SLOT(onNewTile(MPSurface*, MPTile*)));
-    connect(mypaint, SIGNAL(updateTile(MPSurface*, MPTile*)), this, SLOT(onUpdateTile(MPSurface*, MPTile*)));
-    connect(mypaint, SIGNAL(clearedSurface(MPSurface*)), this, SLOT(onClearedSurface(MPSurface*)));
+    connect(myPaintCanvas, SIGNAL(newTile(MPSurface*, MPTile*)), this, SLOT(onNewTile(MPSurface*, MPTile*)));
+    connect(myPaintCanvas, SIGNAL(updateTile(MPSurface*, MPTile*)), this, SLOT(onUpdateTile(MPSurface*, MPTile*)));
+    connect(myPaintCanvas, SIGNAL(clearedSurface(MPSurface*)), this, SLOT(onClearedSurface(MPSurface*)));
 
     // Set scene
+
+    drawingRect = QRectF(QPointF(0, 0), project->getDimension());
     gScene = new QGraphicsScene(this);
-    gScene->setSceneRect(this->rect());
+    gScene->setSceneRect(drawingRect);
     setScene(gScene);
-    setAlignment((Qt::AlignLeft | Qt::AlignTop));
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     QCursor cursor = QCursor(THEME_DIR + "cursors/pencil.png", 0, 11);
     viewport()->setCursor(cursor);
+
+    centerDrawingArea();
 }
 
-MypaintView::~MypaintView()
+RasterCanvas::~RasterCanvas()
 {
 }
 
-void MypaintView::setSize(QSize size)
+void RasterCanvas::centerDrawingArea()
 {
-    mypaint->setSurfaceSize(size);
+    centerOn(drawingRect.center());
 }
 
-void MypaintView::setTabletDevice(QTabletEvent* event)
+void RasterCanvas::setSize(QSize size)
+{
+    myPaintCanvas->setSurfaceSize(size);
+}
+
+void RasterCanvas::setTabletDevice(QTabletEvent* event)
 {
     if (event->type() == QEvent::TabletEnterProximity) {
         tableInUse = true;
@@ -72,29 +80,29 @@ void MypaintView::setTabletDevice(QTabletEvent* event)
     updateCursor(event);
 }
 
-void MypaintView::onNewTile(MPSurface *surface, MPTile *tile)
+void RasterCanvas::onNewTile(MPSurface *surface, MPTile *tile)
 {
     Q_UNUSED(surface)
     gScene->addItem(tile);
 }
 
-void MypaintView::onUpdateTile(MPSurface *surface, MPTile *tile)
+void RasterCanvas::onUpdateTile(MPSurface *surface, MPTile *tile)
 {
     Q_UNUSED(surface)
     tile->update();
 }
 
-void MypaintView::onClearedSurface(MPSurface *surface)
+void RasterCanvas::onClearedSurface(MPSurface *surface)
 {
     Q_UNUSED(surface)
 }
 
-void MypaintView::loadBrush(const QByteArray &content)
+void RasterCanvas::loadBrush(const QByteArray &content)
 {
     MPHandler::handler()->loadBrush(content);
 }
 
-void MypaintView::tabletEvent(QTabletEvent *event)
+void RasterCanvas::tabletEvent(QTabletEvent *event)
 {
     tableInUse = true;
 
@@ -124,13 +132,13 @@ void MypaintView::tabletEvent(QTabletEvent *event)
     }
 }
 
-void MypaintView::mousePressEvent(QMouseEvent *event)
+void RasterCanvas::mousePressEvent(QMouseEvent *event)
 {
     Q_UNUSED(event)
     MPHandler::handler()->startStroke();
 }
 
-void MypaintView::mouseMoveEvent(QMouseEvent *event)
+void RasterCanvas::mouseMoveEvent(QMouseEvent *event)
 {
     Q_UNUSED(event)
 
@@ -140,12 +148,12 @@ void MypaintView::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
-void MypaintView::mouseReleaseEvent(QMouseEvent *event)
+void RasterCanvas::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_UNUSED(event)
 }
 
-void MypaintView::selectColor()
+void RasterCanvas::selectColor()
 {
     QPushButton* button = dynamic_cast<QPushButton*>(sender());
     if (button) {
@@ -160,43 +168,44 @@ void MypaintView::selectColor()
     }
 }
 
-void MypaintView::clearCanvas()
+void RasterCanvas::clearCanvas()
 {
-    mypaint->clearSurface();
+    myPaintCanvas->clearSurface();
 }
 
-void MypaintView::saveToFile(QString filePath)
+void RasterCanvas::saveToFile(QString filePath)
 {
-    QImage image = mypaint->renderImage();
+    QImage image = myPaintCanvas->renderImage(QSize(static_cast<int>(drawingRect.size().width()),
+                                                    static_cast<int>(drawingRect.size().height())));
     image.save(filePath);
 }
 
-void MypaintView::loadFromFile(QString filePath)
+void RasterCanvas::loadFromFile(QString filePath)
 {
     // Clear the surface
-    mypaint->clearSurface();
+    myPaintCanvas->clearSurface();
 
     // Laod the new image
     QImage image = QImage(filePath);
-    mypaint->loadImage(image);
+    myPaintCanvas->loadImage(image);
 }
 
-void MypaintView::updateCursor(const QTabletEvent *event)
+void RasterCanvas::updateCursor(const QTabletEvent *event)
 {
     QCursor cursor;
     if (event->type() != QEvent::TabletLeaveProximity) {
         if (event->pointerType() == QTabletEvent::Eraser) {
-            cursor = QCursor(QPixmap(":/resources/cursor-eraser.png"), 3, 28);
+            cursor = QCursor(QPixmap(RASTER_DIR + "resources/cursor-eraser.png"), 3, 28);
         } else {
             switch (event->device()) {
             case QTabletEvent::Stylus:
-                cursor = QCursor(QPixmap(":/resources/cursor-pencil.png"), 0, 0);
+                cursor = QCursor(QPixmap(RASTER_DIR + "resources/cursor-pencil.png"), 0, 0);
                 break;
             case QTabletEvent::Airbrush:
-                cursor = QCursor(QPixmap(":/resources/cursor-airbrush.png"), 3, 4);
+                cursor = QCursor(QPixmap(RASTER_DIR + "resources/cursor-airbrush.png"), 3, 4);
                 break;
             case QTabletEvent::RotationStylus: {
-                QImage origImg(QLatin1String(":/resources/cursor-felt-marker.png"));
+                QImage origImg(RASTER_DIR + "resources/cursor-felt-marker.png");
                 QImage img(32, 32, QImage::Format_ARGB32);
                 QColor solid = color;
                 solid.setAlpha(255);

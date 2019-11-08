@@ -174,6 +174,7 @@ int main(int argc, char ** argv)
     else
         kAppProp->setThemeDir(kAppProp->shareDir() + "themes/dark/");
 
+    kAppProp->setRasterDir(kAppProp->shareDir() + "themes/raster/");
     // Setting the repository directory (where the projects are saved)
     application.createCache(TCONFIG->value("Cache").toString());
 
