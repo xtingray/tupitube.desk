@@ -7,13 +7,11 @@ TARGET = rastercanvas
 SOURCES = rastermainwindow.cpp \
           rastercanvasbase.cpp \
           rastercanvas.cpp \
-          # rasterbrushselector.cpp \
           rasterbrusheswidget.cpp
 
 HEADERS = rastermainwindow.h \
           rastercanvasbase.h \
           rastercanvas.h \
-          # rasterbrushselector.h \
           rasterbrusheswidget.h
 
 # --- QTMyPaint ---
