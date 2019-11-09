@@ -33,43 +33,36 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPCOLORBUTTONPANEL_H
-#define TUPCOLORBUTTONPANEL_H
+#ifndef RASTERBUTTON_H
+#define RASTERBUTTON_H
 
 #include "tglobal.h"
-#include "tupcolorbutton.h"
+#include "tconfig.h"
+#include "tapplicationproperties.h"
 
-#include <QWidget>
+#include <QPushButton>
 
-class TUPITUBE_EXPORT TupColorButtonPanel : public QWidget
+class TUPITUBE_EXPORT RasterButton : public QPushButton
 {
     Q_OBJECT
 
     public:
-        TupColorButtonPanel(Qt::BrushStyle style, const QSize &baseColorCellSize, int spacing,
-                            const QString &buttonParams, QWidget *parent = nullptr);
-        ~TupColorButtonPanel();
+        RasterButton(int pos, const QString &title);
+        ~RasterButton();
 
-        void resetPanel();
-        void enableTransparentColor(bool flag);
+        void setState(bool isSelected);
+        bool isSelected();
+        int getIndex();
+
+    protected:
+        void mousePressEvent(QMouseEvent *event);
 
     signals:
-        void clickColor(const QColor &color);
-
-    private slots:
-        void updateSelection(int index);
-        void customizeColors();
-        void resetColors();
+        void buttonClicked(int index);
 
     private:
-       void setPanel(const QSize &cellSize, const QString &buttonParams);
-       void setState(int index, bool isSelected);
-
-       QList<TupColorButton *> baseColors;
-       Qt::BrushStyle style;
-       int currentColorIndex;
-       TupColorButton *trans;
-       int spacing;
+        int index;
+        bool selected;
 };
 
 #endif

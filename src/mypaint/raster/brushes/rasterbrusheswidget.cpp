@@ -37,6 +37,7 @@
 
 #include <QLabel>
 #include <QListWidget>
+#include <QGroupBox>
 
 #define BRUSH_CONTENT_EXT ".myb"
 #define BRUSH_PREVIEW_EXT "_prev.png"
@@ -48,7 +49,12 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
     setWindowTitle(tr("Brush Properties"));
     setWindowIcon(QIcon(THEME_DIR + "icons/brush.png"));
 
-    tabWidget = new QTabWidget(this);
+    QGroupBox *groupBox = new QGroupBox();
+    QVBoxLayout *buttonsLayout = new QVBoxLayout(groupBox);
+    buttonsLayout->setMargin(0);
+    buttonsLayout->setSpacing(0);
+
+    stackedWidget = new QStackedWidget(this);
 
     // First, we parse the "order.conf" file to fill m_brushLib
     QFile fileOrder(brushLibPath + QDir::separator() + BRUSH_LIST);
@@ -86,12 +92,14 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
             brushLib.insert(currentGroup, brushesGroup);
 
         // Now we create a QListWidget (displaying icons) for each stringList
+        int index = 0;
         foreach (const QString &caption, brushLib.keys()) {
             const QStringList subList = brushLib.value(caption);
             if (subList.isEmpty())
                 continue; // this should not happen...
 
             QListWidget* brushesList = new QListWidget();
+            brushesList->setWindowTitle(caption);
             brushesList->setUniformItemSizes(true);
             brushesList->setViewMode(QListView::IconMode);
             brushesList->setResizeMode(QListView::Adjust);
@@ -101,8 +109,17 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
             brushesList->setIconSize(QSize(ICON_SZ,ICON_SZ));
             connect(brushesList, SIGNAL(itemClicked(QListWidgetItem*)), SLOT(itemClicked(QListWidgetItem*)));
 
-            // Add this ListWidget to the TabWidget:
-            tabWidget->addTab(brushesList, caption);
+            RasterButton *button = new RasterButton(index, caption);
+            button->setCheckable(true);
+            buttonsList << button;
+            buttonsLayout->addWidget(button);
+            connect(button, SIGNAL(buttonClicked(int)), this, SLOT(updateBrushesPanel(int)));
+            if (index == 0)
+                button->setChecked(true);
+            index++;
+
+            // Add this ListWidget to the QStackedWidget:
+            stackedWidget->addWidget(brushesList);
             // Populate the ListWidget with brushes (and their preview):
             for (int n = 0; n < subList.count(); n++) {
                 QString name(subList[n]);
@@ -116,7 +133,8 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
         // for now, no brush is selected. Expecting some order from owner...
     }
 
-    addChild(tabWidget);
+    addChild(groupBox);
+    addChild(stackedWidget);
 }
 
 RasterBrushesWidget::~RasterBrushesWidget()
@@ -132,12 +150,12 @@ void RasterBrushesWidget::itemClicked(QListWidgetItem *item)
     if (brushesList) {
         QString caption;
         // first of all, we will deselect all other items in other panels :
-        for (int index = 0; index < tabWidget->count(); index++) {
-            QListWidget *list = dynamic_cast<QListWidget*>(tabWidget->widget(index));
+        for (int index = 0; index < stackedWidget->count(); index++) {
+            QListWidget *list = dynamic_cast<QListWidget*>(stackedWidget->widget(index));
             if (list != brushesList)
                 list->clearSelection();
             else
-                caption = tabWidget->tabText(index);
+                caption = stackedWidget->widget(index)->windowTitle();
         }
         // fine, let's read this one and emit the content to any receiver:
         const QStringList subList = brushLib.value(caption);
@@ -159,10 +177,10 @@ void RasterBrushesWidget::selectBrush(QString brushName)
     QListWidget * brushTab = nullptr;
     QListWidgetItem * brushItem = nullptr;
     // We search for the brush requested :
-    for (int page = tabWidget->count()-1; page >= 0 && !brushItem; page--) {
+    for (int page = stackedWidget->count()-1; page >= 0 && !brushItem; page--) {
         // reverse loop so we leave it with first page
-        brushTab = dynamic_cast<QListWidget*>(tabWidget->widget(page));
-        QString caption = tabWidget->tabText(page);
+        brushTab = dynamic_cast<QListWidget*>(stackedWidget->widget(page));
+        QString caption = stackedWidget->widget(page)->windowTitle();
         const QStringList subList = brushLib.value(caption);
         if (!brushName.isEmpty()) {
             for (int idx = 0 ; idx < subList.count() ; idx++) {
@@ -180,8 +198,21 @@ void RasterBrushesWidget::selectBrush(QString brushName)
 
     // Update GUI + load the brush (if any)
     if (brushItem){
-        tabWidget->setCurrentWidget(brushTab);
+        stackedWidget->setCurrentWidget(brushTab);
         brushTab->setCurrentItem(brushItem);
         itemClicked(brushItem);
+    }
+}
+
+void RasterBrushesWidget::updateBrushesPanel(int index)
+{
+    if (stackedWidget->currentIndex() != index) {
+        stackedWidget->setCurrentIndex(index);
+        foreach(RasterButton *button, buttonsList) {
+            if (button->getIndex() != index) {
+                button->setState(false);
+                button->setChecked(false);
+            }
+        }
     }
 }

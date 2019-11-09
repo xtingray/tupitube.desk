@@ -40,8 +40,9 @@
 #include "tupmodulewidgetbase.h"
 #include "tconfig.h"
 #include "tuppaintareaevent.h"
+#include "rasterbutton.h"
 
-#include <QTabWidget>
+#include <QStackedWidget>
 #include <QListWidgetItem>
 
 class TUPITUBE_EXPORT RasterBrushesWidget : public TupModuleWidgetBase
@@ -57,6 +58,7 @@ class TUPITUBE_EXPORT RasterBrushesWidget : public TupModuleWidgetBase
     public slots:
         // Give the brush name (no extension) i.e. : "classic/blend+paint"
         void selectBrush(QString brushName = QString());
+        void updateBrushesPanel(int index);
 
     signals:
         void brushSelected(const QByteArray &content);
@@ -69,7 +71,8 @@ class TUPITUBE_EXPORT RasterBrushesWidget : public TupModuleWidgetBase
         void itemClicked(QListWidgetItem *);
 
     private:
-        QTabWidget * tabWidget;
+        QStackedWidget * stackedWidget;
+        QList<RasterButton *> buttonsList;
 };
 
 #endif

@@ -27,7 +27,7 @@
 
 #include "rastercanvas.h"
 #include "rasterbrusheswidget.h"
-#include "rasterbrushselector.h"
+// #include "rasterbrushselector.h"
 
 class RasterMainWindow : public TMainWindow
 {

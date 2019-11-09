@@ -33,118 +33,40 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "tupcolorbutton.h"
+#include "rasterbutton.h"
 
 #include <QPainter>
 #include <QDebug>
 
-TupColorButton::TupColorButton(int colorIndex, const QString &name, const QBrush &colorBrush,
-                               const QSize &dimension, const QString &params)
+RasterButton::RasterButton(int pos, const QString &title): selected(false)
 {
-    index = colorIndex;
-    editable = true;
-    selected = false;
-    brush = colorBrush;
-    size = dimension;
-
-    TCONFIG->beginGroup("General");
-    themeName = TCONFIG->value("Theme", "Light").toString();
-
-    setToolTip(name);
-
-    QStringList values = params.split(",");
-    border1 = values.at(0).toInt();
-    border2 = values.at(1).toInt();
-    border3 = values.at(2).toInt();
-
-    setFixedSize(size);
+    index = pos;
+    setText(title);
 }
 
-TupColorButton::~TupColorButton()
+RasterButton::~RasterButton()
 {
 }
 
-QSize TupColorButton::sizeHint() const
+void RasterButton::mousePressEvent(QMouseEvent *event)
 {
-    return size;
-}
-
-void TupColorButton::paintEvent(QPaintEvent *event)
-{
-    Q_UNUSED(event)
-
-    QPainter painter(this);
-    painter.fillRect(rect(), brush);
-
-    QRect border = rect();
-    if (selected && editable) {
-        QColor borderColor1 = QColor(200, 200, 200);
-        QColor borderColor2 = QColor(190, 190, 190);
-        QColor borderColor3 = QColor(150, 150, 150);
-        if (themeName.compare("Dark") == 0) {
-            borderColor1 = QColor(120, 120, 120);
-            borderColor2 = QColor(110, 110, 110);
-            borderColor3 = QColor(70, 70, 70);
-        }
-
-        painter.setPen(QPen(borderColor1, border1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        painter.drawRect(border);
-        painter.setPen(QPen(borderColor2, border2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        painter.drawRect(border);
-        painter.setPen(QPen(borderColor3, border3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        painter.drawRect(border);
-    } else {
-        if (brush.color() == Qt::transparent)
-            painter.setPen(QPen(QColor(30, 30, 30), border3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        else
-            painter.setPen(QPen(QColor(190, 190, 190), border3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        painter.drawRect(border);
-    }
-}
-
-void TupColorButton::mousePressEvent(QMouseEvent *event)
-{
-    Q_UNUSED(event)
-
-    emit clicked(index);
+    emit buttonClicked(index);
     setState(true);
+
+    QPushButton::mousePressEvent(event);
 }
 
-void TupColorButton::mouseDoubleClickEvent(QMouseEvent *event)
-{
-    Q_UNUSED(event)
-
-    emit doubledClicked(index);
-}
-
-QColor TupColorButton::color()
-{
-    return brush.color();
-}
-
-void TupColorButton::setState(bool isSelected)
+void RasterButton::setState(bool isSelected)
 {
     selected = isSelected;
-    update();
 }
 
-bool TupColorButton::isSelected()
+bool RasterButton::isSelected()
 {
     return selected;
 }
 
-void TupColorButton::setBrush(const QBrush &cBrush)
-{
-    brush = cBrush;
-    update();
-}
-
-void TupColorButton::setEditable(bool flag)
-{
-    editable = flag;
-}
-
-int TupColorButton::getIndex()
+int RasterButton::getIndex()
 {
     return index;
 }

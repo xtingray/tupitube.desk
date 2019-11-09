@@ -136,19 +136,13 @@ TupColorButtonPanel::~TupColorButtonPanel()
 
 void TupColorButtonPanel::updateSelection(int index)
 {
-    /*
-    tError() << "updateSelection() - index: " << index;
-    tError() << "updateSelection() - currentColorIndex: " << currentColorIndex;
-    tError() << "baseColor.size(): " << baseColors.count();
-    */
-
     if (index != currentColorIndex) {
         if (currentColorIndex >= 0) {
-            TupColorButton *button = (TupColorButton *) baseColors.at(currentColorIndex);
+            TupColorButton *button = static_cast<TupColorButton *> (baseColors.at(currentColorIndex));
             button->setState(false);
         }
 
-        TupColorButton *selection = (TupColorButton *) baseColors.at(index);
+        TupColorButton *selection = static_cast<TupColorButton *> (baseColors.at(index));
         QColor color = selection->color();
         currentColorIndex = index;
 
@@ -159,7 +153,7 @@ void TupColorButtonPanel::updateSelection(int index)
 void TupColorButtonPanel::setState(int index, bool isSelected)
 {
     if (index != currentColorIndex && currentColorIndex >= 0) {
-        TupColorButton *button = (TupColorButton *) baseColors.at(currentColorIndex);
+        TupColorButton *button = static_cast<TupColorButton *> (baseColors.at(currentColorIndex));
         button->setState(isSelected);
     }
 }
@@ -167,7 +161,7 @@ void TupColorButtonPanel::setState(int index, bool isSelected)
 void TupColorButtonPanel::resetPanel()
 {
     if (currentColorIndex >= 0) {
-        TupColorButton *button = (TupColorButton *) baseColors.at(currentColorIndex);
+        TupColorButton *button = static_cast<TupColorButton *> (baseColors.at(currentColorIndex));
         button->setState(false);
         currentColorIndex = -1;
     }
@@ -187,7 +181,7 @@ void TupColorButtonPanel::customizeColors()
         button->setState(true);
         currentColorIndex = 0;
     } else {
-        button = (TupColorButton *) baseColors.at(currentColorIndex);
+        button = static_cast<TupColorButton *> (baseColors.at(currentColorIndex));
     }
 
     QColor color = QColorDialog::getColor(button->color(), this);
