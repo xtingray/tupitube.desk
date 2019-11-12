@@ -51,7 +51,6 @@ class TUPITUBE_EXPORT RasterCanvasBase : public QGraphicsView
         RasterCanvasBase(QSize dimension, QWidget *parent = nullptr /* , TupLibrary *library = nullptr */);
         ~RasterCanvasBase();
 
-        void setBgColor(const QColor color);
         void setAntialiasing(bool use);
         void drawGrid(bool draw);
         void drawActionSafeArea(bool draw);
@@ -103,6 +102,7 @@ class TUPITUBE_EXPORT RasterCanvasBase : public QGraphicsView
         void updateAngle(int angle);
 
     public slots:
+        void setBgColor(const QColor color);
         void centerDrawingArea();
 
     protected:

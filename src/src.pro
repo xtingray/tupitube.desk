@@ -3,6 +3,7 @@ SUBDIRS += themes \
            libtupi \
            store \
            libbase \
+           libcolor \
            mypaint \
            net \
            libui \

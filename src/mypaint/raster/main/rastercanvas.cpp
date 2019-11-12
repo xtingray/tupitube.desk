@@ -27,7 +27,8 @@
 
 // static RasterCanvas* s_view = nullptr;
 
-RasterCanvas::RasterCanvas(TupProject *project, QWidget *parent) : RasterCanvasBase(project->getDimension(), parent)
+RasterCanvas::RasterCanvas(TupProject *project, const QColor contourColor, QWidget *parent):
+                           RasterCanvasBase(project->getDimension(), parent)
 {
     // assert(s_view == nullptr);
     // s_view = this;
@@ -36,6 +37,7 @@ RasterCanvas::RasterCanvas(TupProject *project, QWidget *parent) : RasterCanvasB
     tableInUse = false;
 
     myPaintCanvas = MPHandler::handler();
+    myPaintCanvas->setBrushColor(contourColor);
     myPaintCanvas->clearSurface();
 
     connect(myPaintCanvas, SIGNAL(newTile(MPSurface*, MPTile*)), this, SLOT(onNewTile(MPSurface*, MPTile*)));
@@ -153,6 +155,7 @@ void RasterCanvas::mouseReleaseEvent(QMouseEvent *event)
     Q_UNUSED(event)
 }
 
+/*
 void RasterCanvas::selectColor()
 {
     QPushButton* button = dynamic_cast<QPushButton*>(sender());
@@ -166,6 +169,13 @@ void RasterCanvas::selectColor()
             mypaint->setBrushColor(newColor);
         }
     }
+}
+*/
+
+void RasterCanvas::updateBrushColor(const QColor color)
+{
+    MPHandler *mypaint = MPHandler::handler();
+    mypaint->setBrushColor(color);
 }
 
 void RasterCanvas::clearCanvas()

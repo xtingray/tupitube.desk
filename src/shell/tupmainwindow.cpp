@@ -255,6 +255,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         connectWidgetToManager(animationTab);
         connectWidgetToLocalManager(animationTab);
+        connectWidgetToPaintArea(animationTab);
         connect(animationTab, SIGNAL(modeHasChanged(TupProject::Mode)), this, SLOT(restoreFramesMode(TupProject::Mode)));
         connect(animationTab, SIGNAL(colorChangedFromFullScreen(const QColor &)), this, SLOT(updatePenColor(const QColor &)));
         connect(animationTab, SIGNAL(projectSizeHasChanged(const QSize)), this, SLOT(resizeProjectDimension(const QSize))); 

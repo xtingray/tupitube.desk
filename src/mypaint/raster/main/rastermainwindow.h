@@ -16,18 +16,19 @@
     You should have received a copy of the GNU General Public License
     along with QTMyPaint. If not, see <http://www.gnu.org/licenses/>.
 */
+
 #ifndef RASTERMAINWINDOW_H
 #define RASTERMAINWINDOW_H
 
 #include "tmainwindow.h"
-// #include <QMainWindow>
+#include "rastercanvas.h"
+#include "rasterbrusheswidget.h"
+#include "rastercolorwidget.h"
+
 #include <QDockWidget>
 #include <QPushButton>
 #include <QColorDialog>
-
-#include "rastercanvas.h"
-#include "rasterbrusheswidget.h"
-// #include "rasterbrushselector.h"
+#include <QCloseEvent>
 
 class RasterMainWindow : public TMainWindow
 {
@@ -36,7 +37,8 @@ class RasterMainWindow : public TMainWindow
     public:
         enum Perspective { Raster = 0x01 };
 
-        explicit RasterMainWindow(TupProject *project, const QString &winKey, QWidget *parent = nullptr);
+        explicit RasterMainWindow(TupProject *project, const QString &winKey, const QColor contourColor,
+                                  QWidget *parent = nullptr);
         ~RasterMainWindow();
 
          void setTabletDevice(QTabletEvent *event);
@@ -46,17 +48,20 @@ class RasterMainWindow : public TMainWindow
         void exportProject();
 
     signals:
+         void paintAreaEventTriggered(const TupPaintAreaEvent *event);
          void closeWindow();
 
     protected:
+        void closeEvent(QCloseEvent *event);
         void keyPressEvent(QKeyEvent *event);
         void resizeEvent(QResizeEvent *event);
 
     private:
         RasterCanvas *rasterCanvas;
         RasterBrushesWidget *brushesWidget;
-        // RasterBrushSelector *brushesSelector;
+        RasterColorWidget *colorWidget;
         ToolView *brushesView;
+        ToolView *colorView;
 
         QPushButton *colorBtn;
         QPushButton *clearBtn;

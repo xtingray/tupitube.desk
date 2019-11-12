@@ -2370,9 +2370,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.0000001"
-     inkscape:cx="201.09211"
-     inkscape:cy="1156.7876"
+     inkscape:zoom="4"
+     inkscape:cx="608.53921"
+     inkscape:cy="405.08645"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -2382,7 +2382,8 @@
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      showguides="true"
-     inkscape:guide-bbox="true" />
+     inkscape:guide-bbox="true"
+     inkscape:snap-global="false" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -13032,12 +13033,12 @@
     <image
        sodipodi:absref="/home/xtingray/tupitube/sources/tupitube.artist/src/themes/dark/icons/papagayo.png"
        xlink:href="papagayo.png"
-       y="385.30121"
-       x="1280.6161"
-       id="image6110"
-       preserveAspectRatio="none"
+       width="2.7678113"
        height="2.1219888"
-       width="2.7678113" />
+       preserveAspectRatio="none"
+       id="image6110"
+       x="1280.6161"
+       y="385.30121" />
     <path
        style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 165.0619,599.82791 c -0.24306,0.0103 -0.49697,0.12871 -0.75304,0.3982 -0.60541,-0.62825 -2.60536,-0.60947 -3.05541,1.11526 -1.25802,-0.60253 -3.29706,-1.00586 -4.48697,0.68365 -1.401,2.26453 -0.17627,5.22041 0.58701,5.89142 0.97111,-1.4519 2.15093,-0.91186 2.94627,-0.38359 -0.31165,0.78837 -1.24258,0.56068 -1.24258,0.56068 -0.36415,1.29854 1.60078,2.433 2.53299,2.72387 0.10928,1.03834 -0.1111,2.19383 -0.94666,2.95096 0.71595,0.11689 1.71752,-0.0943 2.2577,-0.32883 0.44538,0.30931 0.78092,0.43117 1.22631,0.74049 l 0.15536,-0.76224 c 0.796,0.10948 1.61393,0.24236 2.1902,0.84392 0.72319,-0.29291 0.91716,-1.04277 0.91716,-1.04277 0.38008,0.71172 1.44129,1.04849 2.39266,0.65881 -0.83431,-0.8275 -1.31708,-1.9831 -0.89895,-2.90434 0.35217,0.0663 0.61647,0.10911 0.83679,0.0583 l 0.20125,-0.32935 c 0.58068,0.27986 1.43599,0.0677 1.70905,-0.32042 l -0.20126,-0.24504 c 0.76984,0.0813 1.48477,-0.43484 1.68332,-1.05649 l -0.34714,-0.36856 c 0.43503,0.29827 1.21221,-0.73242 0.99434,-1.59075 -0.44287,0.20689 -0.80884,0.60125 -1.46046,0.19885 l -2.76554,-3.14838 c 1.81522,0.0249 1.14756,-1.61418 0.96329,-2.38612 l -0.65255,0.99422 c -0.0784,0.15629 -0.81362,0.11775 -1.33617,-0.26512 -0.54393,-0.4613 -1.37348,-1.8365 -2.09321,-1.64163 -0.33677,-0.5671 -0.819,-1.06768 -1.35376,-1.04497 z m -1.29658,1.81355 a 1.3026003,1.8916609 8.0364092 0 1 0.21946,0.0111 1.3026003,1.8916609 8.0364092 0 1 0.99216,2.08708 l -0.002,0.0167 a 1.3026003,1.8916609 8.0364092 0 1 -1.57977,1.63256 1.3026003,1.8916609 8.0364092 0 1 -0.98512,-2.09445 1.3026003,1.8916609 8.0364092 0 1 1.35593,-1.65277 z"
@@ -14271,5 +14272,46 @@
        inkscape:export-xdpi="66.199997"
        inkscape:export-ydpi="66.199997"
        sodipodi:nodetypes="cc" />
+    <g
+       id="g6946"
+       inkscape:export-xdpi="151.66"
+       inkscape:export-ydpi="151.66">
+      <path
+         inkscape:export-ydpi="106.16"
+         inkscape:export-xdpi="106.16"
+         inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/brush.png"
+         sodipodi:nodetypes="ccccccccc"
+         inkscape:connector-curvature="0"
+         id="path4350-9-4"
+         d="m 547.65225,636.95291 -10.14991,7.14222 7.03385,5.5264 10.2202,-11.60574 -2.56593,-0.25667 -7.89711,8.8094 -2.70542,-1.62784 8.8757,-7.03085 z"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:12.08922291" />
+      <path
+         inkscape:export-ydpi="106.16"
+         inkscape:export-xdpi="106.16"
+         inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/brush.png"
+         sodipodi:nodetypes="ccccczc"
+         inkscape:connector-curvature="0"
+         id="path4352-2-8"
+         d="m 544.65015,649.84787 c -0.29836,-0.9075 -2.78106,-3.19686 -5.15713,-4.95427 -5.42803,-3.84295 -6.45934,2.14686 -8.15032,4.01078 -2.37735,2.12362 -6.03235,-6.00304 -8.23524,-7.4462 0.80786,2.33022 0.41033,7.00845 2.03485,8.7887 2.79281,5.35171 9.23451,9.41252 12.84229,8.75532 3.60783,-0.65724 7.96697,-4.59564 6.66542,-9.15414 z"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:12.08922291" />
+      <path
+         inkscape:export-ydpi="106.16"
+         inkscape:export-xdpi="106.16"
+         inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/brush.png"
+         sodipodi:nodetypes="cccscsc"
+         inkscape:connector-curvature="0"
+         id="path4354-3-9"
+         d="m 530.89947,652.6856 c 4.26983,3.71295 5.43827,-0.75459 5.17207,-4.04315 1.28379,-2.7497 9.19489,1.92946 6.37179,5.90398 -0.39605,1.25779 -3.3806,2.24979 -5.58157,2.18674 -0.55031,-0.0155 3.852,-0.30386 3.43645,-4.09977 -1.50483,2.91531 -4.84833,4.34613 -6.74526,3.13436 -1.03738,-0.66269 -1.98986,-1.6394 -2.65355,-3.08213 z"
+         style="fill:#ffffff;fill-opacity:0.47058824;stroke:none;stroke-width:12.08922291" />
+      <path
+         inkscape:export-ydpi="106.16"
+         inkscape:export-xdpi="106.16"
+         inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/brush.png"
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path4364-6-6"
+         d="m 542.82214,641.96793 c 1.12749,1.20033 3.35342,2.34329 4.89957,2.34459"
+         style="fill:none;stroke:#000000;stroke-width:1.22408092;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
   </g>
 </svg>

@@ -37,7 +37,7 @@ class RasterCanvas : public RasterCanvasBase
     Q_OBJECT
 
     public:
-        RasterCanvas(TupProject *project, QWidget *parent = nullptr);
+        RasterCanvas(TupProject *project, const QColor contourColor, QWidget *parent = nullptr);
         ~RasterCanvas();
 
         void setSize(QSize size);
@@ -54,7 +54,8 @@ class RasterCanvas : public RasterCanvasBase
 
     public slots:
         //  void BrushSelected(const QByteArray& content);
-        void selectColor();
+        // void selectColor();
+        void updateBrushColor(const QColor color);
         void clearCanvas();
 
         void onNewTile(MPSurface *surface, MPTile *tile);

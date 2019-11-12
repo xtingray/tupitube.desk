@@ -79,6 +79,9 @@ INCLUDEPATH += $$POLYLINE_DIR
 FRAMEWORK_DIR = "../../framework"
 include($$FRAMEWORK_DIR/framework.pri)
 
+LIBCOLOR_DIR = "../../libcolor"
+include($$LIBCOLOR_DIR/libcolor.pri)
+
 MYPAINT_DIR = "../../mypaint"
 include($$MYPAINT_DIR/mypaint.pri)
 

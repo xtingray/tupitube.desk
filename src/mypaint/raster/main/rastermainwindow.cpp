@@ -26,7 +26,8 @@
 #include <QMenu>
 #include <QAction>
 
-RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, QWidget *parent): TMainWindow(winKey, parent)
+RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, const QColor contourColor,
+                                   QWidget *parent): TMainWindow(winKey, parent)
 {
     QAction *exportAction = new QAction(tr("&Export as Image"), this);
     exportAction->setShortcuts(QKeySequence::Open);
@@ -43,16 +44,22 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, Q
     fileMenu->addAction(closeAction);
 
     // Central widget:
-    rasterCanvas = new RasterCanvas(project, this);
+    rasterCanvas = new RasterCanvas(project, contourColor, this);
     setCentralWidget(rasterCanvas);
 
-    qDebug() << "Brushes Path: " << RASTER_DIR + "brushes";
+    colorWidget = new RasterColorWidget(contourColor, project->getBgColor(), this);
+    connect(colorWidget, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
+            this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
+
+    colorView = addToolView(colorWidget, Qt::LeftDockWidgetArea, Raster, "Brush Color", QKeySequence(tr("Shift+C")));
+
     brushesWidget = new RasterBrushesWidget(RASTER_DIR + "brushes");
     connect(brushesWidget, SIGNAL(brushSelected(const QByteArray&)),
             rasterCanvas, SLOT(loadBrush(const QByteArray&)));
 
     brushesView = addToolView(brushesWidget, Qt::LeftDockWidgetArea, Raster, "Brushes", QKeySequence(tr("Shift+B")));
-    // connect(brushesView, SIGNAL(visibilityChanged(bool)), this, SLOT(updatePenPanelStatus(bool)));
+
+    brushesView->expandDock(true);
 
     /*
     // Add tools:
@@ -109,8 +116,32 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, Q
 
 RasterMainWindow::~RasterMainWindow()
 {
+    colorView = nullptr;
+    delete colorView;
+
+    brushesView = nullptr;
+    delete brushesView;
+
+    colorWidget = nullptr;
+    delete colorWidget;
+
+    brushesWidget = nullptr;
+    delete brushesWidget;
+
     rasterCanvas = nullptr;
     delete rasterCanvas;
+}
+
+void RasterMainWindow::closeEvent(QCloseEvent *event)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "RasterMainWindow::closeEvent(QCloseEvent)";
+    #endif
+
+    colorView->expandDock(false);
+    brushesView->expandDock(false);
+
+    TMainWindow::closeEvent(event);
 }
 
 void RasterMainWindow::setTabletDevice(QTabletEvent* event)

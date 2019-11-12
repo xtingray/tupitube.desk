@@ -171,6 +171,7 @@ class TUPITUBE_EXPORT TupDocumentView: public QMainWindow
     signals:
         void requestTriggered(const TupProjectRequest *event);
         void localRequestTriggered(const TupProjectRequest *event);
+        void paintAreaEventTriggered(const TupPaintAreaEvent *event);
         void autoSave();
         void modeHasChanged(TupProject::Mode mode);
         void requestExportImageToServer(int frameIndex, int sceneIndex, const QString &title, const QString &topics, const QString &description);
@@ -275,6 +276,7 @@ class TUPITUBE_EXPORT TupDocumentView: public QMainWindow
         DockType currentDock;
         bool cameraMode;
         TColorCell::FillType colorSpace;
+        QColor contourColor;
 };
 
 #endif

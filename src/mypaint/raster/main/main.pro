@@ -23,10 +23,16 @@ INCLUDEPATH += ../../qtmypaint
 INCLUDEPATH += ../brushes
 LIBS += -L../brushes -lrasterbrushes
 
+INCLUDEPATH += ../color
+LIBS += -L../color -lrastercolor
+
 # DEPENDPATH += ../../qtmypaint
 
 FRAMEWORK_DIR = "../../../framework"
 include($$FRAMEWORK_DIR/framework.pri)
+
+LIBCOLOR_DIR = "../../../libcolor"
+include($$LIBCOLOR_DIR/libcolor.pri)
 
 unix {
     INSTALLS += target

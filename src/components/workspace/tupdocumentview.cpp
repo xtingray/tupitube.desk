@@ -88,6 +88,7 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     dynamicFlag = false;
     staticFlag = false;
     colorSpace = TColorCell::Contour;
+    contourColor = Qt::black;
     currentDock = ExposureSheet;
 
     cameraMode = false;
@@ -1272,8 +1273,11 @@ void TupDocumentView::createToolBar()
 
 void TupDocumentView::openRasterMode()
 {
-    rasterWindow = new RasterMainWindow(project, "raster", this);
+    rasterWindow = new RasterMainWindow(project, "raster", contourColor, this);
     connect(rasterWindow, SIGNAL(closeWindow()), this, SLOT(closeRasterWindow()));
+    connect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
+            this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
+
     rasterWindowOn = true;
     rasterWindow->showFullScreen();
 }
@@ -1282,6 +1286,8 @@ void TupDocumentView::closeRasterWindow()
 {
     if (rasterWindowOn) {
         disconnect(rasterWindow, SIGNAL(closeWindow()), this, SLOT(closeRasterWindow()));
+        disconnect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
+                   this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
         rasterWindow->close();
         rasterWindowOn = false;
         rasterWindow = nullptr;
@@ -2224,6 +2230,7 @@ void TupDocumentView::updateWorkspace()
 void TupDocumentView::updatePen(const QPen &pen)
 {
     status->setPen(pen);
+    contourColor = pen.color();
     emit contourColorChanged(pen.color());
 }
 

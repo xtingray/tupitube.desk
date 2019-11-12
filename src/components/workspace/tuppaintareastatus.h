@@ -51,7 +51,7 @@ class TUPITUBE_EXPORT TupPaintAreaStatus : public QStatusBar
     Q_OBJECT
 
     public:
-        TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent = 0);
+        TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent = nullptr);
         ~TupPaintAreaStatus();
 
         void updateTool(const QString &label, const QPixmap &pixmap);
