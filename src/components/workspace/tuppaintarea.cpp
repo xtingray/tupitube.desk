@@ -1241,20 +1241,9 @@ void TupPaintArea::setOnionFactor(double value)
 void TupPaintArea::keyPressEvent(QKeyEvent *event)
 {
     #ifdef TUP_DEBUG
-        QString msg1 = "TupPaintArea::keyPressEvent() - Current tool: " + currentTool;
-        QString msg2 = "TupPaintArea::keyPressEvent() - Key: " + QString::number(event->key());
-        QString msg3 = "TupPaintArea::keyPressEvent() - Key: " + event->text(); 
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea::keyPressEvent()]";
-            qDebug() << msg1;
-            qDebug() << msg2;
-            qDebug() << msg3;
-        #else
-            T_FUNCINFO;
-            tDebug() << msg1;
-            tDebug() << msg2;
-            tDebug() << msg3;
-        #endif
+        qDebug() << "TupPaintArea::keyPressEvent() - Current tool: " + currentTool;
+        qDebug() << "TupPaintArea::keyPressEvent() - Key: " + QString::number(event->key());
+        qDebug() << "TupPaintArea::keyPressEvent() - Key: " + event->text();
     #endif
 
     if (event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Delete) {

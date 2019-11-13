@@ -46,7 +46,11 @@ HEADERS += tupgraphicalgorithm.h \
            tupxmlparserbase.h \
            tupproxyitem.h \
            # tupinthash.h \
-           tuppenthicknesswidget.h
+           tuppenthicknesswidget.h \
+           tupbrushstatus.h \
+           tuptoolstatus.h \ 
+           tupcolorwidget.h \
+           tuppaintareastatus.h
 
 SOURCES += tupgraphicalgorithm.cpp \
            tuppaintareaproperties.cpp \
@@ -63,7 +67,11 @@ SOURCES += tupgraphicalgorithm.cpp \
            tupsocketbase.cpp \
            tupxmlparserbase.cpp \
            tupproxyitem.cpp \
-           tuppenthicknesswidget.cpp
+           tuppenthicknesswidget.cpp \
+           tupbrushstatus.cpp \
+           tuptoolstatus.cpp \
+           tupcolorwidget.cpp \
+           tuppaintareastatus.cpp
 
 FRAMEWORK_DIR = "../framework"
 include($$FRAMEWORK_DIR/framework.pri)

@@ -46,6 +46,7 @@ class RasterMainWindow : public TMainWindow
     public slots:
         void openProject();
         void exportProject();
+        void processColorEvent(const TupPaintAreaEvent *);
 
     signals:
          void paintAreaEventTriggered(const TupPaintAreaEvent *event);

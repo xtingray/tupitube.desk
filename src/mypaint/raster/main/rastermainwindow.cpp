@@ -50,6 +50,8 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, c
     colorWidget = new RasterColorWidget(contourColor, project->getBgColor(), this);
     connect(colorWidget, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
             this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
+    connect(colorWidget, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
+            this, SLOT(processColorEvent(const TupPaintAreaEvent *)));
 
     colorView = addToolView(colorWidget, Qt::LeftDockWidgetArea, Raster, "Brush Color", QKeySequence(tr("Shift+C")));
 
@@ -142,6 +144,16 @@ void RasterMainWindow::closeEvent(QCloseEvent *event)
     brushesView->expandDock(false);
 
     TMainWindow::closeEvent(event);
+}
+
+void RasterMainWindow::processColorEvent(const TupPaintAreaEvent *event)
+{
+    QColor color = qvariant_cast<QColor>(event->getData());
+    if (event->getAction() == TupPaintAreaEvent::ChangePenColor) {
+        rasterCanvas->updateBrushColor(color);
+    } else if (event->getAction() == TupPaintAreaEvent::ChangeBgColor) {
+        rasterCanvas->setBgColor(color);
+    }
 }
 
 void RasterMainWindow::setTabletDevice(QTabletEvent* event)

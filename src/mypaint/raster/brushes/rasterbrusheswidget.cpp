@@ -78,7 +78,8 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
                 if (!currentGroup.isEmpty() && !brushesGroup.isEmpty())
                     brushLib.insert(currentGroup, brushesGroup);
                 // Now, we prepare to get the brushes for this new group:
-                currentGroup = line.section(':',1).trimmed(); // Get the name after the first ':' separator
+                currentGroup = line.section(':', 1).trimmed(); // Get the name after the first ':' separato
+
                 brushesGroup.clear();
                 continue;
             }
@@ -106,7 +107,7 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
             brushesList->setMovement(QListView::Static);
             brushesList->setFlow(QListView::LeftToRight);
             brushesList->setSelectionMode(QAbstractItemView::SingleSelection);
-            brushesList->setIconSize(QSize(ICON_SZ,ICON_SZ));
+            brushesList->setIconSize(QSize(ICON_SZ, ICON_SZ));
             connect(brushesList, SIGNAL(itemClicked(QListWidgetItem*)), SLOT(itemClicked(QListWidgetItem*)));
 
             RasterButton *button = new RasterButton(index, caption);

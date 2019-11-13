@@ -205,7 +205,7 @@ void TupPaintAreaStatus::applyZoom(const QString &text)
             input = list.at(0).toInt();
     }
 
-    qreal factor = (qreal)input / (qreal)scaleFactor;
+    qreal factor = static_cast<qreal>(input) / static_cast<qreal>(scaleFactor);
     scaleFactor = input;
 
     emit zoomChanged(factor);

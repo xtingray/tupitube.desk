@@ -156,6 +156,23 @@ void RasterCanvas::mouseReleaseEvent(QMouseEvent *event)
 }
 
 /*
+if (event->key() == Qt::Key_Plus) {
+    if (event->modifiers() == Qt::NoModifier) {
+        emit zoomIn();
+        return;
+    }
+}
+
+if (event->key() == Qt::Key_Minus) {
+    if (event->modifiers() == Qt::NoModifier) {
+        emit zoomOut();
+        return;
+    }
+}
+*/
+
+
+/*
 void RasterCanvas::selectColor()
 {
     QPushButton* button = dynamic_cast<QPushButton*>(sender());

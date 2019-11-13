@@ -11,13 +11,9 @@ CONFIG += dll warn_on
 HEADERS += tuppaintarea.h \
            tupconfigurationarea.h \
            tupdocumentview.h \
-           tuppaintareastatus.h \
            tupimagedevice.h \
            tuppaintareacommand.h \
            tuplibrarydialog.h \
-           tupcolorwidget.h \
-           tupbrushstatus.h \
-           tuptoolstatus.h \
            tupcanvas.h \
            tupcanvasview.h \
            tupimagedialog.h \
@@ -39,13 +35,9 @@ HEADERS += tuppaintarea.h \
 SOURCES += tuppaintarea.cpp \
            tupconfigurationarea.cpp \
            tupdocumentview.cpp \
-           tuppaintareastatus.cpp \
            tupimagedevice.cpp \
            tuppaintareacommand.cpp \
            tuplibrarydialog.cpp \
-           tupcolorwidget.cpp \
-           tupbrushstatus.cpp \
-           tuptoolstatus.cpp \
            tupcanvas.cpp \
            tupcanvasview.cpp \
            tupimagedialog.cpp \
