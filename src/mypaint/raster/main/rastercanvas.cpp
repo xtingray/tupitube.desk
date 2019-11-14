@@ -25,16 +25,13 @@
 #include "tapplicationproperties.h"
 #include "rastercanvas.h"
 
-// static RasterCanvas* s_view = nullptr;
-
 RasterCanvas::RasterCanvas(TupProject *project, const QColor contourColor, QWidget *parent):
                            RasterCanvasBase(project->getDimension(), parent)
 {
-    // assert(s_view == nullptr);
-    // s_view = this;
-
+    pressed = false;
     setBgColor(project->getBgColor());
     tableInUse = false;
+    spaceBar = false;
 
     myPaintCanvas = MPHandler::handler();
     myPaintCanvas->setBrushColor(contourColor);
@@ -45,7 +42,6 @@ RasterCanvas::RasterCanvas(TupProject *project, const QColor contourColor, QWidg
     connect(myPaintCanvas, SIGNAL(clearedSurface(MPSurface*)), this, SLOT(onClearedSurface(MPSurface*)));
 
     // Set scene
-
     drawingRect = QRectF(QPointF(0, 0), project->getDimension());
     gScene = new QGraphicsScene(this);
     gScene->setSceneRect(drawingRect);
@@ -64,6 +60,19 @@ RasterCanvas::~RasterCanvas()
 void RasterCanvas::centerDrawingArea()
 {
     centerOn(drawingRect.center());
+}
+
+void RasterCanvas::resetWorkSpaceCenter(const QSize projectSize)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "RasterCanvas::resetWorkSpaceCenter()";
+    #endif
+
+    int centerX = projectSize.width()/2;
+    int centerY = projectSize.height()/2;
+
+    centerOn(QPointF(centerX, centerY));
+    setSceneRect(0, 0, projectSize.width(), projectSize.height());
 }
 
 void RasterCanvas::setSize(QSize size)
@@ -137,22 +146,31 @@ void RasterCanvas::tabletEvent(QTabletEvent *event)
 void RasterCanvas::mousePressEvent(QMouseEvent *event)
 {
     Q_UNUSED(event)
+    pressed = true;
     MPHandler::handler()->startStroke();
+
+    // RasterCanvasBase::mousePressEvent(event);
 }
 
 void RasterCanvas::mouseMoveEvent(QMouseEvent *event)
 {
     Q_UNUSED(event)
 
-    if (!tableInUse) {
-        QPointF pt = mapToScene(event->pos());
-        MPHandler::handler()->strokeTo(static_cast<float>(pt.x()), static_cast<float>(pt.y()));
+    if (pressed) {
+        if (!tableInUse) {
+            QPointF pt = mapToScene(event->pos());
+            MPHandler::handler()->strokeTo(static_cast<float>(pt.x()), static_cast<float>(pt.y()));
+        }
     }
+
+    RasterCanvasBase::mouseMoveEvent(event);
 }
 
 void RasterCanvas::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_UNUSED(event)
+    pressed = false;
+    // RasterCanvasBase::mouseReleaseEvent(event);
 }
 
 void RasterCanvas::keyPressEvent(QKeyEvent *event)

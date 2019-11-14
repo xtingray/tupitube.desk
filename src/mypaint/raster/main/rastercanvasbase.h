@@ -48,7 +48,7 @@ class TUPITUBE_EXPORT RasterCanvasBase : public QGraphicsView
     Q_OBJECT
 
     public:
-        RasterCanvasBase(QSize dimension, QWidget *parent = nullptr /* , TupLibrary *library = nullptr */);
+        RasterCanvasBase(QSize dimension, QWidget *parent = nullptr);
         ~RasterCanvasBase();
 
         void setAntialiasing(bool use);
@@ -75,16 +75,11 @@ class TUPITUBE_EXPORT RasterCanvasBase : public QGraphicsView
         void updateCenter(const QPoint point);
 
     protected:
-        /*
-        virtual void mousePressEvent(QMouseEvent *event);
         virtual void mouseMoveEvent(QMouseEvent *event);
-        virtual void mouseReleaseEvent(QMouseEvent *event);
-        */
 
         virtual void keyPressEvent(QKeyEvent *event);
         virtual void keyReleaseEvent(QKeyEvent *event);
 
-        // virtual void tabletEvent(QTabletEvent *event);
         virtual void enterEvent(QEvent *event);
         virtual void leaveEvent(QEvent *event);
 
@@ -92,7 +87,6 @@ class TUPITUBE_EXPORT RasterCanvasBase : public QGraphicsView
         virtual void wheelEvent(QWheelEvent *event);
 
     signals:
-        void cursorPosition(const QPointF &pos);
         void requestTriggered(const TupProjectRequest *event);
         void changedZero(const QPointF &zero);
         void scaled(qreal scaleFactor);
@@ -108,7 +102,6 @@ class TUPITUBE_EXPORT RasterCanvasBase : public QGraphicsView
     protected:
         virtual void drawBackground(QPainter *painter, const QRectF &rect);
         virtual void drawForeground(QPainter *painter, const QRectF &rect);
-        virtual bool canPaint() const;
 
     private:
         QGraphicsRectItem *grid;
@@ -121,7 +114,6 @@ class TUPITUBE_EXPORT RasterCanvasBase : public QGraphicsView
         double angle;
 
         QStringList copiesXml;
-        // TupGraphicsScene *gScene;
         QGraphicsScene *gScene;
 
         QPen greenThickPen;

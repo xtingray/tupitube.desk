@@ -1547,13 +1547,9 @@ int TupPaintArea::currentFrameIndex()
 
 void TupPaintArea::resetWorkSpaceCenter(const QSize projectSize)
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[TupPaintArea::resetWorkSpaceCenter()]";
-    #else
-        T_FUNCINFO;
+    #ifdef TUP_DEBUG
+        qDebug() << "TupPaintArea::resetWorkSpaceCenter()";
     #endif
-#endif
 
     int centerX = projectSize.width()/2;
     int centerY = projectSize.height()/2;

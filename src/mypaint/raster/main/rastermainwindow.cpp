@@ -29,6 +29,8 @@
 RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, const QColor contourColor,
                                    QWidget *parent): TMainWindow(winKey, parent)
 {
+    projectSize = project->getDimension();
+
     QAction *exportAction = new QAction(tr("&Export as Image"), this);
     exportAction->setShortcuts(QKeySequence::Open);
     exportAction->setStatusTip(tr("Export as Image"));
@@ -66,6 +68,9 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, c
     brushesView->expandDock(true);
 
     status = new TupPaintAreaStatus(TupPaintAreaStatus::Raster);
+    connect(status, SIGNAL(resetClicked()), this, SLOT(resetWorkSpaceTransformations()));
+    connect(status, SIGNAL(safeAreaClicked()), this, SLOT(drawActionSafeArea()));
+    connect(status, SIGNAL(gridClicked()), this, SLOT(drawGrid()));
     connect(status, SIGNAL(zoomChanged(qreal)), this, SLOT(setZoomFactor(qreal)));
     connect(status, SIGNAL(angleChanged(int)), this, SLOT(setRotationAngle(int)));
     connect(rasterCanvas, SIGNAL(rotated(int)), status, SLOT(updateRotationAngle(int)));
@@ -141,14 +146,10 @@ RasterMainWindow::~RasterMainWindow()
 
     rasterCanvas = nullptr;
     delete rasterCanvas;
-}
 
-/*
-void RasterMainWindow::setZoomPercent(const QString &percent)
-{
-    status->setZoomPercent(percent);
+    status = nullptr;
+    delete status;
 }
-*/
 
 void RasterMainWindow::closeEvent(QCloseEvent *event)
 {
@@ -160,6 +161,23 @@ void RasterMainWindow::closeEvent(QCloseEvent *event)
     brushesView->expandDock(false);
 
     TMainWindow::closeEvent(event);
+}
+
+void RasterMainWindow::resetWorkSpaceTransformations()
+{
+    rasterCanvas->resetWorkSpaceCenter(projectSize);
+    status->setRotationAngle("0");
+    status->setZoomPercent("100");
+}
+
+void RasterMainWindow::drawGrid()
+{
+    rasterCanvas->drawGrid(!rasterCanvas->getGridState());
+}
+
+void RasterMainWindow::drawActionSafeArea()
+{
+    rasterCanvas->drawActionSafeArea(!rasterCanvas->getSafeAreaState());
 }
 
 void RasterMainWindow::setZoomFactor(qreal factor)

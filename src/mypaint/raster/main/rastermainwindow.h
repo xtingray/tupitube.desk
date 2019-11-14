@@ -48,6 +48,10 @@ class RasterMainWindow : public TMainWindow
         void openProject();
         void exportProject();
         void processColorEvent(const TupPaintAreaEvent *);
+
+        void resetWorkSpaceTransformations();
+        void drawActionSafeArea();
+        void drawGrid();
         void setZoomFactor(qreal factor);
         void applyZoomIn();
         void applyZoomOut();
@@ -70,6 +74,7 @@ class RasterMainWindow : public TMainWindow
         ToolView *colorView;
         TupPaintAreaStatus *status;
 
+        QSize projectSize;
         QPushButton *colorBtn;
         QPushButton *clearBtn;
         QPushButton *saveBtn;

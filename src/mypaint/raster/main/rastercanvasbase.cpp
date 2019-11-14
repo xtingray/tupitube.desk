@@ -35,7 +35,6 @@
 
 #include "rastercanvasbase.h"
 #include "tuptextitem.h"
-// #include "tupgraphicsscene.h"
 #include "tupgraphicalgorithm.h"
 
 // TupiTube Framework 
@@ -44,7 +43,6 @@
 #include "tapplication.h"
 #include "tosd.h"
 
-// #include <QGraphicsScene>
 #include <QStyleOptionGraphicsItem>
 #include <QClipboard>
 #include <QTimer>
@@ -54,15 +52,13 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QScreen>
 
-RasterCanvasBase::RasterCanvasBase(QSize dimension, QWidget *parent /*, TupLibrary *library*/) : QGraphicsView(parent)
+RasterCanvasBase::RasterCanvasBase(QSize dimension, QWidget *parent) : QGraphicsView(parent)
 {
     #ifdef TUP_DEBUG
         qDebug() << "RasterCanvasBase::RasterCanvasBase()";
     #endif
 
     gScene = new QGraphicsScene(this);
-    // gScene = new TupGraphicsScene();
-    // gScene->setLibrary(library);
 
     grid = nullptr;
     updateGridParameters();
@@ -87,8 +83,7 @@ RasterCanvasBase::RasterCanvasBase(QSize dimension, QWidget *parent /*, TupLibra
     gScene->setSceneRect(drawingRect);
     setScene(gScene);
     centerDrawingArea();
-    // setInteractive(true);
-    // setMouseTracking(true);
+    setMouseTracking(true);
 
     setRenderHints(QPainter::RenderHints(QPainter::Antialiasing));
 
@@ -124,27 +119,6 @@ void RasterCanvasBase::drawActionSafeArea(bool draw)
     viewport()->update();
 }
 
-/*
-void RasterCanvasBase::setTool(TupToolPlugin *tool)
-{
-    if (!scene()) {
-        #ifdef TUP_DEBUG
-            qDebug() << "RasterCanvasBase::setTool() - Fatal Error: No scene available";
-        #endif
-        return;
-    }
-
-    if (tool) {
-        disconnect(tool, SIGNAL(requested(const TupProjectRequest *)), 
-                   this, SIGNAL(requestTriggered(const TupProjectRequest *)));
-
-        gScene->setTool(tool);
-        connect(tool, SIGNAL(requested(const TupProjectRequest *)), 
-                this, SIGNAL(requestTriggered(const TupProjectRequest*)));
-    }
-}
-*/
-
 bool RasterCanvasBase::getGridState() const
 {
     return gridEnabled;
@@ -155,36 +129,8 @@ bool RasterCanvasBase::getSafeAreaState() const
     return safeAreaEnabled;
 }
 
-/*
-void RasterCanvasBase::mousePressEvent(QMouseEvent * event)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[RasterCanvasBase::mousePressEvent()]";
-    #endif
-
-    if (!canPaint()) { 
-        #ifdef TUP_DEBUG
-            qWarning() << "RasterCanvasBase::mousePressEvent() -> I can't paint right now!";
-        #endif
-        return;
-    }
-
-    // gScene->setSelectionRange();
-    QGraphicsView::mousePressEvent(event);
-}
-*/
-
-/*
 void RasterCanvasBase::mouseMoveEvent(QMouseEvent *event)
 {
-    if (!canPaint()) { 
-        #ifdef TUP_DEBUG
-            qWarning() << "RasterCanvasBase::mouseMoveEvent() - Canvas is busy. Can't paint!";
-        #endif
-
-        return;
-    }
-
     QPoint point = mapToScene(event->pos()).toPoint();
     if (spaceBar) {
         updateCenter(point);
@@ -194,46 +140,7 @@ void RasterCanvasBase::mouseMoveEvent(QMouseEvent *event)
     }
 
     QGraphicsView::mouseMoveEvent(event);
-    // SQA: Check if this code is really useful
-
-    if (!gScene->mouseGrabberItem() && gScene->isDrawing()) { // HACK
-        QGraphicsSceneMouseEvent mouseEvent(QEvent::GraphicsSceneMouseMove);
-        mouseEvent.setWidget(viewport());
-        mouseEvent.setScenePos(mapToScene(event->pos()));
-        mouseEvent.setScreenPos(event->globalPos());
-        mouseEvent.setButtons(event->buttons());
-        mouseEvent.setButton(event->button());
-        mouseEvent.setModifiers(event->modifiers());
-        mouseEvent.setAccepted(false);
-        // QApplication::sendEvent(gScene, &mouseEvent);
-        gScene->mouseMoved(&mouseEvent);
-    }
-
-    position = mapToScene(event->pos());
-    emit cursorPosition(position);
 }
-*/
-
-/*
-void RasterCanvasBase::mouseReleaseEvent(QMouseEvent *event)
-{
-    // QGraphicsView::mouseReleaseEvent(event);
-
-    // SQA: Check if this code is really useful
-    if (! gScene->mouseGrabberItem() && gScene->isDrawing()) { // HACK
-        QGraphicsSceneMouseEvent mouseEvent(QEvent::GraphicsSceneMouseRelease);
-        mouseEvent.setWidget(viewport());
-        mouseEvent.setScenePos(mapToScene(event->pos()));
-        mouseEvent.setScreenPos(event->globalPos());
-        mouseEvent.setButtons(event->buttons());
-        mouseEvent.setButton(event->button());
-        mouseEvent.setModifiers(event->modifiers());
-        mouseEvent.setAccepted(false);
-        // QApplication::sendEvent(gScene, &mouseEvent);
-        gScene->mouseReleased(&mouseEvent);
-    }
-}
-*/
 
 void RasterCanvasBase::keyPressEvent(QKeyEvent *event)
 {
@@ -242,16 +149,10 @@ void RasterCanvasBase::keyPressEvent(QKeyEvent *event)
         return;
     }
 
-    // if (!gScene->userIsDrawing() && (event->modifiers () == (Qt::AltModifier | Qt::ControlModifier))) {
     if (event->modifiers () == (Qt::AltModifier | Qt::ControlModifier)) {
         QDesktopWidget desktop;
         dial->setAngle(static_cast<int>(angle));
         dial->show();
-
-        /*
-        dial->move((int) (desktop.screenGeometry().width() - dial->sizeHint().width())/2,
-                      (int) (desktop.screenGeometry().height() - dial->sizeHint().height())/2);
-        */
 
         QScreen *screen = QGuiApplication::screens().at(0);
         dial->move(static_cast<int> ((screen->geometry().width() - dial->sizeHint().width()) / 2),
@@ -273,26 +174,13 @@ void RasterCanvasBase::keyReleaseEvent(QKeyEvent *event)
     QGraphicsView::keyReleaseEvent(event);
 }
 
-/*
-void RasterCanvasBase::tabletEvent(QTabletEvent *event)
-{
-    if (event->pressure() > 0) {
-        qDebug() << "RasterCanvasBase::tabletEvent() - Pressure: " << event->pressure();
-        qDebug() << "RasterCanvasBase::tabletEvent() - xTilt: " << event->xTilt();
-        qDebug() << "RasterCanvasBase::tabletEvent() - yTilt: " << event->yTilt();
-    }
-
-    QGraphicsView::tabletEvent(event);
-}
-*/
-
 void RasterCanvasBase::enterEvent(QEvent *event)
 {
-/*
-#ifdef TUP_DEBUG
-    qDebug() << "RasterCanvasBase::enterEvent(QEvent)";
-#endif
-*/
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "RasterCanvasBase::enterEvent(QEvent)";
+    #endif
+    */
     if (!hasFocus())
         setFocus();
 
@@ -301,11 +189,11 @@ void RasterCanvasBase::enterEvent(QEvent *event)
 
 void RasterCanvasBase::leaveEvent(QEvent *event)
 {
-/*
-#ifdef TUP_DEBUG
-    qDebug() << "RasterCanvasBase::leaveEvent(QEvent)";
-#endif
-*/
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "RasterCanvasBase::leaveEvent(QEvent)";
+    #endif
+    */
     if (hasFocus())
         clearFocus();
 
@@ -348,102 +236,80 @@ void RasterCanvasBase::drawBackground(QPainter *painter, const QRectF &rect)
 
 void RasterCanvasBase::drawForeground(QPainter *painter, const QRectF &rect)
 {
-    /*
-    TupScene *currentScene = gScene->currentScene();
+    Q_UNUSED(rect)
 
-    if (!currentScene) {
-        drawPadLock(painter, rect, tr("No Scene!"));
-    } else {
-        if (currentScene->layersCount() > 0) {
-            if (currentScene->framesCount() > 0) {
-                if (TupFrame *frame = gScene->currentFrame()) {
-                    if (frame) {
-                        if (frame->isFrameLocked()) {
-                            drawPadLock(painter, rect, tr("Locked!"));
-                        } else {
-                            // if enabled draw grid
-                            if (gridEnabled) {
-                                painter->setPen(gridPen);
-                                int maxX = static_cast<int> (drawingRect.width() + 100);
-                                int maxY = static_cast<int> (drawingRect.height() + 100);
-                                for (int i = -100; i <= maxX; i += gridSeparation)
-                                     painter->drawLine(i, -100, i, maxY);
-                                for (int i = -100; i <= maxY; i += gridSeparation)
-                                     painter->drawLine(-100, i, maxX, i);
-                            }
-                            // if enabled action safe area
-                            if (safeAreaEnabled) {
-                                painter->setPen(greenThickPen);
-                                painter->drawRect(drawingRect);
-
-                                int w = static_cast<int> (drawingRect.width());
-                                int h = static_cast<int> (drawingRect.height());
-                                int outerBorder = w / 19;
-                                int innerBorder = w / 6;
-
-                                int hSpace = w / 3;
-                                int vSpace = static_cast<int> (drawingRect.height() / 3);
-
-                                QPointF left = drawingRect.topLeft() + QPointF(outerBorder, outerBorder);
-                                QPointF right = drawingRect.bottomRight() - QPointF(outerBorder, outerBorder);
-                                int leftX = static_cast<int> (left.x());
-                                int leftY = static_cast<int> (left.y());
-                                int rightX = static_cast<int> (right.x());
-                                int rightY = static_cast<int> (right.y());
-
-                                QRectF outerRect(left, right);
-
-                                painter->setPen(grayPen);
-                                painter->drawRect(outerRect);
-
-                                painter->setPen(greenBoldPen);
-                                painter->drawLine(QPoint(hSpace, leftY - 8), QPoint(hSpace, leftY + 8));
-                                painter->drawLine(QPoint(hSpace - 5, leftY), QPoint(hSpace + 5, leftY));
-                                painter->drawLine(QPoint(hSpace*2, leftY - 8), QPoint(hSpace*2, leftY + 8));
-                                painter->drawLine(QPoint(hSpace*2 - 5, leftY), QPoint(hSpace*2 + 5, leftY));
-
-                                painter->drawLine(QPoint(hSpace, rightY - 8), QPoint(hSpace, rightY + 8));
-                                painter->drawLine(QPoint(hSpace - 5, rightY), QPoint(hSpace + 5, rightY));
-                                painter->drawLine(QPoint(hSpace*2, rightY - 8), QPoint(hSpace*2, rightY + 8));
-                                painter->drawLine(QPoint(hSpace*2 - 5, rightY), QPoint(hSpace*2 + 5, rightY));
-
-                                painter->drawLine(QPoint(leftX - 8, vSpace), QPoint(leftX + 8, vSpace));
-                                painter->drawLine(QPoint(leftX, vSpace - 5), QPoint(leftX, vSpace + 5));
-                                painter->drawLine(QPoint(leftX - 8, vSpace*2), QPoint(leftX + 8, vSpace*2));
-                                painter->drawLine(QPoint(leftX, vSpace*2 - 5), QPoint(leftX, vSpace*2 + 5));
-
-                                painter->drawLine(QPoint(rightX - 8, vSpace), QPoint(rightX + 8, vSpace));
-                                painter->drawLine(QPoint(rightX, vSpace - 5), QPoint(rightX, vSpace + 5));
-                                painter->drawLine(QPoint(rightX - 8, vSpace*2), QPoint(rightX + 8, vSpace*2));
-                                painter->drawLine(QPoint(rightX, vSpace*2 - 5), QPoint(rightX, vSpace*2 + 5));
-
-                                painter->setPen(greenThinPen);
-
-                                left = drawingRect.topLeft() + QPointF(innerBorder, innerBorder);
-                                right = drawingRect.bottomRight() - QPointF(innerBorder, innerBorder);
-                                QRectF innerRect(left, right);
-                                painter->drawRect(innerRect);
-
-                                painter->setPen(dotPen);
-                                int middleX = w/2;
-                                int middleY = h/2;
-                                painter->drawLine(QPoint(0, middleY), QPoint(w, middleY));
-                                painter->drawLine(QPoint(middleX, 0), QPoint(middleX, h));
-                                QRect rect(QPoint(middleX - target, middleY - target),
-                                           QPoint(middleX + target, middleY + target));
-                                painter->drawRect(rect);
-                            }
-                        }
-                    } 
-                }
-            } else {
-                drawPadLock(painter, rect, tr("No Frames!"));
-            } 
-        } else {
-            drawPadLock(painter, rect, tr("No Layers!"));
-        }
+    // if enabled draw grid
+    if (gridEnabled) {
+        painter->setPen(gridPen);
+        int maxX = static_cast<int> (drawingRect.width() + 100);
+        int maxY = static_cast<int> (drawingRect.height() + 100);
+        for (int i = -100; i <= maxX; i += gridSeparation)
+             painter->drawLine(i, -100, i, maxY);
+        for (int i = -100; i <= maxY; i += gridSeparation)
+             painter->drawLine(-100, i, maxX, i);
     }
-    */
+    // if enabled action safe area
+    if (safeAreaEnabled) {
+        painter->setPen(greenThickPen);
+        painter->drawRect(drawingRect);
+
+        int w = static_cast<int> (drawingRect.width());
+        int h = static_cast<int> (drawingRect.height());
+        int outerBorder = w / 19;
+        int innerBorder = w / 6;
+
+        int hSpace = w / 3;
+        int vSpace = static_cast<int> (drawingRect.height() / 3);
+
+        QPointF left = drawingRect.topLeft() + QPointF(outerBorder, outerBorder);
+        QPointF right = drawingRect.bottomRight() - QPointF(outerBorder, outerBorder);
+        int leftX = static_cast<int> (left.x());
+        int leftY = static_cast<int> (left.y());
+        int rightX = static_cast<int> (right.x());
+        int rightY = static_cast<int> (right.y());
+
+        QRectF outerRect(left, right);
+
+        painter->setPen(grayPen);
+        painter->drawRect(outerRect);
+
+        painter->setPen(greenBoldPen);
+        painter->drawLine(QPoint(hSpace, leftY - 8), QPoint(hSpace, leftY + 8));
+        painter->drawLine(QPoint(hSpace - 5, leftY), QPoint(hSpace + 5, leftY));
+        painter->drawLine(QPoint(hSpace*2, leftY - 8), QPoint(hSpace*2, leftY + 8));
+        painter->drawLine(QPoint(hSpace*2 - 5, leftY), QPoint(hSpace*2 + 5, leftY));
+
+        painter->drawLine(QPoint(hSpace, rightY - 8), QPoint(hSpace, rightY + 8));
+        painter->drawLine(QPoint(hSpace - 5, rightY), QPoint(hSpace + 5, rightY));
+        painter->drawLine(QPoint(hSpace*2, rightY - 8), QPoint(hSpace*2, rightY + 8));
+        painter->drawLine(QPoint(hSpace*2 - 5, rightY), QPoint(hSpace*2 + 5, rightY));
+
+        painter->drawLine(QPoint(leftX - 8, vSpace), QPoint(leftX + 8, vSpace));
+        painter->drawLine(QPoint(leftX, vSpace - 5), QPoint(leftX, vSpace + 5));
+        painter->drawLine(QPoint(leftX - 8, vSpace*2), QPoint(leftX + 8, vSpace*2));
+        painter->drawLine(QPoint(leftX, vSpace*2 - 5), QPoint(leftX, vSpace*2 + 5));
+
+        painter->drawLine(QPoint(rightX - 8, vSpace), QPoint(rightX + 8, vSpace));
+        painter->drawLine(QPoint(rightX, vSpace - 5), QPoint(rightX, vSpace + 5));
+        painter->drawLine(QPoint(rightX - 8, vSpace*2), QPoint(rightX + 8, vSpace*2));
+        painter->drawLine(QPoint(rightX, vSpace*2 - 5), QPoint(rightX, vSpace*2 + 5));
+
+        painter->setPen(greenThinPen);
+
+        left = drawingRect.topLeft() + QPointF(innerBorder, innerBorder);
+        right = drawingRect.bottomRight() - QPointF(innerBorder, innerBorder);
+        QRectF innerRect(left, right);
+        painter->drawRect(innerRect);
+
+        painter->setPen(dotPen);
+        int middleX = w/2;
+        int middleY = h/2;
+        painter->drawLine(QPoint(0, middleY), QPoint(w, middleY));
+        painter->drawLine(QPoint(middleX, 0), QPoint(middleX, h));
+        QRect rect(QPoint(middleX - target, middleY - target),
+                   QPoint(middleX + target, middleY + target));
+        painter->drawRect(rect);
+    }
 }
 
 void RasterCanvasBase::drawPadLock(QPainter *painter, const QRectF &rect, QString text)
@@ -472,30 +338,6 @@ void RasterCanvasBase::drawPadLock(QPainter *painter, const QRectF &rect, QStrin
 
     x = (middleX - 30) / 2;
     painter->fillRect(x, y + 30, 30, 20, QColor(100, 100, 100));
-}
-
-bool RasterCanvasBase::canPaint() const
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "RasterCanvasBase::canPaint()";
-    #endif
-
-    /*
-    if (gScene) {
-        TupFrame *frame = gScene->currentFrame();
-        if (frame) {
-            return !frame->isFrameLocked();
-        }
-    } else {
-        #ifdef TUP_DEBUG
-            qWarning() << "RasterCanvasBase::canPaint() - Warning: Scene is NULL!";
-        #endif
-    }
-
-    return false;
-    */
-
-    return true;
 }
 
 void RasterCanvasBase::centerDrawingArea()
@@ -529,13 +371,6 @@ void RasterCanvasBase::setZoom(qreal scaleFactor)
 {
     scale(scaleFactor, scaleFactor);
 }
-
-/*
-TupBrushManager *RasterCanvasBase::brushManager() const
-{
-    return gScene->getBrushManager();
-}
-*/
 
 QRectF RasterCanvasBase::getDrawingRect() const
 {

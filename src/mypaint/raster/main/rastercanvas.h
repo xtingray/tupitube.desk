@@ -21,10 +21,8 @@
 #define RASTERCANVAS_H
 
 #include <QWidget>
-#include <QGraphicsView>
 #include <QMouseEvent>
 #include <QPushButton>
-#include <QColorDialog>
 
 #include "rastercanvasbase.h"
 #include "mphandler.h"
@@ -46,6 +44,8 @@ class RasterCanvas : public RasterCanvasBase
         void saveToFile(QString filePath);
         void loadFromFile(QString filePath);
 
+        void resetWorkSpaceCenter(const QSize projectSize);
+
     protected:
         virtual void tabletEvent(QTabletEvent *event);
         virtual void mouseMoveEvent(QMouseEvent *event);
@@ -59,8 +59,6 @@ class RasterCanvas : public RasterCanvasBase
         void zoomOut();
 
     public slots:
-        //  void BrushSelected(const QByteArray& content);
-        // void selectColor();
         void updateBrushColor(const QColor color);
         void clearCanvas();
 
@@ -72,17 +70,17 @@ class RasterCanvas : public RasterCanvasBase
 
     private:
         void centerDrawingArea();
-        // void setCurrentScene(int index);
         void updateCursor(const QTabletEvent *event);
 
-        // TupProject *project;
         QGraphicsScene *gScene;
         QRectF drawingRect;
         int globalSceneIndex;
 
+        bool pressed;
+        bool spaceBar;
         QColor color;
         bool tableInUse;
         MPHandler *myPaintCanvas;
 };
 
-#endif // MYPAINTVIEW_H
+#endif // RASTERCANVAS_H
