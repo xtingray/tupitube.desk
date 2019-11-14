@@ -39,7 +39,7 @@
 
 #include <QHBoxLayout>
 
-TupPaintAreaStatus::TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent) : QStatusBar(parent)
+TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, QWidget *parent) : QStatusBar(parent)
 {
     setSizeGripEnabled(false);
 
@@ -72,32 +72,34 @@ TupPaintAreaStatus::TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent) 
     connect(gridButton, SIGNAL(clicked()), this, SIGNAL(gridClicked()));
     addPermanentWidget(gridButton);
 
-    fullScreenButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/full_screen.png")), "");
-    fullScreenButton->setIconSize(QSize(16, 16));
-    fullScreenButton->setToolTip(tr("Full screen"));
-    fullScreenButton->setShortcut(QKeySequence(tr("F11")));
-    connect(fullScreenButton, SIGNAL(clicked()), this, SIGNAL(fullClicked()));
-    addPermanentWidget(fullScreenButton);
+    if (type == Vector) {
+        fullScreenButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/full_screen.png")), "");
+        fullScreenButton->setIconSize(QSize(16, 16));
+        fullScreenButton->setToolTip(tr("Full screen"));
+        fullScreenButton->setShortcut(QKeySequence(tr("F11")));
+        connect(fullScreenButton, SIGNAL(clicked()), this, SIGNAL(fullClicked()));
+        addPermanentWidget(fullScreenButton);
 
-    QWidget *frameContainer = new QWidget;
-    frameContainer->setFixedWidth(70);
-    QHBoxLayout *frameLayout = new QHBoxLayout(frameContainer);
-    frameLayout->setSpacing(3);
-    frameLayout->setMargin(1);
-    QLabel *frameLabel = new QLabel("");
-    frameLabel->setToolTip(tr("Current Frame"));
-    QPixmap framePix(THEME_DIR + "icons/frame_number.png");
-    frameLabel->setPixmap(framePix);
+        QWidget *frameContainer = new QWidget;
+        frameContainer->setFixedWidth(70);
+        QHBoxLayout *frameLayout = new QHBoxLayout(frameContainer);
+        frameLayout->setSpacing(3);
+        frameLayout->setMargin(1);
+        QLabel *frameLabel = new QLabel("");
+        frameLabel->setToolTip(tr("Current Frame"));
+        QPixmap framePix(THEME_DIR + "icons/frame_number.png");
+        frameLabel->setPixmap(framePix);
 
-    frameField = new QLineEdit(frameContainer);
-    frameField->setFixedWidth(40);
-    frameField->setAlignment(Qt::AlignRight);
-    frameField->setText(tr("1"));
-    connect(frameField, SIGNAL(editingFinished()), this, SLOT(updateFramePointer()));
+        frameField = new QLineEdit(frameContainer);
+        frameField->setFixedWidth(40);
+        frameField->setAlignment(Qt::AlignRight);
+        frameField->setText(tr("1"));
+        connect(frameField, SIGNAL(editingFinished()), this, SLOT(updateFramePointer()));
 
-    frameLayout->addWidget(frameLabel);
-    frameLayout->addWidget(frameField);
-    addPermanentWidget(frameContainer);
+        frameLayout->addWidget(frameLabel);
+        frameLayout->addWidget(frameField);
+        addPermanentWidget(frameContainer);
+    }
 
     QWidget *zoomContainer = new QWidget;
     QHBoxLayout *zoomLayout = new QHBoxLayout(zoomContainer);
@@ -150,19 +152,22 @@ TupPaintAreaStatus::TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent) 
     addPermanentWidget(rotContainer);
     connect(rotationCombo, SIGNAL(activated(const QString &)), this, SLOT(applyRotation(const QString &)));
 
-    contourStatus = new TupBrushStatus(tr("Contour Color"), TColorCell::Contour, QPixmap(THEME_DIR + "icons/contour_color.png"));
-    contourStatus->setTooltip(tr("Contour Color"));
-    addPermanentWidget(contourStatus);
+    if (type == Vector) {
+        contourStatus = new TupBrushStatus(tr("Contour Color"), TColorCell::Contour, QPixmap(THEME_DIR + "icons/contour_color.png"));
+        contourStatus->setTooltip(tr("Contour Color"));
+        addPermanentWidget(contourStatus);
 
-    fillStatus = new TupBrushStatus(tr("Fill Color"), TColorCell::Inner, QPixmap(THEME_DIR + "icons/fill_color.png"));
-    fillStatus->setTooltip(tr("Fill Color"));
-    addPermanentWidget(fillStatus);
+        fillStatus = new TupBrushStatus(tr("Fill Color"), TColorCell::Inner, QPixmap(THEME_DIR + "icons/fill_color.png"));
+        fillStatus->setTooltip(tr("Fill Color"));
+        addPermanentWidget(fillStatus);
 
-    contourStatus->setColor(pen);
-    fillStatus->setColor(brush);
+        contourStatus->setColor(pen);
+        fillStatus->setColor(brush);
 
-    toolStatus = new TupToolStatus;
-    addPermanentWidget(toolStatus);
+        toolStatus = new TupToolStatus;
+        addPermanentWidget(toolStatus);
+    }
+
     QWidget *empty2 = new QWidget();
     empty2->setFixedWidth(5);
     addPermanentWidget(empty2);

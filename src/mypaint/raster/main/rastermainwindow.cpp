@@ -45,6 +45,9 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, c
 
     // Central widget:
     rasterCanvas = new RasterCanvas(project, contourColor, this);
+    connect(rasterCanvas, SIGNAL(closeWindow()), this, SIGNAL(closeWindow()));
+    connect(rasterCanvas, SIGNAL(zoomIn()), this, SLOT(applyZoomIn()));
+    connect(rasterCanvas, SIGNAL(zoomOut()), this, SLOT(applyZoomOut()));
     setCentralWidget(rasterCanvas);
 
     colorWidget = new RasterColorWidget(contourColor, project->getBgColor(), this);
@@ -60,8 +63,14 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, c
             rasterCanvas, SLOT(loadBrush(const QByteArray&)));
 
     brushesView = addToolView(brushesWidget, Qt::LeftDockWidgetArea, Raster, "Brushes", QKeySequence(tr("Shift+B")));
-
     brushesView->expandDock(true);
+
+    status = new TupPaintAreaStatus(TupPaintAreaStatus::Raster);
+    connect(status, SIGNAL(zoomChanged(qreal)), this, SLOT(setZoomFactor(qreal)));
+    connect(status, SIGNAL(angleChanged(int)), this, SLOT(setRotationAngle(int)));
+    connect(rasterCanvas, SIGNAL(rotated(int)), status, SLOT(updateRotationAngle(int)));
+    setStatusBar(status);
+    status->setZoomPercent("100");
 
     /*
     // Add tools:
@@ -134,6 +143,13 @@ RasterMainWindow::~RasterMainWindow()
     delete rasterCanvas;
 }
 
+/*
+void RasterMainWindow::setZoomPercent(const QString &percent)
+{
+    status->setZoomPercent(percent);
+}
+*/
+
 void RasterMainWindow::closeEvent(QCloseEvent *event)
 {
     #ifdef TUP_DEBUG
@@ -144,6 +160,34 @@ void RasterMainWindow::closeEvent(QCloseEvent *event)
     brushesView->expandDock(false);
 
     TMainWindow::closeEvent(event);
+}
+
+void RasterMainWindow::setZoomFactor(qreal factor)
+{
+    rasterCanvas->setZoom(factor);
+}
+
+void RasterMainWindow::applyZoomIn()
+{
+    qreal zoom = status->currentZoomFactor();
+    if (zoom <= 495) {
+        zoom += 5;
+        status->setZoomPercent(QString::number(zoom));
+    }
+}
+
+void RasterMainWindow::applyZoomOut()
+{
+    qreal zoom = status->currentZoomFactor();
+    if (zoom >= 15) {
+        zoom -= 5;
+        status->setZoomPercent(QString::number(zoom));
+    }
+}
+
+void RasterMainWindow::setRotationAngle(int angle)
+{
+    rasterCanvas->setRotationAngle(angle);
 }
 
 void RasterMainWindow::processColorEvent(const TupPaintAreaEvent *event)

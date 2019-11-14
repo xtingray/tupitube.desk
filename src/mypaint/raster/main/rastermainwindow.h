@@ -24,6 +24,7 @@
 #include "rastercanvas.h"
 #include "rasterbrusheswidget.h"
 #include "rastercolorwidget.h"
+#include "tuppaintareastatus.h"
 
 #include <QDockWidget>
 #include <QPushButton>
@@ -47,6 +48,10 @@ class RasterMainWindow : public TMainWindow
         void openProject();
         void exportProject();
         void processColorEvent(const TupPaintAreaEvent *);
+        void setZoomFactor(qreal factor);
+        void applyZoomIn();
+        void applyZoomOut();
+        void setRotationAngle(int angle);
 
     signals:
          void paintAreaEventTriggered(const TupPaintAreaEvent *event);
@@ -63,6 +68,7 @@ class RasterMainWindow : public TMainWindow
         RasterColorWidget *colorWidget;
         ToolView *brushesView;
         ToolView *colorView;
+        TupPaintAreaStatus *status;
 
         QPushButton *colorBtn;
         QPushButton *clearBtn;

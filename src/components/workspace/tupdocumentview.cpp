@@ -138,7 +138,7 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     createLateralToolBar();
     createToolBar();
 
-    status = new TupPaintAreaStatus(contourPen(), fillBrush());
+    status = new TupPaintAreaStatus(TupPaintAreaStatus::Vector, contourPen(), fillBrush());
     connect(status, SIGNAL(newFramePointer(int)), this, SLOT(goToFrame(int)));
     connect(status, SIGNAL(resetClicked()), this, SLOT(resetWorkSpaceTransformations()));
     connect(status, SIGNAL(safeAreaClicked()), this, SLOT(drawActionSafeArea()));

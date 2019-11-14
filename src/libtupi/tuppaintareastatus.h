@@ -51,7 +51,8 @@ class TUPITUBE_EXPORT TupPaintAreaStatus : public QStatusBar
     Q_OBJECT
 
     public:
-        TupPaintAreaStatus(QPen pen, QBrush brush, QWidget *parent = nullptr);
+        enum StatusType { Vector = 0, Raster };
+        TupPaintAreaStatus(StatusType type, QPen pen = QPen(), QBrush brush = QBrush(), QWidget *parent = nullptr);
         ~TupPaintAreaStatus();
 
         void updateTool(const QString &label, const QPixmap &pixmap);
@@ -59,13 +60,13 @@ class TUPITUBE_EXPORT TupPaintAreaStatus : public QStatusBar
         void setRotationAngle(const QString &angle);
         void updateZoomFactor(double factor);
         qreal currentZoomFactor();
-        void updateRotationAngle(int angle);
         void enableFullScreenFeature(bool flag);
         void updatePosition(const QString &position);
         void setFramePointer(int index);
 
     public slots:
         // void selectAntialiasingHint();
+        void updateRotationAngle(int angle);
         void applyZoom(const QString &text);
         void setPen(const QPen &pen);
         void setBrush(const QBrush  &brush);
