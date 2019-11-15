@@ -67,6 +67,10 @@ class RasterMainWindow : public TMainWindow
         void resizeEvent(QResizeEvent *event);
 
     private:
+        void createTopResources();
+        void createCentralWidget(TupProject * project, const QColor contourColor);
+
+        QToolBar *topBar;
         RasterCanvas *rasterCanvas;
         RasterBrushesWidget *brushesWidget;
         RasterColorWidget *colorWidget;

@@ -197,23 +197,6 @@ void RasterCanvas::keyPressEvent(QKeyEvent *event)
     RasterCanvasBase::keyPressEvent(event);
 }
 
-/*
-void RasterCanvas::selectColor()
-{
-    QPushButton* button = dynamic_cast<QPushButton*>(sender());
-    if (button) {
-        QColor newColor = QColorDialog::getColor(color, window(), "Select the brush color", QColorDialog::ShowAlphaChannel);
-        if (newColor.isValid()) {
-            button->setStyleSheet(QString("color: %1; background-color: %2;").arg((newColor.lightnessF()>0.5)?"black":"white")
-                                  .arg(newColor.name()));
-
-            MPHandler *mypaint = MPHandler::handler();
-            mypaint->setBrushColor(newColor);
-        }
-    }
-}
-*/
-
 void RasterCanvas::updateBrushColor(const QColor color)
 {
     MPHandler *mypaint = MPHandler::handler();

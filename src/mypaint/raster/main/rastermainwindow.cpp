@@ -30,27 +30,8 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, c
                                    QWidget *parent): TMainWindow(winKey, parent)
 {
     projectSize = project->getDimension();
-
-    QAction *exportAction = new QAction(tr("&Export as Image"), this);
-    exportAction->setShortcuts(QKeySequence::Open);
-    exportAction->setStatusTip(tr("Export as Image"));
-    connect(exportAction, SIGNAL(triggered()), this, SLOT(exportProject()));
-
-    QAction *closeAction = new QAction(tr("Exit Raster Mode"), this);
-    closeAction->setShortcuts(QKeySequence::Quit);
-    closeAction->setStatusTip(tr("Exit Raster Mode"));
-    connect(closeAction, &QAction::triggered, this, &QWidget::close);
-
-    QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(exportAction);
-    fileMenu->addAction(closeAction);
-
-    // Central widget:
-    rasterCanvas = new RasterCanvas(project, contourColor, this);
-    connect(rasterCanvas, SIGNAL(closeWindow()), this, SIGNAL(closeWindow()));
-    connect(rasterCanvas, SIGNAL(zoomIn()), this, SLOT(applyZoomIn()));
-    connect(rasterCanvas, SIGNAL(zoomOut()), this, SLOT(applyZoomOut()));
-    setCentralWidget(rasterCanvas);
+    createTopResources();
+    createCentralWidget(project, contourColor);
 
     colorWidget = new RasterColorWidget(contourColor, project->getBgColor(), this);
     connect(colorWidget, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
@@ -149,6 +130,49 @@ RasterMainWindow::~RasterMainWindow()
 
     status = nullptr;
     delete status;
+}
+
+void RasterMainWindow::createTopResources()
+{
+    QAction *exportAction = new QAction(tr("&Export as Image"), this);
+    exportAction->setShortcuts(QKeySequence::Open);
+    exportAction->setStatusTip(tr("Export as Image"));
+    connect(exportAction, SIGNAL(triggered()), this, SLOT(exportProject()));
+
+    QAction *closeAction = new QAction(tr("Exit Raster Mode"), this);
+    closeAction->setShortcuts(QKeySequence::Quit);
+    closeAction->setStatusTip(tr("Exit Raster Mode"));
+    connect(closeAction, &QAction::triggered, this, &QWidget::close);
+
+    QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
+    fileMenu->addAction(exportAction);
+    fileMenu->addAction(closeAction);
+}
+
+void RasterMainWindow::createCentralWidget(TupProject * project, const QColor contourColor)
+{
+    // Central widget:
+    rasterCanvas = new RasterCanvas(project, contourColor, this);
+    connect(rasterCanvas, SIGNAL(closeWindow()), this, SIGNAL(closeWindow()));
+    connect(rasterCanvas, SIGNAL(zoomIn()), this, SLOT(applyZoomIn()));
+    connect(rasterCanvas, SIGNAL(zoomOut()), this, SLOT(applyZoomOut()));
+
+    topBar = new QToolBar(tr("Raster actions"), this);
+    topBar->setIconSize(QSize(16, 16));
+
+    QPushButton *clearButton = new QPushButton(QIcon(THEME_DIR + "icons/new.png"), "", this);
+    clearButton->setToolTip(tr("Clear Canvas"));
+    clearButton->setShortcut(Qt::Key_Backspace);
+    connect(clearButton, SIGNAL(clicked()), rasterCanvas, SLOT(clearCanvas()));
+
+    topBar->addWidget(clearButton);
+
+    QWidget *centralWidget = new QWidget();
+    QVBoxLayout *centralLayout = new QVBoxLayout(centralWidget);
+    centralLayout->addWidget(topBar);
+    centralLayout->addWidget(rasterCanvas);
+
+    setCentralWidget(centralWidget);
 }
 
 void RasterMainWindow::closeEvent(QCloseEvent *event)
