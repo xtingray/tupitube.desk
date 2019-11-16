@@ -1274,7 +1274,7 @@ void TupDocumentView::createToolBar()
 void TupDocumentView::openRasterMode()
 {
     rasterWindow = new RasterMainWindow(project, "raster", contourColor, this);
-    connect(rasterWindow, SIGNAL(closeWindow()), this, SLOT(closeRasterWindow()));
+    connect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString &)));
     connect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
             this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
 
@@ -1282,12 +1282,13 @@ void TupDocumentView::openRasterMode()
     rasterWindow->showFullScreen();
 }
 
-void TupDocumentView::closeRasterWindow()
+void TupDocumentView::closeRasterWindow(const QString &path)
 {
     if (rasterWindowOn) {
-        disconnect(rasterWindow, SIGNAL(closeWindow()), this, SLOT(closeRasterWindow()));
+        disconnect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString &)));
         disconnect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
                    this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
+
         rasterWindow->close();
         rasterWindowOn = false;
         rasterWindow = nullptr;

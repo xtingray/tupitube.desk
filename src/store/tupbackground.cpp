@@ -61,6 +61,14 @@ void TupBackground::setBgColor(const QColor color)
     bgColor = color;
 }
 
+void TupBackground::setRasterBgImage(int type, QImage *image, int index)
+{
+    if (type == TupBackground::BgType(type))
+        dynamicBg->setRasterBgImage(image, index);
+    else
+        staticBg->setRasterBgImage(image, index);
+}
+
 void TupBackground::fromXml(const QString &xml)
 {
     QDomDocument document;

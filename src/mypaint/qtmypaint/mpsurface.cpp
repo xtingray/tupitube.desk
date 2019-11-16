@@ -169,13 +169,11 @@ void MPSurface::clear()
 QImage MPSurface::renderImage(const QSize canvasSize)
 {
     qDebug() << "MPSurface::renderImage() - size: " << size();
-    // QPixmap renderedImage = QPixmap(size());
+
     QPixmap renderedImage = QPixmap(canvasSize);
-    //renderedImage = renderedImage.scaled(size());
     renderedImage.fill(QColor(Qt::transparent));
 
     QGraphicsScene surfaceScene;
-    // surfaceScene.setSceneRect(QRect(QPoint(0,0), size()));
     surfaceScene.setSceneRect(QRect(QPoint(0,0), canvasSize));
 
     QHashIterator<QPoint, MPTile*> i(m_Tiles);

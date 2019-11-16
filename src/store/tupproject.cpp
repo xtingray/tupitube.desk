@@ -49,11 +49,7 @@
 TupProject::TupProject(QObject *parent) : QObject(parent)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProject()]";
-        #else
-            TINIT;
-        #endif
+       qDebug() << "[TupProject()]";
     #endif    
     
     spaceMode = TupProject::NONE;
@@ -68,11 +64,7 @@ TupProject::TupProject(QObject *parent) : QObject(parent)
 TupProject::~TupProject()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupProject()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "[~TupProject()]";
     #endif    
         
     // deleteDataDir(cachePath);
@@ -82,11 +74,7 @@ TupProject::~TupProject()
 void TupProject::loadLibrary(const QString &filename)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProject::loadLibrary()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupProject::loadLibrary()]";
     #endif
 
     QFile file(filename);
@@ -96,12 +84,7 @@ void TupProject::loadLibrary(const QString &filename)
         file.close();
     } else {               
         #ifdef TUP_DEBUG
-            QString msg = "TupProject::loadLibrary() - Cannot open library from: " + filename;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tFatal("library") << msg;
-            #endif
+            qDebug() << "TupProject::loadLibrary() - Cannot open library from: " + filename;
         #endif
     }
 }
@@ -207,14 +190,20 @@ QString TupProject::getDataDir() const
     return cachePath;
 }
 
+QString TupProject::getRasterDir() const
+{
+    return cachePath + "/images/raster/";
+}
+
+QString TupProject::getRasterBgDir() const
+{
+    return cachePath + "/images/raster/bg/";
+}
+
 TupScene *TupProject::createScene(QString name, int position, bool loaded)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProject::createScene()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupProject::createScene()]";
     #endif
 
     if (position < 0 || position > scenesList.count())
@@ -291,11 +280,7 @@ bool TupProject::removeScene(int pos)
 bool TupProject::resetScene(int pos, const QString &newName)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProject::resetScene()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupProject::resetScene()]";
     #endif
    
     TupScene *scene = sceneAt(pos);
@@ -310,12 +295,7 @@ bool TupProject::resetScene(int pos, const QString &newName)
         return true;
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupProject::resetScene() - No scene at index -> " + QString::number(pos);
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupProject::resetScene() - No scene at index -> " + QString::number(pos);
         #endif
     }
 
@@ -337,12 +317,7 @@ bool TupProject::moveScene(int position, int newPosition)
 {
     if (position < 0 || newPosition < 0) {
         #ifdef TUP_DEBUG
-            QString msg = "TupProject::moveScene() - Failed moving scene from " + QString::number(position) + " to " + QString::number(newPosition);
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupProject::moveScene() - Failed moving scene from " + QString::number(position) + " to " + QString::number(newPosition);
         #endif
         return false;
     }
@@ -356,21 +331,12 @@ bool TupProject::moveScene(int position, int newPosition)
 TupScene *TupProject::sceneAt(int position) const
 {    
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProject::sceneAt()] - position: " << position;
-        #else
-            T_FUNCINFOX("project") << position;
-        #endif
+        qDebug() << "[TupProject::sceneAt()] - position: " << position;
     #endif    
 
     if (position < 0) {
         #ifdef TUP_DEBUG
-            QString msg = "TupProject::sceneAt() - FATAL ERROR: index out of bound (" + QString::number(position) + ")";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupProject::sceneAt() - FATAL ERROR: index out of bound (" + QString::number(position) + ")";
         #endif
         return nullptr;
     }
@@ -502,46 +468,26 @@ Scenes TupProject::getScenes() const
 bool TupProject::createSymbol(int type, const QString &name, const QByteArray &data, const QString &folder)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProject::createSymbol()]";
-        #else
-            T_FUNCINFOX("symbol");
-        #endif
+        qDebug() << "[TupProject::createSymbol()]";
     #endif
    
     if (!isOpen) {
         #ifdef TUP_DEBUG
-            QString msg = "TupProject::createSymbol() - Fatal error: project is NOT open!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
-        #endif
-        
+            qDebug() << "TupProject::createSymbol() - Fatal error: project is NOT open!";
+        #endif        
         return false;
     }
 
     if (library->createSymbol(TupLibraryObject::Type(type), name, data, folder) == nullptr) {
         #ifdef TUP_DEBUG
-            QString msg = "TupProject::createSymbol() - Fatal error: object can't be created. Data is NULL!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupProject::createSymbol() - Fatal error: object can't be created. Data is NULL!";
         #endif    
 
         return false;
     }         
 
     #ifdef TUP_DEBUG
-        QString msg = "TupProject::createSymbol() - Object added successfully -> " + name;
-        #ifdef Q_OS_WIN
-            qWarning() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qWarning() << "TupProject::createSymbol() - Object added successfully -> " + name;
     #endif    
 
     return true;
@@ -550,11 +496,7 @@ bool TupProject::createSymbol(int type, const QString &name, const QByteArray &d
 bool TupProject::removeSymbol(const QString &name, TupLibraryObject::Type type)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProject::removeSymbol()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupProject::removeSymbol()]";
     #endif    
     
     int totalScenes = scenesList.size();
@@ -605,11 +547,7 @@ bool TupProject::removeSymbol(const QString &name, TupLibraryObject::Type type)
 bool TupProject::addFolder(const QString &name)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProject::addFolder()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupProject::addFolder()]";
     #endif
 
     TupLibraryFolder *folder = new TupLibraryFolder(name, this);
@@ -620,11 +558,7 @@ bool TupProject::addFolder(const QString &name)
 bool TupProject::removeFolder(const QString &name)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProject::removeFolder()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupProject::removeFolder()]";
     #endif
 
     return library->removeFolder(name);
@@ -639,11 +573,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                                        int layerIndex, int frameIndex)
 {    
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProject::insertSymbolIntoFrame()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupProject::insertSymbolIntoFrame()]";
     #endif        
     
     TupFrame *frame = nullptr;
@@ -675,12 +605,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
             }
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "TupProject::insertSymbolIntoFrame() - Fatal Error: invalid spaceMode!";
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "TupProject::insertSymbolIntoFrame() - Fatal Error: invalid spaceMode!";
             #endif        
             return false;
         }
@@ -772,12 +697,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                         break;
                         default:
                              #ifdef TUP_DEBUG
-                                 QString msg = "TupProject::insertSymbolIntoFrame() -> Unknown Object Type";
-                                 #ifdef Q_OS_WIN
-                                     qDebug() << msg;
-                                 #else
-                                     tFatal() << msg;
-                                 #endif
+                                 qDebug() << "TupProject::insertSymbolIntoFrame() -> Unknown Object Type";
                              #endif                         
                         break;
                 }
@@ -785,34 +705,19 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                 return true;
             } else {                
                 #ifdef TUP_DEBUG
-                    QString msg = "TupProject::insertSymbolIntoFrame() - Object NOT found at library! " + name;
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "TupProject::insertSymbolIntoFrame() - Object NOT found at library! " + name;
                 #endif
                 
                 return false;
             }
         } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupProject::insertSymbolIntoFrame() - Invalid frame!";
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "TupProject::insertSymbolIntoFrame() - Invalid frame!";
                 #endif
         }
     } else {        
         #ifdef TUP_DEBUG
-            QString msg = "TupProject::insertSymbolIntoFrame() - Invalid scene!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupProject::insertSymbolIntoFrame() - Invalid scene!";
         #endif        
     }
 
@@ -822,12 +727,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
 bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::Type type)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupProject::removeSymbolFromFrame() - Removing symbol " + name + " from project...";
-        #ifdef Q_OS_WIN
-            qDebug() << msg;
-        #else
-            T_FUNCINFO << msg;
-        #endif
+        qDebug() << "TupProject::removeSymbolFromFrame() - Removing symbol " + name + " from project...";
     #endif
     
     if (type == TupLibraryObject::Folder)
@@ -983,12 +883,7 @@ bool TupProject::isProjectOpen()
 bool TupProject::deleteDataDir(const QString &path)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupProject::deleteDataDir()]";
-        #else
-            T_FUNCINFO;
-            tWarning() << "Removing project path: " << path;
-        #endif
+        qDebug() << "[TupProject::deleteDataDir()] - path: " << path;
     #endif
 
     QDir dir(path);
@@ -1012,12 +907,7 @@ bool TupProject::deleteDataDir(const QString &path)
         return true;
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupProject::deleteDataDir() - Warning: directory doesn't exist -> " + path;
-            #ifdef Q_OS_WIN
-                qWarning() << msg;
-            #else
-                tWarning() << msg;
-            #endif
+            qWarning() << "TupProject::deleteDataDir() - Warning: directory doesn't exist -> " + path;
         #endif
     }
 

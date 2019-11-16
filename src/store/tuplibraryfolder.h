@@ -61,13 +61,14 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
     Q_OBJECT
     
     public:
-        TupLibraryFolder(const QString &getId, TupProject *getProject, QObject *parent = 0);
+        TupLibraryFolder(const QString &getId, TupProject *getProject, QObject *parent = nullptr);
         ~TupLibraryFolder();
         
         void setId(const QString &getId);
         QString getId() const;
         
-        TupLibraryObject *createSymbol(TupLibraryObject::Type type, const QString &name, const QByteArray &data = QByteArray(), const QString &folder = QString(), bool loaded = false);
+        TupLibraryObject *createSymbol(TupLibraryObject::Type type, const QString &name, const QByteArray &data = QByteArray(),
+                                       const QString &folder = QString(), bool loaded = false);
         
         bool addObject(TupLibraryObject *object); 
         bool addObject(const QString &folderName, TupLibraryObject *object);

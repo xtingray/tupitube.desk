@@ -107,7 +107,7 @@ class TUPITUBE_EXPORT RasterCanvasBase : public QGraphicsView
         QGraphicsRectItem *grid;
         QRectF drawingRect;
         QPointF position;
-        QColor bgcolor;
+        QColor bgColor;
 
         bool gridEnabled;
         bool safeAreaEnabled;

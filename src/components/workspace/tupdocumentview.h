@@ -150,7 +150,7 @@ class TUPITUBE_EXPORT TupDocumentView: public QMainWindow
         void updatePen(const QPen &pen);
         void updateBrush(const QBrush &brush);
         void updateCameraMode();
-        void closeRasterWindow();
+        void closeRasterWindow(const QString &path);
 
     public slots:
         void undo();

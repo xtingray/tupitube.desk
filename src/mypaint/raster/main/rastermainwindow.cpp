@@ -30,6 +30,7 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, c
                                    QWidget *parent): TMainWindow(winKey, parent)
 {
     projectSize = project->getDimension();
+    rasterBgDir = project->getRasterBgDir();
     createTopResources();
     createCentralWidget(project, contourColor);
 
@@ -137,7 +138,7 @@ void RasterMainWindow::createTopResources()
     QAction *exportAction = new QAction(tr("&Export as Image"), this);
     exportAction->setShortcuts(QKeySequence::Open);
     exportAction->setStatusTip(tr("Export as Image"));
-    connect(exportAction, SIGNAL(triggered()), this, SLOT(exportProject()));
+    connect(exportAction, SIGNAL(triggered()), this, SLOT(exportImage()));
 
     QAction *closeAction = new QAction(tr("Exit Raster Mode"), this);
     closeAction->setShortcuts(QKeySequence::Quit);
@@ -153,7 +154,7 @@ void RasterMainWindow::createCentralWidget(TupProject * project, const QColor co
 {
     // Central widget:
     rasterCanvas = new RasterCanvas(project, contourColor, this);
-    connect(rasterCanvas, SIGNAL(closeWindow()), this, SIGNAL(closeWindow()));
+    connect(rasterCanvas, SIGNAL(closeWindow()), this, SLOT(saveCanvas()));
     connect(rasterCanvas, SIGNAL(zoomIn()), this, SLOT(applyZoomIn()));
     connect(rasterCanvas, SIGNAL(zoomOut()), this, SLOT(applyZoomOut()));
 
@@ -180,6 +181,8 @@ void RasterMainWindow::closeEvent(QCloseEvent *event)
     #ifdef TUP_DEBUG
         qDebug() << "RasterMainWindow::closeEvent(QCloseEvent)";
     #endif
+
+    qDebug() << "Tracing 102";
 
     colorView->expandDock(false);
     brushesView->expandDock(false);
@@ -259,7 +262,7 @@ void RasterMainWindow::openProject()
     rasterCanvas->loadFromFile(filePath);
 }
 
-void RasterMainWindow::exportProject()
+void RasterMainWindow::exportImage()
 {
     // Path
     QString initPath = QDir::homePath() + "/untitled.png";
@@ -268,6 +271,20 @@ void RasterMainWindow::exportProject()
         return; // false;
 
     rasterCanvas->saveToFile(filePath);
+}
+
+void RasterMainWindow::saveCanvas()
+{
+    // SQA: Only render if there is at least one stroke
+    QString imgPath = rasterBgDir + "bg_static.png";
+    if (QDir().mkpath(rasterBgDir)) {
+        rasterCanvas->saveToFile(imgPath);
+        emit closeWindow(imgPath);
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "RasterMainWindow::saveCanvas() - Error while creating raster background path!";
+        #endif
+    }
 }
 
 void RasterMainWindow::resizeEvent(QResizeEvent *event)
@@ -283,5 +300,5 @@ void RasterMainWindow::keyPressEvent(QKeyEvent *event)
     #endif
 
     if (event->key() == Qt::Key_F11 || event->key() == Qt::Key_Escape)
-        emit closeWindow();
+        saveCanvas();
 }

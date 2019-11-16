@@ -41,11 +41,7 @@
 TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupLibraryWidget()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "[TupLibraryWidget()]";
     #endif
 
     childCount = 0;
@@ -990,13 +986,9 @@ void TupLibraryWidget::importImageGroup()
 
 void TupLibraryWidget::importImage(const QString &imagePath)
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
+    #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryWidget::importImage()]";
-    #else
-        T_FUNCINFO;
     #endif
-#endif
 
     if (imagePath.isEmpty())
         return;

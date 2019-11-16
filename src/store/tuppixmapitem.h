@@ -40,12 +40,11 @@
 #include "tupabstractserializable.h"
 
 #include <QGraphicsPixmapItem>
-// #include <QPixmap>
 
 class TUPITUBE_EXPORT TupPixmapItem : public QGraphicsPixmapItem, public TupAbstractSerializable
 {
     public:
-        TupPixmapItem(QGraphicsItem *parent = 0);
+        TupPixmapItem(QGraphicsItem *parent = nullptr);
         ~TupPixmapItem();
 
         virtual void fromXml(const QString &xml);

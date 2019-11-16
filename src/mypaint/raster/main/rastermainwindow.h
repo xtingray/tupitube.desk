@@ -46,7 +46,8 @@ class RasterMainWindow : public TMainWindow
 
     public slots:
         void openProject();
-        void exportProject();
+        void exportImage();
+        void saveCanvas();
         void processColorEvent(const TupPaintAreaEvent *);
 
         void resetWorkSpaceTransformations();
@@ -59,7 +60,7 @@ class RasterMainWindow : public TMainWindow
 
     signals:
          void paintAreaEventTriggered(const TupPaintAreaEvent *event);
-         void closeWindow();
+         void closeWindow(const QString &path);
 
     protected:
         void closeEvent(QCloseEvent *event);
@@ -79,6 +80,7 @@ class RasterMainWindow : public TMainWindow
         TupPaintAreaStatus *status;
 
         QSize projectSize;
+        QString rasterBgDir;
         QPushButton *colorBtn;
         QPushButton *clearBtn;
         QPushButton *saveBtn;

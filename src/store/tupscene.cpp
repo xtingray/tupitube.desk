@@ -81,6 +81,11 @@ void TupScene::setSceneLocked(bool locked)
     isLocked = locked;
 }
 
+void TupScene::setRasterBgImage(int type, QImage *image, int index)
+{
+    background->setRasterBgImage(type, image, index);
+}
+
 QString TupScene::getSceneName() const
 {
     return sceneName;

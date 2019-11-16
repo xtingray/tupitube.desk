@@ -67,7 +67,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
             NONE
         };
 
-        TupProject(QObject *parent = 0);
+        TupProject(QObject *parent = nullptr);
         ~TupProject();
 
         void setProjectName(const QString &name);
@@ -90,6 +90,8 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
 
         void setDataDir(const QString &path);
         QString getDataDir() const;
+        QString getRasterDir() const;
+        QString getRasterBgDir() const;
 
         TupScene *sceneAt(int pos) const;
 

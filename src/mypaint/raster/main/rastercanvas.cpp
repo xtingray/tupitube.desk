@@ -170,12 +170,12 @@ void RasterCanvas::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_UNUSED(event)
     pressed = false;
-    // RasterCanvasBase::mouseReleaseEvent(event);
 }
 
 void RasterCanvas::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_F11 || event->key() == Qt::Key_Escape) {
+        qDebug() << "Tracing 103";
         emit closeWindow();
         return;
     }

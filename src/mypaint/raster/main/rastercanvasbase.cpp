@@ -97,7 +97,7 @@ RasterCanvasBase::~RasterCanvasBase()
 
 void RasterCanvasBase::setBgColor(const QColor color)
 {
-    bgcolor = color;
+    bgColor = color;
     viewport()->update();
 }
 
@@ -225,7 +225,7 @@ void RasterCanvasBase::drawBackground(QPainter *painter, const QRectF &rect)
 
     painter->setRenderHint(QPainter::Antialiasing, true);
     painter->setPen(blackPen);
-    painter->fillRect(drawingRect, bgcolor);
+    painter->fillRect(drawingRect, bgColor);
     painter->drawRect(drawingRect);
 
     emit changedZero(painter->worldTransform().map(QPointF(0, 0)));

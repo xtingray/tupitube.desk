@@ -87,6 +87,7 @@ TupFrame::TupFrame(TupBackground *bg, const QString &label) : QObject(bg)
     opacity = 1.0;
     graphics = GraphicObjects();
     svg = SvgObjects();
+    bgRasterImageIndex = 0;
 
     direction = "0";
     shift = "5";
@@ -142,6 +143,27 @@ QString TupFrame::getFrameName() const
     return frameName;
 }
 
+void TupFrame::setRasterBgImage(QImage *image, int index)
+{
+    bgRasterImage = image;
+    bgRasterImageIndex = index;
+}
+
+QImage * TupFrame::getBgRasterImage()
+{
+    return bgRasterImage;
+}
+
+int TupFrame::getBgRasterImageIndex()
+{
+    return bgRasterImageIndex;
+}
+
+void TupFrame::setRasterIndex(int index)
+{
+    bgRasterImageIndex = index;
+}
+
 void TupFrame::setDynamicDirection(const QString &orientation)
 {
     direction = orientation;
@@ -154,9 +176,10 @@ void TupFrame::setDynamicShift(const QString &pixels)
 
 TupBackground::Direction TupFrame::dynamicDirection() const
 {
-#ifdef TUP_DEBUG
-    qDebug() << "[TupFrame::dynamicDirection()] " << direction;
-#endif
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupFrame::dynamicDirection()] " << direction;
+    #endif
+
     bool ok;
     int value = direction.toInt(&ok);
     if (ok)
@@ -167,9 +190,10 @@ TupBackground::Direction TupFrame::dynamicDirection() const
 
 int TupFrame::dynamicShift() const
 {
-#ifdef TUP_DEBUG
-    qDebug() << "[TupFrame::dynamicShift()] " << shift;
-#endif
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupFrame::dynamicShift()] " << shift;
+    #endif
+
     bool ok;
     int value = shift.toInt(&ok);
     if (ok)
@@ -215,33 +239,22 @@ double TupFrame::frameOpacity()
 void TupFrame::fromXml(const QString &xml)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupFrame::fromXml()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupFrame::fromXml()]";
     #endif
 
     QDomDocument document;
     if (!document.setContent(xml)) {    
         #ifdef TUP_DEBUG
-            QString msg = "TupFrame::fromXml() - File corrupted!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-                qWarning() << "Content:";
-                qWarning() << xml;
-            #else
-                tError() << msg;
-                tWarning() << "Content:";
-                tWarning() << xml;            
-            #endif
-        #endif
-        
+            qDebug() << "TupFrame::fromXml() - File corrupted!";
+            qWarning() << "Content:";
+            qWarning() << xml;
+        #endif        
         return;
     }
 
     QDomElement root = document.documentElement();
     setFrameName(root.attribute("name", tr("Frame")));
+    setRasterIndex(root.attribute("rasterIndex", "0").toInt());
 
     if (type == DynamicBg) {
         setDynamicDirection(root.attribute("direction", "0"));
@@ -254,102 +267,92 @@ void TupFrame::fromXml(const QString &xml)
 
     QDomNode n = root.firstChild();
     while (!n.isNull()) {
-           QDomElement e = n.toElement();
-           if (!e.isNull()) {
-               if (e.tagName() == "object") {
-                   QDomNode n2 = e.firstChild();
+        QDomElement e = n.toElement();
+        if (!e.isNull()) {
+            if (e.tagName() == "object") {
+               QDomNode n2 = e.firstChild();
 
-                   TupGraphicObject *last = nullptr; // This variable contains the object in case of tweening
-                   while (!n2.isNull()) {
-                          QDomElement e2 = n2.toElement();
-                          if (e2.tagName() == "tweening" && last) {
-                              TupItemTweener *tweener = new TupItemTweener(); 
-                              QString newDoc;
-                              {
-                                QTextStream ts(&newDoc);
-                                ts << n2;
-                              }
-
-                              tweener->fromXml(newDoc);
-                              last->addTween(tweener);
-                              parentScene()->addTweenObject(layer->layerIndex(), last);
-                          } else {
-                              QString newDoc;
-                              {
-                                QTextStream ts(&newDoc);
-                                ts << n2;
-                              }
-
-                              QPointF point = QPointF();
-                              QDomNode n3 = n2.firstChild();
-                              while (!n3.isNull()) {
-                                     QDomElement e3 = n3.toElement();
-                                     if (e3.tagName() == "properties") {
-                                         TupSvg2Qt::parsePointF(e3.attribute("pos"), point);
-                                         break;
-                                     }
-                                     n3 = n3.nextSibling();
-                              }
-
-                              createItem(point, newDoc);
-                              last = graphics.at(graphics.size()-1);
+               TupGraphicObject *last = nullptr; // This variable contains the object in case of tweening
+               while (!n2.isNull()) {
+                      QDomElement e2 = n2.toElement();
+                      if (e2.tagName() == "tweening" && last) {
+                          TupItemTweener *tweener = new TupItemTweener();
+                          QString newDoc;
+                          {
+                            QTextStream ts(&newDoc);
+                            ts << n2;
                           }
-                          n2 = n2.nextSibling();
-                   }
-               } else if (e.tagName() == "svg") {
-                          QString symbol = e.attribute("id");
-                          if (symbol.length() > 0) {
-                              TupLibraryObject *object = parentProject()->getLibrary()->getObject(symbol);
 
-                              if (object) {
-                                  QString path(object->getDataPath());
-                                  QDomNode n2 = e.firstChild();
-                                  TupSvgItem *svg = new TupSvgItem();
+                          tweener->fromXml(newDoc);
+                          last->addTween(tweener);
+                          parentScene()->addTweenObject(layer->layerIndex(), last);
+                      } else {
+                          QString newDoc;
+                          {
+                            QTextStream ts(&newDoc);
+                            ts << n2;
+                          }
 
-                                  while (!n2.isNull()) {
-                                      QDomElement e2 = n2.toElement();
-                                      if (e2.tagName() == "properties") {
-                                          svg = new TupSvgItem(path, this);
-                                          svg->setSymbolName(symbol);
-                                          TupSerializer::loadProperties(svg, e2);
+                          QPointF point = QPointF();
+                          QDomNode n3 = n2.firstChild();
+                          while (!n3.isNull()) {
+                                 QDomElement e3 = n3.toElement();
+                                 if (e3.tagName() == "properties") {
+                                     TupSvg2Qt::parsePointF(e3.attribute("pos"), point);
+                                     break;
+                                 }
+                                 n3 = n3.nextSibling();
+                          }
 
-                                          addSvgItem(symbol, svg);
-                                      } else if (e2.tagName() == "tweening") {
-                                          TupItemTweener *tweener = new TupItemTweener();
-                                          QString newDoc;
-                                          {
-                                              QTextStream ts(&newDoc);
-                                              ts << n2;
-                                          }
-                                          tweener->fromXml(newDoc);
-                                          svg->addTween(tweener);
-                                          parentScene()->addTweenObject(layer->layerIndex(), svg);
+                          createItem(point, newDoc);
+                          last = graphics.at(graphics.size()-1);
+                      }
+                      n2 = n2.nextSibling();
+               }
+            } else if (e.tagName() == "svg") {
+                      QString symbol = e.attribute("id");
+                      if (symbol.length() > 0) {
+                          TupLibraryObject *object = parentProject()->getLibrary()->getObject(symbol);
+
+                          if (object) {
+                              QString path(object->getDataPath());
+                              QDomNode n2 = e.firstChild();
+                              TupSvgItem *svg = new TupSvgItem();
+
+                              while (!n2.isNull()) {
+                                  QDomElement e2 = n2.toElement();
+                                  if (e2.tagName() == "properties") {
+                                      svg = new TupSvgItem(path, this);
+                                      svg->setSymbolName(symbol);
+                                      TupSerializer::loadProperties(svg, e2);
+
+                                      addSvgItem(symbol, svg);
+                                  } else if (e2.tagName() == "tweening") {
+                                      TupItemTweener *tweener = new TupItemTweener();
+                                      QString newDoc;
+                                      {
+                                          QTextStream ts(&newDoc);
+                                          ts << n2;
                                       }
-                                      n2 = n2.nextSibling(); 
+                                      tweener->fromXml(newDoc);
+                                      svg->addTween(tweener);
+                                      parentScene()->addTweenObject(layer->layerIndex(), svg);
                                   }
-                              } else {
-                                  #ifdef TUP_DEBUG
-                                      QString msg = "TupFrame::fromXml() - Fatal Error: Object is NULL -> " + symbol;
-                                      #ifdef Q_OS_WIN
-                                          qDebug() << msg;
-                                      #else
-                                          tError() << msg;
-                                      #endif
-                                  #endif
+                                  n2 = n2.nextSibling();
                               }
                           } else {
                               #ifdef TUP_DEBUG
-                                  QString msg = "TupFrame::fromXml() - Fatal Error: Object id is NULL!";
-                                  #ifdef Q_OS_WIN
-                                      qDebug() << msg;
-                                  #else
-                                      tError() << msg;
-                                  #endif
-                              #endif    
+                                  qDebug() << "TupFrame::fromXml() - Fatal Error: Object is NULL -> " + symbol;
+                              #endif
                           }
-               } 
+                      } else {
+                          #ifdef TUP_DEBUG
+                              qDebug() << "TupFrame::fromXml() - Fatal Error: Object id is NULL!";
+                          #endif
+                      }
            }
-           n = n.nextSibling();
+        }
+        n = n.nextSibling();
     }
 }
 
@@ -357,6 +360,7 @@ QDomElement TupFrame::toXml(QDomDocument &doc) const
 {
     QDomElement root = doc.createElement("frame");
     root.setAttribute("name", frameName);
+    root.setAttribute("rasterIndex", bgRasterImageIndex);
 
     if (type == DynamicBg) {
         root.setAttribute("direction", direction);

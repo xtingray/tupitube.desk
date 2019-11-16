@@ -78,6 +78,8 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
         void setSceneName(const QString &name);
         QString getSceneName() const;
 
+        void setRasterBgImage(int type, QImage *image, int index);
+
         void setBgColor(const QColor bgColor);
 
         void setSceneLocked(bool isSceneLocked);

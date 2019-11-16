@@ -48,6 +48,7 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
     Q_OBJECT
 
     public:
+        enum BgType { Dynamic = 0, Static };
         enum Direction { Right = 0, Left = 1, Top, Bottom };
         TupBackground(TupScene *parent, const QSize dimension, const QColor bgColor);
         ~TupBackground();
@@ -57,6 +58,8 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
 
         void setBgColor(const QColor color);
         void clear();
+
+        void setRasterBgImage(int type, QImage *image, int index);
 
         void renderDynamicView();
         QPixmap dynamicView(int frameIndex);
