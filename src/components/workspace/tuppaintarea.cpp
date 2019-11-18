@@ -1171,11 +1171,7 @@ void TupPaintArea::requestItemMovement(QAction *action)
 void TupPaintArea::updatePaintArea() 
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea::updatePaintArea()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupPaintArea::updatePaintArea()]";
     #endif
 
     if (spaceMode == TupProject::FRAMES_EDITION) {

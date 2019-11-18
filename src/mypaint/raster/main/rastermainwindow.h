@@ -38,8 +38,8 @@ class RasterMainWindow : public TMainWindow
     public:
         enum Perspective { Raster = 0x01 };
 
-        explicit RasterMainWindow(TupProject *project, const QString &winKey, const QColor contourColor,
-                                  QWidget *parent = nullptr);
+        explicit RasterMainWindow(TupProject *project, const QString &winKey, int scene,
+                                  const QColor contourColor, QWidget *parent = nullptr);
         ~RasterMainWindow();
 
          void setTabletDevice(QTabletEvent *event);
@@ -80,7 +80,8 @@ class RasterMainWindow : public TMainWindow
         TupPaintAreaStatus *status;
 
         QSize projectSize;
-        QString rasterBgDir;
+        QString rasterDir;
+        int sceneIndex;
         QPushButton *colorBtn;
         QPushButton *clearBtn;
         QPushButton *saveBtn;

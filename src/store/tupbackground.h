@@ -59,7 +59,7 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         void setBgColor(const QColor color);
         void clear();
 
-        void setRasterBgImage(int type, QImage *image, int index);
+        // void setRasterBgImage(int type, QImage *image, int index);
 
         void renderDynamicView();
         QPixmap dynamicView(int frameIndex);
@@ -84,13 +84,25 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
 
+        void updateRasterBackground(TupProject::Mode spaceContext, const QString &imgPath);
+        bool rasterDynamicBgIsNull();
+        bool rasterStaticBgIsNull();
+        QPixmap rasterDynamicBackground();
+        QPixmap rasterStaticBackground();
+
     private:
         QSize dimension;
         QColor bgColor;
         TupFrame *staticBg;
         TupFrame *dynamicBg;
-        QImage raster;
+        QImage dynamicBackgroundImage;
+        QImage dynamicViewImage;
         bool noRender;
+
+        QPixmap rasterDynamicBg;
+        QPixmap rasterStaticBg;
+        int rasterStaticBgIndex;
+        int rasterDynamicBgIndex;
 };
 
 #endif

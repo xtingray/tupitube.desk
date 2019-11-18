@@ -26,11 +26,12 @@
 #include <QMenu>
 #include <QAction>
 
-RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, const QColor contourColor,
+RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, int scene, const QColor contourColor,
                                    QWidget *parent): TMainWindow(winKey, parent)
 {
+    sceneIndex = scene;
     projectSize = project->getDimension();
-    rasterBgDir = project->getRasterBgDir();
+    rasterDir = project->getRasterDir();
     createTopResources();
     createCentralWidget(project, contourColor);
 
@@ -184,6 +185,8 @@ void RasterMainWindow::closeEvent(QCloseEvent *event)
 
     qDebug() << "Tracing 102";
 
+    saveCanvas();
+
     colorView->expandDock(false);
     brushesView->expandDock(false);
 
@@ -265,7 +268,7 @@ void RasterMainWindow::openProject()
 void RasterMainWindow::exportImage()
 {
     // Path
-    QString initPath = QDir::homePath() + "/untitled.png";
+    QString initPath = QDir::homePath() + "/static_bg.png";
     QString filePath = QFileDialog::getSaveFileName(this, tr("Export Image"), initPath);
     if (filePath.isEmpty())
         return; // false;
@@ -275,14 +278,21 @@ void RasterMainWindow::exportImage()
 
 void RasterMainWindow::saveCanvas()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "RasterMainWindow::saveCanvas()";
+    #endif
+
     // SQA: Only render if there is at least one stroke
-    QString imgPath = rasterBgDir + "bg_static.png";
-    if (QDir().mkpath(rasterBgDir)) {
-        rasterCanvas->saveToFile(imgPath);
-        emit closeWindow(imgPath);
+    QString imgPath = rasterDir + QString::number(sceneIndex) + "/bg/";
+    qDebug() << "*** RASTER PATH: " << imgPath;
+
+    if (QDir().mkpath(imgPath)) {
+        rasterCanvas->saveToFile(imgPath + "static_bg.png");
+        emit closeWindow(imgPath + "static_bg.png");
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "RasterMainWindow::saveCanvas() - Error while creating raster background path!";
+            qDebug() << "Image Path: " << imgPath;
         #endif
     }
 }

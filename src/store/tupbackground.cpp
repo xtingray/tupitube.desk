@@ -61,14 +61,6 @@ void TupBackground::setBgColor(const QColor color)
     bgColor = color;
 }
 
-void TupBackground::setRasterBgImage(int type, QImage *image, int index)
-{
-    if (type == TupBackground::BgType(type))
-        dynamicBg->setRasterBgImage(image, index);
-    else
-        staticBg->setRasterBgImage(image, index);
-}
-
 void TupBackground::fromXml(const QString &xml)
 {
     QDomDocument document;
@@ -76,6 +68,9 @@ void TupBackground::fromXml(const QString &xml)
         return;
 
     QDomElement root = document.documentElement();
+    rasterDynamicBgIndex = root.attribute("rasterDynamicBgIndex", "0").toInt();
+    rasterStaticBgIndex = root.attribute("rasterStaticBgIndex", "0").toInt();
+
     QDomNode n = root.firstChild();
 
     while (!n.isNull()) {
@@ -112,23 +107,22 @@ void TupBackground::fromXml(const QString &xml)
                    }
                } else {
                    #ifdef TUP_DEBUG
-                       QString msg = "TupBackground::fromXml() - Error: The background input is invalid";
-                       #ifdef Q_OS_WIN
-                           qDebug() << msg;
-                       #else
-                           tError() << msg;
-                       #endif
+                       qDebug() << "TupBackground::fromXml() - Error: The background input is invalid";
                    #endif
                }
            }
 
            n = n.nextSibling();
     }
+
+    // SQA: Load raster images here
 }
 
 QDomElement TupBackground::toXml(QDomDocument &doc) const
 {
     QDomElement root = doc.createElement("background");
+    root.setAttribute("rasterDynamicBgIndex", rasterDynamicBgIndex);
+    root.setAttribute("rasterStaticBgIndex", rasterStaticBgIndex);
     doc.appendChild(root);
 
     root.appendChild(dynamicBg->toXml(doc));
@@ -189,11 +183,7 @@ double TupBackground::staticOpacity()
 void TupBackground::renderDynamicView()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupBackground::renderDynamicView()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupBackground::renderDynamicView()]";
     #endif 
 	
     TupBackgroundScene *bgScene = new TupBackgroundScene(dimension, bgColor, dynamicBg);
@@ -286,9 +276,10 @@ QPixmap TupBackground::dynamicView(int frameIndex)
             break;
     }
 
-    QImage view = raster.copy(posX, posY, dimension.width(), dimension.height()); 
+    // QImage view = raster.copy(posX, posY, dimension.width(), dimension.height());
+    dynamicViewImage = dynamicBackgroundImage.copy(posX, posY, dimension.width(), dimension.height());
 
-    return QPixmap::fromImage(view);
+    return QPixmap::fromImage(dynamicViewImage);
 }
 
 bool TupBackground::rasterRenderIsPending()
@@ -303,12 +294,12 @@ void TupBackground::scheduleRender(bool status)
 
 void TupBackground::setDynamicRaster(QImage bg)
 {
-    raster = bg;
+    dynamicBackgroundImage = bg;
 }
 
 QImage TupBackground::dynamicRaster()
 {
-    return raster;
+    return dynamicBackgroundImage;
 }
 
 void TupBackground::setDynamicDirection(int direction)
@@ -339,4 +330,32 @@ TupScene * TupBackground::scene()
 TupProject * TupBackground::project()
 {
     return scene()->project();
+}
+
+void TupBackground::updateRasterBackground(TupProject::Mode spaceContext, const QString &imgPath)
+{
+    if (spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION)
+        rasterDynamicBg = QPixmap(imgPath);
+    else
+        rasterStaticBg = QPixmap(imgPath);
+}
+
+bool TupBackground::rasterStaticBgIsNull()
+{
+    return rasterStaticBg.isNull();
+}
+
+bool TupBackground::rasterDynamicBgIsNull()
+{
+    return rasterDynamicBg.isNull();
+}
+
+QPixmap TupBackground::rasterStaticBackground()
+{
+    return rasterStaticBg;
+}
+
+QPixmap TupBackground::rasterDynamicBackground()
+{
+    return rasterDynamicBg;
 }

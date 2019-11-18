@@ -78,15 +78,13 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
         void setSceneName(const QString &name);
         QString getSceneName() const;
 
-        void setRasterBgImage(int type, QImage *image, int index);
-
         void setBgColor(const QColor bgColor);
 
         void setSceneLocked(bool isSceneLocked);
         bool isSceneLocked() const;
 
-        void setVisibility(bool isSceneViisible);
-        bool isSceneViisible() const;
+        void setVisibility(bool isSceneVisible);
+        bool isSceneVisible() const;
 
         Layers getLayers() const;
         int layersCount() const;
@@ -168,6 +166,8 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
         int lipSyncTotal();
         Mouths getLipSyncList();
         int totalPhotograms();
+
+        void updateRasterBackground(TupProject::Mode spaceContext, const QString &imgPath);
 
     private:
         void removeTweensFromLayer(int layerIndex);

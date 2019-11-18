@@ -81,11 +81,6 @@ void TupScene::setSceneLocked(bool locked)
     isLocked = locked;
 }
 
-void TupScene::setRasterBgImage(int type, QImage *image, int index)
-{
-    background->setRasterBgImage(type, image, index);
-}
-
 QString TupScene::getSceneName() const
 {
     return sceneName;
@@ -101,7 +96,7 @@ void TupScene::setVisibility(bool visible)
     isVisible = visible;
 }
 
-bool TupScene::isSceneViisible() const
+bool TupScene::isSceneVisible() const
 {
     return isVisible;
 }
@@ -956,4 +951,9 @@ int TupScene::totalPhotograms()
         total = qMax(total, layers.at(i)->getFrames().count());
 
     return total;
+}
+
+void TupScene::updateRasterBackground(TupProject::Mode spaceContext, const QString &imgPath)
+{
+    background->updateRasterBackground(spaceContext, imgPath);
 }

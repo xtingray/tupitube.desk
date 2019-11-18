@@ -160,7 +160,7 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         TupToolPlugin *gTool;
         TupScene *gScene;
         TupBackground *background;
-        QPixmap dynamicPixmap;
+        // QPixmap dynamicPixmap;
         double gOpacity;
 
         struct OnionSkin
@@ -192,6 +192,7 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
 
         bool loadingProject;
         QGraphicsPixmapItem *dynamicBg;
+        QGraphicsPixmapItem *rasterStaticBg;
 };
 
 #endif

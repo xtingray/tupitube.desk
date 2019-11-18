@@ -195,11 +195,6 @@ QString TupProject::getRasterDir() const
     return cachePath + "/images/raster/";
 }
 
-QString TupProject::getRasterBgDir() const
-{
-    return cachePath + "/images/raster/bg/";
-}
-
 TupScene *TupProject::createScene(QString name, int position, bool loaded)
 {
     #ifdef TUP_DEBUG
@@ -934,4 +929,9 @@ void TupProject::importLayer(int sceneIndex, const QString &layer)
 {
     TupScene *scene = scenesList.at(sceneIndex);
     scene->addLayer(layer);
+}
+
+void TupProject::updateRasterBackground(TupProject::Mode spaceContext, int sceneIndex, const QString &imgPath)
+{
+    scenesList.at(sceneIndex)->updateRasterBackground(spaceContext, imgPath);
 }

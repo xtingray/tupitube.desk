@@ -1167,12 +1167,14 @@ void TupDocumentView::createToolBar()
 
     addToolBarBreak();
 
-    QWidget *empty0 = new QWidget();
-    empty0->setFixedWidth(5);
-    QWidget *empty1 = new QWidget();
-    empty1->setFixedWidth(5);
-    QWidget *empty2 = new QWidget();
-    empty2->setFixedWidth(5);
+    QWidget *sEmpty0 = new QWidget();
+    sEmpty0->setFixedWidth(5);
+    QWidget *sEmpty1 = new QWidget();
+    sEmpty1->setFixedWidth(5);
+    QWidget *sEmpty2 = new QWidget();
+    sEmpty2->setFixedWidth(5);
+    QWidget *sEmpty3 = new QWidget();
+    sEmpty3->setFixedWidth(5);
 
     QLabel *staticOpacityLabel = new QLabel();
     QPixmap staticPix(THEME_DIR + "icons/bg_opacity.png");
@@ -1186,16 +1188,18 @@ void TupDocumentView::createToolBar()
     staticOpacityBox->setToolTip(tr("Static BG Opacity"));
     connect(staticOpacityBox, SIGNAL(valueChanged(double)), this, SLOT(updateStaticOpacity(double)));
 
-    QPushButton *rasterButton = new QPushButton(QIcon(THEME_DIR + "icons/raster_mode.png"), "", this);
-    rasterButton->setToolTip(tr("Raster Mode"));
-    connect(rasterButton, SIGNAL(clicked()), this, SLOT(openRasterMode()));
+    QPushButton *staticRasterButton = new QPushButton(QIcon(THEME_DIR + "icons/raster_mode.png"), "");
+    staticRasterButton->setToolTip(tr("Raster Mode"));
+    connect(staticRasterButton, SIGNAL(clicked()), this, SLOT(openRasterMode()));
 
-    staticPropertiesBar->addWidget(empty0);
+    staticPropertiesBar->addWidget(sEmpty0);
     staticPropertiesBar->addWidget(staticOpacityLabel);
-    staticPropertiesBar->addWidget(empty1);
+    staticPropertiesBar->addWidget(sEmpty1);
     staticPropertiesBar->addWidget(staticOpacityBox);
-    staticPropertiesBar->addWidget(empty2);
-    staticPropertiesBar->addWidget(rasterButton);
+    staticPropertiesBar->addWidget(sEmpty2);
+    staticPropertiesBar->addSeparator();
+    staticPropertiesBar->addWidget(sEmpty3);
+    staticPropertiesBar->addWidget(staticRasterButton);
     staticPropertiesBar->setVisible(false);
 
     QLabel *dirLabel = new QLabel();
@@ -1211,20 +1215,24 @@ void TupDocumentView::createToolBar()
     dirCombo->addItem(QIcon(THEME_DIR + "icons/mov_down.png"), "   " + tr("Down"));
     connect(dirCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setBackgroundDirection(int)));
 
-    QWidget *empty3 = new QWidget();
-    empty3->setFixedWidth(5);
-    QWidget *empty4 = new QWidget();
-    empty4->setFixedWidth(5);
-    QWidget *empty5 = new QWidget();
-    empty5->setFixedWidth(5);
-    QWidget *empty6 = new QWidget();
-    empty6->setFixedWidth(5);
-    QWidget *empty7 = new QWidget();
-    empty7->setFixedWidth(5);
-    QWidget *empty8 = new QWidget();
-    empty8->setFixedWidth(5);
-    QWidget *empty9 = new QWidget();
-    empty9->setFixedWidth(5);
+    QWidget *dEmpty0 = new QWidget();
+    dEmpty0->setFixedWidth(5);
+    QWidget *dEmpty1 = new QWidget();
+    dEmpty1->setFixedWidth(5);
+    QWidget *dEmpty2 = new QWidget();
+    dEmpty2->setFixedWidth(5);
+    QWidget *dEmpty3 = new QWidget();
+    dEmpty3->setFixedWidth(5);
+    QWidget *dEmpty4 = new QWidget();
+    dEmpty4->setFixedWidth(5);
+    QWidget *dEmpty5 = new QWidget();
+    dEmpty5->setFixedWidth(5);
+    QWidget *dEmpty6 = new QWidget();
+    dEmpty6->setFixedWidth(5);
+    QWidget *dEmpty7 = new QWidget();
+    dEmpty7->setFixedWidth(5);
+    QWidget *dEmpty8 = new QWidget();
+    dEmpty8->setFixedWidth(5);
 
     QLabel *shiftLabel = new QLabel();
     QPixmap shiftPix(THEME_DIR + "icons/shift_length.png");
@@ -1249,21 +1257,29 @@ void TupDocumentView::createToolBar()
     dynamicOpacityBox->setToolTip(tr("Dynamic BG Opacity"));
     connect(dynamicOpacityBox, SIGNAL(valueChanged(double)), this, SLOT(updateDynamicOpacity(double)));
 
+    QPushButton *dynamicRasterButton = new QPushButton(QIcon(THEME_DIR + "icons/raster_mode.png"), "", this);
+    dynamicRasterButton->setToolTip(tr("Raster Mode"));
+    connect(dynamicRasterButton, SIGNAL(clicked()), this, SLOT(openRasterMode()));
+
     dynamicPropertiesBar->addWidget(dirLabel);
-    dynamicPropertiesBar->addWidget(empty3);
+    dynamicPropertiesBar->addWidget(dEmpty0);
     dynamicPropertiesBar->addWidget(dirCombo);
-    dynamicPropertiesBar->addWidget(empty4);
+    dynamicPropertiesBar->addWidget(dEmpty1);
     dynamicPropertiesBar->addSeparator();
-    dynamicPropertiesBar->addWidget(empty5);
+    dynamicPropertiesBar->addWidget(dEmpty2);
     dynamicPropertiesBar->addWidget(shiftLabel);
-    dynamicPropertiesBar->addWidget(empty6);
+    dynamicPropertiesBar->addWidget(dEmpty3);
     dynamicPropertiesBar->addWidget(shiftSpin);
-    dynamicPropertiesBar->addWidget(empty7);
+    dynamicPropertiesBar->addWidget(dEmpty4);
     dynamicPropertiesBar->addSeparator();
-    dynamicPropertiesBar->addWidget(empty8);
+    dynamicPropertiesBar->addWidget(dEmpty5);
     dynamicPropertiesBar->addWidget(dynamicOpacityLabel);
-    dynamicPropertiesBar->addWidget(empty9);
+    dynamicPropertiesBar->addWidget(dEmpty6);
     dynamicPropertiesBar->addWidget(dynamicOpacityBox);
+    dynamicPropertiesBar->addWidget(dEmpty7);
+    dynamicPropertiesBar->addSeparator();
+    dynamicPropertiesBar->addWidget(dEmpty8);
+    dynamicPropertiesBar->addWidget(dynamicRasterButton);
 
     dynamicPropertiesBar->setVisible(false);
 
@@ -1273,7 +1289,7 @@ void TupDocumentView::createToolBar()
 
 void TupDocumentView::openRasterMode()
 {
-    rasterWindow = new RasterMainWindow(project, "raster", contourColor, this);
+    rasterWindow = new RasterMainWindow(project, "raster", currentSceneIndex(), contourColor, this);
     connect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString &)));
     connect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
             this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
@@ -1282,7 +1298,7 @@ void TupDocumentView::openRasterMode()
     rasterWindow->showFullScreen();
 }
 
-void TupDocumentView::closeRasterWindow(const QString &path)
+void TupDocumentView::closeRasterWindow(const QString &imgPath)
 {
     if (rasterWindowOn) {
         disconnect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString &)));
@@ -1293,6 +1309,11 @@ void TupDocumentView::closeRasterWindow(const QString &path)
         rasterWindowOn = false;
         rasterWindow = nullptr;
         delete rasterWindow;
+
+        if (QFile::exists(imgPath)) {
+            project->updateRasterBackground(spaceContext(), currentSceneIndex(), imgPath);
+            paintArea->updatePaintArea();
+        }
     }
 }
 

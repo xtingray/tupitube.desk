@@ -60,7 +60,7 @@ TupGraphicsScene::TupGraphicsScene() : QGraphicsScene()
     #endif
 
     loadingProject = true;
-    dynamicBg = new QGraphicsPixmapItem;
+    // dynamicBg = new QGraphicsPixmapItem;
 
     setItemIndexMethod(QGraphicsScene::NoIndex);
 
@@ -284,8 +284,9 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
                 if (background->rasterRenderIsPending())
                     background->renderDynamicView();
 
-                dynamicPixmap = background->dynamicView(photogram);
-                dynamicBg = new QGraphicsPixmapItem(dynamicPixmap);
+                // dynamicPixmap = background->dynamicView(photogram);
+                // dynamicBg = new QGraphicsPixmapItem(dynamicPixmap);
+                dynamicBg = new QGraphicsPixmapItem(background->dynamicView(photogram));
                 dynamicBg->setZValue(0);
                 frame = background->dynamicFrame();
                 if (frame) 
@@ -297,6 +298,13 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
                     qDebug() << "TupGraphicsScene::drawSceneBackground() - Dynamic background frame is empty";
                 #endif
             }
+        }
+
+        if (!background->rasterStaticBgIsNull()) {
+            rasterStaticBg = new QGraphicsPixmapItem(background->rasterStaticBackground());
+            rasterStaticBg->setZValue(0);
+            addItem(rasterStaticBg);
+            rasterStaticBg = nullptr;
         }
 
         if (!background->staticBgIsEmpty()) {
@@ -332,18 +340,21 @@ void TupGraphicsScene::addFrame(TupFrame *frame, double opacityFactor, Context m
     if (objectsCount == 0 && svgCount == 0)
         return;
 
+    // Adding only native objects
     if (objectsCount > 0 && svgCount == 0) {
         foreach (TupGraphicObject *object, objects)
             processNativeObject(object, frameType, opacityFactor, mode);
         return;
     }
 
+    // Adding only SVG objects
     if (svgCount > 0 && objectsCount == 0) {
         foreach (TupSvgItem *svg, svgItems)
             processSVGObject(svg, frameType, opacityFactor, mode);
         return;
     }
 
+    // Adding native AND SVG objects
     TupGraphicObject *object;
     TupSvgItem *svg;
     do {
@@ -918,8 +929,8 @@ void TupGraphicsScene::cleanWorkSpace()
     */
 
     if (dynamicBg) {
-        delete dynamicBg;
         dynamicBg = nullptr;
+        delete dynamicBg;
     }
 
     onionSkin.accessMap.clear();

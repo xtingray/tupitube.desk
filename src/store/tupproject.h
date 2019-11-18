@@ -91,7 +91,6 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         void setDataDir(const QString &path);
         QString getDataDir() const;
         QString getRasterDir() const;
-        QString getRasterBgDir() const;
 
         TupScene *sceneAt(int pos) const;
 
@@ -137,6 +136,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         TupProject::Mode spaceContext();
 
         void importLayer(int sceneIndex, const QString &layer);
+        void updateRasterBackground(TupProject::Mode spaceContext, int sceneIndex, const QString &imgPath);
 
     signals:
         void responsed(TupProjectResponse *response);
