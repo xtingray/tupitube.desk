@@ -97,24 +97,24 @@ TupCameraWidget::~TupCameraWidget()
     #endif
 
     if (cameraBar) {
-        delete cameraBar;
         cameraBar = nullptr;
+        delete cameraBar;
     }
 
     if (progressBar) {
-       delete progressBar;
        progressBar = nullptr;
+       delete progressBar;
     }
 
     if (status) {
-        delete status;
         status = nullptr;
+        delete status;
     }
 
     if (previewScreen) {
         previewScreen->clearPhotograms();
-        delete previewScreen;
         previewScreen = nullptr;
+        delete previewScreen;
     }
 }
 

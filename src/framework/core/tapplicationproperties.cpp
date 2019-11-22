@@ -70,9 +70,9 @@ void TApplicationProperties::setThemeDir(const QString &path)
     themePath = path;
 }
 
-void TApplicationProperties::setRasterDir(const QString &path)
+void TApplicationProperties::setRasterResourcesDir(const QString &path)
 {
-    rasterPath = path;
+    rasterResourcesPath = path;
 }
 
 void TApplicationProperties::setPluginDir(const QString &path)
@@ -103,6 +103,11 @@ void TApplicationProperties::setRevision(const QString &revision)
 void TApplicationProperties::setCodeName(const QString &code)
 {
     codeNameStr = code;
+}
+
+void TApplicationProperties::setProjectDir(const QString &projectName)
+{
+    projectPath = cachePath + "/" + projectName;
 }
 
 QString TApplicationProperties::homeDir() const
@@ -143,9 +148,14 @@ QString TApplicationProperties::themeDir() const
     return themePath;
 }
 
-QString TApplicationProperties::rasterDir() const
+QString TApplicationProperties::rasterResourcesDir() const
 {
-    return rasterPath;
+    return rasterResourcesPath;
+}
+
+QString TApplicationProperties::rasterBgDir() const
+{
+    return projectPath + "/images/raster/";
 }
 
 QString TApplicationProperties::pluginDir() const
@@ -168,6 +178,11 @@ QString TApplicationProperties::repositoryDir() const
     return repositoryPath + "/";
 }
 
+QString TApplicationProperties::projectDir() const
+{
+    return revisionStr;
+}
+
 QString TApplicationProperties::version() const
 {
     return versionStr;
@@ -185,7 +200,7 @@ QString TApplicationProperties::revision() const
 
 TApplicationProperties *TApplicationProperties::instance()
 {
-    if (s_instance == 0)
+    if (s_instance == nullptr)
         s_instance = new TApplicationProperties;
     return s_instance;
 }

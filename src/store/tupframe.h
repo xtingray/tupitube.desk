@@ -63,12 +63,12 @@ class TUPITUBE_EXPORT TupFrame : public QObject, public TupAbstractSerializable
     Q_OBJECT
 
     public:
-        enum FrameType { DynamicBg = 0, StaticBg, Regular };
+        enum FrameType { VectorDynamicBg = 0, RasterDynamicBg, VectorStaticBg, RasterStaticBg, Regular };
         enum MoveItemType { MoveBack, MoveToFront, MoveOneLevelBack, MoveOneLevelToFront };
 
         TupFrame();
         TupFrame(TupLayer *parent);
-        TupFrame(TupBackground *bg, const QString &label);
+        TupFrame(TupBackground *bg, const QString &label, int zLevel = -1);
        
         ~TupFrame();
        

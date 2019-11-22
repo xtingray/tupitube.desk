@@ -94,8 +94,8 @@ void TupProject::clear()
     for (int i=0; i<scenesList.count(); i++) {
          TupScene *scene = scenesList.takeAt(i);
          scene->clear();
-         delete scene;
          scene = nullptr;
+         delete scene;
     }
 
     scenesList.clear();
@@ -107,6 +107,7 @@ void TupProject::clear()
 void TupProject::setProjectName(const QString &name)
 {
     projectName = name;
+    kAppProp->setProjectDir(projectName);
 }
 
 void TupProject::setAuthor(const QString &author)
@@ -190,11 +191,6 @@ QString TupProject::getDataDir() const
     return cachePath;
 }
 
-QString TupProject::getRasterDir() const
-{
-    return cachePath + "/images/raster/";
-}
-
 TupScene *TupProject::createScene(QString name, int position, bool loaded)
 {
     #ifdef TUP_DEBUG
@@ -204,7 +200,7 @@ TupScene *TupProject::createScene(QString name, int position, bool loaded)
     if (position < 0 || position > scenesList.count())
         return nullptr;
 
-    TupScene *scene = new TupScene(this, dimension, bgColor);
+    TupScene *scene = new TupScene(this, position, dimension, bgColor);
     scenesList.insert(position, scene);
     sceneCounter++;
     scene->setSceneName(name);
@@ -282,7 +278,7 @@ bool TupProject::resetScene(int pos, const QString &newName)
     if (scene) {
         undoScenes << scenesList.takeAt(pos);
 
-        TupScene *basic = new TupScene(this, dimension, "#ffffff");
+        TupScene *basic = new TupScene(this, pos, dimension, "#ffffff");
         basic->setSceneName(newName);
         basic->setBasicStructure();
         scenesList.insert(pos, basic);
@@ -500,7 +496,7 @@ bool TupProject::removeSymbol(const QString &name, TupLibraryObject::Type type)
 
          TupBackground *bg = scene->sceneBackground();
          if (bg) {
-             TupFrame *frame = bg->staticFrame();
+             TupFrame *frame = bg->vectorStaticFrame();
              if (frame) {
                  if (type != TupLibraryObject::Svg)
                      frame->removeImageItemFromFrame(name);
@@ -508,7 +504,7 @@ bool TupProject::removeSymbol(const QString &name, TupLibraryObject::Type type)
                      frame->removeSvgItemFromFrame(name);
              } 
 
-             frame = bg->dynamicFrame();
+             frame = bg->vectorDynamicFrame();
              if (frame) {
                  bool found = false;
 
@@ -518,7 +514,7 @@ bool TupProject::removeSymbol(const QString &name, TupLibraryObject::Type type)
                      found = frame->removeSvgItemFromFrame(name);
 
                  if (found)
-                     bg->scheduleRender(true);
+                     bg->scheduleVectorRender(true);
              }
          }
 
@@ -586,15 +582,15 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
             TupBackground *bg = scene->sceneBackground();
 
             if (bg)
-                frame = bg->staticFrame();
+                frame = bg->vectorStaticFrame();
             else
                 return false;
         } else if (spaceMode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
             TupBackground *bg = scene->sceneBackground();
 
             if (bg) {
-                frame = bg->dynamicFrame();
-                bg->scheduleRender(true);
+                frame = bg->vectorDynamicFrame();
+                bg->scheduleVectorRender(true);
             } else {
                 return false;
             }
@@ -746,7 +742,7 @@ bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::Ty
 
          TupBackground *bg = scene->sceneBackground();
          if (bg) {
-             TupFrame *frame = bg->staticFrame();
+             TupFrame *frame = bg->vectorStaticFrame();
              if (frame) {
                  if (type == TupLibraryObject::Svg)
                      frame->removeSvgItemFromFrame(name);
@@ -754,7 +750,7 @@ bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::Ty
                      frame->removeImageItemFromFrame(name);
              }
 
-             frame = bg->dynamicFrame();
+             frame = bg->vectorDynamicFrame();
              if (frame) {
                  bool found = false;
 
@@ -764,7 +760,7 @@ bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::Ty
                      found = frame->removeImageItemFromFrame(name);
 
                  if (found)
-                     bg->scheduleRender(true);
+                     bg->scheduleVectorRender(true);
              }
          }
     }
@@ -794,7 +790,7 @@ bool TupProject::updateSymbolId(TupLibraryObject::Type type, const QString &oldI
 
          TupBackground *bg = scene->sceneBackground();
          if (bg) {
-             TupFrame *frame = bg->staticFrame();
+             TupFrame *frame = bg->vectorStaticFrame();
              if (frame) {
                  if (type != TupLibraryObject::Svg)
                      frame->updateIdFromFrame(oldId, newId);
@@ -802,7 +798,7 @@ bool TupProject::updateSymbolId(TupLibraryObject::Type type, const QString &oldI
                      frame->updateSvgIdFromFrame(oldId, newId);
              }
 
-             frame = bg->dynamicFrame();
+             frame = bg->vectorDynamicFrame();
              if (frame) {
                  if (type != TupLibraryObject::Svg)
                      frame->updateIdFromFrame(oldId, newId);
@@ -835,7 +831,7 @@ void TupProject::reloadLibraryItem(TupLibraryObject::Type type, const QString &i
 
          TupBackground *bg = scene->sceneBackground();
          if (bg) {
-             TupFrame *frame = bg->staticFrame();
+             TupFrame *frame = bg->vectorStaticFrame();
              if (frame) {
                  if (type == TupLibraryObject::Svg)
                      frame->reloadSVGItem(id, object);
@@ -843,7 +839,7 @@ void TupProject::reloadLibraryItem(TupLibraryObject::Type type, const QString &i
                      frame->reloadGraphicItem(id, object->getDataPath());
              }
 
-             frame = bg->dynamicFrame();
+             frame = bg->vectorDynamicFrame();
              if (frame) {
                  if (type == TupLibraryObject::Svg)
                      frame->reloadSVGItem(id, object);

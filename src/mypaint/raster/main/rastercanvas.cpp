@@ -148,8 +148,6 @@ void RasterCanvas::mousePressEvent(QMouseEvent *event)
     Q_UNUSED(event)
     pressed = true;
     MPHandler::handler()->startStroke();
-
-    // RasterCanvasBase::mousePressEvent(event);
 }
 
 void RasterCanvas::mouseMoveEvent(QMouseEvent *event)
@@ -221,7 +219,13 @@ void RasterCanvas::loadFromFile(QString filePath)
 
     // Laod the new image
     QImage image = QImage(filePath);
-    myPaintCanvas->loadImage(image);
+    if (!image.isNull()) {
+        myPaintCanvas->loadImage(image);
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "RasterCanvas::loadFromFile() - Fatal Error: Can't load image at path: " << filePath;
+        #endif
+    }
 }
 
 void RasterCanvas::updateCursor(const QTabletEvent *event)
@@ -229,17 +233,17 @@ void RasterCanvas::updateCursor(const QTabletEvent *event)
     QCursor cursor;
     if (event->type() != QEvent::TabletLeaveProximity) {
         if (event->pointerType() == QTabletEvent::Eraser) {
-            cursor = QCursor(QPixmap(RASTER_DIR + "resources/cursor-eraser.png"), 3, 28);
+            cursor = QCursor(QPixmap(RASTER_RESOURCES_DIR + "resources/cursor-eraser.png"), 3, 28);
         } else {
             switch (event->device()) {
             case QTabletEvent::Stylus:
-                cursor = QCursor(QPixmap(RASTER_DIR + "resources/cursor-pencil.png"), 0, 0);
+                cursor = QCursor(QPixmap(RASTER_RESOURCES_DIR + "resources/cursor-pencil.png"), 0, 0);
                 break;
             case QTabletEvent::Airbrush:
-                cursor = QCursor(QPixmap(RASTER_DIR + "resources/cursor-airbrush.png"), 3, 4);
+                cursor = QCursor(QPixmap(RASTER_RESOURCES_DIR + "resources/cursor-airbrush.png"), 3, 4);
                 break;
             case QTabletEvent::RotationStylus: {
-                QImage origImg(RASTER_DIR + "resources/cursor-felt-marker.png");
+                QImage origImg(RASTER_RESOURCES_DIR + "resources/cursor-felt-marker.png");
                 QImage img(32, 32, QImage::Format_ARGB32);
                 QColor solid = color;
                 solid.setAlpha(255);

@@ -72,8 +72,10 @@ static void onTileRequestEnd(MyPaintTiledSurface *tiled_surface, MyPaintTileRequ
 
 MPSurface::MPSurface(QSize size)
 {
-    qDebug() << "MPSurface::MPSurface() - size: " << size;
-    qDebug() << "MPSurface::MPSurface() - calling resetSurface()";
+    #ifdef TUP_DEBUG
+        qDebug() << "MPSurface::MPSurface() - size: " << size;
+        qDebug() << "MPSurface::MPSurface() - calling resetSurface()";
+    #endif
 
     // Init callbacks
     this->onUpdateTileFunction = defaultUpdateFonction;
@@ -109,17 +111,15 @@ void MPSurface::setOnClearedSurface(MPOnUpdateSurfaceFunction onClearedSurfaceFu
 void MPSurface::loadImage(const QImage &image)
 {
     QSize tileSize = QSize(MYPAINT_TILE_SIZE, MYPAINT_TILE_SIZE);
-
     int nbTilesOnWidth = static_cast<int>(ceil(this->width / tileSize.width()));
     int nbTilesOnHeight = static_cast<int>(ceil(this->height / tileSize.height()));
-
-    QImage sourceImage = image.scaled(this->size(), Qt::IgnoreAspectRatio);
 
     for (int h=0; h < nbTilesOnHeight; h++) {
         for (int w=0; w < nbTilesOnWidth; w++) {
             MPTile *tile = getTileFromIdx(QPoint(w, h));
             QRect tileRect = QRect(tile->pos().toPoint(), tileSize);
-            QImage tileImage = sourceImage.copy(tileRect);
+
+            QImage tileImage = image.copy(tileRect);
             tile->setImage(tileImage);
             this->onUpdateTileFunction(this, tile);
         }
@@ -128,17 +128,22 @@ void MPSurface::loadImage(const QImage &image)
 
 void MPSurface::setSize(QSize size)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "MPSurface::setSize() - size: " << size;
+    #endif
+
     free(this->tile_buffer);
     free(this->null_tile);
 
-    qDebug() << "MPSurface::setSize() - size: " << size;
     resetSurface(size);
 }
 
 QSize MPSurface::size()
 {
-    qDebug() << "MPSurface::size() - width: " << width;
-    qDebug() << "MPSurface::size() - height: " << height;
+    #ifdef TUP_DEBUG
+        qDebug() << "MPSurface::size() - width: " << width;
+        qDebug() << "MPSurface::size() - height: " << height;
+    #endif
 
     return QSize(width, height);
 }
@@ -168,7 +173,9 @@ void MPSurface::clear()
 
 QImage MPSurface::renderImage(const QSize canvasSize)
 {
-    qDebug() << "MPSurface::renderImage() - size: " << size();
+    #ifdef TUP_DEBUG
+        qDebug() << "MPSurface::renderImage() - size: " << size();
+    #endif
 
     QPixmap renderedImage = QPixmap(canvasSize);
     renderedImage.fill(QColor(Qt::transparent));
@@ -224,7 +231,9 @@ void MPSurface::resetNullTile()
 
 void MPSurface::resetSurface(QSize size)
 {
-    qDebug() << "*** MPSurface::resetSurface() - Updating size: " << size;
+    #ifdef TUP_DEBUG
+        qDebug() << "*** MPSurface::resetSurface() - Updating size: " << size;
+    #endif
 
     width = size.width();
     height = size.height();
@@ -307,5 +316,6 @@ inline QPoint MPSurface::getTileIndex(const QPoint& pos)
 
 inline QPointF MPSurface::getTileFIndex(const QPoint& pos)
 {
-    return QPointF(static_cast<qreal>(pos.x()/MYPAINT_TILE_SIZE), static_cast<qreal>(pos.y()/MYPAINT_TILE_SIZE));
+    return QPointF(static_cast<qreal>(pos.x()/MYPAINT_TILE_SIZE),
+                   static_cast<qreal>(pos.y()/MYPAINT_TILE_SIZE));
 }

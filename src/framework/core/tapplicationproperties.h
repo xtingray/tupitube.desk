@@ -55,20 +55,22 @@ class T_CORE_EXPORT TApplicationProperties
         void setShareDir(const QString &path);
         void setDataDir(const QString &path);
         void setThemeDir(const QString &path);
-        void setRasterDir(const QString &path);
         void setPluginDir(const QString &path);
         void setCacheDir(const QString &path);
         void setRepositoryDir(const QString &path);
         void setVersion(const QString &version);
         void setRevision(const QString &revision);
         void setCodeName(const QString &code);
+        void setRasterResourcesDir(const QString &path);
+        void setProjectDir(const QString &projectName);
 
         virtual QString homeDir() const;
         virtual QString binDir() const;
         virtual QString shareDir() const;
         virtual QString dataDir() const;
         virtual QString themeDir() const;
-        virtual QString rasterDir() const;
+        virtual QString rasterResourcesDir() const;
+        virtual QString rasterBgDir() const;
         virtual QString pluginDir() const;
         virtual QString configDir() const;
         virtual QString cacheDir() const;
@@ -76,6 +78,7 @@ class T_CORE_EXPORT TApplicationProperties
         virtual QString version() const;
         virtual QString revision() const;
         virtual QString codeName() const;
+        virtual QString projectDir() const;
 
         static TApplicationProperties *instance();
 		
@@ -87,13 +90,14 @@ class T_CORE_EXPORT TApplicationProperties
         QString sharePath;
         QString dataPath;
         QString themePath;
-        QString rasterPath;
+        QString rasterResourcesPath;
         QString repositoryPath;
         QString pluginPath;
         QString versionStr;
         QString codeNameStr;
         QString revisionStr;
         QString cachePath;
+        QString projectPath;
 };
 
 #define kAppProp TApplicationProperties::instance()
@@ -102,10 +106,12 @@ class T_CORE_EXPORT TApplicationProperties
 #define SHARE_DIR kAppProp->shareDir()
 #define DATA_DIR kAppProp->dataDir()
 #define THEME_DIR kAppProp->themeDir()
-#define RASTER_DIR kAppProp->rasterDir()
+#define RASTER_RESOURCES_DIR kAppProp->rasterResourcesDir()
+#define RASTER_BG_DIR kAppProp->rasterBgDir()
 #define CONFIG_DIR kAppProp->configDir()
 #define PLUGINS_DIR kAppProp->pluginDir()
 #define CACHE_DIR kAppProp->cacheDir()
 #define REPOSITORY_DIR kAppProp->repositoryDir()
+#define PROJECT_DIR kAppProp->projectDir()
 
 #endif

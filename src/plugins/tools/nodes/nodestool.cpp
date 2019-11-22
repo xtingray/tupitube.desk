@@ -259,9 +259,9 @@ TupFrame* NodesTool::getCurrentFrame()
         TupScene *tupScene = scene->currentScene();
         TupBackground *bg = tupScene->sceneBackground();
         if (scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
-            frame = bg->staticFrame();
+            frame = bg->vectorStaticFrame();
         } else if (scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-            frame = bg->dynamicFrame();
+            frame = bg->vectorDynamicFrame();
         }
     }
 

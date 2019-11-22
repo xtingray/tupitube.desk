@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tupanimationspace.h"
+
 TupAnimationspace::TupAnimationspace(TupCameraWidget *playerUI, QWidget *parent): QWidget(parent)
 {
     // TODO: Try a nice dark color for this window
@@ -50,8 +51,8 @@ TupAnimationspace::~TupAnimationspace()
          qDebug() << "[~TupCameraWidget()]";
     #endif
 
-    delete playerInterface;
     playerInterface = nullptr;
+    delete playerInterface;
 }
 
 void TupAnimationspace::setCameraWidget(TupCameraWidget *playerUI) 

@@ -260,7 +260,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
             TupBackground *bg = sceneVar->sceneBackground();
             if (bg) {
                 if (scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
-                    frame = bg->staticFrame();
+                    frame = bg->vectorStaticFrame();
                     if (frame) {
                         item = frame->item(response->getItemIndex());
                     } else {
@@ -269,7 +269,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
                         #endif
                     }
                 } else if (scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-                           frame = bg->dynamicFrame();
+                           frame = bg->vectorDynamicFrame();
                            if (frame) {
                                item = frame->item(response->getItemIndex());
                            } else {
@@ -399,7 +399,7 @@ void PolyLineTool::nodeChanged()
                 TupBackground *bg = scene->currentScene()->sceneBackground();
                 if (bg) {
                     if (scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
-                        TupFrame *frame = bg->staticFrame();
+                        TupFrame *frame = bg->vectorStaticFrame();
                         if (frame) {
                             position = frame->indexOf(nodeGroup->parentItem());
                         } else {
@@ -409,7 +409,7 @@ void PolyLineTool::nodeChanged()
                             return;
                         }
                     } else if (scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-                               TupFrame *frame = bg->dynamicFrame();
+                               TupFrame *frame = bg->vectorDynamicFrame();
                                if (frame) {
                                    position = frame->indexOf(nodeGroup->parentItem());
                                } else {

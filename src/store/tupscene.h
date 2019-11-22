@@ -72,7 +72,7 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
     Q_OBJECT
 
     public:
-        TupScene(TupProject *parent, const QSize dimension, const QColor bgColor);
+        TupScene(TupProject *parent, int index, const QSize dimension, const QColor bgColor);
         ~TupScene();
 
         void setSceneName(const QString &name);
@@ -172,6 +172,7 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
     private:
         void removeTweensFromLayer(int layerIndex);
 
+        int sceneIndex;
         QSize dimension;
         QColor bgColor;
         TupStoryboard *storyboard;

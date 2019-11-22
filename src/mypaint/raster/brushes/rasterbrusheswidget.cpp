@@ -44,7 +44,8 @@
 #define BRUSH_LIST        "brushes.conf"
 #define ICON_SZ           64
 
-RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *parent): TupModuleWidgetBase(parent), brushesPath(brushLibPath)
+RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *parent):
+                                         TupModuleWidgetBase(parent), brushesPath(brushLibPath)
 {
     setWindowTitle(tr("Brush Properties"));
     setWindowIcon(QIcon(THEME_DIR + "icons/brush.png"));
@@ -161,7 +162,6 @@ void RasterBrushesWidget::itemClicked(QListWidgetItem *item)
         // fine, let's read this one and emit the content to any receiver:
         const QStringList subList = brushLib.value(caption);
         QFile file(brushesPath + QDir::separator() + subList.at(item->type()) + BRUSH_CONTENT_EXT);
-        // qDebug(f.fileName().toAscii());
         if (file.open(QIODevice::ReadOnly)) {
             QByteArray content = file.readAll();
             content.append(static_cast<char>(0));

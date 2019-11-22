@@ -94,7 +94,6 @@ void MPHandler::hasClearedSurface(MPSurface *surface)
 
 void MPHandler::setSurfaceSize(QSize size)
 {
-    qDebug() << "MPHandler::setSurfaceSize() - Calling MPSurface::setSize() - size: " << size;
     m_surface->setSize(size);
 }
 

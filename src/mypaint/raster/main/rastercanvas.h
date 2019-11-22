@@ -30,7 +30,7 @@
 #include "mpsurface.h"
 #include "mptile.h"
 
-class RasterCanvas : public RasterCanvasBase
+class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
 {
     Q_OBJECT
 

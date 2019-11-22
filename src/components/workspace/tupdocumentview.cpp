@@ -442,8 +442,8 @@ void TupDocumentView::loadPlugins()
         TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(plugin);
 
         if (tool->toolType() != TupToolInterface::Tweener && tool->toolType() != TupToolInterface::LipSync) {
-         connect(tool, SIGNAL(closeHugeCanvas()), this, SLOT(closeFullScreen()));
-         connect(tool, SIGNAL(callForPlugin(int, int)), this, SLOT(loadPlugin(int, int)));
+            connect(tool, SIGNAL(closeHugeCanvas()), this, SLOT(closeFullScreen()));
+            connect(tool, SIGNAL(callForPlugin(int, int)), this, SLOT(loadPlugin(int, int)));
         }
 
         QStringList::iterator it;
@@ -1085,10 +1085,10 @@ double TupDocumentView::backgroundOpacity(TupFrame::FrameType type)
     if (scene) {
         TupBackground *bg = scene->sceneBackground();
         if (bg) {
-            if (type == TupFrame::StaticBg) {
-                opacity = bg->staticOpacity();
-            } else if (type == TupFrame::DynamicBg) {
-                opacity = bg->dynamicOpacity();
+            if (type == TupFrame::VectorStaticBg) {
+                opacity = bg->vectorStaticOpacity();
+            } else if (type == TupFrame::VectorDynamicBg) {
+                opacity = bg->vectorDynamicOpacity();
             }
         }
     }
@@ -1184,12 +1184,12 @@ void TupDocumentView::createToolBar()
     QDoubleSpinBox *staticOpacityBox = new QDoubleSpinBox(this);
     staticOpacityBox->setRange(0.1, 1.0);
     staticOpacityBox->setSingleStep(0.1);
-    staticOpacityBox->setValue(backgroundOpacity(TupFrame::StaticBg));
+    staticOpacityBox->setValue(backgroundOpacity(TupFrame::VectorStaticBg));
     staticOpacityBox->setToolTip(tr("Static BG Opacity"));
     connect(staticOpacityBox, SIGNAL(valueChanged(double)), this, SLOT(updateStaticOpacity(double)));
 
     QPushButton *staticRasterButton = new QPushButton(QIcon(THEME_DIR + "icons/raster_mode.png"), "");
-    staticRasterButton->setToolTip(tr("Raster Mode"));
+    staticRasterButton->setToolTip(tr("Static Raster Mode"));
     connect(staticRasterButton, SIGNAL(clicked()), this, SLOT(openRasterMode()));
 
     staticPropertiesBar->addWidget(sEmpty0);
@@ -1253,12 +1253,12 @@ void TupDocumentView::createToolBar()
     QDoubleSpinBox *dynamicOpacityBox = new QDoubleSpinBox(this);
     dynamicOpacityBox->setRange(0.1, 1.0);
     dynamicOpacityBox->setSingleStep(0.1);
-    dynamicOpacityBox->setValue(backgroundOpacity(TupFrame::DynamicBg));
+    dynamicOpacityBox->setValue(backgroundOpacity(TupFrame::VectorDynamicBg));
     dynamicOpacityBox->setToolTip(tr("Dynamic BG Opacity"));
     connect(dynamicOpacityBox, SIGNAL(valueChanged(double)), this, SLOT(updateDynamicOpacity(double)));
 
     QPushButton *dynamicRasterButton = new QPushButton(QIcon(THEME_DIR + "icons/raster_mode.png"), "", this);
-    dynamicRasterButton->setToolTip(tr("Raster Mode"));
+    dynamicRasterButton->setToolTip(tr("Dynamic Raster Mode"));
     connect(dynamicRasterButton, SIGNAL(clicked()), this, SLOT(openRasterMode()));
 
     dynamicPropertiesBar->addWidget(dirLabel);
@@ -1289,7 +1289,7 @@ void TupDocumentView::createToolBar()
 
 void TupDocumentView::openRasterMode()
 {
-    rasterWindow = new RasterMainWindow(project, "raster", currentSceneIndex(), contourColor, this);
+    rasterWindow = new RasterMainWindow(project, "raster", spaceContext(), currentSceneIndex(), contourColor, this);
     connect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString &)));
     connect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
             this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
@@ -1476,9 +1476,9 @@ void TupDocumentView::setSpaceContext()
         if (scene) {
             TupBackground *bg = scene->sceneBackground();
             if (bg) {
-                int direction = bg->dyanmicDirection();
+                int direction = bg->vectorDynamicDirection();
                 dirCombo->setCurrentIndex(direction);
-                int shift = bg->dyanmicShift();
+                int shift = bg->vectorDynamicShift();
                 shiftSpin->setValue(shift);
             }
         }
@@ -1784,7 +1784,7 @@ void TupDocumentView::updateStaticOpacity(double opacity)
     if (scene) {
         TupBackground *bg = scene->sceneBackground();
         if (bg) {
-            bg->setStaticOpacity(opacity);
+            bg->setVectorStaticOpacity(opacity);
             TupProject::Mode mode = TupProject::Mode(spaceModeCombo->currentIndex());
             if (mode == TupProject::FRAMES_EDITION || mode == TupProject::STATIC_BACKGROUND_EDITION)
                 paintArea->updatePaintArea();
@@ -1804,7 +1804,7 @@ void TupDocumentView::updateDynamicOpacity(double opacity)
    if (scene) {
        TupBackground *bg = scene->sceneBackground();
        if (bg) {
-           bg->setDynamicOpacity(opacity);
+           bg->setVectorDynamicOpacity(opacity);
            paintArea->updatePaintArea();
        }
    }
@@ -1830,7 +1830,7 @@ void TupDocumentView::updateBackgroundShiftProperty(int shift)
    if (scene) {
        TupBackground *bg = scene->sceneBackground();
        if (bg)
-           bg->setDynamicShift(shift);
+           bg->setVectorDynamicShift(shift);
    }
 }
 
@@ -1842,7 +1842,7 @@ void TupDocumentView::renderDynamicBackground()
    if (scene) {
        TupBackground *bg = scene->sceneBackground();
        if (bg)
-           bg->renderDynamicView();
+           bg->renderVectorDynamicView();
    }
 }
 

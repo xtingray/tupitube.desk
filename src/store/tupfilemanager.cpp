@@ -164,8 +164,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 
      if (library.open(QIODevice::WriteOnly | QIODevice::Text)) {
          #ifdef TUP_DEBUG
-             QString msg = "TupFileManager::save() - Saving library file (TPL)";
-             qDebug() << msg;
+             qDebug() << "TupFileManager::save() - Saving library file (TPL)";
          #endif
          QTextStream ts(&library);
          QDomDocument doc;
@@ -175,8 +174,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
          library.close();
      } else {
          #ifdef TUP_DEBUG
-             QString msg = "TupFileManager::save() - Error: Can't create file -> " + projectDir.path() + "/library.tpl";
-             qWarning() << msg;
+             qWarning() << "TupFileManager::save() - Error: Can't create file -> " + projectDir.path() + "/library.tpl";
          #endif
          return false;
      }
@@ -184,29 +182,18 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 
     {
         #ifdef TUP_DEBUG
-            QString msg = "TupFileManager::save() - Creating TUP file...";
-            qDebug() << msg;
+            qDebug() << "TupFileManager::save() - Creating TUP file...";
         #endif
         TupPackageHandler packageHandler;
         ok = packageHandler.makePackage(projectDir.path(), fileName);
 
         if (ok) {
             #ifdef TUP_DEBUG
-                QString msg = "TupFileManager::save() - Project saved at -> " + fileName;
-                #ifdef Q_OS_WIN
-                    qWarning() << msg;
-                #else
-                    tWarning() << msg;
-                #endif
+                qWarning() << "TupFileManager::save() - Project saved at -> " + fileName;
             #endif
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "TupFileManager::save() - Error: Project couldn't be saved at -> " + fileName;
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "TupFileManager::save() - Error: Project couldn't be saved at -> " + fileName;
             #endif
             return false;
         }
@@ -218,11 +205,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 bool TupFileManager::load(const QString &fileName, TupProject *project)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupFileManager::load()] - fileName: " + fileName;
-        #else
-            T_FUNCINFO << "filename: " << fileName;
-        #endif
+        qDebug() << "[TupFileManager::load()] - fileName: " + fileName;
     #endif
 
     TupPackageHandler packageHandler;
@@ -235,12 +218,9 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
             pfile.close();
         } else {
             #ifdef TUP_DEBUG
-                QString msg1 = "TupFileManager::load() - Error while open .tpp file. Name: " + pfile.fileName();
-                QString msg2 = "TupFileManager::load() - Path: " + projectDir.path();
-                QString msg3 = "TupFileManager::load() - Error Description: " + pfile.errorString(); 
-                qWarning() << msg1;
-                qWarning() << msg2;
-                qWarning() << msg3;
+                qWarning() << "TupFileManager::load() - Error while open .tpp file. Name: " + pfile.fileName();
+                qWarning() << "TupFileManager::load() - Path: " + projectDir.path();
+                qWarning() << "TupFileManager::load() - Error Description: " + pfile.errorString();
             #endif
             return false;
         }
@@ -282,24 +262,14 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
             return true;
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "TupFileManager::load() - Error: No scene files found (*.tps)";
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "TupFileManager::load() - Error: No scene files found (*.tps)";
             #endif
             return false;
         }
     }
 
     #ifdef TUP_DEBUG
-        QString msg = "TupFileManager::load() - Error: Can't import package -> " + fileName;
-        #ifdef Q_OS_WIN
-            qDebug() << msg;
-        #else
-            tError() << msg;
-        #endif
+        qDebug() << "TupFileManager::load() - Error: Can't import package -> " + fileName;
     #endif
     return false;
 }

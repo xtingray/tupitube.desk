@@ -90,7 +90,6 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
 
         void setDataDir(const QString &path);
         QString getDataDir() const;
-        QString getRasterDir() const;
 
         TupScene *sceneAt(int pos) const;
 

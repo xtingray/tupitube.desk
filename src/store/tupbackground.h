@@ -48,61 +48,82 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
     Q_OBJECT
 
     public:
-        enum BgType { Dynamic = 0, Static };
+        enum BgType { VectorDynamic = 0, RasterDynamic, VectorStatic, RasterStatic };
         enum Direction { Right = 0, Left = 1, Top, Bottom };
-        TupBackground(TupScene *parent, const QSize dimension, const QColor bgColor);
+        TupBackground(TupScene *parent, int sceneIndex, const QSize dimension, const QColor bgColor);
         ~TupBackground();
 
-        TupFrame* staticFrame();
-        TupFrame* dynamicFrame(); 
+        TupFrame* vectorStaticFrame();
+        TupFrame* vectorDynamicFrame();
 
         void setBgColor(const QColor color);
-        void clear();
+        void clearBackground();
 
-        // void setRasterBgImage(int type, QImage *image, int index);
-
-        void renderDynamicView();
-        QPixmap dynamicView(int frameIndex);
+        void renderVectorDynamicView();
+        QPixmap vectorDynamicView(int frameIndex);
         void setDynamicDirection(int direction);
-        void setDynamicShift(int shift);
-        Direction dyanmicDirection();
-        int dyanmicShift();
-        void setDynamicRaster(QImage bg);
-        QImage dynamicRaster();
-        bool dynamicBgIsEmpty();
-        bool rasterRenderIsPending();
-        void scheduleRender(bool status);
-        void setDynamicOpacity(double opacity);
-        double dynamicOpacity();
+        void setVectorDynamicShift(int shift);
+        Direction vectorDynamicDirection();
 
-        bool staticBgIsEmpty();
-        void setStaticOpacity(double opacity);
-        double staticOpacity();
+        int vectorDynamicShift();
+        int rasterDynamicShift();
+
+        void setVectorDynamicViewImage(QImage bg);
+        void setRasterDynamicViewImage(QImage bg);
+
+        // QImage rasterDynamicImage();
+        bool vectorDynamicBgIsEmpty();
+        bool vectorRenderIsPending();
+        void scheduleVectorRender(bool status);
+        void setVectorDynamicOpacity(double opacity);
+        double vectorDynamicOpacity();
+
+        bool vectorStaticBgIsEmpty();
+        void setVectorStaticOpacity(double opacity);
+        double vectorStaticOpacity();
         TupScene * scene();
         TupProject * project();
 
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
 
-        void updateRasterBackground(TupProject::Mode spaceContext, const QString &imgPath);
+        void updateRasterBgImage(TupProject::Mode spaceContext, const QString &imgPath);
         bool rasterDynamicBgIsNull();
         bool rasterStaticBgIsNull();
         QPixmap rasterDynamicBackground();
         QPixmap rasterStaticBackground();
 
+        bool rasterRenderIsPending();
+        void renderRasterDynamicView();
+        QPixmap rasterDynamicView(int photogram);
+
+        QList<TupBackground::BgType> layerIndexes();
     private:
+        int sceneIndex;
         QSize dimension;
         QColor bgColor;
-        TupFrame *staticBg;
-        TupFrame *dynamicBg;
-        QImage dynamicBackgroundImage;
-        QImage dynamicViewImage;
-        bool noRender;
 
-        QPixmap rasterDynamicBg;
-        QPixmap rasterStaticBg;
-        int rasterStaticBgIndex;
-        int rasterDynamicBgIndex;
+        TupFrame *vectorDynamicBgFrame;
+        TupFrame *vectorStaticBgFrame;
+        TupFrame *rasterDynamicBgFrame;
+        TupFrame *rasterStaticBgFrame;
+
+        bool noVectorRender;
+        bool noRasterRender;
+
+        // Vector base images
+        QImage vectorDynamicBgImg;
+        QImage vectorStaticBgImg;
+        // Vector expanded image
+        QImage vectorDynamicViewImg;
+
+        // Raster base images
+        QPixmap rasterDynamicBgPix;
+        QPixmap rasterStaticBgPix;
+        // Raster expanded image
+        QImage rasterDynamicViewImg;
+
+        QList<BgType> bgLayerIndex;
 };
 
 #endif

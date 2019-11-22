@@ -263,62 +263,135 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
         return;
     }
 
-    // background = gScene->sceneBackground();
     if (background) {
-        TupFrame *frame;
+        // Dynamic Bg
         if (spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-            if (!background->dynamicBgIsEmpty()) {
-                frame = background->dynamicFrame();
-                if (frame) {
-                    zLevel = 0;
-                    addFrame(frame, frame->frameOpacity());
+            // SQA: Include option "show" raster dynamic bg as option
+            // drawRasterDynamicBg();
+            drawVectorDynamicBg();
+            return;
+        } else if (spaceContext == TupProject::STATIC_BACKGROUND_EDITION) {
+            // SQA: Include option "show" raster static bg as option
+            // drawRasterStaticBg();
+            drawVectorStaticBg();
+        } else { // Frames Mode
+            QList<TupBackground::BgType> bgLayerIndex = background->layerIndexes();
+            for (int i=0; i < bgLayerIndex.count(); i++) {
+                switch(bgLayerIndex.at(i)) {
+                    case TupBackground::VectorStatic:
+                        drawVectorStaticBg();
+                    break;
+                    case TupBackground::VectorDynamic:
+                        drawVectorDynamicBgOnMovement(photogram);
+                    break;
+                    case TupBackground::RasterStatic:
+                        drawRasterStaticBg();
+                    break;
+                    case TupBackground::RasterDynamic:
+                        drawRasterDynamicBgOnMovement(photogram);
                 }
-            } else {
-                #ifdef TUP_DEBUG
-                    qDebug() << "TupGraphicsScene::drawSceneBackground() - Dynamic background frame is empty";
-                #endif
-            }
-            return;
-        } else {
-            if (!background->dynamicBgIsEmpty()) {
-                if (background->rasterRenderIsPending())
-                    background->renderDynamicView();
-
-                // dynamicPixmap = background->dynamicView(photogram);
-                // dynamicBg = new QGraphicsPixmapItem(dynamicPixmap);
-                dynamicBg = new QGraphicsPixmapItem(background->dynamicView(photogram));
-                dynamicBg->setZValue(0);
-                frame = background->dynamicFrame();
-                if (frame) 
-                    dynamicBg->setOpacity(frame->frameOpacity());
-                addItem(dynamicBg);
-                dynamicBg = nullptr;
-            } else {
-                #ifdef TUP_DEBUG
-                    qDebug() << "TupGraphicsScene::drawSceneBackground() - Dynamic background frame is empty";
-                #endif
             }
         }
+    }
+}
 
-        if (!background->rasterStaticBgIsNull()) {
-            rasterStaticBg = new QGraphicsPixmapItem(background->rasterStaticBackground());
-            rasterStaticBg->setZValue(0);
-            addItem(rasterStaticBg);
-            rasterStaticBg = nullptr;
+void TupGraphicsScene::drawVectorStaticBg()
+{
+    // Vector Static Bg
+    if (!background->vectorStaticBgIsEmpty()) {
+        TupFrame *frame = background->vectorStaticFrame();
+        if (frame) {
+            zLevel = ZLAYER_LIMIT;
+            addFrame(frame, frame->frameOpacity());
         }
+        frame = nullptr;
+        delete frame;
+        return;
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "TupGraphicsScene::drawVectorStaticBg() - Vector static bg frame is empty";
+        #endif
+    }
+}
 
-        if (!background->staticBgIsEmpty()) {
-            frame = background->staticFrame();
-            if (frame) {
-                zLevel = ZLAYER_LIMIT;
-                addFrame(frame, frame->frameOpacity());
-            }
-            return;
-        } else {
-            #ifdef TUP_DEBUG
-                qDebug() << "TupGraphicsScene::drawSceneBackground() - Static background frame is empty";
-            #endif
+void TupGraphicsScene::drawVectorDynamicBg()
+{
+    // Vector
+    if (!background->vectorDynamicBgIsEmpty()) {
+        TupFrame *frame = background->vectorDynamicFrame();
+        if (frame) {
+            zLevel = 0;
+            addFrame(frame, frame->frameOpacity());
         }
+        frame = nullptr;
+        delete frame;
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "TupGraphicsScene::drawVectorDynamicBg() - Vector dynamic bg frame is empty";
+        #endif
+    }
+}
+
+void TupGraphicsScene::drawVectorDynamicBgOnMovement(int photogram)
+{
+    // Vector Dynamic Bg on movement
+    if (!background->vectorDynamicBgIsEmpty()) {
+        if (background->vectorRenderIsPending())
+            background->renderVectorDynamicView();
+
+        dynamicBg = new QGraphicsPixmapItem(background->vectorDynamicView(photogram));
+        dynamicBg->setZValue(0);
+        TupFrame *frame = background->vectorDynamicFrame();
+        if (frame)
+            dynamicBg->setOpacity(frame->frameOpacity());
+        addItem(dynamicBg);
+
+        dynamicBg = nullptr;
+        delete dynamicBg;
+        frame = nullptr;
+        delete frame;
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "TupGraphicsScene::drawVectorDynamicBgOnMovement() - Vector dynamic bg frame is empty";
+        #endif
+    }
+}
+
+void TupGraphicsScene::drawRasterStaticBg()
+{
+    // Raster Static Bg
+    if (!background->rasterStaticBgIsNull()) {
+        rasterStaticBg = new QGraphicsPixmapItem(background->rasterStaticBackground());
+        rasterStaticBg->setZValue(0);
+        addItem(rasterStaticBg);
+        rasterStaticBg = nullptr;
+    }
+}
+
+void TupGraphicsScene::drawRasterDynamicBg()
+{
+    // Raster
+    if (!background->rasterDynamicBgIsNull()) {
+        // Add original raster dynamic image
+        rasterDynamicBg = new QGraphicsPixmapItem(background->rasterDynamicBackground());
+        rasterDynamicBg->setZValue(0);
+        addItem(rasterDynamicBg);
+        rasterDynamicBg = nullptr;
+    }
+}
+
+void TupGraphicsScene::drawRasterDynamicBgOnMovement(int photogram)
+{
+    // Raster Dynamic Bg on movement
+    if (!background->rasterDynamicBgIsNull()) {
+        // Calculate current raster dynamic view
+        if (background->rasterRenderIsPending())
+            background->renderRasterDynamicView();
+
+        rasterDynamicBg = new QGraphicsPixmapItem(background->rasterDynamicView(photogram));
+        rasterDynamicBg->setZValue(0);
+        addItem(rasterDynamicBg);
+        rasterDynamicBg = nullptr;
     }
 }
 
@@ -1493,9 +1566,9 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
         if (background) {
             TupFrame *frame = new TupFrame;
             if (spaceContext == TupProject::STATIC_BACKGROUND_EDITION) {
-                frame = background->staticFrame();
+                frame = background->vectorStaticFrame();
             } else if (spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-                frame = background->dynamicFrame();
+                frame = background->vectorDynamicFrame();
             }
 
             if (frame) {

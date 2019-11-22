@@ -79,7 +79,7 @@ TupFrame::TupFrame(TupLayer *parent) : QObject(parent)
     zLevelIndex = (layer->layerIndex() + 2)*ZLAYER_LIMIT; // Layers levels starts from 2
 }
 
-TupFrame::TupFrame(TupBackground *bg, const QString &label) : QObject(bg)
+TupFrame::TupFrame(TupBackground *bg, const QString &label, int zLevel) : QObject(bg)
 {
     frameName = label;
     isLocked = false;
@@ -92,11 +92,29 @@ TupFrame::TupFrame(TupBackground *bg, const QString &label) : QObject(bg)
     shift = "5";
 
     if (frameName.compare("landscape_dynamic") == 0) {
-        zLevelIndex = 0;
-        type = DynamicBg;
-    } else {
-        zLevelIndex = ZLAYER_LIMIT;
-        type = StaticBg;
+        if (zLevel == -1)
+            zLevelIndex = 0;
+        else
+            zLevelIndex = ZLAYER_LIMIT * zLevel;
+        type = VectorDynamicBg;
+    } else if (frameName.compare("landscape_raster_dynamic") == 0) {
+        if (zLevel == -1)
+            zLevelIndex = ZLAYER_LIMIT;
+        else
+            zLevelIndex = ZLAYER_LIMIT * zLevel;
+        type = RasterDynamicBg;
+    } else if (frameName.compare("landscape_static") == 0) {
+        if (zLevel == -1)
+            zLevelIndex = ZLAYER_LIMIT * 2;
+        else
+            zLevelIndex = ZLAYER_LIMIT * zLevel;
+        type = VectorStaticBg;
+    } else if (frameName.compare("landscape_raster_static") == 0) {
+        if (zLevel == -1)
+            zLevelIndex = ZLAYER_LIMIT * 3;
+        else
+            zLevelIndex = ZLAYER_LIMIT * zLevel;
+        type = RasterStaticBg;
     }
 }
 
@@ -234,13 +252,13 @@ void TupFrame::fromXml(const QString &xml)
     setFrameName(root.attribute("name", tr("Frame")));
     // setRasterIndex(root.attribute("rasterIndex", "0").toInt());
 
-    if (type == DynamicBg) {
+    if (type == VectorDynamicBg || type == RasterDynamicBg) {
         setDynamicDirection(root.attribute("direction", "0"));
         setDynamicShift(root.attribute("shift", "0"));
         setFrameOpacity(root.attribute("opacity", "1.0").toDouble());
     }
 
-    if (type == StaticBg)
+    if (type == VectorStaticBg || type == RasterStaticBg)
         setFrameOpacity(root.attribute("opacity", "1.0").toDouble());
 
     QDomNode n = root.firstChild();
@@ -340,13 +358,13 @@ QDomElement TupFrame::toXml(QDomDocument &doc) const
     root.setAttribute("name", frameName);
     // root.setAttribute("rasterIndex", bgRasterImageIndex);
 
-    if (type == DynamicBg) {
+    if (type == VectorDynamicBg || type == RasterDynamicBg) {
         root.setAttribute("direction", direction);
         root.setAttribute("shift", shift);
         root.setAttribute("opacity", QString::number(opacity));
     }
 
-    if (type == StaticBg)
+    if (type == VectorStaticBg || type == VectorDynamicBg)
         root.setAttribute("opacity", QString::number(opacity));
 
     doc.appendChild(root);
@@ -474,11 +492,7 @@ void TupFrame::updateIdFromFrame(const QString &oldId, const QString &newId)
 void TupFrame::addSvgItem(const QString &id, TupSvgItem *item)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupFrame::addSvgItem()] - id: " << id;
-        #else
-            T_FUNCINFO << id;
-        #endif
+        qDebug() << "[TupFrame::addSvgItem()] - id: " << id;
     #endif
     
     svgIndexes.append(id);

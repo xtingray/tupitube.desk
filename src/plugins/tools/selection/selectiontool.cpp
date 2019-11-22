@@ -263,9 +263,9 @@ TupFrame* SelectionTool::getCurrentFrame()
         TupScene *tupScene = scene->currentScene();
         TupBackground *bg = tupScene->sceneBackground();
         if (scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
-            frame = bg->staticFrame();
+            frame = bg->vectorStaticFrame();
         } else if (scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-            frame = bg->dynamicFrame();
+            frame = bg->vectorDynamicFrame();
         }
     }
 
@@ -295,10 +295,10 @@ TupFrame* SelectionTool::frameAt(int sceneIndex, int layerIndex, int frameIndex)
         } else {
             TupBackground *bg = sceneData->sceneBackground();
             if (scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
-                frame = bg->staticFrame();
+                frame = bg->vectorStaticFrame();
             } else if (scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-                frame = bg->dynamicFrame();
-                bg->scheduleRender(true);
+                frame = bg->vectorDynamicFrame();
+                bg->scheduleVectorRender(true);
             }
        }
     } else {

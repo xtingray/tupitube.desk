@@ -18,6 +18,7 @@
 */
 
 #include "rastermainwindow.h"
+#include "tapplicationproperties.h"
 
 #include <QDebug>
 #include <QFileDialog>
@@ -26,12 +27,13 @@
 #include <QMenu>
 #include <QAction>
 
-RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, int scene, const QColor contourColor,
-                                   QWidget *parent): TMainWindow(winKey, parent)
+RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, TupProject::Mode context, int scene,
+                                   const QColor contourColor, QWidget *parent): TMainWindow(winKey, parent)
 {
+    spaceContext = context;
     sceneIndex = scene;
     projectSize = project->getDimension();
-    rasterDir = project->getRasterDir();
+
     createTopResources();
     createCentralWidget(project, contourColor);
 
@@ -43,7 +45,7 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, i
 
     colorView = addToolView(colorWidget, Qt::LeftDockWidgetArea, Raster, "Brush Color", QKeySequence(tr("Shift+C")));
 
-    brushesWidget = new RasterBrushesWidget(RASTER_DIR + "brushes");
+    brushesWidget = new RasterBrushesWidget(RASTER_RESOURCES_DIR + "brushes");
     connect(brushesWidget, SIGNAL(brushSelected(const QByteArray&)),
             rasterCanvas, SLOT(loadBrush(const QByteArray&)));
 
@@ -61,45 +63,6 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, i
     status->setZoomPercent("100");
 
     /*
-    // Add tools:
-    QWidget* toolsWidget = new QWidget();
-    QVBoxLayout* toolsLayout = new QVBoxLayout();
-    toolsLayout->setSpacing(0);
-    toolsLayout->setMargin(0);
-    toolsLayout->setContentsMargins(0, 0, 0, 0);
-    toolsLayout->setSizeConstraint(QLayout::SetFixedSize);
-
-    // Open
-    openBtn = new QPushButton(tr("Open"));
-    toolsLayout->addWidget(openBtn);
-    connect(openBtn, SIGNAL(pressed()), this, SLOT(openProject()));
-
-    // Save
-    saveBtn = new QPushButton(tr("Save"));
-    toolsLayout->addWidget(saveBtn);
-    connect(saveBtn, SIGNAL(pressed()), this, SLOT(exportProject()));
-
-    // Clear
-    clearBtn = new QPushButton(tr("Clear"));
-    toolsLayout->addWidget(clearBtn);
-    connect(clearBtn, SIGNAL(pressed()), rasterCanvas, SLOT(clearCanvas()));
-
-    // Color selector
-    colorBtn = new QPushButton(tr("Color Palette"));
-    colorBtn->setMinimumHeight(60);
-    colorBtn->setStyleSheet("color: white; background-color: black;");
-
-    toolsLayout->addWidget(colorBtn);
-
-    connect(colorBtn, SIGNAL(pressed()), rasterCanvas, SLOT(selectColor()));
-
-    toolsWidget->setLayout(toolsLayout);
-
-    QDockWidget* dockTools = new QDockWidget(tr("Tools"));
-    dockTools->setWidget(toolsWidget);
-
-    addDockWidget(Qt::LeftDockWidgetArea, dockTools);
-
     // Add a docked widget
     QDockWidget* dockBrush = new QDockWidget(tr("Brush Library"));
     brushesSelector = new RasterBrushSelector(RASTER_DIR + "brushes", nullptr);
@@ -169,6 +132,23 @@ void RasterMainWindow::createCentralWidget(TupProject * project, const QColor co
 
     topBar->addWidget(clearButton);
 
+    QString imgPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/";
+    if (spaceContext == TupProject::STATIC_BACKGROUND_EDITION) {
+        imgPath += "static_bg.png";
+        // Raster Static Settings
+    } else {
+        imgPath += "dynamic_bg.png";
+        // Raster Dynamic Settings
+    }
+
+    if (QFile::exists(imgPath)) {
+        rasterCanvas->loadFromFile(imgPath);
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "RasterMainWindow::createCentralWidget() - Image doesn't exist -> " + imgPath;
+        #endif
+    }
+
     QWidget *centralWidget = new QWidget();
     QVBoxLayout *centralLayout = new QVBoxLayout(centralWidget);
     centralLayout->addWidget(topBar);
@@ -182,8 +162,6 @@ void RasterMainWindow::closeEvent(QCloseEvent *event)
     #ifdef TUP_DEBUG
         qDebug() << "RasterMainWindow::closeEvent(QCloseEvent)";
     #endif
-
-    qDebug() << "Tracing 102";
 
     saveCanvas();
 
@@ -283,12 +261,15 @@ void RasterMainWindow::saveCanvas()
     #endif
 
     // SQA: Only render if there is at least one stroke
-    QString imgPath = rasterDir + QString::number(sceneIndex) + "/bg/";
-    qDebug() << "*** RASTER PATH: " << imgPath;
+    QString imgPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/";
 
     if (QDir().mkpath(imgPath)) {
-        rasterCanvas->saveToFile(imgPath + "static_bg.png");
-        emit closeWindow(imgPath + "static_bg.png");
+        QString prefix = "dynamic_bg.png";
+        if (spaceContext == TupProject::STATIC_BACKGROUND_EDITION)
+            prefix = "static_bg.png";
+
+        rasterCanvas->saveToFile(imgPath + prefix);
+        emit closeWindow(imgPath + prefix);
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "RasterMainWindow::saveCanvas() - Error while creating raster background path!";

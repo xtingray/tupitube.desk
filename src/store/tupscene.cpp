@@ -41,8 +41,9 @@
 #include "tupprojectloader.h"
 #include "tupitemfactory.h"
 
-TupScene::TupScene(TupProject *parent, const QSize size, const QColor color) : QObject(parent)
+TupScene::TupScene(TupProject *parent, int index, const QSize size, const QColor color) : QObject(parent)
 {
+    sceneIndex = index;
     dimension = size;
     bgColor = color;
     isLocked = false;
@@ -50,7 +51,7 @@ TupScene::TupScene(TupProject *parent, const QSize size, const QColor color) : Q
     layers = Layers();
     isVisible = true;
     storyboard = new TupStoryboard(parent->getAuthor());
-    background = new TupBackground(this, size, color);
+    background = new TupBackground(this, sceneIndex, size, color);
 }
 
 TupScene::~TupScene()
@@ -170,21 +171,12 @@ void TupScene::addLayer(const QString &xml)
 TupSoundLayer *TupScene::createSoundLayer(int position, bool loaded)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[createSoundLayer()] - position: " << position;
-        #else
-            T_FUNCINFO << position;
-        #endif
+        qDebug() << "[createSoundLayer()] - position: " << position;
     #endif    
     
     if (position < 0 || position > soundLayers.count()) {
         #ifdef TUP_DEBUG
-            QString msg = "TupScene::createSoundLayer() - [ Fatal Error ] - Index incorrect!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupScene::createSoundLayer() - [ Fatal Error ] - Index incorrect!";
         #endif        
         return nullptr;
     }
@@ -220,11 +212,7 @@ bool TupScene::restoreLayer(int index)
 bool TupScene::removeLayer(int position)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupScene::removeLayer()] - position: " << position;
-        #else
-            T_FUNCINFO << position;
-        #endif
+        qDebug() << "[TupScene::removeLayer()] - position: " << position;
     #endif
 
     TupLayer *layer = this->layerAt(position);
@@ -271,12 +259,7 @@ TupSoundLayer *TupScene::soundLayer(int position) const
 {
     if (position < 0 || position >= soundLayers.count()) {
         #ifdef TUP_DEBUG
-            QString msg = " FATAL ERROR: index out of bound " + QString::number(position);
-            #ifdef Q_OS_WIN
-               qDebug() << msg;
-            #else
-               T_FUNCINFO << msg;
-            #endif
+            qDebug() << "TupScene::fromXml() - FATAL ERROR: index out of bound " + QString::number(position);
         #endif
         return nullptr;
     }
@@ -287,22 +270,13 @@ TupSoundLayer *TupScene::soundLayer(int position) const
 void TupScene::fromXml(const QString &xml)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupScene::fromXml()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupScene::fromXml()]";
     #endif
 
     QDomDocument document;
     if (!document.setContent(xml)) {
 		#ifdef TUP_DEBUG
-            QString msg = "TupScene::fromXml() - Error while processing XML file";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupScene::fromXml() - Error while processing XML file";
         #endif  
         return;
     }
@@ -328,32 +302,32 @@ void TupScene::fromXml(const QString &xml)
                        layer->fromXml(newDoc);
                    }
                } else if (e.tagName() == "background") {
-                          QString newDoc;
-                          {
-                            QTextStream ts(&newDoc);
-                            ts << n;
-                          }
-                          background->fromXml(newDoc);
-
+                   QString newDoc;
+                   {
+                     QTextStream ts(&newDoc);
+                     ts << n;
+                   }
+                   background->fromXml(newDoc);
+                   qDebug() << "TupScene()::fromXml() - Tracing scene index: " + QString::number(sceneIndex);
                } else if (e.tagName() == "soundlayer") {
-                          int pos = soundLayers.count();
-                          TupSoundLayer *layer = createSoundLayer(pos, true);
+                   int pos = soundLayers.count();
+                   TupSoundLayer *layer = createSoundLayer(pos, true);
 
-                          if (layer) {
-                              QString newDoc;
-                               {
-                                 QTextStream ts(&newDoc);
-                                 ts << n;
-                               }
-                              layer->fromXml(newDoc);
-                          }
+                   if (layer) {
+                       QString newDoc;
+                        {
+                          QTextStream ts(&newDoc);
+                          ts << n;
+                        }
+                       layer->fromXml(newDoc);
+                   }
                } else if (e.tagName() == "storyboard") {
-                          QString newDoc;
-                          {
-                            QTextStream ts(&newDoc);
-                            ts << n;
-                          }
-                          storyboard->fromXml(newDoc);
+                   QString newDoc;
+                   {
+                     QTextStream ts(&newDoc);
+                     ts << n;
+                   }
+                   storyboard->fromXml(newDoc);
                }
            }
 
@@ -385,30 +359,25 @@ bool TupScene::moveLayer(int from, int to)
 {
     if (from < 0 || from >= layers.count() || to < 0 || to >= layers.count()) {
         #ifdef TUP_DEBUG
-            QString msg = "TupScene::moveLayer() - FATAL ERROR: Layer index out of bound " + QString::number(to);
-            #ifdef Q_OS_WIN
-                 qDebug() << msg;
-            #else
-                 tError() << msg;
-            #endif
+            qDebug() << "TupScene::moveLayer() - FATAL ERROR: Layer index out of bound " + QString::number(to);
         #endif
         return false;
     }
 
     TupLayer *sourceLayer = layers[from];
     sourceLayer->updateLayerIndex(to + 1);
-    TupLayer *destinyLayer = layers[to];
-    destinyLayer->updateLayerIndex(from + 1); 
+    TupLayer *targetLayer = layers[to];
+    targetLayer->updateLayerIndex(from + 1);
 
     Frames frames = sourceLayer->getFrames(); 
     int totalFrames = frames.size();
-    int zLevelIndex = (to + 2)*ZLAYER_LIMIT;
+    int zLevelIndex = (to + 2) * ZLAYER_LIMIT;
     for (int i = 0; i < totalFrames; i++) {
          TupFrame *frame = frames.at(i);
          frame->updateZLevel(zLevelIndex);
     }
 
-    frames = destinyLayer->getFrames(); 
+    frames = targetLayer->getFrames();
     totalFrames = frames.size();
     zLevelIndex = (from + 2)*ZLAYER_LIMIT;
     for (int i = 0; i < totalFrames; i++) {
@@ -744,7 +713,7 @@ TupBackground* TupScene::sceneBackground()
 void TupScene::reset(const QString &name)
 {
     sceneName = name;
-    background = new TupBackground(this, dimension, bgColor);
+    background = new TupBackground(this, sceneIndex, dimension, bgColor);
     layers.clear();
     tweeningGraphicObjects.clear();
     tweeningSvgObjects.clear();
@@ -760,16 +729,18 @@ void TupScene::reset(const QString &name)
 void TupScene::clear()
 {
     if (background) {
-        background->clear();
-        delete background;
+        background->clearBackground();
+
         background = nullptr;
+        delete background;
     }
 
     for (int i=0; i<layers.count(); i++) {
          TupLayer *layer = layers.takeAt(i);
          layer->clear();
-         delete layer;
+
          layer = nullptr;
+         delete layer;
     }
 
     layerCount = 1;
@@ -955,5 +926,5 @@ int TupScene::totalPhotograms()
 
 void TupScene::updateRasterBackground(TupProject::Mode spaceContext, const QString &imgPath)
 {
-    background->updateRasterBackground(spaceContext, imgPath);
+    background->updateRasterBgImage(spaceContext, imgPath);
 }

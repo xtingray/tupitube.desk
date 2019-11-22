@@ -31,18 +31,18 @@
 #include <QColorDialog>
 #include <QCloseEvent>
 
-class RasterMainWindow : public TMainWindow
+class TUPITUBE_EXPORT RasterMainWindow : public TMainWindow
 {
     Q_OBJECT
 
     public:
         enum Perspective { Raster = 0x01 };
 
-        explicit RasterMainWindow(TupProject *project, const QString &winKey, int scene,
-                                  const QColor contourColor, QWidget *parent = nullptr);
+        explicit RasterMainWindow(TupProject *project, const QString &winKey, TupProject::Mode context,
+                                  int scene, const QColor contourColor, QWidget *parent = nullptr);
         ~RasterMainWindow();
 
-         void setTabletDevice(QTabletEvent *event);
+        void setTabletDevice(QTabletEvent *event);
 
     public slots:
         void openProject();
@@ -80,7 +80,6 @@ class RasterMainWindow : public TMainWindow
         TupPaintAreaStatus *status;
 
         QSize projectSize;
-        QString rasterDir;
         int sceneIndex;
         QPushButton *colorBtn;
         QPushButton *clearBtn;
@@ -88,6 +87,7 @@ class RasterMainWindow : public TMainWindow
         QPushButton *openBtn;
 
         bool tabletIsActive;
+        TupProject::Mode spaceContext;
 };
 
 #endif // RASTERMAINWINDOW_H

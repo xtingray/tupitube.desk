@@ -65,7 +65,6 @@ RasterColorWidget::RasterColorWidget(const QColor contourColor, const QColor bgC
     TCONFIG->beginGroup("ColorPalette");
     TCONFIG->setValue("CurrentColorMode", 0);
 
-    // currentContourBrush = Qt::black;
     currentContourBrush = QBrush(contourColor);
     bgBrush = QBrush(bgColor);
     splitter = new QSplitter(Qt::Vertical, this);
@@ -129,8 +128,6 @@ void RasterColorWidget::setupColorDisplay()
     QLabel *contourLabel = new QLabel(tr("Contour"));
 
     QSize cellSize(25, 25);
-    // QColor contourColor(0, 0, 0);
-    // QBrush contourBrush = currentContourBrush;
     contourColorCell = new TColorCell(TColorCell::Contour, currentContourBrush, cellSize);
     contourColorCell->setChecked(true);
     connect(contourColorCell, SIGNAL(clicked(TColorCell::FillType)), this, SLOT(updateColorMode(TColorCell::FillType)));
@@ -170,7 +167,6 @@ void RasterColorWidget::setupColorDisplay()
 
     bgLayout->addWidget(new QWidget());
 
-    // QBrush bgBrush = QBrush(Qt::white);
     bgColorCell = new TColorCell(TColorCell::Background, bgBrush, cellSize);
     connect(bgColorCell, SIGNAL(clicked(TColorCell::FillType)), this, SLOT(updateColorMode(TColorCell::FillType)));
     bgLayout->addWidget(bgColorCell);
@@ -281,7 +277,8 @@ void RasterColorWidget::setupMainPalette()
 {
     // Palettes
     paletteContainer = new TupViewColorCells(splitter);
-    connect(paletteContainer, SIGNAL(colorSelected(const QBrush&)), this, SLOT(updateColorFromPalette(const QBrush&)));
+    connect(paletteContainer, SIGNAL(colorSelected(const QBrush&)),
+            this, SLOT(updateColorFromPalette(const QBrush&)));
 
     splitter->addWidget(paletteContainer);
 }

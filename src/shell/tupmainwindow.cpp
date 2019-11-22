@@ -496,23 +496,23 @@ void TupMainWindow::resetUI()
     removeAllWidgets();
 
     if (internetOn) { 
-        delete newsTab;
         newsTab = nullptr;
+        delete newsTab;
     }
 
     if (playerTab) {
-        delete playerTab;
         playerTab = nullptr;
+        delete playerTab;
     }
 
     if (animationTab) {
-        delete animationTab;
         animationTab = nullptr;
+        delete animationTab;
     }
 
     if (exportWidget) {
-        delete exportWidget; 
         exportWidget = nullptr;
+        delete exportWidget; 
     }
 
     m_exposureSheet->closeAllScenes();
@@ -589,6 +589,7 @@ void TupMainWindow::setupLocalProject(TupProjectManagerParams *params)
         projectName = params->getProjectManager();
         author = params->getAuthor();
         setWindowTitle(appTitle +  " - " + projectName + " [ " + tr("by") + " " + author + " ]");
+        kAppProp->setProjectDir(projectName);
     }
 }
 
@@ -656,6 +657,7 @@ void TupMainWindow::openProject(const QString &path)
 
             TupMainWindow::requestType = OpenLocalProject;
             projectName = m_projectManager->getProject()->getName();
+            // kAppProp->setRasterBgDir(projectName);
             updateRecentProjectList();
             updateOpenRecentMenu(m_recentProjectsMenu, m_recentProjects);
 
