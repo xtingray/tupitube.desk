@@ -571,21 +571,21 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
     TupScene *scene = this->sceneAt(sceneIndex);
 
     if (scene) {
-        if (spaceMode == TupProject::FRAMES_EDITION) {
+        if (spaceMode == TupProject::FRAMES_MODE) {
             TupLayer *layer = scene->layerAt(layerIndex);
 
             if (layer)
                 frame = layer->frameAt(frameIndex);
             else
                 return false;
-        } else if (spaceMode == TupProject::STATIC_BACKGROUND_EDITION) { 
+        } else if (spaceMode == TupProject::VECTOR_STATIC_BG_MODE) {
             TupBackground *bg = scene->sceneBackground();
 
             if (bg)
                 frame = bg->vectorStaticFrame();
             else
                 return false;
-        } else if (spaceMode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+        } else if (spaceMode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
             TupBackground *bg = scene->sceneBackground();
 
             if (bg) {

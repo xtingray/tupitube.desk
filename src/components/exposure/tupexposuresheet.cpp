@@ -1160,13 +1160,13 @@ void TupExposureSheet::itemResponse(TupItemResponse *e)
     switch (e->getAction()) {
         case TupProjectRequest::Add:
             {
-                if (e->spaceMode() == TupProject::FRAMES_EDITION && e->getItemIndex() == 0)
+                if (e->spaceMode() == TupProject::FRAMES_MODE && e->getItemIndex() == 0)
                     currentTable->updateFrameState(e->getLayerIndex(), e->getFrameIndex(), TupExposureTable::Used);
             }
         break;
         case TupProjectRequest::Remove:
             {
-                if (e->spaceMode() == TupProject::FRAMES_EDITION && e->frameIsEmpty())
+                if (e->spaceMode() == TupProject::FRAMES_MODE && e->frameIsEmpty())
                     currentTable->updateFrameState(e->getLayerIndex(), e->getFrameIndex(), TupExposureTable::Empty);
             }
         break;
@@ -1186,7 +1186,7 @@ void TupExposureSheet::libraryResponse(TupLibraryResponse *response)
         case TupProjectRequest::Add:
         case TupProjectRequest::InsertSymbolIntoFrame:
             {
-                if (response->getSpaceMode() == TupProject::FRAMES_EDITION)
+                if (response->getSpaceMode() == TupProject::FRAMES_MODE)
                     currentTable->updateFrameState(response->getLayerIndex(), response->getFrameIndex(), TupExposureTable::Used);
             }
         break;

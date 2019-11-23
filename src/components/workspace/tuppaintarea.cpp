@@ -286,7 +286,7 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
             case TupProjectRequest::ReverseSelection:
             case TupProjectRequest::Exchange:
               {
-                  if (spaceMode == TupProject::FRAMES_EDITION)
+                  if (spaceMode == TupProject::FRAMES_MODE)
                       guiScene->drawCurrentPhotogram();
               }
             break;
@@ -303,7 +303,7 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
                   }
                   guiScene->setCurrentFrame(response->getLayerIndex(), response->getFrameIndex());
 
-                  if (spaceMode == TupProject::FRAMES_EDITION) {
+                  if (spaceMode == TupProject::FRAMES_MODE) {
                       guiScene->drawPhotogram(response->getFrameIndex(), true);
                   } else {
                       guiScene->cleanWorkSpace();
@@ -360,7 +360,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
         case TupProjectRequest::Add:
           {
               if (response->getMode() == TupProjectResponse::Redo || response->getMode() == TupProjectResponse::Undo) {
-                  if (spaceMode == TupProject::FRAMES_EDITION)
+                  if (spaceMode == TupProject::FRAMES_MODE)
                       guiScene->drawCurrentPhotogram();
               }
               return;
@@ -375,7 +375,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
                   else
                       guiScene->setCurrentFrame(response->getLayerIndex() + 1, frameIndex);
 
-                  if (spaceMode == TupProject::FRAMES_EDITION) {
+                  if (spaceMode == TupProject::FRAMES_MODE) {
                       guiScene->drawCurrentPhotogram();
                   } else {
                       guiScene->cleanWorkSpace();
@@ -384,7 +384,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
               } else {
                   if (scene->layersCount() == 1) {
                       guiScene->setCurrentFrame(0, frameIndex);
-                      if (spaceMode == TupProject::FRAMES_EDITION) {
+                      if (spaceMode == TupProject::FRAMES_MODE) {
                           guiScene->drawCurrentPhotogram();
                       } else {
                           guiScene->cleanWorkSpace();
@@ -405,7 +405,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
         case TupProjectRequest::TupProjectRequest::View:
           {
               guiScene->updateLayerVisibility(response->getLayerIndex(), response->getArg().toBool());
-              if (spaceMode == TupProject::FRAMES_EDITION) {
+              if (spaceMode == TupProject::FRAMES_MODE) {
                   guiScene->drawCurrentPhotogram();
               } else {
                   guiScene->cleanWorkSpace();
@@ -417,7 +417,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
         case TupProjectRequest::TupProjectRequest::Move:
           {
               guiScene->setCurrentFrame(response->getArg().toInt(), frameIndex);
-              if (spaceMode == TupProject::FRAMES_EDITION) {
+              if (spaceMode == TupProject::FRAMES_MODE) {
                   guiScene->drawCurrentPhotogram();
               } else {
                   guiScene->cleanWorkSpace();
@@ -428,7 +428,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
         break;
         default:
           {
-              if (spaceMode == TupProject::FRAMES_EDITION) {
+              if (spaceMode == TupProject::FRAMES_MODE) {
                   guiScene->drawCurrentPhotogram();
               } else {
                   guiScene->cleanWorkSpace();
@@ -545,7 +545,7 @@ void TupPaintArea::itemResponse(TupItemResponse *response)
             case TupProjectRequest::Remove:
               { 
                   if (!deleteMode) {
-                      if (spaceMode == TupProject::FRAMES_EDITION) {
+                      if (spaceMode == TupProject::FRAMES_MODE) {
                           guiScene->drawCurrentPhotogram();
                       } else {
                           guiScene->cleanWorkSpace();
@@ -564,7 +564,7 @@ void TupPaintArea::itemResponse(TupItemResponse *response)
             break;
             default:
               {
-                  if (spaceMode == TupProject::FRAMES_EDITION) {
+                  if (spaceMode == TupProject::FRAMES_MODE) {
                       guiScene->drawCurrentPhotogram();
                   } else {
                       guiScene->cleanWorkSpace();
@@ -618,7 +618,7 @@ void TupPaintArea::libraryResponse(TupLibraryResponse *request)
         switch (request->getAction()) {
             case TupProjectRequest::InsertSymbolIntoFrame:
               {
-                  if (spaceMode == TupProject::FRAMES_EDITION) {
+                  if (spaceMode == TupProject::FRAMES_MODE) {
                       guiScene->drawCurrentPhotogram();
                   } else {
                       guiScene->cleanWorkSpace();
@@ -634,7 +634,7 @@ void TupPaintArea::libraryResponse(TupLibraryResponse *request)
             case TupProjectRequest::Remove:
             case TupProjectRequest::RemoveSymbolFromFrame:
               {
-                  if (spaceMode == TupProject::FRAMES_EDITION) {
+                  if (spaceMode == TupProject::FRAMES_MODE) {
                       guiScene->drawCurrentPhotogram();
                   } else {
                       guiScene->cleanWorkSpace();
@@ -705,7 +705,7 @@ void TupPaintArea::deleteItems()
                      int frameIndex = -1;
                      int layerIndex = -1;
 
-                     if (spaceMode == TupProject::FRAMES_EDITION) {
+                     if (spaceMode == TupProject::FRAMES_MODE) {
                          frameIndex = currentScene->currentFrameIndex();
                          layerIndex = currentScene->currentLayerIndex();
                          if (svg) {
@@ -718,7 +718,7 @@ void TupPaintArea::deleteItems()
                          TupBackground *bg = currentScene->currentScene()->sceneBackground();
                          if (bg) {
                              TupFrame *frame;
-                             if (spaceMode == TupProject::STATIC_BACKGROUND_EDITION)
+                             if (spaceMode == TupProject::VECTOR_STATIC_BG_MODE)
                                  frame = bg->vectorStaticFrame();
                              else
                                  frame = bg->vectorDynamicFrame();
@@ -1174,7 +1174,7 @@ void TupPaintArea::updatePaintArea()
         qDebug() << "[TupPaintArea::updatePaintArea()]";
     #endif
 
-    if (spaceMode == TupProject::FRAMES_EDITION) {
+    if (spaceMode == TupProject::FRAMES_MODE) {
         TupGraphicsScene* currentScene = graphicsScene();
         currentScene->drawCurrentPhotogram();
     } else {

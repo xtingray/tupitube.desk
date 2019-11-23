@@ -61,9 +61,11 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
     public:
         enum Mode 
         {
-            FRAMES_EDITION = 0,
-            STATIC_BACKGROUND_EDITION,
-            DYNAMIC_BACKGROUND_EDITION,
+            FRAMES_MODE = 0,
+            VECTOR_STATIC_BG_MODE,
+            VECTOR_DYNAMIC_BG_MODE,
+            RASTER_STATIC_BG_MODE,
+            RASTER_DYNAMIC_BG_MODE,
             NONE
         };
 

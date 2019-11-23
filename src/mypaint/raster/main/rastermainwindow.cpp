@@ -34,6 +34,16 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, T
     sceneIndex = scene;
     projectSize = project->getDimension();
 
+    if (spaceContext == TupProject::RASTER_STATIC_BG_MODE) {
+        // Raster Static Settings
+        setWindowTitle(tr("Raster Static Background"));
+        setWindowIcon(QIcon(THEME_DIR + "icons/raster_mode.png"));
+    } else {
+        // Raster Dynamic Settings
+        setWindowTitle(tr("Raster Dynamic Background"));
+        setWindowIcon(QIcon(THEME_DIR + "icons/dynamic_raster_mode.png"));
+    }
+
     createTopResources();
     createCentralWidget(project, contourColor);
 
@@ -133,12 +143,12 @@ void RasterMainWindow::createCentralWidget(TupProject * project, const QColor co
     topBar->addWidget(clearButton);
 
     QString imgPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/";
-    if (spaceContext == TupProject::STATIC_BACKGROUND_EDITION) {
-        imgPath += "static_bg.png";
+    if (spaceContext == TupProject::RASTER_STATIC_BG_MODE) {
         // Raster Static Settings
+        imgPath += "static_bg.png";
     } else {
-        imgPath += "dynamic_bg.png";
         // Raster Dynamic Settings
+        imgPath += "dynamic_bg.png";
     }
 
     if (QFile::exists(imgPath)) {
@@ -265,7 +275,7 @@ void RasterMainWindow::saveCanvas()
 
     if (QDir().mkpath(imgPath)) {
         QString prefix = "dynamic_bg.png";
-        if (spaceContext == TupProject::STATIC_BACKGROUND_EDITION)
+        if (spaceContext == TupProject::VECTOR_STATIC_BG_MODE)
             prefix = "static_bg.png";
 
         rasterCanvas->saveToFile(imgPath + prefix);

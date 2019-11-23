@@ -252,7 +252,7 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
 TupFrame* SelectionTool::getCurrentFrame()
 {
     TupFrame *frame = nullptr;
-    if (scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
+    if (scene->getSpaceContext() == TupProject::FRAMES_MODE) {
         frame = scene->currentFrame();
         currentLayer = scene->currentLayerIndex();
         currentFrame = scene->currentFrameIndex();
@@ -262,9 +262,9 @@ TupFrame* SelectionTool::getCurrentFrame()
 
         TupScene *tupScene = scene->currentScene();
         TupBackground *bg = tupScene->sceneBackground();
-        if (scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
+        if (scene->getSpaceContext() == TupProject::VECTOR_STATIC_BG_MODE) {
             frame = bg->vectorStaticFrame();
-        } else if (scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+        } else if (scene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
             frame = bg->vectorDynamicFrame();
         }
     }
@@ -278,7 +278,7 @@ TupFrame* SelectionTool::frameAt(int sceneIndex, int layerIndex, int frameIndex)
     TupProject *project = scene->currentScene()->project();
     TupScene *sceneData = project->sceneAt(sceneIndex);
     if (sceneData) {
-        if (scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
+        if (scene->getSpaceContext() == TupProject::FRAMES_MODE) {
             TupLayer *layer = sceneData->layerAt(layerIndex);
             if (layer) {
                 frame = layer->frameAt(frameIndex);
@@ -294,9 +294,9 @@ TupFrame* SelectionTool::frameAt(int sceneIndex, int layerIndex, int frameIndex)
             }
         } else {
             TupBackground *bg = sceneData->sceneBackground();
-            if (scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
+            if (scene->getSpaceContext() == TupProject::VECTOR_STATIC_BG_MODE) {
                 frame = bg->vectorStaticFrame();
-            } else if (scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+            } else if (scene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                 frame = bg->vectorDynamicFrame();
                 bg->scheduleVectorRender(true);
             }

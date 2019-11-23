@@ -1101,15 +1101,17 @@ void TupDocumentView::createToolBar()
     barGrid = new QToolBar(tr("Paint area actions"), this);
     barGrid->setIconSize(QSize(16, 16));
 
-    staticPropertiesBar = new QToolBar(tr("Static Background Properties"), this);
-    dynamicPropertiesBar = new QToolBar(tr("Dynamic Background Properties"), this);
+    staticPropertiesBar = new QToolBar(tr("Vector Static BG Properties"), this);
+    dynamicPropertiesBar = new QToolBar(tr("Vector Dynamic BG Properties"), this);
 
     addToolBar(barGrid);
 
     spaceModeCombo = new QComboBox();
     spaceModeCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Frames Mode"));
-    spaceModeCombo->addItem(QIcon(THEME_DIR + "icons/static_background_mode.png"), tr("Static BG Mode"));
-    spaceModeCombo->addItem(QIcon(THEME_DIR + "icons/dynamic_background_mode.png"), tr("Dynamic BG Mode"));
+    spaceModeCombo->addItem(QIcon(THEME_DIR + "icons/static_background_mode.png"), tr("Vector Static BG Mode"));
+    spaceModeCombo->addItem(QIcon(THEME_DIR + "icons/dynamic_background_mode.png"), tr("Vector Dynamic BG Mode"));
+    spaceModeCombo->addItem(QIcon(THEME_DIR + "icons/raster_mode.png"), tr("Raster Static BG Mode"));
+    spaceModeCombo->addItem(QIcon(THEME_DIR + "icons/dynamic_raster_mode.png"), tr("Raster Dynamic BG Mode"));
 
     connect(spaceModeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setSpaceContext()));
     setSpaceContext();
@@ -1173,8 +1175,8 @@ void TupDocumentView::createToolBar()
     sEmpty1->setFixedWidth(5);
     QWidget *sEmpty2 = new QWidget();
     sEmpty2->setFixedWidth(5);
-    QWidget *sEmpty3 = new QWidget();
-    sEmpty3->setFixedWidth(5);
+    // QWidget *sEmpty3 = new QWidget();
+    // sEmpty3->setFixedWidth(5);
 
     QLabel *staticOpacityLabel = new QLabel();
     QPixmap staticPix(THEME_DIR + "icons/bg_opacity.png");
@@ -1188,18 +1190,20 @@ void TupDocumentView::createToolBar()
     staticOpacityBox->setToolTip(tr("Static BG Opacity"));
     connect(staticOpacityBox, SIGNAL(valueChanged(double)), this, SLOT(updateStaticOpacity(double)));
 
+    /*
     QPushButton *staticRasterButton = new QPushButton(QIcon(THEME_DIR + "icons/raster_mode.png"), "");
     staticRasterButton->setToolTip(tr("Static Raster Mode"));
     connect(staticRasterButton, SIGNAL(clicked()), this, SLOT(openRasterMode()));
+    */
 
     staticPropertiesBar->addWidget(sEmpty0);
     staticPropertiesBar->addWidget(staticOpacityLabel);
     staticPropertiesBar->addWidget(sEmpty1);
     staticPropertiesBar->addWidget(staticOpacityBox);
     staticPropertiesBar->addWidget(sEmpty2);
-    staticPropertiesBar->addSeparator();
-    staticPropertiesBar->addWidget(sEmpty3);
-    staticPropertiesBar->addWidget(staticRasterButton);
+    // staticPropertiesBar->addSeparator();
+    // staticPropertiesBar->addWidget(sEmpty3);
+    // staticPropertiesBar->addWidget(staticRasterButton);
     staticPropertiesBar->setVisible(false);
 
     QLabel *dirLabel = new QLabel();
@@ -1231,8 +1235,8 @@ void TupDocumentView::createToolBar()
     dEmpty6->setFixedWidth(5);
     QWidget *dEmpty7 = new QWidget();
     dEmpty7->setFixedWidth(5);
-    QWidget *dEmpty8 = new QWidget();
-    dEmpty8->setFixedWidth(5);
+    // QWidget *dEmpty8 = new QWidget();
+    // dEmpty8->setFixedWidth(5);
 
     QLabel *shiftLabel = new QLabel();
     QPixmap shiftPix(THEME_DIR + "icons/shift_length.png");
@@ -1257,9 +1261,11 @@ void TupDocumentView::createToolBar()
     dynamicOpacityBox->setToolTip(tr("Dynamic BG Opacity"));
     connect(dynamicOpacityBox, SIGNAL(valueChanged(double)), this, SLOT(updateDynamicOpacity(double)));
 
+    /*
     QPushButton *dynamicRasterButton = new QPushButton(QIcon(THEME_DIR + "icons/raster_mode.png"), "", this);
     dynamicRasterButton->setToolTip(tr("Dynamic Raster Mode"));
     connect(dynamicRasterButton, SIGNAL(clicked()), this, SLOT(openRasterMode()));
+    */
 
     dynamicPropertiesBar->addWidget(dirLabel);
     dynamicPropertiesBar->addWidget(dEmpty0);
@@ -1277,9 +1283,9 @@ void TupDocumentView::createToolBar()
     dynamicPropertiesBar->addWidget(dEmpty6);
     dynamicPropertiesBar->addWidget(dynamicOpacityBox);
     dynamicPropertiesBar->addWidget(dEmpty7);
-    dynamicPropertiesBar->addSeparator();
-    dynamicPropertiesBar->addWidget(dEmpty8);
-    dynamicPropertiesBar->addWidget(dynamicRasterButton);
+    // dynamicPropertiesBar->addSeparator();
+    // dynamicPropertiesBar->addWidget(dEmpty8);
+    // dynamicPropertiesBar->addWidget(dynamicRasterButton);
 
     dynamicPropertiesBar->setVisible(false);
 
@@ -1289,6 +1295,7 @@ void TupDocumentView::createToolBar()
 
 void TupDocumentView::openRasterMode()
 {
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     rasterWindow = new RasterMainWindow(project, "raster", spaceContext(), currentSceneIndex(), contourColor, this);
     connect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString &)));
     connect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
@@ -1296,11 +1303,13 @@ void TupDocumentView::openRasterMode()
 
     rasterWindowOn = true;
     rasterWindow->showFullScreen();
+    QApplication::restoreOverrideCursor();
 }
 
 void TupDocumentView::closeRasterWindow(const QString &imgPath)
 {
     if (rasterWindowOn) {
+        spaceModeCombo->setCurrentIndex(0);
         disconnect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString &)));
         disconnect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
                    this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
@@ -1442,49 +1451,67 @@ void TupDocumentView::setSpaceContext()
     if (currentTool) {
         if (((currentTool->toolType() == TupToolInterface::Tweener)
             || (currentTool->toolType() == TupToolInterface::LipSync))
-            && (mode != TupProject::FRAMES_EDITION)) {
+            && (mode != TupProject::FRAMES_MODE)) {
             pencilAction->trigger();
         } else {
             currentTool->init(paintArea->graphicsScene());
         }
     }
 
-    if (mode == TupProject::FRAMES_EDITION) {
-        if (dynamicFlag) {
-            dynamicFlag = false;
-            renderDynamicBackground();
-        }
-        project->updateSpaceContext(TupProject::FRAMES_EDITION);
-        staticPropertiesBar->setVisible(false);
-        dynamicPropertiesBar->setVisible(false);
-        motionMenu->setEnabled(true);
-    } else if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
-        if (dynamicFlag) {
-            dynamicFlag = false;
-            renderDynamicBackground();
-        }
-        project->updateSpaceContext(TupProject::STATIC_BACKGROUND_EDITION);
-        staticPropertiesBar->setVisible(true);
-        dynamicPropertiesBar->setVisible(false);
-        motionMenu->setEnabled(false);
-    } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
-        dynamicFlag = true;
-        project->updateSpaceContext(TupProject::DYNAMIC_BACKGROUND_EDITION);
-
-        int sceneIndex = paintArea->currentSceneIndex();
-        TupScene *scene = project->sceneAt(sceneIndex);
-        if (scene) {
-            TupBackground *bg = scene->sceneBackground();
-            if (bg) {
-                int direction = bg->vectorDynamicDirection();
-                dirCombo->setCurrentIndex(direction);
-                int shift = bg->vectorDynamicShift();
-                shiftSpin->setValue(shift);
+    switch (mode) {
+        case TupProject::FRAMES_MODE:
+        {
+            if (dynamicFlag) {
+                dynamicFlag = false;
+                renderDynamicBackground();
             }
+            project->updateSpaceContext(TupProject::FRAMES_MODE);
+            staticPropertiesBar->setVisible(false);
+            dynamicPropertiesBar->setVisible(false);
+            motionMenu->setEnabled(true);
         }
-        staticPropertiesBar->setVisible(false);
-        dynamicPropertiesBar->setVisible(true);
-        motionMenu->setEnabled(false);
+        break;
+        case TupProject::VECTOR_STATIC_BG_MODE:
+        {
+            if (dynamicFlag) {
+                dynamicFlag = false;
+                renderDynamicBackground();
+            }
+            project->updateSpaceContext(TupProject::VECTOR_STATIC_BG_MODE);
+            staticPropertiesBar->setVisible(true);
+            dynamicPropertiesBar->setVisible(false);
+            motionMenu->setEnabled(false);
+        }
+        break;
+        case TupProject::VECTOR_DYNAMIC_BG_MODE:
+        {
+            dynamicFlag = true;
+            project->updateSpaceContext(TupProject::VECTOR_DYNAMIC_BG_MODE);
+
+            int sceneIndex = paintArea->currentSceneIndex();
+            TupScene *scene = project->sceneAt(sceneIndex);
+            if (scene) {
+                TupBackground *bg = scene->sceneBackground();
+                if (bg) {
+                    int direction = bg->vectorDynamicDirection();
+                    dirCombo->setCurrentIndex(direction);
+                    int shift = bg->vectorDynamicShift();
+                    shiftSpin->setValue(shift);
+                }
+            }
+            staticPropertiesBar->setVisible(false);
+            dynamicPropertiesBar->setVisible(true);
+            motionMenu->setEnabled(false);
+        }
+        break;
+        case TupProject::RASTER_STATIC_BG_MODE:
+        case TupProject::RASTER_DYNAMIC_BG_MODE:
+        {
+            openRasterMode();
+        }
+        break;
+        default:
+        break;
     }
 
     paintArea->updateSpaceContext();
@@ -1786,7 +1813,7 @@ void TupDocumentView::updateStaticOpacity(double opacity)
         if (bg) {
             bg->setVectorStaticOpacity(opacity);
             TupProject::Mode mode = TupProject::Mode(spaceModeCombo->currentIndex());
-            if (mode == TupProject::FRAMES_EDITION || mode == TupProject::STATIC_BACKGROUND_EDITION)
+            if (mode == TupProject::FRAMES_MODE || mode == TupProject::VECTOR_STATIC_BG_MODE)
                 paintArea->updatePaintArea();
         }
     }
@@ -2214,8 +2241,8 @@ void TupDocumentView::papagayoManager()
 {
     if (currentTool->name().compare(tr("Papagayo Lip-sync")) != 0) {
         TupProject::Mode mode = TupProject::Mode(spaceModeCombo->currentIndex());
-        if (mode != TupProject::FRAMES_EDITION)
-            spaceModeCombo->setCurrentIndex(TupProject::FRAMES_EDITION);
+        if (mode != TupProject::FRAMES_MODE)
+            spaceModeCombo->setCurrentIndex(TupProject::FRAMES_MODE);
         papagayoAction->trigger();
     }
 }

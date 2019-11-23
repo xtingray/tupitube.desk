@@ -240,7 +240,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
     TupProject *project = scene->currentScene()->project();
     sceneVar = project->sceneAt(response->getSceneIndex());
     if (sceneVar) {
-        if (scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
+        if (scene->getSpaceContext() == TupProject::FRAMES_MODE) {
             layer = sceneVar->layerAt(response->getLayerIndex());
             if (layer) {
                 frame = layer->frameAt(response->getFrameIndex());
@@ -259,7 +259,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
         } else {
             TupBackground *bg = sceneVar->sceneBackground();
             if (bg) {
-                if (scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
+                if (scene->getSpaceContext() == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
                     if (frame) {
                         item = frame->item(response->getItemIndex());
@@ -268,7 +268,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
                             qDebug() << "PolyLineTool::itemResponse() - Fatal Error: Static bg frame variable is NULL!";
                         #endif
                     }
-                } else if (scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                } else if (scene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                            frame = bg->vectorDynamicFrame();
                            if (frame) {
                                item = frame->item(response->getItemIndex());
@@ -393,12 +393,12 @@ void PolyLineTool::nodeChanged()
     if (nodeGroup) {
         if (!nodeGroup->changedNodes().isEmpty()) {
             int position = -1;
-            if (scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
+            if (scene->getSpaceContext() == TupProject::FRAMES_MODE) {
                 position = scene->currentFrame()->indexOf(nodeGroup->parentItem());
             } else {
                 TupBackground *bg = scene->currentScene()->sceneBackground();
                 if (bg) {
-                    if (scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
+                    if (scene->getSpaceContext() == TupProject::VECTOR_STATIC_BG_MODE) {
                         TupFrame *frame = bg->vectorStaticFrame();
                         if (frame) {
                             position = frame->indexOf(nodeGroup->parentItem());
@@ -408,7 +408,7 @@ void PolyLineTool::nodeChanged()
                             #endif
                             return;
                         }
-                    } else if (scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                    } else if (scene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                                TupFrame *frame = bg->vectorDynamicFrame();
                                if (frame) {
                                    position = frame->indexOf(nodeGroup->parentItem());

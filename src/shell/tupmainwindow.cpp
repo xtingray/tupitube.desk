@@ -230,7 +230,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         if (TupMainWindow::requestType == NewLocalProject || TupMainWindow::requestType == NewNetProject)
             TOsd::self()->display(tr("Information"), tr("Opening a new document..."));
 
-        contextMode = TupProject::FRAMES_EDITION;
+        contextMode = TupProject::FRAMES_MODE;
 
         // Setting undo/redo actions
         setUndoRedoActions();
@@ -1088,7 +1088,7 @@ void TupMainWindow::updateCurrentTab(int index)
                 scenesView->expandDock(true);
             */
 
-            if (contextMode != TupProject::FRAMES_EDITION) {
+            if (contextMode != TupProject::FRAMES_MODE) {
                 if (exposureView->isExpanded()) {
                     exposureView->expandDock(false);
                     exposureView->enableButton(false);
@@ -1135,7 +1135,7 @@ void TupMainWindow::restoreFramesMode(TupProject::Mode mode)
     #endif
 
     contextMode = mode;
-    if (contextMode == TupProject::FRAMES_EDITION) {
+    if (contextMode == TupProject::FRAMES_MODE) {
         if (currentDock == TupDocumentView::ExposureSheet) {
             exposureView->expandDock(true);
         } else if (currentDock == TupDocumentView::TimeLine) {

@@ -248,7 +248,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
 TupFrame* NodesTool::getCurrentFrame()
 {
     TupFrame *frame = nullptr;
-    if (scene->getSpaceContext() == TupProject::FRAMES_EDITION) {
+    if (scene->getSpaceContext() == TupProject::FRAMES_MODE) {
         frame = scene->currentFrame();
         currentLayer = scene->currentLayerIndex();
         currentFrame = scene->currentFrameIndex();
@@ -258,9 +258,9 @@ TupFrame* NodesTool::getCurrentFrame()
 
         TupScene *tupScene = scene->currentScene();
         TupBackground *bg = tupScene->sceneBackground();
-        if (scene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
+        if (scene->getSpaceContext() == TupProject::VECTOR_STATIC_BG_MODE) {
             frame = bg->vectorStaticFrame();
-        } else if (scene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+        } else if (scene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
             frame = bg->vectorDynamicFrame();
         }
     }

@@ -66,7 +66,7 @@ TupGraphicsScene::TupGraphicsScene() : QGraphicsScene()
 
     framePosition.layer = -1;
     framePosition.frame = -1;
-    spaceContext = TupProject::FRAMES_EDITION;
+    spaceContext = TupProject::FRAMES_MODE;
 
     onionSkin.next = 0;
     onionSkin.previous = 0;
@@ -144,7 +144,7 @@ void TupGraphicsScene::drawCurrentPhotogram()
         if (framePosition.frame >= frames)
             framePosition.frame = frames - 1;
 
-        if (spaceContext == TupProject::FRAMES_EDITION) {
+        if (spaceContext == TupProject::FRAMES_MODE) {
             drawPhotogram(framePosition.frame, true);
         } else {
             cleanWorkSpace();
@@ -265,12 +265,12 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
 
     if (background) {
         // Dynamic Bg
-        if (spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+        if (spaceContext == TupProject::VECTOR_DYNAMIC_BG_MODE) {
             // SQA: Include option "show" raster dynamic bg as option
             // drawRasterDynamicBg();
             drawVectorDynamicBg();
             return;
-        } else if (spaceContext == TupProject::STATIC_BACKGROUND_EDITION) {
+        } else if (spaceContext == TupProject::VECTOR_STATIC_BG_MODE) {
             // SQA: Include option "show" raster static bg as option
             // drawRasterStaticBg();
             drawVectorStaticBg();
@@ -500,7 +500,7 @@ void TupGraphicsScene::addGraphicObject(TupGraphicObject *object, TupFrame::Fram
             else
                 onionSkin.accessMap.insert(item, false);
         } else {
-            if (spaceContext == TupProject::STATIC_BACKGROUND_EDITION || spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION)
+            if (spaceContext == TupProject::VECTOR_STATIC_BG_MODE || spaceContext == TupProject::VECTOR_DYNAMIC_BG_MODE)
                 onionSkin.accessMap.insert(item, true);
             else
                 onionSkin.accessMap.insert(item, false);
@@ -541,7 +541,7 @@ void TupGraphicsScene::addSvgObject(TupSvgItem *svgItem, TupFrame::FrameType fra
             else
                 onionSkin.accessMap.insert(svgItem, false);
         } else {
-            if (spaceContext == TupProject::STATIC_BACKGROUND_EDITION || spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION)
+            if (spaceContext == TupProject::VECTOR_STATIC_BG_MODE || spaceContext == TupProject::VECTOR_DYNAMIC_BG_MODE)
                 onionSkin.accessMap.insert(svgItem, true);
             else
                 onionSkin.accessMap.insert(svgItem, false);
@@ -1067,7 +1067,7 @@ void TupGraphicsScene::setNextOnionSkinCount(int n)
 
     onionSkin.next = n;
 
-    if (spaceContext == TupProject::FRAMES_EDITION)
+    if (spaceContext == TupProject::FRAMES_MODE)
         drawCurrentPhotogram();
 }
 
@@ -1081,7 +1081,7 @@ void TupGraphicsScene::setPreviousOnionSkinCount(int n)
 
     onionSkin.previous = n;
 
-    if (spaceContext == TupProject::FRAMES_EDITION)
+    if (spaceContext == TupProject::FRAMES_MODE)
         drawCurrentPhotogram();
 }
 
@@ -1139,7 +1139,7 @@ void TupGraphicsScene::setCurrentScene(TupScene *pScene)
         gScene = pScene;
         background = gScene->sceneBackground();
 
-        if (spaceContext == TupProject::FRAMES_EDITION)
+        if (spaceContext == TupProject::FRAMES_MODE)
             drawCurrentPhotogram();
         else
             drawSceneBackground(framePosition.frame);
@@ -1166,7 +1166,7 @@ void TupGraphicsScene::setTool(TupToolPlugin *plugin)
         qDebug() << "TupGraphicsScene::setTool()";
     #endif
 
-    if (spaceContext == TupProject::FRAMES_EDITION) {
+    if (spaceContext == TupProject::FRAMES_MODE) {
         drawCurrentPhotogram();
     } else {
         cleanWorkSpace();
@@ -1536,7 +1536,7 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
         return;
     }
 
-    if (spaceContext == TupProject::FRAMES_EDITION) {
+    if (spaceContext == TupProject::FRAMES_MODE) {
         TupLayer *layer = gScene->layerAt(framePosition.layer);
         if (layer) {
             TupFrame *frame = layer->frameAt(framePosition.frame);
@@ -1565,9 +1565,9 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
         // TupBackground *bg = gScene->sceneBackground();
         if (background) {
             TupFrame *frame = new TupFrame;
-            if (spaceContext == TupProject::STATIC_BACKGROUND_EDITION) {
+            if (spaceContext == TupProject::VECTOR_STATIC_BG_MODE) {
                 frame = background->vectorStaticFrame();
-            } else if (spaceContext == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+            } else if (spaceContext == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                 frame = background->vectorDynamicFrame();
             }
 
@@ -1600,7 +1600,7 @@ void TupGraphicsScene::setOnionFactor(double opacity)
 {
     gOpacity = opacity;
 
-    if (spaceContext == TupProject::FRAMES_EDITION)
+    if (spaceContext == TupProject::FRAMES_MODE)
         drawCurrentPhotogram();
 }
 

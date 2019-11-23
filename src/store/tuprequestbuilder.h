@@ -69,7 +69,7 @@ class TUPITUBE_EXPORT TupRequestBuilder
         
         static TupProjectRequest createSceneRequest(int sceneIndex, int action, const QVariant &arg= QString(), const QByteArray &data = QByteArray());
         
-        static TupProjectRequest createLibraryRequest(int actionId, const QVariant &arg, TupLibraryObject::Type type, TupProject::Mode spaceMode = TupProject::FRAMES_EDITION,
+        static TupProjectRequest createLibraryRequest(int actionId, const QVariant &arg, TupLibraryObject::Type type, TupProject::Mode spaceMode = TupProject::FRAMES_MODE,
                                                       const QByteArray &data = QByteArray(), const QString &folder = QString(), int scene = -1, int layer = -1, int frame = -1);
         
         static TupProjectRequest fromResponse(TupProjectResponse *response);

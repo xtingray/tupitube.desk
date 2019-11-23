@@ -80,6 +80,18 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
                     brushLib.insert(currentGroup, brushesGroup);
                 // Now, we prepare to get the brushes for this new group:
                 currentGroup = line.section(':', 1).trimmed(); // Get the name after the first ':' separato
+                if (currentGroup.compare("Erasers") == 0)
+                    currentGroup = tr("Erasers");
+                else if (currentGroup.compare("Art1") == 0)
+                    currentGroup = tr("Art Set 1");
+                else if (currentGroup.compare("Art2") == 0)
+                    currentGroup = tr("Art Set 2");
+                else if (currentGroup.compare("Art3") == 0)
+                    currentGroup = tr("Art Set 3");
+                else if (currentGroup.compare("Classic") == 0)
+                    currentGroup = tr("Classic");
+                else if (currentGroup.compare("Experimental") == 0)
+                    currentGroup = tr("Experimental");
 
                 brushesGroup.clear();
                 continue;

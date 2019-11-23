@@ -92,7 +92,7 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
 
     TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
-        if (mode == TupProject::FRAMES_EDITION) {
+        if (mode == TupProject::FRAMES_MODE) {
             TupLayer *layer = scene->layerAt(layerIndex);
             if (layer) {
                 TupFrame *frame = layer->frameAt(frameIndex);
@@ -165,9 +165,9 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
             TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
-                if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
+                if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
-                } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                            frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
@@ -281,7 +281,7 @@ bool TupCommandExecutor::removeItem(TupItemResponse *response)
     TupScene *scene = project->sceneAt(sceneIndex);
 
     if (scene) {
-        if (mode == TupProject::FRAMES_EDITION) {
+        if (mode == TupProject::FRAMES_MODE) {
             TupLayer *layer = scene->layerAt(layerIndex);
 
             if (layer) {
@@ -333,9 +333,9 @@ bool TupCommandExecutor::removeItem(TupItemResponse *response)
             TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
-                if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
+                if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
-                } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                            frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
@@ -423,7 +423,7 @@ bool TupCommandExecutor::moveItem(TupItemResponse *response)
     TupScene *scene = project->sceneAt(sceneIndex);
     
     if (scene) {
-        if (mode == TupProject::FRAMES_EDITION) {
+        if (mode == TupProject::FRAMES_MODE) {
             TupLayer *layer = scene->layerAt(layerIndex);
             if (layer) {
                 TupFrame *frame = layer->frameAt(frameIndex);
@@ -438,9 +438,9 @@ bool TupCommandExecutor::moveItem(TupItemResponse *response)
             TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
-                if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
+                if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
-                } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                            frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
@@ -507,7 +507,7 @@ bool TupCommandExecutor::groupItems(TupItemResponse *response)
     TupScene *scene = project->sceneAt(sceneIndex);
     
     if (scene) {
-        if (mode == TupProject::FRAMES_EDITION) {
+        if (mode == TupProject::FRAMES_MODE) {
             TupLayer *layer = scene->layerAt(layerIndex);
             if (layer) {
                 TupFrame *frame = layer->frameAt(frameIndex);
@@ -529,9 +529,9 @@ bool TupCommandExecutor::groupItems(TupItemResponse *response)
             TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
-                if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
+                if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
-                } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                            frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
@@ -604,7 +604,7 @@ bool TupCommandExecutor::ungroupItems(TupItemResponse *response)
     
     TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
-        if (mode == TupProject::FRAMES_EDITION) {
+        if (mode == TupProject::FRAMES_MODE) {
             TupLayer *layer = scene->layerAt(layerIndex);
             if (layer) {
                 TupFrame *frame = layer->frameAt(frameIndex);
@@ -639,9 +639,9 @@ bool TupCommandExecutor::ungroupItems(TupItemResponse *response)
             TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
-                if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
+                if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
-                } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                     frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
@@ -778,7 +778,7 @@ bool TupCommandExecutor::convertItem(TupItemResponse *response)
     TupScene *scene = project->sceneAt(sceneIndex);
 
     if (scene) {
-        if (mode == TupProject::FRAMES_EDITION) {
+        if (mode == TupProject::FRAMES_MODE) {
 
             TupLayer *layer = scene->layerAt(layerIndex);
             if (layer) {
@@ -812,9 +812,9 @@ bool TupCommandExecutor::convertItem(TupItemResponse *response)
             TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
-                if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
+                if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
-                } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                            frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
@@ -905,7 +905,7 @@ bool TupCommandExecutor::transformItem(TupItemResponse *response)
 
     TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
-        if (mode == TupProject::FRAMES_EDITION) {
+        if (mode == TupProject::FRAMES_MODE) {
             TupLayer *layer = scene->layerAt(layerIndex);
             if (layer) {
                 TupFrame *frame = layer->frameAt(frameIndex);
@@ -937,9 +937,9 @@ bool TupCommandExecutor::transformItem(TupItemResponse *response)
             TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
-                if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
+                if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
-                } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                            frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
@@ -1036,7 +1036,7 @@ bool TupCommandExecutor::setPathItem(TupItemResponse *response)
     TupScene *scene = project->sceneAt(sceneIndex);
     
     if (scene) {
-        if (mode == TupProject::FRAMES_EDITION) {
+        if (mode == TupProject::FRAMES_MODE) {
             TupLayer *layer = scene->layerAt(layerIndex);
             if (layer) {
                 TupFrame *frame = layer->frameAt(frameIndex);
@@ -1071,9 +1071,9 @@ bool TupCommandExecutor::setPathItem(TupItemResponse *response)
             TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
-                if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
+                if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
-                } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                            frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
@@ -1245,7 +1245,7 @@ bool TupCommandExecutor::setBrush(TupItemResponse *response)
     TupScene *scene = project->sceneAt(sceneIndex);
 
     if (scene) {
-        if (mode == TupProject::FRAMES_EDITION) {
+        if (mode == TupProject::FRAMES_MODE) {
             TupLayer *layer = scene->layerAt(layerIndex);
             if (layer) {
                 TupFrame *frame = layer->frameAt(frameIndex);
@@ -1270,9 +1270,9 @@ bool TupCommandExecutor::setBrush(TupItemResponse *response)
             TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
-                if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
+                if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
-                } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                     frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
@@ -1359,7 +1359,7 @@ bool TupCommandExecutor::setPen(TupItemResponse *response)
     TupScene *scene = project->sceneAt(sceneIndex);
 
     if (scene) {
-        if (mode == TupProject::FRAMES_EDITION) {
+        if (mode == TupProject::FRAMES_MODE) {
             TupLayer *layer = scene->layerAt(layerIndex);
             if (layer) {
                 TupFrame *frame = layer->frameAt(frameIndex);
@@ -1384,9 +1384,9 @@ bool TupCommandExecutor::setPen(TupItemResponse *response)
             TupBackground *bg = scene->sceneBackground();
             if (bg) {
                 TupFrame *frame = nullptr;
-                if (mode == TupProject::STATIC_BACKGROUND_EDITION) {
+                if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
-                } else if (mode == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                     frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG

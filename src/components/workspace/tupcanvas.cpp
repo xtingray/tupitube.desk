@@ -305,7 +305,7 @@ void TupCanvas::wakeUpLibrary()
             QByteArray data = f.readAll();
             f.close();
             TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, tag,
-                                        TupLibraryObject::Svg, TupProject::FRAMES_EDITION, data, QString(),
+                                        TupLibraryObject::Svg, TupProject::FRAMES_MODE, data, QString(),
                                         scene->currentSceneIndex(), scene->currentLayerIndex(), scene->currentFrameIndex());
             emit requestTriggered(&request);
         }
@@ -358,7 +358,7 @@ void TupCanvas::wakeUpLibrary()
            QString tag = symName;
 
            TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, tag,
-                                                                               TupLibraryObject::Image, TupProject::FRAMES_EDITION, data, QString(),
+                                                                               TupLibraryObject::Image, TupProject::FRAMES_MODE, data, QString(),
                                                                                scene->currentSceneIndex(), scene->currentLayerIndex(), scene->currentFrameIndex());
            emit requestTriggered(&request);
 

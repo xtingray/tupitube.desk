@@ -105,7 +105,7 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
             int currentFrame;
             TupFrame *frame = new TupFrame;
 
-            if (gScene->getSpaceContext() == TupProject::FRAMES_EDITION) {
+            if (gScene->getSpaceContext() == TupProject::FRAMES_MODE) {
                 frame = gScene->currentFrame();
                 itemIndex = frame->indexOf(item);
                 currentLayer = gScene->currentLayerIndex();
@@ -114,10 +114,10 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                 currentLayer = -1;
                 currentFrame = -1;
                 TupBackground *bg = gScene->currentScene()->sceneBackground();
-                if (gScene->getSpaceContext() == TupProject::STATIC_BACKGROUND_EDITION) {
+                if (gScene->getSpaceContext() == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
                     itemIndex = frame->indexOf(item);
-                } else if (gScene->getSpaceContext() == TupProject::DYNAMIC_BACKGROUND_EDITION) {
+                } else if (gScene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                     frame = bg->vectorDynamicFrame();
                     itemIndex = frame->indexOf(item);
                 }
