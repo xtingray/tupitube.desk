@@ -256,10 +256,17 @@ void RasterMainWindow::openProject()
 void RasterMainWindow::exportImage()
 {
     // Path
-    QString initPath = QDir::homePath() + "/static_bg.png";
+    QString initPath = QDir::homePath() + "/dynamic_bg.png";
+    if (spaceContext == TupProject::RASTER_STATIC_BG_MODE)
+        initPath = QDir::homePath() + "/static_bg.png";
+
     QString filePath = QFileDialog::getSaveFileName(this, tr("Export Image"), initPath);
-    if (filePath.isEmpty())
-        return; // false;
+    if (filePath.isEmpty()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "RasterMainWindow::exportImage() - File path is empty: " << filePath;
+        #endif
+        return;
+    }
 
     rasterCanvas->saveToFile(filePath);
 }
@@ -275,10 +282,11 @@ void RasterMainWindow::saveCanvas()
 
     if (QDir().mkpath(imgPath)) {
         QString prefix = "dynamic_bg.png";
-        if (spaceContext == TupProject::VECTOR_STATIC_BG_MODE)
+        if (spaceContext == TupProject::RASTER_STATIC_BG_MODE)
             prefix = "static_bg.png";
 
         rasterCanvas->saveToFile(imgPath + prefix);
+
         emit closeWindow(imgPath + prefix);
     } else {
         #ifdef TUP_DEBUG
@@ -300,6 +308,11 @@ void RasterMainWindow::keyPressEvent(QKeyEvent *event)
         qDebug() << "RasterMainWindow::keyPressEvent()";
     #endif
 
-    if (event->key() == Qt::Key_F11 || event->key() == Qt::Key_Escape)
-        saveCanvas();
+    switch(event->key()) {
+        case Qt::Key_F11:
+        case Qt::Key_Escape:
+        case Qt::Key_Return:
+            saveCanvas();
+        break;
+    }
 }

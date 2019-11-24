@@ -98,6 +98,7 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         QPixmap rasterDynamicView(int photogram);
 
         QList<TupBackground::BgType> layerIndexes();
+
     private:
         int sceneIndex;
         QSize dimension;

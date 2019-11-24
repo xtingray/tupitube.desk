@@ -172,23 +172,23 @@ void RasterCanvas::mouseReleaseEvent(QMouseEvent *event)
 
 void RasterCanvas::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_F11 || event->key() == Qt::Key_Escape) {
-        emit closeWindow();
-        return;
-    }
-
-    if (event->key() == Qt::Key_Plus) {
-        if (event->modifiers() == Qt::NoModifier) {
-            emit zoomIn();
+    switch(event->key()) {
+        case Qt::Key_F11:
+        case Qt::Key_Escape:
+        case Qt::Key_Return:
+            emit closeWindow();
             return;
-        }
-    }
-
-    if (event->key() == Qt::Key_Minus) {
-        if (event->modifiers() == Qt::NoModifier) {
-            emit zoomOut();
-            return;
-        }
+        case Qt::Key_Plus:
+            if (event->modifiers() == Qt::NoModifier) {
+                emit zoomIn();
+                return;
+            }
+        break;
+        case Qt::Key_Minus:
+            if (event->modifiers() == Qt::NoModifier) {
+                emit zoomOut();
+                return;
+            }
     }
 
     RasterCanvasBase::keyPressEvent(event);

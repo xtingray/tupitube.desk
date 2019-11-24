@@ -1309,20 +1309,22 @@ void TupDocumentView::openRasterMode()
 void TupDocumentView::closeRasterWindow(const QString &imgPath)
 {
     if (rasterWindowOn) {
-        spaceModeCombo->setCurrentIndex(0);
+        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
         disconnect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString &)));
         disconnect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
                    this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
-
-        rasterWindow->close();
-        rasterWindowOn = false;
-        rasterWindow = nullptr;
-        delete rasterWindow;
 
         if (QFile::exists(imgPath)) {
             project->updateRasterBackground(spaceContext(), currentSceneIndex(), imgPath);
             paintArea->updatePaintArea();
         }
+
+        spaceModeCombo->setCurrentIndex(0);
+        rasterWindow->close();
+        rasterWindowOn = false;
+        rasterWindow = nullptr;
+        delete rasterWindow;
+        QApplication::restoreOverrideCursor();
     }
 }
 

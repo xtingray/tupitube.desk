@@ -495,7 +495,12 @@ TupProject * TupBackground::project()
 
 void TupBackground::updateRasterBgImage(TupProject::Mode spaceContext, const QString &imgPath)
 {
-    if (spaceContext == TupProject::VECTOR_DYNAMIC_BG_MODE) {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupBackground::updateRasterBgImage()] - Space Context: " << spaceContext;
+        qDebug() << "[TupBackground::updateRasterBgImage()] - Image Path: " << imgPath;
+    #endif
+
+    if (spaceContext == TupProject::RASTER_DYNAMIC_BG_MODE) {
         rasterDynamicBgPix = QPixmap(imgPath);
         noRasterRender = true;
     } else {
