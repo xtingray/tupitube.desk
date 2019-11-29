@@ -178,7 +178,7 @@ _EOH_
     config.addDefine('VERSION=\\\\\"Artist\\\\\"')
     config.addDefine('REVISION=\\\\\"10-19\\\\\"')
     config.addDefine('CODE_NAME=\\\\\"Mameluco\\\\\"')
-    config.addDefine('CONFIG_VERSION=\\\\\"2\\\\\"')
+    config.addDefine('CONFIG_VERSION=\\\\\"3\\\\\"')
 
     if File.exists?('/etc/canaima_version')
        config.addDefine("CANAIMA")

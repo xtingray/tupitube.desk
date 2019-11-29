@@ -375,16 +375,20 @@ void TupGraphicsScene::drawVectorDynamicBgOnMovement(int photogram)
 
 void TupGraphicsScene::drawRasterStaticBg()
 {
-    #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::drawRasterStaticBg()";
-    #endif
-
     // Raster Static Bg
     if (!background->rasterStaticBgIsNull()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "TupGraphicsScene::drawRasterStaticBg() - Adding RASTER STATIC image!";
+        #endif
+
         rasterStaticBg = new QGraphicsPixmapItem(background->rasterStaticBackground());
         rasterStaticBg->setZValue(0);
         addItem(rasterStaticBg);
         rasterStaticBg = nullptr;
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "TupGraphicsScene::drawRasterStaticBg() - RASTER STATIC image is NULL!";
+        #endif
     }
 }
 
@@ -406,20 +410,25 @@ void TupGraphicsScene::drawRasterDynamicBg()
 
 void TupGraphicsScene::drawRasterDynamicBgOnMovement(int photogram)
 {
-    #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::drawRasterDynamicBgOnMovement() - photogram: " << photogram;
-    #endif
-
     // Raster Dynamic Bg on movement
     if (!background->rasterDynamicBgIsNull()) {
         // Calculate current raster dynamic view
         if (background->rasterRenderIsPending())
             background->renderRasterDynamicView();
 
+        #ifdef TUP_DEBUG
+            qDebug() << "TupGraphicsScene::drawRasterDynamicBgOnMovement() - Adding RASTER DYNAMIC image! "
+                        "/ photogram: " << photogram;
+        #endif
+
         rasterDynamicBg = new QGraphicsPixmapItem(background->rasterDynamicView(photogram));
         rasterDynamicBg->setZValue(0);
         addItem(rasterDynamicBg);
         rasterDynamicBg = nullptr;
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "TupGraphicsScene::drawRasterDynamicBgOnMovement() - RASTER DYNAMIC image is NULL!";
+        #endif
     }
 }
 
