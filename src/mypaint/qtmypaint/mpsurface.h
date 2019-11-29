@@ -75,9 +75,10 @@ class MPSurface : public MyPaintTiledSurface
         QImage renderImage(const QSize canvasSize);
 
         void loadImage(const QImage &image);
+        bool isEmpty();
 
     protected:
-        QHash<QPoint, MPTile*> m_Tiles;
+        QHash<QPoint, MPTile*> tilesHash;
 
     private:
         void resetNullTile();

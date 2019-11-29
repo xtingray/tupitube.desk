@@ -45,6 +45,7 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
         void loadFromFile(QString filePath);
 
         void resetWorkSpaceCenter(const QSize projectSize);
+        bool canvasIsEmpty();
 
     protected:
         virtual void tabletEvent(QTabletEvent *event);

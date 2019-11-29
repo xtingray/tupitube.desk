@@ -33,16 +33,7 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, T
     spaceContext = context;
     sceneIndex = scene;
     projectSize = project->getDimension();
-
-    if (spaceContext == TupProject::RASTER_STATIC_BG_MODE) {
-        // Raster Static Settings
-        setWindowTitle(tr("Raster Static Background"));
-        setWindowIcon(QIcon(THEME_DIR + "icons/raster_mode.png"));
-    } else {
-        // Raster Dynamic Settings
-        setWindowTitle(tr("Raster Dynamic Background"));
-        setWindowIcon(QIcon(THEME_DIR + "icons/dynamic_raster_mode.png"));
-    }
+    tupBg = project->getBackgroundFromScene(scene);
 
     createTopResources();
     createCentralWidget(project, contourColor);
@@ -145,10 +136,66 @@ void RasterMainWindow::createCentralWidget(TupProject * project, const QColor co
     QString imgPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/";
     if (spaceContext == TupProject::RASTER_STATIC_BG_MODE) {
         // Raster Static Settings
+        setWindowTitle(tr("Raster Static Background"));
+        setWindowIcon(QIcon(THEME_DIR + "icons/raster_mode.png"));
         imgPath += "static_bg.png";
     } else {
         // Raster Dynamic Settings
+        setWindowTitle(tr("Raster Dynamic Background"));
+        setWindowIcon(QIcon(THEME_DIR + "icons/dynamic_raster_mode.png"));
         imgPath += "dynamic_bg.png";
+
+        QLabel *dirLabel = new QLabel();
+        QPixmap dirPix(THEME_DIR + "icons/mov_orientation.png");
+        dirLabel->setToolTip(tr("Movement Orientation"));
+        dirLabel->setPixmap(dirPix);
+
+        QComboBox *dirCombo = new QComboBox;
+        dirCombo->setToolTip(tr("Movement Orientation"));
+        dirCombo->addItem(QIcon(THEME_DIR + "icons/mov_right.png"), "   " + tr("Right"));
+        dirCombo->addItem(QIcon(THEME_DIR + "icons/mov_left.png"), "   " + tr("Left"));
+        dirCombo->addItem(QIcon(THEME_DIR + "icons/mov_up.png"), "   " + tr("Up"));
+        dirCombo->addItem(QIcon(THEME_DIR + "icons/mov_down.png"), "   " + tr("Down"));
+        dirCombo->setCurrentIndex(tupBg->rasterDynamicDirection());
+        connect(dirCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setBackgroundDirection(int)));
+
+        QWidget *dEmpty0 = new QWidget();
+        dEmpty0->setFixedWidth(5);
+        QWidget *dEmpty1 = new QWidget();
+        dEmpty1->setFixedWidth(5);
+        QWidget *dEmpty2 = new QWidget();
+        dEmpty2->setFixedWidth(5);
+        QWidget *dEmpty3 = new QWidget();
+        dEmpty3->setFixedWidth(5);
+        QWidget *dEmpty4 = new QWidget();
+        dEmpty4->setFixedWidth(5);
+        QWidget *dEmpty5 = new QWidget();
+        dEmpty5->setFixedWidth(5);
+
+        QLabel *shiftLabel = new QLabel();
+        QPixmap shiftPix(THEME_DIR + "icons/shift_length.png");
+        shiftLabel->setToolTip(tr("Shift Length"));
+        shiftLabel->setPixmap(shiftPix);
+
+        QSpinBox *shiftSpin = new QSpinBox(this);
+        shiftSpin->setSingleStep(1);
+        shiftSpin->setRange(1, 1000);
+        shiftSpin->setValue(tupBg->rasterDynamicShift());
+        shiftSpin->setToolTip(tr("Shift Length"));
+        connect(shiftSpin, SIGNAL(valueChanged(int)), this, SLOT(updateBackgroundShiftProperty(int)));
+
+        topBar->addWidget(dEmpty0);
+        topBar->addSeparator();
+        topBar->addWidget(dEmpty1);
+        topBar->addWidget(dirLabel);
+        topBar->addWidget(dEmpty2);
+        topBar->addWidget(dirCombo);
+        topBar->addWidget(dEmpty3);
+        topBar->addSeparator();
+        topBar->addWidget(dEmpty4);
+        topBar->addWidget(shiftLabel);
+        topBar->addWidget(dEmpty5);
+        topBar->addWidget(shiftSpin);
     }
 
     if (QFile::exists(imgPath)) {
@@ -273,26 +320,35 @@ void RasterMainWindow::exportImage()
 
 void RasterMainWindow::saveCanvas()
 {
-    #ifdef TUP_DEBUG
-        qDebug() << "RasterMainWindow::saveCanvas()";
-    #endif
-
-    // SQA: Only render if there is at least one stroke
     QString imgPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/";
+    QString file = imgPath + "dynamic_bg.png";
+    if (spaceContext == TupProject::RASTER_STATIC_BG_MODE)
+        file = imgPath + "static_bg.png";
 
-    if (QDir().mkpath(imgPath)) {
-        QString prefix = "dynamic_bg.png";
-        if (spaceContext == TupProject::RASTER_STATIC_BG_MODE)
-            prefix = "static_bg.png";
+    if (!rasterCanvas->canvasIsEmpty()) {
+        if (QDir().mkpath(imgPath)) {
+            rasterCanvas->saveToFile(file);
 
-        rasterCanvas->saveToFile(imgPath + prefix);
+            #ifdef TUP_DEBUG
+                qWarning() << "RasterMainWindow::saveCanvas() - Creating PNG image!";
+            #endif
 
-        emit closeWindow(imgPath + prefix);
+            emit closeWindow(file);
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "RasterMainWindow::saveCanvas() - Error while creating raster background path!";
+                qDebug() << "Image Path: " << imgPath;
+            #endif
+        }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "RasterMainWindow::saveCanvas() - Error while creating raster background path!";
-            qDebug() << "Image Path: " << imgPath;
+            qWarning() << "RasterMainWindow::saveCanvas() - Nothing new to save!";
         #endif
+        if (QFile::exists(file)) {
+            QFile bg(file);
+            bg.remove();
+        }
+        emit closeWindow("");
     }
 }
 
@@ -315,4 +371,14 @@ void RasterMainWindow::keyPressEvent(QKeyEvent *event)
             saveCanvas();
         break;
     }
+}
+
+void RasterMainWindow::setBackgroundDirection(int direction)
+{
+    tupBg->setRasterDynamicDirection(direction);
+}
+
+void RasterMainWindow::updateBackgroundShiftProperty(int shift)
+{
+    tupBg->setRasterDynamicShift(shift);
 }

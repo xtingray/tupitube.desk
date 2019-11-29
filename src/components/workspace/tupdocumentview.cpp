@@ -1175,8 +1175,6 @@ void TupDocumentView::createToolBar()
     sEmpty1->setFixedWidth(5);
     QWidget *sEmpty2 = new QWidget();
     sEmpty2->setFixedWidth(5);
-    // QWidget *sEmpty3 = new QWidget();
-    // sEmpty3->setFixedWidth(5);
 
     QLabel *staticOpacityLabel = new QLabel();
     QPixmap staticPix(THEME_DIR + "icons/bg_opacity.png");
@@ -1190,20 +1188,11 @@ void TupDocumentView::createToolBar()
     staticOpacityBox->setToolTip(tr("Static BG Opacity"));
     connect(staticOpacityBox, SIGNAL(valueChanged(double)), this, SLOT(updateStaticOpacity(double)));
 
-    /*
-    QPushButton *staticRasterButton = new QPushButton(QIcon(THEME_DIR + "icons/raster_mode.png"), "");
-    staticRasterButton->setToolTip(tr("Static Raster Mode"));
-    connect(staticRasterButton, SIGNAL(clicked()), this, SLOT(openRasterMode()));
-    */
-
     staticPropertiesBar->addWidget(sEmpty0);
     staticPropertiesBar->addWidget(staticOpacityLabel);
     staticPropertiesBar->addWidget(sEmpty1);
     staticPropertiesBar->addWidget(staticOpacityBox);
     staticPropertiesBar->addWidget(sEmpty2);
-    // staticPropertiesBar->addSeparator();
-    // staticPropertiesBar->addWidget(sEmpty3);
-    // staticPropertiesBar->addWidget(staticRasterButton);
     staticPropertiesBar->setVisible(false);
 
     QLabel *dirLabel = new QLabel();
@@ -1217,7 +1206,7 @@ void TupDocumentView::createToolBar()
     dirCombo->addItem(QIcon(THEME_DIR + "icons/mov_left.png"), "   " + tr("Left"));
     dirCombo->addItem(QIcon(THEME_DIR + "icons/mov_up.png"), "   " + tr("Up"));
     dirCombo->addItem(QIcon(THEME_DIR + "icons/mov_down.png"), "   " + tr("Down"));
-    connect(dirCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setBackgroundDirection(int)));
+    connect(dirCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setVectorBackgroundDirection(int)));
 
     QWidget *dEmpty0 = new QWidget();
     dEmpty0->setFixedWidth(5);
@@ -1235,8 +1224,6 @@ void TupDocumentView::createToolBar()
     dEmpty6->setFixedWidth(5);
     QWidget *dEmpty7 = new QWidget();
     dEmpty7->setFixedWidth(5);
-    // QWidget *dEmpty8 = new QWidget();
-    // dEmpty8->setFixedWidth(5);
 
     QLabel *shiftLabel = new QLabel();
     QPixmap shiftPix(THEME_DIR + "icons/shift_length.png");
@@ -1261,12 +1248,6 @@ void TupDocumentView::createToolBar()
     dynamicOpacityBox->setToolTip(tr("Dynamic BG Opacity"));
     connect(dynamicOpacityBox, SIGNAL(valueChanged(double)), this, SLOT(updateDynamicOpacity(double)));
 
-    /*
-    QPushButton *dynamicRasterButton = new QPushButton(QIcon(THEME_DIR + "icons/raster_mode.png"), "", this);
-    dynamicRasterButton->setToolTip(tr("Dynamic Raster Mode"));
-    connect(dynamicRasterButton, SIGNAL(clicked()), this, SLOT(openRasterMode()));
-    */
-
     dynamicPropertiesBar->addWidget(dirLabel);
     dynamicPropertiesBar->addWidget(dEmpty0);
     dynamicPropertiesBar->addWidget(dirCombo);
@@ -1283,9 +1264,6 @@ void TupDocumentView::createToolBar()
     dynamicPropertiesBar->addWidget(dEmpty6);
     dynamicPropertiesBar->addWidget(dynamicOpacityBox);
     dynamicPropertiesBar->addWidget(dEmpty7);
-    // dynamicPropertiesBar->addSeparator();
-    // dynamicPropertiesBar->addWidget(dEmpty8);
-    // dynamicPropertiesBar->addWidget(dynamicRasterButton);
 
     dynamicPropertiesBar->setVisible(false);
 
@@ -1314,10 +1292,8 @@ void TupDocumentView::closeRasterWindow(const QString &imgPath)
         disconnect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
                    this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
 
-        if (QFile::exists(imgPath)) {
-            project->updateRasterBackground(spaceContext(), currentSceneIndex(), imgPath);
-            paintArea->updatePaintArea();
-        }
+        project->updateRasterBackground(spaceContext(), currentSceneIndex(), imgPath);
+        paintArea->updatePaintArea();
 
         spaceModeCombo->setCurrentIndex(0);
         rasterWindow->close();
@@ -1495,10 +1471,10 @@ void TupDocumentView::setSpaceContext()
             if (scene) {
                 TupBackground *bg = scene->sceneBackground();
                 if (bg) {
-                    int direction = bg->vectorDynamicDirection();
-                    dirCombo->setCurrentIndex(direction);
-                    int shift = bg->vectorDynamicShift();
-                    shiftSpin->setValue(shift);
+                    // int direction = bg->vectorDynamicDirection();
+                    dirCombo->setCurrentIndex(bg->vectorDynamicDirection());
+                    // int shift = bg->vectorDynamicShift();
+                    shiftSpin->setValue(bg->vectorDynamicShift());
                 }
             }
             staticPropertiesBar->setVisible(false);
@@ -1840,14 +1816,14 @@ void TupDocumentView::updateDynamicOpacity(double opacity)
 }
 
 // SQA: This method must support multi-user notifications (pending)
-void TupDocumentView::setBackgroundDirection(int direction)
+void TupDocumentView::setVectorBackgroundDirection(int direction)
 {
    int sceneIndex = paintArea->currentSceneIndex();
    TupScene *scene = project->sceneAt(sceneIndex);
    if (scene) {
        TupBackground *bg = scene->sceneBackground();
        if (bg)
-           bg->setDynamicDirection(direction);
+           bg->setVectorDynamicDirection(direction);
    }
 }
 

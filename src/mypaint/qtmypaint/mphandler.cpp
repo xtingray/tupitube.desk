@@ -165,3 +165,8 @@ void MPHandler::setBrushValue(MyPaintBrushSetting setting, float value)
 {
     this->m_brush->setValue(setting, value);
 }
+
+bool MPHandler::isEmpty()
+{
+    return m_surface->isEmpty();
+}

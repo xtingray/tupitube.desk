@@ -25,6 +25,7 @@
 #include "rasterbrusheswidget.h"
 #include "rastercolorwidget.h"
 #include "tuppaintareastatus.h"
+#include "tupbackground.h"
 
 #include <QDockWidget>
 #include <QPushButton>
@@ -58,6 +59,10 @@ class TUPITUBE_EXPORT RasterMainWindow : public TMainWindow
         void applyZoomOut();
         void setRotationAngle(int angle);
 
+    private slots:
+        void setBackgroundDirection(int direction);
+        void updateBackgroundShiftProperty(int shift);
+
     signals:
          void paintAreaEventTriggered(const TupPaintAreaEvent *event);
          void closeWindow(const QString &path);
@@ -71,6 +76,7 @@ class TUPITUBE_EXPORT RasterMainWindow : public TMainWindow
         void createTopResources();
         void createCentralWidget(TupProject * project, const QColor contourColor);
 
+        TupBackground *tupBg;
         QToolBar *topBar;
         RasterCanvas *rasterCanvas;
         RasterBrushesWidget *brushesWidget;

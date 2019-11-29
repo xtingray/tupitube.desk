@@ -244,6 +244,26 @@ double TupBackground::vectorStaticOpacity()
     return vectorStaticBgFrame->frameOpacity();
 }
 
+void TupBackground::setRasterDynamicOpacity(double opacity)
+{
+    rasterDynamicBgFrame->setFrameOpacity(opacity);
+}
+
+double TupBackground::rasterDynamicOpacity()
+{
+    return rasterDynamicBgFrame->frameOpacity();
+}
+
+void TupBackground::setRasterStaticOpacity(double opacity)
+{
+    rasterStaticBgFrame->setFrameOpacity(opacity);
+}
+
+double TupBackground::rasterStaticOpacity()
+{
+    return rasterStaticBgFrame->frameOpacity();
+}
+
 // Creating expanded vector dynamic image
 void TupBackground::renderVectorDynamicView()
 {
@@ -458,9 +478,14 @@ void TupBackground::setRasterDynamicViewImage(QImage bg)
     rasterDynamicViewImg = bg;
 }
 
-void TupBackground::setDynamicDirection(int direction)
+void TupBackground::setVectorDynamicDirection(int direction)
 {
     vectorDynamicBgFrame->setDynamicDirection(QString::number(direction));
+}
+
+void TupBackground::setRasterDynamicDirection(int direction)
+{
+    rasterDynamicBgFrame->setDynamicDirection(QString::number(direction));
 }
 
 void TupBackground::setVectorDynamicShift(int shift)
@@ -468,9 +493,19 @@ void TupBackground::setVectorDynamicShift(int shift)
     vectorDynamicBgFrame->setDynamicShift(QString::number(shift));
 }
 
+void TupBackground::setRasterDynamicShift(int shift)
+{
+    rasterDynamicBgFrame->setDynamicShift(QString::number(shift));
+}
+
 TupBackground::Direction TupBackground::vectorDynamicDirection()
 {
     return vectorDynamicBgFrame->dynamicDirection();
+}
+
+TupBackground::Direction TupBackground::rasterDynamicDirection()
+{
+    return rasterDynamicBgFrame->dynamicDirection();
 }
 
 int TupBackground::vectorDynamicShift()
@@ -501,10 +536,17 @@ void TupBackground::updateRasterBgImage(TupProject::Mode spaceContext, const QSt
     #endif
 
     if (spaceContext == TupProject::RASTER_DYNAMIC_BG_MODE) {
-        rasterDynamicBgPix = QPixmap(imgPath);
-        noRasterRender = true;
+        if (QFile::exists(imgPath)) {
+            rasterDynamicBgPix = QPixmap(imgPath);
+            noRasterRender = true;
+        } else {
+            rasterDynamicBgPix = QPixmap();
+        }
     } else {
-        rasterStaticBgPix = QPixmap(imgPath);
+        if (QFile::exists(imgPath))
+            rasterStaticBgPix = QPixmap(imgPath);
+        else
+            rasterStaticBgPix = QPixmap();
     }
 }
 

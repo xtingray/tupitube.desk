@@ -47,6 +47,7 @@
 class TupScene;
 class TupLayer;
 class TupFrame;
+class TupBackground;
 class TupProjectRequest;
 class TupProjectResponse;
 class QGraphicsItem;
@@ -88,8 +89,6 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         QSize getDimension() const;
         int getFPS() const;
 
-        // bool deleteDataDir(const QString &path);
-
         void setDataDir(const QString &path);
         QString getDataDir() const;
 
@@ -106,6 +105,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         bool resetScene(int pos, const QString &newName);
         QString recoverScene(int pos);
         bool moveScene(int pos, int newPos);
+        TupBackground * getBackgroundFromScene(int sceneIndex);
 
         bool createSymbol(int type, const QString &name, const QByteArray &data, const QString &folder = QString());
         bool removeSymbol(const QString &name, TupLibraryObject::Type type);

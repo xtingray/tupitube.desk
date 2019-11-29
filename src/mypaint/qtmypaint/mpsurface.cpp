@@ -119,8 +119,9 @@ void MPSurface::loadImage(const QImage &image)
             MPTile *tile = getTileFromIdx(QPoint(w, h));
             QRect tileRect = QRect(tile->pos().toPoint(), tileSize);
 
-            QImage tileImage = image.copy(tileRect);
-            tile->setImage(tileImage);
+            // QImage tileImage = image.copy(tileRect);
+            tile->setImage(image.copy(tileRect));
+            // tile->setImage(tileImage);
             this->onUpdateTileFunction(this, tile);
         }
     }
@@ -150,7 +151,7 @@ QSize MPSurface::size()
 
 void MPSurface::clear()
 {
-    QHashIterator<QPoint, MPTile*> i(m_Tiles);
+    QHashIterator<QPoint, MPTile*> i(tilesHash);
     while (i.hasNext()) {
         i.next();
         MPTile *tile = i.value();
@@ -167,6 +168,7 @@ void MPSurface::clear()
                 scene->removeItem(tile);
         }
     }
+    tilesHash.clear();
 
     this->onClearedSurfaceFunction(this);
 }
@@ -183,7 +185,7 @@ QImage MPSurface::renderImage(const QSize canvasSize)
     QGraphicsScene surfaceScene;
     surfaceScene.setSceneRect(QRect(QPoint(0,0), canvasSize));
 
-    QHashIterator<QPoint, MPTile*> i(m_Tiles);
+    QHashIterator<QPoint, MPTile*> i(tilesHash);
     while (i.hasNext()) {
         i.next();
         MPTile *tile = i.value();
@@ -281,12 +283,12 @@ MPTile* MPSurface::getTileFromIdx(const QPoint& idx)
     if (checkIndex(static_cast<uint>(idx.x())) && checkIndex(static_cast<uint>(idx.y()))) { // out of range ?
 
         // Ok, valid index. Does it exist already ?
-        selectedTile = m_Tiles.value(idx, nullptr);
+        selectedTile = tilesHash.value(idx, nullptr);
 
         if (!selectedTile) {
             // Time to allocate it, update table and insert it as a QGraphicsItem in scene:
             selectedTile = new MPTile();
-            m_Tiles.insert(idx, selectedTile);
+            tilesHash.insert(idx, selectedTile);
 
             QPoint tilePos ( getTilePos(idx) );
             selectedTile->setPos(tilePos);
@@ -318,4 +320,9 @@ inline QPointF MPSurface::getTileFIndex(const QPoint& pos)
 {
     return QPointF(static_cast<qreal>(pos.x()/MYPAINT_TILE_SIZE),
                    static_cast<qreal>(pos.y()/MYPAINT_TILE_SIZE));
+}
+
+bool MPSurface::isEmpty()
+{
+    return tilesHash.isEmpty();
 }

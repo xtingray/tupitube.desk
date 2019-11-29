@@ -268,3 +268,8 @@ void RasterCanvas::updateCursor(const QTabletEvent *event)
     }
     setCursor(cursor);
 }
+
+bool RasterCanvas::canvasIsEmpty()
+{
+    return myPaintCanvas->isEmpty();
+}

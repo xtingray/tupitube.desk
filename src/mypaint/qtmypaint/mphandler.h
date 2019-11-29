@@ -67,6 +67,7 @@ class MPHandler : public QObject
         QImage renderImage(const QSize size);
 
         void loadImage(const QImage &image);
+        bool isEmpty();
 
     public slots:
         void loadBrush(const QByteArray &content);

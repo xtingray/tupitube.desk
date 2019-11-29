@@ -319,20 +319,32 @@ bool TupProject::moveScene(int position, int newPosition)
     return true;
 }
 
-TupScene *TupProject::sceneAt(int position) const
+TupScene *TupProject::sceneAt(int sceneIndex) const
 {    
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::sceneAt()] - position: " << position;
+        qDebug() << "[TupProject::sceneAt()] - position: " << sceneIndex;
     #endif    
 
-    if (position < 0) {
+    if (sceneIndex < 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupProject::sceneAt() - FATAL ERROR: index out of bound (" + QString::number(position) + ")";
+            qDebug() << "TupProject::sceneAt() - FATAL ERROR: index out of bound (" + QString::number(sceneIndex) + ")";
         #endif
         return nullptr;
     }
 
-    return scenesList.value(position);
+    return scenesList.value(sceneIndex);
+}
+
+TupBackground * TupProject::getBackgroundFromScene(int sceneIndex)
+{
+    if (sceneIndex < 0) {
+        #ifdef TUP_DEBUG
+            qDebug() << "TupProject::getBackgroundFromScene() - FATAL ERROR: index out of bound (" + QString::number(sceneIndex) + ")";
+        #endif
+        return nullptr;
+    }
+
+    return scenesList.value(sceneIndex)->sceneBackground();
 }
 
 int TupProject::visualIndexOf(TupScene *scene) const

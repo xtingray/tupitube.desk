@@ -117,7 +117,7 @@ class TUPITUBE_EXPORT TupDocumentView: public QMainWindow
         // void updateStatusBgColor(const QColor color);
         // void updatePenThickness(int size);
         void updateOnionOpacity(double opacity);
-        void setBackgroundDirection(int direction);
+        void setVectorBackgroundDirection(int direction);
         void updateBackgroundShiftProperty(int shift);
         void renderDynamicBackground();
         void fullScreenRightClick();

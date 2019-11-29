@@ -61,9 +61,12 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
 
         void renderVectorDynamicView();
         QPixmap vectorDynamicView(int frameIndex);
-        void setDynamicDirection(int direction);
+        void setVectorDynamicDirection(int direction);
+        void setRasterDynamicDirection(int direction);
         void setVectorDynamicShift(int shift);
+        void setRasterDynamicShift(int shift);
         Direction vectorDynamicDirection();
+        Direction rasterDynamicDirection();
 
         int vectorDynamicShift();
         int rasterDynamicShift();
@@ -96,6 +99,11 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         bool rasterRenderIsPending();
         void renderRasterDynamicView();
         QPixmap rasterDynamicView(int photogram);
+
+        void setRasterDynamicOpacity(double opacity);
+        double rasterDynamicOpacity();
+        void setRasterStaticOpacity(double opacity);
+        double rasterStaticOpacity();
 
         QList<TupBackground::BgType> layerIndexes();
 
