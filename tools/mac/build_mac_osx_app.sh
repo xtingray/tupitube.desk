@@ -38,7 +38,7 @@
 #Usage:
 # ./tools/build_mac_osx_app.sh /Users/username/tupitube/sources/tupitube.desk /Users/username/tupitube/installer
 
-QT_PATH=/Users/daniel/Qt5.13.1
+QT_PATH=/Users/xtingray/Qt5.13.1
 export PATH=$QT_PATH/5.13.1/clang_64/bin:$PATH
 export DYLD_LIBRARY_PATH=/usr/local/lib:$DYLD_LIBRARY_PATH:$QT_PATH/5.13.1/clang_64/lib
 export DYLD_FRAMEWORK_PATH=$QT_PATH/5.13.1/clang_64/lib
@@ -49,8 +49,10 @@ INSTALLER_SCRIPT=$TUPITUBE_GIT_REPOSITORY/tools/mac/update_dylib_path.rb
 TUPITUBE_VERSION=Artist_10-19
 
 declare -a LIBS=('libtupifwcore.dylib' 'libtupifwgui.dylib' 'libtupigui.dylib' 'libtupistore.dylib' 'libtupi.dylib' \
-'libtupibase.dylib' 'libtupinet.dylib' 'libtupicolorpalette.1.dylib' 'libtupiworkspace.1.dylib' \
+'libtupibase.dylib' 'libtupinet.dylib' 'libtupicolorpalette.1.dylib' 'libtupiworkspace.1.dylib' 'libtupicolor.1.dylib' \
 'libtupiplayer.1.dylib' 'libtupibrush.1.dylib' 'libtupimport.1.dylib' 'libtupiexport.1.dylib' 'libtupiexposure.1.dylib' \
+'libjson-c.1.dylib' 'liblibmypaint.1.dylib' 'libqtmypaint.1.dylib' \
+'librasterbrushes.1.dylib' 'librastercolor.1.dylib' 'librastermain.1.dylib' \
 'libtupitimeline.1.dylib' 'libtupilibrary.1.dylib' 'libtupiscenes.1.dylib' 'libtupitwitter.1.dylib' 'libtupiplugincommon.1.dylib');
 
 cd $TUPITUBE_GIT_REPOSITORY

@@ -34,7 +34,38 @@ include($$FRAMEWORK_DIR/framework.pri)
 LIBCOLOR_DIR = "../../../libcolor"
 include($$LIBCOLOR_DIR/libcolor.pri)
 
-unix {
+macx {
+    INSTALLS += target
+    target.path = /lib
+
+    INSTALLS += brushes
+    brushes.target = .
+    brushes.commands = cp -r brushes $(INSTALL_ROOT)/themes/raster
+    brushes.path = /themes/raster/brushes
+
+    INSTALLS += resources
+    resources.target = .
+    resources.commands = cp -r resources $(INSTALL_ROOT)/themes/raster
+    resources.path = /themes/raster/resources
+
+    STORE_DIR = ../../../store/
+    INCLUDEPATH += $$STORE_DIR
+    LIBS += -L$$STORE_DIR/ -ltupistore
+
+    LIBBASE_DIR = ../../../libbase/
+    INCLUDEPATH += $$LIBBASE_DIR
+    LIBS += -L$$LIBBASE_DIR/ -ltupibase
+
+    LIBTUPI_DIR = ../../../libtupi/
+    INCLUDEPATH += $$LIBTUPI_DIR
+    LIBS += -L$$LIBTUPI_DIR/ -ltupi
+
+    !include(../../../../tupiglobal.pri) {
+        error("Run ./configure first!")
+    }
+}
+
+unix:!mac {
     INSTALLS += target
     target.path = /lib/raster
 
@@ -48,26 +79,6 @@ unix {
     resources.commands = cp -r resources $(INSTALL_ROOT)/themes/raster
     resources.path = /themes/raster/resources
 
-    STORE_DIR = ../../..//store/
-    INCLUDEPATH += $$STORE_DIR
-    LIBS += -L$$STORE_DIR -ltupistore
-
-    LIBBASE_DIR = ../../../libbase/
-    INCLUDEPATH += $$LIBBASE_DIR
-    LIBS += -L$$LIBBASE_DIR -ltupibase
-
-    LIBTUPI_DIR = ../../../libtupi/
-    INCLUDEPATH += $$LIBTUPI_DIR
-    LIBS += -L$$LIBTUPI_DIR -ltupi
-
-    !include(../../../../tupiglobal.pri) {
-        error("Run ./configure first!")
-    }
-}
-
-win32 {
-    include(../../../../win.pri)
-
     STORE_DIR = ../../../store/
     INCLUDEPATH += $$STORE_DIR
     LIBS += -L$$STORE_DIR/release/ -ltupistore
@@ -79,6 +90,14 @@ win32 {
     LIBTUPI_DIR = ../../../libtupi/
     INCLUDEPATH += $$LIBTUPI_DIR
     LIBS += -L$$LIBTUPI_DIR/release/ -ltupi
+
+    !include(../../../../tupiglobal.pri) {
+        error("Run ./configure first!")
+    }
+}
+
+win32 {
+    include(../../../../win.pri)
 }
 
 win32:CONFIG(release, debug|release): LIBS += -L../../json-c/release -ljson-c

@@ -37,7 +37,12 @@ SOURCES += arraylist.c \
 QMAKE_CFLAGS += -std=c99
 QMAKE_CFLAGS += -D_XOPEN_SOURCE=600
 
-unix {
+macx {
+    INSTALLS += target
+    target.path = /lib
+}
+
+unix:!mac {
     INSTALLS += target
     target.path = /lib/raster
 }

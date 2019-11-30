@@ -46,7 +46,12 @@ DEPENDPATH += ../libmypaint
 # else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += ../libmypaint/debug/libmypaint.lib
 # else:unix: PRE_TARGETDEPS += ../libmypaint/libmypaint.a
 
-unix {
+macx {
+    INSTALLS += target
+    target.path = /lib
+}
+
+unix:!mac {
     INSTALLS += target
     target.path = /lib/raster
-}
+}   

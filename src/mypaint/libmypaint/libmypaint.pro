@@ -5,14 +5,23 @@ CONFIG += dll warn_on
 
 TARGET = libmypaint
 
-unix {
+macx {
+    INSTALLS += target
+    target.path = /lib
+
+    !include(../../../tupiglobal.pri) {
+        error("Run ./configure first!")
+    }
+}
+
+unix:!mac {
     INSTALLS += target
     target.path = /lib/raster
 
     !include(../../../tupiglobal.pri) {
         error("Run ./configure first!")
     }
-}
+}   
 
 HEADERS += brushmodes.h \
            brushsettings-gen.h \
