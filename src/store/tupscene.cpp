@@ -308,7 +308,6 @@ void TupScene::fromXml(const QString &xml)
                      ts << n;
                    }
                    background->fromXml(newDoc);
-                   qDebug() << "TupScene()::fromXml() - Tracing scene index: " + QString::number(sceneIndex);
                } else if (e.tagName() == "soundlayer") {
                    int pos = soundLayers.count();
                    TupSoundLayer *layer = createSoundLayer(pos, true);

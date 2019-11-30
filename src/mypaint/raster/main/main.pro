@@ -4,18 +4,22 @@ CONFIG += dll warn_on
 TEMPLATE = lib
 TARGET = rastermain
 
-SOURCES = rastermainwindow.cpp \
-          rastercanvasbase.cpp \
-          rastercanvas.cpp
+HEADERS = rastercanvasbase.h \
+          rastercanvas.h \
+          rastermainwindow.h
 
-HEADERS = rastermainwindow.h \
-          rastercanvasbase.h \
-          rastercanvas.h
+SOURCES = rastercanvasbase.cpp \
+          rastercanvas.cpp \
+          rastermainwindow.cpp
 
 # --- QTMyPaint ---
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../qtmypaint/release/ -lqtmypaint
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../qtmypaint/debug/ -lqtmypaint
-else:unix: LIBS += -L$$OUT_PWD/../../qtmypaint/ -lqtmypaint
+# win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../qtmypaint/release/ -lqtmypaint
+# else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../qtmypaint/debug/ -lqtmypaint
+# else:unix: LIBS += -L$$OUT_PWD/../../qtmypaint/ -lqtmypaint
+
+# win32:CONFIG(release, debug|release): LIBS += -L../../json-c/release -ljson-c
+# else:win32:CONFIG(debug, debug|release): LIBS += -L../../json-c/debug -ljson-c
+# else:unix: LIBS += -L../../json-c -ljson-c
 
 INCLUDEPATH += ../../libmypaint
 INCLUDEPATH += ../../qtmypaint
@@ -60,6 +64,9 @@ macx {
     INCLUDEPATH += $$LIBTUPI_DIR
     LIBS += -L$$LIBTUPI_DIR/ -ltupi
 
+    LIBS += -L../../json-c -ljson-c
+    LIBS += -L$$OUT_PWD/../../qtmypaint/ -lqtmypaint
+
     !include(../../../../tupiglobal.pri) {
         error("Run ./configure first!")
     }
@@ -81,6 +88,27 @@ unix:!mac {
 
     STORE_DIR = ../../../store/
     INCLUDEPATH += $$STORE_DIR
+    LIBS += -L$$STORE_DIR/ -ltupistore
+
+    LIBBASE_DIR = ../../../libbase/
+    INCLUDEPATH += $$LIBBASE_DIR
+    LIBS += -L$$LIBBASE_DIR/ -ltupibase
+
+    LIBTUPI_DIR = ../../../libtupi/
+    INCLUDEPATH += $$LIBTUPI_DIR
+    LIBS += -L$$LIBTUPI_DIR/ -ltupi
+
+    LIBS += -L../../json-c -ljson-c
+    LIBS += -L$$OUT_PWD/../../qtmypaint/ -lqtmypaint
+	
+    !include(../../../../tupiglobal.pri) {
+        error("Run ./configure first!")
+    }
+}
+
+win32 {
+	STORE_DIR = ../../../store/
+    INCLUDEPATH += $$STORE_DIR
     LIBS += -L$$STORE_DIR/release/ -ltupistore
 
     LIBBASE_DIR = ../../../libbase/
@@ -90,23 +118,15 @@ unix:!mac {
     LIBTUPI_DIR = ../../../libtupi/
     INCLUDEPATH += $$LIBTUPI_DIR
     LIBS += -L$$LIBTUPI_DIR/release/ -ltupi
+	
+    LIBS += -L../../json-c/release -ljson-c
+    LIBS += -L$$OUT_PWD/../../qtmypaint/release/ -lqtmypaint
 
-    !include(../../../../tupiglobal.pri) {
-        error("Run ./configure first!")
-    }
-}
+    INCLUDEPATH += ../brushes
+    LIBS += -L../brushes/release -lrasterbrushes
 
-win32 {
+    INCLUDEPATH += ../color
+    LIBS += -L../color/release -lrastercolor
+
     include(../../../../win.pri)
 }
-
-win32:CONFIG(release, debug|release): LIBS += -L../../json-c/release -ljson-c
-else:win32:CONFIG(debug, debug|release): LIBS += -L../../json-c/debug -ljson-c
-else:unix: LIBS += -L../../json-c -ljson-c
-
-# win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../qtmypaint/release/libqtmypaint.a
-# else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../qtmypaint/debug/libqtmypaint.a
-# else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../qtmypaint/release/qtmypaint.lib
-# else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../qtmypaint/debug/qtmypaint.lib
-# else:unix: PRE_TARGETDEPS += $$OUT_PWD/../../qtmypaint/libqtmypaint.a
-

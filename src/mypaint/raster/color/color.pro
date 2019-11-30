@@ -13,22 +13,22 @@ include($$FRAMEWORK_DIR/framework.pri)
 LIBCOLOR_DIR = "../../../libcolor"
 include($$LIBCOLOR_DIR/libcolor.pri)
 
-STORE_DIR = ../../../store/
-INCLUDEPATH += $$STORE_DIR
-LIBS += -L$$STORE_DIR -ltupistore
-
-LIBBASE_DIR = ../../../libbase/
-INCLUDEPATH += $$LIBBASE_DIR
-LIBS += -L$$LIBBASE_DIR -ltupibase
-
-LIBTUPI_DIR = ../../../libtupi/
-INCLUDEPATH += $$LIBTUPI_DIR
-LIBS += -L$$LIBTUPI_DIR -ltupi
-
 macx {
     INSTALLS += target
     target.path = /lib
 
+	STORE_DIR = ../../../store/
+    INCLUDEPATH += $$STORE_DIR
+    LIBS += -L$$STORE_DIR -ltupistore
+
+    LIBBASE_DIR = ../../../libbase/
+    INCLUDEPATH += $$LIBBASE_DIR
+    LIBS += -L$$LIBBASE_DIR -ltupibase
+
+    LIBTUPI_DIR = ../../../libtupi/
+    INCLUDEPATH += $$LIBTUPI_DIR
+    LIBS += -L$$LIBTUPI_DIR -ltupi
+	
     !include(../../../../tupiglobal.pri) {
              error("Run ./configure first!")
     }
@@ -38,6 +38,18 @@ unix:!mac {
     INSTALLS += target
     target.path = /lib/raster
 
+    STORE_DIR = ../../../store/
+    INCLUDEPATH += $$STORE_DIR
+    LIBS += -L$$STORE_DIR -ltupistore
+
+    LIBBASE_DIR = ../../../libbase/
+    INCLUDEPATH += $$LIBBASE_DIR
+    LIBS += -L$$LIBBASE_DIR -ltupibase
+
+    LIBTUPI_DIR = ../../../libtupi/
+    INCLUDEPATH += $$LIBTUPI_DIR
+    LIBS += -L$$LIBTUPI_DIR -ltupi
+	
     !include(../../../../tupiglobal.pri) {
              error("Run ./configure first!")
     }
@@ -45,4 +57,16 @@ unix:!mac {
 
 win32 {
     include(../../../../win.pri)
+
+	STORE_DIR = ../../../store
+    INCLUDEPATH += $$STORE_DIR
+    LIBS += -L$$STORE_DIR/release -ltupistore
+
+    LIBBASE_DIR = ../../../libbase
+    INCLUDEPATH += $$LIBBASE_DIR
+    LIBS += -L$$LIBBASE_DIR/release -ltupibase
+
+    LIBTUPI_DIR = ../../../libtupi
+    INCLUDEPATH += $$LIBTUPI_DIR
+    LIBS += -L$$LIBTUPI_DIR/release -ltupi
 }

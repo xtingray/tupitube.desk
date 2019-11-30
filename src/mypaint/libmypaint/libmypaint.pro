@@ -8,6 +8,9 @@ TARGET = libmypaint
 macx {
     INSTALLS += target
     target.path = /lib
+	
+	INCLUDEPATH += ../json-c
+    LIBS += -L../json-c -ljson-c
 
     !include(../../../tupiglobal.pri) {
         error("Run ./configure first!")
@@ -17,11 +20,19 @@ macx {
 unix:!mac {
     INSTALLS += target
     target.path = /lib/raster
+	
+    INCLUDEPATH += ../json-c
+    LIBS += -L../json-c -ljson-c
 
     !include(../../../tupiglobal.pri) {
         error("Run ./configure first!")
     }
 }   
+
+win32 {
+    INCLUDEPATH += ../json-c
+    LIBS += -L../json-c/release -ljson-c
+}
 
 HEADERS += brushmodes.h \
            brushsettings-gen.h \
@@ -61,9 +72,6 @@ SOURCES += brushmodes.c \
            rng-double.c \
            tilemap.c \
            utils.c
-
-INCLUDEPATH += ../json-c
-LIBS += -L../json-c -ljson-c
 
 # for C files, we need to allow C99 mode.
 QMAKE_CFLAGS += -std=c99
