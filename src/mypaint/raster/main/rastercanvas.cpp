@@ -17,13 +17,13 @@
     along with QTMyPaint. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "rastercanvas.h"
+#include "tapplicationproperties.h"
+
 #include <QGraphicsRectItem>
 #include <QBrush>
 #include <QPixmap>
 #include <QCursor>
-
-#include "tapplicationproperties.h"
-#include "rastercanvas.h"
 
 RasterCanvas::RasterCanvas(TupProject *project, const QColor contourColor, QWidget *parent):
                            RasterCanvasBase(project->getDimension(), parent)

@@ -20,15 +20,14 @@
 #ifndef RASTERCANVAS_H
 #define RASTERCANVAS_H
 
-#include <QWidget>
-#include <QMouseEvent>
-#include <QPushButton>
-
 #include "rastercanvasbase.h"
 #include "mphandler.h"
 #include "mpbrush.h"
 #include "mpsurface.h"
 #include "mptile.h"
+
+#include <QWidget>
+#include <QMouseEvent>
 
 class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
 {
