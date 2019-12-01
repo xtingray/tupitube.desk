@@ -782,7 +782,7 @@
         <location filename="../../../plugins/tools/position/possettings.cpp" line="214"/>
         <location filename="../../../plugins/tools/position/possettings.cpp" line="335"/>
         <source>Ending at frame</source>
-        <translation type="unfinished">Terminer à l&apos;image</translation>
+        <translation>Terminer à l&apos;image</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/position/possettings.cpp" line="116"/>
@@ -953,37 +953,37 @@
     <message>
         <location filename="../../../mypaint/raster/brushes/rasterbrusheswidget.cpp" line="50"/>
         <source>Brush Properties</source>
-        <translation type="unfinished">Propriétés des brosses</translation>
+        <translation>Propriétés des brosses</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/brushes/rasterbrusheswidget.cpp" line="84"/>
         <source>Erasers</source>
-        <translation type="unfinished"></translation>
+        <translation>Gommes</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/brushes/rasterbrusheswidget.cpp" line="86"/>
         <source>Art Set 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Ensemble d&apos;Art 1</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/brushes/rasterbrusheswidget.cpp" line="88"/>
         <source>Art Set 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Ensemble d&apos;Art 2</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/brushes/rasterbrusheswidget.cpp" line="90"/>
         <source>Art Set 3</source>
-        <translation type="unfinished"></translation>
+        <translation>Ensemble d&apos;Art 3</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/brushes/rasterbrusheswidget.cpp" line="92"/>
         <source>Classic</source>
-        <translation type="unfinished"></translation>
+        <translation>Classique</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/brushes/rasterbrusheswidget.cpp" line="94"/>
         <source>Experimental</source>
-        <translation type="unfinished"></translation>
+        <translation>Expérimental</translation>
     </message>
 </context>
 <context>
@@ -991,33 +991,33 @@
     <message>
         <location filename="../../../mypaint/raster/color/rastercolorwidget.cpp" line="61"/>
         <source>Color Palette</source>
-        <translation type="unfinished">Palette de couleurs</translation>
+        <translation>Palette de couleurs</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/color/rastercolorwidget.cpp" line="128"/>
         <source>Contour</source>
-        <translation type="unfinished">Contour</translation>
+        <translation>Contour</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/color/rastercolorwidget.cpp" line="145"/>
         <location filename="../../../mypaint/raster/color/rastercolorwidget.cpp" line="194"/>
         <source>HTML</source>
-        <translation type="unfinished">HTML</translation>
+        <translation>HTML</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/color/rastercolorwidget.cpp" line="176"/>
         <source>Background</source>
-        <translation type="unfinished">Arrière-plan</translation>
+        <translation>Arrière-plan</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/color/rastercolorwidget.cpp" line="186"/>
         <source>Reset background</source>
-        <translation type="unfinished">Réinitialiser l&apos;arrière-plan</translation>
+        <translation>Réinitialiser l&apos;arrière-plan</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/color/rastercolorwidget.cpp" line="316"/>
         <source>Color Mixer</source>
-        <translation type="unfinished">Mélangeur de couleurs</translation>
+        <translation>Mélangeur de couleurs</translation>
     </message>
 </context>
 <context>
@@ -1025,95 +1025,95 @@
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="47"/>
         <source>Shift+C</source>
-        <translation type="unfinished">Shift+C</translation>
+        <translation>Shift+C</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="53"/>
         <source>Shift+B</source>
-        <translation type="unfinished">Shift+B</translation>
+        <translation>Shift+B</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="103"/>
         <source>&amp;Export as Image</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Exporter en Image</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="105"/>
         <source>Export as Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Exporter en Image</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="108"/>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="110"/>
         <source>Exit Raster Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Quitter le Mode Raster</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="113"/>
         <source>&amp;File</source>
-        <translation type="unfinished">&amp;Fichier</translation>
+        <translation>&amp;Fichier</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="126"/>
         <source>Raster actions</source>
-        <translation type="unfinished"></translation>
+        <translation>Actions raster</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="130"/>
         <source>Clear Canvas</source>
-        <translation type="unfinished"></translation>
+        <translation>Effacer la Toile</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="139"/>
         <source>Raster Static Background</source>
-        <translation type="unfinished"></translation>
+        <translation>Fond Statique Raster</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="144"/>
         <source>Raster Dynamic Background</source>
-        <translation type="unfinished"></translation>
+        <translation>Fond Dynamique Raster</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="150"/>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="154"/>
         <source>Movement Orientation</source>
-        <translation type="unfinished">Orientation du mouvement</translation>
+        <translation>Orientation du mouvement</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="155"/>
         <source>Right</source>
-        <translation type="unfinished">Droite</translation>
+        <translation>Droite</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="156"/>
         <source>Left</source>
-        <translation type="unfinished">Gauche</translation>
+        <translation>Gauche</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="157"/>
         <source>Up</source>
-        <translation type="unfinished">Haut</translation>
+        <translation>Haut</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="158"/>
         <source>Down</source>
-        <translation type="unfinished">Bas</translation>
+        <translation>Bas</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="177"/>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="184"/>
         <source>Shift Length</source>
-        <translation type="unfinished">Longueur du décalage</translation>
+        <translation>Longueur du décalage</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="295"/>
         <source>Open Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrir l&apos;Image</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="310"/>
         <source>Export Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Exporter l&apos;Image</translation>
     </message>
 </context>
 <context>
@@ -2901,32 +2901,32 @@
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="1104"/>
         <source>Vector Static BG Properties</source>
-        <translation type="unfinished"></translation>
+        <translation>Propriétés de Fond Statique Vectoriel</translation>
     </message>
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="1105"/>
         <source>Vector Dynamic BG Properties</source>
-        <translation type="unfinished"></translation>
+        <translation>Propriétés du Fond Dynamique Vectoriel</translation>
     </message>
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="1111"/>
         <source>Vector Static BG Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Fond Statique Vectoriel</translation>
     </message>
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="1112"/>
         <source>Vector Dynamic BG Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Fond Dynamique Vectoriel</translation>
     </message>
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="1113"/>
         <source>Raster Static BG Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Fond Statique Raster</translation>
     </message>
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="1114"/>
         <source>Raster Dynamic BG Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Fond Dynamique Raster</translation>
     </message>
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="296"/>
