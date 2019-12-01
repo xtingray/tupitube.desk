@@ -616,6 +616,10 @@
         <source>Close Tween Properties</source>
         <translation>关闭补间动画属性</translation>
     </message>
+    <message>
+        <source>Ending at frame</source>
+        <translation type="unfinished">结束帧</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -710,6 +714,139 @@
     <message>
         <source>Fatal Error</source>
         <translation>致命错误</translation>
+    </message>
+</context>
+<context>
+    <name>RasterBrushesWidget</name>
+    <message>
+        <source>Brush Properties</source>
+        <translation type="unfinished">笔刷属性</translation>
+    </message>
+    <message>
+        <source>Erasers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Art Set 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Art Set 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Art Set 3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Classic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Experimental</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>RasterColorWidget</name>
+    <message>
+        <source>Color Palette</source>
+        <translation type="unfinished">调色板</translation>
+    </message>
+    <message>
+        <source>Contour</source>
+        <translation type="unfinished">轮廓</translation>
+    </message>
+    <message>
+        <source>HTML</source>
+        <translation type="unfinished">HTML</translation>
+    </message>
+    <message>
+        <source>Background</source>
+        <translation type="unfinished">背景</translation>
+    </message>
+    <message>
+        <source>Reset background</source>
+        <translation type="unfinished">重置背景</translation>
+    </message>
+    <message>
+        <source>Color Mixer</source>
+        <translation type="unfinished">色彩混合器</translation>
+    </message>
+</context>
+<context>
+    <name>RasterMainWindow</name>
+    <message>
+        <source>Shift+C</source>
+        <translation type="unfinished">Shift+C</translation>
+    </message>
+    <message>
+        <source>Shift+B</source>
+        <translation type="unfinished">Shift+B</translation>
+    </message>
+    <message>
+        <source>&amp;Export as Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export as Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exit Raster Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation type="unfinished">文件</translation>
+    </message>
+    <message>
+        <source>Raster actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear Canvas</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Raster Static Background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Raster Dynamic Background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Movement Orientation</source>
+        <translation type="unfinished">运动方向</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation type="unfinished">右</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation type="unfinished">左</translation>
+    </message>
+    <message>
+        <source>Up</source>
+        <translation type="unfinished">上</translation>
+    </message>
+    <message>
+        <source>Down</source>
+        <translation type="unfinished">下</translation>
+    </message>
+    <message>
+        <source>Shift Length</source>
+        <translation type="unfinished">移位长度</translation>
+    </message>
+    <message>
+        <source>Open Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export Image</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2068,10 +2205,6 @@
         <translation>Shift</translation>
     </message>
     <message>
-        <source>Dynamic BG Mode</source>
-        <translation>动态背景模式</translation>
-    </message>
-    <message>
         <source>Shift Length</source>
         <translation>移位长度</translation>
     </message>
@@ -2144,10 +2277,6 @@
         <translation>多段线</translation>
     </message>
     <message>
-        <source>Static Background Properties</source>
-        <translation>静态背景属性</translation>
-    </message>
-    <message>
         <source>Rotation Tween</source>
         <translation>旋转补间动画</translation>
     </message>
@@ -2170,10 +2299,6 @@
     <message>
         <source>Nodes Selection</source>
         <translation>节点选择</translation>
-    </message>
-    <message>
-        <source>Dynamic Background Properties</source>
-        <translation>动态背景属性</translation>
     </message>
     <message>
         <source>Object Selection</source>
@@ -2227,10 +2352,6 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Frames Mode</source>
         <translation>帧模式</translation>
-    </message>
-    <message>
-        <source>Static BG Mode</source>
-        <translation>静态背景模式</translation>
     </message>
     <message>
         <source>Ellipse</source>
@@ -2287,6 +2408,30 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Image Sequence</source>
         <translation>图像序列</translation>
+    </message>
+    <message>
+        <source>Vector Static BG Properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vector Dynamic BG Properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vector Static BG Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vector Dynamic BG Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Raster Static BG Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Raster Dynamic BG Mode</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
