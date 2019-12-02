@@ -78,11 +78,13 @@ void DefaultSettings::save(const QString &winKey, TMainWindow *window)
         }
     }
 
+    /*
     settings.beginGroup("MainWindow");
     settings.setValue("size", window->size());
     settings.setValue("maximized", window->isMaximized());
     settings.setValue("position", window->pos());
     settings.endGroup();
+    */
 }
 
 void DefaultSettings::restore(const QString &winKey, TMainWindow *window)
@@ -122,15 +124,23 @@ void DefaultSettings::restore(const QString &winKey, TMainWindow *window)
         view->close();
     }
 
+    /*
     settings.beginGroup("MainWindow");
     window->resize(settings.value("size").toSize());
     bool maximized = settings.value("maximized", false).toBool();
+
+    #ifdef TUP_DEBUG
+        qWarning() << "TMainWindow::DefaultSettings::restore() - Size settings:";
+        qWarning() << "Window Size: " << settings.value("size").toSize();
+        qWarning() << "maximized flag: " << maximized;
+    #endif
 
     if (maximized)
         window->showMaximized();
 
     window->move(settings.value("position").toPoint());
     settings.endGroup();
+    */
 }
 
 TMainWindow::TMainWindow(const QString &key, QWidget *parent): QMainWindow(parent), m_forRelayout(nullptr),
