@@ -79,16 +79,18 @@ class MPSurface : public MyPaintTiledSurface
         void loadImage(const QImage &image);
         bool isEmpty();
 
-        void undo(int items);
-        void redo();
-
-        void setScene(QGraphicsScene *scene);
+        // void undo();
+        // void redo();
+        // void saveScreen();
 
     protected:
         QHash<QPoint, MPTile*> tilesHash;
-        QList<QPoint> tileIndexes;
-        QList<MPTile*> undoList;
-        QHash<QPoint, MPTile*> undoHash;
+
+        // QList<QHash<QPoint, MPTile*>> screens;
+        // QList<QHash<QPoint, MPTile*>> undoScreens;
+        // QList<QPoint> tileIndexes;
+        // QList<MPTile*> undoList;
+        // QHash<QPoint, MPTile*> undoHash;
 
     private:
         void resetNullTile();
@@ -102,8 +104,6 @@ class MPSurface : public MyPaintTiledSurface
 
         MPBrush *m_brush;
         QColor m_color;
-
-        QGraphicsScene *gScene;
 };
 
 inline uint qHash(const QPoint & key)

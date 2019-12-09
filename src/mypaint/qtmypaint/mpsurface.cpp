@@ -147,14 +147,9 @@ void MPSurface::clear()
             QGraphicsScene* scene = tile->scene();
             if (scene)
                 scene->removeItem(tile);
-
-            /*
-            if (gScene)
-                gScene->removeItem(tile);
-            */
         }
     }
-    undoHash = tilesHash;
+    // undoHash = tilesHash;
     tilesHash.clear();
 
     this->onClearedSurfaceFunction(this);
@@ -166,25 +161,12 @@ void MPSurface::loadImage(const QImage &image)
     int nbTilesOnWidth = static_cast<int>(ceil(this->width / tileSize.width())) + 1;
     int nbTilesOnHeight = static_cast<int>(ceil(this->height / tileSize.height())) + 1;
 
-    /*
-    #ifdef TUP_DEBUG
-        qDebug() << "RasterCanvas::loadImage() - width: " << this->width;
-        qDebug() << "RasterCanvas::loadImage() - height: " << this->height;
-        qDebug() << "RasterCanvas::loadImage() - tileSize width: " << tileSize.width();
-        qDebug() << "RasterCanvas::loadImage() - tileSize height: " << tileSize.height();
-        qDebug() << "RasterCanvas::loadImage() - nbTilesOnWidth: " << nbTilesOnWidth;
-        qDebug() << "RasterCanvas::loadImage() - nbTilesOnHeight: " << nbTilesOnHeight;
-    #endif
-    */
-
     for (int h=0; h < nbTilesOnHeight; h++) {
         for (int w=0; w < nbTilesOnWidth; w++) {
             MPTile *tile = getTileFromIdx(QPoint(w, h));
             QRect tileRect = QRect(tile->pos().toPoint(), tileSize);
 
-            // QImage tileImage = image.copy(tileRect);
             tile->setImage(image.copy(tileRect));
-            // tile->setImage(tileImage);
             this->onUpdateTileFunction(this, tile);
         }
     }
@@ -305,7 +287,7 @@ MPTile* MPSurface::getTileFromIdx(const QPoint& idx)
             // Time to allocate it, update table and insert it as a QGraphicsItem in scene:
             selectedTile = new MPTile();
             tilesHash.insert(idx, selectedTile);
-            tileIndexes << idx;
+            // tileIndexes << idx;
 
             QPoint tilePos(getTilePos(idx));
             selectedTile->setPos(tilePos);
@@ -326,12 +308,12 @@ inline bool MPSurface::checkIndex(uint n)
 
 inline QPoint MPSurface::getTilePos(const QPoint& idx)
 {
-    return QPoint(MYPAINT_TILE_SIZE*idx.x(), MYPAINT_TILE_SIZE*idx.y());
+    return QPoint(MYPAINT_TILE_SIZE * idx.x(), MYPAINT_TILE_SIZE * idx.y());
 }
 
 inline QPoint MPSurface::getTileIndex(const QPoint& pos)
 {
-    return QPoint(pos.x()/MYPAINT_TILE_SIZE, pos.y()/MYPAINT_TILE_SIZE);
+    return QPoint(pos.x() / MYPAINT_TILE_SIZE, pos.y() / MYPAINT_TILE_SIZE);
 }
 
 inline QPointF MPSurface::getTileFIndex(const QPoint& pos)
@@ -345,44 +327,15 @@ bool MPSurface::isEmpty()
     return tilesHash.isEmpty();
 }
 
-void MPSurface::undo(int items)
+int MPSurface::getTilesCount()
+{
+    return tilesHash.count();
+}
+
+/*
+void MPSurface::undo()
 {
     // qDebug() << "MPSurface::undo() - items: " << items;
-
-    // clear();
-    // tilesHash = undoHash;
-
-    for (int i=0; i< items; i++) {
-        QPoint point = tileIndexes.takeLast();
-        MPTile *tile = tilesHash.take(point);
-        if (gScene)
-            gScene->removeItem(tile);
-
-        undoList << tile;
-    }
-
-    QHashIterator<QPoint, MPTile*> i(tilesHash);
-    while (i.hasNext()) {
-        i.next();
-        MPTile *tile = i.value();
-        if (tile) {
-            tile->update();
-        }
-    }
-
-    /*
-    QHashIterator<QPoint, MPTile*> i(tilesHash);
-    while (i.hasNext()) {
-        i.next();
-        MPTile *tile = i.value();
-        if (tile) {
-            gScene->addItem(tile);
-            // QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(tile->image()));
-            // item->setPos(tile->pos());
-            // gScene->addItem(item);
-        }
-    }
-    */
 }
 
 void MPSurface::redo()
@@ -390,12 +343,8 @@ void MPSurface::redo()
     // qDebug() << "MPSurface::redo() - Tracing...";
 }
 
-int MPSurface::getTilesCount()
+void MPSurface::saveScreen()
 {
-    return tilesHash.count();
+    screens << tilesHash;
 }
-
-void MPSurface::setScene(QGraphicsScene *scene)
-{
-    gScene = scene;
-}
+*/

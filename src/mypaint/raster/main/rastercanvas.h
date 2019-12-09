@@ -46,8 +46,10 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
         void resetWorkSpaceCenter(const QSize projectSize);
         bool canvasIsEmpty();
 
+        /*
         void undo();
         void redo();
+        */
 
     protected:
         virtual void tabletEvent(QTabletEvent *event);
@@ -77,7 +79,6 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
 
         QGraphicsScene *gScene;
         QRectF drawingRect;
-        int counter;
 
         bool pressed;
         bool spaceBar;
@@ -85,7 +86,8 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
         bool tableInUse;
         MPHandler *myPaintCanvas;
 
-        QList<int> tileSets;
+        // int counter;
+        // QList<int> tileSets;
         QSize canvasSize;
 };
 

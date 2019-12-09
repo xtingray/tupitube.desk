@@ -70,12 +70,11 @@ class MPHandler : public QObject
         void loadImage(const QImage &image);
         bool isEmpty();
 
-        void undo(int items);
-        void redo();
-
         int getTilesCounter();
 
-        void setScene(QGraphicsScene *scene);
+        // void undo();
+        // void redo();
+        // void saveScreen();
 
     public slots:
         void loadBrush(const QByteArray &content);

@@ -63,8 +63,8 @@ class TUPITUBE_EXPORT RasterMainWindow : public TMainWindow
     private slots:
         void setBackgroundDirection(int direction);
         void updateBackgroundShiftProperty(int shift);
-        void undo();
-        void redo();
+        // void undo();
+        // void redo();
 
     signals:
          void paintAreaEventTriggered(const TupPaintAreaEvent *event);

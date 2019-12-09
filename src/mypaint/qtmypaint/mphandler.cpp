@@ -171,9 +171,15 @@ bool MPHandler::isEmpty()
     return m_surface->isEmpty();
 }
 
-void MPHandler::undo(int items)
+int MPHandler::getTilesCounter()
 {
-    m_surface->undo(items);
+    return m_surface->getTilesCount();
+}
+
+/*
+void MPHandler::undo()
+{
+    m_surface->undo();
 }
 
 void MPHandler::redo()
@@ -181,12 +187,8 @@ void MPHandler::redo()
     m_surface->redo();
 }
 
-int MPHandler::getTilesCounter()
+void MPHandler::saveScreen()
 {
-    return m_surface->getTilesCount();
+    m_surface->saveScreen();
 }
-
-void MPHandler::setScene(QGraphicsScene *scene)
-{
-    m_surface->setScene(scene);
-}
+*/

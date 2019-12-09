@@ -137,6 +137,7 @@ void RasterMainWindow::createCentralWidget(TupProject * project, const QColor co
     clearButton->setShortcut(Qt::Key_Backspace);
     connect(clearButton, SIGNAL(clicked()), rasterCanvas, SLOT(clearCanvas()));
 
+    /*
     QAction *undo = new QAction(QIcon(THEME_DIR + "icons/undo.png"), tr("Undo"), this);
     undo->setIconVisibleInMenu(true);
     undo->setShortcut(QKeySequence(tr("Ctrl+Z")));
@@ -149,11 +150,15 @@ void RasterMainWindow::createCentralWidget(TupProject * project, const QColor co
 
     QWidget *cEmpty0 = new QWidget();
     cEmpty0->setFixedWidth(5);
+    */
 
     topBar->addWidget(clearButton);
+
+    /*
     topBar->addWidget(cEmpty0);
     topBar->addAction(undo);
     topBar->addAction(redo);
+    */
 
     QString imgPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/";
     if (spaceContext == TupProject::RASTER_STATIC_BG_MODE) {
@@ -405,6 +410,7 @@ void RasterMainWindow::updateBackgroundShiftProperty(int shift)
     tupBg->setRasterDynamicShift(shift);
 }
 
+/*
 void RasterMainWindow::undo()
 {
     rasterCanvas->undo();
@@ -414,3 +420,4 @@ void RasterMainWindow::redo()
 {
     rasterCanvas->redo();
 }
+*/
