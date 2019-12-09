@@ -37,7 +37,7 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
         RasterCanvas(TupProject *project, const QColor contourColor, QWidget *parent = nullptr);
         ~RasterCanvas();
 
-        void setSize(QSize size);
+        // void setSize(QSize size);
         void setTabletDevice(QTabletEvent *event);
 
         void saveToFile(QString filePath);
@@ -45,6 +45,9 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
 
         void resetWorkSpaceCenter(const QSize projectSize);
         bool canvasIsEmpty();
+
+        void undo();
+        void redo();
 
     protected:
         virtual void tabletEvent(QTabletEvent *event);
@@ -74,13 +77,16 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
 
         QGraphicsScene *gScene;
         QRectF drawingRect;
-        int globalSceneIndex;
+        int counter;
 
         bool pressed;
         bool spaceBar;
         QColor color;
         bool tableInUse;
         MPHandler *myPaintCanvas;
+
+        QList<int> tileSets;
+        QSize canvasSize;
 };
 
 #endif // RASTERCANVAS_H

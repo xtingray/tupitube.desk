@@ -41,7 +41,7 @@ class MPTile : public QGraphicsItem
         virtual QPainterPath shape() const;
         virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-        uint16_t* Bits(bool readOnly);
+        uint16_t* bits(bool readOnly);
         void drawPoint(uint x, uint y, uint16_t r, uint16_t g, uint16_t b, uint16_t a);
         void updateCache();
         void clear();

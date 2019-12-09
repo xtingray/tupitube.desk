@@ -22,7 +22,7 @@
 MPTile::MPTile(QGraphicsItem * parent) : QGraphicsItem(parent), m_cache_img(k_tile_dim, k_tile_dim, QImage::Format_ARGB32_Premultiplied)
 {
     setCacheMode(QGraphicsItem::NoCache);
-    clear(); //Default tiles are transparent
+    clear(); // Default tiles are transparent
 }
 
 MPTile::~MPTile()
@@ -39,11 +39,13 @@ QRectF MPTile::boundingRect() const
     return m_cache_img.rect();
 }
 
-//  bool MPTile::contains(const QPointF & point) const
-//  {
-//    // opaque if alpha > 16
-//    return qAlpha(m_cache_img.pixel(point.toPoint())) > 0x10;
-//  }
+/*
+    bool MPTile::contains(const QPointF & point) const
+    {
+      // opaque if alpha > 16
+      return qAlpha(m_cache_img.pixel(point.toPoint())) > 0x10;
+    }
+*/
 
 QPainterPath MPTile::shape() const
 {
@@ -62,7 +64,7 @@ void MPTile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     painter->drawImage(QPoint(), m_cache_img, m_cache_img.rect());
 }
 
-uint16_t* MPTile::Bits(bool readOnly)
+uint16_t* MPTile::bits(bool readOnly)
 {
     // Correct C++ way of doing things is using "const" but MyPaint API is not compatible here
     m_cache_valid = readOnly ? m_cache_valid : false;
@@ -120,6 +122,6 @@ void MPTile::setImage(const QImage &image)
 void MPTile::clear()
 {
     memset(t_pixels, 0, sizeof(t_pixels)); // Tile is transparent
-    m_cache_img.fill( QColor(Qt::transparent) ); // image cache is transparent too, and aligned to the pixel table:
+    m_cache_img.fill(QColor(Qt::transparent)); // image cache is transparent too, and aligned to the pixel table:
     m_cache_valid = true;
 }

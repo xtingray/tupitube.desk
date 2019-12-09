@@ -40,7 +40,8 @@ class TUPITUBE_EXPORT RasterMainWindow : public TMainWindow
         enum Perspective { Raster = 0x01 };
 
         explicit RasterMainWindow(TupProject *project, const QString &winKey, TupProject::Mode context,
-                                  int scene, const QColor contourColor, QWidget *parent = nullptr);
+                                  int scene, const QColor contourColor, const QString &zoomFactor,
+                                  QWidget *parent = nullptr);
         ~RasterMainWindow();
 
         void setTabletDevice(QTabletEvent *event);
@@ -62,6 +63,8 @@ class TUPITUBE_EXPORT RasterMainWindow : public TMainWindow
     private slots:
         void setBackgroundDirection(int direction);
         void updateBackgroundShiftProperty(int shift);
+        void undo();
+        void redo();
 
     signals:
          void paintAreaEventTriggered(const TupPaintAreaEvent *event);

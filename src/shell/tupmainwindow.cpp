@@ -278,7 +278,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         int pHeight = project->getDimension().height();
 
         double proportion = 1;
-        if (pWidth > pHeight)
+        if (pWidth >= pHeight)
             proportion = static_cast<double>(width) / static_cast<double>(pWidth);
         else
             proportion = static_cast<double>(height) / static_cast<double>(pHeight);
@@ -287,9 +287,9 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
             animationTab->setZoomPercent("20");
         } else if (proportion > 0.5 && proportion <= 0.75) {
             animationTab->setZoomPercent("25");
-        } else if (proportion > 0.75 && proportion <= 1.5) {
+        } else if (proportion > 0.75 && proportion <= 1.7) {
             animationTab->setZoomPercent("50");
-        } else if (proportion > 1.5 && proportion < 2) {
+        } else if (proportion > 1.7 && proportion < 2) {
             animationTab->setZoomPercent("75");
         }
 

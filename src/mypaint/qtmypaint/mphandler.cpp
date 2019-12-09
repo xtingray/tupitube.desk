@@ -135,12 +135,12 @@ void MPHandler::strokeTo(float x, float y, float pressure, float xtilt, float yt
 
 void MPHandler::startStroke()
 {
-    mypaint_brush_reset (m_brush->brush);
+    mypaint_brush_reset(m_brush->brush);
     mypaint_brush_new_stroke(m_brush->brush);
 }
 
 void MPHandler::strokeTo(float x, float y)
-{
+{    
     float pressure = 1.0;
     float xtilt = 0.0;
     float ytilt = 0.0;
@@ -169,4 +169,24 @@ void MPHandler::setBrushValue(MyPaintBrushSetting setting, float value)
 bool MPHandler::isEmpty()
 {
     return m_surface->isEmpty();
+}
+
+void MPHandler::undo(int items)
+{
+    m_surface->undo(items);
+}
+
+void MPHandler::redo()
+{
+    m_surface->redo();
+}
+
+int MPHandler::getTilesCounter()
+{
+    return m_surface->getTilesCount();
+}
+
+void MPHandler::setScene(QGraphicsScene *scene)
+{
+    m_surface->setScene(scene);
 }

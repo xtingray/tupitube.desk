@@ -2,7 +2,7 @@
 #define MYPAINTCONFIG_H
 
 #ifndef MYPAINT_TILE_SIZE
-#define MYPAINT_TILE_SIZE 64
+#define MYPAINT_TILE_SIZE 64 
 #endif
 
 #ifndef MYPAINT_MAX_THREADS

@@ -28,11 +28,11 @@
 #include "mpsurface.h"
 
 #ifndef QTMYPAINT_SURFACE_WIDTH
-#define QTMYPAINT_SURFACE_WIDTH 100
+#define QTMYPAINT_SURFACE_WIDTH 720
 #endif
 
 #ifndef QTMYPAINT_SURFACE_HEIGHT
-#define QTMYPAINT_SURFACE_HEIGHT 100
+#define QTMYPAINT_SURFACE_HEIGHT 640
 #endif
 
 class MPHandler : public QObject
@@ -40,6 +40,7 @@ class MPHandler : public QObject
     Q_OBJECT
 
     public:
+        MPHandler();
         ~MPHandler();
 
         static MPHandler *handler();
@@ -69,6 +70,13 @@ class MPHandler : public QObject
         void loadImage(const QImage &image);
         bool isEmpty();
 
+        void undo(int items);
+        void redo();
+
+        int getTilesCounter();
+
+        void setScene(QGraphicsScene *scene);
+
     public slots:
         void loadBrush(const QByteArray &content);
 
@@ -78,7 +86,6 @@ class MPHandler : public QObject
         void clearedSurface(MPSurface *surface);
 
     private:
-        MPHandler();
         static bool instanceFlag;
         static MPHandler *currentHandler;
 

@@ -28,12 +28,17 @@
 #include <QAction>
 
 RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, TupProject::Mode context, int scene,
-                                   const QColor contourColor, QWidget *parent): TMainWindow(winKey, parent)
+                                   const QColor contourColor, const QString &zoomFactor, QWidget *parent): TMainWindow(winKey, parent)
 {
     spaceContext = context;
     sceneIndex = scene;
     projectSize = project->getDimension();
     tupBg = project->getBackgroundFromScene(scene);
+
+    #ifdef TUP_DEBUG
+        qDebug() << "RasterMainWindow::RasterMainWindow() - projectSize: " << projectSize;
+        qDebug() << "RasterMainWindow::RasterMainWindow() - zoomFactor: " << zoomFactor;
+    #endif
 
     createTopResources();
     createCentralWidget(project, contourColor);
@@ -61,7 +66,6 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, T
     connect(status, SIGNAL(angleChanged(int)), this, SLOT(setRotationAngle(int)));
     connect(rasterCanvas, SIGNAL(rotated(int)), status, SLOT(updateRotationAngle(int)));
     setStatusBar(status);
-    status->setZoomPercent("100");
 
     /*
     // Add a docked widget
@@ -73,6 +77,8 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, T
     connect(brushesSelector, SIGNAL(brushSelected(const QByteArray&)),
             rasterCanvas, SLOT(loadBrush(const QByteArray&)));
     */
+
+    status->setZoomPercent(zoomFactor);
 
     tabletIsActive = false;
 }
@@ -117,7 +123,7 @@ void RasterMainWindow::createTopResources()
 
 void RasterMainWindow::createCentralWidget(TupProject * project, const QColor contourColor)
 {
-    // Central widget:
+    // Central widget
     rasterCanvas = new RasterCanvas(project, contourColor, this);
     connect(rasterCanvas, SIGNAL(closeWindow()), this, SLOT(saveCanvas()));
     connect(rasterCanvas, SIGNAL(zoomIn()), this, SLOT(applyZoomIn()));
@@ -131,7 +137,23 @@ void RasterMainWindow::createCentralWidget(TupProject * project, const QColor co
     clearButton->setShortcut(Qt::Key_Backspace);
     connect(clearButton, SIGNAL(clicked()), rasterCanvas, SLOT(clearCanvas()));
 
+    QAction *undo = new QAction(QIcon(THEME_DIR + "icons/undo.png"), tr("Undo"), this);
+    undo->setIconVisibleInMenu(true);
+    undo->setShortcut(QKeySequence(tr("Ctrl+Z")));
+    connect(undo, SIGNAL(triggered()), this, SLOT(undo()));
+
+    QAction *redo = new QAction(QIcon(THEME_DIR + "icons/redo.png"), tr("Redo"), this);
+    redo->setIconVisibleInMenu(true);
+    redo->setShortcut(QKeySequence(tr("Ctrl+Y")));
+    connect(redo, SIGNAL(triggered()), this, SLOT(redo()));
+
+    QWidget *cEmpty0 = new QWidget();
+    cEmpty0->setFixedWidth(5);
+
     topBar->addWidget(clearButton);
+    topBar->addWidget(cEmpty0);
+    topBar->addAction(undo);
+    topBar->addAction(redo);
 
     QString imgPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/";
     if (spaceContext == TupProject::RASTER_STATIC_BG_MODE) {
@@ -202,7 +224,7 @@ void RasterMainWindow::createCentralWidget(TupProject * project, const QColor co
         rasterCanvas->loadFromFile(imgPath);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "RasterMainWindow::createCentralWidget() - Image doesn't exist -> " + imgPath;
+            qDebug() << "RasterMainWindow::createCentralWidget() - Error: Image doesn't exist -> " + imgPath;
         #endif
     }
 
@@ -355,7 +377,7 @@ void RasterMainWindow::saveCanvas()
 void RasterMainWindow::resizeEvent(QResizeEvent *event)
 {
     Q_UNUSED(event)
-    rasterCanvas->setSize(this->centralWidget()->rect().size());
+    // rasterCanvas->setSize(this->centralWidget()->rect().size());
 }
 
 void RasterMainWindow::keyPressEvent(QKeyEvent *event)
@@ -381,4 +403,14 @@ void RasterMainWindow::setBackgroundDirection(int direction)
 void RasterMainWindow::updateBackgroundShiftProperty(int shift)
 {
     tupBg->setRasterDynamicShift(shift);
+}
+
+void RasterMainWindow::undo()
+{
+    rasterCanvas->undo();
+}
+
+void RasterMainWindow::redo()
+{
+    rasterCanvas->redo();
 }

@@ -90,6 +90,7 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     colorSpace = TColorCell::Contour;
     contourColor = Qt::black;
     currentDock = ExposureSheet;
+    zoomFactor = "100";
 
     cameraMode = false;
     photoCounter = 1;
@@ -274,7 +275,8 @@ void TupDocumentView::applyZoomIn()
     qreal zoom = status->currentZoomFactor();
     if (zoom <= 495) {
         zoom += 5;
-        status->setZoomPercent(QString::number(zoom));
+        zoomFactor = QString::number(zoom);
+        status->setZoomPercent(zoomFactor);
     }
 }
 
@@ -283,7 +285,8 @@ void TupDocumentView::applyZoomOut()
     qreal zoom = status->currentZoomFactor();
     if (zoom >= 15) {
         zoom -= 5;
-        status->setZoomPercent(QString::number(zoom));
+        zoomFactor = QString::number(zoom);
+        status->setZoomPercent(zoomFactor);
     }
 }
 
@@ -303,6 +306,7 @@ void TupDocumentView::setZoomPercent(const QString &percent)
 {
     nodesScaleFactor = percent.toDouble() / 100;
     status->setZoomPercent(percent);
+    zoomFactor = percent;
 }
 
 /*
@@ -1275,7 +1279,8 @@ void TupDocumentView::openRasterMode()
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    rasterWindow = new RasterMainWindow(project, "raster", spaceContext(), currentSceneIndex(), contourColor, this);
+    rasterWindow = new RasterMainWindow(project, "raster", spaceContext(), currentSceneIndex(),
+                                        contourColor, zoomFactor, this);
     connect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString &)));
     connect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
             this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));

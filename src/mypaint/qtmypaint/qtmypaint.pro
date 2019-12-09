@@ -15,6 +15,9 @@ SOURCES += mpbrush.cpp \
            mpsurface.cpp \
            mptile.cpp
 
+FRAMEWORK_DIR = "../../framework"
+include($$FRAMEWORK_DIR/framework.pri)
+
 LIBS += -L../json-c -ljson-c
 LIBS += -L../libmypaint -llibmypaint
 
@@ -26,12 +29,6 @@ else:unix: LIBS += -L../json-c -ljson-c
 INCLUDEPATH += ../json-c
 DEPENDPATH += ../json-c
 
-# win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += ../json-c/release/libjson-c.a
-# else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += ../json-c/debug/libjson-c.a
-# else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += ../json-c/release/json-c.lib
-# else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += ../json-c/debug/json-c.lib
-# else:unix: PRE_TARGETDEPS += ../json-c/libjson-c.a
-
 # --- libmypaint ---
 win32:CONFIG(release, debug|release): LIBS += -L../libmypaint/release/ -llibmypaint
 else:win32:CONFIG(debug, debug|release): LIBS += -L../libmypaint/debug/ -llibmypaint
@@ -40,18 +37,20 @@ else:unix: LIBS += -L../libmypaint -llibmypaint
 INCLUDEPATH += ../libmypaint
 DEPENDPATH += ../libmypaint
 
-# win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += ../libmypaint/release/libmypaint.a
-# else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += ../libmypaint/debug/libmypaint.a
-# else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += ../libmypaint/release/libmypaint.lib
-# else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += ../libmypaint/debug/libmypaint.lib
-# else:unix: PRE_TARGETDEPS += ../libmypaint/libmypaint.a
-
 macx {
     INSTALLS += target
     target.path = /lib
+
+    !include(../../../tupiglobal.pri) {
+        error("Run ./configure first!")
+    }
 }
 
 unix:!mac {
     INSTALLS += target
     target.path = /lib/raster
+
+    !include(../../../tupiglobal.pri) {
+        error("Run ./configure first!")
+    }
 }   

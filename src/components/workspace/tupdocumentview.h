@@ -258,6 +258,7 @@ class TUPITUBE_EXPORT TupDocumentView: public QMainWindow
         TupToolPlugin *currentTool;
         TupPaintAreaStatus *status;
         QComboBox *spaceModeCombo;
+        QString zoomFactor;
 
         bool dynamicFlag;
         bool staticFlag;

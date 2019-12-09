@@ -32,20 +32,24 @@ RasterCanvas::RasterCanvas(TupProject *project, const QColor contourColor, QWidg
     setBgColor(project->getBgColor());
     tableInUse = false;
     spaceBar = false;
+    counter = 0;
+
+    // Set scene
+    canvasSize = project->getDimension();
+    drawingRect = QRectF(QPointF(0, 0), canvasSize);
+    gScene = new QGraphicsScene(this);
+    gScene->setSceneRect(drawingRect);
+    setScene(gScene);
 
     myPaintCanvas = MPHandler::handler();
+    myPaintCanvas->setSurfaceSize(canvasSize);
+    myPaintCanvas->setScene(gScene);
     myPaintCanvas->setBrushColor(contourColor);
     myPaintCanvas->clearSurface();
 
     connect(myPaintCanvas, SIGNAL(newTile(MPSurface*, MPTile*)), this, SLOT(onNewTile(MPSurface*, MPTile*)));
     connect(myPaintCanvas, SIGNAL(updateTile(MPSurface*, MPTile*)), this, SLOT(onUpdateTile(MPSurface*, MPTile*)));
     connect(myPaintCanvas, SIGNAL(clearedSurface(MPSurface*)), this, SLOT(onClearedSurface(MPSurface*)));
-
-    // Set scene
-    drawingRect = QRectF(QPointF(0, 0), project->getDimension());
-    gScene = new QGraphicsScene(this);
-    gScene->setSceneRect(drawingRect);
-    setScene(gScene);
 
     QCursor cursor = QCursor(THEME_DIR + "cursors/pencil.png", 0, 11);
     viewport()->setCursor(cursor);
@@ -68,23 +72,25 @@ void RasterCanvas::resetWorkSpaceCenter(const QSize projectSize)
         qDebug() << "RasterCanvas::resetWorkSpaceCenter()";
     #endif
 
-    int centerX = projectSize.width()/2;
-    int centerY = projectSize.height()/2;
+    int centerX = projectSize.width() / 2;
+    int centerY = projectSize.height() / 2;
 
     centerOn(QPointF(centerX, centerY));
     setSceneRect(0, 0, projectSize.width(), projectSize.height());
 }
 
+/*
 void RasterCanvas::setSize(QSize size)
 {
     myPaintCanvas->setSurfaceSize(size);
 }
+*/
 
 void RasterCanvas::setTabletDevice(QTabletEvent* event)
 {
     if (event->type() == QEvent::TabletEnterProximity) {
         tableInUse = true;
-    } else if(event->type() == QEvent::TabletLeaveProximity) {
+    } else if (event->type() == QEvent::TabletLeaveProximity) {
         tableInUse = false;
     }
 
@@ -94,6 +100,7 @@ void RasterCanvas::setTabletDevice(QTabletEvent* event)
 void RasterCanvas::onNewTile(MPSurface *surface, MPTile *tile)
 {
     Q_UNUSED(surface)
+    counter++;
     gScene->addItem(tile);
 }
 
@@ -167,6 +174,14 @@ void RasterCanvas::mouseMoveEvent(QMouseEvent *event)
 void RasterCanvas::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_UNUSED(event)
+
+    /*
+    qDebug() << "RasterCanvas::mouseReleaseEvent() - Releasing mouse...";
+    qDebug() << "Tiles Count: " << myPaintCanvas->getTilesCounter();
+    qDebug() << "Tile parts: " << counter;
+    */
+    tileSets << counter;
+    counter = 0;
     pressed = false;
 }
 
@@ -207,13 +222,25 @@ void RasterCanvas::clearCanvas()
 
 void RasterCanvas::saveToFile(QString filePath)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "RasterCanvas::saveToFile() - filePath: " << filePath;
+    #endif
+
+    /*
     QImage image = myPaintCanvas->renderImage(QSize(static_cast<int>(drawingRect.size().width()),
                                                     static_cast<int>(drawingRect.size().height())));
+    */
+
+    QImage image = myPaintCanvas->renderImage(canvasSize);
     image.save(filePath);
 }
 
 void RasterCanvas::loadFromFile(QString filePath)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "RasterCanvas::loadFromFile() - Tracing...";
+    #endif
+
     // Clear the surface
     myPaintCanvas->clearSurface();
 
@@ -272,4 +299,17 @@ void RasterCanvas::updateCursor(const QTabletEvent *event)
 bool RasterCanvas::canvasIsEmpty()
 {
     return myPaintCanvas->isEmpty();
+}
+
+void RasterCanvas::undo()
+{
+    if (!tileSets.isEmpty()) {
+        myPaintCanvas->undo(tileSets.takeLast());
+        update();
+    }
+}
+
+void RasterCanvas::redo()
+{
+    myPaintCanvas->redo();
 }

@@ -37,12 +37,23 @@ SOURCES += arraylist.c \
 QMAKE_CFLAGS += -std=c99
 QMAKE_CFLAGS += -D_XOPEN_SOURCE=600
 
+FRAMEWORK_DIR = "../../framework"
+include($$FRAMEWORK_DIR/framework.pri)
+
 macx {
     INSTALLS += target
     target.path = /lib
+
+    !include(../../../tupiglobal.pri) {
+        error("Run ./configure first!")
+    }
 }
 
 unix:!mac {
     INSTALLS += target
     target.path = /lib/raster
+
+    !include(../../../tupiglobal.pri) {
+        error("Run ./configure first!")
+    }
 }
