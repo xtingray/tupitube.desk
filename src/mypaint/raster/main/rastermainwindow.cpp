@@ -35,6 +35,11 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, T
     projectSize = project->getDimension();
     tupBg = project->getBackgroundFromScene(scene);
 
+    TCONFIG->beginGroup("Raster");
+    TCONFIG->setValue("ProjectWidth", projectSize.width());
+    TCONFIG->setValue("ProjectHeight", projectSize.height());
+    TCONFIG->sync();
+
     #ifdef TUP_DEBUG
         qDebug() << "RasterMainWindow::RasterMainWindow() - projectSize: " << projectSize;
         qDebug() << "RasterMainWindow::RasterMainWindow() - zoomFactor: " << zoomFactor;
@@ -85,23 +90,6 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, T
 
 RasterMainWindow::~RasterMainWindow()
 {
-    colorView = nullptr;
-    delete colorView;
-
-    brushesView = nullptr;
-    delete brushesView;
-
-    colorWidget = nullptr;
-    delete colorWidget;
-
-    brushesWidget = nullptr;
-    delete brushesWidget;
-
-    rasterCanvas = nullptr;
-    delete rasterCanvas;
-
-    status = nullptr;
-    delete status;
 }
 
 void RasterMainWindow::createTopResources()
@@ -229,7 +217,7 @@ void RasterMainWindow::createCentralWidget(TupProject * project, const QColor co
         rasterCanvas->loadFromFile(imgPath);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "RasterMainWindow::createCentralWidget() - Error: Image doesn't exist -> " + imgPath;
+            qDebug() << "RasterMainWindow::createCentralWidget() - Warning: Image doesn't exist -> " + imgPath;
         #endif
     }
 
@@ -251,6 +239,28 @@ void RasterMainWindow::closeEvent(QCloseEvent *event)
 
     colorView->expandDock(false);
     brushesView->expandDock(false);
+
+    rasterCanvas->resetMem();
+
+    // Cleaning memory
+    colorView = nullptr;
+    delete colorView;
+
+    brushesView = nullptr;
+    delete brushesView;
+
+    colorWidget = nullptr;
+    delete colorWidget;
+
+    brushesWidget = nullptr;
+    delete brushesWidget;
+
+    rasterCanvas = nullptr;
+    delete rasterCanvas;
+
+    status = nullptr;
+    delete status;
+    //
 
     TMainWindow::closeEvent(event);
 }

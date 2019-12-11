@@ -18,6 +18,7 @@
 */
 
 #include "mphandler.h"
+#include "tconfig.h"
 #include "mypaint-brush.h"
 #include "mypaint-surface.h"
 #include "libmypaint.c"
@@ -33,19 +34,19 @@ MPHandler* MPHandler::currentHandler = nullptr;
 
 static void onUpdatedTile(MPSurface *surface, MPTile *tile)
 {
-    MPHandler* handler = MPHandler::handler();
+    MPHandler *handler = MPHandler::handler();
     handler->requestUpdateTile(surface, tile);
 }
 
 static void onNewTile(MPSurface *surface, MPTile *tile)
 {
-    MPHandler* handler = MPHandler::handler();
+    MPHandler *handler = MPHandler::handler();
     handler->hasNewTile(surface, tile);
 }
 
 static void onClearedSurface(MPSurface *surface)
 {
-    MPHandler* handler = MPHandler::handler();
+    MPHandler *handler = MPHandler::handler();
     handler->hasClearedSurface(surface);
 }
 
@@ -61,11 +62,11 @@ MPHandler * MPHandler::handler()
 
 MPHandler::MPHandler()
 {
-    QSize defaultSize = QSize(QTMYPAINT_SURFACE_WIDTH,
-                              QTMYPAINT_SURFACE_HEIGHT);
-
+    TCONFIG->beginGroup("Raster");
+    QSize canvasSize = QSize(TCONFIG->value("ProjectWidth", QTMYPAINT_SURFACE_WIDTH).toInt(),
+                             TCONFIG->value("ProjectHeight", QTMYPAINT_SURFACE_HEIGHT).toInt());
     m_brush = new MPBrush();
-    m_surface = new MPSurface(defaultSize);
+    m_surface = new MPSurface(canvasSize);
 
     this->m_surface->setOnUpdateTile(onUpdatedTile);
     this->m_surface->setOnNewTile(onNewTile);
@@ -74,7 +75,21 @@ MPHandler::MPHandler()
 
 MPHandler::~MPHandler()
 {
+}
+
+void MPHandler::resetMem()
+{
+    instanceFlag = false;
     mypaint_surface_unref((MyPaintSurface *) m_surface);
+
+    m_brush = nullptr;
+    delete m_brush;
+
+    m_surface = nullptr;
+    delete m_surface;
+
+    currentHandler = nullptr;
+    delete currentHandler;
 }
 
 void MPHandler::requestUpdateTile(MPSurface *surface, MPTile *tile)

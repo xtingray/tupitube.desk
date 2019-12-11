@@ -132,27 +132,29 @@ QSize MPSurface::size()
 
 void MPSurface::clear()
 {
-    QHashIterator<QPoint, MPTile*> i(tilesHash);
-    while (i.hasNext()) {
-        i.next();
-        MPTile *tile = i.value();
-        if (tile) {
-            // Clear the content of the tile
-            tile->clear();
+    if (!tilesHash.isEmpty()) {
+        QHashIterator<QPoint, MPTile*> i(tilesHash);
+        while (i.hasNext()) {
+            i.next();
+            MPTile *tile = i.value();
+            if (tile) {
+                // Clear the content of the tile
+                tile->clear();
 
-            // Removes blank tile from the scene for output optimization
-            //
-            // A tile without a scene is not re-created but onNewTile is
-            // called when this tile is to be shown again.
-            QGraphicsScene* scene = tile->scene();
-            if (scene)
-                scene->removeItem(tile);
+                // Removes blank tile from the scene for output optimization
+                //
+                // A tile without a scene is not re-created but onNewTile is
+                // called when this tile is to be shown again.
+                QGraphicsScene* scene = tile->scene();
+                if (scene)
+                    scene->removeItem(tile);
+            }
         }
-    }
-    // undoHash = tilesHash;
-    tilesHash.clear();
+        // undoHash = tilesHash;
+        tilesHash.clear();
 
-    this->onClearedSurfaceFunction(this);
+        this->onClearedSurfaceFunction(this);
+    }
 }
 
 void MPSurface::loadImage(const QImage &image)
@@ -234,7 +236,7 @@ void MPSurface::resetNullTile()
 void MPSurface::resetSurface(QSize size)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "MPSurface::resetSurface() - Updating size: " << size;
+        qDebug() << "MPSurface::resetSurface() - Setting size: " << size;
     #endif
 
     width = size.width();
@@ -251,8 +253,8 @@ void MPSurface::resetSurface(QSize size)
     const size_t tile_size = tile_size_pixels * tile_size_pixels * 4 * sizeof(uint16_t);
     const size_t buffer_size = static_cast<unsigned long>(tiles_width * tiles_height) * tile_size;
 
-    assert(tile_size_pixels*tiles_width >= width);
-    assert(tile_size_pixels*tiles_height >= height);
+    assert(tile_size_pixels * tiles_width >= width);
+    assert(tile_size_pixels * tiles_height >= height);
     assert(buffer_size >= static_cast<unsigned long>(width * height * 4) * sizeof(uint16_t));
 
     uint16_t* buffer = static_cast<uint16_t *> (malloc(buffer_size));

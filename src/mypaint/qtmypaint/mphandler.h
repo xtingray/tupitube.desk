@@ -28,11 +28,11 @@
 #include "mpsurface.h"
 
 #ifndef QTMYPAINT_SURFACE_WIDTH
-#define QTMYPAINT_SURFACE_WIDTH 720
+#define QTMYPAINT_SURFACE_WIDTH 640
 #endif
 
 #ifndef QTMYPAINT_SURFACE_HEIGHT
-#define QTMYPAINT_SURFACE_HEIGHT 640
+#define QTMYPAINT_SURFACE_HEIGHT 480
 #endif
 
 class MPHandler : public QObject
@@ -71,6 +71,8 @@ class MPHandler : public QObject
         bool isEmpty();
 
         int getTilesCounter();
+
+        void resetMem();
 
         // void undo();
         // void redo();

@@ -42,8 +42,7 @@ RasterCanvas::RasterCanvas(TupProject *project, const QColor contourColor, QWidg
     setScene(gScene);
 
     myPaintCanvas = MPHandler::handler();
-    myPaintCanvas->setSurfaceSize(canvasSize);
-    // myPaintCanvas->setScene(gScene);
+    // myPaintCanvas = new MPHandler();
     myPaintCanvas->setBrushColor(contourColor);
     myPaintCanvas->clearSurface();
 
@@ -59,6 +58,17 @@ RasterCanvas::RasterCanvas(TupProject *project, const QColor contourColor, QWidg
 
 RasterCanvas::~RasterCanvas()
 {
+}
+
+void RasterCanvas::resetMem()
+{
+    myPaintCanvas->resetMem();
+
+    myPaintCanvas = nullptr;
+    delete myPaintCanvas;
+
+    gScene = nullptr;
+    delete gScene;
 }
 
 void RasterCanvas::centerDrawingArea()

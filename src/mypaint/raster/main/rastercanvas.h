@@ -46,6 +46,8 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
         void resetWorkSpaceCenter(const QSize projectSize);
         bool canvasIsEmpty();
 
+        void resetMem();
+
         /*
         void undo();
         void redo();
