@@ -1,4 +1,4 @@
-QT += core gui widgets
+QT += core gui widgets xml
 
 TEMPLATE = lib
 CONFIG += dll warn_on
@@ -6,14 +6,14 @@ CONFIG += dll warn_on
 TARGET = qtmypaint
 
 HEADERS += mpbrush.h \
-           mphandler.h \
+           mptile.h \
            mpsurface.h \
-           mptile.h
+           mphandler.h
 
 SOURCES += mpbrush.cpp \
-           mphandler.cpp \
+           mptile.cpp \
            mpsurface.cpp \
-           mptile.cpp
+           mphandler.cpp
 
 FRAMEWORK_DIR = "../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

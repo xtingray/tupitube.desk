@@ -42,7 +42,6 @@ RasterCanvas::RasterCanvas(TupProject *project, const QColor contourColor, QWidg
     setScene(gScene);
 
     myPaintCanvas = MPHandler::handler();
-    // myPaintCanvas = new MPHandler();
     myPaintCanvas->setBrushColor(contourColor);
     myPaintCanvas->clearSurface();
 

@@ -35,7 +35,7 @@
 #include "mptile.h"
 
 class MPSurface : public MyPaintTiledSurface
-{
+{    
     public:
         MPSurface(QSize size);
         ~MPSurface();

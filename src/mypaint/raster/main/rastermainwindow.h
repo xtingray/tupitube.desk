@@ -20,6 +20,7 @@
 #ifndef RASTERMAINWINDOW_H
 #define RASTERMAINWINDOW_H
 
+// #include "tglobal.h"
 #include "tmainwindow.h"
 #include "rastercanvas.h"
 #include "rasterbrusheswidget.h"
@@ -32,16 +33,22 @@
 #include <QColorDialog>
 #include <QCloseEvent>
 
-class TUPITUBE_EXPORT RasterMainWindow : public TMainWindow
+class Q_DECL_EXPORT RasterMainWindow : public TMainWindow
 {
     Q_OBJECT
 
     public:
         enum Perspective { Raster = 0x01 };
 
+        /*
         explicit RasterMainWindow(TupProject *project, const QString &winKey, TupProject::Mode context,
                                   int scene, const QColor contourColor, const QString &zoomFactor,
                                   QWidget *parent = nullptr);
+        */
+
+        RasterMainWindow(TupProject *project, const QString &winKey, TupProject::Mode context,
+                         int scene, const QColor contourColor, const QString &zoomFactor,
+                         QWidget *parent = nullptr);
         ~RasterMainWindow();
 
         void setTabletDevice(QTabletEvent *event);

@@ -37,7 +37,6 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
         RasterCanvas(TupProject *project, const QColor contourColor, QWidget *parent = nullptr);
         ~RasterCanvas();
 
-        // void setSize(QSize size);
         void setTabletDevice(QTabletEvent *event);
 
         void saveToFile(QString filePath);

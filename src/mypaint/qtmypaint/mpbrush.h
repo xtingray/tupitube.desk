@@ -19,11 +19,11 @@
 #ifndef MPBRUSH_H
 #define MPBRUSH_H
 
+#include "tglobal.h"
+#include "mypaint-brush.h"
 #include <QColor>
 
-#include "mypaint-brush.h"
-
-class MPBrush
+class MPBrush: public QObject
 {
     public:
         MPBrush();

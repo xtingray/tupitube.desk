@@ -35,12 +35,11 @@
 #define QTMYPAINT_SURFACE_HEIGHT 480
 #endif
 
-class MPHandler : public QObject
+class Q_DECL_EXPORT MPHandler : public QObject
 {
     Q_OBJECT
 
     public:
-        MPHandler();
         ~MPHandler();
 
         static MPHandler *handler();
@@ -87,6 +86,7 @@ class MPHandler : public QObject
         void clearedSurface(MPSurface *surface);
 
     private:
+        MPHandler();
         static bool instanceFlag;
         static MPHandler *currentHandler;
 
