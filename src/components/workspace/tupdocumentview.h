@@ -78,7 +78,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         ~TupDocumentView();
 
         void setWorkSpaceSize(int width, int height);
-        void closeArea();
+        void closeInterface();
         QSize sizeHint() const;
 
         TupBrushManager *brushManager() const;

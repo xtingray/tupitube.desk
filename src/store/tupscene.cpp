@@ -237,7 +237,7 @@ TupLayer *TupScene::layerAt(int position) const
     if (position < 0 || position >= layers.count()) {
         #ifdef TUP_DEBUG
             QString msg1 = "TupScene::layerAt() - FATAL ERROR: LAYERS TOTAL: " + QString::number(layers.count());
-            QString msg2 = "TupScene::layerAt() - FATAL ERROR: index out of bound -> Position: " + QString::number(position);
+            QString msg2 = "TupScene::layerAt() - FATAL ERROR: index out of bound -> " + QString::number(position);
             QString msg3 = "TupScene::layerAt() - FATAL ERROR: The layer requested doesn't exist anymore";
             #ifdef Q_OS_WIN
                 qDebug() << msg1;

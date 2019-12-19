@@ -174,6 +174,7 @@ TupDocumentView::~TupDocumentView()
         qDebug() << "~TupDocumentView()";
     #endif
 
+    /*
     if (currentTool)
         currentTool->saveConfig();
 
@@ -186,6 +187,7 @@ TupDocumentView::~TupDocumentView()
         delete configurationArea;
         configurationArea = nullptr;
     }
+    */
 }
 
 void TupDocumentView::setWorkSpaceSize(int width, int height)
@@ -812,12 +814,7 @@ void TupDocumentView::loadPlugin(int menu, int index)
             default:
                 {
                     #ifdef TUP_DEBUG
-                        QString msg = "TupDocumentView::loadPlugin() - Error: Invalid Menu Index / No plugin loaded";
-                        #ifdef Q_OS_WIN
-                            qDebug() << msg;
-                        #else
-                            tError() << msg;
-                        #endif
+                        qDebug() << "TupDocumentView::loadPlugin() - Error: Invalid Menu Index / No plugin loaded";
                     #endif
                     return;
                 }
@@ -1313,7 +1310,7 @@ void TupDocumentView::closeRasterWindow(const QString &imgPath)
     }
 }
 
-void TupDocumentView::closeArea()
+void TupDocumentView::closeInterface()
 {
     if (currentTool)
         currentTool->aboutToChangeTool();
@@ -1322,6 +1319,7 @@ void TupDocumentView::closeArea()
         configurationArea->close();
 
     paintArea->setScene(nullptr);
+
     close();
 }
 

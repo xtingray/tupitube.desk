@@ -166,7 +166,7 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
 
     private:
         TupToolPlugin *gTool;
-        TupScene *gScene;
+        TupScene *tupScene;
         TupBackground *background;
         // QPixmap dynamicPixmap;
         double gOpacity;

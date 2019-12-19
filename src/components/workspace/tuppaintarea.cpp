@@ -172,14 +172,12 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
             if (activeSelection) {
                 menu->addSeparator();
                 menu->addAction(tr("Cut"), this, SLOT(cutItems()), QKeySequence(tr("Ctrl+X")));
-                // menu->addAction(tr("Copy"), this, SLOT(copyItems()), QKeySequence(tr("Ctrl+C")));
                 menu->addAction(tr("Copy"), this, SLOT(copyItems()));
             }
 
             if (!copiesXml.isEmpty()) {
                 if (!activeSelection)
                     menu->addSeparator();
-                // menu->addAction(tr("Paste"), this, SLOT(pasteItems()), QKeySequence(tr("Ctrl+V")));
                 menu->addAction(tr("Paste"), this, SLOT(pasteItems()));
 
                 QMenu *pasteMenu = new QMenu(tr("Paste in..."));
@@ -199,7 +197,6 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
             }
 
             if (activeSelection) {
-                // menu->addAction(tr("Delete"), this, SLOT(deleteItems()), QKeySequence(Qt::Key_Delete));
                 menu->addAction(tr("Delete"), this, SLOT(deleteItems()));
                 menu->addSeparator();
                 QMenu *order = new QMenu(tr("Send"));
@@ -316,23 +313,13 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
             break;
             default:
               #ifdef TUP_DEBUG
-                  QString msg = "TupPaintArea::frameResponse() - Action not recognized -> " + QString::number(response->getAction());
-                  #ifdef Q_OS_WIN
-                      qDebug() << msg;
-                  #else
-                      tWarning() << msg;
-                  #endif
+                  qDebug() << "TupPaintArea::frameResponse() - Action not recognized -> " + QString::number(response->getAction());
               #endif
             break;
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupPaintArea::frameResponse() - isDrawing() == true! - No action taken!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tFatal() << msg;
-            #endif
+            qDebug() << "TupPaintArea::frameResponse() - isDrawing() == true! - No action taken!";
         #endif
     }
 
@@ -342,12 +329,8 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
 void TupPaintArea::layerResponse(TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupPaintArea::layerResponse() - [" + QString::number(response->getSceneIndex()) + ", " + QString::number(response->getLayerIndex()) + "]";
-        #ifdef Q_OS_WIN
-            qDebug() << msg;
-        #else
-            tDebug() << msg;
-        #endif
+        qDebug() << "TupPaintArea::layerResponse() - [" + QString::number(response->getSceneIndex()) + ", "
+                    + QString::number(response->getLayerIndex()) + "]";
     #endif
 
     TupGraphicsScene *guiScene = graphicsScene();
@@ -369,37 +352,41 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
           {
               TupScene *scene = project->sceneAt(globalSceneIndex);
 
-              if (scene->layersCount() > 1) {
-                  if (response->getLayerIndex() != 0)
-                      guiScene->setCurrentFrame(response->getLayerIndex() - 1, frameIndex);
-                  else
-                      guiScene->setCurrentFrame(response->getLayerIndex() + 1, frameIndex);
+              if (scene) {
+                  if (scene->layersCount() > 1) {
+                      if (response->getLayerIndex() != 0)
+                          guiScene->setCurrentFrame(response->getLayerIndex() - 1, frameIndex);
+                      else
+                          guiScene->setCurrentFrame(response->getLayerIndex() + 1, frameIndex);
 
-                  if (spaceMode == TupProject::FRAMES_MODE) {
-                      guiScene->drawCurrentPhotogram();
-                  } else {
-                      guiScene->cleanWorkSpace();
-                      guiScene->drawSceneBackground(frameIndex);
-                  }
-              } else {
-                  if (scene->layersCount() == 1) {
-                      guiScene->setCurrentFrame(0, frameIndex);
                       if (spaceMode == TupProject::FRAMES_MODE) {
                           guiScene->drawCurrentPhotogram();
                       } else {
                           guiScene->cleanWorkSpace();
                           guiScene->drawSceneBackground(frameIndex);
                       }
+                  } else {
+                      if (scene->layersCount() == 1) {
+                          guiScene->setCurrentFrame(0, frameIndex);
+                          if (spaceMode == TupProject::FRAMES_MODE) {
+                              guiScene->drawCurrentPhotogram();
+                          } else {
+                              guiScene->cleanWorkSpace();
+                              guiScene->drawSceneBackground(frameIndex);
+                          }
+                      }
                   }
-              }
 
-              viewport()->update();
+                  viewport()->update();
+              }
           }
         break;
         case TupProjectRequest::UpdateOpacity:
           {
               guiScene->drawCurrentPhotogram();
-              viewport()->update(scene()->sceneRect().toRect());
+
+              if (scene())
+                  viewport()->update(guiScene->sceneRect().toRect());
           }
         break;
         case TupProjectRequest::TupProjectRequest::View:
@@ -411,7 +398,8 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
                   guiScene->cleanWorkSpace();
                   guiScene->drawSceneBackground(frameIndex);
               }
-              viewport()->update(scene()->sceneRect().toRect());
+
+              viewport()->update(guiScene->sceneRect().toRect());
           }
         break;
         case TupProjectRequest::TupProjectRequest::Move:
@@ -423,7 +411,8 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
                   guiScene->cleanWorkSpace();
                   guiScene->drawSceneBackground(frameIndex);
               }
-              viewport()->update(scene()->sceneRect().toRect());
+
+              viewport()->update(guiScene->sceneRect().toRect());
           }
         break;
         default:
@@ -434,7 +423,8 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
                   guiScene->cleanWorkSpace();
                   guiScene->drawSceneBackground(frameIndex);
               }
-              viewport()->update(scene()->sceneRect().toRect());
+
+              viewport()->update(guiScene->sceneRect().toRect());
           }
           break;
     }
@@ -494,24 +484,14 @@ void TupPaintArea::sceneResponse(TupSceneResponse *event)
             default: 
               {
                   #ifdef TUP_DEBUG
-                      QString msg = "TupPaintArea::sceneResponse <- TupProjectRequest::Default";
-                      #ifdef Q_OS_WIN
-                          qDebug() << msg;
-                      #else
-                          tFatal() << msg;
-                      #endif
+                      qDebug() << "TupPaintArea::sceneResponse <- TupProjectRequest::Default";
                   #endif
               }
             break;
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupPaintArea::sceneResponse() - isDrawing() == true! - No action taken!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tFatal() << msg;
-            #endif
+            qDebug() << "TupPaintArea::sceneResponse() - isDrawing() == true! - No action taken!";
         #endif
     }
 
@@ -521,14 +501,9 @@ void TupPaintArea::sceneResponse(TupSceneResponse *event)
 void TupPaintArea::itemResponse(TupItemResponse *response)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupPaintArea::itemResponse() - [" + QString::number(response->getSceneIndex()) 
-                      + ", " + QString::number(response->getLayerIndex()) + ", " 
-                      + QString::number(response->getFrameIndex()) + "]";
-        #ifdef Q_OS_WIN
-            qDebug() << msg;
-        #else
-            tDebug() << msg;
-        #endif
+        qDebug() << "TupPaintArea::itemResponse() - [" + QString::number(response->getSceneIndex())
+                    + ", " + QString::number(response->getLayerIndex()) + ", "
+                    + QString::number(response->getFrameIndex()) + "]";
     #endif
 
     TupGraphicsScene *guiScene = graphicsScene();
@@ -552,7 +527,7 @@ void TupPaintArea::itemResponse(TupItemResponse *response)
                           guiScene->drawSceneBackground(guiScene->currentFrameIndex());
                       }
 
-                      viewport()->update(scene()->sceneRect().toRect());
+                      viewport()->update(guiScene->sceneRect().toRect());
                   } 
               }
             break;
@@ -565,13 +540,14 @@ void TupPaintArea::itemResponse(TupItemResponse *response)
             default:
               {
                   if (spaceMode == TupProject::FRAMES_MODE) {
+                      qDebug() << "*** TupPaintArea::itemResponse() - Tracing...";
                       guiScene->drawCurrentPhotogram();
                   } else {
                       guiScene->cleanWorkSpace();
                       guiScene->drawSceneBackground(guiScene->currentFrameIndex());
                   }
 
-                  viewport()->update(scene()->sceneRect().toRect());
+                  viewport()->update(guiScene->sceneRect().toRect());
 
                   if (guiScene->currentTool()->toolType() != TupToolInterface::Tweener
                       && currentTool.compare(tr("PolyLine")) != 0)
@@ -581,12 +557,7 @@ void TupPaintArea::itemResponse(TupItemResponse *response)
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupPaintArea::itemResponse() - isDrawing() == true! - No action taken!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tFatal() << msg;
-            #endif
+            qDebug() << "TupPaintArea::itemResponse() - isDrawing() == true! - No action taken!";
         #endif
     }
 
@@ -600,12 +571,7 @@ void TupPaintArea::projectResponse(TupProjectResponse *)
 void TupPaintArea::libraryResponse(TupLibraryResponse *request)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupPaintArea::libraryResponse() - Request Action: " + QString::number(request->getAction());
-        #ifdef Q_OS_WIN
-            qDebug() << msg;
-        #else
-            tDebug() << msg;
-        #endif
+        qDebug() << "TupPaintArea::libraryResponse() - Request Action: " + QString::number(request->getAction());
     #endif
 
     TupGraphicsScene *guiScene = graphicsScene();
@@ -625,7 +591,7 @@ void TupPaintArea::libraryResponse(TupLibraryResponse *request)
                       guiScene->drawSceneBackground(frameIndex);
                   }
 
-                  viewport()->update(scene()->sceneRect().toRect());
+                  viewport()->update(guiScene->sceneRect().toRect());
 
                   if (currentTool.compare(tr("Object Selection")) == 0)
                       emit itemAddedOnSelection(guiScene);
@@ -641,18 +607,13 @@ void TupPaintArea::libraryResponse(TupLibraryResponse *request)
                       guiScene->drawSceneBackground(frameIndex);
                   }
 
-                  viewport()->update(scene()->sceneRect().toRect());
+                  viewport()->update(guiScene->sceneRect().toRect());
               }
             break;
         } 
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupPaintArea::libraryResponse() - isDrawing() == true! - No action taken!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tFatal() << msg;
-            #endif
+            qDebug() << "TupPaintArea::libraryResponse() - isDrawing() == true! - No action taken!";
         #endif
     }
 }
@@ -672,11 +633,7 @@ bool TupPaintArea::canPaint() const
 void TupPaintArea::deleteItems()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea::deleteItems()]";
-        #else
-            T_FUNCINFOX("paintarea");
-        #endif
+        qDebug() << "[TupPaintArea::deleteItems()]";
     #endif
 
     if (currentTool.compare(tr("Object Selection")) != 0 && currentTool.compare(tr("Nodes Selection")) != 0)
@@ -732,22 +689,12 @@ void TupPaintArea::deleteItems()
                                  }
                              } else {
                                  #ifdef TUP_DEBUG
-                                     QString msg = "TupPaintArea::deleteItems() - Fatal Error: Background frame is NULL!";
-                                     #ifdef Q_OS_WIN
-                                         qDebug() << msg;
-                                     #else
-                                         tError() << msg;
-                                     #endif
+                                     qDebug() << "TupPaintArea::deleteItems() - Fatal Error: Background frame is NULL!";
                                  #endif
                              } 
                          } else {
                              #ifdef TUP_DEBUG
-                                 QString msg = "TupPaintArea::deleteItems() - Fatal Error: Scene has no background element!";
-                                 #ifdef Q_OS_WIN
-                                     qDebug() << msg;
-                                 #else
-                                     tError() << msg;
-                                 #endif
+                                 qDebug() << "TupPaintArea::deleteItems() - Fatal Error: Scene has no background element!";
                              #endif
                          }
                      }
@@ -760,12 +707,7 @@ void TupPaintArea::deleteItems()
                          emit requestTriggered(&event);
                      } else {
                          #ifdef TUP_DEBUG
-                             QString msg = "TupPaintArea::deleteItems() - Fatal Error: Invalid item index -> " + QString::number(itemIndex);
-                             #ifdef Q_OS_WIN
-                                 qDebug() << msg;
-                             #else
-                                 tFatal() << msg;
-                             #endif
+                             qDebug() << "TupPaintArea::deleteItems() - Fatal Error: Invalid item index -> " + QString::number(itemIndex);
                          #endif
                      }
 
@@ -801,11 +743,7 @@ void TupPaintArea::ungroupItems()
 void TupPaintArea::copyItems()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea::copyItems()]";
-        #else
-            T_FUNCINFOX("paintarea");
-        #endif
+        qDebug() << "[TupPaintArea::copyItems()]";
     #endif
 
     QList<QGraphicsItem *> selected = scene()->selectedItems();
@@ -874,11 +812,7 @@ void TupPaintArea::copyItems()
 void TupPaintArea::pasteItems()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea::pasteItems()]";
-        #else
-            T_FUNCINFOX("paintarea");
-        #endif
+        qDebug() << "[TupPaintArea::pasteItems()]";
     #endif
 
     if (!copiesXml.isEmpty()) {
@@ -908,12 +842,7 @@ void TupPaintArea::pasteItems()
                 emit requestTriggered(&event);
             } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupPaintArea::pasteItems() - Fatal Error: Frame is NULL!";
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "TupPaintArea::pasteItems() - Fatal Error: Frame is NULL!";
                 #endif
             }
         }
@@ -926,11 +855,7 @@ void TupPaintArea::pasteItems()
 void TupPaintArea::multipasteObject(int pasteTotal)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea::multipasteObject()]";
-        #else
-            T_FUNCINFOX("paintarea");
-        #endif
+        qDebug() << "[TupPaintArea::multipasteObject()]";
     #endif
 
     TupGraphicsScene* currentScene = graphicsScene();
@@ -1027,11 +952,7 @@ void TupPaintArea::pasteNextHundred()
 void TupPaintArea::cutItems()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea::cutItems()]";
-        #else
-            T_FUNCINFOX("paintarea");
-        #endif
+        qDebug() << "[TupPaintArea::cutItems()]";
     #endif
 
     copyItems();
@@ -1041,11 +962,7 @@ void TupPaintArea::cutItems()
 void TupPaintArea::setNextFramesOnionSkinCount(int n)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea::setNextFramesOnionSkinCount()]";
-        #else
-            T_FUNCINFOX("paintarea");
-        #endif
+        qDebug() << "[TupPaintArea::setNextFramesOnionSkinCount()]";
     #endif
 
     if (TupGraphicsScene* currentScene = graphicsScene())
@@ -1055,11 +972,7 @@ void TupPaintArea::setNextFramesOnionSkinCount(int n)
 void TupPaintArea::setPreviousFramesOnionSkinCount(int n)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea::setPreviousFramesOnionSkinCount()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupPaintArea::setPreviousFramesOnionSkinCount()]";
     #endif
 
     if (TupGraphicsScene* currentScene = graphicsScene())
@@ -1069,11 +982,7 @@ void TupPaintArea::setPreviousFramesOnionSkinCount(int n)
 void TupPaintArea::addSelectedItemsToLibrary()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea::addSelectedItemsToLibrary()]";
-        #else
-            tDebug("paintarea") << "TupPaintArea::addSelectedItemsToLibrary()";
-        #endif
+        qDebug() << "[TupPaintArea::addSelectedItemsToLibrary()]";
     #endif
 
     QList<QGraphicsItem *> selected = scene()->selectedItems();
@@ -1106,11 +1015,7 @@ void TupPaintArea::addSelectedItemsToLibrary()
 void TupPaintArea::requestItemMovement(QAction *action)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea::requestItemMovement()]";
-        #else
-            T_FUNCINFOX("paintarea");
-        #endif
+        qDebug() << "[TupPaintArea::requestItemMovement()]";
     #endif
 
     QList<QGraphicsItem *> selected = scene()->selectedItems();
@@ -1147,22 +1052,12 @@ void TupPaintArea::requestItemMovement(QAction *action)
                      emit requestTriggered(&event);
                  } else {
                      #ifdef TUP_DEBUG
-                         QString msg = "TupPaintArea::requestItemMovement() - Fatal error: Invalid action [ " + QString::number(moveType) + " ]";
-                         #ifdef Q_OS_WIN
-                             qDebug() << msg;
-                         #else
-                             tError() << msg;
-                         #endif
+                         qDebug() << "TupPaintArea::requestItemMovement() - Fatal error: Invalid action [ " + QString::number(moveType) + " ]";
                      #endif
                  }
              } else {
                  #ifdef TUP_DEBUG
-                     QString msg = "TupPaintArea::requestItemMovement() - Fatal error: Invalid object index [ " + QString::number(index) + " ]";
-                     #ifdef Q_OS_WIN
-                         qDebug() << msg;
-                     #else
-                         tError() << msg;
-                     #endif
+                     qDebug() << "TupPaintArea::requestItemMovement() - Fatal error: Invalid object index [ " + QString::number(index) + " ]";
                  #endif
              }
     }
@@ -1185,11 +1080,7 @@ void TupPaintArea::updatePaintArea()
 void TupPaintArea::paintBackground()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea::paintBackground()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupPaintArea::paintBackground()]";
     #endif
 
     TupGraphicsScene* currentScene = graphicsScene();
@@ -1200,13 +1091,8 @@ void TupPaintArea::paintBackground()
 void TupPaintArea::setCurrentTool(QString tool) 
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea::setCurrentTool()]";
-            qDebug() << "SHOW_VAR : " << tool;
-        #else
-            T_FUNCINFO;
-            SHOW_VAR(tool)
-        #endif
+        qDebug() << "[TupPaintArea::setCurrentTool()]";
+        qDebug() << "SHOW_VAR : " << tool;
     #endif
 
     currentTool = tool;
@@ -1216,11 +1102,7 @@ void TupPaintArea::setCurrentTool(QString tool)
 void TupPaintArea::updateSpaceContext()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea::updateSpaceContext()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupPaintArea::updateSpaceContext()]";
     #endif
 
     TupGraphicsScene* currentScene = graphicsScene();
@@ -1422,11 +1304,7 @@ void TupPaintArea::pasteCurrentFrame()
 void TupPaintArea::copyFrameForward()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupPaintArea::copyFrameForward()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupPaintArea::copyFrameForward()]";
     #endif
 
     TupGraphicsScene *gScene = graphicsScene();
@@ -1446,11 +1324,6 @@ void TupPaintArea::removeCurrentFrame()
     if (ask) {
         TOptionalDialog dialog(tr("Do you want to remove this frame?"), tr("Confirmation"), this);
         dialog.setModal(true);
-        // QDesktopWidget desktop;
-        /*
-        dialog.move(static_cast<int> ((desktop.screenGeometry().width() - dialog.sizeHint().width())/2),
-                    static_cast<int> ((desktop.screenGeometry().height() - dialog.sizeHint().height())/2));
-        */
 
         QScreen *screen = QGuiApplication::screens().at(0);
         dialog.move(static_cast<int> ((screen->geometry().width() - dialog.sizeHint().width()) / 2),

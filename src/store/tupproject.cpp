@@ -94,6 +94,7 @@ void TupProject::clear()
     for (int i=0; i<scenesList.count(); i++) {
          TupScene *scene = scenesList.takeAt(i);
          scene->clear();
+
          scene = nullptr;
          delete scene;
     }

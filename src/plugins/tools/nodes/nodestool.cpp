@@ -271,11 +271,7 @@ TupFrame* NodesTool::getCurrentFrame()
 void NodesTool::itemResponse(const TupItemResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[NodesTool::itemResponse()]";
-        #else
-            T_FUNCINFOX("NodesTool");
-        #endif
+        qDebug() << "[NodesTool::itemResponse()]";
     #endif
 
     QGraphicsItem *item = nullptr;
@@ -297,12 +293,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
                      nodeGroup = new TNodeGroup(item, scene, TNodeGroup::LineSelection, baseZValue);
                  } else {
                      #ifdef TUP_DEBUG
-                         QString msg = "NodesTool::itemResponse() - Fatal Error: No item was found";
-                         #ifdef Q_OS_WIN
-                             qDebug() << msg;
-                         #else
-                             tError() << msg;
-                         #endif
+                         qDebug() << "NodesTool::itemResponse() - Fatal Error: No item was found";
                      #endif
                  }
             }
@@ -324,12 +315,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
                      }
                  } else {
                      #ifdef TUP_DEBUG
-                         QString msg = "NodesTool::itemResponse() - Fatal Error: No item was found";
-                         #ifdef Q_OS_WIN
-                             qDebug() << msg;
-                         #else
-                             tError() << msg;
-                         #endif
+                         qDebug() << "NodesTool::itemResponse() - Fatal Error: No item was found";
                      #endif
                  }
             }
@@ -348,12 +334,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
                      nodeGroup->resizeNodes(realFactor);
                  } else {
                      #ifdef TUP_DEBUG
-                         QString msg = "NodesTool::itemResponse() - Fatal error: No item was found";
-                         #ifdef Q_OS_WIN
-                             qDebug() << msg;
-                         #else
-                             tError() << msg;
-                         #endif
+                         qDebug() << "NodesTool::itemResponse() - Fatal error: No item was found";
                      #endif
                  }
 

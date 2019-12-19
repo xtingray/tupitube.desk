@@ -175,6 +175,7 @@ TupMainWindow::~TupMainWindow()
 void TupMainWindow::createNewLocalProject()
 {
     #ifdef TUP_DEBUG
+        qDebug() << "---";
         qDebug() << "TupMainWindow::createNewLocalProject()";
     #endif
 
@@ -474,8 +475,6 @@ void TupMainWindow::resetUI()
         qDebug() << "TupMainWindow::resetUI()";
     #endif
 
-    setCurrentTab(0);
-
     disconnect(exposureView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkTimeLineVisibility(bool)));
     disconnect(timeView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkExposureVisibility(bool)));
 
@@ -491,28 +490,28 @@ void TupMainWindow::resetUI()
     updateOpenRecentMenu(m_recentProjectsMenu, m_recentProjects);
 
     if (animationTab)
-        animationTab->closeArea();
+        animationTab->closeInterface();
 
     removeAllWidgets();
 
-    if (internetOn) { 
-        newsTab = nullptr;
+    if (internetOn) {
         delete newsTab;
+        newsTab = nullptr;
     }
 
     if (playerTab) {
-        playerTab = nullptr;
         delete playerTab;
+        playerTab = nullptr;
     }
 
     if (animationTab) {
-        animationTab = nullptr;
         delete animationTab;
+        animationTab = nullptr;
     }
 
     if (exportWidget) {
+        delete exportWidget;
         exportWidget = nullptr;
-        delete exportWidget; 
     }
 
     m_exposureSheet->closeAllScenes();
@@ -526,7 +525,7 @@ void TupMainWindow::resetUI()
     setUpdatesEnabled(true);
     setWindowTitle(appTitle);
 
-    if (isNetworked) { 
+    if (isNetworked) {
         m_viewChat->expandDock(false);
         // netProjectManager->closeProject();
     }

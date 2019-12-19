@@ -97,6 +97,8 @@ TupPaintAreaBase::TupPaintAreaBase(QWidget *parent, QSize dimension, TupLibrary 
 
 TupPaintAreaBase::~TupPaintAreaBase()
 {
+    gScene = nullptr;
+    delete gScene;
 }
 
 void TupPaintAreaBase::setBgColor(const QColor color)
@@ -125,7 +127,8 @@ void TupPaintAreaBase::drawActionSafeArea(bool draw)
 
 void TupPaintAreaBase::setTool(TupToolPlugin *tool)
 {
-    if (!scene()) {
+    // if (!scene()) {
+    if (!gScene) {
         #ifdef TUP_DEBUG
             qDebug() << "TupPaintAreaBase::setTool() - Fatal Error: No scene available";
         #endif
