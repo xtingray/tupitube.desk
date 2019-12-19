@@ -495,17 +495,28 @@ void TupLibraryFolder::loadItem(const QString &folder, QDomNode xml)
         case TupLibraryObject::Svg:
         case TupLibraryObject::Item:
         {
-            object->loadDataFromPath(project->getDataDir());
+            if (!object->loadDataFromPath(project->getDataDir())) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "TupLibraryFolder::loadItem() - Graphic object not found -> " << object->getSymbolName();
+                #endif
+                return;
+            }
         }
         break;
         case TupLibraryObject::Sound:
         {
-            object->loadDataFromPath(project->getDataDir());
-            if (object->isSoundEffect()) {
-                QPair<int, QString> soundRecord;
-                soundRecord.first = object->frameToPlay();
-                soundRecord.second = object->getDataPath();
-                soundRecords << soundRecord;
+            if (object->loadDataFromPath(project->getDataDir())) {
+                if (object->isSoundEffect()) {
+                    QPair<int, QString> soundRecord;
+                    soundRecord.first = object->frameToPlay();
+                    soundRecord.second = object->getDataPath();
+                    soundRecords << soundRecord;
+                }
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "TupLibraryFolder::loadItem() - Sound object not found -> " << object->getSymbolName();
+                #endif
+                return;
             }
         }
         break;

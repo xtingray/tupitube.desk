@@ -60,8 +60,6 @@ TupGraphicsScene::TupGraphicsScene() : QGraphicsScene()
     #endif
 
     loadingProject = true;
-    // dynamicBg = new QGraphicsPixmapItem;
-
     setItemIndexMethod(QGraphicsScene::NoIndex);
 
     framePosition.layer = -1;
@@ -89,8 +87,8 @@ TupGraphicsScene::~TupGraphicsScene()
     // SQA: Check if these instructions are actually required
     foreach (QGraphicsItem *item, items()) {
         removeItem(item);
-        delete item;
         item = nullptr;
+        delete item;
     }
 }
 
@@ -424,7 +422,7 @@ void TupGraphicsScene::drawRasterDynamicBgOnMovement(int photogram)
 
         #ifdef TUP_DEBUG
             qDebug() << "TupGraphicsScene::drawRasterDynamicBgOnMovement() - Adding RASTER DYNAMIC image! "
-                        "/ photogram: " << photogram;
+                        "- photogram -> " << photogram;
         #endif
 
         rasterDynamicBg = new QGraphicsPixmapItem(background->rasterDynamicView(photogram));
@@ -1609,7 +1607,6 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
             }
         }
     } else {
-        // TupBackground *bg = gScene->sceneBackground();
         if (background) {
             TupFrame *frame = new TupFrame;
             if (spaceContext == TupProject::VECTOR_STATIC_BG_MODE) {

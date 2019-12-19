@@ -174,7 +174,6 @@ TupDocumentView::~TupDocumentView()
         qDebug() << "~TupDocumentView()";
     #endif
 
-    /*
     if (currentTool)
         currentTool->saveConfig();
 
@@ -187,7 +186,6 @@ TupDocumentView::~TupDocumentView()
         delete configurationArea;
         configurationArea = nullptr;
     }
-    */
 }
 
 void TupDocumentView::setWorkSpaceSize(int width, int height)
@@ -1319,7 +1317,6 @@ void TupDocumentView::closeInterface()
         configurationArea->close();
 
     paintArea->setScene(nullptr);
-
     close();
 }
 

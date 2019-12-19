@@ -415,12 +415,7 @@ bool TupLibraryObject::loadRawData(const QByteArray &data)
 bool TupLibraryObject::loadDataFromPath(const QString &dataDir)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "TupLibraryObject::loadDataFromPath()";
-        #else
-            T_FUNCINFO;
-            tWarning() << "Object path: " << dataDir;
-        #endif
+        qDebug() << "TupLibraryObject::loadDataFromPath() - dataDir -> " << dataDir;
     #endif
 
     QString path = "";
@@ -451,9 +446,9 @@ bool TupLibraryObject::loadDataFromPath(const QString &dataDir)
     }
 
     dataPath = dataDir + path + dataPath;
-    loadData(dataPath);
-    
-    return true;
+    return loadData(dataPath);
+
+    // return true;
 }
 
 bool TupLibraryObject::loadData(const QString &path)
