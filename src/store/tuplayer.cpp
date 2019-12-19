@@ -490,19 +490,21 @@ int TupLayer::framesCount() const
 void TupLayer::addTweenObject(TupGraphicObject *object)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-           qDebug() << "[TupLayer::addTweenObject()]";
-        #else
-           T_FUNCINFO;
-        #endif
+       qDebug() << "[TupLayer::addTweenObject()]";
     #endif
 
-    tweeningGraphicObjects << object;
+    if (!tweeningGraphicObjects.contains(object))
+        tweeningGraphicObjects << object;
 }
 
 void TupLayer::addTweenObject(TupSvgItem *object)
 {
-    tweeningSvgObjects << object;
+    #ifdef TUP_DEBUG
+       qDebug() << "[TupLayer::addTweenObject()]";
+    #endif
+
+    if (!tweeningSvgObjects.contains(object))
+        tweeningSvgObjects << object;
 }
 
 void TupLayer::updateTweenObject(int index, TupGraphicObject *object)

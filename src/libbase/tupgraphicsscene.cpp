@@ -647,7 +647,6 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double 
          object = tweenList.at(i);
          int origin = object->frameIndex();
 
-         // SQA: The objects containing tweens are duplicated. Issue pending for fix.
          QList<TupItemTweener *> list = object->tweensList(); 
          foreach(TupItemTweener *tween, list) {
              int adjustX = static_cast<int> (object->item()->boundingRect().width()) / 2;
@@ -656,6 +655,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double 
              if (origin == photogram) {
                  #ifdef TUP_DEBUG
                      qWarning() << "Tween: " <<  tween->getTweenName();
+                     qWarning() << "Type: " << tween->getType();
                      qWarning() << "Adding FIRST tween transformation - photogram -> " << QString::number(photogram);
                  #endif
 
