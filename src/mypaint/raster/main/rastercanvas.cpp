@@ -32,7 +32,6 @@ RasterCanvas::RasterCanvas(TupProject *project, const QColor contourColor, QWidg
     setBgColor(project->getBgColor());
     tableInUse = false;
     spaceBar = false;
-    // counter = 0;
 
     // Set scene
     canvasSize = project->getDimension();
@@ -109,7 +108,6 @@ void RasterCanvas::setTabletDevice(QTabletEvent* event)
 void RasterCanvas::onNewTile(MPSurface *surface, MPTile *tile)
 {
     Q_UNUSED(surface)
-    // counter++;
     gScene->addItem(tile);
 }
 
@@ -236,11 +234,6 @@ void RasterCanvas::saveToFile(QString filePath)
     #ifdef TUP_DEBUG
         qDebug() << "RasterCanvas::saveToFile() - filePath: " << filePath;
     #endif
-
-    /*
-    QImage image = myPaintCanvas->renderImage(QSize(static_cast<int>(drawingRect.size().width()),
-                                                    static_cast<int>(drawingRect.size().height())));
-    */
 
     QImage image = myPaintCanvas->renderImage(canvasSize);
     image.save(filePath);

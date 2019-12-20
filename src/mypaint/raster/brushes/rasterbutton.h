@@ -53,6 +53,7 @@ class TUPITUBE_EXPORT RasterButton : public QPushButton
         void setState(bool isSelected);
         bool isSelected();
         int getIndex();
+        QString & getLabel();
 
     protected:
         void mousePressEvent(QMouseEvent *event);
@@ -63,6 +64,7 @@ class TUPITUBE_EXPORT RasterButton : public QPushButton
     private:
         int index;
         bool selected;
+        QString label;
 };
 
 #endif

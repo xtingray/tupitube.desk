@@ -41,7 +41,8 @@
 RasterButton::RasterButton(int pos, const QString &title): selected(false)
 {
     index = pos;
-    setText(title);
+    label = title;
+    setText(" " + title);
 }
 
 RasterButton::~RasterButton()
@@ -69,4 +70,9 @@ bool RasterButton::isSelected()
 int RasterButton::getIndex()
 {
     return index;
+}
+
+QString & RasterButton::getLabel()
+{
+    return label;
 }

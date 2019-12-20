@@ -53,6 +53,7 @@ class TUPITUBE_EXPORT RasterBrushesWidget : public TupModuleWidgetBase
         RasterBrushesWidget(const QString &brushLibPath, QWidget *parent = nullptr);
         ~RasterBrushesWidget();
 
+        void loadInitSettings();
         bool isValid() { return !brushLib.isEmpty(); }
 
     public slots:
@@ -73,6 +74,10 @@ class TUPITUBE_EXPORT RasterBrushesWidget : public TupModuleWidgetBase
     private:
         QStackedWidget * stackedWidget;
         QList<RasterButton *> buttonsList;
+        QList<QListWidget*> brushesSet;
+
+        int groupIndex;
+        int brushIndex;
 };
 
 #endif

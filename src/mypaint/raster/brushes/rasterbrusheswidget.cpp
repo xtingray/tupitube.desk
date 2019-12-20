@@ -47,8 +47,16 @@
 RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *parent):
                                          TupModuleWidgetBase(parent), brushesPath(brushLibPath)
 {
+    #ifdef TUP_DEBUG
+       qDebug() << "[RasterBrushesWidget()]";
+    #endif
+
     setWindowTitle(tr("Brush Properties"));
     setWindowIcon(QIcon(THEME_DIR + "icons/brush.png"));
+
+    TCONFIG->beginGroup("Raster");
+    groupIndex = TCONFIG->value("BrushGroup", 0).toInt();
+    brushIndex = TCONFIG->value("BrushIndex", 0).toInt();
 
     QGroupBox *groupBox = new QGroupBox();
     QVBoxLayout *buttonsLayout = new QVBoxLayout(groupBox);
@@ -106,7 +114,6 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
             brushLib.insert(currentGroup, brushesGroup);
 
         // Now we create a QListWidget (displaying icons) for each stringList
-        int index = 0;
         foreach (const QString &caption, brushLib.keys()) {
             const QStringList subList = brushLib.value(caption);
             if (subList.isEmpty())
@@ -123,28 +130,50 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
             brushesList->setIconSize(QSize(ICON_SZ, ICON_SZ));
             connect(brushesList, SIGNAL(itemClicked(QListWidgetItem*)), SLOT(itemClicked(QListWidgetItem*)));
 
-            RasterButton *button = new RasterButton(index, caption);
-            button->setCheckable(true);
-            buttonsList << button;
-            buttonsLayout->addWidget(button);
-            connect(button, SIGNAL(buttonClicked(int)), this, SLOT(updateBrushesPanel(int)));
-            if (index == 0)
-                button->setChecked(true);
-            index++;
+            int index = -1;
+            QString iconPath = "";
+            if (caption.compare(tr("Art Set 1")) == 0) {
+                index = 0;
+                iconPath = THEME_DIR + "icons/art1.png";
+            } else if (caption.compare(tr("Art Set 2")) == 0) {
+                index = 1;
+                iconPath = THEME_DIR + "icons/art2.png";
+            } else if (caption.compare(tr("Art Set 3")) == 0) {
+                index = 2;
+                iconPath = THEME_DIR + "icons/art3.png";
+            } else if (caption.compare(tr("Classic")) == 0) {
+                index = 3;
+                iconPath = THEME_DIR + "icons/classic.png";
+            } else if (caption.compare(tr("Experimental")) == 0) {
+                index = 4;
+                iconPath = THEME_DIR + "icons/experimental.png";
+            } else if (caption.compare(tr("Erasers")) == 0) {
+                index = 5;
+                iconPath = THEME_DIR + "icons/eraser.png";
+            }
 
-            // Add this ListWidget to the QStackedWidget:
-            stackedWidget->addWidget(brushesList);
+            RasterButton *button = new RasterButton(index, caption);
+            button->setIcon(QIcon(iconPath));
+            button->setCheckable(true);
+            connect(button, SIGNAL(buttonClicked(int)), this, SLOT(updateBrushesPanel(int)));
+            buttonsList.insert(index, button);
+
             // Populate the ListWidget with brushes (and their preview):
             for (int n = 0; n < subList.count(); n++) {
                 QString name(subList[n]);
                 QIcon preview(brushesPath + QDir::separator() + name + BRUSH_PREVIEW_EXT);
                 // no need to show the name as it is already visible in preview
                 QListWidgetItem* item = new QListWidgetItem(preview, QString(), brushesList, n);
-                // item->setIconSize(QSize(128,128));
                 item->setToolTip(QString("%1 in \"%2\".").arg(name).arg(caption));
             }
+            brushesSet.insert(index, brushesList);
         }
-        // for now, no brush is selected. Expecting some order from owner...
+
+        for (int i=0; i<buttonsList.size(); i++) {
+            buttonsLayout->addWidget(buttonsList.at(i));
+            // Add this ListWidget to the QStackedWidget:
+            stackedWidget->addWidget(brushesSet.at(i));
+        }
     }
 
     addChild(groupBox);
@@ -156,6 +185,20 @@ RasterBrushesWidget::~RasterBrushesWidget()
     #ifdef TUP_DEBUG
        qDebug() << "~RasterBrushesWidget()";
     #endif
+}
+
+void RasterBrushesWidget::loadInitSettings()
+{
+    // Setting latest parameters
+    buttonsList.at(groupIndex)->setChecked(true);
+    stackedWidget->setCurrentIndex(groupIndex);
+    const QStringList subList = brushLib.value(buttonsList.at(groupIndex)->getLabel());
+
+    qDebug() << "--> List Size: " << subList.size();
+    qDebug() << "--> Group Index: " << groupIndex;
+    qDebug() << "--> Brush Index: " << brushIndex;
+
+    selectBrush(subList.at(brushIndex));
 }
 
 void RasterBrushesWidget::itemClicked(QListWidgetItem *item)
@@ -171,10 +214,16 @@ void RasterBrushesWidget::itemClicked(QListWidgetItem *item)
             else
                 caption = stackedWidget->widget(index)->windowTitle();
         }
-        // fine, let's read this one and emit the content to any receiver:
+
         const QStringList subList = brushLib.value(caption);
+
+        // fine, let's read this one and emit the content to any receiver:
         QFile file(brushesPath + QDir::separator() + subList.at(item->type()) + BRUSH_CONTENT_EXT);
         if (file.open(QIODevice::ReadOnly)) {
+            TCONFIG->beginGroup("Raster");
+            TCONFIG->setValue("BrushIndex", item->type());
+            TCONFIG->sync();
+
             QByteArray content = file.readAll();
             content.append(static_cast<char>(0));
             emit brushSelected(content); // Read the whole file and broadcast is as a char* buffer
@@ -219,8 +268,13 @@ void RasterBrushesWidget::selectBrush(QString brushName)
 
 void RasterBrushesWidget::updateBrushesPanel(int index)
 {
-    if (stackedWidget->currentIndex() != index) {
+    if (groupIndex != index) {
+        groupIndex = index;
         stackedWidget->setCurrentIndex(index);
+        TCONFIG->beginGroup("Raster");
+        TCONFIG->setValue("BrushGroup", index);
+        TCONFIG->sync();
+
         foreach(RasterButton *button, buttonsList) {
             if (button->getIndex() != index) {
                 button->setState(false);

@@ -72,20 +72,10 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, T
     connect(rasterCanvas, SIGNAL(rotated(int)), status, SLOT(updateRotationAngle(int)));
     setStatusBar(status);
 
-    /*
-    // Add a docked widget
-    QDockWidget* dockBrush = new QDockWidget(tr("Brush Library"));
-    brushesSelector = new RasterBrushSelector(RASTER_DIR + "brushes", nullptr);
-    dockBrush->setWidget(brushesSelector);
-    addDockWidget(Qt::LeftDockWidgetArea, dockBrush);
-
-    connect(brushesSelector, SIGNAL(brushSelected(const QByteArray&)),
-            rasterCanvas, SLOT(loadBrush(const QByteArray&)));
-    */
-
     status->setZoomPercent(zoomFactor);
-
     tabletIsActive = false;
+
+    brushesWidget->loadInitSettings();
 }
 
 RasterMainWindow::~RasterMainWindow()
