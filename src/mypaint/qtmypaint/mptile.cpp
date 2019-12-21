@@ -18,6 +18,7 @@
 */
 
 #include "mptile.h"
+#include <QDebug>
 
 MPTile::MPTile(QGraphicsItem * parent) : QGraphicsItem(parent), m_cache_img(k_tile_dim, k_tile_dim, QImage::Format_ARGB32_Premultiplied)
 {
@@ -38,14 +39,6 @@ QRectF MPTile::boundingRect() const
 {
     return m_cache_img.rect();
 }
-
-/*
-    bool MPTile::contains(const QPointF & point) const
-    {
-      // opaque if alpha > 16
-      return qAlpha(m_cache_img.pixel(point.toPoint())) > 0x10;
-    }
-*/
 
 QPainterPath MPTile::shape() const
 {
@@ -121,7 +114,44 @@ void MPTile::setImage(const QImage &image)
 
 void MPTile::clear()
 {
+    undoList << m_cache_img.copy();
     memset(t_pixels, 0, sizeof(t_pixels)); // Tile is transparent
     m_cache_img.fill(QColor(Qt::transparent)); // image cache is transparent too, and aligned to the pixel table:
     m_cache_valid = true;
+}
+
+void MPTile::store()
+{
+    undoList << m_cache_img.copy();
+}
+
+void MPTile::undo()
+{
+    if (!undoList.isEmpty()) {
+       if (undoList.size() == 1) {
+           redoList << undoList.takeLast();
+           m_cache_img.fill(QColor(Qt::transparent));
+       } else {
+           redoList << undoList.takeLast();
+           m_cache_img = undoList.last();
+       }
+       setImage(m_cache_img);
+    } else {
+       #ifdef TUP_DEBUG
+           qDebug() << "MPSurface::undo() - No items to undo!";
+       #endif
+    }
+}
+
+void MPTile::redo()
+{
+    if (!redoList.isEmpty()) {
+       undoList << redoList.takeLast();
+       m_cache_img = undoList.last();
+       setImage(m_cache_img);
+    } else {
+       #ifdef TUP_DEBUG
+           qDebug() << "MPSurface::redo() - No items to redo!";
+       #endif
+    }
 }

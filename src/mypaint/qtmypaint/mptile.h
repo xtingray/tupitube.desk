@@ -37,7 +37,6 @@ class MPTile : public QGraphicsItem
         QImage image();
 
         virtual QRectF boundingRect() const;
-        // virtual bool contains(const QPointF & point) const;
         virtual QPainterPath shape() const;
         virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
@@ -47,10 +46,16 @@ class MPTile : public QGraphicsItem
         void clear();
         void setImage(const QImage &image);
 
+        void store();
+        void undo();
+        void redo();
+
     private:
-        uint16_t  t_pixels [k_tile_dim][k_tile_dim][4];
-        QImage    m_cache_img;
-        bool      m_cache_valid;
+        uint16_t t_pixels [k_tile_dim][k_tile_dim][4];
+        QImage m_cache_img;
+        QList<QImage> undoList;
+        QList<QImage> redoList;
+        bool m_cache_valid;
 };
 
 #endif // TILE_H

@@ -73,9 +73,9 @@ class Q_DECL_EXPORT MPHandler : public QObject
 
         void resetMem();
 
-        // void undo();
-        // void redo();
-        // void saveScreen();
+        void undo();
+        void redo();
+        void saveTiles();
 
     public slots:
         void loadBrush(const QByteArray &content);

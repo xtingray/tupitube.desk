@@ -47,11 +47,6 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
 
         void resetMem();
 
-        /*
-        void undo();
-        void redo();
-        */
-
     protected:
         virtual void tabletEvent(QTabletEvent *event);
         virtual void mouseMoveEvent(QMouseEvent *event);
@@ -65,6 +60,8 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
         void zoomOut();
 
     public slots:
+        void undo();
+        void redo();
         void updateBrushColor(const QColor color);
         void clearCanvas();
 
@@ -87,7 +84,7 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
         bool tableInUse;
         MPHandler *myPaintCanvas;
 
-        // int counter;
+        int counter;
         // QList<int> tileSets;
         QSize canvasSize;
 };

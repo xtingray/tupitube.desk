@@ -32,6 +32,7 @@ RasterCanvas::RasterCanvas(TupProject *project, const QColor contourColor, QWidg
     setBgColor(project->getBgColor());
     tableInUse = false;
     spaceBar = false;
+    counter = 0;
 
     // Set scene
     canvasSize = project->getDimension();
@@ -108,6 +109,7 @@ void RasterCanvas::setTabletDevice(QTabletEvent* event)
 void RasterCanvas::onNewTile(MPSurface *surface, MPTile *tile)
 {
     Q_UNUSED(surface)
+    counter++;
     gScene->addItem(tile);
 }
 
@@ -182,14 +184,12 @@ void RasterCanvas::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_UNUSED(event)
 
-    /*
     qDebug() << "RasterCanvas::mouseReleaseEvent() - Releasing mouse...";
     qDebug() << "Tiles Count: " << myPaintCanvas->getTilesCounter();
     qDebug() << "Tile parts: " << counter;
-    myPaintCanvas->saveScreen();
-    tileSets << counter;
+    myPaintCanvas->saveTiles();
+    // tileSets << counter;
     counter = 0;
-    */
 
     pressed = false;
 }
@@ -305,7 +305,6 @@ bool RasterCanvas::canvasIsEmpty()
     return myPaintCanvas->isEmpty();
 }
 
-/*
 void RasterCanvas::undo()
 {
     myPaintCanvas->undo();
@@ -315,4 +314,3 @@ void RasterCanvas::redo()
 {
     myPaintCanvas->redo();
 }
-*/

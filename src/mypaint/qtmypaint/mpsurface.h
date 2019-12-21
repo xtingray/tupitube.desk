@@ -37,6 +37,7 @@
 class MPSurface : public MyPaintTiledSurface
 {    
     public:
+        enum Action { Undo, Redo};
         MPSurface(QSize size);
         ~MPSurface();
 
@@ -79,9 +80,9 @@ class MPSurface : public MyPaintTiledSurface
         void loadImage(const QImage &image);
         bool isEmpty();
 
-        // void undo();
-        // void redo();
-        // void saveScreen();
+        void undo();
+        void redo();
+        void saveTiles();
 
     protected:
         QHash<QPoint, MPTile*> tilesHash;
@@ -95,8 +96,9 @@ class MPSurface : public MyPaintTiledSurface
     private:
         void resetNullTile();
         void resetSurface(QSize size);
-        std::string key;
+        void handleCanvas(Action action);
 
+        std::string key;
         int tiles_width; // width in tiles
         int tiles_height; // height in tiles
         int width; // width in pixels

@@ -191,7 +191,11 @@ int MPHandler::getTilesCounter()
     return m_surface->getTilesCount();
 }
 
-/*
+void MPHandler::saveTiles()
+{
+    m_surface->saveTiles();
+}
+
 void MPHandler::undo()
 {
     m_surface->undo();
@@ -202,6 +206,7 @@ void MPHandler::redo()
     m_surface->redo();
 }
 
+/*
 void MPHandler::saveScreen()
 {
     m_surface->saveScreen();

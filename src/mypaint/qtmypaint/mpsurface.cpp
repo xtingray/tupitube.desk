@@ -58,6 +58,7 @@ static void onTileRequestStart(MyPaintTiledSurface *tiled_surface, MyPaintTileRe
 
 static void onTileRequestEnd(MyPaintTiledSurface *tiled_surface, MyPaintTileRequest *request)
 {
+    qDebug() << "XXXX - onTileRequestEnd() - Tracing...";
     MPSurface *self = (MPSurface *) tiled_surface;
 
     const int tx = request->tx;
@@ -141,6 +142,7 @@ void MPSurface::clear()
                 // Clear the content of the tile
                 tile->clear();
 
+                /*
                 // Removes blank tile from the scene for output optimization
                 //
                 // A tile without a scene is not re-created but onNewTile is
@@ -148,10 +150,13 @@ void MPSurface::clear()
                 QGraphicsScene* scene = tile->scene();
                 if (scene)
                     scene->removeItem(tile);
+                */
             }
         }
-        // undoHash = tilesHash;
+        /*
+        undoHash = tilesHash;
         tilesHash.clear();
+        */
 
         this->onClearedSurfaceFunction(this);
     }
@@ -334,19 +339,50 @@ int MPSurface::getTilesCount()
     return tilesHash.count();
 }
 
-/*
+void MPSurface::handleCanvas(Action action)
+{
+    QHashIterator<QPoint, MPTile*> i(tilesHash);
+    while (i.hasNext()) {
+        i.next();
+        MPTile *tile = i.value();
+        if (tile) {
+            // qDebug() << "*** Processing tile...";
+            // Restore the content of the tile
+            if (action == Undo)
+                tile->undo();
+            else
+                tile->redo();
+            this->onUpdateTileFunction(this, tile);
+        }
+    }
+}
+
 void MPSurface::undo()
 {
-    // qDebug() << "MPSurface::undo() - items: " << items;
+    qDebug() << "";
+    qDebug() << "MPSurface::undo() - Tracing...";
+    handleCanvas(Undo);
+    qDebug() << "";
 }
 
 void MPSurface::redo()
 {
-    // qDebug() << "MPSurface::redo() - Tracing...";
+    qDebug() << "MPSurface::redo() - Tracing...";
+    handleCanvas(Redo);
 }
 
-void MPSurface::saveScreen()
+void MPSurface::saveTiles()
 {
-    screens << tilesHash;
+    qDebug() << "MPSurface::saveTile() - STOP!";
+    qDebug() << "";
+    QHashIterator<QPoint, MPTile*> i(tilesHash);
+    while (i.hasNext()) {
+        i.next();
+        MPTile *tile = i.value();
+        if (tile) {
+            // qDebug() << "*** Processing tile...";
+            // Store the content of the tile
+            tile->store();
+        }
+    }
 }
-*/

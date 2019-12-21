@@ -110,33 +110,28 @@ void RasterMainWindow::createCentralWidget(TupProject * project, const QColor co
     topBar = new QToolBar(tr("Raster actions"), this);
     topBar->setIconSize(QSize(16, 16));
 
-    QPushButton *clearButton = new QPushButton(QIcon(THEME_DIR + "icons/new.png"), "", this);
-    clearButton->setToolTip(tr("Clear Canvas"));
-    clearButton->setShortcut(Qt::Key_Backspace);
-    connect(clearButton, SIGNAL(clicked()), rasterCanvas, SLOT(clearCanvas()));
+    QAction *clearCanvas = new QAction(QIcon(THEME_DIR + "icons/new.png"), tr("Clear Canvas"), this);
+    clearCanvas->setIconVisibleInMenu(true);
+    clearCanvas->setShortcut(Qt::Key_Backspace);
+    connect(clearCanvas, SIGNAL(triggered()), rasterCanvas, SLOT(clearCanvas()));
 
-    /*
     QAction *undo = new QAction(QIcon(THEME_DIR + "icons/undo.png"), tr("Undo"), this);
     undo->setIconVisibleInMenu(true);
-    undo->setShortcut(QKeySequence(tr("Ctrl+Z")));
-    connect(undo, SIGNAL(triggered()), this, SLOT(undo()));
+    // undo->setShortcut(QKeySequence(tr("Ctrl+Z")));
+    connect(undo, SIGNAL(triggered()), rasterCanvas, SLOT(undo()));
 
     QAction *redo = new QAction(QIcon(THEME_DIR + "icons/redo.png"), tr("Redo"), this);
     redo->setIconVisibleInMenu(true);
-    redo->setShortcut(QKeySequence(tr("Ctrl+Y")));
-    connect(redo, SIGNAL(triggered()), this, SLOT(redo()));
+    // redo->setShortcut(QKeySequence(tr("Ctrl+Y")));
+    connect(redo, SIGNAL(triggered()), rasterCanvas, SLOT(redo()));
 
     QWidget *cEmpty0 = new QWidget();
     cEmpty0->setFixedWidth(5);
-    */
 
-    topBar->addWidget(clearButton);
-
-    /*
+    topBar->addAction(clearCanvas);
     topBar->addWidget(cEmpty0);
     topBar->addAction(undo);
     topBar->addAction(redo);
-    */
 
     QString imgPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/";
     if (spaceContext == TupProject::RASTER_STATIC_BG_MODE) {
