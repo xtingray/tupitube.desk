@@ -17,6 +17,7 @@
     along with QTMyPaint. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "tapplication.h"
 #include "rastermainwindow.h"
 #include "tapplicationproperties.h"
 
@@ -106,6 +107,7 @@ void RasterMainWindow::createCentralWidget(TupProject * project, const QColor co
     connect(rasterCanvas, SIGNAL(closeWindow()), this, SLOT(saveCanvas()));
     connect(rasterCanvas, SIGNAL(zoomIn()), this, SLOT(applyZoomIn()));
     connect(rasterCanvas, SIGNAL(zoomOut()), this, SLOT(applyZoomOut()));
+    connect(rasterCanvas, SIGNAL(rasterStrokeMade()), this, SIGNAL(rasterStrokeMade()));
 
     topBar = new QToolBar(tr("Raster actions"), this);
     topBar->setIconSize(QSize(16, 16));
@@ -115,23 +117,23 @@ void RasterMainWindow::createCentralWidget(TupProject * project, const QColor co
     clearCanvas->setShortcut(Qt::Key_Backspace);
     connect(clearCanvas, SIGNAL(triggered()), rasterCanvas, SLOT(clearCanvas()));
 
+    /*
     QAction *undo = new QAction(QIcon(THEME_DIR + "icons/undo.png"), tr("Undo"), this);
     undo->setIconVisibleInMenu(true);
-    // undo->setShortcut(QKeySequence(tr("Ctrl+Z")));
     connect(undo, SIGNAL(triggered()), rasterCanvas, SLOT(undo()));
 
     QAction *redo = new QAction(QIcon(THEME_DIR + "icons/redo.png"), tr("Redo"), this);
     redo->setIconVisibleInMenu(true);
-    // redo->setShortcut(QKeySequence(tr("Ctrl+Y")));
     connect(redo, SIGNAL(triggered()), rasterCanvas, SLOT(redo()));
+    */
 
     QWidget *cEmpty0 = new QWidget();
     cEmpty0->setFixedWidth(5);
 
     topBar->addAction(clearCanvas);
     topBar->addWidget(cEmpty0);
-    topBar->addAction(undo);
-    topBar->addAction(redo);
+    topBar->addAction(kApp->findGlobalAction("undo"));
+    topBar->addAction(kApp->findGlobalAction("redo"));
 
     QString imgPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/";
     if (spaceContext == TupProject::RASTER_STATIC_BG_MODE) {
@@ -405,14 +407,12 @@ void RasterMainWindow::updateBackgroundShiftProperty(int shift)
     tupBg->setRasterDynamicShift(shift);
 }
 
-/*
-void RasterMainWindow::undo()
+void RasterMainWindow::undoRasterItem()
 {
     rasterCanvas->undo();
 }
 
-void RasterMainWindow::redo()
+void RasterMainWindow::redoRasterItem()
 {
     rasterCanvas->redo();
 }
-*/

@@ -1049,8 +1049,22 @@ bool TupDocumentView::handleProjectResponse(TupProjectResponse *response)
     if (TupFrameResponse *frameResponse = static_cast<TupFrameResponse *>(response)) {
         switch (frameResponse->getAction()) {
             case TupProjectRequest::Add:
+            {
                 if (cameraMode)
                     QApplication::restoreOverrideCursor();
+            }
+            break;
+            case TupProjectRequest::AddRasterItem:
+            {
+                if (rasterWindow) {
+                    if ( response->getMode() == TupProjectResponse::Undo)
+                        rasterWindow->undoRasterItem();
+
+                    if (response->getMode() == TupProjectResponse::Redo)
+                        rasterWindow->redoRasterItem();
+                }
+            }
+            break;
         }
     }
 
@@ -1279,6 +1293,7 @@ void TupDocumentView::openRasterMode()
     connect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString &)));
     connect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
             this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
+    connect(rasterWindow, SIGNAL(rasterStrokeMade()), this, SLOT(recordRasterStroke()));
 
     rasterWindowOn = true;
     rasterWindow->showFullScreen();
@@ -1294,6 +1309,7 @@ void TupDocumentView::closeRasterWindow(const QString &imgPath)
         disconnect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString &)));
         disconnect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
                    this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
+        disconnect(rasterWindow, SIGNAL(rasterStrokeMade()), this, SLOT(recordRasterStroke()));
 
         project->updateRasterBackground(spaceContext(), currentSceneIndex(), imgPath);
         paintArea->updatePaintArea();
@@ -1542,7 +1558,8 @@ void TupDocumentView::updateBgColor(const QColor color)
        paintArea->setBgColor(color);
        emit bgColorChanged(color);
    } else {
-       TupProjectRequest event = TupRequestBuilder::createSceneRequest(currentSceneIndex(), TupProjectRequest::BgColor, color.name());
+       TupProjectRequest event = TupRequestBuilder::createSceneRequest(currentSceneIndex(), TupProjectRequest::BgColor,
+                                                                       color.name());
        emit requestTriggered(&event);
    }
 }
@@ -2305,4 +2322,12 @@ void TupDocumentView::setFillTool(TColorCell::FillType type)
             }
         }
     }
+}
+
+void TupDocumentView::recordRasterStroke()
+{
+    TupProjectRequest request = TupRequestBuilder::createItemRequest(-1, -1, -1, 0, QPoint(), spaceContext(),
+                                                                     TupLibraryObject::Item,
+                                                                     TupProjectRequest::AddRasterItem, "");
+    emit requestTriggered(&request);
 }

@@ -115,7 +115,12 @@ class TUPITUBE_EXPORT TupProjectRequest
             AddLipSync = 31,
             UpdateLipSync = 32,
             RemoveLipSync = 33,
-            UpdateOpacity = 34 
+            UpdateOpacity = 34,
+
+            // Raster
+            AddRasterItem,
+            RemoveRasterItem,
+            ClearRasterCanvas
         };
         
         enum Part

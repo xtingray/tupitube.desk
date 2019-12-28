@@ -87,12 +87,6 @@ class MPSurface : public MyPaintTiledSurface
     protected:
         QHash<QPoint, MPTile*> tilesHash;
 
-        // QList<QHash<QPoint, MPTile*>> screens;
-        // QList<QHash<QPoint, MPTile*>> undoScreens;
-        // QList<QPoint> tileIndexes;
-        // QList<MPTile*> undoList;
-        // QHash<QPoint, MPTile*> undoHash;
-
     private:
         void resetNullTile();
         void resetSurface(QSize size);

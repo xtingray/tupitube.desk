@@ -20,7 +20,6 @@
 #ifndef RASTERMAINWINDOW_H
 #define RASTERMAINWINDOW_H
 
-// #include "tglobal.h"
 #include "tmainwindow.h"
 #include "rastercanvas.h"
 #include "rasterbrusheswidget.h"
@@ -52,6 +51,8 @@ class Q_DECL_EXPORT RasterMainWindow : public TMainWindow
         ~RasterMainWindow();
 
         void setTabletDevice(QTabletEvent *event);
+        void undoRasterItem();
+        void redoRasterItem();
 
     public slots:
         void openProject();
@@ -70,12 +71,11 @@ class Q_DECL_EXPORT RasterMainWindow : public TMainWindow
     private slots:
         void setBackgroundDirection(int direction);
         void updateBackgroundShiftProperty(int shift);
-        // void undo();
-        // void redo();
 
     signals:
          void paintAreaEventTriggered(const TupPaintAreaEvent *event);
          void closeWindow(const QString &path);
+         void rasterStrokeMade();
 
     protected:
         void closeEvent(QCloseEvent *event);

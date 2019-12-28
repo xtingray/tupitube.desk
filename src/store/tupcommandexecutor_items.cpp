@@ -1143,3 +1143,10 @@ bool TupCommandExecutor::setPen(TupItemResponse *response)
 
     return false;
 }
+
+
+bool TupCommandExecutor::createRasterPath(TupItemResponse *response)
+{
+    emit responsed(response);
+    return true;
+}

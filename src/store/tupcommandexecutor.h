@@ -66,6 +66,7 @@ class TUPITUBE_EXPORT TupCommandExecutor : public QObject
         // bool restoreFrameSelection(TupFrameResponse *response);
         
         bool createItem(TupItemResponse *response);
+        bool createRasterPath(TupItemResponse *response);
 
         bool updateLipSync(TupLayerResponse *response);
         

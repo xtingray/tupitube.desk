@@ -205,10 +205,3 @@ void MPHandler::redo()
 {
     m_surface->redo();
 }
-
-/*
-void MPHandler::saveScreen()
-{
-    m_surface->saveScreen();
-}
-*/

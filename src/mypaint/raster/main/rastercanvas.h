@@ -58,6 +58,7 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
         void closeWindow();
         void zoomIn();
         void zoomOut();
+        void rasterStrokeMade();
 
     public slots:
         void undo();
@@ -84,8 +85,7 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
         bool tableInUse;
         MPHandler *myPaintCanvas;
 
-        int counter;
-        // QList<int> tileSets;
+        // int counter;
         QSize canvasSize;
 };
 

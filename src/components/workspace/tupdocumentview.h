@@ -167,6 +167,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void updatePaintArea();
         void updateActiveDock(TupDocumentView::DockType currentDock);
         void setAntialiasing(bool useIt);
+        void recordRasterStroke();
 
     signals:
         void requestTriggered(const TupProjectRequest *event);
