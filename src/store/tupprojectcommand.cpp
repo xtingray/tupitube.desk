@@ -619,7 +619,12 @@ void TupProjectCommand::itemCommand()
                  executor->createRasterPath(res);
             }
             break;
-            default: 
+            case TupProjectRequest::ClearRasterCanvas:
+            {
+                 executor->clearRasterCanvas(res);
+            }
+            break;
+            default:
             {
                  #ifdef TUP_DEBUG
                      qDebug() << "TupProjectCommand::itemCommand() - Error: Unknown project response";

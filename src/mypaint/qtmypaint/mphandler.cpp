@@ -171,7 +171,7 @@ float MPHandler::getBrushValue(MyPaintBrushSetting setting)
     return this->m_brush->getValue(setting);
 }
 
-void MPHandler::setBrushColor(QColor newColor)
+void MPHandler::setBrushColor(const QColor newColor)
 {
     this->m_brush->setColor(newColor);
 }

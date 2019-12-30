@@ -115,7 +115,7 @@ void RasterMainWindow::createCentralWidget(TupProject * project, const QColor co
     QAction *clearCanvas = new QAction(QIcon(THEME_DIR + "icons/new.png"), tr("Clear Canvas"), this);
     clearCanvas->setIconVisibleInMenu(true);
     clearCanvas->setShortcut(Qt::Key_Backspace);
-    connect(clearCanvas, SIGNAL(triggered()), rasterCanvas, SLOT(clearCanvas()));
+    connect(clearCanvas, SIGNAL(triggered()), this, SLOT(clearCanvas()));
 
     /*
     QAction *undo = new QAction(QIcon(THEME_DIR + "icons/undo.png"), tr("Undo"), this);
@@ -413,6 +413,22 @@ void RasterMainWindow::undoRasterItem()
 }
 
 void RasterMainWindow::redoRasterItem()
+{
+    rasterCanvas->redo();
+}
+
+void RasterMainWindow::clearCanvas()
+{
+    rasterCanvas->clearCanvas();
+    emit canvasCleared();
+}
+
+void RasterMainWindow::undoClearRasterAction()
+{
+    rasterCanvas->undo();
+}
+
+void RasterMainWindow::redoClearRasterAction()
 {
     rasterCanvas->redo();
 }

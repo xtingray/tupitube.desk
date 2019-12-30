@@ -1065,6 +1065,16 @@ bool TupDocumentView::handleProjectResponse(TupProjectResponse *response)
                 }
             }
             break;
+            case TupProjectRequest::ClearRasterCanvas:
+            {
+                if (rasterWindow) {
+                    if ( response->getMode() == TupProjectResponse::Undo)
+                        rasterWindow->undoClearRasterAction();
+
+                    if (response->getMode() == TupProjectResponse::Redo)
+                        rasterWindow->redoClearRasterAction();
+                }
+            }
         }
     }
 
@@ -1293,7 +1303,8 @@ void TupDocumentView::openRasterMode()
     connect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString &)));
     connect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
             this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
-    connect(rasterWindow, SIGNAL(rasterStrokeMade()), this, SLOT(recordRasterStroke()));
+    connect(rasterWindow, SIGNAL(rasterStrokeMade()), this, SLOT(requestRasterStroke()));
+    connect(rasterWindow, SIGNAL(canvasCleared()), this, SLOT(requestClearRasterCanvas()));
 
     rasterWindowOn = true;
     rasterWindow->showFullScreen();
@@ -1309,7 +1320,8 @@ void TupDocumentView::closeRasterWindow(const QString &imgPath)
         disconnect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString &)));
         disconnect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
                    this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
-        disconnect(rasterWindow, SIGNAL(rasterStrokeMade()), this, SLOT(recordRasterStroke()));
+        disconnect(rasterWindow, SIGNAL(rasterStrokeMade()), this, SLOT(requestRasterStroke()));
+        disconnect(rasterWindow, SIGNAL(canvasCleared()), this, SLOT(requestClearRasterCanvas()));
 
         project->updateRasterBackground(spaceContext(), currentSceneIndex(), imgPath);
         paintArea->updatePaintArea();
@@ -2324,10 +2336,18 @@ void TupDocumentView::setFillTool(TColorCell::FillType type)
     }
 }
 
-void TupDocumentView::recordRasterStroke()
+void TupDocumentView::requestRasterStroke()
 {
     TupProjectRequest request = TupRequestBuilder::createItemRequest(-1, -1, -1, 0, QPoint(), spaceContext(),
                                                                      TupLibraryObject::Item,
                                                                      TupProjectRequest::AddRasterItem, "");
+    emit requestTriggered(&request);
+}
+
+void TupDocumentView::requestClearRasterCanvas()
+{
+    TupProjectRequest request = TupRequestBuilder::createItemRequest(-1, -1, -1, 0, QPoint(), spaceContext(),
+                                                                     TupLibraryObject::Item,
+                                                                     TupProjectRequest::ClearRasterCanvas, "");
     emit requestTriggered(&request);
 }

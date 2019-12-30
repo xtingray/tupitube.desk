@@ -53,7 +53,7 @@ class Q_DECL_EXPORT MPHandler : public QObject
 
         float getBrushValue(MyPaintBrushSetting setting);
 
-        void setBrushColor(QColor newColor);
+        void setBrushColor(const QColor newColor);
         void setBrushValue(MyPaintBrushSetting setting, float value);
 
         void requestUpdateTile(MPSurface *surface, MPTile *tile);

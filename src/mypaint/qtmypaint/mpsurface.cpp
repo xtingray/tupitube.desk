@@ -58,7 +58,6 @@ static void onTileRequestStart(MyPaintTiledSurface *tiled_surface, MyPaintTileRe
 
 static void onTileRequestEnd(MyPaintTiledSurface *tiled_surface, MyPaintTileRequest *request)
 {
-    qDebug() << "XXXX - onTileRequestEnd() - Tracing...";
     MPSurface *self = (MPSurface *) tiled_surface;
 
     const int tx = request->tx;
@@ -325,6 +324,10 @@ int MPSurface::getTilesCount()
 
 void MPSurface::handleCanvas(Action action)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "MPSurface::handleCanvas() - Tracing action -> " << action;
+    #endif
+
     QHashIterator<QPoint, MPTile*> i(tilesHash);
     while (i.hasNext()) {
         i.next();

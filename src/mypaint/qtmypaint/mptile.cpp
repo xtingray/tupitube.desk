@@ -114,7 +114,8 @@ void MPTile::setImage(const QImage &image)
 
 void MPTile::clear()
 {
-    undoList << m_cache_img.copy();
+    redoList << m_cache_img.copy();
+
     memset(t_pixels, 0, sizeof(t_pixels)); // Tile is transparent
     m_cache_img.fill(QColor(Qt::transparent)); // image cache is transparent too, and aligned to the pixel table:
     m_cache_valid = true;

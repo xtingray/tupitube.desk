@@ -53,11 +53,14 @@ class Q_DECL_EXPORT RasterMainWindow : public TMainWindow
         void setTabletDevice(QTabletEvent *event);
         void undoRasterItem();
         void redoRasterItem();
+        void undoClearRasterAction();
+        void redoClearRasterAction();
 
     public slots:
         void openProject();
         void exportImage();
         void saveCanvas();
+        void clearCanvas();
         void processColorEvent(const TupPaintAreaEvent *);
 
         void resetWorkSpaceTransformations();
@@ -76,6 +79,7 @@ class Q_DECL_EXPORT RasterMainWindow : public TMainWindow
          void paintAreaEventTriggered(const TupPaintAreaEvent *event);
          void closeWindow(const QString &path);
          void rasterStrokeMade();
+         void canvasCleared();
 
     protected:
         void closeEvent(QCloseEvent *event);

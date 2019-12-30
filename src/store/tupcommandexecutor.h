@@ -67,6 +67,7 @@ class TUPITUBE_EXPORT TupCommandExecutor : public QObject
         
         bool createItem(TupItemResponse *response);
         bool createRasterPath(TupItemResponse *response);
+        bool clearRasterCanvas(TupItemResponse *response);
 
         bool updateLipSync(TupLayerResponse *response);
         
