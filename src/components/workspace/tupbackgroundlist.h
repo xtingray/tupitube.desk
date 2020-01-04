@@ -1,14 +1,14 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                 *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
  *   2010:                                                                 *
- *    Gustavo Gonzalez / xtingray                                          *
+ *    Gustavo Gonzalez                                                     *
  *                                                                         *
- *   KTooN's versions:                                                     * 
+ *   KTooN's versions:                                                     *
  *                                                                         *
  *   2006:                                                                 *
  *    David Cuadrado                                                       *
@@ -33,33 +33,28 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPTHEMEPREFERENCES_H
-#define TUPTHEMEPREFERENCES_H
+#ifndef TUPBACKGROUNDLIST_H
+#define TUPBACKGROUNDLIST_H
 
 #include "tglobal.h"
-#include "tcolorbutton.h"
-#include "tconfig.h"
+#include <QListWidget>
 
-#include <QRadioButton>
+class TupListItemDelegate;
 
-class TUPITUBE_EXPORT TupThemePreferences : public QWidget
+class TUPITUBE_EXPORT TupListItem : public QListWidgetItem
+{
+    public:
+        TupListItem();
+        ~TupListItem();
+};
+
+class TUPITUBE_EXPORT TupBackgroundList: public QListWidget
 {
     Q_OBJECT
 
     public:
-        TupThemePreferences(QWidget *parent = nullptr);
-        ~TupThemePreferences();
-
-        void saveValues();        
-
-    private slots:
-        void showRestartMsg(bool enabled);
-        
-    private:
-        void setupPage();
-
-        QRadioButton *lightTheme;
-        QRadioButton *darkTheme;
+        TupBackgroundList(QWidget *parent = nullptr);
+        ~TupBackgroundList();
 };
 
-#endif
+#endif // TUPBACKGROUNDITEM_H

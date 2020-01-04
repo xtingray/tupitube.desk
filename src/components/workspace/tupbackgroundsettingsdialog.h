@@ -1,12 +1,12 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                 *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
  *   2010:                                                                 *
- *    Gustavo Gonzalez / xtingray                                          *
+ *    Gustavo Gonzalez                                                     *
  *                                                                         *
  *   KTooN's versions:                                                     * 
  *                                                                         *
@@ -33,33 +33,24 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPTHEMEPREFERENCES_H
-#define TUPTHEMEPREFERENCES_H
+#ifndef TUPBACKGROUNDSETTINGSDIALOG_H
+#define TUPBACKGROUNDSETTINGSDIALOG_H
 
 #include "tglobal.h"
-#include "tcolorbutton.h"
-#include "tconfig.h"
+#include "tapplicationproperties.h"
 
-#include <QRadioButton>
+#include <QDialog>
 
-class TUPITUBE_EXPORT TupThemePreferences : public QWidget
+class TUPITUBE_EXPORT TupBackgroundSettingsDialog : public QDialog
 {
     Q_OBJECT
 
     public:
-        TupThemePreferences(QWidget *parent = nullptr);
-        ~TupThemePreferences();
-
-        void saveValues();        
+        TupBackgroundSettingsDialog(QWidget *parent = nullptr);
+        ~TupBackgroundSettingsDialog();
 
     private slots:
-        void showRestartMsg(bool enabled);
-        
-    private:
-        void setupPage();
-
-        QRadioButton *lightTheme;
-        QRadioButton *darkTheme;
+        void apply();
 };
 
 #endif

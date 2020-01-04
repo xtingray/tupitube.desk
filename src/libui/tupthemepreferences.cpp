@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tupthemepreferences.h"
+#include "tosd.h"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -77,10 +78,15 @@ void TupThemePreferences::setupPage()
     else
         darkTheme->setChecked(true);
 
+    connect(lightTheme, SIGNAL(clicked(bool)), this, SLOT(showRestartMsg(bool)));
+    connect(darkTheme, SIGNAL(clicked(bool)), this, SLOT(showRestartMsg(bool)));
+
     pageLayout->addSpacing(15);
 
+    /*
     QLabel *noteLabel = new QLabel(tr("Note: You must restart TupiTube to apply theme changes"));
     pageLayout->addWidget(noteLabel);
+    */
 
     widget->setLayout(pageLayout);
     layout->addWidget(widget);
@@ -97,4 +103,10 @@ void TupThemePreferences::saveValues()
         TCONFIG->setValue("Theme", "Dark");
 
     TCONFIG->sync();
+}
+
+void TupThemePreferences::showRestartMsg(bool enabled)
+{
+    if (enabled)
+        TOsd::self()->display(tr("Warning"), tr("Please restart TupiTube"), TOsd::Warning);
 }

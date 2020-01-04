@@ -36,8 +36,7 @@
 #include "tactionmanager.h"
 
 /**
- * Construye un manejador de acciones.
- * @param parent widget que contine el manejador de acciones
+ * Create an actions manager
  */
 TActionManager::TActionManager(QObject *parent) : QObject(parent)
 {
@@ -52,12 +51,17 @@ TActionManager::~TActionManager()
 }
 
 /**
- * Inserta una accion al manejador
- * @param action accion para adicionar 
- * @return 
+ * Inserts an action within the manager
  */
 bool TActionManager::insert(QAction *action, const QString &_id, const QString &container)
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "TActionManager::insert() - _id -> " << _id;
+        qDebug() << "TActionManager::insert() - container -> " << container;
+    #endif
+    */
+
     QString id = _id.toLower();
     if (id.isEmpty() || container.isEmpty())
         return false;
@@ -65,12 +69,7 @@ bool TActionManager::insert(QAction *action, const QString &_id, const QString &
     QAction *a = (m_actionContainer[container])[id];
     if (a == action) {
         #ifdef TUP_DEBUG
-            QString msg = "TActionManager::insert() - Fatal Error: Cannot insert action with id -> " + id;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TActionManager::insert() - Fatal Error: Cannot insert action with id -> " + id;
         #endif
 
         return false;
@@ -83,8 +82,7 @@ bool TActionManager::insert(QAction *action, const QString &_id, const QString &
 }
 
 /**
- * Remueve una accion del manejador
- * @param action para remover
+ * Removes an action from the manager
  */
 void TActionManager::remove(QAction* action, const QString &container)
 {
@@ -98,25 +96,25 @@ void TActionManager::remove(QAction* action, const QString &container)
  */
 QAction *TActionManager::take(QAction* action, const QString &container)
 {
-    QAction *a = 0;
+    QAction *actionItem = nullptr;
     QString id = m_actionContainer[container].key(action);
 
     if (! container.isEmpty()) {
         if (m_actionContainer[container].contains(id))
-            a = m_actionContainer[container].take(id);
+            actionItem = m_actionContainer[container].take(id);
     } else {
         foreach (QString key, m_actionContainer.keys()) {
             if (m_actionContainer[key].contains(id)) {
-                a = m_actionContainer[key].take(id);
+                actionItem = m_actionContainer[key].take(id);
                 break;
             }
         }
     }
 
-    if (!a || a != action)
-        return 0;
+    if (!actionItem || actionItem != action)
+        return nullptr;
 
-    return a;
+    return actionItem;
 }
 
 /**
@@ -126,7 +124,7 @@ QAction *TActionManager::take(QAction* action, const QString &container)
  */
 QAction *TActionManager::find(const QString &_id, const QString &container) const
 {
-    QAction *action = 0;
+    QAction *action = nullptr;
     QString id = _id.toLower();
 
     if (!container.isEmpty()) {
@@ -141,14 +139,9 @@ QAction *TActionManager::find(const QString &_id, const QString &container) cons
         }
     }
 
-    if (action == 0) {
+    if (action == nullptr) {
         #ifdef TUP_DEBUG
-            QString msg = "TActionManager::find() - Fatal Error: Returning NULL action: " + id + " in " + container;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TActionManager::find() - Fatal Error: Returning NULL action: " << id << " in " << container;
         #endif
     }
 
@@ -211,9 +204,9 @@ QMenu *TActionManager::setupMenu(QMenu *menu, const QString &container, bool cle
     if (clear)
         menu->clear();
 
-    foreach (QAction *a, m_actionContainer[container]) {
-       if (a)
-           menu->addAction(a);
+    foreach (QAction *action, m_actionContainer[container]) {
+       if (action)
+           menu->addAction(action);
     }
 
     return menu;

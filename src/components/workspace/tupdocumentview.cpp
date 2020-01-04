@@ -58,6 +58,7 @@
 #include "tcolorcell.h"
 #include "tosd.h"
 #include "tupfilterinterface.h"
+#include "tupbackgroundsettingsdialog.h"
 
 #include <QDir>
 #include <QApplication>
@@ -320,6 +321,9 @@ void TupDocumentView::showPos(const QPointF &point)
 
 void TupDocumentView::setupDrawActions()
 {
+    new TAction(QPixmap(THEME_DIR + "icons/background_settings.png"), tr("Background Settings"), QKeySequence(),
+                this, SLOT(showBackgroundSettings()), actionManager, "background_settings");
+
     new TAction(QPixmap(THEME_DIR + "icons/copy.png"), tr("Copy"), QKeySequence(), 
                 paintArea, SLOT(copyItems()), actionManager, "copy");
 
@@ -1129,6 +1133,8 @@ void TupDocumentView::createToolBar()
 
     addToolBar(barGrid);
 
+    barGrid->addAction(actionManager->find("background_settings"));
+
     spaceModeCombo = new QComboBox();
     spaceModeCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Frames Mode"));
     spaceModeCombo->addItem(QIcon(THEME_DIR + "icons/static_background_mode.png"), tr("Vector Static BG Mode"));
@@ -1139,6 +1145,8 @@ void TupDocumentView::createToolBar()
     connect(spaceModeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setSpaceContext()));
     setSpaceContext();
     barGrid->addWidget(spaceModeCombo);
+
+    barGrid->addSeparator();
 
     barGrid->addAction(kApp->findGlobalAction("undo"));
     barGrid->addAction(kApp->findGlobalAction("redo"));
@@ -1200,9 +1208,9 @@ void TupDocumentView::createToolBar()
     sEmpty2->setFixedWidth(5);
 
     QLabel *staticOpacityLabel = new QLabel();
-    QPixmap staticPix(THEME_DIR + "icons/bg_opacity.png");
+    // QPixmap staticPix(THEME_DIR + "icons/bg_opacity.png");
     staticOpacityLabel->setToolTip(tr("Static BG Opacity"));
-    staticOpacityLabel->setPixmap(staticPix);
+    staticOpacityLabel->setPixmap(QPixmap(THEME_DIR + "icons/bg_opacity.png"));
 
     QDoubleSpinBox *staticOpacityBox = new QDoubleSpinBox(this);
     staticOpacityBox->setRange(0.1, 1.0);
@@ -1292,6 +1300,12 @@ void TupDocumentView::createToolBar()
 
     addToolBar(staticPropertiesBar);
     addToolBar(dynamicPropertiesBar);
+}
+
+void TupDocumentView::showBackgroundSettings()
+{
+    TupBackgroundSettingsDialog *dialog = new TupBackgroundSettingsDialog(this);
+    dialog->show();
 }
 
 void TupDocumentView::openRasterMode()

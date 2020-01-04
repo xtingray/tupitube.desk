@@ -2370,9 +2370,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="8"
-     inkscape:cx="32.439652"
-     inkscape:cy="378.357"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="269.71499"
+     inkscape:cy="642.654"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -4675,8 +4675,8 @@
        id="g9112"
        transform="translate(327.6312,-453.34293)"
        inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/layer.png"
-       inkscape:export-xdpi="56.48"
-       inkscape:export-ydpi="56.48">
+       inkscape:export-xdpi="72.300003"
+       inkscape:export-ydpi="72.300003">
       <path
          inkscape:export-ydpi="487.24844"
          inkscape:export-xdpi="487.24844"
@@ -10631,17 +10631,17 @@
        d="m 310.6875,439.83093 c -4.68808,0 -16.5,3.81192 -16.5,8.5 0,4.68808 11.81192,8.46875 16.5,8.46875 4.68808,0 16.5,-3.78067 16.5,-8.46875 l 0,-0.0625 c -0.0349,-4.66312 -11.83675,-8.4375 -16.5,-8.4375 z m 0,3.40625 c 2.79486,0 5.0728,2.23647 5.09375,5.03125 l 0,0.0625 c 0,2.80973 -2.28402,5.0625 -5.09375,5.0625 -2.80973,0 -5.09375,-2.25277 -5.09375,-5.0625 0,-2.80973 2.28402,-5.09375 5.09375,-5.09375 z"
        id="path6273-5-9"
        inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/show_hide_all_layers.png"
-       inkscape:export-xdpi="35.48"
-       inkscape:export-ydpi="35.48"
+       inkscape:export-xdpi="37.82"
+       inkscape:export-ydpi="37.82"
        inkscape:connector-curvature="0" />
     <path
        inkscape:connector-curvature="0"
-       style="fill:#ff0000;fill-opacity:0.50869565;stroke:none"
+       style="fill:#787878;fill-opacity:1;stroke:none"
        d="m 354.36799,439.46363 c -4.68808,0 -16.5,3.81192 -16.5,8.5 0,4.68808 11.81192,8.46875 16.5,8.46875 4.68808,0 16.5,-3.78067 16.5,-8.46875 l 0,-0.0625 c -0.0349,-4.66312 -11.83675,-8.4375 -16.5,-8.4375 z m 0,3.40625 c 2.79486,0 5.0728,2.23647 5.09375,5.03125 l 0,0.0625 c 0,2.80973 -2.28402,5.0625 -5.09375,5.0625 -2.80973,0 -5.09375,-2.25277 -5.09375,-5.0625 0,-2.80973 2.28402,-5.09375 5.09375,-5.09375 z"
        id="path6273-5-9-1"
        inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/hide_layer.png"
-       inkscape:export-xdpi="35.48"
-       inkscape:export-ydpi="35.48" />
+       inkscape:export-xdpi="37.82"
+       inkscape:export-ydpi="37.82" />
     <g
        id="g4651"
        inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/reset_workspace.png"

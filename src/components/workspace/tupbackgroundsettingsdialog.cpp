@@ -1,12 +1,12 @@
-/***************************************************************************
- *   Project TUPITUBE DESK                                                 *
+﻿/***************************************************************************
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
  *   2010:                                                                 *
- *    Gustavo Gonzalez / xtingray                                          *
+ *    Gustavo Gonzalez                                                     *
  *                                                                         *
  *   KTooN's versions:                                                     * 
  *                                                                         *
@@ -33,33 +33,60 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPTHEMEPREFERENCES_H
-#define TUPTHEMEPREFERENCES_H
+#include "tupbackgroundsettingsdialog.h"
+#include "tupbackgroundlist.h"
+#include "tupbackgrounditem.h"
+#include "tseparator.h"
 
-#include "tglobal.h"
-#include "tcolorbutton.h"
-#include "tconfig.h"
+#include <QVBoxLayout>
+#include <QListWidget>
+#include <QDialogButtonBox>
 
-#include <QRadioButton>
-
-class TUPITUBE_EXPORT TupThemePreferences : public QWidget
+TupBackgroundSettingsDialog::TupBackgroundSettingsDialog(QWidget *parent): QDialog(parent)
 {
-    Q_OBJECT
+    setModal(true);
+    setWindowTitle(tr("Background Settings"));
+    setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/background_settings.png")));
 
-    public:
-        TupThemePreferences(QWidget *parent = nullptr);
-        ~TupThemePreferences();
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    TupBackgroundList *list = new TupBackgroundList(this);
 
-        void saveValues();        
+    TupListItem* bgItem1 = new TupListItem;
+    list->addItem(bgItem1);
+    TupBackgroundItem *bgWidget1 = new TupBackgroundItem(tr("Vector Dynamic Background"));
+    list->setItemWidget(bgItem1, bgWidget1);
 
-    private slots:
-        void showRestartMsg(bool enabled);
-        
-    private:
-        void setupPage();
+    TupListItem* bgItem2 = new TupListItem;
+    list->addItem(bgItem2);
+    TupBackgroundItem *bgWidget2 = new TupBackgroundItem(tr("Vector Static Background"));
+    list->setItemWidget(bgItem2, bgWidget2);
 
-        QRadioButton *lightTheme;
-        QRadioButton *darkTheme;
-};
+    TupListItem* bgItem3 = new TupListItem;
+    list->addItem(bgItem3);
+    TupBackgroundItem *bgWidget3 = new TupBackgroundItem(tr("Raster Dyanmic Background"));
+    list->setItemWidget(bgItem3, bgWidget3);
 
-#endif
+    TupListItem* bgItem4 = new TupListItem;
+    list->addItem(bgItem4);
+    TupBackgroundItem *bgWidget4 = new TupBackgroundItem(tr("Raster Static Background"));
+    list->setItemWidget(bgItem4, bgWidget4);
+
+    list->setDragDropMode(QAbstractItemView::InternalMove);
+    list->setFixedHeight(170);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Cancel | QDialogButtonBox::Apply, Qt::Horizontal, this);
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
+
+    layout->addWidget(list);
+    layout->addWidget(new TSeparator());
+    layout->addWidget(buttonBox);
+}
+
+TupBackgroundSettingsDialog::~TupBackgroundSettingsDialog()
+{
+}
+
+void TupBackgroundSettingsDialog::apply()
+{
+}

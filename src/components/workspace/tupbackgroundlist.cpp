@@ -1,14 +1,14 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                 *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
  *   2010:                                                                 *
- *    Gustavo Gonzalez / xtingray                                          *
+ *    Gustavo Gonzalez                                                     *
  *                                                                         *
- *   KTooN's versions:                                                     * 
+ *   KTooN's versions:                                                     *
  *                                                                         *
  *   2006:                                                                 *
  *    David Cuadrado                                                       *
@@ -33,33 +33,62 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPTHEMEPREFERENCES_H
-#define TUPTHEMEPREFERENCES_H
-
-#include "tglobal.h"
-#include "tcolorbutton.h"
+#include "tupbackgroundlist.h"
 #include "tconfig.h"
+#include "tapplicationproperties.h"
 
-#include <QRadioButton>
+#include <QItemDelegate>
+#include <QPainter>
 
-class TUPITUBE_EXPORT TupThemePreferences : public QWidget
+class TupListItemDelegate: public QItemDelegate
 {
-    Q_OBJECT
-
     public:
-        TupThemePreferences(QWidget *parent = nullptr);
-        ~TupThemePreferences();
+        TupListItemDelegate(QObject *parent = nullptr);
+        ~TupListItemDelegate();
 
-        void saveValues();        
-
-    private slots:
-        void showRestartMsg(bool enabled);
-        
-    private:
-        void setupPage();
-
-        QRadioButton *lightTheme;
-        QRadioButton *darkTheme;
+        virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+        virtual QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex &index) const;
 };
 
-#endif
+TupListItemDelegate::TupListItemDelegate(QObject *parent): QItemDelegate(parent)
+{
+}
+
+TupListItemDelegate::~TupListItemDelegate()
+{
+}
+
+QSize TupListItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex &index) const
+{
+    Q_UNUSED(option);
+    Q_UNUSED(index);
+
+    return QSize(100, 40);
+}
+
+void TupListItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    Q_ASSERT(index.isValid());
+
+    QItemDelegate::paint(painter, option, index);
+}
+
+////////// TupListItem ////////
+
+TupListItem::TupListItem()
+{
+}
+
+TupListItem::~TupListItem()
+{
+}
+
+TupBackgroundList::TupBackgroundList(QWidget *parent): QListWidget(parent)
+{
+    setItemDelegate(new TupListItemDelegate(this));
+    setDragDropMode(QAbstractItemView::InternalMove);
+}
+
+TupBackgroundList::~TupBackgroundList()
+{
+}

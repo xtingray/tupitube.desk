@@ -99,7 +99,7 @@ TAction::~TAction()
 {
 }
 
-void TAction::initWithManager(TActionManager * parent, const QString &id)
+void TAction::initWithManager(TActionManager *parent, const QString &id)
 {
     setIconVisibleInMenu(true);
 

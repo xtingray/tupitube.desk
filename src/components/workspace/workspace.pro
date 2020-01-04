@@ -30,7 +30,10 @@ HEADERS += tuppaintarea.h \
            tupvideosurface.h \
            tuppapagayoimporter.h \
            tuppapagayodialog.h \
-           tupreflexrenderarea.h
+           tupreflexrenderarea.h \
+           tupbackgrounditem.h \
+           tupbackgroundsettingsdialog.h \
+           tupbackgroundlist.h
 
 SOURCES += tuppaintarea.cpp \
            tupconfigurationarea.cpp \
@@ -54,7 +57,10 @@ SOURCES += tuppaintarea.cpp \
            tupvideosurface.cpp \
            tuppapagayoimporter.cpp \
            tuppapagayodialog.cpp \
-           tupreflexrenderarea.cpp
+           tupreflexrenderarea.cpp \
+           tupbackgrounditem.cpp \
+           tupbackgroundsettingsdialog.cpp \
+           tupbackgroundlist.cpp
 
 SHELL_DIR = ../../shell/
 INCLUDEPATH += $$SHELL_DIR

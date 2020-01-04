@@ -209,11 +209,7 @@ TupTimeLineTable::~TupTimeLineTable()
 void TupTimeLineTable::setup()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupTimeLineTable::setup()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupTimeLineTable::setup()]";
     #endif
 
     setItemDelegate(new TupTimeLineTableItemDelegate(this));

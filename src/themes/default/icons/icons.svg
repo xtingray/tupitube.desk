@@ -2986,9 +2986,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.6934979"
-     inkscape:cx="300.26168"
-     inkscape:cy="513.19626"
+     inkscape:zoom="2.7200623"
+     inkscape:cx="638.54699"
+     inkscape:cy="1111.9467"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -5384,7 +5384,9 @@
     </g>
     <g
        id="g9112"
-       transform="translate(327.6312,-571.34293)">
+       transform="translate(327.6312,-571.34293)"
+       inkscape:export-xdpi="96.389999"
+       inkscape:export-ydpi="96.389999">
       <path
          inkscape:export-ydpi="487.24844"
          inkscape:export-xdpi="487.24844"
