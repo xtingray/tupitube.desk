@@ -34,51 +34,60 @@
  ***************************************************************************/
 
 #include "tupbackgroundsettingsdialog.h"
-#include "tupbackgroundlist.h"
-#include "tupbackgrounditem.h"
 #include "tseparator.h"
 
 #include <QVBoxLayout>
 #include <QListWidget>
 #include <QDialogButtonBox>
 
-TupBackgroundSettingsDialog::TupBackgroundSettingsDialog(QWidget *parent): QDialog(parent)
+TupBackgroundSettingsDialog::TupBackgroundSettingsDialog(QList<TupBackground::BgType> bgLayers, QList<bool> bgVisibility,
+                                                         QWidget *parent): QDialog(parent)
 {
     setModal(true);
     setWindowTitle(tr("Background Settings"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/background_settings.png")));
 
     QVBoxLayout *layout = new QVBoxLayout(this);
-    TupBackgroundList *list = new TupBackgroundList(this);
+    bgList = new TupBackgroundList(this);
 
-    TupListItem* bgItem1 = new TupListItem;
-    list->addItem(bgItem1);
-    TupBackgroundItem *bgWidget1 = new TupBackgroundItem(tr("Vector Dynamic Background"));
-    list->setItemWidget(bgItem1, bgWidget1);
+    for (int i=0; i<bgLayers.count(); i++) {
+        QString label = "";
+        switch(bgLayers.at(i)) {
+            case TupBackground::VectorDynamic:
+            {
+                label = tr("Vector Dynamic Background");
+            }
+            break;
+            case TupBackground::RasterDynamic:
+            {
+                label = tr("Raster Dyanmic Background");
+            }
+            break;
+            case TupBackground::VectorStatic:
+            {
+                label = tr("Vector Static Background");
+            }
+            break;
+            case TupBackground::RasterStatic:
+            {
+                label = tr("Raster Static Background");
+            }
+        }
 
-    TupListItem* bgItem2 = new TupListItem;
-    list->addItem(bgItem2);
-    TupBackgroundItem *bgWidget2 = new TupBackgroundItem(tr("Vector Static Background"));
-    list->setItemWidget(bgItem2, bgWidget2);
+        TupListItem* bgItem = new TupListItem;
+        bgList->addItem(bgItem);
+        TupBackgroundItem *bgWidget = new TupBackgroundItem(bgLayers.at(i), label, bgVisibility.at(i));
+        bgList->setItemWidget(bgItem, bgWidget);
+    }
 
-    TupListItem* bgItem3 = new TupListItem;
-    list->addItem(bgItem3);
-    TupBackgroundItem *bgWidget3 = new TupBackgroundItem(tr("Raster Dyanmic Background"));
-    list->setItemWidget(bgItem3, bgWidget3);
-
-    TupListItem* bgItem4 = new TupListItem;
-    list->addItem(bgItem4);
-    TupBackgroundItem *bgWidget4 = new TupBackgroundItem(tr("Raster Static Background"));
-    list->setItemWidget(bgItem4, bgWidget4);
-
-    list->setDragDropMode(QAbstractItemView::InternalMove);
-    list->setFixedHeight(170);
+    bgList->setDragDropMode(QAbstractItemView::InternalMove);
+    bgList->setFixedHeight(170);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Cancel | QDialogButtonBox::Apply, Qt::Horizontal, this);
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
 
-    layout->addWidget(list);
+    layout->addWidget(bgList);
     layout->addWidget(new TSeparator());
     layout->addWidget(buttonBox);
 }
@@ -89,4 +98,15 @@ TupBackgroundSettingsDialog::~TupBackgroundSettingsDialog()
 
 void TupBackgroundSettingsDialog::apply()
 {
+    QList<QPair<TupBackground::BgType, bool>> valuesList;
+    for (int i=0; i < bgList->count(); i++) {
+         TupBackgroundItem *widget = static_cast<TupBackgroundItem *>(bgList->itemWidget(bgList->item(i)));
+
+         QPair<TupBackground::BgType, bool> values = widget->getValues();
+         idList << values.first;
+         visibilityList << values.second;
+    }
+
+    emit valuesUpdated(idList, visibilityList);
+    close();
 }

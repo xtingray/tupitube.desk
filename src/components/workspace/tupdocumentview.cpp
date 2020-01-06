@@ -1133,8 +1133,6 @@ void TupDocumentView::createToolBar()
 
     addToolBar(barGrid);
 
-    barGrid->addAction(actionManager->find("background_settings"));
-
     spaceModeCombo = new QComboBox();
     spaceModeCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Frames Mode"));
     spaceModeCombo->addItem(QIcon(THEME_DIR + "icons/static_background_mode.png"), tr("Vector Static BG Mode"));
@@ -1145,6 +1143,7 @@ void TupDocumentView::createToolBar()
     connect(spaceModeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setSpaceContext()));
     setSpaceContext();
     barGrid->addWidget(spaceModeCombo);
+    barGrid->addAction(actionManager->find("background_settings"));
 
     barGrid->addSeparator();
 
@@ -1304,8 +1303,20 @@ void TupDocumentView::createToolBar()
 
 void TupDocumentView::showBackgroundSettings()
 {
-    TupBackgroundSettingsDialog *dialog = new TupBackgroundSettingsDialog(this);
+    QList<TupBackground::BgType> bgLayers = project->getBackgroundFromScene(paintArea->currentSceneIndex())->layerIndexes();
+    QList<bool> bgVisibility = project->getBackgroundFromScene(paintArea->currentSceneIndex())->layersVisibility();
+
+    TupBackgroundSettingsDialog *dialog = new TupBackgroundSettingsDialog(bgLayers, bgVisibility, this);
+    connect(dialog, SIGNAL(valuesUpdated(QList<TupBackground::BgType>, QList<bool>)),
+            this, SLOT(updateBgSettings(QList<TupBackground::BgType>, QList<bool>)));
     dialog->show();
+}
+
+void TupDocumentView::updateBgSettings(QList<TupBackground::BgType> indexes, QList<bool> visibilityList)
+{
+    TupBackground *bg = project->getBackgroundFromScene(paintArea->currentSceneIndex());
+    bg->updateLayerIndexes(indexes);
+    bg->updateLayersVisibility(visibilityList);
 }
 
 void TupDocumentView::openRasterMode()

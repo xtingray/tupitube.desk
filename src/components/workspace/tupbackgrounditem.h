@@ -37,6 +37,8 @@
 #define TUPBACKGROUNDITEM_H
 
 #include "tglobal.h"
+#include "tupbackground.h"
+
 #include <QWidget>
 #include <QPushButton>
 
@@ -45,16 +47,21 @@ class TUPITUBE_EXPORT TupBackgroundItem: public QWidget
     Q_OBJECT
 
     public:
-        TupBackgroundItem(const QString &title, QWidget *parent = nullptr);
+        TupBackgroundItem(TupBackground::BgType id, const QString &title, bool isVisible,
+                          QWidget *parent = nullptr);
         ~TupBackgroundItem();
+
+        QPair<TupBackground::BgType, bool> getValues();
 
     private slots:
         void updateVisibility(bool clicked);
 
     private:
+        TupBackground::BgType itemId;
         QPixmap viewIconOn;
         QPixmap viewIconOff;
         QPushButton *viewButton;
+        bool isVisible;
 };
 
 #endif // TUPBACKGROUNDITEM_H

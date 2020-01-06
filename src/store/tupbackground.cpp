@@ -61,7 +61,8 @@ TupBackground::TupBackground(TupScene *parent, int index, const QSize size,
     vectorStaticBgFrame = new TupFrame(this, "landscape_static");
     rasterStaticBgFrame = new TupFrame(this, "landscape_raster_static");
 
-    bgLayerIndex << VectorDynamic << RasterDynamic << VectorStatic << RasterStatic;
+    bgLayerIndexes << VectorDynamic << RasterDynamic << VectorStatic << RasterStatic;
+    bgVisibilityList << true << true << true << true;
 }
 
 TupBackground::~TupBackground()
@@ -80,13 +81,17 @@ void TupBackground::fromXml(const QString &xml)
         return;
 
     QDomElement root = document.documentElement();
-    bgLayerIndex.clear();
+    bgLayerIndexes.clear();
     QStringList layers = root.attribute("bgLayerIndexes", "0,1,2,3").split(",");
     for (int i=0; i < layers.count(); i++)
-        bgLayerIndex << BgType(layers.at(i).toInt());
+        bgLayerIndexes << BgType(layers.at(i).toInt());
+
+    bgVisibilityList.clear();
+    QStringList visibility = root.attribute("bgLayerVisibility", "1,1,1,1").split(",");
+    for (int i=0; i < visibility.count(); i++)
+        bgVisibilityList << visibility.at(i).toInt();
 
     QDomNode n = root.firstChild();
-
     while (!n.isNull()) {
         QDomElement e = n.toElement();
 
@@ -171,10 +176,17 @@ QDomElement TupBackground::toXml(QDomDocument &doc) const
     QDomElement root = doc.createElement("background");
 
     QString indexes = "";
-    for (int i=0; i < bgLayerIndex.count(); i++)
-        indexes += QString::number(bgLayerIndex.at(i)) + ",";
+    for (int i=0; i < bgLayerIndexes.count(); i++)
+        indexes += QString::number(bgLayerIndexes.at(i)) + ",";
     indexes.chop(1);
     root.setAttribute("bgLayerIndexes", indexes);
+
+    indexes = "";
+    QString visibility = "";
+    for (int i=0; i < bgVisibilityList.count(); i++)
+        indexes += QString::number(bgVisibilityList.at(i)) + ",";
+    indexes.chop(1);
+    root.setAttribute("bgLayerVisibility", indexes);
 
     doc.appendChild(root);
 
@@ -188,7 +200,22 @@ QDomElement TupBackground::toXml(QDomDocument &doc) const
 
 QList<TupBackground::BgType> TupBackground::layerIndexes()
 {
-    return bgLayerIndex;
+    return bgLayerIndexes;
+}
+
+void TupBackground::updateLayerIndexes(QList<TupBackground::BgType> indexes)
+{
+    bgLayerIndexes = indexes;
+}
+
+QList<bool> TupBackground::layersVisibility()
+{
+    return bgVisibilityList;
+}
+
+void TupBackground::updateLayersVisibility(QList<bool> viewFlags)
+{
+    bgVisibilityList = viewFlags;
 }
 
 bool TupBackground::vectorDynamicBgIsEmpty()

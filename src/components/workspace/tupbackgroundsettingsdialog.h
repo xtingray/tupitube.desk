@@ -38,6 +38,9 @@
 
 #include "tglobal.h"
 #include "tapplicationproperties.h"
+#include "tupbackground.h"
+#include "tupbackgroundlist.h"
+#include "tupbackgrounditem.h"
 
 #include <QDialog>
 
@@ -46,11 +49,20 @@ class TUPITUBE_EXPORT TupBackgroundSettingsDialog : public QDialog
     Q_OBJECT
 
     public:
-        TupBackgroundSettingsDialog(QWidget *parent = nullptr);
+        TupBackgroundSettingsDialog(QList<TupBackground::BgType> bgLayers, QList<bool> bgVisibility,
+                                    QWidget *parent = nullptr);
         ~TupBackgroundSettingsDialog();
+
+    signals:
+        void valuesUpdated(QList<TupBackground::BgType>, QList<bool>);
 
     private slots:
         void apply();
+
+    private:
+        TupBackgroundList *bgList;
+        QList<bool> visibilityList;
+        QList<TupBackground::BgType> idList;
 };
 
 #endif

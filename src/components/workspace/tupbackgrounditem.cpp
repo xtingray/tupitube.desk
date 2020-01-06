@@ -41,17 +41,25 @@
 #include <QBoxLayout>
 #include <QLabel>
 
-TupBackgroundItem::TupBackgroundItem(const QString &title, QWidget *parent) : QWidget(parent)
+TupBackgroundItem::TupBackgroundItem(TupBackground::BgType id, const QString &title, bool viewFlag,
+                                     QWidget *parent) : QWidget(parent)
 {
-    QBoxLayout *layout = new QHBoxLayout(this);
+    itemId = id;
+    isVisible = viewFlag;
 
+    QBoxLayout *layout = new QHBoxLayout(this);
     viewIconOn = QPixmap(THEME_DIR + "icons/show_layer.png");
     viewIconOff = QPixmap(THEME_DIR + "icons/hide_layer.png");
 
     viewButton = new QPushButton;
-    viewButton->setIcon(QIcon(viewIconOn));
+    viewButton->setToolTip(tr("Background Layer Visibility"));
+    if (isVisible)
+        viewButton->setIcon(QIcon(viewIconOn));
+    else
+        viewButton->setIcon(QIcon(viewIconOff));
+
     viewButton->setCheckable(true);
-    viewButton->setChecked(true);
+    viewButton->setChecked(isVisible);
     viewButton->setFixedWidth(30);
 
     connect(viewButton, SIGNAL(clicked(bool)), this, SLOT(updateVisibility(bool)));
@@ -72,10 +80,19 @@ TupBackgroundItem::~TupBackgroundItem()
 
 void TupBackgroundItem::updateVisibility(bool clicked)
 {
+    isVisible = clicked;
+
     if (clicked)
         viewButton->setIcon(QIcon(viewIconOn));
     else
         viewButton->setIcon(QIcon(viewIconOff));
 }
 
+QPair<TupBackground::BgType, bool> TupBackgroundItem::getValues()
+{
+    QPair<TupBackground::BgType, bool> response;
+    response.first = itemId;
+    response.second = isVisible;
 
+    return response;
+}

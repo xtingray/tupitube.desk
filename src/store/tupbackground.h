@@ -106,6 +106,10 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         double rasterStaticOpacity();
 
         QList<TupBackground::BgType> layerIndexes();
+        void updateLayerIndexes(QList<TupBackground::BgType> indexes);
+
+        QList<bool> layersVisibility();
+        void updateLayersVisibility(QList<bool> viewFlags);
 
     private:
         int sceneIndex;
@@ -132,7 +136,8 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         // Raster expanded image
         QImage rasterDynamicViewImg;
 
-        QList<BgType> bgLayerIndex;
+        QList<BgType> bgLayerIndexes;
+        QList<bool> bgVisibilityList;
 };
 
 #endif

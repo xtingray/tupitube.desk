@@ -170,6 +170,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void setAntialiasing(bool useIt);
         void requestRasterStroke();
         void requestClearRasterCanvas();
+        void updateBgSettings(QList<TupBackground::BgType>, QList<bool>);
 
     signals:
         void requestTriggered(const TupProjectRequest *event);
