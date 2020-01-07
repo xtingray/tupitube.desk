@@ -139,13 +139,13 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         void addSvgTweeningObjects(int indexLayer, int photogram);
         void addLipSyncObjects(TupLayer *layer, int photogram, int zLevel);
 
-        void drawVectorStaticBg();
+        void drawVectorStaticBg(int index);
         void drawVectorDynamicBg();
-        void drawVectorDynamicBgOnMovement(int photogram);
+        void drawVectorDynamicBgOnMovement(int index, int photogram);
 
-        void drawRasterStaticBg();
-        void drawRasterDynamicBg();
-        void drawRasterDynamicBgOnMovement(int photogram);
+        void drawRasterStaticBg(int index);
+        void drawRasterDynamicBg(int index);
+        void drawRasterDynamicBgOnMovement(int index, int photogram);
 
     protected:
         virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);

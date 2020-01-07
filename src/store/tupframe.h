@@ -75,13 +75,6 @@ class TUPITUBE_EXPORT TupFrame : public QObject, public TupAbstractSerializable
         void setFrameName(const QString &name);
         QString getFrameName() const;
 
-        /*
-        void setRasterBgImage(QImage *image, int index);
-        QImage * getBgRasterImage();
-        int getBgRasterImageIndex();
-        void setRasterIndex(int index);
-        */
-
         void setDynamicDirection(const QString &direction);
         void setDynamicShift(const QString &shift);
         TupBackground::Direction dynamicDirection() const;

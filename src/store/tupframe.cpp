@@ -76,7 +76,7 @@ TupFrame::TupFrame(TupLayer *parent) : QObject(parent)
     direction = "0";
     shift = "5";
 
-    zLevelIndex = (layer->layerIndex() + 2)*ZLAYER_LIMIT; // Layers levels starts from 2
+    zLevelIndex = (layer->layerIndex() + 4) * ZLAYER_LIMIT; // Layers levels starts from 2
 }
 
 TupFrame::TupFrame(TupBackground *bg, const QString &label, int zLevel) : QObject(bg)
@@ -120,12 +120,6 @@ TupFrame::TupFrame(TupBackground *bg, const QString &label, int zLevel) : QObjec
 
 TupFrame::~TupFrame()
 {
-    /*
-    objectIndexes.clear();
-    svgIndexes.clear();
-    graphics.clear();
-    svg.clear();
-    */
 }
 
 void TupFrame::reset()
@@ -250,7 +244,6 @@ void TupFrame::fromXml(const QString &xml)
 
     QDomElement root = document.documentElement();
     setFrameName(root.attribute("name", tr("Frame")));
-    // setRasterIndex(root.attribute("rasterIndex", "0").toInt());
 
     if (type == VectorDynamicBg || type == RasterDynamicBg) {
         setDynamicDirection(root.attribute("direction", "0"));
@@ -356,7 +349,6 @@ QDomElement TupFrame::toXml(QDomDocument &doc) const
 {
     QDomElement root = doc.createElement("frame");
     root.setAttribute("name", frameName);
-    // root.setAttribute("rasterIndex", bgRasterImageIndex);
 
     if (type == VectorDynamicBg || type == RasterDynamicBg) {
         root.setAttribute("direction", direction);
@@ -395,12 +387,8 @@ QDomElement TupFrame::toXml(QDomDocument &doc) const
            int svgZValue = static_cast<int> (svgList.at(0)->zValue());
 
            if (objectZValue < svgZValue) {
-               // TupGraphicObject *object = itemList.takeFirst();
-               // root.appendChild(object->toXml(doc));
                root.appendChild(itemList.takeFirst()->toXml(doc));
            } else { 
-               // TupSvgItem *svg = svgList.takeFirst();
-               // root.appendChild(svg->toXml(doc));
                root.appendChild(svgList.takeFirst()->toXml(doc));
            }
 
@@ -644,18 +632,13 @@ bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int
     switch(move) {
            case MoveBack :
              {
-                int zMin = (layerIndex + 1)*ZLAYER_LIMIT;
+                int zMin = (layerIndex + 1) * ZLAYER_LIMIT;
 
                 if (objectType == TupLibraryObject::Svg) {
                     int zLimit = static_cast<int> (svg.at(currentIndex)->zValue());
                     if (zLimit == zMin) {
                         #ifdef TUP_DEBUG
-                            QString msg = "TupFrame::moveItem() - MoveBack: Minimum level has been reached! (SVG)";
-                            #ifdef Q_OS_WIN
-                                qWarning() << msg;
-                            #else
-                                tWarning() << msg;
-                            #endif
+                            qWarning() << "TupFrame::moveItem() - MoveBack: Minimum level has been reached! (SVG)";
                         #endif
                         return true;
                     }
@@ -688,12 +671,7 @@ bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int
                     int zLimit = graphics.at(currentIndex)->itemZValue();
                     if (zLimit == zMin) {
                         #ifdef TUP_DEBUG
-                            QString msg = "TupFrame::moveItem() - MoveBack: Minimum level has been reached! (VECTOR/RASTER)";
-                            #ifdef Q_OS_WIN
-                                qWarning() << msg; 
-                            #else
-                                tWarning() << msg;
-                            #endif
+                            qWarning() << "TupFrame::moveItem() - MoveBack: Minimum level has been reached! (VECTOR/RASTER)";
                         #endif
                         return true;
                     }
@@ -732,12 +710,7 @@ bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int
                     int zLimit = static_cast<int> (svg.at(currentIndex)->zValue());
                     if (zLimit == zMax) {
                         #ifdef TUP_DEBUG
-                            QString msg = "TupFrame::moveItem() - MoveToFront: Maximum level has been reached! (SVG)";
-                            #ifdef Q_OS_WIN
-                                qWarning() << msg;
-                            #else
-                                tWarning() << msg;
-                            #endif
+                            qWarning() << "TupFrame::moveItem() - MoveToFront: Maximum level has been reached! (SVG)";
                         #endif
                         return true;
                     }
@@ -769,12 +742,7 @@ bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int
                     int zLimit = graphics.at(currentIndex)->itemZValue();
                     if (zLimit == zMax) {
                         #ifdef TUP_DEBUG
-                            QString msg = "TupFrame::moveItem() - MoveToFront: Maximum level has been reached! (VECTOR/RASTER)";
-                            #ifdef Q_OS_WIN
-                                qWarning() << msg;
-                            #else
-                                tWarning() << msg;
-                            #endif
+                            qWarning() << "TupFrame::moveItem() - MoveToFront: Maximum level has been reached! (VECTOR/RASTER)";
                         #endif
                         return true;
                     }
@@ -806,19 +774,13 @@ bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int
              }
            case MoveOneLevelBack :
              {
-                // int zMin = (layerIndex + 1)*ZLAYER_LIMIT;
-                int zMin = (layerIndex + 1)*ZLAYER_LIMIT;
+                int zMin = (layerIndex + 1) * ZLAYER_LIMIT;
 
                 if (objectType == TupLibraryObject::Svg) {
                     int zLevel = static_cast<int> (svg.at(currentIndex)->zValue());
                     if (zLevel == zMin) {
                         #ifdef TUP_DEBUG
-                            QString msg = "TupFrame::moveItem() - MoveOneLevelBack: Minimum level has been reached! (SVG)";
-                            #ifdef Q_OS_WIN
-                                qWarning() << msg;
-                            #else
-                                tWarning() << msg;
-                            #endif
+                            qWarning() << "TupFrame::moveItem() - MoveOneLevelBack: Minimum level has been reached! (SVG)";
                         #endif
                         return true;
                     }
@@ -862,12 +824,7 @@ bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int
                             }
                         } else {                            
                             #ifdef TUP_DEBUG
-                                QString msg = "TupFrame::moveItem() - Fatal Error: Something went wrong [ case MoveOneLevelBack/Svg ]";
-                                #ifdef Q_OS_WIN
-                                    qDebug() << msg;
-                                #else
-                                    tError() << msg;
-                                #endif
+                                qDebug() << "TupFrame::moveItem() - Fatal Error: Something went wrong [ case MoveOneLevelBack/Svg ]";
                             #endif
 
                             return false;
@@ -1375,18 +1332,6 @@ int TupFrame::indexOf(QGraphicsItem *item) const
     return -1;
 }
 
-/*
-void TupFrame::setRepeat(int repeat)
-{
-    k->repeat = repeat;
-}
-
-int TupFrame::repeat() const
-{
-    return k->repeat;
-}
-*/
-
 int TupFrame::index() const
 {
     return parentLayer()->visualIndexOf(const_cast<TupFrame *>(this));
@@ -1491,42 +1436,44 @@ void TupFrame::reloadSVGItem(const QString &id, TupLibraryObject *object)
     }
 }
 
-void TupFrame::updateZLevel(int zLevelIndex)
+void TupFrame::updateZLevel(int newLevel)
 {
     int max = 0;
-    int graphicsSize = graphics.size();
-    for (int i = 0; i < graphicsSize; ++i) {
+    int itemsCount = graphics.size();
+    for (int i = 0; i < itemsCount; ++i) {
          TupGraphicObject *object = graphics.at(i);
          if (object) {  
              int currentZValue = object->itemZValue();
-             int zLevel = zLevelIndex + (currentZValue % ZLAYER_LIMIT);
+             int zLevel = newLevel + (currentZValue % ZLAYER_LIMIT);
              object->setItemZValue(zLevel);
-             if (i == (graphicsSize-1)) {
+             if (i == (itemsCount - 1)) {
                  if (zLevel > max)
                      max = zLevel;
              }
          }
     }
 
-    graphicsSize = svgIndexes.size();
-    for (int i = 0; i < graphicsSize; ++i) {
+    itemsCount = svgIndexes.size();
+    for (int i = 0; i < itemsCount; ++i) {
          TupSvgItem *item = svg.value(i);
          if (item) {
              int currentZValue = static_cast<int> (item->zValue());
-             int zLevel = zLevelIndex + (currentZValue % ZLAYER_LIMIT);
+             int zLevel = newLevel + (currentZValue % ZLAYER_LIMIT);
              item->setZValue(zLevel);
-             if (i == (graphicsSize-1)) {
+             if (i == (itemsCount - 1)) {
                  if (zLevel > max)
                      max = zLevel;
              }
          }
     }
 
-    if (max > 0) {
-        zLevelIndex = max;
-        zLevelIndex++;
+    if (max > 0) { // Setting the level for the next item
+        zLevelIndex = max + 1;
     } else {
-        zLevelIndex = (layer->layerIndex() + 1)*ZLAYER_LIMIT;
+        if (type == Regular) // This frame was empty
+            zLevelIndex = (layer->layerIndex() + 1) * ZLAYER_LIMIT;
+        else // This frame is part of the background layers
+            zLevelIndex = newLevel * ZLAYER_LIMIT;
     }
 }
 

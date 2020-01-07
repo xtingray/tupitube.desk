@@ -110,6 +110,7 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
 
         QList<bool> layersVisibility();
         void updateLayersVisibility(QList<bool> viewFlags);
+        bool isBgLayerVisible(BgType bgId);
 
     private:
         int sceneIndex;

@@ -205,7 +205,33 @@ QList<TupBackground::BgType> TupBackground::layerIndexes()
 
 void TupBackground::updateLayerIndexes(QList<TupBackground::BgType> indexes)
 {
-    bgLayerIndexes = indexes;
+    if (bgLayerIndexes != indexes) {
+        bgLayerIndexes = indexes;
+        for (int i=0; i<bgLayerIndexes.count(); i++) {
+            switch(bgLayerIndexes.at(i)) {
+                case VectorDynamic:
+                {
+                    vectorDynamicBgFrame->updateZLevel(i);
+                }
+                break;
+                case RasterDynamic:
+                {
+
+                }
+                break;
+                case VectorStatic:
+                {
+                    vectorStaticBgFrame->updateZLevel(i);
+                }
+                break;
+                case RasterStatic:
+                {
+
+                }
+                break;
+            }
+        }
+    }
 }
 
 QList<bool> TupBackground::layersVisibility()
@@ -215,7 +241,19 @@ QList<bool> TupBackground::layersVisibility()
 
 void TupBackground::updateLayersVisibility(QList<bool> viewFlags)
 {
-    bgVisibilityList = viewFlags;
+    if (bgVisibilityList != viewFlags)
+        bgVisibilityList = viewFlags;
+}
+
+bool TupBackground::isBgLayerVisible(BgType bgId)
+{
+    int i;
+    for (i = 0;i < bgLayerIndexes.count(); i++) {
+        if (bgLayerIndexes.at(i) == bgId)
+            break;
+    }
+
+    return bgVisibilityList.at(i);
 }
 
 bool TupBackground::vectorDynamicBgIsEmpty()
@@ -298,7 +336,8 @@ void TupBackground::renderVectorDynamicView()
         qDebug() << "[TupBackground::renderVectorDynamicView()]";
     #endif 
 	
-    TupBackgroundScene *bgScene = new TupBackgroundScene(dimension, bgColor, vectorDynamicBgFrame);
+    // TupBackgroundScene *bgScene = new TupBackgroundScene(dimension, bgColor, vectorDynamicBgFrame);
+    TupBackgroundScene *bgScene = new TupBackgroundScene(dimension, Qt::transparent, vectorDynamicBgFrame);
     QImage image(dimension, QImage::Format_ARGB32);
     {
         QPainter *painter = new QPainter(&image);
