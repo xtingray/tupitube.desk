@@ -144,7 +144,7 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         void drawVectorDynamicBgOnMovement(int index, int photogram);
 
         void drawRasterStaticBg(int index);
-        void drawRasterDynamicBg(int index);
+        // void drawRasterDynamicBg(int index);
         void drawRasterDynamicBgOnMovement(int index, int photogram);
 
     protected:

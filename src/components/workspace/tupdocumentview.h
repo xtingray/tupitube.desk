@@ -120,7 +120,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void updateOnionOpacity(double opacity);
         void setVectorBackgroundDirection(int direction);
         void updateBackgroundShiftProperty(int shift);
-        void renderDynamicBackground();
+        void renderVectorDynamicFrame();
         void fullScreenRightClick();
         void cameraInterface();
         void insertPictureInFrame(int id, const QString path);

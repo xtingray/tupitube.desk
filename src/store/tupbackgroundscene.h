@@ -50,7 +50,7 @@ class TUPITUBE_EXPORT TupBackgroundScene : public QGraphicsScene
     Q_OBJECT
 
     public:
-        TupBackgroundScene(const QSize dimension, const QColor color, TupFrame *background);
+        TupBackgroundScene(const QSize dimension, const QBrush bgBrush, TupFrame *background);
         ~TupBackgroundScene();
 
         void renderView(QPainter *painter);

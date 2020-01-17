@@ -53,7 +53,7 @@ SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(new TSeparator(Qt::Horizontal));
 
     formPanel = new QWidget;
-    QBoxLayout *formLayout = new QBoxLayout(QBoxLayout::TopToBottom,formPanel);
+    QBoxLayout *formLayout = new QBoxLayout(QBoxLayout::TopToBottom, formPanel);
 
     QLabel *alignLabel = new QLabel(tr("Alignment"));
     alignLabel->setAlignment(Qt::AlignHCenter);
@@ -259,22 +259,18 @@ SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
     formLayout->addLayout(factorYLayout);
 
     propCheck = new QCheckBox(tr("Proportion"), this);
-    //propCheck->setChecked(true);
+    // propCheck->setChecked(true);
     connect(propCheck, SIGNAL(stateChanged(int)), this, SLOT(enableProportion(int)));
     formLayout->addWidget(propCheck);
     formLayout->setAlignment(propCheck, Qt::AlignHCenter);
-
-    formLayout->addWidget(propCheck);
-    formLayout->setAlignment(propCheck, Qt::AlignHCenter);
-
-    formLayout->addWidget(formPanel);
     formPanel->setVisible(false);
 
     mainLayout->addWidget(formPanel);
 
-    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
     tips = new QPushButton(tr("Show Tips"));
     tips->setToolTip(tr("A little help for the Selection tool"));
+
+    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
     layout->addWidget(tips);
     connect(tips, SIGNAL(clicked()), this, SLOT(openTipPanel()));
 

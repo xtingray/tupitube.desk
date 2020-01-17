@@ -35,10 +35,10 @@
 
 #include "tupbackgroundscene.h"
 
-TupBackgroundScene::TupBackgroundScene(const QSize dimension, const QColor color, TupFrame *background) : QGraphicsScene()
+TupBackgroundScene::TupBackgroundScene(const QSize dimension, const QBrush bgBrush, TupFrame *background) : QGraphicsScene()
 {
-    setSceneRect(QRectF(QPointF(0,0), dimension));
-    setBackgroundBrush(color);
+    setSceneRect(QRectF(QPointF(0, 0), dimension));
+    setBackgroundBrush(bgBrush);
     bg = background;
     drawScene();
 }

@@ -1142,6 +1142,7 @@ void TupDocumentView::createToolBar()
 
     connect(spaceModeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setSpaceContext()));
     setSpaceContext();
+
     barGrid->addWidget(spaceModeCombo);
     barGrid->addAction(actionManager->find("background_settings"));
 
@@ -1499,8 +1500,9 @@ void TupDocumentView::setSpaceContext()
         {
             if (dynamicFlag) {
                 dynamicFlag = false;
-                renderDynamicBackground();
+                renderVectorDynamicFrame();
             }
+
             project->updateSpaceContext(TupProject::FRAMES_MODE);
             staticPropertiesBar->setVisible(false);
             dynamicPropertiesBar->setVisible(false);
@@ -1509,10 +1511,6 @@ void TupDocumentView::setSpaceContext()
         break;
         case TupProject::VECTOR_STATIC_BG_MODE:
         {
-            if (dynamicFlag) {
-                dynamicFlag = false;
-                renderDynamicBackground();
-            }
             project->updateSpaceContext(TupProject::VECTOR_STATIC_BG_MODE);
             staticPropertiesBar->setVisible(true);
             dynamicPropertiesBar->setVisible(false);
@@ -1529,9 +1527,7 @@ void TupDocumentView::setSpaceContext()
             if (scene) {
                 TupBackground *bg = scene->sceneBackground();
                 if (bg) {
-                    // int direction = bg->vectorDynamicDirection();
                     dirCombo->setCurrentIndex(bg->vectorDynamicDirection());
-                    // int shift = bg->vectorDynamicShift();
                     shiftSpin->setValue(bg->vectorDynamicShift());
                 }
             }
@@ -1544,6 +1540,7 @@ void TupDocumentView::setSpaceContext()
         case TupProject::RASTER_DYNAMIC_BG_MODE:
         {
             openRasterMode();
+            return;
         }
         break;
         default:
@@ -1552,8 +1549,7 @@ void TupDocumentView::setSpaceContext()
 
     paintArea->updateSpaceContext();
     paintArea->updatePaintArea();
-
-   emit modeHasChanged(mode);
+    emit modeHasChanged(mode);
 }
 
 TupProject::Mode TupDocumentView::spaceContext()
@@ -1649,9 +1645,6 @@ void TupDocumentView::showFullScreen()
 
     fullScreenOn = true;
 
-    // QDesktopWidget desktop;
-    // int screenW = desktop.screenGeometry().width();
-    // int screenH = desktop.screenGeometry().height();
     int screenW = screen->geometry().width();
     int screenH = screen->geometry().height();
 
@@ -1898,8 +1891,12 @@ void TupDocumentView::updateBackgroundShiftProperty(int shift)
    }
 }
 
-void TupDocumentView::renderDynamicBackground()
+void TupDocumentView::renderVectorDynamicFrame()
 {
+    #ifdef TUP_DEBUG
+       qDebug() << "TupDocumentView::renderVectorDynamicFrame() - Tracing...";
+    #endif
+
    int sceneIndex = paintArea->currentSceneIndex();
    TupScene *scene = project->sceneAt(sceneIndex);
 
@@ -2038,7 +2035,7 @@ void TupDocumentView::cameraInterface()
 void TupDocumentView::resizeProjectDimension(const QSize dimension)
 {
     #ifdef TUP_DEBUG
-       qDebug() << "TupMainWindow::resizeProjectDimension(QSize)";
+       qDebug() << "TupDocumentView::resizeProjectDimension(QSize)";
     #endif
 
     paintArea->updateDimension(dimension);

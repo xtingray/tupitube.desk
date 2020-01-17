@@ -39,6 +39,7 @@
 #include "tapplicationproperties.h"
 
 #include <cmath>
+#include <QTimer>
 
 TupBackground::TupBackground(TupScene *parent, int index, const QSize size,
                              const QColor color) : QObject(parent)
@@ -47,8 +48,8 @@ TupBackground::TupBackground(TupScene *parent, int index, const QSize size,
     dimension = size;
     bgColor = color;
 
-    noVectorRender = true;
-    noRasterRender = true;
+    vectorRenderRequired = true;
+    rasterRenderRequired = true;
 
     vectorDynamicBgFrame = new TupFrame(this, "landscape_dynamic");
     vectorDynamicBgFrame->setDynamicDirection("0");
@@ -100,56 +101,82 @@ void TupBackground::fromXml(const QString &xml)
             if (type == "landscape_dynamic") {
                 vectorDynamicBgFrame = new TupFrame(this, "landscape_dynamic");
 
-                if (vectorDynamicBgFrame) {
-                    QString newDoc;
-                    {
-                        QTextStream ts(&newDoc);
-                        ts << n;
-                    }
+                QString newDoc;
+                {
+                    QTextStream ts(&newDoc);
+                    ts << n;
+                }
+                vectorDynamicBgFrame->fromXml(newDoc);
 
-                    vectorDynamicBgFrame->fromXml(newDoc);
-                    if (!vectorDynamicBgFrame->isEmpty()) {
-                        renderVectorDynamicView();
-                    }
+                // Loading raster dynamic background image
+                QString imgPath = VECTOR_BG_DIR + QString::number(sceneIndex) + "/bg/dynamic_bg.png";
+                if (QFile::exists(imgPath)) {
+                    vectorDynamicBgExpanded = QPixmap(imgPath);
+                    vectorRenderRequired = false;
+
+                    #ifdef TUP_DEBUG
+                        qDebug() << "TupBackground::fromXml() - Vector dynamic image loaded -> " << imgPath;
+                    #endif
+                } else {
+                    #ifdef TUP_DEBUG
+                        qWarning() << "TupBackground::fromXml() - Vector dynamic image wasn't loaded -> " << imgPath;
+                    #endif
                 }
             } else if (type == "landscape_raster_dynamic") {
                 rasterDynamicBgFrame = new TupFrame(this, "landscape_raster_dynamic");
 
-                if (rasterDynamicBgFrame) {
-                    QString newDoc;
-                    {
-                        QTextStream ts(&newDoc);
-                        ts << n;
-                    }
+                QString newDoc;
+                {
+                    QTextStream ts(&newDoc);
+                    ts << n;
+                }
 
-                    rasterDynamicBgFrame->fromXml(newDoc);
-                    if (!rasterDynamicBgFrame->isEmpty()) {
-                        renderRasterDynamicView();
-                    }
+                rasterDynamicBgFrame->fromXml(newDoc);
+
+                // Loading raster dynamic background image
+                QString imgPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/dynamic_bg.png";
+                if (QFile::exists(imgPath)) {
+                    rasterDynamicBgPix = QPixmap(imgPath);
+                    rasterRenderRequired = false;
+
+                    #ifdef TUP_DEBUG
+                        qDebug() << "TupBackground::fromXml() - Raster dynamic image loaded -> " << imgPath;
+                    #endif
+                } else {
+                    #ifdef TUP_DEBUG
+                        qWarning() << "TupBackground::fromXml() - Raster dynamic bg wasn't loaded -> " << imgPath;
+                    #endif
                 }
             } else if (type == "landscape_static") {
                 vectorStaticBgFrame = new TupFrame(this, "landscape_static");
 
-                if (vectorStaticBgFrame) {
-                    QString newDoc;
-                    {
-                        QTextStream ts(&newDoc);
-                        ts << n;
-                    }
-
-                    vectorStaticBgFrame->fromXml(newDoc);
+                QString newDoc;
+                {
+                    QTextStream ts(&newDoc);
+                    ts << n;
                 }
+                vectorStaticBgFrame->fromXml(newDoc);
              }  else if (type == "landscape_raster_static") {
                 rasterStaticBgFrame = new TupFrame(this, "landscape_raster_static");
 
-                if (rasterStaticBgFrame) {
-                    QString newDoc;
-                    {
-                        QTextStream ts(&newDoc);
-                        ts << n;
-                    }
+                QString newDoc;
+                {
+                    QTextStream ts(&newDoc);
+                    ts << n;
+                }
+                rasterStaticBgFrame->fromXml(newDoc);
 
-                    rasterStaticBgFrame->fromXml(newDoc);
+                // Loading raster static background image
+                QString imgPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/static_bg.png";
+                if (QFile::exists(imgPath)) {
+                    rasterStaticBgPix = QPixmap(imgPath);
+                    #ifdef TUP_DEBUG
+                        qDebug() << "TupBackground::fromXml() - Raster static image loaded -> " << imgPath;
+                    #endif
+                } else {
+                    #ifdef TUP_DEBUG
+                        qWarning() << "TupBackground::fromXml() - Raster static bg wasn't loaded -> " << imgPath;
+                    #endif
                 }
             } else {
                 #ifdef TUP_DEBUG
@@ -160,15 +187,6 @@ void TupBackground::fromXml(const QString &xml)
 
         n = n.nextSibling();
     }
-
-    // Loading raster backgrounds
-    QString staticPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/static_bg.png";
-    QString dynamicPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/dynamic_bg.png";
-
-    if (QFile::exists(staticPath))
-        rasterStaticBgPix = QPixmap(staticPath);
-    if (QFile::exists(dynamicPath))
-        rasterDynamicBgPix = QPixmap(dynamicPath);
 }
 
 QDomElement TupBackground::toXml(QDomDocument &doc) const
@@ -205,33 +223,8 @@ QList<TupBackground::BgType> TupBackground::layerIndexes()
 
 void TupBackground::updateLayerIndexes(QList<TupBackground::BgType> indexes)
 {
-    if (bgLayerIndexes != indexes) {
+    if (bgLayerIndexes != indexes)
         bgLayerIndexes = indexes;
-        for (int i=0; i<bgLayerIndexes.count(); i++) {
-            switch(bgLayerIndexes.at(i)) {
-                case VectorDynamic:
-                {
-                    vectorDynamicBgFrame->updateZLevel(i);
-                }
-                break;
-                case RasterDynamic:
-                {
-
-                }
-                break;
-                case VectorStatic:
-                {
-                    vectorStaticBgFrame->updateZLevel(i);
-                }
-                break;
-                case RasterStatic:
-                {
-
-                }
-                break;
-            }
-        }
-    }
 }
 
 QList<bool> TupBackground::layersVisibility()
@@ -278,13 +271,20 @@ TupFrame* TupBackground::vectorDynamicFrame()
 
 void TupBackground::clearBackground()
 {
-    if (vectorDynamicBgFrame)
+    #ifdef TUP_DEBUG
+        qDebug() << "TupBackground::clearBackground() - Tracing...";
+    #endif
+
+    // SQA: Implement the UNDO action for this case
+
+    if (vectorDynamicBgFrame) {
         vectorDynamicBgFrame->clear();
+        vectorDynamicBgExpanded = QPixmap();
+    }
 
     if (vectorStaticBgFrame)
         vectorStaticBgFrame->clear();
 
-    // SQA: Implement the UNDO action for this case
     rasterDynamicBgPix = QPixmap();
     rasterStaticBgPix = QPixmap();
 }
@@ -329,41 +329,71 @@ double TupBackground::rasterStaticOpacity()
     return rasterStaticBgFrame->frameOpacity();
 }
 
-// Creating expanded vector dynamic image
 void TupBackground::renderVectorDynamicView()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupBackground::renderVectorDynamicView()]";
-    #endif 
-	
-    // TupBackgroundScene *bgScene = new TupBackgroundScene(dimension, bgColor, vectorDynamicBgFrame);
-    TupBackgroundScene *bgScene = new TupBackgroundScene(dimension, Qt::transparent, vectorDynamicBgFrame);
-    QImage image(dimension, QImage::Format_ARGB32);
-    {
-        QPainter *painter = new QPainter(&image);
-        painter->setRenderHint(QPainter::Antialiasing, true);
-        bgScene->renderView(painter);
+    #endif
 
-        painter = nullptr;
-        delete painter;
-    }
+    TupBackgroundScene *bgScene = new TupBackgroundScene(dimension, QBrush(Qt::transparent), vectorDynamicBgFrame);
+    QImage vectorDynamicImg = QImage(dimension, QImage::Format_ARGB32);
+    vectorDynamicImg.fill(Qt::transparent);
+
+    QPainter *painter = new QPainter(&vectorDynamicImg);
+    painter->setRenderHint(QPainter::Antialiasing, true);
+    bgScene->renderView(painter);
+    painter->end();
 
     int width = dimension.width();
     int height = dimension.height();
-    QImage bgView(width * 2, height * 2, QImage::Format_ARGB32);
 
+    bool isHorizontal = true;
+    TupBackground::Direction direction = vectorDynamicBgFrame->dynamicDirection();
+    switch (direction) {
+        case TupBackground::Right:
+        case TupBackground::Left:
+        {
+            width *= 2;
+        }
+        break;
+        case TupBackground::Top:
+        case TupBackground::Bottom:
+        {
+            height *= 2;
+            isHorizontal = false;
+        }
+        break;
+    }
+
+    QImage bgView(width, height, QImage::Format_ARGB32);
     QPainter *canvas = new QPainter(&bgView);
-    canvas->drawImage(0, 0, image);
-    canvas->drawImage(width, 0, image);
-    canvas->drawImage(0, height, image);
+    canvas->drawImage(0, 0, vectorDynamicImg);
+    if (isHorizontal)
+        canvas->drawImage(dimension.width(), 0, vectorDynamicImg);
+    else
+        canvas->drawImage(0, dimension.height(), vectorDynamicImg);
+    canvas->end();
 
-    setVectorDynamicViewImage(bgView);
-    noVectorRender = false;
+    QString dirPath = VECTOR_BG_DIR + QString::number(sceneIndex) + "/bg/";
+    QDir imgDir(dirPath);
+    if (!imgDir.exists()) {
+        if (!imgDir.mkpath(dirPath)) {
+            #ifdef TUP_DEBUG
+                qDebug() << "TupBackground::renderVectorDynamicView() - Error creating image path -> " << dirPath;
+            #endif
+            return;
+        }
+    }
 
-    bgScene = nullptr;
-    delete bgScene;
-    canvas = nullptr;
-    delete canvas;
+    if (!bgView.save(dirPath + "dynamic_bg.png", "PNG", 100)) {
+        #ifdef TUP_DEBUG
+            qDebug() << "TupBackground::renderVectorDynamicView() - Error: can save bg image at -> " << dirPath;
+        #endif
+        return;
+    }
+
+    vectorDynamicBgExpanded = QPixmap::fromImage(bgView);
+    vectorRenderRequired = false;
 }
 
 // Creating expanded raster dynamic image
@@ -376,172 +406,157 @@ void TupBackground::renderRasterDynamicView()
     int width = dimension.width();
     int height = dimension.height();
 
+    bool isHorizontal = true;
+    TupBackground::Direction direction = rasterDynamicBgFrame->dynamicDirection();
+    switch (direction) {
+        case TupBackground::Right:
+        case TupBackground::Left:
+        {
+            width *= 2;
+        }
+        break;
+        case TupBackground::Top:
+        case TupBackground::Bottom:
+        {
+            height *= 2;
+            isHorizontal = false;
+        }
+        break;
+    }
+
     QImage image = rasterDynamicBgPix.toImage();
-    QImage bgView(width * 2, height * 2, QImage::Format_ARGB32);
+    QImage bgView(width, height, QImage::Format_ARGB32);
+    bgView.fill(Qt::transparent);
 
     QPainter *canvas = new QPainter(&bgView);
     canvas->drawImage(0, 0, image);
-    canvas->drawImage(width, 0, image);
-    canvas->drawImage(0, height, image);
+    if (isHorizontal)
+        canvas->drawImage(dimension.width(), 0, image);
+    else
+        canvas->drawImage(0, dimension.height(), image);
 
-    setRasterDynamicViewImage(bgView);
-    noRasterRender = false;
-
-    canvas = nullptr;
-    delete canvas;
+    rasterDynamicBgExpanded = QPixmap::fromImage(bgView);
+    rasterRenderRequired = false;
 }
 
-QPixmap TupBackground::vectorDynamicView(int frameIndex)
+QPoint TupBackground::calculatePoint(TupBackground::Direction direction, int frameIndex, int shift)
 {
     int posX = 0;
     int posY = 0;
+    switch (direction) {
+        case TupBackground::Right:
+        {
+            posX = - dimension.width();
+            int delta = dimension.width() / shift;
+
+            if (frameIndex < delta) { // Position is inside the workspace
+                posX += (frameIndex * shift);
+            } else { // Position is outside the workspace
+                int mod = static_cast<int> (fmod(frameIndex, delta));
+                posX += (mod * shift);
+            }
+        }
+        break;
+        case TupBackground::Left:
+        {
+            posX = 0;
+            int delta = dimension.width() / shift;
+
+            if (delta > frameIndex) {
+                posX -= (frameIndex * shift);
+            } else {
+                int mod = static_cast<int> (fmod(frameIndex, delta));
+                posX -= (mod * shift);
+            }
+        }
+        break;
+        case TupBackground::Top:
+        {
+            posY = 0;
+            int delta = dimension.height() / shift;
+
+            if (delta > frameIndex) {
+                posY -= (frameIndex * shift);
+            } else {
+                int mod = static_cast<int> (fmod(frameIndex, delta));
+                posY -= (mod * shift);
+            }
+        }
+        break;
+        case TupBackground::Bottom:
+        {
+            posY = - dimension.height();
+            int delta = dimension.height() / shift;
+
+            if (delta > frameIndex) {
+                posY += (frameIndex * shift);
+            } else {
+                int mod = static_cast<int> (fmod(frameIndex, delta));
+                posY += (mod * shift);
+            }
+        }
+        break;
+    }
+
+    return QPoint(posX, posY);
+}
+
+QPoint TupBackground::vectorDynamicPos(int frameIndex)
+{
     int shift = vectorDynamicShift();
     if (shift == 0)
         shift = 5;
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupBackground::vectorDynamicView()] - shift: " << shift;
-        qDebug() << "[TupBackground::vectorDynamicView()] - frameIndex: " << frameIndex;
+        qDebug() << "[TupBackground::vectorDynamicPos()] - shift: " << shift;
+        qDebug() << "[TupBackground::vectorDynamicPos()] - frameIndex: " << frameIndex;
     #endif
 
-    TupBackground::Direction direction = vectorDynamicBgFrame->dynamicDirection();
-    switch (direction) {
-        case TupBackground::Right:
-        {
-            int delta = dimension.width() / shift;
-            if (delta > frameIndex) {
-                posX = dimension.width() - frameIndex * shift;
-            } else {
-                int mod = static_cast<int> (fmod(frameIndex, delta));
-                posX = dimension.width() - (mod * shift);
-            }
-        }
-        break;
-        case TupBackground::Left:
-        {
-            int delta = dimension.width() / shift;
-            if (delta > frameIndex) {
-                posX = frameIndex * shift;
-            } else {
-                int mod = static_cast<int> (fmod(frameIndex, delta));
-                posX = mod * shift;
-            }
-        }
-        break;
-        case TupBackground::Top:
-        {
-            int delta = dimension.height() / shift;
-            if (delta > frameIndex) {
-                posY = frameIndex * shift;
-            } else {
-                int mod = static_cast<int> (fmod(frameIndex, delta));
-                posY = mod * shift;
-            }
-        }
-        break;
-        case TupBackground::Bottom:
-        {
-            int delta = dimension.height() / shift;
-            if (delta > frameIndex) {
-                posY = dimension.height() - frameIndex*shift;
-            } else {
-                int mod = static_cast<int> (fmod(frameIndex, delta));
-                posY = dimension.height() - (mod * shift);
-            }
-        }
-        break;
-    }
-
-    return QPixmap::fromImage(vectorDynamicViewImg.copy(posX, posY, dimension.width(), dimension.height()));
+    return calculatePoint(vectorDynamicBgFrame->dynamicDirection(), frameIndex, shift);
 }
 
-QPixmap TupBackground::rasterDynamicView(int frameIndex)
+QPoint TupBackground::rasterDynamicPos(int frameIndex)
 {
-    int posX = 0;
-    int posY = 0;
     int shift = rasterDynamicShift();
     if (shift == 0)
         shift = 5;
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupBackground::rasterDynamicView()] - shift: " << shift;
-        qDebug() << "[TupBackground::rasterDynamicView()] - frameIndex: " << frameIndex;
+        qDebug() << "[TupBackground::rasterDynamicPos()] - shift: " << shift;
+        qDebug() << "[TupBackground::rasterDynamicPos()] - frameIndex: " << frameIndex;
     #endif
 
-    TupBackground::Direction direction = rasterDynamicBgFrame->dynamicDirection();
-    switch (direction) {
-        case TupBackground::Right:
-        {
-            int delta = dimension.width() / shift;
-            if (delta > frameIndex) {
-                posX = dimension.width() - frameIndex * shift;
-            } else {
-                int mod = static_cast<int> (fmod(frameIndex, delta));
-                posX = dimension.width() - (mod * shift);
-            }
-        }
-        break;
-        case TupBackground::Left:
-        {
-            int delta = dimension.width() / shift;
-            if (delta > frameIndex) {
-                posX = frameIndex * shift;
-            } else {
-                int mod = static_cast<int> (fmod(frameIndex, delta));
-                posX = mod * shift;
-            }
-        }
-        break;
-        case TupBackground::Top:
-        {
-            int delta = dimension.height() / shift;
-            if (delta > frameIndex) {
-                posY = frameIndex * shift;
-            } else {
-                int mod = static_cast<int> (fmod(frameIndex, delta));
-                posY = mod * shift;
-            }
-        }
-        break;
-        case TupBackground::Bottom:
-        {
-            int delta = dimension.height() / shift;
-            if (delta > frameIndex) {
-                posY = dimension.height() - frameIndex*shift;
-            } else {
-                int mod = static_cast<int> (fmod(frameIndex, delta));
-                posY = dimension.height() - (mod * shift);
-            }
-        }
-        break;
-    }
-
-    return QPixmap::fromImage(rasterDynamicViewImg.copy(posX, posY, dimension.width(), dimension.height()));
+    return calculatePoint(rasterDynamicBgFrame->dynamicDirection(), frameIndex, shift);
 }
 
 bool TupBackground::vectorRenderIsPending()
 {
-    return noVectorRender;
+    return vectorRenderRequired;
 }
 
 bool TupBackground::rasterRenderIsPending()
 {
-    return noRasterRender;
+    return rasterRenderRequired;
 }
 
 void TupBackground::scheduleVectorRender(bool status)
 {
-    noVectorRender = status;
+    vectorRenderRequired = status;
 }
 
-void TupBackground::setVectorDynamicViewImage(QImage bg)
+void TupBackground::scheduleRasterRender(bool status)
 {
-    vectorDynamicViewImg = bg;
+    rasterRenderRequired = status;
 }
 
-void TupBackground::setRasterDynamicViewImage(QImage bg)
+QPixmap TupBackground::vectorDynamicExpandedImage()
 {
-    rasterDynamicViewImg = bg;
+    return vectorDynamicBgExpanded;
+}
+
+QPixmap TupBackground::rasterDynamicExpandedImage()
+{
+    return rasterDynamicBgExpanded;
 }
 
 void TupBackground::setVectorDynamicDirection(int direction)
@@ -604,7 +619,7 @@ void TupBackground::updateRasterBgImage(TupProject::Mode spaceContext, const QSt
     if (spaceContext == TupProject::RASTER_DYNAMIC_BG_MODE) {
         if (QFile::exists(imgPath)) {
             rasterDynamicBgPix = QPixmap(imgPath);
-            noRasterRender = true;
+            rasterRenderRequired = true;
         } else {
             rasterDynamicBgPix = QPixmap();
         }

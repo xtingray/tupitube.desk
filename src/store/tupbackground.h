@@ -60,7 +60,8 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         void clearBackground();
 
         void renderVectorDynamicView();
-        QPixmap vectorDynamicView(int frameIndex);
+
+        QPoint vectorDynamicPos(int frameIndex);
         void setVectorDynamicDirection(int direction);
         void setRasterDynamicDirection(int direction);
         void setVectorDynamicShift(int shift);
@@ -71,13 +72,13 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         int vectorDynamicShift();
         int rasterDynamicShift();
 
-        void setVectorDynamicViewImage(QImage bg);
-        void setRasterDynamicViewImage(QImage bg);
+        QPixmap vectorDynamicExpandedImage();
+        QPixmap rasterDynamicExpandedImage();
 
-        // QImage rasterDynamicImage();
         bool vectorDynamicBgIsEmpty();
         bool vectorRenderIsPending();
         void scheduleVectorRender(bool status);
+        void scheduleRasterRender(bool status);
         void setVectorDynamicOpacity(double opacity);
         double vectorDynamicOpacity();
 
@@ -98,7 +99,7 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
 
         bool rasterRenderIsPending();
         void renderRasterDynamicView();
-        QPixmap rasterDynamicView(int photogram);
+        QPoint rasterDynamicPos(int frameIndex);
 
         void setRasterDynamicOpacity(double opacity);
         double rasterDynamicOpacity();
@@ -113,6 +114,7 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         bool isBgLayerVisible(BgType bgId);
 
     private:
+        QPoint calculatePoint(TupBackground::Direction direction, int frameIndex, int shift);
         int sceneIndex;
         QSize dimension;
         QColor bgColor;
@@ -122,20 +124,17 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         TupFrame *rasterDynamicBgFrame;
         TupFrame *rasterStaticBgFrame;
 
-        bool noVectorRender;
-        bool noRasterRender;
+        bool vectorRenderRequired;
+        bool rasterRenderRequired;
 
-        // Vector base images
-        QImage vectorDynamicBgImg;
-        QImage vectorStaticBgImg;
+        QImage vectorDynamicImg;
         // Vector expanded image
-        QImage vectorDynamicViewImg;
+        QPixmap vectorDynamicBgExpanded;
 
         // Raster base images
-        QPixmap rasterDynamicBgPix;
         QPixmap rasterStaticBgPix;
-        // Raster expanded image
-        QImage rasterDynamicViewImg;
+        QPixmap rasterDynamicBgPix;
+        QPixmap rasterDynamicBgExpanded;
 
         QList<BgType> bgLayerIndexes;
         QList<bool> bgVisibilityList;
