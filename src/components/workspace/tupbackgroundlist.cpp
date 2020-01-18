@@ -92,3 +92,4 @@ TupBackgroundList::TupBackgroundList(QWidget *parent): QListWidget(parent)
 TupBackgroundList::~TupBackgroundList()
 {
 }
+

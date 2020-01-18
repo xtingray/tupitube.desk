@@ -83,11 +83,31 @@ TupBackgroundSettingsDialog::TupBackgroundSettingsDialog(QList<TupBackground::Bg
     bgList->setDragDropMode(QAbstractItemView::InternalMove);
     bgList->setFixedHeight(170);
 
+    QHBoxLayout *buttonsLayout = new QHBoxLayout;
+
+    QPixmap upIcon = QPixmap(THEME_DIR + "icons/bg_up.png");
+    upButton = new QPushButton;
+    upButton->setToolTip(tr("Move Layer Up"));
+    upButton->setIcon(QIcon(upIcon));
+    connect(upButton, SIGNAL(clicked()), this, SLOT(moveBackgroundUp()));
+
+    QPixmap downIcon = QPixmap(THEME_DIR + "icons/bg_down.png");
+    downButton = new QPushButton;
+    downButton->setToolTip(tr("Move Layer Down"));
+    downButton->setIcon(QIcon(downIcon));
+    connect(downButton, SIGNAL(clicked()), this, SLOT(moveBackgroundDown()));
+
+    buttonsLayout->addSpacing(20);
+    buttonsLayout->addWidget(upButton);
+    buttonsLayout->addWidget(downButton);
+    buttonsLayout->addSpacing(20);
+
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Cancel | QDialogButtonBox::Apply, Qt::Horizontal, this);
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
 
     layout->addWidget(bgList);
+    layout->addLayout(buttonsLayout);
     layout->addWidget(new TSeparator());
     layout->addWidget(buttonBox);
 }
@@ -101,7 +121,6 @@ void TupBackgroundSettingsDialog::apply()
     QList<QPair<TupBackground::BgType, bool>> valuesList;
     for (int i=0; i < bgList->count(); i++) {
          TupBackgroundItem *widget = static_cast<TupBackgroundItem *>(bgList->itemWidget(bgList->item(i)));
-
          QPair<TupBackground::BgType, bool> values = widget->getValues();
          idList << values.first;
          visibilityList << values.second;
@@ -109,4 +128,46 @@ void TupBackgroundSettingsDialog::apply()
 
     emit valuesUpdated(idList, visibilityList);
     close();
+}
+
+void TupBackgroundSettingsDialog::moveBackgroundUp()
+{
+    int currentIndex = bgList->currentRow();
+    TupBackgroundItem *bgWidget = static_cast<TupBackgroundItem *>(bgList->itemWidget(bgList->item(currentIndex)));
+    bgList->takeItem(currentIndex);
+    currentIndex--;
+    if (currentIndex < 0)
+        currentIndex = 0;
+
+    if (currentIndex == 0 && upButton->isEnabled())
+        upButton->setEnabled(false);
+    if (currentIndex < 3 && !downButton->isEnabled())
+        downButton->setEnabled(true);
+
+    TupListItem* bgItem = new TupListItem;
+    bgList->insertItem(currentIndex, bgItem);
+    TupBackgroundItem *widget = new TupBackgroundItem(bgWidget->bgType(), bgWidget->itemLabel(), bgWidget->visibility());
+    bgList->setItemWidget(bgItem, widget);
+    bgList->setCurrentRow(currentIndex);
+}
+
+void TupBackgroundSettingsDialog::moveBackgroundDown()
+{
+    int currentIndex = bgList->currentRow();
+    TupBackgroundItem *bgWidget = static_cast<TupBackgroundItem *>(bgList->itemWidget(bgList->item(currentIndex)));
+    bgList->takeItem(currentIndex);
+    currentIndex++;
+    if (currentIndex > 3)
+        currentIndex = 3;
+
+    if (currentIndex > 0 && !upButton->isEnabled())
+        upButton->setEnabled(true);
+    if (currentIndex == 3 && downButton->isEnabled())
+        downButton->setEnabled(false);
+
+    TupListItem* bgItem = new TupListItem;
+    bgList->insertItem(currentIndex, bgItem);
+    TupBackgroundItem *widget = new TupBackgroundItem(bgWidget->bgType(), bgWidget->itemLabel(), bgWidget->visibility());
+    bgList->setItemWidget(bgItem, widget);
+    bgList->setCurrentRow(currentIndex);
 }

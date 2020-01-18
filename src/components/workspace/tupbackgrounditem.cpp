@@ -46,6 +46,7 @@ TupBackgroundItem::TupBackgroundItem(TupBackground::BgType id, const QString &ti
 {
     itemId = id;
     isVisible = viewFlag;
+    label = title;
 
     QBoxLayout *layout = new QHBoxLayout(this);
     viewIconOn = QPixmap(THEME_DIR + "icons/show_layer.png");
@@ -66,7 +67,7 @@ TupBackgroundItem::TupBackgroundItem(TupBackground::BgType id, const QString &ti
 
     TSeparator *separator = new TSeparator(Qt::Vertical);
 
-    QLabel *titleLabel = new QLabel(title);
+    QLabel *titleLabel = new QLabel(label);
     titleLabel->setAttribute(Qt::WA_TranslucentBackground);
 
     layout->addWidget(viewButton);
@@ -95,4 +96,19 @@ QPair<TupBackground::BgType, bool> TupBackgroundItem::getValues()
     response.second = isVisible;
 
     return response;
+}
+
+TupBackground::BgType TupBackgroundItem::bgType()
+{
+    return itemId;
+}
+
+QString & TupBackgroundItem::itemLabel()
+{
+    return label;
+}
+
+bool TupBackgroundItem::visibility()
+{
+    return isVisible;
 }

@@ -2986,9 +2986,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.7200623"
-     inkscape:cx="638.54699"
-     inkscape:cy="1111.9467"
+     inkscape:zoom="7.693498"
+     inkscape:cx="506.76525"
+     inkscape:cy="539.64358"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -16731,5 +16731,23 @@
        sodipodi:nodetypes="cscc"
        inkscape:export-xdpi="162"
        inkscape:export-ydpi="162" />
+    <path
+       style="fill:#008700;fill-opacity:1;stroke:none"
+       d="m 515.7602,513.91376 12.7187,14.18129 h -9.08816 l -3.63055,-3.63841 -3.63055,3.63841 h -9.08816 z"
+       id="rect11330-2-3"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccccc"
+       inkscape:export-filename="/home/xtingray/tupi/sources/tupi/src/themes/default/icons/miter.png"
+       inkscape:export-xdpi="113.22"
+       inkscape:export-ydpi="113.22" />
+    <path
+       style="fill:#008700;fill-opacity:1;stroke:none"
+       d="m 551.11473,527.96507 12.7187,-14.18129 h -9.08816 l -3.63055,3.63841 -3.63055,-3.63841 h -9.08816 z"
+       id="rect11330-2-3-9"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccccc"
+       inkscape:export-filename="/home/xtingray/tupi/sources/tupi/src/themes/default/icons/miter.png"
+       inkscape:export-xdpi="113.22"
+       inkscape:export-ydpi="113.22" />
   </g>
 </svg>

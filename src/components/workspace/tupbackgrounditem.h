@@ -51,6 +51,9 @@ class TUPITUBE_EXPORT TupBackgroundItem: public QWidget
                           QWidget *parent = nullptr);
         ~TupBackgroundItem();
 
+        TupBackground::BgType bgType();
+        QString & itemLabel();
+        bool visibility();
         QPair<TupBackground::BgType, bool> getValues();
 
     private slots:
@@ -58,6 +61,7 @@ class TUPITUBE_EXPORT TupBackgroundItem: public QWidget
 
     private:
         TupBackground::BgType itemId;
+        QString label;
         QPixmap viewIconOn;
         QPixmap viewIconOff;
         QPushButton *viewButton;

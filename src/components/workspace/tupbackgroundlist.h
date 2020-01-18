@@ -37,6 +37,7 @@
 #define TUPBACKGROUNDLIST_H
 
 #include "tglobal.h"
+
 #include <QListWidget>
 
 class TupListItemDelegate;

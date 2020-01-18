@@ -127,7 +127,7 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         bool vectorRenderRequired;
         bool rasterRenderRequired;
 
-        QImage vectorDynamicImg;
+        // QImage vectorDynamicImg;
         // Vector expanded image
         QPixmap vectorDynamicBgExpanded;
 

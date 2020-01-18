@@ -58,11 +58,15 @@ class TUPITUBE_EXPORT TupBackgroundSettingsDialog : public QDialog
 
     private slots:
         void apply();
+        void moveBackgroundUp();
+        void moveBackgroundDown();
 
     private:
         TupBackgroundList *bgList;
         QList<bool> visibilityList;
         QList<TupBackground::BgType> idList;
+        QPushButton *upButton;
+        QPushButton *downButton;
 };
 
 #endif
