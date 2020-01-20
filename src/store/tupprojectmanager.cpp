@@ -471,6 +471,7 @@ bool TupProjectManager::removeProjectPath(const QString &projectPath)
 {
     #ifdef TUP_DEBUG
         qDebug() << "TupProjectManager::removeProjectPath() - Removing project path: " << projectPath;
+        qDebug() << "CACHE_DIR: " << CACHE_DIR;
     #endif
 
     bool result = true;

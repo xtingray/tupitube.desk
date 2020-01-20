@@ -97,7 +97,10 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         QPixmap rasterDynamicBackground();
         QPixmap rasterStaticBackground();
 
-        bool rasterRenderIsPending();
+        bool rasterDynamicRenderIsPending();
+        bool rasterStaticUpdateIsPending();
+        void updateRasterStaticStatus(bool flag);
+
         void renderRasterDynamicView();
         QPoint rasterDynamicPos(int frameIndex);
 
@@ -124,8 +127,9 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         TupFrame *rasterDynamicBgFrame;
         TupFrame *rasterStaticBgFrame;
 
-        bool vectorRenderRequired;
-        bool rasterRenderRequired;
+        bool rasterStaticUpdateRequired;
+        bool vectorDynamicRenderRequired;
+        bool rasterDynamicRenderRequired;
 
         // QImage vectorDynamicImg;
         // Vector expanded image

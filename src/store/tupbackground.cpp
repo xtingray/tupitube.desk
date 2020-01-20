@@ -48,8 +48,9 @@ TupBackground::TupBackground(TupScene *parent, int index, const QSize size,
     dimension = size;
     bgColor = color;
 
-    vectorRenderRequired = true;
-    rasterRenderRequired = true;
+    rasterStaticUpdateRequired = true;
+    vectorDynamicRenderRequired = true;
+    rasterDynamicRenderRequired = true;
 
     vectorDynamicBgFrame = new TupFrame(this, "landscape_dynamic");
     vectorDynamicBgFrame->setDynamicDirection("0");
@@ -112,7 +113,7 @@ void TupBackground::fromXml(const QString &xml)
                 QString imgPath = VECTOR_BG_DIR + QString::number(sceneIndex) + "/bg/dynamic_bg.png";
                 if (QFile::exists(imgPath)) {
                     vectorDynamicBgExpanded = QPixmap(imgPath);
-                    vectorRenderRequired = false;
+                    vectorDynamicRenderRequired = false;
 
                     #ifdef TUP_DEBUG
                         qDebug() << "TupBackground::fromXml() - Vector dynamic image loaded -> " << imgPath;
@@ -137,7 +138,8 @@ void TupBackground::fromXml(const QString &xml)
                 QString imgPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/dynamic_bg.png";
                 if (QFile::exists(imgPath)) {
                     rasterDynamicBgPix = QPixmap(imgPath);
-                    rasterRenderRequired = false;
+                    // rasterRenderRequired = false;
+                    renderRasterDynamicView();
 
                     #ifdef TUP_DEBUG
                         qDebug() << "TupBackground::fromXml() - Raster dynamic image loaded -> " << imgPath;
@@ -170,6 +172,7 @@ void TupBackground::fromXml(const QString &xml)
                 QString imgPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/static_bg.png";
                 if (QFile::exists(imgPath)) {
                     rasterStaticBgPix = QPixmap(imgPath);
+                    rasterStaticUpdateRequired = true;
                     #ifdef TUP_DEBUG
                         qDebug() << "TupBackground::fromXml() - Raster static image loaded -> " << imgPath;
                     #endif
@@ -387,13 +390,13 @@ void TupBackground::renderVectorDynamicView()
 
     if (!bgView.save(dirPath + "dynamic_bg.png", "PNG", 100)) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupBackground::renderVectorDynamicView() - Error: can save bg image at -> " << dirPath;
+            qDebug() << "TupBackground::renderVectorDynamicView() - Error: can't save bg image at -> " << dirPath;
         #endif
         return;
     }
 
     vectorDynamicBgExpanded = QPixmap::fromImage(bgView);
-    vectorRenderRequired = false;
+    vectorDynamicRenderRequired = false;
 }
 
 // Creating expanded raster dynamic image
@@ -434,9 +437,28 @@ void TupBackground::renderRasterDynamicView()
         canvas->drawImage(dimension.width(), 0, image);
     else
         canvas->drawImage(0, dimension.height(), image);
+    canvas->end();
+
+    QString dirPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/";
+    QDir imgDir(dirPath);
+    if (!imgDir.exists()) {
+        if (!imgDir.mkpath(dirPath)) {
+            #ifdef TUP_DEBUG
+                qDebug() << "TupBackground::renderRasterDynamicView() - Error creating image path -> " << dirPath;
+            #endif
+            return;
+        }
+    }
+
+    if (!bgView.save(dirPath + "dynamic_bg.png", "PNG", 100)) {
+        #ifdef TUP_DEBUG
+            qDebug() << "TupBackground::renderRasterDynamicView() - Error: can't save bg image at -> " << dirPath;
+        #endif
+        return;
+    }
 
     rasterDynamicBgExpanded = QPixmap::fromImage(bgView);
-    rasterRenderRequired = false;
+    rasterDynamicRenderRequired = false;
 }
 
 QPoint TupBackground::calculatePoint(TupBackground::Direction direction, int frameIndex, int shift)
@@ -531,22 +553,32 @@ QPoint TupBackground::rasterDynamicPos(int frameIndex)
 
 bool TupBackground::vectorRenderIsPending()
 {
-    return vectorRenderRequired;
+    return vectorDynamicRenderRequired;
 }
 
-bool TupBackground::rasterRenderIsPending()
+bool TupBackground::rasterStaticUpdateIsPending()
 {
-    return rasterRenderRequired;
+    return rasterStaticUpdateRequired;
+}
+
+void TupBackground::updateRasterStaticStatus(bool flag)
+{
+    rasterStaticUpdateRequired = flag;
+}
+
+bool TupBackground::rasterDynamicRenderIsPending()
+{
+    return rasterDynamicRenderRequired;
 }
 
 void TupBackground::scheduleVectorRender(bool status)
 {
-    vectorRenderRequired = status;
+    vectorDynamicRenderRequired = status;
 }
 
 void TupBackground::scheduleRasterRender(bool status)
 {
-    rasterRenderRequired = status;
+    rasterDynamicRenderRequired = status;
 }
 
 QPixmap TupBackground::vectorDynamicExpandedImage()
@@ -619,15 +651,17 @@ void TupBackground::updateRasterBgImage(TupProject::Mode spaceContext, const QSt
     if (spaceContext == TupProject::RASTER_DYNAMIC_BG_MODE) {
         if (QFile::exists(imgPath)) {
             rasterDynamicBgPix = QPixmap(imgPath);
-            rasterRenderRequired = true;
+            rasterDynamicRenderRequired = true;
         } else {
             rasterDynamicBgPix = QPixmap();
         }
     } else {
-        if (QFile::exists(imgPath))
+        if (QFile::exists(imgPath)) {
             rasterStaticBgPix = QPixmap(imgPath);
-        else
+            rasterStaticUpdateRequired = true;
+        } else {
             rasterStaticBgPix = QPixmap();
+        }
     }
 }
 

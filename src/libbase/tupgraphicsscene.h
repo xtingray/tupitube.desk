@@ -199,7 +199,7 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         int zLevel;
 
         bool loadingProject;
-        QGraphicsPixmapItem *dynamicBg;
+        QGraphicsPixmapItem *vectorDynamicBg;
         QGraphicsPixmapItem *rasterStaticBg;
         QGraphicsPixmapItem *rasterDynamicBg;
 };

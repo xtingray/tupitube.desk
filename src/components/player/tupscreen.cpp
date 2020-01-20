@@ -43,11 +43,7 @@
 TupScreen::TupScreen(TupProject *work, const QSize viewSize, bool sizeChanged, QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupScreen()]";
-        #else
-            TINIT << "viewSize" << viewSize;
-        #endif
+            qDebug() << "[TupScreen()] - viewSize: " << viewSize;
     #endif
 
     project = work;
