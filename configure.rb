@@ -175,9 +175,9 @@ _EOH_
        config.addDefine("ADD_HEADERS");
     end
 
-    config.addDefine('VERSION=\\\\\"Artist\\\\\"')
-    config.addDefine('REVISION=\\\\\"11-19\\\\\"')
+    config.addDefine('VERSION=\\\\\"0.2\\\\\"')
     config.addDefine('CODE_NAME=\\\\\"Uberaba\\\\\"')
+    config.addDefine('REVISION=\\\\\"14\\\\\"')
     config.addDefine('CONFIG_VERSION=\\\\\"3\\\\\"')
 
     if File.exists?('/etc/canaima_version')

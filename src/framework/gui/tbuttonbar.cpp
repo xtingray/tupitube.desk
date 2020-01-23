@@ -83,6 +83,7 @@ TButtonBar::~TButtonBar()
 
 void TButtonBar::addButton(TViewButton *viewButton)
 {
+    /*
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TButtonBar::addButton()]";
@@ -90,6 +91,7 @@ void TButtonBar::addButton(TViewButton *viewButton)
             T_FUNCINFO;
         #endif
     #endif
+    */
 
     QAction *action = addWidget(viewButton);
     m_buttons.addButton(viewButton);
@@ -109,6 +111,7 @@ void TButtonBar::addButton(TViewButton *viewButton)
 
 void TButtonBar::removeButton(TViewButton *viewButton)
 {
+    /*
     #ifdef TUP_DEBUG
         #ifdef Q_OS_WIN
             qDebug() << "[TButtonBar::removeButton()]";
@@ -116,6 +119,7 @@ void TButtonBar::removeButton(TViewButton *viewButton)
             T_FUNCINFO;
         #endif
     #endif
+    */
 
     if (!m_buttons.buttons().contains(viewButton)) 
         return;

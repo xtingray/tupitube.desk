@@ -55,9 +55,9 @@
 #endif
 
 #ifdef TUP_DEBUG
-#define SHOW_VAR(arg) qDebug() << #arg << " = " << arg;
 #ifdef Q_OS_WIN
   #include <QDebug>
+  #define SHOW_VAR(arg) qDebug() << #arg << " = " << arg;
 #else
   #include "tdebug.h"
 #endif

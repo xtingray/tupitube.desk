@@ -163,7 +163,8 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         QString currentTool;
         bool deleteMode;
         TupProject::Mode spaceMode;
-        QPointF oldPosition;
+        QPointF copyPosition;
+        QPointF copySize;
         QPointF position;
         bool menuOn;
         QString copyFrameName;

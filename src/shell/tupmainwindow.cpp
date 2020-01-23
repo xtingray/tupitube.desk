@@ -86,7 +86,7 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
     #endif
 
     // Naming the main window
-    appTitle = "TupiTube Desk | Artist";
+    appTitle = "TupiTube Desk";
     setWindowTitle(appTitle);
     setWindowIcon(QIcon(THEME_DIR + "icons/about.png"));
     setObjectName("TupMainWindow_");
@@ -126,11 +126,70 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
     setupMenu();
     setupToolBar();
 
-    TCONFIG->beginGroup("General");
-    bool showTips = TCONFIG->value("ShowTipOfDay", true).toBool();
-    // If option is enabled, then, show a little dialog with a nice tip
-    if (showTips)
-        QTimer::singleShot(0, this, SLOT(showTipDialog()));
+    // SQA: Web announcement comes here
+    QString webMsgPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/webmsg.html";
+    QFile webMsgFile(webMsgPath);
+    QString fileContent = "";
+    if (webMsgFile.exists()) {
+        if (webMsgFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QTextStream in(&webMsgFile);
+            while (!in.atEnd())
+                fileContent += in.readLine();
+        }
+    }
+
+    // Processing web msg content
+    bool showWebMsg = false;
+    isImageMsg = false;
+    webContent = "";
+    if (!fileContent.isEmpty()) {
+        QDomDocument doc;
+        if (doc.setContent(fileContent)) {
+            QDomElement root = doc.documentElement();
+            QDomNode n = root.firstChild();
+            while (!n.isNull()) {
+                QDomElement e = n.toElement();
+                if (e.tagName() == "show") {
+                    QString flag = e.text();
+                    if (flag.compare("true") == 0)
+                        showWebMsg = true;
+                    else
+                        break;
+                } else if (e.tagName() == "size") {
+                    QStringList numbers = e.text().split(",");
+                    if (numbers.size() == 2)
+                        webMsgSize = QSize(numbers.at(0).toInt(), numbers.at(1).toInt());
+                } else if (e.tagName() == "text") {
+                    webContent = e.text();
+                } else if (e.tagName() == "image") {
+                    isImageMsg = true;
+                }
+
+                n = n.nextSibling();
+            }
+        } else {
+            #ifdef TUP_DEBUG
+                qWarning() << "TupMainWindow() - Fatal error parsing file -> " + webMsgPath;
+            #endif
+        }
+    }
+
+    if (showWebMsg) {
+        QTimer::singleShot(0, this, SLOT(showWebMessage()));
+    } else {
+        TCONFIG->beginGroup("General");
+        bool update = TCONFIG->value("NotifyUpdate", false).toBool();
+
+        if (update)
+            QDesktopServices::openUrl(QString(MAEFLORESTA_URL) + QString("downloads"));
+
+        // Check if user wants to see a TupiTube tip for every time he launches the program
+        bool showTips = TCONFIG->value("ShowTipOfDay", true).toBool();
+
+        // If option is enabled, then, show a little dialog with a nice tip
+        if (showTips)
+            QTimer::singleShot(0, this, SLOT(showTipDialog()));
+    }
 
     // Time to load plugins... 
     TupPluginManager::instance()->loadPlugins();
@@ -1263,6 +1322,15 @@ void TupMainWindow::saveDefaultPath(const QString &dir)
     TCONFIG->beginGroup("General");
     TCONFIG->setValue("DefaultPath", dir);
     TCONFIG->sync();
+}
+
+void TupMainWindow::showWebMessage()
+{
+    TMsgDialog *msgDialog = new TMsgDialog(webContent, webMsgSize, isImageMsg, this);
+    msgDialog->show();
+
+    msgDialog->move(static_cast<int> ((screen->geometry().width() - msgDialog->width()) / 2),
+                    static_cast<int> ((screen->geometry().height() - msgDialog->height()) / 2));
 }
 
 void TupMainWindow::setUpdateFlag(bool update)
