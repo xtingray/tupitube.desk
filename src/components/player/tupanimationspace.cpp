@@ -121,3 +121,13 @@ void TupAnimationspace::keyPressEvent(QKeyEvent *event)
         break;
     }
 }
+
+void TupAnimationspace::clearInterface()
+{
+    playerInterface->doStop();
+    playerInterface->clearMemory();
+    playerInterface->resetPlayerInterface();
+
+    playerInterface = nullptr;
+    delete playerInterface;
+}

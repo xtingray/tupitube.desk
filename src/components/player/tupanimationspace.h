@@ -50,6 +50,7 @@ class TUPITUBE_EXPORT TupAnimationspace : public QWidget
         ~TupAnimationspace();
 
         void setCameraWidget(TupCameraWidget *playerUI);
+        void clearInterface();
 
     protected:
         void mousePressEvent(QMouseEvent *event);

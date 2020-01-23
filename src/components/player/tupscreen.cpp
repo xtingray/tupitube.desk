@@ -563,8 +563,9 @@ void TupScreen::render()
         painter->setRenderHint(QPainter::Antialiasing);
 
         renderer->render(painter);
-        delete painter;
+        painter->end();
         painter = nullptr;
+        delete painter;
 
         if (isScaled)
             photograms << renderized.scaledToWidth(screenDimension.width(), Qt::SmoothTransformation);
@@ -578,8 +579,8 @@ void TupScreen::render()
     animationList.replace(sceneIndex, photograms);
     renderControl.replace(sceneIndex, true);
 
-    delete renderer;
     renderer = nullptr;
+    delete renderer;
 
     emit isRendering(0); 
 }

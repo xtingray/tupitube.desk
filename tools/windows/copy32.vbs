@@ -3,7 +3,7 @@ REM Developed by Santiago Paz Mendieta
 Set fileSystem = CreateObject("Scripting.FileSystemObject")
 
 quazipDir = "c:\Quazip\lib"
-sourceDir = "c:\devel\sources\tupitube.artist\src"
+sourceDir = "c:\devel\sources\tupitube.desk\src"
 tupiDir = "c:\tupitube"
 
 If fileSystem.FolderExists(tupiDir) Then
@@ -27,10 +27,10 @@ fileSystem.CreateFolder tupiDir & "\lib\ssl"
 fileSystem.CreateFolder tupiDir & "\lib\raster"
 
 fileSystem.CopyFile quazipDir & "\quazip.dll", tupiDir & "\lib\quazip.dll"
-fileSystem.CopyFile "c:\devel\sources\tupitube.artist\tools\windows\tupitube.iss", tupiDir & "\tupitube.iss"
-fileSystem.CopyFile "c:\devel\sources\tupitube.artist\tools\windows\tupitube.ico", tupiDir & "\bin\raw\icon\tupitube.ico"
-fileSystem.CopyFile "c:\devel\sources\tupitube.artist\tools\windows\TupiTube.bat", tupiDir & "\bin\TupiTube.bat"
-fileSystem.CopyFile "c:\devel\sources\tupitube.artist\tools\windows\TupiTube.debug.bat", tupiDir & "\bin\TupiTube.debug.bat"
+fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\tupitube.iss", tupiDir & "\tupitube.iss"
+fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\tupitube.ico", tupiDir & "\bin\raw\icon\tupitube.ico"
+fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\TupiTube.bat", tupiDir & "\bin\TupiTube.bat"
+fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\TupiTube.debug.bat", tupiDir & "\bin\TupiTube.debug.bat"
 fileSystem.CopyFile sourceDir & "\shell\release\tupitube.desk.exe", tupiDir & "\bin\raw\tupitube.desk.exe"
 fileSystem.CopyFile sourceDir & "\framework\core\release\tupifwcore.dll", tupiDir & "\lib\tupifwcore.dll"
 fileSystem.CopyFile sourceDir & "\framework\gui\release\tupifwgui.dll", tupiDir & "\lib\tupifwgui.dll"

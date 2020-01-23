@@ -590,3 +590,10 @@ void TupCameraWidget::clearMemory()
 {
     previewScreen->clearPhotograms();
 }
+
+void TupCameraWidget::resetPlayerInterface()
+{
+    previewScreen->clearScenesArrays();
+    previewScreen = nullptr;
+    delete previewScreen;
+}

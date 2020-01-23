@@ -559,6 +559,8 @@ void TupMainWindow::resetUI()
     }
 
     if (playerTab) {
+        playerTab->clearInterface();
+
         delete playerTab;
         playerTab = nullptr;
     }
