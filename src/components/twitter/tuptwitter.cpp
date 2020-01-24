@@ -67,7 +67,8 @@ TupTwitter::TupTwitter(QWidget *parent): QWidget(parent)
     themeName = TCONFIG->value("Theme", "Light").toString();
     showAds = TCONFIG->value("ShowAds", true).toBool();
 
-    locale = QString(QLocale::system().name()).left(2);
+    // locale = QString(QLocale::system().name()).left(2);
+    locale = TCONFIG->value("Language", "en").toString();
     if (locale.length() < 2) {
         locale = "en";
     } else {
