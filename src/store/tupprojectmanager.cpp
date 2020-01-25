@@ -482,7 +482,7 @@ bool TupProjectManager::removeProjectPath(const QString &projectPath)
                                                     | QDir::AllDirs | QDir::Files, QDir::DirsFirst)) {
             if (info.isDir()) {
                 QString path = info.absoluteFilePath();
-                if (CACHE_DIR.compare(path + QDir::separator()) != 0) {
+                if (CACHE_DIR.compare(path) != 0) {
                     result = removeProjectPath(path);
                 } else {
                     #ifdef TUP_DEBUG

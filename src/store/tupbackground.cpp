@@ -138,7 +138,6 @@ void TupBackground::fromXml(const QString &xml)
                 QString imgPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/dynamic_bg.png";
                 if (QFile::exists(imgPath)) {
                     rasterDynamicBgPix = QPixmap(imgPath);
-                    // rasterRenderRequired = false;
                     renderRasterDynamicView();
 
                     #ifdef TUP_DEBUG
@@ -338,7 +337,8 @@ void TupBackground::renderVectorDynamicView()
         qDebug() << "[TupBackground::renderVectorDynamicView()]";
     #endif
 
-    TupBackgroundScene *bgScene = new TupBackgroundScene(dimension, QBrush(Qt::transparent), vectorDynamicBgFrame);
+    TupBackgroundScene *bgScene = new TupBackgroundScene(dimension, QBrush(Qt::transparent),
+                                                         vectorDynamicBgFrame);
     QImage vectorDynamicImg = QImage(dimension, QImage::Format_ARGB32);
     vectorDynamicImg.fill(Qt::transparent);
 
@@ -369,6 +369,7 @@ void TupBackground::renderVectorDynamicView()
     }
 
     QImage bgView(width, height, QImage::Format_ARGB32);
+    bgView.fill(Qt::transparent);
     QPainter *canvas = new QPainter(&bgView);
     canvas->drawImage(0, 0, vectorDynamicImg);
     if (isHorizontal)

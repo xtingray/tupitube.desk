@@ -553,7 +553,7 @@ void Tweener::applyTween()
 
     if (total >= framesNumber) {
         for (int i = framesNumber; i < total; i++) {
-             for (int j = 0; j < layersCount; j++) {
+             for (int j = initLayer; j < layersCount; j++) {
                   request = TupRequestBuilder::createFrameRequest(initScene, j, i, TupProjectRequest::Add, tr("Frame"));
                   emit requested(&request);
              }
