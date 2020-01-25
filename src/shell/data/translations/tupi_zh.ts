@@ -1563,6 +1563,44 @@
     </message>
 </context>
 <context>
+    <name>TupBackgroundItem</name>
+    <message>
+        <source>Background Layer Visibility</source>
+        <translation>背景层可见性</translation>
+    </message>
+</context>
+<context>
+    <name>TupBackgroundSettingsDialog</name>
+    <message>
+        <source>Background Settings</source>
+        <translation>背景设定</translation>
+    </message>
+    <message>
+        <source>Vector Dynamic Background</source>
+        <translation>矢量动态背景</translation>
+    </message>
+    <message>
+        <source>Raster Dynamic Background</source>
+        <translation>栅格动态背景</translation>
+    </message>
+    <message>
+        <source>Vector Static Background</source>
+        <translation>矢量静态背景</translation>
+    </message>
+    <message>
+        <source>Raster Static Background</source>
+        <translation>栅格静态背景</translation>
+    </message>
+    <message>
+        <source>Move Layer Up</source>
+        <translation>向上移动图层</translation>
+    </message>
+    <message>
+        <source>Move Layer Down</source>
+        <translation>向下移动图层</translation>
+    </message>
+</context>
+<context>
     <name>TupBasicCameraInterface</name>
     <message>
         <source>Error</source>
@@ -2432,6 +2470,10 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Raster Dynamic BG Mode</source>
         <translation>栅格动态背景</translation>
+    </message>
+    <message>
+        <source>Background Settings</source>
+        <translation>背景设定</translation>
     </message>
 </context>
 <context>
@@ -4748,8 +4790,12 @@ Please, contact the animation server admin to get access.</source>
         <translation>暗黑主题</translation>
     </message>
     <message>
-        <source>Note: You must restart TupiTube to apply theme changes</source>
-        <translation>注意：您必须重新启动Muvizu Tupi才能应用主题更改</translation>
+        <source>Warning</source>
+        <translation>警告</translation>
+    </message>
+    <message>
+        <source>Please restart TupiTube</source>
+        <translation>请重新启动TupiTube</translation>
     </message>
 </context>
 <context>
@@ -4803,6 +4849,10 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Description</source>
         <translation>描述</translation>
+    </message>
+    <message>
+        <source>Want to help us to make a better project? Click here!</source>
+        <translation>想帮助我们做一个更好的项目吗？ 点击这里！</translation>
     </message>
 </context>
 <context>

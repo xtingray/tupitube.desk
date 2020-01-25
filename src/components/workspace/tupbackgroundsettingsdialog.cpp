@@ -60,7 +60,7 @@ TupBackgroundSettingsDialog::TupBackgroundSettingsDialog(QList<TupBackground::Bg
             break;
             case TupBackground::RasterDynamic:
             {
-                label = tr("Raster Dyanmic Background");
+                label = tr("Raster Dynamic Background");
             }
             break;
             case TupBackground::VectorStatic:
