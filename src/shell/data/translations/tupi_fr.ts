@@ -2063,6 +2063,16 @@
         <source>Move Layer Down</source>
         <translation>Déplacer le calque vers le bas</translation>
     </message>
+    <message>
+        <location filename="../../../components/workspace/tupbackgroundsettingsdialog.cpp" line="106"/>
+        <source>&amp;Apply</source>
+        <translation>&amp;Appliquer</translation>
+    </message>
+    <message>
+        <location filename="../../../components/workspace/tupbackgroundsettingsdialog.cpp" line="108"/>
+        <source>&amp;Cancel</source>
+        <translation>A&amp;nnuler</translation>
+    </message>
 </context>
 <context>
     <name>TupBasicCameraInterface</name>

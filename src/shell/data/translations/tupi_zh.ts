@@ -1599,6 +1599,14 @@
         <source>Move Layer Down</source>
         <translation>向下移动图层</translation>
     </message>
+    <message>
+        <source>&amp;Apply</source>
+        <translation>应用</translation>
+    </message>
+    <message>
+        <source>&amp;Cancel</source>
+        <translation>取消</translation>
+    </message>
 </context>
 <context>
     <name>TupBasicCameraInterface</name>
