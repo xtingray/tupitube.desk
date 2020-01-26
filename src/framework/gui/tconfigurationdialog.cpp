@@ -63,9 +63,21 @@ TConfigurationDialog::TConfigurationDialog(QWidget *parent) : QDialog(parent)
 
     mainLayout->addLayout(pagesLayout);
     
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Horizontal);
+    QPushButton *applyButton = new QPushButton(tr("&Apply"));
+    applyButton->setDefault(true);
+    QPushButton *cancelButton = new QPushButton(tr("&Cancel"));
+
+    buttonBox->addButton(cancelButton, QDialogButtonBox::ActionRole);
+    buttonBox->addButton(applyButton, QDialogButtonBox::ActionRole);
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
+    connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
+
+    /*
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Cancel | QDialogButtonBox::Apply, Qt::Horizontal, this);
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
+    */
     
     mainLayout->addWidget(new TSeparator());
     mainLayout->addWidget(buttonBox);

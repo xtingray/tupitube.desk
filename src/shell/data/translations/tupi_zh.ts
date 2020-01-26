@@ -1381,6 +1381,17 @@
     </message>
 </context>
 <context>
+    <name>TConfigurationDialog</name>
+    <message>
+        <source>&amp;Apply</source>
+        <translation>应用</translation>
+    </message>
+    <message>
+        <source>&amp;Cancel</source>
+        <translation>取消</translation>
+    </message>
+</context>
+<context>
     <name>TFontChooser</name>
     <message>
         <source>Size</source>

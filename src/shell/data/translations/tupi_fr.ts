@@ -1801,6 +1801,19 @@
     </message>
 </context>
 <context>
+    <name>TConfigurationDialog</name>
+    <message>
+        <location filename="../../../framework/gui/tconfigurationdialog.cpp" line="67"/>
+        <source>&amp;Apply</source>
+        <translation>&amp;Appliquer</translation>
+    </message>
+    <message>
+        <location filename="../../../framework/gui/tconfigurationdialog.cpp" line="69"/>
+        <source>&amp;Cancel</source>
+        <translation>A&amp;nnuler</translation>
+    </message>
+</context>
+<context>
     <name>TFontChooser</name>
     <message>
         <location filename="../../../framework/gui/tfontchooser.cpp" line="45"/>
