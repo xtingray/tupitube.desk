@@ -194,9 +194,11 @@ void RasterBrushesWidget::loadInitSettings()
     stackedWidget->setCurrentIndex(groupIndex);
     const QStringList subList = brushLib.value(buttonsList.at(groupIndex)->getLabel());
 
+	/*
     qDebug() << "--> List Size: " << subList.size();
     qDebug() << "--> Group Index: " << groupIndex;
     qDebug() << "--> Brush Index: " << brushIndex;
+	*/
 
     selectBrush(subList.at(brushIndex));
 }
