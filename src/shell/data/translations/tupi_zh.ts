@@ -1510,6 +1510,10 @@
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
+    <message>
+        <source>Close</source>
+        <translation>关闭</translation>
+    </message>
 </context>
 <context>
     <name>TheoraPlugin</name>
@@ -3533,10 +3537,6 @@ Please, rename the project&apos;s file</source>
         <translation>打开一个新的文件...</translation>
     </message>
     <message>
-        <source>Visit Store</source>
-        <translation>进入商店</translation>
-    </message>
-    <message>
         <source>Actions Bar</source>
         <translation>操作栏</translation>
     </message>
@@ -3739,6 +3739,10 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Image Sequence</source>
         <translation>图像序列</translation>
+    </message>
+    <message>
+        <source>Open TupiTube&apos;s Network</source>
+        <translation>TupiTube 社交网络</translation>
     </message>
 </context>
 <context>

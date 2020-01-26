@@ -1953,6 +1953,11 @@
     </message>
     <message>
         <location filename="../../../framework/gui/tabdialog.cpp" line="106"/>
+        <source>Close</source>
+        <translation>Fechar</translation>
+    </message>
+    <message>
+        <location filename="../../../framework/gui/tabdialog.cpp" line="113"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -4751,12 +4756,6 @@ Por favor, renomeie o ficheiro do projeto</translation>
         <translation>Exportar projeto para vários formatos de vídeo</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="372"/>
-        <location filename="../../tupmainwindow_gui.cpp" line="374"/>
-        <source>Visit Store</source>
-        <translation>Loja Virtual</translation>
-    </message>
-    <message>
         <location filename="../../tupmainwindow_gui.cpp" line="378"/>
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
@@ -4822,6 +4821,12 @@ Por favor, renomeie o ficheiro do projeto</translation>
         <translation>Sequência SVG</translation>
     </message>
     <message>
+        <location filename="../../tupmainwindow_gui.cpp" line="372"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="374"/>
+        <source>Open TupiTube&apos;s Network</source>
+        <translation>Rede do TupiTube</translation>
+    </message>
+    <message>
         <location filename="../../tupmainwindow_gui.cpp" line="407"/>
         <source>YouTube Tutorials</source>
         <translation>Tutoriais do YouTube</translation>
@@ -4842,22 +4847,22 @@ Por favor, renomeie o ficheiro do projeto</translation>
         <translation>Barra de Ações</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="509"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="505"/>
         <source>Undo</source>
         <translation>Desfazer</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="511"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="507"/>
         <source>Ctrl+Z</source>
         <translation>Ctrl+Z</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="514"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="510"/>
         <source>Redo</source>
         <translation>Refazer</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="516"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="512"/>
         <source>Ctrl+Y</source>
         <translation>Ctrl+Y</translation>
     </message>

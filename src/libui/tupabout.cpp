@@ -46,7 +46,7 @@
 #include <QScrollArea>
 #include <QDir>
 
-TupAbout::TupAbout(QWidget *parent) : TabDialog(Cancel, parent)
+TupAbout::TupAbout(QWidget *parent) : TabDialog(Close, parent)
 {
     // SQA: Check if these instructions are doing something for real
     setWindowIcon(QIcon(THEME_DIR + "icons/about.png"));

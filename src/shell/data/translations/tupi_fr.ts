@@ -1953,6 +1953,11 @@
     </message>
     <message>
         <location filename="../../../framework/gui/tabdialog.cpp" line="106"/>
+        <source>Close</source>
+        <translation>Fermer</translation>
+    </message>
+    <message>
+        <location filename="../../../framework/gui/tabdialog.cpp" line="113"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -4768,8 +4773,8 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="372"/>
         <location filename="../../tupmainwindow_gui.cpp" line="374"/>
-        <source>Visit Store</source>
-        <translation>Magasin Virtuel</translation>
+        <source>Open TupiTube&apos;s Network</source>
+        <translation>Réseau de TupiTube</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="378"/>
@@ -4842,22 +4847,22 @@ SVP, renommer le fichier du projet</translation>
         <translation>Barre des actions</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="509"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="505"/>
         <source>Undo</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="511"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="507"/>
         <source>Ctrl+Z</source>
         <translation>Ctrl+Z</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="514"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="510"/>
         <source>Redo</source>
         <translation>Rétablir</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="516"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="512"/>
         <source>Ctrl+Y</source>
         <translation>Ctrl+Y</translation>
     </message>

@@ -102,6 +102,13 @@ void TabDialog::setupButtons(int buttons)
         m_buttons.insert(Cancel, cancelButton);
     }
 
+    if (buttons & Close) {
+        QPushButton *closeButton = new QPushButton(tr("Close"));
+        connect(closeButton, SIGNAL(clicked()), this, SLOT(cancel()));
+        buttonLayout->addWidget(closeButton);
+        m_buttons.insert(Close, closeButton);
+    }
+
     if (buttons & Ok) {
         QPushButton *okButton = new QPushButton(tr("OK"));
         connect(okButton, SIGNAL(clicked()), this, SLOT(ok()));

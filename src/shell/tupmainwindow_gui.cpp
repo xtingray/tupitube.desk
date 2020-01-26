@@ -368,11 +368,11 @@ void TupMainWindow::setupFileActions()
     exportProject->setStatusTip(tr("Export project to several video formats"));
     m_actionManager->insert(exportProject, "export", "file");
 
-    // Visit Store action
-    TAction *visitStore = new TAction(QPixmap(THEME_DIR + "icons/store.png"), tr("Visit Store"), QKeySequence(),
-                                      this, SLOT(openStore()), m_actionManager);
-    visitStore->setStatusTip(tr("Visit Store"));
-    m_actionManager->insert(visitStore, "visit_store", "file");
+    // Visit TupiTube's Network action
+    TAction *openNetwork = new TAction(QPixmap(THEME_DIR + "icons/social_network.png"), tr("Open TupiTube's Network"), QKeySequence(),
+                                      this, SLOT(openTupiTubeNetwork()), m_actionManager);
+    openNetwork->setStatusTip(tr("Open TupiTube's Network"));
+    m_actionManager->insert(openNetwork, "open_network", "file");
 
     // Exit action
     TAction *exit = new TAction(QPixmap(THEME_DIR + "icons/exit.png"), tr("Quit"), QKeySequence(tr("Ctrl+Q")),
@@ -385,9 +385,9 @@ void TupMainWindow::setupFileActions()
     connect(qApp, SIGNAL(lastWindowClosed()), qApp, SLOT(quit()));
 }
 
-void TupMainWindow::openStore()
+void TupMainWindow::openTupiTubeNetwork()
 {
-    QDesktopServices::openUrl(QString("https://store.maefloresta.com/?desk"));
+    QDesktopServices::openUrl(QString("https://www.tupitube.com/?desk"));
 }
 
 void TupMainWindow::setPreferencesAction()
@@ -427,11 +427,7 @@ void TupMainWindow::setupToolBar()
     mainToolBar->addAction(m_actionManager->find("save_project"));
     mainToolBar->addAction(m_actionManager->find("save_project_as"));
     mainToolBar->addAction(m_actionManager->find("close_project"));
-
-    TCONFIG->beginGroup("General");
-    bool showAds = TCONFIG->value("ShowAds", true).toBool();
-    if (showAds)
-        mainToolBar->addAction(m_actionManager->find("visit_store"));
+    mainToolBar->addAction(m_actionManager->find("open_network"));
 
     addToolBar(Qt::TopToolBarArea, mainToolBar);
 }

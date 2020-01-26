@@ -59,10 +59,12 @@ class T_GUI_EXPORT TabDialog : public QDialog
             Ok      = 1<<3,
             Apply   = 1<<4,
             Cancel  = 1<<5,
-            Custom1 = 1<<6,
-            Custom2 = 1<<7,
-            Custom3 = 1<<8
+            Close   = 1<<6,
+            Custom1 = 1<<7,
+            Custom2 = 1<<8,
+            Custom3 = 1<<9
         };
+
         TabDialog(QWidget *parent = 0, bool modal = true);
         TabDialog(int buttons = Ok|Cancel, QWidget *parent = 0, bool modal = true);
         ~TabDialog();

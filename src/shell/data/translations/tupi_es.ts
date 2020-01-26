@@ -1953,6 +1953,11 @@
     </message>
     <message>
         <location filename="../../../framework/gui/tabdialog.cpp" line="106"/>
+        <source>Close</source>
+        <translation>Cerrar</translation>
+    </message>
+    <message>
+        <location filename="../../../framework/gui/tabdialog.cpp" line="113"/>
         <source>OK</source>
         <translation>Aceptar</translation>
     </message>
@@ -4767,8 +4772,8 @@ Please, rename the project&apos;s file</source>
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="372"/>
         <location filename="../../tupmainwindow_gui.cpp" line="374"/>
-        <source>Visit Store</source>
-        <translation>Tienda Virtual</translation>
+        <source>Open TupiTube&apos;s Network</source>
+        <translation>Red Social TupiTube</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="378"/>
@@ -4841,22 +4846,22 @@ Please, rename the project&apos;s file</source>
         <translation>Barra de Acciones</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="509"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="505"/>
         <source>Undo</source>
         <translation>Deshacer</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="511"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="507"/>
         <source>Ctrl+Z</source>
         <translation>Ctrl+Z</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="514"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="510"/>
         <source>Redo</source>
         <translation>Rehacer</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="516"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="512"/>
         <source>Ctrl+Y</source>
         <translation>Ctrl+Y</translation>
     </message>
