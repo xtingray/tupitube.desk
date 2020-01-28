@@ -58,6 +58,11 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
     groupIndex = TCONFIG->value("BrushGroup", 0).toInt();
     brushIndex = TCONFIG->value("BrushIndex", 0).toInt();
 
+    #ifdef TUP_DEBUG
+       qDebug() << "[RasterBrushesWidget()] - groupIndex -> " << groupIndex;
+       qDebug() << "[RasterBrushesWidget()] - brushIndex -> " << brushIndex;
+    #endif
+
     QGroupBox *groupBox = new QGroupBox();
     QVBoxLayout *buttonsLayout = new QVBoxLayout(groupBox);
     buttonsLayout->setMargin(0);
@@ -75,7 +80,9 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
         QString currentGroup; // no group for now.
         QStringList brushesGroup;
 
-        while(!fileOrder.atEnd()) {
+        QVector<QString> sortedList(6);
+
+        while (!fileOrder.atEnd()) {
             QString line(fileOrder.readLine().trimmed()); // Get a line without begin/end extra space chars
             if (line.isEmpty() || line.startsWith("#")) // empty line or starting with # are ignored
                 continue;
@@ -86,20 +93,28 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
                 // is wrong (only the last one will be visible)
                 if (!currentGroup.isEmpty() && !brushesGroup.isEmpty())
                     brushLib.insert(currentGroup, brushesGroup);
+
                 // Now, we prepare to get the brushes for this new group:
                 currentGroup = line.section(':', 1).trimmed(); // Get the name after the first ':' separato
-                if (currentGroup.compare("Erasers") == 0)
-                    currentGroup = tr("Erasers");
-                else if (currentGroup.compare("Art1") == 0)
+                if (currentGroup.compare("Art1") == 0) {
                     currentGroup = tr("Art Set 1");
-                else if (currentGroup.compare("Art2") == 0)
+                    sortedList[0] = currentGroup;
+                } else if (currentGroup.compare("Art2") == 0) {
                     currentGroup = tr("Art Set 2");
-                else if (currentGroup.compare("Art3") == 0)
+                    sortedList[1] = currentGroup;
+                } else if (currentGroup.compare("Art3") == 0) {
                     currentGroup = tr("Art Set 3");
-                else if (currentGroup.compare("Classic") == 0)
+                    sortedList[2] = currentGroup;
+                } else if (currentGroup.compare("Classic") == 0) {
                     currentGroup = tr("Classic");
-                else if (currentGroup.compare("Experimental") == 0)
+                    sortedList[3] = currentGroup;
+                } else if (currentGroup.compare("Experimental") == 0) {
                     currentGroup = tr("Experimental");
+                    sortedList[4] = currentGroup;
+                } else if (currentGroup.compare("Erasers") == 0) {
+                    currentGroup = tr("Erasers");
+                    sortedList[5] = currentGroup;
+                }
 
                 brushesGroup.clear();
                 continue;
@@ -109,12 +124,13 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
             if (QFileInfo(brushLibPath + QDir::separator() + line + BRUSH_CONTENT_EXT).isReadable())
                 brushesGroup << line;
         }
-        // last group :
+        // Last group :
         if (!currentGroup.isEmpty() && !brushesGroup.isEmpty())
             brushLib.insert(currentGroup, brushesGroup);
 
         // Now we create a QListWidget (displaying icons) for each stringList
-        foreach (const QString &caption, brushLib.keys()) {
+        for (int i = 0; i < sortedList.size(); ++i) {
+            QString caption = sortedList.at(i);
             const QStringList subList = brushLib.value(caption);
             if (subList.isEmpty())
                 continue; // this should not happen...
@@ -130,33 +146,26 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
             brushesList->setIconSize(QSize(ICON_SZ, ICON_SZ));
             connect(brushesList, SIGNAL(itemClicked(QListWidgetItem*)), SLOT(itemClicked(QListWidgetItem*)));
 
-            int index = -1;
-            QString iconPath = "";
+            QString iconPath = THEME_DIR;
             if (caption.compare(tr("Art Set 1")) == 0) {
-                index = 0;
-                iconPath = THEME_DIR + "icons/art1.png";
+                iconPath += "icons/art1.png";
             } else if (caption.compare(tr("Art Set 2")) == 0) {
-                index = 1;
-                iconPath = THEME_DIR + "icons/art2.png";
+                iconPath += "icons/art2.png";
             } else if (caption.compare(tr("Art Set 3")) == 0) {
-                index = 2;
-                iconPath = THEME_DIR + "icons/art3.png";
+                iconPath += "icons/art3.png";
             } else if (caption.compare(tr("Classic")) == 0) {
-                index = 3;
-                iconPath = THEME_DIR + "icons/classic.png";
+                iconPath += "icons/classic.png";
             } else if (caption.compare(tr("Experimental")) == 0) {
-                index = 4;
-                iconPath = THEME_DIR + "icons/experimental.png";
+                iconPath += "icons/experimental.png";
             } else if (caption.compare(tr("Erasers")) == 0) {
-                index = 5;
-                iconPath = THEME_DIR + "icons/eraser.png";
+                iconPath += "icons/eraser.png";
             }
 
-            RasterButton *button = new RasterButton(index, caption);
+            RasterButton *button = new RasterButton(i, caption);
             button->setIcon(QIcon(iconPath));
             button->setCheckable(true);
             connect(button, SIGNAL(buttonClicked(int)), this, SLOT(updateBrushesPanel(int)));
-            buttonsList.insert(index, button);
+            buttonsList.insert(i, button);
 
             // Populate the ListWidget with brushes (and their preview):
             for (int n = 0; n < subList.count(); n++) {
@@ -166,7 +175,7 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
                 QListWidgetItem* item = new QListWidgetItem(preview, QString(), brushesList, n);
                 item->setToolTip(QString("%1 in \"%2\".").arg(name).arg(caption));
             }
-            brushesSet.insert(index, brushesList);
+            brushesSet.insert(i, brushesList);
         }
 
         for (int i=0; i<buttonsList.size(); i++) {
@@ -194,11 +203,11 @@ void RasterBrushesWidget::loadInitSettings()
     stackedWidget->setCurrentIndex(groupIndex);
     const QStringList subList = brushLib.value(buttonsList.at(groupIndex)->getLabel());
 
-	/*
+    /*
     qDebug() << "--> List Size: " << subList.size();
     qDebug() << "--> Group Index: " << groupIndex;
     qDebug() << "--> Brush Index: " << brushIndex;
-	*/
+    */
 
     selectBrush(subList.at(brushIndex));
 }
