@@ -768,10 +768,10 @@ void TupPaintArea::copyItems()
                 }
             }
 
-            int minX;
-            int maxX;
-            int minY;
-            int maxY;
+            int minX = 0;
+            int maxX = 0;
+            int minY = 0;
+            int maxY = 0;
 
             for (int i=0; i<size; i++) {
                 QGraphicsItem *item = selected.at(i);

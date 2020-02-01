@@ -40,6 +40,10 @@ QMAKE_CFLAGS += -D_XOPEN_SOURCE=600
 FRAMEWORK_DIR = "../../framework"
 include($$FRAMEWORK_DIR/framework.pri)
 
+win32 {
+    include(../../../win.pri)
+}
+
 macx {
     INSTALLS += target
     target.path = /lib

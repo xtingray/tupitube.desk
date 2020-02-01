@@ -37,6 +37,10 @@ else:unix: LIBS += -L../libmypaint -llibmypaint
 INCLUDEPATH += ../libmypaint
 DEPENDPATH += ../libmypaint
 
+win32 {
+    include(../../../win.pri)
+}
+
 macx {
     INSTALLS += target
     target.path = /lib

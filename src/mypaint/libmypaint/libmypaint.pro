@@ -30,6 +30,7 @@ unix:!mac {
 }   
 
 win32 {
+    include(../../../win.pri)
     INCLUDEPATH += ../json-c
     LIBS += -L../json-c/release -ljson-c
 }

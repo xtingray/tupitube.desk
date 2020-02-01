@@ -155,7 +155,9 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
         painter.setRenderHint(QPainter::Antialiasing, true);
         foreach (TupScene *scene, scenes) {
             renderer.setScene(scene, size);
+            #ifdef TUP_DEBUG
             int i = 0;
+            #endif
             while (renderer.nextPhotogram()) {
                 #ifdef TUP_DEBUG
                     QString msg = "FFmpegPlugin::exportToFormat() - Rendering frame -> " + QString::number(i);
