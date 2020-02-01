@@ -39,11 +39,7 @@
 NodeManager::NodeManager(QGraphicsItem *parentItem, QGraphicsScene *gScene, int zValue)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[NodeManager::NodeManager()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "[NodeManager::NodeManager()]";
     #endif
 
     parent = parentItem;
@@ -182,14 +178,10 @@ void NodeManager::restoreItem()
 void NodeManager::scale(qreal sx, qreal sy)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[NodeManager::scale()]";
-        #else
-            T_FUNCINFO;
-            tWarning() << "Scale X: " << sx;
-            tWarning() << "Scale Y: " << sy;
-            tWarning() << "Rotation: " << rotationValue;
-        #endif
+        qDebug() << "[NodeManager::scale()]";
+        qWarning() << "Scale X: " << sx;
+        qWarning() << "Scale Y: " << sy;
+        qWarning() << "Rotation: " << rotationValue;
     #endif
 
     QTransform transform;
@@ -213,12 +205,8 @@ void NodeManager::scale(qreal sx, qreal sy)
 void NodeManager::rotate(double angle)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[NodeManager::rotate()]";
-        #else
-            T_FUNCINFO;
-            tWarning() << "New angle: " << angle;
-        #endif
+        qDebug() << "[NodeManager::rotate()]";
+        qWarning() << "New angle: " << angle;
     #endif
 
     QTransform transform;

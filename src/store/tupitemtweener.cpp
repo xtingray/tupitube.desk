@@ -39,6 +39,7 @@
 TupItemTweener::TupItemTweener()
 {
     frames = 0;
+    zLevel = 0;
     initialXScaleFactor = 1;
     initialYScaleFactor = 1;
 }
@@ -56,6 +57,16 @@ QString TupItemTweener::getTweenName()
 TupItemTweener::Type TupItemTweener::getType()
 {
     return tweenType;
+}
+
+void TupItemTweener::setZLevel(int level)
+{
+    zLevel = level;
+}
+
+int TupItemTweener::getZLevel()
+{
+    return zLevel;
 }
 
 void TupItemTweener::addStep(const TupTweenerStep &step)

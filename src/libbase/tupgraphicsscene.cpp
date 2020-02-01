@@ -179,13 +179,13 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
     TupLayer *layer;
     TupFrame *mainFrame;
     TupFrame *frame;
-    for (int i=0; i < layersTotal; i++) {
-         layer = tupScene->layerAt(i);
+    for (int layerIndex=0; layerIndex < layersTotal; layerIndex++) {
+         layer = tupScene->layerAt(layerIndex);
          if (layer) {
-             layerOnProcess = i;
+             layerOnProcess = layerIndex;
              layerOnProcessOpacity = layer->getOpacity();
              int framesCount = layer->framesCount();
-             zLevel = (i + 2) * ZLAYER_LIMIT;
+             zLevel = (BG_LAYERS + layerIndex) * ZLAYER_LIMIT;
 
              if (photogram < framesCount) {
                  mainFrame = layer->frameAt(photogram);
@@ -208,7 +208,8 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
                                      if (frame) {
                                          frameOnProcess = frameIndex;
                                          addFrame(frame, opacity, Previous);
-                                         addTweeningObjects(i, frameIndex, opacity);
+                                         // addTweeningObjects(layerIndex, frameIndex, opacity);
+                                         // addSvgTweeningObjects(layerIndex, frameIndex, opacity);
                                      }
                                      opacity += opacityFactor;
                                  }
@@ -218,8 +219,8 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
                          // Painting current frame
                          frameOnProcess = photogram;
                          addFrame(mainFrame);
-                         addTweeningObjects(i, photogram);
-                         addSvgTweeningObjects(i, photogram);
+                         addTweeningObjects(layerIndex, photogram);
+                         addSvgTweeningObjects(layerIndex, photogram);
 
                          if (drawContext) {
                              // Painting next frames
@@ -235,7 +236,8 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
                                      if (frame) {
                                          frameOnProcess = frameIndex;
                                          addFrame(frame, opacity, Next);
-                                         addTweeningObjects(i, frameIndex, opacity, false);
+                                         // addTweeningObjects(layerIndex, frameIndex, opacity, false);
+                                         // addSvgTweeningObjects(layerIndex, frameIndex, opacity, false);
                                      }
                                      opacity -= opacityFactor;
                                  }
@@ -248,7 +250,7 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
              }
          } else {
             #ifdef TUP_DEBUG
-                qDebug() << "TupGraphicsScene::drawPhotogram() - Error: Invalid layer at index -> " << i;
+                qDebug() << "TupGraphicsScene::drawPhotogram() - Error: Invalid layer at index -> " << layerIndex;
             #endif
             return;
          }
@@ -489,6 +491,8 @@ void TupGraphicsScene::processNativeObject(TupGraphicObject *object, TupFrame::F
     if (mode != TupGraphicsScene::Current) {
         if (!object->hasTweens())
             addGraphicObject(object, frameType, opacityFactor);
+        else
+            zLevel++; // Saving space for a tween
     } else {
         addGraphicObject(object, frameType,  opacityFactor);
     }
@@ -500,6 +504,8 @@ void TupGraphicsScene::processSVGObject(TupSvgItem *svg, TupFrame::FrameType fra
     if (mode != TupGraphicsScene::Current) {
         if (!svg->hasTweens())
             addSvgObject(svg, frameType, opacityFactor);
+        else
+            zLevel++; // Saving space for an SVG tween
     } else {
         addSvgObject(svg, frameType, opacityFactor);
     }
@@ -640,7 +646,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double 
 
              if (origin == photogram) {
                  #ifdef TUP_DEBUG
-                     qWarning() << "Tween: " <<  tween->getTweenName();
+                     qWarning() << "Tween: " << tween->getTweenName();
                      qWarning() << "Type: " << tween->getType();
                      qWarning() << "Adding FIRST tween transformation - photogram -> " << QString::number(photogram);
                  #endif
@@ -711,11 +717,13 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double 
                  }
 
                  if (!onProcess && opacity < 1) {
+                     object->item()->setZValue(((BG_LAYERS + layerIndex) * ZLAYER_LIMIT) + tween->getZLevel());
                      // Including object into the scene
                      addGraphicObject(object, TupFrame::Regular, 1.0, true);
                      object->item()->setOpacity(opacity);
                  }
-             } else if ((origin < photogram) && (photogram < origin + tween->getFrames())) {
+             // Processing photograms > tween init frame
+             } else if ((origin < photogram) && (photogram < (origin + tween->getFrames()))) {
                  if (!onProcess)
                      return;
 
@@ -794,13 +802,27 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double 
                          }
                      }
                  }
+
+                 int level = tween->getZLevel();
+                 if (level > 0)
+                     level--;
+                 object->item()->setZValue(((BG_LAYERS + layerIndex) * ZLAYER_LIMIT) + level);
                  // Including object into the scene
                  addGraphicObject(object, TupFrame::Regular, 1.0, true);
 
-                 if (stepItem->has(TupTweenerStep::Opacity))
-                     object->item()->setOpacity(stepItem->getOpacity());
+                 if (stepItem->has(TupTweenerStep::Opacity)) {
+                     double transp = stepItem->getOpacity();
+                     if (transp == 0)
+                         object->item()->setOpacity(0);
+                     else
+                         if (opacity < transp)
+                             object->item()->setOpacity(opacity);
+                         else
+                             object->item()->setOpacity(transp);
 
-                 if (opacity < 1) {
+                     if (opacity < 1)
+                         return;
+                 } else if (opacity < 1) {
                      object->item()->setOpacity(opacity);
                      return;
                  }
@@ -817,16 +839,22 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double 
     }
 }
 
-void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
+void TupGraphicsScene::addSvgTweeningObjects(int layerIndex, int photogram, double opacity, bool onProcess)
 {
     #ifdef TUP_DEBUG
         qDebug() << "TupGraphicsScene::addSvgTweeningObjects()";
     #endif
 
-    QList<TupSvgItem *> svgList = tupScene->getTweeningSvgObjects(indexLayer);
+    QList<TupSvgItem *> svgList = tupScene->getTweeningSvgObjects(layerIndex);
+    int total = svgList.count();
+
+    #ifdef TUP_DEBUG
+        qWarning() << "Objects with SVG tweens: " << total;
+    #endif
+
     TupSvgItem *object;
     TupTweenerStep *stepItem;
-    for (int i=0; i < svgList.count(); i++) {
+    for (int i=0; i < total; i++) {
          object = svgList.at(i);
          int origin = object->frameIndex();
 
@@ -837,11 +865,12 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
 
              if (origin == photogram) {
                  #ifdef TUP_DEBUG
-                     qDebug() << "Adding FIRST SVG tween transformation - photogram -> " + QString::number(photogram);
+                     qWarning() << "Tween: " << tween->getTweenName();
+                     qWarning() << "Type: " << tween->getType();
+                     qWarning() << "Adding FIRST SVG tween transformation - photogram -> " + QString::number(photogram);
                  #endif
 
                  stepItem = tween->stepAt(0);
-
                  if (stepItem->has(TupTweenerStep::Position)) {
                      object->setPos(tween->transformOriginPoint());
                      QPointF offset = QPoint(-adjustX, -adjustY);
@@ -867,7 +896,17 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
                  } else if (stepItem->has(TupTweenerStep::Opacity)) {
                      object->setOpacity(stepItem->getOpacity());
                  }
+
+                 if (!onProcess && opacity < 1) {
+                     // Including object into the scene
+                     addSvgObject(object, TupFrame::Regular, 1.0, true);
+                     object->setOpacity(opacity);
+                 }
+             // Processing photograms > tween init frame
              } else if ((origin < photogram) && (photogram < origin + tween->getFrames())) {
+                 if (!onProcess)
+                     return;
+
                  #ifdef TUP_DEBUG
                      qDebug() << "Adding SVG tween transformation - photogram -> " + QString::number(photogram);
                  #endif
@@ -908,10 +947,30 @@ void TupGraphicsScene::addSvgTweeningObjects(int indexLayer, int photogram)
                      object->setTransform(transform);
                  }
 
+                 int level = tween->getZLevel();
+                 if (level > 0)
+                     level--;
+
+                 object->setZValue(((BG_LAYERS + layerIndex) * ZLAYER_LIMIT) + level);
+                 // Including SVG object into the scene
                  addSvgObject(object, TupFrame::Regular, 1.0, true);
 
-                 if (stepItem->has(TupTweenerStep::Opacity))
-                     object->setOpacity(stepItem->getOpacity());
+                 if (stepItem->has(TupTweenerStep::Opacity)) {
+                     double transp = stepItem->getOpacity();
+                     if (transp == 0)
+                         object->setOpacity(0);
+                     else
+                         if (opacity < transp)
+                             object->setOpacity(opacity);
+                         else
+                             object->setOpacity(transp);
+
+                     if (opacity < 1)
+                         return;
+                 } else if (opacity < 1) {
+                     object->setOpacity(opacity);
+                     return;
+                 }
              }
 
              QString tip = object->toolTip();

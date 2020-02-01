@@ -440,7 +440,8 @@ QString OpacitySettings::tweenToXml(int currentScene, int currentLayer, int curr
                      cycle = 1;
 
              } else { // If cycle is done and no loop and no reverse
-                 reference = initFactor;
+                 // reference = initFactor;
+                 reference = endFactor;
              }
          }
 

@@ -65,11 +65,7 @@ QStringList GeometricTool::keys() const
 void GeometricTool::init(TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[GeometricTool::init()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[GeometricTool::init()]";
     #endif
 
     scene = gScene;
@@ -120,11 +116,7 @@ QBrush GeometricTool::setLiteBrush(QColor c, Qt::BrushStyle style)
 void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[GeometricTool::press()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[GeometricTool::press()]";
     #endif
 
     Q_UNUSED(input);
@@ -193,11 +185,7 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
 {
     /*
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[GeometricTool::move()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[GeometricTool::move()]";
     #endif
     */
 
@@ -325,11 +313,7 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
 void GeometricTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[GeometricTool::release()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[GeometricTool::release()]";
     #endif
 
     Q_UNUSED(input);
@@ -439,11 +423,7 @@ QCursor GeometricTool::polyCursor() const
 void GeometricTool::endItem()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[GeometricTool::endItem()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[GeometricTool::endItem()]";
     #endif
 
     if (path) {

@@ -71,7 +71,7 @@ void SelectionTool::init(TupGraphicsScene *gScene)
 
     clearSelection();
     scene->clearSelection();
-    nodeZValue = (2*ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
+    nodeZValue = (BG_LAYERS * ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
     initItems(scene);
 }
 

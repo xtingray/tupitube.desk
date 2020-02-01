@@ -76,7 +76,7 @@ TupFrame::TupFrame(TupLayer *parent) : QObject(parent)
     direction = "0";
     shift = "5";
 
-    zLevelIndex = (layer->layerIndex() + 4) * ZLAYER_LIMIT; // Layers levels starts from 2
+    zLevelIndex = (layer->layerIndex() + BG_LAYERS) * ZLAYER_LIMIT; // Layers levels starts from 4
 }
 
 TupFrame::TupFrame(TupBackground *bg, const QString &label, int zLevel) : QObject(bg)
@@ -254,6 +254,7 @@ void TupFrame::fromXml(const QString &xml)
     if (type == VectorStaticBg || type == RasterStaticBg)
         setFrameOpacity(root.attribute("opacity", "1.0").toDouble());
 
+    int counter = 0;
     QDomNode n = root.firstChild();
     while (!n.isNull()) {
         QDomElement e = n.toElement();
@@ -273,6 +274,7 @@ void TupFrame::fromXml(const QString &xml)
                           }
 
                           tweener->fromXml(newDoc);
+                          tweener->setZLevel(counter);
                           last->addTween(tweener);
                           parentScene()->addTweenObject(layer->layerIndex(), last);
                       } else {
@@ -298,6 +300,7 @@ void TupFrame::fromXml(const QString &xml)
                       }
                       n2 = n2.nextSibling();
                }
+               counter++;
             } else if (e.tagName() == "svg") {
                       QString symbol = e.attribute("id");
                       if (symbol.length() > 0) {
@@ -324,11 +327,13 @@ void TupFrame::fromXml(const QString &xml)
                                           ts << n2;
                                       }
                                       tweener->fromXml(newDoc);
+                                      tweener->setZLevel(counter);
                                       svg->addTween(tweener);
                                       parentScene()->addTweenObject(layer->layerIndex(), svg);
                                   }
                                   n2 = n2.nextSibling();
                               }
+                              counter++;
                           } else {
                               #ifdef TUP_DEBUG
                                   qDebug() << "TupFrame::fromXml() - Fatal Error: Object is NULL -> " + symbol;
@@ -480,7 +485,8 @@ void TupFrame::updateIdFromFrame(const QString &oldId, const QString &newId)
 void TupFrame::addSvgItem(const QString &id, TupSvgItem *item)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupFrame::addSvgItem()] - id: " << id;
+        qDebug() << "[TupFrame::addSvgItem()] - id -> " << id;
+        qDebug() << "[TupFrame::addSvgItem()] - zLevelIndex -> " << zLevelIndex;
     #endif
     
     svgIndexes.append(id);
@@ -1192,6 +1198,12 @@ QGraphicsItem *TupFrame::createItem(QPointF coords, const QString &xml, bool loa
 
 TupSvgItem *TupFrame::createSvgItem(QPointF coords, const QString &xml, bool loaded)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "TupFrame::createSvgItem()";
+        qWarning() << "coords: " << coords;
+        qWarning() << xml;
+    #endif
+
     QDomDocument document;
     if (!document.setContent(xml)) {
         #ifdef TUP_DEBUG

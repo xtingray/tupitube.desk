@@ -920,6 +920,7 @@ bool TupCommandExecutor::setTween(TupItemResponse *response)
             if (frame) {
                 TupItemTweener *tween = new TupItemTweener();
                 tween->fromXml(xml);
+                tween->setZLevel(itemIndex);
                 if (itemType == TupLibraryObject::Item) {
                     TupGraphicObject *object = frame->graphicAt(itemIndex);
                     if (object) {

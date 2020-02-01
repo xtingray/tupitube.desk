@@ -70,6 +70,9 @@ class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSeriali
         QString getTweenName();
         TupItemTweener::Type getType();
         
+        void setZLevel(int level);
+        int getZLevel();
+
         void setPosAt(int step, const QPointF & point);
         void setRotationAt(int step, double angle);
         void setScaleAt(int step, double sx, double sy);
@@ -143,6 +146,7 @@ class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSeriali
         int initFrame;
         int initLayer;
         int initScene;
+        int zLevel;
 
         int frames;
         QPointF originPoint;

@@ -414,6 +414,8 @@ QString ShearSettings::tweenToXml(int currentScene, int currentLayer, int curren
     double factorY = 1.0;
     double shearX = 1.0;
     double shearY = 1.0;
+    double lastShearX = 1.0;
+    double lastShearY = 1.0;
 
     if (shearAxes == TupItemTweener::XY) {
         factorX = factor;
@@ -432,9 +434,13 @@ QString ShearSettings::tweenToXml(int currentScene, int currentLayer, int curren
              if (cycle == 1) {
                  shearX = 0;
                  shearY = 0;
+                 lastShearX = 0;
+                 lastShearY = 0;
              } else {
                  shearX += factorX;
                  shearY += factorY;
+                 lastShearX = shearX;
+                 lastShearY = shearY;
              }
              cycle++;
          } else {
@@ -452,8 +458,8 @@ QString ShearSettings::tweenToXml(int currentScene, int currentLayer, int curren
                  else
                      cycle = 1;
              } else { // If cycle is done and no loop and no reverse
-                 shearX = 0;
-                 shearY = 0;
+                 shearX = lastShearX;
+                 shearY = lastShearY;
              }
          }
 

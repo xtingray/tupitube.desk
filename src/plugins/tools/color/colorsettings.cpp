@@ -170,8 +170,8 @@ void ColorSettings::setInnerForm()
     QLabel *typeLabel = new QLabel(tr("Fill Type") + ": ");
     typeLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     fillTypeCombo = new QComboBox();
-    fillTypeCombo->addItem(tr("Line Fill"));
     fillTypeCombo->addItem(tr("Internal Fill"));
+    fillTypeCombo->addItem(tr("Line Fill"));
     fillTypeCombo->addItem(tr("Line & Internal Fill"));
     QHBoxLayout *fillLayout = new QHBoxLayout;
     fillLayout->setAlignment(Qt::AlignHCenter);
