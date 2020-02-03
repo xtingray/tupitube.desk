@@ -76,7 +76,7 @@ int main(int argc, char ** argv)
 #endif
 
     // Setting TupiTube Desk version values
-    kAppProp->setVersion(VERSION);
+    kAppProp->setVersion(TUPITUBE_VERSION);
     kAppProp->setRevision(REVISION);
     kAppProp->setCodeName(CODE_NAME);
 

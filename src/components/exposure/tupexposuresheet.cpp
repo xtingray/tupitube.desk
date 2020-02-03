@@ -249,22 +249,13 @@ void TupExposureSheet::renameScene(int sceneIndex, const QString &name)
 void TupExposureSheet::applyAction(int action)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "TupExposureSheet::applyAction() - action: " << QString::number(action);
-        #else
-            T_FUNCINFO << "TupExposureSheet::applyAction() - action: " << action;
-        #endif
+        qDebug() << "TupExposureSheet::applyAction() - action: " << QString::number(action);
     #endif
 
     currentTable = scenesContainer->getCurrentTable();
     if (!currentTable) {
         #ifdef TUP_DEBUG
-            QString msg = "TupExposureSheet::applyAction: No layer view!!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tFatal() << msg;
-            #endif
+            qDebug() << "TupExposureSheet::applyAction: No layer view!!";
         #endif
         return;
     }
@@ -352,12 +343,7 @@ void TupExposureSheet::applyAction(int action)
                         emit requestTriggered(&request);
                     } else {
                         #ifdef TUP_DEBUG
-                            QString msg = "TupExposureSheet::applyAction() - Selection must include at least 2 frames of the same layer";
-                            #ifdef Q_OS_WIN
-                                qDebug() << msg;
-                            #else
-                                tWarning() << msg;
-                            #endif
+                            qDebug() << "TupExposureSheet::applyAction() - Selection must include at least 2 frames of the same layer";
                         #endif
                     }
                 }
@@ -758,6 +744,7 @@ void TupExposureSheet::layerResponse(TupLayerResponse *response)
                                 }
                             }
                         }
+
                         return;
                     }
                 }
@@ -804,23 +791,13 @@ void TupExposureSheet::layerResponse(TupLayerResponse *response)
             break;
             default:
                 #ifdef TUP_DEBUG
-                    QString msg = "TupExposureSheet::layerResponse - Layer option undefined! -> " + QString::number(response->getAction());
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                       tFatal() << msg;
-                    #endif
+                    qDebug() << "TupExposureSheet::layerResponse - Layer option undefined! -> " + QString::number(response->getAction());
                 #endif
             break;
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupExposureSheet::layerResponse -> Scene index invalid: " + QString::number(sceneIndex);
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tFatal() << msg;
-            #endif
+            qDebug() << "TupExposureSheet::layerResponse -> Scene index invalid: " + QString::number(sceneIndex);
         #endif
     }
 }
@@ -828,11 +805,7 @@ void TupExposureSheet::layerResponse(TupLayerResponse *response)
 void TupExposureSheet::frameResponse(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupExposureSheet::frameResponse()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupExposureSheet::frameResponse()]";
     #endif
 
     int sceneIndex = response->getSceneIndex();
@@ -850,6 +823,7 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
                               setScene(sceneIndex);
                               table->selectFrame(0, 0);
                           } 
+
                           return;
                       }
 
@@ -866,6 +840,7 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
                                   }
                               }
                           }
+
                           return;
                       }
                   }
@@ -962,6 +937,7 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
                               table->selectFrame(layerIndex, frameIndex);
                           }
                       }
+
                       return;
                   }
                 case TupProjectRequest::Reset:
@@ -1145,12 +1121,7 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupExposureSheet::frameResponse() - [ Fatal Error ] - Scene index is invalid -> " + QString::number(sceneIndex);
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupExposureSheet::frameResponse() - [ Fatal Error ] - Scene index is invalid -> " + QString::number(sceneIndex);
         #endif
     }
 }

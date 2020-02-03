@@ -33,82 +33,29 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "tupbackgrounditem.h"
-#include "tconfig.h"
-#include "tapplicationproperties.h"
-#include "tseparator.h"
+#ifndef TUPMODESLIST_H
+#define TUPMODESLIST_H
 
-#include <QBoxLayout>
-#include <QLabel>
+#include "tglobal.h"
 
-TupBackgroundItem::TupBackgroundItem(TupBackground::BgType id, const QString &title, bool viewFlag,
-                                     QWidget *parent) : QWidget(parent)
+#include <QListWidget>
+
+class TupListItemDelegate;
+
+class TUPITUBE_EXPORT TupListItem : public QListWidgetItem
 {
-    itemId = id;
-    isVisible = viewFlag;
-    label = title;
+    public:
+        TupListItem();
+        ~TupListItem();
+};
 
-    QBoxLayout *layout = new QHBoxLayout(this);
-    viewIconOn = QPixmap(THEME_DIR + "icons/show_layer.png");
-    viewIconOff = QPixmap(THEME_DIR + "icons/hide_layer.png");
-
-    viewButton = new QPushButton;
-    viewButton->setToolTip(tr("Background Layer Visibility"));
-    if (isVisible)
-        viewButton->setIcon(QIcon(viewIconOn));
-    else
-        viewButton->setIcon(QIcon(viewIconOff));
-
-    viewButton->setCheckable(true);
-    viewButton->setChecked(isVisible);
-    viewButton->setFixedWidth(30);
-
-    connect(viewButton, SIGNAL(clicked(bool)), this, SLOT(updateVisibility(bool)));
-
-    TSeparator *separator = new TSeparator(Qt::Vertical);
-
-    QLabel *titleLabel = new QLabel(label);
-    titleLabel->setAttribute(Qt::WA_TranslucentBackground);
-
-    layout->addWidget(viewButton);
-    layout->addWidget(separator);
-    layout->addWidget(titleLabel);
-}
-
-TupBackgroundItem::~TupBackgroundItem()
+class TUPITUBE_EXPORT TupModesList: public QListWidget
 {
-}
+    Q_OBJECT
 
-void TupBackgroundItem::updateVisibility(bool clicked)
-{
-    isVisible = clicked;
+    public:
+        TupModesList(QWidget *parent = nullptr);
+        ~TupModesList();
+};
 
-    if (clicked)
-        viewButton->setIcon(QIcon(viewIconOn));
-    else
-        viewButton->setIcon(QIcon(viewIconOff));
-}
-
-QPair<TupBackground::BgType, bool> TupBackgroundItem::getValues()
-{
-    QPair<TupBackground::BgType, bool> response;
-    response.first = itemId;
-    response.second = isVisible;
-
-    return response;
-}
-
-TupBackground::BgType TupBackgroundItem::bgType()
-{
-    return itemId;
-}
-
-QString & TupBackgroundItem::itemLabel()
-{
-    return label;
-}
-
-bool TupBackgroundItem::visibility()
-{
-    return isVisible;
-}
+#endif // TUPMODESLIST_H

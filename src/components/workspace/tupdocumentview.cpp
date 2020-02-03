@@ -58,7 +58,7 @@
 #include "tcolorcell.h"
 #include "tosd.h"
 #include "tupfilterinterface.h"
-#include "tupbackgroundsettingsdialog.h"
+#include "tupmodessettingsdialog.h"
 
 #include <QDir>
 #include <QApplication>
@@ -321,8 +321,8 @@ void TupDocumentView::showPos(const QPointF &point)
 
 void TupDocumentView::setupDrawActions()
 {
-    new TAction(QPixmap(THEME_DIR + "icons/background_settings.png"), tr("Background Settings"), QKeySequence(),
-                this, SLOT(showBackgroundSettings()), actionManager, "background_settings");
+    new TAction(QPixmap(THEME_DIR + "icons/modes_settings.png"), tr("Modes Settings"), QKeySequence(),
+                this, SLOT(showModesSettings()), actionManager, "modes_settings");
 
     new TAction(QPixmap(THEME_DIR + "icons/copy.png"), tr("Copy"), QKeySequence(), 
                 paintArea, SLOT(copyItems()), actionManager, "copy");
@@ -1144,7 +1144,7 @@ void TupDocumentView::createToolBar()
     setSpaceContext();
 
     barGrid->addWidget(spaceModeCombo);
-    barGrid->addAction(actionManager->find("background_settings"));
+    barGrid->addAction(actionManager->find("modes_settings"));
 
     barGrid->addSeparator();
 
@@ -1302,12 +1302,12 @@ void TupDocumentView::createToolBar()
     addToolBar(dynamicPropertiesBar);
 }
 
-void TupDocumentView::showBackgroundSettings()
+void TupDocumentView::showModesSettings()
 {
     QList<TupBackground::BgType> bgLayers = project->getBackgroundFromScene(paintArea->currentSceneIndex())->layerIndexes();
     QList<bool> bgVisibility = project->getBackgroundFromScene(paintArea->currentSceneIndex())->layersVisibility();
 
-    TupBackgroundSettingsDialog *dialog = new TupBackgroundSettingsDialog(bgLayers, bgVisibility, this);
+    TupModesSettingsDialog *dialog = new TupModesSettingsDialog(bgLayers, bgVisibility, this);
     connect(dialog, SIGNAL(valuesUpdated(QList<TupBackground::BgType>, QList<bool>)),
             this, SLOT(updateBgSettings(QList<TupBackground::BgType>, QList<bool>)));
     dialog->show();

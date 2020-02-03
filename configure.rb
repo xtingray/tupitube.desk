@@ -175,7 +175,7 @@ _EOH_
        config.addDefine("ADD_HEADERS");
     end
 
-    config.addDefine('VERSION=\\\\\"0.2\\\\\"')
+    config.addDefine('TUPITUBE_VERSION=\\\\\"0.2\\\\\"')
     config.addDefine('CODE_NAME=\\\\\"Uberaba\\\\\"')
     config.addDefine('REVISION=\\\\\"14\\\\\"')
     config.addDefine('CONFIG_VERSION=\\\\\"3\\\\\"')

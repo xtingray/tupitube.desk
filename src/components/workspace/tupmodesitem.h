@@ -33,63 +33,39 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "tupbackgroundlist.h"
-#include "tconfig.h"
-#include "tapplicationproperties.h"
+#ifndef TUPMODESITEM_H
+#define TUPMODESITEM_H
 
-#include <QItemDelegate>
-#include <QPainter>
+#include "tglobal.h"
+#include "tupbackground.h"
 
-class TupListItemDelegate: public QItemDelegate
+#include <QWidget>
+#include <QPushButton>
+
+class TUPITUBE_EXPORT TupModesItem: public QWidget
 {
-    public:
-        TupListItemDelegate(QObject *parent = nullptr);
-        ~TupListItemDelegate();
+    Q_OBJECT
 
-        virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-        virtual QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex &index) const;
+    public:
+        TupModesItem(TupBackground::BgType id, const QString &title, bool isVisible,
+                     QWidget *parent = nullptr);
+        ~TupModesItem();
+
+        TupBackground::BgType bgType();
+        QString & itemLabel();
+        bool visibility();
+        QPair<TupBackground::BgType, bool> getValues();
+
+    private slots:
+        void updateVisibility(bool clicked);
+
+    private:
+        TupBackground::BgType itemId;
+        QString label;
+        QPixmap viewIconOn;
+        QPixmap viewIconOff;
+        QPushButton *viewButton;
+        bool isVisible;
 };
 
-TupListItemDelegate::TupListItemDelegate(QObject *parent): QItemDelegate(parent)
-{
-}
-
-TupListItemDelegate::~TupListItemDelegate()
-{
-}
-
-QSize TupListItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex &index) const
-{
-    Q_UNUSED(option);
-    Q_UNUSED(index);
-
-    return QSize(100, 40);
-}
-
-void TupListItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    Q_ASSERT(index.isValid());
-
-    QItemDelegate::paint(painter, option, index);
-}
-
-////////// TupListItem ////////
-
-TupListItem::TupListItem()
-{
-}
-
-TupListItem::~TupListItem()
-{
-}
-
-TupBackgroundList::TupBackgroundList(QWidget *parent): QListWidget(parent)
-{
-    setItemDelegate(new TupListItemDelegate(this));
-    setDragDropMode(QAbstractItemView::InternalMove);
-}
-
-TupBackgroundList::~TupBackgroundList()
-{
-}
-
+#endif // TUPMODESITEM_H

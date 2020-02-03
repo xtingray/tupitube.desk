@@ -8,7 +8,7 @@
  *   2010:                                                                 *
  *    Gustavo Gonzalez                                                     *
  *                                                                         *
- *   KTooN's versions:                                                     * 
+ *   KTooN's versions:                                                     *
  *                                                                         *
  *   2006:                                                                 *
  *    David Cuadrado                                                       *
@@ -33,40 +33,63 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPBACKGROUNDSETTINGSDIALOG_H
-#define TUPBACKGROUNDSETTINGSDIALOG_H
-
-#include "tglobal.h"
+#include "tupmodeslist.h"
+#include "tconfig.h"
 #include "tapplicationproperties.h"
-#include "tupbackground.h"
-#include "tupbackgroundlist.h"
-#include "tupbackgrounditem.h"
 
-#include <QDialog>
+#include <QItemDelegate>
+#include <QPainter>
 
-class TUPITUBE_EXPORT TupBackgroundSettingsDialog : public QDialog
+class TupListItemDelegate: public QItemDelegate
 {
-    Q_OBJECT
-
     public:
-        TupBackgroundSettingsDialog(QList<TupBackground::BgType> bgLayers, QList<bool> bgVisibility,
-                                    QWidget *parent = nullptr);
-        ~TupBackgroundSettingsDialog();
+        TupListItemDelegate(QObject *parent = nullptr);
+        ~TupListItemDelegate();
 
-    signals:
-        void valuesUpdated(QList<TupBackground::BgType>, QList<bool>);
-
-    private slots:
-        void apply();
-        void moveBackgroundUp();
-        void moveBackgroundDown();
-
-    private:
-        TupBackgroundList *bgList;
-        QList<bool> visibilityList;
-        QList<TupBackground::BgType> idList;
-        QPushButton *upButton;
-        QPushButton *downButton;
+        virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+        virtual QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex &index) const;
 };
 
-#endif
+TupListItemDelegate::TupListItemDelegate(QObject *parent): QItemDelegate(parent)
+{
+}
+
+TupListItemDelegate::~TupListItemDelegate()
+{
+}
+
+QSize TupListItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex &index) const
+{
+    Q_UNUSED(option);
+    Q_UNUSED(index);
+
+    return QSize(100, 40);
+}
+
+void TupListItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    Q_ASSERT(index.isValid());
+
+    QItemDelegate::paint(painter, option, index);
+}
+
+////////// TupListItem ////////
+
+TupListItem::TupListItem()
+{
+}
+
+TupListItem::~TupListItem()
+{
+}
+
+TupModesList::TupModesList(QWidget *parent): QListWidget(parent)
+{
+    setItemDelegate(new TupListItemDelegate(this));
+    setDragDropMode(QAbstractItemView::InternalMove);
+}
+
+TupModesList::~TupModesList()
+{
+}
+

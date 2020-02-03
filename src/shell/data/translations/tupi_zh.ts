@@ -1578,52 +1578,6 @@
     </message>
 </context>
 <context>
-    <name>TupBackgroundItem</name>
-    <message>
-        <source>Background Layer Visibility</source>
-        <translation>背景层可见性</translation>
-    </message>
-</context>
-<context>
-    <name>TupBackgroundSettingsDialog</name>
-    <message>
-        <source>Background Settings</source>
-        <translation>背景设定</translation>
-    </message>
-    <message>
-        <source>Vector Dynamic Background</source>
-        <translation>矢量动态背景</translation>
-    </message>
-    <message>
-        <source>Raster Dynamic Background</source>
-        <translation>栅格动态背景</translation>
-    </message>
-    <message>
-        <source>Vector Static Background</source>
-        <translation>矢量静态背景</translation>
-    </message>
-    <message>
-        <source>Raster Static Background</source>
-        <translation>栅格静态背景</translation>
-    </message>
-    <message>
-        <source>Move Layer Up</source>
-        <translation>向上移动图层</translation>
-    </message>
-    <message>
-        <source>Move Layer Down</source>
-        <translation>向下移动图层</translation>
-    </message>
-    <message>
-        <source>&amp;Apply</source>
-        <translation>应用</translation>
-    </message>
-    <message>
-        <source>&amp;Cancel</source>
-        <translation>取消</translation>
-    </message>
-</context>
-<context>
     <name>TupBasicCameraInterface</name>
     <message>
         <source>Error</source>
@@ -2495,8 +2449,8 @@ Please, rename the project&apos;s file</source>
         <translation>栅格动态背景</translation>
     </message>
     <message>
-        <source>Background Settings</source>
-        <translation>背景设定</translation>
+        <source>Modes Settings</source>
+        <translation>模式设定</translation>
     </message>
 </context>
 <context>
@@ -3743,6 +3697,52 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Open TupiTube&apos;s Network</source>
         <translation>TupiTube 社交网络</translation>
+    </message>
+</context>
+<context>
+    <name>TupModesItem</name>
+    <message>
+        <source>Mode Visibility</source>
+        <translation>模式可见性</translation>
+    </message>
+</context>
+<context>
+    <name>TupModesSettingsDialog</name>
+    <message>
+        <source>Modes Settings</source>
+        <translation>模式设定</translation>
+    </message>
+    <message>
+        <source>Vector Dynamic Background</source>
+        <translation>矢量动态背景</translation>
+    </message>
+    <message>
+        <source>Raster Dynamic Background</source>
+        <translation>栅格动态背景</translation>
+    </message>
+    <message>
+        <source>Vector Static Background</source>
+        <translation>矢量静态背景</translation>
+    </message>
+    <message>
+        <source>Raster Static Background</source>
+        <translation>栅格静态背景</translation>
+    </message>
+    <message>
+        <source>Move Mode Up</source>
+        <translation>向上移动模式</translation>
+    </message>
+    <message>
+        <source>Move Mode Down</source>
+        <translation>下移模式</translation>
+    </message>
+    <message>
+        <source>&amp;Apply</source>
+        <translation>应用</translation>
+    </message>
+    <message>
+        <source>&amp;Cancel</source>
+        <translation>取消</translation>
     </message>
 </context>
 <context>

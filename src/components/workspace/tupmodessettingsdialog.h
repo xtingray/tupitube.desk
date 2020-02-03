@@ -8,7 +8,7 @@
  *   2010:                                                                 *
  *    Gustavo Gonzalez                                                     *
  *                                                                         *
- *   KTooN's versions:                                                     *
+ *   KTooN's versions:                                                     * 
  *                                                                         *
  *   2006:                                                                 *
  *    David Cuadrado                                                       *
@@ -33,39 +33,40 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPBACKGROUNDITEM_H
-#define TUPBACKGROUNDITEM_H
+#ifndef TUPMODESSETTINGSDIALOG_H
+#define TUPMODESSETTINGSDIALOG_H
 
 #include "tglobal.h"
+#include "tapplicationproperties.h"
 #include "tupbackground.h"
+#include "tupmodeslist.h"
+#include "tupmodesitem.h"
 
-#include <QWidget>
-#include <QPushButton>
+#include <QDialog>
 
-class TUPITUBE_EXPORT TupBackgroundItem: public QWidget
+class TUPITUBE_EXPORT TupModesSettingsDialog : public QDialog
 {
     Q_OBJECT
 
     public:
-        TupBackgroundItem(TupBackground::BgType id, const QString &title, bool isVisible,
-                          QWidget *parent = nullptr);
-        ~TupBackgroundItem();
+        TupModesSettingsDialog(QList<TupBackground::BgType> bgLayers, QList<bool> bgVisibility,
+                               QWidget *parent = nullptr);
+        ~TupModesSettingsDialog();
 
-        TupBackground::BgType bgType();
-        QString & itemLabel();
-        bool visibility();
-        QPair<TupBackground::BgType, bool> getValues();
+    signals:
+        void valuesUpdated(QList<TupBackground::BgType>, QList<bool>);
 
     private slots:
-        void updateVisibility(bool clicked);
+        void apply();
+        void moveModeUp();
+        void moveModeDown();
 
     private:
-        TupBackground::BgType itemId;
-        QString label;
-        QPixmap viewIconOn;
-        QPixmap viewIconOff;
-        QPushButton *viewButton;
-        bool isVisible;
+        TupModesList *modesList;
+        QList<bool> visibilityList;
+        QList<TupBackground::BgType> idList;
+        QPushButton *upButton;
+        QPushButton *downButton;
 };
 
-#endif // TUPBACKGROUNDITEM_H
+#endif

@@ -100,7 +100,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void setFillTool(TColorCell::FillType type);
 
     private slots:
-        void showBackgroundSettings();
+        void showModesSettings();
         void setRotationAngle(int angle);
         void setZoomFactor(qreal factor);
         void goToFrame(int index);
