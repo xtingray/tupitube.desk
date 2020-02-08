@@ -638,7 +638,7 @@ bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int
     switch(move) {
            case MoveBack :
              {
-                int zMin = (layerIndex + 1) * ZLAYER_LIMIT;
+                int zMin = (BG_LAYERS + layerIndex) * ZLAYER_LIMIT;
 
                 if (objectType == TupLibraryObject::Svg) {
                     int zLimit = static_cast<int> (svg.at(currentIndex)->zValue());
@@ -673,8 +673,9 @@ bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int
                     }
 
                     return true;
-                } else {
+                } else { // Vector Element
                     int zLimit = graphics.at(currentIndex)->itemZValue();
+
                     if (zLimit == zMin) {
                         #ifdef TUP_DEBUG
                             qWarning() << "TupFrame::moveItem() - MoveBack: Minimum level has been reached! (VECTOR/RASTER)";
