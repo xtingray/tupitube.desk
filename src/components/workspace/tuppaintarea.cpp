@@ -753,13 +753,12 @@ void TupPaintArea::copyItems()
 
         TupGraphicsScene* currentScene = graphicsScene();
         if (currentScene) {
-            // oldPosition = selected.at(0)->boundingRect().topLeft();
-            int size = selected.size();
+            int itemsCount = selected.size();
 
             // Sort the array of items by zValue
-            for (int i=0; i<size-1; i++) {
+            for (int i=0; i<itemsCount-1; i++) {
                 qreal iLevel = selected.at(i)->zValue();
-                for (int j=i+1; j<size; j++) {
+                for (int j=i+1; j<itemsCount; j++) {
                     qreal jLevel = selected.at(j)->zValue();
                     if (jLevel < iLevel) {
                         selected.swapItemsAt(i, j);
@@ -773,33 +772,38 @@ void TupPaintArea::copyItems()
             int minY = 0;
             int maxY = 0;
 
-            for (int i=0; i<size; i++) {
+            // Processing every item to save them as XML
+            for (int i=0; i<itemsCount; i++) {
                 QGraphicsItem *item = selected.at(i);
-                if (i == 0) {
-                    copyPosition = item->boundingRect().topLeft();
+                if (qgraphicsitem_cast<TControlNode *> (item))
+                    continue;
+
+                if (i == 0) { // Get initial values from the first item
+                    // copyPosition = item->boundingRect().topLeft();
+                    // copyPosition = item->boundingRect().center();
+                    copyPosition = item->pos();
+                    copyCoords << QPointF(-(item->boundingRect().width()/2), -(item->boundingRect().height()/2));
                     minX = copyPosition.x();
                     maxX = copyPosition.x() + item->boundingRect().width();
                     minY = copyPosition.y();
                     maxY = copyPosition.y() + item->boundingRect().height();
+                } else { // Looking for the whole dimension of the selection
+                    QPoint left = item->mapToScene(item->boundingRect().topLeft()).toPoint();
+                    copyCoords << left - copyPosition;
+                    int leftX = left.x();
+                    int leftY = left.y();
+                    if (leftX < minX)
+                        minX = leftX;
+                     if (leftY < minY)
+                        minY = leftY;
+                    QPoint right = item->mapToScene(item->boundingRect().bottomRight()).toPoint();
+                    int rightX = right.x();
+                    int rightY = right.y();
+                    if (rightX > maxX)
+                        maxX = rightX;
+                    if (rightY > maxY)
+                        maxY = rightY;
                 }
-
-                if (qgraphicsitem_cast<TControlNode *> (item))
-                    continue;
-
-                QPoint left = item->mapToScene(item->boundingRect().topLeft()).toPoint();
-                int leftX = left.x();
-                int leftY = left.y();
-                if (leftX < minX)
-                    minX = leftX;
-                 if (leftY < minY)
-                    minY = leftY;
-                QPoint right = item->mapToScene(item->boundingRect().bottomRight()).toPoint();
-                int rightX = right.x();
-                int rightY = right.y();
-                if (rightX > maxX)
-                    maxX = rightX;
-                if (rightY > maxY)
-                    maxY = rightY;
 
                 QDomDocument dom;
                 dom.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(dom));
@@ -852,7 +856,7 @@ void TupPaintArea::pasteItems()
         if (!menuOn)
             position = viewPosition();
 
-        QPointF offset = viewPosition() - copyPosition;
+        // QPointF offset = viewPosition() - copyPosition;
     
         for (int i=0; i<copiesXml.size(); i++) {
             QString xml = copiesXml.at(i);
@@ -866,9 +870,10 @@ void TupPaintArea::pasteItems()
                     total = frame->svgItemsCount();
                 }
 
-                QPointF pos = itemPoint(xml) + offset;                
-                if (viewPosition().y() < 0)
-                    pos = itemPoint(xml) + copySize;
+                QPointF pos = viewPosition() + copyCoords.at(i);
+                // QPointF pos = itemPoint(xml) + offset;
+                // if (viewPosition().y() < 0)
+                //     pos = itemPoint(xml) + copySize;
 
                 TupProjectRequest event = TupRequestBuilder::createItemRequest(currentScene->currentSceneIndex(),
                                           currentScene->currentLayerIndex(),
@@ -950,6 +955,13 @@ void TupPaintArea::multipasteObject(int pasteTotal)
 
 QPoint TupPaintArea::itemPoint(const QString &xml)
 {
+    qDebug() << "";
+    qDebug() << "xml: ";
+    qDebug() << xml;
+
+    if (xml.startsWith("<ellipse"))
+        return QPoint(0, 0);
+
     QDomDocument doc;
     doc.setContent(xml);
     QDomElement root = doc.documentElement();

@@ -164,6 +164,8 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         bool deleteMode;
         TupProject::Mode spaceMode;
         QPointF copyPosition;
+        QList<QPointF> copyCoords;
+
         QPointF copySize;
         QPointF position;
         bool menuOn;
