@@ -41,6 +41,7 @@
 #include "tuppixmapitem.h"
 
 #include <QScreen>
+#include <cmath> // fabs
 
 TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent) : TupPaintAreaBase(parent, work->getDimension(), work->getLibrary())
 {
@@ -750,6 +751,7 @@ void TupPaintArea::copyItems()
 
     if (!selected.isEmpty()) {
         copiesXml.clear();
+        copyCoords.clear();
 
         TupGraphicsScene* currentScene = graphicsScene();
         if (currentScene) {
@@ -781,8 +783,12 @@ void TupPaintArea::copyItems()
                 if (i == 0) { // Get initial values from the first item
                     // copyPosition = item->boundingRect().topLeft();
                     // copyPosition = item->boundingRect().center();
-                    copyPosition = item->pos();
-                    copyCoords << QPointF(-(item->boundingRect().width()/2), -(item->boundingRect().height()/2));
+                    // copyPosition = item->pos();
+                    qDebug() << "";
+                    // qDebug() << "Pos: " << item->mapToScene(copyPosition);
+                    qDebug() << "Pos: " << item->boundingRect().topLeft();
+                    // copyCoords << QPointF(-(item->boundingRect().width()/2), -(item->boundingRect().height()/2));
+                    copyCoords << item->boundingRect().topLeft();
                     minX = copyPosition.x();
                     maxX = copyPosition.x() + item->boundingRect().width();
                     minY = copyPosition.y();
@@ -837,7 +843,7 @@ void TupPaintArea::copyItems()
                 QApplication::clipboard()->setPixmap(toPixmap);
             }
 
-            copySize = QPointF(maxX - minX, maxY - minY);
+            copySize = QPointF((maxX - minX)/2, (maxY - minY)/2);
         }
     } else {
         copyCurrentFrame();
@@ -870,7 +876,30 @@ void TupPaintArea::pasteItems()
                     total = frame->svgItemsCount();
                 }
 
-                QPointF pos = viewPosition() + copyCoords.at(i);
+                double x = 0;
+                double y = 0;
+
+                if (copiesXml.size() == 1) {
+                    x = viewPosition().x() - (copyCoords.at(i).x() + copySize.x());
+                    if (viewPosition().x() >= copyCoords.at(i).x())
+                        x = fabs(x);
+
+                    y = viewPosition().y() - (copyCoords.at(i).y() + copySize.y());
+                    if (viewPosition().y() >= copyCoords.at(i).y())
+                        y = fabs(y);
+                } else {
+
+                }
+
+                QPointF pos = QPointF(x, y);
+                qDebug() << "";
+                qDebug() << "xml:";
+                qDebug() << xml;
+                qDebug() << "viewPosition() -> " << viewPosition();
+                qDebug() << "copyCoords.at(i) -> " << copyCoords.at(i);
+                qDebug() << "pos -> " << pos;
+                qDebug() << "";
+
                 // QPointF pos = itemPoint(xml) + offset;
                 // if (viewPosition().y() < 0)
                 //     pos = itemPoint(xml) + copySize;
