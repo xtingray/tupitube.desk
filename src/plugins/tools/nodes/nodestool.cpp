@@ -61,7 +61,7 @@ void NodesTool::init(TupGraphicsScene *gScene)
         }
     }
 
-    baseZValue = (2*ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
+    baseZValue = (BG_LAYERS * ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
 }
 
 QStringList NodesTool::keys() const

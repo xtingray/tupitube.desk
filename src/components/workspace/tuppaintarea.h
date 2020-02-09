@@ -166,7 +166,7 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         QPointF copyPosition;
         QList<QPointF> copyCoords;
 
-        QPointF copySize;
+        QPointF centerCoord;
         QPointF position;
         bool menuOn;
         QString copyFrameName;
