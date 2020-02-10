@@ -5226,157 +5226,157 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
 <context>
     <name>TupPaintArea</name>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="58"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="59"/>
         <source>Pencil</source>
         <translation>Crayon</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="130"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="131"/>
         <location filename="../../../components/workspace/tuppaintarea.cpp" line="639"/>
         <source>Nodes Selection</source>
         <translation>Sélection des noeuds</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="139"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="140"/>
         <location filename="../../../components/workspace/tuppaintarea.cpp" line="553"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1218"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1270"/>
         <source>PolyLine</source>
         <translation>Polyligne</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="143"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="144"/>
         <source>Line</source>
         <translation>Ligne</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="149"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="150"/>
         <location filename="../../../components/workspace/tuppaintarea.cpp" line="596"/>
         <location filename="../../../components/workspace/tuppaintarea.cpp" line="639"/>
         <source>Object Selection</source>
         <translation>Sélection d&apos;objet</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="166"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="167"/>
         <source>Drawing area</source>
         <translation>Zone de dessin</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="174"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="175"/>
         <source>Cut</source>
         <translation>Couper</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="174"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="175"/>
         <source>Ctrl+X</source>
         <translation>Ctrl+X</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="175"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="176"/>
         <source>Copy</source>
         <translation>Copier</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="181"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="182"/>
         <source>Paste</source>
         <translation>Coller</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="183"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="184"/>
         <source>Paste in...</source>
         <translation>Coller dans...</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="184"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="185"/>
         <source>next 5 frames</source>
         <translation>5 prochaines images</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="185"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="186"/>
         <source>next 10 frames</source>
         <translation>10 prochaines images</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="186"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="187"/>
         <source>next 20 frames</source>
         <translation>20 prochaines images</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="187"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="188"/>
         <source>next 50 frames</source>
         <translation>50 prochaines images</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="188"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="189"/>
         <source>next 100 frames</source>
         <translation>100 prochaines images</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="200"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="201"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="202"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="203"/>
         <source>Send</source>
         <translation>Envoyer</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="205"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="206"/>
         <source>To back</source>
         <translation>Vers l&apos;arrière</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="206"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="207"/>
         <source>To front</source>
         <translation>Vers l&apos;avant</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="207"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="208"/>
         <source>One level to back</source>
         <translation>Un niveau en arrière</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="208"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="209"/>
         <source>One level to front</source>
         <translation>Un niveau en avant</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="214"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="215"/>
         <source>Add to library...</source>
         <translation>Ajouter à la bibliothèque...</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="254"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="255"/>
         <source>Ink</source>
         <translation>Encre</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="924"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1248"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1296"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1311"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="971"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1300"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1348"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1363"/>
         <source>Frame</source>
         <translation>Image</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1030"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1063"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1082"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1115"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1030"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1063"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1082"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1115"/>
         <source>No items selected</source>
         <translation>Aucuns éléments sélectionnés</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1364"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1416"/>
         <source>Do you want to remove this frame?</source>
         <translation>Voulez-vous supprimer cette image?</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1364"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1416"/>
         <source>Confirmation</source>
         <translation>Confirmation</translation>
     </message>
