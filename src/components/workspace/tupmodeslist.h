@@ -56,6 +56,12 @@ class TUPITUBE_EXPORT TupModesList: public QListWidget
     public:
         TupModesList(QWidget *parent = nullptr);
         ~TupModesList();
+
+    protected:
+        void dropEvent(QDropEvent* event);
+
+    signals:
+        void listEdited();
 };
 
 #endif // TUPMODESLIST_H

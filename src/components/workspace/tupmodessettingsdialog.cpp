@@ -82,6 +82,8 @@ TupModesSettingsDialog::TupModesSettingsDialog(QList<TupBackground::BgType> bgLa
 
     modesList->setDragDropMode(QAbstractItemView::InternalMove);
     modesList->setFixedHeight(170);
+    connect(modesList, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(updateListUI()));
+    connect(modesList, SIGNAL(listEdited()), this, SLOT(updateListUI()));
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
 
@@ -176,4 +178,19 @@ void TupModesSettingsDialog::moveModeDown()
     TupModesItem *widget = new TupModesItem(bgWidget->bgType(), bgWidget->itemLabel(), bgWidget->visibility());
     modesList->setItemWidget(bgItem, widget);
     modesList->setCurrentRow(currentIndex);
+}
+
+void TupModesSettingsDialog::updateListUI()
+{
+    int currentIndex = modesList->currentRow();
+
+    if (currentIndex == 0 && upButton->isEnabled())
+        upButton->setEnabled(false);
+    else if (currentIndex > 0 && !upButton->isEnabled())
+        upButton->setEnabled(true);
+
+    if (currentIndex == 3 && downButton->isEnabled())
+        downButton->setEnabled(false);
+    else if (currentIndex < 3 && !downButton->isEnabled())
+        downButton->setEnabled(true);
 }

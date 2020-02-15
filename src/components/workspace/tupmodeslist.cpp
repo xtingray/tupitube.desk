@@ -93,3 +93,8 @@ TupModesList::~TupModesList()
 {
 }
 
+void TupModesList::dropEvent(QDropEvent* event)
+{
+    QListWidget::dropEvent(event);
+    emit listEdited();
+}

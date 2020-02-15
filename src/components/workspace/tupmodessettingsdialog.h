@@ -60,6 +60,7 @@ class TUPITUBE_EXPORT TupModesSettingsDialog : public QDialog
         void apply();
         void moveModeUp();
         void moveModeDown();
+        void updateListUI();
 
     private:
         TupModesList *modesList;
