@@ -131,53 +131,57 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 
     // Save scenes
     {
-     int totalScenes = project->getScenes().size();
-     int index = 0;
-     QDomDocument doc;
-     QString scenePath;
+        int totalScenes = project->getScenes().size();
+        int index = 0;
+        QDomDocument doc;
+        QString scenePath;
 
-     for (int i=0; i<totalScenes; i++) {
-          #ifdef TUP_DEBUG
-              qDebug() << "TupFileManager::save() - Saving scene file " << QString::number(i);
-          #endif
-          doc.appendChild(project->getScenes().at(i)->toXml(doc));
-          scenePath = projectDir.path() + "/scene" + QString::number(index) + ".tps";
-          QFile sceneFile(scenePath);
-          if (sceneFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-              QTextStream st(&sceneFile);
-              st << doc.toString();
-              index += 1;
-              doc.clear();
-              sceneFile.close();
-          } else {
-              #ifdef TUP_DEBUG
-                  qWarning() << "TupFileManager::save() - Error: Can't create file -> " << scenePath;
-              #endif
-              return false;
-          }
-     }
+        for (int i=0; i<totalScenes; i++) {
+            doc.appendChild(project->getScenes().at(i)->toXml(doc));
+            scenePath = projectDir.path() + "/scene" + QString::number(index) + ".tps";
+            #ifdef TUP_DEBUG
+                qDebug() << "TupFileManager::save() - Saving scene file " << QString::number(i);
+                qDebug() << "TupFileManager::save() - Scene file -> " << scenePath;
+            #endif
+            QFile sceneFile(scenePath);
+            if (sceneFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "TupFileManager::save() - Capturing stream...";
+                #endif
+                QTextStream st(&sceneFile);
+                st << doc.toString();
+                index += 1;
+                doc.clear();
+                sceneFile.close();
+            } else {
+                #ifdef TUP_DEBUG
+                    qWarning() << "TupFileManager::save() - Error: Can't create file -> " << scenePath;
+                #endif
+                return false;
+            }
+        }
     }
 
     {
-     // Save library
-     QFile library(projectDir.path() + "/library.tpl");
+         // Save library
+         QFile library(projectDir.path() + "/library.tpl");
 
-     if (library.open(QIODevice::WriteOnly | QIODevice::Text)) {
-         #ifdef TUP_DEBUG
-             qDebug() << "TupFileManager::save() - Saving library file (TPL)";
-         #endif
-         QTextStream ts(&library);
-         QDomDocument doc;
-         doc.appendChild(project->getLibrary()->toXml(doc));
+         if (library.open(QIODevice::WriteOnly | QIODevice::Text)) {
+             #ifdef TUP_DEBUG
+                 qDebug() << "TupFileManager::save() - Saving library file (TPL)";
+             #endif
+             QTextStream ts(&library);
+             QDomDocument doc;
+             doc.appendChild(project->getLibrary()->toXml(doc));
 
-         ts << doc.toString();
-         library.close();
-     } else {
-         #ifdef TUP_DEBUG
-             qWarning() << "TupFileManager::save() - Error: Can't create file -> " + projectDir.path() + "/library.tpl";
-         #endif
-         return false;
-     }
+             ts << doc.toString();
+             library.close();
+         } else {
+             #ifdef TUP_DEBUG
+                 qWarning() << "TupFileManager::save() - Error: Can't create file -> " + projectDir.path() + "/library.tpl";
+             #endif
+             return false;
+         }
     }
 
     {

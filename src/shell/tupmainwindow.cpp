@@ -992,6 +992,9 @@ void TupMainWindow::saveProject()
             QString dir = m_fileName.left(last);
             saveDefaultPath(dir);
         } else {
+            #ifdef TUP_DEBUG
+                qWarning() << "TupMainWindow::saveProject() - Error: Can't save project -> " << m_fileName;
+            #endif
             TOsd::self()->display(tr("Error"), tr("Cannot save the project!"), TOsd::Error);
         }
         m_actionManager->enable("save_project", true);
