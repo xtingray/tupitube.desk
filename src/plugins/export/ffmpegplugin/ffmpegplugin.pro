@@ -9,6 +9,16 @@ unix {
     }
 }
 
+INSTALLS += target
+target.path = /plugins/
+
+contains("DEFINES", "ADD_HEADERS") {
+    INSTALLS += headers
+    headers.target = .
+    headers.commands = /bin/cp *.h $(INSTALL_ROOT)/include/tupiffmpeg
+    headers.path = /include/tupiffmpeg
+}
+
 win32 {
     include(../../../../win.pri)
     include(../../../../ffmpeg.win.pri)
@@ -17,9 +27,6 @@ win32 {
 mac {
     LIBS += -lavutil
 }
-
-INSTALLS += target
-target.path = /plugins/
 
 HEADERS += tffmpegmoviegenerator.h \
            ffmpegplugin.h
