@@ -160,7 +160,7 @@ AVStream * TFFmpegMovieGenerator::addVideoStream(AVFormatContext *oc, AVCodec **
                                  const QString &movieFile, int width, int height, int fps)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TFFmpegMovieGenerator::addVideoStream() - codec_id: " + QString::number(codec_id);
+        qDebug() << "TFFmpegMovieGenerator::addVideoStream() - codec_id: " + QString::number(codec_id);
     #endif
 
     AVCodecContext *c;
@@ -455,6 +455,10 @@ void TFFmpegMovieGenerator::closeVideo(AVStream *st)
 
 void TFFmpegMovieGenerator::saveMovie(const QString &filename) 
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "TFFmpegMovieGenerator::saveMovie() - filename -> " + filename;
+    #endif
+
     endVideo();
     createMovieFile(filename);
 }
@@ -487,17 +491,32 @@ void TFFmpegMovieGenerator::endVideo()
 
 void TFFmpegMovieGenerator::createMovieFile(const QString &fileName)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "TFFmpegMovieGenerator::createMovieFile() - fileName -> " + fileName;
+    #endif
+
     if (QFile::exists(fileName)) 
         QFile::remove(fileName);
 
     if (QFile::copy(movieFile, fileName)) {
         if (QFile::exists(movieFile)) {
+            #ifdef TUP_DEBUG
+                qInfo() << "TFFmpegMovieGenerator::createMovieFile() - Trying to remove temp video file -> " + movieFile;
+            #endif
+ 
             if (QFile::remove(movieFile)) {
                 #ifdef TUP_DEBUG
-                    QString msg = QString("") + "TFFmpegMovieGenerator::createMovieFile() - Removing temp video file -> " + movieFile;
-                    qInfo() << msg;
+                    qDebug() << "TFFmpegMovieGenerator::createMovieFile() - Temp video file has been removed!";
+                #endif
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "TFFmpegMovieGenerator::createMovieFile() - Error: Can't remove temp video file";
                 #endif
             }
+        } else {
+            #ifdef TUP_DEBUG
+                qWarning() << "TFFmpegMovieGenerator::createMovieFile() - Error: Temp video file wasn't found! -> " + movieFile;
+            #endif
         }
     }
 }
