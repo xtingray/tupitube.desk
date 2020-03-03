@@ -65,7 +65,7 @@ ScaleSettings::ScaleSettings(QWidget *parent) : QWidget(parent)
     options->addItem(tr("Set Properties"), 1);
     connect(options, SIGNAL(clicked(int)), this, SLOT(emitOptionChanged(int)));
 
-    apply = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/save.png"), 22);
+    apply = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/apply.png"), 22);
     connect(apply, SIGNAL(clicked()), this, SLOT(applyTween()));
 
     remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close.png"), 22);
@@ -154,11 +154,11 @@ void ScaleSettings::setInnerForm()
     axesLayout->addWidget(comboAxes);
 
     comboFactor = new QDoubleSpinBox;
-    comboFactor->setDecimals(2);
+    comboFactor->setDecimals(3);
     comboFactor->setMinimum(0.0);
     comboFactor->setMaximum(10);
-    comboFactor->setSingleStep(0.05);
-    comboFactor->setValue(1.10);
+    comboFactor->setSingleStep(0.005);
+    comboFactor->setValue(1.100);
 
     QLabel *speedLabel = new QLabel(tr("Scaling Factor") + ": ");
     speedLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);

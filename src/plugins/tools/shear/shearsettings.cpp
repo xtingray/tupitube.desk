@@ -63,7 +63,7 @@ ShearSettings::ShearSettings(QWidget *parent) : QWidget(parent)
     options->addItem(tr("Set Properties"), 1);
     connect(options, SIGNAL(clicked(int)), this, SLOT(emitOptionChanged(int)));
 
-    apply = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/save.png"), 22);
+    apply = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/apply.png"), 22);
     connect(apply, SIGNAL(clicked()), this, SLOT(applyTween()));
 
     remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close.png"), 22);

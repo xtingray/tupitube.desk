@@ -921,7 +921,7 @@ void TupDocumentView::selectTool()
             case TupToolInterface::Tweener:
             {
                 status->enableFullScreenFeature(false);
-                minWidth = 220;
+                minWidth = 230;
                 motionMenu->setDefaultAction(action);
                 motionMenu->setActiveAction(action);
                 if (!action->icon().isNull())
