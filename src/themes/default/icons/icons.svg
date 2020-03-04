@@ -2986,9 +2986,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.693498"
-     inkscape:cx="506.76525"
-     inkscape:cy="539.64358"
+     inkscape:zoom="5.4401246"
+     inkscape:cx="564.85216"
+     inkscape:cy="540.37886"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -16749,5 +16749,73 @@
        inkscape:export-filename="/home/xtingray/tupi/sources/tupi/src/themes/default/icons/miter.png"
        inkscape:export-xdpi="113.22"
        inkscape:export-ydpi="113.22" />
+    <g
+       id="g12240">
+      <g
+         inkscape:export-ydpi="83.688675"
+         inkscape:export-xdpi="83.688675"
+         inkscape:export-filename="/home/xtingray/tupi/sources/tupi.flipbook/images/ok_big.png"
+         transform="matrix(0.66430517,0,0,0.63919334,691.43302,322.07428)"
+         id="g15710-6-9-0">
+        <g
+           id="g15705-8-9-8">
+          <g
+             inkscape:export-ydpi="22153.85"
+             inkscape:export-xdpi="22153.85"
+             inkscape:export-filename="/home/xtingray/tupi/necessitas/tupi.mobile/src/images/checked.png"
+             id="g5080-5-6-0-9"
+             transform="matrix(8.9046644,0,0,8.9046644,-33.084682,-123.26214)">
+            <path
+               style="fill:#008700;fill-opacity:1;stroke:none"
+               d="m -11.767948,47.689466 c -0.131369,-0.174641 -0.463735,-0.629889 -0.92596,-0.673684 -0.381827,0.527897 -0.919963,1.489473 -1.152924,2.271103 l -1.247536,-0.893693 -0.625848,1.182989 c 0.71942,0.101708 1.710268,0.274371 2.084159,1.100212 0.323402,-1.043428 1.032756,-2.213664 1.868109,-2.986927 z"
+               id="path3837-0-7-00-6-3-3"
+               inkscape:connector-curvature="0"
+               sodipodi:nodetypes="ccccccc"
+               inkscape:export-filename="/home/xtingray/tupi/sources/tupi.mobile/images/ok.png"
+               inkscape:export-xdpi="1366.3"
+               inkscape:export-ydpi="1366.3" />
+            <path
+               style="fill:none;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.17788463"
+               d="m -15.49037,49.477194 c 0.518934,-0.02083 1.510759,0.353869 1.826986,0.793083 0.0853,-0.44396 1.012192,-2.070042 1.715511,-2.590605"
+               id="path4103-9-5-4-3-4-1"
+               inkscape:connector-curvature="0"
+               sodipodi:nodetypes="ccc"
+               inkscape:export-filename="/home/xtingray/tupi/sources/tupi.mobile/images/ok.png"
+               inkscape:export-xdpi="1366.3"
+               inkscape:export-ydpi="1366.3" />
+          </g>
+        </g>
+      </g>
+      <rect
+         inkscape:export-ydpi="83.688675"
+         inkscape:export-xdpi="83.688675"
+         inkscape:export-filename="/home/xtingray/tupi/sources/tupi.flipbook/images/ok_big.png"
+         y="508.68997"
+         x="575.53455"
+         height="25.236389"
+         width="25.236389"
+         id="rect6135-6-6-5-9-8-4"
+         style="fill:#ffffff;fill-opacity:0;stroke:none;stroke-width:0.47152612;stroke-opacity:1" />
+    </g>
+    <g
+       transform="translate(392.73056,-3.8884563)"
+       id="g6779">
+      <circle
+         inkscape:export-ydpi="5.6627035"
+         inkscape:export-xdpi="5.6627035"
+         r="6.9299273"
+         cy="524.54987"
+         cx="227.45399"
+         id="path815"
+         style="fill:#ffffff;fill-opacity:1;stroke:#008700;stroke-width:1.26443434;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <circle
+         inkscape:export-ydpi="5.6627035"
+         inkscape:export-xdpi="5.6627035"
+         r="1.7922226"
+         cy="524.54987"
+         cx="227.45399"
+         id="path817"
+         style="fill:#008700;fill-opacity:1;stroke:#008700;stroke-width:1.26443434;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    </g>
   </g>
 </svg>
