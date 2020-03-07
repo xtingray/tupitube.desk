@@ -54,9 +54,9 @@
 TupProjectManager::TupProjectManager(QObject *parent) : QObject(parent)
 {	
     #ifdef TUP_DEBUG
-        qDebug() << "TupProjectManager()";
+        qDebug() << "[TupProjectManager()]";
     #endif
-    
+
     isModified = false;
     handler = nullptr;
 

@@ -48,13 +48,14 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
     Q_OBJECT
 
     public:
-        enum BgType { VectorDynamic = 0, RasterDynamic, VectorStatic, RasterStatic };
+        enum BgType { VectorDynamic = 0, RasterDynamic, VectorStatic, RasterStatic, VectorForeground };
         enum Direction { Right = 0, Left = 1, Top, Bottom };
         TupBackground(TupScene *parent, int sceneIndex, const QSize dimension, const QColor bgColor);
         ~TupBackground();
 
         TupFrame* vectorStaticFrame();
         TupFrame* vectorDynamicFrame();
+        TupFrame* vectorForegroundFrame();
 
         void setBgColor(const QColor color);
         void clearBackground();
@@ -88,6 +89,8 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         TupScene * scene();
         TupProject * project();
 
+        bool vectorFgIsEmpty();
+
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
 
@@ -114,7 +117,7 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
 
         QList<bool> layersVisibility();
         void updateLayersVisibility(QList<bool> viewFlags);
-        bool isBgLayerVisible(BgType bgId);
+        bool isLayerVisible(BgType bgId);
 
     private:
         QPoint calculatePoint(TupBackground::Direction direction, int frameIndex, int shift);
@@ -126,6 +129,7 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         TupFrame *vectorStaticBgFrame;
         TupFrame *rasterDynamicBgFrame;
         TupFrame *rasterStaticBgFrame;
+        TupFrame *vectorFgFrame;
 
         bool rasterStaticUpdateRequired;
         bool vectorDynamicRenderRequired;

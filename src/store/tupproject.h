@@ -67,6 +67,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
             VECTOR_DYNAMIC_BG_MODE,
             RASTER_STATIC_BG_MODE,
             RASTER_DYNAMIC_BG_MODE,
+            VECTOR_FG_MODE,
             NONE
         };
 

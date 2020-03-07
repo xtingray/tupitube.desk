@@ -64,6 +64,7 @@ class TUPITUBE_EXPORT TupModesSettingsDialog : public QDialog
 
     private:
         TupModesList *modesList;
+        TupModesList *fgList;
         QList<bool> visibilityList;
         QList<TupBackground::BgType> idList;
         QPushButton *upButton;

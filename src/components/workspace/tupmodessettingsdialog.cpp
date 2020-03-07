@@ -46,8 +46,12 @@ TupModesSettingsDialog::TupModesSettingsDialog(QList<TupBackground::BgType> bgLa
     setModal(true);
     setWindowTitle(tr("Modes Settings"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/modes_settings.png")));
+    bool fgVisibility = true;
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    // Background Tab
+
+    QWidget *bgWidget = new QWidget;
+    QVBoxLayout *bgLayout = new QVBoxLayout(bgWidget);
     modesList = new TupModesList(this);
 
     for (int i=0; i<bgLayers.count(); i++) {
@@ -71,6 +75,16 @@ TupModesSettingsDialog::TupModesSettingsDialog(QList<TupBackground::BgType> bgLa
             case TupBackground::RasterStatic:
             {
                 label = tr("Raster Static Background");
+            }
+            break;
+            case TupBackground::VectorForeground:
+            {
+                fgVisibility = bgVisibility.at(i);
+                continue;
+            }
+            break;
+            default:
+            {
             }
         }
 
@@ -114,10 +128,28 @@ TupModesSettingsDialog::TupModesSettingsDialog(QList<TupBackground::BgType> bgLa
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
     connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
 
-    layout->addWidget(modesList);
-    layout->addLayout(buttonsLayout);
-    layout->addWidget(new TSeparator());
-    layout->addWidget(buttonBox);
+    bgLayout->addWidget(modesList);
+    bgLayout->addLayout(buttonsLayout);
+
+    // Foreground Tab
+
+    QWidget *fgTabWidget = new QWidget;
+    QVBoxLayout *fgLayout = new QVBoxLayout(fgTabWidget);
+
+    fgList = new TupModesList(this);
+    TupListItem *fgItem = new TupListItem;
+    fgList->addItem(fgItem);
+    TupModesItem *fgWidget = new TupModesItem(TupBackground::VectorForeground, tr("Foreground Layer"), fgVisibility);
+    fgList->setItemWidget(fgItem, fgWidget);
+    fgLayout->addWidget(fgList);
+
+    QTabWidget *tabWidget = new QTabWidget(this);
+    tabWidget->addTab(bgWidget, tr("Backgrounds"));
+    tabWidget->addTab(fgTabWidget, tr("Foreground"));
+
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    mainLayout->addWidget(tabWidget);
+    mainLayout->addWidget(buttonBox);
 }
 
 TupModesSettingsDialog::~TupModesSettingsDialog()
@@ -127,9 +159,18 @@ TupModesSettingsDialog::~TupModesSettingsDialog()
 void TupModesSettingsDialog::apply()
 {
     QList<QPair<TupBackground::BgType, bool>> valuesList;
+    QPair<TupBackground::BgType, bool> values;
+
     for (int i=0; i < modesList->count(); i++) {
          TupModesItem *widget = static_cast<TupModesItem *>(modesList->itemWidget(modesList->item(i)));
-         QPair<TupBackground::BgType, bool> values = widget->getValues();
+         values = widget->getValues();
+         idList << values.first;
+         visibilityList << values.second;
+    }
+
+    for (int i=0; i < fgList->count(); i++) {
+         TupModesItem *widget = static_cast<TupModesItem *>(fgList->itemWidget(fgList->item(i)));
+         values = widget->getValues();
          idList << values.first;
          visibilityList << values.second;
     }

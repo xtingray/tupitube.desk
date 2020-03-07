@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
  *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
@@ -63,8 +63,10 @@ TupBackground::TupBackground(TupScene *parent, int index, const QSize size,
     vectorStaticBgFrame = new TupFrame(this, "landscape_static");
     rasterStaticBgFrame = new TupFrame(this, "landscape_raster_static");
 
-    bgLayerIndexes << VectorDynamic << RasterDynamic << VectorStatic << RasterStatic;
-    bgVisibilityList << true << true << true << true;
+    vectorFgFrame = new TupFrame(this, "landscape_vector_foreground");
+
+    bgLayerIndexes << VectorDynamic << RasterDynamic << VectorStatic << RasterStatic << VectorForeground;
+    bgVisibilityList << true << true << true << true << true;
 }
 
 TupBackground::~TupBackground()
@@ -84,12 +86,12 @@ void TupBackground::fromXml(const QString &xml)
 
     QDomElement root = document.documentElement();
     bgLayerIndexes.clear();
-    QStringList layers = root.attribute("bgLayerIndexes", "0,1,2,3").split(",");
+    QStringList layers = root.attribute("bgLayerIndexes", "0,1,2,3,4").split(",");
     for (int i=0; i < layers.count(); i++)
         bgLayerIndexes << BgType(layers.at(i).toInt());
 
     bgVisibilityList.clear();
-    QStringList visibility = root.attribute("bgLayerVisibility", "1,1,1,1").split(",");
+    QStringList visibility = root.attribute("bgLayerVisibility", "1,1,1,1,1").split(",");
     for (int i=0; i < visibility.count(); i++)
         bgVisibilityList << visibility.at(i).toInt();
 
@@ -179,7 +181,16 @@ void TupBackground::fromXml(const QString &xml)
                     #ifdef TUP_DEBUG
                         qWarning() << "TupBackground::fromXml() - Raster static bg wasn't loaded -> " << imgPath;
                     #endif
+                }                
+            } else if (type == "landscape_vector_foreground") {
+                vectorFgFrame = new TupFrame(this, "landscape_vector_foreground");
+
+                QString newDoc;
+                {
+                    QTextStream ts(&newDoc);
+                    ts << n;
                 }
+                vectorFgFrame->fromXml(newDoc);
             } else {
                 #ifdef TUP_DEBUG
                     qDebug() << "TupBackground::fromXml() - Error: The background input is invalid";
@@ -214,6 +225,7 @@ QDomElement TupBackground::toXml(QDomDocument &doc) const
     root.appendChild(rasterDynamicBgFrame->toXml(doc));
     root.appendChild(vectorStaticBgFrame->toXml(doc));
     root.appendChild(rasterStaticBgFrame->toXml(doc));
+    root.appendChild(vectorFgFrame->toXml(doc));
 
     return root;
 }
@@ -240,7 +252,7 @@ void TupBackground::updateLayersVisibility(QList<bool> viewFlags)
         bgVisibilityList = viewFlags;
 }
 
-bool TupBackground::isBgLayerVisible(BgType bgId)
+bool TupBackground::isLayerVisible(BgType bgId)
 {
     int i;
     for (i = 0;i < bgLayerIndexes.count(); i++) {
@@ -261,6 +273,11 @@ bool TupBackground::vectorStaticBgIsEmpty()
     return vectorStaticBgFrame->isEmpty();
 }
 
+bool TupBackground::vectorFgIsEmpty()
+{
+    return vectorFgFrame->isEmpty();
+}
+
 TupFrame *TupBackground::vectorStaticFrame()
 {
     return vectorStaticBgFrame;
@@ -269,6 +286,11 @@ TupFrame *TupBackground::vectorStaticFrame()
 TupFrame* TupBackground::vectorDynamicFrame()
 {
     return vectorDynamicBgFrame;
+}
+
+TupFrame *TupBackground::vectorForegroundFrame()
+{
+    return vectorFgFrame;
 }
 
 void TupBackground::clearBackground()

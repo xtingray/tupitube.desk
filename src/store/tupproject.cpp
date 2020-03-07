@@ -309,7 +309,8 @@ bool TupProject::moveScene(int position, int newPosition)
 {
     if (position < 0 || newPosition < 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupProject::moveScene() - Failed moving scene from " + QString::number(position) + " to " + QString::number(newPosition);
+            qDebug() << "TupProject::moveScene() - Failed moving scene from " + QString::number(position)
+                        + " to " + QString::number(newPosition);
         #endif
         return false;
     }
@@ -515,7 +516,15 @@ bool TupProject::removeSymbol(const QString &name, TupLibraryObject::Type type)
                      frame->removeImageItemFromFrame(name);
                  else
                      frame->removeSvgItemFromFrame(name);
-             } 
+             }
+
+             frame = bg->vectorForegroundFrame();
+             if (frame) {
+                 if (type != TupLibraryObject::Svg)
+                     frame->removeImageItemFromFrame(name);
+                 else
+                     frame->removeSvgItemFromFrame(name);
+             }
 
              frame = bg->vectorDynamicFrame();
              if (frame) {
@@ -607,6 +616,13 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
             } else {
                 return false;
             }
+        } else if (spaceMode == TupProject::VECTOR_FG_MODE) {
+            TupBackground *bg = scene->sceneBackground();
+
+            if (bg)
+                frame = bg->vectorForegroundFrame();
+            else
+                return false;
         } else {
             #ifdef TUP_DEBUG
                 qDebug() << "TupProject::insertSymbolIntoFrame() - Fatal Error: invalid spaceMode!";
@@ -763,6 +779,14 @@ bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::Ty
                      frame->removeImageItemFromFrame(name);
              }
 
+             frame = bg->vectorForegroundFrame();
+             if (frame) {
+               if (type == TupLibraryObject::Svg)
+                   frame->removeSvgItemFromFrame(name);
+               else
+                   frame->removeImageItemFromFrame(name);
+             }
+
              frame = bg->vectorDynamicFrame();
              if (frame) {
                  bool found = false;
@@ -811,6 +835,14 @@ bool TupProject::updateSymbolId(TupLibraryObject::Type type, const QString &oldI
                      frame->updateSvgIdFromFrame(oldId, newId);
              }
 
+             frame = bg->vectorForegroundFrame();
+             if (frame) {
+               if (type != TupLibraryObject::Svg)
+                   frame->updateIdFromFrame(oldId, newId);
+               else
+                   frame->updateSvgIdFromFrame(oldId, newId);
+             }
+
              frame = bg->vectorDynamicFrame();
              if (frame) {
                  if (type != TupLibraryObject::Svg)
@@ -845,6 +877,14 @@ void TupProject::reloadLibraryItem(TupLibraryObject::Type type, const QString &i
          TupBackground *bg = scene->sceneBackground();
          if (bg) {
              TupFrame *frame = bg->vectorStaticFrame();
+             if (frame) {
+                 if (type == TupLibraryObject::Svg)
+                     frame->reloadSVGItem(id, object);
+                 else
+                     frame->reloadGraphicItem(id, object->getDataPath());
+             }
+
+             frame = bg->vectorForegroundFrame();
              if (frame) {
                  if (type == TupLibraryObject::Svg)
                      frame->reloadSVGItem(id, object);

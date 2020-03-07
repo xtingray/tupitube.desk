@@ -61,7 +61,7 @@ void NodesTool::init(TupGraphicsScene *gScene)
         }
     }
 
-    baseZValue = (BG_LAYERS * ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
+    baseZValue = ((BG_LAYERS + 1) * ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
 }
 
 QStringList NodesTool::keys() const
@@ -149,22 +149,12 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                     // }
                 } else {
                     #ifdef TUP_DEBUG
-                        QString msg = "NodesTool::release() - Fatal Error: Invalid position [ " + QString::number(position) + " ]";
-                        #ifdef Q_OS_WIN
-                            qDebug() << msg;
-                        #else
-                            tError() << msg;
-                        #endif
+                        qDebug() << "NodesTool::release() - Fatal Error: Invalid position [ " + QString::number(position) + " ]";
                     #endif
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "NodesTool::release() - Invalid selected item index: " + QString::number(itemIndex);
-                    #ifdef Q_OS_WIN
-                       qDebug() << msg;
-                    #else
-                       tWarning() << msg;
-                    #endif
+                    qDebug() << "NodesTool::release() - Invalid selected item index: " + QString::number(itemIndex);
                 #endif
             }
 
@@ -198,22 +188,12 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                         nodeGroup->clearChangedNodes();
                     } else {
                         #ifdef TUP_DEBUG
-                            QString msg = "NodesTool::release() - Fatal Error: Invalid position [ " + QString::number(position) + " ]";
-                            #ifdef Q_OS_WIN
-                                qDebug() << msg;
-                            #else
-                                tError() << msg;
-                            #endif
+                            qDebug() << "NodesTool::release() - Fatal Error: Invalid position [ " + QString::number(position) + " ]";
                         #endif
                     }
                 } else {
                     #ifdef TUP_DEBUG
-                        QString msg = "NodesTool::release() - Node group has NO changes!";
-                        #ifdef Q_OS_WIN
-                            qDebug() << msg;
-                        #else
-                            tWarning() << msg;
-                        #endif
+                        qDebug() << "NodesTool::release() - Node group has NO changes!";
                     #endif
                 }
             }
@@ -231,12 +211,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
     } else {
         if (activeSelection) {
             #ifdef TUP_DEBUG
-                QString msg = "NodesTool::release() - Empty selection! Removing nodes...";
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tWarning() << msg;
-                #endif
+                qDebug() << "NodesTool::release() - Empty selection! Removing nodes...";
             #endif
             nodeGroup->clear();
             nodeGroup = nullptr;
@@ -260,6 +235,8 @@ TupFrame* NodesTool::getCurrentFrame()
         TupBackground *bg = tupScene->sceneBackground();
         if (scene->getSpaceContext() == TupProject::VECTOR_STATIC_BG_MODE) {
             frame = bg->vectorStaticFrame();
+        } else if (scene->getSpaceContext() == TupProject::VECTOR_FG_MODE) {
+            frame = bg->vectorForegroundFrame();
         } else if (scene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
             frame = bg->vectorDynamicFrame();
         }
@@ -415,11 +392,7 @@ QCursor NodesTool::polyCursor() const
 void NodesTool::resizeNode(qreal scaleFactor)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[NodesTool::resizeNodes()]";
-        #else
-            T_FUNCINFOX("tools");
-        #endif
+        qDebug() << "[NodesTool::resizeNodes()]";
     #endif
 
     realFactor = scaleFactor;
@@ -444,4 +417,3 @@ void NodesTool::clearSelection()
         }
     }
 }
-

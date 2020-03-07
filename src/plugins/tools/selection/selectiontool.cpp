@@ -71,7 +71,7 @@ void SelectionTool::init(TupGraphicsScene *gScene)
 
     clearSelection();
     scene->clearSelection();
-    nodeZValue = (BG_LAYERS * ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
+    nodeZValue = ((BG_LAYERS + 1) * ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
     initItems(scene);
 }
 
@@ -264,6 +264,8 @@ TupFrame* SelectionTool::getCurrentFrame()
         TupBackground *bg = tupScene->sceneBackground();
         if (scene->getSpaceContext() == TupProject::VECTOR_STATIC_BG_MODE) {
             frame = bg->vectorStaticFrame();
+        } else if (scene->getSpaceContext() == TupProject::VECTOR_FG_MODE) {
+            frame = bg->vectorForegroundFrame();
         } else if (scene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
             frame = bg->vectorDynamicFrame();
         }
@@ -284,18 +286,15 @@ TupFrame* SelectionTool::frameAt(int sceneIndex, int layerIndex, int frameIndex)
                 frame = layer->frameAt(frameIndex);
             } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "SelectionTool::frameAt() - Fatal Error: Layer is NULL! -> " + QString::number(layerIndex);
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "SelectionTool::frameAt() - Fatal Error: Layer is NULL! -> " + QString::number(layerIndex);
                 #endif
             }
         } else {
             TupBackground *bg = sceneData->sceneBackground();
             if (scene->getSpaceContext() == TupProject::VECTOR_STATIC_BG_MODE) {
                 frame = bg->vectorStaticFrame();
+            } else if (scene->getSpaceContext() == TupProject::VECTOR_FG_MODE) {
+                frame = bg->vectorForegroundFrame();
             } else if (scene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                 frame = bg->vectorDynamicFrame();
                 bg->scheduleVectorRender(true);

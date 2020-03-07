@@ -1207,7 +1207,7 @@ void TupMainWindow::restoreFramesMode(TupProject::Mode mode)
         exposureView->enableButton(true);
         timeView->enableButton(true);
         scenesView->enableButton(true);
-    } else {
+    } else { // BG / FG modes
         if (exposureView->isExpanded()) {
             currentDock = TupDocumentView::ExposureSheet;
             exposureView->expandDock(false);

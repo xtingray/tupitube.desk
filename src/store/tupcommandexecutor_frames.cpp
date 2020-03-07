@@ -44,11 +44,7 @@
 bool TupCommandExecutor::createFrame(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::createFrame()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupCommandExecutor::createFrame()]";
     #endif
 
     int sceneIndex = response->getSceneIndex();
@@ -85,11 +81,7 @@ bool TupCommandExecutor::createFrame(TupFrameResponse *response)
 bool TupCommandExecutor::removeFrame(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::removeFrame()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupCommandExecutor::removeFrame()]";
     #endif
 
     int sceneIndex = response->getSceneIndex();
@@ -125,12 +117,8 @@ bool TupCommandExecutor::removeFrame(TupFrameResponse *response)
 bool TupCommandExecutor::removeFrameSelection(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::removeFrameSelection()]";
-        #else
-            T_FUNCINFO;
-            tWarning() << "selection: " << response->getArg().toString(); 
-        #endif
+        qDebug() << "[TupCommandExecutor::removeFrameSelection()]";
+        qWarning() << "Selection: " << response->getArg().toString();
     #endif
 
     int sceneIndex = response->getSceneIndex();
@@ -164,14 +152,9 @@ bool TupCommandExecutor::removeFrameSelection(TupFrameResponse *response)
                                 } else {
                                     if (!layer->removeFrame(frameIndex)) {
                                         #ifdef TUP_DEBUG
-                                            QString msg = "TupCommandExecutor::removeFrameSelection() - "
-                                                          "Fatal Error: Can't remove frame at index: " 
-                                                          + QString::number(frameIndex);
-                                            #ifdef Q_OS_WIN
-                                                qDebug() << msg;
-                                            #else
-                                                tError() << msg;
-                                            #endif
+                                            qDebug() << "TupCommandExecutor::removeFrameSelection() - "
+                                                        "Fatal Error: Can't remove frame at index: "
+                                                        + QString::number(frameIndex);
                                         #endif
                                         return false;
                                     }
@@ -184,13 +167,8 @@ bool TupCommandExecutor::removeFrameSelection(TupFrameResponse *response)
                             bool success = layer->restoreResettedFrame(frameIndex);
                             if (!success) {
                                 #ifdef TUP_DEBUG
-                                    QString msg = "TupCommandExecutor::restoreFrameSelection() "
-                                                  "- Fatal Error: Can't restore resetted frame at index 0";
-                                    #ifdef Q_OS_WIN
-                                        qDebug() << msg;
-                                    #else
-                                        tError() << msg;
-                                    #endif
+                                    qDebug() << "TupCommandExecutor::restoreFrameSelection() "
+                                                "- Fatal Error: Can't restore resetted frame at index 0";
                                 #endif
                                 return false;
                             }
@@ -199,14 +177,9 @@ bool TupCommandExecutor::removeFrameSelection(TupFrameResponse *response)
                             bool success = layer->restoreFrame(frameIndex);
                             if (!success) {
                                 #ifdef TUP_DEBUG
-                                    QString msg = "TupCommandExecutor::restoreFrameSelection() "
-                                                  "- Fatal Error: Can't restore frame at index: "
-                                                  + QString::number(frameIndex);
-                                    #ifdef Q_OS_WIN
-                                        qDebug() << msg;
-                                    #else
-                                        tError() << msg;
-                                    #endif
+                                    qDebug() << "TupCommandExecutor::restoreFrameSelection() "
+                                                "- Fatal Error: Can't restore frame at index: "
+                                                + QString::number(frameIndex);
                                 #endif
                                 return false;
                             }
@@ -224,11 +197,7 @@ bool TupCommandExecutor::removeFrameSelection(TupFrameResponse *response)
 bool TupCommandExecutor::resetFrame(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::resetFrame()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupCommandExecutor::resetFrame()]";
     #endif
 
     int sceneIndex = response->getSceneIndex();
@@ -277,12 +246,7 @@ bool TupCommandExecutor::moveFrame(TupFrameResponse *response)
                 return true;
             } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupCommandExecutor::moveFrame() - Fatal error while moving frame!";
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "TupCommandExecutor::moveFrame() - Fatal error while moving frame!";
                 #endif  
                 return false;
             }
@@ -309,12 +273,7 @@ bool TupCommandExecutor::exchangeFrame(TupFrameResponse *response)
                 return true;
             } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupCommandExecutor::exchangeFrame() - Error while exchanging frames";
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "TupCommandExecutor::exchangeFrame() - Error while exchanging frames";
                 #endif  
                 return false;
             }
@@ -352,11 +311,7 @@ bool TupCommandExecutor::lockFrame(TupFrameResponse *response)
 bool TupCommandExecutor::renameFrame(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::renameFrame()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupCommandExecutor::renameFrame()]";
     #endif	
 
     int sceneIndex = response->getSceneIndex();
@@ -387,11 +342,7 @@ bool TupCommandExecutor::renameFrame(TupFrameResponse *response)
 bool TupCommandExecutor::selectFrame(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::selectFrame()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupCommandExecutor::selectFrame()]";
     #endif	
 	
     int sceneIndex = response->getSceneIndex();
@@ -412,14 +363,9 @@ bool TupCommandExecutor::selectFrame(TupFrameResponse *response)
                     return true;
                 } else {
                     #ifdef TUP_DEBUG
-                        QString msg = "TupCommandExecutor::selectFrame()"
-                                      " - Invalid frame index -> " 
-                                      + QString::number(pos);
-                        #ifdef Q_OS_WIN
-                           qDebug() << msg;
-                        #else
-                           tError() << msg;
-                        #endif
+                        qDebug() << "TupCommandExecutor::selectFrame()"
+                                    " - Invalid frame index -> "
+                                    + QString::number(pos);
                     #endif
                     return false;
                 }
@@ -456,11 +402,7 @@ bool TupCommandExecutor::setFrameVisibility(TupFrameResponse *response)
 bool TupCommandExecutor::extendFrame(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::extendFrame()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupCommandExecutor::extendFrame()]";
     #endif
 
     int sceneIndex = response->getSceneIndex();
@@ -495,11 +437,7 @@ bool TupCommandExecutor::extendFrame(TupFrameResponse *response)
 bool TupCommandExecutor::copyFrameSelection(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::copyFrameSelection()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupCommandExecutor::copyFrameSelection()]";
     #endif
 
     selectionFramesCopy.clear();
@@ -545,11 +483,7 @@ bool TupCommandExecutor::copyFrameSelection(TupFrameResponse *response)
 bool TupCommandExecutor::pasteFrameSelection(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::pasteFrameSelection()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupCommandExecutor::pasteFrameSelection()]";
     #endif
 
     int sceneIndex = response->getSceneIndex();
@@ -597,14 +531,9 @@ bool TupCommandExecutor::pasteFrameSelection(TupFrameResponse *response)
                                     } else {
                                         if (!layer->removeFrame(pos)) {
                                             #ifdef TUP_DEBUG
-                                                QString msg = "TupCommandExecutor::pasteFrameSelection() - "
-                                                              "Fatal Error: Can't remove frame at index: "
-                                                              + QString::number(pos);
-                                                #ifdef Q_OS_WIN
-                                                    qDebug() << msg;
-                                                #else
-                                                    tError() << msg;
-                                                #endif
+                                                qDebug() << "TupCommandExecutor::pasteFrameSelection() - "
+                                                            "Fatal Error: Can't remove frame at index: "
+                                                            + QString::number(pos);
                                             #endif
                                             return false;
                                         }
@@ -629,11 +558,7 @@ bool TupCommandExecutor::pasteFrameSelection(TupFrameResponse *response)
 bool TupCommandExecutor::reverseFrameSelection(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::reverseFrameSelection()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupCommandExecutor::reverseFrameSelection()]";
     #endif
 
     selectionFramesCopy.clear();
@@ -669,12 +594,7 @@ bool TupCommandExecutor::reverseFrameSelection(TupFrameResponse *response)
                          // tError() << "TupCommandExecutor::reverseFrameSelection() - reversing -> " << indexA << ":"<<indexB;
                          if (!layer->exchangeFrame(indexA, indexB)) {
                              #ifdef TUP_DEBUG
-                                 QString msg = "TupCommandExecutor::reverseFrameSelection() - Fatal error while exchanging frames!";
-                                 #ifdef Q_OS_WIN
-                                     qDebug() << msg;
-                                 #else
-                                     tError() << msg;
-                                 #endif
+                                 qDebug() << "TupCommandExecutor::reverseFrameSelection() - Fatal error while exchanging frames!";
                              #endif
                              return false;
                          }

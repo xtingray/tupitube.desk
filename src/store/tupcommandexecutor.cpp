@@ -57,11 +57,7 @@ void TupCommandExecutor::getScenes(TupSceneResponse *response)
 bool TupCommandExecutor::createScene(TupSceneResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::createScene()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupCommandExecutor::createScene()]";
     #endif
 
     int pos = response->getSceneIndex();
@@ -88,11 +84,7 @@ bool TupCommandExecutor::createScene(TupSceneResponse *response)
 bool TupCommandExecutor::removeScene(TupSceneResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::removeScene()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupCommandExecutor::removeScene()]";
     #endif
 
     int pos = response->getSceneIndex();
@@ -134,12 +126,7 @@ bool TupCommandExecutor::lockScene(TupSceneResponse *response)
     bool lock = response->getArg().toBool();
 
     #ifdef TUP_DEBUG
-        QString msg = "TupCommandExecutor::lockScene() - Scene is locked: " + QString::number(lock);
-        #ifdef Q_OS_WIN
-            qWarning() << msg;
-        #else
-            tWarning("library") << msg;
-        #endif
+        qWarning() << "TupCommandExecutor::lockScene() - Scene is locked: " + QString::number(lock);
     #endif  
 
     TupScene *scene = project->sceneAt(pos);
@@ -190,11 +177,7 @@ bool TupCommandExecutor::setSceneVisibility(TupSceneResponse *response)
 bool TupCommandExecutor::resetScene(TupSceneResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::resetScene()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupCommandExecutor::resetScene()]";
     #endif
 
     int pos = response->getSceneIndex();
@@ -217,12 +200,7 @@ bool TupCommandExecutor::resetScene(TupSceneResponse *response)
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupCommandExecutor::resetScene() - Fatal Error: No scene at index -> " + QString::number(pos);
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupCommandExecutor::resetScene() - Fatal Error: No scene at index -> " + QString::number(pos);
         #endif
     }
 

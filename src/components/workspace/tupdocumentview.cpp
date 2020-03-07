@@ -1139,6 +1139,7 @@ void TupDocumentView::createToolBar()
     spaceModeCombo->addItem(QIcon(THEME_DIR + "icons/dynamic_background_mode.png"), tr("Vector Dynamic BG Mode"));
     spaceModeCombo->addItem(QIcon(THEME_DIR + "icons/raster_mode.png"), tr("Raster Static BG Mode"));
     spaceModeCombo->addItem(QIcon(THEME_DIR + "icons/dynamic_raster_mode.png"), tr("Raster Dynamic BG Mode"));
+    spaceModeCombo->addItem(QIcon(THEME_DIR + "icons/fg_mode.png"), tr("Vector Foreground Mode"));
 
     connect(spaceModeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setSpaceContext()));
     setSpaceContext();
@@ -1541,6 +1542,14 @@ void TupDocumentView::setSpaceContext()
         {
             openRasterMode();
             return;
+        }
+        break;
+        case TupProject::VECTOR_FG_MODE:
+        {
+            project->updateSpaceContext(TupProject::VECTOR_FG_MODE);
+            staticPropertiesBar->setVisible(true);
+            dynamicPropertiesBar->setVisible(false);
+            motionMenu->setEnabled(false);
         }
         break;
         default:

@@ -70,6 +70,7 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         
         void drawPhotogram(int photogram, bool drawContext);
         void drawSceneBackground(int photogram);
+        void drawVectorFg();
 
         void cleanWorkSpace();
         void removeScene();

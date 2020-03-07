@@ -115,6 +115,9 @@ TupFrame::TupFrame(TupBackground *bg, const QString &label, int zLevel) : QObjec
         else
             zLevelIndex = ZLAYER_LIMIT * zLevel;
         type = RasterStaticBg;
+    } else if (frameName.compare("landscape_vector_foreground") == 0) {
+        zLevelIndex = 0;
+        type = VectorForeground;
     }
 }
 
@@ -251,7 +254,7 @@ void TupFrame::fromXml(const QString &xml)
         setFrameOpacity(root.attribute("opacity", "1.0").toDouble());
     }
 
-    if (type == VectorStaticBg || type == RasterStaticBg)
+    if (type == VectorStaticBg || type == RasterStaticBg || type == VectorForeground)
         setFrameOpacity(root.attribute("opacity", "1.0").toDouble());
 
     int counter = 0;
@@ -361,7 +364,7 @@ QDomElement TupFrame::toXml(QDomDocument &doc) const
         root.setAttribute("opacity", QString::number(opacity));
     }
 
-    if (type == VectorStaticBg || type == VectorDynamicBg)
+    if (type == VectorStaticBg || type == RasterStaticBg || type == VectorForeground)
         root.setAttribute("opacity", QString::number(opacity));
 
     doc.appendChild(root);

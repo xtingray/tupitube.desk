@@ -46,12 +46,8 @@
 bool TupCommandExecutor::createSymbol(TupLibraryResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "TupCommandExecutor::createSymbol()";
-        #else
-            T_FUNCINFO;
-            tFatal() << "Creating object: " + response->getArg().toString();
-        #endif
+        qDebug() << "TupCommandExecutor::createSymbol()";
+        qDebug() << "Creating object: " + response->getArg().toString();
     #endif
 
     if (response->symbolType() == TupLibraryObject::Folder) {
@@ -78,11 +74,7 @@ bool TupCommandExecutor::createSymbol(TupLibraryResponse *response)
 bool TupCommandExecutor::removeSymbol(TupLibraryResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::removeSymbol()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupCommandExecutor::removeSymbol()]";
     #endif
 
     if (response->symbolType() == TupLibraryObject::Folder) {
@@ -112,12 +104,7 @@ bool TupCommandExecutor::removeSymbol(TupLibraryResponse *response)
 bool TupCommandExecutor::insertSymbolIntoFrame(TupLibraryResponse *response)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupCommandExecutor::insertSymbolIntoFrame() - Adding symbol to project: " + response->getArg().toString();
-        #ifdef Q_OS_WIN
-            qDebug() << msg;
-        #else
-            tFatal() << msg;
-        #endif
+        qDebug() << "TupCommandExecutor::insertSymbolIntoFrame() - Adding symbol to project: " + response->getArg().toString();
     #endif
 
     if (project->scenesCount() > 0) {
@@ -128,12 +115,7 @@ bool TupCommandExecutor::insertSymbolIntoFrame(TupLibraryResponse *response)
         } 
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupCommandExecutor::insertSymbolIntoFrame() - No scenes available!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupCommandExecutor::insertSymbolIntoFrame() - No scenes available!";
         #endif
     } 
 
@@ -145,11 +127,7 @@ bool TupCommandExecutor::insertSymbolIntoFrame(TupLibraryResponse *response)
 bool TupCommandExecutor::removeSymbolFromFrame(TupLibraryResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::removeSymbolFromFrame()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupCommandExecutor::removeSymbolFromFrame()]";
     #endif
 
     if (project->scenesCount() > 0) {
@@ -167,22 +145,12 @@ bool TupCommandExecutor::removeSymbolFromFrame(TupLibraryResponse *response)
             return true;
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "TupCommandExecutor::removeSymbolFromFrame() - Error: Symbol can't be removed from project!";
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "TupCommandExecutor::removeSymbolFromFrame() - Error: Symbol can't be removed from project!";
             #endif
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupCommandExecutor::removeSymbolFromFrame() - No scenes available!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupCommandExecutor::removeSymbolFromFrame() - No scenes available!";
         #endif
     }
 

@@ -138,8 +138,10 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
+                } else if (mode == TupProject::VECTOR_FG_MODE) {
+                    frame = bg->vectorForegroundFrame();
                 } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
-                           frame = bg->vectorDynamicFrame();
+                    frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "TupCommandExecutor::createItem() - Error: Invalid mode!";
@@ -262,8 +264,10 @@ bool TupCommandExecutor::removeItem(TupItemResponse *response)
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
+                } else if (mode == TupProject::VECTOR_FG_MODE) {
+                    frame = bg->vectorForegroundFrame();
                 } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
-                           frame = bg->vectorDynamicFrame();
+                    frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "TupCommandExecutor::removeItem() - Error: Invalid mode!";
@@ -343,8 +347,10 @@ bool TupCommandExecutor::moveItem(TupItemResponse *response)
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
+                } else if (mode == TupProject::VECTOR_FG_MODE) {
+                    frame = bg->vectorForegroundFrame();
                 } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
-                           frame = bg->vectorDynamicFrame();
+                    frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "TupCommandExecutor::moveItem() - Error: Invalid mode!";
@@ -415,8 +421,10 @@ bool TupCommandExecutor::groupItems(TupItemResponse *response)
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
+                } else if (mode == TupProject::VECTOR_FG_MODE) {
+                    frame = bg->vectorForegroundFrame();
                 } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
-                           frame = bg->vectorDynamicFrame();
+                    frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "TupCommandExecutor::groupItems() - Error: Invalid mode!";
@@ -477,16 +485,16 @@ bool TupCommandExecutor::ungroupItems(TupItemResponse *response)
                     QString strItems = "";
                     QList<QGraphicsItem *> items = frame->splitGroup(itemIndex);
                     foreach (QGraphicsItem *item, items) {
-                             if (frame->indexOf(item) != -1) {
-                                 if (strItems.isEmpty())
-                                     strItems += "("+ QString::number(frame->indexOf(item));
-                                 else
-                                     strItems += " , "+ QString::number(frame->indexOf(item));
-                             } else {
-                                 #ifdef TUP_DEBUG
-                                     qDebug() << "TupCommandExecutor::ungroupItems() - Error: Item wasn't found at frame!";
-                                 #endif
-                             }
+                         if (frame->indexOf(item) != -1) {
+                             if (strItems.isEmpty())
+                                 strItems += "("+ QString::number(frame->indexOf(item));
+                             else
+                                 strItems += " , "+ QString::number(frame->indexOf(item));
+                         } else {
+                             #ifdef TUP_DEBUG
+                                 qDebug() << "TupCommandExecutor::ungroupItems() - Error: Item wasn't found at frame!";
+                             #endif
+                         }
                     }
                     strItems+= ")";
                     response->setArg(strItems);
@@ -501,6 +509,8 @@ bool TupCommandExecutor::ungroupItems(TupItemResponse *response)
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
+                } else if (mode == TupProject::VECTOR_FG_MODE) {
+                    frame = bg->vectorForegroundFrame();
                 } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                     frame = bg->vectorDynamicFrame();
                 } else {
@@ -610,7 +620,6 @@ bool TupCommandExecutor::convertItem(TupItemResponse *response)
 
     if (scene) {
         if (mode == TupProject::FRAMES_MODE) {
-
             TupLayer *layer = scene->layerAt(layerIndex);
             if (layer) {
                 TupFrame *frame = layer->frameAt(frameIndex);
@@ -645,8 +654,10 @@ bool TupCommandExecutor::convertItem(TupItemResponse *response)
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
+                } else if (mode == TupProject::VECTOR_FG_MODE) {
+                    frame = bg->vectorForegroundFrame();
                 } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
-                           frame = bg->vectorDynamicFrame();
+                    frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "TupCommandExecutor::convertItem() - Error: Invalid mode!";
@@ -746,8 +757,10 @@ bool TupCommandExecutor::transformItem(TupItemResponse *response)
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
+                } else if (mode == TupProject::VECTOR_FG_MODE) {
+                    frame = bg->vectorForegroundFrame();
                 } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
-                           frame = bg->vectorDynamicFrame();
+                    frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "TupCommandExecutor::transformItem() - Error: Invalid spaceMode!";
@@ -850,8 +863,10 @@ bool TupCommandExecutor::setPathItem(TupItemResponse *response)
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
+                } else if (mode == TupProject::VECTOR_FG_MODE) {
+                    frame = bg->vectorForegroundFrame();
                 } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
-                           frame = bg->vectorDynamicFrame();
+                    frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "TupCommandExecutor::setPathItem() - Error: Invalid mode!";
@@ -1008,6 +1023,8 @@ bool TupCommandExecutor::setBrush(TupItemResponse *response)
                 TupFrame *frame = nullptr;
                 if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
                     frame = bg->vectorStaticFrame();
+                } else if (mode == TupProject::VECTOR_FG_MODE) {
+                    frame = bg->vectorForegroundFrame();
                 } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                     frame = bg->vectorDynamicFrame();
                 } else {
@@ -1100,6 +1117,8 @@ bool TupCommandExecutor::setPen(TupItemResponse *response)
                     frame = bg->vectorStaticFrame();
                 } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
                     frame = bg->vectorDynamicFrame();
+                } else if (mode == TupProject::VECTOR_FG_MODE) {
+                    frame = bg->vectorForegroundFrame();
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "TupCommandExecutor::setPen() - Error: Invalid mode!";

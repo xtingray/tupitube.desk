@@ -88,6 +88,7 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         void setCurrentTool(QString tool);
         void updatePaintArea();
         void paintBackground();
+        void paintForeground();
         void updateSpaceContext();
         virtual void keyPressEvent(QKeyEvent *event);
         // virtual void keyReleaseEvent(QKeyEvent *event);

@@ -43,11 +43,7 @@
 bool TupCommandExecutor::createLayer(TupLayerResponse *response)
 {	
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::createLayer()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupCommandExecutor::createLayer()]";
     #endif
 
     int scenePosition = response->getSceneIndex();
@@ -79,11 +75,7 @@ bool TupCommandExecutor::createLayer(TupLayerResponse *response)
 bool TupCommandExecutor::removeLayer(TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::removeLayer()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupCommandExecutor::removeLayer()]";
     #endif
 
     int scenePos = response->getSceneIndex();
@@ -121,12 +113,7 @@ bool TupCommandExecutor::moveLayer(TupLayerResponse *response)
 
     if (! scene->moveLayer(position, newPosition)) {
         #ifdef TUP_DEBUG
-            QString msg = "TupCommandExecutor::moveLayer() - Error while moving layer!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupCommandExecutor::moveLayer() - Error while moving layer!";
         #endif	
         return false;
     } else {
@@ -166,12 +153,7 @@ bool TupCommandExecutor::renameLayer(TupLayerResponse *response)
     QString newName = response->getArg().toString();
 	
     #ifdef TUP_DEBUG
-        QString msg = "TupCommandExecutor::renameLayer() - Renaming layer to: " + newName;
-        #ifdef Q_OS_WIN
-            qWarning() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qWarning() << "TupCommandExecutor::renameLayer() - Renaming layer to: " + newName;
     #endif	
 
     // QString oldName;
@@ -229,12 +211,7 @@ bool TupCommandExecutor::setLayerVisibility(TupLayerResponse *response)
 bool TupCommandExecutor::addLipSync(TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupCommandExecutor::addLipSync() - Adding lipsync...";
-        #ifdef Q_OS_WIN
-            qWarning() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qWarning() << "TupCommandExecutor::addLipSync() - Adding lipsync...";
     #endif
 
     int scenePos = response->getSceneIndex();
@@ -263,12 +240,7 @@ bool TupCommandExecutor::addLipSync(TupLayerResponse *response)
 bool TupCommandExecutor::updateLipSync(TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupCommandExecutor::updateLipSync() - Updating lipsync...";
-        #ifdef Q_OS_WIN
-            qWarning() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qWarning() << "TupCommandExecutor::updateLipSync() - Updating lipsync...";
     #endif
 
     int scenePos = response->getSceneIndex();
@@ -292,12 +264,7 @@ bool TupCommandExecutor::updateLipSync(TupLayerResponse *response)
 bool TupCommandExecutor::removeLipSync(TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupCommandExecutor::removeLipSync() - Adding lipsync...";
-        #ifdef Q_OS_WIN
-            qWarning() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qWarning() << "TupCommandExecutor::removeLipSync() - Adding lipsync...";
     #endif
 
     int scenePos = response->getSceneIndex();
