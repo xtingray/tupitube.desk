@@ -16817,5 +16817,43 @@
          id="path817"
          style="fill:#008700;fill-opacity:1;stroke:#008700;stroke-width:1.26443434;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     </g>
+    <g
+       id="g6457"
+       inkscape:export-xdpi="68.410004"
+       inkscape:export-ydpi="68.410004">
+      <g
+         inkscape:export-ydpi="68.410004"
+         inkscape:export-xdpi="68.410004"
+         transform="translate(605.13855,-342.45907)"
+         id="g9534-7">
+        <path
+           style="fill:#008700;fill-opacity:0.4509804;stroke:#008700;stroke-width:1.69783664;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 45.259709,865.67363 21.591453,0.0357 0.01868,13.36124 -21.619467,-0.084 z"
+           id="path4477-1-8-1-0-3"
+           inkscape:connector-curvature="0"
+           inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/frames_mode.png"
+           inkscape:export-xdpi="715"
+           inkscape:export-ydpi="715"
+           sodipodi:nodetypes="ccccc" />
+        <path
+           style="fill:none;stroke:#008700;stroke-width:1.69783664;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 50.695516,865.65259 -0.0382,-4.87087 22.201116,-0.011 -0.0747,12.93917 -5.815345,-0.0373"
+           id="path4477-1-8-7-2-9-2"
+           inkscape:connector-curvature="0"
+           inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/frames_mode.png"
+           inkscape:export-xdpi="715"
+           inkscape:export-ydpi="715"
+           sodipodi:nodetypes="ccccc" />
+        <path
+           style="fill:none;stroke:#008700;stroke-width:1.69783664;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 56.37,861.15051 0.0085,-4.5895 22.248017,-0.0119 -0.121565,14.34606 -5.346377,-0.0365"
+           id="path4477-1-8-7-4-0-0-2"
+           inkscape:connector-curvature="0"
+           inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/frames_mode.png"
+           inkscape:export-xdpi="715"
+           inkscape:export-ydpi="715"
+           sodipodi:nodetypes="ccccc" />
+      </g>
+    </g>
   </g>
 </svg>
