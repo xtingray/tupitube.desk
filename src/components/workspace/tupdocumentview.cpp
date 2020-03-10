@@ -1333,11 +1333,34 @@ void TupDocumentView::openRasterMode()
             this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
     connect(rasterWindow, SIGNAL(rasterStrokeMade()), this, SLOT(requestRasterStroke()));
     connect(rasterWindow, SIGNAL(canvasCleared()), this, SLOT(requestClearRasterCanvas()));
+    connect(rasterWindow, SIGNAL(libraryCall(const QString &)), this, SLOT(importImageToLibrary(const QString &)));
 
     rasterWindowOn = true;
     rasterWindow->showFullScreen();
 
     QApplication::restoreOverrideCursor();
+}
+
+void TupDocumentView::importImageToLibrary(const QString &imgPath)
+{
+    QFile imageFile(imgPath);
+    if (imageFile.open(QIODevice::ReadOnly)) {
+        QFileInfo fileInfo(imageFile);
+        QString key = fileInfo.fileName().toLower();
+        int index = key.lastIndexOf(".");
+        QString name = key.mid(0, index);
+
+        QString extension = key.mid(index, key.length() - index);
+        QByteArray data = imageFile.readAll();
+        imageFile.close();
+
+        if (imageFile.remove()) {
+            TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
+                                                                                TupLibraryObject::Image, project->spaceContext(), data, QString(),
+                                                                                0, 0, 0);
+            emit requestTriggered(&request);
+        }
+    }
 }
 
 void TupDocumentView::closeRasterWindow(const QString &imgPath)

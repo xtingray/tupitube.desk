@@ -153,6 +153,8 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void updateCameraMode();
         void closeRasterWindow(const QString &path);
 
+        void importImageToLibrary(const QString &imgPath);
+
     public slots:
         void undo();
         void redo();

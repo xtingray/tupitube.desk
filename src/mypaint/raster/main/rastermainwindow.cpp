@@ -20,6 +20,7 @@
 #include "tapplication.h"
 #include "rastermainwindow.h"
 #include "tapplicationproperties.h"
+#include "tuprequestbuilder.h"
 
 #include <QDebug>
 #include <QFileDialog>
@@ -90,12 +91,18 @@ void RasterMainWindow::createTopResources()
     exportAction->setStatusTip(tr("Export as Image"));
     connect(exportAction, SIGNAL(triggered()), this, SLOT(exportImage()));
 
+    QAction *libraryAction = new QAction(tr("&Import Image to Library"), this);
+    libraryAction->setShortcut(QKeySequence(tr("I")));
+    libraryAction->setStatusTip(tr("Import Image to Library"));
+    connect(libraryAction, SIGNAL(triggered()), this, SLOT(importImageToLibrary()));
+
     QAction *closeAction = new QAction(tr("Exit Raster Mode"), this);
     closeAction->setShortcuts(QKeySequence::Quit);
     closeAction->setStatusTip(tr("Exit Raster Mode"));
     connect(closeAction, &QAction::triggered, this, &QWidget::close);
 
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
+    fileMenu->addAction(libraryAction);
     fileMenu->addAction(exportAction);
     fileMenu->addAction(closeAction);
 }
@@ -204,7 +211,8 @@ void RasterMainWindow::createCentralWidget(TupProject * project, const QColor co
         rasterCanvas->loadFromFile(imgPath);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "RasterMainWindow::createCentralWidget() - Warning: Image doesn't exist -> " + imgPath;
+            qDebug() << "RasterMainWindow::createCentralWidget() - Warning: Image doesn't exist -> "
+                        + imgPath;
         #endif
     }
 
@@ -431,4 +439,12 @@ void RasterMainWindow::undoClearRasterAction()
 void RasterMainWindow::redoClearRasterAction()
 {
     rasterCanvas->redo();
+}
+
+void RasterMainWindow::importImageToLibrary()
+{
+    QString imgPath = CACHE_DIR + "img.png";
+    rasterCanvas->saveToFile(imgPath);
+
+    emit libraryCall(imgPath);
 }

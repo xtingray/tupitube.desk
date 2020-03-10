@@ -74,12 +74,14 @@ class Q_DECL_EXPORT RasterMainWindow : public TMainWindow
     private slots:
         void setBackgroundDirection(int direction);
         void updateBackgroundShiftProperty(int shift);
+        void importImageToLibrary();
 
     signals:
          void paintAreaEventTriggered(const TupPaintAreaEvent *event);
          void closeWindow(const QString &path);
          void rasterStrokeMade();
          void canvasCleared();
+         void libraryCall(const QString &);
 
     protected:
         void closeEvent(QCloseEvent *event);
