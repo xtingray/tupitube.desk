@@ -1790,6 +1790,11 @@ void TupLibraryWidget::callExternalEditor(QTreeWidgetItem *item, const QString &
 
 void TupLibraryWidget::executeSoftware(const QString &software, QString &path)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "TupLibraryWidget::executeSoftware() - Application -> " << software;
+        qDebug() << "TupLibraryWidget::executeSoftware() - File Path -> " << path;
+    #endif
+
     if (path.length() > 0 && QFile::exists(path)) {
         QString program = "/usr/bin/" + software.toLower(); 
 
@@ -1808,13 +1813,8 @@ void TupLibraryWidget::executeSoftware(const QString &software, QString &path)
     }
 }
 
-void TupLibraryWidget::updateItemFromSaveAction()
+void TupLibraryWidget::refreshItem(LibraryObjects collection)
 {
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::updateItemFromSaveAction()]";
-    #endif
-
-    LibraryObjects collection = library->getObjects();
     QMapIterator<QString, TupLibraryObject *> i(collection);
     while (i.hasNext()) {
            i.next();
@@ -1826,6 +1826,20 @@ void TupLibraryWidget::updateItemFromSaveAction()
                    qDebug() << "TupLibraryWidget::updateItemFromSaveAction() - Fatal Error: The library item modified was not found!";
                #endif
            }
+    }
+}
+
+void TupLibraryWidget::updateItemFromSaveAction()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::updateItemFromSaveAction()]";
+    #endif
+
+    refreshItem(library->getObjects());
+
+    foreach (TupLibraryFolder *folder, library->getFolders()) {
+        LibraryObjects objects = folder->getObjects();
+        refreshItem(objects);
     }
 
     TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentFrame.scene, currentFrame.layer, currentFrame.frame,
@@ -1846,12 +1860,16 @@ void TupLibraryWidget::updateItem(const QString &name, const QString &extension,
     if (extension.compare("svg") == 0)
         type = TupLibraryObject::Svg;
 
-    bool isOk = library->reloadObject(onEdition);
-    if (isOk) 
+    if (library->reloadObject(onEdition)) {
         project->reloadLibraryItem(type, onEdition, object);
 
-    if (onDisplay.compare(onEdition) == 0)
-        previewItem(lastItemEdited);
+        if (onDisplay.compare(onEdition) == 0)
+            previewItem(lastItemEdited);
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "TupLibraryWidget::updateItemFromSaveAction() - Fatal Error: Couldn't reload item from Library!";
+        #endif
+    }
 }
 
 bool TupLibraryWidget::itemNameEndsWithDigit(QString &name)

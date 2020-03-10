@@ -139,14 +139,30 @@ bool TupLibraryFolder::addObject(const QString &folderName, TupLibraryObject *ob
     return false;
 }
 
+bool TupLibraryFolder::reloadObject(const QString &key, LibraryObjects bag)
+{
+    foreach (QString oid, bag.keys()) {
+        if (oid.compare(key) == 0) {
+            QString path = bag[key]->getDataPath();
+            if (QFile::exists(path))
+                return bag[key]->loadData(path);
+        }
+    }
+
+    return false;
+}
+
 bool TupLibraryFolder::reloadObject(const QString &key)
 {
-    foreach (QString oid, objects.keys()) {
-        if (oid.compare(key) == 0) {
-            QString path = objects[key]->getDataPath();
-            if (QFile::exists(path))
-                return objects[key]->loadData(path);
-        }
+    bool found = reloadObject(key, objects);
+    if (found)
+        return true;
+
+    foreach (TupLibraryFolder *folder, folders) {
+        LibraryObjects bag = folder->getObjects();
+        found = reloadObject(key, bag);
+        if (found)
+            return true;
     }
 
     #ifdef TUP_DEBUG

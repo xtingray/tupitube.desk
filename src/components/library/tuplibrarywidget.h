@@ -85,6 +85,7 @@
 
 // class TupLibrary;
 typedef QMap<QString, TupLibraryObject *> LibraryObjects;
+typedef QMap<QString, TupLibraryFolder *> Folders;
 
 class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
 {
@@ -154,6 +155,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void saveDefaultPath(const QString &dir);
         void importNativeObject(const QString &object);
         QStringList naturalSort(QStringList photograms);
+        void refreshItem(LibraryObjects collection);
 
         QScreen *screen;
         TupLibrary *library;

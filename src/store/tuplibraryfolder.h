@@ -118,6 +118,7 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
     private:
         void loadObjects(const QString &folder, const QString &xml);
         void loadItem(const QString &folder, QDomNode xml);
+        bool reloadObject(const QString &key, LibraryObjects bag);
 
         QString id;
         Folders folders;
