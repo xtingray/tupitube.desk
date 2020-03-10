@@ -110,6 +110,10 @@ class Q_DECL_EXPORT RasterMainWindow : public TMainWindow
 
         bool tabletIsActive;
         TupProject::Mode spaceContext;
+
+        QAction *exportAction;
+        QAction *libraryAction;
+
 };
 
 #endif // RASTERMAINWINDOW_H

@@ -1481,7 +1481,8 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                                  item->setIcon(0, QIcon(THEME_DIR + "icons/bitmap.png"));
                                  libraryTree->setCurrentItem(item);
                                  previewItem(item);
-                                 if (!isNetworked && !folderName.endsWith(".pgo") && !library->isLoadingProject())
+                                 if (!isNetworked && !folderName.endsWith(".pgo") && !library->isLoadingProject()
+                                     && folderName.compare(tr("Raster Objects")) != 0)
                                      insertObjectInWorkspace();
                                }
                             break;

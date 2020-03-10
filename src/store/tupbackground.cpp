@@ -90,10 +90,20 @@ void TupBackground::fromXml(const QString &xml)
     for (int i=0; i < layers.count(); i++)
         bgLayerIndexes << BgType(layers.at(i).toInt());
 
+    if (bgLayerIndexes.count() == BG_LAYERS)
+        bgLayerIndexes << VectorForeground;
+
     bgVisibilityList.clear();
     QStringList visibility = root.attribute("bgLayerVisibility", "1,1,1,1,1").split(",");
     for (int i=0; i < visibility.count(); i++)
         bgVisibilityList << visibility.at(i).toInt();
+
+    if (bgVisibilityList.count() == BG_LAYERS)
+        bgVisibilityList << true;
+
+    qDebug() << "";
+    qDebug() << "BG_LAYERS: " << BG_LAYERS;
+    qDebug() << "bgVisibilityList: " << bgVisibilityList;
 
     QDomNode n = root.firstChild();
     while (!n.isNull()) {

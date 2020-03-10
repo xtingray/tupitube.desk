@@ -86,17 +86,17 @@ RasterMainWindow::~RasterMainWindow()
 
 void RasterMainWindow::createTopResources()
 {
-    QAction *exportAction = new QAction(tr("&Export as Image"), this);
+    exportAction = new QAction(QIcon(THEME_DIR + "icons/bitmap.png"), tr("&Export as Image"), this);
     exportAction->setShortcuts(QKeySequence::Open);
     exportAction->setStatusTip(tr("Export as Image"));
     connect(exportAction, SIGNAL(triggered()), this, SLOT(exportImage()));
 
-    QAction *libraryAction = new QAction(tr("&Import Image to Library"), this);
+    libraryAction = new QAction(QIcon(THEME_DIR + "icons/library.png"), tr("&Import Image to Library"), this);
     libraryAction->setShortcut(QKeySequence(tr("I")));
     libraryAction->setStatusTip(tr("Import Image to Library"));
     connect(libraryAction, SIGNAL(triggered()), this, SLOT(importImageToLibrary()));
 
-    QAction *closeAction = new QAction(tr("Exit Raster Mode"), this);
+    QAction *closeAction = new QAction(QIcon(THEME_DIR + "icons/exit.png"), tr("Exit Raster Mode"), this);
     closeAction->setShortcuts(QKeySequence::Quit);
     closeAction->setStatusTip(tr("Exit Raster Mode"));
     connect(closeAction, &QAction::triggered, this, &QWidget::close);
@@ -141,6 +141,9 @@ void RasterMainWindow::createCentralWidget(TupProject * project, const QColor co
     topBar->addWidget(cEmpty0);
     topBar->addAction(kApp->findGlobalAction("undo"));
     topBar->addAction(kApp->findGlobalAction("redo"));
+    topBar->addSeparator();
+    topBar->addAction(exportAction);
+    topBar->addAction(libraryAction);
 
     QString imgPath = RASTER_BG_DIR + QString::number(sceneIndex) + "/bg/";
     if (spaceContext == TupProject::RASTER_STATIC_BG_MODE) {
@@ -358,25 +361,31 @@ void RasterMainWindow::saveCanvas()
         file = imgPath + "static_bg.png";
 
     if (!rasterCanvas->canvasIsEmpty()) {
-        if (QDir().mkpath(imgPath)) {
-            rasterCanvas->saveToFile(file);
-
-            #ifdef TUP_DEBUG
-                qWarning() << "RasterMainWindow::saveCanvas() - Creating PNG image!";
-            #endif
-
-            emit closeWindow(file);
-        } else {
-            #ifdef TUP_DEBUG
-                qDebug() << "RasterMainWindow::saveCanvas() - Error while creating raster background path!";
-                qDebug() << "Image Path: " << imgPath;
-            #endif
+        QDir dir(imgPath);
+        if (!dir.exists()) {
+            if (!QDir().mkpath(imgPath)) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "RasterMainWindow::saveCanvas() - Error while creating raster background path!";
+                    qDebug() << "Image Path: " << imgPath;
+                #endif
+            }
         }
+
+        rasterCanvas->saveToFile(file);
+
+        #ifdef TUP_DEBUG
+            qWarning() << "RasterMainWindow::saveCanvas() - Creating PNG image!";
+        #endif
+
+        emit closeWindow(file);
     } else {
         #ifdef TUP_DEBUG
             qWarning() << "RasterMainWindow::saveCanvas() - Nothing new to save!";
         #endif
         if (QFile::exists(file)) {
+            #ifdef TUP_DEBUG
+                qWarning() << "RasterMainWindow::saveCanvas() - Removing previous image -> " << file;
+            #endif
             QFile bg(file);
             bg.remove();
         }
@@ -443,7 +452,7 @@ void RasterMainWindow::redoClearRasterAction()
 
 void RasterMainWindow::importImageToLibrary()
 {
-    QString imgPath = CACHE_DIR + "img.png";
+    QString imgPath = CACHE_DIR + "rasterImg.png";
     rasterCanvas->saveToFile(imgPath);
 
     emit libraryCall(imgPath);

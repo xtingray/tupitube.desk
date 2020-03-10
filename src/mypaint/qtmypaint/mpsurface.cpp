@@ -142,7 +142,13 @@ void MPSurface::clear()
         }
 
         this->onClearedSurfaceFunction(this);
+        tilesHash.clear();
     }
+}
+
+bool MPSurface::isEmpty()
+{
+    return tilesHash.isEmpty();
 }
 
 void MPSurface::loadImage(const QImage &image)
@@ -310,11 +316,6 @@ inline QPointF MPSurface::getTileFIndex(const QPoint& pos)
 {
     return QPointF(static_cast<qreal>(pos.x() / MYPAINT_TILE_SIZE),
                    static_cast<qreal>(pos.y() / MYPAINT_TILE_SIZE));
-}
-
-bool MPSurface::isEmpty()
-{
-    return tilesHash.isEmpty();
 }
 
 int MPSurface::getTilesCount()

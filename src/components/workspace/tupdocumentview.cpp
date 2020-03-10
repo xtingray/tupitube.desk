@@ -1345,20 +1345,40 @@ void TupDocumentView::importImageToLibrary(const QString &imgPath)
 {
     QFile imageFile(imgPath);
     if (imageFile.open(QIODevice::ReadOnly)) {
-        QFileInfo fileInfo(imageFile);
-        QString key = fileInfo.fileName().toLower();
-        int index = key.lastIndexOf(".");
-        QString name = key.mid(0, index);
-
-        QString extension = key.mid(index, key.length() - index);
         QByteArray data = imageFile.readAll();
         imageFile.close();
 
+        QString extension = "png";
+        QString key = QString("rasterbg0." + extension);
+
+        TupLibrary *library = project->getLibrary();
+        int i = 0;
+        while(true) {
+            if (!library->exists(key))
+                break;
+            i++;
+            key = QString("rasterbg" + QString::number(i) + "." + extension).toLower();
+        }
+
         if (imageFile.remove()) {
-            TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
-                                                                                TupLibraryObject::Image, project->spaceContext(), data, QString(),
-                                                                                0, 0, 0);
+            int sceneIndex = paintArea->graphicsScene()->currentSceneIndex();
+            int layerIndex = paintArea->graphicsScene()->currentLayerIndex();
+            int frameIndex = paintArea->graphicsScene()->currentFrameIndex();
+
+            TupProjectRequest request;
+            if (!library->folderExists(tr("Raster Objects"))) {
+                request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, tr("Raster Objects"),
+                                                                                    TupLibraryObject::Folder, project->spaceContext(), data, QString(),
+                                                                                    0, 0, 0);
+                emit requestTriggered(&request);
+            }
+
+            request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
+                                                              TupLibraryObject::Image, project->spaceContext(), data, tr("Raster Objects"),
+                                                              sceneIndex, layerIndex, frameIndex);
             emit requestTriggered(&request);
+
+            TOsd::self()->display(tr("Information"), tr("Image imported successfully"), TOsd::Info, 2000);
         }
     }
 }
