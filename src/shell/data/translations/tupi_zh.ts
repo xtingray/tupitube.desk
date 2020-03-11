@@ -848,6 +848,18 @@
         <source>Export Image</source>
         <translation>导出图像</translation>
     </message>
+    <message>
+        <source>&amp;Import Image to Library</source>
+        <translation>将图像导入库</translation>
+    </message>
+    <message>
+        <source>I</source>
+        <translation>I</translation>
+    </message>
+    <message>
+        <source>Import Image to Library</source>
+        <translation>将图像导入库</translation>
+    </message>
 </context>
 <context>
     <name>RotationSettings</name>
@@ -2452,6 +2464,18 @@ Please, rename the project&apos;s file</source>
         <source>Modes Settings</source>
         <translation>模式设定</translation>
     </message>
+    <message>
+        <source>Vector Foreground Mode</source>
+        <translation>矢量前景模式</translation>
+    </message>
+    <message>
+        <source>Raster Objects</source>
+        <translation>栅格对象</translation>
+    </message>
+    <message>
+        <source>Image imported successfully</source>
+        <translation>图片已成功导入</translation>
+    </message>
 </context>
 <context>
     <name>TupExportModule</name>
@@ -3236,6 +3260,10 @@ Please, rename the project&apos;s file</source>
         <source>Image Sequence</source>
         <translation>图像序列</translation>
     </message>
+    <message>
+        <source>Raster Objects</source>
+        <translation>栅格对象</translation>
+    </message>
 </context>
 <context>
     <name>TupListProjectDialog</name>
@@ -3743,6 +3771,18 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>&amp;Cancel</source>
         <translation>取消</translation>
+    </message>
+    <message>
+        <source>Foreground Layer</source>
+        <translation>前景层</translation>
+    </message>
+    <message>
+        <source>Backgrounds</source>
+        <translation>背景资料</translation>
+    </message>
+    <message>
+        <source>Foreground</source>
+        <translation>前景</translation>
     </message>
 </context>
 <context>
