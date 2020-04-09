@@ -38,7 +38,8 @@
 
 #include "colorsettings.h"
 #include "tradiobuttongroup.h"
-#include "tuptweenerstep.h"
+// #include "tuptweenerstep.h"
+#include "tupitemtweener.h"
 #include "timagebutton.h"
 #include "tseparator.h"
 #include "tosd.h"
@@ -440,7 +441,16 @@ QString ColorSettings::tweenToXml(int currentScene, int currentLayer, int curren
     root.setAttribute("initLayer", currentLayer);
     root.setAttribute("initScene", currentScene);
 
-    root.setAttribute("fillType", fillTypeCombo->currentIndex());
+    QString type = fillTypeCombo->currentText();
+    TupItemTweener::FillType fillType;
+    if (type.compare(tr("Internal Fill")) == 0) 
+        fillType = TupItemTweener::Internal;
+    if (type.compare(tr("Line Fill")) == 0)
+        fillType = TupItemTweener::Line;
+    if (type.compare(tr("Line & Internal Fill")) == 0)
+        fillType = TupItemTweener::FillAll;
+
+    root.setAttribute("fillType", fillType);
     root.setAttribute("frames", totalStepsCount);
     root.setAttribute("origin", "0,0");
 

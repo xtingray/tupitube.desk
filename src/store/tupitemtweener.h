@@ -62,7 +62,7 @@ class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSeriali
         enum RotationType { Continuos = 0, Partial };
         enum RotateDirection { Clockwise = 0, Counterclockwise };
         enum TransformAxes { XY = 0, X, Y };
-        enum FillType { Line = 0, Internal, FillAll};
+        enum FillType { Internal = 0, Line, FillAll };
 
         TupItemTweener();
         ~TupItemTweener();
