@@ -101,10 +101,6 @@ void TupBackground::fromXml(const QString &xml)
     if (bgVisibilityList.count() == BG_LAYERS)
         bgVisibilityList << true;
 
-    qDebug() << "";
-    qDebug() << "BG_LAYERS: " << BG_LAYERS;
-    qDebug() << "bgVisibilityList: " << bgVisibilityList;
-
     QDomNode n = root.firstChild();
     while (!n.isNull()) {
         QDomElement e = n.toElement();
