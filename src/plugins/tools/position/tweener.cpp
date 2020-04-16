@@ -1242,7 +1242,8 @@ void Tweener::paintTweenPoints()
         if (nodesGroup->nodesTotalCount() == 4)
             configPanel->enableSaveOption(true);
     } else {
-        configPanel->enableSaveOption(false);
+        if (mode == TupToolPlugin::Add)
+            configPanel->enableSaveOption(false);
     }
 }
 

@@ -19,133 +19,136 @@
 <context>
     <name>ColorSettings</name>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="58"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="59"/>
         <source>Name</source>
         <translation>Nom</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="68"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="69"/>
         <source>Options</source>
         <translation>Options</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="69"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="70"/>
         <source>Select object</source>
         <translation>Sélectionner l&apos;objet</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="70"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="71"/>
         <source>Set Properties</source>
         <translation>Définir les propriétés</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="124"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="125"/>
         <source>Starting at frame</source>
         <translation>Commencer à l&apos;image</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="132"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="133"/>
         <source>Ending at frame</source>
         <translation>Terminer à l&apos;image</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="155"/>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="572"/>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="616"/>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="623"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="156"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="582"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="626"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="633"/>
         <source>Frames Total</source>
         <translation>Total des Cadres</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="165"/>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="194"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="166"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="195"/>
         <source>White</source>
         <translation>Blanc</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="170"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="171"/>
         <source>Fill Type</source>
         <translation>Type de remplissage</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="174"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="175"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="448"/>
         <source>Line Fill</source>
         <translation>Remplissage de ligne</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="173"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="174"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="446"/>
         <source>Internal Fill</source>
         <translation>Remplissage interne</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="175"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="176"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="450"/>
         <source>Line &amp; Internal Fill</source>
         <translation>Ligne &amp; remplissage interne</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="183"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="184"/>
         <source>Initial Color</source>
         <translation>Couleur initiale</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="199"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="200"/>
         <source>Ending Color</source>
         <translation>Couleur finale</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="213"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="214"/>
         <source>Iterations</source>
         <translation>Itérations</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="222"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="223"/>
         <source>Loop</source>
         <translation>Boucle</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="231"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="232"/>
         <source>Loop with Reverse</source>
         <translation>Boucle avec retour</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="281"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="282"/>
         <source>Save Tween</source>
         <translation>Sauvegarder l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="283"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="284"/>
         <source>Cancel Tween</source>
         <translation>Annuler l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="356"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="357"/>
         <source>Update Tween</source>
         <translation>Mettre à jour l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="358"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="359"/>
         <source>Close Tween Properties</source>
         <translation>Fermer les propriétés de l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="364"/>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="369"/>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="426"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="365"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="370"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="427"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="364"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="365"/>
         <source>You must select at least one object!</source>
         <translation>Vous devez sélectionner au moins un objet!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="369"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="370"/>
         <source>You must set Tween properties first!</source>
         <translation>Vous devez d&apos;abord définir les propriétés d&apos;interpolation!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="426"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="427"/>
         <source>Select objects for Tweening first!</source>
         <translation>Sélectionner les objets pour l&apos;interpolation d&apos;abord!</translation>
     </message>
@@ -779,53 +782,53 @@
     </message>
     <message>
         <location filename="../../../plugins/tools/position/possettings.cpp" line="100"/>
-        <location filename="../../../plugins/tools/position/possettings.cpp" line="214"/>
-        <location filename="../../../plugins/tools/position/possettings.cpp" line="335"/>
+        <location filename="../../../plugins/tools/position/possettings.cpp" line="218"/>
+        <location filename="../../../plugins/tools/position/possettings.cpp" line="340"/>
         <source>Ending at frame</source>
         <translation>Terminer à l&apos;image</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/position/possettings.cpp" line="116"/>
-        <location filename="../../../plugins/tools/position/possettings.cpp" line="152"/>
-        <location filename="../../../plugins/tools/position/possettings.cpp" line="183"/>
-        <location filename="../../../plugins/tools/position/possettings.cpp" line="213"/>
-        <location filename="../../../plugins/tools/position/possettings.cpp" line="336"/>
+        <location filename="../../../plugins/tools/position/possettings.cpp" line="156"/>
+        <location filename="../../../plugins/tools/position/possettings.cpp" line="187"/>
+        <location filename="../../../plugins/tools/position/possettings.cpp" line="217"/>
+        <location filename="../../../plugins/tools/position/possettings.cpp" line="341"/>
         <source>Frames Total</source>
         <translation>Total des Cadres</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/position/possettings.cpp" line="155"/>
+        <location filename="../../../plugins/tools/position/possettings.cpp" line="159"/>
         <source>Save Tween</source>
         <translation>Sauvegarder l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/position/possettings.cpp" line="159"/>
+        <location filename="../../../plugins/tools/position/possettings.cpp" line="163"/>
         <source>Cancel Tween</source>
         <translation>Annuler l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/position/possettings.cpp" line="234"/>
-        <location filename="../../../plugins/tools/position/possettings.cpp" line="296"/>
+        <location filename="../../../plugins/tools/position/possettings.cpp" line="238"/>
+        <location filename="../../../plugins/tools/position/possettings.cpp" line="300"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/position/possettings.cpp" line="234"/>
+        <location filename="../../../plugins/tools/position/possettings.cpp" line="238"/>
         <source>Select objects for Tweening first!</source>
         <translation>Sélectionner les objets pour l&apos;interpolation d&apos;abord!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/position/possettings.cpp" line="296"/>
+        <location filename="../../../plugins/tools/position/possettings.cpp" line="300"/>
         <source>You must select at least one object!</source>
         <translation>Vous devez sélectionner au moins un objet!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/position/possettings.cpp" line="319"/>
+        <location filename="../../../plugins/tools/position/possettings.cpp" line="323"/>
         <source>Update Tween</source>
         <translation>Mettre à jour l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/position/possettings.cpp" line="321"/>
+        <location filename="../../../plugins/tools/position/possettings.cpp" line="326"/>
         <source>Close Tween Properties</source>
         <translation>Fermer les propriétés de l&apos;interpolation</translation>
     </message>

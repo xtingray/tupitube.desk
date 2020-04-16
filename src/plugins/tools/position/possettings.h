@@ -114,7 +114,7 @@ class TUPITUBE_PLUGIN PosSettings : public QWidget
         bool selectionDone;
         TupToolPlugin::Mode mode;
 
-        TImageButton *apply;
+        TImageButton *applyButton;
         TImageButton *remove;
 };
 

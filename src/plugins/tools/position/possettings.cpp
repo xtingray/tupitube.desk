@@ -60,8 +60,8 @@ PosSettings::PosSettings(QWidget *parent) : QWidget(parent)
     options->addItem(tr("Set Path Properties"), 1);
     connect(options, SIGNAL(clicked(int)), this, SLOT(emitOptionChanged(int)));
 
-    apply = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/apply.png"), 22);
-    connect(apply, SIGNAL(clicked()), this, SLOT(applyTween()));
+    applyButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/apply.png"), 22);
+    connect(applyButton, SIGNAL(clicked()), this, SLOT(applyTween()));
 
     remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close.png"), 22);
     connect(remove, SIGNAL(clicked()), this, SIGNAL(clickedResetTween()));
@@ -70,7 +70,7 @@ PosSettings::PosSettings(QWidget *parent) : QWidget(parent)
     buttonsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     buttonsLayout->setMargin(0);
     buttonsLayout->setSpacing(10);
-    buttonsLayout->addWidget(apply);
+    buttonsLayout->addWidget(applyButton);
     buttonsLayout->addWidget(remove);
 
     layout->addLayout(nameLayout);
@@ -144,6 +144,10 @@ void PosSettings::activeInnerForm(bool enable)
 
 void PosSettings::setParameters(const QString &name, int framesCount, int startFrame)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "PosSettings::setParameters() - Adding Tween context!";
+    #endif
+
     mode = TupToolPlugin::Add;
     input->setText(name);
 
@@ -152,8 +156,8 @@ void PosSettings::setParameters(const QString &name, int framesCount, int startF
     totalLabel->setText(tr("Frames Total") + ": 0");
 
     comboInit->setEnabled(false);
-    apply->setToolTip(tr("Save Tween"));
-    apply->setEnabled(false);
+    applyButton->setToolTip(tr("Save Tween"));
+    applyButton->setEnabled(false);
 
     remove->setIcon(QPixmap(kAppProp->themeDir() + "icons/close.png"));
     remove->setToolTip(tr("Cancel Tween"));
@@ -166,7 +170,7 @@ void PosSettings::setParameters(const QString &name, int framesCount, int startF
 void PosSettings::setParameters(TupItemTweener *currentTween)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "Settings::setParameters()";
+        qDebug() << "Settings::setParameters() - Loading Tween context!";
     #endif
 
     setEditMode();
@@ -316,7 +320,8 @@ void PosSettings::applyTween()
 void PosSettings::setEditMode()
 {
     mode = TupToolPlugin::Edit;
-    apply->setToolTip(tr("Update Tween"));
+    applyButton->setToolTip(tr("Update Tween"));
+    applyButton->setEnabled(true);
     remove->setIcon(QPixmap(kAppProp->themeDir() + "icons/close_properties.png"));
     remove->setToolTip(tr("Close Tween Properties"));
 }
@@ -349,7 +354,11 @@ void PosSettings::redoSegment(const QPainterPath path)
 
 void PosSettings::enableSaveOption(bool flag)
 {
-    apply->setEnabled(flag);
+    #ifdef TUP_DEBUG
+        qDebug() << "PosSettings::enableSaveOption() - flag -> " << flag;
+    #endif
+
+    applyButton->setEnabled(flag);
 }
 
 int PosSettings::stepsTotal() 
