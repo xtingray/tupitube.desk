@@ -1705,10 +1705,6 @@
         <translation>確定</translation>
     </message>
     <message>
-        <source>Use the basic camera interface (low resourcesn)</source>
-        <translation>使用基本的相機介面(低資源)</translation>
-    </message>
-    <message>
         <source>Available Camera Resolutions:</source>
         <translation>可用相機解析度</translation>
     </message>
@@ -1731,6 +1727,10 @@
     <message>
         <source>Camera Settings</source>
         <translation>相機設定</translation>
+    </message>
+    <message>
+        <source>Use the basic camera interface (low resources)</source>
+        <translation>使用基本的相機介面(低資源)</translation>
     </message>
 </context>
 <context>
@@ -1988,10 +1988,6 @@
         <translation>匯入一個SVG檔...</translation>
     </message>
     <message>
-        <source>PenPen Size</source>
-        <translation>筆的大小</translation>
-    </message>
-    <message>
         <source>Color Palette</source>
         <translation>調色盤</translation>
     </message>
@@ -2006,6 +2002,10 @@
     <message>
         <source>Frame Backward</source>
         <translation>影格倒退</translation>
+    </message>
+    <message>
+        <source>Pen Size</source>
+        <translation>鋼筆大小</translation>
     </message>
 </context>
 <context>
@@ -3000,10 +3000,6 @@ Please, rename the project&apos;s file</source>
         <translation>著色</translation>
     </message>
     <message>
-        <source>透</source>
-        <translation>不透明度</translation>
-    </message>
-    <message>
         <source>Position</source>
         <translation>位置</translation>
     </message>
@@ -3014,6 +3010,10 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Papagayo Lip-sync</source>
         <translation>Papagayo 唇形同步</translation>
+    </message>
+    <message>
+        <source>Opacity</source>
+        <translation>不透明度</translation>
     </message>
 </context>
 <context>
@@ -3669,10 +3669,6 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Question</source>
         <translation>問題</translation>
-    </message>
-    <message>
-        <source>&amp;Window</source>
-        <translation>窗口</translation>
     </message>
     <message>
         <source>Export project to several video formats</source>
@@ -4702,7 +4698,7 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Play</source>
         <translation>播放</translation>
-     </message>
+    </message>
     <message>
         <source>Play at frame:</source>
         <translation>在影格上播放：</translation>
@@ -5049,10 +5045,6 @@ Please, contact the animation server admin to get access.</source>
         <translation>剪切補間動畫</translation>
     </message>
     <message>
-        <source> Coloring Tween can&apos;t be applied to raster images</source>
-        <translation>變色補間動畫不能應用於柵格影像</translation>
-    </message>
-    <message>
         <source>Accept</source>
         <translation>接受</translation>
     </message>
@@ -5135,6 +5127,10 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Coloring Tween</source>
         <translation>變色補間動畫</translation>
+    </message>
+    <message>
+        <source>Coloring Tween can&apos;t be applied to raster images</source>
+        <translation>變色補間動畫不能應用於柵格影像</translation>
     </message>
 </context>
 </TS>

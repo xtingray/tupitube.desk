@@ -4318,13 +4318,13 @@ Please, rename the project&apos;s file</source>
     <message>
         <location filename="../../tupmainwindow.cpp" line="310"/>
         <location filename="../../tupmainwindow.cpp" line="1026"/>
-        <location filename="../../tupmainwindow_gui.cpp" line="253"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="252"/>
         <source>Animation</source>
         <translation>Animación</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow.cpp" line="377"/>
-        <location filename="../../tupmainwindow_gui.cpp" line="261"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="260"/>
         <source>Player</source>
         <translation>Reproductor</translation>
     </message>
@@ -4404,7 +4404,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <location filename="../../tupmainwindow.cpp" line="806"/>
-        <location filename="../../tupmainwindow_gui.cpp" line="409"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="425"/>
         <source>Tip Of The Day</source>
         <translation>Consejo Del Día</translation>
     </message>
@@ -4580,17 +4580,17 @@ Please, rename the project&apos;s file</source>
         <translation>Abrir Reciente</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="339"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="355"/>
         <source>Save Project</source>
         <translation>Guardar Proyecto</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="344"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="360"/>
         <source>Save Project As...</source>
         <translation>Guardar Proyecto Como...</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="355"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="371"/>
         <source>&amp;Import GIMP Palettes</source>
         <translation>&amp;Importar Paletas De GIMP</translation>
     </message>
@@ -4620,233 +4620,228 @@ Please, rename the project&apos;s file</source>
         <translation>&amp;Importar</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="235"/>
-        <source>&amp;Window</source>
-        <translation>&amp;Ventana</translation>
-    </message>
-    <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="248"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="247"/>
         <source>Modules</source>
         <translation>Módulos</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="269"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="271"/>
         <source>News</source>
         <translation>Noticias</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="282"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="285"/>
         <source>&amp;Help</source>
         <translation>&amp;Ayuda</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="313"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="329"/>
         <source>Ctrl+N</source>
         <translation>Ctrl+N</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="313"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="329"/>
         <source>New Project</source>
         <translation>Nuevo Proyecto</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="315"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="331"/>
         <source>Open new project</source>
         <translation>Abrir nuevo proyecto</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="318"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="334"/>
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="318"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="334"/>
         <source>Open Project</source>
         <translation>Abrir Proyecto</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="321"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="337"/>
         <source>Load existent project</source>
         <translation>Cargar proyecto existente</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="334"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="350"/>
         <source>Open Example</source>
         <translation>Abrir Ejemplo</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="337"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="353"/>
         <source>Open example project</source>
         <translation>Abrir ejemplo</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="340"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="356"/>
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="342"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="358"/>
         <source>Save current project in current location</source>
         <translation>Guardar proyecto actual en ruta actual</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="345"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="361"/>
         <source>Ctrl+Shift+S</source>
         <translation>Ctrl+Shift+S</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="346"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="362"/>
         <source>Open dialog box to save current project in any location</source>
         <translation>Abrir dialogo para guardar proyecto actual en cualquier ruta</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="349"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="365"/>
         <source>Ctrl+W</source>
         <translation>Ctrl+W</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="349"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="365"/>
         <source>Cl&amp;ose Project</source>
         <translation>Cerrar Proyect&amp;o</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="351"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="367"/>
         <source>Close active project</source>
         <translation>Cerrar proyecto activo</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="356"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="372"/>
         <source>Shift+G</source>
         <translation>Shift+G</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="357"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="373"/>
         <source>Import palettes</source>
         <translation>Importar paletas</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="360"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="376"/>
         <source>&amp;Import Papagayo Lip-sync</source>
         <translation>&amp;Importar Papagayo Lip-sync</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="361"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="377"/>
         <source>Alt+P</source>
         <translation>Alt+P</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="362"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="378"/>
         <source>Import Papagayo lip-sync</source>
         <translation>Importar Papagayo lip-sync</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="366"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="382"/>
         <source>&amp;Export Project</source>
         <translation>&amp;Exportar proyecto</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="366"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="382"/>
         <source>Ctrl+R</source>
         <translation>Ctrl+R</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="368"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="384"/>
         <source>Export project to several video formats</source>
         <translation>Exportar proyecto a varios formatos de vídeo</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="372"/>
-        <location filename="../../tupmainwindow_gui.cpp" line="374"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="388"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="390"/>
         <source>Open TupiTube&apos;s Network</source>
         <translation>Red Social TupiTube</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="378"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="394"/>
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="378"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="394"/>
         <source>Quit</source>
         <translation>Salir</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="381"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="397"/>
         <source>Close application</source>
         <translation>Cerrar aplicación</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="395"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="411"/>
         <source>Pr&amp;eferences...</source>
         <translation>Pr&amp;eferencias...</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="396"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="412"/>
         <source>Ctrl+P</source>
         <translation>Ctrl+P</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="398"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="414"/>
         <source>Opens the preferences dialog box</source>
         <translation>Abre el dialogo de preferencias</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="403"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="419"/>
         <source>Online Help Content</source>
         <translation>Contenido de Ayuda en Línea</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="403"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="419"/>
         <source>F1</source>
         <translation>F1</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="407"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="423"/>
         <source>YouTube Tutorials</source>
         <translation>Tutoriales en YouTube</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="407"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="423"/>
         <source>Y</source>
         <translation>Y</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="409"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="425"/>
         <source>Ctrl+T</source>
         <translation>Ctrl+T</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="411"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="427"/>
         <source>Ctrl+K</source>
         <translation>Ctrl+K</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="411"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="427"/>
         <source>About TupiTube Desk</source>
         <translation>Sobre TupiTube Desk</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="417"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="433"/>
         <source>Actions Bar</source>
         <translation>Barra de Acciones</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="505"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="521"/>
         <source>Undo</source>
         <translation>Deshacer</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="507"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="523"/>
         <source>Ctrl+Z</source>
         <translation>Ctrl+Z</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="510"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="526"/>
         <source>Redo</source>
         <translation>Rehacer</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="512"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="528"/>
         <source>Ctrl+Y</source>
         <translation>Ctrl+Y</translation>
     </message>
