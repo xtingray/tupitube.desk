@@ -231,9 +231,9 @@ void TupMainWindow::setupMenu()
     // SQA: Action disabled while Library module is fixed
     m_insertMenu->addAction(m_actionManager->find("importPapagayoLipSync"));
 
+    /*
     // Setting up the window menu
     m_windowMenu = menuBar()->addMenu(tr("&Window"));
-
     // Adding Options show debug, palette, pen, library, timeline, scenes, exposure, help
     m_windowMenu->addAction(m_actionManager->find("show_palette"));
     m_windowMenu->addAction(m_actionManager->find("show_pen"));
@@ -241,8 +241,7 @@ void TupMainWindow::setupMenu()
     m_windowMenu->addAction(m_actionManager->find("show_timeline"));
     m_windowMenu->addAction(m_actionManager->find("show_scenes"));
     m_windowMenu->addAction(m_actionManager->find("show_exposure"));
-
-    m_windowMenu->addSeparator();
+    */
 
     // Setup perspective menu
     m_viewMenu = new QMenu(tr("Modules"), this);
@@ -265,13 +264,17 @@ void TupMainWindow::setupMenu()
     animationPerspective->setData(Player);
     group->addAction(animationPerspective);
 
-    // Adding Option News 
-    QAction *newsPerspective = new QAction(tr("News"), this);
-    newsPerspective->setIcon(QPixmap(THEME_DIR + "icons/news_mode.png"));
-    newsPerspective->setIconVisibleInMenu(true);
-    newsPerspective->setShortcut(QKeySequence("Ctrl+3"));
-    newsPerspective->setData(News);
-    group->addAction(newsPerspective);
+    // Adding Option News
+    TCONFIG->beginGroup("General");
+    bool getNews = TCONFIG->value("GetNews", true).toBool();
+    if (getNews) {
+        QAction *newsPerspective = new QAction(tr("News"), this);
+        newsPerspective->setIcon(QPixmap(THEME_DIR + "icons/news_mode.png"));
+        newsPerspective->setIconVisibleInMenu(true);
+        newsPerspective->setShortcut(QKeySequence("Ctrl+3"));
+        newsPerspective->setData(News);
+        group->addAction(newsPerspective);
+    }
 
     m_viewMenu->addActions(group->actions());
     connect(group, SIGNAL(triggered(QAction *)), this, SLOT(changePerspective(QAction *)));
@@ -295,6 +298,11 @@ void TupMainWindow::setupMenu()
 
 void TupMainWindow::setMenuItemsContext(bool flag)
 {
+/*
+#ifdef TUP_DEBUG
+    qDebug() << "TupMainWindow::setMenuItemsContext() - flag -> " << flag;
+#endif
+*/
     m_actionManager->enable("save_project", flag);
     m_actionManager->enable("save_project_as", flag);
     m_actionManager->enable("close_project", flag);
@@ -302,9 +310,17 @@ void TupMainWindow::setMenuItemsContext(bool flag)
     m_actionManager->enable("export", flag);
     m_actionManager->enable("importImageGroup", flag);
 
-    // m_settingsMenu->setEnabled(flag);
+    /*
+    m_actionManager->enable("show_palette", flag);
+    m_actionManager->enable("show_pen", flag);
+    m_actionManager->enable("show_library", flag);
+    m_actionManager->enable("show_timeline", flag);
+    m_actionManager->enable("show_scenes", flag);
+    m_actionManager->enable("show_exposure", flag);
+    */
+
     m_insertMenu->setEnabled(flag);
-    m_windowMenu->setEnabled(flag);
+    // m_windowMenu->setEnabled(flag);
     m_viewMenu->setEnabled(flag);
 }
 

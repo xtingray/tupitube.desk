@@ -124,6 +124,12 @@ QAction *TActionManager::take(QAction* action, const QString &container)
  */
 QAction *TActionManager::find(const QString &_id, const QString &container) const
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "TActionManager::find() - _id -> " << _id;
+    #endif
+    */
+
     QAction *action = nullptr;
     QString id = _id.toLower();
 
@@ -133,7 +139,7 @@ QAction *TActionManager::find(const QString &_id, const QString &container) cons
     } else {
         foreach (QString key, m_actionContainer.keys()) {
             if (m_actionContainer[key].contains(id)) {
-                action = m_actionContainer[key][id];
+                action =m_actionContainer[key][id];
                 break;
             }
         }

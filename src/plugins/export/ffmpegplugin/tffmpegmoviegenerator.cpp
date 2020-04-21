@@ -456,6 +456,7 @@ void TFFmpegMovieGenerator::closeVideo(AVStream *st)
 void TFFmpegMovieGenerator::saveMovie(const QString &filename) 
 {
     #ifdef TUP_DEBUG
+        qDebug() << "***";
         qDebug() << "TFFmpegMovieGenerator::saveMovie() - filename -> " + filename;
     #endif
 
