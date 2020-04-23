@@ -67,10 +67,12 @@ bool TFFmpegMovieGenerator::beginVideo()
     int ret;
     AVCodec *video_codec = nullptr;
 
+	/*
     // SQA: Code required to support libav on Windows
 	#ifdef Q_OS_WIN
         av_register_all();
 	#endif
+	*/
 
     fmt = av_guess_format("ffh264", movieFile.toLocal8Bit().data(), nullptr);
     if (!fmt) {
@@ -235,12 +237,15 @@ AVStream * TFFmpegMovieGenerator::addVideoStream(AVFormatContext *oc, AVCodec **
     }
 
     if (oc->oformat->flags & AVFMT_GLOBALHEADER) {
+		c->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+		/*
         // SQA: Code required to support libav on Windows
         #ifdef Q_OS_WIN
             c->flags |= CODEC_FLAG_GLOBAL_HEADER;
         #else
             c->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
         #endif
+		*/
     }
 
     return st;

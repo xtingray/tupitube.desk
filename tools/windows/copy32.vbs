@@ -88,7 +88,7 @@ fileSystem.CopyFolder "c:\devel\sources\qt5", tupiDir & "\lib\qt5"
 fileSystem.CopyFolder "c:\devel\sources\imageformats", tupiDir & "\bin\raw\imageformats"
 fileSystem.CopyFolder "c:\devel\sources\mediaservice", tupiDir & "\bin\raw\mediaservice"
 fileSystem.CopyFolder "c:\devel\sources\audio", tupiDir & "\bin\raw\audio"
-fileSystem.CopyFolder "c:\libav\bin", tupiDir & "\lib\ffmpeg"
+fileSystem.CopyFolder "c:\devel\sources\ffmpeg", tupiDir & "\lib\ffmpeg"
 fileSystem.CopyFolder "c:\devel\sources\ssl", tupiDir & "\lib\ssl"
 
 MsgBox "Copy is done! :D"
