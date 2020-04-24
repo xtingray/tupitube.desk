@@ -43,7 +43,7 @@
 TupScreen::TupScreen(TupProject *work, const QSize viewSize, bool sizeChanged, QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
-            qDebug() << "[TupScreen()] - viewSize: " << viewSize;
+        qDebug() << "[TupScreen()] - viewSize: " << viewSize;
     #endif
 
     project = work;
@@ -78,11 +78,7 @@ TupScreen::TupScreen(TupProject *work, const QSize viewSize, bool sizeChanged, Q
 TupScreen::~TupScreen()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupScreen()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "[~TupScreen()]";
     #endif
 
     timer->stop();
@@ -108,11 +104,7 @@ TupScreen::~TupScreen()
 void TupScreen::resetSceneFromList(int scene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupScreen::resetPhotograms()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupScreen::resetPhotograms()]";
     #endif
 
     if (scene > -1) {
@@ -162,11 +154,7 @@ void TupScreen::initPhotogramsArray()
 void TupScreen::setFPS(int speed)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupScreen::setFPS()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupScreen::setFPS()]";
     #endif
 
     fps = speed;
@@ -188,11 +176,7 @@ void TupScreen::paintEvent(QPaintEvent *)
 {
     /*
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupScreen::paintEvent()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupScreen::paintEvent()]";
     #endif
     */
 

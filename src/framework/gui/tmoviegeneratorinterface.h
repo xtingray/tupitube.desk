@@ -65,9 +65,9 @@ class T_GUI_EXPORT TMovieGeneratorInterface
         void saveMovie(const QString &filename);
 
     protected:
-        virtual void createMovieFile(const QString &filename) = 0;
-        virtual bool beginVideo() = 0;
-        virtual void endVideo() = 0;
+        virtual void copyMovieFile(const QString &filename) = 0;
+        virtual bool beginVideoFile() = 0;
+        virtual void endVideoFile() = 0;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(TMovieGeneratorInterface::Formats);

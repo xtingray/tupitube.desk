@@ -52,14 +52,10 @@ class T_GUI_EXPORT TSizeBox : public QGroupBox
     Q_OBJECT
 
     public:
-        TSizeBox(const QString &title, const QSize &size, QWidget *parent = 0);
+        TSizeBox(const QString &title, const QSize &size, QWidget *parent = nullptr);
         ~TSizeBox();
 
         void setSingleStep(int step);
-        // void setMinimum(int min);
-        // void setMaximum(int max);
-        // void setX(int x);
-        // void setY(int y);
         int x();
         int y();
         void setModifyTogether(bool enable);
@@ -70,7 +66,6 @@ class T_GUI_EXPORT TSizeBox : public QGroupBox
     private slots:
         void updateXValue();
         void updateYValue();
-        // void toggleModify();
 
     private:
         QSize dimension;
@@ -78,8 +73,6 @@ class T_GUI_EXPORT TSizeBox : public QGroupBox
         QLabel *m_textY;
         QSpinBox *m_x;
         QSpinBox *m_y;
-        // QPushButton *m_separator;
-        // bool m_modifyTogether;
 };
 
 #endif

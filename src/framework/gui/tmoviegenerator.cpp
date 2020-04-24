@@ -44,7 +44,7 @@ TMovieGenerator::~TMovieGenerator()
 {
 }
 
-bool TMovieGenerator::beginVideo()
+bool TMovieGenerator::beginVideoFile()
 {
     return true;
 }
@@ -64,7 +64,7 @@ QString TMovieGenerator::getErrorMsg() const
     return 0;
 }
 
-void TMovieGenerator::endVideo()
+void TMovieGenerator::endVideoFile()
 {
 }
 

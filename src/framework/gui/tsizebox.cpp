@@ -74,11 +74,6 @@ TSizeBox::TSizeBox(const QString &title, const QSize &size, QWidget *parent) : Q
     layout->addLayout(internal);
 
     setLayout(layout);
-
-    // connect(m_x, SIGNAL(editingFinished()), this, SLOT(updateYValue()));
-    // connect(m_y, SIGNAL(editingFinished()), this, SLOT(updateXValue()));
-
-    // setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
 }
 
 TSizeBox::~TSizeBox()
@@ -102,36 +97,6 @@ void TSizeBox::updateYValue()
     m_y->setValue(y);
     m_y->blockSignals(false);
 }
-
-/*
-void TSizeBox::setSingleStep(int step)
-{
-    m_x->setSingleStep(step);
-    m_y->setSingleStep(step);
-}
-
-void TSizeBox::setMinimum(int min)
-{
-    m_x->setMinimum(min);
-    m_y->setMinimum(min);
-}
-
-void TSizeBox::setMaximum(int max)
-{
-    m_x->setMaximum(max);
-    m_y->setMaximum(max);
-}
-
-void TSizeBox::setX(int x)
-{
-    m_x->setValue(x);
-}
-
-void TSizeBox::setY(int y)
-{
-    m_y->setValue(y);
-}
-*/
 
 int TSizeBox::x()
 {

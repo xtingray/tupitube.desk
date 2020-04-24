@@ -45,11 +45,7 @@ TupExportModule::TupExportModule(TupProject *project, OutputFormat output,
                                  m_currentFormat(TupExportInterface::NONE), m_project(project)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupExportModule::TupExportModule()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "[TupExportModule::TupExportModule()]";
     #endif
 
     transparency = false;
@@ -213,11 +209,7 @@ void TupExportModule::enableTransparency(bool flag)
 void TupExportModule::chooseFile()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupExportModule::chooseFile()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupExportModule::chooseFile()]";
     #endif
 
     filename = QFileDialog::getSaveFileName(this, tr("Export video as..."), path,
@@ -242,11 +234,7 @@ void TupExportModule::chooseFile()
 void TupExportModule::chooseDirectory()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupExportModule::chooseDirectory()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupExportModule::chooseDirectory()]";
     #endif
 
     filename = QFileDialog::getExistingDirectory(this, tr("Choose a directory..."), path,
@@ -268,11 +256,7 @@ void TupExportModule::updateState(const QString &name)
 void TupExportModule::exportIt()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupExportModule::exportIt()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupExportModule::exportIt()]";
     #endif
 
     bool done = false; 
@@ -320,15 +304,8 @@ void TupExportModule::exportIt()
 
         if (filename.length() == 0) {
             TOsd::self()->display(tr("Error"), tr("Animation path is unset! Please, choose one."), TOsd::Error);
-
             #ifdef TUP_DEBUG
-                QString file = path.toLocal8Bit();
-                QString msg = "TupExportModule::exportIt() - [Tracer 01] Fatal Error: Animation path is unset! -> " + file;
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "TupExportModule::exportIt() - [Tracer 01] Fatal Error: Animation path is unset! -> " << path.toLocal8Bit();
             #endif
             return;
         }
@@ -336,13 +313,6 @@ void TupExportModule::exportIt()
         QFileInfo fileInfo(filename);
         name = fileInfo.completeBaseName();
         path = fileInfo.dir().absolutePath();
-
-        /*
-        int indexPath = filename.lastIndexOf("/");
-        int indexFile = filename.length() - indexPath;
-        name = filename.right(indexFile - 1);
-        path = filename.left(indexPath + 1);
-        */
 
         if (!name.toLower().endsWith(extension))
             name += extension;
@@ -371,39 +341,6 @@ void TupExportModule::exportIt()
         }
     }
 
-    /*
-    QDir directory(path);
-    if (!directory.exists()) {
-        TOsd::self()->display(tr("Error"), tr("Directory doesn't exist! Please, choose another path."), TOsd::Error);
-        #ifdef TUP_DEBUG
-            QString file = path.toLocal8Bit();
-            QString msg = "TupExportModule::exportIt() - [Tracer 02] Fatal Error: Directory doesn't exist! -> " + file;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
-        #endif
-        return;
-    } else {
-        if (imageFormats.contains(m_currentFormat)) {
-            QFileInfo dir(path);
-            if (!dir.isReadable() || !dir.isWritable()) {
-                TOsd::self()->display(tr("Error"), tr("Insufficient permissions. Please, choose another directory."), TOsd::Error);
-                return;
-            }
-        } else {
-            QFile file(directory.filePath(name));
-            if (!file.open(QIODevice::ReadWrite)) {
-                file.remove();
-                TOsd::self()->display(tr("Error"), tr("Insufficient permissions. Please, choose another path."), TOsd::Error);
-                return;
-            }
-            file.remove();
-        }
-    }
-    */
-
     if (imageFormats.contains(m_currentFormat)) {
         QFileInfo dir(path);
         if (!dir.isReadable() || !dir.isWritable()) {
@@ -424,31 +361,20 @@ void TupExportModule::exportIt()
 
     if (m_currentExporter) {
         #ifdef TUP_DEBUG
-            QString file = path.toLocal8Bit();
-            QString msg = "TupExportModule::exportIt() -  Exporting to file: " + file;
-            #ifdef Q_OS_WIN
-                qWarning() << msg;
-            #else
-                tWarning() << msg;
-            #endif
+            qWarning() << "TupExportModule::exportIt() -  Exporting to file: " << path.toLocal8Bit();
         #endif
 
         QList<TupScene *> scenes = scenesToExport();
 
         #ifdef TUP_DEBUG
-            QString msg1 = "TupExportModule::exportIt() - Exporting " + QString::number(scenes.count()) + " scenes";
-            #ifdef Q_OS_WIN
-                qWarning() << msg1;
-            #else
-                tWarning() << msg1;
-            #endif
+            qWarning() << "TupExportModule::exportIt() - Exporting " + QString::number(scenes.count()) + " scenes";
         #endif
 
         if (scenes.count() > 0) {
             int width = dimension.width();
             int height = dimension.height();
-            int newWidth = (int) m_size->x();
-            int newHeight = (int) m_size->y();
+            int newWidth = m_size->x();
+            int newHeight = m_size->y();
 
             bool sizeHasChanged = false;
             if (width != newWidth || height != newHeight) {
@@ -461,9 +387,9 @@ void TupExportModule::exportIt()
             }
 
             /* libav requirement: resolution must be a multiple of two */
-            if (width%2 != 0)
+            if ((width % 2) != 0)
                 width++;
-            if (height%2 != 0)
+            if ((height % 2) != 0)
                 height++;
 
             if (!sizeHasChanged) {

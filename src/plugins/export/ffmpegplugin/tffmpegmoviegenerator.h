@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
  *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
@@ -61,7 +61,7 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
 {
     public:
         TFFmpegMovieGenerator(TMovieGeneratorInterface::Format format, const QSize &size, int fps = 24,
-                             double duration = 0);
+                              double duration = 0);
         ~TFFmpegMovieGenerator();
 
         virtual bool validMovieHeader();
@@ -69,25 +69,25 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         void saveMovie(const QString &filename);
 
     protected:
-        void createMovieFile(const QString &fileName);
+        void copyMovieFile(const QString &fileName);
         virtual void handle(const QImage &image);
-        virtual bool beginVideo();
-        virtual void endVideo();
+        virtual bool beginVideoFile();
+        virtual void endVideoFile();
 
     private:
-        bool openVideo(AVCodec *codec, AVStream *st);
-        AVStream * addVideoStream(AVFormatContext *oc, AVCodec **codec, enum AVCodecID codec_id,
-                                  const QString &movieFile, int width, int height, int fps);
-        bool writeVideoFrame(const QString &movieFile, const QImage &image);
-        void RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint iRGBIncrement,
-                          bool bSwapRGB, int width, int height);
-        void chooseFileExtension(int format);
-        void closeVideo(AVStream *st);
+        void setFileExtension(int format);
+        bool openVideoStream(AVCodec *codec);
+        AVStream * addVideoStream(AVCodec **codec, enum AVCodecID codec_id);
+        bool writeVideoFrame(const QImage &image);
+        void RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint iRGBIncrement, bool bSwapRGB);
+        void closeVideo();
 
+        int videoW;
+        int videoH;
         AVFrame *videoFrame;
         AVStream *video_st;
-        AVFormatContext *oc;
-        AVOutputFormat *fmt;
+        AVFormatContext *formatContext;
+        AVOutputFormat *outputFormat;
 
         QString errorMsg;
         int frameCount;

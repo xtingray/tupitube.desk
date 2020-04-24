@@ -122,11 +122,11 @@ TMovieGeneratorInterface::Format FFmpegPlugin::videoFormat(TupExportInterface::F
 bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes, TupExportInterface::Format fmt, 
                                  const QSize &size, const QSize &newSize, int fps, TupLibrary *library)
 {
-    Q_UNUSED(newSize);
+    Q_UNUSED(newSize)
 
-    qreal duration = 0;
+    double duration = 0;
     foreach (TupScene *scene, scenes)
-        duration += static_cast<qreal>(scene->framesCount()) / static_cast<qreal>(fps);
+        duration += static_cast<double>(scene->framesCount()) / static_cast<double>(fps);
 
     TMovieGeneratorInterface::Format format = videoFormat(fmt);
     if (format == TFFmpegMovieGenerator::NONE)
@@ -139,12 +139,7 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
         if (!generator->validMovieHeader()) {
             errorMsg = generator->getErrorMsg();
             #ifdef TUP_DEBUG
-                QString msg = "FFmpegPlugin::exportToFormat() - [ Fatal Error ] - Can't create video -> " + filePath;
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "FFmpegPlugin::exportToFormat() - [ Fatal Error ] - Can't create video -> " << filePath;
             #endif
             delete generator;
 
@@ -156,17 +151,12 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
         foreach (TupScene *scene, scenes) {
             renderer.setScene(scene, size);
             #ifdef TUP_DEBUG
-            int i = 0;
+                int i = 0;
             #endif
             while (renderer.nextPhotogram()) {
                 #ifdef TUP_DEBUG
-                    QString msg = "FFmpegPlugin::exportToFormat() - Rendering frame -> " + QString::number(i);
+                    qDebug() << "FFmpegPlugin::exportToFormat() - Rendering frame -> " << QString::number(i);
                     i++;
-                    #ifdef Q_OS_WIN 
-                        qDebug() << msg;
-                    #else
-                        tWarning() << msg;
-                    #endif
                 #endif
                 renderer.render(&painter);
                 generator->nextFrame();
@@ -181,7 +171,8 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
     return true;
 }
 
-bool FFmpegPlugin::exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene, const QSize &size, TupLibrary *library)
+bool FFmpegPlugin::exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene,
+                               const QSize &size, TupLibrary *library)
 {
     Q_UNUSED(frameIndex);
     Q_UNUSED(color);

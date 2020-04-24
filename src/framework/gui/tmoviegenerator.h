@@ -46,14 +46,15 @@ class T_GUI_EXPORT TMovieGenerator : public QImage, public TMovieGeneratorInterf
     public:
         TMovieGenerator(int width, int height);
         ~TMovieGenerator();
+
         void nextFrame();
         void reset();
         virtual bool validMovieHeader() = 0;
         virtual QString getErrorMsg() const = 0;
 
     protected:
-        virtual bool beginVideo();
-        virtual void endVideo();
+        virtual bool beginVideoFile();
+        virtual void endVideoFile();
         virtual void handle(const QImage &image) = 0;
 };
 

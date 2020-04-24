@@ -49,81 +49,97 @@ TFFmpegMovieGenerator::TFFmpegMovieGenerator(TMovieGeneratorInterface::Format fo
                                              int fpsParam, double duration) : TMovieGenerator(size.width(), size.height())
 {
     movieFile = QDir::tempPath() + "/tupitube_video_" + TAlgorithm::randomString(12);
-    chooseFileExtension(format);
+    setFileExtension(format);
+
+    videoW = size.width();
+    videoH = size.height();
     fps = fpsParam;
     streamDuration = duration;
     next_pts = 0;
     hasSounds = false;
 
-    exception = beginVideo();
+    exception = beginVideoFile();
 }
 
 TFFmpegMovieGenerator::~TFFmpegMovieGenerator()
 {
 }
 
-bool TFFmpegMovieGenerator::beginVideo()
+void TFFmpegMovieGenerator::setFileExtension(int format)
+{
+    switch (format) {
+        case MP4:
+            movieFile += ".mp4";
+        break;
+
+        case AVI:
+            movieFile += ".avi";
+        break;
+
+        case MOV:
+            movieFile += ".mov";
+        break;
+
+        case GIF:
+            movieFile += ".gif";
+        break;
+
+        default:
+            movieFile += ".mp4";
+        break;
+    }
+}
+
+bool TFFmpegMovieGenerator::beginVideoFile()
 {
     int ret;
     AVCodec *video_codec = nullptr;
 
-	/*
-    // SQA: Code required to support libav on Windows
-	#ifdef Q_OS_WIN
-        av_register_all();
-	#endif
-	*/
-
-    fmt = av_guess_format("ffh264", movieFile.toLocal8Bit().data(), nullptr);
-    if (!fmt) {
+    // AVOutputFormat
+    outputFormat = av_guess_format("ffh264", movieFile.toLocal8Bit().data(), nullptr);
+    if (!outputFormat) {
         #ifdef TUP_DEBUG
-            qWarning() << "TFFmpegMovieGenerator::beginVideo() - Can't guess format. Selecting MPEG by default...";
+            qWarning() << "TFFmpegMovieGenerator::beginVideoFile() - Can't guess format. Selecting MPEG by default...";
         #endif
 
-        fmt = av_guess_format("mpeg", nullptr, nullptr);
+        outputFormat = av_guess_format("mpeg", nullptr, nullptr);
     }
 
-    if (!fmt) {
+    if (!outputFormat) {
         errorMsg = "ffmpeg error: Output format variable is NULL.";
         #ifdef TUP_DEBUG
-            qCritical() << "TFFmpegMovieGenerator::beginVideo() - " + errorMsg;
+            qCritical() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
         #endif
 
         return false;
     }
 
-    oc = avformat_alloc_context();
-    if (!oc) {
+    // AVFormatContext
+    formatContext = avformat_alloc_context();
+    if (!formatContext) {
         errorMsg = "ffmpeg error: Memory error while allocating format context.";
         #ifdef TUP_DEBUG
-            qCritical() << "TFFmpegMovieGenerator::beginVideo() - " + errorMsg;
-        #endif
-
-        return false;
-    }
-    oc->oformat = fmt;
-
-    if (!oc) {
-        errorMsg = "ffmpeg error: Format context variable is NULL.";
-        #ifdef TUP_DEBUG
-            qCritical() << "TFFmpegMovieGenerator::beginVideo() - " + errorMsg;
+            qCritical() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
         #endif
 
         return false;
     }
 
+    formatContext->oformat = outputFormat;
+
+    // AVStream
     video_st = nullptr;
-    if (fmt->video_codec != AV_CODEC_ID_NONE)
-        video_st = addVideoStream(oc, &video_codec, fmt->video_codec, movieFile, width(), height(), fps);
-	
-    av_dump_format(oc, 0, movieFile.toLocal8Bit().data(), 1);
+    if (outputFormat->video_codec != AV_CODEC_ID_NONE)
+        video_st = addVideoStream(&video_codec, outputFormat->video_codec);
+
+    av_dump_format(formatContext, 0, movieFile.toLocal8Bit().data(), 1);
 	
     if (video_st) {
-        bool success = openVideo(video_codec, video_st);
+        bool success = openVideoStream(video_codec);
         if (!success) {
             errorMsg = "ffmpeg error: Could not initialize video codec.";
             #ifdef TUP_DEBUG
-                qCritical() << "TFFmpegMovieGenerator::beginVideo() - " + errorMsg;
+                qCritical() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
             #endif
 
             return false;
@@ -131,27 +147,27 @@ bool TFFmpegMovieGenerator::beginVideo()
     } else {
         errorMsg = "ffmpeg error: Video stream variable is NULL.";
         #ifdef TUP_DEBUG
-            qCritical() << "TFFmpegMovieGenerator::beginVideo() - " + errorMsg;
+            qCritical() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
         #endif
 
         return false;
     }
 
-    if (!(fmt->flags & AVFMT_NOFILE)) {
-        ret = avio_open(&oc->pb, movieFile.toLocal8Bit().data(), AVIO_FLAG_WRITE);
+    if (!(outputFormat->flags & AVFMT_NOFILE)) {
+        ret = avio_open(&formatContext->pb, movieFile.toLocal8Bit().data(), AVIO_FLAG_WRITE);
         if (ret < 0) {
             errorMsg = "ffmpeg error: could not open video file";
             #ifdef TUP_DEBUG
-                qCritical() << "TFFmpegMovieGenerator::beginVideo() - " + errorMsg;
+                qCritical() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
             #endif
             return false;
         }
     }
 
-    if (avformat_write_header(oc, nullptr) < 0) {
+    if (avformat_write_header(formatContext, nullptr) < 0) {
         errorMsg = "ffmpeg error: could not write video file header";
         #ifdef TUP_DEBUG
-            qCritical() << "TFFmpegMovieGenerator::beginVideo() - " + errorMsg;
+            qCritical() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
         #endif
         return false;
     }
@@ -164,11 +180,10 @@ bool TFFmpegMovieGenerator::beginVideo()
     return true;
 }
 
-AVStream * TFFmpegMovieGenerator::addVideoStream(AVFormatContext *oc, AVCodec **codec, enum AVCodecID codec_id,
-                                 const QString &movieFile, int width, int height, int fps)
+AVStream * TFFmpegMovieGenerator::addVideoStream(AVCodec **codec, enum AVCodecID videoCodecId)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TFFmpegMovieGenerator::addVideoStream() - codec_id: " + QString::number(codec_id);
+        qDebug() << "TFFmpegMovieGenerator::addVideoStream() - codec_id: " + QString::number(videoCodecId);
     #endif
 
     AVCodecContext *c;
@@ -176,18 +191,18 @@ AVStream * TFFmpegMovieGenerator::addVideoStream(AVFormatContext *oc, AVCodec **
     QString errorMsg = "";
 
     // Find the video encoder
-    *codec = avcodec_find_encoder(codec_id);
+    *codec = avcodec_find_encoder(videoCodecId);
     if (!(*codec)) {
         errorMsg = "ffmpeg error: Could not find video encoder.";
         #ifdef TUP_DEBUG
             qCritical() << "TFFmpegMovieGenerator::addVideoStream() - " + errorMsg;
-            qCritical() << "TFFmpegMovieGenerator::addVideoStream() - Unavailable Codec ID: " + QString::number(codec_id);
+            qCritical() << "TFFmpegMovieGenerator::addVideoStream() - Unavailable Codec ID: " + QString::number(videoCodecId);
         #endif
 
         return nullptr;
     }
 
-    st = avformat_new_stream(oc, *codec);
+    st = avformat_new_stream(formatContext, *codec);
     if (!st) {
         errorMsg = "ffmpeg error: Could not video alloc stream."; 
         #ifdef TUP_DEBUG
@@ -196,10 +211,10 @@ AVStream * TFFmpegMovieGenerator::addVideoStream(AVFormatContext *oc, AVCodec **
 
         return nullptr;
     }
-    st->id = static_cast<int>(oc->nb_streams - 1);
+    st->id = static_cast<int>(formatContext->nb_streams - 1);
 
     c = st->codec;
-    c->codec_id = codec_id;
+    c->codec_id = videoCodecId;
 
     // Put sample parameters
     c->bit_rate = 6000000;
@@ -207,8 +222,8 @@ AVStream * TFFmpegMovieGenerator::addVideoStream(AVFormatContext *oc, AVCodec **
         c->bit_rate = 4000000;
 
     // Resolution must be a multiple of two
-    c->width = width;  
-    c->height = height; 
+    c->width = videoW;
+    c->height = videoH;
 
     c->gop_size = 0;
     c->max_b_frames = 0;
@@ -224,37 +239,16 @@ AVStream * TFFmpegMovieGenerator::addVideoStream(AVFormatContext *oc, AVCodec **
         c->pix_fmt = AV_PIX_FMT_YUV420P;
     }
 
-    if (c->codec_id == AV_CODEC_ID_MPEG2VIDEO) {
-        // Just for testing, we also add B frames
-        c->max_b_frames = 2;
-    }
-
-    if (c->codec_id == AV_CODEC_ID_MPEG1VIDEO) {
-        /* needed to avoid using macroblocks in which some coeffs overflow
-           this doesnt happen with normal video, it just happens here as the
-           motion of the chroma plane doesnt match the luma plane */
-           c->mb_decision=2;
-    }
-
-    if (oc->oformat->flags & AVFMT_GLOBALHEADER) {
-		c->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
-		/*
-        // SQA: Code required to support libav on Windows
-        #ifdef Q_OS_WIN
-            c->flags |= CODEC_FLAG_GLOBAL_HEADER;
-        #else
-            c->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
-        #endif
-		*/
-    }
+    if (formatContext->oformat->flags & AVFMT_GLOBALHEADER)
+        c->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
     return st;
 }
 
-bool TFFmpegMovieGenerator::openVideo(AVCodec *codec, AVStream *st)
+bool TFFmpegMovieGenerator::openVideoStream(AVCodec *codec)
 {
     int ret;
-    AVCodecContext *c = st->codec;
+    AVCodecContext *c = video_st->codec;
 
     // Open the codec
     ret = avcodec_open2(c, codec, nullptr);
@@ -262,19 +256,20 @@ bool TFFmpegMovieGenerator::openVideo(AVCodec *codec, AVStream *st)
     if (ret < 0) {
         errorMsg = "ffmpeg error: Sorry, the video codec required is not installed in your system.";
         #ifdef TUP_DEBUG
-            qCritical() << "TFFmpegMovieGenerator::openVideo() - " + errorMsg;
+            qCritical() << "TFFmpegMovieGenerator::openVideoStream() - " + errorMsg;
         #endif
 
         return false;
     }
 
     // Allocate and init a re-usable frame
+    // AVFrame
     videoFrame = av_frame_alloc();
 
     if (!videoFrame) {
         errorMsg = "ffmpeg error: There is no available memory to export your project as a video";
         #ifdef TUP_DEBUG
-            qCritical() << "TFFmpegMovieGenerator::openVideo() - " + errorMsg;
+            qCritical() << "TFFmpegMovieGenerator::openVideoStream() - " + errorMsg;
         #endif
 
         return false;
@@ -289,10 +284,10 @@ bool TFFmpegMovieGenerator::openVideo(AVCodec *codec, AVStream *st)
   v = static_cast<uint8_t> ((static_cast<int>(50*r) - static_cast<int>(42*g) - static_cast<int>(8*b) + 12800)/100);
 
 void TFFmpegMovieGenerator::RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint iRGBIncrement,
-                                        bool bSwapRGB, int width, int height)
+                                        bool bSwapRGB)
 {
-    const unsigned iPlaneSize = static_cast<const unsigned int> (width * height);
-    const unsigned iHalfWidth = static_cast<const unsigned int> (width >> 1);
+    const unsigned iPlaneSize = static_cast<const unsigned int> (videoW * videoH);
+    const unsigned iHalfWidth = static_cast<const unsigned int> (videoW >> 1);
 
     // get pointers to the data
     uint8_t *yplane  = bufferYUV;
@@ -309,15 +304,16 @@ void TFFmpegMovieGenerator::RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *buff
         iRGBIdx[2] = 0;
     }
  
-    for (int y = 0; y < height; y++) {
-         uint8_t *yline = yplane + (y * width);
+    for (int y = 0; y < videoH; y++) {
+         uint8_t *yline = yplane + (y * videoW);
          uint8_t *uline = uplane + (static_cast<unsigned int>(y >> 1) * iHalfWidth);
          uint8_t *vline = vplane + (static_cast<unsigned int>(y >> 1) * iHalfWidth);
 
-         for (int x = 0; x < width; x += 2) {
+         for (int x = 0; x < videoW; x += 2) {
               RGBtoYUV(bufferRGBIndex[iRGBIdx[0]], bufferRGBIndex[iRGBIdx[1]], bufferRGBIndex[iRGBIdx[2]], *yline, *uline, *vline);
               bufferRGBIndex += iRGBIncrement;
               yline++;
+
               RGBtoYUV(bufferRGBIndex[iRGBIdx[0]], bufferRGBIndex[iRGBIdx[1]], bufferRGBIndex[iRGBIdx[2]], *yline, *uline, *vline);
               bufferRGBIndex += iRGBIncrement;
               yline++;
@@ -327,7 +323,7 @@ void TFFmpegMovieGenerator::RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *buff
     }
 }
 
-bool TFFmpegMovieGenerator::writeVideoFrame(const QString &movieFile, const QImage &image)
+bool TFFmpegMovieGenerator::writeVideoFrame(const QImage &image)
 {
     #ifdef TUP_DEBUG
         qInfo() << "---";
@@ -335,8 +331,6 @@ bool TFFmpegMovieGenerator::writeVideoFrame(const QString &movieFile, const QIma
     #endif
 
     AVCodecContext *c = video_st->codec;
-    int w = c->width;
-    int h = c->height;
 
     int got_output;
     AVPacket pkt;
@@ -346,20 +340,21 @@ bool TFFmpegMovieGenerator::writeVideoFrame(const QString &movieFile, const QIma
 
     if (movieFile.endsWith("gif", Qt::CaseInsensitive)) {
         QImage img = image.convertToFormat(Format_RGB888);
-        avpicture_fill((AVPicture *)videoFrame, img.bits(), AV_PIX_FMT_RGB24, w, h);
+        avpicture_fill((AVPicture *)videoFrame, img.bits(), AV_PIX_FMT_RGB24, videoW, videoH);
     } else { 
-        int size = avpicture_get_size(AV_PIX_FMT_YUV420P, w, h);
+        int size = avpicture_get_size(AV_PIX_FMT_YUV420P, videoW, videoH);
         uint8_t *pic_dat = static_cast<uint8_t *> (av_malloc(static_cast<size_t>(size)));
-        RGBtoYUV420P(image.bits(), pic_dat, static_cast<uint>(image.depth()/8), true, w, h);
-        avpicture_fill((AVPicture *)videoFrame, pic_dat, AV_PIX_FMT_YUV420P, w, h);
+        RGBtoYUV420P(image.bits(), pic_dat, static_cast<uint>(image.depth()/8), true);
+        avpicture_fill((AVPicture *)videoFrame, pic_dat, AV_PIX_FMT_YUV420P, videoW, videoH);
 
         videoFrame->format = AV_PIX_FMT_YUV420P;
-        videoFrame->width = w;
-        videoFrame->height = h;
+        videoFrame->width = videoW;
+        videoFrame->height = videoH;
         videoFrame->pts += av_rescale_q(1, video_st->codec->time_base, video_st->time_base);
     }
 
     int ret = avcodec_encode_video2(c, &pkt, videoFrame, &got_output);
+    // int ret = avcodec_send_frame(c, videoFrame);
     if (ret < 0) {
         errorMsg = "[1] Error while encoding the video of your project";
         #ifdef TUP_DEBUG
@@ -376,8 +371,9 @@ bool TFFmpegMovieGenerator::writeVideoFrame(const QString &movieFile, const QIma
         pkt.stream_index = video_st->index;
 
         // Write the compressed frame to the media file.
-        ret = av_interleaved_write_frame(oc, &pkt);
-        av_free_packet(&pkt);
+        ret = av_interleaved_write_frame(formatContext, &pkt);
+        // av_free_packet(&pkt);
+        av_packet_unref(&pkt);
 
         #ifdef TUP_DEBUG
             qInfo() << "TFFmpegMovieGenerator::writeVideoFrame() - Frame added successfully!";
@@ -421,38 +417,7 @@ void TFFmpegMovieGenerator::handle(const QImage &image)
         qInfo() << msg1;
     #endif
 
-    writeVideoFrame(movieFile, image);
-}
-
-void TFFmpegMovieGenerator::chooseFileExtension(int format)
-{
-    switch (format) {
-        case MP4:
-            movieFile += ".mp4";
-        break;
-
-        case AVI:
-            movieFile += ".avi";
-        break;
-
-        case MOV:
-            movieFile += ".mov";
-        break;
-
-        case GIF:
-            movieFile += ".gif";
-        break;
-
-        default:
-            movieFile += ".mp4";
-        break;
-    }
-}
-
-void TFFmpegMovieGenerator::closeVideo(AVStream *st)
-{
-    avcodec_close(st->codec);
-    av_frame_free(&videoFrame);
+    writeVideoFrame(image);
 }
 
 void TFFmpegMovieGenerator::saveMovie(const QString &filename) 
@@ -462,46 +427,39 @@ void TFFmpegMovieGenerator::saveMovie(const QString &filename)
         qDebug() << "TFFmpegMovieGenerator::saveMovie() - filename -> " + filename;
     #endif
 
-    endVideo();
-    createMovieFile(filename);
+    endVideoFile();
+    copyMovieFile(filename);
 }
 
-bool TFFmpegMovieGenerator::validMovieHeader() 
-{ 
-    return exception;
-}
-
-QString TFFmpegMovieGenerator::getErrorMsg() const
+void TFFmpegMovieGenerator::endVideoFile()
 {
-    QString errorDetail = "This is not a problem directly related to <b>TupiTube Desk</b>. "
-                          "Please, check your ffmpeg installation and codec support. "
-                          "More info: <b>http://ffmpeg.org</b>";
-    return errorDetail;
+    av_write_trailer(formatContext);
+    closeVideo();
+
+    if (!(outputFormat->flags & AVFMT_NOFILE))
+        avio_close(formatContext->pb);
+
+    avformat_free_context(formatContext);
 }
 
-void TFFmpegMovieGenerator::endVideo()
+void TFFmpegMovieGenerator::closeVideo()
 {
-    av_write_trailer(oc);
-
     if (video_st)
-        closeVideo(video_st);
+        avcodec_close(video_st->codec);
 
-    if (!(fmt->flags & AVFMT_NOFILE))
-        avio_close(oc->pb);
-
-    avformat_free_context(oc);
+    av_frame_free(&videoFrame);
 }
 
-void TFFmpegMovieGenerator::createMovieFile(const QString &fileName)
+void TFFmpegMovieGenerator::copyMovieFile(const QString &videoPath)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TFFmpegMovieGenerator::createMovieFile() - fileName -> " + fileName;
+        qDebug() << "TFFmpegMovieGenerator::createMovieFile() - fileName -> " + videoPath;
     #endif
 
-    if (QFile::exists(fileName)) 
-        QFile::remove(fileName);
+    if (QFile::exists(videoPath))
+        QFile::remove(videoPath);
 
-    if (QFile::copy(movieFile, fileName)) {
+    if (QFile::copy(movieFile, videoPath)) {
         if (QFile::exists(movieFile)) {
             #ifdef TUP_DEBUG
                 qInfo() << "TFFmpegMovieGenerator::createMovieFile() - Trying to remove temp video file -> " + movieFile;
@@ -522,4 +480,17 @@ void TFFmpegMovieGenerator::createMovieFile(const QString &fileName)
             #endif
         }
     }
+}
+
+bool TFFmpegMovieGenerator::validMovieHeader()
+{
+    return exception;
+}
+
+QString TFFmpegMovieGenerator::getErrorMsg() const
+{
+    QString errorDetail = "This is not a problem directly related to <b>TupiTube Desk</b>. "
+                          "Please, check your ffmpeg installation and codec support. "
+                          "More info: <b>http://ffmpeg.org</b>";
+    return errorDetail;
 }

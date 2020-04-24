@@ -453,7 +453,7 @@ void TupCameraWidget::setFPS(int fps)
 
 void TupCameraWidget::setDuration(int fps)
 {
-    qreal time = static_cast<qreal> (framesTotal) / static_cast<qreal> (fps);
+    double time = static_cast<double> (framesTotal) / static_cast<double> (fps);
     duration->setText(QString::number(time, 'f', 2) + QString(" " + tr("secs")));
 }
 
