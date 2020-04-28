@@ -44,6 +44,7 @@ extern "C" {
 #include "libavutil/channel_layout.h"
 #include "libavutil/mathematics.h"
 #include "libavutil/opt.h"
+#include "libavutil/imgutils.h"
 #include "libavcodec/avcodec.h"
 #include "libavformat/avformat.h"
 // #include "libavresample/avresample.h"
@@ -76,11 +77,14 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
 
     private:
         void setFileExtension(int format);
-        bool openVideoStream(AVCodec *codec);
-        AVStream * addVideoStream(AVCodec **codec, enum AVCodecID codec_id);
-        bool writeVideoFrame(const QImage &image);
+        bool openVideoStream();
+        AVStream * addVideoStream();
+        bool createVideoFrame(const QImage &image);
+        int writeVideoFrame(AVPacket *pkt);
         void RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint iRGBIncrement, bool bSwapRGB);
         void closeVideo();
+
+        bool encodeVideoFrame(AVCodecContext *enc_ctx, AVFrame *frame, AVPacket *pkt);
 
         int videoW;
         int videoH;
@@ -88,6 +92,9 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         AVStream *video_st;
         AVFormatContext *formatContext;
         AVOutputFormat *outputFormat;
+        AVCodecContext *codecContext;
+        enum AVCodecID videoCodecID;
+        const AVCodec *codec;
 
         QString errorMsg;
         int frameCount;
@@ -98,14 +105,6 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
 
         bool hasSounds;
         int64_t next_pts;
-
-        /*
-        AVFrame *audioFrame;
-        AVFrame *tmpAudioFrame;
-        float t;
-        float tincr;
-        float tincr2;
-        */
 };
 
 #endif

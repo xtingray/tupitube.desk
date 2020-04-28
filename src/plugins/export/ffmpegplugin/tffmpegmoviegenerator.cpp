@@ -93,16 +93,16 @@ void TFFmpegMovieGenerator::setFileExtension(int format)
 bool TFFmpegMovieGenerator::beginVideoFile()
 {
     int ret;
-    AVCodec *video_codec = nullptr;
+    codec = nullptr;
 
     // AVOutputFormat
     outputFormat = av_guess_format("ffh264", movieFile.toLocal8Bit().data(), nullptr);
     if (!outputFormat) {
+        errorMsg = "ffmpeg error: Can't support MP4/MOV format.";
         #ifdef TUP_DEBUG
-            qWarning() << "TFFmpegMovieGenerator::beginVideoFile() - Can't guess format. Selecting MPEG by default...";
+            qWarning() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
         #endif
-
-        outputFormat = av_guess_format("mpeg", nullptr, nullptr);
+        return false;
     }
 
     if (!outputFormat) {
@@ -110,7 +110,6 @@ bool TFFmpegMovieGenerator::beginVideoFile()
         #ifdef TUP_DEBUG
             qCritical() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
         #endif
-
         return false;
     }
 
@@ -121,27 +120,24 @@ bool TFFmpegMovieGenerator::beginVideoFile()
         #ifdef TUP_DEBUG
             qCritical() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
         #endif
-
         return false;
     }
 
     formatContext->oformat = outputFormat;
 
     // AVStream
-    video_st = nullptr;
-    if (outputFormat->video_codec != AV_CODEC_ID_NONE)
-        video_st = addVideoStream(&video_codec, outputFormat->video_codec);
+    videoCodecID = outputFormat->video_codec;
+    video_st = addVideoStream();
 
     av_dump_format(formatContext, 0, movieFile.toLocal8Bit().data(), 1);
 	
     if (video_st) {
-        bool success = openVideoStream(video_codec);
+        bool success = openVideoStream();
         if (!success) {
             errorMsg = "ffmpeg error: Could not initialize video codec.";
             #ifdef TUP_DEBUG
                 qCritical() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
             #endif
-
             return false;
         }
     } else {
@@ -149,14 +145,13 @@ bool TFFmpegMovieGenerator::beginVideoFile()
         #ifdef TUP_DEBUG
             qCritical() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
         #endif
-
         return false;
     }
 
     if (!(outputFormat->flags & AVFMT_NOFILE)) {
         ret = avio_open(&formatContext->pb, movieFile.toLocal8Bit().data(), AVIO_FLAG_WRITE);
         if (ret < 0) {
-            errorMsg = "ffmpeg error: could not open video file";
+            errorMsg = "ffmpeg error: Could not open video file";
             #ifdef TUP_DEBUG
                 qCritical() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
             #endif
@@ -180,85 +175,86 @@ bool TFFmpegMovieGenerator::beginVideoFile()
     return true;
 }
 
-AVStream * TFFmpegMovieGenerator::addVideoStream(AVCodec **codec, enum AVCodecID videoCodecId)
+AVStream * TFFmpegMovieGenerator::addVideoStream()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TFFmpegMovieGenerator::addVideoStream() - codec_id: " + QString::number(videoCodecId);
+        qDebug() << "TFFmpegMovieGenerator::addVideoStream() - codec_id: " + QString::number(videoCodecID);
     #endif
 
-    AVCodecContext *c;
     AVStream *st;
-    QString errorMsg = "";
 
     // Find the video encoder
-    *codec = avcodec_find_encoder(videoCodecId);
-    if (!(*codec)) {
+    codec = avcodec_find_encoder(videoCodecID);
+    if (!codec) {
         errorMsg = "ffmpeg error: Could not find video encoder.";
         #ifdef TUP_DEBUG
             qCritical() << "TFFmpegMovieGenerator::addVideoStream() - " + errorMsg;
-            qCritical() << "TFFmpegMovieGenerator::addVideoStream() - Unavailable Codec ID: " + QString::number(videoCodecId);
+            qCritical() << "TFFmpegMovieGenerator::addVideoStream() - Unavailable Codec ID: " + QString::number(videoCodecID);
         #endif
-
         return nullptr;
     }
 
-    st = avformat_new_stream(formatContext, *codec);
+    st = avformat_new_stream(formatContext, codec);
     if (!st) {
         errorMsg = "ffmpeg error: Could not video alloc stream."; 
         #ifdef TUP_DEBUG
             qCritical() << "TFFmpegMovieGenerator::addVideoStream() - " + errorMsg;
         #endif
-
         return nullptr;
     }
-    st->id = static_cast<int>(formatContext->nb_streams - 1);
 
-    c = st->codec;
-    c->codec_id = videoCodecId;
+    /*
+    codecContext = avcodec_alloc_context3(codec);
+    if (!codecContext) {
+        qDebug() << "Could not allocate video codec context";
+        return nullptr;
+    }
+    if (avcodec_parameters_to_context(codecContext, st->codecpar) < 0) {
+        qDebug() << "Could not copy parameters to context";
+        return nullptr;
+    }
+    */
+
+    codecContext = st->codec;
 
     // Put sample parameters
-    c->bit_rate = 6000000;
+    codecContext->bit_rate = 6000000;
     if (fps == 1)
-        c->bit_rate = 4000000;
+        codecContext->bit_rate = 4000000;
 
     // Resolution must be a multiple of two
-    c->width = videoW;
-    c->height = videoH;
+    codecContext->width = videoW;
+    codecContext->height = videoH;
 
-    c->gop_size = 0;
-    c->max_b_frames = 0;
+    codecContext->gop_size = 0;
+    codecContext->max_b_frames = 0;
 
-    c->time_base.num = 1;
-    c->time_base.den = fps;
+    codecContext->time_base = (AVRational){1, fps};
 
     if (movieFile.endsWith("gif", Qt::CaseInsensitive)) {
         st->time_base.num = 1;
         st->time_base.den = fps;
-        c->pix_fmt = AV_PIX_FMT_RGB24;
+        codecContext->pix_fmt = AV_PIX_FMT_RGB24;
     } else {
-        c->pix_fmt = AV_PIX_FMT_YUV420P;
+        codecContext->pix_fmt = AV_PIX_FMT_YUV420P;
     }
 
     if (formatContext->oformat->flags & AVFMT_GLOBALHEADER)
-        c->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+        codecContext->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
     return st;
 }
 
-bool TFFmpegMovieGenerator::openVideoStream(AVCodec *codec)
+bool TFFmpegMovieGenerator::openVideoStream()
 {
-    int ret;
-    AVCodecContext *c = video_st->codec;
-
     // Open the codec
-    ret = avcodec_open2(c, codec, nullptr);
+    int ret = avcodec_open2(codecContext, codec, nullptr);
 
     if (ret < 0) {
         errorMsg = "ffmpeg error: Sorry, the video codec required is not installed in your system.";
         #ifdef TUP_DEBUG
             qCritical() << "TFFmpegMovieGenerator::openVideoStream() - " + errorMsg;
         #endif
-
         return false;
     }
 
@@ -271,10 +267,9 @@ bool TFFmpegMovieGenerator::openVideoStream(AVCodec *codec)
         #ifdef TUP_DEBUG
             qCritical() << "TFFmpegMovieGenerator::openVideoStream() - " + errorMsg;
         #endif
-
         return false;
     }
-	
+
     return true;
 }
 
@@ -323,16 +318,16 @@ void TFFmpegMovieGenerator::RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *buff
     }
 }
 
-bool TFFmpegMovieGenerator::writeVideoFrame(const QImage &image)
+bool TFFmpegMovieGenerator::createVideoFrame(const QImage &image)
 {
     #ifdef TUP_DEBUG
         qInfo() << "---";
-        qInfo() << "TFFmpegMovieGenerator::writeVideoFrame() - Generating frame #" + QString::number(frameCount);
+        qInfo() << "TFFmpegMovieGenerator::createVideoFrame() - Generating frame #" + QString::number(frameCount);
     #endif
 
-    AVCodecContext *c = video_st->codec;
+    frameCount++;
+    fflush(stdout);
 
-    int got_output;
     AVPacket pkt;
     av_init_packet(&pkt);
     pkt.data = nullptr; // packet data will be allocated by the encoder
@@ -340,84 +335,77 @@ bool TFFmpegMovieGenerator::writeVideoFrame(const QImage &image)
 
     if (movieFile.endsWith("gif", Qt::CaseInsensitive)) {
         QImage img = image.convertToFormat(Format_RGB888);
-        avpicture_fill((AVPicture *)videoFrame, img.bits(), AV_PIX_FMT_RGB24, videoW, videoH);
+        av_image_fill_arrays(videoFrame->data, videoFrame->linesize, img.bits(), AV_PIX_FMT_YUV420P, videoW, videoH, 1);
     } else { 
-        int size = avpicture_get_size(AV_PIX_FMT_YUV420P, videoW, videoH);
+        int size = av_image_get_buffer_size(AV_PIX_FMT_YUV420P, videoW, videoH, 1);
         uint8_t *pic_dat = static_cast<uint8_t *> (av_malloc(static_cast<size_t>(size)));
         RGBtoYUV420P(image.bits(), pic_dat, static_cast<uint>(image.depth()/8), true);
-        avpicture_fill((AVPicture *)videoFrame, pic_dat, AV_PIX_FMT_YUV420P, videoW, videoH);
+        av_image_fill_arrays(videoFrame->data, videoFrame->linesize, pic_dat, AV_PIX_FMT_YUV420P, videoW, videoH, 1);
 
         videoFrame->format = AV_PIX_FMT_YUV420P;
         videoFrame->width = videoW;
         videoFrame->height = videoH;
-        videoFrame->pts += av_rescale_q(1, video_st->codec->time_base, video_st->time_base);
+        videoFrame->pts += av_rescale_q(1, codecContext->time_base, video_st->time_base);
     }
 
-    int ret = avcodec_encode_video2(c, &pkt, videoFrame, &got_output);
-    // int ret = avcodec_send_frame(c, videoFrame);
+    int ret = avcodec_send_frame(codecContext, videoFrame);
     if (ret < 0) {
-        errorMsg = "[1] Error while encoding the video of your project";
+        errorMsg = "ffmpeg error: Error while sending a frame for encoding";
         #ifdef TUP_DEBUG
-            qCritical() << "TFFmpegMovieGenerator::writeVideoFrame() - " + errorMsg;
+            qDebug() << "TFFmpegMovieGenerator::createVideoFrame() - " + errorMsg;
         #endif
-
         return false;
     }
-
-    // If size is zero, it means the image was buffered.
-    if (got_output) {
-        if (c->coded_frame->key_frame)
-            pkt.flags |= AV_PKT_FLAG_KEY;
-        pkt.stream_index = video_st->index;
-
-        // Write the compressed frame to the media file.
-        ret = av_interleaved_write_frame(formatContext, &pkt);
-        // av_free_packet(&pkt);
+    while (ret >= 0) {
+        ret = avcodec_receive_packet(codecContext, &pkt);
+        if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
+            return (ret==AVERROR(EAGAIN)) ? false:true;
+        } else if (ret < 0) {
+            errorMsg = "ffmpeg error: Error during encoding";
+            #ifdef TUP_DEBUG
+                qDebug() << "TFFmpegMovieGenerator::createVideoFrame() - " + errorMsg;
+            #endif
+            return false;
+        }
+        ret = writeVideoFrame(&pkt);
+        if (ret < 0) {
+           errorMsg = "ffmpeg error: Error while writing video frame";
+           #ifdef TUP_DEBUG
+               qDebug() << "TFFmpegMovieGenerator::createVideoFrame() - " + errorMsg;
+           #endif
+           return false;
+        }
         av_packet_unref(&pkt);
-
-        #ifdef TUP_DEBUG
-            qInfo() << "TFFmpegMovieGenerator::writeVideoFrame() - Frame added successfully!";
-        #endif
-    } else {
-        #ifdef TUP_DEBUG
-            qWarning() << "TFFmpegMovieGenerator::writeVideoFrame() - Fatal Error: Frame ignored! -> "
-                          + QString::number(frameCount);
-        #endif
-        ret = 0;
     }
-
-    if (ret != 0) {
-        errorMsg = "[2] Error while encoding the video of your project";
-        #ifdef TUP_DEBUG
-            qCritical() << "TFFmpegMovieGenerator::writeVideoFrame() - " + errorMsg;
-        #endif
-
-        return false;
-    }
-
-    frameCount++;
 
     return true;
+}
+
+int TFFmpegMovieGenerator::writeVideoFrame(AVPacket *pkt)
+{
+    /* rescale output packet timestamp values from codec to stream timebase */
+    av_packet_rescale_ts(pkt, video_st->time_base, video_st->time_base);
+    pkt->stream_index = video_st->index;
+
+    /* Write the compressed frame to the media file. */
+    return av_interleaved_write_frame(formatContext, pkt);
 }
 
 void TFFmpegMovieGenerator::handle(const QImage &image)
 {
     if (!video_st) {
         #ifdef TUP_DEBUG
-            QString msg = "TFFmpegMovieGenerator::handle() - The total of frames has been "
-                          "processed (" + QString::number(streamDuration) + " seg)";
-            qInfo() << msg;
+            qInfo() << "TFFmpegMovieGenerator::handle() - The total of frames has been "
+                       "processed (" + QString::number(streamDuration) + " seg)";
         #endif
-
         return;
     }
 
     #ifdef TUP_DEBUG
-        QString msg1 = "TFFmpegMovieGenerator::handle() - Duration: " + QString::number(streamDuration);
-        qInfo() << msg1;
+        qInfo() << "TFFmpegMovieGenerator::handle() - Duration: " + QString::number(streamDuration);
     #endif
 
-    writeVideoFrame(image);
+    createVideoFrame(image);
 }
 
 void TFFmpegMovieGenerator::saveMovie(const QString &filename) 
@@ -426,6 +414,10 @@ void TFFmpegMovieGenerator::saveMovie(const QString &filename)
         qDebug() << "***";
         qDebug() << "TFFmpegMovieGenerator::saveMovie() - filename -> " + filename;
     #endif
+
+    QImage image = QImage(videoW, videoH, QImage::Format_RGB32);
+    image.fill(Qt::white);
+    createVideoFrame(image);
 
     endVideoFile();
     copyMovieFile(filename);
@@ -444,8 +436,8 @@ void TFFmpegMovieGenerator::endVideoFile()
 
 void TFFmpegMovieGenerator::closeVideo()
 {
-    if (video_st)
-        avcodec_close(video_st->codec);
+    if (codecContext)
+        avcodec_close(codecContext);
 
     av_frame_free(&videoFrame);
 }
