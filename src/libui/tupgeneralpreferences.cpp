@@ -83,10 +83,12 @@ TupGeneralPreferences::TupGeneralPreferences()
     startupLabel->setFont(labelFont);
     widgetLayout->addWidget(startupLabel);
 
-    langSupport << "zh" << "en" << "fr" << "pt" << "es";
+    langSupport = TCONFIG->languages();
+    // langSupport << "zh_CN" << "zh_TW" << "en" << "fr" << "pt" << "es";
     QLabel *langLabel = new QLabel(tr("Language:"));
     langCombo = new QComboBox();
-    langCombo->addItem("中文");
+    langCombo->addItem("简体中文"); // Simplified Chinese
+    langCombo->addItem("繁體中文"); // Traditional Chinese
     langCombo->addItem("English");
     langCombo->addItem("Français");
     langCombo->addItem("Português");
@@ -183,7 +185,11 @@ int TupGeneralPreferences::getLangIndex()
 {
     TCONFIG->beginGroup("General");
     QString locale = TCONFIG->value("Language", "en").toString();
-    return langSupport.indexOf(locale);
+    int index = langSupport.indexOf(locale);
+    if (index == -1)
+        index = langSupport.indexOf("en");
+
+    return index;
 }
 
 void TupGeneralPreferences::updateAppLang(int index)

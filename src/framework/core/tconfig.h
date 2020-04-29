@@ -78,6 +78,8 @@ class T_CORE_EXPORT TConfig : public QObject
 
         void sync();
 
+        static QList<QString> languages();
+
     private:
         QDomElement find(const QDomElement &element, const QString &key) const;
 
@@ -93,7 +95,7 @@ class T_CORE_EXPORT TConfig : public QObject
 
         QHash<QString, QDomElement> groups;
         QDomElement currentElementsGroup;
-        QString lastGroup;
+        QString lastGroup;        
 };
 
 #define TCONFIG TConfig::instance()

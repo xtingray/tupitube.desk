@@ -112,9 +112,6 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
     // Loading audio player plugin
     // TAudioPlayer::instance()->loadEngine("gstreamer"); // FIXME: Move this to the settings 
 
-    // Defining the render type for the drawings
-    // m_renderType = Tupi::RenderType(TCONFIG->value("RenderType").toInt());
-
     // Calling out the project manager
     m_projectManager = new TupProjectManager(this);
 

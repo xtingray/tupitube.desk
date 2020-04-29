@@ -3215,161 +3215,161 @@ Por favor, renomeie o ficheiro do projeto</translation>
 <context>
     <name>TupExportModule</name>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="77"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="73"/>
         <source>Directory: </source>
         <translation>Diretório: </translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="79"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="75"/>
         <source>File: </source>
         <translation>Ficheiro: </translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="94"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="90"/>
         <source>Choose another path</source>
         <translation>Escolha outro caminho</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="105"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="101"/>
         <source>i.e. </source>
         <translation>exemplo: </translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="120"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="116"/>
         <source>Size</source>
         <translation>Tamanho</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="122"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="118"/>
         <source>Configuration</source>
         <translation>Configuração</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="136"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="132"/>
         <source>FPS</source>
         <translation>FPS</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="252"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="240"/>
         <source>Choose a directory...</source>
         <translation>Escolha um diretório...</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="292"/>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="297"/>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="303"/>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="322"/>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="351"/>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="357"/>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="410"/>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="417"/>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="487"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="276"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="281"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="287"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="306"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="321"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="327"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="347"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="354"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="413"/>
         <source>Error</source>
         <translation>Erro</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="311"/>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="364"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="295"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="334"/>
         <source>Warning!</source>
         <translation>Alerta!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="311"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="295"/>
         <source>Image sequence already exists. Overwrite it?</source>
         <translation>Seqüência de imagens já existe. Substituí-la?</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="410"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="347"/>
         <source>Insufficient permissions. Please, choose another directory.</source>
         <translation>Permissões insuficientes. Por favor, escolha outro diretório.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="417"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="354"/>
         <source>Insufficient permissions. Please, choose another path.</source>
         <translation>Permissões insuficientes. Por favor, escolha outro caminho.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="495"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="421"/>
         <source>Image sequence was saved successful</source>
         <translation>Sequência de imagens foi guardada satisfatoriamente</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="511"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="437"/>
         <source>Fatal Error: Can&apos;t export video</source>
         <translation>Erro fatal: Não é possível exportar vídeo</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="66"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="62"/>
         <source>Enable Background Transparency</source>
         <translation>Ativar Transparência Do Fundo</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="74"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="70"/>
         <source>Image Name Prefix: </source>
         <translation>Prefixo Do Arquivo: </translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="223"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="215"/>
         <source>Export video as...</source>
         <translation>Exportar vídeo como...</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="224"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="216"/>
         <source>Video File</source>
         <translation>Arquivo de Vídeo</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="292"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="276"/>
         <source>Images name prefix is unset! Please, type a prefix.</source>
         <translation>O prefixo do nome das imagens não está definido! Por favor, digite um prefixo.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="297"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="281"/>
         <source>Images path can&apos;t be unset! Please, choose one.</source>
         <translation>O caminho das imagens não está definido! Por favor, escolha um.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="303"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="287"/>
         <source>Images path doesn&apos;t exist! Please, choose another.</source>
         <translation>O caminho das imagens não existe! Por favor escolha outro.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="322"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="306"/>
         <source>Animation path is unset! Please, choose one.</source>
         <translation>O caminho de animação não está definido! Por favor, escolha um.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="351"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="321"/>
         <source>Animation path can&apos;t be unset! Please, choose one.</source>
         <translation>O caminho de animação não está definido! Por favor, escolha um.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="357"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="327"/>
         <source>Animation path doesn&apos;t exist! Please, choose another.</source>
         <translation>O caminho de animação não existe! Por favor escolha outro.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="365"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="335"/>
         <source>File exists. Overwrite it?</source>
         <translation>Já existe um ficheiro com mesmo nome. Deseja substituí-lo?</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="487"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="413"/>
         <source>Format problem. TupiTube Internal error.</source>
         <translation>Problema no formato. Erro interno do TupiTube.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="493"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="419"/>
         <source>Video file</source>
         <translation>Arquivo de Vídeo</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="493"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="419"/>
         <source>was saved successful</source>
         <translation>foi guardado satisfatoriamente</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="496"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="422"/>
         <source>Information</source>
         <translation>Informação</translation>
     </message>
@@ -3621,22 +3621,22 @@ Por favor, renomeie o ficheiro do projeto</translation>
         <translation>Idioma:</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="108"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="109"/>
         <source>Confirmation Dialogs</source>
         <translation>Diálogos de Confirmação</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="115"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="116"/>
         <source>On Player</source>
         <translation>Sobre o Player de Vídeo</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="176"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="177"/>
         <source>Warning</source>
         <translation>Aviso</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="176"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="177"/>
         <source>Please restart TupiTube</source>
         <translation>Por favor, reinicie o TupiTube</translation>
     </message>

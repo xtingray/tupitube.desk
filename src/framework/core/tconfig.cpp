@@ -40,11 +40,7 @@ TConfig* TConfig::m_instance = nullptr;
 TConfig::TConfig() : QObject()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TConfig()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "[TConfig()]";
     #endif
 
     QString base = QDir::homePath() + "/";
@@ -53,22 +49,12 @@ TConfig::TConfig() : QObject()
     if (!configDirectory.exists()) {
         isFirstTime = true;
         #ifdef TUP_DEBUG
-            QString msg = "TConfig::TConfig() - Config file doesn't exist. Creating path: " + configDirectory.path();
-            #ifdef Q_OS_WIN
-                qWarning() << msg;
-            #else
-                tWarning() << msg;
-            #endif
+            qWarning() << "TConfig::TConfig() - Config file doesn't exist. Creating path: " + configDirectory.path();
         #endif
 
         if (!configDirectory.mkdir(configDirectory.path())) {
             #ifdef TUP_DEBUG
-                QString msg = "TConfig::TConfig() - Fatal Error: Can't create path -> " + configDirectory.path();
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "TConfig::TConfig() - Fatal Error: Can't create path -> " + configDirectory.path();
             #endif
         }
     } else {
@@ -82,11 +68,7 @@ TConfig::TConfig() : QObject()
 TConfig::~TConfig()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TConfig()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "[~TConfig()]";
     #endif
 
     if (m_instance) 
@@ -114,15 +96,8 @@ void TConfig::checkConfigFile()
         isConfigOk = domDocument.setContent(&config, &errorMsg, &errorLine, &errorColumn);
         if (!isConfigOk) {
             #ifdef TUP_DEBUG
-                QString msg1 = "TConfig::checkConfigFile() - Fatal Error: Configuration file is corrupted - Line: " + QString::number(errorLine) + " - Column: " + QString::number(errorColumn);
-                QString msg2 = "TConfig::checkConfigFile() - Message: " + errorMsg;
-                #ifdef Q_OS_WIN
-                    qDebug() << msg1;
-                    qDebug() << msg2;
-                #else
-                    tError() << msg1;
-                    tError() << msg2;
-                #endif
+                qDebug() << "TConfig::checkConfigFile() - Fatal Error: Configuration file is corrupted - Line: " + QString::number(errorLine) + " - Column: " + QString::number(errorColumn);
+                qDebug() << "TConfig::checkConfigFile() - Message: " + errorMsg;
             #endif
         } else {
             if (configVersion() < QString(CONFIG_VERSION).toInt())
@@ -280,4 +255,9 @@ QDomElement TConfig::find(const QDomElement &element, const QString &key) const
 QString TConfig::currentGroup()
 {
     return lastGroup;
+}
+
+QList<QString> TConfig::languages()
+{
+    return {"zh_CN", "zh_TW", "en", "fr", "pt", "es"};
 }

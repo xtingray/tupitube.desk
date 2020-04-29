@@ -66,27 +66,9 @@
 #define LIBRARY_DIR CONFIG_DIR+"/libraries"
 #define MAEFLORESTA_URL "https://www.maefloresta.com/"
 
-namespace TupiTube 
-{
-    enum RenderType
-      {
-       Image = 0,
-       OpenGL,
-       Native
-      };
-
-    enum MessageType
-      {
-       Information = 0,
-       Warning,
-       Error,
-       Critical
-      };
-};
-
-#endif
-
 #define ZLAYER_LIMIT 10000
 #define BG_LAYERS 4
 // #define BG_LAYERS_TOTAL 10
 #define ZLAYER_BASE 100000 // Initial zValue for Frames Mode layers
+
+#endif

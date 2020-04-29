@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<TS version="2.1" language="zh_TW">
 <context>
     <name>ButtonsPanel</name>
     <message>
@@ -1396,7 +1396,7 @@
     <name>TConfigurationDialog</name>
     <message>
         <source>&amp;Apply</source>
-        <translation>應用</translation>
+        <translation>套用</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
@@ -1512,11 +1512,11 @@
     </message>
     <message>
         <source>Help</source>
-        <translation>幫助</translation>
+        <translation>說明</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation>應用</translation>
+        <translation>套用</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -3352,7 +3352,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>幫助</translation>
+        <translation>說明</translation>
     </message>
     <message>
         <source>Animation</source>
@@ -3416,7 +3416,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>YouTube Tutorials</source>
-        <translation>YouTube 教程</translation>
+        <translation>YouTube 教學</translation>
     </message>
     <message>
         <source>Import project package</source>
@@ -4869,7 +4869,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Time Line</source>
-        <translation>时间线</translation>
+        <translation>時間軸</translation>
     </message>
     <message>
         <source>Layer %1</source>
@@ -4888,7 +4888,7 @@ Please, contact the animation server admin to get access.</source>
     <name>TupToolStatus</name>
     <message>
         <source>Current Tool</source>
-        <translation>当前工具</translation>
+        <translation>目前工具</translation>
     </message>
 </context>
 <context>
@@ -4903,7 +4903,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Revision</source>
-        <translation>修订本</translation>
+        <translation>修訂版本</translation>
     </message>
     <message>
         <source>Description</source>

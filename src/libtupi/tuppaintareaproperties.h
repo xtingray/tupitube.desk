@@ -44,13 +44,12 @@ struct TUPITUBE_EXPORT TupPaintAreaProperties
     public:
         TupPaintAreaProperties();
         ~TupPaintAreaProperties();
+
         QColor gridColor;
         QColor backgroundColor;
         QColor onionSkinColor;
         QColor onionSkinBackground;
         int gridSeparation;
-        
-        TupiTube::RenderType renderType;
 };
 
 #endif

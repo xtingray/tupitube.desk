@@ -136,20 +136,20 @@ int main(int argc, char ** argv)
 #endif
 
     QString locale = "";
-    QList<QString> langSupport;
-    langSupport << "es" << "fr" << "pt" << "zh";
+    QList<QString> langSupport = TCONFIG->languages();
     if (TCONFIG->firstTime()) {
         locale = QString(QLocale::system().name()).left(2);
         if (locale.length() < 2) {
             locale = "en";
-        } else {
-            if (locale.compare("en") != 0 && !langSupport.contains(locale))
-                locale = "en";
+        } else if (locale.compare("en") != 0 && !langSupport.contains(locale)) {
+            locale = "en";
         }
         TCONFIG->beginGroup("General");
         TCONFIG->setValue("Language", locale);
     } else {
         locale = TCONFIG->value("Language", "en").toString();
+        if (locale.compare("en") != 0 && !langSupport.contains(locale))
+            locale = "en";
     }
 
 #ifdef Q_OS_WIN
@@ -193,6 +193,7 @@ int main(int argc, char ** argv)
         #endif
 
         #ifdef TUP_DEBUG
+            qWarning() << "main.cpp - Locale -> " + locale;
             qWarning() << "main.cpp - Loading lang file -> " + langFile;
         #endif
 
