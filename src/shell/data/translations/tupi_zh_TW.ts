@@ -1691,11 +1691,11 @@
     </message>
     <message>
         <source>Rewind</source>
-        <translation>回溯</translation>
+        <translation>倒轉</translation>
     </message>
     <message>
         <source>Forward</source>
-        <translation>快進</translation>
+        <translation>快轉</translation>
     </message>
 </context>
 <context>
@@ -3572,7 +3572,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Previous</source>
-        <translation>以前的</translation>
+        <translation>上一個</translation>
     </message>
     <message>
         <source>SVG Sequence</source>
@@ -4881,7 +4881,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Scene %1</source>
-        <translation> 場景%1</translation>
+        <translation>場景 %1</translation>
     </message>
 </context>
 <context>
