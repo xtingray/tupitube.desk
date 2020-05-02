@@ -2,7 +2,7 @@ REM Developed by Santiago Paz Mendieta
 
 Set fileSystem = CreateObject("Scripting.FileSystemObject")
 
-quazipDir = "c:\Quazip\lib"
+quazipDir = "c:\Quazip\bin"
 sourceDir = "c:\devel\sources\tupitube.desk\src"
 tupiDir = "c:\tupitube"
 
