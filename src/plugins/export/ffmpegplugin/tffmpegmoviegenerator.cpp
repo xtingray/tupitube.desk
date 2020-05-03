@@ -251,7 +251,7 @@ bool TFFmpegMovieGenerator::openVideoStream()
     int ret = avcodec_open2(codecContext, codec, nullptr);
 
     if (ret < 0) {
-        errorMsg = "ffmpeg error: Sorry, the video codec required is not installed in your system.";
+        errorMsg = "ffmpeg error: Can't open video codec.";
         #ifdef TUP_DEBUG
             qCritical() << "TFFmpegMovieGenerator::openVideoStream() - " + errorMsg;
         #endif
@@ -285,16 +285,16 @@ void TFFmpegMovieGenerator::RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *buff
     const unsigned iHalfWidth = static_cast<const unsigned int> (videoW >> 1);
 
     // get pointers to the data
-    uint8_t *yplane  = bufferYUV;
-    uint8_t *uplane  = bufferYUV + iPlaneSize;
-    uint8_t *vplane  = bufferYUV + iPlaneSize + (iPlaneSize >> 2);
+    uint8_t *yplane = bufferYUV;
+    uint8_t *uplane = bufferYUV + iPlaneSize;
+    uint8_t *vplane = bufferYUV + iPlaneSize + (iPlaneSize >> 2);
     const uint8_t *bufferRGBIndex = bufferRGB;
 
     int iRGBIdx[3];
     iRGBIdx[0] = 0;
     iRGBIdx[1] = 1;
     iRGBIdx[2] = 2;
-    if (bSwapRGB)  {
+    if (bSwapRGB) {
         iRGBIdx[0] = 2;
         iRGBIdx[2] = 0;
     }
@@ -426,20 +426,14 @@ void TFFmpegMovieGenerator::saveMovie(const QString &filename)
 void TFFmpegMovieGenerator::endVideoFile()
 {
     av_write_trailer(formatContext);
-    closeVideo();
+    if (codecContext)
+        avcodec_close(codecContext);
+    av_frame_free(&videoFrame);
 
     if (!(outputFormat->flags & AVFMT_NOFILE))
         avio_close(formatContext->pb);
 
     avformat_free_context(formatContext);
-}
-
-void TFFmpegMovieGenerator::closeVideo()
-{
-    if (codecContext)
-        avcodec_close(codecContext);
-
-    av_frame_free(&videoFrame);
 }
 
 void TFFmpegMovieGenerator::copyMovieFile(const QString &videoPath)

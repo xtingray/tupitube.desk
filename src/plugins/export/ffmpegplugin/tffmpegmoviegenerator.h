@@ -82,7 +82,6 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         bool createVideoFrame(const QImage &image);
         int writeVideoFrame(AVPacket *pkt);
         void RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint iRGBIncrement, bool bSwapRGB);
-        void closeVideo();
 
         bool encodeVideoFrame(AVCodecContext *enc_ctx, AVFrame *frame, AVPacket *pkt);
 
