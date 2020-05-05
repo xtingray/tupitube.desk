@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
  *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
@@ -79,7 +79,6 @@ class TUPITUBE_EXPORT TupExportInterface
         virtual bool exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene, const QSize &size, TupLibrary *library = nullptr) = 0;
         virtual QString getExceptionMsg() const = 0;
 };
-
         Q_DECLARE_OPERATORS_FOR_FLAGS(TupExportInterface::Formats);
         Q_DECLARE_INTERFACE(TupExportInterface, "com.maefloresta.tupi.ExportInterface/0.1");
 

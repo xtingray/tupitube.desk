@@ -54,18 +54,19 @@ TupExportInterface::Formats ImagePlugin::availableFormats()
 }
 
 bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, const QList<TupScene *> &scenes, 
-                                 TupExportInterface::Format format, const QSize &size, const QSize &newSize, int fps, TupLibrary *library)
+                                 TupExportInterface::Format format, const QSize &size, const QSize &newSize, int fps,
+                                 TupLibrary *library)
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
+    #ifdef TUP_DEBUG
         qDebug() << "[ImagePlugin::exportToFormat()]";
-    #else
-        T_FUNCINFO;
-        tWarning() << "Size: " << size;
+        qWarning() << "Size: " << size;
     #endif
-#endif
 
-    Q_UNUSED(fps);
+    Q_UNUSED(fps)
+
+    int frames = 0;
+    foreach (TupScene *scene, scenes)
+        frames += scene->framesCount();
 
     QFileInfo fileInfo(filePath);
 
@@ -115,7 +116,8 @@ bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, 
             index += QString("%1").arg(photogram);
 
             if (QString(extension).compare("SVG") == 0) {
-                QString path = fileInfo.absolutePath() + "/" + QString(m_baseName + "%1.%2").arg(index).arg(QString(extension).toLower());
+                QString path = fileInfo.absolutePath() + "/"
+                               + QString(m_baseName + "%1.%2").arg(index).arg(QString(extension).toLower());
 
                 QSvgGenerator generator;
                 generator.setFileName(path);
@@ -145,26 +147,28 @@ bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, 
 
                 if (size != newSize)
                     image = image.QImage::scaled(newSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-                image.save(fileInfo.absolutePath() + "/" + QString(m_baseName + "%1.%2").arg(index).arg(QString(extension).toLower()),
+                image.save(fileInfo.absolutePath() + "/"
+                           + QString(m_baseName + "%1.%2").arg(index).arg(QString(extension).toLower()),
                            extension, 100);
             }
+            #ifdef TUP_DEBUG
+                qDebug() << "ImagePlugin::exportToFormat() - Rendering frame -> " << QString::number(photogram);
+            #endif
             photogram++;
+            emit progressChanged((photogram * 100) / frames);
         }
     }
 
     return true;
 }
 
-bool ImagePlugin::exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene, const QSize &size, TupLibrary *library)
+bool ImagePlugin::exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene,
+                              const QSize &size, TupLibrary *library)
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
+    #ifdef TUP_DEBUG
         qDebug() << "[ImagePlugin::exportToFrame()]";
-    #else
-        T_FUNCINFO;
-        tWarning() << "Size: " << size;
+        qWarning() << "Size: " << size;
     #endif
-#endif
 
     bool result = false;
     QString path = filePath;

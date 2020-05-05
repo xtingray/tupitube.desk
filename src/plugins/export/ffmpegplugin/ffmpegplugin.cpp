@@ -124,9 +124,12 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
 {
     Q_UNUSED(newSize)
 
+    int frames = 0;
     double duration = 0;
-    foreach (TupScene *scene, scenes)
+    foreach (TupScene *scene, scenes) {
         duration += static_cast<double>(scene->framesCount()) / static_cast<double>(fps);
+        frames += scene->framesCount();
+    }
 
     TMovieGeneratorInterface::Format format = videoFormat(fmt);
     if (format == TFFmpegMovieGenerator::NONE)
@@ -148,19 +151,18 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
 
         QPainter painter(generator);
         painter.setRenderHint(QPainter::Antialiasing, true);
+        int photogram = 0;
         foreach (TupScene *scene, scenes) {
             renderer.setScene(scene, size);
-            #ifdef TUP_DEBUG
-                int i = 0;
-            #endif
             while (renderer.nextPhotogram()) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "FFmpegPlugin::exportToFormat() - Rendering frame -> " << QString::number(i);
-                    i++;
+                    qDebug() << "FFmpegPlugin::exportToFormat() - Rendering frame -> " << QString::number(photogram);
                 #endif
                 renderer.render(&painter);
                 generator->nextFrame();
                 generator->reset();
+                photogram++;
+                emit progressChanged((photogram * 100) / frames);
             }
         }
     }

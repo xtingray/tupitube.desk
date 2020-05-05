@@ -63,12 +63,15 @@ class TUPITUBE_EXPORT TupExportWizard : public QDialog
         void showPage(int index);
         void showPage(TupExportWizardPage *page);
 
+    public slots:
+        void enableButtonSet(bool enabled);
+
     private slots:
         void cancel();
         void back();
         void next();
         void pageCompleted();
-        void disableButton();
+        void disableNextButton();
         void closeDialog();
         void setFormat(int code, const QString &extension);
 
@@ -90,6 +93,7 @@ class TUPITUBE_EXPORT TupExportWizard : public QDialog
         QPushButton *cancelButton;
         QPushButton *backButton;
         QPushButton *nextButton;
+
         QHBoxLayout *buttonLayout;
         QVBoxLayout *mainLayout;
         QString format;

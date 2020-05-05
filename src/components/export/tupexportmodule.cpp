@@ -36,6 +36,7 @@
 #include "tupexportmodule.h"
 #include "tconfig.h"
 #include "tosd.h"
+#include "tupexportpluginobject.h"
 
 #include <QGroupBox>
 #include <QFileDialog>
@@ -104,8 +105,8 @@ TupExportModule::TupExportModule(TupProject *project, OutputFormat output,
 
     layout->addLayout(filePathLayout);
 
-    QWidget *configure = new QWidget;
-    QHBoxLayout *configureLayout = new QHBoxLayout(configure);
+    QWidget *configWidget = new QWidget;
+    QHBoxLayout *configureLayout = new QHBoxLayout(configWidget);
     configureLayout->addStretch();
 
     dimension = m_project->getDimension();
@@ -134,8 +135,29 @@ TupExportModule::TupExportModule(TupProject *project, OutputFormat output,
         configureLayout->addWidget(groupBox);
     }
 
+    TCONFIG->beginGroup("General");
+    QString themeName = TCONFIG->value("Theme", "Light").toString();
+    QString style = "QProgressBar { background-color: #DDDDDD; text-align: center; color: #FFFFFF; border-radius: 2px; } ";
+    QString color = "#009500";
+    if (themeName.compare("Dark") == 0)
+        color = "#444444";
+    style += "QProgressBar::chunk { background-color: " + color + "; border-radius: 2px; }";
+
+    progressBar = new QProgressBar;
+    progressBar->setTextVisible(true);
+    progressBar->setStyleSheet(style);
+    progressBar->setRange(1, 100);
+
+    progressWidget = new QWidget;
+    QHBoxLayout *progressLayout = new QHBoxLayout(progressWidget);
+    progressLayout->addSpacing(50);
+    progressLayout->addWidget(progressBar);
+    progressLayout->addSpacing(50);
+    progressWidget->setVisible(false);
+
     configureLayout->addStretch();
-    layout->addWidget(configure);
+    layout->addWidget(configWidget);
+    layout->addWidget(progressWidget);
     layout->addStretch();
 
     setWidget(container);
@@ -162,6 +184,9 @@ void TupExportModule::setScenesIndexes(const QList<int> &indexes)
 void TupExportModule::setCurrentExporter(TupExportInterface *currentExporter)
 {
     m_currentExporter = currentExporter;
+
+    TupExportPluginObject *plugin = (TupExportPluginObject *) currentExporter;
+    connect(plugin, SIGNAL(progressChanged(int)), this, SLOT(updateProgressLabel(int)));
 }
 
 void TupExportModule::setCurrentFormat(int currentFormat, const QString &value)
@@ -171,8 +196,9 @@ void TupExportModule::setCurrentFormat(int currentFormat, const QString &value)
     filename = path;
     filename = QDir::fromNativeSeparators(filename);
 
+    // Animated Image or Animation
     if (m_currentFormat == TupExportInterface::APNG || (m_currentFormat != TupExportInterface::PNG 
-        && m_currentFormat != TupExportInterface::JPEG && m_currentFormat != TupExportInterface::SVG)) { // Animated Image or Animation
+        && m_currentFormat != TupExportInterface::JPEG && m_currentFormat != TupExportInterface::SVG)) {
         if (!filename.endsWith("/"))
             filename += "/";
 
@@ -180,7 +206,6 @@ void TupExportModule::setCurrentFormat(int currentFormat, const QString &value)
         filename += extension;
         m_size->setVisible(false);
     } else { // Images Array
-        filename = QDir::homePath();
         if (m_currentFormat == TupExportInterface::JPEG) {
             if (bgTransparency->isVisible())
                 bgTransparency->setVisible(false);
@@ -241,8 +266,13 @@ void TupExportModule::chooseDirectory()
                                                  QFileDialog::ShowDirsOnly
                                                  | QFileDialog::DontResolveSymlinks);
 
-    if (filename.length() > 0)
+    if (!filename.isEmpty()) {
         m_filePath->setText(filename);
+
+        TCONFIG->beginGroup("General");
+        TCONFIG->setValue("DefaultPath", filename);
+        TCONFIG->sync();
+    }
 }
 
 void TupExportModule::updateState(const QString &name)
@@ -305,7 +335,8 @@ void TupExportModule::exportIt()
         if (filename.length() == 0) {
             TOsd::self()->display(tr("Error"), tr("Animation path is unset! Please, choose one."), TOsd::Error);
             #ifdef TUP_DEBUG
-                qDebug() << "TupExportModule::exportIt() - [Tracer 01] Fatal Error: Animation path is unset! -> " << path.toLocal8Bit();
+                qDebug() << "TupExportModule::exportIt() - [Tracer 01] Fatal Error: Animation path is unset! -> "
+                         << path.toLocal8Bit();
             #endif
             return;
         }
@@ -357,6 +388,9 @@ void TupExportModule::exportIt()
         file.remove();
     }
 
+    emit exportHasStarted();
+
+    progressWidget->setVisible(true);
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     if (m_currentExporter) {
@@ -446,7 +480,12 @@ QList<TupScene *> TupExportModule::scenesToExport() const
 {
     QList<TupScene *> scenes;
     foreach (int index, m_indexes)
-             scenes << m_project->sceneAt(index);
+        scenes << m_project->sceneAt(index);
 
     return scenes;
+}
+
+void TupExportModule::updateProgressLabel(int percent)
+{
+    progressBar->setValue(percent);
 }

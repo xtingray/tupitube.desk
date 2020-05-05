@@ -50,6 +50,9 @@ class TUPITUBE_EXPORT TupExportPluginObject : public QObject, public TupExportIn
     public:
         TupExportPluginObject(QObject *parent = nullptr);
         ~TupExportPluginObject();
+
+    signals:
+        void progressChanged(const QString &);
 };
 
 #endif

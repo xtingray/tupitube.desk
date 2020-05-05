@@ -55,6 +55,7 @@ class TUPITUBE_PLUGIN FFmpegPlugin : public TupExportPluginObject
     public:
         FFmpegPlugin();
         virtual ~FFmpegPlugin();
+
         virtual QString key() const;
         TupExportInterface::Formats availableFormats();
 
@@ -64,6 +65,9 @@ class TUPITUBE_PLUGIN FFmpegPlugin : public TupExportPluginObject
 
         virtual QString getExceptionMsg() const;
         QString errorMsg;
+
+    signals:
+        void progressChanged(int percent);
 
     private:
         TMovieGeneratorInterface::Format videoFormat(TupExportInterface::Format format);

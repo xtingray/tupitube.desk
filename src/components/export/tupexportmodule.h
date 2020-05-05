@@ -45,6 +45,7 @@
 #include <QLineEdit>
 #include <QSpinBox>
 #include <QCheckBox>
+#include <QProgressBar>
 
 class TUPITUBE_EXPORT TupExportModule : public TupExportWizardPage
 {
@@ -75,10 +76,12 @@ class TUPITUBE_EXPORT TupExportModule : public TupExportWizardPage
         void setScenesIndexes(const QList<int> &indexes);
         void setCurrentExporter(TupExportInterface *currentExporter);
         void setCurrentFormat(int currentFormat, const QString &extension);
+        void updateProgressLabel(int percent);
 
     signals:
         void saveFile();
         void exportArray();
+        void exportHasStarted();
         void isDone();
 
     private:
@@ -100,6 +103,9 @@ class TUPITUBE_EXPORT TupExportModule : public TupExportWizardPage
 
         TSizeBox *m_size;
         QSpinBox *m_fps;
+
+        QProgressBar *progressBar;
+        QWidget *progressWidget;
 };
 
 #endif

@@ -82,7 +82,7 @@ TupExportWizardPage *TupExportWizard::addPage(TupExportWizardPage *newPage)
     // nextButton->setEnabled(newPage->isComplete());
 
     connect(newPage, SIGNAL(completed()), this, SLOT(pageCompleted()));
-    connect(newPage, SIGNAL(emptyField()), this, SLOT(disableButton()));
+    connect(newPage, SIGNAL(emptyField()), this, SLOT(disableNextButton()));
 
     if (tag.compare("PLUGIN") == 0) {
         // connect(newPage, SIGNAL(formatSelected(int, const QString &)), this, SLOT(setFormat(int, const QString &)));
@@ -91,7 +91,8 @@ TupExportWizardPage *TupExportWizard::addPage(TupExportWizardPage *newPage)
         connect(newPage, SIGNAL(animationFormatSelected(int, const QString &)), this, SLOT(setFormat(int, const QString &)));
     }
 
-    if (tag.compare("ANIMATION") == 0 || tag.compare("IMAGES_ARRAY") == 0 || tag.compare("ANIMATED_IMAGE") == 0 || tag.compare("PROPERTIES") == 0) 
+    if (tag.compare("ANIMATION") == 0 || tag.compare("IMAGES_ARRAY") == 0
+        || tag.compare("ANIMATED_IMAGE") == 0 || tag.compare("PROPERTIES") == 0)
         connect(newPage, SIGNAL(isDone()), this, SLOT(closeDialog()));
 
     return newPage;
@@ -123,9 +124,9 @@ void TupExportWizard::back()
     if (tag.compare("ANIMATED_IMAGE") == 0) {
         history->setCurrentIndex(history->currentIndex()-3);
     } else if (tag.compare("IMAGES_ARRAY") == 0) {
-               history->setCurrentIndex(history->currentIndex()-2);
+        history->setCurrentIndex(history->currentIndex()-2);
     } else if (tag.compare("ANIMATION") == 0 || tag.compare("SCENE") == 0) {
-               history->setCurrentIndex(history->currentIndex()-1);
+        history->setCurrentIndex(history->currentIndex()-1);
     }
 
     if (tag.compare("SCENE") == 0 || tag.compare("PROPERTIES") == 0)
@@ -133,7 +134,8 @@ void TupExportWizard::back()
 
     nextButton->setEnabled(true);
 
-    if (tag.compare("ANIMATION") == 0 || tag.compare("IMAGES_ARRAY") == 0 || tag.compare("ANIMATED_IMAGE") == 0 || tag.compare("PROPERTIES") == 0) 
+    if (tag.compare("ANIMATION") == 0 || tag.compare("IMAGES_ARRAY") == 0
+        || tag.compare("ANIMATED_IMAGE") == 0 || tag.compare("PROPERTIES") == 0)
         nextButton->setText(tr("Next"));
 }
 
@@ -170,9 +172,10 @@ void TupExportWizard::next()
         if (formatCode == 4096) { // ANIMATED PNG
             emit setAnimatedImageFileName();
             history->setCurrentIndex(history->currentIndex()+3);
-        } else if (format.compare(".jpeg") == 0 || format.compare(".png") == 0 || format.compare(".svg") == 0) { // Images Array
-                   emit setImagesArrayFileName();
-                   history->setCurrentIndex(history->currentIndex()+2);
+        } else if (format.compare(".jpeg") == 0 || format.compare(".png") == 0
+                   || format.compare(".svg") == 0) { // Images Array
+            emit setImagesArrayFileName();
+            history->setCurrentIndex(history->currentIndex()+2);
         } else {
             emit setAnimationFileName();
             history->setCurrentIndex(history->currentIndex()+1); // ANIMATION
@@ -190,7 +193,8 @@ void TupExportWizard::pageCompleted()
     if (tag.compare("SCENE") == 0 || tag.compare("PLUGIN") == 0) {
         nextButton->setEnabled(current->isComplete());
     } else {
-        if (tag.compare("IMAGES_ARRAY") == 0 || tag.compare("ANIMATION") == 0 || tag.compare("ANIMATED_IMAGE") == 0)
+        if (tag.compare("IMAGES_ARRAY") == 0 || tag.compare("ANIMATION") == 0
+            || tag.compare("ANIMATED_IMAGE") == 0)
             nextButton->setText(tr("Export"));
         if (tag.compare("PROPERTIES") == 0)
             nextButton->setText(tr("Post"));
@@ -201,10 +205,17 @@ void TupExportWizard::pageCompleted()
         emit updateScenes();
 }
 
-void TupExportWizard::disableButton() 
+void TupExportWizard::disableNextButton()
 {
     if (nextButton->isEnabled())
         nextButton->setEnabled(false);
+}
+
+void TupExportWizard::enableButtonSet(bool enabled)
+{
+    backButton->setVisible(enabled);
+    cancelButton->setVisible(enabled);
+    nextButton->setVisible(enabled);
 }
 
 void TupExportWizard::closeDialog()
@@ -237,7 +248,6 @@ TupExportWizardPage::TupExportWizardPage(const QString &title, QWidget *parent) 
 
     hide();
 }
-
 
 TupExportWizardPage::~TupExportWizardPage()
 {

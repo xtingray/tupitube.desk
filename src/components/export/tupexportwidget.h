@@ -53,7 +53,7 @@ class TUPITUBE_EXPORT TupExportWidget : public TupExportWizard
 
     public:
         enum OutputFormat { Animation = 0, ImagesArray, AnimatedImage };
-        TupExportWidget(TupProject *project, QWidget *parent = 0, bool isLocal = true);
+        TupExportWidget(TupProject *project, QWidget *parent = nullptr, bool isLocal = true);
         ~TupExportWidget();
 
         QString videoTitle() const;
@@ -64,7 +64,8 @@ class TUPITUBE_EXPORT TupExportWidget : public TupExportWizard
 
     private slots:
         void setExporter(const QString &plugin);
-	
+        void updateWindowTitle();
+
     private:
         void loadPlugins();
 		
