@@ -34,13 +34,16 @@
  ***************************************************************************/
 
 #include "tupfilemanager.h"
+#include "tconfig.h"
 #include "tupproject.h"
 #include "tupscene.h"
 #include "tuplibrary.h"
 #include "tuppackagehandler.h"
 #include "talgorithm.h"
+#include "tbackupdialog.h"
 
 #include <QDir>
+#include <QScreen>
 
 TupFileManager::TupFileManager() : QObject()
 {
@@ -189,7 +192,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
             qDebug() << "TupFileManager::save() - Creating TUP file...";
         #endif
         TupPackageHandler packageHandler;
-        ok = packageHandler.makePackage(projectDir.path(), fileName);
+        ok = packageHandler.makePackage(projectDir.path(), name);
 
         if (ok) {
             #ifdef TUP_DEBUG
@@ -199,6 +202,42 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
             #ifdef TUP_DEBUG
                 qDebug() << "TupFileManager::save() - Error: Project couldn't be saved at -> " + fileName;
             #endif
+
+            QApplication::restoreOverrideCursor();
+            QScreen *screen = QGuiApplication::screens().at(0);
+            TBackupDialog *dialog = new TBackupDialog(projectDir.path(), name);
+            dialog->show();
+
+            int result = dialog->exec();
+            if (result == QDialog::Accepted) {
+                TCONFIG->beginGroup("General");
+                QString path = TCONFIG->value("RecoveryDir").toString();
+                TCONFIG->sync();
+
+                QMessageBox msgBox;
+                msgBox.setWindowTitle(tr("Information"));
+                msgBox.setIcon(QMessageBox::Information);
+                msgBox.setText(tr("A copy of your project was successfuly saved at:<br/><b>%1</b>").arg(path));
+                msgBox.setInformativeText(tr("Please, contact TupiTube's developer team to recovery it. "
+                                             "<b>https://www.tupitube.com</b>"));
+                msgBox.setStandardButtons(QMessageBox::Ok);
+                msgBox.show();
+                msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
+                            static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
+                result = msgBox.exec();
+            } else if (result == QDialog::Rejected) {
+                QMessageBox msgBox;
+                msgBox.setWindowTitle(tr("Information"));
+                msgBox.setIcon(QMessageBox::Critical);
+                msgBox.setText(tr("Sorry, the project <b>%1.tup</b> couldn't be recovered.<br/>"
+                                  "Please, try to backup your animation files often.").arg(name));
+                msgBox.setStandardButtons(QMessageBox::Ok);
+                msgBox.show();
+                msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
+                            static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
+                result = msgBox.exec();
+            }
+
             return false;
         }
     }
@@ -209,7 +248,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 bool TupFileManager::load(const QString &fileName, TupProject *project)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupFileManager::load()] - fileName: " + fileName;
+        qDebug() << "TupFileManager::load() - fileName: " + fileName;
     #endif
 
     TupPackageHandler packageHandler;

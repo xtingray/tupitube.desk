@@ -33,34 +33,39 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TMSGDIALOG_H
-#define TMSGDIALOG_H
+#ifndef TBACKUPDIALOG_H
+#define TBACKUPDIALOG_H
 
 #include "tglobal.h"
 
 #include <QDialog>
-#include <QTextBrowser>
+#include <QLineEdit>
 
 /**
- * @class TMsgDialog
+ * @class TBackupDialog
  */
 
-class T_GUI_EXPORT TMsgDialog : public QDialog
+class T_GUI_EXPORT TBackupDialog : public QDialog
 {
     Q_OBJECT
 
     public:
-        TMsgDialog(const QString &message, QSize dialogSize, bool isImage, QWidget *parent = nullptr);
-        ~TMsgDialog();
-        
+        TBackupDialog(const QString &path, const QString &project, QWidget *parent = nullptr);
+        ~TBackupDialog();
+
+    private slots:
+        void chooseDirectory();
+        void makeBackup();
+
     private:
         void setupGUI();
-        
-    private:
-        QString msg;
-        QSize size;
-        QTextBrowser *textBrowser;
-        bool isImageMsg;
+        bool makeProjectBackup(const QString &sourceFolder, const QString &destFolder);
+
+        QLineEdit *pathLine;
+
+        QString projectName;
+        QString sourcePath;
+        QString destPath;
 };
 
 #endif

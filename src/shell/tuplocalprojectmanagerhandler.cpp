@@ -92,7 +92,8 @@ bool TupLocalProjectManagerHandler::isUndoCommand(const QString &xml)
                                                      QDomNode n4 = e3.firstChild();
                                                      if (!n4.isNull()) {
                                                          return true; 
-                                                     } else if ((e3.attribute("index").toInt() == 0) && isAdd && firstScene && firstLayer) {
+                                                     } else if ((e3.attribute("index").toInt() == 0) && isAdd
+                                                                && firstScene && firstLayer) {
                                                          return false; 
                                                      }
                                                  }

@@ -31,6 +31,7 @@ HEADERS += taction.h \
            tactionmanager.h \
            tanimwidget.h \
            tapplication.h \
+           tbackupdialog.h \
            tbuttonbar.h \
            tcellview.h \
            tcirclebutton.h \
@@ -95,6 +96,7 @@ SOURCES += taction.cpp \
            tactionmanager.cpp \
            tanimwidget.cpp \
            tapplication.cpp \
+           tbackupdialog.cpp \
            tbuttonbar.cpp \
            tcellview.cpp \
            tcirclebutton.cpp \

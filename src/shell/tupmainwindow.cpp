@@ -992,7 +992,7 @@ void TupMainWindow::saveProject()
             #ifdef TUP_DEBUG
                 qWarning() << "TupMainWindow::saveProject() - Error: Can't save project -> " << m_fileName;
             #endif
-            TOsd::self()->display(tr("Error"), tr("Cannot save the project!"), TOsd::Error);
+            // TOsd::self()->display(tr("Error"), tr("Cannot save the project!"), TOsd::Error);
         }
         m_actionManager->enable("save_project", true);
         m_actionManager->enable("save_project_as", true);

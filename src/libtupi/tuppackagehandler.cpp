@@ -49,16 +49,13 @@ TupPackageHandler::~TupPackageHandler()
 bool TupPackageHandler::makePackage(const QString &projectPath, const QString &packagePath)
 {
     #ifdef TUP_DEBUG
-        QString msg1 = "TupPackageHandler::makePackage() - projectPath -> " + projectPath;
-        QString msg2 = "TupPackageHandler::makePackage() - packagePath -> " + packagePath;
-        qWarning() << msg1;
-        qWarning() << msg2;
+        qWarning() << "TupPackageHandler::makePackage() - projectPath -> " + projectPath;
+        qWarning() << "TupPackageHandler::makePackage() - packagePath -> " + packagePath;
     #endif
 
     if (!QFile::exists(projectPath)) {        
         #ifdef TUP_DEBUG
-            QString msg = "TupPackageHandler::makePackage() - Project path doesn't exist -> " + projectPath;
-            qWarning() << msg;
+            qWarning() << "TupPackageHandler::makePackage() - Project path doesn't exist -> " + projectPath;
         #endif
 
         return false;
@@ -73,8 +70,7 @@ bool TupPackageHandler::makePackage(const QString &projectPath, const QString &p
 bool TupPackageHandler::importPackage(const QString &packagePath)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupPackageHandler::importPackage() - packagePath -> " + packagePath;
-        qDebug() << msg;
+        qDebug() << "TupPackageHandler::importPackage() - packagePath -> " + packagePath;
     #endif
 
     QFileInfo file(packagePath);
@@ -82,12 +78,7 @@ bool TupPackageHandler::importPackage(const QString &packagePath)
     QStringList list = JlCompress::extractDir(packagePath, CACHE_DIR);
     if (list.size() == 0) {
         #ifdef TUP_DEBUG
-            QString msg = "TupPackageHandler::importPackage() - Project file is empty! -> " + packagePath;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupPackageHandler::importPackage() - Project file is empty! -> " + packagePath;
         #endif
 
         return false;
@@ -103,8 +94,7 @@ bool TupPackageHandler::importPackage(const QString &packagePath)
 QString TupPackageHandler::importedProjectPath() const
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupPackageHandler::importedProjectPath() - project path -> " + gPath;
-        qDebug() << msg;
+        qDebug() << "TupPackageHandler::importedProjectPath() - project path -> " + gPath;
     #endif
 
     return gPath;

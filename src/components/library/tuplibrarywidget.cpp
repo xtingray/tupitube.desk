@@ -565,14 +565,14 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
                     if (fileExtension.compare("SVG") == 0 && !filename.endsWith(".SVG"))
                         target += ".svg";
                 } else if (type == TupLibraryObject::Sound) {
-                           if (fileExtension.compare("OGG") == 0 && !filename.endsWith(".OGG"))
-                               target += ".ogg";
-                           if (fileExtension.compare("MP3") == 0 && !filename.endsWith(".MP3"))
-                               target += ".mp3";
-                           if (fileExtension.compare("WAV") == 0 && !filename.endsWith(".WAV"))
-                               target += ".wav";
+                    if (fileExtension.compare("OGG") == 0 && !filename.endsWith(".OGG"))
+                        target += ".ogg";
+                    if (fileExtension.compare("MP3") == 0 && !filename.endsWith(".MP3"))
+                        target += ".mp3";
+                    if (fileExtension.compare("WAV") == 0 && !filename.endsWith(".WAV"))
+                        target += ".wav";
                 } else if (type == TupLibraryObject::Item && !filename.endsWith(".TOBJ")) {
-                           target += ".tobj";
+                    target += ".tobj";
                 }
 
                 if (QFile::exists(target)) {
@@ -909,17 +909,12 @@ void TupLibraryWidget::importImage(const QString &imagePath)
             msgBox.setDefaultButton(QMessageBox::Ok);
             msgBox.show();
 
-            /*
-            msgBox.move(static_cast<int> ((desktop.screenGeometry().width() - msgBox.width())/2),
-                        static_cast<int> ((desktop.screenGeometry().height() - msgBox.height())/2));
-            */
-
             msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
                         static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
 
-            int answer = msgBox.exec();
+            // int answer = msgBox.exec();
 
-            if (answer == QMessageBox::Yes) {
+            if (msgBox.exec() == QMessageBox::Yes) {
                 msgBox.close();
                 pixmap = new QPixmap();
                 QString extension = fileInfo.suffix().toUpper();
