@@ -79,7 +79,7 @@ void TBackupDialog::setupGUI()
     connect(openButton, SIGNAL(clicked()), this, SLOT(chooseDirectory()));
 
     QHBoxLayout *filePathLayout = new QHBoxLayout;
-    filePathLayout->addWidget(new QLabel(tr("Directory: ")));
+    filePathLayout->addWidget(new QLabel(tr("Folder: ")));
     filePathLayout->addWidget(pathLine);
     filePathLayout->addWidget(openButton);
 

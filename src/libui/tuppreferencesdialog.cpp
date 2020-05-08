@@ -35,6 +35,7 @@
 
 #include "tuppreferencesdialog.h"
 #include "tapplicationproperties.h"
+#include "tosd.h"
 
 TupPreferencesDialog::TupPreferencesDialog(QWidget *parent) : TConfigurationDialog(parent)
 {
@@ -49,7 +50,7 @@ TupPreferencesDialog::TupPreferencesDialog(QWidget *parent) : TConfigurationDial
     workspace = new TupPaintAreaPreferences;
     addPage(workspace, tr("Workspace"), QIcon(THEME_DIR + "icons/tupi_workspace_preferences.png"));
 
-    setCurrentItem(0);
+    setCurrentItem(General);
 }
 
 TupPreferencesDialog::~TupPreferencesDialog()
@@ -58,11 +59,12 @@ TupPreferencesDialog::~TupPreferencesDialog()
 
 void TupPreferencesDialog::apply()
 {
-    general->saveValues();
-    theme->saveValues();
-    workspace->saveValues();
-
-    accept();
+    if (general->saveValues()) {
+        theme->saveValues();
+        workspace->saveValues();
+        TOsd::self()->display(tr("Information"), tr("Preferences saved successfuly"), TOsd::Info);
+        accept();
+    }
 }
 
 QSize TupPreferencesDialog::sizeHint() const

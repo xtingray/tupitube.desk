@@ -47,6 +47,7 @@ class TUPITUBE_EXPORT TupPreferencesDialog : public TConfigurationDialog
     Q_OBJECT
     
     public:
+        enum TabName { General = 0, Theme, PaintArea };
         TupPreferencesDialog(QWidget *parent = nullptr);
         ~TupPreferencesDialog();
 

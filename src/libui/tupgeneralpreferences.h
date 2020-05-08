@@ -48,15 +48,23 @@ class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
 
     public:
         enum Group { Startup = 0, Confirm, Player };
+        enum GeneralTab { General = 0, Cache };
+
         TupGeneralPreferences();
         ~TupGeneralPreferences();
 
-        void saveValues();
+        bool saveValues();
 
     private slots:
         void updateAppLang(int index);
+        void chooseDirectory();
+        void restoreCachePath();
 
     private:
+        QTabWidget *tabWidget;
+        QWidget * generalTab();
+        QWidget * cacheTab();
+
         int getLangIndex();
         QGridLayout * createForm(const QString &group, Group groupTag,
                                  QStringList keys, QStringList labels);
@@ -71,6 +79,9 @@ class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
         QList<QCheckBox *> startupList;
         QList<QCheckBox *> confirmList;
         QList<QCheckBox *> playerList;
+
+        QString cachePath;
+        QLineEdit *cacheLine;
 };
 
 #endif

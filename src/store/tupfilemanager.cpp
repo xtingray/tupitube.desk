@@ -192,7 +192,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
             qDebug() << "TupFileManager::save() - Creating TUP file...";
         #endif
         TupPackageHandler packageHandler;
-        ok = packageHandler.makePackage(projectDir.path(), name);
+        ok = packageHandler.makePackage(projectDir.path(), fileName);
 
         if (ok) {
             #ifdef TUP_DEBUG
