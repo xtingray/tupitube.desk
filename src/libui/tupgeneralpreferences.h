@@ -54,6 +54,7 @@ class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
         ~TupGeneralPreferences();
 
         bool saveValues();
+        bool showWarning();
 
     private slots:
         void updateAppLang(int index);
@@ -82,6 +83,7 @@ class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
 
         QString cachePath;
         QLineEdit *cacheLine;
+        bool langChanged;
 };
 
 #endif

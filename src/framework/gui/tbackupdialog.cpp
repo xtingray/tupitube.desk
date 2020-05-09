@@ -134,7 +134,7 @@ void TBackupDialog::makeBackup()
 
     if (makeProjectBackup(sourcePath, destPath)) {
         #ifdef TUP_DEBUG
-            qDebug() << "TBackupDialog::makeProjectBackup() - Backup was made successfuly!";
+            qDebug() << "TBackupDialog::makeProjectBackup() - Backup was made successfully!";
         #endif
         QDialog::accept();
     } else {

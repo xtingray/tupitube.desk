@@ -1363,6 +1363,45 @@
     </message>
 </context>
 <context>
+    <name>TBackupDialog</name>
+    <message>
+        <source>Recovery Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>There was an issue while saving your project.&lt;br/&gt;Please, select a folder to try to recover it.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose another path</source>
+        <translation type="unfinished">选择其他路径</translation>
+    </message>
+    <message>
+        <source>Folder: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Make Backup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">取消</translation>
+    </message>
+    <message>
+        <source>Choose a directory...</source>
+        <translation type="unfinished">选择目录</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">错误</translation>
+    </message>
+    <message>
+        <source>Folder doesn&apos;t exist. Please, pick one!</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>TButtonBar</name>
     <message>
         <source>Bottom button bar</source>
@@ -2638,6 +2677,10 @@ Please, rename the project&apos;s file</source>
         <source>Image Sequence</source>
         <translation>图像序列</translation>
     </message>
+    <message>
+        <source>Exporting...</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TupExportWizard</name>
@@ -2738,6 +2781,25 @@ Please, rename the project&apos;s file</source>
     </message>
 </context>
 <context>
+    <name>TupFileManager</name>
+    <message>
+        <source>Information</source>
+        <translation type="unfinished">信息</translation>
+    </message>
+    <message>
+        <source>A copy of your project was successfully saved at:&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please, contact TupiTube&apos;s developer team to recovery it. &lt;b&gt;https://www.tupitube.com&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sorry, the project &lt;b&gt;%1.tup&lt;/b&gt; couldn&apos;t be recovered.&lt;br/&gt;Please, try to backup your animation files often.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>TupFrame</name>
     <message>
         <source>Frame</source>
@@ -2801,6 +2863,46 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Please restart TupiTube</source>
         <translation>请重新启动TupiTube</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation type="unfinished">一般的</translation>
+    </message>
+    <message>
+        <source>Cache</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The CACHE path is the folder where TupiTube creates temporary files while you work on your animation projects.&lt;br/&gt;&lt;b&gt;Note:&lt;/b&gt; Don&apos;t change this parameter unless you know what you are doing.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose another path</source>
+        <translation type="unfinished">选择其他路径</translation>
+    </message>
+    <message>
+        <source>CACHE Path: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Restore default value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a directory...</source>
+        <translation type="unfinished">选择目录</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">错误</translation>
+    </message>
+    <message>
+        <source>Cache path is empty. Set a value!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cache path doesn&apos;t exist. Create it!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3695,10 +3797,6 @@ Please, rename the project&apos;s file</source>
         <translation>致命错误</translation>
     </message>
     <message>
-        <source>Cannot save the project!</source>
-        <translation>不能保存项目</translation>
-    </message>
-    <message>
         <source>Close active project</source>
         <translation>关闭活跃项目</translation>
     </message>
@@ -4435,6 +4533,14 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>General</source>
         <translation>一般的</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation type="unfinished">信息</translation>
+    </message>
+    <message>
+        <source>Preferences saved successfully</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

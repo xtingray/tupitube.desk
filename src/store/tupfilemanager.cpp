@@ -217,7 +217,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                 QMessageBox msgBox;
                 msgBox.setWindowTitle(tr("Information"));
                 msgBox.setIcon(QMessageBox::Information);
-                msgBox.setText(tr("A copy of your project was successfuly saved at:<br/><b>%1</b>").arg(path));
+                msgBox.setText(tr("A copy of your project was successfully saved at:<br/><b>%1</b>").arg(path));
                 msgBox.setInformativeText(tr("Please, contact TupiTube's developer team to recovery it. "
                                              "<b>https://www.tupitube.com</b>"));
                 msgBox.setStandardButtons(QMessageBox::Ok);

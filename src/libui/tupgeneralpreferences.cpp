@@ -62,6 +62,7 @@ TupGeneralPreferences::~TupGeneralPreferences()
 QGridLayout * TupGeneralPreferences::createForm(const QString &groupName, Group group,
                                                 QStringList keys, QStringList labels)
 {
+    langChanged = false;
     QGridLayout *form = new QGridLayout;
     int total = labels.count();
 
@@ -239,10 +240,8 @@ bool TupGeneralPreferences::saveValues()
     for (int i=0; i<total; i++)
          TCONFIG->setValue(confirmation.at(i), confirmList.at(i)->isChecked());
 
-    if (newLang.length() > 0) {
+    if (newLang.length() > 0)
         TCONFIG->setValue("Language", newLang);
-        TOsd::self()->display(tr("Warning"), tr("Please restart TupiTube"), TOsd::Warning);
-    }
 
     cachePath = cacheLine->text();
     if (cachePath.isEmpty()) {
@@ -285,5 +284,11 @@ int TupGeneralPreferences::getLangIndex()
 
 void TupGeneralPreferences::updateAppLang(int index)
 {
+    langChanged = true;
     newLang = langSupport.at(index);
+}
+
+bool TupGeneralPreferences::showWarning()
+{
+    return langChanged;
 }
