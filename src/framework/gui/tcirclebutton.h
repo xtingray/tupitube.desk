@@ -44,7 +44,6 @@
 #include <QRegion>
 #include <QRect>
 #include <QPaintEvent>
-#include <QDebug>
 #include <QMoveEvent>
 #include <QApplication>
 #include <QBitmap>

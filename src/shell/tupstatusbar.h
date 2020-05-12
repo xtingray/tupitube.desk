@@ -36,17 +36,6 @@
 #ifndef TUPSTATUSBAR_H
 #define TUPSTATUSBAR_H
 
-#ifdef TUP_DEBUG
-
-#ifdef Q_OS_WIN
-#include <QDebug>
-#else
-#include "tdebug.h"
-#endif
-
-#endif
-
-// #include <QProgressBar>
 #include <QLabel>
 #include <QTimer>
 #include <QStatusBar>
@@ -56,20 +45,14 @@ class TupStatusBar : public QStatusBar
     Q_OBJECT
 
     public:
-        TupStatusBar(QWidget *parent);
+        TupStatusBar(QWidget *parent = nullptr);
         ~TupStatusBar();
-        //void addWidget ( QWidget *widget, int stretch = 0, bool permanent = FALSE );
 
     public slots:
-        // void setStatus(const QString &status, int ms = 0);
         void setStatus(const QString &status);
-        //void advance(int step, int totalSteps = -1);
-        //void clear();
 
     private:
-        //QTimer *m_timer;
         QLabel *m_status;
-        //QProgressBar *m_progressBar;
 
 };
 

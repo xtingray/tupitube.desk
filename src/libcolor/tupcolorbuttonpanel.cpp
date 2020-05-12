@@ -38,7 +38,10 @@
 
 #include <QBoxLayout>
 #include <QColorDialog>
-#include <QDebug>
+
+#ifdef TUP_DEBUG
+  #include <QDebug>
+#endif
 
 TupColorButtonPanel::TupColorButtonPanel(Qt::BrushStyle bStyle, const QSize &baseColorCellSize, int span,
                                          const QString &buttonParams, QWidget *parent) : QWidget(parent)

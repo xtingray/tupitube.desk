@@ -40,14 +40,6 @@
 #include "tconfig.h"
 #include "tapplicationproperties.h"
 
-#ifdef TUP_DEBUG
-#ifdef Q_OS_WIN
-  #include <QDebug>
-#else
-  #include "tdebug.h"
-#endif
-#endif
-
 #include <QDialog>
 #include <QLineEdit>
 #include <QPlainTextEdit>

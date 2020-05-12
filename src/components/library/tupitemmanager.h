@@ -58,8 +58,6 @@ class TUPITUBE_EXPORT TupItemManager : public TreeListWidget
         QTreeWidgetItem *currentFolder();
         void setCurrentFolder(QTreeWidgetItem *cf);
         void removeCurrentFolder();
-        void mousePressEvent(QMouseEvent *event);
-        void mouseDoubleClickEvent(QMouseEvent *event);
         bool isFolder(QTreeWidgetItem *item);
         int indexOf(QTreeWidgetItem *item);
         QString oldFolder();
@@ -104,6 +102,8 @@ class TUPITUBE_EXPORT TupItemManager : public TreeListWidget
         void createNewSVG();
 
     protected:
+        void mousePressEvent(QMouseEvent *event);
+        void mouseDoubleClickEvent(QMouseEvent *event);
         void dropEvent(QDropEvent *event);
         void dragEnterEvent(QDragEnterEvent *event);
         void dragMoveEvent(QDragMoveEvent *event);

@@ -51,20 +51,22 @@ class T_GUI_EXPORT TAction : public QAction
     public:
         TAction(QObject * parent, const QString &id = QString());
 
-        TAction(const QString & text, QObject * parent, const QString &id = QString());
-        TAction(const QIcon & icon, const QString & text, QObject * parent, const QString &id = QString());
-        TAction(const QIcon & icon, const QString & text, const QString &key, QObject * parent, const QString &id = QString());
-        TAction(const QIcon & icon, QObject * parent, const QString &id = QString());
-        TAction(const QIcon & icon,  const QKeySequence &key, QObject * parent, const QString &id = QString());
-        TAction(const QIcon & icon, const QString &text, const QKeySequence &key, QObject *reciever, const char *slot, QObject * parent, const QString &id = QString());
-        TAction(const QString &text, const QKeySequence &key, QObject *reciever, const char *slot, QObject * parent, const QString &id = QString());
+        TAction(const QString &text, QObject *parent, const QString &id = QString());
+        TAction(const QIcon &icon, const QString &text, QObject *parent, const QString &id = QString());
+        TAction(const QIcon &icon, const QString &text, const QString &key, QObject *parent, const QString &id = QString());
+        TAction(const QIcon &icon, QObject *parent, const QString &id = QString());
+        TAction(const QIcon &icon,  const QKeySequence &key, QObject * parent, const QString &id = QString());
+        TAction(const QIcon &icon, const QString &text, const QKeySequence &key, QObject *reciever, const char *slot,
+                QObject *parent, const QString &id = QString());
+        TAction(const QString &text, const QKeySequence &key, QObject *reciever, const char *slot, QObject *parent,
+                const QString &id = QString());
         ~TAction();
 
         void setCursor(const QCursor &cursor);
         QCursor cursor() const;
 
     private:
-        void initWithManager(TActionManager * parent, const QString &id);
+        void initWithManager(TActionManager *parent, const QString &id);
         void init();
 		
     private:

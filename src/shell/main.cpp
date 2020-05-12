@@ -39,12 +39,10 @@
 #include "talgorithm.h"
 
 #ifdef TUP_DEBUG
-#ifdef Q_OS_WIN
   #include <QDebug>
-#else
-  #include "tdebug.h"
-  #include "tupcrashhandler.h"
-#endif
+  #ifdef Q_OS_UNIX
+    #include "tupcrashhandler.h"
+  #endif
 #endif
 
 #ifdef ENABLE_TUPISTYLE

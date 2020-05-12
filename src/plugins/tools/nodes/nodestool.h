@@ -62,7 +62,6 @@
 #include <QPointF>
 #include <QKeySequence>
 #include <QList>
-#include <QDebug>
 #include <QTimer>
 #include <QDir>
 

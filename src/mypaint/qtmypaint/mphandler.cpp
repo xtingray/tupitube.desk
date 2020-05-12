@@ -23,7 +23,9 @@
 #include "mypaint-surface.h"
 #include "libmypaint.c"
 
-#include <QDebug>
+#ifdef TUP_DEBUG
+  #include <QDebug>
+#endif
 
 #define HAVE_JSON_C
 

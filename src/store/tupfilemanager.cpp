@@ -44,6 +44,7 @@
 
 #include <QDir>
 #include <QScreen>
+#include <QMessageBox>
 
 TupFileManager::TupFileManager() : QObject()
 {

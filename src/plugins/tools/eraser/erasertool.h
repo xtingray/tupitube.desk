@@ -54,7 +54,6 @@
 #include <QLabel>
 #include <QGraphicsView>
 #include <QKeySequence>
-#include <QDebug>
 #include <QImage>
 #include <QPaintDevice>
 

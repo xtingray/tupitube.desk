@@ -35,8 +35,10 @@
  ***************************************************************************/
 
 #include "selectionsettings.h"
+#include "tconfig.h"
 #include "tdebug.h"
 #include "tapplicationproperties.h"
+#include "tlabel.h"
 #include "timagebutton.h"
 #include "tseparator.h"
 
@@ -259,10 +261,27 @@ SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
     formLayout->addLayout(factorYLayout);
 
     propCheck = new QCheckBox(tr("Proportion"), this);
-    // propCheck->setChecked(true);
     connect(propCheck, SIGNAL(stateChanged(int)), this, SLOT(enableProportion(int)));
     formLayout->addWidget(propCheck);
     formLayout->setAlignment(propCheck, Qt::AlignHCenter);
+    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+
+    TCONFIG->beginGroup("PaintArea");
+    bool onMouse = TCONFIG->value("PasteOnMousePos", false).toBool();
+    pasteCheck = new QCheckBox;
+    pasteCheck->setChecked(onMouse);
+    connect(pasteCheck, SIGNAL(stateChanged(int)), this, SLOT(enablePasteOnMouse(int)));
+    TLabel *pasteLabel = new TLabel;
+    pasteLabel->setPixmap(QPixmap(kAppProp->themeDir() + "/icons/paste.png").scaledToWidth(15));
+    pasteLabel->setToolTip(tr("Paste objects over mouse position"));
+    connect(pasteLabel, SIGNAL(clicked()), this, SLOT(enablePasteOnMouse()));
+
+    QBoxLayout *pasteLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    pasteLayout->setMargin(0);
+    pasteLayout->addWidget(pasteCheck, Qt::AlignHCenter);
+    pasteLayout->addWidget(pasteLabel, Qt::AlignHCenter);
+
+    formLayout->addLayout(pasteLayout);
     formPanel->setVisible(false);
 
     mainLayout->addWidget(formPanel);
@@ -388,13 +407,9 @@ void SelectionSettings::setPos(int x, int y)
 
 void SelectionSettings::updateRotationAngle(int angle)
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
-        qDebug() << "[Settings::updateRotationAngle()]";
-    #else
-        T_FUNCINFO << angle;
+    #ifdef TUP_DEBUG
+        qDebug() << "[Settings::updateRotationAngle()] - angle -> " << angle;
     #endif
-#endif
 
     angleField->blockSignals(true);
 
@@ -408,17 +423,10 @@ void SelectionSettings::updateRotationAngle(int angle)
 
 void SelectionSettings::updateScaleFactor(double x, double y)
 {
-#ifdef TUP_DEBUG
-    QString msg1 = "Settings::updateScaleFactor() - x: " + QString::number(x);
-    QString msg2 = "Settings::updateScaleFactor() - y: " + QString::number(y);
-    #ifdef Q_OS_WIN
-        qDebug() << msg1;
-        qDebug() << msg2;
-    #else
-        T_FUNCINFO << msg1;
-        T_FUNCINFO << msg2;
+    #ifdef TUP_DEBUG
+        qDebug() << "Settings::updateScaleFactor() - x: " + QString::number(x);
+        qDebug() << "Settings::updateScaleFactor() - y: " + QString::number(y);
     #endif
-#endif
 
    factorXField->blockSignals(true);
    factorYField->blockSignals(true);
@@ -487,6 +495,21 @@ void SelectionSettings::enableProportion(int flag)
         enable = true;
     }
     emit activateProportion(enable);
+}
+
+void SelectionSettings::enablePasteOnMouse(int)
+{
+    TCONFIG->beginGroup("PaintArea");
+    TCONFIG->setValue("PasteOnMousePos", pasteCheck->isChecked());
+    TCONFIG->sync();
+}
+
+void SelectionSettings::enablePasteOnMouse()
+{
+    if (pasteCheck->isChecked())
+        pasteCheck->setChecked(false);
+    else
+        pasteCheck->setChecked(true);
 }
 
 void SelectionSettings::setProportionState(int flag)

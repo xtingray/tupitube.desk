@@ -35,6 +35,10 @@
 
 #include "erasertool.h"
 
+#ifdef TUP_DEBUG
+  #include <QDebug>
+#endif
+
 EraserTool::EraserTool()
 {
     setupActions();

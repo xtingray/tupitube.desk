@@ -36,7 +36,9 @@
 #include "tupcolorbutton.h"
 
 #include <QPainter>
-#include <QDebug>
+#ifdef TUP_DEBUG
+  #include <QDebug>
+#endif
 
 TupColorButton::TupColorButton(int colorIndex, const QString &name, const QBrush &colorBrush,
                                const QSize &dimension, const QString &params)

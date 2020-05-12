@@ -35,40 +35,41 @@
 
 #include "taction.h"
 
-TAction::TAction(QObject * parent, const QString &id) : QAction(parent)
+TAction::TAction(QObject *parent, const QString &id) : QAction(parent)
 {
     if (TActionManager *m = dynamic_cast<TActionManager *>(parent))
         initWithManager(m, id);
 }
 
-TAction::TAction(const QString & text, QObject * parent, const QString &id) : QAction(text, parent)
+TAction::TAction(const QString &text, QObject *parent, const QString &id) : QAction(text, parent)
 {
     if (TActionManager *m = dynamic_cast<TActionManager *>(parent))
         initWithManager(m, id);
 }
 
-TAction::TAction(const QIcon & icon, const QString & text, QObject * parent, const QString &id) : QAction(icon, text, parent)
+TAction::TAction(const QIcon &icon, const QString &text, QObject *parent, const QString &id) : QAction(icon, text, parent)
 {
     if (TActionManager *m = dynamic_cast<TActionManager *>(parent))
         initWithManager(m, id);
 }
 
-TAction::TAction(const QIcon & icon, QObject *parent, const QString &id) : QAction(parent)
+TAction::TAction(const QIcon &icon, QObject *parent, const QString &id) : QAction(parent)
 {
     setIcon(icon);
 
     if (TActionManager *m = dynamic_cast<TActionManager *>(parent))
-        initWithManager(m , id);
+        initWithManager(m, id);
 }
 
-TAction::TAction(const QIcon & icon, const QString & text, const QString &key, QObject * parent, const QString &id) : QAction(icon, text, parent)
+TAction::TAction(const QIcon &icon, const QString &text, const QString &key, QObject *parent,
+                 const QString &id) : QAction(icon, text, parent)
 {
     setShortcut(QKeySequence(key));
     if (TActionManager *m = dynamic_cast<TActionManager *>(parent))
         initWithManager(m, id);
 }
 
-TAction::TAction(const QIcon & icon, const QKeySequence &key, QObject * parent, const QString &id) : QAction(parent)
+TAction::TAction(const QIcon &icon, const QKeySequence &key, QObject *parent, const QString &id) : QAction(parent)
 {
     setIcon(icon);
     setShortcut(key);
@@ -77,7 +78,8 @@ TAction::TAction(const QIcon & icon, const QKeySequence &key, QObject * parent, 
         initWithManager(m, id);
 }
 
-TAction::TAction(const QIcon & icon, const QString &text, const QKeySequence &key, QObject *reciever, const char *slot, QObject * parent, const QString &id) : QAction(icon, text, parent)
+TAction::TAction(const QIcon &icon, const QString &text, const QKeySequence &key, QObject *reciever,
+                 const char *slot, QObject *parent, const QString &id) : QAction(icon, text, parent)
 {
     setShortcut(key);
     connect(this, SIGNAL(triggered()), reciever, slot);
@@ -86,7 +88,8 @@ TAction::TAction(const QIcon & icon, const QString &text, const QKeySequence &ke
         initWithManager(m, id);
 }
 
-TAction::TAction(const QString &text, const QKeySequence &key, QObject *reciever, const char *slot, QObject * parent, const QString &id) : QAction(text, parent)
+TAction::TAction(const QString &text, const QKeySequence &key, QObject *reciever,
+                 const char *slot, QObject *parent, const QString &id) : QAction(text, parent)
 {
     setShortcut(key);
     connect(this, SIGNAL(triggered()), reciever, slot);
@@ -120,4 +123,3 @@ QCursor TAction::cursor() const
 {
     return m_cursor;
 }
-

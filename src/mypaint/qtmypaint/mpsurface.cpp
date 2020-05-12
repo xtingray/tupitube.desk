@@ -18,7 +18,10 @@
 */
 
 #include "mpsurface.h"
-#include <QDebug>
+
+#ifdef TUP_DEBUG
+  #include <QDebug>
+#endif
 
 static void freeTiledSurface(MyPaintSurface *surface)
 {

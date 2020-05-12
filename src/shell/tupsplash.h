@@ -38,16 +38,6 @@
 
 #include "tapplicationproperties.h"
 
-#ifdef TUP_DEBUG
-
-#ifdef Q_OS_WIN
-#include <QDebug>
-#else
-#include "tdebug.h"
-#endif
-
-#endif
-
 #include <QPainter>
 #include <QSplashScreen>
 #include <QTimer>

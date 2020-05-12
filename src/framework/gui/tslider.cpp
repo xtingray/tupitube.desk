@@ -38,7 +38,10 @@
 #include "tapplicationproperties.h" 
 
 #include <QDesktopWidget>
-#include <QDebug>
+
+#ifdef TUP_DEBUG
+  #include <QDebug>
+#endif
 
 TSlider::TSlider(Qt::Orientation orientation, TSlider::Mode mode, const QColor &start, const QColor &end, QWidget *parent) : QGraphicsView(parent)
 {

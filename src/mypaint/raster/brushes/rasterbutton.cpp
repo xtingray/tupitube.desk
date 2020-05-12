@@ -36,7 +36,10 @@
 #include "rasterbutton.h"
 
 #include <QPainter>
-#include <QDebug>
+
+#ifdef TUP_DEBUG
+  #include <QDebug>
+#endif
 
 RasterButton::RasterButton(int pos, const QString &title): selected(false)
 {

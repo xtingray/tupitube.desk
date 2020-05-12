@@ -41,14 +41,6 @@
 #include "twizard.h"
 #include "txyspinbox.h"
 
-#ifdef TUP_DEBUG
-#ifdef Q_OS_WIN
-  #include <QDebug>
-#else
-  #include "tdebug.h"
-#endif
-#endif
-
 #include <QLineEdit>
 #include <QPlainTextEdit>
 #include <QCheckBox>

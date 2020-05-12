@@ -176,8 +176,8 @@ _EOH_
     end
 
     config.addDefine('TUPITUBE_VERSION=\\\\\"0.2\\\\\"')
-    config.addDefine('CODE_NAME=\\\\\"Uberaba\\\\\"')
-    config.addDefine('REVISION=\\\\\"14\\\\\"')
+    config.addDefine('CODE_NAME=\\\\\"Pytuna\\\\\"')
+    config.addDefine('REVISION=\\\\\"15\\\\\"')
     config.addDefine('CONFIG_VERSION=\\\\\"3\\\\\"')
 
     if File.exists?('/etc/canaima_version')

@@ -38,14 +38,6 @@
 
 #include "tapplication.h"
 
-#ifdef TUP_DEBUG
-#ifdef Q_OS_WIN
-#include <QDebug>
-#else
-#include "tdebug.h"
-#endif
-#endif
-
 #include <QDesktopWidget>
 #include <QRect>
 #include <QEvent>
@@ -58,6 +50,7 @@ class TupApplication : public TApplication
     public:
         TupApplication(int &argc, char **argv);
         ~TupApplication();
+
         #if defined(Q_OS_MAC)
             void setMainWindow(QMainWindow *mainWindow);
         #endif

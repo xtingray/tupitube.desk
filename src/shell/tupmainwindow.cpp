@@ -78,6 +78,10 @@
 #include <QDesktopServices>
 #include <QFileOpenEvent>
 
+#ifdef TUP_DEBUG
+  #include <QDebug>
+#endif
+
 TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), m_projectManager(nullptr), animationTab(nullptr), playerTab(nullptr),
                m_viewChat(nullptr), m_exposureSheet(nullptr), m_scenes(nullptr), isSaveDialogOpen(false), internetOn(false)
 {

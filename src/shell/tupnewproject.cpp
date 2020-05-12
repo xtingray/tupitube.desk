@@ -41,6 +41,10 @@
 #include "tapplication.h"
 #include "tosd.h"
 
+#ifdef TUP_DEBUG
+  #include <QDebug>
+#endif
+
 //SQA: Add a field to define the project description 
 
 TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent)

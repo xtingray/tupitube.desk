@@ -55,12 +55,10 @@
 #endif
 
 #ifdef TUP_DEBUG
-#ifdef Q_OS_WIN
   #include <QDebug>
-  #define SHOW_VAR(arg) qDebug() << #arg << " = " << arg;
-#else
-  #include "tdebug.h"
-#endif
+  #ifdef Q_OS_WIN
+    #define SHOW_VAR(arg) qDebug() << #arg << " = " << arg;
+  #endif
 #endif
 
 #define LIBRARY_DIR CONFIG_DIR+"/libraries"

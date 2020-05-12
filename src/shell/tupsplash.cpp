@@ -38,7 +38,10 @@
 #include <QPixmap>
 #include <QBitmap>
 #include <QImage>
-#include <QtDebug>
+
+#ifdef TUP_DEBUG
+  #include <QDebug>
+#endif
 
 #include <cmath> //abs
 

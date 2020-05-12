@@ -22,12 +22,15 @@
 #include "tapplicationproperties.h"
 #include "tuprequestbuilder.h"
 
-#include <QDebug>
 #include <QFileDialog>
 #include <QVBoxLayout>
 #include <QMenuBar>
 #include <QMenu>
 #include <QAction>
+
+#ifdef TUP_DEBUG
+  #include <QDebug>
+#endif
 
 RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, TupProject::Mode context, int scene,
                                    const QColor contourColor, const QString &zoomFactor, QWidget *parent): TMainWindow(winKey, parent)

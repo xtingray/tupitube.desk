@@ -1421,184 +1421,189 @@
 <context>
     <name>SelectionSettings</name>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="51"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="53"/>
         <source>Selection Properties</source>
         <translation>Propriedades de Seleção</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="58"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="60"/>
         <source>Alignment</source>
         <translation>Alinhamento</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="67"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="69"/>
         <source>Horizontal Center</source>
         <translation>Centralizar Horizontalmente</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="69"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="71"/>
         <source>Vertical Center</source>
         <translation>Centralizar Verticalmente</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="71"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="73"/>
         <source>Absolute Center</source>
         <translation>Centralizar</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="83"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="85"/>
         <source>Flips</source>
         <translation>Inversões</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="92"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="94"/>
         <source>Horizontal Flip</source>
         <translation>Inverter Horizontalmente</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="94"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="96"/>
         <source>Vertical Flip</source>
         <translation>Inverter Verticalmente</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="96"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="98"/>
         <source>Crossed Flip</source>
         <translation>Inverter Cruzado</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="108"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="110"/>
         <source>Order</source>
         <translation>Ordem</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="117"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="119"/>
         <source>Send object to back</source>
         <translation>Enviar objeto para trás</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="120"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="122"/>
         <source>Send object to back one level</source>
         <translation>Enviar objeto para trás um nível</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="123"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="125"/>
         <source>Send object to front</source>
         <translation>Enviar objeto para frente</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="126"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="128"/>
         <source>Send object to front one level</source>
         <translation>Enviar objeto para frente um nível</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="143"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="145"/>
         <source>Group</source>
         <translation>Grupo</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="152"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="154"/>
         <source>Group Objects</source>
         <translation>Agrupar Objetos</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="155"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="157"/>
         <source>Ungroup Objects</source>
         <translation>Desagrupar Objetos</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="168"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="170"/>
         <source>Position</source>
         <translation>Posição</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="172"/>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="229"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="174"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="231"/>
         <source>X</source>
         <translation>X</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="180"/>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="245"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="182"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="247"/>
         <source>Y</source>
         <translation>Y</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="205"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="207"/>
         <source>Rotation</source>
         <translation>Rotação</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="209"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="211"/>
         <source>Angle</source>
         <translation>Ângulo</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="225"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="227"/>
         <source>Scale</source>
         <translation>Escala</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="261"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="263"/>
         <source>Proportion</source>
         <translation>Proporção</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="270"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="276"/>
+        <source>Paste objects over mouse position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="289"/>
         <source>Show Tips</source>
         <translation>Exibir Dicas</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="271"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="290"/>
         <source>A little help for the Selection tool</source>
         <translation>Uma pequena ajuda para a ferramenta de Seleção</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="287"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="306"/>
         <source>Double Click on any node or Shortcut Alt + R</source>
         <translation>Clique duas vezes em qualquer nodo ou atalho Alt + R</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="287"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="306"/>
         <source>Rotation mode</source>
         <translation>Modo de rotação</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="288"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="307"/>
         <source>Arrows</source>
         <translation>Setas</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="288"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="307"/>
         <source>Movement on selection</source>
         <translation>Movimento da seleção</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="289"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="308"/>
         <source>Shift + Arrows</source>
         <translation>Shift + Setas</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="289"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="308"/>
         <source>Slow movement on selection</source>
         <translation>Movimento lento da seleção</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="290"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="309"/>
         <source>Ctrl + Arrows</source>
         <translation>Ctrl + Setas</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="290"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="309"/>
         <source>Fast movement on selection</source>
         <translation>Movimento rápido da seleção</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="291"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="310"/>
         <source>Ctrl + Left Mouse Button</source>
         <translation>Ctrl + Botão Esquerdo do Mouse</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="291"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="310"/>
         <source>Proportional scaling on selection</source>
         <translation>Escalar proporcionalmente a seleção</translation>
     </message>
@@ -3658,113 +3663,103 @@ Por favor, renomeie o ficheiro do projeto</translation>
         <translation>Cache</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="94"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="95"/>
         <source>Always open last project</source>
         <translation>Sempre abrir último projeto</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="94"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="95"/>
         <source>Show tip of the day</source>
         <translation>Mostrar dica do dia</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="102"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="103"/>
         <source>Confirm &quot;Remove frame&quot; action</source>
         <translation>Confirmar ação &quot;Remover quadro&quot;</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="102"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="103"/>
         <source>Confirm &quot;Remove layer&quot; action</source>
         <translation>Confirmar ação &quot;Remover camada&quot;</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="103"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="104"/>
         <source>Confirm &quot;Remove scene&quot; action</source>
         <translation>Confirmar ação &quot;Remover cena&quot;</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="103"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="104"/>
         <source>Confirm &quot;Remove object&quot; action from library</source>
         <translation>Confirmar ação &quot;Remover objeto&quot; da biblioteca</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="110"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="111"/>
         <source>Render and play project automatically</source>
         <translation>Renderize e reproduza o projeto automaticamente</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="117"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="118"/>
         <source>General Preferences</source>
         <translation>Preferências Gerais</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="125"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="126"/>
         <source>On Startup</source>
         <translation>No Arranque</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="133"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="134"/>
         <source>Language:</source>
         <translation>Idioma:</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="155"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="156"/>
         <source>Confirmation Dialogs</source>
         <translation>Diálogos de Confirmação</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="162"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="163"/>
         <source>On Player</source>
         <translation>Sobre o Player de Vídeo</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="177"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="178"/>
         <source>The CACHE path is the folder where TupiTube creates temporary files while you work on your animation projects.&lt;br/&gt;&lt;b&gt;Note:&lt;/b&gt; Don&apos;t change this parameter unless you know what you are doing.</source>
         <translation>O caminho do CACHE é a pasta em que o TupiTube cria arquivos temporários enquanto você trabalha em seus projetos de animação.&lt;br/&gt;&lt;b&gt;Nota:&lt;/b&gt; Não altere esse parâmetro, a menos que saiba o que está fazendo.</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="187"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="188"/>
         <source>Choose another path</source>
         <translation>Escolha outro caminho</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="191"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="192"/>
         <source>CACHE Path: </source>
         <translation>Caminho do CACHE: </translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="195"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="196"/>
         <source>Restore default value</source>
         <translation>Restaurar valor padrão</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="213"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="214"/>
         <source>Choose a directory...</source>
         <translation>Escolha um diretório...</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="244"/>
-        <source>Warning</source>
-        <translation>Aviso</translation>
-    </message>
-    <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="244"/>
-        <source>Please restart TupiTube</source>
-        <translation>Por favor, reinicie o TupiTube</translation>
-    </message>
-    <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="251"/>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="258"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="250"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="257"/>
         <source>Error</source>
         <translation>Erro</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="251"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="250"/>
         <source>Cache path is empty. Set a value!</source>
         <translation>O caminho do Cache está vazio. Defina um valor!</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="258"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="257"/>
         <source>Cache path doesn&apos;t exist. Create it!</source>
         <translation>O caminho do Cache não existe. Crie!</translation>
     </message>
@@ -5412,7 +5407,7 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
     <message>
         <location filename="../../../components/workspace/tuppaintarea.cpp" line="141"/>
         <location filename="../../../components/workspace/tuppaintarea.cpp" line="578"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1317"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1328"/>
         <source>PolyLine</source>
         <translation>PoliLinha</translation>
     </message>
@@ -5514,20 +5509,20 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
         <translation>Tinta</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1005"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1347"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1395"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1410"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1016"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1358"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1406"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1421"/>
         <source>Frame</source>
         <translation>Quadro</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1466"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1477"/>
         <source>Do you want to remove this frame?</source>
         <translation>Deseja remover este quadro?</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1466"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1477"/>
         <source>Confirmation</source>
         <translation>Confirmação</translation>
     </message>
@@ -5542,14 +5537,14 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
         <translation>Adicionar à biblioteca...</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1116"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1149"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1127"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1160"/>
         <source>Error</source>
         <translation>Erro</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1116"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1149"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1127"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1160"/>
         <source>No items selected</source>
         <translation>Nenhum item selecionado</translation>
     </message>
@@ -5883,12 +5878,22 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
         <translation>Área de Trabalho</translation>
     </message>
     <message>
-        <location filename="../../../libui/tuppreferencesdialog.cpp" line="65"/>
+        <location filename="../../../libui/tuppreferencesdialog.cpp" line="66"/>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../libui/tuppreferencesdialog.cpp" line="66"/>
+        <source>Please restart TupiTube</source>
+        <translation type="unfinished">Por favor, reinicie o TupiTube</translation>
+    </message>
+    <message>
+        <location filename="../../../libui/tuppreferencesdialog.cpp" line="68"/>
         <source>Information</source>
         <translation>Informação</translation>
     </message>
     <message>
-        <location filename="../../../libui/tuppreferencesdialog.cpp" line="65"/>
+        <location filename="../../../libui/tuppreferencesdialog.cpp" line="68"/>
         <source>Preferences saved successfully</source>
         <translation>Preferências salvas com sucesso</translation>
     </message>

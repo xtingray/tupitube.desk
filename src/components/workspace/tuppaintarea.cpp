@@ -43,7 +43,8 @@
 #include <QScreen>
 #include <cmath> // fabs
 
-TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent) : TupPaintAreaBase(parent, work->getDimension(), work->getLibrary())
+TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent) : TupPaintAreaBase(parent, work->getDimension(),
+                                                                                 work->getLibrary())
 {
     #ifdef TUP_DEBUG
         qDebug() << "TupPaintArea()";
@@ -817,22 +818,17 @@ void TupPaintArea::copyItems()
                 dom.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(dom));
                 copiesXml << dom.toString();
 
-                if (itemsCount == 1) { // Get initial values from the first item
+                if (itemsCount == 1) { // One item selection
                     copyCoords << item->boundingRect().topLeft();
 
                     minX = 0;
                     maxX = item->boundingRect().width();
                     minY = 0;
                     maxY = item->boundingRect().height();
-                }
-                /* else { // Looking for the whole dimension of the selection
+                } else { // Looking for the whole dimension of the selection
                     QPointF left = item->boundingRect().topLeft();
                     QPointF right = item->boundingRect().bottomRight();
-
                     copyCoords << left;
-                    qDebug() << "";
-                    qDebug() << "POINT: " << left;
-                    qDebug() << "ITEM: " << item->pos();
 
                     if (i == 0) {
                         minX = left.x();
@@ -853,9 +849,8 @@ void TupPaintArea::copyItems()
                             maxX = rightX;
                         if (rightY > maxY)
                             maxY = rightY;
-                    }
+                    }                    
                 }
-                */
 
                 // Paint it to clipbard
                 QPixmap toPixmap(item->boundingRect().size().toSize());
@@ -885,13 +880,16 @@ void TupPaintArea::copyItems()
                 QApplication::clipboard()->setPixmap(toPixmap);
             }
 
-            if (itemsCount == 1)
-                centerCoord = QPointF((maxX - minX)/2, (maxY - minY)/2);
+            TCONFIG->beginGroup("PaintArea");
+            bool onMouse = TCONFIG->value("PasteOnMousePos", false).toBool();
 
-            /*
-            else
-                centerCoord = QPointF((maxX - minX)/2, (maxY - minY)/2);
-            */
+            if (itemsCount == 1) { // One item selection
+                if (onMouse)
+                    centerCoord = QPointF((maxX - minX)/2, (maxY - minY)/2);
+            } else {
+                if (onMouse)
+                    centerCoord = QPointF(minX + ((maxX - minX)/2), minY + ((maxY - minY)/2));
+            }
         }
     } else {
         copyCurrentFrame();
@@ -911,6 +909,8 @@ void TupPaintArea::pasteItems()
             position = currentPos;
 
         int itemsCount = copiesXml.size();
+        TCONFIG->beginGroup("PaintArea");
+        bool onMouse = TCONFIG->value("PasteOnMousePos", false).toBool();
 
         for (int i=0; i<itemsCount; i++) {
             QString xml = copiesXml.at(i);
@@ -925,31 +925,28 @@ void TupPaintArea::pasteItems()
                 }
 
                 QPointF pos = QPointF(0, 0);
-                if (itemsCount == 1) {
-                    double x = currentPos.x() - (copyCoords.at(i).x() + centerCoord.x());
-                    if (currentPos.x() >= copyCoords.at(i).x())
-                        x = fabs(x);
+                if (xml.startsWith("<ellipse"))
+                    pos = ellipsePos(xml);
+                if (itemsCount == 1) { // One item selection
+                    if (onMouse) {
+                        double x = currentPos.x() - (copyCoords.at(i).x() + centerCoord.x());
+                        if (currentPos.x() >= copyCoords.at(i).x())
+                            x = fabs(x);
 
-                    double y = currentPos.y() - (copyCoords.at(i).y() + centerCoord.y());
-                    if (currentPos.y() >= copyCoords.at(i).y())
-                        y = fabs(y);
+                        double y = currentPos.y() - (copyCoords.at(i).y() + centerCoord.y());
+                        if (currentPos.y() >= copyCoords.at(i).y())
+                            y = fabs(y);
 
-                    pos = QPointF(x, y);
-                } else {
-                    pos = itemPoint(xml);
+                        pos = QPointF(x, y);
+                    }
+                } else { // Several items selection
+                    if (onMouse) {
+                        double x = currentPos.x() - centerCoord.x();
+                        double y = currentPos.y() - centerCoord.y();
+
+                        pos = QPointF(x, y);
+                    }
                 }
-
-                /*
-                else {
-                    x = currentPos.x() - centerCoord.x();
-                    if (currentPos.x() >= centerCoord.x())
-                        x = fabs(x);
-
-                    y = currentPos.y() - centerCoord.y();
-                    if (currentPos.y() >= centerCoord.y())
-                        y = fabs(y);
-                }
-                */
 
                 TupProjectRequest event = TupRequestBuilder::createItemRequest(currentScene->currentSceneIndex(),
                                           currentScene->currentLayerIndex(),
@@ -1013,7 +1010,7 @@ void TupPaintArea::multipasteObject(int pasteTotal)
                     }
 
                     TupProjectRequest event = TupRequestBuilder::createItemRequest(globalSceneIndex,
-                                                                 layerIndex, i, total, itemPoint(xml), spaceMode, type,
+                                                                 layerIndex, i, total, ellipsePos(xml), spaceMode, type,
                                                                  TupProjectRequest::Add, xml);
                     emit requestTriggered(&event);
                 }
@@ -1029,7 +1026,7 @@ void TupPaintArea::multipasteObject(int pasteTotal)
      menuOn = false;
 }
 
-QPoint TupPaintArea::itemPoint(const QString &xml)
+QPoint TupPaintArea::ellipsePos(const QString &xml)
 {
     /*
     if (xml.startsWith("<ellipse"))

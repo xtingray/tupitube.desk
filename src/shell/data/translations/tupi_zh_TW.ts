@@ -1221,6 +1221,10 @@
         <source>Proportional scaling on selection</source>
         <translation>選擇比例縮放</translation>
     </message>
+    <message>
+        <source>Paste objects over mouse position</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SelectionTool</name>
@@ -2855,14 +2859,6 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Language:</source>
         <translation>語言</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>警告</translation>
-    </message>
-    <message>
-        <source>Please restart TupiTube</source>
-        <translation>請重新啟動TupiTube</translation>
     </message>
     <message>
         <source>General</source>
@@ -4540,6 +4536,14 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Preferences saved successfully</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished">警告</translation>
+    </message>
+    <message>
+        <source>Please restart TupiTube</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

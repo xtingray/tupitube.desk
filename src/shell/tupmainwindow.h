@@ -61,14 +61,6 @@
 #include "tupprojectmanager.h"
 #include "tupnetprojectmanagerhandler.h"
 
-#ifdef TUP_DEBUG
-#ifdef Q_OS_WIN
-  #include <QDebug>
-#else
-  #include "tdebug.h"
-#endif
-#endif
-
 #include <QMainWindow>
 #include <QMenu>
 #include <QMenuBar>

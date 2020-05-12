@@ -38,16 +38,6 @@
 
 #include "tupabstractprojectmanagerhandler.h"
 
-#ifdef TUP_DEBUG
-
-#ifdef Q_OS_WIN
-#include <QDebug>
-#else
-#include "tdebug.h"
-#endif
-
-#endif
-
 #include <QDomDocument>
 #include <QDomElement>
 
@@ -56,7 +46,7 @@ class TupLocalProjectManagerHandler : public TupAbstractProjectHandler
     Q_OBJECT
 
     public:
-        TupLocalProjectManagerHandler(QObject *parent = 0);
+        TupLocalProjectManagerHandler(QObject *parent = nullptr);
         ~TupLocalProjectManagerHandler();
 
         virtual void handleProjectRequest(const TupProjectRequest *request);

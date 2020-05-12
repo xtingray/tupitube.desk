@@ -43,7 +43,6 @@
 #include "tglobal.h"
 
 #include <QBrush>
-#include <QDebug>
 #include <QPainter>
 #include <QPaintEvent>
 #include <QSize>

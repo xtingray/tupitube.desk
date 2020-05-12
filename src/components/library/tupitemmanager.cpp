@@ -381,157 +381,166 @@ void TupItemManager::mousePressEvent(QMouseEvent *event)
 }
 
 void TupItemManager::dropEvent(QDropEvent *event)
-{
-     bool eventAccept = false;
+{   
+    #ifdef TUP_DEBUG
+        qDebug() << "TupItemManager::dropEvent()";
+    #endif
 
-     if (event->mimeData()->hasFormat("application/x-dnditemdata")) {
-         QByteArray itemData = event->mimeData()->data("application/x-dnditemdata");
-         QDataStream dataStream(&itemData, QIODevice::ReadOnly);
+    bool eventAccept = false;
 
-         QPixmap pixmap;
-         QString label;
-         QString extension;
-         QString key;
-         dataStream >> pixmap >> label >> extension >> key;
+    if (event->mimeData()->hasFormat("application/x-dnditemdata")) {
+        QByteArray itemData = event->mimeData()->data("application/x-dnditemdata");
+        QDataStream dataStream(&itemData, QIODevice::ReadOnly);
 
-         QTreeWidgetItem *item;
-         QTreeWidgetItem *parent = itemAt(event->pos().x(), event->pos().y());
+        QPixmap pixmap;
+        QString label;
+        QString extension;
+        QString key;
+        dataStream >> pixmap >> label >> extension >> key;
 
-         if (parent) {
-             // If both Target and Origin are directories
-             if (parentNode.length() > 0) {
-                 if ((parent->text(2).length() == 0) && (extension.length() == 0))
-                      return;
-             }
+        QTreeWidgetItem *item;
+        QTreeWidgetItem *parent = itemAt(event->pos().x(), event->pos().y());
 
-             // Ensure Target is a directory
-             if (parent->text(2).length() > 0)
-                 return;
+        if (parent) {
+            // If both Target and Origin are directories
+            if (parentNode.length() > 0) {
+                if ((parent->text(2).length() == 0) && (extension.length() == 0))
+                    return;
+            }
 
-             // Target is going to the same parent
-             int childrenTotal = parent->childCount(); 
-             for (int i=0;i < childrenTotal; i++) {
-                  QTreeWidgetItem *child = parent->child(i);
-                  QString name = child->text(1);
-                  if (name.compare(label) == 0 && child->text(2).compare(extension) == 0)
-                      return;
-             }
+            // Ensure Target is a directory
+            if (parent->text(2).length() > 0)
+                return;
 
-             // Make sure node and target are not the same
-             if (extension.length() > 0) {
-                 if (parentNode.length() > 0) {
-                     QList<QTreeWidgetItem *> nodes = findItems(parentNode, Qt::MatchExactly, 1);
-                     for (int i = 0; i < nodes.size(); ++i) {
-                          QTreeWidgetItem *node = nodes.at(i);
-                          if (node->text(1).compare(parentNode) == 0) {
-                              int childrenTotal = node->childCount();
-                              for (int i=0;i < childrenTotal; i++) {
-                                   QTreeWidgetItem *child = node->child(i);
-                                   if (child->text(1).compare(label) == 0 && child->text(2).compare(extension) == 0) {
-                                       node->removeChild(child);
-                                       break;
-                                   }
-                              }
-                              break;
-                          }
-                     }
-                 }
+            // Target is going to the same parent
+            int childrenTotal = parent->childCount();
+            for (int i=0;i < childrenTotal; i++) {
+                QTreeWidgetItem *child = parent->child(i);
+                QString name = child->text(1);
+                if (name.compare(label) == 0 && child->text(2).compare(extension) == 0)
+                    return;
+            }
 
-                 item = new QTreeWidgetItem(parent);
-                 item->setIcon(0, QIcon(pixmap));
-                 item->setText(1, label);
-                 item->setText(2, extension);
-                 item->setText(3, key);
-                 item->setFlags(item->flags() | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
-                 setCurrentItem(item);
+            // Make sure node and target are not the same
+            if (extension.length() > 0) {
+                if (parentNode.length() > 0) {
+                    QList<QTreeWidgetItem *> nodes = findItems(parentNode, Qt::MatchExactly, 1);
+                    for (int i = 0; i < nodes.size(); ++i) {
+                        QTreeWidgetItem *node = nodes.at(i);
+                        if (node->text(1).compare(parentNode) == 0) {
+                            int childrenTotal = node->childCount();
+                            for (int i=0;i < childrenTotal; i++) {
+                                 QTreeWidgetItem *child = node->child(i);
+                                 if (child->text(1).compare(label) == 0 && child->text(2).compare(extension) == 0) {
+                                     node->removeChild(child);
+                                     break;
+                                 }
+                            }
+                            break;
+                        }
+                    }
+                }
 
-                 if (key.length() > 0)
-                     emit itemMoved(key, parent->text(1));
+                item = new QTreeWidgetItem(parent);
+                item->setIcon(0, QIcon(pixmap));
+                item->setText(1, label);
+                item->setText(2, extension);
+                item->setText(3, key);
+                item->setFlags(item->flags() | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
+                setCurrentItem(item);
 
-                 eventAccept = true;
+                if (key.length() > 0)
+                    emit itemMoved(key, parent->text(1));
 
-             } else {
-                 bool flag = true;
-                 if (parent->isExpanded())
-                     flag = false;
-                 parent->setExpanded(flag);
-             }
-
-         } else {
-             if (parentNode.length() > 0) {
-                 QList<QTreeWidgetItem *> nodes = findItems(parentNode, Qt::MatchExactly, 1);
-                 for (int i = 0; i < nodes.size(); ++i) {
-                      QTreeWidgetItem *node = nodes.at(i);
-                      if (node->text(1).compare(parentNode) == 0) {
-                          int childrenTotal = node->childCount();
-                          for (int i=0;i < childrenTotal; i++) {
-                               QTreeWidgetItem *child = node->child(i);
-                               if (child->text(1).compare(label) == 0 && child->text(2).compare(extension) == 0) {
-                                   node->removeChild(child); 
-                                   break;
-                               }
-                          }
-                          break;
+                eventAccept = true;
+            } else {
+                bool flag = true;
+                if (parent->isExpanded())
+                    flag = false;
+                parent->setExpanded(flag);
+            }
+        } else {
+            if (parentNode.length() > 0) {
+                QList<QTreeWidgetItem *> nodes = findItems(parentNode, Qt::MatchExactly, 1);
+                for (int i = 0; i < nodes.size(); ++i) {
+                    QTreeWidgetItem *node = nodes.at(i);
+                    if (node->text(1).compare(parentNode) == 0) {
+                      int childrenTotal = node->childCount();
+                      for (int i=0;i < childrenTotal; i++) {
+                           QTreeWidgetItem *child = node->child(i);
+                           if (child->text(1).compare(label) == 0 && child->text(2).compare(extension) == 0) {
+                               node->removeChild(child);
+                               break;
+                           }
                       }
-                 }
-             } else {
-                 if (extension.length() == 0 && nodeChildren.size() > 0)
-                     return;
-             }
+                      break;
+                    }
+                }
+            } else {
+                if (extension.length() == 0 && nodeChildren.size() > 0)
+                    return;
+            }
 
-             item = new QTreeWidgetItem(this);
-             item->setIcon(0, QIcon(pixmap));
-             item->setText(1, label);
-             item->setText(2, extension);
-             item->setText(3, key);
-             item->setFlags(item->flags() | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
-             setCurrentItem(item);
+            item = new QTreeWidgetItem(this);
+            item->setIcon(0, QIcon(pixmap));
+            item->setText(1, label);
+            item->setText(2, extension);
+            item->setText(3, key);
+            item->setFlags(item->flags() | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
+            setCurrentItem(item);
 
-             emit itemMoved(key, "");
-             eventAccept = true;
-         }
+            emit itemMoved(key, "");
+            eventAccept = true;
+        }
+    } else {
+        event->ignore();
+        return;
+    }
 
-     } else {
-         event->ignore();
-         return;
-     }
-
-     if (eventAccept) {
-         if (event->source() == this) {
-             event->setDropAction(Qt::MoveAction);
-             event->accept();
-         } else {
-             event->acceptProposedAction();
-         }
-     }
+    if (eventAccept) {
+        if (event->source() == this) {
+            event->setDropAction(Qt::MoveAction);
+            event->accept();
+        } else {
+            event->acceptProposedAction();
+        }
+    }
 }
 
 void TupItemManager::dragEnterEvent(QDragEnterEvent *event)
 {
-     if (event->mimeData()->hasFormat("application/x-dnditemdata")) {
-         if (event->source() == this) {
-             event->setDropAction(Qt::MoveAction);
-             event->accept();
-         } else {
-             event->acceptProposedAction();
-         }
-     } else {
-         event->ignore();
-     }
+    #ifdef TUP_DEBUG
+        qDebug() << "TupItemManager::dragEnterEvent()";
+    #endif
+
+    if (event->mimeData()->hasFormat("application/x-dnditemdata")) {
+        if (event->source() == this) {
+            event->setDropAction(Qt::MoveAction);
+            event->accept();
+        } else {
+            event->acceptProposedAction();
+        }
+    } else {
+        event->ignore();
+    }
 }
 
 void TupItemManager::dragMoveEvent(QDragMoveEvent *event)
 {
-     if (event->mimeData()->hasFormat("application/x-dnditemdata")) {
-         if (event->source() == this) {
-             event->setDropAction(Qt::MoveAction);
-             event->accept();
-         } else {
-             event->acceptProposedAction();
-         }
-     } else {
-         event->ignore();
-     }
+    #ifdef TUP_DEBUG
+        qDebug() << "TupItemManager::dragEnterEvent()";
+    #endif
+
+    if (event->mimeData()->hasFormat("application/x-dnditemdata")) {
+        if (event->source() == this) {
+            event->setDropAction(Qt::MoveAction);
+            event->accept();
+        } else {
+            event->acceptProposedAction();
+        }
+    } else {
+        event->ignore();
+    }
 }
 
 void TupItemManager::keyPressEvent(QKeyEvent * event)

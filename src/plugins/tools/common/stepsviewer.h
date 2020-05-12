@@ -46,7 +46,6 @@
 #include <QTableWidget>
 #include <cmath>
 #include <QGraphicsPathItem>
-#include <QDebug>
 #include <QBoxLayout>
 #include <QHeaderView>
 #include <QPainter>

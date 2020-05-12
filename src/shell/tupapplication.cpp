@@ -36,6 +36,10 @@
 #include "tupapplication.h"
 #include "tapplicationproperties.h"
 
+#ifdef TUP_DEBUG
+  #include <QDebug>
+#endif
+
 TupApplication::TupApplication(int &argc, char **argv) : TApplication(argc, argv)
 {
     setApplicationName("tupitube");

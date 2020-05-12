@@ -155,7 +155,7 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         bool canPaint() const;
 
     private:
-        QPoint itemPoint(const QString &xml);
+        QPoint ellipsePos(const QString &xml);
         void multipasteObject(int pasteTotal);
 
         TupProject *project;

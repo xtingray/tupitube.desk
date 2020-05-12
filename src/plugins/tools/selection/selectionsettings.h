@@ -105,6 +105,8 @@ class TUPITUBE_PLUGIN SelectionSettings : public QWidget
         void groupItems();
         void ungroupItems();
         void enableProportion(int flag);
+        void enablePasteOnMouse(int flag);
+        void enablePasteOnMouse();
 
     private:
         QWidget *help;
@@ -114,6 +116,7 @@ class TUPITUBE_PLUGIN SelectionSettings : public QWidget
         QDoubleSpinBox *factorXField;
         QDoubleSpinBox *factorYField;
         QCheckBox *propCheck;
+        QCheckBox *pasteCheck;
 
         QPushButton *tips;
         QWidget *formPanel;
