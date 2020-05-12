@@ -786,7 +786,7 @@
     </message>
     <message>
         <source>&amp;Export as Image</source>
-        <translation>&amp;匯出為影像</translation>
+        <translation>匯出為影像(&amp;E)</translation>
     </message>
     <message>
         <source>Export as Image</source>
@@ -798,7 +798,7 @@
     </message>
     <message>
         <source>&amp;File</source>
-        <translation>檔案</translation>
+        <translation>檔案(&amp;F)</translation>
     </message>
     <message>
         <source>Raster actions</source>
@@ -850,7 +850,7 @@
     </message>
     <message>
         <source>&amp;Import Image to Library</source>
-        <translation>影像匯入到函式庫</translation>
+        <translation>影像匯入到函式庫(&amp;I)</translation>
     </message>
     <message>
         <source>I</source>
@@ -1060,7 +1060,7 @@
     </message>
     <message>
         <source>Info</source>
-        <translation>資訊</translation>
+        <translation>訊息</translation>
     </message>
     <message>
         <source>You must select at least one object!</source>
@@ -1079,11 +1079,11 @@
     <name>SelectionSettings</name>
     <message>
         <source>Selection Properties</source>
-        <translation>選擇屬性</translation>
+        <translation>屬性</translation>
     </message>
     <message>
         <source>Alignment</source>
-        <translation>校準</translation>
+        <translation>對齊</translation>
     </message>
     <message>
         <source>Horizontal Center</source>
@@ -1115,31 +1115,31 @@
     </message>
     <message>
         <source>Order</source>
-        <translation>顺序</translation>
+        <translation>順序</translation>
     </message>
     <message>
         <source>Send object to back</source>
-        <translation>物件移至下層</translation>
+        <translation>物件移至最下層</translation>
     </message>
     <message>
         <source>Send object to back one level</source>
-        <translation>物件移至下一層</translation>
+        <translation>物件向下一層</translation>
     </message>
     <message>
         <source>Send object to front</source>
-        <translation>物件移至上層</translation>
+        <translation>物件移至最上層</translation>
     </message>
     <message>
         <source>Send object to front one level</source>
-        <translation>物件移至上一層</translation>
+        <translation>物件向上一層</translation>
     </message>
     <message>
         <source>Group</source>
-        <translation>组</translation>
+        <translation>群組</translation>
     </message>
     <message>
         <source>Group Objects</source>
-        <translation>編组物件</translation>
+        <translation>群組物件</translation>
     </message>
     <message>
         <source>Ungroup Objects</source>
@@ -1167,7 +1167,7 @@
     </message>
     <message>
         <source>Scale</source>
-        <translation>比例尺</translation>
+        <translation>縮放</translation>
     </message>
     <message>
         <source>Proportion</source>
@@ -1179,7 +1179,7 @@
     </message>
     <message>
         <source>A little help for the Selection tool</source>
-        <translation>對選擇工具有一點幫助。</translation>
+        <translation>選取工具的小提示</translation>
     </message>
     <message>
         <source>Double Click on any node or Shortcut Alt + R</source>
@@ -1191,27 +1191,27 @@
     </message>
     <message>
         <source>Arrows</source>
-        <translation>箭頭</translation>
+        <translation>方向鍵</translation>
     </message>
     <message>
         <source>Movement on selection</source>
-        <translation>移入的選擇</translation>
+        <translation>動作選取項目</translation>
     </message>
     <message>
         <source>Shift + Arrows</source>
-        <translation>Shift + 箭頭</translation>
+        <translation>Shift + 方向鍵</translation>
     </message>
     <message>
         <source>Slow movement on selection</source>
-        <translation>緩慢移入的選擇</translation>
+        <translation>慢動作選取項目</translation>
     </message>
     <message>
         <source>Ctrl + Arrows</source>
-        <translation>Ctrl + 箭頭</translation>
+        <translation>Ctrl + 方向鍵</translation>
     </message>
     <message>
         <source>Fast movement on selection</source>
-        <translation>選擇快速移動</translation>
+        <translation>快動作選取項目</translation>
     </message>
     <message>
         <source>Ctrl + Left Mouse Button</source>
@@ -1219,11 +1219,11 @@
     </message>
     <message>
         <source>Proportional scaling on selection</source>
-        <translation>選擇比例縮放</translation>
+        <translation>比例縮放選取項目</translation>
     </message>
     <message>
         <source>Paste objects over mouse position</source>
-        <translation type="unfinished"></translation>
+        <translation>在滑鼠座標貼上物件</translation>
     </message>
 </context>
 <context>
@@ -1238,7 +1238,7 @@
     </message>
     <message>
         <source>SVG objects can&apos;t be grouped/ungrouped yet</source>
-        <translation>SVG物件不能群组/尚未解除群組。</translation>
+        <translation>SVG物件還不能群组/解除群組。</translation>
     </message>
     <message>
         <source>Selection</source>
@@ -1246,7 +1246,7 @@
     </message>
     <message>
         <source>Object Selection</source>
-        <translation>選擇物件</translation>
+        <translation>選取物件</translation>
     </message>
 </context>
 <context>
@@ -1370,58 +1370,58 @@
     <name>TBackupDialog</name>
     <message>
         <source>Recovery Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>復原模式</translation>
     </message>
     <message>
         <source>There was an issue while saving your project.&lt;br/&gt;Please, select a folder to try to recover it.</source>
-        <translation type="unfinished"></translation>
+        <translation>當儲存您的專案時發生一個問題.&lt;br/&gt;請選擇另一個目錄去嘗試復原它.</translation>
     </message>
     <message>
         <source>Choose another path</source>
-        <translation type="unfinished">選擇其他路徑</translation>
+        <translation>選擇其他路徑</translation>
     </message>
     <message>
         <source>Folder: </source>
-        <translation type="unfinished"></translation>
+        <translation>目錄: </translation>
     </message>
     <message>
         <source>Make Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>建立備份</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">取消</translation>
+        <translation>取消</translation>
     </message>
     <message>
         <source>Choose a directory...</source>
-        <translation type="unfinished">選擇目錄</translation>
+        <translation>選擇目錄</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>錯誤</translation>
     </message>
     <message>
         <source>Folder doesn&apos;t exist. Please, pick one!</source>
-        <translation type="unfinished"></translation>
+        <translation>目錄不存在,請重選一個!</translation>
     </message>
 </context>
 <context>
     <name>TButtonBar</name>
     <message>
         <source>Bottom button bar</source>
-        <translation>底部按鈕帶</translation>
+        <translation>底部按鈕列</translation>
     </message>
     <message>
         <source>Right button bar</source>
-        <translation>右側按鈕帶</translation>
+        <translation>右側按鈕列</translation>
     </message>
     <message>
         <source>Left button bar</source>
-        <translation>左側按鈕帶</translation>
+        <translation>左側按鈕列</translation>
     </message>
     <message>
         <source>Top button bar</source>
-        <translation>頂部按鈕帶</translation>
+        <translation>頂部按鈕列</translation>
     </message>
 </context>
 <context>
@@ -1439,11 +1439,11 @@
     <name>TConfigurationDialog</name>
     <message>
         <source>&amp;Apply</source>
-        <translation>套用</translation>
+        <translation>套用(&amp;A)</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
-        <translation>取消</translation>
+        <translation>取消(&amp;C)</translation>
     </message>
 </context>
 <context>
@@ -1454,11 +1454,11 @@
     </message>
     <message>
         <source>Style</source>
-        <translation>式樣</translation>
+        <translation>樣式</translation>
     </message>
     <message>
         <source>Family</source>
-        <translation>家庭</translation>
+        <translation>字型</translation>
     </message>
     <message>
         <source>Italic</source>
@@ -1510,7 +1510,7 @@
     <name>TRulerBase</name>
     <message>
         <source>Change scale to 10...</source>
-        <translation>改變比例尺為10...</translation>
+        <translation>改變比例尺為 10...</translation>
     </message>
     <message>
         <source>Change scale to 5...</source>
@@ -1536,15 +1536,15 @@
     </message>
     <message>
         <source>Next &gt;</source>
-        <translation>下一個</translation>
+        <translation>下一個 &gt;</translation>
     </message>
     <message>
         <source>&amp;Finish</source>
-        <translation>結束</translation>
+        <translation>結束(&amp;F)</translation>
     </message>
     <message>
         <source>&lt; &amp;Back</source>
-        <translation>返回</translation>
+        <translation>&lt; 返回(&amp;B)</translation>
     </message>
 </context>
 <context>
@@ -1875,7 +1875,7 @@
     </message>
     <message>
         <source>Post</source>
-        <translation>發布</translation>
+        <translation>郵遞</translation>
     </message>
     <message>
         <source>Scene</source>
@@ -2683,7 +2683,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Exporting...</source>
-        <translation type="unfinished"></translation>
+        <translation>匯出中...</translation>
     </message>
 </context>
 <context>
@@ -2788,19 +2788,19 @@ Please, rename the project&apos;s file</source>
     <name>TupFileManager</name>
     <message>
         <source>Information</source>
-        <translation type="unfinished">資訊</translation>
+        <translation>資訊</translation>
     </message>
     <message>
         <source>A copy of your project was successfully saved at:&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>你的專案的複本成功儲存在:&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Please, contact TupiTube&apos;s developer team to recovery it. &lt;b&gt;https://www.tupitube.com&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>請聯絡TupiTube開發團隊去復原這個 &lt;b&gt;https://www.tupitube.com&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Sorry, the project &lt;b&gt;%1.tup&lt;/b&gt; couldn&apos;t be recovered.&lt;br/&gt;Please, try to backup your animation files often.</source>
-        <translation type="unfinished"></translation>
+        <translation>抱歉,這個專案&lt;b&gt;%1.tup&lt;/b&gt;無法復原.&lt;br/&gt;請試著經常備份你的動畫檔案.</translation>
     </message>
 </context>
 <context>
@@ -2858,47 +2858,47 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Language:</source>
-        <translation>語言</translation>
+        <translation>語言:</translation>
     </message>
     <message>
         <source>General</source>
-        <translation type="unfinished">一般的</translation>
+        <translation>一般</translation>
     </message>
     <message>
         <source>Cache</source>
-        <translation type="unfinished"></translation>
+        <translation>暫存檔</translation>
     </message>
     <message>
         <source>The CACHE path is the folder where TupiTube creates temporary files while you work on your animation projects.&lt;br/&gt;&lt;b&gt;Note:&lt;/b&gt; Don&apos;t change this parameter unless you know what you are doing.</source>
-        <translation type="unfinished"></translation>
+        <translation>此暫存路徑是TupiTube運行動畫專案時建立的臨時檔案&lt;br/&gt;&lt;b&gt;備註:&lt;/b&gt; 不要修改此參數除非你知道你在做什麼.</translation>
     </message>
     <message>
         <source>Choose another path</source>
-        <translation type="unfinished">選擇其他路徑</translation>
+        <translation>選擇其他路徑</translation>
     </message>
     <message>
         <source>CACHE Path: </source>
-        <translation type="unfinished"></translation>
+        <translation>暫存路徑: </translation>
     </message>
     <message>
         <source>Restore default value</source>
-        <translation type="unfinished"></translation>
+        <translation>恢復到預設值</translation>
     </message>
     <message>
         <source>Choose a directory...</source>
-        <translation type="unfinished">選擇目錄</translation>
+        <translation>選擇目錄</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>錯誤</translation>
     </message>
     <message>
         <source>Cache path is empty. Set a value!</source>
-        <translation type="unfinished"></translation>
+        <translation>暫存路徑空白. 設定一個路徑!</translation>
     </message>
     <message>
         <source>Cache path doesn&apos;t exist. Create it!</source>
-        <translation type="unfinished"></translation>
+        <translation>暫存路徑不存在. 建立路徑!</translation>
     </message>
 </context>
 <context>
@@ -3057,7 +3057,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>New folder %1</source>
-        <translation>新建資料夾%1</translation>
+        <translation>新資料夾%1</translation>
     </message>
     <message>
         <source>Options</source>
@@ -3300,7 +3300,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>%1 SVG files will be loaded.</source>
-        <translation>即將載入SVG檔案</translation>
+        <translation>即將載入%1 SVG檔案</translation>
     </message>
     <message>
         <source>Import SVG files...</source>
@@ -3320,7 +3320,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>ERROR: Can&apos;t open file %1. Please, check file permissions and try again.</source>
-        <translation>錯誤：無法開啟檔案％1。 請檢查檔案權限並重試。</translation>
+        <translation>錯誤：無法開啟檔案%1。 請檢查檔案權限並重試。</translation>
     </message>
     <message>
         <source>Create new folder</source>
@@ -3442,15 +3442,15 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation>編輯</translation>
+        <translation>編輯(&amp;E)</translation>
     </message>
     <message>
         <source>&amp;File</source>
-        <translation>檔案</translation>
+        <translation>檔案(&amp;F)</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>說明</translation>
+        <translation>說明(&amp;H)</translation>
     </message>
     <message>
         <source>Animation</source>
@@ -3490,7 +3490,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>&amp;Import Papagayo Lip-sync</source>
-        <translation>匯入 Papagayo 唇形同步</translation>
+        <translation>匯入 Papagayo 唇形同步(&amp;I)</translation>
     </message>
     <message>
         <source>Gimp palette import was successful</source>
@@ -3530,7 +3530,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Project &lt;b&gt;%1&lt;/b&gt; opened!</source>
-        <translation>專案已開啟!</translation>
+        <translation>專案 &lt;b&gt;%1&lt;/b&gt; 已開啟!</translation>
     </message>
     <message>
         <source>About TupiTube Desk</source>
@@ -3654,15 +3654,15 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Pr&amp;eferences...</source>
-        <translation>偏好設定</translation>
+        <translation>偏好設定(&amp;E)</translation>
     </message>
     <message>
         <source>[ by %1 | net mode ]</source>
-        <translation>[ by %1 | 網路模式 ]</translation>
+        <translation>[ 以 %1 | 網路模式 ]</translation>
     </message>
     <message>
         <source>Gimp Palette (*.gpl *.txt *.css)</source>
-        <translation>Gimp調色盤 (*.gpl *.txt *.css)</translation>
+        <translation>Gimp調色板 (*.gpl *.txt *.css)</translation>
     </message>
     <message>
         <source>Close application</source>
@@ -3678,11 +3678,11 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>&amp;Export Project</source>
-        <translation>匯出專案</translation>
+        <translation>匯出專案(&amp;E)</translation>
     </message>
     <message>
         <source>Cl&amp;ose Project</source>
-        <translation>關閉專案</translation>
+        <translation>關閉專案(&amp;O)</translation>
     </message>
     <message>
         <source>Information</source>
@@ -3694,7 +3694,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>&amp;Import GIMP Palettes</source>
-        <translation>匯入GIMP調色盤</translation>
+        <translation>匯入GIMP調色盤(&amp;I)</translation>
     </message>
     <message>
         <source>Alt+Shift+B</source>
@@ -3750,7 +3750,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>&amp;Import</source>
-        <translation>匯入</translation>
+        <translation>匯入(&amp;I)</translation>
     </message>
     <message>
         <source>Discard</source>
@@ -3758,7 +3758,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Project &lt;b&gt;%1&lt;/b&gt; saved</source>
-        <translation>儲存專案</translation>
+        <translation>專案 &lt;b&gt;%1&lt;/b&gt; 已儲存</translation>
     </message>
     <message>
         <source>Opens the preferences dialog box</source>
@@ -3856,11 +3856,11 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>&amp;Apply</source>
-        <translation>應用</translation>
+        <translation>應用(&amp;A)</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
-        <translation>取消</translation>
+        <translation>取消(&amp;C)</translation>
     </message>
     <message>
         <source>Foreground Layer</source>
@@ -3927,7 +3927,7 @@ Please, contact the animation server admin to get access.</source>
     <name>TupNewItemDialog</name>
     <message>
         <source>&amp;Open it with:</source>
-        <translation>開啟：</translation>
+        <translation>開啟為(&amp;O):</translation>
     </message>
     <message>
         <source>Black</source>
@@ -3939,7 +3939,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>&amp;Name:</source>
-        <translation>名字</translation>
+        <translation>名字(&amp;N)</translation>
     </message>
     <message>
         <source>Create new vector item</source>
@@ -3951,15 +3951,15 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>&amp;Width:</source>
-        <translation>寬度:</translation>
+        <translation>寬度(&amp;W):</translation>
     </message>
     <message>
         <source>&amp;Background:</source>
-        <translation>背景:</translation>
+        <translation>背景(&amp;B):</translation>
     </message>
     <message>
         <source>&amp;Extension:</source>
-        <translation>擴充:</translation>
+        <translation>擴充(&amp;E):</translation>
     </message>
     <message>
         <source>Create new raster item</source>
@@ -3967,7 +3967,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>&amp;Height:</source>
-        <translation>高:</translation>
+        <translation>高(&amp;H):</translation>
     </message>
 </context>
 <context>
@@ -4375,7 +4375,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Load &amp;Sound</source>
-        <translation>載入聲音</translation>
+        <translation>載入聲音(&amp;S)</translation>
     </message>
     <message>
         <source>Choose the images directory...</source>
@@ -4395,7 +4395,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>&amp;Load PGO File</source>
-        <translation>載入PGO檔</translation>
+        <translation>載入PGO檔(&amp;L)</translation>
     </message>
     <message>
         <source>Sound file (*.ogg *.wav *.mp3)</source>
@@ -4419,7 +4419,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Load &amp;Images</source>
-        <translation>載入影像</translation>
+        <translation>載入影像(&amp;I)</translation>
     </message>
 </context>
 <context>
@@ -4532,19 +4532,19 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Information</source>
-        <translation type="unfinished">資訊</translation>
+        <translation>資訊</translation>
     </message>
     <message>
         <source>Preferences saved successfully</source>
-        <translation type="unfinished"></translation>
+        <translation>偏好儲存成功</translation>
     </message>
     <message>
         <source>Warning</source>
-        <translation type="unfinished">警告</translation>
+        <translation>警告</translation>
     </message>
     <message>
         <source>Please restart TupiTube</source>
-        <translation type="unfinished"></translation>
+        <translation>請重新啟動TupiTube</translation>
     </message>
 </context>
 <context>
@@ -4574,7 +4574,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Extend frame</source>
-        <translation>擴充影格</translation>
+        <translation>延展影格</translation>
     </message>
     <message>
         <source>Remove frame</source>
@@ -4594,7 +4594,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Insert layer</source>
-        <translation>插入層</translation>
+        <translation>插入圖層</translation>
     </message>
     <message>
         <source>Insert scene</source>
@@ -4602,11 +4602,11 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Do you want to remove current selection?</source>
-        <translation>你要移除目前的選項嗎？</translation>
+        <translation>你要移除目前所選項目嗎？</translation>
     </message>
     <message>
         <source>Move frame forward</source>
-        <translation>向前移動影格</translation>
+        <translation>影格向前移動</translation>
     </message>
     <message>
         <source>Paste frame</source>
@@ -4618,7 +4618,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Do you want to remove this layer?</source>
-        <translation>你要移除此層嗎？</translation>
+        <translation>你要移除此圖層嗎？</translation>
     </message>
     <message>
         <source>Copy frame</source>
@@ -4630,7 +4630,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Reverse frame selection</source>
-        <translation>逆向影格選項</translation>
+        <translation>反選選取影格</translation>
     </message>
     <message>
         <source>Confirmation</source>
@@ -4822,7 +4822,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>&amp;PDF</source>
-        <translation>PDF</translation>
+        <translation>&amp;PDF</translation>
     </message>
     <message>
         <source>Html</source>
@@ -4834,11 +4834,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>&amp;HTML</source>
-        <translation>HTML</translation>
-    </message>
-    <message>
-        <source>&amp;Post</source>
-        <translation>發布</translation>
+        <translation>HTML(&amp;H)</translation>
     </message>
     <message>
         <source>Scene Information</source>
@@ -4919,6 +4915,10 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Duration</source>
         <translation>歷時</translation>
+    </message>
+    <message>
+        <source>&amp;Post</source>
+        <translation>郵寄</translation>
     </message>
 </context>
 <context>
@@ -5192,7 +5192,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Tween %1 applied!</source>
-        <translation>補間動畫適用!</translation>
+        <translation>補間動畫%1 已套用!</translation>
     </message>
     <message>
         <source>The selected items already have this kind of tween assigned.</source>

@@ -1223,7 +1223,7 @@
     </message>
     <message>
         <source>Paste objects over mouse position</source>
-        <translation type="unfinished"></translation>
+        <translation>将对象粘贴到鼠标位置</translation>
     </message>
 </context>
 <context>
@@ -1370,39 +1370,39 @@
     <name>TBackupDialog</name>
     <message>
         <source>Recovery Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>恢复模式</translation>
     </message>
     <message>
         <source>There was an issue while saving your project.&lt;br/&gt;Please, select a folder to try to recover it.</source>
-        <translation type="unfinished"></translation>
+        <translation>保存项目时出现问题。&lt;br/&gt;请选择一个文件夹以尝试恢复它。</translation>
     </message>
     <message>
         <source>Choose another path</source>
-        <translation type="unfinished">选择其他路径</translation>
+        <translation>选择其他路径</translation>
     </message>
     <message>
         <source>Folder: </source>
-        <translation type="unfinished"></translation>
+        <translation>夹： </translation>
     </message>
     <message>
         <source>Make Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>进行备份</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">取消</translation>
+        <translation>取消</translation>
     </message>
     <message>
         <source>Choose a directory...</source>
-        <translation type="unfinished">选择目录</translation>
+        <translation>选择目录</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished">错误</translation>
+        <translation>错误</translation>
     </message>
     <message>
         <source>Folder doesn&apos;t exist. Please, pick one!</source>
-        <translation type="unfinished"></translation>
+        <translation>资料夹不存在。 请选一个！</translation>
     </message>
 </context>
 <context>
@@ -2683,7 +2683,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Exporting...</source>
-        <translation type="unfinished"></translation>
+        <translation>出口...</translation>
     </message>
 </context>
 <context>
@@ -2788,19 +2788,19 @@ Please, rename the project&apos;s file</source>
     <name>TupFileManager</name>
     <message>
         <source>Information</source>
-        <translation type="unfinished">信息</translation>
+        <translation>信息</translation>
     </message>
     <message>
         <source>A copy of your project was successfully saved at:&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>您的项目的副本已成功保存在：&lt;br/&gt; &lt;b&gt;％1&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Please, contact TupiTube&apos;s developer team to recovery it. &lt;b&gt;https://www.tupitube.com&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>请与TupiTube的开发人员团队联系以恢复它。 &lt;b&gt;https://www.tupitube.com&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Sorry, the project &lt;b&gt;%1.tup&lt;/b&gt; couldn&apos;t be recovered.&lt;br/&gt;Please, try to backup your animation files often.</source>
-        <translation type="unfinished"></translation>
+        <translation>抱歉，无法恢复项目&lt;b&gt;％1.tup&lt;/b&gt;。&lt;br/&gt;请尝试经常备份动画文件。</translation>
     </message>
 </context>
 <context>
@@ -2862,43 +2862,43 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>General</source>
-        <translation type="unfinished">一般的</translation>
+        <translation>一般的</translation>
     </message>
     <message>
         <source>Cache</source>
-        <translation type="unfinished"></translation>
+        <translation>快取</translation>
     </message>
     <message>
         <source>The CACHE path is the folder where TupiTube creates temporary files while you work on your animation projects.&lt;br/&gt;&lt;b&gt;Note:&lt;/b&gt; Don&apos;t change this parameter unless you know what you are doing.</source>
-        <translation type="unfinished"></translation>
+        <translation>CACHE路径是TupiTube在处理动画项目时在其中创建临时文件的文件夹。&lt;br/&gt;&lt;b&gt;注意：&lt;/b&gt;除非您知道自己在做什么，否则请勿更改此参数。</translation>
     </message>
     <message>
         <source>Choose another path</source>
-        <translation type="unfinished">选择其他路径</translation>
+        <translation>选择其他路径</translation>
     </message>
     <message>
         <source>CACHE Path: </source>
-        <translation type="unfinished"></translation>
+        <translation>缓存路径： </translation>
     </message>
     <message>
         <source>Restore default value</source>
-        <translation type="unfinished"></translation>
+        <translation>恢复默认值</translation>
     </message>
     <message>
         <source>Choose a directory...</source>
-        <translation type="unfinished">选择目录</translation>
+        <translation>选择目录</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished">错误</translation>
+        <translation>错误</translation>
     </message>
     <message>
         <source>Cache path is empty. Set a value!</source>
-        <translation type="unfinished"></translation>
+        <translation>缓存路径为空。 设置一个值！</translation>
     </message>
     <message>
         <source>Cache path doesn&apos;t exist. Create it!</source>
-        <translation type="unfinished"></translation>
+        <translation>缓存路径不存在。 创造它！</translation>
     </message>
 </context>
 <context>
@@ -4532,19 +4532,19 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Information</source>
-        <translation type="unfinished">信息</translation>
+        <translation>信息</translation>
     </message>
     <message>
         <source>Preferences saved successfully</source>
-        <translation type="unfinished"></translation>
+        <translation>首选项已成功保存</translation>
     </message>
     <message>
         <source>Warning</source>
-        <translation type="unfinished">警告</translation>
+        <translation>警告</translation>
     </message>
     <message>
         <source>Please restart TupiTube</source>
-        <translation type="unfinished">请重新启动TupiTube</translation>
+        <translation>请重新启动TupiTube</translation>
     </message>
 </context>
 <context>
