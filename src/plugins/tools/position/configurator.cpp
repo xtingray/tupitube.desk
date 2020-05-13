@@ -81,11 +81,7 @@ Configurator::~Configurator()
 void Configurator::loadTweenList(QList<QString> tweenList)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Configurator::loadTweenList()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[Configurator::loadTweenList()]";
     #endif
 
     tweenManager->loadTweenList(tweenList);
@@ -237,11 +233,7 @@ void Configurator::addTween(const QString &name)
 void Configurator::editTween()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Configurator::editTween()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[Configurator::editTween()]";
     #endif
 
     activeTweenManagerPanel(false);
@@ -259,11 +251,7 @@ void Configurator::editTween()
 void Configurator::closeTweenProperties()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Configurator::closeTweenProperties()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[Configurator::closeTweenProperties()]";
     #endif
 
     if (currentMode == TupToolPlugin::Add)
@@ -310,11 +298,7 @@ void Configurator::notifySelection(bool flag)
 void Configurator::closeSettingsPanel()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Configurator::closeSettingsPanel()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[Configurator::closeSettingsPanel()]";
     #endif
 
     if (state == Properties) {
@@ -339,11 +323,7 @@ void Configurator::applyItem()
 void Configurator::resetUI()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Configurator::resetUI()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[Configurator::resetUI()]";
     #endif
 
     tweenManager->resetUI();

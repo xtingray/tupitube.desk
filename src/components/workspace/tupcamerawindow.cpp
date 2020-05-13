@@ -77,13 +77,7 @@ TupCameraWindow::TupCameraWindow(QCamera *input, const QSize &camSize, const QSi
     QCameraInfo cameraInfo(*input); 
 
     #ifdef TUP_DEBUG
-        QString msg = "TupCameraWindow() - Camera Orientation: " + QString::number(cameraInfo.orientation());
-
-        #ifdef Q_OS_WIN
-            qDebug() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qDebug() << "TupCameraWindow() - Camera Orientation: " + QString::number(cameraInfo.orientation());
     #endif
 
     videoSurface = new TupVideoSurface(this, this, displaySize, isScaled, cameraInfo.orientation(), this);
@@ -122,12 +116,7 @@ void TupCameraWindow::reset()
 
     if (! dir.rmdir(dir.absolutePath())) {
         #ifdef TUP_DEBUG
-            QString msg = "TupCameraWindow::reset() - Fatal Error: Can't remove pictures directory -> " + dir.absolutePath();
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupCameraWindow::reset() - Fatal Error: Can't remove pictures directory -> " + dir.absolutePath();
         #endif 
     }
 }
@@ -201,12 +190,7 @@ void TupCameraWindow::imageSavedFromCamera(int id, const QString path)
     Q_UNUSED(id);
 
     #ifdef TUP_DEBUG
-        QString msg = "TupCameraInterface::imageSavedFromCamera() - Picture path -> " + path;
-        #ifdef Q_OS_WIN
-            qDebug() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qWarning() << "TupCameraInterface::imageSavedFromCamera() - Picture path -> " + path;
     #endif
 
     if (path.isEmpty())

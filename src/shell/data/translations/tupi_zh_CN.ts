@@ -1631,6 +1631,14 @@
         <source>About TupiTube Desk</source>
         <translation>关于Muvizu Tupi</translation>
     </message>
+    <message>
+        <source>License Agreement</source>
+        <translation>许可协议</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>关闭</translation>
+    </message>
 </context>
 <context>
     <name>TupBasicCameraInterface</name>

@@ -152,16 +152,11 @@ void TupGradientCreator::setGradient(const QBrush &brush)
         if (gradient->type() == QGradient::RadialGradient) {
             spinControl->setRadius((int) static_cast<const QRadialGradient*>(gradient)->radius());
         } else if (gradient->type() == QGradient::ConicalGradient) {
-                   spinControl->setAngle((int) static_cast<const QConicalGradient*>(gradient)->angle());
+            spinControl->setAngle((int) static_cast<const QConicalGradient*>(gradient)->angle());
         }
     } else {
         #ifdef TUP_DEBUG
-		    QString msg = "TupGradientCreator::setGradient() - Error: Brush has no gradient (null)";
-		    #ifdef Q_OS_WIN
-               qDebug() << msg;
-            #else
-               tError() << msg;
-            #endif
+	    qDebug() << "TupGradientCreator::setGradient() - Error: Brush has no gradient (null)";
         #endif
     }
 }

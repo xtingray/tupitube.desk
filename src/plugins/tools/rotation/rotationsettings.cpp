@@ -318,11 +318,7 @@ void RotationSettings::activeRangeForm(bool enable)
 void RotationSettings::setParameters(const QString &name, int framesCount, int initFrame)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Settings::setParameters()]";
-        #else
-            T_FUNCINFO << "- Adding new tween";
-        #endif
+        qDebug() << "[Settings::setParameters()] - Adding new tween...";
     #endif
 
     mode = TupToolPlugin::Add;
@@ -351,11 +347,7 @@ void RotationSettings::setParameters(const QString &name, int framesCount, int i
 void RotationSettings::setParameters(TupItemTweener *currentTween)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Settings::setParameters()]";
-        #else
-            T_FUNCINFO << "- Editing current tween";
-        #endif
+        qDebug() << "[Settings::setParameters()] - Editing current tween...";
     #endif
 
     setEditMode();
@@ -434,12 +426,7 @@ void RotationSettings::applyTween()
     if (!selectionDone) {
         TOsd::self()->display(tr("Info"), tr("You must select at least one object!"), TOsd::Info); 
         #ifdef TUP_DEBUG
-            QString msg = "Settings::applyTween() - You must select at least one object!";
-            #ifdef Q_OS_WIN
-         qDebug() << msg;
-            #else
-         tError() << msg;
-            #endif
+            qDebug() << "Settings::applyTween() - You must select at least one object!";
         #endif
 
         return;
@@ -448,12 +435,7 @@ void RotationSettings::applyTween()
     if (!propertiesDone) {
         TOsd::self()->display(tr("Info"), tr("You must set Tween properties first!"), TOsd::Error);
         #ifdef TUP_DEBUG
-            QString msg = "Settings::applyTween() - You must set Tween properties first!";
-            #ifdef Q_OS_WIN
-         qDebug() << msg;
-            #else
-         tError() << msg;
-            #endif
+            qDebug() << "Settings::applyTween() - You must set Tween properties first!";
         #endif
         return;
     }
@@ -464,12 +446,7 @@ void RotationSettings::applyTween()
         if (start == end) {
             TOsd::self()->display(tr("Info"), tr("Angle range must be greater than 0!"), TOsd::Error);
             #ifdef TUP_DEBUG
-         QString msg = "Settings::applyTween() - Angle range must be greater than 0!";
-         #ifdef Q_OS_WIN
-             qDebug() << msg;
-         #else
-             tError() << msg;
-         #endif
+                qDebug() << "Settings::applyTween() - Angle range must be greater than 0!";
             #endif
             return;
         }
@@ -478,12 +455,7 @@ void RotationSettings::applyTween()
         if (range < degreesPerFrame->value()) {
             TOsd::self()->display(tr("Info"), tr("Angle range must be greater than Speed!"), TOsd::Error);
             #ifdef TUP_DEBUG
-         QString msg = "Settings::applyTween() - Angle range must be greater than Speed!";
-         #ifdef Q_OS_WIN
-             qDebug() << msg;
-         #else
-             tError() << msg;
-         #endif
+                qDebug() << "Settings::applyTween() - Angle range must be greater than Speed!";
             #endif
             return;
         }
@@ -525,19 +497,14 @@ void RotationSettings::emitOptionChanged(int option)
         case 1:
         {
             if (selectionDone) {
-         activeInnerForm(true);
-         emit clickedDefineAngle();
+                activeInnerForm(true);
+                emit clickedDefineAngle();
             } else {
-         options->setCurrentIndex(0);
-         TOsd::self()->display(tr("Info"), tr("Select objects for Tweening first!"), TOsd::Info);
-         #ifdef TUP_DEBUG
-             QString msg = "Settings::emitOptionChanged() - You must set Tween properties first!";
-             #ifdef Q_OS_WIN
-                 qDebug() << msg;
-             #else
-                 tError() << msg;
-             #endif
-         #endif
+                options->setCurrentIndex(0);
+                TOsd::self()->display(tr("Info"), tr("Select objects for Tweening first!"), TOsd::Info);
+                #ifdef TUP_DEBUG
+                    qDebug() << "Settings::emitOptionChanged() - You must set Tween properties first!";
+                #endif
             }
         }
     }

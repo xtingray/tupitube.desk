@@ -114,11 +114,7 @@ bool TreeListWidget::isEditable() const
 void TreeListWidget::closeEditor(QWidget * editor, QAbstractItemDelegate::EndEditHint hint)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCommandExecutor::removeItem()]";
-        #else
-           T_FUNCINFO;
-        #endif
+        qDebug() << "[TupCommandExecutor::removeItem()]";
     #endif
 
     QLineEdit *edit = qobject_cast<QLineEdit *>(editor);

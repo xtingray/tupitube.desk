@@ -65,11 +65,7 @@ void TupSceneSelector::reset()
 void TupSceneSelector::setScenes(const QList<TupScene *> &scenes)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupSceneSelector::setScenes()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupSceneSelector::setScenes()]";
     #endif
 
     m_selector->clear();
@@ -78,12 +74,7 @@ void TupSceneSelector::setScenes(const QList<TupScene *> &scenes)
         int pos = 1;
         foreach (TupScene *scene, scenes) {
                  #ifdef TUP_DEBUG
-                     QString msg = "TupSceneSelector::setScenes() - Adding " + scene->getSceneName();
-                     #ifdef Q_OS_WIN
-                         qWarning() << msg;
-                     #else
-                         tWarning("export") << msg;
-                     #endif
+                     qWarning() << "TupSceneSelector::setScenes() - Adding " + scene->getSceneName();
                  #endif
 
                  m_selector->addItem(QString("%1: ").arg(pos) + scene->getSceneName());
@@ -91,12 +82,7 @@ void TupSceneSelector::setScenes(const QList<TupScene *> &scenes)
         }
 
         #ifdef TUP_DEBUG
-            QString msg = "TupSceneSelector::setScenes() - Available Scenes: " + QString::number(pos - 1);
-            #ifdef Q_OS_WIN
-                qWarning() << msg;
-            #else
-                tWarning() << msg;
-            #endif
+            qWarning() << "TupSceneSelector::setScenes() - Available Scenes: " + QString::number(pos - 1);
         #endif
 
         m_selector->selectFirstItem();

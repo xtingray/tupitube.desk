@@ -121,11 +121,7 @@ QStringList Tweener::keys() const
 void Tweener::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Rotation Tweener::press()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[Rotation Tweener::press()]";
     #endif
 
     Q_UNUSED(input);
@@ -149,11 +145,7 @@ void Tweener::move(const TupInputDeviceInformation *input, TupBrushManager *brus
 void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Rotation Tweener::release()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[Rotation Tweener::release()]";
     #endif
 
     Q_UNUSED(input);
@@ -162,21 +154,11 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
     if (gScene->currentFrameIndex() == initFrame) {
         if (editMode == TupToolPlugin::Selection) {
             #ifdef TUP_DEBUG
-                QString msg = "Rotation Tweener::release() - Tracing selection mode";
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "Rotation Tweener::release() - Tracing selection mode";
             #endif
             if (gScene->selectedItems().size() > 0) {
                 #ifdef TUP_DEBUG
-                    QString msg = "Rotation Tweener::release() - selection size -> " + QString::number(gScene->selectedItems().size());
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "Rotation Tweener::release() - selection size -> " + QString::number(gScene->selectedItems().size());
                 #endif
                 objects = gScene->selectedItems();
                 foreach (QGraphicsItem *item, objects) {
@@ -202,12 +184,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 }
 
                 #ifdef TUP_DEBUG
-                    QString msg1 = "Rotation Tweener::release() - Notifying selection...";
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg1;
-                    #else
-                        tError() << msg1;
-                    #endif
+                    qDebug() << "Rotation Tweener::release() - Notifying selection...";
                 #endif
                 configPanel->notifySelection(true);
                 QGraphicsItem *item = objects.at(0);
@@ -215,12 +192,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 origin = rect.center();
             } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "Rotation Tweener::release() - Selection mode: no items selected";
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "Rotation Tweener::release() - Selection mode: no items selected";
                 #endif
             }
         }
@@ -576,11 +548,8 @@ void Tweener::applyTween()
 void Tweener::removeTweenFromProject(const QString &name)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Rotation Tweener::removeTweenFromProject()]";
-        #else
-            T_FUNCINFO << "name: " << name;
-        #endif
+        qDebug() << "[Rotation Tweener::removeTweenFromProject()]";
+        qDebug() << "name: " << name;
     #endif
 
     TupScene *sceneData = scene->currentScene();
@@ -608,12 +577,7 @@ void Tweener::removeTweenFromProject(const QString &name)
         emit tweenRemoved();
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "Tweener::removeTweenFromProject() - Rotation tween couldn't be removed -> " + name;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "Tweener::removeTweenFromProject() - Rotation tween couldn't be removed -> " + name;
         #endif
     }
 }
@@ -621,11 +585,7 @@ void Tweener::removeTweenFromProject(const QString &name)
 void Tweener::removeTween(const QString &name)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Rotation Tweener::removeTween()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[Rotation Tweener::removeTween()]";
     #endif
 
     removeTweenFromProject(name);
@@ -655,22 +615,12 @@ void Tweener::addTarget()
                 target->resizeNode(realFactor);
             } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "Tweener::addTarget() - Current tween pointer is NULL!";
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "Tweener::addTarget() - Current tween pointer is NULL!";
                 #endif
             }
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "Tweener::addTarget() - No objects has been selected for the current tween!";
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "Tweener::addTarget() - No objects has been selected for the current tween!";
             #endif
         }
     }
@@ -703,12 +653,7 @@ void Tweener::updateMode(TupToolPlugin::Mode currentMode)
             }
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "Tweener::updateMode() - Current tween pointer is NULL!";
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "Tweener::updateMode() - Current tween pointer is NULL!";
             #endif
         }
     }

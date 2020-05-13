@@ -42,11 +42,7 @@
 TupCameraStatus::TupCameraStatus(bool isNetworked, QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCameraStatus()]";
-        #else
-           TINIT;
-        #endif
+        qDebug() << "[TupCameraStatus()]";
     #endif
 
     framesTotal = 1;
@@ -129,11 +125,7 @@ TupCameraStatus::TupCameraStatus(bool isNetworked, QWidget *parent) : QFrame(par
 TupCameraStatus::~TupCameraStatus()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupCameraStatus()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "[~TupCameraStatus()]";
     #endif
 }
 
@@ -141,11 +133,7 @@ void TupCameraStatus::setFPS(int frames)
 {
     /*
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupScreen::setFPS()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupScreen::setFPS()]";
     #endif
     */
 

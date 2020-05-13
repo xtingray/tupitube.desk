@@ -139,11 +139,8 @@ void Tweener::init(TupGraphicsScene *gScene)
 void Tweener::updateStartFrame(int index)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Tweener::updateStartFrame()]";
-        #else
-            T_FUNCINFO << "index: " << index;
-        #endif
+       qDebug() << "[Tweener::updateStartFrame()]";
+       qDebug() << "index: " << index;
     #endif
 
     if (index == 1)
@@ -210,12 +207,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
     if (gScene->currentFrameIndex() == initFrame) {
         if (editMode == TupToolPlugin::Properties) {
             #ifdef TUP_DEBUG
-                QString msg = "Position Tweener::release() - Tracing properties mode";
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "Position Tweener::release() - Tracing properties mode";
             #endif
             if (nodesGroup) {
                 updateTweenPath();
@@ -993,12 +985,7 @@ void Tweener::setEditEnv()
         setTweenPath();
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "Tweener::setEditEnv() - Fatal Error: Position tween wasn't found -> " + currentTween->getTweenName();
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "Tweener::setEditEnv() - Fatal Error: Position tween wasn't found -> " + currentTween->getTweenName();
         #endif
     }
 }

@@ -46,11 +46,7 @@ TupSceneContainer::~TupSceneContainer()
 void TupSceneContainer::addScene(int sceneIndex, TupTimeLineTable *framesTable, const QString &sceneName)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupSceneContainer::addScene()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupSceneContainer::addScene()]";
     #endif
 
     scenes << framesTable;
@@ -67,11 +63,7 @@ void TupSceneContainer::restoreScene(int sceneIndex, const QString &sceneName)
 void TupSceneContainer::removeScene(int sceneIndex, bool withBackup)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupSceneContainer::removeScene()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupSceneContainer::removeScene()]";
     #endif
 
     if (withBackup)

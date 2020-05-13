@@ -38,6 +38,7 @@
 
 #include "tglobal.h"
 #include "tabdialog.h"
+#include "tanimwidget.h"
 
 /**
  * @brief Class that handles the about dialog box
@@ -62,8 +63,14 @@ class TUPITUBE_EXPORT TupAbout : public TabDialog
     Q_OBJECT
 
     public:
-        TupAbout(QWidget *parent);
+        TupAbout(QWidget *parent = nullptr);
         ~TupAbout();
+
+    protected:
+        void keyPressEvent(QKeyEvent *event);
+
+    private:
+        TAnimWidget *credits;
 };
 
 #endif

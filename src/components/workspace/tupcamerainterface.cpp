@@ -54,11 +54,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QCameraInfo> 
                                        const QSize cameraSize, int i, QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCameraInterface()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "[TupCameraInterface()]";
     #endif
 
     setWindowTitle(tr("TupiTube Camera Manager") + " | " + tr("Current resolution:") + " " + title);
@@ -274,11 +270,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QCameraInfo> 
 TupCameraInterface::~TupCameraInterface()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupCameraInterface()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "[~TupCameraInterface()]";
     #endif
 }
 
@@ -310,12 +302,7 @@ QString TupCameraInterface::randomPath()
     QDir dir;
     if (!dir.mkdir(path)) {
         #ifdef TUP_DEBUG
-            QString msg = "TupCameraInterface::randomPath() - Fatal Error: Can't create pictures directory -> " + path;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupCameraInterface::randomPath() - Fatal Error: Can't create pictures directory -> " + path;
         #endif
 
         path = "";
@@ -327,13 +314,9 @@ QString TupCameraInterface::randomPath()
 
 void TupCameraInterface::takePicture()
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
+    #ifdef TUP_DEBUG
         qDebug() << "[TupCameraInterface::takePicture()]";
-    #else
-        T_FUNCINFO;
     #endif
-#endif
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     currentCamera->takePicture(counter);

@@ -71,22 +71,10 @@ TupVideoSurface::TupVideoSurface(QWidget *widget, VideoIF *target, const QSize &
     const QScreen *screen = QGuiApplication::primaryScreen();
 
     #ifdef TUP_DEBUG
-        QString msg1 = "TupVideoSurface() - isScaled: " + QString::number(isScaled);
-        QString msg2 = "TupVideoSurface() - displaySize: " + QString::number(size.width()) + ", " + QString::number(size.height());
-        QString msg3 = "TupVideoSurface() - widgetSize: " + QString::number(widgetWidth) + ", " + QString::number(widgetHeight);
-        QString msg4 = "TupVideoSurface() - Screen Orientation: " + QString::number(screen->nativeOrientation());
-
-        #ifdef Q_OS_WIN
-            qDebug() << msg1;
-            qDebug() << msg2;
-            qDebug() << msg3;
-            qDebug() << msg4;
-        #else
-            tWarning() << msg1;
-            tWarning() << msg2;
-            tWarning() << msg3;
-            tWarning() << msg4;
-        #endif
+        qWarning() << "TupVideoSurface() - isScaled: " + QString::number(isScaled);
+        qWarning() << "TupVideoSurface() - displaySize: " + QString::number(size.width()) + ", " + QString::number(size.height());
+        qWarning() << "TupVideoSurface() - widgetSize: " + QString::number(widgetWidth) + ", " + QString::number(widgetHeight);
+        qWarning() << "TupVideoSurface() - Screen Orientation: " + QString::number(screen->nativeOrientation());
     #endif
 
     const int screenAngle = screen->angleBetween(screen->nativeOrientation(), screen->orientation());

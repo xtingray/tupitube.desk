@@ -56,9 +56,7 @@
 
 #ifdef TUP_DEBUG
   #include <QDebug>
-  #ifdef Q_OS_WIN
-    #define SHOW_VAR(arg) qDebug() << #arg << " = " << arg;
-  #endif
+  #define SHOW_VAR(arg) qDebug() << #arg << " = " << arg;
 #endif
 
 #define LIBRARY_DIR CONFIG_DIR+"/libraries"

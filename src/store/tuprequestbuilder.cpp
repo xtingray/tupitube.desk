@@ -276,12 +276,7 @@ TupProjectRequest TupRequestBuilder::fromResponse(TupProjectResponse *response)
             default:
                  {
                     #ifdef TUP_DEBUG
-                        QString msg = "TupRequestBuilder::fromResponse() - Error: wOw! Unknown response! O_o";
-                        #ifdef Q_OS_WIN
-                            qWarning() << msg;
-                        #else
-                            tWarning() << msg;
-                        #endif
+                        qDebug() << "TupRequestBuilder::fromResponse() - Error: wOw! Unknown response! O_o";
                     #endif
                  }
     }

@@ -100,34 +100,24 @@ bool TXmlParserBase::characters(const QString &ch)
 
 bool TXmlParserBase::error(const QXmlParseException &exception)
 {
-#ifdef TUP_DEBUG	
-    #ifdef Q_OS_WIN
+    #ifdef TUP_DEBUG	
         qWarning() << exception.lineNumber() << "x" << exception.columnNumber() << ": " << exception.message();
         qWarning() << __PRETTY_FUNCTION__ << " Document: " << document;
     #else
-        tWarning() << exception.lineNumber() << "x" << exception.columnNumber() << ": " << exception.message();
-        tWarning() << __PRETTY_FUNCTION__ << " Document: " << document;
+        Q_UNUSED(exception);
     #endif
-#else
-     Q_UNUSED(exception);
-#endif
 
     return true;
 }
 
 bool TXmlParserBase::fatalError(const QXmlParseException &exception)
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
+    #ifdef TUP_DEBUG
         qWarning() << exception.lineNumber() << "x" << exception.columnNumber() << ": " << exception.message();
         qWarning() << __PRETTY_FUNCTION__ << " Document: " << document;
     #else
-        tWarning() << exception.lineNumber() << "x" << exception.columnNumber() << ": " << exception.message();
-        tWarning() << __PRETTY_FUNCTION__ << " Document: " << document;
+        Q_UNUSED(exception);
     #endif
-#else
-     Q_UNUSED(exception);
-#endif
 
     return true;
 }
@@ -171,15 +161,9 @@ bool TXmlParserBase::parse(QFile *file)
 {
     if (!file->isOpen()) {
         if (! file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-#ifdef TUP_DEBUG
-            QString msg = "TXmlParserBase::parse() - Error: Cannot open file -> " + file->fileName();
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
+            #ifdef TUP_DEBUG
+                qDebug() << "TXmlParserBase::parse() - Error: Cannot open file -> " + file->fileName();
             #endif
-#endif
-
             return false;
         }
     }

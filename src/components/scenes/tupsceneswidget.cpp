@@ -38,11 +38,7 @@
 TupScenesWidget::TupScenesWidget(QWidget *parent) : TupModuleWidgetBase(parent, "TupScenesWidget")
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupScenesWidget()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "[TupScenesWidget()]";
     #endif
 
     setWindowTitle(tr("Scenes Manager"));
@@ -54,11 +50,7 @@ TupScenesWidget::TupScenesWidget(QWidget *parent) : TupModuleWidgetBase(parent, 
 TupScenesWidget::~TupScenesWidget()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupScenesWidget()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "[~TupScenesWidget()]";
     #endif
 
     delete buttonGroup;
@@ -122,11 +114,7 @@ void TupScenesWidget::sendEvent(int action)
 void TupScenesWidget::selectScene(int index)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupScenesWidget::selectScene()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupScenesWidget::selectScene()]";
     #endif
 
     if (scenesTable->scenesCount() > 1) {
@@ -138,11 +126,7 @@ void TupScenesWidget::selectScene(int index)
 void TupScenesWidget::emitRequestInsertScene()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupScenesWidget::emitRequestInsertScene()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupScenesWidget::emitRequestInsertScene()]";
     #endif
 
     int index = scenesTable->scenesCount();
@@ -171,11 +155,7 @@ void TupScenesWidget::emitRequestInsertScene()
 void TupScenesWidget::emitRequestRemoveScene()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupScenesWidget::emitRequestRemoveScene()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupScenesWidget::emitRequestRemoveScene()]";
     #endif
 
     int index = scenesTable->currentSceneIndex();
@@ -201,11 +181,7 @@ void TupScenesWidget::emitRequestRemoveScene()
 void TupScenesWidget::closeAllScenes()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupScenesWidget::closeAllScenes()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupScenesWidget::closeAllScenes()]";
     #endif
 
     blockSignals(true);
@@ -216,13 +192,8 @@ void TupScenesWidget::closeAllScenes()
 void TupScenesWidget::sceneResponse(TupSceneResponse *e)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupScenesWidget::sceneResponse()]";
-            qDebug() << "SHOW_VAR: " << e->getAction();
-        #else
-            T_FUNCINFOX("scenes");
-            SHOW_VAR(e->getAction());
-        #endif
+        qDebug() << "[TupScenesWidget::sceneResponse()]";
+        qDebug() << "SHOW_VAR: " << e->getAction();
     #endif
 
     int index = e->getSceneIndex();

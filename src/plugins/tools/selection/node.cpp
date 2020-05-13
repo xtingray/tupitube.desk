@@ -124,11 +124,7 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     /*
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Node::itemChange()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[Node::itemChange()]";
     #endif
     */
 
@@ -145,11 +141,7 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Node::mousePressEvent()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[Node::mousePressEvent()]";
     #endif
 
     oldPoint = event->scenePos();
@@ -163,11 +155,7 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Node::mouseReleaseEvent()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[Node::mouseReleaseEvent()]";
     #endif
 
     QGraphicsItem::mouseReleaseEvent(event);
@@ -196,8 +184,8 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             /*
             double scaleX = parent->data(TupGraphicObject::ScaleX).toDouble();
             double scaleY = parent->data(TupGraphicObject::ScaleY).toDouble();
-            tError() << "Node::mouseMoveEvent() - scaleX: " << scaleX;
-            tError() << "Node::mouseMoveEvent() - scaleY: " << scaleY;
+            qDebug() << "Node::mouseMoveEvent() - scaleX: " << scaleX;
+            qDebug() << "Node::mouseMoveEvent() - scaleY: " << scaleY;
             */
 
             qreal sx = fabs(distance.x()) / w;
@@ -228,11 +216,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void Node::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Node::mouseDoubleClickEvent()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[Node::mouseDoubleClickEvent()]";
     #endif
 
     manager->toggleAction();

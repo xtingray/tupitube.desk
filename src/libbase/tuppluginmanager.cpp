@@ -108,12 +108,7 @@ void TupPluginManager::loadPlugins()
 void TupPluginManager::unloadPlugins()
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupPluginManager::unloadPlugins() - Unloading plugins...";
-        #ifdef Q_OS_WIN
-            qWarning() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qWarning() << "TupPluginManager::unloadPlugins() - Unloading plugins...";
     #endif
 
     foreach (QPluginLoader *loader, loaders) {

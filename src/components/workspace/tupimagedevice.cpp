@@ -38,11 +38,7 @@
 TupImageDevice::TupImageDevice(QWidget *parent) : QWidget(parent)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupImageDevice()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "[TupImageDevice()]";
     #endif
 
     image = QImage(300,300, QImage::Format_RGB32);
@@ -57,11 +53,7 @@ TupImageDevice::TupImageDevice(QWidget *parent) : QWidget(parent)
 TupImageDevice::~TupImageDevice()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupImageDevice()]";
-        #else
-           TEND;
-        #endif
+        qDebug() << "[~TupImageDevice()]";
     #endif
 }
 

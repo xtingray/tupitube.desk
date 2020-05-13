@@ -176,14 +176,8 @@ double TupItemTweener::initYScaleValue()
 void TupItemTweener::fromXml(const QString &xml)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupItemTweener::fromXml() - Tween content: ";
-        #ifdef Q_OS_WIN
-           qWarning() << msg;
-           qWarning() << xml;
-        #else
-           tWarning() << msg;
-           tWarning() << xml;
-        #endif
+        qDebug() << "TupItemTweener::fromXml() - Tween content: ";
+        qWarning() << xml;
     #endif
     
     QDomDocument doc;
@@ -290,15 +284,8 @@ void TupItemTweener::fromXml(const QString &xml)
 QDomElement TupItemTweener::toXml(QDomDocument &doc) const
 {
     #ifdef TUP_DEBUG
-        QString msg1 = "TupItemTweener::toXml() - Saving tween: " + tweenName;
-        QString msg2 = "TupItemTweener::toXml() - Type: " + QString::number(tweenType);
-        #ifdef Q_OS_WIN
-           qWarning() << msg1;
-           qWarning() << msg2;
-        #else
-           tWarning() << msg1;
-           tWarning() << msg2;
-        #endif
+        qWarning() << "TupItemTweener::toXml() - Saving tween: " + tweenName;
+        qWarning() << "TupItemTweener::toXml() - Type: " + QString::number(tweenType);
     #endif
 
     QDomElement root = doc.createElement("tweening");

@@ -492,12 +492,7 @@ void TupLibraryWidget::cloneObject(QTreeWidgetItem* item)
             }
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "TupLibraryWidget::cloneObject() - Fatal Error: Object doesn't exist! [ " + id + " ]";
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "TupLibraryWidget::cloneObject() - Fatal Error: Object doesn't exist! [ " + id + " ]";
             #endif
 
             return;
@@ -649,12 +644,7 @@ void TupLibraryWidget::createRasterObject()
             QDir dir;
             if (!dir.mkpath(imagesDir)) {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupLibraryWidget::createRasterObject() - Fatal Error: Couldn't create directory " + imagesDir;
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "TupLibraryWidget::createRasterObject() - Fatal Error: Couldn't create directory " + imagesDir;
                 #endif
                 TOsd::self()->display(tr("Error"), tr("Couldn't create images directory!"), TOsd::Error);
                 return;
@@ -994,19 +984,11 @@ void TupLibraryWidget::importSvg(const QString &svgPath)
         file.close();
 
         #ifdef TUP_DEBUG
-            QString msg1 = "TupLibraryWidget::importSvg() - Inserting SVG into project: " + project->getName();
+            qDebug() << "TupLibraryWidget::importSvg() - Inserting SVG into project: " + project->getName();
             int projectWidth = project->getDimension().width();
             int projectHeight = project->getDimension().height();
-            QString msg2 = "TupLibraryWidget::importSvg() - Project Size: [" + QString::number(projectWidth) + QString(", ")
+            qDebug() << "TupLibraryWidget::importSvg() - Project Size: [" + QString::number(projectWidth) + QString(", ")
                     + QString::number(projectHeight) + QString("]");
-
-            #ifdef Q_OS_WIN
-                qDebug() << msg1;
-                qDebug() << msg2;
-            #else
-                tFatal() << msg1;
-                tFatal() << msg2;
-            #endif
         #endif
 
         int i = 0;

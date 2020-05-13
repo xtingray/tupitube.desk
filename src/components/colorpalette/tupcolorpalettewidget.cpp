@@ -55,11 +55,7 @@
 TupColorPaletteWidget::TupColorPaletteWidget(QWidget *parent) : TupModuleWidgetBase(parent)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupColorPaletteWidget()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "[TupColorPaletteWidget()]";
     #endif
 
     currentSpace = TColorCell::Contour;
@@ -96,11 +92,7 @@ TupColorPaletteWidget::TupColorPaletteWidget(QWidget *parent) : TupModuleWidgetB
 TupColorPaletteWidget::~TupColorPaletteWidget()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupColorPaletteWidget()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "[~TupColorPaletteWidget()]";
     #endif
 
     delete paletteContainer;
@@ -258,11 +250,7 @@ void TupColorPaletteWidget::setupColorDisplay()
 void TupColorPaletteWidget::updateColorMode(TColorCell::FillType type)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupColorPaletteWidget::updateColorMode()] - type: " << type;
-        #else
-            T_FUNCINFOX("tools") << type;
-        #endif
+        qDebug() << "[TupColorPaletteWidget::updateColorMode()] - type: " << type;
     #endif
 
     QBrush brush;
@@ -318,13 +306,9 @@ void TupColorPaletteWidget::updateColorMode(TColorCell::FillType type)
 
 void TupColorPaletteWidget::checkColorButton(TColorCell::FillType type)
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
+    #ifdef TUP_DEBUG
         qDebug() << "[TupColorPaletteWidget::checkColorButton()] - type: " << type;
-    #else
-        T_FUNCINFOX("tools") << type;
     #endif
-#endif
 
     if (type == TColorCell::Contour) {
         contourColorCell->click();

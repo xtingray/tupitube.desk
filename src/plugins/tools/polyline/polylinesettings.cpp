@@ -71,11 +71,7 @@ PolylineSettings::PolylineSettings(QWidget *parent) : QWidget(parent)
 PolylineSettings::~PolylineSettings()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~Settings()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "[~Settings()]";
     #endif
 }
 

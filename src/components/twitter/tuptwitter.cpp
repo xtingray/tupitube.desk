@@ -84,12 +84,7 @@ void TupTwitter::start()
     QString url = MAEFLORESTA_URL + IS_HOST_UP_URL;
 
     #ifdef TUP_DEBUG
-        QString msg = "TupTwitter::start() - Getting news updates...";
-        #ifdef Q_OS_WIN
-            qWarning() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qWarning() << "TupTwitter::start() - Getting news updates...";
     #endif
 
     manager = new QNetworkAccessManager(this);

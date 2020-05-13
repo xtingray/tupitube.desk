@@ -2106,6 +2106,16 @@
         <source>About</source>
         <translation>À propos</translation>
     </message>
+    <message>
+        <location filename="../../../libui/tupabout.cpp" line="163"/>
+        <source>License Agreement</source>
+        <translation>Accord de Licence</translation>
+    </message>
+    <message>
+        <location filename="../../../libui/tupabout.cpp" line="164"/>
+        <source>Close</source>
+        <translation>Fermer</translation>
+    </message>
 </context>
 <context>
     <name>TupBasicCameraInterface</name>

@@ -133,7 +133,7 @@ void TupCrashWidget::setPid(int pid)
 
 void TupCrashWidget::addBacktracePage(const QString &execInfo, const QString &backtrace)
 {
-    T_FUNCINFO << execInfo << " " << backtrace;
+    qDebug() << execInfo << " " << backtrace;
 
     QWidget *btPage = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout(btPage);
@@ -166,7 +166,7 @@ void TupCrashWidget::restart()
    QByteArray ba = path.toLatin1();
 
    int flag = system(ba.data());
-   tWarning() << "TupCrashWidget::restart() - System output: " << flag;
+   qWarning() << "TupCrashWidget::restart() - System output: " << flag;
 
    kill(m_pid, 9);
 }

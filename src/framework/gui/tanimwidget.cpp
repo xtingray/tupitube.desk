@@ -40,6 +40,7 @@ class TAnimWidget::Controller
     public:
         Controller(TAnimWidget *area) : m_area(area), m_timerId(-1)
          {
+            started = false;
          }
         ~Controller()
          {
@@ -50,19 +51,27 @@ class TAnimWidget::Controller
                  stop();
 
              m_timerId = m_area->startTimer(ms);
+             started = true;
          }
         void stop()
          {
              m_area->killTimer(m_timerId);
              m_timerId = -1;
+             started = false;
          }
-
+        bool hasStarted()
+         {
+            return started;
+         }
     private:
         TAnimWidget *m_area;
         int m_timerId;
+        bool started;
 };
 
-TAnimWidget::TAnimWidget(const QPixmap &px, const QString &text, QWidget *parent) : QWidget(parent), m_type(AnimText), m_controller(new Controller(this)), m_background(px), m_text(text)
+TAnimWidget::TAnimWidget(const QPixmap &px, const QString &text, QWidget *parent) : QWidget(parent), m_type(AnimText),
+                                                                                            m_controller(new Controller(this)),
+                                                                                            m_background(px), m_text(text)
 {
     resize(px.width()/2, px.height());
 
@@ -122,24 +131,24 @@ void TAnimWidget::hideEvent(QHideEvent *event)
 void TAnimWidget::timerEvent(QTimerEvent *)
 {
     switch (m_type) {
-            case AnimText:
-             {
-                 int yPos = (int)(m_textRect.y() - 1);
-                 m_textRect.setY(yPos);
-                 m_counter++;
+        case AnimText:
+         {
+             int yPos = (int)(m_textRect.y() - 1);
+             m_textRect.setY(yPos);
+             m_counter++;
 
-                 if (m_counter > m_end) {
-                     m_counter = 0;
-                     m_textRect.setY(height());
-                 } 
+             if (m_counter > m_end) {
+                 m_counter = 0;
+                 m_textRect.setY(height());
              }
-            break;
-            case AnimPixmap:
-             {
-                 m_pixmapIndex = (m_pixmapIndex + 1) % m_pixmaps.count();
-                 m_background = m_pixmaps[m_pixmapIndex];
-             }
-            break;
+         }
+        break;
+        case AnimPixmap:
+         {
+             m_pixmapIndex = (m_pixmapIndex + 1) % m_pixmaps.count();
+             m_background = m_pixmaps[m_pixmapIndex];
+         }
+        break;
     }
     update();
 }
@@ -148,20 +157,27 @@ void TAnimWidget::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
-
-    painter.drawPixmap(0,0, m_background);
+    painter.drawPixmap(0, 0, m_background);
 
     switch (m_type) {
-            case AnimText:
-             {
-                 painter.setRenderHint(QPainter::TextAntialiasing, true);
-                 painter.setFont(QFont("lucida", fontSize, QFont::Bold, false));
-                 painter.drawText(m_textRect, m_text);
-             }
-            break;
-            case AnimPixmap:
-             {
-             }
-            break;
+        case AnimText:
+         {
+             painter.setRenderHint(QPainter::TextAntialiasing, true);
+             painter.setFont(QFont("lucida", fontSize, QFont::Bold, false));
+             painter.drawText(m_textRect, m_text);
+         }
+        break;
+        case AnimPixmap:
+         {
+         }
+        break;
     }
+}
+
+void TAnimWidget::activateAnimation()
+{
+    if (m_controller->hasStarted())
+        m_controller->stop();
+    else
+        m_controller->start(50);
 }

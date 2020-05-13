@@ -79,7 +79,8 @@ class T_GUI_EXPORT TabDialog : public QDialog
         
         QTabWidget *tabWidget() const;
         void enableTab(int index, bool enable);
-        
+        int currentIndex();
+
     private:
         void setupButtons(int buttons);
         

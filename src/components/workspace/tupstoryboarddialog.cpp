@@ -622,12 +622,7 @@ void TupStoryBoardDialog::exportAsPDF()
 void TupStoryBoardDialog::postStoryboardAtServer()
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupStoryBoardDialog::postStoryBoardAtServer() - Posting in TupiTube!";
-        #ifdef Q_OS_WIN
-            qWarning() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qWarning() << "TupStoryBoardDialog::postStoryBoardAtServer() - Posting in TupiTube!";
     #endif
 
     saveLastComponent();
@@ -723,12 +718,7 @@ void TupStoryBoardDialog::cleanDirectory(const QString &folder)
 
     if (!dir.rmdir(folder)) {
         #ifdef TUP_DEBUG
-            QString msg = "TupStoryBoardDialog::cleanDirectory() - Can't remove path -> " + folder;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupStoryBoardDialog::cleanDirectory() - Can't remove path -> " + folder;
         #endif
     }
 }

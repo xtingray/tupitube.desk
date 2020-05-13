@@ -74,23 +74,14 @@ void TupGraphicLibraryItem::setObject(TupLibraryObject *object)
 {
     if (!object) {
         #ifdef TUP_DEBUG
-            QString msg = "TupGraphicLibraryItem::setObject() - Setting null library object";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupGraphicLibraryItem::setObject() - Setting null library object";
         #endif
 
         return;
     }
     
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qWarning() << "TupGraphicLibraryItem::setObject() - object->symbolName(): " << object->getSymbolName();
-        #else
-            T_FUNCINFOX("library") << object->getSymbolName();
-        #endif
+        qWarning() << "TupGraphicLibraryItem::setObject() - object->symbolName(): " << object->getSymbolName();
     #endif
 
     symbolName = object->getSymbolName();

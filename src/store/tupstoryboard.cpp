@@ -157,12 +157,7 @@ void TupStoryboard::setSceneTitle(int index, const QString &headLine)
         scene.replace(index, headLine);
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupStoryboard::setSceneTitle() - Invalid index -> " + QString::number(index);
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupStoryboard::setSceneTitle() - Invalid index -> " + QString::number(index);
         #endif
     }
 }
@@ -173,12 +168,7 @@ void TupStoryboard::setSceneDuration(int index, const QString &time)
         duration.replace(index, time);
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupStoryboard::setSceneDuration() - Invalid index: " + QString::number(index);
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupStoryboard::setSceneDuration() - Invalid index: " + QString::number(index);
         #endif
     }
 }
@@ -189,12 +179,7 @@ void TupStoryboard::setSceneDescription(int index, const QString &desc)
         description.replace(index, desc);
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupStoryboard::setSceneDuration() - Invalid index: " + QString::number(index);
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif 
+            qDebug() << "TupStoryboard::setSceneDuration() - Invalid index: " + QString::number(index);
         #endif
     }
 }

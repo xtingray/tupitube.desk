@@ -120,25 +120,15 @@ void TipDatabase::loadVideos(const QString &videoPath)
     QFile file(videoPath);
 
     if (!file.exists()) {
-        #ifdef TUP_DEBUG
-            QString msg = "TipDatabase::loadVideos() - Fatal Error: File doesn't exist -> " + videoPath;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tWarning() << msg;
+            #ifdef TUP_DEBUG
+                qDebug() << "TipDatabase::loadVideos() - Fatal Error: File doesn't exist -> " + videoPath;
             #endif
-        #endif
 	    return;	
 	}
 	
     if (!file.open(QIODevice::ReadOnly)) {
         #ifdef TUP_DEBUG
-            QString msg = "TipDatabase::loadVideos() - Fatal Error: Insufficient permissions to read file -> " + videoPath;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tWarning() << msg;
-            #endif
+            qDebug() << "TipDatabase::loadVideos() - Fatal Error: Insufficient permissions to read file -> " + videoPath;
         #endif
         return;
     }
@@ -146,12 +136,7 @@ void TipDatabase::loadVideos(const QString &videoPath)
     if (!doc.setContent(&file)) {
         file.close();
         #ifdef TUP_DEBUG
-            QString msg = "TipDatabase::loadVideos() - Fatal Error: Can't load XML file -> " + videoPath;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TipDatabase::loadVideos() - Fatal Error: Can't load XML file -> " + videoPath;
         #endif
         return;
     }
@@ -219,12 +204,7 @@ void TipDatabase::loadTips(const QString &tipPath)
     
     if (!file.open(QIODevice::ReadOnly)) {
         #ifdef TUP_DEBUG
-            QString msg = "TipDatabase::loadTips() - Fatal Error: Insufficient permissions to read file -> " + tipPath;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TipDatabase::loadTips() - Fatal Error: Insufficient permissions to read file -> " + tipPath;
         #endif
         return;
     }
@@ -232,12 +212,7 @@ void TipDatabase::loadTips(const QString &tipPath)
     if (!doc.setContent(&file)) {
         file.close();
         #ifdef TUP_DEBUG
-            QString msg = "TipDatabase::loadTips() - Fatal Error: Can't load XML file -> " + tipPath;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TipDatabase::loadTips() - Fatal Error: Can't load XML file -> " + tipPath;
         #endif
         return;
     }

@@ -38,12 +38,8 @@
 TupGradientSelector::TupGradientSelector(QWidget *parent) : QAbstractSlider(parent), m_currentArrowIndex(0),
                                                             m_gradient(0,0,1,1), m_update(true), m_maxArrows(10), m_currentColor(Qt::black)
 {	
-	#ifdef TUP_DEBUG
-		#ifdef Q_OS_WIN
-            qDebug() << "[TupGradientSelector()]";
-        #else
-            TINIT;
-        #endif
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupGradientSelector()]";
     #endif
 
     _orientation = Qt::Horizontal;
@@ -73,11 +69,7 @@ void TupGradientSelector::init()
 TupGradientSelector::~TupGradientSelector()
 {
     #ifdef TUP_DEBUG
-	    #ifdef Q_OS_WIN
-            qDebug() << "[~TupGradientSelector()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "[~TupGradientSelector()]";
     #endif
 }
 

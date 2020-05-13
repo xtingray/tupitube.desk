@@ -52,11 +52,7 @@ TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString 
                                        const QSize cameraSize, int i, QWidget *parent) : QDialog(parent)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupReflexInterface()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "[TupReflexInterface()]";
     #endif
 
     setModal(false);
@@ -228,11 +224,7 @@ TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString 
 TupReflexInterface::~TupReflexInterface()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupReflexInterface()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "[~TupReflexInterface()]";
     #endif
 }
 
@@ -251,12 +243,7 @@ void TupReflexInterface::randomPath()
     QDir dir;
     if (!dir.mkdir(path)) {
         #ifdef TUP_DEBUG
-            QString msg = "TupReflexInterface::randomPath() - Fatal Error: Can't create pictures directory -> " + path;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupReflexInterface::randomPath() - Fatal Error: Can't create pictures directory -> " + path;
         #endif
 
         path = "";
@@ -305,12 +292,7 @@ void TupReflexInterface::reset()
 
     if (!dir.rmdir(dir.absolutePath())) {
         #ifdef TUP_DEBUG
-            QString msg = "TupReflexInterface::reset() - Fatal Error: Can't remove pictures directory -> " + dir.absolutePath();
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupReflexInterface::reset() - Fatal Error: Can't remove pictures directory -> " + dir.absolutePath();
         #endif
     }
 }
@@ -318,12 +300,7 @@ void TupReflexInterface::reset()
 void TupReflexInterface::error(QCamera::Error error)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupReflexInterface::error() - Fatal Error: Camera error code -> ";
-        #ifdef Q_OS_WIN
-            qDebug() << msg << error;
-        #else
-            tError() << msg << error;
-        #endif
+        qDebug() << "TupReflexInterface::error() - Fatal Error: Camera error code -> " << error;
     #endif
 
     switch (error) {
@@ -359,12 +336,7 @@ void TupReflexInterface::imageSavedFromCamera(int id, const QString folder)
     Q_UNUSED(id);
 
     #ifdef TUP_DEBUG
-        QString msg = "TupCameraInterface::imageSavedFromCamera() - Picture path -> " + folder;
-        #ifdef Q_OS_WIN
-            qDebug() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qDebug() << "TupCameraInterface::imageSavedFromCamera() - Picture path -> " + folder;
     #endif
 
     if (folder.isEmpty())

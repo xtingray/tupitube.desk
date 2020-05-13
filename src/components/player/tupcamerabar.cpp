@@ -42,11 +42,7 @@
 TupCameraBar::TupCameraBar(QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupCameraBar()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "[TupCameraBar()]";
     #endif
 
     // playOn = false;
@@ -96,11 +92,7 @@ TupCameraBar::TupCameraBar(QWidget *parent) : QFrame(parent)
 TupCameraBar::~TupCameraBar()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupCameraBar()]";
-        #else
-           TEND;
-        #endif
+        qDebug() << "[~TupCameraBar()]";
     #endif
 }
 

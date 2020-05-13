@@ -65,7 +65,7 @@ TupExposureHeader::~TupExposureHeader()
 
 void TupExposureHeader::notifyVisibilityChange(int section)
 {
-   emit visibilityChanged(visualIndex(section), !m_sections[section].isVisible);
+    emit visibilityChanged(visualIndex(section), !m_sections[section].isVisible);
 }
 
 void TupExposureHeader::setSectionVisibility(int section, bool visibility)
@@ -162,14 +162,8 @@ int TupExposureHeader::lastFrame(int section)
         return m_sections[section].lastFrame;
 
     #ifdef TUP_DEBUG
-        QString msg = "TupExposureHeader::lastFrame() - Fatal Error: Section index is invalid -> " + QString::number(section);
-
-        #ifdef Q_OS_WIN
-            qDebug() << msg;
-        #else
-            tError() << msg;
-            tError() << "m_sections count: " << m_sections.count(); 
-        #endif
+        qDebug() << "TupExposureHeader::lastFrame() - Fatal Error: Section index is invalid -> " + QString::number(section);
+        qDebug() << "m_sections count: " << m_sections.count();
     #endif
 
     return -1;
@@ -181,14 +175,8 @@ void TupExposureHeader::removeSection(int section)
         m_sections.removeAt(section);
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupExposureHeader::removeSection() - Fatal Error: Section index is invalid -> " + QString::number(section);
-
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-                tError() << "m_sections count: " << m_sections.count();
-            #endif
+            qDebug() << "TupExposureHeader::removeSection() - Fatal Error: Section index is invalid -> " + QString::number(section);
+            qDebug() << "m_sections count: " << m_sections.count();
         #endif
     }
 }
@@ -199,14 +187,8 @@ void TupExposureHeader::setLastFrame(int section, int num)
         m_sections[section].lastFrame = num;
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupExposureHeader::removeSelection() - Fatal Error: Section index is invalid -> " + QString::number(section);
-
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-                tError() << "m_sections count: " << m_sections.count();
-            #endif
+            qDebug() << "TupExposureHeader::removeSelection() - Fatal Error: Section index is invalid -> " + QString::number(section);
+            qDebug() << "m_sections count: " << m_sections.count();
         #endif
     }
 }
@@ -234,12 +216,7 @@ void TupExposureHeader::mousePressEvent(QMouseEvent *event)
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupExposureHeader::mousePressEvent() - Fatal Error: Section index is invalid -> " + QString::number(section);
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tFatal() << msg;
-            #endif
+            qDebug() << "TupExposureHeader::mousePressEvent() - Fatal Error: Section index is invalid -> " + QString::number(section);
         #endif
     }
 }

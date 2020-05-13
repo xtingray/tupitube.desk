@@ -78,11 +78,7 @@ QSize StepsViewer::sizeHint() const
 void StepsViewer::loadPath(const QGraphicsPathItem *pathItem, QList<int> intervals)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[StepsViewer::loadPath()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[StepsViewer::loadPath()]";
     #endif
 
     frames = intervals;
@@ -155,21 +151,12 @@ void StepsViewer::loadPath(const QGraphicsPathItem *pathItem, QList<int> interva
 void StepsViewer::setPath(const QGraphicsPathItem *pathItem)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[StepsViewer::setPath()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[StepsViewer::setPath()]";
     #endif
 
     if (!pathItem) {
         #ifdef TUP_DEBUG
-            QString msg = "StepsViewer::setPath() - Fatal Error: pathItem is NULL!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "StepsViewer::setPath() - Fatal Error: pathItem is NULL!";
         #endif
 
         return;
@@ -296,11 +283,8 @@ void StepsViewer::setPath(const QGraphicsPathItem *pathItem)
 void StepsViewer::updatePathSection(int column, int row)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[StepsViewer::updatePathSection()]";
-        #else
-            T_FUNCINFO << " column: " <<  column << " - row: " << row;
-        #endif
+        qDebug() << "[StepsViewer::updatePathSection()]";
+        qDebug() << "column: " <<  column << " - row: " << row;
     #endif
 
     QTableWidgetItem *cell = item(row, 1);
@@ -458,11 +442,7 @@ QString StepsViewer::intervals()
 void StepsViewer::clearInterface()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[StepsViewer::clearInterface()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[StepsViewer::clearInterface()]";
     #endif
 
     records = 0;
@@ -505,13 +485,9 @@ QList<QPointF> StepsViewer::calculateSegmentPoints(QPointF begin, QPointF end, i
 void StepsViewer::addTableRow(int row, int frames)  
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[StepsViewer::addTableRow()]";
-        #else
-            T_FUNCINFO;
-            tWarning() << "row: " << row;
-            tWarning() << "frames: " << frames;
-        #endif
+        qDebug() << "[StepsViewer::addTableRow()]";
+        qWarning() << "row: " << row;
+        qWarning() << "frames: " << frames;
     #endif
 
     setRowCount(rowCount() + 1);
@@ -584,11 +560,7 @@ void StepsViewer::calculateGroups()
 void StepsViewer::commitData(QWidget *editor)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[StepsViewer::commitData()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[StepsViewer::commitData()]";
     #endif
 
     QLineEdit *lineEdit = qobject_cast<QLineEdit *>(editor);
@@ -607,12 +579,7 @@ void StepsViewer::commitData(QWidget *editor)
             updatePathSection(column, row);
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "input value: " + value;
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tWarning() << msg;
-                #endif
+                qWarning() << "input value: " + value;
             #endif
         }
     }
@@ -621,11 +588,7 @@ void StepsViewer::commitData(QWidget *editor)
 void StepsViewer::undoSegment(const QPainterPath painterPath)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[StepsViewer::undoSegment()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[StepsViewer::undoSegment()]";
     #endif
 
     path = painterPath;
@@ -665,11 +628,7 @@ void StepsViewer::undoSegment(const QPainterPath painterPath)
 void StepsViewer::redoSegment(const QPainterPath painterPath)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[StepsViewer::redoSegment()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[StepsViewer::redoSegment()]";
     #endif
 
     path = painterPath;
@@ -695,11 +654,7 @@ void StepsViewer::redoSegment(const QPainterPath painterPath)
 void StepsViewer::updateSegments(const QPainterPath painterPath)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[StepsViewer::undoSegment()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[StepsViewer::undoSegment()]";
     #endif
 
     path = painterPath;
@@ -796,6 +751,3 @@ void StepsViewer::updateSegments()
 
     loadTweenPoints();
 }
-
-
-

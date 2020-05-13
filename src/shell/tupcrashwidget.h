@@ -40,7 +40,7 @@
 
 #include "tupcrashhandler.h"
 #include "tconfig.h"
-#include "tdebug.h"
+// #include "tdebug.h"
 
 #include <unistd.h>
 #include <QDialog>

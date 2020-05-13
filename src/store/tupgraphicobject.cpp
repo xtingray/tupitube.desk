@@ -42,11 +42,7 @@ TupGraphicObject::TupGraphicObject(QGraphicsItem *graphic, TupFrame *parent) : Q
 {
     /*
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupGraphicObject()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "[TupGraphicObject()]";
     #endif	
     */
 
@@ -60,11 +56,7 @@ TupGraphicObject::~TupGraphicObject()
 {
     /*
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupGraphicObject()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "[~TupGraphicObject()]";
     #endif	
     */
 }
@@ -95,12 +87,7 @@ void TupGraphicObject::setItem(QGraphicsItem *graphic)
         initItemData();
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupGraphicObject::setItem() - Fatal Error: QGraphicsItem is null!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupGraphicObject::setItem() - Fatal Error: QGraphicsItem is null!";
         #endif
     } 
 }

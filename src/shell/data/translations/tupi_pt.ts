@@ -2102,6 +2102,16 @@
         <translation>Sobre</translation>
     </message>
     <message>
+        <location filename="../../../libui/tupabout.cpp" line="163"/>
+        <source>License Agreement</source>
+        <translation>Contrato de Licença</translation>
+    </message>
+    <message>
+        <location filename="../../../libui/tupabout.cpp" line="164"/>
+        <source>Close</source>
+        <translation>Fechar</translation>
+    </message>
+    <message>
         <location filename="../../../libui/tupabout.cpp" line="53"/>
         <source>About TupiTube Desk</source>
         <translation>Sobre TupiTube Desk</translation>

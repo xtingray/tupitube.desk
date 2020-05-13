@@ -100,11 +100,7 @@ void Target::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void Target::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[Target::mouseReleaseEvent()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[Target::mouseReleaseEvent()]";
     #endif
 
     emit positionUpdated(event->scenePos()); 

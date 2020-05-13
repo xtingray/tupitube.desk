@@ -215,11 +215,7 @@ void TupExposureSheet::createMenuForSelection()
 void TupExposureSheet::addScene(int sceneIndex, const QString &name)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupExposureSheet::addScene()] - index: " << QString::number(sceneIndex) << " name: " << name;
-        #else
-            T_FUNCINFO << " index: " << sceneIndex << " name: " << name;
-        #endif
+        qDebug() << "[TupExposureSheet::addScene()] - index: " << QString::number(sceneIndex) << " name: " << name;
     #endif
 
     TupExposureTable *scene = new TupExposureTable;
@@ -429,11 +425,7 @@ void TupExposureSheet::applyAction(int action)
 void TupExposureSheet::setScene(int sceneIndex)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupExposureSheet::setScene()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupExposureSheet::setScene()]";
     #endif
 
     if (scenesContainer->isTableIndexValid(sceneIndex)) {
@@ -443,15 +435,8 @@ void TupExposureSheet::setScene(int sceneIndex)
         scenesContainer->blockSignals(false);
     } else {
         #ifdef TUP_DEBUG
-            QString msg1 = "TupExposureSheet::setScene() - Invalid scene index -> " + QString::number(sceneIndex);
-            QString msg2 = "TupExposureSheet::setScene() - Scenes total -> " + QString::number(scenesContainer->count());
-            #ifdef Q_OS_WIN
-                qDebug() << msg1;
-                qDebug() << msg2;
-            #else
-                tError() << msg1;
-                tError() << msg2;
-            #endif
+            qDebug() << "TupExposureSheet::setScene() - Invalid scene index -> " + QString::number(sceneIndex);
+            qDebug() << "TupExposureSheet::setScene() - Scenes total -> " + QString::number(scenesContainer->count());
         #endif
     }
 }
@@ -502,11 +487,7 @@ void TupExposureSheet::requestExtendCurrentFrame(int times)
 void TupExposureSheet::insertFrame(int layerIndex, int frameIndex)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupExposureSheet::insertFrame()]";
-        #else
-            T_FUNCINFO << "layerIndex, frameIndex -> " << layerIndex << ", " << frameIndex;
-        #endif
+        qDebug() << "[TupExposureSheet::insertFrame()] - frameIndex -> " << frameIndex << " - layerIndex -> " << layerIndex;
     #endif
 
     TupProjectRequest request = TupRequestBuilder::createFrameRequest(scenesContainer->currentIndex(),
@@ -524,11 +505,7 @@ void TupExposureSheet::renameFrame(int layerIndex, int frameIndex, const QString
 void TupExposureSheet::selectFrame(int layerIndex, int frameIndex)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupExposureSheet::selectFrame()] layerIndex, frameIndex -> " << layerIndex << ", " << frameIndex;
-        #else
-            T_FUNCINFO << "layerIndex, frameIndex -> " << layerIndex << ", " << frameIndex;
-        #endif
+        qDebug() << "[TupExposureSheet::selectFrame()] layerIndex, frameIndex -> " << layerIndex << ", " << frameIndex;
     #endif
 
     QList<QTableWidgetItem *> list = currentTable->selectedItems();
@@ -562,11 +539,7 @@ void TupExposureSheet::removeFrame()
 void TupExposureSheet::extendFrameForward(int layerIndex, int frameIndex)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupExposureSheet::extendFrameForward()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupExposureSheet::extendFrameForward()]";
     #endif
 
     int sceneIndex = scenesContainer->currentIndex();
@@ -608,11 +581,7 @@ void TupExposureSheet::actionTriggered(QAction *action)
 void TupExposureSheet::closeAllScenes()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupExposureSheet::closeAllScenes()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupExposureSheet::closeAllScenes()]";
     #endif
 
     blockSignals(true);
@@ -624,11 +593,7 @@ void TupExposureSheet::closeAllScenes()
 void TupExposureSheet::sceneResponse(TupSceneResponse *response)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupExposureSheet::sceneResponse()]";
-        #else
-            T_FUNCINFOX("exposure");
-        #endif
+        qDebug() << "[TupExposureSheet::sceneResponse()]";
     #endif
 
     int sceneIndex = response->getSceneIndex();
@@ -1174,11 +1139,7 @@ void TupExposureSheet::libraryResponse(TupLibraryResponse *response)
 void TupExposureSheet::insertFrames(int times)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupExposureSheet::insertFrames()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupExposureSheet::insertFrames()]";
     #endif
 
     int scene = scenesContainer->currentIndex();
@@ -1207,11 +1168,7 @@ void TupExposureSheet::insertFrames(int times)
 void TupExposureSheet::clearFrame()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupExposureSheet::clearFrame()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupExposureSheet::clearFrame()]";
     #endif
 
     int scene = scenesContainer->currentIndex();
@@ -1364,22 +1321,12 @@ double TupExposureSheet::getLayerOpacity(int sceneIndex, int layerIndex)
             opacity = layer->getOpacity();
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "TupExposureSheet::getLayerOpacity() - Fatal Error: No layer at index -> " + QString::number(layerIndex);
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "TupExposureSheet::getLayerOpacity() - Fatal Error: No layer at index -> " + QString::number(layerIndex);
             #endif
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupExposureSheet::getLayerOpacity() - Fatal Error: No scene at index -> " + QString::number(sceneIndex);
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupExposureSheet::getLayerOpacity() - Fatal Error: No scene at index -> " + QString::number(sceneIndex);
         #endif
     }
 
@@ -1389,11 +1336,7 @@ double TupExposureSheet::getLayerOpacity(int sceneIndex, int layerIndex)
 void TupExposureSheet::initLayerVisibility()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "TupExposureSheet::initLayerVisibility()";
-        #else
-            T_FUNCINFO << "TupExposureSheet::initLayerVisibility()";
-        #endif
+        qDebug() << "TupExposureSheet::initLayerVisibility()";
     #endif
 
     int scenes = project->scenesCount();

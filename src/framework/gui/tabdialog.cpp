@@ -174,3 +174,8 @@ void TabDialog::enableTab(int index, bool enable)
 {
     m_tabWidget->setTabEnabled(index, enable);
 }
+
+int TabDialog::currentIndex()
+{
+    return m_tabWidget->currentIndex();
+}

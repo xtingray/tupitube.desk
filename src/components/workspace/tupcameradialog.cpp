@@ -131,12 +131,7 @@ TupCameraDialog::~TupCameraDialog()
 void TupCameraDialog::changeCameraDevice(const QString &reference)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupCameraDialog::changeCameraDevice() - Camera selected -> " + reference;
-        #ifdef Q_OS_WIN
-            qWarning() << msg;
-        #else
-            tWarning() << msg;
-        #endif
+        qWarning() << "TupCameraDialog::changeCameraDevice() - Camera selected -> " + reference;
     #endif
 
     // disconnect(resolutionCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setCameraResolution(int)));

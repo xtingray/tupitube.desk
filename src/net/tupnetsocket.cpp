@@ -46,14 +46,8 @@ TupNetSocket::~TupNetSocket()
 void TupNetSocket::readed(const QString &readed)
 {
     #ifdef TUP_DEBUG
-        QString msg = "TupNetSocket::readed() - PACKAGE ARRIVING: ";
-        #ifdef Q_OS_WIN
-            qWarning() << msg;
-            qWarning()  << readed;
-        #else
-            tWarning() << msg;
-            tWarning("net")  << readed;
-        #endif
+        qWarning() << "TupNetSocket::readed() - PACKAGE ARRIVING: ";
+        qWarning() << readed;
     #endif
 
     QDomDocument doc;
@@ -63,12 +57,7 @@ void TupNetSocket::readed(const QString &readed)
         m_handler->handlePackage(root, readed);
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupNetSocket::readed() - Error: Package isn't a DOM document";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupNetSocket::readed() - Error: Package isn't a DOM document";
         #endif
     }
 }

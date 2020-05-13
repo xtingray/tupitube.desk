@@ -97,7 +97,7 @@
 #endif
 
 #define K_CHECKPTR(ptr) if ( ptr == 0 ) { tFatal() << __PRETTY_FUNCTION__ << ": " << #ptr << " is NULL"; } 
-#define SHOW_VAR(arg) tDebug() << #arg << " = " << arg;
+// #define SHOW_VAR(arg) tDebug() << #arg << " = " << arg;
 
 class QPalette;
 

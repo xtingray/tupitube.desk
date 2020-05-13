@@ -142,13 +142,8 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                           numPhonemes = strList.at(3).toInt();
                           #ifdef TUP_DEBUG
                               if (numPhonemes == 0) {
-                                  QString msg = "TupPapagayoImporter::TupPapagayoImporter() - Warning: Word \"" 
-                                                +  strWord + "\" has NO phonemes associated! :(";
-                                  #ifdef Q_OS_WIN
-                                      qDebug() << msg;
-                                  #else
-                                      tError() << msg;
-                                  #endif
+                                  qDebug() << "TupPapagayoImporter::TupPapagayoImporter() - Warning: Word \"" 
+                                              +  strWord + "\" has NO phonemes associated! :(";
                               }
                           #endif
                       }
@@ -179,13 +174,8 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                           }
                       } else {
                           #ifdef TUP_DEBUG
-                              QString msg = "TupPapagayoImporter() - Fatal Error: frames size is less than numPhonemes -> ";
-                              msg += QString::number(frames.count()) + " < " + QString::number(numPhonemes);
-                              #ifdef Q_OS_WIN
-                                  qDebug() << msg;
-                              #else
-                                  tError() << msg;
-                              #endif
+                              qDebug() << "TupPapagayoImporter() - Fatal Error: frames size is less than numPhonemes -> " 
+                                       << QString::number(frames.count()) + " < " + QString::number(numPhonemes);
                           #endif
                       }
 
@@ -213,12 +203,7 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
     } else {
         isValid = false;
         #ifdef TUP_DEBUG
-            QString msg = "TupPapagayoImporter() - Fatal Error: Insufficient permissions to load file! -> " + file;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupPapagayoImporter() - Fatal Error: Insufficient permissions to load file! -> " + file;
         #endif
         return;
     }

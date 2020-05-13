@@ -620,18 +620,10 @@ void TupLipSync::fromXml(const QString &xml)
    
     if (! document.setContent(xml)) {
         #ifdef TUP_DEBUG
-            QString msg = "TupLipSync::fromXml() - File corrupted!";
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-                qWarning() << "Content:";
-                qWarning() << xml;
-            #else
-                tError() << msg;
-                tWarning() << "Content:";
-                tWarning() << xml;
-            #endif
+            qDebug() << "Content:";
+            qDebug() << xml;
+            qDebug() << "TupLipSync::fromXml() - File corrupted!";
         #endif
-
         return;
     }
 
@@ -712,11 +704,7 @@ void TupLipSync::updateMouthPosition(int mouthIndex, QPointF point, int frame)
 void TupLipSync::verifyStructure() 
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupLipSync::verifyStructure()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupLipSync::verifyStructure()]";
     #endif
 
     for (int frame=0; frame < framesCount; frame++) {
@@ -747,12 +735,7 @@ void TupLipSync::verifyStructure()
                                      pos = prev->phonemesList().last()->position();
                                  } else {
                                      #ifdef TUP_DEBUG
-                                         QString msg = "TupLipSync::verifyStructure() - Warning: Word(" + QString::number(i-1) + ") has NO phonemes!";
-                                         #ifdef Q_OS_WIN
-                                             qDebug() << msg;
-                                         #else
-                                             tError() << msg;
-                                         #endif
+                                         qDebug() << "TupLipSync::verifyStructure() - Warning: Word(" + QString::number(i-1) + ") has NO phonemes!";
                                      #endif
                                  }
 

@@ -70,12 +70,7 @@ void TupLayer::setFrames(const Frames &array)
 void TupLayer::setFrame(int index, TupFrame *frame)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupLayer::setFrame()]";
-        #else
-            T_FUNCINFO;
-            tWarning() << "At index -> " << index;
-        #endif
+        qDebug() << "[TupLayer::setFrame()] - index -> " << index;
     #endif
 
     frames.insert(index, frame);
@@ -181,13 +176,8 @@ bool TupLayer::restoreFrame(int index)
         return false;
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupLayer::restoreFrame() - Fatal Error: "
+            qDebug() << "TupLayer::restoreFrame() - Fatal Error: "
             "No available frames to restore index -> " + QString::number(index);
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
         #endif
     }
 
@@ -197,11 +187,7 @@ bool TupLayer::restoreFrame(int index)
 bool TupLayer::removeFrame(int pos)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupLayer::removeFrame()]";
-        #else
-            T_FUNCINFO << "pos -> " << pos;
-        #endif
+        qDebug() << "[TupLayer::removeFrame()] - pos -> " << pos;
     #endif
 
     TupFrame *toRemove = frameAt(pos);
@@ -256,13 +242,8 @@ bool TupLayer::restoreResettedFrame(int pos)
         }
     } else {
         #ifdef TUP_DEBUG
-            QString msg = "TupLayer::restoreResettedFrame() - Fatal Error: "
+            qDebug() << "TupLayer::restoreResettedFrame() - Fatal Error: "
             "No available resetted frames to restore -> " + QString::number(resettedFrames.count());
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
         #endif
     }
 
@@ -318,12 +299,7 @@ bool TupLayer::exchangeFrame(int from, int to)
 {
     if (from < 0 || from >= frames.count() || to < 0 || to >= frames.count()) {
         #ifdef TUP_DEBUG
-            QString msg = "TupLayer::exchangeFrame() - Fatal Error: frame indexes are invalid -> from: " + QString::number(from) + " / to: " + QString::number(to);
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupLayer::exchangeFrame() - Fatal Error: frame indexes are invalid -> from: " + QString::number(from) + " / to: " + QString::number(to);
         #endif
         return false;
     }
@@ -363,15 +339,8 @@ TupFrame *TupLayer::frameAt(int position) const
 {
     if (position < 0 || position >= frames.count()) {
         #ifdef TUP_DEBUG
-            QString msg1 = "TupLayer::frameAt() - Fatal Error: frame index out of bound : " + QString::number(position);
-            QString msg2 = "TupLayer::frameAt() - Fatal Error: index limit at layer(" + QString::number(index) + ") : " + QString::number(frames.count()-1);
-            #ifdef Q_OS_WIN
-                qDebug() << msg1;
-                qDebug() << msg2;
-            #else
-                tError() << msg1;
-                tError() << msg2;
-            #endif
+            qDebug() << "TupLayer::frameAt() - Fatal Error: frame index out of bound : " + QString::number(position);
+            qDebug() << "TupLayer::frameAt() - Fatal Error: index limit at layer(" + QString::number(index) + ") : " + QString::number(frames.count()-1);
         #endif    
 
         return nullptr;
@@ -384,11 +353,7 @@ TupFrame *TupLayer::frameAt(int position) const
 void TupLayer::fromXml(const QString &xml)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupLayer::fromXml()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupLayer::fromXml()]";
     #endif
 
     QDomDocument document;
@@ -510,11 +475,7 @@ void TupLayer::addTweenObject(TupSvgItem *object)
 void TupLayer::updateTweenObject(int index, TupGraphicObject *object)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-           qDebug() << "[TupLayer::updateTweenObject()]";
-        #else
-           T_FUNCINFO;
-        #endif
+        qDebug() << "[TupLayer::updateTweenObject()]";
     #endif
 
     tweeningGraphicObjects.replace(index, object);
@@ -528,11 +489,7 @@ void TupLayer::updateTweenObject(int index, TupSvgItem *object)
 void TupLayer::removeTweenObject(TupGraphicObject *object)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-           qDebug() << "[TupLayer::removeTweenObject()]";
-        #else
-           T_FUNCINFO;
-        #endif
+        qDebug() << "[TupLayer::removeTweenObject()]";
     #endif
 
     if (tweeningGraphicObjects.size() > 0)
@@ -548,11 +505,7 @@ void TupLayer::removeTweenObject(TupSvgItem *object)
 QList<TupGraphicObject *> TupLayer::getTweeningGraphicObjects() const
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-           qDebug() << "[TupLayer::getTweeningGraphicObjects()]";
-        #else
-           T_FUNCINFO;
-        #endif
+        qDebug() << "[TupLayer::getTweeningGraphicObjects()]";
     #endif
 
     return tweeningGraphicObjects;
@@ -566,11 +519,7 @@ QList<TupSvgItem *> TupLayer::getTweeningSvgObjects() const
 bool TupLayer::tweenExists(const QString &name, TupItemTweener::Type type)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-           qDebug() << "[TupLayer::tweenExists()]";
-        #else
-           T_FUNCINFO;
-        #endif
+        qDebug() << "[TupLayer::tweenExists()]";
     #endif
 
     foreach (TupGraphicObject *object, tweeningGraphicObjects) {
@@ -595,11 +544,7 @@ bool TupLayer::tweenExists(const QString &name, TupItemTweener::Type type)
 bool TupLayer::removeTween(const QString &name, TupItemTweener::Type type)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupLayer::removeTween()]";
-        #else
-            T_FUNCINFO << "name: " << name << " | type: " << type;
-        #endif
+        qDebug() << "[TupLayer::removeTween()] - type -> " << type;
     #endif
 
     foreach (TupGraphicObject *object, tweeningGraphicObjects) {
@@ -636,11 +581,7 @@ bool TupLayer::removeTween(const QString &name, TupItemTweener::Type type)
 void TupLayer::removeAllTweens()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-           qDebug() << "[TupLayer::removeAllTweens()]";
-        #else
-           T_FUNCINFO;
-        #endif
+        qDebug() << "[TupLayer::removeAllTweens()]";
     #endif
 
     foreach (TupGraphicObject *object, tweeningGraphicObjects) {
@@ -657,11 +598,7 @@ void TupLayer::removeAllTweens()
 void TupLayer::removeTweensFromFrame(int frameIndex)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-           qDebug() << "[TupLayer::removeTweensFromFrame()]";
-        #else
-           T_FUNCINFO;
-        #endif
+        qDebug() << "[TupLayer::removeTweensFromFrame()]";
     #endif
 
     foreach (TupGraphicObject *object, tweeningGraphicObjects) {

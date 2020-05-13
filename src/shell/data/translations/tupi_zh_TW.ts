@@ -1631,6 +1631,14 @@
         <source>About TupiTube Desk</source>
         <translation>關於TupiTube</translation>
     </message>
+    <message>
+        <source>License Agreement</source>
+        <translation>許可協議</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>關閉</translation>
+    </message>
 </context>
 <context>
     <name>TupBasicCameraInterface</name>

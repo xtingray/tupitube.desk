@@ -49,11 +49,7 @@ TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QCa
                                                  int cameraIndex, const QSize cameraSize, int i, QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupBasicCameraInterface()]";
-        #else
-           TINIT;
-        #endif
+        qDebug() << "[TupBasicCameraInterface()]";
     #endif
 
     setWindowTitle(tr("TupiTube Camera Manager") + " | " + tr("Current resolution:") + " " + title);
@@ -167,11 +163,7 @@ TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QCa
 TupBasicCameraInterface::~TupBasicCameraInterface()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TupBasicCameraInterface()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "[~TupBasicCameraInterface()]";
     #endif
 }
 
@@ -190,12 +182,7 @@ void TupBasicCameraInterface::closeEvent(QCloseEvent *event)
 
     if (! dir.rmdir(dir.absolutePath())) {
         #ifdef TUP_DEBUG
-            QString msg = "TupBasicCameraInterface::closeEvent() - Fatal Error: Can't remove pictures directory -> " + dir.absolutePath();
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupBasicCameraInterface::closeEvent() - Fatal Error: Can't remove pictures directory -> " + dir.absolutePath();
         #endif
     }
 
@@ -208,12 +195,7 @@ QString TupBasicCameraInterface::randomPath()
     QDir dir;
     if (!dir.mkdir(imgPath)) {
         #ifdef TUP_DEBUG
-            QString msg = "TupBasicCameraInterface::randomPath() - Fatal Error: Can't create pictures directory -> " + imgPath;
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupBasicCameraInterface::randomPath() - Fatal Error: Can't create pictures directory -> " + imgPath;
         #endif
 
         imgPath = "";
@@ -225,15 +207,11 @@ QString TupBasicCameraInterface::randomPath()
 
 void TupBasicCameraInterface::takePicture()
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
+    #ifdef TUP_DEBUG
         qDebug() << "[TupBasicCameraInterface::takePicture()]";
-    #else
-        T_FUNCINFO;
     #endif
-#endif
-    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     QString prev = "pic";
     if (counter < 10)
         prev += "00";
@@ -264,13 +242,9 @@ void TupBasicCameraInterface::changeCameraDevice(int index)
 
 void TupBasicCameraInterface::imageSavedFromCamera(int id, const QString folder)
 {
-#ifdef TUP_DEBUG
-    #ifdef Q_OS_WIN
+    #ifdef TUP_DEBUG
         qDebug() << "[TupBasicCameraInterface::imageSavedFromCamera()]";
-    #else
-        T_FUNCINFO;
     #endif
-#endif
 
     Q_UNUSED(id);
 

@@ -201,12 +201,7 @@ void PapagayoTool::editLipSyncSelection(const QString &name)
             configPanel->setPhoneme(phoneme->value());
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "PapagayoTool::editLipSyncSelection() - No lipsync phoneme at index 0";
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "PapagayoTool::editLipSyncSelection() - No lipsync phoneme at index 0";
             #endif
         }
         configPanel->setPos(voice->mouthPos());
@@ -217,11 +212,11 @@ void PapagayoTool::removeCurrentLipSync(const QString &name)
 {
     QGraphicsView * view = scene->views().first();
     foreach (QGraphicsItem *item, view->scene()->items()) {
-             QString tip = item->toolTip();
-             if (tip.length() > 0) {
-                 if (tip.startsWith(tr("lipsync:") + name))
-                     scene->removeItem(item);
-             }
+        QString tip = item->toolTip();
+        if (tip.length() > 0) {
+            if (tip.startsWith(tr("lipsync:") + name))
+                scene->removeItem(item);
+        }
     }
 
     TupProjectRequest request = TupRequestBuilder::createLayerRequest(initScene, 0, TupProjectRequest::RemoveLipSync, name);
@@ -266,14 +261,14 @@ void PapagayoTool::setTargetEnvironment()
 {
     QGraphicsView *view = scene->views().at(0);
     foreach (QGraphicsItem *item, view->scene()->items()) {
-             QString tip = item->toolTip();
-             if (tip.length() > 0) {
-                 if (tip.compare(currentMouth) == 0) {
-                     mouthOffset = item->boundingRect().center();
-                     origin = item->pos() + mouthOffset;
-                     mouth = item;
-                 }
-             }
+        QString tip = item->toolTip();
+        if (tip.length() > 0) {
+            if (tip.compare(currentMouth) == 0) {
+                mouthOffset = item->boundingRect().center();
+                origin = item->pos() + mouthOffset;
+                mouth = item;
+            }
+        }
     }
 
     target = new MouthTarget(origin, baseZValue);
@@ -289,12 +284,7 @@ void PapagayoTool::setTargetEnvironment()
             configPanel->setPhoneme(phoneme->value());
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "TupGraphicsScene::setTargetEnvironment() - No lipsync phoneme at frame " + QString::number(scene->currentFrameIndex()) + " - index: " + QString::number(index);
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "TupGraphicsScene::setTargetEnvironment() - No lipsync phoneme at frame " + QString::number(scene->currentFrameIndex()) + " - index: " + QString::number(index);
             #endif
         }
     }

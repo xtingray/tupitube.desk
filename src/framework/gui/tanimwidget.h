@@ -54,19 +54,20 @@ class T_GUI_EXPORT TAnimWidget : public QWidget
     public:
         enum Type { AnimText = 0, AnimPixmap };
 
-        TAnimWidget(const QPixmap &px, const QString &text, QWidget *parent = 0);
-        TAnimWidget(ListOfPixmaps lop, QWidget *parent = 0);
+        TAnimWidget(const QPixmap &px, const QString &text, QWidget *parent = nullptr);
+        TAnimWidget(ListOfPixmaps lop, QWidget *parent = nullptr);
         ~TAnimWidget();
 
         void setBackgroundPixmap(const QPixmap &px);
+        void activateAnimation();
 
     protected:
-        void showEvent(QShowEvent * e);
-        void hideEvent(QHideEvent * e);
+        void showEvent(QShowEvent *);
+        void hideEvent(QHideEvent *);
 
     protected:
-        void timerEvent(QTimerEvent *e);
-        void paintEvent(QPaintEvent *e);
+        void timerEvent(QTimerEvent *);
+        void paintEvent(QPaintEvent *);
 
     private:
         Type m_type;

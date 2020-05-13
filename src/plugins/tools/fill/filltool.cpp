@@ -87,11 +87,7 @@ void FillTool::setupActions()
 void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[FillTool::press()]";
-        #else
-            T_FUNCINFOX("tools");
-        #endif
+        qDebug() << "[FillTool::press()]";
     #endif
 
     if (input->buttons() == Qt::LeftButton) {
@@ -129,12 +125,7 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                     if (libraryItem->type() != TupLibraryObject::Item) {
                         TOsd::self()->display(tr("Error"), tr("Sorry, only native objects can be filled"), TOsd::Error);
                         #ifdef TUP_DEBUG
-                            QString msg = "FillTool::press() - Warning: item is a RASTER object!";
-                            #ifdef Q_OS_WIN
-                                qWarning() << msg;
-                            #else
-                                tWarning() << msg;
-                            #endif
+                            qWarning() << "FillTool::press() - Warning: item is a RASTER object!";
                         #endif
                         return;
                     }
@@ -145,12 +136,7 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                 if (svg) {
                     TOsd::self()->display(tr("Error"), tr("Sorry, only native objects can be filled"), TOsd::Error);
                     #ifdef TUP_DEBUG
-                        QString msg = "FillTool::press() - Warning: item is a SVG object!";
-                        #ifdef Q_OS_WIN
-                            qWarning() << msg;
-                        #else
-                            tWarning() << msg;
-                        #endif
+                        qWarning() << "FillTool::press() - Warning: item is a SVG object!";
                     #endif
                     return;
                 }
@@ -184,32 +170,17 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                     return;
                 } else {
                     #ifdef TUP_DEBUG
-                        QString msg = "FillTool::press() - Fatal Error: QAbstractGraphicsShapeItem cast has failed!";
-                        #ifdef Q_OS_WIN
-                            qDebug() << msg;
-                        #else
-                            tError() << msg;
-                        #endif
+                        qDebug() << "FillTool::press() - Fatal Error: QAbstractGraphicsShapeItem cast has failed!";
                     #endif
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    QString msg = "FillTool::press() - Error: item is not available at the current frame";
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "FillTool::press() - Error: item is not available at the current frame";
                 #endif
             }
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "FillTool::press() - No item found";
-                #ifdef Q_OS_WIN
-                    qDebug() << msg;
-                #else
-                    tError() << msg;
-                #endif
+                qDebug() << "FillTool::press() - No item found";
             #endif
             return;
         }

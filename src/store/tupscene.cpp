@@ -139,12 +139,7 @@ TupLayer *TupScene::createLayer(QString name, int position, bool loaded)
 {
     if (position < 0 || position > layers.count()) {
         #ifdef TUP_DEBUG
-            QString msg = "TupScene::createLayer() - Invalid index -> " + QString::number(position);
-            #ifdef Q_OS_WIN
-                qDebug() << msg;
-            #else
-                tError() << msg;
-            #endif
+            qDebug() << "TupScene::createLayer() - Invalid index -> " + QString::number(position);
         #endif    
         
         return nullptr;
@@ -236,18 +231,9 @@ TupLayer *TupScene::layerAt(int position) const
 {
     if (position < 0 || position >= layers.count()) {
         #ifdef TUP_DEBUG
-            QString msg1 = "TupScene::layerAt() - FATAL ERROR: LAYERS TOTAL: " + QString::number(layers.count());
-            QString msg2 = "TupScene::layerAt() - FATAL ERROR: index out of bound -> " + QString::number(position);
-            QString msg3 = "TupScene::layerAt() - FATAL ERROR: The layer requested doesn't exist anymore";
-            #ifdef Q_OS_WIN
-                qDebug() << msg1;
-                qDebug() << msg2;
-                qDebug() << msg3;
-            #else
-                tError() << msg1;
-                tError() << msg2;
-                tError() << msg3;
-            #endif
+            qDebug() << "TupScene::layerAt() - FATAL ERROR: LAYERS TOTAL: " + QString::number(layers.count());
+            qDebug() << "TupScene::layerAt() - FATAL ERROR: index out of bound -> " + QString::number(position);
+            qDebug() << "TupScene::layerAt() - FATAL ERROR: The layer requested doesn't exist anymore";
         #endif
         return nullptr;
     }
@@ -275,7 +261,7 @@ void TupScene::fromXml(const QString &xml)
 
     QDomDocument document;
     if (!document.setContent(xml)) {
-		#ifdef TUP_DEBUG
+        #ifdef TUP_DEBUG
             qDebug() << "TupScene::fromXml() - Error while processing XML file";
         #endif  
         return;
@@ -521,11 +507,7 @@ bool TupScene::tweenExists(const QString &name, TupItemTweener::Type type)
 bool TupScene::removeTween(const QString &name, TupItemTweener::Type type)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupScene::removeTween()]";
-        #else
-            T_FUNCINFO;
-        #endif
+       qDebug() << "[TupScene::removeTween()]";
     #endif
 
     if (layers.count()) {
@@ -568,11 +550,7 @@ bool TupScene::removeTween(const QString &name, TupItemTweener::Type type)
 void TupScene::removeTweensFromLayer(int layerIndex)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupScene::removeTweensFromLayer()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupScene::removeTweensFromLayer()]";
     #endif
 
     TupLayer *layer = layerAt(layerIndex);
@@ -583,11 +561,7 @@ void TupScene::removeTweensFromLayer(int layerIndex)
 void TupScene::removeTweensFromFrame(int layerIndex, int frameIndex)
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupScene::removeTweensFromFrame()]" << frameIndex;
-        #else
-            T_FUNCINFO << frameIndex;
-        #endif
+        qDebug() << "[TupScene::removeTweensFromFrame()]" << frameIndex;
     #endif
 
     TupLayer *layer = layerAt(layerIndex);

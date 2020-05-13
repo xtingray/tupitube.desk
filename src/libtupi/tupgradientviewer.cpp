@@ -147,12 +147,7 @@ void TupGradientViewer::createGradient()
             default:
             {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupGradientViewer::createGradient() - Fatal Error: the gradient type doesn't exists!";
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "TupGradientViewer::createGradient() - Fatal Error: the gradient type doesn't exists!";
                 #endif
             }
     }
@@ -205,14 +200,9 @@ QGradient TupGradientViewer::gradient()
             default:
             {
                 #ifdef TUP_DEBUG
-                    QString msg = "TupGradientViewer::gradient() - Fatal error: the gradient type doesn't exists!";
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tError() << msg;
-                    #endif
+                    qDebug() << "TupGradientViewer::gradient() - Fatal error: the gradient type doesn't exists!";
                 #endif
-}
+            }
     }
 
     gradientNormalized.setStops(m_gradientStops);
@@ -281,12 +271,7 @@ void TupGradientViewer::setGradient(const QGradient* gradient)
             default:
             { 
                  #ifdef TUP_DEBUG
-                     QString msg = "TupGradientViewer::setGradient() - Fatal Error: the gradient type doesn't exists!";
-                     #ifdef Q_OS_WIN
-                         qDebug() << msg;
-                     #else
-                         tError() << msg;
-                     #endif
+                     qDebug() << "TupGradientViewer::setGradient() - Fatal Error: the gradient type doesn't exists!";
                  #endif
             }
     }

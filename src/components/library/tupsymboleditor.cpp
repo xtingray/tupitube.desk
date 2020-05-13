@@ -95,12 +95,7 @@ void TupSymbolEditor::loadTools()
             
              for (it = keys.begin(); it != keys.end(); ++it) {
                   #ifdef TUP_DEBUG
-                      QString msg = "TupSymbolEditor::loadTools() - *** Tool Loaded: " + *it;
-                      #ifdef Q_OS_WIN
-                          qDebug() << msg;
-                      #else
-                          tDebug("plugins") << msg;
-                      #endif
+                      qDebug() << "TupSymbolEditor::loadTools() - *** Tool Loaded: " + *it;
                   #endif
             
                   TAction *act = tool->actions()[*it];
@@ -141,11 +136,7 @@ void TupSymbolEditor::loadTools()
 void TupSymbolEditor::selectTool()
 {
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupSymbolEditor::selectTool()]";
-        #else
-            T_FUNCINFO;
-        #endif
+        qDebug() << "[TupSymbolEditor::selectTool()]";
     #endif
 
     TAction *action = qobject_cast<TAction *>(sender());

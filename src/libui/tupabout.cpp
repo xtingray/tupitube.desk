@@ -34,7 +34,6 @@
  ***************************************************************************/
 
 #include "tupabout.h"
-#include "tanimwidget.h"
 #include "tapplicationproperties.h"
 
 #include <QTextBrowser>
@@ -98,15 +97,15 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Close, parent)
     QDomNode n = docElem.firstChild();
 
     while (!n.isNull()) {
-           QDomElement e = n.toElement();
-           if (!e.isNull()) {
-               if (e.tagName() == "credits")
-                   creditsText = e.text();
-           }
-           n = n.nextSibling();
+        QDomElement e = n.toElement();
+        if (!e.isNull()) {
+            if (e.tagName() == "credits")
+                creditsText = e.text();
+        }
+        n = n.nextSibling();
     }
 
-    TAnimWidget *credits = new TAnimWidget(QPixmap(THEME_DIR + "/images/credits.png"), creditsText);
+    credits = new TAnimWidget(QPixmap(THEME_DIR + "/images/credits.png"), creditsText);
     addTab(credits, tr("About"));
 
     QPalette palette = credits->palette();
@@ -149,7 +148,6 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Close, parent)
     */
 
     // License Terms Tab
-    /*
     QString licenseFile = QString() + "html/pages/philosophy.html"; 
 #ifdef Q_OS_WIN
     QString licensePath = SHARE_DIR + licenseFile;
@@ -163,9 +161,25 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Close, parent)
     licenseText->moveCursor(QTextCursor::Start);
     addTab(licenseText, tr("License Agreement"));
     setButtonText(Cancel, tr("Close"));
-    */
 }
 
 TupAbout::~TupAbout()
 {
+}
+
+void TupAbout::keyPressEvent(QKeyEvent *event)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupAbout::keyPressEvent(QKeyEvent)] - key -> " << event->key();
+    #endif
+
+    if (currentIndex() == 0) {
+        switch (event->key()) {
+            case Qt::Key_Space:
+              {
+                  credits->activateAnimation();
+              }
+            break;
+        }
+    }
 }
