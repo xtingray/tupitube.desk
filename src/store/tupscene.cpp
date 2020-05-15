@@ -351,12 +351,13 @@ bool TupScene::moveLayer(int from, int to)
 
     TupLayer *sourceLayer = layers[from];
     sourceLayer->updateLayerIndex(to + 1);
+
     TupLayer *targetLayer = layers[to];
     targetLayer->updateLayerIndex(from + 1);
 
     Frames frames = sourceLayer->getFrames(); 
     int totalFrames = frames.size();
-    int zLevelIndex = (to + 2) * ZLAYER_LIMIT;
+    int zLevelIndex = (to + BG_LAYERS) * ZLAYER_LIMIT;
     for (int i = 0; i < totalFrames; i++) {
          TupFrame *frame = frames.at(i);
          frame->updateZLevel(zLevelIndex);
@@ -364,12 +365,12 @@ bool TupScene::moveLayer(int from, int to)
 
     frames = targetLayer->getFrames();
     totalFrames = frames.size();
-    zLevelIndex = (from + 2)*ZLAYER_LIMIT;
+    zLevelIndex = (from + BG_LAYERS) * ZLAYER_LIMIT;
     for (int i = 0; i < totalFrames; i++) {
          TupFrame *frame = frames.at(i);
          frame->updateZLevel(zLevelIndex);
     }
-    // layers.swap(from, to);
+
     layers.swapItemsAt(from, to);
 
     return true;

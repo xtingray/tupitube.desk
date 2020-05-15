@@ -106,6 +106,11 @@ bool TupCommandExecutor::moveLayer(TupLayerResponse *response)
     int position = response->getLayerIndex();
     int newPosition = response->getArg().toInt();
 
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCommandExecutor::moveLayer()] - oldPosition -> " << position;
+        qDebug() << "[TupCommandExecutor::moveLayer()] - newPosition -> " << newPosition;
+    #endif
+
     TupScene *scene = project->sceneAt(scenePos);
 
     if (!scene)

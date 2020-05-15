@@ -564,6 +564,10 @@ void TupExposureSheet::requestRenameLayer(int layerIndex, const QString & name)
 
 void TupExposureSheet::moveLayer(int oldIndex, int newIndex)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExposureSheet::moveLayer()] - oldIndex -> " << oldIndex << " - newIndex -> " << newIndex;
+    #endif
+
     TupProjectRequest request = TupRequestBuilder::createLayerRequest(scenesContainer->currentIndex(), oldIndex,
                                                    TupProjectRequest::Move, newIndex);
     emit requestTriggered(&request);
