@@ -123,6 +123,9 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
                                  const QSize &size, const QSize &newSize, int fps, TupLibrary *library)
 {
     Q_UNUSED(newSize)
+    #ifdef TUP_DEBUG
+        qDebug() << "FFmpegPlugin::exportToFormat() - fps -> " << fps;
+    #endif
 
     int frames = 0;
     double duration = 0;

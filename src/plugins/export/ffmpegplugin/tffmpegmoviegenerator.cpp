@@ -48,6 +48,10 @@
 TFFmpegMovieGenerator::TFFmpegMovieGenerator(TMovieGeneratorInterface::Format format, const QSize &size, 
                                              int fpsParam, double duration) : TMovieGenerator(size.width(), size.height())
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "TFFmpegMovieGenerator::TFFmpegMovieGenerator() - fps -> " << fpsParam;
+    #endif
+
     movieFile = QDir::tempPath() + "/tupitube_video_" + TAlgorithm::randomString(12);
     setFileExtension(format);
 
