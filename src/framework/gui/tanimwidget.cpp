@@ -55,10 +55,12 @@ class TAnimWidget::Controller
          }
         void stop()
          {
-             m_area->killTimer(m_timerId);
-             m_timerId = -1;
-             started = false;
-         }
+            if (m_timerId != -1) {
+                m_area->killTimer(m_timerId);
+                m_timerId = -1;
+                started = false;
+            }
+        }
         bool hasStarted()
          {
             return started;
