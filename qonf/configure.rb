@@ -48,10 +48,10 @@ module RQonf
     attr_reader :qmake, :statusFile
 
     def initialize(args)
-      @statusFile = Dir.getwd+"/configure.status"
+      @statusFile = Dir.getwd + "/configure.status"
 
       @tests = []
-      @testsDir = Dir.getwd
+      @testsDir = Dir.getwd + "/configure.tests"
 
       @options = {}
       parseArgs(args)
@@ -203,7 +203,6 @@ module RQonf
                 @tests << Test.new(file, @qmake)
              end
           else
-             Info.warn << "File: " << file << $endl
              if file.include? "theora"
                 if OS.linux?
                    @tests << Test.new(file, @qmake) 
