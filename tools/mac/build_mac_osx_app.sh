@@ -38,15 +38,15 @@
 #Usage:
 # ./tools/build_mac_osx_app.sh /Users/username/tupitube/sources/tupitube.desk /Users/username/tupitube/installer
 
-QT_PATH=/Users/xtingray/Qt5.13.1
-export PATH=$QT_PATH/5.13.1/clang_64/bin:$PATH
-export DYLD_LIBRARY_PATH=/usr/local/lib:$DYLD_LIBRARY_PATH:$QT_PATH/5.13.1/clang_64/lib
-export DYLD_FRAMEWORK_PATH=$QT_PATH/5.13.1/clang_64/lib
+QT_PATH=/Users/xtingray/Qt5.14.2
+export PATH=$QT_PATH/5.14.2/clang_64/bin:$PATH
+export DYLD_LIBRARY_PATH=/System/Library/Frameworks/ImageIO.framework/Resources:/usr/local/lib:$DYLD_LIBRARY_PATH:$QT_PATH/5.14.2/clang_64/lib
+export DYLD_FRAMEWORK_PATH=$QT_PATH/5.14.2/clang_64/lib
 
 TUPITUBE_GIT_REPOSITORY=$1
 INSTALLATION_PATH=$2
 INSTALLER_SCRIPT=$TUPITUBE_GIT_REPOSITORY/tools/mac/update_dylib_path.rb
-TUPITUBE_VERSION=0.2.14
+TUPITUBE_VERSION=0.2.15
 
 declare -a LIBS=('libtupifwcore.dylib' 'libtupifwgui.dylib' 'libtupigui.dylib' 'libtupistore.dylib' 'libtupi.dylib' \
 'libtupibase.dylib' 'libtupinet.dylib' 'libtupicolorpalette.1.dylib' 'libtupiworkspace.1.dylib' 'libtupicolor.1.dylib' \

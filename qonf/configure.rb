@@ -35,6 +35,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>. #
 ###########################################################################
 
+require 'os'
 require_relative 'test'
 require_relative 'config'
 require_relative 'info'
@@ -189,7 +190,6 @@ module RQonf
         Info.warn << "Searching qonfs in: " << path << $endl
       end
       Dir.foreach(path) { |f|
-
         file = "#{path}/#{f}"
 
         if File.stat(file).directory?
@@ -203,7 +203,14 @@ module RQonf
                 @tests << Test.new(file, @qmake)
              end
           else
-             @tests << Test.new(file, @qmake)
+             Info.warn << "File: " << file << $endl
+             if file.include? "theora"
+                if OS.linux?
+                   @tests << Test.new(file, @qmake) 
+                end
+             else
+                @tests << Test.new(file, @qmake)
+             end
           end
         end
       }

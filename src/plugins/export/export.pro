@@ -20,8 +20,10 @@ contains(DEFINES, HAVE_FFMPEG) {
         SUBDIRS += ffmpegplugin 
 }
 
-contains(DEFINES, HAVE_THEORA) {
+linux-g++ {
+    contains(DEFINES, HAVE_THEORA) {
         SUBDIRS += theoraplugin
+    }
 }
 
 # Experimental code
