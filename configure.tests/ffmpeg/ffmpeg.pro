@@ -11,8 +11,8 @@ TARGET = ffmpeg
 macx {
     CONFIG -= app_bundle
     CONFIG += warn_on static console
-    INCLUDEPATH += . /usr/local/include
-    LIBS += -L/usr/local/lib -lavformat -lavcodec -lavutil #-lswscale
+    INCLUDEPATH += . /usr/local/ffmpeg/include
+    LIBS += -L/usr/local/ffmpeg/lib -lavformat -lavcodec -lavutil #-lswscale
 }
 
 # Input
