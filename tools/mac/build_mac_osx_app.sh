@@ -40,7 +40,7 @@
 
 QT_PATH=/Users/xtingray/Qt5.14.2
 export PATH=$QT_PATH/5.14.2/clang_64/bin:$PATH
-export DYLD_LIBRARY_PATH=/System/Library/Frameworks/ImageIO.framework/Resources:$DYLD_LIBRARY_PATH:$QT_PATH/5.14.2/clang_64/lib
+export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$QT_PATH/5.14.2/clang_64/lib
 export DYLD_FRAMEWORK_PATH=$QT_PATH/5.14.2/clang_64/lib
 
 TUPITUBE_GIT_REPOSITORY=$1
