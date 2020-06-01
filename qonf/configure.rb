@@ -203,13 +203,7 @@ module RQonf
                 @tests << Test.new(file, @qmake)
              end
           else
-             if file.include? "theora"
-                if OS.linux?
-                   @tests << Test.new(file, @qmake) 
-                end
-             else
-                @tests << Test.new(file, @qmake)
-             end
+             @tests << Test.new(file, @qmake)
           end
         end
       }
@@ -278,11 +272,6 @@ module RQonf
 
       unless @options['with-quazip'].nil? then
         value = @options['with-quazip']
-        path += value + "/lib:"
-      end
-
-      unless @options['with-theora'].nil? then
-        value = @options['with-theora']
         path += value + "/lib:"
       end
 

@@ -71,8 +71,8 @@ bool TheoraPlugin::exportToFormat(const QColor color, const QString &filePath, c
     int frames = 0;
     qreal duration = 0;
     foreach (TupScene *scene, scenes) {
-             duration += (qreal) scene->framesCount() / (qreal) fps;
-             frames += scene->framesCount();
+        duration += (qreal) scene->framesCount() / (qreal) fps;
+        frames += scene->framesCount();
     }
 
     TheoraMovieGenerator *generator = 0;
@@ -80,28 +80,30 @@ bool TheoraPlugin::exportToFormat(const QColor color, const QString &filePath, c
 
     TupAnimationRenderer renderer(color, library);
     {
-         if (!generator->validMovieHeader()) {
-             errorMsg = generator->getErrorMsg();
-             #ifdef TUP_DEBUG
-                 qDebug() << "FFMpegPlugin::exportToFormat() - [ Fatal Error ] - Can't create video -> " + filePath;
-             #endif
+        if (!generator->validMovieHeader()) {
+            errorMsg = generator->getErrorMsg();
+            #ifdef TUP_DEBUG
+                qDebug() << "FFMpegPlugin::exportToFormat() - [ Fatal Error ] - Can't create video -> " + filePath;
+            #endif
 
-             delete generator;
-             return false;
-         }
+            delete generator;
+            return false;
+        }
 
-         QPainter painter(generator);
-         painter.setRenderHint(QPainter::Antialiasing, true);
+        QPainter painter(generator);
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        int photogram = 0;
+        foreach (TupScene *scene, scenes) {
+            renderer.setScene(scene, size);
+            while (renderer.nextPhotogram()) {
+                 renderer.render(&painter);
+                 generator->nextFrame();
+                 generator->reset();
 
-         foreach (TupScene *scene, scenes) {
-                  renderer.setScene(scene, size);
-
-                  while (renderer.nextPhotogram()) {
-                         renderer.render(&painter);
-                         generator->nextFrame();
-                         generator->reset();
-                  }
-         }
+                 photogram++;
+                 emit progressChanged((photogram * 100) / frames);
+            }
+        }
     }
 
     generator->saveMovie(filePath);
@@ -110,7 +112,8 @@ bool TheoraPlugin::exportToFormat(const QColor color, const QString &filePath, c
     return true;
 }
 
-bool TheoraPlugin::exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene, const QSize &size, TupLibrary *library)
+bool TheoraPlugin::exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene, const QSize &size,
+                               TupLibrary *library)
 {
     Q_UNUSED(frameIndex);
     Q_UNUSED(color);

@@ -63,6 +63,9 @@ class TheoraPlugin : public TupExportPluginObject
 
         virtual QString getExceptionMsg() const;
         QString errorMsg;
+
+    signals:
+        void progressChanged(int percent);
 };
 
 #endif

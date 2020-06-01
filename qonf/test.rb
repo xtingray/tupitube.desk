@@ -107,20 +107,9 @@ class Test
                          qmakeLine = "'LIBS += #{extraLib}'"
                       end
                    else
-                      if File.dirname(@rules).end_with?("theora")
-                         if conf.hasArgument?("with-theora")
-                            theoraDir = conf.argumentValue("with-theora")
-                            theoraLib = theoraDir + "/lib"
-                            extraLib += "-L#{theoraLib}"
-                            extraInclude = theoraDir + "/include"
-                            qmakeLine = "'LIBS += #{extraLib}'"
-                            qmakeLine += " 'INCLUDEPATH += #{extraInclude}'"
-                         end
-                      else
-                         qmakeLine = ""
-                         if extraLib.length > 0 
-                            qmakeLine = "'LIBS += #{extraLib} #{parser.libs.join(" ")}'"
-                         end
+                      qmakeLine = ""
+                      if extraLib.length > 0 
+                         qmakeLine = "'LIBS += #{extraLib} #{parser.libs.join(" ")}'"
                       end
                    end
                 end
