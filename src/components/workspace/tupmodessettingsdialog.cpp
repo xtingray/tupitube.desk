@@ -150,6 +150,8 @@ TupModesSettingsDialog::TupModesSettingsDialog(QList<TupBackground::BgType> bgLa
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(tabWidget);
     mainLayout->addWidget(buttonBox);
+
+    modesList->setCurrentRow(0);
 }
 
 TupModesSettingsDialog::~TupModesSettingsDialog()
@@ -182,56 +184,61 @@ void TupModesSettingsDialog::apply()
 void TupModesSettingsDialog::moveModeUp()
 {
     int currentIndex = modesList->currentRow();
-    TupModesItem *bgWidget = static_cast<TupModesItem *>(modesList->itemWidget(modesList->item(currentIndex)));
-    modesList->takeItem(currentIndex);
-    currentIndex--;
-    if (currentIndex < 0)
-        currentIndex = 0;
+    if (currentIndex != -1) {
+        TupModesItem *bgWidget = static_cast<TupModesItem *>(modesList->itemWidget(modesList->item(currentIndex)));
+        modesList->takeItem(currentIndex);
+        currentIndex--;
+        if (currentIndex < 0)
+            currentIndex = 0;
 
-    if (currentIndex == 0 && upButton->isEnabled())
-        upButton->setEnabled(false);
-    if (currentIndex < 3 && !downButton->isEnabled())
-        downButton->setEnabled(true);
+        if (currentIndex == 0 && upButton->isEnabled())
+            upButton->setEnabled(false);
+        if (currentIndex < 3 && !downButton->isEnabled())
+            downButton->setEnabled(true);
 
-    TupListItem* bgItem = new TupListItem;
-    modesList->insertItem(currentIndex, bgItem);
-    TupModesItem *widget = new TupModesItem(bgWidget->bgType(), bgWidget->itemLabel(), bgWidget->visibility());
-    modesList->setItemWidget(bgItem, widget);
-    modesList->setCurrentRow(currentIndex);
+        TupListItem* bgItem = new TupListItem;
+        modesList->insertItem(currentIndex, bgItem);
+        TupModesItem *widget = new TupModesItem(bgWidget->bgType(), bgWidget->itemLabel(), bgWidget->visibility());
+        modesList->setItemWidget(bgItem, widget);
+        modesList->setCurrentRow(currentIndex);
+    }
 }
 
 void TupModesSettingsDialog::moveModeDown()
 {
     int currentIndex = modesList->currentRow();
-    TupModesItem *bgWidget = static_cast<TupModesItem *>(modesList->itemWidget(modesList->item(currentIndex)));
-    modesList->takeItem(currentIndex);
-    currentIndex++;
-    if (currentIndex > 3)
-        currentIndex = 3;
+    if (currentIndex != -1) {
+        TupModesItem *bgWidget = static_cast<TupModesItem *>(modesList->itemWidget(modesList->item(currentIndex)));
+        modesList->takeItem(currentIndex);
+        currentIndex++;
+        if (currentIndex > 3)
+            currentIndex = 3;
 
-    if (currentIndex > 0 && !upButton->isEnabled())
-        upButton->setEnabled(true);
-    if (currentIndex == 3 && downButton->isEnabled())
-        downButton->setEnabled(false);
+        if (currentIndex > 0 && !upButton->isEnabled())
+            upButton->setEnabled(true);
+        if (currentIndex == 3 && downButton->isEnabled())
+            downButton->setEnabled(false);
 
-    TupListItem* bgItem = new TupListItem;
-    modesList->insertItem(currentIndex, bgItem);
-    TupModesItem *widget = new TupModesItem(bgWidget->bgType(), bgWidget->itemLabel(), bgWidget->visibility());
-    modesList->setItemWidget(bgItem, widget);
-    modesList->setCurrentRow(currentIndex);
+        TupListItem* bgItem = new TupListItem;
+        modesList->insertItem(currentIndex, bgItem);
+        TupModesItem *widget = new TupModesItem(bgWidget->bgType(), bgWidget->itemLabel(), bgWidget->visibility());
+        modesList->setItemWidget(bgItem, widget);
+        modesList->setCurrentRow(currentIndex);
+    }
 }
 
 void TupModesSettingsDialog::updateListUI()
 {
     int currentIndex = modesList->currentRow();
+    if (currentIndex != -1) {
+        if (currentIndex == 0 && upButton->isEnabled())
+            upButton->setEnabled(false);
+        else if (currentIndex > 0 && !upButton->isEnabled())
+            upButton->setEnabled(true);
 
-    if (currentIndex == 0 && upButton->isEnabled())
-        upButton->setEnabled(false);
-    else if (currentIndex > 0 && !upButton->isEnabled())
-        upButton->setEnabled(true);
-
-    if (currentIndex == 3 && downButton->isEnabled())
-        downButton->setEnabled(false);
-    else if (currentIndex < 3 && !downButton->isEnabled())
-        downButton->setEnabled(true);
+        if (currentIndex == 3 && downButton->isEnabled())
+            downButton->setEnabled(false);
+        else if (currentIndex < 3 && !downButton->isEnabled())
+            downButton->setEnabled(true);
+    }
 }
