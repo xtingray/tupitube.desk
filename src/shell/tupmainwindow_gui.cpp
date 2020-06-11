@@ -47,8 +47,8 @@ void TupMainWindow::createGUI()
         qDebug() << "TupMainWindow::createGUI()";
     #endif
 
-    TAction *hideAction = new TAction(QPixmap(THEME_DIR + "icons/hide_top_panel.png"), tr("Hide top panels"), QKeySequence(tr("Alt")),
-                                      this, SLOT(hideTopPanels()), m_actionManager);
+    TAction *hideAction = new TAction(QPixmap(THEME_DIR + "icons/hide_top_panel.png"), tr("Hide top panels"),
+                                      QKeySequence(tr("Alt")), this, SLOT(hideTopPanels()), m_actionManager);
     m_actionManager->insert(hideAction, "hideaction", "file");
     addSpecialButton(hideAction);
 

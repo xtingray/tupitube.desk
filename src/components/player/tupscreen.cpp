@@ -104,7 +104,7 @@ TupScreen::~TupScreen()
 void TupScreen::resetSceneFromList(int scene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::resetPhotograms()]";
+        qDebug() << "[TupScreen::resetSceneFromList()]";
     #endif
 
     if (scene > -1) {

@@ -50,7 +50,6 @@
 #include <QStyleOptionGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
-// #include <QDesktopWidget>
 #include <QMouseEvent>
 
 TupGraphicsScene::TupGraphicsScene() : QGraphicsScene()
@@ -269,12 +268,13 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
 void TupGraphicsScene::drawSceneBackground(int photogram)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::drawSceneBackground()";
+        qDebug() << "TupGraphicsScene::drawSceneBackground() - photogram -> " << photogram;
+        qDebug() << "*** spaceContext -> " << spaceContext;
     #endif
 
     if (!tupScene) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupGraphicsScene::drawSceneBackground() - Warning: gScene is nullptr!";
+            qWarning() << "TupGraphicsScene::drawSceneBackground() - Warning: gScene is nullptr!";
         #endif
         return;
     }
@@ -354,6 +354,7 @@ void TupGraphicsScene::drawVectorStaticBg(int index)
     }
 }
 
+// Shows dynamic background on background mode
 void TupGraphicsScene::drawVectorDynamicBg()
 {
     #ifdef TUP_DEBUG
@@ -376,6 +377,7 @@ void TupGraphicsScene::drawVectorDynamicBg()
     }
 }
 
+// Shows dynamic background as part of the scene
 void TupGraphicsScene::drawVectorDynamicBgOnMovement(int index, int photogram)
 {
     #ifdef TUP_DEBUG
@@ -384,6 +386,9 @@ void TupGraphicsScene::drawVectorDynamicBgOnMovement(int index, int photogram)
 
     // Vector Dynamic Bg on movement
     if (!background->vectorDynamicBgIsEmpty()) {
+        if (background->vectorRenderIsPending())
+            background->renderVectorDynamicView();
+
         vectorDynamicBg = new QGraphicsPixmapItem(background->vectorDynamicExpandedImage());
         vectorDynamicBg->setZValue(index * ZLAYER_LIMIT);
         vectorDynamicBg->setPos(background->vectorDynamicPos(photogram));
@@ -1552,7 +1557,7 @@ bool TupGraphicsScene::event(QEvent *event)
     return QGraphicsScene::event(event);
 }
 
-void TupGraphicsScene::sceneResponse(TupSceneResponse *event)
+void TupGraphicsScene::sceneResponse(TupSceneResponse *response)
 {
     /*
     #ifdef TUP_DEBUG
@@ -1561,10 +1566,10 @@ void TupGraphicsScene::sceneResponse(TupSceneResponse *event)
     */
 
     if (gTool)
-        gTool->sceneResponse(event);
+        gTool->sceneResponse(response);
 }
 
-void TupGraphicsScene::layerResponse(TupLayerResponse *event)
+void TupGraphicsScene::layerResponse(TupLayerResponse *response)
 {
     /*
     #ifdef TUP_DEBUG
@@ -1573,10 +1578,10 @@ void TupGraphicsScene::layerResponse(TupLayerResponse *event)
     */
 
     if (gTool)
-        gTool->layerResponse(event);
+        gTool->layerResponse(response);
 }
 
-void TupGraphicsScene::frameResponse(TupFrameResponse *event)
+void TupGraphicsScene::frameResponse(TupFrameResponse *response)
 {
     /*
     #ifdef TUP_DEBUG
@@ -1585,10 +1590,10 @@ void TupGraphicsScene::frameResponse(TupFrameResponse *event)
     */
 
     if (gTool)
-        gTool->frameResponse(event);
+        gTool->frameResponse(response);
 }
 
-void TupGraphicsScene::itemResponse(TupItemResponse *event)
+void TupGraphicsScene::itemResponse(TupItemResponse *response)
 {
     /*
     #ifdef TUP_DEBUG
@@ -1597,7 +1602,20 @@ void TupGraphicsScene::itemResponse(TupItemResponse *event)
     */
    
     if (gTool)
-        gTool->itemResponse(event);
+        gTool->itemResponse(response);
+
+    if (spaceContext == TupProject::VECTOR_DYNAMIC_BG_MODE) {
+        if (response->getAction() == TupProjectRequest::Add || response->getAction() == TupProjectRequest::Remove)
+            background->scheduleVectorRender(true);
+    }
+}
+
+void TupGraphicsScene::libraryResponse(TupLibraryResponse *response)
+{
+    if (spaceContext == TupProject::VECTOR_DYNAMIC_BG_MODE) {
+        if (response->getAction() == TupProjectRequest::Add || response->getAction() == TupProjectRequest::Remove)
+            background->scheduleVectorRender(true);
+    }
 }
 
 bool TupGraphicsScene::userIsDrawing() const

@@ -362,7 +362,7 @@ double TupBackground::rasterStaticOpacity()
 void TupBackground::renderVectorDynamicView()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupBackground::renderVectorDynamicView()]";
+        qDebug() << "[TupBackground::renderVectorDynamicView()] - Rendering view...";
     #endif
 
     TupBackgroundScene *bgScene = new TupBackgroundScene(dimension, QBrush(Qt::transparent),
@@ -426,6 +426,9 @@ void TupBackground::renderVectorDynamicView()
 
     vectorDynamicBgExpanded = QPixmap::fromImage(bgView);
     vectorDynamicRenderRequired = false;
+
+    free(painter);
+    free(canvas);
 }
 
 // Creating expanded raster dynamic image

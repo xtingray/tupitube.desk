@@ -301,7 +301,7 @@ void crashTrapper(int sig)
             bt = bt.simplified();
         } 
 
-        execInfo = runCommand("file " + BIN_DIR + "tupi.bin");
+        execInfo = runCommand("file " + BIN_DIR + "tupitube.bin");
 
         // Widget
         // QDesktopWidget desktop;

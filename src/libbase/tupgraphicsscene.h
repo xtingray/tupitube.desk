@@ -94,10 +94,11 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         
         TupBrushManager *getBrushManager() const;
         
-        void itemResponse(TupItemResponse *event);
-        void frameResponse(TupFrameResponse *event);
-        void layerResponse(TupLayerResponse *event);
-        void sceneResponse(TupSceneResponse *event);
+        void itemResponse(TupItemResponse *response);
+        void libraryResponse(TupLibraryResponse *response);
+        void frameResponse(TupFrameResponse *response);
+        void layerResponse(TupLayerResponse *response);
+        void sceneResponse(TupSceneResponse *response);
         
         void mouseMoved(QGraphicsSceneMouseEvent *event);
         void mouseReleased(QGraphicsSceneMouseEvent *event);
