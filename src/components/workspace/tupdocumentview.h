@@ -199,6 +199,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void penWidthChanged(int width);
         void colorModeChanged(TColorCell::FillType mode);
         void fillToolEnabled();
+        void projectHasChanged();
 
     private:
         void setupDrawActions();

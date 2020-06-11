@@ -1320,6 +1320,8 @@ void TupDocumentView::updateBgSettings(QList<TupBackground::BgType> indexes, QLi
     bg->updateLayerIndexes(indexes);
     bg->updateLayersVisibility(visibilityList);
     paintArea->updatePaintArea();
+
+    emit projectHasChanged();
 }
 
 void TupDocumentView::openRasterMode()

@@ -57,7 +57,7 @@ TupProjectManager::TupProjectManager(QObject *parent) : QObject(parent)
         qDebug() << "[TupProjectManager()]";
     #endif
 
-    isModified = false;
+    modified = false;
     handler = nullptr;
 
     project = new TupProject(this);
@@ -187,7 +187,7 @@ void TupProjectManager::closeProject()
     }
 
     project->setOpen(false);
-    isModified = false;
+    modified = false;
     undoStack->clear();
 }
 
@@ -198,7 +198,7 @@ bool TupProjectManager::saveProject(const QString &fileName)
     #endif
 
     bool result = handler->saveProject(fileName, project);
-    isModified = !result;
+    modified = !result;
 
     return result;
 }
@@ -220,7 +220,7 @@ bool TupProjectManager::loadProject(const QString &fileName)
 
     if (ok) {
         project->setOpen(true);
-        isModified = false;
+        modified = false;
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "TupProjectManager::loadProject() - Fatal Error: Can't load project -> " + fileName;
@@ -237,14 +237,14 @@ bool TupProjectManager::isOpen() const
     return project->isProjectOpen();
 }
 
-bool TupProjectManager::isProjectModified() const
+bool TupProjectManager::projectWasModified() const
 {
-    return isModified;
+    return modified;
 }
 
-void TupProjectManager::undoModified()
+void TupProjectManager::setModificationStatus(bool changed)
 {
-    isModified = false;
+    modified = changed;
 }
 
 bool TupProjectManager::isValid() const
@@ -449,7 +449,7 @@ void TupProjectManager::emitResponse(TupProjectResponse *response)
     #endif	
 
     if (response->getAction() != TupProjectRequest::Select)
-        isModified = true;
+        modified = true;
 
     if (!handler) {
         // SQA: Check if this is the right way to handle this condition 

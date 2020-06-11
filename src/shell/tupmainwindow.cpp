@@ -326,6 +326,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(animationTab, SIGNAL(bgColorChanged(const QColor &)), m_colorPalette, SLOT(updateBgColor(const QColor &)));
         connect(animationTab, SIGNAL(colorModeChanged(TColorCell::FillType)), m_colorPalette, SLOT(checkColorButton(TColorCell::FillType)));
         connect(animationTab, SIGNAL(penWidthChanged(int)), this, SLOT(updatePenThickness(int)));
+        connect(animationTab, SIGNAL(projectHasChanged()), this, SLOT(requestSaveAction()));
         connect(this, SIGNAL(activeDockChanged(TupDocumentView::DockType)), animationTab, SLOT(updateActiveDock(TupDocumentView::DockType)));
 
         animationTab->setAntialiasing(true);
@@ -391,7 +392,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         // if (!isNetworked) 
         //     connect(animationTab, SIGNAL(autoSave()), this, SLOT(callSave()));
 
-        m_projectManager->undoModified();
+        m_projectManager->setModificationStatus(false);
         m_colorPalette->init();
         m_colorPalette->setBgColor(project->getBgColor());
 
@@ -470,7 +471,7 @@ void TupMainWindow::newProject()
 
 bool TupMainWindow::cancelChanges()
 {
-    if (m_projectManager->isProjectModified()) {
+    if (m_projectManager->projectWasModified()) {
         QMessageBox msgBox;
         msgBox.setWindowTitle(tr("Question"));
         msgBox.setIcon(QMessageBox::Question);
@@ -527,6 +528,11 @@ bool TupMainWindow::closeProject()
     resetUI();
 
     return true;
+}
+
+void TupMainWindow::requestSaveAction()
+{
+    m_projectManager->setModificationStatus(true);
 }
 
 void TupMainWindow::resetUI()
@@ -1188,7 +1194,7 @@ void TupMainWindow::exportProject()
 
 void TupMainWindow::callSave()
 {
-    if (m_projectManager->isProjectModified())
+    if (m_projectManager->projectWasModified())
         saveProject();
 }
 
@@ -1279,7 +1285,7 @@ void TupMainWindow::unexpectedClose()
 
 void TupMainWindow::netProjectSaved()
 {
-    m_projectManager->undoModified();
+    m_projectManager->setModificationStatus(false);
     QApplication::restoreOverrideCursor();
 }
 

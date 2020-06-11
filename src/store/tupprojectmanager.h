@@ -68,7 +68,7 @@ class TUPITUBE_EXPORT TupProjectManager : public QObject
         virtual void closeProject();
 
         bool isOpen() const;
-        bool isProjectModified() const;
+        bool projectWasModified() const;
         TupProject *getProject();
         void setHandler(TupAbstractProjectHandler *getHandler, bool isNetworked);
         TupAbstractProjectHandler *getHandler() const;
@@ -80,7 +80,7 @@ class TUPITUBE_EXPORT TupProjectManager : public QObject
         virtual bool loadProject(const QString &fileName);
 
         bool isValid() const;
-        void undoModified();
+        void setModificationStatus(bool changed);
         void setOpen(bool isOpen);
 
         void updateProjectDimension(const QSize size);
@@ -101,7 +101,7 @@ class TUPITUBE_EXPORT TupProjectManager : public QObject
         void requestOpenProject(const QString &filename);
 
     private:
-        bool isModified;
+        bool modified;
         int sceneIndex;
         int layerIndex;
         int frameIndex;
