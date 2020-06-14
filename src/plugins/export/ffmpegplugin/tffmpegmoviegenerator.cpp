@@ -371,9 +371,13 @@ bool TFFmpegMovieGenerator::createVideoFrame(const QImage &image)
             #endif
             return false;
         }
+
         ret = writeVideoFrame(&pkt);
+
         qDebug() << "";
         qDebug() << "RET -> " << ret;
+        qDebug() << "FC -> " << frameCount;
+
         if (ret < 0) {
            errorMsg = "ffmpeg error: Error while writing video frame";
            #ifdef TUP_DEBUG
