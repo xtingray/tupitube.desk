@@ -360,10 +360,14 @@ bool TFFmpegMovieGenerator::createVideoFrame(const QImage &image)
         #endif
         return false;
     }
+
     while (ret >= 0) {
         ret = avcodec_receive_packet(codecContext, &pkt);
         if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
-            return (ret==AVERROR(EAGAIN)) ? false:true;
+            #ifdef TUP_DEBUG
+                qDebug() << "TFFmpegMovieGenerator::createVideoFrame() - Tracing EAGAIN conditional...";
+            #endif
+            return (ret == AVERROR(EAGAIN)) ? false : true;
         } else if (ret < 0) {
             errorMsg = "ffmpeg error: Error during encoding";
             #ifdef TUP_DEBUG
@@ -373,7 +377,6 @@ bool TFFmpegMovieGenerator::createVideoFrame(const QImage &image)
         }
 
         ret = writeVideoFrame(&pkt);
-
         qDebug() << "";
         qDebug() << "RET -> " << ret;
         qDebug() << "FC -> " << frameCount;
@@ -399,7 +402,8 @@ int TFFmpegMovieGenerator::writeVideoFrame(AVPacket *pkt)
     pkt->stream_index = video_st->index;
 
     /* Write the compressed frame to the media file. */
-    return av_interleaved_write_frame(formatContext, pkt);
+    // return av_interleaved_write_frame(formatContext, pkt);
+    return av_write_frame(formatContext, pkt);
 }
 
 void TFFmpegMovieGenerator::handle(const QImage &image)
