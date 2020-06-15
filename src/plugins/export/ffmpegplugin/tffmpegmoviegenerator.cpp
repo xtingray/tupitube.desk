@@ -175,7 +175,8 @@ bool TFFmpegMovieGenerator::beginVideoFile()
     if (videoFrame)
         videoFrame->pts = 0;
 
-    frameCount = 0;
+    framesCount = 0;
+    realFrames = 0;
 
     return true;
 }
@@ -327,10 +328,10 @@ bool TFFmpegMovieGenerator::createVideoFrame(const QImage &image)
 {
     #ifdef TUP_DEBUG
         qInfo() << "---";
-        qInfo() << "TFFmpegMovieGenerator::createVideoFrame() - Generating frame #" + QString::number(frameCount);
+        qInfo() << "TFFmpegMovieGenerator::createVideoFrame() - Generating frame #" + QString::number(framesCount);
     #endif
 
-    frameCount++;
+    framesCount++;
     fflush(stdout);
 
     AVPacket pkt;
@@ -380,7 +381,7 @@ bool TFFmpegMovieGenerator::createVideoFrame(const QImage &image)
         ret = writeVideoFrame(&pkt);
         qDebug() << "";
         qDebug() << "RET -> " << ret;
-        qDebug() << "FC -> " << frameCount;
+        qDebug() << "FC -> " << framesCount;
 
         if (ret < 0) {
            errorMsg = "ffmpeg error: Error while writing video frame";
@@ -398,6 +399,8 @@ bool TFFmpegMovieGenerator::createVideoFrame(const QImage &image)
 
 int TFFmpegMovieGenerator::writeVideoFrame(AVPacket *pkt)
 {
+    realFrames++;
+
     /* rescale output packet timestamp values from codec to stream timebase */
     av_packet_rescale_ts(pkt, video_st->time_base, video_st->time_base);
     pkt->stream_index = video_st->index;
@@ -431,10 +434,16 @@ void TFFmpegMovieGenerator::saveMovie(const QString &filename)
         qDebug() << "TFFmpegMovieGenerator::saveMovie() - filename -> " + filename;
     #endif
 
-    for (int i=0; i<10; i++) {
-        QImage image = QImage(videoW, videoH, QImage::Format_RGB32);
-        image.fill(Qt::white);
-        createVideoFrame(image);
+    int missingFrames = framesCount - realFrames;
+    qDebug() << "";
+    qDebug() << "Additional Frames: " << missingFrames;
+
+    if (missingFrames > 0) {
+        for (int i=0; i<missingFrames; i++) {
+            QImage image = QImage(videoW, videoH, QImage::Format_RGB32);
+            image.fill(Qt::white);
+            createVideoFrame(image);
+        }
     }
 
     endVideoFile();

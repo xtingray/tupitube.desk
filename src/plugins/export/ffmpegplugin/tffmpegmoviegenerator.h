@@ -96,7 +96,7 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         const AVCodec *codec;
 
         QString errorMsg;
-        int frameCount;
+        int framesCount;
         QString movieFile;
         int fps;
         double streamDuration;
@@ -104,6 +104,8 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
 
         bool hasSounds;
         int64_t next_pts;
+
+        int realFrames;
 };
 
 #endif
