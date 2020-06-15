@@ -439,8 +439,6 @@ void TFFmpegMovieGenerator::saveMovie(const QString &filename)
 
     if (missingFrames > 0) {
         for (int i=0; i<missingFrames; i++) {
-            qDebug() << "";
-            qDebug() << "Tracing...";
             QImage image = QImage(videoW, videoH, QImage::Format_RGB32);
             image.fill(Qt::white);
             createVideoFrame(image);
