@@ -40,6 +40,7 @@
 #include "talgorithm.h"
 
 #include <QDir>
+#include <QTimer>
 
 // Handy documentation about Libav library
 // https://github.com/leandromoreira/ffmpeg-libav-tutorial
@@ -430,9 +431,11 @@ void TFFmpegMovieGenerator::saveMovie(const QString &filename)
         qDebug() << "TFFmpegMovieGenerator::saveMovie() - filename -> " + filename;
     #endif
 
-    QImage image = QImage(videoW, videoH, QImage::Format_RGB32);
-    image.fill(Qt::white);
-    createVideoFrame(image);
+    for (int i=0; i<10; i++) {
+        QImage image = QImage(videoW, videoH, QImage::Format_RGB32);
+        image.fill(Qt::white);
+        createVideoFrame(image);
+    }
 
     endVideoFile();
     copyMovieFile(filename);
