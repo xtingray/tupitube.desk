@@ -9,6 +9,11 @@
 *.pro.user
 moc_*
 .qmake.stash
+*.Debug
+*.Release
+release
+debug
+*.rc
 
 bin/
 src/framework/tgui/qrc_tgui_images.cpp
