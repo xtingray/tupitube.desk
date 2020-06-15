@@ -209,7 +209,7 @@ AVStream * TFFmpegMovieGenerator::addVideoStream()
         return nullptr;
     }
 
-    /*
+    /* SQA: Code pending for review
     codecContext = avcodec_alloc_context3(codec);
     if (!codecContext) {
         qDebug() << "Could not allocate video codec context";
@@ -379,9 +379,6 @@ bool TFFmpegMovieGenerator::createVideoFrame(const QImage &image)
         }
 
         ret = writeVideoFrame(&pkt);
-        qDebug() << "";
-        qDebug() << "RET -> " << ret;
-        qDebug() << "FC -> " << framesCount;
 
         if (ret < 0) {
            errorMsg = "ffmpeg error: Error while writing video frame";
@@ -399,6 +396,10 @@ bool TFFmpegMovieGenerator::createVideoFrame(const QImage &image)
 
 int TFFmpegMovieGenerator::writeVideoFrame(AVPacket *pkt)
 {
+#ifdef TUP_DEBUG
+    qInfo() << "TFFmpegMovieGenerator::writeVideoFrame() - frame -> " + QString::number(framesCount);
+#endif
+
     realFrames++;
 
     /* rescale output packet timestamp values from codec to stream timebase */
@@ -435,11 +436,11 @@ void TFFmpegMovieGenerator::saveMovie(const QString &filename)
     #endif
 
     int missingFrames = framesCount - realFrames;
-    qDebug() << "";
-    qDebug() << "Additional Frames: " << missingFrames;
 
     if (missingFrames > 0) {
         for (int i=0; i<missingFrames; i++) {
+            qDebug() << "";
+            qDebug() << "Tracing...";
             QImage image = QImage(videoW, videoH, QImage::Format_RGB32);
             image.fill(Qt::white);
             createVideoFrame(image);
