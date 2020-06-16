@@ -541,6 +541,7 @@ void TupMainWindow::resetUI()
         qDebug() << "TupMainWindow::resetUI()";
     #endif
 
+    disconnect(this, SIGNAL(tabHasChanged(int)), this, SLOT(updateCurrentTab(int)));
     disconnect(exposureView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkTimeLineVisibility(bool)));
     disconnect(timeView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkExposureVisibility(bool)));
 
