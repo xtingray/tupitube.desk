@@ -236,7 +236,7 @@ void TupScreen::play()
             return;
 
         if (renderControl.at(sceneIndex))
-            timer->start(1000/fps);
+            timer->start(1000 / fps);
     }
 }
 

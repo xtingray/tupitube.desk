@@ -515,6 +515,10 @@ void TupCameraWidget::postDialog()
 
 void TupCameraWidget::selectScene(int index)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "TupCameraWidget::selectScene() - index -> " << index;
+    #endif
+
     if (index != previewScreen->currentSceneIndex()) {
         TupProjectRequest event = TupRequestBuilder::createSceneRequest(index, TupProjectRequest::Select);
         emit requestTriggered(&event);
