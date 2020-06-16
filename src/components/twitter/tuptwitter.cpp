@@ -54,13 +54,11 @@ QString TupTwitter::BROWSER_FINGERPRINT = QString("Tupi_Browser 2.0");
 
 TupTwitter::TupTwitter(QWidget *parent): QWidget(parent)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "TupTwitter() - SSL version use for build: " << QSslSocket::sslLibraryBuildVersionString();
         qDebug() << "TupTwitter() - SSL version use for run-time: " << QSslSocket::sslLibraryVersionNumber();
         qDebug() << "TupTwitter() - Library Paths: " << QCoreApplication::libraryPaths();
     #endif
-    */
 
     update = false;
     TCONFIG->beginGroup("General");
@@ -281,11 +279,11 @@ void TupTwitter::checkSoftwareUpdates(QByteArray array)
             if (!e.isNull()) {
                 if (e.tagName() == "branch") {
                     version = e.text();
-                    if (version.compare(kAppProp->version())!=0)
+                    if (version.compare(kAppProp->version()) != 0)
                         update = true;
                 } else if (e.tagName() == "rev") {
                     revision = e.text();
-                    if (revision.compare(kAppProp->revision())!=0)
+                    if (revision.compare(kAppProp->revision()) != 0)
                         update = true;
                 } else if (e.tagName() == "codeName") {
                     codeName = e.text();
