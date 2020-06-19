@@ -50,9 +50,10 @@
   #define TUPITUBE_PLUGIN
 #endif
 
-// #ifdef QT_GUI_LIB
-// #include <QImage>
-// #endif
+#ifdef QT_GUI_LIB
+  // #include <QImage>
+  #include <QGuiApplication>
+#endif
 
 #ifdef TUP_DEBUG
   #include <QDebug>
