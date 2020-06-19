@@ -38,6 +38,10 @@
 
 #include "tglobal.h"
 
+#ifdef QT_GUI_LIB
+  #include <QImage>
+#endif
+
 #include <QString>
 #include <QDomDocument>
 #include <QDomElement>

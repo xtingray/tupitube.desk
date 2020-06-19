@@ -37,7 +37,7 @@
 #define LIPSYNCMANAGER_H
 
 #include "tglobal.h"
-#include "tapplication.h"
+// #include "tapplication.h"
 #include "timagebutton.h"
 #include "tosd.h"
 

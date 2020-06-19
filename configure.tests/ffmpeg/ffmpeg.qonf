@@ -11,12 +11,10 @@
             <lib path="-L/usr/local/ffmpeg/lib" />
             <lib path="-lavformat" />
             <lib path="-lavcodec" />
-            <lib path="-lswscale" />
         </libs>
         <includes>
             <include path="/usr/local/ffmpeg/include/libavformat/" />
             <include path="/usr/local/ffmpeg/include/libavcodec/" />
-            <include path="/usr/local/ffmpeg/include/libswscale/" />
         </includes>
     </provide>
     <solution>

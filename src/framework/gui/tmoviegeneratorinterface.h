@@ -36,6 +36,10 @@
 #ifndef TMOVIEGENERATORINTERFACE_H
 #define TMOVIEGENERATORINTERFACE_H
 
+#ifdef QT_GUI_LIB
+  #include <QImage>
+#endif
+
 class T_GUI_EXPORT TMovieGeneratorInterface
 {
     public:
