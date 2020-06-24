@@ -37,6 +37,7 @@
 #include "tseparator.h"
 
 #include <QSpinBox>
+#include <QTimer>
 
 TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
 {
@@ -45,6 +46,7 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     setLineWidth(1);
 
     playing = false;
+    loop = false;
     player = new QMediaPlayer;
     connect(player, SIGNAL(positionChanged(qint64)), SLOT(positionChanged(qint64)));
     connect(player, SIGNAL(durationChanged(qint64)), SLOT(durationChanged(qint64)));
@@ -96,6 +98,7 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     loopBox->setToolTip(tr("Loop"));
     loopBox->setIcon(QPixmap(THEME_DIR + "icons/loop.png"));
     loopBox->setFocusPolicy(Qt::NoFocus);
+    connect(loopBox, SIGNAL(clicked()), this, SLOT(updateLoopState()));
 
     QBoxLayout *buttonLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     buttonLayout->addStretch();
@@ -134,17 +137,10 @@ void TupSoundPlayer::setSoundObject(const QString &path)
 
 void TupSoundPlayer::playFile()
 {
-    if (!playing) {
-        if (loopBox->isChecked()) {
-            while(true) {
-                startPlayer();
-            }
-        } else {
-            startPlayer();
-        }
-    } else {
+    if (!playing)
+        startPlayer();
+    else
         stopFile();
-    }
 }
 
 void TupSoundPlayer::startPlayer()
@@ -167,6 +163,14 @@ void TupSoundPlayer::stopFile()
     playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/play_small.png")));
     playing = false;
     player->pause();
+}
+
+void TupSoundPlayer::updateLoopState()
+{
+    if (loopBox->isChecked())
+        loop = true;
+    else
+        loop = false;
 }
 
 void TupSoundPlayer::positionChanged(qint64 value)
@@ -209,6 +213,9 @@ void TupSoundPlayer::stateChanged(QMediaPlayer::State state)
         if (duration > 3600)
             init = "00:00:00";
         timer->setText(init + " / " + totalTime);
+
+        if (loop)
+            QTimer::singleShot(200, this, SLOT(startPlayer()));
     }
 }
 

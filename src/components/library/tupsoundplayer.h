@@ -71,14 +71,14 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
 
     private slots:
         void playFile();
+        void startPlayer();
         void positionChanged(qint64 value);
         void durationChanged(qint64 value);
         void stateChanged(QMediaPlayer::State state);
         void updateSoundPos(int pos);
+        void updateLoopState();
 
     private:
-        void startPlayer();
-
         QMediaPlayer *player;
         QSlider *slider;
         QLabel *timer;
@@ -88,6 +88,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         QTime soundTotalTime;
         QString totalTime;
         QCheckBox *loopBox;
+        bool loop;
 
         QWidget *frameWidget;
 };
