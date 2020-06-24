@@ -51,7 +51,6 @@
 #endif
 
 #ifdef QT_GUI_LIB
-  // #include <QImage>
   #include <QGuiApplication>
 #endif
 

@@ -47,6 +47,7 @@
 #include <QMediaPlayer>
 #include <QUrl>
 #include <QTime>
+#include <QCheckBox>
 
 /**
  * @author Gustav Gonzalez
@@ -57,7 +58,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
     Q_OBJECT
 
     public:
-        TupSoundPlayer(QWidget *parent);
+        TupSoundPlayer(QWidget *parent = nullptr);
         ~TupSoundPlayer();
 
         QSize sizeHint() const;
@@ -76,6 +77,8 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         void updateSoundPos(int pos);
 
     private:
+        void startPlayer();
+
         QMediaPlayer *player;
         QSlider *slider;
         QLabel *timer;
@@ -84,6 +87,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         qint64 duration;
         QTime soundTotalTime;
         QString totalTime;
+        QCheckBox *loopBox;
 
         QWidget *frameWidget;
 };
