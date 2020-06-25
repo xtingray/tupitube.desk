@@ -63,7 +63,7 @@ QSize TupLibraryDisplay::sizeHint() const
 
 void TupLibraryDisplay::reset()
 {
-    soundPlayer->hide();
+    soundPlayer->reset();
     previewPanel->reset();
 }
 

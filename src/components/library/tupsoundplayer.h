@@ -65,6 +65,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         void setSoundObject(const QString &path);
         void stopFile();
         bool isPlaying();
+        void reset();
 
     signals:
         void frameUpdated(int frame);

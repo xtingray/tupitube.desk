@@ -228,3 +228,10 @@ bool TupSoundPlayer::isPlaying()
 {
     return playing;
 }
+
+void TupSoundPlayer::reset()
+{
+    loop = false;
+    loopBox->setChecked(false);
+    hide();
+}
