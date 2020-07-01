@@ -511,3 +511,13 @@ void TupProjectManager::updateProjectDimension(const QSize size)
 {
     project->setDimension(size);
 }
+
+int TupProjectManager::framesCount(int sceneIndex)
+{
+    int total = 0;
+    TupScene *scene = project->sceneAt(sceneIndex);
+    if (scene)
+        total = scene->framesCount();
+
+    return total;
+}

@@ -1181,9 +1181,33 @@ void TupMainWindow::updateCurrentTab(int index)
 
 void TupMainWindow::exportProject()
 {
-    // QDesktopWidget desktop;
-
     exportWidget = new TupExportWidget(m_projectManager->getProject(), this);
+    connect(exportWidget, SIGNAL(isDone()), animationTab, SLOT(updatePaintArea()));
+    exportWidget->show();
+
+    exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),
+                       static_cast<int> ((screen->geometry().height() - exportWidget->height()) / 2));
+
+    exportWidget->exec();
+}
+
+void TupMainWindow::postProject()
+{
+    if (animationTab) {
+        int sceneIndex = animationTab->currentSceneIndex();
+        int framesCount = m_projectManager->framesCount(sceneIndex);
+        if (framesCount < 2) {
+            TOsd::self()->display(tr("Error"), tr("To post video add more frames!"), TOsd::Error);
+            #ifdef TUP_DEBUG
+                qDebug() << "TupMainWindow::postProject() - Error: Too few frames!";
+            #endif
+            return;
+        }
+    }
+
+    callSave();
+
+    exportWidget = new TupExportWidget(m_projectManager->getProject(), this, false);
     connect(exportWidget, SIGNAL(isDone()), animationTab, SLOT(updatePaintArea()));
     exportWidget->show();
 

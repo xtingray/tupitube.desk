@@ -155,6 +155,7 @@ class TupMainWindow : public TabbedMainWindow
         void openProjectFromServer();
         void importProjectToServer();
         void exportProject();
+        void postProject();
         void saveAs();
         void saveProject();
 

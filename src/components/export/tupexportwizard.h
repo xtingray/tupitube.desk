@@ -80,7 +80,7 @@ class TUPITUBE_EXPORT TupExportWizard : public QDialog
         void updateScenes();
         void exportAnimation();
         void exportAnimatedImage();
-        void saveVideoToServer();
+        void postProcedureCalled();
         void exportImagesArray();
         void setAnimationFileName();
         void setAnimatedImageFileName();

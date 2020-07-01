@@ -200,6 +200,7 @@ void TupMainWindow::setupMenu()
 
     m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_actionManager->find("export"));
+    m_fileMenu->addAction(m_actionManager->find("post"));
 
     m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_actionManager->find("Exit"));
@@ -308,6 +309,7 @@ void TupMainWindow::setMenuItemsContext(bool flag)
     m_actionManager->enable("close_project", flag);
     m_actionManager->enable("hideaction", flag);
     m_actionManager->enable("export", flag);
+    m_actionManager->enable("post", flag);
     m_actionManager->enable("importImageGroup", flag);
 
     /*
@@ -379,14 +381,20 @@ void TupMainWindow::setupFileActions()
     m_actionManager->insert(importPapagayo, "importPapagayoLipSync", "file");
 
     // Export Project action
-    TAction *exportProject = new TAction(QPixmap(THEME_DIR + "icons/export.png"), tr("&Export Project"), QKeySequence(tr("Ctrl+R")),
-                                         this, SLOT(exportProject()), m_actionManager);
+    TAction *exportProject = new TAction(QPixmap(THEME_DIR + "icons/export.png"), tr("&Export Project"),
+                                         QKeySequence(tr("Ctrl+R")), this, SLOT(exportProject()), m_actionManager);
     exportProject->setStatusTip(tr("Export project to several video formats"));
     m_actionManager->insert(exportProject, "export", "file");
 
+    // Export Project action
+    TAction *postProject = new TAction(QPixmap(THEME_DIR + "icons/share.png"), tr("&Post Project"),
+                                       QKeySequence(tr("Ctrl+P")), this, SLOT(postProject()), m_actionManager);
+    postProject->setStatusTip(tr("Post project on TupiTube's network"));
+    m_actionManager->insert(postProject, "post", "file");
+
     // Visit TupiTube's Network action
-    TAction *openNetwork = new TAction(QPixmap(THEME_DIR + "icons/social_network.png"), tr("Open TupiTube's Network"), QKeySequence(),
-                                      this, SLOT(openTupiTubeNetwork()), m_actionManager);
+    TAction *openNetwork = new TAction(QPixmap(THEME_DIR + "icons/social_network.png"), tr("Open TupiTube's Network"),
+                                       QKeySequence(), this, SLOT(openTupiTubeNetwork()), m_actionManager);
     openNetwork->setStatusTip(tr("Open TupiTube's Network"));
     m_actionManager->insert(openNetwork, "open_network", "file");
 

@@ -163,7 +163,7 @@ void TupExportWizard::next()
         emit exportImagesArray();
 
     if (tag.compare("PROPERTIES") == 0)
-        emit saveVideoToServer();
+        emit postProcedureCalled();
 
     if (tag.compare("SCENE") == 0)  {
         nextButton->setText(tr("Export"));

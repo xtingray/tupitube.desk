@@ -40,6 +40,7 @@
 
 #include <QGroupBox>
 #include <QFileDialog>
+#include <QMessageBox>
 
 TupExportModule::TupExportModule(TupProject *project, OutputFormat output,
                                  QString title) : TupExportWizardPage(title), m_currentExporter(nullptr),
@@ -114,25 +115,9 @@ TupExportModule::TupExportModule(TupProject *project, OutputFormat output,
     if (maxDimension < dimension.height())
         maxDimension = dimension.height();
 
-    m_size = new TSizeBox(tr("Size"), dimension);
-
-    QGroupBox *groupBox = new QGroupBox(tr("Configuration"));
-    QHBoxLayout *configLayout = new QHBoxLayout(groupBox);
-    m_fps = new QSpinBox;
-    m_fps->setMinimum(0);
-    m_fps->setMaximum(100);
-    m_fps->setValue(m_project->getFPS());
-
-    configureLayout->addWidget(m_size);
-    configureLayout->addWidget(new QWidget());
-
     if (output == ImagesArray) {
         connect(bgTransparency, SIGNAL(toggled(bool)), this, SLOT(enableTransparency(bool)));
         configureLayout->addWidget(bgTransparency);
-    } else {
-        configLayout->addWidget(new QLabel(tr("FPS")));
-        configLayout->addWidget(m_fps);
-        configureLayout->addWidget(groupBox);
     }
 
     TCONFIG->beginGroup("General");
@@ -204,7 +189,6 @@ void TupExportModule::setCurrentFormat(int currentFormat, const QString &value)
 
         filename += m_project->getName();
         filename += extension;
-        m_size->setVisible(false);
     } else { // Images Array
         if (m_currentFormat == TupExportInterface::JPEG) {
             if (bgTransparency->isVisible())
@@ -212,8 +196,6 @@ void TupExportModule::setCurrentFormat(int currentFormat, const QString &value)
         } else {
             if (!bgTransparency->isVisible())
                 bgTransparency->setVisible(true);
-            if (m_currentFormat == TupExportInterface::SVG)
-                m_size->setVisible(false);
         }
     } 
 
@@ -407,29 +389,11 @@ void TupExportModule::exportIt()
         if (scenes.count() > 0) {
             int width = dimension.width();
             int height = dimension.height();
-            int newWidth = m_size->x();
-            int newHeight = m_size->y();
-
-            bool sizeHasChanged = false;
-            if (width != newWidth || height != newHeight) {
-                sizeHasChanged = true;
-                /* libav requirement: resolution must be a multiple of two */
-                if (newWidth%2 != 0)
-                    newWidth++;
-                if (newHeight%2 != 0)
-                    newHeight++;
-            }
-
-            /* libav requirement: resolution must be a multiple of two */
+            // libav requirement: resolution must be a multiple of two
             if ((width % 2) != 0)
                 width++;
             if ((height % 2) != 0)
                 height++;
-
-            if (!sizeHasChanged) {
-                newWidth = width;
-                newHeight = height;
-            }
 
             QColor color = m_project->getBgColor();
             if (m_currentFormat == TupExportInterface::PNG || m_currentFormat == TupExportInterface::SVG) {
@@ -439,8 +403,11 @@ void TupExportModule::exportIt()
                     color.setAlpha(255);
             }
 
+            // SQA: The QSize second parameter will contain the resizing value of the animation
+            //      * Pending feature
             done = m_currentExporter->exportToFormat(color, filename, scenes, m_currentFormat, 
-                                      QSize(width, height), QSize(newWidth, newHeight), m_fps->value(),
+                                      QSize(width, height), QSize(width, height), m_project->getFPS(),
+                                      // QSize(width, height), QSize(newWidth, newHeight), m_fps->value(),
                                       m_project->getLibrary());
         }
     } else {

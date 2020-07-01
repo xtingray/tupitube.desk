@@ -35,26 +35,24 @@
 
 #include "tupvideoproperties.h"
 
-TupVideoProperties::TupVideoProperties() : TupExportWizardPage(tr("Set Animation Properties"))
+TupVideoProperties::TupVideoProperties() : TupExportWizardPage(tr("Animation Properties"))
 {
     setTag("PROPERTIES");
 
     QLocale utf(QLocale::AnyLanguage, QLocale::AnyCountry);
     isOk = false;
 
-    // connect(widget, SIGNAL(saveVideoToServer()), this, SLOT(postIt()));
-
     QWidget *container = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout(container);
 
     QLabel *titleLabel = new QLabel(tr("Title"));
-    titleEdit = new QLineEdit(tr("My Video"));
+    titleEdit = new QLineEdit(tr("My Animation"));
     titleEdit->setLocale(utf);
     connect(titleEdit, SIGNAL(textChanged(const QString &)), this, SLOT(resetTitleColor(const QString &)));
     titleLabel->setBuddy(titleEdit);
 
     QLabel *topicsLabel = new QLabel(tr("Topics"));
-    topicsEdit = new QLineEdit(tr("#topic1 #topic2 #topic3"));
+    topicsEdit = new QLineEdit(tr("#tupitube #animation #fun"));
     topicsEdit->setLocale(utf);
     connect(topicsEdit, SIGNAL(textChanged(const QString &)), this, SLOT(resetTopicsColor(const QString &)));
     topicsLabel->setBuddy(topicsEdit);
@@ -65,22 +63,12 @@ TupVideoProperties::TupVideoProperties() : TupExportWizardPage(tr("Set Animation
     descText->setLocale(utf);
     descText->setAcceptRichText(false);
     descText->setFixedHeight(80);
-    descText->setText(tr("Just a little taste of my style :)"));
+    descText->setText(tr("Create and share animations easily with TupiTube"));
 
-    QHBoxLayout *exportLayout = new QHBoxLayout;
-    exportLayout->setAlignment(Qt::AlignHCenter);
-
-    QHBoxLayout *topLayout = new QHBoxLayout;
-    topLayout->addWidget(titleLabel);
-    topLayout->addWidget(titleEdit);
-
-    QHBoxLayout *middleLayout = new QHBoxLayout;
-    middleLayout->addWidget(topicsLabel);
-    middleLayout->addWidget(topicsEdit);
-
-    layout->addLayout(exportLayout);
-    layout->addLayout(topLayout);
-    layout->addLayout(middleLayout);
+    layout->addWidget(titleLabel);
+    layout->addWidget(titleEdit);
+    layout->addWidget(topicsLabel);
+    layout->addWidget(topicsEdit);
     layout->addWidget(descLabel);
     layout->addWidget(descText);
 
@@ -139,6 +127,9 @@ void TupVideoProperties::postIt()
         return;
     }
 
+    qDebug() << "";
+    qDebug() << "*** Call the POST procedure here!";
+
     isOk = true;
     emit isDone();
 }
@@ -158,7 +149,8 @@ void TupVideoProperties::resetTitleColor(const QString &)
 void TupVideoProperties::resetTopicsColor(const QString &)
 {
     QPalette palette = topicsEdit->palette();
-    if (topicsEdit->text().length() > 0 && topicsEdit->text().compare(tr("Set some topic tags for the picture here!")) != 0)
+    if (topicsEdit->text().length() > 0 &&
+        topicsEdit->text().compare(tr("Set some topic tags for the picture here!")) != 0)
         palette.setBrush(QPalette::Base, Qt::white);
     else
         palette.setBrush(QPalette::Base, QColor(255, 140, 138));

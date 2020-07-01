@@ -90,8 +90,8 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, bool isLocal
         loadPlugins();
         pluginPage->selectFirstItem();
     } else {
-        setWindowTitle(tr("Post Animation In TupiTube"));
-        setWindowIcon(QIcon(THEME_DIR + "icons/net_document.png"));
+        setWindowTitle(tr("Post Animation"));
+        setWindowIcon(QIcon(THEME_DIR + "icons/share.png"));
 
         scenesPage = new TupSceneSelector();
         scenesPage->setScenes(work->getScenes());
@@ -99,7 +99,7 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, bool isLocal
         addPage(scenesPage);
 
         videoProperties = new TupVideoProperties();
-        connect(this, SIGNAL(saveVideoToServer()), videoProperties, SLOT(postIt()));
+        connect(this, SIGNAL(postProcedureCalled()), videoProperties, SLOT(postIt()));
         addPage(videoProperties);
 
         connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)),

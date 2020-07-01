@@ -40,7 +40,7 @@
 #include "tupexportinterface.h"
 #include "tupexportwizard.h"
 #include "tupproject.h"
-#include "tsizebox.h"
+// #include "tsizebox.h"
 
 #include <QLineEdit>
 #include <QSpinBox>
@@ -101,8 +101,8 @@ class TUPITUBE_EXPORT TupExportModule : public TupExportWizardPage
         bool browserWasOpened;
         QSize dimension;
 
-        TSizeBox *m_size;
-        QSpinBox *m_fps;
+        // TSizeBox *m_size;
+        // QSpinBox *m_fps;
 
         QProgressBar *progressBar;
         QWidget *progressWidget;
