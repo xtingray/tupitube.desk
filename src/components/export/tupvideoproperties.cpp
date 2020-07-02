@@ -131,7 +131,9 @@ void TupVideoProperties::postIt()
     qDebug() << "*** Call the POST procedure here!";
 
     isOk = true;
-    emit isDone();
+
+    // Call this line when the implementation is done!
+    // emit isDone();
 }
 
 void TupVideoProperties::resetTitleColor(const QString &)

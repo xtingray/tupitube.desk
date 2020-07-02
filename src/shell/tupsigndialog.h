@@ -33,107 +33,36 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPEXPORTWIZARD_H
-#define TUPEXPORTWIZARD_H
+#ifndef TUPSIGNDIALOG_H
+#define TUPSIGNDIALOG_H
 
-#include "tglobal.h"
-#include "tvhbox.h"
-#include "toolview.h"
-#include "tseparator.h"
+#include "tosd.h"
 
 #include <QDialog>
-#include <QPushButton>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QStackedWidget>
-#include <QLabel>
-#include <QBitmap>
+#include <QBoxLayout>
+#include <QLineEdit>
+#include <QCheckBox>
 
-class TupExportWizardPage;
-
-class TUPITUBE_EXPORT TupExportWizard : public QDialog
+class TupSignDialog : public QDialog
 {
     Q_OBJECT
 
     public:
-        TupExportWizard(QWidget *parent = nullptr);
-        ~TupExportWizard();
-
-        TupExportWizardPage *addPage(TupExportWizardPage *page);
-        void showPage(int index);
-        void showPage(TupExportWizardPage *page);
-
-    public slots:
-        void enableButtonSet(bool enabled);
+        TupSignDialog(QWidget *parent = nullptr);
+        ~TupSignDialog();
 
     private slots:
-        void cancel();
-        void back();
-        void next();
-        void pageCompleted();
-        void disableNextButton();
-        void closeDialog();
-        void setFormat(int code, const QString &extension);
-
-    signals:
-        void cancelled();
-        void updateScenes();
-        void exportAnimation();
-        void exportAnimatedImage();
-        void postProcedureCalled();
-        void exportImagesArray();
-        void setAnimationFileName();
-        void setAnimatedImageFileName();
-        void setImagesArrayFileName();
-
-        void isDone();
+        void apply();
 
     private:
-        QStackedWidget *history;
-        QPushButton *cancelButton;
-        QPushButton *backButton;
-        QPushButton *nextButton;
-
-        QHBoxLayout *buttonLayout;
-        QVBoxLayout *mainLayout;
-        QString format;
-        int formatCode;
-};
-
-#include <QFrame>
-#include <QGridLayout>
-#include <QLabel>
-
-class TUPITUBE_EXPORT TupExportWizardPage : public TVHBox
-{
-    Q_OBJECT
-
-    public:
-        TupExportWizardPage(const QString &title, QWidget *parent = nullptr);
-        virtual ~TupExportWizardPage();
-
-        virtual bool isComplete() const = 0;
-        virtual void reset() = 0;
-
-        void setPixmap(const QPixmap &pixmap);
-        void setWidget(QWidget *widget);
-        void setTag(const QString &label);
-        const QString getTag();
-
-    public slots:
-        virtual void aboutToNextPage() {}
-        virtual void aboutToBackPage() {}
-
-    signals:
-        void completed();
-        void emptyField();
-        // void formatSelected(int format, const QString &extension);
+        void setForm();
 
     private:
-        QFrame *container;
-        QGridLayout *layout;
-        QLabel *image;
-        QString tag;
+        QBoxLayout *layout;
+
+        QLineEdit *username;
+        QLineEdit *password;
+        QCheckBox *storePassword;
 };
 
 #endif

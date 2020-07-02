@@ -36,6 +36,7 @@
 #include "tupmainwindow.h"
 #include "tuptwitter.h"
 #include "tupnewproject.h"
+#include "tupsigndialog.h"
 #include "tupabout.h"
 #include "tuppackagehandler.h"
 #include "tuppaletteimporter.h"
@@ -356,8 +357,10 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         }
 
         // TupCamera Widget
-        cameraWidget = new TupCameraWidget(m_projectManager->getProject(), isNetworked);
+        cameraWidget = new TupCameraWidget(m_projectManager->getProject());
         connect(cameraWidget, SIGNAL(projectAuthorUpdated(const QString &)), this, SLOT(updateProjectAuthor(const QString &)));
+        connect(cameraWidget, SIGNAL(exportRequested()), this, SLOT(exportProject()));
+        connect(cameraWidget, SIGNAL(postRequested()), this, SLOT(postProject()));
         connectWidgetToManager(cameraWidget);
 
         // Player widget must be hidden while the Player tab is not visible
@@ -1207,6 +1210,24 @@ void TupMainWindow::postProject()
 
     callSave();
 
+    TCONFIG->beginGroup("Network");
+    QString username = TCONFIG->value("Username").toString();
+    QString token = TCONFIG->value("Token").toString();
+
+    if (username.isEmpty() || token.isEmpty()) {
+        TupSignDialog *dialog = new TupSignDialog(this);
+        dialog->show();
+        dialog->move(static_cast<int> ((screen->geometry().width() - dialog->width()) / 2),
+                     static_cast<int> ((screen->geometry().height() - dialog->height()) / 2));
+
+        if (dialog->exec() != QDialog::Rejected) {
+            // if (!username.isEmpty() && !token.isEmpty())
+                // Save login parameters here
+        } else {
+            return;
+        }
+    }
+
     exportWidget = new TupExportWidget(m_projectManager->getProject(), this, false);
     connect(exportWidget, SIGNAL(isDone()), animationTab, SLOT(updatePaintArea()));
     exportWidget->show();
@@ -1346,8 +1367,9 @@ void TupMainWindow::resizeProjectDimension(const QSize dimension)
 {
     m_projectManager->updateProjectDimension(dimension);
     disconnectWidgetToManager(cameraWidget);
-    delete cameraWidget; 
-    cameraWidget = new TupCameraWidget(m_projectManager->getProject(), isNetworked);
+    delete cameraWidget;
+
+    cameraWidget = new TupCameraWidget(m_projectManager->getProject());
     connect(cameraWidget, SIGNAL(projectAuthorUpdated(const QString &)), this, SLOT(updateProjectAuthor(const QString &)));
     connectWidgetToManager(cameraWidget);
 

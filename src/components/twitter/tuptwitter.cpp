@@ -50,7 +50,7 @@ QString TupTwitter::TUPITUBE_VERSION_URL = QString("updates/current_version.xml"
 QString TupTwitter::TUPITUBE_WEB_MSG = QString("updates/web_msg.");
 QString TupTwitter::TUPITUBE_VIDEOS = QString("updates/videos.xml");
 QString TupTwitter::TUPITUBE_IMAGES = QString("updates/images/");
-QString TupTwitter::BROWSER_FINGERPRINT = QString("Tupi_Browser 2.0");
+// QString TupTwitter::BROWSER_FINGERPRINT = QString("Tupi_Browser 2.0");
 
 TupTwitter::TupTwitter(QWidget *parent): QWidget(parent)
 {
@@ -90,7 +90,8 @@ void TupTwitter::start()
 
     request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
     request.setUrl(QUrl(url));
-    request.setRawHeader("User-Agent", BROWSER_FINGERPRINT.toLatin1());
+    // request.setRawHeader("User-Agent", BROWSER_FINGERPRINT.toLatin1());
+    request.setRawHeader("User-Agent", BROWSER_FINGERPRINT); 
 
     reply = manager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
@@ -115,7 +116,8 @@ void TupTwitter::requestFile(const QString &target)
     #endif
 
     request.setUrl(QUrl(target));
-    request.setRawHeader("User-Agent", BROWSER_FINGERPRINT.toLatin1());
+    // request.setRawHeader("User-Agent", BROWSER_FINGERPRINT.toLatin1());
+    request.setRawHeader("User-Agent", BROWSER_FINGERPRINT);
     reply = manager->get(request);
 }
 

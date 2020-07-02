@@ -75,19 +75,21 @@ unix:!mac {
     TARGET = ../../bin/tupitube.bin
 }
 
-HEADERS += tupmainwindow.h \
+HEADERS += tupsigndialog.h \
            tupstatusbar.h \
            tupnewproject.h \
            tupapplication.h \
-           tuplocalprojectmanagerhandler.h
+           tuplocalprojectmanagerhandler.h \
+           tupmainwindow.h
 
-SOURCES += main.cpp \
-           tupmainwindow.cpp \
+SOURCES += tupsigndialog.cpp \
            tupstatusbar.cpp \
            tupnewproject.cpp \
            tupapplication.cpp \
+           tuplocalprojectmanagerhandler.cpp \
+           tupmainwindow.cpp \
            tupmainwindow_gui.cpp \
-           tuplocalprojectmanagerhandler.cpp
+           main.cpp
 
 unix {
     HEADERS += tupcrashhandler.h \

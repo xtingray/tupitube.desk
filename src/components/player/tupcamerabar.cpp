@@ -35,7 +35,6 @@
 
 #include "tupcamerabar.h"
 #include "tapplicationproperties.h"
-// #include <QPainter>
 
 #include <QBoxLayout>
 
@@ -45,7 +44,6 @@ TupCameraBar::TupCameraBar(QWidget *parent) : QFrame(parent)
         qDebug() << "[TupCameraBar()]";
     #endif
 
-    // playOn = false;
     setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
     setMidLineWidth(2);
     setLineWidth(1);
@@ -95,12 +93,6 @@ TupCameraBar::~TupCameraBar()
         qDebug() << "[~TupCameraBar()]";
     #endif
 }
-
-/*
-void TupCameraBar::setPalette(const QPalette &)
-{
-}
-*/
 
 void TupCameraBar::updatePlayButton(bool playOn)
 {

@@ -64,7 +64,7 @@ class TUPITUBE_EXPORT TupExportWidget : public TupExportWizard
 
     private slots:
         void setExporter(const QString &plugin);
-        void updateWindowTitle();
+        void updateExportWindowTitle();
 
     private:
         void loadPlugins();

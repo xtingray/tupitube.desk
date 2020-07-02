@@ -38,14 +38,14 @@
 #include "tupexportwidget.h"
 
 #include <QHBoxLayout>
+#include <QLabel>
 
-TupCameraStatus::TupCameraStatus(bool isNetworked, QWidget *parent) : QFrame(parent)
+TupCameraStatus::TupCameraStatus(QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupCameraStatus()]";
     #endif
 
-    framesTotal = 1;
     mute = false;
     setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
     QBoxLayout *sceneInfoLayout = new QBoxLayout(QBoxLayout::LeftToRight, parent);
@@ -58,13 +58,6 @@ TupCameraStatus::TupCameraStatus(bool isNetworked, QWidget *parent) : QFrame(par
 
     sceneInfoLayout->addWidget(sceneNameText, 1);
     sceneInfoLayout->addWidget(scenesCombo);
-    sceneInfoLayout->addSpacing(15);
-
-    QLabel *label = new QLabel("<B>" + tr("Frames Total") + ":</B> ");
-    framesCount = new QLabel;
-
-    sceneInfoLayout->addWidget(label, 1);
-    sceneInfoLayout->addWidget(framesCount, 1);
     sceneInfoLayout->addSpacing(15);
 
     QLabel *fpsText = new QLabel("<B>" + tr("FPS") + ":</B> ");
@@ -100,24 +93,19 @@ TupCameraStatus::TupCameraStatus(bool isNetworked, QWidget *parent) : QFrame(par
     soundButton->setToolTip(tr("Mute"));
     connect(soundButton, SIGNAL(clicked()), this, SLOT(muteAction()));
     sceneInfoLayout->addWidget(soundButton, 1);
-
     sceneInfoLayout->addSpacing(15);
 
     exportButton = new QPushButton(tr("Export"));
     exportButton->setIcon(QIcon(THEME_DIR + "icons/export_button.png"));
-    exportButton->setFocusPolicy(Qt::NoFocus);
     exportButton->setToolTip(tr("Export Project as Video File"));
-    connect(exportButton, SIGNAL(pressed()), this, SIGNAL(exportChanged()));
+    connect(exportButton, SIGNAL(pressed()), this, SIGNAL(exportClicked()));
     sceneInfoLayout->addWidget(exportButton, 1);
+    sceneInfoLayout->addSpacing(5);
 
-    if (isNetworked) {
-        sceneInfoLayout->addSpacing(5);
-        QPushButton *postButton = new QPushButton(tr("Post"));
-        postButton->setIcon(QIcon(THEME_DIR + "icons/import_project.png"));
-        postButton->setFocusPolicy(Qt::NoFocus);
-        connect(postButton, SIGNAL(pressed()), this, SIGNAL(postChanged()));
-        sceneInfoLayout->addWidget(postButton, 1);
-    }
+    postButton = new QPushButton(tr("Post"));
+    postButton->setIcon(QIcon(THEME_DIR + "icons/share.png"));
+    connect(postButton, SIGNAL(pressed()), this, SIGNAL(postClicked()));
+    sceneInfoLayout->addWidget(postButton, 1);
 
     setLayout(sceneInfoLayout);
 }
@@ -166,15 +154,9 @@ void TupCameraStatus::setScenes(TupProject *project)
          if (scene)
              scenes << scene->getSceneName();
     }
-    // scenes.sort(Qt::CaseSensitive);
+
     scenesCombo->addItems(scenes);
     scenesCombo->setSizeAdjustPolicy(QComboBox::AdjustToContents);
-}
-
-void TupCameraStatus::setFramesTotal(const QString &frames)
-{
-    framesCount->setText(frames);
-    framesTotal = frames.toInt();
 }
 
 bool TupCameraStatus::isLooping()
@@ -204,7 +186,8 @@ void TupCameraStatus::muteAction()
     emit muteEnabled(mute);
 }
 
-void TupCameraStatus::enableExportButton(bool flag)
+void TupCameraStatus::enableButtons(bool flag)
 {
-    exportButton->setVisible(flag);
+    exportButton->setEnabled(flag);
+    postButton->setEnabled(flag);
 }

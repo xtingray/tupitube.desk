@@ -79,13 +79,10 @@ TupExportWizardPage *TupExportWizard::addPage(TupExportWizardPage *newPage)
         nextButton->setDefault(true);
     } 
 
-    // nextButton->setEnabled(newPage->isComplete());
-
     connect(newPage, SIGNAL(completed()), this, SLOT(pageCompleted()));
     connect(newPage, SIGNAL(emptyField()), this, SLOT(disableNextButton()));
 
     if (tag.compare("PLUGIN") == 0) {
-        // connect(newPage, SIGNAL(formatSelected(int, const QString &)), this, SLOT(setFormat(int, const QString &)));
         connect(newPage, SIGNAL(animatedImageFormatSelected(int, const QString &)), this, SLOT(setFormat(int, const QString &)));
         connect(newPage, SIGNAL(imagesArrayFormatSelected(int, const QString &)), this, SLOT(setFormat(int, const QString &)));
         connect(newPage, SIGNAL(animationFormatSelected(int, const QString &)), this, SLOT(setFormat(int, const QString &)));
@@ -115,6 +112,10 @@ void TupExportWizard::cancel()
 
 void TupExportWizard::back()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExportWizard::back()]";
+    #endif
+
     TupExportWizardPage *current = qobject_cast<TupExportWizardPage *>(history->currentWidget());
     QString tag = current->getTag();
 
@@ -127,10 +128,14 @@ void TupExportWizard::back()
         history->setCurrentIndex(history->currentIndex()-2);
     } else if (tag.compare("ANIMATION") == 0 || tag.compare("SCENE") == 0) {
         history->setCurrentIndex(history->currentIndex()-1);
+    } else if (tag.compare("PROPERTIES") == 0) {
+        backButton->setEnabled(false);
+        history->setCurrentIndex(history->currentIndex()-1);
     }
 
-    if (tag.compare("SCENE") == 0 || tag.compare("PROPERTIES") == 0)
+    if (tag.compare("SCENE") == 0) {
         backButton->setEnabled(false);
+    }
 
     nextButton->setEnabled(true);
 

@@ -33,107 +33,87 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPEXPORTWIZARD_H
-#define TUPEXPORTWIZARD_H
+#include "tupsigndialog.h"
+#include "tconfig.h"
+#include "tformfactory.h"
+#include "tapplication.h"
+#include "tosd.h"
 
-#include "tglobal.h"
-#include "tvhbox.h"
-#include "toolview.h"
-#include "tseparator.h"
-
-#include <QDialog>
-#include <QPushButton>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QStackedWidget>
-#include <QLabel>
-#include <QBitmap>
-
-class TupExportWizardPage;
-
-class TUPITUBE_EXPORT TupExportWizard : public QDialog
-{
-    Q_OBJECT
-
-    public:
-        TupExportWizard(QWidget *parent = nullptr);
-        ~TupExportWizard();
-
-        TupExportWizardPage *addPage(TupExportWizardPage *page);
-        void showPage(int index);
-        void showPage(TupExportWizardPage *page);
-
-    public slots:
-        void enableButtonSet(bool enabled);
-
-    private slots:
-        void cancel();
-        void back();
-        void next();
-        void pageCompleted();
-        void disableNextButton();
-        void closeDialog();
-        void setFormat(int code, const QString &extension);
-
-    signals:
-        void cancelled();
-        void updateScenes();
-        void exportAnimation();
-        void exportAnimatedImage();
-        void postProcedureCalled();
-        void exportImagesArray();
-        void setAnimationFileName();
-        void setAnimatedImageFileName();
-        void setImagesArrayFileName();
-
-        void isDone();
-
-    private:
-        QStackedWidget *history;
-        QPushButton *cancelButton;
-        QPushButton *backButton;
-        QPushButton *nextButton;
-
-        QHBoxLayout *buttonLayout;
-        QVBoxLayout *mainLayout;
-        QString format;
-        int formatCode;
-};
-
-#include <QFrame>
-#include <QGridLayout>
-#include <QLabel>
-
-class TUPITUBE_EXPORT TupExportWizardPage : public TVHBox
-{
-    Q_OBJECT
-
-    public:
-        TupExportWizardPage(const QString &title, QWidget *parent = nullptr);
-        virtual ~TupExportWizardPage();
-
-        virtual bool isComplete() const = 0;
-        virtual void reset() = 0;
-
-        void setPixmap(const QPixmap &pixmap);
-        void setWidget(QWidget *widget);
-        void setTag(const QString &label);
-        const QString getTag();
-
-    public slots:
-        virtual void aboutToNextPage() {}
-        virtual void aboutToBackPage() {}
-
-    signals:
-        void completed();
-        void emptyField();
-        // void formatSelected(int format, const QString &extension);
-
-    private:
-        QFrame *container;
-        QGridLayout *layout;
-        QLabel *image;
-        QString tag;
-};
-
+#ifdef TUP_DEBUG
+  #include <QDebug>
 #endif
+
+TupSignDialog::TupSignDialog(QWidget *parent) : QDialog(parent)
+{
+    setWindowIcon(QPixmap(THEME_DIR + "icons/social_network.png"));
+    setWindowTitle(tr("Sign In"));
+    setModal(true);
+
+    TCONFIG->beginGroup("Network");
+
+    setForm();
+}
+
+TupSignDialog::~TupSignDialog()
+{
+}
+
+void TupSignDialog::setForm()
+{
+    layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
+    layout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+
+    username = new QLineEdit;
+    password = new QLineEdit;
+
+    username->setText(TCONFIG->value("Username", "").toString());
+    password->setText(TCONFIG->value("Token", "").toString());
+    password->setEchoMode(QLineEdit::Password);
+
+    QWidget *form = new QWidget;
+    QVBoxLayout *formLayout = new QVBoxLayout(form);
+    formLayout->addLayout(TFormFactory::makeGrid(QStringList() << tr("Username") << tr("Password"),
+                          QWidgetList() << username << password));
+
+    storePassword = new QCheckBox(tr("Store password"));
+    storePassword->setChecked(TCONFIG->value("StorePassword").toInt());
+    formLayout->addWidget(storePassword);
+
+    QHBoxLayout *buttonLayout = new QHBoxLayout;
+    buttonLayout->addStretch(1);
+
+    QPushButton *cancelButton = new QPushButton(tr("Cancel"));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));
+    buttonLayout->addWidget(cancelButton);
+
+    QPushButton *applyButton = new QPushButton(tr("Accept"));
+    connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
+    buttonLayout->addWidget(applyButton);
+
+    layout->addWidget(form);
+    layout->addLayout(buttonLayout);
+}
+
+void TupSignDialog::apply()
+{
+    if (username->text().isEmpty()) {
+        TOsd::self()->display(tr("Error"), tr("Please, fill in your username"), TOsd::Error);
+        return;
+    }
+
+    if (password->text().isEmpty()) {
+        TOsd::self()->display(tr("Error"), tr("Please, fill in your password"), TOsd::Error);
+        return;
+    }
+
+    TCONFIG->setValue("Username", username->text());
+    if (storePassword->isChecked()) {
+        TCONFIG->setValue("Token", password->text());
+        TCONFIG->setValue("StorePassword", "1");
+    } else {
+        TCONFIG->setValue("Token", "");
+        TCONFIG->setValue("StorePassword", "0");
+    }
+
+    accept();
+}

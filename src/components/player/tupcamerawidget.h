@@ -55,7 +55,7 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
     Q_OBJECT
 
     public:
-        TupCameraWidget(TupProject *work, bool isNetworked = false, QWidget *parent = nullptr);
+        TupCameraWidget(TupProject *work, QWidget *parent = nullptr);
         ~TupCameraWidget();
 
         void updateFirstFrame();
@@ -63,6 +63,16 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         void updateScenes(int sceneIndex);
         void clearMemory();
         void resetPlayerInterface();
+
+    signals:
+        void requestTriggered(const TupProjectRequest *event);
+        // void requestForExportVideoToServer(const QString &title, const QString &topics,
+        //                                    const QString &description, int fps, const QList<int> indexes);
+        void projectAuthorUpdated(const QString &author);
+        // void requestForExportStoryboardToServer(const QString &title, const QString &topics,
+        //                                         const QString &description, const QList<int> indexes);
+        void exportRequested();
+        void postRequested();
 
     private slots:
         void setLoop();
@@ -90,21 +100,13 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         void previousFrame();
         void updateTimerPanel(int currentFrame);
 
-    signals:
-        void requestTriggered(const TupProjectRequest *event);
-        void requestForExportVideoToServer(const QString &title, const QString &topics, 
-                                           const QString &description, int fps, const QList<int> indexes);
-        void projectAuthorUpdated(const QString &author);
-        // void requestForExportStoryboardToServer(const QString &title, const QString &topics, 
-        //                                         const QString &description, const QList<int> indexes);
-
     private:
         void addVideoHeader();
         void setProgressBar();
         void addTimerPanel();
         void addAnimationDisplay();
-        void addControlsBar();
-        void addStatusPanel(bool isNetworked);
+        void addPlayerButtonsBar();
+        void addStatusPanel();
         void setDimensionLabel(const QSize dimension);
 
         QBoxLayout *layout;
@@ -122,6 +124,7 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         bool isScaled;
         QWidget *titleWidget;
         QLabel *currentFrameBox;
+        QLabel *framesCount;
         QLabel *timerSecsLabel;
         QLabel *duration;
         int framesTotal;

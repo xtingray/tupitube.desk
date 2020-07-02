@@ -37,10 +37,14 @@
 #define TUPGENERALPREFERENCES_H
 
 #include "tglobal.h"
+
 #include <QLineEdit>
 #include <QGridLayout>
 #include <QComboBox>
 #include <QCheckBox>
+#include <QPushButton>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
 class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
 {
@@ -60,11 +64,16 @@ class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
         void updateAppLang(int index);
         void chooseDirectory();
         void restoreCachePath();
+        void formatEmail();
+        void sendRegisterRequest();
+        void registerAnswer(QNetworkReply *reply);
+        void slotError(QNetworkReply::NetworkError);
 
     private:
         QTabWidget *tabWidget;
         QWidget * generalTab();
         QWidget * cacheTab();
+        QWidget * socialTab();
 
         int getLangIndex();
         QGridLayout * createForm(const QString &group, Group groupTag,
@@ -84,6 +93,15 @@ class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
         QString cachePath;
         QLineEdit *cacheLine;
         bool langChanged;
+
+        QString username;
+        QString token;
+        QLineEdit *usernameEdit;
+        QLineEdit *passwdEdit;
+        QLineEdit *emailEdit;
+        QPushButton *registerButton;
+
+        QNetworkAccessManager *manager;
 };
 
 #endif

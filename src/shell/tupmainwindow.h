@@ -142,6 +142,8 @@ class TupMainWindow : public TabbedMainWindow
         void openExample();
         void updatePenColor(const QColor &color);
         void updatePenThickness(int thickness);
+        void exportProject();
+        void postProject();
 
     private slots:
         void addTwitterPage();
@@ -154,8 +156,6 @@ class TupMainWindow : public TabbedMainWindow
         void openProject();
         void openProjectFromServer();
         void importProjectToServer();
-        void exportProject();
-        void postProject();
         void saveAs();
         void saveProject();
 

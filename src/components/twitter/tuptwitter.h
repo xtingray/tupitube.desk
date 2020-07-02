@@ -74,7 +74,7 @@ class TUPITUBE_EXPORT TupTwitter : public QWidget
         static QString TUPITUBE_WEB_MSG;
         static QString TUPITUBE_VIDEOS;
         static QString TUPITUBE_IMAGES;
-        static QString BROWSER_FINGERPRINT;
+        // static QString BROWSER_FINGERPRINT;
 
         QNetworkAccessManager *manager;
         QNetworkRequest request;

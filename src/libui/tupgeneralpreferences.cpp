@@ -42,6 +42,8 @@
 #include <QPushButton>
 #include <QToolButton>
 #include <QFileDialog>
+#include <QNetworkAccessManager>
+#include <QDesktopServices>
 
 TupGeneralPreferences::TupGeneralPreferences()
 {
@@ -50,6 +52,7 @@ TupGeneralPreferences::TupGeneralPreferences()
     tabWidget = new QTabWidget;
     tabWidget->addTab(generalTab(), tr("General"));
     tabWidget->addTab(cacheTab(), tr("Cache"));
+    tabWidget->addTab(socialTab(), tr("Social Network"));
 
     layout->addWidget(tabWidget, Qt::AlignLeft);
     layout->addStretch(3);
@@ -175,9 +178,16 @@ QWidget * TupGeneralPreferences::cacheTab()
     QWidget *widget = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout(widget);
 
-    QString msg = tr("The CACHE path is the folder where TupiTube creates temporary files while you work on your animation projects.<br/>"
+    QLabel *cacheLabel = new QLabel(tr("Cache Settings"));
+    QFont font = this->font();
+    font.setBold(true);
+    font.setPointSize(font.pointSize() + 3);
+    cacheLabel->setFont(font);
+
+    QString msg = tr("The CACHE path is the folder where TupiTube creates temporary files while you work "
+                     "on your animation projects.<br/>"
                      "<b>Note:</b> Don't change this parameter unless you know what you are doing.");
-    QLabel *label = new QLabel(msg);
+    QLabel *descLabel = new QLabel(msg);
 
     TCONFIG->beginGroup("General");
     cachePath = TCONFIG->value("Cache").toString();
@@ -200,13 +210,225 @@ QWidget * TupGeneralPreferences::cacheTab()
     restoreLayout->addWidget(restoreButton);
     restoreLayout->addStretch();
 
-    layout->addWidget(label);
+    layout->addWidget(cacheLabel);
+    layout->addSpacing(15);
+    layout->addWidget(descLabel);
     layout->addLayout(filePathLayout);
     layout->addWidget(new TSeparator);
     layout->addWidget(restoreWidget);
     layout->addStretch();
 
     return widget;
+}
+
+QWidget * TupGeneralPreferences::socialTab()
+{
+    QWidget *widget = new QWidget;
+    QVBoxLayout *layout = new QVBoxLayout(widget);
+
+    TCONFIG->beginGroup("Network");
+    username = TCONFIG->value("Username").toString();
+    token = TCONFIG->value("Token").toString();
+
+    QLabel *socialLabel = new QLabel(tr("TupiTube Credentials"));
+
+    QFont font = this->font();
+    font.setBold(true);
+    font.setPointSize(font.pointSize() + 3);
+    socialLabel->setFont(font);
+
+    QLabel *usernameLabel = new QLabel(tr("Username: "));
+    usernameEdit = new QLineEdit();
+
+    QLabel *passwdLabel = new QLabel(tr("Password: "));
+    passwdEdit = new QLineEdit();
+    passwdEdit->setEchoMode(QLineEdit::Password);
+
+    QHBoxLayout *usernameLayout = new QHBoxLayout;
+    usernameLayout->addWidget(usernameLabel);
+    usernameLayout->addWidget(usernameEdit);
+    usernameLayout->addStretch();
+
+    QHBoxLayout *passwdLayout = new QHBoxLayout;
+    passwdLayout->addWidget(passwdLabel);
+    passwdLayout->addWidget(passwdEdit);
+    passwdLayout->addStretch();
+
+    usernameEdit->setText(username);
+    passwdEdit->setText(token);    
+
+    font.setPointSize(font.pointSize() - 3);
+    font.setBold(true);
+
+    QLabel *registerLabel = new QLabel(tr("Don't have a TupiTube account?"));
+    registerLabel->setFont(font);
+
+    font.setBold(false);
+
+    QLabel *emailLabel = new QLabel(tr("Email: "));
+    emailLabel->setFont(font);
+    emailEdit = new QLineEdit();
+    connect(emailEdit, SIGNAL(returnPressed()), this, SLOT(formatEmail()));
+    emailEdit->setFont(font);
+
+    QHBoxLayout *emailLayout = new QHBoxLayout;
+    emailLayout->addWidget(emailLabel);
+    emailLayout->addWidget(emailEdit);
+
+    registerButton = new QPushButton(tr("Register"));
+    connect(registerButton, &QPushButton::clicked, this, &TupGeneralPreferences::sendRegisterRequest);
+
+    QWidget *registerWidget = new QWidget;
+    QHBoxLayout *registerLayout = new QHBoxLayout(registerWidget);
+    registerLayout->addWidget(registerButton);
+    registerLayout->addStretch();
+
+    layout->addWidget(socialLabel);
+    layout->addSpacing(15);
+    layout->addLayout(usernameLayout);
+    layout->addLayout(passwdLayout);
+    layout->addSpacing(10);
+    layout->addWidget(new TSeparator);
+    layout->addWidget(registerLabel);
+    layout->addLayout(emailLayout);
+    layout->addWidget(registerWidget);
+    layout->addStretch();
+
+    return widget;
+}
+
+void TupGeneralPreferences::formatEmail()
+{
+    QString input = emailEdit->text();
+    emailEdit->setText(input.toLower());
+}
+
+void TupGeneralPreferences::sendRegisterRequest()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "TupGeneralPreferences::sendRequest() - Tracing...";
+    #endif
+
+    QString email = emailEdit->text().toLower();
+    if (!email.isEmpty()) {
+        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+        QRegExp mailREX("\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b");
+        mailREX.setCaseSensitivity(Qt::CaseInsensitive);
+        mailREX.setPatternSyntax(QRegExp::RegExp);
+        if (mailREX.exactMatch(email)) {
+            registerButton->setEnabled(false);
+            emailEdit->setText(email);
+            QString url = TUPITUBE_URL + QString("/api/?a=register&e=" + email);
+            manager = new QNetworkAccessManager(this);
+            connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(registerAnswer(QNetworkReply*)));
+            #ifdef TUP_DEBUG
+                qDebug() << "GET request -> " << url;
+            #endif
+            QNetworkRequest request;
+            request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+            request.setUrl(QUrl(url));
+            request.setRawHeader("User-Agent", BROWSER_FINGERPRINT);
+
+            QNetworkReply *reply = manager->get(request);
+            connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "TupGeneralPreferences::sendRequest() - Error: Invalid email syntax! -> " << email;
+            #endif
+            emailEdit->setText(" " + tr("Email is invalid. Please, fix it!"));
+            QTimer::singleShot(2000, this, SLOT(cleanMessage()));
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "TupGeneralPreferences::sendRequest() - Invalid email: field is empty!";
+        #endif
+        emailEdit->setText(" " + tr("Email field is empty. Type one!"));
+        QTimer::singleShot(2000, this, SLOT(cleanMessage()));
+    }
+}
+
+void TupGeneralPreferences::registerAnswer(QNetworkReply *reply)
+{
+    #ifdef TUP_DEBUG
+       qDebug() << "TupGeneralPreferences::registerAnswer() - Tracing...";
+    #endif
+
+    QByteArray array = reply->readAll();
+    QString answer(array);
+    if (!answer.isEmpty()) {
+        if (answer.compare("FALSE") == 0) {
+            #ifdef TUP_DEBUG
+                qDebug() << "TupGeneralPreferences::registerAnswer() - Error: e-mail already registered! :(";
+            #endif
+            emailEdit->setText(" " + tr("Error: Email already registered!"));
+            QTimer::singleShot(2000, this, SLOT(cleanMessage()));
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "TupGeneralPreferences::registerAnswer() - URL: " << answer;
+            #endif
+            if (answer.startsWith("http")) {
+                QDesktopServices::openUrl(answer);
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "TupGeneralPreferences::registerAnswer() - Error: Invalid register URL! :(";
+                #endif
+                emailEdit->setText(" " + tr("Please contact us at info@maefloresta.com"));
+                QTimer::singleShot(3000, this, SLOT(cleanMessage()));
+            }
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "TupGeneralPreferences::registerAnswer() - Error: No data from server! :(";
+        #endif
+        emailEdit->setText(" " + tr("Please contact us at info@maefloresta.com"));
+        QTimer::singleShot(3000, this, SLOT(cleanMessage()));
+    }
+
+    manager->deleteLater();
+    registerButton->setEnabled(true);
+    QApplication::restoreOverrideCursor();
+}
+
+void TupGeneralPreferences::slotError(QNetworkReply::NetworkError error)
+{
+    switch (error) {
+        case QNetworkReply::HostNotFoundError:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "TupGeneralPreferences::slotError() - Network Error: Host not found";
+             #endif
+             }
+        break;
+        case QNetworkReply::TimeoutError:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "TupGeneralPreferences::slotError() - Network Error: Time out!";
+             #endif
+             }
+        break;
+        case QNetworkReply::ConnectionRefusedError:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "TupGeneralPreferences::slotError() - Network Error: Connection Refused!";
+             #endif
+             }
+        break;
+        case QNetworkReply::ContentNotFoundError:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "TupGeneralPreferences::slotError() - Network Error: Content not found!";
+             #endif
+             }
+        break;
+        case QNetworkReply::UnknownNetworkError:
+        default:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "TupGeneralPreferences::slotError() - Network Error: Unknown Network error!";
+             #endif
+             }
+        break;
+    }
 }
 
 void TupGeneralPreferences::chooseDirectory()
@@ -232,6 +454,8 @@ bool TupGeneralPreferences::saveValues()
 {
     TCONFIG->beginGroup("General");
 
+    // General Preferences
+
     int total = startup.count();
     for (int i=0; i<total; i++)
          TCONFIG->setValue(startup.at(i), startupList.at(i)->isChecked());
@@ -242,6 +466,8 @@ bool TupGeneralPreferences::saveValues()
 
     if (newLang.length() > 0)
         TCONFIG->setValue("Language", newLang);
+
+    // Cache
 
     cachePath = cacheLine->text();
     if (cachePath.isEmpty()) {
@@ -259,6 +485,20 @@ bool TupGeneralPreferences::saveValues()
         } else {
             TCONFIG->setValue("Cache", cachePath);
         }
+    }
+
+    // Social Network
+    TCONFIG->beginGroup("Network");
+    QString login = usernameEdit->text();
+    if (!login.isEmpty()) {
+        if (login.compare(username) != 0)
+            TCONFIG->setValue("Username", login);
+    }
+
+    QString code = passwdEdit->text();
+    if (!code.isEmpty()) {
+        if (code.compare(token) != 0)
+            TCONFIG->setValue("Token", code);
     }
 
     TCONFIG->beginGroup("AnimationParameters");

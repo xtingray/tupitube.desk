@@ -58,13 +58,13 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, bool isLocal
         animationExport = new TupExportModule(work, TupExportModule::Animation, tr("Export To Video File"));
         connect(this, SIGNAL(exportAnimation()), animationExport, SLOT(exportIt()));
         connect(this, SIGNAL(setAnimationFileName()), animationExport, SLOT(updateNameField()));
-        connect(animationExport, SIGNAL(exportHasStarted()), this, SLOT(updateWindowTitle()));
+        connect(animationExport, SIGNAL(exportHasStarted()), this, SLOT(updateExportWindowTitle()));
         addPage(animationExport);
 
         imagesArrayExport = new TupExportModule(work, TupExportModule::ImagesArray, tr("Export To Image Sequence"));
         connect(this, SIGNAL(exportImagesArray()), imagesArrayExport, SLOT(exportIt()));
         connect(this, SIGNAL(setImagesArrayFileName()), imagesArrayExport, SLOT(updateNameField()));
-        connect(imagesArrayExport, SIGNAL(exportHasStarted()), this, SLOT(updateWindowTitle()));
+        connect(imagesArrayExport, SIGNAL(exportHasStarted()), this, SLOT(updateExportWindowTitle()));
         addPage(imagesArrayExport);
 
         animatedImageExport = new TupExportModule(work, TupExportModule::AnimatedImage, tr("Export To Animated Image"));
@@ -91,7 +91,7 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, bool isLocal
         pluginPage->selectFirstItem();
     } else {
         setWindowTitle(tr("Post Animation"));
-        setWindowIcon(QIcon(THEME_DIR + "icons/share.png"));
+        setWindowIcon(QIcon(THEME_DIR + "icons/social_network.png"));
 
         scenesPage = new TupSceneSelector();
         scenesPage->setScenes(work->getScenes());
@@ -194,7 +194,7 @@ bool TupExportWidget::isComplete()
     return videoProperties->isComplete();
 }
 
-void TupExportWidget::updateWindowTitle()
+void TupExportWidget::updateExportWindowTitle()
 {
     setWindowTitle(tr("Exporting..."));
     enableButtonSet(false);

@@ -41,7 +41,6 @@
 #include "tupproject.h"
 
 #include <QFrame>
-#include <QLabel>
 #include <QComboBox>
 #include <QSpinBox>
 #include <QCheckBox>
@@ -51,24 +50,23 @@ class TUPITUBE_EXPORT TupCameraStatus : public QFrame
     Q_OBJECT
 
     public:
-        TupCameraStatus(bool isNetworked = false, QWidget *parent = nullptr);
+        TupCameraStatus(QWidget *parent = nullptr);
         ~TupCameraStatus();
 
         void setScenes(TupProject *project);
         void setFPS(int frames);
         int getFPS();
         void setCurrentScene(int index);
-        void setFramesTotal(const QString &frames);
         bool isLooping();
-        void enableExportButton(bool flag);
+        void enableButtons(bool flag);
 
     signals:
         void sceneIndexChanged(int index);
         void muteEnabled(bool muteAction);
         void fpsChanged(int fps);
         void loopChanged();
-        void exportChanged();
-        void postChanged();
+        void exportClicked();
+        void postClicked();
 
     private slots:
         void muteAction();
@@ -80,11 +78,9 @@ class TUPITUBE_EXPORT TupCameraStatus : public QFrame
 
         bool loop;
         bool mute;
-        int framesTotal;
-
-        QLabel *framesCount;
         TImageButton *soundButton;
         QPushButton *exportButton;
+        QPushButton *postButton;
 };
 
 #endif

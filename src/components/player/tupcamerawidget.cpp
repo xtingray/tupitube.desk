@@ -42,12 +42,13 @@
 #include <QMainWindow>
 #include <QApplication>
 
-TupCameraWidget::TupCameraWidget(TupProject *work, bool isNetworked, QWidget *parent) : QFrame(parent)
+TupCameraWidget::TupCameraWidget(TupProject *work, QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupCameraWidget()";
+        qDebug() << "[TupCameraWidget()]";
     #endif
 
+    setObjectName("TupCameraWidget_");
     screen = QGuiApplication::screens().at(0);
 
     QSize projectSize = work->getDimension();
@@ -75,7 +76,6 @@ TupCameraWidget::TupCameraWidget(TupProject *work, bool isNetworked, QWidget *pa
     screenDimension = QSize(desktopWidth, desktopHeight);
 
     project = work;
-    setObjectName("TupCameraWidget_");
 
     layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 
@@ -86,8 +86,8 @@ TupCameraWidget::TupCameraWidget(TupProject *work, bool isNetworked, QWidget *pa
     addAnimationDisplay();
 
     layout->addSpacing(10);
-    addControlsBar();
-    addStatusPanel(isNetworked);
+    addPlayerButtonsBar();
+    addStatusPanel();
 }
 
 TupCameraWidget::~TupCameraWidget()
@@ -200,6 +200,8 @@ void TupCameraWidget::addTimerPanel()
     QString style = "QLabel { background-color: #c8c8c8; border: 1px solid #777777; border-radius: 2px; }";
     currentFrameBox->setStyleSheet(style);
 
+    framesCount = new QLabel;
+
     QLabel *stopwatchLabel = new QLabel(tr("Timer: "));
     stopwatchLabel->setFont(font);
     timerSecsLabel = new QLabel("00.00");
@@ -219,6 +221,7 @@ void TupCameraWidget::addTimerPanel()
     timerLayout->setAlignment(Qt::AlignCenter);
     timerLayout->addWidget(timerFramesLabel);
     timerLayout->addWidget(currentFrameBox);
+    timerLayout->addWidget(framesCount);
     timerLayout->addSpacing(10);
 
     timerLayout->addWidget(stopwatchLabel);
@@ -242,7 +245,7 @@ void TupCameraWidget::addAnimationDisplay()
     layout->addWidget(previewScreen, 0, Qt::AlignCenter);
 }
 
-void TupCameraWidget::addControlsBar()
+void TupCameraWidget::addPlayerButtonsBar()
 {
     cameraBar = new TupCameraBar;
 
@@ -256,21 +259,20 @@ void TupCameraWidget::addControlsBar()
     layout->addWidget(cameraBar, 0, Qt::AlignCenter);
 }
 
-void TupCameraWidget::addStatusPanel(bool isNetworked)
+void TupCameraWidget::addStatusPanel()
 {
-    status = new TupCameraStatus(isNetworked);
+    status = new TupCameraStatus();
     status->setScenes(project);
     connect(status, SIGNAL(sceneIndexChanged(int)), this, SLOT(selectScene(int)));
     connect(status, SIGNAL(muteEnabled(bool)), previewScreen, SLOT(enableMute(bool)));
     connect(status, SIGNAL(fpsChanged(int)), this, SLOT(updateFPS(int)));
     connect(status, SIGNAL(loopChanged()), this, SLOT(setLoop()));
-    connect(status, SIGNAL(exportChanged()), this, SLOT(exportDialog()));
-    if (isNetworked)
-        connect(status, SIGNAL(postChanged()), this, SLOT(postDialog()));
+    connect(status, SIGNAL(exportClicked()), this, SLOT(exportDialog()));
+    connect(status, SIGNAL(postClicked()), this, SLOT(postDialog()));
 
     updateFramesTotal(0);
     int fps = project->getFPS();
-    fpsDelta = 1.0/fps;
+    fpsDelta = 1.0 / fps;
     status->setFPS(fps);
     setLoop();
     layout->addWidget(status, 0, Qt::AlignCenter|Qt::AlignTop);
@@ -342,7 +344,7 @@ void TupCameraWidget::doPlay()
     bool flag = false;
     if (previewScreen->currentSceneFrames() > 1)
         flag = true;
-    status->enableExportButton(flag);
+    status->enableButtons(flag);
 }
 
 void TupCameraWidget::doPlayBack()
@@ -479,7 +481,7 @@ void TupCameraWidget::updateFramesTotal(int sceneIndex)
     TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
         framesTotal = scene->framesCount();
-        status->setFramesTotal(QString::number(framesTotal));
+        framesCount->setText("/ " + QString::number(framesTotal));
         progressBar->setRange(0, framesTotal);
         setDuration(project->getFPS());
     }
@@ -490,27 +492,15 @@ void TupCameraWidget::exportDialog()
     if (previewScreen->isPlaying())
         previewScreen->pause();
 
-    TupExportWidget *exportWidget = new TupExportWidget(project, this);
-    exportWidget->show();
-    exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),
-                       static_cast<int> ((screen->geometry().height() - exportWidget->height()) / 2));
-    exportWidget->exec();
+    emit exportRequested();
 }
 
 void TupCameraWidget::postDialog()
 {
-    TupExportWidget *exportWidget = new TupExportWidget(project, this, false);
-    exportWidget->show();
-    exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),
-                       static_cast<int> ((screen->geometry().height() - exportWidget->height()) / 2));
-    exportWidget->exec();
+    if (previewScreen->isPlaying())
+        previewScreen->pause();
 
-    if (exportWidget->isComplete() != QDialog::Rejected) {
-        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-        emit requestForExportVideoToServer(exportWidget->videoTitle(), exportWidget->videoTopics(), 
-                                           exportWidget->videoDescription(), status->getFPS(),
-                                           exportWidget->videoScenes());
-    }
+    emit postRequested();
 }
 
 void TupCameraWidget::selectScene(int index)
