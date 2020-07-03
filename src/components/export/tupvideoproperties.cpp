@@ -34,16 +34,33 @@
  ***************************************************************************/
 
 #include "tupvideoproperties.h"
+#include "tconfig.h"
+
+#include <QNetworkAccessManager>
+#include <QUrlQuery>
 
 TupVideoProperties::TupVideoProperties() : TupExportWizardPage(tr("Animation Properties"))
 {
     setTag("PROPERTIES");
-
-    QLocale utf(QLocale::AnyLanguage, QLocale::AnyCountry);
     isOk = false;
+    stackedWidget = new QStackedWidget;
 
-    QWidget *container = new QWidget;
-    QVBoxLayout *layout = new QVBoxLayout(container);
+    setForm();
+    setProgressBar();
+
+    stackedWidget->setCurrentIndex(0);
+    setWidget(stackedWidget);
+}
+
+TupVideoProperties::~TupVideoProperties()
+{
+}
+
+void TupVideoProperties::setForm()
+{
+    formWidget = new QWidget;
+    QVBoxLayout *formLayout = new QVBoxLayout(formWidget);
+    QLocale utf(QLocale::AnyLanguage, QLocale::AnyCountry);
 
     QLabel *titleLabel = new QLabel(tr("Title"));
     titleEdit = new QLineEdit(tr("My Animation"));
@@ -65,18 +82,40 @@ TupVideoProperties::TupVideoProperties() : TupExportWizardPage(tr("Animation Pro
     descText->setFixedHeight(80);
     descText->setText(tr("Create and share animations easily with TupiTube"));
 
-    layout->addWidget(titleLabel);
-    layout->addWidget(titleEdit);
-    layout->addWidget(topicsLabel);
-    layout->addWidget(topicsEdit);
-    layout->addWidget(descLabel);
-    layout->addWidget(descText);
+    formLayout->addWidget(titleLabel);
+    formLayout->addWidget(titleEdit);
+    formLayout->addWidget(topicsLabel);
+    formLayout->addWidget(topicsEdit);
+    formLayout->addWidget(descLabel);
+    formLayout->addWidget(descText);
 
-    setWidget(container);
+    stackedWidget->addWidget(formWidget);
 }
 
-TupVideoProperties::~TupVideoProperties()
+void TupVideoProperties::setProgressBar()
 {
+    progressWidget = new QWidget;
+    QHBoxLayout *progressLayout = new QHBoxLayout(progressWidget);
+
+    TCONFIG->beginGroup("General");
+    QString themeName = TCONFIG->value("Theme", "Light").toString();
+    QString style = "QProgressBar { background-color: #DDDDDD; text-align: center; color: #FFFFFF; border-radius: 2px; } ";
+    QString color = "#009500";
+    if (themeName.compare("Dark") == 0)
+        color = "#444444";
+    style += "QProgressBar::chunk { background-color: " + color + "; border-radius: 2px; }";
+
+    QProgressBar *progressBar = new QProgressBar;
+    progressBar->setTextVisible(true);
+    progressBar->setStyleSheet(style);
+    progressBar->setRange(1, 100);
+
+    progressLayout->addSpacing(50);
+    progressLayout->addWidget(progressBar);
+    progressLayout->addSpacing(50);
+    progressWidget->setVisible(false);
+
+    stackedWidget->addWidget(progressWidget);
 }
 
 bool TupVideoProperties::isComplete() const
@@ -111,29 +150,133 @@ QList<int> TupVideoProperties::scenesList() const
      return scenes;
 }
 
+void TupVideoProperties::setProjectParams(const QString &login, const QString &passwd, const QString &path)
+{
+     username = login;
+     token = passwd;
+     filePath = path;
+}
+
 void TupVideoProperties::postIt()
 {
-    if (titleEdit->text().length() == 0) {
+    QString title = titleEdit->text();
+    QString tags = topicsEdit->text();
+    QString desc= descText->toPlainText();
+
+    if (title.length() == 0) {
         titleEdit->setText(tr("Set a title for the picture here!"));
         titleEdit->selectAll();
         isOk = false;
         return;
     }
 
-    if (topicsEdit->text().length() == 0) {
+    if (tags.length() == 0) {
         topicsEdit->setText(tr("Set some topic tags for the picture here!"));
         topicsEdit->selectAll();
         isOk = false;
         return;
     }
 
-    qDebug() << "";
-    qDebug() << "*** Call the POST procedure here!";
-
+    stackedWidget->setCurrentIndex(1);
     isOk = true;
+
+    emit postHasStarted();
+
+    qDebug() << "Username: " << username;
+    qDebug() << "Token: " << token;
+    qDebug() << "Title: " << title;
+    qDebug() << "Tags: " << tags;
+    qDebug() << "Desc: " << desc;
+    qDebug() << "Scenes: " << scenes;
+
+    QString scenesStr = "";
+    int total = scenes.count();
+    if (total == 1) {
+        scenesStr += QString::number(scenes.at(0));
+    } else {
+        for (int i=0; i < total; i++) {
+            scenesStr += QString::number(scenes.at(i));
+            scenesStr += ",";
+        }
+        scenesStr.chop(1);
+    }
+
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(serverAuthAnswer(QNetworkReply *)));
+
+    QUrl url(TUPITUBE_URL + QString("/api/desk.php"));
+    QNetworkRequest request(url);
+    request.setRawHeader("User-Agent", BROWSER_FINGERPRINT);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+    request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+    request.setUrl(QUrl(url));
+
+    QUrlQuery params;
+    params.addQueryItem("username", username);
+    params.addQueryItem("token", token);
+    params.addQueryItem("title", title);
+    params.addQueryItem("tags", tags);
+    params.addQueryItem("desc", desc);
+    params.addQueryItem("scenes", scenesStr);
+
+    QByteArray postData = params.query(QUrl::FullyEncoded).toUtf8();
+    QNetworkReply *reply = manager->post(request, postData);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 
     // Call this line when the implementation is done!
     // emit isDone();
+}
+
+void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
+{
+    QByteArray array = reply->readAll();
+    QString answer(array);
+    answer.chop(1);
+    if (answer.length() > 0) {
+        qDebug() << "TupVideoProperties::serverAuthAnswer() - answer -> " << answer;
+    }
+}
+
+void TupVideoProperties::slotError(QNetworkReply::NetworkError error)
+{
+    switch (error) {
+        case QNetworkReply::HostNotFoundError:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "TupVideoProperties::slotError() - Network Error: Host not found";
+             #endif
+             }
+        break;
+        case QNetworkReply::TimeoutError:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "TupVideoProperties::slotError() - Network Error: Time out!";
+             #endif
+             }
+        break;
+        case QNetworkReply::ConnectionRefusedError:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "TupVideoProperties::slotError() - Network Error: Connection Refused!";
+             #endif
+             }
+        break;
+        case QNetworkReply::ContentNotFoundError:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "TupVideoProperties::slotError() - Network Error: Content not found!";
+             #endif
+             }
+        break;
+        case QNetworkReply::UnknownNetworkError:
+        default:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "TupVideoProperties::slotError() - Network Error: Unknown Network error!";
+             #endif
+             }
+        break;
+    }
 }
 
 void TupVideoProperties::resetTitleColor(const QString &)

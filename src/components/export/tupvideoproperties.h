@@ -41,6 +41,8 @@
 
 #include <QLineEdit>
 #include <QTextEdit>
+#include <QProgressBar>
+#include <QNetworkReply>
 
 class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
 {
@@ -57,8 +59,10 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         QString description() const;
         QList<int> scenesList() const;
         bool successful();
+        void setProjectParams(const QString &login, const QString &passwd, const QString &path);
 
     signals:
+        void postHasStarted();
         void isDone();
 
     private slots:
@@ -66,13 +70,26 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         void resetTopicsColor(const QString &text);
         void postIt();
         void setScenesIndexes(const QList<int> &indexes);
+        void serverAuthAnswer(QNetworkReply *reply);
+        void slotError(QNetworkReply::NetworkError error);
 
     private:
+        void setForm();
+        void setProgressBar();
+
+        QVBoxLayout *layout;
         QLineEdit *titleEdit;
         QLineEdit *topicsEdit;
         QTextEdit *descText;
         QList<int> scenes;
         bool isOk;
+
+        QString username;
+        QString token;
+        QString filePath;
+        QWidget *formWidget;
+        QWidget *progressWidget;
+        QStackedWidget *stackedWidget;
 };
 
 #endif

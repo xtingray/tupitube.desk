@@ -970,7 +970,7 @@ void TupMainWindow::saveAs()
 void TupMainWindow::saveProject()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::saveProject()";
+        qDebug() << "TupMainWindow::saveProject() - file path -> " << m_fileName;
     #endif
 
     if (!isNetworked) {
@@ -990,7 +990,6 @@ void TupMainWindow::saveProject()
             updateRecentProjectList();
             
             TOsd::self()->display(tr("Information"), tr("Project <b>%1</b> saved").arg(projectName));
-            // projectSaved = true;
             int indexPath = m_fileName.lastIndexOf("/");
             int indexFile = m_fileName.length() - indexPath;
             QString name = m_fileName.right(indexFile - 1);
@@ -1210,32 +1209,40 @@ void TupMainWindow::postProject()
 
     callSave();
 
-    TCONFIG->beginGroup("Network");
-    QString username = TCONFIG->value("Username").toString();
-    QString token = TCONFIG->value("Token").toString();
+    QFile file(m_fileName);
+    double fileSize = static_cast<double>(file.size()) / static_cast<double>(1000000);
+    if (fileSize < 10) {
+        TCONFIG->beginGroup("Network");
+        QString username = TCONFIG->value("Username").toString();
+        QString token = TCONFIG->value("Token").toString();
 
-    if (username.isEmpty() || token.isEmpty()) {
-        TupSignDialog *dialog = new TupSignDialog(this);
-        dialog->show();
-        dialog->move(static_cast<int> ((screen->geometry().width() - dialog->width()) / 2),
-                     static_cast<int> ((screen->geometry().height() - dialog->height()) / 2));
+        if (username.isEmpty() || token.isEmpty()) {
+            TupSignDialog *dialog = new TupSignDialog(this);
+            dialog->show();
+            dialog->move(static_cast<int> ((screen->geometry().width() - dialog->width()) / 2),
+                         static_cast<int> ((screen->geometry().height() - dialog->height()) / 2));
 
-        if (dialog->exec() != QDialog::Rejected) {
-            // if (!username.isEmpty() && !token.isEmpty())
-                // Save login parameters here
-        } else {
-            return;
+            if (dialog->exec() != QDialog::Rejected) {
+                username = dialog->getUsername();
+                token = dialog->getPasswd();
+            } else {
+                // User cancelled action
+                return;
+            }
         }
+
+        exportWidget = new TupExportWidget(m_projectManager->getProject(), this, false);
+        exportWidget->setProjectParams(username, token, m_fileName);
+        connect(exportWidget, SIGNAL(isDone()), animationTab, SLOT(updatePaintArea()));
+        exportWidget->show();
+
+        exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),
+                           static_cast<int> ((screen->geometry().height() - exportWidget->height()) / 2));
+
+        exportWidget->exec();
+    } else {
+        TOsd::self()->display(tr("Error"), tr("Project is larger than 10 MB. Too big!"), TOsd::Error);
     }
-
-    exportWidget = new TupExportWidget(m_projectManager->getProject(), this, false);
-    connect(exportWidget, SIGNAL(isDone()), animationTab, SLOT(updatePaintArea()));
-    exportWidget->show();
-
-    exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),
-                       static_cast<int> ((screen->geometry().height() - exportWidget->height()) / 2));
-
-    exportWidget->exec();
 }
 
 void TupMainWindow::callSave()

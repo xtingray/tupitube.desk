@@ -225,42 +225,42 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
 void TupTwitter::slotError(QNetworkReply::NetworkError error)
 {
     switch (error) {
-            case QNetworkReply::HostNotFoundError:
-                 { 
-                 #ifdef TUP_DEBUG
-                     qDebug() << "TupTwitter::slotError() - Network Error: Host not found";
-                 #endif
-                 }
-            break;
-            case QNetworkReply::TimeoutError:
-                 {
-                 #ifdef TUP_DEBUG
-                     qDebug() << "TupTwitter::slotError() - Network Error: Time out!";
-                 #endif
-                 }
-            break;
-            case QNetworkReply::ConnectionRefusedError:
-                 {
-                 #ifdef TUP_DEBUG
-                     qDebug() << "TupTwitter::slotError() - Network Error: Connection Refused!";
-                 #endif
-                 }
-            break;
-            case QNetworkReply::ContentNotFoundError:
-                 {
-                 #ifdef TUP_DEBUG
-                     qDebug() << "TupTwitter::slotError() - Network Error: Content not found!";
-                 #endif
-                 }
-            break;
-            case QNetworkReply::UnknownNetworkError:
-            default:
-                 {
-                 #ifdef TUP_DEBUG
-                     qDebug() << "TupTwitter::slotError() - Network Error: Unknown Network error!";
-                 #endif
-                 }
-            break;
+        case QNetworkReply::HostNotFoundError:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "TupTwitter::slotError() - Network Error: Host not found";
+             #endif
+             }
+        break;
+        case QNetworkReply::TimeoutError:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "TupTwitter::slotError() - Network Error: Time out!";
+             #endif
+             }
+        break;
+        case QNetworkReply::ConnectionRefusedError:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "TupTwitter::slotError() - Network Error: Connection Refused!";
+             #endif
+             }
+        break;
+        case QNetworkReply::ContentNotFoundError:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "TupTwitter::slotError() - Network Error: Content not found!";
+             #endif
+             }
+        break;
+        case QNetworkReply::UnknownNetworkError:
+        default:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "TupTwitter::slotError() - Network Error: Unknown Network error!";
+             #endif
+             }
+        break;
     }
 }
 

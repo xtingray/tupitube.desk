@@ -56,6 +56,7 @@ class TUPITUBE_EXPORT TupExportWidget : public TupExportWizard
         TupExportWidget(TupProject *project, QWidget *parent = nullptr, bool isLocal = true);
         ~TupExportWidget();
 
+        void setProjectParams(const QString &username, const QString &token, const QString &path);
         QString videoTitle() const;
         QString videoTopics() const;
         QString videoDescription() const;
@@ -64,7 +65,7 @@ class TUPITUBE_EXPORT TupExportWidget : public TupExportWizard
 
     private slots:
         void setExporter(const QString &plugin);
-        void updateExportWindowTitle();
+        void updateWindowTitle();
 
     private:
         void loadPlugins();
@@ -79,6 +80,7 @@ class TUPITUBE_EXPORT TupExportWidget : public TupExportWizard
 
         const TupProject *project;
         QHash<QString, TupExportInterface *> plugins;
+        bool exportFlag;
 };
 
 #endif

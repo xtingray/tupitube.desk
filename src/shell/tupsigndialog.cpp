@@ -117,3 +117,13 @@ void TupSignDialog::apply()
 
     accept();
 }
+
+QString TupSignDialog::getUsername() const
+{
+    return username->text();
+}
+
+QString TupSignDialog::getPasswd() const
+{
+    return password->text();
+}

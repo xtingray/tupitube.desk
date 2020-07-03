@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
  *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
@@ -42,6 +42,7 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, bool isLocal
     #endif
 
     project = work;
+    exportFlag = isLocal;
 
     if (isLocal) {
         setWindowTitle(tr("Export To Video"));
@@ -58,13 +59,13 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, bool isLocal
         animationExport = new TupExportModule(work, TupExportModule::Animation, tr("Export To Video File"));
         connect(this, SIGNAL(exportAnimation()), animationExport, SLOT(exportIt()));
         connect(this, SIGNAL(setAnimationFileName()), animationExport, SLOT(updateNameField()));
-        connect(animationExport, SIGNAL(exportHasStarted()), this, SLOT(updateExportWindowTitle()));
+        connect(animationExport, SIGNAL(exportHasStarted()), this, SLOT(updateWindowTitle()));
         addPage(animationExport);
 
         imagesArrayExport = new TupExportModule(work, TupExportModule::ImagesArray, tr("Export To Image Sequence"));
         connect(this, SIGNAL(exportImagesArray()), imagesArrayExport, SLOT(exportIt()));
         connect(this, SIGNAL(setImagesArrayFileName()), imagesArrayExport, SLOT(updateNameField()));
-        connect(imagesArrayExport, SIGNAL(exportHasStarted()), this, SLOT(updateExportWindowTitle()));
+        connect(imagesArrayExport, SIGNAL(exportHasStarted()), this, SLOT(updateWindowTitle()));
         addPage(imagesArrayExport);
 
         animatedImageExport = new TupExportModule(work, TupExportModule::AnimatedImage, tr("Export To Animated Image"));
@@ -100,6 +101,7 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, bool isLocal
 
         videoProperties = new TupVideoProperties();
         connect(this, SIGNAL(postProcedureCalled()), videoProperties, SLOT(postIt()));
+        connect(videoProperties, SIGNAL(postHasStarted()), this, SLOT(updateWindowTitle()));
         addPage(videoProperties);
 
         connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)),
@@ -169,6 +171,11 @@ void TupExportWidget::setExporter(const QString &plugin)
     }
 }
 
+void TupExportWidget::setProjectParams(const QString &username, const QString &token, const QString &path)
+{
+    videoProperties->setProjectParams(username, token, path);
+}
+
 QString TupExportWidget::videoTitle() const
 {
     return videoProperties->title();
@@ -194,8 +201,12 @@ bool TupExportWidget::isComplete()
     return videoProperties->isComplete();
 }
 
-void TupExportWidget::updateExportWindowTitle()
+void TupExportWidget::updateWindowTitle()
 {
-    setWindowTitle(tr("Exporting..."));
+    QString label = tr("Posting...");
+    if (exportFlag)
+        label = tr("Exporting...");
+
+    setWindowTitle(label);
     enableButtonSet(false);
 }

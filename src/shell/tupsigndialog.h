@@ -51,6 +51,9 @@ class TupSignDialog : public QDialog
         TupSignDialog(QWidget *parent = nullptr);
         ~TupSignDialog();
 
+        QString getUsername() const;
+        QString getPasswd() const;
+
     private slots:
         void apply();
 
