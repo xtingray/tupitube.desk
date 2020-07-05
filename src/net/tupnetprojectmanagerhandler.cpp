@@ -190,7 +190,7 @@ void TupNetProjectManagerHandler::initialize(TupProjectManagerParams *params)
         socket->send(connectPackage);
         username = netParams->login();
     } else {
-        TOsd::self()->display(tr("Error"), tr("Unable to connect to server"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Unable to connect to server"));
     }
 }
 
@@ -379,7 +379,7 @@ void TupNetProjectManagerHandler::handlePackage(const QString &root, const QStri
                            closeConnection();
                        }
                    } else {
-                       TOsd::self()->display(tr("Information"), tr("User has no available projects in the server"), TOsd::Warning);
+                       TOsd::self()->display(TOsd::Warning, tr("User has no available projects in the server"));
                        #ifdef TUP_DEBUG
                            qDebug() << "TupNetProjectManagerHandler::handlePackage() - Info: User has no available projects in the server";
                        #endif
@@ -406,14 +406,15 @@ void TupNetProjectManagerHandler::handlePackage(const QString &root, const QStri
                    }
 
                    TOsd::Level level = TOsd::Level(parser.notification().level);
+                   /*
                    QString title = "Information";
                    if (level == TOsd::Warning) {
                        title = tr("Warning");
                    } else if (level == TOsd::Error) {
                               title = tr("Error");
                    }
-
-                   TOsd::self()->display(title, parser.notification().message, level);
+                   */
+                   TOsd::self()->display(level, parser.notification().message);
                }
     } else if (root == "communication_chat") {
                TupCommunicationParser parser;
@@ -432,14 +433,14 @@ void TupNetProjectManagerHandler::handlePackage(const QString &root, const QStri
                    if (state == 1)
                        message = "<b>" + login + "</b>" + " has joined the project";
 
-                   TOsd::self()->display(tr("Notice"), message);
+                   TOsd::self()->display(TOsd::Info, message);
                    notices->addMessage(message);
                } 
     } else if (root == "communication_wall") {
                TupCommunicationParser parser;
                if (parser.parse(package)) {
                    QString message = QObject::tr("Wall from") + ": "+ parser.login() + "\n" + parser.message();
-                   TOsd::self()->display(tr("Information"), message);
+                   TOsd::self()->display(TOsd::Info, message);
                }
     } else if (root == "storyboard_update") {
                // SQA: storyboard package must be parsed and the related scene must be updated  

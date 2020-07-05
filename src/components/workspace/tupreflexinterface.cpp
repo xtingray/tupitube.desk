@@ -247,7 +247,7 @@ void TupReflexInterface::randomPath()
         #endif
 
         path = "";
-        TOsd::self()->display(tr("Error"), tr("Can't create pictures directory"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Can't create pictures directory"));
     }
 }
 

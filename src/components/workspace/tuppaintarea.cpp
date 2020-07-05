@@ -1110,7 +1110,7 @@ void TupPaintArea::addSelectedItemsToLibrary()
     QList<QGraphicsItem *> selected = scene()->selectedItems();
 
     if (selected.isEmpty()) {
-        TOsd::self()->display(tr("Error"), tr("No items selected"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("No items selected"));
         return;
     }
 
@@ -1143,7 +1143,7 @@ void TupPaintArea::requestItemMovement(QAction *action)
     QList<QGraphicsItem *> selected = scene()->selectedItems();
 
     if (selected.isEmpty()) {
-        TOsd::self()->display(tr("Error"), tr("No items selected"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("No items selected"));
         return;
     }
 	

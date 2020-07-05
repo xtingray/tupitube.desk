@@ -123,7 +123,7 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                 if (TupGraphicLibraryItem *libraryItem = qgraphicsitem_cast<TupGraphicLibraryItem *>(item)) {
                     // This condition only applies for images
                     if (libraryItem->type() != TupLibraryObject::Item) {
-                        TOsd::self()->display(tr("Error"), tr("Sorry, only native objects can be filled"), TOsd::Error);
+                        TOsd::self()->display(TOsd::Error, tr("Sorry, only native objects can be filled"));
                         #ifdef TUP_DEBUG
                             qWarning() << "FillTool::press() - Warning: item is a RASTER object!";
                         #endif
@@ -134,7 +134,7 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                 // Testing if object is a SVG file
                 TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
                 if (svg) {
-                    TOsd::self()->display(tr("Error"), tr("Sorry, only native objects can be filled"), TOsd::Error);
+                    TOsd::self()->display(TOsd::Error, tr("Sorry, only native objects can be filled"));
                     #ifdef TUP_DEBUG
                         qWarning() << "FillTool::press() - Warning: item is a SVG object!";
                     #endif
@@ -142,7 +142,7 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                 }
 
                 if (qgraphicsitem_cast<TupItemGroup *>(item)) {
-                    TOsd::self()->display(tr("Error"), tr("Sorry, Groups can't be filled yet"), TOsd::Error);
+                    TOsd::self()->display(TOsd::Error, tr("Sorry, Groups can't be filled yet"));
                     return;
                 }
 

@@ -43,7 +43,6 @@
 #include <QBoxLayout>
 #include <QPushButton>
 #include <QScreen>
-// #include <QDesktopWidget>
 
 TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QCameraInfo> cameraDevices, QComboBox *devicesCombo,
                                                  int cameraIndex, const QSize cameraSize, int i, QWidget *parent) : QFrame(parent)
@@ -199,7 +198,7 @@ QString TupBasicCameraInterface::randomPath()
         #endif
 
         imgPath = "";
-        TOsd::self()->display(tr("Error"), tr("Can't create pictures directory"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Can't create pictures directory"));
     }
 
     return imgPath;

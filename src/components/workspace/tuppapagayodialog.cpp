@@ -134,17 +134,17 @@ void TupPapagayoDialog::openSoundDialog()
 void TupPapagayoDialog::checkRecords()
 {
     if (filePath->text().length() == 0) {
-        TOsd::self()->display(tr("Error"), tr("PGO path is unset!"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("PGO path is unset!"));
         return;
     }
 
     if (imagesPath->text().length() == 0) {
-        TOsd::self()->display(tr("Error"), tr("Images directory is unset!"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Images directory is unset!"));
         return;
     }
 
     if (soundPath->text().length() == 0) {
-        TOsd::self()->display(tr("Error"), tr("Sound path is unset!"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Sound path is unset!"));
         return;
     }
 

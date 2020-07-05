@@ -63,9 +63,9 @@ void TupPreferencesDialog::apply()
         theme->saveValues();
         workspace->saveValues();
         if (general->showWarning())
-            TOsd::self()->display(tr("Warning"), tr("Please restart TupiTube"), TOsd::Warning);
+            TOsd::self()->display(TOsd::Warning, tr("Please restart TupiTube"));
         else
-            TOsd::self()->display(tr("Information"), tr("Preferences saved successfully"), TOsd::Info);
+            TOsd::self()->display(TOsd::Info, tr("Preferences saved successfully"));
         accept();
     }
 }

@@ -192,14 +192,14 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                     if (TupGraphicLibraryItem *libraryItem = qgraphicsitem_cast<TupGraphicLibraryItem *>(item)) {
                         if (libraryItem->type() == TupLibraryObject::Image) {
                             clearSelection();
-                            TOsd::self()->display(tr("Error"), tr("Coloring Tween can't be applied to raster images"), TOsd::Error);
+                            TOsd::self()->display(TOsd::Warning, tr("Coloring Tween can't be applied to raster images"));
                             return;
                          }
                     }
 
                     if (qgraphicsitem_cast<TupSvgItem *>(item)) {
                         clearSelection();
-                        TOsd::self()->display(tr("Error"), tr("Coloring Tween can't be applied to SVG files"), TOsd::Error);
+                        TOsd::self()->display(TOsd::Warning, tr("Coloring Tween can't be applied to SVG files"));
                         return;
                     }
                 }
@@ -451,7 +451,7 @@ void Tweener::applyTween()
 
     QString name = configPanel->currentTweenName();
     if (name.length() == 0) {
-        TOsd::self()->display(tr("Error"), tr("Tween name is missing!"), TOsd::Error);
+        TOsd::self()->display(TOsd::Warning, tr("Tween name is missing!"));
         return;
     }
 
@@ -567,7 +567,7 @@ void Tweener::applyTween()
     emit requested(&request);
 
     setCurrentTween(name);
-    TOsd::self()->display(tr("Info"), tr("Tween %1 applied!").arg(name), TOsd::Info);
+    TOsd::self()->display(TOsd::Info, tr("Tween %1 applied!").arg(name));
 
     QApplication::restoreOverrideCursor();
 }

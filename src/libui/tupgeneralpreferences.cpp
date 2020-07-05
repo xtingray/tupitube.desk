@@ -473,14 +473,14 @@ bool TupGeneralPreferences::saveValues()
     if (cachePath.isEmpty()) {
         tabWidget->setCurrentIndex(Cache);
         cacheLine->setFocus();
-        TOsd::self()->display(tr("Error"), tr("Cache path is empty. Set a value!"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Cache path is empty. Set a value!"));
         return false;
     } else {
         QDir dir(cachePath);
         if (!dir.exists()) {
             tabWidget->setCurrentIndex(Cache);
             cacheLine->setFocus();
-            TOsd::self()->display(tr("Error"), tr("Cache path doesn't exist. Create it!"), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Cache path doesn't exist. Create it!"));
             return false;
         } else {
             TCONFIG->setValue("Cache", cachePath);

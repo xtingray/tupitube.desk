@@ -317,12 +317,12 @@ void OpacitySettings::setEditMode()
 void OpacitySettings::applyTween()
 {
     if (!selectionDone) {
-        TOsd::self()->display(tr("Info"), tr("You must select at least one object!"), TOsd::Info);
+        TOsd::self()->display(TOsd::Warning, tr("You must select at least one object!"));
         return;
     }
 
     if (!propertiesDone) {
-        TOsd::self()->display(tr("Info"), tr("You must set Tween properties first!"), TOsd::Info);
+        TOsd::self()->display(TOsd::Warning, tr("You must set Tween properties first!"));
         return;
     }
 
@@ -366,7 +366,7 @@ void OpacitySettings::emitOptionChanged(int option)
                 emit clickedDefineProperties();
             } else {
                 options->setCurrentIndex(0);
-                TOsd::self()->display(tr("Info"), tr("Select objects for Tweening first!"), TOsd::Info);
+                TOsd::self()->display(TOsd::Warning, tr("Select objects for Tweening first!"));
             }
         }
     }

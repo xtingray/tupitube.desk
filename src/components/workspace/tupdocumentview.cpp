@@ -1380,7 +1380,7 @@ void TupDocumentView::importImageToLibrary(const QString &imgPath)
                                                               sceneIndex, layerIndex, frameIndex);
             emit requestTriggered(&request);
 
-            TOsd::self()->display(tr("Information"), tr("Image imported successfully"), TOsd::Info, 2000);
+            TOsd::self()->display(TOsd::Info, tr("Image imported successfully"), 2000);
         }
     }
 }
@@ -1811,9 +1811,9 @@ void TupDocumentView::exportImage()
                                                 project->getDimension(), project->getLibrary());
         updatePaintArea();
         if (isOk)
-            TOsd::self()->display(tr("Information"), tr("Frame has been exported successfully"));
+            TOsd::self()->display(TOsd::Info, tr("Frame has been exported successfully"));
         else
-            TOsd::self()->display(tr("Error"), tr("Can't export frame as image"), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Can't export frame as image"));
     }
 }
 
@@ -1973,11 +1973,10 @@ void TupDocumentView::fullScreenRightClick()
 void TupDocumentView::cameraInterface()
 {
     if (cameraMode) {
-        TOsd::self()->display(tr("Warning"), tr("Please, close current camera dialog first!"), TOsd::Error);
+        TOsd::self()->display(TOsd::Warning, tr("Please, close current camera dialog first!"));
         return;
     }
 
-    // int camerasTotal = QCamera::availableDevices().count();
     int camerasTotal = QCameraInfo::availableCameras().count();
     if (camerasTotal > 0) {
         // QList<QByteArray> cameraDevices;
@@ -2082,7 +2081,7 @@ void TupDocumentView::cameraInterface()
         }
     } else {
         // No devices connected!
-        TOsd::self()->display(tr("Error"), tr("No cameras detected"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("No cameras detected"));
     }
 }
 
@@ -2201,7 +2200,7 @@ void TupDocumentView::importPapagayoLipSync()
         int sceneIndex = paintArea->currentSceneIndex();
         TupScene *scene = project->sceneAt(sceneIndex);
         if (scene->lipSyncExists(folder)) {
-            TOsd::self()->display(tr("Error"), tr("Papagayo project already exists!\nPlease, rename the project's file"), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Papagayo project already exists!\nPlease, rename the project's file"));
             #ifdef TUP_DEBUG
                 qDebug() << "TupDocumentView::importPapagayoLipSync() - Fatal Error: Papagayo file is invalid!";
             #endif
@@ -2296,27 +2295,27 @@ void TupDocumentView::importPapagayoLipSync()
 
                         emit updateFPS(parser->getFps()); 
 
-                        TOsd::self()->display(tr("Information"), tr("Papagayo file has been imported successfully"));
+                        TOsd::self()->display(TOsd::Info, tr("Papagayo file has been imported successfully"));
                     } else {
-                        TOsd::self()->display(tr("Error"), tr("Papagayo file is invalid!"), TOsd::Error);
+                        TOsd::self()->display(TOsd::Error, tr("Papagayo file is invalid!"));
                         #ifdef TUP_DEBUG
                             qDebug() << "TupDocumentView::importPapagayoLipSync() - Fatal Error: Papagayo file is invalid!";
                         #endif
                     }
                 } else {
-                    TOsd::self()->display(tr("Error"), tr("Images directory is empty!"), TOsd::Error);
+                    TOsd::self()->display(TOsd::Error, tr("Images directory is empty!"));
                     #ifdef TUP_DEBUG
                         qDebug() << "TupDocumentView::importPapagayoLipSync() - Fatal Error: Images directory is empty!";
                     #endif
                 }
             } else {
-                TOsd::self()->display(tr("Error"), tr("Papagayo project is invalid!"), TOsd::Error);
+                TOsd::self()->display(TOsd::Error, tr("Papagayo project is invalid!"));
                 #ifdef TUP_DEBUG
                     qDebug() << "TupDocumentView::importPapagayoLipSync() - Fatal Error: Papagayo file is invalid!";
                 #endif
             }
         } else {
-            TOsd::self()->display(tr("Error"), tr("Papagayo project is invalid!"), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Papagayo project is invalid!"));
             #ifdef TUP_DEBUG
                 qDebug() << "TupDocumentView::importPapagayoLipSync() - Fatal Error: Papagayo file doesn't exist!";
             #endif

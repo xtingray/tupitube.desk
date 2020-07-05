@@ -235,7 +235,7 @@ void PosSettings::emitOptionChanged(int option)
                 emit clickedCreatePath();
             } else {
                 options->setCurrentIndex(0);
-                TOsd::self()->display(tr("Info"), tr("Select objects for Tweening first!"), TOsd::Info);
+                TOsd::self()->display(TOsd::Info, tr("Select objects for Tweening first!"));
             }
         }
     }
@@ -297,13 +297,13 @@ void PosSettings::applyTween()
 {
     if (!selectionDone) {
         options->setCurrentIndex(0);
-        TOsd::self()->display(tr("Info"), tr("You must select at least one object!"), TOsd::Info);
+        TOsd::self()->display(TOsd::Info, tr("You must select at least one object!"));
         return;
     }
 
     /*
     if (totalSteps() <= 2) {
-        TOsd::self()->display(tr("Info"), tr("You must define a path for this Tween!"), TOsd::Info);
+        TOsd::self()->display(tr("Information"), tr("You must define a path for this Tween!"), TOsd::Info);
         return;
     }
     */

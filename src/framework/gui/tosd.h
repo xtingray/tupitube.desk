@@ -69,7 +69,7 @@ class T_GUI_EXPORT TOsd : public QWidget
         };
         ~TOsd();
 	
-        void display(const QString & title, const QString & message, Level level = Info, int ms = -1);
+        void display(Level level=Info, const QString &message=QString(), int ms=-1);
 
         static TOsd *self();
 

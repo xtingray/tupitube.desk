@@ -35,9 +35,11 @@
 
 #include "tupvideoproperties.h"
 #include "tconfig.h"
+#include "tosd.h"
 
-#include <QNetworkAccessManager>
 #include <QUrlQuery>
+#include <QDomDocument>
+#include <QHttpPart>
 
 TupVideoProperties::TupVideoProperties() : TupExportWizardPage(tr("Animation Properties"))
 {
@@ -182,13 +184,6 @@ void TupVideoProperties::postIt()
 
     emit postHasStarted();
 
-    qDebug() << "Username: " << username;
-    qDebug() << "Token: " << token;
-    qDebug() << "Title: " << title;
-    qDebug() << "Tags: " << tags;
-    qDebug() << "Desc: " << desc;
-    qDebug() << "Scenes: " << scenes;
-
     QString scenesStr = "";
     int total = scenes.count();
     if (total == 1) {
@@ -201,17 +196,17 @@ void TupVideoProperties::postIt()
         scenesStr.chop(1);
     }
 
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(serverAuthAnswer(QNetworkReply *)));
 
-    QUrl url(TUPITUBE_URL + QString("/api/desk.php"));
-    QNetworkRequest request(url);
+    QUrl url(TUPITUBE_URL + QString("/api/desk/add/"));
+    request = QNetworkRequest();
     request.setRawHeader("User-Agent", BROWSER_FINGERPRINT);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
     request.setUrl(QUrl(url));
 
-    QUrlQuery params;
+    params = QUrlQuery();
     params.addQueryItem("username", username);
     params.addQueryItem("token", token);
     params.addQueryItem("title", title);
@@ -220,25 +215,212 @@ void TupVideoProperties::postIt()
     params.addQueryItem("scenes", scenesStr);
 
     QByteArray postData = params.query(QUrl::FullyEncoded).toUtf8();
-    QNetworkReply *reply = manager->post(request, postData);
+    reply = manager->post(request, postData);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-
-    // Call this line when the implementation is done!
-    // emit isDone();
 }
 
 void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupVideoProperties::serverAuthAnswer()]";
+    #endif
+
+    /*
+      <auth>
+        <code></code>
+      </auth>
+    */
+
     QByteArray array = reply->readAll();
     QString answer(array);
-    answer.chop(1);
-    if (answer.length() > 0) {
-        qDebug() << "TupVideoProperties::serverAuthAnswer() - answer -> " << answer;
+    if (answer.length() > 0) {        
+        #ifdef TUP_DEBUG
+            qDebug() << "TupVideoProperties::serverAuthAnswer() - answer -> " << answer;
+        #endif
+
+        QDomDocument doc;
+        if (doc.setContent(answer)) {
+            QDomNode root = doc.documentElement();
+            QDomElement element = root.firstChildElement("code");
+            QString projectCode = element.text();
+
+            if (projectCode.length() > 0) {
+                disconnect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(serverAuthAnswer(QNetworkReply *)));
+                connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(closeRequest(QNetworkReply *)));
+
+                QUrl url(TUPITUBE_URL + QString("/api/desk/upload/"));
+                request = QNetworkRequest();
+                request.setRawHeader(QByteArray("User-Agent"), QByteArray(BROWSER_FINGERPRINT));
+                request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+                request.setUrl(QUrl(url));
+
+                QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+                QHttpPart loginPart;
+                loginPart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("text/plain"));
+                loginPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"username\""));
+                loginPart.setBody(username.toUtf8());
+
+                QHttpPart tokenPart;
+                tokenPart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("text/plain"));
+                tokenPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"token\""));
+                tokenPart.setBody(token.toUtf8());
+
+                QHttpPart codePart;
+                codePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("text/plain"));
+                codePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"project\""));
+                codePart.setBody(projectCode.toUtf8());
+
+                QHttpPart filePart;
+                filePart.setHeader(QNetworkRequest::ContentDispositionHeader,
+                                   QVariant("form-data; name=\"file\"; filename=\"" + projectCode + ".tup\""));
+                filePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/octet-stream"));
+
+                QFile *projectFile = new QFile(filePath);
+                projectFile->open(QIODevice::ReadOnly);
+
+                filePart.setBodyDevice(projectFile);
+                projectFile->setParent(multiPart);
+
+                multiPart->append(loginPart);
+                multiPart->append(tokenPart);
+                multiPart->append(codePart);
+                multiPart->append(filePart);
+
+                reply = manager->post(request, multiPart);
+                connect(reply, &QNetworkReply::uploadProgress, this, &TupVideoProperties::tracingPostProgress);
+                multiPart->setParent(reply);
+            } else {
+                element = root.firstChildElement("error");
+                QString error = element.text();
+                if (error.length() > 0) {
+                    if (error.compare("401") == 0) { // Invalid credentials
+                        #ifdef TUP_DEBUG
+                            qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Invalid credentials!";
+                        #endif
+                        TOsd::self()->display(TOsd::Error, tr("Access denied. Invalid password!"));
+                    } else {
+                        if (error.compare("XXX") == 0) {
+                            // Unable to store project
+                            #ifdef TUP_DEBUG
+                                qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Unable to create record!";
+                            #endif
+                            TOsd::self()->display(TOsd::Error, tr("Network Error"));
+                        } else {
+                           // Unknown code error
+                            #ifdef TUP_DEBUG
+                                qDebug() << "TupVideoProperties::serverAuthAnswer() - Unknown error! :/";
+                            #endif
+                            TOsd::self()->display(TOsd::Error, tr("Network Error"));
+                        }
+                    }
+                } else {
+                    // Unknown answer - no error
+                    #ifdef TUP_DEBUG
+                        qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Answer package is corrupt!";
+                    #endif
+                    TOsd::self()->display(TOsd::Error, tr("Network Error"));
+                }
+            }
+        } else {
+            // Invalid answer - no xml
+            #ifdef TUP_DEBUG
+                qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Invalid answer format!";
+            #endif
+            TOsd::self()->display(TOsd::Error, tr("Network Error"));
+        }
     }
+}
+
+void TupVideoProperties::tracingPostProgress(qint64 bytesSent, qint64 bytesTotal)
+{
+     qDebug() << "TupVideoProperties::tracingPostProgress() - bytesSent -> " << bytesSent;
+     qDebug() << "TupVideoProperties::tracingPostProgress() - bytesTotal -> " << bytesTotal;
+}
+
+void TupVideoProperties::closeRequest(QNetworkReply *reply)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupVideoProperties::closeRequest()]";
+    #endif
+
+    /*
+      <result>
+        <code></code>
+      </result>
+    */
+
+    QByteArray array = reply->readAll();
+    QString answer(array);
+    if (answer.length() > 0) {
+        #ifdef TUP_DEBUG
+            qDebug() << "TupVideoProperties::closeRequest() - answer -> " << answer;
+        #endif
+
+        QDomDocument doc;
+        if (doc.setContent(answer)) {
+            QDomNode root = doc.documentElement();
+            QDomElement element = root.firstChildElement("code");
+            QString code = element.text();
+            if (code.length() > 0) {
+                if (code.compare("200") == 0) {
+                    // Succeed operation
+                    #ifdef TUP_DEBUG
+                        qDebug() << "TupVideoProperties::closeRequest() - Project posted successfully!";
+                    #endif
+                    TOsd::self()->display(TOsd::Info, tr("Project was uploaded successfully!"));
+                } else {    
+                    if (code.compare("400") == 0) { // Incomplete parameters
+                        #ifdef TUP_DEBUG
+                            qDebug() << "TupVideoProperties::closeRequest() - Error: server answer is incomplete!";
+                        #endif
+                         TOsd::self()->display(TOsd::Error, tr("Network Error 400. Please, contact us!"));
+                    } else if (code.compare("401") == 0) { // Invalid client
+                        #ifdef TUP_DEBUG
+                            qDebug() << "TupVideoProperties::closeRequest() - Error: Invalid client!";
+                        #endif
+                        TOsd::self()->display(TOsd::Error, tr("Network Error 401. Please, contact us!"));
+                    } else if (code.compare("402") == 0) { // Invalid credentials
+                        #ifdef TUP_DEBUG
+                            qDebug() << "TupVideoProperties::closeRequest() - Error: Invalid credentials!";
+                        #endif
+                        TOsd::self()->display(TOsd::Error, tr("Access denied. Invalid password!"));
+                    } else if (code.compare("403") == 0) { // Upload failed
+                        #ifdef TUP_DEBUG
+                            qDebug() << "TupVideoProperties::closeRequest() - Error: Project file couldn't be stored!";
+                        #endif
+                        TOsd::self()->display(TOsd::Error, tr("Network Error 403. Please, contact us!"));
+                    }
+                }
+            } else {
+                // No code - Invalid answer - 404
+                #ifdef TUP_DEBUG
+                    qDebug() << "TupVideoProperties::closeRequest() - Error: Invalid answer. No answer code!";
+                #endif
+                TOsd::self()->display(TOsd::Error, tr("Network Error 404. Please, contact us!"));
+            }
+        } else {
+            // Invalid answer (no xml) - 405
+            #ifdef TUP_DEBUG
+                qDebug() << "TupVideoProperties::closeRequest() - Error: Invalid answer. No XML format!";
+            #endif
+            TOsd::self()->display(TOsd::Error, tr("Network Error 405. Please, contact us!"));
+        }
+    } else {
+        // Empty answer - 406
+        #ifdef TUP_DEBUG
+            qDebug() << "TupVideoProperties::closeRequest() - Error: No answer from server!";
+        #endif
+        TOsd::self()->display(TOsd::Error, tr("Network Error 406. Please, contact us!"));
+    }
+
+    emit isDone();
 }
 
 void TupVideoProperties::slotError(QNetworkReply::NetworkError error)
 {
+    TOsd::self()->display(TOsd::Error, tr("Network Fatal Error. Please, contact us!"));
+
     switch (error) {
         case QNetworkReply::HostNotFoundError:
              {

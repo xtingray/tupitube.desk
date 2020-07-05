@@ -108,5 +108,5 @@ void TupThemePreferences::saveValues()
 void TupThemePreferences::showRestartMsg(bool enabled)
 {
     if (enabled)
-        TOsd::self()->display(tr("Warning"), tr("Please restart TupiTube"), TOsd::Warning);
+        TOsd::self()->display(TOsd::Warning, tr("Please restart TupiTube"));
 }

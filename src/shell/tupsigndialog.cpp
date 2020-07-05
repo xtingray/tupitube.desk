@@ -97,12 +97,12 @@ void TupSignDialog::setForm()
 void TupSignDialog::apply()
 {
     if (username->text().isEmpty()) {
-        TOsd::self()->display(tr("Error"), tr("Please, fill in your username"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Please, fill in your username"));
         return;
     }
 
     if (password->text().isEmpty()) {
-        TOsd::self()->display(tr("Error"), tr("Please, fill in your password"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Please, fill in your password"));
         return;
     }
 

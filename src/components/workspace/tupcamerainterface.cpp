@@ -42,7 +42,6 @@
 #include <QBoxLayout>
 #include <QIcon>
 #include <QDir>
-// #include <QDesktopWidget>
 #include <QScreen>
 #include <QSpinBox>
 #include <QDoubleSpinBox>
@@ -64,7 +63,6 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QCameraInfo> 
 
     widgetStack = new QStackedWidget();
     QSize displaySize = cameraSize;
-    // QDesktopWidget desktop;
     QScreen *screen = QGuiApplication::screens().at(0);
     int desktopWidth = screen->geometry().width();
 
@@ -306,7 +304,7 @@ QString TupCameraInterface::randomPath()
         #endif
 
         path = "";
-        TOsd::self()->display(tr("Error"), tr("Can't create pictures directory"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Can't create pictures directory"));
     }
 
     return path;

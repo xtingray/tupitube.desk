@@ -290,7 +290,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
     if (m_projectManager->isOpen()) {
         if (TupMainWindow::requestType == NewLocalProject || TupMainWindow::requestType == NewNetProject)
-            TOsd::self()->display(tr("Information"), tr("Opening a new document..."));
+            TOsd::self()->display(TOsd::Info, tr("Opening a new document..."));
 
         contextMode = TupProject::FRAMES_MODE;
 
@@ -405,7 +405,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         // m_brushWidget->setThickness(thickness);
 
         if (TupMainWindow::requestType == OpenLocalProject || TupMainWindow::requestType == OpenNetProject)
-            TOsd::self()->display(tr("Information"), tr("Project <b>%1</b> opened!").arg(m_projectManager->getProject()->getName()));
+            TOsd::self()->display(TOsd::Info, tr("Project <b>%1</b> opened!").arg(m_projectManager->getProject()->getName()));
 
         m_exposureSheet->setScene(0);
         connect(this, SIGNAL(tabHasChanged(int)), this, SLOT(updateCurrentTab(int)));
@@ -698,7 +698,7 @@ void TupMainWindow::openExample()
         #ifdef TUP_DEBUG
             qDebug() << "TupMainWindow::openExample() - Fatal Error: Couldn't open example file -> " + QString(example);
         #endif
-        TOsd::self()->display(tr("Error"), tr("Cannot open project!"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Cannot open project!"));
     }
 }
 
@@ -754,7 +754,7 @@ void TupMainWindow::openProject(const QString &path)
             saveDefaultPath(dir);
         } else {
             setUpdatesEnabled(true);
-            TOsd::self()->display(tr("Error"), tr("Cannot open project!"), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Cannot open project!"));
         }
     }
 
@@ -868,9 +868,9 @@ void TupMainWindow::importPalettes()
             QString dir = path.left(last);
             saveDefaultPath(dir);
 
-            TOsd::self()->display(tr("Information"), tr("Gimp palette import was successful"), TOsd::Info);
+            TOsd::self()->display(TOsd::Info, tr("Gimp palette import was successful"));
         } else {
-            TOsd::self()->display(tr("Error"), tr("Gimp palette import was unsuccessful"), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Gimp palette import was unsuccessful"));
         }
     }
 }
@@ -937,17 +937,16 @@ void TupMainWindow::saveAs()
 
     QDir directory(path);
     if (!directory.exists()) {
-        TOsd::self()->display(tr("Error"), tr("Directory does not exist! Please, choose another path."), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Directory does not exist! Please, choose another path."));
         #ifdef TUP_DEBUG
-            QString file = path.toLocal8Bit();
-            qDebug() << "TupMainWindow::saveAs() - Fatal Error: Directory doesn't exist! -> " + file;
+            qDebug() << "TupMainWindow::saveAs() - Fatal Error: Directory doesn't exist! -> " + path.toLocal8Bit();
         #endif
         return;
     } else {
         QFile file(directory.filePath(name));
         if (!file.open(QIODevice::ReadWrite)) {
             file.remove();
-            TOsd::self()->display(tr("Error"), tr("Insufficient permissions. Please, pick another path."), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Insufficient permissions. Please, pick another path."));
             return;
         }
         file.remove();
@@ -989,7 +988,7 @@ void TupMainWindow::saveProject()
         if (m_projectManager->saveProject(m_fileName)) {  
             updateRecentProjectList();
             
-            TOsd::self()->display(tr("Information"), tr("Project <b>%1</b> saved").arg(projectName));
+            TOsd::self()->display(TOsd::Info, tr("Project <b>%1</b> saved").arg(projectName));
             int indexPath = m_fileName.lastIndexOf("/");
             int indexFile = m_fileName.length() - indexPath;
             QString name = m_fileName.right(indexFile - 1);
@@ -1199,7 +1198,7 @@ void TupMainWindow::postProject()
         int sceneIndex = animationTab->currentSceneIndex();
         int framesCount = m_projectManager->framesCount(sceneIndex);
         if (framesCount < 2) {
-            TOsd::self()->display(tr("Error"), tr("To post video add more frames!"), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("To post video add more frames!"));
             #ifdef TUP_DEBUG
                 qDebug() << "TupMainWindow::postProject() - Error: Too few frames!";
             #endif
@@ -1241,7 +1240,7 @@ void TupMainWindow::postProject()
 
         exportWidget->exec();
     } else {
-        TOsd::self()->display(tr("Error"), tr("Project is larger than 10 MB. Too big!"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Project is larger than 10 MB. Too big!"));
     }
 }
 
@@ -1303,11 +1302,11 @@ void TupMainWindow::requestProject()
                     TupImportProjectPackage package(file);
                     netProjectManager->sendPackage(package);
                  } else {
-                    TOsd::self()->display(tr("Error"), tr("Can't import project. File is empty!"), TOsd::Error);
+                    TOsd::self()->display(TOsd::Error, tr("Can't import project. File is empty!"));
                     netProjectManager->closeProject();
                  }
             } else {
-                 TOsd::self()->display(tr("Error"), tr("Can't save the project. File doesn't exist!"), TOsd::Error);
+                 TOsd::self()->display(TOsd::Error, tr("Can't save the project. File doesn't exist!"));
                  netProjectManager->closeProject();
             }
         } else {

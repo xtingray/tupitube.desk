@@ -408,7 +408,7 @@ void Tweener::applyTween()
 
     QString name = configPanel->currentTweenName();
     if (name.length() == 0) {
-        TOsd::self()->display(tr("Error"), tr("Tween name is missing!"), TOsd::Error);
+        TOsd::self()->display(TOsd::Warning, tr("Tween name is missing!"));
         return;
     }
 
@@ -529,7 +529,7 @@ void Tweener::applyTween()
 
 
     setCurrentTween(name);
-    TOsd::self()->display(tr("Info"), tr("Tween %1 applied!").arg(name), TOsd::Info);
+    TOsd::self()->display(TOsd::Info, tr("Tween %1 applied!").arg(name));
 
     QApplication::restoreOverrideCursor();
 }

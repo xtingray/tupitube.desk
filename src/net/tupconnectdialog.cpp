@@ -135,7 +135,7 @@ void TupConnectDialog::saveSettings()
 void TupConnectDialog::accept()
 {
     if (passwdLine->text().isEmpty()) {
-        TOsd::self()->display(tr("Error"), tr("Please, fill in your password"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Please, fill in your password"));
         return;
     }
 

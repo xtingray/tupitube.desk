@@ -308,7 +308,7 @@ void TupLibraryWidget::insertObjectInWorkspace()
     #endif
 
     if (libraryTree->topLevelItemCount() == 0) {
-        TOsd::self()->display(tr("Error"), tr("Library is empty!"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Library is empty!"));
         #ifdef TUP_DEBUG
             qDebug() << "TupLibraryWidget::insertObjectInWorkspace() - Library is empty!";
         #endif
@@ -316,7 +316,7 @@ void TupLibraryWidget::insertObjectInWorkspace()
     }
 
     if (!libraryTree->currentItem()) {
-        TOsd::self()->display(tr("Error"), tr("There's no current selection!"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("There's no current selection!"));
         #ifdef TUP_DEBUG
             qDebug() << "TupLibraryWidget::insertObjectInWorkspace() - There's no current selection!";
         #endif
@@ -325,7 +325,7 @@ void TupLibraryWidget::insertObjectInWorkspace()
 
     QString extension = libraryTree->currentItem()->text(2);
     if (extension.length() == 0) {
-        TOsd::self()->display(tr("Error"), tr("It's a directory! Please, pick a graphic object"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("It's a directory! Please, pick a graphic object"));
         #ifdef TUP_DEBUG
             qDebug() << "TupLibraryWidget::insertObjectInWorkspace() - It's a directory!";
         #endif
@@ -333,7 +333,7 @@ void TupLibraryWidget::insertObjectInWorkspace()
     }
 
     if ((extension.compare("OGG") == 0) || (extension.compare("WAV") == 0) || (extension.compare("MP3") == 0)) {
-        TOsd::self()->display(tr("Error"), tr("It's a sound file! Please, pick a graphic object"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("It's a sound file! Please, pick a graphic object"));
         #ifdef TUP_DEBUG
             qDebug() << "TupLibraryWidget::insertObjectInWorkspace() - It's a sound file!";
         #endif
@@ -581,7 +581,7 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
 
                 if (QFile::copy(path, target)) {
                     setDefaultPath(target);
-                    TOsd::self()->display(tr("Info"), tr("Item exported successfully!"), TOsd::Info);
+                    TOsd::self()->display(TOsd::Info, tr("Item exported successfully!"));
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "TupLibraryWidget::exportObject() - Error: Object file couldn't be exported! [ " + id + " ]";
@@ -646,7 +646,7 @@ void TupLibraryWidget::createRasterObject()
                 #ifdef TUP_DEBUG
                     qDebug() << "TupLibraryWidget::createRasterObject() - Fatal Error: Couldn't create directory " + imagesDir;
                 #endif
-                TOsd::self()->display(tr("Error"), tr("Couldn't create images directory!"), TOsd::Error);
+                TOsd::self()->display(TOsd::Error, tr("Couldn't create images directory!"));
                 return;
             }
         }
@@ -740,7 +740,7 @@ void TupLibraryWidget::createVectorObject()
                     qDebug() << "TupLibraryWidget::createVectorObject() - Fatal Error: Couldn't create directory " + vectorDir;
                 #endif
 
-                TOsd::self()->display(tr("Error"), tr("Couldn't create vector directory!"), TOsd::Error);
+                TOsd::self()->display(TOsd::Error, tr("Couldn't create vector directory!"));
                 return;
             }
         }
@@ -937,7 +937,7 @@ void TupLibraryWidget::importImage(const QString &imagePath)
 
         data.clear();
     } else {
-        TOsd::self()->display(tr("Error"), tr("Cannot open file: %1").arg(imagePath), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Cannot open file: %1").arg(imagePath));
     }
 }
 
@@ -1002,7 +1002,7 @@ void TupLibraryWidget::importSvg(const QString &svgPath)
                                                        currentFrame.scene, currentFrame.layer, currentFrame.frame);
         emit requestTriggered(&request);
     } else {
-        TOsd::self()->display(tr("Error"), tr("Cannot open file: %1").arg(svgPath), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Cannot open file: %1").arg(svgPath));
     }
 }
 
@@ -1058,7 +1058,7 @@ void TupLibraryWidget::importNativeObject(const QString &object)
                                                        currentFrame.scene, currentFrame.layer, currentFrame.frame);
         emit requestTriggered(&request);
     } else {
-        TOsd::self()->display(tr("Error"), tr("Cannot open file: %1").arg(object), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Cannot open file: %1").arg(object));
     }
 }
 
@@ -1238,7 +1238,7 @@ void TupLibraryWidget::importImageSequence()
                 QApplication::restoreOverrideCursor();
             }
         } else {
-            TOsd::self()->display(tr("Error"), tr("No image files were found.<br/>Please, try another directory"), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("No image files were found.<br/>Please, try another directory"));
         }
     }
 }
@@ -1356,7 +1356,7 @@ void TupLibraryWidget::importSvgSequence()
                 QApplication::restoreOverrideCursor();
             }
         } else {
-            TOsd::self()->display(tr("Error"), tr("No SVG files were found.<br/>Please, try another directory"), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("No SVG files were found.<br/>Please, try another directory"));
         }
     }
 }
@@ -1390,7 +1390,7 @@ void TupLibraryWidget::importSoundFile()
             emit requestTriggered(&request);
             setDefaultPath(path);
         } else {
-            TOsd::self()->display(tr("Error"), tr("Error while opening file: %1").arg(path), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Error while opening file: %1").arg(path));
         }
     }
 }

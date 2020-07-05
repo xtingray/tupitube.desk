@@ -42,6 +42,9 @@
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QProgressBar>
+
+#include <QNetworkAccessManager>
+#include <QUrlQuery>
 #include <QNetworkReply>
 
 class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
@@ -71,7 +74,9 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         void postIt();
         void setScenesIndexes(const QList<int> &indexes);
         void serverAuthAnswer(QNetworkReply *reply);
+        void closeRequest(QNetworkReply *reply);
         void slotError(QNetworkReply::NetworkError error);
+        void tracingPostProgress(qint64 bytesSent, qint64 bytesTotal);
 
     private:
         void setForm();
@@ -90,6 +95,11 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         QWidget *formWidget;
         QWidget *progressWidget;
         QStackedWidget *stackedWidget;
+
+        QNetworkAccessManager *manager;
+        QNetworkRequest request;
+        QUrlQuery params;
+        QNetworkReply *reply;
 };
 
 #endif

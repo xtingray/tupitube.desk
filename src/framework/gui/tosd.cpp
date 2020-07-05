@@ -71,14 +71,14 @@ TOsd::~TOsd()
     delete m_timer;
 }
 
-void TOsd::display(const QString &title, const QString &message, Level level, int ms)
+void TOsd::display(Level level, const QString &message,int ms)
 {
     if (message.isEmpty()) 
         return;
 
     QString htmlMessage = message;
     htmlMessage.replace('\n', "<br/>");
-    QString tail = title + "</b></font><br><font style=\"font-size:11px\">" + htmlMessage + "</font>";
+    QString tail = "</b></font><br><font style=\"font-size:11px\">" + htmlMessage + "</font>";
 
     // QBrush background = palette().background();
     QBrush background = palette().window();
@@ -89,6 +89,7 @@ void TOsd::display(const QString &title, const QString &message, Level level, in
         switch (level) {
                 case Info:
                    {
+                     tail = tr("Information") + tail;
                      QString logo = THEME_DIR + "icons/info_message.png";
                      if (themeName.compare("Dark") == 0)
                          background = QColor(0, 80, 0);
@@ -100,6 +101,7 @@ void TOsd::display(const QString &title, const QString &message, Level level, in
                    break;
                 case Warning:
                    {
+                     tail = tr("Warning") + tail;
                      QString logo = THEME_DIR + "icons/warning_message.png";
                      background = QColor(0xf77100);
                      m_document->setHtml("<img src=\"" + logo + "\"><font style=\"font-size:12px;\"><b>&nbsp;&nbsp;" \
@@ -108,6 +110,7 @@ void TOsd::display(const QString &title, const QString &message, Level level, in
                    break;
                 case Error:
                    {
+                     tail = tr("Error") + tail;
                      QString logo = THEME_DIR + "icons/error_message.png";
                      background = Qt::red;
                      m_document->setHtml("<img src=\"" + logo + "\"><font style=\"font-size:12px;\"><b>&nbsp;&nbsp;" \
@@ -116,6 +119,7 @@ void TOsd::display(const QString &title, const QString &message, Level level, in
                    break;
                 case Fatal:
                    {
+                     tail = tr("Fatal") + tail;
                      QString logo = THEME_DIR + "icons/fatal_message.png";
                      background = Qt::red;
                      m_document->setHtml("<img src=\"" + logo + "\"><font style=\"font-size:12px;\"><b>&nbsp;&nbsp;" \

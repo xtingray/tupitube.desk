@@ -42,7 +42,6 @@
 #include <QPainter>
 #include <QFileDialog>
 #include <QDir>
-// #include <QDesktopWidget>
 #include <QScreen>
 #include <QPrintDialog>
 #include <QTextBrowser>
@@ -66,7 +65,6 @@ TupStoryBoardDialog::TupStoryBoardDialog(bool network, TupExportInterface *plugi
     library = assets;
     utf = QLocale(QLocale::AnyLanguage, QLocale::AnyCountry);
 
-    // QDesktopWidget desktop;
     QScreen *screen = QGuiApplication::screens().at(0);
     scaledSize = QSize();
 
@@ -573,7 +571,7 @@ void TupStoryBoardDialog::exportAsHTML()
 
     if (!path.isEmpty()) {
         createHTMLFiles(path, HTML);
-        TOsd::self()->display(tr("Info"), tr("Storyboard exported successfully!"), TOsd::Info);
+        TOsd::self()->display(TOsd::Info, tr("Storyboard exported successfully!"));
     }
 }
 
@@ -615,7 +613,7 @@ void TupStoryBoardDialog::exportAsPDF()
         delete document;
         cleanDirectory(path);
 
-        TOsd::self()->display(tr("Info"), tr("Storyboard exported successfully!"), TOsd::Info);
+        TOsd::self()->display(TOsd::Info, tr("Storyboard exported successfully!"));
     }
 }
 

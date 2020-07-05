@@ -98,7 +98,7 @@ void TupLibraryDialog::checkNames()
          if (name.isEmpty()) {
              toolBox->setCurrentIndex(i);
              tabs[i]->setFocus();
-             TOsd::self()->display(tr("Error"), tr("Library object's name is missing!"), TOsd::Error);
+             TOsd::self()->display(TOsd::Error, tr("Library object's name is missing!"));
              return;
          } else {
              objects << name + ".tobj";
@@ -107,7 +107,7 @@ void TupLibraryDialog::checkNames()
 
     for (int i=0; i<objects.size(); i++) {
          if (library->exists(objects.at(i))) {
-             TOsd::self()->display(tr("Error"), tr("Object's name already exists. Pick a new one!"), TOsd::Error);
+             TOsd::self()->display(TOsd::Error, tr("Object's name already exists. Pick a new one!"));
              return;
          }
     }

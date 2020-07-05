@@ -285,18 +285,18 @@ void TupExportModule::exportIt()
         path = QDir::fromNativeSeparators(path);
 
         if (name.length() == 0) {
-            TOsd::self()->display(tr("Error"), tr("Images name prefix is unset! Please, type a prefix."), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Images name prefix is unset! Please, type a prefix."));
             return;
         }
 
         if (path.length() == 0) {
-            TOsd::self()->display(tr("Error"), tr("Images path can't be unset! Please, choose one."), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Images path can't be unset! Please, choose one."));
             return;
         }
 
         QDir dir(path);
         if (!dir.exists()) {
-            TOsd::self()->display(tr("Error"), tr("Images path doesn't exist! Please, choose another."), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Images path doesn't exist! Please, choose another."));
             return;
         }
 
@@ -315,7 +315,7 @@ void TupExportModule::exportIt()
         filename = QDir::fromNativeSeparators(filename);
 
         if (filename.length() == 0) {
-            TOsd::self()->display(tr("Error"), tr("Animation path is unset! Please, choose one."), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Animation path is unset! Please, choose one."));
             #ifdef TUP_DEBUG
                 qDebug() << "TupExportModule::exportIt() - [Tracer 01] Fatal Error: Animation path is unset! -> "
                          << path.toLocal8Bit();
@@ -331,13 +331,13 @@ void TupExportModule::exportIt()
             name += extension;
 
         if (path.length() == 0) {
-            TOsd::self()->display(tr("Error"), tr("Animation path can't be unset! Please, choose one."), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Animation path can't be unset! Please, choose one."));
             return;
         }
 
         QDir dir(path);
         if (!dir.exists()) {
-            TOsd::self()->display(tr("Error"), tr("Animation path doesn't exist! Please, choose another."), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Animation path doesn't exist! Please, choose another."));
             return;
         }
 
@@ -357,14 +357,14 @@ void TupExportModule::exportIt()
     if (imageFormats.contains(m_currentFormat)) {
         QFileInfo dir(path);
         if (!dir.isReadable() || !dir.isWritable()) {
-            TOsd::self()->display(tr("Error"), tr("Insufficient permissions. Please, choose another directory."), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Insufficient permissions. Please, choose another directory."));
             return;
         }
     } else {
         QFile file(filename);
         if (!file.open(QIODevice::ReadWrite)) {
             file.remove();
-            TOsd::self()->display(tr("Error"), tr("Insufficient permissions. Please, choose another path."), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Insufficient permissions. Please, choose another path."));
             return;
         }
         file.remove();
@@ -411,7 +411,7 @@ void TupExportModule::exportIt()
                                       m_project->getLibrary());
         }
     } else {
-        TOsd::self()->display(tr("Error"), tr("Format problem. TupiTube Internal error."), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Format problem. TupiTube Internal error."));
     }
 
     QApplication::restoreOverrideCursor();
@@ -420,7 +420,7 @@ void TupExportModule::exportIt()
         QString message = tr("Video file") + " " + name + " " + tr("was saved successful");
         if (isArray)
             message = tr("Image sequence was saved successful");
-        TOsd::self()->display(tr("Information"), tr(message.toLocal8Bit()));
+        TOsd::self()->display(TOsd::Info, tr(message.toLocal8Bit()));
         emit isDone();
     } else {
         QString msg = m_currentExporter->getExceptionMsg();

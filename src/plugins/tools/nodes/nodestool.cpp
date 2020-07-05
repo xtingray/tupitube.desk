@@ -102,13 +102,13 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
         int itemIndex = frame->indexOf(selectedItem);
 
         if (qgraphicsitem_cast<TupSvgItem *>(selectedItem)) {
-            TOsd::self()->display(tr("Error"), tr("SVG objects cannot be edited!"), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("SVG objects cannot be edited!"));
             return;
         }
 
         if (TupGraphicLibraryItem *libraryItem = qgraphicsitem_cast<TupGraphicLibraryItem *>(selectedItem)) {
             if (libraryItem->getItemType() == TupLibraryObject::Image) {
-                TOsd::self()->display(tr("Error"), tr("Images have no nodes!"), TOsd::Error);
+                TOsd::self()->display(TOsd::Error, tr("Images have no nodes!"));
                 return;
             }
         }
@@ -132,7 +132,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
 
         if (!qgraphicsitem_cast<TControlNode*>(selectedItem)) {
             if (!qgraphicsitem_cast<TupPathItem *>(selectedItem)) {
-                TOsd::self()->display(tr("Error"), tr("Only pencil/ink lines can be edited!"), TOsd::Error);
+                TOsd::self()->display(TOsd::Error, tr("Only pencil/ink lines can be edited!"));
                 return;
             }
         }

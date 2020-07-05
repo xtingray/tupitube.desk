@@ -685,7 +685,7 @@ void SelectionTool::applyGroupAction(SelectionSettings::Group action)
     foreach (QGraphicsItem *item, selectedObjects) {
         TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
         if (svg) {
-            TOsd::self()->display(tr("Error"), tr("SVG objects can't be grouped/ungrouped yet"), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("SVG objects can't be grouped/ungrouped yet"));
             return;
         }
     }

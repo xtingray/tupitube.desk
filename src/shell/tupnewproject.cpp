@@ -291,23 +291,23 @@ bool TupNewProject::useNetwork() const
 void TupNewProject::ok()
 {
     if (projectName->text().isEmpty()) {
-        TOsd::self()->display(tr("Error"), tr("Please, set a name for the project"), TOsd::Error);
+        TOsd::self()->display(TOsd::Error, tr("Please, set a name for the project"));
         return;
     }
 
     if (enableUseNetwork) {
         if (username->text().isEmpty()) {
-            TOsd::self()->display(tr("Error"), tr("Please, fill in your username"), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Please, fill in your username"));
             return;
         }
 
         if (password->text().isEmpty()) {
-            TOsd::self()->display(tr("Error"), tr("Please, fill in your password"), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Please, fill in your password"));
             return;
         }
 
         if (server->text().isEmpty()) {
-            TOsd::self()->display(tr("Error"), tr("Please, fill in the server name or IP"), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Please, fill in the server name or IP"));
             return;
         }
     }

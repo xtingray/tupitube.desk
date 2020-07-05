@@ -122,7 +122,7 @@ void TBackupDialog::makeBackup()
             #ifdef TUP_DEBUG
                 qDebug() << "TBackupDialog::makeProjectBackup() - Fatal Error:  -> " + destPath;
             #endif
-            TOsd::self()->display(tr("Error"), tr("Folder doesn't exist. Please, pick one!"), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Folder doesn't exist. Please, pick one!"));
             return;
         }
     }

@@ -121,7 +121,7 @@ void TweenManager::addTween()
 
             emit addNewTween(name);
         } else {
-            TOsd::self()->display(tr("Error"), tr("Tween name already exists!"), TOsd::Error);
+            TOsd::self()->display(TOsd::Error, tr("Tween name already exists!"));
         }
     } else {
         int i = 0;

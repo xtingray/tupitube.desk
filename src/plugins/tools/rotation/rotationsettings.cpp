@@ -424,7 +424,7 @@ void RotationSettings::setEditMode()
 void RotationSettings::applyTween()
 {
     if (!selectionDone) {
-        TOsd::self()->display(tr("Info"), tr("You must select at least one object!"), TOsd::Info); 
+        TOsd::self()->display(TOsd::Warning, tr("You must select at least one object!"));
         #ifdef TUP_DEBUG
             qDebug() << "Settings::applyTween() - You must select at least one object!";
         #endif
@@ -433,7 +433,7 @@ void RotationSettings::applyTween()
     }
 
     if (!propertiesDone) {
-        TOsd::self()->display(tr("Info"), tr("You must set Tween properties first!"), TOsd::Error);
+        TOsd::self()->display(TOsd::Warning, tr("You must set Tween properties first!"));
         #ifdef TUP_DEBUG
             qDebug() << "Settings::applyTween() - You must set Tween properties first!";
         #endif
@@ -444,7 +444,7 @@ void RotationSettings::applyTween()
         int start = rangeStart->value();
         int end = rangeEnd->value();
         if (start == end) {
-            TOsd::self()->display(tr("Info"), tr("Angle range must be greater than 0!"), TOsd::Error);
+            TOsd::self()->display(TOsd::Warning, tr("Angle range must be greater than 0!"));
             #ifdef TUP_DEBUG
                 qDebug() << "Settings::applyTween() - Angle range must be greater than 0!";
             #endif
@@ -453,7 +453,7 @@ void RotationSettings::applyTween()
 
         int range = abs(start - end); 
         if (range < degreesPerFrame->value()) {
-            TOsd::self()->display(tr("Info"), tr("Angle range must be greater than Speed!"), TOsd::Error);
+            TOsd::self()->display(TOsd::Warning, tr("Angle range must be greater than Speed!"));
             #ifdef TUP_DEBUG
                 qDebug() << "Settings::applyTween() - Angle range must be greater than Speed!";
             #endif
@@ -501,7 +501,7 @@ void RotationSettings::emitOptionChanged(int option)
                 emit clickedDefineAngle();
             } else {
                 options->setCurrentIndex(0);
-                TOsd::self()->display(tr("Info"), tr("Select objects for Tweening first!"), TOsd::Info);
+                TOsd::self()->display(TOsd::Warning, tr("Select objects for Tweening first!"));
                 #ifdef TUP_DEBUG
                     qDebug() << "Settings::emitOptionChanged() - You must set Tween properties first!";
                 #endif
