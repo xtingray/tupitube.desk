@@ -45,6 +45,7 @@ TupVideoProperties::TupVideoProperties() : TupExportWizardPage(tr("Animation Pro
 {
     setTag("PROPERTIES");
     isOk = false;
+    aborted = false;
     stackedWidget = new QStackedWidget;
 
     setForm();
@@ -96,6 +97,7 @@ void TupVideoProperties::setForm()
 
 void TupVideoProperties::setProgressBar()
 {
+    // Progress Widget
     progressWidget = new QWidget;
     QHBoxLayout *progressLayout = new QHBoxLayout(progressWidget);
 
@@ -107,7 +109,7 @@ void TupVideoProperties::setProgressBar()
         color = "#444444";
     style += "QProgressBar::chunk { background-color: " + color + "; border-radius: 2px; }";
 
-    QProgressBar *progressBar = new QProgressBar;
+    progressBar = new QProgressBar;
     progressBar->setTextVisible(true);
     progressBar->setStyleSheet(style);
     progressBar->setRange(1, 100);
@@ -115,9 +117,29 @@ void TupVideoProperties::setProgressBar()
     progressLayout->addSpacing(50);
     progressLayout->addWidget(progressBar);
     progressLayout->addSpacing(50);
-    progressWidget->setVisible(false);
 
-    stackedWidget->addWidget(progressWidget);
+    // Cancel Button Widget
+    QWidget *cancelWidget = new QWidget;
+    QHBoxLayout *cancelLayout = new QHBoxLayout(cancelWidget);
+
+    QPushButton *cancelButton = new QPushButton(tr("Cancel"));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancelPost()));
+
+    cancelLayout->addStretch();
+    cancelLayout->addWidget(cancelButton);
+    cancelLayout->addStretch();
+
+    // Main Widget
+    QWidget *mainWidget = new QWidget;
+    QVBoxLayout *mainLayout = new QVBoxLayout(mainWidget);
+    mainLayout->addStretch();
+    mainLayout->addWidget(progressWidget);
+    mainLayout->addWidget(cancelWidget);
+    mainLayout->addStretch();
+
+    mainWidget->setVisible(false);
+
+    stackedWidget->addWidget(mainWidget);
 }
 
 bool TupVideoProperties::isComplete() const
@@ -334,8 +356,22 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
 
 void TupVideoProperties::tracingPostProgress(qint64 bytesSent, qint64 bytesTotal)
 {
-     qDebug() << "TupVideoProperties::tracingPostProgress() - bytesSent -> " << bytesSent;
-     qDebug() << "TupVideoProperties::tracingPostProgress() - bytesTotal -> " << bytesTotal;
+    if (aborted) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupVideoProperties::tracingPostProgress() - Aborted by user!";
+        #endif
+        reply->abort();
+        emit isDone();
+        return;
+    }
+
+    if (bytesTotal > 0) {
+        double percent = (bytesSent * 100) / bytesTotal;
+        #ifdef TUP_DEBUG
+            qDebug() << "TupVideoProperties::tracingPostProgress() - percent -> " << percent;
+        #endif
+        progressBar->setValue(percent);
+    }
 }
 
 void TupVideoProperties::closeRequest(QNetworkReply *reply)
@@ -349,6 +385,14 @@ void TupVideoProperties::closeRequest(QNetworkReply *reply)
         <code></code>
       </result>
     */
+
+    if (aborted) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupVideoProperties::closeRequest()] - Aborted by user!";
+        #endif
+        TOsd::self()->display(TOsd::Info, tr("Post action cancelled!"));
+        return;
+    }
 
     QByteArray array = reply->readAll();
     QString answer(array);
@@ -415,6 +459,15 @@ void TupVideoProperties::closeRequest(QNetworkReply *reply)
     }
 
     emit isDone();
+}
+
+void TupVideoProperties::cancelPost()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupVideoProperties::cancelPost()]";
+    #endif
+
+    aborted = true;
 }
 
 void TupVideoProperties::slotError(QNetworkReply::NetworkError error)

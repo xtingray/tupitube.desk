@@ -75,6 +75,7 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         void setScenesIndexes(const QList<int> &indexes);
         void serverAuthAnswer(QNetworkReply *reply);
         void closeRequest(QNetworkReply *reply);
+        void cancelPost();
         void slotError(QNetworkReply::NetworkError error);
         void tracingPostProgress(qint64 bytesSent, qint64 bytesTotal);
 
@@ -88,12 +89,14 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         QTextEdit *descText;
         QList<int> scenes;
         bool isOk;
+        bool aborted;
 
         QString username;
         QString token;
         QString filePath;
         QWidget *formWidget;
         QWidget *progressWidget;
+        QProgressBar *progressBar;
         QStackedWidget *stackedWidget;
 
         QNetworkAccessManager *manager;

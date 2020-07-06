@@ -167,8 +167,10 @@ void TupExportWizard::next()
     if (tag.compare("IMAGES_ARRAY") == 0)
         emit exportImagesArray();
 
-    if (tag.compare("PROPERTIES") == 0)
+    if (tag.compare("PROPERTIES") == 0) {
+        current->setTitle(tr("Uploading Source File"));
         emit postProcedureCalled();
+    }
 
     if (tag.compare("SCENE") == 0)  {
         nextButton->setText(tr("Export"));
@@ -238,7 +240,7 @@ void TupExportWizard::setFormat(int code, const QString &extension)
 TupExportWizardPage::TupExportWizardPage(const QString &title, QWidget *parent) : TVHBox(parent)
 {
     TVHBox *boxTitle = new TVHBox(this, Qt::Vertical);
-    new QLabel(title, boxTitle);
+    titleLabel = new QLabel(title, boxTitle);
     new TSeparator(boxTitle);
     boxLayout()->setAlignment(boxTitle, Qt::AlignTop);
 
@@ -256,6 +258,11 @@ TupExportWizardPage::TupExportWizardPage(const QString &title, QWidget *parent) 
 
 TupExportWizardPage::~TupExportWizardPage()
 {
+}
+
+void TupExportWizardPage::setTitle(const QString &title)
+{
+    titleLabel->setText(title);
 }
 
 void TupExportWizardPage::setPixmap(const QPixmap &pixmap)
@@ -278,3 +285,4 @@ const QString TupExportWizardPage::getTag()
 {
     return tag;
 }
+

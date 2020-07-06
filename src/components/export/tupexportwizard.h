@@ -115,6 +115,7 @@ class TUPITUBE_EXPORT TupExportWizardPage : public TVHBox
         virtual bool isComplete() const = 0;
         virtual void reset() = 0;
 
+        void setTitle(const QString &title);
         void setPixmap(const QPixmap &pixmap);
         void setWidget(QWidget *widget);
         void setTag(const QString &label);
@@ -132,6 +133,7 @@ class TUPITUBE_EXPORT TupExportWizardPage : public TVHBox
     private:
         QFrame *container;
         QGridLayout *layout;
+        QLabel *titleLabel;
         QLabel *image;
         QString tag;
 };
