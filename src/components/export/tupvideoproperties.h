@@ -66,6 +66,7 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
 
     signals:
         void postHasStarted();
+        void postAborted();
         void isDone();
 
     private slots:
@@ -88,7 +89,6 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         QLineEdit *topicsEdit;
         QTextEdit *descText;
         QList<int> scenes;
-        bool isOk;
         bool aborted;
 
         QString username;

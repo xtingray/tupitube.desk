@@ -44,7 +44,6 @@
 TupVideoProperties::TupVideoProperties() : TupExportWizardPage(tr("Animation Properties"))
 {
     setTag("PROPERTIES");
-    isOk = false;
     aborted = false;
     stackedWidget = new QStackedWidget;
 
@@ -142,9 +141,10 @@ void TupVideoProperties::setProgressBar()
     stackedWidget->addWidget(mainWidget);
 }
 
+
 bool TupVideoProperties::isComplete() const
 {
-    return isOk;
+    return true;
 }
 
 void TupVideoProperties::reset()
@@ -190,20 +190,16 @@ void TupVideoProperties::postIt()
     if (title.length() == 0) {
         titleEdit->setText(tr("Set a title for the picture here!"));
         titleEdit->selectAll();
-        isOk = false;
         return;
     }
 
     if (tags.length() == 0) {
         topicsEdit->setText(tr("Set some topic tags for the picture here!"));
         topicsEdit->selectAll();
-        isOk = false;
         return;
     }
 
     stackedWidget->setCurrentIndex(1);
-    isOk = true;
-
     emit postHasStarted();
 
     QString scenesStr = "";
@@ -311,6 +307,7 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
 
                 reply = manager->post(request, multiPart);
                 connect(reply, &QNetworkReply::uploadProgress, this, &TupVideoProperties::tracingPostProgress);
+                connect(this, &TupVideoProperties::postAborted, reply, &QNetworkReply::abort);
                 multiPart->setParent(reply);
             } else {
                 element = root.firstChildElement("error");
@@ -356,14 +353,8 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
 
 void TupVideoProperties::tracingPostProgress(qint64 bytesSent, qint64 bytesTotal)
 {
-    if (aborted) {
-        #ifdef TUP_DEBUG
-            qDebug() << "[TupVideoProperties::tracingPostProgress() - Aborted by user!";
-        #endif
-        reply->abort();
-        emit isDone();
+    if (aborted)
         return;
-    }
 
     if (bytesTotal > 0) {
         double percent = (bytesSent * 100) / bytesTotal;
@@ -391,6 +382,7 @@ void TupVideoProperties::closeRequest(QNetworkReply *reply)
             qDebug() << "[TupVideoProperties::closeRequest()] - Aborted by user!";
         #endif
         TOsd::self()->display(TOsd::Info, tr("Post action cancelled!"));
+        emit isDone();
         return;
     }
 
@@ -468,6 +460,7 @@ void TupVideoProperties::cancelPost()
     #endif
 
     aborted = true;
+    emit postAborted();
 }
 
 void TupVideoProperties::slotError(QNetworkReply::NetworkError error)
