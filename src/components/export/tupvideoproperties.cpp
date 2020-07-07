@@ -328,42 +328,71 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
                 element = root.firstChildElement("error");
                 QString error = element.text();
                 if (error.length() > 0) {
-                    if (error.compare("401") == 0) { // Invalid credentials
-                        #ifdef TUP_DEBUG
-                            qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Invalid credentials!";
-                        #endif
-                        cancelPost();
-                        TOsd::self()->display(TOsd::Error, tr("Access denied. Invalid password!"));
-                    } else {
-                        if (error.compare("500") == 0) {
+                    int errorCode = error.toInt();
+                    switch (errorCode) {
+                        case 401:
+                            // Invalid password
+                            #ifdef TUP_DEBUG
+                                qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Invalid credentials!";
+                            #endif
+                            cancelPost();
+                            TOsd::self()->display(TOsd::Error, tr("Access denied. Invalid password!"));
+                        break;
+                        case 500:
                             // Server side error. No root path
                             #ifdef TUP_DEBUG
                                 qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: No root path on server!";
                             #endif
                             cancelPost();
                             TOsd::self()->display(TOsd::Error, tr("Network Error 500. Please, contact us!"));
-                        } else if (error.compare("501") == 0) {
-                                // Incomplete request
-                                #ifdef TUP_DEBUG
-                                    qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Incomplete client request!";
-                                #endif
-                                cancelPost();
-                                TOsd::self()->display(TOsd::Error, tr("Network Error 501. Please, contact us!"));
-                        } else if (error.compare("502") == 0) {
-                                // Invalid client
-                                #ifdef TUP_DEBUG
-                                    qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Invalid client!";
-                                #endif
-                                cancelPost();
-                                TOsd::self()->display(TOsd::Error, tr("Network Error 502. Please, contact us!"));
-                        } else {
+                        break;
+                        case 501:
+                            // Can't create db record
+                            #ifdef TUP_DEBUG
+                                qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Can't create db record!";
+                            #endif
+                            cancelPost();
+                            TOsd::self()->display(TOsd::Error, tr("Network Error 501. Please, contact us!"));
+                        break;
+                        case 502:
+                            // Can't get uid
+                            #ifdef TUP_DEBUG
+                                qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Can't get uid!";
+                            #endif
+                            cancelPost();
+                            TOsd::self()->display(TOsd::Error, tr("Network Error 502. Please, contact us!"));
+                        break;
+                        case 503:
+                            // Can't get filename string
+                            #ifdef TUP_DEBUG
+                                qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Can't generate filename string!";
+                            #endif
+                            cancelPost();
+                            TOsd::self()->display(TOsd::Error, tr("Network Error 503. Please, contact us!"));
+                        break;
+                        case 504:
+                            // Incomplete request
+                            #ifdef TUP_DEBUG
+                                qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Incomplete request!";
+                            #endif
+                            cancelPost();
+                            TOsd::self()->display(TOsd::Error, tr("Network Error 504. Please, contact us!"));
+                        break;
+                        case 505:
+                            // Invalid client
+                            #ifdef TUP_DEBUG
+                                qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Invalid client!";
+                            #endif
+                            cancelPost();
+                            TOsd::self()->display(TOsd::Error, tr("Network Error 505. Please, contact us!"));
+                        break;
+                        default:
                             // Unknown code error
                             #ifdef TUP_DEBUG
                                 qDebug() << "TupVideoProperties::serverAuthAnswer() - Unknown error! :/";
                             #endif
                             cancelPost();
-                            TOsd::self()->display(TOsd::Error, tr("Network Error 503. Please, contact us!"));
-                        }
+                            TOsd::self()->display(TOsd::Error, tr("Network Error 506. Please, contact us!"));
                     }
                 } else {
                     // Unknown answer - no error
@@ -371,7 +400,7 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
                         qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Answer package is corrupt!";
                     #endif
                     cancelPost();
-                    TOsd::self()->display(TOsd::Error, tr("Network Error 504. Please, contact us!"));
+                    TOsd::self()->display(TOsd::Error, tr("Network Error 507. Please, contact us!"));
                 }
             }
         } else {
@@ -380,14 +409,14 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
                 qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Invalid answer format!";
             #endif
             cancelPost();
-            TOsd::self()->display(TOsd::Error, tr("Network Error 505. Please, contact us!"));
+            TOsd::self()->display(TOsd::Error, tr("Network Error 508. Please, contact us!"));
         }
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: No answer from server!";
         #endif
         cancelPost();
-        TOsd::self()->display(TOsd::Error, tr("Network Error 506. Please, contact us!"));
+        TOsd::self()->display(TOsd::Error, tr("Network Error 509. Please, contact us!"));
     }
 }
 
@@ -442,34 +471,43 @@ void TupVideoProperties::closeRequest(QNetworkReply *reply)
             QDomElement element = root.firstChildElement("code");
             QString code = element.text();
             if (code.length() > 0) {
-                if (code.compare("200") == 0) {
-                    // Succeed operation
-                    #ifdef TUP_DEBUG
-                        qDebug() << "TupVideoProperties::closeRequest() - Project posted successfully!";
-                    #endif
-                    TOsd::self()->display(TOsd::Info, tr("Project was uploaded successfully!"));
-                } else {    
-                    if (code.compare("400") == 0) { // Incomplete parameters
+                int key = code.toInt();
+                switch (key) {
+                    case 200:
+                        // Succeed operation
+                        #ifdef TUP_DEBUG
+                            qDebug() << "TupVideoProperties::closeRequest() - Project posted successfully!";
+                        #endif
+                        TOsd::self()->display(TOsd::Info, tr("Project was uploaded successfully!"));
+                    break;
+                    case 400:
+                        // Incomplete parameters
                         #ifdef TUP_DEBUG
                             qDebug() << "TupVideoProperties::closeRequest() - Error: server answer is incomplete!";
                         #endif
                         TOsd::self()->display(TOsd::Error, tr("Network Error 400. Please, contact us!"));
-                    } else if (code.compare("401") == 0) { // Invalid client
+                    break;
+                    case 401:
+                        // Invalid client
                         #ifdef TUP_DEBUG
                             qDebug() << "TupVideoProperties::closeRequest() - Error: Invalid client!";
                         #endif
                         TOsd::self()->display(TOsd::Error, tr("Network Error 401. Please, contact us!"));
-                    } else if (code.compare("402") == 0) { // Invalid credentials
+                    break;
+                    case 402:
+                        // Invalid passwd
                         #ifdef TUP_DEBUG
                             qDebug() << "TupVideoProperties::closeRequest() - Error: Invalid credentials!";
                         #endif
                         TOsd::self()->display(TOsd::Error, tr("Access denied. Invalid password!"));
-                    } else if (code.compare("403") == 0) { // Upload failed
+                    break;
+                    case 403:
+                        // Error while storing project
                         #ifdef TUP_DEBUG
                             qDebug() << "TupVideoProperties::closeRequest() - Error: Project file couldn't be stored!";
                         #endif
                         TOsd::self()->display(TOsd::Error, tr("Network Error 403. Please, contact us!"));
-                    }
+                    break;
                 }
             } else {
                 // No code - Invalid answer - 404
