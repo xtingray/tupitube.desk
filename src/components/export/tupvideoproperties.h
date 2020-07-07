@@ -43,9 +43,8 @@
 #include <QTextEdit>
 #include <QProgressBar>
 
-#include <QNetworkAccessManager>
-#include <QUrlQuery>
 #include <QNetworkReply>
+#include <QUrlQuery>
 
 class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
 {
@@ -99,10 +98,7 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         QProgressBar *progressBar;
         QStackedWidget *stackedWidget;
 
-        QNetworkAccessManager *manager;
-        QNetworkRequest request;
         QUrlQuery params;
-        // QNetworkReply *reply;
 };
 
 #endif
