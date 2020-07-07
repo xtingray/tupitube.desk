@@ -102,7 +102,7 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         QNetworkAccessManager *manager;
         QNetworkRequest request;
         QUrlQuery params;
-        QNetworkReply *reply;
+        // QNetworkReply *reply;
 };
 
 #endif
