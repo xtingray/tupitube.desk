@@ -142,9 +142,13 @@ void TupProject::setDimension(const QSize size)
     dimension = size;
 }
 
-void TupProject::setFPS(const int value)
+void TupProject::setFPS(const int value, const int sceneIndex)
 {
-    fps = value;
+    if (sceneIndex == 0)
+        fps = value;
+    TupScene *scene = scenesList.at(sceneIndex);
+    if (scene)
+        scene->setFPS(value);
 }
 
 void TupProject::setDataDir(const QString &path)
@@ -182,9 +186,17 @@ QSize TupProject::getDimension() const
     return dimension;
 }
 
-int TupProject::getFPS() const
+int TupProject::getFPS(const int sceneIndex) const
 {
-    return fps;
+    if (sceneIndex == 0)
+        return fps;
+
+    TupScene *scene = scenesList.at(sceneIndex);
+    int value = 24;
+    if (scene)
+        value = scene->getFPS();
+
+    return value;
 }
 
 QString TupProject::getDataDir() const
@@ -409,7 +421,8 @@ void TupProject::fromXml(const QString &xml)
 
                                 } else if (e1.tagName() == "fps") {
                                            if (e1.firstChild().isText())
-                                               setFPS(e1.text().toInt());
+                                               fps = e1.text().toInt();
+                                               // setFPS(e1.text().toInt());
                                 }
 
                                 n1 = n1.nextSibling();

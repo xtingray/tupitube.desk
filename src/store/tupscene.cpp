@@ -46,6 +46,7 @@ TupScene::TupScene(TupProject *parent, int index, const QSize size, const QColor
     sceneIndex = index;
     dimension = size;
     bgColor = color;
+    fps = 24;
     isLocked = false;
     layerCount = 0;
     layers = Layers();
@@ -75,6 +76,16 @@ void TupScene::setBgColor(const QColor color)
 {
     bgColor = color;
     background->setBgColor(color);
+}
+
+void TupScene::setFPS(const int value)
+{
+    fps = value;
+}
+
+int TupScene::getFPS()
+{
+    return fps;
 }
 
 void TupScene::setSceneLocked(bool locked)
@@ -259,18 +270,19 @@ void TupScene::fromXml(const QString &xml)
         qDebug() << "[TupScene::fromXml()]";
     #endif
 
-    QDomDocument document;
-    if (!document.setContent(xml)) {
+    QDomDocument doc;
+    if (!doc.setContent(xml)) {
         #ifdef TUP_DEBUG
             qDebug() << "TupScene::fromXml() - Error while processing XML file";
         #endif  
         return;
     }
 
-    QDomElement root = document.documentElement();
-    setSceneName(root.attribute("name", getSceneName()));
-    QDomNode n = root.firstChild();
+    QDomElement root = doc.documentElement();
+    setSceneName(root.attribute("name"));
+    setFPS(root.attribute("fps", "24").toInt());
 
+    QDomNode n = root.firstChild();
     while (!n.isNull()) {
            QDomElement e = n.toElement();
 
@@ -325,6 +337,7 @@ QDomElement TupScene::toXml(QDomDocument &doc) const
 {
     QDomElement root = doc.createElement("scene");
     root.setAttribute("name", sceneName);
+    root.setAttribute("fps", fps);
 
     root.appendChild(storyboard->toXml(doc));
     root.appendChild(background->toXml(doc));

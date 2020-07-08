@@ -51,6 +51,7 @@ TupCameraWidget::TupCameraWidget(TupProject *work, QWidget *parent) : QFrame(par
     setObjectName("TupCameraWidget_");
     screen = QGuiApplication::screens().at(0);
 
+    currentSceneIndex = 0;
     QSize projectSize = work->getDimension();
     double factor = static_cast<double>(projectSize.width()) / static_cast<double>(projectSize.height());
     int percent = 40;
@@ -271,9 +272,11 @@ void TupCameraWidget::addStatusPanel()
     connect(status, SIGNAL(postClicked()), this, SLOT(postDialog()));
 
     updateFramesTotal(0);
-    int fps = project->getFPS();
+
+    int fps = project->getFPS(currentSceneIndex);
     fpsDelta = 1.0 / fps;
     status->setFPS(fps);
+
     setLoop();
     layout->addWidget(status, 0, Qt::AlignCenter|Qt::AlignTop);
 }
@@ -420,6 +423,11 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
             {
                  if (index >= 0) {
                      currentSceneIndex = index;
+
+                     int fps = project->getFPS(currentSceneIndex);
+                     fpsDelta = 1.0 / fps;
+                     status->setFPS(fps);
+
                      updateFramesTotal(index);
                      status->setCurrentScene(index);
                  }
@@ -446,9 +454,18 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
     return previewScreen->handleResponse(response);
 }
 
+/*
+void TupCameraWidget::updateFPSFromScene(const int sceneIndex)
+{
+    int fps = project->getFPS(sceneIndex);
+    fpsDelta = 1.0 / fps;
+    status->setFPS(fps);
+}
+*/
+
 void TupCameraWidget::setFPS(int fps)
 {
-    project->setFPS(fps);
+    project->setFPS(fps, currentSceneIndex);
     previewScreen->setFPS(fps);
     fpsDelta = 1.0/fps;
 }

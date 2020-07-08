@@ -80,6 +80,9 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
 
         void setBgColor(const QColor bgColor);
 
+        void setFPS(const int value);
+        int getFPS();
+
         void setSceneLocked(bool isSceneLocked);
         bool isSceneLocked() const;
 
@@ -175,6 +178,7 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
         int sceneIndex;
         QSize dimension;
         QColor bgColor;
+        int fps;
         TupStoryboard *storyboard;
         TupBackground *background;
         Layers layers;
