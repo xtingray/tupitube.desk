@@ -122,6 +122,8 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
 
         void updateLoadingFlag(bool flag);
 
+        void setWaterMarkFlag(bool enable);
+
     // private slots:
     //  void updateObjectInformation(const QString &value);
     //  void showInfoWidget();
@@ -148,6 +150,9 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         void drawRasterStaticBg(int index);
         // void drawRasterDynamicBg(int index);
         void drawRasterDynamicBgOnMovement(int index, int photogram);
+
+        QGraphicsTextItem * generateWaterMark(const QColor &color, const QSize &size);
+        QColor waterMarkColor(const QColor &color);
 
     protected:
         virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -204,6 +209,8 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         QGraphicsPixmapItem *vectorDynamicBg;
         QGraphicsPixmapItem *rasterStaticBg;
         QGraphicsPixmapItem *rasterDynamicBg;
+
+        bool showWaterMark;
 };
 
 #endif

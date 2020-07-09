@@ -78,6 +78,21 @@ void TupBackground::setBgColor(const QColor color)
     bgColor = color;
 }
 
+QColor TupBackground::getBgColor() const
+{
+    return bgColor;
+}
+
+void TupBackground::setProjectSize(const QSize size)
+{
+    dimension = size;
+}
+
+QSize TupBackground::getProjectSize() const
+{
+    return dimension;
+}
+
 void TupBackground::fromXml(const QString &xml)
 {
     QDomDocument document;

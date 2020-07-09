@@ -34,6 +34,11 @@
  ***************************************************************************/
 
 #include "tupcrashwidget.h"
+#include <QHBoxLayout>
+#include <QTextBrowser>
+#include <QLabel>
+#include <QPushButton>
+#include <QProcess>
 
 #ifdef TUP_DEBUG
 
@@ -71,12 +76,12 @@ void TextArea::setSource(const QUrl &name)
 
 #include "tupcrashwidget.moc"
 
-TupCrashWidget::TupCrashWidget(int sig) : QDialog(0), m_sig(sig)
+TupCrashWidget::TupCrashWidget(const QString &style, int sig) : QDialog(0), m_sig(sig)
 {
     setModal(true);
-
     setWindowTitle(CHANDLER->title());
     setWindowIcon(QPixmap(THEME_DIR + "icons/skull.png"));
+    setStyleSheet(style);
 
     m_layout = new QVBoxLayout(this);
     m_tabber = new QTabWidget(this);
@@ -84,7 +89,7 @@ TupCrashWidget::TupCrashWidget(int sig) : QDialog(0), m_sig(sig)
 
     QWidget *page1 = new QWidget;
     QVBoxLayout *page1layout = new QVBoxLayout(page1);
-    QLabel *message = new QLabel("<font color="+CHANDLER->messageColor().name()+">"+ CHANDLER->message()+"</color>");
+    QLabel *message = new QLabel("<font color=" + CHANDLER->messageColor().name() + ">" + CHANDLER->message() + "</color>");
 
     page1layout->addWidget(message);
 
@@ -155,14 +160,7 @@ void TupCrashWidget::addBacktracePage(const QString &execInfo, const QString &ba
 
 void TupCrashWidget::restart()
 {
-   /*
-   QString path = QString::fromLocal8Bit(::getenv("TUPITUBE_BIN")) + "/tupitube &";
-   QByteArray ba = path.toAscii();
-   system(ba.data());
-   kill(m_pid, 9);
-   */
-
-   QString path = QString::fromLocal8Bit(::getenv("TUPITUBE_BIN")) + "/tupitube &";
+   QString path = QString::fromLocal8Bit(::getenv("TUPITUBE_BIN")) + "/tupitube.desk &";
    QByteArray ba = path.toLatin1();
 
    int flag = system(ba.data());
@@ -177,4 +175,3 @@ void TupCrashWidget::exit()
 }
 
 #endif
-

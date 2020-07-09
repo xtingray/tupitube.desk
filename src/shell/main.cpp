@@ -41,6 +41,7 @@
 #ifdef TUP_DEBUG
   #include <QDebug>
   #ifdef Q_OS_UNIX
+    #include "tdebug.h"
     #include "tupcrashhandler.h"
   #endif
 #endif

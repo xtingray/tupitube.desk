@@ -1143,7 +1143,6 @@ void TupLibraryWidget::importImageSequence()
                 resize = true;
             }
 
-            // QDesktopWidget desktop;
             QMessageBox msgBox;
             msgBox.setWindowTitle(tr("Information"));  
             msgBox.setIcon(QMessageBox::Question);
@@ -1152,11 +1151,6 @@ void TupLibraryWidget::importImageSequence()
             msgBox.setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
             msgBox.setDefaultButton(QMessageBox::Ok);
             msgBox.show();
-
-            /*
-            msgBox.move(static_cast<int> ((desktop.screenGeometry().width() - msgBox.width())/2),
-                        static_cast<int> ((desktop.screenGeometry().height() - msgBox.height())/2));
-            */
 
             msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
                         static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
@@ -1183,8 +1177,8 @@ void TupLibraryWidget::importImageSequence()
                      QFile file(photograms.at(i));
                      QFileInfo fileInfo(file);
                      QString extension = fileInfo.suffix().toUpper();
-                     if (extension.compare("JPEG")==0 || extension.compare("JPG")==0 || extension.compare("PNG")==0 || extension.compare("GIF")==0 ||
-                         extension.compare("XPM")==0) {
+                     if (extension.compare("JPEG")==0 || extension.compare("JPG")==0 || extension.compare("PNG")==0 ||
+                         extension.compare("GIF")==0 || extension.compare("XPM")==0) {
                          QString symName = fileInfo.fileName().toLower();
                          symName = symName.replace("(","_");
                          symName = symName.replace(")","_");

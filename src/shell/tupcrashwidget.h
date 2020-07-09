@@ -40,30 +40,20 @@
 
 #include "tupcrashhandler.h"
 #include "tconfig.h"
-// #include "tdebug.h"
 
-#include <unistd.h>
 #include <QDialog>
 #include <QImage>
-#include <QVBoxLayout>
 #include <QTabWidget>
-#include <QPainter>
-#include <QPushButton>
-#include <QApplication>
-#include <QFile>
-#include <QLabel>
-#include <QHBoxLayout>
-#include <QTextBrowser>
-#include <QProcess>
-#include <signal.h>
+#include <QVBoxLayout>
 
 class TupCrashWidget : public QDialog
 {
     Q_OBJECT
 
     public:
-        TupCrashWidget(int sig);
+        TupCrashWidget(const QString &style, int sig);
         ~TupCrashWidget();
+
         void setPid(int pid);
         void addBacktracePage(const QString &execInfo, const QString &backtrace);
 

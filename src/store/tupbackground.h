@@ -58,6 +58,11 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         TupFrame* vectorForegroundFrame();
 
         void setBgColor(const QColor color);
+        QColor getBgColor() const;
+
+        void setProjectSize(const QSize size);
+        QSize getProjectSize() const;
+
         void clearBackground();
 
         void renderVectorDynamicView();

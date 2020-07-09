@@ -104,7 +104,7 @@ bool TupCommandExecutor::removeSymbol(TupLibraryResponse *response)
 bool TupCommandExecutor::insertSymbolIntoFrame(TupLibraryResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupCommandExecutor::insertSymbolIntoFrame() - Adding symbol to project: " + response->getArg().toString();
+        qDebug() << "TupCommandExecutor::insertSymbolIntoFrame() - Adding symbol to project -> " + response->getArg().toString();
     #endif
 
     if (project->scenesCount() > 0) {
@@ -117,7 +117,7 @@ bool TupCommandExecutor::insertSymbolIntoFrame(TupLibraryResponse *response)
         #ifdef TUP_DEBUG
             qDebug() << "TupCommandExecutor::insertSymbolIntoFrame() - No scenes available!";
         #endif
-    } 
+    }
 
     return false;
 }

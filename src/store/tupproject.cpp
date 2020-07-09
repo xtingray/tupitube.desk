@@ -146,9 +146,12 @@ void TupProject::setFPS(const int value, const int sceneIndex)
 {
     if (sceneIndex == 0)
         fps = value;
-    TupScene *scene = scenesList.at(sceneIndex);
-    if (scene)
-        scene->setFPS(value);
+
+    // if (sceneIndex < scenesList.count()) {
+        TupScene *scene = scenesList.at(sceneIndex);
+        if (scene)
+            scene->setFPS(value);
+    // }
 }
 
 void TupProject::setDataDir(const QString &path)
@@ -192,7 +195,7 @@ int TupProject::getFPS(const int sceneIndex) const
         return fps;
 
     TupScene *scene = scenesList.at(sceneIndex);
-    int value = 24;
+    int value = fps;
     if (scene)
         value = scene->getFPS();
 
@@ -214,6 +217,7 @@ TupScene *TupProject::createScene(QString name, int position, bool loaded)
         return nullptr;
 
     TupScene *scene = new TupScene(this, position, dimension, bgColor);
+    scene->setFPS(fps);
     scenesList.insert(position, scene);
     sceneCounter++;
     scene->setSceneName(name);

@@ -44,7 +44,6 @@ TupCrashHandler *TupCrashHandler::m_instance = 0;
 
 void crashTrapper(int sig);
 
-// TupCrashHandler::TupCrashHandler() : m_verbose(false)
 TupCrashHandler::TupCrashHandler()
 {
     m_program = QCoreApplication::applicationName();
@@ -59,11 +58,13 @@ TupCrashHandler::TupCrashHandler()
 
     QPair<QString, QString> record;
 
-    record.first = "<p align=\"justify\"><b>Signal 6:</b> The process itself has found that some essential pre-requisite for correct function is not available and voluntarily killing itself.</p>";
+    record.first = "<p align=\"justify\"><b>Signal 6:</b> The process itself has found that some essential pre-requisite for correct "
+                   "function is not available and voluntarily killing itself.</p>";
     record.second = "crash_6.png";
     m_config.signalEntry[6] = record; 
 
-    record.first = "<p align=\"justify\"><b>Signal 11:</b> Officially known as \"<i>segmentation fault</i>\", means that the program accessed a memory location that was not assigned. That's usually a bug in the program.</p>";
+    record.first = "<p align=\"justify\"><b>Signal 11:</b> Officially known as \"<i>segmentation fault</i>\", means that the program "
+                   "accessed a memory location that was not assigned. That's usually a bug in the program.</p>";
     record.second = "crash_11.png";
     m_config.signalEntry[11] = record; 
 }
@@ -184,13 +185,13 @@ bool TupCrashHandler::containsSignalEntry(int signal)
 void TupCrashHandler::setConfig(const QString &filePath)
 {
     T_FUNCINFO;
-    //SHOW_VAR(filePath);
 
     QDomDocument doc;
     QFile file(filePath);
 
     if (!file.open(QIODevice::ReadOnly))
         return;
+
     if (!doc.setContent(&file)) {
         file.close();
         return;
@@ -202,42 +203,59 @@ void TupCrashHandler::setConfig(const QString &filePath)
     if (docElem.tagName() == "CrashHandler") {
         QDomNode n = docElem.firstChild();
         while (!n.isNull()) {
-               QDomElement e = n.toElement();
-               if (!e.isNull()) {
-                   if (e.tagName() == "Title") {
-                       m_config.title = e.attribute("text");
-                   } else if (e.tagName() == "Message") {
-                              m_config.message = e.attribute("text");
-                              m_config.messageColor = QColor(e.attribute("color"));
-                   } else if (e.tagName() == "CloseButton") {
-                              m_config.closeButton = e.attribute("text");
-                   } else if (e.tagName() == "Default") {
-                              m_config.defaultText = "<p align=\"justify\">" + e.attribute("text") + "</p>";
-                              m_config.defaultImage = e.attribute("image");
-                   } else if (e.tagName() == "Signal") {
-                              int signalId = e.attribute("id").toInt();
-                              m_config.signalEntry.insert(signalId, qMakePair(e.attribute("text"), e.attribute("image")));
-                   }
+           QDomElement e = n.toElement();
+           if (!e.isNull()) {
+               if (e.tagName() == "Title") {
+                   m_config.title = e.attribute("text");
+               } else if (e.tagName() == "Message") {
+                   m_config.message = e.attribute("text");
+                   m_config.messageColor = QColor(e.attribute("color"));
+               } else if (e.tagName() == "CloseButton") {
+                   m_config.closeButton = e.attribute("text");
+               } else if (e.tagName() == "Default") {
+                   m_config.defaultText = "<p align=\"justify\">" + e.attribute("text") + "</p>";
+                   m_config.defaultImage = e.attribute("image");
+               } else if (e.tagName() == "Signal") {
+                   int signalId = e.attribute("id").toInt();
+                   m_config.signalEntry.insert(signalId, qMakePair(e.attribute("text"), e.attribute("image")));
                }
-               n = n.nextSibling();
+           }
+           n = n.nextSibling();
         }
     }
 }
 
+QString loadStyle()
+{
+    QFile file(THEME_DIR + "config/ui.qss");
+    if (file.exists()) {
+        file.open(QFile::ReadOnly);
+        QString styleSheet = QLatin1String(file.readAll());
+        file.close();
+
+        return styleSheet;
+    } else {
+        #ifdef TUP_DEBUG
+            qWarning() << "TupCrashHandler::loadStyle() - theme file doesn't exist -> "
+                          + QString(THEME_DIR + "config/ui.qss");
+        #endif
+    }
+
+    return "";
+}
+
 static QString runCommand(const QString &command)
 {
-    static const uint SIZE = 40960; //40 KiB
+    qDebug() << "Running command: " << command;
+
+    static const uint SIZE = 40960; // 40 KiB
+    // static const uint SIZE = 102400; // 100 KiB
     static char buf[SIZE];
     QString result = "";
 
-    tDebug() << "Running command: " << command;
-
     FILE *process = ::popen(command.toLocal8Bit().data(), "r");
-
-    while (fgets(buf, SIZE-1, process) != NULL) {
-           result += buf;
-    }
-
+    while (fgets(buf, SIZE-1, process) != NULL)
+        result += buf;
     ::pclose(process);
 
     result.replace(QString("#"), QString("<p></p>#"));
@@ -271,59 +289,39 @@ void crashTrapper(int sig)
     char *argv[] = { CHANDLER->program().toUtf8().data(), 0 };
     application = new QApplication(argc, argv);
 
-    const pid_t pid = ::fork();
+    QString bt = "We are sorry. No debugging symbols were found :(";
+    QString execInfo;
 
-    if (pid <= 0) {
-        QString bt = "We are sorry. No debugging symbols were found :(";
-        QString execInfo;
+    // so we can read stderr too
+    ::dup2(fileno(stdout), fileno(stderr));
 
-        // so we can read stderr too
-        ::dup2(fileno(stdout), fileno(stderr));
+    QString SUDO = "/usr/bin/sudo";
+    QString GDB = "/usr/bin/gdb";
 
-#ifdef UBUNTU
-        if (QFile::exists("/usr/bin/sudo") && QFile::exists("/usr/bin/gdb")) {
-#else
-        if (QFile::exists("/usr/bin/gdb")) {
-#endif
+    if (QFile::exists(SUDO) && QFile::exists(GDB)) {
+        QString gdb = SUDO + " " + GDB + " -n -nw -batch -ex where " + BIN_DIR + "tupitube.bin --pid=";
+        gdb += QString::number(::getppid());
+        bt = runCommand(gdb);
 
-            QString gdb;
-
-#ifdef UBUNTU
-            gdb = "/usr/bin/sudo /usr/bin/gdb -n -nw -batch -ex where " + BIN_DIR + "tupitube.bin --pid=";
-#else
-            gdb = "/usr/bin/gdb -n -nw -batch -ex where " + BIN_DIR + "tupitube.bin --pid=";
-#endif
-            gdb += QString::number(::getppid());
-            bt = runCommand(gdb);
-
-            // clean up
-            bt.remove(QRegExp("\\(no debugging symbols found\\)"));
-            bt = bt.simplified();
-        } 
-
-        execInfo = runCommand("file " + BIN_DIR + "tupitube.bin");
-
-        // Widget
-        // QDesktopWidget desktop;
-        QScreen *screen = QGuiApplication::screens().at(0);
-        TupCrashWidget widget(sig);
-        widget.setPid(::getpid());
-        widget.addBacktracePage(execInfo, bt);
-        widget.exec();
-        widget.move((int) (screen->geometry().width() - widget.width()) / 2,
-                    (int) (screen->geometry().height() - widget.height()) / 2);
-
-        if (!isActive)
-            application->exec();
-
-        ::exit(255);
-    } else {
-        // Process crashed!
-        ::alarm(0);
-        // wait for child to exit
-        ::waitpid(pid, NULL, 0);
+        // clean up
+        bt.remove(QRegExp("\\(no debugging symbols found\\)"));
+        bt = bt.simplified();
     }
 
+    execInfo = runCommand("file " + BIN_DIR + "tupitube.bin");
+
+    qDebug() << "*** Launching debugging dialog...";
+    QScreen *screen = QGuiApplication::screens().at(0);
+    TupCrashWidget widget(loadStyle(), sig);
+    widget.setPid(::getpid());
+    widget.addBacktracePage(execInfo, bt);
+    widget.exec();
+    widget.move((int) (screen->geometry().width() - widget.width()) / 2,
+                (int) (screen->geometry().height() - widget.height()) / 2);
+
+    application->exec();
+
+    ::exit(255);
     exit(128);
 }
 
