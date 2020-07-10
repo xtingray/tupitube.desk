@@ -33,38 +33,24 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPANIMATIONRENDERER_H
-#define TUPANIMATIONRENDERER_H
+#ifndef TUPWATERMARK_H
+#define TUPWATERMARK_H
 
 #include "tglobal.h"
-#include "tupgraphicsscene.h"
-#include "tupscene.h"
-#include "tuplibrary.h"
 
-#include <QColor>
-#include <QSize>
-#include <QPainter>
+#include <QObject>
+#include <QGraphicsTextItem>
 
-class TUPITUBE_EXPORT TupAnimationRenderer
+class TUPITUBE_EXPORT TupWaterMark : public QObject
 {
+    Q_OBJECT
+ 
     public:
-        TupAnimationRenderer(const QColor color, TupLibrary *library = nullptr, bool waterMark = false);
-        ~TupAnimationRenderer();
+        TupWaterMark(QObject *parent = nullptr);
+        ~TupWaterMark();
 
-        void setScene(TupScene *scene, QSize dimension);
-
-        bool nextPhotogram();
-        void renderPhotogram(int index);
-        void render(QPainter *painter);
-
-        int getCurrentPhotogram() const;
-        int getTotalPhotograms() const;
-
-    private:
-        TupGraphicsScene *gScene;
-        int totalPhotograms;
-        int currentPhotogram;
-        QColor bgColor;
+        QGraphicsTextItem * generateWaterMark(const QColor &color, const QSize &size);
+        QColor waterMarkColor(const QColor &bgColor);
 };
 
 #endif

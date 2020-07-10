@@ -38,12 +38,13 @@
 #include "tupframe.h"
 #include "tupgraphicobject.h"
 
-TupAnimationRenderer::TupAnimationRenderer(const QColor color, TupLibrary *library)
+TupAnimationRenderer::TupAnimationRenderer(const QColor color, TupLibrary *library, bool waterMark)
 {
     bgColor = color;
     gScene = new TupGraphicsScene;
     gScene->setLibrary(library);
     gScene->setBackgroundBrush(bgColor);
+    gScene->setWaterMarkFlag(waterMark);
 }
 
 TupAnimationRenderer::~TupAnimationRenderer()

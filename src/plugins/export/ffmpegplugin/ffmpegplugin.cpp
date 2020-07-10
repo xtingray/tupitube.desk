@@ -119,8 +119,9 @@ TMovieGeneratorInterface::Format FFmpegPlugin::videoFormat(TupExportInterface::F
     // return TFFmpegMovieGenerator::NONE;
 }
 
-bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes, TupExportInterface::Format fmt, 
-                                 const QSize &size, const QSize &newSize, int fps, TupLibrary *library)
+bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes,
+                                  TupExportInterface::Format fmt, const QSize &size, const QSize &newSize, int fps,
+                                  TupLibrary *library, bool waterMark)
 {
     Q_UNUSED(newSize)
 
@@ -141,7 +142,7 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
 
     // SQA: Get sound files from library and pass them as QList to TFFmpegMovieGenerator 
     TFFmpegMovieGenerator *generator = new TFFmpegMovieGenerator(format, size, fps, duration);
-    TupAnimationRenderer renderer(color, library);
+    TupAnimationRenderer renderer(color, library, waterMark);
     {
         if (!generator->validMovieHeader()) {
             errorMsg = generator->getErrorMsg();
@@ -178,14 +179,15 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
 }
 
 bool FFmpegPlugin::exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene,
-                               const QSize &size, TupLibrary *library)
+                               const QSize &size, TupLibrary *library, bool waterMark = false)
 {
-    Q_UNUSED(frameIndex);
-    Q_UNUSED(color);
-    Q_UNUSED(filePath);
-    Q_UNUSED(scene);
-    Q_UNUSED(size);
-    Q_UNUSED(library);
+    Q_UNUSED(frameIndex)
+    Q_UNUSED(color)
+    Q_UNUSED(filePath)
+    Q_UNUSED(scene)
+    Q_UNUSED(size)
+    Q_UNUSED(library)
+    Q_UNUSED(waterMark)
 
     return false;
 }

@@ -84,7 +84,7 @@ class TUPITUBE_EXPORT TupProjectManager : public QObject
         void setOpen(bool isOpen);
 
         void updateProjectDimension(const QSize size);
-        bool removeProjectPath(const QString &projectPath);
+        // bool removeProjectPath(const QString &projectPath);
 
         int framesCount(int sceneIndex);
 

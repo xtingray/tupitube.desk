@@ -138,21 +138,27 @@ void TupCrashWidget::setPid(int pid)
 
 void TupCrashWidget::addBacktracePage(const QString &execInfo, const QString &backtrace)
 {
-    qDebug() << execInfo << " " << backtrace;
+    qDebug() << "TupCrashWidget::addBacktracePage() - Tracing...";
+    qDebug() << "EXEC INFO";
+    qDebug() << execInfo;
+    qDebug() << "";
+    qDebug() << "***";
+    qDebug() << "";
+    qDebug() << "BACKTRACE";
+    qDebug() << backtrace;
 
     QWidget *btPage = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout(btPage);
-    layout->addWidget(new QLabel(tr("Executable information")));
 
     TextArea *fileInfo = new TextArea;
     fileInfo->setHtml(execInfo);
 
-    layout->addWidget(fileInfo);
-    layout->addWidget(new QLabel(tr("Backtrace")));
-
     TextArea *btInfo = new TextArea;
     btInfo->setHtml(backtrace);
 
+    layout->addWidget(new QLabel(tr("Executable information")));
+    layout->addWidget(fileInfo);
+    layout->addWidget(new QLabel(tr("Backtrace")));
     layout->addWidget(btInfo);
 
     m_tabber->addTab(btPage, tr("Backtrace"));

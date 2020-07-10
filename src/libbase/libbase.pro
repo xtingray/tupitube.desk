@@ -42,7 +42,8 @@ HEADERS += tupexportinterface.h \
            tupguideline.h \
            tupanimationrenderer.h \
            # tupwebhunter.h \
-           tuprotationdial.h
+           tuprotationdial.h \
+           tupwatermark.h
 
 SOURCES += tupexportpluginobject.cpp \
            tupmodulewidgetbase.cpp \
@@ -54,7 +55,8 @@ SOURCES += tupexportpluginobject.cpp \
            tupguideline.cpp \
            tupanimationrenderer.cpp \
            # tupwebhunter.cpp \
-           tuprotationdial.cpp
+           tuprotationdial.cpp \
+           tupwatermark.cpp
 
 FRAMEWORK_DIR = "../framework"
 include($$FRAMEWORK_DIR/framework.pri)

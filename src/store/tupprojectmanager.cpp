@@ -155,9 +155,13 @@ void TupProjectManager::setupNewProject()
     if (!isNetworked) {
         QString projectPath = CACHE_DIR + params->getProjectManager();
         QDir projectDir(projectPath); 
-        if (projectDir.exists())
-            removeProjectPath(projectPath);
-
+        if (projectDir.exists()) {
+            if (!projectDir.removeRecursively()) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "TupProjectManager::setupNewProject() - Error: Can't remove CACHE path -> " << projectPath;
+                #endif
+            }
+        }
         project->setDataDir(projectPath);
 
         TupProjectRequest request = TupRequestBuilder::createSceneRequest(0, TupProjectRequest::Add, tr("Scene %1").arg(1));
@@ -467,6 +471,22 @@ void TupProjectManager::setOpen(bool isOpen)
     project->setOpen(isOpen);
 }
 
+void TupProjectManager::updateProjectDimension(const QSize size)
+{
+    project->setDimension(size);
+}
+
+int TupProjectManager::framesCount(int sceneIndex)
+{
+    int total = 0;
+    TupScene *scene = project->sceneAt(sceneIndex);
+    if (scene)
+        total = scene->framesCount();
+
+    return total;
+}
+
+/*
 bool TupProjectManager::removeProjectPath(const QString &projectPath)
 {
     #ifdef TUP_DEBUG
@@ -478,7 +498,7 @@ bool TupProjectManager::removeProjectPath(const QString &projectPath)
     QDir dir(projectPath);
 
     if (dir.exists(projectPath)) {
-        Q_FOREACH(QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden 
+        Q_FOREACH(QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden
                                                     | QDir::AllDirs | QDir::Files, QDir::DirsFirst)) {
             if (info.isDir()) {
                 QString path = info.absoluteFilePath();
@@ -499,25 +519,11 @@ bool TupProjectManager::removeProjectPath(const QString &projectPath)
         }
         result = dir.rmdir(projectPath);
     }
-	
+
     #ifdef TUP_DEBUG
         qWarning() << "TupProjectManager::removeProjectPath() - Result -> " + QString::number(result);
     #endif
 
     return result;
 }
-
-void TupProjectManager::updateProjectDimension(const QSize size)
-{
-    project->setDimension(size);
-}
-
-int TupProjectManager::framesCount(int sceneIndex)
-{
-    int total = 0;
-    TupScene *scene = project->sceneAt(sceneIndex);
-    if (scene)
-        total = scene->framesCount();
-
-    return total;
-}
+*/

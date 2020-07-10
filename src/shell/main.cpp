@@ -178,7 +178,7 @@ int main(int argc, char ** argv)
     application.createCache(TCONFIG->value("Cache").toString());
 
 #ifdef TUP_DEBUG
-    qWarning() << "main.cpp - CACHE path: " + TCONFIG->value("Cache").toString();
+    qWarning() << "main.cpp - CACHE path -> " + TCONFIG->value("Cache").toString();
 #endif
 
     QStyle *style = QStyleFactory::create("fusion");

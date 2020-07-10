@@ -44,6 +44,7 @@
 #include "tuplineitem.h"
 #include "tuprectitem.h"
 #include "tupellipseitem.h"
+#include "tupwatermark.h"
 
 #include <QSvgRenderer>
 #include <QGraphicsView>
@@ -262,9 +263,10 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
     if (background->isLayerVisible(TupBackground::VectorForeground))
         drawVectorFg();
 
-    showWaterMark = true;
-    if (showWaterMark)
-        generateWaterMark(background->getBgColor(), background->getProjectSize());
+    if (showWaterMark) {
+        TupWaterMark *mark = new TupWaterMark;
+        addItem(mark->generateWaterMark(background->getBgColor(), background->getProjectSize()));
+    }
 
     if (gTool)
         gTool->updateScene(this);
@@ -1810,71 +1812,6 @@ TupInputDeviceInformation * TupGraphicsScene::inputDeviceInformation()
 void TupGraphicsScene::updateLoadingFlag(bool flag)
 {
     loadingProject = flag;
-}
-
-QGraphicsTextItem * TupGraphicsScene::generateWaterMark(const QColor &color, const QSize &size)
-{
-    int imgW = size.width();
-    int imgH = size.height();
-
-    double wLimit;
-    if (imgW > imgH)
-        wLimit = imgW * (0.2);
-    else
-        wLimit = imgW * (0.3);
-
-    QColor fgColor = waterMarkColor(color);
-
-    QGraphicsTextItem *watermark = new QGraphicsTextItem("@tupitube");
-    watermark->setDefaultTextColor(fgColor);
-    QFont font("Paytone One");
-
-    int textWidth = 0;
-    int fontSize = 10;
-    while (textWidth < wLimit) {
-        font.setPointSize(fontSize);
-        watermark->setFont(font);
-        QRectF rect = watermark->boundingRect();
-        textWidth = rect.width();
-        fontSize++;
-    }
-
-    int x = (imgW - textWidth)/2;
-    watermark->setPos(x, -5);
-
-    return watermark;
-}
-
-QColor TupGraphicsScene::waterMarkColor(const QColor &color)
-{
-    QColor fgColor(120, 120, 120);
-
-    if (color == Qt::white) {
-        fgColor = QColor(180, 180, 180);
-    } else {
-        if (color == Qt::black) {
-            fgColor = QColor(255, 255, 255);
-        } else {
-            if ((color.green() <= 210) && (color.red() <= 210) && (color.blue() <= 210)) {
-                fgColor = QColor(255, 255, 255);
-            } else {
-                if (color.red() > 210 && color.green() > 210 && color.blue() > 210)
-                    fgColor = QColor(180, 180, 180);
-                else if (color.red() > 220 && color.green() > 220 && color.blue() < 220)
-                    fgColor = QColor(150, 150, 150);
-                else if (color.green() > 200 && (color.red() < 200 || color.blue() < 200))
-                    fgColor = QColor(120, 120, 120);
-                else if (color.red() > 200 && (color.green() < 200 || color.blue() < 200))
-                    fgColor = QColor(255, 255, 255);
-                else if (color.blue() > 200 && (color.red() < 200 || color.green() < 200))
-                    fgColor = QColor(255, 255, 255);
-                else if (color.red() < 150 && color.green() < 150 && color.blue() < 150)
-                    fgColor = QColor(230, 230, 230);
-            }
-        }
-    }
-
-    return fgColor;
 }
 
 void TupGraphicsScene::setWaterMarkFlag(bool enable)

@@ -59,9 +59,11 @@ class TUPITUBE_PLUGIN FFmpegPlugin : public TupExportPluginObject
         virtual QString key() const;
         TupExportInterface::Formats availableFormats();
 
-        virtual bool exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes, TupExportInterface::Format format, 
-                                    const QSize &size, const QSize &newSize, int fps, TupLibrary *library);
-        virtual bool exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene, const QSize &size, TupLibrary *library);
+        virtual bool exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes,
+                                    TupExportInterface::Format format, const QSize &size, const QSize &newSize, int fps,
+                                    TupLibrary *library, bool waterMark = false);
+        virtual bool exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene,
+                                 const QSize &size, TupLibrary *library, bool waterMark);
 
         virtual QString getExceptionMsg() const;
         QString errorMsg;

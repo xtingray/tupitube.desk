@@ -113,7 +113,7 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
             qWarning() << "TupMainWindow::TupMainWindow() - theme file doesn't exist -> " + QString(THEME_DIR + "config/ui.qss");
         #endif
     }
-        
+
     // Loading audio player plugin
     // TAudioPlayer::instance()->loadEngine("gstreamer"); // FIXME: Move this to the settings 
 
@@ -603,7 +603,16 @@ void TupMainWindow::resetUI()
     }
 
     m_projectManager->closeProject();
-    m_projectManager->removeProjectPath(CACHE_DIR + projectName);
+    QString cache(CACHE_DIR + projectName);
+    QDir projectPath(cache);
+    if (projectPath.exists()) {
+        if (!projectPath.removeRecursively()) {
+            #ifdef TUP_DEBUG
+                qDebug() << "TupMainWindow::resetUI() - Fatal Error: Can't remove project cache path! -> " << cache;
+            #endif
+        }
+    }
+    // m_projectManager->removeProjectPath(CACHE_DIR + projectName);
 
     resetMousePointer();
 }

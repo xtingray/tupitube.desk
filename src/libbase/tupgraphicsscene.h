@@ -151,9 +151,6 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         // void drawRasterDynamicBg(int index);
         void drawRasterDynamicBgOnMovement(int index, int photogram);
 
-        QGraphicsTextItem * generateWaterMark(const QColor &color, const QSize &size);
-        QColor waterMarkColor(const QColor &color);
-
     protected:
         virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
         virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);

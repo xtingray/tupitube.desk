@@ -244,22 +244,24 @@ QString loadStyle()
     return "";
 }
 
-static QString runCommand(const QString &command)
+static QString runCommand(const QString &command, QStringList parameters)
 {
-    qDebug() << "Running command: " << command;
+    qDebug() << "Running command: " << command << parameters;
 
-    static const uint SIZE = 40960; // 40 KiB
-    // static const uint SIZE = 102400; // 100 KiB
-    static char buf[SIZE];
-    QString result = "";
+    QProcess process;
+    process.start(command, parameters);
+    if (!process.waitForStarted()) {
+        qDebug() << "TupCrashHandler::runCommand() - Fatal error: Can't run command -> " << command;
+        return "FAILED TO START";
+    }
 
-    FILE *process = ::popen(command.toLocal8Bit().data(), "r");
-    while (fgets(buf, SIZE-1, process) != NULL)
-        result += buf;
-    ::pclose(process);
+    if (!process.waitForFinished())
+        return "FAILED TO END";
+    QByteArray result = process.readAll();
 
-    result.replace(QString("#"), QString("<p></p>#"));
-    result.replace(QString("]"), QString("]<p></p>"));
+    qDebug() << "";
+    qDebug() << "OUTPUT:";
+    qDebug() << result;
 
     return result;
 }
@@ -278,16 +280,13 @@ void crashTrapper(int sig)
         qDebug("accessed a memory location that was not assigned. That's usually a bug in the program.");
     }
 
+    qDebug() << "";
+
     CHANDLER->setTrapper(0); // Unactive crash handler
+    const pid_t pid = ::fork();
 
-    bool isActive = true;
-
-    QApplication* application = dynamic_cast<QApplication *>(QApplication::instance());
-
-    isActive = false;
-    int argc = 1;
-    char *argv[] = { CHANDLER->program().toUtf8().data(), 0 };
-    application = new QApplication(argc, argv);
+    QString SUDO = "/usr/bin/sudo";
+    QString GDB = "/usr/bin/gdb";
 
     QString bt = "We are sorry. No debugging symbols were found :(";
     QString execInfo;
@@ -295,34 +294,43 @@ void crashTrapper(int sig)
     // so we can read stderr too
     ::dup2(fileno(stdout), fileno(stderr));
 
-    QString SUDO = "/usr/bin/sudo";
-    QString GDB = "/usr/bin/gdb";
+    int appPID = ::getppid();
+    QString pidStr = QString::number(appPID);
 
     if (QFile::exists(SUDO) && QFile::exists(GDB)) {
-        QString gdb = SUDO + " " + GDB + " -n -nw -batch -ex where " + BIN_DIR + "tupitube.bin --pid=";
-        gdb += QString::number(::getppid());
-        bt = runCommand(gdb);
+        QStringList parameters;
+        parameters << GDB << "-n" << "-nw" << "-batch" << "-ex" << "where" << BIN_DIR << "tupitube.bin" << QString("--pid=" + pidStr);
+
+        bt = runCommand(SUDO, parameters);
 
         // clean up
         bt.remove(QRegExp("\\(no debugging symbols found\\)"));
         bt = bt.simplified();
+
+        QStringList argument;
+        argument << QString(BIN_DIR + "tupitube.bin");
+
+        execInfo = runCommand("/usr/bin/file", argument);
+
+        /*
+           SQA: Find the crash error in this piece of code
+           qDebug() << "*** Launching debugging dialog...";
+           QScreen *screen = QGuiApplication::screens().at(0);
+           TupCrashWidget widget(loadStyle(), sig);
+           widget.setPid(::getpid());
+           widget.addBacktracePage(execInfo, bt);
+           widget.exec();
+           widget.move(static_cast<int> ((screen->geometry().width() - widget.width()) / 2),
+                       static_cast<int> ((screen->geometry().height() - widget.height()) / 2));
+        */
+
+        // Process crashed!
+        ::alarm(0);
+        // wait for child to exit
+        ::waitpid(pid, NULL, 0);
     }
 
-    execInfo = runCommand("file " + BIN_DIR + "tupitube.bin");
-
-    qDebug() << "*** Launching debugging dialog...";
-    QScreen *screen = QGuiApplication::screens().at(0);
-    TupCrashWidget widget(loadStyle(), sig);
-    widget.setPid(::getpid());
-    widget.addBacktracePage(execInfo, bt);
-    widget.exec();
-    widget.move((int) (screen->geometry().width() - widget.width()) / 2,
-                (int) (screen->geometry().height() - widget.height()) / 2);
-
-    application->exec();
-
     ::exit(255);
-    exit(128);
 }
 
 #endif

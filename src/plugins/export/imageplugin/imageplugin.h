@@ -59,9 +59,9 @@ class TUPITUBE_PLUGIN ImagePlugin : public TupExportPluginObject
         TupExportInterface::Formats availableFormats();
         virtual bool exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes,
                                     TupExportInterface::Format format, const QSize &size, const QSize &newSize,
-                                    int fps, TupLibrary *library);
+                                    int fps, TupLibrary *library, bool waterMark = false);
         virtual bool exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene,
-                                 const QSize &size, TupLibrary *library);
+                                 const QSize &size, TupLibrary *library, bool waterMark = false);
         virtual QString getExceptionMsg() const;
         QString errorMsg;
 

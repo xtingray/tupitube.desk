@@ -1,4 +1,5 @@
 /***************************************************************************
+
  *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
@@ -33,38 +34,78 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPANIMATIONRENDERER_H
-#define TUPANIMATIONRENDERER_H
+#include "tupwatermark.h"
+#include <QFont>
 
-#include "tglobal.h"
-#include "tupgraphicsscene.h"
-#include "tupscene.h"
-#include "tuplibrary.h"
-
-#include <QColor>
-#include <QSize>
-#include <QPainter>
-
-class TUPITUBE_EXPORT TupAnimationRenderer
+TupWaterMark::TupWaterMark(QObject *parent) : QObject(parent)
 {
-    public:
-        TupAnimationRenderer(const QColor color, TupLibrary *library = nullptr, bool waterMark = false);
-        ~TupAnimationRenderer();
+}
 
-        void setScene(TupScene *scene, QSize dimension);
+TupWaterMark::~TupWaterMark()
+{
+}
 
-        bool nextPhotogram();
-        void renderPhotogram(int index);
-        void render(QPainter *painter);
+QGraphicsTextItem * TupWaterMark::generateWaterMark(const QColor &color, const QSize &size)
+{
+    int imgW = size.width();
+    int imgH = size.height();
 
-        int getCurrentPhotogram() const;
-        int getTotalPhotograms() const;
+    double wLimit;
+    if (imgW > imgH)
+        wLimit = imgW * (0.2);
+    else
+        wLimit = imgW * (0.3);
 
-    private:
-        TupGraphicsScene *gScene;
-        int totalPhotograms;
-        int currentPhotogram;
-        QColor bgColor;
-};
+    QColor fgColor = waterMarkColor(color);
 
-#endif
+    QGraphicsTextItem *watermark = new QGraphicsTextItem("@tupitube");
+    watermark->setDefaultTextColor(fgColor);
+    QFont font("Paytone One");
+
+    int textWidth = 0;
+    int fontSize = 10;
+    while (textWidth < wLimit) {
+        font.setPointSize(fontSize);
+        watermark->setFont(font);
+        QRectF rect = watermark->boundingRect();
+        textWidth = rect.width();
+        fontSize++;
+    }
+
+    int x = (imgW - textWidth)/2;
+    watermark->setPos(x, -5);
+
+    return watermark;
+}
+
+QColor TupWaterMark::waterMarkColor(const QColor &bgColor)
+{
+    QColor fgColor(120, 120, 120);
+
+    if (bgColor == Qt::white) {
+        fgColor = QColor(180, 180, 180);
+    } else {
+        if (bgColor == Qt::black) {
+            fgColor = QColor(255, 255, 255);
+        } else {
+            if ((bgColor.green() <= 210) && (bgColor.red() <= 210) && (bgColor.blue() <= 210)) {
+                fgColor = QColor(255, 255, 255);
+            } else {
+                if (bgColor.red() > 210 && bgColor.green() > 210 && bgColor.blue() > 210)
+                    fgColor = QColor(180, 180, 180);
+                else if (bgColor.red() > 220 && bgColor.green() > 220 && bgColor.blue() < 220)
+                    fgColor = QColor(150, 150, 150);
+                else if (bgColor.green() > 200 && (bgColor.red() < 200 || bgColor.blue() < 200))
+                    fgColor = QColor(120, 120, 120);
+                else if (bgColor.red() > 200 && (bgColor.green() < 200 || bgColor.blue() < 200))
+                    fgColor = QColor(255, 255, 255);
+                else if (bgColor.blue() > 200 && (bgColor.red() < 200 || bgColor.green() < 200))
+                    fgColor = QColor(255, 255, 255);
+                else if (bgColor.red() < 150 && bgColor.green() < 150 && bgColor.blue() < 150)
+                    fgColor = QColor(230, 230, 230);
+            }
+        }
+    }
+
+    return fgColor;
+}
