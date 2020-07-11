@@ -1222,9 +1222,10 @@ void TupMainWindow::postProject()
     if (fileSize < 10) {
         TCONFIG->beginGroup("Network");
         QString username = TCONFIG->value("Username").toString();
-        QString token = TCONFIG->value("Token").toString();
+        QString password = TCONFIG->value("Password").toString();
+        bool storePasswd = TCONFIG->value("StorePassword").toBool();
 
-        if (username.isEmpty() || token.isEmpty()) {
+        if (username.isEmpty() || password.isEmpty() || !storePasswd) {
             TupSignDialog *dialog = new TupSignDialog(this);
             dialog->show();
             dialog->move(static_cast<int> ((screen->geometry().width() - dialog->width()) / 2),
@@ -1232,15 +1233,18 @@ void TupMainWindow::postProject()
 
             if (dialog->exec() != QDialog::Rejected) {
                 username = dialog->getUsername();
-                token = dialog->getPasswd();
+                password = dialog->getMetadata();
             } else {
                 // User cancelled action
+                #ifdef TUP_DEBUG
+                    qDebug() << "TupMainWindow::postProject() - Action canceled by user!";
+                #endif
                 return;
             }
         }
 
         exportWidget = new TupExportWidget(m_projectManager->getProject(), this, false);
-        exportWidget->setProjectParams(username, token, m_fileName);
+        exportWidget->setProjectParams(username, password, m_fileName);
         connect(exportWidget, SIGNAL(isDone()), animationTab, SLOT(updatePaintArea()));
         exportWidget->show();
 

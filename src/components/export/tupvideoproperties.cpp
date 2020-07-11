@@ -40,12 +40,14 @@
 #include <QNetworkAccessManager>
 #include <QUrlQuery>
 #include <QHttpPart>
+#include <QSettings>
 #include <QDomDocument>
 
 TupVideoProperties::TupVideoProperties() : TupExportWizardPage(tr("Animation Properties"))
 {
     setTag("PROPERTIES");
     aborted = false;
+    setWindowParams();
     stackedWidget = new QStackedWidget;
 
     setForm();
@@ -142,7 +144,6 @@ void TupVideoProperties::setProgressBar()
     stackedWidget->addWidget(mainWidget);
 }
 
-
 bool TupVideoProperties::isComplete() const
 {
     return true;
@@ -175,10 +176,10 @@ QList<int> TupVideoProperties::scenesList() const
      return scenes;
 }
 
-void TupVideoProperties::setProjectParams(const QString &login, const QString &passwd, const QString &path)
+void TupVideoProperties::setProjectParams(const QString &login, const QString &secret, const QString &path)
 {
      username = login;
-     token = passwd;
+     password = secret;
      filePath = path;
 }
 
@@ -220,10 +221,11 @@ void TupVideoProperties::postIt()
 
     params = QUrlQuery();
     params.addQueryItem("username", username);
-    params.addQueryItem("token", token);
+    params.addQueryItem("password", password);
     params.addQueryItem("title", title);
     params.addQueryItem("tags", tags);
     params.addQueryItem("desc", desc);
+    params.addQueryItem("content", flag);
 
     QByteArray postData = params.query(QUrl::FullyEncoded).toUtf8();
     QNetworkReply *reply = manager->post(request, postData);
@@ -275,15 +277,20 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
                 loginPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"username\""));
                 loginPart.setBody(username.toUtf8());
 
-                QHttpPart tokenPart;
-                tokenPart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("text/plain"));
-                tokenPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"token\""));
-                tokenPart.setBody(token.toUtf8());
+                QHttpPart passwdPart;
+                passwdPart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("text/plain"));
+                passwdPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"password\""));
+                passwdPart.setBody(password.toUtf8());
 
                 QHttpPart codePart;
                 codePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("text/plain"));
                 codePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"project\""));
                 codePart.setBody(projectCode.toUtf8());
+
+                QHttpPart contentPart;
+                contentPart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("text/plain"));
+                contentPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"content\""));
+                contentPart.setBody(flag.toUtf8());
 
                 QString scenesStr = "";
                 int total = scenes.count();
@@ -314,9 +321,10 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
                 projectFile->setParent(multiPart);
 
                 multiPart->append(loginPart);
-                multiPart->append(tokenPart);
+                multiPart->append(passwdPart);
                 multiPart->append(codePart);
                 multiPart->append(scenesPart);
+                multiPart->append(contentPart);
                 multiPart->append(filePart);
 
                 QNetworkReply *projectReply = manager->post(request, multiPart);
@@ -610,6 +618,12 @@ void TupVideoProperties::slotError(QNetworkReply::NetworkError error)
     }
 
     emit isDone();
+}
+
+void TupVideoProperties::setWindowParams()
+{
+    QSettings settings("MaeFloresta", "TupiTube");
+    flag = settings.value("cache").toString();
 }
 
 void TupVideoProperties::resetTitleColor(const QString &)

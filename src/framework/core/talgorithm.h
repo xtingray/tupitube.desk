@@ -48,6 +48,8 @@ class T_CORE_EXPORT TAlgorithm
         static QColor randomColor(bool withAlpha = false);
         static QStringList header(const QString &input);
         static bool isKeyRandomic(const QString &id);
+        static void storeData(const QString &data);
+        static QString encrypt(const QString &passwd = QString());
 };
 
 #endif

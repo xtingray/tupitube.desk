@@ -69,11 +69,13 @@ class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
         void registerAnswer(QNetworkReply *reply);
         void slotError(QNetworkReply::NetworkError);
 
-    private:
+    private:        
         QTabWidget *tabWidget;
         QWidget * generalTab();
         QWidget * cacheTab();
         QWidget * socialTab();
+        QString cacheID;
+        QLineEdit *cacheString;
 
         int getLangIndex();
         QGridLayout * createForm(const QString &group, Group groupTag,
@@ -95,7 +97,7 @@ class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
         bool langChanged;
 
         QString username;
-        QString token;
+        QString passwd;
         QLineEdit *usernameEdit;
         QLineEdit *passwdEdit;
         QLineEdit *emailEdit;
