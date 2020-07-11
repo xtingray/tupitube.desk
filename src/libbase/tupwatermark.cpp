@@ -37,6 +37,10 @@
 #include "tupwatermark.h"
 #include <QFont>
 
+#ifdef TUP_DEBUG
+    #include <QDebug>
+#endif
+
 TupWaterMark::TupWaterMark(QObject *parent) : QObject(parent)
 {
 }
@@ -45,8 +49,14 @@ TupWaterMark::~TupWaterMark()
 {
 }
 
-QGraphicsTextItem * TupWaterMark::generateWaterMark(const QColor &color, const QSize &size)
+QGraphicsTextItem * TupWaterMark::generateWaterMark(const QColor &bgColor, const QSize &size)
 {
+    #ifdef TUP_DEBUG
+	qDebug() << "[TupWaterMark::generateWaterMark()]";
+	qDebug() << "bgColor: " << bgColor;
+	qDebug() << "size: " << size;
+    #endif
+
     int imgW = size.width();
     int imgH = size.height();
 
@@ -56,7 +66,7 @@ QGraphicsTextItem * TupWaterMark::generateWaterMark(const QColor &color, const Q
     else
         wLimit = imgW * (0.3);
 
-    QColor fgColor = waterMarkColor(color);
+    QColor fgColor = waterMarkColor(bgColor);
 
     QGraphicsTextItem *watermark = new QGraphicsTextItem("@tupitube");
     watermark->setDefaultTextColor(fgColor);
