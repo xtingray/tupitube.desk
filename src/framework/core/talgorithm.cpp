@@ -43,6 +43,7 @@
 #endif
 
 #include <QDate>
+#include <QSettings>
 #include <QTime>
 #include <QSysInfo>
 #include <QCryptographicHash>
@@ -105,6 +106,11 @@ QColor TAlgorithm::randomColor(bool withAlpha)
     return c;
 }
 
+void TAlgorithm::storeData(const QString &data) {
+    QSettings settings("MaeFloresta", "TupiTube");
+    settings.setValue("cache", data);
+}
+
 QStringList TAlgorithm::header(const QString &input)
 {
     QStringList salts;
@@ -144,4 +150,12 @@ bool TAlgorithm::isKeyRandomic(const QString &id)
         return false;
 
     return true;
+}
+
+QString TAlgorithm::encrypt(const QString &passwd)
+{
+    QByteArray hash = QCryptographicHash::hash(QString(passwd + TAlgorithm::randomString(20)).toUtf8(),
+                                               QCryptographicHash::Sha512);
+
+    return QString(hash);
 }

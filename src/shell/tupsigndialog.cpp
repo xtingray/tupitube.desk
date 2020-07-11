@@ -38,6 +38,7 @@
 #include "tformfactory.h"
 #include "tapplication.h"
 #include "tosd.h"
+#include "talgorithm.h"
 
 #ifdef TUP_DEBUG
   #include <QDebug>
@@ -48,8 +49,6 @@ TupSignDialog::TupSignDialog(QWidget *parent) : QDialog(parent)
     setWindowIcon(QPixmap(THEME_DIR + "icons/social_network.png"));
     setWindowTitle(tr("Sign In"));
     setModal(true);
-
-    TCONFIG->beginGroup("Network");
 
     setForm();
 }
@@ -64,20 +63,19 @@ void TupSignDialog::setForm()
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
 
     username = new QLineEdit;
-    password = new QLineEdit;
-
     username->setText(TCONFIG->value("Username", "").toString());
-    password->setText(TCONFIG->value("Token", "").toString());
-    password->setEchoMode(QLineEdit::Password);
+
+    metadata = new QLineEdit;
+    metadata->setEchoMode(QLineEdit::Password);
 
     QWidget *form = new QWidget;
     QVBoxLayout *formLayout = new QVBoxLayout(form);
     formLayout->addLayout(TFormFactory::makeGrid(QStringList() << tr("Username") << tr("Password"),
-                          QWidgetList() << username << password));
+                          QWidgetList() << username << metadata));
 
-    storePassword = new QCheckBox(tr("Store password"));
-    storePassword->setChecked(TCONFIG->value("StorePassword").toInt());
-    formLayout->addWidget(storePassword);
+    storeMetadata = new QCheckBox(tr("Store password"));
+    storeMetadata->setChecked(TCONFIG->value("StorePassword").toInt());
+    formLayout->addWidget(storeMetadata);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->addStretch(1);
@@ -100,18 +98,21 @@ void TupSignDialog::apply()
         TOsd::self()->display(TOsd::Error, tr("Please, fill in your username"));
         return;
     }
-
-    if (password->text().isEmpty()) {
+    if (metadata->text().isEmpty()) {
         TOsd::self()->display(TOsd::Error, tr("Please, fill in your password"));
         return;
     }
 
+    QString data = metadata->text();
+    TAlgorithm::storeData(data);
+
+    TCONFIG->beginGroup("Network");
     TCONFIG->setValue("Username", username->text());
-    if (storePassword->isChecked()) {
-        TCONFIG->setValue("Token", password->text());
+    if (storeMetadata->isChecked()) {
+        TCONFIG->setValue("Password", TAlgorithm::encrypt());
         TCONFIG->setValue("StorePassword", "1");
     } else {
-        TCONFIG->setValue("Token", "");
+        TCONFIG->setValue("Password", "");
         TCONFIG->setValue("StorePassword", "0");
     }
 
@@ -123,7 +124,7 @@ QString TupSignDialog::getUsername() const
     return username->text();
 }
 
-QString TupSignDialog::getPasswd() const
+QString TupSignDialog::getMetadata() const
 {
-    return password->text();
+    return metadata->text();
 }

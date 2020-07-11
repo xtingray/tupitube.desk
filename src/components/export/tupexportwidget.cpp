@@ -171,9 +171,9 @@ void TupExportWidget::setExporter(const QString &plugin)
     }
 }
 
-void TupExportWidget::setProjectParams(const QString &username, const QString &token, const QString &path)
+void TupExportWidget::setProjectParams(const QString &username, const QString &secret, const QString &path)
 {
-    videoProperties->setProjectParams(username, token, path);
+    videoProperties->setProjectParams(username, secret, path);
 }
 
 QString TupExportWidget::videoTitle() const

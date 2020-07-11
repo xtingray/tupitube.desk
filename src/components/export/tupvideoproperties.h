@@ -61,7 +61,7 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         QString description() const;
         QList<int> scenesList() const;
         bool successful();
-        void setProjectParams(const QString &login, const QString &passwd, const QString &path);
+        void setProjectParams(const QString &login, const QString &secret, const QString &path);
 
     signals:
         void postHasStarted();
@@ -82,7 +82,9 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
     private:
         void setForm();
         void setProgressBar();
+        void setWindowParams();
 
+        QString flag;
         QVBoxLayout *layout;
         QLineEdit *titleEdit;
         QLineEdit *topicsEdit;
@@ -91,7 +93,7 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         bool aborted;
 
         QString username;
-        QString token;
+        QString password;
         QString filePath;
         QWidget *formWidget;
         QWidget *progressWidget;

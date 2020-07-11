@@ -38,7 +38,9 @@
 #include "tformfactory.h"
 #include "tosd.h"
 #include "tseparator.h"
+#include "talgorithm.h"
 
+#include <QSettings>
 #include <QPushButton>
 #include <QToolButton>
 #include <QFileDialog>
@@ -228,7 +230,7 @@ QWidget * TupGeneralPreferences::socialTab()
 
     TCONFIG->beginGroup("Network");
     username = TCONFIG->value("Username").toString();
-    token = TCONFIG->value("Token").toString();
+    passwd = TCONFIG->value("Password").toString();
 
     QLabel *socialLabel = new QLabel(tr("TupiTube Credentials"));
 
@@ -241,8 +243,8 @@ QWidget * TupGeneralPreferences::socialTab()
     usernameEdit = new QLineEdit();
 
     QLabel *passwdLabel = new QLabel(tr("Password: "));
-    passwdEdit = new QLineEdit();
-    passwdEdit->setEchoMode(QLineEdit::Password);
+    cacheString = new QLineEdit();
+    cacheString->setEchoMode(QLineEdit::Password);
 
     QHBoxLayout *usernameLayout = new QHBoxLayout;
     usernameLayout->addWidget(usernameLabel);
@@ -251,14 +253,17 @@ QWidget * TupGeneralPreferences::socialTab()
 
     QHBoxLayout *passwdLayout = new QHBoxLayout;
     passwdLayout->addWidget(passwdLabel);
-    passwdLayout->addWidget(passwdEdit);
+    passwdLayout->addWidget(cacheString);
     passwdLayout->addStretch();
 
     usernameEdit->setText(username);
-    passwdEdit->setText(token);    
 
     font.setPointSize(font.pointSize() - 3);
     font.setBold(true);
+
+    QSettings settings("MaeFloresta", "TupiTube");
+    cacheID = settings.value("cache").toString();
+    cacheString->setText(cacheID);
 
     QLabel *registerLabel = new QLabel(tr("Don't have a TupiTube account?"));
     registerLabel->setFont(font);
@@ -467,7 +472,16 @@ bool TupGeneralPreferences::saveValues()
     if (newLang.length() > 0)
         TCONFIG->setValue("Language", newLang);
 
-    // Cache
+    // Cache Settings
+    QSettings settings("MaeFloresta", "TupiTube");
+    QString data = cacheString->text();
+    bool changed = false;
+    if (!data.isEmpty()) {
+        if (data.compare(cacheID) != 0) {
+            changed = true;
+            settings.setValue("cache", data);
+        }
+    }
 
     cachePath = cacheLine->text();
     if (cachePath.isEmpty()) {
@@ -487,7 +501,7 @@ bool TupGeneralPreferences::saveValues()
         }
     }
 
-    // Social Network
+    // Social Network Credentials
     TCONFIG->beginGroup("Network");
     QString login = usernameEdit->text();
     if (!login.isEmpty()) {
@@ -495,11 +509,8 @@ bool TupGeneralPreferences::saveValues()
             TCONFIG->setValue("Username", login);
     }
 
-    QString code = passwdEdit->text();
-    if (!code.isEmpty()) {
-        if (code.compare(token) != 0)
-            TCONFIG->setValue("Token", code);
-    }
+    if (!passwd.isEmpty() && changed)
+        TCONFIG->setValue("Password", TAlgorithm::encrypt(passwd));
 
     TCONFIG->beginGroup("AnimationParameters");
     total = player.count();

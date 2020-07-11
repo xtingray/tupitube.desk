@@ -52,7 +52,7 @@ class TupSignDialog : public QDialog
         ~TupSignDialog();
 
         QString getUsername() const;
-        QString getPasswd() const;
+        QString getMetadata() const;
 
     private slots:
         void apply();
@@ -64,8 +64,8 @@ class TupSignDialog : public QDialog
         QBoxLayout *layout;
 
         QLineEdit *username;
-        QLineEdit *password;
-        QCheckBox *storePassword;
+        QLineEdit *metadata;
+        QCheckBox *storeMetadata;
 };
 
 #endif

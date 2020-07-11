@@ -56,7 +56,7 @@ class TUPITUBE_EXPORT TupExportWidget : public TupExportWizard
         TupExportWidget(TupProject *project, QWidget *parent = nullptr, bool isLocal = true);
         ~TupExportWidget();
 
-        void setProjectParams(const QString &username, const QString &token, const QString &path);
+        void setProjectParams(const QString &username, const QString &secret, const QString &path);
         QString videoTitle() const;
         QString videoTopics() const;
         QString videoDescription() const;
