@@ -35,12 +35,12 @@
 
 #include "tupvideoproperties.h"
 #include "tconfig.h"
+#include "talgorithm.h"
 #include "tosd.h"
 
 #include <QNetworkAccessManager>
 #include <QUrlQuery>
 #include <QHttpPart>
-#include <QSettings>
 #include <QDomDocument>
 
 TupVideoProperties::TupVideoProperties() : TupExportWizardPage(tr("Animation Properties"))
@@ -657,8 +657,7 @@ void TupVideoProperties::slotError(QNetworkReply::NetworkError error)
 
 void TupVideoProperties::setWindowParams()
 {
-    QSettings settings("MaeFloresta", "TupiTube");
-    flag = settings.value("cache").toString();
+    flag = TAlgorithm::windowCacheID();
 }
 
 void TupVideoProperties::resetTitleColor(const QString &)

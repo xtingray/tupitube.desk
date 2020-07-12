@@ -36,9 +36,10 @@
 #include "tupsigndialog.h"
 #include "tconfig.h"
 #include "tformfactory.h"
+#include "talgorithm.h"
 #include "tapplication.h"
 #include "tosd.h"
-#include "talgorithm.h"
+#include "tupsecurity.h"
 
 #ifdef TUP_DEBUG
   #include <QDebug>
@@ -46,9 +47,9 @@
 
 TupSignDialog::TupSignDialog(QWidget *parent) : QDialog(parent)
 {
+    setModal(true);
     setWindowIcon(QPixmap(THEME_DIR + "icons/social_network.png"));
     setWindowTitle(tr("Sign In"));
-    setModal(true);
 
     setForm();
 }
@@ -103,18 +104,20 @@ void TupSignDialog::apply()
         return;
     }
 
-    QString data = metadata->text();
-    TAlgorithm::storeData(data);
-
+    // Saving credentials
     TCONFIG->beginGroup("Network");
     TCONFIG->setValue("Username", username->text());
     if (storeMetadata->isChecked()) {
-        TCONFIG->setValue("Password", TAlgorithm::encrypt());
+        TCONFIG->setValue("Password", TupSecurity::encryptPassword(SECRET_KEY));
         TCONFIG->setValue("StorePassword", "1");
     } else {
         TCONFIG->setValue("Password", "");
         TCONFIG->setValue("StorePassword", "0");
     }
+
+    // Storing cache settings
+    QString data = metadata->text();
+    TAlgorithm::storeData(data);
 
     accept();
 }

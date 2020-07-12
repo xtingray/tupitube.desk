@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
  *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
@@ -33,24 +33,17 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TALGORITHM_H
-#define TALGORITHM_H
+#ifndef TUPSECURITY_H
+#define TUPSECURITY_H
 
 #include "tglobal.h"
 
 #include <QColor>
 
-class T_CORE_EXPORT TAlgorithm
+class T_CORE_EXPORT TupSecurity
 {
     public:
-        static int random();
-        static QString randomString(int length);
-        static QColor randomColor(bool withAlpha = false);
-        static void storeData(const QString &data);
-        static bool cacheIDChanged(const QString &data);
-        static QString windowCacheID();
-        static QStringList header(const QString &input);
-        static bool isKeyRandomic(const QString &id);
+        static QString encryptPassword(const QString &key = QString());
 };
 
 #endif

@@ -43,6 +43,7 @@ HEADERS += tupexportinterface.h \
            tupanimationrenderer.h \
            # tupwebhunter.h \
            tuprotationdial.h \
+           tupsecurity.h \
            tupwatermark.h
 
 SOURCES += tupexportpluginobject.cpp \
@@ -56,6 +57,7 @@ SOURCES += tupexportpluginobject.cpp \
            tupanimationrenderer.cpp \
            # tupwebhunter.cpp \
            tuprotationdial.cpp \
+           tupsecurity.cpp \
            tupwatermark.cpp
 
 FRAMEWORK_DIR = "../framework"

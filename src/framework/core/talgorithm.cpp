@@ -35,6 +35,7 @@
 
 #include "talgorithm.h"
 #include "tconfig.h"
+#include "tcachehandler.h"
 
 #ifdef Q_OS_LINUX
 #include <unistd.h>
@@ -106,9 +107,39 @@ QColor TAlgorithm::randomColor(bool withAlpha)
     return c;
 }
 
-void TAlgorithm::storeData(const QString &data) {
-    QSettings settings("MaeFloresta", "TupiTube");
-    settings.setValue("cache", data);
+void TAlgorithm::storeData(const QString &data)
+{
+    TCONFIG->beginGroup("General");
+    int id = TCONFIG->value("ClientID").toInt();
+    TCacheHandler handler(id);
+    QSettings settings(COMPANY, CACHE_DB);
+    settings.setValue("cache", handler.getRecord(data));
+}
+
+bool TAlgorithm::cacheIDChanged(const QString &data)
+{
+    TCONFIG->beginGroup("General");
+    int id = TCONFIG->value("ClientID").toInt();
+    TCacheHandler handler(id);
+    QString output = handler.getRecord(data);
+
+    QSettings settings(COMPANY, CACHE_DB);
+    QString reference = settings.value("cache").toString();
+    if (reference.compare(output) == 0)
+        return false;
+
+    return true;
+}
+
+QString TAlgorithm::windowCacheID()
+{
+    QSettings settings(COMPANY, CACHE_DB);
+    QString reference = settings.value("cache").toString();
+    TCONFIG->beginGroup("General");
+    int id = TCONFIG->value("ClientID").toInt();
+    TCacheHandler handler(id);
+
+    return handler.setRecord(reference);
 }
 
 QStringList TAlgorithm::header(const QString &input)
@@ -150,12 +181,4 @@ bool TAlgorithm::isKeyRandomic(const QString &id)
         return false;
 
     return true;
-}
-
-QString TAlgorithm::encrypt(const QString &passwd)
-{
-    QByteArray hash = QCryptographicHash::hash(QString(passwd + TAlgorithm::randomString(20)).toUtf8(),
-                                               QCryptographicHash::Sha512);
-
-    return QString(hash);
 }

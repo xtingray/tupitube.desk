@@ -33,24 +33,15 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TALGORITHM_H
-#define TALGORITHM_H
+#include "tupsecurity.h"
+#include "talgorithm.h"
 
-#include "tglobal.h"
+#include <QCryptographicHash>
 
-#include <QColor>
-
-class T_CORE_EXPORT TAlgorithm
+QString TupSecurity::encryptPassword(const QString &key)
 {
-    public:
-        static int random();
-        static QString randomString(int length);
-        static QColor randomColor(bool withAlpha = false);
-        static void storeData(const QString &data);
-        static bool cacheIDChanged(const QString &data);
-        static QString windowCacheID();
-        static QStringList header(const QString &input);
-        static bool isKeyRandomic(const QString &id);
-};
+    QByteArray hash = QCryptographicHash::hash(QString(key + TAlgorithm::randomString(20)).toUtf8(),
+                                               QCryptographicHash::Sha512);
 
-#endif
+    return QString(hash);
+}

@@ -32,12 +32,14 @@ HEADERS += talgorithm.h \
            tconfig.h \
            tglobal.h \
            tipdatabase.h \
+           tcachehandler.h \
            txmlparserbase.h
 
 SOURCES += talgorithm.cpp \
            tapplicationproperties.cpp \
            tconfig.cpp \
            tipdatabase.cpp \
+           tcachehandler.cpp \
            txmlparserbase.cpp
 
 unix {

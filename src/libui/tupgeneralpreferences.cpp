@@ -36,11 +36,11 @@
 #include "tupgeneralpreferences.h"
 #include "tconfig.h"
 #include "tformfactory.h"
+#include "talgorithm.h"
 #include "tosd.h"
 #include "tseparator.h"
-#include "talgorithm.h"
+#include "tupsecurity.h"
 
-#include <QSettings>
 #include <QPushButton>
 #include <QToolButton>
 #include <QFileDialog>
@@ -261,10 +261,6 @@ QWidget * TupGeneralPreferences::socialTab()
     font.setPointSize(font.pointSize() - 3);
     font.setBold(true);
 
-    QSettings settings("MaeFloresta", "TupiTube");
-    cacheID = settings.value("cache").toString();
-    cacheString->setText(cacheID);
-
     QLabel *registerLabel = new QLabel(tr("Don't have a TupiTube account?"));
     registerLabel->setFont(font);
 
@@ -472,14 +468,12 @@ bool TupGeneralPreferences::saveValues()
     if (newLang.length() > 0)
         TCONFIG->setValue("Language", newLang);
 
-    // Cache Settings
-    QSettings settings("MaeFloresta", "TupiTube");
-    QString data = cacheString->text();
     bool changed = false;
+    QString data = cacheString->text();
     if (!data.isEmpty()) {
-        if (data.compare(cacheID) != 0) {
+        if (TAlgorithm::cacheIDChanged(data)) {
             changed = true;
-            settings.setValue("cache", data);
+            TAlgorithm::storeData(data);
         }
     }
 
@@ -510,7 +504,7 @@ bool TupGeneralPreferences::saveValues()
     }
 
     if (!passwd.isEmpty() && changed)
-        TCONFIG->setValue("Password", TAlgorithm::encrypt(passwd));
+        TCONFIG->setValue("Password", TupSecurity::encryptPassword(passwd));
 
     TCONFIG->beginGroup("AnimationParameters");
     total = player.count();

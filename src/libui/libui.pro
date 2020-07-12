@@ -48,9 +48,11 @@ SOURCES += tupabout.cpp \
            tuppreferencesdialog.cpp 
 
 STORE_DIR = ../store
+LIBBASE_DIR = ../libbase
 LIBTUPI_DIR = ../libtupi
 
 FRAMEWORK_DIR = "../framework"
 include($$FRAMEWORK_DIR/framework.pri)
 include($$STORE_DIR/store.pri)
+include($$LIBBASE_DIR/libbase.pri)
 include($$LIBTUPI_DIR/libtupi.pri)
