@@ -83,12 +83,14 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         void setForm();
         void setProgressBar();
         void setWindowParams();
+        QString formatPromoComment() const;
 
         QString flag;
         QVBoxLayout *layout;
         QLineEdit *titleEdit;
         QLineEdit *topicsEdit;
         QTextEdit *descText;
+        QString defaultDesc;
         QList<int> scenes;
         bool aborted;
 

@@ -81,11 +81,13 @@ void TupVideoProperties::setForm()
 
     QLabel *descLabel = new QLabel(tr("Description"));
 
+    defaultDesc = tr("Create and share animations easily with TupiTube");
+
     descText = new QTextEdit;
     descText->setLocale(utf);
     descText->setAcceptRichText(false);
     descText->setFixedHeight(80);
-    descText->setText(tr("Create and share animations easily with TupiTube"));
+    descText->setText(defaultDesc);
 
     formLayout->addWidget(titleLabel);
     formLayout->addWidget(titleEdit);
@@ -191,7 +193,7 @@ void TupVideoProperties::postIt()
 
     QString title = titleEdit->text();
     QString tags = topicsEdit->text();
-    QString desc= descText->toPlainText();
+    QString desc = descText->toPlainText();
 
     if (title.length() == 0) {
         titleEdit->setText(tr("Set a title for the picture here!"));
@@ -203,6 +205,25 @@ void TupVideoProperties::postIt()
         topicsEdit->setText(tr("Set some topic tags for the picture here!"));
         topicsEdit->selectAll();
         return;
+    }
+
+    if (desc.length() > 0) {
+        if (desc.contains("<") || desc.contains(">") || desc.contains("http"))
+            desc = "";
+
+        if (desc.length() > 240) {
+            desc = desc.left(240);
+            descText->setPlainText(desc);
+        }
+
+        if (desc.compare(defaultDesc) == 0)
+            desc = formatPromoComment();
+
+        #ifdef TUP_DEBUG
+            qDebug() << "TupVideoProperties::postIt() -> Comment:" << desc;
+        #endif
+    } else {
+        desc = formatPromoComment();
     }
 
     stackedWidget->setCurrentIndex(1);
@@ -232,6 +253,20 @@ void TupVideoProperties::postIt()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
     connect(this, &TupVideoProperties::postAborted, reply, &QNetworkReply::abort);
     reply->setParent(manager);
+}
+
+QString TupVideoProperties::formatPromoComment() const
+{
+    QString desc = "promo.en";
+
+    QStringList langSupport;
+    langSupport << "es" << "pt";
+    QString locale = QString(QLocale::system().name()).left(2);
+
+    if (locale.compare("en") != 0 && langSupport.contains(locale))
+        desc = "promo." + locale;
+
+    return desc;
 }
 
 void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
