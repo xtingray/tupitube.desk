@@ -47,7 +47,7 @@
 QString TupTwitter::IS_HOST_UP_URL = QString("updates/test.xml");
 QString TupTwitter::USER_TIMELINE_URL = QString("updates/tweets.php");
 QString TupTwitter::TUPITUBE_VERSION_URL = QString("updates/current_version.xml");
-QString TupTwitter::TUPITUBE_WEB_MSG = QString("updates/web_msg.");
+QString TupTwitter::TUPITUBE_WEB_AD = QString("updates/web_ad.");
 QString TupTwitter::TUPITUBE_VIDEOS = QString("updates/videos.xml");
 QString TupTwitter::TUPITUBE_IMAGES = QString("updates/images/");
 // QString TupTwitter::BROWSER_FINGERPRINT = QString("Tupi_Browser 2.0");
@@ -184,7 +184,7 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
                             qDebug() << "TupTwitter::closeRequest() - Network Error: Twitter output is NULL!";
                         #endif
                     }
-                    requestFile(MAEFLORESTA_URL + TUPITUBE_WEB_MSG + locale + ".html");
+                    requestFile(MAEFLORESTA_URL + TUPITUBE_WEB_AD + locale + ".html");
                 } else {
                     if (answer.startsWith("<webmsg>")) { // Getting web msg
                         if (showAds) {
