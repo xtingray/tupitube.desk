@@ -49,6 +49,23 @@
 #include "tupitemgroup.h"
 #include "tosd.h"
 
+/*
+SQA: Pay attention to this tip
+You can use the QGraphicsItem::shape () which returns a QPainterPath to retrieve the shape of an item. 
+For taking the intersection path this can be used :
+
+QPainterPath QPainterPath::intersected ( const QPainterPath & p ) const;
+
+So you can get the intersection path of two items like:
+
+QPainterPath intersectedPath = item1->shape()->intersected(item2->shape());
+
+Now you can fill the intersected area by :
+
+painter->setBrush(QColor(122, 163, 39));
+painter->drawPath(intersectedPath);
+*/
+
 FillTool::FillTool()
 {
     setupActions();

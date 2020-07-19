@@ -124,7 +124,7 @@ void TupTwitter::requestFile(const QString &target)
 void TupTwitter::closeRequest(QNetworkReply *reply)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TupTwitter::closeRequest() - Getting answer from request...";
+        qDebug() << "TupTwitter::closeRequest() - Getting answer from request...";
     #endif
 
     QByteArray array = reply->readAll();
@@ -133,14 +133,30 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
     if (imageName.endsWith(".png", Qt::CaseInsensitive)) {
         QString imgPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/images/";
         QDir dir(imgPath);
-        if (!dir.exists())
-            dir.mkpath(imgPath);
+        if (!dir.exists()) {
+            #ifdef TUP_DEBUG
+                qWarning() << "TupTwitter::closeRequest() - Image path doesn't exist -> " << imgPath;
+                qWarning() << "Creating it...";
+            #endif
+            if (!dir.mkpath(imgPath)) {
+                #ifdef TUP_DEBUG
+                    qWarning() << "TupTwitter::closeRequest() - Error while creating path -> " << imgPath;
+                #endif
+            }
+        }
 
         QString image = imgPath + imageName;
         QFile file(image);
+        #ifdef TUP_DEBUG
+            qDebug() << "TupTwitter::closeRequest() - Saving image -> " << image;
+        #endif
         if (file.open(QIODevice::WriteOnly)) {
             file.write(array);
             file.close();
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "TupTwitter::closeRequest() - Can't create file -> " << image;
+            #endif
         }
 
         requestFile(MAEFLORESTA_URL + TUPITUBE_VIDEOS);
