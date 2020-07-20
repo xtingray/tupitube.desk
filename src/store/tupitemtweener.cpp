@@ -73,7 +73,7 @@ void TupItemTweener::addStep(const TupTweenerStep &step)
 {
     int counter = step.getIndex();
 
-    if (step.has(TupTweenerStep::Position))
+    if (step.has(TupTweenerStep::Motion))
         setPosAt(counter, step.getPosition());
 
     if (step.has(TupTweenerStep::Rotation)) 
@@ -201,7 +201,7 @@ void TupItemTweener::fromXml(const QString &xml)
 
         originPoint = QPointF(x, y);
 
-        if (tweenType == TupItemTweener::Position) {
+        if (tweenType == TupItemTweener::Motion) {
             tweenPath = root.attribute("coords");
             intervals = root.attribute("intervals");
         } else if (tweenType == TupItemTweener::Rotation) {
@@ -299,7 +299,7 @@ QDomElement TupItemTweener::toXml(QDomDocument &doc) const
 
     root.setAttribute("origin", QString::number(originPoint.x()) + "," + QString::number(originPoint.y()));
 
-    if (tweenType == TupItemTweener::Position) {
+    if (tweenType == TupItemTweener::Motion) {
         root.setAttribute("coords", tweenPath);
         root.setAttribute("intervals", intervals);
     } else if (tweenType == TupItemTweener::Rotation) {
@@ -381,8 +381,8 @@ QString TupItemTweener::tweenTypeToString()
 {
     QString label = "";
     switch (tweenType) {
-        case TupItemTweener::Position :
-            label = QString(tr("Position"));
+        case TupItemTweener::Motion :
+            label = QString(tr("Motion"));
             break;
         case TupItemTweener::Rotation :
             label = QString(tr("Rotation"));

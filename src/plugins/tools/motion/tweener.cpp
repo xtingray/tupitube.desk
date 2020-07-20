@@ -124,7 +124,7 @@ void Tweener::init(TupGraphicsScene *gScene)
 
     configPanel->resetUI();
 
-    QList<QString> tweenList = scene->currentScene()->getTweenNames(TupItemTweener::Position);
+    QList<QString> tweenList = scene->currentScene()->getTweenNames(TupItemTweener::Motion);
     if (tweenList.size() > 0) {
         configPanel->loadTweenList(tweenList);
         setCurrentTween(tweenList.at(0));
@@ -154,7 +154,7 @@ void Tweener::updateStartFrame(int index)
 
 QStringList Tweener::keys() const
 {
-    return QStringList() << tr("Position Tween");
+    return QStringList() << tr("Motion Tween");
 }
 
 /*
@@ -207,7 +207,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
     if (gScene->currentFrameIndex() == initFrame) {
         if (editMode == TupToolPlugin::Properties) {
             #ifdef TUP_DEBUG
-                qDebug() << "Position Tweener::release() - Tracing properties mode";
+                qDebug() << "Motion Tweener::release() - Tracing properties mode";
             #endif
             if (nodesGroup) {
                 updateTweenPath();
@@ -258,17 +258,17 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
             }
         } else { // Selection mode
             #ifdef TUP_DEBUG
-                qDebug() << "Position Tweener::release() - Tracing selection mode";
+                qDebug() << "Motion Tweener::release() - Tracing selection mode";
             #endif
             if (gScene->selectedItems().size() > 0) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "Position Tweener::release() - selection size -> " + QString::number(gScene->selectedItems().size());
+                    qDebug() << "Motion Tweener::release() - selection size -> " + QString::number(gScene->selectedItems().size());
                 #endif
 
                 objects = gScene->selectedItems();
                 foreach (QGraphicsItem *item, objects) {
                     QString tip = item->toolTip();
-                    if (tip.contains(tr("Position"))) {
+                    if (tip.contains(tr("Motion"))) {
                         // QDesktopWidget desktop;
                         QScreen *screen = QGuiApplication::screens().at(0);
                         QMessageBox msgBox;
@@ -289,7 +289,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 }
 
                 #ifdef TUP_DEBUG
-                    qDebug() << "Position Tweener::release() - Notifying selection...";
+                    qDebug() << "Motion Tweener::release() - Notifying selection...";
                 #endif
                 configPanel->notifySelection(true);
 
@@ -323,13 +323,13 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "Position Tweener::release() - Selection mode: no items selected";
+                    qDebug() << "Motion Tweener::release() - Selection mode: no items selected";
                 #endif
             }
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "Position Tweener::release() - scene->currentFrameIndex() != initFrame";
+            qDebug() << "Motion Tweener::release() - scene->currentFrameIndex() != initFrame";
             qDebug() << "scene->currentFrameIndex() -> " << gScene->currentFrameIndex();
             qDebug() << "initFrame -> " << initFrame;
         #endif
@@ -446,11 +446,11 @@ void Tweener::setupActions()
 
     realFactor = 1;
 
-    TAction *action = new TAction(QPixmap(kAppProp->themeDir() + "icons/position_tween.png"), tr("Position Tween"), this);
+    TAction *action = new TAction(QPixmap(kAppProp->themeDir() + "icons/motion_tween.png"), tr("Motion Tween"), this);
     action->setCursor(QCursor(kAppProp->themeDir() + "cursors/tweener.png", 0 ,0));
     action->setShortcut(QKeySequence(tr("Shift+W")));
 
-    posActions.insert(tr("Position Tween"), action);
+    posActions.insert(tr("Motion Tween"), action);
 }
 
 // This method initializes the "Create path" mode
@@ -471,7 +471,7 @@ void Tweener::setTweenPath()
         if (nodesGroup) {
             nodesGroup->createNodes(path);
         } else {
-            nodesGroup = new TNodeGroup(path, scene, TNodeGroup::PositionTween, baseZValue);
+            nodesGroup = new TNodeGroup(path, scene, TNodeGroup::MotionTween, baseZValue);
             connect(nodesGroup, SIGNAL(nodeReleased()), SLOT(updatePath()));
             nodesGroup->createNodes(path);
         }
@@ -637,7 +637,7 @@ void Tweener::applyTween()
     }
 
     // Tween is new
-    if (!scene->currentScene()->tweenExists(name, TupItemTweener::Position)) {
+    if (!scene->currentScene()->tweenExists(name, TupItemTweener::Motion)) {
         initFrame = scene->currentFrameIndex();
         initLayer = scene->currentLayerIndex();
         initScene = scene->currentSceneIndex();
@@ -895,18 +895,18 @@ void Tweener::updateMode(TupToolPlugin::Mode currentMode)
 void Tweener::removeTweenFromProject(const QString &name)
 {
     TupScene *sceneData = scene->currentScene();
-    bool removed = sceneData->removeTween(name, TupItemTweener::Position);
+    bool removed = sceneData->removeTween(name, TupItemTweener::Motion);
 
     if (removed) {
         foreach (QGraphicsView * view, scene->views()) {
             foreach (QGraphicsItem *item, view->scene()->items()) {
                 QString tip = item->toolTip();
-                if (tip.compare("Tweens: " + tr("Position")) == 0) {
+                if (tip.compare("Tweens: " + tr("Motion")) == 0) {
                     item->setToolTip("");
                 } else {
-                    if (tip.contains(tr("Position"))) {
-                        tip = tip.replace(tr("Position") + ",", "");
-                        tip = tip.replace(tr("Position"), "");
+                    if (tip.contains(tr("Motion"))) {
+                        tip = tip.replace(tr("Motion") + ",", "");
+                        tip = tip.replace(tr("Motion"), "");
                         if (tip.endsWith(","))
                             tip.chop(1);
                         item->setToolTip(tip);
@@ -917,7 +917,7 @@ void Tweener::removeTweenFromProject(const QString &name)
         emit tweenRemoved();
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "Tweener::removeTweenFromProject() - Position tween couldn't be removed -> " + name;
+            qDebug() << "Tweener::removeTweenFromProject() - Motion tween couldn't be removed -> " + name;
         #endif
     }
 }
@@ -931,7 +931,7 @@ void Tweener::removeTween(const QString &name)
 void Tweener::setCurrentTween(const QString &name)
 {
     TupScene *sceneData = scene->currentScene();
-    currentTween = sceneData->tween(name, TupItemTweener::Position);
+    currentTween = sceneData->tween(name, TupItemTweener::Motion);
     if (currentTween)
         configPanel->setCurrentTween(currentTween);
 }
@@ -957,7 +957,7 @@ void Tweener::setEditEnv()
     mode = TupToolPlugin::Edit;
 
     TupScene *sceneData = scene->currentScene();
-    objects = sceneData->getItemsFromTween(currentTween->getTweenName(), TupItemTweener::Position);
+    objects = sceneData->getItemsFromTween(currentTween->getTweenName(), TupItemTweener::Motion);
 
     if (!objects.isEmpty()) {
         QGraphicsItem *item = objects.at(0);
@@ -985,7 +985,7 @@ void Tweener::setEditEnv()
         setTweenPath();
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "Tweener::setEditEnv() - Fatal Error: Position tween wasn't found -> " + currentTween->getTweenName();
+            qDebug() << "Tweener::setEditEnv() - Fatal Error: Motion tween wasn't found -> " + currentTween->getTweenName();
         #endif
     }
 }
@@ -1117,7 +1117,7 @@ void Tweener::itemResponse(const TupItemResponse *response)
                         scene->addItem(path);
                     }
 
-                    nodesGroup = new TNodeGroup(path, scene, TNodeGroup::PositionTween, baseZValue);
+                    nodesGroup = new TNodeGroup(path, scene, TNodeGroup::MotionTween, baseZValue);
                     connect(nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath()));
                     nodesGroup->createNodes(path);
 
@@ -1157,7 +1157,7 @@ void Tweener::itemResponse(const TupItemResponse *response)
                     path->setPath(painterPath);
                     scene->addItem(path);
 
-                    nodesGroup = new TNodeGroup(path, scene, TNodeGroup::PositionTween, baseZValue);
+                    nodesGroup = new TNodeGroup(path, scene, TNodeGroup::MotionTween, baseZValue);
                     connect(nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath()));
                     nodesGroup->createNodes(path);
 

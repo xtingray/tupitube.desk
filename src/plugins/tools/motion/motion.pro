@@ -1,7 +1,7 @@
 QT += opengl core gui svg xml network
 CONFIG += plugin warn_on
 TEMPLATE = lib
-TARGET = tupipositiontool
+TARGET = tupmotiontool
 
 unix {
     !include(../../../../tupiglobal.pri){
@@ -18,11 +18,11 @@ target.path = /plugins/
 
 HEADERS += tweener.h \
            configurator.h \
-           possettings.h
+           motionsettings.h
 		   
 SOURCES += tweener.cpp \
            configurator.cpp \
-           possettings.cpp
+           motionsettings.cpp
 
 FRAMEWORK_DIR = "../../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

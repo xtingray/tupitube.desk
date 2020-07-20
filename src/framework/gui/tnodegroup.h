@@ -50,7 +50,7 @@ class T_GUI_EXPORT TNodeGroup : public QObject
     Q_OBJECT
 
     public:
-        enum GroupType { Polyline, LineSelection, PositionTween, ComposedTween };
+        enum GroupType { Polyline, LineSelection, MotionTween, ComposedTween };
 
         TNodeGroup(QGraphicsItem *parent, QGraphicsScene *nodeScene, GroupType nodeType, int nodeLevel);
         ~TNodeGroup();

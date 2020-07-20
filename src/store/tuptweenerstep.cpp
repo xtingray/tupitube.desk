@@ -50,7 +50,7 @@ TupTweenerStep::~TupTweenerStep()
 void TupTweenerStep::setPosition(const QPointF &pos)
 {
     position = pos;
-    flags |= Position;
+    flags |= Motion;
 }
 
 void TupTweenerStep::setRotation(double angle)
@@ -140,7 +140,7 @@ QDomElement TupTweenerStep::toXml(QDomDocument& doc) const
     QDomElement step = doc.createElement("step");
     step.setAttribute("value", index);
     
-    if (this->has(TupTweenerStep::Position)) {
+    if (this->has(TupTweenerStep::Motion)) {
         QDomElement e = doc.createElement("position");
         e.setAttribute("x", QString::number(position.x()));
         e.setAttribute("y", QString::number(position.y()));

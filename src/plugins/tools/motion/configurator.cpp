@@ -55,9 +55,9 @@ Configurator::Configurator(QWidget *parent) : QFrame(parent)
 
     QLabel *toolTitle = new QLabel;
     toolTitle->setAlignment(Qt::AlignHCenter);
-    QPixmap pic(THEME_DIR + "icons/position_tween.png");
+    QPixmap pic(THEME_DIR + "icons/motion_tween.png");
     toolTitle->setPixmap(pic.scaledToWidth(20, Qt::SmoothTransformation));
-    toolTitle->setToolTip(tr("Position Tween Properties"));
+    toolTitle->setToolTip(tr("Motion Tween Properties"));
     layout->addWidget(toolTitle);
     layout->addWidget(new TSeparator(Qt::Horizontal));
 
@@ -91,7 +91,7 @@ void Configurator::loadTweenList(QList<QString> tweenList)
 
 void Configurator::setPropertiesPanel()
 {
-    settingsPanel = new PosSettings(this);
+    settingsPanel = new MotionSettings(this);
 
     connect(settingsPanel, SIGNAL(startingFrameChanged(int)), this, SIGNAL(startingFrameChanged(int)));
 

@@ -48,7 +48,7 @@ class TUPITUBE_EXPORT TupTweenerStep : public TupAbstractSerializable
     public:
         enum Type {
              None = 0,
-             Position = 1,
+             Motion = 1,
              Rotation = 2,
              Scale = 4,
              Shear = 8,

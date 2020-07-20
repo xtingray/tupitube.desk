@@ -50,7 +50,7 @@ class TUPITUBE_EXPORT TupItemTweener : public QObject, public TupAbstractSeriali
  
     public:
         enum Type {
-             Position = 0,
+             Motion = 0,
              Rotation = 1,
              Scale = 2,
              Shear = 3,

@@ -38,7 +38,7 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
-#include "possettings.h"
+// #include "motionsettings.h"
 #include "tupprojectresponse.h"
 #include "tnodegroup.h"
 #include "configurator.h"
@@ -57,7 +57,7 @@
 class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "com.maefloresta.tupi.TupToolInterface" FILE "positiontool.json")
+    Q_PLUGIN_METADATA(IID "com.maefloresta.tupi.TupToolInterface" FILE "motiontool.json")
 
     public:
         Tweener();

@@ -71,7 +71,7 @@ fileSystem.CopyFile sourceDir & "\plugins\tools\opacity\release\tupiopacitytool.
 fileSystem.CopyFile sourceDir & "\plugins\tools\papagayo\release\tupipapagayotool.dll", tupiDir & "\plugins\tupipapagayotool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\pencil\release\tupipenciltool.dll", tupiDir & "\plugins\tupipenciltool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\polyline\release\tupipolylinetool.dll", tupiDir & "\plugins\tupipolylinetool.dll"
-fileSystem.CopyFile sourceDir & "\plugins\tools\position\release\tupipositiontool.dll", tupiDir & "\plugins\tupipositiontool.dll"
+fileSystem.CopyFile sourceDir & "\plugins\tools\motion\release\tupimotiontool.dll", tupiDir & "\plugins\tupimotiontool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\rotation\release\tupirotationtool.dll", tupiDir & "\plugins\tupirotationtool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\scale\release\tupiscaletool.dll", tupiDir & "\plugins\tupiscaletool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\selection\release\tupiselectiontool.dll", tupiDir & "\plugins\tupiselectiontool.dll"

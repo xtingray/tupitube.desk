@@ -10,7 +10,7 @@ SUBDIRS += common \
            fill \
            # eraser \
            polyline \
-           position \
+           motion \
            rotation \
            scale \
            shear \

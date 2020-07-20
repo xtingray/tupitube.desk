@@ -38,7 +38,7 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
-#include "possettings.h"
+#include "motionsettings.h"
 #include "tweenmanager.h"
 #include "buttonspanel.h"
 #include "tupitemtweener.h"
@@ -129,7 +129,7 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
     private:
         QBoxLayout *layout;
         QBoxLayout *settingsLayout;
-        PosSettings *settingsPanel;
+        MotionSettings *settingsPanel;
         TweenManager *tweenManager;
         ButtonsPanel *controlPanel;
 

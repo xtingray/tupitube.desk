@@ -33,12 +33,12 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "possettings.h"
+#include "motionsettings.h"
 #include "tupitemtweener.h"
 #include "tuptweenerstep.h"
 #include "tosd.h"
 
-PosSettings::PosSettings(QWidget *parent) : QWidget(parent)
+MotionSettings::MotionSettings(QWidget *parent) : QWidget(parent)
 {
     selectionDone = false;
 
@@ -85,11 +85,11 @@ PosSettings::PosSettings(QWidget *parent) : QWidget(parent)
     activateMode(TupToolPlugin::Selection);
 }
 
-PosSettings::~PosSettings()
+MotionSettings::~MotionSettings()
 {
 }
 
-void PosSettings::setInnerForm()
+void MotionSettings::setInnerForm()
 {
     innerPanel = new QWidget;
 
@@ -132,7 +132,7 @@ void PosSettings::setInnerForm()
     activeInnerForm(false);
 }
 
-void PosSettings::activeInnerForm(bool enable)
+void MotionSettings::activeInnerForm(bool enable)
 {
     if (enable && !innerPanel->isVisible())
         innerPanel->show();
@@ -142,10 +142,10 @@ void PosSettings::activeInnerForm(bool enable)
 
 // Adding new Tween
 
-void PosSettings::setParameters(const QString &name, int framesCount, int startFrame)
+void MotionSettings::setParameters(const QString &name, int framesCount, int startFrame)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "PosSettings::setParameters() - Adding Tween context!";
+        qDebug() << "MotionSettings::setParameters() - Adding Tween context!";
     #endif
 
     mode = TupToolPlugin::Add;
@@ -167,7 +167,7 @@ void PosSettings::setParameters(const QString &name, int framesCount, int startF
 
 // Load properties of currentTween 
 
-void PosSettings::setParameters(TupItemTweener *currentTween)
+void MotionSettings::setParameters(TupItemTweener *currentTween)
 {
     #ifdef TUP_DEBUG
         qDebug() << "Settings::setParameters() - Loading Tween context!";
@@ -187,7 +187,7 @@ void PosSettings::setParameters(TupItemTweener *currentTween)
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepViewer->totalSteps()));
 }
 
-void PosSettings::initStartCombo(int framesCount, int currentIndex)
+void MotionSettings::initStartCombo(int framesCount, int currentIndex)
 {
     comboInit->clear();
     comboInit->setMinimum(1);
@@ -195,22 +195,22 @@ void PosSettings::initStartCombo(int framesCount, int currentIndex)
     comboInit->setValue(currentIndex + 1);
 }
 
-void PosSettings::setStartFrame(int currentIndex)
+void MotionSettings::setStartFrame(int currentIndex)
 {
     comboInit->setValue(currentIndex + 1);
 }
 
-int PosSettings::startFrame()
+int MotionSettings::startFrame()
 {
     return comboInit->value() - 1;
 }
 
-int PosSettings::startComboSize()
+int MotionSettings::startComboSize()
 {
     return comboInit->maximum();
 }
 
-void PosSettings::updateSteps(const QGraphicsPathItem *path)
+void MotionSettings::updateSteps(const QGraphicsPathItem *path)
 {
     if (path) {
         stepViewer->setPath(path);
@@ -219,7 +219,7 @@ void PosSettings::updateSteps(const QGraphicsPathItem *path)
     }
 }
 
-void PosSettings::emitOptionChanged(int option)
+void MotionSettings::emitOptionChanged(int option)
 {
     switch (option) {
         case 0:
@@ -241,13 +241,13 @@ void PosSettings::emitOptionChanged(int option)
     }
 }
 
-QString PosSettings::tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point, QString &path)
+QString MotionSettings::tweenToXml(int currentScene, int currentLayer, int currentFrame, QPointF point, QString &path)
 {
     QDomDocument doc;
 
     QDomElement root = doc.createElement("tweening");
     root.setAttribute("name", currentTweenName());
-    root.setAttribute("type", TupItemTweener::Position);
+    root.setAttribute("type", TupItemTweener::Motion);
     root.setAttribute("initFrame", currentFrame);
     root.setAttribute("initLayer", currentLayer);
     root.setAttribute("initScene", currentScene);
@@ -264,27 +264,27 @@ QString PosSettings::tweenToXml(int currentScene, int currentLayer, int currentF
     return doc.toString();
 }
 
-int PosSettings::totalSteps()
+int MotionSettings::totalSteps()
 {
     return stepViewer->totalSteps();
 }
 
-QList<QPointF> PosSettings::tweenPoints()
+QList<QPointF> MotionSettings::tweenPoints()
 {
     return stepViewer->tweenPoints();
 }
 
-void PosSettings::activateMode(TupToolPlugin::EditMode mode)
+void MotionSettings::activateMode(TupToolPlugin::EditMode mode)
 {
     options->setCurrentIndex(mode);
 }
 
-void PosSettings::clearData()
+void MotionSettings::clearData()
 {
     stepViewer->clearInterface();
 }
 
-void PosSettings::notifySelection(bool flag)
+void MotionSettings::notifySelection(bool flag)
 {
     #ifdef TUP_DEBUG
         qDebug() << "Settings::notifySelection() - selection is done? -> " << flag;
@@ -293,7 +293,7 @@ void PosSettings::notifySelection(bool flag)
     selectionDone = flag;
 }
 
-void PosSettings::applyTween()
+void MotionSettings::applyTween()
 {
     if (!selectionDone) {
         options->setCurrentIndex(0);
@@ -317,7 +317,7 @@ void PosSettings::applyTween()
     emit clickedApplyTween();
 }
 
-void PosSettings::setEditMode()
+void MotionSettings::setEditMode()
 {
     mode = TupToolPlugin::Edit;
     applyButton->setToolTip(tr("Update Tween"));
@@ -326,7 +326,7 @@ void PosSettings::setEditMode()
     remove->setToolTip(tr("Close Tween Properties"));
 }
 
-QString PosSettings::currentTweenName() const
+QString MotionSettings::currentTweenName() const
 {
     QString tweenName = input->text();
     if (tweenName.length() > 0)
@@ -335,38 +335,38 @@ QString PosSettings::currentTweenName() const
     return tweenName;
 }
 
-void PosSettings::updateTotalLabel(int total)
+void MotionSettings::updateTotalLabel(int total)
 {
     endingLabel->setText(tr("Ending at frame") + ": " + QString::number(startFrame() + stepViewer->totalSteps()));
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(total));
     emit framesTotalChanged(); 
 }
 
-void PosSettings::undoSegment(const QPainterPath path)
+void MotionSettings::undoSegment(const QPainterPath path)
 {
     stepViewer->undoSegment(path);
 }
 
-void PosSettings::redoSegment(const QPainterPath path)
+void MotionSettings::redoSegment(const QPainterPath path)
 {
     stepViewer->redoSegment(path);
 }
 
-void PosSettings::enableSaveOption(bool flag)
+void MotionSettings::enableSaveOption(bool flag)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "PosSettings::enableSaveOption() - flag -> " << flag;
+        qDebug() << "MotionSettings::enableSaveOption() - flag -> " << flag;
     #endif
 
     applyButton->setEnabled(flag);
 }
 
-int PosSettings::stepsTotal() 
+int MotionSettings::stepsTotal() 
 {
     return stepViewer->rowCount();
 }
 
-void PosSettings::updateSegments(const QPainterPath path)
+void MotionSettings::updateSegments(const QPainterPath path)
 {
     stepViewer->updateSegments(path);
 }

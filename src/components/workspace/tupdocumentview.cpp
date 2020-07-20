@@ -297,7 +297,7 @@ void TupDocumentView::updateNodesScale(qreal factor)
         nodesScaleFactor *= factor;
         QString toolName = currentTool->name();
         if (toolName.compare(tr("Object Selection")) == 0 || toolName.compare(tr("Nodes Selection")) == 0 || 
-            toolName.compare(tr("PolyLine")) == 0 || toolName.compare(tr("Position Tween")) == 0 ||
+            toolName.compare(tr("PolyLine")) == 0 || toolName.compare(tr("Motion Tween")) == 0 ||
             toolName.compare(tr("Rotation Tween")) == 0 || toolName.compare(tr("Shear Tween")) == 0)
             currentTool->resizeNode(1 / nodesScaleFactor);
     }
@@ -525,7 +525,7 @@ void TupDocumentView::loadPlugins()
                   break;
                   case TupToolInterface::Tweener:
                   {
-                      if (toolName.compare(tr("Position Tween")) == 0) {
+                      if (toolName.compare(tr("Motion Tween")) == 0) {
                           tweenTools[0] = action;
                           motionMenu->setDefaultAction(action);
                       }
@@ -1003,7 +1003,7 @@ void TupDocumentView::selectTool()
             paintArea->viewport()->setCursor(action->cursor());
 
         if (toolName.compare(tr("Object Selection")) == 0 || toolName.compare(tr("Nodes Selection")) == 0 ||
-            toolName.compare(tr("PolyLine")) == 0 || toolName.compare(tr("Position Tween")) == 0 ||
+            toolName.compare(tr("PolyLine")) == 0 || toolName.compare(tr("Motion Tween")) == 0 ||
             toolName.compare(tr("Rotation Tween")) == 0 || toolName.compare(tr("Shear Tween")) == 0)
             tool->updateZoomFactor(1 / nodesScaleFactor);
     } else {

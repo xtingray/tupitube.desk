@@ -710,7 +710,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double 
                  #endif
 
                  stepItem = tween->stepAt(0);
-                 if (stepItem->has(TupTweenerStep::Position)) {
+                 if (stepItem->has(TupTweenerStep::Motion)) {
                      QPointF point = QPoint(-adjustX, -adjustY);
                      object->setLastTweenPos(stepItem->getPosition() + point);
                      object->item()->setPos(tween->transformOriginPoint());
@@ -790,7 +790,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double 
                  #endif
                  int step = photogram - origin;
                  stepItem = tween->stepAt(step);
-                 if (stepItem->has(TupTweenerStep::Position)) {
+                 if (stepItem->has(TupTweenerStep::Motion)) {
                      qreal dx = stepItem->getPosition().x() - (object->lastTweenPos().x() + adjustX);
                      qreal dy = stepItem->getPosition().y() - (object->lastTweenPos().y() + adjustY);
                      object->item()->moveBy(dx, dy);
@@ -929,7 +929,7 @@ void TupGraphicsScene::addSvgTweeningObjects(int layerIndex, int photogram, doub
                  #endif
 
                  stepItem = tween->stepAt(0);
-                 if (stepItem->has(TupTweenerStep::Position)) {
+                 if (stepItem->has(TupTweenerStep::Motion)) {
                      object->setPos(tween->transformOriginPoint());
                      QPointF offset = QPoint(-adjustX, -adjustY);
                      object->setLastTweenPos(stepItem->getPosition() + offset);
@@ -972,7 +972,7 @@ void TupGraphicsScene::addSvgTweeningObjects(int layerIndex, int photogram, doub
                  int step = photogram - origin;
                  stepItem = tween->stepAt(step);
 
-                 if (stepItem->has(TupTweenerStep::Position)) {
+                 if (stepItem->has(TupTweenerStep::Motion)) {
                      qreal dx = stepItem->getPosition().x() - (object->lastTweenPos().x() + adjustX);
                      qreal dy = stepItem->getPosition().y() - (object->lastTweenPos().y() + adjustY);
                      object->moveBy(dx, dy);
