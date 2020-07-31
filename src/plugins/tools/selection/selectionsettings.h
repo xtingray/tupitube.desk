@@ -109,6 +109,9 @@ class TUPITUBE_PLUGIN SelectionSettings : public QWidget
         void enablePasteOnMouse();
 
     private:
+        void setLargetInterface();
+        void setCompactInterface();
+
         QWidget *help;
         QSpinBox *xPosField;
         QSpinBox *yPosField;

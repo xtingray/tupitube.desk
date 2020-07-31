@@ -406,7 +406,7 @@ void TupDocumentView::createLateralToolBar()
 
     // Motion Tween menu
     motionMenu = new QMenu(tr("Tweening"), toolbar);
-    motionMenu->setIcon(QPixmap(THEME_DIR + "icons/position_tween.png"));
+    motionMenu->setIcon(QPixmap(THEME_DIR + "icons/motion_tween.png"));
     connect(motionMenu, SIGNAL(triggered(QAction *)), this, SLOT(selectToolFromMenu(QAction*)));
 
     // Misc Tools menu

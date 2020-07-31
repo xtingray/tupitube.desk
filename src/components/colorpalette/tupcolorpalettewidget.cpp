@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
  *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
@@ -52,7 +52,7 @@
 #include <QGroupBox>
 #include <QMenu>
 
-TupColorPaletteWidget::TupColorPaletteWidget(QWidget *parent) : TupModuleWidgetBase(parent)
+TupColorPaletteWidget::TupColorPaletteWidget(QWidget *parent): TupModuleWidgetBase(parent)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupColorPaletteWidget()]";
@@ -144,7 +144,7 @@ void TupColorPaletteWidget::setupColorDisplay()
     QLabel *fillLabel = new QLabel(tr("Fill"));
 
     QSize cellSize(25, 25);
-    QColor contourColor(0, 0, 0);
+    // QColor contourColor(0, 0, 0);
     QBrush contourBrush = QBrush(Qt::black);
     contourColorCell = new TColorCell(TColorCell::Contour, contourBrush, cellSize);
     contourColorCell->setChecked(true);
@@ -331,7 +331,7 @@ void TupColorPaletteWidget::setupMainPalette()
 void TupColorPaletteWidget::setupColorChooser()
 {
     QFrame *colorMixer = new QFrame;
-    colorMixer->setFrameStyle(QFrame::Box | QFrame::Sunken);
+    colorMixer->setFrameStyle(QFrame::Box|QFrame::Sunken);
 
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     colorMixer->setLayout(mainLayout);

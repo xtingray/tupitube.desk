@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
  *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
@@ -34,10 +34,14 @@
  ***************************************************************************/
 
 #include "tupbrushwidget.h"
+#include "tseparator.h"
 
 TupBrushWidget::TupBrushWidget(QWidget *parent) : TupModuleWidgetBase(parent)
 {
     setWindowTitle(tr("Brush Properties"));
+
+    QWidget *borderWidget = new QWidget;
+    QVBoxLayout *borderLayout = new QVBoxLayout(borderWidget);
 
     TCONFIG->beginGroup("BrushParameters");
     int thicknessValue = TCONFIG->value("Thickness", 3).toInt();
@@ -53,15 +57,11 @@ TupBrushWidget::TupBrushWidget(QWidget *parent) : TupModuleWidgetBase(parent)
     connect(thickness, SIGNAL(valueChanged(int)), this, SLOT(setThickness(int)));
     connect(thickness, SIGNAL(valueChanged(int)), thickPreview, SLOT(render(int)));
 
-    addChild(thickPreview);
-    addChild(thickness);
-
-    QWidget *space = new QWidget(this);
-    space->setFixedHeight(5);
-    addChild(space);
+    borderLayout->addWidget(thickPreview);
+    borderLayout->addWidget(thickness);
 
     QLabel *label = new QLabel(tr("Dashes") + ":", this);
-    addChild(label);
+    borderLayout->addWidget(label);
 
     QWidget *styleWidget = new QWidget(this);
     QBoxLayout *styleLayout = new QHBoxLayout(styleWidget);
@@ -84,14 +84,11 @@ TupBrushWidget::TupBrushWidget(QWidget *parent) : TupModuleWidgetBase(parent)
     styleLayout->addWidget(style);
     connect(style, SIGNAL(currentIndexChanged(int)), this, SLOT(setStyle(int)));
 
-    addChild(styleWidget);
-
-    space = new QWidget(this);
-    space->setFixedHeight(5);
-    addChild(space);
+    borderLayout->addWidget(styleWidget);
 
     label = new QLabel(tr("Cap") + ":", this);
-    addChild(label);
+
+    borderLayout->addWidget(label);
 
     QWidget *capWidget = new QWidget(this);
     QBoxLayout *capLayout = new QHBoxLayout(capWidget);
@@ -120,14 +117,12 @@ TupBrushWidget::TupBrushWidget(QWidget *parent) : TupModuleWidgetBase(parent)
     capLayout->addWidget(roundCapButton);
     capLayout->addWidget(squareCapButton);
     capLayout->addWidget(flatCapButton);
-    addChild(capWidget);
 
-    space = new QWidget(this);
-    space->setFixedHeight(5);
-    addChild(space);
+    borderLayout->addWidget(capWidget);
 
     label = new QLabel(tr("Join") + ":", this);
-    addChild(label);
+
+    borderLayout->addWidget(label);
 
     QWidget *joinWidget = new QWidget(this);
     QBoxLayout *joinLayout = new QHBoxLayout(joinWidget);
@@ -156,19 +151,38 @@ TupBrushWidget::TupBrushWidget(QWidget *parent) : TupModuleWidgetBase(parent)
     joinLayout->addWidget(roundJoinButton);
     joinLayout->addWidget(bevelJoinButton);
     joinLayout->addWidget(miterJoinButton);
-    addChild(joinWidget);
 
-    space = new QWidget(this);
-    space->setFixedHeight(5);
-    addChild(space);
+    borderLayout->addWidget(joinWidget);
 
-    label = new QLabel(tr("Brush") + ":", this);
-    addChild(label);
+    label = new QLabel(tr("Border Brush") + ":", this);
 
-    addBrushesList();
- 
-    boxLayout()->addStretch(2);
-    
+    borderLayout->addWidget(label);
+
+    borderBrushesList = new QListWidget(this);
+    borderLayout->addWidget(addBrushesList(Border, borderBrushesList));
+
+    borderLayout->addStretch();
+    borderLayout->setAlignment(Qt::AlignTop);
+
+    addChild(borderWidget);
+
+    /*
+    addChild(new TSeparator(Qt::Horizontal));
+
+    QWidget *fillWidget = new QWidget;
+    QVBoxLayout *fillLayout = new QVBoxLayout(fillWidget);
+
+    label = new QLabel(tr("Fill Brush") + ":", this);
+    fillLayout->addWidget(label);
+    fillBrushesList = new QListWidget(this);
+
+    fillLayout->addWidget(addBrushesList(Fill, fillBrushesList));
+    fillLayout->addStretch();
+    addChild(fillWidget);
+    */
+
+    boxLayout()->addStretch();
+
     setWindowIcon(QIcon(THEME_DIR + "icons/brush.png"));
 }
 
@@ -200,23 +214,35 @@ void TupBrushWidget::setStyle(int styleCode)
     updatePenProperties();
 }
 
-void TupBrushWidget::setBrushStyle(QListWidgetItem *item)
+void TupBrushWidget::setBorderBrushStyle(QListWidgetItem *item)
 {
+    /*
     if (item->toolTip().compare("TexturePattern") == 0) {
         brush = QBrush(QPixmap(THEME_DIR + "icons/brush_15.png"));
         thickPreview->setBrush(24);
-    } else {
-        int index = brushesList->row(item);
-        thickPreview->setBrush(index+1);
-        brush.setStyle(Qt::BrushStyle(index+1));
     }
+    */
+
+    int index = borderBrushesList->row(item);
+    thickPreview->setBrush(index + 1);
+    borderBrush.setStyle(Qt::BrushStyle(index + 1));
 
     updatePenProperties();
 }
 
+/*
+void TupBrushWidget::setFillBrushStyle(QListWidgetItem *item)
+{
+    int index = fillBrushesList->row(item);
+    fillBrush.setStyle(Qt::BrushStyle(index + 2));
+
+    updateBrushProperties();
+}
+*/
+
 void TupBrushWidget::setPenColor(const QColor color)
 {
-    brush.setColor(color);
+    borderBrush.setColor(color);
     thickPreview->setColor(color);
 }
 
@@ -239,7 +265,7 @@ void TupBrushWidget::setPenThickness(int width)
 
 void TupBrushWidget::setBrush(const QBrush b)
 {
-    brush = b;
+    borderBrush = b;
     thickPreview->setBrush(b);
 }
 
@@ -257,11 +283,17 @@ void TupBrushWidget::init(int width)
     enableRoundJoinStyle();
     style->setCurrentIndex(0);
 
-    QListWidgetItem *first = brushesList->item(0);
-    brushesList->setCurrentItem(first);
-    setBrushStyle(first);
-    blockSignals(false);
+    QListWidgetItem *borderFirst = borderBrushesList->item(0);
+    borderBrushesList->setCurrentItem(borderFirst);
+    setBorderBrushStyle(borderFirst);
 
+    /*
+    QListWidgetItem *fillFirst = fillBrushesList->item(0);
+    fillBrushesList->setCurrentItem(fillFirst);
+    setFillBrushStyle(fillFirst);
+    */
+
+    blockSignals(false);
     setThickness(width);
 }
 
@@ -272,7 +304,7 @@ QPen TupBrushWidget::getPen() const
 
 void TupBrushWidget::updatePenProperties()
 {
-    pen.setBrush(brush);
+    pen.setBrush(borderBrush);
 
     TupPaintAreaEvent event(TupPaintAreaEvent::ChangePen, pen);
     emit paintAreaEventTriggered(&event);
@@ -280,18 +312,29 @@ void TupBrushWidget::updatePenProperties()
 
 void TupBrushWidget::updateBrushProperties()
 {
-    TupPaintAreaEvent event(TupPaintAreaEvent::ChangeBrush, brush);
+    TupPaintAreaEvent event(TupPaintAreaEvent::ChangeBrush, fillBrush);
     emit paintAreaEventTriggered(&event);
 }
 
-void TupBrushWidget::addBrushesList()
+QListWidget * TupBrushWidget::addBrushesList(BrushType type, QListWidget *brushesList)
 {
-    brushesList = new QListWidget(this);
+    Q_UNUSED(type)
+
     brushesList->setViewMode(QListView::IconMode);
     brushesList->setFlow(QListView::LeftToRight);
     brushesList->setMovement(QListView::Static);
 
-    QListWidgetItem *brushItem = new QListWidgetItem(brushesList);
+    QListWidgetItem *brushItem;
+
+    /*
+    brushItem = new QListWidgetItem(brushesList);
+    brushItem->setIcon(QIcon(THEME_DIR + "icons/brush_transparent.png"));
+    brushItem->setFont(QFont("verdana", 8));
+    brushItem->setToolTip("Transparent");
+    brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    */
+
+    brushItem = new QListWidgetItem(brushesList);
     brushItem->setIcon(QIcon(THEME_DIR + "icons/brush_01.png"));
     brushItem->setFont(QFont("verdana", 8));
     brushItem->setToolTip("Solid");
@@ -401,11 +444,22 @@ void TupBrushWidget::addBrushesList()
     brushItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     */
 
-    brushesList->setFixedWidth(255);
-    brushesList->setFixedHeight(63);
+    brushesList->setFixedWidth(265);
 
-    addChild(brushesList);
-    connect(brushesList, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(setBrushStyle(QListWidgetItem *)));
+    brushesList->setFixedHeight(63);
+    connect(brushesList, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(setBorderBrushStyle(QListWidgetItem *)));
+
+    /*
+    if (type == Border) {
+        brushesList->setFixedHeight(63);
+        connect(brushesList, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(setBorderBrushStyle(QListWidgetItem *)));
+    } else {
+        brushesList->setFixedHeight(63);
+        connect(brushesList, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(setFillBrushStyle(QListWidgetItem *)));
+    }
+    */
+
+    return brushesList;
 }
 
 void TupBrushWidget::enableRoundCapStyle()

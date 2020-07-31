@@ -57,7 +57,9 @@ class TUPITUBE_EXPORT TupBrushWidget : public TupModuleWidgetBase
     Q_OBJECT
 
     public:
-        TupBrushWidget(QWidget *parent = 0);
+        enum BrushType { Border, Fill };
+
+        TupBrushWidget(QWidget *parent = nullptr);
         ~TupBrushWidget();
 
         QPen getPen() const;
@@ -66,17 +68,18 @@ class TUPITUBE_EXPORT TupBrushWidget : public TupModuleWidgetBase
     private:
         void updatePenProperties();
         void updateBrushProperties();
-        void addBrushesList();
-        
+        QListWidget * addBrushesList(BrushType type, QListWidget *brushesList);
+
     public slots:
         void init(int thickness);
         void setThickness(int thickness);
         void setPenColor(const QColor color);
-        void setBrush(const QBrush brush);
+        void setBrush(const QBrush borderBrush);
         
     private slots:
         void setStyle(int style);
-        void setBrushStyle(QListWidgetItem *item);
+        void setBorderBrushStyle(QListWidgetItem *item);
+        // void setFillBrushStyle(QListWidgetItem *item);
 
         void enableRoundCapStyle();
         void enableSquareCapStyle();
@@ -101,9 +104,11 @@ class TUPITUBE_EXPORT TupBrushWidget : public TupModuleWidgetBase
         QPushButton *roundJoinButton;
 
         QComboBox *style;
-        QListWidget *brushesList;
+        QListWidget *borderBrushesList;
+        QListWidget *fillBrushesList;
         QPen pen;
-        QBrush brush;
+        QBrush borderBrush;
+        QBrush fillBrush;
         TupPenThicknessWidget *thickPreview;
 };
 

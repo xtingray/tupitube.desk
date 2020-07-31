@@ -51,7 +51,7 @@ InkTool::InkTool()
 {
     settings = nullptr;
     guidePath = nullptr;
-    inkCursor = QCursor(kAppProp->themeDir() + "cursors/ink.png", 0, 16);
+    inkCursor = QCursor(kAppProp->themeDir() + "cursors/target.png", 4, 4);
 
     setupActions();
 }

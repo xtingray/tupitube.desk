@@ -42,8 +42,14 @@
 #include "timagebutton.h"
 #include "tseparator.h"
 
+#include <QScreen>
+
 SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
 {
+    // QScreen *screen = QGuiApplication::screens().at(0);
+    // QRect rec = screen->availableGeometry();
+    // int screenH = rec.height();
+
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 
     QLabel *toolTitle = new QLabel;
@@ -54,6 +60,50 @@ SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(toolTitle);
     mainLayout->addWidget(new TSeparator(Qt::Horizontal));
 
+    // if (screenH)
+    setLargetInterface();
+    // else
+    // setCompatInterface();
+
+    mainLayout->addWidget(formPanel);
+
+    tips = new QPushButton(tr("Show Tips"));
+    tips->setToolTip(tr("A little help for the Selection tool"));
+
+    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
+    layout->addWidget(tips);
+    connect(tips, SIGNAL(clicked()), this, SLOT(openTipPanel()));
+
+    mainLayout->addLayout(layout);
+
+    help = new QWidget(this);
+    help->hide();
+    QBoxLayout *helpLayout = new QBoxLayout(QBoxLayout::TopToBottom,help);
+
+    int h = height();
+    textArea = new QTextEdit;
+
+    // SQA: Check this code with several screen resolutions. It must looks good with everyone! 
+    textArea->setHtml("<p><b>" + tr("Double Click on any node or Shortcut Alt + R") + ":</b> " + tr("Rotation mode") + "</p>");
+    textArea->append("<p><b>" + tr("Arrows") + ":</b> " +  tr("Movement on selection") + "</p>");
+    textArea->append("<p><b>" + tr("Shift + Arrows") + ":</b> " +  tr("Slow movement on selection") + "</p>");
+    textArea->append("<p><b>" + tr("Ctrl + Arrows") + ":</b> " +  tr("Fast movement on selection") + "</p>");
+    textArea->append("<p><b>" + tr("Ctrl + Left Mouse Button") + ":</b> " +  tr("Proportional scaling on selection") + "</p>");
+
+    help->setFixedHeight(h);
+    helpLayout->addWidget(textArea);
+
+    mainLayout->addWidget(help);
+    mainLayout->addStretch(2);
+    isVisible = false;
+}
+
+SelectionSettings::~SelectionSettings()
+{
+}
+
+void SelectionSettings::setLargetInterface()
+{
     formPanel = new QWidget;
     QBoxLayout *formLayout = new QBoxLayout(QBoxLayout::TopToBottom, formPanel);
 
@@ -283,42 +333,11 @@ SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
 
     formLayout->addLayout(pasteLayout);
     formPanel->setVisible(false);
-
-    mainLayout->addWidget(formPanel);
-
-    tips = new QPushButton(tr("Show Tips"));
-    tips->setToolTip(tr("A little help for the Selection tool"));
-
-    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
-    layout->addWidget(tips);
-    connect(tips, SIGNAL(clicked()), this, SLOT(openTipPanel()));
-
-    mainLayout->addLayout(layout);
-
-    help = new QWidget(this);
-    help->hide();
-    QBoxLayout *helpLayout = new QBoxLayout(QBoxLayout::TopToBottom,help);
-
-    int h = height();
-    textArea = new QTextEdit;
-
-    // SQA: Check this code with several screen resolutions. It must looks good with everyone! 
-    textArea->setHtml("<p><b>" + tr("Double Click on any node or Shortcut Alt + R") + ":</b> " + tr("Rotation mode") + "</p>");
-    textArea->append("<p><b>" + tr("Arrows") + ":</b> " +  tr("Movement on selection") + "</p>");
-    textArea->append("<p><b>" + tr("Shift + Arrows") + ":</b> " +  tr("Slow movement on selection") + "</p>");
-    textArea->append("<p><b>" + tr("Ctrl + Arrows") + ":</b> " +  tr("Fast movement on selection") + "</p>");
-    textArea->append("<p><b>" + tr("Ctrl + Left Mouse Button") + ":</b> " +  tr("Proportional scaling on selection") + "</p>");
-
-    help->setFixedHeight(h);
-    helpLayout->addWidget(textArea);
-
-    mainLayout->addWidget(help);
-    mainLayout->addStretch(2);
-    isVisible = false;
 }
 
-SelectionSettings::~SelectionSettings()
+void SelectionSettings::setCompactInterface()
 {
+
 }
 
 void SelectionSettings::hFlip()

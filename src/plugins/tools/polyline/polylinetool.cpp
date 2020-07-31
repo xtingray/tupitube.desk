@@ -53,7 +53,7 @@ PolyLineTool::PolyLineTool()
     cutterOn = false;
     movingOn = false;
 
-    polyCursor = QCursor(kAppProp->themeDir() + "cursors/polyline.png", 4, 4);
+    polyCursor = QCursor(kAppProp->themeDir() + "cursors/target.png", 4, 4);
     
     line1 = new QGraphicsLineItem(0, 0, 0, 0);
     line1->setPen(QPen(QColor(55, 177, 50)));
