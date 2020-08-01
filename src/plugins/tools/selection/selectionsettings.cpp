@@ -43,12 +43,13 @@
 #include "tseparator.h"
 
 #include <QScreen>
+#include <QButtonGroup>
 
 SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
 {
-    // QScreen *screen = QGuiApplication::screens().at(0);
-    // QRect rec = screen->availableGeometry();
-    // int screenH = rec.height();
+    QScreen *screen = QGuiApplication::screens().at(0);
+    QRect rect = screen->availableGeometry();
+    int screenH = rect.height();
 
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 
@@ -60,10 +61,12 @@ SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(toolTitle);
     mainLayout->addWidget(new TSeparator(Qt::Horizontal));
 
-    // if (screenH)
-    setLargetInterface();
-    // else
-    // setCompatInterface();
+    formPanel = new QWidget;
+
+    if (screenH >= 1080)
+        setLargetInterface();
+    else
+        setCompactInterface();
 
     mainLayout->addWidget(formPanel);
 
@@ -104,13 +107,125 @@ SelectionSettings::~SelectionSettings()
 
 void SelectionSettings::setLargetInterface()
 {
-    formPanel = new QWidget;
     QBoxLayout *formLayout = new QBoxLayout(QBoxLayout::TopToBottom, formPanel);
 
     QLabel *alignLabel = new QLabel(tr("Alignment"));
     alignLabel->setAlignment(Qt::AlignHCenter);
     formLayout->addWidget(alignLabel);
 
+    formLayout->addLayout(setAlignBlock());
+    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+
+    QLabel *flips = new QLabel(tr("Flips"));
+    flips->setAlignment(Qt::AlignHCenter);
+    formLayout->addWidget(flips);
+
+    formLayout->addLayout(setFlipsBlock());
+    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+
+    QLabel *order = new QLabel(tr("Order"));
+    order->setAlignment(Qt::AlignHCenter);
+    formLayout->addWidget(order);
+
+    formLayout->addLayout(setOrderBlock());
+    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+
+    // Group/Ungroup actions
+
+    QLabel *groupLayer = new QLabel(tr("Group"));
+    groupLayer->setAlignment(Qt::AlignHCenter);
+    formLayout->addWidget(groupLayer);
+
+    formLayout->addLayout(setGroupBlock());
+    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+
+    // Transformation Panels
+
+    QLabel *position = new QLabel(tr("Position"));
+    position->setAlignment(Qt::AlignHCenter);
+    formLayout->addWidget(position);
+
+    formLayout->addLayout(setPosBlock());
+    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+
+    QLabel *rotation = new QLabel(tr("Rotation"));
+    rotation->setAlignment(Qt::AlignHCenter);
+    formLayout->addWidget(rotation);
+
+    formLayout->addLayout(setRotateBlock());
+    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+
+    QLabel *scale = new QLabel(tr("Scale"));
+    scale->setAlignment(Qt::AlignHCenter);
+    formLayout->addWidget(scale);
+
+    formLayout->addLayout(setScaleBlock());
+    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+
+    formLayout->addLayout(setPasteBlock());
+    formPanel->setVisible(false);
+}
+
+void SelectionSettings::setCompactInterface()
+{
+    buttonLabels << tr("Alignment") << tr("Flips") << tr("Order") << tr("Group");
+    buttonLabels << tr("Position") << tr("Rotation") << tr("Scale");
+
+    QBoxLayout *formLayout = new QBoxLayout(QBoxLayout::TopToBottom, formPanel);
+    formPanel->setVisible(false);
+
+    actionLayout[0] = setAlignBlock();
+    actionLayout[1] = setFlipsBlock();
+    actionLayout[2] = setOrderBlock();
+    actionLayout[3] = setGroupBlock();
+    actionLayout[4] = setPosBlock();
+    actionLayout[5] = setRotateBlock();
+    actionLayout[6] = setScaleBlock();
+
+    QButtonGroup *actionsGroup = new QButtonGroup(this);
+
+    int i = 0;
+    foreach (QString label, buttonLabels) {
+        actionButton[i] = new QPushButton(label);
+        actionButton[i]->setCheckable(true);
+        actionsGroup->addButton(actionButton[i]);
+        actionsGroup->setId(actionButton[i], i);
+        formLayout->addWidget(actionButton[i]);
+
+        actionWidget[i] = new QWidget;
+        actionWidget[i]->setLayout(actionLayout[i]);
+        actionWidget[i]->setVisible(false);
+        formLayout->addWidget(actionWidget[i]);
+
+        formLayout->addWidget(new TSeparator(Qt::Horizontal));
+        i++;
+    }
+
+    connect(actionsGroup, SIGNAL(buttonClicked(int)), this, SLOT(showActionPanel(int)));
+
+    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+    formLayout->addLayout(setPasteBlock());
+}
+
+void SelectionSettings::showActionPanel(int index)
+{
+    bool checked = !actionWidget[index]->isVisible();
+    actionWidget[index]->setVisible(checked);
+    updatePanel(index);
+}
+
+void SelectionSettings::updatePanel(int index)
+{
+    for (int i = 0; i < buttonLabels.size(); i++) {
+        if (i != index) {
+            actionButton[i]->setChecked(false);
+            actionWidget[i]->setVisible(false);
+        }
+    }
+}
+
+QBoxLayout * SelectionSettings::setAlignBlock()
+{
     QBoxLayout *alignLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     alignLayout->setMargin(0);
     alignLayout->setSpacing(0);
@@ -129,16 +244,14 @@ void SelectionSettings::setLargetInterface()
     alignLayout->addWidget(vAlignButton);
     alignLayout->addWidget(aAlignButton);
 
-    formLayout->addLayout(alignLayout);
-    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+    return alignLayout;
+}
 
-    QLabel *flips = new QLabel(tr("Flips"));
-    flips->setAlignment(Qt::AlignHCenter);
-    formLayout->addWidget(flips);
-
-    QBoxLayout *buttonsLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    buttonsLayout->setMargin(0);
-    buttonsLayout->setSpacing(0);
+QBoxLayout * SelectionSettings::setFlipsBlock()
+{
+    QBoxLayout *flipLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    flipLayout->setMargin(0);
+    flipLayout->setSpacing(0);
 
     TImageButton *horizontalFlip = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/horizontal_flip.png"), 22);
     horizontalFlip->setToolTip(tr("Horizontal Flip"));
@@ -150,20 +263,18 @@ void SelectionSettings::setLargetInterface()
     connect(verticalFlip, SIGNAL(clicked()), this, SLOT(vFlip()));
     connect(crossedFlip, SIGNAL(clicked()), this, SLOT(cFlip()));
 
-    buttonsLayout->addWidget(horizontalFlip);
-    buttonsLayout->addWidget(verticalFlip);
-    buttonsLayout->addWidget(crossedFlip);
+    flipLayout->addWidget(horizontalFlip);
+    flipLayout->addWidget(verticalFlip);
+    flipLayout->addWidget(crossedFlip);
 
-    formLayout->addLayout(buttonsLayout);
-    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+    return flipLayout;
+}
 
-    QLabel *order = new QLabel(tr("Order"));
-    order->setAlignment(Qt::AlignHCenter);
-    formLayout->addWidget(order);
-
-    QBoxLayout *orderButtonsLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    orderButtonsLayout->setMargin(0);
-    orderButtonsLayout->setSpacing(0);
+QBoxLayout * SelectionSettings::setOrderBlock()
+{
+    QBoxLayout *orderLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    orderLayout->setMargin(0);
+    orderLayout->setSpacing(0);
 
     TImageButton *toBack = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/to_back.png"), 22);
     toBack->setToolTip(tr("Send object to back"));
@@ -182,23 +293,19 @@ void SelectionSettings::setLargetInterface()
     connect(toFront, SIGNAL(clicked()), this, SLOT(sendToFront()));
     connect(toFrontOneLevel, SIGNAL(clicked()), this, SLOT(sendToFrontOneLevel()));
 
-    orderButtonsLayout->addWidget(toBack);
-    orderButtonsLayout->addWidget(toBackOneLevel);
-    orderButtonsLayout->addWidget(toFront);
-    orderButtonsLayout->addWidget(toFrontOneLevel);
+    orderLayout->addWidget(toBack);
+    orderLayout->addWidget(toBackOneLevel);
+    orderLayout->addWidget(toFront);
+    orderLayout->addWidget(toFrontOneLevel);
 
-    formLayout->addLayout(orderButtonsLayout);
-    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+    return orderLayout;
+}
 
-    // Group/Ungroup actions
-
-    QLabel *groupLayer = new QLabel(tr("Group"));
-    groupLayer->setAlignment(Qt::AlignHCenter);
-    formLayout->addWidget(groupLayer);
-
-    QBoxLayout *groupButtonsLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    groupButtonsLayout->setMargin(0);
-    groupButtonsLayout->setSpacing(0);
+QBoxLayout * SelectionSettings::setGroupBlock()
+{
+    QBoxLayout *groupLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    groupLayout->setMargin(0);
+    groupLayout->setSpacing(0);
 
     TImageButton *groupButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/group.png"), 22);
     groupButton->setToolTip(tr("Group Objects"));
@@ -209,17 +316,15 @@ void SelectionSettings::setLargetInterface()
     connect(groupButton, SIGNAL(clicked()), this, SLOT(groupItems()));
     connect(ungroupButton, SIGNAL(clicked()), this, SLOT(ungroupItems()));
 
-    groupButtonsLayout->addWidget(groupButton);
-    groupButtonsLayout->addWidget(ungroupButton);
+    groupLayout->addWidget(groupButton);
+    groupLayout->addWidget(ungroupButton);
 
-    formLayout->addLayout(groupButtonsLayout);
-    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+    return groupLayout;
+}
 
-    // Transformation Panels
-
-    QLabel *position = new QLabel(tr("Position"));
-    position->setAlignment(Qt::AlignHCenter);
-    formLayout->addWidget(position);
+QBoxLayout * SelectionSettings::setPosBlock()
+{
+    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
 
     QLabel *xLabel = new QLabel(tr("X") + ": ");
     xLabel->setMaximumWidth(20);
@@ -243,7 +348,7 @@ void SelectionSettings::setLargetInterface()
     xLayout->addWidget(xLabel);
     xLayout->addWidget(xPosField);
 
-    formLayout->addLayout(xLayout);
+    layout->addLayout(xLayout);
 
     QBoxLayout *yLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     yLayout->setMargin(0);
@@ -251,13 +356,12 @@ void SelectionSettings::setLargetInterface()
     yLayout->addWidget(yLabel);
     yLayout->addWidget(yPosField);
 
-    formLayout->addLayout(yLayout);
-    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+    layout->addLayout(yLayout);
+    return layout;
+}
 
-    QLabel *rotation = new QLabel(tr("Rotation"));
-    rotation->setAlignment(Qt::AlignHCenter);
-    formLayout->addWidget(rotation);
-
+QBoxLayout * SelectionSettings::setRotateBlock()
+{
     QLabel *angleLabel = new QLabel(tr("Angle") + ": ");
 
     angleField = new QSpinBox;
@@ -271,12 +375,12 @@ void SelectionSettings::setLargetInterface()
     angleLayout->addWidget(angleLabel);
     angleLayout->addWidget(angleField);
 
-    formLayout->addLayout(angleLayout);
-    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+    return angleLayout;
+}
 
-    QLabel *scale = new QLabel(tr("Scale"));
-    scale->setAlignment(Qt::AlignHCenter);
-    formLayout->addWidget(scale);
+QBoxLayout * SelectionSettings::setScaleBlock()
+{
+    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
 
     QLabel *factorXLabel = new QLabel(tr("X") + ": ");
     factorXField = new QDoubleSpinBox;
@@ -292,7 +396,7 @@ void SelectionSettings::setLargetInterface()
     factorXLayout->addWidget(factorXLabel);
     factorXLayout->addWidget(factorXField);
 
-    formLayout->addLayout(factorXLayout);
+    layout->addLayout(factorXLayout);
 
     QLabel *factorYLabel = new QLabel(tr("Y") + ": ");
     factorYField = new QDoubleSpinBox;
@@ -308,14 +412,18 @@ void SelectionSettings::setLargetInterface()
     factorYLayout->addWidget(factorYLabel);
     factorYLayout->addWidget(factorYField);
 
-    formLayout->addLayout(factorYLayout);
+    layout->addLayout(factorYLayout);
 
     propCheck = new QCheckBox(tr("Proportion"), this);
     connect(propCheck, SIGNAL(stateChanged(int)), this, SLOT(enableProportion(int)));
-    formLayout->addWidget(propCheck);
-    formLayout->setAlignment(propCheck, Qt::AlignHCenter);
-    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+    layout->addWidget(propCheck);
+    layout->setAlignment(propCheck, Qt::AlignHCenter);
 
+    return layout;
+}
+
+QBoxLayout * SelectionSettings::setPasteBlock()
+{
     TCONFIG->beginGroup("PaintArea");
     bool onMouse = TCONFIG->value("PasteOnMousePos", false).toBool();
     pasteCheck = new QCheckBox;
@@ -331,13 +439,7 @@ void SelectionSettings::setLargetInterface()
     pasteLayout->addWidget(pasteCheck, Qt::AlignHCenter);
     pasteLayout->addWidget(pasteLabel, Qt::AlignHCenter);
 
-    formLayout->addLayout(pasteLayout);
-    formPanel->setVisible(false);
-}
-
-void SelectionSettings::setCompactInterface()
-{
-
+    return pasteLayout;
 }
 
 void SelectionSettings::hFlip()

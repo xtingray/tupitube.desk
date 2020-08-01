@@ -56,6 +56,7 @@ class TUPITUBE_PLUGIN SelectionSettings : public QWidget
     Q_OBJECT
 
     public:
+        enum Action { AlignAction = 0, FlipsAction, OrderAction, GroupAction, PosAction, RotateAction, ScaleAction };
         enum Align { hAlign = 1, vAlign, totalAlign };
         enum Flip { Vertical = 1, Horizontal, Crossed };
         enum Order { ToBack = 0, ToFront, ToBackOneLevel, ToFrontOneLevel };
@@ -86,6 +87,8 @@ class TUPITUBE_PLUGIN SelectionSettings : public QWidget
         void updateScaleFactor(double x, double y);
 
      private slots:
+        void showActionPanel(int index);
+
         void alignObjectHorizontally();
         void alignObjectVertically();
         void alignObjectAbsolutely();
@@ -111,6 +114,21 @@ class TUPITUBE_PLUGIN SelectionSettings : public QWidget
     private:
         void setLargetInterface();
         void setCompactInterface();
+        void updatePanel(int index);
+
+        QBoxLayout * setAlignBlock();
+        QBoxLayout * setFlipsBlock();
+        QBoxLayout * setOrderBlock();
+        QBoxLayout * setGroupBlock();
+        QBoxLayout * setPosBlock();
+        QBoxLayout * setRotateBlock();
+        QBoxLayout * setScaleBlock();
+        QBoxLayout * setPasteBlock();
+
+        QStringList buttonLabels;
+        QPushButton * actionButton[7];
+        QWidget * actionWidget[7];
+        QBoxLayout *actionLayout[7];
 
         QWidget *help;
         QSpinBox *xPosField;
