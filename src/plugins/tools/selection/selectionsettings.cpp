@@ -93,11 +93,13 @@ SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
     textArea->append("<p><b>" + tr("Ctrl + Arrows") + ":</b> " +  tr("Fast movement on selection") + "</p>");
     textArea->append("<p><b>" + tr("Ctrl + Left Mouse Button") + ":</b> " +  tr("Proportional scaling on selection") + "</p>");
 
-    help->setFixedHeight(h);
+    if (screenH >= 1080)
+        help->setFixedHeight(h);
+
     helpLayout->addWidget(textArea);
 
     mainLayout->addWidget(help);
-    mainLayout->addStretch(2);
+    mainLayout->addStretch();
     isVisible = false;
 }
 
