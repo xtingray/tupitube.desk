@@ -202,8 +202,6 @@ void SelectionSettings::setCompactInterface()
     }
 
     connect(actionsGroup, SIGNAL(buttonClicked(int)), this, SLOT(showActionPanel(int)));
-
-    formLayout->addWidget(new TSeparator(Qt::Horizontal));
     formLayout->addLayout(setPasteBlock());
 }
 
