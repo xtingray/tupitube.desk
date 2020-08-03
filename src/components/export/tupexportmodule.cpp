@@ -176,7 +176,6 @@ void TupExportModule::setCurrentExporter(TupExportInterface *currentExporter)
 
 void TupExportModule::setCurrentFormat(TupExportInterface::Format format, const QString &value)
 {
-    // m_currentFormat = TupExportInterface::Format(currentFormat);
     m_currentFormat = format;
     extension = value;
     filename = path;

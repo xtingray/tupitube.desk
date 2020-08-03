@@ -128,55 +128,55 @@ QString TupProjectCommand::actionString(int action)
     {
         case TupProjectRequest::Add:
         {
-            return QObject::tr("add");
+            return "add";
         }
         case TupProjectRequest::Remove:
         {
-            return QObject::tr("remove");
+            return "remove";
         }
         case TupProjectRequest::Move:
         {
-            return QObject::tr("move");
+            return "move";
         }
         case TupProjectRequest::ReverseSelection:
         {
-            return QObject::tr("reverse");
+            return "reverse";
         }
         case TupProjectRequest::Lock:
         {
-            return QObject::tr("lock");
+            return "lock";
         }
         case TupProjectRequest::Rename:
         {
-            return QObject::tr("rename");
+            return "rename";
         }
         case TupProjectRequest::Select:
         {
-            return QObject::tr("select");
+            return "select";
         }
         case TupProjectRequest::EditNodes:
         {
-            return QObject::tr("edit node");
+            return "edit node";
         }
         case TupProjectRequest::Pen:
         {
-            return QObject::tr("pen");
+            return "pen";
         }
         case TupProjectRequest::Brush:
         {
-            return QObject::tr("brush");
+            return "brush";
         }
         case TupProjectRequest::View:
         {
-            return QObject::tr("view");
+            return "view";
         }
         case TupProjectRequest::Transform:
         {
-            return QObject::tr("transform");
+            return "transform";
         }
         case TupProjectRequest::Convert:
         {
-            return QObject::tr("convert");
+            return "convert";
         }
     }
     

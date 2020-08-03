@@ -99,10 +99,6 @@
         <translation>關閉補間屬性</translation>
     </message>
     <message>
-        <source>Info</source>
-        <translation>資訊</translation>
-    </message>
-    <message>
         <source>You must select at least one object!</source>
         <translation>您至少要選擇一個物件!</translation>
     </message>
@@ -142,8 +138,8 @@
         <translation>比例尺補間屬性</translation>
     </message>
     <message>
-        <source>Position Tween Properties</source>
-        <translation>位置補間屬性</translation>
+        <source>Motion Tween Properties</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -158,10 +154,6 @@
     <message>
         <source>F</source>
         <translation>F</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
     </message>
     <message>
         <source>Sorry, Groups can&apos;t be filled yet</source>
@@ -327,14 +319,65 @@
     </message>
 </context>
 <context>
+    <name>MotionSettings</name>
+    <message>
+        <source>Name</source>
+        <translation>名字</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>選項</translation>
+    </message>
+    <message>
+        <source>Select Objects</source>
+        <translation>選擇物件</translation>
+    </message>
+    <message>
+        <source>Set Path Properties</source>
+        <translation>設定路徑屬性</translation>
+    </message>
+    <message>
+        <source>Starting at frame</source>
+        <translation>起始影格</translation>
+    </message>
+    <message>
+        <source>Ending at frame</source>
+        <translation>結束影格</translation>
+    </message>
+    <message>
+        <source>Frames Total</source>
+        <translation>總影格數</translation>
+    </message>
+    <message>
+        <source>Save Tween</source>
+        <translation>儲存補間動畫</translation>
+    </message>
+    <message>
+        <source>Cancel Tween</source>
+        <translation>取消補間動畫</translation>
+    </message>
+    <message>
+        <source>Select objects for Tweening first!</source>
+        <translation>先為補間動畫選擇物件!</translation>
+    </message>
+    <message>
+        <source>You must select at least one object!</source>
+        <translation>您至少要選擇一個物件!</translation>
+    </message>
+    <message>
+        <source>Update Tween</source>
+        <translation>更新補間動畫</translation>
+    </message>
+    <message>
+        <source>Close Tween Properties</source>
+        <translation>關閉補間屬性</translation>
+    </message>
+</context>
+<context>
     <name>NodesTool</name>
     <message>
         <source>N</source>
         <translation>N</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
     </message>
     <message>
         <source>Only pencil/ink lines can be edited!</source>
@@ -418,10 +461,6 @@
     <message>
         <source>Close Tween Properties</source>
         <translation>關閉補間屬性</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation>資訊</translation>
     </message>
     <message>
         <source>You must select at least one object!</source>
@@ -563,86 +602,7 @@
     </message>
 </context>
 <context>
-    <name>PosSettings</name>
-    <message>
-        <source>Name</source>
-        <translation>名字</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>選項</translation>
-    </message>
-    <message>
-        <source>Select Objects</source>
-        <translation>選擇物件</translation>
-    </message>
-    <message>
-        <source>Set Path Properties</source>
-        <translation>設定路徑屬性</translation>
-    </message>
-    <message>
-        <source>Starting at frame</source>
-        <translation>起始影格</translation>
-    </message>
-    <message>
-        <source>Frames Total</source>
-        <translation>總影格數</translation>
-    </message>
-    <message>
-        <source>Save Tween</source>
-        <translation>儲存補間動畫</translation>
-    </message>
-    <message>
-        <source>Cancel Tween</source>
-        <translation>取消補間動畫</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation>資訊</translation>
-    </message>
-    <message>
-        <source>Select objects for Tweening first!</source>
-        <translation>先為補間動畫選擇物件!</translation>
-    </message>
-    <message>
-        <source>You must select at least one object!</source>
-        <translation>您至少要選擇一個物件!</translation>
-    </message>
-    <message>
-        <source>Update Tween</source>
-        <translation>更新補間動畫</translation>
-    </message>
-    <message>
-        <source>Close Tween Properties</source>
-        <translation>關閉補間屬性</translation>
-    </message>
-    <message>
-        <source>Ending at frame</source>
-        <translation>結束影格</translation>
-    </message>
-</context>
-<context>
     <name>QObject</name>
-    <message>
-        <source>add</source>
-        <translation>新增</translation>
-    </message>
-    <message>
-        <source>pen</source>
-        <translation>鋼筆</translation>
-    </message>
-    <message>
-        <source>lock</source>
-        <translation>鎖定</translation>
-    </message>
-    <message>
-        <source>move</source>
-        <translation>移動</translation>
-    </message>
-    <message>
-        <source>view</source>
-        <translation>查看</translation>
-    </message>
     <message>
         <source>Close</source>
         <translation>關閉</translation>
@@ -650,14 +610,6 @@
     <message>
         <source>Error</source>
         <translation>錯誤</translation>
-    </message>
-    <message>
-        <source>edit node</source>
-        <translation>編輯節點</translation>
-    </message>
-    <message>
-        <source>brush</source>
-        <translation>筆刷</translation>
     </message>
     <message>
         <source>Wall from</source>
@@ -676,36 +628,12 @@
         <translation>這是一般性錯誤</translation>
     </message>
     <message>
-        <source>remove</source>
-        <translation>移除</translation>
-    </message>
-    <message>
-        <source>rename</source>
-        <translation>重新命名</translation>
-    </message>
-    <message>
-        <source>select</source>
-        <translation>選擇</translation>
-    </message>
-    <message>
-        <source>transform</source>
-        <translation>轉換</translation>
-    </message>
-    <message>
-        <source>reverse</source>
-        <translation>逆向</translation>
-    </message>
-    <message>
         <source>Critical</source>
         <translation>臨界</translation>
     </message>
     <message>
         <source>Information</source>
         <translation>資訊</translation>
-    </message>
-    <message>
-        <source>convert</source>
-        <translation>轉換</translation>
     </message>
     <message>
         <source>Warning</source>
@@ -956,10 +884,6 @@
         <translation>關閉補間屬性</translation>
     </message>
     <message>
-        <source>Info</source>
-        <translation>資訊</translation>
-    </message>
-    <message>
         <source>You must select at least one object!</source>
         <translation>您至少要選擇一個物件!</translation>
     </message>
@@ -1057,10 +981,6 @@
     <message>
         <source>Close Tween Properties</source>
         <translation>關閉補間屬性</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation>訊息</translation>
     </message>
     <message>
         <source>You must select at least one object!</source>
@@ -1233,16 +1153,8 @@
         <translation>O</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
-    </message>
-    <message>
         <source>SVG objects can&apos;t be grouped/ungrouped yet</source>
         <translation>SVG物件還不能群组/解除群組。</translation>
-    </message>
-    <message>
-        <source>Selection</source>
-        <translation>選擇</translation>
     </message>
     <message>
         <source>Object Selection</source>
@@ -1328,10 +1240,6 @@
         <translation>關閉補間屬性</translation>
     </message>
     <message>
-        <source>Info</source>
-        <translation>資訊</translation>
-    </message>
-    <message>
         <source>You must select at least one object!</source>
         <translation>您至少要選擇一個物件!</translation>
     </message>
@@ -1395,10 +1303,6 @@
     <message>
         <source>Choose a directory...</source>
         <translation>選擇目錄</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
     </message>
     <message>
         <source>Folder doesn&apos;t exist. Please, pick one!</source>
@@ -1507,6 +1411,25 @@
     </message>
 </context>
 <context>
+    <name>TOsd</name>
+    <message>
+        <source>Information</source>
+        <translation>資訊</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>警告</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>錯誤</translation>
+    </message>
+    <message>
+        <source>Fatal</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>TRulerBase</name>
     <message>
         <source>Change scale to 10...</source>
@@ -1568,13 +1491,6 @@
     <message>
         <source>Close</source>
         <translation>關閉</translation>
-    </message>
-</context>
-<context>
-    <name>TheoraPlugin</name>
-    <message>
-        <source>Open Video Format</source>
-        <translation>開啟視訊格式</translation>
     </message>
 </context>
 <context>
@@ -1643,10 +1559,6 @@
 <context>
     <name>TupBasicCameraInterface</name>
     <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
-    </message>
-    <message>
         <source>Take picture</source>
         <translation>拍照</translation>
     </message>
@@ -1694,10 +1606,6 @@
         <translation>斜面</translation>
     </message>
     <message>
-        <source>Brush</source>
-        <translation>筆刷</translation>
-    </message>
-    <message>
         <source>Miter</source>
         <translation>斜接</translation>
     </message>
@@ -1720,6 +1628,10 @@
     <message>
         <source>Thickness</source>
         <translation>厚度</translation>
+    </message>
+    <message>
+        <source>Border Brush</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1797,10 +1709,6 @@
     <message>
         <source>P</source>
         <translation>P</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
     </message>
     <message>
         <source>Show safe area</source>
@@ -1888,10 +1796,6 @@
     <message>
         <source>Scene</source>
         <translation>場景</translation>
-    </message>
-    <message>
-        <source>Frames Total</source>
-        <translation>總影格數</translation>
     </message>
     <message>
         <source>Ctrl+L</source>
@@ -2177,10 +2081,6 @@
         <translation>埠</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
-    </message>
-    <message>
         <source>Login</source>
         <translation>登入</translation>
     </message>
@@ -2239,10 +2139,6 @@
         <translation>剪輯</translation>
     </message>
     <message>
-        <source>Ink</source>
-        <translation>墨水</translation>
-    </message>
-    <message>
         <source>Copy</source>
         <translation>複製</translation>
     </message>
@@ -2253,18 +2149,6 @@
     <message>
         <source>Left</source>
         <translation>左</translation>
-    </message>
-    <message>
-        <source>Line</source>
-        <translation>直線</translation>
-    </message>
-    <message>
-        <source>Text</source>
-        <translation>文本</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
     </message>
     <message>
         <source>Frame</source>
@@ -2279,16 +2163,8 @@
         <translation>右</translation>
     </message>
     <message>
-        <source>Shift</source>
-        <translation>Shift</translation>
-    </message>
-    <message>
         <source>Shift Length</source>
         <translation>移位長度</translation>
-    </message>
-    <message>
-        <source>Fill Tool</source>
-        <translation>填充工具</translation>
     </message>
     <message>
         <source>Storyboard Settings</source>
@@ -2297,10 +2173,6 @@
     <message>
         <source>Papagayo project is invalid!</source>
         <translation>PAPAGAYO專案無效！</translation>
-    </message>
-    <message>
-        <source>Shear Tween</source>
-        <translation>剪切補間動畫</translation>
     </message>
     <message>
         <source>Paint area actions</source>
@@ -2343,28 +2215,8 @@
         <translation>無法將影格存成圖片</translation>
     </message>
     <message>
-        <source>Pencil</source>
-        <translation>鉛筆</translation>
-    </message>
-    <message>
         <source>Onion Skin</source>
         <translation>描圖紙</translation>
-    </message>
-    <message>
-        <source>PolyLine</source>
-        <translation>折線</translation>
-    </message>
-    <message>
-        <source>Rotation Tween</source>
-        <translation>補間動畫旋轉</translation>
-    </message>
-    <message>
-        <source>Position Tween</source>
-        <translation>補間動畫位置</translation>
-    </message>
-    <message>
-        <source>Scale Tween</source>
-        <translation>補間動畫比例尺</translation>
     </message>
     <message>
         <source>Export Frame To Gallery</source>
@@ -2373,18 +2225,6 @@
     <message>
         <source>Previous Frames</source>
         <translation>前一影格</translation>
-    </message>
-    <message>
-        <source>Nodes Selection</source>
-        <translation>選擇節點</translation>
-    </message>
-    <message>
-        <source>Object Selection</source>
-        <translation>選擇物件</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>資訊</translation>
     </message>
     <message>
         <source>Static BG Opacity</source>
@@ -2416,10 +2256,6 @@ Please, rename the project&apos;s file</source>
         <translation>影像目錄是空的！</translation>
     </message>
     <message>
-        <source>Rectangle</source>
-        <translation>矩形</translation>
-    </message>
-    <message>
         <source>Papagayo Lip-sync Files</source>
         <translation>Papagayo 唇形同步檔</translation>
     </message>
@@ -2430,14 +2266,6 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Frames Mode</source>
         <translation>影格模式</translation>
-    </message>
-    <message>
-        <source>Ellipse</source>
-        <translation>橢圓</translation>
-    </message>
-    <message>
-        <source>Opacity Tween</source>
-        <translation>不透明度補間動畫</translation>
     </message>
     <message>
         <source>Ctrl+Shift+C</source>
@@ -2452,10 +2280,6 @@ Please, rename the project&apos;s file</source>
         <translation>Ctrl+Shift+S</translation>
     </message>
     <message>
-        <source>Warning</source>
-        <translation>警告</translation>
-    </message>
-    <message>
         <source>Tweening</source>
         <translation>補間動畫中</translation>
     </message>
@@ -2468,20 +2292,12 @@ Please, rename the project&apos;s file</source>
         <translation>動態背景不透明度</translation>
     </message>
     <message>
-        <source>Papagayo Lip-sync</source>
-        <translation>Papagayo 唇形同步</translation>
-    </message>
-    <message>
         <source>Papagayo file has been imported successfully</source>
         <translation>PAPAGAYO檔案已成功匯入</translation>
     </message>
     <message>
         <source>Export Frame As</source>
         <translation>匯出影格為</translation>
-    </message>
-    <message>
-        <source>Coloring Tween</source>
-        <translation>變色補間動畫</translation>
     </message>
     <message>
         <source>Image Sequence</source>
@@ -2531,18 +2347,6 @@ Please, rename the project&apos;s file</source>
 <context>
     <name>TupExportModule</name>
     <message>
-        <source>FPS</source>
-        <translation>FPS</translation>
-    </message>
-    <message>
-        <source>Size</source>
-        <translation>尺寸</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
-    </message>
-    <message>
         <source>i.e. </source>
         <translation>i.e.</translation>
     </message>
@@ -2579,10 +2383,6 @@ Please, rename the project&apos;s file</source>
         <translation>檔案已存在。取代它嗎?</translation>
     </message>
     <message>
-        <source>Configuration</source>
-        <translation>配置</translation>
-    </message>
-    <message>
         <source>Image sequence was saved successful</source>
         <translation>影像序列儲存成功。</translation>
     </message>
@@ -2597,10 +2397,6 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Animation path can&apos;t be unset! Please, choose one.</source>
         <translation>動畫路徑不能重設！請選擇一個</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>資訊</translation>
     </message>
     <message>
         <source>Image sequence already exists. Overwrite it?</source>
@@ -2658,24 +2454,8 @@ Please, rename the project&apos;s file</source>
         <translation>匯出動畫影像</translation>
     </message>
     <message>
-        <source>Open Video Format</source>
-        <translation>開啟視訊格式</translation>
-    </message>
-    <message>
-        <source>Video Formats</source>
-        <translation>視訊格式</translation>
-    </message>
-    <message>
-        <source>Animated Image</source>
-        <translation>動畫影像</translation>
-    </message>
-    <message>
         <source>Export To Video</source>
         <translation>匯出視訊檔</translation>
-    </message>
-    <message>
-        <source>Post Animation In TupiTube</source>
-        <translation>在TupiTube中發布動畫</translation>
     </message>
     <message>
         <source>Export To Image Sequence</source>
@@ -2686,12 +2466,16 @@ Please, rename the project&apos;s file</source>
         <translation>匯出成視訊檔</translation>
     </message>
     <message>
-        <source>Image Sequence</source>
-        <translation>影像序列</translation>
-    </message>
-    <message>
         <source>Exporting...</source>
         <translation>匯出中...</translation>
+    </message>
+    <message>
+        <source>Post Animation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Posting...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2715,6 +2499,10 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Export</source>
         <translation>匯出</translation>
+    </message>
+    <message>
+        <source>Uploading Source File</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2897,16 +2685,60 @@ Please, rename the project&apos;s file</source>
         <translation>選擇目錄</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
-    </message>
-    <message>
         <source>Cache path is empty. Set a value!</source>
         <translation>暫存路徑空白. 設定一個路徑!</translation>
     </message>
     <message>
         <source>Cache path doesn&apos;t exist. Create it!</source>
         <translation>暫存路徑不存在. 建立路徑!</translation>
+    </message>
+    <message>
+        <source>Social Network</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cache Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TupiTube Credentials</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Username: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Password: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Don&apos;t have a TupiTube account?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Email: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Register</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Email is invalid. Please, fix it!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Email field is empty. Type one!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error: Email already registered!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please contact us at info@maefloresta.com</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2939,24 +2771,8 @@ Please, rename the project&apos;s file</source>
 <context>
     <name>TupGraphicsScene</name>
     <message>
-        <source>Line</source>
-        <translation>直線</translation>
-    </message>
-    <message>
         <source>lipsync:</source>
         <translation>唇型同步校正</translation>
-    </message>
-    <message>
-        <source>PolyLine</source>
-        <translation>折線</translation>
-    </message>
-    <message>
-        <source>Nodes Selection</source>
-        <translation>選擇節點</translation>
-    </message>
-    <message>
-        <source>Object Selection</source>
-        <translation>選擇物件</translation>
     </message>
 </context>
 <context>
@@ -3106,10 +2922,6 @@ Please, rename the project&apos;s file</source>
         <translation>著色</translation>
     </message>
     <message>
-        <source>Position</source>
-        <translation>位置</translation>
-    </message>
-    <message>
         <source>Rotation</source>
         <translation>旋轉</translation>
     </message>
@@ -3120,6 +2932,10 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Opacity</source>
         <translation>不透明度</translation>
+    </message>
+    <message>
+        <source>Motion</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3138,10 +2954,6 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Name</source>
         <translation>名字</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
     </message>
     <message>
         <source>Item %1</source>
@@ -3163,16 +2975,8 @@ Please, rename the project&apos;s file</source>
 <context>
     <name>TupLibraryWidget</name>
     <message>
-        <source>Info</source>
-        <translation>資訊</translation>
-    </message>
-    <message>
         <source>Couldn&apos;t create vector directory!</source>
         <translation>無法建立向量目錄！</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
     </message>
     <message>
         <source>Frame</source>
@@ -3481,10 +3285,6 @@ Please, rename the project&apos;s file</source>
         <translation>關閉</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
-    </message>
-    <message>
         <source>Image</source>
         <translation>影像</translation>
     </message>
@@ -3693,10 +3493,6 @@ Please, rename the project&apos;s file</source>
         <translation>關閉專案(&amp;O)</translation>
     </message>
     <message>
-        <source>Information</source>
-        <translation>資訊</translation>
-    </message>
-    <message>
         <source>Open Example</source>
         <translation>開啟範例</translation>
     </message>
@@ -3824,6 +3620,22 @@ Please, rename the project&apos;s file</source>
         <source>Open TupiTube&apos;s Network</source>
         <translation>開啟TupiTube 社交網路</translation>
     </message>
+    <message>
+        <source>To post video add more frames!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Project is larger than 10 MB. Too big!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Post Project</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Post project on TupiTube&apos;s network</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TupModesItem</name>
@@ -3890,25 +3702,13 @@ Please, rename the project&apos;s file</source>
         <translation>交谈</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
-    </message>
-    <message>
         <source>User &quot;%1&quot; is disabled.
 Please, contact the animation server admin to get access.</source>
         <translation>使用者 &quot;%1&quot;已停用，請聯絡動畫伺服器管理員以獲得授權。</translation>
     </message>
     <message>
-        <source>Notice</source>
-        <translation>通知</translation>
-    </message>
-    <message>
         <source>Notices</source>
         <translation>通知</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>資訊</translation>
     </message>
     <message>
         <source>User has no available projects in the server</source>
@@ -3917,10 +3717,6 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Unable to connect to server</source>
         <translation>無法連接伺服器</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>警告</translation>
     </message>
     <message>
         <source>Fatal Error</source>
@@ -3995,10 +3791,6 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Tags</source>
         <translation>標籤</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
     </message>
     <message>
         <source>White</source>
@@ -4184,10 +3976,6 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Drawing area</source>
         <translation>繪圖區</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
     </message>
     <message>
         <source>Frame</source>
@@ -4378,10 +4166,6 @@ Please, contact the animation server admin to get access.</source>
 <context>
     <name>TupPapagayoDialog</name>
     <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
-    </message>
-    <message>
         <source>Load &amp;Sound</source>
         <translation>載入聲音(&amp;S)</translation>
     </message>
@@ -4464,24 +4248,8 @@ Please, contact the animation server admin to get access.</source>
         <translation>JPEG影像序列</translation>
     </message>
     <message>
-        <source>Video Formats</source>
-        <translation>視訊格式</translation>
-    </message>
-    <message>
-        <source>Animated PNG (APNG)</source>
-        <translation>動畫 PNG (APNG)</translation>
-    </message>
-    <message>
-        <source>Animated Image</source>
-        <translation>動畫影像</translation>
-    </message>
-    <message>
         <source>MP4 Video</source>
         <translation>MP4 視訊</translation>
-    </message>
-    <message>
-        <source>OGV Video</source>
-        <translation>OGV 視訊</translation>
     </message>
     <message>
         <source>QuickTime Video</source>
@@ -4507,18 +4275,6 @@ Please, contact the animation server admin to get access.</source>
         <source>Select Plugin</source>
         <translation>選擇外掛</translation>
     </message>
-    <message>
-        <source>Animated GIF</source>
-        <translation>GIF動畫</translation>
-    </message>
-    <message>
-        <source>WEBM Video</source>
-        <translation>WEBM 視訊</translation>
-    </message>
-    <message>
-        <source>Image Sequence</source>
-        <translation>影像序列</translation>
-    </message>
 </context>
 <context>
     <name>TupPreferencesDialog</name>
@@ -4539,16 +4295,8 @@ Please, contact the animation server admin to get access.</source>
         <translation>一般的</translation>
     </message>
     <message>
-        <source>Information</source>
-        <translation>資訊</translation>
-    </message>
-    <message>
         <source>Preferences saved successfully</source>
         <translation>偏好儲存成功</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>警告</translation>
     </message>
     <message>
         <source>Please restart TupiTube</source>
@@ -4673,10 +4421,6 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>P</source>
         <translation>P</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
     </message>
     <message>
         <source>Show safe area</source>
@@ -4812,6 +4556,41 @@ Please, contact the animation server admin to get access.</source>
     </message>
 </context>
 <context>
+    <name>TupSignDialog</name>
+    <message>
+        <source>Sign In</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Username</source>
+        <translation>使用者名稱</translation>
+    </message>
+    <message>
+        <source>Password</source>
+        <translation>密碼</translation>
+    </message>
+    <message>
+        <source>Store password</source>
+        <translation>儲存密碼</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <source>Accept</source>
+        <translation>接受</translation>
+    </message>
+    <message>
+        <source>Please, fill in your username</source>
+        <translation>請填寫您的使用者名稱</translation>
+    </message>
+    <message>
+        <source>Please, fill in your password</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>TupSoundPlayer</name>
     <message>
         <source>Play</source>
@@ -4820,6 +4599,10 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Play at frame:</source>
         <translation>在影格上播放：</translation>
+    </message>
+    <message>
+        <source>Loop</source>
+        <translation>循環</translation>
     </message>
 </context>
 <context>
@@ -4835,10 +4618,6 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Html</source>
         <translation>Html</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation>資訊</translation>
     </message>
     <message>
         <source>&amp;HTML</source>
@@ -4967,10 +4746,6 @@ Please, contact the animation server admin to get access.</source>
         <translation>暗黑主題</translation>
     </message>
     <message>
-        <source>Warning</source>
-        <translation>警告</translation>
-    </message>
-    <message>
         <source>Please restart TupiTube</source>
         <translation>請重啟TupiTube</translation>
     </message>
@@ -5046,20 +4821,8 @@ Please, contact the animation server admin to get access.</source>
         <translation>標題</translation>
     </message>
     <message>
-        <source>#topic1 #topic2 #topic3</source>
-        <translation>#主題1 #主題2 #主題3</translation>
-    </message>
-    <message>
-        <source>Set Animation Properties</source>
-        <translation>設定動畫屬性</translation>
-    </message>
-    <message>
         <source>Topics</source>
         <translation>主題</translation>
-    </message>
-    <message>
-        <source>Just a little taste of my style :)</source>
-        <translation>仅仅是有一点我的风格：）</translation>
     </message>
     <message>
         <source>Set a title for the picture here!</source>
@@ -5070,12 +4833,120 @@ Please, contact the animation server admin to get access.</source>
         <translation>描述</translation>
     </message>
     <message>
-        <source>My Video</source>
-        <translation>我的影片</translation>
-    </message>
-    <message>
         <source>Set some topic tags for the picture here!</source>
         <translation>在此為圖片設定一些主題標籤</translation>
+    </message>
+    <message>
+        <source>Animation Properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>My Animation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>#tupitube #animation #fun</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create and share animations easily with TupiTube</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <source>Access denied. Invalid password!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 500. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 501. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 502. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 503. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 504. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 505. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 506. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 507. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 508. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 509. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Post action cancelled!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Project was uploaded successfully!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 400. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 402. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 403. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 404. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 405. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 406. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 407. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 408. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 409. Please, contact us!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Fatal Error. Please, contact us!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5112,10 +4983,6 @@ Please, contact the animation server admin to get access.</source>
         <translation>編輯</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>錯數</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>移除</translation>
     </message>
@@ -5134,14 +5001,6 @@ Please, contact the animation server admin to get access.</source>
 </context>
 <context>
     <name>Tweener</name>
-    <message>
-        <source>Info</source>
-        <translation>資訊</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>錯誤</translation>
-    </message>
     <message>
         <source>Frame</source>
         <translation>影格</translation>
@@ -5179,20 +5038,12 @@ Please, contact the animation server admin to get access.</source>
         <translation>Please, edit the previous tween of these objects.</translation>
     </message>
     <message>
-        <source>Position</source>
-        <translation>位置</translation>
-    </message>
-    <message>
         <source>Rotation</source>
         <translation>旋轉</translation>
     </message>
     <message>
         <source>Rotation Tween</source>
         <translation>補間動畫旋轉</translation>
-    </message>
-    <message>
-        <source>Position Tween</source>
-        <translation>補間動畫位置</translation>
     </message>
     <message>
         <source>Scale Tween</source>
@@ -5249,6 +5100,14 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Coloring Tween can&apos;t be applied to raster images</source>
         <translation>變色補間動畫不能應用於柵格影像</translation>
+    </message>
+    <message>
+        <source>Motion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion Tween</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
