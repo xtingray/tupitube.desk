@@ -55,9 +55,8 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
 {
     Q_OBJECT
     Q_INTERFACES(TupToolInterface)
-    
+ 
     public:
-
         enum MenuIndex { InvalidMenu = -1, BrushesMenu = 0, SelectionMenu, FillMenu, ZoomMenu, TweenerMenu, Arrows, ColorMenu };
         enum BrushTools { InvalidBrush = -1, PencilTool = 0, InkTool, SchemeTool, EraserTool, PolyLineTool, LineTool, RectangleTool, 
                           EllipseTool, TextTool };
@@ -73,8 +72,11 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
         explicit TupToolPlugin(QObject *parent = nullptr);
         ~TupToolPlugin();
 
-        void setName(const QString &tool);
-        QString name() const;
+        void setCurrentToolName(const QString &tool);
+        QString currentToolName() const;
+
+        void setToolId(TAction::ActionId code);
+        TAction::ActionId toolId();
 
         virtual void init(TupGraphicsScene *scene);
         virtual void updateScene(TupGraphicsScene *scene);
@@ -84,8 +86,8 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
         virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene) = 0;
         virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene) = 0;
         
-        virtual QMap<QString, TAction *> actions() const = 0;
-        
+        virtual QMap<TAction::ActionId, TAction *> actions() const = 0;
+
         virtual QWidget *configurator()  = 0;
         virtual void aboutToChangeTool() = 0;
         virtual void saveConfig() = 0;
@@ -103,7 +105,8 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
         virtual void updatePressure(qreal pressure);
 
         virtual QMenu *menu() const;
-        virtual QCursor polyCursor() const;
+        // virtual QCursor polyCursor() const;
+        virtual QCursor polyCursor();
         QPair<int, int> setKeyAction(int key, Qt::KeyboardModifiers modifiers);
 
         virtual void resizeNode(qreal factor);
@@ -132,6 +135,7 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
         
     private:
         QString currentTool;
+        TAction::ActionId currentId;
 };
 
 #endif

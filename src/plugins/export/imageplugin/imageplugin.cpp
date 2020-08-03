@@ -43,14 +43,19 @@ ImagePlugin::~ImagePlugin()
 {
 }
 
-QString ImagePlugin::key() const
+QString ImagePlugin::formatName() const
 {
     return tr("Image Sequence");
 }
 
+TupExportInterface::Plugin ImagePlugin::key()
+{
+    return TupExportInterface::ImageSequence;
+}
+
 TupExportInterface::Formats ImagePlugin::availableFormats()
 {
-    return TupExportInterface::PNG | TupExportInterface::JPEG | TupExportInterface::SVG | TupExportInterface::XPM;
+    return TupExportInterface::PNG | TupExportInterface::JPEG | TupExportInterface::SVG;
 }
 
 bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, const QList<TupScene *> &scenes, 
@@ -221,7 +226,8 @@ bool ImagePlugin::exportFrame(int frameIndex, const QColor color, const QString 
     return result;
 }
 
-QString ImagePlugin::getExceptionMsg() const {
+QString ImagePlugin::getExceptionMsg() const
+{
     return errorMsg;
 }
 

@@ -64,12 +64,12 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         virtual ~Tweener();
         virtual void init(TupGraphicsScene *scene);
 
-        virtual QStringList keys() const;
+        virtual QList<TAction::ActionId> keys() const;
         virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         virtual void updateScene(TupGraphicsScene *scene);
-        virtual QMap<QString, TAction *>actions() const;
+        virtual QMap<TAction::ActionId, TAction *>actions() const;
         virtual QWidget *configurator();
         virtual void aboutToChangeTool();
         virtual void saveConfig();
@@ -118,7 +118,7 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         void paintTweenPoints();
         void updateTweenPath();
 
-        QMap<QString, TAction *> posActions;
+        QMap<TAction::ActionId, TAction *> posActions;
         Configurator *configPanel;
 
         TupGraphicsScene *scene;
@@ -150,3 +150,4 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
 };
 
 #endif
+

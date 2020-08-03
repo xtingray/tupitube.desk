@@ -68,9 +68,9 @@ void NodesTool::init(TupGraphicsScene *gScene)
     baseZValue = ((BG_LAYERS + 1) * ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
 }
 
-QStringList NodesTool::keys() const
+QList<TAction::ActionId> NodesTool::keys() const
 {
-    return QStringList() << tr("Nodes Selection") ;
+    return QList<TAction::ActionId>() << TAction::NodesEditor;
 }
 
 void NodesTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
@@ -268,73 +268,73 @@ void NodesTool::itemResponse(const TupItemResponse *response)
     }
 
     switch (response->getAction()) {
-            case TupProjectRequest::Convert:
-            {
-                 if (item) {
-                     nodeGroup = new TNodeGroup(item, scene, TNodeGroup::LineSelection, baseZValue);
-                 } else {
-                     #ifdef TUP_DEBUG
-                         qDebug() << "NodesTool::itemResponse() - Fatal Error: No item was found";
-                     #endif
-                 }
-            }
-            break;
-            case TupProjectRequest::EditNodes:
-            {
-                 if (item) {
-                     if (activeSelection) {
-                         if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeGroup->parentItem()) == item) {
-                             nodeGroup->show();
-                             nodeGroup->syncNodesFromParent();
-                             nodeGroup->saveParentProperties();
-                         }
-                     } else {
-                         nodeGroup = new TNodeGroup(item, scene, TNodeGroup::LineSelection, baseZValue);
+        case TupProjectRequest::Convert:
+        {
+             if (item) {
+                 nodeGroup = new TNodeGroup(item, scene, TNodeGroup::LineSelection, baseZValue);
+             } else {
+                 #ifdef TUP_DEBUG
+                     qDebug() << "NodesTool::itemResponse() - Fatal Error: No item was found";
+                 #endif
+             }
+        }
+        break;
+        case TupProjectRequest::EditNodes:
+        {
+             if (item) {
+                 if (activeSelection) {
+                     if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeGroup->parentItem()) == item) {
                          nodeGroup->show();
-                         activeSelection = true;
-                         nodeGroup->resizeNodes(realFactor);
+                         nodeGroup->syncNodesFromParent();
+                         nodeGroup->saveParentProperties();
                      }
                  } else {
-                     #ifdef TUP_DEBUG
-                         qDebug() << "NodesTool::itemResponse() - Fatal Error: No item was found";
-                     #endif
-                 }
-            }
-            break;
-            case TupProjectRequest::Remove:
-            {
-                 return;
-            }
-            case TupProjectRequest::Ungroup:
-            {
-                 // reset(scene);
-                 if (item) {
                      nodeGroup = new TNodeGroup(item, scene, TNodeGroup::LineSelection, baseZValue);
                      nodeGroup->show();
                      activeSelection = true;
                      nodeGroup->resizeNodes(realFactor);
-                 } else {
-                     #ifdef TUP_DEBUG
-                         qDebug() << "NodesTool::itemResponse() - Fatal error: No item was found";
-                     #endif
                  }
-
-                 return;
-            }
-            default:
-            {
+             } else {
                  #ifdef TUP_DEBUG
-                     qDebug() << "NodesTool::itemResponse() - default action"; 
+                     qDebug() << "NodesTool::itemResponse() - Fatal Error: No item was found";
                  #endif
+             }
+        }
+        break;
+        case TupProjectRequest::Remove:
+        {
+             return;
+        }
+        case TupProjectRequest::Ungroup:
+        {
+             // reset(scene);
+             if (item) {
+                 nodeGroup = new TNodeGroup(item, scene, TNodeGroup::LineSelection, baseZValue);
+                 nodeGroup->show();
+                 activeSelection = true;
+                 nodeGroup->resizeNodes(realFactor);
+             } else {
+                 #ifdef TUP_DEBUG
+                     qDebug() << "NodesTool::itemResponse() - Fatal error: No item was found";
+                 #endif
+             }
 
-                 if (activeSelection) {
-                     nodeGroup->show();
-                     if (nodeGroup->parentItem()) {
-                         nodeGroup->parentItem()->setSelected(true);
-                         nodeGroup->syncNodesFromParent();
-                     }
+             return;
+        }
+        default:
+        {
+             #ifdef TUP_DEBUG
+                 qDebug() << "NodesTool::itemResponse() - default action";
+             #endif
+
+             if (activeSelection) {
+                 nodeGroup->show();
+                 if (nodeGroup->parentItem()) {
+                     nodeGroup->parentItem()->setSelected(true);
+                     nodeGroup->syncNodesFromParent();
                  }
-            }
+             }
+        }
     }
 }
 
@@ -355,12 +355,13 @@ void NodesTool::setupActions()
 
     TAction *nodes = new TAction(QPixmap(kAppProp->themeDir() + "icons/nodes.png"), tr("Nodes Selection"), this);
     nodes->setShortcut(QKeySequence(tr("N")));
-    nodes->setToolTip(tr("Nodes Selection") + " - " + "N");
+    nodes->setToolTip(tr("Nodes Selection") + " - " + tr("N"));
+    nodes->setActionId(TAction::NodesEditor);
 
-    nodesActions.insert(tr("Nodes Selection"), nodes);
+    nodesActions.insert(TAction::NodesEditor, nodes);
 }
 
-QMap<QString, TAction *> NodesTool::actions() const
+QMap<TAction::ActionId, TAction *> NodesTool::actions() const
 {
     return nodesActions;
 }
@@ -388,7 +389,7 @@ void NodesTool::saveConfig()
 {
 }
 
-QCursor NodesTool::polyCursor() const
+QCursor NodesTool::polyCursor() // const
 {
     return QCursor(Qt::ArrowCursor);
 }

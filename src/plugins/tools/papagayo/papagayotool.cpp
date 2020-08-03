@@ -42,8 +42,16 @@
 #include "tupprojectrequest.h"
 #include "tupscene.h"
 
+#ifdef TUP_DEBUG
+    #include <QDebug>
+#endif
+
 PapagayoTool::PapagayoTool() : TupToolPlugin()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::PapagayoTool()]";
+    #endif
+
     setupActions();
     configPanel = 0;
     target = 0;
@@ -58,14 +66,16 @@ PapagayoTool::~PapagayoTool()
 
 void PapagayoTool::init(TupGraphicsScene *gScene)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::init()]";
+    #endif
+
     scene = gScene;
     mode = TupToolPlugin::View;
     baseZValue = ZLAYER_BASE + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
 
     initScene = scene->currentSceneIndex();
-
     removeTarget();
-
     configPanel->resetUI();
 
     QList<QString> lipSyncList = scene->currentScene()->getLipSyncNames();
@@ -75,9 +85,9 @@ void PapagayoTool::init(TupGraphicsScene *gScene)
 
 /* This method returns the plugin name */
 
-QStringList PapagayoTool::keys() const
+QList<TAction::ActionId> PapagayoTool::keys() const
 {
-    return QStringList() << tr("Papagayo Lip-sync");
+    return QList<TAction::ActionId>() << TAction::LipSyncTool;
 }
 
 /* This method makes an action when the mouse is pressed on the workspace 
@@ -113,7 +123,7 @@ void PapagayoTool::release(const TupInputDeviceInformation *input, TupBrushManag
 
 /* This method returns the list of actions defined in this plugin */
 
-QMap<QString, TAction *> PapagayoTool::actions() const
+QMap<TAction::ActionId, TAction *> PapagayoTool::actions() const
 {
     return pgActions;
 }
@@ -167,11 +177,15 @@ void PapagayoTool::aboutToChangeTool()
 
 void PapagayoTool::setupActions()
 {
-    TAction *lipsync = new TAction(QPixmap(kAppProp->themeDir() + "icons/papagayo.png"), 
-                                      tr("Papagayo Lip-sync"), this);
-    lipsync->setShortcut(QKeySequence(tr("Ctrl+Shift+P")));
+    QString name = tr("Papagayo Lip-sync");
+    QString shortcut = tr("Ctrl+Shift+P");
 
-    pgActions.insert(tr("Papagayo Lip-sync"), lipsync);
+    TAction *lipsync = new TAction(QPixmap(kAppProp->themeDir() + "icons/papagayo.png"), name, this);
+    lipsync->setShortcut(QKeySequence(shortcut));
+    lipsync->setToolTip(name + " - " + shortcut);
+    lipsync->setActionId(TAction::LipSyncTool);
+
+    pgActions.insert(TAction::LipSyncTool, lipsync);
 }
 
 /* This method saves the settings of this plugin */

@@ -66,7 +66,7 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         virtual ~SelectionTool();
         
         virtual void init(TupGraphicsScene *scene);
-        virtual QStringList keys() const;
+        virtual QList<TAction::ActionId> keys() const;
         virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
@@ -75,8 +75,8 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
 
         virtual void sceneResponse(const TupSceneResponse *event);
 
-        virtual QMap<QString, TAction *>actions() const;
-        
+        virtual QMap<TAction::ActionId, TAction *> actions() const;
+
         int toolType() const;
         
         virtual QWidget *configurator();
@@ -86,7 +86,7 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         
         virtual void itemResponse(const TupItemResponse *event);
         virtual void saveConfig();
-        QCursor polyCursor() const;
+        QCursor polyCursor(); //  const;
 
         void resizeNode(qreal scaleFactor);
         void updateZoomFactor(qreal scaleFactor);
@@ -121,7 +121,7 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         void requestTransformation(QGraphicsItem *item, TupFrame *frame);
 
         SelectionSettings *panel;
-        QMap<QString, TAction *> selectActions;
+        QMap<TAction::ActionId, TAction *> selectActions;
         QList<QGraphicsItem *> selectedObjects;
         QList<NodeManager*> nodeManagers;
         TupGraphicsScene *scene;

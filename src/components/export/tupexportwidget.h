@@ -64,7 +64,7 @@ class TUPITUBE_EXPORT TupExportWidget : public TupExportWizard
         bool isComplete();
 
     private slots:
-        void setExporter(const QString &plugin);
+        void setExporter(TupExportInterface::Plugin plugin);
         void updateWindowTitle();
 
     private:
@@ -79,7 +79,7 @@ class TUPITUBE_EXPORT TupExportWidget : public TupExportWizard
         TupVideoProperties *videoProperties;
 
         const TupProject *project;
-        QHash<QString, TupExportInterface *> plugins;
+        QHash<TupExportInterface::Plugin, TupExportInterface *> plugins;
         bool exportFlag;
 };
 

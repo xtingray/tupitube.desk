@@ -47,7 +47,7 @@ TupExportModule::TupExportModule(TupProject *project, OutputFormat output,
                                  m_currentFormat(TupExportInterface::NONE), m_project(project)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupExportModule::TupExportModule()]";
+        qDebug() << "[TupExportModule::TupExportModule()] - title -> " << title;
     #endif
 
     transparency = false;
@@ -174,9 +174,10 @@ void TupExportModule::setCurrentExporter(TupExportInterface *currentExporter)
     connect(plugin, SIGNAL(progressChanged(int)), this, SLOT(updateProgressLabel(int)));
 }
 
-void TupExportModule::setCurrentFormat(int currentFormat, const QString &value)
+void TupExportModule::setCurrentFormat(TupExportInterface::Format format, const QString &value)
 {
-    m_currentFormat = TupExportInterface::Format(currentFormat);
+    // m_currentFormat = TupExportInterface::Format(currentFormat);
+    m_currentFormat = format;
     extension = value;
     filename = path;
     filename = QDir::fromNativeSeparators(filename);

@@ -109,9 +109,9 @@ void Tweener::updateStartPoint(int index)
 
 /* This method returns the plugin name */
 
-QStringList Tweener::keys() const
+QList<TAction::ActionId> Tweener::keys() const
 {
-    return QStringList() << tr("Rotation Tween");
+    return QList<TAction::ActionId>() << TAction::Rotation;
 }
 
 /* This method makes an action when the mouse is pressed on the workspace 
@@ -201,7 +201,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
 
 /* This method returns the list of actions defined in this plugin */
 
-QMap<QString, TAction *> Tweener::actions() const
+QMap<TAction::ActionId, TAction *> Tweener::actions() const
 {
     return rotateActions;
 }
@@ -215,7 +215,7 @@ int Tweener::toolType() const
 
 /* This method returns the tool panel associated to this plugin */
 
-QWidget *Tweener::configurator()
+QWidget * Tweener::configurator()
 {
     if (!configPanel) {
         mode = TupToolPlugin::View;
@@ -261,13 +261,16 @@ void Tweener::aboutToChangeTool()
 void Tweener::setupActions()
 {
     realFactor = 1;
+    QString name = tr("Rotation Tween");
+    QString shortcut = tr("Shift+R");
 
-    TAction *translater = new TAction(QPixmap(kAppProp->themeDir() + "icons/rotation_tween.png"), 
-                                      tr("Rotation Tween"), this);
-    translater->setCursor(QCursor(kAppProp->themeDir() + "cursors/tweener.png", 0, 0));
-    translater->setShortcut(QKeySequence(tr("Shift+R")));
+    TAction *action = new TAction(QPixmap(kAppProp->themeDir() + "icons/rotation_tween.png"), name, this);
+    action->setCursor(QCursor(kAppProp->themeDir() + "cursors/tweener.png", 0, 0));
+    action->setShortcut(QKeySequence(shortcut));
+    action->setToolTip(name + " - " + shortcut);
+    action->setActionId(TAction::Rotation);
 
-    rotateActions.insert(tr("Rotation Tween"), translater);
+    rotateActions.insert(TAction::Rotation, action);
 }
 
 /* This method saves the settings of this plugin */

@@ -83,9 +83,13 @@ TupExportWizardPage *TupExportWizard::addPage(TupExportWizardPage *newPage)
     connect(newPage, SIGNAL(emptyField()), this, SLOT(disableNextButton()));
 
     if (tag.compare("PLUGIN") == 0) {
-        connect(newPage, SIGNAL(animatedImageFormatSelected(int, const QString &)), this, SLOT(setFormat(int, const QString &)));
-        connect(newPage, SIGNAL(imagesArrayFormatSelected(int, const QString &)), this, SLOT(setFormat(int, const QString &)));
-        connect(newPage, SIGNAL(animationFormatSelected(int, const QString &)), this, SLOT(setFormat(int, const QString &)));
+        // SQA: Pending for implementation
+        // connect(newPage, SIGNAL(animatedImageFormatSelected(int, const QString &)),
+        //         this, SLOT(setFormat(int, const QString &)));
+        connect(newPage, SIGNAL(imagesArrayFormatSelected(TupExportInterface::Format, const QString &)),
+                this, SLOT(setFormat(TupExportInterface::Format, const QString &)));
+        connect(newPage, SIGNAL(animationFormatSelected(TupExportInterface::Format, const QString &)),
+                this, SLOT(setFormat(TupExportInterface::Format, const QString &)));
     }
 
     if (tag.compare("ANIMATION") == 0 || tag.compare("IMAGES_ARRAY") == 0
@@ -133,9 +137,8 @@ void TupExportWizard::back()
         history->setCurrentIndex(history->currentIndex()-1);
     }
 
-    if (tag.compare("SCENE") == 0) {
+    if (tag.compare("SCENE") == 0)
         backButton->setEnabled(false);
-    }
 
     nextButton->setEnabled(true);
 
@@ -176,16 +179,16 @@ void TupExportWizard::next()
         nextButton->setText(tr("Export"));
         backButton->setEnabled(true);
 
-        if (formatCode == 4096) { // ANIMATED PNG
+        if (formatCode == TupExportInterface::APNG) { // ANIMATED PNG
             emit setAnimatedImageFileName();
-            history->setCurrentIndex(history->currentIndex()+3);
-        } else if (format.compare(".jpeg") == 0 || format.compare(".png") == 0
-                   || format.compare(".svg") == 0) { // Images Array
+            history->setCurrentIndex(history->currentIndex() + 3);
+        } else if (formatCode == TupExportInterface::JPEG || formatCode == TupExportInterface::PNG
+                   || formatCode == TupExportInterface::SVG) { // Images Array
             emit setImagesArrayFileName();
-            history->setCurrentIndex(history->currentIndex()+2);
-        } else {
+            history->setCurrentIndex(history->currentIndex() + 2);
+        } else { // ANIMATION
             emit setAnimationFileName();
-            history->setCurrentIndex(history->currentIndex()+1); // ANIMATION
+            history->setCurrentIndex(history->currentIndex() + 1);
         }
     } 
 
@@ -213,6 +216,7 @@ void TupExportWizard::pageCompleted()
 }
 
 void TupExportWizard::disableNextButton()
+
 {
     if (nextButton->isEnabled())
         nextButton->setEnabled(false);
@@ -231,7 +235,7 @@ void TupExportWizard::closeDialog()
     emit isDone();
 }
 
-void TupExportWizard::setFormat(int code, const QString &extension)
+void TupExportWizard::setFormat(TupExportInterface::Format code, const QString &extension)
 {
     formatCode = code;
     format = extension;
@@ -285,4 +289,3 @@ const QString TupExportWizardPage::getTag()
 {
     return tag;
 }
-

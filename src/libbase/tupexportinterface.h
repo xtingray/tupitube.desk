@@ -48,6 +48,14 @@
 class TUPITUBE_EXPORT TupExportInterface
 {
     public:
+        enum Plugin
+             {
+               VideoFormats = 0,
+               OpenVideoFormat = 1,
+               ImageSequence = 2,
+               AnimatedImage = 3
+             };
+
         enum Format 
              {
                NONE = 0,
@@ -63,16 +71,13 @@ class TUPITUBE_EXPORT TupExportInterface
                XPM  = 1 << 9,
                SVG  = 1 << 10, 
                APNG = 1 << 11
-               // SQA: Obsolete formats
-               // SWF  = 1 << 12,
-               // ASF  = 1 << 13,
-               // SMIL = 1 << 14,
              };
 
         Q_DECLARE_FLAGS(Formats, Format);
 
         virtual ~TupExportInterface() {};
-        virtual QString key() const = 0;
+        virtual QString formatName() const = 0;
+        virtual Plugin key() = 0;
         virtual Formats availableFormats() = 0;
         virtual bool exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes, 
                                     Format format, const QSize &size, const QSize &newSize, int fps, TupLibrary *library = nullptr, 

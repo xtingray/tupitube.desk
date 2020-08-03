@@ -54,14 +54,24 @@ void TupToolPlugin::updateScene(TupGraphicsScene *scene)
     Q_UNUSED(scene)
 }
 
-void TupToolPlugin::setName(const QString &tool)
+void TupToolPlugin::setCurrentToolName(const QString &tool)
 {
     currentTool = tool;
 }
 
-QString TupToolPlugin::name() const
+QString TupToolPlugin::currentToolName() const
 {
     return currentTool;
+}
+
+void TupToolPlugin::setToolId(TAction::ActionId code)
+{
+    currentId = code;
+}
+
+TAction::ActionId TupToolPlugin::toolId()
+{
+    return currentId;
 }
 
 void TupToolPlugin::begin()
@@ -127,7 +137,7 @@ void TupToolPlugin::saveConfig()
 {
 }
 
-QCursor TupToolPlugin::polyCursor() const
+QCursor TupToolPlugin::polyCursor() // const
 {
     return QCursor(Qt::ArrowCursor); 
 }

@@ -119,7 +119,7 @@ void TupGraphicsScene::setCurrentFrame(int layer, int frame)
     if ((frame != framePosition.frame && framePosition.frame >= 0) ||
         (layer != framePosition.layer && framePosition.layer >= 0)) {
         if (gTool) {
-            if (gTool->name().compare(tr("PolyLine")) == 0 || gTool->toolType() == TupToolInterface::Tweener)
+            if (gTool->toolId() == TAction::Polyline || gTool->toolType() == TupToolInterface::Tweener)
                 gTool->aboutToChangeScene(this);
         }
     }
@@ -1397,8 +1397,7 @@ void TupGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     mouseMoved(event);
 
     if (gTool) {
-        QString tool = gTool->name();
-        if (tool.compare(tr("Line")) == 0 || tool.compare(tr("PolyLine")) == 0)
+        if (gTool->toolId() == TAction::Line || gTool->toolId() == TAction::Polyline)
             gTool->updatePos(event->scenePos());
     }
 }
@@ -1647,8 +1646,7 @@ void TupGraphicsScene::setSelectionRange()
         return;
 
     QHash<QGraphicsItem *, bool>::iterator it = onionSkin.accessMap.begin();
-    QString tool = gTool->name();
-    if (tool.compare(tr("Object Selection")) == 0 || tool.compare(tr("Nodes Selection")) == 0) {
+    if (gTool->toolId() == TAction::ObjectSelection || gTool->toolId() == TAction::NodesEditor) {
         while (it != onionSkin.accessMap.end()) {
             if (!it.value() || it.key()->toolTip().length() > 0) {
                 it.key()->setAcceptedMouseButtons(Qt::NoButton);
@@ -1657,7 +1655,7 @@ void TupGraphicsScene::setSelectionRange()
             } else {
                 it.key()->setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MidButton | Qt::XButton1
                                                   | Qt::XButton2);
-                if (tool.compare(tr("Object Selection")) == 0) {
+                if (gTool->toolId() == TAction::ObjectSelection) {
                     it.key()->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
                 } else {
                     it.key()->setFlag(QGraphicsItem::ItemIsSelectable, true);

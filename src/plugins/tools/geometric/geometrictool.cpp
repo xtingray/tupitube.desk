@@ -57,9 +57,9 @@ GeometricTool::~GeometricTool()
 {
 }
 
-QStringList GeometricTool::keys() const
-{
-    return QStringList() << tr("Rectangle") << tr("Ellipse") << tr("Line");
+QList<TAction::ActionId> GeometricTool::keys() const
+{    
+    return QList<TAction::ActionId >() << TAction::Rectangle << TAction::Ellipse << TAction::Line;
 }
 
 void GeometricTool::init(TupGraphicsScene *gScene)
@@ -82,24 +82,30 @@ void GeometricTool::setupActions()
 {
     TAction *action1 = new TAction(QIcon(kAppProp->themeDir() + "icons/square.png"), tr("Rectangle"), this);
     action1->setShortcut(QKeySequence(tr("R")));
+    action1->setToolTip(tr("Rectangle") + " - " + tr("R"));
     squareCursor = QCursor(kAppProp->themeDir() + "cursors/square.png", 0, 0);
     action1->setCursor(squareCursor);
+    action1->setActionId(TAction::Rectangle);
     
-    geoActions.insert(tr("Rectangle"), action1);
+    geoActions.insert(TAction::Rectangle, action1);
     
     TAction *action2 = new TAction(QIcon(kAppProp->themeDir() + "icons/ellipse.png"), tr("Ellipse"), this);
     action2->setShortcut(QKeySequence(tr("C")));
+    action2->setToolTip(tr("Ellipse") + " - " + tr("C"));
     circleCursor = QCursor(kAppProp->themeDir() + "cursors/circle.png", 2, 2);
     action2->setCursor(circleCursor);
-    
-    geoActions.insert(tr("Ellipse"), action2);
+    action2->setActionId(TAction::Ellipse);
+
+    geoActions.insert(TAction::Ellipse, action2);
     
     TAction *action3 = new TAction(QIcon(kAppProp->themeDir() + "icons/line.png"), tr("Line"), this);
     action3->setShortcut(QKeySequence(tr("L")));
+    action3->setToolTip(tr("Line") + " - " + tr("L"));
     lineCursor = QCursor(kAppProp->themeDir() + "cursors/line.png", 0, 15);
     action3->setCursor(lineCursor);
+    action3->setActionId(TAction::Line);
 
-    geoActions.insert(tr("Line"), action3);
+    geoActions.insert(TAction::Line, action3);
 }
 
 QBrush GeometricTool::setLiteBrush(QColor c, Qt::BrushStyle style)
@@ -124,7 +130,8 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
 
     if (input->buttons() == Qt::LeftButton) {
         fillBrush = brushManager->brush();
-        if (name() == tr("Rectangle")) {
+        // if (currentToolName() == tr("Rectangle")) {
+        if (toolId() == TAction::Rectangle) {
             added = false;
             rect = new TupRectItem(QRectF(input->pos(), QSize(0,0)));
             rect->setPen(brushManager->pen());
@@ -134,7 +141,8 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
                 rect->setBrush(brushManager->brush());
 
             currentPoint = input->pos();
-        } else if (name() == tr("Ellipse")) {
+        // } else if (currentToolName() == tr("Ellipse")) {
+        } else if (toolId() == TAction::Ellipse) {
             added = false;
             ellipse = new TupEllipseItem(QRectF(input->pos(), QSize(0,0)));
             ellipse->setPen(brushManager->pen());
@@ -144,7 +152,8 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
                 ellipse->setBrush(brushManager->brush());
 
             currentPoint = input->pos();
-        } else if (name() == tr("Line")) {
+        // } else if (currentToolName() == tr("Line")) {
+        } else if (toolId() == TAction::Line) {
             currentPoint = input->pos();
 
             if (path) {
@@ -192,9 +201,11 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
     Q_UNUSED(brushManager);
     Q_UNUSED(gScene);
     
-    if (name() == tr("Rectangle") || name() == tr("Ellipse")) {
+    // if (currentToolName() == tr("Rectangle") || currentToolName() == tr("Ellipse")) {
+    if (toolId() == TAction::Rectangle || toolId() == TAction::Ellipse) {
         if (!added) {
-            if (name() == tr("Rectangle"))
+            // if (currentToolName() == tr("Rectangle"))
+            if (toolId() == TAction::Rectangle)
                 gScene->includeObject(rect);
             else
                 gScene->includeObject(ellipse);
@@ -207,7 +218,8 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
         int yInit = static_cast<int> (currentPoint.y());
 
         QRectF rectVar;
-        if (name() == tr("Rectangle"))
+        // if (currentToolName() == tr("Rectangle"))
+        if (toolId() == TAction::Rectangle)
             rectVar = rect->rect();
         else
             rectVar = ellipse->rect();
@@ -303,11 +315,12 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
             }
         }
 
-        if (name() == tr("Rectangle"))
+        // if (currentToolName() == tr("Rectangle"))
+        if (toolId() == TAction::Rectangle)
             rect->setRect(rectVar);
         else
             ellipse->setRect(rectVar);
-    } 
+    }
 }
 
 void GeometricTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
@@ -322,16 +335,19 @@ void GeometricTool::release(const TupInputDeviceInformation *input, TupBrushMana
     QDomDocument doc;
     QPointF point;
 
-    if (name() == tr("Rectangle")) {
+    // if (currentToolName() == tr("Rectangle")) {
+    if (toolId() == TAction::Rectangle) {
         rect->setBrush(fillBrush);
         doc.appendChild(dynamic_cast<TupAbstractSerializable *>(rect)->toXml(doc));
         point = rect->pos();
-    } else if (name() == tr("Ellipse")) {
+    // } else if (currentToolName() == tr("Ellipse")) {
+    } else if (toolId() == TAction::Ellipse) {
         ellipse->setBrush(fillBrush);
         doc.appendChild(dynamic_cast<TupAbstractSerializable *>(ellipse)->toXml(doc));
         QRectF rect = ellipse->rect();
         point = rect.topLeft();
-    } else if (name() == tr("Line")) {
+    // } else if (currentToolName() == tr("Line")) {
+    } else if (toolId() == TAction::Line) {
         return;
     }
 
@@ -341,7 +357,7 @@ void GeometricTool::release(const TupInputDeviceInformation *input, TupBrushMana
     emit requested(&event);
 }
 
-QMap<QString, TAction *> GeometricTool::actions() const
+QMap<TAction::ActionId, TAction *> GeometricTool::actions() const
 {
     return geoActions;
 }
@@ -355,9 +371,11 @@ QWidget *GeometricTool::configurator()
 {
     GeometricSettings::ToolType toolType = GeometricSettings::Line;
 
-    if (name() == tr("Rectangle"))
+    // if (currentToolName() == tr("Rectangle"))
+    if (toolId() == TAction::Rectangle)
         toolType = GeometricSettings::Rectangle;
-    else if (name() == tr("Ellipse"))
+    // else if (currentToolName() == tr("Ellipse"))
+    else if (toolId() == TAction::Ellipse)
         toolType = GeometricSettings::Ellipse;
 
     configPanel = new GeometricSettings(toolType);
@@ -390,7 +408,8 @@ void GeometricTool::keyPressEvent(QKeyEvent *event)
     } else if (event->key() == Qt::Key_Shift) {
         side = true;
     } else if (event->key() == Qt::Key_X) {
-        if (name() == tr("Line"))
+        // if (currentToolName() == tr("Line"))
+        if (toolId() == TAction::Line)
             endItem();
     } else {
         QPair<int, int> flags = TupToolPlugin::setKeyAction(event->key(), event->modifiers());
@@ -407,13 +426,16 @@ void GeometricTool::keyReleaseEvent(QKeyEvent *event)
         proportion = false;
 }
 
-QCursor GeometricTool::polyCursor() const
+QCursor GeometricTool::polyCursor() // const
 {
-    if (name() == tr("Rectangle")) {
+    // if (currentToolName() == tr("Rectangle")) {
+    if (toolId() == TAction::Rectangle) {
         return squareCursor;
-    } else if (name() == tr("Ellipse")) {
+    // } else if (currentToolName() == tr("Ellipse")) {
+    } else if (this->toolId() == TAction::Ellipse) {
         return circleCursor;
-    } else if (name() == tr("Line")) {
+    // } else if (currentToolName() == tr("Line")) {
+    } else if (this->toolId() == TAction::Line) {
         return lineCursor;
     }
 
@@ -480,20 +502,23 @@ void GeometricTool::doubleClick(const TupInputDeviceInformation *input, TupGraph
 void GeometricTool::sceneResponse(const TupSceneResponse *event)
 {
     Q_UNUSED(event);
-    if (name() == tr("Line")) 
+    // if (currentToolName() == tr("Line"))
+    if (toolId() == TAction::Line)
         init(scene);
 }
 
 void GeometricTool::layerResponse(const TupLayerResponse *event)
 {
     Q_UNUSED(event);
-    if (name() == tr("Line")) 
+    // if (currentToolName() == tr("Line"))
+    if (toolId() == TAction::Line)
         init(scene);
 }
 
 void GeometricTool::frameResponse(const TupFrameResponse *event)
 {
     Q_UNUSED(event);
-    if (name() == tr("Line")) 
+    // if (currentToolName() == tr("Line"))
+    if (toolId() == TAction::Line)
         init(scene);
 }

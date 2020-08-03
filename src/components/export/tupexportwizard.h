@@ -40,6 +40,7 @@
 #include "tvhbox.h"
 #include "toolview.h"
 #include "tseparator.h"
+#include "tupexportinterface.h"
 
 #include <QDialog>
 #include <QPushButton>
@@ -73,7 +74,7 @@ class TUPITUBE_EXPORT TupExportWizard : public QDialog
         void pageCompleted();
         void disableNextButton();
         void closeDialog();
-        void setFormat(int code, const QString &extension);
+        void setFormat(TupExportInterface::Format format, const QString &extension);
 
     signals:
         void cancelled();
@@ -97,7 +98,7 @@ class TUPITUBE_EXPORT TupExportWizard : public QDialog
         QHBoxLayout *buttonLayout;
         QVBoxLayout *mainLayout;
         QString format;
-        int formatCode;
+        TupExportInterface::Format formatCode;
 };
 
 #include <QFrame>
@@ -128,7 +129,6 @@ class TUPITUBE_EXPORT TupExportWizardPage : public TVHBox
     signals:
         void completed();
         void emptyField();
-        // void formatSelected(int format, const QString &extension);
 
     private:
         QFrame *container;

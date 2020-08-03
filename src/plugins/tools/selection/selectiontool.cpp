@@ -97,9 +97,9 @@ void SelectionTool::removeTarget()
     }
 }
 
-QStringList SelectionTool::keys() const
+QList<TAction::ActionId> SelectionTool::keys() const
 {
-    return QStringList() << tr("Selection");
+    return QList<TAction::ActionId>() << TAction::ObjectSelection;
 }
 
 void SelectionTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
@@ -318,12 +318,13 @@ void SelectionTool::setupActions()
 
     TAction *select = new TAction(QPixmap(kAppProp->themeDir() + "icons/selection.png"), tr("Object Selection"), this);
     select->setShortcut(QKeySequence(tr("O")));
-    select->setToolTip(tr("Object Selection") + " - " + "O");
+    select->setToolTip(tr("Object Selection") + " - " + tr("O"));
+    select->setActionId(TAction::ObjectSelection);
 
-    selectActions.insert(tr("Selection"), select);
+    selectActions.insert(TAction::ObjectSelection, select);
 }
 
-QMap<QString, TAction *> SelectionTool::actions() const
+QMap<TAction::ActionId, TAction *> SelectionTool::actions() const
 {
     return selectActions;
 }
@@ -762,7 +763,7 @@ void SelectionTool::applyGroupAction(SelectionSettings::Group action)
     }
 }
 
-QCursor SelectionTool::polyCursor() const
+QCursor SelectionTool::polyCursor() // const
 {
     return QCursor(Qt::ArrowCursor);
 }

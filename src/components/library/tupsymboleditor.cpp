@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tupsymboleditor.h"
+#include "taction.h"
 
 View::View()
 {
@@ -90,15 +91,17 @@ void TupSymbolEditor::loadTools()
     foreach (QObject *plugin, TupPluginManager::instance()->getTools()) {
              TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(plugin);
         
-             QStringList::iterator it;
-             QStringList keys = tool->keys();
+             // QStringList::iterator it;
+             // QStringList keys = tool->keys();
+             QList<TAction::ActionId> keys = tool->keys();
             
-             for (it = keys.begin(); it != keys.end(); ++it) {
+             // for (it = keys.begin(); it != keys.end(); ++it) {
+             for (int i = 0; i < keys.size(); i++) {
                   #ifdef TUP_DEBUG
-                      qDebug() << "TupSymbolEditor::loadTools() - *** Tool Loaded: " + *it;
+                      qDebug() << "TupSymbolEditor::loadTools() - *** Tool Loaded: " + tool->currentToolName();
                   #endif
-            
-                  TAction *act = tool->actions()[*it];
+
+                  TAction *act = tool->actions()[keys.at(i)];
                   if (act) {
                       connect(act, SIGNAL(triggered()), this, SLOT(selectTool()));
                 
@@ -143,6 +146,6 @@ void TupSymbolEditor::selectTool()
     
     if (action) {
         TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(action->parent());
-        tool->setName(action->text());
+        tool->setCurrentToolName(action->text());
     }
 }

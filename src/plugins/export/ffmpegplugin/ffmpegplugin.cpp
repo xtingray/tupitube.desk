@@ -34,6 +34,13 @@
  ***************************************************************************/
 
 #include "ffmpegplugin.h"
+#include "tuplayer.h"
+#include "tupanimationrenderer.h"
+#include "tupexportinterface.h"
+#include "tffmpegmoviegenerator.h"
+
+#include <QImage>
+#include <QPainter>
 
 FFmpegPlugin::FFmpegPlugin()
 {
@@ -43,21 +50,19 @@ FFmpegPlugin::~FFmpegPlugin()
 {
 }
 
-QString FFmpegPlugin::key() const
+QString FFmpegPlugin::formatName() const
 {
     return tr("Video Formats");
 }
 
+TupExportInterface::Plugin FFmpegPlugin::key()
+{
+    return TupExportInterface::VideoFormats;
+}
+
 TupExportInterface::Formats FFmpegPlugin::availableFormats()
 {
-    // SQA: MPEG codec was removed because it crashes. Check the issue.
-    // TupExportInterface::MPEG 
-
-    // SQA: Obsolete formats
-    // | TupExportInterface::SWF | TupExportInterface::ASF
-
-    return TupExportInterface::WEBM | TupExportInterface::MP4 | TupExportInterface::AVI |
-           TupExportInterface::MOV | TupExportInterface::GIF;
+    return TupExportInterface::MP4 | TupExportInterface::AVI | TupExportInterface::MOV;
 }
 
 TMovieGeneratorInterface::Format FFmpegPlugin::videoFormat(TupExportInterface::Format format)
@@ -86,37 +91,15 @@ TMovieGeneratorInterface::Format FFmpegPlugin::videoFormat(TupExportInterface::F
             {
                 return TFFmpegMovieGenerator::MOV;
             }
-        case TupExportInterface::WEBM:
-            {
-                return TFFmpegMovieGenerator::WEBM;
-            }
-        /* SQA: Obsolete formats
-        case TupExportInterface::SWF:
-            {
-                return TFFmpegMovieGenerator::SWF;
-            }
-        break;
-        case TupExportInterface::ASF:
-            {
-                return TFFmpegMovieGenerator::ASF;
-            }
-        break;
-        */
         case TupExportInterface::PNG:
         case TupExportInterface::JPEG:
         case TupExportInterface::XPM:
-        // case TupExportInterface::SMIL:
         case TupExportInterface::NONE:
-            {
-                return TFFmpegMovieGenerator::NONE;
-            }
         default:
             {
                 return TFFmpegMovieGenerator::NONE;
             }
     }
-
-    // return TFFmpegMovieGenerator::NONE;
 }
 
 bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes,
@@ -192,6 +175,7 @@ bool FFmpegPlugin::exportFrame(int frameIndex, const QColor color, const QString
     return false;
 }
 
-QString FFmpegPlugin::getExceptionMsg() const {
+QString FFmpegPlugin::getExceptionMsg() const
+{
     return errorMsg;
 }

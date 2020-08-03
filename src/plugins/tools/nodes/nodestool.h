@@ -78,12 +78,12 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
         virtual ~NodesTool();
         
         virtual void init(TupGraphicsScene *scene);
-        virtual QStringList keys() const;
+        virtual QList<TAction::ActionId> keys() const;
         virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         
-        virtual QMap<QString, TAction *>actions() const;
+        virtual QMap<TAction::ActionId, TAction *>actions() const;
         int toolType() const;
         virtual QWidget *configurator();
         void aboutToChangeScene(TupGraphicsScene *scene);
@@ -92,7 +92,7 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
         virtual void itemResponse(const TupItemResponse *event);
         virtual void keyPressEvent(QKeyEvent *event);
         virtual void saveConfig();
-        virtual QCursor polyCursor() const;
+        virtual QCursor polyCursor(); // const;
 
         void resizeNode(qreal scaleFactor);
         void updateZoomFactor(qreal scaleFactor);
@@ -107,7 +107,7 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
         void setupActions();
         TupFrame* getCurrentFrame();
 
-        QMap<QString, TAction *> nodesActions;
+        QMap<TAction::ActionId, TAction *> nodesActions;
         TNodeGroup *nodeGroup;
         TupGraphicsScene *scene;
         int baseZValue;
@@ -118,4 +118,3 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
 };
 
 #endif
-

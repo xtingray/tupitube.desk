@@ -61,8 +61,8 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
     public:
         GeometricTool();
         ~GeometricTool();
-        
-        virtual QStringList keys() const;
+
+        virtual QList<TAction::ActionId> keys() const;
         virtual void init(TupGraphicsScene *scene);
         virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
@@ -75,15 +75,15 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
         virtual void layerResponse(const TupLayerResponse *event);
         virtual void frameResponse(const TupFrameResponse *event);
 
-        virtual QMap<QString, TAction *> actions() const;
-        
+        virtual QMap<TAction::ActionId, TAction *> actions() const;
+
         int toolType() const;
         
         virtual QWidget *configurator();
         void aboutToChangeScene(TupGraphicsScene *scene);
         virtual void aboutToChangeTool();
         virtual void saveConfig();
-        virtual QCursor polyCursor() const;
+        virtual QCursor polyCursor(); // const;
         void updatePos(QPointF pos);
 
     public slots:
@@ -109,7 +109,7 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
         bool added;
         QPointF currentPoint;
         QPointF lastPoint;
-        QMap<QString, TAction *> geoActions;
+        QMap<TAction::ActionId, TAction *> geoActions;
 
         bool proportion;
         bool side;

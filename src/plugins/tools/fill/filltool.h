@@ -58,23 +58,22 @@ class TUPITUBE_PLUGIN FillTool : public TupToolPlugin
     public:
         FillTool();
         ~FillTool();
-        
-        virtual QStringList keys() const;
+
+        virtual QList<TAction::ActionId> keys() const;
 
         void init(TupGraphicsScene *scene);
         
         virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, 
-                    TupGraphicsScene *gScene);
-
+                           TupGraphicsScene *gScene);
         virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, 
-                    TupGraphicsScene *gScene);
+                          TupGraphicsScene *gScene);
 
         virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, 
                     TupGraphicsScene *gScene);
         
         TupPathItem *itemPressed(QGraphicsItem *item, const TupBrushManager *brush);
         
-        virtual QMap<QString, TAction *> actions() const;
+        virtual QMap<TAction::ActionId, TAction *> actions() const;
         
         int toolType() const;
         
@@ -87,7 +86,7 @@ class TUPITUBE_PLUGIN FillTool : public TupToolPlugin
 
         virtual void saveConfig();
         virtual void keyPressEvent(QKeyEvent *event);
-        virtual QCursor polyCursor() const;
+        virtual QCursor polyCursor(); // const;
 
         void setColorMode(TColorCell::FillType colorMode);
 
@@ -99,7 +98,7 @@ class TUPITUBE_PLUGIN FillTool : public TupToolPlugin
         void setupActions();
 
     private:
-        QMap<QString, TAction *> fillActions;
+        QMap<TAction::ActionId, TAction *> fillActions;
         TupGraphicsScene *scene;
         QCursor insideCursor;
         QCursor contourCursor;

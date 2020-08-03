@@ -84,9 +84,9 @@ void FillTool::init(TupGraphicsScene *gScene)
     mode = TColorCell::FillType(colorMode);
 }
 
-QStringList FillTool::keys() const
+QList<TAction::ActionId> FillTool::keys() const
 {
-    return QStringList() << tr("Fill Tool");
+    return QList<TAction::ActionId>() << TAction::FillTool;
 }
 
 void FillTool::setupActions()
@@ -98,7 +98,7 @@ void FillTool::setupActions()
     action1->setShortcut(QKeySequence(tr("F")));
     action1->setToolTip(tr("Fill Tool") + " - " + "F");
     action1->setCursor(insideCursor);
-    fillActions.insert(tr("Fill Tool"), action1);
+    fillActions.insert(TAction::FillTool, action1);
 }
 
 void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
@@ -213,7 +213,7 @@ void FillTool::release(const TupInputDeviceInformation *, TupBrushManager *, Tup
 {
 }
 
-QMap<QString, TAction *> FillTool::actions() const
+QMap<TAction::ActionId, TAction *> FillTool::actions() const
 {
     return fillActions;
 }
@@ -225,7 +225,7 @@ int FillTool::toolType() const
         
 QWidget *FillTool::configurator()
 {
-    return 0;
+    return nullptr;
 }
 
 void FillTool::aboutToChangeScene(TupGraphicsScene *)
@@ -271,7 +271,7 @@ void FillTool::keyPressEvent(QKeyEvent *event)
     }
 }
 
-QCursor FillTool::polyCursor() const
+QCursor FillTool::polyCursor() // const
 {
     if (mode == TColorCell::Inner) {
         return insideCursor;

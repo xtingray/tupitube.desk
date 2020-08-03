@@ -56,10 +56,11 @@ void PencilTool::setupActions()
     penCursor = QCursor(kAppProp->themeDir() + "cursors/target.png", 4, 4);
     TAction *pencil = new TAction(QPixmap(kAppProp->themeDir() + "icons/pencil.png"), tr("Pencil"), this);
     pencil->setShortcut(QKeySequence(tr("P")));
-    pencil->setToolTip(tr("Pencil") + " - " + "P");
+    pencil->setToolTip(tr("Pencil") + " - " + tr("P"));
     pencil->setCursor(penCursor);
+    pencil->setActionId(TAction::Pencil);
 
-    penActions.insert(tr("Pencil"), pencil);
+    penActions.insert(TAction::Pencil, pencil);
 }
 
 void PencilTool::init(TupGraphicsScene *gScene)
@@ -83,9 +84,9 @@ void PencilTool::init(TupGraphicsScene *gScene)
         view->setDragMode(QGraphicsView::NoDrag);
 }
 
-QStringList PencilTool::keys() const
-{
-    return QStringList() << tr("Pencil");
+QList<TAction::ActionId> PencilTool::keys() const
+{    
+    return QList<TAction::ActionId>() << TAction::Pencil;
 }
 
 void PencilTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
@@ -214,7 +215,7 @@ void PencilTool::smoothPath(QPainterPath &path, double smoothness, int from, int
     }
 }
 
-QMap<QString, TAction *> PencilTool::actions() const
+QMap<TAction::ActionId, TAction *> PencilTool::actions() const
 {
     return penActions;
 }
@@ -312,7 +313,7 @@ void PencilTool::keyReleaseEvent(QKeyEvent *event)
     }
 }
 
-QCursor PencilTool::polyCursor() const
+QCursor PencilTool::polyCursor() // const
 {
     return penCursor;
 }

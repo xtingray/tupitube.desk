@@ -55,25 +55,33 @@ class TUPITUBE_EXPORT TupPluginSelector : public TupExportWizardPage
         const char *extension;
 
         void reset();
-        void addPlugin(const QString &plugin);
-        void setFormats(TupExportInterface::Formats formats);
+        void addPlugin(TupExportInterface::Plugin pluginId, const QString &pluginName);
+        void setFormats(TupExportInterface::Plugin plugin, TupExportInterface::Formats formats);
 
     public slots:
         void selectedPluginItem(QListWidgetItem *);
-        void selectFirstItem();
+        void selectFirstPlugin();
         void selectedFormatItem(QListWidgetItem *);
         const char* getFileExtension();
 
     signals:
-        void selectedPlugin(const QString &plugin);
-        void animationFormatSelected(int format, const QString &extension);
-        void animatedImageFormatSelected(int format, const QString &extension);
-        void imagesArrayFormatSelected(int format, const QString &extension);
+        void selectedPlugin(TupExportInterface::Plugin key);
+        void animationFormatSelected(TupExportInterface::Format format, const QString &extension);
+
+        // SQA: Pending for implementation
+        // void animatedImageFormatSelected(TupExportInterface::Format format, const QString &extension);
+
+        void imagesArrayFormatSelected(TupExportInterface::Format format, const QString &extension);
 
     private:
-        QListWidget *m_exporterList;
-        QListWidget *m_formatList;
-        const char* getFormatExtension(const QString format);
+        QListWidget *pluginList;
+        QListWidget *formatList;
+        const char* getFormatExtension(TupExportInterface::Format formatId);
+
+        QList<TupExportInterface::Plugin> plugins;
+        QList<TupExportInterface::Format> videoFormats;
+        QList<TupExportInterface::Format> imageFormats;
+        TupExportInterface::Plugin currentPlugin;
 };
 
 #endif

@@ -53,7 +53,7 @@ PolyLineTool::PolyLineTool()
     cutterOn = false;
     movingOn = false;
 
-    polyCursor = QCursor(kAppProp->themeDir() + "cursors/target.png", 4, 4);
+    cursor = QCursor(kAppProp->themeDir() + "cursors/target.png", 4, 4);
     
     line1 = new QGraphicsLineItem(0, 0, 0, 0);
     line1->setPen(QPen(QColor(55, 177, 50)));
@@ -72,13 +72,14 @@ void PolyLineTool::setupActions()
 {
     TAction *polyline = new TAction(QIcon(kAppProp->themeDir() + "/icons/polyline.png"), tr("PolyLine"), this);
     polyline->setShortcut(QKeySequence(tr("S")));
-    polyline->setToolTip(tr("PolyLine") + " - " + "S");
-    polyline->setCursor(polyCursor);
+    polyline->setToolTip(tr("PolyLine") + " - " + tr("S"));
+    polyline->setCursor(cursor);
+    polyline->setActionId(TAction::Polyline);
 
-    polyActions.insert(tr("PolyLine"), polyline);
+    polyActions.insert(TAction::Polyline, polyline);
 }
 
-QMap<QString, TAction *> PolyLineTool::actions() const
+QMap<TAction::ActionId, TAction *> PolyLineTool::actions() const
 {
     return polyActions;
 }
@@ -108,9 +109,9 @@ void PolyLineTool::init(TupGraphicsScene *gScene)
     initEnv();
 }
 
-QStringList PolyLineTool::keys() const
+QList<TAction::ActionId> PolyLineTool::keys() const
 {
-    return QStringList() << tr("PolyLine");
+    return QList<TAction::ActionId>() << TAction::Polyline;
 }
 
 void PolyLineTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
@@ -485,9 +486,9 @@ void PolyLineTool::saveConfig()
 {
 }
 
-QCursor PolyLineTool::cursor() const
+QCursor PolyLineTool::polyCursor() // const
 {
-    return polyCursor;
+    return cursor;
 }
 
 void PolyLineTool::resizeNode(qreal scaleFactor)

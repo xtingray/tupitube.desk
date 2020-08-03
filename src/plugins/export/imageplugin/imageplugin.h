@@ -55,7 +55,8 @@ class TUPITUBE_PLUGIN ImagePlugin : public TupExportPluginObject
         ImagePlugin();
         virtual ~ImagePlugin();
 
-        virtual QString key() const;
+        QString formatName() const;
+        virtual TupExportInterface::Plugin key();
         TupExportInterface::Formats availableFormats();
         virtual bool exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes,
                                     TupExportInterface::Format format, const QSize &size, const QSize &newSize,

@@ -38,14 +38,7 @@
 
 #include "tglobal.h"
 #include "tupexportpluginobject.h"
-#include "tupexportinterface.h"
 #include "tmoviegeneratorinterface.h"
-#include "tffmpegmoviegenerator.h"
-#include "tuplayer.h"
-#include "tupanimationrenderer.h"
-
-#include <QImage>
-#include <QPainter>
 
 class TUPITUBE_PLUGIN FFmpegPlugin : public TupExportPluginObject
 {
@@ -56,7 +49,8 @@ class TUPITUBE_PLUGIN FFmpegPlugin : public TupExportPluginObject
         FFmpegPlugin();
         virtual ~FFmpegPlugin();
 
-        virtual QString key() const;
+        virtual QString formatName() const;
+        virtual TupExportInterface::Plugin key();
         TupExportInterface::Formats availableFormats();
 
         virtual bool exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes,

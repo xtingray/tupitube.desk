@@ -123,3 +123,13 @@ QCursor TAction::cursor() const
 {
     return m_cursor;
 }
+
+void TAction::setActionId(TAction::ActionId code)
+{
+    id = code;
+}
+
+TAction::ActionId TAction::actionId()
+{
+    return id;
+}

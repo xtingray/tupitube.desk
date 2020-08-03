@@ -101,10 +101,9 @@ void Tweener::updateStartPoint(int index)
 }
 
 /* This method returns the plugin name */
-
-QStringList Tweener::keys() const
+QList<TAction::ActionId> Tweener::keys() const
 {
-    return QStringList() << tr("Scale Tween");
+    return QList<TAction::ActionId>() << TAction::Scale;
 }
 
 /* This method makes an action when the mouse is pressed on the workspace 
@@ -198,7 +197,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
 
 /* This method returns the list of actions defined in this plugin */
 
-QMap<QString, TAction *> Tweener::actions() const
+QMap<TAction::ActionId, TAction *> Tweener::actions() const
 {
     return scaleActions;
 }
@@ -255,12 +254,16 @@ void Tweener::aboutToChangeTool()
 
 void Tweener::setupActions()
 {
-    TAction *translater = new TAction(QPixmap(kAppProp->themeDir() + "icons/scale_tween.png"), 
-                                      tr("Scale Tween"), this);
-    translater->setCursor(QCursor(kAppProp->themeDir() + "cursors/tweener.png", 0, 0));
-    translater->setShortcut(QKeySequence(tr("Shift+S")));
+    QString name = tr("Scale Tween");
+    QString shortcut = tr("Shift+S");
 
-    scaleActions.insert(tr("Scale Tween"), translater);
+    TAction *action = new TAction(QPixmap(kAppProp->themeDir() + "icons/scale_tween.png"), name, this);
+    action->setCursor(QCursor(kAppProp->themeDir() + "cursors/tweener.png", 0, 0));
+    action->setShortcut(QKeySequence(shortcut));
+    action->setToolTip(name + " - " + shortcut);
+    action->setActionId(TAction::Scale);
+
+    scaleActions.insert(TAction::Scale, action);
 }
 
 /* This method saves the settings of this plugin */

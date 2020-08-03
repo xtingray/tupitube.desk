@@ -75,7 +75,7 @@ class TUPITUBE_EXPORT TupExportModule : public TupExportWizardPage
     public slots:
         void setScenesIndexes(const QList<int> &indexes);
         void setCurrentExporter(TupExportInterface *currentExporter);
-        void setCurrentFormat(int currentFormat, const QString &extension);
+        void setCurrentFormat(TupExportInterface::Format format, const QString &extension);
         void updateProgressLabel(int percent);
 
     signals:

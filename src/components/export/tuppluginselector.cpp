@@ -35,21 +35,26 @@
 
 #include "tuppluginselector.h"
 
+
 TupPluginSelector::TupPluginSelector() : TupExportWizardPage(tr("Select Plugin"))
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPluginSelector()]";
+    #endif
+
     setTag("PLUGIN");
     QWidget *container = new QWidget;
     QHBoxLayout *layout = new QHBoxLayout(container);
 
-    m_exporterList = new QListWidget;
-    m_exporterList->setSelectionMode(QAbstractItemView::SingleSelection);
+    pluginList = new QListWidget;
+    pluginList->setSelectionMode(QAbstractItemView::SingleSelection);
+    connect(pluginList, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(selectedPluginItem(QListWidgetItem *)));
+    layout->addWidget(pluginList);
 
-    connect(m_exporterList, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(selectedPluginItem(QListWidgetItem *)));
-    layout->addWidget(m_exporterList);
-
-    m_formatList = new QListWidget;
-    connect(m_formatList, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(selectedFormatItem(QListWidgetItem *)));
-    layout->addWidget(m_formatList);
+    formatList = new QListWidget;
+    formatList->setSelectionMode(QAbstractItemView::SingleSelection);
+    connect(formatList, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(selectedFormatItem(QListWidgetItem *)));
+    layout->addWidget(formatList);
 
     setWidget(container);
     reset();
@@ -61,221 +66,177 @@ TupPluginSelector::~TupPluginSelector()
 
 bool TupPluginSelector::isComplete() const
 {
-    return m_exporterList->selectedItems().count() > 0 && m_formatList->selectedItems().count() > 0;
+    return pluginList->selectedItems().count() > 0 && formatList->selectedItems().count() > 0;
 }
 
 void TupPluginSelector::reset()
 {
-    m_exporterList->clearSelection();
-    m_formatList->clearSelection();
-    m_formatList->clear();
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPluginSelector::reset()]";
+    #endif
+
+    pluginList->clearSelection();
+    formatList->clearSelection();
+    formatList->clear();
+
+    videoFormats.clear();
+    imageFormats.clear();
 }
 
-void TupPluginSelector::addPlugin(const QString &plugin)
+void TupPluginSelector::addPlugin(TupExportInterface::Plugin pluginId, const QString &pluginName)
 {
-    #ifdef Q_OS_WIN
-       if (QSysInfo::windowsVersion() != QSysInfo::WV_XP) {
-           new QListWidgetItem(plugin, m_exporterList);
-       } else {
-       if (plugin.compare(tr("Video Formats")) != 0)
-       new QListWidgetItem(plugin, m_exporterList);
-   }
-    #else
-       new QListWidgetItem(plugin, m_exporterList);
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPluginSelector::addPlugin()] - plugin -> " << pluginName;
+        qDebug() << "[TupPluginSelector::addPlugin()] - plugin id-> " << pluginId;
     #endif
+
+    new QListWidgetItem(pluginName, pluginList);
+    plugins << pluginId;
 }
 
 void TupPluginSelector::selectedPluginItem(QListWidgetItem *item)
 {
-    if (item) {
-        emit selectedPlugin(item->text());
+    Q_UNUSED(item)
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPluginSelector::selectedPluginItem()]";
+    #endif
+
+    int pluginIndex = pluginList->currentRow();
+    if (pluginIndex != -1) {
+        currentPlugin = plugins.at(pluginIndex);
+        emit selectedPlugin(currentPlugin);
         emit completed();
     }
 }
 
-void TupPluginSelector::selectFirstItem()
+void TupPluginSelector::selectFirstPlugin()
 {
-    if (m_exporterList->count() > 0) {
-        m_exporterList->item(0)->setSelected(true);
-        if (m_exporterList->item(0)) {
-            emit selectedPlugin(m_exporterList->item(0)->text());
-            emit completed();
-        }
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPluginSelector::selecteFirstPlugin()]";
+    #endif
+
+    if (pluginList->item(0)) {
+        pluginList->item(0)->setSelected(true);
+        currentPlugin = plugins.at(0);
+        emit selectedPlugin(plugins.at(0));
+        emit completed();
     }
-}
-
-void TupPluginSelector::setFormats(TupExportInterface::Formats formats)
-{
-    m_formatList->clear();
-
-#ifdef Q_OS_LINUX
-    if (formats & TupExportInterface::OGV) {
-        QListWidgetItem *format = new QListWidgetItem(tr("OGV Video"), m_formatList);
-        format->setData(3124, TupExportInterface::OGV);
-    }
-#endif
-
-    if (formats & TupExportInterface::MP4) {
-        QListWidgetItem *format = new QListWidgetItem(tr("MP4 Video"), m_formatList);
-        format->setData(3124, TupExportInterface::MP4);
-    }
-
-#if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
-    /* SQA: This code is temporarily disabled
-    if (formats & TupExportInterface::GIF) {
-        QListWidgetItem *format = new QListWidgetItem(tr("Animated GIF"), m_formatList);
-        format->setData(3124, TupExportInterface::GIF);
-    }
-    */
-
-    if (formats & TupExportInterface::MPEG) {
-        QListWidgetItem *format = new QListWidgetItem(tr("MPEG Video"), m_formatList);
-        format->setData(3124, TupExportInterface::MPEG);
-    }
-
-    if (formats & TupExportInterface::AVI) {
-        QListWidgetItem *format = new QListWidgetItem(tr("AVI Video"), m_formatList);
-        format->setData(3124, TupExportInterface::AVI);
-    }
-
-    /* SQA: Unstable format
-    if (formats & TupExportInterface::WEBM) {
-        QListWidgetItem *format = new QListWidgetItem(tr("WEBM Video"), m_formatList);
-        format->setData(3124, TupExportInterface::WEBM);
-    }
-    */
-
-    /* SQA: Obsolete format
-    if (formats & TupExportInterface::SWF) {
-        QListWidgetItem *format = new QListWidgetItem(tr("Macromedia Flash"), m_formatList);
-        format->setData(3124, TupExportInterface::SWF);
-    }
-    */
-
-    /* SQA: Obsolete format
-    if (formats & TupExportInterface::ASF) {
-        QListWidgetItem *format = new QListWidgetItem(tr("ASF Video"), m_formatList);
-        format->setData(3124, TupExportInterface::ASF);
-    }
-    */
-#endif
-
-    if (formats & TupExportInterface::MOV) {
-        QListWidgetItem *format = new QListWidgetItem(tr("QuickTime Video"), m_formatList);
-        format->setData(3124, TupExportInterface::MOV);
-    }
-
-    if (formats & TupExportInterface::PNG) {
-        QListWidgetItem *format = new QListWidgetItem(tr("PNG Image Sequence"), m_formatList);
-        format->setData(3124, TupExportInterface::PNG);
-    }
-
-    if (formats & TupExportInterface::JPEG) {
-        QListWidgetItem *format = new QListWidgetItem(tr("JPEG Image Sequence"), m_formatList);
-        format->setData(3124, TupExportInterface::JPEG);
-    }
-
-    if (formats & TupExportInterface::SVG) {
-        QListWidgetItem *format = new QListWidgetItem(tr("SVG Image Sequence"), m_formatList);
-        format->setData(3124, TupExportInterface::SVG);
-    }
-
-    if (formats & TupExportInterface::APNG) {
-        QListWidgetItem *format = new QListWidgetItem(tr("Animated PNG (APNG)"), m_formatList);
-        format->setData(3124, TupExportInterface::APNG);
-        format->setFlags(Qt::NoItemFlags);
-    }
-
-    /*
-    if (formats & TupExportInterface::SMIL) {
-        QListWidgetItem *format = new QListWidgetItem(tr("SMIL"), m_formatList);
-        format->setData(3124, TupExportInterface::SMIL);
-    }
-    */
-}
-
-char const* TupPluginSelector::getFormatExtension(const QString format) 
-{ 
-    if (format.compare(tr("WEBM Video")) == 0)
-        return ".webm";
-
-#ifdef Q_OS_UNIX
-    if (format.compare(tr("OGV Video")) == 0)
-        return ".ogv";
-#endif
-
-    if (format.compare(tr("MPEG Video")) == 0)
-        return ".mpg";
-
-    /* SQA: Obsolete format
-    if (format.compare(tr("Macromedia Flash")) == 0)
-        return ".swf";
-    */
-
-    if (format.compare(tr("MP4 Video")) == 0)
-        return ".mp4";
-
-    if (format.compare(tr("AVI Video")) == 0)
-        return ".avi";
-
-    /* SQA: Obsolete formats
-    if (format.compare(tr("RealMedia Video")) == 0) 
-        return ".rm";
-
-    if (format.compare(tr("ASF Video")) == 0)
-        return ".asf";
-    */
-
-    if (format.compare(tr("QuickTime Video")) == 0)
-        return ".mov";
-
-    if (format.compare(tr("Animated GIF")) == 0)
-        return ".gif";
-
-    if (format.compare(tr("PNG Image Sequence")) == 0)
-        return ".png";
-
-    if (format.compare(tr("JPEG Image Sequence")) == 0)
-        return ".jpeg";
-
-    if (format.compare(tr("Animated PNG (APNG)")) == 0)
-        return ".png";
-
-    if (format.compare(tr("SVG Image Sequence")) == 0)
-        return ".svg";
-
-    /* SQA: Obsolete format
-    if (format.compare(tr("SMIL")) == 0)
-        return ".smil";
-    */
-
-    return ".none";
 }
 
 void TupPluginSelector::selectedFormatItem(QListWidgetItem *item)
 {
-    if (item) {
-        extension = getFormatExtension(item->text());
-        QList<QListWidgetItem *> family = m_exporterList->selectedItems();
-        QListWidgetItem *familyItem = (QListWidgetItem *) family.at(0); 
+    Q_UNUSED(item)
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPluginSelector::selectedFormatItem()]";
+    #endif
 
-        QString familyLabel = familyItem->text(); 
-        if (familyLabel.compare(tr("Animated Image")) == 0) {
-            emit animatedImageFormatSelected(item->data(3124).toInt(), extension);
-        } else if (familyLabel.compare(tr("Image Sequence")) == 0) {
-                   emit imagesArrayFormatSelected(item->data(3124).toInt(), extension);
-        } else { 
-            emit animationFormatSelected(item->data(3124).toInt(), extension);
+    int formatIndex = formatList->currentRow();
+    if (formatIndex != -1) {
+        if (currentPlugin == TupExportInterface::VideoFormats) {
+            TupExportInterface::Format format = videoFormats.at(formatIndex);
+            extension = getFormatExtension(format);
+            emit animationFormatSelected(format, extension);
+        } else if (currentPlugin == TupExportInterface::ImageSequence) {
+            TupExportInterface::Format format = imageFormats.at(formatIndex);
+            extension = getFormatExtension(format);
+            emit imagesArrayFormatSelected(format, extension);
         }
-
-        // emit formatSelected(item->data(3124).toInt(), extension);
-
         emit completed();
     }
+}
+
+void TupPluginSelector::setFormats(TupExportInterface::Plugin plugin,TupExportInterface::Formats formats)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPluginSelector::setFormats()]";
+    #endif
+
+    formatList->clear();
+
+    if (plugin == TupExportInterface::VideoFormats) {
+        videoFormats.clear();
+
+        if (formats & TupExportInterface::MP4) {
+            new QListWidgetItem(tr("MP4 Video"), formatList);
+            videoFormats << TupExportInterface::MP4;
+        }
+
+        #if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
+            /* SQA: This code is temporarily disabled
+            if (formats & TupExportInterface::GIF) {
+                new QListWidgetItem(tr("Animated GIF"), m_formatList);
+            }
+            */
+
+            if (formats & TupExportInterface::MPEG) {
+                new QListWidgetItem(tr("MPEG Video"), formatList);
+                videoFormats << TupExportInterface::MPEG;
+            }
+
+            if (formats & TupExportInterface::AVI) {
+                new QListWidgetItem(tr("AVI Video"), formatList);
+                videoFormats << TupExportInterface::AVI;
+            }
+        #endif
+
+        if (formats & TupExportInterface::MOV) {
+            new QListWidgetItem(tr("QuickTime Video"), formatList);
+            videoFormats << TupExportInterface::MOV;
+        }
+    } else if (plugin == TupExportInterface::ImageSequence) {
+        imageFormats.clear();
+
+        if (formats & TupExportInterface::PNG) {
+            new QListWidgetItem(tr("PNG Image Sequence"), formatList);
+            imageFormats << TupExportInterface::PNG;
+        }
+
+        if (formats & TupExportInterface::JPEG) {
+            new QListWidgetItem(tr("JPEG Image Sequence"), formatList);
+            imageFormats << TupExportInterface::JPEG;
+        }
+
+        if (formats & TupExportInterface::SVG) {
+            new QListWidgetItem(tr("SVG Image Sequence"), formatList);
+            imageFormats << TupExportInterface::SVG;
+        }
+
+        /* SQA: Pending for implementation
+        if (formats & TupExportInterface::APNG) {
+            new QListWidgetItem(tr("Animated PNG (APNG)"), formatList);
+        }
+        */
+    }
+}
+
+char const* TupPluginSelector::getFormatExtension(TupExportInterface::Format formatId)
+{ 
+    // if (formatId == TupExportInterface::MPEG)
+    //     return ".mpg";
+
+    if (formatId == TupExportInterface::MP4)
+        return ".mp4";
+
+    if (formatId == TupExportInterface::AVI)
+        return ".avi";
+
+    if (formatId == TupExportInterface::MOV)
+        return ".mov";
+
+    // if (formatId == TupExportInterface::GIF)
+    //     return ".gif";
+
+    if (formatId == TupExportInterface::PNG)
+        return ".png";
+
+    if (formatId == TupExportInterface::SVG)
+        return ".svg";
+
+    return ".none";
 }
 
 const char* TupPluginSelector::getFileExtension()
 {
     return extension;
 }
-

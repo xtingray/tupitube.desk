@@ -115,9 +115,9 @@ void Tweener::updateStartPoint(int index)
 
 /* This method returns the plugin name */
 
-QStringList Tweener::keys() const
+QList<TAction::ActionId> Tweener::keys() const
 {
-    return QStringList() << tr("Coloring Tween");
+    return QList<TAction::ActionId>() << TAction::Color;
 }
 
 /* This method makes an action when the mouse is pressed on the workspace 
@@ -233,7 +233,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
 
 /* This method returns the list of actions defined in this plugin */
 
-QMap<QString, TAction *> Tweener::actions() const
+QMap<TAction::ActionId, TAction *> Tweener::actions() const
 {
     return colorActions;
 }
@@ -281,12 +281,16 @@ void Tweener::aboutToChangeTool()
 
 void Tweener::setupActions()
 {
-    TAction *action = new TAction(QPixmap(kAppProp->themeDir() + "icons/coloring_tween.png"),
-                                      tr("Coloring Tween"), this);
-    action->setCursor(QCursor(kAppProp->themeDir() + "cursors/tweener.png", 0, 0));
-    action->setShortcut(QKeySequence(tr("Shift+C")));
+    QString name = tr("Coloring Tween");
+    QString shortcut = tr("Shift+C");
 
-    colorActions.insert(tr("Coloring Tween"), action);
+    TAction *action = new TAction(QPixmap(kAppProp->themeDir() + "icons/coloring_tween.png"), name, this);
+    action->setCursor(QCursor(kAppProp->themeDir() + "cursors/tweener.png", 0, 0));
+    action->setShortcut(QKeySequence(shortcut));
+    action->setToolTip(name + " - " + shortcut);
+    action->setActionId(TAction::Color);
+
+    colorActions.insert(TAction::Color, action);
 }
 
 /* This method saves the settings of this plugin */

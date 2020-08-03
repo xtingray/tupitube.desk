@@ -76,9 +76,9 @@ void InkTool::init(TupGraphicsScene *gScene)
         view->setDragMode(QGraphicsView::NoDrag);
 }
 
-QStringList InkTool::keys() const
+QList<TAction::ActionId> InkTool::keys() const
 {
-    return QStringList() << tr("Ink");
+    return QList<TAction::ActionId>() << TAction::Ink;
 }
 
 void InkTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager,
@@ -211,9 +211,10 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
 
         QDomDocument doc;
         doc.appendChild(blackEllipse->toXml(doc));
-        TupProjectRequest request = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(), gScene->currentLayerIndex(), gScene->currentFrameIndex(),
-                                                                         0, center, gScene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
-                                                                         doc.toString());
+        TupProjectRequest request = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(), gScene->currentLayerIndex(),
+                                                                         gScene->currentFrameIndex(), 0, center,
+                                                                         gScene->getSpaceContext(), TupLibraryObject::Item,
+                                                                         TupProjectRequest::Add, doc.toString());
         emit requested(&request);
         return;
     }
@@ -295,13 +296,14 @@ void InkTool::setupActions()
 {
     TAction *inkPen = new TAction(QPixmap(kAppProp->themeDir() + "icons/ink.png"), tr("Ink"), this);
     inkPen->setShortcut(QKeySequence(tr("K")));
-    inkPen->setToolTip(tr("Ink") + " - " + "K");
+    inkPen->setToolTip(tr("Ink") + " - " + tr("K"));
     inkPen->setCursor(inkCursor);
+    inkPen->setActionId(TAction::Ink);
 
-    inkActions.insert(tr("Ink"), inkPen);
+    inkActions.insert(TAction::Ink, inkPen);
 }
 
-QMap<QString, TAction *> InkTool::actions() const
+QMap<TAction::ActionId, TAction *> InkTool::actions() const
 {
     return inkActions;
 }
@@ -419,7 +421,7 @@ void InkTool::keyPressEvent(QKeyEvent *event)
     }
 }
 
-QCursor InkTool::polyCursor() const
+QCursor InkTool::polyCursor() // const
 {
     return inkCursor;
 }

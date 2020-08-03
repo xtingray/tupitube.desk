@@ -37,8 +37,7 @@
 #define TUPTOOLINTERFACE_H
 
 #include "tglobal.h"
-// #include "tupframe.h"
-// #include "taction.h"
+#include "taction.h"
 #include "qplugin.h" // Q_EXPORT_PLUGIN
 
 #include <QStringList>
@@ -58,20 +57,11 @@ class TupScene;
 class TUPITUBE_EXPORT TupToolInterface
 {
     public:
-        enum ToolType
-        {
-            None = 0,
-            Brush,
-            Fill,
-            Selection,
-            View,
-            Tweener,
-            LipSync
-        };
-        
+        enum ToolType { None = 0, Brush, Fill, Selection, View, Tweener, LipSync };
+ 
         virtual ~TupToolInterface() {};
-        
-        virtual QStringList keys() const = 0;
+
+        virtual QList<TAction::ActionId> keys() const = 0;
         virtual int toolType() const = 0;
 };
 

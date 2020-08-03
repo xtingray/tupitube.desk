@@ -108,9 +108,9 @@ void Tweener::updateInitFrame(int index)
 
 /* This method returns the plugin name */
 
-QStringList Tweener::keys() const
+QList<TAction::ActionId> Tweener::keys() const
 {
-    return QStringList() << tr("Shear Tween");
+    return QList<TAction::ActionId>() << TAction::Shear;
 }
 
 /* This method makes an action when the mouse is pressed on the workspace 
@@ -199,7 +199,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
 
 /* This method returns the list of actions defined in this plugin */
 
-QMap<QString, TAction *> Tweener::actions() const
+QMap<TAction::ActionId, TAction *> Tweener::actions() const
 {
     return shearActions;
 }
@@ -259,13 +259,16 @@ void Tweener::aboutToChangeTool()
 void Tweener::setupActions()
 {
     realFactor = 1;
+    QString name = tr("Shear Tween");
+    QString shortcut = tr("Shift+H");
 
-    TAction *translater = new TAction(QPixmap(kAppProp->themeDir() + "icons/shear_tween.png"), 
-                                      tr("Shear Tween"), this);
-    translater->setCursor(QCursor(kAppProp->themeDir() + "cursors/tweener.png", 0, 0));
-    translater->setShortcut(QKeySequence(tr("Shift+H")));
+    TAction *action = new TAction(QPixmap(kAppProp->themeDir() + "icons/shear_tween.png"), name, this);
+    action->setCursor(QCursor(kAppProp->themeDir() + "cursors/tweener.png", 0, 0));
+    action->setShortcut(QKeySequence(shortcut));
+    action->setToolTip(name + " - " + shortcut);
+    action->setActionId(TAction::Shear);
 
-    shearActions.insert(tr("Shear Tween"), translater);
+    shearActions.insert(TAction::Shear, action);
 }
 
 /* This method saves the settings of this plugin */

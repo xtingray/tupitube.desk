@@ -59,8 +59,8 @@ class TUPITUBE_PLUGIN PolyLineTool : public TupToolPlugin
         virtual ~PolyLineTool();
         
         virtual void init(TupGraphicsScene *scene);
-        virtual QStringList keys() const;
-        virtual QMap<QString, TAction *>actions() const;
+        virtual QList<TAction::ActionId> keys() const;
+        virtual QMap<TAction::ActionId, TAction *>actions() const;
         int toolType() const;
 
         virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
@@ -74,7 +74,7 @@ class TUPITUBE_PLUGIN PolyLineTool : public TupToolPlugin
         void aboutToChangeScene(TupGraphicsScene *scene);
         virtual void aboutToChangeTool();
         virtual void saveConfig();
-        virtual QCursor cursor() const;
+        virtual QCursor polyCursor(); //  const;
 
         void resizeNode(qreal scaleFactor);
         void updateZoomFactor(qreal scaleFactor);
@@ -105,7 +105,7 @@ class TUPITUBE_PLUGIN PolyLineTool : public TupToolPlugin
         TNodeGroup *nodeGroup;
         QPainterPath path;
 
-        QMap<QString, TAction *> polyActions;
+        QMap<TAction::ActionId, TAction *> polyActions;
 
         TupPathItem *pathItem;
         TupGraphicsScene *scene;
@@ -113,7 +113,7 @@ class TUPITUBE_PLUGIN PolyLineTool : public TupToolPlugin
         QGraphicsLineItem *line1;
         QGraphicsLineItem *line2;
         PolylineSettings *configPanel;
-        QCursor polyCursor;
+        QCursor cursor;
         qreal realFactor;
         bool cutterOn;
         bool movingOn;

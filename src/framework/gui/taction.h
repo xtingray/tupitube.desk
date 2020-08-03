@@ -49,6 +49,10 @@ class T_GUI_EXPORT TAction : public QAction
     Q_OBJECT
 
     public:
+        enum ActionId { NoAction = -1, Pencil, Ink, Polyline, Rectangle, Ellipse, Line, FillTool,
+                        Text, Motion, Rotation, Scale, Shear, Color, Opacity, ObjectSelection,
+                        NodesEditor, LipSyncTool, Eraser, ExportImage };
+
         TAction(QObject * parent, const QString &id = QString());
 
         TAction(const QString &text, QObject *parent, const QString &id = QString());
@@ -65,12 +69,16 @@ class T_GUI_EXPORT TAction : public QAction
         void setCursor(const QCursor &cursor);
         QCursor cursor() const;
 
+        void setActionId(TAction::ActionId code);
+        TAction::ActionId actionId();
+
     private:
         void initWithManager(TActionManager *parent, const QString &id);
         void init();
 		
     private:
         QCursor m_cursor;
+        ActionId id;
 };
 
 #endif

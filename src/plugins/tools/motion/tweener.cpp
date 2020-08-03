@@ -151,10 +151,9 @@ void Tweener::updateStartFrame(int index)
 }
 
 // This method returns the plugin name
-
-QStringList Tweener::keys() const
+QList<TAction::ActionId> Tweener::keys() const
 {
-    return QStringList() << tr("Motion Tween");
+    return QList<TAction::ActionId>() << TAction::Motion;
 }
 
 /*
@@ -353,7 +352,7 @@ void Tweener::updateTweenPath()
 
 // This method returns the list of actions defined in this plugin
 
-QMap<QString, TAction *> Tweener::actions() const
+QMap<TAction::ActionId, TAction *> Tweener::actions() const
 {
     return posActions;
 }
@@ -445,12 +444,16 @@ void Tweener::setupActions()
     */
 
     realFactor = 1;
+    QString name = tr("Motion Tween");
+    QString shortcut = tr("Shift+W");
 
-    TAction *action = new TAction(QPixmap(kAppProp->themeDir() + "icons/motion_tween.png"), tr("Motion Tween"), this);
+    TAction *action = new TAction(QPixmap(kAppProp->themeDir() + "icons/motion_tween.png"), name, this);
     action->setCursor(QCursor(kAppProp->themeDir() + "cursors/tweener.png", 0 ,0));
-    action->setShortcut(QKeySequence(tr("Shift+W")));
+    action->setShortcut(QKeySequence(shortcut));
+    action->setToolTip(name + " - " + shortcut);
+    action->setActionId(TAction::Motion);
 
-    posActions.insert(tr("Motion Tween"), action);
+    posActions.insert(TAction::Motion, action);
 }
 
 // This method initializes the "Create path" mode
