@@ -72,6 +72,11 @@ SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
 
     tips = new QPushButton(tr("Show Tips"));
     tips->setToolTip(tr("A little help for the Selection tool"));
+    if (screenH <  1080) {
+        QFont font = this->font();
+        font.setPointSize(8);
+        tips->setFont(font);
+    }
 
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
     layout->addWidget(tips);
@@ -171,6 +176,9 @@ void SelectionSettings::setCompactInterface()
     buttonLabels << tr("Alignment") << tr("Flips") << tr("Order") << tr("Group");
     buttonLabels << tr("Position") << tr("Rotation") << tr("Scale");
 
+    QFont font = this->font();
+    font.setPointSize(8);
+
     QBoxLayout *formLayout = new QBoxLayout(QBoxLayout::TopToBottom, formPanel);
     formPanel->setVisible(false);
 
@@ -187,6 +195,7 @@ void SelectionSettings::setCompactInterface()
     int i = 0;
     foreach (QString label, buttonLabels) {
         actionButton[i] = new QPushButton(label);
+        actionButton[i]->setFont(font);
         actionButton[i]->setCheckable(true);
         actionsGroup->addButton(actionButton[i]);
         actionsGroup->setId(actionButton[i], i);
