@@ -81,7 +81,6 @@ MotionSettings::MotionSettings(QWidget *parent) : QWidget(parent)
     layout->addSpacing(10);
     layout->addLayout(buttonsLayout);
     layout->setSpacing(5);
-
     activateMode(TupToolPlugin::Selection);
 }
 
@@ -221,20 +220,27 @@ void MotionSettings::updateSteps(const QGraphicsPathItem *path)
 
 void MotionSettings::emitOptionChanged(int option)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[MotionSettings::emitOptionChanged()] -> " << option;
+    #endif
+
     switch (option) {
-        case 0:
+        case Selection:
         {
             activeInnerForm(false);
             emit clickedSelect();
         }
         break;
-        case 1:
+        case Path:
         {
             if (selectionDone) {
                 activeInnerForm(true);
                 emit clickedCreatePath();
             } else {
                 options->setCurrentIndex(0);
+                #ifdef TUP_DEBUG
+                    qDebug() << "[MotionSettings::emitOptionChanged()] -> Selection is empty!";
+                #endif
                 TOsd::self()->display(TOsd::Info, tr("Select objects for Tweening first!"));
             }
         }

@@ -218,8 +218,9 @@ void Configurator::clearData()
 
 void Configurator::addTween(const QString &name)
 {
-    currentMode = TupToolPlugin::Add;
+    emit clickedResetInterface();
 
+    currentMode = TupToolPlugin::Add;
     settingsPanel->setParameters(name, framesCount, currentFrame);
 
     activeTweenManagerPanel(false);

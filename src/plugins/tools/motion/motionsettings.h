@@ -59,6 +59,7 @@ class TUPITUBE_PLUGIN MotionSettings : public QWidget
     Q_OBJECT
 
     public:
+    enum Mode { Selection = 0, Path};
         MotionSettings(QWidget *parent = nullptr);
         ~MotionSettings();
 

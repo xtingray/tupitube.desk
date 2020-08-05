@@ -146,8 +146,12 @@ void Tweener::updateStartFrame(int index)
     if (index == 1)
         index--;
 
-    if (initFrame != index && index >= 0)
+    if (initFrame != index && index >= 0) {
         initFrame = index;
+        #ifdef TUP_DEBUG
+           qDebug() << "[Tweener::updateStartFrame()] - initFrame -> " << initFrame;
+        #endif
+    }
 }
 
 // This method returns the plugin name
@@ -164,7 +168,7 @@ QList<TAction::ActionId> Tweener::keys() const
 void Tweener::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "Tweener::press()";
+        qDebug() << "[Tweener::press()] -> Motion";
     #endif
 
     Q_UNUSED(brushManager);
@@ -197,7 +201,7 @@ void Tweener::move(const TupInputDeviceInformation *input, TupBrushManager *brus
 void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "Tweener::release()";
+        qDebug() << "[Tweener::release()] -> Motion";
     #endif
 
     Q_UNUSED(input);
@@ -595,7 +599,7 @@ QString Tweener::pathToCoords()
 void Tweener::applyReset()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "Tweener::applyReset()";
+        qDebug() << "[Tweener::applyReset()]";
     #endif
 
     mode = TupToolPlugin::View;
@@ -620,6 +624,10 @@ void Tweener::applyReset()
     initLayer = scene->currentLayerIndex();
     initScene = scene->currentSceneIndex();
 
+    #ifdef TUP_DEBUG
+        qDebug() << "[Tweener::applyReset()] - initFrame -> " << initFrame;
+    #endif
+
     configPanel->clearData();
 }
 
@@ -628,7 +636,7 @@ void Tweener::applyReset()
 void Tweener::applyTween()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "Tweener::applyTween()";
+        qDebug() << "[Tweener::applyTween()]";
     #endif
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
@@ -644,6 +652,10 @@ void Tweener::applyTween()
         initFrame = scene->currentFrameIndex();
         initLayer = scene->currentLayerIndex();
         initScene = scene->currentSceneIndex();
+
+        #ifdef TUP_DEBUG
+            qDebug() << "[Tweener::applyTween()] - initFrame -> " << initFrame;
+        #endif
 
         foreach (QGraphicsItem *item, objects) {
             TupLibraryObject::Type type = TupLibraryObject::Item;
@@ -671,6 +683,10 @@ void Tweener::applyTween()
         initFrame = configPanel->startFrame();
         initLayer = currentTween->getInitLayer();
         initScene = currentTween->getInitScene();
+
+        #ifdef TUP_DEBUG
+            qDebug() << "[Tweener::applyTween()] - initFrame -> " << initFrame;
+        #endif
 
         foreach (QGraphicsItem *item, objects) {
             TupLibraryObject::Type type = TupLibraryObject::Item;
@@ -789,7 +805,7 @@ void Tweener::applyTween()
 void Tweener::updatePath()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "Tweener::updatePath()";
+        qDebug() << "[Tweener::updatePath()]";
     #endif
 
     if (path) {
@@ -878,7 +894,10 @@ void Tweener::updateScene(TupGraphicsScene *scene)
             path = nullptr;
             if (scene->currentFrameIndex() != initFrame)
                 clearSelection();
-            initFrame = scene->currentFrameIndex();
+            initFrame = scene->currentFrameIndex();            
+            #ifdef TUP_DEBUG
+                qDebug() << "[Tweener::updateScene()] - initFrame -> " << initFrame;
+            #endif
             setSelection();
         }
     } else {
@@ -949,6 +968,10 @@ void Tweener::setEditEnv()
     initLayer = currentTween->getInitLayer();
     initScene = currentTween->getInitScene();
 
+    #ifdef TUP_DEBUG
+        qDebug() << "[Tweener::setEditEnv()] - initFrame -> " << initFrame;
+    #endif
+
     if (initFrame != scene->currentFrameIndex() || initLayer != scene->currentLayerIndex() || initScene != scene->currentSceneIndex()) {
         QString selection = QString::number(initLayer) + "," + QString::number(initLayer) + ","
                             + QString::number(initFrame) + "," + QString::number(initFrame);
@@ -1007,6 +1030,10 @@ int Tweener::framesCount()
 
 void Tweener::clearSelection()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Tweener::clearSelection()]";
+    #endif
+
     if (objects.size() > 0) {
         foreach (QGraphicsItem *item, objects) {
             if (item->isSelected())
