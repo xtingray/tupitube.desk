@@ -1,7 +1,7 @@
 QT += opengl core gui svg xml network
 CONFIG += plugin warn_on
 TEMPLATE = lib
-TARGET = tupmotiontool
+TARGET = tupimotiontool
 
 unix {
     !include(../../../../tupiglobal.pri){
