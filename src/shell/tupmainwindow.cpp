@@ -83,8 +83,9 @@
   #include <QDebug>
 #endif
 
-TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), m_projectManager(nullptr), animationTab(nullptr), playerTab(nullptr),
-               m_viewChat(nullptr), m_exposureSheet(nullptr), m_scenes(nullptr), isSaveDialogOpen(false), internetOn(false)
+TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), m_projectManager(nullptr), animationTab(nullptr),
+                                                      playerTab(nullptr), m_viewChat(nullptr), m_exposureSheet(nullptr),
+                                                      m_scenes(nullptr), isSaveDialogOpen(false), internetOn(false)
 {
     #ifdef TUP_DEBUG
         qDebug() << "TupMainWindow()";
@@ -304,7 +305,8 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         if (isNetworked && server.compare("tupitu.be") == 0) {
             connect(animationTab, SIGNAL(requestExportImageToServer(int, int, const QString &, const QString &, const QString &)),                         
                     netProjectManager, SLOT(sendExportImageRequest(int, int, const QString &, const QString &, const QString &)));
-            connect(animationTab, SIGNAL(updateStoryboard(TupStoryboard *, int)), netProjectManager, SLOT(updateStoryboardRequest(TupStoryboard *, int)));
+            connect(animationTab, SIGNAL(updateStoryboard(TupStoryboard *, int)), netProjectManager,
+                    SLOT(updateStoryboardRequest(TupStoryboard *, int)));
             connect(animationTab, SIGNAL(postStoryboard(int)), netProjectManager, SLOT(postStoryboardRequest(int))); 
         }
 
@@ -325,10 +327,12 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(animationTab, SIGNAL(contourColorChanged(const QColor &)), m_colorPalette, SLOT(updateContourColor(const QColor &))); 
         connect(animationTab, SIGNAL(fillColorChanged(const QColor &)), m_colorPalette, SLOT(updateFillColor(const QColor &)));
         connect(animationTab, SIGNAL(bgColorChanged(const QColor &)), m_colorPalette, SLOT(updateBgColor(const QColor &)));
-        connect(animationTab, SIGNAL(colorModeChanged(TColorCell::FillType)), m_colorPalette, SLOT(checkColorButton(TColorCell::FillType)));
+        connect(animationTab, SIGNAL(colorModeChanged(TColorCell::FillType)), m_colorPalette,
+                SLOT(checkColorButton(TColorCell::FillType)));
         connect(animationTab, SIGNAL(penWidthChanged(int)), this, SLOT(updatePenThickness(int)));
         connect(animationTab, SIGNAL(projectHasChanged()), this, SLOT(requestSaveAction()));
-        connect(this, SIGNAL(activeDockChanged(TupDocumentView::DockType)), animationTab, SLOT(updateActiveDock(TupDocumentView::DockType)));
+        connect(this, SIGNAL(activeDockChanged(TupDocumentView::DockType)), animationTab,
+                SLOT(updateActiveDock(TupDocumentView::DockType)));
 
         animationTab->setAntialiasing(true);
 
@@ -645,7 +649,8 @@ void TupMainWindow::setupNetworkProject(TupProjectManagerParams *params)
         connect(netProjectManager, SIGNAL(authenticationSuccessful()), this, SLOT(requestProject()));
         connect(netProjectManager, SIGNAL(openNewArea(const QString &, const QStringList &)), 
                 this, SLOT(createNewNetProject(const QString &, const QStringList &)));
-        connect(netProjectManager, SIGNAL(updateUsersList(const QString &, int)), this, SLOT(updateUsersOnLine(const QString &, int)));
+        connect(netProjectManager, SIGNAL(updateUsersList(const QString &, int)),
+                this, SLOT(updateUsersOnLine(const QString &, int)));
         connect(netProjectManager, SIGNAL(connectionHasBeenLost()), this, SLOT(unexpectedClose()));
         connect(netProjectManager, SIGNAL(savingSuccessful()), this, SLOT(netProjectSaved()));
         connect(netProjectManager, SIGNAL(postOperationDone()), this, SLOT(resetMousePointer()));
@@ -695,11 +700,11 @@ void TupMainWindow::openExample()
     if (cancelChanges())
         return;
 
-#ifdef Q_OS_WIN
-    QString example = SHARE_DIR + "html/examples/example.tup";
-#else
-    QString example = SHARE_DIR + "data/html/examples/example.tup";
-#endif
+    #ifdef Q_OS_WIN
+        QString example = SHARE_DIR + "html/examples/example.tup";
+    #else
+        QString example = SHARE_DIR + "data/html/examples/example.tup";
+    #endif
     if (QFile::exists(example)) {
         if (m_fileName.compare(example) != 0)
             openProject(example);
@@ -842,7 +847,8 @@ void TupMainWindow::importPalettes()
 {
     TCONFIG->beginGroup("General");
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
-    QStringList files = QFileDialog::getOpenFileNames(this, tr("Import Gimp Palettes"), path, tr("Gimp Palette (*.gpl *.txt *.css)"));
+    QStringList files = QFileDialog::getOpenFileNames(this, tr("Import Gimp Palettes"),
+                                                      path, tr("Gimp Palette (*.gpl *.txt *.css)"));
 
     if (files.count() > 0) { 
         QStringList::ConstIterator file = files.begin();
@@ -917,10 +923,10 @@ void TupMainWindow::connectWidgetToPaintArea(QWidget *widget)
             this, SLOT(createPaintCommand(const TupPaintAreaEvent *)));
 }
 
-void TupMainWindow::saveAs()
+bool TupMainWindow::saveAs()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::saveAs()";
+        qDebug() << "[TupMainWindow::saveAs()]";
     #endif
 
     TCONFIG->beginGroup("General");
@@ -932,7 +938,7 @@ void TupMainWindow::saveAs()
                        tr("TupiTube Project Package (*.tup)"));
     if (fileName.isEmpty()) {
         isSaveDialogOpen = false;
-        return;
+        return false;
     }
 
     if (!fileName.endsWith(".tup", Qt::CaseInsensitive))
@@ -950,13 +956,13 @@ void TupMainWindow::saveAs()
         #ifdef TUP_DEBUG
             qDebug() << "TupMainWindow::saveAs() - Fatal Error: Directory doesn't exist! -> " + path.toLocal8Bit();
         #endif
-        return;
+        return false;
     } else {
         QFile file(directory.filePath(name));
         if (!file.open(QIODevice::ReadWrite)) {
             file.remove();
             TOsd::self()->display(TOsd::Error, tr("Insufficient permissions. Please, pick another path."));
-            return;
+            return false;
         }
         file.remove();
     }
@@ -972,54 +978,23 @@ void TupMainWindow::saveAs()
         setWindowTitle(appTitle + " - " + projectName + " [ " + tr("by") + " " + author + " ]");
     }
 
-    saveProject();
+    return storeProcedure();
 }
 
-void TupMainWindow::saveProject()
+bool TupMainWindow::saveProject()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::saveProject() - file path -> " << m_fileName;
+        qDebug() << "[TupMainWindow::saveProject()] - file path -> " << m_fileName;
     #endif
 
     if (!isNetworked) {
         if (isSaveDialogOpen)
-            return;
+            return false;
 
-        if (m_fileName.isEmpty()) {
-            saveAs();
-            return;
-        }
+        if (m_fileName.isEmpty())
+            return saveAs();
 
-        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-        m_actionManager->enable("save_project", false);
-        m_actionManager->enable("save_project_as", false);
-
-        if (m_projectManager->saveProject(m_fileName)) {  
-            updateRecentProjectList();
-            
-            TOsd::self()->display(TOsd::Info, tr("Project <b>%1</b> saved").arg(projectName));
-            int indexPath = m_fileName.lastIndexOf("/");
-            int indexFile = m_fileName.length() - indexPath;
-            QString name = m_fileName.right(indexFile - 1);
-            int indexDot = name.lastIndexOf(".");
-            name = name.left(indexDot);
-
-            setWindowTitle(appTitle + " - " + name + " [ " + tr("by") +  " " +  author + " ]");
-
-            int last = m_fileName.lastIndexOf("/");
-            QString dir = m_fileName.left(last);
-            saveDefaultPath(dir);
-        } else {
-            #ifdef TUP_DEBUG
-                qWarning() << "TupMainWindow::saveProject() - Error: Can't save project -> " << m_fileName;
-            #endif
-            // TOsd::self()->display(tr("Error"), tr("Cannot save the project!"), TOsd::Error);
-        }
-        m_actionManager->enable("save_project", true);
-        m_actionManager->enable("save_project_as", true);
-        if (isSaveDialogOpen)
-            isSaveDialogOpen = false;
-        QApplication::restoreOverrideCursor();
+        return storeProcedure();
     } else {
         TupSavePackage package(lastSave);
         netProjectManager->sendPackage(package);
@@ -1029,6 +1004,49 @@ void TupMainWindow::saveProject()
         else
             lastSave = false;
     }
+
+    return true;
+}
+
+bool TupMainWindow::storeProcedure()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::storeProcedure()]";
+    #endif
+
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    m_actionManager->enable("save_project", false);
+    m_actionManager->enable("save_project_as", false);
+
+    if (m_projectManager->saveProject(m_fileName)) {
+        updateRecentProjectList();
+
+        TOsd::self()->display(TOsd::Info, tr("Project <b>%1</b> saved").arg(projectName));
+        int indexPath = m_fileName.lastIndexOf("/");
+        int indexFile = m_fileName.length() - indexPath;
+        QString name = m_fileName.right(indexFile - 1);
+        int indexDot = name.lastIndexOf(".");
+        name = name.left(indexDot);
+
+        setWindowTitle(appTitle + " - " + name + " [ " + tr("by") +  " " +  author + " ]");
+
+        int last = m_fileName.lastIndexOf("/");
+        QString dir = m_fileName.left(last);
+        saveDefaultPath(dir);
+    } else {
+        #ifdef TUP_DEBUG
+            qWarning() << "TupMainWindow::saveProject() - Error: Can't save project -> " << m_fileName;
+        #endif
+        return false;
+    }
+
+    m_actionManager->enable("save_project", true);
+    m_actionManager->enable("save_project_as", true);
+    if (isSaveDialogOpen)
+        isSaveDialogOpen = false;
+    QApplication::restoreOverrideCursor();
+
+    return true;
 }
 
 void TupMainWindow::openRecentProject()
@@ -1215,52 +1233,54 @@ void TupMainWindow::postProject()
         }
     }
 
-    callSave();
+    if (callSave()) {
+        QFile file(m_fileName);
+        double fileSize = static_cast<double>(file.size()) / static_cast<double>(1000000);
+        if (fileSize < 10) {
+            TCONFIG->beginGroup("Network");
+            QString username = TCONFIG->value("Username").toString();
+            QString password = TCONFIG->value("Password").toString();
+            bool storePasswd = TCONFIG->value("StorePassword").toBool();
 
-    QFile file(m_fileName);
-    double fileSize = static_cast<double>(file.size()) / static_cast<double>(1000000);
-    if (fileSize < 10) {
-        TCONFIG->beginGroup("Network");
-        QString username = TCONFIG->value("Username").toString();
-        QString password = TCONFIG->value("Password").toString();
-        bool storePasswd = TCONFIG->value("StorePassword").toBool();
+            if (username.isEmpty() || password.isEmpty() || !storePasswd) {
+                TupSignDialog *dialog = new TupSignDialog(this);
+                dialog->show();
+                dialog->move(static_cast<int> ((screen->geometry().width() - dialog->width()) / 2),
+                             static_cast<int> ((screen->geometry().height() - dialog->height()) / 2));
 
-        if (username.isEmpty() || password.isEmpty() || !storePasswd) {
-            TupSignDialog *dialog = new TupSignDialog(this);
-            dialog->show();
-            dialog->move(static_cast<int> ((screen->geometry().width() - dialog->width()) / 2),
-                         static_cast<int> ((screen->geometry().height() - dialog->height()) / 2));
-
-            if (dialog->exec() != QDialog::Rejected) {
-                username = dialog->getUsername();
-                password = dialog->getMetadata();
-            } else {
-                // User cancelled action
-                #ifdef TUP_DEBUG
-                    qDebug() << "TupMainWindow::postProject() - Action canceled by user!";
-                #endif
-                return;
+                if (dialog->exec() != QDialog::Rejected) {
+                    username = dialog->getUsername();
+                    password = dialog->getMetadata();
+                } else {
+                    // User cancelled action
+                    #ifdef TUP_DEBUG
+                        qDebug() << "TupMainWindow::postProject() - Action canceled by user!";
+                    #endif
+                    return;
+                }
             }
+
+            exportWidget = new TupExportWidget(m_projectManager->getProject(), this, false);
+            exportWidget->setProjectParams(username, password, m_fileName);
+            connect(exportWidget, SIGNAL(isDone()), animationTab, SLOT(updatePaintArea()));
+            exportWidget->show();
+
+            exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),
+                               static_cast<int> ((screen->geometry().height() - exportWidget->height()) / 2));
+
+            exportWidget->exec();
+        } else {
+            TOsd::self()->display(TOsd::Error, tr("Project is larger than 10 MB. Too big!"));
         }
-
-        exportWidget = new TupExportWidget(m_projectManager->getProject(), this, false);
-        exportWidget->setProjectParams(username, password, m_fileName);
-        connect(exportWidget, SIGNAL(isDone()), animationTab, SLOT(updatePaintArea()));
-        exportWidget->show();
-
-        exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),
-                           static_cast<int> ((screen->geometry().height() - exportWidget->height()) / 2));
-
-        exportWidget->exec();
-    } else {
-        TOsd::self()->display(TOsd::Error, tr("Project is larger than 10 MB. Too big!"));
     }
 }
 
-void TupMainWindow::callSave()
+bool TupMainWindow::callSave()
 {
     if (m_projectManager->projectWasModified())
-        saveProject();
+        return saveProject();
+
+    return true;
 }
 
 void TupMainWindow::restoreFramesMode(TupProject::Mode mode)
@@ -1389,7 +1409,8 @@ void TupMainWindow::resizeProjectDimension(const QSize dimension)
     delete cameraWidget;
 
     cameraWidget = new TupCameraWidget(m_projectManager->getProject());
-    connect(cameraWidget, SIGNAL(projectAuthorUpdated(const QString &)), this, SLOT(updateProjectAuthor(const QString &)));
+    connect(cameraWidget, SIGNAL(projectAuthorUpdated(const QString &)),
+            this, SLOT(updateProjectAuthor(const QString &)));
     connectWidgetToManager(cameraWidget);
 
     playerTab->setCameraWidget(cameraWidget);

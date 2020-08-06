@@ -127,6 +127,7 @@ class TupMainWindow : public TabbedMainWindow
         void updateRecentProjectList();
         void saveDefaultPath(const QString &dir);
         bool cancelChanges();
+        bool storeProcedure();
 
     protected:
         #if defined(Q_OS_MAC)
@@ -156,8 +157,8 @@ class TupMainWindow : public TabbedMainWindow
         void openProject();
         void openProjectFromServer();
         void importProjectToServer();
-        void saveAs();
-        void saveProject();
+        bool saveAs();
+        bool saveProject();
 
         void showAnimationMenu(const QPoint &p);
 
@@ -185,7 +186,7 @@ class TupMainWindow : public TabbedMainWindow
         void importPalettes();
         void openRecentProject();
         void createPaintCommand(const TupPaintAreaEvent *event);
-        void callSave();
+        bool callSave();
         void restoreFramesMode(TupProject::Mode contextMode);
         void resetMousePointer();
         void updateUsersOnLine(const QString &login, int state);
