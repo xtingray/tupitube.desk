@@ -431,53 +431,53 @@
         <translation>Propriedades De Caminho</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="99"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="98"/>
         <source>Starting at frame</source>
         <translation>Iniciar no quadro</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="100"/>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="218"/>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="340"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="99"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="217"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="346"/>
         <source>Ending at frame</source>
         <translation>Terminar no quadro</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="116"/>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="156"/>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="187"/>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="217"/>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="341"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="115"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="155"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="186"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="216"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="347"/>
         <source>Frames Total</source>
         <translation>Total de Quadros</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="159"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="158"/>
         <source>Save Tween</source>
         <translation>Guardar Tween</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="163"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="162"/>
         <source>Cancel Tween</source>
         <translation>Cancelar Tween</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="238"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="244"/>
         <source>Select objects for Tweening first!</source>
         <translation>Selecione objetos para Tween primeiro!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="300"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="306"/>
         <source>You must select at least one object!</source>
         <translation>Tem de selecionar pelo menos um objeto!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="323"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="329"/>
         <source>Update Tween</source>
         <translation>Atualizar Tween</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="326"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="332"/>
         <source>Close Tween Properties</source>
         <translation>Fechar Propriedades De Tween</translation>
     </message>
@@ -4085,194 +4085,199 @@ Por favor, renomeie o ficheiro do projeto</translation>
 <context>
     <name>TupMainWindow</name>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="257"/>
+        <location filename="../../tupmainwindow.cpp" line="258"/>
         <source>[ by %1 | net mode ]</source>
         <translation>[ por %1 | modo de rede ]</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="293"/>
+        <location filename="../../tupmainwindow.cpp" line="294"/>
         <source>Opening a new document...</source>
         <translation>A abrir um novo documento...</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="312"/>
-        <location filename="../../tupmainwindow.cpp" line="1044"/>
+        <location filename="../../tupmainwindow.cpp" line="314"/>
+        <location filename="../../tupmainwindow.cpp" line="1062"/>
         <location filename="../../tupmainwindow_gui.cpp" line="253"/>
         <source>Animation</source>
         <translation>Animação</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="382"/>
+        <location filename="../../tupmainwindow.cpp" line="386"/>
         <location filename="../../tupmainwindow_gui.cpp" line="261"/>
         <source>Player</source>
         <translation>Reprodutor</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="408"/>
+        <location filename="../../tupmainwindow.cpp" line="412"/>
         <source>Project &lt;b&gt;%1&lt;/b&gt; opened!</source>
         <translation>Projeto &lt;b&gt;%1&lt;/b&gt; aberto!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="479"/>
+        <location filename="../../tupmainwindow.cpp" line="483"/>
         <source>Question</source>
         <translation>Pergunta</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="481"/>
+        <location filename="../../tupmainwindow.cpp" line="485"/>
         <source>The document has been modified.</source>
         <translation>O documento foi modificado.</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="482"/>
+        <location filename="../../tupmainwindow.cpp" line="486"/>
         <source>Do you want to save the project?</source>
         <translation>Deseja guardar o projeto?</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="484"/>
+        <location filename="../../tupmainwindow.cpp" line="488"/>
         <source>Save</source>
         <translation>Guardar</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="485"/>
+        <location filename="../../tupmainwindow.cpp" line="489"/>
         <source>Discard</source>
         <translation>Descartar</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="486"/>
+        <location filename="../../tupmainwindow.cpp" line="490"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="671"/>
-        <location filename="../../tupmainwindow.cpp" line="754"/>
-        <location filename="../../tupmainwindow.cpp" line="972"/>
-        <location filename="../../tupmainwindow.cpp" line="1007"/>
-        <location filename="../../tupmainwindow.cpp" line="1442"/>
+        <location filename="../../tupmainwindow.cpp" line="676"/>
+        <location filename="../../tupmainwindow.cpp" line="759"/>
+        <location filename="../../tupmainwindow.cpp" line="978"/>
+        <location filename="../../tupmainwindow.cpp" line="1031"/>
+        <location filename="../../tupmainwindow.cpp" line="1464"/>
         <source>by</source>
         <translation>por</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="845"/>
+        <location filename="../../tupmainwindow.cpp" line="851"/>
         <source>Gimp Palette (*.gpl *.txt *.css)</source>
         <translation>Paleta do Gimp (*.gpl *.txt *.css)</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="845"/>
+        <location filename="../../tupmainwindow.cpp" line="850"/>
         <source>Import Gimp Palettes</source>
         <translation>Importar Paleta De Gimp</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="880"/>
+        <location filename="../../tupmainwindow.cpp" line="886"/>
         <source>Gimp palette import was successful</source>
         <translation>Paleta do Gimp importada com sucesso</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="882"/>
+        <location filename="../../tupmainwindow.cpp" line="888"/>
         <source>Gimp palette import was unsuccessful</source>
         <translation>Importação da paleta do Gimp falhou</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="931"/>
+        <location filename="../../tupmainwindow.cpp" line="937"/>
         <source>Save Project As</source>
         <translation>Guardar Projeto Como</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="949"/>
+        <location filename="../../tupmainwindow.cpp" line="955"/>
         <source>Directory does not exist! Please, choose another path.</source>
         <translation>Diretório não existe! Por favor, escolha outro caminho.</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="958"/>
+        <location filename="../../tupmainwindow.cpp" line="964"/>
         <source>Insufficient permissions. Please, pick another path.</source>
         <translation>Permissões insuficientes. Por favor, escolha outro caminho.</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1000"/>
+        <location filename="../../tupmainwindow.cpp" line="1024"/>
         <source>Project &lt;b&gt;%1&lt;/b&gt; saved</source>
         <translation>Projeto &lt;b&gt;%1&lt;/b&gt; gravado</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1210"/>
+        <location filename="../../tupmainwindow.cpp" line="1228"/>
         <source>To post video add more frames!</source>
         <translation>Para postar vídeo, adicione mais quadros!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1256"/>
+        <location filename="../../tupmainwindow.cpp" line="1259"/>
+        <source>Post canceled by user!</source>
+        <translation>Postagem cancelada!</translation>
+    </message>
+    <message>
+        <location filename="../../tupmainwindow.cpp" line="1274"/>
         <source>Project is larger than 10 MB. Too big!</source>
         <translation>O projeto tem mais de 10 MB. Muito grande!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1309"/>
+        <location filename="../../tupmainwindow.cpp" line="1330"/>
         <source>Import project package</source>
         <translation>Importar pacote de projeto</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1318"/>
+        <location filename="../../tupmainwindow.cpp" line="1339"/>
         <source>Can&apos;t import project. File is empty!</source>
         <translation>Não é possível importar o projeto. Ficheiro está vazio!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1322"/>
+        <location filename="../../tupmainwindow.cpp" line="1343"/>
         <source>Can&apos;t save the project. File doesn&apos;t exist!</source>
         <translation>Não é possível guardar o projeto. Ficheiro não existe!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1338"/>
+        <location filename="../../tupmainwindow.cpp" line="1359"/>
         <source>Fatal Error</source>
         <translation>Erro Fatal</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1340"/>
+        <location filename="../../tupmainwindow.cpp" line="1361"/>
         <source>The connection to the server has been lost.</source>
         <translation>A conexão com o servidor foi perdida.</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1341"/>
+        <location filename="../../tupmainwindow.cpp" line="1362"/>
         <source>Please, try to connect again in a while</source>
         <translation>Por favor, tente conectar novamente daqui a pouco</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="684"/>
+        <location filename="../../tupmainwindow.cpp" line="689"/>
         <source>Open TupiTube project</source>
         <translation>Abrir projeto TupiTube</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="685"/>
-        <location filename="../../tupmainwindow.cpp" line="932"/>
-        <location filename="../../tupmainwindow.cpp" line="1310"/>
+        <location filename="../../tupmainwindow.cpp" line="690"/>
+        <location filename="../../tupmainwindow.cpp" line="938"/>
+        <location filename="../../tupmainwindow.cpp" line="1331"/>
         <source>TupiTube Project Package (*.tup)</source>
         <translation>Projeto TupiTube (*.tup)</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="710"/>
-        <location filename="../../tupmainwindow.cpp" line="766"/>
+        <location filename="../../tupmainwindow.cpp" line="715"/>
+        <location filename="../../tupmainwindow.cpp" line="771"/>
         <source>Cannot open project!</source>
         <translation>Não é possível abrir o projeto!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="826"/>
-        <location filename="../../tupmainwindow.cpp" line="1342"/>
+        <location filename="../../tupmainwindow.cpp" line="831"/>
+        <location filename="../../tupmainwindow.cpp" line="1363"/>
         <source>Close</source>
         <translation>Fechar</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="826"/>
+        <location filename="../../tupmainwindow.cpp" line="831"/>
         <location filename="../../tupmainwindow_gui.cpp" line="433"/>
         <source>Tip Of The Day</source>
         <translation>Dica Do Día</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="826"/>
+        <location filename="../../tupmainwindow.cpp" line="831"/>
         <source>Previous</source>
         <translation>Anterior</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="826"/>
+        <location filename="../../tupmainwindow.cpp" line="831"/>
         <source>Next</source>
         <translation>Seguinte</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1045"/>
+        <location filename="../../tupmainwindow.cpp" line="1063"/>
         <source>New camera</source>
         <translation>Nova câmera</translation>
     </message>
@@ -6351,16 +6356,16 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
 <context>
     <name>Tweener</name>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="270"/>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="907"/>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="910"/>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="911"/>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="912"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="274"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="926"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="929"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="930"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="931"/>
         <source>Motion</source>
         <translation>Movimento</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="274"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="278"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="170"/>
         <location filename="../../../plugins/tools/scale/tweener.cpp" line="162"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="169"/>
@@ -6370,7 +6375,7 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
         <translation>Aviso</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="276"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="280"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="172"/>
         <location filename="../../../plugins/tools/scale/tweener.cpp" line="164"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="171"/>
@@ -6380,7 +6385,7 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
         <translation>Os itens selecionados já possuem esse tipo de interpolação atribuído.</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="277"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="281"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="173"/>
         <location filename="../../../plugins/tools/scale/tweener.cpp" line="165"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="172"/>
@@ -6390,7 +6395,7 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
         <translation>Por favor, edite a interpolação anterior desses objetos.</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="278"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="282"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="174"/>
         <location filename="../../../plugins/tools/scale/tweener.cpp" line="166"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="173"/>
@@ -6400,12 +6405,12 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
         <translation>Aceitar</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="447"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="451"/>
         <source>Motion Tween</source>
         <translation>Interpolação de Movimento</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="448"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="452"/>
         <source>Shift+W</source>
         <translation>Shift+W</translation>
     </message>
@@ -6439,7 +6444,7 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
         <translation>Shift+C</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="638"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="646"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="432"/>
         <location filename="../../../plugins/tools/scale/tweener.cpp" line="414"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="428"/>
@@ -6449,7 +6454,7 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
         <translation>Nome do Tween em falta!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="750"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="766"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="532"/>
         <location filename="../../../plugins/tools/scale/tweener.cpp" line="520"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="535"/>
@@ -6459,7 +6464,7 @@ Por favor, contacte o administrador do servidor de animação para obter acesso.
         <translation>Quadro</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="764"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="780"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="546"/>
         <location filename="../../../plugins/tools/scale/tweener.cpp" line="535"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="549"/>

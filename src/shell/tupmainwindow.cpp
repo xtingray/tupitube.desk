@@ -1256,6 +1256,7 @@ void TupMainWindow::postProject()
                     #ifdef TUP_DEBUG
                         qDebug() << "TupMainWindow::postProject() - Action canceled by user!";
                     #endif
+                    TOsd::self()->display(TOsd::Info, tr("Post canceled by user!"));
                     return;
                 }
             }

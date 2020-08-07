@@ -3636,6 +3636,10 @@ Please, rename the project&apos;s file</source>
         <source>Post project on TupiTube&apos;s network</source>
         <translation>在TupiTube的网络上发布项目</translation>
     </message>
+    <message>
+        <source>Post canceled by user!</source>
+        <translation>帖子已被用户取消！</translation>
+    </message>
 </context>
 <context>
     <name>TupModesItem</name>

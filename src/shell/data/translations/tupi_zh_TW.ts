@@ -139,7 +139,7 @@
     </message>
     <message>
         <source>Motion Tween Properties</source>
-        <translation type="unfinished"></translation>
+        <translation>動態(Motion)補間屬性</translation>
     </message>
 </context>
 <context>
@@ -1426,7 +1426,7 @@
     </message>
     <message>
         <source>Fatal</source>
-        <translation type="unfinished"></translation>
+        <translation>嚴重錯誤</translation>
     </message>
 </context>
 <context>
@@ -1584,7 +1584,7 @@
     </message>
     <message>
         <source>Current resolution:</source>
-        <translation>目前解析度</translation>
+        <translation>目前解析度:</translation>
     </message>
 </context>
 <context>
@@ -1631,7 +1631,7 @@
     </message>
     <message>
         <source>Border Brush</source>
-        <translation type="unfinished"></translation>
+        <translation>邊框刷</translation>
     </message>
 </context>
 <context>
@@ -2348,7 +2348,7 @@ Please, rename the project&apos;s file</source>
     <name>TupExportModule</name>
     <message>
         <source>i.e. </source>
-        <translation>i.e.</translation>
+        <translation>即 </translation>
     </message>
     <message>
         <source>Images path can&apos;t be unset! Please, choose one.</source>
@@ -2471,22 +2471,22 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Post Animation</source>
-        <translation type="unfinished"></translation>
+        <translation>張貼動畫</translation>
     </message>
     <message>
         <source>Posting...</source>
-        <translation type="unfinished"></translation>
+        <translation>張貼中...</translation>
     </message>
 </context>
 <context>
     <name>TupExportWizard</name>
     <message>
         <source>Back</source>
-        <translation>後退</translation>
+        <translation>上一步</translation>
     </message>
     <message>
         <source>Next</source>
-        <translation>下一個</translation>
+        <translation>下一步</translation>
     </message>
     <message>
         <source>Post</source>
@@ -2502,7 +2502,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Uploading Source File</source>
-        <translation type="unfinished"></translation>
+        <translation>上傳原始檔中</translation>
     </message>
 </context>
 <context>
@@ -2513,7 +2513,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Layer 1</source>
-        <translation>第一層</translation>
+        <translation>圖層1</translation>
     </message>
     <message>
         <source>Remove frame</source>
@@ -2694,51 +2694,51 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Social Network</source>
-        <translation type="unfinished"></translation>
+        <translation>社交網路</translation>
     </message>
     <message>
         <source>Cache Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>暫存設定</translation>
     </message>
     <message>
         <source>TupiTube Credentials</source>
-        <translation type="unfinished"></translation>
+        <translation>TupiTube帳號</translation>
     </message>
     <message>
         <source>Username: </source>
-        <translation type="unfinished"></translation>
+        <translation>帳號: </translation>
     </message>
     <message>
         <source>Password: </source>
-        <translation type="unfinished"></translation>
+        <translation>密碼: </translation>
     </message>
     <message>
         <source>Don&apos;t have a TupiTube account?</source>
-        <translation type="unfinished"></translation>
+        <translation>尚未擁有TupiTube帳號?</translation>
     </message>
     <message>
         <source>Email: </source>
-        <translation type="unfinished"></translation>
+        <translation>Email: </translation>
     </message>
     <message>
         <source>Register</source>
-        <translation type="unfinished"></translation>
+        <translation>註冊</translation>
     </message>
     <message>
         <source>Email is invalid. Please, fix it!</source>
-        <translation type="unfinished"></translation>
+        <translation>信箱不合法, 請修正!</translation>
     </message>
     <message>
         <source>Email field is empty. Type one!</source>
-        <translation type="unfinished"></translation>
+        <translation>信箱欄位不可空白. 輸入一個信箱!</translation>
     </message>
     <message>
         <source>Error: Email already registered!</source>
-        <translation type="unfinished"></translation>
+        <translation>錯誤: 此信箱已經註冊過!</translation>
     </message>
     <message>
         <source>Please contact us at info@maefloresta.com</source>
-        <translation type="unfinished"></translation>
+        <translation>請聯絡我們 info@maefloresta.com</translation>
     </message>
 </context>
 <context>
@@ -2799,7 +2799,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Just a little taste of my style :)</source>
-        <translation>僅有一點我的風格：）</translation>
+        <translation>就是有點我的風格 :)</translation>
     </message>
     <message>
         <source>My Picture</source>
@@ -2904,7 +2904,7 @@ Please, rename the project&apos;s file</source>
     <name>TupItemPreview</name>
     <message>
         <source>Library is empty :(</source>
-        <translation>函式庫是空的</translation>
+        <translation>函式庫是空的 :(</translation>
     </message>
 </context>
 <context>
@@ -2935,7 +2935,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Motion</source>
-        <translation type="unfinished"></translation>
+        <translation>動態(Motion)</translation>
     </message>
 </context>
 <context>
@@ -3140,7 +3140,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Native Objects</source>
-        <translation>本地物件</translation>
+        <translation>原生物件</translation>
     </message>
     <message>
         <source>Confirmation</source>
@@ -3195,7 +3195,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>My works:</source>
-        <translation>我的工作</translation>
+        <translation>我的工作:</translation>
     </message>
     <message>
         <source>Description</source>
@@ -3622,19 +3622,23 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>To post video add more frames!</source>
-        <translation type="unfinished"></translation>
+        <translation>要張貼影片需要更多影格!</translation>
     </message>
     <message>
         <source>Project is larger than 10 MB. Too big!</source>
-        <translation type="unfinished"></translation>
+        <translation>專案太大,超過10MB!</translation>
     </message>
     <message>
         <source>&amp;Post Project</source>
-        <translation type="unfinished"></translation>
+        <translation>張貼專案(&amp;P)</translation>
     </message>
     <message>
         <source>Post project on TupiTube&apos;s network</source>
-        <translation type="unfinished"></translation>
+        <translation>在TupiTube網路張貼專案</translation>
+    </message>
+    <message>
+        <source>Post canceled by user!</source>
+        <translation>帖子已被用戶取消！</translation>
     </message>
 </context>
 <context>
@@ -3704,7 +3708,7 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>User &quot;%1&quot; is disabled.
 Please, contact the animation server admin to get access.</source>
-        <translation>使用者 &quot;%1&quot;已停用，請聯絡動畫伺服器管理員以獲得授權。</translation>
+        <translation>使用者 &quot;%1&quot; 已停用，請聯絡動畫伺服器管理員以獲得授權。</translation>
     </message>
     <message>
         <source>Notices</source>
@@ -4031,7 +4035,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>One level to front</source>
-        <translation>前進一級</translation>
+        <translation>往前一級</translation>
     </message>
     <message>
         <source>Object Selection</source>
@@ -4039,7 +4043,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>One level to back</source>
-        <translation>退回一级</translation>
+        <translation>往後一级</translation>
     </message>
     <message>
         <source>next 100 frames</source>
@@ -4559,7 +4563,7 @@ Please, contact the animation server admin to get access.</source>
     <name>TupSignDialog</name>
     <message>
         <source>Sign In</source>
-        <translation type="unfinished"></translation>
+        <translation>登入</translation>
     </message>
     <message>
         <source>Username</source>
@@ -4587,7 +4591,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Please, fill in your password</source>
-        <translation type="unfinished"></translation>
+        <translation>請輸入您的密碼</translation>
     </message>
 </context>
 <context>
@@ -4705,7 +4709,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>&amp;Post</source>
-        <translation>郵寄</translation>
+        <translation>張貼(&amp;P)</translation>
     </message>
 </context>
 <context>
@@ -4838,19 +4842,19 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Animation Properties</source>
-        <translation type="unfinished"></translation>
+        <translation>動畫屬性</translation>
     </message>
     <message>
         <source>My Animation</source>
-        <translation type="unfinished"></translation>
+        <translation>我的動畫</translation>
     </message>
     <message>
         <source>#tupitube #animation #fun</source>
-        <translation type="unfinished"></translation>
+        <translation>#tupitube #animation #fun</translation>
     </message>
     <message>
         <source>Create and share animations easily with TupiTube</source>
-        <translation type="unfinished"></translation>
+        <translation>用TupiTube來更輕鬆的建立並分享動畫</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -4858,95 +4862,95 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Access denied. Invalid password!</source>
-        <translation type="unfinished"></translation>
+        <translation>拒絕登入, 密碼錯誤</translation>
     </message>
     <message>
         <source>Network Error 500. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 500錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Error 501. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 501錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Error 502. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 502錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Error 503. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 503錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Error 504. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 504錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Error 505. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 505錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Error 506. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 506錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Error 507. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 507錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Error 508. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 508錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Error 509. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 509錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Post action cancelled!</source>
-        <translation type="unfinished"></translation>
+        <translation>張貼已取消!</translation>
     </message>
     <message>
         <source>Project was uploaded successfully!</source>
-        <translation type="unfinished"></translation>
+        <translation>專案上傳成功!</translation>
     </message>
     <message>
         <source>Network Error 400. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 400錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Error 402. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 402錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Error 403. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 403錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Error 404. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 404錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Error 405. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 405錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Error 406. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 406錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Error 407. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 407錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Error 408. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 408錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Error 409. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>HTTP 409錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Network Fatal Error. Please, contact us!</source>
-        <translation type="unfinished"></translation>
+        <translation>網路嚴重錯誤! 請聯絡我們!</translation>
     </message>
 </context>
 <context>
@@ -5103,11 +5107,11 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Motion</source>
-        <translation type="unfinished"></translation>
+        <translation>動態(Motion)</translation>
     </message>
     <message>
         <source>Motion Tween</source>
-        <translation type="unfinished"></translation>
+        <translation>動態補間</translation>
     </message>
 </context>
 </TS>
