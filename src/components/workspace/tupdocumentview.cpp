@@ -566,10 +566,8 @@ void TupDocumentView::loadPlugins()
                     break;
                     case TupToolInterface::LipSync:
                     {
-                      qDebug() << "*** case TupToolInterface::LipSync";
-                      if (toolId == TAction::LipSyncTool) {
+                      if (toolId == TAction::LipSyncTool)
                           papagayoAction = action;
-                      }
                     }
                     break;
                     default:
