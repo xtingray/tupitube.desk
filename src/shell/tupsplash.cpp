@@ -39,10 +39,6 @@
 #include <QBitmap>
 #include <QImage>
 
-#ifdef TUP_DEBUG
-  #include <QDebug>
-#endif
-
 #include <cmath> //abs
 
 //------------------ CONSTRUCTOR -----------------

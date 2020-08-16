@@ -35,10 +35,6 @@
 
 #include "tupstatusbar.h"
 
-#ifdef TUP_DEBUG
-  #include <QDebug>
-#endif
-
 TupStatusBar::TupStatusBar(QWidget *parent): QStatusBar(parent)
 {
     setObjectName("TupStatusBar_");

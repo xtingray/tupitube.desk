@@ -9,6 +9,8 @@
 #ifndef TILE_H
 #define TILE_H
 
+#include "tglobal.h"
+
 #include <QGraphicsItem>
 #include <QImage>
 #include <QPainter>

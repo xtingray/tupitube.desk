@@ -20,6 +20,7 @@
 #ifndef RASTERMAINWINDOW_H
 #define RASTERMAINWINDOW_H
 
+#include "tglobal.h"
 #include "tmainwindow.h"
 #include "rastercanvas.h"
 #include "rasterbrusheswidget.h"

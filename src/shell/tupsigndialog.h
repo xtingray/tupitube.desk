@@ -36,6 +36,7 @@
 #ifndef TUPSIGNDIALOG_H
 #define TUPSIGNDIALOG_H
 
+#include "tglobal.h"
 #include "tosd.h"
 
 #include <QDialog>

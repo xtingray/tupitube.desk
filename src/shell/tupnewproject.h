@@ -36,7 +36,8 @@
 #ifndef TUPNEWPROYECT_H
 #define TUPNEWPROYECT_H
 
-#include "tosd.h"
+#include "tglobal.h"
+// #include "tosd.h"
 #include "tabdialog.h"
 #include "twizard.h"
 #include "txyspinbox.h"

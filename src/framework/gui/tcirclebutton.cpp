@@ -35,10 +35,6 @@
 
 #include "tcirclebutton.h"
 
-#ifdef TUP_DEBUG
-  #include <QDebug>
-#endif
-
 static const char * new_xpm[] = {
 "12 16 6 1",
 "     c #040404",

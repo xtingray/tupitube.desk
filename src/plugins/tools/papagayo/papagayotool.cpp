@@ -42,10 +42,6 @@
 #include "tupprojectrequest.h"
 #include "tupscene.h"
 
-#ifdef TUP_DEBUG
-    #include <QDebug>
-#endif
-
 PapagayoTool::PapagayoTool() : TupToolPlugin()
 {
     #ifdef TUP_DEBUG

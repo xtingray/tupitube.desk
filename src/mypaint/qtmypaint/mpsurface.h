@@ -29,6 +29,7 @@
 #include <QGraphicsScene>
 #include <QImage>
 
+#include "tglobal.h"
 #include "mypaint-glib-compat.h"
 #include "mypaint-tiled-surface.h"
 #include "mpbrush.h"

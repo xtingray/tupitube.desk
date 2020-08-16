@@ -39,10 +39,6 @@
 #include <QLabel>
 #include <QPushButton>
 
-#ifdef TUP_DEBUG
-  #include <QDebug>
-#endif
-
 TupInfoDialog::TupInfoDialog(const QString &tags, const QString &author, 
                              const QString &desc, QWidget *parent) : QDialog(parent)
 {

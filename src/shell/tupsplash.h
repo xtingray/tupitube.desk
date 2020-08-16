@@ -36,6 +36,7 @@
 #ifndef TUPSPLASH_H
 #define TUPSPLASH_H
 
+#include "tglobal.h"
 #include "tapplicationproperties.h"
 
 #include <QPainter>

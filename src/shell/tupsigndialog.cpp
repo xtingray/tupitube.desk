@@ -41,10 +41,6 @@
 #include "tosd.h"
 #include "tupsecurity.h"
 
-#ifdef TUP_DEBUG
-  #include <QDebug>
-#endif
-
 TupSignDialog::TupSignDialog(QWidget *parent) : QDialog(parent)
 {
     setModal(true);

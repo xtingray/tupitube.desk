@@ -23,10 +23,6 @@
 #include "mypaint-surface.h"
 #include "libmypaint.c"
 
-#ifdef TUP_DEBUG
-  #include <QDebug>
-#endif
-
 #define HAVE_JSON_C
 
 #define DEFAULT_BRUSHES_PATH ":brushes"

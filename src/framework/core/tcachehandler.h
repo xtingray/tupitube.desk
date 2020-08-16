@@ -28,6 +28,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef TCACHEHANDLER_H
 #define TCACHEHANDLER_H
 
+#include "tglobal.h"
+
 #include <QString>
 #include <QVector>
 #include <QFlags>

@@ -19,13 +19,14 @@
 #ifndef MPHANDLER_H
 #define MPHANDLER_H
 
-#include <QColor>
-
+#include "tglobal.h"
 #include "mypaint-brush.h"
 #include "mypaint-surface.h"
 
 #include "mpbrush.h"
 #include "mpsurface.h"
+
+#include <QColor>
 
 #ifndef QTMYPAINT_SURFACE_WIDTH
 #define QTMYPAINT_SURFACE_WIDTH 640

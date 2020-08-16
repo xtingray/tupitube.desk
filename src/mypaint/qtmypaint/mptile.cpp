@@ -19,10 +19,6 @@
 
 #include "mptile.h"
 
-#ifdef TUP_DEBUG
-  #include <QDebug>
-#endif
-
 MPTile::MPTile(QGraphicsItem * parent) : QGraphicsItem(parent), m_cache_img(k_tile_dim, k_tile_dim, QImage::Format_ARGB32_Premultiplied)
 {
     setCacheMode(QGraphicsItem::NoCache);

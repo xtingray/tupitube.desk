@@ -39,9 +39,6 @@
 #include "stepsviewer.h"
 
 #include <QLineEdit>
-#ifdef TUP_DEBUG
-#include <QDebug>
-#endif
 
 StepsViewer::StepsViewer(QWidget *parent) : QTableWidget(parent)
 {

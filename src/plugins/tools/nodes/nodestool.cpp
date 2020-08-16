@@ -39,10 +39,6 @@
 #include "tuprequestbuilder.h"
 #include "tupproxyitem.h"
 
-#ifdef TUP_DEBUG
-  #include <QDebug>
-#endif
-
 NodesTool::NodesTool()
 {
     setupActions();

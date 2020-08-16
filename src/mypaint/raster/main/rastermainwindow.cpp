@@ -28,10 +28,6 @@
 #include <QMenu>
 #include <QAction>
 
-#ifdef TUP_DEBUG
-  #include <QDebug>
-#endif
-
 RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, TupProject::Mode context, int scene,
                                    const QColor contourColor, const QString &zoomFactor, QWidget *parent): TMainWindow(winKey, parent)
 {

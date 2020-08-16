@@ -34,10 +34,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QCryptographicHash>
 #include <QDataStream>
 
-#ifdef TUP_DEBUG
-    #include <QDebug>
-#endif
-
 // Handler to manage cache data
 
 TCacheHandler::TCacheHandler(): id(0), m_compressionMode(CompressionAuto), m_protectionMode(ProtectionChecksum),

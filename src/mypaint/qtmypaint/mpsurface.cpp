@@ -19,10 +19,6 @@
 
 #include "mpsurface.h"
 
-#ifdef TUP_DEBUG
-  #include <QDebug>
-#endif
-
 static void freeTiledSurface(MyPaintSurface *surface)
 {
     MPSurface *self = (MPSurface *) surface;

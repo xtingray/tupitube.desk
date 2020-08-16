@@ -36,6 +36,8 @@
 #ifndef TUPSTATUSBAR_H
 #define TUPSTATUSBAR_H
 
+#include "tglobal.h"
+
 #include <QLabel>
 #include <QTimer>
 #include <QStatusBar>

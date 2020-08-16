@@ -37,10 +37,6 @@
 #include "tupwatermark.h"
 #include <QFont>
 
-#ifdef TUP_DEBUG
-    #include <QDebug>
-#endif
-
 TupWaterMark::TupWaterMark(QObject *parent) : QObject(parent)
 {
 }

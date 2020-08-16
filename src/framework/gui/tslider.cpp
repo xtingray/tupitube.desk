@@ -39,10 +39,6 @@
 
 #include <QDesktopWidget>
 
-#ifdef TUP_DEBUG
-  #include <QDebug>
-#endif
-
 TSlider::TSlider(Qt::Orientation orientation, TSlider::Mode mode, const QColor &start, const QColor &end, QWidget *parent) : QGraphicsView(parent)
 {
     setStyleSheet("* { background-color: rgba(255,255,255,0); border: 1px solid rgb(170,170,170); }");

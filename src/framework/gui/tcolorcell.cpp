@@ -41,10 +41,6 @@
 #include "tconfig.h"
 // #include "tapplicationproperties.h"
 
-#ifdef TUP_DEBUG
-  #include <QDebug>
-#endif
-
 TColorCell::TColorCell(FillType typeIndex, const QBrush &b, const QSize &dimension)
 {
     TCONFIG->beginGroup("General");
