@@ -404,68 +404,84 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
                     int errorCode = error.toInt();
                     switch (errorCode) {
                         case 401:
+                        {
                             // Invalid password
                             #ifdef TUP_DEBUG
                                 qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Invalid credentials!";
                             #endif
                             cancelPost();
                             TOsd::self()->display(TOsd::Error, tr("Access denied. Invalid password!"));
+                        }
                         break;
                         case 500:
+                        {
                             // Server side error. No root path
                             #ifdef TUP_DEBUG
                                 qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: No root path on server!";
                             #endif
                             cancelPost();
                             TOsd::self()->display(TOsd::Error, tr("Network Error 500. Please, contact us!"));
+                        }
                         break;
                         case 501:
+                        {
                             // Can't create db record
                             #ifdef TUP_DEBUG
                                 qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Can't create db record!";
                             #endif
                             cancelPost();
                             TOsd::self()->display(TOsd::Error, tr("Network Error 501. Please, contact us!"));
+                        }
                         break;
                         case 502:
+                        {
                             // Can't get uid
                             #ifdef TUP_DEBUG
                                 qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Can't get uid!";
                             #endif
                             cancelPost();
                             TOsd::self()->display(TOsd::Error, tr("Network Error 502. Please, contact us!"));
+                        }
                         break;
                         case 503:
+                        {
                             // Can't get filename string
                             #ifdef TUP_DEBUG
                                 qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Can't generate filename string!";
                             #endif
                             cancelPost();
                             TOsd::self()->display(TOsd::Error, tr("Network Error 503. Please, contact us!"));
+                        }
                         break;
                         case 504:
+                        {
                             // Incomplete request
                             #ifdef TUP_DEBUG
                                 qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Incomplete request!";
                             #endif
                             cancelPost();
                             TOsd::self()->display(TOsd::Error, tr("Network Error 504. Please, contact us!"));
+                        }
                         break;
                         case 505:
+                        {
                             // Invalid client
                             #ifdef TUP_DEBUG
                                 qDebug() << "TupVideoProperties::serverAuthAnswer() - Error: Invalid client!";
                             #endif
                             cancelPost();
                             TOsd::self()->display(TOsd::Error, tr("Network Error 505. Please, contact us!"));
+                        }
                         break;
                         default:
+                        {
                             // Unknown code error
                             #ifdef TUP_DEBUG
                                 qDebug() << "TupVideoProperties::serverAuthAnswer() - Unknown error! :/";
                             #endif
                             cancelPost();
                             TOsd::self()->display(TOsd::Error, tr("Network Error 506. Please, contact us!"));
+                        }
                     }
                 } else {
                     // Unknown answer - no error
@@ -547,60 +563,84 @@ void TupVideoProperties::closeRequest(QNetworkReply *reply)
                 int key = code.toInt();
                 switch (key) {
                     case 200:
+                    {
                         // Succeed operation
                         #ifdef TUP_DEBUG
                             qDebug() << "TupVideoProperties::closeRequest() - Project posted successfully!";
                         #endif
+
+                        QFile file(filePath);
+                        if (!file.remove()) {
+                            #ifdef TUP_DEBUG
+                                qDebug() << "TupVideoProperties::closeRequest() - Error: Can't remove project file -> " << filePath;
+                            #endif
+                        }
+
                         TOsd::self()->display(TOsd::Info, tr("Project was uploaded successfully!"));
+                    }
                     break;
                     case 400:
+                    {
                         // No root path to store files
                         #ifdef TUP_DEBUG
                             qDebug() << "TupVideoProperties::closeRequest() - Error: No root path to store files!";
                         #endif
                         TOsd::self()->display(TOsd::Error, tr("Network Error 400. Please, contact us!"));
+                    }
                     break;
                     case 401:
+                    {
                         // Invalid password
                         #ifdef TUP_DEBUG
                             qDebug() << "TupVideoProperties::closeRequest() - Error: Invalid credentials!";
                         #endif
                         TOsd::self()->display(TOsd::Error, tr("Access denied. Invalid password!"));
+                    }
                     break;
                     case 402:
+                    {
                         // Can't create scenes file
                         #ifdef TUP_DEBUG
                             qDebug() << "TupVideoProperties::closeRequest() - Error: Can't create scenes file!";
                         #endif
                         TOsd::self()->display(TOsd::Error, tr("Network Error 402. Please, contact us!"));
+                    }
                     break;
                     case 403:
+                    {
                         // Can't update database
                         #ifdef TUP_DEBUG
                             qDebug() << "TupVideoProperties::closeRequest() - Error: Can't update database!";
                         #endif
                         TOsd::self()->display(TOsd::Error, tr("Network Error 403. Please, contact us!"));
+                    }
                     break;
                     case 404:
+                    {
                         // Can't store file on server
                         #ifdef TUP_DEBUG
                             qDebug() << "TupVideoProperties::closeRequest() - Error: Can't store file!";
                         #endif
                         TOsd::self()->display(TOsd::Error, tr("Network Error 404. Please, contact us!"));
+                    }
                     break;
                     case 405:
+                    {
                         // Incomplete form request
                         #ifdef TUP_DEBUG
                             qDebug() << "TupVideoProperties::closeRequest() - Error: Incomplete form request!";
                         #endif
                         TOsd::self()->display(TOsd::Error, tr("Network Error 405. Please, contact us!"));
+                    }
                     break;
                     case 406:
+                    {
                         // Invalid browser
                         #ifdef TUP_DEBUG
                             qDebug() << "TupVideoProperties::closeRequest() - Error: Invalid browser!";
                         #endif
                         TOsd::self()->display(TOsd::Error, tr("Network Error 406. Please, contact us!"));
+                    }
                     break;
                 }
             } else {

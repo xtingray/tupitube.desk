@@ -1337,6 +1337,13 @@ void TupMainWindow::postFrame(const QString &imagePath)
                 TOsd::self()->display(TOsd::Error, tr("Error while posting image. File is too big!"));
             }
         }
+
+        QFile imgFile(imagePath);
+        if (!imgFile.remove()) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupMainWindow::postFrame()] - Error: Can't remove image file -> " << imagePath;
+            #endif
+        }
     }
 }
 
