@@ -143,6 +143,7 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
         int framesCount();
 
         TupBackground *sceneBackground();
+        void setSceneBackground(TupBackground *bg);
 
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;

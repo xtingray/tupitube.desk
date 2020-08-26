@@ -37,7 +37,6 @@
 #define TUPNEWPROYECT_H
 
 #include "tglobal.h"
-// #include "tosd.h"
 #include "tabdialog.h"
 #include "twizard.h"
 #include "txyspinbox.h"
@@ -94,7 +93,6 @@ class TupNewProject : public TabDialog
 
         QLineEdit *projectName;
         QLineEdit *authorName;
-        QLineEdit *tags;
         QLineEdit *description;
 
         QColor color;

@@ -81,8 +81,7 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         void updateSoundItems();
         void setDuration(int fps);
         void infoDialog();
-        void saveProjectInfo(const QString &title, const QString &author, 
-                             const QString &description);
+        void saveProjectInfo(const QString &author, const QString &description);
 
     public slots:
         bool handleProjectResponse(TupProjectResponse *event);

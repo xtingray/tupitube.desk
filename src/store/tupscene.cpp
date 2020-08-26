@@ -697,6 +697,11 @@ TupBackground* TupScene::sceneBackground()
     return background;
 }
 
+void TupScene::setSceneBackground(TupBackground *bg)
+{
+    background = bg;
+}
+
 void TupScene::reset(const QString &name)
 {
     sceneName = name;

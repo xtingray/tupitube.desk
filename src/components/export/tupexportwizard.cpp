@@ -99,6 +99,11 @@ TupExportWizardPage *TupExportWizard::addPage(TupExportWizardPage *newPage)
     return newPage;
 }
 
+void TupExportWizard::setButtonLabel(const QString &label)
+{
+    nextButton->setText(label);
+}
+
 void TupExportWizard::showPage(TupExportWizardPage *page)
 {
     history->setCurrentWidget(page);

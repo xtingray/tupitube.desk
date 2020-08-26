@@ -54,8 +54,8 @@ class TUPITUBE_EXPORT TupProjectManagerParams
         void setAuthor(const QString &getAuthor);
         QString getAuthor() const;
 
-        void setTags(const QString &getTags);
-        QString getTags() const;
+        // void setTags(const QString &getTags);
+        // QString getTags() const;
 
         void setDescription(const QString &getDescription);
         QString getDescription() const;
@@ -72,7 +72,7 @@ class TUPITUBE_EXPORT TupProjectManagerParams
     private:
         QString projectName;
         QString author;
-        QString tags;
+        // QString tags;
         QColor bgColor;
         QString description;
         QSize dimension;

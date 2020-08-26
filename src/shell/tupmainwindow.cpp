@@ -327,6 +327,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
                 SLOT(checkColorButton(TColorCell::FillType)));
         connect(animationTab, SIGNAL(penWidthChanged(int)), this, SLOT(updatePenThickness(int)));
         connect(animationTab, SIGNAL(projectHasChanged()), this, SLOT(requestSaveAction()));
+        connect(animationTab, SIGNAL(imagePostRequested(const QString &)), this, SLOT(postFrame(const QString &)));
         connect(this, SIGNAL(activeDockChanged(TupDocumentView::DockType)), animationTab,
                 SLOT(updateActiveDock(TupDocumentView::DockType)));
 
@@ -1237,7 +1238,61 @@ void TupMainWindow::postProject()
             QString username = TCONFIG->value("Username").toString();
             QString password = TCONFIG->value("Password").toString();
             bool storePasswd = TCONFIG->value("StorePassword").toBool();
+            bool anonymous = TCONFIG->value("Anonymous").toBool();
 
+            if (!anonymous) {
+                if (username.isEmpty() || password.isEmpty() || !storePasswd) {
+                    TupSignDialog *dialog = new TupSignDialog(this);
+                    dialog->show();
+                    dialog->move(static_cast<int> ((screen->geometry().width() - dialog->width()) / 2),
+                                 static_cast<int> ((screen->geometry().height() - dialog->height()) / 2));
+
+                    if (dialog->exec() != QDialog::Rejected) {
+                        username = dialog->getUsername();
+                        password = dialog->getMetadata();
+                    } else {
+                        // User cancelled action
+                        #ifdef TUP_DEBUG
+                            qDebug() << "TupMainWindow::postProject() - Action canceled by user!";
+                        #endif
+                        TOsd::self()->display(TOsd::Info, tr("Post canceled by user!"));
+                        return;
+                    }
+                }
+            } else { // Anonymous Post
+                username = "tupitube";
+                password = "tupitube";
+            }
+
+            exportWidget = new TupExportWidget(m_projectManager->getProject(), this, TupExportWidget::Scene);
+            exportWidget->setProjectParams(username, password, m_fileName);
+            connect(exportWidget, SIGNAL(isDone()), animationTab, SLOT(updatePaintArea()));
+            exportWidget->show();
+
+            exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),
+                               static_cast<int> ((screen->geometry().height() - exportWidget->height()) / 2));
+
+            exportWidget->exec();
+        } else {
+            TOsd::self()->display(TOsd::Error, tr("Project is larger than 10 MB. Too big!"));
+        }
+    }
+}
+
+void TupMainWindow::postFrame(const QString &imagePath)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::postFrame()] - imagePath -> " << imagePath;
+    #endif
+
+    if (callSave()) {
+        TCONFIG->beginGroup("Network");
+        QString username = TCONFIG->value("Username").toString();
+        QString password = TCONFIG->value("Password").toString();
+        bool storePasswd = TCONFIG->value("StorePassword").toBool();
+        bool anonymous = TCONFIG->value("Anonymous").toBool();
+
+        if (!anonymous) {
             if (username.isEmpty() || password.isEmpty() || !storePasswd) {
                 TupSignDialog *dialog = new TupSignDialog(this);
                 dialog->show();
@@ -1256,18 +1311,31 @@ void TupMainWindow::postProject()
                     return;
                 }
             }
+        } else { // Anonymous Post
+            username = "tupitube";
+            password = "tupitube";
+        }
 
-            exportWidget = new TupExportWidget(m_projectManager->getProject(), this, false);
-            exportWidget->setProjectParams(username, password, m_fileName);
-            connect(exportWidget, SIGNAL(isDone()), animationTab, SLOT(updatePaintArea()));
-            exportWidget->show();
+        QString projectCode = TAlgorithm::randomString(8);
+        TupFileManager *manager = new TupFileManager;
+        bool saveDone = manager->createImageProject(projectCode, imagePath, m_projectManager->getProject());
+        if (saveDone) {
+            QString fileName = CACHE_DIR + projectCode + ".tup";
+            QFile file(fileName);
+            double fileSize = static_cast<double>(file.size()) / static_cast<double>(1000000);
+            if (fileSize < 10) {
+                exportWidget = new TupExportWidget(m_projectManager->getProject(), this, TupExportWidget::Frame);
+                exportWidget->setProjectParams(username, password, fileName);
+                connect(exportWidget, SIGNAL(isDone()), animationTab, SLOT(updatePaintArea()));
+                exportWidget->show();
 
-            exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),
-                               static_cast<int> ((screen->geometry().height() - exportWidget->height()) / 2));
+                exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),
+                                   static_cast<int> ((screen->geometry().height() - exportWidget->height()) / 2));
 
-            exportWidget->exec();
-        } else {
-            TOsd::self()->display(TOsd::Error, tr("Project is larger than 10 MB. Too big!"));
+                exportWidget->exec();
+            } else {
+                TOsd::self()->display(TOsd::Error, tr("Error while posting image. File is too big!"));
+            }
         }
     }
 }

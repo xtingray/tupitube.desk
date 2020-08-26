@@ -35,7 +35,7 @@
 
 #include "tupexportwidget.h"
 
-TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, bool isLocal) : TupExportWizard(parent)
+TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, ExportType type) : TupExportWizard(parent)
 {
     #ifdef TUP_DEBUG
         qDebug() << "---";
@@ -43,75 +43,93 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, bool isLocal
     #endif
 
     project = work;
-    exportFlag = isLocal;
+    exportFlag = type;
 
-    if (isLocal) {
-        setWindowTitle(tr("Export To Video"));
-        setWindowIcon(QIcon(THEME_DIR + "icons/export_wi.png"));
+    switch (type) {
+        case Local:
+        {
+            setWindowTitle(tr("Export To Video"));
+            setWindowIcon(QIcon(THEME_DIR + "icons/export_wi.png"));
 
-        pluginPage = new TupPluginSelector();
-        addPage(pluginPage);
+            pluginPage = new TupPluginSelector();
+            addPage(pluginPage);
 
-        scenesPage = new TupSceneSelector();
-        scenesPage->setScenes(work->getScenes());
-        connect(this, SIGNAL(updateScenes()), scenesPage, SLOT(updateScenesList()));
-        addPage(scenesPage);
+            scenesPage = new TupSceneSelector();
+            scenesPage->setScenes(work->getScenes());
+            connect(this, SIGNAL(updateScenes()), scenesPage, SLOT(updateScenesList()));
+            addPage(scenesPage);
 
-        animationExport = new TupExportModule(work, TupExportModule::Animation, tr("Export To Video File"));
-        connect(this, SIGNAL(exportAnimation()), animationExport, SLOT(exportIt()));
-        connect(this, SIGNAL(setAnimationFileName()), animationExport, SLOT(updateNameField()));
-        connect(animationExport, SIGNAL(exportHasStarted()), this, SLOT(updateWindowTitle()));
-        addPage(animationExport);
+            animationExport = new TupExportModule(work, TupExportModule::Animation, tr("Export To Video File"));
+            connect(this, SIGNAL(exportAnimation()), animationExport, SLOT(exportIt()));
+            connect(this, SIGNAL(setAnimationFileName()), animationExport, SLOT(updateNameField()));
+            connect(animationExport, SIGNAL(exportHasStarted()), this, SLOT(updateWindowTitle()));
+            addPage(animationExport);
 
-        imagesArrayExport = new TupExportModule(work, TupExportModule::ImagesArray, tr("Export To Image Sequence"));
-        connect(this, SIGNAL(exportImagesArray()), imagesArrayExport, SLOT(exportIt()));
-        connect(this, SIGNAL(setImagesArrayFileName()), imagesArrayExport, SLOT(updateNameField()));
-        connect(imagesArrayExport, SIGNAL(exportHasStarted()), this, SLOT(updateWindowTitle()));
-        addPage(imagesArrayExport);
+            imagesArrayExport = new TupExportModule(work, TupExportModule::ImagesArray, tr("Export To Image Sequence"));
+            connect(this, SIGNAL(exportImagesArray()), imagesArrayExport, SLOT(exportIt()));
+            connect(this, SIGNAL(setImagesArrayFileName()), imagesArrayExport, SLOT(updateNameField()));
+            connect(imagesArrayExport, SIGNAL(exportHasStarted()), this, SLOT(updateWindowTitle()));
+            addPage(imagesArrayExport);
 
-        animatedImageExport = new TupExportModule(work, TupExportModule::AnimatedImage, tr("Export To Animated Image"));
-        connect(this, SIGNAL(exportAnimatedImage()), animatedImageExport, SLOT(exportIt()));
-        connect(this, SIGNAL(setAnimatedImageFileName()), animatedImageExport, SLOT(updateNameField()));
-        addPage(animatedImageExport);
+            animatedImageExport = new TupExportModule(work, TupExportModule::AnimatedImage, tr("Export To Animated Image"));
+            connect(this, SIGNAL(exportAnimatedImage()), animatedImageExport, SLOT(exportIt()));
+            connect(this, SIGNAL(setAnimatedImageFileName()), animatedImageExport, SLOT(updateNameField()));
+            addPage(animatedImageExport);
 
-        // connect(pluginPage, SIGNAL(selectedPlugin(const QString &)), this, SLOT(setExporter(const QString &)));
-        connect(pluginPage, SIGNAL(selectedPlugin(TupExportInterface::Plugin)),
-                this, SLOT(setExporter(TupExportInterface::Plugin)));
+            // connect(pluginPage, SIGNAL(selectedPlugin(const QString &)), this, SLOT(setExporter(const QString &)));
+            connect(pluginPage, SIGNAL(selectedPlugin(TupExportInterface::Plugin)),
+                    this, SLOT(setExporter(TupExportInterface::Plugin)));
 
-        connect(pluginPage, SIGNAL(animationFormatSelected(TupExportInterface::Format, const QString &)),
-                animationExport, SLOT(setCurrentFormat(TupExportInterface::Format, const QString &)));
-        connect(pluginPage, SIGNAL(imagesArrayFormatSelected(TupExportInterface::Format, const QString &)),
-                imagesArrayExport, SLOT(setCurrentFormat(TupExportInterface::Format, const QString &)));
+            connect(pluginPage, SIGNAL(animationFormatSelected(TupExportInterface::Format, const QString &)),
+                    animationExport, SLOT(setCurrentFormat(TupExportInterface::Format, const QString &)));
+            connect(pluginPage, SIGNAL(imagesArrayFormatSelected(TupExportInterface::Format, const QString &)),
+                    imagesArrayExport, SLOT(setCurrentFormat(TupExportInterface::Format, const QString &)));
 
-        // SQA: Pending for development
-        // connect(pluginPage, SIGNAL(animatedImageFormatSelected(int, const QString &)),
-        //         animatedImageExport, SLOT(setCurrentFormat(int, const QString &)));
+            // SQA: Pending for development
+            // connect(pluginPage, SIGNAL(animatedImageFormatSelected(int, const QString &)),
+            //         animatedImageExport, SLOT(setCurrentFormat(int, const QString &)));
 
-        connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)),
-                animationExport, SLOT(setScenesIndexes(const QList<int> &)));
-        connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)),
-                imagesArrayExport, SLOT(setScenesIndexes(const QList<int> &)));
-        connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)),
-                animatedImageExport, SLOT(setScenesIndexes(const QList<int> &)));
+            connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)),
+                    animationExport, SLOT(setScenesIndexes(const QList<int> &)));
+            connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)),
+                    imagesArrayExport, SLOT(setScenesIndexes(const QList<int> &)));
+            connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)),
+                    animatedImageExport, SLOT(setScenesIndexes(const QList<int> &)));
 
-        loadPlugins();
-        pluginPage->selectFirstPlugin();
-    } else {
-        setWindowTitle(tr("Post Animation"));
-        setWindowIcon(QIcon(THEME_DIR + "icons/social_network.png"));
+            loadPlugins();
+            pluginPage->selectFirstPlugin();
+        }
+        break;
+        case Scene:
+        {
+            setWindowTitle(tr("Post Animation"));
+            setWindowIcon(QIcon(THEME_DIR + "icons/social_network.png"));
 
-        scenesPage = new TupSceneSelector();
-        scenesPage->setScenes(work->getScenes());
-        connect(this, SIGNAL(updateScenes()), scenesPage, SLOT(updateScenesList()));
-        addPage(scenesPage);
+            scenesPage = new TupSceneSelector();
+            scenesPage->setScenes(work->getScenes());
+            connect(this, SIGNAL(updateScenes()), scenesPage, SLOT(updateScenesList()));
+            addPage(scenesPage);
 
-        videoProperties = new TupVideoProperties();
-        connect(this, SIGNAL(postProcedureCalled()), videoProperties, SLOT(postIt()));
-        connect(videoProperties, SIGNAL(postHasStarted()), this, SLOT(updateWindowTitle()));
-        addPage(videoProperties);
+            videoProperties = new TupVideoProperties(TupVideoProperties::Video);
+            connect(this, SIGNAL(postProcedureCalled()), videoProperties, SLOT(postIt()));
+            connect(videoProperties, SIGNAL(postHasStarted()), this, SLOT(updateWindowTitle()));
+            addPage(videoProperties);
 
-        connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)),
-                videoProperties, SLOT(setScenesIndexes(const QList<int> &)));
+            connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)),
+                    videoProperties, SLOT(setScenesIndexes(const QList<int> &)));
+        }
+        break;
+        case Frame:
+        {
+            setWindowTitle(tr("Post Image"));
+            setWindowIcon(QIcon(THEME_DIR + "icons/social_network.png"));
+
+            videoProperties = new TupVideoProperties(TupVideoProperties::Image);
+            setButtonLabel(tr("Post"));
+            connect(this, SIGNAL(postProcedureCalled()), videoProperties, SLOT(postIt()));
+            connect(videoProperties, SIGNAL(postHasStarted()), this, SLOT(updateWindowTitle()));
+            addPage(videoProperties);
+        }
     }
 }
 
@@ -224,7 +242,7 @@ bool TupExportWidget::isComplete()
 void TupExportWidget::updateWindowTitle()
 {
     QString label = tr("Posting...");
-    if (exportFlag)
+    if (exportFlag == Local)
         label = tr("Exporting...");
 
     setWindowTitle(label);

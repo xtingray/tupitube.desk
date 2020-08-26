@@ -63,6 +63,7 @@ QString TupProjectManagerParams::getAuthor() const
     return author;
 }
 
+/*
 void TupProjectManagerParams::setTags(const QString &topics)
 {
     tags = topics;
@@ -72,6 +73,7 @@ QString TupProjectManagerParams::getTags() const
 {
     return tags;
 }
+*/
 
 void TupProjectManagerParams::setBgColor(const QColor color)
 {

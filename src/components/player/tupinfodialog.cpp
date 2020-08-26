@@ -39,20 +39,12 @@
 #include <QLabel>
 #include <QPushButton>
 
-TupInfoDialog::TupInfoDialog(const QString &tags, const QString &author, 
-                             const QString &desc, QWidget *parent) : QDialog(parent)
+TupInfoDialog::TupInfoDialog(const QString &author, const QString &desc, QWidget *parent) : QDialog(parent)
 {
     setWindowTitle(tr("Project Information"));
     setModal(true);
 
     QGridLayout *gridLayout = new QGridLayout;
-
-    QLabel *tagsLabel = new QLabel(tr("Tags"));
-    gridLayout->addWidget(tagsLabel, 0, 0);
-
-    projectTags = new QLineEdit();
-    projectTags->setText(tags);
-    gridLayout->addWidget(projectTags, 0, 1);
 
     QLabel *authorLabel = new QLabel(tr("Author"));
     gridLayout->addWidget(authorLabel, 1, 0);
@@ -93,14 +85,12 @@ TupInfoDialog::~TupInfoDialog()
 
 void TupInfoDialog::focusProjectLabel() 
 {
-    projectTags->setFocus();
-    projectTags->selectAll();
+    authorName->setFocus();
+    authorName->selectAll();
 }
 
 void TupInfoDialog::updateInfo()
 {
-    emit dataSent(projectTags->text(),
-                  authorName->text(),
-                  descText->toPlainText());
+    emit dataSent(authorName->text(), descText->toPlainText());
     accept();
 }

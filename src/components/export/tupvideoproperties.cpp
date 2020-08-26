@@ -43,9 +43,10 @@
 #include <QHttpPart>
 #include <QDomDocument>
 
-TupVideoProperties::TupVideoProperties() : TupExportWizardPage(tr("Animation Properties"))
+TupVideoProperties::TupVideoProperties(Mode m) : TupExportWizardPage(tr("Animation Properties"))
 {
     setTag("PROPERTIES");
+    mode = m;
     aborted = false;
     setWindowParams();
     stackedWidget = new QStackedWidget;
@@ -68,13 +69,21 @@ void TupVideoProperties::setForm()
     QLocale utf(QLocale::AnyLanguage, QLocale::AnyCountry);
 
     QLabel *titleLabel = new QLabel(tr("Title"));
-    titleEdit = new QLineEdit(tr("My Animation"));
+    QString title = tr("My Animation");
+    if (mode == Image)
+        title = tr("My Image");
+
+    titleEdit = new QLineEdit(title);
     titleEdit->setLocale(utf);
     connect(titleEdit, SIGNAL(textChanged(const QString &)), this, SLOT(resetTitleColor(const QString &)));
     titleLabel->setBuddy(titleEdit);
 
     QLabel *topicsLabel = new QLabel(tr("Topics"));
-    topicsEdit = new QLineEdit(tr("#tupitube #animation #fun"));
+    QString topics = tr("#tupitube #animation #fun");
+    if (mode == Image)
+        topics = tr("#tupitube #image #fun");
+
+    topicsEdit = new QLineEdit(topics);
     topicsEdit->setLocale(utf);
     connect(topicsEdit, SIGNAL(textChanged(const QString &)), this, SLOT(resetTopicsColor(const QString &)));
     topicsLabel->setBuddy(topicsEdit);
@@ -107,7 +116,8 @@ void TupVideoProperties::setProgressBar()
 
     TCONFIG->beginGroup("General");
     QString themeName = TCONFIG->value("Theme", "Light").toString();
-    QString style = "QProgressBar { background-color: #DDDDDD; text-align: center; color: #FFFFFF; border-radius: 2px; } ";
+    QString style = "QProgressBar { background-color: #DDDDDD; "
+                    "text-align: center; color: #FFFFFF; border-radius: 2px; } ";
     QString color = "#009500";
     if (themeName.compare("Dark") == 0)
         color = "#444444";
@@ -194,6 +204,8 @@ void TupVideoProperties::postIt()
     QString title = titleEdit->text();
     QString tags = topicsEdit->text();
     QString desc = descText->toPlainText();
+    if (username.compare("tupitube") == 0)
+        flag = "tupitube";
 
     if (title.length() == 0) {
         titleEdit->setText(tr("Set a title for the picture here!"));
@@ -233,7 +245,15 @@ void TupVideoProperties::postIt()
     connect(manager, &QNetworkAccessManager::finished, this, &TupVideoProperties::serverAuthAnswer);
     connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
 
-    QUrl url(TUPITUBE_URL + QString("/api/desk/add/"));
+    QString apiEntry = TUPITUBE_URL + QString("/api/desk/add/video/");
+    if (mode == Image)
+        apiEntry = TUPITUBE_URL + QString("/api/desk/add/image/");
+
+    #ifdef TUP_DEBUG
+        qDebug() << "TupVideoProperties::postIt() - URL -> " << apiEntry;
+    #endif
+
+    QUrl url(apiEntry);
     QNetworkRequest request = QNetworkRequest();
     request.setRawHeader("User-Agent", BROWSER_FINGERPRINT);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
@@ -299,7 +319,15 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
                 connect(manager, &QNetworkAccessManager::finished, this, &TupVideoProperties::closeRequest);
                 connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
 
-                QUrl url(TUPITUBE_URL + QString("/api/desk/upload/"));
+                QString apiEntry = TUPITUBE_URL + QString("/api/desk/upload/video/");
+                if (mode == Image)
+                    apiEntry = TUPITUBE_URL + QString("/api/desk/upload/image/");
+
+                #ifdef TUP_DEBUG
+                    qDebug() << "TupVideoProperties::serverAuthAnswer() - URL -> " << apiEntry;
+                #endif
+
+                QUrl url(apiEntry);
                 QNetworkRequest request = QNetworkRequest();
                 request.setRawHeader(QByteArray("User-Agent"), QByteArray(BROWSER_FINGERPRINT));
                 request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
@@ -327,23 +355,6 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
                 contentPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"content\""));
                 contentPart.setBody(flag.toUtf8());
 
-                QString scenesStr = "";
-                int total = scenes.count();
-                if (total == 1) {
-                    scenesStr += QString::number(scenes.at(0));
-                } else {
-                    for (int i=0; i < total; i++) {
-                        scenesStr += QString::number(scenes.at(i));
-                        scenesStr += ",";
-                    }
-                    scenesStr.chop(1);
-                }
-
-                QHttpPart scenesPart;
-                scenesPart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("text/plain"));
-                scenesPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"scenes\""));
-                scenesPart.setBody(scenesStr.toUtf8());
-
                 QHttpPart filePart;
                 filePart.setHeader(QNetworkRequest::ContentDispositionHeader,
                                    QVariant("form-data; name=\"file\"; filename=\"" + projectCode + ".tup\""));
@@ -358,7 +369,26 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
                 multiPart->append(loginPart);
                 multiPart->append(passwdPart);
                 multiPart->append(codePart);
-                multiPart->append(scenesPart);
+                if (mode == Video) {
+                    QString scenesStr = "";
+                    int total = scenes.count();
+                    if (total == 1) {
+                        scenesStr += QString::number(scenes.at(0));
+                    } else {
+                        for (int i=0; i < total; i++) {
+                            scenesStr += QString::number(scenes.at(i));
+                            scenesStr += ",";
+                        }
+                        scenesStr.chop(1);
+                    }
+
+                    QHttpPart scenesPart;
+                    scenesPart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("text/plain"));
+                    scenesPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"scenes\""));
+                    scenesPart.setBody(scenesStr.toUtf8());
+
+                    multiPart->append(scenesPart);
+                }
                 multiPart->append(contentPart);
                 multiPart->append(filePart);
 

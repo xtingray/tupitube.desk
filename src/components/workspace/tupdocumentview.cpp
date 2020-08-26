@@ -36,6 +36,7 @@
 #include "tupdocumentview.h"
 #include "tupapplication.h"
 #include "tconfig.h"
+#include "talgorithm.h"
 #include "tuprequestbuilder.h"
 #include "tuppaintareaproperties.h"
 #include "tuppluginmanager.h"
@@ -361,22 +362,27 @@ void TupDocumentView::setupDrawActions()
     new TAction(QPixmap(THEME_DIR + "icons/export_frame.png"), tr("Export Frame As Image"), QKeySequence(tr("@")),
                 this, SLOT(exportImage()), actionManager, "export_image");
 
+    new TAction(QPixmap(THEME_DIR + "icons/share.png"), tr("Post Frame On TupiTube"), QKeySequence(tr("Ctrl+@")),
+                this, SLOT(postImage()), actionManager, "post_image");
+
     /*
     new TAction(QPixmap(THEME_DIR + "icons/onion_color.png"), tr("Onion Color"), QKeySequence(),
                           this, SLOT(activeOnionColorScheme()), actionManager, "onion_color");
     */
 
+    /*
     TCONFIG->beginGroup("Network");
     QString server = TCONFIG->value("Server").toString();
-
     if (isNetworked && server.compare("tupitu.be") == 0) {
         new TAction(QPixmap(THEME_DIR + "icons/import_project.png"), tr("Export Frame To Gallery"), QKeySequence(tr("@")),
                     this, SLOT(postImage()), actionManager, "post_image");
     }
+    */
 
     new TAction(QPixmap(THEME_DIR + "icons/storyboard.png"), tr("Storyboard Settings"), QKeySequence(tr("Ctrl+Shift+S")),
                 this, SLOT(storyboardSettings()), actionManager, "storyboard");
 
+    /*
     #ifdef Q_OS_WIN
         if (QSysInfo::windowsVersion() != QSysInfo::WV_XP) {
             new TAction(QPixmap(THEME_DIR + "icons/camera.png"), tr("Camera"), QKeySequence(tr("Ctrl+Shift+C")),
@@ -386,6 +392,10 @@ void TupDocumentView::setupDrawActions()
         new TAction(QPixmap(THEME_DIR + "icons/camera.png"), tr("Camera"), QKeySequence(tr("Ctrl+Shift+C")),
                     this, SLOT(cameraInterface()), actionManager, "camera");
     #endif
+    */
+
+    new TAction(QPixmap(THEME_DIR + "icons/camera.png"), tr("Camera"), QKeySequence(tr("Ctrl+Shift+C")),
+                this, SLOT(cameraInterface()), actionManager, "camera");
 
     new TAction(QPixmap(THEME_DIR + "icons/papagayo.png"), tr("Papagayo Lip-sync Files"), QKeySequence(tr("Ctrl+Shift+P")),
                 this, SLOT(papagayoManager()), actionManager, "papagayo");
@@ -589,12 +599,12 @@ void TupDocumentView::loadPlugins()
 
     miscMenu->addAction(actionManager->find("export_image"));
 
-    TCONFIG->beginGroup("Network");
-    QString server = TCONFIG->value("Server").toString();
+    // TCONFIG->beginGroup("Network");
+    // QString server = TCONFIG->value("Server").toString();
+    // if (isNetworked && server.compare("tupitu.be") == 0)
+    //     miscMenu->addAction(actionManager->find("post_image"));
 
-    if (isNetworked && server.compare("tupitu.be") == 0)
-        miscMenu->addAction(actionManager->find("post_image"));
-
+    miscMenu->addAction(actionManager->find("post_image"));
     miscMenu->addAction(actionManager->find("storyboard"));
     miscMenu->addAction(actionManager->find("papagayo"));
 
@@ -1794,27 +1804,32 @@ void TupDocumentView::selectScene(int scene)
     paintArea->goToScene(scene);
 }
 
+void TupDocumentView::updateToolsMenu(TAction::ActionId id, const QString &actionId)
+{
+    if (configurationArea->isVisible())
+        configurationArea->close();
+
+    currentTool->setToolId(id);
+    QAction *action = actionManager->find(actionId);
+    miscMenu->setDefaultAction(action);
+    miscMenu->setActiveAction(action);
+    if (!action->icon().isNull())
+        miscMenu->menuAction()->setIcon(action->icon());
+}
+
 void TupDocumentView::exportImage()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupDocumentView::exportImage()]";
     #endif
 
-    if (configurationArea->isVisible())
-        configurationArea->close();
+    updateToolsMenu(TAction::ExportImage, "export_image");
 
-    currentTool->setToolId(TAction::ExportImage);
-    QAction *action = actionManager->find("export_image");
-    miscMenu->setDefaultAction(action);
-    miscMenu->setActiveAction(action);
-    if (!action->icon().isNull())
-        miscMenu->menuAction()->setIcon(action->icon());
-
-    int sceneIndex = paintArea->graphicsScene()->currentSceneIndex();
-    int frameIndex = paintArea->graphicsScene()->currentFrameIndex();
+    int sceneIndex = paintArea->currentSceneIndex();
+    int frameIndex = paintArea->currentFrameIndex();
 
     QString fileName = QFileDialog::getSaveFileName(this, tr("Export Frame As"), QDir::homePath(),
-                                                        tr("Images") + " (*.png *.jpg *.svg)");
+                                                    tr("Images") + " (*.png *.jpg *.svg)");
     if (!fileName.isNull()) {
         bool isOk = imagePlugin->exportFrame(frameIndex, project->getBgColor(), fileName, project->sceneAt(sceneIndex),
                                                 project->getDimension(), project->getLibrary());
@@ -1828,21 +1843,21 @@ void TupDocumentView::exportImage()
 
 void TupDocumentView::postImage()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupDocumentView::postImage()]";
+    #endif
+
+    updateToolsMenu(TAction::PostImage, "post_image");
+
     int sceneIndex = paintArea->graphicsScene()->currentSceneIndex();
     int frameIndex = paintArea->graphicsScene()->currentFrameIndex();
+    QString fileName = CACHE_DIR + TAlgorithm::randomString(8) + ".png";
 
-    TupImageDialog *dialog = new TupImageDialog(this);
-    dialog->show();
-    dialog->move(static_cast<int>((screen->geometry().width() - dialog->width())/2),
-                 static_cast<int>((screen->geometry().height() - dialog->height())/2));
-
-    if (dialog->exec() != QDialog::Rejected) {
-        QString title = dialog->imageTitle();
-        QString topics = dialog->imageTopics();
-        QString description = dialog->imageDescription();
-        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-        emit requestExportImageToServer(frameIndex, sceneIndex, title, topics, description);
-    }
+    bool isOk = imagePlugin->exportFrame(frameIndex, project->getBgColor(), fileName, project->sceneAt(sceneIndex),
+                                         project->getDimension(), project->getLibrary());
+    updatePaintArea();
+    if (isOk)
+        emit imagePostRequested(fileName);
 }
 
 void TupDocumentView::storyboardSettings()

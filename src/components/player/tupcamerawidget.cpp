@@ -578,20 +578,17 @@ void TupCameraWidget::updateSoundItems()
 }
 
 void TupCameraWidget::infoDialog()
-{
-    TupInfoDialog *settings = new TupInfoDialog(project->getTags(),
-                                                        project->getAuthor(), project->getDescription(),
-                                                        this);
-    connect(settings, SIGNAL(dataSent(const QString &, const QString &, const QString &)), 
-            this, SLOT(saveProjectInfo(const QString &, const QString &, const QString &)));
+{    
+    TupInfoDialog *settings = new TupInfoDialog(project->getAuthor(), project->getDescription(), this);
+
+    connect(settings, SIGNAL(dataSent(const QString &, const QString &)),
+            this, SLOT(saveProjectInfo(const QString &, const QString &)));
 
     settings->show();
 }
 
-void TupCameraWidget::saveProjectInfo(const QString &tags, const QString &author, 
-                                      const QString &description) 
+void TupCameraWidget::saveProjectInfo(const QString &author, const QString &description)
 {
-    project->setTags(tags);
     project->setAuthor(author);
     emit projectAuthorUpdated(author);
     project->setDescription(description);

@@ -52,6 +52,9 @@ class TUPITUBE_EXPORT TupFileManager : public QObject
 
         virtual bool save(const QString &filename, TupProject *project);
         virtual bool load(const QString &filename, TupProject *project);
+
+        virtual bool createImageProject(const QString &projectCode, const QString &imgPath,
+                                        TupProject *project);
 };
 
 #endif

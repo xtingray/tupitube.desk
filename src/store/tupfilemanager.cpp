@@ -37,6 +37,7 @@
 #include "tconfig.h"
 #include "tupproject.h"
 #include "tupscene.h"
+#include "tuplayer.h"
 #include "tuplibrary.h"
 #include "tuppackagehandler.h"
 #include "talgorithm.h"
@@ -68,6 +69,9 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 
     // Project name has been changed by the user
     if (name.compare(project->getName()) != 0) {
+        #ifdef TUP_DEBUG
+            qDebug() << "TupFileManager::save() - User changed project's name...";
+        #endif
         project->setProjectName(name);
         projectDir.setPath(CACHE_DIR + name);    
         project->getLibrary()->updatePaths(CACHE_DIR + name);
@@ -94,6 +98,9 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
     } else {
         // If project's path doesn't exist, create it
         if (!projectDir.exists()) {
+            #ifdef TUP_DEBUG
+                qDebug() << "TupFileManager::save() - Creating project's directory...";
+            #endif
             if (!projectDir.mkdir(projectDir.path())) {
                 #ifdef TUP_DEBUG
                     qWarning() << "TupFileManager::save() - Error: Can't create path -> " << projectDir.path();
@@ -316,4 +323,68 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
         qDebug() << "TupFileManager::load() - Error: Can't import package -> " + fileName;
     #endif
     return false;
+}
+
+bool TupFileManager::createImageProject(const QString &projectCode, const QString &imgPath, TupProject *project)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupFileManager::createImageProject()] - projectCode -> " << projectCode;
+        qDebug() << "[TupFileManager::createImageProject()] - imgPath -> " << imgPath;
+    #endif
+
+    QString filename = CACHE_DIR + projectCode + ".tup";
+
+    TupProject *newProject = new TupProject();
+    newProject->setProjectName(projectCode);
+    newProject->setAuthor(project->getAuthor());
+    // newProject->setTags(project->getTags());
+    newProject->setBgColor(project->getBgColor());
+    newProject->setDescription(project->getDescription());
+    newProject->setDimension(project->getDimension());
+    newProject->setFPS(project->getFPS(), 0);
+    newProject->setDataDir(CACHE_DIR + projectCode);
+
+    TupLibrary *library = new TupLibrary("library", newProject);
+    newProject->setLibrary(library);
+
+    TupScene * newScene = newProject->createScene(tr("Scene %1").arg(QString::number(1)), 0);
+    TupLayer *newLayer = newScene->createLayer(tr("Layer %1").arg(QString::number(1)), 0);
+    newLayer->createFrame(tr("Frame %1").arg(QString::number(1)), 0);
+    TupFrame *frame = newLayer->frameAt(0);
+
+    QFile file(imgPath);
+    if (file.exists()) {
+        if (file.open(QIODevice::ReadOnly)) {
+            QByteArray data = file.readAll();
+            if (library->createSymbol(TupLibraryObject::Image, "image.png", data, "") == nullptr) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "TupProject::createImageProject() - Fatal error: image object can't be created. Data is NULL!";
+                #endif
+                return false;
+            }
+
+            TupLibraryObject *object = library->getObject("image.png");
+            if (object) {
+                TupGraphicLibraryItem *libraryItem = new TupGraphicLibraryItem(object);
+                int imageW = static_cast<int>(libraryItem->boundingRect().width());
+                int imageH = static_cast<int> (libraryItem->boundingRect().height());
+
+                qreal xPos = 0;
+                qreal yPos = 0;
+                QSize dimension = newProject->getDimension();
+                if (dimension.width() > imageW)
+                    xPos = (dimension.width() - imageW) / 2;
+                if (dimension.height() > imageH)
+                    yPos = (dimension.height() - imageH) / 2;
+
+                libraryItem->moveBy(xPos, yPos);
+
+                int zLevel = frame->getTopZLevel();
+                libraryItem->setZValue(zLevel);
+                frame->addItem("image.png", libraryItem);
+            }
+        }
+    }
+
+    return save(filename, newProject);
 }

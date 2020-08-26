@@ -52,8 +52,9 @@ class TUPITUBE_EXPORT TupExportWidget : public TupExportWizard
     Q_OBJECT
 
     public:
+        enum ExportType { Local, Scene, Frame };
         enum OutputFormat { Animation = 0, ImagesArray, AnimatedImage };
-        TupExportWidget(TupProject *project, QWidget *parent = nullptr, bool isLocal = true);
+        TupExportWidget(TupProject *project, QWidget *parent = nullptr, ExportType type = Local);
         ~TupExportWidget();
 
         void setProjectParams(const QString &username, const QString &secret, const QString &path);
@@ -80,7 +81,7 @@ class TUPITUBE_EXPORT TupExportWidget : public TupExportWizard
 
         const TupProject *project;
         QHash<TupExportInterface::Plugin, TupExportInterface *> plugins;
-        bool exportFlag;
+        ExportType exportFlag;
 };
 
 #endif

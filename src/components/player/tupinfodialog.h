@@ -49,19 +49,18 @@ class TupInfoDialog : public QDialog
     Q_OBJECT
 
     public:
-        TupInfoDialog(const QString &tags, const QString &author, const QString &desc, QWidget *parent = 0);
+        TupInfoDialog(const QString &author, const QString &desc, QWidget *parent = nullptr);
         ~TupInfoDialog();
 
         void focusProjectLabel();
 
     signals:
-        void dataSent(const QString &, const QString &, const QString &);
+        void dataSent(const QString &, const QString &);
 
     private slots:
         void updateInfo();
 
     private:
-        QLineEdit *projectTags;
         QLineEdit *authorName;
         QPlainTextEdit *descText;
 };

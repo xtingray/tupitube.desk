@@ -51,7 +51,8 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
     Q_OBJECT
 
     public:
-        TupVideoProperties();
+        enum Mode { Video, Image };
+        TupVideoProperties(Mode m);
         ~TupVideoProperties();
 
         bool isComplete() const;
@@ -103,6 +104,7 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         QStackedWidget *stackedWidget;
 
         QUrlQuery params;
+        Mode mode;
 };
 
 #endif

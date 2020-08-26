@@ -67,12 +67,14 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent)
     authorName->setText(tr("Your name"));
     layout->addWidget(authorName, 1, 1);
 
+    /*
     QLabel *tagsLabel = new QLabel(tr("Tags"), infoContainer);
     layout->addWidget(tagsLabel, 2, 0);
 
     tags = new QLineEdit(infoContainer);
     tags->setText(tr("#animation #2D"));
     layout->addWidget(tags, 2, 1);
+    */
 
     QLabel *descLabel = new QLabel(tr("Description"), infoContainer);
     layout->addWidget(descLabel, 3, 0);
@@ -250,7 +252,6 @@ TupProjectManagerParams *TupNewProject::parameters()
         TupNetProjectManagerParams *params = new TupNetProjectManagerParams;
         params->setProjectName(projectName->text());
         params->setAuthor(authorName->text());
-        params->setTags(tags->text());
         params->setDescription(description->text());
         params->setBgColor(color);
         const QSize projectSize(size->x(), size->y());
@@ -269,7 +270,6 @@ TupProjectManagerParams *TupNewProject::parameters()
     TupProjectManagerParams *params = new TupProjectManagerParams;
     params->setProjectName(projectName->text());
     params->setAuthor(authorName->text());
-    params->setTags(tags->text());
     params->setDescription(description->text());
     params->setBgColor(color);
     const QSize projectSize(size->x(), size->y());

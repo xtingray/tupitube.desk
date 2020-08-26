@@ -63,6 +63,7 @@ class TUPITUBE_EXPORT TupExportWizard : public QDialog
         TupExportWizardPage *addPage(TupExportWizardPage *page);
         void showPage(int index);
         void showPage(TupExportWizardPage *page);
+        void setButtonLabel(const QString &label);
 
     public slots:
         void enableButtonSet(bool enabled);

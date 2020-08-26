@@ -200,6 +200,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void colorModeChanged(TColorCell::FillType mode);
         void fillToolEnabled();
         void projectHasChanged();
+        void imagePostRequested(const QString &);
 
     private:
         void setupDrawActions();
@@ -209,6 +210,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void updateRotationAngleFromRulers(int angle);
         double backgroundOpacity(TupFrame::FrameType type);
         void updateOnionColorSchemeStatus(bool status);
+        void updateToolsMenu(TAction::ActionId id, const QString &actionId);
 
         QMenu *shapesMenu;
         QMenu *motionMenu;

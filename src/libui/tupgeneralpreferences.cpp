@@ -231,6 +231,7 @@ QWidget * TupGeneralPreferences::socialTab()
     TCONFIG->beginGroup("Network");
     username = TCONFIG->value("Username").toString();
     passwd = TCONFIG->value("Password").toString();
+    bool anonymous = TCONFIG->value("Anonymous", false).toBool();
 
     QLabel *socialLabel = new QLabel(tr("TupiTube Credentials"));
 
@@ -257,6 +258,8 @@ QWidget * TupGeneralPreferences::socialTab()
     passwdLayout->addStretch();
 
     usernameEdit->setText(username);
+    anonymousBox = new QCheckBox(tr("Enable anonymous mode"));
+    anonymousBox->setChecked(anonymous);
 
     font.setPointSize(font.pointSize() - 3);
     font.setBold(true);
@@ -288,6 +291,7 @@ QWidget * TupGeneralPreferences::socialTab()
     layout->addSpacing(15);
     layout->addLayout(usernameLayout);
     layout->addLayout(passwdLayout);
+    layout->addWidget(anonymousBox);
     layout->addSpacing(10);
     layout->addWidget(new TSeparator);
     layout->addWidget(registerLabel);
@@ -505,6 +509,11 @@ bool TupGeneralPreferences::saveValues()
 
     if (!passwd.isEmpty() && changed)
         TCONFIG->setValue("Password", TupSecurity::encryptPassword(passwd));
+
+    bool anonymous = false;
+    if (anonymousBox->isChecked())
+        anonymous = true;
+    TCONFIG->setValue("Anonymous", anonymous);
 
     TCONFIG->beginGroup("AnimationParameters");
     total = player.count();

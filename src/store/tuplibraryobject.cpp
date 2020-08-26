@@ -235,9 +235,9 @@ void TupLibraryObject::fromXml(const QString &xml)
                 case TupLibraryObject::Item:
                      {
                          dataPath = objectTag.attribute("path");
-             int index = dataPath.lastIndexOf("/");
-			 if (index > 0)
-                 folder = dataPath.left(index);
+                         int index = dataPath.lastIndexOf("/");
+                         if (index > 0)
+                             folder = dataPath.left(index);
                      }
                 break;
                 case TupLibraryObject::Sound:
@@ -270,9 +270,10 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
         path = folder + "/" + finfo.fileName();
 
     #ifdef TUP_DEBUG
-        qDebug() << "TupLibraryObject::toXml() - Saving element -> " + path;
+        qDebug() << "TupLibraryObject::toXml() - dataPath -> " << dataPath;
+        qDebug() << "TupLibraryObject::toXml() - Saving element -> " << path;
     #endif
-    
+
     switch (objectType) {
             case Text:
             {

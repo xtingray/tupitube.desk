@@ -98,6 +98,7 @@ class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
 
         QString username;
         QString passwd;
+        QCheckBox *anonymousBox;
         QLineEdit *usernameEdit;
         QLineEdit *passwdEdit;
         QLineEdit *emailEdit;

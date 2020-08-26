@@ -145,6 +145,7 @@ class TupMainWindow : public TabbedMainWindow
         void updatePenThickness(int thickness);
         void exportProject();
         void postProject();
+        void postFrame(const QString &imagePath);
 
     private slots:
         void addTwitterPage();

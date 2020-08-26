@@ -54,7 +54,9 @@ TupProject::TupProject(QObject *parent) : QObject(parent)
     
     spaceMode = TupProject::NONE;
     bgColor = QColor("#fff");
-    projectTags = tr("#animation #2D");
+    dimension = QSize(1920, 1080);
+    fps = 24;
+    // projectTags = tr("#animation #2D");
     sceneCounter = 0;
     isOpen = false;
     library = new TupLibrary("library", this);
@@ -116,10 +118,12 @@ void TupProject::setAuthor(const QString &author)
     projectAuthor = author;
 }
 
+/*
 void TupProject::setTags(const QString &tags)
 {
     projectTags = tags;
 }
+*/
 
 void TupProject::setBgColor(const QColor color)
 {
@@ -169,10 +173,12 @@ QString TupProject::getAuthor() const
     return projectAuthor;
 }
 
+/*
 QString TupProject::getTags() const
 {
     return projectTags;
 }
+*/
 
 QColor TupProject::getBgColor() const
 {
@@ -357,7 +363,8 @@ TupBackground * TupProject::getBackgroundFromScene(int sceneIndex)
 {
     if (sceneIndex < 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupProject::getBackgroundFromScene() - FATAL ERROR: index out of bound (" + QString::number(sceneIndex) + ")";
+            qDebug() << "TupProject::getBackgroundFromScene() - FATAL ERROR: index out of bound ("
+                        + QString::number(sceneIndex) + ")";
         #endif
         return nullptr;
     }
@@ -399,11 +406,13 @@ void TupProject::fromXml(const QString &xml)
                               if (e1.tagName() == "author") {
                                   if (e1.firstChild().isText()) 
                                       setAuthor(e1.text());
+                              /*
                               } else if (e1.tagName() == "tags") {
                                          if (e1.text().isEmpty())
                                              setTags(tr("#animation #2D"));
                                          else
                                              setTags(e1.text());
+                              */
                               } else if (e1.tagName() == "bgcolor") {
                                          if (e1.text().isEmpty())
                                              setBgColor(QColor("#ffffff"));
@@ -452,8 +461,10 @@ QDomElement TupProject::toXml(QDomDocument &doc) const
     QDomElement author = doc.createElement("author");
     author.appendChild(doc.createTextNode(projectAuthor));
 
+    /*
     QDomElement tags = doc.createElement("tags");
     tags.appendChild(doc.createTextNode(projectTags));
+    */
 
     QDomElement description = doc.createElement("description");
     description.appendChild(doc.createTextNode(projectDesc));
@@ -470,7 +481,7 @@ QDomElement TupProject::toXml(QDomDocument &doc) const
     fpsElement.appendChild(doc.createTextNode(frames));
 
     meta.appendChild(author);
-    meta.appendChild(tags);
+    // meta.appendChild(tags);
     meta.appendChild(color);
     meta.appendChild(description);
     meta.appendChild(size);
@@ -923,6 +934,11 @@ void TupProject::reloadLibraryItem(TupLibraryObject::Type type, const QString &i
 TupLibrary *TupProject::getLibrary()
 {
     return library;
+}
+
+void TupProject::setLibrary(TupLibrary *lib)
+{
+    library = lib;
 }
 
 void TupProject::emitResponse(TupProjectResponse *response)

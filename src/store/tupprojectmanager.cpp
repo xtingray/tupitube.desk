@@ -139,7 +139,7 @@ void TupProjectManager::setupNewProject()
 
     project->setProjectName(params->getProjectManager());
     project->setAuthor(params->getAuthor());
-    project->setTags(params->getTags());
+    // project->setTags(params->getTags());
     project->setDescription(params->getDescription());
     project->setBgColor(params->getBgColor());
     project->setDimension(params->getDimension());

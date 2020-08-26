@@ -75,16 +75,16 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         ~TupProject();
 
         void setProjectName(const QString &name);
-        void setAuthor(const QString &getAuthor);
-        void setTags(const QString &getTags);
+        void setAuthor(const QString &author);
+        // void setTags(const QString &tags);
         void setBgColor(const QColor color);
-        void setDescription(const QString &getDescription);
-        void setDimension(const QSize getDimension);
+        void setDescription(const QString &desc);
+        void setDimension(const QSize size);
         void setFPS(const int value, const int sceneIndex=0);
 
         QString getName() const;
         QString getAuthor() const;
-        QString getTags() const;
+        // QString getTags() const;
         QColor getBgColor() const;
         QString getDescription() const;
         QSize getDimension() const;
@@ -125,6 +125,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         void loadLibrary(const QString &filename);
 
         TupLibrary *getLibrary();
+        void setLibrary(TupLibrary *lib);
         void emitResponse(TupProjectResponse *response);
 
         virtual void fromXml(const QString &xml);
@@ -146,7 +147,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
     private:
         QString projectName;
         QString projectAuthor;
-        QString projectTags;
+        // QString projectTags;
         QColor bgColor;
         QString projectDesc;
         QSize dimension;
