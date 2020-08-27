@@ -1,4 +1,4 @@
-﻿/***************************************************************************
+/***************************************************************************
  *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
@@ -53,7 +53,8 @@ class TUPITUBE_EXPORT TupExportInterface
                VideoFormats = 0,
                OpenVideoFormat = 1,
                ImageSequence = 2,
-               AnimatedImage = 3
+               AnimatedImage = 3,
+               MobileFormats = 4
              };
 
         enum Format 
