@@ -556,6 +556,19 @@ void TupPaintArea::itemResponse(TupItemResponse *response)
               }
             break;
             case TupProjectRequest::Move:
+              {
+                  if (spaceMode == TupProject::FRAMES_MODE) {
+                      guiScene->drawCurrentPhotogram();
+                  } else if (spaceMode == TupProject::VECTOR_FG_MODE) {
+                      guiScene->cleanWorkSpace();
+                      guiScene->drawVectorFg();
+                  } else {
+                      guiScene->cleanWorkSpace();
+                      guiScene->drawSceneBackground(guiScene->currentFrameIndex());
+                  }
+
+                  viewport()->update(guiScene->sceneRect().toRect());
+              }
             case TupProjectRequest::UpdateTweenPath:
               {
                   // Do nothing

@@ -129,6 +129,7 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, ExportType t
             connect(this, SIGNAL(postProcedureCalled()), videoProperties, SLOT(postIt()));
             connect(videoProperties, SIGNAL(postHasStarted()), this, SLOT(updateWindowTitle()));
             addPage(videoProperties);
+            setFixedWidth(612);
         }
     }
 }
