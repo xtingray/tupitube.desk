@@ -569,11 +569,14 @@ void TupVideoProperties::closeRequest(QNetworkReply *reply)
                             qDebug() << "TupVideoProperties::closeRequest() - Project posted successfully!";
                         #endif
 
-                        QFile file(filePath);
-                        if (!file.remove()) {
-                            #ifdef TUP_DEBUG
-                                qDebug() << "TupVideoProperties::closeRequest() - Error: Can't remove project file -> " << filePath;
-                            #endif
+                        if (mode == Image) {
+                            QFile file(filePath);
+                            if (!file.remove()) {
+                                #ifdef TUP_DEBUG
+                                    qDebug() << "Removing temp file -> " << filePath;
+                                    qDebug() << "TupVideoProperties::closeRequest() - Error: Can't remove project file -> " << filePath;
+                                #endif
+                            }
                         }
 
                         TOsd::self()->display(TOsd::Info, tr("Project was uploaded successfully!"));
