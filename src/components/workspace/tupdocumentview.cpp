@@ -143,6 +143,7 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
 
     status = new TupPaintAreaStatus(TupPaintAreaStatus::Vector, contourPen(), fillBrush());
     connect(status, SIGNAL(newFramePointer(int)), this, SLOT(goToFrame(int)));
+    connect(status, SIGNAL(clearFrameClicked()), this, SLOT(clearFrame()));
     connect(status, SIGNAL(resetClicked()), this, SLOT(resetWorkSpaceTransformations()));
     connect(status, SIGNAL(safeAreaClicked()), this, SLOT(drawActionSafeArea()));
     connect(status, SIGNAL(gridClicked()), this, SLOT(drawGrid()));
@@ -309,6 +310,20 @@ void TupDocumentView::setZoomPercent(const QString &percent)
     nodesScaleFactor = percent.toDouble() / 100;
     status->setZoomPercent(percent);
     zoomFactor = percent;
+}
+
+void TupDocumentView::clearFrame()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupDocumentView::clearFrame()]";
+    #endif
+
+    int scene = paintArea->currentSceneIndex();
+    int layer = paintArea->currentLayerIndex();
+    int frame = paintArea->currentFrameIndex();
+
+    TupProjectRequest event = TupRequestBuilder::createFrameRequest(scene, layer, frame, TupProjectRequest::Reset);
+    emit requestTriggered(&event);
 }
 
 /*

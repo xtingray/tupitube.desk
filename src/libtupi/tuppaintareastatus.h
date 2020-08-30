@@ -79,6 +79,7 @@ class TUPITUBE_EXPORT TupPaintAreaStatus : public QStatusBar
 
     signals:
         void newFramePointer(int index);
+        void clearFrameClicked();
         void resetClicked();
         void safeAreaClicked();
         void gridClicked();

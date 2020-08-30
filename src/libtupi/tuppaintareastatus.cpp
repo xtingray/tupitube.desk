@@ -48,6 +48,13 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     currentFrame = 1;
     colorContext = TColorCell::Contour;
 
+    QPushButton *clearAreaButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/clear_frame.png")), "");
+    clearAreaButton->setIconSize(QSize(16, 16));
+    clearAreaButton->setToolTip(tr("Clear Frame"));
+    // clearAreaButton->setShortcut(QKeySequence(Qt::Key_3));
+    connect(clearAreaButton, SIGNAL(clicked()), this, SIGNAL(clearFrameClicked()));
+    addPermanentWidget(clearAreaButton);
+
     QPushButton *resetWSButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/reset_workspace.png")), "");
     resetWSButton->setIconSize(QSize(16, 16));
     resetWSButton->setToolTip(tr("Reset WorkSpace"));

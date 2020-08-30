@@ -173,6 +173,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void requestRasterStroke();
         void requestClearRasterCanvas();
         void updateBgSettings(QList<TupBackground::BgType>, QList<bool>);
+        void clearFrame();
 
     signals:
         void requestTriggered(const TupProjectRequest *event);
