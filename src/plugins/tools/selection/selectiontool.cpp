@@ -82,7 +82,7 @@ void SelectionTool::initItems(TupGraphicsScene *gScene)
     #endif
 
     foreach (QGraphicsView *view, gScene->views())
-             view->setDragMode(QGraphicsView::RubberBandDrag);
+        view->setDragMode(QGraphicsView::RubberBandDrag);
 
     panel->enableFormControls(false);
 }
@@ -93,6 +93,16 @@ void SelectionTool::removeTarget()
         scene->removeItem(center);
         scene->removeItem(target1);
         scene->removeItem(target2);
+
+        scene->removeItem(topLeftX);
+        scene->removeItem(topLeftY);
+        scene->removeItem(topRightX);
+        scene->removeItem(topRightY);
+        scene->removeItem(bottomLeftX);
+        scene->removeItem(bottomLeftY);
+        scene->removeItem(bottomRightX);
+        scene->removeItem(bottomRightY);
+
         targetIsIncluded = false;
     }
 }
@@ -205,25 +215,27 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
             }
         }
 
-        foreach (QGraphicsItem *item, selectedObjects) {
-            if (item && (dynamic_cast<TupAbstractSerializable* > (item))) {
-                if (item->group())
-                    item = qgraphicsitem_cast<QGraphicsItem *>(item->group());
-                bool found = false;
-                foreach (NodeManager *manager, nodeManagers) {
-                    if (item == manager->parentItem()) {
-                        found = true;
-                        break;
+        if (selectedObjects.count() == 1) {
+            foreach (QGraphicsItem *item, selectedObjects) {
+                if (item && (dynamic_cast<TupAbstractSerializable* > (item))) {
+                    if (item->group())
+                        item = qgraphicsitem_cast<QGraphicsItem *>(item->group());
+                    bool found = false;
+                    foreach (NodeManager *manager, nodeManagers) {
+                        if (item == manager->parentItem()) {
+                            found = true;
+                            break;
+                        }
                     }
-                }
 
-                if (!found) {
-                    NodeManager *manager = new NodeManager(item, gScene, nodeZValue);
-                    connect(manager, SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
-                    connect(manager, SIGNAL(scaleUpdated(double, double)), panel, SLOT(updateScaleFactor(double, double)));
-                    manager->show();
-                    manager->resizeNodes(realFactor);
-                    nodeManagers << manager;
+                    if (!found) {
+                        NodeManager *manager = new NodeManager(item, gScene, nodeZValue);
+                        connect(manager, SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
+                        connect(manager, SIGNAL(scaleUpdated(double, double)), panel, SLOT(updateScaleFactor(double, double)));
+                        manager->show();
+                        manager->resizeNodes(realFactor);
+                        nodeManagers << manager;
+                    }
                 }
             }
         }
@@ -798,9 +810,8 @@ void SelectionTool::updateItemPosition()
         QPoint point = item->mapToScene(item->boundingRect().center()).toPoint();
         panel->setPos(point.x(), point.y());
     } else { 
-        if (nodeManagers.count() > 1) {
-            NodeManager *manager = nodeManagers.first();
-            QGraphicsItem *item = manager->parentItem();
+        if (selectedObjects.count() > 1) {
+            QGraphicsItem *item = selectedObjects.first();
             QPoint left = item->mapToScene(item->boundingRect().topLeft()).toPoint();  
             QPoint right = item->mapToScene(item->boundingRect().bottomRight()).toPoint();
             int minX = left.x();
@@ -808,8 +819,7 @@ void SelectionTool::updateItemPosition()
             int minY = left.y();
             int maxY = right.y();
 
-            foreach (NodeManager *node, nodeManagers) {
-                QGraphicsItem *item = node->parentItem();
+            foreach (QGraphicsItem *item, selectedObjects) {
                 QPoint left = item->mapToScene(item->boundingRect().topLeft()).toPoint(); 
                 int leftX = left.x();
                 int leftY = left.y();
@@ -830,11 +840,19 @@ void SelectionTool::updateItemPosition()
             panel->setPos(x, y);
 
             if (!targetIsIncluded) {
-                center = new TupEllipseItem(QRectF(QPointF(x - 1, y - 1), QSize(2, 2)));
+                center = new TupEllipseItem(QRectF(QPointF(x - 2, y - 2), QSize(4, 4)));
                 target1 = new QGraphicsLineItem(x, y - 6, x, y + 6);
                 target2 = new QGraphicsLineItem(x - 6, y, x + 6, y);
-              
-                QPen pen(QColor(255, 0, 0), 0.5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+                topLeftX = new QGraphicsLineItem(minX, minY, minX + 10, minY);
+                topLeftY = new QGraphicsLineItem(minX, minY, minX, minY + 10);
+                topRightX = new QGraphicsLineItem(maxX, minY, maxX - 10, minY);
+                topRightY = new QGraphicsLineItem(maxX, minY, maxX, minY + 10);
+                bottomRightX = new QGraphicsLineItem(maxX, maxY, maxX - 10, maxY);
+                bottomRightY = new QGraphicsLineItem(maxX, maxY, maxX, maxY - 10);
+                bottomLeftX = new QGraphicsLineItem(minX, maxY, minX + 10, maxY);
+                bottomLeftY = new QGraphicsLineItem(minX, maxY, minX, maxY - 10);
+
+                QPen pen(QColor(255, 0, 0), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
                 center->setPen(pen);
                 center->setBrush(QColor(255, 0, 0));
                 center->setZValue(nodeZValue);
@@ -845,8 +863,34 @@ void SelectionTool::updateItemPosition()
                 target2->setPen(pen);
                 target2->setZValue(nodeZValue);
 
+                topLeftX->setPen(pen);
+                topLeftX->setZValue(nodeZValue);
+                topLeftY->setPen(pen);
+                topLeftY->setZValue(nodeZValue);
+                topRightX->setPen(pen);
+                topRightX->setZValue(nodeZValue);
+                topRightY->setPen(pen);
+                topRightY->setZValue(nodeZValue);
+                bottomLeftX->setPen(pen);
+                bottomLeftX->setZValue(nodeZValue);
+                bottomLeftY->setPen(pen);
+                bottomLeftY->setZValue(nodeZValue);
+                bottomRightX->setPen(pen);
+                bottomRightX->setZValue(nodeZValue);
+                bottomRightY->setPen(pen);
+                bottomRightY->setZValue(nodeZValue);
+
                 scene->includeObject(target1);
                 scene->includeObject(target2);
+
+                scene->includeObject(topLeftX);
+                scene->includeObject(topLeftY);
+                scene->includeObject(topRightX);
+                scene->includeObject(topRightY);
+                scene->includeObject(bottomLeftX);
+                scene->includeObject(bottomLeftY);
+                scene->includeObject(bottomRightX);
+                scene->includeObject(bottomRightY);
 
                 targetIsIncluded = true;
             } else {
@@ -856,6 +900,15 @@ void SelectionTool::updateItemPosition()
                 center->moveBy(deltaX, deltaY);
                 target1->moveBy(deltaX, deltaY);
                 target2->moveBy(deltaX, deltaY);
+
+                topLeftX->moveBy(deltaX, deltaY);
+                topLeftY->moveBy(deltaX, deltaY);
+                topRightX->moveBy(deltaX, deltaY);
+                topRightY->moveBy(deltaX, deltaY);
+                bottomLeftX->moveBy(deltaX, deltaY);
+                bottomLeftY->moveBy(deltaX, deltaY);
+                bottomRightX->moveBy(deltaX, deltaY);
+                bottomRightY->moveBy(deltaX, deltaY);
             }
         }
     }
@@ -921,6 +974,15 @@ void SelectionTool::updateItemPosition(int x, int y)
             center->moveBy(x, y);
             target1->moveBy(x, y);
             target2->moveBy(x, y);
+
+            topLeftX->moveBy(x, y);
+            topLeftY->moveBy(x, y);
+            topRightX->moveBy(x, y);
+            topRightY->moveBy(x, y);
+            bottomLeftX->moveBy(x, y);
+            bottomLeftY->moveBy(x, y);
+            bottomRightX->moveBy(x, y);
+            bottomRightY->moveBy(x, y);
         }
     }
 }

@@ -132,6 +132,15 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         TupEllipseItem *center;
         QGraphicsLineItem *target1;
         QGraphicsLineItem *target2;
+        QGraphicsLineItem *topLeftX;
+        QGraphicsLineItem *topLeftY;
+        QGraphicsLineItem *topRightX;
+        QGraphicsLineItem *topRightY;
+        QGraphicsLineItem *bottomLeftX;
+        QGraphicsLineItem *bottomLeftY;
+        QGraphicsLineItem *bottomRightX;
+        QGraphicsLineItem *bottomRightY;
+
         bool targetIsIncluded;
         QString key;
 
