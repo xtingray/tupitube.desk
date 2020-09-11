@@ -134,7 +134,10 @@ bool TupItemFactory::startTag(const QString& qname, const QXmlAttributes& atts)
                    objects.push(item);
                }
     } else if (qname == "ellipse") {
-               QRectF rect(QPointF(0, 0), QSizeF(2 * atts.value("rx").toDouble(), 2 * atts.value("ry").toDouble()));
+               QRectF rect(QPointF((atts.value("cx").toDouble() - atts.value("rx").toDouble()),
+                           atts.value("cy").toDouble() - atts.value("ry").toDouble()),
+                           QSizeF(2 * atts.value("rx").toDouble(), 2 * atts.value("ry").toDouble()));
+               // QRectF rect(QPointF(0, 0), QSizeF(2 * atts.value("rx").toDouble(), 2 * atts.value("ry").toDouble()));
                if (addToGroup) {
                    TupEllipseItem *item = qgraphicsitem_cast<TupEllipseItem *>(createItem(qname));
                    item->setRect(rect);

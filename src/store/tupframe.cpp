@@ -1156,13 +1156,11 @@ bool TupFrame::removeSvgAt(int position)
 
 QGraphicsItem *TupFrame::createItem(QPointF coords, const QString &xml, bool loaded)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "TupFrame::createItem()";
         qWarning() << "coords: " << coords;
         qWarning() << xml;
     #endif
-    */
 
     TupItemFactory itemFactory;
     // SQA: Refactor the code related to the library variable within this class

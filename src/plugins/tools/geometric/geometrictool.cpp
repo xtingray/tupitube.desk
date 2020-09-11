@@ -130,7 +130,6 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
 
     if (input->buttons() == Qt::LeftButton) {
         fillBrush = brushManager->brush();
-        // if (currentToolName() == tr("Rectangle")) {
         if (toolId() == TAction::Rectangle) {
             added = false;
             rect = new TupRectItem(QRectF(input->pos(), QSize(0,0)));
@@ -141,7 +140,6 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
                 rect->setBrush(brushManager->brush());
 
             currentPoint = input->pos();
-        // } else if (currentToolName() == tr("Ellipse")) {
         } else if (toolId() == TAction::Ellipse) {
             added = false;
             ellipse = new TupEllipseItem(QRectF(input->pos(), QSize(0,0)));
@@ -152,7 +150,6 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
                 ellipse->setBrush(brushManager->brush());
 
             currentPoint = input->pos();
-        // } else if (currentToolName() == tr("Line")) {
         } else if (toolId() == TAction::Line) {
             currentPoint = input->pos();
 
@@ -174,7 +171,7 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
                 gScene->includeObject(path);
 
                 line = new TupLineItem();
-                if (brushManager->pen().color().alpha() == 0) {
+                if (brushManager->pen().color().alpha() == 0) { // Show border guide line
                     QPen pen;
                     pen.setWidth(1);
                     pen.setBrush(QBrush(Qt::black));
@@ -198,13 +195,11 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
     #endif
     */
 
-    Q_UNUSED(brushManager);
-    Q_UNUSED(gScene);
+    Q_UNUSED(brushManager)
+    Q_UNUSED(gScene)
     
-    // if (currentToolName() == tr("Rectangle") || currentToolName() == tr("Ellipse")) {
     if (toolId() == TAction::Rectangle || toolId() == TAction::Ellipse) {
         if (!added) {
-            // if (currentToolName() == tr("Rectangle"))
             if (toolId() == TAction::Rectangle)
                 gScene->includeObject(rect);
             else
@@ -218,7 +213,6 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
         int yInit = static_cast<int> (currentPoint.y());
 
         QRectF rectVar;
-        // if (currentToolName() == tr("Rectangle"))
         if (toolId() == TAction::Rectangle)
             rectVar = rect->rect();
         else
@@ -315,7 +309,6 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
             }
         }
 
-        // if (currentToolName() == tr("Rectangle"))
         if (toolId() == TAction::Rectangle)
             rect->setRect(rectVar);
         else
@@ -329,24 +322,22 @@ void GeometricTool::release(const TupInputDeviceInformation *input, TupBrushMana
         qDebug() << "[GeometricTool::release()]";
     #endif
 
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
 
     QDomDocument doc;
     QPointF point;
 
-    // if (currentToolName() == tr("Rectangle")) {
     if (toolId() == TAction::Rectangle) {
         rect->setBrush(fillBrush);
         doc.appendChild(dynamic_cast<TupAbstractSerializable *>(rect)->toXml(doc));
         point = rect->pos();
-    // } else if (currentToolName() == tr("Ellipse")) {
     } else if (toolId() == TAction::Ellipse) {
         ellipse->setBrush(fillBrush);
         doc.appendChild(dynamic_cast<TupAbstractSerializable *>(ellipse)->toXml(doc));
-        QRectF rect = ellipse->rect();
-        point = rect.topLeft();
-    // } else if (currentToolName() == tr("Line")) {
+        // QRectF rect = ellipse->rect();
+        // point = rect.topLeft();
+        point = QPoint(0, 0);
     } else if (toolId() == TAction::Line) {
         return;
     }
@@ -371,10 +362,8 @@ QWidget *GeometricTool::configurator()
 {
     GeometricSettings::ToolType toolType = GeometricSettings::Line;
 
-    // if (currentToolName() == tr("Rectangle"))
     if (toolId() == TAction::Rectangle)
         toolType = GeometricSettings::Rectangle;
-    // else if (currentToolName() == tr("Ellipse"))
     else if (toolId() == TAction::Ellipse)
         toolType = GeometricSettings::Ellipse;
 
@@ -384,7 +373,7 @@ QWidget *GeometricTool::configurator()
 
 void GeometricTool::aboutToChangeScene(TupGraphicsScene *scene)
 {
-    Q_UNUSED(scene);
+    Q_UNUSED(scene)
 
     endItem();
 }
@@ -408,7 +397,6 @@ void GeometricTool::keyPressEvent(QKeyEvent *event)
     } else if (event->key() == Qt::Key_Shift) {
         side = true;
     } else if (event->key() == Qt::Key_X) {
-        // if (currentToolName() == tr("Line"))
         if (toolId() == TAction::Line)
             endItem();
     } else {
@@ -428,13 +416,10 @@ void GeometricTool::keyReleaseEvent(QKeyEvent *event)
 
 QCursor GeometricTool::polyCursor() // const
 {
-    // if (currentToolName() == tr("Rectangle")) {
     if (toolId() == TAction::Rectangle) {
         return squareCursor;
-    // } else if (currentToolName() == tr("Ellipse")) {
     } else if (this->toolId() == TAction::Ellipse) {
         return circleCursor;
-    // } else if (currentToolName() == tr("Line")) {
     } else if (this->toolId() == TAction::Line) {
         return lineCursor;
     }
@@ -501,24 +486,24 @@ void GeometricTool::doubleClick(const TupInputDeviceInformation *input, TupGraph
 
 void GeometricTool::sceneResponse(const TupSceneResponse *event)
 {
-    Q_UNUSED(event);
-    // if (currentToolName() == tr("Line"))
+    Q_UNUSED(event)
+
     if (toolId() == TAction::Line)
         init(scene);
 }
 
 void GeometricTool::layerResponse(const TupLayerResponse *event)
 {
-    Q_UNUSED(event);
-    // if (currentToolName() == tr("Line"))
+    Q_UNUSED(event)
+
     if (toolId() == TAction::Line)
         init(scene);
 }
 
 void GeometricTool::frameResponse(const TupFrameResponse *event)
 {
-    Q_UNUSED(event);
-    // if (currentToolName() == tr("Line"))
+    Q_UNUSED(event)
+
     if (toolId() == TAction::Line)
         init(scene);
 }

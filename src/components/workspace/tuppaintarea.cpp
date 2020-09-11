@@ -938,8 +938,8 @@ void TupPaintArea::pasteItems()
                 }
 
                 QPointF pos = QPointF(0, 0);
-                if (xml.startsWith("<ellipse"))
-                    pos = ellipsePos(xml);
+                // if (xml.startsWith("<ellipse"))
+                //     pos = ellipsePos(xml);
                 if (itemsCount == 1) { // One item selection
                     if (onMouse) {
                         double x = currentPos.x() - (copyCoords.at(i).x() + centerCoord.x());
@@ -1022,8 +1022,12 @@ void TupPaintArea::multipasteObject(int pasteTotal)
                         total = currentScene->currentFrame()->svgItemsCount();
                     }
 
+                    // TupProjectRequest event = TupRequestBuilder::createItemRequest(globalSceneIndex,
+                    //                                                                layerIndex, i, total, ellipsePos(xml), spaceMode, type,
+                    //                                                                TupProjectRequest::Add, xml);
+
                     TupProjectRequest event = TupRequestBuilder::createItemRequest(globalSceneIndex,
-                                                                 layerIndex, i, total, ellipsePos(xml), spaceMode, type,
+                                                                 layerIndex, i, total, QPoint(0, 0), spaceMode, type,
                                                                  TupProjectRequest::Add, xml);
                     emit requestTriggered(&event);
                 }
@@ -1039,13 +1043,9 @@ void TupPaintArea::multipasteObject(int pasteTotal)
      menuOn = false;
 }
 
+/*
 QPoint TupPaintArea::ellipsePos(const QString &xml)
 {
-    /*
-    if (xml.startsWith("<ellipse"))
-        return QPoint(0, 0);
-    */
-
     QDomDocument doc;
     doc.setContent(xml);
     QDomElement root = doc.documentElement();
@@ -1058,6 +1058,7 @@ QPoint TupPaintArea::ellipsePos(const QString &xml)
 
     return QPoint(x, y);
 }
+*/
 
 void TupPaintArea::pasteNextFive()
 {
