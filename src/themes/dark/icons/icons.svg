@@ -2675,9 +2675,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="4.0000001"
-     inkscape:cx="385.00009"
-     inkscape:cy="1620.0567"
+     inkscape:zoom="0.7071068"
+     inkscape:cx="404.90394"
+     inkscape:cy="1996.6505"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -10304,7 +10304,10 @@
     </g>
     <g
        id="g15687"
-       transform="translate(292.24046,-1061.2275)">
+       transform="translate(292.24046,-1061.2275)"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.app/src/images/icons/log.png"
+       inkscape:export-xdpi="344.39001"
+       inkscape:export-ydpi="344.39001">
       <rect
          inkscape:export-ydpi="1437.51"
          inkscape:export-xdpi="1437.51"
@@ -19402,6 +19405,93 @@
            inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/square_big.png"
            inkscape:export-xdpi="913.15002"
            inkscape:export-ydpi="913.15002" />
+      </g>
+    </g>
+    <rect
+       style="fill:#ffffff;fill-opacity:0;stroke:none"
+       id="rect6135-6-6-53"
+       width="53.52066"
+       height="53.52066"
+       x="342.3494"
+       y="-1017.9367"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupi.mobile/images/new.png"
+       inkscape:export-xdpi="14974.03"
+       inkscape:export-ydpi="14974.03" />
+    <g
+       id="g3697"
+       transform="translate(162.63456,424.26406)"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.app/src/images/icons/log.png"
+       inkscape:export-xdpi="215.24001"
+       inkscape:export-ydpi="215.24001">
+      <g
+         id="g3685">
+        <g
+           id="g3674"
+           inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.app/src/images/icons/log.png"
+           inkscape:export-xdpi="215.24001"
+           inkscape:export-ydpi="215.24001">
+          <rect
+             inkscape:export-ydpi="14974.03"
+             inkscape:export-xdpi="14974.03"
+             inkscape:export-filename="/home/xtingray/tupitube/sources/tupi.mobile/images/new.png"
+             y="-1026.422"
+             x="504.98395"
+             height="53.52066"
+             width="53.52066"
+             id="rect6135-6-6-20"
+             style="fill:#ffffff;fill-opacity:0;stroke:none;stroke-opacity:1" />
+          <g
+             transform="matrix(1.187272,0,0,1.187272,0.52670023,161.97825)"
+             id="g3664">
+            <g
+               id="g3593"
+               transform="matrix(1.372159,0,0,1.372159,-168.57223,382.02236)">
+              <g
+                 inkscape:export-ydpi="1437.51"
+                 inkscape:export-xdpi="1437.51"
+                 inkscape:export-filename="/home/xtingray/tupitube/sources/tupi.mobile/images/metadata.png"
+                 transform="matrix(9.3788431,0,0,9.3788431,571.20164,-1410.1883)"
+                 id="g4283-6-6">
+                <path
+                   style="fill:#000000;fill-opacity:1;stroke:none"
+                   d="m -11.747196,42.986773 -2.740692,0.02895 -0.05351,3.290764 3.008233,-0.216234 -0.20782,-2.666631 -0.292198,0.0429 0.178968,2.356187 -2.392887,0.242989 0.107017,-2.835943 2.392887,0.02456 z"
+                   id="path4758-9-1-7-0"
+                   inkscape:connector-curvature="0"
+                   sodipodi:nodetypes="ccccccccccc"
+                   inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/paste.png"
+                   inkscape:export-xdpi="426.04535"
+                   inkscape:export-ydpi="426.04535" />
+                <path
+                   style="fill:#000000;fill-opacity:1;stroke:none"
+                   d="m -13.955317,44.030358 1.63664,-0.05565 c 0,0 0.264853,0.189181 0.227017,0.179722 -0.03783,-0.0095 -1.948788,-0.01053 -1.948788,-0.01053 z"
+                   id="path4760-3-8-6-62"
+                   inkscape:connector-curvature="0"
+                   inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/paste.png"
+                   inkscape:export-xdpi="426.04535"
+                   inkscape:export-ydpi="426.04535"
+                   sodipodi:nodetypes="ccccc" />
+                <path
+                   style="fill:#000000;fill-opacity:1;stroke:none"
+                   d="m -13.916499,44.491942 1.619685,0.02992 c 0,0 0.250706,0.207563 0.213639,0.195435 -0.03706,-0.01213 -1.926323,-0.118212 -1.926323,-0.118212 z"
+                   id="path4760-7-4-8-9-6"
+                   inkscape:connector-curvature="0"
+                   inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/paste.png"
+                   inkscape:export-xdpi="426.04535"
+                   inkscape:export-ydpi="426.04535"
+                   sodipodi:nodetypes="ccccc" />
+                <path
+                   style="fill:#000000;fill-opacity:1;stroke:none"
+                   d="m -13.896619,45.11974 1.590972,0.129106 c 0,0 0.279606,-0.166604 0.241117,-0.160312 -0.03848,0.0063 -1.907533,-0.08895 -1.907533,-0.08895 z"
+                   id="path4760-7-3-8-1-2-1"
+                   inkscape:connector-curvature="0"
+                   inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/dark/icons/paste.png"
+                   inkscape:export-xdpi="426.04535"
+                   inkscape:export-ydpi="426.04535"
+                   sodipodi:nodetypes="ccccc" />
+              </g>
+            </g>
+          </g>
+        </g>
       </g>
     </g>
   </g>

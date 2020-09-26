@@ -77,13 +77,13 @@ void TupSignDialog::setForm()
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->addStretch(1);
 
-    QPushButton *cancelButton = new QPushButton(tr("Cancel"));
-    connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));
-    buttonLayout->addWidget(cancelButton);
-
     QPushButton *applyButton = new QPushButton(tr("Accept"));
     connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
     buttonLayout->addWidget(applyButton);
+
+    QPushButton *cancelButton = new QPushButton(tr("Cancel"));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));
+    buttonLayout->addWidget(cancelButton);
 
     layout->addWidget(form);
     layout->addLayout(buttonLayout);
