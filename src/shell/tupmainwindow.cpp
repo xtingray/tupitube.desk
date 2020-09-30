@@ -604,16 +604,21 @@ void TupMainWindow::resetUI()
     }
 
     m_projectManager->closeProject();
-    QString cache(CACHE_DIR + projectName);
-    QDir projectPath(cache);
-    if (projectPath.exists()) {
-        if (!projectPath.removeRecursively()) {
-            #ifdef TUP_DEBUG
-                qDebug() << "TupMainWindow::resetUI() - Fatal Error: Can't remove project cache path! -> " << cache;
-            #endif
+    if (!projectName.isEmpty()) {
+        QString cache(CACHE_DIR + projectName);
+        QDir projectPath(cache);
+        if (projectPath.exists()) {
+            if (!projectPath.removeRecursively()) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "TupMainWindow::resetUI() - Fatal Error: Can't remove project cache path! -> " << cache;
+                #endif
+            }
         }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "TupMainWindow::resetUI() - Warning: project name is empty!";
+        #endif
     }
-    // m_projectManager->removeProjectPath(CACHE_DIR + projectName);
 
     resetMousePointer();
 }
