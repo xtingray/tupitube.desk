@@ -74,7 +74,7 @@ QGridLayout * TupGeneralPreferences::createForm(const QString &groupName, Group 
     TCONFIG->beginGroup(groupName);
     QList<QCheckBox *> list;
     for (int i=0; i<total; i++) {
-         bool flag = TCONFIG->value(keys.at(i)).toBool();
+         bool flag = TCONFIG->value(keys.at(i), true).toBool();
          QCheckBox *check = new QCheckBox(labels.at(i));
          check->setChecked(flag);
          list << check;
@@ -94,10 +94,11 @@ QGridLayout * TupGeneralPreferences::createForm(const QString &groupName, Group 
 QWidget * TupGeneralPreferences::generalTab()
 {
     newLang = "";
-    startup << "OpenLastProject" << "ShowTipOfDay";
+    startup << "OpenLastProject" << "ShowTipOfDay" << "EnableStatistics";
 
     QStringList labels;
-    labels << tr("Always open last project") << tr("Show tip of the day");
+    labels << tr("Always open last project") << tr("Show tip of the day")
+           << tr("Allow TupiTube to collect use statistics (No private/personal info)");
 
     QGridLayout *startupForm = createForm("General", Startup, startup, labels);
 

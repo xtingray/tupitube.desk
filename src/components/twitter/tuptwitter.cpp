@@ -50,7 +50,6 @@ QString TupTwitter::TUPITUBE_VERSION_URL = QString("updates/current_version.xml"
 QString TupTwitter::TUPITUBE_WEB_AD = QString("updates/web_ad.");
 QString TupTwitter::TUPITUBE_VIDEOS = QString("updates/videos.xml");
 QString TupTwitter::TUPITUBE_IMAGES = QString("updates/images/");
-// QString TupTwitter::BROWSER_FINGERPRINT = QString("Tupi_Browser 2.0");
 
 TupTwitter::TupTwitter(QWidget *parent): QWidget(parent)
 {
@@ -64,8 +63,8 @@ TupTwitter::TupTwitter(QWidget *parent): QWidget(parent)
     TCONFIG->beginGroup("General");
     themeName = TCONFIG->value("Theme", "Light").toString();
     showAds = TCONFIG->value("ShowAds", true).toBool();
+    enableStatistics = TCONFIG->value("EnableStatistics", true).toBool();
 
-    // locale = QString(QLocale::system().name()).left(2);
     locale = TCONFIG->value("Language", "en").toString();
     if (locale.length() < 2) {
         locale = "en";
@@ -116,8 +115,11 @@ void TupTwitter::requestFile(const QString &target)
     #endif
 
     request.setUrl(QUrl(target));
-    // request.setRawHeader("User-Agent", BROWSER_FINGERPRINT.toLatin1());
-    request.setRawHeader("User-Agent", BROWSER_FINGERPRINT);
+    if (enableStatistics)
+        request.setRawHeader("User-Agent", BROWSER_FINGERPRINT);
+    else
+        request.setRawHeader("User-Agent", MOZILLA_FINGERPRINT);
+
     reply = manager->get(request);
 }
 
@@ -189,8 +191,10 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
                     os = "win";
                 #endif
 
-                requestFile(MAEFLORESTA_URL + USER_TIMELINE_URL + "?id=" + id + "&os=" + os + "&v=" + kAppProp->version()
-                            + "." + kAppProp->revision());
+                QString target = MAEFLORESTA_URL + USER_TIMELINE_URL;
+                if (enableStatistics)
+                    target += "?id=" + id + "&os=" + os + "&v=" + kAppProp->version() + "." + kAppProp->revision();
+                requestFile(target);
             } else {
                 if (answer.startsWith("<div")) { // Getting Twitter records 
                     if (!array.isNull()) {

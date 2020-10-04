@@ -44,7 +44,7 @@
 PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "PenSettings()";
+        qDebug() << "[PenSettings()]";
     #endif
 
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);

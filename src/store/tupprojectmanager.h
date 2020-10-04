@@ -80,13 +80,15 @@ class TUPITUBE_EXPORT TupProjectManager : public QObject
         virtual bool loadProject(const QString &fileName);
 
         bool isValid() const;
-        void setModificationStatus(bool changed);
         void setOpen(bool isOpen);
 
         void updateProjectDimension(const QSize size);
         // bool removeProjectPath(const QString &projectPath);
 
         int framesCount(int sceneIndex);
+
+    public slots:
+        void setModificationStatus(bool changed);
 
     protected slots:
         virtual void handleProjectRequest(const TupProjectRequest *request);

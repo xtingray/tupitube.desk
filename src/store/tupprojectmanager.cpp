@@ -248,6 +248,10 @@ bool TupProjectManager::projectWasModified() const
 
 void TupProjectManager::setModificationStatus(bool changed)
 {
+#ifdef TUP_DEBUG
+    qDebug() << "TupProjectManager::setModificationStatus() - changed -> " << changed;
+#endif
+
     modified = changed;
 }
 

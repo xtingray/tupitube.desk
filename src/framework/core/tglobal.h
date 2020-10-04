@@ -68,6 +68,7 @@
 #define TUPITUBE_URL "https://www.tupitube.com"
 #define MEDIA_URL "media.tupitube.com"
 #define BROWSER_FINGERPRINT "Tupi_Browser 2.0"
+#define MOZILLA_FINGERPRINT "Mozilla/5.0"
 
 #define SECRET_KEY "923B479F-12324679-30A0E076-34E82C77-5"
 

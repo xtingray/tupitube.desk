@@ -74,7 +74,6 @@ class TUPITUBE_EXPORT TupTwitter : public QWidget
         static QString TUPITUBE_WEB_AD;
         static QString TUPITUBE_VIDEOS;
         static QString TUPITUBE_IMAGES;
-        // static QString BROWSER_FINGERPRINT;
 
         QNetworkAccessManager *manager;
         QNetworkRequest request;
@@ -88,6 +87,7 @@ class TUPITUBE_EXPORT TupTwitter : public QWidget
         QString webMsg;
         bool update;
         bool showAds;
+        bool enableStatistics;
         QString themeName;
         QString locale;
 };

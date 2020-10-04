@@ -73,6 +73,7 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         //                                         const QString &description, const QList<int> indexes);
         void exportRequested();
         void postRequested();
+        void projectHasChanged(bool modified);
 
     private slots:
         void setLoop();

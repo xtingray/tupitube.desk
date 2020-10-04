@@ -201,6 +201,7 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
         TCONFIG->setValue("NotifyUpdate", false);
         TCONFIG->setValue("OpenLastProject", false);
         TCONFIG->setValue("ShowTipOfDay", true);
+        TCONFIG->setValue("EnableStatistics", true);
         TCONFIG->setValue("ConfirmRemoveFrame", true); 
         TCONFIG->setValue("ConfirmRemoveLayer", true); 
         TCONFIG->setValue("ConfirmRemoveScene", true); 
@@ -362,6 +363,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(cameraWidget, SIGNAL(projectAuthorUpdated(const QString &)), this, SLOT(updateProjectAuthor(const QString &)));
         connect(cameraWidget, SIGNAL(exportRequested()), this, SLOT(exportProject()));
         connect(cameraWidget, SIGNAL(postRequested()), this, SLOT(postProject()));
+        connect(cameraWidget, SIGNAL(projectHasChanged(bool)), m_projectManager, SLOT(setModificationStatus(bool)));
         connectWidgetToManager(cameraWidget);
 
         // Player widget must be hidden while the Player tab is not visible

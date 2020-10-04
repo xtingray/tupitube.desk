@@ -478,12 +478,21 @@ void TupCameraWidget::setDuration(int fps)
 
 void TupCameraWidget::updateFPS(int fps)
 {
+#ifdef TUP_DEBUG
+    qDebug() << "[TupCameraWidget::updateFPS()] - fps -> " << fps;
+#endif
+
+    emit projectHasChanged(true);
     setFPS(fps);
     setDuration(fps);
 }
 
 void TupCameraWidget::setStatusFPS(int fps)
 {
+#ifdef TUP_DEBUG
+    qDebug() << "[TupCameraWidget::setStatusFPS()] - fps -> " << fps;
+#endif
+
     status->blockSignals(true);
     status->setFPS(fps);
     status->blockSignals(false);
