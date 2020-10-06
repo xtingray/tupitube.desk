@@ -883,10 +883,12 @@ void TupDocumentView::selectTool()
             if (toolId == currentTool->toolId())
                 return;
 
-            if (toolId == TAction::Pencil)
+            // if (toolId == TAction::Pencil)
+            if (currentTool->toolId() == TAction::Pencil)
                 disconnect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
 
-            if (toolId == TAction::LipSyncTool)
+            // if (toolId == TAction::LipSyncTool)
+            if (currentTool->toolId() == TAction::LipSyncTool)
                 disconnect(currentTool, SIGNAL(importLipSync()), this, SLOT(importPapagayoLipSync()));
 
             currentTool->saveConfig();

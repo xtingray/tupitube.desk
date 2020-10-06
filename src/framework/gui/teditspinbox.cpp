@@ -35,20 +35,25 @@
 
 #include "teditspinbox.h"
 
-TEditSpinBox::TEditSpinBox(int value, int minValue, int maxValue, int step, QString text, QWidget *parent, const char *name) :QGroupBox(parent)
+TEditSpinBox::TEditSpinBox(int value, int minValue, int maxValue, int step, QString text,
+                           const char *name, QWidget *parent) : QGroupBox(parent)
 {
     setObjectName(name);
+
     QHBoxLayout *layout = new QHBoxLayout;
     layout->setMargin(2);
     layout->setSpacing(0);
+
     setTitle(text);
     setLayout(layout);
+
     m_spin = new QSpinBox(this);
     m_spin->setMinimum(minValue);
     m_spin->setMaximum(maxValue);
     m_spin->setSingleStep ( step );
     m_spin->setValue(value);
     layout->addWidget(m_spin);
+
     m_slider = new QSlider (Qt::Horizontal, this);
     m_slider->setMinimum(minValue);
     m_slider->setMaximum(maxValue);
@@ -65,10 +70,8 @@ TEditSpinBox::~TEditSpinBox()
 
 void TEditSpinBox::setupConnects()
 {
-    QObject::connect(m_spin, SIGNAL(valueChanged(int)),
-             m_slider, SLOT(setValue(int)));
-    QObject::connect(m_slider, SIGNAL(valueChanged(int)),
-             m_spin, SLOT(setValue(int)));
+    QObject::connect(m_spin, SIGNAL(valueChanged(int)), m_slider, SLOT(setValue(int)));
+    QObject::connect(m_slider, SIGNAL(valueChanged(int)), m_spin, SLOT(setValue(int)));
     QObject::connect(m_slider,  SIGNAL(valueChanged(int)),this, SIGNAL(valueChanged(int)));
     QObject::connect(m_spin,  SIGNAL(valueChanged(int)),this, SIGNAL(valueChanged(int)));
 }

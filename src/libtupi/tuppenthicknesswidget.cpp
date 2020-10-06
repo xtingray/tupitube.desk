@@ -104,12 +104,10 @@ void TupPenThicknessWidget::paintEvent(QPaintEvent *)
      
      if (style != Qt::TexturePattern) {  
          if (brushStyle != -1) {
-             // qDebug() << "TupPenThicknessWidget::paintEvent() - Setting pre-def brush";
              brush = QBrush(Qt::BrushStyle(brushStyle));
              brush.setColor(color);
          } else {
              if (currentBrush.gradient()) {
-                 // qDebug() << "TupPenThicknessWidget::paintEvent() - Setting gradient brush";
                  brush = currentBrush;
              } else {
                 #ifdef TUP_DEBUG

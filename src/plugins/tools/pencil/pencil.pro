@@ -20,7 +20,7 @@ HEADERS += penciltool.h \
            pensettings.h
 
 SOURCES += penciltool.cpp \
-           pensetttings.cpp
+           pensettings.cpp
 
 FRAMEWORK_DIR = "../../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

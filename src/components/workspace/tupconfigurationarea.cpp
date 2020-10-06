@@ -69,8 +69,6 @@ QSize TupConfigurationArea::sizeHint() const
 
 void TupConfigurationArea::setConfigurator(QWidget *w, int minWidth)
 {
-    // Q_CHECK_PTR(w);
-
     if (!w)
         return;
 
@@ -79,7 +77,6 @@ void TupConfigurationArea::setConfigurator(QWidget *w, int minWidth)
         return;
 
     setWidget(w);
-
     if (minWidth > 0) {
         setMinimumWidth(minWidth);
         setMaximumWidth(minWidth);

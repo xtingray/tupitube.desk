@@ -34,12 +34,11 @@
  ***************************************************************************/
 
 #include "pensettings.h"
-#include "timagebutton.h"
 #include "tconfig.h"
 #include "tseparator.h"
 
 #include <QBoxLayout>
-#include <QLabel>
+#include <QPushButton>
 
 PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
 {
@@ -51,15 +50,17 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
     layout->setAlignment(Qt::AlignHCenter);
 
-    QLabel *toolTitle = new QLabel;
-    toolTitle->setAlignment(Qt::AlignHCenter);
-    QPixmap pic(THEME_DIR + "icons/pencil.png"); 
-    toolTitle->setPixmap(pic.scaledToWidth(16, Qt::SmoothTransformation));
-    toolTitle->setToolTip(tr("Pencil Properties"));
-    layout->addWidget(toolTitle);
-    layout->addWidget(new TSeparator(Qt::Horizontal));
+    QPixmap pencilPic(THEME_DIR + "icons/pencil.png");
+    pencilButton = new QPushButton(pencilPic, "");
+    pencilButton->setCheckable(true);
+    pencilButton->setToolTip(tr("Pencil Mode"));
+    layout->addWidget(pencilButton);
 
-    smoothLabel = new QCheckBox(tr("Smoothness"));
+    connect(pencilButton, SIGNAL(clicked()), this, SLOT(enablePencilMode()));
+
+    smoothLabel = new QCheckBox;
+    smoothLabel->setIcon(QIcon(QPixmap(THEME_DIR + "icons/smoothness.png")));
+    smoothLabel->setToolTip(tr("Smoothness"));
     smoothLabel->setChecked(true);
     connect(smoothLabel, SIGNAL(toggled(bool)), this, SLOT(updateSmoothBox(bool)));
     layout->addWidget(smoothLabel);
@@ -72,12 +73,67 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     connect(smoothBox, SIGNAL(valueChanged(double)), this, SIGNAL(smoothnessUpdated(double)));
     layout->addWidget(smoothBox);
 
+    layout->addSpacing(10);
+    layout->addWidget(new TSeparator(Qt::Horizontal));
+    layout->addSpacing(10);
+
+    QPixmap eraserPic(THEME_DIR + "icons/eraser.png");
+    eraserButton = new QPushButton(eraserPic, "");
+    eraserButton->setCheckable(true);
+    eraserButton->setToolTip(tr("Eraser Mode"));
+    layout->addWidget(eraserButton);
+
+    connect(eraserButton, SIGNAL(clicked()), this, SLOT(enableEraserMode()));
+
+    TCONFIG->beginGroup("BrushParameters");
+    int eraserValue = TCONFIG->value("EraserValue", 10).toInt();
+    if (eraserValue > 40)
+        eraserValue = 10;
+
+    eraserLabel = new QLabel;
+    eraserLabel->setAlignment(Qt::AlignCenter);
+
+    eraserPreview = new TupPenThicknessWidget(this);
+    eraserPreview->setColor(Qt::white);
+    eraserPreview->setBrush(Qt::SolidPattern);
+    eraserPreview->render(eraserValue);
+
+    eraserSize = new QSlider(Qt::Horizontal, this);
+    eraserSize->setRange(10, 40);
+    connect(eraserSize, SIGNAL(valueChanged(int)), this, SLOT(updateEraserSize(int)));
+    connect(eraserSize, SIGNAL(valueChanged(int)), eraserPreview, SLOT(render(int)));
+
+    eraserSize->setValue(eraserValue);
+    updateEraserSize(eraserValue);
+
+    layout->addWidget(eraserPreview);
+    layout->addWidget(eraserSize);
+    layout->addWidget(eraserLabel);
+
     mainLayout->addLayout(layout);
     mainLayout->addStretch(2);
 }
 
 PenSettings::~PenSettings()
 {
+}
+
+void PenSettings::enablePencilMode()
+{
+    pencilButton->setChecked(true);
+    if (eraserButton->isChecked())
+        eraserButton->setChecked(false);
+
+    emit toolEnabled(PenSettings::Pencil);
+}
+
+void PenSettings::enableEraserMode()
+{
+    eraserButton->setChecked(true);
+    if (pencilButton->isChecked())
+        pencilButton->setChecked(false);
+
+    emit toolEnabled(PenSettings::Eraser);
 }
 
 void PenSettings::updateSmoothBox(bool enabled)
@@ -94,4 +150,14 @@ void PenSettings::updateSmoothness(double value)
     smoothBox->blockSignals(true);
     smoothBox->setValue(value);
     smoothBox->blockSignals(false);
+}
+
+void PenSettings::updateEraserSize(int value)
+{
+    eraserLabel->setText(QString::number(value));
+}
+
+void PenSettings::enablePencilTool()
+{
+    pencilButton->setChecked(true);
 }

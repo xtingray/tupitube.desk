@@ -95,6 +95,7 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
         void penWidthChanged(int width);
 
     private slots:
+        void updatePenTool(PenSettings::PenTool tool);
         void updateSmoothness(double value);
 
     private:
@@ -109,12 +110,13 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
         TupBrushManager *brushManager;
         TupInputDeviceInformation *input;
 
-        bool resize;
+        bool resizeMode;
         QGraphicsEllipseItem *penCircle;
         int circleZValue;
         QPointF penCirclePos;
         int penWidth;
         double smoothness;
+        PenSettings::PenTool currentTool;
 };
 
 #endif

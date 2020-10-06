@@ -48,68 +48,22 @@ class T_GUI_EXPORT TEditSpinBox : public QGroupBox
     Q_OBJECT
 
     public:
-        /**
-         * @if english
-         * Default constructor
-         * @elseif spanish
-         * Constructor por defecto
-         * @endif
-         * @param value 
-         * @param valueMin 
-         * @param valueMax 
-         * @param step 
-         * @param text 
-         * @param parent 
-         * @param name 
-         * @return 
-         */
-        TEditSpinBox(int value, int valueMin, int valueMax, int step, QString text, QWidget *parent = 0, const char *name = 0);
+        TEditSpinBox(int value, int valueMin, int valueMax, int step, QString text,
+                     const char *name = nullptr, QWidget *parent = nullptr);
         ~TEditSpinBox();
-        /**
-         * @if english
-         * Set a range
-         * @elseif spanish
-         * Pone un rango
-         * @endif
-         * @param min 
-         * @param max 
-         */
+
         void setRange(int min, int max);
-        /**
-         * @if english
-         * Returns the current value
-         * @elseif spanish
-         * Retorna el valor actual
-         * @endif
-         * @return 
-         */
         int value();
         
     private:
         QSlider *m_slider;
         QSpinBox *m_spin;
         void setupConnects();
-    
+
     public slots:
-        /**
-         * @if english
-         * Sets the actual value
-         * @elseif spanish
-         * Pone el valor actual
-         * @endif
-         * @param value 
-         */
         void setValue(int value);
         
     signals:
-        /**
-         * @if english
-         * This signal is emitted when value is changed
-         * @elseif spanish
-         * Este signal es emitido cuando el valor cambia
-         * @endif
-         * @param  
-         */
         void valueChanged(int);
 };
 
