@@ -64,7 +64,7 @@ InkSettings::InkSettings(QWidget *parent) : QWidget(parent)
     toolTitle->setAlignment(Qt::AlignHCenter);
     QPixmap pic(THEME_DIR + "icons/ink.png");
     toolTitle->setPixmap(pic.scaledToWidth(16, Qt::SmoothTransformation));
-    toolTitle->setToolTip(tr("Pencil Properties"));
+    toolTitle->setToolTip(tr("Ink Properties"));
     mainLayout->addWidget(toolTitle);
     mainLayout->addWidget(new TSeparator(Qt::Horizontal));
 

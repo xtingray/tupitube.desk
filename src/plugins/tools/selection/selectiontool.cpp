@@ -386,7 +386,7 @@ void SelectionTool::aboutToChangeTool()
 void SelectionTool::itemResponse(const TupItemResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[SelectionTool::itemResponse()]";
+        qDebug() << "[SelectionTool::itemResponse()] - action -> " << response->getAction();
     #endif
 
     if (response->getAction() == TupProjectRequest::Remove) {
@@ -415,13 +415,13 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
     updateItemRotation();
     updateItemScale();
 
-    #ifdef TUP_DEBUG
-        qDebug() << "SelectionTool::itemResponse() - response->action() -> " + QString::number(response->getAction());
-    #endif
-
     switch (response->getAction()) {
         case TupProjectRequest::Transform:
-        {
+        {        
+            #ifdef TUP_DEBUG
+                qDebug() << "[SelectionTool::itemResponse()] - TupProjectRequest::Transform";
+            #endif
+
             if (item) {
                 foreach (NodeManager* manager, nodeManagers) {
                     manager->show();
@@ -437,11 +437,18 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
         break;
         case TupProjectRequest::Move:
         {
+            #ifdef TUP_DEBUG
+                qDebug() << "[SelectionTool::itemResponse()] - TupProjectRequest::Move";
+            #endif
             syncNodes();
         }
         break;
         case TupProjectRequest::Group:
         {
+            #ifdef TUP_DEBUG
+                qDebug() << "[SelectionTool::itemResponse()] - TupProjectRequest::Group";
+            #endif
+
             nodeManagers.clear();
             selectedObjects.clear();
             /*
@@ -465,6 +472,10 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
         break;
         case TupProjectRequest::Ungroup:
         {
+            #ifdef TUP_DEBUG
+                qDebug() << "[SelectionTool::itemResponse()] - TupProjectRequest::Ungroup";
+            #endif
+
             foreach (QGraphicsItem *graphic, scene->selectedItems())
                 graphic->setSelected(false);
 
@@ -497,6 +508,10 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
         break;
         default:
         {
+            #ifdef TUP_DEBUG
+                qDebug() << "[SelectionTool::itemResponse()] - Switch Default Entry";
+            #endif
+
             syncNodes();
         }
         break;
@@ -508,8 +523,11 @@ void SelectionTool::syncNodes()
     foreach (NodeManager* node, nodeManagers) {
         if (node) {
             node->show();
-            if (node->parentItem())
+            if (node->parentItem()) {
                 node->syncNodesFromParent();
+                if (!node->parentItem()->isSelected())
+                    node->parentItem()->setSelected(true);
+            }
         }
     }
 }
@@ -673,6 +691,10 @@ void SelectionTool::applyFlip(SelectionSettings::Flip flip)
 void SelectionTool::applyOrderAction(SelectionSettings::Order action)
 {
     selectedObjects = scene->selectedItems();
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::applyOrderAction()] - Selected Objects Size -> " << selectedObjects.count();
+    #endif
 
     foreach (QGraphicsItem *item, selectedObjects) {
         TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
@@ -1075,6 +1097,10 @@ void SelectionTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
 
 void SelectionTool::clearSelection()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::clearSelection()]";
+    #endif
+
     if (activeSelection) {
         if (!nodeManagers.isEmpty()) {
             foreach (NodeManager *nodeManager, nodeManagers) {

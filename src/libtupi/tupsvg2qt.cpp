@@ -375,31 +375,45 @@ bool TupSvg2Qt::svgpath2qtpath(const QString &data, QPainterPath &path)
                        }
                        break;
                        case 'c': {
-                           QPointF c1(arg[0]+offsetX, arg[1]+offsetY);
-                           QPointF c2(arg[2]+offsetX, arg[3]+offsetY);
-                           QPointF e(arg[4]+offsetX, arg[5]+offsetY);
-                           path.cubicTo(c1, c2, e);
-                           ctrlPt = c2;
-                           x = e.x();
-                           y = e.y();
-                           arg.pop_front(); arg.pop_front();
-                           arg.pop_front(); arg.pop_front();
-                           arg.pop_front(); arg.pop_front();
+                           if (arg.count() > 5) {
+                               QPointF c1(arg[0]+offsetX, arg[1]+offsetY);
+                               QPointF c2(arg[2]+offsetX, arg[3]+offsetY);
+                               QPointF e(arg[4]+offsetX, arg[5]+offsetY);
+                               path.cubicTo(c1, c2, e);
+                               ctrlPt = c2;
+                               x = e.x();
+                               y = e.y();
+                               arg.pop_front(); arg.pop_front();
+                               arg.pop_front(); arg.pop_front();
+                               arg.pop_front(); arg.pop_front();
+                           } else {
+                               #ifdef TUP_DEBUG
+                                   qDebug() << "[TupSvg2Qt::svgpath2qtpath()] - Invalid path parameters!";
+                               #endif
+                               return false;
+                           }
                        }
                        break;
                        case 'C': 
                        {
-                           QPointF c1(arg[0], arg[1]);
-                           QPointF c2(arg[2], arg[3]);
-                           QPointF e(arg[4], arg[5]);
-                           path.cubicTo(c1, c2, e);
-                           ctrlPt = c2;
-                           x = e.x();
-                           y = e.y();
-                    
-                           arg.pop_front(); arg.pop_front();
-                           arg.pop_front(); arg.pop_front();
-                           arg.pop_front(); arg.pop_front();
+                           if (arg.count() > 5) {
+                               QPointF c1(arg[0], arg[1]);
+                               QPointF c2(arg[2], arg[3]);
+                               QPointF e(arg[4], arg[5]);
+                               path.cubicTo(c1, c2, e);
+                               ctrlPt = c2;
+                               x = e.x();
+                               y = e.y();
+
+                               arg.pop_front(); arg.pop_front();
+                               arg.pop_front(); arg.pop_front();
+                               arg.pop_front(); arg.pop_front();
+                           } else {
+                               #ifdef TUP_DEBUG
+                                   qDebug() << "[TupSvg2Qt::svgpath2qtpath()] - Invalid path parameters!";
+                               #endif
+                               return false;
+                           }
                        }
                        break;
                        case 's': {

@@ -248,10 +248,6 @@
 <context>
     <name>InkSettings</name>
     <message>
-        <source>Pencil Properties</source>
-        <translation>铅笔属性</translation>
-    </message>
-    <message>
         <source>Appearance</source>
         <translation>出现</translation>
     </message>
@@ -290,6 +286,10 @@
     <message>
         <source>Pressure Level</source>
         <translation>压力等级</translation>
+    </message>
+    <message>
+        <source>Ink Properties</source>
+        <translation>油墨性质</translation>
     </message>
 </context>
 <context>
@@ -552,12 +552,12 @@
 <context>
     <name>PenSettings</name>
     <message>
-        <source>Pencil Properties</source>
-        <translation>铅笔属性</translation>
-    </message>
-    <message>
         <source>Smoothness</source>
         <translation>平滑</translation>
+    </message>
+    <message>
+        <source>Pencil Properties</source>
+        <translation>铅笔属性</translation>
     </message>
 </context>
 <context>
@@ -2219,10 +2219,6 @@
         <translation>描图纸</translation>
     </message>
     <message>
-        <source>Export Frame To Gallery</source>
-        <translation>导出帧动画到图库</translation>
-    </message>
-    <message>
         <source>Previous Frames</source>
         <translation>前一帧</translation>
     </message>
@@ -2342,6 +2338,14 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Image imported successfully</source>
         <translation>图片已成功导入</translation>
+    </message>
+    <message>
+        <source>Post Frame On TupiTube</source>
+        <translation>在TupiTube上张贴框架</translation>
+    </message>
+    <message>
+        <source>Ctrl+@</source>
+        <translation>Ctrl+@</translation>
     </message>
 </context>
 <context>
@@ -2477,6 +2481,14 @@ Please, rename the project&apos;s file</source>
         <source>Posting...</source>
         <translation>正在发布...</translation>
     </message>
+    <message>
+        <source>Post Image</source>
+        <translation>发布图片</translation>
+    </message>
+    <message>
+        <source>Post</source>
+        <translation>发布</translation>
+    </message>
 </context>
 <context>
     <name>TupExportWizard</name>
@@ -2598,6 +2610,18 @@ Please, rename the project&apos;s file</source>
         <source>Sorry, the project &lt;b&gt;%1.tup&lt;/b&gt; couldn&apos;t be recovered.&lt;br/&gt;Please, try to backup your animation files often.</source>
         <translation>抱歉，无法恢复项目&lt;b&gt;％1.tup&lt;/b&gt;。&lt;br/&gt;请尝试经常备份动画文件。</translation>
     </message>
+    <message>
+        <source>Scene %1</source>
+        <translation> 场景%1</translation>
+    </message>
+    <message>
+        <source>Layer %1</source>
+        <translation>图层%1</translation>
+    </message>
+    <message>
+        <source>Frame %1</source>
+        <translation>帧 %1</translation>
+    </message>
 </context>
 <context>
     <name>TupFrame</name>
@@ -2705,10 +2729,6 @@ Please, rename the project&apos;s file</source>
         <translation>TupiTube凭证</translation>
     </message>
     <message>
-        <source>Username: </source>
-        <translation>用户名: </translation>
-    </message>
-    <message>
         <source>Password: </source>
         <translation>密码: </translation>
     </message>
@@ -2739,6 +2759,18 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Please contact us at info@maefloresta.com</source>
         <translation>请通过info@maefloresta.com与我们联系。</translation>
+    </message>
+    <message>
+        <source>Allow TupiTube to collect use statistics (No private/personal info)</source>
+        <translation>允许TupiTube收集使用统计信息（无私人/个人信息）</translation>
+    </message>
+    <message>
+        <source>Username / Email: </source>
+        <translation>用户名 / 电子邮件： </translation>
+    </message>
+    <message>
+        <source>Enable anonymous mode</source>
+        <translation>启用匿名模式</translation>
     </message>
 </context>
 <context>
@@ -2824,10 +2856,6 @@ Please, rename the project&apos;s file</source>
 </context>
 <context>
     <name>TupInfoDialog</name>
-    <message>
-        <source>Tags</source>
-        <translation>标签</translation>
-    </message>
     <message>
         <source>Author</source>
         <translation>作者</translation>
@@ -3640,6 +3668,10 @@ Please, rename the project&apos;s file</source>
         <source>Post canceled by user!</source>
         <translation>帖子已被用户取消！</translation>
     </message>
+    <message>
+        <source>Error while posting image. File is too big!</source>
+        <translation>发布图片时出错。 文件太大！</translation>
+    </message>
 </context>
 <context>
     <name>TupModesItem</name>
@@ -3793,10 +3825,6 @@ Please, contact the animation server admin to get access.</source>
         <translation>端口</translation>
     </message>
     <message>
-        <source>Tags</source>
-        <translation>标签</translation>
-    </message>
-    <message>
         <source>White</source>
         <translation>白色</translation>
     </message>
@@ -3855,10 +3883,6 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>my_project</source>
         <translation>我的项目</translation>
-    </message>
-    <message>
-        <source>#animation #2D</source>
-        <translation>#动画 #2D</translation>
     </message>
     <message>
         <source>520x380 - 24</source>
@@ -3970,10 +3994,6 @@ Please, contact the animation server admin to get access.</source>
         <translation>复制</translation>
     </message>
     <message>
-        <source>Line</source>
-        <translation>直线</translation>
-    </message>
-    <message>
         <source>Send</source>
         <translation>发送</translation>
     </message>
@@ -4014,14 +4034,6 @@ Please, contact the animation server admin to get access.</source>
         <translation>删除</translation>
     </message>
     <message>
-        <source>Pencil</source>
-        <translation>铅笔</translation>
-    </message>
-    <message>
-        <source>PolyLine</source>
-        <translation>多段线</translation>
-    </message>
-    <message>
         <source>Do you want to remove this frame?</source>
         <translation>你想删除这个帧吗?</translation>
     </message>
@@ -4030,16 +4042,8 @@ Please, contact the animation server admin to get access.</source>
         <translation>粘贴在...</translation>
     </message>
     <message>
-        <source>Nodes Selection</source>
-        <translation>节点选择</translation>
-    </message>
-    <message>
         <source>One level to front</source>
         <translation>前进一级</translation>
-    </message>
-    <message>
-        <source>Object Selection</source>
-        <translation>选择物体</translation>
     </message>
     <message>
         <source>One level to back</source>
@@ -4068,10 +4072,6 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Confirmation</source>
         <translation>确认</translation>
-    </message>
-    <message>
-        <source>Ink</source>
-        <translation>墨水</translation>
     </message>
 </context>
 <context>
@@ -4165,6 +4165,10 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Fill Color</source>
         <translation>填充颜色</translation>
+    </message>
+    <message>
+        <source>Clear Frame</source>
+        <translation>清晰的框架</translation>
     </message>
 </context>
 <context>
@@ -4305,13 +4309,6 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Please restart TupiTube</source>
         <translation>请重新启动TupiTube</translation>
-    </message>
-</context>
-<context>
-    <name>TupProject</name>
-    <message>
-        <source>#animation #2D</source>
-        <translation>#动画 #2D</translation>
     </message>
 </context>
 <context>
@@ -4951,6 +4948,30 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Network Fatal Error. Please, contact us!</source>
         <translation>网络致命错误。 请联系我们！</translation>
+    </message>
+    <message>
+        <source>My Image</source>
+        <translation>我的形象</translation>
+    </message>
+    <message>
+        <source>#tupitube #image #fun</source>
+        <translation>＃有趣 ＃图像 ＃图像</translation>
+    </message>
+    <message>
+        <source>Set a title for the post here!</source>
+        <translation>在此处为帖子设置标题！</translation>
+    </message>
+    <message>
+        <source>Title is missing!</source>
+        <translation>标题不见了！</translation>
+    </message>
+    <message>
+        <source>Set some topic tags for the post here!</source>
+        <translation>在此处设置帖子的一些主题标签！</translation>
+    </message>
+    <message>
+        <source>Tags are missing!</source>
+        <translation>标签丢失！</translation>
     </message>
 </context>
 <context>

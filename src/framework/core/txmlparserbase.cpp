@@ -73,7 +73,7 @@ bool TXmlParserBase::startElement(const QString& , const QString& , const QStrin
     
     if (docRoot.isEmpty())
         docRoot = qname;
-    
+
     bool r = startTag(qname, atts);   
     tag = qname;
     

@@ -56,7 +56,6 @@ TupProject::TupProject(QObject *parent) : QObject(parent)
     bgColor = QColor("#fff");
     dimension = QSize(1920, 1080);
     fps = 24;
-    // projectTags = tr("#animation #2D");
     sceneCounter = 0;
     isOpen = false;
     library = new TupLibrary("library", this);
@@ -389,62 +388,53 @@ void TupProject::fromXml(const QString &xml)
 
     int i = 0;
     while (!n.isNull()) {
-           QDomElement e = n.toElement();
+       QDomElement e = n.toElement();
 
-           if (!e.isNull()) {
-               if (e.tagName() == "project") {
-                   setProjectName(e.attribute("name", getName()));
+       if (!e.isNull()) {
+           if (e.tagName() == "project") {
+               setProjectName(e.attribute("name", getName()));
+               QDomNode n1 = e.firstChild();
+               e = n1.toElement();
+
+               if (e.tagName() == "meta") {
                    QDomNode n1 = e.firstChild();
-                   e = n1.toElement();
 
-                   if (e.tagName() == "meta") {
-                       QDomNode n1 = e.firstChild();
-
-                       while (!n1.isNull()) {
-                              QDomElement e1 = n1.toElement();
-
-                              if (e1.tagName() == "author") {
-                                  if (e1.firstChild().isText()) 
-                                      setAuthor(e1.text());
-                              /*
-                              } else if (e1.tagName() == "tags") {
-                                         if (e1.text().isEmpty())
-                                             setTags(tr("#animation #2D"));
-                                         else
-                                             setTags(e1.text());
-                              */
-                              } else if (e1.tagName() == "bgcolor") {
-                                         if (e1.text().isEmpty())
-                                             setBgColor(QColor("#ffffff"));
-                                         else
-                                             setBgColor(QColor(e1.text()));
-
-                              } else if (e1.tagName() == "description") {
-                                         if (e1.firstChild().isText())
-                                             setDescription(e1.text());
-
-                                } else if (e1.tagName() == "dimension") {
-                                           if (e1.firstChild().isText()) {
-                                               QStringList list = e1.text().split(",");
-                                               int x = list.at(0).toInt();
-                                               int y = list.at(1).toInt();
-                                               QSize size(x,y);
-                                               setDimension(size);
-                                           }
-
-                                } else if (e1.tagName() == "fps") {
-                                           if (e1.firstChild().isText())
-                                               fps = e1.text().toInt();
-                                               // setFPS(e1.text().toInt());
-                                }
-
-                                n1 = n1.nextSibling();
-                          }
-                   }
-               }
-           } 
-           n = n.nextSibling();
-           i++;
+                   while (!n1.isNull()) {
+                        QDomElement e1 = n1.toElement();
+                        if (e1.tagName() == "author") {
+                            if (e1.firstChild().isText())
+                                setAuthor(e1.text());
+                        } else if (e1.tagName() == "bgcolor") {
+                            if (e1.text().isEmpty())
+                                setBgColor(QColor("#ffffff"));
+                            else
+                                setBgColor(QColor(e1.text()));
+                        } else if (e1.tagName() == "description") {
+                            if (e1.firstChild().isText())
+                                setDescription(e1.text());
+                        } else if (e1.tagName() == "dimension") {
+                            if (e1.firstChild().isText()) {
+                                QStringList list = e1.text().split(",");
+                                int x = list.at(0).toInt();
+                                int y = list.at(1).toInt();
+                                if (x % 2)
+                                    x++;
+                                if (y % 2)
+                                    y++;
+                                QSize size(x, y);
+                                setDimension(size);
+                            }
+                        } else if (e1.tagName() == "fps") {
+                            if (e1.firstChild().isText())
+                                fps = e1.text().toInt();
+                        }
+                        n1 = n1.nextSibling();
+                    }
+                }
+            }
+        }
+        n = n.nextSibling();
+        i++;
     }
 }
 
@@ -461,11 +451,6 @@ QDomElement TupProject::toXml(QDomDocument &doc) const
     QDomElement author = doc.createElement("author");
     author.appendChild(doc.createTextNode(projectAuthor));
 
-    /*
-    QDomElement tags = doc.createElement("tags");
-    tags.appendChild(doc.createTextNode(projectTags));
-    */
-
     QDomElement description = doc.createElement("description");
     description.appendChild(doc.createTextNode(projectDesc));
 
@@ -473,7 +458,13 @@ QDomElement TupProject::toXml(QDomDocument &doc) const
     color.appendChild(doc.createTextNode(bgColor.name()));
 
     QDomElement size = doc.createElement("dimension");
-    QString xy = QString::number(dimension.width()) + "," + QString::number(dimension.height());
+    int w = dimension.width();
+    if (w % 2)
+        w++;
+    int h = dimension.height();
+    if (h % 2)
+        h++;
+    QString xy = QString::number(w) + "," + QString::number(h);
     size.appendChild(doc.createTextNode(xy));
 
     QDomElement fpsElement = doc.createElement("fps");

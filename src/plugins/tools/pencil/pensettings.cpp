@@ -50,13 +50,22 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
     layout->setAlignment(Qt::AlignHCenter);
 
+    QLabel *pencilTitle = new QLabel;
+    pencilTitle->setAlignment(Qt::AlignHCenter);
     QPixmap pencilPic(THEME_DIR + "icons/pencil.png");
+    pencilTitle->setPixmap(pencilPic.scaledToWidth(16, Qt::SmoothTransformation));
+    pencilTitle->setToolTip(tr("Pencil Properties"));
+
+    /*
     pencilButton = new QPushButton(pencilPic, "");
     pencilButton->setCheckable(true);
     pencilButton->setToolTip(tr("Pencil Mode"));
     layout->addWidget(pencilButton);
+    */
+    // connect(pencilButton, SIGNAL(clicked()), this, SLOT(enablePencilMode()));
 
-    connect(pencilButton, SIGNAL(clicked()), this, SLOT(enablePencilMode()));
+    layout->addWidget(pencilTitle);
+    layout->addWidget(new TSeparator(Qt::Horizontal));
 
     smoothLabel = new QCheckBox;
     smoothLabel->setIcon(QIcon(QPixmap(THEME_DIR + "icons/smoothness.png")));
@@ -73,6 +82,7 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     connect(smoothBox, SIGNAL(valueChanged(double)), this, SIGNAL(smoothnessUpdated(double)));
     layout->addWidget(smoothBox);
 
+    /*
     layout->addSpacing(10);
     layout->addWidget(new TSeparator(Qt::Horizontal));
     layout->addSpacing(10);
@@ -109,6 +119,7 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     layout->addWidget(eraserPreview);
     layout->addWidget(eraserSize);
     layout->addWidget(eraserLabel);
+    */
 
     mainLayout->addLayout(layout);
     mainLayout->addStretch(2);
@@ -118,6 +129,7 @@ PenSettings::~PenSettings()
 {
 }
 
+/*
 void PenSettings::enablePencilMode()
 {
     pencilButton->setChecked(true);
@@ -135,6 +147,7 @@ void PenSettings::enableEraserMode()
 
     emit toolEnabled(PenSettings::Eraser);
 }
+*/
 
 void PenSettings::updateSmoothBox(bool enabled)
 {
@@ -152,8 +165,10 @@ void PenSettings::updateSmoothness(double value)
     smoothBox->blockSignals(false);
 }
 
+/*
 void PenSettings::updateEraserSize(int value)
 {
+    emit eraserSizeChanged(value);
     eraserLabel->setText(QString::number(value));
 }
 
@@ -161,3 +176,4 @@ void PenSettings::enablePencilTool()
 {
     pencilButton->setChecked(true);
 }
+*/

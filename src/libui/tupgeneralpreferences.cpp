@@ -241,7 +241,7 @@ QWidget * TupGeneralPreferences::socialTab()
     font.setPointSize(font.pointSize() + 3);
     socialLabel->setFont(font);
 
-    QLabel *usernameLabel = new QLabel(tr("Username: "));
+    QLabel *usernameLabel = new QLabel(tr("Username / Email: "));
     usernameEdit = new QLineEdit();
 
     QLabel *passwdLabel = new QLabel(tr("Password: "));

@@ -174,6 +174,15 @@ QString TupVideoProperties::title() const
 QString TupVideoProperties::topics() const
 {
      QString topics = QString::fromUtf8(topicsEdit->text().toUtf8());
+     QStringList tags = topics.split(" ");
+     topics = "";
+     foreach(QString item, tags) {
+         if (!item.startsWith("#"))
+             item = "#" + item;
+         topics += item + " ";
+     }
+     topics = topics.simplified();
+
      return topics;
 }
 
@@ -207,16 +216,22 @@ void TupVideoProperties::postIt()
     if (username.compare("tupitube") == 0)
         flag = "tupitube";
 
-    if (title.length() == 0) {
-        titleEdit->setText(tr("Set a title for the picture here!"));
+    QString titleMessage = tr("Set a title for the post here!");
+    if (title.length() == 0 || (title.compare(titleMessage) == 0)) {
+        titleEdit->setText(titleMessage);
         titleEdit->selectAll();
+        TOsd::self()->display(TOsd::Error, tr("Title is missing!"));
         return;
     }
 
-    if (tags.length() == 0) {
-        topicsEdit->setText(tr("Set some topic tags for the picture here!"));
+    QString tagsMessage = tr("Set some topic tags for the post here!");
+    if (tags.length() == 0 || (tags.compare(tagsMessage) == 0)) {
+        topicsEdit->setText(tagsMessage);
         topicsEdit->selectAll();
+        TOsd::self()->display(TOsd::Error, tr("Tags are missing!"));
         return;
+    } else {
+        tags = topics();
     }
 
     if (desc.length() > 0) {
@@ -230,13 +245,14 @@ void TupVideoProperties::postIt()
 
         if (desc.compare(defaultDesc) == 0)
             desc = formatPromoComment();
-
-        #ifdef TUP_DEBUG
-            qDebug() << "TupVideoProperties::postIt() -> Comment:" << desc;
-        #endif
     } else {
         desc = formatPromoComment();
     }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "TupVideoProperties::postIt() - Tags -> " << tags;
+        qDebug() << "TupVideoProperties::postIt() - Comment -> " << desc;
+    #endif
 
     stackedWidget->setCurrentIndex(1);
     emit postHasStarted();

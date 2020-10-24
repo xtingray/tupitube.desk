@@ -67,15 +67,6 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent)
     authorName->setText(tr("Your name"));
     layout->addWidget(authorName, 1, 1);
 
-    /*
-    QLabel *tagsLabel = new QLabel(tr("Tags"), infoContainer);
-    layout->addWidget(tagsLabel, 2, 0);
-
-    tags = new QLineEdit(infoContainer);
-    tags->setText(tr("#animation #2D"));
-    layout->addWidget(tags, 2, 1);
-    */
-
     QLabel *descLabel = new QLabel(tr("Description"), infoContainer);
     layout->addWidget(descLabel, 3, 0);
 
@@ -115,12 +106,11 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent)
 
     color = QColor(colorName);
 
-    // QString textColor = "black";
     colorButton = new QPushButton();
     colorButton->setText(tr("Background"));
     colorButton->setToolTip(tr("Click here to change background color"));
     colorButton->setStyleSheet("QPushButton { background-color: " + color.name()
-                                  + "; color: " + labelColor() + "; }");
+                                + "; color: " + labelColor() + "; }");
     connect(colorButton, SIGNAL(clicked()), this, SLOT(setBgColor()));
 
     QBoxLayout *fpsLayout = new QBoxLayout(QBoxLayout::LeftToRight);
@@ -248,13 +238,20 @@ void TupNewProject::setupNetOptions()
 
 TupProjectManagerParams *TupNewProject::parameters()
 {
+    int w = size->x();
+    if (w % 2)
+        w++;
+    int h = size->y();
+    if (h % 2)
+        h++;
+
     if (enableUseNetwork) {
         TupNetProjectManagerParams *params = new TupNetProjectManagerParams;
         params->setProjectName(projectName->text());
         params->setAuthor(authorName->text());
         params->setDescription(description->text());
         params->setBgColor(color);
-        const QSize projectSize(size->x(), size->y());
+        const QSize projectSize(w, h);
         params->setDimension(projectSize);
         params->setFPS(fps->value());
 
@@ -272,7 +269,7 @@ TupProjectManagerParams *TupNewProject::parameters()
     params->setAuthor(authorName->text());
     params->setDescription(description->text());
     params->setBgColor(color);
-    const QSize projectSize(size->x(), size->y());
+    const QSize projectSize(w, h);
     params->setDimension(projectSize);
     params->setFPS(fps->value());
 

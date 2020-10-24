@@ -47,7 +47,7 @@ TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent) : TupPaintAreaBase
                                                                                  work->getLibrary())
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupPaintArea()";
+        qDebug() << "[TupPaintArea()]";
     #endif
 
     setAccessibleName("WORKSPACE");
@@ -57,7 +57,7 @@ TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent) : TupPaintAreaBase
     deleteMode = false;
     menuOn = false;
     copyIsValid = false;
-    currentTool = tr("Pencil");
+    currentTool = TAction::Pencil;
 
     setBgColor(work->getBgColor());
 
@@ -68,7 +68,7 @@ TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent) : TupPaintAreaBase
 TupPaintArea::~TupPaintArea()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "~TupPaintArea()";
+        qDebug() << "[~TupPaintArea()]";
     #endif
 
     graphicsScene()->clear();
@@ -130,7 +130,7 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
         return;
     }
 
-    if (currentTool.compare(tr("Nodes Selection")) == 0) {
+    if (currentTool == TAction::NodesEditor) {
         // If a node is the target... abort!
         if (event->buttons() == Qt::RightButton) {
             if (qgraphicsitem_cast<TControlNode *>(scene()->itemAt(mapToScene(event->pos()), QTransform())))
@@ -139,17 +139,17 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
     }
 
     if (event->buttons() == Qt::RightButton) {
-        if (currentTool.compare(tr("PolyLine")) == 0) {
+        if (currentTool == TAction::Polyline) {
             emit closePolyLine();
             return;
         }
-        if (currentTool.compare(tr("Line")) == 0) {
+        if (currentTool == TAction::Line) {
             emit closeLine();
             return;
         }
     }
 
-    if (currentTool.compare(tr("Object Selection")) == 0) {
+    if (currentTool == TAction::ObjectSelection) {
         if (event->buttons() == Qt::RightButton) {
             /*
             // If a node is the target... abort!
@@ -254,7 +254,7 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
 
 void TupPaintArea::tabletEvent(QTabletEvent *event)
 {
-    if (currentTool.compare(tr("Ink")) == 0) {
+    if (currentTool == TAction::Ink) {
         if (event->pressure() > 0)
             graphicsScene()->currentTool()->updatePressure(event->pressure());
     }
@@ -589,7 +589,7 @@ void TupPaintArea::itemResponse(TupItemResponse *response)
                   viewport()->update(guiScene->sceneRect().toRect());
 
                   if (guiScene->currentTool()->toolType() != TupToolInterface::Tweener
-                      && currentTool.compare(tr("PolyLine")) != 0)
+                      && currentTool != TAction::Polyline)
                       guiScene->resetCurrentTool();
               }
             break;
@@ -635,7 +635,7 @@ void TupPaintArea::libraryResponse(TupLibraryResponse *request)
 
                   viewport()->update(guiScene->sceneRect().toRect());
 
-                  if (currentTool.compare(tr("Object Selection")) == 0)
+                  if (currentTool == TAction::ObjectSelection)
                       emit itemAddedOnSelection(guiScene);
               }
             break;
@@ -681,8 +681,12 @@ void TupPaintArea::deleteItems()
         qDebug() << "[TupPaintArea::deleteItems()]";
     #endif
 
-    if (currentTool.compare(tr("Object Selection")) != 0 && currentTool.compare(tr("Nodes Selection")) != 0)
+    if (currentTool != TAction::ObjectSelection && currentTool != TAction::NodesEditor) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPaintArea::deleteItems()] - Aborting procedure!";
+        #endif
         return;
+    }
 
     QList<QGraphicsItem *> selected = scene()->selectedItems();
 
@@ -969,7 +973,7 @@ void TupPaintArea::pasteItems()
                 emit requestTriggered(&event);
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupPaintArea::pasteItems() - Fatal Error: Frame is NULL!";
+                    qDebug() << "[TupPaintArea::pasteItems()] - Fatal Error: Frame is NULL!";
                 #endif
             }
         }
@@ -1237,7 +1241,7 @@ void TupPaintArea::paintForeground()
     currentScene->drawVectorFg();
 }
 
-void TupPaintArea::setCurrentTool(QString tool) 
+void TupPaintArea::setCurrentTool(TAction::ActionId tool)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupPaintArea::setCurrentTool()]";
@@ -1268,7 +1272,7 @@ void TupPaintArea::setOnionFactor(double value)
 void TupPaintArea::keyPressEvent(QKeyEvent *event)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupPaintArea::keyPressEvent() - Current tool: " + currentTool;
+        qDebug() << "TupPaintArea::keyPressEvent() - Current tool: " << currentTool;
         qDebug() << "TupPaintArea::keyPressEvent() - Key: " + QString::number(event->key());
         qDebug() << "TupPaintArea::keyPressEvent() - Key: " + event->text();
     #endif
@@ -1325,7 +1329,7 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
         }
     }
 
-    if (currentTool.compare(tr("PolyLine")) == 0) {
+    if (currentTool == TAction::Polyline) {
         if (event->key() == Qt::Key_X)
             emit closePolyLine();
         return;

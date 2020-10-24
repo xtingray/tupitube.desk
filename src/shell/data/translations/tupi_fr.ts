@@ -321,8 +321,8 @@
     <name>InkSettings</name>
     <message>
         <location filename="../../../plugins/tools/ink/inksettings.cpp" line="67"/>
-        <source>Pencil Properties</source>
-        <translation>Propriétés du crayon</translation>
+        <source>Ink Properties</source>
+        <translation>Propriétés de L&apos;encre</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/ink/inksettings.cpp" line="72"/>
@@ -485,29 +485,29 @@
 <context>
     <name>NodesTool</name>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="356"/>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="358"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="352"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="354"/>
         <source>Nodes Selection</source>
         <translation>Sélection des noeuds</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="105"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="101"/>
         <source>SVG objects cannot be edited!</source>
         <translation>Les objets SVG ne peuvent être édités!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="111"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="107"/>
         <source>Images have no nodes!</source>
         <translation>Les images n&apos;ont pas de noeuds!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="135"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="131"/>
         <source>Only pencil/ink lines can be edited!</source>
         <translation>Seules les lignes au crayon ou à l&apos;encre peuvent être éditées!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="357"/>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="358"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="353"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="354"/>
         <source>N</source>
         <translation>N</translation>
     </message>
@@ -685,22 +685,22 @@
 <context>
     <name>PapagayoTool</name>
     <message>
-        <location filename="../../../plugins/tools/papagayo/papagayotool.cpp" line="180"/>
+        <location filename="../../../plugins/tools/papagayo/papagayotool.cpp" line="176"/>
         <source>Papagayo Lip-sync</source>
         <translation>Synchronisation labiale Papagayo</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/papagayo/papagayotool.cpp" line="181"/>
+        <location filename="../../../plugins/tools/papagayo/papagayotool.cpp" line="177"/>
         <source>Ctrl+Shift+P</source>
         <translation>Ctrl+Shift+P</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/papagayo/papagayotool.cpp" line="231"/>
+        <location filename="../../../plugins/tools/papagayo/papagayotool.cpp" line="227"/>
         <source>lipsync:</source>
         <translation>Synchronisation labiale:</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/papagayo/papagayotool.cpp" line="372"/>
+        <location filename="../../../plugins/tools/papagayo/papagayotool.cpp" line="368"/>
         <source>Frame</source>
         <translation>Image</translation>
     </message>
@@ -708,12 +708,12 @@
 <context>
     <name>PenSettings</name>
     <message>
-        <location filename="../../../plugins/tools/pencil/pensetttings.cpp" line="58"/>
+        <location filename="../../../plugins/tools/pencil/pensettings.cpp" line="57"/>
         <source>Pencil Properties</source>
-        <translation>Propriétés du crayon</translation>
+        <translation>Propriétés du Crayon</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/pencil/pensetttings.cpp" line="62"/>
+        <location filename="../../../plugins/tools/pencil/pensettings.cpp" line="72"/>
         <source>Smoothness</source>
         <translation>Régularité</translation>
     </message>
@@ -721,14 +721,14 @@
 <context>
     <name>PencilTool</name>
     <message>
-        <location filename="../../../plugins/tools/pencil/penciltool.cpp" line="57"/>
-        <location filename="../../../plugins/tools/pencil/penciltool.cpp" line="59"/>
+        <location filename="../../../plugins/tools/pencil/penciltool.cpp" line="58"/>
+        <location filename="../../../plugins/tools/pencil/penciltool.cpp" line="60"/>
         <source>Pencil</source>
         <translation>Crayon</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/pencil/penciltool.cpp" line="58"/>
         <location filename="../../../plugins/tools/pencil/penciltool.cpp" line="59"/>
+        <location filename="../../../plugins/tools/pencil/penciltool.cpp" line="60"/>
         <source>P</source>
         <translation>P</translation>
     </message>
@@ -905,110 +905,110 @@
 <context>
     <name>RasterMainWindow</name>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="62"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="58"/>
         <source>Shift+C</source>
         <translation>Shift+C</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="68"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="64"/>
         <source>Shift+B</source>
         <translation>Shift+B</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="92"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="88"/>
         <source>&amp;Export as Image</source>
         <translation>&amp;Exporter en Image</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="94"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="90"/>
         <source>Export as Image</source>
         <translation>Exporter en Image</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="97"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="93"/>
         <source>&amp;Import Image to Library</source>
         <translation>&amp;Importer une Image dans la Bibliothèque</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="98"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="94"/>
         <source>I</source>
         <translation>I</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="99"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="95"/>
         <source>Import Image to Library</source>
         <translation>Importer une Image dans la Bibliothèque</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="102"/>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="104"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="98"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="100"/>
         <source>Exit Raster Mode</source>
         <translation>Quitter le Mode Raster</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="107"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="103"/>
         <source>&amp;File</source>
         <translation>&amp;Fichier</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="122"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="118"/>
         <source>Raster actions</source>
         <translation>Actions raster</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="125"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="121"/>
         <source>Clear Canvas</source>
         <translation>Effacer la Toile</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="154"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="150"/>
         <source>Raster Static Background</source>
         <translation>Fond Statique Raster</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="159"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="155"/>
         <source>Raster Dynamic Background</source>
         <translation>Fond Dynamique Raster</translation>
     </message>
     <message>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="161"/>
         <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="165"/>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="169"/>
         <source>Movement Orientation</source>
         <translation>Orientation du mouvement</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="170"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="166"/>
         <source>Right</source>
         <translation>Droite</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="171"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="167"/>
         <source>Left</source>
         <translation>Gauche</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="172"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="168"/>
         <source>Up</source>
         <translation>Haut</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="173"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="169"/>
         <source>Down</source>
         <translation>Bas</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="192"/>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="199"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="188"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="195"/>
         <source>Shift Length</source>
         <translation>Longueur du décalage</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="333"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="329"/>
         <source>Open Image</source>
         <translation>Ouvrir l&apos;Image</translation>
     </message>
     <message>
-        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="348"/>
+        <location filename="../../../mypaint/raster/main/rastermainwindow.cpp" line="344"/>
         <source>Export Image</source>
         <translation>Exporter l&apos;Image</translation>
     </message>
@@ -1475,19 +1475,19 @@
 <context>
     <name>SelectionTool</name>
     <message>
-        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="319"/>
-        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="321"/>
+        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="331"/>
+        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="333"/>
         <source>Object Selection</source>
         <translation>Sélection d&apos;objet</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="320"/>
-        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="321"/>
+        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="332"/>
+        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="333"/>
         <source>O</source>
         <translation>O</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="689"/>
+        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="723"/>
         <source>SVG objects can&apos;t be grouped/ungrouped yet</source>
         <translation>Les objets SVG ne peuvent êtres groupés/dégroupés pour le moment</translation>
     </message>
@@ -1624,12 +1624,12 @@
 <context>
     <name>StepsViewer</name>
     <message>
-        <location filename="../../../plugins/tools/common/stepsviewer.cpp" line="57"/>
+        <location filename="../../../plugins/tools/common/stepsviewer.cpp" line="54"/>
         <source>Interval</source>
         <translation>Intervalle</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/common/stepsviewer.cpp" line="57"/>
+        <location filename="../../../plugins/tools/common/stepsviewer.cpp" line="54"/>
         <source>Frames</source>
         <translation>Images</translation>
     </message>
@@ -2500,42 +2500,42 @@
 <context>
     <name>TupColorButtonPanel</name>
     <message>
-        <location filename="../../../libcolor/tupcolorbuttonpanel.cpp" line="63"/>
+        <location filename="../../../libcolor/tupcolorbuttonpanel.cpp" line="59"/>
         <source>Transparent</source>
         <translation>Transparent</translation>
     </message>
     <message>
-        <location filename="../../../libcolor/tupcolorbuttonpanel.cpp" line="72"/>
+        <location filename="../../../libcolor/tupcolorbuttonpanel.cpp" line="68"/>
         <source>Black</source>
         <translation>Noir</translation>
     </message>
     <message>
-        <location filename="../../../libcolor/tupcolorbuttonpanel.cpp" line="81"/>
+        <location filename="../../../libcolor/tupcolorbuttonpanel.cpp" line="77"/>
         <source>White</source>
         <translation>Blanc</translation>
     </message>
     <message>
-        <location filename="../../../libcolor/tupcolorbuttonpanel.cpp" line="90"/>
+        <location filename="../../../libcolor/tupcolorbuttonpanel.cpp" line="86"/>
         <source>Red</source>
         <translation>Rouge</translation>
     </message>
     <message>
-        <location filename="../../../libcolor/tupcolorbuttonpanel.cpp" line="99"/>
+        <location filename="../../../libcolor/tupcolorbuttonpanel.cpp" line="95"/>
         <source>Green</source>
         <translation>Vert</translation>
     </message>
     <message>
-        <location filename="../../../libcolor/tupcolorbuttonpanel.cpp" line="108"/>
+        <location filename="../../../libcolor/tupcolorbuttonpanel.cpp" line="104"/>
         <source>Blue</source>
         <translation>Bleu</translation>
     </message>
     <message>
-        <location filename="../../../libcolor/tupcolorbuttonpanel.cpp" line="113"/>
+        <location filename="../../../libcolor/tupcolorbuttonpanel.cpp" line="109"/>
         <source>Customize Colors Bar</source>
         <translation>Personnaliser la barre de couleurs</translation>
     </message>
     <message>
-        <location filename="../../../libcolor/tupcolorbuttonpanel.cpp" line="117"/>
+        <location filename="../../../libcolor/tupcolorbuttonpanel.cpp" line="113"/>
         <source>Reset Colors Bar</source>
         <translation>Réinitialiser la barre de couleurs</translation>
     </message>
@@ -2605,12 +2605,12 @@
 <context>
     <name>TupConfigurationArea</name>
     <message>
-        <location filename="../../../components/workspace/tupconfigurationarea.cpp" line="271"/>
+        <location filename="../../../components/workspace/tupconfigurationarea.cpp" line="268"/>
         <source>Cursor here for expand</source>
         <translation>Mettre le curseur ici pour expansion</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupconfigurationarea.cpp" line="304"/>
+        <location filename="../../../components/workspace/tupconfigurationarea.cpp" line="301"/>
         <source>Properties</source>
         <translation>Propriétés</translation>
     </message>
@@ -2675,293 +2675,295 @@
 <context>
     <name>TupDocumentView</name>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="327"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="343"/>
         <source>Copy</source>
         <translation>Copier</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="330"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="346"/>
         <source>Paste</source>
         <translation>Coller</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="333"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="349"/>
         <source>Cut</source>
         <translation>Couper</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="339"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="355"/>
         <source>Delete</source>
         <translation>Effacer</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="355"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="371"/>
         <source>Onion Skin</source>
         <translation>Pelure d&apos;oignon</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="358"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1191"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="374"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1214"/>
         <source>Onion Skin Factor</source>
         <translation>Paramètres de pelure d&apos;oignon</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="358"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="377"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="374"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="397"/>
         <source>Ctrl+Shift+S</source>
         <translation>Ctrl+Shift+S</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="361"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="377"/>
         <source>Export Frame As Image</source>
         <translation>Exporter image par image</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="361"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="373"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="377"/>
         <source>@</source>
         <translation>@</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="373"/>
-        <source>Export Frame To Gallery</source>
-        <translation>Exporter l&apos;image vers la galerie</translation>
-    </message>
-    <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="377"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="397"/>
         <source>Storyboard Settings</source>
         <translation>Propriétés du storyboard</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="382"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="386"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="412"/>
         <source>Camera</source>
         <translation>Caméra</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="382"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="386"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="412"/>
         <source>Ctrl+Shift+C</source>
         <translation>Ctrl+Shift+C</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="390"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="415"/>
         <source>Papagayo Lip-sync Files</source>
         <translation>Fichiers de synchronisation labiale Papagayo</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="390"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="415"/>
         <source>Ctrl+Shift+P</source>
         <translation>Ctrl+Shift+P</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="396"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="421"/>
         <source>Draw tools</source>
         <translation>Outils de dessin</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="403"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="428"/>
         <source>Brushes</source>
         <translation>Brosses</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="408"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="433"/>
         <source>Tweening</source>
         <translation>Interpolation</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="413"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="438"/>
         <source>Misc Tools</source>
         <translation>Autres outils</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="443"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="468"/>
         <source>Image Sequence</source>
         <translation>Séquence d&apos;image</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1125"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1148"/>
         <source>Vector Static BG Properties</source>
         <translation>Propriétés de Fond Statique Vectoriel</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1126"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1149"/>
         <source>Vector Dynamic BG Properties</source>
         <translation>Propriétés du Fond Dynamique Vectoriel</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1132"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1155"/>
         <source>Vector Static BG Mode</source>
         <translation>Fond Statique Vectoriel</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1133"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1156"/>
         <source>Vector Dynamic BG Mode</source>
         <translation>Fond Dynamique Vectoriel</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1134"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1157"/>
         <source>Raster Static BG Mode</source>
         <translation>Fond Statique Raster</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1135"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1158"/>
         <source>Raster Dynamic BG Mode</source>
         <translation>Fond Dynamique Raster</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="818"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="856"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="841"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="879"/>
         <source>%1</source>
         <translation>%1</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="324"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="340"/>
         <source>Modes Settings</source>
         <translation>Paramètres des Modes</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1122"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="380"/>
+        <source>Post Frame On TupiTube</source>
+        <translation>Post Frame Sur TupiTube</translation>
+    </message>
+    <message>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="380"/>
+        <source>Ctrl+@</source>
+        <translation>Ctrl+@</translation>
+    </message>
+    <message>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1145"/>
         <source>Paint area actions</source>
         <translation>Actions de la zone de peinture</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1131"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1154"/>
         <source>Frames Mode</source>
         <translation>Mode images</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1136"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1159"/>
         <source>Vector Foreground Mode</source>
         <translation>Mode de Premier Plan Vectoriel</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1164"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1187"/>
         <source>Previous Frames</source>
         <translation>Images précédentes</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1176"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1199"/>
         <source>Next Frames</source>
         <translation>Images suivantes</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1207"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1214"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1230"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1237"/>
         <source>Static BG Opacity</source>
         <translation>Opacité BG statique</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1226"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1230"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1249"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1253"/>
         <source>Movement Orientation</source>
         <translation>Orientation du mouvement</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1231"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1254"/>
         <source>Right</source>
         <translation>Droite</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1232"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1255"/>
         <source>Left</source>
         <translation>Gauche</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1233"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1256"/>
         <source>Up</source>
         <translation>Haut</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1234"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1257"/>
         <source>Down</source>
         <translation>Bas</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1256"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1262"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1279"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1285"/>
         <source>Shift Length</source>
         <translation>Longueur du décalage</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1267"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1274"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1290"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1297"/>
         <source>Dynamic BG Opacity</source>
         <translation>Opacité BG dynamique</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1365"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1366"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1373"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1388"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1389"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1396"/>
         <source>Raster Objects</source>
         <translation>Objets Raster</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1377"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1400"/>
         <source>Image imported successfully</source>
         <translation>Image importée avec succès</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1818"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1846"/>
         <source>Export Frame As</source>
         <translation>Exporter l&apos;image comme</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1819"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1847"/>
         <source>Images</source>
         <translation>Images</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1825"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1853"/>
         <source>Frame has been exported successfully</source>
         <translation>L&apos;image a été exportée avec succès</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1827"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1855"/>
         <source>Can&apos;t export frame as image</source>
         <translation>Impossible d&apos;exporter comme image</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1989"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2017"/>
         <source>Please, close current camera dialog first!</source>
         <translation>Veuillez fermer la boîte de dialogue actuelle de la caméra en premier!</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2097"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2125"/>
         <source>No cameras detected</source>
         <translation>Pas de caméras detectées</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2165"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2297"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2193"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2325"/>
         <source>Frame</source>
         <translation>Image</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2220"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2248"/>
         <source>Papagayo project already exists!
 Please, rename the project&apos;s file</source>
         <translation>Le projet Papagayo existe déjà!
 SVP, renommer le fichier du projet</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2315"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2343"/>
         <source>Papagayo file has been imported successfully</source>
         <translation>Le fichier Papagayo a été importé avec succès</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2317"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2345"/>
         <source>Papagayo file is invalid!</source>
         <translation>Le fichier Papagayo est invalide!</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2323"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2351"/>
         <source>Images directory is empty!</source>
         <translation>Le répertoire des images est vide!</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2329"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2335"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2357"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2363"/>
         <source>Papagayo project is invalid!</source>
         <translation>Le projet Papagayo est invalide!</translation>
     </message>
@@ -3098,37 +3100,47 @@ SVP, renommer le fichier du projet</translation>
 <context>
     <name>TupExportWidget</name>
     <message>
-        <location filename="../../../components/export/tupexportwidget.cpp" line="49"/>
+        <location filename="../../../components/export/tupexportwidget.cpp" line="51"/>
         <source>Export To Video</source>
         <translation>Exporter vers la vidéo</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportwidget.cpp" line="60"/>
+        <location filename="../../../components/export/tupexportwidget.cpp" line="62"/>
         <source>Export To Video File</source>
         <translation>Exporter vers un fichier vidéo</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportwidget.cpp" line="66"/>
+        <location filename="../../../components/export/tupexportwidget.cpp" line="68"/>
         <source>Export To Image Sequence</source>
         <translation>Exporter vers la séquence d&apos;images</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportwidget.cpp" line="72"/>
+        <location filename="../../../components/export/tupexportwidget.cpp" line="74"/>
         <source>Export To Animated Image</source>
         <translation>Exporter vers une image animée</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportwidget.cpp" line="100"/>
+        <location filename="../../../components/export/tupexportwidget.cpp" line="105"/>
         <source>Post Animation</source>
         <translation>Poster une Animation</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportwidget.cpp" line="226"/>
+        <location filename="../../../components/export/tupexportwidget.cpp" line="124"/>
+        <source>Post Image</source>
+        <translation>Publier l&apos;image</translation>
+    </message>
+    <message>
+        <location filename="../../../components/export/tupexportwidget.cpp" line="128"/>
+        <source>Post</source>
+        <translation>Publier</translation>
+    </message>
+    <message>
+        <location filename="../../../components/export/tupexportwidget.cpp" line="245"/>
         <source>Posting...</source>
         <translation>Affectation...</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportwidget.cpp" line="228"/>
+        <location filename="../../../components/export/tupexportwidget.cpp" line="247"/>
         <source>Exporting...</source>
         <translation>Exportation...</translation>
     </message>
@@ -3147,23 +3159,23 @@ SVP, renommer le fichier du projet</translation>
     </message>
     <message>
         <location filename="../../../components/export/tupexportwizard.cpp" line="44"/>
-        <location filename="../../../components/export/tupexportwizard.cpp" line="147"/>
+        <location filename="../../../components/export/tupexportwizard.cpp" line="152"/>
         <source>Next</source>
         <translation>Suivant</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportwizard.cpp" line="174"/>
+        <location filename="../../../components/export/tupexportwizard.cpp" line="179"/>
         <source>Uploading Source File</source>
         <translation>Téléchargement du Fichier Source</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportwizard.cpp" line="179"/>
-        <location filename="../../../components/export/tupexportwizard.cpp" line="208"/>
+        <location filename="../../../components/export/tupexportwizard.cpp" line="184"/>
+        <location filename="../../../components/export/tupexportwizard.cpp" line="213"/>
         <source>Export</source>
         <translation>Exporter</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportwizard.cpp" line="210"/>
+        <location filename="../../../components/export/tupexportwizard.cpp" line="215"/>
         <source>Post</source>
         <translation>Publier</translation>
     </message>
@@ -3278,25 +3290,40 @@ SVP, renommer le fichier du projet</translation>
 <context>
     <name>TupFileManager</name>
     <message>
-        <location filename="../../../store/tupfilemanager.cpp" line="219"/>
-        <location filename="../../../store/tupfilemanager.cpp" line="231"/>
+        <location filename="../../../store/tupfilemanager.cpp" line="226"/>
+        <location filename="../../../store/tupfilemanager.cpp" line="238"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="../../../store/tupfilemanager.cpp" line="221"/>
+        <location filename="../../../store/tupfilemanager.cpp" line="228"/>
         <source>A copy of your project was successfully saved at:&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt;</source>
         <translation>Une copie de votre projet a été enregistrée avec succès dans:&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../../store/tupfilemanager.cpp" line="222"/>
+        <location filename="../../../store/tupfilemanager.cpp" line="229"/>
         <source>Please, contact TupiTube&apos;s developer team to recovery it. &lt;b&gt;https://www.tupitube.com&lt;/b&gt;</source>
         <translation>Veuillez contacter l&apos;équipe de développement de TupiTube pour le récupérer. &lt;b&gt;https://www.tupitube.com&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../../store/tupfilemanager.cpp" line="233"/>
+        <location filename="../../../store/tupfilemanager.cpp" line="240"/>
         <source>Sorry, the project &lt;b&gt;%1.tup&lt;/b&gt; couldn&apos;t be recovered.&lt;br/&gt;Please, try to backup your animation files often.</source>
         <translation>Désolé, le projet &lt;b&gt;%1.tup&lt;/b&gt; n&apos;a pas pu être récupéré.&lt;br/&gt;Veuillez essayer de sauvegarder souvent vos fichiers d&apos;animation.</translation>
+    </message>
+    <message>
+        <location filename="../../../store/tupfilemanager.cpp" line="350"/>
+        <source>Scene %1</source>
+        <translation>Scène %1</translation>
+    </message>
+    <message>
+        <location filename="../../../store/tupfilemanager.cpp" line="351"/>
+        <source>Layer %1</source>
+        <translation>Calque %1</translation>
+    </message>
+    <message>
+        <location filename="../../../store/tupfilemanager.cpp" line="352"/>
+        <source>Frame %1</source>
+        <translation>Cadre %1</translation>
     </message>
 </context>
 <context>
@@ -3335,143 +3362,153 @@ SVP, renommer le fichier du projet</translation>
         <translation>Montrer l&apos;astuce du jour</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="108"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="101"/>
+        <source>Allow TupiTube to collect use statistics (No private/personal info)</source>
+        <translation>Autoriser TupiTube à collecter des statistiques d&apos;utilisation (aucune information privée / personnelle)</translation>
+    </message>
+    <message>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="109"/>
         <source>Confirm &quot;Remove frame&quot; action</source>
         <translation>Confirmer l&apos;action &quot;Supprimer l&apos;image&quot;</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="108"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="109"/>
         <source>Confirm &quot;Remove layer&quot; action</source>
         <translation>Confirmer l&apos;action &quot;Supprimer le calque&quot;</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="109"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="110"/>
         <source>Confirm &quot;Remove scene&quot; action</source>
         <translation>Confirmer l&apos;action &quot;Supprimer la scène&quot;</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="109"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="110"/>
         <source>Confirm &quot;Remove object&quot; action from library</source>
         <translation>Confirmer l&apos;action &quot;Supprimer l&apos;objet&quot; de la bibliothèque</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="116"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="117"/>
         <source>Render and play project automatically</source>
         <translation>Rendre et lire le projet automatiquement</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="123"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="124"/>
         <source>General Preferences</source>
         <translation>Préférences générales</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="131"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="132"/>
         <source>On Startup</source>
         <translation>Au démarrage</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="139"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="140"/>
         <source>Language:</source>
         <translation>Idiome:</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="161"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="162"/>
         <source>Confirmation Dialogs</source>
         <translation>Dialogues de confirmation</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="168"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="169"/>
         <source>On Player</source>
         <translation>Sur le Lecteur Vidéo</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="183"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="184"/>
         <source>Cache Settings</source>
         <translation>Paramètres du Cache</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="189"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="190"/>
         <source>The CACHE path is the folder where TupiTube creates temporary files while you work on your animation projects.&lt;br/&gt;&lt;b&gt;Note:&lt;/b&gt; Don&apos;t change this parameter unless you know what you are doing.</source>
         <translation>Le chemin CACHE est le dossier dans lequel TupiTube crée des fichiers temporaires pendant que vous travaillez sur vos projets d&apos;animation.&lt;br/&gt;&lt;b&gt;Remarque:&lt;/b&gt; Ne modifiez pas ce paramètre à moins de savoir ce que vous faites.</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="200"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="201"/>
         <source>Choose another path</source>
         <translation>Choisir un autre chemin</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="204"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="205"/>
         <source>CACHE Path: </source>
         <translation>Chemin CACHE: </translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="208"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="209"/>
         <source>Restore default value</source>
         <translation>Restaurer la valeur par défaut</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="235"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="237"/>
         <source>TupiTube Credentials</source>
         <translation>Identifiants TupiTube</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="242"/>
-        <source>Username: </source>
-        <translation>Nom d&apos;utilisateur: </translation>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="244"/>
+        <source>Username / Email: </source>
+        <translation>Nom d&apos;utilisateur / Email:</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="245"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="247"/>
         <source>Password: </source>
         <translation>Mot de passe: </translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="264"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="262"/>
+        <source>Enable anonymous mode</source>
+        <translation>Activer le mode anonyme</translation>
+    </message>
+    <message>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="268"/>
         <source>Don&apos;t have a TupiTube account?</source>
         <translation>Vous n&apos;avez pas de compte TupiTube?</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="269"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="273"/>
         <source>Email: </source>
         <translation>Email: </translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="279"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="283"/>
         <source>Register</source>
         <translation>S&apos;inscrire</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="339"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="344"/>
         <source>Email is invalid. Please, fix it!</source>
         <translation>Le courriel est invalide. Regle-le, s&apos;il te plait!</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="346"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="351"/>
         <source>Email field is empty. Type one!</source>
         <translation>Le champ e-mail est vide. Tapez un!</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="364"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="369"/>
         <source>Error: Email already registered!</source>
         <translation>Erreur: Email déjà enregistré!</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="376"/>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="384"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="381"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="389"/>
         <source>Please contact us at info@maefloresta.com</source>
         <translation>Veuillez nous contacter à info@maefloresta.com</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="437"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="442"/>
         <source>Choose a directory...</source>
         <translation>Choisissez un dossier...</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="484"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="489"/>
         <source>Cache path is empty. Set a value!</source>
         <translation>Le chemin du cache est vide. Définissez une valeur!</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="491"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="496"/>
         <source>Cache path doesn&apos;t exist. Create it!</source>
         <translation>Le chemin du cache n&apos;existe pas. Créez-le!</translation>
     </message>
@@ -3581,32 +3618,27 @@ SVP, renommer le fichier du projet</translation>
 <context>
     <name>TupInfoDialog</name>
     <message>
-        <location filename="../../../components/player/tupinfodialog.cpp" line="49"/>
+        <location filename="../../../components/player/tupinfodialog.cpp" line="44"/>
         <source>Project Information</source>
         <translation>Renseignements sur le Projet</translation>
     </message>
     <message>
-        <location filename="../../../components/player/tupinfodialog.cpp" line="54"/>
-        <source>Tags</source>
-        <translation>Mots Clés</translation>
-    </message>
-    <message>
-        <location filename="../../../components/player/tupinfodialog.cpp" line="61"/>
+        <location filename="../../../components/player/tupinfodialog.cpp" line="49"/>
         <source>Author</source>
         <translation>Auteur</translation>
     </message>
     <message>
-        <location filename="../../../components/player/tupinfodialog.cpp" line="68"/>
+        <location filename="../../../components/player/tupinfodialog.cpp" line="56"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../../../components/player/tupinfodialog.cpp" line="76"/>
+        <location filename="../../../components/player/tupinfodialog.cpp" line="64"/>
         <source>Update</source>
         <translation>Mettre à Jour</translation>
     </message>
     <message>
-        <location filename="../../../components/player/tupinfodialog.cpp" line="78"/>
+        <location filename="../../../components/player/tupinfodialog.cpp" line="66"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -4085,199 +4117,205 @@ SVP, renommer le fichier du projet</translation>
 <context>
     <name>TupMainWindow</name>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="258"/>
+        <location filename="../../tupmainwindow.cpp" line="255"/>
         <source>[ by %1 | net mode ]</source>
         <translation>[ par %1 | mode net ]</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="294"/>
+        <location filename="../../tupmainwindow.cpp" line="291"/>
         <source>Opening a new document...</source>
         <translation>Ouverture d&apos;un nouveau document...</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="314"/>
-        <location filename="../../tupmainwindow.cpp" line="1062"/>
+        <location filename="../../tupmainwindow.cpp" line="311"/>
+        <location filename="../../tupmainwindow.cpp" line="1066"/>
         <location filename="../../tupmainwindow_gui.cpp" line="253"/>
         <source>Animation</source>
         <translation>Animation</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="386"/>
+        <location filename="../../tupmainwindow.cpp" line="385"/>
         <location filename="../../tupmainwindow_gui.cpp" line="261"/>
         <source>Player</source>
         <translation>Lecteur</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="412"/>
+        <location filename="../../tupmainwindow.cpp" line="411"/>
         <source>Project &lt;b&gt;%1&lt;/b&gt; opened!</source>
         <translation>Projet &lt;b&gt;%1&lt;/b&gt; ouvert!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="483"/>
+        <location filename="../../tupmainwindow.cpp" line="482"/>
         <source>Question</source>
         <translation>Question</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="485"/>
+        <location filename="../../tupmainwindow.cpp" line="484"/>
         <source>The document has been modified.</source>
         <translation>Le document a été modifié.</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="486"/>
+        <location filename="../../tupmainwindow.cpp" line="485"/>
         <source>Do you want to save the project?</source>
         <translation>Voulez-vous sauvegarder le projet?</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="488"/>
+        <location filename="../../tupmainwindow.cpp" line="487"/>
         <source>Save</source>
         <translation>Sauvegarder</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="489"/>
+        <location filename="../../tupmainwindow.cpp" line="488"/>
         <source>Discard</source>
         <translation>Ne pas enregistrer</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="490"/>
+        <location filename="../../tupmainwindow.cpp" line="489"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="676"/>
-        <location filename="../../tupmainwindow.cpp" line="759"/>
-        <location filename="../../tupmainwindow.cpp" line="978"/>
-        <location filename="../../tupmainwindow.cpp" line="1031"/>
-        <location filename="../../tupmainwindow.cpp" line="1464"/>
+        <location filename="../../tupmainwindow.cpp" line="680"/>
+        <location filename="../../tupmainwindow.cpp" line="763"/>
+        <location filename="../../tupmainwindow.cpp" line="982"/>
+        <location filename="../../tupmainwindow.cpp" line="1035"/>
+        <location filename="../../tupmainwindow.cpp" line="1542"/>
         <source>by</source>
         <translation>par</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="689"/>
+        <location filename="../../tupmainwindow.cpp" line="693"/>
         <source>Open TupiTube project</source>
         <translation>Ouvrir le projet de TupiTube</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="690"/>
-        <location filename="../../tupmainwindow.cpp" line="938"/>
-        <location filename="../../tupmainwindow.cpp" line="1331"/>
+        <location filename="../../tupmainwindow.cpp" line="694"/>
+        <location filename="../../tupmainwindow.cpp" line="942"/>
+        <location filename="../../tupmainwindow.cpp" line="1409"/>
         <source>TupiTube Project Package (*.tup)</source>
         <translation>Projet TupiTube (*.tup)</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="715"/>
-        <location filename="../../tupmainwindow.cpp" line="771"/>
+        <location filename="../../tupmainwindow.cpp" line="719"/>
+        <location filename="../../tupmainwindow.cpp" line="775"/>
         <source>Cannot open project!</source>
         <translation>Vous ne pouvez pas ouvrir le projet!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="831"/>
+        <location filename="../../tupmainwindow.cpp" line="835"/>
         <location filename="../../tupmainwindow_gui.cpp" line="433"/>
         <source>Tip Of The Day</source>
         <translation>Conseil du jour</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="831"/>
+        <location filename="../../tupmainwindow.cpp" line="835"/>
         <source>Previous</source>
         <translation>Précédent</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="831"/>
+        <location filename="../../tupmainwindow.cpp" line="835"/>
         <source>Next</source>
         <translation>Suivant</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="831"/>
-        <location filename="../../tupmainwindow.cpp" line="1363"/>
+        <location filename="../../tupmainwindow.cpp" line="835"/>
+        <location filename="../../tupmainwindow.cpp" line="1441"/>
         <source>Close</source>
         <translation>Fermer</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="851"/>
+        <location filename="../../tupmainwindow.cpp" line="855"/>
         <source>Gimp Palette (*.gpl *.txt *.css)</source>
         <translation>Palette Gimp (*.gpl *.txt *.css)</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="850"/>
+        <location filename="../../tupmainwindow.cpp" line="854"/>
         <source>Import Gimp Palettes</source>
         <translation>Importer des palettes de Gimp</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="886"/>
+        <location filename="../../tupmainwindow.cpp" line="890"/>
         <source>Gimp palette import was successful</source>
         <translation>L&apos;importation de la palette Gimp s&apos;est bien passée</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="888"/>
+        <location filename="../../tupmainwindow.cpp" line="892"/>
         <source>Gimp palette import was unsuccessful</source>
         <translation>L&apos;importation de la palette Gimp a échoué</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="937"/>
+        <location filename="../../tupmainwindow.cpp" line="941"/>
         <source>Save Project As</source>
         <translation>Enregistrer le projet sous</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="955"/>
+        <location filename="../../tupmainwindow.cpp" line="959"/>
         <source>Directory does not exist! Please, choose another path.</source>
         <translation>Le répertoire n&apos;existe pas! SVP, choisissez un autre chemin.</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="964"/>
+        <location filename="../../tupmainwindow.cpp" line="968"/>
         <source>Insufficient permissions. Please, pick another path.</source>
         <translation>Permissions insuffisantes. SVP, choisissez un autre chemin.</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1024"/>
+        <location filename="../../tupmainwindow.cpp" line="1028"/>
         <source>Project &lt;b&gt;%1&lt;/b&gt; saved</source>
         <translation>Projet &lt;b&gt;%1&lt;/b&gt; sauvegardé</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1063"/>
+        <location filename="../../tupmainwindow.cpp" line="1067"/>
         <source>New camera</source>
         <translation>Nouvelle caméra</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1228"/>
+        <location filename="../../tupmainwindow.cpp" line="1232"/>
         <source>To post video add more frames!</source>
         <translation>Pour publier une vidéo, ajoutez plus d&apos;images!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1259"/>
+        <location filename="../../tupmainwindow.cpp" line="1265"/>
+        <location filename="../../tupmainwindow.cpp" line="1317"/>
         <source>Post canceled by user!</source>
         <translation>Post annulé!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1274"/>
+        <location filename="../../tupmainwindow.cpp" line="1284"/>
         <source>Project is larger than 10 MB. Too big!</source>
         <translation>Le projet fait plus de 10 MB. Trop grand!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1330"/>
+        <location filename="../../tupmainwindow.cpp" line="1344"/>
+        <source>Error while posting image. File is too big!</source>
+        <translation>Erreur lors de la publication de l&apos;image. Le fichier est trop gros!</translation>
+    </message>
+    <message>
+        <location filename="../../tupmainwindow.cpp" line="1408"/>
         <source>Import project package</source>
         <translation>Importation du paquet projet</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1339"/>
+        <location filename="../../tupmainwindow.cpp" line="1417"/>
         <source>Can&apos;t import project. File is empty!</source>
         <translation>Vous ne pouvez pas importer le projet. Le fichier est vide!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1343"/>
+        <location filename="../../tupmainwindow.cpp" line="1421"/>
         <source>Can&apos;t save the project. File doesn&apos;t exist!</source>
         <translation>Vous ne pouvez pas enregistrer le projet. Fichier inexistant!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1359"/>
+        <location filename="../../tupmainwindow.cpp" line="1437"/>
         <source>Fatal Error</source>
         <translation>Erreur fatale</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1361"/>
+        <location filename="../../tupmainwindow.cpp" line="1439"/>
         <source>The connection to the server has been lost.</source>
         <translation>La connexion au serveur a été perdue.</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1362"/>
+        <location filename="../../tupmainwindow.cpp" line="1440"/>
         <source>Please, try to connect again in a while</source>
         <translation>SVP, essayez de vous connecter à nouveau dans un moment</translation>
     </message>
@@ -4810,182 +4848,172 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
 <context>
     <name>TupNewProject</name>
     <message>
-        <location filename="../../tupnewproject.cpp" line="60"/>
+        <location filename="../../tupnewproject.cpp" line="56"/>
         <source>Project Name</source>
         <translation>Nom du projet</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="64"/>
+        <location filename="../../tupnewproject.cpp" line="60"/>
         <source>my_project</source>
         <translation>mon_projet</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="67"/>
+        <location filename="../../tupnewproject.cpp" line="63"/>
         <source>Author</source>
         <translation>Auteur</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="71"/>
+        <location filename="../../tupnewproject.cpp" line="67"/>
         <source>Your name</source>
         <translation>Votre nom</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="81"/>
+        <location filename="../../tupnewproject.cpp" line="70"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="85"/>
+        <location filename="../../tupnewproject.cpp" line="74"/>
         <source>Just for fun!</source>
         <translation>Juste pour le &quot;plaisir&quot;!</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="89"/>
+        <location filename="../../tupnewproject.cpp" line="78"/>
         <source>Presets</source>
         <translation>Préréglages</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="54"/>
+        <location filename="../../tupnewproject.cpp" line="50"/>
         <source>Create New Project</source>
         <translation>Créer un nouveau projet</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="74"/>
-        <source>Tags</source>
-        <translation>Mots Clés</translation>
-    </message>
-    <message>
-        <location filename="../../tupnewproject.cpp" line="78"/>
-        <source>#animation #2D</source>
-        <translation>#animation #2D</translation>
-    </message>
-    <message>
-        <location filename="../../tupnewproject.cpp" line="95"/>
+        <location filename="../../tupnewproject.cpp" line="84"/>
         <source>Free Format</source>
         <translation>Format libre</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="96"/>
+        <location filename="../../tupnewproject.cpp" line="85"/>
         <source>520x380 - 24</source>
         <translation>520x380 - 24</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="97"/>
+        <location filename="../../tupnewproject.cpp" line="86"/>
         <source>640x480 - 24</source>
         <translation>640x480 - 24</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="98"/>
+        <location filename="../../tupnewproject.cpp" line="87"/>
         <source>480 (PAL DV/DVD) - 25</source>
         <translation>480 (PAL DV/DVD) - 25</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="99"/>
+        <location filename="../../tupnewproject.cpp" line="88"/>
         <source>576 (PAL DV/DVD) - 25</source>
         <translation>576 (PAL DV/DVD) - 25</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="100"/>
+        <location filename="../../tupnewproject.cpp" line="89"/>
         <source>720 (HD) - 24</source>
         <translation>720 (HD) - 24</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="101"/>
+        <location filename="../../tupnewproject.cpp" line="90"/>
         <source>1080 (Mobile) - 24</source>
         <translation>1080 (Mobile) - 24</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="102"/>
+        <location filename="../../tupnewproject.cpp" line="91"/>
         <source>1080 (Full HD) - 24</source>
         <translation>1080 (Full HD) - 24</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="110"/>
+        <location filename="../../tupnewproject.cpp" line="99"/>
         <source>Options</source>
         <translation>Options</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="122"/>
+        <location filename="../../tupnewproject.cpp" line="110"/>
         <source>Background</source>
         <translation>Arrière-plan</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="123"/>
+        <location filename="../../tupnewproject.cpp" line="111"/>
         <source>Click here to change background color</source>
         <translation>Cliquer ici pour changer la couleur d&apos;arrière-plan</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="129"/>
+        <location filename="../../tupnewproject.cpp" line="117"/>
         <source>FPS</source>
         <translation>FPS</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="138"/>
+        <location filename="../../tupnewproject.cpp" line="126"/>
         <source>Dimension</source>
         <translation>Dimension</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="153"/>
+        <location filename="../../tupnewproject.cpp" line="141"/>
         <source>TupiTube project</source>
         <translation>Projet TupiTube</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="159"/>
+        <location filename="../../tupnewproject.cpp" line="147"/>
         <source>Project Info</source>
         <translation>Information du projet</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="239"/>
+        <location filename="../../tupnewproject.cpp" line="227"/>
         <source>Settings</source>
         <translation>Paramètres</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="241"/>
+        <location filename="../../tupnewproject.cpp" line="229"/>
         <source>Username</source>
         <translation>Nom d&apos;utilisateur</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="241"/>
+        <location filename="../../tupnewproject.cpp" line="229"/>
         <source>Password</source>
         <translation>Mot de Passe</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="241"/>
+        <location filename="../../tupnewproject.cpp" line="229"/>
         <source>Server</source>
         <translation>Serveur</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="241"/>
+        <location filename="../../tupnewproject.cpp" line="229"/>
         <source>Port</source>
         <translation>Port</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="246"/>
+        <location filename="../../tupnewproject.cpp" line="234"/>
         <source>Store password</source>
         <translation>Garder le mot de passe</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="294"/>
+        <location filename="../../tupnewproject.cpp" line="287"/>
         <source>Please, set a name for the project</source>
         <translation>SVP, définir un nom pour le projet</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="300"/>
+        <location filename="../../tupnewproject.cpp" line="293"/>
         <source>Please, fill in your username</source>
         <translation>SVP, indiquez votre nom d&apos;utilisateur</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="305"/>
+        <location filename="../../tupnewproject.cpp" line="298"/>
         <source>Please, fill in your password</source>
         <translation>SVP, mettez votre mot de passe</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="310"/>
+        <location filename="../../tupnewproject.cpp" line="303"/>
         <source>Please, fill in the server name or IP</source>
         <translation>SVP, précisez le nom du serveur ou l&apos;adresse IP</translation>
     </message>
     <message>
-        <location filename="../../tupnewproject.cpp" line="348"/>
+        <location filename="../../tupnewproject.cpp" line="341"/>
         <source>White</source>
         <translation>Blanc</translation>
     </message>
@@ -5033,36 +5061,6 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
 </context>
 <context>
     <name>TupPaintArea</name>
-    <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="60"/>
-        <source>Pencil</source>
-        <translation>Crayon</translation>
-    </message>
-    <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="133"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="671"/>
-        <source>Nodes Selection</source>
-        <translation>Sélection des noeuds</translation>
-    </message>
-    <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="142"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="579"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1314"/>
-        <source>PolyLine</source>
-        <translation>Polyligne</translation>
-    </message>
-    <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="146"/>
-        <source>Line</source>
-        <translation>Ligne</translation>
-    </message>
-    <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="152"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="625"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="671"/>
-        <source>Object Selection</source>
-        <translation>Sélection d&apos;objet</translation>
-    </message>
     <message>
         <location filename="../../../components/workspace/tuppaintarea.cpp" line="169"/>
         <source>Drawing area</source>
@@ -5154,31 +5152,26 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
         <translation>Ajouter à la bibliothèque...</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="257"/>
-        <source>Ink</source>
-        <translation>Encre</translation>
-    </message>
-    <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1002"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1344"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1392"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1407"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1019"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1362"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1410"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1425"/>
         <source>Frame</source>
         <translation>Image</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1113"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1146"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1131"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1164"/>
         <source>No items selected</source>
         <translation>Aucuns éléments sélectionnés</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1463"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1481"/>
         <source>Do you want to remove this frame?</source>
         <translation>Voulez-vous supprimer cette image?</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1463"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1481"/>
         <source>Confirmation</source>
         <translation>Confirmation</translation>
     </message>
@@ -5238,63 +5231,68 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <name>TupPaintAreaStatus</name>
     <message>
         <location filename="../../../libtupi/tuppaintareastatus.cpp" line="53"/>
+        <source>Clear Frame</source>
+        <translation>Clair Cadre</translation>
+    </message>
+    <message>
+        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="60"/>
         <source>Reset WorkSpace</source>
         <translation>Réinitialiser l&apos;espace de travail</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="60"/>
+        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="67"/>
         <source>Action Safe Area</source>
         <translation>Zone d&apos;animation sûre</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="69"/>
+        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="76"/>
         <source>Show grid</source>
         <translation>Afficher la grille</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="78"/>
+        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="85"/>
         <source>Full screen</source>
         <translation>Plein écran</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="79"/>
+        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="86"/>
         <source>F11</source>
         <translation>F11</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="89"/>
+        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="96"/>
         <source>Current Frame</source>
         <translation>Image courante</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="96"/>
+        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="103"/>
         <source>1</source>
         <translation>1</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="110"/>
+        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="117"/>
         <source>Zoom</source>
         <translation>Zoom</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="127"/>
+        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="134"/>
         <source>%</source>
         <translation>%</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="137"/>
+        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="144"/>
         <source>Rotate Workspace</source>
         <translation>Rotation de l&apos;espace de travail</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="156"/>
-        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="157"/>
+        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="163"/>
+        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="164"/>
         <source>Contour Color</source>
         <translation>Couleur de contour</translation>
     </message>
     <message>
-        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="160"/>
-        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="161"/>
+        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="167"/>
+        <location filename="../../../libtupi/tuppaintareastatus.cpp" line="168"/>
         <source>Fill Color</source>
         <translation>Couleur de remplissage</translation>
     </message>
@@ -5469,15 +5467,6 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
         <location filename="../../../libui/tuppreferencesdialog.cpp" line="68"/>
         <source>Preferences saved successfully</source>
         <translation>Préférences enregistrées avec succès</translation>
-    </message>
-</context>
-<context>
-    <name>TupProject</name>
-    <message>
-        <location filename="../../../store/tupproject.cpp" line="57"/>
-        <location filename="../../../store/tupproject.cpp" line="404"/>
-        <source>#animation #2D</source>
-        <translation>#animation #2D</translation>
     </message>
 </context>
 <context>
@@ -5719,13 +5708,13 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
         <translation>Calque Son %1</translation>
     </message>
     <message>
-        <location filename="../../../store/tupscene.cpp" line="710"/>
+        <location filename="../../../store/tupscene.cpp" line="715"/>
         <source>Layer %1</source>
         <translation>Calque %1</translation>
     </message>
     <message>
         <location filename="../../../store/tupscene.cpp" line="136"/>
-        <location filename="../../../store/tupscene.cpp" line="711"/>
+        <location filename="../../../store/tupscene.cpp" line="716"/>
         <source>Frame</source>
         <translation>Image</translation>
     </message>
@@ -5791,22 +5780,22 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
 <context>
     <name>TupSignDialog</name>
     <message>
-        <location filename="../../tupsigndialog.cpp" line="52"/>
+        <location filename="../../tupsigndialog.cpp" line="48"/>
         <source>Sign In</source>
         <translation>Se connecter</translation>
     </message>
     <message>
-        <location filename="../../tupsigndialog.cpp" line="74"/>
+        <location filename="../../tupsigndialog.cpp" line="70"/>
         <source>Username</source>
         <translation>Nom d&apos;utilisateur</translation>
     </message>
     <message>
-        <location filename="../../tupsigndialog.cpp" line="74"/>
+        <location filename="../../tupsigndialog.cpp" line="70"/>
         <source>Password</source>
         <translation>Mot de Passe</translation>
     </message>
     <message>
-        <location filename="../../tupsigndialog.cpp" line="77"/>
+        <location filename="../../tupsigndialog.cpp" line="73"/>
         <source>Store password</source>
         <translation>Enregistrer le mot de passe</translation>
     </message>
@@ -5816,17 +5805,17 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../../tupsigndialog.cpp" line="88"/>
+        <location filename="../../tupsigndialog.cpp" line="80"/>
         <source>Accept</source>
         <translation>Valider</translation>
     </message>
     <message>
-        <location filename="../../tupsigndialog.cpp" line="99"/>
+        <location filename="../../tupsigndialog.cpp" line="95"/>
         <source>Please, fill in your username</source>
         <translation>SVP, indiquez votre nom d&apos;utilisateur</translation>
     </message>
     <message>
-        <location filename="../../tupsigndialog.cpp" line="103"/>
+        <location filename="../../tupsigndialog.cpp" line="99"/>
         <source>Please, fill in your password</source>
         <translation>Veuillez remplir votre mot de passe</translation>
     </message>
@@ -6088,27 +6077,27 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
 <context>
     <name>TupTwitter</name>
     <message>
-        <location filename="../../../components/twitter/tuptwitter.cpp" line="353"/>
+        <location filename="../../../components/twitter/tuptwitter.cpp" line="357"/>
         <source>Latest Version</source>
         <translation>Dernière version</translation>
     </message>
     <message>
-        <location filename="../../../components/twitter/tuptwitter.cpp" line="354"/>
+        <location filename="../../../components/twitter/tuptwitter.cpp" line="358"/>
         <source>Revision</source>
         <translation>Révision</translation>
     </message>
     <message>
-        <location filename="../../../components/twitter/tuptwitter.cpp" line="355"/>
+        <location filename="../../../components/twitter/tuptwitter.cpp" line="359"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../../../components/twitter/tuptwitter.cpp" line="358"/>
+        <location filename="../../../components/twitter/tuptwitter.cpp" line="362"/>
         <source>It&apos;s time to upgrade! Click here!</source>
         <translation>Il est temps de faire une mise à jour! Cliquez ici!</translation>
     </message>
     <message>
-        <location filename="../../../components/twitter/tuptwitter.cpp" line="362"/>
+        <location filename="../../../components/twitter/tuptwitter.cpp" line="366"/>
         <source>Want to help us to make a better project? Click here!</source>
         <translation>Vous voulez nous aider à faire un meilleur projet? Cliquez ici!</translation>
     </message>
@@ -6124,17 +6113,17 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
 <context>
     <name>TupVideoProperties</name>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="70"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="71"/>
         <source>Title</source>
         <translation>Titre</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="76"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="81"/>
         <source>Topics</source>
         <translation>Sujets</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="82"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="91"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
@@ -6144,150 +6133,178 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
         <translation>Propriétés d&apos;animation</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="71"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="72"/>
         <source>My Animation</source>
         <translation>Mon Animation</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="77"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="82"/>
         <source>#tupitube #animation #fun</source>
         <translation>#tupitube #animation #fun</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="84"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="93"/>
         <source>Create and share animations easily with TupiTube</source>
         <translation>Créez et partagez facilement des animations avec TupiTube</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="129"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="139"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="199"/>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="667"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="756"/>
         <source>Set a title for the picture here!</source>
         <translation>Définir un titre pour l&apos;image ici!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="205"/>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="679"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="768"/>
         <source>Set some topic tags for the picture here!</source>
         <translation>Mettre des balises de sujet pour l&apos;image ici!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="382"/>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="538"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="429"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="616"/>
         <source>Access denied. Invalid password!</source>
         <translation>Accès refusé. Mot de passe incorrect!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="390"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="74"/>
+        <source>My Image</source>
+        <translation>Mon Image</translation>
+    </message>
+    <message>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="84"/>
+        <source>#tupitube #image #fun</source>
+        <translation>#tupitube #image #amusement</translation>
+    </message>
+    <message>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="219"/>
+        <source>Set a title for the post here!</source>
+        <translation>Définissez un titre pour le message ici!</translation>
+    </message>
+    <message>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="223"/>
+        <source>Title is missing!</source>
+        <translation>Le titre manque!</translation>
+    </message>
+    <message>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="227"/>
+        <source>Set some topic tags for the post here!</source>
+        <translation>Définissez ici des balises de sujet pour le message!</translation>
+    </message>
+    <message>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="231"/>
+        <source>Tags are missing!</source>
+        <translation>Les balises manquent!</translation>
+    </message>
+    <message>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="439"/>
         <source>Network Error 500. Please, contact us!</source>
         <translation>Erreur réseau 500. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="398"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="449"/>
         <source>Network Error 501. Please, contact us!</source>
         <translation>Erreur réseau 501. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="406"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="459"/>
         <source>Network Error 502. Please, contact us!</source>
         <translation>Erreur réseau 502. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="414"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="469"/>
         <source>Network Error 503. Please, contact us!</source>
         <translation>Erreur réseau 503. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="422"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="479"/>
         <source>Network Error 504. Please, contact us!</source>
         <translation>Erreur réseau 504. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="430"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="489"/>
         <source>Network Error 505. Please, contact us!</source>
         <translation>Erreur réseau 505. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="438"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="499"/>
         <source>Network Error 506. Please, contact us!</source>
         <translation>Erreur réseau 506. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="446"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="508"/>
         <source>Network Error 507. Please, contact us!</source>
         <translation>Erreur réseau 507. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="455"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="517"/>
         <source>Network Error 508. Please, contact us!</source>
         <translation>Erreur réseau 508. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="462"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="524"/>
         <source>Network Error 509. Please, contact us!</source>
         <translation>Erreur réseau 509. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="500"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="562"/>
         <source>Post action cancelled!</source>
         <translation>Post action annulée!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="524"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="598"/>
         <source>Project was uploaded successfully!</source>
         <translation>Le projet a été téléchargé avec succès!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="531"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="607"/>
         <source>Network Error 400. Please, contact us!</source>
         <translation>Erreur réseau 400. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="545"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="625"/>
         <source>Network Error 402. Please, contact us!</source>
         <translation>Erreur réseau 402. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="552"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="634"/>
         <source>Network Error 403. Please, contact us!</source>
         <translation>Erreur réseau 403. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="559"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="643"/>
         <source>Network Error 404. Please, contact us!</source>
         <translation>Erreur réseau 404. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="566"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="652"/>
         <source>Network Error 405. Please, contact us!</source>
         <translation>Erreur réseau 405. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="573"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="661"/>
         <source>Network Error 406. Please, contact us!</source>
         <translation>Erreur réseau 406. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="581"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="670"/>
         <source>Network Error 407. Please, contact us!</source>
         <translation>Erreur réseau 407. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="588"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="677"/>
         <source>Network Error 408. Please, contact us!</source>
         <translation>Erreur réseau 408. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="595"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="684"/>
         <source>Network Error 409. Please, contact us!</source>
         <translation>Erreur réseau 409. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="614"/>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="703"/>
         <source>Network Fatal Error. Please, contact us!</source>
         <translation>Erreur fatale du réseau. Contactez nous s&apos;il vous plait!</translation>
     </message>

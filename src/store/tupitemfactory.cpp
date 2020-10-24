@@ -66,6 +66,10 @@ void TupItemFactory::setLibrary(const TupLibrary *assets)
 
 QGraphicsItem* TupItemFactory::createItem(const QString &root)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupItemFactory::createItem()] - root -> " << root;
+    #endif
+
     QGraphicsItem* item = nullptr;
     type = TupItemFactory::Vectorial;
 
@@ -95,11 +99,7 @@ bool TupItemFactory::startTag(const QString& qname, const QXmlAttributes& atts)
 {
     /*
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupItemFactory::startTag()] - qname: " << qname;
-        #else
-            T_FUNCINFOX("items") << qname;
-        #endif
+        qDebug() << "[TupItemFactory::startTag()] - qname -> " << qname;
     #endif
     */
 
@@ -389,7 +389,7 @@ void  TupItemFactory::setItemGradient(const QGradient& gradient, bool brush)
 
 QPen TupItemFactory::itemPen() const
 {
-    if (! objects.isEmpty()) {
+    if (!objects.isEmpty()) {
         if (QGraphicsLineItem *line = qgraphicsitem_cast<QGraphicsLineItem *>(objects.last())) {
             return line->pen();
         } else if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(objects.last())) {

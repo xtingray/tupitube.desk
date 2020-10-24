@@ -883,11 +883,9 @@ void TupDocumentView::selectTool()
             if (toolId == currentTool->toolId())
                 return;
 
-            // if (toolId == TAction::Pencil)
             if (currentTool->toolId() == TAction::Pencil)
                 disconnect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
 
-            // if (toolId == TAction::LipSyncTool)
             if (currentTool->toolId() == TAction::LipSyncTool)
                 disconnect(currentTool, SIGNAL(importLipSync()), this, SLOT(importPapagayoLipSync()));
 
@@ -902,7 +900,7 @@ void TupDocumentView::selectTool()
         tool->setToolId(toolId);
         currentTool = tool;
 
-        paintArea->setCurrentTool(toolName);
+        paintArea->setCurrentTool(toolId);
 
         if (!action->icon().isNull())
             status->updateTool(toolName, action->icon().pixmap(15, 15));

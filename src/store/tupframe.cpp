@@ -437,11 +437,9 @@ void TupFrame::addLibraryItem(const QString &id, TupGraphicLibraryItem *libraryI
 
 void TupFrame::addItem(const QString &id, QGraphicsItem *item)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupFrame::addItem()]";
     #endif
-    */
 
     item->setZValue(zLevelIndex);
     zLevelIndex++;
@@ -630,6 +628,11 @@ void TupFrame::replaceItem(int position, QGraphicsItem *item)
 
 bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int action)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+        qDebug() << "[TupFrame::moveItem()] - currentIndex -> " << currentIndex;
+    #endif
+
     if ((svg.size() + graphics.size()) == 1)
         return true;
 
@@ -639,8 +642,12 @@ bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int
 
     MoveItemType move = MoveItemType(action); 
     switch(move) {
-           case MoveBack :
+           case MoveBack:
              {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupFrame::moveItem()] - MoveBack";
+                #endif
+
                 int zMin = (BG_LAYERS + layerIndex) * ZLAYER_LIMIT;
 
                 if (objectType == TupLibraryObject::Svg) {
@@ -713,8 +720,12 @@ bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int
                     return true;
                 }
              }
-           case MoveToFront :
-             {
+           case MoveToFront:
+             {        
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupFrame::moveItem()] - MoveToFront";
+                #endif
+
                 int zMax = zLevelIndex - 1;
                 if (objectType == TupLibraryObject::Svg) {
                     int zLimit = static_cast<int> (svg.at(currentIndex)->zValue());
@@ -782,8 +793,12 @@ bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int
                     return true;
                 }
              }
-           case MoveOneLevelBack :
+           case MoveOneLevelBack:
              {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupFrame::moveItem()] - MoveOneLevelBack";
+                #endif
+
                 int zMin = (layerIndex + 1) * ZLAYER_LIMIT;
 
                 if (objectType == TupLibraryObject::Svg) {
@@ -896,8 +911,12 @@ bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int
                 }
              }
            break;
-           case MoveOneLevelToFront :
+           case MoveOneLevelToFront:
              {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupFrame::moveItem()] - MoveOneLevelToFront";
+                #endif
+
                 int zMax = zLevelIndex - 1;
 
                 if (objectType == TupLibraryObject::Svg) {
