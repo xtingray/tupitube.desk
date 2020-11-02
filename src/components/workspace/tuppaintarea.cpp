@@ -39,6 +39,7 @@
 #include "tosd.h"
 #include "tupitemgroup.h"
 #include "tuppixmapitem.h"
+#include "tupsvg2qt.h"
 
 #include <QScreen>
 #include <cmath> // fabs
@@ -78,7 +79,7 @@ TupPaintArea::~TupPaintArea()
 void TupPaintArea::setCurrentScene(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupPaintArea::setCurrentScene() - Scene index: " << index;
+        qDebug() << "[TupPaintArea::setCurrentScene()] - Scene index: " << index;
     #endif
 
     if (project->scenesCount() > 0) {
@@ -101,7 +102,7 @@ void TupPaintArea::setCurrentScene(int index)
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupPaintArea::setCurrentScene() - No scenes available!";
+            qDebug() << "[TupPaintArea::setCurrentScene()] - No scenes available!";
         #endif
     }
 }
@@ -109,7 +110,7 @@ void TupPaintArea::setCurrentScene(int index)
 void TupPaintArea::mousePressEvent(QMouseEvent *event)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupPaintArea::mousePressEvent()";
+        qDebug() << "[TupPaintArea::mousePressEvent()]";
     #endif
 
     if (!canvasEnabled)
@@ -119,13 +120,13 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
     if (frame) {
         if (frame->isFrameLocked()) {
             #ifdef TUP_DEBUG
-                qDebug() << "TupPaintArea::mousePressEvent() - Frame is locked!";
+                qDebug() << "[TupPaintArea::mousePressEvent()] - Frame is locked!";
             #endif
             return;
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupPaintArea::mousePressEvent() - Frame is NULL!";
+            qDebug() << "[TupPaintArea::mousePressEvent()] - Frame is NULL!";
         #endif
         return;
     }
@@ -274,7 +275,7 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
     TupGraphicsScene *guiScene = graphicsScene();
     if (!guiScene->currentScene()) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupPaintArea::frameResponse() - Fatal error: No TupScene available!";
+            qDebug() << "[TupPaintArea::frameResponse()] - Fatal error: No TupScene available!";
         #endif
         return;
     }
@@ -833,9 +834,80 @@ void TupPaintArea::copyItems()
 
                 QDomDocument dom;
                 dom.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(dom));
+                QString plainItem = dom.toString();
+                QDomElement root = dom.documentElement();
+                QDomElement properties = root.firstChild().toElement();
+                QPointF pos;
+                TupSvg2Qt::parsePointF(properties.attribute("pos"), pos);
+                qDebug() << "pos attribute -> " << pos;
+                qDebug() << "DOM -> " << dom.toString();
+
+                if (plainItem.startsWith("<rect")) {
+                    int x = root.attribute("x").toInt();
+                    int y = root.attribute("y").toInt();
+
+                    qDebug() << "";
+                    qDebug() << "---";
+                    qDebug() << "x -> " << x;
+                    qDebug() << "y -> " << y;
+                    qDebug() << "";
+
+                    if (pos != QPointF(0,0)) {
+                        qDebug() << "Adjusting object...";
+                        qDebug() << "New (x,y) -> " << QPointF(pos.x() + x, pos.y() + y);
+                        root.setAttribute("x", pos.x() + x);
+                        root.setAttribute("y", pos.y() + y);
+                        properties.setAttribute("pos", "(0,0)");
+                        qDebug() << "XML -> " << dom.toString();
+                    }
+                } else if (plainItem.startsWith("<ellipse")) {
+                    int cx = root.attribute("cx").toInt();
+                    int cy = root.attribute("cy").toInt();
+
+                    qDebug() << "";
+                    qDebug() << "---";
+                    qDebug() << "cx -> " << cx;
+                    qDebug() << "cy -> " << cy;
+                    qDebug() << "";
+
+                    if (pos != QPointF(0,0)) {
+                        qDebug() << "Adjusting object...";
+                        qDebug() << "New (x,y) -> " << QPointF(pos.x() + cx, pos.y() + cy);
+                        root.setAttribute("cx", pos.x() + cx);
+                        root.setAttribute("cy", pos.y() + cy);
+                        properties.setAttribute("pos", "(0,0)");
+                        qDebug() << "XML -> " << dom.toString();
+                    }
+                } else if (plainItem.startsWith("<path")) {
+                    // int x = root.attribute("x").toInt();
+                    // int y = root.attribute("y").toInt();
+
+                    qDebug() << "";
+                    qDebug() << "--- PATH ---";
+                    qDebug() << "Item Rect -> " << item->boundingRect();
+                    qDebug() << "scenePos() -> " << item->scenePos();
+                    // qDebug() << "x -> " << x;
+                    // qDebug() << "y -> " << y;
+                    qDebug() << "XML -> " << dom.toString();
+                    qDebug() << "";
+
+                    /*
+                    if (pos != QPointF(0,0)) {
+                        qDebug() << "Adjusting object...";
+                        qDebug() << "New (x,y) -> " << QPointF(pos.x() + x, pos.y() + y);
+                        root.setAttribute("cx", pos.x() + x);
+                        root.setAttribute("cy", pos.y() + y);
+                        properties.setAttribute("pos", "(0,0)");
+                        qDebug() << "XML -> " << dom.toString();
+                    }
+                    */
+                }
+
                 copiesXml << dom.toString();
 
                 if (itemsCount == 1) { // One item selection
+                    qDebug() << "";
+                    qDebug() << "ITEM POS -> " << item->pos();
                     copyCoords << item->boundingRect().topLeft();
 
                     minX = 0;
@@ -931,6 +1003,11 @@ void TupPaintArea::pasteItems()
 
         for (int i=0; i<itemsCount; i++) {
             QString xml = copiesXml.at(i);
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupPaintArea::pasteItems()] - xml:";
+                qDebug() << xml;
+            #endif
+
             TupFrame *frame = currentScene->currentFrame();
             if (frame) {
                 int total = frame->graphicsCount();
@@ -955,6 +1032,11 @@ void TupPaintArea::pasteItems()
                             y = fabs(y);
 
                         pos = QPointF(x, y);
+                    } else {
+                        qDebug() << "";
+                        qDebug() << "---";
+                        qDebug() << "copyCoords.first() -> " << copyCoords.first();
+                        qDebug() << xml;
                     }
                 } else { // Several items selection
                     if (onMouse) {

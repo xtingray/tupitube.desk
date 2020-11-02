@@ -835,3 +835,13 @@ int TupScreen::currentSceneFrames()
 {
     return photograms.count();
 }
+
+void TupScreen::mousePressEvent(QMouseEvent *event)
+{
+    Q_UNUSED(event)
+
+    if (playerIsActive)
+        stopAnimation();
+    else
+        play();
+}

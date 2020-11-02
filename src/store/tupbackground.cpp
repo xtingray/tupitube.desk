@@ -317,7 +317,7 @@ TupFrame *TupBackground::vectorForegroundFrame()
 void TupBackground::clearBackground()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupBackground::clearBackground() - Tracing...";
+        qDebug() << "[TupBackground::clearBackground()] - Tracing...";
     #endif
 
     // SQA: Implement the UNDO action for this case

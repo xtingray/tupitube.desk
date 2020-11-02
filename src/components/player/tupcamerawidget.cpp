@@ -94,7 +94,7 @@ TupCameraWidget::TupCameraWidget(TupProject *work, QWidget *parent) : QFrame(par
 TupCameraWidget::~TupCameraWidget()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "~TupCameraWidget()";
+        qDebug() << "[~TupCameraWidget()]";
     #endif
 
     if (cameraBar) {
@@ -340,7 +340,7 @@ QSize TupCameraWidget::sizeHint() const
 void TupCameraWidget::doPlay()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupCameraWidget::doPlay()";
+        qDebug() << "[TupCameraWidget::doPlay()]";
     #endif
 
     previewScreen->play();
@@ -358,7 +358,7 @@ void TupCameraWidget::doPlayBack()
 void TupCameraWidget::doPause()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupCameraWidget::doPause()";
+        qDebug() << "[TupCameraWidget::doPause()]";
     #endif
 
     bool playOn = previewScreen->isPlaying();
@@ -385,7 +385,7 @@ void TupCameraWidget::previousFrame()
 bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupCameraWidget::handleProjectResponse()";
+        qDebug() << "[TupCameraWidget::handleProjectResponse()]";
     #endif
 
     if (TupSceneResponse *sceneResponse = static_cast<TupSceneResponse *>(response)) {
@@ -532,7 +532,7 @@ void TupCameraWidget::postDialog()
 void TupCameraWidget::selectScene(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupCameraWidget::selectScene() - index -> " << index;
+        qDebug() << "[TupCameraWidget::selectScene()] - index -> " << index;
     #endif
 
     if (index != previewScreen->currentSceneIndex()) {

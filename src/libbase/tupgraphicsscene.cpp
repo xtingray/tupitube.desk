@@ -56,7 +56,7 @@
 TupGraphicsScene::TupGraphicsScene() : QGraphicsScene()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene() - Creating instance...";
+        qDebug() << "[TupGraphicsScene()] - Creating instance...";
     #endif
 
     loadingProject = true;
@@ -83,7 +83,7 @@ TupGraphicsScene::TupGraphicsScene() : QGraphicsScene()
 TupGraphicsScene::~TupGraphicsScene()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "~TupGraphicsScene()";
+        qDebug() << "[~TupGraphicsScene()]";
     #endif
 
     clearFocus();
@@ -113,7 +113,7 @@ void TupGraphicsScene::updateLayerVisibility(int layerIndex, bool visible)
 void TupGraphicsScene::setCurrentFrame(int layer, int frame)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::setCurrentFrame()";
+        qDebug() << "[TupGraphicsScene::setCurrentFrame()]";
     #endif
 
     if ((frame != framePosition.frame && framePosition.frame >= 0) ||
@@ -167,7 +167,7 @@ void TupGraphicsScene::drawCurrentPhotogram()
 void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
 { 
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::drawPhotogram() - photogram -> " << photogram;
+        qDebug() << "[TupGraphicsScene::drawPhotogram()] - photogram -> " << photogram;
     #endif
 
     if (photogram < 0 || !tupScene)

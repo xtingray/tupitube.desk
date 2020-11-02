@@ -178,7 +178,7 @@ void TupProjectManager::setupNewProject()
 void TupProjectManager::closeProject()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupProjectManager::closeProject()";
+        qDebug() << "[TupProjectManager::closeProject()]";
     #endif
 
     if (!handler)
@@ -198,7 +198,7 @@ void TupProjectManager::closeProject()
 bool TupProjectManager::saveProject(const QString &fileName)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupProjectManager::saveProject()";
+        qDebug() << "[TupProjectManager::saveProject()]";
     #endif
 
     bool result = handler->saveProject(fileName, project);
@@ -210,12 +210,12 @@ bool TupProjectManager::saveProject(const QString &fileName)
 bool TupProjectManager::loadProject(const QString &fileName)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupProjectManager::loadProject() - fileName: " << fileName;
+        qDebug() << "[TupProjectManager::loadProject()] - fileName: " << fileName;
     #endif
 
     if (!handler) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupProjectManager::loadProject() - Fatal Error: No project handler available!";
+            qDebug() << "[TupProjectManager::loadProject()] - Fatal Error: No project handler available!";
         #endif
         return false;
     }

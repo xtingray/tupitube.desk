@@ -93,6 +93,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void projectResponse(TupProjectResponse *event);
         void itemResponse(TupItemResponse *event);
         void libraryResponse(TupLibraryResponse *request);
+        void mousePressEvent(QMouseEvent *event);
 
     signals:
         void progressStep(int, int);

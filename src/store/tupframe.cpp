@@ -1530,6 +1530,10 @@ void TupFrame::checkTransformationStatus(TupLibraryObject::Type itemType, int in
 
 void TupFrame::storeItemTransformation(TupLibraryObject::Type itemType, int index, const QString &properties)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "TupFrame::storeItemTransformation() - properties -> " << properties;
+    #endif
+
     if (itemType == TupLibraryObject::Svg) {
         TupSvgItem *item = svg.at(index);
         if (item)

@@ -57,6 +57,12 @@ void TupRectItem::fromXml(const QString &xml)
 
 QDomElement TupRectItem::toXml(QDomDocument &doc) const
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "TupRectItem::toXml() - doc -> " << doc.toString();
+    #endif
+    */
+
     QDomElement root = doc.createElement("rect");
     
     root.setAttribute("x", QString::number(rect().x()));

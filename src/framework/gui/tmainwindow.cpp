@@ -56,7 +56,7 @@ DefaultSettings::~DefaultSettings()
 void DefaultSettings::save(const QString &winKey, TMainWindow *window)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TMainWindow::DefaultSettings::save() - Saving UI settings [ " + qApp->applicationName() + " ]";
+        qWarning() << "[TMainWindow::DefaultSettings::save()] - Saving UI settings -> " + qApp->applicationName();
     #endif
 
     QSettings settings(qApp->applicationName(), winKey, this);
@@ -90,7 +90,7 @@ void DefaultSettings::save(const QString &winKey, TMainWindow *window)
 void DefaultSettings::restore(const QString &winKey, TMainWindow *window)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TMainWindow::DefaultSettings::restore() - Restoring UI settings [ " + qApp->applicationName() + " ]";
+        qWarning() << "[TMainWindow::DefaultSettings::restore()] - Restoring UI settings -> " + qApp->applicationName();
     #endif
 
     QSettings settings(qApp->applicationName(), winKey, this);
@@ -188,7 +188,7 @@ ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TMainWindow::addToolView() - code: " << code;
+        qDebug() << "[TMainWindow::addToolView()] - code: " << code;
     #endif
     */
 
@@ -212,7 +212,7 @@ void TMainWindow::removeToolView(ToolView *view)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TMainWindow::removeToolView()";
+        qDebug() << "[TMainWindow::removeToolView()]";
     #endif
     */
 
@@ -245,7 +245,7 @@ void TMainWindow::enableToolViews(bool isEnabled)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TMainWindow::enableToolViews() - enable: " << isEnabled;
+        qDebug() << "[TMainWindow::enableToolViews()] - enable: " << isEnabled;
     #endif
     */
 
@@ -265,7 +265,7 @@ void TMainWindow::addToPerspective(QWidget *widget, int workSpace)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TMainWindow::addToPerspective()";
+        qDebug() << "[TMainWindow::addToPerspective()]";
     #endif
     */
 
@@ -286,7 +286,7 @@ void TMainWindow::removeFromPerspective(QWidget *widget)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TMainWindow::removeFromPerspective()";
+        qDebug() << "[TMainWindow::removeFromPerspective()]";
     #endif
     */
 
@@ -298,7 +298,7 @@ void TMainWindow::addToPerspective(const QList<QAction *> &actions, int workSpac
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TMainWindow::addToPerspective()";
+        qDebug() << "[TMainWindow::addToPerspective()]";
     #endif
     */
 
@@ -311,7 +311,7 @@ void TMainWindow::addToPerspective(QAction *action, int workSpace)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TMainWindow::addToFromPerspective()";
+        qDebug() << "[TMainWindow::addToFromPerspective()]";
     #endif
     */
 
@@ -351,7 +351,7 @@ Qt::DockWidgetArea TMainWindow::toDockWidgetArea(Qt::ToolBarArea area)
         default: 
            {
               #ifdef TUP_DEBUG
-                  qWarning() << "TMainWindow::toDockWidgetArea() - Floating -> " + QString::number(area);
+                  qWarning() << "[TMainWindow::toDockWidgetArea()] - Floating -> " + QString::number(area);
               #endif
            }
            break;
@@ -394,7 +394,7 @@ void TMainWindow::setCurrentPerspective(int workSpace)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TMainWindow::setCurrentPerspective()";
+        qDebug() << "[TMainWindow::setCurrentPerspective()]";
     #endif
     */
 
@@ -480,7 +480,7 @@ void TMainWindow::closeEvent(QCloseEvent *e)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TMainWindow::closeEvent()";
+        qDebug() << "[TMainWindow::closeEvent()]";
     #endif
     */
 
@@ -492,7 +492,7 @@ void TMainWindow::showEvent(QShowEvent *e)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TMainWindow::showEvent() - m_autoRestore: " << m_autoRestore;
+        qDebug() << "[TMainWindow::showEvent()] - m_autoRestore: " << m_autoRestore;
     #endif
     */
 
@@ -510,7 +510,7 @@ void TMainWindow::showEvent(QShowEvent *e)
 void TMainWindow::saveGUI()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TMainWindow::saveGUI()";
+        qDebug() << "[TMainWindow::saveGUI()]";
     #endif
 
     settings->save(winKey, this);
@@ -519,7 +519,7 @@ void TMainWindow::saveGUI()
 void TMainWindow::restoreGUI()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TMainWindow::restoreGUI()";
+        qDebug() << "[TMainWindow::restoreGUI()]";
     #endif
 
     setUpdatesEnabled(false);

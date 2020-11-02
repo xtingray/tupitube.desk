@@ -54,9 +54,10 @@ QString TupTwitter::TUPITUBE_IMAGES = QString("updates/images/");
 TupTwitter::TupTwitter(QWidget *parent): QWidget(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupTwitter() - SSL version use for build: " << QSslSocket::sslLibraryBuildVersionString();
-        qDebug() << "TupTwitter() - SSL version use for run-time: " << QSslSocket::sslLibraryVersionNumber();
-        qDebug() << "TupTwitter() - Library Paths: " << QCoreApplication::libraryPaths();
+        qDebug() << "TupTwitter() - SSL enabled? -> " << QSslSocket::supportsSsl();
+        qDebug() << "TupTwitter() - SSL version use for build -> " << QSslSocket::sslLibraryBuildVersionString();
+        qDebug() << "TupTwitter() - SSL version use for run-time -> " << QSslSocket::sslLibraryVersionNumber();
+        qDebug() << "TupTwitter() - Library Paths -> " << QCoreApplication::libraryPaths();
     #endif
 
     update = false;

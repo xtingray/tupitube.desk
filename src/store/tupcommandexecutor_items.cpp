@@ -721,6 +721,10 @@ bool TupCommandExecutor::transformItem(TupItemResponse *response)
     TupLibraryObject::Type type = response->getItemType();
     QString xml = response->getArg().toString();
 
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCommandExecutor::transformItem()] - xml -> " << xml;
+    #endif
+
     TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
         if (mode == TupProject::FRAMES_MODE) {

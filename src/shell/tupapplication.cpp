@@ -44,7 +44,7 @@ TupApplication::TupApplication(int &argc, char **argv) : TApplication(argc, argv
 TupApplication::~TupApplication()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "Destroying ~TupApplication";
+        qDebug() << "[~TupApplication]";
     #endif
 }
 

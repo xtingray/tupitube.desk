@@ -84,7 +84,7 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
                                                       m_scenes(nullptr), isSaveDialogOpen(false), internetOn(false)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow()";
+        qDebug() << "[TupMainWindow()]";
     #endif
 
     // Naming the main window
@@ -218,7 +218,7 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
 TupMainWindow::~TupMainWindow()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "~TupMainWindow()";
+        qDebug() << "[~TupMainWindow()]";
     #endif
 
     QClipboard *clipboard = QApplication::clipboard();
@@ -235,7 +235,7 @@ void TupMainWindow::createNewLocalProject()
 {
     #ifdef TUP_DEBUG
         qDebug() << "---";
-        qDebug() << "TupMainWindow::createNewLocalProject()";
+        qDebug() << "[TupMainWindow::createNewLocalProject()]";
     #endif
 
     TupMainWindow::requestType = NewLocalProject;
@@ -273,7 +273,7 @@ void TupMainWindow::createNewNetProject(const QString &title, const QStringList 
 void TupMainWindow::setWorkSpace(const QStringList &users)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::setWorkSpace()";
+        qDebug() << "[TupMainWindow::setWorkSpace()]";
     #endif
 
     TCONFIG->beginGroup("General");
@@ -1085,12 +1085,12 @@ bool TupMainWindow::event(QEvent *event)
 void TupMainWindow::closeEvent(QCloseEvent *event)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::closeEvent(QCloseEvent)";
+        qDebug() << "[TupMainWindow::closeEvent(QCloseEvent)]";
     #endif
 
     if (cancelChanges()) {
         event->ignore();
-		return;
+        return;
     } else {
         QString newsPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/twitter.html";
         if (QFile::exists(newsPath)) {
