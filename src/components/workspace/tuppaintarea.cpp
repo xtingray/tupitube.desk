@@ -839,46 +839,50 @@ void TupPaintArea::copyItems()
                 QDomElement properties = root.firstChild().toElement();
                 QPointF pos;
                 TupSvg2Qt::parsePointF(properties.attribute("pos"), pos);
-                qDebug() << "pos attribute -> " << pos;
-                qDebug() << "DOM -> " << dom.toString();
+                // qDebug() << "pos attribute -> " << pos;
+                // qDebug() << "DOM -> " << dom.toString();
 
                 if (plainItem.startsWith("<rect")) {
                     int x = root.attribute("x").toInt();
                     int y = root.attribute("y").toInt();
 
+                    /*
                     qDebug() << "";
                     qDebug() << "---";
                     qDebug() << "x -> " << x;
                     qDebug() << "y -> " << y;
                     qDebug() << "";
+                    */
 
                     if (pos != QPointF(0,0)) {
-                        qDebug() << "Adjusting object...";
-                        qDebug() << "New (x,y) -> " << QPointF(pos.x() + x, pos.y() + y);
+                        // qDebug() << "Adjusting object...";
+                        // qDebug() << "New (x,y) -> " << QPointF(pos.x() + x, pos.y() + y);
                         root.setAttribute("x", pos.x() + x);
                         root.setAttribute("y", pos.y() + y);
                         properties.setAttribute("pos", "(0,0)");
-                        qDebug() << "XML -> " << dom.toString();
+                        // qDebug() << "XML -> " << dom.toString();
                     }
                 } else if (plainItem.startsWith("<ellipse")) {
                     int cx = root.attribute("cx").toInt();
                     int cy = root.attribute("cy").toInt();
 
+                    /*
                     qDebug() << "";
                     qDebug() << "---";
                     qDebug() << "cx -> " << cx;
                     qDebug() << "cy -> " << cy;
                     qDebug() << "";
+                    */
 
                     if (pos != QPointF(0,0)) {
-                        qDebug() << "Adjusting object...";
-                        qDebug() << "New (x,y) -> " << QPointF(pos.x() + cx, pos.y() + cy);
+                        // qDebug() << "Adjusting object...";
+                        // qDebug() << "New (x,y) -> " << QPointF(pos.x() + cx, pos.y() + cy);
                         root.setAttribute("cx", pos.x() + cx);
                         root.setAttribute("cy", pos.y() + cy);
                         properties.setAttribute("pos", "(0,0)");
-                        qDebug() << "XML -> " << dom.toString();
+                        // qDebug() << "XML -> " << dom.toString();
                     }
-                } else if (plainItem.startsWith("<path")) {
+                } /* else if (plainItem.startsWith("<path")) {
                     // int x = root.attribute("x").toInt();
                     // int y = root.attribute("y").toInt();
 
@@ -891,7 +895,6 @@ void TupPaintArea::copyItems()
                     qDebug() << "XML -> " << dom.toString();
                     qDebug() << "";
 
-                    /*
                     if (pos != QPointF(0,0)) {
                         qDebug() << "Adjusting object...";
                         qDebug() << "New (x,y) -> " << QPointF(pos.x() + x, pos.y() + y);
@@ -900,14 +903,14 @@ void TupPaintArea::copyItems()
                         properties.setAttribute("pos", "(0,0)");
                         qDebug() << "XML -> " << dom.toString();
                     }
-                    */
-                }
+
+                } */
 
                 copiesXml << dom.toString();
 
                 if (itemsCount == 1) { // One item selection
-                    qDebug() << "";
-                    qDebug() << "ITEM POS -> " << item->pos();
+                    // qDebug() << "";
+                    // qDebug() << "ITEM POS -> " << item->pos();
                     copyCoords << item->boundingRect().topLeft();
 
                     minX = 0;
@@ -1032,12 +1035,12 @@ void TupPaintArea::pasteItems()
                             y = fabs(y);
 
                         pos = QPointF(x, y);
-                    } else {
+                    } /* else {
                         qDebug() << "";
                         qDebug() << "---";
                         qDebug() << "copyCoords.first() -> " << copyCoords.first();
                         qDebug() << xml;
-                    }
+                    } */
                 } else { // Several items selection
                     if (onMouse) {
                         double x = currentPos.x() - centerCoord.x();
