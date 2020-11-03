@@ -289,7 +289,7 @@
     </message>
     <message>
         <source>Ink Properties</source>
-        <translation type="unfinished"></translation>
+        <translation>墨水屬性</translation>
     </message>
 </context>
 <context>
@@ -557,7 +557,7 @@
     </message>
     <message>
         <source>Pencil Properties</source>
-        <translation type="unfinished"></translation>
+        <translation>鉛筆屬性</translation>
     </message>
 </context>
 <context>
@@ -1791,7 +1791,7 @@
     </message>
     <message>
         <source>Post</source>
-        <translation>郵遞</translation>
+        <translation>發佈</translation>
     </message>
     <message>
         <source>Scene</source>
@@ -2341,11 +2341,11 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Post Frame On TupiTube</source>
-        <translation type="unfinished"></translation>
+        <translation>在Tupitube裡發佈影格</translation>
     </message>
     <message>
         <source>Ctrl+@</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+@</translation>
     </message>
 </context>
 <context>
@@ -2483,11 +2483,11 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Post Image</source>
-        <translation type="unfinished">發布影像</translation>
+        <translation>發佈影像</translation>
     </message>
     <message>
         <source>Post</source>
-        <translation type="unfinished"></translation>
+        <translation>發佈</translation>
     </message>
 </context>
 <context>
@@ -2612,15 +2612,15 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Scene %1</source>
-        <translation type="unfinished"></translation>
+        <translation>場景 %1</translation>
     </message>
     <message>
         <source>Layer %1</source>
-        <translation type="unfinished">圖層%1</translation>
+        <translation>圖層 %1</translation>
     </message>
     <message>
         <source>Frame %1</source>
-        <translation type="unfinished"></translation>
+        <translation>影格 %1</translation>
     </message>
 </context>
 <context>
@@ -2762,15 +2762,15 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Allow TupiTube to collect use statistics (No private/personal info)</source>
-        <translation type="unfinished"></translation>
+        <translation>准許TupiTube收集數據 (無私人或個人資料)</translation>
     </message>
     <message>
         <source>Username / Email: </source>
-        <translation type="unfinished"></translation>
+        <translation>使用者名稱 / 電子信箱: </translation>
     </message>
     <message>
         <source>Enable anonymous mode</source>
-        <translation type="unfinished"></translation>
+        <translation>啟用 匿名 模式</translation>
     </message>
 </context>
 <context>
@@ -3670,7 +3670,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Error while posting image. File is too big!</source>
-        <translation type="unfinished"></translation>
+        <translation>發佈影像時, 出現錯誤. 檔案太大!</translation>
     </message>
 </context>
 <context>
@@ -4168,7 +4168,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Clear Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>清除影格</translation>
     </message>
 </context>
 <context>
@@ -4951,27 +4951,27 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>My Image</source>
-        <translation type="unfinished"></translation>
+        <translation>我的影像</translation>
     </message>
     <message>
         <source>#tupitube #image #fun</source>
-        <translation type="unfinished"></translation>
+        <translation>#tupitube #影像 #好玩</translation>
     </message>
     <message>
         <source>Set a title for the post here!</source>
-        <translation type="unfinished"></translation>
+        <translation>在此為圖片設定標題!</translation>
     </message>
     <message>
         <source>Title is missing!</source>
-        <translation type="unfinished"></translation>
+        <translation>無標題!</translation>
     </message>
     <message>
         <source>Set some topic tags for the post here!</source>
-        <translation type="unfinished"></translation>
+        <translation>在此為圖片設定一些主題標籤!</translation>
     </message>
     <message>
         <source>Tags are missing!</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
