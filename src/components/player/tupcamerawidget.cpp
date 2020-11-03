@@ -242,6 +242,7 @@ void TupCameraWidget::addAnimationDisplay()
     previewScreen->setFixedSize(playerDimension);
     connect(previewScreen, SIGNAL(isRendering(int)), this, SLOT(updateProgressBar(int)));
     connect(previewScreen, SIGNAL(frameChanged(int)), this, SLOT(updateTimerPanel(int)));
+    connect(previewScreen, SIGNAL(activePause()), this, SLOT(doPause()));
 
     layout->addWidget(previewScreen, 0, Qt::AlignCenter);
 }

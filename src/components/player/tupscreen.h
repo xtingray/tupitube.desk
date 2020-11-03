@@ -102,6 +102,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void requestTriggered(const TupProjectRequest *event);
         void isRendering(int advance);
         void frameChanged(int frame);
+        void activePause();
 
     protected:
         void paintEvent(QPaintEvent *event);

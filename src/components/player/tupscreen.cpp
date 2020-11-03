@@ -840,8 +840,12 @@ void TupScreen::mousePressEvent(QMouseEvent *event)
 {
     Q_UNUSED(event)
 
+    emit activePause();
+
+    /*
     if (playerIsActive)
         stopAnimation();
     else
         play();
+    */
 }
