@@ -39,6 +39,7 @@
 #include "tglobal.h"
 #include "tapplicationproperties.h"
 #include "tapplication.h"
+#include "taction.h"
 
 #include "tupgraphicsscene.h"
 #include "tupcanvasview.h"
@@ -105,7 +106,7 @@ class TUPITUBE_EXPORT TupCanvas : public QFrame
         void penWidthChangedFromFullScreen(int size);
         void onionOpacityChangedFromFullScreen(double opacity);
         void zoomFactorChangedFromFullScreen(qreal factor);
-        void callAction(int menu, int index);
+        void callAction(int menu, int actionId);
         void goToFrame(int frame, int layer, int scene);
         void rightClick();
         void closeHugeCanvas();

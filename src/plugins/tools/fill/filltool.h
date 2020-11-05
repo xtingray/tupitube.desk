@@ -92,7 +92,7 @@ class TUPITUBE_PLUGIN FillTool : public TupToolPlugin
 
     signals:
         void closeHugeCanvas();
-        void callForPlugin(int menu, int index);
+        void callForPlugin(int, int);
  
     private:
         void setupActions();

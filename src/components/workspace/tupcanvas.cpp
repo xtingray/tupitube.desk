@@ -34,7 +34,6 @@
  ***************************************************************************/
 
 #include "tupcanvas.h"
-#include "tuptoolplugin.h"
 #include "timagebutton.h"
 #include "tuppendialog.h"
 #include "tuponiondialog.h"
@@ -52,7 +51,7 @@ TupCanvas::TupCanvas(QWidget *parent, Qt::WindowFlags flags, TupGraphicsScene *g
                    int angle, TupBrushManager *manager) : QFrame(parent, flags)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupCanvas()";
+        qDebug() << "[TupCanvas()]";
     #endif
 
     setWindowTitle("TupiTube Desk");
@@ -60,7 +59,8 @@ TupCanvas::TupCanvas(QWidget *parent, Qt::WindowFlags flags, TupGraphicsScene *g
 
     hand = Right;
     scene = gScene;
-  
+    frameIndex = scene->currentFrameIndex();
+
     size = work->getDimension();
     currentColor = manager->penColor();
     brushManager = manager;
@@ -237,7 +237,6 @@ void TupCanvas::penDialog()
 
 void TupCanvas::onionDialog()
 {
-    // QDesktopWidget desktop;
     TupOnionDialog *dialog = new TupOnionDialog(brushManager->penColor(), scene->getOpacity(), this);
     connect(dialog, SIGNAL(updateOpacity(double)), this, SLOT(setOnionOpacity(double)));
 
@@ -258,34 +257,34 @@ void TupCanvas::oneFrameBack()
 {
     if (frameIndex > 0) {
         frameIndex--;
-        emit callAction(TupToolPlugin::Arrows, TupToolPlugin::LeftArrow);
+        emit callAction(TAction::Arrows, TAction::Left_Arrow);
     }
 }
 
 void TupCanvas::oneFrameForward()
 {
     frameIndex++;
-    emit callAction(TupToolPlugin::Arrows, TupToolPlugin::RightArrow);
+    emit callAction(TAction::Arrows, TAction::Right_Arrow);
 }
 
 void TupCanvas::wakeUpPencil()
 {
-    emit callAction(TupToolPlugin::BrushesMenu, TupToolPlugin::PencilTool);
+    emit callAction(TAction::BrushesMenu, TAction::Pencil);
 }
 
 void TupCanvas::wakeUpPolyline()
 {
-    emit callAction(TupToolPlugin::BrushesMenu, TupToolPlugin::PolyLineTool);
+    emit callAction(TAction::BrushesMenu, TAction::Polyline);
 }
 
 void TupCanvas::wakeUpRectangle()
 {
-    emit callAction(TupToolPlugin::BrushesMenu, TupToolPlugin::RectangleTool);
+    emit callAction(TAction::BrushesMenu, TAction::Rectangle);
 }
 
 void TupCanvas::wakeUpEllipse()
 {
-    emit callAction(TupToolPlugin::BrushesMenu, TupToolPlugin::EllipseTool);
+    emit callAction(TAction::BrushesMenu, TAction::Ellipse);
 }
 
 void TupCanvas::wakeUpLibrary()
@@ -323,7 +322,6 @@ void TupCanvas::wakeUpLibrary()
             int projectHeight = size.height();
 
             if (picWidth > projectWidth || picHeight > projectHeight) {
-                // QDesktopWidget desktop;
                 QMessageBox msgBox;
                 msgBox.setWindowTitle(tr("Information"));
                 msgBox.setIcon(QMessageBox::Question);
@@ -370,17 +368,17 @@ void TupCanvas::wakeUpLibrary()
 
 void TupCanvas::wakeUpSelection()
 {
-    emit callAction(TupToolPlugin::SelectionMenu, TupToolPlugin::ObjectsTool);
+    emit callAction(TAction::SelectionMenu, TAction::ObjectSelection);
 }
 
 void TupCanvas::wakeUpNodes()
 {
-    emit callAction(TupToolPlugin::SelectionMenu, TupToolPlugin::NodesTool);
+    emit callAction(TAction::SelectionMenu, TAction::NodesEditor);
 }
 
 void TupCanvas::wakeUpDeleteSelection()
 {
-    emit callAction(TupToolPlugin::SelectionMenu, TupToolPlugin::Delete);
+    emit callAction(TAction::SelectionMenu, TAction::Delete);
 }
 
 void TupCanvas::wakeUpZoomIn()
@@ -415,4 +413,3 @@ void TupCanvas::enableRubberBand()
 {
     graphicsView->setDragMode(QGraphicsView::RubberBandDrag);
 }
-

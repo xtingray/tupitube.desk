@@ -795,18 +795,30 @@ void TupExposureTable::keyPressEvent(QKeyEvent *event)
 
     if (event->key() == Qt::Key_Right) {
         int limit = columnCount() - 1;
-        int next = currentColumn() + 1;
-        if (next <= limit)
-            setCurrentCell(currentRow(), next);
+        int column = currentColumn() + 1;
+        if (column <= limit) {
+            int framesCount = header->lastFrame(column);
+            int frameIndex = currentRow();
+            if (frameIndex >= framesCount)
+                markUsedFrames(frameIndex, column);
+            else
+                setCurrentCell(frameIndex, column);
+        }
         return;
     }
 
     if (event->key() == Qt::Key_Left) {
         int column = currentColumn() - 1;
-        if (column > -1)
-            setCurrentCell(currentRow(), column);
+        if (column > -1) {
+            int framesCount = header->lastFrame(column);
+            int frameIndex = currentRow();
+            if (frameIndex >= framesCount)
+                markUsedFrames(frameIndex, column);
+            else
+                setCurrentCell(frameIndex, column);
+        }
         return;
-    }   
+    }
 }
 
 // SQA : Verify if this method is required

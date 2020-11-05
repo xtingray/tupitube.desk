@@ -839,78 +839,52 @@ void TupPaintArea::copyItems()
                 QDomElement properties = root.firstChild().toElement();
                 QPointF pos;
                 TupSvg2Qt::parsePointF(properties.attribute("pos"), pos);
-                // qDebug() << "pos attribute -> " << pos;
-                // qDebug() << "DOM -> " << dom.toString();
+                qDebug() << "pos attribute -> " << pos;
+                qDebug() << "DOM -> " << dom.toString();
 
                 if (plainItem.startsWith("<rect")) {
                     int x = root.attribute("x").toInt();
                     int y = root.attribute("y").toInt();
 
-                    /*
                     qDebug() << "";
                     qDebug() << "---";
                     qDebug() << "x -> " << x;
                     qDebug() << "y -> " << y;
                     qDebug() << "";
-                    */
 
                     if (pos != QPointF(0,0)) {
-                        // qDebug() << "Adjusting object...";
-                        // qDebug() << "New (x,y) -> " << QPointF(pos.x() + x, pos.y() + y);
+                        qDebug() << "Adjusting object...";
+                        qDebug() << "New (x,y) -> " << QPointF(pos.x() + x, pos.y() + y);
                         root.setAttribute("x", pos.x() + x);
                         root.setAttribute("y", pos.y() + y);
                         properties.setAttribute("pos", "(0,0)");
-                        // qDebug() << "XML -> " << dom.toString();
+                        qDebug() << "XML -> " << dom.toString();
                     }
                 } else if (plainItem.startsWith("<ellipse")) {
                     int cx = root.attribute("cx").toInt();
                     int cy = root.attribute("cy").toInt();
 
-                    /*
                     qDebug() << "";
                     qDebug() << "---";
                     qDebug() << "cx -> " << cx;
                     qDebug() << "cy -> " << cy;
                     qDebug() << "";
-                    */
-
-                    if (pos != QPointF(0,0)) {
-                        // qDebug() << "Adjusting object...";
-                        // qDebug() << "New (x,y) -> " << QPointF(pos.x() + cx, pos.y() + cy);
-                        root.setAttribute("cx", pos.x() + cx);
-                        root.setAttribute("cy", pos.y() + cy);
-                        properties.setAttribute("pos", "(0,0)");
-                        // qDebug() << "XML -> " << dom.toString();
-                    }
-                } /* else if (plainItem.startsWith("<path")) {
-                    // int x = root.attribute("x").toInt();
-                    // int y = root.attribute("y").toInt();
-
-                    qDebug() << "";
-                    qDebug() << "--- PATH ---";
-                    qDebug() << "Item Rect -> " << item->boundingRect();
-                    qDebug() << "scenePos() -> " << item->scenePos();
-                    // qDebug() << "x -> " << x;
-                    // qDebug() << "y -> " << y;
-                    qDebug() << "XML -> " << dom.toString();
-                    qDebug() << "";
 
                     if (pos != QPointF(0,0)) {
                         qDebug() << "Adjusting object...";
-                        qDebug() << "New (x,y) -> " << QPointF(pos.x() + x, pos.y() + y);
-                        root.setAttribute("cx", pos.x() + x);
-                        root.setAttribute("cy", pos.y() + y);
+                        qDebug() << "New (x,y) -> " << QPointF(pos.x() + cx, pos.y() + cy);
+                        root.setAttribute("cx", pos.x() + cx);
+                        root.setAttribute("cy", pos.y() + cy);
                         properties.setAttribute("pos", "(0,0)");
                         qDebug() << "XML -> " << dom.toString();
                     }
-
-                } */
+                }
 
                 copiesXml << dom.toString();
 
                 if (itemsCount == 1) { // One item selection
-                    // qDebug() << "";
-                    // qDebug() << "ITEM POS -> " << item->pos();
+                    qDebug() << "";
+                    qDebug() << "ITEM POS -> " << item->pos();
                     copyCoords << item->boundingRect().topLeft();
 
                     minX = 0;
@@ -1035,18 +1009,35 @@ void TupPaintArea::pasteItems()
                             y = fabs(y);
 
                         pos = QPointF(x, y);
-                    } /* else {
-                        qDebug() << "";
-                        qDebug() << "---";
-                        qDebug() << "copyCoords.first() -> " << copyCoords.first();
-                        qDebug() << xml;
-                    } */
+                    } else {
+                        if (xml.startsWith("<path") || xml.startsWith("<symbol") || xml.startsWith("<svg")) {
+                            QDomDocument dom;
+                            dom.setContent(xml);
+                            QDomElement root = dom.documentElement();
+                            QDomElement properties = root.firstChild().toElement();
+                            QPointF shift;
+                            TupSvg2Qt::parsePointF(properties.attribute("pos"), shift);
+                            if (shift != QPointF(0,0))
+                                pos = shift;
+                        }
+                    }
                 } else { // Several items selection
                     if (onMouse) {
                         double x = currentPos.x() - centerCoord.x();
                         double y = currentPos.y() - centerCoord.y();
 
                         pos = QPointF(x, y);
+                    } else {
+                        if (xml.startsWith("<path") || xml.startsWith("<symbol") || xml.startsWith("<svg")) {
+                            QDomDocument dom;
+                            dom.setContent(xml);
+                            QDomElement root = dom.documentElement();
+                            QDomElement properties = root.firstChild().toElement();
+                            QPointF shift;
+                            TupSvg2Qt::parsePointF(properties.attribute("pos"), shift);
+                            if (shift != QPointF(0,0))
+                                pos = shift;
+                        }
                     }
                 }
 
@@ -1612,17 +1603,37 @@ void TupPaintArea::goToFrame(int frameIndex, int layerIndex, int sceneIndex)
 
 void TupPaintArea::goOneLayerBack()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintArea::goOneLayerBack()]";
+    #endif
+
     TupGraphicsScene *gScene = graphicsScene();
     int sceneIndex = gScene->currentSceneIndex();
     int layerIndex = gScene->currentLayerIndex();
     int frameIndex = gScene->currentFrameIndex();
 
-    if (layerIndex > 0)
-        goToFrame(frameIndex, layerIndex-1, sceneIndex);
+    if (layerIndex > 0) {
+        layerIndex--;
+        TupScene *scene = gScene->currentScene();
+        TupLayer *layer = scene->layerAt(layerIndex);
+        int framesTotal = layer->framesCount();
+        if (frameIndex >= framesTotal) {
+            for (int i=framesTotal; i<=frameIndex; i++) {
+                 TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, i,
+                                                                 TupProjectRequest::Add, tr("Frame"));
+                 emit requestTriggered(&request);
+            }
+        }
+        goToFrame(frameIndex, layerIndex, sceneIndex);
+    }
 }
 
 void TupPaintArea::goOneLayerForward()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintArea::goOneLayerForward()]";
+    #endif
+
     TupGraphicsScene *gScene = graphicsScene();
     int sceneIndex = gScene->currentSceneIndex();
     int layerIndex = gScene->currentLayerIndex();
@@ -1630,8 +1641,18 @@ void TupPaintArea::goOneLayerForward()
 
     layerIndex++;
     TupScene *scene = gScene->currentScene();
-    if (layerIndex < scene->layersCount())
+    if (layerIndex < scene->layersCount()) {
+        TupLayer *layer = scene->layerAt(layerIndex);
+        int framesTotal = layer->framesCount();
+        if (frameIndex >= framesTotal) {
+            for (int i=framesTotal; i<=frameIndex; i++) {
+                 TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, i,
+                                                                 TupProjectRequest::Add, tr("Frame"));
+                 emit requestTriggered(&request);
+            }
+        }
         goToFrame(frameIndex, layerIndex, sceneIndex);
+    }
 }
 
 void TupPaintArea::goToScene(int sceneIndex)

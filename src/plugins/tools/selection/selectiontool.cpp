@@ -939,7 +939,7 @@ void SelectionTool::updateItemPosition()
 void SelectionTool::updateItemRotation()
 {
     #ifdef TUP_DEBUG
-            qDebug() << "[SelectionTool::updateItemRotation()]";
+        qDebug() << "[SelectionTool::updateItemRotation()]";
     #endif
 
     if (nodeManagers.count() > 0) {
@@ -953,7 +953,7 @@ void SelectionTool::updateItemRotation()
 void SelectionTool::updateItemScale()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[SelectionTool::updateItemRotation()]";
+        qDebug() << "[SelectionTool::updateItemScale()]";
     #endif
 
     if (nodeManagers.count() > 0) {
@@ -1061,6 +1061,7 @@ void SelectionTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
 
     QDomDocument doc;
     doc.appendChild(TupSerializer::properties(item, doc));
+
     TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
     int position = -1;
     TupLibraryObject::Type type;

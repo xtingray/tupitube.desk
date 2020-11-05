@@ -164,126 +164,141 @@ void TupToolPlugin::setProjectSize(const QSize size)
 
 QPair<int, int> TupToolPlugin::setKeyAction(int key, Qt::KeyboardModifiers modifiers)
 {
-    TupToolPlugin::MenuIndex menu = TupToolPlugin::BrushesMenu;
-    int tool = TupToolPlugin::PencilTool;
+    TAction::MenuId menu = TAction::BrushesMenu;
+    int tool = TAction::Pencil;
 
     if (modifiers & Qt::ControlModifier) {
         switch (key) {
             case Qt::Key_Right:
-                menu = TupToolPlugin::Arrows;
-                tool = TupToolPlugin::QuickCopyRight;
-            break;
-            case Qt::Key_Down:
-            case Qt::Key_PageDown:
-                menu = TupToolPlugin::Arrows;
-                tool = TupToolPlugin::QuickCopyDown;
-            break;
-            case Qt::Key_Up:
-            case Qt::Key_PageUp:
-                menu = TupToolPlugin::Arrows;
-                tool = TupToolPlugin::DeleteUp; 
+            {
+                menu = TAction::Arrows;
+                tool = TAction::Right_QuickCopy;
+            }
             break;
             case Qt::Key_Left:
-                menu = TupToolPlugin::Arrows;
-                tool = TupToolPlugin::DeleteLeft;              
+            {
+                menu = TAction::Arrows;
+                tool = TAction::Left_Delete;
+            }
+            break;
+            case Qt::Key_Up:
+            {
+                menu = TAction::Arrows;
+                tool = TAction::Up_Delete;
+            }
+            break;
+            case Qt::Key_Down:
+            {
+                menu = TAction::Arrows;
+                tool = TAction::Down_QuickCopy;
+            }
             break;
         }
     } else {
         switch (key) {
             case Qt::Key_P:
+            {
                  if (modifiers == Qt::ShiftModifier) {
-                     menu = TupToolPlugin::ColorMenu;
-                     tool = TupToolPlugin::ColorTool;
+                     menu = TAction::ColorMenu;
+                     tool = TAction::ColorPalette;
                  } else {
-                     tool = TupToolPlugin::PencilTool;
+                     tool = TAction::Pencil;
                  }
+            }
             break;
 
             case Qt::Key_K:
-                 tool = TupToolPlugin::InkTool;
+            {
+                 tool = TAction::Ink;
+            }
             break;
-
-            /*
-            case Qt::Key_E:
-                 tool = TupToolPlugin::EraserTool;
-            break;
-            */
 
             case Qt::Key_S:
-                 tool = TupToolPlugin::PolyLineTool;
+            {
+                 tool = TAction::Polyline;
+            }
             break;
 
             case Qt::Key_L:
-                 tool = TupToolPlugin::LineTool;
+            {
+                 tool = TAction::Line;
+            }
             break;
 
             case Qt::Key_R:
-                 tool = TupToolPlugin::RectangleTool;
+            {
+                tool = TAction::Rectangle;
+            }
             break;
 
             case Qt::Key_C:
-                 tool = TupToolPlugin::EllipseTool;
+            {
+                tool = TAction::Ellipse;
+            }
             break;
-
-            /* SQA: Temporarily disabled
-            case Qt::Key_T:
-                 tool = TupToolPlugin::TextTool;
-            break;
-            */
 
             case Qt::Key_O:
-                 menu = TupToolPlugin::SelectionMenu;
-                 tool = TupToolPlugin::ObjectsTool;
+            {
+                 menu = TAction::SelectionMenu;
+                 tool = TAction::ObjectSelection;
+            }
             break;
 
             case Qt::Key_N:
-                 menu = TupToolPlugin::SelectionMenu;
-                 tool = TupToolPlugin::NodesTool;
+            {
+                 menu = TAction::SelectionMenu;
+                 tool = TAction::NodesEditor;
+            }
             break;
-
-            /*
-            case Qt::Key_B:
-                 menu = TupToolPlugin::FillMenu;
-                 tool = TupToolPlugin::ContourFill;
-            break;
-            */
 
             case Qt::Key_F:
-                 menu = TupToolPlugin::FillMenu;
-                 tool = TupToolPlugin::FillTool;
+            {
+                 menu = TAction::FillMenu;
+                 tool = TAction::FillTool;
+            }
             break;
 
             case Qt::Key_Left:
-                 menu = TupToolPlugin::Arrows;
-                 tool = TupToolPlugin::LeftArrow;
+            {
+                 menu = TAction::Arrows;
+                 tool = TAction::Left_Arrow;
+            }
             break;
 
             case Qt::Key_Right:
-                 menu = TupToolPlugin::Arrows;
-                 tool = TupToolPlugin::RightArrow;
+            {
+                 menu = TAction::Arrows;
+                 tool = TAction::Right_Arrow;
+            }
             break;
 
             case Qt::Key_PageUp:
             case Qt::Key_Up:
-                 menu = TupToolPlugin::Arrows;
-                 tool = TupToolPlugin::UpArrow;
+            {
+                 menu = TAction::Arrows;
+                 tool = TAction::Up_Arrow;
+            }
             break;
 
             case Qt::Key_PageDown:
             case Qt::Key_Down:
-                 menu = TupToolPlugin::Arrows;
-                 tool = TupToolPlugin::DownArrow;
+            {
+                 menu = TAction::Arrows;
+                 tool = TAction::Down_Arrow;
+            }
             break;
 
             case Qt::Key_Delete:
-                 menu = TupToolPlugin::SelectionMenu;
-                 tool = TupToolPlugin::Delete;
+            {
+                 menu = TAction::SelectionMenu;
+                 tool = TAction::Delete;
+            }
             break;
 
             default:
             {
-                 menu = TupToolPlugin::InvalidMenu;
-                 tool = TupToolPlugin::InvalidBrush;
+                 menu = TAction::InvalidMenu;
+                 tool = TAction::NoAction;
             }
         }
     }

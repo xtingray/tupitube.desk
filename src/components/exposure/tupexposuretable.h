@@ -73,7 +73,7 @@ class TUPITUBE_EXPORT TupExposureTable : public QTableWidget
           UsedWithTween
         };
 
-        TupExposureTable(QWidget *parent = 0);
+        TupExposureTable(QWidget *parent = nullptr);
         ~TupExposureTable();
 
         int currentLayer() const;
@@ -90,7 +90,7 @@ class TUPITUBE_EXPORT TupExposureTable : public QTableWidget
         int usedFrames(int column) const;
 
         QString frameName(int layerIndex, int frameIndex);
-        void setFrameName(int layerIndex, int frameIndex,const QString & name);
+        void setFrameName(int layerIndex, int frameIndex, const QString & name);
         void setLayerName(int layerIndex, const QString & name);
 
         void selectFrame(int layerIndex, int frameIndex);

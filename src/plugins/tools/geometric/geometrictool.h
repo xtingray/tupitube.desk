@@ -91,8 +91,8 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
 
     signals:
         void closeHugeCanvas();
-        void callForPlugin(int menu, int index);
-        
+        void callForPlugin(int, int);
+
     private:
         void setupActions();
 

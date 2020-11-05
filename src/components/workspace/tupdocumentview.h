@@ -114,7 +114,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         // void saveTimer();
         void showFullScreen();
         void closeFullScreen();
-        void loadPlugin(int menu, int index);
+        void loadPlugin(int menu, int actionId);
         // void updateStatusBgColor(const QColor color);
         // void updatePenThickness(int size);
         void updateOnionOpacity(double opacity);

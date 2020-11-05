@@ -51,7 +51,12 @@ class T_GUI_EXPORT TAction : public QAction
     public:
         enum ActionId { NoAction = -1, Pencil, Ink, Polyline, Rectangle, Ellipse, Line, FillTool,
                         Text, Motion, Rotation, Scale, Shear, Color, Opacity, ObjectSelection,
-                        NodesEditor, LipSyncTool, Eraser, ExportImage, PostImage };
+                        NodesEditor, LipSyncTool, Eraser, ExportImage, PostImage, ColorPalette,
+                        Right_Arrow, Left_Arrow, Down_Arrow, Up_Arrow, Right_QuickCopy, Down_QuickCopy,
+                        Left_Delete, Up_Delete, Delete };
+
+        enum MenuId { InvalidMenu = -1, BrushesMenu = 0, SelectionMenu, FillMenu, ZoomMenu, TweenerMenu,
+                      Arrows, ColorMenu };
 
         TAction(QObject * parent, const QString &id = QString());
 
