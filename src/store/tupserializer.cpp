@@ -94,6 +94,10 @@ void TupSerializer::loadProperties(QGraphicsItem *item, const QXmlAttributes &at
 
 void TupSerializer::loadProperties(QGraphicsItem *item, const QDomElement &element)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSerializer::loadProperties()]";
+    #endif
+
     if (element.tagName() == "properties") {
         QTransform transform;
         TupSvg2Qt::svgmatrix2qtmatrix(element.attribute("transform"), transform);
@@ -101,8 +105,11 @@ void TupSerializer::loadProperties(QGraphicsItem *item, const QDomElement &eleme
 
         QPointF pos;
         TupSvg2Qt::parsePointF(element.attribute("pos"), pos);
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupSerializer::loadProperties()] - pos -> " << pos;
+        #endif
         item->setPos(pos);
-        
+
         item->setEnabled(element.attribute("pos") != "0");
         item->setFlags(QGraphicsItem::GraphicsItemFlags(element.attribute("flags").toInt()));
         item->setData(TupGraphicObject::Rotate, element.attribute("rotation").toInt());

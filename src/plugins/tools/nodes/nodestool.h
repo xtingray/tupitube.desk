@@ -91,6 +91,7 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
         
         virtual void itemResponse(const TupItemResponse *event);
         virtual void keyPressEvent(QKeyEvent *event);
+        virtual void keyReleaseEvent(QKeyEvent *event);
         virtual void saveConfig();
         virtual QCursor polyCursor(); // const;
 
@@ -106,6 +107,7 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
         // void reset(TupGraphicsScene *scene);
         void setupActions();
         TupFrame* getCurrentFrame();
+        void requestTransformation(QGraphicsItem *item, TupFrame *frame);
 
         QMap<TAction::ActionId, TAction *> nodesActions;
         TNodeGroup *nodeGroup;

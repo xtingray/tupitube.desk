@@ -339,10 +339,43 @@ void NodesTool::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_F11 || event->key() == Qt::Key_Escape) {
         emit closeHugeCanvas();
     } else {
-        QPair<int, int> flags = TupToolPlugin::setKeyAction(event->key(), event->modifiers());
-        if (flags.first != -1 && flags.second != -1)
-            emit callForPlugin(flags.first, flags.second);
+        if (!activeSelection) {
+            QPair<int, int> flags = TupToolPlugin::setKeyAction(event->key(), event->modifiers());
+            if (flags.first != -1 && flags.second != -1)
+                emit callForPlugin(flags.first, flags.second);
+        } else {
+            int delta = 5;
+
+            if (event->modifiers() == Qt::ShiftModifier)
+                delta = 1;
+
+            if (event->modifiers() == Qt::ControlModifier)
+                delta = 10;
+
+            TupFrame *frame = getCurrentFrame();
+            QGraphicsItem *item = nodeGroup->parentItem();
+
+            if (event->key() == Qt::Key_Left)
+                item->moveBy(-delta, 0);
+
+            if (event->key() == Qt::Key_Up)
+                item->moveBy(0, -delta);
+
+            if (event->key() == Qt::Key_Right)
+                item->moveBy(delta, 0);
+
+            if (event->key() == Qt::Key_Down)
+                item->moveBy(0, delta);
+
+            QTimer::singleShot(0, this, SLOT(syncNodes()));
+            requestTransformation(item, frame);
+        }
     }
+}
+
+void NodesTool::keyReleaseEvent(QKeyEvent *event)
+{
+    Q_UNUSED(event)
 }
 
 void NodesTool::setupActions()
@@ -416,5 +449,48 @@ void NodesTool::clearSelection()
             nodeGroup->clear();
             nodeGroup = nullptr;
         }
+    }
+}
+
+void NodesTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[NodesTool::requestTransformation(QGraphicsItem *, TupFrame *)]";
+    #endif
+
+    QDomDocument doc;
+    doc.appendChild(TupSerializer::properties(item, doc));
+
+    TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
+    int position = -1;
+    TupLibraryObject::Type type;
+
+    if (svg) {
+        type = TupLibraryObject::Svg;
+        position = frame->indexOf(svg);
+    } else {
+        if (TupGraphicLibraryItem *libraryItem = qgraphicsitem_cast<TupGraphicLibraryItem *>(item)) {
+            if (libraryItem->getItemType() == TupLibraryObject::Image)
+                type = TupLibraryObject::Image;
+            else
+                type = TupLibraryObject::Item;
+        } else {
+            type = TupLibraryObject::Item;
+        }
+        position = frame->indexOf(item);
+    }
+
+    if (position >= 0) {
+        TupProjectRequest event = TupRequestBuilder::createItemRequest(
+                          scene->currentSceneIndex(), currentLayer, currentFrame,
+                          position, QPointF(), scene->getSpaceContext(), type,
+                          TupProjectRequest::Transform, doc.toString());
+
+        emit requested(&event);
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "NodesTool::requestTransformation() - Fatal Error: Invalid item position !!! [ "
+                        + QString::number(position) + " ]";
+        #endif
     }
 }

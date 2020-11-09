@@ -36,6 +36,7 @@
 #include "node.h"
 #include "nodemanager.h"
 #include "tupgraphicobject.h"
+#include "tupellipseitem.h"
 
 #include <cmath> // fabs
 
@@ -219,8 +220,10 @@ void Node::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         qDebug() << "[Node::mouseDoubleClickEvent()]";
     #endif
 
-    manager->toggleAction();
-    QGraphicsItem::mouseDoubleClickEvent(event);
+    if (!qgraphicsitem_cast<TupEllipseItem *> (parent)) {
+        manager->toggleAction();
+        QGraphicsItem::mouseDoubleClickEvent(event);
+    }
 }
 
 int Node::nodeType() const

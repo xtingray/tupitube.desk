@@ -1176,8 +1176,9 @@ bool TupFrame::removeSvgAt(int position)
 QGraphicsItem *TupFrame::createItem(QPointF coords, const QString &xml, bool loaded)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupFrame::createItem()";
-        qWarning() << "coords: " << coords;
+        qDebug() << "[TupFrame::createItem()]";
+        qWarning() << "coords -> " << coords;
+        qWarning() << "XML:";
         qWarning() << xml;
     #endif
 
@@ -1190,6 +1191,7 @@ QGraphicsItem *TupFrame::createItem(QPointF coords, const QString &xml, bool loa
 
     QGraphicsItem *graphicItem = itemFactory.create(xml);
     if (graphicItem) {
+        // SQA: Check if this instruction is required
         graphicItem->setPos(coords);
         QString id = "path";
         if (library) {
@@ -1243,6 +1245,19 @@ TupSvgItem *TupFrame::createSvgItem(QPointF coords, const QString &xml, bool loa
         TupSvgItem *item = new TupSvgItem(path, this);
         if (item) {
             item->setSymbolName(id);
+            QDomElement prop = root.firstChild().toElement();
+
+            QTransform transform;
+            TupSvg2Qt::svgmatrix2qtmatrix(prop.attribute("transform"), transform);
+            item->setTransform(transform);
+            item->setEnabled(prop.attribute("pos") != "0"); // default true
+            item->setFlags(QGraphicsItem::GraphicsItemFlags(prop.attribute("flags").toInt()));
+            item->setData(TupGraphicObject::Rotate, prop.attribute("rotation").toInt());
+            double sx = prop.attribute("scale_x").toDouble();
+            item->setData(TupGraphicObject::ScaleX, sx);
+            double sy = prop.attribute("scale_y").toDouble();
+            item->setData(TupGraphicObject::ScaleY, sy);
+
             item->moveBy(coords.x(), coords.y()); 
             addSvgItem(id, item);
             if (loaded)

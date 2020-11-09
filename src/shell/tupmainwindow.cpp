@@ -521,7 +521,7 @@ void TupMainWindow::closeInterface()
 bool TupMainWindow::closeProject()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::closeProject()";
+        qDebug() << "[TupMainWindow::closeProject()]";
     #endif
 
     // SQA: Verify this conditional
@@ -544,7 +544,7 @@ void TupMainWindow::requestSaveAction()
 void TupMainWindow::resetUI()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::resetUI()";
+        qDebug() << "[TupMainWindow::resetUI()]";
     #endif
 
     disconnect(this, SIGNAL(tabHasChanged(int)), this, SLOT(updateCurrentTab(int)));
@@ -612,13 +612,13 @@ void TupMainWindow::resetUI()
         if (projectPath.exists()) {
             if (!projectPath.removeRecursively()) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupMainWindow::resetUI() - Fatal Error: Can't remove project cache path! -> " << cache;
+                    qDebug() << "[TupMainWindow::resetUI()] - Fatal Error: Can't remove project cache path! -> " << cache;
                 #endif
             }
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupMainWindow::resetUI() - Warning: project name is empty!";
+            qDebug() << "[TupMainWindow::resetUI()] - Warning: project name is empty!";
         #endif
     }
 
@@ -668,7 +668,7 @@ void TupMainWindow::setupNetworkProject(TupProjectManagerParams *params)
 void TupMainWindow::setupLocalProject(TupProjectManagerParams *params)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::setupLocalProject()";
+        qDebug() << "[TupMainWindow::setupLocalProject()]";
     #endif
 
     if (closeProject()) {
@@ -723,7 +723,7 @@ void TupMainWindow::openExample()
 void TupMainWindow::openProject(const QString &path)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TupMainWindow::openProject() - Opening project: " + path;
+        qWarning() << "[TupMainWindow::openProject()] - Opening project: " + path;
     #endif
 
     if (path.isEmpty() || !path.endsWith(".tup"))

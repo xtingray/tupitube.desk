@@ -54,10 +54,10 @@ QString TupTwitter::TUPITUBE_IMAGES = QString("updates/images/");
 TupTwitter::TupTwitter(QWidget *parent): QWidget(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupTwitter() - SSL enabled? -> " << QSslSocket::supportsSsl();
-        qDebug() << "TupTwitter() - SSL version use for build -> " << QSslSocket::sslLibraryBuildVersionString();
-        qDebug() << "TupTwitter() - SSL version use for run-time -> " << QSslSocket::sslLibraryVersionNumber();
-        qDebug() << "TupTwitter() - Library Paths -> " << QCoreApplication::libraryPaths();
+        qDebug() << "[TupTwitter()] - SSL enabled? -> " << QSslSocket::supportsSsl();
+        qDebug() << "[TupTwitter()] - SSL version use for build -> " << QSslSocket::sslLibraryBuildVersionString();
+        qDebug() << "[TupTwitter()] - SSL version use for run-time -> " << QSslSocket::sslLibraryVersionNumber();
+        qDebug() << "[TupTwitter()] - Library Paths -> " << QCoreApplication::libraryPaths();
     #endif
 
     update = false;
@@ -82,7 +82,7 @@ void TupTwitter::start()
     QString url = MAEFLORESTA_URL + IS_HOST_UP_URL;
 
     #ifdef TUP_DEBUG
-        qWarning() << "TupTwitter::start() - Getting news updates...";
+        qWarning() << "[TupTwitter::start()] - Getting news updates...";
     #endif
 
     manager = new QNetworkAccessManager(this);
@@ -90,8 +90,11 @@ void TupTwitter::start()
 
     request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
     request.setUrl(QUrl(url));
-    // request.setRawHeader("User-Agent", BROWSER_FINGERPRINT.toLatin1());
-    request.setRawHeader("User-Agent", BROWSER_FINGERPRINT); 
+    request.setRawHeader("User-Agent", BROWSER_FINGERPRINT);
+
+    QSslConfiguration conf = request.sslConfiguration();
+    conf.setPeerVerifyMode(QSslSocket::VerifyNone);
+    request.setSslConfiguration(conf);
 
     reply = manager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
@@ -100,7 +103,7 @@ void TupTwitter::start()
 TupTwitter::~TupTwitter()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "~TupTwitter()";
+        qDebug() << "[~TupTwitter()]";
     #endif
 
     delete manager;
@@ -112,7 +115,7 @@ TupTwitter::~TupTwitter()
 void TupTwitter::requestFile(const QString &target)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TupTwitter::requestFile() - Requesting url -> " + target;
+        qWarning() << "[TupTwitter::requestFile()] - Requesting url -> " + target;
     #endif
 
     request.setUrl(QUrl(target));
@@ -127,7 +130,7 @@ void TupTwitter::requestFile(const QString &target)
 void TupTwitter::closeRequest(QNetworkReply *reply)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupTwitter::closeRequest() - Getting answer from request...";
+        qDebug() << "[TupTwitter::closeRequest()] - Getting answer from request...";
     #endif
 
     QByteArray array = reply->readAll();
@@ -238,13 +241,17 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupTwitter::closeRequest() - Network Error: Gosh! No Internet? :S";
+            qDebug() << "[TupTwitter::closeRequest()] - Network Error: Gosh! No Internet? :S";
         #endif
     } 
 }
 
 void TupTwitter::slotError(QNetworkReply::NetworkError error)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTwitter::slotError()] - Error -> " << error;
+    #endif
+
     switch (error) {
         case QNetworkReply::HostNotFoundError:
              {
@@ -288,7 +295,7 @@ void TupTwitter::slotError(QNetworkReply::NetworkError error)
 void TupTwitter::checkSoftwareUpdates(QByteArray array)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TupTwitter::checkSoftwareUpdates() - Processing updates file...";
+        qWarning() << "[TupTwitter::checkSoftwareUpdates()] - Processing updates file...";
     #endif
 
     QDomDocument doc;
@@ -328,7 +335,7 @@ void TupTwitter::checkSoftwareUpdates(QByteArray array)
 void TupTwitter::formatStatus(QByteArray array)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TupTwitter::formatStatus() - Formatting news file...";
+        qWarning() << "[TupTwitter::formatStatus()] - Formatting news file...";
     #endif
 
     QString tweets = QString(array);
