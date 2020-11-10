@@ -1082,6 +1082,11 @@ void TupPaintArea::multipasteObject(int pasteTotal)
     int layerIndex = currentScene->currentLayerIndex();
     int limit = 0;
 
+    int itemsCount = copiesXml.size();
+    TCONFIG->beginGroup("PaintArea");
+    bool onMouse = TCONFIG->value("PasteOnMousePos", false).toBool();
+    QPointF currentPos = viewPosition();
+
     int currentFrame = currentScene->currentFrameIndex();
     limit = currentFrame + pasteTotal;
     for (int i=currentFrame+1; i<=limit; i++) {
@@ -1111,12 +1116,70 @@ void TupPaintArea::multipasteObject(int pasteTotal)
                         total = currentScene->currentFrame()->svgItemsCount();
                     }
 
-                    // TupProjectRequest event = TupRequestBuilder::createItemRequest(globalSceneIndex,
-                    //                                                                layerIndex, i, total, ellipsePos(xml), spaceMode, type,
-                    //                                                                TupProjectRequest::Add, xml);
+
+                    QPointF pos = QPointF(0, 0);
+                    if (itemsCount == 1) { // One item selection
+                        if (onMouse) {
+                            double x = currentPos.x() - (copyCoords.at(i).x() + centerCoord.x());
+                            if (currentPos.x() >= copyCoords.at(i).x())
+                                x = fabs(x);
+
+                            double y = currentPos.y() - (copyCoords.at(i).y() + centerCoord.y());
+                            if (currentPos.y() >= copyCoords.at(i).y())
+                                y = fabs(y);
+
+                            pos = QPointF(x, y);
+                        } else {
+                            // Path - Image - SVG
+                            if (xml.startsWith("<path") || xml.startsWith("<symbol") || xml.startsWith("<svg")) {
+                                QDomDocument dom;
+                                dom.setContent(xml);
+                                QDomElement root = dom.documentElement();
+                                QDomElement properties = root.firstChild().toElement();
+                                QPointF shift;
+                                TupSvg2Qt::parsePointF(properties.attribute("pos"), shift);
+                                if (shift != QPointF(0,0))
+                                    pos = shift;
+                            } else if (xml.startsWith("<group")) {
+                                QDomDocument dom;
+                                dom.setContent(xml);
+                                QDomElement root = dom.documentElement();
+                                QPointF shift;
+                                TupSvg2Qt::parsePointF(root.attribute("pos"), shift);
+                                if (shift != QPointF(0,0))
+                                    pos = shift;
+                            }
+                        }
+                    } else { // Several items selection
+                        if (onMouse) {
+                            double x = currentPos.x() - centerCoord.x();
+                            double y = currentPos.y() - centerCoord.y();
+
+                            pos = QPointF(x, y);
+                        } else {
+                            if (xml.startsWith("<path") || xml.startsWith("<symbol") || xml.startsWith("<svg")) {
+                                QDomDocument dom;
+                                dom.setContent(xml);
+                                QDomElement root = dom.documentElement();
+                                QDomElement properties = root.firstChild().toElement();
+                                QPointF shift;
+                                TupSvg2Qt::parsePointF(properties.attribute("pos"), shift);
+                                if (shift != QPointF(0,0))
+                                    pos = shift;
+                            } else if (xml.startsWith("<group")) {
+                                QDomDocument dom;
+                                dom.setContent(xml);
+                                QDomElement root = dom.documentElement();
+                                QPointF shift;
+                                TupSvg2Qt::parsePointF(root.attribute("pos"), shift);
+                                if (shift != QPointF(0,0))
+                                    pos = shift;
+                            }
+                        }
+                    }
 
                     TupProjectRequest event = TupRequestBuilder::createItemRequest(globalSceneIndex,
-                                                                 layerIndex, i, total, QPoint(0, 0), spaceMode, type,
+                                                                 layerIndex, i, total, pos, spaceMode, type,
                                                                  TupProjectRequest::Add, xml);
                     emit requestTriggered(&event);
                 }
@@ -1131,23 +1194,6 @@ void TupPaintArea::multipasteObject(int pasteTotal)
      emit localRequestTriggered(&request);
      menuOn = false;
 }
-
-/*
-QPoint TupPaintArea::ellipsePos(const QString &xml)
-{
-    QDomDocument doc;
-    doc.setContent(xml);
-    QDomElement root = doc.documentElement();
-    QDomElement prop = root.firstChildElement("properties");
-    QString pos = prop.attribute("pos");
-    pos = pos.mid(1, pos.length() - 2);
-    QStringList list = pos.split(",");
-    int x = static_cast<int> (list.at(0).toFloat());
-    int y = static_cast<int> (list.at(1).toFloat());
-
-    return QPoint(x, y);
-}
-*/
 
 void TupPaintArea::pasteNextFive()
 {

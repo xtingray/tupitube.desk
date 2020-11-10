@@ -220,7 +220,14 @@ void Node::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         qDebug() << "[Node::mouseDoubleClickEvent()]";
     #endif
 
-    if (!qgraphicsitem_cast<TupEllipseItem *> (parent)) {
+    if (qgraphicsitem_cast<TupEllipseItem *> (parent)) {
+        double scaleX = parent->data(TupGraphicObject::ScaleX).toReal();
+        double scaleY = parent->data(TupGraphicObject::ScaleY).toReal();
+        if (scaleX != scaleY) {
+            manager->toggleAction();
+            QGraphicsItem::mouseDoubleClickEvent(event);
+        }
+    } else {
         manager->toggleAction();
         QGraphicsItem::mouseDoubleClickEvent(event);
     }
