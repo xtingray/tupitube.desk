@@ -214,7 +214,7 @@ void TupScreen::paintEvent(QPaintEvent *)
 void TupScreen::play()
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TupScreen::play() - Playing at " << fps << " FPS";
+        qWarning() << "[TupScreen::play()] - Playing at " << fps << " FPS";
     #endif
 
     if (playBackFlag) {
@@ -243,7 +243,7 @@ void TupScreen::play()
 void TupScreen::playBack()
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TupScreen::playBack() - Starting procedure...";
+        qWarning() << "[TupScreen::playBack()] - Starting procedure...";
     #endif
 
     if (photograms.count() == 1)
@@ -286,7 +286,7 @@ bool TupScreen::isPlaying()
 void TupScreen::pause()
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TupScreen::pause() - Pausing player!";
+        qWarning() << "[TupScreen::pause()] - Pausing player!";
     #endif
 
     if (playerIsActive) {
@@ -310,7 +310,7 @@ void TupScreen::pause()
 void TupScreen::stop()
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TupScreen::stop() - Stopping player!";
+        qWarning() << "[TupScreen::stop()] - Stopping player!";
     #endif
 
     stopAnimation();

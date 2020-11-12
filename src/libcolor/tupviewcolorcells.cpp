@@ -37,6 +37,10 @@
 
 TupViewColorCells::TupViewColorCells(QWidget *parent) : QFrame(parent)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupViewColorCells()]";
+    #endif
+
     numColorRecent = 0;
     currentCell = nullptr;
     viewLayout = new QVBoxLayout;
@@ -45,7 +49,6 @@ TupViewColorCells::TupViewColorCells(QWidget *parent) : QFrame(parent)
 
     setFrameStyle(QFrame::Box | QFrame::Raised);
     setupForm();
-    // setupButtons();
 
     setLayout(viewLayout);
 }
@@ -92,23 +95,22 @@ void TupViewColorCells::setupForm()
     defaultPalette = new TupCellsColor(containerPalette);
     defaultPalette->setName(tr("Default Palette"));
     defaultPalette->setReadOnly(true);
-    // fillDefaultColors();
     addPalette(defaultPalette);
 
-    //Named Colors
+    // Named Colors
     qtColorPalette = new TupCellsColor(containerPalette);
     qtColorPalette->setReadOnly(true);
     qtColorPalette->setName(tr("Named Colors"));
     fillNamedColor();
     addPalette(qtColorPalette);
 
-    //Custom Color Palette
+    // Custom Color Palette
     // SQA: This palette must be implemented
     customColorPalette = new TupCellsColor(containerPalette);
     customColorPalette->setName(tr("Custom Color Palette"));
     addPalette(customColorPalette);
 
-    //Custom Gradient Palette
+    // Custom Gradient Palette
     // SQA: This palette must be implemented
     customGradientPalette = new TupCellsColor(containerPalette);
     customGradientPalette->setName(tr("Custom Gradient Palette"));
@@ -147,7 +149,7 @@ void TupViewColorCells::setupForm()
 void TupViewColorCells::readPalettes(const QString &paletteDir)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TupViewColorCells::readPalettes() - Reading palettes from: " + paletteDir;
+        qWarning() << "[TupViewColorCells::readPalettes()] - Reading palettes from: " + paletteDir;
     #endif
 
     QDir dir(paletteDir);
@@ -161,12 +163,12 @@ void TupViewColorCells::readPalettes(const QString &paletteDir)
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupViewColorCells::readPalettes() - Error: Palettes path doesn't exist -> " + paletteDir;
+            qDebug() << "[TupViewColorCells::readPalettes()] - Error: Palettes path doesn't exist -> " + paletteDir;
         #endif
 
         if (dir.mkpath(paletteDir)) {
             #ifdef TUP_DEBUG
-                qDebug() << "TupViewColorCells::readPalettes() - Creating path -> " + paletteDir;
+                qDebug() << "[TupViewColorCells::readPalettes()] - Creating path -> " + paletteDir;
             #endif
         }
     }
@@ -184,12 +186,12 @@ void TupViewColorCells::readPaletteFile(const QString &paletteFile)
             addPalette(name, brushes, editable);
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "TupViewColorCells::readPaletteFile() - Fatal error while parsing palette file: " + paletteFile;
+                qDebug() << "[TupViewColorCells::readPaletteFile()] - Fatal error while parsing palette file: " + paletteFile;
             #endif
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupViewColorCells::readPaletteFile() - Fatal error: palette file doesn't exist! -> " + paletteFile;
+            qDebug() << "[TupViewColorCells::readPaletteFile()] - Fatal error: palette file doesn't exist! -> " + paletteFile;
         #endif
     }
 }
@@ -198,13 +200,12 @@ void TupViewColorCells::addPalette(const QString & name, const QList<QBrush> & b
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "[TupViewColorCells::addPalette()]";
+        qDebug() << "[TupViewColorCells::addPalette()] - name -> " << name;
     #endif
     */
 
     if (name == "Default Palette") {
         QList<QBrush>::ConstIterator it = brushes.begin();
-
         while (it != brushes.end()) {
                defaultPalette->addItem(*it);
                ++it;

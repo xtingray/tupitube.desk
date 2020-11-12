@@ -63,7 +63,7 @@ SelectionTool::~SelectionTool()
 void SelectionTool::init(TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "SelectionTool::init()";
+        qDebug() << "[SelectionTool::init()]";
     #endif
 
     scene = gScene;
@@ -314,7 +314,7 @@ TupFrame* SelectionTool::frameAt(int sceneIndex, int layerIndex, int frameIndex)
        }
     } else {
        #ifdef TUP_DEBUG
-           qDebug() << "SelectionTool::frameAt() - Fatal Error: Scene is NULL! -> " + QString::number(sceneIndex);
+           qDebug() << "[SelectionTool::frameAt()] - Fatal Error: Scene is NULL! -> " + QString::number(sceneIndex);
        #endif
     }
 
@@ -377,7 +377,7 @@ void SelectionTool::aboutToChangeScene(TupGraphicsScene *scene)
 void SelectionTool::aboutToChangeTool()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "SelectionTool::aboutToChangeTool()";
+        qDebug() << "[SelectionTool::aboutToChangeTool()]";
     #endif
 
     init(scene);
@@ -405,7 +405,7 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "SelectionTool::itemResponse - Fatal Error: frame is NULL! (index: "
+            qDebug() << "[SelectionTool::itemResponse()] - Fatal Error: frame is NULL! (index: "
                         + QString::number(response->getFrameIndex()) + ")";
         #endif
         return;
@@ -430,7 +430,7 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "SelectionTool::itemResponse - No item found";
+                    qDebug() << "[SelectionTool::itemResponse()] - No item found";
                 #endif
             }
         }
@@ -748,7 +748,7 @@ void SelectionTool::applyGroupAction(SelectionSettings::Group action)
                         items += ", ";
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "SelectionTool::applyGroupAction() - Fatal Error: Index of item is invalid! -> -1";
+                        qDebug() << "[SelectionTool::applyGroupAction()] - Fatal Error: Index of item is invalid! -> -1";
                     #endif
                 }
                 i++;

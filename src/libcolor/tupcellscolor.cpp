@@ -76,13 +76,13 @@ void TupCellsColor::setName(const QString& colorName)
     name = colorName;
 }
 
-void TupCellsColor::save( const QString &path)
+void TupCellsColor::save(const QString &path)
 {
     QFile save(path);
     TupPaletteDocument document(name, true);
 
-    for (int i = 0; i < columnCount() ; i++) {
-         for (int  j = 0; j < rowCount() ; j++) {
+    for (int i = 0; i < columnCount(); i++) {
+         for (int  j = 0; j < rowCount(); j++) {
               QTableWidgetItem *tmpItem = itemAt(i*25, j*25);
               if (tmpItem) {
                   if (tmpItem->background().gradient())
@@ -148,12 +148,12 @@ void TupCellsColor::mouseMoveEvent(QMouseEvent* e)
         return;
 
     QDrag *drag = new QDrag(this);
-    QPixmap pix( 25, 25 );
-    QColor color =  currentItem()->background().color();
+    QPixmap pix(25, 25);
+    QColor color = currentItem()->background().color();
     pix.fill(color);
 
     QPainter painter(&pix);
-    painter.drawRect( 0, 0, pix.width(), pix.height() );
+    painter.drawRect(0, 0, pix.width(), pix.height() );
     painter.end();
 
     QMimeData *mimeData = new QMimeData;

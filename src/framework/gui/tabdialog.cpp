@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tabdialog.h"
+#include "tapplicationproperties.h"
 
 TabDialog::TabDialog(QWidget *parent, bool modal) : QDialog(parent)
 {

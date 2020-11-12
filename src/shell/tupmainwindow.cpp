@@ -107,7 +107,7 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
         file.close();
     } else {
         #ifdef TUP_DEBUG 
-            qWarning() << "TupMainWindow::TupMainWindow() - theme file doesn't exist -> " + QString(THEME_DIR + "config/ui.qss");
+            qWarning() << "[TupMainWindow::TupMainWindow()] - theme file doesn't exist -> " + QString(THEME_DIR + "config/ui.qss");
         #endif
     }
 
@@ -168,7 +168,7 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
             }
         } else {
             #ifdef TUP_DEBUG
-                qWarning() << "TupMainWindow() - Fatal error parsing file -> " + webMsgPath;
+                qWarning() << "[TupMainWindow()] - Fatal error parsing file -> " + webMsgPath;
             #endif
         }
     }

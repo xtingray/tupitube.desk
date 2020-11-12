@@ -55,7 +55,7 @@ class TUPITUBE_EXPORT TupCellsColor : public TCellView
 
     public:
         enum Type{Color = 0, Gradient};
-        TupCellsColor(QWidget *parent = 0, Type getType = Color);
+        TupCellsColor(QWidget *parent = nullptr, Type getType = Color);
         virtual ~TupCellsColor();
 
         void setReadOnly(bool enable);
@@ -63,14 +63,14 @@ class TUPITUBE_EXPORT TupCellsColor : public TCellView
         bool isReadOnly();
         int getType();
         QString getName() const;
-        void setName(const QString& getName);
-        void save( const QString& path);
+        void setName(const QString &getName);
+        void save(const QString &path);
 
     protected:
-        void mousePressEvent(QMouseEvent* e);
-        void mouseMoveEvent(QMouseEvent* e);
-        void dragEnterEvent(QDragEnterEvent* e);
-        void dropEvent(QDropEvent* e);
+        void mousePressEvent(QMouseEvent *e);
+        void mouseMoveEvent(QMouseEvent *e);
+        void dragEnterEvent(QDragEnterEvent *e);
+        void dropEvent(QDropEvent *e);
 
     private:
         TupCellsColor::Type type;
