@@ -220,6 +220,7 @@ void Node::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         qDebug() << "[Node::mouseDoubleClickEvent()]";
     #endif
 
+    /*
     if (qgraphicsitem_cast<TupEllipseItem *> (parent)) {
         double scaleX = parent->data(TupGraphicObject::ScaleX).toReal();
         double scaleY = parent->data(TupGraphicObject::ScaleY).toReal();
@@ -231,6 +232,10 @@ void Node::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         manager->toggleAction();
         QGraphicsItem::mouseDoubleClickEvent(event);
     }
+    */
+
+    manager->toggleAction();
+    QGraphicsItem::mouseDoubleClickEvent(event);
 }
 
 int Node::nodeType() const

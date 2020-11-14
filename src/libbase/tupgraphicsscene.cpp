@@ -158,7 +158,7 @@ void TupGraphicsScene::drawCurrentPhotogram()
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupGraphicsScene::drawCurrentPhotogram() - Fatal error: Invalid layer index -> "
+            qDebug() << "[TupGraphicsScene::drawCurrentPhotogram()] - Fatal error: Invalid layer index -> "
                         + QString::number(framePosition.layer);
         #endif
     }
@@ -254,7 +254,7 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
              }
          } else {
             #ifdef TUP_DEBUG
-                qDebug() << "TupGraphicsScene::drawPhotogram() - Error: Invalid layer at index -> " << layerIndex;
+                qDebug() << "[TupGraphicsScene::drawPhotogram()] - Error: Invalid layer at index -> " << layerIndex;
             #endif
             return;
          }
@@ -275,7 +275,7 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
 void TupGraphicsScene::drawSceneBackground(int photogram)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::drawSceneBackground() - photogram -> " << photogram;
+        qDebug() << "[TupGraphicsScene::drawSceneBackground()] - photogram -> " << photogram;
         qDebug() << "*** spaceContext -> " << spaceContext;
     #endif
 
@@ -301,7 +301,7 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
             QList<TupBackground::BgType> bgLayerIndex = background->layerIndexes();
             for (int i=0; i < bgLayerIndex.count(); i++) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupGraphicsScene::drawSceneBackground() - Processing BG index -> " << bgLayerIndex.at(i);
+                    qDebug() << "[TupGraphicsScene::drawSceneBackground()] - Processing BG index -> " << bgLayerIndex.at(i);
                 #endif
 
                 switch(bgLayerIndex.at(i)) {
@@ -341,7 +341,7 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
 void TupGraphicsScene::drawVectorStaticBg(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::drawVectorStaticBg()";
+        qDebug() << "[TupGraphicsScene::drawVectorStaticBg()]";
     #endif
 
     // Vector Static Bg
@@ -356,7 +356,7 @@ void TupGraphicsScene::drawVectorStaticBg(int index)
         return;
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupGraphicsScene::drawVectorStaticBg() - Vector static bg frame is empty";
+            qDebug() << "[TupGraphicsScene::drawVectorStaticBg()] - Vector static bg frame is empty";
         #endif
     }
 }
@@ -365,7 +365,7 @@ void TupGraphicsScene::drawVectorStaticBg(int index)
 void TupGraphicsScene::drawVectorDynamicBg()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::drawVectorDynamicBg()";
+        qDebug() << "[TupGraphicsScene::drawVectorDynamicBg()]";
     #endif
 
     // Vector
@@ -379,7 +379,7 @@ void TupGraphicsScene::drawVectorDynamicBg()
         delete frame;
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupGraphicsScene::drawVectorDynamicBg() - Vector dynamic bg frame is empty";
+            qDebug() << "[TupGraphicsScene::drawVectorDynamicBg()] - Vector dynamic bg frame is empty";
         #endif
     }
 }
@@ -388,7 +388,7 @@ void TupGraphicsScene::drawVectorDynamicBg()
 void TupGraphicsScene::drawVectorDynamicBgOnMovement(int index, int photogram)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::drawVectorDynamicBgOnMovement() - photogram: " << photogram;
+        qDebug() << "[TupGraphicsScene::drawVectorDynamicBgOnMovement()] - photogram: " << photogram;
     #endif
 
     // Vector Dynamic Bg on movement
@@ -402,7 +402,7 @@ void TupGraphicsScene::drawVectorDynamicBgOnMovement(int index, int photogram)
         addItem(vectorDynamicBg);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupGraphicsScene::drawVectorDynamicBgOnMovement() - Vector dynamic bg frame is empty";
+            qDebug() << "[TupGraphicsScene::drawVectorDynamicBgOnMovement()] - Vector dynamic bg frame is empty";
         #endif
     }
 }
@@ -412,7 +412,7 @@ void TupGraphicsScene::drawRasterStaticBg(int index)
     // Raster Static Bg
     if (!background->rasterStaticBgIsNull()) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupGraphicsScene::drawRasterStaticBg() - Adding RASTER STATIC image!";
+            qDebug() << "[TupGraphicsScene::drawRasterStaticBg()] - Adding RASTER STATIC image!";
         #endif
 
         if (background->rasterStaticUpdateIsPending()) {
@@ -425,7 +425,7 @@ void TupGraphicsScene::drawRasterStaticBg(int index)
         // rasterStaticBg = nullptr;
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupGraphicsScene::drawRasterStaticBg() - RASTER STATIC image is NULL!";
+            qDebug() << "[TupGraphicsScene::drawRasterStaticBg()] - RASTER STATIC image is NULL!";
         #endif
     }
 }
@@ -435,7 +435,7 @@ void TupGraphicsScene::drawRasterDynamicBgOnMovement(int index, int photogram)
     // Raster Dynamic Bg on movement
     if (!background->rasterDynamicBgIsNull()) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupGraphicsScene::drawRasterDynamicBgOnMovement() - Adding RASTER DYNAMIC image! "
+            qDebug() << "[TupGraphicsScene::drawRasterDynamicBgOnMovement()] - Adding RASTER DYNAMIC image! "
                         "- photogram -> " << photogram;
         #endif
         // Calculate current raster dynamic view
@@ -449,7 +449,7 @@ void TupGraphicsScene::drawRasterDynamicBgOnMovement(int index, int photogram)
         addItem(rasterDynamicBg);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupGraphicsScene::drawRasterDynamicBgOnMovement() - RASTER DYNAMIC image is NULL!";
+            qDebug() << "[TupGraphicsScene::drawRasterDynamicBgOnMovement()] - RASTER DYNAMIC image is NULL!";
         #endif
     }
 }
@@ -473,7 +473,7 @@ void TupGraphicsScene::drawVectorFg()
         return;
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupGraphicsScene::drawVectorFg() - Vector foreground frame is empty";
+            qDebug() << "[TupGraphicsScene::drawVectorFg()] - Vector foreground frame is empty";
         #endif
     }
 }
@@ -482,7 +482,7 @@ void TupGraphicsScene::addFrame(TupFrame *frame, double opacityFactor, Context m
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::addFrame()";
+        qDebug() << "[TupGraphicsScene::addFrame()]";
     #endif
     */
 
@@ -570,7 +570,7 @@ void TupGraphicsScene::addGraphicObject(TupGraphicObject *object, TupFrame::Fram
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::addGraphicObject()";
+        qDebug() << "[TupGraphicsScene::addGraphicObject()]";
     #endif
     */
 
@@ -619,7 +619,7 @@ void TupGraphicsScene::addSvgObject(TupSvgItem *svgItem, TupFrame::FrameType fra
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::addSvgObject()";
+        qDebug() << "[TupGraphicsScene::addSvgObject()]";
     #endif
     */
 
@@ -661,19 +661,19 @@ void TupGraphicsScene::addSvgObject(TupSvgItem *svgItem, TupFrame::FrameType fra
                 addItem(svgItem);
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupGraphicsScene::addSvgObject() - Error: Frame #"
+                    qDebug() << "[TupGraphicsScene::addSvgObject()] - Error: Frame #"
                                 + QString::number(framePosition.frame) + " NO available!";
                 #endif
             }
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "TupGraphicsScene::addSvgObject() - Error: Layer #"
+                qDebug() << "[TupGraphicsScene::addSvgObject()] - Error: Layer #"
                             + QString::number(framePosition.layer) + " NO available!";
             #endif
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupGraphicsScene::addSvgObject() - Error: No SVG item!";
+            qDebug() << "[TupGraphicsScene::addSvgObject()] - Error: No SVG item!";
         #endif
     } 
 } 
@@ -681,7 +681,7 @@ void TupGraphicsScene::addSvgObject(TupSvgItem *svgItem, TupFrame::FrameType fra
 void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double opacity, bool onProcess)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::addTweeningObjects()";
+        qDebug() << "[TupGraphicsScene::addTweeningObjects()]";
     #endif
 
     QList<TupGraphicObject *> tweenList = tupScene->getTweeningGraphicObjects(layerIndex);
@@ -900,7 +900,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double 
 void TupGraphicsScene::addSvgTweeningObjects(int layerIndex, int photogram, double opacity, bool onProcess)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::addSvgTweeningObjects()";
+        qDebug() << "[TupGraphicsScene::addSvgTweeningObjects()]";
     #endif
 
     QList<TupSvgItem *> svgList = tupScene->getTweeningSvgObjects(layerIndex);
@@ -1045,7 +1045,7 @@ void TupGraphicsScene::addSvgTweeningObjects(int layerIndex, int photogram, doub
 void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zValue)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::addLipSyncObjects()";
+        qDebug() << "[TupGraphicsScene::addLipSyncObjects()]";
     #endif
 
     if (layer->lipSyncCount() > 0) {
@@ -1090,13 +1090,13 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
                                      }
                                  } else {
                                      #ifdef TUP_DEBUG
-                                         qDebug() << "TupGraphicsScene::addLipSyncObjects() - Warning: Can't find phoneme image -> "
+                                         qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Warning: Can't find phoneme image -> "
                                                      + imgName;
                                      #endif
                                  } 
                              } else {
                                  #ifdef TUP_DEBUG
-                                     qDebug() << "TupGraphicsScene::addLipSyncObjects() - Warning: No lipsync phoneme at frame "
+                                     qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Warning: No lipsync phoneme at frame "
                                                  + QString::number(photogram) + " - index: " + QString::number(index);
                                  #endif
 
@@ -1116,21 +1116,21 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
                                      }
                                  } else {
                                      #ifdef TUP_DEBUG
-                                         qDebug() << "TupGraphicsScene::addLipSyncObjects() - Warning: Can't find phoneme image -> "
+                                         qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Warning: Can't find phoneme image -> "
                                                      + imgName;
                                      #endif
                                  }
                              }
                          } else {
                              #ifdef TUP_DEBUG
-                                 qDebug() << "TupGraphicsScene::addLipSyncObjects() - No lipsync phoneme in voice at position: "
+                                 qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - No lipsync phoneme in voice at position: "
                                              + QString::number(j) + " - looking for index: " + QString::number(index);
                              #endif
                          }
                      }
                  } else {
                      #ifdef TUP_DEBUG
-                         qDebug() << "TupGraphicsScene::addLipSyncObjects() - Folder with lipsync mouths is not available -> "
+                         qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Folder with lipsync mouths is not available -> "
                                      + name;
                      #endif
                  } 
@@ -1143,7 +1143,7 @@ void TupGraphicsScene::cleanWorkSpace()
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::cleanWorkSpace()";
+        qDebug() << "[TupGraphicsScene::cleanWorkSpace()]";
     #endif
     */
 
@@ -1167,7 +1167,7 @@ int TupGraphicsScene::currentFrameIndex() const
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::currentFrameIndex()";
+        qDebug() << "[TupGraphicsScene::currentFrameIndex()]";
     #endif
     */
 
@@ -1178,7 +1178,7 @@ int TupGraphicsScene::currentLayerIndex() const
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::currentLayerIndex()";
+        qDebug() << "[TupGraphicsScene::currentLayerIndex()]";
     #endif
     */
 
@@ -1189,13 +1189,13 @@ int TupGraphicsScene::currentSceneIndex() const
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::currentSceneIndex()";
+        qDebug() << "[TupGraphicsScene::currentSceneIndex()]";
     #endif
     */
 
     if (!tupScene) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupGraphicsScene::currentSceneIndex() - Error: Scene index is -1";
+            qDebug() << "[TupGraphicsScene::currentSceneIndex()] - Error: Scene index is -1";
         #endif
         return -1;
     }
@@ -1207,7 +1207,7 @@ void TupGraphicsScene::setNextOnionSkinCount(int n)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::setNextOnionSkinCount()";
+        qDebug() << "[TupGraphicsScene::setNextOnionSkinCount()]";
     #endif
     */
 
@@ -1221,7 +1221,7 @@ void TupGraphicsScene::setPreviousOnionSkinCount(int n)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::setPreviousOnionSkinCount()";
+        qDebug() << "[TupGraphicsScene::setPreviousOnionSkinCount()]";
     #endif
     */
 
@@ -1235,7 +1235,7 @@ TupFrame *TupGraphicsScene::currentFrame()
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::currentFrame()";
+        qDebug() << "[TupGraphicsScene::currentFrame()]";
     #endif
     */
 
@@ -1249,7 +1249,7 @@ TupFrame *TupGraphicsScene::currentFrame()
                         return layer->frameAt(framePosition.frame);
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupGraphicsScene::currentFrame - No layer available at -> "
+                        qDebug() << "[TupGraphicsScene::currentFrame()] - No layer available at -> "
                                     + QString::number(framePosition.frame);
                     #endif
                 }
@@ -1269,7 +1269,7 @@ TupFrame *TupGraphicsScene::currentFrame()
 void TupGraphicsScene::setCurrentScene(TupScene *scene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::setCurrentScene()";
+        qDebug() << "[TupGraphicsScene::setCurrentScene()]";
     #endif
 
     if (scene) {
@@ -1306,7 +1306,7 @@ TupScene *TupGraphicsScene::currentScene() const
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::scene()";
+        qDebug() << "[TupGraphicsScene::scene()]";
     #endif
     */
 
@@ -1319,7 +1319,7 @@ TupScene *TupGraphicsScene::currentScene() const
 void TupGraphicsScene::setTool(TupToolPlugin *plugin)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::setTool()";
+        qDebug() << "[TupGraphicsScene::setTool()]";
     #endif
 
     if (spaceContext == TupProject::FRAMES_MODE) {
@@ -1343,7 +1343,7 @@ TupToolPlugin *TupGraphicsScene::currentTool() const
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::currentTool()";
+        qDebug() << "[TupGraphicsScene::currentTool()]";
     #endif
     */
 
@@ -1354,7 +1354,7 @@ void TupGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::mousePressEvent()";
+        qDebug() << "[TupGraphicsScene::mousePressEvent()]";
     #endif
     */
 
@@ -1389,7 +1389,7 @@ void TupGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::mouseMoveEvent()";
+        qDebug() << "[TupGraphicsScene::mouseMoveEvent()]";
     #endif
     */
 
@@ -1406,7 +1406,7 @@ void TupGraphicsScene::mouseMoved(QGraphicsSceneMouseEvent *event)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::mouseMoved()";
+        qDebug() << "[TupGraphicsScene::mouseMoved()]";
     #endif
     */
 
@@ -1420,7 +1420,7 @@ void TupGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::mouseReleaseEvent()";
+        qDebug() << "[TupGraphicsScene::mouseReleaseEvent()]";
     #endif
     */
 
@@ -1436,7 +1436,7 @@ void TupGraphicsScene::mouseReleased(QGraphicsSceneMouseEvent *event)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::mouseReleased()";
+        qDebug() << "[TupGraphicsScene::mouseReleased()]";
     #endif
     */
 
@@ -1450,7 +1450,7 @@ void TupGraphicsScene::mouseReleased(QGraphicsSceneMouseEvent *event)
     if (currentFrame()) {
         if (currentFrame()->isFrameLocked()) {
             #ifdef TUP_DEBUG
-                qDebug() << "TupGraphicsScene::mouseReleased() - Frame is locked!";
+                qDebug() << "[TupGraphicsScene::mouseReleased()] - Frame is locked!";
             #endif
             return;
         }
@@ -1472,7 +1472,7 @@ void TupGraphicsScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::mouseDoubleClickEvent()";
+        qDebug() << "[TupGraphicsScene::mouseDoubleClickEvent()]";
     #endif
     */
 
@@ -1569,7 +1569,7 @@ void TupGraphicsScene::sceneResponse(TupSceneResponse *response)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::sceneResponse()";
+        qDebug() << "[TupGraphicsScene::sceneResponse()]";
     #endif
     */
 
@@ -1639,7 +1639,7 @@ TupBrushManager *TupGraphicsScene::getBrushManager() const
 void TupGraphicsScene::setSelectionRange()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::setSelectionRange()";
+        qDebug() << "[TupGraphicsScene::setSelectionRange()]";
     #endif
 
     if (onionSkin.accessMap.empty() || gTool->toolType() == TupToolInterface::Tweener)
@@ -1677,7 +1677,7 @@ void TupGraphicsScene::setSelectionRange()
 void TupGraphicsScene::enableItemsForSelection()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::enableItemsForSelection()";
+        qDebug() << "[TupGraphicsScene::enableItemsForSelection()]";
     #endif
 
     QHash<QGraphicsItem *, bool>::iterator it = onionSkin.accessMap.begin();
@@ -1693,13 +1693,13 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::includeObject()";
+        qDebug() << "[TupGraphicsScene::includeObject()]";
     #endif
     */
 
     if (!object) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupGraphicsScene::includeObject() - Fatal Error: Graphic item is nullptr!";
+            qDebug() << "[TupGraphicsScene::includeObject()] - Fatal Error: Graphic item is nullptr!";
         #endif
 
         return;
@@ -1720,7 +1720,7 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
                     object->setOpacity(opacity);
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupGraphicsScene::includeObject() - Fatal Error: Opacity value is invalid -> "
+                        qDebug() << "[TupGraphicsScene::includeObject()] - Fatal Error: Opacity value is invalid -> "
                                     + QString::number(opacity);
                     #endif
                 }
@@ -1791,7 +1791,7 @@ int TupGraphicsScene::getFramesCount()
 void TupGraphicsScene::setLibrary(TupLibrary *assets)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupGraphicsScene::setLibrary()";
+        qDebug() << "[TupGraphicsScene::setLibrary()]";
     #endif
 
     library = assets;
