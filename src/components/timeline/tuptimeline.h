@@ -43,6 +43,8 @@
 #include "tuptimelinetable.h"
 #include "tuprequestbuilder.h"
 
+#include <QDoubleSpinBox>
+
 class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
 {
     Q_OBJECT
@@ -88,7 +90,9 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
         void requestLayerVisibilityAction(int layerIndex, bool isVisible);
         void requestLayerRenameAction(int layerIndex, const QString &name);
         void requestSceneSelection(int sceneIndex);
-        
+
+        void requestUpdateLayerOpacity(double opacity);
+
     private:
         void requestReverseFrameSelection();
 
@@ -100,6 +104,8 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
         TupLibrary *library;
         QString frameSelection;
         bool doSelection;
+        QDoubleSpinBox *opacitySpinBox;
+        QList<double> layerOpacityList;
 };
 
 #endif

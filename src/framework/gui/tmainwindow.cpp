@@ -56,7 +56,7 @@ DefaultSettings::~DefaultSettings()
 void DefaultSettings::save(const QString &winKey, TMainWindow *window)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "[TMainWindow::DefaultSettings::save()] - Saving UI settings -> " + qApp->applicationName();
+        qWarning() << "[TMainWindow::DefaultSettings::save()] - Saving UI settings -> " << qApp->applicationName();
     #endif
 
     QSettings settings(qApp->applicationName(), winKey, this);
@@ -90,7 +90,7 @@ void DefaultSettings::save(const QString &winKey, TMainWindow *window)
 void DefaultSettings::restore(const QString &winKey, TMainWindow *window)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "[TMainWindow::DefaultSettings::restore()] - Restoring UI settings -> " + qApp->applicationName();
+        qWarning() << "[TMainWindow::DefaultSettings::restore()] - Restoring UI settings -> " << qApp->applicationName();
     #endif
 
     QSettings settings(qApp->applicationName(), winKey, this);
@@ -351,7 +351,7 @@ Qt::DockWidgetArea TMainWindow::toDockWidgetArea(Qt::ToolBarArea area)
         default: 
            {
               #ifdef TUP_DEBUG
-                  qWarning() << "[TMainWindow::toDockWidgetArea()] - Floating -> " + QString::number(area);
+                  qWarning() << "[TMainWindow::toDockWidgetArea()] - Floating -> " << QString::number(area);
               #endif
            }
            break;
@@ -382,7 +382,7 @@ Qt::ToolBarArea TMainWindow::toToolBarArea(Qt::DockWidgetArea area)
         default: 
            {
              #ifdef TUP_DEBUG
-                 qWarning() << "TMainWindow::toToolBarArea() - Floating -> " + QString::number(area);
+                 qWarning() << "TMainWindow::toToolBarArea() - Floating -> " << QString::number(area);
              #endif
            }
     }

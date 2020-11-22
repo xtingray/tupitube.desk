@@ -94,14 +94,15 @@ int main(int argc, char ** argv)
 		#else
             TCONFIG->setValue("Home", QString::fromLocal8Bit(::getenv("TUPITUBE_HOME")));
         #endif
-        
+       
+        /* 
         #ifdef Q_OS_WIN
             if (QSysInfo::windowsVersion() == QSysInfo::WV_XP) {
                 QDir dir("C:\temp");
                 if (!dir.exists()) {
                     if (!dir.mkdir("C:\temp")) {
                         #ifdef TUP_DEBUG
-                            qDebug() << "main.cpp - Fatal error: WinXP issue!";
+                            qDebug() << "[main.cpp] - Fatal error: WinXP issue!";
                         #endif
                         return 0;
                     }
@@ -113,6 +114,9 @@ int main(int argc, char ** argv)
         #else
             TCONFIG->setValue("Cache", QDir::tempPath());    
         #endif
+        */
+
+        TCONFIG->setValue("Cache", QDir::tempPath());
     } else {
         QString cache = TCONFIG->value("Cache").toString();
         if (cache.isEmpty())
@@ -177,9 +181,9 @@ int main(int argc, char ** argv)
     // Setting the repository directory (where the projects are saved)
     application.createCache(TCONFIG->value("Cache").toString());
 
-#ifdef TUP_DEBUG
-    qWarning() << "main.cpp - CACHE path -> " + TCONFIG->value("Cache").toString();
-#endif
+    #ifdef TUP_DEBUG
+        qWarning() << "[main.cpp] - CACHE path -> " << TCONFIG->value("Cache").toString();
+    #endif
 
     QStyle *style = QStyleFactory::create("fusion");
     QApplication::setStyle(style);
@@ -192,8 +196,8 @@ int main(int argc, char ** argv)
         #endif
 
         #ifdef TUP_DEBUG
-            qWarning() << "main.cpp - Locale -> " + locale;
-            qWarning() << "main.cpp - Loading lang file -> " + langFile;
+            qWarning() << "[main.cpp] - Locale -> " << locale;
+            qWarning() << "[main.cpp] - Loading lang file -> " << langFile;
         #endif
 
         if (QFile::exists(langFile)) {
@@ -203,7 +207,7 @@ int main(int argc, char ** argv)
             application.installTranslator(translator);
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "main.cpp - Error: Can't open file -> " + langFile;
+                qDebug() << "[main.cpp] - Error: Can't open file -> " << langFile;
             #endif
         }
     }
@@ -216,7 +220,7 @@ int main(int argc, char ** argv)
 
     // Looking for plugins for TupiTube Desk
     #ifdef TUP_DEBUG
-        qWarning() << "main.cpp - Loading plugins from: " + kAppProp->pluginDir();
+        qWarning() << "[main.cpp] - Loading plugins from: " << kAppProp->pluginDir();
     #endif
     QApplication::addLibraryPath(kAppProp->pluginDir());
 
@@ -240,7 +244,7 @@ int main(int argc, char ** argv)
             QString project = QString(argv[1]);
 
             #ifdef TUP_DEBUG
-                qWarning() << "main.cpp - Opening project -> " + project;
+                qWarning() << "[main.cpp] - Opening project -> " << project;
             #endif
 
             if (project.endsWith(".tup") || project.endsWith(".TUP"))

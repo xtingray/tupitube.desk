@@ -128,6 +128,7 @@ class TUPITUBE_EXPORT TupCommandExecutor : public QObject
         bool resetScene(TupSceneResponse *response);
 
         void setBgColor(TupSceneResponse *response);
+        bool setLayerOpacity(TupLayerResponse *response);
 
     signals:
         void responsed(TupProjectResponse *response);

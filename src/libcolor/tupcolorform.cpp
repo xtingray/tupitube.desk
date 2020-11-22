@@ -46,7 +46,7 @@
 TupColorForm::TupColorForm(QWidget *parent) : QWidget(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupColorForm()";
+        qDebug() << "[TupColorForm()]";
     #endif
 
     setupForm();
@@ -55,7 +55,7 @@ TupColorForm::TupColorForm(QWidget *parent) : QWidget(parent)
 TupColorForm::~TupColorForm()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "~TupColorForm()";
+        qDebug() << "[~TupColorForm()]";
     #endif
 }
 

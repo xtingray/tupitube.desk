@@ -62,7 +62,7 @@ TupPluginManager *TupPluginManager::instance()
 void TupPluginManager::loadPlugins()
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TupPluginManager::loadPlugins() - Searching for plugins...";
+        qWarning() << "[TupPluginManager::loadPlugins()] - Searching for plugins...";
     #endif
 
     filters.clear();
@@ -76,7 +76,7 @@ void TupPluginManager::loadPlugins()
         QObject *plugin = qobject_cast<QObject*>(loader->instance());
 
         #ifdef TUP_DEBUG
-            qWarning() << "TupPluginManager::loadPlugins() - Loading plugin from -> " << fileName;
+            qWarning() << "[TupPluginManager::loadPlugins()] - Loading plugin from -> " << fileName;
         #endif
 
         if (plugin) {
@@ -99,7 +99,7 @@ void TupPluginManager::loadPlugins()
             loaders << loader;
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "TupPluginManager::loadPlugins() - Can't load plugin, error was: " + loader->errorString();
+                qDebug() << "[TupPluginManager::loadPlugins()] - Can't load plugin, error was: " + loader->errorString();
             #endif
         }
     }

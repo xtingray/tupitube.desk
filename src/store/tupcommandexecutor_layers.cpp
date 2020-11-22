@@ -118,7 +118,7 @@ bool TupCommandExecutor::moveLayer(TupLayerResponse *response)
 
     if (! scene->moveLayer(position, newPosition)) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupCommandExecutor::moveLayer() - Error while moving layer!";
+            qDebug() << "[TupCommandExecutor::moveLayer()] - Error while moving layer!";
         #endif	
         return false;
     } else {
@@ -158,7 +158,7 @@ bool TupCommandExecutor::renameLayer(TupLayerResponse *response)
     QString newName = response->getArg().toString();
 	
     #ifdef TUP_DEBUG
-        qWarning() << "TupCommandExecutor::renameLayer() - Renaming layer to: " + newName;
+        qWarning() << "[TupCommandExecutor::renameLayer()] - Renaming layer to: " << newName;
     #endif	
 
     // QString oldName;
@@ -216,7 +216,7 @@ bool TupCommandExecutor::setLayerVisibility(TupLayerResponse *response)
 bool TupCommandExecutor::addLipSync(TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TupCommandExecutor::addLipSync() - Adding lipsync...";
+        qWarning() << "[TupCommandExecutor::addLipSync()] - Adding lipsync...";
     #endif
 
     int scenePos = response->getSceneIndex();
@@ -245,7 +245,7 @@ bool TupCommandExecutor::addLipSync(TupLayerResponse *response)
 bool TupCommandExecutor::updateLipSync(TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TupCommandExecutor::updateLipSync() - Updating lipsync...";
+        qWarning() << "[TupCommandExecutor::updateLipSync()] - Updating lipsync...";
     #endif
 
     int scenePos = response->getSceneIndex();
@@ -269,7 +269,7 @@ bool TupCommandExecutor::updateLipSync(TupLayerResponse *response)
 bool TupCommandExecutor::removeLipSync(TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TupCommandExecutor::removeLipSync() - Adding lipsync...";
+        qWarning() << "[TupCommandExecutor::removeLipSync()] - Adding lipsync...";
     #endif
 
     int scenePos = response->getSceneIndex();
@@ -282,6 +282,31 @@ bool TupCommandExecutor::removeLipSync(TupLayerResponse *response)
 
     if (scene->removeLipSync(name)) {
         emit responsed(response);
+        return true;
+    }
+
+    return false;
+}
+
+bool TupCommandExecutor::setLayerOpacity(TupLayerResponse *response)
+{
+    int scenePos = response->getSceneIndex();
+    int position = response->getLayerIndex();
+    qreal opacity = response->getArg().toReal();
+
+    #ifdef TUP_DEBUG
+        qWarning() << "[TupCommandExecutor::setLayerOpacity()] - Updating layer opacity -> " << opacity;
+    #endif
+
+    TupScene *scene = project->sceneAt(scenePos);
+    if (!scene)
+        return false;
+
+    TupLayer *layer = scene->layerAt(position);
+    if (layer) {
+        layer->setOpacity(opacity);
+        responsed(response);
+
         return true;
     }
 

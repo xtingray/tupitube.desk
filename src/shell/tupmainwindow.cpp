@@ -93,8 +93,9 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
     setWindowIcon(QIcon(THEME_DIR + "icons/about.png"));
     setObjectName("TupMainWindow_");
     setAcceptDrops(true);
-    screen = QGuiApplication::screens().at(0);
+    setContextMenuPolicy(Qt::NoContextMenu);
 
+    screen = QGuiApplication::screens().at(0);
     isNetworked = false;
     exportWidget = nullptr;
 
@@ -426,7 +427,7 @@ void TupMainWindow::addTwitterPage()
         QString twitterPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/twitter.html";
         if (QFile::exists(twitterPath)) {
             #ifdef TUP_DEBUG
-                qDebug() << "TupMainWindow::addTwitterPage() - Loading page -> " + twitterPath;
+                qDebug() << "[TupMainWindow::addTwitterPage()] - Loading page -> " + twitterPath;
             #endif
 
             internetOn = true;
@@ -509,7 +510,7 @@ bool TupMainWindow::cancelChanges()
 void TupMainWindow::closeInterface()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::closeInterface()";
+        qDebug() << "[TupMainWindow::closeInterface()]";
     #endif
 
     if (cancelChanges())
@@ -714,7 +715,7 @@ void TupMainWindow::openExample()
             openProject(example);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupMainWindow::openExample() - Fatal Error: Couldn't open example file -> " + QString(example);
+            qDebug() << "[TupMainWindow::openExample()] - Fatal Error: Couldn't open example file -> " + QString(example);
         #endif
         TOsd::self()->display(TOsd::Error, tr("Cannot open project!"));
     }
@@ -868,13 +869,13 @@ void TupMainWindow::importPalettes()
                     m_colorPalette->parsePaletteFile(importer.getFilePath());
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupMainWindow::importPalettes() - Fatal Error: Couldn't import file -> " + QString(*file);
+                        qDebug() << "[TupMainWindow::importPalettes()] - Fatal Error: Couldn't import file -> " + QString(*file);
                     #endif
                     isOk = false;
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupMainWindow::importPalettes() - Fatal Error: Couldn't import palette -> " + QString(*file);
+                    qDebug() << "[TupMainWindow::importPalettes()] - Fatal Error: Couldn't import palette -> " + QString(*file);
                 #endif
                 isOk = false;
             }
@@ -958,7 +959,7 @@ bool TupMainWindow::saveAs()
     if (!directory.exists()) {
         TOsd::self()->display(TOsd::Error, tr("Directory does not exist! Please, choose another path."));
         #ifdef TUP_DEBUG
-            qDebug() << "TupMainWindow::saveAs() - Fatal Error: Directory doesn't exist! -> " + path.toLocal8Bit();
+            qDebug() << "[TupMainWindow::saveAs()] - Fatal Error: Directory doesn't exist! -> " + path.toLocal8Bit();
         #endif
         return false;
     } else {
@@ -1109,12 +1110,12 @@ void TupMainWindow::closeEvent(QCloseEvent *event)
 void TupMainWindow::createPaintCommand(const TupPaintAreaEvent *event)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::createPaintCommand()";
+        qDebug() << "[TupMainWindow::createPaintCommand()]";
     #endif
 
     if (!animationTab) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupMainWindow::createPaintCommand() - No animation tab... aborting!";
+            qDebug() << "[TupMainWindow::createPaintCommand()] - No animation tab... aborting!";
         #endif
         return;
     }
@@ -1138,7 +1139,7 @@ void TupMainWindow::createPaintCommand(const TupPaintAreaEvent *event)
 void TupMainWindow::updatePenColor(const QColor &color)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::updatePenColor()";
+        qDebug() << "[TupMainWindow::updatePenColor()]";
     #endif
 
     TupPaintAreaEvent *event = new TupPaintAreaEvent(TupPaintAreaEvent::ChangePenColor, color);
@@ -1148,7 +1149,7 @@ void TupMainWindow::updatePenColor(const QColor &color)
 void TupMainWindow::updatePenThickness(int thickness)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::updatePenThickness()" << thickness;
+        qDebug() << "[TupMainWindow::updatePenThickness()] - thickness -> " << thickness;
     #endif
 
     TupPaintAreaEvent *event = new TupPaintAreaEvent(TupPaintAreaEvent::ChangePenThickness, thickness);
@@ -1163,7 +1164,7 @@ void TupMainWindow::addPage(QWidget *widget)
 void TupMainWindow::updateCurrentTab(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::updateCurrentTab()";
+        qDebug() << "[TupMainWindow::updateCurrentTab()]";
     #endif
 
     if (index == 1) {  // Player mode 
@@ -1231,7 +1232,7 @@ void TupMainWindow::postProject()
         if (framesCount < 2) {
             TOsd::self()->display(TOsd::Error, tr("To post video add more frames!"));
             #ifdef TUP_DEBUG
-                qDebug() << "TupMainWindow::postProject() - Error: Too few frames!";
+                qDebug() << "[TupMainWindow::postProject()] - Error: Too few frames!";
             #endif
             return;
         }
@@ -1260,7 +1261,7 @@ void TupMainWindow::postProject()
                     } else {
                         // User cancelled action
                         #ifdef TUP_DEBUG
-                            qDebug() << "TupMainWindow::postProject() - Action canceled by user!";
+                            qDebug() << "[TupMainWindow::postProject()] - Action canceled by user!";
                         #endif
                         TOsd::self()->display(TOsd::Info, tr("Post canceled by user!"));
                         return;
@@ -1312,7 +1313,7 @@ void TupMainWindow::postFrame(const QString &imagePath)
                 } else {
                     // User cancelled action
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupMainWindow::postProject() - Action canceled by user!";
+                        qDebug() << "[TupMainWindow::postProject()] - Action canceled by user!";
                     #endif
                     TOsd::self()->display(TOsd::Info, tr("Post canceled by user!"));
                     return;
@@ -1365,7 +1366,7 @@ bool TupMainWindow::callSave()
 void TupMainWindow::restoreFramesMode(TupProject::Mode mode)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupMainWindow::restoreFramesMode()]" << mode << " - currentDock: " << currentDock;
+        qDebug() << "[TupMainWindow::restoreFramesMode()] " << mode << " - currentDock: " << currentDock;
     #endif
 
     contextMode = mode;
@@ -1456,7 +1457,7 @@ void TupMainWindow::netProjectSaved()
 void TupMainWindow::updatePlayer(bool removeAction)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::updatePlayer()";
+        qDebug() << "[TupMainWindow::updatePlayer()]";
     #endif
 
     if (!removeAction)
@@ -1514,7 +1515,7 @@ void TupMainWindow::showWebMessage()
 void TupMainWindow::setUpdateFlag(bool update)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::setUpdateFlag() - update -> " << update;
+        qDebug() << "[TupMainWindow::setUpdateFlag()] - update -> " << update;
     #endif
 
     TCONFIG->beginGroup("General");

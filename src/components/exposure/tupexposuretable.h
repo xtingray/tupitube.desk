@@ -87,6 +87,8 @@ class TUPITUBE_EXPORT TupExposureTable : public QTableWidget
 
         // void setLockLayer(int layerIndex,  bool locked);
         void setLayerVisibility(int visualIndex, bool visibility);
+        // void setLayerOpacity(int layerIndex, double opacity);
+        // void storeUndoLayerOpacity(int layerIndex, double opacity);
         int usedFrames(int column) const;
 
         QString frameName(int layerIndex, int frameIndex);
@@ -160,6 +162,9 @@ class TUPITUBE_EXPORT TupExposureTable : public QTableWidget
         bool isLocalRequest;
         QString themeName;
         bool isEditing;
+
+        // QList<double> opacityControl;
+        // QList<double> undoOpacities;
 };
 
 #endif

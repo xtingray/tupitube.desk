@@ -197,7 +197,7 @@ void TupBrushWidget::setThickness(int width)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupBrushWidget::setThickness()]";
-        qDebug() << "thickness: " << width;
+        qDebug() << "*** thickness: " << width;
     #endif
 
     if (width > 0) {
@@ -250,7 +250,7 @@ void TupBrushWidget::setPenThickness(int width)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupBrushWidget::setPenThickness()]";
-        qDebug() << "thickness: " << width;
+        qDebug() << "*** thickness: " << width;
     #endif
 
     pen.setWidth(width);
@@ -273,7 +273,7 @@ void TupBrushWidget::init(int width)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupBrushWidget::init()]";
-        qDebug() << "thickness: " << width;
+        qDebug() << "*** thickness: " << width;
     #endif
 
     blockSignals(true);

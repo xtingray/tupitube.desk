@@ -52,8 +52,8 @@ TupSceneTabWidget::~TupSceneTabWidget()
 {
     tables.clear();
     undoTables.clear();
-    opacityControl.clear();
-    undoOpacities.clear();
+    // opacityControl.clear();
+    // undoOpacities.clear();
 
     delete tabber;
 }
@@ -65,7 +65,7 @@ void TupSceneTabWidget::removeAllTabs()
          delete tabber->currentWidget();
 
     tables.clear();
-    opacityControl.clear();
+    // opacityControl.clear();
 }
 
 void TupSceneTabWidget::addScene(int index, const QString &name, TupExposureTable *table) 
@@ -87,26 +87,12 @@ void TupSceneTabWidget::addScene(int index, const QString &name, TupExposureTabl
     opacitySpinBox->setSingleStep(0.1);
     opacitySpinBox->setValue(1.0);
     opacitySpinBox->setToolTip(tr("Current Layer Opacity"));
-    connect(opacitySpinBox, SIGNAL(valueChanged(double)), this, SIGNAL(updateLayerOpacity(double)));
+    connect(opacitySpinBox, SIGNAL(valueChanged(double)), this, SIGNAL(layerOpacityChanged(double)));
 
     opacityControl << opacitySpinBox;
 
     toolsLayout->addWidget(header);
     toolsLayout->addWidget(opacitySpinBox);
-
-    /*
-    TImageButton *exportButton = new TImageButton(QIcon(THEME_DIR + "icons/layer_opacity.png"), 16);
-    exportButton->setToolTip(tr("Export Current Layer"));
-    connect(exportButton, SIGNAL(clicked(bool)), this, SIGNAL(exportActionCalled()));
-
-    TImageButton *importButton = new TImageButton(QIcon(THEME_DIR + "icons/layer_opacity.png"), 16);
-    importButton->setToolTip(tr("Import Current Layer"));
-    connect(importButton, SIGNAL(clicked(bool)), this, SIGNAL(importActionCalled()));
-
-    toolsLayout->addSpacing(10);
-    toolsLayout->addWidget(exportButton);
-    toolsLayout->addWidget(importButton);
-    */
 
     layout->addLayout(toolsLayout);
     layout->addWidget(table);
@@ -189,13 +175,13 @@ TupExposureTable* TupSceneTabWidget::getTable(int index)
             return table;
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "TupSceneTabWidget::getTable() - [ Fatal Error ] - Table pointer is NULL!";
+                qDebug() << "[TupSceneTabWidget::getTable()] - Fatal Error: Table pointer is NULL!";
             #endif
         }
     }
 
     #ifdef TUP_DEBUG
-        qDebug() << "TupSceneTabWidget::getTable() - [ Fatal Error ] - Invalid table index: " + QString::number(index);
+        qDebug() << "[TupSceneTabWidget::getTable()] - Fatal Error: Invalid table index: " << index;
     #endif
 
     return 0;
@@ -237,7 +223,7 @@ void TupSceneTabWidget::setLayerVisibility(int sceneIndex, int layerIndex, bool 
         table->setLayerVisibility(layerIndex, visibility);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupSceneTabWidget::setLayerVisibility() - [ Fatal Error ] - Invalid table index: " + QString::number(sceneIndex);
+            qDebug() << "[TupSceneTabWidget::setLayerVisibility()] - Fatal Error: Invalid table index: " << sceneIndex;
         #endif
     }
 }

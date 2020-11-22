@@ -106,7 +106,7 @@ QTabWidget *TabbedMainWindow::tabWidget() const
 void TabbedMainWindow::emitWidgetChanged(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TabbedMainWindow::emitWidgetChanged()";
+        qDebug() << "[TabbedMainWindow::emitWidgetChanged()]";
     #endif
 
     if (index != -1) {
@@ -131,7 +131,7 @@ void TabbedMainWindow::emitWidgetChanged(int index)
 void TabbedMainWindow::setCurrentTab(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TabbedMainWindow::setCurrentTab() - index: " << index;
+        qDebug() << "[TabbedMainWindow::setCurrentTab()] - index: " << index;
     #endif
 
     if (index != -1)

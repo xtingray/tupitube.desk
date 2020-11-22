@@ -149,7 +149,7 @@ void TupViewColorCells::setupForm()
 void TupViewColorCells::readPalettes(const QString &paletteDir)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "[TupViewColorCells::readPalettes()] - Reading palettes from: " + paletteDir;
+        qWarning() << "[TupViewColorCells::readPalettes()] - Reading palettes from: " << paletteDir;
     #endif
 
     QDir dir(paletteDir);
@@ -158,17 +158,17 @@ void TupViewColorCells::readPalettes(const QString &paletteDir)
         QStringList::ConstIterator it = files.begin();
 
         while (it != files.end()) {
-               readPaletteFile(dir.path() + "/" + *it);
-               ++it;
+            readPaletteFile(dir.path() + "/" + *it);
+            ++it;
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupViewColorCells::readPalettes()] - Error: Palettes path doesn't exist -> " + paletteDir;
+            qDebug() << "[TupViewColorCells::readPalettes()] - Error: Palettes path doesn't exist -> " << paletteDir;
         #endif
 
         if (dir.mkpath(paletteDir)) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupViewColorCells::readPalettes()] - Creating path -> " + paletteDir;
+                qDebug() << "[TupViewColorCells::readPalettes()] - Creating path -> " << paletteDir;
             #endif
         }
     }

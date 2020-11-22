@@ -78,6 +78,7 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     #endif
 
     setWindowIcon(QPixmap(THEME_DIR + "icons/animation_mode.png"));
+    setContextMenuPolicy(Qt::NoContextMenu);
 
     project = work;
     currentTool = nullptr;
@@ -450,7 +451,7 @@ void TupDocumentView::loadPlugins()
             TupExportInterface *exporter = qobject_cast<TupExportInterface *>(plugin);
             if (exporter) {
                 #ifdef TUP_DEBUG
-                    qWarning() << "TupDocumentView::loadPlugins() - plugin: " << exporter->key();
+                    qWarning() << "[TupDocumentView::loadPlugins()] - plugin: " << exporter->key();
                 #endif
 
                 if (exporter->key() == TupExportInterface::ImageSequence) {
@@ -464,7 +465,7 @@ void TupDocumentView::loadPlugins()
 
     if (!imagePluginLoaded) {
         #ifdef TUP_DEBUG
-            qWarning() << "TupDocumentView::loadPlugins() - Warning: Couldn't found plugin -> "
+            qWarning() << "[TupDocumentView::loadPlugins()] - Warning: Couldn't found plugin -> "
                        << tr("Image Sequence");
         #endif
     }
@@ -489,7 +490,7 @@ void TupDocumentView::loadPlugins()
             TAction *action = tool->actions()[toolId];
             if (action) {                
                 #ifdef TUP_DEBUG
-                    qWarning() << "TupDocumentView::loadPlugins() - Tool Loaded -> " << action->text();
+                    qWarning() << "[TupDocumentView::loadPlugins()] - Tool Loaded -> " << action->text();
                 #endif
 
                 action->setIconVisibleInMenu(true);
@@ -601,7 +602,7 @@ void TupDocumentView::loadPlugins()
                 } // end switch
             } else {
               #ifdef TUP_DEBUG
-                  qDebug() << "TupDocumentView::loadPlugins() - Fatal Error: Tool action is NULL -> " << *it;
+                  qDebug() << "[TupDocumentView::loadPlugins()] - Fatal Error: Tool action is NULL -> " << *it;
               #endif
             }
         }
@@ -631,7 +632,7 @@ void TupDocumentView::loadPlugins()
 
         for (it = keys.begin(); it != keys.end(); ++it) {
             #ifdef TUP_DEBUG
-                qDebug() << "TupDocumentView::loadPlugins() - Filter Loaded: " << *it;
+                qDebug() << "[TupDocumentView::loadPlugins()] - Filter Loaded: " << *it;
             #endif
 
             TAction *filter = filterInterface->actions()[*it];
@@ -1535,7 +1536,7 @@ TupPaintAreaCommand *TupDocumentView::createPaintCommand(const TupPaintAreaEvent
 void TupDocumentView::updatePaintArea()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupDocumentView::updatePaintArea()";
+        qDebug() << "[TupDocumentView::updatePaintArea()]";
     #endif
 
     paintArea->updatePaintArea();
@@ -1924,7 +1925,7 @@ void TupDocumentView::sendStoryboard(TupStoryboard *storyboard, int sceneIndex)
 {
     if (isNetworked) {
         #ifdef TUP_DEBUG
-            qWarning() << "TupDocumentView::sendStoryboard() - Sending storyboard...";
+            qWarning() << "[TupDocumentView::sendStoryboard()] - Sending storyboard...";
         #endif
         emit updateStoryboard(storyboard, sceneIndex);
     } else {
@@ -1949,7 +1950,7 @@ void TupDocumentView::updateUsersOnLine(const QString &login, int state)
 void TupDocumentView::updateStaticOpacity(double opacity)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupDocumentView::updateStaticOpacity()";
+        qDebug() << "[TupDocumentView::updateStaticOpacity()]";
     #endif
 
     int sceneIndex = paintArea->currentSceneIndex();
@@ -1969,7 +1970,7 @@ void TupDocumentView::updateStaticOpacity(double opacity)
 void TupDocumentView::updateDynamicOpacity(double opacity)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupDocumentView::updateDynamicOpacity()";
+        qDebug() << "[TupDocumentView::updateDynamicOpacity()]";
     #endif
 
    int sceneIndex = paintArea->currentSceneIndex();
@@ -2010,7 +2011,7 @@ void TupDocumentView::updateBackgroundShiftProperty(int shift)
 void TupDocumentView::renderVectorDynamicFrame()
 {
     #ifdef TUP_DEBUG
-       qDebug() << "TupDocumentView::renderVectorDynamicFrame() - Tracing...";
+       qDebug() << "[TupDocumentView::renderVectorDynamicFrame()] - Tracing...";
     #endif
 
    int sceneIndex = paintArea->currentSceneIndex();
@@ -2150,7 +2151,7 @@ void TupDocumentView::cameraInterface()
 void TupDocumentView::resizeProjectDimension(const QSize dimension)
 {
     #ifdef TUP_DEBUG
-       qDebug() << "TupDocumentView::resizeProjectDimension(QSize)";
+       qDebug() << "[TupDocumentView::resizeProjectDimension(QSize)]";
     #endif
 
     paintArea->updateDimension(dimension);
@@ -2365,25 +2366,25 @@ void TupDocumentView::importPapagayoLipSync()
                     } else {
                         TOsd::self()->display(TOsd::Error, tr("Papagayo file is invalid!"));
                         #ifdef TUP_DEBUG
-                            qDebug() << "TupDocumentView::importPapagayoLipSync() - Fatal Error: Papagayo file is invalid!";
+                            qDebug() << "[TupDocumentView::importPapagayoLipSync()] - Fatal Error: Papagayo file is invalid!";
                         #endif
                     }
                 } else {
                     TOsd::self()->display(TOsd::Error, tr("Images directory is empty!"));
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupDocumentView::importPapagayoLipSync() - Fatal Error: Images directory is empty!";
+                        qDebug() << "[TupDocumentView::importPapagayoLipSync()] - Fatal Error: Images directory is empty!";
                     #endif
                 }
             } else {
                 TOsd::self()->display(TOsd::Error, tr("Papagayo project is invalid!"));
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupDocumentView::importPapagayoLipSync() - Fatal Error: Papagayo file is invalid!";
+                    qDebug() << "[TupDocumentView::importPapagayoLipSync()] - Fatal Error: Papagayo file is invalid!";
                 #endif
             }
         } else {
             TOsd::self()->display(TOsd::Error, tr("Papagayo project is invalid!"));
             #ifdef TUP_DEBUG
-                qDebug() << "TupDocumentView::importPapagayoLipSync() - Fatal Error: Papagayo file doesn't exist!";
+                qDebug() << "[TupDocumentView::importPapagayoLipSync()] - Fatal Error: Papagayo file doesn't exist!";
             #endif
         }
         QApplication::restoreOverrideCursor();
@@ -2452,7 +2453,7 @@ void TupDocumentView::updateBrush(const QBrush &brush)
 void TupDocumentView::updateActiveDock(TupDocumentView::DockType dock)
 {
     #ifdef TUP_DEBUG
-        qInfo() << "TupDocumentView::updateActiveDock() - currentDock: " + QString::number(dock);
+        qDebug() << "[TupDocumentView::updateActiveDock()] - currentDock: " << QString::number(dock);
     #endif
 
     currentDock = dock;

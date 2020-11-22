@@ -397,7 +397,6 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
         case TupProjectRequest::UpdateOpacity:
           {
               guiScene->drawCurrentPhotogram();
-
               if (scene())
                   viewport()->update(guiScene->sceneRect().toRect());
           }

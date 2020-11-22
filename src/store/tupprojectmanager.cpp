@@ -71,7 +71,7 @@ TupProjectManager::TupProjectManager(QObject *parent) : QObject(parent)
 TupProjectManager::~TupProjectManager()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "~TupProjectManager()";
+        qDebug() << "[~TupProjectManager()]";
     #endif
 
     delete handler;
@@ -125,12 +125,12 @@ TupAbstractProjectHandler *TupProjectManager::getHandler() const
 void TupProjectManager::setupNewProject()
 {	
     #ifdef TUP_DEBUG
-        qDebug() << "TupProjectManager::setupNewProject()";
+        qDebug() << "[TupProjectManager::setupNewProject()]";
     #endif
 
     if (!handler || !params) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupProjectManager::setupNewProject() - Error: No handler available or no params!";
+            qDebug() << "[TupProjectManager::setupNewProject()] - Error: No handler available or no params!";
         #endif
         return;
     }
@@ -147,7 +147,7 @@ void TupProjectManager::setupNewProject()
 
     if (!handler->setupNewProject(params)) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupProjectManager::setupNewProject() - Error: Project params misconfiguration";
+            qDebug() << "[TupProjectManager::setupNewProject()] - Error: Project params misconfiguration";
         #endif
         return;
     }
@@ -158,7 +158,7 @@ void TupProjectManager::setupNewProject()
         if (projectDir.exists()) {
             if (!projectDir.removeRecursively()) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupProjectManager::setupNewProject() - Error: Can't remove CACHE path -> " << projectPath;
+                    qDebug() << "[TupProjectManager::setupNewProject()] - Error: Can't remove CACHE path -> " << projectPath;
                 #endif
             }
         }
@@ -227,7 +227,7 @@ bool TupProjectManager::loadProject(const QString &fileName)
         modified = false;
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupProjectManager::loadProject() - Fatal Error: Can't load project -> " + fileName;
+            qDebug() << "[TupProjectManager::loadProject()] - Fatal Error: Can't load project -> " << fileName;
         #endif
     }
 
@@ -249,7 +249,7 @@ bool TupProjectManager::projectWasModified() const
 void TupProjectManager::setModificationStatus(bool changed)
 {
 #ifdef TUP_DEBUG
-    qDebug() << "TupProjectManager::setModificationStatus() - changed -> " << changed;
+    qDebug() << "[TupProjectManager::setModificationStatus()] - changed -> " << changed;
 #endif
 
     modified = changed;
@@ -273,7 +273,7 @@ bool TupProjectManager::isValid() const
 void TupProjectManager::handleProjectRequest(const TupProjectRequest *request)
 {	
     #ifdef TUP_DEBUG
-        qWarning() << "TupProjectManager::handleProjectRequest() - Package:";
+        qWarning() << "[TupProjectManager::handleProjectRequest()] - Package:";
         qWarning() << request->getXml();
     #endif
 
@@ -283,7 +283,7 @@ void TupProjectManager::handleProjectRequest(const TupProjectRequest *request)
         handler->handleProjectRequest(request);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupProjectManager::handleProjectRequest() - Error: No handler available";
+            qDebug() << "[TupProjectManager::handleProjectRequest()] - Error: No handler available";
         #endif
     }
 }
@@ -291,7 +291,7 @@ void TupProjectManager::handleProjectRequest(const TupProjectRequest *request)
 void TupProjectManager::handleLocalRequest(const TupProjectRequest *request)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupProjectManager::handleLocalRequest()";
+        qDebug() << "[TupProjectManager::handleLocalRequest()]";
     #endif	
 
     TupRequestParser parser;
@@ -327,6 +327,7 @@ void TupProjectManager::handleLocalRequest(const TupProjectRequest *request)
             } else if (response->action() == TupProjectRequest::UpdateOpacity) {
             */
 
+            /*
             if (response->getAction() == TupProjectRequest::UpdateOpacity) {
                 double opacity = response->getArg().toReal();
                 TupScene *scene = project->sceneAt(sceneIndex);
@@ -336,13 +337,14 @@ void TupProjectManager::handleLocalRequest(const TupProjectRequest *request)
                         layer->setOpacity(opacity);
                     } else {
                         #ifdef TUP_DEBUG
-                            QString msg = "TupProjectManager::handleLocalRequest() - Fatal Error: "
+                            QString msg = "[TupProjectManager::handleLocalRequest()] - Fatal Error: "
                                           " Layer pointer is NULL [index = " +  QString::number(layerIndex) + "]";
                             qDebug() << msg;
                         #endif
                     }
                 }
             }
+            */
         }
 
         parser.getResponse()->setExternal(request->isRequestExternal());
@@ -362,7 +364,7 @@ void TupProjectManager::handleLocalRequest(const TupProjectRequest *request)
 void TupProjectManager::createCommand(const TupProjectRequest *request, bool addToStack)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupProjectManager::createCommand()";
+        qDebug() << "[TupProjectManager::createCommand()]";
         qDebug() << request->getXml();
     #endif
 
@@ -413,8 +415,8 @@ void TupProjectManager::undo()
         if (undoStack->canUndo()) {
             /*
             qDebug() << "";
-            qDebug() << "TupProjectManager::undo() - count: " << undoStack->count();
-            qDebug() << "TupProjectManager::undo() - undo text: " << undoStack->undoText();
+            qDebug() << "[TupProjectManager::undo()] - count: " << undoStack->count();
+            qDebug() << "[TupProjectManager::undo()] - undo text: " << undoStack->undoText();
             qDebug() << "";
             */
             undoStack->undo();
@@ -432,8 +434,8 @@ void TupProjectManager::redo()
        if (undoStack->canRedo()) {
            /*
            qDebug() << "";
-           qDebug() << "TupProjectManager::redo() - count: " << undoStack->count();
-           qDebug() << "TupProjectManager::redo() - redo text: " << undoStack->redoText();
+           qDebug() << "[TupProjectManager::redo()] - count: " << undoStack->count();
+           qDebug() << "[TupProjectManager::redo()] - redo text: " << undoStack->redoText();
            qDebug() << "";
            */
            undoStack->redo();
@@ -453,7 +455,7 @@ void TupProjectManager::clearUndoStack()
 void TupProjectManager::emitResponse(TupProjectResponse *response)
 {	
     #ifdef TUP_DEBUG
-        qDebug() << "TupProjectManager::emitResponse() - response->action(): " << response->getAction();
+        qDebug() << "[TupProjectManager::emitResponse()] - response->action(): " << response->getAction();
     #endif	
 
     if (response->getAction() != TupProjectRequest::Select)
@@ -494,8 +496,8 @@ int TupProjectManager::framesCount(int sceneIndex)
 bool TupProjectManager::removeProjectPath(const QString &projectPath)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupProjectManager::removeProjectPath() - Removing project path: " << projectPath;
-        qDebug() << "CACHE_DIR: " << CACHE_DIR;
+        qDebug() << "[TupProjectManager::removeProjectPath()] - Removing project path: " << projectPath;
+        qDebug() << "*** CACHE_DIR: " << CACHE_DIR;
     #endif
 
     bool result = true;
@@ -510,7 +512,7 @@ bool TupProjectManager::removeProjectPath(const QString &projectPath)
                     result = removeProjectPath(path);
                 } else {
                     #ifdef TUP_DEBUG
-                       qWarning() << "TupProjectManager::removeProjectPath() - Cache Path reached! -> " << path;
+                       qWarning() << "[TupProjectManager::removeProjectPath()] - Cache Path reached! -> " << path;
                     #endif
                     return true;
                 }

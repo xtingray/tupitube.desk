@@ -58,9 +58,10 @@ class T_GUI_EXPORT TupSceneTabWidget : public QFrame
     Q_OBJECT
 
     public:
-        TupSceneTabWidget(QWidget *parent = 0);
+        TupSceneTabWidget(QWidget *parent = nullptr);
         ~TupSceneTabWidget();
-        void addScene(int index, const QString &name, TupExposureTable *table = 0);
+
+        void addScene(int index, const QString &name, TupExposureTable *table = nullptr);
         void restoreScene(int index, const QString &name);
         void removeScene(int index, bool withBackup);
         // void removeCleanScene(int index);
@@ -79,7 +80,7 @@ class T_GUI_EXPORT TupSceneTabWidget : public QFrame
 
     signals:
         void currentChanged(int index);
-        void updateLayerOpacity(double opacity);
+        void layerOpacityChanged(double opacity);
         // void exportActionCalled();
         // void importActionCalled();
 
@@ -87,6 +88,7 @@ class T_GUI_EXPORT TupSceneTabWidget : public QFrame
         QList<TupExposureTable *> tables;
         QList<TupExposureTable *> undoTables;
         QTabWidget *tabber;
+
         QList<QDoubleSpinBox *> opacityControl;
         QList<QDoubleSpinBox *> undoOpacities;
 };

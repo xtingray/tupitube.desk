@@ -688,7 +688,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double 
     int total = tweenList.count();
 
     #ifdef TUP_DEBUG
-        qWarning() << "Objects with tweens: " << total;
+        qWarning() << "*** Objects with tweens: " << total;
     #endif
 
     TupGraphicObject *object;
@@ -907,7 +907,7 @@ void TupGraphicsScene::addSvgTweeningObjects(int layerIndex, int photogram, doub
     int total = svgList.count();
 
     #ifdef TUP_DEBUG
-        qWarning() << "Objects with SVG tweens: " << total;
+        qWarning() << "*** Objects with SVG tweens: " << total;
     #endif
 
     TupSvgItem *object;

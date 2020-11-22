@@ -44,7 +44,7 @@
 void TupMainWindow::createGUI()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::createGUI()";
+        qDebug() << "[TupMainWindow::createGUI()]";
     #endif
 
     TAction *hideAction = new TAction(QPixmap(THEME_DIR + "icons/hide_top_panel.png"), tr("Hide top panels"),
@@ -301,7 +301,7 @@ void TupMainWindow::setMenuItemsContext(bool flag)
 {
 /*
 #ifdef TUP_DEBUG
-    qDebug() << "TupMainWindow::setMenuItemsContext() - flag -> " << flag;
+    qDebug() << "[TupMainWindow::setMenuItemsContext()] - flag -> " << flag;
 #endif
 */
     m_actionManager->enable("save_project", flag);
@@ -490,7 +490,7 @@ void TupMainWindow::updateOpenRecentMenu(QMenu *menu, QStringList recents)
 void TupMainWindow::changePerspective(QAction *action)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::changePerspective(QAction)";
+        qDebug() << "[TupMainWindow::changePerspective(QAction)]";
     #endif
 
     int perspective = action->data().toInt();
@@ -508,7 +508,7 @@ void TupMainWindow::changePerspective(QAction *action)
 void TupMainWindow::changePerspective(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::changePerspective(int) - Updating QMainWindow interface...";
+        qDebug() << "[TupMainWindow::changePerspective(int)] - Updating QMainWindow interface...";
     #endif
 
     if (index == 4) { // Player
@@ -587,7 +587,7 @@ void TupMainWindow::checkTimeLineVisibility(bool visible)
 void TupMainWindow::checkExposureVisibility(bool visible)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupMainWindow::checkExposureVisibility(bool) - visible: " << visible;
+        qDebug() << "[TupMainWindow::checkExposureVisibility(bool)] - visible: " << visible;
     #endif
 
     if (visible) {

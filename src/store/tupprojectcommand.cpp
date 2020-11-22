@@ -448,6 +448,11 @@ void TupProjectCommand::layerCommand()
                  executor->setLayerVisibility(res);
             }
             break;
+            case TupProjectRequest::UpdateOpacity:
+            {
+                 executor->setLayerOpacity(res);
+            }
+            break;
             default: 
             {
                  #ifdef TUP_DEBUG
