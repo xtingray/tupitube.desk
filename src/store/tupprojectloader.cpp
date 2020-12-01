@@ -46,14 +46,18 @@ TupProjectLoader::~TupProjectLoader()
 {
 }
 
-void TupProjectLoader::createItem(int scenePosition, int layerPosition, int framePosition, int itemPosition, QPointF point, TupLibraryObject::Type type, const QString &xml, TupProject *project)
+void TupProjectLoader::createItem(int sceneIndex, int layerIndex, int frameIndex, int itemPosition, QPointF point, TupLibraryObject::Type type, const QString &xml, TupProject *project)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProjectLoader::createItem()]";
+    #endif
+
     TupItemResponse response(TupProjectRequest::Item, TupProjectRequest::Add);
 
     response.setMode(TupProjectResponse::Do);
-    response.setSceneIndex(scenePosition);
-    response.setLayerIndex(layerPosition);
-    response.setFrameIndex(framePosition);
+    response.setSceneIndex(sceneIndex);
+    response.setLayerIndex(layerIndex);
+    response.setFrameIndex(frameIndex);
     response.setItemIndex(itemPosition);
     response.setItemType(type);
     response.setPosX(point.x());
@@ -63,45 +67,53 @@ void TupProjectLoader::createItem(int scenePosition, int layerPosition, int fram
     project->emitResponse(&response);
 }
 
-void TupProjectLoader::createFrame(int scenePosition, int layerPosition, int framePosition, const QString &name, TupProject *project)
+void TupProjectLoader::createFrame(int sceneIndex, int layerIndex, int frameIndex, const QString &name, TupProject *project)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProjectLoader::createFrame()]";
+    #endif
+
     TupFrameResponse response(TupProjectRequest::Frame, TupProjectRequest::Add);
 
     response.setMode(TupProjectResponse::Do);
-    response.setSceneIndex(scenePosition);
-    response.setLayerIndex(layerPosition);
-    response.setFrameIndex(framePosition);
+    response.setSceneIndex(sceneIndex);
+    response.setLayerIndex(layerIndex);
+    response.setFrameIndex(frameIndex);
     response.setArg(name);
 
     project->emitResponse(&response);
 }
 
-void TupProjectLoader::createLayer(int scenePosition, int layerPosition, const QString &name, TupProject *project)
+void TupProjectLoader::createLayer(int sceneIndex, int layerIndex, const QString &name, TupProject *project)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProjectLoader::createLayer()]";
+    #endif
+
     TupLayerResponse response(TupProjectRequest::Layer, TupProjectRequest::Add);
    
     response.setMode(TupProjectResponse::Do); 
-    response.setSceneIndex(scenePosition);
-    response.setLayerIndex(layerPosition);
+    response.setSceneIndex(sceneIndex);
+    response.setLayerIndex(layerIndex);
     response.setArg(name);
     
     project->emitResponse(&response);
 }
 
-void TupProjectLoader::createSoundLayer(int scenePosition, int layerPosition, const QString &name, TupProject *project)
+void TupProjectLoader::createSoundLayer(int sceneIndex, int layerIndex, const QString &name, TupProject *project)
 {
     TupLibraryResponse response(TupProjectRequest::Library, TupProjectRequest::InsertSymbolIntoFrame);
    
     response.setMode(TupProjectResponse::Do); 
-    response.setSceneIndex(scenePosition);
-    response.setLayerIndex(layerPosition);
+    response.setSceneIndex(sceneIndex);
+    response.setLayerIndex(layerIndex);
     response.setArg(name);
     response.setSymbolType(TupLibraryObject::Sound);
     
     project->emitResponse(&response);
 }
 
-void TupProjectLoader::createScene(const QString &name, int scenePosition, TupProject *project)
+void TupProjectLoader::createScene(const QString &name, int sceneIndex, TupProject *project)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupProjectLoader::createScene()]";
@@ -110,7 +122,7 @@ void TupProjectLoader::createScene(const QString &name, int scenePosition, TupPr
     TupSceneResponse response(TupProjectRequest::Scene, TupProjectRequest::Add);
 
     response.setMode(TupProjectResponse::Do);
-    response.setSceneIndex(scenePosition);
+    response.setSceneIndex(sceneIndex);
     response.setArg(name);
     
     project->emitResponse(&response);

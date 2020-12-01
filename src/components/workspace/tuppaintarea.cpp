@@ -1374,8 +1374,7 @@ void TupPaintArea::paintForeground()
 void TupPaintArea::setCurrentTool(TAction::ActionId tool)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPaintArea::setCurrentTool()]";
-        qDebug() << "SHOW_VAR : " << tool;
+        qDebug() << "[TupPaintArea::setCurrentTool()] - tool -> " << tool;
     #endif
 
     currentTool = tool;

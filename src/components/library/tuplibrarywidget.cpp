@@ -1551,9 +1551,8 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
 void TupLibraryWidget::frameResponse(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::frameResponse()]";
-        qDebug() << "frameIndex: " << response->getFrameIndex();
-        qDebug() << "action: " << response->getAction();
+        qDebug() << "[TupLibraryWidget::frameResponse()] - frameIndex -> "
+                 << response->getFrameIndex() << " - action -> " << response->getAction();
     #endif
 
     if (response->getAction() == TupProjectRequest::Add

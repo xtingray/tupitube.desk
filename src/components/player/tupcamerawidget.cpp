@@ -58,9 +58,9 @@ TupCameraWidget::TupCameraWidget(TupProject *work, QWidget *parent) : QFrame(par
     int height = screen->geometry().height();
 
     #ifdef TUP_DEBUG
-        qDebug() << "TupCameraWidget::() - screen height: " << height;
-        qDebug() << "TupCameraWidget::() - project height: " << projectSize.height();
-        qDebug() << "TupCameraWidget::() - factor: " << factor;
+        qDebug() << "[TupCameraWidget()] - screen height: " << height;
+        qDebug() << "[TupCameraWidget()] - project height: " << projectSize.height();
+        qDebug() << "[TupCameraWidget()] - factor: " << factor;
     #endif
 
     if (height <= 800)
@@ -443,9 +443,8 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
             default:
             {
                  #ifdef TUP_DEBUG
-                     QString msg = "TupCameraWidget::handleProjectResponse() - Unknown/Unhandled project action: " 
-                                   + QString::number(sceneResponse->getAction());
-                     qDebug() << msg;
+                     qDebug() << "[TupCameraWidget::handleProjectResponse()] - Unknown/Unhandled project action: "
+                              << sceneResponse->getAction();
                  #endif
             }
             break;

@@ -198,7 +198,7 @@ void TupScreen::paintEvent(QPaintEvent *)
             painter.drawImage(imagePos, currentPhotogram);
         } else {
             #ifdef TUP_DEBUG
-                QString msg = "TupScreen::paintEvent() - Photogram is NULL (index: "
+                QString msg = "[TupScreen::paintEvent()] - Photogram is NULL (index: "
                               + QString::number(currentFramePosition) + "/"
                               + QString::number(photograms.count()) + ")";
                 qWarning() << msg;
@@ -517,12 +517,10 @@ void TupScreen::render()
 
     emit isRendering(0);
 
-    // TupScene *scene = project->sceneAt(sceneIndex);
     if (!project->sceneAt(sceneIndex)) {
         #ifdef TUP_DEBUG
-            QString msg = "TupScreen::render() - [ Fatal Error ] - Scene is NULL! -> index: "
-                          + QString::number(sceneIndex);
-            qWarning() << msg;
+            qWarning() << "[TupScreen::render()] - Fatal Error: Scene is NULL! -> index: "
+                       << sceneIndex;
         #endif
         return;
     }
@@ -590,7 +588,7 @@ void TupScreen::resizeEvent(QResizeEvent *event)
         photograms = animationList.at(sceneIndex);
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "TupScreen::resizeEvent() - [ Error ] - Current index is invalid -> " << sceneIndex;
+            qWarning() << "[TupScreen::resizeEvent()] - Error: Current index is invalid -> " << sceneIndex;
         #endif
     }
 
@@ -619,7 +617,7 @@ void TupScreen::updateSceneIndex(int index)
         photograms = animationList.at(sceneIndex);
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "TupScreen::updateSceneIndex() - [ Error ] - Can't set current photogram array -> " << sceneIndex;
+            qWarning() << "[TupScreen::updateSceneIndex()] - Error: Can't set current photogram array -> " << sceneIndex;
         #endif
     }
 }
@@ -662,7 +660,7 @@ void TupScreen::updateAnimationArea()
         update();
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "TupScreen::updateAnimationArea() - [ Fatal Error ] - Can't access to scene index: "
+            qWarning() << "[TupScreen::updateAnimationArea()] - Fatal Error: Can't access to scene index: "
                        << sceneIndex;
         #endif
     }
@@ -708,12 +706,12 @@ void TupScreen::updateFirstFrame()
             renderer = nullptr;
         } else {
             #ifdef TUP_DEBUG
-                qWarning() << "TupScreen::updateFirstFrame() - [ Fatal Error ] - Null scene at index: " << sceneIndex;
+                qWarning() << "[TupScreen::updateFirstFrame()] - Fatal Error: Null scene at index -> " << sceneIndex;
             #endif
         }
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "TupScreen::updateFirstFrame() - [ Fatal Error ] - Can't access to scene index: " << sceneIndex;
+            qWarning() << "[TupScreen::updateFirstFrame()] - Fatal Error: Can't access to scene index -> " << sceneIndex;
         #endif
     }
 }
@@ -743,8 +741,8 @@ void TupScreen::loadSoundRecords()
     if (project->sceneAt(sceneIndex)) {
         int total = project->sceneAt(sceneIndex)->lipSyncTotal();
         #ifdef TUP_DEBUG
-            qWarning() << "TupScreen::loadSoundRecords() - Loading lip-sync files...";
-            qWarning() << "Total -> " << total;
+            qWarning() << "[TupScreen::loadSoundRecords()] - Loading lip-sync files...";
+            qWarning() << "*** Total -> " << total;
         #endif
         if (total > 0) {
             soundRecords.clear();
@@ -772,8 +770,8 @@ void TupScreen::loadSoundRecords()
     int size = effectsList.count();
 
     #ifdef TUP_DEBUG
-        qWarning() << "TupScreen::loadSoundRecords() - Loading sound effects...";
-        qWarning() << "Files Total -> " << size;
+        qWarning() << "[TupScreen::loadSoundRecords()] - Loading sound effects...";
+        qWarning() << "*** Files Total -> " << size;
     #endif
 
     for (int i=0; i<size; i++)  {
@@ -785,24 +783,25 @@ void TupScreen::loadSoundRecords()
 
 void TupScreen::playSoundAt(int frame)
 {
-/*
-#ifdef TUP_DEBUG
-    qDebug() << "[TupScreen::playSoundAt()]";
-#endif
-*/
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScreen::playSoundAt()]";
+    #endif
+    */
+
     int size = soundRecords.count();
     for (int i=0; i<size; i++) {
         QPair<int, QString> soundRecord = soundRecords.at(i);
         if (frame == soundRecord.first) {
             if (i < soundPlayer.count()) {
                 #ifdef TUP_DEBUG
-                    qWarning() << "TupScreen::playSoundAt() - Playing file -> " << soundRecord.second;
+                    qWarning() << "[TupScreen::playSoundAt()] - Playing file -> " << soundRecord.second;
                 #endif
                 soundPlayer.at(i)->setMedia(QUrl::fromLocalFile(soundRecord.second));
                 soundPlayer.at(i)->play();
             } else { 
                 #ifdef TUP_DEBUG
-                    qWarning() << "TupScreen::playSoundAt() -  Fatal Error: "
+                    qWarning() << "[TupScreen::playSoundAt()] - Fatal Error: "
                     "Not sound file was found at -> " << soundRecord.second;
                 #endif
             }

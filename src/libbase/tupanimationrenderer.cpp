@@ -60,7 +60,7 @@ void TupAnimationRenderer::setScene(TupScene *scene, QSize dimension)
     totalPhotograms = scene->totalPhotograms(); // calculateTotalPhotograms(scene);
 
     #ifdef TUP_DEBUG
-        qInfo() << "TupAnimationRenderer::setScene() - Photograms Total: " + QString::number(totalPhotograms);
+        qDebug() << "[TupAnimationRenderer::setScene()] - Photograms Total -> " << totalPhotograms;
     #endif
 }
 
@@ -82,7 +82,7 @@ bool TupAnimationRenderer::nextPhotogram()
 void TupAnimationRenderer::renderPhotogram(int index) 
 {
     #ifdef TUP_DEBUG
-        qInfo() << "[TupAnimationRenderer::renderPhotogram()] - index -> " << index;
+        qDebug() << "[TupAnimationRenderer::renderPhotogram()] - index -> " << index;
     #endif
 
     gScene->drawPhotogram(index, false);
@@ -91,7 +91,7 @@ void TupAnimationRenderer::renderPhotogram(int index)
 void TupAnimationRenderer::render(QPainter *painter)
 {
     #ifdef TUP_DEBUG
-        qInfo() << "[TupAnimationRenderer::render()]";
+        qDebug() << "[TupAnimationRenderer::render()]";
     #endif
 
     gScene->render(painter, gScene->sceneRect().toRect(),

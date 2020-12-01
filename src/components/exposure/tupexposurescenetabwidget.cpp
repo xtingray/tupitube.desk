@@ -33,11 +33,15 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "tupscenetabwidget.h"
+#include "tupexposurescenetabwidget.h"
 #include "timagebutton.h"
 
-TupSceneTabWidget::TupSceneTabWidget(QWidget *parent) : QFrame(parent)
+TupExposureSceneTabWidget::TupExposureSceneTabWidget(QWidget *parent) : QFrame(parent)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExposureSceneTabWidget()]";
+    #endif
+
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setMargin(1);
 
@@ -48,28 +52,37 @@ TupSceneTabWidget::TupSceneTabWidget(QWidget *parent) : QFrame(parent)
     setLayout(layout);
 }
 
-TupSceneTabWidget::~TupSceneTabWidget()
+TupExposureSceneTabWidget::~TupExposureSceneTabWidget()
 {
     tables.clear();
     undoTables.clear();
-    // opacityControl.clear();
-    // undoOpacities.clear();
+    opacityControl.clear();
+    undoOpacities.clear();
 
     delete tabber;
 }
 
-void TupSceneTabWidget::removeAllTabs()
+void TupExposureSceneTabWidget::removeAllTabs()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExposureSceneTabWidget::removeAllTabs()]";
+    #endif
+
     int count = tabber->count();
     for (int i = 0; i < count; i++)
          delete tabber->currentWidget();
 
     tables.clear();
-    // opacityControl.clear();
+    opacityControl.clear();
+    undoOpacities.clear();
 }
 
-void TupSceneTabWidget::addScene(int index, const QString &name, TupExposureTable *table) 
+void TupExposureSceneTabWidget::addScene(int index, const QString &name, TupExposureTable *table) 
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExposureSceneTabWidget::addScene()]";
+    #endif
+
     QFrame *frame = new QFrame;
     QVBoxLayout *layout = new QVBoxLayout(frame);
     layout->setMargin(1);
@@ -102,8 +115,12 @@ void TupSceneTabWidget::addScene(int index, const QString &name, TupExposureTabl
     tabber->insertTab(index, frame, name);
 }
 
-void TupSceneTabWidget::restoreScene(int index, const QString &name)
+void TupExposureSceneTabWidget::restoreScene(int index, const QString &name)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExposureSceneTabWidget::restoreScene()]";
+    #endif
+
     QFrame *frame = new QFrame;
     QVBoxLayout *layout = new QVBoxLayout(frame);
     layout->setMargin(1);
@@ -131,8 +148,12 @@ void TupSceneTabWidget::restoreScene(int index, const QString &name)
     tabber->insertTab(index, frame, name);
 }
 
-void TupSceneTabWidget::removeScene(int index, bool withBackup) 
+void TupExposureSceneTabWidget::removeScene(int index, bool withBackup) 
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExposureSceneTabWidget::removeScene()]";
+    #endif
+
     if (withBackup) {
         undoTables << tables.takeAt(index);
         undoOpacities << opacityControl.takeAt(index);
@@ -146,7 +167,7 @@ void TupSceneTabWidget::removeScene(int index, bool withBackup)
 }
 
 /*
-void TupSceneTabWidget::removeCleanScene(int index)
+void TupExposureSceneTabWidget::removeCleanScene(int index)
 {
     tables.takeAt(index);
     blockSignals(true);
@@ -155,50 +176,53 @@ void TupSceneTabWidget::removeCleanScene(int index)
 }
 */
 
-void TupSceneTabWidget::renameScene(int index, const QString &name)
+void TupExposureSceneTabWidget::renameScene(int index, const QString &name)
 {
     tabber->setTabText(index, name);
 }
 
-TupExposureTable* TupSceneTabWidget::getCurrentTable() 
+TupExposureTable* TupExposureSceneTabWidget::getCurrentTable() 
 {
     int index = currentIndex();
     return getTable(index);
 }
 
-TupExposureTable* TupSceneTabWidget::getTable(int index)
+TupExposureTable* TupExposureSceneTabWidget::getTable(int index)
 {
     if (isTableIndexValid(index)) {
         TupExposureTable *table = tables.at(index);
-
         if (table) {
             return table;
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupSceneTabWidget::getTable()] - Fatal Error: Table pointer is NULL!";
+                qDebug() << "[TupExposureSceneTabWidget::getTable()] - Fatal Error: Table pointer is NULL!";
             #endif
         }
     }
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupSceneTabWidget::getTable()] - Fatal Error: Invalid table index: " << index;
+        qDebug() << "[TupExposureSceneTabWidget::getTable()] - Fatal Error: Invalid table index -> " << index;
     #endif
 
     return 0;
 }
 
-void TupSceneTabWidget::setCurrentIndex(int index)
+void TupExposureSceneTabWidget::setCurrentIndex(int index)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExposureSceneTabWidget::setCurrentIndex()] - index -> " << index;
+    #endif
+
     tabber->setCurrentIndex(index);
 }
 
-int TupSceneTabWidget::currentIndex()
+int TupExposureSceneTabWidget::currentIndex()
 {
     int index = tabber->currentIndex();
     return index;
 }
 
-bool TupSceneTabWidget::isTableIndexValid(int index)
+bool TupExposureSceneTabWidget::isTableIndexValid(int index)
 {
     if (index > -1 && index < tables.count())
         return true;
@@ -206,24 +230,34 @@ bool TupSceneTabWidget::isTableIndexValid(int index)
     return false;
 }
 
-int TupSceneTabWidget::count()
+int TupExposureSceneTabWidget::count()
 {
     return tables.count();
 }
 
-void TupSceneTabWidget::setLayerOpacity(int sceneIndex, double opacity)
+void TupExposureSceneTabWidget::setLayerOpacity(int sceneIndex, double opacity)
 {
-    opacityControl.at(sceneIndex)->setValue(opacity);
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExposureSceneTabWidget::setLayerOpacity()] - sceneIndex/opacity -> "
+                 << sceneIndex << "," << opacity;
+    #endif
+
+    if (opacityControl.at(sceneIndex)) {
+        QDoubleSpinBox *spinBox = opacityControl.at(sceneIndex);
+        spinBox->blockSignals(true);
+        spinBox->setValue(opacity);
+        spinBox->blockSignals(false);
+    }
 }
 
-void TupSceneTabWidget::setLayerVisibility(int sceneIndex, int layerIndex, bool visibility)
+void TupExposureSceneTabWidget::setLayerVisibility(int sceneIndex, int layerIndex, bool visibility)
 {
     if (isTableIndexValid(sceneIndex)) {
         TupExposureTable *table = tables.at(sceneIndex);
         table->setLayerVisibility(layerIndex, visibility);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupSceneTabWidget::setLayerVisibility()] - Fatal Error: Invalid table index: " << sceneIndex;
+            qDebug() << "[TupExposureSceneTabWidget::setLayerVisibility()] - Fatal Error: Invalid scene index: " << sceneIndex;
         #endif
     }
 }

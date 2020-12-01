@@ -457,7 +457,7 @@ void TupTimeLineTable::removeFrame(int layerIndex, int frameIndex)
         qDebug() << "[TupTimeLineTable::removeFrame()]";
     #endif
 
-    Q_UNUSED(frameIndex);
+    Q_UNUSED(frameIndex)
 
     if (layerIndex < 0 || layerIndex >= rowCount())
         return;
@@ -754,6 +754,11 @@ void TupTimeLineTable::selectFrame(int layerIndex, int frameIndex)
 
 void TupTimeLineTable::selectFrame(int layerIndex, int frameIndex, const QString &selection)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTimeLineTable::selectFrame()] - layerIndex -> " << layerIndex
+                 << " - frameIndex -> " << frameIndex << " - selection -> " << selection;
+    #endif
+
     blockSignals(true);
     setCurrentCell(layerIndex, frameIndex);
     updateLayerHeader(layerIndex);
@@ -773,6 +778,10 @@ void TupTimeLineTable::selectFrame(int layerIndex, int frameIndex, const QString
             for (int j=initFrame; j<=lastFrame; j++)
                 selectionModel()->select(model()->index(i, j), QItemSelectionModel::Select);
         }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupTimeLineTable::selectFrame()] - Error: Selection coords are invalid!";
+        #endif
     }
 }
 

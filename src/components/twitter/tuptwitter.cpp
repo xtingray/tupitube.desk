@@ -92,9 +92,11 @@ void TupTwitter::start()
     request.setUrl(QUrl(url));
     request.setRawHeader("User-Agent", BROWSER_FINGERPRINT);
 
+    /*
     QSslConfiguration conf = request.sslConfiguration();
     conf.setPeerVerifyMode(QSslSocket::VerifyNone);
     request.setSslConfiguration(conf);
+    */
 
     reply = manager->get(request);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));

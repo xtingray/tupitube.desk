@@ -137,6 +137,8 @@ class TUPITUBE_EXPORT TupLayer : public QObject, public TupAbstractSerializable
         bool isLocked;
         int index;
         qreal opacity;
+        QList<qreal> opacityUndo;
+        QList<qreal> opacityRedo;
 
         QList<TupGraphicObject *> tweeningGraphicObjects;
         QList<TupSvgItem *> tweeningSvgObjects;

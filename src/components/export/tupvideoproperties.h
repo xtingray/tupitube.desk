@@ -71,7 +71,7 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
 
     private slots:
         void resetTitleColor(const QString &text);
-        void resetTopicsColor(const QString &text);
+        void resetTagsColor(const QString &text);
         void postIt();
         void setScenesIndexes(const QList<int> &indexes);
         void serverAuthAnswer(QNetworkReply *reply);

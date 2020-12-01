@@ -88,7 +88,7 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModul
     connect(framesBar, SIGNAL(actionSelected(int)), this, SLOT(applyAction(int)));
     addChild(framesBar, Qt::AlignCenter);
 
-    scenesContainer = new TupSceneTabWidget(this);
+    scenesContainer = new TupExposureSceneTabWidget(this);
     connect(scenesContainer, SIGNAL(currentChanged(int)), this, SLOT(requestChangeScene(int)));
     connect(scenesContainer, SIGNAL(layerOpacityChanged(double)), this, SLOT(requestUpdateLayerOpacity(double)));
 
@@ -215,7 +215,8 @@ void TupExposureSheet::createMenuForSelection()
 void TupExposureSheet::addScene(int sceneIndex, const QString &name)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupExposureSheet::addScene()] - index: " << QString::number(sceneIndex) << " name: " << name;
+        qDebug() << "[TupExposureSheet::addScene()] - index -> "
+                 << sceneIndex << " - name -> " << name;
     #endif
 
     TupExposureTable *scene = new TupExposureTable;
@@ -245,7 +246,7 @@ void TupExposureSheet::renameScene(int sceneIndex, const QString &name)
 void TupExposureSheet::applyAction(int action)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupExposureSheet::applyAction()] - action: " << QString::number(action);
+        qDebug() << "[TupExposureSheet::applyAction()] - action -> " << action;
     #endif
 
     currentTable = scenesContainer->getCurrentTable();
@@ -505,7 +506,7 @@ void TupExposureSheet::renameFrame(int layerIndex, int frameIndex, const QString
 void TupExposureSheet::selectFrame(int layerIndex, int frameIndex)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupExposureSheet::selectFrame()] - layerIndex, frameIndex -> " << layerIndex << ", " << frameIndex;
+        qDebug() << "[TupExposureSheet::selectFrame()] - layerIndex, frameIndex -> " << layerIndex << "," << frameIndex;
     #endif
 
     QList<QTableWidgetItem *> list = currentTable->selectedItems();
@@ -597,7 +598,7 @@ void TupExposureSheet::closeAllScenes()
 void TupExposureSheet::sceneResponse(TupSceneResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupExposureSheet::sceneResponse()]";
+        qDebug() << "[TupExposureSheet::sceneResponse()] - action -> " << response->getAction();
     #endif
 
     int sceneIndex = response->getSceneIndex();
@@ -684,6 +685,10 @@ void TupExposureSheet::sceneResponse(TupSceneResponse *response)
 
 void TupExposureSheet::layerResponse(TupLayerResponse *response)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExposureSheet::layerResponse()] - action -> " << response->getAction();
+    #endif
+
     int sceneIndex = response->getSceneIndex();
     TupExposureTable *framesTable = scenesContainer->getTable(sceneIndex);
 
@@ -721,6 +726,13 @@ void TupExposureSheet::layerResponse(TupLayerResponse *response)
             case TupProjectRequest::Remove:
                 {
                     framesTable->removeLayer(layerIndex);
+                    TupScene *scene = project->sceneAt(sceneIndex);
+                    if (scene) {
+                        int index = layerIndex;
+                        if (layerIndex == scene->layersCount())
+                            index--;
+                        updateLayerOpacity(sceneIndex, index);
+                    }
                 }
             break;
             case TupProjectRequest::Move:
@@ -749,6 +761,7 @@ void TupExposureSheet::layerResponse(TupLayerResponse *response)
                     if ((previousScene != sceneIndex) || (previousLayer != layerIndex)) {
                         previousScene = sceneIndex;
                         previousLayer = layerIndex;
+                        qDebug() << "Flag 2 - layerIndex -> " << layerIndex;
                         updateLayerOpacity(sceneIndex, layerIndex);
                     }
                 }
@@ -760,20 +773,26 @@ void TupExposureSheet::layerResponse(TupLayerResponse *response)
             break;
             case TupProjectRequest::UpdateOpacity:
                 {
-                    qDebug() << "";
-                    qDebug() << "[TupExposureSheet::layerResponse()] - Updating layer opacity...";
-                    // setLayerOpacity(int sceneIndex, double opacity);
+                    if (response->getMode() == TupProjectResponse::Do) {
+                        updateLayerOpacity(sceneIndex, layerIndex);
+                    } else {
+                        qDebug() << "";
+                        qDebug() << "   Undo layer opacity - sceneIndex -> " << sceneIndex << " - layerIndex -> " << layerIndex;
+                        qDebug() << "";
+                    }
                 }
             break;
             default:
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupExposureSheet::layerResponse()] - Layer option undefined! -> " + QString::number(response->getAction());
+                    qDebug() << "[TupExposureSheet::layerResponse()] - Layer option undefined! -> "
+                             << response->getAction();
                 #endif
             break;
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupExposureSheet::layerResponse()] -> Scene index invalid: " + QString::number(sceneIndex);
+            qDebug() << "[TupExposureSheet::layerResponse()] - Scene index invalid -> "
+                     << sceneIndex;
         #endif
     }
 }
@@ -781,7 +800,7 @@ void TupExposureSheet::layerResponse(TupLayerResponse *response)
 void TupExposureSheet::frameResponse(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupExposureSheet::frameResponse()]";
+        qDebug() << "[TupExposureSheet::frameResponse()] - action -> " << response->getAction();
     #endif
 
     int sceneIndex = response->getSceneIndex();
@@ -797,8 +816,10 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
                           table->insertFrame(layerIndex, frameIndex, response->getArg().toString(), response->external());
                           if (layerIndex == 0 && frameIndex == 0) {
                               setScene(sceneIndex);
+                              table->blockSignals(true);
                               table->selectFrame(0, 0);
-                          } 
+                              table->blockSignals(false);
+                          }
 
                           return;
                       }
@@ -1097,7 +1118,7 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupExposureSheet::frameResponse()] - Fatal Error: Scene index is invalid -> " + QString::number(sceneIndex);
+            qDebug() << "[TupExposureSheet::frameResponse()] - Fatal Error: Scene index is invalid -> " << sceneIndex;
         #endif
     }
 }
@@ -1310,20 +1331,41 @@ void TupExposureSheet::copyTimeLineFromMenu(QAction *action)
 
 void TupExposureSheet::requestUpdateLayerOpacity(double opacity)
 {
-    int layer = currentTable->currentLayer();
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExposureSheet::requestUpdateLayerOpacity()] - opacity -> " << opacity;
+    #endif
+
+    int layerIndex = currentTable->currentLayer();
     TupProjectRequest request = TupRequestBuilder::createLayerRequest(scenesContainer->currentIndex(),
-                                                                      layer, TupProjectRequest::UpdateOpacity, opacity);
+                                                                      layerIndex, TupProjectRequest::UpdateOpacity, opacity);
     emit requestTriggered(&request);
 }
 
 void TupExposureSheet::updateLayerOpacity(int sceneIndex, int layerIndex)
 {
-    double opacity = getLayerOpacity(sceneIndex, layerIndex);
-    scenesContainer->setLayerOpacity(sceneIndex, opacity);
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExposureSheet::updateLayerOpacity()] - sceneIndex/layerIndex -> " << sceneIndex << "," << layerIndex;
+    #endif
+
+    if (scenesContainer) {
+        double opacity = getLayerOpacity(sceneIndex, layerIndex);
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupExposureSheet::updateLayerOpacity()] - layer opacity -> " << opacity;
+        #endif
+        scenesContainer->setLayerOpacity(sceneIndex, opacity);
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupExposureSheet::updateLayerOpacity()] - scenesContainer is NULL!";
+        #endif
+    }
 }
 
 double TupExposureSheet::getLayerOpacity(int sceneIndex, int layerIndex)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExposureSheet::getLayerOpacity()] - sceneIndex/layerIndex -> " << sceneIndex << "," << layerIndex;
+    #endif
+
     double opacity = 1.0;
     TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
@@ -1332,12 +1374,12 @@ double TupExposureSheet::getLayerOpacity(int sceneIndex, int layerIndex)
             opacity = layer->getOpacity();
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupExposureSheet::getLayerOpacity()] - Fatal Error: No layer at index -> " << QString::number(layerIndex);
+                qDebug() << "[TupExposureSheet::getLayerOpacity()] - Fatal Error: No layer at index -> " << layerIndex;
             #endif
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupExposureSheet::getLayerOpacity()] - Fatal Error: No scene at index -> " << QString::number(sceneIndex);
+            qDebug() << "[TupExposureSheet::getLayerOpacity()] - Fatal Error: No scene at index -> " << sceneIndex;
         #endif
     }
 

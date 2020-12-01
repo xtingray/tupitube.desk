@@ -146,7 +146,7 @@ void TupScene::setLayers(const Layers &sLayers)
     layers = sLayers;
 }
 
-TupLayer *TupScene::createLayer(QString name, int position, bool loaded)
+TupLayer *TupScene::createLayer(QString name, int position, bool loadingFromFile)
 {
     if (position < 0 || position > layers.count()) {
         #ifdef TUP_DEBUG
@@ -161,7 +161,7 @@ TupLayer *TupScene::createLayer(QString name, int position, bool loaded)
     layer->setLayerName(name);
     layers.insert(position, layer);
 
-    if (loaded)
+    if (loadingFromFile)
         TupProjectLoader::createLayer(project()->visualIndexOf(this), position, layer->getLayerName(), project());
 
     return layer;
@@ -174,10 +174,10 @@ void TupScene::addLayer(const QString &xml)
     layers << layer;
 }
 
-TupSoundLayer *TupScene::createSoundLayer(int position, bool loaded)
+TupSoundLayer *TupScene::createSoundLayer(int position, bool loadingFromFile)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[createSoundLayer()] - position: " << position;
+        qDebug() << "[TupScene::createSoundLayer()] - position: " << position;
     #endif    
     
     if (position < 0 || position > soundLayers.count()) {
@@ -194,7 +194,7 @@ TupSoundLayer *TupScene::createSoundLayer(int position, bool loaded)
 
     soundLayers.insert(position, layer);
 
-    if (loaded)
+    if (loadingFromFile)
         TupProjectLoader::createSoundLayer(objectIndex(), position, layer->getLayerName(), project());
 
     return layer;
@@ -218,7 +218,7 @@ bool TupScene::restoreLayer(int index)
 bool TupScene::removeLayer(int position)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScene::removeLayer()] - position: " << position;
+        qDebug() << "[TupScene::removeLayer()] - position -> " << position;
     #endif
 
     TupLayer *layer = this->layerAt(position);
@@ -238,30 +238,30 @@ bool TupScene::removeLayer(int position)
  * @param position 
  * @return 
  */
-TupLayer *TupScene::layerAt(int position) const
+TupLayer *TupScene::layerAt(int index) const
 {
-    if (position < 0 || position >= layers.count()) {
+    if (index < 0 || index >= layers.count()) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupScene::layerAt() - FATAL ERROR: LAYERS TOTAL: " + QString::number(layers.count());
-            qDebug() << "TupScene::layerAt() - FATAL ERROR: index out of bound -> " + QString::number(position);
+            qDebug() << "TupScene::layerAt() - FATAL ERROR: LAYERS TOTAL -> " << layers.count();
+            qDebug() << "TupScene::layerAt() - FATAL ERROR: index out of bound -> " << index;
             qDebug() << "TupScene::layerAt() - FATAL ERROR: The layer requested doesn't exist anymore";
         #endif
         return nullptr;
     }
 
-    return layers.value(position);
+    return layers.value(index);
 }
 
-TupSoundLayer *TupScene::soundLayer(int position) const
+TupSoundLayer *TupScene::soundLayer(int index) const
 {
-    if (position < 0 || position >= soundLayers.count()) {
+    if (index < 0 || index >= soundLayers.count()) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupScene::fromXml() - FATAL ERROR: index out of bound " + QString::number(position);
+            qDebug() << "TupScene::fromXml() - FATAL ERROR: index out of bound -> " << index;
         #endif
         return nullptr;
     }
 
-    return soundLayers.value(position);
+    return soundLayers.value(index);
 }
 
 void TupScene::fromXml(const QString &xml)

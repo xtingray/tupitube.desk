@@ -38,7 +38,7 @@
 
 #include "tglobal.h"
 #include "tupmodulewidgetbase.h"
-#include "tupscenecontainer.h"
+#include "tuptimelinescenecontainer.h"
 #include "tupproject.h"
 #include "tuptimelinetable.h"
 #include "tuprequestbuilder.h"
@@ -79,7 +79,7 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
         bool requestLayerAction(int action, int layerIndex = -1, int sceneIndex = -1, const QVariant &arg = QVariant());
         bool requestSceneAction(int action, int sceneIndex = -1, const QVariant &arg = QVariant());
 
-        void selectFrame(int indexLayer, int indexFrame);
+        void requestFrameSelection(int indexLayer, int indexFrame);
         void requestCopyFrameSelection();
         void requestPasteSelectionInCurrentFrame();
         void removeFrameSelection();
@@ -95,8 +95,10 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
 
     private:
         void requestReverseFrameSelection();
+        double getLayerOpacity(int sceneIndex, int layerIndex);
+        void updateLayerOpacity(int sceneIndex, int layerIndex);
 
-        TupSceneContainer *scenesContainer;
+        TupTimelineSceneContainer *scenesContainer;
         TupTimeLineTable *currentTable;
         TupProjectActionBar *actionBar;
         int selectedLayer;
@@ -105,7 +107,7 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
         QString frameSelection;
         bool doSelection;
         QDoubleSpinBox *opacitySpinBox;
-        QList<double> layerOpacityList;
+        // QList<double> layerOpacityList;
 };
 
 #endif

@@ -33,8 +33,8 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPSCENETABWIDGET_H
-#define TUPSCENETABWIDGET_H
+#ifndef TUPEXPOSURESCENETABWIDGET_H
+#define TUPEXPOSURESCENETABWIDGET_H
 
 #include "tglobal.h"
 #include "tupexposuretable.h"
@@ -53,13 +53,13 @@
  * @author Gustav Gonzalez 
 */
 
-class T_GUI_EXPORT TupSceneTabWidget : public QFrame
+class T_GUI_EXPORT TupExposureSceneTabWidget : public QFrame
 {
     Q_OBJECT
 
     public:
-        TupSceneTabWidget(QWidget *parent = nullptr);
-        ~TupSceneTabWidget();
+        TupExposureSceneTabWidget(QWidget *parent = nullptr);
+        ~TupExposureSceneTabWidget();
 
         void addScene(int index, const QString &name, TupExposureTable *table = nullptr);
         void restoreScene(int index, const QString &name);

@@ -33,8 +33,8 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPSCENECONTAINER_H
-#define TUPSCENECONTAINER_H
+#ifndef TUPTIMELINESCENECONTAINER_H
+#define TUPTIMELINESCENECONTAINER_H
 
 #include "tglobal.h"
 #include "tuptimelinetable.h"
@@ -43,13 +43,13 @@
 #include <QWheelEvent>
 #include <QTabBar>
 
-class T_GUI_EXPORT TupSceneContainer : public QTabWidget
+class T_GUI_EXPORT TupTimelineSceneContainer : public QTabWidget
 {
     Q_OBJECT
 
     public:
-        TupSceneContainer(QWidget *parent = nullptr);
-        ~TupSceneContainer();
+        TupTimelineSceneContainer(QWidget *parent = nullptr);
+        ~TupTimelineSceneContainer();
 
         void addScene(int sceneIndex, TupTimeLineTable *framesTable, const QString &title);
         void restoreScene(int sceneIndex, const QString &title);

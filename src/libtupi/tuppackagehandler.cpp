@@ -49,20 +49,20 @@ TupPackageHandler::~TupPackageHandler()
 bool TupPackageHandler::makePackage(const QString &projectPath, const QString &packagePath)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TupPackageHandler::makePackage() - projectPath -> " + projectPath;
-        qWarning() << "TupPackageHandler::makePackage() - packagePath -> " + packagePath;
+        qWarning() << "[TupPackageHandler::makePackage()] - projectPath -> " << projectPath;
+        qWarning() << "[TupPackageHandler::makePackage()] - packagePath -> " << packagePath;
     #endif
 
     if (!QFile::exists(projectPath)) {        
         #ifdef TUP_DEBUG
-            qWarning() << "TupPackageHandler::makePackage() - Project path doesn't exist -> " + projectPath;
+            qWarning() << "[TupPackageHandler::makePackage()] - Project path doesn't exist -> " << projectPath;
         #endif
 
         return false;
     }
 
     #ifdef TUP_DEBUG
-        qDebug() << "TupPackageHandler::makePackage() - Calling JlCompress library...";
+        qDebug() << "[TupPackageHandler::makePackage()] - Calling JlCompress library...";
     #endif
     return JlCompress::compressDir(packagePath, projectPath, true);
 }
@@ -70,7 +70,7 @@ bool TupPackageHandler::makePackage(const QString &projectPath, const QString &p
 bool TupPackageHandler::importPackage(const QString &packagePath)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupPackageHandler::importPackage() - packagePath -> " + packagePath;
+        qDebug() << "[TupPackageHandler::importPackage()] - packagePath -> " << packagePath;
     #endif
 
     QFileInfo file(packagePath);
@@ -78,7 +78,7 @@ bool TupPackageHandler::importPackage(const QString &packagePath)
     QStringList list = JlCompress::extractDir(packagePath, CACHE_DIR);
     if (list.size() == 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupPackageHandler::importPackage() - Project file is empty! -> " + packagePath;
+            qDebug() << "[TupPackageHandler::importPackage()] - Project file is empty! -> " << packagePath;
         #endif
 
         return false;
@@ -94,7 +94,7 @@ bool TupPackageHandler::importPackage(const QString &packagePath)
 QString TupPackageHandler::importedProjectPath() const
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupPackageHandler::importedProjectPath() - project path -> " + gPath;
+        qDebug() << "[TupPackageHandler::importedProjectPath()] - project path -> " << gPath;
     #endif
 
     return gPath;

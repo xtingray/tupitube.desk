@@ -47,15 +47,15 @@ class TUPITUBE_EXPORT TupProjectLoader
     	TupProjectLoader();
     	~TupProjectLoader();
     	
-    	static void createItem(int scenePosition, int layerPosition, int framePosition, int itemPosition, QPointF point, 
+    	static void createItem(int sceneIndex, int layerIndex, int frameIndex, int itemPosition, QPointF point, 
                                TupLibraryObject::Type type, const QString &xml, TupProject *project);
 
-    	static void createFrame(int scenePosition, int layerPosition, int framePosition, const QString &name, TupProject *project);
-    	static void createLayer(int scenePosition, int layerPosition, const QString &name, TupProject *project);
+    	static void createFrame(int sceneIndex, int layerIndex, int frameIndex, const QString &name, TupProject *project);
+    	static void createLayer(int sceneIndex, int layerIndex, const QString &name, TupProject *project);
 
-    	static void createSoundLayer(int scenePosition, int layerPosition, const QString &name, TupProject *project);
+    	static void createSoundLayer(int sceneIndex, int layerIndex, const QString &name, TupProject *project);
     	
-    	static void createScene(const QString &name, int scenePosition, TupProject *project);
+    	static void createScene(const QString &name, int sceneIndex, TupProject *project);
     	
     	static void createSymbol(TupLibraryObject::Type type, const QString &name, const QString &parent, const QByteArray &data, TupProject *project);
 };

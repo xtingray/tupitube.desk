@@ -109,6 +109,10 @@ bool TupLayer::isLayerVisible() const
 
 void TupLayer::setOpacity(qreal factor)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLayer::setOpacity()] - opacity -> " << factor;
+    #endif
+
     opacity = factor;
 }
 
@@ -334,7 +338,6 @@ bool TupLayer::extendFrame(int pos, int times)
     return false;
 }
 
-
 TupFrame *TupLayer::frameAt(int position) const
 {
     if (position < 0 || position >= frames.count()) {
@@ -348,7 +351,6 @@ TupFrame *TupLayer::frameAt(int position) const
 
     return frames.value(position);
 }
-
 
 void TupLayer::fromXml(const QString &xml)
 {

@@ -204,11 +204,11 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 
         if (ok) {
             #ifdef TUP_DEBUG
-                qWarning() << "[TupFileManager::save()] - Project saved at -> " + fileName;
+                qWarning() << "[TupFileManager::save()] - Project saved at -> " << fileName;
             #endif
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupFileManager::save()] - Error: Project couldn't be saved at -> " + fileName;
+                qDebug() << "[TupFileManager::save()] - Error: Project couldn't be saved at -> " << fileName;
             #endif
 
             QApplication::restoreOverrideCursor();
@@ -256,7 +256,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 bool TupFileManager::load(const QString &fileName, TupProject *project)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupFileManager::load()] - fileName: " + fileName;
+        qDebug() << "[TupFileManager::load()] - fileName: " << fileName;
     #endif
 
     TupPackageHandler packageHandler;
@@ -269,9 +269,9 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
             pfile.close();
         } else {
             #ifdef TUP_DEBUG
-                qWarning() << "[TupFileManager::load()] - Error while open .tpp file. Name: " + pfile.fileName();
-                qWarning() << "[TupFileManager::load()] - Path: " + projectDir.path();
-                qWarning() << "[TupFileManager::load()] - Error Description: " + pfile.errorString();
+                qWarning() << "[TupFileManager::load()] - Error while open .tpp file. Name: " << pfile.fileName();
+                qWarning() << "[TupFileManager::load()] - Path: " << projectDir.path();
+                qWarning() << "[TupFileManager::load()] - Error Description: " << pfile.errorString();
             #endif
             return false;
         }
@@ -320,7 +320,7 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
     }
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupFileManager::load()] - Error: Can't import package -> " + fileName;
+        qDebug() << "[TupFileManager::load()] - Error: Can't import package -> " << fileName;
     #endif
     return false;
 }

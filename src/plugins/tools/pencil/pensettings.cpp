@@ -127,6 +127,9 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
 
 PenSettings::~PenSettings()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[~PenSettings()]";
+    #endif
 }
 
 /*

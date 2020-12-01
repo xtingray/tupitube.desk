@@ -83,9 +83,9 @@ void TupProject::loadLibrary(const QString &filename)
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         library->fromXml(QString::fromLocal8Bit(file.readAll()));
         file.close();
-    } else {               
+    } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupProject::loadLibrary() - Cannot open library from: " + filename;
+            qDebug() << "[TupProject::loadLibrary()] - Cannot open library from -> " << filename;
         #endif
     }
 }
@@ -256,7 +256,7 @@ bool TupProject::restoreScene(int position)
 bool TupProject::removeScene(int pos)
 {
     #ifdef TUP_DEBUG
-        qInfo() << "[TupProject::removeScene()] - scene index: " + QString::number(pos);
+        qInfo() << "[TupProject::removeScene()] - scene index -> " << pos;
     #endif
 
     TupScene *toRemove = sceneAt(pos);
@@ -265,7 +265,7 @@ bool TupProject::removeScene(int pos)
         if (QFile::exists(path)) {
             if (!QFile::remove(path)) {
                 #ifdef TUP_DEBUG
-                    qCritical() << "TupProject::removeScene() - Error removing file " + path;
+                    qCritical() << "[TupProject::removeScene()] - Error removing file -> " << path;
                 #endif
             
                 return false;
@@ -308,7 +308,7 @@ bool TupProject::resetScene(int pos, const QString &newName)
         return true;
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupProject::resetScene() - No scene at index -> " + QString::number(pos);
+            qDebug() << "[TupProject::resetScene()] - No scene at index -> " << pos;
         #endif
     }
 
@@ -330,8 +330,8 @@ bool TupProject::moveScene(int position, int newPosition)
 {
     if (position < 0 || newPosition < 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupProject::moveScene() - Failed moving scene from " + QString::number(position)
-                        + " to " + QString::number(newPosition);
+            qDebug() << "[TupProject::moveScene()] - Failed moving scene from " << position
+                     << " to " << newPosition;
         #endif
         return false;
     }
@@ -345,12 +345,12 @@ bool TupProject::moveScene(int position, int newPosition)
 TupScene *TupProject::sceneAt(int sceneIndex) const
 {    
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::sceneAt()] - position: " << sceneIndex;
+        qDebug() << "[TupProject::sceneAt()] - position -> " << sceneIndex;
     #endif    
 
     if (sceneIndex < 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupProject::sceneAt() - FATAL ERROR: index out of bound (" + QString::number(sceneIndex) + ")";
+            qDebug() << "[TupProject::sceneAt()] - FATAL ERROR: index out of bound -> " << sceneIndex;
         #endif
         return nullptr;
     }
@@ -362,8 +362,7 @@ TupBackground * TupProject::getBackgroundFromScene(int sceneIndex)
 {
     if (sceneIndex < 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupProject::getBackgroundFromScene() - FATAL ERROR: index out of bound ("
-                        + QString::number(sceneIndex) + ")";
+            qDebug() << "[TupProject::getBackgroundFromScene()] - FATAL ERROR: index out of bound -> " << sceneIndex;
         #endif
         return nullptr;
     }
@@ -497,21 +496,21 @@ bool TupProject::createSymbol(int type, const QString &name, const QByteArray &d
    
     if (!isOpen) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupProject::createSymbol() - Fatal error: project is NOT open!";
+            qDebug() << "[TupProject::createSymbol()] - Fatal error: project is NOT open!";
         #endif        
         return false;
     }
 
     if (library->createSymbol(TupLibraryObject::Type(type), name, data, folder) == nullptr) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupProject::createSymbol() - Fatal error: object can't be created. Data is NULL!";
+            qDebug() << "[TupProject::createSymbol()] - Fatal error: object can't be created. Data is NULL!";
         #endif    
 
         return false;
     }         
 
     #ifdef TUP_DEBUG
-        qWarning() << "TupProject::createSymbol() - Object added successfully -> " + name;
+        qWarning() << "[TupProject::createSymbol()] - Object added successfully -> " << name;
     #endif    
 
     return true;
@@ -736,7 +735,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                         break;
                         default:
                              #ifdef TUP_DEBUG
-                                 qDebug() << "TupProject::insertSymbolIntoFrame() -> Unknown Object Type";
+                                 qDebug() << "[TupProject::insertSymbolIntoFrame()] -> Unknown Object Type";
                              #endif                         
                         break;
                 }
@@ -744,20 +743,20 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                 return true;
             } else {                
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupProject::insertSymbolIntoFrame() - Object NOT found at library! " + name;
+                    qDebug() << "[TupProject::insertSymbolIntoFrame()] - Object NOT found at library! -> " << name;
                 #endif
                 
                 return false;
             }
         } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupProject::insertSymbolIntoFrame() - Invalid frame!";
+                    qDebug() << "[TupProject::insertSymbolIntoFrame()] - Invalid frame!";
                 #endif
         }
     } else {        
         #ifdef TUP_DEBUG
-            qDebug() << "TupProject::insertSymbolIntoFrame() - Invalid scene!";
-        #endif        
+            qDebug() << "[TupProject::insertSymbolIntoFrame()] - Invalid scene!";
+        #endif
     }
 
     return false;
@@ -766,7 +765,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
 bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::Type type)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupProject::removeSymbolFromFrame() - Removing symbol " + name + " from project...";
+        qDebug() << "[TupProject::removeSymbolFromFrame()] - Removing symbol from project -> " << name;
     #endif
     
     if (type == TupLibraryObject::Folder)

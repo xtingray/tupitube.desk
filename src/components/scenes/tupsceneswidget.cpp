@@ -192,8 +192,7 @@ void TupScenesWidget::closeAllScenes()
 void TupScenesWidget::sceneResponse(TupSceneResponse *e)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScenesWidget::sceneResponse()]";
-        qDebug() << "SHOW_VAR: " << e->getAction();
+        qDebug() << "[TupScenesWidget::sceneResponse()] - action -> " << e->getAction();
     #endif
 
     int index = e->getSceneIndex();

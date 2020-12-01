@@ -139,11 +139,11 @@ void TupBackground::fromXml(const QString &xml)
                     vectorDynamicRenderRequired = false;
 
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupBackground::fromXml() - Vector dynamic image loaded -> " << imgPath;
+                        qDebug() << "[TupBackground::fromXml()] - Vector dynamic image loaded -> " << imgPath;
                     #endif
                 } else {
                     #ifdef TUP_DEBUG
-                        qWarning() << "TupBackground::fromXml() - Vector dynamic image wasn't loaded -> " << imgPath;
+                        qWarning() << "[TupBackground::fromXml()] - Vector dynamic image wasn't loaded -> " << imgPath;
                     #endif
                 }
             } else if (type == "landscape_raster_dynamic") {
@@ -164,11 +164,11 @@ void TupBackground::fromXml(const QString &xml)
                     renderRasterDynamicView();
 
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupBackground::fromXml() - Raster dynamic image loaded -> " << imgPath;
+                        qDebug() << "[TupBackground::fromXml()] - Raster dynamic image loaded -> " << imgPath;
                     #endif
                 } else {
                     #ifdef TUP_DEBUG
-                        qWarning() << "TupBackground::fromXml() - Raster dynamic bg wasn't loaded -> " << imgPath;
+                        qWarning() << "[TupBackground::fromXml()] - Raster dynamic bg wasn't loaded -> " << imgPath;
                     #endif
                 }
             } else if (type == "landscape_static") {
@@ -196,11 +196,11 @@ void TupBackground::fromXml(const QString &xml)
                     rasterStaticBgPix = QPixmap(imgPath);
                     rasterStaticUpdateRequired = true;
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupBackground::fromXml() - Raster static image loaded -> " << imgPath;
+                        qDebug() << "[TupBackground::fromXml()] - Raster static image loaded -> " << imgPath;
                     #endif
                 } else {
                     #ifdef TUP_DEBUG
-                        qWarning() << "TupBackground::fromXml() - Raster static bg wasn't loaded -> " << imgPath;
+                        qWarning() << "[TupBackground::fromXml()] - Raster static bg wasn't loaded -> " << imgPath;
                     #endif
                 }                
             } else if (type == "landscape_vector_foreground") {
@@ -214,7 +214,7 @@ void TupBackground::fromXml(const QString &xml)
                 vectorFgFrame->fromXml(newDoc);
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupBackground::fromXml() - Error: The background input is invalid";
+                    qDebug() << "[TupBackground::fromXml()] - Error: The background input is invalid";
                 #endif
             }
         }
@@ -426,7 +426,7 @@ void TupBackground::renderVectorDynamicView()
     if (!imgDir.exists()) {
         if (!imgDir.mkpath(dirPath)) {
             #ifdef TUP_DEBUG
-                qDebug() << "TupBackground::renderVectorDynamicView() - Error creating image path -> " << dirPath;
+                qDebug() << "[TupBackground::renderVectorDynamicView()] - Error creating image path -> " << dirPath;
             #endif
             return;
         }
@@ -434,7 +434,7 @@ void TupBackground::renderVectorDynamicView()
 
     if (!bgView.save(dirPath + "dynamic_bg.png", "PNG", 100)) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupBackground::renderVectorDynamicView() - Error: can't save bg image at -> " << dirPath;
+            qDebug() << "[TupBackground::renderVectorDynamicView()] - Error: can't save bg image at -> " << dirPath;
         #endif
         return;
     }
@@ -491,7 +491,7 @@ void TupBackground::renderRasterDynamicView()
     if (!imgDir.exists()) {
         if (!imgDir.mkpath(dirPath)) {
             #ifdef TUP_DEBUG
-                qDebug() << "TupBackground::renderRasterDynamicView() - Error creating image path -> " << dirPath;
+                qDebug() << "[TupBackground::renderRasterDynamicView()] - Error creating image path -> " << dirPath;
             #endif
             return;
         }
@@ -499,7 +499,7 @@ void TupBackground::renderRasterDynamicView()
 
     if (!bgView.save(dirPath + "dynamic_bg.png", "PNG", 100)) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupBackground::renderRasterDynamicView() - Error: can't save bg image at -> " << dirPath;
+            qDebug() << "[TupBackground::renderRasterDynamicView()] - Error: can't save bg image at -> " << dirPath;
         #endif
         return;
     }

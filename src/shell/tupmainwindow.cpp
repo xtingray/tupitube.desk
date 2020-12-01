@@ -274,6 +274,7 @@ void TupMainWindow::createNewNetProject(const QString &title, const QStringList 
 void TupMainWindow::setWorkSpace(const QStringList &users)
 {
     #ifdef TUP_DEBUG
+        qDebug() << "---";
         qDebug() << "[TupMainWindow::setWorkSpace()]";
     #endif
 
@@ -439,7 +440,7 @@ void TupMainWindow::addTwitterPage()
             helpAction->setEnabled(true);
         } else {
             #ifdef TUP_DEBUG
-               qWarning() << "TupMainWindow::addTwitterPage() - Warning: Couldn't load page -> " + twitterPath;
+               qWarning() << "[TupMainWindow::addTwitterPage()] - Warning: Couldn't load page -> " + twitterPath;
             #endif
         }
     }
@@ -448,7 +449,8 @@ void TupMainWindow::addTwitterPage()
 void TupMainWindow::newProject()
 {
     #ifdef TUP_DEBUG
-        qWarning() << "Creating new project...";
+        qWarning() << "---";
+        qWarning() << "[TupMainWindow::newProject()]";
     #endif
 
     if (cancelChanges())
@@ -715,7 +717,7 @@ void TupMainWindow::openExample()
             openProject(example);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupMainWindow::openExample()] - Fatal Error: Couldn't open example file -> " + QString(example);
+            qDebug() << "[TupMainWindow::openExample()] - Fatal Error: Couldn't open example file -> " << QString(example);
         #endif
         TOsd::self()->display(TOsd::Error, tr("Cannot open project!"));
     }
@@ -724,7 +726,8 @@ void TupMainWindow::openExample()
 void TupMainWindow::openProject(const QString &path)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "[TupMainWindow::openProject()] - Opening project: " + path;
+        qWarning() << "---";
+        qWarning() << "[TupMainWindow::openProject()] - Opening project -> " << path;
     #endif
 
     if (path.isEmpty() || !path.endsWith(".tup"))

@@ -10,12 +10,12 @@ CONFIG += dll warn_on
 HEADERS += tupexposuresheet.h \
            tupexposureheader.h \
            tupexposuretable.h \
-           tupscenetabwidget.h
+           tupexposurescenetabwidget.h
 
 SOURCES += tupexposuresheet.cpp \
            tupexposureheader.cpp \ 
            tupexposuretable.cpp \
-           tupscenetabwidget.cpp
+           tupexposurescenetabwidget.cpp
 
 FRAMEWORK_DIR = "../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

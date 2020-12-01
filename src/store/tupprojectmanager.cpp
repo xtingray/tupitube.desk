@@ -210,7 +210,7 @@ bool TupProjectManager::saveProject(const QString &fileName)
 bool TupProjectManager::loadProject(const QString &fileName)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProjectManager::loadProject()] - fileName: " << fileName;
+        qDebug() << "[TupProjectManager::loadProject()] - fileName -> " << fileName;
     #endif
 
     if (!handler) {
@@ -225,6 +225,9 @@ bool TupProjectManager::loadProject(const QString &fileName)
     if (ok) {
         project->setOpen(true);
         modified = false;
+
+        // TupProjectRequest request = TupRequestBuilder::createFrameRequest(0, 0, 0, TupProjectRequest::Select, "0,0,0,0");
+        // emit handleProjectRequest(&request);
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TupProjectManager::loadProject()] - Fatal Error: Can't load project -> " << fileName;
@@ -248,9 +251,9 @@ bool TupProjectManager::projectWasModified() const
 
 void TupProjectManager::setModificationStatus(bool changed)
 {
-#ifdef TUP_DEBUG
-    qDebug() << "[TupProjectManager::setModificationStatus()] - changed -> " << changed;
-#endif
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProjectManager::setModificationStatus()] - changed -> " << changed;
+    #endif
 
     modified = changed;
 }
@@ -384,12 +387,12 @@ void TupProjectManager::createCommand(const TupProjectRequest *request, bool add
             }
         } else {
         #ifdef TUP_DEBUG
-            qWarning() << "TupProjectManager::createCommand() - Invalid command";
+            qWarning() << "[TupProjectManager::createCommand()] - Invalid command";
         #endif
         }
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "TupProjectManager::createCommand() - Invalid request";
+            qWarning() << "[TupProjectManager::createCommand()] - Invalid request";
         #endif
     }
 }
@@ -422,7 +425,7 @@ void TupProjectManager::undo()
             undoStack->undo();
         } else {
             #ifdef TUP_DEBUG
-                qWarning() << "TupProjectManager::undo() - No undo actions available!";
+                qWarning() << "[TupProjectManager::undo()] - No undo actions available!";
             #endif
         }
     }
@@ -441,7 +444,7 @@ void TupProjectManager::redo()
            undoStack->redo();
        } else {
            #ifdef TUP_DEBUG
-               qWarning() << "TupProjectManager::redo() - No redo actions available!";
+               qWarning() << "[TupProjectManager::redo()] - No redo actions available!";
            #endif
        }
    }
@@ -455,8 +458,8 @@ void TupProjectManager::clearUndoStack()
 void TupProjectManager::emitResponse(TupProjectResponse *response)
 {	
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProjectManager::emitResponse()] - response->action(): " << response->getAction();
-    #endif	
+        qDebug() << "[TupProjectManager::emitResponse()] - response->action() -> " << response->getAction();
+    #endif
 
     if (response->getAction() != TupProjectRequest::Select)
         modified = true;

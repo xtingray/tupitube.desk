@@ -107,10 +107,9 @@ TupTimeLine::TupTimeLine(TupProject *projectData, QWidget *parent) : TupModuleWi
     toolbarLayout->addSpacing(3);
     toolbarLayout->addLayout(toolsLayout);
 
-    // addChild(actionBar, Qt::AlignCenter);
     addChild(toolBar, Qt::AlignCenter);
     
-    scenesContainer = new TupSceneContainer(this);
+    scenesContainer = new TupTimelineSceneContainer(this);
     addChild(scenesContainer);
     
     connect(actionBar, SIGNAL(actionSelected(int)), this, SLOT(requestCommand(int)));
@@ -136,7 +135,7 @@ TupTimeLineTable *TupTimeLine::framesTable(int sceneIndex)
 void TupTimeLine::addScene(int sceneIndex, const QString &name)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupTimeLine::addScene()]";
+        qDebug() << "[TupTimeLine::addScene()] - sceneIndex -> " << sceneIndex << " - name -> " << name;
     #endif
 
     if (sceneIndex < 0 || sceneIndex > scenesContainer->count()) {
@@ -147,7 +146,7 @@ void TupTimeLine::addScene(int sceneIndex, const QString &name)
     }
 
     TupTimeLineTable *framesTable = new TupTimeLineTable(sceneIndex, scenesContainer);
-    connect(framesTable, SIGNAL(frameSelected(int, int)), this, SLOT(selectFrame(int, int)));
+    connect(framesTable, SIGNAL(frameSelected(int, int)), this, SLOT(requestFrameSelection(int, int)));
     connect(framesTable, SIGNAL(selectionCopied()), SLOT(requestCopyFrameSelection()));
     connect(framesTable, SIGNAL(selectionPasted()), SLOT(requestPasteSelectionInCurrentFrame()));
     connect(framesTable, SIGNAL(selectionRemoved()), SLOT(removeFrameSelection()));
@@ -181,7 +180,7 @@ void TupTimeLine::closeAllScenes()
 void TupTimeLine::sceneResponse(TupSceneResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupTimeLine::sceneResponse()] - response->action() -> " << response->getAction();
+        qDebug() << "[TupTimeLine::sceneResponse()] - action -> " << response->getAction();
     #endif
 
     int sceneIndex = response->getSceneIndex();
@@ -251,7 +250,7 @@ void TupTimeLine::sceneResponse(TupSceneResponse *response)
         break;
         default:
             #ifdef TUP_DEBUG
-                qDebug() << "[TupTimeLine::sceneResponse()] : Unknown action -> " << QString::number(response->getAction());
+                qDebug() << "[TupTimeLine::sceneResponse()] : Unknown action -> " << response->getAction();
             #endif
         break;
     }
@@ -260,7 +259,7 @@ void TupTimeLine::sceneResponse(TupSceneResponse *response)
 void TupTimeLine::layerResponse(TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupTimeLine::layerResponse()]";
+        qDebug() << "[TupTimeLine::layerResponse()] - action -> " << response->getAction();
     #endif
 
     int sceneIndex = response->getSceneIndex();
@@ -274,7 +273,6 @@ void TupTimeLine::layerResponse(TupLayerResponse *response)
                 if (scene) {
                     TupLayer *layer = scene->layerAt(layerIndex);
                     if (layer) {
-                        layerOpacityList << layer->getOpacity();
                         if (response->getMode() == TupProjectResponse::Do) {
                             framesTable->insertLayer(layerIndex, response->getArg().toString());
                             return;
@@ -293,7 +291,14 @@ void TupTimeLine::layerResponse(TupLayerResponse *response)
             case TupProjectRequest::Remove:
             {
                 framesTable->removeLayer(layerIndex);
-                layerOpacityList.removeAt(layerIndex);
+                TupScene *scene = project->sceneAt(sceneIndex);
+                if (scene) {
+                    int index = layerIndex;
+                    if (layerIndex == scene->layersCount())
+                        index--;
+                    updateLayerOpacity(sceneIndex, index);
+                }
+
                 if (framesTable->layersCount() == 0) {
                     TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, 0, TupProjectRequest::Add,
                                                                                       tr("Layer %1").arg(1));
@@ -329,7 +334,7 @@ void TupTimeLine::layerResponse(TupLayerResponse *response)
             case TupProjectRequest::UpdateOpacity:
             {
                 double opacity = response->getArg().toReal();
-                layerOpacityList[layerIndex] = opacity;
+                // layerOpacityList[layerIndex] = opacity;
                 opacitySpinBox->blockSignals(true);
                 opacitySpinBox->setValue(opacity);
                 opacitySpinBox->blockSignals(false);
@@ -342,7 +347,7 @@ void TupTimeLine::layerResponse(TupLayerResponse *response)
 void TupTimeLine::frameResponse(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupTimeLine::frameResponse()]";
+        qDebug() << "[TupTimeLine::frameResponse()] - action -> " << response->getAction();
     #endif
 
     int sceneIndex = response->getSceneIndex();
@@ -396,8 +401,17 @@ void TupTimeLine::frameResponse(TupFrameResponse *response)
             break;
             case TupProjectRequest::Select:
               {
-                  if (selectedLayer != layerIndex)
-                      opacitySpinBox->setValue(layerOpacityList[layerIndex]);
+                  if (selectedLayer != layerIndex) {
+                      TupScene *scene = project->sceneAt(sceneIndex);
+                      if (scene) {
+                          TupLayer *layer = scene->layerAt(layerIndex);
+                          if (layer) {
+                              opacitySpinBox->blockSignals(true);
+                              opacitySpinBox->setValue(layer->getOpacity());
+                              opacitySpinBox->blockSignals(false);
+                          }
+                      }
+                  }
 
                   QString selection = response->getArg().toString();
                   selectedLayer = layerIndex;
@@ -555,7 +569,7 @@ bool TupTimeLine::requestFrameAction(int action, int frameIndex, int layerIndex,
                 }
             }
 
-            selectFrame(layerIndex, lastFrame + 1);
+            requestFrameSelection(layerIndex, lastFrame + 1);
             return true;
         }
         case TupProjectActionBar::ExtendFrame:
@@ -734,10 +748,10 @@ void TupTimeLine::requestLayerRenameAction(int layerIndex, const QString &name)
     emit requestTriggered(&request);
 }
 
-void TupTimeLine::selectFrame(int layerIndex, int frameIndex)
+void TupTimeLine::requestFrameSelection(int layerIndex, int frameIndex)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupTimeLine::selectFrame()] - layerIndex, frameIndex -> (" << layerIndex << ", " << frameIndex << ")";
+        qDebug() << "[TupTimeLine::requestFrameSelection()] - layerIndex, frameIndex -> (" << layerIndex << ", " << frameIndex << ")";
     #endif
 
     int sceneIndex = scenesContainer->currentIndex();
@@ -913,11 +927,55 @@ void TupTimeLine::requestReverseFrameSelection()
 
 void TupTimeLine::requestUpdateLayerOpacity(double opacity)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTimeLine::requestUpdateLayerOpacity()] - opacity -> " << opacity;
+    #endif
+
     int sceneIndex = scenesContainer->currentIndex();
     int layerIndex = framesTable(sceneIndex)->currentLayer();
-    layerOpacityList[layerIndex] = opacitySpinBox->value();
 
     TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex,
                                                                       TupProjectRequest::UpdateOpacity, opacity);
     emit requestTriggered(&request);
+}
+
+double TupTimeLine::getLayerOpacity(int sceneIndex, int layerIndex)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTimeLine::getLayerOpacity()] - sceneIndex/layerIndex -> " << sceneIndex << "," << layerIndex;
+    #endif
+
+    double opacity = 1.0;
+    TupScene *scene = project->sceneAt(sceneIndex);
+    if (scene) {
+        TupLayer *layer = scene->layerAt(layerIndex);
+        if (layer) {
+            opacity = layer->getOpacity();
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupTimeLine::getLayerOpacity()] - Fatal Error: No layer at index -> " << layerIndex;
+            #endif
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupTimeLine::getLayerOpacity()] - Fatal Error: No scene at index -> " << sceneIndex;
+        #endif
+    }
+
+    return opacity;
+}
+
+void TupTimeLine::updateLayerOpacity(int sceneIndex, int layerIndex)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTimeLine::updateLayerOpacity()] - sceneIndex/layerIndex -> " << sceneIndex << "," << layerIndex;
+    #endif
+
+    double opacity = getLayerOpacity(sceneIndex, layerIndex);
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTimeLine::updateLayerOpacity()] - layer opacity -> " << opacity;
+    #endif
+    opacitySpinBox->blockSignals(true);
+    opacitySpinBox->setValue(opacity);
+    opacitySpinBox->blockSignals(false);
 }

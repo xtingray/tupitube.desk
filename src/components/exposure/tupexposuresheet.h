@@ -39,7 +39,7 @@
 #include "tglobal.h"
 #include "tupmodulewidgetbase.h"
 #include "tupexposuretable.h"
-#include "tupscenetabwidget.h"
+#include "tupexposurescenetabwidget.h"
 #include "timagebutton.h"
 #include "tupprojectactionbar.h"
 #include "tupproject.h"
@@ -119,7 +119,7 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
 
     private:
         TupProject *project;
-        TupSceneTabWidget *scenesContainer;
+        TupExposureSceneTabWidget *scenesContainer;
         TupExposureTable *currentTable;
         TupProjectActionBar *actionBar;
         QMenu *singleMenu;

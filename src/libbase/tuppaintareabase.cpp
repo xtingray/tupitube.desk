@@ -57,7 +57,7 @@
 TupPaintAreaBase::TupPaintAreaBase(QWidget *parent, QSize dimension, TupLibrary *library) : QGraphicsView(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupPaintAreaBase::TupPaintAreaBase()";
+        qDebug() << "[TupPaintAreaBase()]";
     #endif
 
     gScene = new TupGraphicsScene();
@@ -130,7 +130,7 @@ void TupPaintAreaBase::setTool(TupToolPlugin *tool)
     // if (!scene()) {
     if (!gScene) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupPaintAreaBase::setTool() - Fatal Error: No scene available";
+            qDebug() << "[TupPaintAreaBase::setTool()] - Fatal Error: No scene available";
         #endif
         return;
     }
@@ -273,9 +273,9 @@ void TupPaintAreaBase::keyReleaseEvent(QKeyEvent *event)
 void TupPaintAreaBase::tabletEvent(QTabletEvent *event)
 {
     if (event->pressure() > 0) {
-        qDebug() << "TupPaintAreaBase::tabletEvent() - Pressure: " << event->pressure();
-        qDebug() << "TupPaintAreaBase::tabletEvent() - xTilt: " << event->xTilt();
-        qDebug() << "TupPaintAreaBase::tabletEvent() - yTilt: " << event->yTilt();
+        qDebug() << "[TupPaintAreaBase::tabletEvent()] - Pressure: " << event->pressure();
+        qDebug() << "[TupPaintAreaBase::tabletEvent()] - xTilt: " << event->xTilt();
+        qDebug() << "[TupPaintAreaBase::tabletEvent()] - yTilt: " << event->yTilt();
     }
 
     QGraphicsView::tabletEvent(event);
@@ -284,11 +284,12 @@ void TupPaintAreaBase::tabletEvent(QTabletEvent *event)
 
 void TupPaintAreaBase::enterEvent(QEvent *event)
 {
-/*
-#ifdef TUP_DEBUG
-    qDebug() << "TupPaintAreaBase::enterEvent(QEvent)";
-#endif
-*/
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintAreaBase::enterEvent(QEvent)]";
+    #endif
+    */
+
     if (!hasFocus())
         setFocus();
 
@@ -299,7 +300,7 @@ void TupPaintAreaBase::leaveEvent(QEvent *event)
 {
 /*
 #ifdef TUP_DEBUG
-    qDebug() << "TupPaintAreaBase::leaveEvent(QEvent)";
+    qDebug() << "[TupPaintAreaBase::leaveEvent(QEvent)]";
 #endif
 */
     if (hasFocus())
@@ -312,7 +313,7 @@ bool TupPaintAreaBase::viewportEvent(QEvent *event)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "TupPaintAreaBase::viewportEvent(QEvent)";
+        qDebug() << "[TupPaintAreaBase::viewportEvent(QEvent)]";
     #endif
     */
 
@@ -471,7 +472,7 @@ void TupPaintAreaBase::drawPadLock(QPainter *painter, const QRectF &rect, QStrin
 bool TupPaintAreaBase::canPaint() const
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupPaintAreaBase::canPaint()";
+        qDebug() << "[TupPaintAreaBase::canPaint()]";
     #endif
 
     if (gScene) {

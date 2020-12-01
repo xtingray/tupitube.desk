@@ -39,7 +39,7 @@
 TupTimeLineRuler::TupTimeLineRuler(QWidget *parent) : QHeaderView(Qt::Horizontal, parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupTimeLineRuler()";
+        qDebug() << "[TupTimeLineRuler()]";
     #endif
 
     TCONFIG->beginGroup("General");
@@ -52,7 +52,7 @@ TupTimeLineRuler::TupTimeLineRuler(QWidget *parent) : QHeaderView(Qt::Horizontal
 TupTimeLineRuler::~TupTimeLineRuler()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "~TupTimeLineRuler()";
+        qDebug() << "[~TupTimeLineRuler()]";
     #endif
 }
 

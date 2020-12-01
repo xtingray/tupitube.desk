@@ -10,14 +10,14 @@ CONFIG += dll warn_on
 HEADERS += tuptimeline.h \
            tuptimelineruler.h \
            tuptimelinetable.h \ 
-           tupscenecontainer.h \
+           tuptimelinescenecontainer.h \
            # tuplayerindex.h \
            tuptimelineheader.h
 
 SOURCES += tuptimeline.cpp \
            tuptimelineruler.cpp \
            tuptimelinetable.cpp \
-           tupscenecontainer.cpp \
+           tuptimelinescenecontainer.cpp \
            # tuplayerindex.cpp \
            tuptimelineheader.cpp
 

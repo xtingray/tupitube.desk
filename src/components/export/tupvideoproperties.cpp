@@ -78,14 +78,14 @@ void TupVideoProperties::setForm()
     connect(titleEdit, SIGNAL(textChanged(const QString &)), this, SLOT(resetTitleColor(const QString &)));
     titleLabel->setBuddy(titleEdit);
 
-    QLabel *topicsLabel = new QLabel(tr("Topics"));
+    QLabel *topicsLabel = new QLabel(tr("Tags"));
     QString topics = tr("#tupitube #animation #fun");
     if (mode == Image)
         topics = tr("#tupitube #image #fun");
 
     topicsEdit = new QLineEdit(topics);
     topicsEdit->setLocale(utf);
-    connect(topicsEdit, SIGNAL(textChanged(const QString &)), this, SLOT(resetTopicsColor(const QString &)));
+    connect(topicsEdit, SIGNAL(textChanged(const QString &)), this, SLOT(resetTagsColor(const QString &)));
     topicsLabel->setBuddy(topicsEdit);
 
     QLabel *descLabel = new QLabel(tr("Description"));
@@ -238,8 +238,8 @@ void TupVideoProperties::postIt()
         if (desc.contains("<") || desc.contains(">") || desc.contains("http"))
             desc = "";
 
-        if (desc.length() > 240) {
-            desc = desc.left(240);
+        if (desc.length() > 500) {
+            desc = desc.left(500);
             descText->setPlainText(desc);
         }
 
@@ -274,6 +274,13 @@ void TupVideoProperties::postIt()
     request.setRawHeader("User-Agent", BROWSER_FINGERPRINT);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+
+    /*
+    QSslConfiguration conf = request.sslConfiguration();
+    conf.setPeerVerifyMode(QSslSocket::VerifyNone);
+    request.setSslConfiguration(conf);
+    */
+
     request.setUrl(QUrl(url));
 
     params = QUrlQuery();
@@ -347,9 +354,12 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
                 QNetworkRequest request = QNetworkRequest();
                 request.setRawHeader(QByteArray("User-Agent"), QByteArray(BROWSER_FINGERPRINT));
                 request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+
+                /*
                 QSslConfiguration conf = request.sslConfiguration();
                 conf.setPeerVerifyMode(QSslSocket::VerifyNone);
                 request.setSslConfiguration(conf);
+                */
 
                 request.setUrl(QUrl(url));
 
@@ -765,7 +775,7 @@ void TupVideoProperties::resetTitleColor(const QString &)
     titleEdit->setPalette(palette);
 }
 
-void TupVideoProperties::resetTopicsColor(const QString &)
+void TupVideoProperties::resetTagsColor(const QString &)
 {
     QPalette palette = topicsEdit->palette();
     if (topicsEdit->text().length() > 0 &&

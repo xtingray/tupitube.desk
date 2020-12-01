@@ -33,37 +33,37 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "tupscenecontainer.h"
+#include "tuptimelinescenecontainer.h"
 
-TupSceneContainer::TupSceneContainer(QWidget *parent) : QTabWidget(parent)
+TupTimelineSceneContainer::TupTimelineSceneContainer(QWidget *parent) : QTabWidget(parent)
 {
 }
 
-TupSceneContainer::~TupSceneContainer()
+TupTimelineSceneContainer::~TupTimelineSceneContainer()
 {
 }
 
-void TupSceneContainer::addScene(int sceneIndex, TupTimeLineTable *framesTable, const QString &sceneName)
+void TupTimelineSceneContainer::addScene(int sceneIndex, TupTimeLineTable *framesTable, const QString &sceneName)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupSceneContainer::addScene()]";
+        qDebug() << "[TupTimelineSceneContainer::addScene()]";
     #endif
 
     scenes << framesTable;
     QTabWidget::insertTab(sceneIndex, framesTable, sceneName);
 }
 
-void TupSceneContainer::restoreScene(int sceneIndex, const QString &sceneName)
+void TupTimelineSceneContainer::restoreScene(int sceneIndex, const QString &sceneName)
 {
     TupTimeLineTable *framesTable = undoScenes.takeLast();
     scenes << framesTable;
     QTabWidget::insertTab(sceneIndex, framesTable, sceneName);
 }
 
-void TupSceneContainer::removeScene(int sceneIndex, bool withBackup)
+void TupTimelineSceneContainer::removeScene(int sceneIndex, bool withBackup)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupSceneContainer::removeScene()]";
+        qDebug() << "[TupTimelineSceneContainer::removeScene()]";
     #endif
 
     if (withBackup)
@@ -74,12 +74,12 @@ void TupSceneContainer::removeScene(int sceneIndex, bool withBackup)
     QTabWidget::removeTab(sceneIndex);
 }
 
-void TupSceneContainer::renameScene(int index, const QString &name)
+void TupTimelineSceneContainer::renameScene(int index, const QString &name)
 {
     setTabText(index, name);
 }
 
-void TupSceneContainer::removeAllScenes()
+void TupTimelineSceneContainer::removeAllScenes()
 {
     blockSignals(true);
     clear();
@@ -88,7 +88,7 @@ void TupSceneContainer::removeAllScenes()
     blockSignals(false);
 }
 
-TupTimeLineTable * TupSceneContainer::currentScene()
+TupTimeLineTable * TupTimelineSceneContainer::currentScene()
 {
     int index = currentIndex();
     TupTimeLineTable *framesTable = nullptr;
@@ -99,18 +99,18 @@ TupTimeLineTable * TupSceneContainer::currentScene()
     return framesTable;
 }
 
-TupTimeLineTable * TupSceneContainer::getTable(int index)
+TupTimeLineTable * TupTimelineSceneContainer::getTable(int index)
 {
     TupTimeLineTable *framesTable = scenes.at(index);
     return framesTable;
 }
 
-int TupSceneContainer::count()
+int TupTimelineSceneContainer::count()
 {
     return scenes.count();
 }
 
-bool TupSceneContainer::isTableIndexValid(int index)
+bool TupTimelineSceneContainer::isTableIndexValid(int index)
 {
     if (index > -1 && index < scenes.count())
         return true;
@@ -119,7 +119,7 @@ bool TupSceneContainer::isTableIndexValid(int index)
 }
 
 #ifndef QT_NO_WHEELEVENT
-void TupSceneContainer::wheelEvent(QWheelEvent *ev)
+void TupTimelineSceneContainer::wheelEvent(QWheelEvent *ev)
 {
     QRect rect = tabBar()->rect();
     rect.setWidth(width());
@@ -128,7 +128,7 @@ void TupSceneContainer::wheelEvent(QWheelEvent *ev)
         wheelMove(ev->delta());
 }
 
-void TupSceneContainer::wheelMove(int delta)
+void TupTimelineSceneContainer::wheelMove(int delta)
 {
     if (count() > 1) {
         int current = currentIndex();
