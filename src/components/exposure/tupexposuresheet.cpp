@@ -436,8 +436,8 @@ void TupExposureSheet::setScene(int sceneIndex)
         scenesContainer->blockSignals(false);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupExposureSheet::setScene()] - Invalid scene index -> " + QString::number(sceneIndex);
-            qDebug() << "[TupExposureSheet::setScene()] - Scenes total -> " + QString::number(scenesContainer->count());
+            qDebug() << "[TupExposureSheet::setScene()] - Invalid scene index -> " << sceneIndex;
+            qDebug() << "[TupExposureSheet::setScene()] - Scenes total -> " << scenesContainer->count();
         #endif
     }
 }
@@ -761,7 +761,6 @@ void TupExposureSheet::layerResponse(TupLayerResponse *response)
                     if ((previousScene != sceneIndex) || (previousLayer != layerIndex)) {
                         previousScene = sceneIndex;
                         previousLayer = layerIndex;
-                        qDebug() << "Flag 2 - layerIndex -> " << layerIndex;
                         updateLayerOpacity(sceneIndex, layerIndex);
                     }
                 }
@@ -773,12 +772,10 @@ void TupExposureSheet::layerResponse(TupLayerResponse *response)
             break;
             case TupProjectRequest::UpdateOpacity:
                 {
-                    if (response->getMode() == TupProjectResponse::Do) {
-                        updateLayerOpacity(sceneIndex, layerIndex);
-                    } else {
-                        qDebug() << "";
-                        qDebug() << "   Undo layer opacity - sceneIndex -> " << sceneIndex << " - layerIndex -> " << layerIndex;
-                        qDebug() << "";
+                    updateLayerOpacity(sceneIndex, layerIndex);
+                    if (response->getMode() == TupProjectResponse::Undo || response->getMode() == TupProjectResponse::Redo) {
+                        QString layer = QString::number(layerIndex);
+                        framesTable->selectFrame(layerIndex, 0, layer + "," + layer + ",0,0");
                     }
                 }
             break;
@@ -851,7 +848,7 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
                          } else {
                              int lastFrame = table->framesCountAtCurrentLayer() - 1;
                              int target = frameIndex;
-                             if (target == lastFrame) {
+                             if (target == lastFrame) { // Removing last frame from layer
                                  table->removeFrame(layerIndex, target);
                                  if (target <= 0)
                                      table->clearSelection();
@@ -882,10 +879,11 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
                      if (response->getMode() == TupProjectResponse::Redo || response->getMode() == TupProjectResponse::Undo) {
                          int lastFrame = table->framesCountAtCurrentLayer() - 1;
                          int target = frameIndex;
-                         if (target == lastFrame) {
-                             table->removeFrame(layerIndex, frameIndex);
-                             if (frameIndex > 0)
+                         if (target == lastFrame) { // Removing last frame
+                             if (frameIndex > 0) {
+                                 table->removeFrame(layerIndex, frameIndex);
                                  frameIndex--;
+                             }
                              table->selectFrame(layerIndex, frameIndex);
                          } else {
                              table->removeFrame(layerIndex, frameIndex);

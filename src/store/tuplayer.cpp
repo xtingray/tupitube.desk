@@ -54,6 +54,8 @@ TupLayer::~TupLayer()
     lipsyncList.clear();
     tweeningGraphicObjects.clear();
     tweeningSvgObjects.clear();
+    opacityUndo.clear();
+    opacityRedo.clear();
 }
 
 Frames TupLayer::getFrames()
@@ -113,6 +115,7 @@ void TupLayer::setOpacity(qreal factor)
         qDebug() << "[TupLayer::setOpacity()] - opacity -> " << factor;
     #endif
 
+    opacityUndo << opacity;
     opacity = factor;
 }
 
@@ -180,8 +183,8 @@ bool TupLayer::restoreFrame(int index)
         return false;
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupLayer::restoreFrame() - Fatal Error: "
-            "No available frames to restore index -> " + QString::number(index);
+            qDebug() << "[TupLayer::restoreFrame()] - Fatal Error: "
+            "No available frames to restore index -> " << index;
         #endif
     }
 
@@ -246,8 +249,8 @@ bool TupLayer::restoreResettedFrame(int pos)
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupLayer::restoreResettedFrame() - Fatal Error: "
-            "No available resetted frames to restore -> " + QString::number(resettedFrames.count());
+            qDebug() << "[TupLayer::restoreResettedFrame()] - Fatal Error: "
+            "No available resetted frames to restore -> " << resettedFrames.count();
         #endif
     }
 
@@ -303,12 +306,12 @@ bool TupLayer::exchangeFrame(int from, int to)
 {
     if (from < 0 || from >= frames.count() || to < 0 || to >= frames.count()) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupLayer::exchangeFrame() - Fatal Error: frame indexes are invalid -> from: " + QString::number(from) + " / to: " + QString::number(to);
+            qDebug() << "[TupLayer::exchangeFrame()] - Fatal Error: frame indexes are invalid -> from: "
+                     <<  from << " / to: " << to;
         #endif
         return false;
     }
 
-    // frames.swap(from, to);
     frames.swapItemsAt(from, to);
 
     return true;
@@ -338,18 +341,19 @@ bool TupLayer::extendFrame(int pos, int times)
     return false;
 }
 
-TupFrame *TupLayer::frameAt(int position) const
+TupFrame *TupLayer::frameAt(int pos) const
 {
-    if (position < 0 || position >= frames.count()) {
+    if (pos < 0 || pos >= frames.count()) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupLayer::frameAt() - Fatal Error: frame index out of bound : " + QString::number(position);
-            qDebug() << "TupLayer::frameAt() - Fatal Error: index limit at layer(" + QString::number(index) + ") : " + QString::number(frames.count()-1);
+            qDebug() << "[TupLayer::frameAt()] - Fatal Error: frame index out of bound -> " << pos;
+            qDebug() << "[TupLayer::frameAt()] - Fatal Error: index limit at layer ("
+                     << index << ") -> " << (frames.count()-1);
         #endif    
 
         return nullptr;
     }
 
-    return frames.value(position);
+    return frames.value(pos);
 }
 
 void TupLayer::fromXml(const QString &xml)
@@ -364,7 +368,8 @@ void TupLayer::fromXml(const QString &xml)
 
     QDomElement root = document.documentElement();
     setLayerName(root.attribute("name", getLayerName()));
-    setOpacity(root.attribute("opacity", "1.0").toDouble());
+    // setOpacity(root.attribute("opacity", "1.0").toDouble());
+    opacity = root.attribute("opacity", "1.0").toDouble();
     setLayerVisibility(root.attribute("visible", "1").toInt());
     QDomNode n = root.firstChild();
 
@@ -618,9 +623,18 @@ void TupLayer::removeTweensFromFrame(int frameIndex)
     }
 }
 
-/*
-int TupLayer::tweensCount()
+void TupLayer::undoOpacity()
 {
-    return tweeningGraphicObjects.count() + tweeningSvgObjects.count();
+    if (!opacityUndo.isEmpty()) {
+        opacityRedo << opacity;
+        opacity = opacityUndo.takeLast();
+    }
 }
-*/
+
+void TupLayer::redoOpacity()
+{
+    if (!opacityRedo.isEmpty()) {
+        opacityUndo << opacity;
+        opacity = opacityRedo.takeLast();
+    }
+}

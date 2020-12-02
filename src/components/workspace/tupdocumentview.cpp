@@ -690,10 +690,8 @@ void TupDocumentView::loadPlugins()
 void TupDocumentView::loadPlugin(int menu, int actionID)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "[TupDocumentView::loadPlugin()]";
-        qWarning() << "  Menu: " << menu;
-        qWarning() << "  Action: " << actionID;
-        qWarning() << "  currentDock: " << currentDock;
+        qWarning() << "[TupDocumentView::loadPlugin()] - Menu -> "
+                   << menu << " - Action -> " << actionID << " - currentDock -> " << currentDock;
     #endif
 
     TAction *action = nullptr;

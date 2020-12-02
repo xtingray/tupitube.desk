@@ -807,3 +807,9 @@ QList<int> TupTimeLineTable::currentSelection()
 
     return coords;
 }
+
+int TupTimeLineTable::framesCountAtCurrentLayer()
+{
+    return layersColumn->lastFrame(currentLayer());
+}
+

@@ -172,9 +172,7 @@ void TupTimeLine::removeScene(int sceneIndex)
 
 void TupTimeLine::closeAllScenes()
 {
-    // blockSignals(true);
     scenesContainer->removeAllScenes();
-    // blockSignals(false);
 }
 
 void TupTimeLine::sceneResponse(TupSceneResponse *response)
@@ -333,11 +331,11 @@ void TupTimeLine::layerResponse(TupLayerResponse *response)
             break;
             case TupProjectRequest::UpdateOpacity:
             {
-                double opacity = response->getArg().toReal();
-                // layerOpacityList[layerIndex] = opacity;
-                opacitySpinBox->blockSignals(true);
-                opacitySpinBox->setValue(opacity);
-                opacitySpinBox->blockSignals(false);
+                 updateLayerOpacity(sceneIndex, layerIndex);
+                 if (response->getMode() == TupProjectResponse::Undo || response->getMode() == TupProjectResponse::Redo) {
+                     QString layer = QString::number(layerIndex);
+                     framesTable->selectFrame(layerIndex, 0, layer + "," + layer + ",0,0");
+                 }
             }
             break;
         }
@@ -364,7 +362,21 @@ void TupTimeLine::frameResponse(TupFrameResponse *response)
             break;
             case TupProjectRequest::Remove:
               {
-                  framesTable->removeFrame(layerIndex, frameIndex);
+                  if (response->getMode() == TupProjectResponse::Redo || response->getMode() == TupProjectResponse::Undo) {
+                      int lastFrame = framesTable->framesCountAtCurrentLayer() - 1;
+                      int target = frameIndex;
+                      if (target == lastFrame) { // Removing last frame
+                          if (frameIndex > 0) {
+                              framesTable->removeFrame(layerIndex, frameIndex);
+                              frameIndex--;
+                          }
+                          framesTable->selectFrame(layerIndex, frameIndex);
+                      } else { // When the item deleted is not the last one
+                          framesTable->removeFrame(layerIndex, frameIndex);
+                      }
+                  } else {
+                      framesTable->removeFrame(layerIndex, frameIndex);
+                  }
               }
             break;
             case TupProjectRequest::RemoveSelection:
@@ -401,17 +413,8 @@ void TupTimeLine::frameResponse(TupFrameResponse *response)
             break;
             case TupProjectRequest::Select:
               {
-                  if (selectedLayer != layerIndex) {
-                      TupScene *scene = project->sceneAt(sceneIndex);
-                      if (scene) {
-                          TupLayer *layer = scene->layerAt(layerIndex);
-                          if (layer) {
-                              opacitySpinBox->blockSignals(true);
-                              opacitySpinBox->setValue(layer->getOpacity());
-                              opacitySpinBox->blockSignals(false);
-                          }
-                      }
-                  }
+                  if (selectedLayer != layerIndex)
+                      updateLayerOpacity(sceneIndex, layerIndex);
 
                   QString selection = response->getArg().toString();
                   selectedLayer = layerIndex;
@@ -472,7 +475,7 @@ void TupTimeLine::libraryResponse(TupLibraryResponse *response)
             default:
                 // Do nothing
             break;
-        };
+        }
     }
 }
 
@@ -485,7 +488,7 @@ void TupTimeLine::requestCommand(int action)
     int sceneIndex = scenesContainer->currentIndex();
     if (sceneIndex < 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupTimeLine::requestCommand()] - Fatal Error: Scene index is invalid -> " + QString::number(sceneIndex);
+            qDebug() << "[TupTimeLine::requestCommand()] - Fatal Error: Scene index is invalid -> " << sceneIndex;
         #endif
 
         return;
@@ -494,7 +497,7 @@ void TupTimeLine::requestCommand(int action)
     int layerIndex = framesTable(sceneIndex)->currentLayer();
     if (layerIndex < 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupTimeLine::requestCommand()] - Fatal Error: Layer index is invalid -> " + QString::number(layerIndex);
+            qDebug() << "[TupTimeLine::requestCommand()] - Fatal Error: Layer index is invalid -> " << layerIndex;
         #endif
 
         return;
@@ -503,7 +506,7 @@ void TupTimeLine::requestCommand(int action)
     int frameIndex = framesTable(sceneIndex)->lastFrameByLayer(layerIndex);
     if (frameIndex < 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupTimeLine::requestCommand()] - Fatal Error: Frame index is invalid -> " + QString::number(frameIndex);
+            qDebug() << "[TupTimeLine::requestCommand()] - Fatal Error: Frame index is invalid -> " << frameIndex;
         #endif
 
         return;
@@ -751,7 +754,8 @@ void TupTimeLine::requestLayerRenameAction(int layerIndex, const QString &name)
 void TupTimeLine::requestFrameSelection(int layerIndex, int frameIndex)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupTimeLine::requestFrameSelection()] - layerIndex, frameIndex -> (" << layerIndex << ", " << frameIndex << ")";
+        qDebug() << "[TupTimeLine::requestFrameSelection()] - layerIndex, frameIndex -> ("
+                 << layerIndex << ", " << frameIndex << ")";
     #endif
 
     int sceneIndex = scenesContainer->currentIndex();

@@ -202,9 +202,15 @@ TupSoundLayer *TupScene::createSoundLayer(int position, bool loadingFromFile)
 
 bool TupScene::restoreLayer(int index)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScene::restoreLayer()] - index -> " << index;
+    #endif
+
     if (undoLayers.count() > 0) {
         TupLayer *layer = undoLayers.takeLast();
         if (layer) {
+            if (layer->framesCount() == 0)
+                layer->restoreFrame(0);
             layers.insert(index, layer);
             layerCount++;
             return true;
@@ -215,16 +221,16 @@ bool TupScene::restoreLayer(int index)
     return false;
 }
 
-bool TupScene::removeLayer(int position)
+bool TupScene::removeLayer(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScene::removeLayer()] - position -> " << position;
+        qDebug() << "[TupScene::removeLayer()] - index -> " << index;
     #endif
 
-    TupLayer *layer = this->layerAt(position);
+    TupLayer *layer = this->layerAt(index);
     if (layer) {
-        removeTweensFromLayer(position + 1);
-        undoLayers << layers.takeAt(position);
+        removeTweensFromLayer(index + 1);
+        undoLayers << layers.takeAt(index);
         layerCount--;
 
         return true;

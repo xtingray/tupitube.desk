@@ -87,6 +87,7 @@ class TUPITUBE_EXPORT TupTimeLineTable : public QTableWidget
         void selectFrame(int layerIndex, int frameIndex, const QString &selection);
         // bool frameIsLocked(int layerIndex, int frameIndex);
         QList<int> currentSelection();
+        int framesCountAtCurrentLayer();
 
     public slots:
         // Layers

@@ -304,7 +304,15 @@ bool TupCommandExecutor::setLayerOpacity(TupLayerResponse *response)
 
     TupLayer *layer = scene->layerAt(position);
     if (layer) {
-        layer->setOpacity(opacity);
+        if (response->getMode() == TupProjectResponse::Do)
+            layer->setOpacity(opacity);
+
+        if (response->getMode() == TupProjectResponse::Undo)
+            layer->undoOpacity();
+
+        if (response->getMode() == TupProjectResponse::Redo)
+            layer->redoOpacity();
+
         responsed(response);
 
         return true;

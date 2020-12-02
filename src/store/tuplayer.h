@@ -119,7 +119,9 @@ class TUPITUBE_EXPORT TupLayer : public QObject, public TupAbstractSerializable
         bool removeTween(const QString &name, TupItemTweener::Type type);
         void removeAllTweens();
         void removeTweensFromFrame(int frameIndex);
-        // int tweensCount();
+
+        void undoOpacity();
+        void redoOpacity();
 
     public:
         virtual void fromXml(const QString &xml);

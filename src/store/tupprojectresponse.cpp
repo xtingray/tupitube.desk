@@ -80,7 +80,7 @@ int TupProjectResponse::getAction() const
             default:
                  {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupProjectResponse::action() - Returning same action as UNDO respoonse -> " + QString::number(action);
+                        qDebug() << "[TupProjectResponse::action()] - Returning same action as UNDO respoonse -> " << action;
                     #endif
                  }
             break;
@@ -372,7 +372,7 @@ TupProjectResponse *TupProjectResponseFactory::create(int part, int action)
         default:
         {
             #ifdef TUP_DEBUG
-                qDebug() << "TupProjectResponseFactory::create() - Error: Unknown/Unhandled element: " + QString::number(part);
+                qDebug() << "[TupProjectResponseFactory::create()] - Error: Unknown/Unhandled element -> " << part;
             #endif
         }
         break;
