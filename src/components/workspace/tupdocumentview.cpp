@@ -165,9 +165,8 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     // SQA: Find out why this timer instruction is required?
     QTimer::singleShot(500, this, SLOT(loadPlugins()));
 
-    // SQA: Temporarily disabled  
-    // if (!isNetworked)
-    //     saveTimer();
+    if (!isNetworked)
+        saveTimer();
 
     paintArea->updateLoadingFlag(false);
 }
@@ -1540,7 +1539,6 @@ void TupDocumentView::updatePaintArea()
     paintArea->updatePaintArea();
 }
 
-/*
 void TupDocumentView::callAutoSave()
 {
     emit autoSave();
@@ -1549,20 +1547,16 @@ void TupDocumentView::callAutoSave()
 void TupDocumentView::saveTimer()
 {
     TCONFIG->beginGroup("General");
-    autoSaveTime = TCONFIG->value("AutoSave", 10).toInt();
+    bool autoSave = TCONFIG->value("AutoSave", false).toBool();
 
-    timer = new QTimer(this);
-
-    if (autoSaveTime != 0) {
-        if (autoSaveTime < 0 || autoSaveTime > 60)
-            autoSaveTime = 5;
-
-        int saveTime = autoSaveTime*60000;
+    if (autoSave) {
+        QString min = TCONFIG->value("AutoSaveTime", "5").toString();
+        int saveTime = min.toInt() * 60000;
+        timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(callAutoSave()));
         timer->start(saveTime);
     }
 }
-*/
 
 void TupDocumentView::setSpaceContext()
 {

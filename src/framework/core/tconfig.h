@@ -62,11 +62,11 @@ class T_CORE_EXPORT TConfig : public QObject
     public:
         void checkConfigFile();
         void initConfigFile();
-        void beginGroup(const QString & prefix);
+        void beginGroup(const QString &prefix);
         void endGroup();
 
-        void setValue(const QString & key, const QVariant & value);
-        QVariant value(const QString & key, const QVariant & defaultValue = QVariant()) const;
+        void setValue(const QString &key, const QVariant &value);
+        QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;
 
         static TConfig *instance();
 
@@ -78,7 +78,8 @@ class T_CORE_EXPORT TConfig : public QObject
 
         void sync();
 
-        static QList<QString> languages();
+        static QStringList languages();
+        static QStringList timeRanges();
 
     private:
         QDomElement find(const QDomElement &element, const QString &key) const;

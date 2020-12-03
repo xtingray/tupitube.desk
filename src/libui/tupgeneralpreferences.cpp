@@ -100,7 +100,7 @@ QWidget * TupGeneralPreferences::generalTab()
     labels << tr("Always open last project") << tr("Show tip of the day")
            << tr("Allow TupiTube to collect use statistics (No private/personal info)");
 
-    QGridLayout *startupForm = createForm("General", Startup, startup, labels);
+    QGridLayout *interfaceForm = createForm("General", Startup, startup, labels);
 
     confirmation << "ConfirmRemoveFrame" << "ConfirmRemoveLayer"
                     << "ConfirmRemoveScene" << "ConfirmRemoveObject";
@@ -118,22 +118,34 @@ QWidget * TupGeneralPreferences::generalTab()
 
     QGridLayout *playerForm = createForm("AnimationParameters", Player, player, labels);
 
-    QWidget *widget = new QWidget;
-    QVBoxLayout *widgetLayout = new QVBoxLayout;
-
     QLabel *generalLabel = new QLabel(tr("General Preferences"));
     QFont labelFont = font();
     labelFont.setBold(true);
     labelFont.setPointSize(labelFont.pointSize() + 3);
     generalLabel->setFont(labelFont);
-    widgetLayout->addWidget(generalLabel);
-    widgetLayout->addSpacing(15);
 
-    QLabel *startupLabel = new QLabel(tr("On Startup"));
+    QLabel *interfaceLabel = new QLabel(tr("Interface"));
     labelFont = font();
     labelFont.setBold(true);
-    startupLabel->setFont(labelFont);
-    widgetLayout->addWidget(startupLabel);
+    interfaceLabel->setFont(labelFont);
+
+    saveCheck = new QCheckBox(tr("Enable autosave feature every"));
+    saveCheck->setChecked(getAutoSaveFlag());
+    connect(saveCheck, SIGNAL(stateChanged(int)), this, SLOT(updateTimeFlag(int)));
+
+    saveCombo = new QComboBox();
+    saveTimeList = TCONFIG->timeRanges();
+    saveCombo->addItems(saveTimeList);
+    if (!saveCheck->isChecked())
+        saveCombo->setEnabled(false);
+    saveCombo->setCurrentIndex(getAutoSaveTime());
+    QLabel *minLabel = new QLabel(tr("minutes"));
+
+    QHBoxLayout *saveLayout = new QHBoxLayout;
+    saveLayout->addWidget(saveCheck);
+    saveLayout->addWidget(saveCombo);
+    saveLayout->addWidget(minLabel);
+    saveLayout->addStretch();
 
     langSupport = TCONFIG->languages();
     // langSupport << "zh_CN" << "zh_TW" << "en" << "fr" << "pt" << "es";
@@ -154,24 +166,26 @@ QWidget * TupGeneralPreferences::generalTab()
     langLayout->addWidget(langCombo);
     langLayout->addStretch();
 
-    widgetLayout->addLayout(langLayout);
-    widgetLayout->addLayout(startupForm);
-
-    widgetLayout->addSpacing(15);
-
     QLabel *confirmLabel = new QLabel(tr("Confirmation Dialogs"));
     confirmLabel->setFont(labelFont);
+
+    QLabel *playerLabel = new QLabel(tr("Player"));
+    playerLabel->setFont(labelFont);    
+
+    QWidget *widget = new QWidget;
+    QVBoxLayout *widgetLayout = new QVBoxLayout(widget);
+    widgetLayout->addWidget(generalLabel);
+    widgetLayout->addSpacing(15);
+    widgetLayout->addWidget(interfaceLabel);
+    widgetLayout->addLayout(langLayout);
+    widgetLayout->addLayout(saveLayout);
+    widgetLayout->addLayout(interfaceForm);
+    widgetLayout->addSpacing(15);
     widgetLayout->addWidget(confirmLabel);
     widgetLayout->addLayout(confirmForm);
-
     widgetLayout->addSpacing(15);
-
-    QLabel *playerLabel = new QLabel(tr("On Player"));
-    playerLabel->setFont(labelFont);
     widgetLayout->addWidget(playerLabel);
     widgetLayout->addLayout(playerForm);
-
-    widget->setLayout(widgetLayout);
 
     return widget;
 }
@@ -473,6 +487,9 @@ bool TupGeneralPreferences::saveValues()
     if (newLang.length() > 0)
         TCONFIG->setValue("Language", newLang);
 
+    TCONFIG->setValue("AutoSave", saveCheck->isChecked());
+    TCONFIG->setValue("AutoSaveTime", saveCombo->currentText());
+
     bool changed = false;
     QString data = cacheString->text();
     if (!data.isEmpty()) {
@@ -537,6 +554,23 @@ int TupGeneralPreferences::getLangIndex()
     return index;
 }
 
+bool TupGeneralPreferences::getAutoSaveFlag()
+{
+    TCONFIG->beginGroup("General");
+    return TCONFIG->value("AutoSave", "false").toBool();
+}
+
+int TupGeneralPreferences::getAutoSaveTime()
+{
+    TCONFIG->beginGroup("General");
+    QString time = TCONFIG->value("AutoSaveTime", "5").toString();
+    int index = saveTimeList.indexOf(time);
+    if (index == -1)
+        index = 5;
+
+    return index;
+}
+
 void TupGeneralPreferences::updateAppLang(int index)
 {
     langChanged = true;
@@ -546,4 +580,13 @@ void TupGeneralPreferences::updateAppLang(int index)
 bool TupGeneralPreferences::showWarning()
 {
     return langChanged;
+}
+
+void TupGeneralPreferences::updateTimeFlag(int status)
+{
+    bool flag = false;
+    if (status == Qt::Checked)
+        flag = true;
+
+    saveCombo->setEnabled(flag);
 }

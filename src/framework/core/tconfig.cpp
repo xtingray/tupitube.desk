@@ -49,12 +49,12 @@ TConfig::TConfig() : QObject()
     if (!configDirectory.exists()) {
         isFirstTime = true;
         #ifdef TUP_DEBUG
-            qWarning() << "TConfig::TConfig() - Config file doesn't exist. Creating path: " + configDirectory.path();
+            qWarning() << "[TConfig::TConfig()] - Config file doesn't exist. Creating path: " << configDirectory.path();
         #endif
 
         if (!configDirectory.mkdir(configDirectory.path())) {
             #ifdef TUP_DEBUG
-                qDebug() << "TConfig::TConfig() - Fatal Error: Can't create path -> " + configDirectory.path();
+                qDebug() << "[TConfig::TConfig()] - Fatal Error: Can't create path -> " << configDirectory.path();
             #endif
         }
     } else {
@@ -96,8 +96,8 @@ void TConfig::checkConfigFile()
         isConfigOk = domDocument.setContent(&config, &errorMsg, &errorLine, &errorColumn);
         if (!isConfigOk) {
             #ifdef TUP_DEBUG
-                qDebug() << "TConfig::checkConfigFile() - Fatal Error: Configuration file is corrupted - Line: " + QString::number(errorLine) + " - Column: " + QString::number(errorColumn);
-                qDebug() << "TConfig::checkConfigFile() - Message: " + errorMsg;
+                qDebug() << "[TConfig::checkConfigFile()] - Fatal Error: Configuration file is corrupted - Line: " << errorLine << " - Column: " << errorColumn;
+                qDebug() << "[TConfig::checkConfigFile()] - Message: " << errorMsg;
             #endif
         } else {
             if (configVersion() < QString(CONFIG_VERSION).toInt())
@@ -217,39 +217,39 @@ void TConfig::setValue(const QString & key, const QVariant & value)
 
 QVariant TConfig::value(const QString & key, const QVariant & defaultValue) const
 {
-   QDomElement element = find(currentElementsGroup, key); // Current group or root?
+    QDomElement element = find(currentElementsGroup, key); // Current group or root?
 	
-   if (element.isNull())
-       return defaultValue;
+    if (element.isNull())
+        return defaultValue;
 
-   QVariant content = element.attribute("value");
+    QVariant content = element.attribute("value");
 
-   if (content.toString() == "false") {
-       return false;
-   } else if (content.toString() == "true") {
-              return true;
-   }
+    if (content.toString() == "false") {
+        return false;
+    } else if (content.toString() == "true") {
+        return true;
+    }
 
-   return content;
+    return content;
 }
 
 QDomElement TConfig::find(const QDomElement &element, const QString &key) const 
 {
-   QDomElement recent;
-   QDomNode n = element.firstChild();
+    QDomElement recent;
+    QDomNode n = element.firstChild();
 
-   while (!n.isNull()) {
-          QDomElement e = n.toElement();
-          if (!e.isNull()) {
-              if (e.tagName() == key) {
-                  recent = e;
-                  break;
-              }
-          }
-          n = n.nextSibling();
-   }
+    while (!n.isNull()) {
+        QDomElement e = n.toElement();
+        if (!e.isNull()) {
+            if (e.tagName() == key) {
+                recent = e;
+                break;
+            }
+        }
+        n = n.nextSibling();
+    }
 
-   return recent;
+    return recent;
 }
 
 QString TConfig::currentGroup()
@@ -257,7 +257,12 @@ QString TConfig::currentGroup()
     return lastGroup;
 }
 
-QList<QString> TConfig::languages()
+QStringList TConfig::languages()
 {
     return {"zh_CN", "zh_TW", "en", "fr", "pt", "es"};
+}
+
+QStringList TConfig::timeRanges()
+{
+    return {"5", "8", "10", "12"};
 }

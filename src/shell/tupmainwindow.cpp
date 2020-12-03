@@ -299,6 +299,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         animationTab = new TupDocumentView(m_projectManager->getProject(), isNetworked, users, this);
 
+        /* SQA: Multi-user code. Pending for the future.
         TCONFIG->beginGroup("Network");
         QString server = TCONFIG->value("Server").toString();
         if (isNetworked && server.compare("tupitu.be") == 0) {
@@ -308,6 +309,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
                     SLOT(updateStoryboardRequest(TupStoryboard *, int)));
             connect(animationTab, SIGNAL(postStoryboard(int)), netProjectManager, SLOT(postStoryboardRequest(int))); 
         }
+        */
 
         QWidget *animationWidget = new QWidget();
         animationWidget->setWindowTitle(tr("Animation"));

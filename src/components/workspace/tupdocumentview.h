@@ -111,7 +111,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void applyZoomOut();
         void updateRotationVars(int angle);
         void changeRulerOrigin(const QPointF &zero);
-        // void saveTimer();
+        void saveTimer();
         void showFullScreen();
         void closeFullScreen();
         void loadPlugin(int menu, int actionId);
@@ -143,7 +143,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         // void showPos(const QPointF &point);
         void setCursor(const QCursor &cursor);
         void selectToolFromMenu(QAction *action);
-        // void callAutoSave();
+        void callAutoSave();
         void sendStoryboard(TupStoryboard *storyboard, int sceneIndex);
         void updateStaticOpacity(double opacity);
         void updateDynamicOpacity(double opacity);
@@ -240,7 +240,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         int nextOnionValue;
         double opacityFactor;
         int viewAngle;
-        int autoSaveTime;
+        // int autoSaveTime;
         bool fullScreenOn;
         bool rasterWindowOn;
         bool isNetworked;

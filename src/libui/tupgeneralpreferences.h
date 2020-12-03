@@ -68,25 +68,34 @@ class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
         void sendRegisterRequest();
         void registerAnswer(QNetworkReply *reply);
         void slotError(QNetworkReply::NetworkError);
+        void updateTimeFlag(int status);
 
-    private:        
-        QTabWidget *tabWidget;
+    private:
+        int getLangIndex();
+        bool getAutoSaveFlag();
+        int getAutoSaveTime();
+        QGridLayout * createForm(const QString &group, Group groupTag,
+                                 QStringList keys, QStringList labels);
+
         QWidget * generalTab();
         QWidget * cacheTab();
         QWidget * socialTab();
+
+        QTabWidget *tabWidget;
         QString cacheID;
         QLineEdit *cacheString;
 
-        int getLangIndex();
-        QGridLayout * createForm(const QString &group, Group groupTag,
-                                 QStringList keys, QStringList labels);
         QStringList startup;
         QStringList confirmation;
         QStringList player;
 
         QComboBox *langCombo;
-        QList<QString> langSupport;
+        QStringList langSupport;
         QString newLang;
+
+        QCheckBox *saveCheck;
+        QComboBox *saveCombo;
+        QStringList saveTimeList;
 
         QList<QCheckBox *> startupList;
         QList<QCheckBox *> confirmList;
