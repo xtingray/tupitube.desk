@@ -183,7 +183,7 @@ class TupMainWindow : public TabbedMainWindow
         void showHelp();
         void aboutTupiTube();
         void openYouTubeChannel();
-        void showTipDialog();
+        // void showTipDialog();
         void importPalettes();
         void openRecentProject();
         void createPaintCommand(const TupPaintAreaEvent *event);

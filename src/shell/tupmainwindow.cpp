@@ -44,7 +44,7 @@
 #include "tuppaintareacommand.h"
 
 // TupiTube Framework
-#include "tipdialog.h"
+// #include "tipdialog.h"
 #include "tmsgdialog.h"
 #include "tosd.h"
 // #include "taudioplayer.h"
@@ -174,8 +174,10 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
         }
     }
 
-    if (showWebMsg) {
+    if (showWebMsg)
         QTimer::singleShot(0, this, SLOT(showWebMessage()));
+
+    /*
     } else {
         TCONFIG->beginGroup("General");
         bool update = TCONFIG->value("NotifyUpdate", false).toBool();
@@ -190,6 +192,7 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
         if (showTips)
             QTimer::singleShot(0, this, SLOT(showTipDialog()));
     }
+    */
 
     // Time to load plugins... 
     TupPluginManager::instance()->loadPlugins();
@@ -835,6 +838,7 @@ void TupMainWindow::aboutTupiTube()
     about->show();
 }
 
+/*
 void TupMainWindow::showTipDialog()
 {
     QStringList labels;
@@ -847,6 +851,7 @@ void TupMainWindow::showTipDialog()
     tipDialog->move(static_cast<int> ((screen->geometry().width() - tipDialog->width()) / 2),
                     static_cast<int> ((screen->geometry().height() - tipDialog->height()) / 2));
 }
+*/
 
 void TupMainWindow::openYouTubeChannel()
 {

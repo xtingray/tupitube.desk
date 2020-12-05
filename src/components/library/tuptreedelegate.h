@@ -47,7 +47,7 @@ class TUPITUBE_EXPORT TupTreeDelegate : public QItemDelegate
     Q_OBJECT
 
     public:
-        TupTreeDelegate(QObject *parent = 0);
+        TupTreeDelegate(QObject *parent = nullptr);
         ~TupTreeDelegate();
 
         void paint(QPainter *painter, const QStyleOptionViewItem &option,

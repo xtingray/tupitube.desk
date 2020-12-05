@@ -82,7 +82,7 @@ QGridLayout * TupGeneralPreferences::createForm(const QString &groupName, Group 
     }
 
     if (group == Startup)
-        startupList = list;
+        interfaceList = list;
     else if (group == Confirm)
         confirmList = list;
     else if (group == Player)
@@ -94,13 +94,15 @@ QGridLayout * TupGeneralPreferences::createForm(const QString &groupName, Group 
 QWidget * TupGeneralPreferences::generalTab()
 {
     newLang = "";
-    startup << "OpenLastProject" << "ShowTipOfDay" << "EnableStatistics";
+    // startup << "OpenLastProject" << "ShowTipOfDay" << "EnableStatistics";
+    interfaceOptions << "OpenLastProject" << "ShowTipOfDay" << "EnableStatistics";
 
     QStringList labels;
-    labels << tr("Always open last project") << tr("Show tip of the day")
+    // labels << tr("Always open last project") << tr("Show tip of the day")
+    labels << tr("Always open last project")
            << tr("Allow TupiTube to collect use statistics (No private/personal info)");
 
-    QGridLayout *interfaceForm = createForm("General", Startup, startup, labels);
+    QGridLayout *interfaceForm = createForm("General", Startup, interfaceOptions, labels);
 
     confirmation << "ConfirmRemoveFrame" << "ConfirmRemoveLayer"
                     << "ConfirmRemoveScene" << "ConfirmRemoveObject";
@@ -476,9 +478,9 @@ bool TupGeneralPreferences::saveValues()
 
     // General Preferences
 
-    int total = startup.count();
+    int total = interfaceOptions.count();
     for (int i=0; i<total; i++)
-         TCONFIG->setValue(startup.at(i), startupList.at(i)->isChecked());
+         TCONFIG->setValue(interfaceOptions.at(i), interfaceList.at(i)->isChecked());
 
     total = confirmation.count();
     for (int i=0; i<total; i++)

@@ -38,11 +38,11 @@
 class TreeListWidgetDelegate : public QItemDelegate
 {
     public:
-        TreeListWidgetDelegate(QObject * parent = 0);
+        TreeListWidgetDelegate(QObject *parent = nullptr);
         ~TreeListWidgetDelegate();
 };
 
-TreeListWidgetDelegate::TreeListWidgetDelegate(QObject * parent) : QItemDelegate(parent)
+TreeListWidgetDelegate::TreeListWidgetDelegate(QObject *parent) : QItemDelegate(parent)
 {
 }
 
@@ -54,19 +54,22 @@ TreeListWidgetDelegate::~TreeListWidgetDelegate()
 
 TreeListWidget::TreeListWidget(QWidget *parent) : QTreeWidget(parent)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TreeListWidget()]";
+    #endif
+
     setEditTriggers(QAbstractItemView::EditKeyPressed | QAbstractItemView::DoubleClicked);
     setHeaderLabels(QStringList() << "");
-    
     header()->hide();
-    setUniformRowHeights (true);
-    
+
+    setUniformRowHeights(true);
     setAlternatingRowColors(true);
     
     TreeListWidgetDelegate *delegator = new TreeListWidgetDelegate(this);
-    
     setItemDelegate(delegator);
-    
-    connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(editDoubleClickedItem(QTreeWidgetItem *, int)));
+
+    connect(this, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)),
+            this, SLOT(editDoubleClickedItem(QTreeWidgetItem *, int)));
 }
 
 TreeListWidget::~TreeListWidget()
@@ -75,6 +78,10 @@ TreeListWidget::~TreeListWidget()
 
 void TreeListWidget::editDoubleClickedItem(QTreeWidgetItem *item, int col)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TreeListWidget::editDoubleClickedItem()]";
+    #endif
+
     if (item && m_isEditable) {
         item->setFlags(item->flags() | Qt::ItemIsEditable);
         editItem(item, col);
@@ -83,17 +90,25 @@ void TreeListWidget::editDoubleClickedItem(QTreeWidgetItem *item, int col)
 
 void TreeListWidget::addItems(const QStringList &items)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TreeListWidget::addItems()]";
+    #endif
+
     QStringList::ConstIterator it = items.begin();
     
     while (it != items.end()) {
-           QTreeWidgetItem *item = new QTreeWidgetItem(this);
-           item->setText(0, *it);
-           ++it;
+        QTreeWidgetItem *item = new QTreeWidgetItem(this);
+        item->setText(0, *it);
+        ++it;
     }
 }
 
 QList<QTreeWidgetItem *> TreeListWidget::topLevelItems()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TreeListWidget::topLevelItems()]";
+    #endif
+
     QList<QTreeWidgetItem *> items;
     for (int i = 0; i < topLevelItemCount (); i++)
          items << topLevelItem(i);
@@ -111,10 +126,10 @@ bool TreeListWidget::isEditable() const
     return m_isEditable;
 }
 
-void TreeListWidget::closeEditor(QWidget * editor, QAbstractItemDelegate::EndEditHint hint)
+void TreeListWidget::closeEditor(QWidget *editor, QAbstractItemDelegate::EndEditHint hint)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupCommandExecutor::removeItem()]";
+        qDebug() << "[TreeListWidget::closeEditor()]";
     #endif
 
     QLineEdit *edit = qobject_cast<QLineEdit *>(editor);

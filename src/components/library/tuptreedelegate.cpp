@@ -46,16 +46,16 @@ TupTreeDelegate::~TupTreeDelegate()
 }
 
 void TupTreeDelegate::paint(QPainter *painter,
-                            const QStyleOptionViewItem &option,
-                            const QModelIndex &index) const
+                            const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QItemDelegate::paint(painter, option, index);
 }
 
 QWidget *TupTreeDelegate::createEditor(QWidget *parent,
-        const QStyleOptionViewItem & /* option */,
-        const QModelIndex &index) const
+        const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    Q_UNUSED(option)
+
     if (index.column() != 1)
         return nullptr;
 

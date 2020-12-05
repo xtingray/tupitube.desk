@@ -287,7 +287,7 @@ void TupMainWindow::setupMenu()
     menuBar()->addMenu(m_helpMenu);
     m_helpMenu->addAction(m_actionManager->find("help"));
     m_helpMenu->addAction(m_actionManager->find("youtube"));
-    m_helpMenu->addAction(m_actionManager->find("tip_of_day"));
+    // m_helpMenu->addAction(m_actionManager->find("tip_of_day"));
     m_helpMenu->addSeparator();
     m_helpMenu->addAction(m_actionManager->find("about_tupitube"));
 
@@ -430,8 +430,8 @@ void TupMainWindow::setupHelpActions()
 
     new TAction(QPixmap(THEME_DIR + "icons/youtube.png"), tr("YouTube Tutorials"), QKeySequence(tr("Y")),
                 this, SLOT(openYouTubeChannel()), m_actionManager, "youtube");
-    new TAction(QPixmap(THEME_DIR + "icons/tip.png"), tr("Tip Of The Day"), QKeySequence(tr("Ctrl+T")),
-                this, SLOT(showTipDialog()), m_actionManager, "tip_of_day");
+    // new TAction(QPixmap(THEME_DIR + "icons/tip.png"), tr("Tip Of The Day"), QKeySequence(tr("Ctrl+T")),
+    //          this, SLOT(showTipDialog()), m_actionManager, "tip_of_day");
     new TAction(QPixmap(THEME_DIR + "icons/about.png"), tr("About TupiTube Desk"), QKeySequence(tr("Ctrl+K")), 
                 this, SLOT(aboutTupiTube()), m_actionManager, "about_tupitube");
 }

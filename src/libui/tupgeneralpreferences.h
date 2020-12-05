@@ -85,7 +85,7 @@ class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
         QString cacheID;
         QLineEdit *cacheString;
 
-        QStringList startup;
+        QStringList interfaceOptions;
         QStringList confirmation;
         QStringList player;
 
@@ -97,7 +97,7 @@ class TUPITUBE_EXPORT TupGeneralPreferences : public QWidget
         QComboBox *saveCombo;
         QStringList saveTimeList;
 
-        QList<QCheckBox *> startupList;
+        QList<QCheckBox *> interfaceList;
         QList<QCheckBox *> confirmList;
         QList<QCheckBox *> playerList;
 

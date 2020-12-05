@@ -49,8 +49,9 @@ class T_GUI_EXPORT TreeListWidget : public QTreeWidget
     Q_OBJECT
 
     public:
-        TreeListWidget(QWidget *parent = 0);
+        TreeListWidget(QWidget *parent = nullptr);
         ~TreeListWidget();
+
         void addItems(const QStringList &items);
         QList<QTreeWidgetItem *> topLevelItems();
         

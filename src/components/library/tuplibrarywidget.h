@@ -83,7 +83,6 @@
 #include <cstdlib>
 #include <ctime>
 
-// class TupLibrary;
 typedef QMap<QString, TupLibraryObject *> LibraryObjects;
 typedef QMap<QString, TupLibraryFolder *> Folders;
 
