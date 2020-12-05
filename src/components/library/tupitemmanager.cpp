@@ -235,15 +235,14 @@ void TupItemManager::mousePressEvent(QMouseEvent *event)
     parentNode = "";
 
     QTreeWidgetItem *item = itemAt(event->pos());
-
     if (item) {
         setCurrentItem(item);
         emit itemSelected(item);
 
-        if (event->buttons() == Qt::RightButton) {
+        if (event->buttons() == Qt::RightButton) { // Opening item options
             QMenu *menu = new QMenu(tr("Options"));
 
-            if (isFolder(item)) {
+            if (isFolder(item)) { // Options for folders
                 QAction *rename = new QAction(tr("Rename"), this);
                 connect(rename, SIGNAL(triggered()), this, SLOT(renameItem()));
 
@@ -252,7 +251,7 @@ void TupItemManager::mousePressEvent(QMouseEvent *event)
 
                 menu->addAction(rename);
                 menu->addAction(remove);
-            } else {
+            } else { // Options for Graphic Objects and Sound
                 QString extension = item->text(2);
                 bool isSound = false;
                 bool isNative = false;
@@ -273,38 +272,38 @@ void TupItemManager::mousePressEvent(QMouseEvent *event)
                     #endif
                     menu->addAction(edit);
                 } else if ((extension.compare("OBJ") != 0) && !isSound) {
-                           QAction *gimpEdit = new QAction(tr("Edit with Gimp"), this);
-                           connect(gimpEdit, SIGNAL(triggered()), this, SLOT(callGimpToEdit()));
-                           #ifdef Q_OS_UNIX
-                               if (!QFile::exists("/usr/bin/gimp"))
-                                   gimpEdit->setDisabled(true);
-                           #else
-                               gimpEdit->setDisabled(true);
-                           #endif
-                           menu->addAction(gimpEdit);
+                    QAction *gimpEdit = new QAction(tr("Edit with Gimp"), this);
+                    connect(gimpEdit, SIGNAL(triggered()), this, SLOT(callGimpToEdit()));
+                    #ifdef Q_OS_UNIX
+                       if (!QFile::exists("/usr/bin/gimp"))
+                           gimpEdit->setDisabled(true);
+                    #else
+                       gimpEdit->setDisabled(true);
+                    #endif
+                    menu->addAction(gimpEdit);
 
-                           QAction *kritaEdit = new QAction(tr("Edit with Krita"), this);
-                           connect(kritaEdit, SIGNAL(triggered()), this, SLOT(callKritaToEdit()));
-                           #ifdef Q_OS_UNIX
-                               if (!QFile::exists("/usr/bin/krita"))
-                                   kritaEdit->setDisabled(true);
-                           #else
-                                   kritaEdit->setDisabled(true);
-                           #endif
-                           menu->addAction(kritaEdit);
+                    QAction *kritaEdit = new QAction(tr("Edit with Krita"), this);
+                    connect(kritaEdit, SIGNAL(triggered()), this, SLOT(callKritaToEdit()));
+                    #ifdef Q_OS_UNIX
+                       if (!QFile::exists("/usr/bin/krita"))
+                           kritaEdit->setDisabled(true);
+                    #else
+                           kritaEdit->setDisabled(true);
+                    #endif
+                    menu->addAction(kritaEdit);
 
-                           QAction *myPaintEdit = new QAction(tr("Edit with MyPaint"), this);
-                           connect(myPaintEdit, SIGNAL(triggered()), this, SLOT(callMyPaintToEdit()));
-                           #ifdef Q_OS_UNIX
-                               if (!QFile::exists("/usr/bin/mypaint"))
-                                   myPaintEdit->setDisabled(true);
-                           #else
-                               myPaintEdit->setDisabled(true);
-                           #endif
-                           menu->addAction(myPaintEdit);
+                    QAction *myPaintEdit = new QAction(tr("Edit with MyPaint"), this);
+                    connect(myPaintEdit, SIGNAL(triggered()), this, SLOT(callMyPaintToEdit()));
+                    #ifdef Q_OS_UNIX
+                       if (!QFile::exists("/usr/bin/mypaint"))
+                           myPaintEdit->setDisabled(true);
+                    #else
+                       myPaintEdit->setDisabled(true);
+                    #endif
+                    menu->addAction(myPaintEdit);
                 }
 
-                if (!isSound && !isNative) {
+                if (!isSound && !isNative) { // Option for graphics only
                     QAction *clone = new QAction(tr("Clone"), this);
                     connect(clone, SIGNAL(triggered()), this, SLOT(cloneItem()));
                     menu->addAction(clone);
@@ -342,7 +341,7 @@ void TupItemManager::mousePressEvent(QMouseEvent *event)
             }
 
             menu->exec(event->globalPos());
-        } else if (event->buttons() == Qt::LeftButton) {
+        } else if (event->buttons() == Qt::LeftButton) { // Moving item
             // SQA: This code doesn't work well at all. Reengineering is urgently required right here!
             // If the node has a parent, get the parent's name
             QTreeWidgetItem *top = item->parent();
@@ -352,7 +351,7 @@ void TupItemManager::mousePressEvent(QMouseEvent *event)
             // For directories, get the children
             nodeChildren.clear();
             if (item->text(2).length()==0 && item->childCount() > 0) {
-                for (int i=0;i<item->childCount();i++) {
+                for (int i=0; i<item->childCount(); i++) {
                     QTreeWidgetItem *node = item->child(i);
                     nodeChildren << node;
                 }
@@ -417,46 +416,58 @@ void TupItemManager::dropEvent(QDropEvent *event)
         QTreeWidgetItem *item;
         QTreeWidgetItem *parent = itemAt(event->pos().x(), event->pos().y());
 
-        if (parent) {
-            // If both Target and Origin are directories
+        if (parent) { // Target != NULL
+            // Checking if both target and origin are directories
             if (parentNode.length() > 0) {
-                if ((parent->text(2).length() == 0) && (extension.length() == 0))
+                if ((parent->text(2).length() == 0) && (extension.length() == 0)) {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupItemManager::dropEvent()] - Error: can't move dir inside dir!";
+                    #endif
                     return;
+                }
             }
 
-            // Ensure Target is a directory
-            if (parent->text(2).length() > 0)
+            // Ensure target is a directory
+            if (parent->text(2).length() > 0) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupItemManager::dropEvent()] - Error: parent MUST BE a directory!";
+                #endif
                 return;
+            }
 
-            // Target is going to the same parent
+            // Check if target is going to the same parent
             int childrenTotal = parent->childCount();
-            for (int i=0;i < childrenTotal; i++) {
+            for (int i=0; i < childrenTotal; i++) {
                 QTreeWidgetItem *child = parent->child(i);
                 QString name = child->text(1);
-                if (name.compare(label) == 0 && child->text(2).compare(extension) == 0)
+                if (name.compare(label) == 0 && child->text(2).compare(extension) == 0) {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupItemManager::dropEvent()] - Error: origin and target are the same!";
+                    #endif
                     return;
+                }
             }
 
-            // Make sure node and target are not the same
-            if (extension.length() > 0) {
-                if (parentNode.length() > 0) {
+            if (extension.length() > 0) { // Origin is not a directory
+                if (parentNode.length() > 0) { // Parent is NOT root
                     QList<QTreeWidgetItem *> nodes = findItems(parentNode, Qt::MatchExactly, 1);
                     for (int i = 0; i < nodes.size(); ++i) {
-                    QTreeWidgetItem *node = nodes.at(i);
-                    if (node->text(1).compare(parentNode) == 0) {
-                        int childrenTotal = node->childCount();
-                        for (int i=0;i < childrenTotal; i++) {
-                            QTreeWidgetItem *child = node->child(i);
-                            if (child->text(1).compare(label) == 0 && child->text(2).compare(extension) == 0) {
-                                node->removeChild(child);
-                                break;
+                        QTreeWidgetItem *node = nodes.at(i);
+                        if (node->text(1).compare(parentNode) == 0) { // Old parent of origin found
+                            int childrenTotal = node->childCount();
+                            for (int i=0;i < childrenTotal; i++) {
+                                QTreeWidgetItem *child = node->child(i);
+                                if (child->text(1).compare(label) == 0 && child->text(2).compare(extension) == 0) {
+                                    node->removeChild(child); // Removing origin from old position
+                                    break;
+                                }
                             }
+                            break;
                         }
-                        break;
-                    }
                     }
                 }
 
+                // Adding origin to the target
                 item = new QTreeWidgetItem(parent);
                 item->setIcon(0, QIcon(pixmap));
                 item->setText(1, label);
@@ -465,7 +476,7 @@ void TupItemManager::dropEvent(QDropEvent *event)
                 item->setFlags(item->flags() | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
                 setCurrentItem(item);
 
-                if (key.length() > 0)
+                if (key.length() > 0) // Notifying item was moved
                     emit itemMoved(key, parent->text(1));
 
                 eventAccept = true;
@@ -475,17 +486,17 @@ void TupItemManager::dropEvent(QDropEvent *event)
                     flag = false;
                 parent->setExpanded(flag);
             }
-        } else {
+        } else { // Moving object to root
             if (parentNode.length() > 0) {
                 QList<QTreeWidgetItem *> nodes = findItems(parentNode, Qt::MatchExactly, 1);
                 for (int i = 0; i < nodes.size(); ++i) {
                     QTreeWidgetItem *node = nodes.at(i);
-                    if (node->text(1).compare(parentNode) == 0) {
+                    if (node->text(1).compare(parentNode) == 0) { // Old parent of origin found
                         int childrenTotal = node->childCount();
                         for (int i=0;i < childrenTotal; i++) {
                             QTreeWidgetItem *child = node->child(i);
                             if (child->text(1).compare(label) == 0 && child->text(2).compare(extension) == 0) {
-                                node->removeChild(child);
+                                node->removeChild(child); // Removing origin from old position
                                 break;
                             }
                         }
@@ -493,8 +504,12 @@ void TupItemManager::dropEvent(QDropEvent *event)
                     }
                 }
             } else {
-                if (extension.length() == 0 && nodeChildren.size() > 0)
+                if (extension.length() == 0 && nodeChildren.size() > 0) {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupItemManager::dropEvent()] - Error: folder with children detected!";
+                    #endif
                     return;
+                }
             }
 
             item = new QTreeWidgetItem(this);
@@ -505,15 +520,15 @@ void TupItemManager::dropEvent(QDropEvent *event)
             item->setFlags(item->flags() | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
             setCurrentItem(item);
 
-            emit itemMoved(key, "");
+            emit itemMoved(key, ""); // Notifying item was moved to the root
             eventAccept = true;
         }
-    } else {
+    } else { // Item wasn't recognized as library element
         event->ignore();
         return;
     }
 
-    if (eventAccept) {
+    if (eventAccept) { // Accepting action
         if (event->source() == this) {
             event->setDropAction(Qt::MoveAction);
             event->accept();
@@ -537,7 +552,7 @@ void TupItemManager::dragEnterEvent(QDragEnterEvent *event)
             event->acceptProposedAction();
         }
     } else {
-     event->ignore();
+        event->ignore();
     }
 }
 
