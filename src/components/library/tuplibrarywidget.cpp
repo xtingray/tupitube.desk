@@ -242,7 +242,11 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
             return;
         }
 
-        TupLibraryObject *object = library->getObject(item->text(1) + "." + item->text(2).toLower());
+        QString objectName = item->text(1) + "." + item->text(2).toLower();
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryWidget::previewItem()] - Getting object -> " << objectName;
+        #endif
+        TupLibraryObject *object = library->getObject(objectName);
 
         if (!object) {
             #ifdef TUP_DEBUG

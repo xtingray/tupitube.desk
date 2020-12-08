@@ -999,6 +999,7 @@ bool TupMainWindow::saveAs()
 bool TupMainWindow::saveProject()
 {
     #ifdef TUP_DEBUG
+        qDebug() << "---";
         qDebug() << "[TupMainWindow::saveProject()] - file path -> " << m_fileName;
     #endif
 
@@ -1019,6 +1020,10 @@ bool TupMainWindow::saveProject()
         else
             lastSave = false;
     }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+    #endif
 
     return true;
 }

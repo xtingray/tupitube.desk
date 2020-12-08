@@ -50,9 +50,8 @@ void TupProxyItem::setItem(QGraphicsItem *item)
     // TODO: Enable this line when filter support is ready
     // if (realItem)
     //     this->removeSceneEventFilter(realItem);
-    
-    realItem = item;
-    
+
+    realItem = item;    
     if (realItem) {
         // TODO: Enable this line when filter support is ready 
         // realItem->installSceneEventFilter(this);

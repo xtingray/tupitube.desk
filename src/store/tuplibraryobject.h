@@ -59,27 +59,28 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
             Text,
             Folder 
         };
-        
-        TupLibraryObject(QObject *parent = 0);
-        TupLibraryObject(const QString &name, const QString &getFolder, TupLibraryObject::Type getType, QObject *parent = 0);
+
+        TupLibraryObject(QObject *parent = nullptr);
+        TupLibraryObject(const QString &name, const QString &folder,
+                         TupLibraryObject::Type type, QObject *parent = nullptr);
         ~TupLibraryObject();
-        
-        void setType(TupLibraryObject::Type getType);
+
+        void setType(TupLibraryObject::Type type);
         TupLibraryObject::Type getType() const;
-        
-        void setData(const QVariant &getData);
+
+        void setData(const QVariant &data);
         QVariant getData() const;
-       
+
         void setDataPath(const QString &path);
         QString getDataPath() const;
-        
+
         void setSymbolName(const QString &name);
         QString getSymbolName() const;
 
-        void setFolder(const QString &getFolder);
+        void setFolder(const QString &folder);
         QString getFolder() const;
 
-        void updateFolder(const QString &getFolder);
+        void updateFolder(const QString &projectPath, const QString &folder = QString());
 
         int frameToPlay();
         void updateFrameToPlay(int frame);
@@ -87,7 +88,7 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         QString getSmallId() const;
         QString getExtension() const;
         
-        bool loadRawData(const QByteArray &getData);
+        bool loadRawData(const QByteArray &data);
         bool loadDataFromPath(const QString &dataDir);
         bool loadData(const QString &path);
         

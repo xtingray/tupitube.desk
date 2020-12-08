@@ -116,13 +116,13 @@ void TupItemPreview::paintEvent(QPaintEvent *)
             newPosX = -path->path().boundingRect().topLeft().x();
             newPosY = -path->path().boundingRect().topLeft().y();
         } else if (QGraphicsItemGroup *group = qgraphicsitem_cast<QGraphicsItemGroup *>(proxy->item())) {
-                   isNative = true;
-                   itemWidth = group->boundingRect().width();
-                   itemHeight = group->boundingRect().height();
-                   // SQA: These coords don't work if the group has been edited
-                   // A new algorithm must be developed here
-                   newPosX = -group->boundingRect().topLeft().x();
-                   newPosY = -group->boundingRect().topLeft().y();
+            isNative = true;
+            itemWidth = group->boundingRect().width();
+            itemHeight = group->boundingRect().height();
+            // SQA: These coords don't work if the group has been edited
+            // A new algorithm must be developed here
+            newPosX = -group->boundingRect().topLeft().x();
+            newPosY = -group->boundingRect().topLeft().y();
         }
 
         // If preview is for a native object (path or group)
@@ -160,43 +160,43 @@ void TupItemPreview::paintEvent(QPaintEvent *)
                 painter.translate(newPosX, newPosY);
             }
         } else { 
-                // if preview is for images or svg objects 
-                // if object is bigger than canvas, resize
-                if (opt.exposedRect.width() > rect().width() || opt.exposedRect.height() > rect().height()) {
-                    float distance = 0;
-                    float base = 0;
-                    int newPosX = 0;
-                    int newPosY = 0;
+            // if preview is for images or svg objects
+            // if object is bigger than canvas, resize
+            if (opt.exposedRect.width() > rect().width() || opt.exposedRect.height() > rect().height()) {
+                float distance = 0;
+                float base = 0;
+                int newPosX = 0;
+                int newPosY = 0;
 
-                    // Let's calculate the proportion of the object and the preview area
-                    float limit = (float) rect().width() / (float) rect().height();
-                    float proportion = opt.exposedRect.width() / opt.exposedRect.height();
+                // Let's calculate the proportion of the object and the preview area
+                float limit = (float) rect().width() / (float) rect().height();
+                float proportion = opt.exposedRect.width() / opt.exposedRect.height();
 
-                    if (proportion <= limit) {
-                        distance = opt.exposedRect.height();  
-                        base = rect().height() - 10;
-                    } else {
-                        distance = opt.exposedRect.width();
-                        base = rect().width();
-                    }
- 
-                    float factor = base/distance;
-                    float alterFactor = 1/factor;
-                    int widthRealLength = rect().width()*alterFactor;
-                    int heightRealLength = rect().height()*alterFactor;
-
-                    if (widthRealLength > opt.exposedRect.width())
-                        newPosX = (widthRealLength - opt.exposedRect.width())/2;
-
-                    if (heightRealLength > opt.exposedRect.height()) 
-                        newPosY = (heightRealLength - opt.exposedRect.height())/2;
-
-                    painter.scale(factor, factor);
-                    painter.translate(newPosX, newPosY);
-
-                } else { // if object is smaller than canvas, just show it
-                    painter.translate((rect().width() - opt.exposedRect.width())/2, (rect().height() - opt.exposedRect.height())/2);
+                if (proportion <= limit) {
+                    distance = opt.exposedRect.height();
+                    base = rect().height() - 10;
+                } else {
+                    distance = opt.exposedRect.width();
+                    base = rect().width();
                 }
+
+                float factor = base/distance;
+                float alterFactor = 1/factor;
+                int widthRealLength = rect().width()*alterFactor;
+                int heightRealLength = rect().height()*alterFactor;
+
+                if (widthRealLength > opt.exposedRect.width())
+                    newPosX = (widthRealLength - opt.exposedRect.width())/2;
+
+                if (heightRealLength > opt.exposedRect.height())
+                    newPosY = (heightRealLength - opt.exposedRect.height())/2;
+
+                painter.scale(factor, factor);
+                painter.translate(newPosX, newPosY);
+
+            } else { // if object is smaller than canvas, just show it
+                painter.translate((rect().width() - opt.exposedRect.width())/2, (rect().height() - opt.exposedRect.height())/2);
+            }
         }
 
         proxy->paint(&painter, &opt, this); // paint isn't const...
