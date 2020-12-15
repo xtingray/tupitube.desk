@@ -35,6 +35,7 @@
 
 #include "tuplibrarywidget.h"
 #include "tuplayer.h"
+#include "tupsearchdialog.h"
 
 #define RETURN_IF_NOT_LIBRARY if (!library) return;
 
@@ -114,6 +115,11 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     QHBoxLayout *buttonLayout = new QHBoxLayout(buttons);
     buttonLayout->setMargin(0);
     buttonLayout->setSpacing(0);
+
+    TImageButton *searchButton = new TImageButton(QPixmap(THEME_DIR + "icons/search.png"), 22, buttons);
+    connect(searchButton, SIGNAL(clicked()), this, SLOT(openSearchDialog()));
+    searchButton->setToolTip(tr("Search for Assets"));
+    buttonLayout->addWidget(searchButton);
 
     QHBoxLayout *comboLayout = new QHBoxLayout;
     comboLayout->setMargin(0);
@@ -1990,4 +1996,10 @@ void TupLibraryWidget::stopSoundPlayer()
 {
     if (display)
         display->stopSoundPlayer();
+}
+
+void TupLibraryWidget::openSearchDialog()
+{
+    TupSearchDialog *dialog = new TupSearchDialog(project->getDimension());
+    dialog->show();
 }

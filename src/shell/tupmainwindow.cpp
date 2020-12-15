@@ -215,6 +215,8 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
         TCONFIG->setValue("GridSeparation", 10);
     }
 
+    TCONFIG->beginGroup("General");
+    TCONFIG->setValue("AssetsPath", CACHE_DIR + TAlgorithm::randomString(8) + "/");
     TupMainWindow::requestType = None;
     lastSave = false;
 }
@@ -1114,10 +1116,25 @@ void TupMainWindow::closeEvent(QCloseEvent *event)
             file.remove();
         }
 
+        // Removing assets path
+        TCONFIG->beginGroup("General");
+        QString assetsPath = TCONFIG->value("AssetsPath", CACHE_DIR + "assets").toString();
+        QDir assetsDir(assetsPath);
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMainWindow::closeEvent()] - Removing assets path -> " << assetsPath;
+        #endif
+        if (assetsDir.exists()) {
+            if (!assetsDir.removeRecursively()) {
+                #ifdef TUP_DEBUG
+                    qWarning() << "[TupMainWindow::closeEvent()] - Error: Can't remove assets path -> " << assetsPath;
+                #endif
+            }
+        }
+
         TCONFIG->beginGroup("General");
         TCONFIG->setValue("Recents", m_recentProjects);
-
         resetUI();
+
         TMainWindow::closeEvent(event);
     }
 }

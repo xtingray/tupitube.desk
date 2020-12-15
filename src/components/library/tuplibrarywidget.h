@@ -136,6 +136,9 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void importSvgSequence();
         void importSoundFile();
 
+    private slots:
+        void openSearchDialog();
+
     signals:
         void requestCurrentGraphic();
         void soundUpdated();

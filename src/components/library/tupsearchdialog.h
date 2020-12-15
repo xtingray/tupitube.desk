@@ -33,49 +33,55 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "tformfactory.h"
+#ifndef TUPSEARCHDIALOG_H
+#define TUPSEARCHDIALOG_H
 
-TFormFactory::TFormFactory()
-{
-}
+#include "tglobal.h"
 
-TFormFactory::~TFormFactory()
-{
-}
+#include <QDialog>
+#include <QComboBox>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
-QBoxLayout *TFormFactory::makeLine(const QString &text, QWidget *widget, Qt::Orientation o)
+class TUPITUBE_EXPORT TupSearchDialog : public QDialog
 {
-    QBoxLayout *layout;
-    
-    if (o == Qt::Vertical)
-        layout = new QVBoxLayout;
-    else
-        layout = new QHBoxLayout;
-    
-    layout->addWidget(new QLabel(text));
-    layout->addWidget(widget);
-    
-    if (o == Qt::Vertical)
-        layout->addStretch(3);
-    
-    return layout;
-}
+    Q_OBJECT
 
-QGridLayout *TFormFactory::makeGrid(const QStringList &texts, const QWidgetList &widgets, Qt::Alignment alignment)
-{
-    // SQA: Replace this line for a better control instruction
-    // Q_ASSERT(texts.count() != widgets.count());
-    
-    QGridLayout *layout = new QGridLayout;
-    
-    // layout->setColumnStretch(0, 1);
-    
-    for (int i = 0; i < widgets.count(); i++) {
-         layout->addWidget(new QLabel(texts[i]), i, 0, Qt::AlignLeft);
-         layout->addWidget(widgets[i], i, 1, alignment);
-    }
-    
-    layout->setColumnStretch(2, 1);
-    
-    return layout;
-}
+    public:
+        TupSearchDialog(const QSize &size, QWidget *parent = nullptr);
+        ~TupSearchDialog();
+
+    private slots:
+        void startSearch();
+        void processResult(QNetworkReply *reply);
+        void processMiniature(QNetworkReply *reply);
+        void slotError(QNetworkReply::NetworkError error);
+
+    private:
+        void requestResults();
+        void loadAssets(const QString &input);
+        void getMiniature(const QString &code);
+
+        QString assetsPath;
+        QComboBox *searchLine;
+        QComboBox *assetCombo;
+        QString pattern;
+        QString dimension;
+        QString type;
+        int itemsCounter;
+
+        QNetworkAccessManager *manager;
+
+        struct AssetRecord {
+            QString description;
+            QString code;
+            QString creator;
+            QString creatorUrl;
+            QString licenseTitle;
+            QString licenseUrl;
+        };
+
+        QList<AssetRecord> assetList;
+};
+
+#endif
