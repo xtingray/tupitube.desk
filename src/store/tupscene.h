@@ -141,6 +141,7 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
         QList<TupSvgItem *> getTweeningSvgObjects(int layerIndex) const;
 
         int framesCount();
+        bool frameIsEmpty(int layerIndex, int frameIndex);
 
         TupBackground *sceneBackground();
         void setSceneBackground(TupBackground *bg);

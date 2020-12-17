@@ -70,6 +70,12 @@ QSize TupTimeLineTableItemDelegate::sizeHint(const QStyleOptionViewItem & option
 
 void TupTimeLineTableItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTimeLineTable::paint()]";
+    #endif
+    */
+
     Q_ASSERT(index.isValid());
 
     QItemDelegate::paint(painter, option, index);
@@ -118,7 +124,6 @@ void TupTimeLineTableItemDelegate::paint(QPainter *painter, const QStyleOptionVi
     // Draw attributes
     if (item && index.isValid()) {
         int offset = option.rect.width() / 3;
-        // int offset = 2;
         if (item->isUsed()) {
             painter->save();
             QColor gray(80, 80, 80);
@@ -130,10 +135,14 @@ void TupTimeLineTableItemDelegate::paint(QPainter *painter, const QStyleOptionVi
                 if (item->isLocked()) {
                     painter->setPen(QPen(Qt::red, 1, Qt::SolidLine));
                     painter->setBrush(Qt::red);
+                } else {
+                    if (item->isEmpty())
+                        painter->setBrush(Qt::transparent);
+
+                    painter->drawEllipse(option.rect.x() + ((option.rect.width() - offset)/2),
+                                         option.rect.y() + ((option.rect.height() - offset)/2),
+                                         offset, offset);
                 }
-                painter->drawEllipse(option.rect.x() + ((option.rect.width() - offset)/2), 
-                                     option.rect.y() + ((option.rect.height() - offset)/2),
-                                     offset, offset);
             } else {
                 painter->setBrush(QColor(0, 136, 0));
                 painter->drawRect(option.rect.x() + ((option.rect.width() - offset)/2), 
@@ -159,6 +168,11 @@ TupTimeLineTableItem::~TupTimeLineTableItem()
 bool TupTimeLineTableItem::isUsed()
 {
     return data(IsUsed).toBool();
+}
+
+bool TupTimeLineTableItem::isEmpty()
+{
+    return data(IsEmpty).toBool();
 }
 
 bool TupTimeLineTableItem::isLocked()
@@ -241,7 +255,7 @@ void TupTimeLineTable::frameSelectionFromLayerHeader(int layerIndex)
 
 void TupTimeLineTable::requestLayerMove(int logicalIndex, int oldLayerIndex, int newLayerIndex)
 {
-    Q_UNUSED(logicalIndex);
+    Q_UNUSED(logicalIndex)
 
     if (!layersColumn->sectionIsMoving()) {
         int distance = newLayerIndex - oldLayerIndex;
@@ -383,6 +397,7 @@ void TupTimeLineTable::insertFrame(int layerIndex)
     int lastFrame = layersColumn->lastFrame(layerIndex);
 
     setAttribute(layerIndex, lastFrame, TupTimeLineTableItem::IsUsed, true);
+    setAttribute(layerIndex, lastFrame, TupTimeLineTableItem::IsEmpty, true);
     setAttribute(layerIndex, lastFrame, TupTimeLineTableItem::IsSound, false);
 }
 
@@ -532,6 +547,12 @@ bool TupTimeLineTable::frameIsLocked(int layerIndex, int frameIndex)
 
 void TupTimeLineTable::setAttribute(int layerIndex, int frameIndex, TupTimeLineTableItem::Attributes att, bool value)
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTimeLineTable::setAttribute()] - attribute -> " << att << " - value -> " << value;
+    #endif
+    */
+
     QTableWidgetItem *item = this->item(layerIndex, frameIndex);
     if (!item) {
         item = new TupTimeLineTableItem;
@@ -812,4 +833,3 @@ int TupTimeLineTable::framesCountAtCurrentLayer()
 {
     return layersColumn->lastFrame(currentLayer());
 }
-

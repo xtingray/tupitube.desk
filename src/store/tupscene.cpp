@@ -698,6 +698,17 @@ int TupScene::framesCount()
     return total;
 }
 
+bool TupScene::frameIsEmpty(int layerIndex, int frameIndex)
+{
+    TupLayer *layer = layerAt(layerIndex);
+    if (layer) {
+        TupFrame *frame = layer->frameAt(frameIndex);
+        return frame->isEmpty();
+    }
+
+    return true;
+}
+
 TupBackground* TupScene::sceneBackground()
 {
     return background;

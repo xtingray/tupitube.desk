@@ -479,6 +479,43 @@ void TupTimeLine::libraryResponse(TupLibraryResponse *response)
     }
 }
 
+void TupTimeLine::itemResponse(TupItemResponse *response)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTimeLine::itemResponse()]";
+    #endif
+
+    int sceneIndex = response->getSceneIndex();
+    TupTimeLineTable *framesTable = this->framesTable(sceneIndex);
+    if (framesTable) {
+        int layerIndex = response->getLayerIndex();
+        int frameIndex = response->getFrameIndex();
+
+        switch (response->getAction()) {
+            case TupProjectRequest::Add:
+              {
+                  TupScene *scene = project->sceneAt(sceneIndex);
+                  if (scene) {
+                      if (!scene->frameIsEmpty(layerIndex, frameIndex))
+                          framesTable->setAttribute(layerIndex, frameIndex, TupTimeLineTableItem::IsEmpty, false);
+                  }
+              }
+            break;
+            case TupProjectRequest::Remove:
+              {
+                  TupScene *scene = project->sceneAt(sceneIndex);
+                  if (scene) {
+                      if (scene->frameIsEmpty(layerIndex, frameIndex))
+                          framesTable->setAttribute(layerIndex, frameIndex, TupTimeLineTableItem::IsEmpty, true);
+                  }
+              }
+            break;
+            default:
+            break;
+        }
+    }
+}
+
 void TupTimeLine::requestCommand(int action)
 {
     #ifdef TUP_DEBUG

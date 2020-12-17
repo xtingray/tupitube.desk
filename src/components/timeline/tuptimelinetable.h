@@ -56,14 +56,16 @@ class TUPITUBE_EXPORT TupTimeLineTableItem : public QTableWidgetItem
         enum Attributes
         {
             IsUsed = 0x0100,
+            IsEmpty,
             IsLocked,
             IsSound
         };
-        
+
         TupTimeLineTableItem();
         virtual ~TupTimeLineTableItem();
         
         bool isUsed();
+        bool isEmpty();
         bool isLocked();
         bool isSound();
 };
