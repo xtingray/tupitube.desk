@@ -47,6 +47,19 @@ TupLibraryDialog::TupLibraryDialog(TupLibrary *assets) : QDialog()
     setWindowTitle(tr("Library Object"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/polyline.png")));
 
+    QFile file(THEME_DIR + "config/ui.qss");
+    if (file.exists()) {
+        file.open(QFile::ReadOnly);
+        QString styleSheet = QLatin1String(file.readAll());
+        if (styleSheet.length() > 0)
+            setStyleSheet(styleSheet);
+        file.close();
+    } else {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupLibraryDialog()] - theme file doesn't exist -> " << QString(THEME_DIR + "config/ui.qss");
+        #endif
+    }
+
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     toolBox = new QToolBox;

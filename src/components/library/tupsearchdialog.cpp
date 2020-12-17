@@ -35,7 +35,6 @@
 
 #include "tupsearchdialog.h"
 #include "tosd.h"
-#include "timagebutton.h"
 #include "tconfig.h"
 
 #include <QVBoxLayout>
@@ -58,13 +57,54 @@ TupSearchDialog::TupSearchDialog(const QSize &size, QWidget *parent) : QDialog(p
     TCONFIG->beginGroup("General");
     assetsPath = TCONFIG->value("AssetsPath", CACHE_DIR + "assets").toString();
 
+    QFile file(THEME_DIR + "config/ui.qss");
+    if (file.exists()) {
+        file.open(QFile::ReadOnly);
+        QString styleSheet = QLatin1String(file.readAll());
+        if (styleSheet.length() > 0)
+            setStyleSheet(styleSheet);
+        file.close();
+    } else {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupSearchDialog::TupSearchDialog()] - theme file doesn't exist -> " << QString(THEME_DIR + "config/ui.qss");
+        #endif
+    }
+
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    QWidget *searchPanel = new QWidget;
-    searchPanel->setMaximumWidth(400);
-    QVBoxLayout *searchLayout = new QVBoxLayout(searchPanel);
+    tabWidget = new QTabWidget;
+    tabWidget->addTab(searchTab(), tr("Search"));
+    tabWidget->addTab(patreonTab(), tr("Patreon"));
 
-    QHBoxLayout *comboLayout = new QHBoxLayout;
+    QPushButton *closeButton = new QPushButton(tr("Close"));
+    layout->addWidget(closeButton);
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+
+    QHBoxLayout *buttonLayout = new QHBoxLayout;
+    buttonLayout->addWidget(closeButton, 1, Qt::AlignRight);
+
+    layout->addWidget(tabWidget, Qt::AlignLeft);
+    layout->addLayout(buttonLayout);
+    layout->addStretch();
+
+    setFixedWidth(800);
+}
+
+TupSearchDialog::~TupSearchDialog()
+{
+}
+
+QWidget * TupSearchDialog::searchTab()
+{
+    QWidget *searchWidget = new QWidget;
+    QVBoxLayout *layout = new QVBoxLayout(searchWidget);
+
+    QWidget *searchPanel = new QWidget;
+    QVBoxLayout *searchLayout = new QVBoxLayout(searchPanel);
+    searchLayout->addWidget(new QWidget);
+
+    QWidget *comboPanel = new QWidget;
+    QHBoxLayout *comboLayout = new QHBoxLayout(comboPanel);
     comboLayout->setMargin(0);
     comboLayout->setSpacing(0);
 
@@ -73,12 +113,12 @@ TupSearchDialog::TupSearchDialog(const QSize &size, QWidget *parent) : QDialog(p
     comboLayout->addWidget(searchLine);
     comboLayout->addSpacing(10);
 
-    TImageButton *searchButton = new TImageButton(QPixmap(THEME_DIR + "icons/search.png"), 22, this);
+    searchButton = new TImageButton(QPixmap(THEME_DIR + "icons/search.png"), 22, this);
     searchButton->setToolTip(tr("Search"));
     connect(searchButton, SIGNAL(clicked()), this, SLOT(startSearch()));
     comboLayout->addWidget(searchButton);
 
-    searchLayout->addLayout(comboLayout, Qt::AlignHCenter);
+    searchLayout->addWidget(comboPanel, Qt::AlignHCenter);
 
     assetCombo = new QComboBox;
     assetCombo->setIconSize(QSize(15, 15));
@@ -89,25 +129,100 @@ TupSearchDialog::TupSearchDialog(const QSize &size, QWidget *parent) : QDialog(p
     // assetCombo->addItem(QIcon(THEME_DIR + "icons/bitmap.png"), tr("Puppet"));
 
     searchLayout->addWidget(assetCombo, Qt::AlignHCenter);
+    searchLayout->addWidget(new QWidget);
     searchLayout->addStretch();
 
-    QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Cancel, Qt::Horizontal);
-    connect(buttons, SIGNAL(rejected ()), this, SLOT(reject()));
+    resultPanel = new QWidget;
+    QHBoxLayout *resultLayout = new QHBoxLayout(resultPanel);
+    assetDescList = new QListWidget;
+    assetDescList->setFixedWidth(150);
+    connect(assetDescList, SIGNAL(currentRowChanged(int)),
+            this, SLOT(updateAssetView(int)));
+    resultLayout->addWidget(assetDescList);
 
-    layout->addWidget(searchPanel, Qt::AlignHCenter);
-    layout->addWidget(buttons, 0, Qt::AlignHCenter);
-    // resize(800, height());
+    QWidget *picPanel = new QWidget;
+    QVBoxLayout *picLayout = new QVBoxLayout(picPanel);
+    previewPic = new QLabel;
+    picLayout->addWidget(previewPic);
+
+    // picLayout->addLayout(importLayout);
+
+    QWidget *detailsPanel = new QWidget;
+    detailsPanel->setStyleSheet("background-color:#c8c8c8;");
+    QVBoxLayout *detailsLayout = new QVBoxLayout(detailsPanel);
+    graphicType = new QLabel;
+    creator = new QLabel;
+    creatorUrl = new QLabel;
+    license = new QLabel;
+    licenseUrl = new QLabel;
+
+    detailsLayout->addWidget(new QWidget);
+    detailsLayout->addWidget(graphicType);
+    detailsLayout->addSpacing(10);
+    detailsLayout->addWidget(creator);
+    detailsLayout->addWidget(creatorUrl);
+    detailsLayout->addSpacing(10);
+    detailsLayout->addWidget(license);
+    detailsLayout->addWidget(licenseUrl);
+    detailsLayout->addWidget(new QWidget);
+
+    QHBoxLayout *importLayout = new QHBoxLayout;
+    QPushButton *importButton = new QPushButton(tr("Import Asset"));
+    connect(importButton, SIGNAL(clicked()), this, SLOT(importAsset()));
+    importLayout->addWidget(new QWidget);
+    importLayout->addWidget(importButton, 1, Qt::AlignHCenter);
+    importLayout->addWidget(new QWidget);
+    importLayout->addStretch();
+
+    detailsLayout->addLayout(importLayout);
+
+    QHBoxLayout *infoLayout = new QHBoxLayout;
+    infoLayout->addWidget(picPanel);
+    infoLayout->addWidget(detailsPanel);
+
+    QVBoxLayout *dataLayout = new QVBoxLayout;
+    dataLayout->addLayout(infoLayout, Qt::AlignHCenter);
+    // dataLayout->addLayout(importLayout, Qt::AlignHCenter);
+
+    resultLayout->addLayout(dataLayout);
+    resultLayout->addStretch();
+
+    QWidget *controlPanel = new QWidget;
+    QHBoxLayout *controlLayout = new QHBoxLayout(controlPanel);
+    controlLayout->addWidget(new QWidget);
+    controlLayout->addWidget(searchPanel);
+    controlLayout->addWidget(new QWidget);
+
+    dynamicPanel = new TCollapsibleWidget;
+    dynamicPanel->setWidget(resultPanel);
+
+    layout->addWidget(controlPanel);
+    layout->addWidget(dynamicPanel, Qt::AlignHCenter);
+    layout->addStretch();
+
+    // resultPanel->setVisible(false);
+
+    return searchWidget;
 }
 
-TupSearchDialog::~TupSearchDialog()
+QWidget * TupSearchDialog::patreonTab()
 {
+    QWidget *patreonWidget = new QWidget;
+    QVBoxLayout *layout = new QVBoxLayout(patreonWidget);
+    layout->addStretch();
+
+    return patreonWidget;
 }
 
 void TupSearchDialog::startSearch()
 {
     pattern = searchLine->currentText();
     if (pattern.length() > 0) {
+        searchButton->setEnabled(false);
+        if (dynamicPanel->isExpanded())
+            dynamicPanel->setExpanded(false);
         assetList.clear();
+        assetDescList->clear();
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
         qDebug() << "";
         qDebug() << "Search pattern -> " << pattern;
@@ -219,8 +334,15 @@ void TupSearchDialog::loadAssets(const QString &input)
     QDomDocument doc;
     if (doc.setContent(input)) {
         QDomElement root = doc.documentElement();
-        // int total = root.attribute("size", "0").toInt();
-        // qDebug() << "TOTAL -> " << total;
+        int total = root.attribute("size", "0").toInt();
+        qDebug() << "TOTAL -> " << total;
+        if (total == 0) {
+            qDebug() << "No recourds found!";
+            searchButton->setEnabled(true);
+            QApplication::restoreOverrideCursor();
+            return;
+        }
+
         QDomNode n = root.firstChild();
         while (!n.isNull()) {
             QDomElement e = n.toElement();
@@ -235,8 +357,11 @@ void TupSearchDialog::loadAssets(const QString &input)
                         qDebug() << "VALUE -> " << record.text();
                         if (record.tagName() == "desc") {
                             asset.description = record.text();
+                            new QListWidgetItem(record.text(), assetDescList);
                         } else if (record.tagName() == "code") {
                             asset.code = record.text();
+                        } else if (record.tagName() == "type") {
+                            asset.type = record.text();
                         } else if (record.tagName() == "creator") {
                             asset.creator = record.text();
                         } else if (record.tagName() == "creator_url") {
@@ -271,8 +396,13 @@ void TupSearchDialog::loadAssets(const QString &input)
                 QFileInfo file(path + "/miniature.png");
                 if (file.exists()) {
                     itemsCounter++;
-                    if (itemsCounter == assetList.count())
+                    if (itemsCounter == assetList.count()) {
+                        assetDescList->setCurrentRow(0);
+                        // resultPanel->setVisible(true);
+                        dynamicPanel->setExpanded(true);
+                        searchButton->setEnabled(true);
                         QApplication::restoreOverrideCursor();
+                    }
                 } else {
                     getMiniature(asset.code);
                 }
@@ -349,12 +479,56 @@ void TupSearchDialog::processMiniature(QNetworkReply *reply)
         }
 
         itemsCounter++;
-        if (itemsCounter == assetList.count())
+        if (itemsCounter == assetList.count()) {
+            assetDescList->setCurrentRow(0);
+            // resultPanel->setVisible(true);
+            dynamicPanel->setExpanded(true);
+            searchButton->setEnabled(true);
             QApplication::restoreOverrideCursor();
+        }
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TupSearchDialog::processMiniature()] - Fatal Error: No answer from server!";
         #endif
         TOsd::self()->display(TOsd::Error, tr("Network Error 709. Please, contact us!"));
     }
+}
+
+void TupSearchDialog::updateAssetView(int index)
+{
+    qDebug() << "";
+    qDebug() << "Current Index -> " << index;
+    qDebug() << "assetList.count() -> " << assetList.count();
+
+    if (!assetList.isEmpty()) {
+        AssetRecord item = assetList.at(index);
+        QString path = assetsPath + item.code + "/miniature.png";
+        previewPic->setPixmap(QPixmap(path));
+
+        graphicType->setText("<b>" + tr("Type:") + "</b> " + item.type);
+
+        creator->setText("<b>" + tr("Creator:") + "</b> " + item.creator);
+        setLabelLink(creatorUrl, item.creatorUrl);
+
+        license->setText("<b>" + tr("License:") + "</b> " + item.licenseTitle);
+        setLabelLink(licenseUrl, item.licenseUrl);
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupSearchDialog::updateAssetView()] - Fatal Error: Assets list is empty!";
+        #endif
+    }
+}
+
+void TupSearchDialog::setLabelLink(QLabel *label, const QString &url)
+{
+    label->setText("<a href=\"" + url + "\">" + url + "</a>");
+    label->setTextFormat(Qt::RichText);
+    label->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    label->setOpenExternalLinks(true);
+}
+
+void TupSearchDialog::importAsset()
+{
+    qDebug() << "";
+    qDebug() << "TupSearchDialog::importAsset() - Tracing...";
 }

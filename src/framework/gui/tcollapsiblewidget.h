@@ -38,123 +38,31 @@
 
 #include "tglobal.h"
 
-#include <QScrollArea>
-#include <QLabel>
-#include <QTextDocument>
-#include <QMimeData>
-#include <QPainter>
-#include <QMouseEvent>
-#include <QDragEnterEvent>
-#include <QVBoxLayout>
-#include <QApplication>
 #include <QGridLayout>
-#include <QPushButton>
-#include <QPainterPath>
-#include <QStyleOption>
 #include <QGroupBox>
-#include <QFontMetrics>
-#include <QDrag>
 
-class QScrollArea;
-class QTextDocument;
-
-class T_GUI_EXPORT TClickableLabel : public QWidget
-{
-    Q_OBJECT
-
-    public:
-        TClickableLabel(QWidget* parent = 0);
-        ~TClickableLabel();
-        
-        void setText(const QString &text);
-        QString text() const;
-        
-        void setChecked(bool c);
-        bool isChecked() const;
-        QSize sizeHint() const;
-        
-    protected:
-        void paintEvent(QPaintEvent *e);
-        void enterEvent(QEvent * e);
-        void leaveEvent(QEvent *e);
-        void mousePressEvent(QMouseEvent *e);
-        void mouseReleaseEvent(QMouseEvent *e);
-        void mouseMoveEvent(QMouseEvent* e);
-        
-    signals:
-        void clicked();
-        
-    private:
-        bool m_isEnter;
-        QPoint m_position;
-        QTextDocument *m_text;
-        bool m_isDragging;
-        bool m_checked;
-};
-
-/**
-  @short A widget that has a caption and a collapsible widget
-  @author Daniel Molkentin <molkentin@kde.org>
- */
 class T_GUI_EXPORT TCollapsibleWidget : public QWidget
 {
     Q_OBJECT
 
     public:
-        TCollapsibleWidget(QWidget *parent = 0);
-        TCollapsibleWidget(const QString& caption, QWidget *parent = 0);
+        TCollapsibleWidget(QWidget *parent = nullptr);
         ~TCollapsibleWidget();
     
         QString caption() const;
         bool isExpanded() const;
 
-        QWidget* innerWidget() const;
-        void setInnerWidget(QWidget *w);
+        QWidget * getWidget() const;
+        void setWidget(QWidget *w);
 
     public slots:
         void setExpanded(bool collapsed);
-        void setCaption(const QString& caption);
-        
-    private slots:
-        void toggleExpanded();
-        
-    protected:
-        void init();
 
     private:
         Q_DISABLE_COPY(TCollapsibleWidget);
-        class Private;
-        Private *k;
+        QGridLayout *mainLayout;
+        QWidget *innerWidget;
+        bool status;
 };
 
-/**
-  @short A scrollable container that contains groups of settings,
-         usually in the form of TCollapsibleWidgets.
-  @author Daniel Molkentin <molkentin@kde.org>
- */
-class T_GUI_EXPORT KSettingsContainer : public QScrollArea
-{
-    Q_ENUMS(CollapseState);
-
-    Q_OBJECT
-
-    public:
-        enum CollapseState { Collapsed, Uncollapsed };
-        KSettingsContainer(QWidget *parent = 0);
-        ~KSettingsContainer();
-
-        TCollapsibleWidget* insertWidget(QWidget* w, const QString& name);
-        void removeWidget(QWidget *w);
-        
-    protected:
-        void dragEnterEvent(QDragEnterEvent * event);
-        void dragMoveEvent(QDragMoveEvent* event);
-        void dropEvent(QDropEvent* e);
-
-    private:
-        Q_DISABLE_COPY(KSettingsContainer);
-        class Private;
-        Private *k;
-};
-
-#endif // KCOLLAPSIBLEWIDGET_H
+#endif // TCOLLAPSIBLEWIDGET_H

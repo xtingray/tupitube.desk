@@ -37,11 +37,15 @@
 #define TUPSEARCHDIALOG_H
 
 #include "tglobal.h"
+#include "tcollapsiblewidget.h"
+#include "timagebutton.h"
 
 #include <QDialog>
 #include <QComboBox>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QListWidget>
+#include <QLabel>
 
 class TUPITUBE_EXPORT TupSearchDialog : public QDialog
 {
@@ -56,18 +60,37 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         void processResult(QNetworkReply *reply);
         void processMiniature(QNetworkReply *reply);
         void slotError(QNetworkReply::NetworkError error);
+        void updateAssetView(int index);
+        void importAsset();
 
     private:
+        QWidget * searchTab();
+        QWidget * patreonTab();
+
         void requestResults();
         void loadAssets(const QString &input);
         void getMiniature(const QString &code);
+        void setLabelLink(QLabel *label, const QString &url);
+
+        QTabWidget *tabWidget;
+        TImageButton *searchButton;
+        QListWidget *assetDescList;
+        QWidget *resultPanel;
+        QLabel *previewPic;
+        QLabel *graphicType;
+        QLabel *creator;
+        QLabel *creatorUrl;
+        QLabel *license;
+        QLabel *licenseUrl;
+
+        TCollapsibleWidget *dynamicPanel;
 
         QString assetsPath;
         QComboBox *searchLine;
         QComboBox *assetCombo;
         QString pattern;
         QString dimension;
-        QString type;
+        QString assetType;
         int itemsCounter;
 
         QNetworkAccessManager *manager;
@@ -75,6 +98,7 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         struct AssetRecord {
             QString description;
             QString code;
+            QString type;
             QString creator;
             QString creatorUrl;
             QString licenseTitle;

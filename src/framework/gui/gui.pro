@@ -37,7 +37,7 @@ HEADERS += taction.h \
            tcirclebutton.h \
            tcirclebuttonbar.h \
            tclicklineedit.h \
-           # tcollapsiblewidget.h \
+           tcollapsiblewidget.h \
            tcolorbutton.h \
            tcommandhistory.h \
            tconfigurationdialog.h \
@@ -104,7 +104,7 @@ SOURCES += taction.cpp \
            tcirclebuttonbar.cpp \
            tclicklineedit.cpp \
            tcolorbutton.cpp \
-           # tcollapsiblewidget.cpp \
+           tcollapsiblewidget.cpp \
            tcommandhistory.cpp \
            tconfigurationdialog.cpp \
            tcontrolnode.cpp \

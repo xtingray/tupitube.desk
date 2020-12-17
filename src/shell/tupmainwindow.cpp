@@ -108,7 +108,7 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
         file.close();
     } else {
         #ifdef TUP_DEBUG 
-            qWarning() << "[TupMainWindow::TupMainWindow()] - theme file doesn't exist -> " + QString(THEME_DIR + "config/ui.qss");
+            qWarning() << "[TupMainWindow()] - theme file doesn't exist -> " << QString(THEME_DIR + "config/ui.qss");
         #endif
     }
 
