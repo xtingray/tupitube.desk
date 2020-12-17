@@ -46,12 +46,14 @@
 #include <QNetworkReply>
 #include <QListWidget>
 #include <QLabel>
+#include <QProgressBar>
 
 class TUPITUBE_EXPORT TupSearchDialog : public QDialog
 {
     Q_OBJECT
 
     public:
+    enum StackId { Result = 0, Progressbar, NoResult };
         TupSearchDialog(const QSize &size, QWidget *parent = nullptr);
         ~TupSearchDialog();
 
@@ -82,6 +84,9 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         QLabel *creatorUrl;
         QLabel *license;
         QLabel *licenseUrl;
+        QProgressBar *progressBar;
+        int percent;
+        int delta;
 
         TCollapsibleWidget *dynamicPanel;
 

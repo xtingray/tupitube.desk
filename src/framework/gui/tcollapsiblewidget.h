@@ -38,8 +38,8 @@
 
 #include "tglobal.h"
 
-#include <QGridLayout>
-#include <QGroupBox>
+#include <QVBoxLayout>
+#include <QStackedWidget>
 
 class T_GUI_EXPORT TCollapsibleWidget : public QWidget
 {
@@ -49,19 +49,18 @@ class T_GUI_EXPORT TCollapsibleWidget : public QWidget
         TCollapsibleWidget(QWidget *parent = nullptr);
         ~TCollapsibleWidget();
     
-        QString caption() const;
         bool isExpanded() const;
-
-        QWidget * getWidget() const;
-        void setWidget(QWidget *w);
+        void addWidget(QWidget *w);
+        void setCurrentIndex(int index);
 
     public slots:
         void setExpanded(bool collapsed);
 
     private:
         Q_DISABLE_COPY(TCollapsibleWidget);
-        QGridLayout *mainLayout;
-        QWidget *innerWidget;
+
+        QVBoxLayout *mainLayout;
+        QStackedWidget *stack;
         bool status;
 };
 

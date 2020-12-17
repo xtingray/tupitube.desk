@@ -145,8 +145,6 @@ QWidget * TupSearchDialog::searchTab()
     previewPic = new QLabel;
     picLayout->addWidget(previewPic);
 
-    // picLayout->addLayout(importLayout);
-
     QWidget *detailsPanel = new QWidget;
     detailsPanel->setStyleSheet("background-color:#c8c8c8;");
     QVBoxLayout *detailsLayout = new QVBoxLayout(detailsPanel);
@@ -180,11 +178,11 @@ QWidget * TupSearchDialog::searchTab()
     infoLayout->addWidget(picPanel);
     infoLayout->addWidget(detailsPanel);
 
-    QVBoxLayout *dataLayout = new QVBoxLayout;
+    QWidget *dataPanel = new QWidget;
+    QVBoxLayout *dataLayout = new QVBoxLayout(dataPanel);
     dataLayout->addLayout(infoLayout, Qt::AlignHCenter);
-    // dataLayout->addLayout(importLayout, Qt::AlignHCenter);
 
-    resultLayout->addLayout(dataLayout);
+    resultLayout->addWidget(dataPanel, Qt::AlignHCenter);
     resultLayout->addStretch();
 
     QWidget *controlPanel = new QWidget;
@@ -193,14 +191,56 @@ QWidget * TupSearchDialog::searchTab()
     controlLayout->addWidget(searchPanel);
     controlLayout->addWidget(new QWidget);
 
+    QWidget *progressPanel = new QWidget;
+    // QGridLayout *progressLayout = new QGridLayout(progressPanel);
+    QVBoxLayout *progressLayout = new QVBoxLayout(progressPanel);
+
+    TCONFIG->beginGroup("General");
+    QString themeName = TCONFIG->value("Theme", "Light").toString();
+    QString progressStyle = "QProgressBar { background-color: #DDDDDD; "
+                    "text-align: center; color: #FFFFFF; border-radius: 2px; } ";
+    QString color = "#009500";
+    if (themeName.compare("Dark") == 0)
+        color = "#444444";
+    progressStyle += "QProgressBar::chunk { background-color: " + color + "; border-radius: 2px; }";
+
+    QLabel *progressLabel = new QLabel("<b>" + tr("Searching...") + "</b>");
+    progressLabel->setAlignment(Qt::AlignHCenter);
+
+    progressBar = new QProgressBar;
+    progressBar->setTextVisible(true);
+    progressBar->setStyleSheet(progressStyle);
+    progressBar->setRange(1, 100);
+
+    QWidget *innerProgressPanel = new QWidget;
+    QVBoxLayout *innerProgressLayout = new QVBoxLayout(innerProgressPanel);
+    innerProgressLayout->addStretch();
+    innerProgressLayout->addWidget(progressLabel);
+    innerProgressLayout->addSpacing(10);
+    innerProgressLayout->addWidget(progressBar);
+    innerProgressLayout->addStretch();
+
+    progressLayout->addWidget(innerProgressPanel, Qt::AlignCenter);
+
+    QWidget *noResultPanel = new QWidget;
+    QVBoxLayout *noResultLayout = new QVBoxLayout(noResultPanel);
+    QLabel *noResultLabel = new QLabel(tr("No Results"));
+    QFont font = noResultLabel->font();
+    font.setPointSize(20);
+    font.setBold(true);
+    noResultLabel->setFont(font);
+
+    noResultLabel->setAlignment(Qt::AlignCenter);
+    noResultLayout->addWidget(noResultLabel);
+
     dynamicPanel = new TCollapsibleWidget;
-    dynamicPanel->setWidget(resultPanel);
+    dynamicPanel->addWidget(resultPanel);
+    dynamicPanel->addWidget(progressPanel);
+    dynamicPanel->addWidget(noResultPanel);
 
     layout->addWidget(controlPanel);
-    layout->addWidget(dynamicPanel, Qt::AlignHCenter);
+    layout->addWidget(dynamicPanel, Qt::AlignCenter);
     layout->addStretch();
-
-    // resultPanel->setVisible(false);
 
     return searchWidget;
 }
@@ -218,11 +258,18 @@ void TupSearchDialog::startSearch()
 {
     pattern = searchLine->currentText();
     if (pattern.length() > 0) {
-        searchButton->setEnabled(false);
-        if (dynamicPanel->isExpanded())
-            dynamicPanel->setExpanded(false);
+        if (pattern.length() > 30)
+            pattern = pattern.left(30);
+
         assetList.clear();
         assetDescList->clear();
+        searchButton->setEnabled(false);
+        percent = 0;
+        progressBar->reset();
+        dynamicPanel->setCurrentIndex(Progressbar);
+        if (!dynamicPanel->isExpanded())
+            dynamicPanel->setExpanded(true);
+
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
         qDebug() << "";
         qDebug() << "Search pattern -> " << pattern;
@@ -272,6 +319,8 @@ void TupSearchDialog::processResult(QNetworkReply *reply)
             qDebug() << "[TupSearchDialog::processResult()] - answer -> " << answer;
         #endif
         itemsCounter = 0;
+        percent = 20;
+        progressBar->setValue(percent);
         loadAssets(answer);
     } else {
         #ifdef TUP_DEBUG
@@ -335,9 +384,17 @@ void TupSearchDialog::loadAssets(const QString &input)
     if (doc.setContent(input)) {
         QDomElement root = doc.documentElement();
         int total = root.attribute("size", "0").toInt();
+        if (total)
+            delta = 70/total;
+        else
+            delta = 0;
         qDebug() << "TOTAL -> " << total;
         if (total == 0) {
             qDebug() << "No recourds found!";
+            percent = 0;
+            progressBar->reset();
+            dynamicPanel->setCurrentIndex(NoResult);
+            // dynamicPanel->setExpanded(false);
             searchButton->setEnabled(true);
             QApplication::restoreOverrideCursor();
             return;
@@ -379,6 +436,9 @@ void TupSearchDialog::loadAssets(const QString &input)
             n = n.nextSibling();
         }
 
+        percent = 30;
+        progressBar->setValue(percent);
+
         for (int i=0; i<assetList.count(); i++) {
             AssetRecord asset = assetList.at(i);
             QString path = assetsPath + asset.code;
@@ -399,7 +459,8 @@ void TupSearchDialog::loadAssets(const QString &input)
                     if (itemsCounter == assetList.count()) {
                         assetDescList->setCurrentRow(0);
                         // resultPanel->setVisible(true);
-                        dynamicPanel->setExpanded(true);
+                        // dynamicPanel->setExpanded(true);
+                        dynamicPanel->setCurrentIndex(Result);
                         searchButton->setEnabled(true);
                         QApplication::restoreOverrideCursor();
                     }
@@ -478,13 +539,16 @@ void TupSearchDialog::processMiniature(QNetworkReply *reply)
             TOsd::self()->display(TOsd::Error, tr("Can't load result images!"));
         }
 
+        percent += delta;
         itemsCounter++;
         if (itemsCounter == assetList.count()) {
             assetDescList->setCurrentRow(0);
-            // resultPanel->setVisible(true);
-            dynamicPanel->setExpanded(true);
+            dynamicPanel->setCurrentIndex(Result);
             searchButton->setEnabled(true);
+            progressBar->setValue(100);
             QApplication::restoreOverrideCursor();
+        } else {
+            progressBar->setValue(percent);
         }
     } else {
         #ifdef TUP_DEBUG

@@ -38,55 +38,43 @@
 // Collapsible Widget
 
 TCollapsibleWidget::TCollapsibleWidget(QWidget *parent): QWidget(parent)
-{    
-    innerWidget = nullptr;
-    mainLayout = new QGridLayout(this);
+{
+    mainLayout = new QVBoxLayout(this);
     mainLayout->setMargin(0);
-    status = false;
 
+    stack = new QStackedWidget;
+    mainLayout->addWidget(stack, Qt::AlignCenter);
+
+    status = false;
     setExpanded(false);
     setEnabled(false);
-
 }
 
 TCollapsibleWidget::~TCollapsibleWidget()
 {
 }
 
-QWidget *TCollapsibleWidget::getWidget() const
-{
-    return innerWidget;
-}
-
-void TCollapsibleWidget::setWidget(QWidget *widget)
+void TCollapsibleWidget::addWidget(QWidget *widget)
 {
     if (!widget)
         return;
-    
-    QGroupBox *container = new QGroupBox(this);
-    widget->setParent(container);
-    
-    QVBoxLayout *containerLayout = new QVBoxLayout(container);
-    innerWidget = widget;
-    
-    containerLayout->addWidget(widget);
+    stack->addWidget(widget);
+}
 
-    mainLayout->addWidget(container, 1, 1);
-    // mainLayout->setRowStretch(2, 1);
-    
-    setEnabled(true);
-    setExpanded(isExpanded());
+void TCollapsibleWidget::setCurrentIndex(int index)
+{
+    stack->setCurrentIndex(index);
 }
 
 void TCollapsibleWidget::setExpanded(bool expanded)
 {
-    if (innerWidget) {
+    if (stack) {
         setUpdatesEnabled(false);
 
         status = expanded;
-        innerWidget->parentWidget()->setVisible(expanded);
-        innerWidget->setVisible(expanded);
-        
+        stack->setVisible(expanded);
+        setEnabled(expanded);
+
         setUpdatesEnabled(true);
     }
 }
