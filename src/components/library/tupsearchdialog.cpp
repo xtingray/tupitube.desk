@@ -108,7 +108,8 @@ QWidget * TupSearchDialog::searchTab()
     comboLayout->setMargin(0);
     comboLayout->setSpacing(0);
 
-    searchLine = new QComboBox;
+    searchLine = new TComboBox;
+    connect(searchLine, SIGNAL(enterPressed()), this, SLOT(startSearch()));
     searchLine->setEditable(true);
     comboLayout->addWidget(searchLine);
     comboLayout->addSpacing(10);
@@ -560,9 +561,9 @@ void TupSearchDialog::processMiniature(QNetworkReply *reply)
 
 void TupSearchDialog::updateAssetView(int index)
 {
-    qDebug() << "";
-    qDebug() << "Current Index -> " << index;
-    qDebug() << "assetList.count() -> " << assetList.count();
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSearchDialog::updateAssetView()] - index -> " << index;
+    #endif
 
     if (!assetList.isEmpty()) {
         AssetRecord item = assetList.at(index);

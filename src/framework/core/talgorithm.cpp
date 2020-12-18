@@ -131,6 +131,17 @@ bool TAlgorithm::cacheIDChanged(const QString &data)
     return true;
 }
 
+void TAlgorithm::resetCacheID()
+{
+    TCONFIG->beginGroup("Network");
+    TCONFIG->setValue("Password", "");
+    TCONFIG->setValue("StorePassword", false);
+    TCONFIG->sync();
+
+    QSettings settings(COMPANY, CACHE_DB);
+    settings.setValue("cache", "");
+}
+
 QString TAlgorithm::windowCacheID()
 {
     QSettings settings(COMPANY, CACHE_DB);

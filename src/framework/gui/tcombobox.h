@@ -33,85 +33,27 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPSEARCHDIALOG_H
-#define TUPSEARCHDIALOG_H
+#ifndef TCOMBOBOX_H
+#define TCOMBOBOX_H
 
 #include "tglobal.h"
-#include "tcollapsiblewidget.h"
-#include "timagebutton.h"
-#include "tcombobox.h"
 
-#include <QDialog>
 #include <QComboBox>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QListWidget>
-#include <QLabel>
-#include <QProgressBar>
+#include <QKeyEvent>
 
-class TUPITUBE_EXPORT TupSearchDialog : public QDialog
+class T_GUI_EXPORT TComboBox : public QComboBox
 {
     Q_OBJECT
 
     public:
-    enum StackId { Result = 0, Progressbar, NoResult };
-        TupSearchDialog(const QSize &size, QWidget *parent = nullptr);
-        ~TupSearchDialog();
+        TComboBox(QWidget *parent = nullptr);
+        ~TComboBox();
 
-    private slots:
-        void startSearch();
-        void processResult(QNetworkReply *reply);
-        void processMiniature(QNetworkReply *reply);
-        void slotError(QNetworkReply::NetworkError error);
-        void updateAssetView(int index);
-        void importAsset();
-
-    private:
-        QWidget * searchTab();
-        QWidget * patreonTab();
-
-        void requestResults();
-        void loadAssets(const QString &input);
-        void getMiniature(const QString &code);
-        void setLabelLink(QLabel *label, const QString &url);
-
-        QTabWidget *tabWidget;
-        TImageButton *searchButton;
-        QListWidget *assetDescList;
-        QWidget *resultPanel;
-        QLabel *previewPic;
-        QLabel *graphicType;
-        QLabel *creator;
-        QLabel *creatorUrl;
-        QLabel *license;
-        QLabel *licenseUrl;
-        QProgressBar *progressBar;
-        int percent;
-        int delta;
-
-        TCollapsibleWidget *dynamicPanel;
-
-        QString assetsPath;
-        TComboBox *searchLine;
-        QComboBox *assetCombo;
-        QString pattern;
-        QString dimension;
-        QString assetType;
-        int itemsCounter;
-
-        QNetworkAccessManager *manager;
-
-        struct AssetRecord {
-            QString description;
-            QString code;
-            QString type;
-            QString creator;
-            QString creatorUrl;
-            QString licenseTitle;
-            QString licenseUrl;
-        };
-
-        QList<AssetRecord> assetList;
+    signals:
+        void enterPressed();
+        
+    protected:
+        void keyPressEvent(QKeyEvent *e);
 };
 
 #endif

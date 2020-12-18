@@ -440,6 +440,7 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
                                 qDebug() << "[TupVideoProperties::serverAuthAnswer()] - Error: Invalid credentials!";
                             #endif
                             cancelPost();
+                            TAlgorithm::resetCacheID();
                             TOsd::self()->display(TOsd::Error, tr("Access denied. Invalid password!"));
                         }
                         break;

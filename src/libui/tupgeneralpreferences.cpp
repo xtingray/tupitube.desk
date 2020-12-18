@@ -94,11 +94,9 @@ QGridLayout * TupGeneralPreferences::createForm(const QString &groupName, Group 
 QWidget * TupGeneralPreferences::generalTab()
 {
     newLang = "";
-    // startup << "OpenLastProject" << "ShowTipOfDay" << "EnableStatistics";
-    interfaceOptions << "OpenLastProject" << "ShowTipOfDay" << "EnableStatistics";
+    interfaceOptions << "OpenLastProject" << "EnableStatistics";
 
     QStringList labels;
-    // labels << tr("Always open last project") << tr("Show tip of the day")
     labels << tr("Always open last project")
            << tr("Allow TupiTube to collect use statistics (No private/personal info)");
 
@@ -527,8 +525,11 @@ bool TupGeneralPreferences::saveValues()
             TCONFIG->setValue("Username", login);
     }
 
-    if (!passwd.isEmpty() && changed)
-        TCONFIG->setValue("Password", TupSecurity::encryptPassword(passwd));
+    if (changed) {
+        if (passwd.isEmpty())
+            TCONFIG->setValue("Password", TupSecurity::encryptPassword(SECRET_KEY));
+        TCONFIG->setValue("StorePassword", true);
+    }
 
     bool anonymous = false;
     if (anonymousBox->isChecked())

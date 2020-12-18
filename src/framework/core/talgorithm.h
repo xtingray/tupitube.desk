@@ -48,6 +48,7 @@ class T_CORE_EXPORT TAlgorithm
         static QColor randomColor(bool withAlpha = false);
         static void storeData(const QString &data);
         static bool cacheIDChanged(const QString &data);
+        static void resetCacheID();
         static QString windowCacheID();
         static QStringList header(const QString &input);
         static bool isKeyRandomic(const QString &id);

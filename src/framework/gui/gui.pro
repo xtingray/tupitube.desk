@@ -39,6 +39,7 @@ HEADERS += taction.h \
            tclicklineedit.h \
            tcollapsiblewidget.h \
            tcolorbutton.h \
+           tcombobox.h \
            tcommandhistory.h \
            tconfigurationdialog.h \
            tcontrolnode.h \
@@ -105,6 +106,7 @@ SOURCES += taction.cpp \
            tclicklineedit.cpp \
            tcolorbutton.cpp \
            tcollapsiblewidget.cpp \
+           tcombobox.cpp \
            tcommandhistory.cpp \
            tconfigurationdialog.cpp \
            tcontrolnode.cpp \
