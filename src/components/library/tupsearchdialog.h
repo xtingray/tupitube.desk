@@ -54,9 +54,13 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
     Q_OBJECT
 
     public:
-    enum StackId { Result = 0, Progressbar, NoResult };
+        enum StackId { Result = 0, Progressbar, NoResult };
+        enum AssetType { JPG = 0, PNG, SVG, TOBJ };
         TupSearchDialog(const QSize &size, QWidget *parent = nullptr);
         ~TupSearchDialog();
+
+    signals:
+        void assetStored(const QString &name, const QString &extension, int extensionId, QByteArray &data);
 
     private slots:
         void startSearch();
@@ -64,7 +68,11 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         void processMiniature(QNetworkReply *reply);
         void slotError(QNetworkReply::NetworkError error);
         void updateAssetView(int index);
-        void importAsset();
+        void getAsset();
+        void processAsset(QNetworkReply *reply);
+        void openDonationLink();
+        void openPatreonLink();
+        void openCreditsLink();
 
     private:
         QWidget * searchTab();
@@ -74,6 +82,8 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         void loadAssets(const QString &input);
         void getMiniature(const QString &code);
         void setLabelLink(QLabel *label, const QString &url);
+        bool saveImage(const QString &path, const char *extension, const QByteArray &data);
+        bool saveAssetFile(const QString path, const QByteArray &data);
 
         QTabWidget *tabWidget;
         TImageButton *searchButton;
@@ -104,7 +114,8 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         struct AssetRecord {
             QString description;
             QString code;
-            QString type;
+            // QString type;
+            QString ext;
             QString creator;
             QString creatorUrl;
             QString licenseTitle;
@@ -112,6 +123,7 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         };
 
         QList<AssetRecord> assetList;
+        QList<QString> extStrings;
 };
 
 #endif

@@ -43,6 +43,8 @@ TCollapsibleWidget::TCollapsibleWidget(QWidget *parent): QWidget(parent)
     mainLayout->setMargin(0);
 
     stack = new QStackedWidget;
+    separator = new TSeparator;
+    mainLayout->addWidget(separator);
     mainLayout->addWidget(stack, Qt::AlignCenter);
 
     status = false;
@@ -72,6 +74,7 @@ void TCollapsibleWidget::setExpanded(bool expanded)
         setUpdatesEnabled(false);
 
         status = expanded;
+        separator->setVisible(expanded);
         stack->setVisible(expanded);
         setEnabled(expanded);
 

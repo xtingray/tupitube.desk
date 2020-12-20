@@ -41,6 +41,8 @@
 #include <QDialogButtonBox>
 #include <QHBoxLayout>
 #include <QIcon>
+#include <QTextEdit>
+#include <QDesktopServices>
 
 #include <QUrlQuery>
 #include <QNetworkReply>
@@ -57,6 +59,8 @@ TupSearchDialog::TupSearchDialog(const QSize &size, QWidget *parent) : QDialog(p
     TCONFIG->beginGroup("General");
     assetsPath = TCONFIG->value("AssetsPath", CACHE_DIR + "assets").toString();
 
+    extStrings << "jpg" << "png" << "svg" << "tobj";
+
     QFile file(THEME_DIR + "config/ui.qss");
     if (file.exists()) {
         file.open(QFile::ReadOnly);
@@ -66,7 +70,8 @@ TupSearchDialog::TupSearchDialog(const QSize &size, QWidget *parent) : QDialog(p
         file.close();
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupSearchDialog::TupSearchDialog()] - theme file doesn't exist -> " << QString(THEME_DIR + "config/ui.qss");
+            qWarning() << "[TupSearchDialog::TupSearchDialog()] - theme file doesn't exist -> "
+                       << QString(THEME_DIR + "config/ui.qss");
         #endif
     }
 
@@ -74,7 +79,7 @@ TupSearchDialog::TupSearchDialog(const QSize &size, QWidget *parent) : QDialog(p
 
     tabWidget = new QTabWidget;
     tabWidget->addTab(searchTab(), tr("Search"));
-    tabWidget->addTab(patreonTab(), tr("Patreon"));
+    tabWidget->addTab(patreonTab(), tr("Support Us"));
 
     QPushButton *closeButton = new QPushButton(tr("Close"));
     layout->addWidget(closeButton);
@@ -114,7 +119,7 @@ QWidget * TupSearchDialog::searchTab()
     comboLayout->addWidget(searchLine);
     comboLayout->addSpacing(10);
 
-    searchButton = new TImageButton(QPixmap(THEME_DIR + "icons/search.png"), 22, this);
+    searchButton = new TImageButton(QPixmap(THEME_DIR + "icons/search.png"), 22);
     searchButton->setToolTip(tr("Search"));
     connect(searchButton, SIGNAL(clicked()), this, SLOT(startSearch()));
     comboLayout->addWidget(searchButton);
@@ -123,12 +128,14 @@ QWidget * TupSearchDialog::searchTab()
 
     assetCombo = new QComboBox;
     assetCombo->setIconSize(QSize(15, 15));
-    assetCombo->addItem(QIcon(THEME_DIR + "icons/bitmap.png"), tr("Object"));
-    assetCombo->addItem(QIcon(THEME_DIR + "icons/bitmap.png"), tr("Character"));
-    assetCombo->addItem(QIcon(THEME_DIR + "icons/bitmap.png"), tr("Static Background"));
-    assetCombo->addItem(QIcon(THEME_DIR + "icons/bitmap.png"), tr("Dynamic Background"));
+    assetCombo->addItem(QIcon(THEME_DIR + "icons/tip.png"), tr("Object"));
+    assetCombo->addItem(QIcon(THEME_DIR + "icons/animation_mode.png"), tr("Character"));
+    assetCombo->addItem(QIcon(THEME_DIR + "icons/static_background_mode.png"), tr("Static Background"));
+    assetCombo->addItem(QIcon(THEME_DIR + "icons/dynamic_background_mode.png"), tr("Dynamic Background"));
+    assetCombo->addItem(QIcon(THEME_DIR + "icons/speaker.png"), tr("Sound"));
     // assetCombo->addItem(QIcon(THEME_DIR + "icons/bitmap.png"), tr("Puppet"));
 
+    assetCombo->setItemData(4, 0, Qt::UserRole - 1);
     searchLayout->addWidget(assetCombo, Qt::AlignHCenter);
     searchLayout->addWidget(new QWidget);
     searchLayout->addStretch();
@@ -147,7 +154,7 @@ QWidget * TupSearchDialog::searchTab()
     picLayout->addWidget(previewPic);
 
     QWidget *detailsPanel = new QWidget;
-    detailsPanel->setStyleSheet("background-color:#c8c8c8;");
+    detailsPanel->setStyleSheet("background-color:#c8c8c8; border-radius: 10px;");
     QVBoxLayout *detailsLayout = new QVBoxLayout(detailsPanel);
     graphicType = new QLabel;
     creator = new QLabel;
@@ -166,18 +173,22 @@ QWidget * TupSearchDialog::searchTab()
     detailsLayout->addWidget(new QWidget);
 
     QHBoxLayout *importLayout = new QHBoxLayout;
-    QPushButton *importButton = new QPushButton(tr("Import Asset"));
-    connect(importButton, SIGNAL(clicked()), this, SLOT(importAsset()));
+    QPushButton  *importButton = new QPushButton(QPixmap(THEME_DIR + "icons/import_asset.png"), tr("Import Asset"));
+    connect(importButton, SIGNAL(clicked()), this, SLOT(getAsset()));
+
+    importLayout->addStretch();
     importLayout->addWidget(new QWidget);
     importLayout->addWidget(importButton, 1, Qt::AlignHCenter);
     importLayout->addWidget(new QWidget);
     importLayout->addStretch();
 
-    detailsLayout->addLayout(importLayout);
+    QVBoxLayout *rightLayout = new QVBoxLayout;
+    rightLayout->addWidget(detailsPanel);
+    rightLayout->addLayout(importLayout);
 
     QHBoxLayout *infoLayout = new QHBoxLayout;
     infoLayout->addWidget(picPanel);
-    infoLayout->addWidget(detailsPanel);
+    infoLayout->addLayout(rightLayout);
 
     QWidget *dataPanel = new QWidget;
     QVBoxLayout *dataLayout = new QVBoxLayout(dataPanel);
@@ -193,7 +204,6 @@ QWidget * TupSearchDialog::searchTab()
     controlLayout->addWidget(new QWidget);
 
     QWidget *progressPanel = new QWidget;
-    // QGridLayout *progressLayout = new QGridLayout(progressPanel);
     QVBoxLayout *progressLayout = new QVBoxLayout(progressPanel);
 
     TCONFIG->beginGroup("General");
@@ -208,17 +218,23 @@ QWidget * TupSearchDialog::searchTab()
     QLabel *progressLabel = new QLabel("<b>" + tr("Searching...") + "</b>");
     progressLabel->setAlignment(Qt::AlignHCenter);
 
+    QHBoxLayout *barLayout = new QHBoxLayout;
     progressBar = new QProgressBar;
     progressBar->setTextVisible(true);
     progressBar->setStyleSheet(progressStyle);
     progressBar->setRange(1, 100);
+    barLayout->addStretch();
+    barLayout->addWidget(progressBar);
+    barLayout->addStretch();
 
     QWidget *innerProgressPanel = new QWidget;
+    innerProgressPanel->setStyleSheet("background-color:#c8c8c8; border-radius: 10px;");
+
     QVBoxLayout *innerProgressLayout = new QVBoxLayout(innerProgressPanel);
     innerProgressLayout->addStretch();
     innerProgressLayout->addWidget(progressLabel);
     innerProgressLayout->addSpacing(10);
-    innerProgressLayout->addWidget(progressBar);
+    innerProgressLayout->addLayout(barLayout);
     innerProgressLayout->addStretch();
 
     progressLayout->addWidget(innerProgressPanel, Qt::AlignCenter);
@@ -250,6 +266,48 @@ QWidget * TupSearchDialog::patreonTab()
 {
     QWidget *patreonWidget = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout(patreonWidget);
+
+    QFont font = this->font();
+    font.setPointSize(11);
+
+    QTextEdit *patreonText = new QTextEdit;
+    patreonText->setHtml(tr("From the <b>MaeFloresta</b> startup we are requesting the support from our users community "
+                            "to keep creating new assets for our library repository. Thanks to your contributions "
+                            "we can deliver a better product. You can start helping from <b>USD 1</b>."));
+    patreonText->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+    patreonText->setFont(font);
+    layout->addWidget(patreonText);
+
+    font.setPointSize(10);
+    font.setBold(true);
+
+    QHBoxLayout *buttonsLayout = new QHBoxLayout;
+    QPushButton *oneTimeButton = new QPushButton(tr("One Time Donation"));
+    oneTimeButton->setStyleSheet("padding:8px;");
+    oneTimeButton->setFont(font);
+    connect(oneTimeButton, SIGNAL(clicked()), this, SLOT(openDonationLink()));
+
+    QPushButton *patreonButton = new QPushButton(tr("Join Our Patreon"));
+    patreonButton->setStyleSheet("padding:8px;");
+    patreonButton->setFont(font);
+    connect(patreonButton, SIGNAL(clicked()), this, SLOT(openPatreonLink()));
+
+    QPushButton *creditsButton = new QPushButton(tr("Sponsors"));
+    creditsButton->setStyleSheet("padding:8px;");
+    creditsButton->setFont(font);
+    connect(creditsButton, SIGNAL(clicked()), this, SLOT(openCreditsLink()));
+
+    buttonsLayout->addStretch();
+    buttonsLayout->addWidget(new QWidget);
+    buttonsLayout->addWidget(oneTimeButton);
+    buttonsLayout->addSpacing(10);
+    buttonsLayout->addWidget(patreonButton);
+    buttonsLayout->addSpacing(10);
+    buttonsLayout->addWidget(creditsButton);
+    buttonsLayout->addWidget(new QWidget);
+    buttonsLayout->addStretch();
+
+    layout->addLayout(buttonsLayout);
     layout->addStretch();
 
     return patreonWidget;
@@ -262,6 +320,10 @@ void TupSearchDialog::startSearch()
         if (pattern.length() > 30)
             pattern = pattern.left(30);
 
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupSearchDialog::startSearch()] - pattern -> " << pattern;
+        #endif
+
         assetList.clear();
         assetDescList->clear();
         searchButton->setEnabled(false);
@@ -272,8 +334,6 @@ void TupSearchDialog::startSearch()
             dynamicPanel->setExpanded(true);
 
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-        qDebug() << "";
-        qDebug() << "Search pattern -> " << pattern;
 
         manager = new QNetworkAccessManager(this);
         connect(manager, &QNetworkAccessManager::finished, this, &TupSearchDialog::processResult);
@@ -389,13 +449,14 @@ void TupSearchDialog::loadAssets(const QString &input)
             delta = 70/total;
         else
             delta = 0;
-        qDebug() << "TOTAL -> " << total;
+
         if (total == 0) {
-            qDebug() << "No recourds found!";
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupSearchDialog::loadAssets()] - No recourds found!";
+            #endif
             percent = 0;
             progressBar->reset();
             dynamicPanel->setCurrentIndex(NoResult);
-            // dynamicPanel->setExpanded(false);
             searchButton->setEnabled(true);
             QApplication::restoreOverrideCursor();
             return;
@@ -405,21 +466,20 @@ void TupSearchDialog::loadAssets(const QString &input)
         while (!n.isNull()) {
             QDomElement e = n.toElement();
             if (!e.isNull()) {
-                qDebug() << "TAG: " << e.tagName();
                 if (e.tagName() == "item") {
                     AssetRecord asset;
                     QDomNode item = e.firstChild();
                     while (!item.isNull()) {
                         QDomElement record = item.toElement();
-                        qDebug() << "RECORD -> " << record.tagName();
-                        qDebug() << "VALUE -> " << record.text();
                         if (record.tagName() == "desc") {
                             asset.description = record.text();
                             new QListWidgetItem(record.text(), assetDescList);
                         } else if (record.tagName() == "code") {
                             asset.code = record.text();
-                        } else if (record.tagName() == "type") {
-                            asset.type = record.text();
+                        // } else if (record.tagName() == "type") {
+                        //     asset.type = record.text();
+                        } else if (record.tagName() == "ext") {
+                            asset.ext = record.text();
                         } else if (record.tagName() == "creator") {
                             asset.creator = record.text();
                         } else if (record.tagName() == "creator_url") {
@@ -443,7 +503,6 @@ void TupSearchDialog::loadAssets(const QString &input)
         for (int i=0; i<assetList.count(); i++) {
             AssetRecord asset = assetList.at(i);
             QString path = assetsPath + asset.code;
-            qDebug() << "Item path -> " << path;
             QDir assetDir(path);
             if (!assetDir.exists()) {
                 if (assetDir.mkpath(path)) {
@@ -459,8 +518,6 @@ void TupSearchDialog::loadAssets(const QString &input)
                     itemsCounter++;
                     if (itemsCounter == assetList.count()) {
                         assetDescList->setCurrentRow(0);
-                        // resultPanel->setVisible(true);
-                        // dynamicPanel->setExpanded(true);
                         dynamicPanel->setCurrentIndex(Result);
                         searchButton->setEnabled(true);
                         QApplication::restoreOverrideCursor();
@@ -570,7 +627,7 @@ void TupSearchDialog::updateAssetView(int index)
         QString path = assetsPath + item.code + "/miniature.png";
         previewPic->setPixmap(QPixmap(path));
 
-        graphicType->setText("<b>" + tr("Type:") + "</b> " + item.type);
+        graphicType->setText("<b>" + tr("Asset Extension:") + "</b> " + extStrings[item.ext.toInt()].toUpper());
 
         creator->setText("<b>" + tr("Creator:") + "</b> " + item.creator);
         setLabelLink(creatorUrl, item.creatorUrl);
@@ -592,8 +649,178 @@ void TupSearchDialog::setLabelLink(QLabel *label, const QString &url)
     label->setOpenExternalLinks(true);
 }
 
-void TupSearchDialog::importAsset()
+void TupSearchDialog::getAsset()
 {
-    qDebug() << "";
-    qDebug() << "TupSearchDialog::importAsset() - Tracing...";
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSearchDialog::getAsset()]";
+    #endif
+
+    int index = assetDescList->currentRow();
+    AssetRecord item = assetList.at(index);
+
+    qDebug() << "code -> " << item.code;
+    QString path = assetsPath + item.code + "/1.jpg";
+    QFile assetFile(path);
+
+    if (assetFile.exists(path)) {
+        if (assetFile.open(QIODevice::ReadOnly)) {
+            QByteArray data = assetFile.readAll();
+            assetFile.close();
+            int extId = item.ext.toInt();
+            emit assetStored(item.code, extStrings[extId], extId, data);
+        } else {
+            #ifdef TUP_DEBUG
+                qWarning() << "[TupSearchDialog::getAsset()] - Fatal Error: can't open asset -> " << path;
+            #endif
+        }
+    } else {
+        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+        manager = new QNetworkAccessManager(this);
+        connect(manager, &QNetworkAccessManager::finished, this, &TupSearchDialog::processAsset);
+        connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
+
+        QString apiEntry = TUPITUBE_URL + QString("/api/library/item/");
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupSearchDialog::getAsset()] - URL -> " << apiEntry;
+        #endif
+
+        QUrl url(apiEntry);
+        QNetworkRequest request = QNetworkRequest();
+        request.setRawHeader("User-Agent", BROWSER_FINGERPRINT);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+        request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+
+        request.setUrl(QUrl(url));
+
+        int type = assetCombo->currentIndex();
+        QUrlQuery params = QUrlQuery();
+        params.addQueryItem("code", item.code);
+        params.addQueryItem("type", QString::number(type));
+        if (type == 2 || type == 3)
+            params.addQueryItem("dimension", dimension);
+
+        QByteArray postData = params.query(QUrl::FullyEncoded).toUtf8();
+        QNetworkReply *reply = manager->post(request, postData);
+        connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+        connect(reply, &QNetworkReply::finished, reply, &QNetworkReply::deleteLater);
+        reply->setParent(manager);
+    }
+}
+
+void TupSearchDialog::processAsset(QNetworkReply *reply)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSearchDialog::processAsset()]";
+    #endif
+
+    QByteArray data = reply->readAll();
+    if (data.size() > 0) {
+        QString code = reply->rawHeader("Code");
+        int extId = reply->rawHeader("ExtId").toInt();
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupSearchDialog::processAsset()] - Saving asset...";
+            qDebug() << "[TupSearchDialog::processAsset()] - Code -> " << code;
+            qDebug() << "[TupSearchDialog::processAsset()] - Extension -> " << extId;
+            qDebug() << "[TupSearchDialog::processAsset()] - Object size -> " << data.size();
+        #endif
+
+        QString ext = extStrings[extId];
+        QString path = assetsPath + code + "/1." + ext;
+        switch(extId) {
+          case JPG:
+          case PNG:
+            {
+                if (saveImage(path, ext.toUpper().toUtf8(), data))
+                    emit assetStored(code, ext, extId, data);
+            }
+          break;
+          case SVG:
+          case TOBJ:
+            {
+                if (saveAssetFile(path, data))
+                    emit assetStored(code, ext, extId, data);
+            }
+          break;
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupSearchDialog::processAsset()()] - Fatal Error: No answer from server!";
+        #endif
+        TOsd::self()->display(TOsd::Error, tr("Network Error 809. Please, contact us!"));
+    }
+
+    QApplication::restoreOverrideCursor();
+}
+
+bool TupSearchDialog::saveImage(const QString &path, const char *extension, const QByteArray &data)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSearchDialog::saveImage()] - extension -> " << extension;
+    #endif
+
+    QImage image;
+    if (image.loadFromData(data, extension)) {
+        if (image.save(path, extension)) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupSearchDialog::saveImage()] - Asset saved successfully! -> " << path;
+            #endif
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupSearchDialog::saveImage()] - Can't save asset! -> " << path;
+            #endif
+            TOsd::self()->display(TOsd::Error, tr("Can't save asset!"));
+            return false;
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupSearchDialog::saveImage()] - Fatal Error: Can't load image bytes!";
+        #endif
+        TOsd::self()->display(TOsd::Error, tr("Can't load asset!"));
+        return false;
+    }
+
+    return true;
+}
+
+bool TupSearchDialog::saveAssetFile(const QString path, const QByteArray &data)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSearchDialog::saveAssetFile()] - path -> " << path;
+    #endif
+
+    QFile svg(path);
+    if (svg.open(QIODevice::WriteOnly)) {
+        svg.write(data);
+        svg.close();
+
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupSearchDialog::saveAssetFile()] - Asset saved successfully!";
+        #endif
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupSearchDialog::saveAssetFile()] - Can't save asset! -> " << path;
+        #endif
+        TOsd::self()->display(TOsd::Error, tr("Can't load asset file!"));
+    }
+
+    return true;
+}
+
+void TupSearchDialog::openDonationLink()
+{
+    QUrl url("https://paypal.me/maefloresta");
+    QDesktopServices::openUrl(url);
+}
+
+void TupSearchDialog::openPatreonLink()
+{
+    QUrl url("https://www.patreon.com/maefloresta");
+    QDesktopServices::openUrl(url);
+}
+
+void TupSearchDialog::openCreditsLink()
+{
+    QUrl url("https://www.maefloresta.com/credits");
+    QDesktopServices::openUrl(url);
 }

@@ -37,6 +37,7 @@
 #define TCOLLAPSIBLEWIDGET_H
 
 #include "tglobal.h"
+#include "tseparator.h"
 
 #include <QVBoxLayout>
 #include <QStackedWidget>
@@ -60,6 +61,7 @@ class T_GUI_EXPORT TCollapsibleWidget : public QWidget
         Q_DISABLE_COPY(TCollapsibleWidget);
 
         QVBoxLayout *mainLayout;
+        TSeparator *separator;
         QStackedWidget *stack;
         bool status;
 };
