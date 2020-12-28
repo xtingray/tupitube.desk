@@ -43,11 +43,11 @@
 
 #include <QDialog>
 #include <QComboBox>
-#include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QListWidget>
 #include <QLabel>
 #include <QProgressBar>
+#include <QScreen>
 
 class TUPITUBE_EXPORT TupSearchDialog : public QDialog
 {
@@ -73,6 +73,7 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         void openDonationLink();
         void openPatreonLink();
         void openCreditsLink();
+        void updateProgress(qint64 bytesSent, qint64 bytesTotal);
 
     private:
         QWidget * searchTab();
@@ -84,20 +85,21 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         void setLabelLink(QLabel *label, const QString &url);
         bool saveImage(const QString &path, const char *extension, const QByteArray &data);
         bool saveAssetFile(const QString path, const QByteArray &data);
+        void resetProgress(StackId id);
 
         QTabWidget *tabWidget;
         TImageButton *searchButton;
         QListWidget *assetDescList;
         QWidget *resultPanel;
+        QScreen *screen;
         QLabel *previewPic;
         QLabel *graphicType;
         QLabel *creator;
         QLabel *creatorUrl;
         QLabel *license;
         QLabel *licenseUrl;
+        QLabel *progressLabel;
         QProgressBar *progressBar;
-        int percent;
-        int delta;
 
         TCollapsibleWidget *dynamicPanel;
 
@@ -108,13 +110,11 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         QString dimension;
         QString assetType;
         int itemsCounter;
-
-        QNetworkAccessManager *manager;
+        // QStringList currentCode;
 
         struct AssetRecord {
             QString description;
             QString code;
-            // QString type;
             QString ext;
             QString creator;
             QString creatorUrl;

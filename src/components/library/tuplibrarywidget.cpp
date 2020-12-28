@@ -2011,61 +2011,36 @@ void TupLibraryWidget::importAsset(const QString &name, const QString &extension
         qDebug() << "[TupLibraryWidget::importAsset()] - name -> " << name;
     #endif
 
+    QString key = name + "." + extension;
+    int i = 0;
+    while (library->exists(key)) {
+        i++;
+        key = name + "-" + QString::number(i) + extension;
+    }
+
+    TupLibraryObject::Type type;
+
     switch(extensionId) {
       case TupSearchDialog::JPG:
       case TupSearchDialog::PNG:
         {
-            importImageAsset(name, extension, data);
+            type = TupLibraryObject::Image;
         }
       break;
       case TupSearchDialog::SVG:
         {
-            // importSvg(path);
+            type = TupLibraryObject::Svg;
         }
       break;
       case TupSearchDialog::TOBJ:
         {
-            importNativeAsset(name, extension, data);
+            type = TupLibraryObject::Item;
         }
       break;
     }
-}
-
-void TupLibraryWidget::importImageAsset(const QString &name, const QString &extension, QByteArray &data)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::importAssetImage()]";
-    #endif
-
-    QString key = name + "." + extension;
-    int i = 0;
-    while (library->exists(key)) {
-        i++;
-        key = name + "-" + QString::number(i) + extension;
-    }
 
     TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
-                                                                        TupLibraryObject::Image, project->spaceContext(), data, QString(),
-                                                                        currentFrame.scene, currentFrame.layer, currentFrame.frame);
-    emit requestTriggered(&request);
-    data.clear();
-}
-
-void TupLibraryWidget::importNativeAsset(const QString &name, const QString &extension, QByteArray &data)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::importNativeAsset()]";
-    #endif
-
-    QString key = name + "." + extension;
-    int i = 0;
-    while (library->exists(key)) {
-        i++;
-        key = name + "-" + QString::number(i) + extension;
-    }
-
-    TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
-                                                   TupLibraryObject::Item, project->spaceContext(), data, QString(),
+                                                   type, project->spaceContext(), data, QString(),
                                                    currentFrame.scene, currentFrame.layer, currentFrame.frame);
     emit requestTriggered(&request);
     data.clear();

@@ -44,6 +44,7 @@
 #include <QTextEdit>
 #include <QDesktopServices>
 
+#include <QNetworkAccessManager>
 #include <QUrlQuery>
 #include <QNetworkReply>
 #include <QBuffer>
@@ -92,6 +93,8 @@ TupSearchDialog::TupSearchDialog(const QSize &size, QWidget *parent) : QDialog(p
     layout->addLayout(buttonLayout);
     layout->addStretch();
 
+    screen = QGuiApplication::screens().at(0);
+
     setFixedWidth(800);
 }
 
@@ -135,6 +138,8 @@ QWidget * TupSearchDialog::searchTab()
     assetCombo->addItem(QIcon(THEME_DIR + "icons/speaker.png"), tr("Sound"));
     // assetCombo->addItem(QIcon(THEME_DIR + "icons/bitmap.png"), tr("Puppet"));
 
+    connect(assetCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(startSearch()));
+
     assetCombo->setItemData(4, 0, Qt::UserRole - 1);
     searchLayout->addWidget(assetCombo, Qt::AlignHCenter);
     searchLayout->addWidget(new QWidget);
@@ -174,6 +179,7 @@ QWidget * TupSearchDialog::searchTab()
 
     QHBoxLayout *importLayout = new QHBoxLayout;
     QPushButton  *importButton = new QPushButton(QPixmap(THEME_DIR + "icons/import_asset.png"), tr("Import Asset"));
+    importButton->setStyleSheet("padding:8px;");
     connect(importButton, SIGNAL(clicked()), this, SLOT(getAsset()));
 
     importLayout->addStretch();
@@ -183,8 +189,11 @@ QWidget * TupSearchDialog::searchTab()
     importLayout->addStretch();
 
     QVBoxLayout *rightLayout = new QVBoxLayout;
+    rightLayout->addStretch();
     rightLayout->addWidget(detailsPanel);
+    rightLayout->addSpacing(10);
     rightLayout->addLayout(importLayout);
+    rightLayout->addStretch();
 
     QHBoxLayout *infoLayout = new QHBoxLayout;
     infoLayout->addWidget(picPanel);
@@ -215,7 +224,7 @@ QWidget * TupSearchDialog::searchTab()
         color = "#444444";
     progressStyle += "QProgressBar::chunk { background-color: " + color + "; border-radius: 2px; }";
 
-    QLabel *progressLabel = new QLabel("<b>" + tr("Searching...") + "</b>");
+    progressLabel = new QLabel("<b>" + tr("Searching...") + "</b>");
     progressLabel->setAlignment(Qt::AlignHCenter);
 
     QHBoxLayout *barLayout = new QHBoxLayout;
@@ -319,6 +328,7 @@ void TupSearchDialog::startSearch()
     if (pattern.length() > 0) {
         if (pattern.length() > 30)
             pattern = pattern.left(30);
+        assetType = QString::number(assetCombo->currentIndex());
 
         #ifdef TUP_DEBUG
             qDebug() << "[TupSearchDialog::startSearch()] - pattern -> " << pattern;
@@ -327,21 +337,20 @@ void TupSearchDialog::startSearch()
         assetList.clear();
         assetDescList->clear();
         searchButton->setEnabled(false);
-        percent = 0;
-        progressBar->reset();
+
         dynamicPanel->setCurrentIndex(Progressbar);
         if (!dynamicPanel->isExpanded())
             dynamicPanel->setExpanded(true);
 
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-        manager = new QNetworkAccessManager(this);
+        QNetworkAccessManager *manager = new QNetworkAccessManager(this);
         connect(manager, &QNetworkAccessManager::finished, this, &TupSearchDialog::processResult);
         connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
 
         QString apiEntry = TUPITUBE_URL + QString("/api/library/");
         #ifdef TUP_DEBUG
-            qDebug() << "[TupSearchDialog::startSearch()] - URL -> " << apiEntry;
+            qDebug() << "[TupSearchDialog::startSearch()] - Getting URL -> " << apiEntry;
         #endif
 
         QUrl url(apiEntry);
@@ -354,7 +363,7 @@ void TupSearchDialog::startSearch()
 
         QUrlQuery params = QUrlQuery();
         params.addQueryItem("pattern", pattern);
-        params.addQueryItem("type", QString::number(assetCombo->currentIndex()));
+        params.addQueryItem("type", assetType);
         params.addQueryItem("dimension", dimension);
 
         QByteArray postData = params.query(QUrl::FullyEncoded).toUtf8();
@@ -380,8 +389,6 @@ void TupSearchDialog::processResult(QNetworkReply *reply)
             qDebug() << "[TupSearchDialog::processResult()] - answer -> " << answer;
         #endif
         itemsCounter = 0;
-        percent = 20;
-        progressBar->setValue(percent);
         loadAssets(answer);
     } else {
         #ifdef TUP_DEBUG
@@ -392,7 +399,9 @@ void TupSearchDialog::processResult(QNetworkReply *reply)
 }
 
 void TupSearchDialog::slotError(QNetworkReply::NetworkError error)
-{
+{    
+    resetProgress(NoResult);
+
     TOsd::self()->display(TOsd::Error, tr("Network Fatal Error. Please, contact us!"));
 
     switch (error) {
@@ -445,20 +454,11 @@ void TupSearchDialog::loadAssets(const QString &input)
     if (doc.setContent(input)) {
         QDomElement root = doc.documentElement();
         int total = root.attribute("size", "0").toInt();
-        if (total)
-            delta = 70/total;
-        else
-            delta = 0;
-
         if (total == 0) {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupSearchDialog::loadAssets()] - No recourds found!";
             #endif
-            percent = 0;
-            progressBar->reset();
-            dynamicPanel->setCurrentIndex(NoResult);
-            searchButton->setEnabled(true);
-            QApplication::restoreOverrideCursor();
+            resetProgress(NoResult);
             return;
         }
 
@@ -476,8 +476,6 @@ void TupSearchDialog::loadAssets(const QString &input)
                             new QListWidgetItem(record.text(), assetDescList);
                         } else if (record.tagName() == "code") {
                             asset.code = record.text();
-                        // } else if (record.tagName() == "type") {
-                        //     asset.type = record.text();
                         } else if (record.tagName() == "ext") {
                             asset.ext = record.text();
                         } else if (record.tagName() == "creator") {
@@ -497,32 +495,36 @@ void TupSearchDialog::loadAssets(const QString &input)
             n = n.nextSibling();
         }
 
-        percent = 30;
-        progressBar->setValue(percent);
+        #ifdef TUP_DEBUG
+            qDebug() << "---";
+        #endif
 
         for (int i=0; i<assetList.count(); i++) {
             AssetRecord asset = assetList.at(i);
             QString path = assetsPath + asset.code;
             QDir assetDir(path);
-            if (!assetDir.exists()) {
+            if (!assetDir.exists()) { // Record hasn't downloaded yet
                 if (assetDir.mkpath(path)) {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupSearchDialog::loadAssets()] - Request No " << (i + 1);
+                    #endif
+                    progressLabel->setText("<b>Getting item " + asset.description + "</b>");
                     getMiniature(asset.code);
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "[TupSearchDialog::loadAssets()] - Fatal Error: Can't create asset dir -> " << path;
                     #endif
+                    resetProgress(NoResult);
                 }
-            } else {
+            } else { // Folder already exists
                 QFileInfo file(path + "/miniature.png");
-                if (file.exists()) {
+                if (file.exists()) { // File was downloaded previously
                     itemsCounter++;
                     if (itemsCounter == assetList.count()) {
                         assetDescList->setCurrentRow(0);
-                        dynamicPanel->setCurrentIndex(Result);
-                        searchButton->setEnabled(true);
-                        QApplication::restoreOverrideCursor();
+                        resetProgress(Result);
                     }
-                } else {
+                } else { // Getting file for the first time
                     getMiniature(asset.code);
                 }
             }
@@ -536,13 +538,15 @@ void TupSearchDialog::getMiniature(const QString &code)
         qDebug() << "[TupSearchDialog::getMiniature()] - code -> " << code;
     #endif
 
-    manager = new QNetworkAccessManager(this);
+    progressBar->reset();
+
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     connect(manager, &QNetworkAccessManager::finished, this, &TupSearchDialog::processMiniature);
     connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
 
     QString apiEntry = TUPITUBE_URL + QString("/api/library/miniature/");
     #ifdef TUP_DEBUG
-        qDebug() << "[TupSearchDialog::getMiniature()] - URL -> " << apiEntry;
+        qDebug() << "[TupSearchDialog::getMiniature()] - Calling URL -> " << apiEntry;
     #endif
 
     QUrl url(apiEntry);
@@ -557,9 +561,42 @@ void TupSearchDialog::getMiniature(const QString &code)
 
     QByteArray postData = params.query(QUrl::FullyEncoded).toUtf8();
     QNetworkReply *reply = manager->post(request, postData);
+    connect(reply, &QNetworkReply::downloadProgress, this, &TupSearchDialog::updateProgress);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
     connect(reply, &QNetworkReply::finished, reply, &QNetworkReply::deleteLater);
     reply->setParent(manager);
+    reply = manager->post(request, postData);
+
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+    #endif
+}
+
+void TupSearchDialog::updateProgress(qint64 bytesSent, qint64 bytesTotal)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSearchDialog::updateProgress()] - bytesSent -> " << bytesSent;
+    #endif
+
+    if (bytesTotal > 0) {
+        double percent = (bytesSent * 100) / bytesTotal;
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupSearchDialog::updateProgress()] - percent -> " << percent;
+        #endif
+        progressBar->setValue(percent);
+    }
+}
+
+void TupSearchDialog::resetProgress(StackId id)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSearchDialog::resetProgress()]";
+    #endif
+
+    progressBar->reset();
+    dynamicPanel->setCurrentIndex(id);
+    searchButton->setEnabled(true);
+    QApplication::restoreOverrideCursor();
 }
 
 void TupSearchDialog::processMiniature(QNetworkReply *reply)
@@ -587,7 +624,7 @@ void TupSearchDialog::processMiniature(QNetworkReply *reply)
             } else {
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupSearchDialog::processMiniature()] - Can't save miniature!";
-                #endif
+                #endif                    
                 TOsd::self()->display(TOsd::Error, tr("Can't load result images!"));
             }
         } else {
@@ -597,23 +634,20 @@ void TupSearchDialog::processMiniature(QNetworkReply *reply)
             TOsd::self()->display(TOsd::Error, tr("Can't load result images!"));
         }
 
-        percent += delta;
         itemsCounter++;
         if (itemsCounter == assetList.count()) {
             assetDescList->setCurrentRow(0);
-            dynamicPanel->setCurrentIndex(Result);
-            searchButton->setEnabled(true);
-            progressBar->setValue(100);
-            QApplication::restoreOverrideCursor();
-        } else {
-            progressBar->setValue(percent);
+            resetProgress(Result);
         }
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TupSearchDialog::processMiniature()] - Fatal Error: No answer from server!";
         #endif
+
+        resetProgress(NoResult);
         TOsd::self()->display(TOsd::Error, tr("Network Error 709. Please, contact us!"));
     }
+    progressBar->reset();
 }
 
 void TupSearchDialog::updateAssetView(int index)
@@ -634,6 +668,9 @@ void TupSearchDialog::updateAssetView(int index)
 
         license->setText("<b>" + tr("License:") + "</b> " + item.licenseTitle);
         setLabelLink(licenseUrl, item.licenseUrl);
+
+        move(static_cast<int>((screen->geometry().width() - width())/2),
+             static_cast<int>((screen->geometry().height() - height())/2));
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TupSearchDialog::updateAssetView()] - Fatal Error: Assets list is empty!";
@@ -651,14 +688,13 @@ void TupSearchDialog::setLabelLink(QLabel *label, const QString &url)
 
 void TupSearchDialog::getAsset()
 {
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupSearchDialog::getAsset()]";
-    #endif
-
     int index = assetDescList->currentRow();
     AssetRecord item = assetList.at(index);
 
-    qDebug() << "code -> " << item.code;
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSearchDialog::getAsset()] - code -> " << item.code;
+    #endif
+
     QString path = assetsPath + item.code + "/1.jpg";
     QFile assetFile(path);
 
@@ -676,13 +712,13 @@ void TupSearchDialog::getAsset()
     } else {
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-        manager = new QNetworkAccessManager(this);
+        QNetworkAccessManager *manager = new QNetworkAccessManager(this);
         connect(manager, &QNetworkAccessManager::finished, this, &TupSearchDialog::processAsset);
         connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
 
         QString apiEntry = TUPITUBE_URL + QString("/api/library/item/");
         #ifdef TUP_DEBUG
-            qDebug() << "[TupSearchDialog::getAsset()] - URL -> " << apiEntry;
+            qDebug() << "[TupSearchDialog::getAsset()] - Getting URL -> " << apiEntry;
         #endif
 
         QUrl url(apiEntry);
@@ -693,10 +729,10 @@ void TupSearchDialog::getAsset()
 
         request.setUrl(QUrl(url));
 
-        int type = assetCombo->currentIndex();
         QUrlQuery params = QUrlQuery();
         params.addQueryItem("code", item.code);
-        params.addQueryItem("type", QString::number(type));
+        params.addQueryItem("type", assetType);
+        int type = assetType.toInt();
         if (type == 2 || type == 3)
             params.addQueryItem("dimension", dimension);
 

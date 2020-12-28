@@ -126,8 +126,6 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void importNativeObjects();
         void updateSoundTiming(int frame);
         void importAsset(const QString &name, const QString &extension, int extensionId, QByteArray &data);
-        void importImageAsset(const QString &name, const QString &extension, QByteArray &data);
-        void importNativeAsset(const QString &name, const QString &extension, QByteArray &data);
 
     public slots:
         void addFolder(const QString &folderName = QString());
