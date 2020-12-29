@@ -185,9 +185,6 @@ void TupLibraryWidget::resetGUI()
     if (library)
         library->reset();
 
-    if (display)
-        display->reset();
-
     if (libraryTree)
         libraryTree->cleanUI();
 }

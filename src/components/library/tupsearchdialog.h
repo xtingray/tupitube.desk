@@ -64,6 +64,7 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
 
     private slots:
         void startSearch();
+        void startSearchFromCombo();
         void processResult(QNetworkReply *reply);
         void processMiniature(QNetworkReply *reply);
         void slotError(QNetworkReply::NetworkError error);
@@ -73,7 +74,7 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         void openDonationLink();
         void openPatreonLink();
         void openCreditsLink();
-        void updateProgress(qint64 bytesSent, qint64 bytesTotal);
+        void updateProgress(qint64 bytesReceived, qint64 bytesTotal);
 
     private:
         QWidget * searchTab();

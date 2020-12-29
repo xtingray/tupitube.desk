@@ -138,7 +138,7 @@ QWidget * TupSearchDialog::searchTab()
     assetCombo->addItem(QIcon(THEME_DIR + "icons/speaker.png"), tr("Sound"));
     // assetCombo->addItem(QIcon(THEME_DIR + "icons/bitmap.png"), tr("Puppet"));
 
-    connect(assetCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(startSearch()));
+    connect(assetCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(startSearchFromCombo()));
 
     assetCombo->setItemData(4, 0, Qt::UserRole - 1);
     searchLayout->addWidget(assetCombo, Qt::AlignHCenter);
@@ -322,6 +322,14 @@ QWidget * TupSearchDialog::patreonTab()
     return patreonWidget;
 }
 
+void TupSearchDialog::startSearchFromCombo()
+{
+    pattern = searchLine->currentText();
+    if (pattern.length() > 0) {
+        startSearch();
+    }
+}
+
 void TupSearchDialog::startSearch()
 {
     pattern = searchLine->currentText();
@@ -348,7 +356,7 @@ void TupSearchDialog::startSearch()
         connect(manager, &QNetworkAccessManager::finished, this, &TupSearchDialog::processResult);
         connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
 
-        QString apiEntry = TUPITUBE_URL + QString("/api/library/");
+        QString apiEntry = LIBRARY_URL + QString("/api/search/");
         #ifdef TUP_DEBUG
             qDebug() << "[TupSearchDialog::startSearch()] - Getting URL -> " << apiEntry;
         #endif
@@ -544,7 +552,7 @@ void TupSearchDialog::getMiniature(const QString &code)
     connect(manager, &QNetworkAccessManager::finished, this, &TupSearchDialog::processMiniature);
     connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
 
-    QString apiEntry = TUPITUBE_URL + QString("/api/library/miniature/");
+    QString apiEntry = LIBRARY_URL + QString("/api/miniature/");
     #ifdef TUP_DEBUG
         qDebug() << "[TupSearchDialog::getMiniature()] - Calling URL -> " << apiEntry;
     #endif
@@ -572,14 +580,14 @@ void TupSearchDialog::getMiniature(const QString &code)
     #endif
 }
 
-void TupSearchDialog::updateProgress(qint64 bytesSent, qint64 bytesTotal)
+void TupSearchDialog::updateProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupSearchDialog::updateProgress()] - bytesSent -> " << bytesSent;
+        qDebug() << "[TupSearchDialog::updateProgress()] - bytesSent -> " << bytesReceived;
     #endif
 
     if (bytesTotal > 0) {
-        double percent = (bytesSent * 100) / bytesTotal;
+        double percent = (bytesReceived * 100) / bytesTotal;
         #ifdef TUP_DEBUG
             qDebug() << "[TupSearchDialog::updateProgress()] - percent -> " << percent;
         #endif
@@ -647,6 +655,7 @@ void TupSearchDialog::processMiniature(QNetworkReply *reply)
         resetProgress(NoResult);
         TOsd::self()->display(TOsd::Error, tr("Network Error 709. Please, contact us!"));
     }
+
     progressBar->reset();
 }
 
@@ -716,7 +725,7 @@ void TupSearchDialog::getAsset()
         connect(manager, &QNetworkAccessManager::finished, this, &TupSearchDialog::processAsset);
         connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
 
-        QString apiEntry = TUPITUBE_URL + QString("/api/library/item/");
+        QString apiEntry = LIBRARY_URL + QString("/api/item/");
         #ifdef TUP_DEBUG
             qDebug() << "[TupSearchDialog::getAsset()] - Getting URL -> " << apiEntry;
         #endif

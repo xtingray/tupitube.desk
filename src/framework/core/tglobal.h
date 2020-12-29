@@ -66,6 +66,7 @@
 #define MAEFLORESTA_URL "https://www.maefloresta.com/"
 
 #define TUPITUBE_URL "https://www.tupitube.com"
+#define LIBRARY_URL "https://library.tupitube.com"
 #define MEDIA_URL "media.tupitube.com"
 #define BROWSER_FINGERPRINT "Tupi_Browser 2.0"
 #define MOZILLA_FINGERPRINT "Mozilla/5.0"
