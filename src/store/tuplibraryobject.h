@@ -97,6 +97,9 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         void setSoundEffectFlag(bool flag);
         bool isSoundEffect();
 
+        bool isNativeGroup();
+        QString getGroupXml() const;
+
     public:
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
@@ -110,8 +113,10 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         QString smallId;
         QString extension;
         QByteArray rawData;
+        QString groupXml;
 
         bool objectHasSoundEffect;
+        bool isGroup;
         int playAt;
 };
 

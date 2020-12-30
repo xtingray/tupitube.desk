@@ -109,6 +109,13 @@ void TupItemPreview::paintEvent(QPaintEvent *)
         int newPosX = 0;
         int newPosY = 0;
 
+        isNative = true;
+        itemWidth = proxy->item()->boundingRect().width();
+        itemHeight = proxy->item()->boundingRect().height();
+        newPosX = -proxy->item()->boundingRect().topLeft().x();
+        newPosY = -proxy->item()->boundingRect().topLeft().y();
+
+        /*
         if (QGraphicsPathItem *path = qgraphicsitem_cast<QGraphicsPathItem *>(proxy->item())) {
             isNative = true;
             itemWidth = path->path().boundingRect().width();
@@ -124,6 +131,7 @@ void TupItemPreview::paintEvent(QPaintEvent *)
             newPosX = -group->boundingRect().topLeft().x();
             newPosY = -group->boundingRect().topLeft().y();
         }
+        */
 
         // If preview is for a native object (path or group)
         if (isNative) {
@@ -182,8 +190,8 @@ void TupItemPreview::paintEvent(QPaintEvent *)
 
                 float factor = base/distance;
                 float alterFactor = 1/factor;
-                int widthRealLength = rect().width()*alterFactor;
-                int heightRealLength = rect().height()*alterFactor;
+                int widthRealLength = rect().width() * alterFactor;
+                int heightRealLength = rect().height() * alterFactor;
 
                 if (widthRealLength > opt.exposedRect.width())
                     newPosX = (widthRealLength - opt.exposedRect.width())/2;
@@ -193,7 +201,6 @@ void TupItemPreview::paintEvent(QPaintEvent *)
 
                 painter.scale(factor, factor);
                 painter.translate(newPosX, newPosY);
-
             } else { // if object is smaller than canvas, just show it
                 painter.translate((rect().width() - opt.exposedRect.width())/2, (rect().height() - opt.exposedRect.height())/2);
             }

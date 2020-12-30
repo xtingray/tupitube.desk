@@ -45,12 +45,12 @@ TupWaterMark::~TupWaterMark()
 {
 }
 
-QGraphicsTextItem * TupWaterMark::generateWaterMark(const QColor &bgColor, const QSize &size)
+QGraphicsTextItem * TupWaterMark::generateWaterMark(const QColor &bgColor, const QSize &size, int zLevel)
 {
     #ifdef TUP_DEBUG
-	qDebug() << "[TupWaterMark::generateWaterMark()]";
-	qDebug() << "bgColor: " << bgColor;
-	qDebug() << "size: " << size;
+        qDebug() << "[TupWaterMark::generateWaterMark()]";
+        qDebug() << "bgColor: " << bgColor;
+        qDebug() << "size: " << size;
     #endif
 
     int imgW = size.width();
@@ -80,6 +80,7 @@ QGraphicsTextItem * TupWaterMark::generateWaterMark(const QColor &bgColor, const
 
     int x = (imgW - textWidth)/2;
     watermark->setPos(x, -5);
+    watermark->setZValue(zLevel);
 
     return watermark;
 }

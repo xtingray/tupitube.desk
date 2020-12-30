@@ -265,7 +265,7 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
 
     if (showWaterMark) {
         TupWaterMark *mark = new TupWaterMark;
-        addItem(mark->generateWaterMark(background->getBgColor(), background->getProjectSize()));
+        addItem(mark->generateWaterMark(background->getBgColor(), background->getProjectSize(), zLevel));
     }
 
     if (gTool)
@@ -464,7 +464,7 @@ void TupGraphicsScene::drawVectorFg()
     if (!background->vectorFgIsEmpty()) {
         TupFrame *frame = background->vectorForegroundFrame();
         if (frame) {
-            zLevel = (tupScene->layersCount() + BG_LAYERS) * ZLAYER_LIMIT;
+            zLevel = (tupScene->layersCount() + BG_LAYERS + 1) * ZLAYER_LIMIT;
             addFrame(frame, frame->frameOpacity());
         }
 

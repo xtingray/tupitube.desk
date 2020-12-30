@@ -49,7 +49,7 @@ class TUPITUBE_EXPORT TupWaterMark : public QObject
         TupWaterMark(QObject *parent = nullptr);
         ~TupWaterMark();
 
-        QGraphicsTextItem * generateWaterMark(const QColor &color, const QSize &size);
+        QGraphicsTextItem * generateWaterMark(const QColor &color, const QSize &size, int zLevel);
         QColor waterMarkColor(const QColor &bgColor);
 };
 

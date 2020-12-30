@@ -740,7 +740,6 @@ void TupSearchDialog::getAsset()
 
         QUrlQuery params = QUrlQuery();
         params.addQueryItem("code", item.code);
-        params.addQueryItem("type", assetType);
         int type = assetType.toInt();
         if (type == 2 || type == 3)
             params.addQueryItem("dimension", dimension);
@@ -762,6 +761,7 @@ void TupSearchDialog::processAsset(QNetworkReply *reply)
     QByteArray data = reply->readAll();
     if (data.size() > 0) {
         QString code = reply->rawHeader("Code");
+        QString name = reply->rawHeader("Name");
         int extId = reply->rawHeader("ExtId").toInt();
         #ifdef TUP_DEBUG
             qDebug() << "[TupSearchDialog::processAsset()] - Saving asset...";
@@ -777,14 +777,14 @@ void TupSearchDialog::processAsset(QNetworkReply *reply)
           case PNG:
             {
                 if (saveImage(path, ext.toUpper().toUtf8(), data))
-                    emit assetStored(code, ext, extId, data);
+                    emit assetStored(name, ext, extId, data);
             }
           break;
           case SVG:
           case TOBJ:
             {
                 if (saveAssetFile(path, data))
-                    emit assetStored(code, ext, extId, data);
+                    emit assetStored(name, ext, extId, data);
             }
           break;
         }

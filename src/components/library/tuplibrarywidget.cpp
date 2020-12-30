@@ -36,6 +36,8 @@
 #include "tuplibrarywidget.h"
 #include "tuplayer.h"
 #include "tupsearchdialog.h"
+#include "tupitemfactory.h"
+#include "tupitemgroup.h"
 
 #define RETURN_IF_NOT_LIBRARY if (!library) return;
 
@@ -182,6 +184,9 @@ void TupLibraryWidget::resetGUI()
         qDebug() << "[TupLibraryWidget::resetGUI()]";
     #endif
 
+    if (display)
+        display->reset();
+
     if (library)
         library->reset();
 
@@ -273,18 +278,31 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                    }
                    break;
                 case TupLibraryObject::Image:
+                   {
+                     display->showDisplay();
+                     display->render(qvariant_cast<QGraphicsItem *>(object->getData()));
+                   }
+                   break;
                 case TupLibraryObject::Item:
                    {
-                     if (object->getData().canConvert<QGraphicsItem *>()) {
-                         display->showDisplay();
+                     display->showDisplay();
+                     if (object->isNativeGroup()) {
+                         QString data = object->getGroupXml();
+                         // qDebug() << "";
+                         // qDebug() << "GROUP:";
+                         // qDebug() << data;
+                         TupItemFactory factory;
+                         QGraphicsItem *group = factory.create(data);
+                         display->render(group);
+                     } else { // Single item
                          display->render(qvariant_cast<QGraphicsItem *>(object->getData()));
+                     }
 
-                         /* SQA: Just a test
-                         TupSymbolEditor *editor = new TupSymbolEditor;
-                         editor->setSymbol(object);
-                         emit postPage(editor);
-                         */    
-                     } 
+                     /* SQA: Just a test
+                     TupSymbolEditor *editor = new TupSymbolEditor;
+                     editor->setSymbol(object);
+                     emit postPage(editor);
+                     */
                    }
                    break;
                 case TupLibraryObject::Sound:

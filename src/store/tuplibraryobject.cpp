@@ -51,6 +51,7 @@ TupLibraryObject::TupLibraryObject(const QString &name, const QString &dir, TupL
     objectType = type;
     objectHasSoundEffect = false;
     playAt = 0;
+    isGroup = false;
 }
 
 TupLibraryObject::~TupLibraryObject()
@@ -238,58 +239,58 @@ void TupLibraryObject::fromXml(const QString &xml)
         }
 
         switch (objectType) {
-                case TupLibraryObject::Text:
+            case TupLibraryObject::Text:
+             {
+                 QDomElement objectData = objectTag.firstChild().toElement();
+                 if (!objectTag.isNull()) {
+                     QString data;
                      {
-                         QDomElement objectData = objectTag.firstChild().toElement();
-                         if (!objectTag.isNull()) {
-                             QString data;
-                             {
-                                 QTextStream ts(&data);
-                                 ts << objectData;
-                             }
+                         QTextStream ts(&data);
+                         ts << objectData;
+                     }
 
-                             QByteArray array = data.toLocal8Bit();
-                             if (!array.isEmpty() && !array.isNull()) {
-                                 loadRawData(array);
-                             } else {
-                                 #ifdef TUP_DEBUG
-                                     qDebug() << "[TupLibraryObject::fromXml()] - Object data is empty! -> " << symbolName;
-                                 #endif
-                                 return;
-                             }
-                         } else {
-                             #ifdef TUP_DEBUG
-                                 qDebug() << "[TupLibraryObject::fromXml()] - Fatal Error: Object data from xml is NULL -> " << symbolName;
-                             #endif
-                             return;
-                         }
-                     }
-                break;
-                case TupLibraryObject::Image:
-                case TupLibraryObject::Svg:
-                case TupLibraryObject::Item:
-                     {
-                         dataPath = objectTag.attribute("path");
-                         int index = dataPath.lastIndexOf("/");
-                         if (index > 0)
-                             folder = dataPath.left(index);
-                     }
-                break;
-                case TupLibraryObject::Sound:
-                     {
-                         objectHasSoundEffect = objectTag.attribute("soundEffect").toInt() ? true : false;
-                         playAt = objectTag.attribute("playAt").toInt();
-                         dataPath = objectTag.attribute("path");
-                     }
-                break;
-                default:
-                     {
+                     QByteArray array = data.toLocal8Bit();
+                     if (!array.isEmpty() && !array.isNull()) {
+                         loadRawData(array);
+                     } else {
                          #ifdef TUP_DEBUG
-                             qDebug() << "[TupLibraryObject::fromXml()] - Unknown object type -> " << objectType;
+                             qDebug() << "[TupLibraryObject::fromXml()] - Object data is empty! -> " << symbolName;
                          #endif
-
                          return;
                      }
+                 } else {
+                     #ifdef TUP_DEBUG
+                         qDebug() << "[TupLibraryObject::fromXml()] - Fatal Error: Object data from xml is NULL -> " << symbolName;
+                     #endif
+                     return;
+                 }
+             }
+            break;
+            case TupLibraryObject::Image:
+            case TupLibraryObject::Svg:
+            case TupLibraryObject::Item:
+             {
+                 dataPath = objectTag.attribute("path");
+                 int index = dataPath.lastIndexOf("/");
+                 if (index > 0)
+                     folder = dataPath.left(index);
+             }
+            break;
+            case TupLibraryObject::Sound:
+             {
+                 objectHasSoundEffect = objectTag.attribute("soundEffect").toInt() ? true : false;
+                 playAt = objectTag.attribute("playAt").toInt();
+                 dataPath = objectTag.attribute("path");
+             }
+            break;
+            default:
+             {
+                 #ifdef TUP_DEBUG
+                     qDebug() << "[TupLibraryObject::fromXml()] - Unknown object type -> " << objectType;
+                 #endif
+
+                 return;
+             }
         }
     }
 }
@@ -343,6 +344,10 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
 
 bool TupLibraryObject::loadRawData(const QByteArray &data)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryObject::loadRawData()]";
+    #endif
+
     rawData = data;
 
     switch (objectType) {
@@ -369,8 +374,14 @@ bool TupLibraryObject::loadRawData(const QByteArray &data)
             break;
             case TupLibraryObject::Item:
             {
+                 QString input = QString::fromLocal8Bit(data);
+                 if (input.startsWith("<group")) {
+                     groupXml = input;
+                     isGroup = true;
+                 }
+
                  TupItemFactory factory;
-                 QGraphicsItem *item = factory.create(QString::fromLocal8Bit(data));
+                 QGraphicsItem *item = factory.create(input);
                  setData(QVariant::fromValue(item));
             }
             break;
@@ -635,4 +646,14 @@ void TupLibraryObject::setSoundEffectFlag(bool flag)
 bool TupLibraryObject::isSoundEffect()
 {
     return objectHasSoundEffect;
+}
+
+bool TupLibraryObject::isNativeGroup()
+{
+    return isGroup;
+}
+
+QString TupLibraryObject::getGroupXml() const
+{
+    return groupXml;
 }
