@@ -77,7 +77,7 @@ void TupProxyItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     if (realItem) {
         if (QGraphicsItemGroup *group = qgraphicsitem_cast<QGraphicsItemGroup *>(realItem)) {
             foreach (QGraphicsItem *child, group->childItems())
-                     child->paint(painter, option, widget);
+                child->paint(painter, option, widget);
         } else {
             realItem->paint(painter, option, widget);
         }

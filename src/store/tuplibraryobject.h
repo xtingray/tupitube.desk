@@ -100,6 +100,10 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         bool isNativeGroup();
         QString getGroupXml() const;
 
+        static QImage renderImage(const QString &xml, int width);
+        static QImage generateImage(QGraphicsItem *item, int width);
+        static QImage generateImage(const QString &xml, int width);
+
     public:
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;

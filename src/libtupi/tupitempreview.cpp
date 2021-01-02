@@ -34,11 +34,17 @@
  ***************************************************************************/
 
 #include "tupitempreview.h"
+#include "tupabstractserializable.h"
+#include "tupitemfactory.h"
+
+#include <QDomDocument>
+#include <QGraphicsScene>
 #include <QGraphicsItemGroup>
 
 TupItemPreview::TupItemPreview(QWidget *parent) : QWidget(parent)
 {
     item = new QGraphicsTextItem;
+    isNativeGroup = false;
     reset();
 }
 
@@ -78,7 +84,15 @@ void TupItemPreview::render(QGraphicsItem *item)
         proxy = new TupProxyItem(item);
     else
         proxy->setItem(item);
-    
+
+    isNativeGroup = false;
+    update();
+}
+
+void TupItemPreview::render(const QImage &img)
+{
+    previewImg = img;
+    isNativeGroup = true;
     update();
 }
 
@@ -99,7 +113,7 @@ void TupItemPreview::paintEvent(QPaintEvent *)
         QTransform matrix = proxy->sceneTransform();
         painter.setTransform(matrix);
 
-        QRectF rectangle(QPointF(0,0), size()); 
+        QRectF rectangle(QPointF(0,0), size());
         painter.setPen(QPen(Qt::gray, 0.5, Qt::SolidLine));
         painter.drawRect(rectangle);
 
@@ -109,29 +123,19 @@ void TupItemPreview::paintEvent(QPaintEvent *)
         int newPosX = 0;
         int newPosY = 0;
 
-        isNative = true;
-        itemWidth = proxy->item()->boundingRect().width();
-        itemHeight = proxy->item()->boundingRect().height();
-        newPosX = -proxy->item()->boundingRect().topLeft().x();
-        newPosY = -proxy->item()->boundingRect().topLeft().y();
-
-        /*
         if (QGraphicsPathItem *path = qgraphicsitem_cast<QGraphicsPathItem *>(proxy->item())) {
             isNative = true;
             itemWidth = path->path().boundingRect().width();
             itemHeight = path->path().boundingRect().height();
             newPosX = -path->path().boundingRect().topLeft().x();
             newPosY = -path->path().boundingRect().topLeft().y();
-        } else if (QGraphicsItemGroup *group = qgraphicsitem_cast<QGraphicsItemGroup *>(proxy->item())) {
+        } else if (isNativeGroup) {
             isNative = true;
-            itemWidth = group->boundingRect().width();
-            itemHeight = group->boundingRect().height();
-            // SQA: These coords don't work if the group has been edited
-            // A new algorithm must be developed here
-            newPosX = -group->boundingRect().topLeft().x();
-            newPosY = -group->boundingRect().topLeft().y();
+            itemWidth = previewImg.width();
+            itemHeight = previewImg.height();
+            newPosX = 0;
+            newPosY = 0;
         }
-        */
 
         // If preview is for a native object (path or group)
         if (isNative) {
@@ -161,14 +165,11 @@ void TupItemPreview::paintEvent(QPaintEvent *)
                 int posX = (widthRealLength - itemWidth)/2;  
                 int posY = (heightRealLength - itemHeight)/2;
                 painter.translate(posX + newPosX, posY + newPosY);
-
-                // painter.translate(newPosX, newPosY);
             } else { // if object is smaller than canvas, just show it
                 painter.translate((rect().width() - itemWidth)/2, (rect().height() - itemHeight)/2);
                 painter.translate(newPosX, newPosY);
             }
-        } else { 
-            // if preview is for images or svg objects
+        } else { // if preview is for images or svg objects
             // if object is bigger than canvas, resize
             if (opt.exposedRect.width() > rect().width() || opt.exposedRect.height() > rect().height()) {
                 float distance = 0;
@@ -206,10 +207,13 @@ void TupItemPreview::paintEvent(QPaintEvent *)
             }
         }
 
-        proxy->paint(&painter, &opt, this); // paint isn't const...
+        if (isNativeGroup)
+            painter.drawImage(previewImg.rect(), previewImg);
+        else
+            proxy->paint(&painter, &opt, this);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupItemPreview::paintEvent() - Warning: proxy is NULL]";
+            qDebug() << "[TupItemPreview::paintEvent()] - Warning: proxy is NULL]";
         #endif
     }
 }

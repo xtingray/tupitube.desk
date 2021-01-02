@@ -54,16 +54,20 @@ class TUPITUBE_EXPORT TupItemPreview : public QWidget
         TupItemPreview(QWidget *parent = nullptr);
         ~TupItemPreview();
 
-        void reset();        
+        void reset();
         void render(QGraphicsItem *item);
+        void render(const QImage &img);
+
         QSize sizeHint() const;
-        
+
     protected:
         void paintEvent(QPaintEvent *e);
         
     private:
         TupProxyItem *proxy;
         QGraphicsTextItem *item;
+        bool isNativeGroup;
+        QImage previewImg;
 };
 
 #endif

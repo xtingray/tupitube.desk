@@ -66,9 +66,11 @@ void TupItemFactory::setLibrary(const TupLibrary *assets)
 
 QGraphicsItem* TupItemFactory::createItem(const QString &root)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupItemFactory::createItem()] - root -> " << root;
     #endif
+    */
 
     QGraphicsItem* item = nullptr;
     type = TupItemFactory::Vectorial;

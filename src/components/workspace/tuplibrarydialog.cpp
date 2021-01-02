@@ -36,10 +36,13 @@
 #include "tuplibrarydialog.h"
 #include "tformfactory.h"
 #include "tosd.h"
+#include "tupitemfactory.h"
 
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
 #include <QHBoxLayout>
+
+#include <QGraphicsScene>
 
 TupLibraryDialog::TupLibraryDialog(TupLibrary *assets) : QDialog()
 {
@@ -79,8 +82,13 @@ TupLibraryDialog::~TupLibraryDialog()
 
 void TupLibraryDialog::addItem(QGraphicsItem *item)
 {
-    TupItemPreview *preview = new TupItemPreview;    
-    preview->render(item);
+    TupItemPreview *preview = new TupItemPreview;
+    if (qgraphicsitem_cast<QGraphicsItemGroup *>(item)) {
+        QImage img = TupLibraryObject::generateImage(item, (width() * 60)/100);
+        preview->render(img);
+    } else {
+        preview->render(item);
+    }
 
     QWidget *container = new QWidget;
 

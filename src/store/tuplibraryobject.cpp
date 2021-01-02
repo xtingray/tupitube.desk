@@ -39,6 +39,9 @@
 // #include "tupitemgroup.h"
 // #include "taudioplayer.h"
 
+#include <QGraphicsScene>
+#include <QPainter>
+
 TupLibraryObject::TupLibraryObject(QObject *parent) : QObject(parent)
 {
 }
@@ -439,8 +442,6 @@ bool TupLibraryObject::loadDataFromPath(const QString &dataDir)
 
     dataPath = dataDir + path + dataPath;
     return loadData(dataPath);
-
-    // return true;
 }
 
 bool TupLibraryObject::loadData(const QString &path)
@@ -656,4 +657,39 @@ bool TupLibraryObject::isNativeGroup()
 QString TupLibraryObject::getGroupXml() const
 {
     return groupXml;
+}
+
+QImage TupLibraryObject::renderImage(const QString &xml, int width)
+{
+    TupItemFactory factory;
+    QGraphicsItem *item = factory.create(xml);
+    QGraphicsScene *scene = new QGraphicsScene;
+    scene->addItem(item);
+
+    width = (width*60) / 100;
+    int height = (item->boundingRect().height() * width) / item->boundingRect().width();
+    QPixmap pixmap(width, height);
+    pixmap.fill(Qt::transparent);
+
+    QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::Antialiasing);
+    scene->render(&painter);
+
+    return pixmap.toImage();
+}
+
+QImage TupLibraryObject::generateImage(QGraphicsItem *item, int width)
+{
+    QDomDocument doc;
+    doc.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(doc));
+
+    return renderImage(doc.toString(), width);
+}
+
+QImage TupLibraryObject::generateImage(const QString &xml, int width)
+{
+    QDomDocument doc;
+    doc.setContent(xml);
+
+    return renderImage(doc.toString(), width);
 }

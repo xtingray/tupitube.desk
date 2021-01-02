@@ -159,6 +159,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void importNativeObject(const QString &object);
         QStringList naturalSort(QStringList photograms);
         void refreshItem(LibraryObjects collection);
+        // QPixmap groupImage(QGraphicsItem *item);
 
         QScreen *screen;
         TupLibrary *library;
@@ -179,6 +180,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         QList<QString> editorItems;
         bool isEffectSound;
         TupLibraryObject *currentSound;
+        QMap<QString, QImage> nativeMap;
 
         struct Frame
         {

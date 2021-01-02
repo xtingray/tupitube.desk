@@ -72,6 +72,11 @@ void TupLibraryDisplay::render(QGraphicsItem *item)
     previewPanel->render(item);
 }
 
+void TupLibraryDisplay::render(const QImage &img)
+{
+    previewPanel->render(img);
+}
+
 void TupLibraryDisplay::showDisplay()
 {
     if (!previewPanel->isVisible()) {

@@ -74,7 +74,7 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
     /*
     if (xml.isEmpty()) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupCommandExecutor::createItem() - Fatal Error: xml content is empty!";
+            qDebug() << "[TupCommandExecutor::createItem()] - Fatal Error: xml content is empty!";
         #endif
 
         return false;
@@ -95,7 +95,7 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
                                 response->setItemIndex(frame->svgItemsCount()-1);
                             } else {                            
                                 #ifdef TUP_DEBUG
-                                    qDebug() << "TupCommandExecutor::createItem() - Error: Svg object is invalid!";
+                                    qDebug() << "[TupCommandExecutor::createItem()] - Error: Svg object is invalid!";
                                 #endif                            
                                 return false;
                             }
@@ -109,7 +109,7 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
                                 response->setItemIndex(frame->graphicsCount()-1);
                             } else {
                                 #ifdef TUP_DEBUG
-                                    qDebug() << "TupCommandExecutor::createItem() - Error: QGraphicsItem object is invalid!";
+                                    qDebug() << "[TupCommandExecutor::createItem()] - Error: QGraphicsItem object is invalid!";
                                 #endif    
                                 return false;
                             }
@@ -122,13 +122,15 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
                     emit responsed(response);
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::createItem() - Error: Frame index doesn't exist! -> " + QString::number(frameIndex);
+                        qDebug() << "[TupCommandExecutor::createItem()] - Error: Frame index doesn't exist! -> "
+                                 << frameIndex;
                     #endif    
                     return false;
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupCommandExecutor::createItem() - Error: Layer index doesn't exist! -> " + QString::number(layerIndex);
+                    qDebug() << "[TupCommandExecutor::createItem()] - Error: Layer index doesn't exist! -> "
+                             << layerIndex;
                 #endif
                 return false;
             }
@@ -144,7 +146,7 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
                     frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::createItem() - Error: Invalid mode!";
+                        qDebug() << "[TupCommandExecutor::createItem()] - Error: Invalid mode!";
                     #endif    
                     return false;
                 }
@@ -157,7 +159,7 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
                                 response->setItemIndex(frame->indexOf(svg));
                             } else {
                                 #ifdef TUP_DEBUG
-                                    qDebug() << "TupCommandExecutor::createItem() - Error: Svg object is invalid!";
+                                    qDebug() << "[TupCommandExecutor::createItem()] - Error: Svg object is invalid!";
                                 #endif    
                                 return false;
                             }
@@ -171,7 +173,7 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
                                 response->setItemIndex(frame->indexOf(item));
                             } else {
                                 #ifdef TUP_DEBUG
-                                    qDebug() << "TupCommandExecutor::createItem() - Error: QGraphicsItem object is invalid!";
+                                    qDebug() << "[TupCommandExecutor::createItem()] - Error: QGraphicsItem object is invalid!";
                                 #endif    
                                 return false;
                             }
@@ -183,13 +185,13 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
                     emit responsed(response);
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::createItem() - Error: Invalid background frame!";
+                        qDebug() << "[TupCommandExecutor::createItem()] - Error: Invalid background frame!";
                     #endif    
                     return false;
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupCommandExecutor::createItem() - Error: Invalid background data structure!";
+                    qDebug() << "[TupCommandExecutor::createItem()] - Error: Invalid background data structure!";
                 #endif                
                 return false;
             }
@@ -197,7 +199,7 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
 
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupCommandExecutor::createItem() - Error: Invalid scene index!";
+            qDebug() << "[TupCommandExecutor::createItem()] - Error: Invalid scene index!";
         #endif    
         return false;
     }
@@ -246,14 +248,16 @@ bool TupCommandExecutor::removeItem(TupItemResponse *response)
                             return true;
                         } else {
                             #ifdef TUP_DEBUG
-                                qDebug() << "TupCommandExecutor::removeItem() - Error: Invalid object index (value: " + QString::number(response->getItemIndex()) + ")";
+                                qDebug() << "[TupCommandExecutor::removeItem()] - Error: Invalid object index (value: "
+                                         << response->getItemIndex() << ")";
                             #endif                                
                             return false;
                         }
                     }
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::removeItem() - Error: Invalid frame index (value: " + QString::number(frameIndex) + ")";
+                        qDebug() << "[TupCommandExecutor::removeItem()] - Error: Invalid frame index (value: "
+                                 << frameIndex << ")";
                     #endif
                     return false;
                 }
@@ -270,7 +274,7 @@ bool TupCommandExecutor::removeItem(TupItemResponse *response)
                     frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::removeItem() - Error: Invalid mode!";
+                        qDebug() << "[TupCommandExecutor::removeItem()] - Error: Invalid mode!";
                     #endif
                     return false;
                 }
@@ -285,13 +289,13 @@ bool TupCommandExecutor::removeItem(TupItemResponse *response)
                     return true;
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::removeItem() - Error: Invalid background frame!";
+                        qDebug() << "[TupCommandExecutor::removeItem()] - Error: Invalid background frame!";
                     #endif
                     return false;
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupCommandExecutor::removeItem() - Error: Invalid background data structure!";
+                    qDebug() << "[TupCommandExecutor::removeItem()] - Error: Invalid background data structure!";
                 #endif
                 return false;
             }
@@ -299,7 +303,7 @@ bool TupCommandExecutor::removeItem(TupItemResponse *response)
 
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupCommandExecutor::removeItem() - Error: Invalid scene index!";
+            qDebug() << "[TupCommandExecutor::removeItem()] - Error: Invalid scene index!";
         #endif
         return false;
     }
@@ -353,7 +357,7 @@ bool TupCommandExecutor::moveItem(TupItemResponse *response)
                     frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::moveItem() - Error: Invalid mode!";
+                        qDebug() << "[TupCommandExecutor::moveItem()] - Error: Invalid mode!";
                     #endif
                     return false;
                 }
@@ -365,13 +369,13 @@ bool TupCommandExecutor::moveItem(TupItemResponse *response)
                     }
                 } else {                    
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::moveItem() - Error: Invalid background frame!";
+                        qDebug() << "[TupCommandExecutor::moveItem()] - Error: Invalid background frame!";
                     #endif
                     return false;
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupCommandExecutor::moveItem() - Error: Invalid background data structure!";
+                    qDebug() << "[TupCommandExecutor::moveItem()] - Error: Invalid background data structure!";
                 #endif
                 return false;
             }
@@ -427,7 +431,7 @@ bool TupCommandExecutor::groupItems(TupItemResponse *response)
                     frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::groupItems() - Error: Invalid mode!";
+                        qDebug() << "[TupCommandExecutor::groupItems()] - Error: Invalid mode!";
                     #endif                    
                     return false;
                 }
@@ -446,14 +450,14 @@ bool TupCommandExecutor::groupItems(TupItemResponse *response)
                     return true;
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::groupItems() - Error: Invalid background frame!";
+                        qDebug() << "[TupCommandExecutor::groupItems()] - Error: Invalid background frame!";
                     #endif 
                     return false;
                 }
 
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupCommandExecutor::groupItems() - Error: Invalid background data structure!";
+                    qDebug() << "[TupCommandExecutor::groupItems()] - Error: Invalid background data structure!";
                 #endif
                 return false;
             }
@@ -492,7 +496,7 @@ bool TupCommandExecutor::ungroupItems(TupItemResponse *response)
                                  strItems += " , "+ QString::number(frame->indexOf(item));
                          } else {
                              #ifdef TUP_DEBUG
-                                 qDebug() << "TupCommandExecutor::ungroupItems() - Error: Item wasn't found at frame!";
+                                 qDebug() << "[TupCommandExecutor::ungroupItems()] - Error: Item wasn't found at frame!";
                              #endif
                          }
                     }
@@ -515,7 +519,7 @@ bool TupCommandExecutor::ungroupItems(TupItemResponse *response)
                     frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::ungroupItems() - Error: Invalid mode!";
+                        qDebug() << "[TupCommandExecutor::ungroupItems()] - Error: Invalid mode!";
                     #endif
                     return false;
                 }
@@ -524,16 +528,16 @@ bool TupCommandExecutor::ungroupItems(TupItemResponse *response)
                     QString strItems = "";
                     QList<QGraphicsItem *> items = frame->splitGroup(itemIndex);
                     foreach (QGraphicsItem *item, items) {
-                             if (frame->indexOf(item) != -1) {
-                                 if (strItems.isEmpty())
-                                     strItems += "("+ QString::number(frame->indexOf(item));
-                                 else
-                                     strItems += " , "+ QString::number(frame->indexOf(item));
-                             } else {
-                                 #ifdef TUP_DEBUG
-                                     qDebug() << "TupCommandExecutor::ungroupItems() - Error: Item wasn't found at static/dynamic frame!";
-                                 #endif
-                             }
+                         if (frame->indexOf(item) != -1) {
+                             if (strItems.isEmpty())
+                                 strItems += "("+ QString::number(frame->indexOf(item));
+                             else
+                                 strItems += " , "+ QString::number(frame->indexOf(item));
+                         } else {
+                             #ifdef TUP_DEBUG
+                                 qDebug() << "[TupCommandExecutor::ungroupItems()] - Error: Item wasn't found at static/dynamic frame!";
+                             #endif
+                         }
                     }
                     strItems+= ")";
                     response->setArg(strItems);
@@ -541,14 +545,14 @@ bool TupCommandExecutor::ungroupItems(TupItemResponse *response)
                     return true;
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::ungroupItems() - Error: Invalid background frame!";
+                        qDebug() << "[TupCommandExecutor::ungroupItems()] - Error: Invalid background frame!";
                     #endif
                     return false;
                 }
 
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupCommandExecutor::ungroupItems() - Error: Invalid background data structure!";
+                    qDebug() << "[TupCommandExecutor::ungroupItems()] - Error: Invalid background data structure!";
                 #endif
                 return false;
             }
@@ -595,7 +599,7 @@ static QGraphicsItem *convert(QGraphicsItem *item, int toType)
             default:
             {
                 #ifdef TUP_DEBUG
-                    qWarning() << "TupCommandExecutor::convert() - Error: Unknown item type -> " + QString::number(toType);
+                    qWarning() << "[TupCommandExecutor::convert()] - Error: Unknown item type -> " << toType;
                 #endif
             }
     }
@@ -660,7 +664,7 @@ bool TupCommandExecutor::convertItem(TupItemResponse *response)
                     frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::convertItem() - Error: Invalid mode!";
+                        qDebug() << "[TupCommandExecutor::convertItem()] - Error: Invalid mode!";
                     #endif
                     return false;
                 }
@@ -685,19 +689,19 @@ bool TupCommandExecutor::convertItem(TupItemResponse *response)
                         }
                     } else {
                         #ifdef TUP_DEBUG
-                            qDebug() << "TupCommandExecutor::convertItem() - Error: Invalid item index!";
+                            qDebug() << "[TupCommandExecutor::convertItem()] - Error: Invalid item index!";
                         #endif
                         return false;
                     }
                 } else {                    
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::convertItem() - Error: Invalid background frame!";
+                        qDebug() << "[TupCommandExecutor::convertItem()] - Error: Invalid background frame!";
                     #endif
                     return false;
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupCommandExecutor::convertItem() - Error: Invalid background data structure!";
+                    qDebug() << "[TupCommandExecutor::convertItem()] - Error: Invalid background data structure!";
                 #endif
                 return false;
             }
@@ -767,7 +771,7 @@ bool TupCommandExecutor::transformItem(TupItemResponse *response)
                     frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::transformItem() - Error: Invalid spaceMode!";
+                        qDebug() << "[TupCommandExecutor::transformItem()] - Error: Invalid spaceMode!";
                     #endif
                     return false;
                 }
@@ -795,19 +799,19 @@ bool TupCommandExecutor::transformItem(TupItemResponse *response)
                         return true;
                     } else {
                         #ifdef TUP_DEBUG
-                            qDebug() << "TupCommandExecutor::transformItem() - Error: Invalid item index!";
+                            qDebug() << "[TupCommandExecutor::transformItem()] - Error: Invalid item index!";
                         #endif
                         return false;
                     }
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::transformItem() - Error: Invalid background frame!";
+                        qDebug() << "[TupCommandExecutor::transformItem()] - Error: Invalid background frame!";
                     #endif
                     return false;
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupCommandExecutor::transformItem() - Error: Invalid background data structure!";
+                    qDebug() << "[TupCommandExecutor::transformItem()] - Error: Invalid background data structure!";
                 #endif
                 return false;
             }
@@ -855,7 +859,8 @@ bool TupCommandExecutor::setPathItem(TupItemResponse *response)
                         return true;
                     } else {
                         #ifdef TUP_DEBUG
-                            qDebug() << "TupCommandExecutor::setPathItem() - Invalid path item at index -> " + QString::number(itemIndex);
+                            qDebug() << "[TupCommandExecutor::setPathItem()] - Invalid path item at index -> "
+                                     << itemIndex;
                         #endif
                         return false;
                     }
@@ -873,7 +878,7 @@ bool TupCommandExecutor::setPathItem(TupItemResponse *response)
                     frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::setPathItem() - Error: Invalid mode!";
+                        qDebug() << "[TupCommandExecutor::setPathItem()] - Error: Invalid mode!";
                     #endif
                     return false;
                 }
@@ -894,20 +899,21 @@ bool TupCommandExecutor::setPathItem(TupItemResponse *response)
                         return true;
                     } else {
                         #ifdef TUP_DEBUG
-                            qDebug() << "TupCommandExecutor::setPathItem() - Invalid path item at index -> " + QString::number(itemIndex);
+                            qDebug() << "[TupCommandExecutor::setPathItem()] - Invalid path item at index -> "
+                                     << itemIndex;
                         #endif
                         return false;
                     }
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::setPathItem() - Error: Invalid background frame!";
+                        qDebug() << "[TupCommandExecutor::setPathItem()] - Error: Invalid background frame!";
                     #endif
                     return false;
                 }
 
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupCommandExecutor::setPathItem() - Error: Invalid background data structure!";
+                    qDebug() << "[TupCommandExecutor::setPathItem()] - Error: Invalid background data structure!";
                 #endif
                 return false;
             }
@@ -947,7 +953,8 @@ bool TupCommandExecutor::setTween(TupItemResponse *response)
                         scene->addTweenObject(layerIndex, object);
                     } else {
                         #ifdef TUP_DEBUG
-                            qDebug() << "TupCommandExecutor::setTween() - Error: Invalid graphic index -> " + QString::number(itemIndex);
+                            qDebug() << "[TupCommandExecutor::setTween()] - Error: Invalid graphic index -> "
+                                     << itemIndex;
                         #endif
                         return false;
                     }
@@ -958,8 +965,8 @@ bool TupCommandExecutor::setTween(TupItemResponse *response)
                         scene->addTweenObject(layerIndex, svg);
                     } else {
                         #ifdef TUP_DEBUG
-                            qDebug() << "TupCommandExecutor::setTween() - Error: Invalid svg index -> "
-                                        + QString::number(itemIndex);
+                            qDebug() << "[TupCommandExecutor::setTween()] - Error: Invalid svg index -> "
+                                     << itemIndex;
                         #endif
                         return false;
                     }
@@ -1033,7 +1040,7 @@ bool TupCommandExecutor::setBrush(TupItemResponse *response)
                     frame = bg->vectorDynamicFrame();
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::setBrush() - Error: Invalid mode!";
+                        qDebug() << "[TupCommandExecutor::setBrush()] - Error: Invalid mode!";
                     #endif
                     return false;
                 }
@@ -1054,19 +1061,19 @@ bool TupCommandExecutor::setBrush(TupItemResponse *response)
                         return true;
                     } else {
                         #ifdef TUP_DEBUG
-                            qDebug() << "TupCommandExecutor::setBrush() - Invalid path item at index -> " + QString::number(itemIndex);
+                            qDebug() << "[TupCommandExecutor::setBrush()] - Invalid path item at index -> " << itemIndex;
                         #endif
                         return false;
                     }
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::setBrush() - Error: Invalid background frame!";
+                        qDebug() << "[TupCommandExecutor::setBrush()] - Error: Invalid background frame!";
                     #endif
                     return false;
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupCommandExecutor::setBrush() - Error: Invalid background data structure!";
+                    qDebug() << "[TupCommandExecutor::setBrush()] - Error: Invalid background data structure!";
                 #endif
                 return false;
             }
@@ -1125,7 +1132,7 @@ bool TupCommandExecutor::setPen(TupItemResponse *response)
                     frame = bg->vectorForegroundFrame();
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::setPen() - Error: Invalid mode!";
+                        qDebug() << "[TupCommandExecutor::setPen()] - Error: Invalid mode!";
                     #endif
                     return false;
                 }
@@ -1146,19 +1153,19 @@ bool TupCommandExecutor::setPen(TupItemResponse *response)
                         return true;
                     } else {
                         #ifdef TUP_DEBUG
-                            qDebug() << "TupCommandExecutor::setPen() - Invalid path item at index -> " + QString::number(itemIndex);
+                            qDebug() << "[TupCommandExecutor::setPen()] - Invalid path item at index -> " << itemIndex;
                         #endif
                         return false;
                     }
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "TupCommandExecutor::setPen() - Error: Invalid background frame!";
+                        qDebug() << "[TupCommandExecutor::setPen()] - Error: Invalid background frame!";
                     #endif
                     return false;
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupCommandExecutor::setPen() - Error: Invalid background data structure!";
+                    qDebug() << "[TupCommandExecutor::setPen()] - Error: Invalid background data structure!";
                 #endif
                 return false;
             }

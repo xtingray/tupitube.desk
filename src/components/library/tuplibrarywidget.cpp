@@ -286,17 +286,10 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                 case TupLibraryObject::Item:
                    {
                      display->showDisplay();
-                     if (object->isNativeGroup()) {
-                         QString data = object->getGroupXml();
-                         // qDebug() << "";
-                         // qDebug() << "GROUP:";
-                         // qDebug() << data;
-                         TupItemFactory factory;
-                         QGraphicsItem *group = factory.create(data);
-                         display->render(group);
-                     } else { // Single item
+                     if (object->isNativeGroup())
+                         display->render(nativeMap[objectName]);
+                     else
                          display->render(qvariant_cast<QGraphicsItem *>(object->getData()));
-                     }
 
                      /* SQA: Just a test
                      TupSymbolEditor *editor = new TupSymbolEditor;
@@ -1043,8 +1036,16 @@ void TupLibraryWidget::importNativeObjects()
 
 void TupLibraryWidget::importNativeObject(const QString &object)
 {
-    if (object.isEmpty())
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::importNativeObject()]";
+    #endif
+
+    if (object.isEmpty()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryWidget::importNativeObject()] - Error: object data is empty!";
+        #endif
         return;
+    }
 
     QFile file(object);
     if (file.open(QIODevice::ReadOnly)) {
@@ -1054,6 +1055,9 @@ void TupLibraryWidget::importNativeObject(const QString &object)
         key = key.replace(")","_");
         QByteArray data = file.readAll();
         file.close();
+
+        if (object.startsWith("<group"))
+            nativeMap[key] = TupLibraryObject::generateImage(object, width());
 
         #ifdef TUP_DEBUG
             qDebug() << "[TupLibraryWidget::importNativeObject()] - Inserting native object into project -> "
@@ -1412,147 +1416,154 @@ void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
 
 void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::libraryResponse()]";
+    #endif
+
     RETURN_IF_NOT_LIBRARY;
 
     switch (response->getAction()) {
-            case TupProjectRequest::Add:
-              {
-                 if (response->symbolType() == TupLibraryObject::Folder) {
-                     libraryTree->createFolder(response->getArg().toString());
-                     return;
+        case TupProjectRequest::Add:
+          {
+             if (response->symbolType() == TupLibraryObject::Folder) {
+                 libraryTree->createFolder(response->getArg().toString());
+                 return;
+             }
+
+             QString folderName = response->getParent();
+             QString id = response->getArg().toString();
+
+             int index = id.lastIndexOf(".");
+             QString name = id.mid(0, index);
+             QString extension = id.mid(index + 1, id.length() - index).toUpper();
+             TupLibraryObject *obj = library->getObject(id);
+
+             if (index < 0)
+                 extension = "TOBJ";
+
+             QTreeWidgetItem *item;
+             if (folderName.length() > 0 && folderName.compare("library") != 0)
+                 item = new QTreeWidgetItem(libraryTree->getFolder(folderName));
+             else
+                 item = new QTreeWidgetItem(libraryTree);
+
+             item->setText(1, name);
+             item->setText(2, extension);
+             item->setText(3, id);
+             item->setFlags(item->flags() | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
+
+             if (obj) {
+                 switch (obj->getType()) {
+                     case TupLibraryObject::Item:
+                       {
+                         if (obj->isNativeGroup())
+                             nativeMap[id] = TupLibraryObject::generateImage(obj->getGroupXml(), width());
+
+                         item->setIcon(0, QIcon(THEME_DIR + "icons/drawing_object.png"));
+                         libraryTree->setCurrentItem(item);
+                         previewItem(item);
+                         if (!isNetworked && !library->isLoadingProject())
+                             insertObjectInWorkspace();
+                       }
+                     break;
+                     case TupLibraryObject::Image:
+                       {
+                         item->setIcon(0, QIcon(THEME_DIR + "icons/bitmap.png"));
+                         libraryTree->setCurrentItem(item);
+                         previewItem(item);
+                         if (!isNetworked && !folderName.endsWith(".pgo") && !library->isLoadingProject()
+                             && folderName.compare(tr("Raster Objects")) != 0)
+                             insertObjectInWorkspace();
+                       }
+                     break;
+                     case TupLibraryObject::Svg:
+                       {
+                         item->setIcon(0, QIcon(THEME_DIR + "icons/svg.png"));
+                         libraryTree->setCurrentItem(item);
+                         previewItem(item);
+                         if (!isNetworked && !library->isLoadingProject())
+                             insertObjectInWorkspace();
+                       }
+                     break;
+                     case TupLibraryObject::Sound:
+                       {
+                         TupLibraryObject *object = library->getObject(id);
+                         if (object) {
+                             if (isEffectSound) {
+                                 object->setSoundEffectFlag(true);
+                                 isEffectSound = false;
+                             }
+                         }
+
+                         item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
+                         libraryTree->setCurrentItem(item);
+                         previewItem(item);
+                       }
+                     break;
+                     default:
+                       {
+                       }
+                     break;
                  }
 
-                 QString folderName = response->getParent(); 
-                 QString id = response->getArg().toString();
-
-                 int index = id.lastIndexOf(".");
-                 QString name = id.mid(0, index);
-                 QString extension = id.mid(index + 1, id.length() - index).toUpper();
-                 TupLibraryObject *obj = library->getObject(id);
-
-                 if (index < 0)
-                     extension = "TOBJ"; 
-
-                 QTreeWidgetItem *item;
-                 if (folderName.length() > 0 && folderName.compare("library")!=0)
-                     item = new QTreeWidgetItem(libraryTree->getFolder(folderName));
-                 else
-                     item = new QTreeWidgetItem(libraryTree);
-
-                 item->setText(1, name);
-                 item->setText(2, extension);
-                 item->setText(3, id);
-                 item->setFlags(item->flags() | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
-
-                 if (obj) {
-                     switch (obj->getType()) {
-                            case TupLibraryObject::Item:
-                               {
-                                 item->setIcon(0, QIcon(THEME_DIR + "icons/drawing_object.png"));
-                                 libraryTree->setCurrentItem(item);
-                                 previewItem(item);
-                                 if (!isNetworked && !library->isLoadingProject())
-                                     insertObjectInWorkspace();
-                               }
-                            break;
-                            case TupLibraryObject::Image:
-                               {
-                                 item->setIcon(0, QIcon(THEME_DIR + "icons/bitmap.png"));
-                                 libraryTree->setCurrentItem(item);
-                                 previewItem(item);
-                                 if (!isNetworked && !folderName.endsWith(".pgo") && !library->isLoadingProject()
-                                     && folderName.compare(tr("Raster Objects")) != 0)
-                                     insertObjectInWorkspace();
-                               }
-                            break;
-                            case TupLibraryObject::Svg:
-                               {
-                                 item->setIcon(0, QIcon(THEME_DIR + "icons/svg.png"));
-                                 libraryTree->setCurrentItem(item);
-                                 previewItem(item);
-                                 if (!isNetworked && !library->isLoadingProject())
-                                     insertObjectInWorkspace();
-                               }
-                            break;
-                            case TupLibraryObject::Sound:
-                               {
-                                 TupLibraryObject *object = library->getObject(id);
-                                 if (object) {
-                                     if (isEffectSound) {
-                                         object->setSoundEffectFlag(true);
-                                         isEffectSound = false;
-                                     }
-                                 }
-
-                                 item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
-                                 libraryTree->setCurrentItem(item);
-                                 previewItem(item);
-                               }
-                            break;
-                            default:
-                               {
-                               }
-                            break;
-                     }
-
-                 } else {
-                     #ifdef TUP_DEBUG
-                         qDebug() << "[TupLibraryWidget::libraryResponse()] - No object found: " << id;
-                     #endif
-                 }
-              }
-            break;
-            case TupProjectRequest::InsertSymbolIntoFrame:
-              {
+             } else {
                  #ifdef TUP_DEBUG
-                     qDebug() << "[TupLibraryWidget::libraryResponse()] - InsertSymbolIntoFrame -> No action taken";
+                     qDebug() << "[TupLibraryWidget::libraryResponse()] - No object found: " << id;
                  #endif
-              }
-            break;
-            case TupProjectRequest::RemoveSymbolFromFrame:
-              {
-                 #ifdef TUP_DEBUG
-                     qDebug() << "[TupLibraryWidget::libraryResponse()] - RemoveSymbolFromFrame -> No action taken";
-                 #endif
-              }
-            break;
-            case TupProjectRequest::Remove:
-              {
-                 QString id = response->getArg().toString();
-                 QTreeWidgetItemIterator it(libraryTree);
-                 while ((*it)) {
-                        // If target is NOT a folder
-                        if ((*it)->text(2).length() > 0) {
-                            if (id == (*it)->text(3)) {
-                                delete (*it);
-                                break;
-                            }
-                        } else {
-                            // If target is a folder
-                            if (id == (*it)->text(1)) {
-                                delete (*it);
-                                break;
-                            }
+             }
+          }
+        break;
+        case TupProjectRequest::InsertSymbolIntoFrame:
+          {
+             #ifdef TUP_DEBUG
+                 qDebug() << "[TupLibraryWidget::libraryResponse()] - InsertSymbolIntoFrame -> No action taken";
+             #endif
+          }
+        break;
+        case TupProjectRequest::RemoveSymbolFromFrame:
+          {
+             #ifdef TUP_DEBUG
+                 qDebug() << "[TupLibraryWidget::libraryResponse()] - RemoveSymbolFromFrame -> No action taken";
+             #endif
+          }
+        break;
+        case TupProjectRequest::Remove:
+          {
+             QString id = response->getArg().toString();
+             QTreeWidgetItemIterator it(libraryTree);
+             while ((*it)) {
+                    // If target is NOT a folder
+                    if ((*it)->text(2).length() > 0) {
+                        if (id == (*it)->text(3)) {
+                            delete (*it);
+                            break;
                         }
-                        ++it;
-                 }
+                    } else {
+                        // If target is a folder
+                        if (id == (*it)->text(1)) {
+                            delete (*it);
+                            break;
+                        }
+                    }
+                    ++it;
+             }
 
-                 if (libraryTree->topLevelItemCount() > 0) {
-                     previewItem(libraryTree->currentItem());
-                 } else  {
-                     display->showDisplay();
-                     display->reset();
-                 }
-              }
-            break;
-            default:
-              {
-                 #ifdef TUP_DEBUG
-                     qDebug() << "[TupLibraryWidget::libraryResponse()] - Unknown/Unhandled project action -> "
-                                 << response->getAction();
-                 #endif
-              }
-            break;
+             if (libraryTree->topLevelItemCount() > 0) {
+                 previewItem(libraryTree->currentItem());
+             } else  {
+                 display->showDisplay();
+                 display->reset();
+             }
+          }
+        break;
+        default:
+          {
+             #ifdef TUP_DEBUG
+                 qDebug() << "[TupLibraryWidget::libraryResponse()] - Unknown/Unhandled project action -> "
+                             << response->getAction();
+             #endif
+          }
+        break;
     }
 }
 
