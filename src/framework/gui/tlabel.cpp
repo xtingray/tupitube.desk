@@ -37,15 +37,16 @@
 
 TLabel::TLabel(QWidget *parent, Qt::WindowFlags flags)
 {
-   Q_UNUSED(parent);
-   Q_UNUSED(flags);
+   Q_UNUSED(parent)
+   Q_UNUSED(flags)
 }
 
 TLabel::TLabel(const QString &text, QWidget *parent, Qt::WindowFlags flags)
 {
-   Q_UNUSED(text);
-   Q_UNUSED(parent);
-   Q_UNUSED(flags);
+   Q_UNUSED(parent)
+   Q_UNUSED(flags)
+
+   setText(text);
 }
 
 TLabel::~TLabel()

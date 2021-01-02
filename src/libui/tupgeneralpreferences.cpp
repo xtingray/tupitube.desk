@@ -560,7 +560,7 @@ int TupGeneralPreferences::getLangIndex()
 bool TupGeneralPreferences::getAutoSaveFlag()
 {
     TCONFIG->beginGroup("General");
-    return TCONFIG->value("AutoSave", "false").toBool();
+    return TCONFIG->value("AutoSave", "true").toBool();
 }
 
 int TupGeneralPreferences::getAutoSaveTime()

@@ -63,6 +63,7 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         void assetStored(const QString &name, const QString &extension, int extensionId, QByteArray &data);
 
     private slots:
+        void setSupportTab();
         void startSearch();
         void startSearchFromCombo();
         void processResult(QNetworkReply *reply);
@@ -100,6 +101,7 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         QLabel *license;
         QLabel *licenseUrl;
         QLabel *progressLabel;
+        QLabel *noResultLabel;
         QProgressBar *progressBar;
 
         TCollapsibleWidget *dynamicPanel;
@@ -111,7 +113,7 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         QString dimension;
         QString assetType;
         int itemsCounter;
-        // QStringList currentCode;
+        QString linkStyle;
 
         struct AssetRecord {
             QString description;

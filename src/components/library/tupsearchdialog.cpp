@@ -36,6 +36,7 @@
 #include "tupsearchdialog.h"
 #include "tosd.h"
 #include "tconfig.h"
+#include "tlabel.h"
 
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
@@ -48,7 +49,6 @@
 #include <QUrlQuery>
 #include <QNetworkReply>
 #include <QBuffer>
-
 #include <QDomDocument>
 
 TupSearchDialog::TupSearchDialog(const QSize &size, QWidget *parent) : QDialog(parent)
@@ -104,6 +104,7 @@ TupSearchDialog::~TupSearchDialog()
 
 QWidget * TupSearchDialog::searchTab()
 {
+    linkStyle = "style=\"color:#0064be;\">";
     QWidget *searchWidget = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout(searchWidget);
 
@@ -249,15 +250,35 @@ QWidget * TupSearchDialog::searchTab()
     progressLayout->addWidget(innerProgressPanel, Qt::AlignCenter);
 
     QWidget *noResultPanel = new QWidget;
+    noResultPanel->setStyleSheet("background-color:#c8c8c8; border-radius: 10px;");
     QVBoxLayout *noResultLayout = new QVBoxLayout(noResultPanel);
-    QLabel *noResultLabel = new QLabel(tr("No Results"));
+
+    noResultLabel = new QLabel;
     QFont font = noResultLabel->font();
-    font.setPointSize(20);
+    font.setPointSize(18);
     font.setBold(true);
     noResultLabel->setFont(font);
+    noResultLabel->setAlignment(Qt::AlignHCenter);
 
-    noResultLabel->setAlignment(Qt::AlignCenter);
+    QLabel *descLabel = new QLabel(tr("But we are working on new assets..."));
+    descLabel->setAlignment(Qt::AlignHCenter);
+    font.setPointSize(14);
+    font.setBold(false);
+    descLabel->setFont(font);
+
+    TLabel *supportLabel = new TLabel("<a href=\"https://tupitube.com\" " + linkStyle + tr("Want to support us?") + "</a>");
+    supportLabel->setAlignment(Qt::AlignHCenter);
+    // font.setUnderline(true);
+    supportLabel->setFont(font);
+    supportLabel->setTextFormat(Qt::RichText);
+    supportLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    connect(supportLabel, SIGNAL(clicked()), this, SLOT(setSupportTab()));
+
+    noResultLayout->addStretch();
     noResultLayout->addWidget(noResultLabel);
+    noResultLayout->addWidget(descLabel);
+    noResultLayout->addWidget(supportLabel);
+    noResultLayout->addStretch();
 
     dynamicPanel = new TCollapsibleWidget;
     dynamicPanel->addWidget(resultPanel);
@@ -320,6 +341,11 @@ QWidget * TupSearchDialog::patreonTab()
     layout->addStretch();
 
     return patreonWidget;
+}
+
+void TupSearchDialog::setSupportTab()
+{
+    tabWidget->setCurrentIndex(1);
 }
 
 void TupSearchDialog::startSearchFromCombo()
@@ -466,6 +492,7 @@ void TupSearchDialog::loadAssets(const QString &input)
             #ifdef TUP_DEBUG
                 qDebug() << "[TupSearchDialog::loadAssets()] - No recourds found!";
             #endif
+            noResultLabel->setText("No Results for \"" + pattern + "\" YET!");
             resetProgress(NoResult);
             return;
         }
@@ -689,7 +716,7 @@ void TupSearchDialog::updateAssetView(int index)
 
 void TupSearchDialog::setLabelLink(QLabel *label, const QString &url)
 {
-    label->setText("<a href=\"" + url + "\">" + url + "</a>");
+    label->setText("<a href=\"" + url + "\" " + linkStyle + ">" + url + "</a>");
     label->setTextFormat(Qt::RichText);
     label->setTextInteractionFlags(Qt::TextBrowserInteraction);
     label->setOpenExternalLinks(true);
