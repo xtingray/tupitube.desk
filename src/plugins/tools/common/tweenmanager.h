@@ -56,15 +56,14 @@
  * @author Gustav Gonzalez 
 */
 
-// class QListWidgetItem;
-
 class TUPITUBE_EXPORT TweenManager: public QWidget 
 {
     Q_OBJECT
 
     public:
-        TweenManager(QWidget *parent = 0);
+        TweenManager(QWidget *parent = nullptr);
         ~TweenManager();
+
         void loadTweenList(QList<QString> tweenList);
         void resetUI();
         QString currentTweenName() const;

@@ -57,7 +57,7 @@ class TUPITUBE_EXPORT Configurator : public QWidget
     public:
         enum Structure { Basic = 0, Axial, Organic };
 
-        Configurator(QWidget *parent = 0);
+        Configurator(QWidget *parent = nullptr);
         ~Configurator();
         int spacingValue();
         qreal sizeToleranceValue();

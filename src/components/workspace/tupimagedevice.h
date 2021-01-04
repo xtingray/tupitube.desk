@@ -48,7 +48,7 @@ class TUPITUBE_EXPORT TupImageDevice : public QWidget
     Q_OBJECT
 
     public:
-        TupImageDevice(QWidget *parent = 0);
+        TupImageDevice(QWidget *parent = nullptr);
         ~TupImageDevice();
 
         virtual QPaintEngine *paintEngine() const;

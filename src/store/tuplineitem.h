@@ -44,7 +44,7 @@
 class TUPITUBE_EXPORT TupLineItem : public QGraphicsLineItem, public TupAbstractSerializable
 {
     public:
-        TupLineItem(QGraphicsItem *parent = 0);
+        TupLineItem(QGraphicsItem *parent = nullptr);
         ~TupLineItem();
         
         virtual void fromXml(const QString &xml);

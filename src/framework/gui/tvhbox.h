@@ -52,8 +52,9 @@ class T_GUI_EXPORT TVHBox : public QFrame
 
     public:
         TVHBox(QWidget *parent, Qt::Orientation o);
-        TVHBox(QWidget *parent = 0, bool isVertical = true);
+        TVHBox(QWidget *parent = nullptr, bool isVertical = true);
         ~TVHBox();
+
         void moveWidgetUp(QWidget *);
         void moveWidgetDown(QWidget *);
         void switchWidgetsPosition(QWidget *first, QWidget *second);

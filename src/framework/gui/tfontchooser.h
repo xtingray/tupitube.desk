@@ -53,7 +53,7 @@ class T_GUI_EXPORT TFontChooser : public QFrame
     Q_OBJECT
 
     public:
-        TFontChooser(QWidget *parent = 0);
+        TFontChooser(QWidget *parent = nullptr);
         ~TFontChooser();
         void setCurrentFont(const QFont &font);
         void initFont();

@@ -65,8 +65,8 @@ class T_GUI_EXPORT TCellView : public QTableWidget
     Q_OBJECT
 
     public:
-        TCellView(int MAX_COLUMNS = 16, QWidget *parent = 0);
-        TCellView(int rows, int columns, int MAX_COLUMNS = 16, QWidget *parent = 0);
+        TCellView(int MAX_COLUMNS = 16, QWidget *parent = nullptr);
+        TCellView(int rows, int columns, int MAX_COLUMNS = 16, QWidget *parent = nullptr);
         ~TCellView();
 
         void setItemSize(int w, int h);

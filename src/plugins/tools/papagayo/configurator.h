@@ -56,7 +56,7 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
     public:
         enum GuiState { Manager = 1, Properties };
 
-        Configurator(QWidget *parent = 0);
+        Configurator(QWidget *parent = nullptr);
         ~Configurator();
 
         void loadLipSyncList(QList<QString> list);

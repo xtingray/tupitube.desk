@@ -44,8 +44,8 @@
 class TUPITUBE_EXPORT TupEllipseItem: public TupAbstractSerializable, public QGraphicsEllipseItem
 {
     public:
-        TupEllipseItem(QGraphicsItem *parent = 0);
-        TupEllipseItem(const QRectF &rect, QGraphicsItem *parent = 0);
+        TupEllipseItem(QGraphicsItem *parent = nullptr);
+        TupEllipseItem(const QRectF &rect, QGraphicsItem *parent = nullptr);
         ~TupEllipseItem();
 
         virtual void fromXml(const QString &xml);

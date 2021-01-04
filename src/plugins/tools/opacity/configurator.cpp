@@ -36,7 +36,6 @@
 #include "configurator.h"
 #include "tapplicationproperties.h"
 #include "tseparator.h"
-// #include "tosd.h"
 
 Configurator::Configurator(QWidget *parent) : QFrame(parent)
 {

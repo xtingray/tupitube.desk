@@ -55,7 +55,7 @@ class TUPITUBE_EXPORT TupLibrary : public TupLibraryFolder
             Folder
         };
 
-        TupLibrary(const QString &getId, TupProject *parent = 0);
+        TupLibrary(const QString &getId, TupProject *parent = nullptr);
         ~TupLibrary();
         
     public:

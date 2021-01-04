@@ -113,21 +113,21 @@ QList<TAction::ActionId> Tweener::keys() const
 void Tweener::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[Tweener::press()]";
+        qDebug() << "[ScaleTweener::press()]";
     #endif
 
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
-    Q_UNUSED(gScene);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
+    Q_UNUSED(gScene)
 }
 
 /* This method is executed while the mouse is pressed and on movement */
 
 void Tweener::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
-    Q_UNUSED(gScene);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
+    Q_UNUSED(gScene)
 }
 
 /* This method finishes the action started on the press method depending
@@ -137,26 +137,25 @@ void Tweener::move(const TupInputDeviceInformation *input, TupBrushManager *brus
 void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[Tweener::release()]";
+        qDebug() << "[ScaleTweener::release()]";
     #endif
 
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
 
     if (gScene->currentFrameIndex() == initFrame) {
         if (editMode == TupToolPlugin::Selection) {
             #ifdef TUP_DEBUG
-                qDebug() << "Scale Tweener::release() - Tracing selection mode";
+                qDebug() << "[ScaleTweener::release()] - Tracing selection mode";
             #endif
             if (gScene->selectedItems().size() > 0) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "Scale Tweener::release() - selection size -> " + QString::number(gScene->selectedItems().size());
+                    qDebug() << "[ScaleTweener::release()] - selection size -> " << gScene->selectedItems().size();
                 #endif
                 objects = gScene->selectedItems();
                 foreach (QGraphicsItem *item, objects) {
                     QString tip = item->toolTip();
                     if (tip.contains(tr("Scale"))) {
-                        // QDesktopWidget desktop;
                         QScreen *screen = QGuiApplication::screens().at(0);
                         QMessageBox msgBox;
                         msgBox.setWindowTitle(tr("Warning"));
@@ -176,7 +175,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 }
 
                 #ifdef TUP_DEBUG
-                    qDebug() << "Scale Tweener::release() - Notifying selection...";
+                    qDebug() << "[ScaleTweener::release()] - Notifying selection...";
                 #endif
                 configPanel->notifySelection(true);
 
@@ -188,7 +187,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 origin = rect.center();
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "Scale Tweener::release() - Selection mode: no items selected";
+                    qDebug() << "[ScaleTweener::release()] - Selection mode: no items selected";
                 #endif
             }
         }
@@ -245,9 +244,6 @@ void Tweener::aboutToChangeTool()
 
         return;
     }
-
-    // if (editMode == TupToolPlugin::Properties)
-    //     scene->removeItem(target);
 }
 
 /* This method defines the actions contained in this plugin */
@@ -283,11 +279,6 @@ void Tweener::updateScene(TupGraphicsScene *gScene)
 
        if (configPanel->startComboSize() < framesNumber)
            configPanel->initStartCombo(framesNumber, initFrame);
-
-       // int tweenLimit = initFrame + (configPanel->totalSteps() - 1);
-       // if (scene->currentFrameIndex() >= initFrame && scene->currentFrameIndex() <= tweenLimit) {
-       //     scene->addItem(target);
-       // }
     } else if (mode == TupToolPlugin::Add) {
         int total = framesCount();
 
@@ -336,7 +327,6 @@ int Tweener::framesCount()
 }
 
 /* This method clears selection */
-
 void Tweener::clearSelection()
 {
     if (objects.size() > 0) {
@@ -350,7 +340,6 @@ void Tweener::clearSelection()
 }
 
 /* This method disables object selection */
-
 void Tweener::disableSelection()
 {
     foreach (QGraphicsView *view, scene->views()) {
@@ -363,7 +352,6 @@ void Tweener::disableSelection()
 }
 
 /* This method initializes the "Select object" mode */
-
 void Tweener::setSelection()
 {
     editMode = TupToolPlugin::Selection;
@@ -389,7 +377,6 @@ void Tweener::setPropertiesMode()
 }
 
 /* This method resets this plugin */
-
 void Tweener::applyReset()
 {
     disableSelection();
@@ -404,7 +391,6 @@ void Tweener::applyReset()
 }
 
 /* This method applies to the project, the Tween created from this plugin */
-
 void Tweener::applyTween()
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
@@ -530,7 +516,6 @@ void Tweener::applyTween()
                                                     TupProjectRequest::Select, selection);
     emit requested(&request);
 
-
     setCurrentTween(name);
     TOsd::self()->display(TOsd::Info, tr("Tween %1 applied!").arg(name));
 
@@ -564,7 +549,7 @@ void Tweener::removeTweenFromProject(const QString &name)
         emit tweenRemoved();
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "Tweener::removeTweenFromProject() - Scale tween couldn't be removed -> " + name;
+            qDebug() << "[ScaleTweener::removeTweenFromProject()] - Scale tween couldn't be removed -> " << name;
         #endif
     }
 }
@@ -618,7 +603,7 @@ void Tweener::updateMode(TupToolPlugin::Mode currentMode)
             }
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "Tweener::updateMode() - Current tween pointer is NULL!";
+                qDebug() << "[ScaleTweener::updateMode()] - Current tween pointer is NULL!";
             #endif
         }
     }

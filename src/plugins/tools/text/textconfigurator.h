@@ -52,7 +52,7 @@ class TUPITUBE_PLUGIN TextConfigurator : public QWidget
     Q_OBJECT
 
     public:
-        TextConfigurator(QWidget *parent = 0);
+        TextConfigurator(QWidget *parent = nullptr);
         ~TextConfigurator();
 
         QString text() const;

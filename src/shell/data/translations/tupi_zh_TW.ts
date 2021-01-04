@@ -2518,6 +2518,13 @@ Please, rename the project&apos;s file</source>
     </message>
 </context>
 <context>
+    <name>TupExposureSceneTabWidget</name>
+    <message>
+        <source>Current Layer Opacity</source>
+        <translation type="unfinished">目前層不透明度</translation>
+    </message>
+</context>
+<context>
     <name>TupExposureSheet</name>
     <message>
         <source>Frame</source>
@@ -2641,16 +2648,8 @@ Please, rename the project&apos;s file</source>
         <translation>確認執行“移除場景”</translation>
     </message>
     <message>
-        <source>Show tip of the day</source>
-        <translation>顯示每天的提示</translation>
-    </message>
-    <message>
         <source>Confirmation Dialogs</source>
         <translation>確認對話框</translation>
-    </message>
-    <message>
-        <source>On Player</source>
-        <translation>在播放器上</translation>
     </message>
     <message>
         <source>Confirm &quot;Remove frame&quot; action</source>
@@ -2663,10 +2662,6 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Confirm &quot;Remove layer&quot; action</source>
         <translation>確認執行“移除圖層”</translation>
-    </message>
-    <message>
-        <source>On Startup</source>
-        <translation>在啟動時</translation>
     </message>
     <message>
         <source>General Preferences</source>
@@ -2771,6 +2766,22 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Enable anonymous mode</source>
         <translation>啟用 匿名 模式</translation>
+    </message>
+    <message>
+        <source>Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable autosave feature every</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Player</source>
+        <translation type="unfinished">播放器</translation>
     </message>
 </context>
 <context>
@@ -3202,6 +3213,10 @@ Please, rename the project&apos;s file</source>
         <source>Raster Objects</source>
         <translation>光栅物件</translation>
     </message>
+    <message>
+        <source>Search for Assets</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TupListProjectDialog</name>
@@ -3259,10 +3274,6 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>News</source>
         <translation>消息</translation>
-    </message>
-    <message>
-        <source>Next</source>
-        <translation>下一個</translation>
     </message>
     <message>
         <source>Redo</source>
@@ -3417,10 +3428,6 @@ Please, rename the project&apos;s file</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
-        <source>Ctrl+T</source>
-        <translation>Ctrl+T</translation>
-    </message>
-    <message>
         <source>Ctrl+W</source>
         <translation>Ctrl+W</translation>
     </message>
@@ -3505,10 +3512,6 @@ Please, rename the project&apos;s file</source>
         <translation>關閉應用</translation>
     </message>
     <message>
-        <source>Previous</source>
-        <translation>上一個</translation>
-    </message>
-    <message>
         <source>SVG Sequence</source>
         <translation>SVG順序</translation>
     </message>
@@ -3575,10 +3578,6 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>SVG File</source>
         <translation>SVG檔案</translation>
-    </message>
-    <message>
-        <source>Tip Of The Day</source>
-        <translation>每日提示</translation>
     </message>
     <message>
         <source>&amp;Import</source>
@@ -4527,13 +4526,6 @@ Please, contact the animation server admin to get access.</source>
     </message>
 </context>
 <context>
-    <name>TupSceneTabWidget</name>
-    <message>
-        <source>Current Layer Opacity</source>
-        <translation>目前層不透明度</translation>
-    </message>
-</context>
-<context>
     <name>TupScenesWidget</name>
     <message>
         <source>Frame</source>
@@ -4554,6 +4546,125 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Filter here...</source>
         <translation>過濾此處...</translation>
+    </message>
+</context>
+<context>
+    <name>TupSearchDialog</name>
+    <message>
+        <source>Assets Search Engine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">搜索</translation>
+    </message>
+    <message>
+        <source>Support Us</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">關閉</translation>
+    </message>
+    <message>
+        <source>Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Character</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Static Background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dynamic Background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sound</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import Asset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Searching...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>But we are working on new assets...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Want to support us?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error while processing request. Please, try again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>From the &lt;b&gt;MaeFloresta&lt;/b&gt; startup we are requesting the support from our users community to keep creating new assets for our library repository. Thanks to your contributions we can deliver a better product. You can start helping from &lt;b&gt;USD 1&lt;/b&gt;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>One Time Donation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Join Our Patreon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sponsors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid search: Empty pattern!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 609. Please, contact us!</source>
+        <translation type="unfinished">HTTP 409錯誤! 請聯絡我們! {609.?}</translation>
+    </message>
+    <message>
+        <source>Network Fatal Error. Please, contact us!</source>
+        <translation type="unfinished">網路嚴重錯誤! 請聯絡我們!</translation>
+    </message>
+    <message>
+        <source>Can&apos;t load result images!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Asset Extension:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Creator:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>License:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Error 809. Please, contact us!</source>
+        <translation type="unfinished">HTTP 409錯誤! 請聯絡我們! {809.?}</translation>
+    </message>
+    <message>
+        <source>Can&apos;t save asset!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Can&apos;t load asset!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Can&apos;t load asset file!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4777,6 +4888,10 @@ Please, contact the animation server admin to get access.</source>
         <source>Scene %1</source>
         <translation>場景 %1</translation>
     </message>
+    <message>
+        <source>Current Layer Opacity</source>
+        <translation type="unfinished">目前層不透明度</translation>
+    </message>
 </context>
 <context>
     <name>TupToolStatus</name>
@@ -4820,10 +4935,6 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Title</source>
         <translation>標題</translation>
-    </message>
-    <message>
-        <source>Topics</source>
-        <translation>主題</translation>
     </message>
     <message>
         <source>Set a title for the picture here!</source>
@@ -4972,6 +5083,10 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Tags are missing!</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>Tags</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

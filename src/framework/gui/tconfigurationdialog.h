@@ -61,7 +61,7 @@ class T_GUI_EXPORT TConfigurationDialog : public QDialog
     Q_OBJECT
 
     public:
-        TConfigurationDialog(QWidget *parent = 0);
+        TConfigurationDialog(QWidget *parent = nullptr);
         ~TConfigurationDialog();
         
         void addPage(QWidget *page, const QString &label, const QIcon &icon);

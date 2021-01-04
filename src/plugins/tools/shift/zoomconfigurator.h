@@ -54,21 +54,12 @@ class TUPITUBE_PLUGIN ZoomConfigurator : public QWidget
     Q_OBJECT
 
     public:
-        ZoomConfigurator(QWidget *parent = 0);
+        ZoomConfigurator(QWidget *parent = nullptr);
         ~ZoomConfigurator();
-        //bool zoomIn();
+
         double getFactor() const;
 
-    //protected:
-        //void resizeEvent(QResizeEvent *);
-
-    /* private slots:
-        void setZoomIn();
-        void setZoomOut(); */
-
     private:
-        //QRadioButton *in;
-        //QRadioButton *out;
         QDoubleSpinBox *factor;
         QLabel *scale;
 };

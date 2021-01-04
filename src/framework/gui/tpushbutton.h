@@ -50,7 +50,7 @@ class T_GUI_EXPORT TPushButton : public QPushButton
     Q_OBJECT
 
     public:
-        TPushButton(QWidget *parent = 0, const QString &name = QString(), int column = 0, int row = 0);
+        TPushButton(QWidget *parent = nullptr, const QString &name = QString(), int column = 0, int row = 0);
         ~TPushButton();
 
     signals:

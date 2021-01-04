@@ -49,7 +49,7 @@ class KinasWidget : public TupModuleWidgetBase
     Q_OBJECT
 
     public:
-        KinasWidget(QWidget *parent = 0);
+        KinasWidget(QWidget *parent = nullptr);
         ~KinasWidget();
 
     public slots:

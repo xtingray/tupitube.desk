@@ -168,10 +168,10 @@ void OpacitySettings::setInnerForm()
     opacityEndLayout->addWidget(opacityEndLabel);
     opacityEndLayout->addWidget(comboEndFactor);
 
-    iterationsCombo = new QSpinBox;
-    iterationsCombo->setEnabled(true);
-    iterationsCombo->setMinimum(1);
-    iterationsCombo->setMaximum(999);
+    iterationsField = new QSpinBox;
+    iterationsField->setEnabled(true);
+    iterationsField->setMinimum(1);
+    iterationsField->setMaximum(999);
 
     QLabel *iterationsLabel = new QLabel(tr("Iterations") + ": ");
     iterationsLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -180,7 +180,7 @@ void OpacitySettings::setInnerForm()
     iterationsLayout->setMargin(0);
     iterationsLayout->setSpacing(0);
     iterationsLayout->addWidget(iterationsLabel);
-    iterationsLayout->addWidget(iterationsCombo);
+    iterationsLayout->addWidget(iterationsField);
 
     loopBox = new QCheckBox(tr("Loop"), innerPanel);
     connect(loopBox, SIGNAL(stateChanged(int)), this, SLOT(updateReverseCheckbox(int)));
@@ -248,7 +248,6 @@ void OpacitySettings::setParameters(const QString &name, int framesCount, int in
 }
 
 // Editing current Tween
-
 void OpacitySettings::setParameters(TupItemTweener *currentTween)
 {
     setEditMode();
@@ -265,7 +264,7 @@ void OpacitySettings::setParameters(TupItemTweener *currentTween)
 
     comboInitFactor->setValue(currentTween->tweenOpacityInitialFactor());
     comboEndFactor->setValue(currentTween->tweenOpacityEndingFactor());
-    iterationsCombo->setValue(currentTween->tweenOpacityIterations());
+    iterationsField->setValue(currentTween->tweenOpacityIterations());
     loopBox->setChecked(currentTween->tweenOpacityLoop());
     reverseLoopBox->setChecked(currentTween->tweenOpacityReverseLoop());
 }
@@ -281,6 +280,8 @@ void OpacitySettings::initStartCombo(int framesCount, int currentIndex)
 
     endFrame->setMinimum(1);
     endFrame->setValue(framesCount);
+
+    iterationsField->setValue(framesCount);
 }
 
 void OpacitySettings::setStartFrame(int currentIndex)
@@ -392,10 +393,10 @@ QString OpacitySettings::tweenToXml(int currentScene, int currentLayer, int curr
     double endFactor = comboEndFactor->value();
     root.setAttribute("endOpacityFactor", QString::number(endFactor));
 
-    int iterations = iterationsCombo->value();
+    int iterations = iterationsField->value();
     if (iterations == 0) {
         iterations = 1;
-        iterationsCombo->setValue(1);
+        iterationsField->setValue(1);
     }
     root.setAttribute("opacityIterations", iterations);
 
@@ -480,14 +481,14 @@ void OpacitySettings::checkFramesRange()
     stepsCounter = end - begin + 1;
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepsCounter));
 
-    int iterations = iterationsCombo->value();
+    int iterations = iterationsField->value();
     if (iterations > stepsCounter)
-        iterationsCombo->setValue(stepsCounter);
+        iterationsField->setValue(stepsCounter);
 }
 
 void OpacitySettings::updateLoopCheckbox(int state)
 {
-    Q_UNUSED(state);
+    Q_UNUSED(state)
 
     if (reverseLoopBox->isChecked() && loopBox->isChecked())
         loopBox->setChecked(false);
@@ -495,7 +496,7 @@ void OpacitySettings::updateLoopCheckbox(int state)
 
 void OpacitySettings::updateReverseCheckbox(int state)
 {
-    Q_UNUSED(state);
+    Q_UNUSED(state)
 
     if (reverseLoopBox->isChecked() && loopBox->isChecked())
         reverseLoopBox->setChecked(false);

@@ -42,7 +42,7 @@
 class TUPITUBE_EXPORT TupFrameGroup : public TupFrame
 {
     public:
-        TupFrameGroup(TupLayer *parent = 0);
+        TupFrameGroup(TupLayer *parent = nullptr);
         ~TupFrameGroup();
         
         void addFrame(TupFrame *frame);

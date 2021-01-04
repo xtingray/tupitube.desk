@@ -55,11 +55,11 @@ class T_GUI_EXPORT TImageButton : public QPushButton
     Q_OBJECT
 
     public:
-        TImageButton(const QIcon &icon, int size, QWidget *parent = 0, bool animate = false);
-        TImageButton(const QIcon &icon, int size, QObject *reciever, const  char *slot, QWidget *parent = 0, bool animate = false);
+        TImageButton(const QIcon &icon, int size, QWidget *parent = nullptr, bool animate = false);
+        TImageButton(const QIcon &icon, int size, QObject *reciever, const  char *slot, QWidget *parent = nullptr, bool animate = false);
         ~TImageButton();
+
         virtual void setImage(const QIcon &icon);
-        
         void setAnimated(bool anim);
         
     protected:

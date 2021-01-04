@@ -52,7 +52,7 @@ class TUPITUBE_EXPORT TupAbstractProjectHandler : public QObject
     Q_OBJECT
 
     public:
-        TupAbstractProjectHandler(QObject *parent = 0);
+        TupAbstractProjectHandler(QObject *parent = nullptr);
         virtual ~TupAbstractProjectHandler();
 
         virtual void initialize(TupProjectManagerParams *params);

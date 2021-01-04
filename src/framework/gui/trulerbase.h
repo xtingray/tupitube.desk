@@ -57,7 +57,7 @@ class T_GUI_EXPORT TRulerBase : public QFrame
     Q_OBJECT
     
     public:
-        TRulerBase(Qt::Orientation direction=Qt::Horizontal, QWidget *parent = 0);
+        TRulerBase(Qt::Orientation direction=Qt::Horizontal, QWidget *parent = nullptr);
         virtual ~TRulerBase();
         
         // const double unitGetRatioFromIndex(const int index);

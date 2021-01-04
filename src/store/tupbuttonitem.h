@@ -49,7 +49,7 @@ class TUPITUBE_EXPORT TupButtonItem : public QObject, public QGraphicsItem, publ
     Q_INTERFACES(QGraphicsItem)
 
     public:
-        TupButtonItem(QGraphicsItem *parent = 0);
+        TupButtonItem(QGraphicsItem *parent = nullptr);
         ~TupButtonItem();
         
         virtual void fromXml(const QString &xml);
@@ -60,7 +60,7 @@ class TUPITUBE_EXPORT TupButtonItem : public QObject, public QGraphicsItem, publ
         
         virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-        virtual void mouseMoveEvent ( QGraphicsSceneMouseEvent * event );
+        virtual void mouseMoveEvent ( QGraphicsSceneMouseEvent * event);
         
     public:
         void setIconSize(const QSize &size);

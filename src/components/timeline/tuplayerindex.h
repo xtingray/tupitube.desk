@@ -79,7 +79,7 @@ class TUPITUBE_EXPORT TupLayerIndex : public QTableWidget
          * @param parent 
          * @return 
          */
-        TupLayerIndex(int sceneIndex=0, QWidget *parent = 0);
+        TupLayerIndex(int sceneIndex=0, QWidget *parent = nullptr);
         ~TupLayerIndex();
         
         void insertLayer(int position, const QString &name);

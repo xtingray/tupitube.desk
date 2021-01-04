@@ -82,12 +82,9 @@ class TUPITUBE_PLUGIN RotationSettings : public QWidget
         void applyTween();
         void emitOptionChanged(int option);
         void refreshForm(int type);
-        // void checkTopLimit(int index);
         void updateRangeCheckbox(int state);
         void updateReverseCheckbox(int state);
-        // void updateTotalSteps(const QString &text);
         void checkRange(int index);
-        // void updateLastFrame();
         void updateRangeFromInit(int begin);
         void updateRangeFromEnd(int end);
         

@@ -52,8 +52,9 @@ class T_GUI_EXPORT TXYSpinBox : public QGroupBox
     Q_OBJECT
 
     public:
-        TXYSpinBox(const QString &title, QWidget *parent = 0);
+        TXYSpinBox(const QString &title, QWidget *parent = nullptr);
         ~TXYSpinBox();
+
         void setSingleStep(int step);
         void setMinimum(int min);
         void setMaximum(int max);

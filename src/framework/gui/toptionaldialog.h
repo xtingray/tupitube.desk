@@ -50,7 +50,7 @@ class T_GUI_EXPORT TOptionalDialog : public QDialog
     Q_OBJECT
 
     public:
-        TOptionalDialog(const QString &text, const QString &title = 0, QWidget *parent = 0);
+        TOptionalDialog(const QString &text, const QString &title = QString(), QWidget *parent = nullptr);
         ~TOptionalDialog();
         
         bool shownAgain();

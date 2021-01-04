@@ -60,7 +60,7 @@ class TUPITUBE_EXPORT TupThemeSelector : public TVHBox
     Q_OBJECT
 
     public:
-        TupThemeSelector(QWidget *parent = 0);
+        TupThemeSelector(QWidget *parent = nullptr);
         ~TupThemeSelector();
         
         ThemeDocument document() const;

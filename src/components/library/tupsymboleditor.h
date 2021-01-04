@@ -62,7 +62,7 @@ class TUPITUBE_EXPORT TupSymbolEditor : public QMainWindow
     Q_OBJECT
 
     public:
-        TupSymbolEditor(QWidget *parent = 0);
+        TupSymbolEditor(QWidget *parent = nullptr);
         ~TupSymbolEditor();
         
         void setSymbol(TupLibraryObject *object);

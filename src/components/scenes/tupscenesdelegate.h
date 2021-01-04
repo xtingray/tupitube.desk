@@ -48,7 +48,7 @@ class TUPITUBE_EXPORT TupScenesDelegate : public QItemDelegate
     Q_OBJECT
 
     public:
-        TupScenesDelegate(QObject *parent = 0);
+        TupScenesDelegate(QObject *parent = nullptr);
         ~TupScenesDelegate();
 
         void paint(QPainter *painter, const QStyleOptionViewItem &option,

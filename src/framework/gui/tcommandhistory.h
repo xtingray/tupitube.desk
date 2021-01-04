@@ -52,7 +52,7 @@ class T_GUI_EXPORT TCommandHistory : public QObject
     Q_OBJECT
     
     public:
-        TCommandHistory(QUndoStack *stack, QObject *parent = 0);
+        TCommandHistory(QUndoStack *stack, QObject *parent = nullptr);
         ~TCommandHistory();
         
         QAction *redoAction() const;

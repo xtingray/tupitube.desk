@@ -169,10 +169,10 @@ void ScaleSettings::setInnerForm()
     speedLayout->addWidget(speedLabel);
     speedLayout->addWidget(comboFactor);
 
-    iterationsCombo = new QSpinBox;
-    iterationsCombo->setEnabled(true);
-    iterationsCombo->setMinimum(1);
-    iterationsCombo->setMaximum(999);
+    iterationsField = new QSpinBox;
+    iterationsField->setEnabled(true);
+    iterationsField->setMinimum(1);
+    iterationsField->setMaximum(999);
 
     QLabel *iterationsLabel = new QLabel(tr("Iterations") + ": ");
     iterationsLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -181,7 +181,7 @@ void ScaleSettings::setInnerForm()
     iterationsLayout->setMargin(0);
     iterationsLayout->setSpacing(0);
     iterationsLayout->addWidget(iterationsLabel);
-    iterationsLayout->addWidget(iterationsCombo);
+    iterationsLayout->addWidget(iterationsField);
 
     loopBox = new QCheckBox(tr("Loop"), innerPanel);
     connect(loopBox, SIGNAL(stateChanged(int)), this, SLOT(updateReverseCheckbox(int)));
@@ -233,7 +233,6 @@ void ScaleSettings::activeInnerForm(bool enable)
 }
 
 // Adding new Tween
-
 void ScaleSettings::setParameters(const QString &name, int framesCount, int initFrame)
 {
     Q_UNUSED(framesCount);
@@ -251,7 +250,6 @@ void ScaleSettings::setParameters(const QString &name, int framesCount, int init
 }
 
 // Editing new Tween
-
 void ScaleSettings::setParameters(TupItemTweener *currentTween)
 {
     setEditMode();
@@ -264,22 +262,13 @@ void ScaleSettings::setParameters(TupItemTweener *currentTween)
 
     endFrameSpin->setValue(currentTween->getInitFrame() + currentTween->getFrames());
 
-    /*
-    int begin = comboInit->value();
-    int end = comboEnd->value();
-    totalSteps = end - begin + 1;
-    totalLabel->setText(tr("Frames Total") + ": " + QString::number(totalSteps));
-    */
-
     int end = endFrameSpin->value();
     updateRangeFromEnd(end);
-
-    // checkFramesRange();
 
     comboAxes->setCurrentIndex(currentTween->tweenScaleAxes());
     comboFactor->setValue(currentTween->tweenScaleFactor());
 
-    iterationsCombo->setValue(currentTween->tweenScaleIterations());
+    iterationsField->setValue(currentTween->tweenScaleIterations());
 
     loopBox->setChecked(currentTween->tweenScaleLoop());
     reverseLoopBox->setChecked(currentTween->tweenScaleReverseLoop());
@@ -296,6 +285,8 @@ void ScaleSettings::initStartCombo(int framesCount, int currentIndex)
 
     endFrameSpin->setMinimum(1);
     endFrameSpin->setValue(framesCount);
+
+    iterationsField->setValue(framesCount);
 }
 
 void ScaleSettings::setStartFrame(int currentIndex)
@@ -400,7 +391,6 @@ QString ScaleSettings::tweenToXml(int currentScene, int currentLayer, int curren
     root.setAttribute("initLayer", currentLayer);
     root.setAttribute("initScene", currentScene);
 
-    // checkFramesRange();
     root.setAttribute("frames", stepsCounter);
     root.setAttribute("initXScaleFactor", QString::number(initialXScaleFactor));
     root.setAttribute("initYScaleFactor", QString::number(initialYScaleFactor));
@@ -411,10 +401,10 @@ QString ScaleSettings::tweenToXml(int currentScene, int currentLayer, int curren
     double factor = comboFactor->value();
     root.setAttribute("scaleFactor", QString::number(factor));
 
-    int iterations = iterationsCombo->value();
+    int iterations = iterationsField->value();
     if (iterations == 0) {
         iterations = 1;
-        iterationsCombo->setValue(iterations);
+        iterationsField->setValue(iterations);
     }
     root.setAttribute("scaleIterations", iterations);
 
@@ -499,28 +489,12 @@ void ScaleSettings::activateMode(TupToolPlugin::EditMode mode)
     options->setCurrentIndex(mode);
 }
 
-/*
-void Settings::updateLastFrame()
-{
-    int end = comboInit->value() + totalSteps - 1;
-    comboEnd->setValue(end);
-}
-
-void Settings::checkTopLimit(int index)
-{
-    Q_UNUSED(index);
-    checkFramesRange();
-}
-*/
-
 void ScaleSettings::checkFramesRange()
 {
     int begin = initFrameSpin->value();
     int end = endFrameSpin->value();
 
     if (begin > end) {
-        // comboEnd->setValue(comboEnd->maximum() - 1);
-        // end = comboEnd->value();
         initFrameSpin->blockSignals(true);
         endFrameSpin->blockSignals(true);
         int tmp = end;
@@ -535,9 +509,9 @@ void ScaleSettings::checkFramesRange()
     stepsCounter = end - begin + 1;
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepsCounter));
 
-    int iterations = iterationsCombo->value();
+    int iterations = iterationsField->value();
     if (iterations > stepsCounter)
-        iterationsCombo->setValue(stepsCounter);
+        iterationsField->setValue(stepsCounter);
 }
 
 void ScaleSettings::updateLoopCheckbox(int state)
@@ -555,14 +529,6 @@ void ScaleSettings::updateReverseCheckbox(int state)
     if (reverseLoopBox->isChecked() && loopBox->isChecked())
         reverseLoopBox->setChecked(false);
 }
-
-/*
-void Settings::updateTotalSteps(const QString &text)
-{
-    Q_UNUSED(text);
-    checkFramesRange();
-}
-*/
 
 void ScaleSettings::updateRangeFromInit(int begin)
 {

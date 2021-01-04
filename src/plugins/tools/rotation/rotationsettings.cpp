@@ -109,7 +109,6 @@ void RotationSettings::setInnerForm()
     initFrame->setEnabled(false);
     initFrame->setMaximum(999);
     connect(initFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromInit(int)));
-    // connect(initFrame, SIGNAL(valueChanged(int)), this, SLOT(updateLastFrame()));
  
     QLabel *endingLabel = new QLabel(tr("Ending at frame") + ": ");
     endingLabel->setAlignment(Qt::AlignVCenter);
@@ -119,7 +118,6 @@ void RotationSettings::setInnerForm()
     endFrame->setValue(1);
     endFrame->setMaximum(999);
     connect(endFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromEnd(int)));
-    // connect(endFrame, SIGNAL(valueChanged(int)), this, SLOT(checkTopLimit(int)));
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
@@ -314,7 +312,6 @@ void RotationSettings::activeRangeForm(bool enable)
 }
 
 // Adding new Tween
-
 void RotationSettings::setParameters(const QString &name, int framesCount, int initFrame)
 {
     #ifdef TUP_DEBUG
@@ -343,7 +340,6 @@ void RotationSettings::setParameters(const QString &name, int framesCount, int i
 }
 
 // Editing current Tween
-
 void RotationSettings::setParameters(TupItemTweener *currentTween)
 {
     #ifdef TUP_DEBUG
@@ -360,7 +356,6 @@ void RotationSettings::setParameters(TupItemTweener *currentTween)
 
     endFrame->setValue(currentTween->getInitFrame() + currentTween->getFrames());
 
-    // checkFramesRange();
     int end = endFrame->value();
     updateRangeFromEnd(end);
 
@@ -521,7 +516,6 @@ QString RotationSettings::tweenToXml(int currentScene, int currentLayer, int cur
     root.setAttribute("initLayer", currentLayer);
     root.setAttribute("initScene", currentScene);
     
-    // checkFramesRange();
     root.setAttribute("frames", stepsCounter);
 
     root.setAttribute("origin", QString::number(point.x()) + "," + QString::number(point.y()));
@@ -666,30 +660,12 @@ void RotationSettings::refreshForm(int type)
     }
 }
 
-/*
-void Settings::checkTopLimit(int index)
-{
-    Q_UNUSED(index);
-    checkFramesRange();
-}
-*/
-
-/*
-void Settings::updateLastFrame()
-{
-    int end = initFrame->value() + totalSteps - 1;
-    endFrame->setValue(end);
-}
-*/
-
 void RotationSettings::checkFramesRange()
 {
     int begin = initFrame->value();
     int end = endFrame->value();
        
     if (begin > end) {
-        // endFrame->setValue(endFrame->maximum() - 1);
-        // end = endFrame->value();
         initFrame->blockSignals(true);
         endFrame->blockSignals(true);
         int tmp = end;
@@ -707,7 +683,7 @@ void RotationSettings::checkFramesRange()
 
 void RotationSettings::updateRangeCheckbox(int state)
 {
-    Q_UNUSED(state);
+    Q_UNUSED(state)
 
     if (reverseLoopBox->isChecked() && rangeLoopBox->isChecked())
         rangeLoopBox->setChecked(false);
@@ -715,23 +691,15 @@ void RotationSettings::updateRangeCheckbox(int state)
 
 void RotationSettings::updateReverseCheckbox(int state)
 {
-    Q_UNUSED(state);
+    Q_UNUSED(state)
 
     if (reverseLoopBox->isChecked() && rangeLoopBox->isChecked())
         reverseLoopBox->setChecked(false);
 }
 
-/*
-void Settings::updateTotalSteps(const QString &text)
-{
-    Q_UNUSED(text);
-    checkFramesRange();
-}
-*/
-
 void RotationSettings::checkRange(int index)
 {
-    Q_UNUSED(index);
+    Q_UNUSED(index)
 
     int start = rangeStart->value();
     int end = rangeEnd->value();

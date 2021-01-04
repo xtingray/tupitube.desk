@@ -48,7 +48,7 @@ class T_GUI_EXPORT TRadioButtonGroup : public QGroupBox
     Q_OBJECT
 
     public:
-        TRadioButtonGroup(const QString &title, Qt::Orientation orientation, QWidget *parent = 0);
+        TRadioButtonGroup(const QString &title, Qt::Orientation orientation, QWidget *parent = nullptr);
         ~TRadioButtonGroup();
         
         void addItem(const QString & text, int index = -1);

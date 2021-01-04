@@ -80,12 +80,8 @@ class TUPITUBE_PLUGIN ScaleSettings : public QWidget
     private slots:
         void applyTween();
         void emitOptionChanged(int option);
-        // void checkBottomLimit(int index);
-        // void checkTopLimit(int index);
-        // void updateTotalSteps(const QString &text);
         void updateLoopCheckbox(int state);
         void updateReverseCheckbox(int state);
-        // void updateLastFrame();
         void updateRangeFromInit(int begin);
         void updateRangeFromEnd(int end);
 
@@ -120,7 +116,7 @@ class TUPITUBE_PLUGIN ScaleSettings : public QWidget
         TupItemTweener::TransformAxes scaleAxes;
         QComboBox *comboAxes;
         QDoubleSpinBox *comboFactor;
-        QSpinBox *iterationsCombo;
+        QSpinBox *iterationsField;
 
         QCheckBox *loopBox;
         QCheckBox *reverseLoopBox;

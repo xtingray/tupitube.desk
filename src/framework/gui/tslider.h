@@ -50,7 +50,7 @@ class TUPITUBE_EXPORT TSlider : public QGraphicsView
     public:
         enum Mode { Color = 0, Size, Opacity, FPS };
 
-        explicit TSlider(Qt::Orientation orientation, Mode mode, const QColor& start, const QColor& end, QWidget *parent = 0);
+        explicit TSlider(Qt::Orientation orientation, Mode mode, const QColor& start, const QColor& end, QWidget *parent = nullptr);
         ~TSlider();
 
         void setBrushSettings(Qt::BrushStyle style, double opacity);

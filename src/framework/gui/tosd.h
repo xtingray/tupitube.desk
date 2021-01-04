@@ -56,7 +56,7 @@ class T_GUI_EXPORT TOsd : public QWidget
     Q_OBJECT
 
     private:
-        TOsd(QWidget *parent = 0);
+        TOsd(QWidget *parent = nullptr);
 
     public:
         enum Level

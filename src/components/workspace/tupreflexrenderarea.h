@@ -47,7 +47,7 @@ class TUPITUBE_EXPORT TupReflexRenderArea : public QWidget
     Q_OBJECT
 
     public:
-        TupReflexRenderArea(const QSize &size, QWidget *parent = 0);
+        TupReflexRenderArea(const QSize &size, QWidget *parent = nullptr);
 
         QSize minimumSizeHint() const override;
         QSize sizeHint() const override;

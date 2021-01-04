@@ -167,10 +167,10 @@ void ShearSettings::setInnerForm()
     speedLayout->addWidget(speedLabel);
     speedLayout->addWidget(comboFactor);
 
-    iterationsCombo = new QSpinBox;
-    iterationsCombo->setEnabled(true);
-    iterationsCombo->setMinimum(1);
-    iterationsCombo->setMaximum(999);
+    iterationsField = new QSpinBox;
+    iterationsField->setEnabled(true);
+    iterationsField->setMinimum(1);
+    iterationsField->setMaximum(999);
 
     QLabel *iterationsLabel = new QLabel(tr("Iterations") + ": ");
     iterationsLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -179,7 +179,7 @@ void ShearSettings::setInnerForm()
     iterationsLayout->setMargin(0);
     iterationsLayout->setSpacing(0);
     iterationsLayout->addWidget(iterationsLabel);
-    iterationsLayout->addWidget(iterationsCombo);
+    iterationsLayout->addWidget(iterationsField);
 
     loopBox = new QCheckBox(tr("Loop"), innerPanel);
     connect(loopBox, SIGNAL(stateChanged(int)), this, SLOT(updateReverseCheckbox(int)));
@@ -231,7 +231,6 @@ void ShearSettings::activeInnerForm(bool enable)
 }
 
 // Adding new Tween
-
 void ShearSettings::setParameters(const QString &name, int framesCount, int initFrame)
 {
     mode = TupToolPlugin::Add;
@@ -247,7 +246,6 @@ void ShearSettings::setParameters(const QString &name, int framesCount, int init
 }
 
 // Editing new Tween
-
 void ShearSettings::setParameters(TupItemTweener *currentTween)
 {
     setEditMode();
@@ -264,7 +262,7 @@ void ShearSettings::setParameters(TupItemTweener *currentTween)
 
     comboAxes->setCurrentIndex(currentTween->tweenShearAxes());
     comboFactor->setValue(currentTween->tweenShearFactor());
-    iterationsCombo->setValue(currentTween->tweenShearIterations());
+    iterationsField->setValue(currentTween->tweenShearIterations());
     loopBox->setChecked(currentTween->tweenShearLoop());
     reverseLoopBox->setChecked(currentTween->tweenShearReverseLoop());
 }
@@ -280,6 +278,8 @@ void ShearSettings::initStartCombo(int framesCount, int currentIndex)
 
     endFrameSpin->setMinimum(1);
     endFrameSpin->setValue(framesCount);
+
+    iterationsField->setValue(framesCount);
 }
 
 void ShearSettings::setStartFrame(int currentIndex)
@@ -391,10 +391,10 @@ QString ShearSettings::tweenToXml(int currentScene, int currentLayer, int curren
     double factor = comboFactor->value();
     root.setAttribute("shearFactor", QString::number(factor));
 
-    int iterations = iterationsCombo->value();
+    int iterations = iterationsField->value();
     if (iterations == 0) {
         iterations = 1;
-        iterationsCombo->setValue(1);
+        iterationsField->setValue(1);
     }
     root.setAttribute("shearIterations", iterations);
 
@@ -498,14 +498,14 @@ void ShearSettings::checkFramesRange()
     stepsCounter = end - begin + 1;
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepsCounter));
 
-    int iterations = iterationsCombo->value();
+    int iterations = iterationsField->value();
     if (iterations > stepsCounter)
-        iterationsCombo->setValue(stepsCounter);
+        iterationsField->setValue(stepsCounter);
 }
 
 void ShearSettings::updateLoopCheckbox(int state)
 {
-    Q_UNUSED(state);
+    Q_UNUSED(state)
 
     if (reverseLoopBox->isChecked() && loopBox->isChecked())
         loopBox->setChecked(false);
@@ -513,7 +513,7 @@ void ShearSettings::updateLoopCheckbox(int state)
 
 void ShearSettings::updateReverseCheckbox(int state)
 {
-    Q_UNUSED(state);
+    Q_UNUSED(state)
 
     if (reverseLoopBox->isChecked() && loopBox->isChecked())
         reverseLoopBox->setChecked(false);

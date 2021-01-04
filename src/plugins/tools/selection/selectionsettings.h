@@ -62,7 +62,7 @@ class TUPITUBE_PLUGIN SelectionSettings : public QWidget
         enum Order { ToBack = 0, ToFront, ToBackOneLevel, ToFrontOneLevel };
         enum Group { GroupItems = 0, UngroupItems };
 
-        SelectionSettings(QWidget *parent = 0);
+        SelectionSettings(QWidget *parent = nullptr);
         ~SelectionSettings();
 
         void enableFormControls(bool flag);

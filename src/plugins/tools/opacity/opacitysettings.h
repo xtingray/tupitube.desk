@@ -111,7 +111,7 @@ class TUPITUBE_PLUGIN OpacitySettings : public QWidget
         QDoubleSpinBox *comboInitFactor;
         QDoubleSpinBox *comboEndFactor;
 
-        QSpinBox *iterationsCombo;
+        QSpinBox *iterationsField;
 
         QCheckBox *loopBox;
         QCheckBox *reverseLoopBox;

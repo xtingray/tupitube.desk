@@ -76,7 +76,7 @@ class T_GUI_EXPORT TreeWidgetSearchLine : public TClickLineEdit
      * If \a treeWidget is null then the widget will be disabled until listviews
      * are set with setTreeWidget(), setTreeWidgets() or added with addTreeWidget().
      */
-        TreeWidgetSearchLine(QWidget *parent = 0, QTreeWidget *treeWidget = 0);
+        TreeWidgetSearchLine(QWidget *parent = nullptr, QTreeWidget *treeWidget = nullptr);
 
     /**
      * Constructs a TreeWidgetSearchLine with \a treeWidgets being the list of
@@ -328,7 +328,7 @@ class T_GUI_EXPORT TreeWidgetSearchLineWidget : public QWidget
      * Creates a TreeWidgetSearchLineWidget for \a treeWidget with \a parent as the
      * parent.
      */
-        TreeWidgetSearchLineWidget(QWidget *parent = 0, QTreeWidget *treeWidget = 0);
+        TreeWidgetSearchLineWidget(QWidget *parent = nullptr, QTreeWidget *treeWidget = nullptr);
 
     /**
      * Destroys the TreeWidgetSearchLineWidget

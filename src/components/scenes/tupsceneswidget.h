@@ -66,7 +66,7 @@ class TUPITUBE_EXPORT TupScenesWidget : public TupModuleWidgetBase
     Q_OBJECT
 
     public:
-        TupScenesWidget(QWidget *parent = 0);
+        TupScenesWidget(QWidget *parent = nullptr);
         ~TupScenesWidget();
 
     public slots:

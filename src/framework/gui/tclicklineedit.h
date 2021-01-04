@@ -46,7 +46,7 @@
 class T_GUI_EXPORT TClickLineEdit : public QLineEdit
 {
     public:
-        TClickLineEdit(const QString &msg, QWidget *parent = 0);
+        TClickLineEdit(const QString &msg, QWidget *parent = nullptr);
         ~TClickLineEdit();
         
         void setClickMessage(const QString &msg);
@@ -55,9 +55,9 @@ class T_GUI_EXPORT TClickLineEdit : public QLineEdit
         virtual void setText(const QString& txt);
     
     protected:
-        virtual void paintEvent(QPaintEvent *ev);
-        virtual void focusInEvent(QFocusEvent *ev);
-        virtual void focusOutEvent(QFocusEvent *ev);
+        virtual void paintEvent(QPaintEvent *e);
+        virtual void focusInEvent(QFocusEvent *e);
+        virtual void focusOutEvent(QFocusEvent *e);
     
     private:
         QString message;

@@ -55,7 +55,7 @@ class TUPITUBE_PLUGIN ButtonsPanel: public QWidget
 
     public:
 
-        ButtonsPanel(QWidget *parent = 0);
+        ButtonsPanel(QWidget *parent = nullptr);
         ~ButtonsPanel();
 
     signals:

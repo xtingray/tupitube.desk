@@ -47,7 +47,7 @@ class T_GUI_EXPORT TStyleComboBox : public QComboBox
     Q_OBJECT
 
     public:
-        TStyleComboBox(QWidget *parent = 0);
+        TStyleComboBox(QWidget *parent = nullptr);
         ~TStyleComboBox();
         
     private slots:

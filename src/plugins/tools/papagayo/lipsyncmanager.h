@@ -53,7 +53,7 @@ class TUPITUBE_PLUGIN LipSyncManager: public QWidget
     Q_OBJECT
 
     public:
-        LipSyncManager(QWidget *parent = 0);
+        LipSyncManager(QWidget *parent = nullptr);
         ~LipSyncManager();
 
         void loadLipSyncList(QList<QString> list);

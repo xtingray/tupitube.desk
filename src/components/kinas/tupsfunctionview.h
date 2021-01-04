@@ -43,13 +43,13 @@ class TupSFunctionView : public QTreeWidget
     Q_OBJECT
 
     public:
-        TupSFunctionView(QWidget *parent = 0);
+        TupSFunctionView(QWidget *parent = nullptr);
         ~TupSFunctionView();
+
         void addModule(const QString &module, const QString &sections, QStringList functions);
 
     protected:
         bool dropMimeData(QTreeWidgetItem * parent, int index, const QMimeData * data, Qt::DropAction action);
-
 };
 
 #endif

@@ -117,7 +117,7 @@ class TUPITUBE_PLUGIN ShearSettings : public QWidget
         QComboBox *comboAxes;
 
         QDoubleSpinBox *comboFactor;
-        QSpinBox *iterationsCombo;
+        QSpinBox *iterationsField;
 
         QCheckBox *loopBox;
         QCheckBox *reverseLoopBox;

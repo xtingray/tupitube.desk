@@ -44,11 +44,12 @@ class TupSEditor : public QTextEdit
     Q_OBJECT
 
     public:
-        TupSEditor(QWidget *parent = 0);
+        TupSEditor(QWidget *parent = nullptr);
         ~TupSEditor();
+
         void dragEnterEvent(QDragEnterEvent *e);
         void dropEvent(QDropEvent *e);
-        void insertFromMimeData(const QMimeData * source);
+        void insertFromMimeData(const QMimeData *source);
 };
 
 #endif

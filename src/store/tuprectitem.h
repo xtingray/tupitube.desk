@@ -48,8 +48,8 @@
 class TUPITUBE_EXPORT TupRectItem : public QGraphicsRectItem, public TupAbstractSerializable
 {
     public:
-        TupRectItem(QGraphicsItem * parent = 0);
-        TupRectItem(const QRectF& rect, QGraphicsItem * parent = 0);
+        TupRectItem(QGraphicsItem *parent = nullptr);
+        TupRectItem(const QRectF & rect, QGraphicsItem *parent = nullptr);
         ~TupRectItem();
 
         bool contains(const QPointF & point) const;

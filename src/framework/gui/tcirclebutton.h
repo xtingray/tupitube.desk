@@ -56,13 +56,7 @@ class T_GUI_EXPORT TCircleButton : public QPushButton
     Q_OBJECT
 
     public:
-        /**
-         * Constructs a TCircleButton
-         */
-        TCircleButton(int diameter, bool animate = true, QWidget *parent = 0);
-        /**
-         * Destructor
-         */
+        TCircleButton(int diameter, bool animate = true, QWidget *parent = nullptr);
         ~TCircleButton();
         
         QStyleOptionButton styleOption() const;

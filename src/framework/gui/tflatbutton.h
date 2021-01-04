@@ -45,8 +45,8 @@ class T_GUI_EXPORT TFlatButton : public QAbstractButton
     Q_OBJECT
 
     public:
-        TFlatButton(QWidget *parent = 0);
-        TFlatButton(const QString &text, QWidget *parent = 0);
+        TFlatButton(QWidget *parent = nullptr);
+        TFlatButton(const QString &text, QWidget *parent = nullptr);
         ~TFlatButton();
         
     protected:

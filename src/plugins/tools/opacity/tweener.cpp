@@ -100,7 +100,6 @@ void Tweener::updateStartPoint(int index)
 }
 
 /* This method returns the plugin name */
-
 QList<TAction::ActionId> Tweener::keys() const
 {
     return QList<TAction::ActionId>() << TAction::Opacity;
@@ -108,26 +107,25 @@ QList<TAction::ActionId> Tweener::keys() const
 
 /* This method makes an action when the mouse is pressed on the workspace 
  * depending on the active mode: Selecting an object or Creating a path  
-*/
-
+ */
 void Tweener::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[Tweener::press()]";
+        qDebug() << "[OpacityTweener::press()]";
     #endif
 
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
-    Q_UNUSED(scene);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
+    Q_UNUSED(scene)
 }
 
 /* This method is executed while the mouse is pressed and on movement */
 
 void Tweener::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
-    Q_UNUSED(gScene);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
+    Q_UNUSED(gScene)
 }
 
 /* This method finishes the action started on the press method depending
@@ -137,21 +135,21 @@ void Tweener::move(const TupInputDeviceInformation *input, TupBrushManager *brus
 void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[Tweener::release()]";
+        qDebug() << "[OpacityTweener::release()]";
     #endif
 
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
 
     if (gScene->currentFrameIndex() == initFrame) {
         if (editMode == TupToolPlugin::Selection) {
             #ifdef TUP_DEBUG
-                qDebug() << "Opacity Tweener::release() - Tracing selection mode";
+                qDebug() << "[OpacityTweener::release()] - Tracing selection mode";
             #endif
 
             if (gScene->selectedItems().size() > 0) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "Opacity Tweener::release() - selection size -> " + QString::number(gScene->selectedItems().size());
+                    qDebug() << "[OpacityTweener::release()] - selection size -> " << gScene->selectedItems().size();
                 #endif
                 objects = gScene->selectedItems();
                 foreach (QGraphicsItem *item, objects) {
@@ -175,12 +173,12 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                     }
                 }
                 #ifdef TUP_DEBUG
-                    qDebug() << "Opacity Tweener::release() - Notifying selection...";
+                    qDebug() << "[OpacityTweener::release()] - Notifying selection...";
                 #endif
                 configPanel->notifySelection(true);
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "Opacity Tweener::release() - Selection mode: no items selected";
+                    qDebug() << "[OpacityTweener::release()] - Selection mode: no items selected";
                 #endif
             }
         }
@@ -188,21 +186,18 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
 }
 
 /* This method returns the list of actions defined in this plugin */
-
 QMap<TAction::ActionId, TAction *> Tweener::actions() const
 {
     return opacityActions;
 }
 
 /* This method returns the list of actions defined in this plugin */
-
 int Tweener::toolType() const
 {
     return TupToolInterface::Tweener;
 }
 
 /* This method returns the tool panel associated to this plugin */
-
 QWidget *Tweener::configurator()
 {
     if (!configPanel) {
@@ -228,13 +223,11 @@ void Tweener::aboutToChangeScene(TupGraphicsScene *)
 }
 
 /* This method is called when this plugin is off */
-
 void Tweener::aboutToChangeTool()
 {
 }
 
 /* This method defines the actions contained in this plugin */
-
 void Tweener::setupActions()
 {
     QString name = tr("Opacity Tween");
@@ -250,13 +243,11 @@ void Tweener::setupActions()
 }
 
 /* This method saves the settings of this plugin */
-
 void Tweener::saveConfig()
 {
 }
 
 /* This method updates the workspace when the plugin changes the scene */
-
 void Tweener::updateScene(TupGraphicsScene *gScene)
 {
     mode = configPanel->mode();
@@ -313,7 +304,6 @@ int Tweener::framesCount()
 }
 
 /* This method clears selection */
-
 void Tweener::clearSelection()
 {
     if (objects.size() > 0) {
@@ -327,7 +317,6 @@ void Tweener::clearSelection()
 }
 
 /* This method disables object selection */
-
 void Tweener::disableSelection()
 {
     foreach (QGraphicsView *view, scene->views()) {
@@ -363,7 +352,6 @@ void Tweener::setPropertiesMode()
 }
 
 /* This method resets this plugin */
-
 void Tweener::applyReset()
 {
     disableSelection();
@@ -378,7 +366,6 @@ void Tweener::applyReset()
 }
 
 /* This method applies to the project, the Tween created from this plugin */
-
 void Tweener::applyTween()
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
@@ -423,9 +410,6 @@ void Tweener::applyTween()
 
         foreach (QGraphicsItem *item, objects) {
             TupLibraryObject::Type type = TupLibraryObject::Item;
-
-            // TupProject *project = scene->scene()->project();
-            // TupScene *scene = project->scene(initScene);
 
             TupScene *sceneData = scene->currentScene();
             TupLayer *layer = sceneData->layerAt(initLayer);
@@ -538,7 +522,7 @@ void Tweener::removeTweenFromProject(const QString &name)
         emit tweenRemoved();
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "Tweener::removeTweenFromProject() - Opacity tween couldn't be removed -> " + name;
+            qDebug() << "[OpacityTweener::removeTweenFromProject()] - Opacity tween couldn't be removed -> " << name;
         #endif
     }
 }
@@ -572,7 +556,7 @@ void Tweener::updateMode(TupToolPlugin::Mode currentMode)
                 objects = scene->currentScene()->getItemsFromTween(currentTween->getTweenName(), TupItemTweener::Opacity);
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "Tweener::updateMode() - Current tween pointer is NULL!";
+                qDebug() << "[OpacityTweener::updateMode()] - Current tween pointer is NULL!";
             #endif
         }
     }

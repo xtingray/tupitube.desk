@@ -65,8 +65,8 @@ class T_GUI_EXPORT TabDialog : public QDialog
             Custom3 = 1<<9
         };
 
-        TabDialog(QWidget *parent = 0, bool modal = true);
-        TabDialog(int buttons = Ok|Cancel, QWidget *parent = 0, bool modal = true);
+        TabDialog(QWidget *parent = nullptr, bool modal = true);
+        TabDialog(int buttons = Ok|Cancel, QWidget *parent = nullptr, bool modal = true);
         ~TabDialog();
         
         void addTab(QWidget * child, const QString & label);

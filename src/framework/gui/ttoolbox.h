@@ -47,8 +47,9 @@ class T_GUI_EXPORT TToolBox : public QToolBox
     Q_OBJECT
 
     public:
-        TToolBox(QWidget *parent = 0);
+        TToolBox(QWidget *parent = nullptr);
         ~TToolBox();
+
         void addPage(QWidget *page, const QString &title);
         
     protected:

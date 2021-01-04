@@ -66,7 +66,7 @@ class T_GUI_EXPORT TColorButton : public QAbstractButton
     Q_PROPERTY(QColor color READ color WRITE setColor);
 
     public:
-        TColorButton(QWidget* parent = 0);
+        TColorButton(QWidget* parent = nullptr);
         ~TColorButton();
 
         void setColor(const QColor&);

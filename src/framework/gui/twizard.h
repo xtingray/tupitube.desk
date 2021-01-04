@@ -55,8 +55,9 @@ class T_GUI_EXPORT TWizard : public QDialog
     Q_OBJECT
 
     public:
-        TWizard(QWidget *parent = 0);
+        TWizard(QWidget *parent = nullptr);
         ~TWizard();
+
         TWizardPage *addPage(TWizardPage *page);
         void showPage(int index);
         void showPage(TWizardPage *page);
@@ -86,7 +87,7 @@ class T_GUI_EXPORT TWizardPage : public TVHBox
     Q_OBJECT
 
     public:
-        TWizardPage(const QString &title, QWidget *parent = 0);
+        TWizardPage(const QString &title, QWidget *parent = nullptr);
         virtual ~TWizardPage();
 
         virtual bool isComplete() const = 0;

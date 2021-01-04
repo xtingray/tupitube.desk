@@ -58,7 +58,7 @@ class TUPITUBE_EXPORT TupConnectDialog : public QDialog
     Q_OBJECT
 
     public:
-        TupConnectDialog(QWidget *parent = 0);
+        TupConnectDialog(QWidget *parent = nullptr);
         ~TupConnectDialog();
         
         void setServer(const QString &server);

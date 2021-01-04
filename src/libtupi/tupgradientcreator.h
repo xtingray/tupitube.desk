@@ -56,7 +56,7 @@ class TUPITUBE_EXPORT TupGradientCreator : public QFrame
     Q_OBJECT
 
     public:
-        TupGradientCreator(QWidget *parent = 0);
+        TupGradientCreator(QWidget *parent = nullptr);
         ~TupGradientCreator();
         
         void setCurrentColor(const QColor &);
@@ -91,7 +91,7 @@ class TUPITUBE_EXPORT SpinControl: public QGroupBox
 {
     Q_OBJECT
     public:
-        SpinControl(QWidget *parent = 0) : QGroupBox(parent)
+        SpinControl(QWidget *parent = nullptr) : QGroupBox(parent)
         {
             QBoxLayout *layout = new QBoxLayout(QBoxLayout::LeftToRight, this);
             layout->setSizeConstraint(QLayout::SetFixedSize);

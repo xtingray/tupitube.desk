@@ -54,7 +54,7 @@ class TUPITUBE_EXPORT TupVideoSurface: public QAbstractVideoSurface
     Q_OBJECT
 
     public:
-        TupVideoSurface(QWidget *widget, VideoIF *target, const QSize &displaySize, bool isScaled, int orientation, QObject *parent = 0);
+        TupVideoSurface(QWidget *widget, VideoIF *target, const QSize &displaySize, bool isScaled, int orientation, QObject *parent = nullptr);
         ~TupVideoSurface();
 
         bool start(const QVideoSurfaceFormat &format);

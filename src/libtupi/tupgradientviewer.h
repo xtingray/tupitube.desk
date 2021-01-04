@@ -70,7 +70,7 @@ class TUPITUBE_EXPORT TupGradientViewer : public QFrame
 		 * Constructor por defecto.
 		 * @endif
 		 */
-		TupGradientViewer(QWidget *parent = 0);
+		TupGradientViewer(QWidget *parent = nullptr);
 		/**
 		 * Destructor
 		 */

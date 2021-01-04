@@ -59,7 +59,7 @@ class T_GUI_EXPORT TActionManager : public QObject
     Q_OBJECT
 
     public:
-        TActionManager(QObject *parent = 0);
+        TActionManager(QObject *parent = nullptr);
         ~TActionManager();
 
         bool insert(QAction *action, const QString &id, const QString &container = "default");

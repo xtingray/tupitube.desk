@@ -63,7 +63,7 @@ class TUPITUBE_EXPORT TupGradientSelector : public QAbstractSlider
       {
          public:
 
-            TupGradientArrow(QPoint pos, const QColor& color, QObject *parent = 0) : QObject(parent), m_color(color)
+            TupGradientArrow(QPoint pos, const QColor& color, QObject *parent = nullptr) : QObject(parent), m_color(color)
             {
                QPolygon array(6);
                array.setPoint(0, pos.x() + 0, pos.y() + 0);
@@ -123,8 +123,8 @@ class TUPITUBE_EXPORT TupGradientSelector : public QAbstractSlider
       
    public:
 
-      TupGradientSelector(QWidget *parent=0);
-      TupGradientSelector(Qt::Orientation o, QWidget *parent = 0);
+      TupGradientSelector(QWidget *parent = nullptr);
+      TupGradientSelector(Qt::Orientation o, QWidget *parent = nullptr);
       ~TupGradientSelector();
 
       void setStops(const QGradientStops &);

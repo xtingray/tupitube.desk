@@ -44,17 +44,15 @@
 class TUPITUBE_EXPORT TupItemGroup: public TupAbstractSerializable, public QGraphicsItemGroup
 {
     public:
-        TupItemGroup(QGraphicsItem *parent = 0);
+        TupItemGroup(QGraphicsItem *parent = nullptr);
         ~TupItemGroup();
+
         void addToGroup(QGraphicsItem *item);
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
         void recoverChilds();
         QList<QGraphicsItem *> childItems();
-        
-    // protected:
-    //     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-        
+
     private:
         QList<QGraphicsItem *> children;
 };
