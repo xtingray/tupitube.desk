@@ -54,13 +54,15 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
     Q_OBJECT
 
     public:
-        enum StackId { Result = 0, Progressbar, NoResult };
-        enum AssetType { JPG = 0, PNG, SVG, TOBJ };
+        enum StackId { Result = 0, Progressbar, NoResult, Error };
+        enum AssetType { Object = 0, Character, StaticBg, DynamicBg, Sound };
+        enum AssetExtension { JPG = 0, PNG, SVG, TOBJ };
         TupSearchDialog(const QSize &size, QWidget *parent = nullptr);
         ~TupSearchDialog();
 
     signals:
-        void assetStored(const QString &name, const QString &extension, int extensionId, QByteArray &data);
+        void assetStored(const QString &name, AssetType assetTypeCode, const QString &extension,
+                         int extensionId, QByteArray &data);
 
     private slots:
         void setSupportTab();
@@ -83,7 +85,7 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
 
         void requestResults();
         void loadAssets(const QString &input);
-        void getMiniature(const QString &code);
+        void getMiniature(const QString &code, const QString &desc);
         void setLabelLink(QLabel *label, const QString &url);
         bool saveImage(const QString &path, const char *extension, const QByteArray &data);
         bool saveAssetFile(const QString path, const QByteArray &data);
@@ -111,6 +113,7 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         QComboBox *assetCombo;
         QString pattern;
         QString dimension;
+        int assetTypeCode;
         QString assetType;
         int itemsCounter;
         QString linkStyle;

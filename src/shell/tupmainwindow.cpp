@@ -102,9 +102,9 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
     QFile file(THEME_DIR + "config/ui.qss");
     if (file.exists()) {
         file.open(QFile::ReadOnly);
-        QString styleSheet = QLatin1String(file.readAll());
-        if (styleSheet.length() > 0)
-            setStyleSheet(styleSheet);
+        uiStyleSheet = QLatin1String(file.readAll());
+        if (uiStyleSheet.length() > 0)
+            setStyleSheet(uiStyleSheet);
         file.close();
     } else {
         #ifdef TUP_DEBUG 
@@ -489,6 +489,7 @@ bool TupMainWindow::cancelChanges()
 {
     if (m_projectManager->projectWasModified()) {
         QMessageBox msgBox;
+        msgBox.setStyleSheet(uiStyleSheet);
         msgBox.setWindowTitle(tr("Question"));
         msgBox.setIcon(QMessageBox::Question);
         msgBox.setText(tr("The document has been modified."));
@@ -1427,6 +1428,9 @@ void TupMainWindow::restoreFramesMode(TupProject::Mode mode)
         timeView->enableButton(false);
         scenesView->enableButton(false);
     }
+
+    if (m_libraryWidget)
+        m_libraryWidget->updateSpaceContext(mode);
 }
 
 void TupMainWindow::requestProject()

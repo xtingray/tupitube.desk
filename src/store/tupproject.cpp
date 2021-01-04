@@ -491,7 +491,7 @@ Scenes TupProject::getScenes() const
 bool TupProject::createSymbol(int type, const QString &name, const QByteArray &data, const QString &folder)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::createSymbol()]";
+        qDebug() << "[TupProject::createSymbol()] - name -> " << name;
     #endif
    
     if (!isOpen) {
@@ -604,8 +604,8 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                                        int layerIndex, int frameIndex)
 {    
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::insertSymbolIntoFrame()]";
-    #endif        
+        qDebug() << "[TupProject::insertSymbolIntoFrame()] - spaceMode -> " << spaceMode;
+    #endif
     
     TupFrame *frame = nullptr;
     TupScene *scene = this->sceneAt(sceneIndex);
@@ -652,92 +652,92 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
             TupLibraryObject *object = library->getObject(name);
             if (object) {
                 switch (object->getType()) {
-                        case TupLibraryObject::Item:
-                        {
-                             TupGraphicLibraryItem *libraryItem = new TupGraphicLibraryItem(object);
-                             int zLevel = frame->getTopZLevel();
-                             libraryItem->setZValue(zLevel);
-                             frame->addLibraryItem(name, libraryItem);
-                        }
-                        break;
-                        case TupLibraryObject::Image:
-                        {
-                             TupGraphicLibraryItem *libraryItem = new TupGraphicLibraryItem(object);
-                             int imageW = static_cast<int>(libraryItem->boundingRect().width());
-                             int imageH = static_cast<int> (libraryItem->boundingRect().height());
+                    case TupLibraryObject::Item:
+                    {
+                         TupGraphicLibraryItem *libraryItem = new TupGraphicLibraryItem(object);
+                         int zLevel = frame->getTopZLevel();
+                         libraryItem->setZValue(zLevel);
+                         frame->addLibraryItem(name, libraryItem);
+                    }
+                    break;
+                    case TupLibraryObject::Image:
+                    {
+                         TupGraphicLibraryItem *libraryItem = new TupGraphicLibraryItem(object);
+                         int imageW = static_cast<int>(libraryItem->boundingRect().width());
+                         int imageH = static_cast<int> (libraryItem->boundingRect().height());
 
-                             qreal xPos = 0;
-                             qreal yPos = 0;
-                             if (dimension.width() > imageW)
-                                 xPos = (dimension.width() - imageW) / 2;
-                             if (dimension.height() > imageH)
-                                 yPos = (dimension.height() - imageH) / 2;
+                         qreal xPos = 0;
+                         qreal yPos = 0;
+                         if (dimension.width() > imageW)
+                             xPos = (dimension.width() - imageW) / 2;
+                         if (dimension.height() > imageH)
+                             yPos = (dimension.height() - imageH) / 2;
 
-                             libraryItem->moveBy(xPos, yPos);
+                         libraryItem->moveBy(xPos, yPos);
 
-                             int zLevel = frame->getTopZLevel();
-                             libraryItem->setZValue(zLevel);
-                             frame->addItem(name, libraryItem);
-                        }
-                        break;
-                        case TupLibraryObject::Svg:
-                        {
-                             QString path(object->getDataPath());
-                             TupSvgItem *svgItem = new TupSvgItem(path, frame);
-                             svgItem->setSymbolName(name);
+                         int zLevel = frame->getTopZLevel();
+                         libraryItem->setZValue(zLevel);
+                         frame->addItem(name, libraryItem);
+                    }
+                    break;
+                    case TupLibraryObject::Svg:
+                    {
+                         QString path(object->getDataPath());
+                         TupSvgItem *svgItem = new TupSvgItem(path, frame);
+                         svgItem->setSymbolName(name);
 
-                             int svgW = static_cast<int> (svgItem->boundingRect().width());
-                             int svgH = static_cast<int> (svgItem->boundingRect().height());
-                             if (dimension.width() < svgW || dimension.height() < svgH) {
-                                 qreal factorW = static_cast<qreal>(dimension.width()) / static_cast<qreal>(svgW);
-                                 qreal factorH = static_cast<qreal>(dimension.height()) / static_cast<qreal>(svgH);
-                                 if (svgW < svgH) {
-                                     svgItem->setScale(factorW);
-                                     svgW = static_cast<int> (svgW * factorW);
-                                     svgH = static_cast<int> (svgH * factorW);
-                                 } else {
-                                     svgItem->setScale(factorH);
-                                     svgW = static_cast<int> (svgW * factorH);
-                                     svgH = static_cast<int> (svgH * factorH);
-                                 }
+                         int svgW = static_cast<int> (svgItem->boundingRect().width());
+                         int svgH = static_cast<int> (svgItem->boundingRect().height());
+                         if (dimension.width() < svgW || dimension.height() < svgH) {
+                             qreal factorW = static_cast<qreal>(dimension.width()) / static_cast<qreal>(svgW);
+                             qreal factorH = static_cast<qreal>(dimension.height()) / static_cast<qreal>(svgH);
+                             if (svgW < svgH) {
+                                 svgItem->setScale(factorW);
+                                 svgW = static_cast<int> (svgW * factorW);
+                                 svgH = static_cast<int> (svgH * factorW);
+                             } else {
+                                 svgItem->setScale(factorH);
+                                 svgW = static_cast<int> (svgW * factorH);
+                                 svgH = static_cast<int> (svgH * factorH);
                              }
+                         }
 
-                             qreal xPos = 0;
-                             qreal yPos = 0;
-                             if (dimension.width() > svgW)
-                                 xPos = (dimension.width() - svgW) / 2;
-                             if (dimension.height() > svgH)
-                                 yPos = (dimension.height() - svgH) / 2;
+                         qreal xPos = 0;
+                         qreal yPos = 0;
+                         if (dimension.width() > svgW)
+                             xPos = (dimension.width() - svgW) / 2;
+                         if (dimension.height() > svgH)
+                             yPos = (dimension.height() - svgH) / 2;
 
-                             svgItem->moveBy(xPos, yPos);
+                         svgItem->moveBy(xPos, yPos);
 
-                             int zLevel = frame->getTopZLevel();
-                             svgItem->setZValue(zLevel);
-                             frame->addSvgItem(name, svgItem);
-                        }
-                        break;
-                        case TupLibraryObject::Text:
-                        {
-                             // SQA: Just out of curiosity, check if this case really happens!
-                             // tFatal() << "TupProject::insertSymbolIntoFrame() - Just tracing text!";
-                             TupGraphicLibraryItem *libraryItem = new TupGraphicLibraryItem(object);
+                         int zLevel = frame->getTopZLevel();
+                         svgItem->setZValue(zLevel);
+                         frame->addSvgItem(name, svgItem);
+                    }
+                    break;
+                    case TupLibraryObject::Text:
+                    {
+                         // SQA: Just out of curiosity, check if this case really happens!
+                         // tFatal() << "TupProject::insertSymbolIntoFrame() - Just tracing text!";
+                         TupGraphicLibraryItem *libraryItem = new TupGraphicLibraryItem(object);
 
-                             int zLevel = frame->getTopZLevel();
-                             libraryItem->setZValue(zLevel);
-                             frame->addItem(name, libraryItem);
-                        }
-                        break;
-                        case TupLibraryObject::Sound:
-                        {
-                             TupSoundLayer *sound = scene->createSoundLayer(scene->getSoundLayers().count());
-                             sound->fromSymbol(object->getSymbolName());
-                        }
-                        break;
-                        default:
-                             #ifdef TUP_DEBUG
-                                 qDebug() << "[TupProject::insertSymbolIntoFrame()] -> Unknown Object Type";
-                             #endif                         
-                        break;
+                         int zLevel = frame->getTopZLevel();
+                         libraryItem->setZValue(zLevel);
+                         frame->addItem(name, libraryItem);
+                    }
+                    break;
+                    case TupLibraryObject::Sound:
+                    {
+                         TupSoundLayer *sound = scene->createSoundLayer(scene->getSoundLayers().count());
+                         sound->fromSymbol(object->getSymbolName());
+                    }
+                    break;
+                    default:
+                         #ifdef TUP_DEBUG
+                             qDebug() << "[TupProject::insertSymbolIntoFrame()] -> Unknown Object Type";
+                         #endif
+                    break;
                 }
 
                 return true;

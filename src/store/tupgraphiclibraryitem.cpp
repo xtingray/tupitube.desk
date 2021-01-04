@@ -67,21 +67,21 @@ QDomElement TupGraphicLibraryItem::toXml(QDomDocument &doc) const
 
 void TupGraphicLibraryItem::fromXml(const QString &xml)
 {
-    Q_UNUSED(xml);
+    Q_UNUSED(xml)
 }
 
 void TupGraphicLibraryItem::setObject(TupLibraryObject *object)
 {
     if (!object) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupGraphicLibraryItem::setObject() - Setting null library object";
+            qDebug() << "[TupGraphicLibraryItem::setObject()] - Fatal Error: Library object is NULL!";
         #endif
 
         return;
     }
     
     #ifdef TUP_DEBUG
-        qWarning() << "TupGraphicLibraryItem::setObject() - object->symbolName(): " << object->getSymbolName();
+        qWarning() << "[TupGraphicLibraryItem::setObject()] - object->symbolName() -> " << object->getSymbolName();
     #endif
 
     symbolName = object->getSymbolName();

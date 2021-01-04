@@ -238,6 +238,7 @@ class TupMainWindow : public TabbedMainWindow
 
     // Components
     private:
+        QString uiStyleSheet;
         QToolBar *mainToolBar;
         QToolBar *alternativeToolBar;
         TupExposureSheet *m_exposureSheet;

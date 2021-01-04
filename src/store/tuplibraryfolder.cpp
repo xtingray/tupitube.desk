@@ -79,7 +79,6 @@ TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::Type type, co
     }
 
     TupLibraryObject *object = new TupLibraryObject(name, folder, type, this);
-
     if (!object->loadRawData(data)) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupLibraryFolder::createSymbol()] - Fatal Error: Object have no data raw!";
@@ -90,7 +89,6 @@ TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::Type type, co
     }
 
     bool ret;
-
     if (folder.length() == 0)
         ret = addObject(object);
     else

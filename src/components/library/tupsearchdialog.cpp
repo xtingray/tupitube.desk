@@ -53,6 +53,7 @@
 
 TupSearchDialog::TupSearchDialog(const QSize &size, QWidget *parent) : QDialog(parent)
 {
+    setModal(true);
     setWindowTitle(tr("Assets Search Engine"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/search.png")));
 
@@ -84,7 +85,7 @@ TupSearchDialog::TupSearchDialog(const QSize &size, QWidget *parent) : QDialog(p
 
     QPushButton *closeButton = new QPushButton(tr("Close"));
     layout->addWidget(closeButton);
-    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(accept()));
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->addWidget(closeButton, 1, Qt::AlignRight);
@@ -104,7 +105,7 @@ TupSearchDialog::~TupSearchDialog()
 
 QWidget * TupSearchDialog::searchTab()
 {
-    linkStyle = "style=\"color:#0064be;\">";
+    linkStyle = "style=\"color:#0064be;\"";
     QWidget *searchWidget = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout(searchWidget);
 
@@ -266,9 +267,8 @@ QWidget * TupSearchDialog::searchTab()
     font.setBold(false);
     descLabel->setFont(font);
 
-    TLabel *supportLabel = new TLabel("<a href=\"https://tupitube.com\" " + linkStyle + tr("Want to support us?") + "</a>");
+    TLabel *supportLabel = new TLabel("<a href=\"https://tupitube.com\" " + linkStyle + ">" + tr("Want to support us?") + "</a>");
     supportLabel->setAlignment(Qt::AlignHCenter);
-    // font.setUnderline(true);
     supportLabel->setFont(font);
     supportLabel->setTextFormat(Qt::RichText);
     supportLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
@@ -280,10 +280,30 @@ QWidget * TupSearchDialog::searchTab()
     noResultLayout->addWidget(supportLabel);
     noResultLayout->addStretch();
 
+    QWidget *errorPanel = new QWidget;
+    errorPanel->setStyleSheet("background-color:#c8c8c8; border-radius: 10px;");
+    QVBoxLayout *errorLayout = new QVBoxLayout(errorPanel);
+
+    QLabel *errorIcon = new QLabel;
+    errorIcon->setPixmap(QPixmap(THEME_DIR + "icons/warning_sign.png"));
+    errorIcon->setAlignment(Qt::AlignHCenter);
+
+    QLabel *errorLabel = new QLabel(tr("Error while processing request. Please, try again."));
+    font.setPointSize(14);
+    font.setBold(true);
+    errorLabel->setFont(font);
+    errorLabel->setAlignment(Qt::AlignHCenter);
+
+    errorLayout->addStretch();
+    errorLayout->addWidget(errorIcon);
+    errorLayout->addWidget(errorLabel);
+    errorLayout->addStretch();
+
     dynamicPanel = new TCollapsibleWidget;
     dynamicPanel->addWidget(resultPanel);
     dynamicPanel->addWidget(progressPanel);
-    dynamicPanel->addWidget(noResultPanel);
+    dynamicPanel->addWidget(noResultPanel);    
+    dynamicPanel->addWidget(errorPanel);
 
     layout->addWidget(controlPanel);
     layout->addWidget(dynamicPanel, Qt::AlignCenter);
@@ -362,7 +382,8 @@ void TupSearchDialog::startSearch()
     if (pattern.length() > 0) {
         if (pattern.length() > 30)
             pattern = pattern.left(30);
-        assetType = QString::number(assetCombo->currentIndex());
+        assetTypeCode = assetCombo->currentIndex();
+        assetType = QString::number(assetTypeCode);
 
         #ifdef TUP_DEBUG
             qDebug() << "[TupSearchDialog::startSearch()] - pattern -> " << pattern;
@@ -543,8 +564,7 @@ void TupSearchDialog::loadAssets(const QString &input)
                     #ifdef TUP_DEBUG
                         qDebug() << "[TupSearchDialog::loadAssets()] - Request No " << (i + 1);
                     #endif
-                    progressLabel->setText("<b>Getting item " + asset.description + "</b>");
-                    getMiniature(asset.code);
+                    getMiniature(asset.code, asset.description);
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "[TupSearchDialog::loadAssets()] - Fatal Error: Can't create asset dir -> " << path;
@@ -560,19 +580,20 @@ void TupSearchDialog::loadAssets(const QString &input)
                         resetProgress(Result);
                     }
                 } else { // Getting file for the first time
-                    getMiniature(asset.code);
+                    getMiniature(asset.code, asset.description);
                 }
             }
         }
     }
 }
 
-void TupSearchDialog::getMiniature(const QString &code)
+void TupSearchDialog::getMiniature(const QString &code, const QString &desc)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupSearchDialog::getMiniature()] - code -> " << code;
     #endif
 
+    progressLabel->setText("<b>Getting item " + desc + "</b>");
     progressBar->reset();
 
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
@@ -678,9 +699,7 @@ void TupSearchDialog::processMiniature(QNetworkReply *reply)
         #ifdef TUP_DEBUG
             qDebug() << "[TupSearchDialog::processMiniature()] - Fatal Error: No answer from server!";
         #endif
-
-        resetProgress(NoResult);
-        TOsd::self()->display(TOsd::Error, tr("Network Error 709. Please, contact us!"));
+        resetProgress(Error);
     }
 
     progressBar->reset();
@@ -739,7 +758,7 @@ void TupSearchDialog::getAsset()
             QByteArray data = assetFile.readAll();
             assetFile.close();
             int extId = item.ext.toInt();
-            emit assetStored(item.code, extStrings[extId], extId, data);
+            emit assetStored(item.code, static_cast<AssetType>(assetTypeCode), extStrings[extId], extId, data);
         } else {
             #ifdef TUP_DEBUG
                 qWarning() << "[TupSearchDialog::getAsset()] - Fatal Error: can't open asset -> " << path;
@@ -803,15 +822,27 @@ void TupSearchDialog::processAsset(QNetworkReply *reply)
           case JPG:
           case PNG:
             {
-                if (saveImage(path, ext.toUpper().toUtf8(), data))
-                    emit assetStored(name, ext, extId, data);
+                if (saveImage(path, ext.toUpper().toUtf8(), data)) {
+                    emit assetStored(name, static_cast<AssetType>(assetTypeCode), ext, extId, data);
+                } else {
+                    resetProgress(Error);
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupSearchDialog::processAsset()] - Fatal Error: can't save asset! -> " << name;
+                    #endif
+                }
             }
           break;
           case SVG:
           case TOBJ:
             {
-                if (saveAssetFile(path, data))
-                    emit assetStored(name, ext, extId, data);
+                if (saveAssetFile(path, data)) {
+                    emit assetStored(name, static_cast<AssetType>(assetTypeCode), ext, extId, data);
+                } else {
+                    resetProgress(Error);
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupSearchDialog::processAsset()] - Fatal Error: can't save asset! -> " << name;
+                    #endif
+                }
             }
           break;
         }

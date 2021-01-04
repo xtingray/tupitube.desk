@@ -53,6 +53,7 @@
 #include "tosd.h"
 #include "talgorithm.h"
 #include "toptionaldialog.h"
+#include "tupsearchdialog.h"
 
 #include <QScreen>
 #include <QTreeWidget>
@@ -98,6 +99,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void setLibrary(TupLibrary *assets);
         void setNetworking(bool isNetworked);
         void stopSoundPlayer();
+        void updateSpaceContext(TupProject::Mode mode);
 
     protected:
         virtual void sceneResponse(TupSceneResponse *response);
@@ -106,6 +108,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
 
     private slots:
         void previewItem(QTreeWidgetItem *item);
+        // void insertObjectManually();
         void insertObjectInWorkspace();
         void removeCurrentItem();
         void cloneObject(QTreeWidgetItem *item);
@@ -125,7 +128,8 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void updateItemEditionState();
         void importNativeObjects();
         void updateSoundTiming(int frame);
-        void importAsset(const QString &name, const QString &extension, int extensionId, QByteArray &data);
+        void importAsset(const QString &name, TupSearchDialog::AssetType assetType, const QString &extension,
+                         int extensionId, QByteArray &data);
 
     public slots:
         void addFolder(const QString &folderName = QString());
@@ -139,6 +143,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
 
     private slots:
         void openSearchDialog();
+        void recoverMode();
 
     signals:
         void requestCurrentGraphic();
@@ -164,6 +169,8 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         QScreen *screen;
         TupLibrary *library;
         TupProject *project;
+        TupProject::Mode currentMode;
+        TupProject::Mode previousMode;
         TupLibraryDisplay *display;
         TupItemManager *libraryTree;
         int childCount;

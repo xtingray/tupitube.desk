@@ -35,7 +35,6 @@
 
 #include "tuplibrarywidget.h"
 #include "tuplayer.h"
-#include "tupsearchdialog.h"
 #include "tupitemfactory.h"
 #include "tupitemgroup.h"
 
@@ -51,6 +50,7 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     renaming = false;
     mkdir = false;
     isEffectSound = false;
+    currentMode = TupProject::FRAMES_MODE;
 
     setWindowIcon(QPixmap(THEME_DIR + "icons/library.png"));
     setWindowTitle(tr("Library"));
@@ -112,7 +112,6 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     connect(libraryTree, SIGNAL(newVectorCall()), this,
                                    SLOT(createVectorObject()));
 
-    // QGroupBox *buttons = new QGroupBox(this);
     QGroupBox *buttons = new QGroupBox;
     QHBoxLayout *buttonLayout = new QHBoxLayout(buttons);
     buttonLayout->setMargin(0);
@@ -157,7 +156,7 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     // addFolderGC->setEnabled(false);
 
     TImageButton *gctoDrawingArea = new TImageButton(QPixmap(THEME_DIR + "icons/library_to_ws.png"), 22, buttons);
-    connect(gctoDrawingArea, SIGNAL(clicked()), this, SLOT(insertObjectInWorkspace()));
+    connect(gctoDrawingArea, SIGNAL(clicked()), this, SLOT(insertObjectManually()));
     gctoDrawingArea->setToolTip(tr("Insert library item into frame"));
     buttonLayout->addWidget(gctoDrawingArea);
 
@@ -202,6 +201,11 @@ void TupLibraryWidget::setLibrary(TupLibrary *assets)
 
     library = assets;
     project = library->getProject();
+}
+
+void TupLibraryWidget::updateSpaceContext(TupProject::Mode mode)
+{
+    currentMode = mode;
 }
 
 void TupLibraryWidget::setNetworking(bool netOn)
@@ -323,7 +327,7 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
 void TupLibraryWidget::insertObjectInWorkspace()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::insertObjectInWorkspace()]";
+        qDebug() << "[TupLibraryWidget::insertObjectInWorkspace()] - currentMode -> " << currentMode;
     #endif
 
     if (libraryTree->topLevelItemCount() == 0) {
@@ -362,7 +366,7 @@ void TupLibraryWidget::insertObjectInWorkspace()
     QString key = libraryTree->currentItem()->text(1) + "." + extension.toLower();
     int objectType = libraryTree->itemType();
     TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::InsertSymbolIntoFrame, key,
-                                TupLibraryObject::Type(objectType), project->spaceContext(),
+                                TupLibraryObject::Type(objectType), currentMode,
                                 nullptr, QString(), currentFrame.scene, currentFrame.layer, currentFrame.frame);
 
     emit requestTriggered(&request);
@@ -2026,12 +2030,20 @@ void TupLibraryWidget::stopSoundPlayer()
 
 void TupLibraryWidget::openSearchDialog()
 {
+    previousMode = currentMode;
     TupSearchDialog *dialog = new TupSearchDialog(project->getDimension());
     connect(dialog, &TupSearchDialog::assetStored, this, &TupLibraryWidget::importAsset);
+    connect(dialog, &TupSearchDialog::accepted, this, &TupLibraryWidget::recoverMode);
     dialog->show();
 }
 
-void TupLibraryWidget::importAsset(const QString &name, const QString &extension, int extensionId, QByteArray &data)
+void TupLibraryWidget::recoverMode()
+{
+    currentMode = previousMode;
+}
+
+void TupLibraryWidget::importAsset(const QString &name, TupSearchDialog::AssetType assetType,
+                                   const QString &extension, int extensionId, QByteArray &data)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryWidget::importAsset()] - name -> " << name;
@@ -2041,11 +2053,10 @@ void TupLibraryWidget::importAsset(const QString &name, const QString &extension
     int i = 0;
     while (library->exists(key)) {
         i++;
-        key = name + "-" + QString::number(i) + extension;
+        key = name + "-" + QString::number(i) + "." + extension;
     }
 
     TupLibraryObject::Type type;
-
     switch(extensionId) {
       case TupSearchDialog::JPG:
       case TupSearchDialog::PNG:
@@ -2065,8 +2076,14 @@ void TupLibraryWidget::importAsset(const QString &name, const QString &extension
       break;
     }
 
+    currentMode = project->spaceContext();
+    if (assetType == TupSearchDialog::StaticBg)
+        currentMode = TupProject::VECTOR_STATIC_BG_MODE;
+    else if (assetType == TupSearchDialog::DynamicBg)
+        currentMode = TupProject::VECTOR_DYNAMIC_BG_MODE;
+
     TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
-                                                   type, project->spaceContext(), data, QString(),
+                                                   type, currentMode, data, QString(),
                                                    currentFrame.scene, currentFrame.layer, currentFrame.frame);
     emit requestTriggered(&request);
     data.clear();
