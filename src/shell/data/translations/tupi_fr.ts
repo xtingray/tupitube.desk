@@ -159,7 +159,7 @@
         <translation>Propriétés de l&apos;Interpolation de coloration</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/opacity/configurator.cpp" line="56"/>
+        <location filename="../../../plugins/tools/opacity/configurator.cpp" line="55"/>
         <source>Opacity Tween Properties</source>
         <translation>Propriétés de l&apos;Interpolation d&apos;opacité</translation>
     </message>
@@ -546,9 +546,9 @@
     </message>
     <message>
         <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="131"/>
-        <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="481"/>
-        <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="508"/>
-        <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="515"/>
+        <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="482"/>
+        <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="509"/>
+        <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="516"/>
         <source>Frames Total</source>
         <translation>Total des Cadres</translation>
     </message>
@@ -588,27 +588,27 @@
         <translation>Annuler l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="312"/>
+        <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="313"/>
         <source>Update Tween</source>
         <translation>Mettre à jour l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="314"/>
+        <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="315"/>
         <source>Close Tween Properties</source>
         <translation>Fermer les propriétés de l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="320"/>
+        <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="321"/>
         <source>You must select at least one object!</source>
         <translation>Vous devez sélectionner au moins un objet!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="325"/>
+        <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="326"/>
         <source>You must set Tween properties first!</source>
         <translation>Vous devez d&apos;abord définir les propriétés d&apos;interpolation!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="369"/>
+        <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="370"/>
         <source>Select objects for Tweening first!</source>
         <translation>Sélectionner les objets pour l&apos;interpolation d&apos;abord!</translation>
     </message>
@@ -1041,120 +1041,120 @@
         <translation>Commencer à l&apos;image</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="114"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="113"/>
         <source>Ending at frame</source>
         <translation>Terminer à l&apos;image</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="138"/>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="705"/>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="751"/>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="758"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="136"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="681"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="719"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="726"/>
         <source>Frames Total</source>
         <translation>Total des Cadres</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="147"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="145"/>
         <source>Continuous</source>
         <translation>Continu</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="148"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="146"/>
         <source>Partial</source>
         <translation>Partiel</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="152"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="150"/>
         <source>Type</source>
         <translation>Type</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="161"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="159"/>
         <source>Speed (Degrees/Frame)</source>
         <translation>Vitesse (Degrés/Image)</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="199"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="197"/>
         <source>Direction</source>
         <translation>Direction</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="203"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="201"/>
         <source>Clockwise</source>
         <translation>Rotation horaire</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="204"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="202"/>
         <source>Counterclockwise</source>
         <translation>Rotation antihoraire</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="244"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="242"/>
         <source>Degrees Range</source>
         <translation>Gamme des degrés</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="247"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="245"/>
         <source>Start at</source>
         <translation>Commence à</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="263"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="261"/>
         <source>Finish at</source>
         <translation>Fini à</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="279"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="277"/>
         <source>Loop</source>
         <translation>Boucle</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="288"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="286"/>
         <source>Loop with Reverse</source>
         <translation>Boucle avec retour</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="338"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="335"/>
         <source>Save Tween</source>
         <translation>Sauvegarder l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="340"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="337"/>
         <source>Cancel Tween</source>
         <translation>Annuler l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="419"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="414"/>
         <source>Update Tween</source>
         <translation>Mettre à jour l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="421"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="416"/>
         <source>Close Tween Properties</source>
         <translation>Fermer les propriétés de l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="427"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="422"/>
         <source>You must select at least one object!</source>
         <translation>Vous devez sélectionner au moins un objet!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="436"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="431"/>
         <source>You must set Tween properties first!</source>
         <translation>Vous devez d&apos;abord définir les propriétés d&apos;interpolation!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="447"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="442"/>
         <source>Angle range must be greater than 0!</source>
         <translation>L&apos;amplitude angulaire doit être supérieure à 0!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="456"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="451"/>
         <source>Angle range must be greater than Speed!</source>
         <translation>L&apos;amplitude angulaire doit être supérieure à la vitesse!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="504"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="499"/>
         <source>Select objects for Tweening first!</source>
         <translation>Sélectionner les objets pour l&apos;interpolation d&apos;abord!</translation>
     </message>
@@ -1193,9 +1193,9 @@
     </message>
     <message>
         <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="135"/>
-        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="536"/>
-        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="571"/>
-        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="578"/>
+        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="510"/>
+        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="537"/>
+        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="544"/>
         <source>Frames Total</source>
         <translation>Total des Cadres</translation>
     </message>
@@ -1240,37 +1240,37 @@
         <translation>Boucle avec retour</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="245"/>
+        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="244"/>
         <source>Save Tween</source>
         <translation>Sauvegarder l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="247"/>
+        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="246"/>
         <source>Cancel Tween</source>
         <translation>Annuler l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="327"/>
+        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="318"/>
         <source>Update Tween</source>
         <translation>Mettre à jour l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="329"/>
+        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="320"/>
         <source>Close Tween Properties</source>
         <translation>Fermer les propriétés de l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="335"/>
+        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="326"/>
         <source>You must select at least one object!</source>
         <translation>Vous devez sélectionner au moins un objet!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="340"/>
+        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="331"/>
         <source>You must set Tween properties first!</source>
         <translation>Vous devez d&apos;abord définir les propriétés d&apos;interpolation!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="385"/>
+        <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="376"/>
         <source>Select objects for Tweening first!</source>
         <translation>Sélectionner les objets pour l&apos;interpolation d&apos;abord!</translation>
     </message>
@@ -1573,12 +1573,12 @@
         <translation>Boucle avec retour</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/shear/shearsettings.cpp" line="242"/>
+        <location filename="../../../plugins/tools/shear/shearsettings.cpp" line="241"/>
         <source>Save Tween</source>
         <translation>Sauvegarder l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/shear/shearsettings.cpp" line="244"/>
+        <location filename="../../../plugins/tools/shear/shearsettings.cpp" line="243"/>
         <source>Cancel Tween</source>
         <translation>Annuler l&apos;interpolation</translation>
     </message>
@@ -3187,7 +3187,7 @@ SVP, renommer le fichier du projet</translation>
         <location filename="../../../components/exposure/tupexposurescenetabwidget.cpp" line="102"/>
         <location filename="../../../components/exposure/tupexposurescenetabwidget.cpp" line="133"/>
         <source>Current Layer Opacity</source>
-        <translation type="unfinished">Opacité du calque courant</translation>
+        <translation>Opacité du calque courant</translation>
     </message>
 </context>
 <context>
@@ -3414,22 +3414,22 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="../../../libui/tupgeneralpreferences.cpp" line="127"/>
         <source>Interface</source>
-        <translation type="unfinished"></translation>
+        <translation>Interface</translation>
     </message>
     <message>
         <location filename="../../../libui/tupgeneralpreferences.cpp" line="132"/>
         <source>Enable autosave feature every</source>
-        <translation type="unfinished"></translation>
+        <translation>Activer la fonction d&apos;enregistrement automatique toutes les</translation>
     </message>
     <message>
         <location filename="../../../libui/tupgeneralpreferences.cpp" line="142"/>
         <source>minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>minutes</translation>
     </message>
     <message>
         <location filename="../../../libui/tupgeneralpreferences.cpp" line="172"/>
         <source>Player</source>
-        <translation type="unfinished">Lecteur</translation>
+        <translation>Lecteur</translation>
     </message>
     <message>
         <location filename="../../../libui/tupgeneralpreferences.cpp" line="198"/>
@@ -3823,7 +3823,7 @@ SVP, renommer le fichier du projet</translation>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="122"/>
         <source>Search for Assets</source>
-        <translation type="unfinished"></translation>
+        <translation>Rechercher des Actifs</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="133"/>
@@ -5772,149 +5772,164 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="57"/>
         <source>Assets Search Engine</source>
-        <translation type="unfinished"></translation>
+        <translation>Moteur de Recherche d&apos;Actifs</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="83"/>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="128"/>
         <source>Search</source>
-        <translation type="unfinished">Rechercher</translation>
+        <translation>Rechercher</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="84"/>
         <source>Support Us</source>
-        <translation type="unfinished"></translation>
+        <translation>Soutenez-nous</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="86"/>
         <source>Close</source>
-        <translation type="unfinished">Fermer</translation>
+        <translation>Fermer</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="136"/>
         <source>Object</source>
-        <translation type="unfinished"></translation>
+        <translation>Objet</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="137"/>
         <source>Character</source>
-        <translation type="unfinished"></translation>
+        <translation>Personnage</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="138"/>
         <source>Static Background</source>
-        <translation type="unfinished"></translation>
+        <translation>Image de Fond Statique</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="139"/>
         <source>Dynamic Background</source>
-        <translation type="unfinished"></translation>
+        <translation>Image de Fond Dynamique</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="140"/>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Du Son</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="183"/>
         <source>Import Asset</source>
-        <translation type="unfinished"></translation>
+        <translation>Importer un Élément</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="229"/>
         <source>Searching...</source>
-        <translation type="unfinished"></translation>
+        <translation>Recherche...</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="264"/>
         <source>But we are working on new assets...</source>
-        <translation type="unfinished"></translation>
+        <translation>Mais nous travaillons sur de nouveaux actifs ...</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="270"/>
         <source>Want to support us?</source>
-        <translation type="unfinished"></translation>
+        <translation>Envie de nous soutenir?</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="291"/>
         <source>Error while processing request. Please, try again.</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur lors du traitement de la demande. Veuillez réessayer.</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="324"/>
         <source>From the &lt;b&gt;MaeFloresta&lt;/b&gt; startup we are requesting the support from our users community to keep creating new assets for our library repository. Thanks to your contributions we can deliver a better product. You can start helping from &lt;b&gt;USD 1&lt;/b&gt;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Depuis le startup de &lt;b&gt;MaeFloresta&lt;/b&gt;, nous demandons le soutien de notre communauté d&apos;utilisateurs pour continuer à créer de nouveaux actifs pour notre référentiel de bibliothèque. Grâce à vos contributions, nous pouvons fournir un meilleur produit. Vous pouvez commencer à aider à partir de &lt;b&gt;1 USD&lt;/b&gt;.</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="335"/>
         <source>One Time Donation</source>
-        <translation type="unfinished"></translation>
+        <translation>Don Unique</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="340"/>
         <source>Join Our Patreon</source>
-        <translation type="unfinished"></translation>
+        <translation>Rejoignez notre Patreon</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsearchdialog.cpp" line="345"/>
         <source>Sponsors</source>
-        <translation type="unfinished"></translation>
+        <translation>Les Sponsors</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsearchdialog.cpp" line="430"/>
+        <location filename="../../../components/library/tupsearchdialog.cpp" line="429"/>
         <source>Invalid search: Empty pattern!</source>
-        <translation type="unfinished"></translation>
+        <translation>Recherche non valide: Modèle vide!</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsearchdialog.cpp" line="452"/>
+        <location filename="../../../components/library/tupsearchdialog.cpp" line="451"/>
         <source>Network Error 609. Please, contact us!</source>
-        <translation type="unfinished">Erreur réseau 409. Veuillez nous contacter! {609.?}</translation>
+        <translation>Erreur Réseau 609. Veuillez nous contacter!</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsearchdialog.cpp" line="460"/>
+        <location filename="../../../components/library/tupsearchdialog.cpp" line="459"/>
         <source>Network Fatal Error. Please, contact us!</source>
-        <translation type="unfinished">Erreur fatale du réseau. Contactez nous s&apos;il vous plait!</translation>
+        <translation>Erreur fatale du réseau. Contactez nous s&apos;il vous plait!</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsearchdialog.cpp" line="684"/>
-        <location filename="../../../components/library/tupsearchdialog.cpp" line="690"/>
-        <source>Can&apos;t load result images!</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../../components/library/tupsearchdialog.cpp" line="515"/>
+        <source>No Results for</source>
+        <translation>Aucun Résultat pour</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsearchdialog.cpp" line="719"/>
+        <location filename="../../../components/library/tupsearchdialog.cpp" line="515"/>
+        <source>YET!</source>
+        <translation>ENCORE!</translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsearchdialog.cpp" line="595"/>
+        <source>Getting item</source>
+        <translation>Obtention de l&apos;élément</translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsearchdialog.cpp" line="683"/>
+        <location filename="../../../components/library/tupsearchdialog.cpp" line="689"/>
+        <source>Can&apos;t load the result images!</source>
+        <translation>Impossible de charger les images de résultat!</translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsearchdialog.cpp" line="874"/>
+        <source>Can&apos;t save the asset!</source>
+        <translation>Impossible de sauvegarder l&apos;élément!</translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsearchdialog.cpp" line="881"/>
+        <source>Can&apos;t load the asset!</source>
+        <translation>Impossible de charger l&apos;élément!</translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsearchdialog.cpp" line="906"/>
+        <source>Can&apos;t load the asset file!</source>
+        <translation>Impossible de charger le fichier d&apos;actif!</translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsearchdialog.cpp" line="718"/>
         <source>Asset Extension:</source>
-        <translation type="unfinished"></translation>
+        <translation>Extension d&apos;actif:</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsearchdialog.cpp" line="721"/>
+        <location filename="../../../components/library/tupsearchdialog.cpp" line="720"/>
         <source>Creator:</source>
-        <translation type="unfinished"></translation>
+        <translation>Créateur:</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsearchdialog.cpp" line="724"/>
+        <location filename="../../../components/library/tupsearchdialog.cpp" line="723"/>
         <source>License:</source>
-        <translation type="unfinished"></translation>
+        <translation>Licence:</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsearchdialog.cpp" line="853"/>
+        <location filename="../../../components/library/tupsearchdialog.cpp" line="852"/>
         <source>Network Error 809. Please, contact us!</source>
-        <translation type="unfinished">Erreur réseau 409. Veuillez nous contacter! {809.?}</translation>
-    </message>
-    <message>
-        <location filename="../../../components/library/tupsearchdialog.cpp" line="875"/>
-        <source>Can&apos;t save asset!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../components/library/tupsearchdialog.cpp" line="882"/>
-        <source>Can&apos;t load asset!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../components/library/tupsearchdialog.cpp" line="907"/>
-        <source>Can&apos;t load asset file!</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur réseau 809. Veuillez nous contacter!</translation>
     </message>
 </context>
 <context>
@@ -6172,7 +6187,7 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
         <location filename="../../../components/timeline/tuptimeline.cpp" line="87"/>
         <location filename="../../../components/timeline/tuptimeline.cpp" line="94"/>
         <source>Current Layer Opacity</source>
-        <translation type="unfinished">Opacité du calque courant</translation>
+        <translation>Opacité du calque courant</translation>
     </message>
     <message>
         <location filename="../../../components/timeline/tuptimeline.cpp" line="302"/>
@@ -6279,6 +6294,11 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
         <translation>Mon Animation</translation>
     </message>
     <message>
+        <location filename="../../../components/export/tupvideoproperties.cpp" line="81"/>
+        <source>Hashtags</source>
+        <translation>Hashtags</translation>
+    </message>
+    <message>
         <location filename="../../../components/export/tupvideoproperties.cpp" line="82"/>
         <source>#tupitube #animation #fun</source>
         <translation>#tupitube #animation #fun</translation>
@@ -6313,11 +6333,6 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
         <location filename="../../../components/export/tupvideoproperties.cpp" line="74"/>
         <source>My Image</source>
         <translation>Mon Image</translation>
-    </message>
-    <message>
-        <location filename="../../../components/export/tupvideoproperties.cpp" line="81"/>
-        <source>Tags</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../../components/export/tupvideoproperties.cpp" line="84"/>
@@ -6550,9 +6565,9 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <message>
         <location filename="../../../plugins/tools/motion/tweener.cpp" line="646"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="432"/>
-        <location filename="../../../plugins/tools/scale/tweener.cpp" line="414"/>
+        <location filename="../../../plugins/tools/scale/tweener.cpp" line="400"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="428"/>
-        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="388"/>
+        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="375"/>
         <location filename="../../../plugins/tools/color/tweener.cpp" line="458"/>
         <source>Tween name is missing!</source>
         <translation>Le nom de l&apos;interpolation est manquante!</translation>
@@ -6560,9 +6575,9 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <message>
         <location filename="../../../plugins/tools/motion/tweener.cpp" line="766"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="532"/>
-        <location filename="../../../plugins/tools/scale/tweener.cpp" line="520"/>
+        <location filename="../../../plugins/tools/scale/tweener.cpp" line="506"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="535"/>
-        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="495"/>
+        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="479"/>
         <location filename="../../../plugins/tools/color/tweener.cpp" line="560"/>
         <source>Frame</source>
         <translation>Image</translation>
@@ -6570,29 +6585,29 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <message>
         <location filename="../../../plugins/tools/motion/tweener.cpp" line="780"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="546"/>
-        <location filename="../../../plugins/tools/scale/tweener.cpp" line="535"/>
+        <location filename="../../../plugins/tools/scale/tweener.cpp" line="520"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="549"/>
-        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="509"/>
+        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="493"/>
         <location filename="../../../plugins/tools/color/tweener.cpp" line="574"/>
         <source>Tween %1 applied!</source>
         <translation>Interpolation %1 appliquée!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="240"/>
+        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="233"/>
         <source>Opacity Tween</source>
         <translation>Interpolation d&apos;opacité</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="159"/>
-        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="523"/>
-        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="527"/>
-        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="528"/>
-        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="529"/>
+        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="157"/>
+        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="507"/>
+        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="511"/>
+        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="512"/>
+        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="513"/>
         <source>Opacity</source>
         <translation>Opacité</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="241"/>
+        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="234"/>
         <source>Shift+O</source>
         <translation>Shift+O</translation>
     </message>
@@ -6608,9 +6623,9 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <message>
         <location filename="../../../plugins/tools/motion/tweener.cpp" line="278"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="170"/>
-        <location filename="../../../plugins/tools/scale/tweener.cpp" line="162"/>
+        <location filename="../../../plugins/tools/scale/tweener.cpp" line="161"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="169"/>
-        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="162"/>
+        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="160"/>
         <location filename="../../../plugins/tools/color/tweener.cpp" line="175"/>
         <source>Warning</source>
         <translation>Attention</translation>
@@ -6618,9 +6633,9 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <message>
         <location filename="../../../plugins/tools/motion/tweener.cpp" line="280"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="172"/>
-        <location filename="../../../plugins/tools/scale/tweener.cpp" line="164"/>
+        <location filename="../../../plugins/tools/scale/tweener.cpp" line="163"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="171"/>
-        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="164"/>
+        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="162"/>
         <location filename="../../../plugins/tools/color/tweener.cpp" line="177"/>
         <source>The selected items already have this kind of tween assigned.</source>
         <translation>Les éléments sélectionnés ont déjà ce type d&apos;interpolation attribué.</translation>
@@ -6628,9 +6643,9 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <message>
         <location filename="../../../plugins/tools/motion/tweener.cpp" line="281"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="173"/>
-        <location filename="../../../plugins/tools/scale/tweener.cpp" line="165"/>
+        <location filename="../../../plugins/tools/scale/tweener.cpp" line="164"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="172"/>
-        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="165"/>
+        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="163"/>
         <location filename="../../../plugins/tools/color/tweener.cpp" line="178"/>
         <source>Please, edit the previous tween of these objects.</source>
         <translation>S&apos;il vous plaît, éditez la précédente interpolation de ces objets.</translation>
@@ -6638,9 +6653,9 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
     <message>
         <location filename="../../../plugins/tools/motion/tweener.cpp" line="282"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="174"/>
-        <location filename="../../../plugins/tools/scale/tweener.cpp" line="166"/>
+        <location filename="../../../plugins/tools/scale/tweener.cpp" line="165"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="173"/>
-        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="166"/>
+        <location filename="../../../plugins/tools/opacity/tweener.cpp" line="164"/>
         <location filename="../../../plugins/tools/color/tweener.cpp" line="179"/>
         <source>Accept</source>
         <translation>Valider</translation>
@@ -6675,21 +6690,21 @@ SVP, contacter l&apos;administrateur du serveur d&apos;animation pour obtenir un
         <translation>Shift+R</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/scale/tweener.cpp" line="257"/>
+        <location filename="../../../plugins/tools/scale/tweener.cpp" line="253"/>
         <source>Scale Tween</source>
         <translation>Interpolation d&apos;échelle</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/scale/tweener.cpp" line="158"/>
-        <location filename="../../../plugins/tools/scale/tweener.cpp" line="549"/>
-        <location filename="../../../plugins/tools/scale/tweener.cpp" line="553"/>
-        <location filename="../../../plugins/tools/scale/tweener.cpp" line="554"/>
-        <location filename="../../../plugins/tools/scale/tweener.cpp" line="555"/>
+        <location filename="../../../plugins/tools/scale/tweener.cpp" line="534"/>
+        <location filename="../../../plugins/tools/scale/tweener.cpp" line="538"/>
+        <location filename="../../../plugins/tools/scale/tweener.cpp" line="539"/>
+        <location filename="../../../plugins/tools/scale/tweener.cpp" line="540"/>
         <source>Scale</source>
         <translation>Échelle</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/scale/tweener.cpp" line="258"/>
+        <location filename="../../../plugins/tools/scale/tweener.cpp" line="254"/>
         <source>Shift+S</source>
         <translation>Shift+S</translation>
     </message>

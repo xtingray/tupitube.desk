@@ -254,6 +254,10 @@ QWidget * TupSearchDialog::searchTab()
     noResultPanel->setStyleSheet("background-color:#c8c8c8; border-radius: 10px;");
     QVBoxLayout *noResultLayout = new QVBoxLayout(noResultPanel);
 
+    QLabel *noResultIcon = new QLabel;
+    noResultIcon->setPixmap(QPixmap(THEME_DIR + "icons/warning_sign.png"));
+    noResultIcon->setAlignment(Qt::AlignHCenter);
+
     noResultLabel = new QLabel;
     QFont font = noResultLabel->font();
     font.setPointSize(18);
@@ -275,6 +279,7 @@ QWidget * TupSearchDialog::searchTab()
     connect(supportLabel, SIGNAL(clicked()), this, SLOT(setSupportTab()));
 
     noResultLayout->addStretch();
+    noResultLayout->addWidget(noResultIcon);
     noResultLayout->addWidget(noResultLabel);
     noResultLayout->addWidget(descLabel);
     noResultLayout->addWidget(supportLabel);
@@ -371,9 +376,8 @@ void TupSearchDialog::setSupportTab()
 void TupSearchDialog::startSearchFromCombo()
 {
     pattern = searchLine->currentText();
-    if (pattern.length() > 0) {
+    if (pattern.length() > 0)
         startSearch();
-    }
 }
 
 void TupSearchDialog::startSearch()
@@ -511,9 +515,9 @@ void TupSearchDialog::loadAssets(const QString &input)
         int total = root.attribute("size", "0").toInt();
         if (total == 0) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupSearchDialog::loadAssets()] - No recourds found!";
+                qDebug() << "[TupSearchDialog::loadAssets()] - No records found!";
             #endif
-            noResultLabel->setText("No Results for \"" + pattern + "\" YET!");
+            noResultLabel->setText(tr("No Results for") + " \"" + pattern + "\" " + tr("YET!"));
             resetProgress(NoResult);
             return;
         }
@@ -593,7 +597,7 @@ void TupSearchDialog::getMiniature(const QString &code, const QString &desc)
         qDebug() << "[TupSearchDialog::getMiniature()] - code -> " << code;
     #endif
 
-    progressLabel->setText("<b>Getting item " + desc + "</b>");
+    progressLabel->setText("<b>" + tr("Getting item") + " " + desc + "</b>");
     progressBar->reset();
 
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
@@ -681,13 +685,13 @@ void TupSearchDialog::processMiniature(QNetworkReply *reply)
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupSearchDialog::processMiniature()] - Can't save miniature!";
                 #endif                    
-                TOsd::self()->display(TOsd::Error, tr("Can't load result images!"));
+                TOsd::self()->display(TOsd::Error, tr("Can't load the result images!"));
             }
         } else {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupSearchDialog::processMiniature()] - Fatal Error: Can't load image bytes!";
             #endif
-            TOsd::self()->display(TOsd::Error, tr("Can't load result images!"));
+            TOsd::self()->display(TOsd::Error, tr("Can't load the result images!"));
         }
 
         itemsCounter++;
@@ -872,14 +876,14 @@ bool TupSearchDialog::saveImage(const QString &path, const char *extension, cons
             #ifdef TUP_DEBUG
                 qDebug() << "[TupSearchDialog::saveImage()] - Can't save asset! -> " << path;
             #endif
-            TOsd::self()->display(TOsd::Error, tr("Can't save asset!"));
+            TOsd::self()->display(TOsd::Error, tr("Can't save the asset!"));
             return false;
         }
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TupSearchDialog::saveImage()] - Fatal Error: Can't load image bytes!";
         #endif
-        TOsd::self()->display(TOsd::Error, tr("Can't load asset!"));
+        TOsd::self()->display(TOsd::Error, tr("Can't load the asset!"));
         return false;
     }
 
@@ -902,9 +906,9 @@ bool TupSearchDialog::saveAssetFile(const QString path, const QByteArray &data)
         #endif
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupSearchDialog::saveAssetFile()] - Can't save asset! -> " << path;
+            qDebug() << "[TupSearchDialog::saveAssetFile()] - Can't save the asset! -> " << path;
         #endif
-        TOsd::self()->display(TOsd::Error, tr("Can't load asset file!"));
+        TOsd::self()->display(TOsd::Error, tr("Can't load the asset file!"));
     }
 
     return true;

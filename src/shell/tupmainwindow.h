@@ -270,7 +270,7 @@ class TupMainWindow : public TabbedMainWindow
         QString webContent;
         bool isImageMsg;
         QSize webMsgSize;
-        TAction *helpAction;
+        // TAction *helpAction;
         TupDocumentView::DockType currentDock;
 
     signals:

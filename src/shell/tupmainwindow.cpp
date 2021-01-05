@@ -444,7 +444,7 @@ void TupMainWindow::addTwitterPage()
             connect(newsTab, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
             addWidget(newsTab);
 
-            helpAction->setEnabled(true);
+            // helpAction->setEnabled(true);
         } else {
             #ifdef TUP_DEBUG
                qWarning() << "[TupMainWindow::addTwitterPage()] - Warning: Couldn't load page -> " + twitterPath;

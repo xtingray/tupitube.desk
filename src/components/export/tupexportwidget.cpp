@@ -222,7 +222,7 @@ QString TupExportWidget::videoTitle() const
 
 QString TupExportWidget::videoTopics() const
 {
-    return videoProperties->topics();
+    return videoProperties->hashtags();
 }
 
 QString TupExportWidget::videoDescription() const

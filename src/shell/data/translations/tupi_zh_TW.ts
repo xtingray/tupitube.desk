@@ -4635,10 +4635,6 @@ Please, contact the animation server admin to get access.</source>
         <translation type="unfinished">網路嚴重錯誤! 請聯絡我們!</translation>
     </message>
     <message>
-        <source>Can&apos;t load result images!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Asset Extension:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4655,15 +4651,31 @@ Please, contact the animation server admin to get access.</source>
         <translation type="unfinished">HTTP 409錯誤! 請聯絡我們! {809.?}</translation>
     </message>
     <message>
-        <source>Can&apos;t save asset!</source>
+        <source>No Results for</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Can&apos;t load asset!</source>
+        <source>YET!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Can&apos;t load asset file!</source>
+        <source>Getting item</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Can&apos;t load the result images!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Can&apos;t save the asset!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Can&apos;t load the asset!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Can&apos;t load the asset file!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5085,7 +5097,7 @@ Please, contact the animation server admin to get access.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Tags</source>
+        <source>Hashtags</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

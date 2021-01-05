@@ -285,7 +285,7 @@ void TupMainWindow::setupMenu()
     setupHelpActions();
     m_helpMenu = new QMenu(tr("&Help"), this);
     menuBar()->addMenu(m_helpMenu);
-    m_helpMenu->addAction(m_actionManager->find("help"));
+    // m_helpMenu->addAction(m_actionManager->find("help"));
     m_helpMenu->addAction(m_actionManager->find("youtube"));
     // m_helpMenu->addAction(m_actionManager->find("tip_of_day"));
     m_helpMenu->addSeparator();
@@ -424,9 +424,11 @@ void TupMainWindow::setPreferencesAction()
 
 void TupMainWindow::setupHelpActions()
 {
+    /*
     helpAction = new TAction(QPixmap(THEME_DIR + "icons/help_mode.png"), tr("Online Help Content"), QKeySequence(tr("F1")),
                  this, SLOT(showHelp()), m_actionManager, "help");
     helpAction->setEnabled(false);
+    */
 
     new TAction(QPixmap(THEME_DIR + "icons/youtube.png"), tr("YouTube Tutorials"), QKeySequence(tr("Y")),
                 this, SLOT(openYouTubeChannel()), m_actionManager, "youtube");

@@ -58,7 +58,7 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         bool isComplete() const;
         void reset();
         QString title() const;
-        QString topics() const;
+        QString hashtags() const;
         QString description() const;
         QList<int> scenesList() const;
         bool successful();
@@ -89,7 +89,7 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         QString flag;
         QVBoxLayout *layout;
         QLineEdit *titleEdit;
-        QLineEdit *topicsEdit;
+        QLineEdit *tagsEdit;
         QTextEdit *descText;
         QString defaultDesc;
         QList<int> scenes;

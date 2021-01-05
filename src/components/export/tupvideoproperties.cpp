@@ -78,15 +78,15 @@ void TupVideoProperties::setForm()
     connect(titleEdit, SIGNAL(textChanged(const QString &)), this, SLOT(resetTitleColor(const QString &)));
     titleLabel->setBuddy(titleEdit);
 
-    QLabel *topicsLabel = new QLabel(tr("Tags"));
-    QString topics = tr("#tupitube #animation #fun");
+    QLabel *tagsLabel = new QLabel(tr("Hashtags"));
+    QString tags = tr("#tupitube #animation #fun");
     if (mode == Image)
-        topics = tr("#tupitube #image #fun");
+        tags = tr("#tupitube #image #fun");
 
-    topicsEdit = new QLineEdit(topics);
-    topicsEdit->setLocale(utf);
-    connect(topicsEdit, SIGNAL(textChanged(const QString &)), this, SLOT(resetTagsColor(const QString &)));
-    topicsLabel->setBuddy(topicsEdit);
+    tagsEdit = new QLineEdit(tags);
+    tagsEdit->setLocale(utf);
+    connect(tagsEdit, SIGNAL(textChanged(const QString &)), this, SLOT(resetTagsColor(const QString &)));
+    tagsLabel->setBuddy(tagsEdit);
 
     QLabel *descLabel = new QLabel(tr("Description"));
 
@@ -100,8 +100,8 @@ void TupVideoProperties::setForm()
 
     formLayout->addWidget(titleLabel);
     formLayout->addWidget(titleEdit);
-    formLayout->addWidget(topicsLabel);
-    formLayout->addWidget(topicsEdit);
+    formLayout->addWidget(tagsLabel);
+    formLayout->addWidget(tagsEdit);
     formLayout->addWidget(descLabel);
     formLayout->addWidget(descText);
 
@@ -171,9 +171,9 @@ QString TupVideoProperties::title() const
      return title;
 }
 
-QString TupVideoProperties::topics() const
+QString TupVideoProperties::hashtags() const
 {
-     QString topics = QString::fromUtf8(topicsEdit->text().toUtf8());
+     QString topics = QString::fromUtf8(tagsEdit->text().toUtf8());
      QStringList tags = topics.split(" ");
      topics = "";
      foreach(QString item, tags) {
@@ -211,7 +211,7 @@ void TupVideoProperties::postIt()
     #endif
 
     QString title = titleEdit->text();
-    QString tags = topicsEdit->text();
+    QString tags = tagsEdit->text();
     QString desc = descText->toPlainText();
     if (username.compare("tupitube") == 0)
         flag = "tupitube";
@@ -226,12 +226,12 @@ void TupVideoProperties::postIt()
 
     QString tagsMessage = tr("Set some topic tags for the post here!");
     if (tags.length() == 0 || (tags.compare(tagsMessage) == 0)) {
-        topicsEdit->setText(tagsMessage);
-        topicsEdit->selectAll();
+        tagsEdit->setText(tagsMessage);
+        tagsEdit->selectAll();
         TOsd::self()->display(TOsd::Error, tr("Tags are missing!"));
         return;
     } else {
-        tags = topics();
+        tags = hashtags();
     }
 
     if (desc.length() > 0) {
@@ -778,14 +778,14 @@ void TupVideoProperties::resetTitleColor(const QString &)
 
 void TupVideoProperties::resetTagsColor(const QString &)
 {
-    QPalette palette = topicsEdit->palette();
-    if (topicsEdit->text().length() > 0 &&
-        topicsEdit->text().compare(tr("Set some topic tags for the picture here!")) != 0)
+    QPalette palette = tagsEdit->palette();
+    if (tagsEdit->text().length() > 0 &&
+        tagsEdit->text().compare(tr("Set some topic tags for the picture here!")) != 0)
         palette.setBrush(QPalette::Base, Qt::white);
     else
         palette.setBrush(QPalette::Base, QColor(255, 140, 138));
 
-    topicsEdit->setPalette(palette);
+    tagsEdit->setPalette(palette);
 }
 
 void TupVideoProperties::setScenesIndexes(const QList<int> &indexes)

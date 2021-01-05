@@ -2521,7 +2521,7 @@ Please, rename the project&apos;s file</source>
     <name>TupExposureSceneTabWidget</name>
     <message>
         <source>Current Layer Opacity</source>
-        <translation type="unfinished">当前图层不透明度</translation>
+        <translation>当前图层不透明度</translation>
     </message>
 </context>
 <context>
@@ -2769,19 +2769,19 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Interface</source>
-        <translation type="unfinished"></translation>
+        <translation>接口</translation>
     </message>
     <message>
         <source>Enable autosave feature every</source>
-        <translation type="unfinished"></translation>
+        <translation>每次启用自动保存功能</translation>
     </message>
     <message>
         <source>minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>分钟</translation>
     </message>
     <message>
         <source>Player</source>
-        <translation type="unfinished">播放器</translation>
+        <translation>播放器</translation>
     </message>
 </context>
 <context>
@@ -3215,7 +3215,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Search for Assets</source>
-        <translation type="unfinished"></translation>
+        <translation>搜索资产</translation>
     </message>
 </context>
 <context>
@@ -4552,119 +4552,131 @@ Please, contact the animation server admin to get access.</source>
     <name>TupSearchDialog</name>
     <message>
         <source>Assets Search Engine</source>
-        <translation type="unfinished"></translation>
+        <translation>资产搜索引擎</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished">搜索</translation>
+        <translation>搜索</translation>
     </message>
     <message>
         <source>Support Us</source>
-        <translation type="unfinished"></translation>
+        <translation>支持我们</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished">关闭</translation>
+        <translation>关闭</translation>
     </message>
     <message>
         <source>Object</source>
-        <translation type="unfinished"></translation>
+        <translation>目的</translation>
     </message>
     <message>
         <source>Character</source>
-        <translation type="unfinished"></translation>
+        <translation>字符</translation>
     </message>
     <message>
         <source>Static Background</source>
-        <translation type="unfinished"></translation>
+        <translation>静态背景</translation>
     </message>
     <message>
         <source>Dynamic Background</source>
-        <translation type="unfinished"></translation>
+        <translation>动态背景</translation>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>声音</translation>
     </message>
     <message>
         <source>Import Asset</source>
-        <translation type="unfinished"></translation>
+        <translation>进口资产</translation>
     </message>
     <message>
         <source>Searching...</source>
-        <translation type="unfinished"></translation>
+        <translation>正在搜寻...</translation>
     </message>
     <message>
         <source>But we are working on new assets...</source>
-        <translation type="unfinished"></translation>
+        <translation>但是我们正在开发新资产...</translation>
     </message>
     <message>
         <source>Want to support us?</source>
-        <translation type="unfinished"></translation>
+        <translation>想支持我们吗？</translation>
     </message>
     <message>
         <source>Error while processing request. Please, try again.</source>
-        <translation type="unfinished"></translation>
+        <translation>处理请求时出错。 请再试一次。</translation>
     </message>
     <message>
         <source>From the &lt;b&gt;MaeFloresta&lt;/b&gt; startup we are requesting the support from our users community to keep creating new assets for our library repository. Thanks to your contributions we can deliver a better product. You can start helping from &lt;b&gt;USD 1&lt;/b&gt;.</source>
-        <translation type="unfinished"></translation>
+        <translation>从&lt;b&gt;MaeFloresta&lt;/b&gt;创业公司开始，我们要求用户社区提供支持，以继续为我们的图书馆资料库创建新资产。 感谢您的贡献，我们可以提供更好的产品。 您可以从 &lt;b&gt;1美元&lt;/b&gt;开始获得帮助。</translation>
     </message>
     <message>
         <source>One Time Donation</source>
-        <translation type="unfinished"></translation>
+        <translation>一次性捐赠</translation>
     </message>
     <message>
         <source>Join Our Patreon</source>
-        <translation type="unfinished"></translation>
+        <translation>加入我们的Patreon</translation>
     </message>
     <message>
         <source>Sponsors</source>
-        <translation type="unfinished"></translation>
+        <translation>赞助商</translation>
     </message>
     <message>
         <source>Invalid search: Empty pattern!</source>
-        <translation type="unfinished"></translation>
+        <translation>无效的搜索：空模式！</translation>
     </message>
     <message>
         <source>Network Error 609. Please, contact us!</source>
-        <translation type="unfinished">网络错误409。请与我们联系！ {609.?}</translation>
+        <translation>网络错误609。请与我们联系！</translation>
     </message>
     <message>
         <source>Network Fatal Error. Please, contact us!</source>
-        <translation type="unfinished">网络致命错误。 请联系我们！</translation>
-    </message>
-    <message>
-        <source>Can&apos;t load result images!</source>
-        <translation type="unfinished"></translation>
+        <translation>网络致命错误。 请联系我们！</translation>
     </message>
     <message>
         <source>Asset Extension:</source>
-        <translation type="unfinished"></translation>
+        <translation>无法加载结果图像！</translation>
     </message>
     <message>
         <source>Creator:</source>
-        <translation type="unfinished"></translation>
+        <translation>创建者：</translation>
     </message>
     <message>
         <source>License:</source>
-        <translation type="unfinished"></translation>
+        <translation>执照：</translation>
     </message>
     <message>
         <source>Network Error 809. Please, contact us!</source>
-        <translation type="unfinished">网络错误409。请与我们联系！ {809.?}</translation>
+        <translation>网络错误809。请与我们联系！</translation>
     </message>
     <message>
-        <source>Can&apos;t save asset!</source>
-        <translation type="unfinished"></translation>
+        <source>No Results for</source>
+        <translation>没有结果</translation>
     </message>
     <message>
-        <source>Can&apos;t load asset!</source>
-        <translation type="unfinished"></translation>
+        <source>YET!</source>
+        <translation>然而！</translation>
     </message>
     <message>
-        <source>Can&apos;t load asset file!</source>
-        <translation type="unfinished"></translation>
+        <source>Getting item</source>
+        <translation>获取物品</translation>
+    </message>
+    <message>
+        <source>Can&apos;t load the result images!</source>
+        <translation>无法加载结果图像！</translation>
+    </message>
+    <message>
+        <source>Can&apos;t save the asset!</source>
+        <translation>无法保存资产！</translation>
+    </message>
+    <message>
+        <source>Can&apos;t load the asset!</source>
+        <translation>无法加载资产！</translation>
+    </message>
+    <message>
+        <source>Can&apos;t load the asset file!</source>
+        <translation>无法加载资产文件！</translation>
     </message>
 </context>
 <context>
@@ -4890,7 +4902,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Current Layer Opacity</source>
-        <translation type="unfinished">当前图层不透明度</translation>
+        <translation>当前图层不透明度</translation>
     </message>
 </context>
 <context>
@@ -5085,8 +5097,8 @@ Please, contact the animation server admin to get access.</source>
         <translation>标签丢失！</translation>
     </message>
     <message>
-        <source>Tags</source>
-        <translation type="unfinished"></translation>
+        <source>Hashtags</source>
+        <translation>标签</translation>
     </message>
 </context>
 <context>
