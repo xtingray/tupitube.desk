@@ -2521,7 +2521,7 @@ Please, rename the project&apos;s file</source>
     <name>TupExposureSceneTabWidget</name>
     <message>
         <source>Current Layer Opacity</source>
-        <translation type="unfinished">目前層不透明度</translation>
+        <translation>目前層不透明度</translation>
     </message>
 </context>
 <context>
@@ -2769,19 +2769,19 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Interface</source>
-        <translation type="unfinished"></translation>
+        <translation>介面</translation>
     </message>
     <message>
         <source>Enable autosave feature every</source>
-        <translation type="unfinished"></translation>
+        <translation>啟動自動儲存功能</translation>
     </message>
     <message>
         <source>minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>分鐘</translation>
     </message>
     <message>
         <source>Player</source>
-        <translation type="unfinished">播放器</translation>
+        <translation>播放器</translation>
     </message>
 </context>
 <context>
@@ -3215,7 +3215,7 @@ Please, rename the project&apos;s file</source>
     </message>
     <message>
         <source>Search for Assets</source>
-        <translation type="unfinished"></translation>
+        <translation>搜尋資產</translation>
     </message>
 </context>
 <context>
@@ -4552,131 +4552,131 @@ Please, contact the animation server admin to get access.</source>
     <name>TupSearchDialog</name>
     <message>
         <source>Assets Search Engine</source>
-        <translation type="unfinished"></translation>
+        <translation>資產搜尋引擎</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished">搜索</translation>
+        <translation>搜索</translation>
     </message>
     <message>
         <source>Support Us</source>
-        <translation type="unfinished"></translation>
+        <translation>支持我們</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished">關閉</translation>
+        <translation>關閉</translation>
     </message>
     <message>
         <source>Object</source>
-        <translation type="unfinished"></translation>
+        <translation>物件</translation>
     </message>
     <message>
         <source>Character</source>
-        <translation type="unfinished"></translation>
+        <translation>文字</translation>
     </message>
     <message>
         <source>Static Background</source>
-        <translation type="unfinished"></translation>
+        <translation>靜態背景</translation>
     </message>
     <message>
         <source>Dynamic Background</source>
-        <translation type="unfinished"></translation>
+        <translation>動態背景</translation>
     </message>
     <message>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>音效</translation>
     </message>
     <message>
         <source>Import Asset</source>
-        <translation type="unfinished"></translation>
+        <translation>匯入資產</translation>
     </message>
     <message>
         <source>Searching...</source>
-        <translation type="unfinished"></translation>
+        <translation>搜尋中...</translation>
     </message>
     <message>
         <source>But we are working on new assets...</source>
-        <translation type="unfinished"></translation>
+        <translation>但是我們還在製作新資產...</translation>
     </message>
     <message>
         <source>Want to support us?</source>
-        <translation type="unfinished"></translation>
+        <translation>想要支持我們嗎?</translation>
     </message>
     <message>
         <source>Error while processing request. Please, try again.</source>
-        <translation type="unfinished"></translation>
+        <translation>執行錯誤, 請重試.</translation>
     </message>
     <message>
         <source>From the &lt;b&gt;MaeFloresta&lt;/b&gt; startup we are requesting the support from our users community to keep creating new assets for our library repository. Thanks to your contributions we can deliver a better product. You can start helping from &lt;b&gt;USD 1&lt;/b&gt;.</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;MaeFloresta&lt;/b&gt;新創希望能得到大家的幫助，以利之後在圖庫裡發展新資產。謝謝你們的貢獻，我們才能提供更好的產品，你只要捐一塊&lt;b&gt;美金&lt;/b&gt;。</translation>
     </message>
     <message>
         <source>One Time Donation</source>
-        <translation type="unfinished"></translation>
+        <translation>一次捐款</translation>
     </message>
     <message>
         <source>Join Our Patreon</source>
-        <translation type="unfinished"></translation>
+        <translation>加入我們的贊助團隊</translation>
     </message>
     <message>
         <source>Sponsors</source>
-        <translation type="unfinished"></translation>
+        <translation>贊助商</translation>
     </message>
     <message>
         <source>Invalid search: Empty pattern!</source>
-        <translation type="unfinished"></translation>
+        <translation>搜索條件無效: 無圖樣!</translation>
     </message>
     <message>
         <source>Network Error 609. Please, contact us!</source>
-        <translation type="unfinished">HTTP 409錯誤! 請聯絡我們! {609.?}</translation>
+        <translation>HTTP 409錯誤! 請聯絡我們! {609.?}</translation>
     </message>
     <message>
         <source>Network Fatal Error. Please, contact us!</source>
-        <translation type="unfinished">網路嚴重錯誤! 請聯絡我們!</translation>
+        <translation>網路嚴重錯誤! 請聯絡我們!</translation>
     </message>
     <message>
         <source>Asset Extension:</source>
-        <translation type="unfinished"></translation>
+        <translation>資產格式:</translation>
     </message>
     <message>
         <source>Creator:</source>
-        <translation type="unfinished"></translation>
+        <translation>製作者:</translation>
     </message>
     <message>
         <source>License:</source>
-        <translation type="unfinished"></translation>
+        <translation>授權:</translation>
     </message>
     <message>
         <source>Network Error 809. Please, contact us!</source>
-        <translation type="unfinished">HTTP 409錯誤! 請聯絡我們! {809.?}</translation>
+        <translation>HTTP 409錯誤! 請聯絡我們! {809.?}</translation>
     </message>
     <message>
         <source>No Results for</source>
-        <translation type="unfinished"></translation>
+        <translation>未找到結果</translation>
     </message>
     <message>
         <source>YET!</source>
-        <translation type="unfinished"></translation>
+        <translation>還沒!</translation>
     </message>
     <message>
         <source>Getting item</source>
-        <translation type="unfinished"></translation>
+        <translation>取得項目</translation>
     </message>
     <message>
         <source>Can&apos;t load the result images!</source>
-        <translation type="unfinished"></translation>
+        <translation>無法載入圖片</translation>
     </message>
     <message>
         <source>Can&apos;t save the asset!</source>
-        <translation type="unfinished"></translation>
+        <translation>無法儲存資產</translation>
     </message>
     <message>
         <source>Can&apos;t load the asset!</source>
-        <translation type="unfinished"></translation>
+        <translation>無法載入資產</translation>
     </message>
     <message>
         <source>Can&apos;t load the asset file!</source>
-        <translation type="unfinished"></translation>
+        <translation>無法載入資產檔案</translation>
     </message>
 </context>
 <context>
@@ -4902,7 +4902,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Current Layer Opacity</source>
-        <translation type="unfinished">目前層不透明度</translation>
+        <translation>目前層不透明度</translation>
     </message>
 </context>
 <context>
@@ -5098,7 +5098,7 @@ Please, contact the animation server admin to get access.</source>
     </message>
     <message>
         <source>Hashtags</source>
-        <translation type="unfinished"></translation>
+        <translation>Hashtags</translation>
     </message>
 </context>
 <context>
