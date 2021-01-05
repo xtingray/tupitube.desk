@@ -76,6 +76,6 @@ SOURCES += tupgraphicalgorithm.cpp \
 FRAMEWORK_DIR = "../framework"
 include($$FRAMEWORK_DIR/framework.pri)
 
-STORE_DIR = ../store/
-INCLUDEPATH += $$STORE_DIR
-LIBS += -L$$STORE_DIR -ltupistore
+# STORE_DIR = ../store/
+# INCLUDEPATH += $$STORE_DIR
+# LIBS += -L$$STORE_DIR/release -ltupistore

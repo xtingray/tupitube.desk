@@ -83,7 +83,7 @@ fileSystem.CopyFile "c:\devel\sources\platforms\qwindows.dll", tupiDir & "\bin\r
 
 fileSystem.CopyFolder sourceDir & "\shell\data", tupiDir & "\data"
 fileSystem.CopyFolder sourceDir & "\shell\html", tupiDir & "\data\html"
-fileSystem.CopyFolder sourceDir & "\components\colorpalette\palettes", tupiDir & "\data\palettes"
+REM fileSystem.CopyFolder sourceDir & "\components\colorpalette\palettes", tupiDir & "\data\palettes"
 fileSystem.CopyFolder sourceDir & "\themes", tupiDir & "\data\themes"
 fileSystem.CreateFolder tupiDir & "\data\themes\raster"
 fileSystem.CopyFolder sourceDir & "\mypaint\raster\main\brushes", tupiDir & "\data\themes\raster\brushes"

@@ -34,8 +34,6 @@
  ***************************************************************************/
 
 #include "tupitempreview.h"
-#include "tupabstractserializable.h"
-#include "tupitemfactory.h"
 
 #include <QDomDocument>
 #include <QGraphicsScene>

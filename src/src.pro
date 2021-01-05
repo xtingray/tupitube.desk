@@ -1,7 +1,7 @@
 SUBDIRS += themes \
            framework \
+		   libtupi \
            store \
-           libtupi \
            libbase \
            libcolor \
            mypaint \
