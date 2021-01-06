@@ -60,6 +60,7 @@ TupSearchDialog::TupSearchDialog(const QSize &size, QWidget *parent) : QDialog(p
     dimension = QString::number(size.width()) + ":" + QString::number(size.height());
     TCONFIG->beginGroup("General");
     assetsPath = TCONFIG->value("AssetsPath", CACHE_DIR + "assets").toString();
+    getNews = TCONFIG->value("GetNews", true).toBool();
 
     extStrings << "jpg" << "png" << "svg" << "tobj";
 
@@ -81,7 +82,8 @@ TupSearchDialog::TupSearchDialog(const QSize &size, QWidget *parent) : QDialog(p
 
     tabWidget = new QTabWidget;
     tabWidget->addTab(searchTab(), tr("Search"));
-    tabWidget->addTab(patreonTab(), tr("Support Us"));
+    if (getNews)
+        tabWidget->addTab(patreonTab(), tr("Support Us"));
 
     QPushButton *closeButton = new QPushButton(tr("Close"));
     layout->addWidget(closeButton);
@@ -282,7 +284,8 @@ QWidget * TupSearchDialog::searchTab()
     noResultLayout->addWidget(noResultIcon);
     noResultLayout->addWidget(noResultLabel);
     noResultLayout->addWidget(descLabel);
-    noResultLayout->addWidget(supportLabel);
+    if (getNews)
+        noResultLayout->addWidget(supportLabel);
     noResultLayout->addStretch();
 
     QWidget *errorPanel = new QWidget;

@@ -156,7 +156,7 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     // addFolderGC->setEnabled(false);
 
     TImageButton *gctoDrawingArea = new TImageButton(QPixmap(THEME_DIR + "icons/library_to_ws.png"), 22, buttons);
-    connect(gctoDrawingArea, SIGNAL(clicked()), this, SLOT(insertObjectManually()));
+    connect(gctoDrawingArea, SIGNAL(clicked()), this, SLOT(insertObjectInWorkspace()));
     gctoDrawingArea->setToolTip(tr("Insert library item into frame"));
     buttonLayout->addWidget(gctoDrawingArea);
 

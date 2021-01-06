@@ -108,6 +108,7 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
 
         TCollapsibleWidget *dynamicPanel;
 
+        bool getNews;
         QString assetsPath;
         TComboBox *searchLine;
         QComboBox *assetCombo;
