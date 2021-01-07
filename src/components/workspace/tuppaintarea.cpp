@@ -1492,6 +1492,12 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
         return;
     }
 
+    // Clone frame
+    if (event->key() == Qt::Key_8) {
+        copyFrameForward();
+        return;
+    }
+
     // Redundant shortcut for "Add Frame" feature (as 9)
     if (event->key() == Qt::Key_Insert) {
         TupGraphicsScene *gScene = graphicsScene();

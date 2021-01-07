@@ -41,6 +41,7 @@ class TUPITUBE_EXPORT TupExposureVerticalHeader : public QHeaderView
     public:
         TupExposureVerticalHeader(QWidget * parent = nullptr);
         ~TupExposureVerticalHeader();
+
         void paintSection(QPainter *painter, const QRect & rect, int logicalIndex) const;
 };
 
@@ -55,7 +56,7 @@ TupExposureVerticalHeader::~TupExposureVerticalHeader()
 
 void TupExposureVerticalHeader::paintSection(QPainter * painter, const QRect & rect, int logicalIndex) const
 {
-    Q_UNUSED(logicalIndex);
+    Q_UNUSED(logicalIndex)
 
     if (!rect.isValid())
         return;
@@ -764,6 +765,12 @@ void TupExposureTable::keyPressEvent(QKeyEvent *event)
             else
                 setCurrentCell(next, currentColumn());
         }
+        return;
+    }
+
+    // Clone frame
+    if (event->key() == Qt::Key_8) {
+        emit frameExtended(currentLayer(), currentFrame());
         return;
     }
 
