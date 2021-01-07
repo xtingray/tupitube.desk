@@ -87,6 +87,7 @@ TupColorPaletteWidget::TupColorPaletteWidget(QWidget *parent): TupModuleWidgetBa
     splitter->addWidget(tab);
 
     setMinimumWidth(316);
+    setMaximumWidth(470);
 }
 
 TupColorPaletteWidget::~TupColorPaletteWidget()
