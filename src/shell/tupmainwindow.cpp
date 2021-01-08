@@ -177,21 +177,11 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
     if (showWebMsg)
         QTimer::singleShot(0, this, SLOT(showWebMessage()));
 
-    /*
-    } else {
-        TCONFIG->beginGroup("General");
-        bool update = TCONFIG->value("NotifyUpdate", false).toBool();
-
-        if (update)
-            QDesktopServices::openUrl(QString(MAEFLORESTA_URL) + QString("downloads"));
-
-        // Check if user wants to see a TupiTube tip for every time he launches the program
-        bool showTips = TCONFIG->value("ShowTipOfDay", true).toBool();
-
-        // If option is enabled, then, show a little dialog with a nice tip
-        if (showTips)
-            QTimer::singleShot(0, this, SLOT(showTipDialog()));
-    }
+    /* SQA: Check this code for the future
+    TCONFIG->beginGroup("General");
+    bool update = TCONFIG->value("NotifyUpdate", false).toBool();
+    if (update)
+        QDesktopServices::openUrl(QString(MAEFLORESTA_URL) + QString("downloads"));
     */
 
     // Time to load plugins... 
