@@ -37,14 +37,14 @@
  <!-- Row 2 -->
  <Color colorName="#ff2225" alpha="255" />
  <Color colorName="#ff29bf" alpha="255" />
- <Color colorName="#a735ff" alpha="255" />
+ <Color colorName="#bd0ebb" alpha="255" />
  <Color colorName="#4235ff" alpha="255" />
  <Color colorName="#2599ff" alpha="255" />
  <Color colorName="#005894" alpha="255" />
- <Color colorName="#00c0c0" alpha="255" />
+ <Color colorName="#0186b7" alpha="255" />
  <Color colorName="#00857b" alpha="255" />
  <Color colorName="#00833f" alpha="255" />
- <Color colorName="#03b103" alpha="255" />
+ <Color colorName="#23983e" alpha="255" />
  <Color colorName="#6a9b2f" alpha="255" />
  <Color colorName="#cccc00" alpha="255" />
  <Color colorName="#bf720f" alpha="255" />
@@ -54,19 +54,19 @@
  <!-- Row 3 -->
  <Color colorName="#ff3336" alpha="255" />
  <Color colorName="#ff43d0" alpha="255" />
- <Color colorName="#d361ff" alpha="255" />
+ <Color colorName="#e10edf" alpha="255" />
  <Color colorName="#5d62ff" alpha="255" />
  <Color colorName="#3895ff" alpha="255" />
- <Color colorName="#2aaeff" alpha="255" />
- <Color colorName="#00ffff" alpha="255" />
- <Color colorName="#00d2c1" alpha="255" />
- <Color colorName="#00d569" alpha="255" />
- <Color colorName="#00ff00" alpha="255" />
- <Color colorName="#82e700" alpha="255" />
- <Color colorName="#ffff00" alpha="255" />
- <Color colorName="#ffb400" alpha="255" />
- <Color colorName="#ff9600" alpha="255" />
- <Color colorName="#ff0000" alpha="255" />
+ <Color colorName="#0065ab" alpha="255" />
+ <Color colorName="#0192c8" alpha="255" />
+ <Color colorName="#00968a" alpha="255" />
+ <Color colorName="#009647" alpha="255" />
+ <Color colorName="#28a645" alpha="255" />
+ <Color colorName="#76ac35" alpha="255" />
+ <Color colorName="#dbde00" alpha="255" />
+ <Color colorName="#cf7c11" alpha="255" />
+ <Color colorName="#cd5616" alpha="255" />
+ <Color colorName="#db0000" alpha="255" />
  <Color colorName="#d90000" alpha="255" />
 <!-- Row 4 -->
  <Color colorName="#ff4c4f" alpha="255" />
