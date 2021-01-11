@@ -385,6 +385,7 @@ void TupSearchDialog::startSearchFromCombo()
 
 void TupSearchDialog::startSearch()
 {
+    searchFailed = false;
     pattern = searchLine->currentText();
     if (pattern.length() > 0) {
         if (pattern.length() > 30)
@@ -563,6 +564,8 @@ void TupSearchDialog::loadAssets(const QString &input)
         #endif
 
         for (int i=0; i<assetList.count(); i++) {
+            if (searchFailed) // Cancel process
+                return;
             AssetRecord asset = assetList.at(i);
             QString path = assetsPath + asset.code;
             QDir assetDir(path);
@@ -576,7 +579,8 @@ void TupSearchDialog::loadAssets(const QString &input)
                     #ifdef TUP_DEBUG
                         qDebug() << "[TupSearchDialog::loadAssets()] - Fatal Error: Can't create asset dir -> " << path;
                     #endif
-                    resetProgress(NoResult);
+                    searchFailed = true;
+                    resetProgress(Error);
                 }
             } else { // Folder already exists
                 QFileInfo file(path + "/miniature.png");
@@ -706,6 +710,7 @@ void TupSearchDialog::processMiniature(QNetworkReply *reply)
         #ifdef TUP_DEBUG
             qDebug() << "[TupSearchDialog::processMiniature()] - Fatal Error: No answer from server!";
         #endif
+        searchFailed = true;
         resetProgress(Error);
     }
 

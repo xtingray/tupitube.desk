@@ -118,6 +118,7 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         QString assetType;
         int itemsCounter;
         QString linkStyle;
+        int searchFailed;
 
         struct AssetRecord {
             QString description;
