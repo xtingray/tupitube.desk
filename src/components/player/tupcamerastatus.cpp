@@ -64,6 +64,7 @@ TupCameraStatus::TupCameraStatus(QWidget *parent) : QFrame(parent)
 
     fpsBox = new QSpinBox();
     fpsBox->setMinimum(1);
+    fpsBox->setMaximum(35);
     fpsBox->setValue(24);
     connect(fpsBox, SIGNAL(valueChanged(int)), this, SIGNAL(fpsChanged(int)));
 
