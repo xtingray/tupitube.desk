@@ -641,6 +641,7 @@ QPixmap TupBackground::rasterDynamicExpandedImage()
 void TupBackground::setVectorDynamicDirection(int direction)
 {
     vectorDynamicBgFrame->setDynamicDirection(QString::number(direction));
+    vectorDynamicRenderRequired = true;
 }
 
 void TupBackground::setRasterDynamicDirection(int direction)

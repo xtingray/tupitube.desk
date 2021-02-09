@@ -50,7 +50,7 @@ TFFmpegMovieGenerator::TFFmpegMovieGenerator(TMovieGeneratorInterface::Format fo
                                              int fpsParam, double duration) : TMovieGenerator(size.width(), size.height())
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TFFmpegMovieGenerator::TFFmpegMovieGenerator() - fps -> " << fpsParam;
+        qDebug() << "[TFFmpegMovieGenerator::TFFmpegMovieGenerator()] - fps -> " << fpsParam;
     #endif
 
     movieFile = QDir::tempPath() + "/tupitube_video_" + TAlgorithm::randomString(12);
@@ -105,7 +105,7 @@ bool TFFmpegMovieGenerator::beginVideoFile()
     if (!outputFormat) {
         errorMsg = "ffmpeg error: Can't support MP4/MOV format.";
         #ifdef TUP_DEBUG
-            qWarning() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
+            qWarning() << "[TFFmpegMovieGenerator::beginVideoFile()] - " << errorMsg;
         #endif
         return false;
     }
@@ -113,7 +113,7 @@ bool TFFmpegMovieGenerator::beginVideoFile()
     if (!outputFormat) {
         errorMsg = "ffmpeg error: Output format variable is NULL.";
         #ifdef TUP_DEBUG
-            qCritical() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::beginVideoFile()] - " << errorMsg;
         #endif
         return false;
     }
@@ -123,7 +123,7 @@ bool TFFmpegMovieGenerator::beginVideoFile()
     if (!formatContext) {
         errorMsg = "ffmpeg error: Memory error while allocating format context.";
         #ifdef TUP_DEBUG
-            qCritical() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::beginVideoFile()] - " << errorMsg;
         #endif
         return false;
     }
@@ -141,14 +141,14 @@ bool TFFmpegMovieGenerator::beginVideoFile()
         if (!success) {
             errorMsg = "ffmpeg error: Could not initialize video codec.";
             #ifdef TUP_DEBUG
-                qCritical() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
+                qCritical() << "[TFFmpegMovieGenerator::beginVideoFile()] - " << errorMsg;
             #endif
             return false;
         }
     } else {
         errorMsg = "ffmpeg error: Video stream variable is NULL.";
         #ifdef TUP_DEBUG
-            qCritical() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::beginVideoFile()] - " << errorMsg;
         #endif
         return false;
     }
@@ -158,7 +158,7 @@ bool TFFmpegMovieGenerator::beginVideoFile()
         if (ret < 0) {
             errorMsg = "ffmpeg error: Could not open video file";
             #ifdef TUP_DEBUG
-                qCritical() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
+                qCritical() << "[TFFmpegMovieGenerator::beginVideoFile()] - " << errorMsg;
             #endif
             return false;
         }
@@ -167,7 +167,7 @@ bool TFFmpegMovieGenerator::beginVideoFile()
     if (avformat_write_header(formatContext, nullptr) < 0) {
         errorMsg = "ffmpeg error: could not write video file header";
         #ifdef TUP_DEBUG
-            qCritical() << "TFFmpegMovieGenerator::beginVideoFile() - " + errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::beginVideoFile()] - " << errorMsg;
         #endif
         return false;
     }
@@ -184,7 +184,7 @@ bool TFFmpegMovieGenerator::beginVideoFile()
 AVStream * TFFmpegMovieGenerator::addVideoStream()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TFFmpegMovieGenerator::addVideoStream() - codec_id: " + QString::number(videoCodecID);
+        qDebug() << "[TFFmpegMovieGenerator::addVideoStream()] - codec_id: " << videoCodecID;
     #endif
 
     AVStream *st;
@@ -194,8 +194,8 @@ AVStream * TFFmpegMovieGenerator::addVideoStream()
     if (!codec) {
         errorMsg = "ffmpeg error: Could not find video encoder.";
         #ifdef TUP_DEBUG
-            qCritical() << "TFFmpegMovieGenerator::addVideoStream() - " + errorMsg;
-            qCritical() << "TFFmpegMovieGenerator::addVideoStream() - Unavailable Codec ID: " + QString::number(videoCodecID);
+            qCritical() << "[TFFmpegMovieGenerator::addVideoStream()] - " << errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::addVideoStream()] - Unavailable Codec ID: " << videoCodecID;
         #endif
         return nullptr;
     }
@@ -204,7 +204,7 @@ AVStream * TFFmpegMovieGenerator::addVideoStream()
     if (!st) {
         errorMsg = "ffmpeg error: Could not video alloc stream."; 
         #ifdef TUP_DEBUG
-            qCritical() << "TFFmpegMovieGenerator::addVideoStream() - " + errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::addVideoStream()] - " << errorMsg;
         #endif
         return nullptr;
     }
@@ -259,7 +259,7 @@ bool TFFmpegMovieGenerator::openVideoStream()
     if (ret < 0) {
         errorMsg = "ffmpeg error: Can't open video codec.";
         #ifdef TUP_DEBUG
-            qCritical() << "TFFmpegMovieGenerator::openVideoStream() - " + errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::openVideoStream()] - " << errorMsg;
         #endif
         return false;
     }
@@ -271,7 +271,7 @@ bool TFFmpegMovieGenerator::openVideoStream()
     if (!videoFrame) {
         errorMsg = "ffmpeg error: There is no available memory to export your project as a video";
         #ifdef TUP_DEBUG
-            qCritical() << "TFFmpegMovieGenerator::openVideoStream() - " + errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::openVideoStream()] - " << errorMsg;
         #endif
         return false;
     }
@@ -328,7 +328,7 @@ bool TFFmpegMovieGenerator::createVideoFrame(const QImage &image)
 {
     #ifdef TUP_DEBUG
         qInfo() << "---";
-        qInfo() << "TFFmpegMovieGenerator::createVideoFrame() - Generating frame #" + QString::number(framesCount);
+        qInfo() << "[TFFmpegMovieGenerator::createVideoFrame()] - Generating frame #" << framesCount;
     #endif
 
     framesCount++;
@@ -358,7 +358,7 @@ bool TFFmpegMovieGenerator::createVideoFrame(const QImage &image)
     if (ret < 0) {
         errorMsg = "ffmpeg error: Error while sending a frame for encoding";
         #ifdef TUP_DEBUG
-            qDebug() << "TFFmpegMovieGenerator::createVideoFrame() - " + errorMsg;
+            qDebug() << "[TFFmpegMovieGenerator::createVideoFrame()] - " << errorMsg;
         #endif
         return false;
     }
@@ -367,13 +367,13 @@ bool TFFmpegMovieGenerator::createVideoFrame(const QImage &image)
         ret = avcodec_receive_packet(codecContext, &pkt);
         if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
             #ifdef TUP_DEBUG
-                qDebug() << "TFFmpegMovieGenerator::createVideoFrame() - Tracing EAGAIN conditional...";
+                qDebug() << "[TFFmpegMovieGenerator::createVideoFrame()] - Tracing EAGAIN conditional...";
             #endif
             return (ret == AVERROR(EAGAIN)) ? false : true;
         } else if (ret < 0) {
             errorMsg = "ffmpeg error: Error during encoding";
             #ifdef TUP_DEBUG
-                qDebug() << "TFFmpegMovieGenerator::createVideoFrame() - " + errorMsg;
+                qDebug() << "[TFFmpegMovieGenerator::createVideoFrame()] - " << errorMsg;
             #endif
             return false;
         }
@@ -383,7 +383,7 @@ bool TFFmpegMovieGenerator::createVideoFrame(const QImage &image)
         if (ret < 0) {
            errorMsg = "ffmpeg error: Error while writing video frame";
            #ifdef TUP_DEBUG
-               qDebug() << "TFFmpegMovieGenerator::createVideoFrame() - " + errorMsg;
+               qDebug() << "[TFFmpegMovieGenerator::createVideoFrame()] - " << errorMsg;
            #endif
            return false;
         }
@@ -396,9 +396,9 @@ bool TFFmpegMovieGenerator::createVideoFrame(const QImage &image)
 
 int TFFmpegMovieGenerator::writeVideoFrame(AVPacket *pkt)
 {
-#ifdef TUP_DEBUG
-    qInfo() << "TFFmpegMovieGenerator::writeVideoFrame() - frame -> " + QString::number(framesCount);
-#endif
+    #ifdef TUP_DEBUG
+        qInfo() << "[TFFmpegMovieGenerator::writeVideoFrame()] - frame -> " << framesCount;
+    #endif
 
     realFrames++;
 
@@ -415,14 +415,14 @@ void TFFmpegMovieGenerator::handle(const QImage &image)
 {
     if (!video_st) {
         #ifdef TUP_DEBUG
-            qInfo() << "TFFmpegMovieGenerator::handle() - The total of frames has been "
-                       "processed (" + QString::number(streamDuration) + " seg)";
+            qInfo() << "[TFFmpegMovieGenerator::handle()] - The total of frames has been "
+                       "processed (" << streamDuration << " seg)";
         #endif
         return;
     }
 
     #ifdef TUP_DEBUG
-        qInfo() << "TFFmpegMovieGenerator::handle() - Duration: " + QString::number(streamDuration);
+        qInfo() << "[TFFmpegMovieGenerator::handle()] - Duration: " << streamDuration;
     #endif
 
     createVideoFrame(image);
@@ -432,7 +432,7 @@ void TFFmpegMovieGenerator::saveMovie(const QString &filename)
 {
     #ifdef TUP_DEBUG
         qDebug() << "***";
-        qDebug() << "TFFmpegMovieGenerator::saveMovie() - filename -> " + filename;
+        qDebug() << "[TFFmpegMovieGenerator::saveMovie()] - filename -> " << filename;
     #endif
 
     int missingFrames = framesCount - realFrames;
@@ -465,7 +465,7 @@ void TFFmpegMovieGenerator::endVideoFile()
 void TFFmpegMovieGenerator::copyMovieFile(const QString &videoPath)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TFFmpegMovieGenerator::createMovieFile() - fileName -> " + videoPath;
+        qDebug() << "[TFFmpegMovieGenerator::createMovieFile()] - fileName -> " << videoPath;
     #endif
 
     if (QFile::exists(videoPath))
@@ -474,21 +474,21 @@ void TFFmpegMovieGenerator::copyMovieFile(const QString &videoPath)
     if (QFile::copy(movieFile, videoPath)) {
         if (QFile::exists(movieFile)) {
             #ifdef TUP_DEBUG
-                qInfo() << "TFFmpegMovieGenerator::createMovieFile() - Trying to remove temp video file -> " + movieFile;
+                qInfo() << "[TFFmpegMovieGenerator::createMovieFile()] - Trying to remove temp video file -> " << movieFile;
             #endif
  
             if (QFile::remove(movieFile)) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TFFmpegMovieGenerator::createMovieFile() - Temp video file has been removed!";
+                    qDebug() << "[TFFmpegMovieGenerator::createMovieFile()] - Temp video file has been removed!";
                 #endif
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TFFmpegMovieGenerator::createMovieFile() - Error: Can't remove temp video file";
+                    qDebug() << "[TFFmpegMovieGenerator::createMovieFile()] - Error: Can't remove temp video file";
                 #endif
             }
         } else {
             #ifdef TUP_DEBUG
-                qWarning() << "TFFmpegMovieGenerator::createMovieFile() - Error: Temp video file wasn't found! -> " + movieFile;
+                qWarning() << "[TFFmpegMovieGenerator::createMovieFile()] - Error: Temp video file wasn't found! -> " << movieFile;
             #endif
         }
     }

@@ -109,7 +109,7 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
     Q_UNUSED(newSize)
 
     #ifdef TUP_DEBUG
-        qDebug() << "FFmpegPlugin::exportToFormat() - fps -> " << fps;
+        qDebug() << "[FFmpegPlugin::exportToFormat()] - fps -> " << fps;
     #endif
 
     int frames = 0;
@@ -130,7 +130,7 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
         if (!generator->validMovieHeader()) {
             errorMsg = generator->getErrorMsg();
             #ifdef TUP_DEBUG
-                qDebug() << "FFmpegPlugin::exportToFormat() - [ Fatal Error ] - Can't create video -> " << filePath;
+                qDebug() << "[FFmpegPlugin::exportToFormat()] - Fatal Error: Can't create video -> " << filePath;
             #endif
             delete generator;
 
@@ -144,7 +144,7 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
             renderer.setScene(scene, size);
             while (renderer.nextPhotogram()) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "FFmpegPlugin::exportToFormat() - Rendering frame -> " << QString::number(photogram);
+                    qDebug() << "[FFmpegPlugin::exportToFormat()] - Rendering frame -> " << photogram;
                 #endif
                 renderer.render(&painter);
                 generator->nextFrame();
