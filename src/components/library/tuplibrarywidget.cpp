@@ -422,7 +422,7 @@ void TupLibraryWidget::cloneObject(QTreeWidgetItem* item)
         TupLibraryObject *object = library->getObject(id);
 
         if (object) {
-            QString smallId = object->getSmallId();
+            QString smallId = object->getShortId();
             QString extension = object->getExtension();
             TupLibraryObject::Type type = object->getType();
             QString path = object->getDataPath();
@@ -1813,7 +1813,7 @@ void TupLibraryWidget::refreshItem(LibraryObjects collection)
            i.next();
            TupLibraryObject *object = i.value();
            if (object) {
-               updateItem(object->getSmallId(), object->getExtension().toLower(), object);
+               updateItem(object->getShortId(), object->getExtension().toLower(), object);
            } else {
                #ifdef TUP_DEBUG
                    qDebug() << "[TupLibraryWidget::updateItemFromSaveAction()] - Fatal Error: The library item modified was not found!";

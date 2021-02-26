@@ -85,7 +85,7 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         int frameToPlay();
         void updateFrameToPlay(int frame);
 
-        QString getSmallId() const;
+        QString getShortId() const;
         QString getExtension() const;
         
         bool loadRawData(const QByteArray &data);

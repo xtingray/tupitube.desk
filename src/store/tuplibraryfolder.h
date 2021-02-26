@@ -93,7 +93,8 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
         
         Folders getFolders() const;
         LibraryObjects getObjects() const;
-        
+        LibraryObjects getSoundObjects() const;
+
         int objectsCount() const;
         int foldersCount() const;
         

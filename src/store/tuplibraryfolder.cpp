@@ -457,6 +457,26 @@ LibraryObjects TupLibraryFolder::getObjects() const
     return objects;
 }
 
+LibraryObjects TupLibraryFolder::getSoundObjects() const
+{
+    LibraryObjects items;
+
+    foreach (TupLibraryObject *object, objects) {
+        if (object->getType() == TupLibraryObject::Sound)
+            items[object->getSymbolName()] = object;
+    }
+
+    foreach (TupLibraryFolder *folder, folders) {
+        LibraryObjects media = folder->getObjects();
+        foreach (TupLibraryObject *object, media) {
+            if (object->getType() == TupLibraryObject::Sound)
+                items[object->getSymbolName()] = object;
+        }
+    }
+
+    return items;
+}
+
 void TupLibraryFolder::fromXml(const QString &xml)
 {
     #ifdef TUP_DEBUG

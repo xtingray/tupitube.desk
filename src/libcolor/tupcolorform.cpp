@@ -90,7 +90,7 @@ void TupColorForm::setupForm()
     gridLayout->addWidget(valueS, 1, 1, Qt::AlignTop | Qt::AlignLeft);
     gridLayout->addWidget(valueV, 2, 1, Qt::AlignTop | Qt::AlignLeft);
 
-    QLabel *alphaLabel = new QLabel(tr("Alpha (Transparency)"));
+    QLabel *alphaLabel = new QLabel(tr("Opacity"));
     alphaLabel->setAlignment(Qt::AlignHCenter);
 
     alphaBox = new QSpinBox();

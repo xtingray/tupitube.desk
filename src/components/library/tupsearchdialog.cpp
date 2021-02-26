@@ -936,6 +936,6 @@ void TupSearchDialog::openPatreonLink()
 
 void TupSearchDialog::openCreditsLink()
 {
-    QUrl url("https://www.maefloresta.com/credits");
+    QUrl url(TUPITUBE_URL + QString("/credits"));
     QDesktopServices::openUrl(url);
 }

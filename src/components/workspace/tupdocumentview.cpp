@@ -1860,7 +1860,7 @@ void TupDocumentView::exportImage()
                                                     tr("Images") + " (*.png *.jpg *.svg)");
     if (!fileName.isNull()) {
         bool isOk = imagePlugin->exportFrame(frameIndex, project->getBgColor(), fileName, project->sceneAt(sceneIndex),
-                                                project->getDimension(), project->getLibrary());
+                                             project->getDimension(), project->getLibrary());
         updatePaintArea();
         if (isOk)
             TOsd::self()->display(TOsd::Info, tr("Frame has been exported successfully"));

@@ -196,7 +196,7 @@ QString TupLibraryObject::getFolder() const
     return folder;
 }
 
-QString TupLibraryObject::getSmallId() const
+QString TupLibraryObject::getShortId() const
 {
     return smallId;
 }

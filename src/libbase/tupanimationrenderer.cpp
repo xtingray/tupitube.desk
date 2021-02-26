@@ -40,6 +40,10 @@
 
 TupAnimationRenderer::TupAnimationRenderer(const QColor color, TupLibrary *library, bool waterMark)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupAnimationRenderer()] - bgColor -> " << color.name();
+    #endif
+
     bgColor = color;
     gScene = new TupGraphicsScene;
     gScene->setLibrary(library);

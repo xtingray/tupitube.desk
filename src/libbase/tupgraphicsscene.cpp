@@ -170,8 +170,12 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
         qDebug() << "[TupGraphicsScene::drawPhotogram()] - photogram -> " << photogram;
     #endif
 
-    if (photogram < 0 || !tupScene)
+    if (photogram < 0 || !tupScene) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupGraphicsScene::drawPhotogram()] - Error: Invalid photogram -> " << photogram;
+        #endif
         return;
+    }
 
     cleanWorkSpace();
     // Painting the background
@@ -341,7 +345,7 @@ void TupGraphicsScene::drawSceneBackground(int photogram)
 void TupGraphicsScene::drawVectorStaticBg(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupGraphicsScene::drawVectorStaticBg()]";
+        qDebug() << "[TupGraphicsScene::drawVectorStaticBg()] - index -> " << index;
     #endif
 
     // Vector Static Bg
@@ -359,6 +363,10 @@ void TupGraphicsScene::drawVectorStaticBg(int index)
             qDebug() << "[TupGraphicsScene::drawVectorStaticBg()] - Vector static bg frame is empty";
         #endif
     }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+    #endif
 }
 
 // Shows dynamic background on background mode
@@ -382,6 +390,10 @@ void TupGraphicsScene::drawVectorDynamicBg()
             qDebug() << "[TupGraphicsScene::drawVectorDynamicBg()] - Vector dynamic bg frame is empty";
         #endif
     }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+    #endif
 }
 
 // Shows dynamic background as part of the scene
@@ -389,6 +401,7 @@ void TupGraphicsScene::drawVectorDynamicBgOnMovement(int index, int photogram)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupGraphicsScene::drawVectorDynamicBgOnMovement()] - photogram: " << photogram;
+        qDebug() << "[TupGraphicsScene::drawVectorDynamicBgOnMovement()] - index -> " << index;
     #endif
 
     // Vector Dynamic Bg on movement
@@ -405,6 +418,10 @@ void TupGraphicsScene::drawVectorDynamicBgOnMovement(int index, int photogram)
             qDebug() << "[TupGraphicsScene::drawVectorDynamicBgOnMovement()] - Vector dynamic bg frame is empty";
         #endif
     }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+    #endif
 }
 
 void TupGraphicsScene::drawRasterStaticBg(int index)
@@ -428,6 +445,10 @@ void TupGraphicsScene::drawRasterStaticBg(int index)
             qDebug() << "[TupGraphicsScene::drawRasterStaticBg()] - RASTER STATIC image is NULL!";
         #endif
     }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+    #endif
 }
 
 void TupGraphicsScene::drawRasterDynamicBgOnMovement(int index, int photogram)
@@ -452,6 +473,10 @@ void TupGraphicsScene::drawRasterDynamicBgOnMovement(int index, int photogram)
             qDebug() << "[TupGraphicsScene::drawRasterDynamicBgOnMovement()] - RASTER DYNAMIC image is NULL!";
         #endif
     }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+    #endif
 }
 
 void TupGraphicsScene::drawVectorFg()
@@ -476,6 +501,10 @@ void TupGraphicsScene::drawVectorFg()
             qDebug() << "[TupGraphicsScene::drawVectorFg()] - Vector foreground frame is empty";
         #endif
     }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+    #endif
 }
 
 void TupGraphicsScene::addFrame(TupFrame *frame, double opacityFactor, Context mode)
@@ -1141,11 +1170,9 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
 
 void TupGraphicsScene::cleanWorkSpace()
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupGraphicsScene::cleanWorkSpace()]";
     #endif
-    */
 
     if (vectorDynamicBg) {
         vectorDynamicBg = nullptr;

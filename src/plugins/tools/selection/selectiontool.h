@@ -84,7 +84,9 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         virtual void aboutToChangeTool();
         void aboutToChangeScene(TupGraphicsScene *scene);
         
-        virtual void itemResponse(const TupItemResponse *event);
+        virtual void itemResponse(const TupItemResponse *response);
+        void layerResponse(const TupLayerResponse *response);
+
         virtual void saveConfig();
         QCursor polyCursor(); //  const;
 

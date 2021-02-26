@@ -1144,7 +1144,6 @@ void TupMainWindow::createPaintCommand(const TupPaintAreaEvent *event)
     }
 
     TupPaintAreaCommand *command = animationTab->createPaintCommand(event);
-
     if (command) { 
         // SQA: Implement Undo procedure for "Color" actions 
         // SQA: Refactor pointer cast
@@ -1156,7 +1155,10 @@ void TupMainWindow::createPaintCommand(const TupPaintAreaEvent *event)
 
         if (event->getAction() == TupPaintAreaEvent::ChangePenThickness)
             m_brushWidget->setPenThickness(qvariant_cast<int>(event->getData()));
-    } 
+
+        if (event->getAction() == TupPaintAreaEvent::ChangeBgColor)
+            m_projectManager->setModificationStatus(true);
+    }
 }
 
 void TupMainWindow::updatePenColor(const QColor &color)

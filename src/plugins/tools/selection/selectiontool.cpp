@@ -518,6 +518,20 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
     }
 }
 
+void SelectionTool::layerResponse(const TupLayerResponse *response)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::layerResponse()] - action -> " << response->getAction();
+    #endif
+
+    switch (response->getAction()) {
+        case TupProjectRequest::Move:
+        {
+            init(scene);
+        }
+    }
+}
+
 void SelectionTool::syncNodes()
 {
     foreach (NodeManager* node, nodeManagers) {

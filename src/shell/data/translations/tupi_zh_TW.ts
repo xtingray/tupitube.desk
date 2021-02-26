@@ -2016,8 +2016,8 @@
 <context>
     <name>TupColorForm</name>
     <message>
-        <source>Alpha (Transparency)</source>
-        <translation>開端(透明)</translation>
+        <source>Opacity</source>
+        <translation>不透明度</translation>
     </message>
 </context>
 <context>
@@ -3260,10 +3260,6 @@ Please, rename the project&apos;s file</source>
         <translation>Y</translation>
     </message>
     <message>
-        <source>F1</source>
-        <translation>F1</translation>
-    </message>
-    <message>
         <source>by</source>
         <translation>通過</translation>
     </message>
@@ -3606,10 +3602,6 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Save Project As</source>
         <translation>將專案另儲存為</translation>
-    </message>
-    <message>
-        <source>Online Help Content</source>
-        <translation>線上說明內容</translation>
     </message>
     <message>
         <source>Hide top panels</source>
