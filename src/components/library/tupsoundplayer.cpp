@@ -83,7 +83,6 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     timerLayout->setContentsMargins(0, 0, 0, 0);
 
     slider = new QSlider(Qt::Horizontal, this);
-    // slider->setRange(0, player->duration() / 1000);
     connect(slider, SIGNAL(sliderMoved(int)), this, SLOT(updateSoundPos(int)));
 
     QBoxLayout *sliderLayout = new QBoxLayout(QBoxLayout::LeftToRight);

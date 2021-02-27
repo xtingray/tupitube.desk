@@ -2088,11 +2088,3 @@ void TupLibraryWidget::importAsset(const QString &name, TupSearchDialog::AssetTy
     emit requestTriggered(&request);
     data.clear();
 }
-
-void TupLibraryWidget::setLipsyncSoundMetadata(const QString &soundKey, int frame)
-{
-    qDebug() << "";
-    qDebug() << "SOUNDKEY -> " << soundKey;
-    library->updateEffectSoundList(soundKey, frame);
-    emit soundUpdated();
-}

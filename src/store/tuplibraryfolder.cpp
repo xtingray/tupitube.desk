@@ -679,8 +679,3 @@ void TupLibraryFolder::updateEffectSoundList(const QString &soundPath, int frame
         }
     }
 }
-
-void TupLibraryFolder::updateSoundItemMetadata(const QString &soundKey, int frameIndex)
-{
-
-}
