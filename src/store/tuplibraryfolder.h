@@ -111,7 +111,8 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
         QList<QPair<int, QString> > soundEffectList();
 
         void updateEffectSoundList(const QString &soundPath, int frame);
- 
+        void updateSoundItemMetadata(const QString &soundKey, int frameIndex);
+
     public:
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;

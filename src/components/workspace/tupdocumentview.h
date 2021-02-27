@@ -202,6 +202,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void fillToolEnabled();
         void projectHasChanged();
         void imagePostRequested(const QString &);
+        void notifyLipsyncSoundMetadata(const QString &, int);
 
     private:
         void setupDrawActions();

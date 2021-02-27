@@ -103,7 +103,6 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
 
     protected:
         virtual void sceneResponse(TupSceneResponse *response);
-        virtual void layerResponse(TupLayerResponse *response);
         virtual void libraryResponse(TupLibraryResponse *response);
         virtual void frameResponse(TupFrameResponse *response);
 
@@ -131,6 +130,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void updateSoundTiming(int frame);
         void importAsset(const QString &name, TupSearchDialog::AssetType assetType, const QString &extension,
                          int extensionId, QByteArray &data);
+        void setLipsyncSoundMetadata(const QString &soundKey, int frame);
 
     public slots:
         void addFolder(const QString &folderName = QString());

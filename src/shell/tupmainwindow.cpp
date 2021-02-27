@@ -330,7 +330,8 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(animationTab, SIGNAL(imagePostRequested(const QString &)), this, SLOT(postFrame(const QString &)));
         connect(this, SIGNAL(activeDockChanged(TupDocumentView::DockType)), animationTab,
                 SLOT(updateActiveDock(TupDocumentView::DockType)));
-
+        connect(animationTab, SIGNAL(notifyLipsyncSoundMetadata(const QString &, int)),
+                              m_libraryWidget, SLOT(setLipsyncSoundMetadata(const QString &, int)));
         animationTab->setAntialiasing(true);
 
         int width = animationTab->workSpaceSize().width();

@@ -1418,20 +1418,6 @@ void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
     }
 }
 
-void TupLibraryWidget::layerResponse(TupLayerResponse *response)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::layerResponse()]";
-    #endif
-
-    switch (response->getAction()) {
-        case TupProjectRequest::AddLipSync:
-        {
-            qDebug() << "TupLibraryWidget::layerResponse() - Adding Lip-sync into the library!";
-        }
-    }
-}
-
 void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
 {
     #ifdef TUP_DEBUG
@@ -2101,4 +2087,12 @@ void TupLibraryWidget::importAsset(const QString &name, TupSearchDialog::AssetTy
                                                    currentFrame.scene, currentFrame.layer, currentFrame.frame);
     emit requestTriggered(&request);
     data.clear();
+}
+
+void TupLibraryWidget::setLipsyncSoundMetadata(const QString &soundKey, int frame)
+{
+    qDebug() << "";
+    qDebug() << "SOUNDKEY -> " << soundKey;
+    // library->updateEffectSoundList(currentSound->getDataPath(), frame);
+    // emit soundUpdated();
 }

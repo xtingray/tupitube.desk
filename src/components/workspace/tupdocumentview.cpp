@@ -2354,6 +2354,7 @@ void TupDocumentView::importPapagayoLipSync()
                         emit updateFPS(parser->getFps()); 
 
                         TOsd::self()->display(TOsd::Info, tr("Papagayo file has been imported successfully"));
+                        emit notifyLipsyncSoundMetadata(folder + "/" + soundKey, currentIndex);
                     } else {
                         TOsd::self()->display(TOsd::Error, tr("Papagayo file is invalid!"));
                         #ifdef TUP_DEBUG
