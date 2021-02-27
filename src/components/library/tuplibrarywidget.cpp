@@ -1420,6 +1420,10 @@ void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
 
 void TupLibraryWidget::layerResponse(TupLayerResponse *response)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::layerResponse()]";
+    #endif
+
     switch (response->getAction()) {
         case TupProjectRequest::AddLipSync:
         {
