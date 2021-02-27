@@ -2093,6 +2093,6 @@ void TupLibraryWidget::setLipsyncSoundMetadata(const QString &soundKey, int fram
 {
     qDebug() << "";
     qDebug() << "SOUNDKEY -> " << soundKey;
-    // library->updateEffectSoundList(currentSound->getDataPath(), frame);
-    // emit soundUpdated();
+    library->updateEffectSoundList(soundKey, frame);
+    emit soundUpdated();
 }
