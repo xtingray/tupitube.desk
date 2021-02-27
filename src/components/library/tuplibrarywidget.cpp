@@ -1499,6 +1499,9 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                              }
                          }
 
+                         object->updateFrameToPlay(currentFrame.frame);
+                         library->updateEffectSoundList(object->getDataPath(), currentFrame.frame);
+
                          item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
                          libraryTree->setCurrentItem(item);
                          previewItem(item);
