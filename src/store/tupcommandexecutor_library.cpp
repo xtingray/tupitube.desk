@@ -57,7 +57,8 @@ bool TupCommandExecutor::createSymbol(TupLibraryResponse *response)
         }
     } else {
         if (response->getMode() == TupProjectResponse::Do) {
-            if (project->createSymbol(response->symbolType(), response->getArg().toString(), response->getData(), response->getParent())) {
+            if (project->createSymbol(response->symbolType(), response->getArg().toString(), response->getData(),
+                                      response->getParent())) {
                 emit responsed(response);
                 return true;
             } 

@@ -40,8 +40,9 @@
 #include <QTextStream>
 
 TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &projectSize, const QString &extension, 
-                                         int initFrame) : QObject()
+                                         int frameIndex) : QObject()
 {
+    initFrame = frameIndex;
     int framesTotal = 0;
     framesCount = 0;
     isValid = true;
@@ -247,4 +248,9 @@ int TupPapagayoImporter::getFrameCount()
 int TupPapagayoImporter::getFps()
 {
     return fps;
+}
+
+int TupPapagayoImporter::getInitFrame()
+{
+    return initFrame;
 }

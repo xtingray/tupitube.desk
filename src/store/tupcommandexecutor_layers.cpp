@@ -229,7 +229,6 @@ bool TupCommandExecutor::addLipSync(TupLayerResponse *response)
         return false;
 
     TupLayer *layer = scene->layerAt(position);
-
     if (layer) {
         TupLipSync *lipsync = new TupLipSync();
         lipsync->fromXml(xml);

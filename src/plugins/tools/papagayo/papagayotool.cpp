@@ -92,18 +92,18 @@ QList<TAction::ActionId> PapagayoTool::keys() const
 
 void PapagayoTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
-    Q_UNUSED(scene);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
+    Q_UNUSED(scene)
 }
 
 /* This method is executed while the mouse is pressed and on movement */
 
 void PapagayoTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
-    Q_UNUSED(scene);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
+    Q_UNUSED(scene)
 }
 
 /* This method finishes the action started on the press method depending
@@ -112,9 +112,9 @@ void PapagayoTool::move(const TupInputDeviceInformation *input, TupBrushManager 
 
 void PapagayoTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
-    Q_UNUSED(scene);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
+    Q_UNUSED(scene)
 }
 
 /* This method returns the list of actions defined in this plugin */
@@ -194,7 +194,7 @@ void PapagayoTool::saveConfig()
 
 void PapagayoTool::updateScene(TupGraphicsScene *scene)
 { 
-    Q_UNUSED(scene); 
+    Q_UNUSED(scene)
 }
 
 void PapagayoTool::editLipSyncSelection(const QString &name)
@@ -428,7 +428,7 @@ void PapagayoTool::keyPressEvent(QKeyEvent *event)
 
 void PapagayoTool::keyReleaseEvent(QKeyEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
 }
 
 void PapagayoTool::updateXPosition(int x)

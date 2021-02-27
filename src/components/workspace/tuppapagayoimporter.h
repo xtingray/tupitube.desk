@@ -46,7 +46,7 @@ class TUPITUBE_EXPORT TupPapagayoImporter : public QObject
     Q_OBJECT
 
     public:
-        TupPapagayoImporter(const QString &file, const QSize &projectSize, const QString &extension, int initFrame);
+        TupPapagayoImporter(const QString &file, const QSize &projectSize, const QString &extension, int frameIndex);
         ~TupPapagayoImporter();
 
         void setSoundFile(const QString &soundFile);
@@ -54,12 +54,14 @@ class TUPITUBE_EXPORT TupPapagayoImporter : public QObject
         QString file2Text() const;
         int getFrameCount();
         int getFps();
+        int getInitFrame();
 
     private:
         bool isValid;
         int framesCount;
         int fps;
         TupLipSync *lipsync;
+        int initFrame;
 };
 
 #endif
