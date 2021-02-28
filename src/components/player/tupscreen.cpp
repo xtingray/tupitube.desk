@@ -743,6 +743,7 @@ void TupScreen::loadSoundRecords()
         #ifdef TUP_DEBUG
             qWarning() << "[TupScreen::loadSoundRecords()] - Loading lip-sync files...";
             qWarning() << "*** Total -> " << total;
+            qWarning() << "---";
         #endif
         if (total > 0) {
             soundRecords.clear();
@@ -840,11 +841,4 @@ void TupScreen::mousePressEvent(QMouseEvent *event)
     Q_UNUSED(event)
 
     emit activePause();
-
-    /*
-    if (playerIsActive)
-        stopAnimation();
-    else
-        play();
-    */
 }
