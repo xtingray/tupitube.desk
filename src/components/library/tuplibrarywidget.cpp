@@ -306,7 +306,7 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                    {
                      currentSound = object;
 
-                     display->setSoundObject(object->getDataPath());
+                     display->setSoundParams(object->getDataPath(), object->frameToPlay());
                      display->showSoundPlayer();
                    }
                    break;

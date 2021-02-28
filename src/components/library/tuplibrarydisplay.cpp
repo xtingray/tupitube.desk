@@ -85,9 +85,9 @@ void TupLibraryDisplay::showDisplay()
     }
 }
 
-void TupLibraryDisplay::setSoundObject(const QString &path)
+void TupLibraryDisplay::setSoundParams(const QString &path, int frameIndex)
 {
-    soundPlayer->setSoundObject(path);
+    soundPlayer->setSoundParams(path, frameIndex);
 }
 
 void TupLibraryDisplay::showSoundPlayer()

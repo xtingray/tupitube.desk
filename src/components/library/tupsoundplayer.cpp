@@ -36,7 +36,6 @@
 #include "tupsoundplayer.h"
 #include "tseparator.h"
 
-#include <QSpinBox>
 #include <QTimer>
 
 TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
@@ -55,7 +54,7 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     frameWidget = new QWidget;
 
     QLabel *frameLabel = new QLabel(tr("Play at frame:") + " ");
-    QSpinBox *frameBox = new QSpinBox();
+    frameBox = new QSpinBox();
     frameBox->setMinimum(1);
     frameBox->setMaximum(999);
     frameBox->setValue(1);
@@ -129,9 +128,12 @@ QSize TupSoundPlayer::sizeHint() const
     return QWidget::sizeHint().expandedTo(QSize(100, 100));
 }
 
-void TupSoundPlayer::setSoundObject(const QString &path)
+void TupSoundPlayer::setSoundParams(const QString &path, int frameIndex)
 {
     player->setMedia(QUrl::fromLocalFile(path));
+    frameBox->blockSignals(true);
+    frameBox->setValue(frameIndex);
+    frameBox->blockSignals(false);
 }
 
 void TupSoundPlayer::playFile()

@@ -44,6 +44,7 @@
 #include <QBoxLayout>
 #include <QSlider>
 #include <QLabel>
+#include <QSpinBox>
 #include <QMediaPlayer>
 #include <QUrl>
 #include <QTime>
@@ -62,7 +63,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         ~TupSoundPlayer();
 
         QSize sizeHint() const;
-        void setSoundObject(const QString &path);
+        void setSoundParams(const QString &path, int frameIndex);
         void stopFile();
         bool isPlaying();
         void reset();
@@ -90,7 +91,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         QString totalTime;
         QCheckBox *loopBox;
         bool loop;
-
+        QSpinBox *frameBox;
         QWidget *frameWidget;
 };
 

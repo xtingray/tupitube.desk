@@ -62,7 +62,7 @@ class TUPITUBE_EXPORT TupLibraryDisplay : public QWidget
 
         void showDisplay();
         void showSoundPlayer();
-        void setSoundObject(const QString &path);
+        void setSoundParams(const QString &path, int frameIndex);
         void stopSoundPlayer();
 
     signals:
