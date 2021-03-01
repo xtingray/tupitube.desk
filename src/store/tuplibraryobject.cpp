@@ -52,7 +52,8 @@ TupLibraryObject::TupLibraryObject(const QString &name, const QString &dir, TupL
     setSymbolName(name);
     folder = dir;
     objectType = type;
-    objectHasSoundEffect = false;
+    objectIsSoundResource = false;
+    mute = false;
     playAt = 0;
     isGroup = false;
 }
@@ -93,6 +94,16 @@ void TupLibraryObject::setType(TupLibraryObject::Type type)
 TupLibraryObject::Type TupLibraryObject::getType() const
 {
     return objectType;
+}
+
+void TupLibraryObject::enableMute(bool flag)
+{
+    mute = flag;
+}
+
+bool TupLibraryObject::isMuted()
+{
+    return mute;
 }
 
 int TupLibraryObject::frameToPlay()
@@ -281,7 +292,8 @@ void TupLibraryObject::fromXml(const QString &xml)
             break;
             case TupLibraryObject::Sound:
              {
-                 objectHasSoundEffect = objectTag.attribute("soundEffect").toInt() ? true : false;
+                 objectIsSoundResource = objectTag.attribute("soundEffect").toInt() ? true : false;
+                 mute = objectTag.attribute("mute").toInt() ? true : false;
                  playAt = objectTag.attribute("playAt").toInt();
                  dataPath = objectTag.attribute("path");
              }
@@ -332,7 +344,8 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
             break;
             case Sound:
             {
-                object.setAttribute("soundEffect", objectHasSoundEffect);
+                object.setAttribute("soundEffect", objectIsSoundResource);
+                object.setAttribute("mute", mute);
                 object.setAttribute("playAt", playAt);
                 object.setAttribute("path", path);
             }
@@ -635,18 +648,18 @@ bool TupLibraryObject::saveData(const QString &dataDir)
     return false;
 }
 
-void TupLibraryObject::setSoundEffectFlag(bool flag)
+void TupLibraryObject::setSoundResourceFlag(bool flag)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryObject::setSoundEffectFlag(bool)] - flag -> " << flag;
     #endif
 
-    objectHasSoundEffect = flag;
+    objectIsSoundResource = flag;
 }
 
-bool TupLibraryObject::isSoundEffect()
+bool TupLibraryObject::isSoundResource()
 {
-    return objectHasSoundEffect;
+    return objectIsSoundResource;
 }
 
 bool TupLibraryObject::isNativeGroup()

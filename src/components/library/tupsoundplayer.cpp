@@ -92,6 +92,11 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     playButton->setToolTip(tr("Play"));
     connect(playButton, SIGNAL(clicked()), this, SLOT(playFile()));
 
+    muteButton = new TImageButton(QPixmap(THEME_DIR + "icons/speaker.png"), 22, this, true);
+    muteButton->setShortcut(QKeySequence(tr("M")));
+    muteButton->setToolTip(tr("Mute"));
+    connect(muteButton, SIGNAL(clicked()), this, SLOT(muteAction()));
+
     loopBox = new QCheckBox();
     loopBox->setToolTip(tr("Loop"));
     loopBox->setIcon(QPixmap(THEME_DIR + "icons/loop.png"));
@@ -104,6 +109,8 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     buttonLayout->addStretch();
     buttonLayout->addWidget(new TSeparator(Qt::Vertical));
     buttonLayout->addStretch();
+    buttonLayout->addWidget(muteButton);
+    buttonLayout->addSpacing(10);
     buttonLayout->addWidget(loopBox);
     buttonLayout->addStretch();
     buttonLayout->setContentsMargins(0, 0, 0, 0);
@@ -235,4 +242,24 @@ void TupSoundPlayer::reset()
     loop = false;
     loopBox->setChecked(false);
     hide();
+}
+
+void TupSoundPlayer::muteAction()
+{
+    QString img("icons/mute.png");
+    if (mute) {
+        mute = false;
+        img = "icons/speaker.png";
+        muteButton->setToolTip(tr("Mute"));
+        playButton->setEnabled(true);
+    } else {
+        mute = true;
+        muteButton->setToolTip(tr("Unmute"));
+        playButton->setEnabled(false);
+        if (playing)
+            stopFile();
+    }
+    muteButton->setImage(QPixmap(THEME_DIR + img));
+
+    emit muteEnabled(mute);
 }

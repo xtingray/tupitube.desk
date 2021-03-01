@@ -583,7 +583,7 @@ void TupCameraWidget::updateTimerPanel(int currentFrame)
 
 void TupCameraWidget::updateSoundItems()
 {
-    previewScreen->loadLipSyncSounds();
+    previewScreen->loadSoundRecords();
 }
 
 void TupCameraWidget::infoDialog()

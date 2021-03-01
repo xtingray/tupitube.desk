@@ -67,6 +67,7 @@ class TUPITUBE_EXPORT TupLibraryDisplay : public QWidget
 
     signals:
         void frameUpdated(int frame);
+        void muteEnabled(bool mute);
 
     private:
         TupItemPreview *previewPanel;

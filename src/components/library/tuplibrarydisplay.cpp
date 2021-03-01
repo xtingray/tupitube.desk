@@ -43,6 +43,7 @@ TupLibraryDisplay::TupLibraryDisplay() : QWidget()
     previewPanel = new TupItemPreview(this);
     soundPlayer = new TupSoundPlayer(this);
     connect(soundPlayer, SIGNAL(frameUpdated(int)), this, SIGNAL(frameUpdated(int)));
+    connect(soundPlayer, SIGNAL(muteEnabled(bool)), this, SIGNAL(muteEnabled(bool)));
 
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->addWidget(previewPanel);

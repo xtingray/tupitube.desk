@@ -2353,8 +2353,8 @@ void TupDocumentView::importPapagayoLipSync()
 
                         emit updateFPS(parser->getFps()); 
 
-                        TupLibrary *library = project->getLibrary();
-                        library->updateEffectSoundList(folder + "/" + soundKey, currentIndex);
+                        // TupLibrary *library = project->getLibrary();
+                        // library->updateSoundResourcesItem(folder + "/" + soundKey, currentIndex, true);
 
                         TOsd::self()->display(TOsd::Info, tr("Papagayo file has been imported successfully"));
                     } else {

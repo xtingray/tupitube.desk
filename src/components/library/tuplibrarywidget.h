@@ -128,6 +128,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void updateItemEditionState();
         void importNativeObjects();
         void updateSoundTiming(int frame);
+        void updateSoundMuteStatus(bool mute);
         void importAsset(const QString &name, TupSearchDialog::AssetType assetType, const QString &extension,
                          int extensionId, QByteArray &data);
     public slots:

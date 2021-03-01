@@ -80,6 +80,9 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         void setFolder(const QString &folder);
         QString getFolder() const;
 
+        void enableMute(bool flag);
+        bool isMuted();
+
         void updateFolder(const QString &projectPath, const QString &folder = QString());
 
         int frameToPlay();
@@ -94,8 +97,8 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         
         bool saveData(const QString &dataDir);
 
-        void setSoundEffectFlag(bool flag);
-        bool isSoundEffect();
+        void setSoundResourceFlag(bool flag);
+        bool isSoundResource();
 
         bool isNativeGroup();
         QString getGroupXml() const;
@@ -119,7 +122,8 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         QByteArray rawData;
         QString groupXml;
 
-        bool objectHasSoundEffect;
+        bool objectIsSoundResource;
+        bool mute;
         bool isGroup;
         int playAt;
 };

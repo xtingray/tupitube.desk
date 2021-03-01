@@ -48,7 +48,7 @@ TupScreen::TupScreen(TupProject *work, const QSize viewSize, bool sizeChanged, Q
 
     project = work;
     library = work->getLibrary();
-    QList<QPair<int, QString> > effectsList = library->soundEffectList();
+    QList<SoundResource> effectsList = library->soundResourcesList();
 
     isScaled = sizeChanged;
     screenDimension = viewSize;
@@ -754,11 +754,12 @@ void TupScreen::loadSoundRecords()
                 if (folder) {
                     TupLibraryObject *sound = folder->getObject(lipsync->getSoundFile());
                     if (sound) {
-                        QPair<int, QString> soundRecord;
-                        soundRecord.first = lipsync->getInitFrame();
-                        soundRecord.second = sound->getDataPath();
+                        SoundResource record;
+                        record.frame = lipsync->getInitFrame();
+                        record.path = sound->getDataPath();
+                        record.muted = sound->isMuted();
 
-                        soundRecords << soundRecord;
+                        soundRecords << record;
                         soundPlayer << new QMediaPlayer();
                         i++;
                     }
@@ -767,7 +768,7 @@ void TupScreen::loadSoundRecords()
         }
     }
 
-    QList<QPair<int, QString> > effectsList = library->soundEffectList();
+    QList<SoundResource> effectsList = library->soundResourcesList();
     int size = effectsList.count();
 
     #ifdef TUP_DEBUG
@@ -776,7 +777,7 @@ void TupScreen::loadSoundRecords()
     #endif
 
     for (int i=0; i<size; i++)  {
-        QPair<int, QString> sound = effectsList.at(i);
+        SoundResource sound = effectsList.at(i);
         soundRecords << sound;
         soundPlayer << new QMediaPlayer();
     }
@@ -792,20 +793,26 @@ void TupScreen::playSoundAt(int frame)
 
     int size = soundRecords.count();
     for (int i=0; i<size; i++) {
-        QPair<int, QString> soundRecord = soundRecords.at(i);
-        if (frame == soundRecord.first) {
-            if (i < soundPlayer.count()) {
-                #ifdef TUP_DEBUG
-                    qWarning() << "[TupScreen::playSoundAt()] - Playing file -> " << soundRecord.second;
-                #endif
-                soundPlayer.at(i)->setMedia(QUrl::fromLocalFile(soundRecord.second));
-                soundPlayer.at(i)->play();
-            } else { 
-                #ifdef TUP_DEBUG
-                    qWarning() << "[TupScreen::playSoundAt()] - Fatal Error: "
-                    "Not sound file was found at -> " << soundRecord.second;
-                #endif
+        SoundResource soundRecord = soundRecords.at(i);
+        if (!soundRecord.muted) {
+            if (frame == soundRecord.frame) {
+                if (i < soundPlayer.count()) {
+                    #ifdef TUP_DEBUG
+                        qWarning() << "[TupScreen::playSoundAt()] - Playing file -> " << soundRecord.path;
+                    #endif
+                    soundPlayer.at(i)->setMedia(QUrl::fromLocalFile(soundRecord.path));
+                    soundPlayer.at(i)->play();
+                } else {
+                    #ifdef TUP_DEBUG
+                        qWarning() << "[TupScreen::playSoundAt()] - Fatal Error: "
+                        "Not sound file was found at -> " << soundRecord.path;
+                    #endif
+                }
             }
+        } else {
+            #ifdef TUP_DEBUG
+                qWarning() << "[TupScreen::playSoundAt()] - Sound file is muted -> " << soundRecord.path;
+            #endif
         }
     }
 }

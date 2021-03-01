@@ -78,4 +78,9 @@
 // #define BG_LAYERS_TOTAL 10
 #define ZLAYER_BASE 100000 // Initial zValue for Frames Mode layers
 
+struct SoundResource {
+    int frame;
+    QString path;
+    bool muted;
+};
 #endif

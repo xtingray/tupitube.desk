@@ -90,6 +90,7 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
         virtual void aboutToChangeTool();
         
         virtual void itemResponse(const TupItemResponse *event);
+        virtual void layerResponse(const TupLayerResponse *response);
         virtual void keyPressEvent(QKeyEvent *event);
         virtual void keyReleaseEvent(QKeyEvent *event);
         virtual void saveConfig();

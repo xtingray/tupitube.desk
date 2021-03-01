@@ -97,10 +97,11 @@ TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::Type type, co
     bool success = object->saveData(project->getDataDir());
     if (success) {
         if (type == TupLibraryObject::Sound) {
-            QPair<int, QString> soundRecord;
-            soundRecord.first = object->frameToPlay();
-            soundRecord.second = object->getDataPath();
-            soundRecords << soundRecord;
+            SoundResource record;
+            record.frame = object->frameToPlay();
+            record.path = object->getDataPath();
+            record.muted = object->isMuted();
+            soundRecords << record;
         }
 
         if (loaded && ret)
@@ -586,11 +587,12 @@ void TupLibraryFolder::loadItem(const QString &folder, QDomNode xml)
         case TupLibraryObject::Sound:
         {
             if (object->loadDataFromPath(project->getDataDir())) {
-                if (object->isSoundEffect()) {
-                    QPair<int, QString> soundRecord;
-                    soundRecord.first = object->frameToPlay();
-                    soundRecord.second = object->getDataPath();
-                    soundRecords << soundRecord;
+                if (object->isSoundResource()) {
+                    SoundResource record;
+                    record.frame = object->frameToPlay();
+                    record.path = object->getDataPath();
+                    record.muted = object->isMuted();
+                    soundRecords << record;
                 }
             } else {
                 #ifdef TUP_DEBUG
@@ -662,19 +664,20 @@ bool TupLibraryFolder::isLoadingProject()
     return loadingProject;
 }
 
-QList<QPair<int, QString> > TupLibraryFolder::soundEffectList()
+QList<SoundResource> TupLibraryFolder::soundResourcesList()
 {
     return soundRecords;
 }
 
-void TupLibraryFolder::updateEffectSoundList(const QString &soundPath, int frame)
+void TupLibraryFolder::updateSoundResourcesItem(TupLibraryObject *item)
 {
     int size = soundRecords.count();
     for(int i=0; i<size; i++) {
-        QPair<int, QString> soundRecord = soundRecords.at(i);
-        if (soundPath.compare(soundRecord.second) == 0) {
-            soundRecord.first = frame;
-            soundRecords.replace(i, soundRecord);
+        SoundResource record = soundRecords.at(i);
+        if (item->getDataPath().compare(record.path) == 0) {
+            record.frame = item->frameToPlay();
+            record.muted = item->isMuted();
+            soundRecords.replace(i, record);
             return;
         }
     }

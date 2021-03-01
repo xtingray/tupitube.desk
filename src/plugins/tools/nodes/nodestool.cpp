@@ -245,6 +245,20 @@ TupFrame* NodesTool::getCurrentFrame()
     return frame;
 }
 
+void NodesTool::layerResponse(const TupLayerResponse *response)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[NodesTool::layerResponse()] - action -> " << response->getAction();
+    #endif
+
+    switch (response->getAction()) {
+        case TupProjectRequest::Move:
+        {
+            init(scene);
+        }
+    }
+}
+
 void NodesTool::itemResponse(const TupItemResponse *response)
 {
     #ifdef TUP_DEBUG

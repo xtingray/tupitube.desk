@@ -70,6 +70,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
 
     signals:
         void frameUpdated(int frame);
+        void muteEnabled(bool mute);
 
     private slots:
         void playFile();
@@ -79,18 +80,21 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         void stateChanged(QMediaPlayer::State state);
         void updateSoundPos(int pos);
         void updateLoopState();
+        void muteAction();
 
     private:
         QMediaPlayer *player;
         QSlider *slider;
         QLabel *timer;
         TImageButton *playButton;
+        TImageButton *muteButton;
         bool playing;
         qint64 duration;
         QTime soundTotalTime;
         QString totalTime;
         QCheckBox *loopBox;
         bool loop;
+        bool mute;
         QSpinBox *frameBox;
         QWidget *frameWidget;
 };

@@ -61,6 +61,7 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
 
     display = new TupLibraryDisplay;
     connect(display, SIGNAL(frameUpdated(int)), this, SLOT(updateSoundTiming(int)));
+    connect(display, SIGNAL(muteEnabled(bool)), this, SLOT(updateSoundMuteStatus(bool)));
 
     libraryTree = new TupItemManager;
 
@@ -1494,13 +1495,13 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                          TupLibraryObject *object = library->getObject(id);
                          if (object) {
                              if (isEffectSound) {
-                                 object->setSoundEffectFlag(true);
+                                 object->setSoundResourceFlag(true);
                                  isEffectSound = false;
                              }
                          }
 
                          object->updateFrameToPlay(currentFrame.frame);
-                         library->updateEffectSoundList(object->getDataPath(), currentFrame.frame);
+                         library->updateSoundResourcesItem(object);
 
                          item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
                          libraryTree->setCurrentItem(item);
@@ -2020,7 +2021,16 @@ void TupLibraryWidget::updateSoundTiming(int frame)
 {
     if (currentSound) {
         currentSound->updateFrameToPlay(frame);
-        library->updateEffectSoundList(currentSound->getDataPath(), frame);
+        library->updateSoundResourcesItem(currentSound);
+        emit soundUpdated();
+    }
+}
+
+void TupLibraryWidget::updateSoundMuteStatus(bool mute)
+{
+    if (currentSound) {
+        currentSound->enableMute(mute);
+        library->updateSoundResourcesItem(currentSound);
         emit soundUpdated();
     }
 }
