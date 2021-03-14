@@ -42,6 +42,9 @@
 #include <QCheckBox>
 #include <QPushButton>
 #include <QFileDialog>
+#include <QComboBox>
+#include <QStackedWidget>
+#include <QLabel>
 
 TupPapagayoDialog::TupPapagayoDialog() : QDialog()
 {
@@ -54,34 +57,55 @@ TupPapagayoDialog::TupPapagayoDialog() : QDialog()
     QVBoxLayout *buttonsLayout = new QVBoxLayout;
     QVBoxLayout *textLayout = new QVBoxLayout;
 
-    QPushButton *fileButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/papagayo.png")), " " + tr("&Load PGO File"), this); 
+    QPushButton *fileButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/papagayo.png")), " " + tr("&Load PGO File"));
     connect(fileButton, SIGNAL(clicked()), this, SLOT(openFileDialog()));
 
-    QPushButton *imagesButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/bitmap_array.png")), " " + tr("Load &Images"), this);
+    QPushButton *imagesButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/bitmap_array.png")), " " + tr("Load &Images"));
     connect(imagesButton, SIGNAL(clicked()), this, SLOT(openImagesDialog()));
 
-    QPushButton *soundButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/bitmap_array.png")), " " + tr("Load &Sound"), this);
+    QPushButton *soundButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/bitmap_array.png")), " " + tr("Load &Sound"));
     connect(soundButton, SIGNAL(clicked()), this, SLOT(openSoundDialog()));
 
     buttonsLayout->addWidget(fileButton);
-    buttonsLayout->addWidget(imagesButton);
     buttonsLayout->addWidget(soundButton);
 
     filePath = new QLineEdit();
     filePath->setReadOnly(true);
-    imagesPath = new QLineEdit();
+    imagesPath = new QLineEdit("");
     imagesPath->setReadOnly(true);
     soundPath = new QLineEdit();
     soundPath->setReadOnly(true);
 
     textLayout->addWidget(filePath);
-    textLayout->addWidget(imagesPath);
     textLayout->addWidget(soundPath);
 
     blockLayout->addLayout(buttonsLayout);
     blockLayout->addLayout(textLayout);
 
     layout->addLayout(blockLayout);
+    QComboBox *mouthCombo = new QComboBox();
+    mouthCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Set Mouth Images"));
+    mouthCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 1"));
+    mouthCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 2"));
+    mouthCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 3"));
+    mouthCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 4"));
+
+    connect(mouthCombo, SIGNAL(activated(int)), this, SLOT(updateMouthView(int)));
+    layout->addWidget(mouthCombo);
+
+    QWidget *mouthsPanel = new QWidget;
+    QHBoxLayout *mouthBlockLayout = new QHBoxLayout(mouthsPanel);
+    mouthBlockLayout->addWidget(imagesButton);
+    mouthBlockLayout->addWidget(imagesPath);
+
+    stackedWidget = new QStackedWidget;
+    stackedWidget->addWidget(mouthsPanel);
+
+    folder << "";
+    for (int i=1; i<5; i++)
+        stackedWidget->addWidget(sampleWidget(i));
+
+    layout->addWidget(stackedWidget, Qt::AlignCenter);
 
     QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok 
                                 | QDialogButtonBox::Cancel, Qt::Horizontal);
@@ -178,4 +202,33 @@ void TupPapagayoDialog::saveDefaultPath(const QString &dir)
     TCONFIG->beginGroup("General");
     TCONFIG->setValue("DefaultPath", dir);
     TCONFIG->sync();
+}
+
+QWidget * TupPapagayoDialog::sampleWidget(int index)
+{
+    folder << SHARE_DIR + "data/mouths/" + QString::number(index);
+    QString imgPath = folder[index] + "/" + "AI.png";
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoDialog::sampleWidget()] - imgPath -> " << imgPath;
+    #endif
+
+    QWidget *widget = new QWidget;
+    QVBoxLayout *layout = new QVBoxLayout(widget);
+    QLabel *preview = new QLabel;
+    preview->setAlignment(Qt::AlignCenter);
+    preview->setPixmap(QPixmap(imgPath));
+    preview->setStyleSheet("QWidget { border: 1px solid #cccccc; }");
+    layout->addWidget(preview, Qt::AlignCenter);
+
+    return widget;
+}
+
+void TupPapagayoDialog::updateMouthView(int index)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoDialog::updateMouthView()] - index -> " << index;
+    #endif
+
+    imagesPath->setText(folder[index]);
+    stackedWidget->setCurrentIndex(index);
 }

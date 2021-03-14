@@ -40,6 +40,7 @@
 #include "tupitemgroup.h"
 #include "tuppixmapitem.h"
 #include "tupsvg2qt.h"
+#include "tmouthtarget.h"
 
 #include <QScreen>
 #include <cmath> // fabs
@@ -129,6 +130,14 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
             qDebug() << "[TupPaintArea::mousePressEvent()] - Frame is NULL!";
         #endif
         return;
+    }
+
+    if (currentTool == TAction::LipSyncTool) {
+        // If a node is the mouth target... abort!
+        if (event->buttons() == Qt::RightButton) {
+            if (qgraphicsitem_cast<TMouthTarget *>(scene()->itemAt(mapToScene(event->pos()), QTransform())))
+                return;
+        }
     }
 
     if (currentTool == TAction::NodesEditor) {
@@ -336,8 +345,8 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
 void TupPaintArea::layerResponse(TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPaintArea::layerResponse()] - [" + QString::number(response->getSceneIndex()) + ", "
-                    + QString::number(response->getLayerIndex()) + "]";
+        qDebug() << "[TupPaintArea::layerResponse()] - [" << response->getSceneIndex() << ", "
+                 << response->getLayerIndex() << "]";
     #endif
 
     TupGraphicsScene *guiScene = graphicsScene();
@@ -401,7 +410,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
                   viewport()->update(guiScene->sceneRect().toRect());
           }
         break;
-        case TupProjectRequest::TupProjectRequest::View:
+        case TupProjectRequest::View:
           {
               guiScene->updateLayerVisibility(response->getLayerIndex(), response->getArg().toBool());
               if (spaceMode == TupProject::FRAMES_MODE) {
@@ -417,7 +426,7 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
               viewport()->update(guiScene->sceneRect().toRect());
           }
         break;
-        case TupProjectRequest::TupProjectRequest::Move:
+        case TupProjectRequest::Move:
           {
               guiScene->setCurrentFrame(response->getArg().toInt(), frameIndex);
               if (spaceMode == TupProject::FRAMES_MODE) {
@@ -432,6 +441,9 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
 
               viewport()->update(guiScene->sceneRect().toRect());
           }
+        break;
+        case TupProjectRequest::UpdateLipSync:
+          return;
         break;
         default:
           {

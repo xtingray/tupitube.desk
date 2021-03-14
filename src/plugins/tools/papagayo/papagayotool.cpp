@@ -50,8 +50,6 @@ PapagayoTool::PapagayoTool() : TupToolPlugin()
 
     setupActions();
     configPanel = 0;
-    target = 0;
-    targetIncluded = false;
 }
 
 PapagayoTool::~PapagayoTool()
@@ -66,11 +64,12 @@ void PapagayoTool::init(TupGraphicsScene *gScene)
         qDebug() << "[PapagayoTool::init()]";
     #endif
 
+    target = 0;
+    targetIncluded = false;
     scene = gScene;
     mode = TupToolPlugin::View;
-    baseZValue = ZLAYER_BASE + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
 
-    initScene = scene->currentSceneIndex();
+    sceneIndex = scene->currentSceneIndex();
     removeTarget();
     configPanel->resetUI();
 
@@ -133,8 +132,12 @@ int PapagayoTool::toolType() const
 
 /* This method returns the tool panel associated to this plugin */
 
-QWidget *PapagayoTool::configurator()
+QWidget * PapagayoTool::configurator()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::configurator()]";
+    #endif
+
     if (!configPanel) {
         mode = TupToolPlugin::View;
 
@@ -154,6 +157,10 @@ QWidget *PapagayoTool::configurator()
 
 void PapagayoTool::resetCanvas()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::resetCanvas()]";
+    #endif
+
     mode = TupToolPlugin::View;
     removeTarget();
 }
@@ -166,6 +173,10 @@ void PapagayoTool::aboutToChangeScene(TupGraphicsScene *)
 /* This method is called when this plugin is off */
 void PapagayoTool::aboutToChangeTool()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::aboutToChangeTool()]";
+    #endif
+
     init(scene);
 }
 
@@ -182,6 +193,8 @@ void PapagayoTool::setupActions()
     lipsync->setActionId(TAction::LipSyncTool);
 
     pgActions.insert(TAction::LipSyncTool, lipsync);
+
+    realFactor = 1;
 }
 
 /* This method saves the settings of this plugin */
@@ -229,24 +242,41 @@ void PapagayoTool::removeCurrentLipSync(const QString &name)
         }
     }
 
-    TupProjectRequest request = TupRequestBuilder::createLayerRequest(initScene, 0, TupProjectRequest::RemoveLipSync, name);
+    TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, 0, TupProjectRequest::RemoveLipSync, name);
     emit requested(&request);
+}
+
+void PapagayoTool::setTargetInitPos(const QPointF &point)
+{
+    targetInitPos = point;
 }
 
 void PapagayoTool::updateOriginPoint(const QPointF &point)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::updateOriginPoint()] - point -> " << point;
+    #endif
+
     origin = point;
     mouth->setPos(origin - mouthOffset);
-    currentLipSync->updateMouthPosition(currentMouthIndex, point, scene->currentFrameIndex());
 
-    TupScene *sceneData = scene->currentScene();
-    sceneData->updateLipSync(currentLipSync);
+    int sceneIndex = scene->currentFrameIndex();
+    currentLipSync->updateMouthPos(currentMouthIndex, origin, (scene->currentFrameIndex() - currentLipSync->getInitFrame()));
+
+    TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, scene->currentLayerIndex(),
+                                                                      TupProjectRequest::UpdateLipSync, currentLipSync->toString());
+    emit requested(&request);
 
     configPanel->setPos(point);
 }
 
 void PapagayoTool::addTarget(const QString &id, int index)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::addTarget()] - id -> " << id;
+        qDebug() << "[PapagayoTool::addTarget()] - index -> " << index;
+    #endif
+
     mode = TupToolPlugin::Edit;
 
     currentMouth = id;
@@ -259,7 +289,7 @@ void PapagayoTool::addTarget(const QString &id, int index)
     QString selection = QString::number(initLayer) + "," + QString::number(initLayer) + ","
                         + QString::number(initFrame) + "," + QString::number(initFrame);
 
-    TupProjectRequest request = TupRequestBuilder::createFrameRequest(initScene, initLayer, initFrame,
+    TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, initLayer, initFrame,
                                                                       TupProjectRequest::Select, selection);
     emit requested(&request);
 
@@ -269,6 +299,10 @@ void PapagayoTool::addTarget(const QString &id, int index)
 
 void PapagayoTool::setTargetEnvironment()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::setTargetEnvironment()]";
+    #endif
+
     QGraphicsView *view = scene->views().at(0);
     foreach (QGraphicsItem *item, view->scene()->items()) {
         QString tip = item->toolTip();
@@ -281,7 +315,9 @@ void PapagayoTool::setTargetEnvironment()
         }
     }
 
-    target = new MouthTarget(origin, baseZValue);
+    target = new TMouthTarget(origin, mouth->zValue() + 1);
+    target->resize(realFactor);
+    connect(target, SIGNAL(initPos(const QPointF &)), this, SLOT(setTargetInitPos(const QPointF &)));
     connect(target, SIGNAL(positionUpdated(const QPointF &)), this, SLOT(updateOriginPoint(const QPointF &)));
     scene->addItem(target);
     targetIncluded = true;
@@ -294,7 +330,7 @@ void PapagayoTool::setTargetEnvironment()
             configPanel->setPhoneme(phoneme->value());
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupGraphicsScene::setTargetEnvironment()] - No lipsync phoneme at frame "
+                qDebug() << "[PapagayoTool::setTargetEnvironment()] - No lipsync phoneme at frame "
                          << scene->currentFrameIndex() << " - index: " << index;
             #endif
         }
@@ -305,6 +341,10 @@ void PapagayoTool::setTargetEnvironment()
 
 void PapagayoTool::removeTarget()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::removeTarget()]";
+    #endif
+
     if (targetIncluded) {
         if (target) {
             scene->removeItem(target);
@@ -316,6 +356,10 @@ void PapagayoTool::removeTarget()
 
 void PapagayoTool::sceneResponse(const TupSceneResponse *event)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::sceneResponse()]";
+    #endif
+
     if ((event->getAction() == TupProjectRequest::Remove || event->getAction() == TupProjectRequest::Reset)
         && (scene->currentSceneIndex() == event->getSceneIndex()))
         init(scene);
@@ -326,16 +370,29 @@ void PapagayoTool::sceneResponse(const TupSceneResponse *event)
 
 void PapagayoTool::layerResponse(const TupLayerResponse *event)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::layerResponse()]";
+    #endif
+
     if (event->getAction() == TupProjectRequest::AddLipSync) {
         QString xml = event->getArg().toString();
         currentLipSync = new TupLipSync();
         currentLipSync->fromXml(xml);
         configPanel->addLipSyncRecord(currentLipSync->getLipSyncName());
-    } 
+    }
+
+    if (event->getAction() == TupProjectRequest::UpdateLipSync) {
+        if (mode == TupToolPlugin::Edit)
+            setTargetEnvironment();
+    }
 }
 
 void PapagayoTool::frameResponse(const TupFrameResponse *event)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::frameResponse()]";
+    #endif
+
     if (event->getAction() == TupProjectRequest::Select) {
         if (mode == TupToolPlugin::Edit) {
             int frameIndex = event->getFrameIndex();
@@ -348,17 +405,25 @@ void PapagayoTool::frameResponse(const TupFrameResponse *event)
 
 void PapagayoTool::updateWorkSpaceContext()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::updateWorkSpaceContext()]";
+    #endif
+
     if (mode == TupToolPlugin::Edit)
         configPanel->closePanels();
 }
 
 void PapagayoTool::updateInitFrame(int index)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::updateInitFrame()]";
+    #endif
+
     removeTarget();
     currentLipSync->setInitFrame(index);
 
     TupScene *sceneData = scene->currentScene();
-    sceneData->updateLipSync(currentLipSync);
+    // sceneData->updateLipSync(currentLipSync);
 
     int sceneFrames = sceneData->framesCount();
     int lipSyncFrames = index + currentLipSync->getFramesCount();
@@ -366,7 +431,8 @@ void PapagayoTool::updateInitFrame(int index)
         int layersCount = sceneData->layersCount();
         for (int i = sceneFrames; i < lipSyncFrames; i++) {
              for (int j = 0; j < layersCount; j++) {
-                  TupProjectRequest request = TupRequestBuilder::createFrameRequest(initScene, j, i, TupProjectRequest::Add, tr("Frame"));
+                  TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, j, i,
+                                                                                    TupProjectRequest::Add, tr("Frame"));
                   emit requested(&request);
              }
         }
@@ -374,11 +440,15 @@ void PapagayoTool::updateInitFrame(int index)
 
     configPanel->updateInterfaceRecords();
 
+    TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, scene->currentLayerIndex(),
+                                                                      TupProjectRequest::UpdateLipSync, currentLipSync->toString());
+    emit requested(&request);
+
     int initLayer = sceneData->getLipSyncLayerIndex(currentLipSync->getLipSyncName());
     QString selection = QString::number(initLayer) + "," + QString::number(initLayer) + ","
                         + QString::number(index) + "," + QString::number(index);
 
-    TupProjectRequest request = TupRequestBuilder::createFrameRequest(initScene, initLayer, index, TupProjectRequest::Select, selection);
+    request = TupRequestBuilder::createFrameRequest(sceneIndex, initLayer, index, TupProjectRequest::Select, selection);
     emit requested(&request);
 }
 
@@ -423,6 +493,10 @@ void PapagayoTool::keyPressEvent(QKeyEvent *event)
      
             updateOriginPoint(point);
         }
+    } else {
+        QPair<int, int> flags = TupToolPlugin::setKeyAction(event->key(), event->modifiers());
+        if (flags.first != -1 && flags.second != -1)
+            emit callForPlugin(flags.first, flags.second);
     }
 }
 
@@ -443,4 +517,20 @@ void PapagayoTool::updateYPosition(int y)
     QPointF point(origin.x(), y);
     target->setPos(point);
     updateOriginPoint(point);
+}
+
+void PapagayoTool::resizeNode(qreal factor)
+{
+    realFactor = factor;
+    target->resize(realFactor);
+}
+
+void PapagayoTool::updateZoomFactor(qreal factor)
+{
+    realFactor = factor;
+}
+
+TupToolPlugin::Mode PapagayoTool::currentMode()
+{
+    return mode;
 }

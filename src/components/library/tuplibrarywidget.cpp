@@ -260,7 +260,6 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
             qDebug() << "[TupLibraryWidget::previewItem()] - Getting object -> " << objectName;
         #endif
         TupLibraryObject *object = library->getObject(objectName);
-
         if (!object) {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupLibraryWidget::previewItem()] - Fatal Error: Cannot find the object -> "
@@ -291,10 +290,15 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                 case TupLibraryObject::Item:
                    {
                      display->showDisplay();
-                     if (object->isNativeGroup())
+                     qDebug() << "";
+                     if (object->isNativeGroup()) {
+                         qDebug() << "1 TEST - objectName -> " << objectName;
+                         qDebug() << "nativeMap[objectName] -> " << nativeMap[objectName].isNull();
                          display->render(nativeMap[objectName]);
-                     else
+                     } else {
+                         qDebug() << "2 TEST - objectName -> " << objectName;
                          display->render(qvariant_cast<QGraphicsItem *>(object->getData()));
+                     }
 
                      /* SQA: Just a test
                      TupSymbolEditor *editor = new TupSymbolEditor;
@@ -307,7 +311,7 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                    {
                      currentSound = object;
 
-                     display->setSoundParams(object->getDataPath(), object->frameToPlay() + 1);
+                     display->setSoundParams(object);
                      display->showSoundPlayer();
                    }
                    break;
@@ -1419,6 +1423,27 @@ void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
     }
 }
 
+void TupLibraryWidget::layerResponse(TupLayerResponse *event)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::layerResponse()] - event -> " << event->getAction();
+    #endif
+
+    if (event->getAction() == TupProjectRequest::UpdateLipSync) {
+        TupLipSync *lipSync = new TupLipSync();
+        lipSync->fromXml(event->getArg().toString());
+
+        QString soundID = lipSync->getSoundFile();
+        int frameIndex = lipSync->getInitFrame();
+        TupLibraryObject *sound = library->getObject(soundID);
+        sound->updateFrameToPlay(frameIndex);
+        if (display->isSoundPanelVisible()) {
+            if (display->getSoundID().compare(soundID) == 0)
+                display->updateSoundInitFrame(frameIndex);
+        }
+    }
+}
+
 void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
 {
     #ifdef TUP_DEBUG
@@ -1461,13 +1486,18 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                  switch (obj->getType()) {
                      case TupLibraryObject::Item:
                        {
-                         if (obj->isNativeGroup())
+                         if (obj->isNativeGroup()) {
+                             qDebug() << "GROUP OBJECT -> " << obj->getSymbolName();
+                             qDebug() << "nativeMap[id] - id -> " << id;
+                             qDebug() << "XML -> ";
+                             qDebug() << obj->getGroupXml();
                              nativeMap[id] = TupLibraryObject::generateImage(obj->getGroupXml(), width());
+                         }
 
                          item->setIcon(0, QIcon(THEME_DIR + "icons/drawing_object.png"));
                          libraryTree->setCurrentItem(item);
                          previewItem(item);
-                         if (!isNetworked && !library->isLoadingProject())
+                         if (!isNetworked && !folderName.endsWith(".pgo") && !library->isLoadingProject())
                              insertObjectInWorkspace();
                        }
                      break;
@@ -1497,6 +1527,8 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                              if (isEffectSound) {
                                  object->setSoundResourceFlag(true);
                                  isEffectSound = false;
+                             } else {
+                                 object->setLipsyncVoiceFlag(true);
                              }
                          }
 
@@ -2069,7 +2101,7 @@ void TupLibraryWidget::importAsset(const QString &name, TupSearchDialog::AssetTy
         key = name + "-" + QString::number(i) + "." + extension;
     }
 
-    TupLibraryObject::Type type;
+    TupLibraryObject::Type type = TupLibraryObject::Item;
     switch(extensionId) {
       case TupSearchDialog::JPG:
       case TupSearchDialog::PNG:
@@ -2082,11 +2114,13 @@ void TupLibraryWidget::importAsset(const QString &name, TupSearchDialog::AssetTy
             type = TupLibraryObject::Svg;
         }
       break;
+      /*
       case TupSearchDialog::TOBJ:
         {
             type = TupLibraryObject::Item;
         }
       break;
+      */
     }
 
     currentMode = project->spaceContext();

@@ -779,6 +779,24 @@ void TupExposureSheet::layerResponse(TupLayerResponse *response)
                     }
                 }
             break;
+            /*
+            case TupProjectRequest::AddLipSync:
+                {
+                    QString xml = response->getArg().toString();
+                    TupLipSync *lipsync = new TupLipSync();
+                    lipsync->fromXml(xml);
+                    currentTable->updateFrameState(response->getLayerIndex(), lipsync->getInitFrame(), TupExposureTable::Used);
+                }
+            break;
+            case TupProjectRequest::UpdateLipSync:
+                {
+                    QString xml = response->getArg().toString();
+                    TupLipSync *lipsync = new TupLipSync();
+                    lipsync->fromXml(xml);
+                    currentTable->updateFrameState(response->getLayerIndex(), lipsync->getInitFrame(), TupExposureTable::Used);
+                }
+            break;
+            */
             default:
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupExposureSheet::layerResponse()] - Layer option undefined! -> "
@@ -1121,19 +1139,23 @@ void TupExposureSheet::frameResponse(TupFrameResponse *response)
     }
 }
 
-void TupExposureSheet::itemResponse(TupItemResponse *e)
+void TupExposureSheet::itemResponse(TupItemResponse *response)
 {
-    switch (e->getAction()) {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExposureSheet::itemResponse()] - action -> " << response->getAction();
+    #endif
+
+    switch (response->getAction()) {
         case TupProjectRequest::Add:
             {
-                if (e->spaceMode() == TupProject::FRAMES_MODE && e->getItemIndex() == 0)
-                    currentTable->updateFrameState(e->getLayerIndex(), e->getFrameIndex(), TupExposureTable::Used);
+                if (response->spaceMode() == TupProject::FRAMES_MODE && response->getItemIndex() == 0)
+                    currentTable->updateFrameState(response->getLayerIndex(), response->getFrameIndex(), TupExposureTable::Used);
             }
         break;
         case TupProjectRequest::Remove:
             {
-                if (e->spaceMode() == TupProject::FRAMES_MODE && e->frameIsEmpty())
-                    currentTable->updateFrameState(e->getLayerIndex(), e->getFrameIndex(), TupExposureTable::Empty);
+                if (response->spaceMode() == TupProject::FRAMES_MODE && response->frameIsEmpty())
+                    currentTable->updateFrameState(response->getLayerIndex(), response->getFrameIndex(), TupExposureTable::Empty);
             }
         break;
         case TupProjectRequest::SetTween:
@@ -1148,6 +1170,15 @@ void TupExposureSheet::itemResponse(TupItemResponse *e)
 
 void TupExposureSheet::libraryResponse(TupLibraryResponse *response)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExposureSheet::libraryResponse()] - action -> " << response->getAction();
+        qDebug() << "[TupExposureSheet::libraryResponse()] - arg -> " << response->getArg().toString();
+        qDebug() << "[TupExposureSheet::libraryResponse()] - symbol type -> " << response->symbolType();
+    #endif
+
+    if (response->symbolType() == TupLibraryObject::Folder || response->symbolType() == TupLibraryObject::Sound)
+        return;
+
     switch (response->getAction()) {
         case TupProjectRequest::Add:
         case TupProjectRequest::InsertSymbolIntoFrame:

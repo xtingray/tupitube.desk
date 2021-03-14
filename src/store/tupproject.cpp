@@ -492,8 +492,9 @@ bool TupProject::createSymbol(int type, const QString &name, const QByteArray &d
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupProject::createSymbol()] - name -> " << name;
+        qDebug() << "[TupProject::createSymbol()] - folder -> " << folder;
     #endif
-   
+
     if (!isOpen) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupProject::createSymbol()] - Fatal error: project is NOT open!";

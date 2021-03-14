@@ -53,6 +53,7 @@ TupLibraryObject::TupLibraryObject(const QString &name, const QString &dir, TupL
     folder = dir;
     objectType = type;
     objectIsSoundResource = false;
+    lipsyncVoice = false;
     mute = false;
     playAt = 0;
     isGroup = false;
@@ -114,6 +115,16 @@ int TupLibraryObject::frameToPlay()
 void TupLibraryObject::updateFrameToPlay(int frame)
 {
     playAt = frame;
+}
+
+bool TupLibraryObject::isLipsyncVoice()
+{
+    return lipsyncVoice;
+}
+
+void TupLibraryObject::setLipsyncVoiceFlag(bool isVoice)
+{
+    lipsyncVoice = isVoice;
 }
 
 void TupLibraryObject::setSymbolName(const QString &name)
@@ -293,6 +304,7 @@ void TupLibraryObject::fromXml(const QString &xml)
             case TupLibraryObject::Sound:
              {
                  objectIsSoundResource = objectTag.attribute("soundEffect").toInt() ? true : false;
+                 lipsyncVoice = objectTag.attribute("lipsyncVoice").toInt() ? true : false;
                  mute = objectTag.attribute("mute").toInt() ? true : false;
                  playAt = objectTag.attribute("playAt").toInt();
                  dataPath = objectTag.attribute("path");
@@ -345,6 +357,7 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
             case Sound:
             {
                 object.setAttribute("soundEffect", objectIsSoundResource);
+                object.setAttribute("lipsyncVoice", lipsyncVoice);
                 object.setAttribute("mute", mute);
                 object.setAttribute("playAt", playAt);
                 object.setAttribute("path", path);
@@ -516,16 +529,19 @@ bool TupLibraryObject::saveData(const QString &dataDir)
             case TupLibraryObject::Item:
             {
                  QString path = dataDir + "/obj/";
+                 if (folder.length() > 0)
+                     path += folder + "/";
                  if (!QFile::exists(path)) {
                      QDir dir;
                      dir.mkpath(path);
                  }
 
-                 QFile file(path + symbolName);
+                 dataPath = path + symbolName;
+                 QFile file(dataPath);
                  if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
                      QTextStream out(&file);
                      out << QString(rawData);
-                     dataPath = path + symbolName;
+                     file.close();
                      return true;
                  } else {
                      #ifdef TUP_DEBUG
@@ -581,11 +597,13 @@ bool TupLibraryObject::saveData(const QString &dataDir)
                      dir.mkpath(path);
                  }
 
-                 QFile file(path + symbolName);
+                 dataPath = path + symbolName;
+
+                 QFile file(dataPath);
                  if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
                      QTextStream out(&file);
                      out << data.toString();
-                     dataPath = path + symbolName;
+                     file.close();
                      return true;
                  } else {
                      #ifdef TUP_DEBUG
@@ -600,7 +618,6 @@ bool TupLibraryObject::saveData(const QString &dataDir)
                  QString path = dataDir + "/images/";
                  if (folder.length() > 0)
                      path += folder + "/";
-
                  if (!QFile::exists(path)) {
                      QDir dir;
                      if (!dir.mkpath(path)) { 
@@ -672,37 +689,87 @@ QString TupLibraryObject::getGroupXml() const
     return groupXml;
 }
 
-QImage TupLibraryObject::renderImage(const QString &xml, int width)
+QPixmap TupLibraryObject::renderImage(const QString &xml, int width)
 {
-    TupItemFactory factory;
-    QGraphicsItem *item = factory.create(xml);
-    QGraphicsScene *scene = new QGraphicsScene;
-    scene->addItem(item);
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryObject::renderImage(QString, int)] - width -> " << width;
+        qDebug() << "[TupLibraryObject::renderImage(QString, int)] - XML -> ";
+        qDebug() << xml;
+    #endif
 
-    width = (width*60) / 100;
-    int height = (item->boundingRect().height() * width) / item->boundingRect().width();
-    QPixmap pixmap(width, height);
-    pixmap.fill(Qt::transparent);
+    if (!xml.isEmpty()) {
+        TupItemFactory factory;
+        QGraphicsItem *item = factory.create(xml);
+        if (item) {
+            QGraphicsScene *scene = new QGraphicsScene;
+            scene->addItem(item);
 
-    QPainter painter(&pixmap);
-    painter.setRenderHint(QPainter::Antialiasing);
-    scene->render(&painter);
+            width = (width*60) / 100;
+            int height = (item->boundingRect().height() * width) / item->boundingRect().width();
+            QPixmap pixmap(width, height);
+            pixmap.fill(Qt::transparent);
 
-    return pixmap.toImage();
+            QPainter painter(&pixmap);
+            painter.setRenderHint(QPainter::Antialiasing);
+            scene->render(&painter);
+
+            return pixmap;
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupLibraryObject::renderImage()] - Fatal Error: QGraphicsItem from XML failed!";
+            #endif
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryObject::renderImage()] - Fatal Error: XML is empty!";
+        #endif
+    }
+
+    return QPixmap();
 }
 
-QImage TupLibraryObject::generateImage(QGraphicsItem *item, int width)
+QPixmap TupLibraryObject::generateImage(QGraphicsItem *item, int width)
 {
-    QDomDocument doc;
-    doc.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(doc));
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryObject::generateImage(QGraphicsItem *, int)] - width -> " << width;
+    #endif
 
-    return renderImage(doc.toString(), width);
+    if (item) {
+        QDomDocument doc;
+        doc.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(doc));
+
+        return renderImage(doc.toString(), width);
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryObject::generateImage()] - Fatal Error: item is NULL!";
+        #endif
+    }
+
+    return QPixmap();
 }
 
-QImage TupLibraryObject::generateImage(const QString &xml, int width)
+QPixmap TupLibraryObject::generateImage(const QString &xml, int width)
 {
-    QDomDocument doc;
-    doc.setContent(xml);
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryObject::generateImage(QString, int)] - width -> " << width;
+        qDebug() << "[TupLibraryObject::generateImage()] - XML -> ";
+        qDebug() << xml;
+    #endif
 
-    return renderImage(doc.toString(), width);
+    if (!xml.isEmpty()) {
+        QDomDocument doc;
+        if (doc.setContent(xml)) {
+            return renderImage(xml, width);
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupLibraryObject::generateImage()] - Fatal Error: XML is corrupt!";
+            #endif
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryObject::generateImage()] - Fatal Error: XML is empty!";
+        #endif
+    }
+
+    return QPixmap();
 }

@@ -41,7 +41,7 @@
 #include "papagayosettings.h"
 #include "tupprojectresponse.h"
 #include "configurator.h"
-#include "mouthtarget.h"
+#include "tmouthtarget.h"
 
 #include <QPointF>
 #include <QKeySequence>
@@ -88,13 +88,22 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
         virtual void keyPressEvent(QKeyEvent *event);
         virtual void keyReleaseEvent(QKeyEvent *event);
 
+        virtual TupToolPlugin::Mode currentMode();
+
+        void resizeNode(qreal factor);
+        void updateZoomFactor(qreal factor);
+
+        void setTargetEnvironment();
+
     signals:
         void importLipSync();
+        void callForPlugin(int menu, int index);
 
     private slots:
         void editLipSyncSelection(const QString &name);
         void removeCurrentLipSync(const QString &name);
         // void setCurrentLipSync(const QString &name);
+        void setTargetInitPos(const QPointF &point);
         void updateOriginPoint(const QPointF &point);
         void resetCanvas();
         void addTarget(const QString &id, int index);
@@ -103,7 +112,6 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
         void updateYPosition(int y);
 
     private:
-        void setTargetEnvironment();
         void setupActions();
         void removeTarget();
 
@@ -113,14 +121,16 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
         TupGraphicsScene *scene;
 
         TupLipSync *currentLipSync;
-        int initScene;
+        int sceneIndex;
 
+        QPointF targetInitPos;
         QPointF origin;
-        MouthTarget *target;
+        TMouthTarget *target;
 
         TupToolPlugin::Mode mode;
 
-        int baseZValue;
+        // int baseZValue;
+        qreal realFactor;
 
         QGraphicsItem *mouth;
         QPointF mouthOffset;

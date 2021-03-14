@@ -329,60 +329,63 @@ void TupVoice::setMouthPos(QPointF pos)
 
 void TupVoice::updateMouthPos(QPointF pos, int frame)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupVoice::updateMouthPos()] - pos -> " << pos;
+        qDebug() << "[TupVoice::updateMouthPos()] - frame -> " << frame;
+        qDebug() << "[TupVoice::updateMouthPos()] - initIndex -> " << initIndex;
+    #endif
+
     if (initIndex == frame)
         point = pos;
 
     int index = frame - initIndex;
-
     // Look for phoneme for this frame index
     int i = 0;
     foreach (TupPhrase *phrase, phrases) {
-             if (phrase->contains(index)) {
-                 int j = 0;
-                 QList <TupWord *> wordList = phrase->wordsList(); 
-                 foreach (TupWord *word, wordList ) {
-                          int initFrame = word->initFrame();
-                          if (word->contains(index)) {
-                              QList <TupPhoneme *> phonemeList = word->phonemesList();
-                              int position = index - initFrame;
-                              TupPhoneme *phoneme = phonemeList.at(position);
-                              QPointF oldPos = phoneme->position();
-                              phoneme->setPos(pos);
+        if (phrase->contains(index)) {
+            int j = 0;
+            QList<TupWord *> wordList = phrase->wordsList();
+            foreach (TupWord *word, wordList ) {
+                int initFrame = word->initFrame();
+                if (word->contains(index)) {
+                    QList<TupPhoneme *> phonemeList = word->phonemesList();
+                    int position = index - initFrame;
+                    TupPhoneme *phoneme = phonemeList.at(position);
+                    QPointF oldPos = phoneme->position();
+                    phoneme->setPos(pos);
 
-                              for (int n=position+1; n<phonemeList.count(); n++) {
-                                   TupPhoneme *p = phonemeList.at(n);
-                                   if (p->position() == oldPos)
-                                       p->setPos(pos);
-                                   else
-                                       return;
+                    for (int n=position+1; n<phonemeList.count(); n++) {
+                        TupPhoneme *p = phonemeList.at(n);
+                        if (p->position() == oldPos)
+                            p->setPos(pos);
+                        else
+                            return;
+                    }
+                    for (int n=j+1; n<wordList.count(); n++) {
+                        TupWord *w = wordList.at(n);
+                        foreach (TupPhoneme *p, w->phonemesList()) {
+                            if (p->position() == oldPos)
+                                p->setPos(pos);
+                            else
+                                return;                               }
+                        }
+                        for (int n=i+1; n<phrases.count(); n++) {
+                          TupPhrase *ph = phrases.at(n);
+                          foreach (TupWord *w, ph->wordsList()) {
+                              foreach (TupPhoneme *p, w->phonemesList()) {
+                                  if (p->position() == oldPos)
+                                      p->setPos(pos);
+                                  else
+                                      return;
                               }
-                              for (int n=j+1; n<wordList.count(); n++) {
-                                   TupWord *w = wordList.at(n);
-                                   foreach (TupPhoneme *p, w->phonemesList()) {
-                                            if (p->position() == oldPos)
-                                                p->setPos(pos);
-                                            else
-                                                return;
-                                   }
-                              }
-                              for (int n=i+1; n<phrases.count(); n++) {
-                                   TupPhrase *ph = phrases.at(n);
-                                   foreach (TupWord *w, ph->wordsList()) {
-                                            foreach (TupPhoneme *p, w->phonemesList()) {
-                                                     if (p->position() == oldPos)
-                                                         p->setPos(pos);
-                                                     else
-                                                         return;
-                                            }
-                                   }
-                              }
-
-                              return;
-                          }
-                          j++;
-                 }
+                        }
+                    }
+                    return;
+                }
+                j++;
              }
-             i++;
+         }
+         i++;
     }
 }
 
@@ -691,11 +694,17 @@ TupVoice * TupLipSync::voiceAt(int index)
     if (index >= 0 && index < voices.count())
         return voices.at(index);
 
-    return 0;
+    return nullptr;
 }
 
-void TupLipSync::updateMouthPosition(int mouthIndex, QPointF point, int frame)
+void TupLipSync::updateMouthPos(int mouthIndex, QPointF point, int frame)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLipSync::updateMouthPos()] - mouthIndex -> " << mouthIndex;
+        qDebug() << "[TupLipSync::updateMouthPos()] - point -> " << point;
+        qDebug() << "[TupLipSync::updateMouthPos()] - frame -> " << frame;
+    #endif
+
     TupVoice *voice = voices.at(mouthIndex);
     if (voice)
         voice->updateMouthPos(point, frame);
@@ -735,7 +744,7 @@ void TupLipSync::verifyStructure()
                                      pos = prev->phonemesList().last()->position();
                                  } else {
                                      #ifdef TUP_DEBUG
-                                         qDebug() << "TupLipSync::verifyStructure() - Warning: Word(" + QString::number(i-1) + ") has NO phonemes!";
+                                         qDebug() << "[TupLipSync::verifyStructure()] - Warning: Word(" << (i-1) << ") has NO phonemes!";
                                      #endif
                                  }
 
@@ -764,4 +773,18 @@ void TupLipSync::verifyStructure()
                  break;
          }
     }
+}
+
+QString TupLipSync::toString() const
+{
+    QDomDocument document;
+    QDomElement root = this->toXml(document);
+
+    QString xml;
+    {
+      QTextStream ts(&xml);
+      ts << root;
+    }
+
+    return xml;
 }

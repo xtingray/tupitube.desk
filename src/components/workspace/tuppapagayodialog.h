@@ -41,6 +41,7 @@
 
 #include <QDialog>
 #include <QLineEdit>
+#include <QStackedWidget>
 
 class TUPITUBE_EXPORT TupPapagayoDialog : public QDialog
 {
@@ -59,14 +60,18 @@ class TUPITUBE_EXPORT TupPapagayoDialog : public QDialog
         void openImagesDialog();
         void openSoundDialog();
         void checkRecords();
+        void updateMouthView(int index);
 
     private:
+        QWidget * sampleWidget(int index);
         void setDefaultPath(const QString &path);
         void saveDefaultPath(const QString &dir);
 
         QLineEdit *filePath;
         QLineEdit *imagesPath;
         QLineEdit *soundPath;
+        QStackedWidget *stackedWidget;
+        QStringList folder;
 };
 
 #endif

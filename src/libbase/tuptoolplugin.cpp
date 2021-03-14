@@ -76,16 +76,16 @@ TAction::ActionId TupToolPlugin::toolId()
 
 void TupToolPlugin::begin()
 {
-#ifdef TUP_DEBUG
-    qWarning() << "TupToolPlugin::begin() - Begin: " + currentTool;
-#endif
+    #ifdef TUP_DEBUG
+        qWarning() << "[TupToolPlugin::begin()] - Begin: " << currentTool;
+    #endif
 }
 
 void TupToolPlugin::end()
 {
-#ifdef TUP_DEBUG
-    qWarning() << "TupToolPlugin::end() - End: " + currentTool;
-#endif
+    #ifdef TUP_DEBUG
+        qWarning() << "[TupToolPlugin::end()] - End: " << currentTool;
+    #endif
 }
 
 void TupToolPlugin::sceneResponse(const TupSceneResponse *event)

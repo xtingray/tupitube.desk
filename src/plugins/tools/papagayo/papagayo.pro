@@ -16,22 +16,20 @@ win32 {
 INSTALLS += target 
 target.path = /plugins/
 
-HEADERS += mouthtarget.h \
-           papagayosettings.h \
+FRAMEWORK_DIR = "../../../framework"
+include($$FRAMEWORK_DIR/framework.pri)
+
+HEADERS += papagayosettings.h \
            buttonspanel.h \
            configurator.h \
            lipsyncmanager.h \
            papagayotool.h 
 
-SOURCES += mouthtarget.cpp \
-           papagayosettings.cpp \
+SOURCES += papagayosettings.cpp \
            buttonspanel.cpp \
            configurator.cpp \
            lipsyncmanager.cpp \
            papagayotool.cpp
-
-FRAMEWORK_DIR = "../../../framework"
-include($$FRAMEWORK_DIR/framework.pri)
 
 LIBBASE_DIR = ../../../libbase
 STORE_DIR = ../../../store

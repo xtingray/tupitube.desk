@@ -70,11 +70,19 @@ void TupLibraryDisplay::reset()
 
 void TupLibraryDisplay::render(QGraphicsItem *item)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryDisplay::render(QGraphicsItem)]";
+    #endif
+
     previewPanel->render(item);
 }
 
-void TupLibraryDisplay::render(const QImage &img)
+void TupLibraryDisplay::render(const QPixmap &img)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryDisplay::render(QImage)] - img.isNull() -> " << img.isNull();
+    #endif
+
     previewPanel->render(img);
 }
 
@@ -86,9 +94,9 @@ void TupLibraryDisplay::showDisplay()
     }
 }
 
-void TupLibraryDisplay::setSoundParams(const QString &path, int frameIndex)
+void TupLibraryDisplay::setSoundParams(TupLibraryObject *sound)
 {
-    soundPlayer->setSoundParams(path, frameIndex);
+    soundPlayer->setSoundParams(sound);
 }
 
 void TupLibraryDisplay::showSoundPlayer()
@@ -105,4 +113,19 @@ void TupLibraryDisplay::stopSoundPlayer()
         if (soundPlayer->isPlaying())
             soundPlayer->stopFile();
     }
+}
+
+bool TupLibraryDisplay::isSoundPanelVisible()
+{
+    return soundPlayer->isVisible();
+}
+
+QString TupLibraryDisplay::getSoundID() const
+{
+    return soundPlayer->getSoundID();
+}
+
+void TupLibraryDisplay::updateSoundInitFrame(int frame)
+{
+    soundPlayer->updateInitFrame(frame);
 }

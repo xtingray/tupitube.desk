@@ -742,7 +742,7 @@ void TupScreen::loadSoundRecords()
         int total = project->sceneAt(sceneIndex)->lipSyncTotal();
         #ifdef TUP_DEBUG
             qWarning() << "[TupScreen::loadSoundRecords()] - Loading lip-sync files...";
-            qWarning() << "*** Total -> " << total;
+            qWarning() << "*** Lip-sync Total -> " << total;
             qWarning() << "---";
         #endif
         if (total > 0) {
@@ -769,14 +769,14 @@ void TupScreen::loadSoundRecords()
     }
 
     QList<SoundResource> effectsList = library->soundResourcesList();
-    int size = effectsList.count();
+    int total = effectsList.count();
 
     #ifdef TUP_DEBUG
         qWarning() << "[TupScreen::loadSoundRecords()] - Loading sound effects...";
-        qWarning() << "*** Files Total -> " << size;
+        qWarning() << "*** Sound Files Total -> " << total;
     #endif
 
-    for (int i=0; i<size; i++)  {
+    for (int i=0; i<total; i++)  {
         SoundResource sound = effectsList.at(i);
         soundRecords << sound;
         soundPlayer << new QMediaPlayer();

@@ -56,7 +56,8 @@ class TUPITUBE_PLUGIN Node : public QObject, public QGraphicsItem
         enum NodeType { TopLeft  = 0, TopRight, BottomLeft, BottomRight, Center };
         enum NodeAction { NoAction = 0, Scale, Rotate };
         
-        Node(NodeType node, NodeAction action, const QPointF &pos=QPoint(0,0), NodeManager *manager=0, QGraphicsItem *parent=0, int zValue=0);
+        Node(NodeType node, NodeAction action, const QPointF &pos=QPoint(0,0), NodeManager *manager=nullptr,
+             QGraphicsItem *parent=nullptr, int zValue=0);
         ~Node();
         
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *);

@@ -300,7 +300,8 @@ void TupDocumentView::updateNodesScale(qreal factor)
 
         if (tool == TAction::ObjectSelection || tool == TAction::NodesEditor ||
             tool == TAction::Polyline || tool == TAction::Motion ||
-            tool == TAction::Rotation || tool == TAction::Shear)
+            tool == TAction::Rotation || tool == TAction::Shear ||
+            tool == TAction::LipSyncTool)
             currentTool->resizeNode(1 / nodesScaleFactor);
     }
 }
@@ -475,11 +476,11 @@ void TupDocumentView::loadPlugins()
     foreach (QObject *plugin, TupPluginManager::instance()->getTools()) {
         TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(plugin);
 
-        if (tool->toolType() != TupToolInterface::Tweener && tool->toolType() != TupToolInterface::LipSync) {
+        if (tool->toolType() != TupToolInterface::Tweener && tool->toolType() != TupToolInterface::LipSync)
             connect(tool, SIGNAL(closeHugeCanvas()), this, SLOT(closeFullScreen()));
-            connect(tool, SIGNAL(callForPlugin(int, int)),
-                    this, SLOT(loadPlugin(int, int)));
-        }
+
+        if (tool->toolType() != TupToolInterface::Tweener)
+            connect(tool, SIGNAL(callForPlugin(int, int)), this, SLOT(loadPlugin(int, int)));
 
         QStringList::iterator it;
         QList<TAction::ActionId> keys = tool->keys();
@@ -1038,7 +1039,8 @@ void TupDocumentView::selectTool()
             paintArea->viewport()->setCursor(action->cursor());
 
         if (toolId == TAction::ObjectSelection || toolId == TAction::NodesEditor || toolId == TAction::Polyline
-            || toolId == TAction::Motion || toolId == TAction::Rotation || toolId == TAction::Shear)
+            || toolId == TAction::Motion || toolId == TAction::Rotation || toolId == TAction::Shear
+            || toolId == TAction::LipSyncTool)
             tool->updateZoomFactor(1 / nodesScaleFactor);
     } else {
         #ifdef TUP_DEBUG
@@ -1559,6 +1561,10 @@ void TupDocumentView::saveTimer()
 
 void TupDocumentView::setSpaceContext()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupDocumentView::setSpaceContext()]";
+    #endif
+
     TupProject::Mode mode = TupProject::Mode(spaceModeCombo->currentIndex());
     if (currentTool) {
         if (((currentTool->toolType() == TupToolInterface::Tweener)
@@ -2271,14 +2277,11 @@ void TupDocumentView::importPapagayoLipSync()
         if (projectFile.exists()) {
             if (projectFile.size() > 0) {
                 QDir dir(imagesDir);
-                QStringList imagesList = dir.entryList(QStringList() << "*.png" << "*.jpg" << "*.jpeg" << "*.gif" << "*.svg");
+                QStringList imagesList = dir.entryList(QStringList() << "*.png" << "*.jpg" << "*.jpeg" << "*.gif" << "*.svg" << "*.tobj");
                 if (imagesList.count() > 0) {
-                    QString extension = ".svg";
                     QString firstImage = imagesList.at(0);
-                    if (!firstImage.endsWith(".svg")) {
-                        int dot = firstImage.lastIndexOf(".");
-                        extension = firstImage.mid(dot);
-                    }
+                    int dot = firstImage.lastIndexOf(".");
+                    QString extension = firstImage.mid(dot);
 
                     int currentIndex = paintArea->currentFrameIndex();
                     TupPapagayoImporter *parser = new TupPapagayoImporter(file, project->getDimension(), extension, currentIndex);
@@ -2288,8 +2291,13 @@ void TupDocumentView::importPapagayoLipSync()
                         QDir mouthDir = QDir(mouthPath);
 
                         // Creating Papagayo folder in the library
-                        TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, folder, TupLibraryObject::Folder);
+                        TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, folder,
+                                                                                            TupLibraryObject::Folder);
                         emit requestTriggered(&request);
+
+                        TupLibraryObject::Type type = TupLibraryObject::Image;
+                        if (extension.compare(".tobj") == 0)
+                            type = TupLibraryObject::Item;
 
                         // Adding mouth images in the library
                         foreach (QString fileName, imagesList) {
@@ -2298,7 +2306,8 @@ void TupDocumentView::importPapagayoLipSync()
                             if (f.open(QIODevice::ReadOnly)) {
                                 QByteArray data = f.readAll();
                                 f.close();
-                                request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key, TupLibraryObject::Image, project->spaceContext(), data, folder,
+
+                                request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key, type, project->spaceContext(), data, folder,
                                                                                   sceneIndex, layerIndex, currentIndex);
                                 emit requestTriggered(&request);
                             }
@@ -2320,7 +2329,7 @@ void TupDocumentView::importPapagayoLipSync()
 
                         // Adding Papagayo project
                         parser->setSoundFile(soundKey);
-                        QString xml = parser->file2Text();
+                        QString xml = parser->toString();
 
                         request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex, TupProjectRequest::AddLipSync, xml);
                         emit requestTriggered(&request);

@@ -39,6 +39,7 @@
 #include "tglobal.h"
 #include "timagebutton.h"
 #include "tapplicationproperties.h"
+#include "tuplibraryobject.h"
 
 #include <QFrame>
 #include <QBoxLayout>
@@ -63,10 +64,12 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         ~TupSoundPlayer();
 
         QSize sizeHint() const;
-        void setSoundParams(const QString &path, int frameIndex);
+        void setSoundParams(TupLibraryObject *sound);
         void stopFile();
         bool isPlaying();
         void reset();
+        QString getSoundID() const;
+        void updateInitFrame(int frame);
 
     signals:
         void frameUpdated(int frame);
@@ -83,6 +86,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         void muteAction();
 
     private:
+        QLabel *frameLabel;
         QMediaPlayer *player;
         QSlider *slider;
         QLabel *timer;
@@ -97,6 +101,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         bool mute;
         QSpinBox *frameBox;
         QWidget *frameWidget;
+        QString soundID;
 };
 
 #endif

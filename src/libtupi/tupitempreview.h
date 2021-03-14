@@ -43,8 +43,6 @@
 #include <QGraphicsItem>
 #include <QGraphicsTextItem>
 #include <QPainter>
-#include <QStyleOptionGraphicsItem>
-#include <QGraphicsSvgItem>
 
 class TUPITUBE_EXPORT TupItemPreview : public QWidget
 {
@@ -56,18 +54,16 @@ class TUPITUBE_EXPORT TupItemPreview : public QWidget
 
         void reset();
         void render(QGraphicsItem *item);
-        void render(const QImage &img);
+        void render(const QPixmap &img);
 
         QSize sizeHint() const;
 
     protected:
-        void paintEvent(QPaintEvent *e);
+        void paintEvent(QPaintEvent *event);
         
     private:
         TupProxyItem *proxy;
         QGraphicsTextItem *item;
-        bool isNativeGroup;
-        QImage previewImg;
 };
 
 #endif

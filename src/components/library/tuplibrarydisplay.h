@@ -58,12 +58,15 @@ class TUPITUBE_EXPORT TupLibraryDisplay : public QWidget
         void reset();
 
         void render(QGraphicsItem *item);
-        void render(const QImage &img);
+        void render(const QPixmap &img);
 
         void showDisplay();
         void showSoundPlayer();
-        void setSoundParams(const QString &path, int frameIndex);
-        void stopSoundPlayer();
+        bool isSoundPanelVisible();
+        void setSoundParams(TupLibraryObject *sound);
+        void stopSoundPlayer();     
+        QString getSoundID() const;
+        void updateSoundInitFrame(int frame);
 
     signals:
         void frameUpdated(int frame);

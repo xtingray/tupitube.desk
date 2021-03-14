@@ -33,7 +33,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "mouthtarget.h"
+#include "tmouthtarget.h"
 
 /**
  * This class defines the data structure for a node, and all the methods required to manipulate it.
@@ -41,25 +41,26 @@
  * @author Gustav Gonzalez 
 */
 
-MouthTarget::MouthTarget(const QPointF & pos, int zLevel) : QGraphicsItem(0)
+TMouthTarget::TMouthTarget(const QPointF & pos, int zLevel) : QGraphicsItem(nullptr)
 {
     QGraphicsItem::setCursor(QCursor(Qt::PointingHandCursor));
     setFlag(ItemIsSelectable, false);
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsFocusable, true);
 
-    setZValue(zLevel);
     setPos(pos);
+    size = QSizeF(10, 10);
+    setZValue(zLevel);
 }
 
-MouthTarget::~MouthTarget()
+TMouthTarget::~TMouthTarget()
 {
 }
 
-void MouthTarget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *w)
+void TMouthTarget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *w)
 {
-    Q_UNUSED(w);
-    Q_UNUSED(option);
+    Q_UNUSED(w)
+    Q_UNUSED(option)
     
     QColor color;
     color = QColor("green");
@@ -67,7 +68,7 @@ void MouthTarget::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
     QRectF square = boundingRect();
     painter->setBrush(color);
-    painter->drawRoundedRect(square, 1, 1, Qt::AbsoluteSize);
+    painter->drawRoundedRect(square, 2, 2, Qt::AbsoluteSize);
 
     painter->save();
     color = QColor("white");
@@ -83,37 +84,59 @@ void MouthTarget::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->restore();
 }
 
-QRectF MouthTarget::boundingRect() const
+QRectF TMouthTarget::boundingRect() const
 {
-    QSizeF size(10, 10);
     QRectF rect(QPointF(-size.width()/2, -size.height()/2), size);
 
     return rect;
 }
 
-void MouthTarget::mousePressEvent(QGraphicsSceneMouseEvent *event)
+/*
+QVariant TMouthTarget::itemChange(GraphicsItemChange change, const QVariant &value)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TMouthTarget::itemChange()]";
+    #endif
+
+    if (change == ItemSelectedChange)
+        setVisible(true);
+
+    return QGraphicsItem::itemChange(change, value);
+}
+*/
+
+void TMouthTarget::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TMouthTarget::mousePressEvent()] - pos() -> " << pos();
+    #endif
+
+    emit initPos(pos());
     QGraphicsItem::mousePressEvent(event);
 }
 
-void MouthTarget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[MouthTarget::mouseReleaseEvent()]";
-    #endif
-
-    emit positionUpdated(pos());
-
-    QGraphicsItem::mouseReleaseEvent(event);
-}
-
-void MouthTarget::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void TMouthTarget::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mouseMoveEvent(event);
 }
 
-QPointF MouthTarget::currentPos()
+void TMouthTarget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TMouthTarget::mouseReleaseEvent()] - pos() -> " << pos();
+    #endif
+
+    emit positionUpdated(pos());
+    QGraphicsItem::mouseReleaseEvent(event);
+}
+
+QPointF TMouthTarget::currentPos()
 {
     QPointF xy = pos();
     return xy;
+}
+
+void TMouthTarget::resize(qreal factor)
+{
+    setScale(factor);
 }

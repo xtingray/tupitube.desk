@@ -57,7 +57,7 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
             Sound,
             Svg,
             Text,
-            Folder 
+            Folder
         };
 
         TupLibraryObject(QObject *parent = nullptr);
@@ -88,6 +88,9 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         int frameToPlay();
         void updateFrameToPlay(int frame);
 
+        bool isLipsyncVoice();
+        void setLipsyncVoiceFlag(bool isVoice);
+
         QString getShortId() const;
         QString getExtension() const;
         
@@ -103,9 +106,9 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         bool isNativeGroup();
         QString getGroupXml() const;
 
-        static QImage renderImage(const QString &xml, int width);
-        static QImage generateImage(QGraphicsItem *item, int width);
-        static QImage generateImage(const QString &xml, int width);
+        static QPixmap renderImage(const QString &xml, int width);
+        static QPixmap generateImage(QGraphicsItem *item, int width);
+        static QPixmap generateImage(const QString &xml, int width);
 
     public:
         virtual void fromXml(const QString &xml);
@@ -123,6 +126,7 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         QString groupXml;
 
         bool objectIsSoundResource;
+        bool lipsyncVoice;
         bool mute;
         bool isGroup;
         int playAt;

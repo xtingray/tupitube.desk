@@ -53,7 +53,8 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
 
     frameWidget = new QWidget;
 
-    QLabel *frameLabel = new QLabel(tr("Play at frame:") + " ");
+    // frameLabel = new QLabel(tr("Play at frame:") + " ");
+    frameLabel = new QLabel("");
     frameBox = new QSpinBox();
     frameBox->setMinimum(1);
     frameBox->setMaximum(999);
@@ -135,12 +136,27 @@ QSize TupSoundPlayer::sizeHint() const
     return QWidget::sizeHint().expandedTo(QSize(100, 100));
 }
 
-void TupSoundPlayer::setSoundParams(const QString &path, int frameIndex)
+void TupSoundPlayer::setSoundParams(TupLibraryObject *sound)
 {
-    player->setMedia(QUrl::fromLocalFile(path));
-    frameBox->blockSignals(true);
-    frameBox->setValue(frameIndex);
-    frameBox->blockSignals(false);
+    player->setMedia(QUrl::fromLocalFile(sound->getDataPath()));
+    soundID = sound->getSymbolName();
+    if (!sound->isLipsyncVoice()) {
+        frameBox->setVisible(true);
+        frameLabel->setText(tr("Play at frame:") + " ");
+        frameBox->blockSignals(true);
+        frameBox->setValue(sound->frameToPlay() + 1);
+        frameBox->blockSignals(false);
+    } else {
+        frameBox->setVisible(false);
+        frameLabel->setText(tr("Play at frame:") + " " + QString::number(sound->frameToPlay() + 1));
+    }
+
+    mute = sound->isMuted();
+    if (mute) {
+        muteButton->setToolTip(tr("Unmute"));
+        playButton->setEnabled(false);
+        muteButton->setImage(QPixmap(THEME_DIR + QString("icons/mute.png")));
+    }
 }
 
 void TupSoundPlayer::playFile()
@@ -262,4 +278,14 @@ void TupSoundPlayer::muteAction()
     muteButton->setImage(QPixmap(THEME_DIR + img));
 
     emit muteEnabled(mute);
+}
+
+QString TupSoundPlayer::getSoundID() const
+{
+    return soundID;
+}
+
+void TupSoundPlayer::updateInitFrame(int frame)
+{
+    frameLabel->setText(tr("Play at frame:") + " " + QString::number(frame + 1));
 }

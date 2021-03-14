@@ -62,6 +62,7 @@ TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::Type type, co
         qDebug() << "*** type -> " << type;
         qDebug() << "*** folder -> " << folder;
         qDebug() << "*** size -> " << data.size();
+        qDebug() << "---";
     #endif
 
     if (data.isNull()) {
@@ -120,7 +121,7 @@ TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::Type type, co
 bool TupLibraryFolder::addObject(TupLibraryObject *object)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryFolder::addObject()] - folder -> " << id;
+        qDebug() << "[TupLibraryFolder::addObject()] - Adding object -> " << object->getSymbolName();
     #endif
 
     if (!objects.contains(object->getSymbolName())) {
@@ -134,7 +135,7 @@ bool TupLibraryFolder::addObject(TupLibraryObject *object)
 bool TupLibraryFolder::addObject(const QString &folderName, TupLibraryObject *object)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryFolder::addObject()] - foderName -> " << folderName;
+        qDebug() << "[TupLibraryFolder::addObject()] - folderName -> " << folderName;
     #endif
 
     foreach (TupLibraryFolder *folder, folders) {
@@ -335,7 +336,7 @@ bool TupLibraryFolder::exists(const QString &key)
 TupLibraryObject *TupLibraryFolder::getObject(const QString &key) const
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryFolder::getObject()] - key -> " << key;
+        qDebug() << "[TupLibraryFolder::getObject()] - object key -> " << key;
     #endif
 
     foreach (QString oid, objects.keys()) {
@@ -367,7 +368,7 @@ TupLibraryObject *TupLibraryFolder::getObject(const QString &key) const
 TupLibraryFolder *TupLibraryFolder::getFolder(const QString &key) const
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryFolder::getFolder()] - key -> " << key;
+        qDebug() << "[TupLibraryFolder::getFolder()] - folder key -> " << key;
     #endif
 
     foreach (TupLibraryFolder *folder, folders) {

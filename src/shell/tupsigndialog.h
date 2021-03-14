@@ -56,6 +56,7 @@ class TupSignDialog : public QDialog
         QString getMetadata() const;
 
     private slots:
+        void signUp();
         void apply();
 
     private:

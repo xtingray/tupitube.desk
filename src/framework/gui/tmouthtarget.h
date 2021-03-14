@@ -33,12 +33,12 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef MOUTHTARGET_H
-#define MOUTHTARGET_H
+#ifndef TMOUTHTARGET_H
+#define TMOUTHTARGET_H
 
 #include "tglobal.h"
-#include "tupgraphicalgorithm.h"
-#include "tupgraphicobject.h"
+// #include "tupgraphicalgorithm.h"
+// #include "tupgraphicobject.h"
 
 #include <QGraphicsItem>
 #include <QObject>
@@ -55,28 +55,33 @@
  * @author Gustav Gonzalez 
 */
 
-class TUPITUBE_PLUGIN MouthTarget : public QObject, public QGraphicsItem
-// class TUPITUBE_PLUGIN MouthTarget : public QGraphicsItem
+class TUPITUBE_PLUGIN TMouthTarget : public QObject, public QGraphicsItem
 {
     Q_OBJECT
     Q_INTERFACES(QGraphicsItem)
     
     public: 
-        MouthTarget(const QPointF & pos = QPoint(0,0), int zLevel = 0);
-        ~MouthTarget();
-        
+        TMouthTarget(const QPointF & pos = QPoint(0,0), int zLevel = 0);
+        ~TMouthTarget();
+
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *);
         QRectF boundingRect() const;
 
         QPointF currentPos();
+        void resize(qreal factor);
 
     signals:
+        void initPos(const QPointF &point);
         void positionUpdated(const QPointF &point);
-        
+
     protected:
+        // QVariant itemChange(GraphicsItemChange change, const QVariant &value);
         void mousePressEvent(QGraphicsSceneMouseEvent *event);
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
         void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+
+    private:
+        QSizeF size;
 };
 
 #endif

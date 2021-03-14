@@ -65,8 +65,8 @@ Node::~Node()
 
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *w)
 {
-    Q_UNUSED(w);
-    Q_UNUSED(option);
+    Q_UNUSED(w)
+    Q_UNUSED(option)
     
     QColor color;
    
@@ -265,7 +265,8 @@ int Node::nodeAction()
 
 void Node::keyReleaseEvent(QKeyEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
+
     manager->setProportion(false);
 }
 

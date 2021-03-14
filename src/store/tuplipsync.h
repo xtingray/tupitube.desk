@@ -160,6 +160,7 @@ class TUPITUBE_EXPORT TupLipSync : public QObject, public TupAbstractSerializabl
         void setLipSyncName(const QString &title);
         void setPicsExtension(const QString &extension);
         QString getPicExtension() const;
+        bool hasNativeMouths();
         QString getSoundFile() const;
         void setSoundFile(const QString &file);
         int getFPS();
@@ -168,11 +169,13 @@ class TUPITUBE_EXPORT TupLipSync : public QObject, public TupAbstractSerializabl
         void setInitFrame(int frame);
         int getFramesCount();
         void setFramesCount(int getFramesCount);
+
         void addVoice(TupVoice *voice);
         TupVoice *voiceAt(int index);
         QList<TupVoice *> getVoices();
-        void updateMouthPosition(int mouthIndex, QPointF point, int frame);
+        void updateMouthPos(int mouthIndex, QPointF point, int frame);
         void verifyStructure();
+        QString toString() const;
 
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;

@@ -63,18 +63,19 @@ QBoxLayout *TFormFactory::makeLine(const QString &text, QWidget *widget, Qt::Ori
 
 QGridLayout *TFormFactory::makeGrid(const QStringList &texts, const QWidgetList &widgets, Qt::Alignment alignment)
 {
-    // SQA: Replace this line for a better control instruction
-    // Q_ASSERT(texts.count() != widgets.count());
-    
     QGridLayout *layout = new QGridLayout;
-    
-    // layout->setColumnStretch(0, 1);
-    
-    for (int i = 0; i < widgets.count(); i++) {
-         layout->addWidget(new QLabel(texts[i]), i, 0, Qt::AlignLeft);
-         layout->addWidget(widgets[i], i, 1, alignment);
+
+    if (texts.count() == widgets.count()) {
+        for (int i = 0; i < widgets.count(); i++) {
+             layout->addWidget(new QLabel(texts[i]), i, 0, Qt::AlignLeft);
+             layout->addWidget(widgets[i], i, 1, alignment);
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TFormFactory::makeGrid()] - Fatal Error: Total of labels != Total of widgets";
+        #endif
     }
-    
+
     layout->setColumnStretch(2, 1);
     
     return layout;

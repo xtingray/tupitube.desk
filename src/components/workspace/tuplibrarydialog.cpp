@@ -84,7 +84,7 @@ void TupLibraryDialog::addItem(QGraphicsItem *item)
 {
     TupItemPreview *preview = new TupItemPreview;
     if (qgraphicsitem_cast<QGraphicsItemGroup *>(item)) {
-        QImage img = TupLibraryObject::generateImage(item, (width() * 60)/100);
+        QPixmap img = TupLibraryObject::generateImage(item, (width() * 60)/100);
         preview->render(img);
     } else {
         preview->render(item);

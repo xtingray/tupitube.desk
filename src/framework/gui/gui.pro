@@ -58,6 +58,7 @@ HEADERS += taction.h \
            tmainwindow.h \
            tmainwindowabstractsettings.h \
            # tmainwindowfactory.h \
+           tmouthtarget.h \
            tmoviegenerator.h \
            tmoviegeneratorinterface.h \
            tnodegroup.h \
@@ -123,6 +124,7 @@ SOURCES += taction.cpp \
            titemselector.cpp \
            tmainwindow.cpp \
            # tmainwindowfactory.cpp \
+           tmouthtarget.cpp \
            tmoviegenerator.cpp \
            tnodegroup.cpp \
            tseparator.cpp \

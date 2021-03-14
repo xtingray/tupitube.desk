@@ -57,7 +57,7 @@ class T_GUI_EXPORT TFormFactory
         
     public:
         static QBoxLayout *makeLine(const QString &text, QWidget *widget, Qt::Orientation = Qt::Vertical);
-        static QGridLayout *makeGrid(const QStringList &texts, const QWidgetList &widgets, Qt::Alignment alignment = 0);
+        static QGridLayout *makeGrid(const QStringList &texts, const QWidgetList &widgets, Qt::Alignment alignment = Qt::AlignCenter);
 };
 
 #endif

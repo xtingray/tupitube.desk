@@ -103,6 +103,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
 
     protected:
         virtual void sceneResponse(TupSceneResponse *response);
+        virtual void layerResponse(TupLayerResponse *response);
         virtual void libraryResponse(TupLibraryResponse *response);
         virtual void frameResponse(TupFrameResponse *response);
 
@@ -187,7 +188,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         QList<QString> editorItems;
         bool isEffectSound;
         TupLibraryObject *currentSound;
-        QMap<QString, QImage> nativeMap;
+        QMap<QString, QPixmap> nativeMap;
 
         struct Frame
         {

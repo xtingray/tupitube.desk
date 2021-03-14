@@ -35,14 +35,11 @@
 
 #include "tupitempreview.h"
 
-#include <QDomDocument>
-#include <QGraphicsScene>
-#include <QGraphicsItemGroup>
+#include <QStyleOptionGraphicsItem>
 
 TupItemPreview::TupItemPreview(QWidget *parent) : QWidget(parent)
 {
     item = new QGraphicsTextItem;
-    isNativeGroup = false;
     reset();
 }
 
@@ -83,15 +80,13 @@ void TupItemPreview::render(QGraphicsItem *item)
     else
         proxy->setItem(item);
 
-    isNativeGroup = false;
     update();
 }
 
-void TupItemPreview::render(const QImage &img)
+void TupItemPreview::render(const QPixmap &pix)
 {
-    previewImg = img;
-    isNativeGroup = true;
-    update();
+    QGraphicsPixmapItem *picItem = new QGraphicsPixmapItem(pix);
+    render(picItem);
 }
 
 void TupItemPreview::paintEvent(QPaintEvent *)
@@ -127,12 +122,6 @@ void TupItemPreview::paintEvent(QPaintEvent *)
             itemHeight = path->path().boundingRect().height();
             newPosX = -path->path().boundingRect().topLeft().x();
             newPosY = -path->path().boundingRect().topLeft().y();
-        } else if (isNativeGroup) {
-            isNative = true;
-            itemWidth = previewImg.width();
-            itemHeight = previewImg.height();
-            newPosX = 0;
-            newPosY = 0;
         }
 
         // If preview is for a native object (path or group)
@@ -205,10 +194,7 @@ void TupItemPreview::paintEvent(QPaintEvent *)
             }
         }
 
-        if (isNativeGroup)
-            painter.drawImage(previewImg.rect(), previewImg);
-        else
-            proxy->paint(&painter, &opt, this);
+        proxy->paint(&painter, &opt, this);
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TupItemPreview::paintEvent()] - Warning: proxy is NULL]";

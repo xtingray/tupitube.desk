@@ -42,6 +42,10 @@
 TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &projectSize, const QString &extension, 
                                          int frameIndex) : QObject()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoImporter::TupPapagayoImporter()]";
+    #endif
+
     initFrame = frameIndex;
     int framesTotal = 0;
     framesCount = 0;
@@ -71,14 +75,6 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                        }
                    } 
                    break;
-                   /*
-                   case 1:
-                   {
-                       // Load audio file
-                       lipsync->setSoundFile(line.trimmed());
-                   }
-                   break;
-                   */
                    case 2:
                    {
                        // FPS 
@@ -102,8 +98,8 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                i++;
         }
 
-        int x = projectSize.width()/(voicesNumber+1);
-        int y = projectSize.height()/2;
+        int x = projectSize.width() / (voicesNumber+1);
+        int y = projectSize.height() / 2;
 
         for(int j=1; j<=voicesNumber; j++) {
             TupVoice *voice = new TupVoice(); 
@@ -143,8 +139,8 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                           numPhonemes = strList.at(3).toInt();
                           #ifdef TUP_DEBUG
                               if (numPhonemes == 0) {
-                                  qDebug() << "TupPapagayoImporter::TupPapagayoImporter() - Warning: Word \"" 
-                                              +  strWord + "\" has NO phonemes associated! :(";
+                                  qDebug() << "[TupPapagayoImporter::TupPapagayoImporter()] - Warning: Word \""
+                                           <<  strWord << "\" has NO phonemes associated! :(";
                               }
                           #endif
                       }
@@ -175,8 +171,8 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                           }
                       } else {
                           #ifdef TUP_DEBUG
-                              qDebug() << "TupPapagayoImporter() - Fatal Error: frames size is less than numPhonemes -> " 
-                                       << QString::number(frames.count()) + " < " + QString::number(numPhonemes);
+                              qDebug() << "[TupPapagayoImporter::TupPapagayoImporter()] - Fatal Error: frames size is less than numPhonemes -> "
+                                       << frames.count() << " < " << numPhonemes;
                           #endif
                       }
 
@@ -204,7 +200,7 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
     } else {
         isValid = false;
         #ifdef TUP_DEBUG
-            qDebug() << "TupPapagayoImporter() - Fatal Error: Insufficient permissions to load file! -> " + file;
+            qDebug() << "[TupPapagayoImporter::TupPapagayoImporter()] - Fatal Error: Insufficient permissions to load file! -> " << file;
         #endif
         return;
     }
@@ -226,20 +222,6 @@ bool TupPapagayoImporter::fileIsValid()
     return isValid;
 }
 
-QString TupPapagayoImporter::file2Text() const
-{
-    QDomDocument document;
-    QDomElement root = lipsync->toXml(document);
-
-    QString xml;
-    {
-      QTextStream ts(&xml);
-      ts << root;
-    }
-
-    return xml;
-}
-
 int TupPapagayoImporter::getFrameCount()
 {
     return framesCount;
@@ -253,4 +235,18 @@ int TupPapagayoImporter::getFps()
 int TupPapagayoImporter::getInitFrame()
 {
     return initFrame;
+}
+
+QString TupPapagayoImporter::toString() const
+{
+    QDomDocument document;
+    QDomElement root = lipsync->toXml(document);
+
+    QString xml;
+    {
+      QTextStream ts(&xml);
+      ts << root;
+    }
+
+    return xml;
 }

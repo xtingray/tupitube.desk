@@ -100,7 +100,7 @@ void TupItemManager::createFolder(const QString &name)
 QTreeWidgetItem *TupItemManager::getFolder(const QString &folderName)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupItemManager::getFolder()] - foderName -> " << folderName;
+        qDebug() << "[TupItemManager::getFolder()] - folderName -> " << folderName;
     #endif
 
     QList<QTreeWidgetItem *> nodes = findItems(folderName, Qt::MatchExactly, 1);
@@ -458,7 +458,7 @@ void TupItemManager::dropEvent(QDropEvent *event)
             // Ensure target is a directory
             if (parent->text(2).length() > 0) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupItemManager::dropEvent()] - Error: parent MUST BE a folder!";
+                    qDebug() << "[TupItemManager::dropEvent()] - Warning: parent MUST BE a folder!";
                 #endif
                 return;
             }

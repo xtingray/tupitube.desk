@@ -41,6 +41,8 @@
 #include "tosd.h"
 #include "tupsecurity.h"
 
+#include <QDesktopServices>
+
 TupSignDialog::TupSignDialog(QWidget *parent) : QDialog(parent)
 {
     setModal(true);
@@ -60,22 +62,27 @@ void TupSignDialog::setForm()
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
 
     username = new QLineEdit;
+    username->setMinimumWidth(200);
     username->setText(TCONFIG->value("Username", "").toString());
 
     metadata = new QLineEdit;
+    metadata->setMinimumWidth(200);
     metadata->setEchoMode(QLineEdit::Password);
 
     QWidget *form = new QWidget;
     QVBoxLayout *formLayout = new QVBoxLayout(form);
     formLayout->addLayout(TFormFactory::makeGrid(QStringList() << tr("Username") << tr("Password"),
-                          QWidgetList() << username << metadata));
+                          QWidgetList() << username << metadata), Qt::AlignHCenter);
 
     storeMetadata = new QCheckBox(tr("Store password"));
     storeMetadata->setChecked(TCONFIG->value("StorePassword").toInt());
     formLayout->addWidget(storeMetadata);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
-    buttonLayout->addStretch(1);
+
+    QPushButton *signUpButton = new QPushButton(tr("Sign Up"));
+    connect(signUpButton, SIGNAL(clicked()), this, SLOT(signUp()));
+    buttonLayout->addWidget(signUpButton);
 
     QPushButton *applyButton = new QPushButton(tr("Accept"));
     connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
@@ -85,8 +92,15 @@ void TupSignDialog::setForm()
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));
     buttonLayout->addWidget(cancelButton);
 
-    layout->addWidget(form);
+    layout->addWidget(form, Qt::AlignHCenter);
+    layout->addWidget(new TSeparator(Qt::Horizontal));
     layout->addLayout(buttonLayout);
+}
+
+void TupSignDialog::signUp()
+{
+    QUrl url(TUPITUBE_URL);
+    QDesktopServices::openUrl(url);
 }
 
 void TupSignDialog::apply()
