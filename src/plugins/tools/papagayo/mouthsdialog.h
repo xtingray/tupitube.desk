@@ -33,68 +33,38 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef CONFIGURATOR_H
-#define CONFIGURATOR_H
-
+#ifndef MOUTHSDIALOG_H
+#define MOUTHSDIALOG_H
+ 
 #include "tglobal.h"
-#include "papagayosettings.h"
-#include "lipsyncmanager.h"
+#include "tapplicationproperties.h"
 
-#include <QFrame>
-#include <QLabel>
-#include <QBoxLayout>
-#include <QListWidgetItem>
+#include <QDialog>
+#include <QStackedWidget>
 
 /**
  * @author Gustav Gonzalez 
 */
 
-class TUPITUBE_PLUGIN Configurator : public QFrame
+class TUPITUBE_PLUGIN MouthsDialog: public QDialog
 {
     Q_OBJECT
 
     public:
-        enum GuiState { Manager = 1, Properties };
-
-        Configurator(QWidget *parent = nullptr);
-        ~Configurator();
-
-        void loadLipSyncList(QList<QString> list);
-        void openLipSyncProperties(TupLipSync *lipsync);
-
-        void addLipSyncRecord(const QString &name);
-        void updateInterfaceRecords();
-
-        void resetUI();
-        void closePanels();
-
-        void setPhoneme(const QString &phoneme);
-        void setPos(const QPointF &point);
+        MouthsDialog(QWidget *parent = nullptr);
+        ~MouthsDialog();
 
     private slots:
-        void editCurrentLipSync(const QString &name);
-        void closeSettingsPanel();
-        void openMouthsDialog();
+        void updateMouthCollection(int index);
 
-    signals:
-        void importLipSync();
-        void selectMouth(const QString &name, int index);
-        void closeLipSyncProperties();
-        void editLipSyncSelection(const QString &lipSyncName);
-        void initFrameHasChanged(int index);
-        void removeCurrentLipSync(const QString &name);
-        void xPosChanged(int x);
-        void yPosChanged(int y);
-        
     private:
-        void setPropertiesPanel();
-        void activePropertiesPanel(bool enable);
-        void setLipSyncManagerPanel();
-        void activeLipSyncManagerPanel(bool enable);
+        QWidget * createMouthsCollection(int index);
+        QWidget * createMouthPanel(int index, int row, int column);
 
-        QBoxLayout *settingsLayout;
-        PapagayoSettings *settingsPanel;
-        LipSyncManager *manager;
+        QStackedWidget *stackedWidget;
+        QStringList mouthLabels;
+        QStringList folder;
+        int currentCollectionIndex;
 };
 
 #endif

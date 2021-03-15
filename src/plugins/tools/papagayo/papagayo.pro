@@ -23,13 +23,15 @@ HEADERS += papagayosettings.h \
            buttonspanel.h \
            configurator.h \
            lipsyncmanager.h \
-           papagayotool.h 
+           papagayotool.h \
+           mouthsdialog.h
 
 SOURCES += papagayosettings.cpp \
            buttonspanel.cpp \
            configurator.cpp \
            lipsyncmanager.cpp \
-           papagayotool.cpp
+           papagayotool.cpp \
+           mouthsdialog.cpp
 
 LIBBASE_DIR = ../../../libbase
 STORE_DIR = ../../../store

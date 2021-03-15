@@ -36,6 +36,7 @@
 #include "configurator.h"
 #include "tapplicationproperties.h"
 #include "tseparator.h"
+#include "mouthsdialog.h"
 
 Configurator::Configurator(QWidget *parent) : QFrame(parent)
 {
@@ -59,6 +60,15 @@ Configurator::Configurator(QWidget *parent) : QFrame(parent)
     setPropertiesPanel();
 
     layout->addLayout(settingsLayout);
+
+    QHBoxLayout *mouthsLayout = new QHBoxLayout;
+    QPushButton *mouthsButton = new QPushButton(tr("Mouth Samples"));
+    connect(mouthsButton, SIGNAL(clicked()), this, SLOT(openMouthsDialog()));
+    mouthsLayout->addWidget(new QWidget);
+    mouthsLayout->addWidget(mouthsButton);
+    mouthsLayout->addWidget(new QWidget);
+    layout->addLayout(mouthsLayout);
+
     layout->addStretch(2);
 }
 
@@ -160,4 +170,10 @@ void Configurator::setPos(const QPointF &point)
 void Configurator::setPhoneme(const QString &phoneme)
 {
     settingsPanel->setPhoneme(phoneme);
+}
+
+void Configurator::openMouthsDialog()
+{
+    MouthsDialog *dialog = new MouthsDialog();
+    dialog->show();
 }
