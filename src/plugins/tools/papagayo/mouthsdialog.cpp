@@ -50,10 +50,10 @@ MouthsDialog::MouthsDialog(QWidget *parent) : QDialog(parent)
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     QComboBox *mouthCombo = new QComboBox();
-    mouthCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 1"));
-    mouthCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 2"));
-    mouthCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 3"));
-    mouthCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 4"));
+    mouthCombo->addItem(QIcon(THEME_DIR + "icons/mouth.png"), tr("Mouth Sample Pack No 1"));
+    mouthCombo->addItem(QIcon(THEME_DIR + "icons/mouth.png"), tr("Mouth Sample Pack No 2"));
+    mouthCombo->addItem(QIcon(THEME_DIR + "icons/mouth.png"), tr("Mouth Sample Pack No 3"));
+    mouthCombo->addItem(QIcon(THEME_DIR + "icons/mouth.png"), tr("Mouth Sample Pack No 4"));
     connect(mouthCombo, SIGNAL(activated(int)), this, SLOT(updateMouthCollection(int)));
 
     stackedWidget = new QStackedWidget;

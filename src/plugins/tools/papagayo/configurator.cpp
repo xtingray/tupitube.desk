@@ -63,6 +63,8 @@ Configurator::Configurator(QWidget *parent) : QFrame(parent)
 
     QHBoxLayout *mouthsLayout = new QHBoxLayout;
     QPushButton *mouthsButton = new QPushButton(tr("Mouth Samples"));
+    mouthsButton->setStyleSheet("QPushButton { padding: 5px; }");
+    mouthsButton->setIcon(QIcon(THEME_DIR + "icons/mouth.png"));
     connect(mouthsButton, SIGNAL(clicked()), this, SLOT(openMouthsDialog()));
     mouthsLayout->addWidget(new QWidget);
     mouthsLayout->addWidget(mouthsButton);
