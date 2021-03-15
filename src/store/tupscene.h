@@ -153,14 +153,14 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
         void reset(const QString &name);
         void clear();
 
-        void setStoryboard(TupStoryboard *storyboardStructure);
-        TupStoryboard * storyboardStructure();
+        void setStoryboard(TupStoryboard *getStoryboard);
+        TupStoryboard * getStoryboard();
 
-        void insertStoryBoardScene(int index);
-        void appendStoryBoardScene();
-        void moveStoryBoardScene(int oldIndex, int newIndex);
-        void resetStoryBoardScene(int index);
-        void removeStoryBoardScene(int index);
+        void insertStoryboardScene(int index);
+        void appendStoryboardScene();
+        void moveStoryboardScene(int oldIndex, int newIndex);
+        void resetStoryboardScene(int index);
+        void removeStoryboardScene(int index);
 
         QList<QString> getLipSyncNames();
         bool lipSyncExists(const QString &name);

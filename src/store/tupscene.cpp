@@ -763,32 +763,32 @@ void TupScene::setStoryboard(TupStoryboard *sb)
     storyboard = sb;
 }
 
-TupStoryboard * TupScene::storyboardStructure()
+TupStoryboard * TupScene::getStoryboard()
 {
     return storyboard;
 }
 
-void TupScene::insertStoryBoardScene(int index)
+void TupScene::insertStoryboardScene(int index)
 {
     storyboard->insertScene(index);
 }
 
-void TupScene::appendStoryBoardScene()
+void TupScene::appendStoryboardScene()
 {
     storyboard->appendScene();
 }
 
-void TupScene::moveStoryBoardScene(int oldIndex, int newIndex)
+void TupScene::moveStoryboardScene(int oldIndex, int newIndex)
 {
     storyboard->moveScene(oldIndex, newIndex);
 }
 
-void TupScene::resetStoryBoardScene(int index)
+void TupScene::resetStoryboardScene(int index)
 {
     storyboard->resetScene(index);
 }
 
-void TupScene::removeStoryBoardScene(int index)
+void TupScene::removeStoryboardScene(int index)
 {
     storyboard->removeScene(index);
 }

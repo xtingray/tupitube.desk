@@ -70,6 +70,10 @@ void TupStoryboard::reset()
 
 void TupStoryboard::insertScene(int index)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupStoryboard::insertScene()] - index -> " << index;
+    #endif
+
     if (index >= 0 && index < scene.size()) {
         scene.insert(index, "");
         duration.insert(index, "");
@@ -79,6 +83,10 @@ void TupStoryboard::insertScene(int index)
 
 void TupStoryboard::appendScene()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupStoryboard::appendScene()]";
+    #endif
+
     scene.append("");
     duration.append("");
     description.append("");
@@ -157,7 +165,7 @@ void TupStoryboard::setSceneTitle(int index, const QString &headLine)
         scene.replace(index, headLine);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupStoryboard::setSceneTitle() - Invalid index -> " + QString::number(index);
+            qDebug() << "[TupStoryboard::setSceneTitle()] - Invalid index -> " << index;
         #endif
     }
 }
@@ -168,7 +176,7 @@ void TupStoryboard::setSceneDuration(int index, const QString &time)
         duration.replace(index, time);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupStoryboard::setSceneDuration() - Invalid index: " + QString::number(index);
+            qDebug() << "[TupStoryboard::setSceneDuration()] - Invalid index: -> " << index;
         #endif
     }
 }
@@ -179,7 +187,7 @@ void TupStoryboard::setSceneDescription(int index, const QString &desc)
         description.replace(index, desc);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupStoryboard::setSceneDuration() - Invalid index: " + QString::number(index);
+            qDebug() << "[TupStoryboard::setSceneDuration()] - Invalid index -> " << QString::number(index);
         #endif
     }
 }
@@ -223,24 +231,24 @@ void TupStoryboard::fromXml(const QString &xml)
                if (e.tagName() == "title") {
                    title = cleanString(e.text());
                } else if (e.tagName() == "author") {
-                          author = cleanString(e.text());
+                   author = cleanString(e.text());
                } else if (e.tagName() == "topics") {
-                          topics = cleanString(e.text());
+                   topics = cleanString(e.text());
                } else if (e.tagName() == "summary") {
-                          summary = cleanString(e.text());
+                   summary = cleanString(e.text());
                } else if (e.tagName() == "scene") {
-                          QDomNode n2 = e.firstChild();
-                          while (!n2.isNull()) {
-                                 QDomElement e2 = n2.toElement();
-                                 if (e2.tagName() == "title") {
-                                     scene << e2.text();
-                                 } else if (e2.tagName() == "duration") {
-                                            duration << e2.text();
-                                 } else if (e2.tagName() == "description") {
-                                            description << e2.text();
-                                 }
-                                 n2 = n2.nextSibling();
+                   QDomNode n2 = e.firstChild();
+                   while (!n2.isNull()) {
+                          QDomElement e2 = n2.toElement();
+                          if (e2.tagName() == "title") {
+                              scene << e2.text();
+                          } else if (e2.tagName() == "duration") {
+                                     duration << e2.text();
+                          } else if (e2.tagName() == "description") {
+                                     description << e2.text();
                           }
+                          n2 = n2.nextSibling();
+                   }
                }
            }
            n = n.nextSibling();

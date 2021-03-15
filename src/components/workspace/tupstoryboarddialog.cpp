@@ -61,7 +61,7 @@ TupStoryBoardDialog::TupStoryBoardDialog(bool network, TupExportInterface *plugi
     size = pSize;
     scene = pScene;
     sceneIndex = sIndex;
-    storyboard = scene->storyboardStructure();
+    storyboard = scene->getStoryboard();
     library = assets;
     utf = QLocale(QLocale::AnyLanguage, QLocale::AnyCountry);
 
@@ -429,12 +429,23 @@ void TupStoryBoardDialog::updateForm(QListWidgetItem *current, QListWidgetItem *
 
 void TupStoryBoardDialog::createHTMLFiles(const QString &savePath, DocType type)
 {
-    if (scaledSize.width() <= 520) {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupStoryBoardDialog::createHTMLFiles()] - savePath -> " << savePath;
+        qDebug() << "[TupStoryBoardDialog::createHTMLFiles()] - path -> " << path;
+    #endif
 
+    if (scaledSize.width() <= 520) {
         // find all .png files in path (var) directory
         QDir directory(path);
         directory.setNameFilters(QStringList() << "*.png");
         QStringList files = directory.entryList();
+
+        /*
+        int scenes = files.size();
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupStoryBoardDialog::createHTMLFiles()] - files.size() -> " << scenes;
+        #endif
+        */
 
         // copy all .png files
         for (int i = 0; i < files.size(); ++i) {
@@ -446,11 +457,17 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &savePath, DocType type)
         }
 
     } else {
-
         // find all .png files in path (var) directory
         QDir directory(path);
         directory.setNameFilters(QStringList()<<"*.png");
         QStringList files = directory.entryList();
+
+        /*
+        int scenes = files.size();
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupStoryBoardDialog::createHTMLFiles()] - files.size() -> " << scenes;
+        #endif
+        */
 
         // scale and copy all .png files
         for (int i = 0; i < files.size(); ++i) {
@@ -458,7 +475,8 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &savePath, DocType type)
              QPixmap pixmap(path + file);
              QString destination = savePath + "/" + file;
 
-             if (QFile::exists(destination)) QFile::remove(destination);
+             if (QFile::exists(destination))
+                 QFile::remove(destination);
 
              QPixmap resized;
              resized = pixmap.scaledToWidth(520, Qt::SmoothTransformation);
@@ -467,20 +485,22 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &savePath, DocType type)
     }
 
     QString base = kAppProp->shareDir() + "data/storyboard/";
-
     if (type == HTML) 
         QFile::copy(base + "tupi.html.css", savePath + "/tupitube.css");
     else
         QFile::copy(base + "tupi.pdf.css", savePath + "/tupitube.css");
 
-    QString index = savePath + "/index.html";
+    QString indexPath = savePath + "index.html";
+    if (QFile::exists(indexPath))
+        QFile::remove(indexPath);
 
-    if (QFile::exists(index))
-        QFile::remove(index);  
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupStoryBoardDialog::createHTMLFiles()] - indexPath -> " << indexPath;
+    #endif
 
-    QFile file(index);
-    file.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out(&file);
+    QFile indexFile(indexPath);
+    indexFile.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(&indexFile);
     out << "<html>\n";
     out << "<head>\n";
     QString record = storyboard->storyTitle();
@@ -521,6 +541,10 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &savePath, DocType type)
     }
 
     int scenes = storyboard->size();
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupStoryBoardDialog::createHTMLFiles()] - scenes count -> " << scenes;
+    #endif
+
     for (int i=0; i < scenes; i++) {
          out << "<div id=\"scene\">\n";
          QString image = "<img src=\"scene" + QString::number(i) + ".png\" />\n";
@@ -559,7 +583,7 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &savePath, DocType type)
     out << "</body>\n";
     out << "</html>";
 
-    file.close(); 
+    indexFile.close();
 }
 
 void TupStoryBoardDialog::exportAsHTML()
