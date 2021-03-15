@@ -429,42 +429,15 @@ TupPhoneme * TupVoice::getPhonemeAt(int frame)
 {
     foreach (TupPhrase *phrase, phrases) {
              if (phrase->contains(frame)) {
-                 // int i = 0;
                  foreach (TupWord *word, phrase->wordsList()) {
-                          int initFrame = word->initFrame();
-                          int index = frame - initFrame;
-                          if (initFrame <= frame) {
-                              if (word->contains(frame)) {
-                                  TupPhoneme *phoneme = word->phonemesList().at(index);
-                                  return phoneme;
-                              }
-                          } 
-                          /*
-                            else {
-                              int init = 0;
-                              int endFrame = word->initFrame() - 1;
-                              int total = word->initFrame();
-                              QPointF pos = point;
-
-                              if (i > 0) {
-                                  TupWord *prev = phrase->wordsList().at(i-1);
-                                  init = prev->endFrame() + 1;
-                                  pos = prev->phonemesList().last()->position();
-                                  total = (endFrame - init) + 1;
-                              }
-
-                              TupWord *w = new TupWord(init);
-                              for (int j=0; j<total; j++) {
-                                   TupPhoneme *phoneme = new TupPhoneme("rest", pos);
-                                   w->addPhoneme(phoneme);
-                              }
-                              w->setEndFrame(endFrame);
-                              phrase->insertWord(i, w);
-
-                              return w->phonemesList().at(0);
+                      int initFrame = word->initFrame();
+                      int index = frame - initFrame;
+                      if (initFrame <= frame) {
+                          if (word->contains(frame)) {
+                              TupPhoneme *phoneme = word->phonemesList().at(index);
+                              return phoneme;
                           }
-                          i++;
-                         */
+                      }
                  }
              }
     }

@@ -2278,95 +2278,107 @@ void TupDocumentView::importPapagayoLipSync()
             if (projectFile.size() > 0) {
                 QDir dir(imagesDir);
                 QStringList imagesList = dir.entryList(QStringList() << "*.png" << "*.jpg" << "*.jpeg" << "*.gif" << "*.svg" << "*.tobj");
-                if (imagesList.count() > 0) {
-                    QString firstImage = imagesList.at(0);
-                    int dot = firstImage.lastIndexOf(".");
-                    QString extension = firstImage.mid(dot);
+                if (imagesList.size() > 0) {
+                    if (imagesList.count() == 10) { // Mouths set always contains 10 figures
+                        QString firstImage = imagesList.at(0);
+                        int dot = firstImage.lastIndexOf(".");
+                        QString extension = firstImage.mid(dot);
 
-                    int currentIndex = paintArea->currentFrameIndex();
-                    TupPapagayoImporter *parser = new TupPapagayoImporter(file, project->getDimension(), extension, currentIndex);
-                    if (parser->fileIsValid()) {
-                        int layerIndex = paintArea->currentLayerIndex();
-                        QString mouthPath = imagesDir;
-                        QDir mouthDir = QDir(mouthPath);
+                        int currentIndex = paintArea->currentFrameIndex();
+                        TupPapagayoImporter *parser = new TupPapagayoImporter(file, project->getDimension(), extension, currentIndex);
+                        if (parser->fileIsValid()) {
+                            int layerIndex = paintArea->currentLayerIndex();
+                            QString mouthPath = imagesDir;
+                            QDir mouthDir = QDir(mouthPath);
 
-                        // Creating Papagayo folder in the library
-                        TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, folder,
-                                                                                            TupLibraryObject::Folder);
-                        emit requestTriggered(&request);
+                            // Creating Papagayo folder in the library
+                            TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, folder,
+                                                                                                TupLibraryObject::Folder);
+                            emit requestTriggered(&request);
 
-                        TupLibraryObject::Type type = TupLibraryObject::Image;
-                        if (extension.compare(".tobj") == 0)
-                            type = TupLibraryObject::Item;
+                            TupLibraryObject::Type type = TupLibraryObject::Image;
+                            if (extension.compare(".tobj") == 0)
+                                type = TupLibraryObject::Item;
 
-                        // Adding mouth images in the library
-                        foreach (QString fileName, imagesList) {
-                            QString key = fileName.toLower();
-                            QFile f(mouthPath + "/" + fileName);
+                            // Adding mouth images in the library
+                            foreach (QString fileName, imagesList) {
+                                QString key = fileName.toLower();
+                                QFile f(mouthPath + "/" + fileName);
+                                if (f.open(QIODevice::ReadOnly)) {
+                                    QByteArray data = f.readAll();
+                                    f.close();
+
+                                    request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key, type, project->spaceContext(), data, folder,
+                                                                                      sceneIndex, layerIndex, currentIndex);
+                                    emit requestTriggered(&request);
+                                }
+                            }
+
+                            // Adding lip-sync sound file
+                            QString soundFile = dialog->getSoundFile();
+                            QFile f(soundFile);
+                            QFileInfo info(soundFile);
+                            QString soundKey = info.fileName().toLower();
+
                             if (f.open(QIODevice::ReadOnly)) {
                                 QByteArray data = f.readAll();
                                 f.close();
-
-                                request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key, type, project->spaceContext(), data, folder,
+                                request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, soundKey, TupLibraryObject::Sound, project->spaceContext(), data, folder,
                                                                                   sceneIndex, layerIndex, currentIndex);
                                 emit requestTriggered(&request);
                             }
-                        }
 
-                        // Adding lip-sync sound file
-                        QString soundFile = dialog->getSoundFile();
-                        QFile f(soundFile);
-                        QFileInfo info(soundFile);
-                        QString soundKey = info.fileName().toLower();
+                            // Adding Papagayo project
+                            parser->setSoundFile(soundKey);
+                            QString xml = parser->toString();
 
-                        if (f.open(QIODevice::ReadOnly)) {
-                            QByteArray data = f.readAll();
-                            f.close();
-                            request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, soundKey, TupLibraryObject::Sound, project->spaceContext(), data, folder,
-                                                                              sceneIndex, layerIndex, currentIndex);
+                            request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex, TupProjectRequest::AddLipSync, xml);
                             emit requestTriggered(&request);
-                        }
 
-                        // Adding Papagayo project
-                        parser->setSoundFile(soundKey);
-                        QString xml = parser->toString();
+                            // Adding frames if they are required
+                            TupScene *scene = project->sceneAt(sceneIndex);
+                            if (scene) {
+                                int sceneFrames = scene->framesCount();
+                                int lipSyncFrames = currentIndex + parser->getFrameCount();
 
-                        request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex, TupProjectRequest::AddLipSync, xml);
-                        emit requestTriggered(&request);
+                                #ifdef TUP_DEBUG
+                                    qDebug() << "[TupDocumentView::importPapagayoLipSync()] - scenesFrames -> " << sceneFrames;
+                                    qDebug() << "[TupDocumentView::importPapagayoLipSync()] - lipSyncFrames -> " << lipSyncFrames;
+                                #endif
 
-                        // Adding frames if they are required
-                        TupScene *scene = project->sceneAt(sceneIndex);
-                        if (scene) {
-                            int sceneFrames = scene->framesCount();
-                            int lipSyncFrames = currentIndex + parser->getFrameCount();
+                                if (lipSyncFrames > sceneFrames) {
+                                    int layersCount = scene->layersCount();
+                                    for (int i = sceneFrames; i < lipSyncFrames; i++) {
+                                         for (int j = 0; j < layersCount; j++) {
+                                              request = TupRequestBuilder::createFrameRequest(sceneIndex, j, i, TupProjectRequest::Add, tr("Frame"));
+                                              emit requestTriggered(&request);
+                                         }
+                                    }
 
-                            if (lipSyncFrames > sceneFrames) {
-                                int layersCount = scene->layersCount();
-                                for (int i = sceneFrames; i < lipSyncFrames; i++) {
-                                     for (int j = 0; j < layersCount; j++) {
-                                          request = TupRequestBuilder::createFrameRequest(sceneIndex, j, i, TupProjectRequest::Add, tr("Frame"));
-                                          emit requestTriggered(&request);
-                                     }
+                                    QString selection = QString::number(layerIndex) + "," + QString::number(layerIndex) + ","
+                                                        + QString::number(currentIndex) + "," + QString::number(currentIndex);
+
+                                    request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, currentIndex, TupProjectRequest::Select, selection);
+                                    emit requestTriggered(&request);
                                 }
-
-                                QString selection = QString::number(layerIndex) + "," + QString::number(layerIndex) + ","
-                                                    + QString::number(currentIndex) + "," + QString::number(currentIndex);
-
-                                request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, currentIndex, TupProjectRequest::Select, selection);
-                                emit requestTriggered(&request);
                             }
+
+                            if (currentTool->toolId() != TAction::LipSyncTool)
+                                papagayoAction->trigger();
+
+                            emit updateFPS(parser->getFps());
+
+                            TOsd::self()->display(TOsd::Info, tr("Papagayo file has been imported successfully"));
+                        } else {
+                            TOsd::self()->display(TOsd::Error, tr("Papagayo file is invalid!"));
+                            #ifdef TUP_DEBUG
+                                qDebug() << "[TupDocumentView::importPapagayoLipSync()] - Fatal Error: Papagayo file is invalid!";
+                            #endif
                         }
-
-                        if (currentTool->toolId() != TAction::LipSyncTool)
-                            papagayoAction->trigger();
-
-                        emit updateFPS(parser->getFps()); 
-
-                        TOsd::self()->display(TOsd::Info, tr("Papagayo file has been imported successfully"));
                     } else {
-                        TOsd::self()->display(TOsd::Error, tr("Papagayo file is invalid!"));
+                        TOsd::self()->display(TOsd::Error, tr("Mouth images are incomplete!"));
                         #ifdef TUP_DEBUG
-                            qDebug() << "[TupDocumentView::importPapagayoLipSync()] - Fatal Error: Papagayo file is invalid!";
+                            qDebug() << "[TupDocumentView::importPapagayoLipSync()] - Fatal Error: Mouth images are incomplete!";
                         #endif
                     }
                 } else {

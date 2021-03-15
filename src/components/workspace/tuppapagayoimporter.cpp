@@ -176,9 +176,20 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                           #endif
                       }
 
-                      if (w == numWords - 1) {
-                          if (lastFrame > framesCount)
+                      // Checking frames count consistency
+                      if (w == numWords - 1) { // If last word
+                          if (lastFrame > 0)
                               framesCount = lastFrame;
+
+                          // If lip-sync is longer that latest word, fill empty frames with rest mouth
+                          if (lastFrame < framesTotal) {
+                              int distance = framesTotal - lastFrame;
+                              for (int i=0; i<distance; i++) {
+                                   TupPhoneme *phoneme = new TupPhoneme("rest", point);
+                                   word->addPhoneme(phoneme);
+                              }
+                              framesCount += distance;
+                          }
                       }
                       phrase->addWord(word);
                  } // for w
