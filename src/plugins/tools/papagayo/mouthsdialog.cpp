@@ -44,6 +44,19 @@ MouthsDialog::MouthsDialog(QWidget *parent) : QDialog(parent)
     setWindowTitle(tr("LipSync Mouth Examples"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/papagayo.png")));
 
+    QFile file(THEME_DIR + "config/ui.qss");
+    if (file.exists()) {
+        file.open(QFile::ReadOnly);
+        QString styleSheet = QLatin1String(file.readAll());
+        if (styleSheet.length() > 0)
+            setStyleSheet(styleSheet);
+        file.close();
+    } else {
+        #ifdef TUP_DEBUG
+            qWarning() << "[MouthsDialog()] - theme file doesn't exist -> " << (THEME_DIR + "config/ui.qss");
+        #endif
+    }
+
     mouthLabels << "AI" << "E" << "etc" << "FV" << "L" << "MBP" << "O" << "rest" << "U" << "WQ";
     for (int i = 1; i < 5; i++)
         folder << SHARE_DIR + "data/mouths/" + QString::number(i);
@@ -107,7 +120,7 @@ QWidget * MouthsDialog::createMouthPanel(int index, int row, int column)
     QLabel *mouthImage = new QLabel;
     mouthImage->setAlignment(Qt::AlignCenter);
     mouthImage->setPixmap(QPixmap(imgPath));
-    mouthImage->setStyleSheet("QWidget { border: 1px solid #cccccc; }");
+    mouthImage->setStyleSheet("QWidget { border: 1px solid #cccccc; border-radius: 3px; }");
     panelLayout->addWidget(mouthImage, Qt::AlignCenter);
 
     return panel;

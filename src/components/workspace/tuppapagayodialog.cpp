@@ -51,6 +51,19 @@ TupPapagayoDialog::TupPapagayoDialog() : QDialog()
     setWindowTitle(tr("Import Papagayo project"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/papagayo.png")));
 
+    QFile file(THEME_DIR + "config/ui.qss");
+    if (file.exists()) {
+        file.open(QFile::ReadOnly);
+        QString styleSheet = QLatin1String(file.readAll());
+        if (styleSheet.length() > 0)
+            setStyleSheet(styleSheet);
+        file.close();
+    } else {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupPapagayoDialog()] - theme file doesn't exist -> " << (THEME_DIR + "config/ui.qss");
+        #endif
+    }
+
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     QHBoxLayout *blockLayout = new QHBoxLayout;
