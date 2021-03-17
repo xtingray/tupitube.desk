@@ -74,14 +74,22 @@ void TupStoryboard::insertScene(int index)
         qDebug() << "[TupStoryboard::insertScene()] - index -> " << index;
     #endif
 
-    if (index >= 0 && index < scene.size()) {
-        scene.insert(index, "");
-        duration.insert(index, "");
-        description.insert(index, "");
+    if (index >= 0) {
+        if (index < scene.size()) {
+            scene.insert(index, "");
+            duration.insert(index, "");
+            description.insert(index, "");
+        } else if (index == scene.size()) {
+            appendScene();
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupStoryboard::insertScene()] - Error: invalid index -> " << index;
+                qDebug() << "[TupStoryboard::insertScene()] - scene.size() -> " << scene.size();
+            #endif
+        }
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TupStoryboard::insertScene()] - Error: invalid index -> " << index;
-            qDebug() << "[TupStoryboard::insertScene()] - scene.size() -> " << scene.size();
         #endif
     }
 }

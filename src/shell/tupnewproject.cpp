@@ -85,6 +85,7 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent)
     presets->addItem(tr("520x380 - 24"));
     presets->addItem(tr("640x480 - 24"));
     presets->addItem(tr("480 (PAL DV/DVD) - 25"));
+    presets->addItem(tr("Storyboard (Anime)"));
     presets->addItem(tr("576 (PAL DV/DVD) - 25"));
     presets->addItem(tr("720 (HD) - 24"));
     presets->addItem(tr("1080 (Mobile) - 24"));
@@ -348,7 +349,8 @@ void TupNewProject::setPresets(int index)
     size->blockSignals(true);
 
     switch(index) {
-           case FREE: 
+           case FREE:
+           break;
            case FORMAT_520:
            {
                size->setX(520);
@@ -368,6 +370,13 @@ void TupNewProject::setPresets(int index)
                size->setX(720);
                size->setY(480);
                fps->setValue(25);
+           }
+           break;
+           case STORYBOARD_ANIME:
+           {
+               size->setX(1080);
+               size->setY(1920);
+               fps->setValue(24);
            }
            break;
            case FORMAT_576:

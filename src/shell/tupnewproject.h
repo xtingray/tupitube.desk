@@ -60,6 +60,7 @@ class TupNewProject : public TabDialog
                       FORMAT_520,
                       FORMAT_640,
                       FORMAT_480,
+                      STORYBOARD_ANIME,
                       FORMAT_576,
                       FORMAT_720,
                       FORMAT_MOBILE,
