@@ -78,6 +78,11 @@ void TupStoryboard::insertScene(int index)
         scene.insert(index, "");
         duration.insert(index, "");
         description.insert(index, "");
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupStoryboard::insertScene()] - Error: invalid index -> " << index;
+            qDebug() << "[TupStoryboard::insertScene()] - scene.size() -> " << scene.size();
+        #endif
     }
 }
 
@@ -94,6 +99,11 @@ void TupStoryboard::appendScene()
 
 void TupStoryboard::moveScene(int oldIndex, int newIndex)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupStoryboard::moveScene()] - oldIndex -> " << oldIndex;
+        qDebug() << "[TupStoryboard::moveScene()] - newIndex -> " << newIndex;
+    #endif
+
     if (oldIndex >= 0 && oldIndex < scene.size() && newIndex >= 0 && newIndex < scene.size()) {
         scene.swapItemsAt(oldIndex, newIndex);
         duration.swapItemsAt(oldIndex, newIndex);
@@ -103,6 +113,10 @@ void TupStoryboard::moveScene(int oldIndex, int newIndex)
 
 void TupStoryboard::resetScene(int index)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupStoryboard::resetScene()] - index -> " << index;
+    #endif
+
     if (index >= 0 && index < scene.size()) {
         scene.replace(index, "");
         duration.replace(index, "");
@@ -112,6 +126,10 @@ void TupStoryboard::resetScene(int index)
 
 void TupStoryboard::removeScene(int index)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupStoryboard::removeScene()] - index -> " << index;
+    #endif
+
     if (index >= 0 && index < scene.size()) {
         scene.removeAt(index);
         duration.removeAt(index);
@@ -218,12 +236,17 @@ QString TupStoryboard::sceneDescription(int index) const
 
 void TupStoryboard::fromXml(const QString &xml)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupStoryboard::fromXml()]";
+    #endif
+
     QDomDocument document;
     if (!document.setContent(xml))
         return;
 
     QDomElement root = document.documentElement();
     QDomNode n = root.firstChild();
+    int counter = 0;
 
     while (!n.isNull()) {
            QDomElement e = n.toElement();
@@ -237,6 +260,7 @@ void TupStoryboard::fromXml(const QString &xml)
                } else if (e.tagName() == "summary") {
                    summary = cleanString(e.text());
                } else if (e.tagName() == "scene") {
+                   counter++;
                    QDomNode n2 = e.firstChild();
                    while (!n2.isNull()) {
                           QDomElement e2 = n2.toElement();
@@ -253,10 +277,18 @@ void TupStoryboard::fromXml(const QString &xml)
            }
            n = n.nextSibling();
     }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupStoryboard::fromXml()] - counter -> " << counter;
+    #endif
 }
 
 QDomElement TupStoryboard::toXml(QDomDocument &doc) const
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupStoryboard::toXml()]";
+    #endif
+
     QDomElement storyboard = doc.createElement("storyboard");
 
     QDomText titleDom   = doc.createTextNode(title);
@@ -268,6 +300,10 @@ QDomElement TupStoryboard::toXml(QDomDocument &doc) const
     storyboard.appendChild(doc.createElement("author")).appendChild(authorDom);
     storyboard.appendChild(doc.createElement("topics")).appendChild(topicsDom);
     storyboard.appendChild(doc.createElement("summary")).appendChild(summaryDom);
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupStoryboard::toXml()] - scene.size() -> " << scene.size();
+    #endif
 
     for (int i=0; i<scene.size(); i++) {
          QDomElement sceneDom = doc.createElement("scene");

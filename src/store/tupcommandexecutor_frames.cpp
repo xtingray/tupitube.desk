@@ -54,10 +54,11 @@ bool TupCommandExecutor::createFrame(TupFrameResponse *response)
 
     TupScene *scene = project->sceneAt(sceneIndex);
     if (scene) {
-        scene->insertStoryboardScene(pos);
+        // scene->insertStoryboardScene(pos);
         TupLayer *layer = scene->layerAt(layerIndex);
         if (layer) {
             if (response->getMode() == TupProjectResponse::Do) {
+                scene->appendStoryboardScene();
                 TupFrame *frame = layer->createFrame(name, pos);
                 if (frame) {
                     emit responsed(response);
@@ -66,6 +67,7 @@ bool TupCommandExecutor::createFrame(TupFrameResponse *response)
             }
 
             if (response->getMode() == TupProjectResponse::Redo || response->getMode() == TupProjectResponse::Undo) {
+                scene->insertStoryboardScene(pos);
                 bool success = layer->restoreFrame(pos);
                 if (success) {
                     emit responsed(response);
