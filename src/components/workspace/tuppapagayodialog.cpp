@@ -102,6 +102,7 @@ TupPapagayoDialog::TupPapagayoDialog() : QDialog()
     mouthCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 2"));
     mouthCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 3"));
     mouthCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 4"));
+    mouthCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 5"));
 
     connect(mouthCombo, SIGNAL(activated(int)), this, SLOT(updateMouthView(int)));
     layout->addWidget(mouthCombo);
@@ -115,7 +116,7 @@ TupPapagayoDialog::TupPapagayoDialog() : QDialog()
     stackedWidget->addWidget(mouthsPanel);
 
     folder << "";
-    for (int i=1; i<5; i++)
+    for (int i=1; i<6; i++)
         stackedWidget->addWidget(sampleWidget(i));
 
     layout->addWidget(stackedWidget, Qt::AlignCenter);

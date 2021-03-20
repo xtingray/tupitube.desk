@@ -58,7 +58,7 @@ MouthsDialog::MouthsDialog(QWidget *parent) : QDialog(parent)
     }
 
     mouthLabels << "AI" << "E" << "etc" << "FV" << "L" << "MBP" << "O" << "rest" << "U" << "WQ";
-    for (int i = 1; i < 5; i++)
+    for (int i = 1; i < 6; i++)
         folder << SHARE_DIR + "data/mouths/" + QString::number(i);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
@@ -67,10 +67,11 @@ MouthsDialog::MouthsDialog(QWidget *parent) : QDialog(parent)
     mouthCombo->addItem(QIcon(THEME_DIR + "icons/mouth.png"), tr("Mouth Sample Pack No 2"));
     mouthCombo->addItem(QIcon(THEME_DIR + "icons/mouth.png"), tr("Mouth Sample Pack No 3"));
     mouthCombo->addItem(QIcon(THEME_DIR + "icons/mouth.png"), tr("Mouth Sample Pack No 4"));
+    mouthCombo->addItem(QIcon(THEME_DIR + "icons/mouth.png"), tr("Mouth Sample Pack No 5"));
     connect(mouthCombo, SIGNAL(activated(int)), this, SLOT(updateMouthCollection(int)));
 
     stackedWidget = new QStackedWidget;
-    for (int i=0; i<4; i++)
+    for (int i=0; i<5; i++)
         stackedWidget->addWidget(createMouthsCollection(i));
 
     QHBoxLayout *comboLayout = new QHBoxLayout;
