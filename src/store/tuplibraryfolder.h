@@ -110,6 +110,9 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
 
         QList<SoundResource> soundResourcesList();
         void updateSoundResourcesItem(TupLibraryObject *item);
+        void releaseLipSyncVoices(const QString &soundFile);
+
+        TupLibraryObject * findSoundFile(const QString &folder);
 
     public:
         virtual void fromXml(const QString &xml);

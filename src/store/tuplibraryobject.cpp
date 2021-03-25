@@ -305,8 +305,8 @@ void TupLibraryObject::fromXml(const QString &xml)
              {
                  objectIsSoundResource = objectTag.attribute("soundEffect").toInt() ? true : false;
                  lipsyncVoice = objectTag.attribute("lipsyncVoice").toInt() ? true : false;
-                 mute = objectTag.attribute("mute").toInt() ? true : false;
-                 playAt = objectTag.attribute("playAt").toInt();
+                 mute = objectTag.attribute("mute", "true").toInt() ? true : false;
+                 playAt = objectTag.attribute("playAt", "1").toInt();
                  dataPath = objectTag.attribute("path");
              }
             break;

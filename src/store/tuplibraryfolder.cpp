@@ -635,6 +635,10 @@ void TupLibraryFolder::reset()
 
 void TupLibraryFolder::updatePaths(const QString &newPath)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryFolder::updatePaths()] - newPath -> " << newPath;
+    #endif
+
     foreach (QString oid, objects.keys()) {
          QString oldPath = objects[oid]->getDataPath();
          QFileInfo logicalPath(oldPath);
@@ -682,4 +686,42 @@ void TupLibraryFolder::updateSoundResourcesItem(TupLibraryObject *item)
             return;
         }
     }
+}
+
+void TupLibraryFolder::releaseLipSyncVoices(const QString &soundKey)
+{
+    if (exists(soundKey)) {
+        TupLibraryObject *sound = getObject(soundKey);
+        sound->setLipsyncVoiceFlag(false);
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryFolder::releaseLipSyncVoices()] - Sound file was NOT found! -> " << soundKey;
+        #endif
+    }
+}
+
+TupLibraryObject * TupLibraryFolder::findSoundFile(const QString &folderId)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryFolder::findSoundFile()] - Folder -> " << folderId;
+    #endif
+
+    TupLibraryFolder *folder = this->getFolder(folderId);
+    if (folder) {
+        LibraryObjects items = folder->getObjects();
+        if (!items.isEmpty()) {
+            foreach (TupLibraryObject *object, items) {
+                if (object->getType() == TupLibraryObject::Sound) {
+                    qDebug() << "OBJECT -> " << object->getSymbolName();
+                    return object;
+                }
+            }
+        } else {
+            qDebug() << "LIPSYNC - Folder is empty -> " << folderId;
+        }
+    } else {
+        qDebug() << "LIPSYNC - Folder is NULL -> " << folderId;
+    }
+
+    return nullptr;
 }

@@ -1008,3 +1008,13 @@ void TupProject::updateRasterBackground(TupProject::Mode spaceContext, int scene
 {
     scenesList.at(sceneIndex)->updateRasterBackground(spaceContext, imgPath);
 }
+
+void TupProject::releaseLipSyncVoices(int sceneIndex, const QString &lipSyncName)
+{
+    TupScene *scene = scenesList.at(sceneIndex);
+    if (scene) {
+        TupLipSync *lipsync = scene->getLipSync(lipSyncName);
+        if (lipsync)
+            library->releaseLipSyncVoices(lipsync->getSoundFile());
+    }
+}

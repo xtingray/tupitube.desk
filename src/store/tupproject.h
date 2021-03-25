@@ -141,6 +141,8 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         void importLayer(int sceneIndex, const QString &layer);
         void updateRasterBackground(TupProject::Mode spaceContext, int sceneIndex, const QString &imgPath);
 
+        void releaseLipSyncVoices(int sceneIndex, const QString &lipSyncName);
+
     signals:
         void responsed(TupProjectResponse *response);
 

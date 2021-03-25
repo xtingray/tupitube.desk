@@ -53,7 +53,6 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
 
     frameWidget = new QWidget;
 
-    // frameLabel = new QLabel(tr("Play at frame:") + " ");
     frameLabel = new QLabel("");
     frameBox = new QSpinBox();
     frameBox->setMinimum(1);
@@ -66,14 +65,6 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     effectLayout->addWidget(frameLabel);
     effectLayout->addWidget(frameBox);
     effectLayout->addStretch();
-
-    /*
-    lipSyncWidget = new QWidget;
-    QBoxLayout *lipLayout = new QBoxLayout(QBoxLayout::LeftToRight, lipSyncWidget);
-    lipLayout->addStretch();
-    lipLayout->addWidget(new QLabel(tr("Papagayo Lip-Sync Sound")));
-    lipLayout->addStretch();
-    */
 
     timer = new QLabel("");
     QBoxLayout *timerLayout = new QBoxLayout(QBoxLayout::LeftToRight);
@@ -140,22 +131,27 @@ void TupSoundPlayer::setSoundParams(TupLibraryObject *sound)
 {
     player->setMedia(QUrl::fromLocalFile(sound->getDataPath()));
     soundID = sound->getSymbolName();
-    if (!sound->isLipsyncVoice()) {
-        frameBox->setVisible(true);
-        frameLabel->setText(tr("Play at frame:") + " ");
-        frameBox->blockSignals(true);
-        frameBox->setValue(sound->frameToPlay() + 1);
-        frameBox->blockSignals(false);
-    } else {
-        frameBox->setVisible(false);
-        frameLabel->setText(tr("Play at frame:") + " " + QString::number(sound->frameToPlay() + 1));
-    }
+    enableLipSyncInterface(sound->isLipsyncVoice(), sound->frameToPlay() + 1);
 
     mute = sound->isMuted();
     if (mute) {
         muteButton->setToolTip(tr("Unmute"));
         playButton->setEnabled(false);
         muteButton->setImage(QPixmap(THEME_DIR + QString("icons/mute.png")));
+    }
+}
+
+void TupSoundPlayer::enableLipSyncInterface(bool isLipsync, int frame)
+{
+    if (!isLipsync) {
+        frameBox->setVisible(true);
+        frameLabel->setText(tr("Play at frame:") + " ");
+        frameBox->blockSignals(true);
+        frameBox->setValue(frame);
+        frameBox->blockSignals(false);
+    } else {
+        frameBox->setVisible(false);
+        frameLabel->setText(tr("Play at frame:") + " " + QString::number(frame));
     }
 }
 

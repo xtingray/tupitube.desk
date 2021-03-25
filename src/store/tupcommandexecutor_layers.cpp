@@ -275,13 +275,12 @@ bool TupCommandExecutor::removeLipSync(TupLayerResponse *response)
     QString name = response->getArg().toString();
 
     TupScene *scene = project->sceneAt(scenePos);
-
-    if (!scene)
-        return false;
-
-    if (scene->removeLipSync(name)) {
-        emit responsed(response);
-        return true;
+    if (scene) {
+        project->releaseLipSyncVoices(scenePos, name);
+        if (scene->removeLipSync(name)) {
+            emit responsed(response);
+            return true;
+        }
     }
 
     return false;

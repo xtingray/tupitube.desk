@@ -596,9 +596,9 @@ void TupLipSync::fromXml(const QString &xml)
    
     if (! document.setContent(xml)) {
         #ifdef TUP_DEBUG
-            qDebug() << "Content:";
+            qDebug() << "[TupLipSync::fromXml()] - Content:";
             qDebug() << xml;
-            qDebug() << "TupLipSync::fromXml() - File corrupted!";
+            qDebug() << "[TupLipSync::fromXml()] - File corrupted!";
         #endif
         return;
     }
@@ -606,7 +606,7 @@ void TupLipSync::fromXml(const QString &xml)
     QDomElement root = document.documentElement();
     lipSyncName = root.attribute("name");
     soundFile = root.attribute("soundFile");
-    initFrame = root.attribute("initFrame").toInt();
+    initFrame = root.attribute("initFrame", "1").toInt();
     framesCount = root.attribute("framesTotal").toInt();
     extension = root.attribute("extension");
     fps = root.attribute("fps").toInt();

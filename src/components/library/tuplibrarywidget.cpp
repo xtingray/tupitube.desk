@@ -1441,6 +1441,14 @@ void TupLibraryWidget::layerResponse(TupLayerResponse *event)
             if (display->getSoundID().compare(soundID) == 0)
                 display->updateSoundInitFrame(frameIndex);
         }
+    } else if (event->getAction() == TupProjectRequest::RemoveLipSync) {
+        if (display->isSoundPanelVisible()) {
+            QString id = event->getArg().toString();
+            TupLibraryObject *sound = library->findSoundFile(id);
+            QString currentId = display->getSoundID();
+            if (currentId.compare(sound->getSymbolName()) == 0)
+                display->enableLipSyncInterface(false, sound->frameToPlay() + 1);
+        }
     }
 }
 
