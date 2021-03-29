@@ -735,7 +735,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double 
                  #ifdef TUP_DEBUG
                      qWarning() << "Tween: " << tween->getTweenName();
                      qWarning() << "Type: " << tween->getType();
-                     qWarning() << "Adding FIRST tween transformation - photogram -> " << QString::number(photogram);
+                     qWarning() << "Adding FIRST tween transformation - photogram -> " << photogram;
                  #endif
 
                  stepItem = tween->stepAt(0);
@@ -745,7 +745,13 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double 
                      object->item()->setPos(tween->transformOriginPoint());
                  } else if (stepItem->has(TupTweenerStep::Rotation)) {
                      double angle = stepItem->getRotation();
-                     object->item()->setTransformOriginPoint(tween->transformOriginPoint());
+                     QPointF pos = tween->transformOriginPoint();
+                     if (qgraphicsitem_cast<QGraphicsItemGroup *>(object->item())) {
+                         QPointF newTarget = pos - (object->item()->boundingRect().center() + object->item()->pos());
+                         pos = object->item()->boundingRect().center() + newTarget;
+                     }
+
+                     object->item()->setTransformOriginPoint(pos);
                      object->item()->setRotation(angle);
                  } else if (stepItem->has(TupTweenerStep::Scale)) {
                      QPointF point = tween->transformOriginPoint();

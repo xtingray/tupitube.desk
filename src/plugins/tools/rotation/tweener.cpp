@@ -71,6 +71,10 @@ Tweener::~Tweener()
 
 void Tweener::init(TupGraphicsScene *gScene)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Rotation Tweener::init()]";
+    #endif
+
     scene = gScene;
     objects.clear();
 
@@ -124,18 +128,18 @@ void Tweener::press(const TupInputDeviceInformation *input, TupBrushManager *bru
         qDebug() << "[Rotation Tweener::press()]";
     #endif
 
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
-    Q_UNUSED(gScene);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
+    Q_UNUSED(gScene)
 }
 
 /* This method is executed while the mouse is pressed and on movement */
 
 void Tweener::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
-    Q_UNUSED(gScene);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
+    Q_UNUSED(gScene)
 }
 
 /* This method finishes the action started on the press method depending
@@ -148,23 +152,22 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
         qDebug() << "[Rotation Tweener::release()]";
     #endif
 
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
 
     if (gScene->currentFrameIndex() == initFrame) {
         if (editMode == TupToolPlugin::Selection) {
             #ifdef TUP_DEBUG
-                qDebug() << "Rotation Tweener::release() - Tracing selection mode";
+                qDebug() << "[Rotation Tweener::release()] - Tracing selection mode";
             #endif
             if (gScene->selectedItems().size() > 0) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "Rotation Tweener::release() - selection size -> " + QString::number(gScene->selectedItems().size());
+                    qDebug() << "[Rotation Tweener::release()] - selection size -> " << gScene->selectedItems().size();
                 #endif
                 objects = gScene->selectedItems();
                 foreach (QGraphicsItem *item, objects) {
                     QString tip = item->toolTip();
                     if (tip.contains(tr("Rotation"))) {
-                        // QDesktopWidget desktop;
                         QScreen *screen = QGuiApplication::screens().at(0);
                         QMessageBox msgBox;
                         msgBox.setWindowTitle(tr("Warning"));
@@ -184,7 +187,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 }
 
                 #ifdef TUP_DEBUG
-                    qDebug() << "Rotation Tweener::release() - Notifying selection...";
+                    qDebug() << "[Rotation Tweener::release()] - Notifying selection...";
                 #endif
                 configPanel->notifySelection(true);
                 QGraphicsItem *item = objects.at(0);
@@ -192,7 +195,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 origin = rect.center();
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "Rotation Tweener::release() - Selection mode: no items selected";
+                    qDebug() << "[Rotation Tweener::release()] - Selection mode: no items selected";
                 #endif
             }
         }
@@ -425,6 +428,10 @@ void Tweener::applyReset()
 
 void Tweener::applyTween()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Rotation Tweener::applyTween()]";
+    #endif
+
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     QString name = configPanel->currentTweenName();
@@ -435,6 +442,10 @@ void Tweener::applyTween()
 
     // Tween is new
     if (!scene->currentScene()->tweenExists(name, TupItemTweener::Rotation)) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[Rotation Tweener::applyTween()] - Adding new tween...";
+        #endif
+
         initFrame = scene->currentFrameIndex();
         initLayer = scene->currentLayerIndex();
         initScene = scene->currentSceneIndex();
@@ -448,9 +459,13 @@ void Tweener::applyTween()
                 type = TupLibraryObject::Svg;
                 objectIndex = scene->currentFrame()->indexOf(svg);
             } else {
-                objectIndex = scene->currentFrame()->indexOf(item);
-                if (qgraphicsitem_cast<TupPathItem *>(item))
-                    pos = origin;
+                 objectIndex = scene->currentFrame()->indexOf(item);
+                 if (qgraphicsitem_cast<QGraphicsItemGroup *>(item)) {
+                     pos = origin;
+                 } else {
+                     if (qgraphicsitem_cast<TupPathItem *>(item))
+                         pos = origin;
+                 }
             }
 
             TupProjectRequest request = TupRequestBuilder::createItemRequest(
@@ -461,6 +476,10 @@ void Tweener::applyTween()
             emit requested(&request);
         }
     } else { // Tween already exists
+        #ifdef TUP_DEBUG
+            qDebug() << "[Rotation Tweener::applyTween()] - Updating existing tween...";
+        #endif
+
         removeTweenFromProject(name);
         QList<QGraphicsItem *> newList;
 
@@ -551,8 +570,7 @@ void Tweener::applyTween()
 void Tweener::removeTweenFromProject(const QString &name)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[Rotation Tweener::removeTweenFromProject()]";
-        qDebug() << "name: " << name;
+        qDebug() << "[Rotation Tweener::removeTweenFromProject()] - name -> " << name;
     #endif
 
     TupScene *sceneData = scene->currentScene();
@@ -580,7 +598,7 @@ void Tweener::removeTweenFromProject(const QString &name)
         emit tweenRemoved();
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "Tweener::removeTweenFromProject() - Rotation tween couldn't be removed -> " + name;
+            qDebug() << "[Rotation Tweener::removeTweenFromProject()] - Rotation tween couldn't be removed -> " << name;
         #endif
     }
 }
@@ -588,7 +606,7 @@ void Tweener::removeTweenFromProject(const QString &name)
 void Tweener::removeTween(const QString &name)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[Rotation Tweener::removeTween()]";
+        qDebug() << "[Rotation Tweener::removeTween()] - name -> " << name;
     #endif
 
     removeTweenFromProject(name);
@@ -597,11 +615,19 @@ void Tweener::removeTween(const QString &name)
 
 void Tweener::updateOriginPoint(const QPointF &point)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Rotation Tweener::updateOriginPoint()] - point -> " << point;
+    #endif
+
     origin = point;
 }
 
 void Tweener::addTarget()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Rotation Tweener::addTarget()]";
+    #endif
+
     if (mode == TupToolPlugin::Add) {
         target = new Target(origin, baseZValue);
         connect(target, SIGNAL(positionUpdated(const QPointF &)), this, SLOT(updateOriginPoint(const QPointF &)));
@@ -611,19 +637,24 @@ void Tweener::addTarget()
         if (!objects.isEmpty()) {
             QGraphicsItem *item = objects.at(0);
             if (currentTween) {
-                origin = item->mapToParent(currentTween->transformOriginPoint());
+                QPointF point = currentTween->transformOriginPoint();
+                if (qgraphicsitem_cast<QGraphicsItemGroup *>(item))
+                    origin = point;
+                else
+                    origin = item->mapToParent(point);
+
                 target = new Target(origin, baseZValue);
                 connect(target, SIGNAL(positionUpdated(const QPointF &)), this, SLOT(updateOriginPoint(const QPointF &)));
                 scene->addItem(target);
                 target->resizeNode(realFactor);
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "Tweener::addTarget() - Current tween pointer is NULL!";
+                    qDebug() << "[Rotation Tweener::addTarget()] - Current tween pointer is NULL!";
                 #endif
             }
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "Tweener::addTarget() - No objects has been selected for the current tween!";
+                qDebug() << "[Rotation Tweener::addTarget()] - No objects has been selected for the current tween!";
             #endif
         }
     }
@@ -656,7 +687,7 @@ void Tweener::updateMode(TupToolPlugin::Mode currentMode)
             }
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "Tweener::updateMode() - Current tween pointer is NULL!";
+                qDebug() << "[Rotation Tweener::updateMode()] - Current tween pointer is NULL!";
             #endif
         }
     }
@@ -680,7 +711,7 @@ void Tweener::layerResponse(const TupLayerResponse *event)
 
 void Tweener::frameResponse(const TupFrameResponse *event)
 {
-    if (event->getAction() == TupProjectRequest::Remove && initLayer == event->getLayerIndex())
+    if (event->getAction() == TupProjectRequest::RemoveSelection && initLayer == event->getLayerIndex())
         init(scene);
 
     if (event->getAction() == TupProjectRequest::Select)

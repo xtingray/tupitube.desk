@@ -1494,13 +1494,8 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                  switch (obj->getType()) {
                      case TupLibraryObject::Item:
                        {
-                         if (obj->isNativeGroup()) {
-                             qDebug() << "GROUP OBJECT -> " << obj->getSymbolName();
-                             qDebug() << "nativeMap[id] - id -> " << id;
-                             qDebug() << "XML -> ";
-                             qDebug() << obj->getGroupXml();
+                         if (obj->isNativeGroup())
                              nativeMap[id] = TupLibraryObject::generateImage(obj->getGroupXml(), width());
-                         }
 
                          item->setIcon(0, QIcon(THEME_DIR + "icons/drawing_object.png"));
                          libraryTree->setCurrentItem(item);
@@ -1540,7 +1535,8 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                              }
                          }
 
-                         object->updateFrameToPlay(currentFrame.frame);
+                         if (!library->isLoadingProject())
+                             object->updateFrameToPlay(currentFrame.frame);
                          library->updateSoundResourcesItem(object);
 
                          item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
