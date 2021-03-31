@@ -290,15 +290,10 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                 case TupLibraryObject::Item:
                    {
                      display->showDisplay();
-                     qDebug() << "";
-                     if (object->isNativeGroup()) {
-                         qDebug() << "1 TEST - objectName -> " << objectName;
-                         qDebug() << "nativeMap[objectName] -> " << nativeMap[objectName].isNull();
+                     if (object->isNativeGroup())
                          display->render(nativeMap[objectName]);
-                     } else {
-                         qDebug() << "2 TEST - objectName -> " << objectName;
+                     else
                          display->render(qvariant_cast<QGraphicsItem *>(object->getData()));
-                     }
 
                      /* SQA: Just a test
                      TupSymbolEditor *editor = new TupSymbolEditor;
@@ -1378,6 +1373,10 @@ void TupLibraryWidget::importSvgSequence()
 
 void TupLibraryWidget::importSoundFile()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::importSoundFile()]";
+    #endif
+
     TCONFIG->beginGroup("General");
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
 
@@ -1399,6 +1398,7 @@ void TupLibraryWidget::importSoundFile()
             QByteArray data = file.readAll();
             file.close();
 
+            qDebug() << "Enabling EFFECT variable! -> true";
             isEffectSound = true;
             TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
                                                            TupLibraryObject::Sound, project->spaceContext(), data);
@@ -1527,21 +1527,27 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                        {
                          TupLibraryObject *object = library->getObject(id);
                          if (object) {
-                             if (isEffectSound) {
-                                 object->setSoundResourceFlag(true);
-                                 isEffectSound = false;
-                             } else {
-                                 object->setLipsyncVoiceFlag(true);
+                             if (!library->isLoadingProject()) {
+                                 if (isEffectSound) {
+                                     object->setSoundResourceFlag(true);
+                                     isEffectSound = false;
+                                 } else {
+                                     object->setLipsyncVoiceFlag(true);
+                                 }
                              }
+
+                             if (!library->isLoadingProject())
+                                 object->updateFrameToPlay(currentFrame.frame);
+                             library->updateSoundResourcesItem(object);
+
+                             item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
+                             libraryTree->setCurrentItem(item);
+                             previewItem(item);
+                         } else {
+                             #ifdef TUP_DEBUG
+                                 qDebug() << "[TupLibraryWidget::libraryResponse()] - Fatal Error: No object with id -> " << id;
+                             #endif
                          }
-
-                         if (!library->isLoadingProject())
-                             object->updateFrameToPlay(currentFrame.frame);
-                         library->updateSoundResourcesItem(object);
-
-                         item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
-                         libraryTree->setCurrentItem(item);
-                         previewItem(item);
                        }
                      break;
                      default:
@@ -1628,6 +1634,10 @@ void TupLibraryWidget::frameResponse(TupFrameResponse *response)
 
 void TupLibraryWidget::importLibraryObject()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::importLibraryObject()]";
+    #endif
+
     QString option = itemType->currentText();
 
     if (option.compare(tr("Image")) == 0) {

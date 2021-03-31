@@ -129,6 +129,12 @@ QSize TupSoundPlayer::sizeHint() const
 
 void TupSoundPlayer::setSoundParams(TupLibraryObject *sound)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "TupSoundPlayer::setSoundParams() - isLipsyncVoice() -> " << sound->isLipsyncVoice();
+        qDebug() << "TupSoundPlayer::setSoundParams() - frameToPlay() -> " << sound->frameToPlay();
+        qDebug() << "TupSoundPlayer::setSoundParams() - isMuted() -> " << sound->isMuted();
+    #endif
+
     player->setMedia(QUrl::fromLocalFile(sound->getDataPath()));
     soundID = sound->getSymbolName();
     enableLipSyncInterface(sound->isLipsyncVoice(), sound->frameToPlay() + 1);

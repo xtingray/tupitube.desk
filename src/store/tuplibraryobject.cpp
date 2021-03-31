@@ -303,11 +303,15 @@ void TupLibraryObject::fromXml(const QString &xml)
             break;
             case TupLibraryObject::Sound:
              {
+                 // <object id="audio.mp3" path="audio.mp3" type="3" soundEffect="1" playAt="30" lipsyncVoice="0" />
                  objectIsSoundResource = objectTag.attribute("soundEffect").toInt() ? true : false;
                  lipsyncVoice = objectTag.attribute("lipsyncVoice").toInt() ? true : false;
                  mute = objectTag.attribute("mute", "true").toInt() ? true : false;
                  playAt = objectTag.attribute("playAt", "1").toInt();
                  dataPath = objectTag.attribute("path");
+                 qDebug() << "";
+                 qDebug() << "LIPSYNC -> " << lipsyncVoice;
+                 qDebug() << "PLAY_AT -> " << playAt;
              }
             break;
             default:
