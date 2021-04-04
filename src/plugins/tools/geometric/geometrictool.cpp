@@ -125,8 +125,8 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
         qDebug() << "[GeometricTool::press()]";
     #endif
 
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
 
     if (input->buttons() == Qt::LeftButton) {
         fillBrush = brushManager->brush();

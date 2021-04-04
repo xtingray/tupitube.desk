@@ -90,6 +90,10 @@ NodeManager::~NodeManager()
 
 void NodeManager::clear()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[NodeManager::clear()]";
+    #endif
+
     foreach (Node *node, nodes) {
         if (node) {
             QGraphicsScene *scene = node->scene();
@@ -104,9 +108,17 @@ void NodeManager::clear()
 
 void NodeManager::syncNodes(const QRectF &rect)
 {
-    if (nodes.isEmpty())
+    #ifdef TUP_DEBUG
+        qDebug() << "[NodeManager::syncNodes()]";
+    #endif
+
+    if (nodes.isEmpty()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[NodeManager::syncNodes()] - Warning: No nodes! Leaving...";
+        #endif
         return;
-    
+    }
+
     QHash<Node::NodeType, Node *>::iterator it = nodes.begin();
     while (it != nodes.end()) {
         if ((*it)) {
@@ -149,6 +161,10 @@ void NodeManager::syncNodes(const QRectF &rect)
 
 void NodeManager::syncNodesFromParent()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[NodeManager::syncNodesFromParent()]";
+    #endif
+
     if (parent)
         syncNodes(parent->sceneBoundingRect());
 }
@@ -160,11 +176,23 @@ QGraphicsItem *NodeManager::parentItem() const
 
 bool NodeManager::isModified() const
 {
-    return !((parent->transform() == origTransform) && (parent->pos() == origPos));
+    if (parent) {
+        return !((parent->transform() == origTransform) && (parent->pos() == origPos));
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[NodeManager::isModified()] - Fatal Error: Item is NULL!";
+        #endif
+    }
+
+    return false;
 }
 
 void NodeManager::beginToEdit()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[NodeManager::beginToEdit()]";
+    #endif
+
     origTransform = parent->transform();
     origPos = parent->pos();
 }
@@ -243,6 +271,10 @@ void NodeManager::crossedFlip()
 
 void NodeManager::show()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[NodeManager::show()]";
+    #endif
+
     foreach (Node *node, nodes) {
         if (!node->scene())
             scene->addItem(node);
@@ -251,11 +283,19 @@ void NodeManager::show()
 
 void NodeManager::setPressedStatus(bool pressedFlag)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[NodeManager::setPressedStatus()] - pressedFlag -> " << pressedFlag;
+    #endif
+
     pressed = pressedFlag;
 }
 
 bool NodeManager::isPressed()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[NodeManager::isPressed()] - pressed -> " << pressed;
+    #endif
+
     return pressed;
 }
 
@@ -284,6 +324,10 @@ void NodeManager::resizeNodes(qreal factor)
 
 void NodeManager::setVisible(bool visible)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[NodeManager::setVisible()] - visible -> " << visible;
+    #endif
+
     foreach (Node *node, nodes)
         node->setVisible(visible);
 }

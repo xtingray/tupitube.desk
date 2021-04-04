@@ -128,6 +128,11 @@ SoundLayers TupScene::getSoundLayers() const
     return soundLayers;
 }
 
+QSize TupScene::getDimension()
+{
+    return dimension;
+}
+
 void TupScene::setBasicStructure()
 {
     layerCount++;

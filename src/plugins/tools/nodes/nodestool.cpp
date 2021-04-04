@@ -86,7 +86,7 @@ void NodesTool::move(const TupInputDeviceInformation *input, TupBrushManager *br
 void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "NodesTool::release()";
+        qDebug() << "[NodesTool::release()]";
     #endif
 
     Q_UNUSED(brushManager)
@@ -149,12 +149,12 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                     // }
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "NodesTool::release() - Fatal Error: Invalid position [ " + QString::number(position) + " ]";
+                        qDebug() << "[NodesTool::release()] - Fatal Error: Invalid position -> " << position;
                     #endif
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "NodesTool::release() - Invalid selected item index: " + QString::number(itemIndex);
+                    qDebug() << "[NodesTool::release()] - Fatal Error: Invalid selected item index -> " << itemIndex;
                 #endif
             }
 
@@ -188,12 +188,12 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                         nodeGroup->clearChangedNodes();
                     } else {
                         #ifdef TUP_DEBUG
-                            qDebug() << "NodesTool::release() - Fatal Error: Invalid position [ " + QString::number(position) + " ]";
+                            qDebug() << "[NodesTool::release()] - Fatal Error: Invalid position -> " << position;
                         #endif
                     }
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "NodesTool::release() - Node group has NO changes!";
+                        qDebug() << "[NodesTool::release()] - Node group has NO changes!";
                     #endif
                 }
             }
@@ -211,7 +211,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
     } else {
         if (activeSelection) {
             #ifdef TUP_DEBUG
-                qDebug() << "NodesTool::release() - Empty selection! Removing nodes...";
+                qDebug() << "[NodesTool::release()] - Empty selection! Removing nodes...";
             #endif
             nodeGroup->clear();
             nodeGroup = nullptr;
@@ -284,7 +284,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
                  nodeGroup = new TNodeGroup(item, scene, TNodeGroup::LineSelection, baseZValue);
              } else {
                  #ifdef TUP_DEBUG
-                     qDebug() << "NodesTool::itemResponse() - Fatal Error: No item was found";
+                     qDebug() << "[NodesTool::itemResponse()] - Fatal Error: No item was found";
                  #endif
              }
         }
@@ -306,7 +306,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
                  }
              } else {
                  #ifdef TUP_DEBUG
-                     qDebug() << "NodesTool::itemResponse() - Fatal Error: No item was found";
+                     qDebug() << "[NodesTool::itemResponse()] - Fatal Error: No item was found";
                  #endif
              }
         }
@@ -325,7 +325,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
                  nodeGroup->resizeNodes(realFactor);
              } else {
                  #ifdef TUP_DEBUG
-                     qDebug() << "NodesTool::itemResponse() - Fatal error: No item was found";
+                     qDebug() << "[NodesTool::itemResponse()] - Fatal error: No item was found";
                  #endif
              }
 
@@ -334,7 +334,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
         default:
         {
              #ifdef TUP_DEBUG
-                 qDebug() << "NodesTool::itemResponse() - default action";
+                 qDebug() << "[NodesTool::itemResponse()] - default action";
              #endif
 
              if (activeSelection) {

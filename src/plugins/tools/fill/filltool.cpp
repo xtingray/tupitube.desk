@@ -111,96 +111,96 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
         // SQA: Enhance this plugin to support several items with one click 
         QList<QGraphicsItem *> list = scene->items(input->pos(), Qt::IntersectsItemShape, Qt::DescendingOrder, QTransform());
         foreach(QGraphicsItem *item, list) {
-        // QGraphicsItem *item = gScene->itemAt(input->pos(), QTransform());
-        if (item) {
-            int itemIndex = -1;
-            int currentLayer;
-            int currentFrame;
-            TupFrame *frame = new TupFrame;
+            // QGraphicsItem *item = gScene->itemAt(input->pos(), QTransform());
+            if (item) {
+                int itemIndex = -1;
+                int currentLayer;
+                int currentFrame;
+                TupFrame *frame = new TupFrame;
 
-            if (gScene->getSpaceContext() == TupProject::FRAMES_MODE) {
-                frame = gScene->currentFrame();
-                itemIndex = frame->indexOf(item);
-                currentLayer = gScene->currentLayerIndex();
-                currentFrame = gScene->currentFrameIndex();
-            } else {
-                currentLayer = -1;
-                currentFrame = -1;
-                TupBackground *bg = gScene->currentScene()->sceneBackground();
-                if (gScene->getSpaceContext() == TupProject::VECTOR_STATIC_BG_MODE) {
-                    frame = bg->vectorStaticFrame();
+                if (gScene->getSpaceContext() == TupProject::FRAMES_MODE) {
+                    frame = gScene->currentFrame();
                     itemIndex = frame->indexOf(item);
-                } else if (gScene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
-                    frame = bg->vectorDynamicFrame();
-                    itemIndex = frame->indexOf(item);
+                    currentLayer = gScene->currentLayerIndex();
+                    currentFrame = gScene->currentFrameIndex();
+                } else {
+                    currentLayer = -1;
+                    currentFrame = -1;
+                    TupBackground *bg = gScene->currentScene()->sceneBackground();
+                    if (gScene->getSpaceContext() == TupProject::VECTOR_STATIC_BG_MODE) {
+                        frame = bg->vectorStaticFrame();
+                        itemIndex = frame->indexOf(item);
+                    } else if (gScene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
+                        frame = bg->vectorDynamicFrame();
+                        itemIndex = frame->indexOf(item);
+                    }
                 }
-            }
 
-            if (itemIndex >= 0) {
-                if (TupGraphicLibraryItem *libraryItem = qgraphicsitem_cast<TupGraphicLibraryItem *>(item)) {
-                    // This condition only applies for images
-                    if (libraryItem->type() != TupLibraryObject::Item) {
+                if (itemIndex >= 0) {
+                    if (TupGraphicLibraryItem *libraryItem = qgraphicsitem_cast<TupGraphicLibraryItem *>(item)) {
+                        // This condition only applies for images
+                        if (libraryItem->type() != TupLibraryObject::Item) {
+                            TOsd::self()->display(TOsd::Error, tr("Sorry, only native objects can be filled"));
+                            #ifdef TUP_DEBUG
+                                qWarning() << "FillTool::press() - Warning: item is a RASTER object!";
+                            #endif
+                            return;
+                        }
+                    }
+
+                    // Testing if object is a SVG file
+                    TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
+                    if (svg) {
                         TOsd::self()->display(TOsd::Error, tr("Sorry, only native objects can be filled"));
                         #ifdef TUP_DEBUG
-                            qWarning() << "FillTool::press() - Warning: item is a RASTER object!";
+                            qWarning() << "FillTool::press() - Warning: item is a SVG object!";
                         #endif
                         return;
                     }
-                }
 
-                // Testing if object is a SVG file
-                TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
-                if (svg) {
-                    TOsd::self()->display(TOsd::Error, tr("Sorry, only native objects can be filled"));
-                    #ifdef TUP_DEBUG
-                        qWarning() << "FillTool::press() - Warning: item is a SVG object!";
-                    #endif
-                    return;
-                }
-
-                if (qgraphicsitem_cast<TupItemGroup *>(item)) {
-                    TOsd::self()->display(TOsd::Error, tr("Sorry, Groups can't be filled yet"));
-                    return;
-                }
-
-                if (qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(item)) {
-                    QDomDocument doc;
-                    TupProjectRequest::Action action = TupProjectRequest::Brush;
-                    if (mode == TColorCell::Inner) {
-                        frame->checkBrushStatus(itemIndex); 
-                        QBrush brush = brushManager->brush();
-                        doc.appendChild(TupSerializer::brush(&brush, doc));
-                    } else if (mode == TColorCell::Contour) {
-                        frame->checkPenStatus(itemIndex);
-                        QPen pen = brushManager->pen();
-                        action = TupProjectRequest::Pen;
-                        doc.appendChild(TupSerializer::pen(&pen, doc));
+                    if (qgraphicsitem_cast<TupItemGroup *>(item)) {
+                        TOsd::self()->display(TOsd::Error, tr("Sorry, Groups can't be filled yet"));
+                        return;
                     }
 
-                    TupProjectRequest event = TupRequestBuilder::createItemRequest(
-                                              gScene->currentSceneIndex(), currentLayer,
-                                              currentFrame, itemIndex, QPointF(),
-                                              gScene->getSpaceContext(), TupLibraryObject::Item,
-                                              action, doc.toString());
+                    if (qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(item)) {
+                        QDomDocument doc;
+                        TupProjectRequest::Action action = TupProjectRequest::Brush;
+                        if (mode == TColorCell::Inner) {
+                            frame->checkBrushStatus(itemIndex);
+                            QBrush brush = brushManager->brush();
+                            doc.appendChild(TupSerializer::brush(&brush, doc));
+                        } else if (mode == TColorCell::Contour) {
+                            frame->checkPenStatus(itemIndex);
+                            QPen pen = brushManager->pen();
+                            action = TupProjectRequest::Pen;
+                            doc.appendChild(TupSerializer::pen(&pen, doc));
+                        }
 
-                    emit requested(&event);
-                    return;
+                        TupProjectRequest event = TupRequestBuilder::createItemRequest(
+                                                  gScene->currentSceneIndex(), currentLayer,
+                                                  currentFrame, itemIndex, QPointF(),
+                                                  gScene->getSpaceContext(), TupLibraryObject::Item,
+                                                  action, doc.toString());
+
+                        emit requested(&event);
+                        return;
+                    } else {
+                        #ifdef TUP_DEBUG
+                            qDebug() << "FillTool::press() - Fatal Error: QAbstractGraphicsShapeItem cast has failed!";
+                        #endif
+                    }
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "FillTool::press() - Fatal Error: QAbstractGraphicsShapeItem cast has failed!";
+                        qDebug() << "FillTool::press() - Error: item is not available at the current frame";
                     #endif
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "FillTool::press() - Error: item is not available at the current frame";
+                    qDebug() << "FillTool::press() - No item found";
                 #endif
+                return;
             }
-        } else {
-            #ifdef TUP_DEBUG
-                qDebug() << "FillTool::press() - No item found";
-            #endif
-            return;
-        }
         }
     }
 }

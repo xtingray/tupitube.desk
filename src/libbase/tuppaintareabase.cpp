@@ -127,7 +127,6 @@ void TupPaintAreaBase::drawActionSafeArea(bool draw)
 
 void TupPaintAreaBase::setTool(TupToolPlugin *tool)
 {
-    // if (!scene()) {
     if (!gScene) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupPaintAreaBase::setTool()] - Fatal Error: No scene available";
@@ -163,7 +162,7 @@ void TupPaintAreaBase::mousePressEvent(QMouseEvent * event)
 
     if (!canPaint()) { 
         #ifdef TUP_DEBUG
-            qWarning() << "TupPaintAreaBase::mousePressEvent() -> I can't paint right now!";
+            qWarning() << "[TupPaintAreaBase::mousePressEvent()] - Warning: I can't paint right now!";
         #endif
         return;
     }
@@ -176,7 +175,7 @@ void TupPaintAreaBase::mouseMoveEvent(QMouseEvent *event)
 {
     if (!canPaint()) { 
         #ifdef TUP_DEBUG
-            qWarning() << "TupPaintAreaBase::mouseMoveEvent() - Canvas is busy. Can't paint!";
+            qWarning() << "[TupPaintAreaBase::mouseMoveEvent()] - Canvas is busy. Can't paint!";
         #endif
 
         return;
@@ -298,11 +297,12 @@ void TupPaintAreaBase::enterEvent(QEvent *event)
 
 void TupPaintAreaBase::leaveEvent(QEvent *event)
 {
-/*
-#ifdef TUP_DEBUG
-    qDebug() << "[TupPaintAreaBase::leaveEvent(QEvent)]";
-#endif
-*/
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintAreaBase::leaveEvent(QEvent)]";
+    #endif
+    */
+
     if (hasFocus())
         clearFocus();
 

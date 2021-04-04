@@ -55,19 +55,20 @@ class T_GUI_EXPORT TFontChooser : public QFrame
     public:
         TFontChooser(QWidget *parent = nullptr);
         ~TFontChooser();
+
         void setCurrentFont(const QFont &font);
         void initFont();
         QFont currentFont() const;
         QFont::Style currentStyle() const;
         int currentSize() const;
-        
+
     signals:
         void fontChanged();
-        
+
     private slots:
         void emitFontChanged(int = 0);
         void loadFontInfo(const QFont &newFont);
-        
+
     private:
         QFontComboBox *m_families;
         QComboBox *m_fontStyle;

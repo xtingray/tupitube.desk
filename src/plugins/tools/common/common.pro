@@ -25,14 +25,18 @@ HEADERS += buttonspanel.h \
            tweenmanager.h \
            stepsviewer.h \
            # spinboxdelegate.h \
-           target.h
+           target.h \
+           node.h \
+           nodemanager.h
 
 SOURCES += buttonspanel.cpp \
            tweenmanager.cpp \
            stepsviewer.cpp \
            # spinboxdelegate.cpp \
-           target.cpp
-		   
+           target.cpp \
+           node.cpp \
+           nodemanager.cpp
+
 FRAMEWORK_DIR = "../../../framework"
 include($$FRAMEWORK_DIR/framework.pri)
 

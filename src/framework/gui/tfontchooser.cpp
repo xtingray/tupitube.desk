@@ -37,20 +37,31 @@
 
 TFontChooser::TFontChooser(QWidget *parent) : QFrame(parent)
 {
-    QHBoxLayout *mainLayout = new QHBoxLayout(this);
-     
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+
     m_families = new QFontComboBox;
     connect(m_families, SIGNAL(currentFontChanged(const QFont &)), this, SLOT(loadFontInfo(const QFont &)));
     
-    mainLayout->addLayout(TFormFactory::makeLine(tr("Family"), m_families));
+    QHBoxLayout *fontFamilyLayout = new QHBoxLayout;
+    fontFamilyLayout->addStretch();
+    fontFamilyLayout->addLayout(TFormFactory::makeLine(tr("Family"), m_families));
+    fontFamilyLayout->addStretch();
+
+    mainLayout->addLayout(fontFamilyLayout);
+
+    QHBoxLayout *fontSettingsLayout = new QHBoxLayout;
+    fontSettingsLayout->addStretch();
 
     m_fontStyle = new QComboBox;
     connect(m_fontStyle, SIGNAL(activated (int)), this, SLOT(emitFontChanged(int)));
-    mainLayout->addLayout(TFormFactory::makeLine(tr("Style"), m_fontStyle));
+    fontSettingsLayout->addLayout(TFormFactory::makeLine(tr("Style"), m_fontStyle));
 
     m_fontSize = new QComboBox;
     connect(m_fontSize, SIGNAL(activated (int)), this, SLOT(emitFontChanged(int)));
-    mainLayout->addLayout(TFormFactory::makeLine(tr("Size"), m_fontSize));
+    fontSettingsLayout->addLayout(TFormFactory::makeLine(tr("Size"), m_fontSize));
+    fontSettingsLayout->addStretch();
+
+    mainLayout->addLayout(fontSettingsLayout);
 
     initFont();
 }
@@ -61,28 +72,38 @@ TFontChooser::~TFontChooser()
 
 void TFontChooser::loadFontInfo(const QFont &newFont)
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TFontChooser::loadFontInfo()] - newFont -> " << newFont.styleName();
+    #endif
+    */
+
     QString currentSize = m_fontSize->currentText();
     QString currentStyle = m_fontStyle->currentText();
-    
     QString family = newFont.family();
-    
+
     QFontDatabase fdb;
-    
+
     m_fontStyle->clear();
     
     m_fontStyle->addItem(tr("Normal"), QFont::StyleNormal);
     m_fontStyle->addItem(tr("Italic"), QFont::StyleItalic);
     m_fontStyle->addItem(tr("Oblique"), QFont::StyleOblique);
-    
-    // m_fontStyle->addItems();
-    
+
     m_fontSize->clear();
     
     QList<int> points = fdb.pointSizes(family);
-    
-    foreach (int point, points)
-             m_fontSize->addItem(QString::number(point));
-    
+    if (!points.isEmpty()) {
+        foreach (int point, points)
+            m_fontSize->addItem(QString::number(point));
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TFontChooser::loadFontInfo()] - Fatal Error: No sizes for family -> " << family;
+        #endif
+        for (int i=1; i<30; i++)
+            m_fontSize->addItem(QString::number(i));
+    }
+
     int sizeIndex = m_fontSize->findText(currentSize);
     int styleIndex = m_fontStyle->findText(currentStyle);
 
@@ -100,8 +121,7 @@ void TFontChooser::loadFontInfo(const QFont &newFont)
 
     m_families->blockSignals(false);
     
-    emit fontChanged();
-    
+    emit fontChanged();    
 }
 
 void TFontChooser::emitFontChanged(int)
@@ -132,7 +152,6 @@ void TFontChooser::initFont()
 QFont TFontChooser::currentFont() const
 {
      return m_currentFont;
-    //return m_families->currentFont();
 }
 
 QFont::Style TFontChooser::currentStyle() const
@@ -144,6 +163,3 @@ int TFontChooser::currentSize() const
 {
     return m_fontSize->currentText().toInt();
 }
-
-
-

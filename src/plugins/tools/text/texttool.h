@@ -41,6 +41,8 @@
 #include "tuptextitem.h"
 #include "textconfigurator.h"
 #include "tupbrushmanager.h"
+#include "node.h"
+#include "nodemanager.h"
 
 #include <QPointF>
 #include <QFontMetrics>
@@ -51,37 +53,66 @@ class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "com.maefloresta.tupi.TupToolInterface" FILE "texttool.json")
-    
+
     public:
         TextTool();
-        virtual ~TextTool();
+        ~TextTool();
         
-        virtual QStringList keys() const;
+        virtual void init(TupGraphicsScene *gScene);
+        virtual QList<TAction::ActionId> keys() const;
+        virtual QCursor cursor();
+
         virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
-        virtual void doubleClick(const TupInputDeviceInformation *input, TupGraphicsScene *scene);
+        // virtual void doubleClick(const TupInputDeviceInformation *input, TupGraphicsScene *scene);
         virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
-        virtual bool itemPressed(QGraphicsItem *item);
-        virtual QMap<QString, TAction *>actions() const;
-        int toolType() const;
+        virtual void doubleClick(const TupInputDeviceInformation *input, TupGraphicsScene *scene);
+
+        virtual QMap<TAction::ActionId, TAction *>actions() const; 
         virtual QWidget *configurator();
-        void aboutToChangeScene(TupGraphicsScene *scene);
-        void aboutToChangeTool();
         virtual void saveConfig();
         virtual void keyPressEvent(QKeyEvent *event);
+
+        virtual void sceneResponse(const TupSceneResponse *event);
+        virtual void layerResponse(const TupLayerResponse *response);
+        virtual void itemResponse(const TupItemResponse *response);
+
+        int toolType() const;
+        void aboutToChangeScene(TupGraphicsScene *scene);
+        void aboutToChangeTool();
+        void resizeNode(qreal scaleFactor);
+        void updateZoomFactor(qreal scaleFactor);
+        void clearSelection();
 
     signals:
         void closeHugeCanvas();
         void callForPlugin(int menu, int index);
- 
+
+    private slots:
+        // void initItems(TupGraphicsScene *scene);
+        void insertText();
+        void syncNodes();
+
     private:
         void setupActions();
-        
-    private:
-        TupTextItem *textItem;
+        TupFrame* getCurrentFrame();
+        void requestTransformation(QGraphicsItem *item, TupFrame *frame);
+        TupFrame* frameAt(int sceneIndex, int layerIndex, int frameIndex);
+
+        TupGraphicsScene *scene;
+        // TupTextItem *textItem;
         TextConfigurator *config;
-        // QPoint pos;
-        QMap<QString, TAction *> textActions;
+        QMap<TAction::ActionId, TAction *> textActions;
+        QColor currentColor;
+
+        int currentLayer;
+        int currentFrame;
+        TupFrame *frame;
+
+        int nodeZValue;
+        qreal realFactor;
+        NodeManager *manager;
+        bool activeSelection;
 };
 
 #endif

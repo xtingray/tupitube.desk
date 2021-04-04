@@ -247,7 +247,8 @@ void TupDocumentView::setRotationAngle(int angle)
 void TupDocumentView::updateRotationVars(int angle)
 {
     TAction::ActionId tool = currentTool->toolId();
-    if (tool == TAction::ObjectSelection || tool == TAction::NodesEditor || tool == TAction::Polyline)
+    if (tool == TAction::ObjectSelection || tool == TAction::NodesEditor
+        || tool == TAction::Polyline || tool == TAction::Text)
         currentTool->clearSelection();
 
     updateRotationAngleFromRulers(angle);
@@ -301,7 +302,7 @@ void TupDocumentView::updateNodesScale(qreal factor)
         if (tool == TAction::ObjectSelection || tool == TAction::NodesEditor ||
             tool == TAction::Polyline || tool == TAction::Motion ||
             tool == TAction::Rotation || tool == TAction::Shear ||
-            tool == TAction::LipSyncTool)
+            tool == TAction::LipSyncTool || tool == TAction::Text)
             currentTool->resizeNode(1 / nodesScaleFactor);
     }
 }
@@ -546,7 +547,7 @@ void TupDocumentView::loadPlugins()
                       if (toolId == TAction::Ellipse)
                           brushTools[1] = action;
 
-                      // if (toolId == TupToolInterface::Text)
+                      // if (toolId == TAction::Text)
                       //     textAction = action;
                     }
                     break;
@@ -583,6 +584,9 @@ void TupDocumentView::loadPlugins()
 
                       if (toolId == TAction::NodesEditor)
                           nodesAction = action;
+
+                      if (toolId == TAction::Text)
+                          textAction = action;
                     }
                     break;
                     case TupToolInterface::Fill:
@@ -646,17 +650,16 @@ void TupDocumentView::loadPlugins()
     toolbar->addAction(pencilAction);
     toolbar->addAction(inkAction);
     // SQA: Enable it only for debugging goals
-    // toolbar->addAction(k->schemeAction);
+    // toolbar->addAction(schemeAction);
     toolbar->addAction(polyLineAction);
-
-    // SQA: Temporarily disabled
-    // toolbar->addAction(textAction);
 
     toolbar->addSeparator();
     toolbar->addAction(shapesMenu->menuAction());
     toolbar->addSeparator();
     toolbar->addAction(selectionAction);
     toolbar->addAction(nodesAction);
+    toolbar->addSeparator();
+    toolbar->addAction(textAction);
     toolbar->addSeparator();
     toolbar->addAction(fillAction);
     toolbar->addSeparator();
@@ -802,6 +805,11 @@ void TupDocumentView::loadPlugin(int menu, int actionID)
                         action = static_cast<TAction *> (brushActions[2]);
                     }
                     break;
+                    case TAction::Text:
+                    {
+                        action = textAction;
+                    }
+                    break;
                     default:
                     {
                         // No Action
@@ -897,6 +905,8 @@ void TupDocumentView::selectTool()
         QString toolName = tr("%1").arg(action->text());
         TAction::ActionId toolId = action->actionId();
 
+        qDebug() << "1 - ACTION ID -> " << action->actionId();
+
         if (currentTool) {
             if (toolId == currentTool->toolId())
                 return;
@@ -933,8 +943,10 @@ void TupDocumentView::selectTool()
                     minWidth = 130;
                     if (toolId == TAction::Pencil)
                         connect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
+                /*
                 } else if (toolId == TAction::Text) {
-                    minWidth = 350;
+                    minWidth = 130;
+                */
                 } else {
                     if (toolId == TAction::Rectangle || toolId == TAction::Ellipse || toolId == TAction::Line) {
                         minWidth = 130;
@@ -1040,7 +1052,7 @@ void TupDocumentView::selectTool()
 
         if (toolId == TAction::ObjectSelection || toolId == TAction::NodesEditor || toolId == TAction::Polyline
             || toolId == TAction::Motion || toolId == TAction::Rotation || toolId == TAction::Shear
-            || toolId == TAction::LipSyncTool)
+            || toolId == TAction::LipSyncTool || toolId == TAction::Text)
             tool->updateZoomFactor(1 / nodesScaleFactor);
     } else {
         #ifdef TUP_DEBUG
@@ -1058,6 +1070,9 @@ void TupDocumentView::selectToolFromMenu(QAction *action)
     QMenu *menu = qobject_cast<QMenu *>(action->parent());
     if (menu) {
         TAction *tool = qobject_cast<TAction *>(menu->activeAction());
+
+        // qDebug() << "2 - ACTION ID -> " << tool->actionId();
+
         if (tool) {
             if (tool->actionId() == currentTool->toolId())
                 return;

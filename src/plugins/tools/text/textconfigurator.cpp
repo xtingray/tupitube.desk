@@ -34,27 +34,55 @@
  ***************************************************************************/
 
 #include "textconfigurator.h"
+#include "tapplicationproperties.h"
+#include "tseparator.h"
+
+#include <QPushButton>
 
 TextConfigurator::TextConfigurator(QWidget *parent) : QWidget(parent)
 {
-    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
-    setLayout(layout);
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextConfigurator()]";
+    #endif
+    */
+
+    QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
+
+    QLabel *pencilTitle = new QLabel;
+    pencilTitle->setAlignment(Qt::AlignHCenter);
+    QPixmap pencilPic(THEME_DIR + "icons/text.png");
+    pencilTitle->setPixmap(pencilPic.scaledToWidth(16, Qt::SmoothTransformation));
+    pencilTitle->setToolTip(tr("Text Properties"));
+
+    mainLayout->addWidget(pencilTitle);
+    mainLayout->addWidget(new TSeparator(Qt::Horizontal));
 
     m_fontChooser = new TFontChooser;
-    layout->addWidget(m_fontChooser);
+    mainLayout->addWidget(m_fontChooser);
 
+    QLabel *textLabel = new QLabel(tr("Text"));
+    mainLayout->addWidget(textLabel);
     m_text = new QTextEdit(this);
-    layout->addWidget(m_text);
+    mainLayout->addWidget(m_text);
 
-    m_isHtml = new QCheckBox(tr("Html"));
-    layout->addWidget(m_isHtml);
+    QHBoxLayout *buttonLayout = new QHBoxLayout;
+    QPushButton *addButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/plus_sign.png")), "");
+    addButton->setToolTip(tr("Add Text"));
+    addButton->setMaximumWidth(50);
+    connect(addButton, SIGNAL(clicked()), this, SIGNAL(textAdded()));
 
-    layout->addStretch(1);
+    buttonLayout->addStretch(1);
+    buttonLayout->addWidget(new QWidget);
+    buttonLayout->addWidget(addButton, Qt::AlignHCenter);
+    buttonLayout->addWidget(new QWidget);
+    buttonLayout->addStretch(1);
+
+    mainLayout->addLayout(buttonLayout);
+    mainLayout->addStretch(1);
 
     connect(m_fontChooser, SIGNAL(fontChanged()), this, SLOT(changeFont()));
     changeFont();
-
-    // new KSpellHighlighter(m_text->document());
 }
 
 TextConfigurator::~TextConfigurator()
@@ -75,12 +103,11 @@ void TextConfigurator::changeFont()
 {
     font = m_fontChooser->currentFont();
 
-    // kFatal() << "TextConfigurator::changeFont() - Font Family: " << font.family();
-    // kFatal() << "TextConfigurator::changeFont() - Font Style: " << font.style(); 
-    // kFatal() << "TextConfigurator::changeFont() - Font Size: " << font.pointSize();
+    // qDebug() << "[TextConfigurator::changeFont()] - Font Family -> " << font.family();
+    // qDebug() << "[TextConfigurator::changeFont()] - Font Style -> " << font.style();
+    // qDebug() << "[TextConfigurator::changeFont()] - Font Size -> " << font.pointSize();
 
     m_text->setFont(font);
-
     adjustSize();
 }
 
@@ -89,7 +116,9 @@ void TextConfigurator::setDocument(QTextDocument *doc)
     m_text->setDocument(doc);
 }
 
-bool TextConfigurator::isHtml() const
+/*
+void TextConfigurator::sendText()
 {
-    return m_isHtml->isChecked();
+    emit textAdded(m_text->toPlainText());
 }
+*/

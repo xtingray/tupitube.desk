@@ -237,68 +237,74 @@ QPair<int, int> TupToolPlugin::setKeyAction(int key, Qt::KeyboardModifiers modif
             }
             break;
 
+            case Qt::Key_T:
+            {
+                tool = TAction::Text;
+            }
+            break;
+
             case Qt::Key_O:
             {
-                 menu = TAction::SelectionMenu;
-                 tool = TAction::ObjectSelection;
+                menu = TAction::SelectionMenu;
+                tool = TAction::ObjectSelection;
             }
             break;
 
             case Qt::Key_N:
             {
-                 menu = TAction::SelectionMenu;
-                 tool = TAction::NodesEditor;
+                menu = TAction::SelectionMenu;
+                tool = TAction::NodesEditor;
             }
             break;
 
             case Qt::Key_F:
             {
-                 menu = TAction::FillMenu;
-                 tool = TAction::FillTool;
+                menu = TAction::FillMenu;
+                tool = TAction::FillTool;
             }
             break;
 
             case Qt::Key_Left:
             {
-                 menu = TAction::Arrows;
-                 tool = TAction::Left_Arrow;
+                menu = TAction::Arrows;
+                tool = TAction::Left_Arrow;
             }
             break;
 
             case Qt::Key_Right:
             {
-                 menu = TAction::Arrows;
-                 tool = TAction::Right_Arrow;
+                menu = TAction::Arrows;
+                tool = TAction::Right_Arrow;
             }
             break;
 
             case Qt::Key_PageUp:
             case Qt::Key_Up:
             {
-                 menu = TAction::Arrows;
-                 tool = TAction::Up_Arrow;
+                menu = TAction::Arrows;
+                tool = TAction::Up_Arrow;
             }
             break;
 
             case Qt::Key_PageDown:
             case Qt::Key_Down:
             {
-                 menu = TAction::Arrows;
-                 tool = TAction::Down_Arrow;
+                menu = TAction::Arrows;
+                tool = TAction::Down_Arrow;
             }
             break;
 
             case Qt::Key_Delete:
             {
-                 menu = TAction::SelectionMenu;
-                 tool = TAction::Delete;
+                menu = TAction::SelectionMenu;
+                tool = TAction::Delete;
             }
             break;
 
             default:
             {
-                 menu = TAction::InvalidMenu;
-                 tool = TAction::NoAction;
+                menu = TAction::InvalidMenu;
+                tool = TAction::NoAction;
             }
         }
     }

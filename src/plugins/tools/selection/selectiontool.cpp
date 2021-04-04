@@ -136,10 +136,13 @@ void SelectionTool::press(const TupInputDeviceInformation *input, TupBrushManage
     }
 
     if (frame->indexOf(gScene->mouseGrabberItem()) != -1) {
+        qDebug() << "GRABBED!";
         selectedObjects << gScene->mouseGrabberItem();
     } else {
-        if (gScene->selectedItems().count() > 0)
+        if (!gScene->selectedItems().isEmpty()) {
+            qDebug() << "ITEM SELECTED!";
             selectedObjects = gScene->selectedItems();
+        }
     }
 
     foreach (QGraphicsItem *item, selectedObjects) {
@@ -155,6 +158,7 @@ void SelectionTool::press(const TupInputDeviceInformation *input, TupBrushManage
         } else {
             itemIndex = frame->indexOf(item);
         }
+
         if (itemIndex >= 0)
             frame->checkTransformationStatus(type, itemIndex);
 
@@ -170,19 +174,39 @@ void SelectionTool::press(const TupInputDeviceInformation *input, TupBrushManage
             }
             
             if (!found) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[SelectionTool::press()] - Adding node manager to item!";
+                #endif
+
+                qDebug() << "*** ITEM is selectable? -> " << item->ItemIsSelectable;
+                qDebug() << "*** ITEM is selected? -> " << item->isSelected();
                 NodeManager *manager = new NodeManager(item, gScene, nodeZValue);
                 connect(manager, SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
                 connect(manager, SIGNAL(scaleUpdated(double, double)), panel, SLOT(updateScaleFactor(double, double)));
                 manager->show();
                 manager->resizeNodes(realFactor);
                 nodeManagers << manager;
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[SelectionTool::press()] - Item already has node manager!";
+                #endif
             }
-        } 
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[SelectionTool::press()] - Fatal Error: can't serialize item!";
+            #endif
+        }
     }
+
+    qDebug() << "press - COUNT -> " << selectedObjects.count();
 }
 
 void SelectionTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::move()]";
+    #endif
+
     Q_UNUSED(brushManager)
 
     if (input->buttons() == Qt::LeftButton && gScene->selectedItems().count() > 0)
@@ -198,8 +222,15 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
     Q_UNUSED(input)
     Q_UNUSED(brushManager)
 
+    qDebug() << "1 - release - COUNT -> " << selectedObjects.count();
+    // qDebug() << "Is selected? -> " << selectedObjects.at(0)->isSelected();
+    // selectedObjects.at(0)->setSelected(true);
     selectedObjects = gScene->selectedItems();
+    qDebug() << "1A - release - COUNT -> " << selectedObjects.count();
+
     if (selectedObjects.count() > 0) {
+        qDebug() << "2 release - COUNT -> " << selectedObjects.count();
+
         panel->enableFormControls(true);
         activeSelection = true;
         foreach (NodeManager *manager, nodeManagers) {
@@ -216,26 +247,36 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
         }
 
         if (selectedObjects.count() == 1) {
-            foreach (QGraphicsItem *item, selectedObjects) {
-                if (item && (dynamic_cast<TupAbstractSerializable* > (item))) {
-                    if (item->group())
-                        item = qgraphicsitem_cast<QGraphicsItem *>(item->group());
-                    bool found = false;
-                    foreach (NodeManager *manager, nodeManagers) {
-                        if (item == manager->parentItem()) {
-                            found = true;
-                            break;
-                        }
-                    }
+            #ifdef TUP_DEBUG
+                qDebug() << "[SelectionTool::release()] - 1 item selected!";
+            #endif
+            QGraphicsItem *item = selectedObjects.at(0);
+            if (item && (dynamic_cast<TupAbstractSerializable* > (item))) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[SelectionTool::release()] - Item is serializable!";
+                #endif
+                if (item->group())
+                    item = qgraphicsitem_cast<QGraphicsItem *>(item->group());
 
-                    if (!found) {
-                        NodeManager *manager = new NodeManager(item, gScene, nodeZValue);
-                        connect(manager, SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
-                        connect(manager, SIGNAL(scaleUpdated(double, double)), panel, SLOT(updateScaleFactor(double, double)));
-                        manager->show();
-                        manager->resizeNodes(realFactor);
-                        nodeManagers << manager;
+                // Check if the selected item has no nodes
+                bool found = false;
+                foreach (NodeManager *manager, nodeManagers) {
+                    if (item == manager->parentItem()) {
+                        found = true;
+                        break;
                     }
+                }
+
+                if (!found) {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[SelectionTool::release()] - Adding nodes manager to item!";
+                    #endif
+                    NodeManager *manager = new NodeManager(item, gScene, nodeZValue);
+                    connect(manager, SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
+                    connect(manager, SIGNAL(scaleUpdated(double, double)), panel, SLOT(updateScaleFactor(double, double)));
+                    manager->show();
+                    manager->resizeNodes(realFactor);
+                    nodeManagers << manager;
                 }
             }
         }
@@ -248,6 +289,10 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
         updateItemRotation();
         updateItemScale();
     } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[SelectionTool::release()] - No items selected!";
+        #endif
+
         panel->enableFormControls(false);
         if (targetIsIncluded)
             targetIsIncluded = false;
@@ -298,7 +343,7 @@ TupFrame* SelectionTool::frameAt(int sceneIndex, int layerIndex, int frameIndex)
                 frame = layer->frameAt(frameIndex);
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "SelectionTool::frameAt() - Fatal Error: Layer is NULL! -> " + QString::number(layerIndex);
+                    qDebug() << "[SelectionTool::frameAt()] - Fatal Error: Layer is NULL! -> " + QString::number(layerIndex);
                 #endif
             }
         } else {
@@ -451,23 +496,6 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
 
             nodeManagers.clear();
             selectedObjects.clear();
-            /*
-            if (item && (dynamic_cast<TupAbstractSerializable* > (item))) {
-                if (item->group())
-                    item = qgraphicsitem_cast<QGraphicsItem *>(item->group());
-            }
-
-            selectedObjects << item;
-            item->setSelected(true);
-            NodeManager *manager = new NodeManager(item, scene, nodeZValue);
-            connect(manager, SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
-            connect(manager, SIGNAL(scaleUpdated(double, double)), panel, SLOT(updateScaleFactor(double, double)));
-            manager->show();
-            manager->resizeNodes(realFactor);
-            nodeManagers << manager;
-
-            syncNodes();
-            */
         }
         break;
         case TupProjectRequest::Ungroup:
@@ -481,29 +509,6 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
 
             nodeManagers.clear();
             selectedObjects.clear();
-
-            /*
-            QString list = response->getArg().toString();
-            QString::const_iterator itr = list.constBegin();
-            QList<int> positions = TupSvg2Qt::parseIntList(++itr);
-            qSort(positions.begin(), positions.end());
-            int total = positions.size();
-            for (int i=0; i<total; i++) {
-                QGraphicsItem *graphic = frame->item(positions.at(i));     
-                if (graphic) {
-                    selectedObjects << graphic;
-                    graphic->setSelected(true);
-                    NodeManager *manager = new NodeManager(graphic, scene, nodeZValue);
-                    connect(manager, SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
-                    connect(manager, SIGNAL(scaleUpdated(double, double)), panel, SLOT(updateScaleFactor(double, double)));
-                    // manager->show();
-                    manager->resizeNodes(realFactor);
-                    nodeManagers << manager;
-                }
-            }
-
-            syncNodes();
-            */
         }
         break;
         default:
@@ -534,15 +539,26 @@ void SelectionTool::layerResponse(const TupLayerResponse *response)
 
 void SelectionTool::syncNodes()
 {
-    foreach (NodeManager* node, nodeManagers) {
-        if (node) {
-            node->show();
-            if (node->parentItem()) {
-                node->syncNodesFromParent();
-                if (!node->parentItem()->isSelected())
-                    node->parentItem()->setSelected(true);
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::syncNodes()]";
+    #endif
+
+    if (!nodeManagers.isEmpty()) {
+        foreach (NodeManager* node, nodeManagers) {
+            if (node) {
+                node->show();
+                QGraphicsItem *item = node->parentItem();
+                if (item) {
+                    node->syncNodesFromParent();
+                    if (!item->isSelected())
+                        item->setSelected(true);
+                }
             }
         }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[SelectionTool::syncNodes()] - Warning: No node managers!";
+        #endif
     }
 }
 
@@ -811,7 +827,7 @@ void SelectionTool::applyGroupAction(SelectionSettings::Group action)
     }
 }
 
-QCursor SelectionTool::polyCursor() // const
+QCursor SelectionTool::cursor()
 {
     return QCursor(Qt::ArrowCursor);
 }

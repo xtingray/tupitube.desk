@@ -45,6 +45,7 @@
 #include "tuprectitem.h"
 #include "tupellipseitem.h"
 #include "tupwatermark.h"
+#include "tuptextitem.h"
 
 #include <QSvgRenderer>
 #include <QGraphicsView>
@@ -733,8 +734,8 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double 
 
              if (origin == photogram) {
                  #ifdef TUP_DEBUG
-                     qWarning() << "Tween: " << tween->getTweenName();
-                     qWarning() << "Type: " << tween->getType();
+                     qWarning() << "Tween -> " << tween->getTweenName();
+                     qWarning() << "Type -> " << tween->getType();
                      qWarning() << "Adding FIRST tween transformation - photogram -> " << photogram;
                  #endif
 
@@ -821,7 +822,7 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double 
                      return;
 
                  #ifdef TUP_DEBUG
-                     qWarning() << "Adding tween transformation - photogram -> " << QString::number(photogram);
+                     qWarning() << "Adding tween transformation - photogram -> " << photogram;
                  #endif
                  int step = photogram - origin;
                  stepItem = tween->stepAt(step);
@@ -958,9 +959,9 @@ void TupGraphicsScene::addSvgTweeningObjects(int layerIndex, int photogram, doub
 
              if (origin == photogram) {
                  #ifdef TUP_DEBUG
-                     qWarning() << "Tween: " << tween->getTweenName();
-                     qWarning() << "Type: " << tween->getType();
-                     qWarning() << "Adding FIRST SVG tween transformation - photogram -> " + QString::number(photogram);
+                     qWarning() << "Tween -> " << tween->getTweenName();
+                     qWarning() << "Type -> " << tween->getType();
+                     qWarning() << "Adding FIRST SVG tween transformation - photogram -> " << photogram;
                  #endif
 
                  stepItem = tween->stepAt(0);
@@ -1001,7 +1002,7 @@ void TupGraphicsScene::addSvgTweeningObjects(int layerIndex, int photogram, doub
                      return;
 
                  #ifdef TUP_DEBUG
-                     qDebug() << "Adding SVG tween transformation - photogram -> " + QString::number(photogram);
+                     qDebug() << "Adding SVG tween transformation - photogram -> " << photogram;
                  #endif
 
                  int step = photogram - origin;
@@ -1394,11 +1395,9 @@ TupToolPlugin *TupGraphicsScene::currentTool() const
 
 void TupGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupGraphicsScene::mousePressEvent()]";
     #endif
-    */
 
     QGraphicsScene::mousePressEvent(event);
     inputInformation->updateFromMouseEvent(event);
@@ -1421,8 +1420,8 @@ void TupGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
                     gTool->begin();
                     isDrawing = true;
                     gTool->press(inputInformation, brushManager, this);
-                } 
-            } 
+                }
+            }
         }
     }
 }
@@ -1476,11 +1475,9 @@ void TupGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void TupGraphicsScene::mouseReleased(QGraphicsSceneMouseEvent *event)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupGraphicsScene::mouseReleased()]";
     #endif
-    */
 
     if (gTool) {
         if (gTool->toolType() == TupToolInterface::Brush) {
@@ -1500,23 +1497,29 @@ void TupGraphicsScene::mouseReleased(QGraphicsSceneMouseEvent *event)
 
     inputInformation->updateFromMouseEvent(event);
 
+    qDebug() << "*** isDrawing -> " << isDrawing;
     if (isDrawing) {
+        qDebug() << "STEP 0";
         if (gTool) {
+            qDebug() << "STEP 1";
             gTool->release(inputInformation, brushManager, this);
+            qDebug() << "STEP 2";
             gTool->end();
+        } else {
+            qDebug() << "FLAG 1 - No gTool!";
         }
-    } 
+    } else {
+        qDebug() << "FLAG 2 - No drawing!";
+    }
 
     isDrawing = false;
 }
 
 void TupGraphicsScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupGraphicsScene::mouseDoubleClickEvent()]";
     #endif
-    */
 
     QGraphicsScene::mouseDoubleClickEvent(event);
     inputInformation->updateFromMouseEvent(event);
@@ -1684,12 +1687,19 @@ void TupGraphicsScene::setSelectionRange()
         qDebug() << "[TupGraphicsScene::setSelectionRange()]";
     #endif
 
-    if (onionSkin.accessMap.empty() || gTool->toolType() == TupToolInterface::Tweener)
+    if (onionSkin.accessMap.empty() || gTool->toolType() == TupToolInterface::Tweener) {
+        qDebug() << "BLOW ME!";
         return;
+    }
+
+    qDebug() << "TOOL ID -> " << gTool->toolId();
 
     QHash<QGraphicsItem *, bool>::iterator it = onionSkin.accessMap.begin();
-    if (gTool->toolId() == TAction::ObjectSelection || gTool->toolId() == TAction::NodesEditor) {
+    if (gTool->toolId() == TAction::ObjectSelection || gTool->toolId() == TAction::NodesEditor
+        || gTool->toolId() == TAction::Text) {
+        qDebug() << "1 - TRACING TEXT TOOL!";
         while (it != onionSkin.accessMap.end()) {
+            // if item is a tween
             if (!it.value() || it.key()->toolTip().length() > 0) {
                 it.key()->setAcceptedMouseButtons(Qt::NoButton);
                 it.key()->setFlag(QGraphicsItem::ItemIsSelectable, false);
@@ -1697,7 +1707,14 @@ void TupGraphicsScene::setSelectionRange()
             } else {
                 it.key()->setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MidButton | Qt::XButton1
                                                   | Qt::XButton2);
-                if (gTool->toolId() == TAction::ObjectSelection) {
+                if (gTool->toolId() == TAction::Text) {
+                    qDebug() << "2 - TRACING TEXT TOOL!";
+                    if (qgraphicsitem_cast<TupTextItem *>(it.key())) {
+                        qDebug() << "2A - TRACING TEXT TOOL!";
+                        it.key()->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+                    }
+                } else if (gTool->toolId() == TAction::ObjectSelection) {
+                    qDebug() << "TRACING SELECTION TOOL!";
                     it.key()->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
                 } else {
                     it.key()->setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -1706,6 +1723,7 @@ void TupGraphicsScene::setSelectionRange()
             }
             ++it;
         }
+        qDebug() << "3 - TRACING TEXT TOOL!";
     } else {
         while (it != onionSkin.accessMap.end()) {
             it.key()->setAcceptedMouseButtons(Qt::NoButton);
@@ -1713,6 +1731,7 @@ void TupGraphicsScene::setSelectionRange()
             it.key()->setFlag(QGraphicsItem::ItemIsMovable, false);
             ++it;
         }
+        qDebug() << "4 - TRACING TEXT TOOL!";
     }
 }
 
@@ -1763,9 +1782,13 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "[TupGraphicsScene::includeObject()] - Fatal Error: Opacity value is invalid -> "
-                                    + QString::number(opacity);
+                                 << opacity;
                     #endif
                 }
+
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupGraphicsScene::includeObject()] - zValue -> " << zValue;
+                #endif
 
                 object->setZValue(zValue);
                 addItem(object);
@@ -1861,4 +1884,12 @@ void TupGraphicsScene::updateLoadingFlag(bool flag)
 void TupGraphicsScene::setWaterMarkFlag(bool enable)
 {
     showWaterMark = enable;
+}
+
+QSize TupGraphicsScene::getSceneDimension()
+{
+    if (tupScene)
+        return tupScene->getDimension();
+
+    return QSize();
 }

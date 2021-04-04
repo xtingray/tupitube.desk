@@ -58,15 +58,18 @@ class TUPITUBE_PLUGIN TextConfigurator : public QWidget
         QString text() const;
         QFont textFont() const;
         void setDocument(QTextDocument *doc);
-        bool isHtml() const;
+
+    signals:
+        void textAdded();
 
     private slots:
         void changeFont();
 
     private:
+        // void sendText();
+
         QTextEdit *m_text;
         TFontChooser *m_fontChooser;
-        QCheckBox *m_isHtml;
         QFont font;
 };
 

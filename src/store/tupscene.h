@@ -93,6 +93,7 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
         int layersCount() const;
         SoundLayers getSoundLayers() const;
 
+        QSize getDimension();
         void setBasicStructure();
 
         TupLayer *layerAt(int position) const;

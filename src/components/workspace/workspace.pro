@@ -68,8 +68,8 @@ INCLUDEPATH += $$SHELL_DIR
 PLUGIN_DIR = ../../plugins/export/genericexportplugin
 INCLUDEPATH += $$PLUGIN_DIR
 
-SELECTION_DIR = ../../plugins/tools/selection
-INCLUDEPATH += $$SELECTION_DIR
+COMMON_DIR = ../../plugins/tools/common
+INCLUDEPATH += $$COMMON_DIR
 
 POLYLINE_DIR = ../../plugins/tools/polyline
 INCLUDEPATH += $$POLYLINE_DIR

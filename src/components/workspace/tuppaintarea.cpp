@@ -161,21 +161,6 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
 
     if (currentTool == TAction::ObjectSelection) {
         if (event->buttons() == Qt::RightButton) {
-            /*
-            // If a node is the target... abort!
-            if (qgraphicsitem_cast<Node *>(scene()->itemAt(mapToScene(event->pos()), QTransform()))) {
-                #ifdef TUP_DEBUG
-                    QString msg = "TupPaintArea::mousePressEvent() - Node is the target - Aborting right menu!";
-                    #ifdef Q_OS_WIN
-                        qDebug() << msg;
-                    #else
-                        tFatal() << msg;
-                    #endif
-                #endif
-                return;
-            }
-            */
-
             QMenu *menu = new QMenu(tr("Drawing area"));
             menu->addAction(kApp->findGlobalAction("undo"));
             menu->addAction(kApp->findGlobalAction("redo"));
@@ -781,28 +766,6 @@ void TupPaintArea::deleteItems()
         }
     }
 }
-
-/*
-void TupPaintArea::ungroupItems()
-{
-    QList<QGraphicsItem *> selected = scene()->selectedItems();
-    if (!selected.isEmpty()) {
-        TupGraphicsScene* currentScene = graphicsScene();
-        if (currentScene) {
-            foreach (QGraphicsItem *item, selected) {
-                     TupProjectRequest event = TupRequestBuilder::createItemRequest( 
-                                              currentScene->currentSceneIndex(),
-                                              currentScene->currentLayerIndex(), 
-                                              currentScene->currentFrameIndex(), 
-                                              currentScene->currentFrame()->indexOf(item), QPointF(), 
-                                              spaceMode, TupLibraryObject::Item,
-                                              TupProjectRequest::Ungroup);
-                     emit requestTriggered(&event);
-            }
-        }
-    }
-}
-*/
 
 void TupPaintArea::copyItems()
 {

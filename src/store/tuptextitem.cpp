@@ -39,6 +39,7 @@
 #include <QFont>
 #include <QFocusEvent>
 #include <QTimer>
+#include <QTextCursor>
 
 TupTextItem::TupTextItem(QGraphicsItem *parent) : QGraphicsTextItem(parent), textFlags(flags()), isEditable(false)
 {
@@ -52,7 +53,7 @@ TupTextItem::~TupTextItem()
 
 void TupTextItem::fromXml(const QString &xml)
 {
-    Q_UNUSED(xml);
+    Q_UNUSED(xml)
 }
 
 QDomElement TupTextItem::toXml(QDomDocument &doc) const
@@ -78,10 +79,20 @@ void TupTextItem::setEditable(bool editable)
         setTextInteractionFlags(Qt::TextEditorInteraction);
         setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsFocusable);
         setFocus(Qt::MouseFocusReason);
+
+        /*
+        setTextInteractionFlags(Qt::TextEditorInteraction);
+        setFocus(Qt::MouseFocusReason);
+        setSelected(true); // this ensures that itemChange() gets called when we click out of the item
+        QTextCursor c = textCursor();
+        c.select(QTextCursor::Document);
+        setTextCursor(c);
+        */
     } else {
         setTextInteractionFlags(Qt::TextBrowserInteraction);
         setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable); // restore flags
     }
+
     update();
 }
 
@@ -102,6 +113,8 @@ void TupTextItem::focusOutEvent(QFocusEvent * event)
 
 void TupTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
+
     setEditable(true);
+    QGraphicsTextItem::mouseDoubleClickEvent(event);
 }

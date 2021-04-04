@@ -121,8 +121,9 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         TupInputDeviceInformation * inputDeviceInformation();
 
         void updateLoadingFlag(bool flag);
-
         void setWaterMarkFlag(bool enable);
+
+        QSize getSceneDimension();
 
     // private slots:
     //  void updateObjectInformation(const QString &value);

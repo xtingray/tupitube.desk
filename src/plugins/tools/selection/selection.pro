@@ -17,13 +17,9 @@ INSTALLS += target
 target.path = /plugins/
 
 HEADERS += selectiontool.h \
-           node.h \
-           nodemanager.h \ 
            selectionsettings.h
 
 SOURCES += selectiontool.cpp \
-           node.cpp \
-           nodemanager.cpp \ 
            selectionsettings.cpp
 
 FRAMEWORK_DIR = "../../../framework"

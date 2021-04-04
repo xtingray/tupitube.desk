@@ -52,7 +52,7 @@ TupRectItem::~TupRectItem()
 
 void TupRectItem::fromXml(const QString &xml)
 {
-    Q_UNUSED(xml);
+    Q_UNUSED(xml)
 }
 
 QDomElement TupRectItem::toXml(QDomDocument &doc) const
@@ -94,7 +94,8 @@ void TupRectItem::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 
 void TupRectItem::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
+
     dragOver = false;
     update();
 }

@@ -1532,6 +1532,10 @@ void TupFrame::checkTransformationStatus(TupLibraryObject::Type itemType, int in
         if (item) {
             if (item->transformationIsNotEdited())
                 item->saveInitTransformation();
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupFrame::checkTransformationStatus()] - Fatal Error: Can't find SVG object!";
+            #endif
         }
         return;
     }
@@ -1540,13 +1544,17 @@ void TupFrame::checkTransformationStatus(TupLibraryObject::Type itemType, int in
     if (object) {
         if (object->transformationIsNotEdited())
             object->saveInitTransformation();
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupFrame::checkTransformationStatus()] - Fatal Error: Can't find graphic object!";
+        #endif
     }
 }
 
 void TupFrame::storeItemTransformation(TupLibraryObject::Type itemType, int index, const QString &properties)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupFrame::storeItemTransformation() - properties -> " << properties;
+        qDebug() << "[TupFrame::storeItemTransformation()] - properties -> " << properties;
     #endif
 
     if (itemType == TupLibraryObject::Svg) {

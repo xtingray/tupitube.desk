@@ -1,6 +1,6 @@
 QT += xml opengl svg
 
-INCLUDEPATH += ../plugins/tools/selection
+INCLUDEPATH += ../plugins/tools/common
 
 MYPAINT_DIR = ../mypaint
 LIBCOLOR_DIR = ../libcolor
