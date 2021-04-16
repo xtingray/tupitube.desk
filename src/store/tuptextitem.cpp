@@ -36,15 +36,11 @@
 #include "tuptextitem.h"
 #include "tupserializer.h"
 
-#include <QFont>
-#include <QFocusEvent>
-#include <QTimer>
-#include <QTextCursor>
+#include <QTextDocument>
 
-TupTextItem::TupTextItem(QGraphicsItem *parent) : QGraphicsTextItem(parent), textFlags(flags()), isEditable(false)
+TupTextItem::TupTextItem(QGraphicsItem *parent) : QGraphicsTextItem(parent), textFlags(flags())
 {
-    setOpenExternalLinks(true);
-    setEditable(false);
+    setAcceptDrops(true);
 }
 
 TupTextItem::~TupTextItem()
@@ -59,62 +55,24 @@ void TupTextItem::fromXml(const QString &xml)
 QDomElement TupTextItem::toXml(QDomDocument &doc) const
 {
     QDomElement root = doc.createElement("text");
-    QDomText text = doc.createTextNode(toHtml());
+    QDomText text = doc.createTextNode(toPlainText());
     root.appendChild(text);
-    
-    root.appendChild(TupSerializer::properties(this, doc));
-    QFont font = this->font();
-    
+
+    QTextOption option = this->document()->defaultTextOption();
+    root.appendChild(TupSerializer::properties(this, doc, this->data(0).toString(), textWidth(), option.alignment()));
+    QFont font = this->font();    
     root.appendChild(TupSerializer::font(&font, doc));
-    
+    QBrush brush(this->defaultTextColor());
+    root.appendChild(TupSerializer::brush(&brush, doc));
+
+    qDebug() << "";
+    qDebug() << "XML:";
+    qDebug() << "" << doc.toString();
+
     return root;
 }
 
-void TupTextItem::setEditable(bool editable)
+bool TupTextItem::contains(const QPointF &point) const
 {
-    isEditable = editable;
-    
-    if (editable) {
-        textFlags = flags(); // save flags
-        setTextInteractionFlags(Qt::TextEditorInteraction);
-        setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsFocusable);
-        setFocus(Qt::MouseFocusReason);
-
-        /*
-        setTextInteractionFlags(Qt::TextEditorInteraction);
-        setFocus(Qt::MouseFocusReason);
-        setSelected(true); // this ensures that itemChange() gets called when we click out of the item
-        QTextCursor c = textCursor();
-        c.select(QTextCursor::Document);
-        setTextCursor(c);
-        */
-    } else {
-        setTextInteractionFlags(Qt::TextBrowserInteraction);
-        setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable); // restore flags
-    }
-
-    update();
-}
-
-void TupTextItem::toggleEditable()
-{
-    setEditable(!isEditable);
-}
-
-void TupTextItem::focusOutEvent(QFocusEvent * event)
-{
-    QGraphicsTextItem::focusOutEvent(event);
-
-    if (textInteractionFlags() & Qt::TextEditorInteraction && isEditable) {
-        QTimer::singleShot(0, this, SLOT(toggleEditable()));
-        emit edited();
-    }
-}
-
-void TupTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_UNUSED(event)
-
-    setEditable(true);
-    QGraphicsTextItem::mouseDoubleClickEvent(event);
+    return QGraphicsTextItem::contains(point);
 }

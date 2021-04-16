@@ -77,7 +77,8 @@ class TUPITUBE_EXPORT TupCommandExecutor : public QObject
 
         bool setBrush(TupItemResponse *response);
         bool setPen(TupItemResponse *response);
-        
+        bool setTextColor(TupItemResponse *response);
+
         bool removeScene(TupSceneResponse *response);
         bool removeLayer(TupLayerResponse *response);
         bool removeLipSync(TupLayerResponse *response);

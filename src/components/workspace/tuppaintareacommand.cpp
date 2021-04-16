@@ -38,6 +38,10 @@
 
 TupPaintAreaCommand::TupPaintAreaCommand(TupPaintArea *area, const TupPaintAreaEvent *paintEvent) : QUndoCommand()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintAreaCommand::TupPaintAreaCommand()]";
+    #endif
+
     paintArea = area;
     event = paintEvent->clone();
 }

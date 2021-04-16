@@ -164,6 +164,11 @@ class TUPITUBE_EXPORT TupFrame : public QObject, public TupAbstractSerializable
        void setPenAtItem(int itemIndex, const QString &xml);
        void redoPenAction(int itemIndex);
        void undoPenAction(int itemIndex);
+
+       void checkTextColorStatus(int itemIndex);
+       void setTextColorAtItem(int itemIndex, const QString &color, int alpha);
+       void redoTextColorAction(int itemIndex);
+       void undoTextColorAction(int itemIndex);
        
     public:
        virtual void fromXml(const QString &xml);

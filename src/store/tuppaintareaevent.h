@@ -49,7 +49,8 @@ class TUPITUBE_EXPORT TupPaintAreaEvent
              ChangePenColor,
              ChangePenThickness,
              ChangeBrush,
-             ChangeBgColor
+             ChangeBgColor,
+             ChangeTextColor
           };
 
         TupPaintAreaEvent(Action act, const QVariant &variant);

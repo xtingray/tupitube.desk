@@ -155,7 +155,7 @@ TupLayer *TupScene::createLayer(QString name, int position, bool loadingFromFile
 {
     if (position < 0 || position > layers.count()) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupScene::createLayer() - Invalid index -> " + QString::number(position);
+            qDebug() << "[TupScene::createLayer()] - Invalid index -> " + QString::number(position);
         #endif    
         
         return nullptr;
@@ -187,7 +187,7 @@ TupSoundLayer *TupScene::createSoundLayer(int position, bool loadingFromFile)
     
     if (position < 0 || position > soundLayers.count()) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupScene::createSoundLayer() - [ Fatal Error ] - Index incorrect!";
+            qDebug() << "[TupScene::createSoundLayer()] - Fatal Error: Index incorrect!";
         #endif        
         return nullptr;
     }
@@ -253,9 +253,9 @@ TupLayer *TupScene::layerAt(int index) const
 {
     if (index < 0 || index >= layers.count()) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupScene::layerAt() - FATAL ERROR: LAYERS TOTAL -> " << layers.count();
-            qDebug() << "TupScene::layerAt() - FATAL ERROR: index out of bound -> " << index;
-            qDebug() << "TupScene::layerAt() - FATAL ERROR: The layer requested doesn't exist anymore";
+            qDebug() << "[TupScene::layerAt()] - Fatal Error: LAYERS TOTAL -> " << layers.count();
+            qDebug() << "[TupScene::layerAt()] - Fatal Error: index out of bound -> " << index;
+            qDebug() << "[TupScene::layerAt()] - Fatal Error: The layer requested doesn't exist anymore";
         #endif
         return nullptr;
     }
@@ -267,7 +267,7 @@ TupSoundLayer *TupScene::soundLayer(int index) const
 {
     if (index < 0 || index >= soundLayers.count()) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupScene::fromXml() - FATAL ERROR: index out of bound -> " << index;
+            qDebug() << "[TupScene::fromXml()] - Fatal Error: index out of bound -> " << index;
         #endif
         return nullptr;
     }
@@ -284,7 +284,7 @@ void TupScene::fromXml(const QString &xml)
     QDomDocument doc;
     if (!doc.setContent(xml)) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupScene::fromXml() - Error while processing XML file";
+            qDebug() << "[TupScene::fromXml()] - Error while processing XML file";
         #endif  
         return;
     }
@@ -368,7 +368,7 @@ bool TupScene::moveLayer(int from, int to)
 {
     if (from < 0 || from >= layers.count() || to < 0 || to >= layers.count()) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupScene::moveLayer() - FATAL ERROR: Layer index out of bound " + QString::number(to);
+            qDebug() << "[TupScene::moveLayer()] - Fatal Error: Layer index out of bound " << to;
         #endif
         return false;
     }

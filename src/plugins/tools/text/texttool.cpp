@@ -46,8 +46,13 @@
 
 TextTool::TextTool()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextTool::TextTool()]";
+    #endif
+
     config = new TextConfigurator;
     connect(config, SIGNAL(textAdded()), this, SLOT(insertText()));
+    connect(config, SIGNAL(textUpdated()), this, SLOT(updateText()));
 
     setupActions();
 }
@@ -58,15 +63,21 @@ TextTool::~TextTool()
 
 void TextTool::init(TupGraphicsScene *gScene)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextTool::init()]";
+    #endif
+
     scene = gScene;
     clearSelection();
     scene->clearSelection();
 
     nodeZValue = ((BG_LAYERS + 1) * ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
-    // initItems(scene);
+    if (scene->getSpaceContext() == TupProject::VECTOR_FG_MODE)
+        nodeZValue += ZLAYER_LIMIT;
+
+    initItems(scene);
 }
 
-/*
 void TextTool::initItems(TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
@@ -76,7 +87,6 @@ void TextTool::initItems(TupGraphicsScene *gScene)
     foreach (QGraphicsView *view, gScene->views())
         view->setDragMode(QGraphicsView::RubberBandDrag);
 }
-*/
 
 QList<TAction::ActionId> TextTool::keys() const 
 {
@@ -99,20 +109,12 @@ void TextTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
 
     activeSelection = false;
 
-    // User clicked on background
-    QList<QGraphicsItem *> list = scene->items(input->pos(), Qt::IntersectsItemShape, Qt::DescendingOrder, QTransform());
-    if (list.isEmpty()) {
-        if (manager) {
-            manager->parentItem()->setSelected(false);
-            manager->clear();
-            // manager = nullptr;
-            scene->drawCurrentPhotogram();
-        }
-        return;
-    }
+    foreach (QGraphicsView *view, scene->views())
+        view->setDragMode(QGraphicsView::RubberBandDrag);
 
     QList<QGraphicsItem *> currentSelection;
     frame = getCurrentFrame();
+    // User clicked the item directly
     if (frame->indexOf(scene->mouseGrabberItem()) != -1) {
         currentSelection << scene->mouseGrabberItem();
     } else {
@@ -120,23 +122,59 @@ void TextTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
             currentSelection = scene->selectedItems();
     }
 
-    qDebug() << "COUNT - scene->selectedItems().count() -> " << scene->selectedItems().count();
-    qDebug() << "COUNT - currentSelection.count() -> " << currentSelection.count();
-
     if (!currentSelection.isEmpty()) {
+        for(int i=1; i<currentSelection.size(); i++)
+            currentSelection.at(i)->setSelected(false);
+
         QGraphicsItem *item = currentSelection.at(0);
-        if (qgraphicsitem_cast<TupTextItem *>(item)) {
-            qDebug() << "ADDING MANAGER!";
-            manager = nullptr;
-            manager = new NodeManager(item, scene, nodeZValue);
+        if (TupTextItem *textItem = qgraphicsitem_cast<TupTextItem *>(item)) {
+            if (!manager) {
+                if (!item->isSelected())
+                    item->setSelected(true);
+                manager = new NodeManager(item, scene, nodeZValue);
+            } else {
+                QGraphicsItem *parent = manager->parentItem();
+                if (parent) {
+                    if (item != parent) {
+                        if (!item->isSelected())
+                            item->setSelected(true);
+
+                        parent->setSelected(false);
+                        manager->clear();
+                        manager = nullptr;
+                        manager = new NodeManager(item, scene, nodeZValue);
+                    }
+                }
+            }            
             manager->show();
             manager->resizeNodes(realFactor);
+
             activeSelection = true;
+            config->loadTextSettings(textItem->font(), textItem->data(0).toString());
         } else {
-            qDebug() << "SELECTION IS NOT A TEXT!";
+            #ifdef TUP_DEBUG
+                qDebug() << "[TextTool::press()] - Warning: Object is not a text item!";
+            #endif
         }
     } else {
-        qDebug() << "SELECTION IS EMPTY!";
+        #ifdef TUP_DEBUG
+            qDebug() << "[TextTool::press()] - Warning: Selection is empty!";
+        #endif
+        // User clicked on background
+        QList<QGraphicsItem *> list = scene->items(input->pos(), Qt::IntersectsItemShape, Qt::DescendingOrder, QTransform());
+        if (list.isEmpty()) {
+            if (manager) {
+                manager->parentItem()->setSelected(false);
+                manager->clear();
+                manager = nullptr;
+
+                scene->drawCurrentPhotogram();
+            }
+            config->updateMode(TextConfigurator::Add);
+            #ifdef TUP_DEBUG
+                qDebug() << "[TextTool::press()] - User clicked on background... exiting!";
+            #endif
+        }
     }
 }
 
@@ -150,8 +188,6 @@ void TextTool::move(const TupInputDeviceInformation *input, TupBrushManager *bru
     Q_UNUSED(scene)
     Q_UNUSED(brushManager)
 
-    // if (input->buttons() == Qt::LeftButton && scene->selectedItems().count() > 0)
-    // if (input->buttons() == Qt::LeftButton && manager)
     if (input->buttons() == Qt::LeftButton && activeSelection)
         QTimer::singleShot(0, this, SLOT(syncNodes()));
 }
@@ -164,15 +200,38 @@ void TextTool::release(const TupInputDeviceInformation *input, TupBrushManager *
 
     Q_UNUSED(input)
     Q_UNUSED(brushManager)
-    Q_UNUSED(scene)
+    // Q_UNUSED(scene)
 
     if (manager) {
         activeSelection = true;
         if (manager->isModified())
             requestTransformation(manager->parentItem(), frame);
+    } else {
+        QList<QGraphicsItem *> currentSelection = scene->selectedItems();
+        if (currentSelection.count() > 0) {
+            for(int i=1; i<currentSelection.size(); i++)
+                currentSelection.at(i)->setSelected(false);
+
+            QGraphicsItem *item = currentSelection.at(0);
+            if (TupTextItem *textItem = qgraphicsitem_cast<TupTextItem *>(item)) {
+                if (!textItem->isSelected())
+                    textItem->setSelected(true);
+
+                manager = new NodeManager(textItem, scene, nodeZValue);
+                manager->show();
+                manager->resizeNodes(realFactor);
+
+                activeSelection = true;
+                // config->loadTextSettings(text->font(), text->toPlainText());
+                config->loadTextSettings(textItem->font(), textItem->data(0).toString());
+            } else {
+                item->setSelected(false);
+            }
+        }
     }
 }
 
+/*
 void TextTool::doubleClick(const TupInputDeviceInformation *input, TupGraphicsScene *scene)
 {
     #ifdef TUP_DEBUG
@@ -182,14 +241,20 @@ void TextTool::doubleClick(const TupInputDeviceInformation *input, TupGraphicsSc
     Q_UNUSED(input)
     Q_UNUSED(scene)
 
-    /*
     QList<QGraphicsItem *> list = scene->items(input->pos(), Qt::IntersectsItemShape, Qt::DescendingOrder, QTransform());
     if (!list.isEmpty()) {
         TupTextItem *item = qgraphicsitem_cast<TupTextItem *>(list.at(0));
-        item->setEditable(true);
+        if (item) {
+            if (manager) {
+                if (manager->parentItem() == item) {
+                    manager->clear();
+                }
+            }
+            item->setEditable(true);
+        }
     }
-    */
 }
+*/
 
 TupFrame* TextTool::frameAt(int sceneIndex, int layerIndex, int frameIndex)
 {
@@ -232,6 +297,19 @@ void TextTool::itemResponse(const TupItemResponse *response)
         qDebug() << "[TextTool::itemResponse()] - action -> " << response->getAction();
         qDebug() << "[TextTool::itemResponse()] - item index -> " << response->getItemIndex();
     #endif
+
+    if (response->getAction() == TupProjectRequest::Remove) {
+        if (manager) {
+            if (manager->parentItem())
+                manager->parentItem()->setSelected(false);
+            manager->clear();
+            manager = nullptr;
+        }
+        activeSelection = false;
+        config->resetText();
+
+        return;
+    }
 
     QGraphicsItem *item = nullptr;
     TupFrame *frame = frameAt(response->getSceneIndex(), response->getLayerIndex(), response->getFrameIndex());
@@ -305,8 +383,8 @@ void TextTool::sceneResponse(const TupSceneResponse *event)
 {
     Q_UNUSED(event)
 
-    // if (event->getAction() == TupProjectRequest::Select)
-    //     initItems(scene);
+    if (event->getAction() == TupProjectRequest::Select)
+        initItems(scene);
 }
 
 QMap<TAction::ActionId, TAction *> TextTool::actions() const
@@ -356,14 +434,39 @@ void TextTool::saveConfig()
 
 void TextTool::insertText()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextTool::insertText()]";
+    #endif
+
     QString text = config->text();
     if (!text.isEmpty()) {
         TupTextItem *textItem = new TupTextItem;
-        textItem->setDefaultTextColor(Qt::black);
-        textItem->setPlainText(config->text());
-        textItem->setFont(config->textFont());
+        QTextOption option = textItem->document()->defaultTextOption();
+        option.setAlignment(config->textAlignment());
+        textItem->document()->setDefaultTextOption(option);
+
+        QColor textColor(Qt::black);
+        textColor.setAlpha(100);
+        textItem->setDefaultTextColor(textColor);
+        QFont font = config->textFont();
+        QString text = config->text();
+        textItem->setFont(font);
+
+        textItem->setPlainText(text);
+        textItem->setData(0, text);
 
         int textW = static_cast<int>(textItem->boundingRect().width());
+
+        QFontMetrics fm(font);
+        QStringList list = text.split("\n");
+        int longerLine = 0;
+        foreach (QString sentence, list) {
+            int width = fm.horizontalAdvance(sentence);
+            if (width > longerLine)
+                longerLine = width;
+        }
+
+        textItem->setTextWidth(longerLine + 9);
         int textH = static_cast<int>(textItem->boundingRect().height());
 
         QSize dimension = scene->getSceneDimension();
@@ -375,11 +478,6 @@ void TextTool::insertText()
             yPos = (dimension.height() - textH) / 2;
 
         QPointF pos = QPointF(xPos, yPos);
-        qDebug() << "POS -> " << pos;
-        qDebug() << "dimension -> " << dimension;
-        qDebug() << "Text W -> " << textW;
-        qDebug() << "Text H -> " << textH;
-
         textItem->setPos(pos);
         scene->includeObject(textItem);
 
@@ -392,6 +490,40 @@ void TextTool::insertText()
         emit requested(&request);
     } else {
         TOsd::self()->display(TOsd::Warning, tr("Sorry, text can't be empty!"));
+    }
+}
+
+void TextTool::updateText()
+{
+    if (manager) {
+        QGraphicsItem *item = manager->parentItem();
+        if (TupTextItem *textItem = qgraphicsitem_cast<TupTextItem *>(item)) {
+            QTextOption option = textItem->document()->defaultTextOption();
+            option.setAlignment(config->textAlignment());
+            textItem->document()->setDefaultTextOption(option);
+
+            QString text = config->text();
+            QFont font = config->textFont();
+            textItem->setFont(font);
+            textItem->setPlainText(text);
+            textItem->setData(0, text);
+
+            QFontMetrics fm(font);
+            QStringList list = text.split("\n");
+            int longerLine = 0;
+            foreach (QString sentence, list) {
+                int width = fm.horizontalAdvance(sentence);
+                if (width > longerLine)
+                    longerLine = width;
+            }
+
+            textItem->setTextWidth(longerLine + 9);
+            manager->syncNodesFromParent();
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TextTool::updateText()] - Warning: No item selected!";
+        #endif
     }
 }
 
@@ -421,11 +553,13 @@ void TextTool::syncNodes()
             if (!item->isSelected())
                 item->setSelected(true);
         } else {
-            qDebug() << "NO ITEM!";
+            #ifdef TUP_DEBUG
+                qDebug() << "[TextTool::syncNodes()] - Fatal Error: Item is NULL!";
+            #endif
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TextTool::syncNodes()] - Warning: No node managers!";
+            qDebug() << "[TextTool::syncNodes()] - Fatal Error: Node manager is NULL!";
         #endif
     }
 }
@@ -489,6 +623,10 @@ TupFrame* TextTool::getCurrentFrame()
 
 void TextTool::keyPressEvent(QKeyEvent *event)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextTool::keyPressEvent()] - key -> " << event->key();
+    #endif
+
     if (event->key() == Qt::Key_F11 || event->key() == Qt::Key_Escape) {
         emit closeHugeCanvas();
     } else {
@@ -536,7 +674,6 @@ void TextTool::clearSelection()
         if (manager) {
             manager->parentItem()->setSelected(false);
             manager->clear();
-            // manager = nullptr;
         }
 
         activeSelection = false;

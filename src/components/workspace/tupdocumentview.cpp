@@ -1581,15 +1581,6 @@ void TupDocumentView::setSpaceContext()
     #endif
 
     TupProject::Mode mode = TupProject::Mode(spaceModeCombo->currentIndex());
-    if (currentTool) {
-        if (((currentTool->toolType() == TupToolInterface::Tweener)
-            || (currentTool->toolType() == TupToolInterface::LipSync))
-            && (mode != TupProject::FRAMES_MODE)) {
-            pencilAction->trigger();
-        } else {
-            currentTool->init(paintArea->graphicsScene());
-        }
-    }
 
     switch (mode) {
         case TupProject::FRAMES_MODE:
@@ -1653,6 +1644,17 @@ void TupDocumentView::setSpaceContext()
 
     paintArea->updateSpaceContext();
     paintArea->updatePaintArea();
+
+    if (currentTool) {
+        if (((currentTool->toolType() == TupToolInterface::Tweener)
+            || (currentTool->toolType() == TupToolInterface::LipSync))
+            && (mode != TupProject::FRAMES_MODE)) {
+            pencilAction->trigger();
+        } else {
+            currentTool->init(paintArea->graphicsScene());
+        }
+    }
+
     emit modeHasChanged(mode);
 }
 

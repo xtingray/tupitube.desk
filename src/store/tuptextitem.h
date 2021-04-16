@@ -40,9 +40,6 @@
 #include "tupabstractserializable.h"
 
 #include <QGraphicsTextItem>
-#include <QFont>
-#include <QFocusEvent>
-#include <QTimer>
 
 class TUPITUBE_EXPORT TupTextItem : public QGraphicsTextItem, public TupAbstractSerializable
 {
@@ -54,22 +51,10 @@ class TUPITUBE_EXPORT TupTextItem : public QGraphicsTextItem, public TupAbstract
         
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
-        
-        void setEditable(bool editable);
-        
-    public slots:
-        void toggleEditable();
-        
-    signals:
-        void edited();
-        
-    protected:
-        virtual void focusOutEvent(QFocusEvent * event);
-        virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
-        
+        bool contains(const QPointF &point) const;
+
     private:
         GraphicsItemFlags textFlags;
-        bool isEditable;
 };
 
 #endif

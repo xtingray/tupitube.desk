@@ -52,7 +52,7 @@ class TUPITUBE_EXPORT TupRectItem : public QGraphicsRectItem, public TupAbstract
         TupRectItem(const QRectF & rect, QGraphicsItem *parent = nullptr);
         ~TupRectItem();
 
-        bool contains(const QPointF & point) const;
+        bool contains(const QPointF &point) const;
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
         

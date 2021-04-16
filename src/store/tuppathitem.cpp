@@ -77,32 +77,6 @@ void TupPathItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
 bool TupPathItem::contains(const QPointF &point) const
 {
-    /*
-    double thickness = 4;
-    QRectF rectS(point-QPointF(thickness/2,thickness/2) , QSizeF(thickness,thickness));
-    
-    QPolygonF pol = shape().toFillPolygon();
-    pol.pop_back();
-    pol.pop_front();
-    
-    foreach (QPointF point, pol) {
-             if (rectS.contains( point))
-                 return true;
-    }
-    
-    QPolygonF::iterator it1 = pol.begin();
-    QPolygonF::iterator it2 = pol.begin()+1;
-    
-    while (it2 != pol.end()) {
-           if (TupGraphicalAlgorithm::intersectLine((*it1), (*it2), rectS))
-               return true;
-           ++it1;
-           ++it2;
-    }
-    
-    return false;
-    */
-
     return QGraphicsPathItem::contains(point);
 }
 

@@ -37,6 +37,7 @@
 #include "tuplayer.h"
 #include "tupscene.h"
 #include "tupserializer.h"
+#include "tuptextitem.h"
 
 TupGraphicObject::TupGraphicObject(QGraphicsItem *graphic, TupFrame *parent) : QObject(parent)
 {
@@ -63,15 +64,18 @@ TupGraphicObject::~TupGraphicObject()
 
 void TupGraphicObject::fromXml(const QString &xml)
 {
-    Q_UNUSED(xml);
+    Q_UNUSED(xml)
 }
 
 QDomElement TupGraphicObject::toXml(QDomDocument &doc) const
 {
     QDomElement object = doc.createElement("object");
 
-    if (TupAbstractSerializable *serialData = dynamic_cast<TupAbstractSerializable *>(graphicItem))
+    if (TupTextItem *textItem = dynamic_cast<TupTextItem *>(graphicItem)) {
+        object.appendChild(textItem->toXml(doc));
+    } else if (TupAbstractSerializable *serialData = dynamic_cast<TupAbstractSerializable *>(graphicItem)) {
         object.appendChild(serialData->toXml(doc));
+    }
 
     int total = tweens.count();
     for(int i=0; i < total; i++)
@@ -381,6 +385,64 @@ void TupGraphicObject::undoPenAction()
 
                 TupSerializer::loadPen(pen, doc.documentElement());
                 shape->setPen(pen);
+            }
+        }
+    }
+}
+
+bool TupGraphicObject::textColorIsNotEdited()
+{
+    return textColorDoList.isEmpty() && textColorUndoList.isEmpty();
+}
+
+void TupGraphicObject::saveInitTextColor()
+{
+    if (QGraphicsTextItem *textItem = qgraphicsitem_cast<QGraphicsTextItem *>(graphicItem)) {
+        QColor textColor = textItem->defaultTextColor();
+        Color color;
+        color.name = textColor.name();
+        color.alpha = textColor.alpha();
+        textColorDoList << color;
+    }
+}
+
+void TupGraphicObject::setTextColor(const QString &colorName, int alpha)
+{
+    if (QGraphicsTextItem *textItem = qgraphicsitem_cast<QGraphicsTextItem *>(graphicItem)) {
+        QColor textColor(colorName);
+        textColor.setAlpha(alpha);
+        textItem->setDefaultTextColor(textColor);
+
+        Color color;
+        color.name = colorName;
+        color.alpha = alpha;
+        textColorDoList << color;
+    }
+}
+
+void TupGraphicObject::redoTextColorAction()
+{
+    if (!textColorUndoList.isEmpty()) {
+        if (QGraphicsTextItem *textItem = qgraphicsitem_cast<QGraphicsTextItem *>(graphicItem)) {
+            Color color = textColorUndoList.takeLast();
+            textColorDoList << color;
+            QColor textColor(color.name);
+            textColor.setAlpha(color.alpha);
+            textItem->setDefaultTextColor(textColor);
+        }
+    }
+}
+
+void TupGraphicObject::undoTextColorAction()
+{
+    if (textColorDoList.count() > 1) {
+        if (QGraphicsTextItem *textItem = qgraphicsitem_cast<QGraphicsTextItem *>(graphicItem)) {
+            textColorUndoList << textColorDoList.takeLast();
+            if (!textColorDoList.isEmpty()) {
+                Color color = textColorDoList.last();
+                QColor textColor(color.name);
+                textColor.setAlpha(color.alpha);
+                textItem->setDefaultTextColor(textColor);
             }
         }
     }

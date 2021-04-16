@@ -60,7 +60,7 @@ TupEllipseItem::~TupEllipseItem()
 
 void TupEllipseItem::fromXml(const QString &xml)
 {
-    Q_UNUSED(xml);
+    Q_UNUSED(xml)
 }
 
 QDomElement TupEllipseItem::toXml(QDomDocument &doc) const
@@ -128,7 +128,8 @@ void TupEllipseItem::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 
 void TupEllipseItem::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
+
     dragOver = false;
     update();
 }

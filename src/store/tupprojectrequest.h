@@ -72,7 +72,7 @@ class TUPITUBE_EXPORT TupProjectRequest
             None = 0,
             Add = 1,
             Remove = -Add,
-            RemoveSelection = 2, 
+            RemoveSelection = 2,
             Reset = 3,
             Exchange = 4,
             Move = 5,
@@ -90,8 +90,9 @@ class TUPITUBE_EXPORT TupProjectRequest
             EditNodes = 13,
             Pen = 14,
             Brush = 15,
-            InsertSymbolIntoFrame = 16,
-            RemoveSymbolFromFrame = 17,
+            TextColor = 16,
+            InsertSymbolIntoFrame = 17,
+            RemoveSymbolFromFrame = -InsertSymbolIntoFrame,
 
             SetTween = 18,
             UpdateTween = 19,
@@ -105,24 +106,24 @@ class TUPITUBE_EXPORT TupProjectRequest
             CopySelection = 25,
             Paste = 26,
             PasteSelection = 27,
-            ReverseSelection = 28,
+            ReverseSelection = -PasteSelection,
 
             // scenes
-            GetInfo = 29,
-            BgColor = 30,
+            GetInfo = 28,
+            BgColor = 29,
 
             // layer
-            AddLipSync = 31,
-            UpdateLipSync = 32,
-            RemoveLipSync = 33,
-            UpdateOpacity = 34,
+            AddLipSync = 30,
+            RemoveLipSync = -AddLipSync,
+            UpdateLipSync = 31,
+            UpdateOpacity = 32,
 
             // Raster
-            AddRasterItem,
-            RemoveRasterItem,
-            ClearRasterCanvas
+            AddRasterItem = 33,
+            RemoveRasterItem = -AddRasterItem,
+            ClearRasterCanvas = 34
         };
-        
+
         enum Part
         {
             Project = 1000,

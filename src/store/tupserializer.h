@@ -54,7 +54,8 @@ class TUPITUBE_EXPORT TupSerializer
         TupSerializer();
         ~TupSerializer();
         
-        static QDomElement properties(const QGraphicsItem *item, QDomDocument &doc);
+        static QDomElement properties(const QGraphicsItem *item, QDomDocument &doc, const QString &text = QString(),
+                                      int textWidth = -1, Qt::Alignment textAlign = Qt::AlignLeft);
         static void loadProperties(QGraphicsItem *item, const QXmlAttributes &atts);
         static void loadProperties(QGraphicsItem *item, const QDomElement &element);
         

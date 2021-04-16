@@ -519,9 +519,9 @@ void TupPaintArea::sceneResponse(TupSceneResponse *event)
 void TupPaintArea::itemResponse(TupItemResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPaintArea::itemResponse()] - [" + QString::number(response->getSceneIndex())
-                    + ", " + QString::number(response->getLayerIndex()) + ", "
-                    + QString::number(response->getFrameIndex()) + "]";
+        qDebug() << "[TupPaintArea::itemResponse()] - [" << response->getSceneIndex()
+                 << ", " << response->getLayerIndex() << ", "
+                 << response->getFrameIndex() << "]";
     #endif
 
     TupGraphicsScene *guiScene = graphicsScene();
@@ -678,7 +678,7 @@ void TupPaintArea::deleteItems()
         qDebug() << "[TupPaintArea::deleteItems()]";
     #endif
 
-    if (currentTool != TAction::ObjectSelection && currentTool != TAction::NodesEditor) {
+    if (currentTool != TAction::ObjectSelection && currentTool != TAction::NodesEditor && currentTool != TAction::Text) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupPaintArea::deleteItems()] - Aborting procedure!";
         #endif
@@ -686,11 +686,10 @@ void TupPaintArea::deleteItems()
     }
 
     QList<QGraphicsItem *> selected = scene()->selectedItems();
-
     if (!selected.empty()) {
         foreach (QGraphicsItem *item, selected) {
-             if (qgraphicsitem_cast<TControlNode *> (item))
-                 selected.removeOne(item);
+            if (qgraphicsitem_cast<TControlNode *> (item))
+                selected.removeOne(item);
         }
 
         TupGraphicsScene* currentScene = graphicsScene();
@@ -699,71 +698,74 @@ void TupPaintArea::deleteItems()
             int total = selected.count();
             deleteMode = true;
             foreach (QGraphicsItem *item, selected) {
-                     if (counter == total-1) 
-                         deleteMode = false;
+                 if (counter == total-1)
+                     deleteMode = false;
 
-                     TupLibraryObject::Type type = TupLibraryObject::Svg;
-                     TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
-                     int itemIndex = -1;
-                     int frameIndex = -1;
-                     int layerIndex = -1;
+                 TupLibraryObject::Type type = TupLibraryObject::Svg;
+                 TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
+                 int itemIndex = -1;
+                 int frameIndex = -1;
+                 int layerIndex = -1;
 
-                     if (spaceMode == TupProject::FRAMES_MODE) {
-                         frameIndex = currentScene->currentFrameIndex();
-                         layerIndex = currentScene->currentLayerIndex();
-                         if (svg) {
-                             itemIndex = currentScene->currentFrame()->indexOf(svg);
-                         } else {
-                             type = TupLibraryObject::Item;
-                             itemIndex = currentScene->currentFrame()->indexOf(item);
-                         }
+                 if (spaceMode == TupProject::FRAMES_MODE) {
+                     frameIndex = currentScene->currentFrameIndex();
+                     layerIndex = currentScene->currentLayerIndex();
+                     if (svg) {
+                         itemIndex = currentScene->currentFrame()->indexOf(svg);
                      } else {
-                         TupBackground *bg = currentScene->currentScene()->sceneBackground();
-                         if (bg) {
-                             TupFrame *frame;
-                             if (spaceMode == TupProject::VECTOR_STATIC_BG_MODE)
-                                 frame = bg->vectorStaticFrame();
-                             else if (spaceMode == TupProject::VECTOR_FG_MODE)
-                                 frame = bg->vectorForegroundFrame();
-                             else
-                                 frame = bg->vectorDynamicFrame();
+                         type = TupLibraryObject::Item;
+                         itemIndex = currentScene->currentFrame()->indexOf(item);
+                     }
+                 } else {
+                     TupBackground *bg = currentScene->currentScene()->sceneBackground();
+                     if (bg) {
+                         TupFrame *frame;
+                         if (spaceMode == TupProject::VECTOR_STATIC_BG_MODE)
+                             frame = bg->vectorStaticFrame();
+                         else if (spaceMode == TupProject::VECTOR_FG_MODE)
+                             frame = bg->vectorForegroundFrame();
+                         else
+                             frame = bg->vectorDynamicFrame();
 
-                             if (frame) {
-                                 if (svg) {
-                                     itemIndex = frame->indexOf(svg);
-                                 } else {
-                                     type = TupLibraryObject::Item;
-                                     itemIndex = frame->indexOf(item);
-                                 }
+                         if (frame) {
+                             if (svg) {
+                                 itemIndex = frame->indexOf(svg);
                              } else {
-                                 #ifdef TUP_DEBUG
-                                     qDebug() << "[TupPaintArea::deleteItems()] - Fatal Error: Background frame is NULL!";
-                                 #endif
-                             } 
+                                 type = TupLibraryObject::Item;
+                                 itemIndex = frame->indexOf(item);
+                             }
                          } else {
                              #ifdef TUP_DEBUG
-                                 qDebug() << "[TupPaintArea::deleteItems()] - Fatal Error: Scene has no background element!";
+                                 qDebug() << "[TupPaintArea::deleteItems()] - Fatal Error: Background frame is NULL!";
                              #endif
                          }
-                     }
-
-                     if (itemIndex >= 0) {
-                         TupProjectRequest event = TupRequestBuilder::createItemRequest( 
-                                                   currentScene->currentSceneIndex(), layerIndex, frameIndex,
-                                                   itemIndex, QPointF(), spaceMode, type,
-                                                   TupProjectRequest::Remove);
-                         emit requestTriggered(&event);
                      } else {
                          #ifdef TUP_DEBUG
-                             qDebug() << "[TupPaintArea::deleteItems()] - Fatal Error: Invalid item index -> "
-                                      << itemIndex;
+                             qDebug() << "[TupPaintArea::deleteItems()] - Fatal Error: Scene has no background element!";
                          #endif
                      }
+                 }
 
-                     counter++;
+                 if (itemIndex >= 0) {
+                     TupProjectRequest event = TupRequestBuilder::createItemRequest(
+                                               currentScene->currentSceneIndex(), layerIndex, frameIndex,
+                                               itemIndex, QPointF(), spaceMode, type,
+                                               TupProjectRequest::Remove);
+                     emit requestTriggered(&event);
+                 } else {
+                     #ifdef TUP_DEBUG
+                         qDebug() << "[TupPaintArea::deleteItems()] - Fatal Error: Invalid item index -> "
+                                  << itemIndex;
+                     #endif
+                 }
+
+                 counter++;
             }
-
         }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPaintArea::deleteItems()] - Warning: No items to remove!";
+        #endif
     }
 }
 
@@ -1382,6 +1384,13 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
         qDebug() << "[TupPaintArea::keyPressEvent()] - Key: " << event->key();
         qDebug() << "[TupPaintArea::keyPressEvent()] - Key: " << event->text();
     #endif
+
+    /*
+    if (currentTool == TAction::Text) {
+        TupPaintAreaBase::keyPressEvent(event);
+        return;
+    }
+    */
 
     if (event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Delete) {
         deleteItems();

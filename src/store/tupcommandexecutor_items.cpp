@@ -1175,6 +1175,100 @@ bool TupCommandExecutor::setPen(TupItemResponse *response)
     return false;
 }
 
+bool TupCommandExecutor::setTextColor(TupItemResponse *response)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCommandExecutor::setTextColor()]";
+    #endif
+
+    int sceneIndex = response->getSceneIndex();
+    int layerIndex = response->getLayerIndex();
+    int frameIndex = response->getFrameIndex();
+    int itemIndex = response->getItemIndex();
+    TupProject::Mode mode = response->spaceMode();
+
+    QStringList params = response->getArg().toString().split("|");
+    QString textColor = params.at(0);
+    int alpha = params.at(1).toInt();
+    TupScene *scene = project->sceneAt(sceneIndex);
+
+    if (scene) {
+        if (mode == TupProject::FRAMES_MODE) {
+            TupLayer *layer = scene->layerAt(layerIndex);
+            if (layer) {
+                TupFrame *frame = layer->frameAt(frameIndex);
+                if (frame) {
+                    QGraphicsItem *item = frame->item(itemIndex);
+                    if (item) {
+                        if (response->getMode() == TupProjectResponse::Do)
+                            frame->setTextColorAtItem(itemIndex, textColor, alpha);
+
+                        if (response->getMode() == TupProjectResponse::Redo)
+                            frame->redoTextColorAction(itemIndex);
+
+                        if (response->getMode() == TupProjectResponse::Undo)
+                            frame->undoTextColorAction(itemIndex);
+
+                        emit responsed(response);
+                        return true;
+                    }
+                }
+            }
+        } else {
+            TupBackground *bg = scene->sceneBackground();
+            if (bg) {
+                TupFrame *frame = nullptr;
+                if (mode == TupProject::VECTOR_STATIC_BG_MODE) {
+                    frame = bg->vectorStaticFrame();
+                } else if (mode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
+                    frame = bg->vectorDynamicFrame();
+                } else if (mode == TupProject::VECTOR_FG_MODE) {
+                    frame = bg->vectorForegroundFrame();
+                } else {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupCommandExecutor::setTextColor()] - Error: Invalid mode!";
+                    #endif
+                    return false;
+                }
+
+                if (frame) {
+                    QGraphicsItem *item = frame->item(itemIndex);
+                    if (item) {
+                        if (response->getMode() == TupProjectResponse::Do)
+                            frame->setPenAtItem(itemIndex, textColor);
+
+                        if (response->getMode() == TupProjectResponse::Redo)
+                            frame->redoPenAction(itemIndex);
+
+                        if (response->getMode() == TupProjectResponse::Undo)
+                            frame->undoPenAction(itemIndex);
+
+                        emit responsed(response);
+                        return true;
+                    } else {
+                        #ifdef TUP_DEBUG
+                            qDebug() << "[TupCommandExecutor::setTextColor()] - Invalid path item at index -> " << itemIndex;
+                        #endif
+                        return false;
+                    }
+                } else {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupCommandExecutor::setTextColor()] - Error: Invalid background frame!";
+                    #endif
+                    return false;
+                }
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupCommandExecutor::setTextColor()] - Error: Invalid background data structure!";
+                #endif
+                return false;
+            }
+        }
+    }
+
+    return false;
+}
+
 bool TupCommandExecutor::createRasterPath(TupItemResponse *response)
 {
     emit responsed(response);

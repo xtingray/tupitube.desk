@@ -52,25 +52,33 @@ class TUPITUBE_PLUGIN TextConfigurator : public QWidget
     Q_OBJECT
 
     public:
+        enum Mode {Add, Update};
         TextConfigurator(QWidget *parent = nullptr);
         ~TextConfigurator();
 
         QString text() const;
         QFont textFont() const;
-        void setDocument(QTextDocument *doc);
+        // void setDocument(QTextDocument *doc);
+        void loadTextSettings(const QFont &itemFont, const QString &text);
+        void updateMode(Mode action);
+        Qt::Alignment textAlignment();
+        void resetText();
 
     signals:
         void textAdded();
+        void textUpdated();
 
     private slots:
         void changeFont();
+        void callAction();
+        void updateTextAlignment(Qt::Alignment flag);
 
     private:
-        // void sendText();
-
-        QTextEdit *m_text;
-        TFontChooser *m_fontChooser;
+        QTextEdit *textBox;
+        TFontChooser *fontChooser;
         QFont font;
+        QPushButton *addButton;
+        Mode mode;
+        Qt::Alignment textAlignmentValue;
 };
-
 #endif

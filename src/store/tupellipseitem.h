@@ -50,7 +50,7 @@ class TUPITUBE_EXPORT TupEllipseItem: public TupAbstractSerializable, public QGr
 
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
-        bool contains(const QPointF & point) const;
+        bool contains(const QPointF &point) const;
           
     protected:
         virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);

@@ -99,11 +99,9 @@ QGraphicsItem* TupItemFactory::createItem(const QString &root)
 
 bool TupItemFactory::startTag(const QString& qname, const QXmlAttributes& atts)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupItemFactory::startTag()] - qname -> " << qname;
     #endif
-    */
 
     if (qname == "path") {
         QPainterPath path;
@@ -122,145 +120,140 @@ bool TupItemFactory::startTag(const QString& qname, const QXmlAttributes& atts)
             objects.push(item);
         }
     } else if (qname == "rect") {
-               QRectF rect(atts.value("x").toDouble(), atts.value("y").toDouble(), atts.value("width").toDouble(),
-                           atts.value("height").toDouble());
+        QRectF rect(atts.value("x").toDouble(), atts.value("y").toDouble(), atts.value("width").toDouble(),
+                    atts.value("height").toDouble());
 
-               if (addToGroup) {
-                   TupRectItem *item = qgraphicsitem_cast<TupRectItem *>(createItem(qname));
-                   item->setRect(rect);
-                   objects.push(item);
-               } else {
-                   if (!item)
-                       item = createItem(qname);
-                   qgraphicsitem_cast<TupRectItem *>(item)->setRect(rect);
-                   objects.push(item);
-               }
+        if (addToGroup) {
+            TupRectItem *item = qgraphicsitem_cast<TupRectItem *>(createItem(qname));
+            item->setRect(rect);
+            objects.push(item);
+        } else {
+            if (!item)
+                item = createItem(qname);
+            qgraphicsitem_cast<TupRectItem *>(item)->setRect(rect);
+            objects.push(item);
+        }
     } else if (qname == "ellipse") {
-               QRectF rect(QPointF((atts.value("cx").toDouble() - atts.value("rx").toDouble()),
-                           atts.value("cy").toDouble() - atts.value("ry").toDouble()),
-                           QSizeF(2 * atts.value("rx").toDouble(), 2 * atts.value("ry").toDouble()));
-               // QRectF rect(QPointF(0, 0), QSizeF(2 * atts.value("rx").toDouble(), 2 * atts.value("ry").toDouble()));
-               if (addToGroup) {
-                   TupEllipseItem *item = qgraphicsitem_cast<TupEllipseItem *>(createItem(qname));
-                   item->setRect(rect);
-                   objects.push(item);
-               } else {
-                   if (!item)
-                       item = createItem(qname);
+        QRectF rect(QPointF((atts.value("cx").toDouble() - atts.value("rx").toDouble()),
+                    atts.value("cy").toDouble() - atts.value("ry").toDouble()),
+                    QSizeF(2 * atts.value("rx").toDouble(), 2 * atts.value("ry").toDouble()));
+        // QRectF rect(QPointF(0, 0), QSizeF(2 * atts.value("rx").toDouble(), 2 * atts.value("ry").toDouble()));
+        if (addToGroup) {
+            TupEllipseItem *item = qgraphicsitem_cast<TupEllipseItem *>(createItem(qname));
+            item->setRect(rect);
+            objects.push(item);
+        } else {
+            if (!item)
+                item = createItem(qname);
 
-                   qgraphicsitem_cast<TupEllipseItem *>(item)->setRect(rect);
-                   objects.push(item);
-               }
+            qgraphicsitem_cast<TupEllipseItem *>(item)->setRect(rect);
+            objects.push(item);
+        }
     } else if (qname == "button") {
-               if (!item) {
-                   item = createItem(qname);
-                   objects.push(item);
-               }
+        if (!item) {
+            item = createItem(qname);
+            objects.push(item);
+        }
 
-               if (addToGroup) {
-                   // groups.last()->addToGroup(createItem(qname));
-               }
+        if (addToGroup) {
+            // groups.last()->addToGroup(createItem(qname));
+        }
     } else if (qname == "text") {
-               if (addToGroup) {
-                   TupTextItem *item = qgraphicsitem_cast<TupTextItem *>(createItem(qname));
-                   objects.push(item);
-               } else {
-                   if (!item)
-                       item = createItem(qname);
+        if (addToGroup) {
+            TupTextItem *item = qgraphicsitem_cast<TupTextItem *>(createItem(qname));
+            objects.push(item);
+        } else {
+            if (!item)
+                item = createItem(qname);
 
-                   objects.push(item);
-               }
-               setReadText(true);
-               textReaded = "";
+            objects.push(item);
+        }
+        setReadText(true);
+        textReaded = "";
     } else if (qname == "line") {
-               QLineF line(atts.value("x1").toDouble(), atts.value("y1").toDouble(), atts.value("x2").toDouble(), atts.value("y2").toDouble());
-        
-               if (addToGroup) {
-                   TupLineItem *item = qgraphicsitem_cast<TupLineItem *>(createItem(qname));
-                   item->setLine(line);
-            
-                   objects.push(item);
-               } else {
-               if (!item)
-                   item = createItem(qname);
-            
-               qgraphicsitem_cast<TupLineItem *>(item)->setLine(line);
-               objects.push(item);
+        QLineF line(atts.value("x1").toDouble(), atts.value("y1").toDouble(), atts.value("x2").toDouble(), atts.value("y2").toDouble());
+
+        if (addToGroup) {
+            TupLineItem *item = qgraphicsitem_cast<TupLineItem *>(createItem(qname));
+            item->setLine(line);
+
+            objects.push(item);
+        } else {
+            if (!item)
+                item = createItem(qname);
+
+            qgraphicsitem_cast<TupLineItem *>(item)->setLine(line);
+            objects.push(item);
         }
     } else if (qname == "group") {
-               if (addToGroup) {
-                   TupItemGroup *group = qgraphicsitem_cast<TupItemGroup *>(createItem(qname));
-                   groups.push(group);
-                   objects.push(group);
-               } else {
-                   if (!item)
-                       item = createItem(qname);
-                   groups.push(qgraphicsitem_cast<TupItemGroup *>(item));
-                   objects.push(item);
-               }
-        
-               addToGroup = true;
+        if (addToGroup) {
+            TupItemGroup *group = qgraphicsitem_cast<TupItemGroup *>(createItem(qname));
+            groups.push(group);
+            objects.push(group);
+        } else {
+            if (!item)
+                item = createItem(qname);
+            groups.push(qgraphicsitem_cast<TupItemGroup *>(item));
+            objects.push(item);
+        }
+
+        addToGroup = true;
     } else if (qname == "symbol") {
-               if (addToGroup) {
-                   TupGraphicLibraryItem *item = qgraphicsitem_cast<TupGraphicLibraryItem *>(createItem(qname));
-                   QString id = atts.value("id");
-                   item->setSymbolName(id);
-                   if (library)
-                       item->setObject(library->getObject(id));
+        if (addToGroup) {
+            TupGraphicLibraryItem *item = qgraphicsitem_cast<TupGraphicLibraryItem *>(createItem(qname));
+            QString id = atts.value("id");
+            item->setSymbolName(id);
+            if (library)
+                item->setObject(library->getObject(id));
 
-                   objects.push(item);
-               } else {
-                   if (!item)
-                       item = createItem(qname);
+            objects.push(item);
+        } else {
+            if (!item)
+                item = createItem(qname);
 
-                   QString id = atts.value("id");
+            QString id = atts.value("id");
 
-                   qgraphicsitem_cast<TupGraphicLibraryItem *>(item)->setSymbolName(id);
+            qgraphicsitem_cast<TupGraphicLibraryItem *>(item)->setSymbolName(id);
 
-                   if (library)
-                       qgraphicsitem_cast<TupGraphicLibraryItem *>(item)->setObject(library->getObject(id));
+            if (library)
+                qgraphicsitem_cast<TupGraphicLibraryItem *>(item)->setObject(library->getObject(id));
 
-                   objects.push(item);
-               }
-    }
-
-    //////////
-
-    if (qname == "properties" && !objects.isEmpty()) {
+            objects.push(item);
+        }
+    } else if (qname == "properties" && !objects.isEmpty()) {
         TupSerializer::loadProperties(objects.last(), atts);
     } else if (qname == "brush") {
-               QBrush brush;
-               TupSerializer::loadBrush(brush, atts);
+        QBrush brush;
+        TupSerializer::loadBrush(brush, atts);
 
-               if (currentTag() == "pen") {
-                   loading = "pen";
-                   QPen pen = itemPen();
-                   pen.setBrush(brush);
-                   setItemPen(pen);
-               } else {
-                   loading = qname;
-                   setItemBrush(brush);
-               }
+        if (currentTag() == "pen") {
+            loading = "pen";
+            QPen pen = itemPen();
+            pen.setBrush(brush);
+            setItemPen(pen);
+        } else {
+            loading = qname;
+            setItemBrush(brush);
+        }
     } else if (qname == "pen") {
-               QPen pen;
-               loading = qname;
-               TupSerializer::loadPen(pen, atts);
-               setItemPen(pen);
+        QPen pen;
+        loading = qname;
+        TupSerializer::loadPen(pen, atts);
+        setItemPen(pen);
     } else if (qname == "font") {
-               QFont font;
+        QFont font;
+        TupSerializer::loadFont(font, atts);
 
-               TupSerializer::loadFont(font, atts);
-
-               if (TupTextItem *text = qgraphicsitem_cast<TupTextItem *>(objects.last()))
-                   text->setFont(font);
+        if (TupTextItem *text = qgraphicsitem_cast<TupTextItem *>(objects.last()))
+            text->setFont(font);
     } else if (qname == "stop") {
-               if (gradient) {
-                   QColor c(atts.value("colorName"));
-                   c.setAlpha(atts.value("alpha").toInt());
-                   gradient->setColorAt(atts.value("value").toDouble(), c);
-               }
+        if (gradient) {
+            QColor c(atts.value("colorName"));
+            c.setAlpha(atts.value("alpha").toInt());
+            gradient->setColorAt(atts.value("value").toDouble(), c);
+        }
     } else if (qname == "gradient") {
-               gradient = TupSerializer::createGradient( atts);
+        gradient = TupSerializer::createGradient( atts);
     }
 
     return true;
@@ -312,7 +305,8 @@ bool TupItemFactory::endTag(const QString& qname)
                    groups.last()->addToGroup(objects.last());
 
                if (TupTextItem *text = qgraphicsitem_cast<TupTextItem *>(objects.last()))
-                   text->setHtml(textReaded);
+                   text->setPlainText(textReaded);
+                   // text->setHtml(textReaded);
                objects.pop();
     } else if (qname == "group") {
                groups.pop();
@@ -360,7 +354,9 @@ void TupItemFactory::setItemBrush(const QBrush &brush)
     if (objects.isEmpty())
         return;
 
-    if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(objects.last()))
+    if (QGraphicsTextItem *textItem = qgraphicsitem_cast<QGraphicsTextItem *>(objects.last())) {
+        textItem->setDefaultTextColor(brush.color());
+    } else if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(objects.last()))
         shape->setBrush(brush);
 }
 

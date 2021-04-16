@@ -491,6 +491,10 @@ void TupGraphicsScene::drawVectorFg()
         TupFrame *frame = background->vectorForegroundFrame();
         if (frame) {
             zLevel = (tupScene->layersCount() + BG_LAYERS + 1) * ZLAYER_LIMIT;
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupGraphicsScene::drawVectorFg()] - zLevel -> " << zLevel;
+            #endif
+
             addFrame(frame, frame->frameOpacity());
         }
 
@@ -1497,19 +1501,11 @@ void TupGraphicsScene::mouseReleased(QGraphicsSceneMouseEvent *event)
 
     inputInformation->updateFromMouseEvent(event);
 
-    qDebug() << "*** isDrawing -> " << isDrawing;
     if (isDrawing) {
-        qDebug() << "STEP 0";
         if (gTool) {
-            qDebug() << "STEP 1";
             gTool->release(inputInformation, brushManager, this);
-            qDebug() << "STEP 2";
             gTool->end();
-        } else {
-            qDebug() << "FLAG 1 - No gTool!";
         }
-    } else {
-        qDebug() << "FLAG 2 - No drawing!";
     }
 
     isDrawing = false;
@@ -1687,17 +1683,12 @@ void TupGraphicsScene::setSelectionRange()
         qDebug() << "[TupGraphicsScene::setSelectionRange()]";
     #endif
 
-    if (onionSkin.accessMap.empty() || gTool->toolType() == TupToolInterface::Tweener) {
-        qDebug() << "BLOW ME!";
+    if (onionSkin.accessMap.empty() || gTool->toolType() == TupToolInterface::Tweener)
         return;
-    }
-
-    qDebug() << "TOOL ID -> " << gTool->toolId();
 
     QHash<QGraphicsItem *, bool>::iterator it = onionSkin.accessMap.begin();
     if (gTool->toolId() == TAction::ObjectSelection || gTool->toolId() == TAction::NodesEditor
         || gTool->toolId() == TAction::Text) {
-        qDebug() << "1 - TRACING TEXT TOOL!";
         while (it != onionSkin.accessMap.end()) {
             // if item is a tween
             if (!it.value() || it.key()->toolTip().length() > 0) {
@@ -1708,13 +1699,10 @@ void TupGraphicsScene::setSelectionRange()
                 it.key()->setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MidButton | Qt::XButton1
                                                   | Qt::XButton2);
                 if (gTool->toolId() == TAction::Text) {
-                    qDebug() << "2 - TRACING TEXT TOOL!";
                     if (qgraphicsitem_cast<TupTextItem *>(it.key())) {
-                        qDebug() << "2A - TRACING TEXT TOOL!";
                         it.key()->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
                     }
                 } else if (gTool->toolId() == TAction::ObjectSelection) {
-                    qDebug() << "TRACING SELECTION TOOL!";
                     it.key()->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
                 } else {
                     it.key()->setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -1723,7 +1711,6 @@ void TupGraphicsScene::setSelectionRange()
             }
             ++it;
         }
-        qDebug() << "3 - TRACING TEXT TOOL!";
     } else {
         while (it != onionSkin.accessMap.end()) {
             it.key()->setAcceptedMouseButtons(Qt::NoButton);
@@ -1731,7 +1718,6 @@ void TupGraphicsScene::setSelectionRange()
             it.key()->setFlag(QGraphicsItem::ItemIsMovable, false);
             ++it;
         }
-        qDebug() << "4 - TRACING TEXT TOOL!";
     }
 }
 

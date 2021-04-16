@@ -36,6 +36,9 @@
 #include "tupserializer.h"
 #include "tupgraphicobject.h"
 #include "tupsvg2qt.h"
+#include "tuptextitem.h"
+
+#include <QTextDocument>
 
 TupSerializer::TupSerializer()
 {
@@ -45,7 +48,7 @@ TupSerializer::~TupSerializer()
 {
 }
 
-QDomElement TupSerializer::properties(const QGraphicsItem *item, QDomDocument &doc)
+QDomElement TupSerializer::properties(const QGraphicsItem *item, QDomDocument &doc, const QString &text, int textWidth, Qt::Alignment textAlign)
 {
     QDomElement properties = doc.createElement("properties");
     
@@ -70,6 +73,12 @@ QDomElement TupSerializer::properties(const QGraphicsItem *item, QDomDocument &d
     properties.setAttribute("enabled", item->isEnabled());
     properties.setAttribute("flags", item->flags());
 
+    if (textWidth > 0) {
+        properties.setAttribute("text_width", textWidth);
+        properties.setAttribute("text_alignment", textAlign);
+        properties.setAttribute("text", text);
+    }
+
     return properties;
 }
 
@@ -90,6 +99,17 @@ void TupSerializer::loadProperties(QGraphicsItem *item, const QXmlAttributes &at
     item->setData(TupGraphicObject::ScaleX, sx);
     double sy = atts.value("scale_y").toDouble();
     item->setData(TupGraphicObject::ScaleY, sy);
+
+    if (TupTextItem *textItem = qgraphicsitem_cast<TupTextItem *>(item)) {
+        textItem->setTextWidth(atts.value("text_width").toInt());
+
+        Qt::Alignment alignment = Qt::Alignment(atts.value("text_alignment").toInt());
+        QTextOption option = textItem->document()->defaultTextOption();
+        option.setAlignment(alignment);
+        textItem->document()->setDefaultTextOption(option);
+
+        textItem->setData(0, atts.value("text"));
+    }
 }
 
 void TupSerializer::loadProperties(QGraphicsItem *item, const QDomElement &element)
@@ -117,6 +137,17 @@ void TupSerializer::loadProperties(QGraphicsItem *item, const QDomElement &eleme
         item->setData(TupGraphicObject::ScaleX, sx);
         double sy = element.attribute("scale_y").toDouble();
         item->setData(TupGraphicObject::ScaleY, sy);
+
+        if (TupTextItem *textItem = qgraphicsitem_cast<TupTextItem *>(item)) {
+            textItem->setTextWidth(element.attribute("text_width").toInt());
+
+            Qt::Alignment alignment = Qt::Alignment(element.attribute("text_alignment").toInt());
+            QTextOption option = textItem->document()->defaultTextOption();
+            option.setAlignment(alignment);
+            textItem->document()->setDefaultTextOption(option);
+
+            textItem->setData(0, element.attribute("text"));
+        }
     }
 }
 
@@ -164,11 +195,11 @@ QDomElement TupSerializer::gradient(const QGradient *gradient, QDomDocument &doc
     QGradientStops stops = gradient->stops();
 
     foreach (QGradientStop stop, stops) {
-             QDomElement stopElement = doc.createElement("stop");
-             stopElement.setAttribute("value", stop.first);
-             stopElement.setAttribute("colorName", stop.second.name());
-             stopElement.setAttribute("alpha", stop.second.alpha());
-             element.appendChild(stopElement);
+         QDomElement stopElement = doc.createElement("stop");
+         stopElement.setAttribute("value", stop.first);
+         stopElement.setAttribute("colorName", stop.second.name());
+         stopElement.setAttribute("alpha", stop.second.alpha());
+         element.appendChild(stopElement);
     }
     
     return element;
@@ -343,7 +374,6 @@ QDomElement TupSerializer::font(const QFont *font, QDomDocument &doc)
     fontElement.setAttribute("italic", font->italic());
     fontElement.setAttribute("bold", font->bold());
     fontElement.setAttribute("style", font->style());
-    
     fontElement.setAttribute("underline", font->underline());
     fontElement.setAttribute("overline", font->overline());
     
@@ -362,11 +392,11 @@ void TupSerializer::loadFont(QFont &font, const QDomElement &e)
 
 void TupSerializer::loadFont(QFont &font, const QXmlAttributes &atts)
 {
-    font = QFont(atts.value("family"), atts.value("pointSize", "-1").toInt(), atts.value("weight", "-1").toInt(),
-                 atts.value( "italic", "0").toInt());
-    
-    font.setBold(atts.value("bold", "0").toInt());
+    font = QFont(atts.value("family"), atts.value("pointSize").toInt(), atts.value("weight").toInt(),
+                 atts.value("italic").toInt());
+
+    font.setBold(atts.value("bold").toInt());
     font.setStyle(QFont::Style(atts.value("style").toInt()));
-    font.setUnderline(atts.value("underline", "0").toInt());
-    font.setOverline(atts.value("overline", "0").toInt());
+    font.setUnderline(atts.value("underline").toInt());
+    font.setOverline(atts.value("overline").toInt());
 }

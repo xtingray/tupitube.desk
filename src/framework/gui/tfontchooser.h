@@ -44,9 +44,10 @@
 #include <QHBoxLayout>
 #include <QFontDatabase>
 #include <QFontComboBox>
+#include <QPushButton>
 
-class QComboBox;
-class QFontComboBox;
+// class QComboBox;
+// class QFontComboBox;
 
 class T_GUI_EXPORT TFontChooser : public QFrame
 {
@@ -57,24 +58,46 @@ class T_GUI_EXPORT TFontChooser : public QFrame
         ~TFontChooser();
 
         void setCurrentFont(const QFont &font);
+        void updateFontSettings(const QFont &itemFont);
+
         void initFont();
         QFont currentFont() const;
-        QFont::Style currentStyle() const;
         int currentSize() const;
 
     signals:
         void fontChanged();
+        void alignmentUpdated(Qt::Alignment);
+
+    public slots:
+        void loadFontInfo(const QFont &newFont);
 
     private slots:
         void emitFontChanged(int = 0);
-        void loadFontInfo(const QFont &newFont);
+
+        void setBoldFlag();
+        void setItalicFlag();
+        void setUnderlineFlag();
+        void setOverlineFlag();
+
+        void alignTextToLeft();
+        void alignTextToCenter();
+        void alignTextToRight();
 
     private:
+        void setFontSizeRange(const QString &family);
+
         QFontComboBox *m_families;
-        QComboBox *m_fontStyle;
         QComboBox *m_fontSize;
         
         QFont m_currentFont;
+        QPushButton *boldButton;
+        QPushButton *italicButton;
+        QPushButton *underlineButton;
+        QPushButton *overlineButton;
+
+        QPushButton *leftButton;
+        QPushButton *centerButton;
+        QPushButton *rightButton;
 };
 
 #endif

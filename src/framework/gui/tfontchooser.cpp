@@ -34,6 +34,10 @@
  ***************************************************************************/
 
 #include "tfontchooser.h"
+#include "tapplicationproperties.h"
+#include "tseparator.h"
+
+#include <QPushButton>
 
 TFontChooser::TFontChooser(QWidget *parent) : QFrame(parent)
 {
@@ -45,23 +49,64 @@ TFontChooser::TFontChooser(QWidget *parent) : QFrame(parent)
     QHBoxLayout *fontFamilyLayout = new QHBoxLayout;
     fontFamilyLayout->addStretch();
     fontFamilyLayout->addLayout(TFormFactory::makeLine(tr("Family"), m_families));
-    fontFamilyLayout->addStretch();
-
-    mainLayout->addLayout(fontFamilyLayout);
-
-    QHBoxLayout *fontSettingsLayout = new QHBoxLayout;
-    fontSettingsLayout->addStretch();
-
-    m_fontStyle = new QComboBox;
-    connect(m_fontStyle, SIGNAL(activated (int)), this, SLOT(emitFontChanged(int)));
-    fontSettingsLayout->addLayout(TFormFactory::makeLine(tr("Style"), m_fontStyle));
 
     m_fontSize = new QComboBox;
     connect(m_fontSize, SIGNAL(activated (int)), this, SLOT(emitFontChanged(int)));
-    fontSettingsLayout->addLayout(TFormFactory::makeLine(tr("Size"), m_fontSize));
-    fontSettingsLayout->addStretch();
 
-    mainLayout->addLayout(fontSettingsLayout);
+    fontFamilyLayout->addLayout(TFormFactory::makeLine(tr("Size"), m_fontSize));
+    fontFamilyLayout->addStretch();
+    mainLayout->addLayout(fontFamilyLayout);
+
+    QHBoxLayout *buttonsBarLayout = new QHBoxLayout;
+    buttonsBarLayout->addStretch();
+
+    boldButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/bold.png")), "");
+    boldButton->setCheckable(true);
+    boldButton->setToolTip(tr("Bold"));
+    buttonsBarLayout->addWidget(boldButton);
+    connect(boldButton, SIGNAL(clicked()), this, SLOT(setBoldFlag()));
+
+    italicButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/italic.png")), "");
+    italicButton->setCheckable(true);
+    italicButton->setToolTip(tr("Italic"));
+    buttonsBarLayout->addWidget(italicButton);
+    connect(italicButton, SIGNAL(clicked()), this, SLOT(setItalicFlag()));
+
+    underlineButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/underline.png")), "");
+    underlineButton->setCheckable(true);
+    underlineButton->setToolTip(tr("Underline"));
+    buttonsBarLayout->addWidget(underlineButton);
+    connect(underlineButton, SIGNAL(clicked()), this, SLOT(setUnderlineFlag()));
+
+    overlineButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/overline.png")), "");
+    overlineButton->setCheckable(true);
+    overlineButton->setToolTip(tr("Overline"));
+    buttonsBarLayout->addWidget(overlineButton);
+    connect(overlineButton, SIGNAL(clicked()), this, SLOT(setOverlineFlag()));
+
+    buttonsBarLayout->addWidget(new TSeparator(Qt::Vertical));
+
+    leftButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/align_left.png")), "");
+    leftButton->setCheckable(true);
+    leftButton->setChecked(true);
+    leftButton->setToolTip(tr("Align Text To Left"));
+    buttonsBarLayout->addWidget(leftButton);
+    connect(leftButton, SIGNAL(clicked()), this, SLOT(alignTextToLeft()));
+
+    centerButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/align_center.png")), "");
+    centerButton->setCheckable(true);
+    centerButton->setToolTip(tr("Align Text To Center"));
+    buttonsBarLayout->addWidget(centerButton);
+    connect(centerButton, SIGNAL(clicked()), this, SLOT(alignTextToCenter()));
+
+    rightButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/align_right.png")), "");
+    rightButton->setCheckable(true);
+    rightButton->setToolTip(tr("Align Text To Right"));
+    buttonsBarLayout->addWidget(rightButton);
+    connect(rightButton, SIGNAL(clicked()), this, SLOT(alignTextToRight()));
+
+    buttonsBarLayout->addStretch();
+    mainLayout->addLayout(buttonsBarLayout);
 
     initFont();
 }
@@ -70,28 +115,40 @@ TFontChooser::~TFontChooser()
 {
 }
 
+void TFontChooser::setFontSizeRange(const QString &family)
+{
+    m_fontSize->blockSignals(true);
+
+    QFontDatabase fdb;
+    m_fontSize->clear();
+    QList<int> points = fdb.pointSizes(family);
+    if (!points.isEmpty()) {
+        foreach (int point, points)
+            m_fontSize->addItem(QString::number(point));
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TFontChooser::setFontSizeRange()] - Fatal Error: No sizes for family -> " << family;
+        #endif
+        for (int i=1; i<30; i++)
+            m_fontSize->addItem(QString::number(i));
+    }
+
+    m_fontSize->blockSignals(false);
+}
+
 void TFontChooser::loadFontInfo(const QFont &newFont)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TFontChooser::loadFontInfo()] - newFont -> " << newFont.styleName();
     #endif
-    */
 
     QString currentSize = m_fontSize->currentText();
-    QString currentStyle = m_fontStyle->currentText();
+    // QString currentStyle = tr("Normal");
     QString family = newFont.family();
 
+    /*
     QFontDatabase fdb;
-
-    m_fontStyle->clear();
-    
-    m_fontStyle->addItem(tr("Normal"), QFont::StyleNormal);
-    m_fontStyle->addItem(tr("Italic"), QFont::StyleItalic);
-    m_fontStyle->addItem(tr("Oblique"), QFont::StyleOblique);
-
-    m_fontSize->clear();
-    
+    m_fontSize->clear();    
     QList<int> points = fdb.pointSizes(family);
     if (!points.isEmpty()) {
         foreach (int point, points)
@@ -103,49 +160,72 @@ void TFontChooser::loadFontInfo(const QFont &newFont)
         for (int i=1; i<30; i++)
             m_fontSize->addItem(QString::number(i));
     }
+    */
+
+    setFontSizeRange(family);
 
     int sizeIndex = m_fontSize->findText(currentSize);
-    int styleIndex = m_fontStyle->findText(currentStyle);
-
     if (sizeIndex >= 0)
         m_fontSize->setCurrentIndex(sizeIndex);
-    
-    if (styleIndex >= 0)
-        m_fontStyle->setCurrentIndex(styleIndex);
-    
-    m_families->blockSignals(true);
 
+    m_families->blockSignals(true);
     m_currentFont = newFont;
     m_currentFont.setPointSize(m_fontSize->currentText().toInt());
-    m_currentFont.setStyle(QFont::Style(m_fontStyle->itemData(m_fontStyle->currentIndex()).toInt()));
-
     m_families->blockSignals(false);
     
     emit fontChanged();    
+}
+
+void TFontChooser::updateFontSettings(const QFont &itemFont)
+{
+    QString family = itemFont.family();
+
+    m_families->blockSignals(true);
+    m_families->setCurrentFont(itemFont);
+    m_families->blockSignals(false);
+
+    int pointSize = itemFont.pointSize();
+    int sizeIndex = m_fontSize->findText(QString::number(pointSize));
+    if (sizeIndex >= 0) {
+        m_fontSize->blockSignals(true);
+        m_fontSize->setCurrentIndex(sizeIndex);
+        m_fontSize->blockSignals(false);
+    }
+
+    boldButton->blockSignals(true);
+    boldButton->setChecked(itemFont.bold());
+    boldButton->blockSignals(false);
+
+    italicButton->blockSignals(true);
+    italicButton->setChecked(itemFont.italic());
+    italicButton->blockSignals(false);
+
+    underlineButton->blockSignals(true);
+    underlineButton->setChecked(itemFont.underline());
+    underlineButton->blockSignals(false);
+
+    overlineButton->blockSignals(true);
+    overlineButton->setChecked(itemFont.overline());
+    overlineButton->blockSignals(false);
 }
 
 void TFontChooser::emitFontChanged(int)
 {
     m_currentFont = m_families->currentFont();
     m_currentFont.setPointSize(m_fontSize->currentText().toInt());
-    m_currentFont.setStyle(QFont::Style(m_fontStyle->itemData(m_fontStyle->currentIndex()).toInt()));
 
     emit fontChanged();
 }
 
 void TFontChooser::setCurrentFont(const QFont &font)
 {
-    QFontDatabase fdb;
-
     m_families->setCurrentIndex(m_families->findText(font.family()));
-    m_fontStyle->setCurrentIndex(m_fontStyle->findText(fdb.styleString(font.family())));
     m_fontSize->setCurrentIndex(m_fontSize->findText(QString::number(font.pointSize())));
 }
 
 void TFontChooser::initFont()
 {
     m_families->setCurrentIndex(0);
-    m_fontStyle->setCurrentIndex(0);
     m_fontSize->setCurrentIndex(0);
 }
 
@@ -154,12 +234,70 @@ QFont TFontChooser::currentFont() const
      return m_currentFont;
 }
 
-QFont::Style TFontChooser::currentStyle() const
-{
-    return QFont::Style(m_fontStyle->itemData(m_fontStyle->currentIndex()).toInt());
-}
-
 int TFontChooser::currentSize() const
 {
     return m_fontSize->currentText().toInt();
+}
+
+void TFontChooser::setBoldFlag()
+{
+    m_currentFont.setBold(boldButton->isChecked());
+    emit fontChanged();
+}
+
+void TFontChooser::setItalicFlag()
+{
+    m_currentFont.setItalic(italicButton->isChecked());
+    emit fontChanged();
+}
+
+void TFontChooser::setUnderlineFlag()
+{
+    m_currentFont.setUnderline(underlineButton->isChecked());
+    emit fontChanged();
+}
+
+void TFontChooser::setOverlineFlag()
+{
+    m_currentFont.setOverline(overlineButton->isChecked());
+    emit fontChanged();
+}
+
+void TFontChooser::alignTextToLeft()
+{
+    centerButton->blockSignals(true);
+    centerButton->setChecked(false);
+    centerButton->blockSignals(false);
+
+    rightButton->blockSignals(true);
+    rightButton->setChecked(false);
+    rightButton->blockSignals(false);
+
+    emit alignmentUpdated(Qt::AlignLeft);
+}
+
+void TFontChooser::alignTextToCenter()
+{
+    leftButton->blockSignals(true);
+    leftButton->setChecked(false);
+    leftButton->blockSignals(false);
+
+    rightButton->blockSignals(true);
+    rightButton->setChecked(false);
+    rightButton->blockSignals(false);
+
+    emit alignmentUpdated(Qt::AlignCenter);
+}
+
+void TFontChooser::alignTextToRight()
+{
+    leftButton->blockSignals(true);
+    leftButton->setChecked(false);
+    leftButton->blockSignals(false);
+
+    centerButton->blockSignals(true);
+    centerButton->setChecked(false);
+    centerButton->blockSignals(false);
+
+    emit alignmentUpdated(Qt::AlignRight);
 }

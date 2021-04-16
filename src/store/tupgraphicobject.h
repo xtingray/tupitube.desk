@@ -97,6 +97,12 @@ class TUPITUBE_EXPORT TupGraphicObject : public QObject, public TupAbstractSeria
         void redoPenAction();
         void undoPenAction();
 
+        bool textColorIsNotEdited();
+        void saveInitTextColor();
+        void setTextColor(const QString &color, int alpha);
+        void redoTextColorAction();
+        void undoTextColorAction();
+
         QString toString() const;
 
     public:
@@ -121,5 +127,13 @@ class TUPITUBE_EXPORT TupGraphicObject : public QObject, public TupAbstractSeria
 
         QStringList penDoList;
         QStringList penUndoList;
+
+        struct Color {
+            QString name;
+            int alpha;
+        };
+
+        QList<Color> textColorDoList;
+        QList<Color> textColorUndoList;
 };
 #endif

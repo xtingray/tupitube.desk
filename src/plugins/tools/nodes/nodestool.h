@@ -113,7 +113,7 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
         QMap<TAction::ActionId, TAction *> nodesActions;
         TNodeGroup *nodeGroup;
         TupGraphicsScene *scene;
-        int baseZValue;
+        int nodeZValue;
         qreal realFactor;
         bool activeSelection;
         int currentLayer;

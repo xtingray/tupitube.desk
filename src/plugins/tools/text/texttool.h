@@ -66,7 +66,7 @@ class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
         // virtual void doubleClick(const TupInputDeviceInformation *input, TupGraphicsScene *scene);
         virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
-        virtual void doubleClick(const TupInputDeviceInformation *input, TupGraphicsScene *scene);
+        // virtual void doubleClick(const TupInputDeviceInformation *input, TupGraphicsScene *scene);
 
         virtual QMap<TAction::ActionId, TAction *>actions() const; 
         virtual QWidget *configurator();
@@ -89,8 +89,9 @@ class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
         void callForPlugin(int menu, int index);
 
     private slots:
-        // void initItems(TupGraphicsScene *scene);
+        void initItems(TupGraphicsScene *scene);
         void insertText();
+        void updateText();
         void syncNodes();
 
     private:

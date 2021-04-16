@@ -115,33 +115,7 @@ void TupRectItem::dropEvent(QGraphicsSceneDragDropEvent *event)
     update();
 }
 
-bool TupRectItem::contains(const QPointF & point) const
+bool TupRectItem::contains(const QPointF &point) const
 {
-/*
-    double thickness = pen().widthF()+2;
-    QRectF rectS(point-QPointF(thickness/2,thickness/2) , QSizeF(thickness,thickness));
-    
-    QPolygonF pol = shape().toFillPolygon();
-
-    foreach (QPointF point, pol) {
-        if (rectS.contains( point))
-            return true;
-    }
-    
-    QPolygonF::iterator it1 = pol.begin();
-    QPolygonF::iterator it2 = pol.begin()+1;
-    
-    while (it2 != pol.end()) {
-           QRectF rect((*it1).x(), (*it1).y(), (*it2).x()-(*it1).x(), (*it2).y()-(*it1).y());
-        
-           if (rect.intersects(rectS))
-               return true;
-           ++it1;
-           ++it2;
-    }
-    
-    return false;
-*/
-    
     return QGraphicsRectItem::contains(point);
 }

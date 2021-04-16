@@ -52,7 +52,7 @@ TupProjectCommand::TupProjectCommand(TupCommandExecutor *exec, const TupProjectR
     TupRequestParser parser;
     if (!parser.parse(request->getXml())) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupProjectCommand::TupProjectCommand(): - Fatal error: request xml can't be parsed!";
+            qDebug() << "[TupProjectCommand::TupProjectCommand()] - Fatal error: request xml can't be parsed!";
         #endif
         return;
     }
@@ -64,7 +64,7 @@ TupProjectCommand::TupProjectCommand(TupCommandExecutor *exec, const TupProjectR
 
     if (!response) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupProjectCommand::TupProjectCommand() - Unparsed response!";
+            qDebug() << "[TupProjectCommand::TupProjectCommand()] - Unparsed response!";
         #endif
     }
 
@@ -115,7 +115,7 @@ void TupProjectCommand::initText()
         default:
         {				  
             #ifdef TUP_DEBUG
-                qDebug() << "TProjectCommand::initText() - Error: can't handle ID: " + QString::number(response->getPart());
+                qDebug() << "[TupProjectCommand::initText()] - Error: can't handle ID -> " << response->getPart();
             #endif
         }
         break;
@@ -201,12 +201,12 @@ void TupProjectCommand::redo()
         response->setMode(TupProjectResponse::Do);
         executed = true;
     }
-    
+
     switch (response->getPart()) {
             case TupProjectRequest::Project:
             {
                 #ifdef TUP_DEBUG
-                     qWarning() << "TupProjectCommand::redo() - Error: Project response isn't implemented";
+                     qWarning() << "[TupProjectCommand::redo()] - Error: Project response isn't implemented";
                 #endif
             }
             break;
@@ -238,7 +238,7 @@ void TupProjectCommand::redo()
             default:
             {
                 #ifdef TUP_DEBUG
-                     qDebug() << "TupProjectCommand::redo() - Error: Unknown project response";
+                     qDebug() << "[TupProjectCommand::redo()] - Error: Unknown project response";
                 #endif
             }
             break;
@@ -256,7 +256,7 @@ void TupProjectCommand::undo()
             case TupProjectRequest::Project:
             {
                  #ifdef TUP_DEBUG
-                     qDebug() << "TupProjectCommand::undo() - Error: Project response isn't implemented";
+                     qDebug() << "[TupProjectCommand::undo()] - Error: Project response isn't implemented";
                  #endif
             }
             break;
@@ -288,7 +288,7 @@ void TupProjectCommand::undo()
             default:
             {
                  #ifdef TUP_DEBUG
-                     qDebug() << "TupProjectCommand::undo() - Error: Unknown project response";
+                     qDebug() << "[TupProjectCommand::undo()] - Error: Unknown project response";
                  #endif
             }
             break;
@@ -386,7 +386,7 @@ void TupProjectCommand::frameCommand()
             default: 
             {
                  #ifdef TUP_DEBUG
-                     qDebug() << "TupProjectCommand::frameCommand() - Fatal Error: Unknown project request";
+                     qDebug() << "[TupProjectCommand::frameCommand()] - Fatal Error: Unknown project request";
                  #endif
             }
             break;
@@ -456,7 +456,7 @@ void TupProjectCommand::layerCommand()
             default: 
             {
                  #ifdef TUP_DEBUG
-                     qDebug() << "TupProjectCommand::layerCommand() - Error: Unknown project response";
+                     qDebug() << "[TupProjectCommand::layerCommand()] - Error: Unknown project response";
                  #endif
             }
             break;
@@ -523,7 +523,7 @@ void TupProjectCommand::sceneCommand()
             default: 
             {
                  #ifdef TUP_DEBUG
-                     qDebug() << "TupProjectCommand::sceneCommand() - Error: Unknown project response";
+                     qDebug() << "[TupProjectCommand::sceneCommand()] - Error: Unknown project response";
                  #endif
             }
             break;
@@ -532,11 +532,9 @@ void TupProjectCommand::sceneCommand()
 
 void TupProjectCommand::itemCommand()
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupProjectCommand::itemCommand()]";
     #endif
-    */
 
     TupItemResponse *res = static_cast<TupItemResponse *>(response);
 
@@ -582,6 +580,11 @@ void TupProjectCommand::itemCommand()
             case TupProjectRequest::Brush:
             {
                  executor->setBrush(res);
+            }
+            break;
+            case TupProjectRequest::TextColor:
+            {
+                 executor->setTextColor(res);
             }
             break;
             /*
@@ -632,7 +635,7 @@ void TupProjectCommand::itemCommand()
             default:
             {
                  #ifdef TUP_DEBUG
-                     qDebug() << "TupProjectCommand::itemCommand() - Error: Unknown project response";
+                     qDebug() << "[TupProjectCommand::itemCommand()] - Error: Unknown project response";
                  #endif
             }
             break;
@@ -675,7 +678,7 @@ void TupProjectCommand::libraryCommand()
             default:
             {
                  #ifdef TUP_DEBUG
-                     qDebug() << "TupProjectCommand::libraryCommand() - Error: Unknown project response";
+                     qDebug() << "[TupProjectCommand::libraryCommand()] - Error: Unknown project response";
                  #endif
             }
             break;

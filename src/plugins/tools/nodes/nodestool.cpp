@@ -61,7 +61,9 @@ void NodesTool::init(TupGraphicsScene *gScene)
         }
     }
 
-    baseZValue = ((BG_LAYERS + 1) * ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
+    nodeZValue = ((BG_LAYERS + 1) * ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
+    if (scene->getSpaceContext() == TupProject::VECTOR_FG_MODE)
+        nodeZValue += ZLAYER_LIMIT;
 }
 
 QList<TAction::ActionId> NodesTool::keys() const
@@ -167,7 +169,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
             int oldIndex = frame->indexOf(nodeGroup->parentItem());
             if (oldIndex != itemIndex) {
                 nodeGroup->clear();
-                nodeGroup = new TNodeGroup(selectedItem, gScene, TNodeGroup::LineSelection, baseZValue);
+                nodeGroup = new TNodeGroup(selectedItem, gScene, TNodeGroup::LineSelection, nodeZValue);
                 nodeGroup->show();
                 nodeGroup->resizeNodes(realFactor);
                 if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(selectedItem)) {
@@ -198,7 +200,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                 }
             }
         } else {
-            nodeGroup = new TNodeGroup(selectedItem, gScene, TNodeGroup::LineSelection, baseZValue);
+            nodeGroup = new TNodeGroup(selectedItem, gScene, TNodeGroup::LineSelection, nodeZValue);
             nodeGroup->show();
             activeSelection = true;
 
@@ -281,7 +283,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
         case TupProjectRequest::Convert:
         {
              if (item) {
-                 nodeGroup = new TNodeGroup(item, scene, TNodeGroup::LineSelection, baseZValue);
+                 nodeGroup = new TNodeGroup(item, scene, TNodeGroup::LineSelection, nodeZValue);
              } else {
                  #ifdef TUP_DEBUG
                      qDebug() << "[NodesTool::itemResponse()] - Fatal Error: No item was found";
@@ -299,7 +301,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
                          nodeGroup->saveParentProperties();
                      }
                  } else {
-                     nodeGroup = new TNodeGroup(item, scene, TNodeGroup::LineSelection, baseZValue);
+                     nodeGroup = new TNodeGroup(item, scene, TNodeGroup::LineSelection, nodeZValue);
                      nodeGroup->show();
                      activeSelection = true;
                      nodeGroup->resizeNodes(realFactor);
@@ -319,7 +321,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
         {
              // reset(scene);
              if (item) {
-                 nodeGroup = new TNodeGroup(item, scene, TNodeGroup::LineSelection, baseZValue);
+                 nodeGroup = new TNodeGroup(item, scene, TNodeGroup::LineSelection, nodeZValue);
                  nodeGroup->show();
                  activeSelection = true;
                  nodeGroup->resizeNodes(realFactor);

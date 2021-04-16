@@ -72,6 +72,9 @@ void SelectionTool::init(TupGraphicsScene *gScene)
     clearSelection();
     scene->clearSelection();
     nodeZValue = ((BG_LAYERS + 1) * ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
+    if (scene->getSpaceContext() == TupProject::VECTOR_FG_MODE)
+        nodeZValue += ZLAYER_LIMIT;
+
     initItems(scene);
 }
 
@@ -136,13 +139,10 @@ void SelectionTool::press(const TupInputDeviceInformation *input, TupBrushManage
     }
 
     if (frame->indexOf(gScene->mouseGrabberItem()) != -1) {
-        qDebug() << "GRABBED!";
         selectedObjects << gScene->mouseGrabberItem();
     } else {
-        if (!gScene->selectedItems().isEmpty()) {
-            qDebug() << "ITEM SELECTED!";
+        if (!gScene->selectedItems().isEmpty())
             selectedObjects = gScene->selectedItems();
-        }
     }
 
     foreach (QGraphicsItem *item, selectedObjects) {
@@ -178,8 +178,9 @@ void SelectionTool::press(const TupInputDeviceInformation *input, TupBrushManage
                     qDebug() << "[SelectionTool::press()] - Adding node manager to item!";
                 #endif
 
-                qDebug() << "*** ITEM is selectable? -> " << item->ItemIsSelectable;
-                qDebug() << "*** ITEM is selected? -> " << item->isSelected();
+                // SQA: Temporary code
+                // item->setSelected(true);
+
                 NodeManager *manager = new NodeManager(item, gScene, nodeZValue);
                 connect(manager, SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
                 connect(manager, SIGNAL(scaleUpdated(double, double)), panel, SLOT(updateScaleFactor(double, double)));
@@ -197,8 +198,6 @@ void SelectionTool::press(const TupInputDeviceInformation *input, TupBrushManage
             #endif
         }
     }
-
-    qDebug() << "press - COUNT -> " << selectedObjects.count();
 }
 
 void SelectionTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
@@ -222,15 +221,12 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
     Q_UNUSED(input)
     Q_UNUSED(brushManager)
 
-    qDebug() << "1 - release - COUNT -> " << selectedObjects.count();
+    // qDebug() << "1 - release - COUNT -> " << selectedObjects.count();
     // qDebug() << "Is selected? -> " << selectedObjects.at(0)->isSelected();
     // selectedObjects.at(0)->setSelected(true);
     selectedObjects = gScene->selectedItems();
-    qDebug() << "1A - release - COUNT -> " << selectedObjects.count();
 
     if (selectedObjects.count() > 0) {
-        qDebug() << "2 release - COUNT -> " << selectedObjects.count();
-
         panel->enableFormControls(true);
         activeSelection = true;
         foreach (NodeManager *manager, nodeManagers) {
