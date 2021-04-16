@@ -4,7 +4,7 @@ Set fileSystem = CreateObject("Scripting.FileSystemObject")
 
 Dim Folder
 Folder="C:\tupitube"
-fileSystem.DeleteFolder(Folder)
+REM fileSystem.DeleteFolder(Folder)
 
 quazipDir = "c:\Quazip\bin"
 sourceDir = "c:\devel\sources\tupitube.desk\src"
@@ -28,7 +28,7 @@ fileSystem.CreateFolder tupiDir & "\plugins"
 fileSystem.CreateFolder tupiDir & "\lib"
 fileSystem.CreateFolder tupiDir & "\lib\qt5"
 fileSystem.CreateFolder tupiDir & "\lib\ffmpeg"
-fileSystem.CreateFolder tupiDir & "\lib\ssl"
+REM fileSystem.CreateFolder tupiDir & "\lib\ssl"
 fileSystem.CreateFolder tupiDir & "\lib\raster"
 
 fileSystem.CopyFile quazipDir & "\quazip.dll", tupiDir & "\lib\quazip.dll"
@@ -37,6 +37,8 @@ fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\tupitube.ico",
 fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\TupiTube.bat", tupiDir & "\bin\TupiTube.bat"
 fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\TupiTube.debug.bat", tupiDir & "\bin\TupiTube.debug.bat"
 fileSystem.CopyFile sourceDir & "\shell\release\tupitube.desk.exe", tupiDir & "\bin\raw\tupitube.desk.exe"
+fileSystem.CopyFile "c:\devel\sources\ssl\libcrypto-1_1.dll", tupiDir & "\bin\raw\libcrypto-1_1.dll"
+fileSystem.CopyFile "c:\devel\sources\ssl\libssl-1_1.dll", tupiDir & "\bin\raw\libssl-1_1.dll"
 fileSystem.CopyFile sourceDir & "\framework\core\release\tupifwcore.dll", tupiDir & "\lib\tupifwcore.dll"
 fileSystem.CopyFile sourceDir & "\framework\gui\release\tupifwgui.dll", tupiDir & "\lib\tupifwgui.dll"
 fileSystem.CopyFile sourceDir & "\store\release\tupistore.dll", tupiDir & "\lib\tupistore.dll"
@@ -77,6 +79,7 @@ fileSystem.CopyFile sourceDir & "\plugins\tools\rotation\release\tupirotationtoo
 fileSystem.CopyFile sourceDir & "\plugins\tools\scale\release\tupiscaletool.dll", tupiDir & "\plugins\tupiscaletool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\selection\release\tupiselectiontool.dll", tupiDir & "\plugins\tupiselectiontool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\shear\release\tupisheartool.dll", tupiDir & "\plugins\tupisheartool.dll"
+fileSystem.CopyFile sourceDir & "\plugins\tools\text\release\tupitexttool.dll", tupiDir & "\plugins\tupitexttool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\export\imageplugin\release\tupiimageplugin.dll", tupiDir & "\plugins\tupiimageplugin.dll"
 fileSystem.CopyFile sourceDir & "\plugins\export\ffmpegplugin\release\tupiffmpegplugin.dll", tupiDir & "\plugins\tupiffmpegplugin.dll"
 
@@ -94,6 +97,6 @@ fileSystem.CopyFolder "c:\devel\sources\imageformats", tupiDir & "\bin\raw\image
 fileSystem.CopyFolder "c:\devel\sources\mediaservice", tupiDir & "\bin\raw\mediaservice"
 fileSystem.CopyFolder "c:\devel\sources\audio", tupiDir & "\bin\raw\audio"
 fileSystem.CopyFolder "c:\devel\sources\ffmpeg", tupiDir & "\lib\ffmpeg"
-fileSystem.CopyFolder "c:\devel\sources\ssl", tupiDir & "\lib\ssl"
+REM fileSystem.CopyFolder "c:\devel\sources\ssl", tupiDir & "\lib\ssl"
 
 MsgBox "Copy is done! :D"

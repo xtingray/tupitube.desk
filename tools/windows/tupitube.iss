@@ -3,7 +3,7 @@ SetupIconFile=bin\raw\icon\tupitube.ico
 AppName=TupiTube Desk
 AppVersion=0.2.17
 AppPublisher=MaeFloresta
-AppPublisherURL=https://www.maefloresta.com/
+AppPublisherURL=https://www.tupitube.com/
 DefaultDirName={pf}\TupiTube
 DefaultGroupName=TupiTube
 OutputBaseFilename=tupitube_installer
@@ -58,7 +58,7 @@ Name: "{app}\plugins"
 Name: "{app}\lib"
 Name: "{app}\lib\qt5"
 Name: "{app}\lib\ffmpeg"
-Name: "{app}\lib\ssl"
+; Name: "{app}\lib\ssl"
 Name: "{app}\lib\raster"
 
 [Files]
@@ -99,7 +99,7 @@ Source: "plugins\*"; DestDir: "{app}\plugins"
 Source: "lib\*"; DestDir: "{app}\lib"
 Source: "lib\qt5\*"; DestDir: "{app}\lib\qt5"
 Source: "lib\ffmpeg\*"; DestDir: "{app}\lib\ffmpeg"
-Source: "lib\ssl\*"; DestDir: "{app}\lib\ssl"
+; Source: "lib\ssl\*"; DestDir: "{app}\lib\ssl"
 Source: "lib\raster\*"; DestDir: "{app}\lib\raster"
 
 [Registry]
