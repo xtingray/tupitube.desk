@@ -36,6 +36,8 @@
 #include "tupexposuretable.h"
 #include "tconfig.h"
 
+#include <QPainterPath>
+
 class TUPITUBE_EXPORT TupExposureVerticalHeader : public QHeaderView
 {
     public:
