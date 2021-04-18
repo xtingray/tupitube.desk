@@ -134,17 +134,19 @@ void TextConfigurator::callAction()
 
 void TextConfigurator::updateMode(Mode action)
 {
-    mode = action;
+    if (action != mode) {
+        mode = action;
 
-    QString tip = tr("Update Text");
-    QString icon = "edit_sign.png";
-    if (mode == Add) {
-        tip = tr("Add Text");
-        icon = "plus_sign.png";
+        QString tip = tr("Update Text");
+        QString icon = "edit_sign.png";
+        if (mode == Add) {
+            tip = tr("Add Text");
+            icon = "plus_sign.png";
+        }
+
+        addButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/" + icon)));
+        addButton->setToolTip(tip);
     }
-
-    addButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/" + icon)));
-    addButton->setToolTip(tip);
 }
 
 void TextConfigurator::updateTextAlignment(Qt::Alignment value)

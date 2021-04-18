@@ -366,6 +366,16 @@ void TextTool::itemResponse(const TupItemResponse *response)
     }
 }
 
+void TextTool::frameResponse(const TupFrameResponse *response)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextTool::frameResponse()] - action -> " << response->getAction();
+    #endif
+
+    activeSelection = false;
+    config->updateMode(TextConfigurator::Add);
+}
+
 void TextTool::layerResponse(const TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
@@ -380,11 +390,9 @@ void TextTool::layerResponse(const TupLayerResponse *response)
     }
 }
 
-void TextTool::sceneResponse(const TupSceneResponse *event)
+void TextTool::sceneResponse(const TupSceneResponse *response)
 {
-    Q_UNUSED(event)
-
-    if (event->getAction() == TupProjectRequest::Select)
+    if (response->getAction() == TupProjectRequest::Select)
         initItems(scene);
 }
 

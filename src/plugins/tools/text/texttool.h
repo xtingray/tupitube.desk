@@ -75,6 +75,7 @@ class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
 
         virtual void sceneResponse(const TupSceneResponse *event);
         virtual void layerResponse(const TupLayerResponse *response);
+        virtual void frameResponse(const TupFrameResponse *event);
         virtual void itemResponse(const TupItemResponse *response);
 
         int toolType() const;
