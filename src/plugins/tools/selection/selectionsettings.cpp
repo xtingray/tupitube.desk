@@ -552,8 +552,8 @@ void SelectionSettings::updateRotationAngle(int angle)
 void SelectionSettings::updateScaleFactor(double x, double y)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "Settings::updateScaleFactor() - x -> " << x;
-        qDebug() << "Settings::updateScaleFactor() - y -> " << y;
+        qDebug() << "[Settings::updateScaleFactor()] - x -> " << x;
+        qDebug() << "[Settings::updateScaleFactor()] - y -> " << y;
     #endif
 
    factorXField->blockSignals(true);
