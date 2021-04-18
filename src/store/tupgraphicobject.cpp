@@ -399,24 +399,16 @@ void TupGraphicObject::saveInitTextColor()
 {
     if (QGraphicsTextItem *textItem = qgraphicsitem_cast<QGraphicsTextItem *>(graphicItem)) {
         QColor textColor = textItem->defaultTextColor();
-        Color color;
-        color.name = textColor.name();
-        color.alpha = textColor.alpha();
-        textColorDoList << color;
+        textColorDoList << textColor.name(QColor::HexArgb);
     }
 }
 
-void TupGraphicObject::setTextColor(const QString &colorName, int alpha)
+void TupGraphicObject::setTextColor(const QString &colorName)
 {
     if (QGraphicsTextItem *textItem = qgraphicsitem_cast<QGraphicsTextItem *>(graphicItem)) {
         QColor textColor(colorName);
-        textColor.setAlpha(alpha);
         textItem->setDefaultTextColor(textColor);
-
-        Color color;
-        color.name = colorName;
-        color.alpha = alpha;
-        textColorDoList << color;
+        textColorDoList << colorName;
     }
 }
 
@@ -424,11 +416,9 @@ void TupGraphicObject::redoTextColorAction()
 {
     if (!textColorUndoList.isEmpty()) {
         if (QGraphicsTextItem *textItem = qgraphicsitem_cast<QGraphicsTextItem *>(graphicItem)) {
-            Color color = textColorUndoList.takeLast();
-            textColorDoList << color;
-            QColor textColor(color.name);
-            textColor.setAlpha(color.alpha);
-            textItem->setDefaultTextColor(textColor);
+            QString colorName = textColorUndoList.takeLast();
+            textColorDoList << colorName;
+            textItem->setDefaultTextColor(QColor(colorName));
         }
     }
 }
@@ -439,10 +429,8 @@ void TupGraphicObject::undoTextColorAction()
         if (QGraphicsTextItem *textItem = qgraphicsitem_cast<QGraphicsTextItem *>(graphicItem)) {
             textColorUndoList << textColorDoList.takeLast();
             if (!textColorDoList.isEmpty()) {
-                Color color = textColorDoList.last();
-                QColor textColor(color.name);
-                textColor.setAlpha(color.alpha);
-                textItem->setDefaultTextColor(textColor);
+                QString colorName = textColorDoList.last();
+                textItem->setDefaultTextColor(QColor(colorName));
             }
         }
     }

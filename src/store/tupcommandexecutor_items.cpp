@@ -1189,7 +1189,6 @@ bool TupCommandExecutor::setTextColor(TupItemResponse *response)
 
     QStringList params = response->getArg().toString().split("|");
     QString textColor = params.at(0);
-    int alpha = params.at(1).toInt();
     TupScene *scene = project->sceneAt(sceneIndex);
 
     if (scene) {
@@ -1201,7 +1200,7 @@ bool TupCommandExecutor::setTextColor(TupItemResponse *response)
                     QGraphicsItem *item = frame->item(itemIndex);
                     if (item) {
                         if (response->getMode() == TupProjectResponse::Do)
-                            frame->setTextColorAtItem(itemIndex, textColor, alpha);
+                            frame->setTextColorAtItem(itemIndex, textColor);
 
                         if (response->getMode() == TupProjectResponse::Redo)
                             frame->redoTextColorAction(itemIndex);

@@ -585,6 +585,7 @@ void ColorSettings::checkFramesRange()
 void ColorSettings::updateLoopCheckbox(int state)
 {
     Q_UNUSED(state)
+
     if (reverseLoopBox->isChecked() && loopBox->isChecked())
        loopBox->setChecked(false);
 }
@@ -592,6 +593,7 @@ void ColorSettings::updateLoopCheckbox(int state)
 void ColorSettings::updateReverseCheckbox(int state)
 {
     Q_UNUSED(state)
+
     if (reverseLoopBox->isChecked() && loopBox->isChecked())
        reverseLoopBox->setChecked(false);
 }

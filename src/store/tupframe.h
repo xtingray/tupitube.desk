@@ -166,7 +166,7 @@ class TUPITUBE_EXPORT TupFrame : public QObject, public TupAbstractSerializable
        void undoPenAction(int itemIndex);
 
        void checkTextColorStatus(int itemIndex);
-       void setTextColorAtItem(int itemIndex, const QString &color, int alpha);
+       void setTextColorAtItem(int itemIndex, const QString &color);
        void redoTextColorAction(int itemIndex);
        void undoTextColorAction(int itemIndex);
        

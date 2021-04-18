@@ -58,6 +58,7 @@
 #include "tuplayer.h"
 #include "tupprojectresponse.h"
 #include "tupgraphiclibraryitem.h"
+#include "tuptextitem.h"
 
 #include <QMessageBox>
 #include <QScreen>
@@ -130,18 +131,18 @@ void Tweener::press(const TupInputDeviceInformation *input, TupBrushManager *bru
         qDebug() << "[Tweener::press()]";
     #endif
 
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
-    Q_UNUSED(gScene);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
+    Q_UNUSED(gScene)
 }
 
 /* This method is executed while the mouse is pressed and on movement */
 
 void Tweener::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
-    Q_UNUSED(gScene);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
+    Q_UNUSED(gScene)
 }
 
 /* This method finishes the action started on the press method depending
@@ -154,17 +155,17 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
         qDebug() << "[Tweener::release()]";
     #endif
 
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
 
     if (gScene->currentFrameIndex() == initFrame) {
         if (editMode == TupToolPlugin::Selection) {
             #ifdef TUP_DEBUG
-                qDebug() << "Color Tweener::release() - Tracing selection mode";
+                qDebug() << "[Color Tweener::release()] - Tracing selection mode";
             #endif
             if (gScene->selectedItems().size() > 0) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "Color Tweener::release() - selection size -> " + QString::number(gScene->selectedItems().size());
+                    qDebug() << "[Color Tweener::release()] - selection size -> " << gScene->selectedItems().size();
                 #endif
                 objects = gScene->selectedItems();
                 foreach (QGraphicsItem *item, objects) {
@@ -206,7 +207,9 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
 
                 QGraphicsItem *item = objects.at(0);
                 QColor color = QColor("#fff");
-                if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(item)) {
+                if (TupTextItem *text = qgraphicsitem_cast<TupTextItem *>(item)) {
+                    color = text->defaultTextColor();
+                } else if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(item)) {
                     color = path->pen().color();
                 } else if (TupEllipseItem *ellipse = qgraphicsitem_cast<TupEllipseItem *>(item)) {
                     color = ellipse->pen().color();
@@ -219,13 +222,13 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 configPanel->setInitialColor(color);
 
                 #ifdef TUP_DEBUG
-                    qDebug() << "Shear Tweener::release() - Notifying selection...";
+                    qDebug() << "[Color Tweener::release()] - Notifying selection...";
                 #endif
                 configPanel->notifySelection(true);
             }
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "Shear Tweener::release() - Selection mode: no items selected";
+                qDebug() << "[Color Tweener::release()] - Selection mode: no items selected";
             #endif
         }
     }
@@ -272,13 +275,11 @@ void Tweener::aboutToChangeScene(TupGraphicsScene *)
 }
 
 /* This method is called when this plugin is off */
-
 void Tweener::aboutToChangeTool()
 {
 }
 
 /* This method defines the actions contained in this plugin */
-
 void Tweener::setupActions()
 {
     QString name = tr("Coloring Tween");
@@ -294,13 +295,11 @@ void Tweener::setupActions()
 }
 
 /* This method saves the settings of this plugin */
-
 void Tweener::saveConfig()
 {
 }
 
 /* This method updates the workspace when the plugin changes the scene */
-
 void Tweener::updateScene(TupGraphicsScene *gScene)
 {
     mode = configPanel->mode();
@@ -321,10 +320,10 @@ void Tweener::updateScene(TupGraphicsScene *gScene)
                        setSelection();
                    }
                } else if (editMode == TupToolPlugin::Selection) {
-                          if (gScene->currentFrameIndex() != initFrame)
-                              clearSelection();
-                          initFrame = gScene->currentFrameIndex();
-                          setSelection();
+                   if (gScene->currentFrameIndex() != initFrame)
+                       clearSelection();
+                   initFrame = gScene->currentFrameIndex();
+                   setSelection();
                }
 
                if (configPanel->startComboSize() < total) {
@@ -359,7 +358,6 @@ int Tweener::framesCount()
 }
 
 /* This method clears selection */
-
 void Tweener::clearSelection()
 {
     if (objects.size() > 0) {
@@ -373,7 +371,6 @@ void Tweener::clearSelection()
 }
 
 /* This method disables object selection */
-
 void Tweener::disableSelection()
 {
     foreach (QGraphicsView *view, scene->views()) {
@@ -412,7 +409,9 @@ void Tweener::setSelection()
         }
         QGraphicsItem *item = objects.at(0);
         QColor color = QColor();
-        if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(item)) {
+        if (TupTextItem *text = qgraphicsitem_cast<TupTextItem *>(item)) {
+            color = text->defaultTextColor();
+        } else if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(item)) {
             color = path->pen().color();
         } else if (TupEllipseItem *ellipse = qgraphicsitem_cast<TupEllipseItem *>(item)) {
             color = ellipse->pen().color();
@@ -600,7 +599,7 @@ void Tweener::removeTweenFromProject(const QString &name)
         emit tweenRemoved();
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "Tweener::removeTweenFromProject() - Coloring tween couldn't be removed -> " + name;
+            qDebug() << "[Color Tweener::removeTweenFromProject()] - Coloring tween couldn't be removed -> " << name;
         #endif
     }
 }
@@ -634,7 +633,7 @@ void Tweener::updateMode(TupToolPlugin::Mode toolMode)
                 objects = scene->currentScene()->getItemsFromTween(currentTween->getTweenName(), TupItemTweener::Coloring);
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "Tweener::updateMode() - Current tween pointer is NULL!";
+                qDebug() << "[Color Tweener::updateMode()] - Current tween pointer is NULL!";
             #endif
         }
     }

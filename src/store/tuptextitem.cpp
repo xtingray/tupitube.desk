@@ -65,9 +65,11 @@ QDomElement TupTextItem::toXml(QDomDocument &doc) const
     QBrush brush(this->defaultTextColor());
     root.appendChild(TupSerializer::brush(&brush, doc));
 
+    /*
     qDebug() << "";
     qDebug() << "XML:";
     qDebug() << "" << doc.toString();
+    */
 
     return root;
 }

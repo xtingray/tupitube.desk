@@ -773,41 +773,46 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double 
                      transform.shear(0, 0);
                      object->item()->setTransform(transform);
                  } else if (stepItem->has(TupTweenerStep::Coloring)) {
-                     if (tween->tweenColorFillType() == TupItemTweener::Line || tween->tweenColorFillType() == TupItemTweener::FillAll) {
+                     if (TupTextItem *text = qgraphicsitem_cast<TupTextItem *>(object->item())) {
                          QColor itemColor = stepItem->getColor();
-                         if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(object->item())) {
-                             QPen pen = path->pen();
-                             pen.setColor(itemColor);
-                             path->setPen(pen);
-                         } else if (TupEllipseItem *ellipse = qgraphicsitem_cast<TupEllipseItem *>(object->item())) {
-                             QPen pen = ellipse->pen();
-                             pen.setColor(itemColor);
-                             ellipse->setPen(pen);
-                         } else if (TupLineItem *line = qgraphicsitem_cast<TupLineItem *>(object->item())) {
-                             QPen pen = line->pen();
-                             pen.setColor(itemColor);
-                             line->setPen(pen);
-                         } else if (TupRectItem *rect = qgraphicsitem_cast<TupRectItem *>(object->item())) {
-                             QPen pen = rect->pen();
-                             pen.setColor(itemColor);
-                             rect->setPen(pen);
+                         text->setDefaultTextColor(itemColor);
+                     } else {
+                         if (tween->tweenColorFillType() == TupItemTweener::Line || tween->tweenColorFillType() == TupItemTweener::FillAll) {
+                             QColor itemColor = stepItem->getColor();
+                             if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(object->item())) {
+                                 QPen pen = path->pen();
+                                 pen.setColor(itemColor);
+                                 path->setPen(pen);
+                             } else if (TupEllipseItem *ellipse = qgraphicsitem_cast<TupEllipseItem *>(object->item())) {
+                                 QPen pen = ellipse->pen();
+                                 pen.setColor(itemColor);
+                                 ellipse->setPen(pen);
+                             } else if (TupLineItem *line = qgraphicsitem_cast<TupLineItem *>(object->item())) {
+                                 QPen pen = line->pen();
+                                 pen.setColor(itemColor);
+                                 line->setPen(pen);
+                             } else if (TupRectItem *rect = qgraphicsitem_cast<TupRectItem *>(object->item())) {
+                                 QPen pen = rect->pen();
+                                 pen.setColor(itemColor);
+                                 rect->setPen(pen);
+                             }
                          }
-                     }
 
-                     if (tween->tweenColorFillType() == TupItemTweener::Internal || tween->tweenColorFillType() == TupItemTweener::FillAll) {
-                         QColor itemColor = stepItem->getColor();
-                         if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(object->item())) {
-                             QBrush brush = path->brush();
-                             brush.setColor(itemColor);
-                             path->setBrush(brush);
-                         } else if (TupEllipseItem *ellipse = qgraphicsitem_cast<TupEllipseItem *>(object->item())) {
-                             QBrush brush = ellipse->brush();
-                             brush.setColor(itemColor);
-                             ellipse->setBrush(brush);
-                         } else if (TupRectItem *rect = qgraphicsitem_cast<TupRectItem *>(object->item())) {
-                             QBrush brush = rect->brush();
-                             brush.setColor(itemColor);
-                             rect->setBrush(brush);
+                         if (tween->tweenColorFillType() == TupItemTweener::Internal || tween->tweenColorFillType() == TupItemTweener::FillAll) {
+                             QColor itemColor = stepItem->getColor();
+                             if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(object->item())) {
+                                 QBrush brush = path->brush();
+                                 brush.setColor(itemColor);
+                                 path->setBrush(brush);
+                             } else if (TupEllipseItem *ellipse = qgraphicsitem_cast<TupEllipseItem *>(object->item())) {
+                                 QBrush brush = ellipse->brush();
+                                 brush.setColor(itemColor);
+                                 ellipse->setBrush(brush);
+                             } else if (TupRectItem *rect = qgraphicsitem_cast<TupRectItem *>(object->item())) {
+                                 QBrush brush = rect->brush();
+                                 brush.setColor(itemColor);
+                                 rect->setBrush(brush);
+                             }
                          }
                      }
                  } else if (stepItem->has(TupTweenerStep::Opacity)) {
@@ -861,42 +866,47 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double 
                      transform.translate(-point.x(), -point.y());
 
                      object->item()->setTransform(transform);
-                 } else if (stepItem->has(TupTweenerStep::Coloring)) {
-                     if (tween->tweenColorFillType() == TupItemTweener::Line || tween->tweenColorFillType() == TupItemTweener::FillAll) {
+                 } else if (stepItem->has(TupTweenerStep::Coloring)) {                     
+                     if (TupTextItem *text = qgraphicsitem_cast<TupTextItem *>(object->item())) {
                          QColor itemColor = stepItem->getColor();
-                         if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(object->item())) {
-                             QPen pen = path->pen();
-                             pen.setColor(itemColor);
-                             path->setPen(pen);
-                         } else if (TupEllipseItem *ellipse = qgraphicsitem_cast<TupEllipseItem *>(object->item())) {
-                             QPen pen = ellipse->pen();
-                             pen.setColor(itemColor);
-                             ellipse->setPen(pen);
-                         } else if (TupLineItem *line = qgraphicsitem_cast<TupLineItem *>(object->item())) {
-                             QPen pen = line->pen();
-                             pen.setColor(itemColor);
-                             line->setPen(pen);
-                         } else if (TupRectItem *rect = qgraphicsitem_cast<TupRectItem *>(object->item())) {
-                             QPen pen = rect->pen();
-                             pen.setColor(itemColor);
-                             rect->setPen(pen);
+                         text->setDefaultTextColor(itemColor);
+                     } else {
+                         if (tween->tweenColorFillType() == TupItemTweener::Line || tween->tweenColorFillType() == TupItemTweener::FillAll) {
+                             QColor itemColor = stepItem->getColor();
+                             if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(object->item())) {
+                                 QPen pen = path->pen();
+                                 pen.setColor(itemColor);
+                                 path->setPen(pen);
+                             } else if (TupEllipseItem *ellipse = qgraphicsitem_cast<TupEllipseItem *>(object->item())) {
+                                 QPen pen = ellipse->pen();
+                                 pen.setColor(itemColor);
+                                 ellipse->setPen(pen);
+                             } else if (TupLineItem *line = qgraphicsitem_cast<TupLineItem *>(object->item())) {
+                                 QPen pen = line->pen();
+                                 pen.setColor(itemColor);
+                                 line->setPen(pen);
+                             } else if (TupRectItem *rect = qgraphicsitem_cast<TupRectItem *>(object->item())) {
+                                 QPen pen = rect->pen();
+                                 pen.setColor(itemColor);
+                                 rect->setPen(pen);
+                             }
                          }
-                     }
 
-                     if (tween->tweenColorFillType() == TupItemTweener::Internal || tween->tweenColorFillType() == TupItemTweener::FillAll) {
-                         QColor itemColor = stepItem->getColor();
-                         if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(object->item())) {
-                             QBrush brush = path->brush();
-                             brush.setColor(itemColor);
-                             path->setBrush(brush);
-                         } else if (TupEllipseItem *ellipse = qgraphicsitem_cast<TupEllipseItem *>(object->item())) {
-                             QBrush brush = ellipse->brush();
-                             brush.setColor(itemColor);
-                             ellipse->setBrush(brush);
-                         } else if (TupRectItem *rect = qgraphicsitem_cast<TupRectItem *>(object->item())) {
-                             QBrush brush = rect->brush();
-                             brush.setColor(itemColor);
-                             rect->setBrush(brush);
+                         if (tween->tweenColorFillType() == TupItemTweener::Internal || tween->tweenColorFillType() == TupItemTweener::FillAll) {
+                             QColor itemColor = stepItem->getColor();
+                             if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(object->item())) {
+                                 QBrush brush = path->brush();
+                                 brush.setColor(itemColor);
+                                 path->setBrush(brush);
+                             } else if (TupEllipseItem *ellipse = qgraphicsitem_cast<TupEllipseItem *>(object->item())) {
+                                 QBrush brush = ellipse->brush();
+                                 brush.setColor(itemColor);
+                                 ellipse->setBrush(brush);
+                             } else if (TupRectItem *rect = qgraphicsitem_cast<TupRectItem *>(object->item())) {
+                                 QBrush brush = rect->brush();
+                                 brush.setColor(itemColor);
+                                 rect->setBrush(brush);
+                             }
                          }
                      }
                  }

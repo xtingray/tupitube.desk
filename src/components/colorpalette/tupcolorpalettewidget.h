@@ -98,6 +98,7 @@ class TUPITUBE_EXPORT TupColorPaletteWidget : public TupModuleWidgetBase
         void setupGradientManager();
         void setGlobalColors(const QBrush &brush);
         void updateLuminancePicker(const QColor &color);
+        void saveTextColor(const QColor &color);
 
         QSplitter *splitter;
         QTabWidget *tab;

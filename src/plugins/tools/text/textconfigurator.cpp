@@ -37,6 +37,7 @@
 #include "tapplicationproperties.h"
 #include "tseparator.h"
 
+#include <QBoxLayout>
 #include <QPushButton>
 
 TextConfigurator::TextConfigurator(QWidget *parent) : QWidget(parent)
@@ -63,6 +64,7 @@ TextConfigurator::TextConfigurator(QWidget *parent) : QWidget(parent)
     QLabel *textLabel = new QLabel(tr("Text"));
     mainLayout->addWidget(textLabel);
     textBox = new QTextEdit(this);
+    textBox->setAlignment(Qt::AlignLeft);
     mainLayout->addWidget(textBox);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
@@ -91,7 +93,6 @@ TextConfigurator::~TextConfigurator()
 
 QString TextConfigurator::text() const
 {
-    // return m_text->toPlainText().trimmed();
     return textBox->toPlainText();
 }
 
@@ -107,22 +108,17 @@ void TextConfigurator::changeFont()
     adjustSize();
 }
 
-/*
-void TextConfigurator::setDocument(QTextDocument *doc)
+void TextConfigurator::loadTextSettings(const QFont &itemFont, const QString &text, const QColor &color)
 {
-    textBox->setDocument(doc);
-}
-*/
-
-void TextConfigurator::loadTextSettings(const QFont &itemFont, const QString &text)
-{
-    qDebug() << "[TextConfigurator::loadTextSettings] - text -> " << text;
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextConfigurator::loadTextSettings()] - text -> " << text;
+        qDebug() << "[TextConfigurator::loadTextSettings()] - color -> " << color.name(QColor::HexArgb);
+    #endif
 
     font = itemFont;
     textBox->setFont(itemFont);
+    textBox->setTextColor(color);
     textBox->setPlainText(text);
-    // QTextDocument *doc = new QTextDocument(text);
-    // textBox->setDocument(text);
 
     fontChooser->updateFontSettings(itemFont);
     updateMode(Update);
@@ -153,7 +149,13 @@ void TextConfigurator::updateMode(Mode action)
 
 void TextConfigurator::updateTextAlignment(Qt::Alignment value)
 {
+    textBox->selectAll();
+    textBox->setAlignment(value);
     textAlignmentValue = value;
+
+    QTextCursor cursor = textBox->textCursor();
+    cursor.movePosition(QTextCursor::End);
+    textBox->setTextCursor(cursor);
 }
 
 Qt::Alignment TextConfigurator::textAlignment()
@@ -165,4 +167,21 @@ void TextConfigurator::resetText()
 {
     textBox->clear();
     updateMode(Add);
+}
+
+void TextConfigurator::setTextColor(const QColor &color)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextConfigurator::setTextColor()] - color -> " << color.name(QColor::HexArgb);
+    #endif
+
+    QString text = textBox->toPlainText();
+    textBox->clear();
+    textBox->setTextColor(color);
+    textBox->setText(text);
+}
+
+QColor TextConfigurator::getTextColor() const
+{
+    return textBox->textColor();
 }

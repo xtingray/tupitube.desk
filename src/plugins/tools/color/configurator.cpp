@@ -305,4 +305,3 @@ void Configurator::updateTweenData(const QString &name)
 {
     emit getTweenData(name);
 }
-

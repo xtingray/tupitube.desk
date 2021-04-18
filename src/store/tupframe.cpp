@@ -1655,10 +1655,10 @@ void TupFrame::checkTextColorStatus(int itemIndex)
          object->saveInitTextColor();
 }
 
-void TupFrame::setTextColorAtItem(int itemIndex, const QString &color, int alpha)
+void TupFrame::setTextColorAtItem(int itemIndex, const QString &color)
 {
     TupGraphicObject *object = graphics.at(itemIndex);
-    object->setTextColor(color, alpha);
+    object->setTextColor(color);
 }
 
 void TupFrame::redoTextColorAction(int itemIndex)

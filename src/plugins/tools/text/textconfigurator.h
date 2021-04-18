@@ -40,12 +40,11 @@
 #include "tfontchooser.h"
 
 #include <QWidget>
-#include <QLineEdit>
+// #include <QLineEdit>
 #include <QFont>
 #include <QTextEdit>
-#include <QCheckBox>
-#include <QBoxLayout>
-#include <QFontDatabase>
+// #include <QCheckBox>
+// #include <QBoxLayout>
 
 class TUPITUBE_PLUGIN TextConfigurator : public QWidget
 {
@@ -58,11 +57,12 @@ class TUPITUBE_PLUGIN TextConfigurator : public QWidget
 
         QString text() const;
         QFont textFont() const;
-        // void setDocument(QTextDocument *doc);
-        void loadTextSettings(const QFont &itemFont, const QString &text);
+        void loadTextSettings(const QFont &itemFont, const QString &text, const QColor &color);
         void updateMode(Mode action);
         Qt::Alignment textAlignment();
         void resetText();
+        void setTextColor(const QColor &color);
+        QColor getTextColor() const;
 
     signals:
         void textAdded();

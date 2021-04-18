@@ -1398,7 +1398,6 @@ void TupLibraryWidget::importSoundFile()
             QByteArray data = file.readAll();
             file.close();
 
-            qDebug() << "Enabling EFFECT variable! -> true";
             isEffectSound = true;
             TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
                                                            TupLibraryObject::Sound, project->spaceContext(), data);

@@ -176,15 +176,12 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                             textColor = brushManager->pen().color();
                         }
 
-                        qDebug() << "";
-                        qDebug() << "TEXTCOLOR -> " << textColor.name();
-
                         TupProjectRequest event = TupRequestBuilder::createItemRequest(
                                                   gScene->currentSceneIndex(), currentLayer,
                                                   currentFrame, itemIndex, QPointF(),
                                                   gScene->getSpaceContext(), TupLibraryObject::Item,
                                                   TupProjectRequest::TextColor,
-                                                  textColor.name() + "|" + QString::number(textColor.alpha()));
+                                                  textColor.name(QColor::HexArgb));
                         emit requested(&event);
                         return;
                     } else if (qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(item)) {

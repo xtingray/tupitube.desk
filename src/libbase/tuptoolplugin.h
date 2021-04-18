@@ -115,7 +115,8 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
         virtual void clearSelection();
 
         virtual void setColorMode(TColorCell::FillType mode);
-        
+        virtual void updateTextColor(const QColor &color);
+
     signals:
         void requested(const TupProjectRequest *request);
         

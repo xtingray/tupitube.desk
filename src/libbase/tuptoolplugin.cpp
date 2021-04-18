@@ -36,7 +36,7 @@
 
 #include "tuptoolplugin.h"
 
-TupToolPlugin::TupToolPlugin(QObject * parent) : QObject(parent)
+TupToolPlugin::TupToolPlugin(QObject *parent) : QObject(parent)
 {
 }
 
@@ -352,4 +352,9 @@ void TupToolPlugin::setColorMode(TColorCell::FillType mode)
 void TupToolPlugin::updatePressure(qreal pressure)
 {
     Q_UNUSED(pressure)
+}
+
+void TupToolPlugin::updateTextColor(const QColor &color)
+{
+    Q_UNUSED(color)
 }

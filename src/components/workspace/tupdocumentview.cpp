@@ -905,8 +905,6 @@ void TupDocumentView::selectTool()
         QString toolName = tr("%1").arg(action->text());
         TAction::ActionId toolId = action->actionId();
 
-        qDebug() << "1 - ACTION ID -> " << action->actionId();
-
         if (currentTool) {
             if (toolId == currentTool->toolId())
                 return;
@@ -1070,8 +1068,6 @@ void TupDocumentView::selectToolFromMenu(QAction *action)
     QMenu *menu = qobject_cast<QMenu *>(action->parent());
     if (menu) {
         TAction *tool = qobject_cast<TAction *>(menu->activeAction());
-
-        // qDebug() << "2 - ACTION ID -> " << tool->actionId();
 
         if (tool) {
             if (tool->actionId() == currentTool->toolId())
@@ -2470,12 +2466,22 @@ void TupDocumentView::updatePen(const QPen &pen)
 {
     status->setPen(pen);
     contourColor = pen.color();
+    if (currentTool) {
+        if (currentTool->toolId() == TAction::Text)
+            currentTool->updateTextColor(pen.color());
+    }
+
     emit contourColorChanged(pen.color());
 }
 
 void TupDocumentView::updateBrush(const QBrush &brush)
 {
     status->setBrush(brush);
+    if (currentTool) {
+        if (currentTool->toolId() == TAction::Text)
+            currentTool->updateTextColor(brush.color());
+    }
+
     emit fillColorChanged(brush.color());
 }
 

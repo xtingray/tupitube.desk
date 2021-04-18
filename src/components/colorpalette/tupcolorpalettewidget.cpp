@@ -61,6 +61,7 @@ TupColorPaletteWidget::TupColorPaletteWidget(QWidget *parent): TupModuleWidgetBa
     currentSpace = TColorCell::Contour;
     TCONFIG->beginGroup("ColorPalette");
     TCONFIG->setValue("CurrentColorMode", 0);
+    TCONFIG->setValue("TextColor", QColor(Qt::black));
 
     currentContourBrush = Qt::black;
     currentFillBrush = Qt::transparent;
@@ -251,11 +252,13 @@ void TupColorPaletteWidget::setupColorDisplay()
 void TupColorPaletteWidget::updateColorMode(TColorCell::FillType type)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupColorPaletteWidget::updateColorMode()] - type: " << type;
+        qDebug() << "[TupColorPaletteWidget::updateColorMode()] - type -> " << type;
     #endif
 
     QBrush brush;
     QColor color;
+    TCONFIG->beginGroup("ColorPalette");
+    TCONFIG->setValue("CurrentColorMode", type);
 
     if (type == TColorCell::Background) {
         paletteContainer->enableTransparentColor(false);
@@ -278,7 +281,7 @@ void TupColorPaletteWidget::updateColorMode(TColorCell::FillType type)
             currentSpace = TColorCell::Contour;
             brush = contourColorCell->brush();
             if (fillColorCell->isChecked())
-                fillColorCell->setChecked(false);
+                fillColorCell->setChecked(false);                
         } else if (type == TColorCell::Inner) {
             currentSpace = TColorCell::Inner;
             brush = fillColorCell->brush();
@@ -286,12 +289,11 @@ void TupColorPaletteWidget::updateColorMode(TColorCell::FillType type)
                 contourColorCell->setChecked(false);
         }
 
+        TCONFIG->setValue("TextColor", brush.color().name(QColor::HexArgb));
         color = brush.color();
         htmlField->setText(color.name());
     }
 
-    TCONFIG->beginGroup("ColorPalette");
-    TCONFIG->setValue("CurrentColorMode", type);
     emit colorSpaceChanged(type);
 
     if (fgType == Solid && tab->currentIndex() != 0) {
@@ -580,6 +582,13 @@ void TupColorPaletteWidget::parsePaletteFile(const QString &file)
     paletteContainer->readPaletteFile(file);
 }
 
+
+void TupColorPaletteWidget::saveTextColor(const QColor &color)
+{
+    TCONFIG->beginGroup("ColorPalette");
+    TCONFIG->setValue("TextColor", color.name(QColor::HexArgb));
+}
+
 void TupColorPaletteWidget::init()
 {
     if (bgColor->isChecked())
@@ -588,6 +597,7 @@ void TupColorPaletteWidget::init()
     currentSpace = TColorCell::Contour;
 
     QColor contourColor = Qt::black;
+    saveTextColor(Qt::black);
     currentContourBrush = QBrush(contourColor);
     htmlField->setText("#000000");
 
@@ -727,6 +737,8 @@ void TupColorPaletteWidget::updateContourColor(const QColor &color)
         contourColorCell->setBrush(QBrush(color));
         updateColorMode(TColorCell::Contour);
     }
+
+    saveTextColor(color);
 }
 
 void TupColorPaletteWidget::updateFillColor(const QColor &color)
@@ -744,6 +756,8 @@ void TupColorPaletteWidget::updateFillColor(const QColor &color)
         fillColorCell->setBrush(QBrush(color));
         updateColorMode(TColorCell::Inner);
     }
+
+    saveTextColor(color);
 }
 
 void TupColorPaletteWidget::updateBgColor(const QColor &color)

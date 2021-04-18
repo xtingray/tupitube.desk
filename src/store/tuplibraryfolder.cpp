@@ -711,16 +711,18 @@ TupLibraryObject * TupLibraryFolder::findSoundFile(const QString &folderId)
         LibraryObjects items = folder->getObjects();
         if (!items.isEmpty()) {
             foreach (TupLibraryObject *object, items) {
-                if (object->getType() == TupLibraryObject::Sound) {
-                    qDebug() << "OBJECT -> " << object->getSymbolName();
+                if (object->getType() == TupLibraryObject::Sound)
                     return object;
-                }
             }
         } else {
-            qDebug() << "LIPSYNC - Folder is empty -> " << folderId;
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupLibraryFolder::findSoundFile()] -  Fatal Error: Folder is empty -> " << folderId;
+            #endif
         }
     } else {
-        qDebug() << "LIPSYNC - Folder is NULL -> " << folderId;
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryFolder::findSoundFile()] -  Fatal Error: Folder is NULL -> " << folderId;
+        #endif
     }
 
     return nullptr;

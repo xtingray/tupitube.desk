@@ -83,6 +83,7 @@ class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
         void resizeNode(qreal scaleFactor);
         void updateZoomFactor(qreal scaleFactor);
         void clearSelection();
+        void updateTextColor(const QColor &color);
 
     signals:
         void closeHugeCanvas();

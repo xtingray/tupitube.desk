@@ -43,6 +43,7 @@
 #include "tuprequestbuilder.h"
 #include "tosd.h"
 #include "tupserializer.h"
+#include "tconfig.h"
 
 TextTool::TextTool()
 {
@@ -51,6 +52,7 @@ TextTool::TextTool()
     #endif
 
     config = new TextConfigurator;
+    config->setTextColor(Qt::black);
     connect(config, SIGNAL(textAdded()), this, SLOT(insertText()));
     connect(config, SIGNAL(textUpdated()), this, SLOT(updateText()));
 
@@ -150,7 +152,7 @@ void TextTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
             manager->resizeNodes(realFactor);
 
             activeSelection = true;
-            config->loadTextSettings(textItem->font(), textItem->data(0).toString());
+            config->loadTextSettings(textItem->font(), textItem->data(0).toString(), textItem->defaultTextColor());
         } else {
             #ifdef TUP_DEBUG
                 qDebug() << "[TextTool::press()] - Warning: Object is not a text item!";
@@ -222,8 +224,7 @@ void TextTool::release(const TupInputDeviceInformation *input, TupBrushManager *
                 manager->resizeNodes(realFactor);
 
                 activeSelection = true;
-                // config->loadTextSettings(text->font(), text->toPlainText());
-                config->loadTextSettings(textItem->font(), textItem->data(0).toString());
+                config->loadTextSettings(textItem->font(), textItem->data(0).toString(), textItem->defaultTextColor());
             } else {
                 item->setSelected(false);
             }
@@ -445,9 +446,10 @@ void TextTool::insertText()
         option.setAlignment(config->textAlignment());
         textItem->document()->setDefaultTextOption(option);
 
-        QColor textColor(Qt::black);
-        textColor.setAlpha(100);
-        textItem->setDefaultTextColor(textColor);
+        TCONFIG->beginGroup("ColorPalette");
+        currentColor = QColor(TCONFIG->value("TextColor").toString());
+        textItem->setDefaultTextColor(currentColor);
+
         QFont font = config->textFont();
         QString text = config->text();
         textItem->setFont(font);
@@ -495,6 +497,10 @@ void TextTool::insertText()
 
 void TextTool::updateText()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextTool::updateText()]";
+    #endif
+
     if (manager) {
         QGraphicsItem *item = manager->parentItem();
         if (TupTextItem *textItem = qgraphicsitem_cast<TupTextItem *>(item)) {
@@ -507,6 +513,7 @@ void TextTool::updateText()
             textItem->setFont(font);
             textItem->setPlainText(text);
             textItem->setData(0, text);
+            textItem->setDefaultTextColor(config->getTextColor());
 
             QFontMetrics fm(font);
             QStringList list = text.split("\n");
@@ -679,4 +686,13 @@ void TextTool::clearSelection()
         activeSelection = false;
         scene->drawCurrentPhotogram();
     }
+}
+
+void TextTool::updateTextColor(const QColor &color)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextTool::updateTextColor()] - color -> " << color;
+    #endif
+
+    config->setTextColor(color);
 }
