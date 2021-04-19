@@ -71,6 +71,7 @@ class TUPITUBE_PLUGIN TextConfigurator : public QWidget
     private slots:
         void changeFont();
         void callAction();
+        void clearText();
         void updateTextAlignment(Qt::Alignment flag);
 
     private:
@@ -78,6 +79,7 @@ class TUPITUBE_PLUGIN TextConfigurator : public QWidget
         TFontChooser *fontChooser;
         QFont font;
         QPushButton *addButton;
+        QPushButton *clearButton;
         Mode mode;
         Qt::Alignment textAlignmentValue;
 };

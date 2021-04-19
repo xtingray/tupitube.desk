@@ -73,9 +73,15 @@ TextConfigurator::TextConfigurator(QWidget *parent) : QWidget(parent)
     addButton->setMaximumWidth(50);
     connect(addButton, SIGNAL(clicked()), this, SLOT(callAction()));
 
+    clearButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/new.png")), "");
+    clearButton->setToolTip(tr("Clear Text"));
+    clearButton->setMaximumWidth(50);
+    connect(clearButton, SIGNAL(clicked()), this, SLOT(clearText()));
+
     buttonLayout->addStretch(1);
     buttonLayout->addWidget(new QWidget);
     buttonLayout->addWidget(addButton, Qt::AlignHCenter);
+    buttonLayout->addWidget(clearButton, Qt::AlignHCenter);
     buttonLayout->addWidget(new QWidget);
     buttonLayout->addStretch(1);
 
@@ -130,6 +136,11 @@ void TextConfigurator::callAction()
         emit textAdded();
     else
         emit textUpdated();
+}
+
+void TextConfigurator::clearText()
+{
+    textBox->clear();
 }
 
 void TextConfigurator::updateMode(Mode action)

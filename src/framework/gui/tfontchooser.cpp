@@ -123,13 +123,15 @@ void TFontChooser::setFontSizeRange(const QString &family)
     m_fontSize->clear();
     QList<int> points = fdb.pointSizes(family);
     if (!points.isEmpty()) {
-        foreach (int point, points)
-            m_fontSize->addItem(QString::number(point));
+        foreach (int point, points) {
+            if (point > 9)
+                m_fontSize->addItem(QString::number(point));
+        }
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TFontChooser::setFontSizeRange()] - Fatal Error: No sizes for family -> " << family;
         #endif
-        for (int i=1; i<30; i++)
+        for (int i=10; i<30; i++)
             m_fontSize->addItem(QString::number(i));
     }
 

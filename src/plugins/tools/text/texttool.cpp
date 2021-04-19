@@ -512,28 +512,65 @@ void TextTool::updateText()
     if (manager) {
         QGraphicsItem *item = manager->parentItem();
         if (TupTextItem *textItem = qgraphicsitem_cast<TupTextItem *>(item)) {
-            QTextOption option = textItem->document()->defaultTextOption();
-            option.setAlignment(config->textAlignment());
-            textItem->document()->setDefaultTextOption(option);
-
             QString text = config->text();
-            QFont font = config->textFont();
-            textItem->setFont(font);
-            textItem->setPlainText(text);
-            textItem->setData(0, text);
-            textItem->setDefaultTextColor(config->getTextColor());
+            if (text.isEmpty()) { // Remove item
+                int itemIndex = -1;
+                int frameIndex = -1;
+                int layerIndex = -1;
 
-            QFontMetrics fm(font);
-            QStringList list = text.split("\n");
-            int longerLine = 0;
-            foreach (QString sentence, list) {
-                int width = fm.horizontalAdvance(sentence);
-                if (width > longerLine)
-                    longerLine = width;
+                TupProject::Mode spaceMode = scene->getSpaceContext();
+                if (spaceMode == TupProject::FRAMES_MODE) {
+                    frameIndex = scene->currentFrameIndex();
+                    layerIndex = scene->currentLayerIndex();
+                    itemIndex = scene->currentFrame()->indexOf(item);
+                } else {
+                    TupBackground *bg = scene->currentScene()->sceneBackground();
+                    if (bg) {
+                        TupFrame *frame;
+                        if (spaceMode == TupProject::VECTOR_STATIC_BG_MODE)
+                            frame = bg->vectorStaticFrame();
+                        else if (spaceMode == TupProject::VECTOR_FG_MODE)
+                            frame = bg->vectorForegroundFrame();
+                        else
+                            frame = bg->vectorDynamicFrame();
+
+                        if (frame)
+                            itemIndex = frame->indexOf(item);
+                    } else {
+                        #ifdef TUP_DEBUG
+                            qDebug() << "[TextTool::updateText()] - Fatal Error: Background frame is NULL!";
+                        #endif
+                    }
+                }
+
+                TupProjectRequest event = TupRequestBuilder::createItemRequest(
+                                          scene->currentSceneIndex(), layerIndex, frameIndex,
+                                          itemIndex, QPointF(), scene->getSpaceContext(), TupLibraryObject::Item,
+                                          TupProjectRequest::Remove);
+                emit requested(&event);
+            } else {
+                QTextOption option = textItem->document()->defaultTextOption();
+                option.setAlignment(config->textAlignment());
+                textItem->document()->setDefaultTextOption(option);
+
+                QFont font = config->textFont();
+                textItem->setFont(font);
+                textItem->setPlainText(text);
+                textItem->setData(0, text);
+                textItem->setDefaultTextColor(config->getTextColor());
+
+                QFontMetrics fm(font);
+                QStringList list = text.split("\n");
+                int longerLine = 0;
+                foreach (QString sentence, list) {
+                    int width = fm.horizontalAdvance(sentence);
+                    if (width > longerLine)
+                        longerLine = width;
+                }
+
+                textItem->setTextWidth(longerLine + 9);
+                manager->syncNodesFromParent();
             }
-
-            textItem->setTextWidth(longerLine + 9);
-            manager->syncNodesFromParent();
         }
     } else {
         #ifdef TUP_DEBUG
