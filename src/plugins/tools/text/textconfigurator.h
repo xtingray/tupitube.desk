@@ -61,6 +61,7 @@ class TUPITUBE_PLUGIN TextConfigurator : public QWidget
         void updateMode(Mode action);
         Qt::Alignment textAlignment();
         void resetText();
+        void clearText();
         void setTextColor(const QColor &color);
         QColor getTextColor() const;
 
@@ -71,7 +72,6 @@ class TUPITUBE_PLUGIN TextConfigurator : public QWidget
     private slots:
         void changeFont();
         void callAction();
-        void clearText();
         void updateTextAlignment(Qt::Alignment flag);
 
     private:

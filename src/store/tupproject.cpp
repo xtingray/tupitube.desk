@@ -502,7 +502,7 @@ bool TupProject::createSymbol(int type, const QString &name, const QByteArray &d
         return false;
     }
 
-    if (library->createSymbol(TupLibraryObject::Type(type), name, data, folder) == nullptr) {
+    if (library->createSymbol(TupLibraryObject::ObjectType(type), name, data, folder) == nullptr) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupProject::createSymbol()] - Fatal error: object can't be created. Data is NULL!";
         #endif    
@@ -517,7 +517,7 @@ bool TupProject::createSymbol(int type, const QString &name, const QByteArray &d
     return true;
 }
 
-bool TupProject::removeSymbol(const QString &name, TupLibraryObject::Type type)
+bool TupProject::removeSymbol(const QString &name, TupLibraryObject::ObjectType type)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupProject::removeSymbol()]";
@@ -644,7 +644,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                 return false;
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "TupProject::insertSymbolIntoFrame() - Fatal Error: invalid spaceMode!";
+                qDebug() << "[TupProject::insertSymbolIntoFrame()] - Fatal Error: invalid spaceMode!";
             #endif        
             return false;
         }
@@ -652,10 +652,10 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
         if (frame) {
             TupLibraryObject *object = library->getObject(name);
             if (object) {
-                switch (object->getType()) {
+                switch (object->getObjectType()) {
                     case TupLibraryObject::Item:
                     {
-                         TupGraphicLibraryItem *libraryItem = new TupGraphicLibraryItem(object);
+                         TupGraphicLibraryItem *libraryItem = new TupGraphicLibraryItem(object->clone());
                          int zLevel = frame->getTopZLevel();
                          libraryItem->setZValue(zLevel);
                          frame->addLibraryItem(name, libraryItem);
@@ -717,6 +717,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                          frame->addSvgItem(name, svgItem);
                     }
                     break;
+                    /*
                     case TupLibraryObject::Text:
                     {
                          // SQA: Just out of curiosity, check if this case really happens!
@@ -728,6 +729,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                          frame->addItem(name, libraryItem);
                     }
                     break;
+                    */
                     case TupLibraryObject::Sound:
                     {
                          TupSoundLayer *sound = scene->createSoundLayer(scene->getSoundLayers().count());
@@ -763,7 +765,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
     return false;
 }
 
-bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::Type type)
+bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::ObjectType type)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupProject::removeSymbolFromFrame()] - Removing symbol from project -> " << name;
@@ -826,7 +828,7 @@ bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::Ty
     return true;
 }
 
-bool TupProject::updateSymbolId(TupLibraryObject::Type type, const QString &oldId, const QString &newId)
+bool TupProject::updateSymbolId(TupLibraryObject::ObjectType type, const QString &oldId, const QString &newId)
 {
     int scenesCount = scenesList.size();
     for (int i = 0; i < scenesCount; i++) {
@@ -875,7 +877,7 @@ bool TupProject::updateSymbolId(TupLibraryObject::Type type, const QString &oldI
     return true;
 }
 
-void TupProject::reloadLibraryItem(TupLibraryObject::Type type, const QString &id, TupLibraryObject *object)
+void TupProject::reloadLibraryItem(TupLibraryObject::ObjectType type, const QString &id, TupLibraryObject *object)
 {
     int scenesCount = scenesList.size();
     for (int i = 0; i < scenesCount; i++) {

@@ -101,7 +101,7 @@ class TUPITUBE_EXPORT TupFrame : public QObject, public TupAbstractSerializable
         void updateSvgIdFromFrame(const QString &oldId, const QString &newId);
 
         void replaceItem(int position, QGraphicsItem *item);
-        bool moveItem(TupLibraryObject::Type frameType, int currentPosition, int action);
+        bool moveItem(TupLibraryObject::ObjectType frameType, int currentPosition, int action);
       
         bool removeGraphic(int position);
         bool removeGraphicAt(int position);
@@ -150,10 +150,10 @@ class TUPITUBE_EXPORT TupFrame : public QObject, public TupAbstractSerializable
         void reloadSVGItem(const QString &id, TupLibraryObject *object);
         void updateZLevel(int zLevelIndex);
 
-        void checkTransformationStatus(TupLibraryObject::Type itemType, int index);
-        void storeItemTransformation(TupLibraryObject::Type itemType, int index, const QString &properties);
-        void undoTransformation(TupLibraryObject::Type itemType, int index);
-        void redoTransformation(TupLibraryObject::Type itemType, int index);
+        void checkTransformationStatus(TupLibraryObject::ObjectType itemType, int index);
+        void storeItemTransformation(TupLibraryObject::ObjectType itemType, int index, const QString &properties);
+        void undoTransformation(TupLibraryObject::ObjectType itemType, int index);
+        void redoTransformation(TupLibraryObject::ObjectType itemType, int index);
 
        void checkBrushStatus(int itemIndex);
        void setBrushAtItem(int itemIndex, const QString &xml);

@@ -240,12 +240,12 @@ void TupItemResponse::setItemIndex(int index)
     m_itemIndex = index;
 }
 
-TupLibraryObject::Type TupItemResponse::getItemType() const
+TupLibraryObject::ObjectType TupItemResponse::getItemType() const
 {
     return m_itemType;
 }
 
-void TupItemResponse::setItemType(TupLibraryObject::Type type)
+void TupItemResponse::setItemType(TupLibraryObject::ObjectType type)
 {
     m_itemType = type;
 }
@@ -293,12 +293,12 @@ TupLibraryResponse::~TupLibraryResponse()
 {
 }
 
-void TupLibraryResponse::setSymbolType(TupLibraryObject::Type symtype)
+void TupLibraryResponse::setSymbolType(TupLibraryObject::ObjectType symtype)
 {
     m_symbolType = symtype;
 }
 
-TupLibraryObject::Type TupLibraryResponse::symbolType() const
+TupLibraryObject::ObjectType TupLibraryResponse::symbolType() const
 {
     return m_symbolType;
 }

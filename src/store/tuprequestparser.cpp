@@ -57,7 +57,7 @@ bool TupRequestParser::startTag(const QString& qname, const QXmlAttributes& atts
     } else if (qname == "item") {
                static_cast<TupItemResponse *>(response)->setItemIndex(atts.value("index").toInt());
     } else if (qname == "objectType") {
-               static_cast<TupItemResponse *>(response)->setItemType(TupLibraryObject::Type(atts.value("id").toInt()));
+               static_cast<TupItemResponse *>(response)->setItemType(TupLibraryObject::ObjectType(atts.value("id").toInt()));
     } else if (qname == "position") {
                static_cast<TupItemResponse *>(response)->setPosX(atts.value("x").toDouble());
                static_cast<TupItemResponse *>(response)->setPosY(atts.value("y").toDouble());
@@ -72,7 +72,7 @@ bool TupRequestParser::startTag(const QString& qname, const QXmlAttributes& atts
     } else if (qname == "scene") {
                static_cast<TupSceneResponse *>(response)->setSceneIndex(atts.value("index").toInt());
     } else if (qname == "symbol") {
-               static_cast<TupLibraryResponse*>(response)->setSymbolType(TupLibraryObject::Type(atts.value("type").toInt()));
+               static_cast<TupLibraryResponse*>(response)->setSymbolType(TupLibraryObject::ObjectType(atts.value("type").toInt()));
                static_cast<TupLibraryResponse*>(response)->setParent(atts.value("folder"));
                static_cast<TupLibraryResponse*>(response)->setSpaceMode(TupProject::Mode(atts.value("spaceMode").toInt()));
     } else if (qname == "action") {
@@ -85,7 +85,7 @@ bool TupRequestParser::startTag(const QString& qname, const QXmlAttributes& atts
 
 bool TupRequestParser::endTag(const QString& qname)
 {
-    Q_UNUSED(qname);
+    Q_UNUSED(qname)
     return true;
 }
 

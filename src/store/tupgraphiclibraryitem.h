@@ -50,7 +50,7 @@ class TUPITUBE_EXPORT TupGraphicLibraryItem : public TupProxyItem, public TupAbs
         TupGraphicLibraryItem(TupLibraryObject *object);
         ~TupGraphicLibraryItem();
 
-        TupLibraryObject::Type getItemType();
+        TupLibraryObject::ObjectType getItemType();
         
         QDomElement toXml(QDomDocument &doc) const;
         void fromXml(const QString &xml);
@@ -68,7 +68,7 @@ class TUPITUBE_EXPORT TupGraphicLibraryItem : public TupProxyItem, public TupAbs
         QString symbolName;
         QString symbolPath;
         QString svgContent;
-        TupLibraryObject::Type itemType;
+        TupLibraryObject::ObjectType itemType;
 };
 
 #endif

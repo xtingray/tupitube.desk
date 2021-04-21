@@ -49,24 +49,34 @@ class TupLibraryObject;
 class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSerializable
 {
     public:
-        enum Type
+        enum ObjectType
         {
-            // Item = 0x01,
             Item = 1,
             Image,
             Sound,
             Svg,
-            Text,
             Folder
+        };
+
+        enum ItemType
+        {
+            Path = 0x01,
+            Rect,
+            Ellipse,
+            Text,
+            Group
         };
 
         TupLibraryObject(QObject *parent = nullptr);
         TupLibraryObject(const QString &name, const QString &folder,
-                         TupLibraryObject::Type type, QObject *parent = nullptr);
+                         TupLibraryObject::ObjectType type, QObject *parent = nullptr);
         ~TupLibraryObject();
 
-        void setType(TupLibraryObject::Type type);
-        TupLibraryObject::Type getType() const;
+        void setObjectType(TupLibraryObject::ObjectType type);
+        TupLibraryObject::ObjectType getObjectType() const;
+
+        void setItemType(TupLibraryObject::ItemType type);
+        TupLibraryObject::ItemType getItemType() const;
 
         void setData(const QVariant &data);
         QVariant getData() const;
@@ -103,19 +113,22 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         void setSoundResourceFlag(bool flag);
         bool isSoundResource();
 
-        bool isNativeGroup();
-        QString getGroupXml() const;
+        // bool isNativeGroup();
+        QString toString() const;
 
         static QPixmap renderImage(const QString &xml, int width);
         static QPixmap generateImage(QGraphicsItem *item, int width);
         static QPixmap generateImage(const QString &xml, int width);
+
+        TupLibraryObject * clone();
 
     public:
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
         
     private:
-        TupLibraryObject::Type objectType;
+        TupLibraryObject::ObjectType objectType;
+        TupLibraryObject::ItemType itemType;
         QVariant data;
         QString dataPath;
         QString symbolName;
@@ -123,12 +136,12 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         QString smallId;
         QString extension;
         QByteArray rawData;
-        QString groupXml;
+        QString xmlString;
 
         bool objectIsSoundResource;
         bool lipsyncVoice;
         bool mute;
-        bool isGroup;
+        // bool isGroup;
         int playAt;
 };
 

@@ -383,7 +383,7 @@ void Tweener::applyTween()
         initScene = scene->currentSceneIndex();
 
         foreach (QGraphicsItem *item, objects) {
-            TupLibraryObject::Type type = TupLibraryObject::Item;
+            TupLibraryObject::ObjectType type = TupLibraryObject::Item;
             int objectIndex = -1;
 
             if (TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item)) {
@@ -409,7 +409,7 @@ void Tweener::applyTween()
         initScene = scene->currentSceneIndex();
 
         foreach (QGraphicsItem *item, objects) {
-            TupLibraryObject::Type type = TupLibraryObject::Item;
+            TupLibraryObject::ObjectType type = TupLibraryObject::Item;
 
             TupScene *sceneData = scene->currentScene();
             TupLayer *layer = sceneData->layerAt(initLayer);

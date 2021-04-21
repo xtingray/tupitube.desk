@@ -159,6 +159,21 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
         }
     }
 
+    if (currentTool == TAction::Text) {
+        if (event->buttons() == Qt::RightButton) {
+            bool activeSelection = !scene()->selectedItems().isEmpty();
+            if (activeSelection) {
+                QMenu *menu = new QMenu(tr("Drawing area"));
+                menu->addAction(kApp->findGlobalAction("undo"));
+                menu->addSeparator();
+                menu->addAction(tr("Add to library..."), this, SLOT(addSelectedItemsToLibrary()));
+                menuOn = true;
+                menu->exec(event->globalPos());
+                return;
+            }
+        }
+    }
+
     if (currentTool == TAction::ObjectSelection) {
         if (event->buttons() == Qt::RightButton) {
             QMenu *menu = new QMenu(tr("Drawing area"));
@@ -604,10 +619,10 @@ void TupPaintArea::projectResponse(TupProjectResponse *)
 {
 }
 
-void TupPaintArea::libraryResponse(TupLibraryResponse *request)
+void TupPaintArea::libraryResponse(TupLibraryResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPaintArea::libraryResponse()] - Request Action: " << request->getAction();
+        qDebug() << "[TupPaintArea::libraryResponse()] - Response Action: " << response->getAction();
     #endif
 
     TupGraphicsScene *guiScene = graphicsScene();
@@ -617,7 +632,7 @@ void TupPaintArea::libraryResponse(TupLibraryResponse *request)
 
     if (!guiScene->userIsDrawing()) {
         int frameIndex = guiScene->currentFrameIndex();
-        switch (request->getAction()) {
+        switch (response->getAction()) {
             case TupProjectRequest::InsertSymbolIntoFrame:
               {
                   if (spaceMode == TupProject::FRAMES_MODE) {
@@ -658,6 +673,8 @@ void TupPaintArea::libraryResponse(TupLibraryResponse *request)
             qDebug() << "[TupPaintArea::libraryResponse()] - isDrawing() == true! - No action taken!";
         #endif
     }
+
+    guiScene->libraryResponse(response);
 }
 
 bool TupPaintArea::canPaint() const
@@ -701,7 +718,7 @@ void TupPaintArea::deleteItems()
                  if (counter == total-1)
                      deleteMode = false;
 
-                 TupLibraryObject::Type type = TupLibraryObject::Svg;
+                 TupLibraryObject::ObjectType type = TupLibraryObject::Svg;
                  TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
                  int itemIndex = -1;
                  int frameIndex = -1;
@@ -956,7 +973,7 @@ void TupPaintArea::pasteItems()
             TupFrame *frame = currentScene->currentFrame();
             if (frame) {
                 int total = frame->graphicsCount();
-                TupLibraryObject::Type type = TupLibraryObject::Item;
+                TupLibraryObject::ObjectType type = TupLibraryObject::Item;
 
                 if (xml.startsWith("<svg")) {
                     type = TupLibraryObject::Svg;
@@ -1067,7 +1084,7 @@ void TupPaintArea::multipasteObject(int pasteTotal)
     limit = currentFrame + pasteTotal;
     for (int i=currentFrame+1; i<=limit; i++) {
         foreach (QString xml, copiesXml) {
-            TupLibraryObject::Type type = TupLibraryObject::Item;
+            TupLibraryObject::ObjectType type = TupLibraryObject::Item;
             int total = currentScene->currentFrame()->graphicsCount();
 
             TupScene *scene = project->sceneAt(currentScene->currentSceneIndex());
@@ -1279,7 +1296,7 @@ void TupPaintArea::requestItemMovement(QAction *action)
     TupFrame *currentFrame = currentScene->currentFrame();
 
     foreach (QGraphicsItem *item, selected) {
-             TupLibraryObject::Type type = TupLibraryObject::Item; 
+             TupLibraryObject::ObjectType type = TupLibraryObject::Item;
              int index = -1;
              if (TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item)) {
                  type = TupLibraryObject::Svg;

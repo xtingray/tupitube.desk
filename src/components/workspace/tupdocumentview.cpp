@@ -2309,7 +2309,7 @@ void TupDocumentView::importPapagayoLipSync()
                                                                                                 TupLibraryObject::Folder);
                             emit requestTriggered(&request);
 
-                            TupLibraryObject::Type type = TupLibraryObject::Image;
+                            TupLibraryObject::ObjectType type = TupLibraryObject::Image;
                             if (extension.compare(".tobj") == 0)
                                 type = TupLibraryObject::Item;
 

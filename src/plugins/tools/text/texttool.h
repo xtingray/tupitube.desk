@@ -63,7 +63,6 @@ class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
         virtual QCursor cursor();
 
         virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
-        // virtual void doubleClick(const TupInputDeviceInformation *input, TupGraphicsScene *scene);
         virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         // virtual void doubleClick(const TupInputDeviceInformation *input, TupGraphicsScene *scene);
@@ -75,7 +74,8 @@ class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
 
         virtual void sceneResponse(const TupSceneResponse *event);
         virtual void layerResponse(const TupLayerResponse *response);
-        virtual void frameResponse(const TupFrameResponse *event);
+        virtual void frameResponse(const TupFrameResponse *response);
+        virtual void libraryResponse(const TupLibraryResponse *response);
         virtual void itemResponse(const TupItemResponse *response);
 
         int toolType() const;
@@ -101,6 +101,7 @@ class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
         TupFrame* getCurrentFrame();
         void requestTransformation(QGraphicsItem *item, TupFrame *frame);
         TupFrame* frameAt(int sceneIndex, int layerIndex, int frameIndex);
+        void removeManager();
 
         TupGraphicsScene *scene;
         // TupTextItem *textItem;

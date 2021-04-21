@@ -343,7 +343,7 @@ void Tweener::updateTweenPath()
 {
     QString route = pathToCoords();
     foreach (QGraphicsItem *item, objects) {
-        TupLibraryObject::Type type = TupLibraryObject::Item;
+        TupLibraryObject::ObjectType type = TupLibraryObject::Item;
         int objectIndex = scene->currentFrame()->indexOf(item);
         TupProjectRequest request = TupRequestBuilder::createItemRequest(
                                     initScene, initLayer, initFrame, objectIndex,
@@ -658,7 +658,7 @@ void Tweener::applyTween()
         #endif
 
         foreach (QGraphicsItem *item, objects) {
-            TupLibraryObject::Type type = TupLibraryObject::Item;
+            TupLibraryObject::ObjectType type = TupLibraryObject::Item;
             int objectIndex = scene->currentFrame()->indexOf(item);
             QPointF point = item->pos();
 
@@ -689,7 +689,7 @@ void Tweener::applyTween()
         #endif
 
         foreach (QGraphicsItem *item, objects) {
-            TupLibraryObject::Type type = TupLibraryObject::Item;
+            TupLibraryObject::ObjectType type = TupLibraryObject::Item;
             TupScene *sceneData = scene->currentScene();
             TupLayer *layer = sceneData->layerAt(initLayer);
             TupFrame *frame = layer->frameAt(currentTween->getInitFrame());

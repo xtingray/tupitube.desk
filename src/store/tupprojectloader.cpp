@@ -46,7 +46,7 @@ TupProjectLoader::~TupProjectLoader()
 {
 }
 
-void TupProjectLoader::createItem(int sceneIndex, int layerIndex, int frameIndex, int itemPosition, QPointF point, TupLibraryObject::Type type, const QString &xml, TupProject *project)
+void TupProjectLoader::createItem(int sceneIndex, int layerIndex, int frameIndex, int itemPosition, QPointF point, TupLibraryObject::ObjectType type, const QString &xml, TupProject *project)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupProjectLoader::createItem()]";
@@ -128,7 +128,7 @@ void TupProjectLoader::createScene(const QString &name, int sceneIndex, TupProje
     project->emitResponse(&response);
 }
 
-void TupProjectLoader::createSymbol(TupLibraryObject::Type type, const QString &name, const QString &parent, const QByteArray &data, TupProject *project)
+void TupProjectLoader::createSymbol(TupLibraryObject::ObjectType type, const QString &name, const QString &parent, const QByteArray &data, TupProject *project)
 {
     TupLibraryResponse response(TupProjectRequest::Library, TupProjectRequest::Add);
   

@@ -91,7 +91,7 @@ void TupGraphicObject::setItem(QGraphicsItem *graphic)
         initItemData();
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupGraphicObject::setItem() - Fatal Error: QGraphicsItem is null!";
+            qDebug() << "[TupGraphicObject::setItem()] - Fatal Error: QGraphicsItem is null!";
         #endif
     } 
 }

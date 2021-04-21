@@ -46,6 +46,9 @@
 #include "tupprojectloader.h"
 #include "tupscene.h"
 #include "tuplayer.h"
+#include "tuptextitem.h"
+#include "tuprectitem.h"
+#include "tupellipseitem.h"
 
 #include <QApplication>
 #include <QGraphicsItem>
@@ -429,6 +432,15 @@ void TupFrame::addLibraryItem(const QString &id, TupGraphicLibraryItem *libraryI
         if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(item)) {
             dom.appendChild(dynamic_cast<TupAbstractSerializable *>(path)->toXml(dom));
             item = itemFactory.create(dom.toString());
+        } else if (TupTextItem *text = qgraphicsitem_cast<TupTextItem *>(item)) {
+            dom.appendChild(dynamic_cast<TupAbstractSerializable *>(text)->toXml(dom));
+            item = itemFactory.create(dom.toString());
+        } else if (TupRectItem *rect = qgraphicsitem_cast<TupRectItem *>(item)) {
+            dom.appendChild(dynamic_cast<TupAbstractSerializable *>(rect)->toXml(dom));
+            item = itemFactory.create(dom.toString());
+        } else if (TupEllipseItem *ellipse = qgraphicsitem_cast<TupEllipseItem *>(item)) {
+            dom.appendChild(dynamic_cast<TupAbstractSerializable *>(ellipse)->toXml(dom));
+            item = itemFactory.create(dom.toString());
         }
     } 
 
@@ -626,7 +638,7 @@ void TupFrame::replaceItem(int position, QGraphicsItem *item)
         toReplace->setItem(item);
 }
 
-bool TupFrame::moveItem(TupLibraryObject::Type objectType, int currentIndex, int action)
+bool TupFrame::moveItem(TupLibraryObject::ObjectType objectType, int currentIndex, int action)
 {
     #ifdef TUP_DEBUG
         qDebug() << "---";
@@ -1096,7 +1108,7 @@ bool TupFrame::removeGraphicAt(int position)
     } 
 
     #ifdef TUP_DEBUG
-        qDebug() << "TupFrame::removeGraphicAt() - Error: Object at position " + QString::number(position) + " is NULL!";
+        qDebug() << "TupFrame::removeGraphicAt() - Error: Object at position " << position << " is NULL!";
     #endif
 
     return false;
@@ -1132,7 +1144,7 @@ bool TupFrame::removeSvgAt(int position)
     
     if ((position < 0) || (position >= svg.size())) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupFrame::removeSvgAt() - Fatal Error: invalid object index! [ " + QString::number(position) + " ]";
+            qDebug() << "[TupFrame::removeSvgAt()] - Fatal Error: invalid object index -> " << position;
         #endif
         return false;
     }
@@ -1160,14 +1172,14 @@ bool TupFrame::removeSvgAt(int position)
         zLevelIndex--;
 
         #ifdef TUP_DEBUG
-            qWarning() << "TupFrame::removeSvgAt() - SVG object has been removed (" + QString::number(position) + ")";
+            qWarning() << "[TupFrame::removeSvgAt()] - SVG object has been removed -> " << position;
         #endif
 
         return true;
     }
 
     #ifdef TUP_DEBUG
-        qDebug() << "TupFrame::removeSvgAt() - Error: Couldn't find SVG object (" + QString::number(position) + ")";
+        qDebug() << "[TupFrame::removeSvgAt()] - Error: Couldn't find SVG object -> " << position;
     #endif
 
     return false;
@@ -1316,7 +1328,8 @@ TupSvgItem *TupFrame::svgAt(int position) const
 {
     if ((position < 0) || (position >= svg.count())) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupFrame::svgAt() -  Fatal Error: index out of bound [ " + QString::number(position) + " ] / Total items: " + QString::number(svg.count());
+            qDebug() << "[TupFrame::svgAt()] -  Fatal Error: index out of bound -> " << position << " / Total items -> "
+                     << svg.count();
         #endif
         
         return nullptr;
@@ -1329,7 +1342,8 @@ QGraphicsItem *TupFrame::item(int position) const
 {
     if ((position < 0) || (position >= graphics.count())) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupFrame::item() -  Fatal Error: index out of bound [ " + QString::number(position) + " ] / Total items: " + QString::number(graphics.count());
+            qDebug() << "[TupFrame::item()] -  Fatal Error: index out of bound -> " << position << " / Total items -> "
+                     << graphics.count();
         #endif
 
         return nullptr;
@@ -1342,14 +1356,14 @@ QGraphicsItem *TupFrame::item(int position) const
             return item;
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "TupFrame::item() -  Fatal Error: QGraphicsItem object is NULL!";
+                qDebug() << "[TupFrame::item()] -  Fatal Error: QGraphicsItem object is NULL!";
             #endif
             return nullptr;
         }
     }
 
     #ifdef TUP_DEBUG
-        qDebug() << "TupFrame::item() -  Fatal Error: TupGraphicObject is NULL!";
+        qDebug() << "[TupFrame::item()] -  Fatal Error: TupGraphicObject is NULL!";
     #endif
 
     return nullptr;
@@ -1435,26 +1449,26 @@ bool TupFrame::isEmpty()
 void TupFrame::reloadGraphicItem(const QString &id, const QString &path)
 {
     for (int i = 0; i < objectIndexes.size(); ++i) {
-         if (objectIndexes.at(i).compare(id) == 0) {
-             TupGraphicObject *old = graphics.at(i);
-             QGraphicsItem *oldItem = old->item();
+        if (objectIndexes.at(i).compare(id) == 0) {
+            TupGraphicObject *old = graphics.at(i);
+            QGraphicsItem *oldItem = old->item();
 
-             QPixmap pixmap(path);
-             TupPixmapItem *image = new TupPixmapItem;
-             image->setPixmap(pixmap);
+            QPixmap pixmap(path);
+            TupPixmapItem *image = new TupPixmapItem;
+            image->setPixmap(pixmap);
 
-             TupGraphicLibraryItem *item = new TupGraphicLibraryItem;
-             item->setSymbolName(id);
-             item->setItem(image);
-             item->setTransform(oldItem->transform());
-             item->setPos(oldItem->pos());
-             item->setEnabled(true);
-             item->setFlags(oldItem->flags());
-             item->setZValue(oldItem->zValue());
+            TupGraphicLibraryItem *item = new TupGraphicLibraryItem;
+            item->setSymbolName(id);
+            item->setItem(image);
+            item->setTransform(oldItem->transform());
+            item->setPos(oldItem->pos());
+            item->setEnabled(true);
+            item->setFlags(oldItem->flags());
+            item->setZValue(oldItem->zValue());
 
-             TupGraphicObject *object = new TupGraphicObject(item, this);
-             graphics[i] = object;
-         }
+            TupGraphicObject *object = new TupGraphicObject(item, this);
+            graphics[i] = object;
+        }
     }
 }
 
@@ -1525,7 +1539,7 @@ void TupFrame::updateZLevel(int newLevel)
     }
 }
 
-void TupFrame::checkTransformationStatus(TupLibraryObject::Type itemType, int index)
+void TupFrame::checkTransformationStatus(TupLibraryObject::ObjectType itemType, int index)
 {
     if (itemType == TupLibraryObject::Svg) {
         TupSvgItem *item = svg.at(index);
@@ -1551,7 +1565,7 @@ void TupFrame::checkTransformationStatus(TupLibraryObject::Type itemType, int in
     }
 }
 
-void TupFrame::storeItemTransformation(TupLibraryObject::Type itemType, int index, const QString &properties)
+void TupFrame::storeItemTransformation(TupLibraryObject::ObjectType itemType, int index, const QString &properties)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupFrame::storeItemTransformation()] - properties -> " << properties;
@@ -1568,7 +1582,7 @@ void TupFrame::storeItemTransformation(TupLibraryObject::Type itemType, int inde
     }
 }
 
-void TupFrame::undoTransformation(TupLibraryObject::Type itemType, int index)
+void TupFrame::undoTransformation(TupLibraryObject::ObjectType itemType, int index)
 {
     if (itemType == TupLibraryObject::Svg) {
         TupSvgItem *item = svg.at(index);
@@ -1581,7 +1595,7 @@ void TupFrame::undoTransformation(TupLibraryObject::Type itemType, int index)
     }
 }
 
-void TupFrame::redoTransformation(TupLibraryObject::Type itemType, int index)
+void TupFrame::redoTransformation(TupLibraryObject::ObjectType itemType, int index)
 {
     if (itemType == TupLibraryObject::Svg) {
         TupSvgItem *item = svg.at(index);

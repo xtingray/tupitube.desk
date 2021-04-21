@@ -602,11 +602,9 @@ void TupGraphicsScene::processSVGObject(TupSvgItem *svg, TupFrame::FrameType fra
 void TupGraphicsScene::addGraphicObject(TupGraphicObject *object, TupFrame::FrameType frameType,
                                         double opacityFactor, bool tweenInAdvance)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupGraphicsScene::addGraphicObject()]";
     #endif
-    */
 
     QGraphicsItem *item = object->item();
     if (item) {
@@ -1671,6 +1669,15 @@ void TupGraphicsScene::itemResponse(TupItemResponse *response)
 
 void TupGraphicsScene::libraryResponse(TupLibraryResponse *response)
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupGraphicsScene::libraryResponse()]";
+    #endif
+    */
+
+    if (gTool)
+        gTool->libraryResponse(response);
+
     if (spaceContext == TupProject::VECTOR_DYNAMIC_BG_MODE) {
         if (response->getAction() == TupProjectRequest::Add || response->getAction() == TupProjectRequest::Remove)
             background->scheduleVectorRender(true);
@@ -1748,17 +1755,14 @@ void TupGraphicsScene::enableItemsForSelection()
 
 void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // SQA: Bool parameter is a hack for the Polyline tool. Must be fixed. 
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupGraphicsScene::includeObject()]";
     #endif
-    */
 
     if (!object) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupGraphicsScene::includeObject()] - Fatal Error: Graphic item is nullptr!";
         #endif
-
         return;
     }
 

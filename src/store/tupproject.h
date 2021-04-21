@@ -109,17 +109,17 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         TupBackground * getBackgroundFromScene(int sceneIndex);
 
         bool createSymbol(int type, const QString &name, const QByteArray &data, const QString &folder = QString());
-        bool removeSymbol(const QString &name, TupLibraryObject::Type type);
+        bool removeSymbol(const QString &name, TupLibraryObject::ObjectType type);
         bool addFolder(const QString &name);
         bool removeFolder(const QString &name);
 
         bool removeSound(const QString &name);
 
         bool insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString &name, int scene, int layer, int frame);
-        bool removeSymbolFromFrame(const QString &name, TupLibraryObject::Type type);
+        bool removeSymbolFromFrame(const QString &name, TupLibraryObject::ObjectType type);
 
-        bool updateSymbolId(TupLibraryObject::Type type, const QString &oldId, const QString &newId);
-        void reloadLibraryItem(TupLibraryObject::Type type, const QString &id, TupLibraryObject *object);
+        bool updateSymbolId(TupLibraryObject::ObjectType type, const QString &oldId, const QString &newId);
+        void reloadLibraryItem(TupLibraryObject::ObjectType type, const QString &id, TupLibraryObject *object);
 
         void clear();
         void loadLibrary(const QString &filename);

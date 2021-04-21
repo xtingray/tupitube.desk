@@ -37,6 +37,10 @@
 #include "tuplayer.h"
 #include "tupitemfactory.h"
 #include "tupitemgroup.h"
+#include "tuppathitem.h"
+#include "tuptextitem.h"
+#include "tuprectitem.h"
+#include "tupellipseitem.h"
 
 #define RETURN_IF_NOT_LIBRARY if (!library) return;
 
@@ -51,6 +55,7 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     mkdir = false;
     isEffectSound = false;
     currentMode = TupProject::FRAMES_MODE;
+    nativeFromFileSystem = false;
 
     setWindowIcon(QPixmap(THEME_DIR + "icons/library.png"));
     setWindowTitle(tr("Library"));
@@ -273,7 +278,7 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
             return;
         }
 
-        switch (object->getType()) {
+        switch (object->getObjectType()) {
                 case TupLibraryObject::Svg:
                    {
                      display->showDisplay();
@@ -290,10 +295,11 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                 case TupLibraryObject::Item:
                    {
                      display->showDisplay();
-                     if (object->isNativeGroup())
-                         display->render(nativeMap[objectName]);
-                     else
+                     if (object->getItemType() == TupLibraryObject::Text || object->getItemType() == TupLibraryObject::Path) {
                          display->render(qvariant_cast<QGraphicsItem *>(object->getData()));
+                     } else {
+                         display->render(nativeMap[objectName]);
+                     }
 
                      /* SQA: Just a test
                      TupSymbolEditor *editor = new TupSymbolEditor;
@@ -313,7 +319,7 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                 default:
                    {
                      #ifdef TUP_DEBUG
-                         qDebug() << "[TupLibraryWidget::previewItem()] - Unknown symbol id -> " << object->getType();
+                         qDebug() << "[TupLibraryWidget::previewItem()] - Unknown symbol id -> " << object->getObjectType();
                      #endif
                    }
                    break;
@@ -344,7 +350,7 @@ void TupLibraryWidget::insertObjectInWorkspace()
             qDebug() << "[TupLibraryWidget::insertObjectInWorkspace()] - There's no current selection!";
         #endif
         return;
-    } 
+    }
 
     QString extension = libraryTree->currentItem()->text(2);
     if (extension.length() == 0) {
@@ -365,9 +371,9 @@ void TupLibraryWidget::insertObjectInWorkspace()
 
     QString key = libraryTree->currentItem()->text(1) + "." + extension.toLower();
     int objectType = libraryTree->itemType();
-    TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::InsertSymbolIntoFrame, key,
-                                TupLibraryObject::Type(objectType), currentMode,
-                                nullptr, QString(), currentFrame.scene, currentFrame.layer, currentFrame.frame);
+    TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::InsertSymbolIntoFrame,
+                                key, TupLibraryObject::ObjectType(objectType), currentMode, nullptr, QString(),
+                                currentFrame.scene, currentFrame.layer, currentFrame.frame);
 
     emit requestTriggered(&request);
 }
@@ -396,7 +402,7 @@ void TupLibraryWidget::removeCurrentItem()
 
     QString objectKey = libraryTree->currentItem()->text(1);
     QString extension = libraryTree->currentItem()->text(2);
-    TupLibraryObject::Type type = TupLibraryObject::Folder;
+    TupLibraryObject::ObjectType type = TupLibraryObject::Folder;
 
     // If it's NOT a directory
     if (extension.length() > 0) {
@@ -424,7 +430,7 @@ void TupLibraryWidget::cloneObject(QTreeWidgetItem* item)
         if (object) {
             QString smallId = object->getShortId();
             QString extension = object->getExtension();
-            TupLibraryObject::Type type = object->getType();
+            TupLibraryObject::ObjectType type = object->getObjectType();
             QString path = object->getDataPath();
             int limit = path.lastIndexOf("/");
             QString newPath = path.left(limit + 1); 
@@ -455,7 +461,7 @@ void TupLibraryWidget::cloneObject(QTreeWidgetItem* item)
 
             TupLibraryObject *newObject = new TupLibraryObject();
             newObject->setSymbolName(symbolName);
-            newObject->setType(type);
+            newObject->setObjectType(type);
             newObject->setDataPath(newPath);
             isOk = newObject->loadData(newPath);
 
@@ -474,7 +480,7 @@ void TupLibraryWidget::cloneObject(QTreeWidgetItem* item)
             item->setText(3, symbolName);
             item->setFlags(item->flags() | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
 
-            switch (object->getType()) {
+            switch (object->getObjectType()) {
                 case TupLibraryObject::Item:
                     {
                         item->setIcon(0, QIcon(THEME_DIR + "icons/drawing_object.png"));
@@ -528,7 +534,7 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
         if (object) {
             QString path = object->getDataPath();
             if (path.length() > 0) {
-                TupLibraryObject::Type type = object->getType();
+                TupLibraryObject::ObjectType type = object->getObjectType();
                 QString fileExtension = object->getExtension();
                 QString filter;
 
@@ -688,7 +694,7 @@ void TupLibraryWidget::createRasterObject()
         if (isOk) {
             TupLibraryObject *newObject = new TupLibraryObject();
             newObject->setSymbolName(symbolName);
-            newObject->setType(TupLibraryObject::Image);
+            newObject->setObjectType(TupLibraryObject::Image);
             newObject->setDataPath(path);
             isOk = newObject->loadData(path);
 
@@ -813,7 +819,7 @@ void TupLibraryWidget::createVectorObject()
 
             TupLibraryObject *newObject = new TupLibraryObject();
             newObject->setSymbolName(symbolName);
-            newObject->setType(TupLibraryObject::Svg);
+            newObject->setObjectType(TupLibraryObject::Svg);
             newObject->setDataPath(path);
             isOk = newObject->loadData(path);
 
@@ -1021,6 +1027,8 @@ void TupLibraryWidget::importSvg(const QString &svgPath)
 
 void TupLibraryWidget::importNativeObjects()
 {
+    nativeFromFileSystem = true;
+
     TCONFIG->beginGroup("General");
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
 
@@ -1041,7 +1049,8 @@ void TupLibraryWidget::importNativeObjects()
 void TupLibraryWidget::importNativeObject(const QString &object)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::importNativeObject()]";
+        qDebug() << "[TupLibraryWidget::importNativeObject()] - object -> ";
+        qDebug() << object;
     #endif
 
     if (object.isEmpty()) {
@@ -1060,7 +1069,7 @@ void TupLibraryWidget::importNativeObject(const QString &object)
         QByteArray data = file.readAll();
         file.close();
 
-        if (object.startsWith("<group"))
+        if (object.startsWith("<group") || object.startsWith("<rect") || object.startsWith("<ellipse"))
             nativeMap[key] = TupLibraryObject::generateImage(object, width());
 
         #ifdef TUP_DEBUG
@@ -1411,6 +1420,10 @@ void TupLibraryWidget::importSoundFile()
 
 void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::sceneResponse()] - response->action() -> " << response->getAction();
+    #endif
+
     switch (response->getAction()) {
         case TupProjectRequest::Select:
         {
@@ -1454,7 +1467,7 @@ void TupLibraryWidget::layerResponse(TupLayerResponse *event)
 void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::libraryResponse()]";
+        qDebug() << "[TupLibraryWidget::libraryResponse()] - response->action() -> " << response->getAction();
     #endif
 
     RETURN_IF_NOT_LIBRARY;
@@ -1469,6 +1482,10 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
 
              QString folderName = response->getParent();
              QString id = response->getArg().toString();
+
+             #ifdef TUP_DEBUG
+                 qDebug() << "[TupLibraryWidget::libraryResponse()] - response->getArg() -> " << id;
+             #endif
 
              int index = id.lastIndexOf(".");
              QString name = id.mid(0, index);
@@ -1490,17 +1507,21 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
              item->setFlags(item->flags() | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
 
              if (obj) {
-                 switch (obj->getType()) {
+                 switch (obj->getObjectType()) {
                      case TupLibraryObject::Item:
                        {
-                         if (obj->isNativeGroup())
-                             nativeMap[id] = TupLibraryObject::generateImage(obj->getGroupXml(), width());
+                           if (obj->getItemType() != TupLibraryObject::Text && obj->getItemType() != TupLibraryObject::Path)
+                               nativeMap[id] = TupLibraryObject::generateImage(obj->toString(), width());
 
                          item->setIcon(0, QIcon(THEME_DIR + "icons/drawing_object.png"));
                          libraryTree->setCurrentItem(item);
                          previewItem(item);
-                         if (!isNetworked && !folderName.endsWith(".pgo") && !library->isLoadingProject())
-                             insertObjectInWorkspace();
+
+                         if (nativeFromFileSystem) {
+                             if (!isNetworked && !folderName.endsWith(".pgo") && !library->isLoadingProject())
+                                 insertObjectInWorkspace();
+                             nativeFromFileSystem = false;
+                         }
                        }
                      break;
                      case TupLibraryObject::Image:
@@ -1761,7 +1782,7 @@ void TupLibraryWidget::refreshItem(QTreeWidgetItem *item)
                 else
                     library->renameObject("", oldRef, newId);
 
-                TupLibraryObject::Type type = TupLibraryObject::Image;
+                TupLibraryObject::ObjectType type = TupLibraryObject::Image;
                 if (extension.compare("SVG")==0)
                     type = TupLibraryObject::Svg;
                 if (extension.compare("TOBJ")==0)
@@ -1898,7 +1919,7 @@ void TupLibraryWidget::updateItem(const QString &name, const QString &extension,
     QString onEdition = name + "." + extension;
     QString onDisplay = currentItemDisplayed->text(1) + "." + currentItemDisplayed->text(2).toLower();
 
-    TupLibraryObject::Type type = TupLibraryObject::Image;
+    TupLibraryObject::ObjectType type = TupLibraryObject::Image;
     if (extension.compare("svg") == 0)
         type = TupLibraryObject::Svg;
 
@@ -2114,7 +2135,7 @@ void TupLibraryWidget::importAsset(const QString &name, TupSearchDialog::AssetTy
         key = name + "-" + QString::number(i) + "." + extension;
     }
 
-    TupLibraryObject::Type type = TupLibraryObject::Item;
+    TupLibraryObject::ObjectType type = TupLibraryObject::Item;
     switch(extensionId) {
       case TupSearchDialog::JPG:
       case TupSearchDialog::PNG:

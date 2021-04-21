@@ -103,6 +103,11 @@ void TupToolPlugin::frameResponse(const TupFrameResponse *event)
     Q_UNUSED(event)
 }
 
+void TupToolPlugin::libraryResponse(const TupLibraryResponse *event)
+{
+    Q_UNUSED(event)
+}
+
 void TupToolPlugin::itemResponse(const TupItemResponse *event)
 {
     Q_UNUSED(event)

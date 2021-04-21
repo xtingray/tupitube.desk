@@ -61,7 +61,7 @@ class TUPITUBE_EXPORT TupRequestBuilder
         ~TupRequestBuilder();
         
         static TupProjectRequest createItemRequest(int sceneIndex, int layerIndex, int frameIndex, int itemIndex, QPointF point, TupProject::Mode spaceMode, 
-                                                  TupLibraryObject::Type type, int action, const QVariant &arg = QString(), const QByteArray &data = QByteArray());
+                                                  TupLibraryObject::ObjectType type, int action, const QVariant &arg = QString(), const QByteArray &data = QByteArray());
         
         static TupProjectRequest createFrameRequest(int sceneIndex, int layerIndex, int frameIndex, int action, const QVariant &arg= QString(), const QByteArray &data = QByteArray());
         
@@ -69,7 +69,7 @@ class TUPITUBE_EXPORT TupRequestBuilder
         
         static TupProjectRequest createSceneRequest(int sceneIndex, int action, const QVariant &arg= QString(), const QByteArray &data = QByteArray());
         
-        static TupProjectRequest createLibraryRequest(int actionId, const QVariant &arg, TupLibraryObject::Type type, TupProject::Mode spaceMode = TupProject::FRAMES_MODE,
+        static TupProjectRequest createLibraryRequest(int actionId, const QVariant &arg, TupLibraryObject::ObjectType type, TupProject::Mode spaceMode = TupProject::FRAMES_MODE,
                                                       const QByteArray &data = QByteArray(), const QString &folder = QString(), int scene = -1, int layer = -1, int frame = -1);
         
         static TupProjectRequest fromResponse(TupProjectResponse *response);

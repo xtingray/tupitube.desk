@@ -46,7 +46,7 @@ TupRequestBuilder::~TupRequestBuilder()
 }
 
 TupProjectRequest TupRequestBuilder::createItemRequest(int sceneIndex, int layerIndex, int frameIndex, int itemIndex, QPointF point, TupProject::Mode spaceMode, 
-                                                     TupLibraryObject::Type type, int actionId, const QVariant &arg, const QByteArray &data)
+                                                     TupLibraryObject::ObjectType type, int actionId, const QVariant &arg, const QByteArray &data)
 {
     QDomDocument doc;
 
@@ -180,7 +180,7 @@ TupProjectRequest TupRequestBuilder::createSceneRequest(int sceneIndex, int acti
     return TupProjectRequest(doc.toString(0));
 }
 
-TupProjectRequest TupRequestBuilder::createLibraryRequest(int actionId, const QVariant &arg, TupLibraryObject::Type type, TupProject::Mode spaceMode,
+TupProjectRequest TupRequestBuilder::createLibraryRequest(int actionId, const QVariant &arg, TupLibraryObject::ObjectType type, TupProject::Mode spaceMode,
                                                         const QByteArray &data, const QString &folder, int sceneIndex, int layerIndex, int frameIndex)
 {
     QDomDocument doc;
@@ -246,7 +246,7 @@ TupProjectRequest TupRequestBuilder::fromResponse(TupProjectResponse *response)
                     request = TupRequestBuilder::createItemRequest(static_cast<TupItemResponse*> (response)->getSceneIndex(), static_cast<TupItemResponse*> (response)->getLayerIndex(), 
                                                                   static_cast<TupItemResponse*> (response)->getFrameIndex(), static_cast<TupItemResponse*> (response)->getItemIndex(), 
                                                                   static_cast<TupItemResponse*> (response)->position(), TupProject::Mode(static_cast<TupItemResponse*> (response)->spaceMode()), 
-                                                                  TupLibraryObject::Type(static_cast<TupItemResponse*> (response)->getItemType()), response->getAction(), response->getArg().toString(), 
+                                                                  TupLibraryObject::ObjectType(static_cast<TupItemResponse*> (response)->getItemType()), response->getAction(), response->getArg().toString(),
                                                                   response->getData());
                  }
             break;
@@ -267,7 +267,7 @@ TupProjectRequest TupRequestBuilder::fromResponse(TupProjectResponse *response)
             break;
             case TupProjectRequest::Library:
                  {
-                    request = TupRequestBuilder::createLibraryRequest(response->getAction(), response->getArg().toString(), TupLibraryObject::Type(static_cast<TupLibraryResponse*>(response)->symbolType()), 
+                    request = TupRequestBuilder::createLibraryRequest(response->getAction(), response->getArg().toString(), TupLibraryObject::ObjectType(static_cast<TupLibraryResponse*>(response)->symbolType()),
                                                                      TupProject::Mode(static_cast<TupLibraryResponse*>(response)->getSpaceMode()), response->getData(), static_cast<TupLibraryResponse*>(response)->getParent(), 
                                                                      static_cast<TupLibraryResponse*>(response)->getSceneIndex(), static_cast<TupLibraryResponse*>(response)->getLayerIndex(),  
                                                                      static_cast<TupLibraryResponse*>(response)->getFrameIndex());

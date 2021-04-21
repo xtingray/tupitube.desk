@@ -408,7 +408,7 @@ void Tweener::applyTween()
         initScene = scene->currentSceneIndex();
 
         foreach (QGraphicsItem *item, objects) {
-            TupLibraryObject::Type type = TupLibraryObject::Item;
+            TupLibraryObject::ObjectType type = TupLibraryObject::Item;
             int objectIndex = scene->currentFrame()->indexOf(item);
             QPointF pos = item->mapFromParent(origin);
 
@@ -437,7 +437,7 @@ void Tweener::applyTween()
         initScene = scene->currentSceneIndex();
 
         foreach (QGraphicsItem *item, objects) {
-            TupLibraryObject::Type type = TupLibraryObject::Item;
+            TupLibraryObject::ObjectType type = TupLibraryObject::Item;
 
             TupScene *sceneData = scene->currentScene();
             TupLayer *layer = sceneData->layerAt(initLayer);

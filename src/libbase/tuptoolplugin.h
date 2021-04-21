@@ -84,10 +84,11 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
         virtual void saveConfig() = 0;
         virtual void aboutToChangeScene(TupGraphicsScene *scene);
 
-        virtual void itemResponse(const TupItemResponse *event);
-        virtual void frameResponse(const TupFrameResponse *event);
-        virtual void layerResponse(const TupLayerResponse *event);
         virtual void sceneResponse(const TupSceneResponse *event);
+        virtual void layerResponse(const TupLayerResponse *event);
+        virtual void frameResponse(const TupFrameResponse *event);
+        virtual void libraryResponse(const TupLibraryResponse *event);
+        virtual void itemResponse(const TupItemResponse *event);
 
         virtual void keyPressEvent(QKeyEvent *event);
         virtual void keyReleaseEvent(QKeyEvent *event);

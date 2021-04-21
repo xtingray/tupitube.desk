@@ -123,18 +123,18 @@ void Tweener::press(const TupInputDeviceInformation *input, TupBrushManager *bru
         qDebug() << "[Tweener::press()]";
     #endif
 
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
-    Q_UNUSED(gScene);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
+    Q_UNUSED(gScene)
 }
 
 /* This method is executed while the mouse is pressed and on movement */
 
 void Tweener::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
-    Q_UNUSED(gScene);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
+    Q_UNUSED(gScene)
 }
 
 /* This method finishes the action started on the press method depending
@@ -157,7 +157,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
             #endif
             if (gScene->selectedItems().size() > 0) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "Shear Tweener::release() - selection size -> " + QString::number(gScene->selectedItems().size());
+                    qDebug() << "Shear Tweener::release() - selection size -> " << gScene->selectedItems().size();
                 #endif
                 objects = gScene->selectedItems();
                 foreach (QGraphicsItem *item, objects) {
@@ -436,7 +436,7 @@ void Tweener::applyTween()
         initScene = scene->currentSceneIndex();
 
         foreach (QGraphicsItem *item, objects) {
-            TupLibraryObject::Type type = TupLibraryObject::Item;
+            TupLibraryObject::ObjectType type = TupLibraryObject::Item;
             int objectIndex = scene->currentFrame()->indexOf(item);
             QPointF pos = item->mapFromParent(origin);
 
@@ -465,7 +465,7 @@ void Tweener::applyTween()
         initScene = scene->currentSceneIndex();
 
         foreach (QGraphicsItem *item, objects) {
-            TupLibraryObject::Type type = TupLibraryObject::Item;
+            TupLibraryObject::ObjectType type = TupLibraryObject::Item;
             TupScene *sceneData = scene->currentScene();
             TupLayer *layer = sceneData->layerAt(currentTween->getInitLayer());
             TupFrame *frame = layer->frameAt(currentTween->getInitFrame());

@@ -44,14 +44,14 @@ TupGraphicLibraryItem::TupGraphicLibraryItem() : TupProxyItem()
 TupGraphicLibraryItem::TupGraphicLibraryItem(TupLibraryObject *object) : TupProxyItem()
 {
     setObject(object);
-    itemType = object->getType();
+    itemType = object->getObjectType();
 }
 
 TupGraphicLibraryItem::~TupGraphicLibraryItem()
 {
 }
 
-TupLibraryObject::Type TupGraphicLibraryItem::getItemType()
+TupLibraryObject::ObjectType TupGraphicLibraryItem::getItemType()
 {
     return itemType;
 }
@@ -76,7 +76,6 @@ void TupGraphicLibraryItem::setObject(TupLibraryObject *object)
         #ifdef TUP_DEBUG
             qDebug() << "[TupGraphicLibraryItem::setObject()] - Fatal Error: Library object is NULL!";
         #endif
-
         return;
     }
     
@@ -86,9 +85,9 @@ void TupGraphicLibraryItem::setObject(TupLibraryObject *object)
 
     symbolName = object->getSymbolName();
     symbolPath = object->getDataPath();
-    switch(object->getType()) {
+    switch(object->getObjectType()) {
         case TupLibraryObject::Item:
-        case TupLibraryObject::Text:
+        // case TupLibraryObject::Text:
         case TupLibraryObject::Image:
         {
              setItem(qvariant_cast<QGraphicsItem *>(object->getData()));

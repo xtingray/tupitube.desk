@@ -60,12 +60,12 @@ bool TupCommandExecutor::createItem(TupItemResponse *response)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupCommandExecutor::createItem()]";
-    #endif        
-    
+    #endif
+
     int sceneIndex = response->getSceneIndex();
     int layerIndex = response->getLayerIndex();
     int frameIndex = response->getFrameIndex();
-    TupLibraryObject::Type type = response->getItemType(); 
+    TupLibraryObject::ObjectType type = response->getItemType();
     QPointF point = response->position();
 
     TupProject::Mode mode = response->spaceMode();
@@ -216,7 +216,7 @@ bool TupCommandExecutor::removeItem(TupItemResponse *response)
     int sceneIndex = response->getSceneIndex();
     int layerIndex = response->getLayerIndex();
     int frameIndex = response->getFrameIndex();
-    TupLibraryObject::Type type = response->getItemType();
+    TupLibraryObject::ObjectType type = response->getItemType();
     TupProject::Mode mode = response->spaceMode();
 
     TupScene *scene = project->sceneAt(sceneIndex);
@@ -322,7 +322,7 @@ bool TupCommandExecutor::moveItem(TupItemResponse *response)
     int frameIndex = response->getFrameIndex();
     int objectIndex = response->getItemIndex();
     int action = response->getArg().toInt();
-    TupLibraryObject::Type type = response->getItemType();
+    TupLibraryObject::ObjectType type = response->getItemType();
     TupProject::Mode mode = response->spaceMode();
 
     if (response->getMode() == TupProjectResponse::Undo) {
@@ -722,7 +722,7 @@ bool TupCommandExecutor::transformItem(TupItemResponse *response)
     int frameIndex = response->getFrameIndex();
     int itemIndex = response->getItemIndex();
     TupProject::Mode mode = response->spaceMode();
-    TupLibraryObject::Type type = response->getItemType();
+    TupLibraryObject::ObjectType type = response->getItemType();
     QString xml = response->getArg().toString();
 
     #ifdef TUP_DEBUG
@@ -933,7 +933,7 @@ bool TupCommandExecutor::setTween(TupItemResponse *response)
     int sceneIndex = response->getSceneIndex();
     int layerIndex = response->getLayerIndex();
     int frameIndex = response->getFrameIndex();
-    TupLibraryObject::Type itemType = response->getItemType();
+    TupLibraryObject::ObjectType itemType = response->getItemType();
     int itemIndex = response->getItemIndex();
     QString xml = response->getArg().toString();
     TupScene *scene = project->sceneAt(sceneIndex);

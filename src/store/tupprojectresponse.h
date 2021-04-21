@@ -137,8 +137,8 @@ class TUPITUBE_EXPORT TupItemResponse : public TupFrameResponse
 
         int getItemIndex() const;
         void setItemIndex(int index);
-        TupLibraryObject::Type getItemType() const;
-        void setItemType(TupLibraryObject::Type type);
+        TupLibraryObject::ObjectType getItemType() const;
+        void setItemType(TupLibraryObject::ObjectType type);
         QPointF position() const;
         void setPosX(double coord);
         void setPosY(double coord);
@@ -149,7 +149,7 @@ class TUPITUBE_EXPORT TupItemResponse : public TupFrameResponse
 
     private:
         int m_itemIndex;
-        TupLibraryObject::Type m_itemType;
+        TupLibraryObject::ObjectType m_itemType;
         double m_x;
         double m_y;
         TupProject::Mode m_mode;
@@ -162,8 +162,8 @@ class TUPITUBE_EXPORT TupLibraryResponse : public TupFrameResponse
         TupLibraryResponse(int part, int action);
         ~TupLibraryResponse();
 
-        void setSymbolType(TupLibraryObject::Type symtype);
-        TupLibraryObject::Type symbolType() const;
+        void setSymbolType(TupLibraryObject::ObjectType symtype);
+        TupLibraryObject::ObjectType symbolType() const;
         void setParent(const QString top);
         QString getParent() const;
         TupProject::Mode getSpaceMode();
@@ -172,7 +172,7 @@ class TUPITUBE_EXPORT TupLibraryResponse : public TupFrameResponse
         void setFrameState(bool state);
 
     private:
-        TupLibraryObject::Type m_symbolType;
+        TupLibraryObject::ObjectType m_symbolType;
         QString parentNode;
         TupProject::Mode m_mode;
         bool empty;

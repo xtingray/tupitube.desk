@@ -182,6 +182,8 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         bool renaming;
         bool mkdir;
         bool isNetworked;
+        bool nativeFromFileSystem;
+
         QTreeWidgetItem *lastItemEdited;
         QTreeWidgetItem *currentItemDisplayed;
         QFileSystemWatcher *watcher;

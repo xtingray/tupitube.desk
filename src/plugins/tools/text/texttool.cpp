@@ -300,6 +300,7 @@ void TextTool::itemResponse(const TupItemResponse *response)
     #endif
 
     if (response->getAction() == TupProjectRequest::Remove) {
+        /*
         if (manager) {
             if (manager->parentItem())
                 manager->parentItem()->setSelected(false);
@@ -307,6 +308,9 @@ void TextTool::itemResponse(const TupItemResponse *response)
             manager = nullptr;
         }
         activeSelection = false;
+        */
+
+        removeManager();
         config->resetText();
 
         return;
@@ -376,6 +380,27 @@ void TextTool::frameResponse(const TupFrameResponse *response)
     config->updateMode(TextConfigurator::Add);
 }
 
+void TextTool::libraryResponse(const TupLibraryResponse *response)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextTool::libraryResponse()] - action -> " << response->getAction();
+    #endif
+
+    removeManager();
+
+    /*
+    if (manager) {
+        if (manager->parentItem())
+            manager->parentItem()->setSelected(false);
+        manager->clear();
+        manager = nullptr;
+    }
+    activeSelection = false;
+    */
+
+    config->updateMode(TextConfigurator::Add);
+}
+
 void TextTool::layerResponse(const TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
@@ -396,6 +421,18 @@ void TextTool::sceneResponse(const TupSceneResponse *response)
         initItems(scene);
 }
 
+void TextTool::removeManager()
+{
+    if (manager) {
+        if (manager->parentItem())
+            manager->parentItem()->setSelected(false);
+        manager->clear();
+        manager = nullptr;
+    }
+
+    activeSelection = false;
+}
+
 QMap<TAction::ActionId, TAction *> TextTool::actions() const
 {
     return textActions;
@@ -414,6 +451,7 @@ QWidget *TextTool::configurator()
 void TextTool::aboutToChangeTool()
 {
     init(scene);
+    config->clearText();
 }
 
 void TextTool::aboutToChangeScene(TupGraphicsScene *scene)
@@ -627,7 +665,7 @@ void TextTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
 
     TupTextItem *textItem = qgraphicsitem_cast<TupTextItem *>(item);
     int position = -1;
-    TupLibraryObject::Type type;
+    TupLibraryObject::ObjectType type;
     if (textItem) {
         type = TupLibraryObject::Item;
         position = frame->indexOf(item);

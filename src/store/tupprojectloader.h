@@ -48,7 +48,7 @@ class TUPITUBE_EXPORT TupProjectLoader
     	~TupProjectLoader();
     	
     	static void createItem(int sceneIndex, int layerIndex, int frameIndex, int itemPosition, QPointF point, 
-                               TupLibraryObject::Type type, const QString &xml, TupProject *project);
+                               TupLibraryObject::ObjectType type, const QString &xml, TupProject *project);
 
     	static void createFrame(int sceneIndex, int layerIndex, int frameIndex, const QString &name, TupProject *project);
     	static void createLayer(int sceneIndex, int layerIndex, const QString &name, TupProject *project);
@@ -57,7 +57,7 @@ class TUPITUBE_EXPORT TupProjectLoader
     	
     	static void createScene(const QString &name, int sceneIndex, TupProject *project);
     	
-    	static void createSymbol(TupLibraryObject::Type type, const QString &name, const QString &parent, const QByteArray &data, TupProject *project);
+    	static void createSymbol(TupLibraryObject::ObjectType type, const QString &name, const QString &parent, const QByteArray &data, TupProject *project);
 };
 
 #endif

@@ -46,7 +46,7 @@ TupLibraryObject::TupLibraryObject(QObject *parent) : QObject(parent)
 {
 }
 
-TupLibraryObject::TupLibraryObject(const QString &name, const QString &dir, TupLibraryObject::Type type,
+TupLibraryObject::TupLibraryObject(const QString &name, const QString &dir, TupLibraryObject::ObjectType type,
                                    QObject *parent) : QObject(parent)
 {
     setSymbolName(name);
@@ -56,7 +56,6 @@ TupLibraryObject::TupLibraryObject(const QString &name, const QString &dir, TupL
     lipsyncVoice = false;
     mute = false;
     playAt = 0;
-    isGroup = false;
 }
 
 TupLibraryObject::~TupLibraryObject()
@@ -87,14 +86,24 @@ QString TupLibraryObject::getDataPath() const
     return dataPath;
 }
 
-void TupLibraryObject::setType(TupLibraryObject::Type type)
+void TupLibraryObject::setObjectType(TupLibraryObject::ObjectType type)
 {
     objectType = type;
 }
 
-TupLibraryObject::Type TupLibraryObject::getType() const
+TupLibraryObject::ObjectType TupLibraryObject::getObjectType() const
 {
     return objectType;
+}
+
+void TupLibraryObject::setItemType(TupLibraryObject::ItemType type)
+{
+    itemType = type;
+}
+
+TupLibraryObject::ItemType TupLibraryObject::getItemType() const
+{
+    return itemType;
 }
 
 void TupLibraryObject::enableMute(bool flag)
@@ -255,7 +264,7 @@ void TupLibraryObject::fromXml(const QString &xml)
         bool isOk = false; 
         int index = objectTag.attribute("type").toInt(&isOk);
         if (isOk) {
-            objectType = TupLibraryObject::Type(index);
+            objectType = TupLibraryObject::ObjectType(index);
         } else {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupLibraryObject::fromXml()] - Fatal Error: Invalid object type!";
@@ -264,41 +273,50 @@ void TupLibraryObject::fromXml(const QString &xml)
         }
 
         switch (objectType) {
-            case TupLibraryObject::Text:
-             {
-                 QDomElement objectData = objectTag.firstChild().toElement();
-                 if (!objectTag.isNull()) {
-                     QString data;
-                     {
-                         QTextStream ts(&data);
-                         ts << objectData;
-                     }
-
-                     QByteArray array = data.toLocal8Bit();
-                     if (!array.isEmpty() && !array.isNull()) {
-                         loadRawData(array);
-                     } else {
-                         #ifdef TUP_DEBUG
-                             qDebug() << "[TupLibraryObject::fromXml()] - Object data is empty! -> " << symbolName;
-                         #endif
-                         return;
-                     }
-                 } else {
-                     #ifdef TUP_DEBUG
-                         qDebug() << "[TupLibraryObject::fromXml()] - Fatal Error: Object data from xml is NULL -> " << symbolName;
-                     #endif
-                     return;
-                 }
-             }
-            break;
             case TupLibraryObject::Image:
             case TupLibraryObject::Svg:
             case TupLibraryObject::Item:
              {
-                 dataPath = objectTag.attribute("path");
-                 int index = dataPath.lastIndexOf("/");
-                 if (index > 0)
-                     folder = dataPath.left(index);
+                 if (xml.startsWith("<text")) {
+                     itemType = Text;
+                     QDomElement objectData = objectTag.firstChild().toElement();
+                     if (!objectTag.isNull()) {
+                         QString data;
+                         {
+                             QTextStream ts(&data);
+                             ts << objectData;
+                         }
+
+                         QByteArray array = data.toLocal8Bit();
+                         if (!array.isEmpty() && !array.isNull()) {
+                             loadRawData(array);
+                         } else {
+                             #ifdef TUP_DEBUG
+                                 qDebug() << "[TupLibraryObject::fromXml()] - Object data is empty! -> " << symbolName;
+                             #endif
+                             return;
+                         }
+                     } else {
+                         #ifdef TUP_DEBUG
+                             qDebug() << "[TupLibraryObject::fromXml()] - Fatal Error: Object data from xml is NULL -> " << symbolName;
+                         #endif
+                         return;
+                     }
+                 } else {
+                     if (xml.startsWith("<path"))
+                        itemType = Path;
+                     else if (xml.startsWith("<ellipse"))
+                        itemType = Ellipse;
+                     else if (xml.startsWith("<rect"))
+                         itemType = Rect;
+                     else if (xml.startsWith("<group"))
+                         itemType = Group;
+
+                     dataPath = objectTag.attribute("path");
+                     int index = dataPath.lastIndexOf("/");
+                     if (index > 0)
+                         folder = dataPath.left(index);
+                 }
              }
             break;
             case TupLibraryObject::Sound:
@@ -339,20 +357,19 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
     #endif
 
     switch (objectType) {
-            case Text:
-            {
-                QGraphicsItem *item = qvariant_cast<QGraphicsItem *>(data);
-                if (item) {
-                    if (TupAbstractSerializable *serializable = dynamic_cast<TupAbstractSerializable *>(item))
-                        object.appendChild(serializable->toXml(doc));
-                }
-            }
-            break;
             case Image:
             case Svg:
             case Item:
             {
-                object.setAttribute("path", path);
+                if (itemType == Text) {
+                    QGraphicsItem *item = qvariant_cast<QGraphicsItem *>(data);
+                    if (item) {
+                        if (TupAbstractSerializable *serializable = dynamic_cast<TupAbstractSerializable *>(item))
+                            object.appendChild(serializable->toXml(doc));
+                    }
+                } else {
+                    object.setAttribute("path", path);
+                }
             }
             break;
             case Sound:
@@ -404,22 +421,25 @@ bool TupLibraryObject::loadRawData(const QByteArray &data)
             break;
             case TupLibraryObject::Item:
             {
-                 QString input = QString::fromLocal8Bit(data);
-                 if (input.startsWith("<group")) {
-                     groupXml = input;
-                     isGroup = true;
-                 }
+                 if (itemType == Text) {
+                     setData(QString::fromLocal8Bit(data));
+                 } else {
+                     QString input = QString::fromLocal8Bit(data);
+                     xmlString = input;
 
-                 TupItemFactory factory;
-                 QGraphicsItem *item = factory.create(input);
-                 setData(QVariant::fromValue(item));
+                     TupItemFactory factory;
+                     QGraphicsItem *item = factory.create(input);
+                     setData(QVariant::fromValue(item));
+                 }
             }
             break;
+            /*
             case TupLibraryObject::Text:
             {
                  setData(QString::fromLocal8Bit(data));
             }
             break;
+            */
             case TupLibraryObject::Sound:
             {
                  setData(QVariant::fromValue(data));
@@ -680,14 +700,16 @@ bool TupLibraryObject::isSoundResource()
     return objectIsSoundResource;
 }
 
+/*
 bool TupLibraryObject::isNativeGroup()
 {
     return isGroup;
 }
+*/
 
-QString TupLibraryObject::getGroupXml() const
+QString TupLibraryObject::toString() const
 {
-    return groupXml;
+    return xmlString;
 }
 
 QPixmap TupLibraryObject::renderImage(const QString &xml, int width)
@@ -773,4 +795,20 @@ QPixmap TupLibraryObject::generateImage(const QString &xml, int width)
     }
 
     return QPixmap();
+}
+
+TupLibraryObject * TupLibraryObject::clone()
+{
+    TupLibraryObject *copy = new TupLibraryObject(getSymbolName(), getFolder(), getObjectType());
+    copy->setDataPath(getDataPath());
+    copy->setData(getData());
+
+    if (isSoundResource()) {
+        copy->setSoundResourceFlag(isSoundResource());
+        copy->setLipsyncVoiceFlag(isLipsyncVoice());
+        copy->updateFrameToPlay(frameToPlay());
+        copy->enableMute(isMuted());
+    }
+
+    return copy;
 }

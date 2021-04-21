@@ -99,9 +99,11 @@ QGraphicsItem* TupItemFactory::createItem(const QString &root)
 
 bool TupItemFactory::startTag(const QString& qname, const QXmlAttributes& atts)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupItemFactory::startTag()] - qname -> " << qname;
     #endif
+    */
 
     if (qname == "path") {
         QPainterPath path;

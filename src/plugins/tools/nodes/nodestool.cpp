@@ -479,7 +479,7 @@ void NodesTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
 
     TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
     int position = -1;
-    TupLibraryObject::Type type;
+    TupLibraryObject::ObjectType type;
 
     if (svg) {
         type = TupLibraryObject::Svg;

@@ -151,7 +151,7 @@ void SelectionTool::press(const TupInputDeviceInformation *input, TupBrushManage
 
         TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
         int itemIndex = -1;
-        TupLibraryObject::Type type = TupLibraryObject::Item;
+        TupLibraryObject::ObjectType type = TupLibraryObject::Item;
         if (svg) {
             type = TupLibraryObject::Svg;
             itemIndex = frame->indexOf(svg);
@@ -693,7 +693,7 @@ void SelectionTool::applyFlip(SelectionSettings::Flip flip)
 
                 TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(manager->parentItem());
                 int position = -1;
-                TupLibraryObject::Type type = TupLibraryObject::Item;
+                TupLibraryObject::ObjectType type = TupLibraryObject::Item;
                 TupFrame *frame = getCurrentFrame();
                 if (svg) {
                     type = TupLibraryObject::Svg;
@@ -725,7 +725,7 @@ void SelectionTool::applyOrderAction(SelectionSettings::Order action)
     foreach (QGraphicsItem *item, selectedObjects) {
         TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
         int position = -1;
-        TupLibraryObject::Type type = TupLibraryObject::Item;
+        TupLibraryObject::ObjectType type = TupLibraryObject::Item;
         TupFrame *frame = getCurrentFrame();
         if (svg) {
             type = TupLibraryObject::Svg;
@@ -1090,7 +1090,7 @@ void SelectionTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
 
     TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
     int position = -1;
-    TupLibraryObject::Type type;
+    TupLibraryObject::ObjectType type;
 
     if (svg) {
         type = TupLibraryObject::Svg;
