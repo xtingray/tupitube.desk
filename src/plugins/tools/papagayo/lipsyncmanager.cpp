@@ -39,7 +39,7 @@
 #include <QLineEdit>
 #include <QListWidgetItem>
 
-LipSyncManager::LipSyncManager(QWidget *parent) : QWidget(parent)
+LipSyncManager::LipSyncManager(QWidget *parent): QWidget(parent)
 {
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);

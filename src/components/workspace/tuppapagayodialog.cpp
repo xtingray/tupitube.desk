@@ -220,7 +220,12 @@ void TupPapagayoDialog::saveDefaultPath(const QString &dir)
 
 QWidget * TupPapagayoDialog::sampleWidget(int index)
 {
-    folder << SHARE_DIR + "data/mouths/" + QString::number(index);
+    #ifdef Q_OS_UNIX
+        folder << SHARE_DIR + "data/mouths/" + QString::number(index);
+    #else
+        folder << SHARE_DIR + "mouths/" + QString::number(index);
+    #endif
+
     QString imgPath = folder[index] + "/" + "AI.png";
     #ifdef TUP_DEBUG
         qDebug() << "[TupPapagayoDialog::sampleWidget()] - imgPath -> " << imgPath;

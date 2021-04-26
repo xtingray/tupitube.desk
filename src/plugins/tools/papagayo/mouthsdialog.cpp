@@ -58,8 +58,13 @@ MouthsDialog::MouthsDialog(QWidget *parent) : QDialog(parent)
     }
 
     mouthLabels << "AI" << "E" << "etc" << "FV" << "L" << "MBP" << "O" << "rest" << "U" << "WQ";
-    for (int i = 1; i < 6; i++)
-        folder << SHARE_DIR + "data/mouths/" + QString::number(i);
+    #ifdef Q_OS_UNIX
+        for (int i = 1; i < 6; i++)
+            folder << SHARE_DIR + "data/mouths/" + QString::number(i);
+    #else
+        for (int i = 1; i < 6; i++)
+            folder << SHARE_DIR + "mouths/" + QString::number(i);
+    #endif
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     QComboBox *mouthCombo = new QComboBox();
@@ -118,6 +123,10 @@ QWidget * MouthsDialog::createMouthPanel(int index, int row, int column)
     panelLayout->addWidget(label);
 
     QString imgPath = folder[index] + "/" + text + ".png";
+    #ifdef TUP_DEBUG
+        qDebug() << "[MouthsDialog::createMouthPanel()] - imgPath -> " << imgPath;
+    #endif
+
     QLabel *mouthImage = new QLabel;
     mouthImage->setAlignment(Qt::AlignCenter);
     mouthImage->setPixmap(QPixmap(imgPath));
