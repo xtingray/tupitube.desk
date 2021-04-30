@@ -81,6 +81,8 @@ module RQonf
                                      newmakefile += "#{line.gsub(/\$\(INSTALL_ROOT\)\/themes/, "\$\(DESTDIR\)" + @options['sharedir'] + "/themes")}"
                                elsif line.include? "\$\(INSTALL_ROOT\)\/applications" then
                                      newmakefile += "#{line.gsub(/\$\(INSTALL_ROOT\)\/applications/, "\$\(DESTDIR\)" + @options['prefix'] + "/share/applications")}"
+                               elsif line.include? "\$\(INSTALL_ROOT\)\/metainfo" then
+                                     newmakefile += "#{line.gsub(/\$\(INSTALL_ROOT\)\/metainfo/, "\$\(DESTDIR\)" + @options['prefix'] + "/share/metainfo")}"
                                elsif line.include? "\$\(INSTALL_ROOT\)\/pixmaps" then
                                      newmakefile += "#{line.gsub(/\$\(INSTALL_ROOT\)\/pixmaps/, "\$\(DESTDIR\)" + @options['prefix'] + "/share/pixmaps")}"
                                elsif line.include? "\$\(INSTALL_ROOT\)\/man1" then

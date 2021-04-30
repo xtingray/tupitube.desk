@@ -38,6 +38,7 @@ unix:!mac {
                 mime \
                 target \
                 desktop \
+                appdata \
                 icons \
                 html \
                 copyright
@@ -57,6 +58,10 @@ unix:!mac {
     desktop.target = ../../launcher/tupitube.desktop
     desktop.commands = cp ../../launcher/tupitube.desktop $(INSTALL_ROOT)/applications
     desktop.path = /applications/
+
+    appdata.target = ../../launcher/tupitube.appdata.xml
+    appdata.commands = cp ../../launcher/tupitube.appdata.xml $(INSTALL_ROOT)/metainfo
+    appdata.path = /metainfo/
 
     icons.target = ../../launcher/icons/tupitube.desk.png
     icons.commands = cp ../../launcher/icons/tupitube.desk.png $(INSTALL_ROOT)/pixmaps
