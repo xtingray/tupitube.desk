@@ -74,7 +74,7 @@ class TUPITUBE_PLUGIN PolyLineTool : public TupToolPlugin
         void aboutToChangeScene(TupGraphicsScene *scene);
         virtual void aboutToChangeTool();
         virtual void saveConfig();
-        virtual QCursor polyCursor(); //  const;
+        virtual QCursor toolCursor(); //  const;
 
         void resizeNode(qreal scaleFactor);
         void updateZoomFactor(qreal scaleFactor);

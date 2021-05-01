@@ -141,7 +141,7 @@ class TupMainWindow : public TabbedMainWindow
     public slots:
         void openProject(const QString &path);
         void openExample();
-        void updatePenColor(const QColor &color);
+        void updateColor(TColorCell::FillType type, const QColor &color);
         void updatePenThickness(int thickness);
         void exportProject();
         void postProject();

@@ -211,7 +211,7 @@ void TupCanvas::colorDialog(const QColor &current)
     QColor color = QColorDialog::getColor(current, this);
     if (color.isValid()) { 
         currentColor = color;
-        emit colorChangedFromFullScreen(color);
+        emit colorChanged(TColorCell::Contour, color);
     }
 }
 
@@ -219,7 +219,7 @@ void TupCanvas::colorDialog()
 {
     QColor color = QColorDialog::getColor(currentColor, this);
     if (color.isValid())
-        emit colorChangedFromFullScreen(color);
+        emit colorChanged(TColorCell::Contour, color);
 }
 
 void TupCanvas::penDialog()

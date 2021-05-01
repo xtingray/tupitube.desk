@@ -142,7 +142,7 @@ void TupToolPlugin::saveConfig()
 {
 }
 
-QCursor TupToolPlugin::polyCursor() // const
+QCursor TupToolPlugin::toolCursor() // const
 {
     return QCursor(Qt::ArrowCursor); 
 }
@@ -362,4 +362,13 @@ void TupToolPlugin::updatePressure(qreal pressure)
 void TupToolPlugin::updateTextColor(const QColor &color)
 {
     Q_UNUSED(color)
+}
+
+void TupToolPlugin::updateColorType(TColorCell::FillType fillType)
+{
+    Q_UNUSED(fillType)
+}
+
+void TupToolPlugin::refreshEyeDropperPanel()
+{
 }

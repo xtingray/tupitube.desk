@@ -16,7 +16,8 @@ SUBDIRS += common \
            shear \
            opacity \
            color \
-           papagayo
+           papagayo \
+           eyedropper
 
 CONFIG += ordered warn_on
 TEMPLATE = subdirs

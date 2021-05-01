@@ -421,7 +421,7 @@ void InkTool::keyPressEvent(QKeyEvent *event)
     }
 }
 
-QCursor InkTool::polyCursor() // const
+QCursor InkTool::toolCursor() // const
 {
     return inkCursor;
 }

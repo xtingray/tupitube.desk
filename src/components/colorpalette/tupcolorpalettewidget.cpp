@@ -133,7 +133,8 @@ void TupColorPaletteWidget::setupColorDisplay()
     mainLayout->setMargin(0);
     mainLayout->setSpacing(1);
 
-    mainLayout->addWidget(new QWidget());
+    // mainLayout->addWidget(new QWidget());
+    mainLayout->addStretch(1);
 
     TImageButton *changeButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/exchange_colors.png")), 20, this, true);
     changeButton->setToolTip(tr("Exchange colors"));
@@ -146,7 +147,6 @@ void TupColorPaletteWidget::setupColorDisplay()
     QLabel *fillLabel = new QLabel(tr("Fill"));
 
     QSize cellSize(25, 25);
-    // QColor contourColor(0, 0, 0);
     QBrush contourBrush = QBrush(Qt::black);
     contourColorCell = new TColorCell(TColorCell::Contour, contourBrush, cellSize);
     contourColorCell->setChecked(true);
@@ -175,7 +175,9 @@ void TupColorPaletteWidget::setupColorDisplay()
     connect(resetButton, SIGNAL(clicked()), this, SLOT(init()));
     mainLayout->addWidget(resetButton);
 
-    mainLayout->addWidget(new QWidget());
+    QWidget *space = new QWidget();
+    space->setFixedWidth(10);
+    mainLayout->addWidget(space);
 
     QLabel *htmlLabel = new QLabel(tr("HTML"), topPanel);
     htmlLabel->setMaximumWidth(50);
@@ -188,19 +190,25 @@ void TupColorPaletteWidget::setupColorDisplay()
     connect(htmlField, SIGNAL(editingFinished()), this, SLOT(updateColorFromHTML()));
     mainLayout->addWidget(htmlField);
 
-    mainLayout->addWidget(new QWidget());
+    TImageButton *eyedropperButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/eyedropper.png")), 20, this, true);
+    eyedropperButton->setToolTip(tr("Eye Dropper"));
+    connect(eyedropperButton, SIGNAL(clicked()), this, SLOT(activateEyeDropper()));
+    mainLayout->addWidget(eyedropperButton);
+
+    mainLayout->addStretch(1);
+    // mainLayout->addWidget(new QWidget());
 
     generalLayout->addLayout(mainLayout);
     generalLayout->addWidget(new QWidget());
     generalLayout->setAlignment(mainLayout, Qt::AlignHCenter|Qt::AlignVCenter);
 
-    generalLayout->addWidget(new TSeparator(Qt::Horizontal));    
+    generalLayout->addWidget(new TSeparator(Qt::Horizontal));
 
     QBoxLayout *bgLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     bgLayout->setMargin(0);
     bgLayout->setSpacing(1);
 
-    bgLayout->addWidget(new QWidget());
+    // bgLayout->addWidget(new QWidget());
 
     QBrush bgBrush = QBrush(Qt::white);
     bgColor = new TColorCell(TColorCell::Background, bgBrush, cellSize);
@@ -239,14 +247,19 @@ void TupColorPaletteWidget::setupColorDisplay()
     connect(bgHtmlField, SIGNAL(editingFinished()), this, SLOT(updateBgColorFromHTML()));
     bgLayout->addWidget(bgHtmlField);
 
-    bgLayout->addWidget(new QWidget());
+    TImageButton *bgEyedropperButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/eyedropper.png")), 20, this, true);
+    bgEyedropperButton->setToolTip(tr("Eye Dropper"));
+    connect(bgEyedropperButton, SIGNAL(clicked()), this, SLOT(activateBgEyeDropper()));
+    bgLayout->addWidget(bgEyedropperButton);
+
+    // bgLayout->addWidget(new QWidget());
 
     generalLayout->addLayout(bgLayout);
     generalLayout->setAlignment(bgLayout, Qt::AlignHCenter);
 
     generalLayout->addWidget(new QWidget());
 
-    addChild(topPanel);
+    addChild(topPanel, Qt::AlignHCenter);
 }
 
 void TupColorPaletteWidget::updateColorMode(TColorCell::FillType type)
@@ -398,7 +411,7 @@ void TupColorPaletteWidget::setColorOnAppFromHTML(const QBrush& brush)
               gradientManager->setGradient(gradient);
 
           // SQA: Gradient issue pending for revision
-          // tFatal() << "TupColorPaletteWidget::setColor() - Sending gradient value!";
+          // qWarning() << "TupColorPaletteWidget::setColor() - Sending gradient value!";
           // TupPaintAreaEvent event(TupPaintAreaEvent::ChangeBrush, brush);
           // emit paintAreaEventTriggered(&event);
           // return;
@@ -775,4 +788,34 @@ void TupColorPaletteWidget::updateBgColor(const QColor &color)
         bgColor->setBrush(QBrush(color));
         updateColorMode(TColorCell::Background);
     }
+}
+
+void TupColorPaletteWidget::activateEyeDropper()
+{
+    if (bgColor->isChecked()) {
+        bgColor->setChecked(false);
+        contourColorCell->setChecked(true);
+        updateColorMode(TColorCell::Contour);
+    }
+
+    if (contourColorCell->isChecked())
+        emit eyeDropperActivated(TColorCell::Contour);
+    else if (fillColorCell->isChecked())
+        emit eyeDropperActivated(TColorCell::Inner);
+}
+
+void TupColorPaletteWidget::activateBgEyeDropper()
+{
+    if (contourColorCell->isChecked())
+        contourColorCell->setChecked(false);
+
+    if (fillColorCell->isChecked())
+        fillColorCell->setChecked(false);
+
+    if (!bgColor->isChecked()) {
+        bgColor->setChecked(true);
+        updateColorMode(TColorCell::Background);
+    }
+
+    emit eyeDropperActivated(TColorCell::Background);
 }

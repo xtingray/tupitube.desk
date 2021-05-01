@@ -6,7 +6,7 @@
  *                                                                         *
  *   Developers:                                                           *
  *   2010:                                                                 *
- *    Gustavo Gonzalez                                                     *
+ *    Gustav Gonzalez / xtingray                                           *
  *                                                                         *
  *   KTooN's versions:                                                     * 
  *                                                                         *
@@ -33,105 +33,67 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef INKTOOL_H
-#define INKTOOL_H
+#ifndef EYEDROPPERPLUGIN_H
+#define EYEDROPPERPLUGIN_H
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
-#include "inksettings.h"
-#include "tuppathitem.h"
+#include "eyedroppersettings.h"
 
-#include <QObject>
-#include <QSpinBox>
-#include <QTimer>
-#include <QPointF>
-#include <QKeySequence>
-#include <QGraphicsPathItem>
-#include <QPainterPath>
-#include <QGraphicsLineItem>
-#include <QGraphicsView>
-#include <QBrush>
-#include <cmath>
+#include <QDesktopWidget>
 
-class TUPITUBE_PLUGIN InkTool : public TupToolPlugin
+class TUPITUBE_PLUGIN EyeDropper: public TupToolPlugin
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "com.maefloresta.tupi.TupToolInterface" FILE "inktool.json")
+    Q_PLUGIN_METADATA(IID "com.maefloresta.tupi.TupToolInterface" FILE "eyedropper.json")
     
     public:
-        enum Direction { None, Up, Down, Right, RightUp, RightDown, Left, LeftUp, LeftDown };
-        InkTool();
-        virtual ~InkTool();
-        
-        virtual void init(TupGraphicsScene *scene);
+        EyeDropper();
+        ~EyeDropper();
+
         virtual QList<TAction::ActionId> keys() const;
-        virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
-        virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
-        virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
+
+        void init(TupGraphicsScene *scene);
+        
+        virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, 
+                           TupGraphicsScene *gScene);
+        virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, 
+                          TupGraphicsScene *gScene);
+
+        virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, 
+                    TupGraphicsScene *gScene);
+        
         virtual QMap<TAction::ActionId, TAction *> actions() const;
+        
         int toolType() const;
+        
         virtual QWidget *configurator();
+        void aboutToChangeScene(TupGraphicsScene *scene);
         virtual void aboutToChangeTool();
+        
         virtual void saveConfig();
         virtual void keyPressEvent(QKeyEvent *event);
-        virtual QCursor toolCursor(); // const;
-        void updatePressure(qreal pressure);
+        virtual QCursor toolCursor();
+
+        virtual void updateColorType(TColorCell::FillType type);
+        QColor grabColorFromScreen() const;
+        void refreshEyeDropperPanel();
 
     signals:
         void closeHugeCanvas();
-        void callForPlugin(int menu, int index);
-        
-    private slots:
-        void setDevice(InkSettings::Device device);
-        void updateBorderFeature(bool border);
-        void updateFillFlag(bool fill);
-        void updateBorderSize(int size);
-        void updatePressure(int value);
-        void updateSmoothness(double value);
+        void callForPlugin(int, int);
+        void colorPicked(TColorCell::FillType type, const QColor &color);
 
     private:
         void setupActions();
-        void processPoint(QPointF currentPoint, qreal strokeWidth);
-        void smoothPath(QPainterPath &guidePainterPath, double smoothness, int from = 0,
-                        int to = -1, bool closePath = false);
-        void removeExtraPoints();
 
     private:
-        QPointF firstPoint;
-        QPointF oldPos;
-
-        QPointF previousPoint;
-        QPointF firstHalfPrevious;
-        bool firstHalfOnTop;
-        QPointF secondHalfPrevious;
-
-        QPainterPath guidePainterPath;
-        QPainterPath inkPath;
-        QList<QPointF> guidePoints;
-        QList<QPointF> shapePoints;
-        QList<qreal> pointPress;
-
-        InkSettings *settings;
-        QMap<TAction::ActionId, TAction *> inkActions;
-
-        TupPathItem *guidePath;
-
-        int borderSize;
-        qreal initPenWidth;
-        qreal penWidth;
-        qreal penPress;
-        // qreal oldSlope;
-        int arrowSize;
-        int firstArrow;
-        QCursor inkCursor;
-
-        int sensibility;
-        double smoothness;
-        bool showBorder;
-        bool showFill;
-
-        Direction previousDirection;
-        InkSettings::Device device;
+        QCursor cursor;
+        QMap<TAction::ActionId, TAction *> eyedropperActions;
+        TupGraphicsScene *scene;
+        EyeDropperSettings *settings;
+        TColorCell::FillType fillType;
+        const QDesktopWidget *desktop = QApplication::desktop();
 };
 
 #endif

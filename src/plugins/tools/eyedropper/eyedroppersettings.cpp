@@ -1,19 +1,15 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                 *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
+ *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
- *   2019:                                                                 *
- *    Alejandro Carrasco Rodríguez                                         *
- *   2012:                                                                 *
- *    Andres Calderon / @andresfcalderon                                   *
- *    Antonio Vanegas / @hpsaturn                                          *
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
- *   TupiTube Desk is a fork of the KTooN project                          *
- *   KTooN's versions:                                                     *
+ *   KTooN's versions:                                                     * 
+ *                                                                         *
  *   2006:                                                                 *
  *    David Cuadrado                                                       *
  *    Jorge Cuadrado                                                       *
@@ -21,7 +17,7 @@
  *    Fernado Roldan                                                       *
  *    Simena Dinas                                                         *
  *                                                                         *
- *   Copyright (C) 2012 Mae Floresta - http://www.maefloresta.com          *
+ *   Copyright (C) 2010 Gustav Gonzalez - http://www.maefloresta.com       *
  *   License:                                                              *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -37,49 +33,56 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TCOLORCELL_H
-#define TCOLORCELL_H
+#include "eyedroppersettings.h"
+#include "tconfig.h"
+#include "tseparator.h"
 
-#include "tglobal.h"
+#include <QBoxLayout>
+#include <QPushButton>
 
-#include <QBrush>
-#include <QPainter>
-#include <QPaintEvent>
-#include <QSize>
-#include <QWidget>
-
-class TUPITUBE_EXPORT TColorCell : public QWidget
+EyeDropperSettings::EyeDropperSettings(QWidget *parent): QWidget(parent)
 {
-    Q_OBJECT
+    #ifdef TUP_DEBUG
+        qDebug() << "[EyeDropperSettings()]";
+    #endif
 
-    public:
-        enum FillType {None, Contour = 0, Inner, Background, Basic, PreviousFrames, NextFrames, Layers};
-        TColorCell(FillType typeIndex, const QBrush &b, const QSize &dimension);
-        ~TColorCell();
+    QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
+    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
+    layout->setAlignment(Qt::AlignHCenter);
 
-        QSize sizeHint() const;
-        QBrush brush();
-        QColor color();
-        void setEnabled(bool isEnabled);
-        void setChecked(bool isChecked);
-        bool isChecked();
-        void setBrush(const QBrush &b);
-        void click();
+    QLabel *eyeDropperLabel = new QLabel;
+    eyeDropperLabel->setAlignment(Qt::AlignHCenter);
+    QPixmap pencilPic(THEME_DIR + "icons/eyedropper.png");
+    eyeDropperLabel->setPixmap(pencilPic.scaledToWidth(16, Qt::SmoothTransformation));
+    eyeDropperLabel->setToolTip(tr("Eye Dropper Properties"));
 
-    protected:
-        void paintEvent(QPaintEvent *painter);
-        void mousePressEvent(QMouseEvent *event);
+    layout->addWidget(eyeDropperLabel);
+    layout->addWidget(new TSeparator(Qt::Horizontal));
+    layout->addSpacing(10);
 
-    signals:
-        void clicked(TColorCell::FillType index);
+    colorCell = new TColorCell(TColorCell::None, Qt::white, QSize(50, 50));
+    layout->addWidget(colorCell);
 
-    private:
-        bool checked;
-        bool enabled;
-        FillType index;
-        QBrush cellBrush;
-        QSize size;
-        QString themeName;
-};
+    QHBoxLayout *colorLayout = new QHBoxLayout;
+    colorLabel = new QLabel("");
+    colorLabel->setAlignment(Qt::AlignCenter);
+    colorLayout->addWidget(colorLabel);
 
-#endif
+    mainLayout->addLayout(layout);
+    mainLayout->addLayout(colorLayout);
+    mainLayout->addStretch(2);
+}
+
+EyeDropperSettings::~EyeDropperSettings()
+{
+}
+
+void EyeDropperSettings::updateColor(const QColor &color)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[EyeDropperSettings::updateColor()] - color -> " << color;
+    #endif
+
+    colorCell->setBrush(QBrush(color));
+    colorLabel->setText(color.name());
+}

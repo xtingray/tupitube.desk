@@ -45,7 +45,7 @@
 #include <QScreen>
 #include <cmath> // fabs
 
-TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent) : TupPaintAreaBase(parent, work->getDimension(),
+TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent): TupPaintAreaBase(parent, work->getDimension(),
                                                                                  work->getLibrary())
 {
     #ifdef TUP_DEBUG

@@ -102,7 +102,7 @@ class TUPITUBE_EXPORT TupCanvas : public QFrame
    signals:
         void requestTriggered(const TupProjectRequest *event);
         void localRequestTriggered(const TupProjectRequest *event);
-        void colorChangedFromFullScreen(const QColor &color);
+        void colorChanged(TColorCell::FillType type, const QColor &color);
         void penWidthChangedFromFullScreen(int size);
         void onionOpacityChangedFromFullScreen(double opacity);
         void zoomFactorChangedFromFullScreen(qreal factor);

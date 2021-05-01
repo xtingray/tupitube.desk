@@ -65,7 +65,7 @@ QSize TColorCell::sizeHint() const
 
 void TColorCell::paintEvent(QPaintEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
 
     QPainter painter(this);
     painter.fillRect(rect(), cellBrush);

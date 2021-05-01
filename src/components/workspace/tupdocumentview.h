@@ -126,6 +126,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void insertPictureInFrame(int id, const QString path);
         void papagayoManager();
         void openRasterMode();
+        void refreshEyeDropperPanel();
 
     private slots: 
         // Plugins
@@ -174,6 +175,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void requestClearRasterCanvas();
         void updateBgSettings(QList<TupBackground::BgType>, QList<bool>);
         void clearFrame();
+        void enableEyeDropperTool(TColorCell::FillType fillType);
 
     signals:
         void requestTriggered(const TupProjectRequest *event);
@@ -184,7 +186,9 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void requestExportImageToServer(int frameIndex, int sceneIndex, const QString &title, const QString &topics, const QString &description);
         void openColorDialog(const QColor &);
         // void updateColorFromFullScreen(const QColor &color);
-        void colorChangedFromFullScreen(const QColor &color);
+        // void penColorChanged(const QColor &color);
+        void colorChanged(TColorCell::FillType fillType, const QColor color);
+
         // void updatePenFromFullScreen(const QPen &pen);
         void updateStoryboard(TupStoryboard *storyboard, int sceneIndex);
         void postStoryboard(int sceneIndex);
@@ -257,6 +261,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         TAction *nodesAction;
         TAction *fillAction;
         TAction *papagayoAction;
+        TAction *eyedropperAction;
 
         TupCanvas *fullScreen;
         RasterMainWindow *rasterWindow;

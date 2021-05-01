@@ -97,8 +97,7 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
         virtual void updatePressure(qreal pressure);
 
         virtual QMenu *menu() const;
-        // virtual QCursor polyCursor() const;
-        virtual QCursor polyCursor();
+        virtual QCursor toolCursor();
         QPair<int, int> setKeyAction(int key, Qt::KeyboardModifiers modifiers);
 
         virtual void resizeNode(qreal factor);
@@ -117,6 +116,9 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
 
         virtual void setColorMode(TColorCell::FillType mode);
         virtual void updateTextColor(const QColor &color);
+
+        virtual void updateColorType(TColorCell::FillType fillType);
+        virtual void refreshEyeDropperPanel();
 
     signals:
         void requested(const TupProjectRequest *request);

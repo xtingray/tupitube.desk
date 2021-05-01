@@ -85,10 +85,14 @@ class TUPITUBE_EXPORT TupColorPaletteWidget : public TupModuleWidgetBase
         void updateGradientColor(const QBrush &brush);
         void switchColors();
         void updateColorType(int index);
-		
+
+        void activateEyeDropper();
+        void activateBgEyeDropper();
+
     signals:
         void paintAreaEventTriggered(const TupPaintAreaEvent *event);
         void colorSpaceChanged(TColorCell::FillType type);
+        void eyeDropperActivated(TColorCell::FillType type);
 
     private:
         void setupButtons();

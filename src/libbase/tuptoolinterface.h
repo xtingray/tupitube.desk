@@ -57,7 +57,7 @@ class TupScene;
 class TUPITUBE_EXPORT TupToolInterface
 {
     public:
-        enum ToolType { None = 0, Brush, Fill, Selection, View, Tweener, LipSync };
+        enum ToolType { None = 0, Brush, Fill, Selection, View, Tweener, LipSync, Color };
  
         virtual ~TupToolInterface() {};
 

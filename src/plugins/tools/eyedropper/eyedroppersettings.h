@@ -1,19 +1,15 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                 *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
+ *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
- *   2019:                                                                 *
- *    Alejandro Carrasco Rodríguez                                         *
- *   2012:                                                                 *
- *    Andres Calderon / @andresfcalderon                                   *
- *    Antonio Vanegas / @hpsaturn                                          *
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
- *   TupiTube Desk is a fork of the KTooN project                          *
- *   KTooN's versions:                                                     *
+ *   KTooN's versions:                                                     * 
+ *                                                                         *
  *   2006:                                                                 *
  *    David Cuadrado                                                       *
  *    Jorge Cuadrado                                                       *
@@ -21,7 +17,7 @@
  *    Fernado Roldan                                                       *
  *    Simena Dinas                                                         *
  *                                                                         *
- *   Copyright (C) 2012 Mae Floresta - http://www.maefloresta.com          *
+ *   Copyright (C) 2010 Gustav Gonzalez - http://www.maefloresta.com       *
  *   License:                                                              *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -37,49 +33,29 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TCOLORCELL_H
-#define TCOLORCELL_H
+#ifndef EYEDROPPER_SETTINGS_H
+#define EYEDROPPER_SETTINGS_H
 
 #include "tglobal.h"
+#include "tapplicationproperties.h"
+#include "tcolorcell.h"
 
-#include <QBrush>
-#include <QPainter>
-#include <QPaintEvent>
-#include <QSize>
 #include <QWidget>
+#include <QLabel>
 
-class TUPITUBE_EXPORT TColorCell : public QWidget
+class TUPITUBE_PLUGIN EyeDropperSettings: public QWidget
 {
     Q_OBJECT
 
     public:
-        enum FillType {None, Contour = 0, Inner, Background, Basic, PreviousFrames, NextFrames, Layers};
-        TColorCell(FillType typeIndex, const QBrush &b, const QSize &dimension);
-        ~TColorCell();
+        EyeDropperSettings(QWidget *parent = nullptr);
+        ~EyeDropperSettings();
 
-        QSize sizeHint() const;
-        QBrush brush();
-        QColor color();
-        void setEnabled(bool isEnabled);
-        void setChecked(bool isChecked);
-        bool isChecked();
-        void setBrush(const QBrush &b);
-        void click();
-
-    protected:
-        void paintEvent(QPaintEvent *painter);
-        void mousePressEvent(QMouseEvent *event);
-
-    signals:
-        void clicked(TColorCell::FillType index);
+        void updateColor(const QColor &color);
 
     private:
-        bool checked;
-        bool enabled;
-        FillType index;
-        QBrush cellBrush;
-        QSize size;
-        QString themeName;
+        TColorCell *colorCell;
+        QLabel *colorLabel;
 };
 
 #endif

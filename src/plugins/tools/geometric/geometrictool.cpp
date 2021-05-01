@@ -414,7 +414,7 @@ void GeometricTool::keyReleaseEvent(QKeyEvent *event)
         proportion = false;
 }
 
-QCursor GeometricTool::polyCursor() // const
+QCursor GeometricTool::toolCursor() // const
 {
     if (toolId() == TAction::Rectangle) {
         return squareCursor;

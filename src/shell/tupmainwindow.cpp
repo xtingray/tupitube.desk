@@ -317,21 +317,27 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connectWidgetToLocalManager(animationTab);
         connectWidgetToPaintArea(animationTab);
         connect(animationTab, SIGNAL(modeHasChanged(TupProject::Mode)), this, SLOT(restoreFramesMode(TupProject::Mode)));
-        connect(animationTab, SIGNAL(colorChangedFromFullScreen(const QColor &)), this, SLOT(updatePenColor(const QColor &)));
         connect(animationTab, SIGNAL(projectSizeHasChanged(const QSize)), this, SLOT(resizeProjectDimension(const QSize))); 
         connect(animationTab, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
+
+        connect(animationTab, SIGNAL(colorChanged(TColorCell::FillType, const QColor &)),
+                this, SLOT(updateColor(TColorCell::FillType, const QColor &)));
+
         connect(animationTab, SIGNAL(contourColorChanged(const QColor &)), m_colorPalette, SLOT(updateContourColor(const QColor &))); 
         connect(animationTab, SIGNAL(fillColorChanged(const QColor &)), m_colorPalette, SLOT(updateFillColor(const QColor &)));
         connect(animationTab, SIGNAL(bgColorChanged(const QColor &)), m_colorPalette, SLOT(updateBgColor(const QColor &)));
+
         connect(animationTab, SIGNAL(colorModeChanged(TColorCell::FillType)), m_colorPalette,
                 SLOT(checkColorButton(TColorCell::FillType)));
+
         connect(animationTab, SIGNAL(penWidthChanged(int)), this, SLOT(updatePenThickness(int)));
         connect(animationTab, SIGNAL(projectHasChanged()), this, SLOT(requestSaveAction()));
         connect(animationTab, SIGNAL(imagePostRequested(const QString &)), this, SLOT(postFrame(const QString &)));
         connect(this, SIGNAL(activeDockChanged(TupDocumentView::DockType)), animationTab,
                 SLOT(updateActiveDock(TupDocumentView::DockType)));
-        animationTab->setAntialiasing(true);
+        connect(m_colorPalette, SIGNAL(eyeDropperActivated(TColorCell::FillType)), animationTab, SLOT(enableEyeDropperTool(TColorCell::FillType)));
 
+        animationTab->setAntialiasing(true);
         int width = animationTab->workSpaceSize().width();
         int height = animationTab->workSpaceSize().height();
         animationTab->setWorkSpaceSize(width, height);
@@ -1160,13 +1166,21 @@ void TupMainWindow::createPaintCommand(const TupPaintAreaEvent *event)
     }
 }
 
-void TupMainWindow::updatePenColor(const QColor &color)
+void TupMainWindow::updateColor(TColorCell::FillType type, const QColor &color)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupMainWindow::updatePenColor()]";
+        qDebug() << "[TupMainWindow::updateColor()]";
     #endif
 
-    TupPaintAreaEvent *event = new TupPaintAreaEvent(TupPaintAreaEvent::ChangePenColor, color);
+    TupPaintAreaEvent::Action action = TupPaintAreaEvent::ChangePenColor;
+
+    if (type == TColorCell::Inner)
+        action = TupPaintAreaEvent::ChangeBrush;
+
+    if (type == TColorCell::Background)
+        action = TupPaintAreaEvent::ChangeBgColor;
+
+    TupPaintAreaEvent *event = new TupPaintAreaEvent(action, color);
     createPaintCommand(event);
 }
 

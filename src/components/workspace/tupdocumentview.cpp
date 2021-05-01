@@ -154,6 +154,7 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
 
     connect(paintArea, SIGNAL(frameChanged(int)), status, SLOT(updateFrameIndex(int)));
     connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), status, SLOT(showPos(const QPointF &)));
+
     brushManager()->initBgColor(project->getBgColor());
 
     connect(brushManager(), SIGNAL(penChanged(const QPen &)), this, SLOT(updatePen(const QPen &)));
@@ -601,6 +602,12 @@ void TupDocumentView::loadPlugins()
                           papagayoAction = action;
                     }
                     break;
+                    case TupToolInterface::Color:
+                    {
+                      if (toolId == TAction::EyeDropper)
+                          eyedropperAction = action;
+                    }
+                    break;
                     default:
                     break;
                 } // end switch
@@ -915,6 +922,12 @@ void TupDocumentView::selectTool()
             if (currentTool->toolId() == TAction::LipSyncTool)
                 disconnect(currentTool, SIGNAL(importLipSync()), this, SLOT(importPapagayoLipSync()));
 
+            if (currentTool->toolId() == TAction::EyeDropper) {
+                disconnect(currentTool, SIGNAL(colorPicked(TColorCell::FillType, const QColor &)),
+                                        this, SIGNAL(colorChanged(TColorCell::FillType, const QColor &)));
+                disconnect(paintArea, SIGNAL(cursorPosition(const QPointF &)), this, SLOT(refreshEyeDropperPanel()));
+            }
+
             currentTool->saveConfig();
             QWidget *toolConfigurator = currentTool->configurator();
             if (toolConfigurator)
@@ -1030,7 +1043,6 @@ void TupDocumentView::selectTool()
         }
 
         QWidget *toolConfigurator = tool->configurator();
-
         if (toolConfigurator) {
             configurationArea = new TupConfigurationArea(this);
             configurationArea->setConfigurator(toolConfigurator, minWidth);
@@ -1763,7 +1775,7 @@ void TupDocumentView::showFullScreen()
                                   paintArea->getCenterPoint(), QSize(screenW, screenH), project, scaleFactor,
                                   viewAngle, brushManager());
 
-    fullScreen->updateCursor(currentTool->polyCursor());
+    fullScreen->updateCursor(currentTool->toolCursor());
 
     /*
     QString toolName = currentTool->currentToolName();
@@ -1775,7 +1787,8 @@ void TupDocumentView::showFullScreen()
     updateNodesScale(scaleFactor);
 
     connect(this, SIGNAL(openColorDialog(const QColor &)), fullScreen, SLOT(colorDialog(const QColor &)));
-    connect(fullScreen, SIGNAL(colorChangedFromFullScreen(const QColor &)), this, SIGNAL(colorChangedFromFullScreen(const QColor &)));
+    connect(fullScreen, SIGNAL(colorChanged(TColorCell::FillType, const QColor &)),
+            this, SIGNAL(colorChanged(TColorCell::FillType, const QColor &)));
     connect(fullScreen, SIGNAL(penWidthChangedFromFullScreen(int)), this, SIGNAL(penWidthChanged(int)));
     connect(fullScreen, SIGNAL(onionOpacityChangedFromFullScreen(double)), this, SLOT(updateOnionOpacity(double)));
     connect(fullScreen, SIGNAL(zoomFactorChangedFromFullScreen(qreal)), this, SLOT(updateNodesScale(qreal)));
@@ -1813,7 +1826,8 @@ void TupDocumentView::closeFullScreen()
 {
     if (fullScreenOn) {
         disconnect(this, SIGNAL(openColorDialog(const QColor &)), fullScreen, SLOT(colorDialog(const QColor &)));
-        disconnect(fullScreen, SIGNAL(colorChangedFromFullScreen(const QColor &)), this, SIGNAL(colorChangedFromFullScreen(const QColor &)));
+        disconnect(fullScreen, SIGNAL(colorChanged(TColorCell::FillType, const QColor &)),
+                   this, SIGNAL(colorChanged(TColorCell::FillType, const QColor &)));
         disconnect(fullScreen, SIGNAL(penWidthChangedFromFullScreen(int)), this, SIGNAL(penWidthChanged(int)));
         disconnect(fullScreen, SIGNAL(onionOpacityChangedFromFullScreen(double)), this, SLOT(updateOnionOpacity(double)));
         disconnect(fullScreen, SIGNAL(zoomFactorChangedFromFullScreen(qreal)), this, SLOT(updateNodesScale(qreal)));
@@ -2488,7 +2502,7 @@ void TupDocumentView::updateBrush(const QBrush &brush)
 void TupDocumentView::updateActiveDock(TupDocumentView::DockType dock)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupDocumentView::updateActiveDock()] - currentDock: " << QString::number(dock);
+        qDebug() << "[TupDocumentView::updateActiveDock()] - currentDock: " << dock;
     #endif
 
     currentDock = dock;
@@ -2503,6 +2517,9 @@ void TupDocumentView::setFillTool(TColorCell::FillType type)
 {
     if (currentTool) {
         colorSpace = type;
+        if (currentTool->toolId() == TAction::EyeDropper)
+            currentTool->updateColorType(type);
+
         if (colorSpace == TColorCell::Background) {
             // Call Pencil plugin here
             if (currentTool->toolType() == TupToolInterface::Fill)
@@ -2535,4 +2552,65 @@ void TupDocumentView::requestClearRasterCanvas()
                                                                      TupLibraryObject::Item,
                                                                      TupProjectRequest::ClearRasterCanvas, "");
     emit requestTriggered(&request);
+}
+
+void TupDocumentView::enableEyeDropperTool(TColorCell::FillType fillType)
+{
+    shapesMenu->setActiveAction(nullptr);
+    motionMenu->setActiveAction(nullptr);
+    miscMenu->setActiveAction(nullptr);
+
+    eyedropperAction->trigger();
+
+    QString toolName = tr("%1").arg(eyedropperAction->text());
+    TAction::ActionId toolId = eyedropperAction->actionId();
+
+    if (currentTool) {
+        if (currentTool->toolId() == TAction::Pencil)
+            disconnect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
+
+        if (currentTool->toolId() == TAction::LipSyncTool)
+            disconnect(currentTool, SIGNAL(importLipSync()), this, SLOT(importPapagayoLipSync()));
+
+        currentTool->saveConfig();
+        QWidget *toolConfigurator = currentTool->configurator();
+        if (toolConfigurator)
+            configurationArea->close();
+    }
+
+    TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(eyedropperAction->parent());
+    tool->setCurrentToolName(toolName);
+    tool->setToolId(toolId);
+
+    currentTool = tool;
+    currentTool->updateColorType(fillType);
+
+    paintArea->setCurrentTool(toolId);
+
+    if (!eyedropperAction->icon().isNull())
+        status->updateTool(toolName, eyedropperAction->icon().pixmap(15, 15));
+
+    QWidget *toolConfigurator = tool->configurator();
+    if (toolConfigurator) {
+        configurationArea = new TupConfigurationArea(this);
+        configurationArea->setConfigurator(toolConfigurator, 80);
+        addDockWidget(Qt::RightDockWidgetArea, configurationArea);
+        toolConfigurator->show();
+        if (!configurationArea->isVisible())
+            configurationArea->show();
+    }
+
+    paintArea->setTool(tool);
+    connect(currentTool, SIGNAL(colorPicked(TColorCell::FillType, const QColor &)),
+                                this, SIGNAL(colorChanged(TColorCell::FillType, const QColor &)));
+    connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), this, SLOT(refreshEyeDropperPanel()));
+}
+
+void TupDocumentView::refreshEyeDropperPanel()
+{
+    #ifdef TUP_DEBUG
+       qDebug() << "[TupDocumentView::refreshEyeDropperPanel()]";
+    #endif
+
+    currentTool->refreshEyeDropperPanel();
 }

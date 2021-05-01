@@ -53,7 +53,7 @@ class T_GUI_EXPORT TAction : public QAction
                         Text, Motion, Rotation, Scale, Shear, Color, Opacity, ObjectSelection,
                         NodesEditor, LipSyncTool, Eraser, ExportImage, PostImage, ColorPalette,
                         Right_Arrow, Left_Arrow, Down_Arrow, Up_Arrow, Right_QuickCopy, Down_QuickCopy,
-                        Left_Delete, Up_Delete, Delete };
+                        Left_Delete, Up_Delete, Delete, EyeDropper };
 
         enum MenuId { InvalidMenu = -1, BrushesMenu = 0, SelectionMenu, FillMenu, ZoomMenu, TweenerMenu,
                       Arrows, ColorMenu };

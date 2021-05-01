@@ -77,7 +77,7 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
         virtual QWidget *configurator();
         virtual void aboutToChangeTool();
         virtual void saveConfig();
-        virtual QCursor polyCursor(); //  const;
+        virtual QCursor toolCursor(); //  const;
         virtual void frameResponse(const TupFrameResponse *event);
         virtual void sceneResponse(const TupSceneResponse *event);
 

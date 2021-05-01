@@ -403,7 +403,7 @@ void PencilTool::keyReleaseEvent(QKeyEvent *event)
     }
 }
 
-QCursor PencilTool::polyCursor() // const
+QCursor PencilTool::toolCursor() // const
 {
     return penCursor;
 }

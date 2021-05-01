@@ -292,7 +292,7 @@ void FillTool::keyPressEvent(QKeyEvent *event)
     }
 }
 
-QCursor FillTool::polyCursor() // const
+QCursor FillTool::toolCursor() // const
 {
     if (mode == TColorCell::Inner) {
         return insideCursor;

@@ -434,7 +434,7 @@ void NodesTool::saveConfig()
 {
 }
 
-QCursor NodesTool::polyCursor() // const
+QCursor NodesTool::toolCursor() // const
 {
     return QCursor(Qt::ArrowCursor);
 }

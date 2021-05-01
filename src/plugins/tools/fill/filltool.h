@@ -86,7 +86,7 @@ class TUPITUBE_PLUGIN FillTool : public TupToolPlugin
 
         virtual void saveConfig();
         virtual void keyPressEvent(QKeyEvent *event);
-        virtual QCursor polyCursor(); // const;
+        virtual QCursor toolCursor(); // const;
 
         void setColorMode(TColorCell::FillType colorMode);
 

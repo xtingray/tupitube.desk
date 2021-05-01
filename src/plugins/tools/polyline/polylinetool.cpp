@@ -486,7 +486,7 @@ void PolyLineTool::saveConfig()
 {
 }
 
-QCursor PolyLineTool::polyCursor() // const
+QCursor PolyLineTool::toolCursor() // const
 {
     return cursor;
 }
