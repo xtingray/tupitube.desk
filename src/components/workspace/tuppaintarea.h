@@ -123,6 +123,7 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         void zoomIn();
         void zoomOut();
         void newPerspective(int index);
+        void eyeDropperLaunched();
 
     public slots:
         void deleteItems();

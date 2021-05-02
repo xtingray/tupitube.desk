@@ -169,6 +169,10 @@ void TupToolPlugin::setProjectSize(const QSize size)
 
 QPair<int, int> TupToolPlugin::setKeyAction(int key, Qt::KeyboardModifiers modifiers)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupToolPlugin::setKeyAction()] - key -> " << key;
+    #endif
+
     TAction::MenuId menu = TAction::BrushesMenu;
     int tool = TAction::Pencil;
 
@@ -303,6 +307,13 @@ QPair<int, int> TupToolPlugin::setKeyAction(int key, Qt::KeyboardModifiers modif
             {
                 menu = TAction::SelectionMenu;
                 tool = TAction::Delete;
+            }
+            break;
+
+            case Qt::Key_E:
+            {
+                menu = TAction::ColorMenu;
+                tool = TAction::EyeDropper;
             }
             break;
 

@@ -234,16 +234,6 @@ void PencilTool::release(const TupInputDeviceInformation *input, TupBrushManager
                                                                              doc.toString());
             emit requested(&request);
         }
-    /* } else {
-        foreach (TupPathItem *item, lineItems) {
-            QPainterPath segment = item->path();
-            if (segment.contains(currentPoint)) {
-                // Process item here
-                qDebug() << "";
-                qDebug() << "PencilTool::release() - MATCH!!!";
-            }
-        }
-    } */
 }
 
 void PencilTool::smoothPath(QPainterPath &path, double smoothness, int from, int to)
@@ -356,22 +346,20 @@ void PencilTool::saveConfig()
 void PencilTool::keyPressEvent(QKeyEvent *event)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "PencilTool::keyPressEvent()";
+        qDebug() << "[PencilTool::keyPressEvent()]";
     #endif
 
     if (event->modifiers() == Qt::ShiftModifier) {
-        // if (currentTool == PenSettings::Pencil) {
-            resizeMode = true;
-            input = scene->inputDeviceInformation();
-            int diameter = brushManager->penWidth();
-            int radius = diameter/2;
-            penCirclePos = input->pos();
+        resizeMode = true;
+        input = scene->inputDeviceInformation();
+        int diameter = brushManager->penWidth();
+        int radius = diameter/2;
+        penCirclePos = input->pos();
 
-            penCircle = new QGraphicsEllipseItem(penCirclePos.x() - radius, penCirclePos.y() - radius, diameter, diameter);
-            penCircle->setZValue(circleZValue);
-            scene->addItem(penCircle);
-            return;
-        // }
+        penCircle = new QGraphicsEllipseItem(penCirclePos.x() - radius, penCirclePos.y() - radius, diameter, diameter);
+        penCircle->setZValue(circleZValue);
+        scene->addItem(penCircle);
+        return;
     }
 
     if (event->key() == Qt::Key_F11 || event->key() == Qt::Key_Escape) {
@@ -387,7 +375,7 @@ void PencilTool::keyPressEvent(QKeyEvent *event)
 void PencilTool::keyReleaseEvent(QKeyEvent *event) 
 {
     #ifdef TUP_DEBUG
-        qDebug() << "PencilTool::keyReleaseEvent()";
+        qDebug() << "[PencilTool::keyReleaseEvent()]";
     #endif
 
     Q_UNUSED(event)

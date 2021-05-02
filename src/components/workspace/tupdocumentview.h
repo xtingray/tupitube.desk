@@ -126,7 +126,9 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void insertPictureInFrame(int id, const QString path);
         void papagayoManager();
         void openRasterMode();
+
         void refreshEyeDropperPanel();
+        void launchEyeDropperTool();
 
     private slots: 
         // Plugins

@@ -1399,15 +1399,8 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
     #ifdef TUP_DEBUG
         qDebug() << "[TupPaintArea::keyPressEvent()] - Current tool: " << currentTool;
         qDebug() << "[TupPaintArea::keyPressEvent()] - Key: " << event->key();
-        qDebug() << "[TupPaintArea::keyPressEvent()] - Key: " << event->text();
+        qDebug() << "[TupPaintArea::keyPressEvent()] - Code: " << event->text();
     #endif
-
-    /*
-    if (currentTool == TAction::Text) {
-        TupPaintAreaBase::keyPressEvent(event);
-        return;
-    }
-    */
 
     if (event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Delete) {
         deleteItems();
@@ -1469,6 +1462,11 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
             emit zoomOut();
             return;
         }
+    }
+
+    if (event->key() == Qt::Key_E) {
+        emit eyeDropperLaunched();
+        return;
     }
 
     if (currentTool == TAction::Polyline) {

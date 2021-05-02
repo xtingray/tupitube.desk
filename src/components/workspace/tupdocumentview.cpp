@@ -130,6 +130,7 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     connect(paintArea, SIGNAL(zoomIn()), this, SLOT(applyZoomIn()));
     connect(paintArea, SIGNAL(zoomOut()), this, SLOT(applyZoomOut()));
     connect(paintArea, SIGNAL(newPerspective(int)), this, SIGNAL(newPerspective(int)));
+    connect(paintArea, SIGNAL(eyeDropperLaunched()), this, SLOT(launchEyeDropperTool()));
 
     // connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), this, SLOT(showPos(const QPointF &)));
     connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), verticalRuler, SLOT(movePointers(const QPointF&)));
@@ -762,9 +763,12 @@ void TupDocumentView::loadPlugin(int menu, int actionID)
             {
                 if (actionID == TAction::ColorPalette) {
                     if (fullScreenOn) {
-                        QColor currentColor = brushManager()->penColor();
-                        emit openColorDialog(currentColor);
+                        // QColor currentColor = brushManager()->penColor();
+                        emit openColorDialog(brushManager()->penColor());
                     }
+                    return;
+                } else if (actionID == TAction::EyeDropper) {
+                    launchEyeDropperTool();
                     return;
                 }
             }
@@ -2552,6 +2556,11 @@ void TupDocumentView::requestClearRasterCanvas()
                                                                      TupLibraryObject::Item,
                                                                      TupProjectRequest::ClearRasterCanvas, "");
     emit requestTriggered(&request);
+}
+
+void TupDocumentView::launchEyeDropperTool()
+{
+    enableEyeDropperTool(colorSpace);
 }
 
 void TupDocumentView::enableEyeDropperTool(TColorCell::FillType fillType)

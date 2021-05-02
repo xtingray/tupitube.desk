@@ -238,8 +238,8 @@ void TupVideoProperties::postIt()
         if (desc.contains("<") || desc.contains(">") || desc.contains("http"))
             desc = "";
 
-        if (desc.length() > 500) {
-            desc = desc.left(500);
+        if (desc.length() > 1000) {
+            desc = desc.left(1000);
             descText->setPlainText(desc);
         }
 

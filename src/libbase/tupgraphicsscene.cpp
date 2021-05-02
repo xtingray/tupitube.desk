@@ -1534,6 +1534,10 @@ void TupGraphicsScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 void TupGraphicsScene::keyPressEvent(QKeyEvent *event)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupGraphicsScene::keyPressEvent()]";
+    #endif
+
     if (gTool) {
         gTool->keyPressEvent(event);
         
