@@ -198,7 +198,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void closePolyLine();
         void closeLine();
         void projectSizeHasChanged(const QSize dimension);
-        void updateFPS(int fps);
+        void fpsUpdated(int fps);
         void newPerspective(int index);
         void contourColorChanged(const QColor &color);
         void fillColorChanged(const QColor &color);

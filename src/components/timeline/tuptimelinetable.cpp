@@ -45,7 +45,6 @@ class TupTimeLineTableItemDelegate : public QItemDelegate
         ~TupTimeLineTableItemDelegate();
 
         virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-        // virtual QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex &index) const;
 
     private:
         QString themeName;
@@ -60,13 +59,6 @@ TupTimeLineTableItemDelegate::TupTimeLineTableItemDelegate(QObject *parent) : QI
 TupTimeLineTableItemDelegate::~TupTimeLineTableItemDelegate()
 {
 }
-
-/*
-QSize TupTimeLineTableItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex &index) const
-{
-    return QSize(5, 10);
-}
-*/
 
 void TupTimeLineTableItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
@@ -192,7 +184,7 @@ bool TupTimeLineTableItem::isSound()
 
 //// TupTimeLineTable
 
-TupTimeLineTable::TupTimeLineTable(int index, QWidget *parent) : QTableWidget(0, 200, parent)
+TupTimeLineTable::TupTimeLineTable(int index, int fps, QWidget *parent) : QTableWidget(0, 200, parent)
 {
     setItemSize(5, 5);
 
@@ -201,29 +193,20 @@ TupTimeLineTable::TupTimeLineTable(int index, QWidget *parent) : QTableWidget(0,
     frameIndex = 0;
     layerIndex = 0;
 
-    ruler = new TupTimeLineRuler;
-    connect(ruler, SIGNAL(headerSelectionChanged(int)), this, SLOT(frameSelectionFromRuler(int)));
-
     removingLayer = false;
     removingFrame = false;
 
-    layersColumn = new TupTimeLineHeader;
-    connect(layersColumn, SIGNAL(nameChanged(int, const QString &)), this, SIGNAL(layerNameChanged(int, const QString &)));
-    connect(layersColumn, SIGNAL(headerSelectionChanged(int)), this, SLOT(frameSelectionFromLayerHeader(int)));
-    connect(layersColumn, SIGNAL(visibilityChanged(int, bool)), this, SIGNAL(visibilityChanged(int, bool)));
-    connect(layersColumn, SIGNAL(sectionMoved(int, int, int)), this, SLOT(requestLayerMove(int, int, int)));
-
-    setup();
+    setTableHeaders(fps);
 }
 
 TupTimeLineTable::~TupTimeLineTable()
 {
 }
 
-void TupTimeLineTable::setup()
+void TupTimeLineTable::setTableHeaders(int fps)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupTimeLineTable::setup()]";
+        qDebug() << "[TupTimeLineTable::setTableHeaders()]";
     #endif
 
     setItemDelegate(new TupTimeLineTableItemDelegate(this));
@@ -231,13 +214,18 @@ void TupTimeLineTable::setup()
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    connect(this, SIGNAL(currentCellChanged(int, int, int, int)), this, SLOT(requestFrameSelection(int, int, int, int)));
-
+    TupTimeLineRuler *ruler = new TupTimeLineRuler(fps, this);
     setHorizontalHeader(ruler);
+    connect(ruler, SIGNAL(headerSelectionChanged(int)), this, SLOT(frameSelectionFromRuler(int)));
+
+    layersColumn = new TupTimeLineHeader;
+    connect(layersColumn, SIGNAL(nameChanged(int, const QString &)), this, SIGNAL(layerNameChanged(int, const QString &)));
+    connect(layersColumn, SIGNAL(headerSelectionChanged(int)), this, SLOT(frameSelectionFromLayerHeader(int)));
+    connect(layersColumn, SIGNAL(visibilityChanged(int, bool)), this, SIGNAL(visibilityChanged(int, bool)));
+    connect(layersColumn, SIGNAL(sectionMoved(int, int, int)), this, SLOT(requestLayerMove(int, int, int)));
     setVerticalHeader(layersColumn);
-    
-    ruler->setSectionResizeMode(QHeaderView::Custom);
-    layersColumn->setSectionResizeMode(QHeaderView::Custom);
+
+    connect(this, SIGNAL(currentCellChanged(int, int, int, int)), this, SLOT(requestFrameSelection(int, int, int, int)));
 }
 
 void TupTimeLineTable::frameSelectionFromRuler(int frameIndex)
@@ -832,4 +820,10 @@ QList<int> TupTimeLineTable::currentSelection()
 int TupTimeLineTable::framesCountAtCurrentLayer()
 {
     return layersColumn->lastFrame(currentLayer());
+}
+
+void TupTimeLineTable::updateFPS(int fps)
+{
+    TupTimeLineRuler *header = dynamic_cast<TupTimeLineRuler *>(this->horizontalHeader());
+    header->updateFPS(fps);
 }

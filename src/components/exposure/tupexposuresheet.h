@@ -92,6 +92,7 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
         void renameScene(int sceneIndex, const QString &name);
         void setScene(int sceneIndex);
         void changeLayerVisibility(int, bool);
+        void updateFPS(int fps);
 
     private slots: 
         void requestChangeScene(int index);

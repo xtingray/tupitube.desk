@@ -38,25 +38,35 @@
 
 #include <QPainterPath>
 
-class TUPITUBE_EXPORT TupExposureVerticalHeader : public QHeaderView
+class TUPITUBE_EXPORT TupExposureVerticalHeader: public QHeaderView
 {
     public:
-        TupExposureVerticalHeader(QWidget * parent = nullptr);
+        TupExposureVerticalHeader(int fps, QWidget *parent = nullptr);
         ~TupExposureVerticalHeader();
 
-        void paintSection(QPainter *painter, const QRect & rect, int logicalIndex) const;
+        void updateFPS(int fps);
+        virtual void paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const;
+
+    private:
+        int fps;
 };
 
-TupExposureVerticalHeader::TupExposureVerticalHeader(QWidget * parent) : QHeaderView(Qt::Vertical, parent)
+TupExposureVerticalHeader::TupExposureVerticalHeader(int value, QWidget *parent): QHeaderView(Qt::Vertical, parent)
 {
     setFixedWidth(25);
+    fps = value;
 }
 
 TupExposureVerticalHeader::~TupExposureVerticalHeader()
 {
 }
 
-void TupExposureVerticalHeader::paintSection(QPainter * painter, const QRect & rect, int logicalIndex) const
+void TupExposureVerticalHeader::updateFPS(int value)
+{
+    fps = value;
+}
+
+void TupExposureVerticalHeader::paintSection(QPainter *painter, const QRect & rect, int logicalIndex) const
 {
     Q_UNUSED(logicalIndex)
 
@@ -80,7 +90,8 @@ void TupExposureVerticalHeader::paintSection(QPainter * painter, const QRect & r
     style()->drawControl(QStyle::CE_HeaderSection, &headerOption, painter);
 
     QString text;
-    text = text.setNum(logicalIndex + 1);
+    int label = logicalIndex + 1;
+    text = text.setNum(label);
     QFont font = this->font();
     font.setPointSize(7);
     QFontMetrics fm(font);
@@ -89,7 +100,14 @@ void TupExposureVerticalHeader::paintSection(QPainter * painter, const QRect & r
     int y = rect.normalized().bottomLeft().y() - (1 + (rect.normalized().height() - fm.height())/2);
 
     painter->setFont(font);
-    painter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
+    if (label % fps == 0) {
+
+        painter->fillRect(rect, QBrush(QColor(120, 120, 120)));
+        painter->setPen(QPen(Qt::white, 1, Qt::SolidLine));
+    } else {
+        painter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
+    }
+
     painter->drawText(x, y, text);
 }
 
@@ -100,6 +118,7 @@ class TupExposureItemDelegate : public QItemDelegate
     public:
         TupExposureItemDelegate(QObject * parent = nullptr);
         ~TupExposureItemDelegate();
+
         virtual void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
 
     private:
@@ -171,7 +190,7 @@ void TupExposureItemDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 
 ////////////////////////
 
-TupExposureTable::TupExposureTable(QWidget *parent) : QTableWidget(parent)
+TupExposureTable::TupExposureTable(int fps, QWidget *parent) : QTableWidget(parent)
 {
     TCONFIG->beginGroup("General");
     themeName = TCONFIG->value("Theme", "Light").toString();
@@ -179,7 +198,7 @@ TupExposureTable::TupExposureTable(QWidget *parent) : QTableWidget(parent)
     isLocalRequest = false;
     isEditing = false;
 
-    TupExposureVerticalHeader *verticalHeader = new TupExposureVerticalHeader(this);
+    TupExposureVerticalHeader *verticalHeader = new TupExposureVerticalHeader(fps, this);
     setVerticalHeader(verticalHeader);
 
     setItemDelegate(new TupExposureItemDelegate(this));
@@ -215,8 +234,12 @@ TupExposureTable::TupExposureTable(QWidget *parent) : QTableWidget(parent)
 TupExposureTable::~TupExposureTable()
 {
     delete header;
-    // opacityControl.clear();
-    // undoOpacities.clear();
+}
+
+void TupExposureTable::updateFPS(int fps)
+{
+    TupExposureVerticalHeader *header = dynamic_cast<TupExposureVerticalHeader *>(this->verticalHeader());
+    header->updateFPS(fps);
 }
 
 void TupExposureTable::requestFrameRenaming(QTableWidgetItem *item)
@@ -427,7 +450,6 @@ int TupExposureTable::currentFrame() const
     #endif
 
     QTableWidgetItem *frame = currentItem();
-
     if (frame) {
         if (frame->data(TupExposureTable::IsEmpty).toInt() != Unset)
             return currentRow();

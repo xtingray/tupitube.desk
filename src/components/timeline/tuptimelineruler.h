@@ -42,16 +42,18 @@
 #include <QPainter>
 #include <QMouseEvent>
 
-class TUPITUBE_EXPORT TupTimeLineRuler : public QHeaderView
+class TUPITUBE_EXPORT TupTimeLineRuler: public QHeaderView
 {
     Q_OBJECT
 
     public:
-        TupTimeLineRuler(QWidget *parent = nullptr);
+        TupTimeLineRuler(int fps, QWidget *parent = nullptr);
         ~TupTimeLineRuler();
 
+        void updateFPS(int fps);
+
     protected:
-        void paintSection(QPainter *painter, const QRect & rect, int logicalIndex) const;
+        virtual void paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const;
         virtual void mousePressEvent(QMouseEvent *event);
 
     signals:
@@ -59,6 +61,7 @@ class TUPITUBE_EXPORT TupTimeLineRuler : public QHeaderView
 
     private:
         QString themeName;
+        int fps;
 };
 
 #endif

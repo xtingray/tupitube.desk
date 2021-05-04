@@ -74,6 +74,7 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         void exportRequested();
         void postRequested();
         void projectHasChanged(bool modified);
+        void fpsUpdated(int fps);
 
     private slots:
         void setLoop();
@@ -88,7 +89,7 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         bool handleProjectResponse(TupProjectResponse *event);
         void setFPS(int fps);
         void updateFPS(int fps);
-        void setStatusFPS(int fps);
+        void setFpsStatus(int fps);
         void updateFramesTotal(int sceneIndex);
         void exportDialog();
         void postDialog();

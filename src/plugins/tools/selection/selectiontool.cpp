@@ -620,11 +620,17 @@ void SelectionTool::keyPressEvent(QKeyEvent *event)
             updateItemPosition();
         }
     } else if (event->modifiers() == Qt::ControlModifier) {
-        panel->setProportionState(true);
-        key = "CONTROL";
-        if (selectionIsActive()) {
-            foreach (NodeManager *nodeManager, nodeManagers)
-                nodeManager->setProportion(true);
+        if (event->key() == Qt::Key_G) {
+            applyGroupAction(SelectionSettings::GroupItems);
+        } else if (event->key() == Qt::Key_U) {
+            applyGroupAction(SelectionSettings::UngroupItems);
+        } else {
+            panel->setProportionState(true);
+            key = "CONTROL";
+            if (selectionIsActive()) {
+                foreach (NodeManager *nodeManager, nodeManagers)
+                    nodeManager->setProportion(true);
+            }
         }
     } else {
         QPair<int, int> flags = TupToolPlugin::setKeyAction(event->key(), event->modifiers());

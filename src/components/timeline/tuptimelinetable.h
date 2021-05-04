@@ -70,16 +70,17 @@ class TUPITUBE_EXPORT TupTimeLineTableItem : public QTableWidgetItem
         bool isSound();
 };
 
-class TupTimeLineRuler;
+// class TupTimeLineRuler;
 
 class TUPITUBE_EXPORT TupTimeLineTable : public QTableWidget
 {
     Q_OBJECT
-    
+
+    friend class TupTimeLineRuler;
     friend class TupTimeLineTableItemDelegate;
     
     public:
-        TupTimeLineTable(int sceneIndex = 0, QWidget *parent = nullptr);
+        TupTimeLineTable(int sceneIndex = 0, int fps = 24, QWidget *parent = nullptr);
         ~TupTimeLineTable();
         
         bool isSoundLayer(int row);
@@ -115,9 +116,10 @@ class TUPITUBE_EXPORT TupTimeLineTable : public QTableWidget
         // void lockFrame(int layerIndex, int frameIndex, bool lock);
         void setItemSize(int w, int h);
         void exchangeFrame(int currentFrameIndex, int currentLayerIndex, int newFrameIndex, int newLayerIndex);
-        
+        void updateFPS(int fps);
+
     private:
-        void setup();
+        void setTableHeaders(int fps);
         void generateFrames(int layerIndex, int layers, int frames);
  
     protected:
@@ -155,7 +157,7 @@ class TUPITUBE_EXPORT TupTimeLineTable : public QTableWidget
         int layerIndex;
         int frameIndex;
 
-        TupTimeLineRuler *ruler;
+        // TupTimeLineRuler *ruler;
         TupTimeLineHeader *layersColumn;
 
         bool removingLayer;

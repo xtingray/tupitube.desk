@@ -62,7 +62,7 @@ class TUPITUBE_EXPORT TupExposureTable : public QTableWidget
     public:
         enum Attribute
         {
-          IsEmpty = 1000,
+          IsEmpty = 1000
         };
 
         enum FrameType 
@@ -73,9 +73,10 @@ class TUPITUBE_EXPORT TupExposureTable : public QTableWidget
           UsedWithTween
         };
 
-        TupExposureTable(QWidget *parent = nullptr);
+        TupExposureTable(int fps, QWidget *parent = nullptr);
         ~TupExposureTable();
 
+        void updateFPS(int fps);
         int currentLayer() const;
         int currentFrame() const;
         void insertLayer(int index, const QString &name);

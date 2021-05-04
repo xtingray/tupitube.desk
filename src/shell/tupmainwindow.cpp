@@ -368,6 +368,8 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(cameraWidget, SIGNAL(exportRequested()), this, SLOT(exportProject()));
         connect(cameraWidget, SIGNAL(postRequested()), this, SLOT(postProject()));
         connect(cameraWidget, SIGNAL(projectHasChanged(bool)), m_projectManager, SLOT(setModificationStatus(bool)));
+        connect(cameraWidget, SIGNAL(fpsUpdated(int)), m_exposureSheet, SLOT(updateFPS(int)));
+        connect(cameraWidget, SIGNAL(fpsUpdated(int)), m_timeLine, SLOT(updateFPS(int)));
         connectWidgetToManager(cameraWidget);
 
         // Player widget must be hidden while the Player tab is not visible
@@ -390,7 +392,9 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(playerTab, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
         addWidget(playerTab);
 
-        connect(animationTab, SIGNAL(updateFPS(int)), cameraWidget, SLOT(setStatusFPS(int)));
+        connect(animationTab, SIGNAL(fpsUpdated(int)), cameraWidget, SLOT(setFpsStatus(int)));
+        connect(animationTab, SIGNAL(fpsUpdated(int)), m_exposureSheet, SLOT(updateFPS(int)));
+        connect(animationTab, SIGNAL(fpsUpdated(int)), m_timeLine, SLOT(updateFPS(int)));
 
         connect(exposureView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkTimeLineVisibility(bool)));
         connect(timeView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkExposureVisibility(bool)));

@@ -39,7 +39,7 @@
 #include <QMenu>
 #include <QMap>
 
-TupExposureHeader::TupExposureHeader(QWidget * parent) : QHeaderView(Qt::Horizontal, parent), m_editedSection(-1), m_sectionOnMotion(false)
+TupExposureHeader::TupExposureHeader(QWidget *parent): QHeaderView(Qt::Horizontal, parent), m_editedSection(-1), m_sectionOnMotion(false)
 {
     setSectionsClickable(true);
     setSectionsMovable(true);

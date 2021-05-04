@@ -145,7 +145,9 @@ void TupTimeLine::addScene(int sceneIndex, const QString &name)
         return;
     }
 
-    TupTimeLineTable *framesTable = new TupTimeLineTable(sceneIndex, scenesContainer);
+    TupScene *tupScene = project->sceneAt(sceneIndex);
+    int fps = tupScene->getFPS();
+    TupTimeLineTable *framesTable = new TupTimeLineTable(sceneIndex, fps, scenesContainer);
     connect(framesTable, SIGNAL(frameSelected(int, int)), this, SLOT(requestFrameSelection(int, int)));
     connect(framesTable, SIGNAL(selectionCopied()), SLOT(requestCopyFrameSelection()));
     connect(framesTable, SIGNAL(selectionPasted()), SLOT(requestPasteSelectionInCurrentFrame()));
@@ -1019,4 +1021,11 @@ void TupTimeLine::updateLayerOpacity(int sceneIndex, int layerIndex)
     opacitySpinBox->blockSignals(true);
     opacitySpinBox->setValue(opacity);
     opacitySpinBox->blockSignals(false);
+}
+
+void TupTimeLine::updateFPS(int fps)
+{
+    currentTable = scenesContainer->currentScene();
+    if (currentTable)
+        currentTable->updateFPS(fps);
 }

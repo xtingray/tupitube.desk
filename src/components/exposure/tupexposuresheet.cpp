@@ -219,7 +219,9 @@ void TupExposureSheet::addScene(int sceneIndex, const QString &name)
                  << sceneIndex << " - name -> " << name;
     #endif
 
-    TupExposureTable *scene = new TupExposureTable;
+    TupScene *tupScene = project->sceneAt(sceneIndex);
+    int fps = tupScene->getFPS();
+    TupExposureTable *scene = new TupExposureTable(fps);
     scene->setSinglePopUpMenu(singleMenu);
 
     connect(scene, SIGNAL(frameUsed(int, int)), this, SLOT(insertFrame(int, int)));
@@ -1529,3 +1531,8 @@ void TupExposureSheet::importCurrentLayer()
     project->importLayer(sceneIndex, xml);
 }
 */
+
+void TupExposureSheet::updateFPS(int fps)
+{
+    currentTable->updateFPS(fps);
+}

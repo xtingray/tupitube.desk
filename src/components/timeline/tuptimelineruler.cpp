@@ -36,15 +36,17 @@
 #include "tuptimelineruler.h"
 #include "tconfig.h"
 
-TupTimeLineRuler::TupTimeLineRuler(QWidget *parent) : QHeaderView(Qt::Horizontal, parent)
+TupTimeLineRuler::TupTimeLineRuler(int fps, QWidget *parent): QHeaderView(Qt::Horizontal, parent)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupTimeLineRuler()]";
     #endif
 
+    this->fps = fps;
     TCONFIG->beginGroup("General");
     themeName = TCONFIG->value("Theme", "Light").toString();
 
+    setSectionResizeMode(QHeaderView::Custom);
     setHighlightSections(true);
     setStyleSheet("QHeaderView { background-color: #cccccc; }");
 }
@@ -56,25 +58,33 @@ TupTimeLineRuler::~TupTimeLineRuler()
     #endif
 }
 
+void TupTimeLineRuler::updateFPS(int value)
+{
+    fps = value;
+}
+
 void TupTimeLineRuler::paintSection(QPainter *painter, const QRect & rect, int logicalIndex) const
 {
     if (!model() || !rect.isValid())
         return;
 
-    painter->save();
+    // painter->save();
 
     QModelIndex currentSelection = currentIndex(); 
     int column = currentSelection.row(); 
 
     // Cell is selected
     if (selectionModel()->isSelected(model()->index(column, logicalIndex))) {
-        QBrush brush(QColor(0, 135, 0, 80)); // Light Green
-        painter->fillRect(rect, brush);
+        // QBrush brush(QColor(0, 135, 0, 80)); // Light Green
+        painter->fillRect(rect, QBrush(QColor(0, 135, 0, 80))); // Light Green
     } else {
         // Cell contains a number
         if ((logicalIndex + 1) == 1 || (logicalIndex + 1) % 5 == 0) {
-            QBrush brush(QColor(150, 150, 150, 255)); // Gray
-            painter->fillRect(rect, brush);
+            // QBrush brush(QColor(150, 150, 150, 255)); // Gray
+            painter->fillRect(rect, QBrush(QColor(150, 150, 150, 255))); // Gray
+        } else if ((logicalIndex + 1) % fps == 0) {
+            // QBrush brush(QColor(48, 140, 198));
+            painter->fillRect(rect, QBrush(QColor(48, 140, 198)));
         }
     }
 
@@ -104,7 +114,7 @@ void TupTimeLineRuler::paintSection(QPainter *painter, const QRect & rect, int l
     painter->setPen(pen); 
     painter->drawLine(rect.bottomLeft(), rect.bottomRight());
 
-    painter->restore();
+    // painter->restore();
 }
 
 void TupTimeLineRuler::mousePressEvent(QMouseEvent *event)

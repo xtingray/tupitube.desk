@@ -2397,7 +2397,7 @@ void TupDocumentView::importPapagayoLipSync()
                             if (currentTool->toolId() != TAction::LipSyncTool)
                                 papagayoAction->trigger();
 
-                            emit updateFPS(parser->getFps());
+                            emit fpsUpdated(parser->getFps());
 
                             TOsd::self()->display(TOsd::Info, tr("Papagayo file has been imported successfully"));
                         } else {

@@ -41,6 +41,7 @@ TupTimeLineHeader::TupTimeLineHeader(QWidget * parent) : QHeaderView(Qt::Vertica
     TCONFIG->beginGroup("General");
     themeName = TCONFIG->value("Theme", "Light").toString();
 
+    setSectionResizeMode(QHeaderView::Custom);
     setSectionsClickable(true);
     setSectionsMovable(true);
     setFixedWidth(115);
