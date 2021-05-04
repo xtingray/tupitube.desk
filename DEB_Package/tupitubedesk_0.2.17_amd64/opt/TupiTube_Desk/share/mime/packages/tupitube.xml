@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/tup">
+         <comment xml:lang="en">TUP project</comment>
+         <sub-class-of type="application/zip"/>
+         <generic-icon name="tupitube.desk"/>
+         <glob pattern="*.tup"/>
+  </mime-type>
+</mime-info>

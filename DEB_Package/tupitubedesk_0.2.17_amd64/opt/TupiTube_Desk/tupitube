@@ -1,0 +1,11 @@
+#!/bin/bash
+
+export TUPITUBE_HOME="/opt/TupiTube_Desk"
+export TUPITUBE_SHARE="${TUPITUBE_HOME}/share/tupitube"
+export TUPITUBE_LIB="${TUPITUBE_HOME}/lib/tupitube:${TUPITUBE_HOME}/lib/tupitube/raster"
+export TUPITUBE_PLUGIN="${TUPITUBE_HOME}/lib/tupitube/plugins"
+export TUPITUBE_BIN="${TUPITUBE_HOME}/bin"
+
+export LD_LIBRARY_PATH="${TUPITUBE_HOME}/lib/qt:${TUPITUBE_HOME}/lib/ffmpeg:${TUPITUBE_HOME}/lib/quazip:${TUPITUBE_LIB}:${TUPITUBE_PLUGIN}:$LD_LIBRARY_PATH"
+
+exec ${TUPITUBE_BIN}/tupitube.bin $*

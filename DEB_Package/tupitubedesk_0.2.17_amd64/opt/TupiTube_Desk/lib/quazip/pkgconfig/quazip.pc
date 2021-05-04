@@ -1,0 +1,13 @@
+prefix=/usr/local/quazip
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+
+Name: Quazip
+Description: Quazip Library
+Version: 1.0.0
+Libs: -L${libdir} -lquazip 
+Cflags: -I${includedir}
+Requires: Qt5Core
+

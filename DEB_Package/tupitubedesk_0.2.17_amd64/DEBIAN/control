@@ -1,0 +1,15 @@
+Package: tupitubedesk
+Version:  0.2.17
+Installed-Size: 118966
+Maintainer: Charlie Martinez <cmartinez@quirinux.org>
+Section: graphics
+Source: https://github.com/xtingray/tupitube.desk
+Homepage: https://www.tupitube.com/
+Architecture: amd64
+Priority: optional
+Depends: libogg0, libtheora0
+Recommends: gstreamer1.0-plugins-bad, libgstreamer-plugins-bad1.0-0, libgstreamer-plugins-bad1.0-dev, libx264-152, libx264-dev, zlib1g
+Description: TupiTube Desk 0.2.17 
+ Autor: Gustav Gonzalez
+ .
+ Hacer dibujos animados y animacion stop-motion.
