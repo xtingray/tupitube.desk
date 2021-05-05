@@ -198,9 +198,21 @@ void TupMainWindow::setupMenu()
     m_fileMenu->addAction(m_actionManager->find("save_project_as"));
     m_fileMenu->addAction(m_actionManager->find("close_project"));
 
+    /*
     m_fileMenu->addSeparator();
-    m_fileMenu->addAction(m_actionManager->find("export"));
-    m_fileMenu->addAction(m_actionManager->find("post"));
+    exportMenu = new QMenu(tr("Export..."), this);
+    exportMenu->addAction(m_actionManager->find("export"));
+    exportMenu->addAction(m_actionManager->find("export_image"));
+    m_fileMenu->addMenu(exportMenu);
+
+    // m_fileMenu->addAction(m_actionManager->find("export"));
+    // m_fileMenu->addAction(m_actionManager->find("post"));
+
+    postMenu = new QMenu(tr("Post..."), this);
+    postMenu->addAction(m_actionManager->find("post"));
+    postMenu->addAction(m_actionManager->find("post_image"));
+    m_fileMenu->addMenu(postMenu);
+    */
 
     m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_actionManager->find("Exit"));
@@ -243,6 +255,14 @@ void TupMainWindow::setupMenu()
     m_windowMenu->addAction(m_actionManager->find("show_scenes"));
     m_windowMenu->addAction(m_actionManager->find("show_exposure"));
     */
+
+    exportMenu = menuBar()->addMenu(tr("&Export"));
+    exportMenu->addAction(m_actionManager->find("export"));
+    exportMenu->addAction(m_actionManager->find("export_image"));
+
+    postMenu = menuBar()->addMenu(tr("&Post"));
+    postMenu->addAction(m_actionManager->find("post"));
+    postMenu->addAction(m_actionManager->find("post_image"));
 
     // Setup perspective menu
     m_viewMenu = new QMenu(tr("Modules"), this);
@@ -299,30 +319,25 @@ void TupMainWindow::setupMenu()
 
 void TupMainWindow::setMenuItemsContext(bool flag)
 {
-/*
-#ifdef TUP_DEBUG
-    qDebug() << "[TupMainWindow::setMenuItemsContext()] - flag -> " << flag;
-#endif
-*/
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::setMenuItemsContext()] - flag -> " << flag;
+    #endif
+    */
+
     m_actionManager->enable("save_project", flag);
     m_actionManager->enable("save_project_as", flag);
     m_actionManager->enable("close_project", flag);
     m_actionManager->enable("hideaction", flag);
     m_actionManager->enable("export", flag);
+    m_actionManager->enable("export_image", flag);
     m_actionManager->enable("post", flag);
+    m_actionManager->enable("post_image", flag);
     m_actionManager->enable("importImageGroup", flag);
 
-    /*
-    m_actionManager->enable("show_palette", flag);
-    m_actionManager->enable("show_pen", flag);
-    m_actionManager->enable("show_library", flag);
-    m_actionManager->enable("show_timeline", flag);
-    m_actionManager->enable("show_scenes", flag);
-    m_actionManager->enable("show_exposure", flag);
-    */
-
+    exportMenu->setEnabled(flag);
+    postMenu->setEnabled(flag);
     m_insertMenu->setEnabled(flag);
-    // m_windowMenu->setEnabled(flag);
     m_viewMenu->setEnabled(flag);
 }
 
@@ -386,11 +401,21 @@ void TupMainWindow::setupFileActions()
     exportProject->setStatusTip(tr("Export project to several video formats"));
     m_actionManager->insert(exportProject, "export", "file");
 
-    // Export Project action
-    TAction *postProject = new TAction(QPixmap(THEME_DIR + "icons/share.png"), tr("&Post Project"),
+    // Export Frame action
+    TAction *exportFrame = new TAction(QPixmap(THEME_DIR + "icons/export_frame.png"), tr("Export Frame As Image"),
+                                       QKeySequence(tr("@")), this, SIGNAL(imageExported()), m_actionManager);
+    m_actionManager->insert(exportFrame, "export_image", "file");
+
+    // Post Animation action
+    TAction *postProject = new TAction(QPixmap(THEME_DIR + "icons/share.png"), tr("&Post Animation"),
                                        QKeySequence(tr("Ctrl+P")), this, SLOT(postProject()), m_actionManager);
     postProject->setStatusTip(tr("Post project on TupiTube's network"));
     m_actionManager->insert(postProject, "post", "file");
+
+    // Post Frame action
+    TAction *postFrame = new TAction(QPixmap(THEME_DIR + "icons/share.png"), tr("Post Frame"),
+                                     QKeySequence(tr("Ctrl+@")), this, SIGNAL(imagePosted()), m_actionManager);
+    m_actionManager->insert(postFrame, "post_image", "file");
 
     // Visit TupiTube's Network action
     TAction *openNetwork = new TAction(QPixmap(THEME_DIR + "icons/social_network.png"), tr("Open TupiTube's Network"),

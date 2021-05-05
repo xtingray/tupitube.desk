@@ -63,6 +63,7 @@ class TUPITUBE_EXPORT TupPaintAreaPreferences : public QWidget
         QColor gridColor;
         QPushButton *gridColorButton;
         QSpinBox *gridSeparation;
+        QSpinBox *thicknessSpinBox;
 };
 
 #endif

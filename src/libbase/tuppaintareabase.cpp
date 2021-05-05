@@ -592,7 +592,7 @@ void TupPaintAreaBase::updateGridParameters()
     QString colorName = TCONFIG->value("GridColor").toString();
     QColor gridColor(colorName);
     gridColor.setAlpha(50);
-    gridPen = QPen(gridColor, 1);
+    gridPen = QPen(gridColor, TCONFIG->value("GridLineThickness", "1").toInt());
     gridSeparation = TCONFIG->value("GridSeparation").toInt();
 }
 

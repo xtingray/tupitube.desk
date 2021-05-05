@@ -75,6 +75,7 @@ void TupPaintAreaPreferences::setupPage()
     QString colorName = TCONFIG->value("GridColor").toString();
     gridColor = QColor(colorName);
     int separation = TCONFIG->value("GridSeparation").toInt();
+    int thickness = TCONFIG->value("GridLineThickness").toInt();
 
     QGridLayout *gridForm = new QGridLayout;
 
@@ -92,6 +93,13 @@ void TupPaintAreaPreferences::setupPage()
     gridSeparation->setValue(separation);
     gridForm->addWidget(gridSeparation, 1, 1, Qt::AlignLeft);
 
+    gridForm->addWidget(new QLabel(tr("Grid Line Thickness:")), 2, 0, Qt::AlignLeft);
+    thicknessSpinBox = new QSpinBox(this);
+    thicknessSpinBox->setMinimum(1);
+    thicknessSpinBox->setMaximum(5);
+    thicknessSpinBox->setValue(thickness);
+    gridForm->addWidget(thicknessSpinBox, 2, 1, Qt::AlignLeft);
+
     pageLayout->addLayout(gridForm);
 
     widget->setLayout(pageLayout);
@@ -105,6 +113,7 @@ void TupPaintAreaPreferences::saveValues()
     TCONFIG->beginGroup("PaintArea");
     TCONFIG->setValue("GridColor", gridColor.name());
     TCONFIG->setValue("GridSeparation", gridSeparation->value());
+    TCONFIG->setValue("GridLineThickness", thicknessSpinBox->value());
     TCONFIG->sync();
 }
 

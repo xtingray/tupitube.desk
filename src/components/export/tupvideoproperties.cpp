@@ -628,6 +628,11 @@ void TupVideoProperties::closeRequest(QNetworkReply *reply)
                         #ifdef TUP_DEBUG
                             qDebug() << "[TupVideoProperties::closeRequest()] - Error: Invalid credentials!";
                         #endif
+
+                        TCONFIG->beginGroup("Network");
+                        TCONFIG->setValue("Password", "");
+                        TCONFIG->setValue("StorePassword", "false");
+
                         TOsd::self()->display(TOsd::Error, tr("Access denied. Invalid password!"));
                     }
                     break;

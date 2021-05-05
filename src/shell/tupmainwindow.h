@@ -220,6 +220,8 @@ class TupMainWindow : public TabbedMainWindow
         TupStatusBar *m_statusBar;
         TActionManager *m_actionManager;
         QMenu *m_fileMenu;
+        QMenu *exportMenu;
+        QMenu *postMenu;
         QMenu *m_settingsMenu;
         QMenu *m_viewMenu;
         QMenu *m_insertMenu;
@@ -277,6 +279,8 @@ class TupMainWindow : public TabbedMainWindow
         void responsed(TupProjectResponse *);
         void updateAnimationModule(TupProject *, int, int, int);
         void activeDockChanged(TupDocumentView::DockType);
+        void imagePosted();
+        void imageExported();
 };
 
 #endif

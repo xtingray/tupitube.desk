@@ -137,8 +137,6 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void enableOnionFeature();
         void setDefaultOnionFactor();
         void setOnionFactor(double value);
-        void exportImage();
-        void postImage();
         void storyboardSettings();
         void selectFrame(int frame, int layer, int scene);
         void selectScene(int scene);
@@ -178,6 +176,8 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void updateBgSettings(QList<TupBackground::BgType>, QList<bool>);
         void clearFrame();
         void enableEyeDropperTool(TColorCell::FillType fillType);
+        void exportImage();
+        void postImage();
 
     signals:
         void requestTriggered(const TupProjectRequest *event);
