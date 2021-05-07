@@ -65,17 +65,14 @@ TupPaintAreaBase::TupPaintAreaBase(QWidget *parent, QSize dimension, TupLibrary 
 
     grid = nullptr;
     updateGridParameters();
+    updateRotParameters();
+    updateSafeParameters();
 
-    greenThickPen = QPen(QColor(0, 135, 0, 255), 2);
-
-    grayPen = QPen(QColor(150, 150, 150, 255), 1);
-    greenBoldPen = QPen(QColor(0, 135, 0, 255), 3);
-    greenThinPen = QPen(QColor(0, 135, 0, 255), 1);
     blackPen = QPen(QColor(0, 0, 0, 180), 2);
-    dotPen = QPen(QColor(150, 150, 150, 255), 1, Qt::DashLine);
 
     gridEnabled = false;
     safeAreaEnabled = false;
+    ruleOfThirdsEnabled = false;
     angle = 0;
     spaceBar = false;
 
@@ -125,6 +122,12 @@ void TupPaintAreaBase::drawActionSafeArea(bool draw)
     viewport()->update();
 }
 
+void TupPaintAreaBase::drawRuleOfThirds(bool draw)
+{
+    ruleOfThirdsEnabled = draw;
+    viewport()->update();
+}
+
 void TupPaintAreaBase::setTool(TupToolPlugin *tool)
 {
     if (!gScene) {
@@ -154,6 +157,11 @@ bool TupPaintAreaBase::getSafeAreaState() const
     return safeAreaEnabled;
 }
 
+bool TupPaintAreaBase::getRuleOfThirdsState() const
+{
+    return ruleOfThirdsEnabled;
+}
+
 void TupPaintAreaBase::mousePressEvent(QMouseEvent * event)
 {
     #ifdef TUP_DEBUG
@@ -177,7 +185,6 @@ void TupPaintAreaBase::mouseMoveEvent(QMouseEvent *event)
         #ifdef TUP_DEBUG
             qWarning() << "[TupPaintAreaBase::mouseMoveEvent()] - Canvas is busy. Can't paint!";
         #endif
-
         return;
     }
 
@@ -246,11 +253,6 @@ void TupPaintAreaBase::keyPressEvent(QKeyEvent *event)
         QDesktopWidget desktop;
         dial->setAngle(static_cast<int>(angle));
         dial->show();
-
-        /*
-        dial->move((int) (desktop.screenGeometry().width() - dial->sizeHint().width())/2,
-                      (int) (desktop.screenGeometry().height() - dial->sizeHint().height())/2);
-        */
 
         QScreen *screen = QGuiApplication::screens().at(0);
         dial->move(static_cast<int> ((screen->geometry().width() - dial->sizeHint().width()) / 2),
@@ -354,7 +356,6 @@ void TupPaintAreaBase::drawBackground(QPainter *painter, const QRectF &rect)
 void TupPaintAreaBase::drawForeground(QPainter *painter, const QRectF &rect)
 {
     TupScene *currentScene = gScene->currentScene();
-
     if (!currentScene) {
         drawPadLock(painter, rect, tr("No Scene!"));
     } else {
@@ -365,28 +366,45 @@ void TupPaintAreaBase::drawForeground(QPainter *painter, const QRectF &rect)
                         if (frame->isFrameLocked()) {
                             drawPadLock(painter, rect, tr("Locked!"));
                         } else {
+                            int width = drawingRect.width();
+                            int height = drawingRect.height();
+
                             // if enabled draw grid
                             if (gridEnabled) {
                                 painter->setPen(gridPen);
-                                int maxX = static_cast<int> (drawingRect.width() + 100);
-                                int maxY = static_cast<int> (drawingRect.height() + 100);
+                                int maxX = static_cast<int> (width + 100);
+                                int maxY = static_cast<int> (height + 100);
                                 for (int i = -100; i <= maxX; i += gridSeparation)
                                      painter->drawLine(i, -100, i, maxY);
                                 for (int i = -100; i <= maxY; i += gridSeparation)
                                      painter->drawLine(-100, i, maxX, i);
                             }
+
+                            // if enabled draw rule of thirds
+                            if (ruleOfThirdsEnabled) {
+                                painter->setPen(rotPen);
+                                int horizontalSpace = static_cast<int> (width / 3);
+                                int verticalSpace = static_cast<int> (height / 3);
+
+                                painter->drawLine(0, verticalSpace, width, verticalSpace);
+                                painter->drawLine(0, verticalSpace*2, width, verticalSpace*2);
+                                painter->drawLine(horizontalSpace, 0, horizontalSpace, height);
+                                painter->drawLine(horizontalSpace*2, 0, horizontalSpace*2, height);
+                            }
+
                             // if enabled action safe area
                             if (safeAreaEnabled) {
-                                painter->setPen(greenThickPen);
+                                painter->setPen(safeRectPen);
+                                painter->setBrush(QBrush());
                                 painter->drawRect(drawingRect);
 
-                                int w = static_cast<int> (drawingRect.width());
-                                int h = static_cast<int> (drawingRect.height());
+                                int w = static_cast<int> (width);
+                                int h = static_cast<int> (height);
                                 int outerBorder = w / 19;
                                 int innerBorder = w / 6;
 
                                 int hSpace = w / 3;
-                                int vSpace = static_cast<int> (drawingRect.height() / 3);
+                                int vSpace = static_cast<int> (height / 3);
 
                                 QPointF left = drawingRect.topLeft() + QPointF(outerBorder, outerBorder);
                                 QPointF right = drawingRect.bottomRight() - QPointF(outerBorder, outerBorder);
@@ -396,11 +414,8 @@ void TupPaintAreaBase::drawForeground(QPainter *painter, const QRectF &rect)
                                 int rightY = static_cast<int> (right.y());
 
                                 QRectF outerRect(left, right);
-
-                                painter->setPen(grayPen);
                                 painter->drawRect(outerRect);
 
-                                painter->setPen(greenBoldPen);
                                 painter->drawLine(QPoint(hSpace, leftY - 8), QPoint(hSpace, leftY + 8));
                                 painter->drawLine(QPoint(hSpace - 5, leftY), QPoint(hSpace + 5, leftY));
                                 painter->drawLine(QPoint(hSpace*2, leftY - 8), QPoint(hSpace*2, leftY + 8));
@@ -421,14 +436,12 @@ void TupPaintAreaBase::drawForeground(QPainter *painter, const QRectF &rect)
                                 painter->drawLine(QPoint(rightX - 8, vSpace*2), QPoint(rightX + 8, vSpace*2));
                                 painter->drawLine(QPoint(rightX, vSpace*2 - 5), QPoint(rightX, vSpace*2 + 5));
 
-                                painter->setPen(greenThinPen);
-
                                 left = drawingRect.topLeft() + QPointF(innerBorder, innerBorder);
                                 right = drawingRect.bottomRight() - QPointF(innerBorder, innerBorder);
                                 QRectF innerRect(left, right);
                                 painter->drawRect(innerRect);
 
-                                painter->setPen(dotPen);
+                                painter->setPen(safeLinePen);
                                 int middleX = w/2;
                                 int middleY = h/2;
                                 painter->drawLine(QPoint(0, middleY), QPoint(w, middleY));
@@ -490,7 +503,7 @@ bool TupPaintAreaBase::canPaint() const
         }
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "TupPaintAreaBase::canPaint() - Warning: Scene is NULL!";
+            qWarning() << "[TupPaintAreaBase::canPaint()] - Warning: Scene is NULL!";
         #endif
     }
 
@@ -589,11 +602,36 @@ void TupPaintAreaBase::updateCenter(const QPoint point)
 void TupPaintAreaBase::updateGridParameters()
 {
     TCONFIG->beginGroup("PaintArea");
-    QString colorName = TCONFIG->value("GridColor").toString();
+    QString colorName = TCONFIG->value("GridColor", "#0000b4").toString();
     QColor gridColor(colorName);
     gridColor.setAlpha(50);
+
     gridPen = QPen(gridColor, TCONFIG->value("GridLineThickness", "1").toInt());
-    gridSeparation = TCONFIG->value("GridSeparation").toInt();
+    gridSeparation = TCONFIG->value("GridSeparation", "10").toInt();
+}
+
+void TupPaintAreaBase::updateRotParameters()
+{
+    TCONFIG->beginGroup("PaintArea");
+    QString colorName = TCONFIG->value("ROTColor", "#000000").toString();
+    int thickness = TCONFIG->value("ROTLineThickness", "1").toInt();
+
+    rotColor = QColor(colorName);
+    rotPen = QPen(rotColor, thickness);
+    rotColor.setAlpha(20);
+}
+
+void TupPaintAreaBase::updateSafeParameters()
+{
+    TCONFIG->beginGroup("PaintArea");
+    QString rectColorName = TCONFIG->value("SafeAreaRectColor", "#008700").toString();
+    QString lineColorName = TCONFIG->value("SafeAreaLineColor", "#969696").toString();
+    int thickness = TCONFIG->value("SafeLineThickness", 1).toInt();
+
+    QColor safeRectColor = QColor(rectColorName);
+    safeRectPen = QPen(safeRectColor, thickness);
+    QColor safeLineColor = QColor(lineColorName);
+    safeLinePen = QPen(safeLineColor, thickness);
 }
 
 void TupPaintAreaBase::updateAngle(int degree)

@@ -101,8 +101,7 @@ void TupExposureVerticalHeader::paintSection(QPainter *painter, const QRect & re
 
     painter->setFont(font);
     if (label % fps == 0) {
-
-        painter->fillRect(rect, QBrush(QColor(120, 120, 120)));
+        painter->fillRect(rect, QBrush(QColor(140, 140, 140)));
         painter->setPen(QPen(Qt::white, 1, Qt::SolidLine));
     } else {
         painter->setPen(QPen(Qt::black, 1, Qt::SolidLine));

@@ -42,12 +42,15 @@
 #include <QWidget>
 #include <QSpinBox>
 #include <QPushButton>
+#include <QGridLayout>
+#include <QTabWidget>
 
 class TUPITUBE_EXPORT TupPaintAreaPreferences : public QWidget
 {
     Q_OBJECT
 
     public:
+        enum ColorType {Grid, ROT};
         TupPaintAreaPreferences(QWidget *parent = nullptr);
         ~TupPaintAreaPreferences();
 
@@ -55,15 +58,38 @@ class TUPITUBE_EXPORT TupPaintAreaPreferences : public QWidget
 
     private slots:
         void setGridColor();
+        void setRotColor();
+        void setSafeAreaRectColor();
+        void setSafeAreaLineColor();
+        QColor setButtonColor(QPushButton *button, const QColor &currentColor) const;
+        void restoreValues();
  
     private:
         void setupPage();
-        
+        QGridLayout * gridPanel();
+        QGridLayout * ruleOfThirdsPanel();
+        QGridLayout * safeAreaPanel();
+
     private:
+        QTabWidget *tabWidget;
         QColor gridColor;
+        QColor rotColor;
+        QColor safeAreaRectColor;
+        QColor safeAreaLineColor;
+
         QPushButton *gridColorButton;
         QSpinBox *gridSeparation;
-        QSpinBox *thicknessSpinBox;
+        QSpinBox *gridThickness;
+
+        QPushButton *rotColorButton;
+        QSpinBox *rotSeparation;
+        QSpinBox *rotThickness;
+
+        QPushButton *safeRectColorButton;
+        QPushButton *safeLineColorButton;
+        QSpinBox *safeThickness;
+
+        QFont labelFont;
 };
 
 #endif

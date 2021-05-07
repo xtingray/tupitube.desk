@@ -58,7 +58,7 @@ class TUPITUBE_EXPORT TupThemePreferences : public QWidget
     private:
         void setupPage();
 
-        QRadioButton *lightTheme;
+        // QRadioButton *lightTheme;
         QRadioButton *darkTheme;
 };
 

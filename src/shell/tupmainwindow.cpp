@@ -199,10 +199,17 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
         TCONFIG->setValue("ConfirmRemoveFrame", true); 
         TCONFIG->setValue("ConfirmRemoveLayer", true); 
         TCONFIG->setValue("ConfirmRemoveScene", true); 
-        TCONFIG->setValue("ConfirmRemoveObject", true); 
+        TCONFIG->setValue("ConfirmRemoveObject", true);
+
         TCONFIG->beginGroup("PaintArea");
         TCONFIG->setValue("GridColor", "#0000b4");
-        TCONFIG->setValue("GridSeparation", 10);
+        TCONFIG->setValue("GridSeparation", 20);
+        TCONFIG->setValue("GridLineThickness", 1);
+        TCONFIG->setValue("ROTColor", "#ff0000");
+        TCONFIG->setValue("ROTLineThickness", 1);
+        TCONFIG->setValue("SafeAreaRectColor", "#008700");
+        TCONFIG->setValue("SafeAreaLineColor", "#969696");
+        TCONFIG->setValue("SafeLineThickness", 1);
     }
 
     TCONFIG->beginGroup("General");

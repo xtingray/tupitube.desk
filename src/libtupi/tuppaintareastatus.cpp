@@ -71,6 +71,13 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     connect(actionSafeAreaButton, SIGNAL(clicked()), this, SIGNAL(safeAreaClicked()));
     addPermanentWidget(actionSafeAreaButton);
 
+    QPushButton *thirdAreaButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/3_3.png")), "");
+    thirdAreaButton->setIconSize(QSize(16, 16));
+    thirdAreaButton->setToolTip(tr("Rule Of Thirds"));
+    thirdAreaButton->setCheckable(true);
+    connect(thirdAreaButton, SIGNAL(clicked()), this, SIGNAL(ruleOfThirdsClicked()));
+    addPermanentWidget(thirdAreaButton);
+
     QPushButton *gridButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/subgrid.png")), "");
     gridButton->setIconSize(QSize(16, 16));
     gridButton->setToolTip(tr("Show grid"));

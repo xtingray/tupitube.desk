@@ -182,7 +182,7 @@ void TupConfigurationArea::shrink()
 
     if (! QApplication::sendEvent(mainWindow, &move)) {
         #ifdef TUP_DEBUG
-            qWarning() << "TupConfigurationArea::shrink() - Error while moving!";
+            qWarning() << "[TupConfigurationArea::shrink()] - Error while moving!";
         #endif
     }
 
@@ -194,7 +194,7 @@ void TupConfigurationArea::shrink()
 
     if (! QApplication::sendEvent(mainWindow, &release)) {
         #ifdef TUP_DEBUG
-            qWarning() << "TupConfigurationArea::shrink() - Error while releasing!";
+            qWarning() << "[TupConfigurationArea::shrink()] - Error while releasing!";
         #endif
     }
 
@@ -204,7 +204,7 @@ void TupConfigurationArea::shrink()
 
 void TupConfigurationArea::enterEvent(QEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
 
     if (locker.isActive())
         locker.stop();
@@ -217,7 +217,7 @@ void TupConfigurationArea::enterEvent(QEvent *event)
 
 void TupConfigurationArea::leaveEvent(QEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
 
     if (shower.isActive())
         shower.stop();

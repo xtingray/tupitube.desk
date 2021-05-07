@@ -148,6 +148,7 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     connect(status, SIGNAL(clearFrameClicked()), this, SLOT(clearFrame()));
     connect(status, SIGNAL(resetClicked()), this, SLOT(resetWorkSpaceTransformations()));
     connect(status, SIGNAL(safeAreaClicked()), this, SLOT(drawActionSafeArea()));
+    connect(status, SIGNAL(ruleOfThirdsClicked()), this, SLOT(drawRuleOfThirds()));
     connect(status, SIGNAL(gridClicked()), this, SLOT(drawGrid()));
     connect(status, SIGNAL(angleChanged(int)), this, SLOT(setRotationAngle(int)));
     connect(status, SIGNAL(zoomChanged(qreal)), this, SLOT(setZoomFactor(qreal)));
@@ -224,6 +225,11 @@ void TupDocumentView::drawGrid()
 void TupDocumentView::drawActionSafeArea()
 {
     paintArea->drawActionSafeArea(!paintArea->getSafeAreaState());
+}
+
+void TupDocumentView::drawRuleOfThirds()
+{
+    paintArea->drawRuleOfThirds(!paintArea->getRuleOfThirdsState());
 }
 
 void TupDocumentView::updateRotationAngleFromRulers(int angle)
@@ -2477,6 +2483,9 @@ QColor TupDocumentView::projectBGColor() const
 void TupDocumentView::updateWorkspace()
 {
     paintArea->updateGridParameters();
+    paintArea->updateRotParameters();
+    paintArea->updateSafeParameters();
+
     paintArea->viewport()->update();
 }
 

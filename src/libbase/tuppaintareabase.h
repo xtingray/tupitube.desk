@@ -58,10 +58,12 @@ class TUPITUBE_EXPORT TupPaintAreaBase : public QGraphicsView
         void setAntialiasing(bool use);
         void drawGrid(bool draw);
         void drawActionSafeArea(bool draw);
+        void drawRuleOfThirds(bool draw);
         void setTool(TupToolPlugin *tool);
 
         bool getGridState() const;
         bool getSafeAreaState() const;
+        bool getRuleOfThirdsState() const;
 
         void scaleView(qreal scaleFactor);
         void setRotationAngle(int angle);
@@ -76,6 +78,8 @@ class TUPITUBE_EXPORT TupPaintAreaBase : public QGraphicsView
 
         void updateDimension(const QSize dimension);
         void updateGridParameters();
+        void updateRotParameters();
+        void updateSafeParameters();
 
     private:
         void drawPadLock(QPainter *painter, const QRectF &rect, QString text);
@@ -121,21 +125,22 @@ class TUPITUBE_EXPORT TupPaintAreaBase : public QGraphicsView
 
         bool gridEnabled;
         bool safeAreaEnabled;
+        bool ruleOfThirdsEnabled;
         double angle;
 
         QStringList copiesXml;
         TupGraphicsScene *gScene;
 
-        QPen greenThickPen;
-        QPen grayPen;
-        QPen greenBoldPen;
-        QPen greenThinPen;
+        QPen safeRectPen;
+        QPen safeLinePen;
         QPen blackPen;
+
         bool spaceBar;
         QPen gridPen;
-        QPen dotPen;
+        QPen rotPen;
         int target;
         int gridSeparation;
+        QColor rotColor;
 
         QPoint initPoint;
         QPoint centerPoint;

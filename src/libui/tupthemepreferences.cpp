@@ -65,20 +65,23 @@ void TupThemePreferences::setupPage()
 
     pageLayout->addSpacing(15);
 
-    lightTheme = new QRadioButton(tr("Light Theme"), this);
-    pageLayout->addWidget(lightTheme);
+    // lightTheme = new QRadioButton(tr("Light Theme"), this);
+    // pageLayout->addWidget(lightTheme);
 
     darkTheme = new QRadioButton(tr("Dark Theme"), this);
+    darkTheme->setChecked(true);
     pageLayout->addWidget(darkTheme);
 
+    /*
     TCONFIG->beginGroup("General");
-    QString themeName = TCONFIG->value("Theme", "Light").toString();
+    QString themeName = TCONFIG->value("Theme", "Dark").toString();
     if (themeName.compare("Light") == 0)
         lightTheme->setChecked(true);
     else
         darkTheme->setChecked(true);
+    */
 
-    connect(lightTheme, SIGNAL(clicked(bool)), this, SLOT(showRestartMsg(bool)));
+    // connect(lightTheme, SIGNAL(clicked(bool)), this, SLOT(showRestartMsg(bool)));
     connect(darkTheme, SIGNAL(clicked(bool)), this, SLOT(showRestartMsg(bool)));
 
     pageLayout->addSpacing(15);
@@ -96,6 +99,7 @@ void TupThemePreferences::setupPage()
 
 void TupThemePreferences::saveValues()
 {
+    /*
     TCONFIG->beginGroup("General");
     if (lightTheme->isChecked())
         TCONFIG->setValue("Theme", "Light");
@@ -103,6 +107,7 @@ void TupThemePreferences::saveValues()
         TCONFIG->setValue("Theme", "Dark");
 
     TCONFIG->sync();
+    */
 }
 
 void TupThemePreferences::showRestartMsg(bool enabled)
