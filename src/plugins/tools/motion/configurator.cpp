@@ -102,7 +102,8 @@ void Configurator::setPropertiesPanel()
     connect(settingsPanel, SIGNAL(clickedResetTween()), this, SLOT(closeTweenProperties()));
 
     connect(settingsPanel, SIGNAL(framesTotalChanged()), this, SIGNAL(framesTotalChanged()));
-
+    connect(settingsPanel, SIGNAL(pathThicknessChanged(int)), this, SIGNAL(pathThicknessChanged(int)));
+    connect(settingsPanel, SIGNAL(pathColorUpdated(const QColor &)), this, SIGNAL(pathColorUpdated(const QColor &)));
 
     settingsLayout->addWidget(settingsPanel);
 
@@ -365,4 +366,14 @@ int Configurator::stepsTotal()
 void Configurator::updateSegments(const QPainterPath path)
 {
     settingsPanel->updateSegments(path);
+}
+
+int Configurator::getPathThickness()
+{
+    return settingsPanel->getPathThickness();
+}
+
+QColor Configurator::getPathColor() const
+{
+    return settingsPanel->getPathColor();
 }

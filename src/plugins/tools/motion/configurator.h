@@ -103,6 +103,8 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void updateSegments(const QPainterPath path);
 
         void enableSaveOption(bool flag);
+        int getPathThickness();
+        QColor getPathColor() const;
 
     public slots:
         void editTween();
@@ -125,6 +127,9 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void startingFrameChanged(int);
         void getTweenData(const QString &);
         void framesTotalChanged();
+
+        void pathThicknessChanged(int);
+        void pathColorUpdated(const QColor &);
         
     private:
         QBoxLayout *layout;

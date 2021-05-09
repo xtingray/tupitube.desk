@@ -59,7 +59,7 @@ class TUPITUBE_PLUGIN MotionSettings : public QWidget
     Q_OBJECT
 
     public:
-    enum Mode { Selection = 0, Path};
+        enum Mode { Selection = 0, Path};
         MotionSettings(QWidget *parent = nullptr);
         ~MotionSettings();
 
@@ -83,13 +83,17 @@ class TUPITUBE_PLUGIN MotionSettings : public QWidget
         void undoSegment(const QPainterPath path);
         void redoSegment(const QPainterPath path);
         void enableSaveOption(bool flag);
-        int stepsTotal(); 
+        int stepsTotal();
+
+        int getPathThickness();
+        QColor getPathColor() const;
 
     private slots:
         void emitOptionChanged(int option);
         void applyTween();
         void updateTotalLabel(int total);
-        
+        void setPathColor();
+
     signals:
         void clickedCreatePath();
         void clickedSelect();
@@ -97,11 +101,15 @@ class TUPITUBE_PLUGIN MotionSettings : public QWidget
         void clickedApplyTween();
         void startingFrameChanged(int);
         void framesTotalChanged();
+        void pathThicknessChanged(int);
+        void pathColorUpdated(const QColor &);
         
     private:
         void setInnerForm();
         void activeInnerForm(bool enable);
         void setEditMode();
+        QGridLayout * pathSettingsPanel();
+        QColor setButtonColor(QPushButton *button, const QColor &currentColor) const;
 
         QWidget *innerPanel;
         QBoxLayout *layout;
@@ -114,6 +122,10 @@ class TUPITUBE_PLUGIN MotionSettings : public QWidget
         QLabel *totalLabel;
         bool selectionDone;
         TupToolPlugin::Mode mode;
+
+        QColor pathColor;
+        QSpinBox *pathThickness;
+        QPushButton *pathColorButton;
 
         TImageButton *applyButton;
         TImageButton *remove;

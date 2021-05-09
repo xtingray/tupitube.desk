@@ -103,6 +103,9 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         void setCurrentTween(const QString &name);
         void updateTweenPoints();
 
+        void updatePathThickness(int thickness);
+        void updatePathColor(const QColor &color);
+
     public slots:
         void updatePath();
 
@@ -147,6 +150,8 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         QList<TupEllipseItem *> dots;
 
         int baseZValue;
+        // QColor pathColor;
+        // int pathThickness;
 };
 
 #endif

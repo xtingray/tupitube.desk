@@ -37,6 +37,10 @@
 #include "tupitemtweener.h"
 #include "tuptweenerstep.h"
 #include "tosd.h"
+#include "tconfig.h"
+#include "tseparator.h"
+
+#include <QColorDialog>
 
 MotionSettings::MotionSettings(QWidget *parent) : QWidget(parent)
 {
@@ -109,6 +113,8 @@ void MotionSettings::setInnerForm()
     startLayout->addWidget(startingLabel);
     startLayout->addWidget(comboInit);
 
+    QGridLayout *pathForm = pathSettingsPanel();
+
     stepViewer = new StepsViewer;
     connect(stepViewer, SIGNAL(totalHasChanged(int)), this, SLOT(updateTotalLabel(int)));
 
@@ -122,8 +128,10 @@ void MotionSettings::setInnerForm()
 
     innerLayout->addLayout(startLayout);
     innerLayout->addWidget(endingLabel);
+    innerLayout->addWidget(new TSeparator(Qt::Horizontal));
+    innerLayout->addLayout(pathForm);
+    innerLayout->addWidget(new TSeparator(Qt::Horizontal));
     innerLayout->addWidget(stepViewer);
-
     innerLayout->addLayout(totalLayout);
 
     layout->addWidget(innerPanel);
@@ -144,7 +152,7 @@ void MotionSettings::activeInnerForm(bool enable)
 void MotionSettings::setParameters(const QString &name, int framesCount, int startFrame)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "MotionSettings::setParameters() - Adding Tween context!";
+        qDebug() << "[MotionSettings::setParameters()] - Adding Tween context!";
     #endif
 
     mode = TupToolPlugin::Add;
@@ -169,7 +177,7 @@ void MotionSettings::setParameters(const QString &name, int framesCount, int sta
 void MotionSettings::setParameters(TupItemTweener *currentTween)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "Settings::setParameters() - Loading Tween context!";
+        qDebug() << "[MotionSettings::setParameters()] - Loading Tween context!";
     #endif
 
     setEditMode();
@@ -293,7 +301,7 @@ void MotionSettings::clearData()
 void MotionSettings::notifySelection(bool flag)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "Settings::notifySelection() - selection is done? -> " << flag;
+        qDebug() << "[MotionSettings::notifySelection()] - selection is done? -> " << flag;
     #endif
 
     selectionDone = flag;
@@ -361,7 +369,7 @@ void MotionSettings::redoSegment(const QPainterPath path)
 void MotionSettings::enableSaveOption(bool flag)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "MotionSettings::enableSaveOption() - flag -> " << flag;
+        qDebug() << "[MotionSettings::enableSaveOption()] - flag -> " << flag;
     #endif
 
     applyButton->setEnabled(flag);
@@ -375,4 +383,64 @@ int MotionSettings::stepsTotal()
 void MotionSettings::updateSegments(const QPainterPath path)
 {
     stepViewer->updateSegments(path);
+}
+
+QGridLayout * MotionSettings::pathSettingsPanel()
+{
+    TCONFIG->beginGroup("PaintArea");
+    QString colorName = TCONFIG->value("MotionPathColor", "#379b37").toString();
+    pathColor = QColor(colorName);
+    int thickness = TCONFIG->value("MotionPathThickness", 2).toInt();
+
+    QGridLayout *pathForm = new QGridLayout;
+
+    pathForm->addWidget(new QLabel(tr("Path Color")), 0, 0, Qt::AlignLeft);
+    pathColorButton = new QPushButton;
+    pathColorButton->setText(pathColor.name());
+    pathColorButton->setStyleSheet("* { background-color: " + pathColor.name() + "; }");
+    connect(pathColorButton, SIGNAL(clicked()), this, SLOT(setPathColor()));
+    pathForm->addWidget(pathColorButton, 0, 1, Qt::AlignLeft);
+
+    pathForm->addWidget(new QLabel(tr("Path Thickness:")), 2, 0, Qt::AlignLeft);
+    pathThickness = new QSpinBox(this);
+    pathThickness->setMinimum(1);
+    pathThickness->setMaximum(5);
+    pathThickness->setValue(thickness);
+    pathForm->addWidget(pathThickness, 2, 1, Qt::AlignLeft);
+    connect(pathThickness, SIGNAL(valueChanged(int)), this, SIGNAL(pathThicknessChanged(int)));
+
+    return pathForm;
+}
+
+int MotionSettings::getPathThickness()
+{
+    return pathThickness->value();
+}
+
+QColor MotionSettings::getPathColor() const
+{
+    return pathColor;
+}
+
+void MotionSettings::setPathColor()
+{
+     pathColor = setButtonColor(pathColorButton, pathColor);
+     emit pathColorUpdated(pathColor);
+}
+
+QColor MotionSettings::setButtonColor(QPushButton *button, const QColor &currentColor) const
+{
+     QColor color = QColorDialog::getColor(currentColor);
+     if (color.isValid()) {
+         button->setText(color.name());
+         QString css = "QPushButton { background-color: " + color.name() + " }";
+         if (color == Qt::black)
+             css = "QPushButton { background-color: " + color.name() + "; color: #ffffff; }";
+         button->setStyleSheet(css);
+     } else {
+         color = currentColor;
+     }
+     color.setAlpha(200);
+
+     return color;
 }
