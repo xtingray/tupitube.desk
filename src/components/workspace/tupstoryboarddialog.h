@@ -53,6 +53,7 @@
 #include <QTextEdit>
 #include <QListWidgetItem>
 #include <QLocale>
+#include <QDoubleSpinBox>
 
 class TUPITUBE_EXPORT TupStoryBoardDialog : public QDialog
 {
@@ -66,6 +67,7 @@ class TUPITUBE_EXPORT TupStoryBoardDialog : public QDialog
 
     private slots:
         void updateForm(QListWidgetItem *current, QListWidgetItem *previous);
+        void updateDuration(double value);
         void exportStoyrboard(const QString &type);
         void postStoryboardAtServer();
         void closeDialog();
@@ -79,10 +81,10 @@ class TUPITUBE_EXPORT TupStoryBoardDialog : public QDialog
     private:
         void setListComponent();
         void setPreviewScreen();
-        void setStoryForm();
+        void setCoverForm();
         void setSceneForm();
 
-        void thumbnailGenerator();
+        void thumbnailsGenerator();
         void addScene(const QString &label, const QIcon &icon);
 
         void saveLastComponent();
@@ -92,11 +94,12 @@ class TUPITUBE_EXPORT TupStoryBoardDialog : public QDialog
         QString getStoryTopics() const;
         QString getStorySummary() const;
 
-        QString getSceneTitle() const;
         QString getSceneDuration() const;
-        QString getSceneDescription() const;
+        QFont setFont(double proportion) const;
+        QString formatString(QStringList stringWords, int size) const;
         void createHTMLFiles(const QString &path, DocType type);
         void cleanDirectory(const QString &path);
+        QPixmap renderCover(const QSize dimension);
  
         bool isNetworked;
         TupExportInterface *imagePlugin;
@@ -125,9 +128,8 @@ class TUPITUBE_EXPORT TupStoryBoardDialog : public QDialog
         QTextEdit *summaryEdit;
 
         QLabel *sceneLabel;
-        QLineEdit *sceneTitleEdit;
-        QLineEdit *sceneDurationEdit;
-        QTextEdit *sceneDescriptionEdit;
+        // QLineEdit *sceneDurationEdit;
+        QDoubleSpinBox *secSpinBox;
 
         QLocale utf;
         TupLibrary *library;

@@ -48,7 +48,7 @@ class TUPITUBE_EXPORT TupStoryboard : public QObject, public TupAbstractSerializ
     Q_OBJECT
 
     public:
-        TupStoryboard(const QString &author);
+        TupStoryboard();
         ~TupStoryboard();
 
         void init(int start, int size);
@@ -69,13 +69,8 @@ class TUPITUBE_EXPORT TupStoryboard : public QObject, public TupAbstractSerializ
         QString storyTopics() const;
         QString storySummary() const;
 
-        void setSceneTitle(int index, const QString &title);
         void setSceneDuration(int index, const QString &duration);
-        void setSceneDescription(int index, const QString &description);
-
-        QString sceneTitle(int index) const;
         QString sceneDuration(int index) const;
-        QString sceneDescription(int index) const;
         
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
@@ -84,15 +79,14 @@ class TUPITUBE_EXPORT TupStoryboard : public QObject, public TupAbstractSerializ
         
     private:
         QString cleanString(QString input) const;
+        bool storyboardHasData() const;
 
         QString title;
         QString author;
         QString topics;
         QString summary;
 
-        QList<QString> scene;
         QList<QString> duration;
-        QList<QString> description;
 };
 
 #endif

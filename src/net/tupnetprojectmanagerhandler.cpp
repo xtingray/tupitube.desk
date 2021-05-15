@@ -288,7 +288,7 @@ void TupNetProjectManagerHandler::handlePackage(const QString &root, const QStri
 
                if (parser.checksum()) {
                    if ((parser.sceneIndex() >= 0) && (parser.storyboardXml().length() > 0)) {
-                       TupStoryboard *storyboard = new TupStoryboard(username);
+                       TupStoryboard *storyboard = new TupStoryboard;
                        storyboard->fromXml(parser.storyboardXml());
                        project->sceneAt(parser.sceneIndex())->setStoryboard(storyboard);
                    } else {

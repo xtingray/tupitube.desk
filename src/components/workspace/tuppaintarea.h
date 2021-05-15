@@ -86,7 +86,6 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
 
         void setCurrentScene(int index);
         void setCurrentTool(TAction::ActionId tool);
-        void updatePaintArea();
         void paintBackground();
         void paintForeground();
         void updateSpaceContext();
@@ -109,6 +108,7 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         void goOneLayerForward();
 
     public slots:
+        void updatePaintArea();
         void setNextFramesOnionSkinCount(int n);
         void setPreviousFramesOnionSkinCount(int n);
         void setOnionFactor(double value);

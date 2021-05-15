@@ -417,6 +417,8 @@ bool TupCommandExecutor::extendFrame(TupFrameResponse *response)
         if (layer) {
             if (response->getMode() == TupProjectResponse::Do || response->getMode() == TupProjectResponse::Redo) {
                 if (layer->extendFrame(pos, times)) {
+                    for (int i=0; i<times; i++)
+                        scene->insertStoryboardScene(pos + i);
                     emit responsed(response);
                     return true;
                 }

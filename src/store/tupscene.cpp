@@ -51,7 +51,8 @@ TupScene::TupScene(TupProject *parent, int index, const QSize size, const QColor
     layerCount = 0;
     layers = Layers();
     isVisible = true;
-    storyboard = new TupStoryboard(parent->getAuthor());
+
+    storyboard = new TupStoryboard;
     background = new TupBackground(this, sceneIndex, size, color);
 }
 

@@ -1944,6 +1944,8 @@ void TupDocumentView::storyboardSettings()
     TupStoryBoardDialog *storySettings = new TupStoryBoardDialog(isNetworked, imagePlugin, project->getBgColor(), project->getDimension(),
                                                                  project->sceneAt(sceneIndex), currentSceneIndex(), project->getLibrary(), this);
     connect(storySettings, SIGNAL(updateStoryboard(TupStoryboard *, int)), this, SLOT(sendStoryboard(TupStoryboard *, int)));
+    connect(storySettings, SIGNAL(accepted()), paintArea, SLOT(updatePaintArea()));
+    connect(storySettings, SIGNAL(rejected()), paintArea, SLOT(updatePaintArea()));
 
     if (isNetworked)
         connect(storySettings, SIGNAL(postStoryboard(int)), this, SIGNAL(postStoryboard(int)));
@@ -1953,6 +1955,8 @@ void TupDocumentView::storyboardSettings()
     storySettings->show();
     storySettings->move(static_cast<int>((screen->geometry().width() - storySettings->width())/2),
                         static_cast<int>((screen->geometry().height() - storySettings->height())/2));
+
+
 }
 
 void TupDocumentView::sendStoryboard(TupStoryboard *storyboard, int sceneIndex)
