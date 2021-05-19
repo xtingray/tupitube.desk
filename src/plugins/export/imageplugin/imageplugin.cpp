@@ -231,4 +231,17 @@ QString ImagePlugin::getExceptionMsg() const
     return errorMsg;
 }
 
+bool ImagePlugin::exportToAnimatic(const QString &filePath, const QList<QImage> images, const QList<int> indexes,
+                              TupExportInterface::Format format, const QSize &size, int fps)
+{
+    Q_UNUSED(filePath)
+    Q_UNUSED(images)
+    Q_UNUSED(indexes)
+    Q_UNUSED(format)
+    Q_UNUSED(size)
+    Q_UNUSED(fps)
+
+    return true;
+}
+
 // Q_EXPORT_PLUGIN(ImagePlugin);

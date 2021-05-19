@@ -59,6 +59,9 @@ class TUPITUBE_PLUGIN FFmpegPlugin : public TupExportPluginObject
         virtual bool exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene,
                                  const QSize &size, TupLibrary *library, bool waterMark);
 
+        virtual bool exportToAnimatic(const QString &filePath, const QList<QImage> images, const QList<int> indexes,
+                                      TupExportInterface::Format format, const QSize &size, int fps);
+
         virtual QString getExceptionMsg() const;
         QString errorMsg;
 

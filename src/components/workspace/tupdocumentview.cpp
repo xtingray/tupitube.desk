@@ -454,7 +454,9 @@ void TupDocumentView::createLateralToolBar()
 
 void TupDocumentView::loadPlugins()
 {
-    bool imagePluginLoaded = false; 
+    bool videoPluginLoaded = false;
+    bool imagePluginLoaded = false;
+
     foreach (QObject *plugin, TupPluginManager::instance()->getFormats()) {
         if (plugin) {
             TupExportInterface *exporter = qobject_cast<TupExportInterface *>(plugin);
@@ -463,13 +465,27 @@ void TupDocumentView::loadPlugins()
                     qWarning() << "[TupDocumentView::loadPlugins()] - plugin: " << exporter->key();
                 #endif
 
+                if (exporter->key() == TupExportInterface::VideoFormats) {
+                    videoPlugin = exporter;
+                    videoPluginLoaded = true;
+                }
+
                 if (exporter->key() == TupExportInterface::ImageSequence) {
                     imagePlugin = exporter;
                     imagePluginLoaded = true;
-                    break;
                 }
+
+                if (videoPluginLoaded && imagePluginLoaded)
+                    break;
             }
         }
+    }
+
+    if (!videoPluginLoaded) {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupDocumentView::loadPlugins()] - Warning: Couldn't found plugin -> "
+                       << tr("Video Formats");
+        #endif
     }
 
     if (!imagePluginLoaded) {
@@ -1937,15 +1953,15 @@ void TupDocumentView::storyboardSettings()
         qDebug() << "[TupDocumentView::storyboardSettings()]";
     #endif
 
-    int sceneIndex = paintArea->graphicsScene()->currentSceneIndex();
-
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    TupStoryBoardDialog *storySettings = new TupStoryBoardDialog(isNetworked, imagePlugin, project->getBgColor(), project->getDimension(),
-                                                                 project->sceneAt(sceneIndex), currentSceneIndex(), project->getLibrary(), this);
+    TupStoryBoardDialog *storySettings = new TupStoryBoardDialog(isNetworked, imagePlugin, videoPlugin, project,
+                                                                 currentSceneIndex(), this);
+
     connect(storySettings, SIGNAL(updateStoryboard(TupStoryboard *, int)), this, SLOT(sendStoryboard(TupStoryboard *, int)));
     connect(storySettings, SIGNAL(accepted()), paintArea, SLOT(updatePaintArea()));
     connect(storySettings, SIGNAL(rejected()), paintArea, SLOT(updatePaintArea()));
+    connect(storySettings, SIGNAL(projectHasChanged()), this, SIGNAL(projectHasChanged()));
 
     if (isNetworked)
         connect(storySettings, SIGNAL(postStoryboard(int)), this, SIGNAL(postStoryboard(int)));
@@ -1955,8 +1971,6 @@ void TupDocumentView::storyboardSettings()
     storySettings->show();
     storySettings->move(static_cast<int>((screen->geometry().width() - storySettings->width())/2),
                         static_cast<int>((screen->geometry().height() - storySettings->height())/2));
-
-
 }
 
 void TupDocumentView::sendStoryboard(TupStoryboard *storyboard, int sceneIndex)

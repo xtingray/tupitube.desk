@@ -167,6 +167,16 @@ QString TupStoryboard::storySummary() const
     return summary;
 }
 
+void TupStoryboard::setCoverDuration(const QString &duration)
+{
+    coverDuration = duration;
+}
+
+QString TupStoryboard::getCoverDuration() const
+{
+    return coverDuration;
+}
+
 void TupStoryboard::setSceneDuration(int index, const QString &time)
 {
     if (index >= 0 && index < duration.count()) {
@@ -198,6 +208,7 @@ void TupStoryboard::fromXml(const QString &xml)
         return;
 
     QDomElement root = document.documentElement();
+    coverDuration = root.attribute("cover_duration", "0");
     QDomNode n = root.firstChild();
     int counter = 0;
 
@@ -238,6 +249,8 @@ QDomElement TupStoryboard::toXml(QDomDocument &doc) const
     #endif
 
     QDomElement storyboard = doc.createElement("storyboard");
+    storyboard.setAttribute("cover_duration", coverDuration);
+
     if (storyboardHasData()) {
         QDomText titleDom   = doc.createTextNode(title);
         QDomText authorDom  = doc.createTextNode(author);

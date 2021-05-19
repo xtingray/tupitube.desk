@@ -178,6 +178,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void clearFrame();
         void enableEyeDropperTool(TColorCell::FillType fillType);
         void exportImage();
+        // void exportAnimaticVideo(const QString &path, const QPixmap &pixmap, int fps);
         void postImage();
 
     signals:
@@ -287,6 +288,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         QTimer *timer;
 
         TupExportInterface *imagePlugin;
+        TupExportInterface *videoPlugin;
 
         qreal nodesScaleFactor;
         qreal cacheScaleFactor;

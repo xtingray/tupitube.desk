@@ -69,6 +69,8 @@ class TUPITUBE_EXPORT TupStoryboard : public QObject, public TupAbstractSerializ
         QString storyTopics() const;
         QString storySummary() const;
 
+        void setCoverDuration(const QString &duration);
+        QString getCoverDuration() const;
         void setSceneDuration(int index, const QString &duration);
         QString sceneDuration(int index) const;
         
@@ -86,6 +88,7 @@ class TUPITUBE_EXPORT TupStoryboard : public QObject, public TupAbstractSerializ
         QString topics;
         QString summary;
 
+        QString coverDuration;
         QList<QString> duration;
 };
 

@@ -43,7 +43,6 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QScreen>
-#include <QPrintDialog>
 #include <QTextBrowser>
 #include <QDialogButtonBox>
 #include <QPrinter>
@@ -51,24 +50,26 @@
 #include <QPushButton>
 #include <QListWidget>
 
-TupStoryBoardDialog::TupStoryBoardDialog(bool network, TupExportInterface *plugin, const QColor &color,
-                                         const QSize &pSize, TupScene *pScene, int sIndex, TupLibrary *assets,
-                                         QWidget *parent) : QDialog(parent)
+TupStoryBoardDialog::TupStoryBoardDialog(bool network, TupExportInterface *imgPlugin, TupExportInterface *vPlugin,
+                                         TupProject *work, int sIndex, QWidget *parent): QDialog(parent)
 {
     isNetworked = network;
-    imagePlugin = plugin;
-    bgColor = color;
-    size = pSize;
-    scene = pScene;
+    imagePlugin = imgPlugin;
+    videoPlugin = vPlugin;
+
+    project = work;
+    bgColor = project->getBgColor();
+    size = project->getDimension();
+    scene =  project->sceneAt(sIndex);
     sceneIndex = sIndex;
     storyboard = scene->getStoryboard();
-    library = assets;
+    library = project->getLibrary();
     utf = QLocale(QLocale::AnyLanguage, QLocale::AnyCountry);
 
     QScreen *screen = QGuiApplication::screens().at(0);
     scaledSize = QSize();
 
-    if (pSize.width() > pSize.height()) {
+    if (size.width() > size.height()) {
         if (size.width() + 500 > screen->geometry().width()) {
             int w = screen->geometry().width() - 500;
             int h = (size.height() * w) / size.width();
@@ -117,9 +118,9 @@ TupStoryBoardDialog::TupStoryBoardDialog(bool network, TupExportInterface *plugi
     pdfButton->setShortcut(QKeySequence("Ctrl+P"));
     connect(pdfButton, SIGNAL(clicked()), this, SLOT(exportAsPDF()));
 
-    QPushButton *htmlButton = new QPushButton(tr("&HTML"));
-    htmlButton->setToolTip(tr("Export as HTML"));
-    connect(htmlButton, SIGNAL(clicked()), this, SLOT(exportAsHTML()));
+    QPushButton *animaticButton = new QPushButton(tr("&Animatic"));
+    animaticButton->setToolTip(tr("Export as Animatic"));
+    connect(animaticButton, SIGNAL(clicked()), this, SLOT(exportAsAnimatic()));
 
     QPushButton *closeButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/apply.png")), "");
     closeButton->setToolTip(tr("Close"));
@@ -128,7 +129,7 @@ TupStoryBoardDialog::TupStoryBoardDialog(bool network, TupExportInterface *plugi
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Horizontal, this);
     buttonBox->addButton(pdfButton, QDialogButtonBox::ActionRole);
-    buttonBox->addButton(htmlButton, QDialogButtonBox::ActionRole);
+    buttonBox->addButton(animaticButton, QDialogButtonBox::ActionRole);
 
     if (isNetworked) {
         QPushButton *postButton = new QPushButton(tr("&Post"));
@@ -184,13 +185,6 @@ void TupStoryBoardDialog::setCoverForm()
 
     QBoxLayout *sceneLayout = new QBoxLayout(QBoxLayout::TopToBottom, storyPanel);
 
-    QFont font = this->font();
-    font.setPointSize(10);
-    font.setBold(true);
-    QLabel *mainTitle = new QLabel(tr("Storyboard General Information"));
-    mainTitle->setFont(font);
-    mainTitle->setAlignment(Qt::AlignHCenter);
-
     QLabel *titleLabel = new QLabel(tr("Title"));
     titleEdit = new QLineEdit("");
     titleEdit->setLocale(utf);
@@ -217,7 +211,6 @@ void TupStoryBoardDialog::setCoverForm()
     middleLayout->addWidget(authorLabel);
     middleLayout->addWidget(authorEdit);
 
-    sceneLayout->addWidget(mainTitle);
     sceneLayout->addLayout(topLayout);
 
     if (isNetworked) {
@@ -237,7 +230,53 @@ void TupStoryBoardDialog::setCoverForm()
     sceneLayout->addWidget(summaryLabel);
     sceneLayout->addWidget(summaryEdit);
 
-    formLayout->addWidget(storyPanel);
+    coverTabWidget = new QTabWidget;
+    coverTabWidget->addTab(storyPanel, tr("Cover Information"));
+    coverTabWidget->addTab(addDurationPanel(), tr("Animatic"));
+
+    formLayout->addWidget(coverTabWidget);
+}
+
+QWidget * TupStoryBoardDialog::addDurationPanel()
+{
+    QFont font = this->font();
+    font.setPointSize(10);
+    font.setBold(true);
+    QLabel *mainTitle = new QLabel(tr("Cover"));
+    mainTitle->setFont(font);
+    mainTitle->setAlignment(Qt::AlignHCenter);
+
+    QLabel *durationLabel = new QLabel(tr("Duration"));
+
+    coverSecSpinBox = new QDoubleSpinBox;
+    coverSecSpinBox->setDecimals(1);
+    coverSecSpinBox->setMinimum(0.2);
+    coverSecSpinBox->setMaximum(20);
+    coverSecSpinBox->setValue(1);
+    coverSecSpinBox->setSingleStep(0.2);
+
+    QString duration = storyboard->getCoverDuration();
+    coverSecSpinBox->setValue(duration.toDouble());
+
+    connect(coverSecSpinBox, SIGNAL(valueChanged(double)), this, SLOT(updateCoverDuration(double)));
+
+    QLabel *secsLabel = new QLabel(tr("seconds"));
+
+    QWidget *secondsPanel = new QWidget;
+    QHBoxLayout *secondsLayout = new QHBoxLayout(secondsPanel);
+    secondsLayout->addStretch();
+    secondsLayout->addWidget(durationLabel);
+    secondsLayout->addWidget(coverSecSpinBox);
+    secondsLayout->addWidget(secsLabel);
+    secondsLayout->addStretch();
+
+    QWidget *blockPanel = new QWidget;
+    QVBoxLayout *blockLayout = new QVBoxLayout(blockPanel);
+    blockLayout->addWidget(mainTitle);
+    blockLayout->addWidget(secondsPanel);
+    blockLayout->addStretch();
+
+    return blockPanel;
 }
 
 void TupStoryBoardDialog::setSceneForm()
@@ -256,11 +295,11 @@ void TupStoryBoardDialog::setSceneForm()
     QLabel *durationLabel = new QLabel(tr("Duration"));
 
     secSpinBox = new QDoubleSpinBox;
-    secSpinBox->setDecimals(3);
-    secSpinBox->setMinimum(0);
+    secSpinBox->setDecimals(1);
+    secSpinBox->setMinimum(0.2);
     secSpinBox->setMaximum(20);
-    secSpinBox->setValue(0);
-    secSpinBox->setSingleStep(0.100);
+    secSpinBox->setValue(1);
+    secSpinBox->setSingleStep(0.2);
     connect(secSpinBox, SIGNAL(valueChanged(double)), this, SLOT(updateDuration(double)));
 
     QLabel *secsLabel = new QLabel(tr("seconds"));
@@ -275,10 +314,13 @@ void TupStoryBoardDialog::setSceneForm()
     sceneLayout->addWidget(secondsPanel);
     sceneLayout->addStretch();
 
-    formLayout->addWidget(scenePanel, Qt::AlignHCenter);
+    sceneTabWidget = new QTabWidget;
+    sceneTabWidget->addTab(scenePanel, tr("Animatic"));
+
+    formLayout->addWidget(sceneTabWidget, Qt::AlignHCenter);
     formLayout->addStretch();
 
-    scenePanel->hide();
+    sceneTabWidget->hide();
 }
 
 void TupStoryBoardDialog::addScene(const QString &label, const QIcon &icon)
@@ -372,8 +414,8 @@ void TupStoryBoardDialog::updateForm(QListWidgetItem *current, QListWidgetItem *
             pixmap = QPixmap(filename);
 
             if (previousIndex == 0) {
-                storyPanel->hide();
-                scenePanel->show();
+                coverTabWidget->hide();
+                sceneTabWidget->show();
 
                 storyboard->setStoryTitle(getStoryTitle());
 
@@ -388,20 +430,21 @@ void TupStoryBoardDialog::updateForm(QListWidgetItem *current, QListWidgetItem *
                 previousIndex--;
                 storyboard->setSceneDuration(previousIndex, getSceneDuration());
             }
+
+            QString duration = storyboard->sceneDuration(index);
+            secSpinBox->setValue(duration.toDouble());
         } else {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupStoryBoardDialog::updateForm()] - Fatal error: image doesn't exist -> " << filename;
             #endif
             return;
         }
-        QString duration = storyboard->sceneDuration(index);
-        secSpinBox->setValue(duration.toDouble());
     } else { // Cover
         if (previousIndex != 0) {
             pixmap = renderCover(scaledSize);
 
-            scenePanel->hide();
-            storyPanel->show();
+            sceneTabWidget->hide();
+            coverTabWidget->show();
 
             if (previousIndex > 0)
                 storyboard->setSceneDuration(previousIndex - 1, getSceneDuration());
@@ -522,52 +565,28 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &savePath, DocType type)
     QString fileName = path + "images/cover.png";
     pixmap.save(fileName);
 
-    if (scaledSize.width() <= 520) {
-        // find all .png files in path (var) directory
-        QDir directory(path + "images");
-        directory.setNameFilters(QStringList() << "*.png");
-        QStringList files = directory.entryList();
+    // find all .png files in path (var) directory
+    QDir directory(path + "images");
+    directory.setNameFilters(QStringList() << "*.png");
+    QStringList files = directory.entryList();
 
-        /*
-        int scenes = files.size();
-        #ifdef TUP_DEBUG
-            qDebug() << "[TupStoryBoardDialog::createHTMLFiles()] - files.size() -> " << scenes;
-        #endif
-        */
+    /*
+    int scenes = files.size();
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupStoryBoardDialog::createHTMLFiles()] - files.size() -> " << scenes;
+    #endif
+    */
 
-        // copy all .png files
-        for (int i = 0; i < files.size(); ++i) {
-             QString file = files.at(i).toLocal8Bit().constData();
-             QString target = savePath + "/" + file;
+    // copy all .png files
+    for (int i = 0; i < files.size(); ++i) {
+         QString file = files.at(i).toLocal8Bit().constData();
+         QPixmap pixmap(path + "images/" + file);
+         QString destination = savePath + "/" + file;
 
-             if (QFile::exists(target)) QFile::remove(target);
-             QFile::copy(path + "images/" + file, target);
-        }
+         if (QFile::exists(destination))
+             QFile::remove(destination);
 
-    } else {
-        // find all .png files in path (var) directory
-        QDir directory(path + "images");
-        directory.setNameFilters(QStringList() << "*.png");
-        QStringList files = directory.entryList();
-
-        /*
-        int scenes = files.size();
-        #ifdef TUP_DEBUG
-            qDebug() << "[TupStoryBoardDialog::createHTMLFiles()] - files.size() -> " << scenes;
-        #endif
-        */
-
-        // scale and copy all .png files
-        for (int i = 0; i < files.size(); ++i) {
-             QString file = files.at(i).toLocal8Bit().constData();
-             QPixmap pixmap(path + "images/" + file);
-             QString destination = savePath + "/" + file;
-
-             if (QFile::exists(destination))
-                 QFile::remove(destination);
-
-             pixmap.save(destination);
-        }
+         pixmap.save(destination);
     }
 
     QString base = kAppProp->shareDir() + "data/storyboard/";
@@ -589,109 +608,26 @@ void TupStoryBoardDialog::createHTMLFiles(const QString &savePath, DocType type)
     QTextStream out(&indexFile);
     out << "<html>\n";
     out << "<head>\n";
-    /*
-    QString record = storyboard->storyTitle();
-    if (record.length() == 0)
-        record = "&nbsp;";
-    out << "<title>" << record << "</title>\n";
-    */
-
     out << "<link rel=\"stylesheet\" type=\"text/css\" href=\"tupitube.css\" media=\"print\"/>\n";
     out << "</head>\n";
     out << "<body>\n";
-
-    /*
-    out << "<div id=\"header\">\n";
-    out << "<div id=\"title\">Storyboard</div>\n";
-    out << "<div id=\"item\">\n";
-    out << "     <div id=\"item-header\">Title:</div>\n";
-    out << "     <div id=\"item-data\">" << record << "</div>\n";
-    out << "     </div>\n";
-    out << "<div id=\"item\">\n";
-    out << "     <div id=\"item-header\">Author:</div>\n";
-    record = storyboard->storyAuthor();
-    if (record.length() == 0)
-        record = "&nbsp;";
-    out << "     <div id=\"item-data\">" << record << "</div>\n";
-    out << "</div>\n";
-    out << "<div id=\"item\">\n";
-    out << "     <div id=\"item-header\">Summary:</div>\n";
-    record = storyboard->storySummary();
-    if (record.length() == 0)
-        record = "&nbsp;";
-    out << "     <div id=\"item-data\">" << record << "</div>\n";
-    out << "</div>\n";
-    out << "<div id=\"item\">\n";
-    out << "     <div id=\"item-header\">Scenes Total:</div>\n";
-    out << "     <div id=\"item-data\">" << QString::number(storyboard->size()) << "</div>\n";
-    out << "</div>\n";
-    out << "</div>\n";
-
-    if (type == PDF) {
-        out << "<div id=\"page-break\">\n";
-        out << "</div>\n";
-    }
-    */
 
     int scenes = storyboard->size();
     #ifdef TUP_DEBUG
         qDebug() << "[TupStoryBoardDialog::createHTMLFiles()] - scenes count -> " << scenes;
     #endif
 
-    // out << "<div id=\"scene\">\n";
-    QString image = "<img class=\"printThisFull\" src=\"cover.png\" />\n";
+    QString image = "<center><img class=\"printThisFull\" src=\"cover.png\" /></center>\n";
     out << image;
-    // out << "</div>\n";
-    /*
-    if (type == PDF) {
-        out << "<div id=\"page-break\">\n";
-        out << "</div>\n";
-    }
-    */
 
     for (int i=0; i < scenes; i++) {
-         // out << "<div id=\"scene\">\n";
-         QString image = "<img class=\"printThisFull\" src=\"scene" + QString::number(i) + ".png\" />\n";
+         QString image = "<center><img class=\"printThisFull\" src=\"scene" + QString::number(i) + ".png\" /></center>\n";
          out << image;
-         // out << "</div>\n";
-
-         /*
-         out << "<div id=\"paragraph\">\n";
-         out << "<div id=\"scene-item\">\n";
-         out << " <div id=\"scene-header\">Duration:</div>\n";
-         record = storyboard->sceneDuration(i);
-         if (record.length() == 0)
-             record = "&nbsp;";
-         out << " <div id=\"scene-data\">" << record << "</div>\n";
-         out << "</div>\n";
-         out << "</div>\n";
-         */
-
-         /*
-         if (type == PDF) {
-             if (i < (storyboard->size() - 1)) {
-                 out << "<div id=\"page-break\">\n";
-                 out << "</div>\n";
-             }
-         }
-         */
     }
     out << "</body>\n";
     out << "</html>";
 
     indexFile.close();
-}
-
-void TupStoryBoardDialog::exportAsHTML()
-{
-    saveLastComponent();
-    QString path = QFileDialog::getExistingDirectory(this, tr("Choose a directory..."), QDir::homePath(),
-                                                     QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-
-    if (!path.isEmpty()) {
-        createHTMLFiles(path, HTML);
-        TOsd::self()->display(TOsd::Info, tr("Storyboard exported successfully!"));
-    }
 }
 
 void TupStoryBoardDialog::exportAsPDF()
@@ -719,12 +655,24 @@ void TupStoryBoardDialog::exportAsPDF()
         htmlContent = in.readAll();
 
         QPrinter printer;
-        // printer.setPageSize(QPrinter::A4);
-        // QPageSize pageSize(QPageSize::Custom);
+        if (size == QSize(520, 380)) {
+            printer.setPageSize(QPrinter::A5);
+        } else if (size == QSize(640, 480)) {
+            printer.setPageSize(QPrinter::A4);
+        } else if (size == QSize(720, 480)) {
+            printer.setPageSize(QPrinter::A4);
+        } else if (size == QSize(1920, 1080) || size == QSize(1280, 720)) {
+            printer.setPageSize(QPrinter::A2);
+        } else if (size == QSize(1080, 1080)) {
+            QPageSize pageSize(size);
+            printer.setPageSize(pageSize);
+        }
 
-        QPageSize pageSize(size, QPageSize::Point);
-        printer.setPageSize(pageSize);
-        // printer.setPageOrientation(QPageLayout::Landscape);
+        QPageLayout::Orientation orientation = QPageLayout::Portrait;
+        if (size.width() > size.height())
+            orientation = QPageLayout::Landscape;
+        printer.setPageOrientation(orientation);
+
         printer.setOutputFormat(QPrinter::PdfFormat);
         printer.setOutputFileName(pdfPath);
 
@@ -736,9 +684,54 @@ void TupStoryBoardDialog::exportAsPDF()
         document->print(&printer);
         delete document;
 
-        // cleanDirectory(path);
+        cleanDirectory(path);
 
         TOsd::self()->display(TOsd::Info, tr("Storyboard exported successfully!"));
+    }
+}
+
+void TupStoryBoardDialog::exportAsAnimatic()
+{
+    #ifdef TUP_DEBUG
+        qWarning() << "[TupStoryBoardDialog::exportAsAnimatic()]";
+    #endif
+
+    QString videoPath = QFileDialog::getSaveFileName(this, tr("Export Animatic As"), QDir::homePath(),
+                                                    tr("Videos") + " (*.mp4)");
+    if (!videoPath.isNull()) {
+        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+        int fps = 5;
+        QPixmap pixmap = renderCover(size);
+        QString coverPath = path + "images/cover.png";
+        pixmap.save(coverPath);
+
+        QList<int> frames;
+        QImage cover(pixmap.toImage());
+        QList<QImage> images;
+        images << cover;
+        double counter = fps * storyboard->getCoverDuration().toDouble();
+        frames << counter;
+
+        int framesCount = scene->framesCount();
+        for (int i=0; i < framesCount; i++) {
+             QString imagePath = path + "images/scene" + QString::number(i) + ".png";
+             QImage image(imagePath);
+             images << image;
+             counter = fps * storyboard->sceneDuration(i).toDouble();
+             frames << counter;
+        }
+
+        bool isOk = videoPlugin->exportToAnimatic(videoPath, images, frames, TupExportInterface::MP4,
+                                                  project->getDimension(), fps);
+        QApplication::restoreOverrideCursor();
+        if (isOk) {
+            TOsd::self()->display(TOsd::Info, tr("Animatic exported successfully!"));
+            return;
+        } else {
+            #ifdef TUP_DEBUG
+                qWarning() << "[TupDocumentView::exportAnimaticVideo()] - Fatal Error: Can't export animatic -> " << path;
+            #endif
+        }
     }
 }
 
@@ -773,12 +766,14 @@ void TupStoryBoardDialog::saveLastComponent()
 void TupStoryBoardDialog::closeDialog()
 {
     saveLastComponent();
+    cleanDirectory(path + "images/");
+    cleanDirectory(path + "display/");
     cleanDirectory(path);
 
     if (isNetworked)
         emit updateStoryboard(storyboard, sceneIndex);
 
-    // close();
+    emit projectHasChanged();
     accept();
 }
 
@@ -808,29 +803,39 @@ QString TupStoryBoardDialog::getSceneDuration() const
     return QString::number(value);
 }
 
-// SQA ¿quien usa este método? & error de gramática
-void TupStoryBoardDialog::exportStoyrboard(const QString &type)
-{
-    if (type.compare(tr("PDF")) == 0) {
-        exportAsPDF();
-    } else if (type.compare(tr("Html")) == 0) {
-        exportAsHTML();
-    }
-}
-
 void TupStoryBoardDialog::cleanDirectory(const QString &folder)
 {
-    QDir dir(folder);
-    QStringList files = dir.entryList();
-    for (int i = 0; i < files.size(); ++i) {
-         QString file = files.at(i).toLocal8Bit().constData();
-         if (file != "." && file != "..")
-             QFile::remove(folder + file);
-    }
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupStoryBoardDialog::cleanDirectory()] - Processing folder -> " << folder;
+    #endif
 
-    if (!dir.rmdir(folder)) {
+    QDir dir(folder);
+    if (dir.exists()) {
+        QStringList files = dir.entryList();
+        for (int i = 0; i < files.size(); ++i) {
+             QString file = files.at(i).toLocal8Bit().constData();
+             if (file != "." && file != "..") {
+                 if (!QFile::remove(folder + file)) {
+                     #ifdef TUP_DEBUG
+                         qDebug() << "[TupStoryBoardDialog::cleanDirectory()] - Fatal Error: Can't remove file -> "
+                                  << (folder + file);
+                     #endif
+                 }
+             }
+        }
+
+        if (!dir.rmdir(folder)) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupStoryBoardDialog::cleanDirectory()] - Fatal Error: Can't remove folder -> " << folder;
+            #endif
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupStoryBoardDialog::cleanDirectory()] - SUCCESS!";
+            #endif
+        }
+    } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupStoryBoardDialog::cleanDirectory()] - Can't remove path -> " << folder;
+            qDebug() << "[TupStoryBoardDialog::cleanDirectory()] - Warning: Directory doesn't exist -> " << folder;
         #endif
     }
 }
@@ -845,4 +850,9 @@ void TupStoryBoardDialog::updateDuration(double value)
 
     int index = list->currentRow() - 1;
     storyboard->setSceneDuration(index, QString::number(value));
+}
+
+void TupStoryBoardDialog::updateCoverDuration(double value)
+{
+    storyboard->setCoverDuration(QString::number(value));
 }

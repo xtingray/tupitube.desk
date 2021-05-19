@@ -60,28 +60,30 @@ class TUPITUBE_EXPORT TupStoryBoardDialog : public QDialog
     Q_OBJECT
 
     public:
-        enum DocType { HTML = 1, PDF };
-        TupStoryBoardDialog(bool isNetworked, TupExportInterface *imagePlugin, const QColor &color, 
-                            const QSize &size, TupScene *scene, int sceneIndex, TupLibrary *library, QWidget *parent);
+        enum DocType { HTML = 1, PDF };        
+        TupStoryBoardDialog(bool isNetworked, TupExportInterface *imagePlugin, TupExportInterface *videoPlugin,
+                            TupProject *work, int sceneIndex, QWidget *parent);
         ~TupStoryBoardDialog();
 
     private slots:
         void updateForm(QListWidgetItem *current, QListWidgetItem *previous);
+        void updateCoverDuration(double value);
         void updateDuration(double value);
-        void exportStoyrboard(const QString &type);
         void postStoryboardAtServer();
         void closeDialog();
-        void exportAsHTML();
         void exportAsPDF();
+        void exportAsAnimatic();
 
     signals:
         void updateStoryboard(TupStoryboard *, int sceneIndex);
         void postStoryboard(int sceneIndex);
+        void projectHasChanged();
 
     private:
         void setListComponent();
         void setPreviewScreen();
         void setCoverForm();
+        QWidget * addDurationPanel();
         void setSceneForm();
 
         void thumbnailsGenerator();
@@ -103,6 +105,9 @@ class TUPITUBE_EXPORT TupStoryBoardDialog : public QDialog
  
         bool isNetworked;
         TupExportInterface *imagePlugin;
+        TupExportInterface *videoPlugin;
+
+        TupProject *project;
         QColor bgColor;
         QSize size;
         QSize scaledSize;
@@ -116,6 +121,8 @@ class TUPITUBE_EXPORT TupStoryBoardDialog : public QDialog
         QBoxLayout *layout;
         QVBoxLayout *formLayout;
 
+        QTabWidget *sceneTabWidget;
+        QTabWidget *coverTabWidget;
         QWidget *storyPanel;
         QWidget *scenePanel;
 
@@ -128,8 +135,8 @@ class TUPITUBE_EXPORT TupStoryBoardDialog : public QDialog
         QTextEdit *summaryEdit;
 
         QLabel *sceneLabel;
-        // QLineEdit *sceneDurationEdit;
         QDoubleSpinBox *secSpinBox;
+        QDoubleSpinBox *coverSecSpinBox;
 
         QLocale utf;
         TupLibrary *library;

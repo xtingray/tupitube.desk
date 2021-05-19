@@ -465,32 +465,51 @@ void TFFmpegMovieGenerator::endVideoFile()
 void TFFmpegMovieGenerator::copyMovieFile(const QString &videoPath)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TFFmpegMovieGenerator::createMovieFile()] - fileName -> " << videoPath;
+        qDebug() << "[TFFmpegMovieGenerator::copyMovieFile()] - Video File -> " << videoPath;
+        qDebug() << "[TFFmpegMovieGenerator::copyMovieFile()] - Temp File -> " << movieFile;
     #endif
 
-    if (QFile::exists(videoPath))
-        QFile::remove(videoPath);
+    if (QFile::exists(videoPath)) {
+        QFileInfo info(videoPath);
+        if (!info.isFile()) {
+            #ifdef TUP_DEBUG
+                qInfo() << "[TFFmpegMovieGenerator::copyMovieFile()] - Fatal Error: Video path is NOT a file! -> " << videoPath;
+            #endif
+            return;
+        }
+
+        if (!QFile::remove(videoPath)) {
+            #ifdef TUP_DEBUG
+                qInfo() << "[TFFmpegMovieGenerator::copyMovieFile()] - Fatal Error: Can't remove file! -> " << videoPath;
+            #endif
+            return;
+        }
+    }
 
     if (QFile::copy(movieFile, videoPath)) {
         if (QFile::exists(movieFile)) {
             #ifdef TUP_DEBUG
-                qInfo() << "[TFFmpegMovieGenerator::createMovieFile()] - Trying to remove temp video file -> " << movieFile;
+                qInfo() << "[TFFmpegMovieGenerator::copyMovieFile()] - Trying to remove temp video file -> " << movieFile;
             #endif
  
             if (QFile::remove(movieFile)) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TFFmpegMovieGenerator::createMovieFile()] - Temp video file has been removed!";
+                    qDebug() << "[TFFmpegMovieGenerator::copyMovieFile()] - Temp video file has been removed!";
                 #endif
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TFFmpegMovieGenerator::createMovieFile()] - Error: Can't remove temp video file";
+                    qDebug() << "[TFFmpegMovieGenerator::copyMovieFile()] - Error: Can't remove temp video file";
                 #endif
             }
         } else {
             #ifdef TUP_DEBUG
-                qWarning() << "[TFFmpegMovieGenerator::createMovieFile()] - Error: Temp video file wasn't found! -> " << movieFile;
+                qWarning() << "[TFFmpegMovieGenerator::copyMovieFile()] - Error: Temp video file wasn't found! -> " << movieFile;
             #endif
         }
+    } else {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TFFmpegMovieGenerator::copyMovieFile()] - Error: Can't create video file -> " << videoPath;
+        #endif
     }
 }
 

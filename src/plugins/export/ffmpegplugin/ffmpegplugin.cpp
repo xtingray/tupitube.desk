@@ -179,3 +179,40 @@ QString FFmpegPlugin::getExceptionMsg() const
 {
     return errorMsg;
 }
+
+bool FFmpegPlugin::exportToAnimatic(const QString &filePath, const QList<QImage> images, const QList<int> frames,
+                                    TupExportInterface::Format fmt, const QSize &size, int fps)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[FFmpegPlugin::exportAnimatic()] - fps -> " << fps;
+        qDebug() << "[FFmpegPlugin::exportAnimatic()] - video path -> " << filePath;
+    #endif
+
+    double duration = static_cast<double>(images.count()) / static_cast<double>(fps);
+    TMovieGeneratorInterface::Format format = videoFormat(fmt);
+    if (format == TFFmpegMovieGenerator::NONE)
+        return false;
+
+    TFFmpegMovieGenerator *generator = new TFFmpegMovieGenerator(format, size, fps, duration);
+    {
+        if (!generator->validMovieHeader()) {
+            errorMsg = generator->getErrorMsg();
+            #ifdef TUP_DEBUG
+                qDebug() << "[FFmpegPlugin::exportToAnimatic()] - Fatal Error: Can't create video -> " << filePath;
+            #endif
+            delete generator;
+            return false;
+        }
+
+        for (int i=0; i<images.count(); i++) {
+            int times = frames.at(i);
+            for (int j=0; j<times; j++)
+                generator->createVideoFrame(images.at(i));
+        }
+    }
+
+    generator->saveMovie(filePath);
+    delete generator;
+
+    return true;
+}

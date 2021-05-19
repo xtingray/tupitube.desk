@@ -67,6 +67,7 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
 
         virtual bool validMovieHeader();
         virtual QString getErrorMsg() const;
+        bool createVideoFrame(const QImage &image);
         void saveMovie(const QString &filename);
 
     protected:
@@ -79,7 +80,6 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         void setFileExtension(int format);
         bool openVideoStream();
         AVStream * addVideoStream();
-        bool createVideoFrame(const QImage &image);
         int writeVideoFrame(AVPacket *pkt);
         void RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint iRGBIncrement, bool bSwapRGB);
 
