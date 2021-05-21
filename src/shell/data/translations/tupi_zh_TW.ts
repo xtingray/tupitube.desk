@@ -141,6 +141,24 @@
         <source>Motion Tween Properties</source>
         <translation>動態(Motion)補間屬性</translation>
     </message>
+    <message>
+        <source>Mouth Samples</source>
+        <translation>口腔樣本</translation>
+    </message>
+</context>
+<context>
+    <name>EyeDropper</name>
+    <message>
+        <source>Eye Dropper</source>
+        <translation>滴管</translation>
+    </message>
+</context>
+<context>
+    <name>EyeDropperSettings</name>
+    <message>
+        <source>Eye Dropper Properties</source>
+        <translation>滴管特性</translation>
+    </message>
 </context>
 <context>
     <name>FFmpegPlugin</name>
@@ -371,6 +389,41 @@
     <message>
         <source>Close Tween Properties</source>
         <translation>關閉補間屬性</translation>
+    </message>
+    <message>
+        <source>Path Color</source>
+        <translation>路徑顏色</translation>
+    </message>
+    <message>
+        <source>Path Thickness:</source>
+        <translation>路徑厚度：</translation>
+    </message>
+</context>
+<context>
+    <name>MouthsDialog</name>
+    <message>
+        <source>LipSync Mouth Examples</source>
+        <translation>口例（LipSync）</translation>
+    </message>
+    <message>
+        <source>Mouth Sample Pack No 1</source>
+        <translation>口腔樣本包 1</translation>
+    </message>
+    <message>
+        <source>Mouth Sample Pack No 2</source>
+        <translation>口腔樣本包 2</translation>
+    </message>
+    <message>
+        <source>Mouth Sample Pack No 3</source>
+        <translation>口腔樣本包 3</translation>
+    </message>
+    <message>
+        <source>Mouth Sample Pack No 4</source>
+        <translation>口腔樣本包 4</translation>
+    </message>
+    <message>
+        <source>Mouth Sample Pack No 5</source>
+        <translation>口腔樣本包 5</translation>
     </message>
 </context>
 <context>
@@ -1357,10 +1410,6 @@
         <translation>尺寸</translation>
     </message>
     <message>
-        <source>Style</source>
-        <translation>樣式</translation>
-    </message>
-    <message>
         <source>Family</source>
         <translation>字型</translation>
     </message>
@@ -1369,12 +1418,28 @@
         <translation>斜體字</translation>
     </message>
     <message>
-        <source>Normal</source>
-        <translation>正常</translation>
+        <source>Bold</source>
+        <translation>大膽的</translation>
     </message>
     <message>
-        <source>Oblique</source>
-        <translation>傾斜</translation>
+        <source>Underline</source>
+        <translation>強調</translation>
+    </message>
+    <message>
+        <source>Overline</source>
+        <translation>上線</translation>
+    </message>
+    <message>
+        <source>Align Text To Left</source>
+        <translation>文本向左對齊</translation>
+    </message>
+    <message>
+        <source>Align Text To Center</source>
+        <translation>文本居中對齊</translation>
+    </message>
+    <message>
+        <source>Align Text To Right</source>
+        <translation>文字右對齊</translation>
     </message>
 </context>
 <context>
@@ -1491,6 +1556,44 @@
     <message>
         <source>Close</source>
         <translation>關閉</translation>
+    </message>
+</context>
+<context>
+    <name>TextConfigurator</name>
+    <message>
+        <source>Text Properties</source>
+        <translation>文字屬性</translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation>文本</translation>
+    </message>
+    <message>
+        <source>Add Text</source>
+        <translation>添加文字</translation>
+    </message>
+    <message>
+        <source>Clear Text</source>
+        <translation>清除文字</translation>
+    </message>
+    <message>
+        <source>Update Text</source>
+        <translation>更新文字</translation>
+    </message>
+</context>
+<context>
+    <name>TextTool</name>
+    <message>
+        <source>Text</source>
+        <translation>文本</translation>
+    </message>
+    <message>
+        <source>T</source>
+        <translation>T</translation>
+    </message>
+    <message>
+        <source>Sorry, text can&apos;t be empty!</source>
+        <translation>抱歉，文字不能為空！</translation>
     </message>
 </context>
 <context>
@@ -2062,6 +2165,10 @@
         <source>Exchange colors</source>
         <translation>交換顏色</translation>
     </message>
+    <message>
+        <source>Eye Dropper</source>
+        <translation>滴管</translation>
+    </message>
 </context>
 <context>
     <name>TupConfigurationArea</name>
@@ -2346,6 +2453,14 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Ctrl+@</source>
         <translation>Ctrl+@</translation>
+    </message>
+    <message>
+        <source>Video Formats</source>
+        <translation>視訊格式</translation>
+    </message>
+    <message>
+        <source>Mouth images are incomplete!</source>
+        <translation>嘴部圖像不完整！</translation>
     </message>
 </context>
 <context>
@@ -3648,10 +3763,6 @@ Please, rename the project&apos;s file</source>
         <translation>專案太大,超過10MB!</translation>
     </message>
     <message>
-        <source>&amp;Post Project</source>
-        <translation>張貼專案(&amp;P)</translation>
-    </message>
-    <message>
         <source>Post project on TupiTube&apos;s network</source>
         <translation>在TupiTube網路張貼專案</translation>
     </message>
@@ -3662,6 +3773,34 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Error while posting image. File is too big!</source>
         <translation>發佈影像時, 出現錯誤. 檔案太大!</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>出口</translation>
+    </message>
+    <message>
+        <source>&amp;Post</source>
+        <translation>郵政</translation>
+    </message>
+    <message>
+        <source>Export Frame As Image</source>
+        <translation>將影格存成圖片</translation>
+    </message>
+    <message>
+        <source>@</source>
+        <translation>@</translation>
+    </message>
+    <message>
+        <source>&amp;Post Animation</source>
+        <translation>後期動畫</translation>
+    </message>
+    <message>
+        <source>Post Frame</source>
+        <translation>柱架</translation>
+    </message>
+    <message>
+        <source>Ctrl+@</source>
+        <translation>Ctrl+@</translation>
     </message>
 </context>
 <context>
@@ -3939,6 +4078,10 @@ Please, contact the animation server admin to get access.</source>
         <source>Click here to change background color</source>
         <translation>點選此處更改背景顏色</translation>
     </message>
+    <message>
+        <source>1080 (Full HD Vertical) - 24</source>
+        <translation>1080 (Full HD Vertical) - 24</translation>
+    </message>
 </context>
 <context>
     <name>TupNotice</name>
@@ -4087,10 +4230,6 @@ Please, contact the animation server admin to get access.</source>
 <context>
     <name>TupPaintAreaPreferences</name>
     <message>
-        <source>White</source>
-        <translation>白色</translation>
-    </message>
-    <message>
         <source>Grid Settings</source>
         <translation>栅格設定</translation>
     </message>
@@ -4105,6 +4244,38 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Grid Separation:</source>
         <translation>栅格間隔:</translation>
+    </message>
+    <message>
+        <source>Rule Of Thirds Settings</source>
+        <translation>三分法則設置</translation>
+    </message>
+    <message>
+        <source>Safe Area Settings</source>
+        <translation>安全區域設置</translation>
+    </message>
+    <message>
+        <source>Restore Default Values</source>
+        <translation>恢復默認值</translation>
+    </message>
+    <message>
+        <source>UI Settings</source>
+        <translation>用戶界面設置</translation>
+    </message>
+    <message>
+        <source>Grid Line Thickness:</source>
+        <translation>網格線粗度：</translation>
+    </message>
+    <message>
+        <source>Line Color:</source>
+        <translation>線條顏色：</translation>
+    </message>
+    <message>
+        <source>Line Thickness:</source>
+        <translation>線的粗細：</translation>
+    </message>
+    <message>
+        <source>Rect Color:</source>
+        <translation>矩形顏色：</translation>
     </message>
 </context>
 <context>
@@ -4161,6 +4332,10 @@ Please, contact the animation server admin to get access.</source>
         <source>Clear Frame</source>
         <translation>清除影格</translation>
     </message>
+    <message>
+        <source>Rule Of Thirds</source>
+        <translation>三分法則</translation>
+    </message>
 </context>
 <context>
     <name>TupPapagayoDialog</name>
@@ -4211,6 +4386,30 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Load &amp;Images</source>
         <translation>載入影像(&amp;I)</translation>
+    </message>
+    <message>
+        <source>Set Mouth Images</source>
+        <translation>設置口像</translation>
+    </message>
+    <message>
+        <source>Mouth Sample Pack No 1</source>
+        <translation>口腔樣本包 1</translation>
+    </message>
+    <message>
+        <source>Mouth Sample Pack No 2</source>
+        <translation>口腔樣本包 2</translation>
+    </message>
+    <message>
+        <source>Mouth Sample Pack No 3</source>
+        <translation>口腔樣本包 3</translation>
+    </message>
+    <message>
+        <source>Mouth Sample Pack No 4</source>
+        <translation>口腔樣本包 4</translation>
+    </message>
+    <message>
+        <source>Mouth Sample Pack No 5</source>
+        <translation>口腔樣本包 5</translation>
     </message>
 </context>
 <context>
@@ -4705,6 +4904,10 @@ Please, contact the animation server admin to get access.</source>
         <source>Please, fill in your password</source>
         <translation>請輸入您的密碼</translation>
     </message>
+    <message>
+        <source>Sign Up</source>
+        <translation>報名</translation>
+    </message>
 </context>
 <context>
     <name>TupSoundPlayer</name>
@@ -4720,28 +4923,24 @@ Please, contact the animation server admin to get access.</source>
         <source>Loop</source>
         <translation>循環</translation>
     </message>
+    <message>
+        <source>M</source>
+        <translation>M</translation>
+    </message>
+    <message>
+        <source>Mute</source>
+        <translation>静音</translation>
+    </message>
+    <message>
+        <source>Unmute</source>
+        <translation>取消静音</translation>
+    </message>
 </context>
 <context>
     <name>TupStoryBoardDialog</name>
     <message>
-        <source>PDF</source>
-        <translation>PDF</translation>
-    </message>
-    <message>
         <source>&amp;PDF</source>
         <translation>&amp;PDF</translation>
-    </message>
-    <message>
-        <source>Html</source>
-        <translation>Html</translation>
-    </message>
-    <message>
-        <source>&amp;HTML</source>
-        <translation>HTML(&amp;H)</translation>
-    </message>
-    <message>
-        <source>Scene Information</source>
-        <translation>場景資訊</translation>
     </message>
     <message>
         <source>Close</source>
@@ -4776,18 +4975,6 @@ Please, contact the animation server admin to get access.</source>
         <translation>主题</translation>
     </message>
     <message>
-        <source>Storyboard General Information</source>
-        <translation>分鏡腳本一般資訊</translation>
-    </message>
-    <message>
-        <source>Export as HTML</source>
-        <translation>匯出 HTML</translation>
-    </message>
-    <message>
-        <source>Description</source>
-        <translation>描述</translation>
-    </message>
-    <message>
         <source>Storyboard</source>
         <translation>分鏡腳本</translation>
     </message>
@@ -4800,16 +4987,8 @@ Please, contact the animation server admin to get access.</source>
         <translation>概要</translation>
     </message>
     <message>
-        <source>Scene No %1 - Information</source>
-        <translation>場景編號%1 – 資訊</translation>
-    </message>
-    <message>
         <source>Storyboard exported successfully!</source>
         <translation>分鏡腳本匯出成功</translation>
-    </message>
-    <message>
-        <source>Choose a directory...</source>
-        <translation>選擇目錄</translation>
     </message>
     <message>
         <source>PDF file (*.pdf)</source>
@@ -4822,6 +5001,51 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>&amp;Post</source>
         <translation>張貼(&amp;P)</translation>
+    </message>
+    <message>
+        <source>&amp;Animatic</source>
+        <translation>動畫的</translation>
+    </message>
+    <message>
+        <source>Export as Animatic</source>
+        <translation>導出為Animatic</translation>
+    </message>
+    <message>
+        <source>Cover Information</source>
+        <translation>封面信息</translation>
+    </message>
+    <message>
+        <source>Animatic</source>
+        <translation>動畫的</translation>
+    </message>
+    <message>
+        <source>seconds</source>
+        <translation>秒</translation>
+    </message>
+    <message>
+        <source>Storyboard
+Cover</source>
+        <translation>情節提要封面</translation>
+    </message>
+    <message>
+        <source>Scene No %1</source>
+        <translation>場景 %1</translation>
+    </message>
+    <message>
+        <source>By</source>
+        <translation>經過</translation>
+    </message>
+    <message>
+        <source>Export Animatic As</source>
+        <translation>將Animatic導出為</translation>
+    </message>
+    <message>
+        <source>Videos</source>
+        <translation>影片</translation>
+    </message>
+    <message>
+        <source>Animatic exported successfully!</source>
+        <translation>Animatic已成功導出！</translation>
     </message>
 </context>
 <context>
@@ -4849,10 +5073,6 @@ Please, contact the animation server admin to get access.</source>
 </context>
 <context>
     <name>TupThemePreferences</name>
-    <message>
-        <source>Light Theme</source>
-        <translation>淺色主題</translation>
-    </message>
     <message>
         <source>Theme Preferences</source>
         <translation>主題偏好設定</translation>
