@@ -459,57 +459,57 @@
     </message>
     <message>
         <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="103"/>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="225"/>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="354"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="233"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="362"/>
         <source>Ending at frame</source>
         <translation>Terminar en marco</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="121"/>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="163"/>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="194"/>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="224"/>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="355"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="167"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="198"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="232"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="363"/>
         <source>Frames Total</source>
         <translation>Total de Marcos</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="166"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="170"/>
         <source>Save Tween</source>
         <translation>Guardar Tween</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="170"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="174"/>
         <source>Cancel Tween</source>
         <translation>Cancelar Tween</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="252"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="260"/>
         <source>Select objects for Tweening first!</source>
         <translation>Selecciona los objetos para el Tween primero!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="314"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="322"/>
         <source>You must select at least one object!</source>
         <translation>Debes seleccionar al menos un objeto!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="337"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="345"/>
         <source>Update Tween</source>
         <translation>Actualizar Tween</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="340"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="348"/>
         <source>Close Tween Properties</source>
         <translation>Cerrar Propiedades De Tween</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="397"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="405"/>
         <source>Path Color</source>
         <translation>Color de Línea</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="404"/>
+        <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="412"/>
         <source>Path Thickness:</source>
         <translation>Grosor de Línea:</translation>
     </message>
@@ -887,6 +887,11 @@
         <location filename="../../tupcrashhandler.cpp" line="56"/>
         <source>This is a general failure</source>
         <translation>Esta es una falla general</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/export/ffmpegplugin/tffmpegmoviegenerator.cpp" line="167"/>
+        <source>Animation created using TupiTube.com</source>
+        <translation>Animación creada utilizando TupiTube.com</translation>
     </message>
 </context>
 <context>
@@ -6836,7 +6841,7 @@ Cover</source>
         <translation>Shift+C</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="627"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="647"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="439"/>
         <location filename="../../../plugins/tools/scale/tweener.cpp" line="400"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="428"/>
@@ -6846,7 +6851,7 @@ Cover</source>
         <translation>El nombre del Tween no ha sido asignado!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="747"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="767"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="551"/>
         <location filename="../../../plugins/tools/scale/tweener.cpp" line="506"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="535"/>
@@ -6856,7 +6861,7 @@ Cover</source>
         <translation>Marco</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="761"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="781"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="565"/>
         <location filename="../../../plugins/tools/scale/tweener.cpp" line="520"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="549"/>
@@ -6885,16 +6890,16 @@ Cover</source>
         <translation>Shift+O</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="253"/>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="907"/>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="910"/>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="911"/>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="912"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="262"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="927"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="930"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="931"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="932"/>
         <source>Motion</source>
         <translation>Movimiento</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="256"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="265"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="173"/>
         <location filename="../../../plugins/tools/scale/tweener.cpp" line="161"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="169"/>
@@ -6904,7 +6909,7 @@ Cover</source>
         <translation>Advertencia</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="258"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="267"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="175"/>
         <location filename="../../../plugins/tools/scale/tweener.cpp" line="163"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="171"/>
@@ -6914,7 +6919,7 @@ Cover</source>
         <translation>Los ítems seleccionados ya tienen asignados un tween de este tipo.</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="259"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="268"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="176"/>
         <location filename="../../../plugins/tools/scale/tweener.cpp" line="164"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="172"/>
@@ -6924,7 +6929,7 @@ Cover</source>
         <translation>Por faovr, edita el tween previo de estos objetos.</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="260"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="269"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="177"/>
         <location filename="../../../plugins/tools/scale/tweener.cpp" line="165"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="173"/>
@@ -6934,12 +6939,12 @@ Cover</source>
         <translation>Aceptar</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="432"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="452"/>
         <source>Motion Tween</source>
         <translation>Tween de Movimiento</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="433"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="453"/>
         <source>Shift+W</source>
         <translation>Shift+W</translation>
     </message>

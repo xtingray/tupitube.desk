@@ -49,7 +49,7 @@
 GeometricTool::GeometricTool()
 {
     scene = nullptr;
-    path = nullptr;
+    linePath = nullptr;
     setupActions();
 }
 
@@ -59,7 +59,7 @@ GeometricTool::~GeometricTool()
 
 QList<TAction::ActionId> GeometricTool::keys() const
 {    
-    return QList<TAction::ActionId >() << TAction::Rectangle << TAction::Ellipse << TAction::Line;
+    return QList<TAction::ActionId>() << TAction::Rectangle << TAction::Ellipse << TAction::Line;
 }
 
 void GeometricTool::init(TupGraphicsScene *gScene)
@@ -69,8 +69,8 @@ void GeometricTool::init(TupGraphicsScene *gScene)
     #endif
 
     scene = gScene;
-    delete path;
-    path = nullptr;
+    delete linePath;
+    linePath = nullptr;
     proportion = false;
     side = false;
 
@@ -153,35 +153,35 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
         } else if (toolId() == TAction::Line) {
             currentPoint = input->pos();
 
-            if (path) {
-                QPainterPath painterPath = path->path();
+            if (linePath) {
+                QPainterPath painterPath = linePath->path();
                 painterPath.cubicTo(lastPoint, lastPoint, lastPoint);
-                path->setPath(painterPath);
+                linePath->setPath(painterPath);
             } else {
-                path = new TupPathItem;
-                path->setPen(brushManager->pen());
+                linePath = new TupPathItem;
+                linePath->setPen(brushManager->pen());
                 if (brushManager->brush().color().alpha() > 0)
-                   path->setBrush(setLiteBrush(brushManager->brush().color(), brushManager->brush().style()));
+                   linePath->setBrush(setLiteBrush(brushManager->brush().color(), brushManager->brush().style()));
                 else
-                   path->setBrush(brushManager->brush());
+                   linePath->setBrush(brushManager->brush());
 
                 QPainterPath painterPath;
                 painterPath.moveTo(currentPoint);
-                path->setPath(painterPath);
-                gScene->includeObject(path);
+                linePath->setPath(painterPath);
+                gScene->includeObject(linePath);
 
-                line = new TupLineItem();
+                guideLine = new TupLineItem();
                 if (brushManager->pen().color().alpha() == 0) { // Show border guide line
                     QPen pen;
                     pen.setWidth(1);
                     pen.setBrush(QBrush(Qt::black));
-                    line->setPen(pen);
+                    guideLine->setPen(pen);
                 } else {
-                    line->setPen(brushManager->pen());
+                    guideLine->setPen(brushManager->pen());
                 }
 
-                line->setLine(QLineF(input->pos().x(), input->pos().y(), input->pos().x(), input->pos().y()));
-                gScene->includeObject(line);
+                guideLine->setLine(QLineF(input->pos().x(), input->pos().y(), input->pos().x(), input->pos().y()));
+                gScene->includeObject(guideLine);
             }
         }
     }
@@ -433,10 +433,10 @@ void GeometricTool::endItem()
         qDebug() << "[GeometricTool::endItem()]";
     #endif
 
-    if (path) {
-        path->setBrush(fillBrush);
+    if (linePath) {
+        linePath->setBrush(fillBrush);
         QDomDocument doc;
-        doc.appendChild(dynamic_cast<TupAbstractSerializable *>(path)->toXml(doc));
+        doc.appendChild(dynamic_cast<TupAbstractSerializable *>(linePath)->toXml(doc));
         QPointF point = QPointF(0, 0);
 
         TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(), scene->currentLayerIndex(),
@@ -444,13 +444,17 @@ void GeometricTool::endItem()
                                   TupProjectRequest::Add, doc.toString());
 
         emit requested(&event);
-        path = nullptr;
+        linePath = nullptr;
     }
 }
 
 void GeometricTool::updatePos(QPointF pos)
 {
-    if (path) {
+    #ifdef TUP_DEBUG
+        qDebug() << "[GeometricTool::updatePos()] - pos -> " << pos;
+    #endif
+
+    if (linePath) {
         QLineF lineVar;
         if (proportion) {
             qreal dx = pos.x() - currentPoint.x();
@@ -469,8 +473,8 @@ void GeometricTool::updatePos(QPointF pos)
             lineVar = QLineF(currentPoint, pos);
             lastPoint = pos;
         }
-        if (line)
-            line->setLine(lineVar);
+        if (guideLine)
+            guideLine->setLine(lineVar);
     }
 }
 

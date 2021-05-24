@@ -112,5 +112,4 @@ class TUPITUBE_EXPORT StepsViewer : public QTableWidget
     signals:
         void updateTable();
 };
-
 #endif

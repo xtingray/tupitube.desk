@@ -39,6 +39,8 @@
 #include "tglobal.h"
 #include "tmoviegenerator.h"
 
+#include <QObject>
+
 #ifdef __cplusplus
 extern "C" {
 #include "libavutil/channel_layout.h"

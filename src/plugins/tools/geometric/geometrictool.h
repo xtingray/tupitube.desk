@@ -102,8 +102,8 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
         QBrush fillBrush;
         TupRectItem *rect;
         TupEllipseItem *ellipse;
-        TupLineItem *line;
-        TupPathItem *path;
+        TupLineItem *guideLine;
+        TupPathItem *linePath;
         TupGraphicsScene *scene;
         GeometricSettings *configPanel;
         bool added;

@@ -91,6 +91,10 @@ void Configurator::loadTweenList(QList<QString> tweenList)
 
 void Configurator::setPropertiesPanel()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Configurator::setPropertiesPanel()]";
+    #endif
+
     settingsPanel = new MotionSettings(this);
 
     connect(settingsPanel, SIGNAL(startingFrameChanged(int)), this, SIGNAL(startingFrameChanged(int)));
@@ -112,6 +116,12 @@ void Configurator::setPropertiesPanel()
 
 void Configurator::activePropertiesPanel(bool enable)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Configurator::activePropertiesPanel()] - enable flag -> " << enable;
+    #endif
+
+    settingsPanel->enableInitCombo(enable);
+
     if (enable) {
         settingsPanel->show();
     } else {
@@ -122,6 +132,10 @@ void Configurator::activePropertiesPanel(bool enable)
 
 void Configurator::setTweenManagerPanel()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Configurator::setTweenManagerPanel()]";
+    #endif
+
     tweenManager = new TweenManager(this);
 
     connect(tweenManager, SIGNAL(addNewTween(const QString &)), this, SLOT(addTween(const QString &)));
@@ -136,7 +150,11 @@ void Configurator::setTweenManagerPanel()
 
 void Configurator::activeTweenManagerPanel(bool enable)
 {
-    if (enable) 
+    #ifdef TUP_DEBUG
+        qDebug() << "[Configurator::activeTweenManagerPanel()] - enable flag -> " << enable;
+    #endif
+
+    if (enable)
         tweenManager->show();
     else 
         tweenManager->hide();
@@ -158,6 +176,10 @@ void Configurator::setButtonsPanel()
 
 void Configurator::activeButtonsPanel(bool enable)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Configurator::activeButtonsPanel()] - enable flag -> " << enable;
+    #endif
+
     if (enable)
         controlPanel->show();
     else
@@ -302,6 +324,8 @@ void Configurator::closeSettingsPanel()
     #ifdef TUP_DEBUG
         qDebug() << "[Configurator::closeSettingsPanel()]";
     #endif
+
+    // settingsPanel->enableInitCombo(false);
 
     if (state == Properties) {
         activeTweenManagerPanel(true);

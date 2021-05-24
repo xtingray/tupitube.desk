@@ -275,10 +275,10 @@ void TupPaintArea::tabletEvent(QTabletEvent *event)
 void TupPaintArea::frameResponse(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPaintArea::frameResponse()] - [" + QString::number(response->getSceneIndex())
-                    + ", " + QString::number(response->getLayerIndex()) + ", "
-                    + QString::number(response->getFrameIndex()) + "] | request -> "
-                    + QString::number(response->getAction());
+        qDebug() << "[TupPaintArea::frameResponse()] - [" << response->getSceneIndex()
+                 << ", " << response->getLayerIndex() << ", "
+                 << response->getFrameIndex() << "] | request -> "
+                 << response->getAction();
     #endif
 
     TupGraphicsScene *guiScene = graphicsScene();

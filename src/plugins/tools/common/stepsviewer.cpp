@@ -153,9 +153,8 @@ void StepsViewer::setPath(const QGraphicsPathItem *pathItem)
 
     if (!pathItem) {
         #ifdef TUP_DEBUG
-            qDebug() << "StepsViewer::setPath() - Fatal Error: pathItem is NULL!";
+            qDebug() << "[StepsViewer::setPath()] - Fatal Error: pathItem is NULL!";
         #endif
-
         return;
     }
 
@@ -281,7 +280,7 @@ void StepsViewer::updatePathSection(int column, int row)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[StepsViewer::updatePathSection()]";
-        qDebug() << "column: " <<  column << " - row: " << row;
+        qDebug() << "*** column: " <<  column << " - row: " << row;
     #endif
 
     QTableWidgetItem *cell = item(row, 1);
@@ -430,7 +429,7 @@ QString StepsViewer::intervals()
 {
     QString output = ""; 
     foreach(int interval, frames)
-            output += QString::number(interval) + ",";
+        output += QString::number(interval) + ",";
 
     output.chop(1);
     return output;
@@ -457,21 +456,40 @@ void StepsViewer::clearInterface()
 
 QList<QPointF> StepsViewer::calculateSegmentPoints(QPointF begin, QPointF end, int total)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[StepsViewer::calculateSegmentPoints()] - begin point -> " << begin;
+        qDebug() << "[StepsViewer::calculateSegmentPoints()] - end point -> " << end;
+    #endif
+
     QList<QPointF> pathPoints;
-
-    qreal m = (end.y() - begin.y())/(end.x() - begin.x());
-    qreal b = begin.y() - (m*begin.x());
-    qreal delta = (end.x() - begin.x())/total; 
-    qreal x = begin.x();
-
     QPointF dot;
+    qreal x;
     qreal y;
-    for (int i=0; i<(total-1); i++) {
-         x += delta;
-         y = m*x + b;
-         dot.setX(x);
-         dot.setY(y);
-         pathPoints.append(dot);
+    qreal delta;
+
+    if (end.x() != begin.x()) {
+        qreal m = (end.y() - begin.y())/(end.x() - begin.x());
+        qreal b = begin.y() - (m*begin.x());
+        delta = (end.x() - begin.x())/total;
+        x = begin.x();
+
+        for (int i=0; i<(total-1); i++) {
+             x += delta;
+             y = m*x + b;
+             dot.setX(x);
+             dot.setY(y);
+             pathPoints.append(dot);
+        }
+    } else {
+        delta = (end.y() - begin.y())/total;
+        x = begin.x();
+        y = begin.y();
+        for (int i=0; i<(total-1); i++) {
+             y += delta;
+             dot.setX(x);
+             dot.setY(y);
+             pathPoints.append(dot);
+        }
     }
 
     pathPoints.append(end);
@@ -514,6 +532,10 @@ void StepsViewer::addTableRow(int row, int frames)
 // Store all the points of the current path
 void StepsViewer::calculateKeys()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[StepsViewer::calculateKeys()]";
+    #endif
+
     keys.clear();
     int total = path.elementCount();
     int count = 0;
@@ -535,6 +557,10 @@ void StepsViewer::calculateKeys()
 // Calculate blocks of points per segment 
 void StepsViewer::calculateGroups()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[StepsViewer::calculateGroups()]";
+    #endif
+
     pointBlocks.clear();
 
     int index = 0;
@@ -573,10 +599,13 @@ void StepsViewer::commitData(QWidget *editor)
             int column = currentColumn();
             QTableWidgetItem *cell = item(row, column);
             cell->setText(value);
+            #ifdef TUP_DEBUG
+                qDebug() << "[StepsViewer::commitData()] - Processing value -> " << value;
+            #endif
             updatePathSection(column, row);
         } else {
             #ifdef TUP_DEBUG
-                qWarning() << "input value: " + value;
+                qWarning() << "[StepsViewer::commitData()] - Input value -> " << value;
             #endif
         }
     }
@@ -667,6 +696,10 @@ void StepsViewer::updateSegments(const QPainterPath painterPath)
 
 void StepsViewer::updateSegments()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[StepsViewer::updateSegments()]";
+    #endif
+
     int total = frames.count();
     for (int row=0; row < total; row++) { // Processing every segment
          QList<QPointF> block = pointBlocks.at(row);

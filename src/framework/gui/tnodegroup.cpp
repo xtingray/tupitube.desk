@@ -38,7 +38,7 @@
 TNodeGroup::TNodeGroup(QGraphicsItem *parent, QGraphicsScene *scene, GroupType type, int level)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TNodeGroup()";
+        qDebug() << "[TNodeGroup()]";
     #endif
 
     nodeParentItem = parent;
@@ -82,7 +82,7 @@ void TNodeGroup::clear()
 void TNodeGroup::syncNodes(const QPainterPath &path)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TNodeGroup::syncNodes()";
+        qDebug() << "[TNodeGroup::syncNodes()]";
     #endif
 
     if (nodes.isEmpty())
@@ -99,7 +99,7 @@ void TNodeGroup::syncNodes(const QPainterPath &path)
 void TNodeGroup::syncNodesFromParent()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TNodeGroup::syncNodesFromParent()";
+        qDebug() << "[TNodeGroup::syncNodesFromParent()]";
     #endif
 
     if (nodeParentItem) {
@@ -112,7 +112,7 @@ void TNodeGroup::syncNodesFromParent()
 void TNodeGroup::setParentItem(QGraphicsItem *newParent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TNodeGroup::setParentItem()";
+        qDebug() << "[TNodeGroup::setParentItem()]";
     #endif
 
     nodeParentItem = newParent;
@@ -197,7 +197,7 @@ int TNodeGroup::removeSelectedNodes()
 void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TNodeGroup::createNodes()";
+        qDebug() << "[TNodeGroup::createNodes()]";
     #endif
 
     if (pathItem) {
@@ -254,7 +254,7 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TNodeGroup::createNodes() - Fatal Error: Item is NULL!";
+            qDebug() << "[TNodeGroup::createNodes()] - Fatal Error: Item is NULL!";
         #endif
     }
 }
@@ -266,12 +266,12 @@ void TNodeGroup::addControlNode(TControlNode*)
 void TNodeGroup::emitNodeClicked(TControlNode::State state)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TNodeGroup::emitNodeClicked()";
+        qDebug() << "[TNodeGroup::emitNodeClicked()]";
     #endif
 
     /* SQA: Possible code for the future 
     if (state == TControlNode::Pressed) {
-        tFatal() << "TNodeGroup::emitNodeClicked() - Click! -> PRESSED";
+        qWarning() << "[TNodeGroup::emitNodeClicked()] - Click! -> PRESSED";
         emit nodePressed();
     }
     */

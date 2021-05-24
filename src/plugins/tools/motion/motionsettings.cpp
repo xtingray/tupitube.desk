@@ -102,16 +102,16 @@ void MotionSettings::setInnerForm()
     QLabel *startingLabel = new QLabel(tr("Starting at frame") + ": ");
     endingLabel = new QLabel(tr("Ending at frame") + ": 0");
     endingLabel->setAlignment(Qt::AlignHCenter);
-    comboInit = new QSpinBox();
+    initSpinBox = new QSpinBox();
 
-    connect(comboInit, SIGNAL(valueChanged(int)), this, SIGNAL(startingFrameChanged(int)));
+    connect(initSpinBox, SIGNAL(valueChanged(int)), this, SIGNAL(startingFrameChanged(int)));
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
     startLayout->setMargin(0);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
-    startLayout->addWidget(comboInit);
+    startLayout->addWidget(initSpinBox);
 
     QGridLayout *pathForm = pathSettingsPanel();
 
@@ -141,6 +141,10 @@ void MotionSettings::setInnerForm()
 
 void MotionSettings::activeInnerForm(bool enable)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[MotionSettings::activeInnerForm()] - enable flag -> " << enable;
+    #endif
+
     if (enable && !innerPanel->isVisible())
         innerPanel->show();
     else
@@ -162,7 +166,7 @@ void MotionSettings::setParameters(const QString &name, int framesCount, int sta
     stepViewer->clearInterface();
     totalLabel->setText(tr("Frames Total") + ": 0");
 
-    comboInit->setEnabled(false);
+    initSpinBox->setEnabled(false);
     applyButton->setToolTip(tr("Save Tween"));
     applyButton->setEnabled(false);
 
@@ -186,7 +190,7 @@ void MotionSettings::setParameters(TupItemTweener *currentTween)
     activateMode(TupToolPlugin::Properties);
 
     input->setText(currentTween->getTweenName());
-    comboInit->setEnabled(true);
+    initSpinBox->setEnabled(true);
 
     initStartCombo(currentTween->getFrames(), currentTween->getInitFrame());
 
@@ -196,29 +200,33 @@ void MotionSettings::setParameters(TupItemTweener *currentTween)
 
 void MotionSettings::initStartCombo(int framesCount, int currentIndex)
 {
-    comboInit->clear();
-    comboInit->setMinimum(1);
-    comboInit->setMaximum(framesCount);
-    comboInit->setValue(currentIndex + 1);
+    initSpinBox->clear();
+    initSpinBox->setMinimum(1);
+    initSpinBox->setMaximum(framesCount);
+    initSpinBox->setValue(currentIndex + 1);
 }
 
 void MotionSettings::setStartFrame(int currentIndex)
 {
-    comboInit->setValue(currentIndex + 1);
+    initSpinBox->setValue(currentIndex + 1);
 }
 
 int MotionSettings::startFrame()
 {
-    return comboInit->value() - 1;
+    return initSpinBox->value() - 1;
 }
 
 int MotionSettings::startComboSize()
 {
-    return comboInit->maximum();
+    return initSpinBox->maximum();
 }
 
 void MotionSettings::updateSteps(const QGraphicsPathItem *path)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[MotionSettings::updateSteps()]";
+    #endif
+
     if (path) {
         stepViewer->setPath(path);
         totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepViewer->totalSteps()));
@@ -325,8 +333,8 @@ void MotionSettings::applyTween()
     // SQA: Verify if Tween is already saved before calling setEditMode!
     setEditMode();
 
-    if (!comboInit->isEnabled())
-        comboInit->setEnabled(true);
+    if (!initSpinBox->isEnabled())
+        initSpinBox->setEnabled(true);
 
     emit clickedApplyTween();
 }
@@ -443,4 +451,13 @@ QColor MotionSettings::setButtonColor(QPushButton *button, const QColor &current
      color.setAlpha(200);
 
      return color;
+}
+
+void MotionSettings::enableInitCombo(bool enable)
+{
+    initSpinBox->setEnabled(enable);
+    if (enable)
+        connect(initSpinBox, SIGNAL(valueChanged(int)), this, SIGNAL(startingFrameChanged(int)));
+    else
+        disconnect(initSpinBox, SIGNAL(valueChanged(int)), this, SIGNAL(startingFrameChanged(int)));
 }

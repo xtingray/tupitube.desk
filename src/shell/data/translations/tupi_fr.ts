@@ -888,6 +888,11 @@
         <source>This is a general failure</source>
         <translation>Ceci est une erreur générale</translation>
     </message>
+    <message>
+        <location filename="../../../plugins/export/ffmpegplugin/tffmpegmoviegenerator.cpp" line="167"/>
+        <source>Animation created using TupiTube.com</source>
+        <translation>Animation créée à l&apos;aide de TupiTube.com</translation>
+    </message>
 </context>
 <context>
     <name>RasterBrushesWidget</name>

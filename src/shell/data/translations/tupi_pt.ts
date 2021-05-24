@@ -888,6 +888,11 @@
         <source>Wall from</source>
         <translation>Mensagem de</translation>
     </message>
+    <message>
+        <location filename="../../../plugins/export/ffmpegplugin/tffmpegmoviegenerator.cpp" line="167"/>
+        <source>Animation created using TupiTube.com</source>
+        <translation>Animação criada usando TupiTube.com</translation>
+    </message>
 </context>
 <context>
     <name>RasterBrushesWidget</name>

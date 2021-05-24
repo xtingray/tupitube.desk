@@ -68,7 +68,7 @@ Tweener::Tweener() : TupToolPlugin()
 
     isPathInScene = false;
     configPanel = nullptr;
-    path = nullptr;
+    linePath = nullptr;
     nodesGroup = nullptr;
     currentTween = nullptr;
 
@@ -84,26 +84,26 @@ Tweener::~Tweener()
 // This method initialize the context of the plugin
 void Tweener::init(TupGraphicsScene *gScene)
 {
-    /*
     #ifdef TUP_DEBUG
-        qDebug() << "[Motion Tweener::init()]";
+        qDebug() << "[Motion Tweener::init()] - isPathInScene -> " << isPathInScene;
     #endif
-    */
 
     doList.clear();
     undoList.clear();
     dots.clear();
 
     if (isPathInScene) {
-        if (path) {
-            delete path;
-            path = nullptr;
+        if (linePath) {
+            gScene->removeItem(linePath);
+            delete linePath;
+            linePath = nullptr;
         }
 
         isPathInScene = false;
     }
 
     scene = gScene;
+    lineStraightMode = false;
     objects.clear();
     baseZValue = ZLAYER_BASE + (gScene->currentScene()->layersCount() * ZLAYER_LIMIT);
 
@@ -132,7 +132,7 @@ void Tweener::updateStartFrame(int index)
 {
     #ifdef TUP_DEBUG
        qDebug() << "[Motion Tweener::updateStartFrame()]";
-       qDebug() << "index: " << index;
+       qDebug() << "*** index -> " << index;
     #endif
 
     if (index == 1)
@@ -167,11 +167,19 @@ void Tweener::press(const TupInputDeviceInformation *input, TupBrushManager *bru
     Q_UNUSED(gScene)
 
     if (editMode == TupToolPlugin::Properties && scene->currentFrameIndex() == initFrame) {
-        if (path) {
-            QPointF point = path->mapFromParent(input->pos());
-            QPainterPath pathVar = path->path();
-            pathVar.cubicTo(point, point, point);
-            path->setPath(pathVar);
+        if (linePath) {
+            QPointF point = linePath->mapFromParent(input->pos());
+            if (lineStraightMode) {
+                QPainterPath pathVar = linePath->path();
+                pathVar.cubicTo(lastPoint, lastPoint, lastPoint);
+                linePath->setPath(pathVar);
+                currentPoint = lastPoint;
+            } else {
+                QPainterPath pathVar = linePath->path();
+                pathVar.cubicTo(point, point, point);
+                linePath->setPath(pathVar);
+                currentPoint = point;
+            }
         }
     } 
 }
@@ -193,7 +201,7 @@ void Tweener::move(const TupInputDeviceInformation *input, TupBrushManager *brus
 void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[Motion Tweener::release()] -> Motion";
+        qDebug() << "[Motion Tweener::release()]";
     #endif
 
     Q_UNUSED(input)
@@ -207,17 +215,17 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
             if (nodesGroup) {
                 updateTweenPath();
 
-                nodesGroup->createNodes(path);
+                nodesGroup->createNodes(linePath);
                 nodesGroup->show();
                 nodesGroup->resizeNodes(realFactor);
                 nodesGroup->expandAllNodes();
 
-                configPanel->updateSteps(path);
+                configPanel->updateSteps(linePath);
 
-                QPainterPath::Element e = path->path().elementAt(0);
+                QPainterPath::Element e = linePath->path().elementAt(0);
                 QPointF begin = QPointF(e.x, e.y);
 
-                if (begin != firstNode) {
+                if (begin != firstNode) { // Object has been moved to a new position!
                     QPointF oldPos = firstNode;
                     QPointF newPos = begin;
 
@@ -234,6 +242,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                     }
 
                     firstNode = newPos;
+                    currentPoint = firstNode;
                 }
 
                 updateTweenPoints();
@@ -280,27 +289,38 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 QPointF oldPos = itemObjectReference;
                 itemObjectReference = newPos;
 
-                if (!path) {
-                    path = new QGraphicsPathItem;
-                    path->setZValue(baseZValue);
+                if (!linePath) {
+                    linePath = new QGraphicsPathItem;
+                    linePath->setZValue(baseZValue);
 
                     QColor pathColor = configPanel->getPathColor();
                     pathColor.setAlpha(200);
                     QPen pen(QBrush(pathColor), configPanel->getPathThickness(), Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
-                    path->setPen(pen);
+                    linePath->setPen(pen);
 
                     QPainterPath pathVar;
                     pathVar.moveTo(newPos);
                     firstNode = newPos;
-                    path->setPath(pathVar);
-                    gScene->addItem(path);
+                    currentPoint = newPos;
+                    linePath->setPath(pathVar);
+                    gScene->addItem(linePath);
                     isPathInScene = true;
 
                     pathOffset = QPointF(0, 0);
+
+                    // Include guide line
+                    guideLine = new TupLineItem();
+                    QPen guidePen;
+                    guidePen.setWidth(1);
+                    guidePen.setBrush(QBrush(Qt::red));
+                    guideLine->setPen(guidePen);
+
+                    guideLine->setLine(QLineF(firstNode, firstNode));
+                    // gScene->addItem(guideLine);
                 } else {
                     int distanceX = static_cast<int> (newPos.x() - oldPos.x());
                     int distanceY = static_cast<int> (newPos.y() - oldPos.y());
-                    path->moveBy(distanceX, distanceY);
+                    linePath->moveBy(distanceX, distanceY);
                     pathOffset = QPointF(distanceX, distanceY);
                 }
             } else {
@@ -330,7 +350,7 @@ void Tweener::updateTweenPath()
                                     TupProjectRequest::UpdateTweenPath, route);
         emit requested(&request);
     }
-    doList << path->path();
+    doList << linePath->path();
 }
 
 // This method returns the list of actions defined in this plugin
@@ -377,7 +397,7 @@ QWidget *Tweener::configurator()
 
 void Tweener::aboutToChangeScene(TupGraphicsScene *scene)
 {
-    Q_UNUSED(scene);
+    Q_UNUSED(scene)
 }
 
 // This method is called when this plugin is off
@@ -403,8 +423,8 @@ void Tweener::resetGUI()
         clearSelection();
         disableSelection();
     } else if (editMode == TupToolPlugin::Properties) {
-        if (path) {
-            scene->removeItem(path);
+        if (linePath) {
+            scene->removeItem(linePath);
             removeTweenPoints();
             isPathInScene = false;
             if (nodesGroup) {
@@ -412,8 +432,8 @@ void Tweener::resetGUI()
                 nodesGroup = nullptr;
             }
 
-            delete path;
-            path = nullptr;
+            delete linePath;
+            linePath = nullptr;
         }
     }
 }
@@ -449,19 +469,19 @@ void Tweener::setTweenPath()
         qDebug() << "[Motion Tweener::setTweenPath()]";
     #endif
 
-    if (path) {
+    if (linePath) {
         pathOffset = QPointF(0, 0);
         if (!isPathInScene) {
-            scene->addItem(path);
+            scene->addItem(linePath);
             isPathInScene = true;
         } 
 
         if (nodesGroup) {
-            nodesGroup->createNodes(path);
+            nodesGroup->createNodes(linePath);
         } else {
-            nodesGroup = new TNodeGroup(path, scene, TNodeGroup::MotionTween, baseZValue);
+            nodesGroup = new TNodeGroup(linePath, scene, TNodeGroup::MotionTween, baseZValue);
             connect(nodesGroup, SIGNAL(nodeReleased()), SLOT(updatePath()));
-            nodesGroup->createNodes(path);
+            nodesGroup->createNodes(linePath);
         }
         nodesGroup->show();
         nodesGroup->resizeNodes(realFactor);
@@ -495,9 +515,9 @@ void Tweener::setSelection()
         }
     }
 
-    if (path) {
+    if (linePath) {
         removeTweenPoints();
-        scene->removeItem(path);
+        scene->removeItem(linePath);
         isPathInScene = false;
         if (nodesGroup) {
             nodesGroup->clear();
@@ -528,7 +548,7 @@ QString Tweener::pathToCoords()
     int offsetX = static_cast<int> (pathOffset.x());
     int offsetY = static_cast<int> (pathOffset.y());
 
-    QPainterPath pathVar = path->path();
+    QPainterPath pathVar = linePath->path();
     int total = pathVar.elementCount();
     for (int i=0; i < total; i++) {
          QPainterPath::Element e = pathVar.elementAt(i);
@@ -594,11 +614,11 @@ void Tweener::applyReset()
         nodesGroup = nullptr;
     }
 
-    if (path) {
+    if (linePath) {
         removeTweenPoints();
-        scene->removeItem(path);
+        scene->removeItem(linePath);
         isPathInScene = false;
-        path = nullptr;
+        linePath = nullptr;
     }
 
     initFrame = scene->currentFrameIndex();
@@ -789,8 +809,8 @@ void Tweener::updatePath()
         qDebug() << "[Motion Tweener::updatePath()]";
     #endif
 
-    if (path) {
-        QPainterPath::Element e = path->path().elementAt(0);
+    if (linePath) {
+        QPainterPath::Element e = linePath->path().elementAt(0);
         QPointF point = QPointF(e.x, e.y);
         if (point != firstNode) {
             int distanceX = static_cast<int> (point.x() - firstNode.x());
@@ -811,9 +831,9 @@ void Tweener::updatePath()
             }
         }
 
-        doList << path->path();
+        doList << linePath->path();
 
-        configPanel->updateSteps(path);
+        configPanel->updateSteps(linePath);
         updateTweenPoints();
     }
 }
@@ -839,9 +859,9 @@ void Tweener::updateScene(TupGraphicsScene *scene)
 
         if (editMode == TupToolPlugin::Properties) {
             if (scene->currentFrameIndex() >= initFrame && scene->currentFrameIndex() < total) {
-                if (path && nodesGroup) {
-                    scene->addItem(path);
-                    nodesGroup->createNodes(path);
+                if (linePath && nodesGroup) {
+                    scene->addItem(linePath);
+                    nodesGroup->createNodes(linePath);
                     nodesGroup->show();
                     nodesGroup->resizeNodes(realFactor);
                     nodesGroup->expandAllNodes();
@@ -866,13 +886,13 @@ void Tweener::updateScene(TupGraphicsScene *scene)
         }
 
         if (editMode == TupToolPlugin::Properties) {
-            path = nullptr;
+            linePath = nullptr;
             configPanel->clearData();
             configPanel->activateMode(TupToolPlugin::Selection);
             clearSelection();
             setSelection();
         } else if (editMode == TupToolPlugin::Selection) {
-            path = nullptr;
+            linePath = nullptr;
             if (scene->currentFrameIndex() != initFrame)
                 clearSelection();
             initFrame = scene->currentFrameIndex();            
@@ -971,10 +991,10 @@ void Tweener::setEditEnv()
         QRectF rect = item->sceneBoundingRect();
         itemObjectReference = rect.center();
 
-        path = currentTween->graphicsPath();
-        path->setZValue(baseZValue);
+        linePath = currentTween->graphicsPath();
+        linePath->setZValue(baseZValue);
 
-        QPainterPath::Element e = path->path().elementAt(0);
+        QPainterPath::Element e = linePath->path().elementAt(0);
         firstNode = QPointF(e.x, e.y);
 
         QPointF oldPos = QPointF(e.x, e.y);
@@ -982,17 +1002,19 @@ void Tweener::setEditEnv()
 
         int distanceX = static_cast<int> (newPos.x() - oldPos.x());
         int distanceY = static_cast<int> (newPos.y() - oldPos.y());
-        path->moveBy(distanceX, distanceY);
+        linePath->moveBy(distanceX, distanceY);
         pathOffset = QPointF(distanceX, distanceY);
 
-        QColor color(55, 155, 55, 200);
-        QPen pen(QBrush(color), 2, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
-        path->setPen(pen);
+        QColor pathColor = configPanel->getPathColor();
+        pathColor.setAlpha(200);
+        QPen pen(QBrush(pathColor), configPanel->getPathThickness(), Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
+        linePath->setPen(pen);
 
         setTweenPath();
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[Motion Tweener::setEditEnv()] - Fatal Error: Motion tween wasn't found -> " << currentTween->getTweenName();
+            qDebug() << "[Motion Tweener::setEditEnv()] - Fatal Error: Motion tween wasn't found -> "
+                     << currentTween->getTweenName();
         #endif
     }
 }
@@ -1072,6 +1094,17 @@ void Tweener::frameResponse(const TupFrameResponse *response)
     if (response->getAction() == TupProjectRequest::Remove && scene->currentLayerIndex() == response->getLayerIndex()) {
         isPathInScene = false;
         init(scene);
+
+        if (initFrame != scene->currentFrameIndex()) {
+            QString selection = QString::number(initLayer) + "," + QString::number(initLayer) + ","
+                                + QString::number(initFrame) + "," + QString::number(initFrame);
+
+            TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentTween->getInitScene(),
+                                                                              currentTween->getInitLayer(),
+                                                                              currentTween->getInitFrame(),
+                                                                              TupProjectRequest::Select, selection);
+            emit requested(&request);
+        }
         return;
     }
 
@@ -1100,7 +1133,7 @@ void Tweener::itemResponse(const TupItemResponse *response)
                 if (!doList.isEmpty()) {
                     undoList << doList.last();
                     doList.removeLast();
-                    scene->removeItem(path);
+                    scene->removeItem(linePath);
 
                     if (nodesGroup) {
                         nodesGroup->clear();
@@ -1110,27 +1143,32 @@ void Tweener::itemResponse(const TupItemResponse *response)
 
                     QPainterPath painterPath;
                     if (doList.isEmpty()) {
-                        path = new QGraphicsPathItem;
-                        path->setZValue(baseZValue);
+                        linePath = new QGraphicsPathItem;
+                        linePath->setZValue(baseZValue);
 
-                        QColor color(55, 155, 55, 200);
-                        QPen pen(QBrush(color), 2, Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
-                        path->setPen(pen);
+                        QColor pathColor = configPanel->getPathColor();
+                        pathColor.setAlpha(200);
+                        QPen pen(QBrush(pathColor), configPanel->getPathThickness(), Qt::DashDotLine, Qt::RoundCap, Qt::RoundJoin);
+                        linePath->setPen(pen);
 
                         painterPath.moveTo(firstNode);
-                        path->setPath(painterPath);
-                        scene->addItem(path);
+                        linePath->setPath(painterPath);
+                        scene->addItem(linePath);
+                        currentPoint = firstNode;
 
                         configPanel->enableSaveOption(false);
                     } else {
                         painterPath = doList.last();
-                        path->setPath(painterPath);
-                        scene->addItem(path);
+
+                        QPainterPath::Element e = painterPath.elementAt(painterPath.elementCount() - 1);
+                        currentPoint = QPointF(e.x, e.y);
+                        linePath->setPath(painterPath);
+                        scene->addItem(linePath);
                     }
 
-                    nodesGroup = new TNodeGroup(path, scene, TNodeGroup::MotionTween, baseZValue);
+                    nodesGroup = new TNodeGroup(linePath, scene, TNodeGroup::MotionTween, baseZValue);
                     connect(nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath()));
-                    nodesGroup->createNodes(path);
+                    nodesGroup->createNodes(linePath);
 
                     nodesGroup->show();
                     nodesGroup->resizeNodes(realFactor);
@@ -1155,7 +1193,7 @@ void Tweener::itemResponse(const TupItemResponse *response)
                 if (!undoList.isEmpty()) {
                     doList << undoList.last();
                     undoList.removeLast();
-                    scene->removeItem(path);
+                    scene->removeItem(linePath);
 
                     if (nodesGroup) {
                         nodesGroup->clear();
@@ -1165,12 +1203,15 @@ void Tweener::itemResponse(const TupItemResponse *response)
                     removeTweenPoints();
 
                     QPainterPath painterPath = doList.last();
-                    path->setPath(painterPath);
-                    scene->addItem(path);
+                    QPainterPath::Element e = painterPath.elementAt(painterPath.elementCount() - 1);
+                    currentPoint = QPointF(e.x, e.y);
 
-                    nodesGroup = new TNodeGroup(path, scene, TNodeGroup::MotionTween, baseZValue);
+                    linePath->setPath(painterPath);
+                    scene->addItem(linePath);
+
+                    nodesGroup = new TNodeGroup(linePath, scene, TNodeGroup::MotionTween, baseZValue);
                     connect(nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath()));
-                    nodesGroup->createNodes(path);
+                    nodesGroup->createNodes(linePath);
 
                     nodesGroup->show();
                     nodesGroup->resizeNodes(realFactor);
@@ -1247,6 +1288,10 @@ void Tweener::paintTweenPoints()
 
 void Tweener::updateTweenPoints()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Motion Tweener::updateTweenPoints()]";
+    #endif
+
     removeTweenPoints();
     paintTweenPoints();
 }
@@ -1265,18 +1310,68 @@ void Tweener::updateZoomFactor(qreal scaleFactor)
 
 void Tweener::updatePathThickness(int thickness)
 {
-    if (path) {
-        QPen pen = path->pen();
+    if (linePath) {
+        QPen pen = linePath->pen();
         pen.setWidth(thickness);
-        path->setPen(pen);
+        linePath->setPen(pen);
     }
 }
 
 void Tweener::updatePathColor(const QColor &color)
 {
-    if (path) {
-        QPen pen = path->pen();
+    if (linePath) {
+        QPen pen = linePath->pen();
         pen.setColor(color);
-        path->setPen(pen);
+        linePath->setPen(pen);
+    }
+}
+
+void Tweener::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Control) {
+        lineStraightMode = true;
+        if (guideLine)
+            scene->addItem(guideLine);
+    }
+}
+
+void Tweener::keyReleaseEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Control) {
+        lineStraightMode = false;
+        if (guideLine)
+            scene->removeItem(guideLine);
+    }
+}
+
+void Tweener::updatePos(QPointF pos)
+{
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[Tweener::updatePos()] - pos -> " << pos;
+    #endif
+    */
+
+    if (editMode == TupToolPlugin::Selection)
+        return;
+
+    if (linePath) {
+        QLineF lineVar;
+        if (lineStraightMode) {
+            qreal dx = pos.x() - currentPoint.x();
+            qreal dy = pos.y() - currentPoint.y();
+            qreal m = fabs(dx/dy);
+
+            if (m > 1) {
+                lineVar = QLineF(currentPoint.x(), currentPoint.y(), pos.x(), currentPoint.y());
+                lastPoint = QPointF(pos.x(), currentPoint.y());
+            } else {
+                lineVar = QLineF(currentPoint.x(), currentPoint.y(), currentPoint.x(), pos.y());
+                lastPoint = QPointF(currentPoint.x(), pos.y());
+            }
+
+            if (guideLine)
+                guideLine->setLine(lineVar);
+        }
     }
 }

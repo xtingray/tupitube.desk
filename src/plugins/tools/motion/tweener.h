@@ -43,6 +43,7 @@
 #include "tnodegroup.h"
 #include "configurator.h"
 #include "tupellipseitem.h"
+#include "tuplineitem.h"
 #include "taction.h"
 
 #include <QPointF>
@@ -87,6 +88,11 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
 
         void resizeNode(qreal scaleFactor);
         void updateZoomFactor(qreal scaleFactor);
+        void updatePos(QPointF pos);
+
+    protected:
+        virtual void keyPressEvent(QKeyEvent *event);
+        virtual void keyReleaseEvent(QKeyEvent *event);
 
     signals:
         void tweenRemoved();
@@ -125,7 +131,9 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         Configurator *configPanel;
 
         TupGraphicsScene *scene;
-        QGraphicsPathItem *path;
+        QGraphicsPathItem *linePath;
+        TupLineItem *guideLine;
+
         QList<QPainterPath> doList;
         QList<QPainterPath> undoList;
 
@@ -150,9 +158,9 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         QList<TupEllipseItem *> dots;
 
         int baseZValue;
-        // QColor pathColor;
-        // int pathThickness;
+        bool lineStraightMode;
+        QPointF currentPoint;
+        QPointF lastPoint;
 };
 
 #endif
-

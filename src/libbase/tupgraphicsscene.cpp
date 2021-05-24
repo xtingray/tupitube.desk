@@ -1450,7 +1450,7 @@ void TupGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     mouseMoved(event);
 
     if (gTool) {
-        if (gTool->toolId() == TAction::Line || gTool->toolId() == TAction::Polyline)
+        if (gTool->toolId() == TAction::Line || gTool->toolId() == TAction::Polyline || gTool->toolId() == TAction::Motion)
             gTool->updatePos(event->scenePos());
     }
 }

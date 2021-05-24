@@ -50,7 +50,6 @@
 #include <QBoxLayout>
 #include <QHeaderView>
 #include <QGraphicsPathItem>
-// #include <QDir>
 
 class TupItemTweener;
 
@@ -77,6 +76,7 @@ class TUPITUBE_PLUGIN MotionSettings : public QWidget
         void clearData();
         void notifySelection(bool flag);
         int startComboSize();
+        void enableInitCombo(bool enable);
         QString currentTweenName() const;
         void updateSegments(const QPainterPath path);
 
@@ -118,7 +118,7 @@ class TUPITUBE_PLUGIN MotionSettings : public QWidget
         QLineEdit *input;
         TRadioButtonGroup *options;
         StepsViewer *stepViewer;
-        QSpinBox *comboInit;
+        QSpinBox *initSpinBox;
         QLabel *totalLabel;
         bool selectionDone;
         TupToolPlugin::Mode mode;

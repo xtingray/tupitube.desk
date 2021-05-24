@@ -381,6 +381,8 @@ void TupExposureTable::selectFrame(int layerIndex, int frameIndex)
                  << layerIndex << "," << frameIndex;
     #endif
 
+    selectionModel()->clearSelection();
+
     if (header->currentSectionIndex() != layerIndex)
         header->updateSelection(layerIndex);
 
@@ -393,6 +395,8 @@ void TupExposureTable::selectFrame(int layerIndex, int frameIndex, const QString
         qDebug() << "[TupExposureTable::selectFrame()] - layerIndex -> "
                  << layerIndex << " - frameIndex -> " << frameIndex << " - selection -> " << selection;
     #endif
+
+    selectionModel()->clearSelection();
 
     if (selection.isEmpty()) {
         #ifdef TUP_DEBUG

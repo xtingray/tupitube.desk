@@ -164,7 +164,11 @@ bool TFFmpegMovieGenerator::beginVideoFile()
         }
     }
 
-    if (avformat_write_header(formatContext, nullptr) < 0) {
+    QString desc = QObject::tr("Animation created using TupiTube.com");
+    av_dict_set(&formatContext->metadata, "movflags", "use_metadata_tags", 0);
+    av_dict_set(&formatContext->metadata, "description", desc.toLatin1(), 0);
+
+    if (avformat_write_header(formatContext, &formatContext->metadata) < 0) {
         errorMsg = "ffmpeg error: could not write video file header";
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::beginVideoFile()] - " << errorMsg;

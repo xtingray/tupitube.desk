@@ -696,6 +696,10 @@
         <source>Fatal Error</source>
         <translation>嚴重錯誤</translation>
     </message>
+    <message>
+        <source>Animation created using TupiTube.com</source>
+        <translation>使用TupiTube.com創建的動畫</translation>
+    </message>
 </context>
 <context>
     <name>RasterBrushesWidget</name>
