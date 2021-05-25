@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-    <Product Id="DBA50485-7705-43E7-861D-EE09D123A104" Name="TupiTube Desk 0.2.17" Language="1033" Version="0.2.17" Manufacturer="MaeFloresta" UpgradeCode="A1B50C14-7B2C-44D4-8404-8EEE79A57EF1">
+    <Product Id="DBA50485-7705-43E7-861D-EE09D123A104" Name="TupiTube Desk 0.2.18" Language="1033" Version="0.2.18" Manufacturer="MaeFloresta" UpgradeCode="A1B50C14-7B2C-44D4-8404-8EEE79A57EF1">
         <Package Description="2D Animation Software" Comments="Your First Animation Experience" InstallerVersion="200" Compressed="yes" />
         <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
         <Directory Id="TARGETDIR" Name="SourceDir">
