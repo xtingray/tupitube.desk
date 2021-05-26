@@ -98,6 +98,7 @@ class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
 
     private:
         void setupActions();
+        void loadTextColor();
         TupFrame* getCurrentFrame();
         void requestTransformation(QGraphicsItem *item, TupFrame *frame);
         TupFrame* frameAt(int sceneIndex, int layerIndex, int frameIndex);

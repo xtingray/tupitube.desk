@@ -69,6 +69,9 @@ void TextTool::init(TupGraphicsScene *gScene)
         qDebug() << "[TextTool::init()]";
     #endif
 
+    loadTextColor();
+    config->setTextColor(currentColor);
+
     scene = gScene;
     clearSelection();
     scene->clearSelection();
@@ -88,6 +91,12 @@ void TextTool::initItems(TupGraphicsScene *gScene)
 
     foreach (QGraphicsView *view, gScene->views())
         view->setDragMode(QGraphicsView::RubberBandDrag);
+}
+
+void TextTool::loadTextColor()
+{
+    TCONFIG->beginGroup("ColorPalette");
+    currentColor = QColor(TCONFIG->value("TextColor").toString());
 }
 
 QList<TAction::ActionId> TextTool::keys() const 
@@ -202,7 +211,6 @@ void TextTool::release(const TupInputDeviceInformation *input, TupBrushManager *
 
     Q_UNUSED(input)
     Q_UNUSED(brushManager)
-    // Q_UNUSED(scene)
 
     if (manager) {
         activeSelection = true;
@@ -374,7 +382,9 @@ void TextTool::frameResponse(const TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TextTool::frameResponse()] - action -> " << response->getAction();
-    #endif
+    #else
+        Q_UNUSED(response)
+    #endif   
 
     activeSelection = false;
     config->updateMode(TextConfigurator::Add);
@@ -384,6 +394,8 @@ void TextTool::libraryResponse(const TupLibraryResponse *response)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TextTool::libraryResponse()] - action -> " << response->getAction();
+    #else
+        Q_UNUSED(response)
     #endif
 
     removeManager();
@@ -492,8 +504,7 @@ void TextTool::insertText()
         option.setAlignment(config->textAlignment());
         textItem->document()->setDefaultTextOption(option);
 
-        TCONFIG->beginGroup("ColorPalette");
-        currentColor = QColor(TCONFIG->value("TextColor").toString());
+        loadTextColor();
         textItem->setDefaultTextColor(currentColor);
 
         QFont font = config->textFont();

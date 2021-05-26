@@ -961,135 +961,137 @@ void TupDocumentView::selectTool()
         }
 
         TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(action->parent());
-        tool->setCurrentToolName(toolName);
-        tool->setToolId(toolId);
-        currentTool = tool;
+        if (tool) {
+            tool->setCurrentToolName(toolName);
+            tool->setToolId(toolId);
+            currentTool = tool;
 
-        paintArea->setCurrentTool(toolId);
+            paintArea->setCurrentTool(toolId);
 
-        if (!action->icon().isNull())
-            status->updateTool(toolName, action->icon().pixmap(15, 15));
+            if (!action->icon().isNull())
+                status->updateTool(toolName, action->icon().pixmap(15, 15));
 
-        int minWidth = 0;
+            int minWidth = 0;
 
-        switch (tool->toolType()) {
-            case TupToolInterface::Brush:
-            {
-                status->enableFullScreenFeature(true);
-                if (toolId == TAction::Pencil || toolId == TAction::Polyline) {
-                    minWidth = 130;
-                    if (toolId == TAction::Pencil)
-                        connect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
-                /*
-                } else if (toolId == TAction::Text) {
-                    minWidth = 130;
-                */
-                } else {
-                    if (toolId == TAction::Rectangle || toolId == TAction::Ellipse || toolId == TAction::Line) {
+            switch (tool->toolType()) {
+                case TupToolInterface::Brush:
+                {
+                    status->enableFullScreenFeature(true);
+                    if (toolId == TAction::Pencil || toolId == TAction::Polyline) {
                         minWidth = 130;
-                        shapesMenu->setDefaultAction(action);
-                        shapesMenu->setActiveAction(action);
+                        if (toolId == TAction::Pencil)
+                            connect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
+                    /*
+                    } else if (toolId == TAction::Text) {
+                        minWidth = 130;
+                    */
+                    } else {
+                        if (toolId == TAction::Rectangle || toolId == TAction::Ellipse || toolId == TAction::Line) {
+                            minWidth = 130;
+                            shapesMenu->setDefaultAction(action);
+                            shapesMenu->setActiveAction(action);
 
-                        if (!action->icon().isNull())
-                            shapesMenu->menuAction()->setIcon(action->icon());
+                            if (!action->icon().isNull())
+                                shapesMenu->menuAction()->setIcon(action->icon());
+                        }
+                    }
+                    /*
+                        SQA: Enable it only for debugging
+                        if (toolId == TAction::Scheme)
+                            minWidth = 130;
+                    */
+                }
+                break;
+                case TupToolInterface::Tweener:
+                {
+                    status->enableFullScreenFeature(false);
+                    minWidth = 230;
+                    motionMenu->setDefaultAction(action);
+                    motionMenu->setActiveAction(action);
+                    if (!action->icon().isNull())
+                        motionMenu->menuAction()->setIcon(action->icon());
+                }
+                break;
+                case TupToolInterface::Fill:
+                {
+                    QString cursorIcon = "line_fill.png";
+                    if (colorSpace == TColorCell::Background) {
+                        TCONFIG->beginGroup("ColorPalette");
+                        TCONFIG->setValue("CurrentColorMode", TColorCell::Contour);
+
+                        emit colorModeChanged(TColorCell::Contour);
+                    } else {
+                        if (colorSpace == TColorCell::Inner)
+                            cursorIcon = "internal_fill.png";
+                    }
+                    QCursor cursor = QCursor(kAppProp->themeDir() + "cursors/" + cursorIcon, 0, 11);
+                    paintArea->viewport()->setCursor(cursor);
+                    status->enableFullScreenFeature(true);
+
+                    fillAction->trigger();
+                }
+                break;
+                case TupToolInterface::Selection:
+                {
+                    status->enableFullScreenFeature(true);
+                    if (toolId == TAction::ObjectSelection) {
+                        tool->setProjectSize(project->getDimension());
+                        minWidth = 130;
+                        connect(paintArea, SIGNAL(itemAddedOnSelection(TupGraphicsScene *)),
+                                tool, SLOT(initItems(TupGraphicsScene *)));
                     }
                 }
+                break;
                 /*
-                    SQA: Enable it only for debugging
-                    if (toolId == TAction::Scheme)
-                        minWidth = 130;
+                case TupToolInterface::View:
+                {
+                    status->enableFullScreenFeature(true);
+                    if (toolId == TAction::Shift) {
+                        tool->setProjectSize(project->getDimension());
+                        if (fullScreenOn)
+                            tool->setActiveView("FULL_SCREEN");
+                        else
+                            tool->setActiveView("WORKSPACE");
+                    }
+                }
+                break;
                 */
-            }
-            break;
-            case TupToolInterface::Tweener:
-            {
-                status->enableFullScreenFeature(false);
-                minWidth = 230;
-                motionMenu->setDefaultAction(action);
-                motionMenu->setActiveAction(action);
-                if (!action->icon().isNull())
-                    motionMenu->menuAction()->setIcon(action->icon());
-            }
-            break;
-            case TupToolInterface::Fill:
-            {
-                QString cursorIcon = "line_fill.png";
-                if (colorSpace == TColorCell::Background) {
-                    TCONFIG->beginGroup("ColorPalette");
-                    TCONFIG->setValue("CurrentColorMode", TColorCell::Contour);
+                case TupToolInterface::LipSync:
+                {
+                    status->enableFullScreenFeature(false);
+                    minWidth = 220;
+                    connect(currentTool, SIGNAL(importLipSync()), this, SLOT(importPapagayoLipSync()));
 
-                    emit colorModeChanged(TColorCell::Contour);
-                } else {
-                    if (colorSpace == TColorCell::Inner)
-                        cursorIcon = "internal_fill.png";
-                }
-                QCursor cursor = QCursor(kAppProp->themeDir() + "cursors/" + cursorIcon, 0, 11);
-                paintArea->viewport()->setCursor(cursor);
-                status->enableFullScreenFeature(true);
-
-                fillAction->trigger();
-            }
-            break;
-            case TupToolInterface::Selection:
-            {
-                status->enableFullScreenFeature(true);
-                if (toolId == TAction::ObjectSelection) {
-                    tool->setProjectSize(project->getDimension());
-                    minWidth = 130;
-                    connect(paintArea, SIGNAL(itemAddedOnSelection(TupGraphicsScene *)),
-                            tool, SLOT(initItems(TupGraphicsScene *)));
+                    miscMenu->setDefaultAction(action);
+                    miscMenu->setActiveAction(action);
+                    if (!action->icon().isNull())
+                        miscMenu->menuAction()->setIcon(action->icon());
                 }
             }
-            break;
-            /*
-            case TupToolInterface::View:
-            {
-                status->enableFullScreenFeature(true);
-                if (toolId == TAction::Shift) {
-                    tool->setProjectSize(project->getDimension());
-                    if (fullScreenOn)
-                        tool->setActiveView("FULL_SCREEN");
-                    else
-                        tool->setActiveView("WORKSPACE");
-                }
-            }
-            break;
-            */
-            case TupToolInterface::LipSync:
-            {
-                status->enableFullScreenFeature(false);
-                minWidth = 220;
-                connect(currentTool, SIGNAL(importLipSync()), this, SLOT(importPapagayoLipSync()));
 
-                miscMenu->setDefaultAction(action);
-                miscMenu->setActiveAction(action);
-                if (!action->icon().isNull())
-                    miscMenu->menuAction()->setIcon(action->icon());
+            QWidget *toolConfigurator = tool->configurator();
+            if (toolConfigurator) {
+                configurationArea = new TupConfigurationArea(this);
+                configurationArea->setConfigurator(toolConfigurator, minWidth);
+                addDockWidget(Qt::RightDockWidgetArea, configurationArea);
+                toolConfigurator->show();
+                if (!configurationArea->isVisible())
+                    configurationArea->show();
+            } else {
+                if (configurationArea->isVisible())
+                    configurationArea->close();
             }
+
+            paintArea->setTool(tool);
+
+            if (tool->toolType() != TupToolInterface::Fill)
+                paintArea->viewport()->setCursor(action->cursor());
+
+            if (toolId == TAction::ObjectSelection || toolId == TAction::NodesEditor || toolId == TAction::Polyline
+                || toolId == TAction::Motion || toolId == TAction::Rotation || toolId == TAction::Shear
+                || toolId == TAction::LipSyncTool || toolId == TAction::Text)
+                tool->updateZoomFactor(1 / nodesScaleFactor);
         }
-
-        QWidget *toolConfigurator = tool->configurator();
-        if (toolConfigurator) {
-            configurationArea = new TupConfigurationArea(this);
-            configurationArea->setConfigurator(toolConfigurator, minWidth);
-            addDockWidget(Qt::RightDockWidgetArea, configurationArea);
-            toolConfigurator->show();
-            if (!configurationArea->isVisible())
-                configurationArea->show();
-        } else {
-            if (configurationArea->isVisible())
-                configurationArea->close();
-        }
-
-        paintArea->setTool(tool);
-
-        if (tool->toolType() != TupToolInterface::Fill)
-            paintArea->viewport()->setCursor(action->cursor());
-
-        if (toolId == TAction::ObjectSelection || toolId == TAction::NodesEditor || toolId == TAction::Polyline
-            || toolId == TAction::Motion || toolId == TAction::Rotation || toolId == TAction::Shear
-            || toolId == TAction::LipSyncTool || toolId == TAction::Text)
-            tool->updateZoomFactor(1 / nodesScaleFactor);
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TupDocumentView::selectTool()] - Fatal Error: Action from sender() is NULL";
@@ -2587,59 +2589,73 @@ void TupDocumentView::requestClearRasterCanvas()
 
 void TupDocumentView::launchEyeDropperTool()
 {
+    #ifdef TUP_DEBUG
+       qDebug() << "[TupDocumentView::launchEyeDropperTool()]";
+    #endif
+
     enableEyeDropperTool(colorSpace);
 }
 
 void TupDocumentView::enableEyeDropperTool(TColorCell::FillType fillType)
 {
+    #ifdef TUP_DEBUG
+       qDebug() << "[TupDocumentView::enableEyeDropperTool()]";
+    #endif
+
     shapesMenu->setActiveAction(nullptr);
     motionMenu->setActiveAction(nullptr);
     miscMenu->setActiveAction(nullptr);
 
-    eyedropperAction->trigger();
+    if (eyedropperAction) {
+        eyedropperAction->trigger();
 
-    QString toolName = tr("%1").arg(eyedropperAction->text());
-    TAction::ActionId toolId = eyedropperAction->actionId();
+        QString toolName = tr("%1").arg(eyedropperAction->text());
+        TAction::ActionId toolId = eyedropperAction->actionId();
 
-    if (currentTool) {
-        if (currentTool->toolId() == TAction::Pencil)
-            disconnect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
+        if (currentTool) {
+            if (currentTool->toolId() == TAction::Pencil)
+                disconnect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
 
-        if (currentTool->toolId() == TAction::LipSyncTool)
-            disconnect(currentTool, SIGNAL(importLipSync()), this, SLOT(importPapagayoLipSync()));
+            if (currentTool->toolId() == TAction::LipSyncTool)
+                disconnect(currentTool, SIGNAL(importLipSync()), this, SLOT(importPapagayoLipSync()));
 
-        currentTool->saveConfig();
-        QWidget *toolConfigurator = currentTool->configurator();
-        if (toolConfigurator)
-            configurationArea->close();
+            currentTool->saveConfig();
+            QWidget *toolConfigurator = currentTool->configurator();
+            if (toolConfigurator)
+                configurationArea->close();
+        }
+
+        TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(eyedropperAction->parent());
+        tool->setCurrentToolName(toolName);
+        tool->setToolId(toolId);
+
+        currentTool = tool;
+        currentTool->updateColorType(fillType);
+
+        paintArea->setCurrentTool(toolId);
+
+        if (!eyedropperAction->icon().isNull())
+            status->updateTool(toolName, eyedropperAction->icon().pixmap(15, 15));
+
+        QWidget *toolConfigurator = tool->configurator();
+        if (toolConfigurator) {
+            configurationArea = new TupConfigurationArea(this);
+            configurationArea->setConfigurator(toolConfigurator, 80);
+            addDockWidget(Qt::RightDockWidgetArea, configurationArea);
+            toolConfigurator->show();
+            if (!configurationArea->isVisible())
+                configurationArea->show();
+        }
+
+        paintArea->setTool(tool);
+        connect(currentTool, SIGNAL(colorPicked(TColorCell::FillType, const QColor &)),
+                                    this, SIGNAL(colorChanged(TColorCell::FillType, const QColor &)));
+        connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), this, SLOT(refreshEyeDropperPanel()));
+    } else {
+        #ifdef TUP_DEBUG
+           qDebug() << "[TupDocumentView::enableEyeDropperTool()] - Fatal Error: Eyedropper action is NULL!";
+        #endif
     }
-
-    TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(eyedropperAction->parent());
-    tool->setCurrentToolName(toolName);
-    tool->setToolId(toolId);
-
-    currentTool = tool;
-    currentTool->updateColorType(fillType);
-
-    paintArea->setCurrentTool(toolId);
-
-    if (!eyedropperAction->icon().isNull())
-        status->updateTool(toolName, eyedropperAction->icon().pixmap(15, 15));
-
-    QWidget *toolConfigurator = tool->configurator();
-    if (toolConfigurator) {
-        configurationArea = new TupConfigurationArea(this);
-        configurationArea->setConfigurator(toolConfigurator, 80);
-        addDockWidget(Qt::RightDockWidgetArea, configurationArea);
-        toolConfigurator->show();
-        if (!configurationArea->isVisible())
-            configurationArea->show();
-    }
-
-    paintArea->setTool(tool);
-    connect(currentTool, SIGNAL(colorPicked(TColorCell::FillType, const QColor &)),
-                                this, SIGNAL(colorChanged(TColorCell::FillType, const QColor &)));
-    connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), this, SLOT(refreshEyeDropperPanel()));
 }
 
 void TupDocumentView::refreshEyeDropperPanel()

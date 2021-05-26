@@ -311,8 +311,8 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                     // Include guide line
                     guideLine = new TupLineItem();
                     QPen guidePen;
-                    guidePen.setWidth(1);
-                    guidePen.setBrush(QBrush(Qt::red));
+                    guidePen.setWidth(configPanel->getPathThickness());
+                    guidePen.setBrush(pathColor);
                     guideLine->setPen(guidePen);
 
                     guideLine->setLine(QLineF(firstNode, firstNode));

@@ -163,7 +163,7 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         int globalSceneIndex;
         QStringList copiesXml;
         // QString currentTool;
-        TAction::ActionId currentTool;
+        TAction::ActionId currentToolID;
         bool deleteMode;
         TupProject::Mode spaceMode;
         QPointF copyPosition;

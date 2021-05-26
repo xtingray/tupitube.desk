@@ -143,12 +143,12 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
         QDir dir(imgPath);
         if (!dir.exists()) {
             #ifdef TUP_DEBUG
-                qWarning() << "TupTwitter::closeRequest() - Image path doesn't exist -> " << imgPath;
-                qWarning() << "Creating it...";
+                qWarning() << "[TupTwitter::closeRequest()] - Image path doesn't exist -> " << imgPath;
+                qWarning() << "*** Creating it...";
             #endif
             if (!dir.mkpath(imgPath)) {
                 #ifdef TUP_DEBUG
-                    qWarning() << "TupTwitter::closeRequest() - Error while creating path -> " << imgPath;
+                    qWarning() << "[TupTwitter::closeRequest()] - Error while creating path -> " << imgPath;
                 #endif
             }
         }
@@ -156,14 +156,14 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
         QString image = imgPath + imageName;
         QFile file(image);
         #ifdef TUP_DEBUG
-            qDebug() << "TupTwitter::closeRequest() - Saving image -> " << image;
+            qDebug() << "[TupTwitter::closeRequest()] - Saving image -> " << image;
         #endif
         if (file.open(QIODevice::WriteOnly)) {
             file.write(array);
             file.close();
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "TupTwitter::closeRequest() - Can't create file -> " << image;
+                qDebug() << "[TupTwitter::closeRequest()] - Can't create file -> " << image;
             #endif
         }
 
@@ -207,7 +207,7 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
                         formatStatus(array);
                     } else {
                         #ifdef TUP_DEBUG
-                            qDebug() << "TupTwitter::closeRequest() - Network Error: Twitter output is NULL!";
+                            qDebug() << "[TupTwitter::closeRequest()] - Network Error: Twitter output is NULL!";
                         #endif
                     }
                     requestFile(MAEFLORESTA_URL + TUPITUBE_WEB_AD + locale + ".html");
@@ -234,7 +234,7 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
                             manager->deleteLater();
                         } else {
                             #ifdef TUP_DEBUG
-                                qDebug() << "TupTwitter::closeRequest() - Network Error: Invalid data!";
+                                qDebug() << "[TupTwitter::closeRequest()] - Network Error: Invalid data!";
                             #endif
                         }
                     }
@@ -258,28 +258,28 @@ void TupTwitter::slotError(QNetworkReply::NetworkError error)
         case QNetworkReply::HostNotFoundError:
              {
              #ifdef TUP_DEBUG
-                 qDebug() << "TupTwitter::slotError() - Network Error: Host not found";
+                 qDebug() << "[TupTwitter::slotError()] - Network Error: Host not found";
              #endif
              }
         break;
         case QNetworkReply::TimeoutError:
              {
              #ifdef TUP_DEBUG
-                 qDebug() << "TupTwitter::slotError() - Network Error: Time out!";
+                 qDebug() << "[TupTwitter::slotError()] - Network Error: Time out!";
              #endif
              }
         break;
         case QNetworkReply::ConnectionRefusedError:
              {
              #ifdef TUP_DEBUG
-                 qDebug() << "TupTwitter::slotError() - Network Error: Connection Refused!";
+                 qDebug() << "[TupTwitter::slotError()] - Network Error: Connection Refused!";
              #endif
              }
         break;
         case QNetworkReply::ContentNotFoundError:
              {
              #ifdef TUP_DEBUG
-                 qDebug() << "TupTwitter::slotError() - Network Error: Content not found!";
+                 qDebug() << "[TupTwitter::slotError()] - Network Error: Content not found!";
              #endif
              }
         break;
@@ -287,7 +287,7 @@ void TupTwitter::slotError(QNetworkReply::NetworkError error)
         default:
              {
              #ifdef TUP_DEBUG
-                 qDebug() << "TupTwitter::slotError() - Network Error: Unknown Network error!";
+                 qDebug() << "[TupTwitter::slotError()] - Network Error: Unknown Network error!";
              #endif
              }
         break;
@@ -325,9 +325,9 @@ void TupTwitter::checkSoftwareUpdates(QByteArray array)
         }
 
         #ifdef TUP_DEBUG
-            qWarning() << "TupTwitter::checkSoftwareUpdates() - Update Flag: " + QString::number(update);
-            qWarning() << "Server Version: " + version + " - Revision: " + revision + " - Code Name: " + codeName;
-            qWarning() << "Local Version: " + kAppProp->version() + " - Revision: " + kAppProp->revision();
+            qWarning() << "[TupTwitter::checkSoftwareUpdates()] - Update Flag -> " << update;
+            qWarning() << "*** Server Version: " << version << " - Revision: " << revision << " - Code Name: " << codeName;
+            qWarning() << "*** Local Version: " << kAppProp->version() << " - Revision: " << kAppProp->revision();
         #endif
 
         emit newUpdate(update);
@@ -388,7 +388,7 @@ void TupTwitter::formatStatus(QByteArray array)
     }
 
     #ifdef TUP_DEBUG
-        qWarning() << "TupTwitter::formatStatus() - Saving file -> " + twitterPath;
+        qWarning() << "[TupTwitter::formatStatus()] - Saving file -> " << twitterPath;
     #endif
 
     emit pageReady();

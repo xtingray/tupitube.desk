@@ -67,6 +67,8 @@ QList<TAction::ActionId> EyeDropper::keys() const
 
 void EyeDropper::setupActions()
 {
+
+    settings = new EyeDropperSettings;
     cursor = QCursor(kAppProp->themeDir() + "cursors/eyedropper.png", 8, 8);
 
     TAction *action = new TAction(QIcon(kAppProp->themeDir() + "icons/eyedropper.png"), tr("Eye Dropper"), this);
@@ -120,8 +122,9 @@ int EyeDropper::toolType() const
 
 QWidget *EyeDropper::configurator()
 {
-    if (!settings)
-        settings = new EyeDropperSettings;
+    #ifdef TUP_DEBUG
+        qDebug() << "[EyeDropper::configurator()]";
+    #endif
 
     return settings;
 }
@@ -161,5 +164,9 @@ void EyeDropper::updateColorType(TColorCell::FillType type)
 
 void EyeDropper::refreshEyeDropperPanel()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[EyeDropper::refreshEyeDropperPanel()]";
+    #endif
+
     settings->updateColor(grabColorFromScreen());
 }

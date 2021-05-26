@@ -59,7 +59,7 @@ TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent): TupPaintAreaBase(
     deleteMode = false;
     menuOn = false;
     copyIsValid = false;
-    currentTool = TAction::Pencil;
+    currentToolID = TAction::Pencil;
 
     setBgColor(work->getBgColor());
 
@@ -132,7 +132,7 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
         return;
     }
 
-    if (currentTool == TAction::LipSyncTool) {
+    if (currentToolID == TAction::LipSyncTool) {
         // If a node is the mouth target... abort!
         if (event->buttons() == Qt::RightButton) {
             if (qgraphicsitem_cast<TMouthTarget *>(scene()->itemAt(mapToScene(event->pos()), QTransform())))
@@ -140,7 +140,7 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
         }
     }
 
-    if (currentTool == TAction::NodesEditor) {
+    if (currentToolID == TAction::NodesEditor) {
         // If a node is the target... abort!
         if (event->buttons() == Qt::RightButton) {
             if (qgraphicsitem_cast<TControlNode *>(scene()->itemAt(mapToScene(event->pos()), QTransform())))
@@ -149,17 +149,17 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
     }
 
     if (event->buttons() == Qt::RightButton) {
-        if (currentTool == TAction::Polyline) {
+        if (currentToolID == TAction::Polyline) {
             emit closePolyLine();
             return;
         }
-        if (currentTool == TAction::Line) {
+        if (currentToolID == TAction::Line) {
             emit closeLine();
             return;
         }
     }
 
-    if (currentTool == TAction::Text) {
+    if (currentToolID == TAction::Text) {
         if (event->buttons() == Qt::RightButton) {
             bool activeSelection = !scene()->selectedItems().isEmpty();
             if (activeSelection) {
@@ -174,7 +174,7 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
         }
     }
 
-    if (currentTool == TAction::ObjectSelection) {
+    if (currentToolID == TAction::ObjectSelection) {
         if (event->buttons() == Qt::RightButton) {
             QMenu *menu = new QMenu(tr("Drawing area"));
             menu->addAction(kApp->findGlobalAction("undo"));
@@ -264,7 +264,7 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
 
 void TupPaintArea::tabletEvent(QTabletEvent *event)
 {
-    if (currentTool == TAction::Ink) {
+    if (currentToolID == TAction::Ink) {
         if (event->pressure() > 0)
             graphicsScene()->currentTool()->updatePressure(event->pressure());
     }
@@ -601,7 +601,7 @@ void TupPaintArea::itemResponse(TupItemResponse *response)
                   viewport()->update(guiScene->sceneRect().toRect());
 
                   if (guiScene->currentTool()->toolType() != TupToolInterface::Tweener
-                      && currentTool != TAction::Polyline)
+                      && currentToolID != TAction::Polyline)
                       guiScene->resetCurrentTool();
               }
             break;
@@ -647,7 +647,7 @@ void TupPaintArea::libraryResponse(TupLibraryResponse *response)
 
                   viewport()->update(guiScene->sceneRect().toRect());
 
-                  if (currentTool == TAction::ObjectSelection)
+                  if (currentToolID == TAction::ObjectSelection)
                       emit itemAddedOnSelection(guiScene);
               }
             break;
@@ -695,7 +695,7 @@ void TupPaintArea::deleteItems()
         qDebug() << "[TupPaintArea::deleteItems()]";
     #endif
 
-    if (currentTool != TAction::ObjectSelection && currentTool != TAction::NodesEditor && currentTool != TAction::Text) {
+    if (currentToolID != TAction::ObjectSelection && currentToolID != TAction::NodesEditor && currentToolID != TAction::Text) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupPaintArea::deleteItems()] - Aborting procedure!";
         #endif
@@ -1373,7 +1373,7 @@ void TupPaintArea::setCurrentTool(TAction::ActionId tool)
         qDebug() << "[TupPaintArea::setCurrentTool()] - tool -> " << tool;
     #endif
 
-    currentTool = tool;
+    currentToolID = tool;
     canvasEnabled = true;
 }
 
@@ -1397,7 +1397,7 @@ void TupPaintArea::setOnionFactor(double value)
 void TupPaintArea::keyPressEvent(QKeyEvent *event)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPaintArea::keyPressEvent()] - Current tool: " << currentTool;
+        qDebug() << "[TupPaintArea::keyPressEvent()] - Current tool: " << currentToolID;
         qDebug() << "[TupPaintArea::keyPressEvent()] - Key: " << event->key();
         qDebug() << "[TupPaintArea::keyPressEvent()] - Code: " << event->text();
     #endif
@@ -1469,7 +1469,7 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
         return;
     }
 
-    if (currentTool == TAction::Polyline) {
+    if (currentToolID == TAction::Polyline) {
         if (event->key() == Qt::Key_X)
             emit closePolyLine();
         return;
