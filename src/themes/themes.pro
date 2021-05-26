@@ -5,4 +5,5 @@
 
 CONFIG += warn_on 
 TEMPLATE = subdirs 
-SUBDIRS = default dark
+# SUBDIRS = default dark
+SUBDIRS = dark
