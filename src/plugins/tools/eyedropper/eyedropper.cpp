@@ -67,7 +67,6 @@ QList<TAction::ActionId> EyeDropper::keys() const
 
 void EyeDropper::setupActions()
 {
-
     settings = new EyeDropperSettings;
     cursor = QCursor(kAppProp->themeDir() + "cursors/eyedropper.png", 8, 8);
 

@@ -102,4 +102,40 @@ fileSystem.CopyFolder "c:\devel\sources\audio", tupiDir & "\bin\raw\audio"
 fileSystem.CopyFolder "c:\devel\sources\ffmpeg", tupiDir & "\lib\ffmpeg"
 REM fileSystem.CopyFolder "c:\devel\sources\ssl", tupiDir & "\lib\ssl"
 
+Dim objFSO
+Set objFSO = CreateObject("Scripting.FileSystemObject")
+RemoveProFiles objFSO.GetFolder("C:\tupitube")
+RemoveMkFiles objFSO.GetFolder("C:\tupitube")
+
+Sub RemoveProFiles(objFolder)
+    Dim objFile, objSubFolder
+
+    For Each objFile In objFolder.Files
+        If LCase(objFSO.GetExtensionName(objFile.Name)) = "pro" Then
+			Set proFile = createobject("Scripting.FileSystemObject")
+			proFile.DeleteFile objFile.Path
+        End If
+    Next
+
+    For Each objSubFolder In objFolder.SubFolders
+        RemoveProFiles objSubFolder
+    Next
+End Sub
+
+Sub RemoveMkFiles(objFolder)
+    Dim objFile, objSubFolder, mkFile
+	mkFile  = "Makefile"
+
+    For Each objFile In objFolder.Files
+        If StrComp(objFile.Name, mkFile) = 0 Then
+			Set mk = createobject("Scripting.FileSystemObject")
+			mk.DeleteFile objFile.Path
+        End If		
+    Next
+
+    For Each objSubFolder In objFolder.SubFolders
+        RemoveMkFiles objSubFolder
+    Next
+End Sub
+
 MsgBox "Copy is done! :D"

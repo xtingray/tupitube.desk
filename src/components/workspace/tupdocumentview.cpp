@@ -1071,6 +1071,9 @@ void TupDocumentView::selectTool()
 
             QWidget *toolConfigurator = tool->configurator();
             if (toolConfigurator) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupDocumentView::selectTool()] - Showing plugin settings panel";
+                #endif
                 configurationArea = new TupConfigurationArea(this);
                 configurationArea->setConfigurator(toolConfigurator, minWidth);
                 addDockWidget(Qt::RightDockWidgetArea, configurationArea);
@@ -1078,6 +1081,9 @@ void TupDocumentView::selectTool()
                 if (!configurationArea->isVisible())
                     configurationArea->show();
             } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupDocumentView::selectTool()] - No settings panel";
+                #endif
                 if (configurationArea->isVisible())
                     configurationArea->close();
             }

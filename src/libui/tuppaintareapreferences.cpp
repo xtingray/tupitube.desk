@@ -135,7 +135,7 @@ QGridLayout * TupPaintAreaPreferences::gridPanel()
     gridForm->addWidget(new QLabel(tr("Grid Separation:")), 1, 0, Qt::AlignLeft);
     gridSeparation = new QSpinBox(this);
     gridSeparation->setMinimum(5);
-    gridSeparation->setMaximum(30);
+    gridSeparation->setMaximum(100);
     gridSeparation->setValue(separation);
     gridForm->addWidget(gridSeparation, 1, 1, Qt::AlignLeft);
 

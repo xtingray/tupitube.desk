@@ -190,7 +190,7 @@ void TupColorPaletteWidget::setupColorDisplay()
     connect(htmlField, SIGNAL(editingFinished()), this, SLOT(updateColorFromHTML()));
     mainLayout->addWidget(htmlField);
 
-    TImageButton *eyedropperButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/eyedropper.png")), 20, this, true);
+    TImageButton *eyedropperButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/eyedropper.png")), 18, this, true);
     eyedropperButton->setToolTip(tr("Eye Dropper"));
     // eyedropperButton->setShortcut(QKeySequence(tr("E")));
     connect(eyedropperButton, SIGNAL(clicked()), this, SLOT(activateEyeDropper()));
@@ -248,7 +248,7 @@ void TupColorPaletteWidget::setupColorDisplay()
     connect(bgHtmlField, SIGNAL(editingFinished()), this, SLOT(updateBgColorFromHTML()));
     bgLayout->addWidget(bgHtmlField);
 
-    TImageButton *bgEyedropperButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/eyedropper.png")), 20, this, true);
+    TImageButton *bgEyedropperButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/eyedropper.png")), 18, this, true);
     bgEyedropperButton->setToolTip(tr("Eye Dropper"));
     // bgEyedropperButton->setShortcut(QKeySequence(tr("E")));
     connect(bgEyedropperButton, SIGNAL(clicked()), this, SLOT(activateBgEyeDropper()));
