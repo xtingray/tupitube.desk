@@ -46,6 +46,8 @@ unix {
 }
 
 win32 {
+    QT += winextras
+
     include(../../../win.pri)
 
     STORE_DIR = ../../store/
