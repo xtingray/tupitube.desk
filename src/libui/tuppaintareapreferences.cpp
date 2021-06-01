@@ -78,6 +78,17 @@ void TupPaintAreaPreferences::setupPage()
     pageLayout->addWidget(new TSeparator(Qt::Horizontal));
     pageLayout->addSpacing(10);
 
+    QLabel *safeAreaLabel = new QLabel(tr("Safe Area Settings"));
+    safeAreaLabel->setFont(labelFont);
+    pageLayout->addWidget(safeAreaLabel);
+    pageLayout->addLayout(safeAreaPanel());
+
+    /*
+    pageLayout->addSpacing(10);
+    pageLayout->addWidget(new TSeparator(Qt::Horizontal));
+    pageLayout->addSpacing(10);
+    */
+
     QLabel *ROTLabel = new QLabel(tr("Rule Of Thirds Settings"));
     ROTLabel->setFont(labelFont);
     pageLayout->addWidget(ROTLabel);
@@ -87,17 +98,8 @@ void TupPaintAreaPreferences::setupPage()
     pageLayout->addWidget(new TSeparator(Qt::Horizontal));
     pageLayout->addSpacing(10);
 
-    QLabel *safeAreaLabel = new QLabel(tr("Safe Area Settings"));
-    safeAreaLabel->setFont(labelFont);
-    pageLayout->addWidget(safeAreaLabel);
-    pageLayout->addLayout(safeAreaPanel());
-
-    pageLayout->addSpacing(10);
-    pageLayout->addWidget(new TSeparator(Qt::Horizontal));
-    pageLayout->addSpacing(10);
-
     QHBoxLayout *resetLayout = new QHBoxLayout;
-    QPushButton *resetButton = new QPushButton(tr("Restore Default Values"));
+    QPushButton *resetButton = new QPushButton(" " + tr("Restore Default Values") + " ");
     connect(resetButton, SIGNAL(clicked()), this, SLOT(restoreValues()));
 
     resetLayout->addStretch();

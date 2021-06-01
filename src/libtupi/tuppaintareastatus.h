@@ -82,7 +82,6 @@ class TUPITUBE_EXPORT TupPaintAreaStatus : public QStatusBar
         void clearFrameClicked();
         void resetClicked();
         void safeAreaClicked();
-        void ruleOfThirdsClicked();
         void gridClicked();
         void angleChanged(int angle);
         void zoomChanged(qreal factor);

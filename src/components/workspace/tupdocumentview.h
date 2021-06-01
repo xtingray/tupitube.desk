@@ -163,7 +163,6 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void applyFilter();
         void drawGrid();
         void drawActionSafeArea();
-        void drawRuleOfThirds();
         bool handleProjectResponse(TupProjectResponse *response);
         void updateNodesScale(qreal factor);
         void importPapagayoLipSync();

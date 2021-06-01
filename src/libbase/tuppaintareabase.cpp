@@ -72,7 +72,6 @@ TupPaintAreaBase::TupPaintAreaBase(QWidget *parent, QSize dimension, TupLibrary 
 
     gridEnabled = false;
     safeAreaEnabled = false;
-    ruleOfThirdsEnabled = false;
     angle = 0;
     spaceBar = false;
 
@@ -122,12 +121,6 @@ void TupPaintAreaBase::drawActionSafeArea(bool draw)
     viewport()->update();
 }
 
-void TupPaintAreaBase::drawRuleOfThirds(bool draw)
-{
-    ruleOfThirdsEnabled = draw;
-    viewport()->update();
-}
-
 void TupPaintAreaBase::setTool(TupToolPlugin *tool)
 {
     if (!gScene) {
@@ -155,11 +148,6 @@ bool TupPaintAreaBase::getGridState() const
 bool TupPaintAreaBase::getSafeAreaState() const
 {
     return safeAreaEnabled;
-}
-
-bool TupPaintAreaBase::getRuleOfThirdsState() const
-{
-    return ruleOfThirdsEnabled;
 }
 
 void TupPaintAreaBase::mousePressEvent(QMouseEvent * event)
@@ -380,18 +368,6 @@ void TupPaintAreaBase::drawForeground(QPainter *painter, const QRectF &rect)
                                      painter->drawLine(-100, i, maxX, i);
                             }
 
-                            // if enabled draw rule of thirds
-                            if (ruleOfThirdsEnabled) {
-                                painter->setPen(rotPen);
-                                int horizontalSpace = static_cast<int> (width / 3);
-                                int verticalSpace = static_cast<int> (height / 3);
-
-                                painter->drawLine(0, verticalSpace, width, verticalSpace);
-                                painter->drawLine(0, verticalSpace*2, width, verticalSpace*2);
-                                painter->drawLine(horizontalSpace, 0, horizontalSpace, height);
-                                painter->drawLine(horizontalSpace*2, 0, horizontalSpace*2, height);
-                            }
-
                             // if enabled action safe area
                             if (safeAreaEnabled) {
                                 painter->setPen(safeRectPen);
@@ -403,38 +379,11 @@ void TupPaintAreaBase::drawForeground(QPainter *painter, const QRectF &rect)
                                 int outerBorder = w / 19;
                                 int innerBorder = w / 6;
 
-                                int hSpace = w / 3;
-                                int vSpace = static_cast<int> (height / 3);
-
                                 QPointF left = drawingRect.topLeft() + QPointF(outerBorder, outerBorder);
                                 QPointF right = drawingRect.bottomRight() - QPointF(outerBorder, outerBorder);
-                                int leftX = static_cast<int> (left.x());
-                                int leftY = static_cast<int> (left.y());
-                                int rightX = static_cast<int> (right.x());
-                                int rightY = static_cast<int> (right.y());
 
                                 QRectF outerRect(left, right);
                                 painter->drawRect(outerRect);
-
-                                painter->drawLine(QPoint(hSpace, leftY - 8), QPoint(hSpace, leftY + 8));
-                                painter->drawLine(QPoint(hSpace - 5, leftY), QPoint(hSpace + 5, leftY));
-                                painter->drawLine(QPoint(hSpace*2, leftY - 8), QPoint(hSpace*2, leftY + 8));
-                                painter->drawLine(QPoint(hSpace*2 - 5, leftY), QPoint(hSpace*2 + 5, leftY));
-
-                                painter->drawLine(QPoint(hSpace, rightY - 8), QPoint(hSpace, rightY + 8));
-                                painter->drawLine(QPoint(hSpace - 5, rightY), QPoint(hSpace + 5, rightY));
-                                painter->drawLine(QPoint(hSpace*2, rightY - 8), QPoint(hSpace*2, rightY + 8));
-                                painter->drawLine(QPoint(hSpace*2 - 5, rightY), QPoint(hSpace*2 + 5, rightY));
-
-                                painter->drawLine(QPoint(leftX - 8, vSpace), QPoint(leftX + 8, vSpace));
-                                painter->drawLine(QPoint(leftX, vSpace - 5), QPoint(leftX, vSpace + 5));
-                                painter->drawLine(QPoint(leftX - 8, vSpace*2), QPoint(leftX + 8, vSpace*2));
-                                painter->drawLine(QPoint(leftX, vSpace*2 - 5), QPoint(leftX, vSpace*2 + 5));
-
-                                painter->drawLine(QPoint(rightX - 8, vSpace), QPoint(rightX + 8, vSpace));
-                                painter->drawLine(QPoint(rightX, vSpace - 5), QPoint(rightX, vSpace + 5));
-                                painter->drawLine(QPoint(rightX - 8, vSpace*2), QPoint(rightX + 8, vSpace*2));
-                                painter->drawLine(QPoint(rightX, vSpace*2 - 5), QPoint(rightX, vSpace*2 + 5));
 
                                 left = drawingRect.topLeft() + QPointF(innerBorder, innerBorder);
                                 right = drawingRect.bottomRight() - QPointF(innerBorder, innerBorder);
@@ -449,6 +398,15 @@ void TupPaintAreaBase::drawForeground(QPainter *painter, const QRectF &rect)
                                 QRect rect(QPoint(middleX - target, middleY - target),
                                            QPoint(middleX + target, middleY + target));
                                 painter->drawRect(rect);
+
+                                painter->setPen(rotPen);
+                                int horizontalSpace = static_cast<int> (width / 3);
+                                int verticalSpace = static_cast<int> (height / 3);
+
+                                painter->drawLine(0, verticalSpace, width, verticalSpace);
+                                painter->drawLine(0, verticalSpace*2, width, verticalSpace*2);
+                                painter->drawLine(horizontalSpace, 0, horizontalSpace, height);
+                                painter->drawLine(horizontalSpace*2, 0, horizontalSpace*2, height);
                             }
                         }
                     } 
