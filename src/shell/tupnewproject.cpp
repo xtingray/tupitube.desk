@@ -78,7 +78,7 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent)
     QLabel *presetsLabel = new QLabel(tr("Presets") + " ");
 
     TCONFIG->beginGroup("PaintArea");
-    int presetIndex = TCONFIG->value("DefaultFormat", 3).toInt();
+    int presetIndex = TCONFIG->value("DefaultFormat", FORMAT_1080).toInt();
 
     presets = new QComboBox();
     presets->addItem(tr("Free Format"));

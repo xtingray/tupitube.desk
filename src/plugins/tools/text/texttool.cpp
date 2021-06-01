@@ -71,6 +71,7 @@ void TextTool::init(TupGraphicsScene *gScene)
 
     loadTextColor();
     config->setTextColor(currentColor);
+    config->updateMode(TextConfigurator::Add);
 
     scene = gScene;
     clearSelection();

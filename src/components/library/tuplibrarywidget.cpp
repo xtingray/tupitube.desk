@@ -1521,6 +1521,10 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                              if (!isNetworked && !folderName.endsWith(".pgo") && !library->isLoadingProject())
                                  insertObjectInWorkspace();
                              nativeFromFileSystem = false;
+                         } else {
+                             if (currentMode == TupProject::VECTOR_STATIC_BG_MODE
+                                 || currentMode == TupProject::VECTOR_DYNAMIC_BG_MODE)
+                             insertObjectInWorkspace();
                          }
                        }
                      break;
