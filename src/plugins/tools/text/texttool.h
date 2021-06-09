@@ -71,6 +71,7 @@ class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
         virtual QWidget *configurator();
         virtual void saveConfig();
         virtual void keyPressEvent(QKeyEvent *event);
+        virtual void keyReleaseEvent(QKeyEvent *event);
 
         virtual void sceneResponse(const TupSceneResponse *event);
         virtual void layerResponse(const TupLayerResponse *response);
@@ -105,7 +106,6 @@ class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
         void removeManager();
 
         TupGraphicsScene *scene;
-        // TupTextItem *textItem;
         TextConfigurator *config;
         QMap<TAction::ActionId, TAction *> textActions;
         QColor currentColor;
@@ -118,6 +118,7 @@ class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
         qreal realFactor;
         NodeManager *manager;
         bool activeSelection;
+        QString key;
 };
 
 #endif

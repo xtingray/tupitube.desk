@@ -44,7 +44,7 @@ TupGraphicObject::TupGraphicObject(QGraphicsItem *graphic, TupFrame *parent) : Q
     /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupGraphicObject()]";
-    #endif	
+    #endif
     */
 
     graphicItem = graphic;
@@ -239,6 +239,10 @@ void TupGraphicObject::saveInitTransformation()
 
 void TupGraphicObject::storeItemTransformation(const QString &properties)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupGraphicObject::storeItemTransformation()] - properties -> " << properties;
+    #endif
+
     transformDoList << properties;
 }
 

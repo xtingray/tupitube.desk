@@ -40,6 +40,7 @@
 #include "tupscene.h"
 #include "tuplayer.h"
 #include "tupsvgitem.h"
+#include "tuptextitem.h"
 #include "tupsvg2qt.h"
 #include "tupitemgroup.h"
 #include "tupgraphicobject.h"
@@ -1092,7 +1093,10 @@ void SelectionTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
     #endif
 
     QDomDocument doc;
-    doc.appendChild(TupSerializer::properties(item, doc));
+    if (TupTextItem *textItem = qgraphicsitem_cast<TupTextItem *>(item))
+        doc.appendChild(TupSerializer::properties(item, doc, textItem->toPlainText(), textItem->textWidth()));
+    else
+        doc.appendChild(TupSerializer::properties(item, doc));
 
     TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
     int position = -1;

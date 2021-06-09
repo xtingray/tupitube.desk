@@ -76,6 +76,7 @@ void TextTool::init(TupGraphicsScene *gScene)
     scene = gScene;
     clearSelection();
     scene->clearSelection();
+    manager = nullptr;
 
     nodeZValue = ((BG_LAYERS + 1) * ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
     if (scene->getSpaceContext() == TupProject::VECTOR_FG_MODE)
@@ -161,8 +162,14 @@ void TextTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
             manager->show();
             manager->resizeNodes(realFactor);
 
+            QString text = textItem->data(0).toString();
+            if (text.isEmpty()) {
+                text = textItem->toPlainText();
+                textItem->setData(0, text);
+            }
+
             activeSelection = true;
-            config->loadTextSettings(textItem->font(), textItem->data(0).toString(), textItem->defaultTextColor());
+            config->loadTextSettings(textItem->font(), text, textItem->defaultTextColor());
         } else {
             #ifdef TUP_DEBUG
                 qDebug() << "[TextTool::press()] - Warning: Object is not a text item!";
@@ -672,10 +679,10 @@ void TextTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
         qDebug() << "[TextTool::requestTransformation(QGraphicsItem *, TupFrame *)]";
     #endif
 
-    QDomDocument doc;
-    doc.appendChild(TupSerializer::properties(item, doc));
-
     TupTextItem *textItem = qgraphicsitem_cast<TupTextItem *>(item);
+    QDomDocument doc;
+    doc.appendChild(TupSerializer::properties(item, doc, textItem->toPlainText(), textItem->textWidth()));
+
     int position = -1;
     TupLibraryObject::ObjectType type;
     if (textItem) {
@@ -729,9 +736,12 @@ void TextTool::keyPressEvent(QKeyEvent *event)
         qDebug() << "[TextTool::keyPressEvent()] - key -> " << event->key();
     #endif
 
+    key = "NONE";
+
     if (event->key() == Qt::Key_F11 || event->key() == Qt::Key_Escape) {
         emit closeHugeCanvas();
-    } else {
+    } else if ((event->key() == Qt::Key_Left) || (event->key() == Qt::Key_Up)
+              || (event->key() == Qt::Key_Right) || (event->key() == Qt::Key_Down)) {
         if (!activeSelection) {
             QPair<int, int> flags = TupToolPlugin::setKeyAction(event->key(), event->modifiers());
             if (flags.first != -1 && flags.second != -1)
@@ -763,6 +773,21 @@ void TextTool::keyPressEvent(QKeyEvent *event)
             QTimer::singleShot(0, this, SLOT(syncNodes()));
             requestTransformation(item, frame);
         }
+    } else if (event->modifiers() == Qt::ControlModifier) {
+        key = "CONTROL";
+        if (activeSelection)
+            manager->setProportion(true);
+    }
+}
+
+void TextTool::keyReleaseEvent(QKeyEvent *event)
+{
+    Q_UNUSED(event)
+
+    if (key.compare("CONTROL") == 0) {
+        key = "NONE";
+        if (activeSelection)
+            manager->setProportion(false);
     }
 }
 
