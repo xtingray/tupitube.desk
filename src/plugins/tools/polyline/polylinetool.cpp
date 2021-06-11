@@ -347,7 +347,7 @@ void PolyLineTool::keyPressEvent(QKeyEvent *event)
         cutterOn = true;
         initEnv();
     } else {
-        QPair<int, int> flags = TupToolPlugin::setKeyAction(event->key(), event->modifiers());
+        QPair<int, int> flags = TAction::setKeyAction(event->key(), event->modifiers());
         if (flags.first != -1 && flags.second != -1)
             emit callForPlugin(flags.first, flags.second);
     }

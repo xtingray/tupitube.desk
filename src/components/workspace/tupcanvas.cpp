@@ -74,6 +74,7 @@ TupCanvas::TupCanvas(QWidget *parent, Qt::WindowFlags flags, TupGraphicsScene *g
     connect(graphicsView, SIGNAL(zoomOut()), this, SLOT(wakeUpZoomOut()));
     connect(graphicsView, SIGNAL(frameBackward()), this, SLOT(oneFrameBack()));
     connect(graphicsView, SIGNAL(frameForward()), this, SLOT(oneFrameForward()));
+    // connect(graphicsView, SIGNAL(callAction(int, int)), this, SIGNAL(callAction(int, int)));
 
     graphicsView->centerOn(centerPoint);
     graphicsView->scale(scaleFactor, scaleFactor);
@@ -364,7 +365,6 @@ void TupCanvas::wakeUpLibrary()
         }
     }
 }
-
 
 void TupCanvas::wakeUpSelection()
 {

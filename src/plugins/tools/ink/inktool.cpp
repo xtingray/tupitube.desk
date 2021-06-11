@@ -212,7 +212,7 @@ void InkTool::release(const TupInputDeviceInformation *input, TupBrushManager *b
         QDomDocument doc;
         doc.appendChild(blackEllipse->toXml(doc));
         TupProjectRequest request = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(), gScene->currentLayerIndex(),
-                                                                         gScene->currentFrameIndex(), 0, center,
+                                                                         gScene->currentFrameIndex(), 0, QPointF(0, 0),
                                                                          gScene->getSpaceContext(), TupLibraryObject::Item,
                                                                          TupProjectRequest::Add, doc.toString());
         emit requested(&request);
@@ -415,7 +415,7 @@ void InkTool::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_F11 || event->key() == Qt::Key_Escape) {
         emit closeHugeCanvas();
     } else {
-        QPair<int, int> flags = TupToolPlugin::setKeyAction(event->key(), event->modifiers());
+        QPair<int, int> flags = TAction::setKeyAction(event->key(), event->modifiers());
         if (flags.first != -1 && flags.second != -1)
             emit callForPlugin(flags.first, flags.second);
     }

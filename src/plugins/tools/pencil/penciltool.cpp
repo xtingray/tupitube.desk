@@ -208,12 +208,10 @@ void PencilTool::release(const TupInputDeviceInformation *input, TupBrushManager
                 blackEllipse->setBrush(inkPen.brush());
                 gScene->includeObject(blackEllipse);
 
-                QPointF point = currentPoint - distance;
-
                 QDomDocument doc;
                 doc.appendChild(blackEllipse->toXml(doc));
                 TupProjectRequest request = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(), gScene->currentLayerIndex(), gScene->currentFrameIndex(),
-                                                                                 0, point, gScene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
+                                                                                 0, QPointF(0, 0), gScene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
                                                                                  doc.toString());
                 emit requested(&request);
                 return;
@@ -367,7 +365,7 @@ void PencilTool::keyPressEvent(QKeyEvent *event)
         return;
     }
 
-    QPair<int, int> flags = TupToolPlugin::setKeyAction(event->key(), event->modifiers());
+    QPair<int, int> flags = TAction::setKeyAction(event->key(), event->modifiers());
     if (flags.first != -1 && flags.second != -1)
         emit callForPlugin(flags.first, flags.second);
 }

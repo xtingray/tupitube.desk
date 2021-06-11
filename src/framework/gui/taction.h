@@ -76,6 +76,7 @@ class T_GUI_EXPORT TAction : public QAction
 
         void setActionId(TAction::ActionId code);
         TAction::ActionId actionId();
+        static QPair<int, int> setKeyAction(int key, Qt::KeyboardModifiers modifiers);
 
     private:
         void initWithManager(TActionManager *parent, const QString &id);

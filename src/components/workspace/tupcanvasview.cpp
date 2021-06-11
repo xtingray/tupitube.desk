@@ -110,6 +110,9 @@ void TupCanvasView::mouseMoveEvent(QMouseEvent *event)
 
 void TupCanvasView::keyPressEvent(QKeyEvent *event)
 {
+    if (event->key() == Qt::Key_T)
+        return;
+
     if (event->key() == Qt::Key_Space)
         spaceBar = true;
 

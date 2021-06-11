@@ -286,7 +286,7 @@ void FillTool::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_F11 || event->key() == Qt::Key_Escape) {
         emit closeHugeCanvas();
     } else {
-        QPair<int, int> flags = TupToolPlugin::setKeyAction(event->key(), event->modifiers());
+        QPair<int, int> flags = TAction::setKeyAction(event->key(), event->modifiers());
         if (flags.first != -1 && flags.second != -1)
             emit callForPlugin(flags.first, flags.second);
     }

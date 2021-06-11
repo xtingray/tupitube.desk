@@ -282,6 +282,10 @@ void NodesTool::itemResponse(const TupItemResponse *response)
     switch (response->getAction()) {
         case TupProjectRequest::Convert:
         {
+             #ifdef TUP_DEBUG
+                 qDebug() << "[NodesTool::itemResponse()] - Convert case";
+             #endif
+
              if (item) {
                  nodeGroup = new TNodeGroup(item, scene, TNodeGroup::LineSelection, nodeZValue);
              } else {
@@ -292,7 +296,11 @@ void NodesTool::itemResponse(const TupItemResponse *response)
         }
         break;
         case TupProjectRequest::EditNodes:
-        {
+        {  
+             #ifdef TUP_DEBUG
+                 qDebug() << "[NodesTool::itemResponse()] - EditNodes case";
+             #endif
+
              if (item) {
                  if (activeSelection) {
                      if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeGroup->parentItem()) == item) {
@@ -315,11 +323,17 @@ void NodesTool::itemResponse(const TupItemResponse *response)
         break;
         case TupProjectRequest::Remove:
         {
+             #ifdef TUP_DEBUG
+                 qDebug() << "[NodesTool::itemResponse()] - Remove case";
+             #endif
              return;
         }
         case TupProjectRequest::Ungroup:
         {
-             // reset(scene);
+             #ifdef TUP_DEBUG
+                 qDebug() << "[NodesTool::itemResponse()] - Ungroup case";
+             #endif
+
              if (item) {
                  nodeGroup = new TNodeGroup(item, scene, TNodeGroup::LineSelection, nodeZValue);
                  nodeGroup->show();
@@ -356,10 +370,11 @@ void NodesTool::keyPressEvent(QKeyEvent *event)
         emit closeHugeCanvas();
     } else {
         if (!activeSelection) {
-            QPair<int, int> flags = TupToolPlugin::setKeyAction(event->key(), event->modifiers());
+            QPair<int, int> flags = TAction::setKeyAction(event->key(), event->modifiers());
             if (flags.first != -1 && flags.second != -1)
                 emit callForPlugin(flags.first, flags.second);
-        } else {
+        } else if ((event->key() == Qt::Key_Left) || (event->key() == Qt::Key_Up)
+                   || (event->key() == Qt::Key_Right) || (event->key() == Qt::Key_Down)) {
             int delta = 5;
 
             if (event->modifiers() == Qt::ShiftModifier)
@@ -385,6 +400,10 @@ void NodesTool::keyPressEvent(QKeyEvent *event)
 
             QTimer::singleShot(0, this, SLOT(syncNodes()));
             requestTransformation(item, frame);
+        } else {
+            QPair<int, int> flags = TAction::setKeyAction(event->key(), event->modifiers());
+            if (flags.first != -1 && flags.second != -1)
+                emit callForPlugin(flags.first, flags.second);
         }
     }
 }

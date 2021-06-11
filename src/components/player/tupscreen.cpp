@@ -339,9 +339,6 @@ void TupScreen::stopAnimation()
             if (timer->isActive())
                 timer->stop();
         }
-
-        // foreach (TupSoundLayer *sound, k->sounds)
-        //     sound->stop();
     } else {
         if (playBackTimer) {
             if (playBackTimer->isActive())

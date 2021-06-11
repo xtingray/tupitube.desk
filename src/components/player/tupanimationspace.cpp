@@ -65,7 +65,7 @@ void TupAnimationspace::setCameraWidget(TupCameraWidget *playerUI)
 
 void TupAnimationspace::mousePressEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
     setFocus();
 }
 

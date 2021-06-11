@@ -743,7 +743,7 @@ void TextTool::keyPressEvent(QKeyEvent *event)
     } else if ((event->key() == Qt::Key_Left) || (event->key() == Qt::Key_Up)
               || (event->key() == Qt::Key_Right) || (event->key() == Qt::Key_Down)) {
         if (!activeSelection) {
-            QPair<int, int> flags = TupToolPlugin::setKeyAction(event->key(), event->modifiers());
+            QPair<int, int> flags = TAction::setKeyAction(event->key(), event->modifiers());
             if (flags.first != -1 && flags.second != -1)
                 emit callForPlugin(flags.first, flags.second);
         } else {

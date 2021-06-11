@@ -133,3 +133,168 @@ TAction::ActionId TAction::actionId()
 {
     return id;
 }
+
+QPair<int, int> TAction::setKeyAction(int key, Qt::KeyboardModifiers modifiers)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TAction::setKeyAction()] - key -> " << key;
+    #endif
+
+    TAction::MenuId menu = TAction::BrushesMenu;
+    int tool = TAction::Pencil;
+
+    if (modifiers & Qt::ControlModifier) {
+        switch (key) {
+            case Qt::Key_Right:
+            {
+                menu = TAction::Arrows;
+                tool = TAction::Right_QuickCopy;
+            }
+            break;
+            case Qt::Key_Left:
+            {
+                menu = TAction::Arrows;
+                tool = TAction::Left_Delete;
+            }
+            break;
+            case Qt::Key_Up:
+            {
+                menu = TAction::Arrows;
+                tool = TAction::Up_Delete;
+            }
+            break;
+            case Qt::Key_Down:
+            {
+                menu = TAction::Arrows;
+                tool = TAction::Down_QuickCopy;
+            }
+            break;
+        }
+    } else {
+        switch (key) {
+            case Qt::Key_P:
+            {
+                 if (modifiers == Qt::ShiftModifier) {
+                     menu = TAction::ColorMenu;
+                     tool = TAction::ColorPalette;
+                 } else {
+                     tool = TAction::Pencil;
+                 }
+            }
+            break;
+
+            case Qt::Key_K:
+            {
+                 tool = TAction::Ink;
+            }
+            break;
+
+            case Qt::Key_S:
+            {
+                 tool = TAction::Polyline;
+            }
+            break;
+
+            case Qt::Key_L:
+            {
+                 tool = TAction::Line;
+            }
+            break;
+
+            case Qt::Key_R:
+            {
+                tool = TAction::Rectangle;
+            }
+            break;
+
+            case Qt::Key_C:
+            {
+                tool = TAction::Ellipse;
+            }
+            break;
+
+            case Qt::Key_T:
+            {
+                tool = TAction::Text;
+            }
+            break;
+
+            case Qt::Key_O:
+            {
+                menu = TAction::SelectionMenu;
+                tool = TAction::ObjectSelection;
+            }
+            break;
+
+            case Qt::Key_N:
+            {
+                menu = TAction::SelectionMenu;
+                tool = TAction::NodesEditor;
+            }
+            break;
+
+            case Qt::Key_F:
+            {
+                menu = TAction::FillMenu;
+                tool = TAction::FillTool;
+            }
+            break;
+
+            case Qt::Key_Left:
+            {
+                menu = TAction::Arrows;
+                tool = TAction::Left_Arrow;
+            }
+            break;
+
+            case Qt::Key_Right:
+            {
+                menu = TAction::Arrows;
+                tool = TAction::Right_Arrow;
+            }
+            break;
+
+            case Qt::Key_PageUp:
+            case Qt::Key_Up:
+            {
+                menu = TAction::Arrows;
+                tool = TAction::Up_Arrow;
+            }
+            break;
+
+            case Qt::Key_PageDown:
+            case Qt::Key_Down:
+            {
+                menu = TAction::Arrows;
+                tool = TAction::Down_Arrow;
+            }
+            break;
+
+            case Qt::Key_Delete:
+            {
+                menu = TAction::SelectionMenu;
+                tool = TAction::Delete;
+            }
+            break;
+
+            case Qt::Key_E:
+            {
+                menu = TAction::ColorMenu;
+                tool = TAction::EyeDropper;
+            }
+            break;
+
+            default:
+            {
+                menu = TAction::InvalidMenu;
+                tool = TAction::NoAction;
+            }
+        }
+    }
+
+    QPair<int, int> flags;
+    flags.first = menu;
+    flags.second = tool;
+
+    return flags;
+}

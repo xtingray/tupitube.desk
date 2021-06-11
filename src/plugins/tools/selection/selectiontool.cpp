@@ -586,7 +586,7 @@ void SelectionTool::keyPressEvent(QKeyEvent *event)
                || (event->key() == Qt::Key_Right) || (event->key() == Qt::Key_Down)) {
 
         if (!selectionIsActive()) {
-            QPair<int, int> flags = TupToolPlugin::setKeyAction(event->key(), event->modifiers());
+            QPair<int, int> flags = TAction::setKeyAction(event->key(), event->modifiers());
             if (flags.first != -1 && flags.second != -1)
                 emit callForPlugin(flags.first, flags.second);
         } else {
@@ -634,7 +634,7 @@ void SelectionTool::keyPressEvent(QKeyEvent *event)
             }
         }
     } else {
-        QPair<int, int> flags = TupToolPlugin::setKeyAction(event->key(), event->modifiers());
+        QPair<int, int> flags = TAction::setKeyAction(event->key(), event->modifiers());
         if (flags.first != -1 && flags.second != -1)
             emit callForPlugin(flags.first, flags.second);
     }
