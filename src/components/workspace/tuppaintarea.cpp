@@ -1469,12 +1469,6 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
         return;
     }
 
-    if (currentToolID == TAction::Polyline) {
-        if (event->key() == Qt::Key_X)
-            emit closePolyLine();
-        return;
-    }
-
     if (event->key() == Qt::Key_PageUp) {
         if (event->modifiers() == Qt::ControlModifier)
             removeCurrentFrame();
@@ -1515,6 +1509,11 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
         emit localRequestTriggered(&request);
 
         return;
+    }
+
+    if (currentToolID == TAction::Polyline) {
+        if (event->key() == Qt::Key_X)
+            emit closePolyLine();
     }
 
     TupPaintAreaBase::keyPressEvent(event);

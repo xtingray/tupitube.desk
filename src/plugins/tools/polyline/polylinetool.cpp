@@ -88,7 +88,7 @@ void PolyLineTool::init(TupGraphicsScene *gScene)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "PolyLineTool::init()";
+        qDebug() << "[PolyLineTool::init()]";
     #endif
     */
 
@@ -96,7 +96,7 @@ void PolyLineTool::init(TupGraphicsScene *gScene)
         scene = gScene;
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "PolyLineTool::init() - Fatal Error: TupGraphicsScene variable is NULL!";
+            qDebug() << "[PolyLineTool::init()] - Fatal Error: TupGraphicsScene variable is NULL!";
         #endif
 
         return;
@@ -117,7 +117,7 @@ QList<TAction::ActionId> PolyLineTool::keys() const
 void PolyLineTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "PolyLineTool::press()";
+        qDebug() << "[PolyLineTool::press()]";
     #endif
 
     if (cutterOn)
@@ -159,8 +159,8 @@ void PolyLineTool::press(const TupInputDeviceInformation *input, TupBrushManager
 
 void PolyLineTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
-    Q_UNUSED(brushManager);
-    Q_UNUSED(gScene);
+    Q_UNUSED(brushManager)
+    Q_UNUSED(gScene)
 
     if (cutterOn)
         return;
@@ -191,11 +191,11 @@ void PolyLineTool::move(const TupInputDeviceInformation *input, TupBrushManager 
 void PolyLineTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "PolyLineTool::release()";
+        qDebug() << "[PolyLineTool::release()]";
     #endif
 
-    Q_UNUSED(input);
-    Q_UNUSED(brushManager);
+    Q_UNUSED(input)
+    Q_UNUSED(brushManager)
 
     if (cutterOn)
         return;
@@ -230,7 +230,7 @@ void PolyLineTool::release(const TupInputDeviceInformation *input, TupBrushManag
 void PolyLineTool::itemResponse(const TupItemResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "PolyLineTool::itemResponse()";
+        qDebug() << "[PolyLineTool::itemResponse()]";
     #endif
 
     QGraphicsItem *item = nullptr;
@@ -249,12 +249,12 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
                     item = frame->item(response->getItemIndex());
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "PolyLineTool::itemResponse() - Fatal Error: Frame variable is NULL!";
+                        qDebug() << "[PolyLineTool::itemResponse()] - Fatal Error: Frame variable is NULL!";
                     #endif
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "PolyLineTool::itemResponse() - Fatal Error: Layer variable is NULL!";
+                    qDebug() << "[PolyLineTool::itemResponse()] - Fatal Error: Layer variable is NULL!";
                 #endif
             }
         } else {
@@ -266,7 +266,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
                         item = frame->item(response->getItemIndex());
                     } else {
                         #ifdef TUP_DEBUG
-                            qDebug() << "PolyLineTool::itemResponse() - Fatal Error: Static bg frame variable is NULL!";
+                            qDebug() << "[PolyLineTool::itemResponse()] - Fatal Error: Static bg frame variable is NULL!";
                         #endif
                     }
                 } else if (scene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
@@ -275,23 +275,23 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
                                item = frame->item(response->getItemIndex());
                            } else {
                                #ifdef TUP_DEBUG
-                                   qDebug() << "PolyLineTool::itemResponse() - Fatal Error: Dynamic bg frame variable is NULL!";
+                                   qDebug() << "[PolyLineTool::itemResponse()] - Fatal Error: Dynamic bg frame variable is NULL!";
                                #endif
                            }
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "PolyLineTool::itemResponse() - Fatal Error: Invalid spaceContext!";
+                        qDebug() << "[PolyLineTool::itemResponse()] - Fatal Error: Invalid spaceContext!";
                     #endif
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "PolyLineTool::itemResponse() - Fatal Error: Scene bg variable is NULL!";
+                    qDebug() << "[PolyLineTool::itemResponse()] - Fatal Error: Scene bg variable is NULL!";
                 #endif
             }
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "PolyLineTool::itemResponse() - Fatal Error: Scene variable is NULL!";
+            qDebug() << "[PolyLineTool::itemResponse()] - Fatal Error: Scene variable is NULL!";
         #endif
     }
 
@@ -325,7 +325,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "PolyLineTool::itemResponse() - Fatal Error: No item was found";
+                    qDebug() << "[PolyLineTool::itemResponse()] - Fatal Error: No item was found";
                 #endif
             }
         }
@@ -338,7 +338,7 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
 void PolyLineTool::keyPressEvent(QKeyEvent *event)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "PolyLineTool::keyPressEvent()";
+        qDebug() << "[PolyLineTool::keyPressEvent()]";
     #endif
 
     if (event->key() == Qt::Key_F11 || event->key() == Qt::Key_Escape) {
@@ -362,7 +362,7 @@ void PolyLineTool::keyReleaseEvent(QKeyEvent *event)
 void PolyLineTool::initEnv()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "PolyLineTool::initEnv()";
+        qDebug() << "[PolyLineTool::initEnv()]";
     #endif
 
     if (pathItem) {
@@ -388,7 +388,7 @@ void PolyLineTool::initEnv()
 void PolyLineTool::nodeChanged()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "PolyLineTool::nodeChanged()";
+        qDebug() << "[PolyLineTool::nodeChanged()]";
     #endif
 
     if (nodeGroup) {
@@ -405,7 +405,7 @@ void PolyLineTool::nodeChanged()
                             position = frame->indexOf(nodeGroup->parentItem());
                         } else {
                             #ifdef TUP_DEBUG
-                                qDebug() << "PolyLineTool::nodeChanged() - Fatal Error: Static bg frame is NULL!";
+                                qDebug() << "[PolyLineTool::nodeChanged()] - Fatal Error: Static bg frame is NULL!";
                             #endif
                             return;
                         }
@@ -415,18 +415,18 @@ void PolyLineTool::nodeChanged()
                                    position = frame->indexOf(nodeGroup->parentItem());
                                } else {
                                    #ifdef TUP_DEBUG
-                                       qDebug() << "PolyLineTool::nodeChanged() - Fatal Error: Dynamic bg frame is NULL!";
+                                       qDebug() << "[PolyLineTool::nodeChanged()] - Fatal Error: Dynamic bg frame is NULL!";
                                    #endif
                                    return;
                                }
                     } else {
                         #ifdef TUP_DEBUG
-                            qDebug() << "PolyLineTool::nodeChanged() - Fatal Error: Invalid spaceContext!";
+                            qDebug() << "[PolyLineTool::nodeChanged()] - Fatal Error: Invalid spaceContext!";
                         #endif
                     }
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "PolyLineTool::nodeChanged() - Fatal Error: Scene background variable is NULL!";
+                        qDebug() << "[PolyLineTool::nodeChanged()] - Fatal Error: Scene background variable is NULL!";
                     #endif
                 }
             }
@@ -441,19 +441,19 @@ void PolyLineTool::nodeChanged()
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "PolyLineTool::nodeChanged() - Fatal Error: Invalid object index || No nodeGroup parent item -> " + QString::number(position);
+                    qDebug() << "[PolyLineTool::nodeChanged()] - Fatal Error: Invalid object index || No nodeGroup parent item -> " + QString::number(position);
                 #endif
                 return;
              }
         } else {
           #ifdef TUP_DEBUG
-              qDebug() << "PolyLineTool::nodeChanged() - Fatal Error: Array of changed nodes is empty!";
+              qDebug() << "[PolyLineTool::nodeChanged()] - Fatal Error: Array of changed nodes is empty!";
           #endif
           return;
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "PolyLineTool::nodeChanged() - Fatal Error: Array of nodes is empty!";
+            qDebug() << "[PolyLineTool::nodeChanged()] - Fatal Error: Array of nodes is empty!";
         #endif
         return;
     }
