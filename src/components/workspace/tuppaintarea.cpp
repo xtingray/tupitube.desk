@@ -833,7 +833,9 @@ void TupPaintArea::copyItems()
                 QPointF pos;
                 TupSvg2Qt::parsePointF(properties.attribute("pos"), pos);
                 // qDebug() << "pos attribute -> " << pos;
-                // qDebug() << "DOM -> " << dom.toString();
+                // qDebug() << "";
+                // qDebug() << "DOM -> ";
+                // qDebug() << dom.toString();
 
                 if (plainItem.startsWith("<rect")) { // Rectangle
                     int x = root.attribute("x").toInt();
@@ -981,10 +983,8 @@ void TupPaintArea::pasteItems()
                 }
 
                 QPointF pos = QPointF(0, 0);
-                // if (xml.startsWith("<ellipse"))
-                //     pos = ellipsePos(xml);
                 if (itemsCount == 1) { // One item selection
-                    if (onMouse) {
+                    if (onMouse) { // Dynamic position
                         double x = currentPos.x() - (copyCoords.at(i).x() + centerCoord.x());
                         if (currentPos.x() >= copyCoords.at(i).x())
                             x = fabs(x);
@@ -994,7 +994,7 @@ void TupPaintArea::pasteItems()
                             y = fabs(y);
 
                         pos = QPointF(x, y);
-                    } else {
+                    } else { // Same position
                         // Path - Image - SVG
                         if (xml.startsWith("<path") || xml.startsWith("<symbol") || xml.startsWith("<svg")) {
                             QDomDocument dom;
@@ -1042,6 +1042,12 @@ void TupPaintArea::pasteItems()
                         }
                     }
                 }
+
+                /*
+                qDebug() << "";
+                qDebug() << "XML:";
+                qDebug() << xml;
+                */
 
                 TupProjectRequest event = TupRequestBuilder::createItemRequest(currentScene->currentSceneIndex(),
                                           currentScene->currentLayerIndex(),

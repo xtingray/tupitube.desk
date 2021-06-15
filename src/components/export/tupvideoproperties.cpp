@@ -235,7 +235,7 @@ void TupVideoProperties::postIt()
     }
 
     if (desc.length() > 0) {
-        if (desc.contains("<") || desc.contains(">") || desc.contains("http"))
+        if (desc.contains("<") || desc.contains(">"))
             desc = "";
 
         if (desc.length() > 1000) {

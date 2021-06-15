@@ -4336,10 +4336,6 @@ Please, contact the animation server admin to get access.</source>
         <source>Clear Frame</source>
         <translation>清除影格</translation>
     </message>
-    <message>
-        <source>Rule Of Thirds</source>
-        <translation>三分法則</translation>
-    </message>
 </context>
 <context>
     <name>TupPapagayoDialog</name>
@@ -4872,6 +4868,14 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Can&apos;t load the asset file!</source>
         <translation>無法載入資產檔案</translation>
+    </message>
+    <message>
+        <source>Keywords</source>
+        <translation>關鍵詞</translation>
+    </message>
+    <message>
+        <source>Keywords Database</source>
+        <translation>關鍵詞數據庫</translation>
     </message>
 </context>
 <context>

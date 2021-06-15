@@ -77,6 +77,7 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         void openDonationLink();
         void openPatreonLink();
         void openCreditsLink();
+        void openKeywordsLink();
         void updateProgress(qint64 bytesReceived, qint64 bytesTotal);
 
     private:

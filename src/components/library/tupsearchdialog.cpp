@@ -121,6 +121,7 @@ QWidget * TupSearchDialog::searchTab()
     comboLayout->setSpacing(0);
 
     searchLine = new TComboBox;
+    searchLine->setFixedWidth(200);
     connect(searchLine, SIGNAL(enterPressed()), this, SLOT(startSearch()));
     searchLine->setEditable(true);
     comboLayout->addWidget(searchLine);
@@ -130,6 +131,11 @@ QWidget * TupSearchDialog::searchTab()
     searchButton->setToolTip(tr("Search"));
     connect(searchButton, SIGNAL(clicked()), this, SLOT(startSearch()));
     comboLayout->addWidget(searchButton);
+
+    QPushButton *keywordsButton = new QPushButton(tr("Keywords"));
+    keywordsButton->setToolTip(tr("Keywords Database"));
+    connect(keywordsButton, SIGNAL(clicked()), this, SLOT(openKeywordsLink()));
+    comboLayout->addWidget(keywordsButton);
 
     searchLayout->addWidget(comboPanel, Qt::AlignHCenter);
 
@@ -143,9 +149,14 @@ QWidget * TupSearchDialog::searchTab()
     // assetCombo->addItem(QIcon(THEME_DIR + "icons/bitmap.png"), tr("Puppet"));
 
     connect(assetCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(startSearchFromCombo()));
-
     assetCombo->setItemData(4, 0, Qt::UserRole - 1);
-    searchLayout->addWidget(assetCombo, Qt::AlignHCenter);
+
+    QHBoxLayout *filterLayout = new QHBoxLayout;
+    filterLayout->addWidget(new QWidget);
+    filterLayout->addWidget(assetCombo);
+    filterLayout->addWidget(new QWidget);
+
+    searchLayout->addLayout(filterLayout);
     searchLayout->addWidget(new QWidget);
     searchLayout->addStretch();
 
@@ -937,5 +948,11 @@ void TupSearchDialog::openPatreonLink()
 void TupSearchDialog::openCreditsLink()
 {
     QUrl url(TUPITUBE_URL + QString("/credits"));
+    QDesktopServices::openUrl(url);
+}
+
+void TupSearchDialog::openKeywordsLink()
+{
+    QUrl url(TUPITUBE_URL + QString("/keywords"));
     QDesktopServices::openUrl(url);
 }
