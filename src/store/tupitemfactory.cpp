@@ -270,11 +270,7 @@ bool TupItemFactory::endTag(const QString& qname)
 {
     /*
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TupItemFactory::endTag()] - qname: " << qname;
-        #else
-            T_FUNCINFOX("items") << qname;
-        #endif
+        qDebug() << "[TupItemFactory::endTag()] - qname: " << qname;
     #endif
     */
 
@@ -306,9 +302,9 @@ bool TupItemFactory::endTag(const QString& qname)
                if (addToGroup)
                    groups.last()->addToGroup(objects.last());
 
-               if (TupTextItem *text = qgraphicsitem_cast<TupTextItem *>(objects.last()))
-                   text->setPlainText(textReaded);
-                   // text->setHtml(textReaded);
+               // if (TupTextItem *text = qgraphicsitem_cast<TupTextItem *>(objects.last()))
+               //     text->setPlainText(textReaded);
+
                objects.pop();
     } else if (qname == "group") {
                groups.pop();

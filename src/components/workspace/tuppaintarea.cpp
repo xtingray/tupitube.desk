@@ -832,10 +832,13 @@ void TupPaintArea::copyItems()
                 QDomElement properties = root.firstChild().toElement();
                 QPointF pos;
                 TupSvg2Qt::parsePointF(properties.attribute("pos"), pos);
-                // qDebug() << "pos attribute -> " << pos;
-                // qDebug() << "";
-                // qDebug() << "DOM -> ";
-                // qDebug() << dom.toString();
+
+                /*
+                qDebug() << "pos attribute -> " << pos;
+                qDebug() << "";
+                qDebug() << "DOM -> ";
+                qDebug() << dom.toString();
+                */
 
                 if (plainItem.startsWith("<rect")) { // Rectangle
                     int x = root.attribute("x").toInt();
@@ -996,15 +999,20 @@ void TupPaintArea::pasteItems()
                         pos = QPointF(x, y);
                     } else { // Same position
                         // Path - Image - SVG
-                        if (xml.startsWith("<path") || xml.startsWith("<symbol") || xml.startsWith("<svg")) {
+                        if (xml.startsWith("<path") || xml.startsWith("<symbol") || xml.startsWith("<svg") ||
+                            xml.startsWith("<text")) {
                             QDomDocument dom;
                             dom.setContent(xml);
                             QDomElement root = dom.documentElement();
                             QDomElement properties = root.firstChild().toElement();
                             QPointF shift;
                             TupSvg2Qt::parsePointF(properties.attribute("pos"), shift);
+                            /*
+                            qDebug() << "";
+                            qDebug() << "WATCH shift -> " << shift;
                             if (shift != QPointF(0,0))
                                 pos = shift;
+                            */
                         } else if (xml.startsWith("<group")) {
                             QDomDocument dom;
                             dom.setContent(xml);
@@ -1045,8 +1053,8 @@ void TupPaintArea::pasteItems()
 
                 /*
                 qDebug() << "";
-                qDebug() << "XML:";
-                qDebug() << xml;
+                qDebug() << "POS:";
+                qDebug() << pos;
                 */
 
                 TupProjectRequest event = TupRequestBuilder::createItemRequest(currentScene->currentSceneIndex(),

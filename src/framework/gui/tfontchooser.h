@@ -46,9 +46,6 @@
 #include <QFontComboBox>
 #include <QPushButton>
 
-// class QComboBox;
-// class QFontComboBox;
-
 class T_GUI_EXPORT TFontChooser : public QFrame
 {
     Q_OBJECT
@@ -84,8 +81,6 @@ class T_GUI_EXPORT TFontChooser : public QFrame
         void alignTextToRight();
 
     private:
-        void setFontSizeRange(const QString &family);
-
         QFontComboBox *m_families;
         QComboBox *m_fontSize;
         

@@ -109,6 +109,10 @@ QFont TextConfigurator::textFont() const
 
 void TextConfigurator::changeFont()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextConfigurator::changeFont()]";
+    #endif
+
     font = fontChooser->currentFont();
     textBox->setFont(font);
     adjustSize();

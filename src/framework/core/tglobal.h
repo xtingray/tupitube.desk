@@ -78,6 +78,8 @@
 // #define BG_LAYERS_TOTAL 10
 #define ZLAYER_BASE 100000 // Initial zValue for Frames Mode layers
 
+#define DEFAULT_FONT_SIZE 36
+
 struct SoundResource {
     int frame;
     QString path;

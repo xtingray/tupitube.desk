@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tfontchooser.h"
+#include "tconfig.h"
 #include "tapplicationproperties.h"
 #include "tseparator.h"
 
@@ -115,56 +116,28 @@ TFontChooser::~TFontChooser()
 {
 }
 
-void TFontChooser::setFontSizeRange(const QString &family)
-{
-    m_fontSize->blockSignals(true);
-
-    QFontDatabase fdb;
-    m_fontSize->clear();
-    QList<int> points = fdb.pointSizes(family);
-    if (!points.isEmpty()) {
-        foreach (int point, points) {
-            if (point > 9)
-                m_fontSize->addItem(QString::number(point));
-        }
-    } else {
-        #ifdef TUP_DEBUG
-            qDebug() << "[TFontChooser::setFontSizeRange()] - Fatal Error: No sizes for family -> " << family;
-        #endif
-        for (int i=10; i<30; i++)
-            m_fontSize->addItem(QString::number(i));
-    }
-
-    m_fontSize->blockSignals(false);
-}
-
 void TFontChooser::loadFontInfo(const QFont &newFont)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TFontChooser::loadFontInfo()] - newFont -> " << newFont.styleName();
+        qDebug() << "[TFontChooser::loadFontInfo()]";
     #endif
 
     QString currentSize = m_fontSize->currentText();
-    // QString currentStyle = tr("Normal");
     QString family = newFont.family();
 
-    /*
-    QFontDatabase fdb;
-    m_fontSize->clear();    
-    QList<int> points = fdb.pointSizes(family);
-    if (!points.isEmpty()) {
-        foreach (int point, points)
-            m_fontSize->addItem(QString::number(point));
-    } else {
-        #ifdef TUP_DEBUG
-            qDebug() << "[TFontChooser::loadFontInfo()] - Fatal Error: No sizes for family -> " << family;
-        #endif
-        for (int i=1; i<30; i++)
-            m_fontSize->addItem(QString::number(i));
-    }
-    */
+    m_fontSize->clear();
+    for (int i=6; i<=12; i++)
+        m_fontSize->addItem(QString::number(i));
 
-    setFontSizeRange(family);
+    int value = 14;
+    for (int i=1; i<=8; i++) {
+        m_fontSize->addItem(QString::number(value));
+        value += 2;
+    }
+
+    m_fontSize->addItem("36");
+    m_fontSize->addItem("48");
+    m_fontSize->addItem("72");
 
     int sizeIndex = m_fontSize->findText(currentSize);
     if (sizeIndex >= 0)
@@ -227,17 +200,38 @@ void TFontChooser::setCurrentFont(const QFont &font)
 
 void TFontChooser::initFont()
 {
-    m_families->setCurrentIndex(0);
-    m_fontSize->setCurrentIndex(0);
+    #ifdef TUP_DEBUG
+        qDebug() << "[TFontChooser::initFont()]";
+    #endif
+
+    TCONFIG->beginGroup("TextTool");
+    QString fontFamily = TCONFIG->value("FontFamily", "Helvetica").toString();
+    QString fontSize = TCONFIG->value("FontSize", DEFAULT_FONT_SIZE).toString();
+
+    int familyIndex = m_families->findText(fontFamily);
+    if (familyIndex < 0)
+        familyIndex = 0;
+    m_families->setCurrentIndex(familyIndex);
+
+    m_fontSize->setCurrentIndex(m_fontSize->findText(fontSize));
+    m_currentFont.setPointSize(fontSize.toInt());
 }
 
 QFont TFontChooser::currentFont() const
 {
-     return m_currentFont;
+    #ifdef TUP_DEBUG
+        qDebug() << "[TFontChooser::currentFont()]";
+    #endif
+
+    return m_currentFont;
 }
 
 int TFontChooser::currentSize() const
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TFontChooser::currentSize()]";
+    #endif
+
     return m_fontSize->currentText().toInt();
 }
 

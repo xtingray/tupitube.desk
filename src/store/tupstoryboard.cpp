@@ -41,6 +41,8 @@ TupStoryboard::TupStoryboard()
     author  = "";
     topics  = "";
     summary = "";
+
+    coverDuration = "1.0";
 }
 
 TupStoryboard::~TupStoryboard()
@@ -50,7 +52,7 @@ TupStoryboard::~TupStoryboard()
 void TupStoryboard::init(int start, int size)
 {
     for (int i=start; i < size; i++)
-         duration << "0";
+         duration << "1.0";
 }
 
 void TupStoryboard::reset()
@@ -71,7 +73,7 @@ void TupStoryboard::insertScene(int index)
 
     if (index >= 0) {
         if (index < duration.size()) {
-            duration.insert(index, "0");
+            duration.insert(index, "1.0");
         } else if (index == duration.size()) {
             appendScene();
         } else {
@@ -93,7 +95,7 @@ void TupStoryboard::appendScene()
         qDebug() << "[TupStoryboard::appendScene()]";
     #endif
 
-    duration.append("0");
+    duration.append("1.0");
 }
 
 void TupStoryboard::moveScene(int oldIndex, int newIndex)
@@ -114,7 +116,7 @@ void TupStoryboard::resetScene(int index)
     #endif
 
     if (index >= 0 && index < duration.size())
-        duration.replace(index, "0");
+        duration.replace(index, "1.0");
 }
 
 void TupStoryboard::removeScene(int index)
@@ -194,7 +196,7 @@ QString TupStoryboard::sceneDuration(int index) const
     if (index < duration.count())
         return duration.at(index);
 
-    return "0";
+    return "1.0";
 }
 
 void TupStoryboard::fromXml(const QString &xml)
@@ -208,7 +210,7 @@ void TupStoryboard::fromXml(const QString &xml)
         return;
 
     QDomElement root = document.documentElement();
-    coverDuration = root.attribute("cover_duration", "0");
+    coverDuration = root.attribute("cover_duration", "1.0");
     QDomNode n = root.firstChild();
     int counter = 0;
 

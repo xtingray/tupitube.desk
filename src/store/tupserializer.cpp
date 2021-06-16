@@ -109,6 +109,7 @@ void TupSerializer::loadProperties(QGraphicsItem *item, const QXmlAttributes &at
         textItem->document()->setDefaultTextOption(option);
 
         textItem->setData(0, atts.value("text"));
+        textItem->setPlainText(atts.value("text"));
     }
 }
 
@@ -147,6 +148,7 @@ void TupSerializer::loadProperties(QGraphicsItem *item, const QDomElement &eleme
             textItem->document()->setDefaultTextOption(option);
 
             textItem->setData(0, element.attribute("text"));
+            textItem->setPlainText(element.attribute("text"));
         }
     }
 }

@@ -40,11 +40,8 @@
 #include "tfontchooser.h"
 
 #include <QWidget>
-// #include <QLineEdit>
 #include <QFont>
 #include <QTextEdit>
-// #include <QCheckBox>
-// #include <QBoxLayout>
 
 class TUPITUBE_PLUGIN TextConfigurator : public QWidget
 {

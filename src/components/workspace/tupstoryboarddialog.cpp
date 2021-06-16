@@ -250,10 +250,10 @@ QWidget * TupStoryBoardDialog::addDurationPanel()
 
     coverSecSpinBox = new QDoubleSpinBox;
     coverSecSpinBox->setDecimals(1);
+    coverSecSpinBox->setSingleStep(0.2);
     coverSecSpinBox->setMinimum(0.2);
     coverSecSpinBox->setMaximum(20);
-    coverSecSpinBox->setValue(1);
-    coverSecSpinBox->setSingleStep(0.2);
+    coverSecSpinBox->setValue(1.0);
 
     QString duration = storyboard->getCoverDuration();
     coverSecSpinBox->setValue(duration.toDouble());

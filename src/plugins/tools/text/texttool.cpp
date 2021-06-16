@@ -472,6 +472,11 @@ void TextTool::aboutToChangeTool()
 {
     init(scene);
     config->clearText();
+
+    QFont font = config->textFont();
+    TCONFIG->beginGroup("TextTool");
+    TCONFIG->setValue("FontFamily", font.family());
+    TCONFIG->setValue("FontSize", font.pointSize());
 }
 
 void TextTool::aboutToChangeScene(TupGraphicsScene *scene)
@@ -516,7 +521,6 @@ void TextTool::insertText()
         textItem->setDefaultTextColor(currentColor);
 
         QFont font = config->textFont();
-        QString text = config->text();
         textItem->setFont(font);
 
         textItem->setPlainText(text);

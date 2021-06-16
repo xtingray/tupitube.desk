@@ -55,11 +55,14 @@ void TupTextItem::fromXml(const QString &xml)
 QDomElement TupTextItem::toXml(QDomDocument &doc) const
 {
     QDomElement root = doc.createElement("text");
-    QDomText text = doc.createTextNode(toPlainText());
-    root.appendChild(text);
+    // QDomText text = doc.createTextNode(toPlainText());
+    // root.appendChild(text);
+    QString text = this->data(0).toString();
+    if (text.isEmpty())
+        text = toPlainText();
 
     QTextOption option = this->document()->defaultTextOption();
-    root.appendChild(TupSerializer::properties(this, doc, this->data(0).toString(), textWidth(), option.alignment()));
+    root.appendChild(TupSerializer::properties(this, doc, text, textWidth(), option.alignment()));
     QFont font = this->font();    
     root.appendChild(TupSerializer::font(&font, doc));
     QBrush brush(this->defaultTextColor());
