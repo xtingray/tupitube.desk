@@ -832,7 +832,6 @@ void TupPaintArea::copyItems()
                 QDomElement properties = root.firstChild().toElement();
                 QPointF pos;
                 TupSvg2Qt::parsePointF(properties.attribute("pos"), pos);
-
                 /*
                 qDebug() << "pos attribute -> " << pos;
                 qDebug() << "";
@@ -1005,14 +1004,11 @@ void TupPaintArea::pasteItems()
                             dom.setContent(xml);
                             QDomElement root = dom.documentElement();
                             QDomElement properties = root.firstChild().toElement();
+
                             QPointF shift;
                             TupSvg2Qt::parsePointF(properties.attribute("pos"), shift);
-                            /*
-                            qDebug() << "";
-                            qDebug() << "WATCH shift -> " << shift;
                             if (shift != QPointF(0,0))
                                 pos = shift;
-                            */
                         } else if (xml.startsWith("<group")) {
                             QDomDocument dom;
                             dom.setContent(xml);
