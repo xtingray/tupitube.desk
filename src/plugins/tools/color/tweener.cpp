@@ -459,7 +459,7 @@ void Tweener::applyTween()
     }
 
     // Tween is new
-    if (!scene->currentScene()->tweenExists(name, TupItemTweener::Coloring)) {
+    if (!scene->tweenExists(name, TupItemTweener::Coloring)) {
         initFrame = scene->currentFrameIndex();
         initLayer = scene->currentLayerIndex();
         initScene = scene->currentSceneIndex();

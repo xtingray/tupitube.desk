@@ -402,7 +402,7 @@ void Tweener::applyTween()
     }
 
     // Tween is new
-    if (!scene->currentScene()->tweenExists(name, TupItemTweener::Scale)) {
+    if (!scene->tweenExists(name, TupItemTweener::Scale)) {
         initFrame = scene->currentFrameIndex();
         initLayer = scene->currentLayerIndex();
         initScene = scene->currentSceneIndex();

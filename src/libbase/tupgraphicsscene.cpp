@@ -1897,3 +1897,11 @@ QSize TupGraphicsScene::getSceneDimension()
 
     return QSize();
 }
+
+bool TupGraphicsScene::tweenExists(const QString &name, TupItemTweener::Type type)
+{
+    if (tupScene)
+        return tupScene->tweenExists(name, type);
+
+    return false;
+}

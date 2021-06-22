@@ -124,6 +124,7 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         void setWaterMarkFlag(bool enable);
 
         QSize getSceneDimension();
+        bool tweenExists(const QString &name, TupItemTweener::Type type);
 
     // private slots:
     //  void updateObjectInformation(const QString &value);

@@ -441,7 +441,7 @@ void Tweener::applyTween()
     }
 
     // Tween is new
-    if (!scene->currentScene()->tweenExists(name, TupItemTweener::Rotation)) {
+    if (!scene->tweenExists(name, TupItemTweener::Rotation)) {
         #ifdef TUP_DEBUG
             qDebug() << "[Rotation Tweener::applyTween()] - Adding new tween...";
         #endif
@@ -467,6 +467,10 @@ void Tweener::applyTween()
                          pos = origin;
                  }
             }
+
+            #ifdef TUP_DEBUG
+                qDebug() << "[Rotation Tweener::applyTween()] - pivot pos -> " << pos;
+            #endif
 
             TupProjectRequest request = TupRequestBuilder::createItemRequest(
                                         initScene, initLayer, initFrame,
@@ -494,10 +498,19 @@ void Tweener::applyTween()
             TupFrame *frame = layer->frameAt(currentTween->getInitFrame());
             int objectIndex = frame->indexOf(item);
 
+            QPointF pos = item->mapFromParent(origin);
             TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
             if (svg) {
                 type = TupLibraryObject::Svg;
                 objectIndex = frame->indexOf(svg);
+            } else {
+                 objectIndex = scene->currentFrame()->indexOf(item);
+                 if (qgraphicsitem_cast<QGraphicsItemGroup *>(item)) {
+                     pos = origin;
+                 } else {
+                     if (qgraphicsitem_cast<TupPathItem *>(item))
+                         pos = origin;
+                 }
             }
 
             if (initFrame != currentTween->getInitFrame()) {
@@ -528,11 +541,15 @@ void Tweener::applyTween()
                 }
             }
 
+            #ifdef TUP_DEBUG
+                qDebug() << "[Rotation Tweener::applyTween()] - pivot pos -> " << pos;
+            #endif
+
             TupProjectRequest request = TupRequestBuilder::createItemRequest(
                                         initScene, initLayer, initFrame,
                                         objectIndex, QPointF(), scene->getSpaceContext(),
                                         type, TupProjectRequest::SetTween,
-                                        configPanel->tweenToXml(initScene, initLayer, initFrame, origin));
+                                        configPanel->tweenToXml(initScene, initLayer, initFrame, pos));
             emit requested(&request);
         }
 

@@ -430,7 +430,7 @@ void Tweener::applyTween()
     }
 
     // Tween is new
-    if (!scene->currentScene()->tweenExists(name, TupItemTweener::Shear)) {
+    if (!scene->tweenExists(name, TupItemTweener::Shear)) {
         initFrame = scene->currentFrameIndex();
         initLayer = scene->currentLayerIndex();
         initScene = scene->currentSceneIndex();

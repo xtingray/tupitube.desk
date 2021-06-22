@@ -377,7 +377,7 @@ void Tweener::applyTween()
     }
 
     // Tween is new
-    if (!scene->currentScene()->tweenExists(name, TupItemTweener::Opacity)) {
+    if (!scene->tweenExists(name, TupItemTweener::Opacity)) {
         initFrame = scene->currentFrameIndex();
         initLayer = scene->currentLayerIndex();
         initScene = scene->currentSceneIndex();
