@@ -138,5 +138,9 @@ QPointF TMouthTarget::currentPos()
 
 void TMouthTarget::resize(qreal factor)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TMouthTarget::resize()] - factor -> " << factor;
+    #endif
+
     setScale(factor);
 }

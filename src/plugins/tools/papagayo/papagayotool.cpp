@@ -522,7 +522,8 @@ void PapagayoTool::updateYPosition(int y)
 void PapagayoTool::resizeNode(qreal factor)
 {
     realFactor = factor;
-    target->resize(realFactor);
+    if (target)
+        target->resize(realFactor);
 }
 
 void PapagayoTool::updateZoomFactor(qreal factor)
