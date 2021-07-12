@@ -233,6 +233,10 @@ void PapagayoTool::editLipSyncSelection(const QString &name)
 
 void PapagayoTool::removeCurrentLipSync(const QString &name)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::removeCurrentLipSync()] - name -> " << name;
+    #endif
+
     QGraphicsView * view = scene->views().first();
     foreach (QGraphicsItem *item, view->scene()->items()) {
         QString tip = item->toolTip();
@@ -243,6 +247,9 @@ void PapagayoTool::removeCurrentLipSync(const QString &name)
     }
 
     TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, 0, TupProjectRequest::RemoveLipSync, name);
+    emit requested(&request);
+
+    request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove, name, TupLibraryObject::Folder);
     emit requested(&request);
 }
 

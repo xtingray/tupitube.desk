@@ -2330,7 +2330,11 @@ void TupDocumentView::importPapagayoLipSync()
             return;
         }
 
-        QString imagesDir = dialog->getImagesFile();
+        QString imagesDir = dialog->getImagesDir();
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupDocumentView::importPapagayoLipSync()] - imagesDir -> " << imagesDir;
+        #endif
+
         QFile projectFile(file);
         if (projectFile.exists()) {
             if (projectFile.size() > 0) {
@@ -2362,6 +2366,11 @@ void TupDocumentView::importPapagayoLipSync()
                             foreach (QString fileName, imagesList) {
                                 QString key = fileName.toLower();
                                 QFile f(mouthPath + "/" + fileName);
+                                #ifdef TUP_DEBUG
+                                    qDebug() << "[TupDocumentView::importPapagayoLipSync()] - mouth image -> " << fileName;
+                                    qDebug() << "[TupDocumentView::importPapagayoLipSync()] - key -> " << key;
+                                    qDebug() << "[TupDocumentView::importPapagayoLipSync()] - mouthPath -> " << mouthPath;
+                                #endif
                                 if (f.open(QIODevice::ReadOnly)) {
                                     QByteArray data = f.readAll();
                                     f.close();

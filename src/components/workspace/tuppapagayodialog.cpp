@@ -194,7 +194,7 @@ QString TupPapagayoDialog::getPGOFile() const
     return filePath->text();
 }
 
-QString TupPapagayoDialog::getImagesFile() const
+QString TupPapagayoDialog::getImagesDir() const
 {
     return imagesPath->text();
 }
@@ -246,6 +246,7 @@ void TupPapagayoDialog::updateMouthView(int index)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupPapagayoDialog::updateMouthView()] - index -> " << index;
+        qDebug() << "[TupPapagayoDialog::updateMouthView()] - images path -> " << folder[index];
     #endif
 
     imagesPath->setText(folder[index]);

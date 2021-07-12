@@ -52,7 +52,7 @@ class TUPITUBE_EXPORT TupPapagayoDialog : public QDialog
         ~TupPapagayoDialog();
 
         QString getPGOFile() const;
-        QString getImagesFile() const;
+        QString getImagesDir() const;
         QString getSoundFile() const;
 
     private slots:

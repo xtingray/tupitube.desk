@@ -71,9 +71,11 @@ LipSyncManager::LipSyncManager(QWidget *parent): QWidget(parent)
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->setAlignment(Qt::AlignHCenter);
     buttonLayout->setMargin(0);
-    buttonLayout->setSpacing(0);
+    // buttonLayout->setSpacing(0);
     buttonLayout->addWidget(addButton);
+    buttonLayout->addSpacing(10);
     buttonLayout->addWidget(editButton);
+    buttonLayout->addSpacing(10);
     buttonLayout->addWidget(delButton);
 
     layout->addLayout(listLayout);
@@ -120,6 +122,10 @@ void LipSyncManager::editLipSync()
 
 void LipSyncManager::removeLipSync()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[LipSyncManager::removeLipSync()]";
+    #endif
+
     if (lipSyncList->count() > 0) {
         QListWidgetItem *item = lipSyncList->currentItem();
         if (item) {
