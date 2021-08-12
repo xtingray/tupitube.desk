@@ -407,7 +407,8 @@ void TupLibraryWidget::removeCurrentItem()
     // If it's NOT a directory
     if (extension.length() > 0) {
         objectKey = libraryTree->currentItem()->text(3);
-        if (extension.compare("JPEG") == 0 || extension.compare("JPG") == 0 || extension.compare("PNG") == 0 || extension.compare("GIF") == 0)
+        if (extension.compare("JPEG") == 0 || extension.compare("JPG") == 0 || extension.compare("PNG") == 0 ||
+            extension.compare("GIF") == 0 || extension.compare("WEBP") == 0)
             type = TupLibraryObject::Image;
         if (extension.compare("SVG")==0)
             type = TupLibraryObject::Svg;
@@ -546,6 +547,8 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
                         filter += "(*.jpg *.jpeg)";
                     if (fileExtension.compare("GIF") == 0)
                         filter += "(*.gif)";
+                    if (fileExtension.compare("WEBP") == 0)
+                        filter += "(*.webp)";
                     if (fileExtension.compare("XPM") == 0)
                         filter += "(*.xpm)";
                     if (fileExtension.compare("SVG") == 0)
@@ -577,6 +580,8 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
                         target += ".jpg";
                     if (fileExtension.compare("GIF") == 0 && !filename.endsWith(".GIF"))
                         target += ".gif";
+                    if (fileExtension.compare("WEBP") == 0 && !filename.endsWith(".WEBP"))
+                        target += ".webp";
                     if (fileExtension.compare("XPM") == 0 && !filename.endsWith(".XPM"))
                         target += ".xpm";
                     if (fileExtension.compare("SVG") == 0 && !filename.endsWith(".SVG"))
@@ -859,7 +864,7 @@ void TupLibraryWidget::importImageGroup()
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
 
     QFileDialog dialog(this, tr("Import images..."), path);
-    dialog.setNameFilter(tr("Images") + " (*.png *.xpm *.jpg *.jpeg *.gif)");
+    dialog.setNameFilter(tr("Images") + " (*.png *.xpm *.jpg *.jpeg *.gif *.webp)");
     dialog.setFileMode(QFileDialog::ExistingFiles);
 
     if (dialog.exec() == QDialog::Accepted) {
@@ -1146,14 +1151,14 @@ void TupLibraryWidget::importImageSequence()
         QFileInfoList records = source.entryInfoList(QDir::Files, QDir::Name);
         int filesTotal = records.size();
 
-        // Ensuring to get only graphic files here. Check extensions! (PNG, JPG, GIF, XPM) 
+        // Ensuring to get only graphic files here. Check extensions! (PNG, JPG, GIF, XPM, WEBP)
         int imagesCounter = 0; 
         QStringList photograms;
         for (int i = 0; i < filesTotal; ++i) {
              if (records.at(i).isFile()) {
                  QString extension = records.at(i).suffix().toUpper();
                  if (extension.compare("JPEG")==0 || extension.compare("JPG")==0 || extension.compare("PNG")==0 || extension.compare("GIF")==0 || 
-                     extension.compare("XPM")==0) {
+                     extension.compare("XPM")==0 || extension.compare("WEBP")==0) {
                      imagesCounter++;
                      photograms << records.at(i).absoluteFilePath();
                  }
@@ -1211,7 +1216,7 @@ void TupLibraryWidget::importImageSequence()
                      QFileInfo fileInfo(file);
                      QString extension = fileInfo.suffix().toUpper();
                      if (extension.compare("JPEG")==0 || extension.compare("JPG")==0 || extension.compare("PNG")==0 ||
-                         extension.compare("GIF")==0 || extension.compare("XPM")==0) {
+                         extension.compare("GIF")==0 || extension.compare("XPM")==0 || extension.compare("WEBP")==0) {
                          QString symName = fileInfo.fileName().toLower();
                          symName = symName.replace("(","_");
                          symName = symName.replace(")","_");
@@ -1884,15 +1889,15 @@ void TupLibraryWidget::refreshItem(LibraryObjects collection)
 {
     QMapIterator<QString, TupLibraryObject *> i(collection);
     while (i.hasNext()) {
-           i.next();
-           TupLibraryObject *object = i.value();
-           if (object) {
-               updateItem(object->getShortId(), object->getExtension().toLower(), object);
-           } else {
-               #ifdef TUP_DEBUG
-                   qDebug() << "[TupLibraryWidget::updateItemFromSaveAction()] - Fatal Error: The library item modified was not found!";
-               #endif
-           }
+       i.next();
+       TupLibraryObject *object = i.value();
+       if (object) {
+           updateItem(object->getShortId(), object->getExtension().toLower(), object);
+       } else {
+           #ifdef TUP_DEBUG
+               qDebug() << "[TupLibraryWidget::updateItemFromSaveAction()] - Fatal Error: The library item modified was not found!";
+           #endif
+       }
     }
 }
 

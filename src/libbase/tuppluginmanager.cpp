@@ -70,6 +70,9 @@ void TupPluginManager::loadPlugins()
     formats.clear();
     
     QDir pluginDirectory = QDir(kAppProp->pluginDir());
+    #ifdef TUP_DEBUG
+        qWarning() << "[TupPluginManager::loadPlugins()] - plugin dir -> " << pluginDirectory.path();
+    #endif
 
     foreach (QString fileName, pluginDirectory.entryList(QStringList() << "*.so" << "*.dll" << "*.dylib", QDir::Files)) {
         QPluginLoader *loader = new QPluginLoader(pluginDirectory.absoluteFilePath(fileName));
@@ -77,6 +80,7 @@ void TupPluginManager::loadPlugins()
 
         #ifdef TUP_DEBUG
             qWarning() << "[TupPluginManager::loadPlugins()] - Loading plugin from -> " << fileName;
+            qWarning() << "[TupPluginManager::loadPlugins()] - Plugin is loaded? -> " << loader->isLoaded();
         #endif
 
         if (plugin) {
@@ -99,7 +103,7 @@ void TupPluginManager::loadPlugins()
             loaders << loader;
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupPluginManager::loadPlugins()] - Can't load plugin, error was: " + loader->errorString();
+                qDebug() << "[TupPluginManager::loadPlugins()] - Fatal Error while loading plugin -> " << loader->errorString();
             #endif
         }
     }

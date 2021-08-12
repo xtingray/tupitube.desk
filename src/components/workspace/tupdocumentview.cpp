@@ -449,6 +449,10 @@ void TupDocumentView::createLateralToolBar()
 
 void TupDocumentView::loadPlugins()
 {
+    #ifdef TUP_DEBUG
+        qWarning() << "[TupDocumentView::loadPlugins()]";
+    #endif
+
     bool videoPluginLoaded = false;
     bool imagePluginLoaded = false;
 
@@ -457,7 +461,7 @@ void TupDocumentView::loadPlugins()
             TupExportInterface *exporter = qobject_cast<TupExportInterface *>(plugin);
             if (exporter) {
                 #ifdef TUP_DEBUG
-                    qWarning() << "[TupDocumentView::loadPlugins()] - plugin: " << exporter->key();
+                    qWarning() << "[TupDocumentView::loadPlugins()] - plugin -> " << exporter->key();
                 #endif
 
                 if (exporter->key() == TupExportInterface::VideoFormats) {
@@ -472,6 +476,10 @@ void TupDocumentView::loadPlugins()
 
                 if (videoPluginLoaded && imagePluginLoaded)
                     break;
+            } else {
+                #ifdef TUP_DEBUG
+                    qWarning() << "[TupDocumentView::loadPlugins()] - Fatal Error: plugin is NULL -> " << plugin->objectName();
+                #endif
             }
         }
     }
