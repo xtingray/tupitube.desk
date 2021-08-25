@@ -65,7 +65,7 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModul
     actionBar = new TupProjectActionBar(QString("Exposure"), generalActions);
 
     connect(actionBar, SIGNAL(actionSelected(int)), this, SLOT(applyAction(int)));
-    addChild(actionBar, Qt::AlignCenter);
+    addChild(actionBar, Qt::AlignHCenter);
 
     QList<TupProjectActionBar::Action> frameActions;
     frameActions << TupProjectActionBar::InsertFrame
@@ -86,7 +86,7 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModul
     TupProjectActionBar *framesBar = new TupProjectActionBar(QString("Exposure"), frameActions);
 
     connect(framesBar, SIGNAL(actionSelected(int)), this, SLOT(applyAction(int)));
-    addChild(framesBar, Qt::AlignCenter);
+    addChild(framesBar, Qt::AlignHCenter);
 
     scenesContainer = new TupExposureSceneTabWidget(this);
     connect(scenesContainer, SIGNAL(currentChanged(int)), this, SLOT(requestChangeScene(int)));

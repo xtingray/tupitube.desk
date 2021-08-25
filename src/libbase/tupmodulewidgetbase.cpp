@@ -64,30 +64,30 @@ bool TupModuleWidgetBase::handleProjectResponse(TupProjectResponse *response)
 
 void TupModuleWidgetBase::frameResponse(TupFrameResponse *frameResponse)
 {
-    Q_UNUSED(frameResponse);
+    Q_UNUSED(frameResponse)
 }
 
 void TupModuleWidgetBase::layerResponse(TupLayerResponse *layerResponse)
 {
-    Q_UNUSED(layerResponse);
+    Q_UNUSED(layerResponse)
 }
 
 void TupModuleWidgetBase::sceneResponse(TupSceneResponse *sceneResponse)
 {
-    Q_UNUSED(sceneResponse);
+    Q_UNUSED(sceneResponse)
 }
 
 void TupModuleWidgetBase::projectResponse(TupProjectResponse *projectResponse)
 {
-    Q_UNUSED(projectResponse);
+    Q_UNUSED(projectResponse)
 }
 
 void TupModuleWidgetBase::itemResponse(TupItemResponse *itemResponse)
 {
-    Q_UNUSED(itemResponse);
+    Q_UNUSED(itemResponse)
 }
 
 void TupModuleWidgetBase::libraryResponse(TupLibraryResponse *libraryResponse)
 {
-    Q_UNUSED(libraryResponse);
+    Q_UNUSED(libraryResponse)
 }

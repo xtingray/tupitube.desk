@@ -79,7 +79,7 @@ void TVHBox::moveWidgetUp(QWidget *widget)
         m_pLayout->insertWidget(position-1, widget);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TVHBox::moveWidgetUp() - Error: The widget isn't in the layout";
+            qDebug() << "[TVHBox::moveWidgetUp()] - Error: The widget isn't in the layout";
         #endif
     }
 }
@@ -161,4 +161,3 @@ QBoxLayout *TVHBox::boxLayout()
 {
     return m_pLayout;
 }
-

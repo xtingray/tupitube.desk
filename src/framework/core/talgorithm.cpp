@@ -48,6 +48,7 @@
 #include <QTime>
 #include <QSysInfo>
 #include <QCryptographicHash>
+#include <QRandomGenerator>
 
 int TAlgorithm::random()
 {
@@ -65,9 +66,12 @@ int TAlgorithm::random()
 
     #if defined(Q_OS_MAC) || defined(Q_OS_WIN)
         QString day = QDate::currentDate().toString("d");
-        QString number = day + QTime::currentTime().toString("mmzzz");
-        int aux = number.toInt();
+        QString time = QTime::currentTime().toString("mmzzz");
+        QString number = day + time;
+        if (day % 2 == 0)
+            number = time + day;
 
+        int aux = number.toInt();
         seed = TCONFIG->value("RandomSeed", 0).toInt();
         if (seed == 0)
             seed = aux;
@@ -76,9 +80,12 @@ int TAlgorithm::random()
 
     TCONFIG->beginGroup("General");
     TCONFIG->setValue("RandomSeed", seed);
-    qsrand(seed);
 
-    return qrand();
+    // qsrand(seed);
+    // return qrand();
+
+    QRandomGenerator generator = QRandomGenerator(seed);
+    return generator.generate();
 }
 
 QString TAlgorithm::randomString(int length)

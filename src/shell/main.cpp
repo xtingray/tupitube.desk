@@ -41,7 +41,7 @@
 #ifdef TUP_DEBUG
   #include <QDebug>
   #ifdef Q_OS_UNIX
-    #include "tdebug.h"
+    // #include "tdebug.h"
     #include "tupcrashhandler.h"
   #endif
 #endif
@@ -68,7 +68,7 @@ int main(int argc, char ** argv)
 
 #ifdef Q_OS_UNIX
 #ifdef TUP_DEBUG
-    TDebug::setOutputChannel();
+    // TDebug::setOutputChannel();
     // Initializing the crash handler (bug catcher)
     TupCrashHandler::init();
 #endif

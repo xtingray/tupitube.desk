@@ -96,7 +96,8 @@ void TConfig::checkConfigFile()
         isConfigOk = domDocument.setContent(&config, &errorMsg, &errorLine, &errorColumn);
         if (!isConfigOk) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TConfig::checkConfigFile()] - Fatal Error: Configuration file is corrupted - Line: " << errorLine << " - Column: " << errorColumn;
+                qDebug() << "[TConfig::checkConfigFile()] - Fatal Error: Configuration file is corrupted - Line: "
+                         << errorLine << " - Column: " << errorColumn;
                 qDebug() << "[TConfig::checkConfigFile()] - Message: " << errorMsg;
             #endif
         } else {
@@ -154,7 +155,7 @@ void TConfig::sync()
 
     if (file.open(QIODevice::WriteOnly)) {
         QTextStream st(&file);
-        st << domDocument.toString() << endl;
+        st << domDocument.toString() << Qt::endl;
         isConfigOk = true;
         file.close();
     } else {

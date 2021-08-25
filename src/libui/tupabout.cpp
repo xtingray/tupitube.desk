@@ -65,8 +65,7 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Close, parent)
     if (QString(QLocale::system().name()).length() > 1)
         lang = QString(QLocale::system().name()).left(2);
 
-    Qt::WindowFlags flags = nullptr;
-    flags = Qt::Dialog;
+    Qt::WindowFlags flags = Qt::Dialog;
     flags |= Qt::CustomizeWindowHint;
     setWindowFlags(flags);
 

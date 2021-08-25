@@ -51,7 +51,7 @@ class TUPITUBE_EXPORT TupModuleWidgetBase : public QWidget, public TupAbstractPr
         TupModuleWidgetBase(QWidget *parent, const char *name = nullptr);
         ~TupModuleWidgetBase();
 
-        virtual void addChild(QWidget *child, Qt::Alignment alignment = nullptr);
+        virtual void addChild(QWidget *child, Qt::Alignment alignment = Qt::Alignment());
         QBoxLayout *boxLayout();
 
     public slots:

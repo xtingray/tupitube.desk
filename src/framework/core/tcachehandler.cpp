@@ -39,13 +39,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 TCacheHandler::TCacheHandler(): id(0), m_compressionMode(CompressionAuto), m_protectionMode(ProtectionChecksum),
                                 m_lastError(ErrorNoError)
 {
-    qsrand(uint(QDateTime::currentMSecsSinceEpoch() & 0xFFFF));
+    generator = QRandomGenerator(uint(QDateTime::currentMSecsSinceEpoch() & 0xFFFF));
+
+    // qsrand(uint(QDateTime::currentMSecsSinceEpoch() & 0xFFFF));
 }
 
 TCacheHandler::TCacheHandler(quint64 key): id(key), m_compressionMode(CompressionAuto), m_protectionMode(ProtectionChecksum),
     m_lastError(ErrorNoError)
 {
-    qsrand(uint(QDateTime::currentMSecsSinceEpoch() & 0xFFFF));
+    // qsrand(uint(QDateTime::currentMSecsSinceEpoch() & 0xFFFF));
+
+    generator = QRandomGenerator(uint(QDateTime::currentMSecsSinceEpoch() & 0xFFFF));
     splitParameter();
 }
 
@@ -113,7 +117,8 @@ QByteArray TCacheHandler::saveRecordAsByteArray(QByteArray plaintext)
         integrityProtection += hash.result();
     }
 
-    char randomChar = char(qrand() & 0xFF);
+    // char randomChar = char(qrand() & 0xFF);
+    char randomChar = char(generator.generate() & 0xFF);
     ba = randomChar + integrityProtection + ba;
 
     int pos(0);

@@ -162,8 +162,8 @@ bool TupItemFactory::startTag(const QString& qname, const QXmlAttributes& atts)
         }
     } else if (qname == "text") {
         if (addToGroup) {
-            TupTextItem *item = qgraphicsitem_cast<TupTextItem *>(createItem(qname));
-            objects.push(item);
+            TupTextItem *textItem = qgraphicsitem_cast<TupTextItem *>(createItem(qname));
+            objects.push(textItem);
         } else {
             if (!item)
                 item = createItem(qname);
@@ -367,19 +367,22 @@ void  TupItemFactory::setItemGradient(const QGradient& gradient, bool brush)
 
     if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(objects.last())) {
         if (brush) {
-            gBrush.setMatrix(shape->brush().matrix());
+            // gBrush.setMatrix(shape->brush().matrix());
+            gBrush.setTransform(shape->brush().transform());
             shape->setBrush(gBrush);
         } else {
-            gBrush.setMatrix(shape->pen().brush().matrix());
+            // gBrush.setMatrix(shape->pen().brush().matrix());
+            gBrush.setTransform(shape->pen().brush().transform());
             QPen pen = shape->pen();
             pen.setBrush(gBrush);
             shape->setPen(pen);
         }
     } else if (QGraphicsLineItem *line = qgraphicsitem_cast<QGraphicsLineItem *>(objects.last())) {
-               gBrush.setMatrix(line->pen().brush().matrix());
-               QPen pen = line->pen();
-               pen.setBrush(gBrush);
-               line->setPen(pen);
+        // gBrush.setMatrix(line->pen().brush().matrix());
+        gBrush.setTransform(line->pen().brush().transform());
+        QPen pen = line->pen();
+        pen.setBrush(gBrush);
+        line->setPen(pen);
     }
 }
 
@@ -389,7 +392,7 @@ QPen TupItemFactory::itemPen() const
         if (QGraphicsLineItem *line = qgraphicsitem_cast<QGraphicsLineItem *>(objects.last())) {
             return line->pen();
         } else if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(objects.last())) {
-                   return shape->pen();
+            return shape->pen();
         }
     }
 

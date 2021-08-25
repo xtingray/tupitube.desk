@@ -61,7 +61,7 @@ class T_GUI_EXPORT TVHBox : public QFrame
         virtual QSize sizeHint() const;
         void setSpacing(int space);
         void setStretchFactor(QWidget* w, int stretch);
-        void addWidget(QWidget *child, Qt::Alignment alignment = 0);
+        void addWidget(QWidget *child, Qt::Alignment alignment);
         QBoxLayout *boxLayout();
         
     signals:

@@ -1969,7 +1969,7 @@ void TupDocumentView::storyboardSettings()
     TupStoryBoardDialog *storySettings = new TupStoryBoardDialog(isNetworked, imagePlugin, videoPlugin, project,
                                                                  currentSceneIndex(), this);
 
-    connect(storySettings, SIGNAL(updateStoryboard(TupStoryboard *, int)), this, SLOT(sendStoryboard(TupStoryboard *, int)));
+    connect(storySettings, SIGNAL(updateStoryboard(TupStoryboard*, int)), this, SLOT(sendStoryboard(TupStoryboard*, int)));
     connect(storySettings, SIGNAL(accepted()), paintArea, SLOT(updatePaintArea()));
     connect(storySettings, SIGNAL(rejected()), paintArea, SLOT(updatePaintArea()));
     connect(storySettings, SIGNAL(projectHasChanged()), this, SIGNAL(projectHasChanged()));
@@ -2666,8 +2666,8 @@ void TupDocumentView::enableEyeDropperTool(TColorCell::FillType fillType)
         }
 
         paintArea->setTool(tool);
-        connect(currentTool, SIGNAL(colorPicked(TColorCell::FillType, const QColor &)),
-                                    this, SIGNAL(colorChanged(TColorCell::FillType, const QColor &)));
+        connect(currentTool, SIGNAL(colorPicked(TColorCell::FillType, QColor)),
+                                    this, SIGNAL(colorChanged(TColorCell::FillType, QColor)));
         connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), this, SLOT(refreshEyeDropperPanel()));
     } else {
         #ifdef TUP_DEBUG

@@ -50,7 +50,7 @@ class T_CORE_EXPORT TXmlParserBase : public QXmlDefaultHandler
         bool startDocument();
         bool endDocument();
         
-        bool startElement(const QString& , const QString& , const QString& qname, const QXmlAttributes& atts);
+        bool startElement(const QString&, const QString&, const QString& qname, const QXmlAttributes& atts);
         bool characters(const QString & ch);
         bool endElement(const QString& ns, const QString& localname, const QString& qname);
         bool error(const QXmlParseException & exception);

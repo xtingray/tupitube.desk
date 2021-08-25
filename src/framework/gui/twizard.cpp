@@ -116,20 +116,20 @@ void TWizard::back()
 void TWizard::next()
 {
     TWizardPage *current = qobject_cast<TWizardPage *>(m_history.currentWidget());
-    if (current)
+    if (current) {
         current->aboutToNextPage();
+        m_history.setCurrentIndex(m_history.currentIndex()+1);
 
-    m_history.setCurrentIndex(m_history.currentIndex()+1);
+        if (m_history.currentIndex() == m_history.count()-1 && current->isComplete()) {
+            m_nextButton->setEnabled(false);
+            m_backButton->setEnabled(true);
+            m_finishButton->setDefault(true);
+        } else {
+            m_finishButton->setEnabled(false);
+        }
 
-    if (m_history.currentIndex() == m_history.count()-1 && current->isComplete()) {
-        m_nextButton->setEnabled(false);
-        m_backButton->setEnabled(true);
-        m_finishButton->setDefault(true);
-    } else {
-        m_finishButton->setEnabled(false);
+        pageCompleted();
     }
-
-    pageCompleted();
 }
 
 void TWizard::finish()

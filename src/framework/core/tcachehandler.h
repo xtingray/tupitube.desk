@@ -33,6 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QString>
 #include <QVector>
 #include <QFlags>
+#include <QRandomGenerator>
 
 class TCacheHandler
 {
@@ -83,6 +84,8 @@ class TCacheHandler
         Q_DECLARE_FLAGS(CacheFlags, CacheFlag);
 
     private:
+        QRandomGenerator generator;
+
         void splitParameter();
         quint64 id;
         QVector<char> parts;

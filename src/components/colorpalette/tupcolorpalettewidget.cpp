@@ -261,7 +261,7 @@ void TupColorPaletteWidget::setupColorDisplay()
 
     generalLayout->addWidget(new QWidget());
 
-    addChild(topPanel, Qt::AlignHCenter);
+    addChild(topPanel);
 }
 
 void TupColorPaletteWidget::updateColorMode(TColorCell::FillType type)

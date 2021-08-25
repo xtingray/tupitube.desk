@@ -74,8 +74,8 @@ HEADERS += taction.h \
            tabbedmainwindow.h \
            tabdialog.h \
            # ttabwidget.h \
-           themedocument.h \
-           thememanager.h \
+           # themedocument.h \
+           # thememanager.h \
            tipdialog.h \
            ttoolbox.h \
            toolview.h \
@@ -139,8 +139,8 @@ SOURCES += taction.cpp \
            tabbedmainwindow.cpp \
            tabdialog.cpp \
            # ttabwidget.cpp \
-           themedocument.cpp \
-           thememanager.cpp \
+           # themedocument.cpp \
+           # thememanager.cpp \
            tipdialog.cpp \
            ttoolbox.cpp \
            toolview.cpp \

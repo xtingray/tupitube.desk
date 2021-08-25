@@ -58,7 +58,7 @@ class TUPITUBE_EXPORT TupViewColorCells : public QFrame
 
     public:
         TupViewColorCells(QWidget *parent = nullptr);
-        virtual ~TupViewColorCells();
+        ~TupViewColorCells();
 
         void readPaletteFile(const QString &file);
         void setColor(const QBrush & brush);
@@ -66,16 +66,13 @@ class TUPITUBE_EXPORT TupViewColorCells : public QFrame
         void resetBasicPanel();
         void enableTransparentColor(bool flag);
 
-    // protected:
-    //     QSize sizeHint() const;
-
     signals:
         void colorSelected(const QBrush &);
 
     public slots:
-        virtual void addCurrentColor();
-        virtual void removeCurrentColor();
-        virtual void addPalette(const QString & name, const QList<QBrush> & brushes, bool editable);
+        void addCurrentColor();
+        void removeCurrentColor();
+        void addPalette(const QString & name, const QList<QBrush> & brushes, bool editable);
         void changeColor(QTableWidgetItem*);
 
     private slots:

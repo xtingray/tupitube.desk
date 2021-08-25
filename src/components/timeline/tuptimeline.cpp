@@ -107,9 +107,10 @@ TupTimeLine::TupTimeLine(TupProject *projectData, QWidget *parent) : TupModuleWi
     toolbarLayout->addSpacing(3);
     toolbarLayout->addLayout(toolsLayout);
 
-    addChild(toolBar, Qt::AlignCenter);
+    addChild(toolBar, Qt::AlignHCenter);
     
-    scenesContainer = new TupTimelineSceneContainer(this);
+    // scenesContainer = new TupTimelineSceneContainer(this);
+    scenesContainer = new TupTimelineSceneContainer;
     addChild(scenesContainer);
     
     connect(actionBar, SIGNAL(actionSelected(int)), this, SLOT(requestCommand(int)));

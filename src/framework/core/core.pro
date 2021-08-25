@@ -42,9 +42,9 @@ SOURCES += talgorithm.cpp \
            tcachehandler.cpp \
            txmlparserbase.cpp
 
-unix {
-    contains(DEFINES, TUP_DEBUG) {
-        HEADERS += tdebug.h
-        SOURCES += tdebug.cpp
-    }
-}
+# unix {
+#    contains(DEFINES, TUP_DEBUG) {
+#        HEADERS += tdebug.h
+#        SOURCES += tdebug.cpp
+#    }
+# }

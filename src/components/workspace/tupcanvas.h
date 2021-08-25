@@ -60,9 +60,9 @@ class TUPITUBE_EXPORT TupCanvas : public QFrame
     Q_OBJECT
 
     public:
-        TupCanvas(QWidget *parent = nullptr, Qt::WindowFlags f = nullptr, TupGraphicsScene *scene = nullptr,
+        TupCanvas(QWidget *parent = nullptr, Qt::WindowFlags = Qt::Widget, TupGraphicsScene *scene = nullptr,
                   const QPointF centerPoint = QPoint(0, 0) , const QSize &size = QSize(0, 0), 
-                  TupProject *project = nullptr, qreal scaleFactor = 1, int angle=0,
+                  TupProject *project = nullptr, qreal scaleFactor = 1, int angle = 0,
                   TupBrushManager *brushManager = nullptr);
         ~TupCanvas();
 

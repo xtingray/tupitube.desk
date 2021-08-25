@@ -55,7 +55,7 @@
 RasterColorWidget::RasterColorWidget(const QColor contourColor, const QColor bgColor, QWidget *parent) : TupModuleWidgetBase(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "RasterColorWidget()";
+        qDebug() << "[RasterColorWidget()]";
     #endif
 
     setWindowTitle(tr("Color Palette"));
@@ -89,7 +89,7 @@ RasterColorWidget::RasterColorWidget(const QColor contourColor, const QColor bgC
 RasterColorWidget::~RasterColorWidget()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "~RasterColorWidget()";
+        qDebug() << "[~RasterColorWidget()]";
     #endif
 
     delete paletteContainer;
@@ -217,7 +217,7 @@ void RasterColorWidget::setupColorDisplay()
 void RasterColorWidget::updateColorMode(TColorCell::FillType type)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "RasterColorWidget::updateColorMode() - type: " << type;
+        qDebug() << "[RasterColorWidget::updateColorMode()] - type -> " << type;
     #endif
 
     QBrush brush;
@@ -263,7 +263,7 @@ void RasterColorWidget::updateColorMode(TColorCell::FillType type)
 void RasterColorWidget::checkColorButton(TColorCell::FillType type)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "RasterColorWidget::checkColorButton() - type: " << type;
+        qDebug() << "[RasterColorWidget::checkColorButton()] - type -> " << type;
     #endif
 
     if (type == TColorCell::Contour) {
@@ -277,8 +277,8 @@ void RasterColorWidget::setupMainPalette()
 {
     // Palettes
     paletteContainer = new TupViewColorCells(splitter);
-    connect(paletteContainer, SIGNAL(colorSelected(const QBrush&)),
-            this, SLOT(updateColorFromPalette(const QBrush&)));
+    connect(paletteContainer, SIGNAL(colorSelected(QBrush)),
+            this, SLOT(updateColorFromPalette(QBrush)));
 
     splitter->addWidget(paletteContainer);
 }
@@ -292,15 +292,15 @@ void RasterColorWidget::setupColorChooser()
     colorMixer->setLayout(mainLayout);
 
     colorPickerArea = new TupColorPicker(colorMixer);
-    connect(colorPickerArea, SIGNAL(newColor(int, int)), this, SLOT(setHS(int, int)));
+    connect(colorPickerArea, SIGNAL(newColor(int,int)), this, SLOT(setHS(int,int)));
 
     luminancePicker = new TSlider(Qt::Horizontal, TSlider::Color, QColor(0, 0, 0), QColor(255, 255, 255));
-    connect(luminancePicker, SIGNAL(colorChanged(const QColor &)), this, SLOT(syncColor(const QColor &)));
+    connect(luminancePicker, SIGNAL(colorChanged(QColor)), this, SLOT(syncColor(QColor)));
     luminancePicker->setRange(0, 100);
     luminancePicker->setValue(100);
 
     colorForm = new TupColorForm;
-    connect(colorForm, SIGNAL(brushChanged(const QBrush&)), this, SLOT(updateColorFromDisplay(const QBrush&)));
+    connect(colorForm, SIGNAL(brushChanged(QBrush)), this, SLOT(updateColorFromDisplay(QBrush)));
 
     mainLayout->addWidget(colorPickerArea);
     mainLayout->setAlignment(colorPickerArea, Qt::AlignHCenter);
