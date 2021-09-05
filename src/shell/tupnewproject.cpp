@@ -34,7 +34,7 @@
  ***************************************************************************/
 
 #include "tupnewproject.h"
-#include "tupnetprojectmanagerparams.h"
+// #include "tupnetprojectmanagerparams.h"
 
 #include "tformfactory.h"
 #include "tconfig.h"
@@ -246,6 +246,7 @@ TupProjectManagerParams *TupNewProject::parameters()
     if (h % 2)
         h++;
 
+    /*
     if (enableUseNetwork) {
         TupNetProjectManagerParams *params = new TupNetProjectManagerParams;
         params->setProjectName(projectName->text());
@@ -264,6 +265,7 @@ TupProjectManagerParams *TupNewProject::parameters()
 
         return params;
     }
+    */
 
     TupProjectManagerParams *params = new TupProjectManagerParams;
     params->setProjectName(projectName->text());

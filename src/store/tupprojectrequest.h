@@ -135,6 +135,7 @@ class TUPITUBE_EXPORT TupProjectRequest
         };
         
         TupProjectRequest(const QString &data = nullptr);
+        TupProjectRequest(const TupProjectRequest &request);
         virtual ~TupProjectRequest();
         
         void setId(int getId);

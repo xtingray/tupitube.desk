@@ -86,6 +86,11 @@ TupProjectRequest::TupProjectRequest(const QString &data) : xml(data)
 {
 }
 
+TupProjectRequest::TupProjectRequest(const TupProjectRequest &request)
+{
+    *this = request;
+}
+
 TupProjectRequest::~TupProjectRequest()
 {
 }

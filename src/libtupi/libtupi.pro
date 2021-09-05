@@ -30,7 +30,6 @@ contains("DEFINES", "ADD_HEADERS") {
 }
 
 HEADERS += tupgraphicalgorithm.h \
-           # tupglobal.h \
            tuppaintareaproperties.h \
            tupgradientcreator.h \
            tupgradientselector.h \
@@ -43,9 +42,7 @@ HEADERS += tupgraphicalgorithm.h \
            tupitempreview.h \
            tupcompress.h  \
            tupsocketbase.h \
-           tupxmlparserbase.h \
            tupproxyitem.h \
-           # tupinthash.h \
            tuppenthicknesswidget.h \
            tupbrushstatus.h \
            tuptoolstatus.h \ 
@@ -65,7 +62,6 @@ SOURCES += tupgraphicalgorithm.cpp \
            tupitempreview.cpp \
            tupcompress.cpp  \
            tupsocketbase.cpp \
-           tupxmlparserbase.cpp \
            tupproxyitem.cpp \
            tuppenthicknesswidget.cpp \
            tupbrushstatus.cpp \
@@ -75,7 +71,3 @@ SOURCES += tupgraphicalgorithm.cpp \
 
 FRAMEWORK_DIR = "../framework"
 include($$FRAMEWORK_DIR/framework.pri)
-
-# STORE_DIR = ../store/
-# INCLUDEPATH += $$STORE_DIR
-# LIBS += -L$$STORE_DIR/release -ltupistore

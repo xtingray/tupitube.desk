@@ -418,7 +418,7 @@ void TupMainWindow::setupFileActions()
     m_actionManager->insert(postFrame, "post_image", "file");
 
     // Visit TupiTube's Network action
-    TAction *openNetwork = new TAction(QPixmap(THEME_DIR + "icons/social_network.png"), tr("Open TupiTube's Network"),
+    TAction *openNetwork = new TAction(QPixmap(THEME_DIR + "icons/social_network.png"), tr("TupiTube's Social Media"),
                                        QKeySequence(), this, SLOT(openTupiTubeNetwork()), m_actionManager);
     openNetwork->setStatusTip(tr("Open TupiTube's Network"));
     m_actionManager->insert(openNetwork, "open_network", "file");

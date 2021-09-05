@@ -1190,7 +1190,7 @@ QGraphicsItem *TupFrame::createItem(QPointF coords, const QString &xml, bool loa
     #ifdef TUP_DEBUG
         qDebug() << "[TupFrame::createItem()]";
         qWarning() << "coords -> " << coords;
-        qWarning() << "XML:";
+        qWarning() << "xml:";
         qWarning() << xml;
     #endif
 
@@ -1207,7 +1207,7 @@ QGraphicsItem *TupFrame::createItem(QPointF coords, const QString &xml, bool loa
         graphicItem->setPos(coords);
         QString id = "path";
         if (library) {
-            if (itemFactory.getType() == TupItemFactory::Library)
+            if (itemFactory.getType() == TupFactoryHandler::Library)
                 id = itemFactory.itemID(xml);
         }
 

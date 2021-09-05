@@ -42,6 +42,7 @@
 #include "tuppaletteimporter.h"
 #include "tuppaintareaevent.h"
 #include "tuppaintareacommand.h"
+#include "tupfilemanager.h"
 
 // TupiTube Framework
 // #include "tipdialog.h"
@@ -55,12 +56,12 @@
 #include "tuplocalprojectmanagerhandler.h"
 
 // Network support
-#include "tupnetprojectmanagerparams.h"
-#include "tupconnectdialog.h"
-#include "tuplistpackage.h"
-#include "tupimportprojectpackage.h"
-#include "tuplistprojectspackage.h"
-#include "tupsavepackage.h"
+// #include "tupnetprojectmanagerparams.h"
+// #include "tupconnectdialog.h"
+// #include "tuplistpackage.h"
+// #include "tupimportprojectpackage.h"
+// #include "tuplistprojectspackage.h"
+// #include "tupsavepackage.h"
 
 // Qt Framework
 #include <QImage>
@@ -251,6 +252,7 @@ void TupMainWindow::createNewLocalProject()
     setWorkSpace();
 }
 
+/*
 void TupMainWindow::createNewNetProject(const QString &title, const QStringList &users)
 {
     isNetworked = true;
@@ -272,6 +274,7 @@ void TupMainWindow::createNewNetProject(const QString &title, const QStringList 
 
     setWorkSpace(users);
 }
+*/
 
 void TupMainWindow::setWorkSpace(const QStringList &users)
 {
@@ -282,6 +285,10 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
     TCONFIG->beginGroup("General");
     bool getNews = TCONFIG->value("GetNews", true).toBool();
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+        qDebug() << "[TupMainWindow::setWorkSpace()] - GetNews -> " << TCONFIG->value("GetNews").toBool();;
+    #endif
     if (getNews) {
         // Downloading maefloresta Twitter status
         TupTwitter *twitter = new TupTwitter();
@@ -388,12 +395,17 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         m_libraryWidget->setNetworking(isNetworked);
 
+        if (isNetworked)
+            connect(animationTab, SIGNAL(autoSave()), this, SLOT(callSave()));
+
+        /*
         if (isNetworked) {
             connect(cameraWidget, SIGNAL(requestForExportVideoToServer(const QString &, const QString &, const QString &, int, const QList<int>)), 
                     netProjectManager, SLOT(sendVideoRequest(const QString &, const QString &, const QString &, int, const QList<int>)));
         } else {
             connect(animationTab, SIGNAL(autoSave()), this, SLOT(callSave()));
         }
+        */
 
         playerTab = new TupAnimationspace(cameraWidget);
         playerTab->setWindowIcon(QIcon(THEME_DIR + "icons/play_small.png"));
@@ -480,6 +492,10 @@ void TupMainWindow::newProject()
     wizard->focusProjectLabel();
 
     if (wizard->exec() != QDialog::Rejected) {
+        setupLocalProject(wizard->parameters());
+        createNewLocalProject();
+
+        /*
         if (wizard->useNetwork()) {
             TupMainWindow::requestType = NewNetProject;
             setupNetworkProject(wizard->parameters());
@@ -488,6 +504,7 @@ void TupMainWindow::newProject()
             setupLocalProject(wizard->parameters());
             createNewLocalProject();
         }
+        */
     }
 
     delete wizard;
@@ -644,6 +661,7 @@ void TupMainWindow::resetUI()
     resetMousePointer();
 }
 
+/*
 void TupMainWindow::setupNetworkProject()
 {
     TupConnectDialog *netDialog = new TupConnectDialog(this);
@@ -683,6 +701,7 @@ void TupMainWindow::setupNetworkProject(TupProjectManagerParams *params)
         author = params->getAuthor();
     }
 }
+*/
 
 void TupMainWindow::setupLocalProject(TupProjectManagerParams *params)
 {
@@ -812,6 +831,7 @@ void TupMainWindow::updateRecentProjectList()
     }
 }
 
+/*
 void TupMainWindow::openProjectFromServer()
 {
     TupMainWindow::requestType = OpenNetProject;
@@ -823,6 +843,7 @@ void TupMainWindow::importProjectToServer()
     TupMainWindow::requestType = ImportProjectToNet;
     setupNetworkProject();
 }
+*/
 
 void TupMainWindow::preferences()
 {
@@ -1022,7 +1043,7 @@ bool TupMainWindow::saveProject()
             return saveAs();
 
         return storeProcedure();
-    } else {
+    } /* else {
         TupSavePackage package(lastSave);
         netProjectManager->sendPackage(package);
 
@@ -1030,7 +1051,7 @@ bool TupMainWindow::saveProject()
             QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
         else
             lastSave = false;
-    }
+    } */
 
     #ifdef TUP_DEBUG
         qDebug() << "---";
@@ -1455,7 +1476,7 @@ void TupMainWindow::requestProject()
 {
     if (TupMainWindow::requestType == NewNetProject) {
         m_projectManager->setupNewProject();
-    } else if (TupMainWindow::requestType == OpenNetProject) {
+    } /* else if (TupMainWindow::requestType == OpenNetProject) {
         TupListProjectsPackage package;
         netProjectManager->sendPackage(package);
     } else if (TupMainWindow::requestType == ImportProjectToNet) {
@@ -1480,6 +1501,7 @@ void TupMainWindow::requestProject()
             netProjectManager->closeProject();
         }
     }
+    */
 }
 
 void TupMainWindow::unexpectedClose()

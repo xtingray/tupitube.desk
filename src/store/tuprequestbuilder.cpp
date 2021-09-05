@@ -92,8 +92,8 @@ TupProjectRequest TupRequestBuilder::createItemRequest(int sceneIndex, int layer
     root.appendChild(scene);
 
     doc.appendChild(root);
-    TupProjectRequest request(doc.toString(0));
 
+    TupProjectRequest request(doc.toString(0));
     return request;
 }
 

@@ -112,12 +112,12 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
             int numPhrases = stream.readLine().toInt();
             int numPhonemes = 0;
             int numWords;
-            QString str;
+            // QString str;
             int firstFrame = 0;
             int lastFrame = 0;
 
             for (int p = 0; p < numPhrases; p++) {
-                 QString text = stream.readLine().trimmed();
+                 // QString text = stream.readLine().trimmed();
                  int phInitFrame = stream.readLine().toInt();
                  if (p == 0)
                      phInitFrame = 0;
@@ -127,7 +127,7 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
 
                  for (int w = 0; w < numWords; w++) {
                       QString str = stream.readLine().trimmed();
-                      QStringList strList = str.split(' ', QString::SkipEmptyParts);
+                      QStringList strList = str.split(' ', Qt::SkipEmptyParts);
                       QString strWord; 
                       TupWord *word = 0;
                       if (strList.size() >= 4) {
@@ -148,7 +148,7 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                       QList<QString> blocks;
                       for (int ph = 0; ph < numPhonemes; ph++) {
                            str = stream.readLine().trimmed();
-                           QStringList strList = str.split(' ', QString::SkipEmptyParts);
+                           QStringList strList = str.split(' ', Qt::SkipEmptyParts);
                            if (strList.size() >= 2) {
                                frames << strList.at(0).toInt();
                                blocks << strList.at(1).toLower();

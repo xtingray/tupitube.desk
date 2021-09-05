@@ -107,9 +107,9 @@ _EOH_
 
     if conf.hasArgument?("with-qtdir")
        qtdir = conf.argumentValue("with-qtdir")
-       conf.verifyQtVersion("5.13.0", debug, qtdir)
+       conf.verifyQtVersion("5.15.0", debug, qtdir)
     else
-       conf.verifyQtVersion("5.13.0", debug, "")
+       conf.verifyQtVersion("5.15.0", debug, "")
     end
 
     if conf.hasArgument?("with-ffmpeg")

@@ -33,52 +33,60 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPXMLPARSERBASE_H
-#define TUPXMLPARSERBASE_H
+#ifndef TUPFACTORYHANDLER_H
+#define TUPFACTORYHANDLER_H
 
 #include "tglobal.h"
+#include "tupitemgroup.h"
 
-#include <QXmlDefaultHandler>
+#include <QXmlStreamReader>
+#include <QStack>
+#include <QPen>
+#include <QBrush>
+#include <QGraphicsItem>
 
-class TUPITUBE_EXPORT TupXmlParserBase : public QXmlDefaultHandler
+class TupLibrary;
+
+class TUPITUBE_EXPORT TupFactoryHandler : public QXmlStreamReader
 {
     public:
-        ~TupXmlParserBase();
+        enum Type
+        {
+            Vectorial = 1,
+            Library 
+        };
 
-    protected:
-        TupXmlParserBase();
-
-        bool startDocument();
-        bool endDocument();
-        bool startElement(const QString& , const QString& , const QString& qname, const QXmlAttributes& atts);
-        bool characters(const QString & ch);
-        bool endElement( const QString& ns, const QString& localname, const QString& qname);
-        bool error(const QXmlParseException & exception);
-        bool fatalError(const QXmlParseException & exception);
-
-    protected:
-        void setReadText(bool read);
-        void setIgnore(bool ignore);
-
-    public:
-        virtual void initialize();
-        virtual bool startTag(const QString &tag, const QXmlAttributes &atts) = 0;
-        virtual bool endTag(const QString &tag) = 0;
-        virtual void text(const QString &text) = 0;
-
-    public:
-        QString currentTag() const;
-        QString root() const;
-        bool parse(const QString &doc);
-        bool parse(QFile *file);
+        TupFactoryHandler();
+        TupFactoryHandler(const QString &xml, const TupLibrary *assets);
+    	~TupFactoryHandler();
+    	
+        QGraphicsItem* getItem();
+        QString itemID(const QString &xml);
+        Type getType();
 
     private:
-        QString gTag;
-        QString rootStr;
-        bool isParsing;
-        bool readText;
-        bool ignore;
-        QString document;
+    	void setItemPen(const QPen &pen);
+    	void setItemBrush(const QBrush &brush);
+    	void setItemGradient(const QGradient& gradient, bool brush);
+        bool parse();
+
+    	QPen itemPen() const;
+    	QBrush itemBrush() const;
+    	
+    	QGraphicsItem* createItem(const QString &xml);
+    	
+    private:
+        QGraphicsItem *item;
+        QGradient *gradient;
+        QString loading; // brush or pen
+
+        QStack<TupItemGroup *> groups;
+        QStack<QGraphicsItem *> objects;
+        bool addToGroup;
+        bool isLoading;
+        const TupLibrary *library;
+        Type type;
+        QString parentTag;
 };
 
 #endif

@@ -33,54 +33,29 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TXMLPARSERBASE_H
-#define TXMLPARSERBASE_H
+#ifndef TUPREQUESTPARSERHANDLER_H
+#define TUPREQUESTPARSERHANDLER_H
 
 #include "tglobal.h"
+#include "tupprojectresponse.h"
 
-#include <QXmlDefaultHandler>
+#include <QXmlStreamReader>
 
-class T_CORE_EXPORT TXmlParserBase : public QXmlDefaultHandler
+class TUPITUBE_EXPORT TupRequestParserHandler : public QXmlStreamReader
 {
     public:
-        TXmlParserBase();
-        ~TXmlParserBase();
-        
-    protected:
-        bool startDocument();
-        bool endDocument();
-        
-        bool startElement(const QString&, const QString&, const QString& qname, const QXmlAttributes& atts);
-        bool characters(const QString & ch);
-        bool endElement(const QString& ns, const QString& localname, const QString& qname);
-        bool error(const QXmlParseException & exception);
-        bool fatalError(const QXmlParseException & exception);
-        
-    protected:
-        void setReadText(bool read);
-        void setIgnore(bool ignore);
-        
-    public:
-        virtual void initialize();
-        virtual bool startTag(const QString &tag, const QXmlAttributes &atts) = 0;
-        virtual bool endTag(const QString &tag) = 0;
-        virtual void text(const QString &text) = 0;
-        
-    public:
-        QString currentTag() const;
-        QString root() const;
-        
-        bool parse(const QString &doc);
-        bool parse(QFile *file);
-        
-    private:
+        TupRequestParserHandler();
+        TupRequestParserHandler(const QString &xml);
+        ~TupRequestParserHandler();
 
-        QString tag;
-        QString docRoot;
-        bool isParsing;
+        bool parse();
+        TupProjectResponse* getResponse() const;
+        QString getSign() const;
+
+    private:
+        QString sign;
+        TupProjectResponse* response;
         bool readText;
-        bool ignore;
-        QString document;
 };
 
 #endif
