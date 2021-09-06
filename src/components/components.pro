@@ -12,8 +12,6 @@ SUBDIRS += scenes \
            brush \
            workspace \
            twitter \
-           player 
-  
-# linux-g++ {
-#     SUBDIRS += debug
-# }
+           player \
+           papagayo
+# SUBDIRS += debug
