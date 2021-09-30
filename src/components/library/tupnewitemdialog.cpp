@@ -40,6 +40,23 @@
 
 TupNewItemDialog::TupNewItemDialog(QString &item, DialogType type, QSize size) : QDialog()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupNewItemDialog()]";
+    #endif
+
+    QFile file(THEME_DIR + "config/ui.qss");
+    if (file.exists()) {
+        file.open(QFile::ReadOnly);
+        QString uiStyleSheet = QLatin1String(file.readAll());
+        if (uiStyleSheet.length() > 0)
+            setStyleSheet(uiStyleSheet);
+        file.close();
+    } else {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupNewItemDialog()] - theme file doesn't exist -> " << QString(THEME_DIR + "config/ui.qss");
+        #endif
+    }
+
     name = item;
 
     colors[0] = Qt::transparent;

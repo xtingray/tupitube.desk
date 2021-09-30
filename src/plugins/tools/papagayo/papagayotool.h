@@ -96,6 +96,7 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
         void setTargetEnvironment();
 
     signals:
+        void openLipSyncCreator();
         void importLipSync();
         void callForPlugin(int menu, int index);
 

@@ -1214,8 +1214,8 @@ void TupMainWindow::updateColor(TColorCell::FillType type, const QColor &color)
     if (type == TColorCell::Background)
         action = TupPaintAreaEvent::ChangeBgColor;
 
-    TupPaintAreaEvent *event = new TupPaintAreaEvent(action, color);
-    createPaintCommand(event);
+    // TupPaintAreaEvent *event = new TupPaintAreaEvent(action, color);
+    createPaintCommand(new TupPaintAreaEvent(action, color));
 }
 
 void TupMainWindow::updatePenThickness(int thickness)

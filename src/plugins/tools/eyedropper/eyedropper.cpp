@@ -163,9 +163,11 @@ void EyeDropper::updateColorType(TColorCell::FillType type)
 
 void EyeDropper::refreshEyeDropperPanel()
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[EyeDropper::refreshEyeDropperPanel()]";
     #endif
+    */
 
     settings->updateColor(grabColorFromScreen());
 }

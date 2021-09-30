@@ -1,7 +1,9 @@
 CONFIG += ordered warn_on
 TEMPLATE = subdirs
 
-SUBDIRS += scenes \
+SUBDIRS += papagayo \
+           micmanager \
+           scenes \
            colorpalette \
            library \
            timeline \
@@ -12,6 +14,6 @@ SUBDIRS += scenes \
            brush \
            workspace \
            twitter \
-           player \
-           papagayo
+           player
+
 # SUBDIRS += debug

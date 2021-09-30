@@ -165,6 +165,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void drawActionSafeArea();
         bool handleProjectResponse(TupProjectResponse *response);
         void updateNodesScale(qreal factor);
+        void openLipSyncCreator();
         void importPapagayoLipSync();
         void resetWorkSpaceTransformations();
         void updateBgColor(const QColor color);

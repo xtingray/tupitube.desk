@@ -4,29 +4,42 @@
 
 TupAudioExtractor::TupAudioExtractor(const char *path, bool reverse)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupAudioExtractor::TupAudioExtractor()] - reverse -> " << reverse;
+    #endif
+
     numFrames = 0;
     numSamples = 0;
     samples = nullptr;
     sourcePath = path;
 
-    if (path == nullptr)
+    if (path == nullptr) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupAudioExtractor::TupAudioExtractor()] - Fatal Error: path value is empty -> " << path;
+        #endif
 		return;
+    }
 	
 	// The sound file might already be in the right format (AIFF or WAV), try and read it. 
     bool soundRead = readSoundFile(path);
     if (soundRead && reverse) {
         int32 revI;
         float temp;
-
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupAudioExtractor::TupAudioExtractor()] - soundInfo.frames -> " << soundInfo.frames;
+        #endif
         for (int32 i = 0; i < soundInfo.frames / 2; i++) {
             revI = (int32)soundInfo.frames - 1 - i;
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupAudioExtractor::TupAudioExtractor()] - soundInfo.channels -> " << soundInfo.channels;
+            #endif
             for (int32 j = 0; j < soundInfo.channels; j++) {
                 temp = samples[i * soundInfo.channels + j];
                 samples[i * soundInfo.channels + j] = samples[revI * soundInfo.channels + j];
                 samples[revI * soundInfo.channels + j] = temp;
 			}
 		}
-	}
+    }
 }
 
 TupAudioExtractor::~TupAudioExtractor()
@@ -37,8 +50,16 @@ TupAudioExtractor::~TupAudioExtractor()
 
 bool TupAudioExtractor::isValid() const
 {
-    if (samples == nullptr)
+    if (samples == nullptr) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupAudioExtractor::isValid()] - samples array is NULL!";
+        #endif
 		return false;
+    }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupAudioExtractor::isValid()] - true!";
+    #endif
 
 	return true;
 }
@@ -142,13 +163,13 @@ uint32 TupAudioExtractor::timeToSample(real time, bool clamped) const
     if (samples == nullptr)
 		return 0;
 
-	uint32	sample;
+    uint32 sample;
 
     time = time * (real)(soundInfo.samplerate * soundInfo.channels);
 	sample = PG_ROUND(time);
     if (soundInfo.channels) {
         while (sample % soundInfo.channels)
-			sample--;
+            sample--;
 	}
 
 	if (clamped)
@@ -158,17 +179,25 @@ uint32 TupAudioExtractor::timeToSample(real time, bool clamped) const
 }
 
 bool TupAudioExtractor::readSoundFile(const char *soundFilePath)
-{
+{    
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupAudioExtractor::readSoundFile()] - soundFilePath -> " << soundFilePath;
+    #endif
+
     SNDFILE *sndFile = sf_open(soundFilePath, SFM_READ, &soundInfo);
-    if (!sndFile)
+    if (!sndFile) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupAudioExtractor::readSoundFile()] - sndFile is NULL!";
+        #endif
         return false;
-    
+    }
+
     if (soundInfo.frames > MAX_AUDIO_FRAMES)
         soundInfo.frames = MAX_AUDIO_FRAMES;
     numSamples = (int32)(soundInfo.frames * soundInfo.channels);
     samples = new float[numSamples];
 
-    /*	if (sndFormat == (SF_FORMAT_OGG | SF_FORMAT_VORBIS))
+    /* if (sndFormat == (SF_FORMAT_OGG | SF_FORMAT_VORBIS))
 	{
 		float		*bufPtr = fSamples;
 		sf_count_t	sampleCount = fNumSamples;
@@ -186,8 +215,7 @@ bool TupAudioExtractor::readSoundFile(const char *soundFilePath)
 		if (sampleCount > 0)
 			sf_read_float(sndFile, bufPtr, chunkSize);
 		fNumFrames = fSndInfo.frames;
-	}
-	else*/
+    } else */
 	{
         numFrames = sf_readf_float(sndFile, samples, soundInfo.frames);
 	}

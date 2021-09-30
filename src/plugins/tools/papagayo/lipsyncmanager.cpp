@@ -56,9 +56,13 @@ LipSyncManager::LipSyncManager(QWidget *parent): QWidget(parent)
 
     listLayout->addWidget(lipSyncList);
 
-    addButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/plus_sign.png"), 22);
-    addButton->setToolTip(tr("Import LipSync"));
-    connect(addButton, SIGNAL(clicked()), this, SIGNAL(importLipSync()));
+    openButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/plus_sign.png"), 22);
+    openButton->setToolTip(tr("Open LipSync Creator"));
+    connect(openButton, SIGNAL(clicked()), this, SIGNAL(openLipSyncCreator()));
+
+    importButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/import_lipsync.png"), 22);
+    importButton->setToolTip(tr("Import LipSync"));
+    connect(importButton, SIGNAL(clicked()), this, SIGNAL(importLipSync()));
 
     editButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/edit_sign.png"), 22);
     editButton->setToolTip(tr("Edit LipSync"));
@@ -71,8 +75,9 @@ LipSyncManager::LipSyncManager(QWidget *parent): QWidget(parent)
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->setAlignment(Qt::AlignHCenter);
     buttonLayout->setMargin(0);
-    // buttonLayout->setSpacing(0);
-    buttonLayout->addWidget(addButton);
+    buttonLayout->addWidget(openButton);
+    buttonLayout->addSpacing(10);
+    buttonLayout->addWidget(importButton);
     buttonLayout->addSpacing(10);
     buttonLayout->addWidget(editButton);
     buttonLayout->addSpacing(10);

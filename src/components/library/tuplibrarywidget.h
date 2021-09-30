@@ -145,6 +145,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
     private slots:
         void openSearchDialog();
         void recoverMode();
+        void importSoundFileFromFolder(const QString &filePath);
 
     signals:
         void requestCurrentGraphic();

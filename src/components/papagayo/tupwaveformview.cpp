@@ -11,6 +11,10 @@
 
 TupWaveFormView::TupWaveFormView(QWidget *parent) : QWidget(parent)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupWaveFormView::TupWaveFormView()]";
+    #endif
+
     // setAttribute(Qt::WA_StaticContents);
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum); // QSizePolicy::Fixed ?
 
@@ -59,6 +63,10 @@ void TupWaveFormView::setScrollArea(QScrollArea *scrollArea)
 
 void TupWaveFormView::setDocument(TupLipsyncDoc *doc)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupWaveFormView::setDocument()]";
+    #endif
+
     if (document == nullptr && doc) {
         sampleWidth = DEFAULT_SAMPLE_WIDTH;
         samplesPerFrame = DEFAULT_SAMPLES_PER_FRAME;
@@ -469,6 +477,7 @@ void TupWaveFormView::mouseReleaseEvent(QMouseEvent *event)
 				QString phStr = phList.at(i);
 				if (phStr.isEmpty())
 					continue;
+
 				LipsyncPhoneme *phoneme = new LipsyncPhoneme;
                 phoneme->setText(phStr);
                 selectedWord->addPhoneme(phoneme);
@@ -504,7 +513,7 @@ void TupWaveFormView::paintEvent(QPaintEvent *event)
     int32 clientHeight = height();
 
     if (document == nullptr) {
-		dc.drawText(QRect(0, 0, clientWidth, clientHeight), Qt::AlignHCenter | Qt::AlignVCenter, tr("Drop WAV audio file here"));
+        dc.drawText(QRect(0, 0, clientWidth, clientHeight), Qt::AlignHCenter | Qt::AlignVCenter, tr("Drop audio file here"));
 		return;
 	}
 
@@ -605,7 +614,8 @@ void TupWaveFormView::paintEvent(QPaintEvent *event)
 
             for (int32 w = 0; w < phrase->wordsSize(); w++) {
                 LipsyncWord *word = phrase->getWordAt(w);
-                rect = QRect(word->getStartFrame() * frameWidth, topBorder + 4 + textHeight, (word->getEndFrame() - word->getStartFrame() + 1) * frameWidth, textHeight);
+                rect = QRect(word->getStartFrame() * frameWidth, topBorder + 4 + textHeight,
+                             (word->getEndFrame() - word->getStartFrame() + 1) * frameWidth, textHeight);
 				if (w & 1)
                     rect.translate(0, textHeight - textHeight / 4);
                 word->setTop(rect.top());

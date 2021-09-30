@@ -685,10 +685,10 @@ TupLipsyncDoc::TupLipsyncDoc()
     dirty = false;
     fps = 24;
     audioDuration = 0;
-    audioPlayer = NULL;
-    audioExtractor = NULL;
+    audioPlayer = nullptr;
+    audioExtractor = nullptr;
     maxAmplitude = 1.0f;
-    currentVoice = NULL;
+    currentVoice = nullptr;
 }
 
 TupLipsyncDoc::~TupLipsyncDoc()
@@ -696,12 +696,12 @@ TupLipsyncDoc::~TupLipsyncDoc()
     if (audioPlayer) {
         audioPlayer->stop();
         delete audioPlayer;
-        audioPlayer = NULL;
+        audioPlayer = nullptr;
 	}
 
     if (audioExtractor) {
         delete audioExtractor;
-        audioExtractor = NULL;
+        audioExtractor = nullptr;
 	}
 
     while (!voices.isEmpty())
@@ -740,8 +740,12 @@ void TupLipsyncDoc::loadDictionaries()
         while (!file->atEnd()) {
             QString line = file->readLine();
 			line = line.trimmed();
-            if (line.at(0) == "#" || line.length() == 0)
+
+            if (line.isEmpty()) {
+                continue; // skip comments
+            } else if (line.at(0) == "#" || line.length() == 0) {
 				continue; // skip comments
+            }
 
 			QStringList strList = line.split(' ', Qt::SkipEmptyParts);
             if (strList.size() > 1) {
@@ -756,13 +760,16 @@ void TupLipsyncDoc::loadDictionaries()
     delete file;
 }
 
-void TupLipsyncDoc::loadDictionary(QFile *f)
+void TupLipsyncDoc::loadDictionary(QFile *file)
 {
-    while (!f->atEnd()) {
-		QString line = f->readLine();
+    while (!file->atEnd()) {
+        QString line = file->readLine();
 		line = line.trimmed();
-        if (line.at(0) == "#" || line.length() == 0)
-			continue; // skip comments
+        if (line.isEmpty()) {
+            continue;
+        } else if (line.at(0) == "#") {
+            continue; // skip comments
+        }
 
 		QStringList strList = line.split(' ', Qt::SkipEmptyParts);
         if (strList.size() > 1) {
@@ -774,6 +781,10 @@ void TupLipsyncDoc::loadDictionary(QFile *f)
 
 void TupLipsyncDoc::open(const QString &path)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLipsyncDoc::open()]";
+    #endif
+
     QFile *file;
     QString str;
     QString tempPath;
@@ -781,27 +792,30 @@ void TupLipsyncDoc::open(const QString &path)
 
     file = new QFile(path);
     if (!file->open(QIODevice::ReadOnly | QIODevice::Text)) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLipsyncDoc::open()] - Fatal Error: can't open file -> " << path;
+        #endif
         file->close();
         delete file;
 		return;
 	}
-    QTextStream in(file);
 
     if (audioPlayer) {
         audioPlayer->stop();
         delete audioPlayer;
-        audioPlayer = NULL;
+        audioPlayer = nullptr;
 	}
 
     if (audioExtractor) {
         delete audioExtractor;
-        audioExtractor = NULL;
+        audioExtractor = nullptr;
 	}
 
     while (!voices.isEmpty())
         delete voices.takeFirst();
-    currentVoice = NULL;
+    currentVoice = nullptr;
 
+    QTextStream in(file);
     filePath = path;
 	str = in.readLine(); // discard the header
 	tempPath = in.readLine().trimmed();
@@ -835,18 +849,22 @@ void TupLipsyncDoc::open(const QString &path)
 
 void TupLipsyncDoc::openAudio(const QString &path)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLipsyncDoc::openAudio()] - Loading audio file -> " << path;
+    #endif
+
     dirty = true;
     maxAmplitude = 1.0f;
 
     if (audioPlayer) {
         audioPlayer->stop();
         delete audioPlayer;
-        audioPlayer = NULL;
+        audioPlayer = nullptr;
 	}
 
     if (audioExtractor) {
         delete audioExtractor;
-        audioExtractor = NULL;
+        audioExtractor = nullptr;
 	}
 
     audioPath = path;
@@ -854,14 +872,21 @@ void TupLipsyncDoc::openAudio(const QString &path)
     // connect(player, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
     audioPlayer->setMedia(QUrl::fromLocalFile(audioPath));
     if (audioPlayer->error()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLipsyncDoc::openAudio()] - Fatal Error: Can't open audio -> " << path;
+            qDebug() << "[TupLipsyncDoc::openAudio()] - Error Output -> " << audioPlayer->errorString();
+        #endif
         delete audioPlayer;
-        audioPlayer = NULL;
+        audioPlayer = nullptr;
     } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLipsyncDoc::openAudio()] - Audio file loaded successful!";
+        #endif
         fps = 24;
         audioExtractor = new TupAudioExtractor(path.toUtf8().data());
         if (audioExtractor->isValid()) {
-            real f = audioExtractor->duration() * fps;
-            audioDuration = PG_ROUND(f);
+            real frames = audioExtractor->duration() * fps;
+            audioDuration = PG_ROUND(frames);
             maxAmplitude = 0.001f;
 			real time = 0.0f, sampleDur = 1.0f / 24.0f;
             while (time < audioExtractor->duration()) {
@@ -871,8 +896,11 @@ void TupLipsyncDoc::openAudio(const QString &path)
 				time += sampleDur;
 			}
         } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupLipsyncDoc::openAudio()] - Fatal Error: Audio extractor failed!";
+            #endif
             delete audioExtractor;
-            audioExtractor = NULL;
+            audioExtractor = nullptr;
 		}
 	}
 

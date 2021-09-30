@@ -3,9 +3,10 @@
 
 #include <QWidget>
 
+#include "tglobal.h"
 #include "tuplipsyncdoc.h"
 
-class TupMouthView : public QWidget
+class Q_DECL_EXPORT TupMouthView : public QWidget
 {
 	Q_OBJECT
 

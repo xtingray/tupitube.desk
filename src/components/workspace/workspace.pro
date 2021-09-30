@@ -83,6 +83,9 @@ include($$LIBCOLOR_DIR/libcolor.pri)
 MYPAINT_DIR = "../../mypaint"
 include($$MYPAINT_DIR/mypaint.pri)
 
+PAPAGAYO_DIR = "../papagayo"
+include($$PAPAGAYO_DIR/papagayo.pri)
+
 unix {
     INCLUDEPATH += /usr/include/qt5/QtMultimedia /usr/include/qt5/QtMultimediaWidgets
 

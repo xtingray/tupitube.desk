@@ -77,6 +77,7 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void openMouthsDialog();
 
     signals:
+        void openLipSyncCreator();
         void importLipSync();
         void selectMouth(const QString &name, int index);
         void closeLipSyncProperties();

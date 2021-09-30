@@ -323,6 +323,8 @@ bool TupFactoryHandler::parse()
                     loading = tag;
                     setItemBrush(brush);
                 }
+
+                parentTag = tag;
             } else if (tag == "pen") {
                 QPen pen;
                 parentTag = tag;

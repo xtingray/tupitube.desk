@@ -112,16 +112,16 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
             int numPhrases = stream.readLine().toInt();
             int numPhonemes = 0;
             int numWords;
-            // QString str;
             int firstFrame = 0;
             int lastFrame = 0;
 
             for (int p = 0; p < numPhrases; p++) {
-                 // QString text = stream.readLine().trimmed();
-                 int phInitFrame = stream.readLine().toInt();
+                 line = stream.readLine().trimmed();
+                 int phInitFrame = stream.readLine().trimmed().toInt();
+
                  if (p == 0)
                      phInitFrame = 0;
-                 stream.readLine();
+                 line = stream.readLine().trimmed(); // Skipping line
                  TupPhrase *phrase = new TupPhrase(phInitFrame);
                  numWords = stream.readLine().toInt();
 
@@ -142,6 +142,10 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                                   qDebug() << "[TupPapagayoImporter::TupPapagayoImporter()] - Warning: Word \""
                                            <<  strWord << "\" has NO phonemes associated! :(";
                               }
+                          #endif
+                      } else {
+                          #ifdef TUP_DEBUG
+                              qDebug() << "[TupPapagayoImporter::TupPapagayoImporter()] - Warning: Missing parameters -> " << str;
                           #endif
                       }
                       QList<int> frames;

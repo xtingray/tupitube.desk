@@ -143,6 +143,7 @@ QWidget * PapagayoTool::configurator()
 
         configPanel = new Configurator;
         connect(configPanel, SIGNAL(importLipSync()), this, SIGNAL(importLipSync()));
+        connect(configPanel, SIGNAL(openLipSyncCreator()), this, SIGNAL(openLipSyncCreator()));
         connect(configPanel, SIGNAL(editLipSyncSelection(const QString &)), this, SLOT(editLipSyncSelection(const QString &)));
         connect(configPanel, SIGNAL(removeCurrentLipSync(const QString &)), this, SLOT(removeCurrentLipSync(const QString &)));
         connect(configPanel, SIGNAL(selectMouth(const QString &, int)), this, SLOT(addTarget(const QString &, int)));

@@ -60,6 +60,7 @@
 #include "tosd.h"
 #include "tupfilterinterface.h"
 #include "tupmodessettingsdialog.h"
+#include "tuppapagayoapp.h"
 
 #include <QDir>
 #include <QApplication>
@@ -133,8 +134,8 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     connect(paintArea, SIGNAL(eyeDropperLaunched()), this, SLOT(launchEyeDropperTool()));
 
     // connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), this, SLOT(showPos(const QPointF &)));
-    connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), verticalRuler, SLOT(movePointers(const QPointF&)));
-    connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), horizontalRuler, SLOT(movePointers(const QPointF&)));
+    connect(paintArea, SIGNAL(cursorPosition(const QPointF&)), verticalRuler, SLOT(movePointers(const QPointF&)));
+    connect(paintArea, SIGNAL(cursorPosition(const QPointF&)), horizontalRuler, SLOT(movePointers(const QPointF&)));
     connect(paintArea, SIGNAL(changedZero(const QPointF&)), this, SLOT(changeRulerOrigin(const QPointF&)));
     connect(paintArea, SIGNAL(requestTriggered(const TupProjectRequest *)), this, SIGNAL(requestTriggered(const TupProjectRequest *)));
     connect(paintArea, SIGNAL(localRequestTriggered(const TupProjectRequest *)), this, SIGNAL(localRequestTriggered(const TupProjectRequest *)));
@@ -427,17 +428,17 @@ void TupDocumentView::createLateralToolBar()
     toolbar->setIconSize(QSize(16, 16));
     toolbar->setMovable(false);
     addToolBar(Qt::LeftToolBarArea, toolbar);
-    connect(toolbar, SIGNAL(actionTriggered(QAction *)), this, SLOT(selectToolFromMenu(QAction *)));
+    connect(toolbar, SIGNAL(actionTriggered(QAction*)), this, SLOT(selectToolFromMenu(QAction*)));
 
     // Brushes menu
     shapesMenu = new QMenu(tr("Brushes"), toolbar);
     shapesMenu->setIcon(QPixmap(THEME_DIR + "icons/square.png"));
-    connect(shapesMenu, SIGNAL(triggered(QAction *)), this, SLOT(selectToolFromMenu(QAction*)));
+    connect(shapesMenu, SIGNAL(triggered(QAction*)), this, SLOT(selectToolFromMenu(QAction*)));
 
     // Motion Tween menu
     motionMenu = new QMenu(tr("Tweening"), toolbar);
     motionMenu->setIcon(QPixmap(THEME_DIR + "icons/motion_tween.png"));
-    connect(motionMenu, SIGNAL(triggered(QAction *)), this, SLOT(selectToolFromMenu(QAction*)));
+    connect(motionMenu, SIGNAL(triggered(QAction*)), this, SLOT(selectToolFromMenu(QAction*)));
 
     // Misc Tools menu
     miscMenu = new QMenu(tr("Misc Tools"), toolbar);
@@ -508,7 +509,7 @@ void TupDocumentView::loadPlugins()
             connect(tool, SIGNAL(closeHugeCanvas()), this, SLOT(closeFullScreen()));
 
         if (tool->toolType() != TupToolInterface::Tweener)
-            connect(tool, SIGNAL(callForPlugin(int, int)), this, SLOT(loadPlugin(int, int)));
+            connect(tool, SIGNAL(callForPlugin(int,int)), this, SLOT(loadPlugin(int,int)));
 
         QStringList::iterator it;
         QList<TAction::ActionId> keys = tool->keys();
@@ -527,8 +528,7 @@ void TupDocumentView::loadPlugins()
                 action->setCheckable(true);
                 actionGroup->addAction(action);
 
-                QString toolName = action->text();
-
+                // QString toolName = action->text();
                 switch (tool->toolType()) {
                     case TupToolInterface::Brush:
                     {
@@ -914,7 +914,7 @@ void TupDocumentView::loadPlugin(int menu, int actionID)
                 qDebug() << "[TupDocumentView::loadPlugin()] - Calling action -> " << action->text();
             #endif
 
-            QString toolName = tr("%1").arg(action->text());
+            // QString toolName = tr("%1").arg(action->text());
             TAction::ActionId tool = action->actionId();
             if (tool != currentTool->toolId()) {
                 action->trigger();
@@ -948,8 +948,10 @@ void TupDocumentView::selectTool()
             if (currentTool->toolId() == TAction::Pencil)
                 disconnect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
 
-            if (currentTool->toolId() == TAction::LipSyncTool)
+            if (currentTool->toolId() == TAction::LipSyncTool) {
+                disconnect(currentTool, SIGNAL(openLipSyncCreator()), this, SLOT(openLipSyncCreator()));
                 disconnect(currentTool, SIGNAL(importLipSync()), this, SLOT(importPapagayoLipSync()));
+            }
 
             if (currentTool->toolId() == TAction::EyeDropper) {
                 disconnect(currentTool, SIGNAL(colorPicked(TColorCell::FillType, const QColor &)),
@@ -1040,8 +1042,8 @@ void TupDocumentView::selectTool()
                     if (toolId == TAction::ObjectSelection) {
                         tool->setProjectSize(project->getDimension());
                         minWidth = 130;
-                        connect(paintArea, SIGNAL(itemAddedOnSelection(TupGraphicsScene *)),
-                                tool, SLOT(initItems(TupGraphicsScene *)));
+                        connect(paintArea, SIGNAL(itemAddedOnSelection(TupGraphicsScene*)),
+                                tool, SLOT(initItems(TupGraphicsScene*)));
                     }
                 }
                 break;
@@ -1063,6 +1065,7 @@ void TupDocumentView::selectTool()
                 {
                     status->enableFullScreenFeature(false);
                     minWidth = 220;
+                    connect(currentTool, SIGNAL(openLipSyncCreator()), this, SLOT(openLipSyncCreator()));
                     connect(currentTool, SIGNAL(importLipSync()), this, SLOT(importPapagayoLipSync()));
 
                     miscMenu->setDefaultAction(action);
@@ -1276,7 +1279,7 @@ void TupDocumentView::createToolBar()
 
     nextOnionSkinSpin = new QSpinBox(this);
     nextOnionSkinSpin->setToolTip(tr("Next Frames"));
-    connect(nextOnionSkinSpin, SIGNAL(valueChanged (int)), this, SLOT(setNextOnionSkin(int)));
+    connect(nextOnionSkinSpin, SIGNAL(valueChanged(int)), this, SLOT(setNextOnionSkin(int)));
 
     if (next > 0)
         nextOnionSkinSpin->setValue(next);
@@ -1426,12 +1429,12 @@ void TupDocumentView::openRasterMode()
 
     rasterWindow = new RasterMainWindow(project, "raster", spaceContext(), currentSceneIndex(),
                                         contourColor, zoomFactor, this);
-    connect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString &)));
-    connect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
-            this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
+    connect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString&)));
+    connect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent*)),
+            this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent*)));
     connect(rasterWindow, SIGNAL(rasterStrokeMade()), this, SLOT(requestRasterStroke()));
     connect(rasterWindow, SIGNAL(canvasCleared()), this, SLOT(requestClearRasterCanvas()));
-    connect(rasterWindow, SIGNAL(libraryCall(const QString &)), this, SLOT(importImageToLibrary(const QString &)));
+    connect(rasterWindow, SIGNAL(libraryCall(const QString&)), this, SLOT(importImageToLibrary(const QString&)));
 
     rasterWindowOn = true;
     rasterWindow->showFullScreen();
@@ -1969,7 +1972,7 @@ void TupDocumentView::storyboardSettings()
     TupStoryBoardDialog *storySettings = new TupStoryBoardDialog(isNetworked, imagePlugin, videoPlugin, project,
                                                                  currentSceneIndex(), this);
 
-    connect(storySettings, SIGNAL(updateStoryboard(TupStoryboard*, int)), this, SLOT(sendStoryboard(TupStoryboard*, int)));
+    connect(storySettings, SIGNAL(updateStoryboard(TupStoryboard*,int)), this, SLOT(sendStoryboard(TupStoryboard*,int)));
     connect(storySettings, SIGNAL(accepted()), paintArea, SLOT(updatePaintArea()));
     connect(storySettings, SIGNAL(rejected()), paintArea, SLOT(updatePaintArea()));
     connect(storySettings, SIGNAL(projectHasChanged()), this, SIGNAL(projectHasChanged()));
@@ -2311,6 +2314,18 @@ void TupDocumentView::insertPictureInFrame(int id, const QString path)
     }
 }
 
+void TupDocumentView::openLipSyncCreator()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupDocumentView::openLipSyncCreator()]";
+    #endif
+
+    TupPapagayoApp *papagayoApp = new TupPapagayoApp(this);
+    papagayoApp->show();
+    papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
+                      static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
+}
+
 void TupDocumentView::importPapagayoLipSync()
 {
     #ifdef TUP_DEBUG
@@ -2359,7 +2374,7 @@ void TupDocumentView::importPapagayoLipSync()
                         if (parser->fileIsValid()) {
                             int layerIndex = paintArea->currentLayerIndex();
                             QString mouthPath = imagesDir;
-                            QDir mouthDir = QDir(mouthPath);
+                            // QDir mouthDir = QDir(mouthPath);
 
                             // Creating Papagayo folder in the library
                             TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, folder,
@@ -2634,8 +2649,10 @@ void TupDocumentView::enableEyeDropperTool(TColorCell::FillType fillType)
             if (currentTool->toolId() == TAction::Pencil)
                 disconnect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
 
-            if (currentTool->toolId() == TAction::LipSyncTool)
+            if (currentTool->toolId() == TAction::LipSyncTool) {
+                disconnect(currentTool, SIGNAL(openLipSyncCreator()), this, SLOT(openLipSyncCreator()));
                 disconnect(currentTool, SIGNAL(importLipSync()), this, SLOT(importPapagayoLipSync()));
+            }
 
             currentTool->saveConfig();
             QWidget *toolConfigurator = currentTool->configurator();
@@ -2666,8 +2683,8 @@ void TupDocumentView::enableEyeDropperTool(TColorCell::FillType fillType)
         }
 
         paintArea->setTool(tool);
-        connect(currentTool, SIGNAL(colorPicked(TColorCell::FillType, QColor)),
-                                    this, SIGNAL(colorChanged(TColorCell::FillType, QColor)));
+        connect(currentTool, SIGNAL(colorPicked(TColorCell::FillType,QColor)),
+                                    this, SIGNAL(colorChanged(TColorCell::FillType,QColor)));
         connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), this, SLOT(refreshEyeDropperPanel()));
     } else {
         #ifdef TUP_DEBUG

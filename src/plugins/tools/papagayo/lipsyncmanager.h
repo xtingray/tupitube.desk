@@ -63,6 +63,7 @@ class TUPITUBE_PLUGIN LipSyncManager: public QWidget
         void addNewRecord(const QString &name);
 
     signals:
+        void openLipSyncCreator();
         void importLipSync();
         void editCurrentLipSync(const QString &name);
         void removeCurrentLipSync(const QString &name);
@@ -75,7 +76,8 @@ class TUPITUBE_PLUGIN LipSyncManager: public QWidget
         bool itemExists(const QString &name);
 
         QListWidget *lipSyncList;
-        TImageButton *addButton;
+        TImageButton *openButton;
+        TImageButton *importButton;
         TImageButton *editButton;
         TImageButton *delButton;
         QString target;

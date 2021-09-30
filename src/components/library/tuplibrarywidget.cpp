@@ -41,6 +41,7 @@
 #include "tuptextitem.h"
 #include "tuprectitem.h"
 #include "tupellipseitem.h"
+#include "tupsounddialog.h"
 
 #define RETURN_IF_NOT_LIBRARY if (!library) return;
 
@@ -1391,35 +1392,35 @@ void TupLibraryWidget::importSoundFile()
         qDebug() << "[TupLibraryWidget::importSoundFile()]";
     #endif
 
-    TCONFIG->beginGroup("General");
-    QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
+    TupSoundDialog *soundDialog = new TupSoundDialog();
+    connect(soundDialog, &TupSoundDialog::soundFilePicked,
+            this, &TupLibraryWidget::importSoundFileFromFolder);
+    soundDialog->show();
+}
 
-    QFileDialog dialog(this, tr("Import audio file..."), path);
-    dialog.setNameFilter(tr("Sound file") + " (*.ogg *.wav *.mp3)");
-    dialog.setFileMode(QFileDialog::ExistingFile);
+void TupLibraryWidget::importSoundFileFromFolder(const QString &path)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::importSoundFileFromFolder()]";
+    #endif
 
-    if (dialog.exec() == QDialog::Accepted) {
-        QStringList files = dialog.selectedFiles();
-        path = files.at(0);
+    QFile file(path);
+    QFileInfo fileInfo(file);
+    QString key = fileInfo.fileName().toLower();
+    key = key.replace("(","_");
+    key = key.replace(")","_");
 
-        QFile file(path);
-        QFileInfo fileInfo(file);
-        QString key = fileInfo.fileName().toLower();
-        key = key.replace("(","_");
-        key = key.replace(")","_");
+    if (file.open(QIODevice::ReadOnly)) {
+        QByteArray data = file.readAll();
+        file.close();
 
-        if (file.open(QIODevice::ReadOnly)) {
-            QByteArray data = file.readAll();
-            file.close();
-
-            isEffectSound = true;
-            TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
-                                                           TupLibraryObject::Sound, project->spaceContext(), data);
-            emit requestTriggered(&request);
-            setDefaultPath(path);
-        } else {
-            TOsd::self()->display(TOsd::Error, tr("Error while opening file: %1").arg(path));
-        }
+        isEffectSound = true;
+        TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
+                                                       TupLibraryObject::Sound, project->spaceContext(), data);
+        emit requestTriggered(&request);
+        setDefaultPath(path);
+    } else {
+        TOsd::self()->display(TOsd::Error, tr("Error while opening file: %1").arg(path));
     }
 }
 

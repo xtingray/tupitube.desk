@@ -96,8 +96,8 @@ void TupMainWindow::createGUI()
     new TAction(QPixmap(THEME_DIR + "icons/svg_array.png"), tr("SVG Sequence"), QKeySequence(tr("Alt+Shift+S")), m_libraryWidget, 
 		SLOT(importSvgSequence()), m_actionManager, "importSvgSequence");
 
-    //new TAction(QPixmap(), tr("Audio File..."), QKeySequence(), m_libraryWidget, SLOT(importSound()),
-    //            m_actionManager, "importAudioFile");
+    new TAction(QPixmap(THEME_DIR + "icons/sound_object.png"), tr("Audio File"), QKeySequence(tr("Alt+A")), m_libraryWidget, SLOT(importSoundFile()),
+                m_actionManager, "importAudioFile");
 
     // SQA: Temporary code
     //m_actionManager->enable("importSvg", false);
@@ -236,7 +236,7 @@ void TupMainWindow::setupMenu()
     m_insertMenu->addAction(m_actionManager->find("importImageSequence"));
     m_insertMenu->addAction(m_actionManager->find("importSvg"));
     m_insertMenu->addAction(m_actionManager->find("importSvgSequence"));
-    // m_insertMenu->addAction(m_actionManager->find("importAudioFile"));
+    m_insertMenu->addAction(m_actionManager->find("importAudioFile"));
 
     m_insertMenu->addSeparator();
     m_insertMenu->addAction(m_actionManager->find("importGimpPalettes"));

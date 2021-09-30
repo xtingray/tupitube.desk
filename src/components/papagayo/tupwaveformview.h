@@ -3,11 +3,13 @@
 
 #include <QWidget>
 
+#include "tglobal.h"
 #include "tuplipsyncdoc.h"
 
-class QScrollArea;
+#include <QScrollArea>
+// class QScrollArea;
 
-class TupWaveFormView : public QWidget
+class Q_DECL_EXPORT TupWaveFormView : public QWidget
 {
 	Q_OBJECT
 

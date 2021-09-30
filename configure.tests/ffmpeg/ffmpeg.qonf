@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <qonf optional="true">
-    <test name="ffmpeg">
+    <test name="FFmpeg">
         <dir path="." />
     </test>
     <provide>

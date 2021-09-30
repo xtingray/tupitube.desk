@@ -3,6 +3,7 @@
 
 #include <QMediaPlayer>
 
+#include "tglobal.h"
 #include "tupaudioextractor.h"
 
 class QFile;
@@ -136,7 +137,7 @@ class LipsyncVoice
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class TupLipsyncDoc : public QObject
+class Q_DECL_EXPORT TupLipsyncDoc : public QObject
 {
 	Q_OBJECT
 

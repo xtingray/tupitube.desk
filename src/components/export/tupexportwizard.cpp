@@ -156,48 +156,51 @@ void TupExportWizard::next()
 {
     TupExportWizardPage *current = qobject_cast<TupExportWizardPage *>(history->currentWidget());
 
-    if (current)
+    if (current) {
         current->aboutToNextPage();
 
-    QString tag = current->getTag();
-
-    if (tag.compare("PLUGIN") == 0) {
-        backButton->setEnabled(true);
-        history->setCurrentIndex(history->currentIndex()+1);
-    }
-
-    if (tag.compare("ANIMATION") == 0)
-        emit exportAnimation();
-
-    if (tag.compare("ANIMATED_IMAGE") == 0)
-        emit exportAnimatedImage();
-
-    if (tag.compare("IMAGES_ARRAY") == 0)
-        emit exportImagesArray();
-
-    if (tag.compare("PROPERTIES") == 0) {
-        current->setTitle(tr("Uploading Source File"));
-        emit postProcedureCalled();
-    }
-
-    if (tag.compare("SCENE") == 0)  {
-        nextButton->setText(tr("Export"));
-        backButton->setEnabled(true);
-
-        if (formatCode == TupExportInterface::APNG) { // ANIMATED PNG
-            emit setAnimatedImageFileName();
-            history->setCurrentIndex(history->currentIndex() + 3);
-        } else if (formatCode == TupExportInterface::JPEG || formatCode == TupExportInterface::PNG
-                   || formatCode == TupExportInterface::SVG) { // Images Array
-            emit setImagesArrayFileName();
-            history->setCurrentIndex(history->currentIndex() + 2);
-        } else { // ANIMATION
-            emit setAnimationFileName();
-            history->setCurrentIndex(history->currentIndex() + 1);
+        QString tag = current->getTag();
+        if (tag.compare("PLUGIN") == 0) {
+            backButton->setEnabled(true);
+            history->setCurrentIndex(history->currentIndex()+1);
         }
-    } 
 
-    pageCompleted();
+        if (tag.compare("ANIMATION") == 0)
+            emit exportAnimation();
+
+        if (tag.compare("ANIMATED_IMAGE") == 0)
+            emit exportAnimatedImage();
+
+        if (tag.compare("IMAGES_ARRAY") == 0)
+            emit exportImagesArray();
+
+        if (tag.compare("PROPERTIES") == 0) {
+            current->setTitle(tr("Uploading Source File"));
+            emit postProcedureCalled();
+        }
+
+        if (tag.compare("SCENE") == 0)  {
+            nextButton->setText(tr("Export"));
+            backButton->setEnabled(true);
+
+            if (formatCode == TupExportInterface::APNG) { // ANIMATED PNG
+                emit setAnimatedImageFileName();
+                history->setCurrentIndex(history->currentIndex() + 3);
+            } else if (formatCode == TupExportInterface::JPEG || formatCode == TupExportInterface::PNG
+                       || formatCode == TupExportInterface::SVG) { // Images Array
+                emit setImagesArrayFileName();
+                history->setCurrentIndex(history->currentIndex() + 2);
+            } else { // ANIMATION
+                emit setAnimationFileName();
+                history->setCurrentIndex(history->currentIndex() + 1);
+            }
+        }
+        pageCompleted();
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupExportWizard::next()] - Fatal Error: Current page is NULL!";
+        #endif
+    }
 }
 
 void TupExportWizard::pageCompleted()
@@ -221,7 +224,6 @@ void TupExportWizard::pageCompleted()
 }
 
 void TupExportWizard::disableNextButton()
-
 {
     if (nextButton->isEnabled())
         nextButton->setEnabled(false);

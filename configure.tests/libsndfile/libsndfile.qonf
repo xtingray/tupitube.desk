@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<qonf optional="false" >
+	<test name="LibSoundFile">
+		<dir path="." />
+	</test>
+	<provide>
+		<defines>
+			<define value="HAVE_LIBSNDFILE" />
+		</defines>
+		<libs>
+			<lib path="-lsndfile" />
+		</libs>
+	</provide>
+	<solution>
+		<linux package="libsndfile" url="http://zlib.net/" comment="" >
+			<distribution name="gentoo" package="libsndfile" url="https://github.com/libsndfile/libsndfile" comment="Try: emerge libsndfile" />
+			<distribution name="ubuntu" package="libsndfile1" url="https://github.com/libsndfile/libsndfile" comment="Try: apt-get install libsndfile1 libsndfile1-dev" />
+		</linux>
+		<windows package="libsndfile" url="https://github.com/libsndfile/libsndfile" comment="" />
+		<macosx package="libsndfile" url="https://github.com/libsndfile/libsndfile" comment="" />
+	</solution>
+</qonf>

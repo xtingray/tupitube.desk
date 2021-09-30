@@ -275,6 +275,11 @@ module RQonf
         path += value + "/lib:"
       end
 
+      unless @options['with-libsndfile'].nil? then
+        value = @options['with-libsndfile']
+        path += value + "/lib:"
+      end
+
       if RUBY_PLATFORM.downcase.include?("darwin")
         newfile += "export DYLD_FALLBACK_LIBRARY_PATH=\"" + path + "\$\{TUPITUBE_LIB\}:\$\{TUPITUBE_PLUGIN\}:$DYLD_FALLBACK_LIBRARY_PATH\"\n\n"
         newfile += "open ${TUPITUBE_BIN}/TupiTube.app $*"

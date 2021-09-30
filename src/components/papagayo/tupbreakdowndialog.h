@@ -1,15 +1,24 @@
 #ifndef TUPBREAKDOWNDIALOG_H
 #define TUPBREAKDOWNDIALOG_H
 
-#include <QDialog>
+#include "tglobal.h"
+#include "tuplipsyncdoc.h"
 
+#include <QDialog>
+#include <QBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QDialogButtonBox>
+
+/*
 namespace Ui {
     class TupBreakdownDialog;
 }
+*/
 
-class LipsyncWord;
+// class LipsyncWord;
 
-class TupBreakdownDialog : public QDialog
+class Q_DECL_EXPORT TupBreakdownDialog : public QDialog
 {
 	Q_OBJECT
 
@@ -32,9 +41,29 @@ class TupBreakdownDialog : public QDialog
         void on_restBut();
 
     private:
+        void setupUI();
         void addPhoneme(QString phoneme);
 
-        Ui::TupBreakdownDialog *ui;
+        // Ui::TupBreakdownDialog *ui;
+
+        QDialog *breakdownDialog;
+        QVBoxLayout *verticalLayout;
+        QLabel *wordLabel;
+        QGridLayout *gridLayout;
+        QPushButton *aiBut;
+        QPushButton *oBut;
+        QPushButton *eBut;
+        QPushButton *uBut;
+        QPushButton *lBut;
+        QPushButton *wqBut;
+        QPushButton *mbpBut;
+        QPushButton *fvBut;
+        QPushButton *etcBut;
+        QPushButton *restBut;
+        QLineEdit *breakdownEdit;
+        QDialogButtonBox *buttonBox;
+
+        QString title;
 };
 
 #endif // TUPBREAKDOWNDIALOG_H

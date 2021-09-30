@@ -50,18 +50,19 @@ begin
        puts <<_EOH_
 Use: ./configure [options]
   options:
-  --help:               Show this message
-  --prefix=[path]:      Sets installation path [/usr]
-  --bindir=[path]:      Set binaries path [/usr/bin]
-  --libdir=[path]:      Set library path [/usr/lib/tupitube | /usr/lib64/tupitube]
-  --sharedir=[path]:    Set data path [/usr/share]
-  --with-ffmpeg=[path]: Set ffmpeg installation path [/usr]
-  --with-quazip=[path]: Set quazip installation path [/usr]
-  --without-ffmpeg:     Disable ffmpeg support
-  --without-debug:      Disable debug
-  --with-qtdir=[path]:  Set Qt directory [i.e. /usr/local/qt]
-  --package-build:      Option exclusive for package maintainers
-  --install-headers:    Include header files as part of installation
+  --help:                   Show this message
+  --prefix=[path]:          Sets installation path [/usr]
+  --bindir=[path]:          Set binaries path [/usr/bin]
+  --libdir=[path]:          Set library path [/usr/lib/tupitube | /usr/lib64/tupitube]
+  --sharedir=[path]:        Set data path [/usr/share]
+  --with-ffmpeg=[path]:     Set ffmpeg installation path [/usr]
+  --with-quazip=[path]:     Set quazip installation path [/usr]
+  --with-libsndfile=[path]: Set libsndfile installation path [/usr]
+  --without-ffmpeg:         Disable ffmpeg support
+  --without-debug:          Disable debug
+  --with-qtdir=[path]:      Set Qt directory [i.e. /usr/local/qt]
+  --package-build:          Option exclusive for package maintainers
+  --install-headers:        Include header files as part of installation
 _EOH_
         exit 0
     end
@@ -139,6 +140,19 @@ _EOH_
           config.addIncludePath(quazipInclude)
        else
           Info.error << " ERROR: quazip directory does not exist!\n"
+          exit 0
+       end
+    end
+
+    if conf.hasArgument?("with-libsndfile")
+       libsndfileDir = conf.argumentValue("with-libsndfile")
+       if File.directory? libsndfileDir
+          libsndfileLib = libsndfileDir + "/lib"
+          libsndfileInclude = libsndfileDir + "/include"
+          config.addLib("-L" + libsndfileLib)
+          config.addIncludePath(libsndfileInclude)
+       else
+          Info.error << " ERROR: libsndfile directory does not exist!\n"
           exit 0
        end
     end
