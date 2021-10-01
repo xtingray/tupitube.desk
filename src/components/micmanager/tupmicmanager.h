@@ -27,7 +27,7 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         ~TupMicManager();
 
     public slots:
-        void processBuffer(const QAudioBuffer&);
+        void handleBuffer(const QAudioBuffer&);
 
     private slots:
         void setOutputLocation();

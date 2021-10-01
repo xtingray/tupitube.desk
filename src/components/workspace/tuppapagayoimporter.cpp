@@ -50,6 +50,7 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
     int framesTotal = 0;
     framesCount = 0;
     isValid = true;
+    bool numberIsOk = false;
     QFile input(file);
 
     QFileInfo info(file);
@@ -78,20 +79,33 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                    case 2:
                    {
                        // FPS 
-                       fps = line.trimmed().toInt();
-                       lipsync->setFPS(fps);
+                       fps = line.trimmed().toInt(&numberIsOk);
+                       if (numberIsOk) {
+                           lipsync->setFPS(fps);
+                       } else {
+                           isValid = false;
+                           return;
+                       }
                    }
                    break;
                    case 3:
                    {
                        // Frames Total
-                       framesTotal = line.trimmed().toInt();
+                       framesTotal = line.trimmed().toInt(&numberIsOk);
+                       if (!numberIsOk) {
+                           isValid = false;
+                           return;
+                       }
                    }
                    break;
                    case 4:
                    {
                        // Total of voices 
-                       voicesNumber = line.trimmed().toInt();
+                       voicesNumber = line.trimmed().toInt(&numberIsOk);
+                       if (!numberIsOk) {
+                           isValid = false;
+                           return;
+                       }
                    }
                    break;
                }
@@ -109,7 +123,12 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
             voice->setMouthPos(point);
             voice->setVoiceTitle(stream.readLine().trimmed());
             voice->setText(stream.readLine().trimmed());
-            int numPhrases = stream.readLine().toInt();
+            int numPhrases = stream.readLine().toInt(&numberIsOk);
+            if (!numberIsOk) {
+                isValid = false;
+                return;
+            }
+
             int numPhonemes = 0;
             int numWords;
             int firstFrame = 0;
@@ -117,13 +136,21 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
 
             for (int p = 0; p < numPhrases; p++) {
                  line = stream.readLine().trimmed();
-                 int phInitFrame = stream.readLine().trimmed().toInt();
+                 int phInitFrame = stream.readLine().trimmed().toInt(&numberIsOk);
+                 if (!numberIsOk) {
+                     isValid = false;
+                     return;
+                 }
 
                  if (p == 0)
                      phInitFrame = 0;
                  line = stream.readLine().trimmed(); // Skipping line
                  TupPhrase *phrase = new TupPhrase(phInitFrame);
-                 numWords = stream.readLine().toInt();
+                 numWords = stream.readLine().toInt(&numberIsOk);
+                 if (!numberIsOk) {
+                     isValid = false;
+                     return;
+                 }
 
                  for (int w = 0; w < numWords; w++) {
                       QString str = stream.readLine().trimmed();
@@ -132,11 +159,26 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                       TupWord *word = 0;
                       if (strList.size() >= 4) {
                           strWord = strList.at(0);   
-                          firstFrame = strList.at(1).toInt();
+                          firstFrame = strList.at(1).toInt(&numberIsOk);
+                          if (!numberIsOk) {
+                              isValid = false;
+                              return;
+                          }
+
                           word = new TupWord(firstFrame);
-                          lastFrame = strList.at(2).toInt();
+                          lastFrame = strList.at(2).toInt(&numberIsOk);
+                          if (!numberIsOk) {
+                              isValid = false;
+                              return;
+                          }
+
                           word->setEndFrame(lastFrame);
-                          numPhonemes = strList.at(3).toInt();
+                          numPhonemes = strList.at(3).toInt(&numberIsOk);
+                          if (!numberIsOk) {
+                              isValid = false;
+                              return;
+                          }
+
                           #ifdef TUP_DEBUG
                               if (numPhonemes == 0) {
                                   qDebug() << "[TupPapagayoImporter::TupPapagayoImporter()] - Warning: Word \""
@@ -154,7 +196,12 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                            str = stream.readLine().trimmed();
                            QStringList strList = str.split(' ', Qt::SkipEmptyParts);
                            if (strList.size() >= 2) {
-                               frames << strList.at(0).toInt();
+                               frames << strList.at(0).toInt(&numberIsOk);
+                               if (!numberIsOk) {
+                                   isValid = false;
+                                   return;
+                               }
+
                                blocks << strList.at(1).toLower();
                            }
                       } // for ph

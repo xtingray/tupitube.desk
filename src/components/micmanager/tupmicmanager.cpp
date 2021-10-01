@@ -42,7 +42,7 @@
 #include <QStandardPaths>
 #include <QGroupBox>
 
-static qreal getPeakValue(const QAudioFormat &format);
+static qreal getMaxValue(const QAudioFormat &format);
 static QVector<qreal> getBufferLevels(const QAudioBuffer &buffer);
 
 template <class T> static QVector<qreal> getBufferLevels(const T *buffer, int frames, int channels);
@@ -99,33 +99,35 @@ void TupMicManager::setupUI()
     formLayout->addWidget(audioDevDropList, 1, 1, 1, 1);
     mainLayout->addLayout(formLayout, 0, 0, 1, 3);
 
-    recordButton = new QPushButton(centralWidget);
+    QHBoxLayout *controlsLayout = new QHBoxLayout;
+
+    recordButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/record.png")), "", centralWidget);
     recordButton->setObjectName(QString::fromUtf8("recordButton"));
-    recordButton->setText(tr("Record"));
+    recordButton->setToolTip(tr("Record"));
     connect(recordButton, SIGNAL(clicked()), this, SLOT(toggleRecord()));
 
-    mainLayout->addWidget(recordButton, 2, 0, 1, 1);
+    controlsLayout->addWidget(recordButton);
 
-    pauseButton = new QPushButton(centralWidget);
+    pauseButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/pause.png")), "", centralWidget);
     pauseButton->setObjectName(QString::fromUtf8("pauseButton"));
-    pauseButton->setText(tr("Pause"));
+    pauseButton->setToolTip(tr("Pause"));
     pauseButton->setEnabled(false);
     connect(pauseButton, SIGNAL(clicked()), this, SLOT(togglePause()));
 
-    mainLayout->addWidget(pauseButton, 2, 1, 1, 1);
+    controlsLayout->addWidget(pauseButton);
 
-    playButton = new QPushButton(centralWidget);
+    playButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/play.png")), "", centralWidget);
     playButton->setObjectName(QString::fromUtf8("playButton"));
-    playButton->setText(tr("Play"));
+    playButton->setToolTip(tr("Play"));
 
-    mainLayout->addWidget(playButton, 2, 2, 1, 1);
+    controlsLayout->addWidget(playButton);
 
-    discardButton = new QPushButton(centralWidget);
+    discardButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/delete.png")), "", centralWidget);
     discardButton->setObjectName(QString::fromUtf8("discardButton"));
-    discardButton->setText(tr("Discard"));
+    discardButton->setToolTip(tr("Discard"));
     connect(discardButton, SIGNAL(clicked()), this, SLOT(setOutputLocation()));
 
-    mainLayout->addWidget(discardButton, 2, 3, 1, 1);
+    controlsLayout->addWidget(discardButton);
 
     bottomWidget = new QWidget;
     QVBoxLayout *bottomLayout = new QVBoxLayout;
@@ -155,6 +157,7 @@ void TupMicManager::setupUI()
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(centralWidget);
+    layout->addLayout(controlsLayout);
     layout->addWidget(bottomWidget);
     layout->addStretch(1);
     setLayout(layout);
@@ -164,7 +167,7 @@ void TupMicManager::initRecorder()
 {
     micRecorder = new QAudioRecorder(this);
     micProbe = new QAudioProbe(this);
-    connect(micProbe, &QAudioProbe::audioBufferProbed, this, &TupMicManager::processBuffer);
+    connect(micProbe, &QAudioProbe::audioBufferProbed, this, &TupMicManager::handleBuffer);
     micProbe->setSource(micRecorder);
 }
 
@@ -213,16 +216,22 @@ void TupMicManager::onStateChanged(QMediaRecorder::State state)
 {
     switch (state) {
         case QMediaRecorder::RecordingState:
-            recordButton->setText(tr("Stop"));
-            pauseButton->setText(tr("Pause"));
+            recordButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/stop.png")));
+            recordButton->setToolTip(tr("Stop"));
+            pauseButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/pause.png")));
+            pauseButton->setToolTip(tr("Pause"));
             break;
         case QMediaRecorder::PausedState:
-            recordButton->setText(tr("Stop"));
-            pauseButton->setText(tr("Resume"));
+            recordButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/stop.png")));
+            recordButton->setToolTip(tr("Stop"));
+            pauseButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/resume.png")));
+            pauseButton->setToolTip(tr("Resume"));
             break;
         case QMediaRecorder::StoppedState:
-            recordButton->setText(tr("Record"));
-            pauseButton->setText(tr("Pause"));
+            recordButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/record.png")));
+            recordButton->setToolTip(tr("Record"));
+            pauseButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/pause.png")));
+            pauseButton->setToolTip(tr("Pause"));
             break;
     }
 
@@ -241,7 +250,6 @@ static QVariant boxValue(const QComboBox *box)
 void TupMicManager::toggleRecord()
 {
     if (micRecorder->state() == QMediaRecorder::StoppedState) {
-        // bottomWidget->setVisible(true);
         micRecorder->setAudioInput(boxValue(audioDevDropList).toString());
 
         QAudioEncoderSettings settings;
@@ -286,7 +294,7 @@ void TupMicManager::clearMicLevels()
         micLevels.at(i)->setLevel(0);
 }
 
-qreal getPeakValue(const QAudioFormat& format)
+qreal getMaxValue(const QAudioFormat& format)
 {
     if (!format.isValid())
         return qreal(0);
@@ -298,7 +306,7 @@ qreal getPeakValue(const QAudioFormat& format)
         case QAudioFormat::Unknown:
             break;
         case QAudioFormat::Float:
-            if (format.sampleSize() != 32) // other sample formats are not supported
+            if (format.sampleSize() != 32)
                 return qreal(0);
             return qreal(1.00003);
         case QAudioFormat::SignedInt:
@@ -334,8 +342,8 @@ QVector<qreal> getBufferLevels(const QAudioBuffer& buffer)
 
     int channelCount = buffer.format().channelCount();
     levels.fill(0, channelCount);
-    qreal peak_value = getPeakValue(buffer.format());
-    if (qFuzzyCompare(peak_value, qreal(0)))
+    qreal maxValue = getMaxValue(buffer.format());
+    if (qFuzzyCompare(maxValue, qreal(0)))
         return levels;
 
     switch (buffer.format().sampleType()) {
@@ -348,13 +356,13 @@ QVector<qreal> getBufferLevels(const QAudioBuffer& buffer)
             if (buffer.format().sampleSize() == 8)
                 levels = getBufferLevels(buffer.constData<quint8>(), buffer.frameCount(), channelCount);
             for (int i = 0; i < levels.size(); ++i)
-                levels[i] = qAbs(levels.at(i) - peak_value / 2) / (peak_value / 2);
+                levels[i] = qAbs(levels.at(i) - maxValue / 2) / (maxValue / 2);
         break;
         case QAudioFormat::Float:
             if (buffer.format().sampleSize() == 32) {
                 levels = getBufferLevels(buffer.constData<float>(), buffer.frameCount(), channelCount);
                 for (int i = 0; i < levels.size(); ++i)
-                    levels[i] /= peak_value;
+                    levels[i] /= maxValue;
             }
         break;
         case QAudioFormat::SignedInt:
@@ -365,7 +373,7 @@ QVector<qreal> getBufferLevels(const QAudioBuffer& buffer)
             if (buffer.format().sampleSize() == 8)
                 levels = getBufferLevels(buffer.constData<qint8>(), buffer.frameCount(), channelCount);
             for (int i = 0; i < levels.size(); ++i)
-                levels[i] /= peak_value;
+                levels[i] /= maxValue;
             break;
     }
 
@@ -388,7 +396,7 @@ template <class T> QVector<qreal> getBufferLevels(const T *buffer, int frames, i
     return max_values;
 }
 
-void TupMicManager::processBuffer(const QAudioBuffer& buffer)
+void TupMicManager::handleBuffer(const QAudioBuffer& buffer)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupMicManager::processBuffer()]";
