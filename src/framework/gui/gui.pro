@@ -53,6 +53,7 @@ HEADERS += taction.h \
            ticon.h \
            # tideality.h \
            timagebutton.h \
+           tinputfield.h \
            titemselector.h \
            tlabel.h \
            tmainwindow.h \
@@ -121,6 +122,7 @@ SOURCES += taction.cpp \
            ticon.cpp \ 
            tlabel.cpp \
            timagebutton.cpp \
+           tinputfield.cpp \
            titemselector.cpp \
            tmainwindow.cpp \
            # tmainwindowfactory.cpp \

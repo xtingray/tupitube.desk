@@ -5,6 +5,8 @@
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco Rodríguez                                         *
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
@@ -33,48 +35,29 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPSOUNDDIALOG_H
-#define TUPSOUNDDIALOG_H
+#ifndef TINPUTFIELD_H
+#define TINPUTFIELD_H
 
 #include "tglobal.h"
-#include "tapplicationproperties.h"
-#include "tupmicmanager.h"
 
-#include <QDialog>
 #include <QLineEdit>
-#include <QTabWidget>
+#include <QKeyEvent>
 
-/**
- * @author Gustav Gonzalez
-**/
-
-class TUPITUBE_EXPORT TupSoundDialog : public QDialog
+class T_GUI_EXPORT TInputField : public QLineEdit
 {
     Q_OBJECT
 
     public:
-        TupSoundDialog(QWidget *parent = nullptr);
-        ~TupSoundDialog();
-
-    private slots:
-        void loadSoundFile();
-        void importSoundAsset();
-        void importRecordingAsset();
-        void enableOkButton(bool enabled);
+        TInputField(const QString &input, QWidget *parent = nullptr);
+        ~TInputField();
 
     signals:
-        void soundFilePicked(const QString &);
-
-    private:
-        QWidget * soundFileTab();
-        QWidget * soundRecordTab();
-
-        QTabWidget *tabWidget;
-        QLineEdit *filePathInput;
-        QString soundFilePath;
-        QPushButton *importFileButton;
-        QPushButton *importRecordButton;
-
-        TupMicManager *micManager;
+        void inputFilled(bool enabled);
+ 
+    protected:
+        virtual void focusInEvent(QFocusEvent *event);
+        virtual void focusOutEvent(QFocusEvent *event);
+        virtual void keyPressEvent(QKeyEvent *event);
 };
+
 #endif

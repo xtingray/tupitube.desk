@@ -3,6 +3,8 @@
 
 #include "tglobal.h"
 #include "tapplicationproperties.h"
+#include "tupmiclevel.h"
+#include "tinputfield.h"
 
 #include <QWidget>
 #include <QMediaRecorder>
@@ -15,8 +17,8 @@
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QLabel>
-
-#include "tupmiclevel.h"
+#include <QMediaPlayer>
+#include <QTimer>
 
 class TUPITUBE_EXPORT TupMicManager : public QWidget
 {
@@ -26,18 +28,27 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         TupMicManager();
         ~TupMicManager();
 
+        QString getRecordPath() const;
+
+    signals:
+        void soundReady(bool enabled);
+
     public slots:
-        void handleBuffer(const QAudioBuffer&);
+        void handleBuffer(const QAudioBuffer &buffer);
 
     private slots:
-        void setOutputLocation();
+        void discardRecording();
         void togglePause();
         void toggleRecord();
 
-        void updateStatus(QMediaRecorder::Status);
-        void onStateChanged(QMediaRecorder::State);
+        void updateStatus(QMediaRecorder::Status status);
+        void onStateChanged(QMediaRecorder::State state);
         void updateProgress(qint64 pos);
         void showErrorMessage();
+        void enableRecordButton(bool enabled);
+
+        void playRecording();
+        void trackPlayerStatus();
 
     private:
         void initRecorder();
@@ -48,22 +59,29 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         QAudioRecorder *micRecorder;
         QAudioProbe *micProbe;
         QList<TupMicLevel*> micLevels;
-        bool outputPosFlag;
 
         QWidget *centralWidget;
+        QWidget *controlsWidget;
+        QWidget *playerWidget;
         QWidget *bottomWidget;
         QVBoxLayout *levelsScreenLayout;
         TupMicLevel *initLevel;
         bool initLevelIncluded;
 
-        QLineEdit *nameInput;
+        TInputField *nameInput;
         QComboBox *audioDevDropList;
         QLabel *statusLabel;
 
-        QPushButton *playButton;
-        QPushButton *discardButton;
         QPushButton *recordButton;
         QPushButton *pauseButton;
+
+        QPushButton *playButton;
+        QPushButton *discardButton;
+
+        QMediaPlayer *player;
+        QTimer *timer;
+        qreal secCounter;
+        qreal audioDuration;
 };
 
 #endif // TUPMICMANAGER_H

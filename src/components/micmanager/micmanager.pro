@@ -9,6 +9,12 @@ QT += widgets multimedia
 FRAMEWORK_DIR = "../../framework"
 include($$FRAMEWORK_DIR/framework.pri)
 
+unix {
+  !include(../../../tupiglobal.pri) {
+    error("Run ./configure first!")
+  }
+}
+
 HEADERS = tupmicmanager.h \
           tupmiclevel.h
 

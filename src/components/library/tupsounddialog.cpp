@@ -130,13 +130,14 @@ QWidget* TupSoundDialog::soundRecordTab()
     QVBoxLayout *layout = new QVBoxLayout;
 
     micManager = new TupMicManager;
+    connect(micManager, &TupMicManager::soundReady, this, &TupSoundDialog::enableOkButton);
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     importRecordButton = new QPushButton("");
     importRecordButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
     importRecordButton->setToolTip(tr("Import Recorded Sound"));
     importRecordButton->setEnabled(false);
-    connect(importRecordButton, SIGNAL(clicked()), this, SLOT(importSoundAsset()));
+    connect(importRecordButton, SIGNAL(clicked()), this, SLOT(importRecordingAsset()));
 
     QPushButton *cancelButton = new QPushButton("");
     cancelButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
@@ -187,4 +188,22 @@ void TupSoundDialog::importSoundAsset()
     } else {
         TOsd::self()->display(TOsd::Error, tr("Please, choose a sound file!"));
     }
+}
+
+void TupSoundDialog::importRecordingAsset()
+{
+    QString path = micManager->getRecordPath();
+    if (!path.isEmpty()) {
+        emit soundFilePicked(path);
+        close();
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupSoundDialog::importRecordingAsset()] - Recording file path is empty!";
+        #endif
+    }
+}
+
+void TupSoundDialog::enableOkButton(bool enabled)
+{
+    importRecordButton->setEnabled(enabled);
 }

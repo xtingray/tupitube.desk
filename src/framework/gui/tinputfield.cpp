@@ -5,6 +5,8 @@
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
  *                                                                         *
  *   Developers:                                                           *
+ *   2019:                                                                 *
+ *    Alejandro Carrasco Rodríguez                                         *
  *   2010:                                                                 *
  *    Gustavo Gonzalez / xtingray                                          *
  *                                                                         *
@@ -33,48 +35,55 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPSOUNDDIALOG_H
-#define TUPSOUNDDIALOG_H
+#include "tinputfield.h"
 
-#include "tglobal.h"
-#include "tapplicationproperties.h"
-#include "tupmicmanager.h"
-
-#include <QDialog>
-#include <QLineEdit>
-#include <QTabWidget>
-
-/**
- * @author Gustav Gonzalez
-**/
-
-class TUPITUBE_EXPORT TupSoundDialog : public QDialog
+TInputField::TInputField(const QString &input, QWidget *parent) : QLineEdit(parent)
 {
-    Q_OBJECT
+    setText(input);
+}
 
-    public:
-        TupSoundDialog(QWidget *parent = nullptr);
-        ~TupSoundDialog();
+TInputField::~TInputField()
+{
+}
 
-    private slots:
-        void loadSoundFile();
-        void importSoundAsset();
-        void importRecordingAsset();
-        void enableOkButton(bool enabled);
+void TInputField::focusInEvent(QFocusEvent *event)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupInputField::focusInEvent()]";
+    #endif
 
-    signals:
-        void soundFilePicked(const QString &);
+    bool enabled = true;
+    if (text().isEmpty())
+        enabled = false;
+    emit inputFilled(enabled);
 
-    private:
-        QWidget * soundFileTab();
-        QWidget * soundRecordTab();
+    QLineEdit::focusInEvent(event);
+}
 
-        QTabWidget *tabWidget;
-        QLineEdit *filePathInput;
-        QString soundFilePath;
-        QPushButton *importFileButton;
-        QPushButton *importRecordButton;
+void TInputField::focusOutEvent(QFocusEvent *event)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupInputField::focusOutEvent()]";
+    #endif
 
-        TupMicManager *micManager;
-};
-#endif
+    bool enabled = true;
+    if (text().isEmpty())
+        enabled = false;
+    emit inputFilled(enabled);
+
+    QLineEdit::focusOutEvent(event);
+}
+
+void TInputField::keyPressEvent(QKeyEvent *event)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupInputField::keyPressEvent()]";
+    #endif
+
+    bool enabled = true;
+    if (text().isEmpty())
+        enabled = false;
+    emit inputFilled(enabled);
+
+    QLineEdit::keyPressEvent(event);
+}

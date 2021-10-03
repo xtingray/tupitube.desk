@@ -37,10 +37,10 @@
 
 #include <QDir>
 #include <QGridLayout>
-#include <QFileDialog>
 #include <QMediaRecorder>
-#include <QStandardPaths>
 #include <QGroupBox>
+#include <QTimer>
+#include <QMessageBox>
 
 static qreal getMaxValue(const QAudioFormat &format);
 static QVector<qreal> getBufferLevels(const QAudioBuffer &buffer);
@@ -49,8 +49,6 @@ template <class T> static QVector<qreal> getBufferLevels(const T *buffer, int fr
 
 TupMicManager::TupMicManager()
 {
-    outputPosFlag = false;
-
     initRecorder();
     setupUI();
     setConnections();
@@ -58,109 +56,9 @@ TupMicManager::TupMicManager()
 
 TupMicManager::~TupMicManager()
 {
-}
-
-void TupMicManager::setupUI()
-{
-    setObjectName(QString::fromUtf8("MicManager"));
-
-    centralWidget = new QWidget(this);
-    centralWidget->setObjectName(QString::fromUtf8("centralwidget"));
-    QGridLayout *mainLayout = new QGridLayout(centralWidget);
-    mainLayout->setObjectName(QString::fromUtf8("mainLayout"));
-
-    QGridLayout *formLayout = new QGridLayout();
-    formLayout->setObjectName(QString::fromUtf8("formLayout"));
-
-    QLabel *nameLabel = new QLabel(centralWidget);
-    nameLabel->setObjectName(QString::fromUtf8("deviceLabel"));
-    nameLabel->setText(tr("Record Name:"));
-
-    formLayout->addWidget(nameLabel, 0, 0, 1, 1);
-
-    nameInput = new QLineEdit(tr("Sound 01"));
-    nameInput->setObjectName(QString::fromUtf8("nameInput"));
-
-    formLayout->addWidget(nameInput, 0, 1, 1, 1);
-
-    QLabel *deviceLabel = new QLabel(centralWidget);
-    deviceLabel->setObjectName(QString::fromUtf8("deviceLabel"));
-    deviceLabel->setText(tr("Input Device:"));
-
-    formLayout->addWidget(deviceLabel, 1, 0, 1, 1);
-
-    audioDevDropList = new QComboBox(centralWidget);
-    audioDevDropList->setObjectName(QString::fromUtf8("audioDeviceBox"));
-    audioDevDropList->addItem(tr("Default"), QVariant(QString()));
-    for (auto &device: micRecorder->audioInputs()) {
-        audioDevDropList->addItem(device, QVariant(device));
-    }
-
-    formLayout->addWidget(audioDevDropList, 1, 1, 1, 1);
-    mainLayout->addLayout(formLayout, 0, 0, 1, 3);
-
-    QHBoxLayout *controlsLayout = new QHBoxLayout;
-
-    recordButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/record.png")), "", centralWidget);
-    recordButton->setObjectName(QString::fromUtf8("recordButton"));
-    recordButton->setToolTip(tr("Record"));
-    connect(recordButton, SIGNAL(clicked()), this, SLOT(toggleRecord()));
-
-    controlsLayout->addWidget(recordButton);
-
-    pauseButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/pause.png")), "", centralWidget);
-    pauseButton->setObjectName(QString::fromUtf8("pauseButton"));
-    pauseButton->setToolTip(tr("Pause"));
-    pauseButton->setEnabled(false);
-    connect(pauseButton, SIGNAL(clicked()), this, SLOT(togglePause()));
-
-    controlsLayout->addWidget(pauseButton);
-
-    playButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/play.png")), "", centralWidget);
-    playButton->setObjectName(QString::fromUtf8("playButton"));
-    playButton->setToolTip(tr("Play"));
-
-    controlsLayout->addWidget(playButton);
-
-    discardButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/delete.png")), "", centralWidget);
-    discardButton->setObjectName(QString::fromUtf8("discardButton"));
-    discardButton->setToolTip(tr("Discard"));
-    connect(discardButton, SIGNAL(clicked()), this, SLOT(setOutputLocation()));
-
-    controlsLayout->addWidget(discardButton);
-
-    bottomWidget = new QWidget;
-    QVBoxLayout *bottomLayout = new QVBoxLayout;
-
-    QLabel *levelLabel = new QLabel(bottomWidget);
-    levelLabel->setObjectName(QString::fromUtf8("levelLabel"));
-    levelLabel->setText(tr("Audio Level:"));
-
-    bottomLayout->addWidget(levelLabel);
-
-    levelsScreenLayout = new QVBoxLayout();
-    levelsScreenLayout->setObjectName(QString::fromUtf8("levelsLayout"));
-
-    initLevel = new TupMicLevel(bottomWidget);
-    levelsScreenLayout->addWidget(initLevel);
-    initLevelIncluded = true;
-
-    bottomLayout->addLayout(levelsScreenLayout);
-
-    statusLabel = new QLabel(bottomWidget);
-    statusLabel->setObjectName(QString::fromUtf8("statusLabel"));
-    statusLabel->setText(" ");
-
-    bottomLayout->addWidget(statusLabel);
-    bottomLayout->addStretch(1);
-    bottomWidget->setLayout(bottomLayout);
-
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget(centralWidget);
-    layout->addLayout(controlsLayout);
-    layout->addWidget(bottomWidget);
-    layout->addStretch(1);
-    setLayout(layout);
+    delete player;
+    delete micRecorder;
+    delete micProbe;
 }
 
 void TupMicManager::initRecorder()
@@ -169,6 +67,106 @@ void TupMicManager::initRecorder()
     micProbe = new QAudioProbe(this);
     connect(micProbe, &QAudioProbe::audioBufferProbed, this, &TupMicManager::handleBuffer);
     micProbe->setSource(micRecorder);
+
+    secCounter = 0;
+    player = new QMediaPlayer;
+}
+
+void TupMicManager::setupUI()
+{
+    centralWidget = new QWidget(this);
+    QGridLayout *mainLayout = new QGridLayout(centralWidget);
+
+    QGridLayout *formLayout = new QGridLayout();
+
+    QLabel *nameLabel = new QLabel(centralWidget);
+    nameLabel->setText(tr("Record Name:"));
+
+    formLayout->addWidget(nameLabel, 0, 0, 1, 1);
+
+    nameInput = new TInputField(tr("Sound 01"));
+    connect(nameInput, SIGNAL(inputFilled(bool)), this, SLOT(enableRecordButton(bool)));
+
+    formLayout->addWidget(nameInput, 0, 1, 1, 1);
+
+    QLabel *deviceLabel = new QLabel(centralWidget);
+    deviceLabel->setText(tr("Input Device:"));
+
+    formLayout->addWidget(deviceLabel, 1, 0, 1, 1);
+
+    audioDevDropList = new QComboBox(centralWidget);
+    audioDevDropList->addItem(tr("Default"), QVariant(QString()));
+    for (auto &device: micRecorder->audioInputs()) {
+        audioDevDropList->addItem(device, QVariant(device));
+    }
+
+    formLayout->addWidget(audioDevDropList, 1, 1, 1, 1);
+    mainLayout->addLayout(formLayout, 0, 0, 1, 3);
+
+    controlsWidget = new QWidget;
+    QHBoxLayout *controlsLayout = new QHBoxLayout;
+
+    recordButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/record.png")), "", controlsWidget);
+    recordButton->setToolTip(tr("Record"));
+    connect(recordButton, SIGNAL(clicked()), this, SLOT(toggleRecord()));
+
+    controlsLayout->addWidget(recordButton);
+
+    pauseButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/pause.png")), "", controlsWidget);
+    pauseButton->setToolTip(tr("Pause"));
+    pauseButton->setEnabled(false);
+    connect(pauseButton, SIGNAL(clicked()), this, SLOT(togglePause()));
+
+    controlsLayout->addWidget(pauseButton);
+    controlsWidget->setLayout(controlsLayout);
+
+    playerWidget = new QWidget;
+    QHBoxLayout *playerLayout = new QHBoxLayout;
+
+    playButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/play.png")), "", playerWidget);
+    playButton->setToolTip(tr("Play"));
+    connect(playButton, SIGNAL(clicked()), this, SLOT(playRecording()));
+
+    playerLayout->addWidget(playButton);
+
+    discardButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/delete.png")), "", playerWidget);
+    discardButton->setToolTip(tr("Discard"));
+    connect(discardButton, SIGNAL(clicked()), this, SLOT(discardRecording()));
+
+    playerLayout->addWidget(discardButton);
+    playerWidget->setLayout(playerLayout);
+    playerWidget->setVisible(false);
+
+    bottomWidget = new QWidget;
+    QVBoxLayout *bottomLayout = new QVBoxLayout;
+
+    QLabel *levelLabel = new QLabel(bottomWidget);
+    levelLabel->setText(tr("Audio Level:"));
+
+    bottomLayout->addWidget(levelLabel);
+
+    levelsScreenLayout = new QVBoxLayout();
+
+    initLevel = new TupMicLevel(bottomWidget);
+    levelsScreenLayout->addWidget(initLevel);
+    initLevelIncluded = true;
+
+    bottomLayout->addLayout(levelsScreenLayout);
+
+    statusLabel = new QLabel(bottomWidget);
+    statusLabel->setText(" ");
+
+    bottomLayout->addWidget(statusLabel);
+    bottomLayout->addStretch(1);
+    bottomWidget->setLayout(bottomLayout);
+
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(centralWidget);
+    layout->addWidget(controlsWidget);
+    layout->addWidget(playerWidget);
+    layout->addWidget(bottomWidget);
+    layout->addStretch(1);
+    setLayout(layout);
 }
 
 void TupMicManager::setConnections()
@@ -185,7 +183,7 @@ void TupMicManager::updateProgress(qint64 duration)
     if (micRecorder->error() != QMediaRecorder::NoError || duration < 2000)
         return;
 
-    statusLabel->setText(tr("Recorded %1 sec").arg(duration / 1000));
+    statusLabel->setText(tr("%1 sec").arg(duration / 1000));
 }
 
 void TupMicManager::updateStatus(QMediaRecorder::Status status)
@@ -194,7 +192,7 @@ void TupMicManager::updateStatus(QMediaRecorder::Status status)
 
     switch (status) {
         case QMediaRecorder::RecordingStatus:
-            statusMessage = tr("Recording to %1").arg(micRecorder->actualLocation().toString());
+            statusMessage = tr("Recording...");
             break;
         case QMediaRecorder::PausedStatus:
             clearMicLevels();
@@ -228,10 +226,22 @@ void TupMicManager::onStateChanged(QMediaRecorder::State state)
             pauseButton->setToolTip(tr("Resume"));
             break;
         case QMediaRecorder::StoppedState:
+            QString filename = CACHE_DIR + nameInput->text() + ".mp3";
+            if (QFile::exists(filename)) {
+                player->setMedia(QUrl::fromLocalFile(filename));
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupMicManager::onStateChanged()] - Fatal Error: Sound file doesn't exist -> " << filename;
+                #endif
+            }
+
             recordButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/record.png")));
             recordButton->setToolTip(tr("Record"));
             pauseButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/pause.png")));
             pauseButton->setToolTip(tr("Pause"));
+            controlsWidget->setVisible(false);
+            playerWidget->setVisible(true);
+            emit soundReady(true);
             break;
     }
 
@@ -250,6 +260,7 @@ static QVariant boxValue(const QComboBox *box)
 void TupMicManager::toggleRecord()
 {
     if (micRecorder->state() == QMediaRecorder::StoppedState) {
+        nameInput->setReadOnly(true);
         micRecorder->setAudioInput(boxValue(audioDevDropList).toString());
 
         QAudioEncoderSettings settings;
@@ -261,9 +272,9 @@ void TupMicManager::toggleRecord()
         settings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
 
         micRecorder->setEncodingSettings(settings, QVideoEncoderSettings(), QString("audio/mpeg, mpegversion=(int)1"));
+        micRecorder->setOutputLocation(QUrl::fromLocalFile(CACHE_DIR + nameInput->text() + ".mp3"));
         micRecorder->record();
-    }
-    else {
+    } else {
         micRecorder->stop();
     }
 }
@@ -276,11 +287,38 @@ void TupMicManager::togglePause()
         micRecorder->record();
 }
 
-void TupMicManager::setOutputLocation()
+void TupMicManager::discardRecording()
 {
-    QString fileName = QFileDialog::getSaveFileName();
-    micRecorder->setOutputLocation(QUrl::fromLocalFile(fileName));
-    outputPosFlag = true;
+    QMessageBox msgBox(this);
+    msgBox.setWindowTitle(tr("Question"));
+    msgBox.setIcon(QMessageBox::Question);
+    msgBox.setText(tr("Confirm Action."));
+    msgBox.setInformativeText(tr("Do you want to delete this sound recording?"));
+
+    msgBox.addButton(QString(tr("Ok")), QMessageBox::AcceptRole);
+    msgBox.addButton(QString(tr("Cancel")), QMessageBox::RejectRole);
+    msgBox.show();
+
+    int ret = msgBox.exec();
+    if (ret == QMessageBox::RejectRole)
+        return;
+
+    nameInput->setReadOnly(false);
+    nameInput->setText(tr("Sound 01"));
+    nameInput->setFocus();
+
+    playerWidget->setVisible(false);
+    controlsWidget->setVisible(true);
+    QString filename = CACHE_DIR + nameInput->text() + ".mp3";
+    if (QFile::exists(filename)) {
+        if (!QFile::remove(filename)) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupMicManager::discardRecording()] - Fatal Error: Can't remove file -> " << filename;
+            #endif
+        }
+    }
+
+    emit soundReady(false);
 }
 
 void TupMicManager::showErrorMessage()
@@ -398,9 +436,11 @@ template <class T> QVector<qreal> getBufferLevels(const T *buffer, int frames, i
 
 void TupMicManager::handleBuffer(const QAudioBuffer& buffer)
 {
+    /*
     #ifdef TUP_DEBUG
-        qDebug() << "[TupMicManager::processBuffer()]";
+        qDebug() << "[TupMicManager::handleBuffer()]";
     #endif
+    */
 
     if (initLevelIncluded) {
         levelsScreenLayout->removeWidget(initLevel);
@@ -420,4 +460,62 @@ void TupMicManager::handleBuffer(const QAudioBuffer& buffer)
     QVector<qreal> levels = getBufferLevels(buffer);
     for (int i = 0; i < levels.count(); ++i)
         micLevels.at(i)->setLevel(levels.at(i));
+}
+
+void TupMicManager::enableRecordButton(bool enabled)
+{
+    recordButton->setEnabled(enabled);
+}
+
+void TupMicManager::playRecording()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMicManager::playRecording()] - player->state() -> " << player->state();
+    #endif
+
+    if (player->state() == QMediaPlayer::StoppedState) {
+        timer = new QTimer(this);
+        connect(timer, &QTimer::timeout, this, QOverload<>::of(&TupMicManager::trackPlayerStatus));
+        timer->start(500);
+
+        playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/stop.png")));
+        discardButton->setEnabled(false);
+        player->play();
+        statusLabel->setText(tr("Playing..."));
+    } else if (player->state() == QMediaPlayer::PlayingState) {
+        player->stop();
+        statusLabel->setText(tr(""));
+        playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/play.png")));
+        discardButton->setEnabled(true);
+    }
+}
+
+void TupMicManager::trackPlayerStatus()
+{
+    secCounter += 500.0;
+
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMicManager::checkPlayerStatus()] - status -> " << player->state();
+        qDebug() << "milsec counter -> " << secCounter;
+    #endif
+    */
+
+    if (secCounter >= player->duration()) {
+        secCounter = 0;
+        timer->stop();
+        player->stop();
+        statusLabel->setText(tr(""));
+        playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/play.png")));
+        discardButton->setEnabled(true);
+    }
+}
+
+QString TupMicManager::getRecordPath() const
+{
+    QString filename = CACHE_DIR + nameInput->text() + ".mp3";
+    if (QFile::exists(filename))
+        return filename;
+
+    return "";
 }
