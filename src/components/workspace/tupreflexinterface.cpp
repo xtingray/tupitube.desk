@@ -42,7 +42,6 @@
 #include <QBoxLayout>
 #include <QIcon>
 #include <QDir>
-// #include <QDesktopWidget>
 #include <QScreen>
 #include <QPushButton>
 #include <QSpinBox>
@@ -230,7 +229,7 @@ TupReflexInterface::~TupReflexInterface()
 
 void TupReflexInterface::closeEvent(QCloseEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
 
     reset();
     emit closed();
@@ -243,7 +242,7 @@ void TupReflexInterface::randomPath()
     QDir dir;
     if (!dir.mkdir(path)) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupReflexInterface::randomPath() - Fatal Error: Can't create pictures directory -> " + path;
+            qDebug() << "[TupReflexInterface::randomPath()] - Fatal Error: Can't create pictures directory -> " << path;
         #endif
 
         path = "";
@@ -253,6 +252,10 @@ void TupReflexInterface::randomPath()
 
 void TupReflexInterface::takePicture()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupReflexInterface::takePicture()]";
+    #endif
+
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     QString prev = "pic";
@@ -281,6 +284,10 @@ void TupReflexInterface::takePicture()
 
 void TupReflexInterface::reset()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupReflexInterface::reset()]";
+    #endif
+
     if (camera->state() == QCamera::ActiveState)
         camera->stop();
 
@@ -292,7 +299,7 @@ void TupReflexInterface::reset()
 
     if (!dir.rmdir(dir.absolutePath())) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupReflexInterface::reset() - Fatal Error: Can't remove pictures directory -> " + dir.absolutePath();
+            qDebug() << "[TupReflexInterface::reset()] - Fatal Error: Can't remove pictures directory -> " << dir.absolutePath();
         #endif
     }
 }
@@ -300,7 +307,7 @@ void TupReflexInterface::reset()
 void TupReflexInterface::error(QCamera::Error error)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "TupReflexInterface::error() - Fatal Error: Camera error code -> " << error;
+        qDebug() << "[TupReflexInterface::error()] - Fatal Error: Camera error code -> " << error;
     #endif
 
     switch (error) {
@@ -333,10 +340,10 @@ void TupReflexInterface::error(QCamera::Error error)
 
 void TupReflexInterface::imageSavedFromCamera(int id, const QString folder)
 {
-    Q_UNUSED(id);
+    Q_UNUSED(id)
 
     #ifdef TUP_DEBUG
-        qDebug() << "TupCameraInterface::imageSavedFromCamera() - Picture path -> " + folder;
+        qDebug() << "[TupCameraInterface::imageSavedFromCamera()] - Picture path -> " << folder;
     #endif
 
     if (folder.isEmpty())

@@ -72,7 +72,7 @@ TupSoundDialog::TupSoundDialog(QWidget *parent) : QDialog(parent)
 
     tabWidget = new QTabWidget;
     tabWidget->addTab(soundFileTab(), tr("Sound File"));
-    tabWidget->addTab(soundRecordTab(), tr("Record Sound"));
+    tabWidget->addTab(soundRecordTab(), tr("Record Audio"));
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(tabWidget);
@@ -98,7 +98,7 @@ QWidget* TupSoundDialog::soundFileTab()
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     importFileButton = new QPushButton("");
     importFileButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
-    importFileButton->setToolTip(tr("Import Sound File"));
+    importFileButton->setToolTip(tr("Import sound file"));
     importFileButton->setEnabled(false);
     connect(importFileButton, SIGNAL(clicked()), this, SLOT(importSoundAsset()));
     QPushButton *cancelButton = new QPushButton("");
@@ -130,19 +130,27 @@ QWidget* TupSoundDialog::soundRecordTab()
     QVBoxLayout *layout = new QVBoxLayout;
 
     micManager = new TupMicManager;
-    connect(micManager, &TupMicManager::soundReady, this, &TupSoundDialog::enableOkButton);
+    connect(micManager, &TupMicManager::soundReady, this, &TupSoundDialog::enableDialogButtons);
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     importRecordButton = new QPushButton("");
     importRecordButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
-    importRecordButton->setToolTip(tr("Import Recorded Sound"));
+    importRecordButton->setToolTip(tr("Import recorded sound"));
     importRecordButton->setEnabled(false);
     connect(importRecordButton, SIGNAL(clicked()), this, SLOT(importRecordingAsset()));
+
+    lipsyncButton = new QPushButton("");
+    lipsyncButton->setIcon(QIcon(THEME_DIR + "icons/papagayo.png"));
+    lipsyncButton->setToolTip(tr("Open lip-sync module"));
+    lipsyncButton->setEnabled(false);
+    connect(lipsyncButton, SIGNAL(clicked()), this, SLOT(launchLipsyncModule()));
 
     QPushButton *cancelButton = new QPushButton("");
     cancelButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
+
     buttonsLayout->addWidget(importRecordButton, Qt::AlignRight);
+    buttonsLayout->addWidget(lipsyncButton, Qt::AlignRight);
     buttonsLayout->addWidget(cancelButton, Qt::AlignRight);
 
     QHBoxLayout *bottomLayout = new QHBoxLayout;
@@ -203,7 +211,22 @@ void TupSoundDialog::importRecordingAsset()
     }
 }
 
-void TupSoundDialog::enableOkButton(bool enabled)
+void TupSoundDialog::enableDialogButtons(bool enabled)
 {
     importRecordButton->setEnabled(enabled);
+    lipsyncButton->setEnabled(enabled);
+}
+
+void TupSoundDialog::launchLipsyncModule()
+{   
+    QString path = micManager->getRecordPath();
+    if (!path.isEmpty()) {
+        qDebug() << "[TupSoundDialog::launchLipsyncModule()] - emiting signal!!!";
+        emit lipsyncModuleCalled(path);
+        close();
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupSoundDialog::launchLipsyncModule()] - Recording file path is empty!";
+        #endif
+    }
 }

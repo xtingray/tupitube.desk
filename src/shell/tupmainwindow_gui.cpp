@@ -76,6 +76,7 @@ void TupMainWindow::createGUI()
 
     // Adding the objects library widget to the left side of the interface
     m_libraryWidget = new TupLibraryWidget(this);
+    // connect(m_libraryWidget, &TupLibraryWidget::lipsyncModuleCalled, animationTab, &TupDocumentView::launchLipsyncModule);
     m_libraryWidget->setLibrary(m_projectManager->getProject()->getLibrary());
 
     libraryView = addToolView(m_libraryWidget, Qt::LeftDockWidgetArea, Animation, "Library", QKeySequence(tr("Shift+L")));

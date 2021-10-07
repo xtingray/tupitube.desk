@@ -2685,7 +2685,7 @@ void TupDocumentView::enableEyeDropperTool(TColorCell::FillType fillType)
         paintArea->setTool(tool);
         connect(currentTool, SIGNAL(colorPicked(TColorCell::FillType,QColor)),
                                     this, SIGNAL(colorChanged(TColorCell::FillType,QColor)));
-        connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), this, SLOT(refreshEyeDropperPanel()));
+        connect(paintArea, &TupPaintArea::cursorPosition, this, &TupDocumentView::refreshEyeDropperPanel);
     } else {
         #ifdef TUP_DEBUG
            qDebug() << "[TupDocumentView::enableEyeDropperTool()] - Fatal Error: Eyedropper action is NULL!";
@@ -2700,4 +2700,18 @@ void TupDocumentView::refreshEyeDropperPanel()
     #endif
 
     currentTool->refreshEyeDropperPanel();
+}
+
+void TupDocumentView::launchLipsyncModule(const QString &soundFile)
+{
+    #ifdef TUP_DEBUG
+       qDebug() << "[TupDocumentView::launchLipsyncModule()] - soundFile -> " << soundFile;
+    #endif
+
+    papagayoManager();
+
+    TupPapagayoApp *papagayoApp = new TupPapagayoApp(this);
+    papagayoApp->show();
+    papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
+                      static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
 }

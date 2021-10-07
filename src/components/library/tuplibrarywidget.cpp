@@ -1395,16 +1395,18 @@ void TupLibraryWidget::importSoundFile()
     TupSoundDialog *soundDialog = new TupSoundDialog();
     connect(soundDialog, &TupSoundDialog::soundFilePicked,
             this, &TupLibraryWidget::importSoundFileFromFolder);
+    connect(soundDialog, &TupSoundDialog::lipsyncModuleCalled,
+            this, &TupLibraryWidget::callLipySyncModule);
     soundDialog->show();
 }
 
-void TupLibraryWidget::importSoundFileFromFolder(const QString &path)
+void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::importSoundFileFromFolder()]";
+        qDebug() << "[TupLibraryWidget::importSoundFileFromFolder()] - filePath -> " << filePath;
     #endif
 
-    QFile file(path);
+    QFile file(filePath);
     QFileInfo fileInfo(file);
     QString key = fileInfo.fileName().toLower();
     key = key.replace("(","_");
@@ -1418,10 +1420,21 @@ void TupLibraryWidget::importSoundFileFromFolder(const QString &path)
         TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
                                                        TupLibraryObject::Sound, project->spaceContext(), data);
         emit requestTriggered(&request);
-        setDefaultPath(path);
+        setDefaultPath(filePath);
     } else {
-        TOsd::self()->display(TOsd::Error, tr("Error while opening file: %1").arg(path));
+        TOsd::self()->display(TOsd::Error, tr("Error while opening file: %1").arg(filePath));
     }
+}
+
+void TupLibraryWidget::callLipySyncModule(const QString &filePath)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::callLipsyncModule()] - filePath -> " << filePath;
+    #endif
+
+    importSoundFileFromFolder(filePath);
+    qDebug() << "Tracing emit...";
+    emit lipsyncModuleCalled(filePath);
 }
 
 void TupLibraryWidget::sceneResponse(TupSceneResponse *response)

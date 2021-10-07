@@ -60,10 +60,12 @@ class TUPITUBE_EXPORT TupSoundDialog : public QDialog
         void loadSoundFile();
         void importSoundAsset();
         void importRecordingAsset();
-        void enableOkButton(bool enabled);
+        void enableDialogButtons(bool enabled);
+        void launchLipsyncModule();
 
     signals:
         void soundFilePicked(const QString &);
+        void lipsyncModuleCalled(const QString &);
 
     private:
         QWidget * soundFileTab();
@@ -74,6 +76,7 @@ class TUPITUBE_EXPORT TupSoundDialog : public QDialog
         QString soundFilePath;
         QPushButton *importFileButton;
         QPushButton *importRecordButton;
+        QPushButton *lipsyncButton;
 
         TupMicManager *micManager;
 };

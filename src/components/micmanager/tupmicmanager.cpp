@@ -84,7 +84,7 @@ void TupMicManager::setupUI()
 
     formLayout->addWidget(nameLabel, 0, 0, 1, 1);
 
-    nameInput = new TInputField(tr("Sound 01"));
+    nameInput = new TInputField(tr("Audio 01"));
     connect(nameInput, SIGNAL(inputFilled(bool)), this, SLOT(enableRecordButton(bool)));
 
     formLayout->addWidget(nameInput, 0, 1, 1, 1);

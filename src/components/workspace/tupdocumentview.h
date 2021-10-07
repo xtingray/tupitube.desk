@@ -180,6 +180,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void exportImage();
         // void exportAnimaticVideo(const QString &path, const QPixmap &pixmap, int fps);
         void postImage();
+        void launchLipsyncModule(const QString &soundFile);
 
     signals:
         void requestTriggered(const TupProjectRequest *event);
@@ -187,7 +188,8 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void paintAreaEventTriggered(const TupPaintAreaEvent *event);
         void autoSave();
         void modeHasChanged(TupProject::Mode mode);
-        void requestExportImageToServer(int frameIndex, int sceneIndex, const QString &title, const QString &topics, const QString &description);
+        void requestExportImageToServer(int frameIndex, int sceneIndex, const QString &title,
+                                        const QString &topics, const QString &description);
         void openColorDialog(const QColor &);
         // void updateColorFromFullScreen(const QColor &color);
         // void penColorChanged(const QColor &color);
@@ -210,7 +212,6 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void fillToolEnabled();
         void projectHasChanged();
         void imagePostRequested(const QString &);
-        // void notifyLipsyncSoundMetadata(const QString &, int);
 
     private:
         void setupDrawActions();

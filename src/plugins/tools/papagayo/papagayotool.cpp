@@ -543,3 +543,8 @@ TupToolPlugin::Mode PapagayoTool::currentMode()
 {
     return mode;
 }
+
+void PapagayoTool::openLipSyncEditor(const QString &soundFile)
+{
+
+}

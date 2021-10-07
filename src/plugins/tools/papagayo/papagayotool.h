@@ -100,6 +100,9 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
         void importLipSync();
         void callForPlugin(int menu, int index);
 
+    public slots:
+        void openLipSyncEditor(const QString &soundFile);
+
     private slots:
         void editLipSyncSelection(const QString &name);
         void removeCurrentLipSync(const QString &name);
