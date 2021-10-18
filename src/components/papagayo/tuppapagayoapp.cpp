@@ -1,5 +1,23 @@
+/***************************************************************************
+*   License:                                                              *
+*   This program is free software; you can redistribute it and/or modify  *
+*   it under the terms of the GNU General Public License as published by  *
+*   the Free Software Foundation; either version 2 of the License, or     *
+*   (at your option) any later version.                                   *
+*                                                                         *
+*   This program is distributed in the hope that it will be useful,       *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+*   GNU General Public License for more details.                          *
+*                                                                         *
+*   You should have received a copy of the GNU General Public License     *
+*   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
+***************************************************************************/
+
 #include "tuppapagayoapp.h"
 #include "tapplicationproperties.h"
+#include "tconfig.h"
+#include "tosd.h"
 
 #include <QAction>
 #include <QToolBar>
@@ -16,13 +34,46 @@
 #include <QSpacerItem>
 #include <QGroupBox>
 #include <QLabel>
+#include <QScreen>
 
-TupPapagayoApp::TupPapagayoApp(QWidget *parent) : QMainWindow(parent)
+TupPapagayoApp::TupPapagayoApp(int32 fps, const QString &soundFile, QWidget *parent) : QMainWindow(parent)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupPapagayoApp::TupPapagayoApp()]";
     #endif
 
+    setUIStyle();
+
+    document = nullptr;
+    enableAutoBreakdown = true;
+    defaultFps = fps;
+    playerStopped = true;
+
+    setupActions();
+    setupUI();
+    setupMenus();
+    setAcceptDrops(true);
+
+    updateActions();
+
+    if (!soundFile.isEmpty())
+        openFile(soundFile);
+}
+
+TupPapagayoApp::~TupPapagayoApp()
+{
+    if (document)
+        delete document;
+
+    if (waveformView)
+        delete waveformView;
+
+    if (mouthView)
+        delete mouthView;
+}
+
+void TupPapagayoApp::setUIStyle()
+{
     QFile file(THEME_DIR + "config/ui.qss");
     if (file.exists()) {
         file.open(QFile::ReadOnly);
@@ -35,117 +86,86 @@ TupPapagayoApp::TupPapagayoApp(QWidget *parent) : QMainWindow(parent)
             qWarning() << "[TupPapagayoApp()] - Error: Theme file doesn't exist -> " << QString(THEME_DIR + "config/ui.qss");
         #endif
     }
-
-    document = nullptr;
-    enableAutoBreakdown = true;
-    defaultFps = 24;
-    playerStopped = true;
-
-    setupActions();
-    setupUI();
-    setupConnections();
-    setupMenus();
-    setAcceptDrops(true);
-
-    restoreSettings();
-    updateActions();
-}
-
-TupPapagayoApp::~TupPapagayoApp()
-{
-    if (document)
-        delete document;
 }
 
 void TupPapagayoApp::setupActions()
 {
     // Actions
     actionClose = new QAction(this);
-    actionClose->setObjectName(QString::fromUtf8("actionClose"));
     QIcon closeIcon;
-    closeIcon.addFile(QString::fromUtf8(":/images/images/close.png"), QSize(), QIcon::Normal, QIcon::Off);
+    closeIcon.addFile(THEME_DIR + "icons/close.png", QSize(), QIcon::Normal, QIcon::Off);
     actionClose->setIcon(closeIcon);
     actionClose->setText(tr("Close"));
     actionClose->setShortcut(Qt::Key_Escape);
+    connect(actionClose, SIGNAL(triggered()), this, SLOT(close()));
 
     actionOpen = new QAction(this);
-    actionOpen->setObjectName(QString::fromUtf8("actionOpen"));
     QIcon openIcon;
-    openIcon.addFile(QString::fromUtf8(":/images/images/open.png"), QSize(), QIcon::Normal, QIcon::Off);
+    openIcon.addFile(THEME_DIR + "icons/open.png", QSize(), QIcon::Normal, QIcon::Off);
     actionOpen->setIcon(openIcon);
     actionOpen->setText(tr("Open"));
     actionOpen->setShortcut(QKeySequence(tr("Ctrl+O")));
+    connect(actionOpen, SIGNAL(triggered()), this, SLOT(onFileOpen()));
 
     actionSave = new QAction(this);
-    actionSave->setObjectName(QString::fromUtf8("actionSave"));
     QIcon saveIcon;
-    saveIcon.addFile(QString::fromUtf8(":/images/images/save.png"), QSize(), QIcon::Normal, QIcon::Off);
+    saveIcon.addFile(THEME_DIR + "icons/save.png", QSize(), QIcon::Normal, QIcon::Off);
     actionSave->setIcon(saveIcon);
     actionSave->setText(tr("Save"));
     actionSave->setShortcut(QKeySequence(tr("Ctrl+S")));
-
-    actionSaveAs = new QAction(this);
-    actionSaveAs->setObjectName(QString::fromUtf8("actionSave_As"));
-    actionSaveAs->setText(tr("Save As"));
+    connect(actionSave, SIGNAL(triggered()), this, SLOT(onFileSave()));
 
     actionPlay = new QAction(this);
-    actionPlay->setObjectName(QString::fromUtf8("actionPlay"));
-    QIcon playIcon;
-    playIcon.addFile(QString::fromUtf8(":/images/images/play.png"), QSize(), QIcon::Normal, QIcon::Off);
+    playIcon.addFile(THEME_DIR + "icons/play.png", QSize(), QIcon::Normal, QIcon::Off);
     actionPlay->setIcon(playIcon);
     actionPlay->setText(tr("Play"));
     actionPlay->setToolTip(tr("Play"));
+    connect(actionPlay, SIGNAL(triggered()), this, SLOT(onPlay()));
+
+    pauseIcon.addFile(THEME_DIR + "icons/pause.png", QSize(), QIcon::Normal, QIcon::Off);
 
     actionStop = new QAction(this);
-
-    actionStop->setObjectName(QString::fromUtf8("actionStop"));
     QIcon stopIcon;
-    stopIcon.addFile(QString::fromUtf8(":/images/images/stop.png"), QSize(), QIcon::Normal, QIcon::Off);
+    stopIcon.addFile(THEME_DIR + "icons/stop.png", QSize(), QIcon::Normal, QIcon::Off);
     actionStop->setIcon(stopIcon);
     actionStop->setText(tr("Stop"));
     actionStop->setToolTip(tr("Stop"));
+    connect(actionStop, SIGNAL(triggered()), this, SLOT(onStop()));
 
     actionZoomIn = new QAction(this);
-    actionZoomIn->setObjectName(QString::fromUtf8("actionZoomIn"));
     QIcon zoomInIcon;
-    zoomInIcon.addFile(QString::fromUtf8(":/images/images/zoom_in.png"), QSize(), QIcon::Normal, QIcon::Off);
+    zoomInIcon.addFile(THEME_DIR + "icons/zoom_in.png", QSize(), QIcon::Normal, QIcon::Off);
     actionZoomIn->setIcon(zoomInIcon);
     actionZoomIn->setText(tr("Zoom In"));
     actionZoomIn->setToolTip(tr("Zoom In"));
 
     actionZoomOut = new QAction(this);
-    actionZoomOut->setObjectName(QString::fromUtf8("actionZoomOut"));
     QIcon zoomOutIcon;
-    zoomOutIcon.addFile(QString::fromUtf8(":/images/images/zoom_out.png"), QSize(), QIcon::Normal, QIcon::Off);
+    zoomOutIcon.addFile(THEME_DIR + "icons/zoom_out.png", QSize(), QIcon::Normal, QIcon::Off);
     actionZoomOut->setIcon(zoomOutIcon);
     actionZoomOut->setText(tr("Zoom Out"));
     actionZoomOut->setToolTip(tr("Zoom Out"));
 
     actionAutoZoom = new QAction(this);
-    actionAutoZoom->setObjectName(QString::fromUtf8("actionAutoZoom"));
     QIcon autoZoomIcon;
-    autoZoomIcon.addFile(QString::fromUtf8(":/images/images/zoom_1.png"), QSize(), QIcon::Normal, QIcon::Off);
+    autoZoomIcon.addFile(THEME_DIR + "icons/zoom_1.png", QSize(), QIcon::Normal, QIcon::Off);
     actionAutoZoom->setIcon(autoZoomIcon);
     actionAutoZoom->setText(tr("Auto Zoom"));
     actionAutoZoom->setToolTip(tr("Auto Zoom"));
 
     actionUndo = new QAction(this);
-    actionUndo->setObjectName(QString::fromUtf8("actionUndo"));
     actionUndo->setText(tr("Undo"));
     actionUndo->setShortcut(QKeySequence("Ctrl+Z"));
 
     actionCut = new QAction(this);
-    actionCut->setObjectName(QString::fromUtf8("actionCut"));
     actionCut->setText(tr("Cut"));
     actionCut->setShortcut(tr("Ctrl+X"));
 
     actionCopy = new QAction(this);
-    actionCopy->setObjectName(QString::fromUtf8("actionCopy"));
     actionCopy->setText(tr("Copy"));
     actionCopy->setShortcut(tr("Ctrl+C"));
 
     actionPaste = new QAction(this);
-    actionPaste->setObjectName(QString::fromUtf8("actionPaste"));
     actionPaste->setText(tr("Paste"));
     actionPaste->setShortcut(tr("Ctrl+V"));   
 }
@@ -160,33 +180,119 @@ void TupPapagayoApp::setupUI()
 
     // Central Widget
     QWidget *centralWidget = new QWidget(this);
-    centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
 
     QHBoxLayout *centralHorizontalLayout = new QHBoxLayout(centralWidget);
     centralHorizontalLayout->setSpacing(6);
     centralHorizontalLayout->setContentsMargins(11, 11, 11, 11);
-    centralHorizontalLayout->setObjectName(QString::fromUtf8("centralHorizontalLayout"));
 
     QVBoxLayout *innerVerticalLayout = new QVBoxLayout();
     innerVerticalLayout->setSpacing(6);
-    innerVerticalLayout->setObjectName(QString::fromUtf8("innerVerticalLayout"));
+
+    QHBoxLayout *firstLineLayout = new QHBoxLayout;
 
     QScrollArea *scrollArea = new QScrollArea(centralWidget);
-    scrollArea->setObjectName(QString::fromUtf8("scrollArea"));
     scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     scrollArea->setWidgetResizable(true);
 
     waveformView = new TupWaveFormView();
-    waveformView->setObjectName(QString::fromUtf8("waveformView"));
     waveformView->setGeometry(QRect(0, 0, 542, 194));
     scrollArea->setWidget(waveformView);
     waveformView->setScrollArea(scrollArea);
 
-    innerVerticalLayout->addWidget(scrollArea);
+    connect(waveformView, SIGNAL(audioStopped()), this, SLOT(updatePauseButton()));
+    connect(actionZoomIn, SIGNAL(triggered()), waveformView, SLOT(onZoomIn()));
+    connect(actionZoomOut, SIGNAL(triggered()), waveformView, SLOT(onZoomOut()));
+    connect(actionAutoZoom, SIGNAL(triggered()), waveformView, SLOT(onAutoZoom()));
+
+    // Mouth Component
+    QVBoxLayout *verticalLayout = new QVBoxLayout();
+    verticalLayout->setSpacing(6);
+    QHBoxLayout *fpsLayout = new QHBoxLayout();
+    fpsLayout->setSpacing(6);
+
+    QLabel *fpsLabel = new QLabel;
+    fpsLabel->setText(tr("FPS:"));
+    fpsLayout->addWidget(fpsLabel);
+
+    fpsEdit = new QLineEdit;
+    QSizePolicy fpsSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    fpsSizePolicy.setHorizontalStretch(1);
+    fpsSizePolicy.setVerticalStretch(0);
+    fpsSizePolicy.setHeightForWidth(fpsEdit->sizePolicy().hasHeightForWidth());
+    fpsEdit->setSizePolicy(fpsSizePolicy);
+    fpsEdit->setValidator(new QIntValidator(1, 120));
+    connect(fpsEdit, SIGNAL(textChanged(QString)), this, SLOT(onFpsChange(QString)));
+
+    fpsLayout->addWidget(fpsEdit);
+    verticalLayout->addLayout(fpsLayout);
+
+    mouthsCombo = new QComboBox;
+    mouthsCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 1"));
+    mouthsCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 2"));
+    mouthsCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 3"));
+    mouthsCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 4"));
+    mouthsCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 5"));
+    mouthsCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Set Mouth Images"));
+
+    verticalLayout->addWidget(mouthsCombo);
+
+    mouthFrame = new QStackedWidget(this);
+    QSizePolicy viewSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+    viewSizePolicy.setHorizontalStretch(0);
+    viewSizePolicy.setVerticalStretch(0);
+    viewSizePolicy.setHeightForWidth(mouthFrame->sizePolicy().hasHeightForWidth());
+
+    mouthFrame->setSizePolicy(viewSizePolicy);
+    mouthFrame->setMinimumSize(QSize(280, 200));
+    mouthFrame->setMaximumWidth(280);
+
+    QWidget *browserWidget = new QWidget;
+    QVBoxLayout *browserMainLayout = new QVBoxLayout(browserWidget);
+
+    QHBoxLayout *browserControlsLayout = new QHBoxLayout;
+    QPushButton *mouthsButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/bitmap_array.png")), " " + tr("Load &Images"));
+    connect(mouthsButton, SIGNAL(clicked()), this, SLOT(openImagesDialog()));
+    mouthsPath = new QLineEdit("");
+    mouthsPath->setReadOnly(true);
+
+    mouthView = new TupMouthView(mouthFrame);
+    viewSizePolicy.setHeightForWidth(mouthView->sizePolicy().hasHeightForWidth());
+    mouthView->setSizePolicy(viewSizePolicy);
+    mouthView->setMinimumSize(QSize(280, 200));
+    mouthView->setMaximumWidth(280);
+
+    // SQA: stylesheet pending
+    // mouthView->setStyleSheet(QString::fromUtf8(""));
+
+    // connect(waveformView, SIGNAL(frameChanged(int)), mouthView, SLOT(onFrameChanged(int)));
+    connect(waveformView, SIGNAL(frameChanged(int)), this, SLOT(updateFrame(int)));
+    connect(mouthsCombo, SIGNAL(activated(int)), this, SLOT(updateMouthView(int)));
+
+    mouthFrame->addWidget(mouthView);
+
+    customView = new TupCustomizedMouthView;
+    viewSizePolicy.setHeightForWidth(customView->sizePolicy().hasHeightForWidth());
+    customView->setSizePolicy(viewSizePolicy);
+    customView->setMinimumSize(QSize(280, 200));
+    customView->setMaximumWidth(280);
+
+    browserControlsLayout->addWidget(mouthsPath);
+    browserControlsLayout->addWidget(mouthsButton);
+
+    browserMainLayout->addLayout(browserControlsLayout);
+    browserMainLayout->addWidget(customView);
+    mouthFrame->addWidget(browserWidget);
+
+    verticalLayout->addWidget(mouthFrame);
+    verticalLayout->addStretch();
+
+    firstLineLayout->addWidget(scrollArea);
+    firstLineLayout->addLayout(verticalLayout);
+
+    innerVerticalLayout->addLayout(firstLineLayout);
 
     // Lateral Panel
     QGroupBox *lateralGroupBox = new QGroupBox(centralWidget);
-    lateralGroupBox->setObjectName(QString::fromUtf8("lateralGroupBox"));
     lateralGroupBox->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     lateralGroupBox->setTitle(tr("Current Voice"));
 
@@ -198,12 +304,11 @@ void TupPapagayoApp::setupUI()
     QVBoxLayout *lateralVerticalLayout = new QVBoxLayout(lateralGroupBox);
     lateralVerticalLayout->setSpacing(6);
     lateralVerticalLayout->setContentsMargins(11, 11, 11, 11);
-    lateralVerticalLayout->setObjectName(QString::fromUtf8("lateralVerticalLayout"));
     QHBoxLayout *voiceHorizontalLayout = new QHBoxLayout();
     voiceHorizontalLayout->setSpacing(6);
-    voiceHorizontalLayout->setObjectName(QString::fromUtf8("voiceHorizontalLayout"));
 
     voiceName = new QLineEdit();
+    connect(voiceName, SIGNAL(textChanged(QString)), this, SLOT(onVoiceNameChanged()));
 
     QLabel *voiceLabel = new QLabel(lateralGroupBox);
     voiceLabel->setText(tr("Voice name:"));
@@ -217,12 +322,13 @@ void TupPapagayoApp::setupUI()
     lateralVerticalLayout->addLayout(voiceHorizontalLayout);
 
     voiceText = new QPlainTextEdit(lateralGroupBox);
-    voiceText->setObjectName(QString::fromUtf8("voiceText"));
+    voiceText->setMaximumHeight(100);
     QSizePolicy voiceSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     voiceSizePolicy.setHorizontalStretch(0);
     voiceSizePolicy.setVerticalStretch(0);
-    voiceSizePolicy.setHeightForWidth(voiceText->sizePolicy().hasHeightForWidth());
+    // voiceSizePolicy.setHeightForWidth(voiceText->sizePolicy().hasHeightForWidth());
     voiceText->setSizePolicy(voiceSizePolicy);
+    connect(voiceText, SIGNAL(textChanged()), this, SLOT(onVoiceTextChanged()));
 
     QLabel *spokenText = new QLabel(lateralGroupBox);
     spokenText->setText(tr("Spoken text:"));
@@ -233,166 +339,52 @@ void TupPapagayoApp::setupUI()
 
     QLabel *phoneticLabel = new QLabel(lateralGroupBox);
     phoneticLabel->setText(tr("Phonetic breakdown:"));
-    phoneticLabel->setObjectName(QString::fromUtf8("phoneticLabel"));
 
     lateralVerticalLayout->addWidget(phoneticLabel);
 
-    QHBoxLayout *languageLayout = new QHBoxLayout;
-    languageLayout->setObjectName(QString::fromUtf8("languageLayout"));
-
-    QHBoxLayout *languageHorizontalLayout = new QHBoxLayout();
+    QHBoxLayout *languageHorizontalLayout = new QHBoxLayout;
     languageHorizontalLayout->setSpacing(6);
-    languageHorizontalLayout->setObjectName(QString::fromUtf8("languageHorizontalLayout"));
 
     languageChoice = new QComboBox();
     languageChoice->addItem(tr("English"));
     languageChoice->addItem(tr("Spanish"));
     languageChoice->addItem(tr("Italian"));
-    languageChoice->setObjectName(QString::fromUtf8("languageChoice"));
 
     languageHorizontalLayout->addWidget(languageChoice);
 
     breakdownButton = new QPushButton(lateralGroupBox);
     breakdownButton->setText(tr("Breakdown"));
-    breakdownButton->setObjectName(QString::fromUtf8("breakdownButton"));
+    connect(breakdownButton, SIGNAL(clicked()), this, SLOT(onBreakdown()));
+
+    okButton = new QPushButton(lateralGroupBox);
+    okButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
+    okButton->setToolTip(tr("Save lip-sync record"));
+    connect(okButton, SIGNAL(clicked()), this, SLOT(createLipsyncRecord()));
+
+    QPushButton *cancelButton = new QPushButton(lateralGroupBox);
+    cancelButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
+    cancelButton->setToolTip(tr("Cancel"));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));
 
     languageHorizontalLayout->addWidget(breakdownButton);
 
     QSpacerItem *languageHorizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
     languageHorizontalLayout->addItem(languageHorizontalSpacer);
 
-    exportChoice = new QComboBox;
-    exportChoice->addItem(tr("Anime Studio"));
+    languageHorizontalLayout->addWidget(okButton);
+    languageHorizontalLayout->addWidget(cancelButton);
 
-    languageHorizontalLayout->addWidget(exportChoice);
-
-    exportButton = new QPushButton(lateralGroupBox);
-    exportButton->setText(tr("Export..."));
-    exportButton->setObjectName(QString::fromUtf8("exportButton"));
-
-    languageHorizontalLayout->addWidget(exportButton);
     lateralVerticalLayout->addLayout(languageHorizontalLayout);
     innerVerticalLayout->addWidget(lateralGroupBox);
     centralHorizontalLayout->addLayout(innerVerticalLayout);
 
-    QVBoxLayout *verticalLayout = new QVBoxLayout();
-    verticalLayout->setSpacing(6);
-    verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-    QHBoxLayout *horizontalLayout = new QHBoxLayout();
-    horizontalLayout->setSpacing(6);
-    horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-
-    QLabel *fpsLabel = new QLabel(centralWidget);
-    fpsLabel->setObjectName(QString::fromUtf8("label"));
-    fpsLabel->setText(tr("FPS:"));
-    horizontalLayout->addWidget(fpsLabel);
-
-    fpsEdit = new QLineEdit(centralWidget);
-    fpsEdit->setObjectName(QString::fromUtf8("fpsEdit"));
-    QSizePolicy fpsSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-    fpsSizePolicy.setHorizontalStretch(1);
-    fpsSizePolicy.setVerticalStretch(0);
-    fpsSizePolicy.setHeightForWidth(fpsEdit->sizePolicy().hasHeightForWidth());
-    fpsEdit->setSizePolicy(fpsSizePolicy);
-    fpsEdit->setValidator(new QIntValidator(1, 120));
-
-    horizontalLayout->addWidget(fpsEdit);
-    verticalLayout->addLayout(horizontalLayout);
-
-    mouthsCombo = new QComboBox(centralWidget);
-    mouthsCombo->addItem(tr("Mouth 1"));
-    mouthsCombo->addItem(tr("Mouth 2"));
-    mouthsCombo->addItem(tr("Gary C Martin"));
-    mouthsCombo->addItem(tr("Preston Blair"));
-    mouthsCombo->setObjectName(QString::fromUtf8("comboBox"));
-    generalSizePolicy.setHeightForWidth(mouthsCombo->sizePolicy().hasHeightForWidth());
-    mouthsCombo->setSizePolicy(generalSizePolicy);
-    mouthsCombo->setMinimumSize(QSize(0, 0));
-    mouthsCombo->setMaximumSize(QSize(16777215, 16777215));
-
-    verticalLayout->addWidget(mouthsCombo);
-
-    QFrame *frame = new QFrame();
-    frame->setObjectName(QString::fromUtf8("frame"));
-
-    QSizePolicy frameSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
-    frameSizePolicy.setHorizontalStretch(0);
-    frameSizePolicy.setVerticalStretch(0);
-    frameSizePolicy.setHeightForWidth(frame->sizePolicy().hasHeightForWidth());
-
-    frame->setSizePolicy(frameSizePolicy);
-    frame->setFrameShape(QFrame::StyledPanel);
-    frame->setFrameShadow(QFrame::Raised);
-
-    QHBoxLayout *mouthHorizontalLayout = new QHBoxLayout(frame);
-    mouthHorizontalLayout->setSpacing(6);
-    mouthHorizontalLayout->setContentsMargins(11, 11, 11, 11);
-    mouthHorizontalLayout->setObjectName(QString::fromUtf8("mouthHorizontalLayout"));
-    mouthHorizontalLayout->setContentsMargins(0, 0, 0, 0);
-
-    mouthView = new TupMouthView(frame);
-    mouthView->setObjectName(QString::fromUtf8("mouthView"));
-    frameSizePolicy.setHeightForWidth(mouthView->sizePolicy().hasHeightForWidth());
-    mouthView->setSizePolicy(frameSizePolicy);
-    mouthView->setMinimumSize(QSize(200, 200));
-    mouthView->setMaximumSize(QSize(16777215, 16777215));
-    // SQA: stylesheet pending
-    mouthView->setStyleSheet(QString::fromUtf8(""));
-    mouthHorizontalLayout->addWidget(mouthView);
-    mouthHorizontalLayout->addWidget(mouthView);
-
-    mouthHorizontalLayout->addWidget(mouthView);
-    verticalLayout->addWidget(frame);
-
-    QGroupBox *voiceGroupBox = new QGroupBox();
-    voiceGroupBox->setObjectName(QString::fromUtf8("voiceGroupBox"));
-    voiceGroupBox->setTitle(tr("Voice List"));
-
-    QSizePolicy voiceGroupSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    voiceGroupSizePolicy.setHorizontalStretch(0);
-    voiceGroupSizePolicy.setVerticalStretch(0);
-    voiceGroupSizePolicy.setHeightForWidth(voiceGroupBox->sizePolicy().hasHeightForWidth());
-    voiceGroupBox->setSizePolicy(voiceGroupSizePolicy);
-    QVBoxLayout *voiceVerticalLayout = new QVBoxLayout(voiceGroupBox);
-    voiceVerticalLayout->setSpacing(6);
-    voiceVerticalLayout->setContentsMargins(11, 11, 11, 11);
-    voiceVerticalLayout->setObjectName(QString::fromUtf8("voiceVerticalLayout"));
-
-    voiceList = new QListWidget(voiceGroupBox);
-    voiceList->setObjectName(QString::fromUtf8("voiceList"));
-    QSizePolicy voiceListSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
-    voiceListSizePolicy.setHorizontalStretch(0);
-    voiceListSizePolicy.setVerticalStretch(0);
-    voiceListSizePolicy.setHeightForWidth(voiceList->sizePolicy().hasHeightForWidth());
-    voiceList->setSizePolicy(voiceListSizePolicy);
-    voiceList->setMaximumSize(QSize(16777215, 16777215));
-    voiceList->setEditTriggers(QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed);
-    voiceVerticalLayout->addWidget(voiceList);
-
-    QHBoxLayout *voiceHLayout = new QHBoxLayout();
-    voiceHLayout->setSpacing(6);
-    voiceHLayout->setObjectName(QString::fromUtf8("voiceHLayout"));
-
-    newVoiceButton = new QPushButton(voiceGroupBox);
-    newVoiceButton->setObjectName(QString::fromUtf8("newVoiceButton"));
-    newVoiceButton->setText(tr("New"));
-
-    voiceHLayout->addWidget(newVoiceButton);
-
-    deleteVoiceButton = new QPushButton(voiceGroupBox);
-    deleteVoiceButton->setObjectName(QString::fromUtf8("deleteVoiceButton"));
-    deleteVoiceButton->setText(tr("Delete"));
-    voiceHLayout->addWidget(deleteVoiceButton);
-    voiceVerticalLayout->addLayout(voiceHLayout);
-
-    verticalLayout->addWidget(voiceGroupBox);
-    centralHorizontalLayout->addLayout(verticalLayout);
-
     setCentralWidget(centralWidget);
 
     QStatusBar *statusBar = new QStatusBar(this);
-    statusBar->setObjectName(QString::fromUtf8("statusBar"));
     setStatusBar(statusBar);
+
+    QScreen *screen = QGuiApplication::screens().at(0);
+    setMinimumWidth(screen->geometry().width() * 0.7);
 }
 
 void TupPapagayoApp::setupMenus()
@@ -402,21 +394,16 @@ void TupPapagayoApp::setupMenus()
     #endif
 
     QMenuBar *menuBar = new QMenuBar(this);
-    menuBar->setObjectName(QString::fromUtf8("menuBar"));
     menuBar->setGeometry(QRect(0, 0, 872, 22));
 
     QMenu *menuFile = new QMenu(menuBar);
-    menuFile->setObjectName(QString::fromUtf8("menuFile"));
     menuFile->setTitle(tr("File"));
 
     QMenu *menuEdit = new QMenu(menuBar);
-    menuEdit->setObjectName(QString::fromUtf8("menuEdit"));
-    menuEdit->setTitle(QCoreApplication::translate("TupPapagayoApp", "Edit", nullptr));
-    menuFile->setTitle(tr("Edit"));
+    menuEdit->setTitle(tr("Edit"));
 
     menuFile->addAction(actionOpen);
-    menuFile->addAction(actionSave);
-    menuFile->addAction(actionSaveAs);
+    // menuFile->addAction(actionSave);
     menuFile->addAction(actionClose);
 
     menuEdit->addAction(actionUndo);
@@ -430,7 +417,6 @@ void TupPapagayoApp::setupMenus()
     setMenuBar(menuBar);
 
     QToolBar *mainToolBar = new QToolBar(this);
-    mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
     mainToolBar->setMovable(true);
     mainToolBar->setIconSize(QSize(32, 32));
     mainToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
@@ -447,35 +433,6 @@ void TupPapagayoApp::setupMenus()
     mainToolBar->addAction(actionAutoZoom);
 
     addToolBar(Qt::TopToolBarArea, mainToolBar);
-}
-
-void TupPapagayoApp::setupConnections()
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupPapagayoApp::setupConnections()]";
-    #endif
-
-    connect(actionOpen, SIGNAL(triggered()), this, SLOT(onFileOpen()));
-    connect(actionPlay, SIGNAL(triggered()), this, SLOT(onPlay()));
-    connect(actionStop, SIGNAL(triggered()), this, SLOT(onStop()));
-    connect(newVoiceButton, SIGNAL(clicked()), this, SLOT(onNewVoice()));
-    connect(deleteVoiceButton, SIGNAL(clicked()), this, SLOT(onDeleteVoice()));
-    connect(voiceName, SIGNAL(textChanged(QString)), this, SLOT(onVoiceNameChanged()));
-    connect(voiceText, SIGNAL(textChanged()), this, SLOT(onVoiceTextChanged()));
-    connect(voiceList, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(onVoiceSelected(QListWidgetItem*)));
-    connect(voiceList, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(onVoiceItemChanged(QListWidgetItem*)));
-    connect(breakdownButton, SIGNAL(clicked()), this, SLOT(onBreakdown()));
-    connect(mouthsCombo, SIGNAL(activated(int)), mouthView, SLOT(onMouthChanged(int)));
-    connect(actionSave, SIGNAL(triggered()), this, SLOT(onFileSave()));
-    connect(actionSaveAs, SIGNAL(triggered()), this, SLOT(onFileSaveAs()));
-    connect(exportButton, SIGNAL(clicked()), this, SLOT(onExport()));
-    connect(actionClose, SIGNAL(triggered()), this, SLOT(close()));
-
-    connect(actionZoomIn, SIGNAL(triggered()), waveformView, SLOT(onZoomIn()));
-    connect(actionZoomOut, SIGNAL(triggered()), waveformView, SLOT(onZoomOut()));
-    connect(actionAutoZoom, SIGNAL(triggered()), waveformView, SLOT(onAutoZoom()));
-    connect(fpsEdit, SIGNAL(textChanged(QString)), this, SLOT(onFpsChange(QString)));
-    connect(waveformView, SIGNAL(frameChanged(int)), mouthView, SLOT(onFrameChanged(int)));
 }
 
 void TupPapagayoApp::openFile(QString filePath)
@@ -501,24 +458,24 @@ void TupPapagayoApp::openFile(QString filePath)
     if (document->getAudioPlayer() == nullptr) {
         delete document;
         document = nullptr;
-        QMessageBox::warning(this, tr("Papagayo"),
+        QMessageBox::warning(this, tr("Lip-Sync Manager"),
                              tr("Error opening audio file."),
                              QMessageBox::Ok);
-        setWindowTitle(tr("Papagayo"));
+        setWindowTitle(tr("Lip-Sync Manager"));
     } else {
         waveformView->setDocument(document);
         mouthView->setDocument(document);
         document->getAudioPlayer()->setNotifyInterval(17); // 60 fps
         connect(document->getAudioPlayer(), SIGNAL(positionChanged(qint64)), waveformView, SLOT(positionChanged(qint64)));
 
-        rebuildVoiceList();
         if (document->getCurrentVoice()) {
             voiceName->setText(document->getCurrentVoice()->getName());
             enableAutoBreakdown = false;
             voiceText->setPlainText(document->getCurrentVoice()->getText());
             enableAutoBreakdown = true;
         }
-        setWindowTitle(tr("Papagayo") + " - " + info.fileName());
+
+        setWindowTitle(tr("Lip-Sync Manager") + " - " + info.fileName());
     }
 
     fpsEdit->setText(QString::number(document->getFps()));
@@ -528,8 +485,8 @@ void TupPapagayoApp::openFile(QString filePath)
 bool TupPapagayoApp::isOKToCloseDocument()
 {
     if (document && document->isDirty()) {
-        int res = QMessageBox::warning(this, tr("Papagayo"),
-                  tr("The document has been modified.\n"
+        int res = QMessageBox::warning(this, tr("Lip-Sync Manager"),
+                  tr("This lip-sync item has been modified.\n"
                   "Do you want to save your changes?"),
                   QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
 
@@ -549,27 +506,6 @@ bool TupPapagayoApp::isOKToCloseDocument()
     return true;
 }
 
-void TupPapagayoApp::restoreSettings()
-{
-    QSettings settings;
-    restoreGeometry(settings.value("TupPapagayoApp/geometry").toByteArray());
-    restoreState(settings.value("TupPapagayoApp/windowState").toByteArray());
-
-    defaultFps = settings.value("defaultFps").toInt();
-    if (defaultFps < 1)
-        defaultFps = 24;
-    defaultFps = PG_CLAMP(defaultFps, 1, 120);
-}
-
-void TupPapagayoApp::saveSettings()
-{
-    QSettings settings;
-
-    settings.setValue("TupPapagayoApp/geometry", saveGeometry());
-    settings.setValue("TupPapagayoApp/windowState", saveState());
-    settings.setValue("defaultFps", defaultFps);
-}
-
 void TupPapagayoApp::closeEvent(QCloseEvent *event)
 {
     if (isOKToCloseDocument()) {
@@ -577,7 +513,6 @@ void TupPapagayoApp::closeEvent(QCloseEvent *event)
             delete document;
             document = nullptr;
         }
-        saveSettings();
         event->accept();
     } else {
         event->ignore();
@@ -596,8 +531,8 @@ void TupPapagayoApp::dragEnterEvent(QDragEnterEvent *event)
         return;
 
     QFileInfo info(filePath);
-    QString extn = info.suffix().toLower();
-    if (extn == "pgo" || extn == "mp3" || extn == "wav")
+    QString extension = info.suffix().toLower();
+    if (extension == "pgo" || extension == "mp3" || extension == "wav")
         event->acceptProposedAction();
 }
 
@@ -632,7 +567,6 @@ void TupPapagayoApp::updateActions()
         flag = true;
 
     actionSave->setEnabled(flag);
-    actionSaveAs->setEnabled(flag);
     actionPlay->setEnabled(flag);
     actionStop->setEnabled(flag);
     actionZoomIn->setEnabled(flag);
@@ -642,25 +576,12 @@ void TupPapagayoApp::updateActions()
     voiceName->setEnabled(flag);
     voiceText->setEnabled(flag);
 
-    voiceName->setEnabled(true);
-    voiceText->setEnabled(true);
-
-    languageChoice->setEnabled(false);
-
-    exportChoice->setEnabled(flag);
+    languageChoice->setEnabled(flag);
     fpsEdit->setEnabled(flag);
-    voiceList->setEnabled(flag);
-    newVoiceButton->setEnabled(flag);
+    mouthsCombo->setEnabled(flag);
 
-    if (flag) {
-        breakdownButton->setEnabled(document->getCurrentVoice() && !document->getCurrentVoice()->getText().isEmpty());
-        exportButton->setEnabled(document->getCurrentVoice() && !document->getCurrentVoice()->getText().isEmpty());
-        deleteVoiceButton->setEnabled(document->getCurrentVoice() && document->getVoices().size() > 1);
-    } else {        
-        breakdownButton->setEnabled(false);
-        exportButton->setEnabled(false);
-        deleteVoiceButton->setEnabled(false);
-    }
+    breakdownButton->setEnabled(flag);
+    okButton->setEnabled(flag);
 }
 
 void TupPapagayoApp::onFileOpen()
@@ -668,15 +589,13 @@ void TupPapagayoApp::onFileOpen()
     if (!isOKToCloseDocument())
         return;
 
-    QSettings settings;
+    TCONFIG->beginGroup("General");
+    QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
     QString filePath = QFileDialog::getOpenFileName(this,
-                                                    tr("Open"), settings.value("default_dir", "").toString(),
+                                                    tr("Open"), path,
                                                     tr("Papgayo and Audio files (*.pgo *.mp3 *.wav)"));
     if (filePath.isEmpty())
         return;
-
-    QFileInfo info(filePath);
-    settings.setValue("default_dir", info.dir().absolutePath());
 
     openFile(filePath);
 }
@@ -686,47 +605,24 @@ void TupPapagayoApp::onFileSave()
     if (!document)
         return;
 
-    if (document->getFilePath().isEmpty()) {
-        onFileSaveAs();
-        return;
-    }
-
     document->save();
     QFileInfo info(document->getFilePath());
     setWindowTitle(tr("Lip-sync Creator") + " - " + info.fileName());
 }
 
-void TupPapagayoApp::onFileSaveAs()
-{
-    if (!document)
-        return;
-
-    QSettings settings;
-    QString name = tr("Untitled.pgo");
-    if (!document->getFilePath().isEmpty()) {
-        name = document->getFilePath();
-    } else {
-        QDir dir(settings.value("default_dir", "").toString());
-        name = dir.absoluteFilePath(name);
-    }
-    QString filePath = QFileDialog::getSaveFileName(this,
-                                                    tr("Save"), name,
-                                                    tr("Papgayo files (*.pgo)"));
-    if (filePath.isEmpty())
-        return;
-
-    QFileInfo info(filePath);
-    settings.setValue("default_dir", info.dir().absolutePath());
-
-    document->setFilePath(filePath);
-    onFileSave();
-}
-
 void TupPapagayoApp::onPlay()
 {
     if (document && document->getAudioPlayer()) {
-        playerStopped = false;
-        document->getAudioPlayer()->play();
+        if (playerStopped) {
+            playerStopped = false;
+            actionPlay->setIcon(pauseIcon);
+            actionPlay->setText(tr("Pause"));
+            actionPlay->setToolTip(tr("Pause"));
+            document->playAudio();
+        } else {
+            updatePauseButton();
+            document->pauseAudio();
+        }
     }
 }
 
@@ -734,7 +630,18 @@ void TupPapagayoApp::onStop()
 {
     if (document && document->getAudioPlayer()) {
         playerStopped = true;
-        document->getAudioPlayer()->stop();
+        actionPlay->setIcon(playIcon);
+        actionPlay->setText(tr("Play"));
+        actionPlay->setToolTip(tr("Play"));
+        document->stopAudio();
+    }
+}
+
+void TupPapagayoApp::onPause()
+{
+    if (document && document->getAudioPlayer()) {
+        playerStopped = true;
+        document->pauseAudio();
     }
 }
 
@@ -755,87 +662,12 @@ void TupPapagayoApp::onFpsChange(QString text)
     waveformView->setDocument(document);
 }
 
-void TupPapagayoApp::onNewVoice()
-{
-    if (!document)
-        return;
-
-    QString newVoiceName = tr("Voice");
-    newVoiceName += " ";
-    newVoiceName += QString::number(document->getVoices().size() + 1);
-    document->setCurrentVoice(new LipsyncVoice(newVoiceName));
-    document->appendVoice(document->getCurrentVoice());
-    rebuildVoiceList();
-
-    if (document->getCurrentVoice()) {
-        voiceName->setText(document->getCurrentVoice()->getName());
-        voiceText->setPlainText(document->getCurrentVoice()->getText());
-    }
-}
-
-void TupPapagayoApp::onDeleteVoice()
-{
-    if (!document || document->getVoices().size() < 2 || document->getCurrentVoice() == nullptr)
-        return;
-
-    int id = document->getVoices().indexOf(document->getCurrentVoice());
-    document->removeVoiceAt(id);
-    delete document->getCurrentVoice();
-    if (id > 0)
-        id--;
-    document->setCurrentVoice(document->getVoiceAt(id));
-    rebuildVoiceList();
-
-    if (document->getCurrentVoice()) {
-        voiceName->setText(document->getCurrentVoice()->getName());
-        enableAutoBreakdown = false;
-        voiceText->setPlainText(document->getCurrentVoice()->getText());
-        enableAutoBreakdown = true;
-    }
-    updateActions();
-}
-
-void TupPapagayoApp::onVoiceSelected(QListWidgetItem *item)
-{
-    if (rebuildingList || !document)
-        return;
-
-    int id = voiceList->row(item);
-    if (id >= 0 && id < document->getVoices().size()) {
-        document->setCurrentVoice(document->getVoiceAt(id));
-        if (document->getCurrentVoice()) {
-            voiceName->setText(document->getCurrentVoice()->getName());
-            enableAutoBreakdown = false;
-            voiceText->setPlainText(document->getCurrentVoice()->getText());
-            enableAutoBreakdown = true;
-        }
-    }
-    waveformView->update();
-    updateActions();
-}
-
-void TupPapagayoApp::onVoiceItemChanged(QListWidgetItem *item)
-{
-    if (rebuildingList || !document)
-        return;
-
-    int id = voiceList->row(item);
-    if (id >= 0 && id < document->getVoices().size()) {
-        document->setCurrentVoice(document->getVoiceAt(id));
-        if (document->getCurrentVoice()) {
-            document->getCurrentVoice()->setName(item->text());
-            voiceName->setText(document->getCurrentVoice()->getName());
-        }
-    }
-}
-
 void TupPapagayoApp::onVoiceNameChanged()
 {
     if (!document || !document->getCurrentVoice())
         return;
 
     document->getCurrentVoice()->setName(voiceName->text());
-    rebuildVoiceList();
 }
 
 void TupPapagayoApp::onVoiceTextChanged()
@@ -851,8 +683,12 @@ void TupPapagayoApp::onVoiceTextChanged()
 
 void TupPapagayoApp::onBreakdown()
 {
-    if (!document || !document->getCurrentVoice())
+    if (!document || !document->getCurrentVoice()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPapagayoApp::onBreakdown()] - Error: No lip-sync document loaded!";
+        #endif
         return;
+    }
 
     TupLipsyncDoc::loadDictionaries();
     document->setDirtyFlag(true);
@@ -863,49 +699,8 @@ void TupPapagayoApp::onBreakdown()
         duration = PG_ROUND(time);
     }
 
-    document->getCurrentVoice()->runBreakdown("EN", duration);
+    document->runBreakdown("EN", duration);
     waveformView->update();
-}
-
-void TupPapagayoApp::onExport()
-{
-    if (!document || !document->getCurrentVoice())
-        return;
-
-    QSettings settings;
-    QString name = document->getCurrentVoice()->getName() + tr(".dat");
-    QDir dir(settings.value("default_dir", "").toString());
-    name = dir.absoluteFilePath(name);
-    QString filePath = QFileDialog::getSaveFileName(this, tr("Export"), name, tr("DAT files (*.dat)"));
-    if (filePath.isEmpty())
-        return;
-
-    QFileInfo info(filePath);
-    settings.setValue("default_dir", info.dir().absolutePath());
-
-    document->getCurrentVoice()->exportVoice(filePath);
-}
-
-void TupPapagayoApp::rebuildVoiceList()
-{
-    if (rebuildingList)
-        return;
-
-    rebuildingList = true;
-    voiceList->clear();
-
-    if (document) {
-        for (int i = 0; i < document->getVoices().size(); i++) {
-            voiceList->addItem(document->getVoiceAt(i)->getName());
-            QListWidgetItem *item = voiceList->item(i);
-            item->setFlags(item->flags() | Qt::ItemIsEditable);
-        }
-
-        if (document->getCurrentVoice()) {
-            voiceList->setCurrentItem(voiceList->item(document->getVoices().indexOf(document->getCurrentVoice())));
-        }
-    }
-    rebuildingList = false;
 }
 
 void TupPapagayoApp::keyPressEvent(QKeyEvent *event)
@@ -915,9 +710,90 @@ void TupPapagayoApp::keyPressEvent(QKeyEvent *event)
     #endif
 
     if (event->key() == Qt::Key_Space) {
-        if (playerStopped)
-            onPlay();
-        else
-            onStop();
+        onPlay();
+    } else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
+        onStop();
     }
+}
+
+void TupPapagayoApp::updateMouthView(int index)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::updateMouthView()] - index -> " << index;
+    #endif
+
+    if (index == 5) {
+        if (mouthFrame->currentIndex() == Predefined)
+            mouthFrame->setCurrentIndex(Customized);
+    } else {
+        mouthView->onMouthChanged(index);
+        if (mouthFrame->currentIndex() == Customized)
+            mouthFrame->setCurrentIndex(Predefined);
+    }
+}
+
+void TupPapagayoApp::openImagesDialog()
+{
+    TCONFIG->beginGroup("General");
+    QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Choose the images directory..."), path,
+                                                    QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    if (!dir.isEmpty()) {
+        mouthsPath->setText(dir);
+        saveDefaultPath(dir);
+        customView->loadImages(dir);
+    }
+}
+
+void TupPapagayoApp::saveDefaultPath(const QString &dir)
+{
+    TCONFIG->beginGroup("General");
+    TCONFIG->setValue("DefaultPath", dir);
+    TCONFIG->sync();
+}
+
+void TupPapagayoApp::updateFrame(int frame)
+{
+    if (mouthFrame->currentIndex() == Predefined)
+        mouthView->onFrameChanged(frame);
+    else
+        customView->onFrameChanged(frame);
+}
+
+void TupPapagayoApp::updatePauseButton()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::updatePauseButton()]";
+    #endif
+
+    playerStopped = true;
+    actionPlay->setIcon(playIcon);
+    actionPlay->setText(tr("Play"));
+    actionPlay->setToolTip(tr("Play"));
+}
+
+void TupPapagayoApp::createLipsyncRecord()
+{
+    QString title = voiceName->text();
+    if (title.isEmpty()) {
+        TOsd::self()->display(TOsd::Error, tr("Voice name is empty!"));
+        return;
+    }
+
+    QString words = voiceText->toPlainText();
+    if (words.isEmpty()) {
+        TOsd::self()->display(TOsd::Error, tr("Voice text is empty!"));
+        return;
+    }
+
+    int index = mouthsCombo->currentIndex();
+    if (index == 5) {
+        QString path = mouthsPath->text();
+        if (path.isEmpty()) {
+            TOsd::self()->display(TOsd::Error, tr("Customized mouths path is unset!"));
+            return;
+        }
+    }
+
+    close();
 }

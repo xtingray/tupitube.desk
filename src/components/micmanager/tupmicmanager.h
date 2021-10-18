@@ -29,6 +29,8 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         ~TupMicManager();
 
         QString getRecordPath() const;
+        bool isRecording();
+        void cancelRecording();
 
     signals:
         void soundReady(bool enabled);
@@ -82,6 +84,7 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         QTimer *timer;
         qreal secCounter;
         qreal audioDuration;
+        bool recording;
 };
 
 #endif // TUPMICMANAGER_H

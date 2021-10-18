@@ -2320,10 +2320,12 @@ void TupDocumentView::openLipSyncCreator()
         qDebug() << "[TupDocumentView::openLipSyncCreator()]";
     #endif
 
-    TupPapagayoApp *papagayoApp = new TupPapagayoApp(this);
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    TupPapagayoApp *papagayoApp = new TupPapagayoApp(project->getFPS(), "", this);
     papagayoApp->show();
     papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
                       static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
+    QApplication::restoreOverrideCursor();
 }
 
 void TupDocumentView::importPapagayoLipSync()
@@ -2710,8 +2712,24 @@ void TupDocumentView::launchLipsyncModule(const QString &soundFile)
 
     papagayoManager();
 
-    TupPapagayoApp *papagayoApp = new TupPapagayoApp(this);
-    papagayoApp->show();
-    papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
-                      static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
+    QString filePath = project->getDataDir() + "/audio/" + soundFile.toLower() + ".mp3";
+    if (QFile::exists(filePath)) {
+        QString tmpPath = CACHE_DIR + soundFile + ".mp3";
+        if (QFile::exists(tmpPath)) {
+            if (!QFile::remove(tmpPath)) {
+                #ifdef TUP_DEBUG
+                   qWarning() << "[TupDocumentView::launchLipsyncModule()] - Fatal Error: Unable to remove temporary file -> " << tmpPath;
+                #endif
+            }
+        }
+
+        TupPapagayoApp *papagayoApp = new TupPapagayoApp(project->getFPS(), filePath, this);
+        papagayoApp->show();
+        papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
+                          static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
+    } else {
+        #ifdef TUP_DEBUG
+           qWarning() << "[TupDocumentView::launchLipsyncModule()] - Fatal Error: Sound file doesn't exist -> " << filePath;
+        #endif
+    }
 }

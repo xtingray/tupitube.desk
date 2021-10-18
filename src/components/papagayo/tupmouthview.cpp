@@ -1,6 +1,23 @@
+/***************************************************************************
+*   License:                                                              *
+*   This program is free software; you can redistribute it and/or modify  *
+*   it under the terms of the GNU General Public License as published by  *
+*   the Free Software Foundation; either version 2 of the License, or     *
+*   (at your option) any later version.                                   *
+*                                                                         *
+*   This program is distributed in the hope that it will be useful,       *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+*   GNU General Public License for more details.                          *
+*                                                                         *
+*   You should have received a copy of the GNU General Public License     *
+*   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
+***************************************************************************/
+
 #include <QPainter>
 
 #include "tupmouthview.h"
+#include "tapplicationproperties.h"
 
 TupMouthView::TupMouthView(QWidget *parent) : QWidget(parent)
 {
@@ -10,27 +27,12 @@ TupMouthView::TupMouthView(QWidget *parent) : QWidget(parent)
 
 	TupLipsyncDoc::loadDictionaries();
 
-    for (int32 mouth = 0; mouth < 4; mouth++) {
-        QString basePath;
-
-        switch (mouth) {
-			case 0:
-				basePath = ":/mouths/mouths/1_Mouth_1/";
-				break;
-			case 1:
-				basePath = ":/mouths/mouths/2_Mouth_2/";
-				break;
-			case 2:
-				basePath = ":/mouths/mouths/3_Gary_C_Martin/";
-				break;
-			case 3:
-				basePath = ":/mouths/mouths/4_Preston_Blair/";
-				break;
-		}
-
+    for (int32 mouth = 0; mouth < 5; mouth++) {
+        QString basePath = SHARE_DIR + "data/mouths/" + QString::number(mouth + 1) + "/";
         for (int32 i = 0; i < TupLipsyncDoc::phonemesListSize(); i++) {
-            mouths[mouth].insert(TupLipsyncDoc::getPhonemeAt(i), new QImage(basePath + TupLipsyncDoc::getPhonemeAt(i) + ".jpg"));
-		}
+            QString path = basePath + TupLipsyncDoc::getPhonemeAt(i) + ".png";
+            mouths[mouth].insert(TupLipsyncDoc::getPhonemeAt(i), new QImage(path));
+        }
 	}
 }
 
@@ -46,7 +48,7 @@ void TupMouthView::setDocument(TupLipsyncDoc *doc)
 
 void TupMouthView::setMouth(int32 id)
 {
-    mouthID = PG_CLAMP(id, 0, 3);
+    mouthID = PG_CLAMP(id, 0, 4);
 }
 
 void TupMouthView::onMouthChanged(int id)
@@ -70,7 +72,7 @@ void TupMouthView::paintEvent(QPaintEvent *event)
     QPainter dc(this);
 
     if (document && document->getCurrentVoice())
-        phoneme = document->getCurrentVoice()->getPhonemeAtFrame(frame);
+        phoneme = document->getPhonemeAtFrame(frame);
 	else
 		phoneme = "etc";
 

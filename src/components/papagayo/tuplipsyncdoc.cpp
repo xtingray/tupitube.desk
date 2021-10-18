@@ -1,8 +1,25 @@
+/***************************************************************************
+*   License:                                                              *
+*   This program is free software; you can redistribute it and/or modify  *
+*   it under the terms of the GNU General Public License as published by  *
+*   the Free Software Foundation; either version 2 of the License, or     *
+*   (at your option) any later version.                                   *
+*                                                                         *
+*   This program is distributed in the hope that it will be useful,       *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+*   GNU General Public License for more details.                          *
+*                                                                         *
+*   You should have received a copy of the GNU General Public License     *
+*   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
+***************************************************************************/
+
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
 
 #include "tuplipsyncdoc.h"
+#include "tapplicationproperties.h"
 
 LipsyncPhoneme::LipsyncPhoneme()
 {
@@ -674,6 +691,11 @@ QString LipsyncVoice::getPhonemeAtFrame(int32 frame)
 	return "rest";
 }
 
+bool LipsyncVoice::textIsEmpty()
+{
+    return text.isEmpty();
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 QList<QString> TupLipsyncDoc::phonemesList;
@@ -714,28 +736,28 @@ void TupLipsyncDoc::loadDictionaries()
 		return;
 
     QFile *file;
-    file = new QFile(":/dictionaries/dictionaries/standard_dictionary");
+    file = new QFile(SHARE_DIR + "data/dictionaries/standard_dictionary");
     if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
         loadDictionary(file);
         file->close();
 	}
     delete file;
 
-    file = new QFile(":/dictionaries/dictionaries/extended_dictionary");
+    file = new QFile(SHARE_DIR + "data/dictionaries/extended_dictionary");
     if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
         loadDictionary(file);
         file->close();
 	}
     delete file;
 
-    file = new QFile(":/dictionaries/dictionaries/user_dictionary");
+    file = new QFile(SHARE_DIR + "data/dictionaries/user_dictionary");
     if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
         loadDictionary(file);
         file->close();
 	}
     delete file;
 
-    file = new QFile(":/dictionaries/dictionaries/phoneme_mapping");
+    file = new QFile(SHARE_DIR + "data/dictionaries/phoneme_mapping");
     if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
         while (!file->atEnd()) {
             QString line = file->readLine();
@@ -869,7 +891,6 @@ void TupLipsyncDoc::openAudio(const QString &path)
 
     audioPath = path;
     audioPlayer = new QMediaPlayer;
-    // connect(player, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
     audioPlayer->setMedia(QUrl::fromLocalFile(audioPath));
     if (audioPlayer->error()) {
         #ifdef TUP_DEBUG
@@ -1071,4 +1092,41 @@ int TupLipsyncDoc::phonemesListSize()
 QString TupLipsyncDoc::getPhonemeAt(int index)
 {
     return phonemesList.at(index);
+}
+
+void TupLipsyncDoc::playAudio()
+{
+    audioPlayer->play();
+}
+
+void TupLipsyncDoc::pauseAudio()
+{
+    audioPlayer->pause();
+}
+
+void TupLipsyncDoc::stopAudio()
+{
+    audioPlayer->stop();
+}
+
+void TupLipsyncDoc::runBreakdown(const QString &lang, int32 duration)
+{
+    if (currentVoice)
+        currentVoice->runBreakdown(lang, duration);
+}
+
+bool TupLipsyncDoc::voiceTextIsEmpty()
+{
+    if (currentVoice)
+        return currentVoice->textIsEmpty();
+
+    return true;
+}
+
+QString TupLipsyncDoc::getPhonemeAtFrame(int frame) const
+{
+    if (currentVoice)
+        return currentVoice->getPhonemeAtFrame(frame);
+
+    return "";
 }

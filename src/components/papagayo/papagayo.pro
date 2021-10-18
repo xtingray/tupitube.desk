@@ -36,6 +36,7 @@ HEADERS += tuppapagayoapp.h \
            tupwaveformview.h \
            tupaudioextractor.h \
            tupmouthview.h \
+           tupcustomizedmouthview.h \
            tuppg_config.h \
            tupbreakdowndialog.h
 
@@ -43,23 +44,18 @@ SOURCES += tuppapagayoapp.cpp \
            tuplipsyncdoc.cpp \
            tupwaveformview.cpp \
            tupmouthview.cpp \
+           tupcustomizedmouthview.cpp \
            tupaudioextractor.cpp \
            tupbreakdowndialog.cpp
 
 INCLUDEPATH += src
 
 # OTHER_FILES += ToDo.txt
-
-RESOURCES += assets/papagayo.qrc
-
-ICON = mac/papagayo.icns
-
-QMAKE_INFO_PLIST = mac/Info.plist
-
-RC_FILE = win/papagayo.rc
-
+# RESOURCES += assets/papagayo.qrc
+# ICON = mac/papagayo.icns
+# QMAKE_INFO_PLIST = mac/Info.plist
+# RC_FILE = win/papagayo.rc
 # OBJECTIVE_SOURCES +=
 # extra_libs.files = SOUND_FILES
 # extra_libs.path = $$DESTDIR
-
 # INSTALLS += extra_libs

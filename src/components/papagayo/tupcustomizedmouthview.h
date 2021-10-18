@@ -14,27 +14,26 @@
 *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
 ***************************************************************************/
 
-#ifndef TUPMOUTHVIEW_H
-#define TUPMOUTHVIEW_H
+#ifndef TUPCUSTOMIZEDMOUTHVIEW_H
+#define TUPCUSTOMIZEDMOUTHVIEW_H
 
 #include <QWidget>
 
 #include "tglobal.h"
 #include "tuplipsyncdoc.h"
 
-class Q_DECL_EXPORT TupMouthView : public QWidget
+class Q_DECL_EXPORT TupCustomizedMouthView : public QWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 
     public:
-        explicit TupMouthView(QWidget *parent = nullptr);
-        ~TupMouthView();
+        explicit TupCustomizedMouthView(QWidget *parent = nullptr);
+        ~TupCustomizedMouthView();
 
         void setDocument(TupLipsyncDoc *doc);
-        void setMouth(int32 id);
+        void loadImages(const QString &folderPath);
 
     public slots:
-        void onMouthChanged(int id);
         void onFrameChanged(int frame);
 
     protected:
@@ -42,9 +41,9 @@ class Q_DECL_EXPORT TupMouthView : public QWidget
 
     private:
         TupLipsyncDoc *document;
-        int32 mouthID;
         int32 frame;
-        QHash<QString, QImage *> mouths[5];
+        QHash<QString, QImage *> mouths;
+        bool assetsLoaded;
 };
 
-#endif // TUPMOUTHVIEW_H
+#endif // TUPCUSTOMIZEDMOUTHVIEW_H

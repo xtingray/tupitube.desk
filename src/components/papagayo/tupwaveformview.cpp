@@ -1,10 +1,26 @@
+/***************************************************************************
+*   License:                                                              *
+*   This program is free software; you can redistribute it and/or modify  *
+*   it under the terms of the GNU General Public License as published by  *
+*   the Free Software Foundation; either version 2 of the License, or     *
+*   (at your option) any later version.                                   *
+*                                                                         *
+*   This program is distributed in the hope that it will be useful,       *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+*   GNU General Public License for more details.                          *
+*                                                                         *
+*   You should have received a copy of the GNU General Public License     *
+*   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
+***************************************************************************/
+
 #include <QPainter>
-#include <QMouseEvent>
 #include <QScrollArea>
 #include <QScrollBar>
 
 #include "tupwaveformview.h"
 #include "tupbreakdowndialog.h"
+#include "tosd.h"
 
 #define DEFAULT_SAMPLE_WIDTH 4
 #define DEFAULT_SAMPLES_PER_FRAME 2
@@ -15,8 +31,7 @@ TupWaveFormView::TupWaveFormView(QWidget *parent) : QWidget(parent)
         qDebug() << "[TupWaveFormView::TupWaveFormView()]";
     #endif
 
-    // setAttribute(Qt::WA_StaticContents);
-    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum); // QSizePolicy::Fixed ?
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
 
     scrollArea = nullptr;
     document = nullptr;
@@ -38,6 +53,8 @@ TupWaveFormView::TupWaveFormView(QWidget *parent) : QWidget(parent)
     selectedPhrase = nullptr;
     selectedWord = nullptr;
     selectedPhoneme = nullptr;
+
+    setToolTip(tr("Drop audio file here"));
 }
 
 TupWaveFormView::~TupWaveFormView()
@@ -51,9 +68,9 @@ TupWaveFormView::~TupWaveFormView()
 QSize TupWaveFormView::sizeHint() const
 {
     if (document && numSamples > 0)
-        return QSize(numSamples * sampleWidth, 100);
+        return QSize(numSamples * sampleWidth, height());
 	else
-		return QSize(400, 100);
+        return QSize(width(), height());
 }
 
 void TupWaveFormView::setScrollArea(QScrollArea *scrollArea)
@@ -82,9 +99,11 @@ void TupWaveFormView::setDocument(TupLipsyncDoc *doc)
         amp = nullptr;
 	}
 
-    if (document && document->getAudioExtractor()) {
-        TupAudioExtractor *extractor = document->getAudioExtractor();
-
+    TupAudioExtractor *extractor = document->getAudioExtractor();
+    if (document && extractor) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupWaveFormView::setDocument()] - Processing audio...";
+        #endif
         frameWidth = sampleWidth * samplesPerFrame;
 		real duration = extractor->duration();
 		real time = 0.0f;
@@ -101,21 +120,39 @@ void TupWaveFormView::setDocument(TupLipsyncDoc *doc)
 		time = 0.0f;
 		int32 i = 0;
 
+        onlySilent = true;
         while (time < duration) {
             amp[i] = extractor->getRMSAmplitude(time, sampleDur);
+            if (amp[i] > 0)
+                onlySilent = false;
+
             if (amp[i] > maxAmp)
                 maxAmp = amp[i];
 			time += sampleDur;
 			i++;
 		}
+
 		// normalize amplitudes
 		maxAmp = 0.95f / maxAmp;
         for (i = 0; i < numSamples; i++)
             amp[i] *= maxAmp;
-	}
 
-	updateGeometry();
-	update();
+        if (!onlySilent) {
+            updateGeometry();
+            update();
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupWaveFormView::setDocument()] - Fatal Error: Invalid sound file!";
+            #endif
+            TOsd::self()->display(TOsd::Error, tr("Sound file has no voices!"), 3000);
+            close();
+        }
+
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupWaveFormView::setDocument()] - Fatal Error: Can't process audio input!";
+        #endif
+    }
 }
 
 void TupWaveFormView::onZoomIn()
@@ -171,14 +208,23 @@ void TupWaveFormView::onAutoZoom()
 
 void TupWaveFormView::positionChanged(qint64 milliseconds)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupWaveFormView::positionChanged()] - milliseconds -> " << milliseconds;
+    #endif
+
     if (document) {
         real f = ((real)milliseconds / 1000.0f) * document->getFps();
 		int32 frame = PG_FLOOR(f);
+
+        if (frame == document->getDuration())
+            emit audioStopped();
+
         if (frame != currentFrame) {
             if (audioStopFrame >= 0) {
                 if (frame > audioStopFrame) {
                     if (document->getAudioPlayer())
-                        document->getAudioPlayer()->stop();
+                        document->stopAudio();
+
                     audioStopFrame = -1;
                 } else {
                     currentFrame = frame;
@@ -188,7 +234,7 @@ void TupWaveFormView::positionChanged(qint64 milliseconds)
             } else if (dragging) {
                 if (frame > currentFrame + 1) {
                     if (document->getAudioPlayer())
-                        document->getAudioPlayer()->stop();
+                        document->stopAudio();
 				}
             } else {
                 currentFrame = frame;
@@ -197,21 +243,23 @@ void TupWaveFormView::positionChanged(qint64 milliseconds)
 			}
 
             QMediaPlayer *audioPlayer = document->getAudioPlayer();
-            if (!dragging && audioPlayer && audioPlayer->state() == QMediaPlayer::PlayingState) {
-                if (scrollArea) {
-                    QScrollBar *scrollBar = scrollArea->horizontalScrollBar();
-                    if (scrollBar) {
-                        int frameX = currentFrame * frameWidth;
-						int scrollX = scrollBar->value();
-                        int scrollW = scrollArea->width();
-                        if (frameX - scrollX > scrollW) {
-							scrollBar->setValue(frameX - scrollW / 6);
-                        } else if (frameX - scrollX < 0) {
-							scrollBar->setValue(frameX);
+            if (audioPlayer) {
+                if (!dragging && audioPlayer && audioPlayer->state() == QMediaPlayer::PlayingState) {
+                    if (scrollArea) {
+                        QScrollBar *scrollBar = scrollArea->horizontalScrollBar();
+                        if (scrollBar) {
+                            int frameX = currentFrame * frameWidth;
+                            int scrollX = scrollBar->value();
+                            int scrollW = scrollArea->width();
+                            if (frameX - scrollX > scrollW) {
+                                scrollBar->setValue(frameX - scrollW / 6);
+                            } else if (frameX - scrollX < 0) {
+                                scrollBar->setValue(frameX);
+                            }
                         }
-					}
-				}
-			}
+                    }
+                }
+            }
 		}
 	}
 }
@@ -508,14 +556,16 @@ void TupWaveFormView::paintEvent(QPaintEvent *event)
     Q_UNUSED(event)
 
     QPainter dc(this);
-
-    int32 clientWidth = width();
     int32 clientHeight = height();
+    if (onlySilent) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupWaveFormView::paintEvent()] - Fatal Error: Invalid sound file!";
+        #endif
+        return;
+    }
 
-    if (document == nullptr) {
-        dc.drawText(QRect(0, 0, clientWidth, clientHeight), Qt::AlignHCenter | Qt::AlignVCenter, tr("Drop audio file here"));
-		return;
-	}
+    if (document == nullptr)
+        return;
 
     int32 topBorder = 16; // should be the height of frame label text
     int32 halfClientHeight;

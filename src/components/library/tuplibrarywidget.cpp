@@ -1158,8 +1158,8 @@ void TupLibraryWidget::importImageSequence()
         for (int i = 0; i < filesTotal; ++i) {
              if (records.at(i).isFile()) {
                  QString extension = records.at(i).suffix().toUpper();
-                 if (extension.compare("JPEG")==0 || extension.compare("JPG")==0 || extension.compare("PNG")==0 || extension.compare("GIF")==0 || 
-                     extension.compare("XPM")==0 || extension.compare("WEBP")==0) {
+                 if (extension.compare("JPEG")==0 || extension.compare("JPG")==0 || extension.compare("PNG")==0 ||
+                     extension.compare("GIF")==0 || extension.compare("XPM")==0 || extension.compare("WEBP")==0) {
                      imagesCounter++;
                      photograms << records.at(i).absoluteFilePath();
                  }
@@ -1426,15 +1426,14 @@ void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath)
     }
 }
 
-void TupLibraryWidget::callLipySyncModule(const QString &filePath)
+void TupLibraryWidget::callLipySyncModule(const QString &soundFile)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::callLipsyncModule()] - filePath -> " << filePath;
+        qDebug() << "[TupLibraryWidget::callLipsyncModule()] - filePath -> " << soundFile;
     #endif
 
-    importSoundFileFromFolder(filePath);
-    qDebug() << "Tracing emit...";
-    emit lipsyncModuleCalled(filePath);
+    importSoundFileFromFolder(CACHE_DIR + soundFile + ".mp3");
+    emit lipsyncModuleCalled(soundFile);
 }
 
 void TupLibraryWidget::sceneResponse(TupSceneResponse *response)

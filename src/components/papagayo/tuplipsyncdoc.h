@@ -1,3 +1,19 @@
+/***************************************************************************
+*   License:                                                              *
+*   This program is free software; you can redistribute it and/or modify  *
+*   it under the terms of the GNU General Public License as published by  *
+*   the Free Software Foundation; either version 2 of the License, or     *
+*   (at your option) any later version.                                   *
+*                                                                         *
+*   This program is distributed in the hope that it will be useful,       *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+*   GNU General Public License for more details.                          *
+*                                                                         *
+*   You should have received a copy of the GNU General Public License     *
+*   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
+***************************************************************************/
+
 #ifndef TUPLIPSYNCDOC_H
 #define TUPLIPSYNCDOC_H
 
@@ -128,6 +144,7 @@ class LipsyncVoice
         QString getText() const;
         QList<LipsyncPhrase *> getPhrases();
         LipsyncPhrase* getPhraseAt(int index);
+        bool textIsEmpty();
 
     private:
         QString name;
@@ -168,12 +185,18 @@ class Q_DECL_EXPORT TupLipsyncDoc : public QObject
         bool isDirty();
         void setDirtyFlag(bool flag);
         void removeVoiceAt(int index);
+        void runBreakdown(const QString &lang, int32 duration);
+        bool voiceTextIsEmpty();
+
         static QString getPhonemeFromDictionary(const QString &key, const QString &defaultValue);
         static QStringList getDictionaryValue(const QString &key);
         static int phonemesListSize();
         static QString getPhonemeAt(int index);
+        QString getPhonemeAtFrame(int frame) const;
 
-    private slots:
+        void playAudio();
+        void pauseAudio();
+        void stopAudio();
 
     private:
         static void loadDictionary(QFile *file);

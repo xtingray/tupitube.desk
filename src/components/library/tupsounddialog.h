@@ -62,6 +62,7 @@ class TUPITUBE_EXPORT TupSoundDialog : public QDialog
         void importRecordingAsset();
         void enableDialogButtons(bool enabled);
         void launchLipsyncModule();
+        void closeDialog();
 
     signals:
         void soundFilePicked(const QString &);

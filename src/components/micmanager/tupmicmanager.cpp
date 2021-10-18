@@ -68,6 +68,7 @@ void TupMicManager::initRecorder()
     connect(micProbe, &QAudioProbe::audioBufferProbed, this, &TupMicManager::handleBuffer);
     micProbe->setSource(micRecorder);
 
+    recording = false;
     secCounter = 0;
     player = new QMediaPlayer;
 }
@@ -214,18 +215,21 @@ void TupMicManager::onStateChanged(QMediaRecorder::State state)
 {
     switch (state) {
         case QMediaRecorder::RecordingState:
+            recording = true;
             recordButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/stop.png")));
             recordButton->setToolTip(tr("Stop"));
             pauseButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/pause.png")));
             pauseButton->setToolTip(tr("Pause"));
             break;
         case QMediaRecorder::PausedState:
+            recording = false;
             recordButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/stop.png")));
             recordButton->setToolTip(tr("Stop"));
             pauseButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/resume.png")));
             pauseButton->setToolTip(tr("Resume"));
             break;
         case QMediaRecorder::StoppedState:
+            recording = false;
             QString filename = CACHE_DIR + nameInput->text() + ".mp3";
             if (QFile::exists(filename)) {
                 player->setMedia(QUrl::fromLocalFile(filename));
@@ -513,9 +517,41 @@ void TupMicManager::trackPlayerStatus()
 
 QString TupMicManager::getRecordPath() const
 {
-    QString filename = CACHE_DIR + nameInput->text() + ".mp3";
-    if (QFile::exists(filename))
+    QString filename = nameInput->text();
+    QString path = CACHE_DIR + filename + ".mp3";
+    if (QFile::exists(path))
         return filename;
 
     return "";
+}
+
+bool TupMicManager::isRecording()
+{
+    return recording;
+}
+
+void TupMicManager::cancelRecording()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMicManager::cancelRecording()]";
+    #endif
+
+    if (micRecorder->state() == QMediaRecorder::RecordingState) {
+        disconnect(micRecorder, &QAudioRecorder::durationChanged, this, &TupMicManager::updateProgress);
+        disconnect(micRecorder, &QAudioRecorder::statusChanged, this, &TupMicManager::updateStatus);
+        disconnect(micRecorder, &QAudioRecorder::stateChanged, this, &TupMicManager::onStateChanged);
+        micRecorder->stop();
+    } else if (player->state() == QMediaPlayer::PlayingState) {
+        player->stop();
+    }
+
+    QString filename = nameInput->text();
+    QString path = CACHE_DIR + filename + ".mp3";
+    if (QFile::exists(path)) {
+        if (!QFile::remove(path)) {
+            #ifdef TUP_DEBUG
+                qWarning() << "[TupMicManager::cancelRecording()] - Fatal Error: Can't remove temporary file -> " << path;
+            #endif
+        }
+    }
 }
