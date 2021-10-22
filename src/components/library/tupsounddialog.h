@@ -65,19 +65,20 @@ class TUPITUBE_EXPORT TupSoundDialog : public QDialog
         void closeDialog();
 
     signals:
-        void soundFilePicked(const QString &);
-        void lipsyncModuleCalled(const QString &);
+        void soundFilePicked(const QString &path);
+        void lipsyncModuleCalled(bool recorded, const QString &path);
 
     private:
-        QWidget * soundFileTab();
-        QWidget * soundRecordTab();
+        QWidget *soundFileTab();
+        QWidget *soundRecordTab();
 
         QTabWidget *tabWidget;
         QLineEdit *filePathInput;
         QString soundFilePath;
         QPushButton *importFileButton;
         QPushButton *importRecordButton;
-        QPushButton *lipsyncButton;
+        QPushButton *lipsyncButton01;
+        QPushButton *lipsyncButton02;
 
         TupMicManager *micManager;
 };

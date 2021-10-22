@@ -98,7 +98,10 @@ void TMsgDialog::setupGUI()
 
     textBrowser->setHtml(html);
 
-    QPushButton *closeButton = new QPushButton(tr("Close"));
+    QPushButton *closeButton = new QPushButton(this);
+    closeButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
+    closeButton->setMinimumWidth(60);
+
     layout->addWidget(closeButton);
     connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
 

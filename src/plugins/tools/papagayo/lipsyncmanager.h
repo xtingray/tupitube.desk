@@ -77,7 +77,7 @@ class TUPITUBE_PLUGIN LipSyncManager: public QWidget
 
         QListWidget *lipSyncList;
         TImageButton *openButton;
-        TImageButton *importButton;
+        // TImageButton *importButton;
         TImageButton *editButton;
         TImageButton *delButton;
         QString target;

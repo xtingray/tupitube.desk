@@ -2321,7 +2321,7 @@ void TupDocumentView::openLipSyncCreator()
     #endif
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    TupPapagayoApp *papagayoApp = new TupPapagayoApp(project->getFPS(), "", this);
+    TupPapagayoApp *papagayoApp = new TupPapagayoApp(true, project->getFPS(), "", this);
     papagayoApp->show();
     papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
                       static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
@@ -2704,32 +2704,50 @@ void TupDocumentView::refreshEyeDropperPanel()
     currentTool->refreshEyeDropperPanel();
 }
 
-void TupDocumentView::launchLipsyncModule(const QString &soundFile)
+void TupDocumentView::launchLipsyncModule(bool recorded, const QString &soundFile)
 {
     #ifdef TUP_DEBUG
        qDebug() << "[TupDocumentView::launchLipsyncModule()] - soundFile -> " << soundFile;
     #endif
 
-    papagayoManager();
+    papagayoManager(); // Launch plugin
 
-    QString filePath = project->getDataDir() + "/audio/" + soundFile.toLower() + ".mp3";
-    if (QFile::exists(filePath)) {
-        QString tmpPath = CACHE_DIR + soundFile + ".mp3";
-        if (QFile::exists(tmpPath)) {
-            if (!QFile::remove(tmpPath)) {
-                #ifdef TUP_DEBUG
-                   qWarning() << "[TupDocumentView::launchLipsyncModule()] - Fatal Error: Unable to remove temporary file -> " << tmpPath;
-                #endif
+    if (recorded) {
+        QString filePath = project->getDataDir() + "/audio/" + soundFile.toLower() + ".mp3";
+        if (QFile::exists(filePath)) {
+            QString tmpPath = CACHE_DIR + soundFile + ".mp3";
+            if (QFile::exists(tmpPath)) {
+                if (!QFile::remove(tmpPath)) {
+                    #ifdef TUP_DEBUG
+                       qWarning() << "[TupDocumentView::launchLipsyncModule()] - Fatal Error: Unable to remove temporary file -> " << tmpPath;
+                    #endif
+                }
             }
-        }
 
-        TupPapagayoApp *papagayoApp = new TupPapagayoApp(project->getFPS(), filePath, this);
-        papagayoApp->show();
-        papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
-                          static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
+
+            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+            TupPapagayoApp *papagayoApp = new TupPapagayoApp(false, project->getFPS(), filePath, this);
+            papagayoApp->show();
+            papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
+                              static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
+
+            QApplication::restoreOverrideCursor();
+        } else {
+            #ifdef TUP_DEBUG
+               qWarning() << "[TupDocumentView::launchLipsyncModule()] - Fatal Error: Sound file doesn't exist -> " << filePath;
+            #endif
+        }
     } else {
-        #ifdef TUP_DEBUG
-           qWarning() << "[TupDocumentView::launchLipsyncModule()] - Fatal Error: Sound file doesn't exist -> " << filePath;
-        #endif
+        QFileInfo info(soundFile);
+        QString filename = info.baseName().toLower();
+        QString filePath = project->getDataDir() + "/audio/" + filename + ".mp3";
+
+        if (QFile::exists(filePath)) {
+            TupPapagayoApp *papagayoApp = new TupPapagayoApp(false, project->getFPS(), filePath, this);
+            papagayoApp->show();
+            papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
+                              static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
+        }
     }
 }

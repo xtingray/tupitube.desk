@@ -97,7 +97,11 @@ void TabDialog::setupButtons(int buttons)
     }
     
     if (buttons & Cancel) {
-        QPushButton *cancelButton = new QPushButton(tr("Cancel"));
+        // QPushButton *cancelButton = new QPushButton(tr("Cancel"));
+        QPushButton *cancelButton = new QPushButton;
+        cancelButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
+        cancelButton->setToolTip(tr("Cancel"));
+        cancelButton->setMinimumWidth(60);
         connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
         buttonLayout->addWidget(cancelButton);
         m_buttons.insert(Cancel, cancelButton);
@@ -111,7 +115,11 @@ void TabDialog::setupButtons(int buttons)
     }
 
     if (buttons & Ok) {
-        QPushButton *okButton = new QPushButton(tr("OK"));
+        // QPushButton *okButton = new QPushButton(tr("OK"));
+        QPushButton *okButton = new QPushButton;
+        okButton->setMinimumWidth(60);
+        okButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
+        okButton->setToolTip(tr("OK"));
         connect(okButton, SIGNAL(clicked()), this, SLOT(ok()));
         okButton->setDefault(true);
         buttonLayout->addWidget(okButton);

@@ -107,18 +107,24 @@ void TupMicManager::setupUI()
     controlsWidget = new QWidget;
     QHBoxLayout *controlsLayout = new QHBoxLayout;
 
+    controlsLayout->addStretch();
+
     recordButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/record.png")), "", controlsWidget);
     recordButton->setToolTip(tr("Record"));
+    recordButton->setMinimumWidth(60);
     connect(recordButton, SIGNAL(clicked()), this, SLOT(toggleRecord()));
 
     controlsLayout->addWidget(recordButton);
 
     pauseButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/pause.png")), "", controlsWidget);
     pauseButton->setToolTip(tr("Pause"));
+    pauseButton->setMinimumWidth(60);
     pauseButton->setEnabled(false);
     connect(pauseButton, SIGNAL(clicked()), this, SLOT(togglePause()));
 
     controlsLayout->addWidget(pauseButton);
+    controlsLayout->addStretch();
+
     controlsWidget->setLayout(controlsLayout);
 
     playerWidget = new QWidget;

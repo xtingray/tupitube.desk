@@ -92,20 +92,32 @@ QWidget* TupSoundDialog::soundFileTab()
     filePathInput = new QLineEdit;
     QToolButton *fileButton = new QToolButton;
     fileButton->setIcon(QIcon(THEME_DIR + "icons/open.png"));
+    fileButton->setMinimumWidth(60);
     fileButton->setToolTip(tr("Load sound file"));
     connect(fileButton, SIGNAL(clicked()), this, SLOT(loadSoundFile()));
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     importFileButton = new QPushButton("");
     importFileButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
+    importFileButton->setMinimumWidth(60);
     importFileButton->setToolTip(tr("Import sound file"));
     importFileButton->setEnabled(false);
     connect(importFileButton, SIGNAL(clicked()), this, SLOT(importSoundAsset()));
+
+    lipsyncButton02 = new QPushButton("");
+    lipsyncButton02->setIcon(QIcon(THEME_DIR + "icons/papagayo.png"));
+    lipsyncButton02->setMinimumWidth(60);
+    lipsyncButton02->setToolTip(tr("Open lip-sync module"));
+    lipsyncButton02->setEnabled(false);
+    connect(lipsyncButton02, SIGNAL(clicked()), this, SLOT(launchLipsyncModule()));
+
     QPushButton *cancelButton = new QPushButton("");
     cancelButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
+    cancelButton->setMinimumWidth(60);
     cancelButton->setToolTip(tr("Cancel"));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
     buttonsLayout->addWidget(importFileButton, Qt::AlignRight);
+    buttonsLayout->addWidget(lipsyncButton02, Qt::AlignRight);
     buttonsLayout->addWidget(cancelButton, Qt::AlignRight);
 
     QHBoxLayout *bottomLayout = new QHBoxLayout;
@@ -136,22 +148,25 @@ QWidget* TupSoundDialog::soundRecordTab()
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     importRecordButton = new QPushButton("");
     importRecordButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
+    importRecordButton->setMinimumWidth(60);
     importRecordButton->setToolTip(tr("Import recorded sound"));
     importRecordButton->setEnabled(false);
     connect(importRecordButton, SIGNAL(clicked()), this, SLOT(importRecordingAsset()));
 
-    lipsyncButton = new QPushButton("");
-    lipsyncButton->setIcon(QIcon(THEME_DIR + "icons/papagayo.png"));
-    lipsyncButton->setToolTip(tr("Open lip-sync module"));
-    lipsyncButton->setEnabled(false);
-    connect(lipsyncButton, SIGNAL(clicked()), this, SLOT(launchLipsyncModule()));
+    lipsyncButton01 = new QPushButton("");
+    lipsyncButton01->setIcon(QIcon(THEME_DIR + "icons/papagayo.png"));
+    lipsyncButton01->setMinimumWidth(60);
+    lipsyncButton01->setToolTip(tr("Open lip-sync module"));
+    lipsyncButton01->setEnabled(false);
+    connect(lipsyncButton01, SIGNAL(clicked()), this, SLOT(launchLipsyncModule()));
 
     QPushButton *cancelButton = new QPushButton("");
     cancelButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
+    cancelButton->setMinimumWidth(60);
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(closeDialog()));
 
     buttonsLayout->addWidget(importRecordButton, Qt::AlignRight);
-    buttonsLayout->addWidget(lipsyncButton, Qt::AlignRight);
+    buttonsLayout->addWidget(lipsyncButton01, Qt::AlignRight);
     buttonsLayout->addWidget(cancelButton, Qt::AlignRight);
 
     QHBoxLayout *bottomLayout = new QHBoxLayout;
@@ -180,6 +195,7 @@ void TupSoundDialog::loadSoundFile()
         QStringList files = dialog.selectedFiles();
         filePathInput->setText(files.at(0));
         importFileButton->setEnabled(true);
+        lipsyncButton02->setEnabled(true);
     }
 }
 
@@ -207,7 +223,7 @@ void TupSoundDialog::importRecordingAsset()
         close();
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupSoundDialog::importRecordingAsset()] - Recording file path is empty!";
+            qDebug() << "[TupSoundDialog::importRecordingAsset()] - Fatal Error: Recording file path is empty!";
         #endif
     }
 }
@@ -215,7 +231,7 @@ void TupSoundDialog::importRecordingAsset()
 void TupSoundDialog::enableDialogButtons(bool enabled)
 {
     importRecordButton->setEnabled(enabled);
-    lipsyncButton->setEnabled(enabled);
+    lipsyncButton01->setEnabled(enabled);
 }
 
 void TupSoundDialog::launchLipsyncModule()
@@ -224,13 +240,21 @@ void TupSoundDialog::launchLipsyncModule()
         qDebug() << "[TupSoundDialog::launchLipsyncModule()]";
     #endif
 
-    QString path = micManager->getRecordPath();
+    QString path = "";
+    bool isRecorded = false;
+    if (tabWidget->currentIndex() == 0) { // Sound file comes from filesystem
+        path = filePathInput->text();
+    } else { // Sound file was recorded
+        isRecorded = true;
+        path = micManager->getRecordPath();
+    }
+
     if (!path.isEmpty()) {
-        emit lipsyncModuleCalled(path);
+        emit lipsyncModuleCalled(isRecorded, path);
         close();
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupSoundDialog::launchLipsyncModule()] - Recording file path is empty!";
+            qWarning() << "[TupSoundDialog::launchLipsyncModule()] - Fatal Error: Recording file path is empty!";
         #endif
     }
 }

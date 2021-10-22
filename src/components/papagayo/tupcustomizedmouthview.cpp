@@ -35,6 +35,10 @@ TupCustomizedMouthView::~TupCustomizedMouthView()
 
 void TupCustomizedMouthView::setDocument(TupLipsyncDoc *doc)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCustomizedMouthView::setDoccument()]";
+    #endif
+
     document = doc;
 	update();
 }
@@ -82,6 +86,12 @@ void TupCustomizedMouthView::loadImages(const QString &folderPath)
 
 void TupCustomizedMouthView::onFrameChanged(int frameIndex)
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCustomizedMouthView::onFrameChanged()] - frameIndex -> " << frameIndex;
+    #endif
+    */
+
     frame = frameIndex;
 	update();
 }
@@ -99,7 +109,7 @@ void TupCustomizedMouthView::paintEvent(QPaintEvent *event)
 
     if (document && document->getCurrentVoice())
         phoneme = document->getPhonemeAtFrame(frame);
-	else
+    else
 		phoneme = "etc";
 
     if (phoneme.isEmpty() && document)

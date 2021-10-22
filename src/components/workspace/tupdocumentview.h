@@ -180,7 +180,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void exportImage();
         // void exportAnimaticVideo(const QString &path, const QPixmap &pixmap, int fps);
         void postImage();
-        void launchLipsyncModule(const QString &soundFile);
+        void launchLipsyncModule(bool recorded, const QString &soundFile);
 
     signals:
         void requestTriggered(const TupProjectRequest *event);

@@ -145,12 +145,12 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void openSearchDialog();
         void recoverMode();
         void importSoundFileFromFolder(const QString &filePath);
-        void callLipySyncModule(const QString &filePath);
+        void callLipySyncModule(bool recorded, const QString &filePath);
 
     signals:
         void requestCurrentGraphic();
         void soundUpdated();
-        void lipsyncModuleCalled(const QString &filePath);
+        void lipsyncModuleCalled(bool recorded, const QString &filePath);
 
     private:
         void callExternalEditor(QTreeWidgetItem *item, const QString &software);

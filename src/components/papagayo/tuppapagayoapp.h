@@ -24,6 +24,7 @@
 #include <QComboBox>
 #include <QPushButton>
 #include <QStackedWidget>
+// #include <QSpinBox>
 
 #include "tglobal.h"
 #include "tuplipsyncdoc.h"
@@ -37,7 +38,7 @@ class Q_DECL_EXPORT TupPapagayoApp : public QMainWindow
 
     public:
         enum ViewType { Predefined = 0, Customized };
-        explicit TupPapagayoApp(int32 fps, const QString &soundFile = QString(), QWidget *parent = nullptr);
+        explicit TupPapagayoApp(bool extendedUI, int32 fps, const QString &soundFile = QString(), QWidget *parent = nullptr);
         ~TupPapagayoApp();
 
     public:
@@ -59,7 +60,7 @@ class Q_DECL_EXPORT TupPapagayoApp : public QMainWindow
         void onPlay();
         void onPause();
         void onStop();
-        void onFpsChange(QString text);
+        void onFpsChange(int fps);
         void onVoiceNameChanged();
         void onVoiceTextChanged();
         void onBreakdown();
@@ -85,6 +86,7 @@ class Q_DECL_EXPORT TupPapagayoApp : public QMainWindow
         bool rebuildingList;
         int defaultFps;
         bool playerStopped;
+        bool extendedUI;
 
         QAction *actionClose;
         QAction *actionOpen;
@@ -105,7 +107,8 @@ class Q_DECL_EXPORT TupPapagayoApp : public QMainWindow
         QStackedWidget *mouthFrame;
         QLineEdit *voiceName;
         QPlainTextEdit *voiceText;
-        QLineEdit *fpsEdit;
+        // QLineEdit *fpsEdit;
+        // QSpinBox *fpsEdit;
         QComboBox *mouthsCombo;
         QComboBox *languageChoice;
         QPushButton *breakdownButton;

@@ -23,7 +23,6 @@
 #include <QToolBar>
 #include <QMenu>
 #include <QMenuBar>
-#include <QStatusBar>
 #include <QMessageBox>
 #include <QBoxLayout>
 #include <QFileInfo>
@@ -36,18 +35,19 @@
 #include <QLabel>
 #include <QScreen>
 
-TupPapagayoApp::TupPapagayoApp(int32 fps, const QString &soundFile, QWidget *parent) : QMainWindow(parent)
+TupPapagayoApp::TupPapagayoApp(bool extendedUI, int32 fps, const QString &soundFile, QWidget *parent) : QMainWindow(parent)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupPapagayoApp::TupPapagayoApp()]";
     #endif
 
-    setUIStyle();
-
+    this->extendedUI = extendedUI;
     document = nullptr;
     enableAutoBreakdown = true;
     defaultFps = fps;
     playerStopped = true;
+
+    setUIStyle();
 
     setupActions();
     setupUI();
@@ -83,7 +83,8 @@ void TupPapagayoApp::setUIStyle()
         file.close();
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupPapagayoApp()] - Error: Theme file doesn't exist -> " << QString(THEME_DIR + "config/ui.qss");
+            qWarning() << "[TupPapagayoApp()] - Error: Theme file doesn't exist -> "
+                       << QString(THEME_DIR + "config/ui.qss");
         #endif
     }
 }
@@ -99,13 +100,15 @@ void TupPapagayoApp::setupActions()
     actionClose->setShortcut(Qt::Key_Escape);
     connect(actionClose, SIGNAL(triggered()), this, SLOT(close()));
 
-    actionOpen = new QAction(this);
-    QIcon openIcon;
-    openIcon.addFile(THEME_DIR + "icons/open.png", QSize(), QIcon::Normal, QIcon::Off);
-    actionOpen->setIcon(openIcon);
-    actionOpen->setText(tr("Open"));
-    actionOpen->setShortcut(QKeySequence(tr("Ctrl+O")));
-    connect(actionOpen, SIGNAL(triggered()), this, SLOT(onFileOpen()));
+    if (extendedUI) {
+        actionOpen = new QAction(this);
+        QIcon openIcon;
+        openIcon.addFile(THEME_DIR + "icons/open.png", QSize(), QIcon::Normal, QIcon::Off);
+        actionOpen->setIcon(openIcon);
+        actionOpen->setText(tr("Open"));
+        actionOpen->setShortcut(QKeySequence(tr("Ctrl+O")));
+        connect(actionOpen, SIGNAL(triggered()), this, SLOT(onFileOpen()));
+    }
 
     actionSave = new QAction(this);
     QIcon saveIcon;
@@ -207,6 +210,8 @@ void TupPapagayoApp::setupUI()
     // Mouth Component
     QVBoxLayout *verticalLayout = new QVBoxLayout();
     verticalLayout->setSpacing(6);
+
+    /*
     QHBoxLayout *fpsLayout = new QHBoxLayout();
     fpsLayout->setSpacing(6);
 
@@ -214,17 +219,21 @@ void TupPapagayoApp::setupUI()
     fpsLabel->setText(tr("FPS:"));
     fpsLayout->addWidget(fpsLabel);
 
-    fpsEdit = new QLineEdit;
+    fpsEdit = new QSpinBox();
+    fpsEdit->setMinimum(1);
+    fpsEdit->setMaximum(999);
+    fpsEdit->setValue(1);
+    connect(fpsEdit, SIGNAL(valueChanged(int)), this, SLOT(onFpsChange(int)));
+
     QSizePolicy fpsSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     fpsSizePolicy.setHorizontalStretch(1);
     fpsSizePolicy.setVerticalStretch(0);
     fpsSizePolicy.setHeightForWidth(fpsEdit->sizePolicy().hasHeightForWidth());
     fpsEdit->setSizePolicy(fpsSizePolicy);
-    fpsEdit->setValidator(new QIntValidator(1, 120));
-    connect(fpsEdit, SIGNAL(textChanged(QString)), this, SLOT(onFpsChange(QString)));
 
     fpsLayout->addWidget(fpsEdit);
     verticalLayout->addLayout(fpsLayout);
+    */
 
     mouthsCombo = new QComboBox;
     mouthsCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 1"));
@@ -264,7 +273,6 @@ void TupPapagayoApp::setupUI()
     // SQA: stylesheet pending
     // mouthView->setStyleSheet(QString::fromUtf8(""));
 
-    // connect(waveformView, SIGNAL(frameChanged(int)), mouthView, SLOT(onFrameChanged(int)));
     connect(waveformView, SIGNAL(frameChanged(int)), this, SLOT(updateFrame(int)));
     connect(mouthsCombo, SIGNAL(activated(int)), this, SLOT(updateMouthView(int)));
 
@@ -326,7 +334,6 @@ void TupPapagayoApp::setupUI()
     QSizePolicy voiceSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     voiceSizePolicy.setHorizontalStretch(0);
     voiceSizePolicy.setVerticalStretch(0);
-    // voiceSizePolicy.setHeightForWidth(voiceText->sizePolicy().hasHeightForWidth());
     voiceText->setSizePolicy(voiceSizePolicy);
     connect(voiceText, SIGNAL(textChanged()), this, SLOT(onVoiceTextChanged()));
 
@@ -357,11 +364,13 @@ void TupPapagayoApp::setupUI()
     connect(breakdownButton, SIGNAL(clicked()), this, SLOT(onBreakdown()));
 
     okButton = new QPushButton(lateralGroupBox);
+    okButton->setMinimumWidth(60);
     okButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
     okButton->setToolTip(tr("Save lip-sync record"));
     connect(okButton, SIGNAL(clicked()), this, SLOT(createLipsyncRecord()));
 
     QPushButton *cancelButton = new QPushButton(lateralGroupBox);
+    cancelButton->setMinimumWidth(60);
     cancelButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
     cancelButton->setToolTip(tr("Cancel"));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));
@@ -379,9 +388,6 @@ void TupPapagayoApp::setupUI()
     centralHorizontalLayout->addLayout(innerVerticalLayout);
 
     setCentralWidget(centralWidget);
-
-    QStatusBar *statusBar = new QStatusBar(this);
-    setStatusBar(statusBar);
 
     QScreen *screen = QGuiApplication::screens().at(0);
     setMinimumWidth(screen->geometry().width() * 0.7);
@@ -402,8 +408,9 @@ void TupPapagayoApp::setupMenus()
     QMenu *menuEdit = new QMenu(menuBar);
     menuEdit->setTitle(tr("Edit"));
 
-    menuFile->addAction(actionOpen);
-    // menuFile->addAction(actionSave);
+    if (extendedUI)
+        menuFile->addAction(actionOpen);
+
     menuFile->addAction(actionClose);
 
     menuEdit->addAction(actionUndo);
@@ -422,7 +429,9 @@ void TupPapagayoApp::setupMenus()
     mainToolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
     mainToolBar->setFloatable(false);
 
-    mainToolBar->addAction(actionOpen);
+    if (extendedUI)
+        mainToolBar->addAction(actionOpen);
+
     mainToolBar->addAction(actionSave);
     mainToolBar->addSeparator();
     mainToolBar->addAction(actionPlay);
@@ -465,6 +474,8 @@ void TupPapagayoApp::openFile(QString filePath)
     } else {
         waveformView->setDocument(document);
         mouthView->setDocument(document);
+        customView->setDocument(document);
+
         document->getAudioPlayer()->setNotifyInterval(17); // 60 fps
         connect(document->getAudioPlayer(), SIGNAL(positionChanged(qint64)), waveformView, SLOT(positionChanged(qint64)));
 
@@ -478,7 +489,7 @@ void TupPapagayoApp::openFile(QString filePath)
         setWindowTitle(tr("Lip-Sync Manager") + " - " + info.fileName());
     }
 
-    fpsEdit->setText(QString::number(document->getFps()));
+    // fpsEdit->setValue(document->getFps());
     updateActions();
 }
 
@@ -548,8 +559,9 @@ void TupPapagayoApp::dropEvent(QDropEvent *event)
         return;
 
     QFileInfo info(filePath);
-    QString extn = info.suffix().toLower();
-    if (extn == "pgo" || extn == "mp3" || extn == "wav") {
+    QString extension = info.suffix().toLower();
+    // if (extn == "pgo" || extn == "mp3" || extn == "wav") {
+    if (extension == "mp3" || extension == "wav") {
         event->acceptProposedAction();
         if (isOKToCloseDocument())
             openFile(filePath);
@@ -577,7 +589,7 @@ void TupPapagayoApp::updateActions()
     voiceText->setEnabled(flag);
 
     languageChoice->setEnabled(flag);
-    fpsEdit->setEnabled(flag);
+    // fpsEdit->setEnabled(flag);
     mouthsCombo->setEnabled(flag);
 
     breakdownButton->setEnabled(flag);
@@ -645,12 +657,11 @@ void TupPapagayoApp::onPause()
     }
 }
 
-void TupPapagayoApp::onFpsChange(QString text)
+void TupPapagayoApp::onFpsChange(int fps)
 {
     if (!document)
         return;
 
-    int32 fps = text.toInt();
     fps = PG_CLAMP(fps, 1, 120);
 
     if (fps == document->getFps())
@@ -658,7 +669,6 @@ void TupPapagayoApp::onFpsChange(QString text)
 
     defaultFps = fps;
     document->setFps(fps);
-    waveformView->setDocument(nullptr);
     waveformView->setDocument(document);
 }
 
@@ -736,12 +746,43 @@ void TupPapagayoApp::openImagesDialog()
 {
     TCONFIG->beginGroup("General");
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Choose the images directory..."), path,
+    QString dirPath = QFileDialog::getExistingDirectory(this, tr("Choose the images directory..."), path,
                                                     QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-    if (!dir.isEmpty()) {
-        mouthsPath->setText(dir);
-        saveDefaultPath(dir);
-        customView->loadImages(dir);
+    if (!dirPath.isEmpty()) {
+        QDir dir(dirPath);
+        QStringList imagesList = dir.entryList(QStringList() << "*.png" << "*.jpg" << "*.jpeg");
+        if (imagesList.size() > 0) {
+            if (imagesList.count() == 10) { // Mouths set always contains 10 figures
+                QString firstImage = imagesList.at(0);
+                int dot = firstImage.lastIndexOf(".");
+                QString extension = firstImage.mid(dot);
+                for (int32 i = 0; i < TupLipsyncDoc::phonemesListSize(); i++) {
+                    QString image = TupLipsyncDoc::getPhonemeAt(i) + extension;
+                    QString path = dirPath + "/" +  image;
+                    if (!QFile::exists(path)) {
+                        TOsd::self()->display(TOsd::Error, tr("Mouth image is missing!"));
+                        #ifdef TUP_DEBUG
+                            qDebug() << "[TupPapagayoApp::openImagesDialog()] - Fatal Error: Image file is missing -> " << path;
+                        #endif
+                        return;
+                    }
+                }
+
+                mouthsPath->setText(dirPath);
+                saveDefaultPath(dirPath);
+                customView->loadImages(dirPath);
+            } else {
+                TOsd::self()->display(TOsd::Error, tr("Mouth images are incomplete!"));
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupPapagayoApp::openImagesDialog()] - Fatal Error: Mouth images are incomplete!";
+                #endif
+            }
+        } else {
+            TOsd::self()->display(TOsd::Error, tr("Images directory is empty!"));
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupPapagayoApp::openImagesDialog()] - Fatal Error: Images directory is empty!";
+            #endif
+        }
     }
 }
 

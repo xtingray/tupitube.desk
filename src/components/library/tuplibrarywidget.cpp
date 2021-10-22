@@ -1426,14 +1426,22 @@ void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath)
     }
 }
 
-void TupLibraryWidget::callLipySyncModule(const QString &soundFile)
+void TupLibraryWidget::callLipySyncModule(bool recorded, const QString &soundFile)
 {
     #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::callLipsyncModule()] - recorded -> " << recorded;
         qDebug() << "[TupLibraryWidget::callLipsyncModule()] - filePath -> " << soundFile;
     #endif
 
-    importSoundFileFromFolder(CACHE_DIR + soundFile + ".mp3");
-    emit lipsyncModuleCalled(soundFile);
+    QString path = "";
+    if (recorded) {
+        path = CACHE_DIR + soundFile + ".mp3";
+        importSoundFileFromFolder(path);
+        emit lipsyncModuleCalled(recorded, soundFile);
+    } else {
+        importSoundFileFromFolder(soundFile);
+        emit lipsyncModuleCalled(recorded, soundFile);
+    }
 }
 
 void TupLibraryWidget::sceneResponse(TupSceneResponse *response)

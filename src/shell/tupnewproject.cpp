@@ -333,14 +333,14 @@ void TupNewProject::setBgColor()
     color = QColorDialog::getColor(color, this);
 
     // SQA: what is this?
-    QString labelColorStr = "black";
+    // QString labelColorStr = "black";
 
      if (color.isValid()) {
          colorButton->setText(color.name());
          colorButton->setStyleSheet("QPushButton { background-color: " + color.name()
-                                       + "; color: " + labelColor() + "; }");
+                                     + "; color: " + labelColor() + "; }");
      } else {
-         color = QColor("#fff");
+         color = QColor(Qt::white);
          colorButton->setText(tr("White"));
          colorButton->setStyleSheet("QPushButton { background-color: #fff }; color: black;");
      }

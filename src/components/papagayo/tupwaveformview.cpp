@@ -208,9 +208,11 @@ void TupWaveFormView::onAutoZoom()
 
 void TupWaveFormView::positionChanged(qint64 milliseconds)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupWaveFormView::positionChanged()] - milliseconds -> " << milliseconds;
     #endif
+    */
 
     if (document) {
         real f = ((real)milliseconds / 1000.0f) * document->getFps();

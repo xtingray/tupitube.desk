@@ -171,6 +171,11 @@ void TupLibraryObject::updateFolder(const QString &projectPath, const QString &n
             root += "/images/";
         }
         break;
+        case TupLibraryObject::Sound:
+        {
+            root += "/audio/";
+        }
+        break;
         case TupLibraryObject::Svg:
         {
             root += "/svg/";
