@@ -2741,7 +2741,8 @@ void TupDocumentView::launchLipsyncModule(bool recorded, const QString &soundFil
     } else {
         QFileInfo info(soundFile);
         QString filename = info.baseName().toLower();
-        QString filePath = project->getDataDir() + "/audio/" + filename + ".mp3";
+        QString extension = info.suffix();
+        QString filePath = project->getDataDir() + "/audio/" + filename + "." + extension;
 
         if (QFile::exists(filePath)) {
             TupPapagayoApp *papagayoApp = new TupPapagayoApp(false, project->getFPS(), filePath, this);

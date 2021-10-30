@@ -16,61 +16,37 @@
 
 #ifndef TUPBREAKDOWNDIALOG_H
 #define TUPBREAKDOWNDIALOG_H
-
+ 
 #include "tglobal.h"
 #include "tuplipsyncdoc.h"
 
 #include <QDialog>
-#include <QBoxLayout>
-#include <QLabel>
+#include <QStackedWidget>
 #include <QLineEdit>
-#include <QDialogButtonBox>
-#include <QPushButton>
 
-class Q_DECL_EXPORT TupBreakdownDialog : public QDialog
+class TUPITUBE_PLUGIN TupBreakdownDialog: public QDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 
     public:
-        explicit TupBreakdownDialog(LipsyncWord *word, QWidget *parent = nullptr);
+        TupBreakdownDialog(LipsyncWord *word, QWidget *parent = nullptr);
         ~TupBreakdownDialog();
 
         QString phonemeString();
 
     private slots:
-        void on_aiBut();
-        void on_oBut();
-        void on_eBut();
-        void on_uBut();
-        void on_lBut();
-        void on_wqBut();
-        void on_mbpBut();
-        void on_fvBut();
-        void on_etcBut();
-        void on_restBut();
+        void addPhoneme(const QString &phoneme);
+        void clearPhonemes();
 
     private:
-        void setupUI();
-        void addPhoneme(QString phoneme);
+        QWidget * createMouthsCollection(int index);
+        QWidget * createMouthPanel(int index, int row, int column);
 
-        QDialog *breakdownDialog;
-        QVBoxLayout *verticalLayout;
-        QLabel *wordLabel;
-        QGridLayout *gridLayout;
-        QPushButton *aiBut;
-        QPushButton *oBut;
-        QPushButton *eBut;
-        QPushButton *uBut;
-        QPushButton *lBut;
-        QPushButton *wqBut;
-        QPushButton *mbpBut;
-        QPushButton *fvBut;
-        QPushButton *etcBut;
-        QPushButton *restBut;
         QLineEdit *breakdownEdit;
-        QDialogButtonBox *buttonBox;
-
-        QString title;
+        QStackedWidget *stackedWidget;
+        QStringList mouthLabels;
+        QStringList folder;
+        int currentCollectionIndex;
 };
 
-#endif // TUPBREAKDOWNDIALOG_H
+#endif

@@ -32,6 +32,7 @@ HEADERS += taction.h \
            tanimwidget.h \
            tapplication.h \
            tbackupdialog.h \
+           tbutton.h \
            tbuttonbar.h \
            tcellview.h \
            tcirclebutton.h \
@@ -53,6 +54,7 @@ HEADERS += taction.h \
            ticon.h \
            # tideality.h \
            timagebutton.h \
+           timagelabel.h \
            tinputfield.h \
            titemselector.h \
            tlabel.h \
@@ -101,6 +103,7 @@ SOURCES += taction.cpp \
            tanimwidget.cpp \
            tapplication.cpp \
            tbackupdialog.cpp \
+           tbutton.cpp \
            tbuttonbar.cpp \
            tcellview.cpp \
            tcirclebutton.cpp \
@@ -122,6 +125,7 @@ SOURCES += taction.cpp \
            ticon.cpp \ 
            tlabel.cpp \
            timagebutton.cpp \
+           timagelabel.cpp \
            tinputfield.cpp \
            titemselector.cpp \
            tmainwindow.cpp \

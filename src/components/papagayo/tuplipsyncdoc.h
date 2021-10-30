@@ -62,17 +62,18 @@ class LipsyncWord
         void setText(const QString string);
         QString getText() const;
 
-        void setStartFrame(int frameIndex);
+        void setStartFrame(int32 frameIndex);
         int getStartFrame() const;
-        void setEndFrame(int frameIndex);
+        void setEndFrame(int32 frameIndex);
         int getEndFrame() const;
 
         QList<LipsyncPhoneme *>	getPhonemes();
         void addPhoneme(LipsyncPhoneme *phoneme);
         int phonemesSize();
-        LipsyncPhoneme * getPhonemeAt(int index);
+        LipsyncPhoneme * getPhonemeAt(int32 index);
         LipsyncPhoneme * getLastPhoneme();
         void removeFirstPhoneme();
+        int getFrameFromPhonemeAt(int32 index);
 
         int32 getTop();
         int32 getBottom();
@@ -115,6 +116,8 @@ class LipsyncPhrase
         int wordsSize();
         QList<LipsyncWord *> getWords();
         LipsyncWord* getLastWord();
+        int getStartFrameFromWordAt(int index);
+        int getEndFrameFromWordAt(int index);
 
     private:
         QString text;
@@ -143,7 +146,10 @@ class LipsyncVoice
         void setText(const QString &text);
         QString getText() const;
         QList<LipsyncPhrase *> getPhrases();
+        int getPhrasesTotal();
         LipsyncPhrase* getPhraseAt(int index);
+        int getPhraseStartFrame(int index);
+        int getPhraseEndFrame(int index);
         bool textIsEmpty();
 
     private:
@@ -154,7 +160,7 @@ class LipsyncVoice
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Q_DECL_EXPORT TupLipsyncDoc : public QObject
+class TUPITUBE_EXPORT TupLipsyncDoc : public QObject
 {
 	Q_OBJECT
 
@@ -193,6 +199,11 @@ class Q_DECL_EXPORT TupLipsyncDoc : public QObject
         static int phonemesListSize();
         static QString getPhonemeAt(int index);
         QString getPhonemeAtFrame(int frame) const;
+        LipsyncPhrase* getPhraseAt(int index);
+        int getPhrasesTotal();
+        int getStartFrameFromPhraseAt(int index);
+        int getEndFrameFromPhraseAt(int index);
+        void repositionPhrase(LipsyncPhrase *phrase);
 
         void playAudio();
         void pauseAudio();
@@ -201,7 +212,8 @@ class Q_DECL_EXPORT TupLipsyncDoc : public QObject
     private:
         static void loadDictionary(QFile *file);
 
-        int32 fps, audioDuration;
+        int32 fps;
+        int32 audioDuration;
         QString audioPath;
         QMediaPlayer *audioPlayer;
         TupAudioExtractor *audioExtractor;

@@ -32,7 +32,7 @@
 #include "tupmouthview.h"
 #include "tupcustomizedmouthview.h"
 
-class Q_DECL_EXPORT TupPapagayoApp : public QMainWindow
+class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
 {
 	Q_OBJECT
 
@@ -63,7 +63,7 @@ class Q_DECL_EXPORT TupPapagayoApp : public QMainWindow
         void onFpsChange(int fps);
         void onVoiceNameChanged();
         void onVoiceTextChanged();
-        void onBreakdown();
+        void runBreakdownProcess();
         void updateMouthView(int index);
         void openImagesDialog();
         void updateFrame(int frame);
@@ -99,10 +99,11 @@ class Q_DECL_EXPORT TupPapagayoApp : public QMainWindow
         QAction *actionZoomIn;
         QAction *actionZoomOut;
         QAction *actionAutoZoom;
-        QAction *actionUndo;
-        QAction *actionCut;
-        QAction *actionCopy;
-        QAction *actionPaste;
+
+        // QAction *actionUndo;
+        // QAction *actionCut;
+        // QAction *actionCopy;
+        // QAction *actionPaste;
 
         QStackedWidget *mouthFrame;
         QLineEdit *voiceName;

@@ -30,7 +30,7 @@
 // NOTE: If a path is already a .aiff or .wav file it is just read in directly by libsndfile.
 //
 
-class Q_DECL_EXPORT TupAudioExtractor
+class TUPITUBE_EXPORT TupAudioExtractor
 {
     public:
         TupAudioExtractor(const char *path, bool reverse = false);

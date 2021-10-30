@@ -24,7 +24,7 @@
 #include <QScrollArea>
 #include <QMouseEvent>
 
-class Q_DECL_EXPORT TupWaveFormView : public QWidget
+class TUPITUBE_EXPORT TupWaveFormView : public QWidget
 {
 	Q_OBJECT
 
@@ -37,14 +37,14 @@ class Q_DECL_EXPORT TupWaveFormView : public QWidget
         void setDocument(TupLipsyncDoc *doc);
 
     signals:
-        void frameChanged(int);
+        void frameChanged(int index);
         void audioStopped();
 
     public slots:
-        void onZoomIn();
-        void onZoomOut();
-        void onAutoZoom();
-        void positionChanged(qint64 milliseconds);
+        void zoomIn();
+        void zoomOut();
+        void autoZoom();
+        void positionChanged(qint64 millisecs);
 
     protected:
         void mousePressEvent(QMouseEvent *event);
@@ -58,7 +58,8 @@ class Q_DECL_EXPORT TupWaveFormView : public QWidget
         TupLipsyncDoc *document;
         int32 numSamples;
         real *amp;
-        bool dragging, doubleClick;
+        bool dragging;
+        bool doubleClick;
         int32 draggingEnd;
         int32 currentFrame;
         int32 oldFrame;
@@ -73,8 +74,10 @@ class Q_DECL_EXPORT TupWaveFormView : public QWidget
         int32 phonemeTop;
         bool onlySilent;
 
-        LipsyncPhrase *selectedPhrase, *parentPhrase;
-        LipsyncWord *selectedWord, *parentWord;
+        LipsyncPhrase *selectedPhrase;
+        LipsyncPhrase *parentPhrase;
+        LipsyncWord *selectedWord;
+        LipsyncWord *parentWord;
         LipsyncPhoneme *selectedPhoneme;
 };
 

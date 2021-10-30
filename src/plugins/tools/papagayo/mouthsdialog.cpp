@@ -37,7 +37,7 @@
 #include <QComboBox>
 #include <QVBoxLayout>
 #include <QLabel>
-#include <QDialogButtonBox>
+#include <QPushButton>
 
 MouthsDialog::MouthsDialog(QWidget *parent) : QDialog(parent)
 {
@@ -87,10 +87,13 @@ MouthsDialog::MouthsDialog(QWidget *parent) : QDialog(parent)
     layout->addLayout(comboLayout, Qt::AlignCenter);
     layout->addWidget(stackedWidget, Qt::AlignCenter);
 
-    QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok, Qt::Horizontal);
-    connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
+    QPushButton *cancelButton = new QPushButton(this);
+    cancelButton->setMinimumWidth(60);
+    cancelButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
+    cancelButton->setToolTip(tr("Close"));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));
 
-    layout->addWidget(buttons, 0, Qt::AlignRight);
+    layout->addWidget(cancelButton, 0, Qt::AlignRight);
 }
 
 MouthsDialog::~MouthsDialog()

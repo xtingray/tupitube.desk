@@ -138,7 +138,7 @@ QString LipsyncWord::getText() const
     return text;
 }
 
-void LipsyncWord::setStartFrame(int frameIndex)
+void LipsyncWord::setStartFrame(int32 frameIndex)
 {
     startFrame = frameIndex;
 }
@@ -148,7 +148,7 @@ int LipsyncWord::getStartFrame() const
     return startFrame;
 }
 
-void LipsyncWord::setEndFrame(int frameIndex)
+void LipsyncWord::setEndFrame(int32 frameIndex)
 {
     endFrame = frameIndex;
 }
@@ -173,9 +173,12 @@ int LipsyncWord::phonemesSize()
     return phonemes.size();
 }
 
-LipsyncPhoneme* LipsyncWord::getPhonemeAt(int index)
+LipsyncPhoneme* LipsyncWord::getPhonemeAt(int32 index)
 {
-    return phonemes.at(index);
+    if (phonemes.size() > index)
+        return phonemes.at(index);
+
+    return nullptr;
 }
 
 LipsyncPhoneme * LipsyncWord::getLastPhoneme()
@@ -206,6 +209,15 @@ void LipsyncWord::setTop(int32 index)
 void LipsyncWord::setBottom(int32 index)
 {
     bottom = index;
+}
+
+int LipsyncWord::getFrameFromPhonemeAt(int32 index)
+{
+    LipsyncPhoneme *phoneme = getPhonemeAt(index);
+    if (phoneme)
+        return phoneme->getFrame();
+
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -344,7 +356,10 @@ void LipsyncPhrase::setBottom(int32 index)
 
 LipsyncWord * LipsyncPhrase::getWordAt(int index)
 {
-    return words.at(index);
+    if (words.size() > index)
+        return words.at(index);
+
+    return nullptr;
 }
 
 void LipsyncPhrase::addWord(LipsyncWord* word)
@@ -365,6 +380,24 @@ QList<LipsyncWord *> LipsyncPhrase::getWords()
 LipsyncWord* LipsyncPhrase::getLastWord()
 {
     return words.last();
+}
+
+int LipsyncPhrase::getStartFrameFromWordAt(int index)
+{
+    LipsyncWord *word = getWordAt(index);
+    if (word)
+        return word->getStartFrame();
+
+    return 0;
+}
+
+int LipsyncPhrase::getEndFrameFromWordAt(int index)
+{
+    LipsyncWord *word = getWordAt(index);
+    if (word)
+        return word->getEndFrame();
+
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -407,7 +440,33 @@ QList<LipsyncPhrase *> LipsyncVoice::getPhrases()
 
 LipsyncPhrase* LipsyncVoice::getPhraseAt(int index)
 {
-    return phrases.at(index);
+    if (phrases.count() > index)
+        return phrases.at(index);
+
+    return nullptr;
+}
+
+int LipsyncVoice::getPhrasesTotal()
+{
+    return phrases.size();
+}
+
+int LipsyncVoice::getPhraseStartFrame(int index)
+{
+    LipsyncPhrase *phrase = getPhraseAt(index);
+    if (phrase)
+        return phrase->getStartFrame();
+
+    return 0;
+}
+
+int LipsyncVoice::getPhraseEndFrame(int index)
+{
+    LipsyncPhrase *phrase = getPhraseAt(index);
+    if (phrase)
+        return phrase->getEndFrame();
+
+    return 0;
 }
 
 void LipsyncVoice::open(QTextStream &in)
@@ -1129,4 +1188,42 @@ QString TupLipsyncDoc::getPhonemeAtFrame(int frame) const
         return currentVoice->getPhonemeAtFrame(frame);
 
     return "";
+}
+
+LipsyncPhrase* TupLipsyncDoc::getPhraseAt(int index)
+{
+    if (currentVoice)
+        return currentVoice->getPhraseAt(index);
+
+    return nullptr;
+}
+
+int TupLipsyncDoc::getPhrasesTotal()
+{
+    if (currentVoice)
+        return currentVoice->getPhrasesTotal();
+
+    return 0;
+}
+
+int TupLipsyncDoc::getStartFrameFromPhraseAt(int index)
+{
+    if (currentVoice)
+        return currentVoice->getPhraseStartFrame(index);
+
+    return 0;
+}
+
+int TupLipsyncDoc::getEndFrameFromPhraseAt(int index)
+{
+    if (currentVoice)
+        return currentVoice->getPhraseEndFrame(index);
+
+    return 0;
+}
+
+void TupLipsyncDoc::repositionPhrase(LipsyncPhrase *phrase)
+{
+    if (currentVoice)
+        currentVoice->repositionPhrase(phrase, audioDuration);
 }

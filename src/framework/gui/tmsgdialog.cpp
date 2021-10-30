@@ -100,13 +100,14 @@ void TMsgDialog::setupGUI()
 
     QPushButton *closeButton = new QPushButton(this);
     closeButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
+    closeButton->setToolTip(tr("Close"));
     closeButton->setMinimumWidth(60);
 
     layout->addWidget(closeButton);
     connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
-    buttonLayout->addWidget(closeButton, 1, Qt::AlignHCenter);
+    buttonLayout->addWidget(closeButton, 1, Qt::AlignRight);
 
     layout->addWidget(textBrowser);
     layout->addWidget(new TSeparator);

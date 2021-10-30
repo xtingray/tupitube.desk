@@ -156,6 +156,7 @@ void TupPapagayoApp::setupActions()
     actionAutoZoom->setText(tr("Auto Zoom"));
     actionAutoZoom->setToolTip(tr("Auto Zoom"));
 
+    /*
     actionUndo = new QAction(this);
     actionUndo->setText(tr("Undo"));
     actionUndo->setShortcut(QKeySequence("Ctrl+Z"));
@@ -170,7 +171,8 @@ void TupPapagayoApp::setupActions()
 
     actionPaste = new QAction(this);
     actionPaste->setText(tr("Paste"));
-    actionPaste->setShortcut(tr("Ctrl+V"));   
+    actionPaste->setShortcut(tr("Ctrl+V"));
+    */
 }
 
 void TupPapagayoApp::setupUI()
@@ -203,37 +205,13 @@ void TupPapagayoApp::setupUI()
     waveformView->setScrollArea(scrollArea);
 
     connect(waveformView, SIGNAL(audioStopped()), this, SLOT(updatePauseButton()));
-    connect(actionZoomIn, SIGNAL(triggered()), waveformView, SLOT(onZoomIn()));
-    connect(actionZoomOut, SIGNAL(triggered()), waveformView, SLOT(onZoomOut()));
-    connect(actionAutoZoom, SIGNAL(triggered()), waveformView, SLOT(onAutoZoom()));
+    connect(actionZoomIn, SIGNAL(triggered()), waveformView, SLOT(zoomIn()));
+    connect(actionZoomOut, SIGNAL(triggered()), waveformView, SLOT(zoomOut()));
+    connect(actionAutoZoom, SIGNAL(triggered()), waveformView, SLOT(autoZoom()));
 
     // Mouth Component
     QVBoxLayout *verticalLayout = new QVBoxLayout();
     verticalLayout->setSpacing(6);
-
-    /*
-    QHBoxLayout *fpsLayout = new QHBoxLayout();
-    fpsLayout->setSpacing(6);
-
-    QLabel *fpsLabel = new QLabel;
-    fpsLabel->setText(tr("FPS:"));
-    fpsLayout->addWidget(fpsLabel);
-
-    fpsEdit = new QSpinBox();
-    fpsEdit->setMinimum(1);
-    fpsEdit->setMaximum(999);
-    fpsEdit->setValue(1);
-    connect(fpsEdit, SIGNAL(valueChanged(int)), this, SLOT(onFpsChange(int)));
-
-    QSizePolicy fpsSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-    fpsSizePolicy.setHorizontalStretch(1);
-    fpsSizePolicy.setVerticalStretch(0);
-    fpsSizePolicy.setHeightForWidth(fpsEdit->sizePolicy().hasHeightForWidth());
-    fpsEdit->setSizePolicy(fpsSizePolicy);
-
-    fpsLayout->addWidget(fpsEdit);
-    verticalLayout->addLayout(fpsLayout);
-    */
 
     mouthsCombo = new QComboBox;
     mouthsCombo->addItem(QIcon(THEME_DIR + "icons/frames_mode.png"), tr("Mouth Sample Pack No 1"));
@@ -259,7 +237,8 @@ void TupPapagayoApp::setupUI()
     QVBoxLayout *browserMainLayout = new QVBoxLayout(browserWidget);
 
     QHBoxLayout *browserControlsLayout = new QHBoxLayout;
-    QPushButton *mouthsButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/bitmap_array.png")), " " + tr("Load &Images"));
+    QPushButton *mouthsButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/bitmap_array.png")),
+                                                " " + tr("Load &Images"));
     connect(mouthsButton, SIGNAL(clicked()), this, SLOT(openImagesDialog()));
     mouthsPath = new QLineEdit("");
     mouthsPath->setReadOnly(true);
@@ -361,7 +340,7 @@ void TupPapagayoApp::setupUI()
 
     breakdownButton = new QPushButton(lateralGroupBox);
     breakdownButton->setText(tr("Breakdown"));
-    connect(breakdownButton, SIGNAL(clicked()), this, SLOT(onBreakdown()));
+    connect(breakdownButton, SIGNAL(clicked()), this, SLOT(runBreakdownProcess()));
 
     okButton = new QPushButton(lateralGroupBox);
     okButton->setMinimumWidth(60);
@@ -405,21 +384,20 @@ void TupPapagayoApp::setupMenus()
     QMenu *menuFile = new QMenu(menuBar);
     menuFile->setTitle(tr("File"));
 
-    QMenu *menuEdit = new QMenu(menuBar);
-    menuEdit->setTitle(tr("Edit"));
-
     if (extendedUI)
         menuFile->addAction(actionOpen);
 
     menuFile->addAction(actionClose);
 
+    /*
     menuEdit->addAction(actionUndo);
     menuEdit->addAction(actionCut);
     menuEdit->addAction(actionCopy);
     menuEdit->addAction(actionPaste);
+    */
 
     menuBar->addAction(menuFile->menuAction());
-    menuBar->addAction(menuEdit->menuAction());
+    // menuBar->addAction(menuEdit->menuAction());
 
     setMenuBar(menuBar);
 
@@ -543,7 +521,8 @@ void TupPapagayoApp::dragEnterEvent(QDragEnterEvent *event)
 
     QFileInfo info(filePath);
     QString extension = info.suffix().toLower();
-    if (extension == "pgo" || extension == "mp3" || extension == "wav")
+    // if (extension == "pgo" || extension == "mp3" || extension == "wav")
+    if (extension == "mp3" || extension == "wav")
         event->acceptProposedAction();
 }
 
@@ -605,7 +584,8 @@ void TupPapagayoApp::onFileOpen()
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
     QString filePath = QFileDialog::getOpenFileName(this,
                                                     tr("Open"), path,
-                                                    tr("Papgayo and Audio files (*.pgo *.mp3 *.wav)"));
+                                                    // tr("Papgayo and Audio files (*.pgo *.mp3 *.wav)"));
+                                                    tr("Audio files (*.mp3 *.wav)"));
     if (filePath.isEmpty())
         return;
 
@@ -687,15 +667,19 @@ void TupPapagayoApp::onVoiceTextChanged()
 
     document->getCurrentVoice()->setText(voiceText->toPlainText());
     if (enableAutoBreakdown)
-        onBreakdown(); // this is cool, but it could slow things down by doing constant breakdowns
+        runBreakdownProcess(); // this is cool, but it could slow things down by doing constant breakdowns
     updateActions();
 }
 
-void TupPapagayoApp::onBreakdown()
+void TupPapagayoApp::runBreakdownProcess()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::runBreakdownProcess()]";
+    #endif
+
     if (!document || !document->getCurrentVoice()) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::onBreakdown()] - Error: No lip-sync document loaded!";
+            qDebug() << "[TupPapagayoApp::onBreakdownProcess()] - Error: No lip-sync document loaded!";
         #endif
         return;
     }

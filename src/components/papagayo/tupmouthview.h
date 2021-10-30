@@ -22,7 +22,7 @@
 #include "tglobal.h"
 #include "tuplipsyncdoc.h"
 
-class Q_DECL_EXPORT TupMouthView : public QWidget
+class TUPITUBE_EXPORT TupMouthView : public QWidget
 {
 	Q_OBJECT
 

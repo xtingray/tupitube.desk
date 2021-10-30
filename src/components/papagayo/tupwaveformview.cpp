@@ -155,7 +155,7 @@ void TupWaveFormView::setDocument(TupLipsyncDoc *doc)
     }
 }
 
-void TupWaveFormView::onZoomIn()
+void TupWaveFormView::zoomIn()
 {
     if (document && samplesPerFrame < 16) {
         if (sampleWidth < 2) {
@@ -173,7 +173,7 @@ void TupWaveFormView::onZoomIn()
 	}
 }
 
-void TupWaveFormView::onZoomOut()
+void TupWaveFormView::zoomOut()
 {
     if (document) {
         if (samplesPerFrame > 1) {
@@ -195,7 +195,7 @@ void TupWaveFormView::onZoomOut()
 	}
 }
 
-void TupWaveFormView::onAutoZoom()
+void TupWaveFormView::autoZoom()
 {
     if (document) {
         sampleWidth = DEFAULT_SAMPLE_WIDTH;
@@ -277,8 +277,10 @@ void TupWaveFormView::mousePressEvent(QMouseEvent *event)
     oldFrame = frame;
     dragging = false;
     draggingEnd = -1;
-    selectedPhrase = parentPhrase = nullptr;
-    selectedWord = parentWord = nullptr;
+    selectedPhrase = nullptr;
+    parentPhrase = nullptr;
+    selectedWord = nullptr;
+    parentWord = nullptr;
     selectedPhoneme = nullptr;
 
     if (document && document->getAudioPlayer()) {
@@ -287,31 +289,47 @@ void TupWaveFormView::mousePressEvent(QMouseEvent *event)
         if (document->getCurrentVoice()) {
             // test to see if the user clicked on a phrase, word, or phoneme
 			// first, find the phrase that was clicked on
-            for (int32 i = 0; i < document->getCurrentVoice()->getPhrases().size(); i++) {
-                if (frame >= document->getCurrentVoice()->getPhraseAt(i)->getStartFrame()
-                    && frame <= document->getCurrentVoice()->getPhraseAt(i)->getEndFrame()) {
-                    selectedPhrase = document->getCurrentVoice()->getPhraseAt(i);
+            // for (int32 i = 0; i < document->getCurrentVoice()->getPhrases().size(); i++) {
+            for (int32 i = 0; i < document->getPhrasesTotal(); i++) {
+                // if (frame >= document->getCurrentVoice()->getPhraseAt(i)->getStartFrame()
+                //     && frame <= document->getCurrentVoice()->getPhraseAt(i)->getEndFrame()) {
+                if (frame >= document->getStartFrameFromPhraseAt(i)
+                    && frame <= document->getEndFrameFromPhraseAt(i)) {
+                    // selectedPhrase = document->getCurrentVoice()->getPhraseAt(i);
+                    selectedPhrase = document->getPhraseAt(i);
 					break;
 				}
 			}
+
 			// next, find the word that was clicked on
             if (selectedPhrase) {
                 for (int32 i = 0; i < selectedPhrase->wordsSize(); i++) {
-                    if (frame >= selectedPhrase->getWordAt(i)->getStartFrame() && frame <= selectedPhrase->getWordAt(i)->getEndFrame()) {
+                    // if (frame >= selectedPhrase->getWordAt(i)->getStartFrame() && frame <= selectedPhrase->getWordAt(i)->getEndFrame()) {
+                    if (frame >= selectedPhrase->getStartFrameFromWordAt(i) && frame <= selectedPhrase->getEndFrameFromWordAt(i)) {
                         selectedWord = selectedPhrase->getWordAt(i);
 						break;
 					}
 				}
-			}
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupWaveFormView::mousePressEvent()] - Warning: NO phrase found!";
+                #endif
+            }
+
 			// finally, find the phoneme that was clicked on
             if (selectedWord) {
                 for (int32 i = 0; i < selectedWord->phonemesSize(); i++) {
-                    if (frame == selectedWord->getPhonemeAt(i)->getFrame()) {
+                    // if (frame == selectedWord->getPhonemeAt(i)->getFrame()) {
+                    if (frame == selectedWord->getFrameFromPhonemeAt(i)) {
                         selectedPhoneme = selectedWord->getPhonemeAt(i);
 						break;
 					}
 				}
-			}
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupWaveFormView::mousePressEvent()] - Warning: NO word found!";
+                #endif
+            }
 
             parentPhrase = selectedPhrase;
             parentWord = selectedWord;
@@ -341,7 +359,7 @@ void TupWaveFormView::mousePressEvent(QMouseEvent *event)
 				}
 
                 if ((selectedWord->getEndFrame() - selectedWord->getStartFrame() > 1) &&
-                        (PG_FABS((selectedWord->getEndFrame() + selectedWord->getStartFrame()) / 2 - frame) < frameDist)) {
+                    (PG_FABS((selectedWord->getEndFrame() + selectedWord->getStartFrame()) / 2 - frame) < frameDist)) {
                     draggingEnd = 2; // middle of phrase
 				}
             } else if (selectedPhoneme && mouseY >= selectedPhoneme->getTop() && mouseY <= selectedPhoneme->getBottom()) {
@@ -422,7 +440,8 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
                 if (selectedPhrase->getStartFrame() > selectedPhrase->getEndFrame() - 1)
                     selectedPhrase->setStartFrame(selectedPhrase->getEndFrame() - 1);
 
-                document->getCurrentVoice()->repositionPhrase(selectedPhrase, document->getDuration());
+                // document->getCurrentVoice()->repositionPhrase(selectedPhrase, document->getDuration());
+                document->repositionPhrase(selectedPhrase);
 				needUpdate = true;
 			}
         } else if (draggingEnd == 1) {
@@ -432,8 +451,9 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
                 if (selectedPhrase->getEndFrame() < selectedPhrase->getStartFrame() + 1)
                     selectedPhrase->setEndFrame(selectedPhrase->getStartFrame() + 1);
 
-                document->getCurrentVoice()->repositionPhrase(selectedPhrase, document->getDuration());
-				needUpdate = true;
+                // document->getCurrentVoice()->repositionPhrase(selectedPhrase, document->getDuration());
+                document->repositionPhrase(selectedPhrase);
+                needUpdate = true;
 			}
         } else if (draggingEnd == 2) {
             if (frame != oldFrame) {
@@ -443,8 +463,9 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
                 if (selectedPhrase->getEndFrame() < selectedPhrase->getStartFrame() + 1)
                     selectedPhrase->setEndFrame(selectedPhrase->getStartFrame() + 1);
 
-                document->getCurrentVoice()->repositionPhrase(selectedPhrase, document->getDuration());
-				needUpdate = true;
+                // document->getCurrentVoice()->repositionPhrase(selectedPhrase, document->getDuration());
+                document->repositionPhrase(selectedPhrase);
+                needUpdate = true;
 			}
 		}
     } else if (selectedWord) {
@@ -510,19 +531,24 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
 
 void TupWaveFormView::mouseReleaseEvent(QMouseEvent *event)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupWaveFormView::mouseReleaseEvent()]";
+    #endif
+
     if (document && document->getAudioPlayer() && audioStopFrame < 0)
-        document->getAudioPlayer()->stop();
+        document->stopAudio();
+        // document->getAudioPlayer()->stop();
 
     if (event->button() == Qt::RightButton && selectedWord) {
 		// manually enter the pronunciation for this word
-        TupBreakdownDialog *dlog = new TupBreakdownDialog(selectedWord, this);
-        if (dlog->exec() == QDialog::Accepted) {
+        TupBreakdownDialog *breakdownDialog = new TupBreakdownDialog(selectedWord, this);
+        if (breakdownDialog->exec() == QDialog::Accepted) {
             document->setDirtyFlag(true);
-            while (!selectedWord->getPhonemes().isEmpty())
+            // while (!selectedWord->getPhonemes().isEmpty())
+            while (selectedWord->phonemesSize() > 0)
                 selectedWord->removeFirstPhoneme();
-                // delete selectedWord->getPhonemes().takeFirst();
 
-            QStringList phList = dlog->phonemeString().split(' ', Qt::SkipEmptyParts);
+            QStringList phList = breakdownDialog->phonemeString().split(' ', Qt::SkipEmptyParts);
             for (int i = 0; i < phList.size(); i++) {
 				QString phStr = phList.at(i);
 				if (phStr.isEmpty())
@@ -538,8 +564,12 @@ void TupWaveFormView::mouseReleaseEvent(QMouseEvent *event)
 			update();
 		}
 
-		delete dlog;
-	}
+        delete breakdownDialog;
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupWaveFormView::mouseReleaseEvent()] - Warning: NO word selected!";
+        #endif
+    }
 
     scrubFrame = -1;
     currentFrame = -1;
@@ -555,6 +585,12 @@ void TupWaveFormView::mouseReleaseEvent(QMouseEvent *event)
 
 void TupWaveFormView::paintEvent(QPaintEvent *event)
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupWaveFormView::paintEvent()]";
+    #endif
+    */
+
     Q_UNUSED(event)
 
     QPainter dc(this);
@@ -571,7 +607,9 @@ void TupWaveFormView::paintEvent(QPaintEvent *event)
 
     int32 topBorder = 16; // should be the height of frame label text
     int32 halfClientHeight;
-    int32 sampleHeight, halfSampleHeight, textHeight;
+    int32 sampleHeight;
+    int32 halfSampleHeight;
+    int32 textHeight;
     int32 fps = document->getFps();
     int32 x = 0;
     int32 frameX;
@@ -649,10 +687,12 @@ void TupWaveFormView::paintEvent(QPaintEvent *event)
 
     if (document->getCurrentVoice()) {
 		topBorder += 4;
-        for (int32 p = 0; p < document->getCurrentVoice()->getPhrases().size(); p++) {
-            LipsyncPhrase *phrase = document->getCurrentVoice()->getPhraseAt(p);
+        // for (int32 p = 0; p < document->getCurrentVoice()->getPhrases().size(); p++) {
+        for (int32 p = 0; p < document->getPhrasesTotal(); p++) {
+            // LipsyncPhrase *phrase = document->getCurrentVoice()->getPhraseAt(p);
+            LipsyncPhrase *phrase = document->getPhraseAt(p);
             rect = QRect(phrase->getStartFrame() * frameWidth, topBorder,
-                         (phrase->getEndFrame() - phrase->getStartFrame() + 1) * frameWidth, textHeight);
+                        (phrase->getEndFrame() - phrase->getStartFrame() + 1) * frameWidth, textHeight);
             phrase->setTop(rect.top());
             phrase->setBottom(rect.bottom());
             dc.fillRect(rect, phraseFillCol);
