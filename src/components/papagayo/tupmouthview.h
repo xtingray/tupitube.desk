@@ -32,6 +32,7 @@ class TUPITUBE_EXPORT TupMouthView : public QWidget
 
         void setDocument(TupLipsyncDoc *doc);
         void setMouth(int32 id);
+        QString getMouthsPath() const;
 
     public slots:
         void onMouthChanged(int id);
@@ -45,6 +46,8 @@ class TUPITUBE_EXPORT TupMouthView : public QWidget
         int32 mouthID;
         int32 frame;
         QHash<QString, QImage *> mouths[5];
+        QStringList mouthsPath;
+        QString currentPath;
 };
 
 #endif // TUPMOUTHVIEW_H

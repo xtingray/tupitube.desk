@@ -32,6 +32,8 @@ class TUPITUBE_EXPORT TupCustomizedMouthView : public QWidget
 
         void setDocument(TupLipsyncDoc *doc);
         void loadImages(const QString &folderPath);
+        bool imagesAresLoaded();
+        QString getMouthsPath() const;
 
     public slots:
         void onFrameChanged(int frame);
@@ -44,6 +46,7 @@ class TUPITUBE_EXPORT TupCustomizedMouthView : public QWidget
         int32 frame;
         QHash<QString, QImage *> mouths;
         bool assetsLoaded;
+        QString imagesPath;
 };
 
 #endif // TUPCUSTOMIZEDMOUTHVIEW_H

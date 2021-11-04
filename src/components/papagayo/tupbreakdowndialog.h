@@ -29,7 +29,7 @@ class TUPITUBE_PLUGIN TupBreakdownDialog: public QDialog
     Q_OBJECT
 
     public:
-        TupBreakdownDialog(LipsyncWord *word, QWidget *parent = nullptr);
+        TupBreakdownDialog(LipsyncWord *word, const QString &mouthsPath, QWidget *parent = nullptr);
         ~TupBreakdownDialog();
 
         QString phonemeString();
@@ -39,14 +39,15 @@ class TUPITUBE_PLUGIN TupBreakdownDialog: public QDialog
         void clearPhonemes();
 
     private:
-        QWidget * createMouthsCollection(int index);
-        QWidget * createMouthPanel(int index, int row, int column);
+        QWidget * createMouthsCollection();
+        QWidget * createMouthPanel(int row, int column);
 
         QLineEdit *breakdownEdit;
         QStackedWidget *stackedWidget;
         QStringList mouthLabels;
-        QStringList folder;
+        QString folder;
         int currentCollectionIndex;
+        QString extension;
 };
 
 #endif

@@ -514,9 +514,20 @@ void TupMainWindow::newProject()
 bool TupMainWindow::cancelChanges()
 {
     if (m_projectManager->projectWasModified()) {
+        /*
+        TOptionalDialog dialog(tr("Do you want to remove this frame?"), tr("Confirmation"), false, true, this);
+        dialog.setModal(true);
+        QScreen *screen = QGuiApplication::screens().at(0);
+        dialog.move(static_cast<int> ((screen->geometry().width() - dialog.sizeHint().width()) / 2),
+                    static_cast<int> ((screen->geometry().height() - dialog.sizeHint().height()) / 2));
+
+        if (dialog.exec() == QDialog::Rejected)
+            return;
+        */
+
         QMessageBox msgBox;
         msgBox.setStyleSheet(uiStyleSheet);
-        msgBox.setWindowTitle(tr("Question"));
+        msgBox.setWindowTitle(tr("Confirmation Required"));
         msgBox.setIcon(QMessageBox::Question);
         msgBox.setText(tr("The document has been modified."));
         msgBox.setInformativeText(tr("Do you want to save the project?"));

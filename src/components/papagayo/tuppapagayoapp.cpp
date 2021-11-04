@@ -18,6 +18,7 @@
 #include "tapplicationproperties.h"
 #include "tconfig.h"
 #include "tosd.h"
+#include "toptionaldialog.h"
 
 #include <QAction>
 #include <QToolBar>
@@ -107,23 +108,15 @@ void TupPapagayoApp::setupActions()
         actionOpen->setIcon(openIcon);
         actionOpen->setText(tr("Open"));
         actionOpen->setShortcut(QKeySequence(tr("Ctrl+O")));
-        connect(actionOpen, SIGNAL(triggered()), this, SLOT(onFileOpen()));
+        connect(actionOpen, SIGNAL(triggered()), this, SLOT(openFile()));
     }
-
-    actionSave = new QAction(this);
-    QIcon saveIcon;
-    saveIcon.addFile(THEME_DIR + "icons/save.png", QSize(), QIcon::Normal, QIcon::Off);
-    actionSave->setIcon(saveIcon);
-    actionSave->setText(tr("Save"));
-    actionSave->setShortcut(QKeySequence(tr("Ctrl+S")));
-    connect(actionSave, SIGNAL(triggered()), this, SLOT(onFileSave()));
 
     actionPlay = new QAction(this);
     playIcon.addFile(THEME_DIR + "icons/play.png", QSize(), QIcon::Normal, QIcon::Off);
     actionPlay->setIcon(playIcon);
     actionPlay->setText(tr("Play"));
     actionPlay->setToolTip(tr("Play"));
-    connect(actionPlay, SIGNAL(triggered()), this, SLOT(onPlay()));
+    connect(actionPlay, SIGNAL(triggered()), this, SLOT(playVoice()));
 
     pauseIcon.addFile(THEME_DIR + "icons/pause.png", QSize(), QIcon::Normal, QIcon::Off);
 
@@ -133,7 +126,7 @@ void TupPapagayoApp::setupActions()
     actionStop->setIcon(stopIcon);
     actionStop->setText(tr("Stop"));
     actionStop->setToolTip(tr("Stop"));
-    connect(actionStop, SIGNAL(triggered()), this, SLOT(onStop()));
+    connect(actionStop, SIGNAL(triggered()), this, SLOT(stopVoice()));
 
     actionZoomIn = new QAction(this);
     QIcon zoomInIcon;
@@ -155,24 +148,6 @@ void TupPapagayoApp::setupActions()
     actionAutoZoom->setIcon(autoZoomIcon);
     actionAutoZoom->setText(tr("Auto Zoom"));
     actionAutoZoom->setToolTip(tr("Auto Zoom"));
-
-    /*
-    actionUndo = new QAction(this);
-    actionUndo->setText(tr("Undo"));
-    actionUndo->setShortcut(QKeySequence("Ctrl+Z"));
-
-    actionCut = new QAction(this);
-    actionCut->setText(tr("Cut"));
-    actionCut->setShortcut(tr("Ctrl+X"));
-
-    actionCopy = new QAction(this);
-    actionCopy->setText(tr("Copy"));
-    actionCopy->setShortcut(tr("Ctrl+C"));
-
-    actionPaste = new QAction(this);
-    actionPaste->setText(tr("Paste"));
-    actionPaste->setShortcut(tr("Ctrl+V"));
-    */
 }
 
 void TupPapagayoApp::setupUI()
@@ -249,9 +224,6 @@ void TupPapagayoApp::setupUI()
     mouthView->setMinimumSize(QSize(280, 200));
     mouthView->setMaximumWidth(280);
 
-    // SQA: stylesheet pending
-    // mouthView->setStyleSheet(QString::fromUtf8(""));
-
     connect(waveformView, SIGNAL(frameChanged(int)), this, SLOT(updateFrame(int)));
     connect(mouthsCombo, SIGNAL(activated(int)), this, SLOT(updateMouthView(int)));
 
@@ -277,6 +249,8 @@ void TupPapagayoApp::setupUI()
     firstLineLayout->addLayout(verticalLayout);
 
     innerVerticalLayout->addLayout(firstLineLayout);
+
+    waveformView->setMouthsPath(mouthView->getMouthsPath());
 
     // Lateral Panel
     QGroupBox *lateralGroupBox = new QGroupBox(centralWidget);
@@ -333,8 +307,7 @@ void TupPapagayoApp::setupUI()
 
     languageChoice = new QComboBox();
     languageChoice->addItem(tr("English"));
-    languageChoice->addItem(tr("Spanish"));
-    languageChoice->addItem(tr("Italian"));
+    languageChoice->addItem(tr("Other Language"));
 
     languageHorizontalLayout->addWidget(languageChoice);
 
@@ -386,19 +359,9 @@ void TupPapagayoApp::setupMenus()
 
     if (extendedUI)
         menuFile->addAction(actionOpen);
-
     menuFile->addAction(actionClose);
 
-    /*
-    menuEdit->addAction(actionUndo);
-    menuEdit->addAction(actionCut);
-    menuEdit->addAction(actionCopy);
-    menuEdit->addAction(actionPaste);
-    */
-
     menuBar->addAction(menuFile->menuAction());
-    // menuBar->addAction(menuEdit->menuAction());
-
     setMenuBar(menuBar);
 
     QToolBar *mainToolBar = new QToolBar(this);
@@ -410,7 +373,6 @@ void TupPapagayoApp::setupMenus()
     if (extendedUI)
         mainToolBar->addAction(actionOpen);
 
-    mainToolBar->addAction(actionSave);
     mainToolBar->addSeparator();
     mainToolBar->addAction(actionPlay);
     mainToolBar->addAction(actionStop);
@@ -456,6 +418,8 @@ void TupPapagayoApp::openFile(QString filePath)
 
         document->getAudioPlayer()->setNotifyInterval(17); // 60 fps
         connect(document->getAudioPlayer(), SIGNAL(positionChanged(qint64)), waveformView, SLOT(positionChanged(qint64)));
+        connect(document->getAudioPlayer(), SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)),
+                waveformView, SLOT(updateMediaStatus(QMediaPlayer::MediaStatus)));
 
         if (document->getCurrentVoice()) {
             voiceName->setText(document->getCurrentVoice()->getName());
@@ -467,29 +431,35 @@ void TupPapagayoApp::openFile(QString filePath)
         setWindowTitle(tr("Lip-Sync Manager") + " - " + info.fileName());
     }
 
-    // fpsEdit->setValue(document->getFps());
     updateActions();
 }
 
-bool TupPapagayoApp::isOKToCloseDocument()
+bool TupPapagayoApp::confirmCloseDocument()
 {
-    if (document && document->isDirty()) {
-        int res = QMessageBox::warning(this, tr("Lip-Sync Manager"),
-                  tr("This lip-sync item has been modified.\n"
-                  "Do you want to save your changes?"),
-                  QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::confirmCloseDocument()]";
+    #endif
 
-        if (res == QMessageBox::Yes) {
-            onFileSave();
-            if (document->isDirty())
-                return false;
-            else
-                return true;
-        } else if (res == QMessageBox::No) {
+    if (document && document->isDirty()) {
+        TOptionalDialog dialog(tr("Do you want to save your changes?"), tr("Confirmation Required"),
+                               false, true, this);
+        dialog.setModal(true);
+        QScreen *screen = QGuiApplication::screens().at(0);
+        dialog.move(static_cast<int> ((screen->geometry().width() - dialog.sizeHint().width()) / 2),
+                    static_cast<int> ((screen->geometry().height() - dialog.sizeHint().height()) / 2));
+        dialog.exec();
+
+        TOptionalDialog::Result result = dialog.getResult();
+        if (result == TOptionalDialog::Accepted) {
+            createLipsyncRecord();
             return true;
-        } else if (res == QMessageBox::Cancel) {
-            return false;
         }
+
+        if (result == TOptionalDialog::Cancelled)
+            return false;
+
+        if (result == TOptionalDialog::Discarded)
+            return true;
     }
 
     return true;
@@ -497,7 +467,7 @@ bool TupPapagayoApp::isOKToCloseDocument()
 
 void TupPapagayoApp::closeEvent(QCloseEvent *event)
 {
-    if (isOKToCloseDocument()) {
+    if (confirmCloseDocument()) {
         if (document) {
             delete document;
             document = nullptr;
@@ -515,13 +485,11 @@ void TupPapagayoApp::dragEnterEvent(QDragEnterEvent *event)
         return;
 
     QString filePath = urls.first().toLocalFile();
-
     if (filePath.isEmpty())
         return;
 
     QFileInfo info(filePath);
     QString extension = info.suffix().toLower();
-    // if (extension == "pgo" || extension == "mp3" || extension == "wav")
     if (extension == "mp3" || extension == "wav")
         event->acceptProposedAction();
 }
@@ -539,10 +507,9 @@ void TupPapagayoApp::dropEvent(QDropEvent *event)
 
     QFileInfo info(filePath);
     QString extension = info.suffix().toLower();
-    // if (extn == "pgo" || extn == "mp3" || extn == "wav") {
     if (extension == "mp3" || extension == "wav") {
         event->acceptProposedAction();
-        if (isOKToCloseDocument())
+        if (confirmCloseDocument())
             openFile(filePath);
     }
 }
@@ -557,7 +524,6 @@ void TupPapagayoApp::updateActions()
     if (document)
         flag = true;
 
-    actionSave->setEnabled(flag);
     actionPlay->setEnabled(flag);
     actionStop->setEnabled(flag);
     actionZoomIn->setEnabled(flag);
@@ -568,23 +534,21 @@ void TupPapagayoApp::updateActions()
     voiceText->setEnabled(flag);
 
     languageChoice->setEnabled(flag);
-    // fpsEdit->setEnabled(flag);
     mouthsCombo->setEnabled(flag);
 
     breakdownButton->setEnabled(flag);
     okButton->setEnabled(flag);
 }
 
-void TupPapagayoApp::onFileOpen()
+void TupPapagayoApp::openFile()
 {
-    if (!isOKToCloseDocument())
+    if (!confirmCloseDocument())
         return;
 
     TCONFIG->beginGroup("General");
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
     QString filePath = QFileDialog::getOpenFileName(this,
                                                     tr("Open"), path,
-                                                    // tr("Papgayo and Audio files (*.pgo *.mp3 *.wav)"));
                                                     tr("Audio files (*.mp3 *.wav)"));
     if (filePath.isEmpty())
         return;
@@ -592,17 +556,7 @@ void TupPapagayoApp::onFileOpen()
     openFile(filePath);
 }
 
-void TupPapagayoApp::onFileSave()
-{
-    if (!document)
-        return;
-
-    document->save();
-    QFileInfo info(document->getFilePath());
-    setWindowTitle(tr("Lip-sync Creator") + " - " + info.fileName());
-}
-
-void TupPapagayoApp::onPlay()
+void TupPapagayoApp::playVoice()
 {
     if (document && document->getAudioPlayer()) {
         if (playerStopped) {
@@ -618,7 +572,7 @@ void TupPapagayoApp::onPlay()
     }
 }
 
-void TupPapagayoApp::onStop()
+void TupPapagayoApp::stopVoice()
 {
     if (document && document->getAudioPlayer()) {
         playerStopped = true;
@@ -629,27 +583,12 @@ void TupPapagayoApp::onStop()
     }
 }
 
-void TupPapagayoApp::onPause()
+void TupPapagayoApp::pauseVoice()
 {
     if (document && document->getAudioPlayer()) {
         playerStopped = true;
         document->pauseAudio();
     }
-}
-
-void TupPapagayoApp::onFpsChange(int fps)
-{
-    if (!document)
-        return;
-
-    fps = PG_CLAMP(fps, 1, 120);
-
-    if (fps == document->getFps())
-        return;
-
-    defaultFps = fps;
-    document->setFps(fps);
-    waveformView->setDocument(document);
 }
 
 void TupPapagayoApp::onVoiceNameChanged()
@@ -704,9 +643,9 @@ void TupPapagayoApp::keyPressEvent(QKeyEvent *event)
     #endif
 
     if (event->key() == Qt::Key_Space) {
-        onPlay();
+        playVoice();
     } else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
-        onStop();
+        stopVoice();
     }
 }
 
@@ -719,10 +658,17 @@ void TupPapagayoApp::updateMouthView(int index)
     if (index == 5) {
         if (mouthFrame->currentIndex() == Predefined)
             mouthFrame->setCurrentIndex(Customized);
+
+        if (customView->imagesAresLoaded())
+            waveformView->setMouthsPath(customView->getMouthsPath());
+        else
+            waveformView->setMouthsPath("");
     } else {
         mouthView->onMouthChanged(index);
         if (mouthFrame->currentIndex() == Customized)
             mouthFrame->setCurrentIndex(Predefined);
+
+        waveformView->setMouthsPath(mouthView->getMouthsPath());
     }
 }
 
@@ -755,6 +701,7 @@ void TupPapagayoApp::openImagesDialog()
                 mouthsPath->setText(dirPath);
                 saveDefaultPath(dirPath);
                 customView->loadImages(dirPath);
+                waveformView->setMouthsPath(dirPath);
             } else {
                 TOsd::self()->display(TOsd::Error, tr("Mouth images are incomplete!"));
                 #ifdef TUP_DEBUG
@@ -820,5 +767,18 @@ void TupPapagayoApp::createLipsyncRecord()
         }
     }
 
+    if (!document) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPapagayoApp::createLipsyncRecord()] - Warning: No lip-sync document!";
+        #endif
+        return;
+    }
+
+    document->save();
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::confirmCloseDocument()] - Lip-sync item saved successfully!";
+    #endif
+    TOsd::self()->display(TOsd::Info, tr("Lip-sync item added!"));
     close();
 }

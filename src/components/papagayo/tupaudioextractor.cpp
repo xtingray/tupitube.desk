@@ -210,28 +210,10 @@ bool TupAudioExtractor::readSoundFile(const char *soundFilePath)
 
     if (soundInfo.frames > MAX_AUDIO_FRAMES)
         soundInfo.frames = MAX_AUDIO_FRAMES;
+
     numSamples = (int32)(soundInfo.frames * soundInfo.channels);
     samples = new float[numSamples];
 
-    /* if (sndFormat == (SF_FORMAT_OGG | SF_FORMAT_VORBIS))
-	{
-		float		*bufPtr = fSamples;
-		sf_count_t	sampleCount = fNumSamples;
-		sf_count_t	chunkSize = 65536;
-		sf_count_t	readCount;
-		
-		while (sampleCount > chunkSize)
-		{
-			readCount = sf_read_float(sndFile, bufPtr, chunkSize);
-			if (readCount == 0)
-				break;
-			bufPtr += readCount;
-			sampleCount -= readCount;
-		}
-		if (sampleCount > 0)
-			sf_read_float(sndFile, bufPtr, chunkSize);
-		fNumFrames = fSndInfo.frames;
-    } else */
 	{
         numFrames = sf_readf_float(sndFile, samples, soundInfo.frames);
 	}

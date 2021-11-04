@@ -45,7 +45,7 @@ class TImageLabel : public QLabel {
 
     public:
         TImageLabel(QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::Widget);
-        TImageLabel(const QString &text, QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::Widget);
+        TImageLabel(const QString &text, const QColor &color, QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::Widget);
         ~TImageLabel();
 
         void setPixmap(const QPixmap &img);

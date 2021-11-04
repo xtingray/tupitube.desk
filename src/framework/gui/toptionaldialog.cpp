@@ -34,40 +34,101 @@
  ***************************************************************************/
 
 #include "toptionaldialog.h"
+#include "tapplicationproperties.h"
 
-TOptionalDialog::TOptionalDialog(const QString &text,const QString &title,QWidget *parent) : QDialog(parent)
+TOptionalDialog::TOptionalDialog(const QString &text,const QString &title, bool showAgainBox,
+                                 bool showDiscardButton, QWidget *parent) : QDialog(parent)
 {
+    setUIStyle();
+
     setWindowTitle(title);
-    m_layout = new QVBoxLayout;
-    m_layout->addStretch(10);
+    mainLayout = new QVBoxLayout;
+    mainLayout->addStretch(10);
     QLabel *label = new QLabel(text, this);
-    m_layout->addWidget(label);
-    m_layout->addStretch(10);
-    m_layout->addWidget(new TSeparator);
+    mainLayout->addWidget(label);
+    mainLayout->addStretch(10);
+    mainLayout->addWidget(new TSeparator);
     
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->addStretch(1);
     
-    m_checkBox = new QCheckBox(tr("Don't show again"));
-    buttonLayout->addWidget(m_checkBox);
+    if (showAgainBox) {
+        checkBox = new QCheckBox(tr("Don't show again"));
+        buttonLayout->addWidget(checkBox);
+    }
     
-    QPushButton *cancelButton = new QPushButton(tr("Cancel"));
-    connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
+    QPushButton *cancelButton = new QPushButton(this);
+    cancelButton->setToolTip(tr("Cancel"));
+    cancelButton->setMinimumWidth(60);
+    cancelButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(callCancelAction()));
     buttonLayout->addWidget(cancelButton);
-    
-    QPushButton *okButton = new QPushButton(tr("Accept"));
-    connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
+
+    if (showDiscardButton) {
+        QPushButton *discardButton = new QPushButton(this);
+        discardButton->setToolTip(tr("Discard"));
+        discardButton->setMinimumWidth(60);
+        discardButton->setIcon(QIcon(THEME_DIR + "icons/delete.png"));
+        connect(discardButton, SIGNAL(clicked()), this, SLOT(callDiscardAction()));
+        buttonLayout->addWidget(discardButton);
+    }
+
+    QPushButton *okButton = new QPushButton(this);
+    okButton->setToolTip(tr("Accept"));
+    okButton->setMinimumWidth(60);
+    okButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
+    connect(okButton, SIGNAL(clicked()), this, SLOT(callAcceptAction()));
     buttonLayout->addWidget(okButton);
     
-    m_layout->addLayout(buttonLayout);
-    setLayout(m_layout);
+    mainLayout->addLayout(buttonLayout);
+    setLayout(mainLayout);
 }
 
 TOptionalDialog::~TOptionalDialog()
 {
 }
 
+void TOptionalDialog::setUIStyle()
+{
+    QFile file(THEME_DIR + "config/ui.qss");
+    if (file.exists()) {
+        file.open(QFile::ReadOnly);
+        QString uiStyleSheet = QLatin1String(file.readAll());
+        if (uiStyleSheet.length() > 0)
+            setStyleSheet(uiStyleSheet);
+        file.close();
+    } else {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupPapagayoApp()] - Error: Theme file doesn't exist -> "
+                       << QString(THEME_DIR + "config/ui.qss");
+        #endif
+    }
+}
+
 bool TOptionalDialog::shownAgain()
 {
-    return !m_checkBox->isChecked();
+    return !checkBox->isChecked();
+}
+
+void TOptionalDialog::callAcceptAction()
+{
+    result = Accepted;
+    accept();
+}
+
+void TOptionalDialog::callDiscardAction()
+{
+    result = Discarded;
+    reject();
+}
+
+void TOptionalDialog::callCancelAction()
+{
+    result = Cancelled;
+    reject();
+}
+
+TOptionalDialog::Result TOptionalDialog::getResult()
+{
+    return result;
 }

@@ -146,7 +146,7 @@ void TupExposureSheet::createMenuForAFrame()
     insertHundred->setIconVisibleInMenu(true);
     insertMenu->addAction(insertHundred);
 
-    connect(insertMenu, SIGNAL(triggered(QAction *)), this, SLOT(insertFramesFromMenu(QAction*)));
+    connect(insertMenu, SIGNAL(triggered(QAction*)), this, SLOT(insertFramesFromMenu(QAction*)));
 
     singleMenu->addMenu(insertMenu);
 
@@ -511,7 +511,7 @@ void TupExposureSheet::selectFrame(int layerIndex, int frameIndex)
         qDebug() << "[TupExposureSheet::selectFrame()] - layerIndex, frameIndex -> " << layerIndex << "," << frameIndex;
     #endif
 
-    QList<QTableWidgetItem *> list = currentTable->selectedItems();
+    // QList<QTableWidgetItem *> list = currentTable->selectedItems();
     QString selection = "";
     QList<int> coords = currentTable->currentSelection();
 

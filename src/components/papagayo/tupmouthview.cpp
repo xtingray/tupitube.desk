@@ -28,12 +28,23 @@ TupMouthView::TupMouthView(QWidget *parent) : QWidget(parent)
 	TupLipsyncDoc::loadDictionaries();
 
     for (int32 mouth = 0; mouth < 5; mouth++) {
-        QString basePath = SHARE_DIR + "data/mouths/" + QString::number(mouth + 1) + "/";
+        #ifdef Q_OS_UNIX
+            QString basePath = SHARE_DIR + "data/mouths/" + QString::number(mouth + 1) + "/";
+        #else
+            QString basePath = SHARE_DIR + "mouths/" + QString::number(i) + "/";
+        #endif
+
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMouthView()] - basePath -> " << basePath;
+        #endif
+        mouthsPath << basePath;
         for (int32 i = 0; i < TupLipsyncDoc::phonemesListSize(); i++) {
             QString path = basePath + TupLipsyncDoc::getPhonemeAt(i) + ".png";
             mouths[mouth].insert(TupLipsyncDoc::getPhonemeAt(i), new QImage(path));
         }
 	}
+
+    currentPath = mouthsPath.at(0);
 }
 
 TupMouthView::~TupMouthView()
@@ -51,9 +62,16 @@ void TupMouthView::setMouth(int32 id)
     mouthID = PG_CLAMP(id, 0, 4);
 }
 
+QString TupMouthView::getMouthsPath() const
+{
+    return currentPath;
+}
+
 void TupMouthView::onMouthChanged(int id)
 {
     setMouth(id);
+    currentPath = mouthsPath.at(id);
+
 	update();
 }
 

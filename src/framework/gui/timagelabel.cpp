@@ -43,15 +43,14 @@ TImageLabel::TImageLabel(QWidget *parent, Qt::WindowFlags flags)
    Q_UNUSED(flags)
 }
 
-TImageLabel::TImageLabel(const QString &text, QWidget *parent, Qt::WindowFlags flags)
+TImageLabel::TImageLabel(const QString &text, const QColor &color, QWidget *parent, Qt::WindowFlags flags)
 {
    Q_UNUSED(parent)
    Q_UNUSED(flags)
 
    id = text;
    pressed = false;
-   markColor = QColor(79, 94, 62);
-   // markColor = QColor(0, 0, 0);
+   markColor = color;
 }
 
 TImageLabel::~TImageLabel()

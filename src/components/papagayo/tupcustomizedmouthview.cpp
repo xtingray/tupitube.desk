@@ -25,6 +25,7 @@ TupCustomizedMouthView::TupCustomizedMouthView(QWidget *parent) : QWidget(parent
     document = nullptr;
     frame = 0;
     assetsLoaded = false;
+    imagesPath = "";
 
 	TupLipsyncDoc::loadDictionaries();
 }
@@ -69,6 +70,7 @@ void TupCustomizedMouthView::loadImages(const QString &folderPath)
                 }
             }
             assetsLoaded = true;
+            imagesPath = folderPath;
             update();
         } else {
             TOsd::self()->display(TOsd::Error, tr("Mouth images are incomplete!"));
@@ -134,4 +136,14 @@ void TupCustomizedMouthView::paintEvent(QPaintEvent *event)
     } else {
 		dc.eraseRect(0, 0, width(), height());
     }
+}
+
+bool TupCustomizedMouthView::imagesAresLoaded()
+{
+    return !imagesPath.isEmpty();
+}
+
+QString TupCustomizedMouthView::getMouthsPath() const
+{
+    return imagesPath;
 }

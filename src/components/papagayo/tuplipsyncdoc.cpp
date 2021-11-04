@@ -25,7 +25,8 @@ LipsyncPhoneme::LipsyncPhoneme()
 {
     text = "";
     frame = 0;
-    top = bottom = 0;
+    top = 0;
+    bottom = 0;
 }
 
 LipsyncPhoneme::~LipsyncPhoneme()

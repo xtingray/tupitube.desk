@@ -24,7 +24,6 @@
 #include <QComboBox>
 #include <QPushButton>
 #include <QStackedWidget>
-// #include <QSpinBox>
 
 #include "tglobal.h"
 #include "tuplipsyncdoc.h"
@@ -43,7 +42,7 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
 
     public:
         void openFile(QString filePath);
-        bool isOKToCloseDocument();
+        bool confirmCloseDocument();
 
     protected:
         void closeEvent(QCloseEvent *event);
@@ -55,12 +54,10 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         void updateActions();
 
     private slots:
-        void onFileOpen();
-        void onFileSave();
-        void onPlay();
-        void onPause();
-        void onStop();
-        void onFpsChange(int fps);
+        void openFile();
+        void playVoice();
+        void pauseVoice();
+        void stopVoice();
         void onVoiceNameChanged();
         void onVoiceTextChanged();
         void runBreakdownProcess();
@@ -90,7 +87,6 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
 
         QAction *actionClose;
         QAction *actionOpen;
-        QAction *actionSave;
         QAction *actionPlay;
         QIcon playIcon;
         QIcon pauseIcon;
@@ -100,16 +96,9 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         QAction *actionZoomOut;
         QAction *actionAutoZoom;
 
-        // QAction *actionUndo;
-        // QAction *actionCut;
-        // QAction *actionCopy;
-        // QAction *actionPaste;
-
         QStackedWidget *mouthFrame;
         QLineEdit *voiceName;
         QPlainTextEdit *voiceText;
-        // QLineEdit *fpsEdit;
-        // QSpinBox *fpsEdit;
         QComboBox *mouthsCombo;
         QComboBox *languageChoice;
         QPushButton *breakdownButton;

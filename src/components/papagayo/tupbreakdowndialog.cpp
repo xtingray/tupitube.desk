@@ -24,8 +24,12 @@
 #include <QLabel>
 #include <QPushButton>
 
-TupBreakdownDialog::TupBreakdownDialog(LipsyncWord *word, QWidget *parent) : QDialog(parent)
+TupBreakdownDialog::TupBreakdownDialog(LipsyncWord *word, const QString &mouthsPath, QWidget *parent) : QDialog(parent)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupBreakdownDialog()] - mouthsPath -> " << mouthsPath;
+    #endif
+
     setWindowTitle(tr("Word:") + " " + word->getText());
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/papagayo.png")));
 
@@ -43,13 +47,12 @@ TupBreakdownDialog::TupBreakdownDialog(LipsyncWord *word, QWidget *parent) : QDi
     }
 
     mouthLabels << "AI" << "E" << "etc" << "FV" << "L" << "MBP" << "O" << "rest" << "U" << "WQ";
-    #ifdef Q_OS_UNIX
-        for (int i = 1; i < 6; i++)
-            folder << SHARE_DIR + "data/mouths/" + QString::number(i);
-    #else
-        for (int i = 1; i < 6; i++)
-            folder << SHARE_DIR + "mouths/" + QString::number(i);
-    #endif
+    folder = mouthsPath;
+
+    QDir directory(folder);
+    QStringList mouthsList = directory.entryList(QStringList(), QDir::Files);
+    QFileInfo info(mouthsList.at(0));
+    extension = info.suffix();
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -59,8 +62,7 @@ TupBreakdownDialog::TupBreakdownDialog(LipsyncWord *word, QWidget *parent) : QDi
     layout->addWidget(wordLabel);
 
     stackedWidget = new QStackedWidget;
-    for (int i=0; i<5; i++)
-        stackedWidget->addWidget(createMouthsCollection(i));
+    stackedWidget->addWidget(createMouthsCollection());
 
     layout->addWidget(stackedWidget, Qt::AlignCenter);
 
@@ -72,8 +74,7 @@ TupBreakdownDialog::TupBreakdownDialog(LipsyncWord *word, QWidget *parent) : QDi
     QPushButton *clearButton = new QPushButton(this);
     clearButton->setMinimumWidth(60);
     clearButton->setIcon(QIcon(THEME_DIR + "icons/clear.png"));
-    clearButton->setToolTip(tr("Clear Phonemes"));
-    // QPushButton *clearButton = new QPushButton(tr("Clear"));
+    clearButton->setToolTip(tr("Clear phonemes"));
     connect(clearButton, SIGNAL(clicked()), this, SLOT(clearPhonemes()));
 
     phonemesLayout->addWidget(phonemesLabel);
@@ -94,7 +95,7 @@ TupBreakdownDialog::TupBreakdownDialog(LipsyncWord *word, QWidget *parent) : QDi
     cancelButton->setMinimumWidth(60);
     cancelButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
     cancelButton->setToolTip(tr("Close"));
-    connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 
     buttonsLayout->addStretch(1);
     buttonsLayout->addWidget(okButton);
@@ -107,19 +108,19 @@ TupBreakdownDialog::~TupBreakdownDialog()
 {
 }
 
-QWidget * TupBreakdownDialog::createMouthsCollection(int index)
+QWidget * TupBreakdownDialog::createMouthsCollection()
 {
     QWidget *collection = new QWidget;
     QGridLayout *mouthsLayout = new QGridLayout(collection);
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 5; j++)
-            mouthsLayout->addWidget(createMouthPanel(index, i, j), i, j, Qt::AlignCenter);
+            mouthsLayout->addWidget(createMouthPanel(i, j), i, j, Qt::AlignCenter);
     }
 
     return collection;
 }
 
-QWidget * TupBreakdownDialog::createMouthPanel(int index, int row, int column)
+QWidget * TupBreakdownDialog::createMouthPanel(int row, int column)
 {
     int labelIndex = column;
     if (row == 1)
@@ -133,13 +134,12 @@ QWidget * TupBreakdownDialog::createMouthPanel(int index, int row, int column)
     connect(phonemeButton, &TButton::clicked, this, &TupBreakdownDialog::addPhoneme);
     panelLayout->addWidget(phonemeButton);
 
-    QString imgPath = folder[index] + "/" + text + ".png";
+    QString imgPath = folder + "/" + text + "." + extension;
     #ifdef TUP_DEBUG
         qDebug() << "[TupBreakdownDialog::createMouthPanel()] - imgPath -> " << imgPath;
     #endif
 
-    // QLabel *mouthImage = new QLabel;
-    TImageLabel *mouthImage = new TImageLabel(text);
+    TImageLabel *mouthImage = new TImageLabel(text, QColor(200, 255, 200));
     connect(mouthImage, &TImageLabel::clicked, this, &TupBreakdownDialog::addPhoneme);
     connect(phonemeButton, SIGNAL(clicked(QString)), mouthImage, SLOT(activateMark()));
     mouthImage->setAlignment(Qt::AlignCenter);
@@ -158,8 +158,8 @@ QString TupBreakdownDialog::phonemeString()
 void TupBreakdownDialog::addPhoneme(const QString &phoneme)
 {
     QString str = breakdownEdit->text().trimmed();
-        str += " ";
-        str += phoneme;
+    str += " ";
+    str += phoneme;
     breakdownEdit->setText(str.trimmed());
 }
 

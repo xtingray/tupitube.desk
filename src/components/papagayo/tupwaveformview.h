@@ -35,6 +35,7 @@ class TUPITUBE_EXPORT TupWaveFormView : public QWidget
         QSize sizeHint() const;
         void setScrollArea(QScrollArea *scrollArea);
         void setDocument(TupLipsyncDoc *doc);
+        void setMouthsPath(const QString &path);
 
     signals:
         void frameChanged(int index);
@@ -45,6 +46,7 @@ class TUPITUBE_EXPORT TupWaveFormView : public QWidget
         void zoomOut();
         void autoZoom();
         void positionChanged(qint64 millisecs);
+        void updateMediaStatus(QMediaPlayer::MediaStatus status);
 
     protected:
         void mousePressEvent(QMouseEvent *event);
@@ -73,6 +75,7 @@ class TUPITUBE_EXPORT TupWaveFormView : public QWidget
         int32 wordBottom;
         int32 phonemeTop;
         bool onlySilent;
+        QString mouthsPath;
 
         LipsyncPhrase *selectedPhrase;
         LipsyncPhrase *parentPhrase;
