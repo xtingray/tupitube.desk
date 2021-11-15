@@ -82,6 +82,24 @@ class TUPITUBE_EXPORT TupWaveFormView : public QWidget
         LipsyncWord *selectedWord;
         LipsyncWord *parentWord;
         LipsyncPhoneme *selectedPhoneme;
+
+        QColor markText;
+        QColor textCol;
+        QColor sampleFillCol;
+        QColor sampleOutlineCol;
+        QColor playBackCol;
+        QColor playForeCol;
+        QColor playOutlineCol;
+        QColor frameCol;
+        QColor phraseFillCol;
+        QColor phraseOutlineCol;
+        QColor wordFillCol;
+        QColor wordOutlineCol;
+        QColor wordMissingFillCol;
+        QColor wordMissingOutlineCol;
+        QColor phonemeFillCol;
+        QColor phonemeOutlineCol;
+        QMediaPlayer *audioPlayer;
 };
 
 #endif // TUPWAVEFORMVIEW_H

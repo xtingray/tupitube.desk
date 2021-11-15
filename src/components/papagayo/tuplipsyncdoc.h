@@ -72,7 +72,9 @@ class LipsyncWord
         LipsyncPhoneme * getPhonemeAt(int32 index);
         LipsyncPhoneme * getLastPhoneme();
         void removeFirstPhoneme();
+        void removePhonemes();
         int getFrameFromPhonemeAt(int32 index);
+        QString getPhonemesString() const;
 
         int32 getTop();
         int32 getBottom();
@@ -119,6 +121,8 @@ class LipsyncPhrase
         int getEndFrameFromWordAt(int index);
 
     private:
+        void cleanWords();
+
         QString text;
         int32 startFrame, endFrame;
         int32 top, bottom;
@@ -144,12 +148,15 @@ class LipsyncVoice
         QString getName() const;
         void setText(const QString &text);
         QString getText() const;
+        void addPhrase(LipsyncPhrase *phrase);
         QList<LipsyncPhrase *> getPhrases();
+        LipsyncPhrase * getFirstPhrase();
         int getPhrasesTotal();
         LipsyncPhrase* getPhraseAt(int index);
         int getPhraseStartFrame(int index);
         int getPhraseEndFrame(int index);
         bool textIsEmpty();
+        void cleanPhrases();
 
     private:
         QString name;
@@ -186,12 +193,16 @@ class TUPITUBE_EXPORT TupLipsyncDoc : public QObject
         void setCurrentVoice(LipsyncVoice *voice);
         QList<LipsyncVoice *> getVoices();
         LipsyncVoice* getVoiceAt(int index);
+        LipsyncPhrase * getFirstPhrase();
         void appendVoice(LipsyncVoice *voice);
-        bool isDirty();
-        void setDirtyFlag(bool flag);
+        bool isModified();
+        void setModifiedFlag(bool flag);
         void removeVoiceAt(int index);
         void runBreakdown(const QString &lang, int32 duration);
         bool voiceTextIsEmpty();
+        void setVoiceText(const QString &text);
+        QString getVoiceText() const;
+        QList<LipsyncWord *> getWords();
 
         static QString getPhonemeFromDictionary(const QString &key, const QString &defaultValue);
         static QStringList getDictionaryValue(const QString &key);
@@ -207,6 +218,8 @@ class TUPITUBE_EXPORT TupLipsyncDoc : public QObject
         void playAudio();
         void pauseAudio();
         void stopAudio();
+        void cleanVoices();
+        void cleanPhrases();
 
     private:
         static void loadDictionary(QFile *file);

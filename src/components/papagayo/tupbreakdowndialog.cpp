@@ -18,21 +18,67 @@
 #include "tapplicationproperties.h"
 #include "tbutton.h"
 #include "timagelabel.h"
+#include "tseparator.h"
+#include "tosd.h"
 
 #include <QComboBox>
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
 
-TupBreakdownDialog::TupBreakdownDialog(LipsyncWord *word, const QString &mouthsPath, QWidget *parent) : QDialog(parent)
+TupBreakdownDialog::TupBreakdownDialog(const QString &word, const QString &phonemes,
+                                       const QString &mouthsPath, QWidget *parent) : QDialog(parent)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupBreakdownDialog()] - word -> " << word;
+        qDebug() << "[TupBreakdownDialog()] - phonemes -> " << phonemes;
+        qDebug() << "[TupBreakdownDialog()] - mouthsPath -> " << mouthsPath;
+    #endif
+
+    isPhrase = false;
+    currentIndex = 0;
+
+    setInitVars(word, mouthsPath);
+    setUIStyle();
+    setUI(word, phonemes);
+}
+
+TupBreakdownDialog::TupBreakdownDialog(QStringList wordsList, QStringList phonemesList, const QString &mouthsPath,
+                                       QWidget *parent) : QDialog(parent)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupBreakdownDialog()] - mouthsPath -> " << mouthsPath;
     #endif
 
-    setWindowTitle(tr("Word:") + " " + word->getText());
-    setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/papagayo.png")));
+    this->wordsList = wordsList;
+    this->phonemesList = phonemesList;
+    isPhrase = true;
+    currentIndex = 0;
 
+    setInitVars(wordsList.at(0), mouthsPath);
+    setUIStyle();
+    setUI(wordsList.at(0), phonemesList.at(0));
+}
+
+TupBreakdownDialog::~TupBreakdownDialog()
+{
+}
+
+void TupBreakdownDialog::setInitVars(const QString &word, const QString &mouthsPath)
+{
+    setWindowTitle(tr("Word:") + " " + word);
+    setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/papagayo.png")));
+    mouthLabels << "AI" << "E" << "etc" << "FV" << "L" << "MBP" << "O" << "rest" << "U" << "WQ";
+    folder = mouthsPath;
+
+    QDir directory(folder);
+    QStringList mouthsList = directory.entryList(QStringList(), QDir::Files);
+    QFileInfo info(mouthsList.at(0));
+    extension = info.suffix();
+}
+
+void TupBreakdownDialog::setUIStyle()
+{
     QFile file(THEME_DIR + "config/ui.qss");
     if (file.exists()) {
         file.open(QFile::ReadOnly);
@@ -45,31 +91,26 @@ TupBreakdownDialog::TupBreakdownDialog(LipsyncWord *word, const QString &mouthsP
             qWarning() << "[TupBreakdownDialog()] - theme file doesn't exist -> " << (THEME_DIR + "config/ui.qss");
         #endif
     }
+}
 
-    mouthLabels << "AI" << "E" << "etc" << "FV" << "L" << "MBP" << "O" << "rest" << "U" << "WQ";
-    folder = mouthsPath;
+void TupBreakdownDialog::setUI(const QString &word, const QString &phonemes)
+{
+    mainLayout = new QVBoxLayout(this);
 
-    QDir directory(folder);
-    QStringList mouthsList = directory.entryList(QStringList(), QDir::Files);
-    QFileInfo info(mouthsList.at(0));
-    extension = info.suffix();
-
-    QVBoxLayout *layout = new QVBoxLayout(this);
-
-    QLabel *wordLabel = new QLabel(this);
+    wordLabel = new QLabel(this);
     wordLabel->setAlignment(Qt::AlignCenter);
-    wordLabel->setText(tr("Break down the word:") + " <b>" + word->getText() + "</b>");
-    layout->addWidget(wordLabel);
+    wordLabel->setText(tr("Break down the word:") + " <b>" + word + "</b>");
+    mainLayout->addWidget(wordLabel);
 
     stackedWidget = new QStackedWidget;
     stackedWidget->addWidget(createMouthsCollection());
 
-    layout->addWidget(stackedWidget, Qt::AlignCenter);
+    mainLayout->addWidget(stackedWidget, Qt::AlignCenter);
 
     QHBoxLayout *phonemesLayout = new QHBoxLayout;
 
     QLabel *phonemesLabel = new QLabel(tr("Phonemes:"));
-    breakdownEdit = new QLineEdit;
+    breakdownEdit = new QLineEdit(phonemes);
 
     QPushButton *clearButton = new QPushButton(this);
     clearButton->setMinimumWidth(60);
@@ -81,15 +122,37 @@ TupBreakdownDialog::TupBreakdownDialog(LipsyncWord *word, const QString &mouthsP
     phonemesLayout->addWidget(breakdownEdit);
     phonemesLayout->addWidget(clearButton);
 
-    layout->addLayout(phonemesLayout);
+    mainLayout->addLayout(phonemesLayout);
+    mainLayout->addWidget(new TSeparator(Qt::Horizontal));
 
+    setButtonsPanel();
+}
+
+void TupBreakdownDialog::setButtonsPanel()
+{
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
-
-    QPushButton *okButton = new QPushButton(this);
+    okButton = new QPushButton(this);
     okButton->setMinimumWidth(60);
-    okButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
-    okButton->setToolTip(tr("Save word"));
-    connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
+
+    if (isPhrase) {
+        previousButton = new QPushButton(this);
+        previousButton->setMinimumWidth(60);
+        previousButton->setIcon(QIcon(THEME_DIR + "icons/previous.png"));
+        previousButton->setToolTip(tr("Next word"));
+        connect(previousButton, SIGNAL(clicked()), this, SLOT(previousWord()));
+        previousButton->setEnabled(false);
+
+        okButton->setIcon(QIcon(THEME_DIR + "icons/next.png"));
+        okButton->setToolTip(tr("Next word"));
+        connect(okButton, SIGNAL(clicked()), this, SLOT(nextWord()));
+    } else {
+        okButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
+        okButton->setToolTip(tr("Save word"));
+        connect(okButton, SIGNAL(clicked()), this, SLOT(savePhonemes()));
+
+        if (breakdownEdit->text().isEmpty())
+            okButton->setEnabled(false);
+    }
 
     QPushButton *cancelButton = new QPushButton(this);
     cancelButton->setMinimumWidth(60);
@@ -98,14 +161,13 @@ TupBreakdownDialog::TupBreakdownDialog(LipsyncWord *word, const QString &mouthsP
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 
     buttonsLayout->addStretch(1);
+    if (isPhrase)
+        buttonsLayout->addWidget(previousButton);
+
     buttonsLayout->addWidget(okButton);
     buttonsLayout->addWidget(cancelButton);
 
-    layout->addLayout(buttonsLayout);
-}
-
-TupBreakdownDialog::~TupBreakdownDialog()
-{
+    mainLayout->addLayout(buttonsLayout);
 }
 
 QWidget * TupBreakdownDialog::createMouthsCollection()
@@ -134,7 +196,7 @@ QWidget * TupBreakdownDialog::createMouthPanel(int row, int column)
     connect(phonemeButton, &TButton::clicked, this, &TupBreakdownDialog::addPhoneme);
     panelLayout->addWidget(phonemeButton);
 
-    QString imgPath = folder + "/" + text + "." + extension;
+    QString imgPath = folder + text + "." + extension;
     #ifdef TUP_DEBUG
         qDebug() << "[TupBreakdownDialog::createMouthPanel()] - imgPath -> " << imgPath;
     #endif
@@ -161,9 +223,91 @@ void TupBreakdownDialog::addPhoneme(const QString &phoneme)
     str += " ";
     str += phoneme;
     breakdownEdit->setText(str.trimmed());
+
+    if  (!okButton->isEnabled())
+        okButton->setEnabled(true);
 }
 
 void TupBreakdownDialog::clearPhonemes()
 {
     breakdownEdit->clear();
+}
+
+void TupBreakdownDialog::previousWord()
+{
+    if (currentIndex > 0) {
+        currentIndex--;
+
+        QString word = wordsList.at(currentIndex);
+        setWindowTitle(tr("Word:") + " " + word);
+        wordLabel->setText(tr("Break down the word:") + " <b>" + word + "</b>");
+        breakdownEdit->setText(phonemesList.at(currentIndex));
+
+        if (currentIndex == wordsList.size() - 2) {
+            okButton->setIcon(QIcon(THEME_DIR + "icons/next.png"));
+            okButton->setToolTip(tr("Next word"));
+            disconnect(okButton, SIGNAL(clicked()), this, SLOT(savePhonemes()));
+            connect(okButton, SIGNAL(clicked()), this, SLOT(nextWord()));
+        }
+
+        if (currentIndex == 0) {
+            if (previousButton->isEnabled())
+                previousButton->setEnabled(false);
+        }
+    }
+}
+
+void TupBreakdownDialog::nextWord()
+{
+    QString wordPhonemes = breakdownEdit->text().trimmed();
+    if (wordPhonemes.isEmpty()) {
+        notifyMissingPhonemes();
+        return;
+    }
+
+    phonemesList[currentIndex] = wordPhonemes;
+    currentIndex++;
+    if (currentIndex < wordsList.size()) {
+        QString word = wordsList.at(currentIndex);
+        setWindowTitle(tr("Word:") + " " + word);
+        wordLabel->setText(tr("Break down the word:") + " <b>" + word + "</b>");
+        breakdownEdit->setText(phonemesList.at(currentIndex));
+
+        if (currentIndex == wordsList.size() - 1) {
+            okButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
+            okButton->setToolTip(tr("Save sentence"));
+            disconnect(okButton, SIGNAL(clicked()), this, SLOT(nextWord()));
+            connect(okButton, SIGNAL(clicked()), this, SLOT(savePhonemes()));
+        }
+
+        if (!previousButton->isEnabled())
+            previousButton->setEnabled(true);
+    }
+}
+
+QStringList TupBreakdownDialog::phomeneList()
+{
+    return phonemesList;
+}
+
+void TupBreakdownDialog::savePhonemes()
+{
+    QString field = breakdownEdit->text();
+    if (field.isEmpty()) {
+        notifyMissingPhonemes();
+        return;
+    } else {
+        if (isPhrase)
+            phonemesList[currentIndex] = field.trimmed();
+        accept();
+    }
+}
+
+void TupBreakdownDialog::notifyMissingPhonemes()
+{
+    TOsd::self()->display(TOsd::Warning, tr("Word phonemes are missing!"));
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupBreakdownDialog::notifyMissingPhonemes()] - Fatal Error: Word phonemes are missing!!!";
+    #endif
+    breakdownEdit->setFocus();
 }

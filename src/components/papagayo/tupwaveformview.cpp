@@ -54,6 +54,23 @@ TupWaveFormView::TupWaveFormView(QWidget *parent) : QWidget(parent)
     selectedWord = nullptr;
     selectedPhoneme = nullptr;
 
+    markText = Qt::black;
+    textCol = QColor(64, 64, 64);
+    sampleFillCol = QColor(162, 205, 242);
+    sampleOutlineCol = QColor(30, 121, 198);
+    playBackCol = QColor(255, 127, 127);
+    playForeCol = QColor(209, 102, 121, 128);
+    playOutlineCol = QColor(128, 0, 0);
+    frameCol = QColor(192, 192, 192);
+    phraseFillCol = QColor(205, 242, 162);
+    phraseOutlineCol = QColor(121, 198, 30);
+    wordFillCol = QColor(242, 205, 162);
+    wordOutlineCol = QColor(198, 121, 30);
+    wordMissingFillCol = QColor(255, 127, 127);
+    wordMissingOutlineCol = QColor(255, 0, 0);
+    phonemeFillCol = QColor(231, 185, 210);
+    phonemeOutlineCol = QColor(173, 114, 146);
+
     setToolTip(tr("Drop audio file here"));
 }
 
@@ -94,6 +111,7 @@ void TupWaveFormView::setDocument(TupLipsyncDoc *doc)
 	}
 
     document = doc;
+    audioPlayer = document->getAudioPlayer();
     numSamples = 0;
 
     if (amp) {
@@ -448,7 +466,7 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
     if (selectedPhrase) {
         if (draggingEnd == 0) {
             if (frame != selectedPhrase->getStartFrame()) {
-                document->setDirtyFlag(true);
+                document->setModifiedFlag(true);
                 selectedPhrase->setStartFrame(frame);
                 if (selectedPhrase->getStartFrame() > selectedPhrase->getEndFrame() - 1)
                     selectedPhrase->setStartFrame(selectedPhrase->getEndFrame() - 1);
@@ -458,7 +476,7 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
 			}
         } else if (draggingEnd == 1) {
             if (frame != selectedPhrase->getEndFrame()) {
-                document->setDirtyFlag(true);
+                document->setModifiedFlag(true);
                 selectedPhrase->setEndFrame(frame);
                 if (selectedPhrase->getEndFrame() < selectedPhrase->getStartFrame() + 1)
                     selectedPhrase->setEndFrame(selectedPhrase->getStartFrame() + 1);
@@ -468,7 +486,7 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
 			}
         } else if (draggingEnd == 2) {
             if (frame != oldFrame) {
-                document->setDirtyFlag(true);
+                document->setModifiedFlag(true);
                 selectedPhrase->setStartFrame(selectedPhrase->getStartFrame() + (frame - oldFrame));
                 selectedPhrase->setEndFrame(selectedPhrase->getEndFrame() + (frame - oldFrame));
                 if (selectedPhrase->getEndFrame() < selectedPhrase->getStartFrame() + 1)
@@ -481,7 +499,7 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
     } else if (selectedWord) {
         if (draggingEnd == 0) {
             if (frame != selectedWord->getStartFrame()) {
-                document->setDirtyFlag(true);
+                document->setModifiedFlag(true);
                 selectedWord->setStartFrame(frame);
                 if (selectedWord->getStartFrame() > selectedWord->getEndFrame() - 1)
                     selectedWord->setStartFrame(selectedWord->getEndFrame() - 1);
@@ -491,7 +509,7 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
 			}
         } else if (draggingEnd == 1) {
             if (frame != selectedWord->getEndFrame()) {
-                document->setDirtyFlag(true);
+                document->setModifiedFlag(true);
                 selectedWord->setEndFrame(frame);
                 if (selectedWord->getEndFrame() < selectedWord->getStartFrame() + 1)
                     selectedWord->setEndFrame(selectedWord->getStartFrame() + 1);
@@ -501,7 +519,7 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
 			}
         } else if (draggingEnd == 2) {
             if (frame != oldFrame) {
-                document->setDirtyFlag(true);
+                document->setModifiedFlag(true);
                 selectedWord->setStartFrame(selectedWord->getStartFrame() + (frame - oldFrame));
                 selectedWord->setEndFrame(selectedWord->getEndFrame() + (frame - oldFrame));
                 if (selectedWord->getEndFrame() < selectedWord->getStartFrame() + 1)
@@ -514,7 +532,7 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
     } else if (selectedPhoneme) {
         if (draggingEnd == 0) {
             if (frame != selectedPhoneme->getFrame()) {
-                document->setDirtyFlag(true);
+                document->setModifiedFlag(true);
                 selectedPhoneme->setFrame(frame);
                 parentWord->repositionPhoneme(selectedPhoneme);
 				needUpdate = true;
@@ -559,11 +577,11 @@ void TupWaveFormView::mouseReleaseEvent(QMouseEvent *event)
             }
 
             // manually enter the pronunciation for this word
-            TupBreakdownDialog *breakdownDialog = new TupBreakdownDialog(selectedWord, mouthsPath, this);
+            TupBreakdownDialog *breakdownDialog = new TupBreakdownDialog(selectedWord->getText(), selectedWord->getPhonemesString(),
+                                                                         mouthsPath, this);
             if (breakdownDialog->exec() == QDialog::Accepted) {
-                document->setDirtyFlag(true);
-                while (selectedWord->phonemesSize() > 0)
-                    selectedWord->removeFirstPhoneme();
+                document->setModifiedFlag(true);
+                selectedWord->removePhonemes();
 
                 QStringList phList = breakdownDialog->phonemeString().split(' ', Qt::SkipEmptyParts);
                 for (int i = 0; i < phList.size(); i++) {
@@ -607,11 +625,9 @@ void TupWaveFormView::mouseReleaseEvent(QMouseEvent *event)
 
 void TupWaveFormView::paintEvent(QPaintEvent *event)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupWaveFormView::paintEvent()]";
     #endif
-    */
 
     Q_UNUSED(event)
 
@@ -624,8 +640,12 @@ void TupWaveFormView::paintEvent(QPaintEvent *event)
         return;
     }
 
-    if (document == nullptr)
+    if (document == nullptr) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupWaveFormView::paintEvent()] - Fatal Error: Document is NULL!";
+        #endif
         return;
+    }
 
     int32 topBorder = 16; // should be the height of frame label text
     int32 halfClientHeight;
@@ -639,23 +659,6 @@ void TupWaveFormView::paintEvent(QPaintEvent *event)
     int32 frame = 0;
     bool drawPlayMarker = false;
     QRect rect;
-    QColor markText = Qt::black;
-    QColor textCol(64, 64, 64);
-    QColor sampleFillCol(162, 205, 242);
-    QColor sampleOutlineCol(30, 121, 198);
-    QColor playBackCol(255, 127, 127);
-    QColor playForeCol(209, 102, 121, 128);
-    QColor playOutlineCol(128, 0, 0);
-    QColor frameCol(192, 192, 192);
-    QColor phraseFillCol(205, 242, 162);
-    QColor phraseOutlineCol(121, 198, 30);
-    QColor wordFillCol(242, 205, 162);
-    QColor wordOutlineCol(198, 121, 30);
-    QColor wordMissingFillCol(255, 127, 127);
-    QColor wordMissingOutlineCol(255, 0, 0);
-    QColor phonemeFillCol(231, 185, 210);
-    QColor phonemeOutlineCol(173, 114, 146);
-    QMediaPlayer *audioPlayer = document->getAudioPlayer();
 
 	textHeight = dc.fontMetrics().height() + 4;
 	topBorder = textHeight;
@@ -765,7 +768,7 @@ void TupWaveFormView::paintEvent(QPaintEvent *event)
 				} // for i
 			} // for w
 		} // for p
-	}
+    }
 
     if (drawPlayMarker) {
         x = currentFrame * frameWidth;

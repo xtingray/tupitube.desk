@@ -36,6 +36,7 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
 	Q_OBJECT
 
     public:
+        enum Language { English = 0, OtherLang };
         enum ViewType { Predefined = 0, Customized };
         explicit TupPapagayoApp(bool extendedUI, int32 fps, const QString &soundFile = QString(), QWidget *parent = nullptr);
         ~TupPapagayoApp();
@@ -60,7 +61,9 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         void stopVoice();
         void onVoiceNameChanged();
         void onVoiceTextChanged();
-        void runBreakdownProcess();
+        void updateLanguage(int index);
+        void runBreakdownAction();
+        void runManualBreakdownAction();
         void updateMouthView(int index);
         void openImagesDialog();
         void updateFrame(int frame);
@@ -74,6 +77,10 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         void setupUI();
         void setupMenus();
         void saveDefaultPath(const QString &dir);
+        void buildOtherLanguagePhonemes();
+        void loadWordsFromDocument();
+        void loadDocumentFromScratch(QStringList phonemes);
+        int32 calculateDuration();
 
         TupWaveFormView *waveformView;
         TupMouthView *mouthView;
@@ -103,7 +110,12 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         QComboBox *languageChoice;
         QPushButton *breakdownButton;
         QLineEdit *mouthsPath;
+        Language currentLanguage;
+        QString currentMouthPath;
+
         QPushButton *okButton;
+        QStringList wordsList;
+        QStringList phonemesList;
 };
 
 #endif // TUPPAPAGAYODIALOG_H

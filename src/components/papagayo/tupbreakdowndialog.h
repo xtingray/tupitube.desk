@@ -21,7 +21,9 @@
 #include "tuplipsyncdoc.h"
 
 #include <QDialog>
+#include <QVBoxLayout>
 #include <QStackedWidget>
+#include <QLabel>
 #include <QLineEdit>
 
 class TUPITUBE_PLUGIN TupBreakdownDialog: public QDialog
@@ -29,25 +31,47 @@ class TUPITUBE_PLUGIN TupBreakdownDialog: public QDialog
     Q_OBJECT
 
     public:
-        TupBreakdownDialog(LipsyncWord *word, const QString &mouthsPath, QWidget *parent = nullptr);
+        TupBreakdownDialog(const QString &word, const QString &phonemes,
+                           const QString &mouthsPath, QWidget *parent = nullptr);
+        TupBreakdownDialog(QStringList wordsList, QStringList phonemesList, const QString &mouthsPath,
+                           QWidget *parent = nullptr);
         ~TupBreakdownDialog();
 
         QString phonemeString();
+        QStringList phomeneList();
 
     private slots:
         void addPhoneme(const QString &phoneme);
         void clearPhonemes();
+        void previousWord();
+        void nextWord();
+        void savePhonemes();
 
     private:
+        void setInitVars(const QString &word, const QString &mouthsPath);
+        void setUIStyle();
+        void setUI(const QString &word, const QString &phonemes);
+        void setButtonsPanel();
+        void notifyMissingPhonemes();
+
         QWidget * createMouthsCollection();
         QWidget * createMouthPanel(int row, int column);
 
+        QVBoxLayout *mainLayout;
+        QLabel *wordLabel;
         QLineEdit *breakdownEdit;
         QStackedWidget *stackedWidget;
         QStringList mouthLabels;
         QString folder;
         int currentCollectionIndex;
         QString extension;
+        bool isPhrase;
+        QStringList wordsList;
+        QStringList phonemesList;
+        int currentIndex;
+
+        QPushButton *okButton;
+        QPushButton *previousButton;
 };
 
 #endif
