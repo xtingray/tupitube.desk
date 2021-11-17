@@ -625,9 +625,11 @@ void TupWaveFormView::mouseReleaseEvent(QMouseEvent *event)
 
 void TupWaveFormView::paintEvent(QPaintEvent *event)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupWaveFormView::paintEvent()]";
     #endif
+    */
 
     Q_UNUSED(event)
 

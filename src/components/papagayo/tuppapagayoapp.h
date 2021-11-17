@@ -43,7 +43,6 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
 
     public:
         void openFile(QString filePath);
-        bool confirmCloseDocument();
 
     protected:
         void closeEvent(QCloseEvent *event);
@@ -69,6 +68,8 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         void updateFrame(int frame);
         void updatePauseButton();
         void createLipsyncRecord();
+        void closeWindow();
+        bool validateLipsyncForm();
 
     private:
         void setBaseUI();
@@ -81,6 +82,8 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         void loadWordsFromDocument();
         void loadDocumentFromScratch(QStringList phonemes);
         int32 calculateDuration();
+        bool confirmCloseDocument();
+        void saveLipsyncRecord();
 
         TupWaveFormView *waveformView;
         TupMouthView *mouthView;
@@ -116,6 +119,7 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         QPushButton *okButton;
         QStringList wordsList;
         QStringList phonemesList;
+        bool saveButtonPressed;
 };
 
 #endif // TUPPAPAGAYODIALOG_H

@@ -178,7 +178,7 @@ class TUPITUBE_EXPORT TupLipsyncDoc : public QObject
 
         void open(const QString &path);
         void openAudio(const QString &path);
-        void save();
+        bool save();
         void rebuildAudioSamples();
 
         void setFilePath(const QString &path);

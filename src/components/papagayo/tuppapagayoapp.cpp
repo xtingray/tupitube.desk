@@ -48,6 +48,7 @@ TupPapagayoApp::TupPapagayoApp(bool extendedUI, int32 fps, const QString &soundF
     enableAutoBreakdown = true;
     defaultFps = fps;
     playerStopped = true;
+    saveButtonPressed = false;
 
     setUIStyle();
 
@@ -330,7 +331,7 @@ void TupPapagayoApp::setupUI()
     cancelButton->setMinimumWidth(60);
     cancelButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
     cancelButton->setToolTip(tr("Cancel"));
-    connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(closeWindow()));
 
     languageHorizontalLayout->addWidget(breakdownButton);
 
@@ -444,7 +445,7 @@ bool TupPapagayoApp::confirmCloseDocument()
     #endif
 
     if (document && document->isModified()) {
-        TOptionalDialog dialog(tr("Do you want to save your changes?"), tr("Confirmation Required"),
+        TOptionalDialog dialog(tr("Do you want to save this lip-sync record?"), tr("Confirmation Required"),
                                false, true, this);
         dialog.setModal(true);
         QScreen *screen = QGuiApplication::screens().at(0);
@@ -454,8 +455,12 @@ bool TupPapagayoApp::confirmCloseDocument()
 
         TOptionalDialog::Result result = dialog.getResult();
         if (result == TOptionalDialog::Accepted) {
-            createLipsyncRecord();
-            return true;
+            if (validateLipsyncForm()) {
+                saveLipsyncRecord();
+                return true;
+            }
+
+            return false;
         }
 
         if (result == TOptionalDialog::Cancelled)
@@ -482,16 +487,29 @@ void TupPapagayoApp::updateLanguage(int index)
     }
 }
 
-void TupPapagayoApp::closeEvent(QCloseEvent *event)
+void TupPapagayoApp::closeWindow()
 {
     if (confirmCloseDocument()) {
         if (document) {
             delete document;
             document = nullptr;
         }
-        event->accept();
-    } else {
-        event->ignore();
+        close();
+    }
+}
+
+void TupPapagayoApp::closeEvent(QCloseEvent *event)
+{
+    if (!saveButtonPressed) {
+        if (confirmCloseDocument()) {
+            if (document) {
+                delete document;
+                document = nullptr;
+            }
+            event->accept();
+        } else {
+            event->ignore();
+        }
     }
 }
 
@@ -974,18 +992,18 @@ void TupPapagayoApp::updatePauseButton()
     actionPlay->setToolTip(tr("Play"));
 }
 
-void TupPapagayoApp::createLipsyncRecord()
+bool TupPapagayoApp::validateLipsyncForm()
 {
     QString title = voiceName->text();
     if (title.isEmpty()) {
         TOsd::self()->display(TOsd::Error, tr("Voice name is empty!"));
-        return;
+        return false;
     }
 
     QString words = voiceText->toPlainText();
     if (words.isEmpty()) {
         TOsd::self()->display(TOsd::Error, tr("Voice text is empty!"));
-        return;
+        return false;
     }
 
     int index = mouthsCombo->currentIndex();
@@ -993,7 +1011,7 @@ void TupPapagayoApp::createLipsyncRecord()
         QString path = mouthsPath->text();
         if (path.isEmpty()) {
             TOsd::self()->display(TOsd::Error, tr("Customized mouths path is unset!"));
-            return;
+            return false;
         }
     }
 
@@ -1001,14 +1019,35 @@ void TupPapagayoApp::createLipsyncRecord()
         #ifdef TUP_DEBUG
             qDebug() << "[TupPapagayoApp::createLipsyncRecord()] - Warning: No lip-sync document!";
         #endif
-        return;
+        return false;
     }
 
-    document->save();
+    return true;
+}
 
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupPapagayoApp::confirmCloseDocument()] - Lip-sync item saved successfully!";
-    #endif
-    TOsd::self()->display(TOsd::Info, tr("Lip-sync item added!"));
-    close();
+void TupPapagayoApp::createLipsyncRecord()
+{
+    if (validateLipsyncForm()) {
+        saveButtonPressed = true;
+        saveLipsyncRecord();
+    } else {
+        saveButtonPressed = false;
+    }
+}
+
+void TupPapagayoApp::saveLipsyncRecord()
+{
+    document->setFilePath("/tmp/test.pgo");
+    if (document->save()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Lip-sync item saved successfully!";
+        #endif
+        TOsd::self()->display(TOsd::Info, tr("Lip-sync item added!"));
+        close();
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Can't save lip-sync record!";
+        #endif
+        TOsd::self()->display(TOsd::Error, tr("Error while saving lip-sync record!"));
+    }
 }

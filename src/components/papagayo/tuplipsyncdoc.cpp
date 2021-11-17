@@ -1026,17 +1026,29 @@ void TupLipsyncDoc::openAudio(const QString &path)
 	}
 }
 
-void TupLipsyncDoc::save()
+bool TupLipsyncDoc::save()
 {
-    if (filePath.isEmpty())
-		return;
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLipsyncDoc::save()]";
+    #endif
+
+    if (filePath.isEmpty()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLipsyncDoc::save()] - Fatal Error: filePath is unset!";
+        #endif
+        return false;
+    }
 
     QFile *file;
     file = new QFile(filePath);
     if (!file->open(QIODevice::WriteOnly | QIODevice::Text)) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLipsyncDoc::save()] - Fatal Error: Can't write PGO file!";
+        #endif
+
         file->close();
         delete file;
-		return;
+        return false;
 	}
 
     if (audioExtractor && audioExtractor->isValid()) {
@@ -1050,22 +1062,22 @@ void TupLipsyncDoc::save()
     QFileInfo docInfo(filePath);
     QFileInfo audioInfo(audioPath);
     QString path = audioPath;
-    if (audioInfo.absoluteDir() == docInfo.absoluteDir()) {
+    if (audioInfo.absoluteDir() == docInfo.absoluteDir())
         path = audioInfo.fileName();
-	}
 
     out << path << Qt::endl;
     out << fps << Qt::endl;
     out << audioDuration << Qt::endl;
 
     out << voices.size() << Qt::endl;
-    for (int i = 0; i < voices.size(); i++) {
+    for (int i = 0; i < voices.size(); i++)
         voices[i]->save(out);
-	}
 
     file->close();
     delete file;
     dirty = false;
+
+    return true;
 }
 
 void TupLipsyncDoc::setFps(int32 fps)
