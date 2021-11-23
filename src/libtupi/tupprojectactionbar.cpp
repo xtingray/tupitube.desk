@@ -282,7 +282,7 @@ void TupProjectActionBar::emitActionSelected(int action)
             bool ask = TCONFIG->value("ConfirmRemoveFrame", true).toBool();
 
             if (ask) {
-                TOptionalDialog dialog(tr("Do you want to remove current selection?"), tr("Confirmation"), this);
+                TOptionalDialog dialog(tr("Do you want to remove current selection?"), tr("Confirmation"), true, false, this);
                 dialog.setModal(true);
 
                 dialog.move(static_cast<int> ((screenW - dialog.sizeHint().width()) / 2),
@@ -303,7 +303,7 @@ void TupProjectActionBar::emitActionSelected(int action)
             bool ask = TCONFIG->value("ConfirmRemoveLayer", true).toBool();
 
             if (ask) {
-                TOptionalDialog dialog(tr("Do you want to remove this layer?"), tr("Confirmation"), this);
+                TOptionalDialog dialog(tr("Do you want to remove this layer?"), tr("Confirmation"), true, false, this);
 
                 dialog.move(static_cast<int> ((screenW - dialog.sizeHint().width()) / 2),
                             static_cast<int> ((screenH - dialog.sizeHint().height()) / 2));
@@ -323,7 +323,7 @@ void TupProjectActionBar::emitActionSelected(int action)
             bool ask = TCONFIG->value("ConfirmRemoveScene", true).toBool();
 
             if (ask) {
-                TOptionalDialog dialog(tr("Do you want to remove this scene?"), tr("Confirmation"), this);
+                TOptionalDialog dialog(tr("Do you want to remove this scene?"), tr("Confirmation"), true, false, this);
 
                 dialog.move(static_cast<int> ((screenW - dialog.sizeHint().width()) / 2),
                             static_cast<int> ((screenH - dialog.sizeHint().height()) / 2));

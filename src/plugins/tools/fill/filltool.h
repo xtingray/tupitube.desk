@@ -74,6 +74,7 @@ class TUPITUBE_PLUGIN FillTool : public TupToolPlugin
         TupPathItem *itemPressed(QGraphicsItem *item, const TupBrushManager *brush);
         
         virtual QMap<TAction::ActionId, TAction *> actions() const;
+        TAction * getAction(TAction::ActionId toolId);
         
         int toolType() const;
         

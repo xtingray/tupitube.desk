@@ -173,7 +173,8 @@ class TUPITUBE_EXPORT TupLipSync : public QObject, public TupAbstractSerializabl
         void addVoice(TupVoice *voice);
         TupVoice *voiceAt(int index);
         QList<TupVoice *> getVoices();
-        void updateMouthPos(int mouthIndex, QPointF point, int frame);
+        // void updateMouthPos(int mouthIndex, QPointF point, int frame);
+        void updateMouthPos(QPointF point, int frame);
         void verifyStructure();
         QString toString() const;
 

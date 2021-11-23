@@ -458,6 +458,11 @@ QMap<TAction::ActionId, TAction *> TextTool::actions() const
     return textActions;
 }
 
+TAction * TextTool::getAction(TAction::ActionId toolId)
+{
+    return textActions[toolId];
+}
+
 int TextTool::toolType() const
 {
     return TupToolInterface::Selection;

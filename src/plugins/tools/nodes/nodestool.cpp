@@ -430,6 +430,11 @@ QMap<TAction::ActionId, TAction *> NodesTool::actions() const
     return nodesActions;
 }
 
+TAction * NodesTool::getAction(TAction::ActionId toolId)
+{
+    return nodesActions[toolId];
+}
+
 int NodesTool::toolType() const
 {
     return TupToolInterface::Selection;

@@ -31,6 +31,9 @@
 #include "tupmouthview.h"
 #include "tupcustomizedmouthview.h"
 
+#include "tupproject.h"
+#include "tupprojectrequest.h"
+
 class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
 {
 	Q_OBJECT
@@ -38,7 +41,8 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
     public:
         enum Language { English = 0, OtherLang };
         enum ViewType { Predefined = 0, Customized };
-        explicit TupPapagayoApp(bool extendedUI, int32 fps, const QString &soundFile = QString(), QWidget *parent = nullptr);
+        explicit TupPapagayoApp(bool extendedUI, TupProject *project, const QString &soundFile = QString(),
+                                QList<int> indexes = QList<int>(), QWidget *parent = nullptr);
         ~TupPapagayoApp();
 
     public:
@@ -49,6 +53,9 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         void dragEnterEvent(QDragEnterEvent *event);
         void dropEvent(QDropEvent *event);
         void keyPressEvent(QKeyEvent *event);
+
+    signals:
+        void requestTriggered(const TupProjectRequest *request);
 
     public slots:
         void updateActions();
@@ -120,6 +127,13 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         QStringList wordsList;
         QStringList phonemesList;
         bool saveButtonPressed;
+        QString pgoFilePath;
+        QString soundFilePath;
+
+        TupProject *tupProject;
+        int sceneIndex;
+        int layerIndex;
+        int frameIndex;
 };
 
 #endif // TUPPAPAGAYODIALOG_H

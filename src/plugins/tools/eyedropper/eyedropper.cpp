@@ -114,6 +114,11 @@ QMap<TAction::ActionId, TAction *> EyeDropper::actions() const
     return eyedropperActions;
 }
 
+TAction * EyeDropper::getAction(TAction::ActionId toolId)
+{
+    return eyedropperActions[toolId];
+}
+
 int EyeDropper::toolType() const
 {
     return TupToolInterface::Color;

@@ -383,6 +383,11 @@ QMap<TAction::ActionId, TAction *> SelectionTool::actions() const
     return selectActions;
 }
 
+TAction * SelectionTool::getAction(TAction::ActionId toolId)
+{
+    return selectActions[toolId];
+}
+
 int SelectionTool::toolType() const
 {
     return TupToolInterface::Selection;

@@ -76,6 +76,7 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         virtual void sceneResponse(const TupSceneResponse *event);
 
         virtual QMap<TAction::ActionId, TAction *> actions() const;
+        TAction * getAction(TAction::ActionId toolId);
 
         int toolType() const;
         

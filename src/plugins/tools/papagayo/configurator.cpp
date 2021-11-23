@@ -109,7 +109,7 @@ void Configurator::setLipSyncManagerPanel()
 {
     manager = new LipSyncManager(this);
     connect(manager, SIGNAL(openLipSyncCreator()), this, SIGNAL(openLipSyncCreator()));
-    connect(manager, SIGNAL(importLipSync()), this, SIGNAL(importLipSync()));
+    // connect(manager, SIGNAL(importLipSync()), this, SIGNAL(importLipSync()));
     connect(manager, SIGNAL(editCurrentLipSync(const QString &)), this, SLOT(editCurrentLipSync(const QString &)));
     connect(manager, SIGNAL(removeCurrentLipSync(const QString &)), this, SIGNAL(removeCurrentLipSync(const QString &)));
 

@@ -65,13 +65,10 @@ void PapagayoSettings::setInnerForm()
     nameLayout->addWidget(nameLabel);
     nameLayout->addWidget(lipSyncName);
 
-    fpsLabel = new QLabel;
-
     QHBoxLayout *fpsLayout = new QHBoxLayout;
     fpsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
     fpsLayout->setMargin(0);
     fpsLayout->setSpacing(0);
-    fpsLayout->addWidget(fpsLabel);
 
     QLabel *startingLabel = new QLabel(tr("Starting at frame") + ": ");
     startingLabel->setAlignment(Qt::AlignVCenter);
@@ -106,29 +103,6 @@ void PapagayoSettings::setInnerForm()
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
 
-    QBoxLayout *listLayout = new QBoxLayout(QBoxLayout::TopToBottom);
-    listLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-
-    QLabel *mouthsLabel = new QLabel(tr("Mouths") + ": ");
-    mouthsLabel->setAlignment(Qt::AlignHCenter);
-
-    mouthsList = new QListWidget;
-    mouthsList->setContextMenuPolicy(Qt::CustomContextMenu);
-    mouthsList->setViewMode(QListView::ListMode);
-    mouthsList->setFlow(QListView::TopToBottom);
-    mouthsList->setMovement(QListView::Static);
-    mouthsList->setFixedHeight(68);
-
-    listLayout->addWidget(mouthsLabel);
-    listLayout->addWidget(mouthsList);
-
-    QLabel *textLabel = new QLabel(tr("Text") + ": ");
-    textLabel->setAlignment(Qt::AlignHCenter);
-
-    textArea = new QTextEdit;
-    textArea->setReadOnly(true);
-
-    // phonemeLabel = new QLabel(tr("Current Phoneme") + ": " + phoneme);
     phonemeLabel = new QLabel;
     phonemeLabel->setAlignment(Qt::AlignHCenter);
 
@@ -154,14 +128,18 @@ void PapagayoSettings::setInnerForm()
     QBoxLayout *xLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     xLayout->setMargin(0);
     xLayout->setSpacing(0);
+    xLayout->addStretch();
     xLayout->addWidget(xLabel);
     xLayout->addWidget(xPosField);
+    xLayout->addStretch();
 
     QBoxLayout *yLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     yLayout->setMargin(0);
     yLayout->setSpacing(0);
+    yLayout->addStretch();
     yLayout->addWidget(yLabel);
     yLayout->addWidget(yPosField);
+    yLayout->addStretch();
 
     TImageButton *remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close_properties.png"), 22);
     remove->setToolTip(tr("Close properties"));
@@ -178,9 +156,6 @@ void PapagayoSettings::setInnerForm()
     innerLayout->addLayout(startLayout);
     innerLayout->addLayout(endLayout);
     innerLayout->addLayout(totalLayout);
-    innerLayout->addLayout(listLayout);
-    innerLayout->addWidget(textLabel);
-    innerLayout->addWidget(textArea);
     innerLayout->addWidget(phonemeLabel);
     innerLayout->addWidget(mouthPosLabel);
     innerLayout->addLayout(xLayout);
@@ -201,45 +176,16 @@ void PapagayoSettings::openLipSyncProperties(TupLipSync *lipsync)
     initFrame = lipsync->getInitFrame();
     framesCount = lipsync->getFramesCount();
 
-    lipSyncName->setText(name);
-    fpsLabel->setText(tr("Lip-Sync FPS") + ": " + QString::number(lipsync->getFPS()));
+    lipSyncName->setText("<b>" + name + "</b>");
 
     comboInit->setEnabled(true);
     comboInit->setValue(initFrame + 1);
 
     int endIndex = initFrame + framesCount;
-    endingLabel->setText(tr("Ending at frame") + ": " + QString::number(endIndex));
-    totalLabel->setText(tr("Frames Total") + ": " + QString::number(framesCount));
-
-    disconnect(mouthsList, SIGNAL(currentRowChanged(int)), this, SLOT(setCurrentMouth(int)));
-    mouthsList->clear();
+    endingLabel->setText(tr("Ending at frame") + ": <b>" + QString::number(endIndex) + "</b>");
+    totalLabel->setText(tr("Frames Total") + ": <b>" + QString::number(framesCount) + "</b>");
 
     voices = lipsync->getVoices();
-    int total = voices.size();
-    if (total > 0) {
-        for (int i=0; i < total; i++) {
-             QListWidgetItem *item = new QListWidgetItem(mouthsList);
-             item->setText(tr("mouth") + "_" + QString::number(i));
-             item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-        }
-
-        TupVoice *voice = voices.at(0);
-        textArea->setText(voice->text());
-
-        connect(mouthsList, SIGNAL(currentRowChanged(int)), this, SLOT(setCurrentMouth(int)));
-        mouthsList->setCurrentRow(0);
-    }
-}
-
-void PapagayoSettings::setCurrentMouth(int index) 
-{
-    QString tail = ":" + QString::number(index);
-    QString id = "lipsync:" + name + tail;
-
-    TupVoice *voice = voices.at(index);
-    textArea->setText(voice->text());
-
-    emit selectMouth(id, index);
 }
 
 void PapagayoSettings::updateInitFrame(int index)
@@ -255,7 +201,7 @@ void PapagayoSettings::updateInitFrame(int index)
 void PapagayoSettings::updateInterfaceRecords()
 {
     int endIndex = initFrame + framesCount;
-    endingLabel->setText(tr("Ending at frame") + ": " + QString::number(endIndex));
+    endingLabel->setText(tr("Ending at frame") + ": <b>" + QString::number(endIndex) + "</b>");
 }
 
 void PapagayoSettings::setPos(const QPointF &point) 

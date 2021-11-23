@@ -44,10 +44,7 @@
 #include <QLabel>
 #include <QBoxLayout>
 #include <QSpinBox>
-#include <QListWidget>
 #include <QTextEdit>
-
-// class TupLipSync;
 
 /**
  * @author Gustav Gonzalez 
@@ -68,7 +65,6 @@ class TUPITUBE_PLUGIN PapagayoSettings : public QWidget
         void setPos(const QPointF &point);
 
     private slots:
-        void setCurrentMouth(int index);
         void updateInitFrame(int index);
         
     signals:
@@ -85,18 +81,13 @@ class TUPITUBE_PLUGIN PapagayoSettings : public QWidget
         QBoxLayout *layout;
 
         QLabel *lipSyncName;
-        QLabel *fpsLabel;
         QSpinBox *comboInit;
 
         QLabel *endingLabel;
         QLabel *totalLabel;
 
-        QListWidget *mouthsList;
         QList<TupVoice *> voices;
 
-        QTextEdit *textArea;
-
-        // QString phoneme;
         QLabel *phonemeLabel;
         QSpinBox *xPosField;
         QSpinBox *yPosField;

@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
 *   License:                                                              *
 *   This program is free software; you can redistribute it and/or modify  *
 *   it under the terms of the GNU General Public License as published by  *
@@ -20,6 +20,9 @@
 #include "tosd.h"
 #include "toptionaldialog.h"
 #include "tupbreakdowndialog.h"
+#include "tuppapagayoimporter.h"
+
+#include "tuprequestbuilder.h"
 
 #include <QAction>
 #include <QToolBar>
@@ -37,18 +40,25 @@
 #include <QLabel>
 #include <QScreen>
 
-TupPapagayoApp::TupPapagayoApp(bool extendedUI, int32 fps, const QString &soundFile, QWidget *parent) : QMainWindow(parent)
+TupPapagayoApp::TupPapagayoApp(bool extendedUI, TupProject *project, const QString &soundFile, QList<int> indexes,
+                               QWidget *parent) : QMainWindow(parent)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupPapagayoApp::TupPapagayoApp()]";
     #endif
 
     this->extendedUI = extendedUI;
+    tupProject = project;
     document = nullptr;
     enableAutoBreakdown = true;
-    defaultFps = fps;
+    defaultFps = project->getFPS();
     playerStopped = true;
     saveButtonPressed = false;
+    pgoFilePath = project->getDataDir();
+    soundFilePath = soundFile;
+    sceneIndex= indexes.at(0);
+    layerIndex = indexes.at(1);
+    frameIndex = indexes.at(2);
 
     setUIStyle();
 
@@ -404,6 +414,7 @@ void TupPapagayoApp::openFile(QString filePath)
     if (info.suffix().toLower() == "pgo") {
         document->open(filePath);
     } else {
+        soundFilePath = filePath;
         document->openAudio(filePath);
         document->setFps(defaultFps);
     }
@@ -581,9 +592,7 @@ void TupPapagayoApp::openFile()
 
     TCONFIG->beginGroup("General");
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
-    QString filePath = QFileDialog::getOpenFileName(this,
-                                                    tr("Open"), path,
-                                                    tr("Audio files (*.mp3 *.wav)"));
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Open"), path, tr("Audio files (*.mp3 *.wav)"));
     if (filePath.isEmpty())
         return;
 
@@ -592,6 +601,22 @@ void TupPapagayoApp::openFile()
 
 void TupPapagayoApp::playVoice()
 {
+    if (currentMouthPath.isEmpty()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPapagayoApp::playVoice()] - Fatal Error: Mouth images are unset!";
+        #endif
+        TOsd::self()->display(TOsd::Error, tr("Mouth images are unset!"));
+        return;
+    }
+
+    if (voiceText->toPlainText().isEmpty()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPapagayoApp::playVoice()] - Fatal Error: No voice text to play!";
+        #endif
+        TOsd::self()->display(TOsd::Error, tr("No voice text to play!"));
+        return;
+    }
+
     if (document && document->getAudioPlayer()) {
         if (playerStopped) {
             playerStopped = false;
@@ -815,6 +840,7 @@ void TupPapagayoApp::runManualBreakdownAction()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - currentLanguage -> " << currentLanguage;
+        qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - currentMouthPath -> " << currentMouthPath;
     #endif
 
     if (wordsList.isEmpty()) {
@@ -905,12 +931,12 @@ void TupPapagayoApp::updateMouthView(int index)
         if (mouthFrame->currentIndex() == Predefined)
             mouthFrame->setCurrentIndex(Customized);
 
-        if (customView->imagesAresLoaded()) {
+        if (customView->imagesAresLoaded())
             currentMouthPath = customView->getMouthsPath();
-            waveformView->setMouthsPath(currentMouthPath);
-        } else {
-            waveformView->setMouthsPath("");
-        }
+        else
+            currentMouthPath = "";
+
+        waveformView->setMouthsPath(currentMouthPath);
     } else {
         mouthView->onMouthChanged(index);
         if (mouthFrame->currentIndex() == Customized)
@@ -920,12 +946,17 @@ void TupPapagayoApp::updateMouthView(int index)
         waveformView->setMouthsPath(currentMouthPath);
     }
 }
+
 void TupPapagayoApp::openImagesDialog()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::openImagesDialog()]";
+    #endif
+
     TCONFIG->beginGroup("General");
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
     QString dirPath = QFileDialog::getExistingDirectory(this, tr("Choose the images directory..."), path,
-                                                    QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+                                                        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
     if (!dirPath.isEmpty()) {
         QDir dir(dirPath);
         QStringList imagesList = dir.entryList(QStringList() << "*.png" << "*.jpg" << "*.jpeg");
@@ -936,7 +967,7 @@ void TupPapagayoApp::openImagesDialog()
                 QString extension = firstImage.mid(dot);
                 for (int32 i = 0; i < TupLipsyncDoc::phonemesListSize(); i++) {
                     QString image = TupLipsyncDoc::getPhonemeAt(i) + extension;
-                    QString path = dirPath + "/" +  image;
+                    QString path = dirPath + "/" + image;
                     if (!QFile::exists(path)) {
                         TOsd::self()->display(TOsd::Error, tr("Mouth image is missing!"));
                         #ifdef TUP_DEBUG
@@ -946,10 +977,11 @@ void TupPapagayoApp::openImagesDialog()
                     }
                 }
 
-                mouthsPath->setText(dirPath);
-                saveDefaultPath(dirPath);
-                customView->loadImages(dirPath);
-                waveformView->setMouthsPath(dirPath);
+                currentMouthPath = dirPath + "/";
+                mouthsPath->setText(currentMouthPath);
+                saveDefaultPath(currentMouthPath);
+                customView->loadImages(currentMouthPath);
+                waveformView->setMouthsPath(currentMouthPath);
             } else {
                 TOsd::self()->display(TOsd::Error, tr("Mouth images are incomplete!"));
                 #ifdef TUP_DEBUG
@@ -1037,8 +1069,165 @@ void TupPapagayoApp::createLipsyncRecord()
 
 void TupPapagayoApp::saveLipsyncRecord()
 {
-    document->setFilePath("/tmp/test.pgo");
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    pgoFilePath += "/pgo/";
+    if (!QDir(pgoFilePath).exists()) {
+        if (!QDir().mkpath(pgoFilePath)) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Can't create folder -> " << pgoFilePath;
+            #endif
+            TOsd::self()->display(TOsd::Error, tr("Error while saving lip-sync!"));
+            return;
+        }
+    }
+
+    QString folderName = QString(voiceName->text() + ".pgo").toLower();
+    pgoFilePath += folderName;
+    document->setFilePath(pgoFilePath);
+
     if (document->save()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPapagayoApp::importPapagayoLipSync()] - imagesDir -> " << currentMouthPath;
+        #endif
+
+        QFile projectFile(pgoFilePath);
+        if (projectFile.exists()) {
+            if (projectFile.size() > 0) {
+                QDir dir(currentMouthPath);
+                QStringList imagesList = dir.entryList(QStringList() << "*.png" << "*.jpg" << "*.jpeg");
+                if (imagesList.size() > 0) {
+                    if (imagesList.count() == 10) { // Mouths set always contains 10 figures
+                        QString firstImage = imagesList.at(0);
+                        int dot = firstImage.lastIndexOf(".");
+                        QString extension = firstImage.mid(dot);
+
+                        TupPapagayoImporter *parser = new TupPapagayoImporter(pgoFilePath, tupProject->getDimension(), extension, frameIndex);
+                        if (parser->fileIsValid()) {
+                            // Creating Papagayo folder in the library
+                            TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, folderName,
+                                                                                                TupLibraryObject::Folder);
+                            emit requestTriggered(&request);
+
+                            TupLibraryObject::ObjectType type = TupLibraryObject::Image;
+
+                            // Adding mouth images in the library
+                            foreach (QString fileName, imagesList) {
+                                QString key = fileName.toLower();
+                                QString imagePath = currentMouthPath + fileName;
+                                QFile f(imagePath);
+                                #ifdef TUP_DEBUG
+                                    qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - mouth image -> " << fileName;
+                                    qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - key -> " << key;
+                                    qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - mouthPath -> " << currentMouthPath;
+                                    qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - imagePath -> " << imagePath;
+                                #endif
+                                // Importing image into Library
+                                if (f.open(QIODevice::ReadOnly)) {
+                                    QByteArray data = f.readAll();
+                                    f.close();
+
+                                    request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key, type, TupProject::FRAMES_MODE, data, folderName,
+                                                                                      sceneIndex, layerIndex, frameIndex);
+                                    emit requestTriggered(&request);
+                                } else {
+                                    #ifdef TUP_DEBUG
+                                        qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Can't open image file -> " << imagePath;
+                                    #endif
+                                    TOsd::self()->display(TOsd::Error, tr("Can't load mouth image!"));
+                                    return;
+                                }
+                            }
+
+                            // Adding lip-sync sound file
+                            QFile f(soundFilePath);
+                            QFileInfo info(soundFilePath);
+                            QString soundKey = info.fileName().toLower();
+
+                            if (extendedUI) {
+                                if (f.open(QIODevice::ReadOnly)) {
+                                    QByteArray data = f.readAll();
+                                    f.close();
+                                    request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, soundKey, TupLibraryObject::Sound, TupProject::FRAMES_MODE,
+                                                                                      data, folderName, sceneIndex, layerIndex, frameIndex);
+                                    emit requestTriggered(&request);
+                                } else {
+                                    #ifdef TUP_DEBUG
+                                        qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Can't open sound file -> " << soundFilePath;
+                                    #endif
+                                    TOsd::self()->display(TOsd::Error, tr("Can't load voice sound!"));
+                                    return;
+                                }
+                            }
+
+                            // Adding Papagayo project
+                            parser->setSoundFile(soundKey);
+                            QString xml = parser->toString();
+
+                            request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex, TupProjectRequest::AddLipSync, xml);
+                            emit requestTriggered(&request);
+
+                            // Adding frames if they are required
+                            TupScene *scene = tupProject->sceneAt(sceneIndex);
+                            if (scene) {
+                                int sceneFrames = scene->framesCount();
+                                int lipSyncFrames = frameIndex + parser->getFrameCount();
+
+                                #ifdef TUP_DEBUG
+                                    qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - scenesFrames -> " << sceneFrames;
+                                    qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - lipSyncFrames -> " << lipSyncFrames;
+                                #endif
+
+                                if (lipSyncFrames > sceneFrames) {
+                                    int layersCount = scene->layersCount();
+                                    for (int i = sceneFrames; i < lipSyncFrames; i++) {
+                                         for (int j = 0; j < layersCount; j++) {
+                                              request = TupRequestBuilder::createFrameRequest(sceneIndex, j, i, TupProjectRequest::Add, tr("Frame"));
+                                              emit requestTriggered(&request);
+                                         }
+                                    }
+
+                                    QString selection = QString::number(layerIndex) + "," + QString::number(layerIndex) + ","
+                                                        + QString::number(frameIndex) + "," + QString::number(frameIndex);
+
+                                    request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex, TupProjectRequest::Select, selection);
+                                    emit requestTriggered(&request);
+                                }
+                            }
+
+                            TOsd::self()->display(TOsd::Info, tr("Papagayo file has been imported successfully"));
+                        } else {
+                            TOsd::self()->display(TOsd::Error, tr("Papagayo file is invalid!"));
+                            #ifdef TUP_DEBUG
+                                qDebug() << "[TupPapagayoApp::importPapagayoLipSync()] - Fatal Error: Papagayo file is invalid!";
+                            #endif
+                        }
+                    } else {
+                        TOsd::self()->display(TOsd::Error, tr("Mouth images are incomplete!"));
+                        #ifdef TUP_DEBUG
+                            qDebug() << "[TupPapagayoApp::importPapagayoLipSync()] - Fatal Error: Mouth images are incomplete!";
+                        #endif
+                    }
+                } else {
+                    TOsd::self()->display(TOsd::Error, tr("Images directory is empty!"));
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupPapagayoApp::importPapagayoLipSync()] - Fatal Error: Images directory is empty!";
+                    #endif
+                }
+            } else {
+                TOsd::self()->display(TOsd::Error, tr("Papagayo project is invalid!"));
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupPapagayoApp::importPapagayoLipSync()] - Fatal Error: Papagayo file is invalid!";
+                #endif
+            }
+        } else {
+            TOsd::self()->display(TOsd::Error, tr("Papagayo project is invalid!"));
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupPapagayoApp::importPapagayoLipSync()] - Fatal Error: Papagayo file doesn't exist!";
+            #endif
+        }
+
+        QApplication::restoreOverrideCursor();
         #ifdef TUP_DEBUG
             qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Lip-sync item saved successfully!";
         #endif

@@ -61,6 +61,7 @@ class TUPITUBE_PLUGIN PolyLineTool : public TupToolPlugin
         virtual void init(TupGraphicsScene *scene);
         virtual QList<TAction::ActionId> keys() const;
         virtual QMap<TAction::ActionId, TAction *>actions() const;
+        TAction * getAction(TAction::ActionId toolId);
         int toolType() const;
 
         virtual void press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);

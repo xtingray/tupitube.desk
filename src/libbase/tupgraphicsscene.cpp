@@ -1141,7 +1141,8 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
                                              int hDelta = static_cast<int> (item->boundingRect().height()/2);
                                              item->setPos(pos.x() - wDelta, pos.y() - hDelta);
                                          }
-                                         item->setToolTip(tr("lipsync:") + name + ":" + QString::number(j));
+                                         // item->setToolTip(tr("lipsync:") + name + ":" + QString::number(j));
+                                         item->setToolTip(tr("lipsync:") + name);
                                          item->setZValue(zValue);
                                          addItem(item);
                                      }

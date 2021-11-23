@@ -670,15 +670,16 @@ TupVoice * TupLipSync::voiceAt(int index)
     return nullptr;
 }
 
-void TupLipSync::updateMouthPos(int mouthIndex, QPointF point, int frame)
+void TupLipSync::updateMouthPos(QPointF point, int frame)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLipSync::updateMouthPos()] - mouthIndex -> " << mouthIndex;
+        // qDebug() << "[TupLipSync::updateMouthPos()] - mouthIndex -> " << mouthIndex;
         qDebug() << "[TupLipSync::updateMouthPos()] - point -> " << point;
         qDebug() << "[TupLipSync::updateMouthPos()] - frame -> " << frame;
     #endif
 
-    TupVoice *voice = voices.at(mouthIndex);
+    // TupVoice *voice = voices.at(mouthIndex);
+    TupVoice *voice = voices.first();
     if (voice)
         voice->updateMouthPos(point, frame);
 }

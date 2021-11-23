@@ -78,6 +78,7 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
         virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene) = 0;
         
         virtual QMap<TAction::ActionId, TAction *> actions() const = 0;
+        virtual TAction * getAction(TAction::ActionId toolId) = 0;
 
         virtual QWidget *configurator()  = 0;
         virtual void aboutToChangeTool() = 0;

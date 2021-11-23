@@ -69,6 +69,7 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
         virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
 
         virtual QMap<TAction::ActionId, TAction *>actions() const;
+        TAction * getAction(TAction::ActionId toolId);
         int toolType() const;
         virtual QWidget *configurator();
 
@@ -82,7 +83,6 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
         virtual void layerResponse(const TupLayerResponse *event);
         virtual void frameResponse(const TupFrameResponse *event);
 
-        // virtual void addNewItem(const QString &name);
         virtual void updateWorkSpaceContext();
 
         virtual void keyPressEvent(QKeyEvent *event);
@@ -97,20 +97,18 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
 
     signals:
         void openLipSyncCreator();
-        void importLipSync();
         void callForPlugin(int menu, int index);
 
-    public slots:
-        void openLipSyncEditor(const QString &soundFile);
+    // public slots:
+    //    void openLipSyncEditor(const QString &soundFile);
 
     private slots:
         void editLipSyncSelection(const QString &name);
         void removeCurrentLipSync(const QString &name);
-        // void setCurrentLipSync(const QString &name);
         void setTargetInitPos(const QPointF &point);
         void updateOriginPoint(const QPointF &point);
         void resetCanvas();
-        void addTarget(const QString &id, int index);
+        void addTarget();
         void updateInitFrame(int index);
         void updateXPosition(int x);
         void updateYPosition(int y);
@@ -133,13 +131,9 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
 
         TupToolPlugin::Mode mode;
 
-        // int baseZValue;
         qreal realFactor;
-
         QGraphicsItem *mouth;
         QPointF mouthOffset;
-        QString currentMouth;
-        int currentMouthIndex;
         bool targetIncluded;
 };
 

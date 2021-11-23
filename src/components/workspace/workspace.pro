@@ -28,8 +28,8 @@ HEADERS += tuppaintarea.h \
            tupcameradialog.h \
            tupcamerawindow.h \
            tupvideosurface.h \
-           tuppapagayoimporter.h \
-           tuppapagayodialog.h \
+           # tuppapagayoimporter.h \
+           # tuppapagayodialog.h \
            tupreflexrenderarea.h \
            tupmodesitem.h \
            tupmodessettingsdialog.h \
@@ -55,8 +55,8 @@ SOURCES += tuppaintarea.cpp \
            tupcameradialog.cpp \
            tupcamerawindow.cpp \
            tupvideosurface.cpp \
-           tuppapagayoimporter.cpp \
-           tuppapagayodialog.cpp \
+           # tuppapagayoimporter.cpp \
+           # tuppapagayodialog.cpp \
            tupreflexrenderarea.cpp \
            tupmodesitem.cpp \
            tupmodessettingsdialog.cpp \

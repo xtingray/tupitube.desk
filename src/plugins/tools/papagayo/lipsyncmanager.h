@@ -64,7 +64,7 @@ class TUPITUBE_PLUGIN LipSyncManager: public QWidget
 
     signals:
         void openLipSyncCreator();
-        void importLipSync();
+        // void importLipSync();
         void editCurrentLipSync(const QString &name);
         void removeCurrentLipSync(const QString &name);
 

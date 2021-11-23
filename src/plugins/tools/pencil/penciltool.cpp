@@ -264,6 +264,11 @@ QMap<TAction::ActionId, TAction *> PencilTool::actions() const
     return penActions;
 }
 
+TAction * PencilTool::getAction(TAction::ActionId toolId)
+{
+    return penActions[toolId];
+}
+
 int PencilTool::toolType() const
 {
     return TupToolInterface::Brush;

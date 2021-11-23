@@ -569,7 +569,7 @@ void TupMainWindow::setUndoRedoActions()
 
 void TupMainWindow::importPapagayoLipSync()
 {
-    animationTab->importPapagayoLipSync();
+    animationTab->openLipSyncCreator();
 }
 
 void TupMainWindow::hideTopPanels()

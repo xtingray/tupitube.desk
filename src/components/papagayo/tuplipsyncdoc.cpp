@@ -1029,7 +1029,7 @@ void TupLipsyncDoc::openAudio(const QString &path)
 bool TupLipsyncDoc::save()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLipsyncDoc::save()]";
+        qDebug() << "[TupLipsyncDoc::save()] - filePath -> " << filePath;
     #endif
 
     if (filePath.isEmpty()) {

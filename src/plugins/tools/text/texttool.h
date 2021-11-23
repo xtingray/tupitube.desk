@@ -67,7 +67,8 @@ class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
         virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         // virtual void doubleClick(const TupInputDeviceInformation *input, TupGraphicsScene *scene);
 
-        virtual QMap<TAction::ActionId, TAction *>actions() const; 
+        virtual QMap<TAction::ActionId, TAction *>actions() const;
+        TAction * getAction(TAction::ActionId toolId);
         virtual QWidget *configurator();
         virtual void saveConfig();
         virtual void keyPressEvent(QKeyEvent *event);

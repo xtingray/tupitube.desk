@@ -84,6 +84,11 @@ QMap<TAction::ActionId, TAction *> PolyLineTool::actions() const
     return polyActions;
 }
 
+TAction * PolyLineTool::getAction(TAction::ActionId toolId)
+{
+    return polyActions[toolId];
+}
+
 void PolyLineTool::init(TupGraphicsScene *gScene)
 {
     /*

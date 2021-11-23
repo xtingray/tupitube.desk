@@ -73,7 +73,7 @@ class TUPITUBE_EXPORT TupCanvas : public QFrame
         void closeEvent(QCloseEvent *event);
 
    public slots:
-        void colorDialog(const QColor &current);
+        void openColorDialog(const QColor &color);
 
    private slots:
         void wakeUpPencil();
@@ -83,7 +83,7 @@ class TUPITUBE_EXPORT TupCanvas : public QFrame
         void wakeUpSelection();
         void wakeUpNodes();
 
-        void colorDialog();
+        void showColorDialog();
         void penDialog();
         void onionDialog();
         void setOnionOpacity(double onion);

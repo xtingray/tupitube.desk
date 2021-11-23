@@ -76,6 +76,7 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
         virtual void frameResponse(const TupFrameResponse *event);
 
         virtual QMap<TAction::ActionId, TAction *> actions() const;
+        TAction * getAction(TAction::ActionId toolId);
 
         int toolType() const;
         

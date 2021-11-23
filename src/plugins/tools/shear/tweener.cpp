@@ -204,6 +204,11 @@ QMap<TAction::ActionId, TAction *> Tweener::actions() const
     return shearActions;
 }
 
+TAction * Tweener::getAction(TAction::ActionId toolId)
+{
+    return shearActions[toolId];
+}
+
 /* This method returns the list of actions defined in this plugin */
 
 int Tweener::toolType() const

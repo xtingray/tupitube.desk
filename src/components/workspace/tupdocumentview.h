@@ -166,7 +166,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         bool handleProjectResponse(TupProjectResponse *response);
         void updateNodesScale(qreal factor);
         void openLipSyncCreator();
-        void importPapagayoLipSync();
+        // void importPapagayoLipSync();
         void resetWorkSpaceTransformations();
         void updateBgColor(const QColor color);
         void updatePaintArea();
@@ -190,7 +190,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void modeHasChanged(TupProject::Mode mode);
         void requestExportImageToServer(int frameIndex, int sceneIndex, const QString &title,
                                         const QString &topics, const QString &description);
-        void openColorDialog(const QColor &);
+        void colorDialogRequested(const QColor &color);
         // void updateColorFromFullScreen(const QColor &color);
         // void penColorChanged(const QColor &color);
         void colorChanged(TColorCell::FillType fillType, const QColor color);
@@ -222,6 +222,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         double backgroundOpacity(TupFrame::FrameType type);
         void updateOnionColorSchemeStatus(bool status);
         void updateToolsMenu(TAction::ActionId id, const QString &actionId);
+        QList<int> getContextIndexes();
 
         QMenu *shapesMenu;
         QMenu *motionMenu;

@@ -13,6 +13,10 @@ INSTALLS += target
 target.path = /lib/
 
 win32 {
+    STORE_DIR = ../../store/
+    INCLUDEPATH += $$STORE_DIR
+    LIBS += -L$$STORE_DIR/release/ -ltupistore
+
     INCLUDEPATH += libsndfile_1.0.25/Win32/include
 
     LIBS += -LC:\Users\mclifton\Documents\QtDevelopment\Papagayo\libsndfile_1.0.25\Win32\lib -llibsndfile-1
@@ -26,6 +30,10 @@ win32 {
     !include(../../../tupiglobal.pri) {
              error("Run ./configure first!")
     }
+
+    STORE_DIR = ../../store/
+    INCLUDEPATH += $$STORE_DIR
+    LIBS += -L$$STORE_DIR -ltupistore
 }
 
 FRAMEWORK_DIR = "../../framework"
@@ -38,7 +46,8 @@ HEADERS += tuppapagayoapp.h \
            tupmouthview.h \
            tupcustomizedmouthview.h \
            tuppg_config.h \
-           tupbreakdowndialog.h
+           tupbreakdowndialog.h \
+           tuppapagayoimporter.h
 
 SOURCES += tuppapagayoapp.cpp \
            tuplipsyncdoc.cpp \
@@ -46,7 +55,8 @@ SOURCES += tuppapagayoapp.cpp \
            tupmouthview.cpp \
            tupcustomizedmouthview.cpp \
            tupaudioextractor.cpp \
-           tupbreakdowndialog.cpp
+           tupbreakdowndialog.cpp \
+           tuppapagayoimporter.cpp
 
 INCLUDEPATH += src
 

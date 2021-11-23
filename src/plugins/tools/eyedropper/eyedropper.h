@@ -64,7 +64,8 @@ class TUPITUBE_PLUGIN EyeDropper: public TupToolPlugin
                     TupGraphicsScene *gScene);
         
         virtual QMap<TAction::ActionId, TAction *> actions() const;
-        
+        TAction * getAction(TAction::ActionId toolId);
+
         int toolType() const;
         
         virtual QWidget *configurator();

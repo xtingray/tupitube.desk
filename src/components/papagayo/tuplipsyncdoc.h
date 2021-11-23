@@ -240,9 +240,7 @@ class TUPITUBE_EXPORT TupLipsyncDoc : public QObject
         static QHash<QString, QString> dictionaryToPhonemeMap;
         static QHash<QString, QStringList> phonemeDictionary;
 
-	/*
-	 * I would have preferred to use a QAudioDecoder object, but it doesn't seem to actually be implemented (at least on Mac).
-	*/
+        // SQA: Consider to use a QAudioDecoder object, but it doesn't seem to actually be implemented (at least on Mac).
 };
 
 #endif // LIPSYNCDOC_H
