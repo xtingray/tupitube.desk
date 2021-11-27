@@ -49,7 +49,7 @@ PapagayoTool::PapagayoTool() : TupToolPlugin()
     #endif
 
     setupActions();
-    configPanel = 0;
+    configPanel = nullptr;
 }
 
 PapagayoTool::~PapagayoTool()
@@ -64,7 +64,7 @@ void PapagayoTool::init(TupGraphicsScene *gScene)
         qDebug() << "[PapagayoTool::init()]";
     #endif
 
-    target = 0;
+    target = nullptr;
     targetIncluded = false;
     scene = gScene;
     mode = TupToolPlugin::View;
@@ -147,13 +147,14 @@ QWidget * PapagayoTool::configurator()
         mode = TupToolPlugin::View;
 
         configPanel = new Configurator;
-        connect(configPanel, SIGNAL(openLipSyncCreator()), this, SIGNAL(openLipSyncCreator()));
-        connect(configPanel, &Configurator::editLipSyncSelection, this, &PapagayoTool::editLipSyncSelection);
+        connect(configPanel, &Configurator::lipsyncCreatorRequested, this, &PapagayoTool::lipsyncCreatorRequested);
+        connect(configPanel, &Configurator::lipsyncEditionRequested, this, &PapagayoTool::lipsyncEditionRequested);
+        connect(configPanel, &Configurator::mouthEditionRequested, this, &PapagayoTool::editLipsyncMouth);
         connect(configPanel, &Configurator::removeCurrentLipSync, this, &PapagayoTool::removeCurrentLipSync);
-        connect(configPanel, SIGNAL(closeLipSyncProperties()), this, SLOT(resetCanvas()));
-        connect(configPanel, SIGNAL(initFrameHasChanged(int)), this, SLOT(updateInitFrame(int)));
-        connect(configPanel, SIGNAL(xPosChanged(int)), this, SLOT(updateXPosition(int)));
-        connect(configPanel, SIGNAL(yPosChanged(int)), this, SLOT(updateYPosition(int)));
+        connect(configPanel, &Configurator::closeLipSyncProperties, this, &PapagayoTool::resetCanvas);
+        connect(configPanel, &Configurator::initFrameHasChanged, this, &PapagayoTool::updateInitFrame);
+        connect(configPanel, &Configurator::xPosChanged, this, &PapagayoTool::updateXPosition);
+        connect(configPanel, &Configurator::yPosChanged, this, &PapagayoTool::updateYPosition);
     } 
 
     return configPanel;
@@ -216,7 +217,7 @@ void PapagayoTool::updateScene(TupGraphicsScene *scene)
     Q_UNUSED(scene)
 }
 
-void PapagayoTool::editLipSyncSelection(const QString &name)
+void PapagayoTool::editLipsyncMouth(const QString &name)
 {
     TupScene *sceneData = scene->currentScene();
     currentLipSync = sceneData->getLipSync(name);
@@ -230,7 +231,7 @@ void PapagayoTool::editLipSyncSelection(const QString &name)
             configPanel->setPhoneme(phoneme->value());
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[PapagayoTool::editLipSyncSelection()] - No lipsync phoneme at index 0";
+                qDebug() << "[PapagayoTool::editLipsyncMouth()] - No lipsync phoneme at index 0";
             #endif
         }
         configPanel->setPos(voice->mouthPos());
@@ -360,7 +361,7 @@ void PapagayoTool::removeTarget()
     if (targetIncluded) {
         if (target) {
             scene->removeItem(target);
-            target = 0;
+            target = nullptr;
             targetIncluded = false;
         }
     }
@@ -546,9 +547,3 @@ TupToolPlugin::Mode PapagayoTool::currentMode()
 {
     return mode;
 }
-
-/*
-void PapagayoTool::openLipSyncEditor(const QString &soundFile)
-{
-}
-*/

@@ -58,32 +58,30 @@ LipSyncManager::LipSyncManager(QWidget *parent): QWidget(parent)
 
     openButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/plus_sign.png"), 22);
     openButton->setToolTip(tr("Open LipSync Creator"));
-    connect(openButton, SIGNAL(clicked()), this, SIGNAL(openLipSyncCreator()));
+    connect(openButton, SIGNAL(clicked()), this, SIGNAL(lipsyncCreatorRequested()));
 
-    /*
-    importButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/import_lipsync.png"), 22);
-    importButton->setToolTip(tr("Import LipSync"));
-    connect(importButton, SIGNAL(clicked()), this, SIGNAL(importLipSync()));
-    */
+    editPgoButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/edit_sign.png"), 22);
+    editPgoButton->setToolTip(tr("Edit LipSync"));
+    connect(editPgoButton, SIGNAL(clicked()), this, SLOT(editLipSync()));
 
-    editButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/edit_sign.png"), 22);
-    editButton->setToolTip(tr("Edit LipSync"));
-    connect(editButton, SIGNAL(clicked()), this, SLOT(editLipSync()));
+    editMouthButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/mouth.png"), 22);
+    editMouthButton->setToolTip(tr("Edit Mouth"));
+    connect(editMouthButton, SIGNAL(clicked()), this, SLOT(editMouth()));
 
-    delButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/minus_sign.png"), 22);
-    delButton->setToolTip(tr("Remove LipSync"));
-    connect(delButton, SIGNAL(clicked()), this, SLOT(removeLipSync()));
+    deleteButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/minus_sign.png"), 22);
+    deleteButton->setToolTip(tr("Remove LipSync"));
+    connect(deleteButton, SIGNAL(clicked()), this, SLOT(removeLipSync()));
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->setAlignment(Qt::AlignHCenter);
     buttonLayout->setMargin(0);
     buttonLayout->addWidget(openButton);
-    // buttonLayout->addSpacing(10);
-    // buttonLayout->addWidget(importButton);
     buttonLayout->addSpacing(10);
-    buttonLayout->addWidget(editButton);
+    buttonLayout->addWidget(editPgoButton);
     buttonLayout->addSpacing(10);
-    buttonLayout->addWidget(delButton);
+    buttonLayout->addWidget(editMouthButton);
+    buttonLayout->addSpacing(10);
+    buttonLayout->addWidget(deleteButton);
 
     layout->addLayout(listLayout);
     layout->addLayout(buttonLayout);
@@ -123,7 +121,16 @@ void LipSyncManager::editLipSync()
     if (lipSyncList->count() > 0) {
         QListWidgetItem *item = lipSyncList->currentItem();
         if (item)
-            emit editCurrentLipSync(item->text());
+            emit lipsyncEditionRequested(item->text());
+    }
+}
+
+void LipSyncManager::editMouth()
+{
+    if (lipSyncList->count() > 0) {
+        QListWidgetItem *item = lipSyncList->currentItem();
+        if (item)
+            emit mouthEditionRequested(item->text());
     }
 }
 

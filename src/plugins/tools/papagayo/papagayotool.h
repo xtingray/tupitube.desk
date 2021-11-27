@@ -96,14 +96,12 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
         void setTargetEnvironment();
 
     signals:
-        void openLipSyncCreator();
+        void lipsyncCreatorRequested();
+        void lipsyncEditionRequested(const QString &lipsyncName);
         void callForPlugin(int menu, int index);
 
-    // public slots:
-    //    void openLipSyncEditor(const QString &soundFile);
-
     private slots:
-        void editLipSyncSelection(const QString &name);
+        void editLipsyncMouth(const QString &name);
         void removeCurrentLipSync(const QString &name);
         void setTargetInitPos(const QPointF &point);
         void updateOriginPoint(const QPointF &point);

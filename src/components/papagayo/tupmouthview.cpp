@@ -89,7 +89,7 @@ void TupMouthView::paintEvent(QPaintEvent *event)
     QImage *img = nullptr;
     QPainter dc(this);
 
-    if (document && document->getCurrentVoice())
+    if (document && document->getVoice())
         phoneme = document->getPhonemeAtFrame(frame);
 	else
 		phoneme = "etc";

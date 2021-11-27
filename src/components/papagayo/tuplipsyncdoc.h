@@ -55,7 +55,7 @@ class LipsyncWord
         LipsyncWord();
         ~LipsyncWord();
 
-        void runBreakdown(QString language);
+        void runBreakdown(const QString &language);
         void repositionPhoneme(LipsyncPhoneme *phoneme);
 
         void setText(const QString string);
@@ -72,7 +72,7 @@ class LipsyncWord
         LipsyncPhoneme * getPhonemeAt(int32 index);
         LipsyncPhoneme * getLastPhoneme();
         void removeFirstPhoneme();
-        void removePhonemes();
+        void clearPhonemes();
         int getFrameFromPhonemeAt(int32 index);
         QString getPhonemesString() const;
 
@@ -101,6 +101,7 @@ class LipsyncPhrase
 
         void setText(const QString string);
         QString getText() const;
+        bool isTextEmpty();
 
         void setStartFrame(int frameIndex);
         int getStartFrame() const;
@@ -119,10 +120,9 @@ class LipsyncPhrase
         LipsyncWord* getLastWord();
         int getStartFrameFromWordAt(int index);
         int getEndFrameFromWordAt(int index);
+        void clearWords();
 
     private:
-        void cleanWords();
-
         QString text;
         int32 startFrame, endFrame;
         int32 top, bottom;
@@ -139,7 +139,6 @@ class LipsyncVoice
 
         void open(QTextStream &in);
         void save(QTextStream &out);
-        void exportVoice(QString path);
         void runBreakdown(QString language, int32 audioDuration);
         void repositionPhrase(LipsyncPhrase *phrase, int32 audioDuration);
         QString getPhonemeAtFrame(int32 frame);
@@ -148,20 +147,20 @@ class LipsyncVoice
         QString getName() const;
         void setText(const QString &text);
         QString getText() const;
-        void addPhrase(LipsyncPhrase *phrase);
-        QList<LipsyncPhrase *> getPhrases();
-        LipsyncPhrase * getFirstPhrase();
-        int getPhrasesTotal();
-        LipsyncPhrase* getPhraseAt(int index);
-        int getPhraseStartFrame(int index);
-        int getPhraseEndFrame(int index);
+        bool isTextEmpty();
+
+        void setPhrase(LipsyncPhrase *phrase);
+        LipsyncPhrase * getPhrase();
+        int getPhraseStartFrame();
+        int getPhraseEndFrame();
+        void clearPhrase();
+
         bool textIsEmpty();
-        void cleanPhrases();
 
     private:
         QString name;
         QString	text;
-        QList<LipsyncPhrase *> phrases;
+        LipsyncPhrase * phrase;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -176,30 +175,31 @@ class TUPITUBE_EXPORT TupLipsyncDoc : public QObject
 
         static void loadDictionaries();
 
-        void open(const QString &path);
-        void openAudio(const QString &path);
+        void openPGOFile(const QString &pgoPath, const QString &audioPath, int fps);
+        void openAudioFile(const QString &audioPath);
         bool save();
         void rebuildAudioSamples();
 
-        void setFilePath(const QString &path);
-        QString getFilePath() const;
+        void setPGOFilePath(const QString &pgoPath);
+        QString getPGOFilePath() const;
         int32 getFps() { return fps; }
         void setFps(int32 fps);
-        QMediaPlayer *getAudioPlayer();
-        TupAudioExtractor *getAudioExtractor();
+        QMediaPlayer * getAudioPlayer();
+        TupAudioExtractor * getAudioExtractor();
         int32 getDuration() { return audioDuration; }
         QString getVolumePhonemeAtFrame(int32 frame);
-        LipsyncVoice *  getCurrentVoice();
-        void setCurrentVoice(LipsyncVoice *voice);
-        QList<LipsyncVoice *> getVoices();
-        LipsyncVoice* getVoiceAt(int index);
-        LipsyncPhrase * getFirstPhrase();
-        void appendVoice(LipsyncVoice *voice);
+        LipsyncVoice * getVoice();
+        void setVoice(LipsyncVoice *voice);
+        LipsyncPhrase * getPhrase();
+
         bool isModified();
         void setModifiedFlag(bool flag);
         void removeVoiceAt(int index);
         void runBreakdown(const QString &lang, int32 duration);
         bool voiceTextIsEmpty();
+
+        void setVoiceName(const QString &name);
+        QString getVoiceName() const;
         void setVoiceText(const QString &text);
         QString getVoiceText() const;
         QList<LipsyncWord *> getWords();
@@ -209,17 +209,15 @@ class TUPITUBE_EXPORT TupLipsyncDoc : public QObject
         static int phonemesListSize();
         static QString getPhonemeAt(int index);
         QString getPhonemeAtFrame(int frame) const;
-        LipsyncPhrase* getPhraseAt(int index);
-        int getPhrasesTotal();
-        int getStartFrameFromPhraseAt(int index);
-        int getEndFrameFromPhraseAt(int index);
+        int getStartFrameFromPhrase();
+        int getEndFrameFromPhrase();
         void repositionPhrase(LipsyncPhrase *phrase);
 
         void playAudio();
         void pauseAudio();
         void stopAudio();
-        void cleanVoices();
-        void cleanPhrases();
+
+         void clearVoice();
 
     private:
         static void loadDictionary(QFile *file);
@@ -231,10 +229,9 @@ class TUPITUBE_EXPORT TupLipsyncDoc : public QObject
         TupAudioExtractor *audioExtractor;
         real maxAmplitude;
 
-        QString filePath;
-        bool dirty;
-        QList<LipsyncVoice *> voices;
-        LipsyncVoice *currentVoice;
+        QString pgoFilePath;
+        bool projectHasChanged;
+        LipsyncVoice * voice;
 
         static QList<QString> phonemesList;
         static QHash<QString, QString> dictionaryToPhonemeMap;

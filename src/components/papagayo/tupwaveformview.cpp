@@ -322,16 +322,16 @@ void TupWaveFormView::mousePressEvent(QMouseEvent *event)
     if (document && document->getAudioPlayer()) {
         dragging = true;
 
-        if (document->getCurrentVoice()) {
+        if (document->getVoice()) {
             // test to see if the user clicked on a phrase, word, or phoneme
 			// first, find the phrase that was clicked on
-            for (int32 i = 0; i < document->getPhrasesTotal(); i++) {
-                if (frame >= document->getStartFrameFromPhraseAt(i)
-                    && frame <= document->getEndFrameFromPhraseAt(i)) {
-                    selectedPhrase = document->getPhraseAt(i);
-					break;
+            // for (int32 i = 0; i < document->getPhrasesTotal(); i++) {
+                if (frame >= document->getStartFrameFromPhrase()
+                    && frame <= document->getEndFrameFromPhrase()) {
+                    selectedPhrase = document->getPhrase();
+                    // break;
 				}
-			}
+            // }
 
 			// next, find the word that was clicked on
             if (selectedPhrase) {
@@ -581,7 +581,7 @@ void TupWaveFormView::mouseReleaseEvent(QMouseEvent *event)
                                                                          mouthsPath, this);
             if (breakdownDialog->exec() == QDialog::Accepted) {
                 document->setModifiedFlag(true);
-                selectedWord->removePhonemes();
+                selectedWord->clearPhonemes();
 
                 QStringList phList = breakdownDialog->phonemeString().split(' ', Qt::SkipEmptyParts);
                 for (int i = 0; i < phList.size(); i++) {
@@ -714,62 +714,76 @@ void TupWaveFormView::paintEvent(QPaintEvent *event)
 			frame++;
 	}
 
-    if (document->getCurrentVoice()) {
+    if (document->getVoice()) {
 		topBorder += 4;
-        for (int32 p = 0; p < document->getPhrasesTotal(); p++) {
-            LipsyncPhrase *phrase = document->getPhraseAt(p);
-            rect = QRect(phrase->getStartFrame() * frameWidth, topBorder,
-                        (phrase->getEndFrame() - phrase->getStartFrame() + 1) * frameWidth, textHeight);
-            phrase->setTop(rect.top());
-            phrase->setBottom(rect.bottom());
-            dc.fillRect(rect, phraseFillCol);
-			dc.setPen(phraseOutlineCol);
-            dc.drawRect(rect);
-            dc.setClipRect(rect);
-			dc.setPen(textCol);
-            rect = rect.marginsRemoved(QMargins(2, 2, 2, 2));
-            dc.drawText(QPoint(rect.left(), rect.bottom() - 2), phrase->getText());
-			dc.setClipping(false);
-
-            for (int32 w = 0; w < phrase->wordsSize(); w++) {
-                LipsyncWord *word = phrase->getWordAt(w);
-                rect = QRect(word->getStartFrame() * frameWidth, topBorder + 4 + textHeight,
-                             (word->getEndFrame() - word->getStartFrame() + 1) * frameWidth, textHeight);
-				if (w & 1)
-                    rect.translate(0, textHeight - textHeight / 4);
-                word->setTop(rect.top());
-                word->setBottom(rect.bottom());
-                if (word->phonemesSize() == 0) {
-                    dc.fillRect(rect, wordMissingFillCol);
-					dc.setPen(wordMissingOutlineCol);
-                } else {
-                    dc.fillRect(rect, wordFillCol);
-					dc.setPen(wordOutlineCol);
-				}
-
+        LipsyncPhrase *phrase = document->getPhrase();
+        if (phrase) {
+            if (!document->voiceTextIsEmpty()) {
+                rect = QRect(phrase->getStartFrame() * frameWidth, topBorder,
+                            (phrase->getEndFrame() - phrase->getStartFrame() + 1) * frameWidth, textHeight);
+                phrase->setTop(rect.top());
+                phrase->setBottom(rect.bottom());
+                dc.fillRect(rect, phraseFillCol);
+                dc.setPen(phraseOutlineCol);
                 dc.drawRect(rect);
                 dc.setClipRect(rect);
-				dc.setPen(textCol);
+                dc.setPen(textCol);
                 rect = rect.marginsRemoved(QMargins(2, 2, 2, 2));
-                dc.drawText(QPoint(rect.left(), rect.bottom() - 2), word->getText());
-				dc.setClipping(false);
+                dc.drawText(QPoint(rect.left(), rect.bottom() - 2), phrase->getText());
+                dc.setClipping(false);
 
-                for (int32 i = 0; i < word->phonemesSize(); i++) {
-                    LipsyncPhoneme *phoneme = word->getPhonemeAt(i);
-                    rect = QRect(phoneme->getFrame() * frameWidth, clientHeight - 4 - textHeight, frameWidth, textHeight);
-					if (i & 1)
-                        rect.translate(0, -(textHeight - textHeight / 4));
-                    phoneme->setTop(rect.top());
-                    phoneme->setBottom(rect.bottom());
-                    dc.fillRect(rect, phonemeFillCol);
-					dc.setPen(phonemeOutlineCol);
+                for (int32 w = 0; w < phrase->wordsSize(); w++) {
+                    LipsyncWord *word = phrase->getWordAt(w);
+                    rect = QRect(word->getStartFrame() * frameWidth, topBorder + 4 + textHeight,
+                                 (word->getEndFrame() - word->getStartFrame() + 1) * frameWidth, textHeight);
+                    if (w & 1)
+                        rect.translate(0, textHeight - textHeight / 4);
+                    word->setTop(rect.top());
+                    word->setBottom(rect.bottom());
+                    if (word->phonemesSize() == 0) {
+                        dc.fillRect(rect, wordMissingFillCol);
+                        dc.setPen(wordMissingOutlineCol);
+                    } else {
+                        dc.fillRect(rect, wordFillCol);
+                        dc.setPen(wordOutlineCol);
+                    }
+
                     dc.drawRect(rect);
-					dc.setPen(textCol);
+                    dc.setClipRect(rect);
+                    dc.setPen(textCol);
                     rect = rect.marginsRemoved(QMargins(2, 2, 2, 2));
-                    dc.drawText(QPoint(rect.left(), rect.bottom() - 2), phoneme->getText());
-				} // for i
-			} // for w
-		} // for p
+                    dc.drawText(QPoint(rect.left(), rect.bottom() - 2), word->getText());
+                    dc.setClipping(false);
+
+                    for (int32 i = 0; i < word->phonemesSize(); i++) {
+                        LipsyncPhoneme *phoneme = word->getPhonemeAt(i);
+                        rect = QRect(phoneme->getFrame() * frameWidth, clientHeight - 4 - textHeight, frameWidth, textHeight);
+                        if (i & 1)
+                            rect.translate(0, -(textHeight - textHeight / 4));
+                        phoneme->setTop(rect.top());
+                        phoneme->setBottom(rect.bottom());
+                        dc.fillRect(rect, phonemeFillCol);
+                        dc.setPen(phonemeOutlineCol);
+                        dc.drawRect(rect);
+                        dc.setPen(textCol);
+                        rect = rect.marginsRemoved(QMargins(2, 2, 2, 2));
+                        dc.drawText(QPoint(rect.left(), rect.bottom() - 2), phoneme->getText());
+                    } // for i
+                } // for w
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupWaveFormView::paintEvent()] - Warning: Phrase is empty!";
+                #endif
+            }
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupWaveFormView::paintEvent()] - Fatal Error: Phrase is NULL!";
+            #endif
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupWaveFormView::paintEvent()] - Fatal Error: Voice is NULL!";
+        #endif
     }
 
     if (drawPlayMarker) {

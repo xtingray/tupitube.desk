@@ -141,15 +141,15 @@ void PapagayoSettings::setInnerForm()
     yLayout->addWidget(yPosField);
     yLayout->addStretch();
 
-    TImageButton *remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close_properties.png"), 22);
-    remove->setToolTip(tr("Close properties"));
-    connect(remove, SIGNAL(clicked()), this, SIGNAL(closeLipSyncProperties()));
+    TImageButton *closeButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close_properties.png"), 22);
+    closeButton->setToolTip(tr("Close properties"));
+    connect(closeButton, SIGNAL(clicked()), this, SIGNAL(closeLipSyncProperties()));
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     buttonsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     buttonsLayout->setMargin(0);
     buttonsLayout->setSpacing(10);
-    buttonsLayout->addWidget(remove);
+    buttonsLayout->addWidget(closeButton);
 
     innerLayout->addLayout(nameLayout);
     innerLayout->addLayout(fpsLayout);

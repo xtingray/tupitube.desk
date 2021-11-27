@@ -33,6 +33,7 @@
 
 #include "tupproject.h"
 #include "tupprojectrequest.h"
+#include "tuplipsync.h"
 
 class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
 {
@@ -43,6 +44,9 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         enum ViewType { Predefined = 0, Customized };
         explicit TupPapagayoApp(bool extendedUI, TupProject *project, const QString &soundFile = QString(),
                                 QList<int> indexes = QList<int>(), QWidget *parent = nullptr);
+
+        explicit TupPapagayoApp(bool extendedUI, TupProject *project, TupLipSync *lipsync, QList<int> indexes,
+                                QWidget *parent = nullptr);
         ~TupPapagayoApp();
 
     public:
@@ -79,6 +83,7 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         bool validateLipsyncForm();
 
     private:
+        void setUICore();
         void setBaseUI();
         void setUIStyle();
         void setupActions();

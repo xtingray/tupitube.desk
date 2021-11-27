@@ -37,7 +37,6 @@
 #define LIPSYNCMANAGER_H
 
 #include "tglobal.h"
-// #include "tapplication.h"
 #include "timagebutton.h"
 #include "tosd.h"
 
@@ -63,13 +62,14 @@ class TUPITUBE_PLUGIN LipSyncManager: public QWidget
         void addNewRecord(const QString &name);
 
     signals:
-        void openLipSyncCreator();
-        // void importLipSync();
-        void editCurrentLipSync(const QString &name);
+        void lipsyncCreatorRequested();
+        void lipsyncEditionRequested(const QString &name);
+        void mouthEditionRequested(const QString &name);
         void removeCurrentLipSync(const QString &name);
 
     private slots:
         void editLipSync();
+        void editMouth();
         void removeLipSync();
 
     private:
@@ -77,9 +77,9 @@ class TUPITUBE_PLUGIN LipSyncManager: public QWidget
 
         QListWidget *lipSyncList;
         TImageButton *openButton;
-        // TImageButton *importButton;
-        TImageButton *editButton;
-        TImageButton *delButton;
+        TImageButton *editPgoButton;
+        TImageButton *editMouthButton;
+        TImageButton *deleteButton;
         QString target;
 };
 

@@ -80,24 +80,30 @@ LipsyncWord::LipsyncWord()
     text = "";
     startFrame = 0;
     endFrame = 0;
-    top = bottom = 0;
+    top = 0;
+    bottom = 0;
+
+    phonemes = QList<LipsyncPhoneme *>();
 }
 
 LipsyncWord::~LipsyncWord()
 {
+    clearPhonemes();
+
+    /*
     while (!phonemes.isEmpty())
         delete phonemes.takeFirst();
+    */
 }
 
-void LipsyncWord::runBreakdown(QString language)
+void LipsyncWord::runBreakdown(const QString &lang)
 {
-    while (!phonemes.isEmpty())
-        delete phonemes.takeFirst();
+    clearPhonemes();
 
     QString msg = text;
     msg.remove(QRegExp("[.,!?;-/()¿]"));
 	QStringList	pronunciation;
-    if (language == "EN") {
+    if (lang == "EN") {
         pronunciation = TupLipsyncDoc::getDictionaryValue(msg.toUpper());
         if (pronunciation.size() > 1) {
             for (int32 i = 1; i < pronunciation.size(); i++) {
@@ -176,25 +182,25 @@ int LipsyncWord::phonemesSize()
 
 LipsyncPhoneme* LipsyncWord::getPhonemeAt(int32 index)
 {
-    if (phonemes.size() > index)
-        return phonemes.at(index);
+    if (!phonemes.isEmpty() && index >= 0) {
+        if (phonemes.size() > index)
+            return phonemes.at(index);
+    }
 
     return nullptr;
 }
 
 LipsyncPhoneme * LipsyncWord::getLastPhoneme()
 {
-    return phonemes.last();
+    if (!phonemes.isEmpty())
+        return phonemes.last();
+
+    return nullptr;
 }
 
 void LipsyncWord::removeFirstPhoneme()
 {
-    delete phonemes.takeFirst();
-}
-
-void LipsyncWord::removePhonemes()
-{
-    while (!phonemes.isEmpty())
+    if (!phonemes.isEmpty())
         delete phonemes.takeFirst();
 }
 
@@ -236,6 +242,12 @@ QString LipsyncWord::getPhonemesString() const
     return string.trimmed();
 }
 
+void LipsyncWord::clearPhonemes()
+{
+    while (!phonemes.isEmpty())
+        delete phonemes.takeFirst();
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 LipsyncPhrase::LipsyncPhrase()
@@ -244,17 +256,19 @@ LipsyncPhrase::LipsyncPhrase()
     startFrame = 0;
     endFrame = 0;
     top = bottom = 0;
+
+    words = QList<LipsyncWord *>();
 }
 
 LipsyncPhrase::~LipsyncPhrase()
 {
-    cleanWords();
+    clearWords();
 }
 
 void LipsyncPhrase::runBreakdown(QString language)
 {
 	// break phrase into words
-    cleanWords();
+    clearWords();
 
     QStringList strList = text.split(' ', Qt::SkipEmptyParts);
     for (int32 i = 0; i < strList.size(); i++) {
@@ -327,6 +341,11 @@ QString LipsyncPhrase::getText() const
     return text;
 }
 
+bool LipsyncPhrase::isTextEmpty()
+{
+    return text.isEmpty();
+}
+
 void LipsyncPhrase::setStartFrame(int frameIndex)
 {
     startFrame = frameIndex;
@@ -369,8 +388,10 @@ void LipsyncPhrase::setBottom(int32 index)
 
 LipsyncWord * LipsyncPhrase::getWordAt(int index)
 {
-    if (words.size() > index)
-        return words.at(index);
+    if (!words.isEmpty() && index >=0) {
+        if (words.size() > index)
+            return words.at(index);
+    }
 
     return nullptr;
 }
@@ -413,7 +434,7 @@ int LipsyncPhrase::getEndFrameFromWordAt(int index)
     return 0;
 }
 
-void LipsyncPhrase::cleanWords()
+void LipsyncPhrase::clearWords()
 {
     while (!words.isEmpty())
         delete words.takeFirst();
@@ -424,11 +445,12 @@ void LipsyncPhrase::cleanWords()
 LipsyncVoice::LipsyncVoice(const QString &name)
 {
     this->name = name;
+    phrase = new LipsyncPhrase;
 }
 
 LipsyncVoice::~LipsyncVoice()
 {
-    cleanPhrases();
+    clearPhrase();
 }
 
 void LipsyncVoice::setName(const QString &name)
@@ -443,57 +465,48 @@ QString LipsyncVoice::getName() const
 
 void LipsyncVoice::setText(const QString &text)
 {
-    this->text = text;
+    if (phrase) {
+        this->text = text;
+        phrase->setText(text);
+    }
 }
 
 QString LipsyncVoice::getText() const
 {
-    return text;
+    if (phrase)
+        return phrase->getText();
+
+    return "";
 }
 
-void LipsyncVoice::addPhrase(LipsyncPhrase *phrase)
+bool LipsyncVoice::isTextEmpty()
 {
-    phrases << phrase;
+    if (phrase)
+        return phrase->isTextEmpty();
+
+    return true;
 }
 
-QList<LipsyncPhrase *> LipsyncVoice::getPhrases()
+void LipsyncVoice::setPhrase(LipsyncPhrase *phrase)
 {
-    return phrases;
+    this->phrase = phrase;
 }
 
-LipsyncPhrase * LipsyncVoice::getFirstPhrase()
+LipsyncPhrase * LipsyncVoice::getPhrase()
 {
-    if (!phrases.isEmpty())
-        return phrases.first();
-
-    return nullptr;
+    return phrase;
 }
 
-LipsyncPhrase* LipsyncVoice::getPhraseAt(int index)
+int LipsyncVoice::getPhraseStartFrame()
 {
-    if (phrases.count() > index)
-        return phrases.at(index);
-
-    return nullptr;
-}
-
-int LipsyncVoice::getPhrasesTotal()
-{
-    return phrases.size();
-}
-
-int LipsyncVoice::getPhraseStartFrame(int index)
-{
-    LipsyncPhrase *phrase = getPhraseAt(index);
     if (phrase)
         return phrase->getStartFrame();
 
     return 0;
 }
 
-int LipsyncVoice::getPhraseEndFrame(int index)
+int LipsyncVoice::getPhraseEndFrame()
 {
-    LipsyncPhrase *phrase = getPhraseAt(index);
     if (phrase)
         return phrase->getEndFrame();
 
@@ -502,7 +515,7 @@ int LipsyncVoice::getPhraseEndFrame(int index)
 
 void LipsyncVoice::open(QTextStream &in)
 {
-    int32 numPhrases, numWords;
+    int32 numWords;
     int32 numPhonemes = 0;
     QString str;
 
@@ -510,107 +523,72 @@ void LipsyncVoice::open(QTextStream &in)
     text = in.readLine().trimmed();
     text = text.split('|').join('\n');
 
-	numPhrases = in.readLine().toInt();
-    for (int p = 0; p < numPhrases; p++) {
-		LipsyncPhrase *phrase = new LipsyncPhrase;
-        phrase->setText(in.readLine().trimmed());
-        phrase->setStartFrame(in.readLine().toInt());
-        phrase->setEndFrame(in.readLine().toInt());
-		numWords = in.readLine().toInt();
-        for (int w = 0; w < numWords; w++) {
-			LipsyncWord *word = new LipsyncWord;
-			str = in.readLine().trimmed();
-			QStringList strList = str.split(' ', Qt::SkipEmptyParts);
-            if (strList.size() >= 4) {
-                word->setText(strList.at(0));
-                word->setStartFrame(strList.at(1).toInt());
-                word->setEndFrame(strList.at(2).toInt());
-				numPhonemes = strList.at(3).toInt();
-			}
+    LipsyncPhrase *phrase = new LipsyncPhrase;
+    phrase->setText(in.readLine().trimmed());
+    phrase->setStartFrame(in.readLine().toInt());
+    phrase->setEndFrame(in.readLine().toInt());
+    numWords = in.readLine().toInt();
 
-            for (int ph = 0; ph < numPhonemes; ph++) {
-				LipsyncPhoneme *phoneme = new LipsyncPhoneme;
-				str = in.readLine().trimmed();
-				QStringList strList = str.split(' ', Qt::SkipEmptyParts);
-                if (strList.size() >= 2) {
-                    phoneme->setFrame(strList.at(0).toInt());
-                    phoneme->setText(strList.at(1));
-				}
-                word->addPhoneme(phoneme);
-			} // for ph
-            phrase->addWord(word);
-		} // for w
-        phrases << phrase;
-	} // for p
+    for (int w = 0; w < numWords; w++) {
+        LipsyncWord *word = new LipsyncWord;
+        str = in.readLine().trimmed();
+        QStringList strList = str.split(' ', Qt::SkipEmptyParts);
+        if (strList.size() >= 4) {
+            word->setText(strList.at(0));
+            word->setStartFrame(strList.at(1).toInt());
+            word->setEndFrame(strList.at(2).toInt());
+            numPhonemes = strList.at(3).toInt();
+        }
+
+        for (int ph = 0; ph < numPhonemes; ph++) {
+            LipsyncPhoneme *phoneme = new LipsyncPhoneme;
+            str = in.readLine().trimmed();
+            QStringList strList = str.split(' ', Qt::SkipEmptyParts);
+            if (strList.size() >= 2) {
+                phoneme->setFrame(strList.at(0).toInt());
+                phoneme->setText(strList.at(1));
+            }
+            word->addPhoneme(phoneme);
+        } // for ph
+        phrase->addWord(word);
+    } // for w
+
+    this->phrase = phrase;
 }
 
 void LipsyncVoice::save(QTextStream &out)
 {
     out << '\t' << name << Qt::endl;
     out << '\t' << text.split('\n').join('|') << Qt::endl;
-    out << '\t' << phrases.size() << Qt::endl;
+    out << "\t\t" << phrase->getText() << Qt::endl;
+    out << "\t\t" << phrase->getStartFrame() << Qt::endl;
+    out << "\t\t" << phrase->getEndFrame() << Qt::endl;
+    out << "\t\t" << phrase->wordsSize() << Qt::endl;
 
-    for (int p = 0; p < phrases.size(); p++) {
-        LipsyncPhrase *phrase = phrases[p];
-        out << "\t\t" << phrase->getText() << Qt::endl;
-        out << "\t\t" << phrase->getStartFrame() << Qt::endl;
-        out << "\t\t" << phrase->getEndFrame() << Qt::endl;
-        out << "\t\t" << phrase->wordsSize() << Qt::endl;
-
-        for (int w = 0; w < phrase->wordsSize(); w++) {
-            LipsyncWord *word = phrase->getWordAt(w);
-            out << "\t\t\t" << word->getText()
-                << ' ' << word->getStartFrame()
-                << ' ' << word->getEndFrame()
-                << ' ' << word->getPhonemes().size()
-				<< Qt::endl;
-            for (int ph = 0; ph < word->phonemesSize(); ph++) {
-                LipsyncPhoneme *phoneme = word->getPhonemeAt(ph);
-                out << "\t\t\t\t" << phoneme->getFrame() << ' ' << phoneme->getText() << Qt::endl;
-			} // for ph
-		} // for w
-	} // for p
-}
-
-void LipsyncVoice::exportVoice(QString path)
-{
-    QFile file(path);
-
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-		return;
-
-    QTextStream out(&file);
-	out << "MohoSwitch1" << Qt::endl;
-
-    int startFrame = 0;
-    int endFrame = 1;
-	QString	phoneme, nextPhoneme;
-
-    if (phrases.size() > 0) {
-        startFrame = phrases[0]->getStartFrame();
-        endFrame = phrases.last()->getEndFrame();
-	}
-
-    if (startFrame > 1) {
-		phoneme = "rest";
-		out << 1 << ' ' << "rest" << Qt::endl;
-	}
-
-    for (int frame = startFrame; frame <= endFrame; frame++) {
-        nextPhoneme = getPhonemeAtFrame(frame);
-        if (nextPhoneme != phoneme) {
-            if (phoneme == "rest") { // export an extra "rest" phoneme at the end of a pause between words or phrases
-				out << frame << ' ' << phoneme << Qt::endl;
-			}
-			phoneme = nextPhoneme;
-			out << frame - 1 << ' ' << phoneme << Qt::endl;
-		}
-	}
-	out << endFrame + 2 << ' ' << "rest" << Qt::endl;
+    for (int w = 0; w < phrase->wordsSize(); w++) {
+        LipsyncWord *word = phrase->getWordAt(w);
+        out << "\t\t\t" << word->getText()
+            << ' ' << word->getStartFrame()
+            << ' ' << word->getEndFrame()
+            << ' ' << word->getPhonemes().size()
+            << Qt::endl;
+        for (int ph = 0; ph < word->phonemesSize(); ph++) {
+            LipsyncPhoneme *phoneme = word->getPhonemeAt(ph);
+            out << "\t\t\t\t" << phoneme->getFrame() << ' ' << phoneme->getText() << Qt::endl;
+        } // for ph
+    } // for w
 }
 
 void LipsyncVoice::runBreakdown(QString language, int32 audioDuration)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::runBreakdownProcess()] - text -> " <<  text;
+    #endif
+
+    if (text.isEmpty()) {
+        return;
+    }
+
 	// make sure there is a space after all punctuation marks
 	QString punctuation = ".,!?;";
 	bool repeatLoop = true;
@@ -627,34 +605,28 @@ void LipsyncVoice::runBreakdown(QString language, int32 audioDuration)
 	}
 
 	// break text into phrases
-    cleanPhrases();
+    clearPhrase();
 
     QStringList strList = text.split('\n', Qt::SkipEmptyParts);
     for (int32 i = 0; i < strList.size(); i++) {
 		if (strList.at(i).length() == 0)
 			continue;
 
-		LipsyncPhrase *phrase = new LipsyncPhrase;
+        phrase = new LipsyncPhrase;
         phrase->setText(strList.at(i));
-        phrases << phrase;
 	}
 
-	// now break down the phrases
-    for (int32 i = 0; i < phrases.size(); i++) {
-        phrases[i]->runBreakdown(language);
-    }
+    phrase->runBreakdown(language);
 
 	// for first-guess frame alignment, count how many phonemes we have
 	int32 phonemeCount = 0;
-    for (int32 i = 0; i < phrases.size(); i++) {
-        LipsyncPhrase *phrase = phrases[i];
-        for (int32 j = 0; j < phrase->wordsSize(); j++) {
-            if (phrase->getWordAt(j)->phonemesSize() == 0) // deal with unknown words
-				phonemeCount += 4;
-			else
-                phonemeCount += phrase->getWordAt(j)->phonemesSize();
-		}
-	}
+    for (int32 j = 0; j < phrase->wordsSize(); j++) {
+        if (phrase->getWordAt(j)->phonemesSize() == 0) // deal with unknown words
+            phonemeCount += 4;
+        else
+            phonemeCount += phrase->getWordAt(j)->phonemesSize();
+    }
+
 	// now divide up the total time by phonemes
 	int32 framesPerPhoneme = 1;
     if (audioDuration > 0 && phonemeCount > 0) {
@@ -665,46 +637,30 @@ void LipsyncVoice::runBreakdown(QString language, int32 audioDuration)
 
 	// finally, assign frames based on phoneme durations
 	int32 curFrame = 0;
-    for (int32 i = 0; i < phrases.size(); i++) {
-        LipsyncPhrase *phrase = phrases[i];
-        for (int32 j = 0; j < phrase->wordsSize(); j++) {
-            LipsyncWord *word = phrase->getWordAt(j);
-            for (int32 k = 0; k < word->phonemesSize(); k++) {
-                LipsyncPhoneme *phoneme = word->getPhonemeAt(k);
-                phoneme->setFrame(curFrame);
-				curFrame += framesPerPhoneme;
-			} // for k
-            if (word->phonemesSize() == 0) { // deal with unknown words
-                word->setStartFrame(curFrame);
-                word->setEndFrame(curFrame + 3);
-				curFrame += 4;
-            } else {
-                word->setStartFrame(word->getPhonemeAt(0)->getFrame());
-                word->setEndFrame(word->getLastPhoneme()->getFrame() + framesPerPhoneme - 1);
-			}
-		} // for j
+    for (int32 j = 0; j < phrase->wordsSize(); j++) {
+        LipsyncWord *word = phrase->getWordAt(j);
+        for (int32 k = 0; k < word->phonemesSize(); k++) {
+            LipsyncPhoneme *phoneme = word->getPhonemeAt(k);
+            phoneme->setFrame(curFrame);
+            curFrame += framesPerPhoneme;
+        } // for k
 
-        phrase->setStartFrame(phrase->getWordAt(0)->getStartFrame());
-        phrase->setEndFrame(phrase->getLastWord()->getEndFrame());
-	} // for i
+        if (word->phonemesSize() == 0) { // deal with unknown words
+            word->setStartFrame(curFrame);
+            word->setEndFrame(curFrame + 3);
+            curFrame += 4;
+        } else {
+            word->setStartFrame(word->getPhonemeAt(0)->getFrame());
+            word->setEndFrame(word->getLastPhoneme()->getFrame() + framesPerPhoneme - 1);
+        }
+    } // for j
+
+    phrase->setStartFrame(phrase->getWordAt(0)->getStartFrame());
+    phrase->setEndFrame(phrase->getLastWord()->getEndFrame());
 }
 
 void LipsyncVoice::repositionPhrase(LipsyncPhrase *phrase, int32 audioDuration)
 {
-    int id = phrases.indexOf(phrase);
-
-    if ((id > 0) && (phrase->getStartFrame() < phrases[id - 1]->getEndFrame() + 1)) {
-        phrase->setStartFrame(phrases[id - 1]->getEndFrame() + 1);
-        if (phrase->getEndFrame() < phrase->getStartFrame() + 1)
-            phrase->setEndFrame(phrase->getStartFrame() + 1);
-	}
-
-    if ((id < phrases.size() - 1) && (phrase->getEndFrame() > phrases[id + 1]->getStartFrame() - 1)) {
-        phrase->setEndFrame(phrases[id + 1]->getStartFrame() - 1);
-        if (phrase->getStartFrame() > phrase->getEndFrame() - 1)
-            phrase->setStartFrame(phrase->getEndFrame() - 1);
-	}
-
     if (phrase->getStartFrame() < 0)
         phrase->setStartFrame(0);
 
@@ -756,26 +712,23 @@ void LipsyncVoice::repositionPhrase(LipsyncPhrase *phrase, int32 audioDuration)
 
 QString LipsyncVoice::getPhonemeAtFrame(int32 frame)
 {
-    for (int32 i = 0; i < phrases.size(); i++) {
-        LipsyncPhrase *phrase = phrases[i];
-        if (frame >= phrase->getStartFrame() && frame <= phrase->getEndFrame()) {
-            // we found the phrase that contains this frame
-            for (int32 j = 0; j < phrase->wordsSize(); j++) {
-                LipsyncWord *word = phrase->getWordAt(j);
-                if (frame >= word->getStartFrame() && frame <= word->getEndFrame()) { // we found the word that contains this frame
-                    if (word->phonemesSize() > 0) {
-                        for (int32 k = word->phonemesSize() - 1; k >= 0; k--) {
-                            if (frame >= word->getPhonemeAt(k)->getFrame()) {
-                                return word->getPhonemeAt(k)->getText();
-							}
-						}
-                    } else { // volume-based breakdown
-						return "";
-					}
-				}
-			}
-		}
-	}
+    if (frame >= phrase->getStartFrame() && frame <= phrase->getEndFrame()) {
+        // we found the phrase that contains this frame
+        for (int32 j = 0; j < phrase->wordsSize(); j++) {
+            LipsyncWord *word = phrase->getWordAt(j);
+            if (frame >= word->getStartFrame() && frame <= word->getEndFrame()) { // we found the word that contains this frame
+                if (word->phonemesSize() > 0) {
+                    for (int32 k = word->phonemesSize() - 1; k >= 0; k--) {
+                        if (frame >= word->getPhonemeAt(k)->getFrame()) {
+                            return word->getPhonemeAt(k)->getText();
+                        }
+                    }
+                } else { // volume-based breakdown
+                    return "";
+                }
+            }
+        }
+    }
 
 	return "rest";
 }
@@ -785,12 +738,10 @@ bool LipsyncVoice::textIsEmpty()
     return text.isEmpty();
 }
 
-void LipsyncVoice::cleanPhrases()
+void LipsyncVoice::clearPhrase()
 {
-    while (!phrases.isEmpty())
-        delete phrases.takeFirst();
-
-    phrases = QList<LipsyncPhrase *>();
+    phrase->setText("");
+    phrase->clearWords();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -801,13 +752,13 @@ QHash<QString, QStringList>	TupLipsyncDoc::phonemeDictionary;
 
 TupLipsyncDoc::TupLipsyncDoc()
 {
-    dirty = false;
+    projectHasChanged = false;
     fps = 24;
     audioDuration = 0;
     audioPlayer = nullptr;
     audioExtractor = nullptr;
     maxAmplitude = 1.0f;
-    currentVoice = nullptr;
+    voice = nullptr;
 }
 
 TupLipsyncDoc::~TupLipsyncDoc()
@@ -823,7 +774,7 @@ TupLipsyncDoc::~TupLipsyncDoc()
         audioExtractor = nullptr;
 	}
 
-    cleanVoices();
+    clearVoice();
 }
 
 void TupLipsyncDoc::loadDictionaries()
@@ -897,26 +848,28 @@ void TupLipsyncDoc::loadDictionary(QFile *file)
 	}
 }
 
-void TupLipsyncDoc::open(const QString &path)
+void TupLipsyncDoc::openPGOFile(const QString &pgoPath, const QString &audioPath, int fps)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLipsyncDoc::open()]";
+        qDebug() << "[TupLipsyncDoc::openPGOFile()] - pgoPath -> " << pgoPath;
+        qDebug() << "[TupLipsyncDoc::openPGOFile()] - audioPath -> " << audioPath;
+        qDebug() << "[TupLipsyncDoc::openPGOFile()] - fps -> " << fps;
     #endif
 
-    QFile *file;
+    QFile *pgoFile;
     QString str;
-    QString tempPath;
-    int32 numVoices;
 
-    file = new QFile(path);
-    if (!file->open(QIODevice::ReadOnly | QIODevice::Text)) {
+    pgoFile = new QFile(pgoPath);
+    if (!pgoFile->open(QIODevice::ReadOnly | QIODevice::Text)) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupLipsyncDoc::open()] - Fatal Error: can't open file -> " << path;
+            qDebug() << "[TupLipsyncDoc::openPGOFile()] - Fatal Error: can't open file -> " << pgoPath;
         #endif
-        file->close();
-        delete file;
+        pgoFile->close();
+        delete pgoFile;
+
 		return;
 	}
+    pgoFilePath = pgoPath;
 
     if (audioPlayer) {
         audioPlayer->stop();
@@ -929,48 +882,35 @@ void TupLipsyncDoc::open(const QString &path)
         audioExtractor = nullptr;
 	}
 
-    cleanVoices();
-    currentVoice = nullptr;
+    clearVoice();
+    voice = nullptr;
 
-    QTextStream in(file);
-    filePath = path;
+    QTextStream in(pgoFile);
 	str = in.readLine(); // discard the header
-	tempPath = in.readLine().trimmed();
-	QFileInfo audioFileInfo(tempPath);
-    if (!audioFileInfo.isAbsolute()) {
-		QFileInfo fileInfo(path);
-		QDir dir = fileInfo.absoluteDir();
-		tempPath = dir.absoluteFilePath(tempPath);
-	}
-    audioPath = tempPath;
 
-    fps = in.readLine().toInt();
-    fps = PG_CLAMP(fps, 1, 120);
+    this->audioPath = audioPath;
+    this->fps = fps;
+    this->fps = PG_CLAMP(this->fps, 1, 120);
+
     audioDuration = in.readLine().toInt();
 
-	numVoices = in.readLine().toInt();
-    for (int i = 0; i < numVoices; i++) {
-        LipsyncVoice *voice = new LipsyncVoice("");
-		voice->open(in);
-        voices << voice;
-	}
+    voice = new LipsyncVoice("");
+    voice->open(in);
 
-    file->close();
-    delete file;
-    openAudio(audioPath);
-    if (voices.size() > 0)
-        currentVoice = voices[0];
+    pgoFile->close();
+    delete pgoFile;
+    openAudioFile(audioPath);
 
-    dirty = false;
+    projectHasChanged = false;
 }
 
-void TupLipsyncDoc::openAudio(const QString &path)
+void TupLipsyncDoc::openAudioFile(const QString &path)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLipsyncDoc::openAudio()] - Loading audio file -> " << path;
     #endif
 
-    dirty = true;
+    projectHasChanged = true;
     maxAmplitude = 1.0f;
 
     if (audioPlayer) {
@@ -1020,27 +960,26 @@ void TupLipsyncDoc::openAudio(const QString &path)
 		}
 	}
 
-    if (voices.size() == 0) {
-        currentVoice = new LipsyncVoice(tr("Voice 1"));
-        voices << currentVoice;
-	}
+    if (!voice)
+        voice = new LipsyncVoice(tr("Voice 1"));
 }
 
 bool TupLipsyncDoc::save()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLipsyncDoc::save()] - filePath -> " << filePath;
+        qDebug() << "[TupLipsyncDoc::save()] - filePath -> " << pgoFilePath;
     #endif
 
-    if (filePath.isEmpty()) {
+    if (pgoFilePath.isEmpty()) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupLipsyncDoc::save()] - Fatal Error: filePath is unset!";
         #endif
+
         return false;
     }
 
     QFile *file;
-    file = new QFile(filePath);
+    file = new QFile(pgoFilePath);
     if (!file->open(QIODevice::WriteOnly | QIODevice::Text)) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupLipsyncDoc::save()] - Fatal Error: Can't write PGO file!";
@@ -1048,6 +987,7 @@ bool TupLipsyncDoc::save()
 
         file->close();
         delete file;
+
         return false;
 	}
 
@@ -1058,24 +998,13 @@ bool TupLipsyncDoc::save()
 
     QTextStream out(file);
 	out << "lipsync version 1" << Qt::endl;
-
-    QFileInfo docInfo(filePath);
-    QFileInfo audioInfo(audioPath);
-    QString path = audioPath;
-    if (audioInfo.absoluteDir() == docInfo.absoluteDir())
-        path = audioInfo.fileName();
-
-    out << path << Qt::endl;
-    out << fps << Qt::endl;
     out << audioDuration << Qt::endl;
 
-    out << voices.size() << Qt::endl;
-    for (int i = 0; i < voices.size(); i++)
-        voices[i]->save(out);
+    voice->save(out);
 
     file->close();
     delete file;
-    dirty = false;
+    projectHasChanged = false;
 
     return true;
 }
@@ -1083,7 +1012,7 @@ bool TupLipsyncDoc::save()
 void TupLipsyncDoc::setFps(int32 fps)
 {
     this->fps = fps;
-    dirty = true;
+    projectHasChanged = true;
 
     if (audioExtractor && audioExtractor->isValid()) {
         real duration = audioExtractor->duration() * fps;
@@ -1131,60 +1060,42 @@ QString TupLipsyncDoc::getVolumePhonemeAtFrame(int32 frame)
 	return "rest";
 }
 
-LipsyncVoice* TupLipsyncDoc::getCurrentVoice()
+LipsyncVoice* TupLipsyncDoc::getVoice()
 {
-    return currentVoice;
+    return voice;
 }
 
-void TupLipsyncDoc::setCurrentVoice(LipsyncVoice *voice)
+void TupLipsyncDoc::setVoice(LipsyncVoice *voice)
 {
-    currentVoice = voice;
+    this->voice = voice;
 }
 
-QList<LipsyncVoice *> TupLipsyncDoc::getVoices()
+void TupLipsyncDoc::clearVoice()
 {
-    return voices;
+    if (voice)
+        voice->clearPhrase();
+
+    delete voice;
 }
 
-LipsyncVoice* TupLipsyncDoc::getVoiceAt(int index)
+void TupLipsyncDoc::setPGOFilePath(const QString &path)
 {
-    return voices.at(index);
+    pgoFilePath = path;
 }
 
-void TupLipsyncDoc::appendVoice(LipsyncVoice *voice)
+QString TupLipsyncDoc::getPGOFilePath() const
 {
-    voices.append(voice);
-}
-
-void TupLipsyncDoc::cleanVoices()
-{
-    while (!voices.isEmpty())
-        delete voices.takeFirst();
-}
-
-void TupLipsyncDoc::setFilePath(const QString &path)
-{
-    filePath = path;
-}
-
-QString TupLipsyncDoc::getFilePath() const
-{
-    return filePath;
+    return pgoFilePath;
 }
 
 bool TupLipsyncDoc::isModified()
 {
-    return dirty;
+    return projectHasChanged;
 }
 
 void TupLipsyncDoc::setModifiedFlag(bool flag)
 {
-    dirty = flag;
-}
-
-void TupLipsyncDoc::removeVoiceAt(int index)
-{
-    voices.removeAt(index);
+    projectHasChanged = flag;
 }
 
 QString TupLipsyncDoc::getPhonemeFromDictionary(const QString &key, const QString &defaultValue)
@@ -1224,100 +1135,92 @@ void TupLipsyncDoc::stopAudio()
 
 void TupLipsyncDoc::runBreakdown(const QString &lang, int32 duration)
 {
-    if (currentVoice)
-        currentVoice->runBreakdown(lang, duration);
+    if (voice)
+        voice->runBreakdown(lang, duration);
 }
 
 bool TupLipsyncDoc::voiceTextIsEmpty()
 {
-    if (currentVoice)
-        return currentVoice->textIsEmpty();
+    if (voice)
+        return voice->textIsEmpty();
 
     return true;
 }
 
+void TupLipsyncDoc::setVoiceName(const QString &name)
+{
+    if (voice)
+        voice->setName(name);
+}
+
+QString TupLipsyncDoc::getVoiceName() const
+{
+    if (voice)
+        return voice->getName();
+
+    return "";
+}
+
 void TupLipsyncDoc::setVoiceText(const QString &text)
 {
-    if (currentVoice)
-        currentVoice->setText(text);
+    if (voice)
+        voice->setText(text);
 }
 
 QString TupLipsyncDoc::getVoiceText() const
 {
-    if (currentVoice)
-        return currentVoice->getText();
+    if (voice)
+        return voice->getText();
 
     return "";
 }
 
 QString TupLipsyncDoc::getPhonemeAtFrame(int frame) const
 {
-    if (currentVoice)
-        return currentVoice->getPhonemeAtFrame(frame);
+    if (voice)
+        return voice->getPhonemeAtFrame(frame);
 
     return "";
 }
 
-LipsyncPhrase* TupLipsyncDoc::getPhraseAt(int index)
+LipsyncPhrase * TupLipsyncDoc::getPhrase()
 {
-    if (currentVoice)
-        return currentVoice->getPhraseAt(index);
+    if (voice)
+        return voice->getPhrase();
 
     return nullptr;
 }
 
-LipsyncPhrase * TupLipsyncDoc::getFirstPhrase()
+int TupLipsyncDoc::getStartFrameFromPhrase()
 {
-    if (currentVoice)
-        return currentVoice->getFirstPhrase();
-
-    return nullptr;
-}
-
-int TupLipsyncDoc::getPhrasesTotal()
-{
-    if (currentVoice)
-        return currentVoice->getPhrasesTotal();
+    if (voice)
+        return voice->getPhraseStartFrame();
 
     return 0;
 }
 
-int TupLipsyncDoc::getStartFrameFromPhraseAt(int index)
+int TupLipsyncDoc::getEndFrameFromPhrase()
 {
-    if (currentVoice)
-        return currentVoice->getPhraseStartFrame(index);
-
-    return 0;
-}
-
-int TupLipsyncDoc::getEndFrameFromPhraseAt(int index)
-{
-    if (currentVoice)
-        return currentVoice->getPhraseEndFrame(index);
+    if (voice)
+        return voice->getPhraseEndFrame();
 
     return 0;
 }
 
 void TupLipsyncDoc::repositionPhrase(LipsyncPhrase *phrase)
 {
-    if (currentVoice)
-        currentVoice->repositionPhrase(phrase, audioDuration);
+    if (voice)
+        voice->repositionPhrase(phrase, audioDuration);
 }
 
 QList<LipsyncWord *> TupLipsyncDoc::getWords()
 {
     QList<LipsyncWord *> words;
-    if (currentVoice) {
-        LipsyncPhrase *phrase = getFirstPhrase();
+    if (voice) {
+        LipsyncPhrase *phrase = getPhrase();
         if (phrase)
             words = phrase->getWords();
     }
 
     return words;
-}
-
-void TupLipsyncDoc::cleanPhrases()
-{
-    if (currentVoice)
-        currentVoice->cleanPhrases();
 }

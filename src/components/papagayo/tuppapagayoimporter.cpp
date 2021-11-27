@@ -63,9 +63,8 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
     if (input.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream stream(&input);
         int i = 0;
-        int voicesNumber = 0;
         QString line;
-        while (i < 5) {
+        while (i < 2) {
                line = stream.readLine(); 
                switch (i) {
                    case 0:
@@ -76,32 +75,10 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                        }
                    } 
                    break;
-                   case 2:
-                   {
-                       // FPS 
-                       fps = line.trimmed().toInt(&numberIsOk);
-                       if (numberIsOk) {
-                           lipsync->setFPS(fps);
-                       } else {
-                           isValid = false;
-                           return;
-                       }
-                   }
-                   break;
-                   case 3:
+                   case 1:
                    {
                        // Frames Total
                        framesTotal = line.trimmed().toInt(&numberIsOk);
-                       if (!numberIsOk) {
-                           isValid = false;
-                           return;
-                       }
-                   }
-                   break;
-                   case 4:
-                   {
-                       // Total of voices 
-                       voicesNumber = line.trimmed().toInt(&numberIsOk);
                        if (!numberIsOk) {
                            isValid = false;
                            return;
@@ -112,143 +89,134 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                i++;
         }
 
-        int x = projectSize.width() / (voicesNumber+1);
+        int x = projectSize.width() / 2;
         int y = projectSize.height() / 2;
 
-        for(int j=1; j<=voicesNumber; j++) {
-            TupVoice *voice = new TupVoice(); 
-            x = x*j;
+        TupVoice *voice = new TupVoice();
 
-            QPointF point(x, y);
-            voice->setMouthPos(point);
-            voice->setVoiceTitle(stream.readLine().trimmed());
-            voice->setText(stream.readLine().trimmed());
-            int numPhrases = stream.readLine().toInt(&numberIsOk);
-            if (!numberIsOk) {
-                isValid = false;
-                return;
-            }
+        QPointF point(x, y);
+        voice->setMouthPos(point);
+        voice->setVoiceTitle(stream.readLine().trimmed());
+        voice->setText(stream.readLine().trimmed());
 
-            int numPhonemes = 0;
-            int numWords;
-            int firstFrame = 0;
-            int lastFrame = 0;
+        int numPhonemes = 0;
+        int numWords;
+        int firstFrame = 0;
+        int lastFrame = 0;
 
-            for (int p = 0; p < numPhrases; p++) {
-                 line = stream.readLine().trimmed();
-                 int phInitFrame = stream.readLine().trimmed().toInt(&numberIsOk);
-                 if (!numberIsOk) {
-                     isValid = false;
-                     return;
-                 }
-
-                 if (p == 0)
-                     phInitFrame = 0;
-                 line = stream.readLine().trimmed(); // Skipping line
-                 TupPhrase *phrase = new TupPhrase(phInitFrame);
-                 numWords = stream.readLine().toInt(&numberIsOk);
-                 if (!numberIsOk) {
-                     isValid = false;
-                     return;
-                 }
-
-                 for (int w = 0; w < numWords; w++) {
-                      QString str = stream.readLine().trimmed();
-                      QStringList strList = str.split(' ', Qt::SkipEmptyParts);
-                      QString strWord; 
-                      TupWord *word = 0;
-                      if (strList.size() >= 4) {
-                          strWord = strList.at(0);   
-                          firstFrame = strList.at(1).toInt(&numberIsOk);
-                          if (!numberIsOk) {
-                              isValid = false;
-                              return;
-                          }
-
-                          word = new TupWord(firstFrame);
-                          lastFrame = strList.at(2).toInt(&numberIsOk);
-                          if (!numberIsOk) {
-                              isValid = false;
-                              return;
-                          }
-
-                          word->setEndFrame(lastFrame);
-                          numPhonemes = strList.at(3).toInt(&numberIsOk);
-                          if (!numberIsOk) {
-                              isValid = false;
-                              return;
-                          }
-
-                          #ifdef TUP_DEBUG
-                              if (numPhonemes == 0) {
-                                  qDebug() << "[TupPapagayoImporter::TupPapagayoImporter()] - Warning: Word \""
-                                           <<  strWord << "\" has NO phonemes associated! :(";
-                              }
-                          #endif
-                      } else {
-                          #ifdef TUP_DEBUG
-                              qDebug() << "[TupPapagayoImporter::TupPapagayoImporter()] - Warning: Missing parameters -> " << str;
-                          #endif
-                      }
-                      QList<int> frames;
-                      QList<QString> blocks;
-                      for (int ph = 0; ph < numPhonemes; ph++) {
-                           str = stream.readLine().trimmed();
-                           QStringList strList = str.split(' ', Qt::SkipEmptyParts);
-                           if (strList.size() >= 2) {
-                               frames << strList.at(0).toInt(&numberIsOk);
-                               if (!numberIsOk) {
-                                   isValid = false;
-                                   return;
-                               }
-
-                               blocks << strList.at(1).toLower();
-                           }
-                      } // for ph
-
-                      for (int ph = 0; ph < numPhonemes-1; ph++) {
-                           int total = frames.at(ph+1) - frames.at(ph);
-                           for (int i=0; i<total; i++) {
-                                TupPhoneme *phoneme = new TupPhoneme(blocks.at(ph), point);
-                                word->addPhoneme(phoneme);
-                           }
-                      } // for ph
-
-                      if (!frames.isEmpty()) {
-                          int total = (lastFrame - frames.at(numPhonemes-1)) + 1;
-                          for (int i=0; i<total; i++) {
-                               TupPhoneme *phoneme = new TupPhoneme(blocks.at(numPhonemes-1), point);
-                               word->addPhoneme(phoneme);
-                          }
-                      } else {
-                          #ifdef TUP_DEBUG
-                              qDebug() << "[TupPapagayoImporter::TupPapagayoImporter()] - Fatal Error: frames size is less than numPhonemes -> "
-                                       << frames.count() << " < " << numPhonemes;
-                          #endif
-                      }
-
-                      // Checking frames count consistency
-                      if (w == numWords - 1) { // If last word
-                          if (lastFrame > 0)
-                              framesCount = lastFrame;
-
-                          // If lip-sync is longer that latest word, fill empty frames with rest mouth
-                          if (lastFrame < framesTotal) {
-                              int distance = framesTotal - lastFrame;
-                              for (int i=0; i<distance; i++) {
-                                   TupPhoneme *phoneme = new TupPhoneme("rest", point);
-                                   word->addPhoneme(phoneme);
-                              }
-                              framesCount += distance;
-                          }
-                      }
-                      phrase->addWord(word);
-                 } // for w
-                 phrase->setEndFrame(framesCount);
-                 voice->addPhrase(phrase); 
-            }
-            lipsync->addVoice(voice);
+        line = stream.readLine().trimmed();
+        int phInitFrame = stream.readLine().trimmed().toInt(&numberIsOk);
+        if (!numberIsOk) {
+            isValid = false;
+            return;
         }
+
+        line = stream.readLine().trimmed(); // Skipping line
+        TupPhrase *phrase = new TupPhrase(phInitFrame);
+        numWords = stream.readLine().toInt(&numberIsOk);
+        if (!numberIsOk) {
+            isValid = false;
+            return;
+        }
+
+        for (int w = 0; w < numWords; w++) {
+             QString str = stream.readLine().trimmed();
+             QStringList strList = str.split(' ', Qt::SkipEmptyParts);
+             QString strWord;
+             TupWord *word = nullptr;
+             if (strList.size() >= 4) {
+                 strWord = strList.at(0);
+                 firstFrame = strList.at(1).toInt(&numberIsOk);
+                 if (!numberIsOk) {
+                     isValid = false;
+                     return;
+                 }
+
+                 word = new TupWord(firstFrame);
+                 lastFrame = strList.at(2).toInt(&numberIsOk);
+                 if (!numberIsOk) {
+                     isValid = false;
+                     return;
+                 }
+
+                 word->setEndFrame(lastFrame);
+                 numPhonemes = strList.at(3).toInt(&numberIsOk);
+                 if (!numberIsOk) {
+                     isValid = false;
+                     return;
+                 }
+
+                 #ifdef TUP_DEBUG
+                     if (numPhonemes == 0) {
+                         qDebug() << "[TupPapagayoImporter::TupPapagayoImporter()] - Warning: Word \""
+                                  <<  strWord << "\" has NO phonemes associated! :(";
+                     }
+                 #endif
+             } else {
+                 #ifdef TUP_DEBUG
+                     qDebug() << "[TupPapagayoImporter::TupPapagayoImporter()] - Warning: Missing parameters -> " << str;
+                 #endif
+             }
+             QList<int> frames;
+             QList<QString> blocks;
+             for (int ph = 0; ph < numPhonemes; ph++) {
+                  str = stream.readLine().trimmed();
+                  QStringList strList = str.split(' ', Qt::SkipEmptyParts);
+                  if (strList.size() >= 2) {
+                      frames << strList.at(0).toInt(&numberIsOk);
+                      if (!numberIsOk) {
+                          isValid = false;
+                          return;
+                      }
+
+                      blocks << strList.at(1).toLower();
+                  }
+             } // for ph
+
+             for (int ph = 0; ph < numPhonemes-1; ph++) {
+                  int total = frames.at(ph+1) - frames.at(ph);
+                  for (int i=0; i<total; i++) {
+                       TupPhoneme *phoneme = new TupPhoneme(blocks.at(ph), point);
+                       if (word)
+                           word->addPhoneme(phoneme);
+                  }
+             } // for ph
+
+             if (!frames.isEmpty()) {
+                 int total = (lastFrame - frames.at(numPhonemes-1)) + 1;
+                 for (int i=0; i<total; i++) {
+                      TupPhoneme *phoneme = new TupPhoneme(blocks.at(numPhonemes-1), point);
+                      if (word)
+                          word->addPhoneme(phoneme);
+                 }
+             } else {
+                 #ifdef TUP_DEBUG
+                     qDebug() << "[TupPapagayoImporter::TupPapagayoImporter()] - Fatal Error: frames size is less than numPhonemes -> "
+                              << frames.count() << " < " << numPhonemes;
+                 #endif
+             }
+
+             // Checking frames count consistency
+             if (w == numWords - 1) { // If last word
+                 if (lastFrame > 0)
+                     framesCount = lastFrame;
+
+                 // If lip-sync is longer that latest word, fill empty frames with rest mouth
+                 if (lastFrame < framesTotal) {
+                     int distance = framesTotal - lastFrame;
+                     for (int i=0; i<distance; i++) {
+                          TupPhoneme *phoneme = new TupPhoneme("rest", point);
+                          if (word)
+                              word->addPhoneme(phoneme);
+                     }
+                     framesCount += distance;
+                 }
+             }
+             phrase->addWord(word);
+        } // for w
+        phrase->setEndFrame(framesCount);
+        voice->addPhrase(phrase);
+        lipsync->addVoice(voice);
 
         framesCount++;
         if (framesTotal > framesCount) {

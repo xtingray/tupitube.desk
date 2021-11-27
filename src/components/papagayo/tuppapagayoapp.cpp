@@ -23,6 +23,7 @@
 #include "tuppapagayoimporter.h"
 
 #include "tuprequestbuilder.h"
+#include "tuplibrary.h"
 
 #include <QAction>
 #include <QToolBar>
@@ -60,17 +61,41 @@ TupPapagayoApp::TupPapagayoApp(bool extendedUI, TupProject *project, const QStri
     layerIndex = indexes.at(1);
     frameIndex = indexes.at(2);
 
-    setUIStyle();
+    setUICore();
+}
 
-    setupActions();
-    setupUI();
-    setupMenus();
-    setAcceptDrops(true);
+TupPapagayoApp::TupPapagayoApp(bool extendedUI, TupProject *project, TupLipSync *lipsync, QList<int> indexes,
+                               QWidget *parent) : QMainWindow(parent)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::TupPapagayoApp()]";
+    #endif
 
-    updateActions();
+    Q_UNUSED(lipsync)
 
-    if (!soundFile.isEmpty())
-        openFile(soundFile);
+    this->extendedUI = extendedUI;
+    tupProject = project;
+    document = nullptr;
+    enableAutoBreakdown = true;
+    defaultFps = project->getFPS();
+    playerStopped = true;
+    saveButtonPressed = false;
+    pgoFilePath = project->getDataDir() + "/pgo/" + lipsync->getLipSyncName();
+
+    TupLibrary *library = project->getLibrary();
+    if (library) {
+        soundFilePath = library->getObjectPath(lipsync->getSoundFile());
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPapagayoApp::TupPapagayoApp()] - Fatal Error: Library pointer is NULL!";
+        #endif
+    }
+
+    sceneIndex= indexes.at(0);
+    layerIndex = indexes.at(1);
+    frameIndex = indexes.at(2);
+
+    setUICore();
 }
 
 TupPapagayoApp::~TupPapagayoApp()
@@ -83,6 +108,21 @@ TupPapagayoApp::~TupPapagayoApp()
 
     if (mouthView)
         delete mouthView;
+}
+
+void TupPapagayoApp::setUICore()
+{
+    setUIStyle();
+
+    setupActions();
+    setupUI();
+    setupMenus();
+    setAcceptDrops(true);
+
+    updateActions();
+
+    if (!soundFilePath.isEmpty())
+        openFile(soundFilePath);
 }
 
 void TupPapagayoApp::setUIStyle()
@@ -412,10 +452,12 @@ void TupPapagayoApp::openFile(QString filePath)
     document = new TupLipsyncDoc;
     QFileInfo info(filePath);
     if (info.suffix().toLower() == "pgo") {
-        document->open(filePath);
-    } else {
+        document->openPGOFile(filePath, soundFilePath, defaultFps);
+        voiceName->setText(document->getVoiceName());
+        voiceText->setPlainText(document->getVoiceText());
+    } else { // Loading sound file
         soundFilePath = filePath;
-        document->openAudio(filePath);
+        document->openAudioFile(soundFilePath);
         document->setFps(defaultFps);
     }
 
@@ -436,10 +478,10 @@ void TupPapagayoApp::openFile(QString filePath)
         connect(document->getAudioPlayer(), SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)),
                 waveformView, SLOT(updateMediaStatus(QMediaPlayer::MediaStatus)));
 
-        if (document->getCurrentVoice()) {
-            voiceName->setText(document->getCurrentVoice()->getName());
+        if (document->getVoice()) {
+            voiceName->setText(document->getVoiceName());
             enableAutoBreakdown = false;
-            voiceText->setPlainText(document->getCurrentVoice()->getText());
+            voiceText->setPlainText(document->getVoiceText());
             enableAutoBreakdown = true;
         }
 
@@ -652,14 +694,18 @@ void TupPapagayoApp::pauseVoice()
 
 void TupPapagayoApp::onVoiceNameChanged()
 {
-    if (!document || !document->getCurrentVoice())
+    if (!document || !document->getVoice())
         return;
 
-    document->getCurrentVoice()->setName(voiceName->text());
+    document->setVoiceName(voiceName->text());
 }
 
 void TupPapagayoApp::loadWordsFromDocument()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::loadWordsFromDocument()]";
+    #endif
+
     wordsList.clear();
     phonemesList.clear();
     QList<LipsyncWord *> words = document->getWords();
@@ -725,7 +771,7 @@ void TupPapagayoApp::onVoiceTextChanged()
         return;
     }
 
-    if (!document->getCurrentVoice()) {
+    if (!document->getVoice()) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupPapagayoApp::onVoiceTextChanged()] - Warning: Voice is null!";
         #endif
@@ -733,14 +779,13 @@ void TupPapagayoApp::onVoiceTextChanged()
     }
 
     QString text = voiceText->toPlainText();
-    if (text.isEmpty()) {
+    if (text.isEmpty()) { // voice text is empty
         if (breakdownButton->isEnabled())
             breakdownButton->setEnabled(false);
 
         wordsList.clear();
         phonemesList.clear();
-
-        document->cleanPhrases();
+        document->setVoiceText("");
         waveformView->update();
 
         #ifdef TUP_DEBUG
@@ -781,13 +826,13 @@ int32 TupPapagayoApp::calculateDuration()
     return duration;
 }
 
-void TupPapagayoApp::runBreakdownAction()
+void TupPapagayoApp::runBreakdownAction() // English generator
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupPapagayoApp::runBreakdownProcess()]";
     #endif
 
-    if (!document || !document->getCurrentVoice()) {
+    if (!document || !document->getVoice()) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupPapagayoApp::onBreakdownProcess()] - Error: No lip-sync document loaded!";
         #endif
@@ -831,8 +876,8 @@ void TupPapagayoApp::loadDocumentFromScratch(QStringList phonemes)
         phrase->addWord(word);
         wordPos += wordLength + 1;
     }
-    voice->addPhrase(phrase);
-    document->setCurrentVoice(voice);
+    voice->setPhrase(phrase);
+    document->setVoice(voice);
     document->setVoiceText(voiceText->toPlainText());
 }
 
@@ -845,7 +890,7 @@ void TupPapagayoApp::runManualBreakdownAction()
 
     if (wordsList.isEmpty()) {
         phonemesList.clear();
-        document->cleanPhrases();
+        document->clearVoice();
 
         waveformView->update();
         #ifdef TUP_DEBUG
@@ -863,7 +908,8 @@ void TupPapagayoApp::runManualBreakdownAction()
         if (breakdownDialog->exec() == QDialog::Accepted) {
             document->setModifiedFlag(true);
 
-            if (document->getPhrasesTotal() == 0) {
+            // if (document->getPhrasesTotal() == 0) {
+            if (document->voiceTextIsEmpty() == 0) {
                 loadDocumentFromScratch(breakdownDialog->phomeneList());
             } else {
                 QString newText = voiceText->toPlainText();
@@ -872,7 +918,7 @@ void TupPapagayoApp::runManualBreakdownAction()
                 if (newText.compare(currentText) != 0) {
                     loadDocumentFromScratch(breakdownDialog->phomeneList());
                 } else {
-                    LipsyncPhrase *phrase = document->getFirstPhrase();
+                    LipsyncPhrase *phrase = document->getPhrase();
                     if (phrase) {
                         QList<LipsyncWord *> words = phrase->getWords();
                         QStringList phonemes = breakdownDialog->phomeneList();
@@ -885,7 +931,7 @@ void TupPapagayoApp::runManualBreakdownAction()
                                 int32 wordPos = word->getStartFrame();
                                 int32 phonemePos = wordPos;
                                 int32 phonemeLength = wordLength / phList.size();
-                                word->removePhonemes();
+                                word->clearPhonemes();
 
                                 for (int i = 0; i < phList.size(); i++) {
                                     QString phStr = phList.at(i);
@@ -1084,11 +1130,11 @@ void TupPapagayoApp::saveLipsyncRecord()
 
     QString folderName = QString(voiceName->text() + ".pgo").toLower();
     pgoFilePath += folderName;
-    document->setFilePath(pgoFilePath);
+    document->setPGOFilePath(pgoFilePath);
 
     if (document->save()) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::importPapagayoLipSync()] - imagesDir -> " << currentMouthPath;
+            qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - imagesDir -> " << currentMouthPath;
         #endif
 
         QFile projectFile(pgoFilePath);
@@ -1199,31 +1245,31 @@ void TupPapagayoApp::saveLipsyncRecord()
                         } else {
                             TOsd::self()->display(TOsd::Error, tr("Papagayo file is invalid!"));
                             #ifdef TUP_DEBUG
-                                qDebug() << "[TupPapagayoApp::importPapagayoLipSync()] - Fatal Error: Papagayo file is invalid!";
+                                qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Papagayo file is invalid!";
                             #endif
                         }
                     } else {
                         TOsd::self()->display(TOsd::Error, tr("Mouth images are incomplete!"));
                         #ifdef TUP_DEBUG
-                            qDebug() << "[TupPapagayoApp::importPapagayoLipSync()] - Fatal Error: Mouth images are incomplete!";
+                            qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Mouth images are incomplete!";
                         #endif
                     }
                 } else {
                     TOsd::self()->display(TOsd::Error, tr("Images directory is empty!"));
                     #ifdef TUP_DEBUG
-                        qDebug() << "[TupPapagayoApp::importPapagayoLipSync()] - Fatal Error: Images directory is empty!";
+                        qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Images directory is empty!";
                     #endif
                 }
             } else {
                 TOsd::self()->display(TOsd::Error, tr("Papagayo project is invalid!"));
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupPapagayoApp::importPapagayoLipSync()] - Fatal Error: Papagayo file is invalid!";
+                    qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Papagayo file is invalid!";
                 #endif
             }
         } else {
             TOsd::self()->display(TOsd::Error, tr("Papagayo project is invalid!"));
             #ifdef TUP_DEBUG
-                qDebug() << "[TupPapagayoApp::importPapagayoLipSync()] - Fatal Error: Papagayo file doesn't exist!";
+                qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Papagayo file doesn't exist!";
             #endif
         }
 

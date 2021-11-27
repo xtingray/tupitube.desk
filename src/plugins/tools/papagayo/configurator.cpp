@@ -86,11 +86,11 @@ void Configurator::loadLipSyncList(QList<QString> list)
 void Configurator::setPropertiesPanel()
 {
     settingsPanel = new PapagayoSettings(this);
-    connect(settingsPanel, SIGNAL(selectMouth(const QString &, int)), this, SIGNAL(selectMouth(const QString &, int)));
-    connect(settingsPanel, SIGNAL(closeLipSyncProperties()), this, SLOT(closeSettingsPanel()));
-    connect(settingsPanel, SIGNAL(initFrameHasChanged(int)), this, SIGNAL(initFrameHasChanged(int)));
-    connect(settingsPanel, SIGNAL(xPosChanged(int)), this, SIGNAL(xPosChanged(int)));
-    connect(settingsPanel, SIGNAL(yPosChanged(int)), this, SIGNAL(yPosChanged(int)));
+    connect(settingsPanel, &PapagayoSettings::selectMouth, this, &Configurator::selectMouth);
+    connect(settingsPanel, &PapagayoSettings::closeLipSyncProperties, this, &Configurator::closeSettingsPanel);
+    connect(settingsPanel, &PapagayoSettings::initFrameHasChanged, this, &Configurator::initFrameHasChanged);
+    connect(settingsPanel, &PapagayoSettings::xPosChanged, this, &Configurator::xPosChanged);
+    connect(settingsPanel, &PapagayoSettings::yPosChanged, this, &Configurator::yPosChanged);
 
     settingsLayout->addWidget(settingsPanel);
 
@@ -108,10 +108,10 @@ void Configurator::activePropertiesPanel(bool enable)
 void Configurator::setLipSyncManagerPanel()
 {
     manager = new LipSyncManager(this);
-    connect(manager, SIGNAL(openLipSyncCreator()), this, SIGNAL(openLipSyncCreator()));
-    // connect(manager, SIGNAL(importLipSync()), this, SIGNAL(importLipSync()));
-    connect(manager, SIGNAL(editCurrentLipSync(const QString &)), this, SLOT(editCurrentLipSync(const QString &)));
-    connect(manager, SIGNAL(removeCurrentLipSync(const QString &)), this, SIGNAL(removeCurrentLipSync(const QString &)));
+    connect(manager, &LipSyncManager::lipsyncCreatorRequested, this, &Configurator::lipsyncCreatorRequested);
+    connect(manager, &LipSyncManager::lipsyncEditionRequested, this, &Configurator::lipsyncEditionRequested);
+    connect(manager, &LipSyncManager::mouthEditionRequested, this, &Configurator::editCurrentLipSync);
+    connect(manager, &LipSyncManager::removeCurrentLipSync, this, &Configurator::removeCurrentLipSync);
 
     settingsLayout->addWidget(manager);
 }
@@ -131,7 +131,7 @@ void Configurator::addLipSyncRecord(const QString &name)
 
 void Configurator::editCurrentLipSync(const QString &name)
 {
-    emit editLipSyncSelection(name);
+    emit mouthEditionRequested(name);
 
     activeLipSyncManagerPanel(false);
     activePropertiesPanel(true);

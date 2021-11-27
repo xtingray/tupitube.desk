@@ -49,7 +49,7 @@ bool TupCommandExecutor::createLayer(TupLayerResponse *response)
     int scenePosition = response->getSceneIndex();
     int position = response->getLayerIndex();
     QString name = response->getArg().toString();
-    QString state = response->getState();
+    // QString state = response->getState();
 
     TupScene *scene = project->sceneAt(scenePosition);
     if (scene) {
@@ -205,7 +205,7 @@ bool TupCommandExecutor::setLayerVisibility(TupLayerResponse *response)
 
     if (layer) {
         layer->setLayerVisibility(view);
-        responsed(response);
+        emit responsed(response);
 
         return true;
     }

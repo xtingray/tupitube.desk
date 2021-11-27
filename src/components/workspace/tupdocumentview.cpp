@@ -59,6 +59,7 @@
 #include "tupfilterinterface.h"
 #include "tupmodessettingsdialog.h"
 #include "tuppapagayoapp.h"
+#include "tuplipsync.h"
 
 #include <QDir>
 #include <QApplication>
@@ -668,7 +669,8 @@ void TupDocumentView::loadPlugins()
                 qDebug() << "[TupDocumentView::loadPlugins()] - Filter Loaded: " << *it;
             #endif
 
-            TAction *filter = filterInterface->actions()[*it];
+            // TAction *filter = filterInterface->actions()[*it];
+            TAction *filter = filterInterface->getAction(*it);
             if (filter) {
                 connect(filter, SIGNAL(triggered()), this, SLOT(applyFilter()));
                 filterMenu->addAction(filter);
@@ -944,8 +946,10 @@ void TupDocumentView::selectTool()
             if (currentTool->toolId() == TAction::Pencil)
                 disconnect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
 
-            if (currentTool->toolId() == TAction::LipSyncTool)
-                disconnect(currentTool, SIGNAL(openLipSyncCreator()), this, SLOT(openLipSyncCreator()));
+            if (currentTool->toolId() == TAction::LipSyncTool) {
+                disconnect(currentTool, SIGNAL(lipsyncCreatorRequested()), this, SLOT(openLipSyncCreator()));
+                disconnect(currentTool, SIGNAL(lipsyncEditionRequested(QString)), this, SLOT(openLipSyncCreator(QString)));
+            }
 
             if (currentTool->toolId() == TAction::EyeDropper) {
                 disconnect(currentTool, SIGNAL(colorPicked(TColorCell::FillType, const QColor &)),
@@ -1059,7 +1063,8 @@ void TupDocumentView::selectTool()
                 {
                     status->enableFullScreenFeature(false);
                     minWidth = 220;
-                    connect(currentTool, SIGNAL(openLipSyncCreator()), this, SLOT(openLipSyncCreator()));
+                    connect(currentTool, SIGNAL(lipsyncCreatorRequested()), this, SLOT(openLipSyncCreator()));
+                    connect(currentTool, SIGNAL(lipsyncEditionRequested(QString)), this, SLOT(openLipSyncCreator(QString)));
 
                     miscMenu->setDefaultAction(action);
                     miscMenu->setActiveAction(action);
@@ -2300,6 +2305,40 @@ void TupDocumentView::openLipSyncCreator()
     QApplication::restoreOverrideCursor();
 }
 
+void TupDocumentView::openLipSyncCreator(const QString &lipsyncName)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupDocumentView::openLipSyncCreator(QString)] - lipsyncName -> " << lipsyncName;
+    #endif
+
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    int sceneIndex = paintArea->currentSceneIndex();
+    TupScene *scene = project->sceneAt(sceneIndex);
+    if (scene) {
+        TupLipSync *lipsync = scene->getLipSync(lipsyncName);
+        if (lipsync) {
+            QList<int> indexes;
+            indexes << sceneIndex;
+            indexes << scene->getLipSyncLayerIndex(lipsyncName);
+            indexes << lipsync->getInitFrame();
+
+            TupPapagayoApp *papagayoApp = new TupPapagayoApp(true, project, lipsync, indexes, this);
+            connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);
+
+            papagayoApp->show();
+            papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
+                              static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupDocumentView::openLipSyncCreator(QString)] - Fatal Error: Can't find lipsync -> " << lipsyncName;
+            #endif
+        }
+    }
+
+    QApplication::restoreOverrideCursor();
+}
+
 void TupDocumentView::papagayoManager()
 {
     #ifdef TUP_DEBUG
@@ -2456,8 +2495,10 @@ void TupDocumentView::enableEyeDropperTool(TColorCell::FillType fillType)
             if (currentTool->toolId() == TAction::Pencil)
                 disconnect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
 
-            if (currentTool->toolId() == TAction::LipSyncTool)
-                disconnect(currentTool, SIGNAL(openLipSyncCreator()), this, SLOT(openLipSyncCreator()));
+            if (currentTool->toolId() == TAction::LipSyncTool) {
+                disconnect(currentTool, SIGNAL(lipsyncCreatorRequested()), this, SLOT(openLipSyncCreator()));
+                disconnect(currentTool, SIGNAL(lipsyncEditionRequested(QString)), this, SLOT(openLipSyncCreator(QString)));
+            }
 
             currentTool->saveConfig();
             QWidget *toolConfigurator = currentTool->configurator();

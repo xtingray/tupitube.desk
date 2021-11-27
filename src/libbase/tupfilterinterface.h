@@ -62,6 +62,7 @@ class TUPITUBE_EXPORT AFilterInterface
         // virtual void filter(const QString &filter, const QList<TupGraphicComponent *> &frame) = 0;
         
         virtual QHash<QString, TAction *>actions() = 0;
+        virtual TAction * getAction(const QString &id) = 0;
 };
 
 Q_DECLARE_INTERFACE(AFilterInterface, "com.maefloresta.tupi.AFilterInterface/0.1")

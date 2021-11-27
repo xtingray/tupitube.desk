@@ -1099,7 +1099,9 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
     if (layer->lipSyncCount() > 0) {
         Mouths mouths = layer->getLipSyncList();
         int total = mouths.count();
-
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Mouths Total -> " << total;
+        #endif
         TupLipSync *lipSync;
         TupLibraryFolder *folder;
         TupVoice *voice;
@@ -1113,10 +1115,18 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
              // If photogram is in the range of the lip-sync object
              if ((photogram >= initFrame) && (photogram <= initFrame + lipSync->getFramesCount())) {
                  QString name = lipSync->getLipSyncName();
+                 #ifdef TUP_DEBUG
+                     qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - lipSync name -> " << name;
+                 #endif
                  folder = library->getFolder(name);
                  if (folder) {
                      QList<TupVoice *> voices = lipSync->getVoices();
                      int voicesTotal = voices.count();
+                     /*
+                     #ifdef TUP_DEBUG
+                         qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - voicesTotal -> " << voicesTotal;
+                     #endif
+                     */
                      // Looking for through all the voices
                      for(int j=0; j<voicesTotal; j++) {
                          voice = voices.at(j);
@@ -1128,6 +1138,11 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
                              if (phoneme) {
                                  QString imgName = phoneme->value() + lipSync->getPicExtension();
                                  mouthImg = folder->getObject(imgName);
+                                 /*
+                                 #ifdef TUP_DEBUG
+                                     qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - imgName -> " << imgName;
+                                 #endif
+                                 */
                                  if (mouthImg) {
                                      item = new TupGraphicLibraryItem(mouthImg);
                                      // Adding image of the mouth phoneme
@@ -1141,10 +1156,13 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
                                              int hDelta = static_cast<int> (item->boundingRect().height()/2);
                                              item->setPos(pos.x() - wDelta, pos.y() - hDelta);
                                          }
-                                         // item->setToolTip(tr("lipsync:") + name + ":" + QString::number(j));
                                          item->setToolTip(tr("lipsync:") + name);
                                          item->setZValue(zValue);
                                          addItem(item);
+                                     } else {
+                                         #ifdef TUP_DEBUG
+                                             qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Fatal Error: Can't load mouth -> " << mouthImg;
+                                         #endif
                                      }
                                  } else {
                                      #ifdef TUP_DEBUG

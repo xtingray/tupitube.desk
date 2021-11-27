@@ -37,7 +37,7 @@ TupCustomizedMouthView::~TupCustomizedMouthView()
 void TupCustomizedMouthView::setDocument(TupLipsyncDoc *doc)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupCustomizedMouthView::setDoccument()]";
+        qDebug() << "[TupCustomizedMouthView::setDocument()]";
     #endif
 
     document = doc;
@@ -109,7 +109,7 @@ void TupCustomizedMouthView::paintEvent(QPaintEvent *event)
     QImage *img = nullptr;
     QPainter dc(this);
 
-    if (document && document->getCurrentVoice())
+    if (document && document->getVoice())
         phoneme = document->getPhonemeAtFrame(frame);
     else
 		phoneme = "etc";
