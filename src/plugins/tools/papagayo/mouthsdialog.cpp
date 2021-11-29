@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "mouthsdialog.h"
+
 #include <QComboBox>
 #include <QVBoxLayout>
 #include <QLabel>

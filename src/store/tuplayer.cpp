@@ -161,6 +161,21 @@ void TupLayer::addLipSync(TupLipSync *lipsync)
         lipsyncList << lipsync;
 }
 
+bool TupLayer::updateLipSync(int index, TupLipSync *lipsync)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLayer::updateLipSync()] - index -> " << index;
+    #endif
+
+    if (index > -1 && index < lipsyncList.count()) {
+        delete lipsyncList.takeAt(index);
+        lipsyncList << lipsync;
+        return true;
+    }
+
+    return  false;
+}
+
 int TupLayer::lipSyncCount()
 {
      return lipsyncList.count();

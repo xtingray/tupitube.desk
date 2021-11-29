@@ -53,6 +53,16 @@ TupLibraryFolder::~TupLibraryFolder()
 {
 }
 
+QString TupLibraryFolder::getImagesFolderPath() const
+{
+    return project->getDataDir() + "images/";
+}
+
+QString TupLibraryFolder::getAudioFolderPath() const
+{
+    return project->getDataDir() + "audio/";
+}
+
 TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::ObjectType type, const QString &name, const QByteArray &data,
                                                  const QString &folder, bool loaded)
 {

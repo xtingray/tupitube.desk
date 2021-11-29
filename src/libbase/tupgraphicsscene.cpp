@@ -198,7 +198,7 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
 
              if (photogram < framesCount) {
                  mainFrame = layer->frameAt(photogram);
-                 QString currentFrame = "";
+                 // QString currentFrame = "";
 
                  if (mainFrame) {
                      if (layer->isLayerVisible()) {

@@ -1633,7 +1633,7 @@ void TupPaintArea::removeCurrentFrame()
     TCONFIG->beginGroup("General");
     bool ask = TCONFIG->value("ConfirmRemoveFrame", true).toBool();
     if (ask) {
-        TOptionalDialog dialog(tr("Do you want to remove this frame?"), tr("Confirmation"), this);
+        TOptionalDialog dialog(tr("Do you want to remove this frame?"), tr("Confirmation"), true, false, this);
         dialog.setModal(true);
 
         QScreen *screen = QGuiApplication::screens().at(0);

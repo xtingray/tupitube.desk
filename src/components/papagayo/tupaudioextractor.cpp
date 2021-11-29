@@ -16,6 +16,8 @@
 
 #include "tupaudioextractor.h"
 
+#include <QFile>
+
 #define MAX_AUDIO_FRAMES 53000000
 
 TupAudioExtractor::TupAudioExtractor(const char *path, bool reverse)
@@ -35,7 +37,14 @@ TupAudioExtractor::TupAudioExtractor(const char *path, bool reverse)
         #endif
 		return;
     }
-	
+
+    if (!QFile::exists(path)) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupAudioExtractor::TupAudioExtractor()] - Fatal Error: file doesn't exist -> " << path;
+        #endif
+        return;
+    }
+
 	// The sound file might already be in the right format (AIFF or WAV), try and read it. 
     bool soundRead = readSoundFile(path);
     if (soundRead && reverse) {

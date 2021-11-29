@@ -2296,7 +2296,7 @@ void TupDocumentView::openLipSyncCreator()
     if (currentTool->toolId() != TAction::LipSyncTool)
         papagayoAction->trigger();
 
-    TupPapagayoApp *papagayoApp = new TupPapagayoApp(true, project, "", getContextIndexes(), this);
+    TupPapagayoApp *papagayoApp = new TupPapagayoApp(TupPapagayoApp::Insert, project, "", getContextIndexes(), this);
     connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);
 
     papagayoApp->show();
@@ -2323,7 +2323,7 @@ void TupDocumentView::openLipSyncCreator(const QString &lipsyncName)
             indexes << scene->getLipSyncLayerIndex(lipsyncName);
             indexes << lipsync->getInitFrame();
 
-            TupPapagayoApp *papagayoApp = new TupPapagayoApp(true, project, lipsync, indexes, this);
+            TupPapagayoApp *papagayoApp = new TupPapagayoApp(TupPapagayoApp::Update, project, lipsync, indexes, this);
             connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);
 
             papagayoApp->show();
@@ -2579,7 +2579,7 @@ void TupDocumentView::launchLipsyncModule(bool recorded, const QString &soundFil
             }
             QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-            TupPapagayoApp *papagayoApp = new TupPapagayoApp(false, project, filePath, getContextIndexes(), this);
+            TupPapagayoApp *papagayoApp = new TupPapagayoApp(TupPapagayoApp::Update, project, filePath, getContextIndexes(), this);
             connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);
 
             papagayoApp->show();
@@ -2599,7 +2599,7 @@ void TupDocumentView::launchLipsyncModule(bool recorded, const QString &soundFil
         QString filePath = project->getDataDir() + "/audio/" + filename + "." + extension;
 
         if (QFile::exists(filePath)) {
-            TupPapagayoApp *papagayoApp = new TupPapagayoApp(false, project, filePath, getContextIndexes(), this);
+            TupPapagayoApp *papagayoApp = new TupPapagayoApp(TupPapagayoApp::Update, project, filePath, getContextIndexes(), this);
             connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);
 
             papagayoApp->show();

@@ -63,6 +63,7 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void openLipSyncProperties(TupLipSync *lipsync);
 
         void addLipSyncRecord(const QString &name);
+        void removeLipSyncRecord(const QString &name);
         void updateInterfaceRecords();
 
         void resetUI();
@@ -83,7 +84,7 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void selectMouth(const QString &name, int index);
         void closeLipSyncProperties();
         void initFrameHasChanged(int index);
-        void removeCurrentLipSync(const QString &name);
+        void currentLipsyncRemoved(const QString &name);
         void xPosChanged(int x);
         void yPosChanged(int y);
         

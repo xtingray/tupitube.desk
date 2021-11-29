@@ -40,12 +40,13 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
 	Q_OBJECT
 
     public:
+        enum Mode { Insert = 0, Update };
         enum Language { English = 0, OtherLang };
         enum ViewType { Predefined = 0, Customized };
-        explicit TupPapagayoApp(bool extendedUI, TupProject *project, const QString &soundFile = QString(),
+        explicit TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, const QString &soundFile = QString(),
                                 QList<int> indexes = QList<int>(), QWidget *parent = nullptr);
 
-        explicit TupPapagayoApp(bool extendedUI, TupProject *project, TupLipSync *lipsync, QList<int> indexes,
+        explicit TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, TupLipSync *lipsync, QList<int> indexes,
                                 QWidget *parent = nullptr);
         ~TupPapagayoApp();
 
@@ -79,11 +80,12 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         void updateFrame(int frame);
         void updatePauseButton();
         void createLipsyncRecord();
+        void callUpdateProcedure();
         void closeWindow();
         bool validateLipsyncForm();
 
     private:
-        void setUICore();
+        void setUICore(const QString &filePath);
         void setBaseUI();
         void setUIStyle();
         void setupActions();
@@ -95,7 +97,8 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         void loadDocumentFromScratch(QStringList phonemes);
         int32 calculateDuration();
         bool confirmCloseDocument();
-        void saveLipsyncRecord();
+        bool saveLipsyncRecord();
+        bool updateLipsyncRecord();
 
         TupWaveFormView *waveformView;
         TupMouthView *mouthView;
@@ -105,7 +108,7 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         bool rebuildingList;
         int defaultFps;
         bool playerStopped;
-        bool extendedUI;
+        Mode mode;
 
         QAction *actionClose;
         QAction *actionOpen;
@@ -132,8 +135,12 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         QStringList wordsList;
         QStringList phonemesList;
         bool saveButtonPressed;
+        QString pgoFolderPath;
         QString pgoFilePath;
         QString soundFilePath;
+        QString soundKey;
+
+        QString oldLipsyncName;
 
         TupProject *tupProject;
         int sceneIndex;
@@ -141,4 +148,4 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         int frameIndex;
 };
 
-#endif // TUPPAPAGAYODIALOG_H
+#endif // TUPPAPAGAYOAPP_H

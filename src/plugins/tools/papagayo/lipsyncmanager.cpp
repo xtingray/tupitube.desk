@@ -34,10 +34,13 @@
  ***************************************************************************/
 
 #include "lipsyncmanager.h"
+#include "tseparator.h"
+#include "toptionaldialog.h"
 
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QListWidgetItem>
+#include <QScreen>
 
 LipSyncManager::LipSyncManager(QWidget *parent): QWidget(parent)
 {
@@ -76,11 +79,17 @@ LipSyncManager::LipSyncManager(QWidget *parent): QWidget(parent)
     buttonLayout->setAlignment(Qt::AlignHCenter);
     buttonLayout->setMargin(0);
     buttonLayout->addWidget(openButton);
-    buttonLayout->addSpacing(10);
+    buttonLayout->addSpacing(5);
+    buttonLayout->addWidget(new TSeparator(Qt::Vertical));
+    buttonLayout->addSpacing(5);
     buttonLayout->addWidget(editPgoButton);
-    buttonLayout->addSpacing(10);
+    buttonLayout->addSpacing(5);
+    buttonLayout->addWidget(new TSeparator(Qt::Vertical));
+    buttonLayout->addSpacing(5);
     buttonLayout->addWidget(editMouthButton);
-    buttonLayout->addSpacing(10);
+    buttonLayout->addSpacing(5);
+    buttonLayout->addWidget(new TSeparator(Qt::Vertical));
+    buttonLayout->addSpacing(5);
     buttonLayout->addWidget(deleteButton);
 
     layout->addLayout(listLayout);
@@ -141,12 +150,41 @@ void LipSyncManager::removeLipSync()
     #endif
 
     if (lipSyncList->count() > 0) {
-        QListWidgetItem *item = lipSyncList->currentItem();
-        if (item) {
-            lipSyncList->takeItem(lipSyncList->row(item));
-            target = item->text();
-            emit removeCurrentLipSync(target);
+        TOptionalDialog dialog(tr("Are you sure you want to delete this lip-sync record?"),
+                               tr("Confirmation Required"), false, false, this);
+        dialog.setModal(true);
+        QScreen *screen = QGuiApplication::screens().at(0);
+        dialog.move(static_cast<int> ((screen->geometry().width() - dialog.sizeHint().width()) / 2),
+                    static_cast<int> ((screen->geometry().height() - dialog.sizeHint().height()) / 2));
+        dialog.exec();
+
+        TOptionalDialog::Result result = dialog.getResult();
+        if (result == TOptionalDialog::Accepted) {
+            QListWidgetItem *item = lipSyncList->currentItem();
+            if (item) {
+                lipSyncList->takeItem(lipSyncList->row(item));
+                target = item->text();
+                emit currentLipSyncRemoved(target);
+            }
         }
+    }
+}
+
+void LipSyncManager::removeRecordFromList(const QString &name)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[LipSyncManager::removeRecordFromList()] - name -> " << name;
+    #endif
+
+    QList<QListWidgetItem *> items = lipSyncList->findItems(name, Qt::MatchExactly);
+    if (items.size() == 1) {
+        QListWidgetItem *item = items.first();
+        if (item)
+            lipSyncList->takeItem(lipSyncList->row(item));
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[LipSyncManager::removeRecordFromList()] - Warning: Can't find item -> " << name;
+        #endif
     }
 }
 

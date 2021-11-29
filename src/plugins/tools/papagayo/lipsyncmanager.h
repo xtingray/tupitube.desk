@@ -60,12 +60,13 @@ class TUPITUBE_PLUGIN LipSyncManager: public QWidget
         QString currentLipSyncName() const;
         int listSize(); 
         void addNewRecord(const QString &name);
+        void removeRecordFromList(const QString &name);
 
     signals:
         void lipsyncCreatorRequested();
         void lipsyncEditionRequested(const QString &name);
         void mouthEditionRequested(const QString &name);
-        void removeCurrentLipSync(const QString &name);
+        void currentLipSyncRemoved(const QString &name);
 
     private slots:
         void editLipSync();

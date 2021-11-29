@@ -266,5 +266,5 @@ QStringList TConfig::languages()
 
 QStringList TConfig::timeRanges()
 {
-    return {"5", "8", "10", "12"};
+    return {"3", "5", "8", "10", "12"};
 }

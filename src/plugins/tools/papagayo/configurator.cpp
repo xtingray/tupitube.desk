@@ -111,7 +111,7 @@ void Configurator::setLipSyncManagerPanel()
     connect(manager, &LipSyncManager::lipsyncCreatorRequested, this, &Configurator::lipsyncCreatorRequested);
     connect(manager, &LipSyncManager::lipsyncEditionRequested, this, &Configurator::lipsyncEditionRequested);
     connect(manager, &LipSyncManager::mouthEditionRequested, this, &Configurator::editCurrentLipSync);
-    connect(manager, &LipSyncManager::removeCurrentLipSync, this, &Configurator::removeCurrentLipSync);
+    connect(manager, &LipSyncManager::currentLipSyncRemoved, this, &Configurator::currentLipsyncRemoved);
 
     settingsLayout->addWidget(manager);
 }
@@ -127,6 +127,11 @@ void Configurator::activeLipSyncManagerPanel(bool enable)
 void Configurator::addLipSyncRecord(const QString &name)
 {
     manager->addNewRecord(name);
+}
+
+void Configurator::removeLipSyncRecord(const QString &name)
+{
+    manager->removeRecordFromList(name);
 }
 
 void Configurator::editCurrentLipSync(const QString &name)

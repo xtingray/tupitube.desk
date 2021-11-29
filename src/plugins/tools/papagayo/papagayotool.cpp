@@ -150,7 +150,7 @@ QWidget * PapagayoTool::configurator()
         connect(configPanel, &Configurator::lipsyncCreatorRequested, this, &PapagayoTool::lipsyncCreatorRequested);
         connect(configPanel, &Configurator::lipsyncEditionRequested, this, &PapagayoTool::lipsyncEditionRequested);
         connect(configPanel, &Configurator::mouthEditionRequested, this, &PapagayoTool::editLipsyncMouth);
-        connect(configPanel, &Configurator::removeCurrentLipSync, this, &PapagayoTool::removeCurrentLipSync);
+        connect(configPanel, &Configurator::currentLipsyncRemoved, this, &PapagayoTool::removeCurrentLipSync);
         connect(configPanel, &Configurator::closeLipSyncProperties, this, &PapagayoTool::resetCanvas);
         connect(configPanel, &Configurator::initFrameHasChanged, this, &PapagayoTool::updateInitFrame);
         connect(configPanel, &Configurator::xPosChanged, this, &PapagayoTool::updateXPosition);
@@ -239,10 +239,10 @@ void PapagayoTool::editLipsyncMouth(const QString &name)
     }
 }
 
-void PapagayoTool::removeCurrentLipSync(const QString &name)
+void PapagayoTool::removeCurrentLipSync(const QString &lipsyncName)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[PapagayoTool::removeCurrentLipSync()] - name -> " << name;
+        qDebug() << "[PapagayoTool::removeCurrentLipSync()] - name -> " << lipsyncName;
     #endif
 
     QList<QGraphicsView *> views = scene->views();
@@ -250,16 +250,60 @@ void PapagayoTool::removeCurrentLipSync(const QString &name)
     foreach (QGraphicsItem *item, view->scene()->items()) {
         QString tip = item->toolTip();
         if (tip.length() > 0) {
-            if (tip.startsWith(tr("lipsync:") + name))
+            if (tip.startsWith(tr("lipsync:") + lipsyncName))
                 scene->removeItem(item);
         }
     }
 
-    TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, 0, TupProjectRequest::RemoveLipSync, name);
+    TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, 0, TupProjectRequest::RemoveLipSync, lipsyncName);
     emit requested(&request);
 
-    request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove, name, TupLibraryObject::Folder);
+    request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove, lipsyncName, TupLibraryObject::Folder);
     emit requested(&request);
+
+    TupScene *sceneData = scene->currentScene();
+    TupProject *project = sceneData->project();
+
+    QString pgoPath = project->getDataDir() + "/pgo/" + lipsyncName;
+    if (QFile::exists(pgoPath)) {
+        if (!QFile::remove(pgoPath)) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[PapagayoTool::removeCurrentLipSync()] - Fatal Error: Can't remove PGO file -> " << pgoPath;
+            #endif
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[PapagayoTool::removeCurrentLipSync()] - Warning: PGO file doesn't exists -> " << pgoPath;
+        #endif
+    }
+
+    QString imagesPath = project->getDataDir() + "/images/" + lipsyncName;
+    QDir imgDir(imagesPath);
+    if (QFile::exists(imagesPath)) {
+        if (!imgDir.removeRecursively()) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[PapagayoTool::removeCurrentLipSync()] - Fatal Error: Can't remove folder -> " << imagesPath;
+            #endif
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[PapagayoTool::removeCurrentLipSync()] - Warning: folder doesn't exists -> " << imagesPath;
+        #endif
+    }
+
+    QString audioPath = project->getDataDir() + "/audio/" + lipsyncName;
+    QDir audioDir(audioPath);
+    if (QFile::exists(audioPath)) {
+        if (!audioDir.removeRecursively()) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[PapagayoTool::removeCurrentLipSync()] - Fatal Error: Can't remove folder -> " << audioPath;
+            #endif
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[PapagayoTool::removeCurrentLipSync()] - Warning: folder doesn't exists -> " << audioPath;
+        #endif
+    }
 }
 
 void PapagayoTool::setTargetInitPos(const QPointF &point)
@@ -392,11 +436,18 @@ void PapagayoTool::layerResponse(const TupLayerResponse *event)
         currentLipSync = new TupLipSync();
         currentLipSync->fromXml(xml);
         configPanel->addLipSyncRecord(currentLipSync->getLipSyncName());
+        return;
     }
 
     if (event->getAction() == TupProjectRequest::UpdateLipSync) {
         if (mode == TupToolPlugin::Edit)
             setTargetEnvironment();
+        return;
+    }
+
+    if (event->getAction() == TupProjectRequest::RemoveLipSync) {
+        QString name = event->getArg().toString();
+        configPanel->removeLipSyncRecord(name);
     }
 }
 

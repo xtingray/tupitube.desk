@@ -89,11 +89,6 @@ LipsyncWord::LipsyncWord()
 LipsyncWord::~LipsyncWord()
 {
     clearPhonemes();
-
-    /*
-    while (!phonemes.isEmpty())
-        delete phonemes.takeFirst();
-    */
 }
 
 void LipsyncWord::runBreakdown(const QString &lang)
@@ -514,7 +509,7 @@ int LipsyncVoice::getPhraseEndFrame()
 }
 
 void LipsyncVoice::open(QTextStream &in)
-{
+{    
     int32 numWords;
     int32 numPhonemes = 0;
     QString str;
@@ -523,11 +518,20 @@ void LipsyncVoice::open(QTextStream &in)
     text = in.readLine().trimmed();
     text = text.split('|').join('\n');
 
+    #ifdef TUP_DEBUG
+        qDebug() << "[LipsyncVoice::open()] - voice name -> " << name;
+        qDebug() << "[LipsyncVoice::open()] - voice text -> " << text;
+    #endif
+
     LipsyncPhrase *phrase = new LipsyncPhrase;
     phrase->setText(in.readLine().trimmed());
     phrase->setStartFrame(in.readLine().toInt());
     phrase->setEndFrame(in.readLine().toInt());
     numWords = in.readLine().toInt();
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[LipsyncVoice::open()] - numWords -> " << numWords;
+    #endif
 
     for (int w = 0; w < numWords; w++) {
         LipsyncWord *word = new LipsyncWord;
@@ -558,6 +562,10 @@ void LipsyncVoice::open(QTextStream &in)
 
 void LipsyncVoice::save(QTextStream &out)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[LipsyncVoice::save()]";
+    #endif
+
     out << '\t' << name << Qt::endl;
     out << '\t' << text.split('\n').join('|') << Qt::endl;
     out << "\t\t" << phrase->getText() << Qt::endl;
@@ -582,7 +590,7 @@ void LipsyncVoice::save(QTextStream &out)
 void LipsyncVoice::runBreakdown(QString language, int32 audioDuration)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPapagayoApp::runBreakdownProcess()] - text -> " <<  text;
+        qDebug() << "[LipsyncVoice::runBreakdown()] - text -> " <<  text;
     #endif
 
     if (text.isEmpty()) {
@@ -907,10 +915,10 @@ void TupLipsyncDoc::openPGOFile(const QString &pgoPath, const QString &audioPath
 void TupLipsyncDoc::openAudioFile(const QString &path)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLipsyncDoc::openAudio()] - Loading audio file -> " << path;
+        qDebug() << "[TupLipsyncDoc::openAudioFile()] - Loading audio file -> " << path;
     #endif
 
-    projectHasChanged = true;
+    // projectHasChanged = true;
     maxAmplitude = 1.0f;
 
     if (audioPlayer) {
@@ -929,14 +937,14 @@ void TupLipsyncDoc::openAudioFile(const QString &path)
     audioPlayer->setMedia(QUrl::fromLocalFile(audioPath));
     if (audioPlayer->error()) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupLipsyncDoc::openAudio()] - Fatal Error: Can't open audio -> " << path;
-            qDebug() << "[TupLipsyncDoc::openAudio()] - Error Output -> " << audioPlayer->errorString();
+            qDebug() << "[TupLipsyncDoc::openAudioFile()] - Fatal Error: Can't open audio -> " << path;
+            qDebug() << "[TupLipsyncDoc::openAudioFile()] - Error Output -> " << audioPlayer->errorString();
         #endif
         delete audioPlayer;
         audioPlayer = nullptr;
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupLipsyncDoc::openAudio()] - Audio file loaded successful!";
+            qDebug() << "[TupLipsyncDoc::openAudioFile()] - Audio file loaded successful!";
         #endif
         fps = 24;
         audioExtractor = new TupAudioExtractor(path.toUtf8().data());
@@ -953,7 +961,7 @@ void TupLipsyncDoc::openAudioFile(const QString &path)
 			}
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLipsyncDoc::openAudio()] - Fatal Error: Audio extractor failed!";
+                qDebug() << "[TupLipsyncDoc::openAudioFile()] - Fatal Error: Audio extractor failed!";
             #endif
             delete audioExtractor;
             audioExtractor = nullptr;
@@ -1005,6 +1013,10 @@ bool TupLipsyncDoc::save()
     file->close();
     delete file;
     projectHasChanged = false;
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLipsyncDoc::save()] - File saved successfully! - pgoFilePath -> " << pgoFilePath;
+    #endif
 
     return true;
 }
