@@ -55,8 +55,6 @@ void TupTextItem::fromXml(const QString &xml)
 QDomElement TupTextItem::toXml(QDomDocument &doc) const
 {
     QDomElement root = doc.createElement("text");
-    // QDomText text = doc.createTextNode(toPlainText());
-    // root.appendChild(text);
     QString text = this->data(0).toString();
     if (text.isEmpty())
         text = toPlainText();
@@ -67,12 +65,6 @@ QDomElement TupTextItem::toXml(QDomDocument &doc) const
     root.appendChild(TupSerializer::font(&font, doc));
     QBrush brush(this->defaultTextColor());
     root.appendChild(TupSerializer::brush(&brush, doc));
-
-    /*
-    qDebug() << "";
-    qDebug() << "XML:";
-    qDebug() << "" << doc.toString();
-    */
 
     return root;
 }

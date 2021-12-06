@@ -61,7 +61,8 @@ QDomElement TupSerializer::properties(const QGraphicsItem *item, QDomDocument &d
     qreal e = m.dx();
     qreal f = m.dy();
     
-    matrixStr += QString::number(a) + "," + QString::number(b) + "," + QString::number(c) + "," + QString::number(d) + "," + QString::number(e) + "," + QString::number(f) + ")" ; 
+    matrixStr += QString::number(a) + "," + QString::number(b) + "," + QString::number(c) + "," + QString::number(d)
+                 + "," + QString::number(e) + "," + QString::number(f) + ")" ;
 
     properties.setAttribute("transform", matrixStr);
     properties.setAttribute("rotation", item->data(TupGraphicObject::Rotate).toInt());
@@ -82,12 +83,9 @@ QDomElement TupSerializer::properties(const QGraphicsItem *item, QDomDocument &d
     return properties;
 }
 
-// void TupSerializer::loadProperties(QGraphicsItem *item, const QXmlAttributes &atts)
 void TupSerializer::loadProperties(QGraphicsItem *item, const QXmlStreamAttributes &atts)
 {
     QTransform transform;
-    // TupSvg2Qt::svgmatrix2qtmatrix(atts.value("transform"), transform);
-    // TupSvg2Qt::svgmatrix2qtmatrix(atts.value("coords").toString(), transform);
     TupSvg2Qt::svgmatrix2qtmatrix(atts.value("transform").toString(), transform);
     item->setTransform(transform);
 
@@ -210,7 +208,6 @@ QDomElement TupSerializer::gradient(const QGradient *gradient, QDomDocument &doc
     return element;
 }
 
-// QGradient * TupSerializer::createGradient(const QXmlAttributes &atts)
 QGradient * TupSerializer::createGradient(const QXmlStreamAttributes &atts)
 {
     QGradient *result = nullptr;
@@ -335,7 +332,6 @@ QDomElement TupSerializer::pen(const QPen *pen, QDomDocument &doc)
     return penElement;
 }
 
-// void TupSerializer::loadPen(QPen &pen, const QXmlAttributes &atts)
 void TupSerializer::loadPen(QPen &pen, const QXmlStreamAttributes &atts)
 {
     pen.setCapStyle(Qt::PenCapStyle(atts.value("capStyle").toInt()));
@@ -369,7 +365,6 @@ void TupSerializer::loadPen(QPen &pen, const QDomElement &e)
     QBrush brush; 
     loadBrush(brush, brushElement);
 
-    // pen.setColor(color);
     pen.setBrush(brush);
 }
 
@@ -400,7 +395,6 @@ void TupSerializer::loadFont(QFont &font, const QDomElement &e)
     font.setOverline(e.attribute("overline", "0").toInt());
 }
 
-// void TupSerializer::loadFont(QFont &font, const QXmlAttributes &atts)
 void TupSerializer::loadFont(QFont &font, const QXmlStreamAttributes &atts)
 {
     font = QFont(atts.value("family").toString(), atts.value("pointSize").toInt(), atts.value("weight").toInt(),

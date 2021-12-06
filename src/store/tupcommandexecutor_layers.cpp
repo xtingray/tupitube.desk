@@ -223,6 +223,10 @@ bool TupCommandExecutor::addLipSync(TupLayerResponse *response)
     int position = response->getLayerIndex();
     QString xml = response->getArg().toString();
 
+    qDebug() << "";
+    qDebug() << "4 LIPSYNC";
+    qDebug() << xml;
+
     TupScene *scene = project->sceneAt(scenePos);
 
     if (!scene)
@@ -232,6 +236,11 @@ bool TupCommandExecutor::addLipSync(TupLayerResponse *response)
     if (layer) {
         TupLipSync *lipsync = new TupLipSync();
         lipsync->fromXml(xml);
+
+        qDebug() << "";
+        qDebug() << "4A LIPSYNC";
+        qDebug() << lipsync->toString();
+
         layer->addLipSync(lipsync);
 
         emit responsed(response);

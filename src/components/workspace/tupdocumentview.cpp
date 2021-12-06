@@ -2355,6 +2355,7 @@ void TupDocumentView::papagayoManager()
         TupProject::Mode mode = TupProject::Mode(spaceModeCombo->currentIndex());
         if (mode != TupProject::FRAMES_MODE)
             spaceModeCombo->setCurrentIndex(TupProject::FRAMES_MODE);
+
         papagayoAction->trigger();
     }
 }

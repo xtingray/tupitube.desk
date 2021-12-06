@@ -41,7 +41,7 @@
 #include "tuptextitem.h"
 #include "textconfigurator.h"
 #include "tupbrushmanager.h"
-#include "node.h"
+// #include "node.h"
 #include "nodemanager.h"
 
 #include <QPointF>

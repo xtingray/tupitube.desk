@@ -1283,6 +1283,10 @@ bool TupPapagayoApp::saveLipsyncRecord()
                             parser->setSoundFile(soundKey);
                             QString xml = parser->toString();
 
+                            qDebug() << "";
+                            qDebug() << "3 LIPSYNC";
+                            qDebug() << xml;
+
                             request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex, TupProjectRequest::AddLipSync, xml);
                             emit requestTriggered(&request);
 

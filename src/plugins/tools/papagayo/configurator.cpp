@@ -62,7 +62,7 @@ Configurator::Configurator(QWidget *parent) : QFrame(parent)
     layout->addLayout(settingsLayout);
 
     QHBoxLayout *mouthsLayout = new QHBoxLayout;
-    QPushButton *mouthsButton = new QPushButton(tr("Mouth Samples"));
+    QPushButton *mouthsButton = new QPushButton(" " + tr("Mouth Samples"));
     mouthsButton->setStyleSheet("QPushButton { padding: 5px; }");
     mouthsButton->setIcon(QIcon(THEME_DIR + "icons/mouth.png"));
     connect(mouthsButton, SIGNAL(clicked()), this, SLOT(openMouthsDialog()));
@@ -170,12 +170,12 @@ void Configurator::updateInterfaceRecords()
     settingsPanel->updateInterfaceRecords();
 }
 
-void Configurator::setPos(const QPointF &point)
+void Configurator::setTransformations(const TupTransformation::Parameters parameters)
 {
-    settingsPanel->setPos(point);
+    settingsPanel->setTransformations(parameters);
 }
 
-void Configurator::setPhoneme(const QString &phoneme)
+void Configurator::setPhoneme(const TupPhoneme *phoneme)
 {
     settingsPanel->setPhoneme(phoneme);
 }

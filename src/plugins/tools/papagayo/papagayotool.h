@@ -41,7 +41,7 @@
 #include "papagayosettings.h"
 #include "tupprojectresponse.h"
 #include "configurator.h"
-#include "tmouthtarget.h"
+#include "nodemanager.h"
 
 #include <QPointF>
 #include <QKeySequence>
@@ -93,7 +93,7 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
         void resizeNode(qreal factor);
         void updateZoomFactor(qreal factor);
 
-        void setTargetEnvironment();
+        void setNodesManagerEnvironment();
 
     signals:
         void lipsyncCreatorRequested();
@@ -103,17 +103,19 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
     private slots:
         void editLipsyncMouth(const QString &name);
         void removeCurrentLipSync(const QString &name);
-        void setTargetInitPos(const QPointF &point);
-        void updateOriginPoint(const QPointF &point);
+        void setManagerInitPos(const QPointF &point);
+        // void updateOriginPoint(const QPointF &point);
         void resetCanvas();
-        void addTarget();
+        void addNodesManager();
         void updateInitFrame(int index);
         void updateXPosition(int x);
         void updateYPosition(int y);
+        void syncNodes();
 
     private:
         void setupActions();
-        void removeTarget();
+        void removeNodesManager();
+        void storeTransformation(QGraphicsItem *item);
 
         QMap<TAction::ActionId, TAction *> pgActions;
         Configurator *configPanel;
@@ -123,16 +125,18 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
         TupLipSync *currentLipSync;
         int sceneIndex;
 
-        QPointF targetInitPos;
+        QPointF managerInitPos;
         QPointF origin;
-        TMouthTarget *target;
 
         TupToolPlugin::Mode mode;
 
         qreal realFactor;
         QGraphicsItem *mouth;
         QPointF mouthOffset;
-        bool targetIncluded;
+
+        int nodeZValue;
+        NodeManager *nodesManager;
+        bool managerIncluded;
 };
 
 #endif

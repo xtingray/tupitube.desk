@@ -69,8 +69,6 @@ class TUPITUBE_PLUGIN SelectionSettings : public QWidget
         void setPos(int x, int y);
         void setProportionState(int flag);
         bool formIsVisible();
-        // void setRotationAngle(int angle);
-        // void setScaleFactor(double factor);
 
      signals:
         void callAlignAction(SelectionSettings::Align align);

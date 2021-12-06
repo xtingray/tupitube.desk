@@ -46,6 +46,7 @@
 #include "tupellipseitem.h"
 #include "tupwatermark.h"
 #include "tuptextitem.h"
+#include "tupserializer.h"
 
 #include <QSvgRenderer>
 #include <QGraphicsView>
@@ -1104,7 +1105,6 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
         #endif
         TupLipSync *lipSync;
         TupLibraryFolder *folder;
-        TupVoice *voice;
         TupPhoneme *phoneme;
         TupLibraryObject *mouthImg;
         TupGraphicLibraryItem *item;
@@ -1113,96 +1113,94 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
              lipSync = mouths.at(i);
              int initFrame = lipSync->getInitFrame();
              // If photogram is in the range of the lip-sync object
-             if ((photogram >= initFrame) && (photogram <= initFrame + lipSync->getFramesCount())) {
+             if ((photogram >= initFrame) && (photogram <= initFrame + lipSync->getFramesTotal())) {
                  QString name = lipSync->getLipSyncName();
                  #ifdef TUP_DEBUG
                      qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - lipSync name -> " << name;
                  #endif
                  folder = library->getFolder(name);
                  if (folder) {
-                     QList<TupVoice *> voices = lipSync->getVoices();
-                     int voicesTotal = voices.count();
-                     /*
-                     #ifdef TUP_DEBUG
-                         qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - voicesTotal -> " << voicesTotal;
-                     #endif
-                     */
-                     // Looking for through all the voices
-                     for(int j=0; j<voicesTotal; j++) {
-                         voice = voices.at(j);
-                         int index = photogram - initFrame;
-                         // Voice contains a phoneme for this frame
-                         if (voice->contains(index)) {
-                             // Adding phoneme image
-                             phoneme = voice->getPhonemeAt(index);
-                             if (phoneme) {
-                                 QString imgName = phoneme->value() + lipSync->getPicExtension();
-                                 mouthImg = folder->getObject(imgName);
-                                 /*
-                                 #ifdef TUP_DEBUG
-                                     qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - imgName -> " << imgName;
-                                 #endif
-                                 */
-                                 if (mouthImg) {
-                                     item = new TupGraphicLibraryItem(mouthImg);
-                                     // Adding image of the mouth phoneme
-                                     if (item) {
-                                         QPointF pos = phoneme->position();
-                                         if (lipSync->getPicExtension().compare(".tobj") == 0) {
-                                             pos -= item->boundingRect().center();
-                                             item->setPos(pos);
-                                         } else {
-                                             int wDelta = static_cast<int> (item->boundingRect().width()/2);
-                                             int hDelta = static_cast<int> (item->boundingRect().height()/2);
-                                             item->setPos(pos.x() - wDelta, pos.y() - hDelta);
-                                         }
-                                         item->setToolTip(tr("lipsync:") + name);
-                                         item->setZValue(zValue);
-                                         addItem(item);
-                                     } else {
-                                         #ifdef TUP_DEBUG
-                                             qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Fatal Error: Can't load mouth -> " << mouthImg;
-                                         #endif
-                                     }
-                                 } else {
-                                     #ifdef TUP_DEBUG
-                                         qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Warning: Can't find phoneme image -> "
-                                                  << imgName;
-                                     #endif
-                                 } 
-                             } else {
-                                 #ifdef TUP_DEBUG
-                                     qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Warning: No lipsync phoneme at frame "
-                                              << photogram << " - index: " << index;
-                                 #endif
+                     TupVoice * voice = lipSync->getVoice();
+                     int index = photogram - initFrame;
+                     // Voice contains a phoneme for this frame
+                     if (voice->contains(index)) {
+                         // Adding phoneme image
+                         phoneme = voice->getPhonemeAt(index);
+                         if (phoneme) {
+                             QString imgName = phoneme->value() + lipSync->getPicExtension();
+                             mouthImg = folder->getObject(imgName);
+                             /*
+                             #ifdef TUP_DEBUG
+                                 qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - imgName -> " << imgName;
+                             #endif
+                             */
+                             if (mouthImg) {
+                                 item = new TupGraphicLibraryItem(mouthImg);
+                                 // Adding image of the mouth phoneme
+                                 if (item) {
+                                     QDomElement properties = phoneme->getTransformationDom();
+                                     TupSerializer::loadProperties(item, properties);
 
-                                 // Adding rest phoneme to cover empty frame
-                                 QString imgName = "rest" + lipSync->getPicExtension();
-                                 mouthImg = folder->getObject(imgName);
-                                 if (mouthImg) {
-                                     item = new TupGraphicLibraryItem(mouthImg);
-                                     if (item) {
-                                         QPointF pos = voice->mouthPos();
-                                         int wDelta = static_cast<int> (item->boundingRect().width()/2);
-                                         int hDelta = static_cast<int> (item->boundingRect().height()/2);
-                                         item->setPos(pos.x()-wDelta, pos.y()-hDelta);
-                                         item->setToolTip(tr("lipsync:") + name + ":" + QString::number(j));
-                                         item->setZValue(zValue);
-                                         addItem(item);
-                                     }
+                                     QRectF rect = item->boundingRect();
+                                     int x = rect.width()/2;
+                                     int y = rect.height()/2;
+                                     item->moveBy(-x, -y);
+
+                                     item->setToolTip(tr("lipsync:") + name);
+                                     item->setZValue(zValue);
+                                     addItem(item);
                                  } else {
                                      #ifdef TUP_DEBUG
-                                         qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Warning: Can't find phoneme image -> "
-                                                  << imgName;
+                                         qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Fatal Error: Can't load mouth -> "
+                                                  << mouthImg;
                                      #endif
                                  }
+                             } else {
+                                 #ifdef TUP_DEBUG
+                                     qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Warning: Can't find phoneme image -> "
+                                              << imgName;
+                                 #endif
                              }
                          } else {
                              #ifdef TUP_DEBUG
-                                 qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - No lipsync phoneme in voice at position: "
-                                          << j << " - looking for index: " << index;
+                                 qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Warning: No lipsync phoneme at frame "
+                                          << photogram << " - index: " << index;
                              #endif
+
+                             // Adding rest phoneme to cover empty frame
+                             QString imgName = "rest" + lipSync->getPicExtension();
+                             mouthImg = folder->getObject(imgName);
+                             if (mouthImg) {
+                                 item = new TupGraphicLibraryItem(mouthImg);
+                                 if (item) {
+                                     QDomElement properties = voice->getDefaultTransformation();
+                                     TupSerializer::loadProperties(item, properties);
+
+                                     QRectF rect = item->boundingRect();
+                                     int x = rect.width()/2;
+                                     int y = rect.height()/2;
+                                     item->moveBy(-x, -y);
+
+                                     item->setToolTip(tr("lipsync:") + name);
+                                     item->setZValue(zValue);
+                                     addItem(item);
+                                 } else {
+                                    #ifdef TUP_DEBUG
+                                        qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Warning: Can't load library item -> "
+                                                 << imgName;
+                                    #endif
+                                 }
+                             } else {
+                                     #ifdef TUP_DEBUG
+                                         qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Warning: Can't find phoneme image -> "
+                                                  << imgName;
+                                     #endif
+                             }
                          }
+                     } else {
+                         #ifdef TUP_DEBUG
+                             qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - No lipsync phoneme in voice looking for index: " << index;
+                         #endif
                      }
                  } else {
                      #ifdef TUP_DEBUG

@@ -39,6 +39,7 @@
 #include "tglobal.h"
 #include "papagayosettings.h"
 #include "lipsyncmanager.h"
+#include "tuplipsync.h"
 
 #include <QFrame>
 #include <QLabel>
@@ -69,8 +70,8 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void resetUI();
         void closePanels();
 
-        void setPhoneme(const QString &phoneme);
-        void setPos(const QPointF &point);
+        void setPhoneme(const TupPhoneme *phoneme);
+        void setTransformations(const TupTransformation::Parameters parameters);
 
     private slots:
         void editCurrentLipSync(const QString &name);

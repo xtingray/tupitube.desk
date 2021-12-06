@@ -44,6 +44,8 @@
 #include <QLabel>
 #include <QBoxLayout>
 #include <QSpinBox>
+#include <QDoubleSpinBox>
+#include <QCheckBox>
 #include <QTextEdit>
 
 /**
@@ -61,18 +63,34 @@ class TUPITUBE_PLUGIN PapagayoSettings : public QWidget
         void openLipSyncProperties(TupLipSync *lipsync);
         void updateInterfaceRecords();
 
-        void setPhoneme(const QString &phoneme);
-        void setPos(const QPointF &point);
+        void setPhoneme(const TupPhoneme *phoneme);
+        void setTransformations(const TupTransformation::Parameters parameters);
 
-    private slots:
-        void updateInitFrame(int index);
-        
     signals:
         void initFrameHasChanged(int index);
         void selectMouth(const QString &id, int index);
         void closeLipSyncProperties();
         void xPosChanged(int x);
         void yPosChanged(int y);
+
+        void positionUpdated(int x, int y);
+        void rotationUpdated(int angle);
+        void scaleUpdated(double xFactor, double yFactor);
+        void activateProportion(bool flag);
+
+    private slots:
+        void updateInitFrame(int index);
+
+        void notifyXMovement(int x);
+        void notifyYMovement(int y);
+        void notifyRotation(int angle);
+        void notifyXScale(double factor);
+        void notifyYScale(double factor);
+        void enableProportion(int flag);
+
+    public slots:
+       void updateRotationAngle(int angle);
+       void updateScaleFactor(double x, double y);
 
     private:
         void setInnerForm();
@@ -86,15 +104,28 @@ class TUPITUBE_PLUGIN PapagayoSettings : public QWidget
         QLabel *endingLabel;
         QLabel *totalLabel;
 
-        QList<TupVoice *> voices;
+        // QList<TupVoice *> voices;
 
         QLabel *phonemeLabel;
         QSpinBox *xPosField;
         QSpinBox *yPosField;
 
+        QSpinBox *angleField;
+        QDoubleSpinBox *factorXField;
+        QDoubleSpinBox *factorYField;
+        QCheckBox *propCheck;
+
         QString name;
         int initFrame;
         int framesCount;
+
+        int currentX;
+        int currentY;
+        int currentAngle;
+        double currentXFactor;
+        double currentYFactor;
+
+        const TupPhoneme *phoneme;
 };
 
 #endif
