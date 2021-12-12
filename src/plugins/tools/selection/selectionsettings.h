@@ -79,6 +79,7 @@ class TUPITUBE_PLUGIN SelectionSettings : public QWidget
         void rotationUpdated(int angle);
         void scaleUpdated(double xFactor, double yFactor);
         void activateProportion(bool flag);
+        void objectHasBeenReset();
 
      public slots:
         void updateRotationAngle(int angle);

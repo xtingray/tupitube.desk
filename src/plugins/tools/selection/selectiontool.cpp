@@ -399,6 +399,7 @@ QWidget *SelectionTool::configurator()
         connect(settingsPanel, &SelectionSettings::rotationUpdated, this, &SelectionTool::setItemRotation);
         connect(settingsPanel, &SelectionSettings::scaleUpdated, this, &SelectionTool::setItemScale);
         connect(settingsPanel, &SelectionSettings::activateProportion, this, &SelectionTool::enableProportion);
+        connect(settingsPanel, &SelectionSettings::objectHasBeenReset, this, &SelectionTool::resetItemTransformations);
     }
 
     return settingsPanel;
@@ -1166,4 +1167,10 @@ void SelectionTool::enableProportion(bool flag)
 void SelectionTool::setProjectSize(const QSize size)
 {
     wsCenter = QPoint(0, 0) + QPointF(size.width()/2, size.height()/2);
+}
+
+void SelectionTool::resetItemTransformations()
+{
+    setItemRotation(0);
+    setItemScale(1, 1);
 }

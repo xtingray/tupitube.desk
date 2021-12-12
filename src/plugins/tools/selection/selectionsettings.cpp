@@ -63,10 +63,12 @@ SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
 
     formPanel = new QWidget;
 
+    /*
     if (screenH >= 1080)
         setLargetInterface();
     else
-        setCompactInterface();
+    */
+    setCompactInterface();
 
     mainLayout->addWidget(formPanel);
 
@@ -114,21 +116,21 @@ void SelectionSettings::setLargetInterface()
 {
     QBoxLayout *formLayout = new QBoxLayout(QBoxLayout::TopToBottom, formPanel);
 
-    QLabel *alignLabel = new QLabel(tr("Alignment"));
+    QLabel *alignLabel = new QLabel("<b>" + tr("Alignment") + "</b>");
     alignLabel->setAlignment(Qt::AlignHCenter);
     formLayout->addWidget(alignLabel);
 
     formLayout->addLayout(setAlignBlock());
     formLayout->addWidget(new TSeparator(Qt::Horizontal));
 
-    QLabel *flips = new QLabel(tr("Flips"));
+    QLabel *flips = new QLabel("<b>" + tr("Flips") + "</b>");
     flips->setAlignment(Qt::AlignHCenter);
     formLayout->addWidget(flips);
 
     formLayout->addLayout(setFlipsBlock());
     formLayout->addWidget(new TSeparator(Qt::Horizontal));
 
-    QLabel *order = new QLabel(tr("Order"));
+    QLabel *order = new QLabel("<b>" + tr("Order") + "</b>");
     order->setAlignment(Qt::AlignHCenter);
     formLayout->addWidget(order);
 
@@ -137,7 +139,7 @@ void SelectionSettings::setLargetInterface()
 
     // Group/Ungroup actions
 
-    QLabel *groupLayer = new QLabel(tr("Group"));
+    QLabel *groupLayer = new QLabel("<b>" + tr("Group") + "</b>");
     groupLayer->setAlignment(Qt::AlignHCenter);
     formLayout->addWidget(groupLayer);
 
@@ -146,21 +148,21 @@ void SelectionSettings::setLargetInterface()
 
     // Transformation Panels
 
-    QLabel *position = new QLabel(tr("Position"));
+    QLabel *position = new QLabel("<b>" + tr("Position") + "</b>");
     position->setAlignment(Qt::AlignHCenter);
     formLayout->addWidget(position);
 
     formLayout->addLayout(setPosBlock());
-    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+    // formLayout->addWidget(new TSeparator(Qt::Horizontal));
 
-    QLabel *rotation = new QLabel(tr("Rotation"));
+    QLabel *rotation = new QLabel("<b>" + tr("Rotation") + "</b>");
     rotation->setAlignment(Qt::AlignHCenter);
     formLayout->addWidget(rotation);
 
     formLayout->addLayout(setRotateBlock());
-    formLayout->addWidget(new TSeparator(Qt::Horizontal));
+    // formLayout->addWidget(new TSeparator(Qt::Horizontal));
 
-    QLabel *scale = new QLabel(tr("Scale"));
+    QLabel *scale = new QLabel("<b>" + tr("Scale") + "</b>");
     scale->setAlignment(Qt::AlignHCenter);
     formLayout->addWidget(scale);
 
@@ -436,15 +438,22 @@ QBoxLayout * SelectionSettings::setPasteBlock()
     pasteCheck = new QCheckBox;
     pasteCheck->setChecked(onMouse);
     connect(pasteCheck, SIGNAL(stateChanged(int)), this, SLOT(enablePasteOnMouse(int)));
+
     TLabel *pasteLabel = new TLabel;
     pasteLabel->setPixmap(QPixmap(kAppProp->themeDir() + "/icons/paste.png").scaledToWidth(15));
     pasteLabel->setToolTip(tr("Paste objects over mouse position"));
     connect(pasteLabel, SIGNAL(clicked()), this, SLOT(enablePasteOnMouse()));
 
+    TImageButton *resetButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/reset.png"), 18);
+    resetButton->setToolTip(tr("Reset Item"));
+    connect(resetButton, SIGNAL(clicked()), this, SIGNAL(objectHasBeenReset()));
+
     QBoxLayout *pasteLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     pasteLayout->setMargin(0);
     pasteLayout->addWidget(pasteCheck, Qt::AlignHCenter);
     pasteLayout->addWidget(pasteLabel, Qt::AlignHCenter);
+    pasteLayout->addWidget(new TSeparator(Qt::Vertical));
+    pasteLayout->addWidget(resetButton);
 
     return pasteLayout;
 }

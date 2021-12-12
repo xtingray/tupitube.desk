@@ -111,6 +111,7 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         void setItemRotation(int angle);
         void setItemScale(double xFactor, double yFactor);
         void enableProportion(bool flag);
+        void resetItemTransformations();
 
     private:
         void setupActions();

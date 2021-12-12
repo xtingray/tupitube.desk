@@ -216,7 +216,7 @@ void PapagayoSettings::setInnerForm()
     // Bottom section
 
     TImageButton *resetButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/reset.png"), 22);
-    resetButton->setToolTip(tr("Reset Transformations"));
+    resetButton->setToolTip(tr("Reset Mouth"));
     resetButton->setMaximumWidth(50);
     connect(resetButton, SIGNAL(clicked()), this, SIGNAL(objectHasBeenReset()));
 
