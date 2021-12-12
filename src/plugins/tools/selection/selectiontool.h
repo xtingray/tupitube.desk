@@ -107,9 +107,9 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         void applyFlip(SelectionSettings::Flip flip);
         void applyOrderAction(SelectionSettings::Order order);
         void applyGroupAction(SelectionSettings::Group action);
-        void updateItemPosition(int x, int y);
-        void updateItemRotation(int angle);
-        void updateItemScale(double xFactor, double yFactor);
+        void setItemPosition(int x, int y);
+        void setItemRotation(int angle);
+        void setItemScale(double xFactor, double yFactor);
         void enableProportion(bool flag);
 
     private:
@@ -123,7 +123,7 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         TupFrame* frameAt(int sceneIndex, int layerIndex, int frameIndex);
         void requestTransformation(QGraphicsItem *item, TupFrame *frame);
 
-        SelectionSettings *panel;
+        SelectionSettings *settingsPanel;
         QMap<TAction::ActionId, TAction *> selectActions;
         QList<QGraphicsItem *> selectedObjects;
         QList<NodeManager*> nodeManagers;

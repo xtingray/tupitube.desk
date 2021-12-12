@@ -36,7 +36,7 @@
 #include "nodemanager.h"
 #include "tupgraphicobject.h"
 
-NodeManager::NodeManager(QGraphicsItem *parentItem, QGraphicsScene *gScene, int zValue)
+NodeManager::NodeManager(Node::Context context, QGraphicsItem *parentItem, QGraphicsScene *gScene, int zValue)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[NodeManager::NodeManager()]";
@@ -67,11 +67,14 @@ NodeManager::NodeManager(QGraphicsItem *parentItem, QGraphicsScene *gScene, int 
     } 
 
     QRectF rect = parentItem->sceneBoundingRect();
-    Node *topLeft = new Node(Node::TopLeft, Node::Scale, rect.topLeft(), this, parentItem, zValue);
-    Node *topRight = new Node(Node::TopRight, Node::Scale, rect.topRight(), this, parentItem, zValue);
-    Node *bottomLeft = new Node(Node::BottomLeft, Node::Scale, rect.bottomLeft(), this, parentItem, zValue);
-    Node *bottomRight = new Node(Node::BottomRight, Node::Scale, rect.bottomRight(), this, parentItem, zValue);
-    Node *center = new Node(Node::Center, Node::Scale, rect.center(), this, parentItem, zValue);
+    Node *topLeft = new Node(context, Node::TopLeft, Node::Scale, rect.topLeft(), this, parentItem, zValue);
+    Node *topRight = new Node(context, Node::TopRight, Node::Scale, rect.topRight(), this, parentItem, zValue);
+    Node *bottomLeft = new Node(context, Node::BottomLeft, Node::Scale, rect.bottomLeft(), this, parentItem, zValue);
+    Node *bottomRight = new Node(context, Node::BottomRight, Node::Scale, rect.bottomRight(), this, parentItem, zValue);
+
+    Node *center = new Node(context, Node::Center, Node::Scale, rect.center(), this, parentItem, zValue);
+    if (context == Node::Papagayo)
+        connect(center, &Node::positionUpdated, this, &NodeManager::positionUpdated);
 
     nodes.insert(Node::TopLeft, topLeft);
     nodes.insert(Node::TopRight, topRight);
@@ -101,7 +104,7 @@ void NodeManager::clear()
                 scene->removeItem(node);
         }
         delete node;
-        node = 0;
+        node = nullptr;
     }
     nodes.clear();
 }
@@ -233,12 +236,12 @@ void NodeManager::scale(qreal sx, qreal sy)
 void NodeManager::rotate(double angle)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[NodeManager::rotate()]";
-        qWarning() << "New angle: " << angle;
+        qDebug() << "[NodeManager::rotate()] - New angle -> " << angle;
     #endif
 
     QTransform transform;
     QPointF point = parent->boundingRect().center();
+
     transform.translate(point.x(), point.y());
     transform.rotate(angle);
     transform.scale(scaleX, scaleY);

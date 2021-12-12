@@ -64,7 +64,7 @@ Configurator::Configurator(QWidget *parent) : QFrame(parent)
     QHBoxLayout *mouthsLayout = new QHBoxLayout;
     QPushButton *mouthsButton = new QPushButton(" " + tr("Mouth Samples"));
     mouthsButton->setStyleSheet("QPushButton { padding: 5px; }");
-    mouthsButton->setIcon(QIcon(THEME_DIR + "icons/mouth.png"));
+    mouthsButton->setIcon(QIcon(THEME_DIR + "icons/mouth_samples.png"));
     connect(mouthsButton, SIGNAL(clicked()), this, SLOT(openMouthsDialog()));
     mouthsLayout->addWidget(new QWidget);
     mouthsLayout->addWidget(mouthsButton);
@@ -91,6 +91,11 @@ void Configurator::setPropertiesPanel()
     connect(settingsPanel, &PapagayoSettings::initFrameHasChanged, this, &Configurator::initFrameHasChanged);
     connect(settingsPanel, &PapagayoSettings::xPosChanged, this, &Configurator::xPosChanged);
     connect(settingsPanel, &PapagayoSettings::yPosChanged, this, &Configurator::yPosChanged);
+    connect(settingsPanel, &PapagayoSettings::rotationChanged, this, &Configurator::rotationChanged);
+    connect(settingsPanel, &PapagayoSettings::scaleChanged, this, &Configurator::scaleChanged);
+
+    connect(settingsPanel, &PapagayoSettings::objectHasBeenReset, this, &Configurator::objectHasBeenReset);
+    connect(settingsPanel, &PapagayoSettings::proportionActivated, this, &Configurator::proportionActivated);
 
     settingsLayout->addWidget(settingsPanel);
 
@@ -170,9 +175,29 @@ void Configurator::updateInterfaceRecords()
     settingsPanel->updateInterfaceRecords();
 }
 
+void Configurator::setTransformations(const QDomElement &dom)
+{
+    settingsPanel->setTransformations(dom);
+}
+
 void Configurator::setTransformations(const TupTransformation::Parameters parameters)
 {
     settingsPanel->setTransformations(parameters);
+}
+
+void Configurator::updatePositionCoords(int x, int y)
+{
+    settingsPanel->updatePositionCoords(x, y);
+}
+
+void Configurator::updateRotationAngle(int angle)
+{
+    settingsPanel->updateRotationAngle(angle);
+}
+
+void Configurator::updateScaleFactor(double x, double y)
+{
+    settingsPanel->updateScaleFactor(x, y);
 }
 
 void Configurator::setPhoneme(const TupPhoneme *phoneme)
@@ -184,4 +209,9 @@ void Configurator::openMouthsDialog()
 {
     MouthsDialog *dialog = new MouthsDialog();
     dialog->show();
+}
+
+void Configurator::setProportionState(bool flag)
+{
+    settingsPanel->setProportionState(flag);
 }

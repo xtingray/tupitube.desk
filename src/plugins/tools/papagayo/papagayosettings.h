@@ -33,8 +33,8 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#ifndef PAPAGAYOSETTINGS_H
+#define PAPAGAYOSETTINGS_H
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
@@ -65,32 +65,35 @@ class TUPITUBE_PLUGIN PapagayoSettings : public QWidget
 
         void setPhoneme(const TupPhoneme *phoneme);
         void setTransformations(const TupTransformation::Parameters parameters);
+        void setTransformations(const QDomElement &dom);
+
+        void updatePositionCoords(int x, int y);
+        void updateRotationAngle(int angle);
+        void updateScaleFactor(double x, double y);
+
+        void setProportionState(int flag);
 
     signals:
         void initFrameHasChanged(int index);
         void selectMouth(const QString &id, int index);
         void closeLipSyncProperties();
+
         void xPosChanged(int x);
         void yPosChanged(int y);
+        void rotationChanged(int angle);
+        void scaleChanged(double xFactor, double yFactor);
 
-        void positionUpdated(int x, int y);
-        void rotationUpdated(int angle);
-        void scaleUpdated(double xFactor, double yFactor);
-        void activateProportion(bool flag);
+        void objectHasBeenReset();
+        void proportionActivated(bool flag);
 
     private slots:
         void updateInitFrame(int index);
 
-        void notifyXMovement(int x);
-        void notifyYMovement(int y);
         void notifyRotation(int angle);
         void notifyXScale(double factor);
         void notifyYScale(double factor);
         void enableProportion(int flag);
-
-    public slots:
-       void updateRotationAngle(int angle);
-       void updateScaleFactor(double x, double y);
+        void resetTransformations();
 
     private:
         void setInnerForm();
@@ -103,8 +106,6 @@ class TUPITUBE_PLUGIN PapagayoSettings : public QWidget
 
         QLabel *endingLabel;
         QLabel *totalLabel;
-
-        // QList<TupVoice *> voices;
 
         QLabel *phonemeLabel;
         QSpinBox *xPosField;
@@ -121,7 +122,6 @@ class TUPITUBE_PLUGIN PapagayoSettings : public QWidget
 
         int currentX;
         int currentY;
-        int currentAngle;
         double currentXFactor;
         double currentYFactor;
 

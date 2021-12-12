@@ -40,7 +40,7 @@
 
 #include <cmath> // fabs
 
-Node::Node(NodeType nType, NodeAction actionValue, const QPointF &pos, NodeManager *mngr,
+Node::Node(Context tool, NodeType nType, NodeAction actionValue, const QPointF &pos, NodeManager *mngr,
            QGraphicsItem *parentItem, int zValue) : QGraphicsItem(0)
 {
     QGraphicsItem::setCursor(QCursor(Qt::PointingHandCursor));
@@ -49,6 +49,7 @@ Node::Node(NodeType nType, NodeAction actionValue, const QPointF &pos, NodeManag
     setFlag(ItemIsFocusable, true);
     setPos(pos);
 
+    context = tool;
     node = nType;
     action = actionValue;
     manager = mngr;
@@ -153,26 +154,22 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
     QGraphicsItem::mousePressEvent(event);
 }
 
-void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[Node::mouseReleaseEvent()]";
-    #endif
-
-    QGraphicsItem::mouseReleaseEvent(event);
-    parent->setSelected(true);
-
-    if (manager)
-        manager->setPressedStatus(false);
-}
-
 void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QPointF newPos(event->scenePos());
 
     if (node == Center) {
-        parent->moveBy(newPos.x() - scenePos().x(), newPos.y() - scenePos().y());
+        if (context == Selection) {
+            int x = newPos.x() - scenePos().x();
+            int  y = newPos.y() - scenePos().y();
+            parent->moveBy(x, y);
+        } else { // Papagayo context
+            QPointF center = newPos - QPointF(parent->boundingRect().width()/2, parent->boundingRect().height()/2);
+            parent->setPos(center.x(), center.y());
+            emit positionUpdated(newPos);
+        }
         QGraphicsItem::mouseMoveEvent(event);
+
         return;
     } else {
         if (action == Scale) {
@@ -181,13 +178,6 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
             qreal w = parent->boundingRect().width() / 2;
             qreal h = parent->boundingRect().height() / 2;
-
-            /*
-            double scaleX = parent->data(TupGraphicObject::ScaleX).toDouble();
-            double scaleY = parent->data(TupGraphicObject::ScaleY).toDouble();
-            qDebug() << "Node::mouseMoveEvent() - scaleX: " << scaleX;
-            qDebug() << "Node::mouseMoveEvent() - scaleY: " << scaleY;
-            */
 
             qreal sx = fabs(distance.x()) / w;
             qreal sy = fabs(distance.y()) / h;
@@ -212,6 +202,19 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             oldPoint = newPos;
         }
     }
+}
+
+void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[Node::mouseReleaseEvent()]";
+    #endif
+
+    QGraphicsItem::mouseReleaseEvent(event);
+    parent->setSelected(true);
+
+    if (manager)
+        manager->setPressedStatus(false);
 }
 
 void Node::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)

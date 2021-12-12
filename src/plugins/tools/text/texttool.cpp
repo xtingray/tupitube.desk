@@ -144,7 +144,7 @@ void TextTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
             if (!manager) {
                 if (!item->isSelected())
                     item->setSelected(true);
-                manager = new NodeManager(item, scene, nodeZValue);
+                manager = new NodeManager(Node::Selection, item, scene, nodeZValue);
             } else {
                 QGraphicsItem *parent = manager->parentItem();
                 if (parent) {
@@ -155,7 +155,7 @@ void TextTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                         parent->setSelected(false);
                         manager->clear();
                         manager = nullptr;
-                        manager = new NodeManager(item, scene, nodeZValue);
+                        manager = new NodeManager(Node::Selection, item, scene, nodeZValue);
                     }
                 }
             }            
@@ -235,7 +235,7 @@ void TextTool::release(const TupInputDeviceInformation *input, TupBrushManager *
                 if (!textItem->isSelected())
                     textItem->setSelected(true);
 
-                manager = new NodeManager(textItem, scene, nodeZValue);
+                manager = new NodeManager(Node::Selection, textItem, scene, nodeZValue);
                 manager->show();
                 manager->resizeNodes(realFactor);
 

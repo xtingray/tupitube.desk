@@ -85,15 +85,17 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
 
         virtual void updateWorkSpaceContext();
 
-        virtual void keyPressEvent(QKeyEvent *event);
-        virtual void keyReleaseEvent(QKeyEvent *event);
-
         virtual TupToolPlugin::Mode currentMode();
 
         void resizeNode(qreal factor);
         void updateZoomFactor(qreal factor);
 
         void setNodesManagerEnvironment();
+        void setProportionState(int flag);
+
+    protected:
+        virtual void keyPressEvent(QKeyEvent *event);
+        virtual void keyReleaseEvent(QKeyEvent *event);
 
     signals:
         void lipsyncCreatorRequested();
@@ -103,19 +105,27 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
     private slots:
         void editLipsyncMouth(const QString &name);
         void removeCurrentLipSync(const QString &name);
-        void setManagerInitPos(const QPointF &point);
-        // void updateOriginPoint(const QPointF &point);
+
         void resetCanvas();
         void addNodesManager();
+
         void updateInitFrame(int index);
-        void updateXPosition(int x);
-        void updateYPosition(int y);
-        void syncNodes();
+        void updateXMouthPositionInScene(int x);
+        void updateYMouthPositionInScene(int y);
+        void updateRotationInScene(int angle);
+        void updateScaleInScene(double xFactor, double yFactor);
+
+        void updatePositionRecord(const QPointF &point);
+        void updateRotationAngleRecord(int angle);
+        void updateScaleFactorRecord(double x, double y);
+
+        void resetMouthTransformations();
+        void enableProportion(bool flag);
 
     private:
         void setupActions();
         void removeNodesManager();
-        void storeTransformation(QGraphicsItem *item);
+        void updateMouthTransformation(const QDomElement &doc);
 
         QMap<TAction::ActionId, TAction *> pgActions;
         Configurator *configPanel;
@@ -125,18 +135,15 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
         TupLipSync *currentLipSync;
         int sceneIndex;
 
-        QPointF managerInitPos;
-        QPointF origin;
-
         TupToolPlugin::Mode mode;
 
         qreal realFactor;
         QGraphicsItem *mouth;
-        QPointF mouthOffset;
 
         int nodeZValue;
         NodeManager *nodesManager;
         bool managerIncluded;
+        QString key;
 };
 
 #endif

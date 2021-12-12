@@ -71,12 +71,14 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void closePanels();
 
         void setPhoneme(const TupPhoneme *phoneme);
+        void setTransformations(const QDomElement &dom);
         void setTransformations(const TupTransformation::Parameters parameters);
 
-    private slots:
-        void editCurrentLipSync(const QString &name);
-        void closeSettingsPanel();
-        void openMouthsDialog();
+        void updatePositionCoords(int x, int y);
+        void updateRotationAngle(int angle);
+        void updateScaleFactor(double x, double y);
+
+        void setProportionState(bool flag);
 
     signals:
         void lipsyncCreatorRequested();
@@ -86,9 +88,20 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void closeLipSyncProperties();
         void initFrameHasChanged(int index);
         void currentLipsyncRemoved(const QString &name);
+
         void xPosChanged(int x);
         void yPosChanged(int y);
-        
+        void rotationChanged(int angle);
+        void scaleChanged(double xFactor, double yFactor);
+
+        void objectHasBeenReset();
+        void proportionActivated(bool flag);
+
+    private slots:
+        void editCurrentLipSync(const QString &name);
+        void closeSettingsPanel();
+        void openMouthsDialog();
+
     private:
         void setPropertiesPanel();
         void activePropertiesPanel(bool enable);

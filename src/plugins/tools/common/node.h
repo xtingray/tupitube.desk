@@ -53,10 +53,11 @@ class TUPITUBE_PLUGIN Node : public QObject, public QGraphicsItem
     Q_INTERFACES(QGraphicsItem)
     
     public:
+        enum Context { Selection = 0, Papagayo };
         enum NodeType { TopLeft  = 0, TopRight, BottomLeft, BottomRight, Center };
         enum NodeAction { NoAction = 0, Scale, Rotate };
         
-        Node(NodeType node, NodeAction action, const QPointF &pos=QPoint(0,0), NodeManager *manager=nullptr,
+        Node(Context tool, NodeType node, NodeAction action, const QPointF &pos=QPoint(0,0), NodeManager *manager=nullptr,
              QGraphicsItem *parent=nullptr, int zValue=0);
         ~Node();
         
@@ -66,12 +67,7 @@ class TUPITUBE_PLUGIN Node : public QObject, public QGraphicsItem
         
         void setAction(NodeAction action);
         int nodeAction();
-        
-        /*
-        enum { Type = UserType + 1 };
-        int type() const { return Type; }
-        */
-        
+
         int nodeType() const;
 
     protected:
@@ -82,7 +78,11 @@ class TUPITUBE_PLUGIN Node : public QObject, public QGraphicsItem
         void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
         void keyReleaseEvent(QKeyEvent *event);
 
+    signals:
+        void positionUpdated(const QPointF &point);
+
     private:
+        Context context;
         NodeType node;
         NodeAction action;
         NodeAction generalState;

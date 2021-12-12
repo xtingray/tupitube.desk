@@ -533,8 +533,8 @@ QDomElement TupVoice::setDefaultTransformation(int x, int y) const
     QDomDocument doc;
     QDomElement transformation = doc.createElement("properties");
     transformation.setAttribute("pos", "(" + QString::number(x) + "," + QString::number(y) + ")");
-    transformation.setAttribute("scale_x", "0");
-    transformation.setAttribute("scale_y", "0");
+    transformation.setAttribute("scale_x", "1");
+    transformation.setAttribute("scale_y", "1");
     transformation.setAttribute("transform", "matrix(1,0,0,1,0,0)");
     transformation.setAttribute("flags", "0");
     transformation.setAttribute("rotation", "0");

@@ -1315,14 +1315,13 @@ TupFrame *TupGraphicsScene::currentFrame()
         if (tupScene->layersCount() > 0) {
             if (framePosition.layer < tupScene->layersCount()) {
                 TupLayer *layer = tupScene->layerAt(framePosition.layer);
-                // Q_CHECK_PTR(layer);
+                // Q_CHECK_PTR(layer)
                 if (layer) {
                     if (!layer->getFrames().isEmpty())
                         return layer->frameAt(framePosition.frame);
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "[TupGraphicsScene::currentFrame()] - No layer available at -> "
-                                    + QString::number(framePosition.frame);
+                        qDebug() << "[TupGraphicsScene::currentFrame()] - No layer available at -> " << framePosition.frame;
                     #endif
                 }
             } else {
