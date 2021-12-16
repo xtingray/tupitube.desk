@@ -53,7 +53,7 @@ class TUPITUBE_PLUGIN Node : public QObject, public QGraphicsItem
     Q_INTERFACES(QGraphicsItem)
     
     public:
-        enum Context { Selection = 0, Papagayo };
+        enum Context { Selection = 0, Papagayo, Text };
         enum NodeType { TopLeft  = 0, TopRight, BottomLeft, BottomRight, Center };
         enum NodeAction { NoAction = 0, Scale, Rotate };
         

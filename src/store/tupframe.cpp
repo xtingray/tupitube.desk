@@ -1568,6 +1568,7 @@ void TupFrame::checkTransformationStatus(TupLibraryObject::ObjectType itemType, 
 void TupFrame::storeItemTransformation(TupLibraryObject::ObjectType itemType, int index, const QString &properties)
 {
     #ifdef TUP_DEBUG
+        qDebug() << "[TupFrame::storeItemTransformation()] - index -> " << index;
         qDebug() << "[TupFrame::storeItemTransformation()] - properties -> " << properties;
     #endif
 
@@ -1584,6 +1585,10 @@ void TupFrame::storeItemTransformation(TupLibraryObject::ObjectType itemType, in
 
 void TupFrame::undoTransformation(TupLibraryObject::ObjectType itemType, int index)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupFrame::undoTransformation()] - index -> " << index;
+    #endif
+
     if (itemType == TupLibraryObject::Svg) {
         TupSvgItem *item = svg.at(index);
         if (item)

@@ -110,7 +110,7 @@ void PapagayoSettings::setInnerForm()
 
     // Position section
 
-    QLabel *mouthPosLabel = new QLabel(tr("<b>Mouth Position</b>"));
+    QLabel *mouthPosLabel = new QLabel("<b>" + tr("<b>Mouth Position") + "</b>");
     mouthPosLabel->setAlignment(Qt::AlignHCenter);
 
     QLabel *xLabel = new QLabel(tr("X") + ": ");
@@ -147,7 +147,7 @@ void PapagayoSettings::setInnerForm()
 
     // Rotation section
 
-    QLabel *rotationLabel = new QLabel(tr("<b>Mouth Rotation</b>"));
+    QLabel *rotationLabel = new QLabel("<b>" + tr("Mouth Rotation") + "</b>");
     rotationLabel->setAlignment(Qt::AlignHCenter);
 
     QLabel *angleLabel = new QLabel(tr("Angle") + ": ");
@@ -167,7 +167,7 @@ void PapagayoSettings::setInnerForm()
 
     // Scale section
 
-    QLabel *scaleLabel = new QLabel(tr("<b>Mouth Scale</b>"));
+    QLabel *scaleLabel = new QLabel("<b>" + tr("Mouth Scale") + "</b>");
     scaleLabel->setAlignment(Qt::AlignHCenter);
 
     QBoxLayout *scaleLayout = new QBoxLayout(QBoxLayout::TopToBottom);

@@ -36,6 +36,7 @@
 #include "textconfigurator.h"
 #include "tapplicationproperties.h"
 #include "tseparator.h"
+#include "tupsvg2qt.h"
 
 #include <QBoxLayout>
 #include <QPushButton>
@@ -67,11 +68,22 @@ TextConfigurator::TextConfigurator(QWidget *parent) : QWidget(parent)
     textBox->setAlignment(Qt::AlignLeft);
     mainLayout->addWidget(textBox);
 
+    controlsWidget = createTransformationTools();
+    controlsWidget->setVisible(false);
+
+    mainLayout->addWidget(controlsWidget);
+    mainLayout->addWidget(new TSeparator(Qt::Horizontal));
+
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     addButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/plus_sign.png")), "");
     addButton->setToolTip(tr("Add Text"));
     addButton->setMaximumWidth(50);
     connect(addButton, SIGNAL(clicked()), this, SLOT(callAction()));
+
+    resetButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/reset.png")), "");
+    resetButton->setToolTip(tr("Reset Transformations"));
+    resetButton->setMaximumWidth(50);
+    connect(resetButton, SIGNAL(clicked()), this, SIGNAL(resetActionCalled()));
 
     clearButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/new.png")), "");
     clearButton->setToolTip(tr("Clear Text"));
@@ -81,6 +93,7 @@ TextConfigurator::TextConfigurator(QWidget *parent) : QWidget(parent)
     buttonLayout->addStretch(1);
     buttonLayout->addWidget(new QWidget);
     buttonLayout->addWidget(addButton, Qt::AlignHCenter);
+    buttonLayout->addWidget(resetButton, Qt::AlignHCenter);
     buttonLayout->addWidget(clearButton, Qt::AlignHCenter);
     buttonLayout->addWidget(new QWidget);
     buttonLayout->addStretch(1);
@@ -95,6 +108,162 @@ TextConfigurator::TextConfigurator(QWidget *parent) : QWidget(parent)
 
 TextConfigurator::~TextConfigurator()
 {
+}
+
+QWidget * TextConfigurator::createTransformationTools()
+{
+    QWidget *widget = new QWidget;
+
+    // Position section
+
+    QLabel *mouthPosLabel = new QLabel;
+    mouthPosLabel->setPixmap(QPixmap(kAppProp->themeDir() + "/icons/position.png"));
+    mouthPosLabel->setToolTip(tr("Text Position"));
+    mouthPosLabel->setAlignment(Qt::AlignVCenter);
+
+    QVBoxLayout *mouthLayout = new QVBoxLayout;
+    mouthLayout->addWidget(mouthPosLabel, Qt::AlignVCenter);
+
+    QLabel *xLabel = new QLabel(tr("X") + ": ");
+    xLabel->setMaximumWidth(20);
+
+    xPosField = new QSpinBox;
+    xPosField->setMinimum(-5000);
+    xPosField->setMaximum(5000);
+    connect(xPosField, SIGNAL(valueChanged(int)), this, SIGNAL(xPosChanged(int)));
+
+    QLabel *yLabel = new QLabel(tr("Y") + ": ");
+    yLabel->setMaximumWidth(20);
+
+    yPosField = new QSpinBox;
+    yPosField->setMinimum(-5000);
+    yPosField->setMaximum(5000);
+    connect(yPosField, SIGNAL(valueChanged(int)), this, SIGNAL(yPosChanged(int)));
+
+    QBoxLayout *xLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    xLayout->setMargin(0);
+    xLayout->setSpacing(0);
+    xLayout->addStretch();
+    xLayout->addWidget(xLabel);
+    xLayout->addWidget(xPosField);
+    xLayout->addStretch();
+
+    QBoxLayout *yLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    yLayout->setMargin(0);
+    yLayout->setSpacing(0);
+    yLayout->addStretch();
+    yLayout->addWidget(yLabel);
+    yLayout->addWidget(yPosField);
+    yLayout->addStretch();
+
+    QVBoxLayout *posLayout = new QVBoxLayout;
+    posLayout->addLayout(xLayout);
+    posLayout->addLayout(yLayout);
+
+    QHBoxLayout *posBlockLayout = new QHBoxLayout;
+    posBlockLayout->addStretch();
+    posBlockLayout->addLayout(mouthLayout);
+    posBlockLayout->addLayout(posLayout);
+    posBlockLayout->addStretch();
+
+    // Rotation section
+
+    QLabel *rotationLabel = new QLabel;
+    rotationLabel->setPixmap(QPixmap(kAppProp->themeDir() + "icons/rotation.png"));
+    rotationLabel->setToolTip(tr("Text Rotation"));
+    rotationLabel->setAlignment(Qt::AlignVCenter);
+
+    angleField = new QSpinBox;
+    angleField->setMinimum(0);
+    angleField->setMaximum(360);
+    connect(angleField, SIGNAL(valueChanged(int)), this, SIGNAL(rotationChanged(int)));
+
+    QBoxLayout *rotationBlockLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    rotationBlockLayout->setMargin(0);
+    rotationBlockLayout->setSpacing(10);
+    rotationBlockLayout->addStretch();
+    rotationBlockLayout->addWidget(rotationLabel);
+    rotationBlockLayout->addWidget(angleField);
+    rotationBlockLayout->addStretch();
+
+    // Scale section
+
+    QLabel *scaleLabel = new QLabel("<b>" + tr("Mouth Scale") + "</b>");
+    scaleLabel->setAlignment(Qt::AlignHCenter);
+
+    QBoxLayout *scaleLayout = new QBoxLayout(QBoxLayout::TopToBottom);
+
+    QLabel *factorXLabel = new QLabel(tr("X") + ": ");
+    factorXField = new QDoubleSpinBox;
+    factorXField->setDecimals(2);
+    factorXField->setMinimum(0.01);
+    factorXField->setMaximum(10);
+    factorXField->setSingleStep(0.01);
+    factorXField->setValue(1);
+    connect(factorXField, SIGNAL(valueChanged(double)), this, SLOT(notifyXScale(double)));
+
+    QBoxLayout *factorXLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    factorXLayout->setMargin(0);
+    factorXLayout->setSpacing(0);
+    factorXLayout->addStretch();
+    factorXLayout->addWidget(factorXLabel);
+    factorXLayout->addWidget(factorXField);
+    factorXLayout->addStretch();
+
+    scaleLayout->addLayout(factorXLayout);
+
+    QLabel *factorYLabel = new QLabel(tr("Y") + ": ");
+    factorYField = new QDoubleSpinBox;
+    factorYField->setDecimals(2);
+    factorYField->setMinimum(0.01);
+    factorYField->setMaximum(10);
+    factorYField->setSingleStep(0.01);
+    factorYField->setValue(1);
+    connect(factorYField, SIGNAL(valueChanged(double)), this, SLOT(notifyYScale(double)));
+
+    QBoxLayout *factorYLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    factorYLayout->setMargin(0);
+    factorYLayout->setSpacing(0);
+    factorYLayout->addStretch();
+    factorYLayout->addWidget(factorYLabel);
+    factorYLayout->addWidget(factorYField);
+    factorYLayout->addStretch();
+
+    scaleLayout->addLayout(factorYLayout);
+
+    QLabel *scaleTextLabel = new QLabel;
+    scaleTextLabel->setPixmap(QPixmap(kAppProp->themeDir() + "/icons/scale.png"));
+    scaleTextLabel->setToolTip(tr("Text Scale"));
+    scaleTextLabel->setAlignment(Qt::AlignVCenter);
+
+    QVBoxLayout *scaleLabelLayout = new QVBoxLayout;
+    scaleLabelLayout->addWidget(scaleTextLabel, Qt::AlignVCenter);
+
+    propCheck = new QCheckBox(tr("Proportion"), this);
+    connect(propCheck, SIGNAL(stateChanged(int)), this, SLOT(enableProportion(int)));
+
+    scaleLayout->addWidget(propCheck);
+    scaleLayout->setAlignment(propCheck, Qt::AlignHCenter);
+
+    QHBoxLayout *scaleBlockLayout = new QHBoxLayout;
+    scaleBlockLayout->addStretch();
+    scaleBlockLayout->addLayout(scaleLabelLayout);
+    scaleBlockLayout->addLayout(scaleLayout);
+
+    scaleBlockLayout->addStretch();
+
+    QHBoxLayout *transBlockLayout = new QHBoxLayout;
+    transBlockLayout->addStretch();
+    transBlockLayout->addLayout(posBlockLayout);
+    transBlockLayout->addWidget(new TSeparator(Qt::Vertical));
+    transBlockLayout->addLayout(rotationBlockLayout);
+    transBlockLayout->addWidget(new TSeparator(Qt::Vertical));
+    transBlockLayout->addLayout(scaleBlockLayout);
+    transBlockLayout->addStretch();
+
+    widget->setLayout(transBlockLayout);
+
+    return widget;
 }
 
 QString TextConfigurator::text() const
@@ -145,6 +314,7 @@ void TextConfigurator::callAction()
 void TextConfigurator::clearText()
 {
     textBox->clear();
+    displayControls(false);
 }
 
 void TextConfigurator::updateMode(Mode action)
@@ -201,4 +371,141 @@ void TextConfigurator::setTextColor(const QColor &color)
 QColor TextConfigurator::getTextColor() const
 {
     return textBox->textColor();
+}
+
+void TextConfigurator::displayControls(bool flag, const QPointF &pos, const QDomElement &e)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextConfigurator::displayControls()] - flag -> " << flag;
+    #endif
+
+    controlsWidget->setVisible(flag);
+    resetButton->setVisible(flag);
+    if (flag) {
+        updatePositionCoords(pos.x(), pos.y());
+        updateRotationAngle(e.attribute("rotation").toInt());
+        updateScaleFactor(e.attribute("scale_x").toDouble(), e.attribute("scale_y").toDouble());
+    } else {
+        emit textObjectReleased();
+    }
+}
+
+void TextConfigurator::updatePositionCoords(int x, int y)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextConfigurator::updatePositionCoords()] - x -> " << x;
+        qDebug() << "[TextConfigurator::updatePositionCoords()] - y -> " << y;
+    #endif
+
+   xPosField->blockSignals(true);
+   yPosField->blockSignals(true);
+
+   currentX = x;
+   xPosField->setValue(x);
+
+   currentY = y;
+   yPosField->setValue(y);
+
+   xPosField->blockSignals(false);
+   yPosField->blockSignals(false);
+}
+
+void TextConfigurator::updateRotationAngle(int angle)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextConfigurator::updateRotationAngle()] - angle -> " << angle;
+    #endif
+
+    angleField->blockSignals(true);
+
+    if (angle > 359)
+        angle = 0;
+    angleField->setValue(angle);
+
+    angleField->blockSignals(false);
+}
+
+void TextConfigurator::updateScaleFactor(double x, double y)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextConfigurator::updateScaleFactor()] - x -> " << x;
+        qDebug() << "[TextConfigurator::updateScaleFactor()] - y -> " << y;
+    #endif
+
+   factorXField->blockSignals(true);
+   factorYField->blockSignals(true);
+
+   currentXFactor = x;
+   factorXField->setValue(x);
+
+   currentYFactor = y;
+   factorYField->setValue(y);
+
+   factorXField->blockSignals(false);
+   factorYField->blockSignals(false);
+}
+
+void TextConfigurator::notifyRotation(int angle)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextConfigurator::notifyRotation()] - angle -> " << angle;
+    #endif
+
+    if (angle == 360) {
+        angle = 0;
+        angleField->setValue(0);
+    }
+    emit rotationChanged(angle);
+}
+
+void TextConfigurator::notifyXScale(double factor)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextConfigurator::notifyXScale()] - factor -> " << factor;
+    #endif
+
+    if (propCheck->isChecked()) {
+        currentYFactor = factor;
+        factorYField->setValue(factor);
+    }
+
+    emit scaleChanged(factor, currentYFactor);
+    currentXFactor = factor;
+}
+
+void TextConfigurator::notifyYScale(double factor)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextConfigurator::notifyYScale()] - factor -> " << factor;
+    #endif
+
+    if (propCheck->isChecked()) {
+       currentXFactor = factor;
+       factorXField->setValue(factor);
+    }
+
+    emit scaleChanged(currentXFactor, factor);
+    currentYFactor = factor;
+}
+
+void TextConfigurator::enableProportion(int flag)
+{
+    bool enable = false;
+    if (flag == Qt::Checked) {
+        double factor = factorXField->value();
+        factorYField->setValue(factor);
+        emit scaleUpdated(factor, factor);
+        enable = true;
+    }
+
+    emit activateProportion(enable);
+}
+
+void TextConfigurator::setProportionState(int flag)
+{
+    propCheck->blockSignals(true);
+    propCheck->setChecked(flag);
+    if (flag)
+        factorYField->setValue(factorXField->value());
+    propCheck->blockSignals(false);
 }

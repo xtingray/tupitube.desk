@@ -73,7 +73,7 @@ NodeManager::NodeManager(Node::Context context, QGraphicsItem *parentItem, QGrap
     Node *bottomRight = new Node(context, Node::BottomRight, Node::Scale, rect.bottomRight(), this, parentItem, zValue);
 
     Node *center = new Node(context, Node::Center, Node::Scale, rect.center(), this, parentItem, zValue);
-    if (context == Node::Papagayo)
+    if (context == Node::Text || context == Node::Papagayo)
         connect(center, &Node::positionUpdated, this, &NodeManager::positionUpdated);
 
     nodes.insert(Node::TopLeft, topLeft);
@@ -179,6 +179,10 @@ QGraphicsItem *NodeManager::parentItem() const
 
 bool NodeManager::isModified() const
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[NodeManager::isModified()]";
+    #endif
+
     if (parent) {
         return !((parent->transform() == origTransform) && (parent->pos() == origPos));
     } else {

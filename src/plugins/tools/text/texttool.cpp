@@ -45,16 +45,28 @@
 #include "tupserializer.h"
 #include "tconfig.h"
 
+#include <QDomDocument>
+
 TextTool::TextTool()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TextTool::TextTool()]";
     #endif
 
-    config = new TextConfigurator;
-    config->setTextColor(Qt::black);
-    connect(config, SIGNAL(textAdded()), this, SLOT(insertText()));
-    connect(config, SIGNAL(textUpdated()), this, SLOT(updateText()));
+    configPanel = new TextConfigurator;
+    configPanel->setTextColor(Qt::black);
+    connect(configPanel, &TextConfigurator::textAdded, this, &TextTool::insertText);
+    connect(configPanel, &TextConfigurator::textUpdated, this, &TextTool::updateText);
+
+    connect(configPanel, &TextConfigurator::xPosChanged, this, &TextTool::updateXPositionInScene);
+    connect(configPanel, &TextConfigurator::yPosChanged, this, &TextTool::updateYPositionInScene);
+    connect(configPanel, &TextConfigurator::rotationChanged, this, &TextTool::updateRotationInScene);
+    connect(configPanel, &TextConfigurator::scaleChanged, this, &TextTool::updateScaleInScene);
+    connect(configPanel, &TextConfigurator::resetActionCalled, this, &TextTool::resetTextTransformations);
+
+    connect(configPanel, &TextConfigurator::scaleUpdated, this, &TextTool::setItemScale);
+    connect(configPanel, &TextConfigurator::activateProportion, this, &TextTool::enableProportion);
+    connect(configPanel, &TextConfigurator::textObjectReleased, this, &TextTool::removeManager);
 
     setupActions();
 }
@@ -70,13 +82,13 @@ void TextTool::init(TupGraphicsScene *gScene)
     #endif
 
     loadTextColor();
-    config->setTextColor(currentColor);
-    config->updateMode(TextConfigurator::Add);
+    configPanel->setTextColor(currentColor);
+    configPanel->updateMode(TextConfigurator::Add);
 
     scene = gScene;
     clearSelection();
     scene->clearSelection();
-    manager = nullptr;
+    nodesManager = nullptr;
 
     nodeZValue = ((BG_LAYERS + 1) * ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
     if (scene->getSpaceContext() == TupProject::VECTOR_FG_MODE)
@@ -141,26 +153,32 @@ void TextTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
 
         QGraphicsItem *item = currentSelection.at(0);
         if (TupTextItem *textItem = qgraphicsitem_cast<TupTextItem *>(item)) {
-            if (!manager) {
+            if (!nodesManager) {
                 if (!item->isSelected())
                     item->setSelected(true);
-                manager = new NodeManager(Node::Selection, item, scene, nodeZValue);
+                nodesManager = new NodeManager(Node::Text, item, scene, nodeZValue);
+                connect(nodesManager, &NodeManager::positionUpdated, this, &TextTool::updatePositionRecord);
+                connect(nodesManager, &NodeManager::rotationUpdated, this, &TextTool::updateRotationAngleRecord);
+                connect(nodesManager, &NodeManager::scaleUpdated, this, &TextTool::updateScaleFactorRecord);
             } else {
-                QGraphicsItem *parent = manager->parentItem();
+                QGraphicsItem *parent = nodesManager->parentItem();
                 if (parent) {
                     if (item != parent) {
                         if (!item->isSelected())
                             item->setSelected(true);
 
                         parent->setSelected(false);
-                        manager->clear();
-                        manager = nullptr;
-                        manager = new NodeManager(Node::Selection, item, scene, nodeZValue);
+                        nodesManager->clear();
+                        nodesManager = nullptr;
+                        nodesManager = new NodeManager(Node::Text, item, scene, nodeZValue);
+                        connect(nodesManager, &NodeManager::positionUpdated, this, &TextTool::updatePositionRecord);
+                        connect(nodesManager, &NodeManager::rotationUpdated, this, &TextTool::updateRotationAngleRecord);
+                        connect(nodesManager, &NodeManager::scaleUpdated, this, &TextTool::updateScaleFactorRecord);
                     }
                 }
             }            
-            manager->show();
-            manager->resizeNodes(realFactor);
+            nodesManager->show();
+            nodesManager->resizeNodes(realFactor);
 
             QString text = textItem->data(0).toString();
             if (text.isEmpty()) {
@@ -169,7 +187,13 @@ void TextTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
             }
 
             activeSelection = true;
-            config->loadTextSettings(textItem->font(), text, textItem->defaultTextColor());
+            configPanel->loadTextSettings(textItem->font(), text, textItem->defaultTextColor());
+
+            QPointF pos =  textItem->pos();
+            pos += QPointF(textItem->boundingRect().size().width()/2, textItem->boundingRect().size().height()/2);
+
+            QDomDocument doc;
+            configPanel->displayControls(true, pos, TupSerializer::properties(textItem, doc, textItem->toPlainText(), textItem->textWidth()));
         } else {
             #ifdef TUP_DEBUG
                 qDebug() << "[TextTool::press()] - Warning: Object is not a text item!";
@@ -182,14 +206,16 @@ void TextTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
         // User clicked on background
         QList<QGraphicsItem *> list = scene->items(input->pos(), Qt::IntersectsItemShape, Qt::DescendingOrder, QTransform());
         if (list.isEmpty()) {
-            if (manager) {
-                manager->parentItem()->setSelected(false);
-                manager->clear();
-                manager = nullptr;
+            if (nodesManager) {
+                nodesManager->parentItem()->setSelected(false);
+                nodesManager->clear();
+                nodesManager = nullptr;
 
                 scene->drawCurrentPhotogram();
             }
-            config->updateMode(TextConfigurator::Add);
+            configPanel->updateMode(TextConfigurator::Add);
+            configPanel->displayControls(false);
+
             #ifdef TUP_DEBUG
                 qDebug() << "[TextTool::press()] - User clicked on background... exiting!";
             #endif
@@ -203,7 +229,6 @@ void TextTool::move(const TupInputDeviceInformation *input, TupBrushManager *bru
         qDebug() << "[TextTool::move()]";
     #endif
 
-    Q_UNUSED(input)
     Q_UNUSED(scene)
     Q_UNUSED(brushManager)
 
@@ -220,10 +245,10 @@ void TextTool::release(const TupInputDeviceInformation *input, TupBrushManager *
     Q_UNUSED(input)
     Q_UNUSED(brushManager)
 
-    if (manager) {
+    if (nodesManager) {
         activeSelection = true;
-        if (manager->isModified())
-            requestTransformation(manager->parentItem(), frame);
+        if (nodesManager->isModified())
+            requestTransformation(nodesManager->parentItem(), frame);
     } else {
         QList<QGraphicsItem *> currentSelection = scene->selectedItems();
         if (currentSelection.count() > 0) {
@@ -235,14 +260,25 @@ void TextTool::release(const TupInputDeviceInformation *input, TupBrushManager *
                 if (!textItem->isSelected())
                     textItem->setSelected(true);
 
-                manager = new NodeManager(Node::Selection, textItem, scene, nodeZValue);
-                manager->show();
-                manager->resizeNodes(realFactor);
+                nodesManager = new NodeManager(Node::Text, textItem, scene, nodeZValue);
+                connect(nodesManager, &NodeManager::positionUpdated, this, &TextTool::updatePositionRecord);
+                connect(nodesManager, &NodeManager::rotationUpdated, this, &TextTool::updateRotationAngleRecord);
+                connect(nodesManager, &NodeManager::scaleUpdated, this, &TextTool::updateScaleFactorRecord);
+                nodesManager->show();
+                nodesManager->resizeNodes(realFactor);
 
                 activeSelection = true;
-                config->loadTextSettings(textItem->font(), textItem->data(0).toString(), textItem->defaultTextColor());
+                configPanel->loadTextSettings(textItem->font(), textItem->data(0).toString(), textItem->defaultTextColor());
+
+                QPointF point = textItem->pos();
+                point += QPointF(textItem->boundingRect().size().width()/2, textItem->boundingRect().size().height()/2);
+
+                QDomDocument doc;
+                configPanel->displayControls(true, point,
+                                        TupSerializer::properties(textItem, doc, textItem->toPlainText(), textItem->textWidth()));
             } else {
                 item->setSelected(false);
+                configPanel->displayControls(false);
             }
         }
     }
@@ -316,18 +352,8 @@ void TextTool::itemResponse(const TupItemResponse *response)
     #endif
 
     if (response->getAction() == TupProjectRequest::Remove) {
-        /*
-        if (manager) {
-            if (manager->parentItem())
-                manager->parentItem()->setSelected(false);
-            manager->clear();
-            manager = nullptr;
-        }
-        activeSelection = false;
-        */
-
         removeManager();
-        config->resetText();
+        configPanel->resetText();
 
         return;
     }
@@ -355,10 +381,10 @@ void TextTool::itemResponse(const TupItemResponse *response)
             #endif
 
             if (item) {
-                if (manager) {
-                    manager->show();
-                    manager->syncNodesFromParent();
-                    manager->beginToEdit();
+                if (nodesManager) {
+                    nodesManager->show();
+                    nodesManager->syncNodesFromParent();
+                    nodesManager->beginToEdit();
                 }
             } else {
                 #ifdef TUP_DEBUG
@@ -395,7 +421,7 @@ void TextTool::frameResponse(const TupFrameResponse *response)
     #endif   
 
     activeSelection = false;
-    config->updateMode(TextConfigurator::Add);
+    configPanel->updateMode(TextConfigurator::Add);
 }
 
 void TextTool::libraryResponse(const TupLibraryResponse *response)
@@ -407,18 +433,7 @@ void TextTool::libraryResponse(const TupLibraryResponse *response)
     #endif
 
     removeManager();
-
-    /*
-    if (manager) {
-        if (manager->parentItem())
-            manager->parentItem()->setSelected(false);
-        manager->clear();
-        manager = nullptr;
-    }
-    activeSelection = false;
-    */
-
-    config->updateMode(TextConfigurator::Add);
+    configPanel->updateMode(TextConfigurator::Add);
 }
 
 void TextTool::layerResponse(const TupLayerResponse *response)
@@ -443,11 +458,15 @@ void TextTool::sceneResponse(const TupSceneResponse *response)
 
 void TextTool::removeManager()
 {
-    if (manager) {
-        if (manager->parentItem())
-            manager->parentItem()->setSelected(false);
-        manager->clear();
-        manager = nullptr;
+    if (nodesManager) {
+        disconnect(nodesManager, &NodeManager::positionUpdated, this, &TextTool::updatePositionRecord);
+        disconnect(nodesManager, &NodeManager::rotationUpdated, this, &TextTool::updateRotationAngleRecord);
+        disconnect(nodesManager, &NodeManager::scaleUpdated, this, &TextTool::updateScaleFactorRecord);
+
+        if (nodesManager->parentItem())
+            nodesManager->parentItem()->setSelected(false);
+        nodesManager->clear();
+        nodesManager = nullptr;
     }
 
     activeSelection = false;
@@ -470,15 +489,19 @@ int TextTool::toolType() const
 
 QWidget *TextTool::configurator()
 {
-    return config;
+    return configPanel;
 }
 
 void TextTool::aboutToChangeTool()
 {
-    init(scene);
-    config->clearText();
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextTool::aboutToChangeTool()]";
+    #endif
 
-    QFont font = config->textFont();
+    init(scene);
+    configPanel->clearText();
+
+    QFont font = configPanel->textFont();
     TCONFIG->beginGroup("TextTool");
     TCONFIG->setValue("FontFamily", font.family());
     TCONFIG->setValue("FontSize", font.pointSize());
@@ -495,7 +518,7 @@ void TextTool::setupActions()
 {
     realFactor = 1;
     activeSelection = false;
-    manager = nullptr;
+    nodesManager = nullptr;
 
     TAction *text = new TAction(QIcon(kAppProp->themeDir() + "icons/text.png"), tr("Text"), this);
     text->setShortcut(QKeySequence(tr("T")));
@@ -515,17 +538,17 @@ void TextTool::insertText()
         qDebug() << "[TextTool::insertText()]";
     #endif
 
-    QString text = config->text();
+    QString text = configPanel->text();
     if (!text.isEmpty()) {
         TupTextItem *textItem = new TupTextItem;
         QTextOption option = textItem->document()->defaultTextOption();
-        option.setAlignment(config->textAlignment());
+        option.setAlignment(configPanel->textAlignment());
         textItem->document()->setDefaultTextOption(option);
 
         loadTextColor();
         textItem->setDefaultTextColor(currentColor);
 
-        QFont font = config->textFont();
+        QFont font = configPanel->textFont();
         textItem->setFont(font);
 
         textItem->setPlainText(text);
@@ -555,6 +578,10 @@ void TextTool::insertText()
 
         QPointF pos = QPointF(xPos, yPos);
         textItem->setPos(pos);
+        textItem->setData(TupGraphicObject::Rotate, 0);
+        textItem->setData(TupGraphicObject::ScaleX, 1);
+        textItem->setData(TupGraphicObject::ScaleY, 1);
+
         scene->includeObject(textItem);
 
         QDomDocument doc;
@@ -575,10 +602,10 @@ void TextTool::updateText()
         qDebug() << "[TextTool::updateText()]";
     #endif
 
-    if (manager) {
-        QGraphicsItem *item = manager->parentItem();
+    if (nodesManager) {
+        QGraphicsItem *item = nodesManager->parentItem();
         if (TupTextItem *textItem = qgraphicsitem_cast<TupTextItem *>(item)) {
-            QString text = config->text();
+            QString text = configPanel->text();
             if (text.isEmpty()) { // Remove item
                 int itemIndex = -1;
                 int frameIndex = -1;
@@ -616,14 +643,14 @@ void TextTool::updateText()
                 emit requested(&event);
             } else {
                 QTextOption option = textItem->document()->defaultTextOption();
-                option.setAlignment(config->textAlignment());
+                option.setAlignment(configPanel->textAlignment());
                 textItem->document()->setDefaultTextOption(option);
 
-                QFont font = config->textFont();
+                QFont font = configPanel->textFont();
                 textItem->setFont(font);
                 textItem->setPlainText(text);
                 textItem->setData(0, text);
-                textItem->setDefaultTextColor(config->getTextColor());
+                textItem->setDefaultTextColor(configPanel->getTextColor());
 
                 QFontMetrics fm(font);
                 QStringList list = text.split("\n");
@@ -635,7 +662,7 @@ void TextTool::updateText()
                 }
 
                 textItem->setTextWidth(longerLine + 9);
-                manager->syncNodesFromParent();
+                nodesManager->syncNodesFromParent();
             }
         }
     } else {
@@ -648,8 +675,8 @@ void TextTool::updateText()
 void TextTool::resizeNode(qreal scaleFactor)
 {
     realFactor = scaleFactor;
-    if (manager)
-        manager->resizeNodes(scaleFactor);
+    if (nodesManager)
+        nodesManager->resizeNodes(scaleFactor);
 }
 
 void TextTool::updateZoomFactor(qreal scaleFactor)
@@ -663,11 +690,11 @@ void TextTool::syncNodes()
         qDebug() << "[TextTool::syncNodes()]";
     #endif
 
-    if (manager) {
-        manager->show();
-        QGraphicsItem *item = manager->parentItem();
+    if (nodesManager) {
+        nodesManager->show();
+        QGraphicsItem *item = nodesManager->parentItem();
         if (item) {
-            manager->syncNodesFromParent();
+            nodesManager->syncNodesFromParent();
             if (!item->isSelected())
                 item->setSelected(true);
         } else {
@@ -709,7 +736,7 @@ void TextTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "TextTool::requestTransformation() - Fatal Error: Invalid item position !!! [ "
-                        + QString::number(position) + " ]";
+                        << position << " ]";
         #endif
     }
 }
@@ -765,7 +792,7 @@ void TextTool::keyPressEvent(QKeyEvent *event)
                 delta = 10;
 
             TupFrame *frame = getCurrentFrame();
-            QGraphicsItem *item = manager->parentItem();
+            QGraphicsItem *item = nodesManager->parentItem();
 
             if (event->key() == Qt::Key_Left)
                 item->moveBy(-delta, 0);
@@ -781,11 +808,14 @@ void TextTool::keyPressEvent(QKeyEvent *event)
 
             QTimer::singleShot(0, this, SLOT(syncNodes()));
             requestTransformation(item, frame);
+
+            updatePositionRecord(item->pos() + QPointF(item->boundingRect().size().width()/2, item->boundingRect().size().height()/2));
         }
     } else if (event->modifiers() == Qt::ControlModifier) {
+        configPanel->setProportionState(true);
         key = "CONTROL";
         if (activeSelection)
-            manager->setProportion(true);
+            nodesManager->setProportion(true);
     }
 }
 
@@ -794,9 +824,10 @@ void TextTool::keyReleaseEvent(QKeyEvent *event)
     Q_UNUSED(event)
 
     if (key.compare("CONTROL") == 0) {
+        configPanel->setProportionState(false);
         key = "NONE";
         if (activeSelection)
-            manager->setProportion(false);
+            nodesManager->setProportion(false);
     }
 }
 
@@ -807,9 +838,9 @@ void TextTool::clearSelection()
     #endif
 
     if (activeSelection) {
-        if (manager) {
-            manager->parentItem()->setSelected(false);
-            manager->clear();
+        if (nodesManager) {
+            nodesManager->parentItem()->setSelected(false);
+            nodesManager->clear();
         }
 
         activeSelection = false;
@@ -823,5 +854,134 @@ void TextTool::updateTextColor(const QColor &color)
         qDebug() << "[TextTool::updateTextColor()] - color -> " << color;
     #endif
 
-    config->setTextColor(color);
+    configPanel->setTextColor(color);
+}
+
+void TextTool::updatePositionRecord(const QPointF &point)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextTool::updatePositionRecord()] - point -> " << point;
+    #endif
+
+    configPanel->updatePositionCoords(point.x(), point.y());
+    if (nodesManager)
+        requestTransformation(nodesManager->parentItem(), frame);
+}
+
+void TextTool::updateRotationAngleRecord(int angle)
+{
+    configPanel->updateRotationAngle(angle);
+    if (nodesManager)
+        requestTransformation(nodesManager->parentItem(), frame);
+}
+
+void TextTool::updateScaleFactorRecord(double x, double y)
+{
+    configPanel->updateScaleFactor(x, y);
+    if (nodesManager)
+        requestTransformation(nodesManager->parentItem(), frame);
+}
+
+void TextTool::updateXPositionInScene(int x)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextTool::updateXPositionInScene()] - x -> " << x;
+    #endif
+
+    if (nodesManager) {
+        QGraphicsItem *item = nodesManager->parentItem();
+        item->setPos(x, item->pos().y());
+        nodesManager->syncNodesFromParent();
+        requestTransformation(nodesManager->parentItem(), frame);
+    }
+}
+
+// Actions executed from the panel
+
+void TextTool::updateYPositionInScene(int y)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextTool::updateYPositionInScene()] - y -> " << y;
+    #endif
+
+    if (nodesManager) {
+        QGraphicsItem *item = nodesManager->parentItem();
+        item->setPos(item->pos().x(), y);
+        nodesManager->syncNodesFromParent();
+        requestTransformation(nodesManager->parentItem(), frame);
+    }
+}
+
+void TextTool::updateRotationInScene(int angle)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextTool::updateRotationInScene()] - angle -> " << angle;
+    #endif
+
+    if (nodesManager) {
+        nodesManager->rotate(angle);
+        nodesManager->syncNodesFromParent();
+        requestTransformation(nodesManager->parentItem(), frame);
+    }
+}
+
+void TextTool::updateScaleInScene(double xFactor, double yFactor)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextTool::updateScaleInScene()] - scale factor -> " << QPointF(xFactor, yFactor);
+    #endif
+
+    if (nodesManager) {
+        nodesManager->scale(xFactor, yFactor);
+        nodesManager->syncNodesFromParent();
+        requestTransformation(nodesManager->parentItem(), frame);
+    }
+}
+
+void TextTool::resetTextTransformations()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextTool::resetTextTransformations()]";
+    #endif
+
+    if (nodesManager) {
+        QSizeF projectSize = scene->currentScene()->getDimension();
+        int projectX = projectSize.width() / 2;
+        int projectY = projectSize.height() / 2;
+
+        QGraphicsItem *item = nodesManager->parentItem();
+        if (item) {
+            QSizeF mouthSize = item->boundingRect().size();
+            int mouthX = mouthSize.width() / 2;
+            int mouthY = mouthSize.height() / 2;
+
+            updateXPositionInScene(projectX - mouthX);
+            updateYPositionInScene(projectY - mouthY);
+            updateRotationInScene(0);
+            updateScaleInScene(1, 1);
+        }
+    }
+}
+
+void TextTool::setItemScale(double xFactor, double yFactor)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TextTool::setItemScale(double, double)]";
+    #endif
+
+    if (nodesManager) {
+        nodesManager->scale(xFactor, yFactor);
+        if (nodesManager->isModified())
+            requestTransformation(nodesManager->parentItem(), frame);
+    }
+}
+
+void TextTool::enableProportion(bool flag)
+{
+    key = "NONE";
+    if (flag)
+        key = "CONTROL";
+
+    if (nodesManager)
+        nodesManager->setProportion(flag);
 }

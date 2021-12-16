@@ -159,13 +159,17 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     QPointF newPos(event->scenePos());
 
     if (node == Center) {
-        if (context == Selection) {
+        if (context == Selection || context == Text) {
             int x = newPos.x() - scenePos().x();
-            int  y = newPos.y() - scenePos().y();
+            int y = newPos.y() - scenePos().y();
             parent->moveBy(x, y);
-        } else { // Papagayo context
+
+            if (context == Text)
+                emit positionUpdated(newPos);
+        } else { /* Papagayo context */
             QPointF center = newPos - QPointF(parent->boundingRect().width()/2, parent->boundingRect().height()/2);
             parent->setPos(center.x(), center.y());
+
             emit positionUpdated(newPos);
         }
         QGraphicsItem::mouseMoveEvent(event);

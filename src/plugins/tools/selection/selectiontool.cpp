@@ -1127,7 +1127,7 @@ void SelectionTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "SelectionTool::requestTransformation() - Fatal Error: Invalid item position !!! [ "
-                        + QString::number(position) + " ]";
+                     << position << " ]";
         #endif
     }
 }

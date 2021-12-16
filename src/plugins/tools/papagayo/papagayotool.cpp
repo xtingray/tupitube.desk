@@ -599,7 +599,7 @@ void PapagayoTool::updateXMouthPositionInScene(int x)
 void PapagayoTool::updateYMouthPositionInScene(int y)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[PapagayoTool::updateYMouthPositionInScene()] - x -> " << y;
+        qDebug() << "[PapagayoTool::updateYMouthPositionInScene()] - y -> " << y;
     #endif
 
     mouth->setPos(mouth->pos().x(), y);

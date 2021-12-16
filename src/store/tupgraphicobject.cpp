@@ -248,6 +248,10 @@ void TupGraphicObject::storeItemTransformation(const QString &properties)
 
 void TupGraphicObject::undoTransformation()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupGraphicObject::storeItemTransformation()]";
+    #endif
+
     if (transformDoList.count() > 1) {
         transformUndoList << transformDoList.takeLast();
         if (!transformDoList.isEmpty()) {
@@ -255,7 +259,15 @@ void TupGraphicObject::undoTransformation()
             QDomDocument doc;
             doc.setContent(properties);
             TupSerializer::loadProperties(graphicItem, doc.documentElement());
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupGraphicObject::storeItemTransformation()] - transformDoList is EMPTY!";
+            #endif
         }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupGraphicObject::storeItemTransformation()] - transformDoList.count() -> " << transformDoList.count();
+        #endif
     }
 }
 

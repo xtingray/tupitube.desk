@@ -38,10 +38,13 @@
 
 #include "tglobal.h"
 #include "tfontchooser.h"
+#include "tuptextitem.h"
 
 #include <QWidget>
 #include <QFont>
 #include <QTextEdit>
+#include <QSpinBox>
+#include <QCheckBox>
 
 class TUPITUBE_PLUGIN TextConfigurator : public QWidget
 {
@@ -61,9 +64,28 @@ class TUPITUBE_PLUGIN TextConfigurator : public QWidget
         void setTextColor(const QColor &color);
         QColor getTextColor() const;
 
+        void displayControls(bool flag, const QPointF &point = QPointF(), const QDomElement &element = QDomElement());
+
+        void updatePositionCoords(int x, int y);
+        void updateRotationAngle(int angle);
+        void updateScaleFactor(double x, double y);
+
+        void setProportionState(int flag);
+
     signals:
         void textAdded();
         void textUpdated();
+
+        void xPosChanged(int x);
+        void yPosChanged(int y);
+        void rotationChanged(int angle);
+        void scaleChanged(double xFactor, double yFactor);
+        void resetActionCalled();
+
+        void scaleUpdated(double xFactor, double yFactor);
+        void activateProportion(bool enable);
+
+        void textObjectReleased();
 
     public slots:
         void clearText();
@@ -73,13 +95,34 @@ class TUPITUBE_PLUGIN TextConfigurator : public QWidget
         void callAction();
         void updateTextAlignment(Qt::Alignment flag);
 
+        void notifyRotation(int angle);
+        void notifyXScale(double factor);
+        void notifyYScale(double factor);
+        void enableProportion(int flag);
+
     private:
+        QWidget * createTransformationTools();
+
         QTextEdit *textBox;
         TFontChooser *fontChooser;
         QFont font;
         QPushButton *addButton;
+        QPushButton *resetButton;
         QPushButton *clearButton;
         Mode mode;
         Qt::Alignment textAlignmentValue;
+
+        QWidget *controlsWidget;
+        QSpinBox *xPosField;
+        QSpinBox *yPosField;
+        QSpinBox *angleField;
+        QDoubleSpinBox *factorXField;
+        QDoubleSpinBox *factorYField;
+        QCheckBox *propCheck;
+
+        int currentX;
+        int currentY;
+        double currentXFactor;
+        double currentYFactor;
 };
 #endif
