@@ -49,7 +49,6 @@ bool TupCommandExecutor::createLayer(TupLayerResponse *response)
     int scenePosition = response->getSceneIndex();
     int position = response->getLayerIndex();
     QString name = response->getArg().toString();
-    // QString state = response->getState();
 
     TupScene *scene = project->sceneAt(scenePosition);
     if (scene) {
@@ -223,27 +222,21 @@ bool TupCommandExecutor::addLipSync(TupLayerResponse *response)
     int position = response->getLayerIndex();
     QString xml = response->getArg().toString();
 
-    qDebug() << "";
-    qDebug() << "4 LIPSYNC";
-    qDebug() << xml;
-
     TupScene *scene = project->sceneAt(scenePos);
-
-    if (!scene)
+    if (!scene) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupCommandExecutor::addLipSync()] - Fatal Error: No scene at index -> " << scenePos;
+        #endif
         return false;
+    }
 
     TupLayer *layer = scene->layerAt(position);
     if (layer) {
         TupLipSync *lipsync = new TupLipSync();
         lipsync->fromXml(xml);
-
-        qDebug() << "";
-        qDebug() << "4A LIPSYNC";
-        qDebug() << lipsync->toString();
-
         layer->addLipSync(lipsync);
-
         emit responsed(response);
+
         return true;
     }
 
@@ -260,9 +253,12 @@ bool TupCommandExecutor::updateLipSync(TupLayerResponse *response)
     QString xml = response->getArg().toString();
 
     TupScene *scene = project->sceneAt(scenePos);
-
-    if (!scene)
+    if (!scene) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupCommandExecutor::updateLipSync()] - Fatal Error: No scene at index -> " << scenePos;
+        #endif
         return false;
+    }
 
     TupLipSync *lipsync = new TupLipSync();
     lipsync->fromXml(xml);

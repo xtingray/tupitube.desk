@@ -20,15 +20,15 @@ FRAMEWORK_DIR = "../../../framework"
 include($$FRAMEWORK_DIR/framework.pri)
 
 HEADERS += papagayosettings.h \
-           buttonspanel.h \
-           configurator.h \
+           # buttonspanel.h \
+           papagayoconfigurator.h \
            lipsyncmanager.h \
            papagayotool.h \
            mouthsdialog.h
 
 SOURCES += papagayosettings.cpp \
-           buttonspanel.cpp \
-           configurator.cpp \
+           # buttonspanel.cpp \
+           papagayoconfigurator.cpp \
            lipsyncmanager.cpp \
            papagayotool.cpp \
            mouthsdialog.cpp

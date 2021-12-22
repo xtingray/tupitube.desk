@@ -76,6 +76,7 @@ class TUPITUBE_PLUGIN PapagayoSettings : public QWidget
     signals:
         void initFrameHasChanged(int index);
         void selectMouth(const QString &id, int index);
+        // void saveMouthTransRequested();
         void closeLipSyncProperties();
 
         void xPosChanged(int x);

@@ -80,6 +80,7 @@ class TUPITUBE_PLUGIN Node : public QObject, public QGraphicsItem
 
     signals:
         void positionUpdated(const QPointF &point);
+        void transformationUpdated();
 
     private:
         Context context;

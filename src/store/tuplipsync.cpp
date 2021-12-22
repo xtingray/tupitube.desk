@@ -166,10 +166,12 @@ TupTransformation::Parameters TupPhoneme::getTransformationParams() const
 
 void TupPhoneme::fromXml(const QString &xml)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupPhoneme::fromXml()] - xml:";
         qDebug() << xml;
     #endif
+    */
 
     QDomDocument document;
     if (document.setContent(xml)) {
@@ -186,9 +188,11 @@ void TupPhoneme::fromXml(const QString &xml)
 
 QDomElement TupPhoneme::toXml(QDomDocument &doc) const
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupPhoneme::toXml()]";
     #endif
+    */
 
     QDomElement root = doc.createElement("phoneme");
     root.setAttribute("value", phoneme);
@@ -301,10 +305,12 @@ TupTransformation::Parameters TupWord::getTransformationParams(int frame)
 
 void TupWord::fromXml(const QString &xml)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupWord::fromXml()] - xml:";
         qDebug() << xml;
     #endif
+    */
 
     QDomDocument document;
     if (document.setContent(xml)) {
@@ -444,10 +450,12 @@ TupTransformation::Parameters TupPhrase::getTransformationParams(int frame)
 
 void TupPhrase::fromXml(const QString &xml)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupPhrase::fromXml()] - xml:";
         qDebug() << xml;
     #endif
+    */
 
     QDomDocument document;
     if (document.setContent(xml)) {
@@ -650,10 +658,12 @@ bool TupVoice::contains(int frame)
 
 void TupVoice::fromXml(const QString &xml)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupVoice::fromXml()] - xml:";
         qDebug() << xml;
     #endif
+    */
 
     QDomDocument document;
     if (document.setContent(xml)) {
@@ -704,6 +714,12 @@ TupLipSync::TupLipSync() : QObject()
 
 TupLipSync::TupLipSync(const QString &name, const QString &sound, int init) : QObject()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLipSync::TupLipSync()] - lipSyncName -> " << name;
+        qDebug() << "[TupLipSync::TupLipSync()] - soundFile -> " << sound;
+        qDebug() << "[TupLipSync::TupLipSync()] - initFrame -> " << init;
+    #endif
+
     lipSyncName = name;
     soundFile = sound;
     initFrame = init;

@@ -76,6 +76,14 @@ NodeManager::NodeManager(Node::Context context, QGraphicsItem *parentItem, QGrap
     if (context == Node::Text || context == Node::Papagayo)
         connect(center, &Node::positionUpdated, this, &NodeManager::positionUpdated);
 
+    if (context == Node::Papagayo) {
+        connect(topLeft, &Node::transformationUpdated, this, &NodeManager::transformationUpdated);
+        connect(topRight, &Node::transformationUpdated, this, &NodeManager::transformationUpdated);
+        connect(bottomLeft, &Node::transformationUpdated, this, &NodeManager::transformationUpdated);
+        connect(bottomRight, &Node::transformationUpdated, this, &NodeManager::transformationUpdated);
+        connect(center, &Node::transformationUpdated, this, &NodeManager::transformationUpdated);
+    }
+
     nodes.insert(Node::TopLeft, topLeft);
     nodes.insert(Node::TopRight, topRight);
     nodes.insert(Node::BottomLeft, bottomLeft);

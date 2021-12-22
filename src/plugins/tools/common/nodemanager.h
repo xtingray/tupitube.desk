@@ -88,6 +88,7 @@ class TUPITUBE_PLUGIN NodeManager : public QObject
         void positionUpdated(const QPointF &point);
         void rotationUpdated(int angle);
         void scaleUpdated(double x, double y);
+        void transformationUpdated();
 
     private:
         QHash<Node::NodeType, Node *> nodes;

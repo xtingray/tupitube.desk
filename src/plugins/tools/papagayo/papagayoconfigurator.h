@@ -33,35 +33,85 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef BUTTONSPANEL_H
-#define BUTTONSPANEL_H
+#ifndef PAPAGAYOCONFIGURATOR_H
+#define PAPAGAYOCONFIGURATOR_H
 
 #include "tglobal.h"
-#include "tapplicationproperties.h"
-#include "timagebutton.h"
+#include "papagayosettings.h"
+#include "lipsyncmanager.h"
+#include "tuplipsync.h"
 
-#include <QWidget>
-#include <QHBoxLayout>
+#include <QFrame>
+#include <QLabel>
 #include <QBoxLayout>
-#include <QDir>
+#include <QListWidgetItem>
 
 /**
  * @author Gustav Gonzalez 
 */
 
-class TUPITUBE_PLUGIN ButtonsPanel: public QWidget 
+class TUPITUBE_PLUGIN PapagayoConfigurator : public QFrame
 {
     Q_OBJECT
 
     public:
+        enum GuiState { Manager = 1, Properties };
 
-        ButtonsPanel(QWidget *parent = nullptr);
-        ~ButtonsPanel();
+        PapagayoConfigurator(QWidget *parent = nullptr);
+        ~PapagayoConfigurator();
+
+        void loadLipSyncList(QList<QString> list);
+        void openLipSyncProperties(TupLipSync *lipsync);
+
+        void addLipSyncRecord(const QString &name);
+        void removeLipSyncRecord(const QString &name);
+        void updateInterfaceRecords();
+
+        void resetUI();
+        void closePanels();
+
+        void setPhoneme(const TupPhoneme *phoneme);
+        void setTransformations(const QDomElement &dom);
+        void setTransformations(const TupTransformation::Parameters parameters);
+
+        void updatePositionCoords(int x, int y);
+        void updateRotationAngle(int angle);
+        void updateScaleFactor(double x, double y);
+
+        void setProportionState(bool flag);
 
     signals:
-        void clickedEditTween();
-        void clickedRemoveTween();
-        
+        void lipsyncCreatorRequested();
+        void lipsyncEditionRequested(const QString &lipSyncName);
+        void mouthEditionRequested(const QString &lipSyncName);
+        void selectMouth(const QString &name, int index);
+        // void saveMouthTransRequested();;
+        void closeLipSyncProperties();
+        void initFrameHasChanged(int index);
+        void currentLipsyncRemoved(const QString &name);
+
+        void xPosChanged(int x);
+        void yPosChanged(int y);
+        void rotationChanged(int angle);
+        void scaleChanged(double xFactor, double yFactor);
+
+        void objectHasBeenReset();
+        void proportionActivated(bool flag);
+
+    private slots:
+        void editCurrentLipSync(const QString &name);
+        void closeSettingsPanel();
+        void openMouthsDialog();
+
+    private:
+        void setPropertiesPanel();
+        void activePropertiesPanel(bool enable);
+        void setLipSyncManagerPanel();
+        void activeLipSyncManagerPanel(bool enable);
+
+        QBoxLayout *settingsLayout;
+        PapagayoSettings *settingsPanel;
+        LipSyncManager *manager;
 };
 
 #endif

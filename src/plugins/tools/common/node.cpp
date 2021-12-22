@@ -219,6 +219,8 @@ void Node::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     if (manager)
         manager->setPressedStatus(false);
+
+    emit transformationUpdated();
 }
 
 void Node::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)

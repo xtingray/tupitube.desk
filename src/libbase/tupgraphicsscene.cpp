@@ -1141,10 +1141,12 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
                                      QDomElement properties = phoneme->getTransformationDom();
                                      TupSerializer::loadProperties(item, properties);
 
+                                     /*
                                      QRectF rect = item->boundingRect();
                                      int x = rect.width()/2;
                                      int y = rect.height()/2;
                                      item->moveBy(-x, -y);
+                                     */
 
                                      item->setToolTip(tr("lipsync:") + name);
                                      item->setZValue(zValue);

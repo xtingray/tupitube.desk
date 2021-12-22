@@ -39,7 +39,7 @@
 #include <QFileInfo>
 #include <QTextStream>
 
-TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &projectSize, const QString &extension, 
+TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QPointF &mouthPos, const QString &extension,
                                          int frameIndex) : QObject()
 {
     #ifdef TUP_DEBUG
@@ -89,13 +89,10 @@ TupPapagayoImporter::TupPapagayoImporter(const QString &file, const QSize &proje
                i++;
         }
 
-        int x = projectSize.width() / 2;
-        int y = projectSize.height() / 2;
-
         TupVoice *voice = new TupVoice();
         voice->setVoiceTitle(stream.readLine().trimmed());
         voice->setText(stream.readLine().trimmed());
-        QDomElement transformation = voice->setDefaultTransformation(x, y);
+        QDomElement transformation = voice->setDefaultTransformation(mouthPos.x(), mouthPos.y());
 
         int numPhonemes = 0;
         int numWords;

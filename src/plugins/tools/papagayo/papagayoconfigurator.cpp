@@ -33,12 +33,12 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "configurator.h"
+#include "papagayoconfigurator.h"
 #include "tapplicationproperties.h"
 #include "tseparator.h"
 #include "mouthsdialog.h"
 
-Configurator::Configurator(QWidget *parent) : QFrame(parent)
+PapagayoConfigurator::PapagayoConfigurator(QWidget *parent) : QFrame(parent)
 {
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
@@ -74,35 +74,36 @@ Configurator::Configurator(QWidget *parent) : QFrame(parent)
     layout->addStretch(2);
 }
 
-Configurator::~Configurator()
+PapagayoConfigurator::~PapagayoConfigurator()
 {
 }
 
-void Configurator::loadLipSyncList(QList<QString> list)
+void PapagayoConfigurator::loadLipSyncList(QList<QString> list)
 {
     manager->loadLipSyncList(list);
 }
 
-void Configurator::setPropertiesPanel()
+void PapagayoConfigurator::setPropertiesPanel()
 {
     settingsPanel = new PapagayoSettings(this);
-    connect(settingsPanel, &PapagayoSettings::selectMouth, this, &Configurator::selectMouth);
-    connect(settingsPanel, &PapagayoSettings::closeLipSyncProperties, this, &Configurator::closeSettingsPanel);
-    connect(settingsPanel, &PapagayoSettings::initFrameHasChanged, this, &Configurator::initFrameHasChanged);
-    connect(settingsPanel, &PapagayoSettings::xPosChanged, this, &Configurator::xPosChanged);
-    connect(settingsPanel, &PapagayoSettings::yPosChanged, this, &Configurator::yPosChanged);
-    connect(settingsPanel, &PapagayoSettings::rotationChanged, this, &Configurator::rotationChanged);
-    connect(settingsPanel, &PapagayoSettings::scaleChanged, this, &Configurator::scaleChanged);
+    connect(settingsPanel, &PapagayoSettings::selectMouth, this, &PapagayoConfigurator::selectMouth);
+    // connect(settingsPanel, &PapagayoSettings::saveMouthTransRequested, this, &PapagayoConfigurator::saveMouthTransRequested);
+    connect(settingsPanel, &PapagayoSettings::closeLipSyncProperties, this, &PapagayoConfigurator::closeSettingsPanel);
+    connect(settingsPanel, &PapagayoSettings::initFrameHasChanged, this, &PapagayoConfigurator::initFrameHasChanged);
+    connect(settingsPanel, &PapagayoSettings::xPosChanged, this, &PapagayoConfigurator::xPosChanged);
+    connect(settingsPanel, &PapagayoSettings::yPosChanged, this, &PapagayoConfigurator::yPosChanged);
+    connect(settingsPanel, &PapagayoSettings::rotationChanged, this, &PapagayoConfigurator::rotationChanged);
+    connect(settingsPanel, &PapagayoSettings::scaleChanged, this, &PapagayoConfigurator::scaleChanged);
 
-    connect(settingsPanel, &PapagayoSettings::objectHasBeenReset, this, &Configurator::objectHasBeenReset);
-    connect(settingsPanel, &PapagayoSettings::proportionActivated, this, &Configurator::proportionActivated);
+    connect(settingsPanel, &PapagayoSettings::objectHasBeenReset, this, &PapagayoConfigurator::objectHasBeenReset);
+    connect(settingsPanel, &PapagayoSettings::proportionActivated, this, &PapagayoConfigurator::proportionActivated);
 
     settingsLayout->addWidget(settingsPanel);
 
     activePropertiesPanel(false);
 }
 
-void Configurator::activePropertiesPanel(bool enable)
+void PapagayoConfigurator::activePropertiesPanel(bool enable)
 {
     if (enable)
         settingsPanel->show();
@@ -110,18 +111,18 @@ void Configurator::activePropertiesPanel(bool enable)
         settingsPanel->hide();
 }
 
-void Configurator::setLipSyncManagerPanel()
+void PapagayoConfigurator::setLipSyncManagerPanel()
 {
     manager = new LipSyncManager(this);
-    connect(manager, &LipSyncManager::lipsyncCreatorRequested, this, &Configurator::lipsyncCreatorRequested);
-    connect(manager, &LipSyncManager::lipsyncEditionRequested, this, &Configurator::lipsyncEditionRequested);
-    connect(manager, &LipSyncManager::mouthEditionRequested, this, &Configurator::editCurrentLipSync);
-    connect(manager, &LipSyncManager::currentLipSyncRemoved, this, &Configurator::currentLipsyncRemoved);
+    connect(manager, &LipSyncManager::lipsyncCreatorRequested, this, &PapagayoConfigurator::lipsyncCreatorRequested);
+    connect(manager, &LipSyncManager::lipsyncEditionRequested, this, &PapagayoConfigurator::lipsyncEditionRequested);
+    connect(manager, &LipSyncManager::mouthEditionRequested, this, &PapagayoConfigurator::editCurrentLipSync);
+    connect(manager, &LipSyncManager::currentLipSyncRemoved, this, &PapagayoConfigurator::currentLipsyncRemoved);
 
     settingsLayout->addWidget(manager);
 }
 
-void Configurator::activeLipSyncManagerPanel(bool enable)
+void PapagayoConfigurator::activeLipSyncManagerPanel(bool enable)
 {
     if (enable)
         manager->show();
@@ -129,17 +130,17 @@ void Configurator::activeLipSyncManagerPanel(bool enable)
         manager->hide();
 }
 
-void Configurator::addLipSyncRecord(const QString &name)
+void PapagayoConfigurator::addLipSyncRecord(const QString &name)
 {
     manager->addNewRecord(name);
 }
 
-void Configurator::removeLipSyncRecord(const QString &name)
+void PapagayoConfigurator::removeLipSyncRecord(const QString &name)
 {
     manager->removeRecordFromList(name);
 }
 
-void Configurator::editCurrentLipSync(const QString &name)
+void PapagayoConfigurator::editCurrentLipSync(const QString &name)
 {
     emit mouthEditionRequested(name);
 
@@ -147,71 +148,71 @@ void Configurator::editCurrentLipSync(const QString &name)
     activePropertiesPanel(true);
 }
 
-void Configurator::openLipSyncProperties(TupLipSync *lipsync)
+void PapagayoConfigurator::openLipSyncProperties(TupLipSync *lipsync)
 {
     settingsPanel->openLipSyncProperties(lipsync);
 }
 
-void Configurator::resetUI()
+void PapagayoConfigurator::resetUI()
 {
     manager->resetUI();
     closeSettingsPanel();
 }
 
-void Configurator::closeSettingsPanel()
+void PapagayoConfigurator::closeSettingsPanel()
 {
     emit closeLipSyncProperties();
     closePanels();
 }
 
-void Configurator::closePanels()
+void PapagayoConfigurator::closePanels()
 {
     activeLipSyncManagerPanel(true);
     activePropertiesPanel(false);
 }
 
-void Configurator::updateInterfaceRecords()
+void PapagayoConfigurator::updateInterfaceRecords()
 {
     settingsPanel->updateInterfaceRecords();
 }
 
-void Configurator::setTransformations(const QDomElement &dom)
+void PapagayoConfigurator::setTransformations(const QDomElement &dom)
 {
     settingsPanel->setTransformations(dom);
 }
 
-void Configurator::setTransformations(const TupTransformation::Parameters parameters)
+void PapagayoConfigurator::setTransformations(const TupTransformation::Parameters parameters)
 {
     settingsPanel->setTransformations(parameters);
 }
 
-void Configurator::updatePositionCoords(int x, int y)
+void PapagayoConfigurator::updatePositionCoords(int x, int y)
 {
     settingsPanel->updatePositionCoords(x, y);
 }
 
-void Configurator::updateRotationAngle(int angle)
+void PapagayoConfigurator::updateRotationAngle(int angle)
 {
     settingsPanel->updateRotationAngle(angle);
 }
 
-void Configurator::updateScaleFactor(double x, double y)
+void PapagayoConfigurator::updateScaleFactor(double x, double y)
 {
     settingsPanel->updateScaleFactor(x, y);
 }
 
-void Configurator::setPhoneme(const TupPhoneme *phoneme)
+void PapagayoConfigurator::setPhoneme(const TupPhoneme *phoneme)
 {
     settingsPanel->setPhoneme(phoneme);
 }
 
-void Configurator::openMouthsDialog()
+void PapagayoConfigurator::openMouthsDialog()
 {
     MouthsDialog *dialog = new MouthsDialog();
     dialog->show();
 }
 
-void Configurator::setProportionState(bool flag)
+void PapagayoConfigurator::setProportionState(bool flag)
 {
     settingsPanel->setProportionState(flag);
 }

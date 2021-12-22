@@ -40,7 +40,7 @@
 #include "tuptoolplugin.h"
 #include "papagayosettings.h"
 #include "tupprojectresponse.h"
-#include "configurator.h"
+#include "papagayoconfigurator.h"
 #include "nodemanager.h"
 
 #include <QPointF>
@@ -103,6 +103,7 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
         void callForPlugin(int menu, int index);
 
     private slots:
+        // void saveMouthTransformations();
         void editLipsyncMouth(const QString &name);
         void removeCurrentLipSync(const QString &name);
 
@@ -125,10 +126,10 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
     private:
         void setupActions();
         void removeNodesManager();
-        void updateMouthTransformation(const QDomElement &doc);
+        void updateMouthTransformation();
 
         QMap<TAction::ActionId, TAction *> pgActions;
-        Configurator *configPanel;
+        PapagayoConfigurator *configPanel;
 
         TupGraphicsScene *scene;
 

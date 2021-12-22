@@ -150,21 +150,22 @@ QWidget * PapagayoTool::configurator()
     if (!configPanel) {
         mode = TupToolPlugin::View;
 
-        configPanel = new Configurator;
-        connect(configPanel, &Configurator::lipsyncCreatorRequested, this, &PapagayoTool::lipsyncCreatorRequested);
-        connect(configPanel, &Configurator::lipsyncEditionRequested, this, &PapagayoTool::lipsyncEditionRequested);
-        connect(configPanel, &Configurator::mouthEditionRequested, this, &PapagayoTool::editLipsyncMouth);
-        connect(configPanel, &Configurator::currentLipsyncRemoved, this, &PapagayoTool::removeCurrentLipSync);
-        connect(configPanel, &Configurator::closeLipSyncProperties, this, &PapagayoTool::resetCanvas);
-        connect(configPanel, &Configurator::initFrameHasChanged, this, &PapagayoTool::updateInitFrame);
+        configPanel = new PapagayoConfigurator;
+        connect(configPanel, &PapagayoConfigurator::lipsyncCreatorRequested, this, &PapagayoTool::lipsyncCreatorRequested);
+        connect(configPanel, &PapagayoConfigurator::lipsyncEditionRequested, this, &PapagayoTool::lipsyncEditionRequested);
+        connect(configPanel, &PapagayoConfigurator::mouthEditionRequested, this, &PapagayoTool::editLipsyncMouth);
+        connect(configPanel, &PapagayoConfigurator::currentLipsyncRemoved, this, &PapagayoTool::removeCurrentLipSync);
+        // connect(configPanel, &PapagayoConfigurator::saveMouthTransRequested, this, &PapagayoTool::saveMouthTransformations);
+        connect(configPanel, &PapagayoConfigurator::closeLipSyncProperties, this, &PapagayoTool::resetCanvas);
+        connect(configPanel, &PapagayoConfigurator::initFrameHasChanged, this, &PapagayoTool::updateInitFrame);
 
-        connect(configPanel, &Configurator::xPosChanged, this, &PapagayoTool::updateXMouthPositionInScene);
-        connect(configPanel, &Configurator::yPosChanged, this, &PapagayoTool::updateYMouthPositionInScene);
-        connect(configPanel, &Configurator::rotationChanged, this, &PapagayoTool::updateRotationInScene);
-        connect(configPanel, &Configurator::scaleChanged, this, &PapagayoTool::updateScaleInScene);
+        connect(configPanel, &PapagayoConfigurator::xPosChanged, this, &PapagayoTool::updateXMouthPositionInScene);
+        connect(configPanel, &PapagayoConfigurator::yPosChanged, this, &PapagayoTool::updateYMouthPositionInScene);
+        connect(configPanel, &PapagayoConfigurator::rotationChanged, this, &PapagayoTool::updateRotationInScene);
+        connect(configPanel, &PapagayoConfigurator::scaleChanged, this, &PapagayoTool::updateScaleInScene);
 
-        connect(configPanel, &Configurator::objectHasBeenReset, this, &PapagayoTool::resetMouthTransformations);
-        connect(configPanel, &Configurator::proportionActivated, this, &PapagayoTool::enableProportion);
+        connect(configPanel, &PapagayoConfigurator::objectHasBeenReset, this, &PapagayoTool::resetMouthTransformations);
+        connect(configPanel, &PapagayoConfigurator::proportionActivated, this, &PapagayoTool::enableProportion);
     } 
 
     return configPanel;
@@ -233,9 +234,12 @@ void PapagayoTool::updateScene(TupGraphicsScene *scene)
 
 void PapagayoTool::editLipsyncMouth(const QString &name)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::editLipsyncMouth()] - name -> " << name;
+    #endif
+
     TupScene *sceneData = scene->currentScene();
     currentLipSync = sceneData->getLipSync(name);
-
     configPanel->openLipSyncProperties(currentLipSync);
 
     TupVoice *voice = currentLipSync->getVoice();
@@ -320,22 +324,6 @@ void PapagayoTool::removeCurrentLipSync(const QString &lipsyncName)
     }
 }
 
-void PapagayoTool::updateMouthTransformation(const QDomElement &dom)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[PapagayoTool::updateMouthTransformation()]";
-    #endif
-
-    int sceneIndex = scene->currentFrameIndex();    
-    currentLipSync->updateMouthTransformation(dom, (scene->currentFrameIndex() - currentLipSync->getInitFrame()));
-
-    TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, scene->currentLayerIndex(),
-                                                                      TupProjectRequest::UpdateLipSync, currentLipSync->toString());
-    emit requested(&request);
-
-    configPanel->setTransformations(dom);
-}
-
 void PapagayoTool::addNodesManager()
 {
     #ifdef TUP_DEBUG
@@ -384,6 +372,7 @@ void PapagayoTool::setNodesManagerEnvironment()
         connect(nodesManager, &NodeManager::positionUpdated, this, &PapagayoTool::updatePositionRecord);
         connect(nodesManager, &NodeManager::rotationUpdated, this, &PapagayoTool::updateRotationAngleRecord);
         connect(nodesManager, &NodeManager::scaleUpdated, this, &PapagayoTool::updateScaleFactorRecord);
+        connect(nodesManager, &NodeManager::transformationUpdated, this, &PapagayoTool::updateMouthTransformation);
         nodesManager->show();
         nodesManager->resizeNodes(realFactor);
         managerIncluded = true;
@@ -442,24 +431,25 @@ void PapagayoTool::sceneResponse(const TupSceneResponse *event)
 void PapagayoTool::layerResponse(const TupLayerResponse *event)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[PapagayoTool::layerResponse()]";
+        qDebug() << "[PapagayoTool::layerResponse()] - action -> " << event->getAction();
     #endif
 
+    QString xml = event->getArg().toString();
+    currentLipSync = new TupLipSync();
+
     if (event->getAction() == TupProjectRequest::AddLipSync) {
-        QString xml = event->getArg().toString();
-        currentLipSync = new TupLipSync();
         currentLipSync->fromXml(xml);
         configPanel->addLipSyncRecord(currentLipSync->getLipSyncName());
         return;
     }
 
     if (event->getAction() == TupProjectRequest::UpdateLipSync) {
-        if (mode == TupToolPlugin::Edit)
-            setNodesManagerEnvironment();
+        currentLipSync->fromXml(xml);
         return;
     }
 
     if (event->getAction() == TupProjectRequest::RemoveLipSync) {
+        currentLipSync = nullptr;
         QString name = event->getArg().toString();
         configPanel->removeLipSyncRecord(name);
     }
@@ -558,6 +548,7 @@ void PapagayoTool::keyPressEvent(QKeyEvent *event)
             int y = mouth->pos().y() + (mouth->boundingRect().height() / 2);
 
             updatePositionRecord(QPointF(x, y));
+            updateMouthTransformation();
         } else if (event->modifiers() == Qt::ControlModifier) {
             configPanel->setProportionState(true);
             key = "CONTROL";
@@ -590,10 +581,10 @@ void PapagayoTool::updateXMouthPositionInScene(int x)
     #endif
 
     mouth->setPos(x, mouth->pos().y());
-    if (nodesManager)
+    if (nodesManager) {
         nodesManager->syncNodesFromParent();
-
-    // updateMouthTransformation(point);
+        updateMouthTransformation();
+    }
 }
 
 void PapagayoTool::updateYMouthPositionInScene(int y)
@@ -603,10 +594,10 @@ void PapagayoTool::updateYMouthPositionInScene(int y)
     #endif
 
     mouth->setPos(mouth->pos().x(), y);
-    if (nodesManager)
+    if (nodesManager) {
         nodesManager->syncNodesFromParent();
-
-    // updateMouthTransformation(point);
+        updateMouthTransformation();
+    }
 }
 
 void PapagayoTool::updateRotationInScene(int angle)
@@ -618,9 +609,8 @@ void PapagayoTool::updateRotationInScene(int angle)
     if (nodesManager) {
         nodesManager->rotate(angle);
         nodesManager->syncNodesFromParent();
+        updateMouthTransformation();
     }
-
-    // updateMouthTransformation(angle);
 }
 
 void PapagayoTool::updateScaleInScene(double xFactor, double yFactor)
@@ -628,9 +618,8 @@ void PapagayoTool::updateScaleInScene(double xFactor, double yFactor)
     if (nodesManager) {
         nodesManager->scale(xFactor, yFactor);
         nodesManager->syncNodesFromParent();
+        updateMouthTransformation();
     }
-
-    // updateMouthTransformation(xFactor, yFactor);
 }
 
 void PapagayoTool::resizeNode(qreal scaleFactor)
@@ -650,36 +639,28 @@ TupToolPlugin::Mode PapagayoTool::currentMode()
     return mode;
 }
 
-/*
-void PapagayoTool::storeTransformation(QGraphicsItem *item)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[PapagayoTool::saveTransformation(QGraphicsItem *)]";
-    #endif
-
-    QDomDocument doc;
-    doc.appendChild(TupSerializer::properties(item, doc, "", 0));
-
-    currentLipSync->updateMouthTransformation(doc.documentElement(), (scene->currentFrameIndex() - currentLipSync->getInitFrame()));
-}
-*/
-
 void PapagayoTool::updatePositionRecord(const QPointF &point)
 {
-    if (nodesManager)
-        nodesManager->syncNodesFromParent();
-
     configPanel->updatePositionCoords(point.x(), point.y());
+
+    if (nodesManager) // {
+        nodesManager->syncNodesFromParent();
+        // updateMouthTransformation();
+    // }
 }
 
 void PapagayoTool::updateRotationAngleRecord(int angle)
 {
     configPanel->updateRotationAngle(angle);
+    // if (nodesManager)
+    //     updateMouthTransformation();
 }
 
 void PapagayoTool::updateScaleFactorRecord(double x, double y)
 {
     configPanel->updateScaleFactor(x, y);
+    // if (nodesManager)
+    //     updateMouthTransformation();
 }
 
 void PapagayoTool::enableProportion(bool flag)
@@ -703,8 +684,40 @@ void PapagayoTool::resetMouthTransformations()
     int mouthX = mouthSize.width() / 2;
     int mouthY = mouthSize.height() / 2;
 
-    updateXMouthPositionInScene(projectX - mouthX);
-    updateYMouthPositionInScene(projectY - mouthY);
-    updateRotationInScene(0);
-    updateScaleInScene(1, 1);
+    if (nodesManager) {
+        mouth->setPos(projectX - mouthX, projectY - mouthY);
+        nodesManager->rotate(0);
+        nodesManager->scale(1, 1);
+        nodesManager->syncNodesFromParent();
+
+        updateMouthTransformation();
+    }
 }
+
+void PapagayoTool::updateMouthTransformation()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::updateMouthTransformation()]";
+    #endif
+
+    QGraphicsItem *item = nodesManager->parentItem();
+    if (item) {
+        QDomDocument doc;
+        currentLipSync->updateMouthTransformation(TupSerializer::properties(item, doc, "", 0),
+                                                  (scene->currentFrameIndex() - currentLipSync->getInitFrame()));
+
+        TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, scene->currentLayerIndex(),
+                                                                          TupProjectRequest::UpdateLipSync, currentLipSync->toString());
+        emit requested(&request);
+
+    }
+}
+
+/*
+void PapagayoTool::saveMouthTransformations()
+{
+    TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, scene->currentLayerIndex(),
+                                                                      TupProjectRequest::UpdateLipSync, currentLipSync->toString());
+    emit requested(&request);
+}
+*/

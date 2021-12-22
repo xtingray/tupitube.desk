@@ -443,7 +443,10 @@ void TupPaintArea::layerResponse(TupLayerResponse *response)
           }
         break;
         case TupProjectRequest::UpdateLipSync:
-          return;
+          {
+              guiScene->layerResponse(response);
+              return;
+          }
         break;
         default:
           {

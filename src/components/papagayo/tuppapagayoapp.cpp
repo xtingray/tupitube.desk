@@ -1210,7 +1210,12 @@ bool TupPapagayoApp::saveLipsyncRecord()
                         int dot = firstImage.lastIndexOf(".");
                         QString extension = firstImage.mid(dot);
 
-                        TupPapagayoImporter *parser = new TupPapagayoImporter(pgoFilePath, tupProject->getDimension(), extension, frameIndex);
+                        QSize projectSize = tupProject->getDimension();
+                        QPointF projectCenter = QPointF(projectSize.width()/2, projectSize.height()/2);
+                        QPixmap pixmap(currentMouthPath + firstImage);
+                        QPointF mouthPos = projectCenter - QPointF(pixmap.size().width()/2, pixmap.size().height()/2);
+
+                        TupPapagayoImporter *parser = new TupPapagayoImporter(pgoFilePath, mouthPos, extension, frameIndex);
                         if (parser->fileIsValid()) {
                             // Creating Papagayo folder in the library
                             TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, folderName,
