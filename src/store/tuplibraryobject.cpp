@@ -41,6 +41,7 @@
 
 #include <QGraphicsScene>
 #include <QPainter>
+#include <QTextStream>
 
 TupLibraryObject::TupLibraryObject(QObject *parent) : QObject(parent)
 {

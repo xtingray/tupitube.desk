@@ -288,6 +288,7 @@ void Tweener::updateScene(TupGraphicsScene *scene)
 { 
     mode = configPanel->mode();
 
+    /*
     if (mode == TupToolPlugin::Edit) {
         int framesNumber = framesCount();
 
@@ -298,6 +299,9 @@ void Tweener::updateScene(TupGraphicsScene *scene)
         if (scene->currentFrameIndex() >= initFrame && scene->currentFrameIndex() <= tweenLimit)
             scene->addItem(target);
     } else if (mode == TupToolPlugin::Add) {
+    */
+
+    if (mode == TupToolPlugin::Add) {
         int total = framesCount();
 
         if (editMode == TupToolPlugin::Properties) {

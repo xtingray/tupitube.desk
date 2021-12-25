@@ -36,6 +36,7 @@
 #include "tconfig.h"
 
 #include <QFile>
+#include <QTextStream>
 
 TConfig* TConfig::m_instance = nullptr;
 

@@ -1229,12 +1229,14 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                 QString key = fileName.toLower();
                                 QString imagePath = currentMouthPath + fileName;
                                 QFile imageFile(imagePath);
+                                /*
                                 #ifdef TUP_DEBUG
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - mouth image -> " << fileName;
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - key -> " << key;
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - mouthPath -> " << currentMouthPath;
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - imagePath -> " << imagePath;
                                 #endif
+                                */
                                 // Importing image into Library
                                 if (imageFile.open(QIODevice::ReadOnly)) {
                                     QByteArray data = imageFile.readAll();
@@ -1287,11 +1289,6 @@ bool TupPapagayoApp::saveLipsyncRecord()
                             // Adding Papagayo project
                             parser->setSoundFile(soundKey);
                             QString xml = parser->toString();
-
-                            qDebug() << "";
-                            qDebug() << "3 LIPSYNC";
-                            qDebug() << xml;
-
                             request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex, TupProjectRequest::AddLipSync, xml);
                             emit requestTriggered(&request);
 

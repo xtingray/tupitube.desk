@@ -439,12 +439,8 @@ QDomElement TupLayer::toXml(QDomDocument &doc) const
     }
 
     int lipsyncTotal = lipsyncList.size();
-    for (int i = 0; i < lipsyncTotal; i++) {
-        qDebug() << "";
-        qDebug() << "5 LIPSYNC";
-        qDebug() << lipsyncList.at(i)->toString();
+    for (int i = 0; i < lipsyncTotal; i++)
         root.appendChild(lipsyncList.at(i)->toXml(doc));
-    }
 
     return root;
 }

@@ -276,6 +276,10 @@ void ScaleSettings::setParameters(TupItemTweener *currentTween)
 
 void ScaleSettings::initStartCombo(int framesCount, int currentIndex)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[ScaleSettings::initStartCombo()] - framesCount -> " << framesCount;
+    #endif
+
     initFrameSpin->clear();
     endFrameSpin->clear();
 
@@ -406,6 +410,7 @@ QString ScaleSettings::tweenToXml(int currentScene, int currentLayer, int curren
         iterations = 1;
         iterationsField->setValue(iterations);
     }
+
     root.setAttribute("scaleIterations", iterations);
 
     bool loop = loopBox->isChecked();
@@ -516,7 +521,7 @@ void ScaleSettings::checkFramesRange()
 
 void ScaleSettings::updateLoopCheckbox(int state)
 {
-    Q_UNUSED(state);
+    Q_UNUSED(state)
 
     if (reverseLoopBox->isChecked() && loopBox->isChecked())
         loopBox->setChecked(false);
@@ -524,7 +529,7 @@ void ScaleSettings::updateLoopCheckbox(int state)
 
 void ScaleSettings::updateReverseCheckbox(int state)
 {
-    Q_UNUSED(state);
+    Q_UNUSED(state)
 
     if (reverseLoopBox->isChecked() && loopBox->isChecked())
         reverseLoopBox->setChecked(false);

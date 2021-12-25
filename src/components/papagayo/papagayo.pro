@@ -59,13 +59,3 @@ SOURCES += tuppapagayoapp.cpp \
            tuppapagayoimporter.cpp
 
 INCLUDEPATH += src
-
-# OTHER_FILES += ToDo.txt
-# RESOURCES += assets/papagayo.qrc
-# ICON = mac/papagayo.icns
-# QMAKE_INFO_PLIST = mac/Info.plist
-# RC_FILE = win/papagayo.rc
-# OBJECTIVE_SOURCES +=
-# extra_libs.files = SOUND_FILES
-# extra_libs.path = $$DESTDIR
-# INSTALLS += extra_libs
