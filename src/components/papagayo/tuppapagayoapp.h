@@ -40,7 +40,7 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
 	Q_OBJECT
 
     public:
-        enum Mode { Insert = 0, Update };
+        enum Mode { Insert = 0, Update, VoiceRecorded };
         enum Language { English = 0, OtherLang };
         enum ViewType { Predefined = 0, Customized };
         explicit TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, const QString &soundFile = QString(),

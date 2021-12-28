@@ -1397,7 +1397,6 @@ void TupLibraryWidget::importSoundFile()
             this, &TupLibraryWidget::importSoundFileFromFolder);
     connect(soundDialog, &TupSoundDialog::lipsyncModuleCalled,
             this, &TupLibraryWidget::lipsyncModuleCalled);
-            // this, &TupLibraryWidget::callLipySyncModule);
     soundDialog->show();
 }
 
@@ -1426,31 +1425,6 @@ void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath)
         TOsd::self()->display(TOsd::Error, tr("Error while opening file: %1").arg(filePath));
     }
 }
-
-/*
-void TupLibraryWidget::callLipySyncModule(bool recorded, const QString &soundFile)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::callLipsyncModule()] - recorded -> " << recorded;
-        qDebug() << "[TupLibraryWidget::callLipsyncModule()] - filePath -> " << soundFile;
-    #endif
-
-    // QString path = "";
-    if (recorded) {
-        // QString path = CACHE_DIR + soundFile + ".mp3";
-        // importSoundFileFromFolder(path);
-        emit lipsyncModuleCalled(recorded, soundFile);
-    } else {
-        importSoundFileFromFolder(soundFile);
-        emit lipsyncModuleCalled(recorded, soundFile);
-    }
-
-    // if (!recorded)
-    //     importSoundFileFromFolder(soundFile);
-
-    emit lipsyncModuleCalled(recorded, soundFile);
-}
-*/
 
 void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
 {

@@ -2569,7 +2569,7 @@ void TupDocumentView::launchLipsyncModule(bool recorded, const QString &soundFil
 
     TupPapagayoApp::Mode mode = TupPapagayoApp::Insert;
     if (recorded)
-        mode = TupPapagayoApp::Update;
+        mode = TupPapagayoApp::VoiceRecorded;
 
     if (QFile::exists(soundFile)) {
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));

@@ -379,10 +379,11 @@ void TupPapagayoApp::setupUI()
     okButton->setMinimumWidth(60);
     okButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
     okButton->setToolTip(tr("Save lip-sync record"));
-    if (mode == Insert)
+    if (mode == Insert || mode == VoiceRecorded) {
         connect(okButton, SIGNAL(clicked()), this, SLOT(createLipsyncRecord()));
-    else
+    } else if (mode == Update) {
         connect(okButton, SIGNAL(clicked()), this, SLOT(callUpdateProcedure()));
+    }
 
     QPushButton *cancelButton = new QPushButton(lateralGroupBox);
     cancelButton->setMinimumWidth(60);
@@ -1260,15 +1261,13 @@ bool TupPapagayoApp::saveLipsyncRecord()
                             QFileInfo info(soundFilePath);
                             QString soundKey = info.fileName().toLower();
 
-                            qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - *** soundFilePath -> " << soundFilePath;
-
                             if (soundFile.open(QIODevice::ReadOnly)) {
                                 QByteArray data = soundFile.readAll();
                                 soundFile.close();
+
+                                qDebug() << "SOUND PATH -> " << soundFilePath;
+
                                 if (mode == Update) {
-
-                                    qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Removing sound file -> " << soundFilePath;
-
                                     if (!QFile::remove(soundFilePath)) {
                                         #ifdef TUP_DEBUG
                                             qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Can't remove sound file -> " << soundFilePath;
