@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                *
+ *   Project TUPITUBE DESK                                                 *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -532,14 +532,15 @@ QString TupVoice::voiceTitle() const
     return title;
 }
 
-QDomElement TupVoice::setDefaultTransformation(int x, int y) const
+QDomElement TupVoice::setDefaultTransformation(int x, int y)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupVoice::setDefaultTransformation()] - point -> " << QPointF(x, y);
     #endif
 
     QDomDocument doc;
-    QDomElement transformation = doc.createElement("properties");
+    transformation = doc.createElement("properties");
+    transformation = doc.createElement("properties");
     transformation.setAttribute("pos", "(" + QString::number(x) + "," + QString::number(y) + ")");
     transformation.setAttribute("scale_x", "1");
     transformation.setAttribute("scale_y", "1");

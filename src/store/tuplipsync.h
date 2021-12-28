@@ -169,7 +169,7 @@ class TUPITUBE_EXPORT TupVoice : public QObject, public TupAbstractSerializable
         void setVoiceTitle(const QString &label);
         QString voiceTitle() const;
 
-        QDomElement setDefaultTransformation(int x, int yl) const;
+        QDomElement setDefaultTransformation(int x, int yl);
         QDomElement getDefaultTransformation() const;
 
         QDomElement getTransformationDomAt(int frame) const;

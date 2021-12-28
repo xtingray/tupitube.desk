@@ -2567,7 +2567,25 @@ void TupDocumentView::launchLipsyncModule(bool recorded, const QString &soundFil
 
     papagayoManager(); // Launch plugin
 
-    if (recorded) {
+    TupPapagayoApp::Mode mode = TupPapagayoApp::Insert;
+    if (recorded)
+        mode = TupPapagayoApp::Update;
+
+    if (QFile::exists(soundFile)) {
+        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+        TupPapagayoApp *papagayoApp = new TupPapagayoApp(mode, project, soundFile, getContextIndexes(), this);
+        connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);
+
+        papagayoApp->show();
+        papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
+                          static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
+
+        QApplication::restoreOverrideCursor();
+    }
+
+    /*
+    if (recorded) { // Sound was reccorded using the mic
         QString filePath = project->getDataDir() + "/audio/" + soundFile.toLower() + ".mp3";
         if (QFile::exists(filePath)) {
             QString tmpPath = CACHE_DIR + soundFile + ".mp3";
@@ -2594,18 +2612,18 @@ void TupDocumentView::launchLipsyncModule(bool recorded, const QString &soundFil
             #endif
         }
     } else {
-        QFileInfo info(soundFile);
-        QString filename = info.baseName().toLower();
-        QString extension = info.suffix();
-        QString filePath = project->getDataDir() + "/audio/" + filename + "." + extension;
+        if (QFile::exists(soundFile)) {
+            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-        if (QFile::exists(filePath)) {
-            TupPapagayoApp *papagayoApp = new TupPapagayoApp(TupPapagayoApp::Update, project, filePath, getContextIndexes(), this);
+            TupPapagayoApp *papagayoApp = new TupPapagayoApp(TupPapagayoApp::Insert, project, soundFile, getContextIndexes(), this);
             connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);
 
             papagayoApp->show();
             papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
                               static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
+
+            QApplication::restoreOverrideCursor();
         }
     }
+    */
 }

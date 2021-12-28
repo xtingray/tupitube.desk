@@ -1396,7 +1396,8 @@ void TupLibraryWidget::importSoundFile()
     connect(soundDialog, &TupSoundDialog::soundFilePicked,
             this, &TupLibraryWidget::importSoundFileFromFolder);
     connect(soundDialog, &TupSoundDialog::lipsyncModuleCalled,
-            this, &TupLibraryWidget::callLipySyncModule);
+            this, &TupLibraryWidget::lipsyncModuleCalled);
+            // this, &TupLibraryWidget::callLipySyncModule);
     soundDialog->show();
 }
 
@@ -1426,6 +1427,7 @@ void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath)
     }
 }
 
+/*
 void TupLibraryWidget::callLipySyncModule(bool recorded, const QString &soundFile)
 {
     #ifdef TUP_DEBUG
@@ -1433,16 +1435,22 @@ void TupLibraryWidget::callLipySyncModule(bool recorded, const QString &soundFil
         qDebug() << "[TupLibraryWidget::callLipsyncModule()] - filePath -> " << soundFile;
     #endif
 
-    QString path = "";
+    // QString path = "";
     if (recorded) {
-        path = CACHE_DIR + soundFile + ".mp3";
-        importSoundFileFromFolder(path);
+        // QString path = CACHE_DIR + soundFile + ".mp3";
+        // importSoundFileFromFolder(path);
         emit lipsyncModuleCalled(recorded, soundFile);
     } else {
         importSoundFileFromFolder(soundFile);
         emit lipsyncModuleCalled(recorded, soundFile);
     }
+
+    // if (!recorded)
+    //     importSoundFileFromFolder(soundFile);
+
+    emit lipsyncModuleCalled(recorded, soundFile);
 }
+*/
 
 void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
 {

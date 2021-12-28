@@ -1260,10 +1260,15 @@ bool TupPapagayoApp::saveLipsyncRecord()
                             QFileInfo info(soundFilePath);
                             QString soundKey = info.fileName().toLower();
 
+                            qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - *** soundFilePath -> " << soundFilePath;
+
                             if (soundFile.open(QIODevice::ReadOnly)) {
                                 QByteArray data = soundFile.readAll();
                                 soundFile.close();
                                 if (mode == Update) {
+
+                                    qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Removing sound file -> " << soundFilePath;
+
                                     if (!QFile::remove(soundFilePath)) {
                                         #ifdef TUP_DEBUG
                                             qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Can't remove sound file -> " << soundFilePath;

@@ -1142,10 +1142,12 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
                                      TupSerializer::loadProperties(item, properties);
 
                                      /*
-                                     QRectF rect = item->boundingRect();
-                                     int x = rect.width()/2;
-                                     int y = rect.height()/2;
-                                     item->moveBy(-x, -y);
+                                     QString newDoc;
+                                     {
+                                       QTextStream ts(&newDoc);
+                                       ts << properties;
+                                     }
+                                     qDebug() << "PROPERTIES -> " << newDoc;
                                      */
 
                                      item->setToolTip(tr("lipsync:") + name);

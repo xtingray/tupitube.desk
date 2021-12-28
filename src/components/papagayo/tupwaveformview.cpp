@@ -374,6 +374,7 @@ void TupWaveFormView::mousePressEvent(QMouseEvent *event)
                     draggingEnd = 1; // end of phrase
                     frameDist = selectedPhrase->getEndFrame() - frame;
 				}
+
                 if ((selectedPhrase->getEndFrame() - selectedPhrase->getStartFrame() > 1) &&
                         (PG_FABS((selectedPhrase->getEndFrame() + selectedPhrase->getStartFrame()) / 2 - frame) < frameDist)) {
                     draggingEnd = 2; // middle of phrase
