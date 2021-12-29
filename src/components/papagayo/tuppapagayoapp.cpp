@@ -1265,9 +1265,7 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                 QByteArray data = soundFile.readAll();
                                 soundFile.close();
 
-                                qDebug() << "SOUND PATH -> " << soundFilePath;
-
-                                if (mode == Update) {
+                                if (mode == VoiceRecorded || mode == Update) {
                                     if (!QFile::remove(soundFilePath)) {
                                         #ifdef TUP_DEBUG
                                             qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Can't remove sound file -> " << soundFilePath;
