@@ -71,53 +71,52 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
 
     libraryTree = new TupItemManager;
 
-    connect(libraryTree, SIGNAL(itemSelected(QTreeWidgetItem *)), this,
-                                   SLOT(previewItem(QTreeWidgetItem *)));
+    connect(libraryTree, &TupItemManager::itemSelected, this, &TupLibraryWidget::previewItem);
 
-    connect(libraryTree, SIGNAL(itemRemoved()), this,
-                                   SLOT(removeCurrentItem()));
+    connect(libraryTree, &TupItemManager::itemRemoved, this,
+                         &TupLibraryWidget::removeCurrentItem);
 
-    connect(libraryTree, SIGNAL(itemCloned(QTreeWidgetItem*)), this,
-                                   SLOT(cloneObject(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::itemCloned, this,
+                         &TupLibraryWidget::cloneObject);
 
-    connect(libraryTree, SIGNAL(itemExported(QTreeWidgetItem*)), this,
-                                   SLOT(exportObject(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::itemExported, this,
+                         &TupLibraryWidget::exportObject);
 
-    connect(libraryTree, SIGNAL(itemRenamed(QTreeWidgetItem*)), this,
-                                   SLOT(renameObject(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::itemRenamed, this,
+                         &TupLibraryWidget::renameObject);
 
-    connect(libraryTree, SIGNAL(itemChanged(QTreeWidgetItem*, int)), this,
-                                   SLOT(refreshItem(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::itemChanged, this,
+                         &TupLibraryWidget::refreshItem);
 
-    connect(libraryTree, SIGNAL(editorClosed()), this,
-                                   SLOT(updateItemEditionState()));
+    connect(libraryTree, &TupItemManager::editorClosed, this,
+                         &TupLibraryWidget::updateItemEditionState);
 
-    connect(libraryTree, SIGNAL(itemMoved(QString, QString)), this,
-                                   SLOT(updateLibrary(QString, QString)));
+    connect(libraryTree, &TupItemManager::itemMoved, this,
+                         &TupLibraryWidget::updateLibrary);
 
-    connect(libraryTree, SIGNAL(itemRequired()), this,
-                                   SLOT(insertObjectInWorkspace()));
+    connect(libraryTree, &TupItemManager::itemRequired, this,
+                         &TupLibraryWidget::insertObjectInWorkspace);
 
-    connect(libraryTree, SIGNAL(itemCreated(QTreeWidgetItem*)), this,
-                                   SLOT(activeRefresh(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::itemCreated, this,
+                         &TupLibraryWidget::activeRefresh);
 
-    connect(libraryTree, SIGNAL(inkscapeEditCall(QTreeWidgetItem*)), this,
-                                   SLOT(openInkscapeToEdit(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::inkscapeEditCall, this,
+                         &TupLibraryWidget::openInkscapeToEdit);
 
-    connect(libraryTree, SIGNAL(gimpEditCall(QTreeWidgetItem*)), this,
-                                   SLOT(openGimpToEdit(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::gimpEditCall, this,
+                         &TupLibraryWidget::openGimpToEdit);
 
-    connect(libraryTree, SIGNAL(kritaEditCall(QTreeWidgetItem*)), this,
-                                   SLOT(openKritaToEdit(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::kritaEditCall, this,
+                         &TupLibraryWidget::openKritaToEdit);
 
-    connect(libraryTree, SIGNAL(myPaintEditCall(QTreeWidgetItem*)), this,
-                                   SLOT(openMyPaintToEdit(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::myPaintEditCall, this,
+                         &TupLibraryWidget::openMyPaintToEdit);
 
-    connect(libraryTree, SIGNAL(newRasterCall()), this,
-                                   SLOT(createRasterObject()));
+    connect(libraryTree, &TupItemManager::newRasterCall, this,
+                         &TupLibraryWidget::createRasterObject);
 
-    connect(libraryTree, SIGNAL(newVectorCall()), this,
-                                   SLOT(createVectorObject()));
+    connect(libraryTree, &TupItemManager::newVectorCall, this,
+                         &TupLibraryWidget::createVectorObject);
 
     QGroupBox *buttons = new QGroupBox;
     QHBoxLayout *buttonLayout = new QHBoxLayout(buttons);
@@ -388,7 +387,7 @@ void TupLibraryWidget::removeCurrentItem()
     bool ask = TCONFIG->value("ConfirmRemoveObject", true).toBool();
 
     if (ask) {
-        TOptionalDialog dialog(tr("Do you want to remove this object from Library?"), tr("Confirmation"), this);
+        TOptionalDialog dialog(tr("Do you want to remove this object from Library?"), tr("Confirmation"));
         dialog.setModal(true);
         dialog.move(static_cast<int> ((screen->geometry().width() - dialog.sizeHint().width()) / 2),
                     static_cast<int> ((screen->geometry().height() - dialog.sizeHint().height()) / 2));
@@ -601,7 +600,7 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
                 if (QFile::exists(target)) {
                     if (!QFile::remove(target)) {
                         #ifdef TUP_DEBUG
-                            qDebug() << "[TupLibraryWidget::exportObject()] - Fatal Error: Destination path already exists! -> " + id;
+                            qDebug() << "[TupLibraryWidget::exportObject()] - Fatal Error: Destination path already exists! -> " << id;
                         #endif
                         return;
                     }
@@ -618,13 +617,13 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupLibraryWidget::exportObject()] - Error: Object path is null! -> " + id;
+                    qDebug() << "[TupLibraryWidget::exportObject()] - Error: Object path is null! -> " << id;
                 #endif
                 return;
             }
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryWidget::exportObject()] - Error: Object doesn't exist! -> " + id;
+                qDebug() << "[TupLibraryWidget::exportObject()] - Error: Object doesn't exist! -> " << id;
             #endif
             return;
         }
@@ -1888,7 +1887,7 @@ void TupLibraryWidget::executeSoftware(const QString &software, QString &path)
     }
 }
 
-void TupLibraryWidget::refreshItem(LibraryObjects collection)
+void TupLibraryWidget::refreshItemFromCollection(LibraryObjects collection)
 {
     QMapIterator<QString, TupLibraryObject *> i(collection);
     while (i.hasNext()) {
@@ -1910,11 +1909,11 @@ void TupLibraryWidget::updateItemFromSaveAction()
         qDebug() << "[TupLibraryWidget::updateItemFromSaveAction()]";
     #endif
 
-    refreshItem(library->getObjects());
+    refreshItemFromCollection(library->getObjects());
 
     foreach (TupLibraryFolder *folder, library->getFolders()) {
         LibraryObjects objects = folder->getObjects();
-        refreshItem(objects);
+        refreshItemFromCollection(objects);
     }
 
     TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentFrame.scene, currentFrame.layer, currentFrame.frame,

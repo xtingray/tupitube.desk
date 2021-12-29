@@ -527,7 +527,6 @@ QString TupMicManager::getRecordPath() const
     QString path = CACHE_DIR + filename + ".mp3";
     if (QFile::exists(path))
         return path;
-        // return filename;
 
     return "";
 }

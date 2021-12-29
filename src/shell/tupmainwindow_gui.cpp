@@ -100,8 +100,8 @@ void TupMainWindow::createGUI()
                 m_actionManager, "importAudioFile");
 
     // SQA: Temporary code
-    //m_actionManager->enable("importSvg", false);
-    //m_actionManager->enable("importSvgArray", false);
+    // m_actionManager->enable("importSvg", false);
+    // m_actionManager->enable("importSvgArray", false);
 
     connectWidgetToManager(m_libraryWidget);
     connectWidgetToLocalManager(m_libraryWidget);

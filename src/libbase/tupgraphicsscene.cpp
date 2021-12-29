@@ -695,13 +695,13 @@ void TupGraphicsScene::addSvgObject(TupSvgItem *svgItem, TupFrame::FrameType fra
             } else {
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupGraphicsScene::addSvgObject()] - Error: Frame #"
-                                + QString::number(framePosition.frame) + " NO available!";
+                             << framePosition.frame << " NO available!";
                 #endif
             }
         } else {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupGraphicsScene::addSvgObject()] - Error: Layer #"
-                            + QString::number(framePosition.layer) + " NO available!";
+                         << framePosition.layer << " NO available!";
             #endif
         }
     } else {
@@ -1141,15 +1141,6 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
                                      QDomElement properties = phoneme->getTransformationDom();
                                      TupSerializer::loadProperties(item, properties);
 
-                                     /*
-                                     QString newDoc;
-                                     {
-                                       QTextStream ts(&newDoc);
-                                       ts << properties;
-                                     }
-                                     qDebug() << "PROPERTIES -> " << newDoc;
-                                     */
-
                                      item->setToolTip(tr("lipsync:") + name);
                                      item->setZValue(zValue);
                                      addItem(item);
@@ -1319,7 +1310,6 @@ TupFrame *TupGraphicsScene::currentFrame()
         if (tupScene->layersCount() > 0) {
             if (framePosition.layer < tupScene->layersCount()) {
                 TupLayer *layer = tupScene->layerAt(framePosition.layer);
-                // Q_CHECK_PTR(layer)
                 if (layer) {
                     if (!layer->getFrames().isEmpty())
                         return layer->frameAt(framePosition.frame);
@@ -1821,7 +1811,7 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
         }
     } else {
         if (background) {
-            TupFrame *frame = new TupFrame;
+            TupFrame *frame = nullptr;
             if (spaceContext == TupProject::VECTOR_STATIC_BG_MODE) {
                 frame = background->vectorStaticFrame();
             } else if (spaceContext == TupProject::VECTOR_FG_MODE) {

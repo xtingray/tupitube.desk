@@ -257,15 +257,6 @@ void Tweener::updateScene(TupGraphicsScene *gScene)
 {
     mode = configPanel->mode();
 
-    /*
-    if (mode == TupToolPlugin::Edit) {
-        int framesNumber = framesCount();
-
-        if (configPanel->startComboSize() < framesNumber)
-            configPanel->initStartCombo(framesNumber, initFrame);
-    } else if (mode == TupToolPlugin::Add) {
-    */
-
     if (mode == TupToolPlugin::Add) {
         int total = framesCount();
 

@@ -2583,47 +2583,4 @@ void TupDocumentView::launchLipsyncModule(bool recorded, const QString &soundFil
 
         QApplication::restoreOverrideCursor();
     }
-
-    /*
-    if (recorded) { // Sound was reccorded using the mic
-        QString filePath = project->getDataDir() + "/audio/" + soundFile.toLower() + ".mp3";
-        if (QFile::exists(filePath)) {
-            QString tmpPath = CACHE_DIR + soundFile + ".mp3";
-            if (QFile::exists(tmpPath)) {
-                if (!QFile::remove(tmpPath)) {
-                    #ifdef TUP_DEBUG
-                       qWarning() << "[TupDocumentView::launchLipsyncModule()] - Fatal Error: Unable to remove temporary file -> " << tmpPath;
-                    #endif
-                }
-            }
-            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-
-            TupPapagayoApp *papagayoApp = new TupPapagayoApp(TupPapagayoApp::Update, project, filePath, getContextIndexes(), this);
-            connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);
-
-            papagayoApp->show();
-            papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
-                              static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
-
-            QApplication::restoreOverrideCursor();
-        } else {
-            #ifdef TUP_DEBUG
-               qWarning() << "[TupDocumentView::launchLipsyncModule()] - Fatal Error: Sound file doesn't exist -> " << filePath;
-            #endif
-        }
-    } else {
-        if (QFile::exists(soundFile)) {
-            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-
-            TupPapagayoApp *papagayoApp = new TupPapagayoApp(TupPapagayoApp::Insert, project, soundFile, getContextIndexes(), this);
-            connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);
-
-            papagayoApp->show();
-            papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
-                              static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
-
-            QApplication::restoreOverrideCursor();
-        }
-    }
-    */
 }

@@ -166,7 +166,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void saveDefaultPath(const QString &dir);
         void importNativeObject(const QString &object);
         QStringList naturalSort(QStringList photograms);
-        void refreshItem(LibraryObjects collection);
+        void refreshItemFromCollection(LibraryObjects collection);
 
         QScreen *screen;
         TupLibrary *library;
