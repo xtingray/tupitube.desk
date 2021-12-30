@@ -66,12 +66,12 @@ TupSoundDialog::TupSoundDialog(QWidget *parent) : QDialog(parent)
         #endif
     }
 
-    setWindowTitle(tr("Import Sound Asset"));
+    setWindowTitle(tr("Import Audio Asset"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/sound_object.png")));
     setMinimumWidth(400);
 
     tabWidget = new QTabWidget;
-    tabWidget->addTab(soundFileTab(), tr("Sound File"));
+    tabWidget->addTab(soundFileTab(), tr("Audio File"));
     tabWidget->addTab(soundRecordTab(), tr("Record Audio"));
 
     QVBoxLayout *layout = new QVBoxLayout;
@@ -87,20 +87,25 @@ QWidget* TupSoundDialog::soundFileTab()
 {
     QWidget *widget = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout;
+
     QHBoxLayout *fileLayout = new QHBoxLayout;
-    QLabel *fileLabel = new QLabel(tr("Sound File:"));
-    filePathInput = new QLineEdit;
-    QToolButton *fileButton = new QToolButton;
+    QLabel *fileLabel = new QLabel(tr("Audio Path:"));
+    filePathInput = new QLabel;
+    filePathInput->setMinimumWidth(260);
+    filePathInput->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+    filePathInput->setStyleSheet("background-color:#dddddd; padding-left:3px;");
+
+    fileButton = new QToolButton;
     fileButton->setIcon(QIcon(THEME_DIR + "icons/open.png"));
     fileButton->setMinimumWidth(60);
-    fileButton->setToolTip(tr("Load sound file"));
+    fileButton->setToolTip(tr("Load audio file"));
     connect(fileButton, SIGNAL(clicked()), this, SLOT(loadSoundFile()));
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     importFileButton = new QPushButton("");
     importFileButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
     importFileButton->setMinimumWidth(60);
-    importFileButton->setToolTip(tr("Import sound file"));
+    importFileButton->setToolTip(tr("Import audio file"));
     importFileButton->setEnabled(false);
     connect(importFileButton, SIGNAL(clicked()), this, SLOT(importSoundAsset()));
 
@@ -124,10 +129,13 @@ QWidget* TupSoundDialog::soundFileTab()
     bottomLayout->addStretch(1);
     bottomLayout->addLayout(buttonsLayout);
 
+    fileLayout->addStretch();
     fileLayout->addWidget(fileLabel);
     fileLayout->addWidget(filePathInput);
     fileLayout->addWidget(fileButton);
+    fileLayout->addStretch();
 
+    layout->addSpacing(20);
     layout->addLayout(fileLayout);
     layout->addStretch(1);
     layout->addWidget(new TSeparator());
@@ -149,7 +157,7 @@ QWidget* TupSoundDialog::soundRecordTab()
     importRecordButton = new QPushButton("");
     importRecordButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
     importRecordButton->setMinimumWidth(60);
-    importRecordButton->setToolTip(tr("Import recorded sound"));
+    importRecordButton->setToolTip(tr("Import recorded audio"));
     importRecordButton->setEnabled(false);
     connect(importRecordButton, SIGNAL(clicked()), this, SLOT(importRecordingAsset()));
 
@@ -188,7 +196,7 @@ void TupSoundDialog::loadSoundFile()
     soundFilePath = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
 
     QFileDialog dialog(this, tr("Import audio file..."), soundFilePath);
-    dialog.setNameFilter(tr("Sound file") + " (*.ogg *.wav *.mp3)");
+    dialog.setNameFilter(tr("Audio file") + " (*.ogg *.wav *.mp3)");
     dialog.setFileMode(QFileDialog::ExistingFile);
 
     if (dialog.exec() == QDialog::Accepted) {
@@ -207,11 +215,11 @@ void TupSoundDialog::importSoundAsset()
             emit soundFilePicked(path);
             close();
         } else {
-            filePathInput->setFocus();
-            TOsd::self()->display(TOsd::Error, tr("Sound file doesn't exist!"));
+            fileButton->setFocus();
+            TOsd::self()->display(TOsd::Error, tr("Audio file doesn't exist!"));
         }
     } else {
-        TOsd::self()->display(TOsd::Error, tr("Please, choose a sound file!"));
+        TOsd::self()->display(TOsd::Error, tr("Please, choose an audio file!"));
     }
 }
 
@@ -242,9 +250,9 @@ void TupSoundDialog::launchLipsyncModule()
 
     QString path = "";
     bool isRecorded = false;
-    if (tabWidget->currentIndex() == 0) { // Sound file comes from filesystem
+    if (tabWidget->currentIndex() == 0) { // Audio file comes from filesystem
         path = filePathInput->text();
-    } else { // Sound file was recorded
+    } else { // Audio file was recorded
         isRecorded = true;
         path = micManager->getRecordPath();
     }

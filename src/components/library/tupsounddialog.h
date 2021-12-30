@@ -41,7 +41,6 @@
 #include "tupmicmanager.h"
 
 #include <QDialog>
-#include <QLineEdit>
 #include <QTabWidget>
 
 /**
@@ -73,7 +72,8 @@ class TUPITUBE_EXPORT TupSoundDialog : public QDialog
         QWidget *soundRecordTab();
 
         QTabWidget *tabWidget;
-        QLineEdit *filePathInput;
+        QToolButton *fileButton;
+        QLabel *filePathInput;
         QString soundFilePath;
         QPushButton *importFileButton;
         QPushButton *importRecordButton;

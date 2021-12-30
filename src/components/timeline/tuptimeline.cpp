@@ -466,7 +466,7 @@ void TupTimeLine::libraryResponse(TupLibraryResponse *response)
 
     if (response->getAction() == TupProjectRequest::InsertSymbolIntoFrame) {
         switch (response->symbolType()) {
-            case TupLibraryObject::Sound:
+            case TupLibraryObject::Audio:
             {
                 TupTimeLineTable *framesTable = this->framesTable(response->getSceneIndex());
                 if (framesTable) {

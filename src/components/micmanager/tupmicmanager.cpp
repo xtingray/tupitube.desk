@@ -148,7 +148,8 @@ void TupMicManager::setupUI()
     QVBoxLayout *bottomLayout = new QVBoxLayout;
 
     QLabel *levelLabel = new QLabel(bottomWidget);
-    levelLabel->setText(tr("Audio Level:"));
+    levelLabel->setAlignment(Qt::AlignCenter);
+    levelLabel->setText(tr("Audio Level"));
 
     bottomLayout->addWidget(levelLabel);
 

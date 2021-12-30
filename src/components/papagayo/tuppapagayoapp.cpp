@@ -312,7 +312,7 @@ void TupPapagayoApp::setupUI()
     // Lateral Panel
     QGroupBox *lateralGroupBox = new QGroupBox(centralWidget);
     lateralGroupBox->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-    lateralGroupBox->setTitle(tr("Current Voice"));
+    lateralGroupBox->setTitle(tr("Voice Settings"));
 
     QSizePolicy generalSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     generalSizePolicy.setHorizontalStretch(0);
@@ -1276,7 +1276,7 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                     }
                                 }
 
-                                request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, soundKey, TupLibraryObject::Sound, TupProject::FRAMES_MODE,
+                                request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, soundKey, TupLibraryObject::Audio, TupProject::FRAMES_MODE,
                                                                                   data, folderName, sceneIndex, layerIndex, frameIndex);
                                 emit requestTriggered(&request);
                             } else {

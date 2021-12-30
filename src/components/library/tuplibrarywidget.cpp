@@ -141,7 +141,7 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     itemType->addItem(QIcon(THEME_DIR + "icons/drawing_object.png"), tr("Native Object"));
     itemType->addItem(QIcon(THEME_DIR + "icons/bitmap_array.png"), tr("Image Sequence"));
     itemType->addItem(QIcon(THEME_DIR + "icons/svg_array.png"), tr("Svg Sequence"));
-    itemType->addItem(QIcon(THEME_DIR + "icons/sound_object.png"), tr("Sound File"));
+    itemType->addItem(QIcon(THEME_DIR + "icons/sound_object.png"), tr("Audio File"));
 
     comboLayout->addWidget(itemType);
 
@@ -308,7 +308,7 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                      */
                    }
                    break;
-                case TupLibraryObject::Sound:
+                case TupLibraryObject::Audio:
                    {
                      currentSound = object;
 
@@ -362,9 +362,9 @@ void TupLibraryWidget::insertObjectInWorkspace()
     }
 
     if ((extension.compare("OGG") == 0) || (extension.compare("WAV") == 0) || (extension.compare("MP3") == 0)) {
-        TOsd::self()->display(TOsd::Error, tr("It's a sound file! Please, pick a graphic object"));
+        TOsd::self()->display(TOsd::Error, tr("It's an audio file! Please, pick a graphic object"));
         #ifdef TUP_DEBUG
-            qDebug() << "[TupLibraryWidget::insertObjectInWorkspace()] - It's a sound file!";
+            qDebug() << "[TupLibraryWidget::insertObjectInWorkspace()] - It's an audio file!";
         #endif
         return;
     } 
@@ -415,7 +415,7 @@ void TupLibraryWidget::removeCurrentItem()
         if (extension.compare("TOBJ")==0)
             type = TupLibraryObject::Item;
         if ((extension.compare("OGG") == 0) || (extension.compare("WAV") == 0) || (extension.compare("MP3") == 0))
-            type = TupLibraryObject::Sound;
+            type = TupLibraryObject::Audio;
     } 
 
     TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove, objectKey, type);
@@ -503,7 +503,7 @@ void TupLibraryWidget::cloneObject(QTreeWidgetItem* item)
                         previewItem(item);
                     }
                     break;
-                case TupLibraryObject::Sound:
+                case TupLibraryObject::Audio:
                     {
                         item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
                         previewItem(item);
@@ -553,8 +553,8 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
                         filter += "(*.xpm)";
                     if (fileExtension.compare("SVG") == 0)
                         filter += "(*.svg)";
-                } else if (type == TupLibraryObject::Sound) {
-                    filter = tr("Sounds") + " ";
+                } else if (type == TupLibraryObject::Audio) {
+                    filter = tr("Audio") + " ";
                     if (fileExtension.compare("OGG") == 0)
                         filter += "(*.ogg)";
                     if (fileExtension.compare("MP3") == 0)
@@ -586,7 +586,7 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
                         target += ".xpm";
                     if (fileExtension.compare("SVG") == 0 && !filename.endsWith(".SVG"))
                         target += ".svg";
-                } else if (type == TupLibraryObject::Sound) {
+                } else if (type == TupLibraryObject::Audio) {
                     if (fileExtension.compare("OGG") == 0 && !filename.endsWith(".OGG"))
                         target += ".ogg";
                     if (fileExtension.compare("MP3") == 0 && !filename.endsWith(".MP3"))
@@ -1417,7 +1417,7 @@ void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath)
 
         isEffectSound = true;
         TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
-                                                       TupLibraryObject::Sound, project->spaceContext(), data);
+                                                       TupLibraryObject::Audio, project->spaceContext(), data);
         emit requestTriggered(&request);
         setDefaultPath(filePath);
     } else {
@@ -1554,7 +1554,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                              insertObjectInWorkspace();
                        }
                      break;
-                     case TupLibraryObject::Sound:
+                     case TupLibraryObject::Audio:
                        {
                          TupLibraryObject *object = library->getObject(id);
                          if (object) {
@@ -1696,7 +1696,7 @@ void TupLibraryWidget::importLibraryObject()
         return;
     }
 
-    if (option.compare(tr("Sound File")) == 0) {
+    if (option.compare(tr("Audio File")) == 0) {
         importSoundFile();
         return;
     }

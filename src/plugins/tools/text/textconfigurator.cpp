@@ -116,13 +116,13 @@ QWidget * TextConfigurator::createTransformationTools()
 
     // Position section
 
-    QLabel *mouthPosLabel = new QLabel;
-    mouthPosLabel->setPixmap(QPixmap(kAppProp->themeDir() + "/icons/position.png"));
-    mouthPosLabel->setToolTip(tr("Text Position"));
-    mouthPosLabel->setAlignment(Qt::AlignVCenter);
+    QLabel *textPosLabel = new QLabel;
+    textPosLabel->setPixmap(QPixmap(kAppProp->themeDir() + "/icons/position.png"));
+    textPosLabel->setToolTip(tr("Text Position"));
+    textPosLabel->setAlignment(Qt::AlignVCenter);
 
-    QVBoxLayout *mouthLayout = new QVBoxLayout;
-    mouthLayout->addWidget(mouthPosLabel, Qt::AlignVCenter);
+    QVBoxLayout *textLayout = new QVBoxLayout;
+    textLayout->addWidget(textPosLabel, Qt::AlignVCenter);
 
     QLabel *xLabel = new QLabel(tr("X") + ": ");
     xLabel->setMaximumWidth(20);
@@ -162,7 +162,7 @@ QWidget * TextConfigurator::createTransformationTools()
 
     QHBoxLayout *posBlockLayout = new QHBoxLayout;
     posBlockLayout->addStretch();
-    posBlockLayout->addLayout(mouthLayout);
+    posBlockLayout->addLayout(textLayout);
     posBlockLayout->addLayout(posLayout);
     posBlockLayout->addStretch();
 
@@ -188,7 +188,7 @@ QWidget * TextConfigurator::createTransformationTools()
 
     // Scale section
 
-    QLabel *scaleLabel = new QLabel("<b>" + tr("Mouth Scale") + "</b>");
+    QLabel *scaleLabel = new QLabel("<b>" + tr("Text Scale") + "</b>");
     scaleLabel->setAlignment(Qt::AlignHCenter);
 
     QBoxLayout *scaleLayout = new QBoxLayout(QBoxLayout::TopToBottom);

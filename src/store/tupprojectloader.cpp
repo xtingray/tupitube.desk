@@ -108,7 +108,7 @@ void TupProjectLoader::createSoundLayer(int sceneIndex, int layerIndex, const QS
     response.setSceneIndex(sceneIndex);
     response.setLayerIndex(layerIndex);
     response.setArg(name);
-    response.setSymbolType(TupLibraryObject::Sound);
+    response.setSymbolType(TupLibraryObject::Audio);
     
     project->emitResponse(&response);
 }

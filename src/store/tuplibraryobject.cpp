@@ -172,7 +172,7 @@ void TupLibraryObject::updateFolder(const QString &projectPath, const QString &n
             root += "/images/";
         }
         break;
-        case TupLibraryObject::Sound:
+        case TupLibraryObject::Audio:
         {
             root += "/audio/";
         }
@@ -325,7 +325,7 @@ void TupLibraryObject::fromXml(const QString &xml)
                  }
              }
             break;
-            case TupLibraryObject::Sound:
+            case TupLibraryObject::Audio:
              {
                  // <object id="audio.mp3" path="audio.mp3" type="3" soundEffect="1" playAt="30" lipsyncVoice="0" />
                  objectIsSoundResource = objectTag.attribute("soundEffect").toInt() ? true : false;
@@ -378,7 +378,7 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
                 }
             }
             break;
-            case Sound:
+            case Audio:
             {
                 object.setAttribute("soundEffect", objectIsSoundResource);
                 object.setAttribute("lipsyncVoice", lipsyncVoice);
@@ -446,7 +446,7 @@ bool TupLibraryObject::loadRawData(const QByteArray &data)
             }
             break;
             */
-            case TupLibraryObject::Sound:
+            case TupLibraryObject::Audio:
             {
                  setData(QVariant::fromValue(data));
             }
@@ -474,7 +474,7 @@ bool TupLibraryObject::loadDataFromPath(const QString &dataDir)
                  path = "/images/";
             }
             break;
-            case TupLibraryObject::Sound:
+            case TupLibraryObject::Audio:
             {
                  path = "/audio/";
             }
@@ -507,7 +507,7 @@ bool TupLibraryObject::loadData(const QString &path)
             case TupLibraryObject::Image:
             case TupLibraryObject::Svg:
             case TupLibraryObject::Item:
-            case TupLibraryObject::Sound:
+            case TupLibraryObject::Audio:
             {
                  QFile file(path);
                  if (file.exists()) {
@@ -578,7 +578,7 @@ bool TupLibraryObject::saveData(const QString &dataDir)
                  }
             }
 
-            case TupLibraryObject::Sound:
+            case TupLibraryObject::Audio:
             {
                  QString path = dataDir + "/audio/";
                  if (folder.length() > 0)

@@ -84,7 +84,7 @@ bool TupCommandExecutor::removeSymbol(TupLibraryResponse *response)
             return true;
         }
     } else {
-        if (response->symbolType() == TupLibraryObject::Sound) {
+        if (response->symbolType() == TupLibraryObject::Audio) {
             if (project->removeSound(response->getArg().toString())) {
                 emit responsed(response);
                 return true;

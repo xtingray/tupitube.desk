@@ -730,7 +730,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                     }
                     break;
                     */
-                    case TupLibraryObject::Sound:
+                    case TupLibraryObject::Audio:
                     {
                          TupSoundLayer *sound = scene->createSoundLayer(scene->getSoundLayers().count());
                          sound->fromSymbol(object->getSymbolName());

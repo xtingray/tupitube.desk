@@ -107,7 +107,7 @@ TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::ObjectType ty
 
     bool success = object->saveData(project->getDataDir());
     if (success) {
-        if (type == TupLibraryObject::Sound) {
+        if (type == TupLibraryObject::Audio) {
             SoundResource record;
             record.frame = object->frameToPlay();
             record.path = object->getDataPath();
@@ -488,14 +488,14 @@ LibraryObjects TupLibraryFolder::getSoundObjects() const
     LibraryObjects items;
 
     foreach (TupLibraryObject *object, objects) {
-        if (object->getObjectType() == TupLibraryObject::Sound)
+        if (object->getObjectType() == TupLibraryObject::Audio)
             items[object->getSymbolName()] = object;
     }
 
     foreach (TupLibraryFolder *folder, folders) {
         LibraryObjects media = folder->getObjects();
         foreach (TupLibraryObject *object, media) {
-            if (object->getObjectType() == TupLibraryObject::Sound)
+            if (object->getObjectType() == TupLibraryObject::Audio)
                 items[object->getSymbolName()] = object;
         }
     }
@@ -610,7 +610,7 @@ void TupLibraryFolder::loadItem(const QString &folder, QDomNode xml)
             }
         }
         break;
-        case TupLibraryObject::Sound:
+        case TupLibraryObject::Audio:
         {
             if (object->loadDataFromPath(project->getDataDir())) {
                 if (object->isSoundResource()) {
@@ -677,7 +677,7 @@ void TupLibraryFolder::updatePaths(const QString &newPath)
          if (objects[oid]->getObjectType() == TupLibraryObject::Svg)
              path = newPath + "/svg/" + filename;
 
-         if (objects[oid]->getObjectType() == TupLibraryObject::Sound)
+         if (objects[oid]->getObjectType() == TupLibraryObject::Audio)
              path = newPath + "/audio/" + filename;
 
          if (objects[oid]->getObjectType() == TupLibraryObject::Item)
@@ -737,7 +737,7 @@ TupLibraryObject * TupLibraryFolder::findSoundFile(const QString &folderId)
         LibraryObjects items = folder->getObjects();
         if (!items.isEmpty()) {
             foreach (TupLibraryObject *object, items) {
-                if (object->getObjectType() == TupLibraryObject::Sound)
+                if (object->getObjectType() == TupLibraryObject::Audio)
                     return object;
             }
         } else {

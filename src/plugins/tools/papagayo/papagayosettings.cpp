@@ -110,7 +110,7 @@ void PapagayoSettings::setInnerForm()
 
     // Position section
 
-    QLabel *mouthPosLabel = new QLabel("<b>" + tr("<b>Mouth Position") + "</b>");
+    QLabel *mouthPosLabel = new QLabel("<b>" + tr("Mouth Position") + "</b>");
     mouthPosLabel->setAlignment(Qt::AlignHCenter);
 
     QLabel *xLabel = new QLabel(tr("X") + ": ");
