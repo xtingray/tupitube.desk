@@ -415,7 +415,7 @@ void TupDocumentView::setupDrawActions()
     new TAction(QPixmap(THEME_DIR + "icons/camera.png"), tr("Camera"), QKeySequence(tr("Ctrl+Shift+C")),
                 this, SLOT(cameraInterface()), actionManager, "camera");
 
-    new TAction(QPixmap(THEME_DIR + "icons/papagayo.png"), tr("Papagayo Lip-sync Files"), QKeySequence(tr("Ctrl+Shift+P")),
+    new TAction(QPixmap(THEME_DIR + "icons/papagayo.png"), tr("Papagayo Lip-sync Module"), QKeySequence(tr("Ctrl+Shift+P")),
                 this, SLOT(papagayoManager()), actionManager, "papagayo");
 }
 

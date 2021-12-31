@@ -2943,11 +2943,6 @@
     </message>
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="418"/>
-        <source>Papagayo Lip-sync Files</source>
-        <translation>Archivos de Lip-sync</translation>
-    </message>
-    <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="418"/>
         <source>Ctrl+Shift+P</source>
         <translation>Ctrl+Shift+P</translation>
     </message>
@@ -3031,6 +3026,11 @@
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="383"/>
         <source>Ctrl+@</source>
         <translation>Ctrl+@</translation>
+    </message>
+    <message>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="418"/>
+        <source>Papagayo Lip-sync Module</source>
+        <translation>Módulo de Lip-Sync Papagayo</translation>
     </message>
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="488"/>
@@ -4700,21 +4700,6 @@
         <translation>Exportar proyecto a varios formatos de vídeo</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="412"/>
-        <source>Post project on TupiTube&apos;s network</source>
-        <translation>Publicar proyecto en la red de TupiTube</translation>
-    </message>
-    <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="421"/>
-        <source>TupiTube&apos;s Social Media</source>
-        <translation>Red Social de TupiTube</translation>
-    </message>
-    <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="423"/>
-        <source>Open TupiTube&apos;s Network</source>
-        <translation>Red Social TupiTube</translation>
-    </message>
-    <message>
         <location filename="../../tupmainwindow_gui.cpp" line="427"/>
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
@@ -4756,6 +4741,11 @@
         <translation>&amp;Publicar Animación</translation>
     </message>
     <message>
+        <location filename="../../tupmainwindow_gui.cpp" line="412"/>
+        <source>Post project on TupiTube network</source>
+        <translation>Publicar proyecto en la red de TupiTube</translation>
+    </message>
+    <message>
         <location filename="../../tupmainwindow_gui.cpp" line="416"/>
         <source>Post Frame</source>
         <translation>Publicar Marco</translation>
@@ -4764,6 +4754,16 @@
         <location filename="../../tupmainwindow_gui.cpp" line="417"/>
         <source>Ctrl+@</source>
         <translation>Ctrl+@</translation>
+    </message>
+    <message>
+        <location filename="../../tupmainwindow_gui.cpp" line="421"/>
+        <source>TupiTube Social Media</source>
+        <translation>Red Social de TupiTube</translation>
+    </message>
+    <message>
+        <location filename="../../tupmainwindow_gui.cpp" line="423"/>
+        <source>Open TupiTube Network</source>
+        <translation>Abrir la Red de TupiTube</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="447"/>

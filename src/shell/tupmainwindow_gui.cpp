@@ -409,7 +409,7 @@ void TupMainWindow::setupFileActions()
     // Post Animation action
     TAction *postProject = new TAction(QPixmap(THEME_DIR + "icons/share.png"), tr("&Post Animation"),
                                        QKeySequence(tr("Ctrl+P")), this, SLOT(postProject()), m_actionManager);
-    postProject->setStatusTip(tr("Post project on TupiTube's network"));
+    postProject->setStatusTip(tr("Post project on TupiTube network"));
     m_actionManager->insert(postProject, "post", "file");
 
     // Post Frame action
@@ -417,10 +417,10 @@ void TupMainWindow::setupFileActions()
                                      QKeySequence(tr("Ctrl+@")), this, SIGNAL(imagePosted()), m_actionManager);
     m_actionManager->insert(postFrame, "post_image", "file");
 
-    // Visit TupiTube's Network action
-    TAction *openNetwork = new TAction(QPixmap(THEME_DIR + "icons/social_network.png"), tr("TupiTube's Social Media"),
+    // Visit TupiTube Network action
+    TAction *openNetwork = new TAction(QPixmap(THEME_DIR + "icons/social_network.png"), tr("TupiTube Social Media"),
                                        QKeySequence(), this, SLOT(openTupiTubeNetwork()), m_actionManager);
-    openNetwork->setStatusTip(tr("Open TupiTube's Network"));
+    openNetwork->setStatusTip(tr("Open TupiTube Network"));
     m_actionManager->insert(openNetwork, "open_network", "file");
 
     // Exit action

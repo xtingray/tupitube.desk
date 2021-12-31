@@ -405,7 +405,7 @@
     <message>
         <location filename="../../../plugins/tools/papagayo/lipsyncmanager.cpp" line="63"/>
         <source>Open LipSync Creator</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrez LipSync Creator</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/lipsyncmanager.cpp" line="67"/>
@@ -415,7 +415,7 @@
     <message>
         <location filename="../../../plugins/tools/papagayo/lipsyncmanager.cpp" line="71"/>
         <source>Edit Mouth</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifier la Bouche</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/lipsyncmanager.cpp" line="75"/>
@@ -425,12 +425,12 @@
     <message>
         <location filename="../../../plugins/tools/papagayo/lipsyncmanager.cpp" line="153"/>
         <source>Are you sure you want to delete this lip-sync record?</source>
-        <translation type="unfinished"></translation>
+        <translation>Voulez-vous vraiment supprimer cet enregistrement de synchronisation labiale?</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/lipsyncmanager.cpp" line="154"/>
         <source>Confirmation Required</source>
-        <translation type="unfinished"></translation>
+        <translation>Confirmation Requise</translation>
     </message>
 </context>
 <context>
@@ -552,7 +552,7 @@
     <message>
         <location filename="../../../plugins/tools/papagayo/mouthsdialog.cpp" line="94"/>
         <source>Close</source>
-        <translation type="unfinished">Fermer</translation>
+        <translation>Fermer</translation>
     </message>
 </context>
 <context>
@@ -691,12 +691,12 @@
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayoconfigurator.cpp" line="50"/>
         <source>Papagayo LipSync Files</source>
-        <translation type="unfinished">Fichier Papagayo de synchronisation labiale</translation>
+        <translation>Fichier Papagayo de synchronisation labiale</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayoconfigurator.cpp" line="65"/>
         <source>Mouth Samples</source>
-        <translation type="unfinished">Échantillons De Bouche</translation>
+        <translation>Échantillons De Bouche</translation>
     </message>
 </context>
 <context>
@@ -714,7 +714,7 @@
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="113"/>
         <source>Mouth Position</source>
-        <translation type="unfinished"></translation>
+        <translation>Position de la Bouche</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="116"/>
@@ -731,27 +731,27 @@
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="150"/>
         <source>Mouth Rotation</source>
-        <translation type="unfinished"></translation>
+        <translation>Rotation de la Bouche</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="153"/>
         <source>Angle</source>
-        <translation type="unfinished">Angle</translation>
+        <translation>Angle</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="170"/>
         <source>Mouth Scale</source>
-        <translation type="unfinished"></translation>
+        <translation>Échelle de la Bouche</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="211"/>
         <source>Proportion</source>
-        <translation type="unfinished">Proportion</translation>
+        <translation>Proportion</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="226"/>
         <source>Reset Mouth</source>
-        <translation type="unfinished"></translation>
+        <translation>Réinitialiser la Bouche</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="231"/>
@@ -1547,7 +1547,7 @@
     <message>
         <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="446"/>
         <source>Reset Item</source>
-        <translation type="unfinished"></translation>
+        <translation>Réinitialiser l&apos;élément</translation>
     </message>
 </context>
 <context>
@@ -1888,7 +1888,7 @@
     <message>
         <location filename="../../../framework/gui/toptionaldialog.cpp" line="69"/>
         <source>Discard</source>
-        <translation type="unfinished">Ne pas enregistrer</translation>
+        <translation>Ne pas enregistrer</translation>
     </message>
     <message>
         <location filename="../../../framework/gui/toptionaldialog.cpp" line="77"/>
@@ -2017,7 +2017,7 @@
     <message>
         <location filename="../../../plugins/tools/text/textconfigurator.cpp" line="84"/>
         <source>Reset Transformations</source>
-        <translation type="unfinished"></translation>
+        <translation>Réinitialiser les Transformations</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/text/textconfigurator.cpp" line="89"/>
@@ -2027,39 +2027,35 @@
     <message>
         <location filename="../../../plugins/tools/text/textconfigurator.cpp" line="121"/>
         <source>Text Position</source>
-        <translation type="unfinished"></translation>
+        <translation>Position du Texte</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/text/textconfigurator.cpp" line="127"/>
         <location filename="../../../plugins/tools/text/textconfigurator.cpp" line="196"/>
         <source>X</source>
-        <translation type="unfinished">X</translation>
+        <translation>X</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/text/textconfigurator.cpp" line="135"/>
         <location filename="../../../plugins/tools/text/textconfigurator.cpp" line="215"/>
         <source>Y</source>
-        <translation type="unfinished">Y</translation>
+        <translation>Y</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/text/textconfigurator.cpp" line="173"/>
         <source>Text Rotation</source>
-        <translation type="unfinished"></translation>
+        <translation>Rotation du Texte</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/text/textconfigurator.cpp" line="191"/>
-        <source>Mouth Scale</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../../plugins/tools/text/textconfigurator.cpp" line="236"/>
         <source>Text Scale</source>
-        <translation type="unfinished"></translation>
+        <translation>Échelle de Texte</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/text/textconfigurator.cpp" line="242"/>
         <source>Proportion</source>
-        <translation type="unfinished">Proportion</translation>
+        <translation>Proportion</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/text/textconfigurator.cpp" line="325"/>
@@ -2206,51 +2202,51 @@
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="242"/>
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="272"/>
         <source>Word:</source>
-        <translation type="unfinished"></translation>
+        <translation>Mot:</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="102"/>
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="243"/>
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="273"/>
         <source>Break down the word:</source>
-        <translation type="unfinished"></translation>
+        <translation>Décomposez le mot:</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="112"/>
         <source>Phonemes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Phonèmes:</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="118"/>
         <source>Clear phonemes</source>
-        <translation type="unfinished"></translation>
+        <translation>Effacer les phonèmes</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="141"/>
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="146"/>
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="248"/>
         <source>Next word</source>
-        <translation type="unfinished"></translation>
+        <translation>Mot suivant</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="150"/>
         <source>Save word</source>
-        <translation type="unfinished"></translation>
+        <translation>Enregistrer le mot</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="160"/>
         <source>Close</source>
-        <translation type="unfinished">Fermer</translation>
+        <translation>Fermer</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="278"/>
         <source>Save sentence</source>
-        <translation type="unfinished"></translation>
+        <translation>Enregistrer la phrase</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="308"/>
         <source>Word phonemes are missing!</source>
-        <translation type="unfinished"></translation>
+        <translation>Il manque des phonèmes de mots!</translation>
     </message>
 </context>
 <context>
@@ -2868,17 +2864,17 @@
     <message>
         <location filename="../../../components/papagayo/tupcustomizedmouthview.cpp" line="66"/>
         <source>Mouth images are missing!</source>
-        <translation type="unfinished"></translation>
+        <translation>Les images de la bouche sont manquantes!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tupcustomizedmouthview.cpp" line="76"/>
         <source>Mouth images are incomplete!</source>
-        <translation type="unfinished">Les images de la bouche sont incomplètes!</translation>
+        <translation>Les images de la bouche sont incomplètes!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tupcustomizedmouthview.cpp" line="82"/>
         <source>Images directory is empty!</source>
-        <translation type="unfinished">Le répertoire des images est vide!</translation>
+        <translation>Le répertoire des images est vide!</translation>
     </message>
 </context>
 <context>
@@ -2944,11 +2940,6 @@
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="415"/>
         <source>Ctrl+Shift+C</source>
         <translation>Ctrl+Shift+C</translation>
-    </message>
-    <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="418"/>
-        <source>Papagayo Lip-sync Files</source>
-        <translation>Fichiers de synchronisation labiale Papagayo</translation>
     </message>
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="418"/>
@@ -3030,6 +3021,11 @@
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="383"/>
         <source>Ctrl+@</source>
         <translation>Ctrl+@</translation>
+    </message>
+    <message>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="418"/>
+        <source>Papagayo Lip-sync Module</source>
+        <translation>Module de Lip-sync Papagayo</translation>
     </message>
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="488"/>
@@ -4041,12 +4037,6 @@
         <translation>Séquence Svg</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="144"/>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="1699"/>
-        <source>Sound File</source>
-        <translation>Fichier son</translation>
-    </message>
-    <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="151"/>
         <source>Add an object to library</source>
         <translation>Ajoutez un objet à la bibliothèque</translation>
@@ -4089,11 +4079,6 @@
         <translation>C&apos;est un répertoire! SVP, choisissez un objet graphique</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="365"/>
-        <source>It&apos;s a sound file! Please, pick a graphic object</source>
-        <translation>C&apos;est un fichier son! SVP, choisissez un objet graphique</translation>
-    </message>
-    <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="390"/>
         <source>Do you want to remove this object from Library?</source>
         <translation>Voulez-vous supprimer cet objet de la bibliothèque?</translation>
@@ -4110,9 +4095,20 @@
         <translation>Images</translation>
     </message>
     <message>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="144"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="1699"/>
+        <source>Audio File</source>
+        <translation>Fichier Audio</translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="365"/>
+        <source>It&apos;s an audio file! Please, pick a graphic object</source>
+        <translation>C&apos;est un fichier audio! S&apos;il vous plaît, choisissez un objet graphique</translation>
+    </message>
+    <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="557"/>
-        <source>Sounds</source>
-        <translation>Sons</translation>
+        <source>Audio</source>
+        <translation>L&apos;audio</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="565"/>
@@ -4268,7 +4264,7 @@
     <message>
         <location filename="../../../components/papagayo/tuplipsyncdoc.cpp" line="972"/>
         <source>Voice 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Voix 1</translation>
     </message>
 </context>
 <context>
@@ -4360,7 +4356,7 @@
     <message>
         <location filename="../../tupmainwindow.cpp" line="530"/>
         <source>Confirmation Required</source>
-        <translation type="unfinished"></translation>
+        <translation>Confirmation Requise</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow.cpp" line="909"/>
@@ -4546,12 +4542,12 @@
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="99"/>
         <source>Audio File</source>
-        <translation type="unfinished"></translation>
+        <translation>Fichier Audio</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="99"/>
         <source>Alt+A</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt+A</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="222"/>
@@ -4704,21 +4700,6 @@
         <translation>Exporter le projet sous différents formats vidéo</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="412"/>
-        <source>Post project on TupiTube&apos;s network</source>
-        <translation>Publier le projet sur le réseau de TupiTube</translation>
-    </message>
-    <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="421"/>
-        <source>TupiTube&apos;s Social Media</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="423"/>
-        <source>Open TupiTube&apos;s Network</source>
-        <translation>Réseau de TupiTube</translation>
-    </message>
-    <message>
         <location filename="../../tupmainwindow_gui.cpp" line="427"/>
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
@@ -4760,6 +4741,11 @@
         <translation>&amp;Publier une Animation</translation>
     </message>
     <message>
+        <location filename="../../tupmainwindow_gui.cpp" line="412"/>
+        <source>Post project on TupiTube network</source>
+        <translation>Publier le projet sur le réseau TupiTube</translation>
+    </message>
+    <message>
         <location filename="../../tupmainwindow_gui.cpp" line="416"/>
         <source>Post Frame</source>
         <translation>Publier Un Cadre</translation>
@@ -4768,6 +4754,16 @@
         <location filename="../../tupmainwindow_gui.cpp" line="417"/>
         <source>Ctrl+@</source>
         <translation>Ctrl+@</translation>
+    </message>
+    <message>
+        <location filename="../../tupmainwindow_gui.cpp" line="421"/>
+        <source>TupiTube Social Media</source>
+        <translation>Réseaux Sociaux TupiTube</translation>
+    </message>
+    <message>
+        <location filename="../../tupmainwindow_gui.cpp" line="423"/>
+        <source>Open TupiTube Network</source>
+        <translation>Ouvrir le Réseau TupiTube</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="447"/>
@@ -4825,116 +4821,116 @@
     <message>
         <location filename="../../../components/micmanager/tupmicmanager.cpp" line="84"/>
         <source>Record Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nom de l&apos;enregistrement:</translation>
     </message>
     <message>
         <location filename="../../../components/micmanager/tupmicmanager.cpp" line="88"/>
         <source>Audio 01</source>
-        <translation type="unfinished"></translation>
+        <translation>Son 01</translation>
     </message>
     <message>
         <location filename="../../../components/micmanager/tupmicmanager.cpp" line="94"/>
         <source>Input Device:</source>
-        <translation type="unfinished"></translation>
+        <translation>Périphérique d&apos;entrée:</translation>
     </message>
     <message>
         <location filename="../../../components/micmanager/tupmicmanager.cpp" line="99"/>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Appareil par défaut</translation>
     </message>
     <message>
         <location filename="../../../components/micmanager/tupmicmanager.cpp" line="113"/>
-        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="249"/>
+        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="250"/>
         <source>Record</source>
-        <translation type="unfinished"></translation>
+        <translation>Enregistrement</translation>
     </message>
     <message>
         <location filename="../../../components/micmanager/tupmicmanager.cpp" line="120"/>
-        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="228"/>
-        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="251"/>
+        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="229"/>
+        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="252"/>
         <source>Pause</source>
-        <translation type="unfinished">Pause</translation>
+        <translation>Pause</translation>
     </message>
     <message>
         <location filename="../../../components/micmanager/tupmicmanager.cpp" line="134"/>
         <source>Play</source>
-        <translation type="unfinished">Lecture</translation>
+        <translation>Reproduire</translation>
     </message>
     <message>
         <location filename="../../../components/micmanager/tupmicmanager.cpp" line="140"/>
         <source>Discard</source>
-        <translation type="unfinished">Ne pas enregistrer</translation>
+        <translation>Ne pas enregistrer</translation>
     </message>
     <message>
-        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="151"/>
-        <source>Audio Level:</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="152"/>
+        <source>Audio Level</source>
+        <translation>Niveau Sonore</translation>
     </message>
     <message>
-        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="193"/>
+        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="194"/>
         <source>%1 sec</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 sec</translation>
     </message>
     <message>
-        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="202"/>
+        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="203"/>
         <source>Recording...</source>
-        <translation type="unfinished"></translation>
+        <translation>Enregistrement...</translation>
     </message>
     <message>
-        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="206"/>
+        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="207"/>
         <source>Paused</source>
-        <translation type="unfinished"></translation>
+        <translation>En Pause</translation>
     </message>
     <message>
-        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="211"/>
+        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="212"/>
         <source>Stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>Arrêté</translation>
     </message>
     <message>
-        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="226"/>
-        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="233"/>
+        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="227"/>
+        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="234"/>
         <source>Stop</source>
-        <translation type="unfinished">Stop</translation>
+        <translation>Arrêter</translation>
     </message>
     <message>
-        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="235"/>
+        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="236"/>
         <source>Resume</source>
-        <translation type="unfinished"></translation>
+        <translation>Continuer</translation>
     </message>
     <message>
-        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="303"/>
+        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="304"/>
         <source>Question</source>
-        <translation type="unfinished">Question</translation>
-    </message>
-    <message>
-        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="305"/>
-        <source>Confirm Action.</source>
-        <translation type="unfinished"></translation>
+        <translation>Question</translation>
     </message>
     <message>
         <location filename="../../../components/micmanager/tupmicmanager.cpp" line="306"/>
-        <source>Do you want to delete this sound recording?</source>
-        <translation type="unfinished"></translation>
+        <source>Confirm Action.</source>
+        <translation>Confirmez l&apos;action.</translation>
     </message>
     <message>
-        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="308"/>
-        <source>Ok</source>
-        <translation type="unfinished">Ok</translation>
+        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="307"/>
+        <source>Do you want to delete this sound recording?</source>
+        <translation>Voulez-vous supprimer cet enregistrement sonore?</translation>
     </message>
     <message>
         <location filename="../../../components/micmanager/tupmicmanager.cpp" line="309"/>
+        <source>Ok</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="310"/>
         <source>Cancel</source>
-        <translation type="unfinished">Annuler</translation>
+        <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="317"/>
+        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="318"/>
         <source>Sound 01</source>
-        <translation type="unfinished"></translation>
+        <translation>Son 01</translation>
     </message>
     <message>
-        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="494"/>
+        <location filename="../../../components/micmanager/tupmicmanager.cpp" line="495"/>
         <source>Playing...</source>
-        <translation type="unfinished"></translation>
+        <translation>Reproduction...</translation>
     </message>
 </context>
 <context>
@@ -5565,18 +5561,18 @@
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="156"/>
         <source>Close</source>
-        <translation type="unfinished">Fermer</translation>
+        <translation>Fermer</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="165"/>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="685"/>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrir</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="166"/>
         <source>Ctrl+O</source>
-        <translation type="unfinished">Ctrl+O</translation>
+        <translation>Ctrl+O</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="173"/>
@@ -5586,31 +5582,31 @@
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1116"/>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1117"/>
         <source>Play</source>
-        <translation type="unfinished">Lecture</translation>
+        <translation>Reproduire</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="183"/>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="184"/>
         <source>Stop</source>
-        <translation type="unfinished">Stop</translation>
+        <translation>Arrêter</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="191"/>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="192"/>
         <source>Zoom In</source>
-        <translation type="unfinished">Zoom avant</translation>
+        <translation>Zoom avant</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="198"/>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="199"/>
         <source>Zoom Out</source>
-        <translation type="unfinished">Zoom arrière</translation>
+        <translation>Zoom arrière</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="205"/>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="206"/>
         <source>Auto Zoom</source>
-        <translation type="unfinished"></translation>
+        <translation>Zoom Automatique</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="215"/>
@@ -5619,234 +5615,234 @@
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="499"/>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="502"/>
         <source>Lip-Sync Manager</source>
-        <translation type="unfinished"></translation>
+        <translation>Gestionnaire de Lip-Sync</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="248"/>
         <source>Mouth Sample Pack No 1</source>
-        <translation type="unfinished">Pack d&apos;échantillons de bouche n° 1</translation>
+        <translation>Pack d&apos;échantillons de bouche n° 1</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="249"/>
         <source>Mouth Sample Pack No 2</source>
-        <translation type="unfinished">Pack d&apos;échantillons de bouche n° 2</translation>
+        <translation>Pack d&apos;échantillons de bouche n° 2</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="250"/>
         <source>Mouth Sample Pack No 3</source>
-        <translation type="unfinished">Pack d&apos;échantillons de bouche n° 3</translation>
+        <translation>Pack d&apos;échantillons de bouche n° 3</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="251"/>
         <source>Mouth Sample Pack No 4</source>
-        <translation type="unfinished">Pack d&apos;échantillons de bouche n° 4</translation>
+        <translation>Pack d&apos;échantillons de bouche n° 4</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="252"/>
         <source>Mouth Sample Pack No 5</source>
-        <translation type="unfinished">Pack d&apos;Échantillons De Bouche n° 5</translation>
+        <translation>Pack d&apos;Échantillons De Bouche n° 5</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="253"/>
         <source>Set Mouth Images</source>
-        <translation type="unfinished">Définir les Images de la Bouche</translation>
+        <translation>Définir les Images de la Bouche</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="272"/>
         <source>Load &amp;Images</source>
-        <translation type="unfinished">Charger des &amp;images</translation>
+        <translation>Charger des &amp;images</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="315"/>
-        <source>Current Voice</source>
-        <translation type="unfinished"></translation>
+        <source>Voice Settings</source>
+        <translation>Paramètres de Voix</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="332"/>
         <source>Voice name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nom de la voix:</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="351"/>
         <source>Spoken text:</source>
-        <translation type="unfinished"></translation>
+        <translation>Texte parlé:</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="358"/>
         <source>Phonetic breakdown:</source>
-        <translation type="unfinished"></translation>
+        <translation>Décomposition phonétique:</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="366"/>
         <source>English</source>
-        <translation type="unfinished"></translation>
+        <translation>Anglais</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="367"/>
         <source>Other Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Autre Langue</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="374"/>
         <source>Breakdown</source>
-        <translation type="unfinished"></translation>
+        <translation>Panne</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="381"/>
         <source>Save lip-sync record</source>
-        <translation type="unfinished"></translation>
+        <translation>Enregistrer l&apos;enregistrement de lip-sync</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="391"/>
         <source>Cancel</source>
-        <translation type="unfinished">Annuler</translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="421"/>
         <source>File</source>
-        <translation type="unfinished"></translation>
+        <translation>Fichier</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="479"/>
         <source>Error opening audio file.</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur lors de l&apos;ouverture du fichier audio.</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="502"/>
         <source>Updating</source>
-        <translation type="unfinished"></translation>
+        <translation>Mise à jour</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="518"/>
         <source>Do you want to save this lip-sync record?</source>
-        <translation type="unfinished"></translation>
+        <translation>Voulez-vous enregistrer cet enregistrement de synchronisation labiale?</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="518"/>
         <source>Confirmation Required</source>
-        <translation type="unfinished"></translation>
+        <translation>Confirmation Requise</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="535"/>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1163"/>
         <source>Lip-sync item added!</source>
-        <translation type="unfinished"></translation>
+        <translation>Élément de lip-sync ajouté!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="552"/>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1433"/>
         <source>Lip-sync item updated!</source>
-        <translation type="unfinished"></translation>
+        <translation>Élément de lip-sync mis à jour!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="685"/>
         <source>Audio files (*.mp3 *.wav)</source>
-        <translation type="unfinished"></translation>
+        <translation>Fichiers audio (*.mp3 *.wav)</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="698"/>
         <source>Mouth images are unset!</source>
-        <translation type="unfinished"></translation>
+        <translation>Les images de la bouche ne sont pas définies!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="706"/>
         <source>No voice text to play!</source>
-        <translation type="unfinished"></translation>
+        <translation>Pas de texte vocal à jouer!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="714"/>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="715"/>
         <source>Pause</source>
-        <translation type="unfinished">Pause</translation>
+        <translation>Pause</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="947"/>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1130"/>
         <source>Voice text is empty!</source>
-        <translation type="unfinished"></translation>
+        <translation>Le texte vocal est vide!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1051"/>
         <source>Choose the images directory...</source>
-        <translation type="unfinished">Choisissez le répertoire des images...</translation>
+        <translation>Choisissez le répertoire des images...</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1065"/>
         <source>Mouth image is missing!</source>
-        <translation type="unfinished"></translation>
+        <translation>L&apos;image de la bouche est manquante!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1079"/>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1335"/>
         <source>Mouth images are incomplete!</source>
-        <translation type="unfinished">Les images de la bouche sont incomplètes!</translation>
+        <translation>Les images de la bouche sont incomplètes!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1085"/>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1343"/>
         <source>Images directory is empty!</source>
-        <translation type="unfinished">Le répertoire des images est vide!</translation>
+        <translation>Le répertoire des images est vide!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1124"/>
         <source>Voice name is empty!</source>
-        <translation type="unfinished"></translation>
+        <translation>Le nom de la voix est vide!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1138"/>
         <source>Customized mouths path is unset!</source>
-        <translation type="unfinished"></translation>
+        <translation>Le chemin des bouches personnalisées n&apos;est pas défini!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1189"/>
         <source>Error while saving lip-sync!</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur lors de l&apos;enregistrement de la synchronisation labiale!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1253"/>
         <source>Can&apos;t load mouth image!</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de charger l&apos;image de la bouche!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1273"/>
         <source>Can&apos;t remove temporary voice sound!</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de supprimer le son vocal temporaire!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1286"/>
         <source>Can&apos;t load voice sound!</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de charger le son de la voix!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1312"/>
         <source>Frame</source>
-        <translation type="unfinished">Image</translation>
+        <translation>Image</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1325"/>
         <source>Papagayo file has been imported successfully</source>
-        <translation type="unfinished">Le fichier Papagayo a été importé avec succès</translation>
+        <translation>Le fichier Papagayo a été importé avec succès</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1327"/>
         <source>Papagayo file is invalid!</source>
-        <translation type="unfinished">Le fichier Papagayo est invalide!</translation>
+        <translation>Le fichier Papagayo est invalide!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1351"/>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1359"/>
         <source>Papagayo project is invalid!</source>
-        <translation type="unfinished">Le projet Papagayo est invalide!</translation>
+        <translation>Le projet Papagayo est invalide!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1370"/>
         <source>Error while saving lip-sync record!</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur lors de l&apos;enregistrement de la synchronisation labiale!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1440"/>
         <source>Error while updating lip-sync!</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur lors de la mise à jour de la lip-sync!</translation>
     </message>
 </context>
 <context>
@@ -6482,70 +6478,70 @@
 <context>
     <name>TupSoundDialog</name>
     <message>
+        <location filename="../../../components/library/tupsounddialog.cpp" line="75"/>
+        <source>Record Audio</source>
+        <translation>Enregistrement Audio</translation>
+    </message>
+    <message>
         <location filename="../../../components/library/tupsounddialog.cpp" line="69"/>
-        <source>Import Sound Asset</source>
-        <translation type="unfinished"></translation>
+        <source>Import Audio Asset</source>
+        <translation>Importer un Élément Audio</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsounddialog.cpp" line="74"/>
-        <source>Sound File</source>
-        <translation type="unfinished">Fichier son</translation>
+        <source>Audio File</source>
+        <translation>Fichier Audio</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsounddialog.cpp" line="75"/>
-        <source>Record Audio</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../../components/library/tupsounddialog.cpp" line="92"/>
+        <source>Audio Path:</source>
+        <translation>Chemin Audio:</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsounddialog.cpp" line="91"/>
-        <source>Sound File:</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../../components/library/tupsounddialog.cpp" line="101"/>
+        <source>Load audio file</source>
+        <translation>Charger le fichier audio</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsounddialog.cpp" line="96"/>
-        <source>Load sound file</source>
-        <translation type="unfinished">Charger un fichier son</translation>
+        <location filename="../../../components/library/tupsounddialog.cpp" line="108"/>
+        <source>Import audio file</source>
+        <translation>Importer un fichier audio</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsounddialog.cpp" line="103"/>
-        <source>Import sound file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../components/library/tupsounddialog.cpp" line="110"/>
-        <location filename="../../../components/library/tupsounddialog.cpp" line="159"/>
+        <location filename="../../../components/library/tupsounddialog.cpp" line="115"/>
+        <location filename="../../../components/library/tupsounddialog.cpp" line="167"/>
         <source>Open lip-sync module</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrir le module de lip-sync</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsounddialog.cpp" line="117"/>
+        <location filename="../../../components/library/tupsounddialog.cpp" line="122"/>
         <source>Cancel</source>
-        <translation type="unfinished">Annuler</translation>
+        <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsounddialog.cpp" line="152"/>
-        <source>Import recorded sound</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../../components/library/tupsounddialog.cpp" line="160"/>
+        <source>Import recorded audio</source>
+        <translation>Importer de l&apos;audio enregistré</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsounddialog.cpp" line="190"/>
+        <location filename="../../../components/library/tupsounddialog.cpp" line="199"/>
+        <source>Audio file</source>
+        <translation>Fichier audio</translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsounddialog.cpp" line="219"/>
+        <source>Audio file doesn&apos;t exist!</source>
+        <translation>Le fichier audio n&apos;existe pas!</translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsounddialog.cpp" line="222"/>
+        <source>Please, choose an audio file!</source>
+        <translation>S&apos;il vous plaît, choisissez un fichier audio!</translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsounddialog.cpp" line="198"/>
         <source>Import audio file...</source>
-        <translation type="unfinished">Importer le fichier audio...</translation>
-    </message>
-    <message>
-        <location filename="../../../components/library/tupsounddialog.cpp" line="191"/>
-        <source>Sound file</source>
-        <translation type="unfinished">Fichier son</translation>
-    </message>
-    <message>
-        <location filename="../../../components/library/tupsounddialog.cpp" line="211"/>
-        <source>Sound file doesn&apos;t exist!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../components/library/tupsounddialog.cpp" line="214"/>
-        <source>Please, choose a sound file!</source>
-        <translation type="unfinished"></translation>
+        <translation>Importer le fichier audio...</translation>
     </message>
 </context>
 <context>
@@ -7109,17 +7105,17 @@ Couverture</translation>
     <message>
         <location filename="../../../components/papagayo/tupwaveformview.cpp" line="74"/>
         <source>Drop audio file here</source>
-        <translation type="unfinished"></translation>
+        <translation>Déposez le fichier audio ici</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tupwaveformview.cpp" line="167"/>
         <source>Sound file has no voices!</source>
-        <translation type="unfinished"></translation>
+        <translation>Le fichier son n&apos;a pas de voix!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tupwaveformview.cpp" line="576"/>
         <source>Mouth images are unset!</source>
-        <translation type="unfinished"></translation>
+        <translation>Les images de la bouche ne sont pas définies!</translation>
     </message>
 </context>
 <context>

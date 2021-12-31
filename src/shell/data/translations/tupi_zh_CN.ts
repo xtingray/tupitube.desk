@@ -325,19 +325,19 @@
     </message>
     <message>
         <source>Open LipSync Creator</source>
-        <translation type="unfinished"></translation>
+        <translation>打开 LipSync Creator</translation>
     </message>
     <message>
         <source>Edit Mouth</source>
-        <translation type="unfinished"></translation>
+        <translation>编辑嘴巴</translation>
     </message>
     <message>
         <source>Are you sure you want to delete this lip-sync record?</source>
-        <translation type="unfinished"></translation>
+        <translation>您确定要删除此口型同步记录吗?</translation>
     </message>
     <message>
         <source>Confirmation Required</source>
-        <translation type="unfinished"></translation>
+        <translation>需要确认</translation>
     </message>
 </context>
 <context>
@@ -431,7 +431,7 @@
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished">关闭</translation>
+        <translation>关闭</translation>
     </message>
 </context>
 <context>
@@ -540,11 +540,11 @@
     <name>PapagayoConfigurator</name>
     <message>
         <source>Papagayo LipSync Files</source>
-        <translation type="unfinished">Papagayo 唇形同步 文件</translation>
+        <translation>Papagayo 唇形同步 文件</translation>
     </message>
     <message>
         <source>Mouth Samples</source>
-        <translation type="unfinished">口腔样本</translation>
+        <translation>口腔样本</translation>
     </message>
 </context>
 <context>
@@ -583,27 +583,27 @@
     </message>
     <message>
         <source>Mouth Rotation</source>
-        <translation type="unfinished"></translation>
+        <translation>嘴巴旋转</translation>
     </message>
     <message>
         <source>Angle</source>
-        <translation type="unfinished">角度</translation>
+        <translation>角度</translation>
     </message>
     <message>
         <source>Mouth Scale</source>
-        <translation type="unfinished"></translation>
+        <translation>口腔秤</translation>
     </message>
     <message>
         <source>Proportion</source>
-        <translation type="unfinished">面积</translation>
+        <translation>面积</translation>
     </message>
     <message>
         <source>Reset Mouth</source>
-        <translation type="unfinished"></translation>
+        <translation>重置嘴巴</translation>
     </message>
     <message>
         <source>Mouth Position</source>
-        <translation type="unfinished"></translation>
+        <translation>嘴的位置</translation>
     </message>
 </context>
 <context>
@@ -1207,7 +1207,7 @@
     </message>
     <message>
         <source>Reset Item</source>
-        <translation type="unfinished"></translation>
+        <translation>重置项目</translation>
     </message>
 </context>
 <context>
@@ -1487,7 +1487,7 @@
     </message>
     <message>
         <source>Discard</source>
-        <translation type="unfinished">放弃</translation>
+        <translation>放弃</translation>
     </message>
 </context>
 <context>
@@ -1597,35 +1597,31 @@
     </message>
     <message>
         <source>Reset Transformations</source>
-        <translation type="unfinished"></translation>
+        <translation>重置转换</translation>
     </message>
     <message>
         <source>Text Position</source>
-        <translation type="unfinished"></translation>
+        <translation>文字位置</translation>
     </message>
     <message>
         <source>X</source>
-        <translation type="unfinished">X</translation>
+        <translation>X</translation>
     </message>
     <message>
         <source>Y</source>
-        <translation type="unfinished">Y</translation>
+        <translation>Y</translation>
     </message>
     <message>
         <source>Text Rotation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Mouth Scale</source>
-        <translation type="unfinished"></translation>
+        <translation>文字旋转</translation>
     </message>
     <message>
         <source>Text Scale</source>
-        <translation type="unfinished"></translation>
+        <translation>文字比例</translation>
     </message>
     <message>
         <source>Proportion</source>
-        <translation type="unfinished">面积</translation>
+        <translation>部分</translation>
     </message>
 </context>
 <context>
@@ -1741,39 +1737,39 @@
     <name>TupBreakdownDialog</name>
     <message>
         <source>Word:</source>
-        <translation type="unfinished"></translation>
+        <translation>单词:</translation>
     </message>
     <message>
         <source>Break down the word:</source>
-        <translation type="unfinished"></translation>
+        <translation>分解一句话:</translation>
     </message>
     <message>
         <source>Phonemes:</source>
-        <translation type="unfinished"></translation>
+        <translation>音素：</translation>
     </message>
     <message>
         <source>Clear phonemes</source>
-        <translation type="unfinished"></translation>
+        <translation>清除音素</translation>
     </message>
     <message>
         <source>Next word</source>
-        <translation type="unfinished"></translation>
+        <translation>下一个词</translation>
     </message>
     <message>
         <source>Save word</source>
-        <translation type="unfinished"></translation>
+        <translation>保存单词</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished">关闭</translation>
+        <translation>关闭</translation>
     </message>
     <message>
         <source>Save sentence</source>
-        <translation type="unfinished"></translation>
+        <translation>保存句子</translation>
     </message>
     <message>
         <source>Word phonemes are missing!</source>
-        <translation type="unfinished"></translation>
+        <translation>单词音素丢失!</translation>
     </message>
 </context>
 <context>
@@ -2271,15 +2267,15 @@
     <name>TupCustomizedMouthView</name>
     <message>
         <source>Mouth images are missing!</source>
-        <translation type="unfinished"></translation>
+        <translation>嘴巴图片不见了!</translation>
     </message>
     <message>
         <source>Mouth images are incomplete!</source>
-        <translation type="unfinished">嘴部图像不完整！</translation>
+        <translation>嘴部图像不完整！</translation>
     </message>
     <message>
         <source>Images directory is empty!</source>
-        <translation type="unfinished">图像目录是空的！</translation>
+        <translation>图像目录是空的！</translation>
     </message>
 </context>
 <context>
@@ -2401,10 +2397,6 @@
         <translation>导出成帧图像</translation>
     </message>
     <message>
-        <source>Papagayo Lip-sync Files</source>
-        <translation>Papagayo 口型同步 文件</translation>
-    </message>
-    <message>
         <source>Frames Mode</source>
         <translation>帧模式</translation>
     </message>
@@ -2491,6 +2483,10 @@
     <message>
         <source>Video Formats</source>
         <translation>视频格式</translation>
+    </message>
+    <message>
+        <source>Papagayo Lip-sync Module</source>
+        <translation>Papagayo 唇形同步模块</translation>
     </message>
 </context>
 <context>
@@ -3219,10 +3215,6 @@
         <translation>选择SVG文件目录</translation>
     </message>
     <message>
-        <source>Sound File</source>
-        <translation>音频文件</translation>
-    </message>
-    <message>
         <source>ERROR!</source>
         <translation>错误</translation>
     </message>
@@ -3233,10 +3225,6 @@
     <message>
         <source>Image files found: %1.</source>
         <translation>找到图像文件:%1</translation>
-    </message>
-    <message>
-        <source>Sounds</source>
-        <translation>音效</translation>
     </message>
     <message>
         <source>Vector</source>
@@ -3335,10 +3323,6 @@
         <translation>库是空的！</translation>
     </message>
     <message>
-        <source>It&apos;s a sound file! Please, pick a graphic object</source>
-        <translation>它是一个声音文件！ 请选择一个图形目标</translation>
-    </message>
-    <message>
         <source>There&apos;s no current selection!</source>
         <translation>目前没有选择！</translation>
     </message>
@@ -3354,12 +3338,24 @@
         <source>Search for Assets</source>
         <translation>搜索资产</translation>
     </message>
+    <message>
+        <source>Audio File</source>
+        <translation>音频文件</translation>
+    </message>
+    <message>
+        <source>It&apos;s an audio file! Please, pick a graphic object</source>
+        <translation>是音频文件！ 请选择一个图形对象</translation>
+    </message>
+    <message>
+        <source>Audio</source>
+        <translation>声音的</translation>
+    </message>
 </context>
 <context>
     <name>TupLipsyncDoc</name>
     <message>
         <source>Voice 1</source>
-        <translation type="unfinished"></translation>
+        <translation>语音 1</translation>
     </message>
 </context>
 <context>
@@ -3725,20 +3721,12 @@
         <translation>图像序列</translation>
     </message>
     <message>
-        <source>Open TupiTube&apos;s Network</source>
-        <translation>TupiTube 社交网络</translation>
-    </message>
-    <message>
         <source>To post video add more frames!</source>
         <translation>要发布视频，请添加更多帧！</translation>
     </message>
     <message>
         <source>Project is larger than 10 MB. Too big!</source>
         <translation>项目大于10 MB。 太大！</translation>
-    </message>
-    <message>
-        <source>Post project on TupiTube&apos;s network</source>
-        <translation>在TupiTube的网络上发布项目</translation>
     </message>
     <message>
         <source>Post canceled by user!</source>
@@ -3778,110 +3766,118 @@
     </message>
     <message>
         <source>Confirmation Required</source>
-        <translation type="unfinished"></translation>
+        <translation>需要确认</translation>
     </message>
     <message>
         <source>Audio File</source>
-        <translation type="unfinished"></translation>
+        <translation>音频文件</translation>
     </message>
     <message>
         <source>Alt+A</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <source>TupiTube&apos;s Social Media</source>
-        <translation type="unfinished"></translation>
+        <source>Post project on TupiTube network</source>
+        <translation>在 TupiTube 网络上发布项目</translation>
+    </message>
+    <message>
+        <source>TupiTube Social Media</source>
+        <translation>TupiTube 社交媒体</translation>
+    </message>
+    <message>
+        <source>Open TupiTube Network</source>
+        <translation>打开 TupiTube 网络</translation>
     </message>
 </context>
 <context>
     <name>TupMicManager</name>
     <message>
         <source>Record Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>记录名称:</translation>
     </message>
     <message>
         <source>Audio 01</source>
-        <translation type="unfinished"></translation>
+        <translation>音频 01</translation>
     </message>
     <message>
         <source>Input Device:</source>
-        <translation type="unfinished"></translation>
+        <translation>输入设备:</translation>
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>默认设备</translation>
     </message>
     <message>
         <source>Record</source>
-        <translation type="unfinished"></translation>
+        <translation>记录</translation>
     </message>
     <message>
         <source>Pause</source>
-        <translation type="unfinished">暂停</translation>
+        <translation>暂停</translation>
     </message>
     <message>
         <source>Play</source>
-        <translation type="unfinished">播放</translation>
+        <translation>播放</translation>
     </message>
     <message>
         <source>Discard</source>
-        <translation type="unfinished">放弃</translation>
-    </message>
-    <message>
-        <source>Audio Level:</source>
-        <translation type="unfinished"></translation>
+        <translation>放弃</translation>
     </message>
     <message>
         <source>%1 sec</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 第二</translation>
     </message>
     <message>
         <source>Recording...</source>
-        <translation type="unfinished"></translation>
+        <translation>录音...</translation>
     </message>
     <message>
         <source>Paused</source>
-        <translation type="unfinished"></translation>
+        <translation>暂停</translation>
     </message>
     <message>
         <source>Stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>停止</translation>
     </message>
     <message>
         <source>Stop</source>
-        <translation type="unfinished">停止</translation>
+        <translation>停止</translation>
     </message>
     <message>
         <source>Resume</source>
-        <translation type="unfinished"></translation>
+        <translation>恢复</translation>
     </message>
     <message>
         <source>Question</source>
-        <translation type="unfinished">问题</translation>
+        <translation>问题</translation>
     </message>
     <message>
         <source>Confirm Action.</source>
-        <translation type="unfinished"></translation>
+        <translation>确认操作。</translation>
     </message>
     <message>
         <source>Do you want to delete this sound recording?</source>
-        <translation type="unfinished"></translation>
+        <translation>您要删除此录音吗？</translation>
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished">确定</translation>
+        <translation>确定</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">取消</translation>
+        <translation>取消</translation>
     </message>
     <message>
         <source>Sound 01</source>
-        <translation type="unfinished"></translation>
+        <translation>声音01</translation>
     </message>
     <message>
         <source>Playing...</source>
-        <translation type="unfinished"></translation>
+        <translation>正在播放...</translation>
+    </message>
+    <message>
+        <source>Audio Level</source>
+        <translation>音频电平</translation>
     </message>
 </context>
 <context>
@@ -4379,215 +4375,215 @@
     <name>TupPapagayoApp</name>
     <message>
         <source>Close</source>
-        <translation type="unfinished">关闭</translation>
+        <translation>关闭</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>打开</translation>
     </message>
     <message>
         <source>Ctrl+O</source>
-        <translation type="unfinished">Ctrl+O</translation>
+        <translation>Ctrl+O</translation>
     </message>
     <message>
         <source>Play</source>
-        <translation type="unfinished">播放</translation>
+        <translation>播放</translation>
     </message>
     <message>
         <source>Stop</source>
-        <translation type="unfinished">停止</translation>
+        <translation>停止</translation>
     </message>
     <message>
         <source>Zoom In</source>
-        <translation type="unfinished">放大</translation>
+        <translation>放大</translation>
     </message>
     <message>
         <source>Zoom Out</source>
-        <translation type="unfinished">缩小</translation>
+        <translation>缩小</translation>
     </message>
     <message>
         <source>Auto Zoom</source>
-        <translation type="unfinished"></translation>
+        <translation>自动缩放</translation>
     </message>
     <message>
         <source>Lip-Sync Manager</source>
-        <translation type="unfinished"></translation>
+        <translation>口型同步管理器</translation>
     </message>
     <message>
         <source>Mouth Sample Pack No 1</source>
-        <translation type="unfinished">口腔样本包 1</translation>
+        <translation>口腔样本包 1</translation>
     </message>
     <message>
         <source>Mouth Sample Pack No 2</source>
-        <translation type="unfinished">口腔样本包 2</translation>
+        <translation>口腔样本包 2</translation>
     </message>
     <message>
         <source>Mouth Sample Pack No 3</source>
-        <translation type="unfinished">口腔样本包 3</translation>
+        <translation>口腔样本包 3</translation>
     </message>
     <message>
         <source>Mouth Sample Pack No 4</source>
-        <translation type="unfinished">口腔样本包 4</translation>
+        <translation>口腔样本包 4</translation>
     </message>
     <message>
         <source>Mouth Sample Pack No 5</source>
-        <translation type="unfinished">口腔样本包 5</translation>
+        <translation>口腔样本包 5</translation>
     </message>
     <message>
         <source>Set Mouth Images</source>
-        <translation type="unfinished">设置口像</translation>
+        <translation>设置口像</translation>
     </message>
     <message>
         <source>Load &amp;Images</source>
-        <translation type="unfinished">加载图片</translation>
-    </message>
-    <message>
-        <source>Current Voice</source>
-        <translation type="unfinished"></translation>
+        <translation>加载图片</translation>
     </message>
     <message>
         <source>Voice name:</source>
-        <translation type="unfinished"></translation>
+        <translation>语音名称：</translation>
     </message>
     <message>
         <source>Spoken text:</source>
-        <translation type="unfinished"></translation>
+        <translation>口语文字：</translation>
     </message>
     <message>
         <source>Phonetic breakdown:</source>
-        <translation type="unfinished"></translation>
+        <translation>语音分解：</translation>
     </message>
     <message>
         <source>English</source>
-        <translation type="unfinished"></translation>
+        <translation>英语</translation>
     </message>
     <message>
         <source>Other Language</source>
-        <translation type="unfinished"></translation>
+        <translation>其他语言</translation>
     </message>
     <message>
         <source>Breakdown</source>
-        <translation type="unfinished"></translation>
+        <translation>分解</translation>
     </message>
     <message>
         <source>Save lip-sync record</source>
-        <translation type="unfinished"></translation>
+        <translation>保存口型同步记录</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">取消</translation>
+        <translation>取消</translation>
     </message>
     <message>
         <source>File</source>
-        <translation type="unfinished"></translation>
+        <translation>文件</translation>
     </message>
     <message>
         <source>Error opening audio file.</source>
-        <translation type="unfinished"></translation>
+        <translation>打开音频文件时出错。</translation>
     </message>
     <message>
         <source>Updating</source>
-        <translation type="unfinished"></translation>
+        <translation>更新中</translation>
     </message>
     <message>
         <source>Do you want to save this lip-sync record?</source>
-        <translation type="unfinished"></translation>
+        <translation>你想保存这个口型同步记录吗？</translation>
     </message>
     <message>
         <source>Confirmation Required</source>
-        <translation type="unfinished"></translation>
+        <translation>需要确认</translation>
     </message>
     <message>
         <source>Lip-sync item added!</source>
-        <translation type="unfinished"></translation>
+        <translation>添加了口型同步项目！</translation>
     </message>
     <message>
         <source>Lip-sync item updated!</source>
-        <translation type="unfinished"></translation>
+        <translation>口型同步项目已更新！</translation>
     </message>
     <message>
         <source>Audio files (*.mp3 *.wav)</source>
-        <translation type="unfinished"></translation>
+        <translation>音频文件 (*.mp3 *.wav)</translation>
     </message>
     <message>
         <source>Mouth images are unset!</source>
-        <translation type="unfinished"></translation>
+        <translation>嘴巴图像未设置！</translation>
     </message>
     <message>
         <source>No voice text to play!</source>
-        <translation type="unfinished"></translation>
+        <translation>没有可播放的语音文本！</translation>
     </message>
     <message>
         <source>Pause</source>
-        <translation type="unfinished">暂停</translation>
+        <translation>暂停</translation>
     </message>
     <message>
         <source>Voice text is empty!</source>
-        <translation type="unfinished"></translation>
+        <translation>语音文本为空！</translation>
     </message>
     <message>
         <source>Choose the images directory...</source>
-        <translation type="unfinished">选择图像目录...</translation>
+        <translation>选择图像目录...</translation>
     </message>
     <message>
         <source>Mouth image is missing!</source>
-        <translation type="unfinished"></translation>
+        <translation>嘴巴图片不见了！</translation>
     </message>
     <message>
         <source>Mouth images are incomplete!</source>
-        <translation type="unfinished">嘴部图像不完整！</translation>
+        <translation>嘴部图像不完整！</translation>
     </message>
     <message>
         <source>Images directory is empty!</source>
-        <translation type="unfinished">图像目录是空的！</translation>
+        <translation>图像目录是空的！</translation>
     </message>
     <message>
         <source>Voice name is empty!</source>
-        <translation type="unfinished"></translation>
+        <translation>语音名称为空！</translation>
     </message>
     <message>
         <source>Customized mouths path is unset!</source>
-        <translation type="unfinished"></translation>
+        <translation>自定义嘴巴路径未设置！</translation>
     </message>
     <message>
         <source>Error while saving lip-sync!</source>
-        <translation type="unfinished"></translation>
+        <translation>保存口型同步时出错！</translation>
     </message>
     <message>
         <source>Can&apos;t load mouth image!</source>
-        <translation type="unfinished"></translation>
+        <translation>无法加载嘴巴图片！</translation>
     </message>
     <message>
         <source>Can&apos;t remove temporary voice sound!</source>
-        <translation type="unfinished"></translation>
+        <translation>无法去除临时语音！</translation>
     </message>
     <message>
         <source>Can&apos;t load voice sound!</source>
-        <translation type="unfinished"></translation>
+        <translation>无法加载语音！</translation>
     </message>
     <message>
         <source>Frame</source>
-        <translation type="unfinished">帧</translation>
+        <translation>帧</translation>
     </message>
     <message>
         <source>Papagayo file has been imported successfully</source>
-        <translation type="unfinished">PAPAGAYO文件已成功导入</translation>
+        <translation>PAPAGAYO文件已成功导入</translation>
     </message>
     <message>
         <source>Papagayo file is invalid!</source>
-        <translation type="unfinished">PAPAGAYO文件无效！</translation>
+        <translation>PAPAGAYO文件无效！</translation>
     </message>
     <message>
         <source>Papagayo project is invalid!</source>
-        <translation type="unfinished">PAPAGAYO项目无效！</translation>
+        <translation>PAPAGAYO项目无效！</translation>
     </message>
     <message>
         <source>Error while saving lip-sync record!</source>
-        <translation type="unfinished"></translation>
+        <translation>保存口型同步记录时出错！</translation>
     </message>
     <message>
         <source>Error while updating lip-sync!</source>
-        <translation type="unfinished"></translation>
+        <translation>更新口型同步时出错！</translation>
+    </message>
+    <message>
+        <source>Voice Settings</source>
+        <translation>语音设置</translation>
     </message>
 </context>
 <context>
@@ -5098,56 +5094,56 @@
 <context>
     <name>TupSoundDialog</name>
     <message>
-        <source>Import Sound Asset</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sound File</source>
-        <translation type="unfinished">音频文件</translation>
-    </message>
-    <message>
         <source>Record Audio</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sound File:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Load sound file</source>
-        <translation type="unfinished">加载音频文件</translation>
-    </message>
-    <message>
-        <source>Import sound file</source>
-        <translation type="unfinished"></translation>
+        <translation>录制音频</translation>
     </message>
     <message>
         <source>Open lip-sync module</source>
-        <translation type="unfinished"></translation>
+        <translation>打开口型同步模块</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">取消</translation>
-    </message>
-    <message>
-        <source>Import recorded sound</source>
-        <translation type="unfinished"></translation>
+        <translation>取消</translation>
     </message>
     <message>
         <source>Import audio file...</source>
-        <translation type="unfinished">导入音频文件中...</translation>
+        <translation>导入音频文件中...</translation>
     </message>
     <message>
-        <source>Sound file</source>
-        <translation type="unfinished">声音文件</translation>
+        <source>Import Audio Asset</source>
+        <translation>导入音频资产</translation>
     </message>
     <message>
-        <source>Sound file doesn&apos;t exist!</source>
-        <translation type="unfinished"></translation>
+        <source>Audio File</source>
+        <translation>音频文件</translation>
     </message>
     <message>
-        <source>Please, choose a sound file!</source>
-        <translation type="unfinished"></translation>
+        <source>Audio Path:</source>
+        <translation>音频路径：</translation>
+    </message>
+    <message>
+        <source>Load audio file</source>
+        <translation>加载音频文件</translation>
+    </message>
+    <message>
+        <source>Import audio file</source>
+        <translation>导入音频文件 </translation>
+    </message>
+    <message>
+        <source>Import recorded audio</source>
+        <translation>导入录制的音频</translation>
+    </message>
+    <message>
+        <source>Audio file</source>
+        <translation>音频文件</translation>
+    </message>
+    <message>
+        <source>Audio file doesn&apos;t exist!</source>
+        <translation>音频文件不存在！</translation>
+    </message>
+    <message>
+        <source>Please, choose an audio file!</source>
+        <translation>请选择一个音频文件！</translation>
     </message>
 </context>
 <context>
@@ -5585,15 +5581,15 @@ Cover</source>
     <name>TupWaveFormView</name>
     <message>
         <source>Drop audio file here</source>
-        <translation type="unfinished"></translation>
+        <translation>将音频文件拖放到此处</translation>
     </message>
     <message>
         <source>Sound file has no voices!</source>
-        <translation type="unfinished"></translation>
+        <translation>声音文件没有声音！</translation>
     </message>
     <message>
         <source>Mouth images are unset!</source>
-        <translation type="unfinished"></translation>
+        <translation>嘴巴图像未设置！</translation>
     </message>
 </context>
 <context>
