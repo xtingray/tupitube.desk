@@ -74,6 +74,12 @@ _EOH_
 
     config = RQonf::Config.new
 
+    version = "0.2"
+    codeName = "Aiyra"
+    revision = "19"
+    configVersion = "3"
+
+    Info.info << "Compiling \033[91mTupiTube " +  version + "." + revision + "\033[0m (" +  codeName + ")" << $endl
     Info.info << "Debug support... "
 
     file_name = 'src/components/components.pro'
@@ -175,10 +181,10 @@ _EOH_
        config.addDefine("ADD_HEADERS");
     end
 
-    config.addDefine('TUPITUBE_VERSION=\\\\\"0.2\\\\\"')
-    config.addDefine('CODE_NAME=\\\\\"Quati\\\\\"')
-    config.addDefine('REVISION=\\\\\"18\\\\\"')
-    config.addDefine('CONFIG_VERSION=\\\\\"3\\\\\"')
+    config.addDefine('TUPITUBE_VERSION=\\\\\"' + version + '\\\\\"')
+    config.addDefine('CODE_NAME=\\\\\"' + codeName + '\\\\\"')
+    config.addDefine('REVISION=\\\\\"' + revision + '\\\\\"')
+    config.addDefine('CONFIG_VERSION=\\\\\"' + configVersion + '\\\\\"')
 
     if File.exists?('/etc/canaima_version')
        config.addDefine("CANAIMA")

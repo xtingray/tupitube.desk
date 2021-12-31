@@ -199,7 +199,7 @@ module RQonf
         elsif file =~ /.qonf$/
           if file.include? "ffmpeg"
              if @ffmpeg
-                Info.warn << "Adding ffmpeg support: " << @ffmpeg << $endl
+                Info.info << "Adding ffmpeg support: " << @ffmpeg << $endl
                 @tests << Test.new(file, @qmake)
              end
           else
