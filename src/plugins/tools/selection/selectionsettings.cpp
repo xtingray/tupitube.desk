@@ -63,10 +63,17 @@ SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
 
     formPanel = new QWidget;
 
+#if defined(Q_OS_MAC)
+    if (screenH >= 900)
+        setLargetInterface();
+    else
+        setCompactInterface();
+#else
     if (screenH >= 1080)
         setLargetInterface();
     else
         setCompactInterface();
+#endif
 
     mainLayout->addWidget(formPanel);
 
