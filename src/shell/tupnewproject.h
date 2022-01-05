@@ -40,6 +40,7 @@
 #include "tabdialog.h"
 #include "twizard.h"
 #include "txyspinbox.h"
+#include "tupprojectmanagerparams.h"
 
 #include <QLineEdit>
 #include <QPlainTextEdit>
@@ -49,7 +50,7 @@
 #include <QComboBox>
 #include <QLineEdit>
 
-class TupProjectManagerParams;
+// class TupProjectManagerParams;
 
 class TupNewProject : public TabDialog
 {

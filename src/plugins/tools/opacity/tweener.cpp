@@ -191,6 +191,11 @@ QMap<TAction::ActionId, TAction *> Tweener::actions() const
     return opacityActions;
 }
 
+TAction * Tweener::getAction(TAction::ActionId toolId)
+{
+    return opacityActions[toolId];
+}
+
 /* This method returns the list of actions defined in this plugin */
 int Tweener::toolType() const
 {
@@ -252,12 +257,7 @@ void Tweener::updateScene(TupGraphicsScene *gScene)
 {
     mode = configPanel->mode();
 
-    if (mode == TupToolPlugin::Edit) {
-        int framesNumber = framesCount();
-
-        if (configPanel->startComboSize() < framesNumber)
-            configPanel->initStartCombo(framesNumber, initFrame);
-    } else if (mode == TupToolPlugin::Add) {
+    if (mode == TupToolPlugin::Add) {
         int total = framesCount();
 
         if (editMode == TupToolPlugin::Properties) {

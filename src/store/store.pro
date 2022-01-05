@@ -44,6 +44,7 @@ HEADERS += tuplayer.h \
            tuppixmapitem.h \
            tuptextitem.h \
            tupbuttonitem.h \
+           tupfactoryhandler.h \
            tupitemfactory.h \
            tupellipseitem.h \
            # tupglobal_store.h \
@@ -60,6 +61,7 @@ HEADERS += tuplayer.h \
            tuplibraryobject.h \
            tuplibraryfolder.h \
            tuprequestbuilder.h \
+           tuprequestparserhandler.h \
            tuprequestparser.h \
            tupprojectresponse.h \
            tupabstractprojectresponsehandler.h \
@@ -107,9 +109,11 @@ SOURCES += tuplayer.cpp \
            tuplibraryfolder.cpp \
            tupcommandexecutor_library.cpp \
            tuprequestbuilder.cpp \
+           tuprequestparserhandler.cpp \
            tuprequestparser.cpp \
            tupprojectresponse.cpp \
            tupabstractprojectresponsehandler.cpp \
+           tupfactoryhandler.cpp \
            tupitemfactory.cpp \
            tupfilemanager.cpp \
            tupprojectloader.cpp \

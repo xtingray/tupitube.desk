@@ -261,7 +261,8 @@ void RasterCanvas::updateCursor(const QTabletEvent *event)
         if (event->pointerType() == QTabletEvent::Eraser) {
             cursor = QCursor(QPixmap(RASTER_RESOURCES_DIR + "resources/cursor-eraser.png"), 3, 28);
         } else {
-            switch (event->device()) {
+            // switch (event->device()) {
+            switch (event->deviceType()) {
             case QTabletEvent::Stylus:
                 cursor = QCursor(QPixmap(RASTER_RESOURCES_DIR + "resources/cursor-pencil.png"), 0, 0);
                 break;

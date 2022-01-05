@@ -40,8 +40,8 @@
 #include "tuptoolplugin.h"
 #include "papagayosettings.h"
 #include "tupprojectresponse.h"
-#include "configurator.h"
-#include "tmouthtarget.h"
+#include "papagayoconfigurator.h"
+#include "nodemanager.h"
 
 #include <QPointF>
 #include <QKeySequence>
@@ -69,6 +69,7 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
         virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
 
         virtual QMap<TAction::ActionId, TAction *>actions() const;
+        TAction * getAction(TAction::ActionId toolId);
         int toolType() const;
         virtual QWidget *configurator();
 
@@ -82,61 +83,68 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
         virtual void layerResponse(const TupLayerResponse *event);
         virtual void frameResponse(const TupFrameResponse *event);
 
-        // virtual void addNewItem(const QString &name);
         virtual void updateWorkSpaceContext();
-
-        virtual void keyPressEvent(QKeyEvent *event);
-        virtual void keyReleaseEvent(QKeyEvent *event);
 
         virtual TupToolPlugin::Mode currentMode();
 
         void resizeNode(qreal factor);
         void updateZoomFactor(qreal factor);
 
-        void setTargetEnvironment();
+        void setNodesManagerEnvironment();
+        void setProportionState(int flag);
+
+    protected:
+        virtual void keyPressEvent(QKeyEvent *event);
+        virtual void keyReleaseEvent(QKeyEvent *event);
 
     signals:
-        void importLipSync();
+        void lipsyncCreatorRequested();
+        void lipsyncEditionRequested(const QString &lipsyncName);
         void callForPlugin(int menu, int index);
 
     private slots:
-        void editLipSyncSelection(const QString &name);
+        // void saveMouthTransformations();
+        void editLipsyncMouth(const QString &name);
         void removeCurrentLipSync(const QString &name);
-        // void setCurrentLipSync(const QString &name);
-        void setTargetInitPos(const QPointF &point);
-        void updateOriginPoint(const QPointF &point);
+
         void resetCanvas();
-        void addTarget(const QString &id, int index);
+        void addNodesManager();
+
         void updateInitFrame(int index);
-        void updateXPosition(int x);
-        void updateYPosition(int y);
+        void updateXMouthPositionInScene(int x);
+        void updateYMouthPositionInScene(int y);
+        void updateRotationInScene(int angle);
+        void updateScaleInScene(double xFactor, double yFactor);
+
+        void updatePositionRecord(const QPointF &point);
+        void updateRotationAngleRecord(int angle);
+        void updateScaleFactorRecord(double x, double y);
+
+        void resetMouthTransformations();
+        void enableProportion(bool flag);
 
     private:
         void setupActions();
-        void removeTarget();
+        void removeNodesManager();
+        void updateMouthTransformation();
 
         QMap<TAction::ActionId, TAction *> pgActions;
-        Configurator *configPanel;
+        PapagayoConfigurator *configPanel;
 
         TupGraphicsScene *scene;
 
         TupLipSync *currentLipSync;
         int sceneIndex;
 
-        QPointF targetInitPos;
-        QPointF origin;
-        TMouthTarget *target;
-
         TupToolPlugin::Mode mode;
 
-        // int baseZValue;
         qreal realFactor;
-
         QGraphicsItem *mouth;
-        QPointF mouthOffset;
-        QString currentMouth;
-        int currentMouthIndex;
-        bool targetIncluded;
+
+        int nodeZValue;
+        NodeManager *nodesManager;
+        bool managerIncluded;
+        QString key;
 };
 
 #endif

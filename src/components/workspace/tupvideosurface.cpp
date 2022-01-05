@@ -41,6 +41,10 @@
 TupVideoSurface::TupVideoSurface(QWidget *widget, VideoIF *target, const QSize &size, bool scaleFlag,
                                  int orientation, QObject *parent) : QAbstractVideoSurface(parent)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupVideoSurface()]";
+    #endif
+
     setNativeResolution(size);
 
     isScaled = scaleFlag;
@@ -87,6 +91,10 @@ TupVideoSurface::~TupVideoSurface()
 
 bool TupVideoSurface::start(const QVideoSurfaceFormat &format)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupVideoSurface::start()]";
+    #endif
+
     const QImage::Format imgFormat = QVideoFrame::imageFormatFromPixelFormat(format.pixelFormat());
     const QSize size = format.frameSize();
 
@@ -101,6 +109,10 @@ bool TupVideoSurface::start(const QVideoSurfaceFormat &format)
 
 bool TupVideoSurface::present(const QVideoFrame &vFrame)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupVideoSurface::present()]";
+    #endif
+
     frame = vFrame;
     if (surfaceFormat().pixelFormat() != frame.pixelFormat() ||
         surfaceFormat().frameSize() != frame.size()) {
@@ -260,6 +272,10 @@ void TupVideoSurface::paint(QPainter *painter)
 
 QList<QVideoFrame::PixelFormat> TupVideoSurface::supportedPixelFormats(QAbstractVideoBuffer::HandleType handleType) const
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupVideoSurface::supportedPixelFormats()]";
+    #endif
+
     if (handleType == QAbstractVideoBuffer::NoHandle) {
         return QList<QVideoFrame::PixelFormat>()
                 << QVideoFrame::Format_RGB32
@@ -286,6 +302,10 @@ void TupVideoSurface::drawActionSafeArea(bool flag)
 
 void TupVideoSurface::setLastImage(const QImage &image)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupVideoSurface::setLastImage()]";
+    #endif
+
     if (isScaled) {
         int height = image.height();
         int width = (displaySize.width() * height) / displaySize.height();

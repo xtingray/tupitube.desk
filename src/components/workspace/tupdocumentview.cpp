@@ -54,12 +54,12 @@
 #include "tupbasiccamerainterface.h"
 #include "tupcameradialog.h"
 #include "tuplibrary.h"
-#include "tuppapagayoimporter.h"
-#include "tuppapagayodialog.h"
 #include "tcolorcell.h"
 #include "tosd.h"
 #include "tupfilterinterface.h"
 #include "tupmodessettingsdialog.h"
+#include "tuppapagayoapp.h"
+#include "tuplipsync.h"
 
 #include <QDir>
 #include <QApplication>
@@ -125,43 +125,41 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
 
     setCentralWidget(workspace);
 
-    connect(paintArea, SIGNAL(scaled(qreal)), this, SLOT(updateZoomVars(qreal)));
-    connect(paintArea, SIGNAL(rotated(int)), this, SLOT(updateRotationVars(int)));
-    connect(paintArea, SIGNAL(zoomIn()), this, SLOT(applyZoomIn()));
-    connect(paintArea, SIGNAL(zoomOut()), this, SLOT(applyZoomOut()));
-    connect(paintArea, SIGNAL(newPerspective(int)), this, SIGNAL(newPerspective(int)));
-    connect(paintArea, SIGNAL(eyeDropperLaunched()), this, SLOT(launchEyeDropperTool()));
+    connect(paintArea, &TupPaintArea::scaled, this, &TupDocumentView::updateZoomVars);
+    connect(paintArea, &TupPaintArea::rotated, this, &TupDocumentView::updateRotationVars);
+    connect(paintArea, &TupPaintArea::zoomIn, this, &TupDocumentView::applyZoomIn);
+    connect(paintArea, &TupPaintArea::zoomOut, this, &TupDocumentView::applyZoomOut);
+    connect(paintArea, &TupPaintArea::newPerspective, this, &TupDocumentView::newPerspective);
+    connect(paintArea, &TupPaintArea::eyeDropperLaunched, this, &TupDocumentView::launchEyeDropperTool);
 
-    // connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), this, SLOT(showPos(const QPointF &)));
-    connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), verticalRuler, SLOT(movePointers(const QPointF&)));
-    connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), horizontalRuler, SLOT(movePointers(const QPointF&)));
-    connect(paintArea, SIGNAL(changedZero(const QPointF&)), this, SLOT(changeRulerOrigin(const QPointF&)));
-    connect(paintArea, SIGNAL(requestTriggered(const TupProjectRequest *)), this, SIGNAL(requestTriggered(const TupProjectRequest *)));
-    connect(paintArea, SIGNAL(localRequestTriggered(const TupProjectRequest *)), this, SIGNAL(localRequestTriggered(const TupProjectRequest *)));
+    connect(paintArea, &TupPaintArea::cursorPosition, verticalRuler, &TupRuler::movePointers);
+    connect(paintArea, &TupPaintArea::cursorPosition, horizontalRuler, &TupRuler::movePointers);
+    connect(paintArea, &TupPaintArea::changedZero, this, &TupDocumentView::changeRulerOrigin);
+    connect(paintArea, &TupPaintArea::requestTriggered, this, &TupDocumentView::requestTriggered);
+    connect(paintArea, &TupPaintArea::localRequestTriggered, this, &TupDocumentView::localRequestTriggered);
 
     setupDrawActions();
     createLateralToolBar();
     createToolBar();
 
     status = new TupPaintAreaStatus(TupPaintAreaStatus::Vector, contourPen(), fillBrush());
-    connect(status, SIGNAL(newFramePointer(int)), this, SLOT(goToFrame(int)));
-    connect(status, SIGNAL(clearFrameClicked()), this, SLOT(clearFrame()));
-    connect(status, SIGNAL(resetClicked()), this, SLOT(resetWorkSpaceTransformations()));
-    connect(status, SIGNAL(safeAreaClicked()), this, SLOT(drawActionSafeArea()));
-    // connect(status, SIGNAL(ruleOfThirdsClicked()), this, SLOT(drawRuleOfThirds()));
-    connect(status, SIGNAL(gridClicked()), this, SLOT(drawGrid()));
-    connect(status, SIGNAL(angleChanged(int)), this, SLOT(setRotationAngle(int)));
-    connect(status, SIGNAL(zoomChanged(qreal)), this, SLOT(setZoomFactor(qreal)));
-    connect(status, SIGNAL(fullClicked()), this, SLOT(showFullScreen()));
+    connect(status, &TupPaintAreaStatus::newFramePointer, this, &TupDocumentView::goToFrame);
+    connect(status, &TupPaintAreaStatus::clearFrameClicked, this, &TupDocumentView::clearFrame);
+    connect(status, &TupPaintAreaStatus::resetClicked, this, &TupDocumentView::resetWorkSpaceTransformations);
+    connect(status, &TupPaintAreaStatus::safeAreaClicked, this, &TupDocumentView::drawActionSafeArea);
+    connect(status, &TupPaintAreaStatus::gridClicked, this, &TupDocumentView::drawGrid);
+    connect(status, &TupPaintAreaStatus::angleChanged, this, &TupDocumentView::setRotationAngle);
+    connect(status, &TupPaintAreaStatus::zoomChanged, this, &TupDocumentView::setZoomFactor);
+    connect(status, &TupPaintAreaStatus::fullClicked, this, &TupDocumentView::showFullScreen);
 
-    connect(paintArea, SIGNAL(frameChanged(int)), status, SLOT(updateFrameIndex(int)));
-    connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), status, SLOT(showPos(const QPointF &)));
+    connect(paintArea, &TupPaintArea::frameChanged, status, &TupPaintAreaStatus::updateFrameIndex);
+    connect(paintArea, &TupPaintArea::cursorPosition, status, &TupPaintAreaStatus::showPos);
 
     brushManager()->initBgColor(project->getBgColor());
 
-    connect(brushManager(), SIGNAL(penChanged(const QPen &)), this, SLOT(updatePen(const QPen &)));
-    connect(brushManager(), SIGNAL(brushChanged(const QBrush &)), this, SLOT(updateBrush(const QBrush &)));
-    connect(brushManager(), SIGNAL(bgColorChanged(const QColor &)), this, SLOT(updateBgColor(const QColor &)));
+    connect(brushManager(), &TupBrushManager::penChanged, this, &TupDocumentView::updatePen);
+    connect(brushManager(), &TupBrushManager::brushChanged, this, &TupDocumentView::updateBrush);
+    connect(brushManager(), &TupBrushManager::bgColorChanged, this, &TupDocumentView::updateBgColor);
 
     setStatusBar(status);
 
@@ -417,7 +415,7 @@ void TupDocumentView::setupDrawActions()
     new TAction(QPixmap(THEME_DIR + "icons/camera.png"), tr("Camera"), QKeySequence(tr("Ctrl+Shift+C")),
                 this, SLOT(cameraInterface()), actionManager, "camera");
 
-    new TAction(QPixmap(THEME_DIR + "icons/papagayo.png"), tr("Papagayo Lip-sync Files"), QKeySequence(tr("Ctrl+Shift+P")),
+    new TAction(QPixmap(THEME_DIR + "icons/papagayo.png"), tr("Papagayo Lip-sync Module"), QKeySequence(tr("Ctrl+Shift+P")),
                 this, SLOT(papagayoManager()), actionManager, "papagayo");
 }
 
@@ -427,17 +425,17 @@ void TupDocumentView::createLateralToolBar()
     toolbar->setIconSize(QSize(16, 16));
     toolbar->setMovable(false);
     addToolBar(Qt::LeftToolBarArea, toolbar);
-    connect(toolbar, SIGNAL(actionTriggered(QAction *)), this, SLOT(selectToolFromMenu(QAction *)));
+    connect(toolbar, SIGNAL(actionTriggered(QAction*)), this, SLOT(selectToolFromMenu(QAction*)));
 
     // Brushes menu
     shapesMenu = new QMenu(tr("Brushes"), toolbar);
     shapesMenu->setIcon(QPixmap(THEME_DIR + "icons/square.png"));
-    connect(shapesMenu, SIGNAL(triggered(QAction *)), this, SLOT(selectToolFromMenu(QAction*)));
+    connect(shapesMenu, SIGNAL(triggered(QAction*)), this, SLOT(selectToolFromMenu(QAction*)));
 
     // Motion Tween menu
     motionMenu = new QMenu(tr("Tweening"), toolbar);
     motionMenu->setIcon(QPixmap(THEME_DIR + "icons/motion_tween.png"));
-    connect(motionMenu, SIGNAL(triggered(QAction *)), this, SLOT(selectToolFromMenu(QAction*)));
+    connect(motionMenu, SIGNAL(triggered(QAction*)), this, SLOT(selectToolFromMenu(QAction*)));
 
     // Misc Tools menu
     miscMenu = new QMenu(tr("Misc Tools"), toolbar);
@@ -508,15 +506,15 @@ void TupDocumentView::loadPlugins()
             connect(tool, SIGNAL(closeHugeCanvas()), this, SLOT(closeFullScreen()));
 
         if (tool->toolType() != TupToolInterface::Tweener)
-            connect(tool, SIGNAL(callForPlugin(int, int)), this, SLOT(loadPlugin(int, int)));
+            connect(tool, SIGNAL(callForPlugin(int,int)), this, SLOT(loadPlugin(int,int)));
 
         QStringList::iterator it;
         QList<TAction::ActionId> keys = tool->keys();
 
         for (int i = 0; i < keys.size(); i++) {
             TAction::ActionId toolId = keys.at(i);
-            TAction *action = tool->actions()[toolId];
-            if (action) {                
+            TAction *action = tool->getAction(toolId);
+            if (action) {
                 #ifdef TUP_DEBUG
                     qWarning() << "[TupDocumentView::loadPlugins()] - Tool Loaded -> " << action->text();
                 #endif
@@ -527,8 +525,7 @@ void TupDocumentView::loadPlugins()
                 action->setCheckable(true);
                 actionGroup->addAction(action);
 
-                QString toolName = action->text();
-
+                // QString toolName = action->text();
                 switch (tool->toolType()) {
                     case TupToolInterface::Brush:
                     {
@@ -672,7 +669,8 @@ void TupDocumentView::loadPlugins()
                 qDebug() << "[TupDocumentView::loadPlugins()] - Filter Loaded: " << *it;
             #endif
 
-            TAction *filter = filterInterface->actions()[*it];
+            // TAction *filter = filterInterface->actions()[*it];
+            TAction *filter = filterInterface->getAction(*it);
             if (filter) {
                 connect(filter, SIGNAL(triggered()), this, SLOT(applyFilter()));
                 filterMenu->addAction(filter);
@@ -789,7 +787,7 @@ void TupDocumentView::loadPlugin(int menu, int actionID)
                 if (actionID == TAction::ColorPalette) {
                     if (fullScreenOn) {
                         // QColor currentColor = brushManager()->penColor();
-                        emit openColorDialog(brushManager()->penColor());
+                        emit colorDialogRequested(brushManager()->penColor());
                     }
                     return;
                 } else if (actionID == TAction::EyeDropper) {
@@ -817,7 +815,7 @@ void TupDocumentView::loadPlugin(int menu, int actionID)
                     /*
                     case TupToolPlugin::SchemeTool:
                     {
-                        action = k->schemeAction;
+                        action = schemeAction;
                     }
                     break;
                     */
@@ -914,7 +912,7 @@ void TupDocumentView::loadPlugin(int menu, int actionID)
                 qDebug() << "[TupDocumentView::loadPlugin()] - Calling action -> " << action->text();
             #endif
 
-            QString toolName = tr("%1").arg(action->text());
+            // QString toolName = tr("%1").arg(action->text());
             TAction::ActionId tool = action->actionId();
             if (tool != currentTool->toolId()) {
                 action->trigger();
@@ -948,8 +946,10 @@ void TupDocumentView::selectTool()
             if (currentTool->toolId() == TAction::Pencil)
                 disconnect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
 
-            if (currentTool->toolId() == TAction::LipSyncTool)
-                disconnect(currentTool, SIGNAL(importLipSync()), this, SLOT(importPapagayoLipSync()));
+            if (currentTool->toolId() == TAction::LipSyncTool) {
+                disconnect(currentTool, SIGNAL(lipsyncCreatorRequested()), this, SLOT(openLipSyncCreator()));
+                disconnect(currentTool, SIGNAL(lipsyncEditionRequested(QString)), this, SLOT(openLipSyncCreator(QString)));
+            }
 
             if (currentTool->toolId() == TAction::EyeDropper) {
                 disconnect(currentTool, SIGNAL(colorPicked(TColorCell::FillType, const QColor &)),
@@ -1040,8 +1040,8 @@ void TupDocumentView::selectTool()
                     if (toolId == TAction::ObjectSelection) {
                         tool->setProjectSize(project->getDimension());
                         minWidth = 130;
-                        connect(paintArea, SIGNAL(itemAddedOnSelection(TupGraphicsScene *)),
-                                tool, SLOT(initItems(TupGraphicsScene *)));
+                        connect(paintArea, SIGNAL(itemAddedOnSelection(TupGraphicsScene*)),
+                                tool, SLOT(initItems(TupGraphicsScene*)));
                     }
                 }
                 break;
@@ -1063,7 +1063,8 @@ void TupDocumentView::selectTool()
                 {
                     status->enableFullScreenFeature(false);
                     minWidth = 220;
-                    connect(currentTool, SIGNAL(importLipSync()), this, SLOT(importPapagayoLipSync()));
+                    connect(currentTool, SIGNAL(lipsyncCreatorRequested()), this, SLOT(openLipSyncCreator()));
+                    connect(currentTool, SIGNAL(lipsyncEditionRequested(QString)), this, SLOT(openLipSyncCreator(QString)));
 
                     miscMenu->setDefaultAction(action);
                     miscMenu->setActiveAction(action);
@@ -1276,7 +1277,7 @@ void TupDocumentView::createToolBar()
 
     nextOnionSkinSpin = new QSpinBox(this);
     nextOnionSkinSpin->setToolTip(tr("Next Frames"));
-    connect(nextOnionSkinSpin, SIGNAL(valueChanged (int)), this, SLOT(setNextOnionSkin(int)));
+    connect(nextOnionSkinSpin, SIGNAL(valueChanged(int)), this, SLOT(setNextOnionSkin(int)));
 
     if (next > 0)
         nextOnionSkinSpin->setValue(next);
@@ -1305,7 +1306,6 @@ void TupDocumentView::createToolBar()
     sEmpty2->setFixedWidth(5);
 
     QLabel *staticOpacityLabel = new QLabel();
-    // QPixmap staticPix(THEME_DIR + "icons/bg_opacity.png");
     staticOpacityLabel->setToolTip(tr("Static BG Opacity"));
     staticOpacityLabel->setPixmap(QPixmap(THEME_DIR + "icons/bg_opacity.png"));
 
@@ -1426,12 +1426,11 @@ void TupDocumentView::openRasterMode()
 
     rasterWindow = new RasterMainWindow(project, "raster", spaceContext(), currentSceneIndex(),
                                         contourColor, zoomFactor, this);
-    connect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString &)));
-    connect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
-            this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
-    connect(rasterWindow, SIGNAL(rasterStrokeMade()), this, SLOT(requestRasterStroke()));
-    connect(rasterWindow, SIGNAL(canvasCleared()), this, SLOT(requestClearRasterCanvas()));
-    connect(rasterWindow, SIGNAL(libraryCall(const QString &)), this, SLOT(importImageToLibrary(const QString &)));
+    connect(rasterWindow, &RasterMainWindow::closeWindow, this, &TupDocumentView::closeRasterWindow);
+    connect(rasterWindow, &RasterMainWindow::paintAreaEventTriggered, this, &TupDocumentView::paintAreaEventTriggered);
+    connect(rasterWindow, &RasterMainWindow::rasterStrokeMade, this, &TupDocumentView::requestRasterStroke);
+    connect(rasterWindow, &RasterMainWindow::canvasCleared, this, &TupDocumentView::requestClearRasterCanvas);
+    connect(rasterWindow, &RasterMainWindow::libraryCall, this, &TupDocumentView::importImageToLibrary);
 
     rasterWindowOn = true;
     rasterWindow->showFullScreen();
@@ -1814,44 +1813,26 @@ void TupDocumentView::showFullScreen()
 
     fullScreen->updateCursor(currentTool->toolCursor());
 
-    /*
-    QString toolName = currentTool->currentToolName();
-    if (currentTool->toolId() == TAction::Shift)
-        currentTool->setActiveView("FULL_SCREEN");
-    */
-
     nodesScaleFactor = 1;
     updateNodesScale(scaleFactor);
 
-    connect(this, SIGNAL(openColorDialog(const QColor &)), fullScreen, SLOT(colorDialog(const QColor &)));
-    connect(fullScreen, SIGNAL(colorChanged(TColorCell::FillType, const QColor &)),
-            this, SIGNAL(colorChanged(TColorCell::FillType, const QColor &)));
-    connect(fullScreen, SIGNAL(penWidthChangedFromFullScreen(int)), this, SIGNAL(penWidthChanged(int)));
-    connect(fullScreen, SIGNAL(onionOpacityChangedFromFullScreen(double)), this, SLOT(updateOnionOpacity(double)));
-    connect(fullScreen, SIGNAL(zoomFactorChangedFromFullScreen(qreal)), this, SLOT(updateNodesScale(qreal)));
-    connect(fullScreen, SIGNAL(callAction(int, int)), this, SLOT(loadPlugin(int, int)));
-    connect(fullScreen, SIGNAL(requestTriggered(const TupProjectRequest *)), this, SIGNAL(requestTriggered(const TupProjectRequest *)));
-    connect(fullScreen, SIGNAL(localRequestTriggered(const TupProjectRequest *)), this, SIGNAL(localRequestTriggered(const TupProjectRequest *)));
-    connect(fullScreen, SIGNAL(rightClick()), this, SLOT(fullScreenRightClick()));
-    connect(fullScreen, SIGNAL(rightClick()), this, SLOT(fullScreenRightClick()));
-    connect(fullScreen, SIGNAL(goToFrame(int, int, int)), this, SLOT(selectFrame(int, int, int)));
-    connect(fullScreen, SIGNAL(closeHugeCanvas()), this, SLOT(closeFullScreen()));
+    connect(this, &TupDocumentView::colorDialogRequested, fullScreen, &TupCanvas::openColorDialog);
+    connect(fullScreen, &TupCanvas::colorChanged, this, &TupDocumentView::colorChanged);
+    connect(fullScreen, &TupCanvas::penWidthChangedFromFullScreen, this, &TupDocumentView::penWidthChanged);
+    connect(fullScreen, &TupCanvas::onionOpacityChangedFromFullScreen, this, &TupDocumentView::updateOnionOpacity);
+    connect(fullScreen, &TupCanvas::zoomFactorChangedFromFullScreen, this, &TupDocumentView::updateNodesScale);
+    connect(fullScreen, &TupCanvas::callAction, this, &TupDocumentView::loadPlugin);
+    connect(fullScreen, &TupCanvas::requestTriggered, this, &TupDocumentView::requestTriggered);
+    connect(fullScreen, &TupCanvas::localRequestTriggered, this, &TupDocumentView::localRequestTriggered);
+    connect(fullScreen, &TupCanvas::rightClick, this, &TupDocumentView::fullScreenRightClick);
+    connect(fullScreen, &TupCanvas::goToFrame, this, &TupDocumentView::selectFrame);
+    connect(fullScreen, &TupCanvas::closeHugeCanvas, this, &TupDocumentView::closeFullScreen);
 
     if (currentTool->toolId() == TAction::ObjectSelection)
         fullScreen->enableRubberBand();
 
-    // fullScreen->showFullScreen();
     fullScreen->showMaximized();
 }
-
-/*
-void TupDocumentView::updatePenThickness(int size) 
-{
-    QPen pen = brushManager()->pen();
-    pen.setWidth(size);
-    emit updatePenFromFullScreen(pen);
-}
-*/
 
 void TupDocumentView::updateOnionOpacity(double opacity)
 {
@@ -1862,7 +1843,7 @@ void TupDocumentView::updateOnionOpacity(double opacity)
 void TupDocumentView::closeFullScreen()
 {
     if (fullScreenOn) {
-        disconnect(this, SIGNAL(openColorDialog(const QColor &)), fullScreen, SLOT(colorDialog(const QColor &)));
+        disconnect(this, SIGNAL(colorDialogRequested(const QColor &)), fullScreen, SLOT(openColorDialog(const QColor &)));
         disconnect(fullScreen, SIGNAL(colorChanged(TColorCell::FillType, const QColor &)),
                    this, SIGNAL(colorChanged(TColorCell::FillType, const QColor &)));
         disconnect(fullScreen, SIGNAL(penWidthChangedFromFullScreen(int)), this, SIGNAL(penWidthChanged(int)));
@@ -1872,7 +1853,6 @@ void TupDocumentView::closeFullScreen()
         disconnect(fullScreen, SIGNAL(requestTriggered(const TupProjectRequest *)), this, SIGNAL(requestTriggered(const TupProjectRequest *)));
         disconnect(fullScreen, SIGNAL(localRequestTriggered(const TupProjectRequest *)), this, SIGNAL(localRequestTriggered(const TupProjectRequest *)));
         disconnect(fullScreen, SIGNAL(rightClick()), this, SLOT(fullScreenRightClick()));
-        disconnect(fullScreen, SIGNAL(rightClick()), this, SLOT(fullScreenRightClick()));
         disconnect(fullScreen, SIGNAL(goToFrame(int, int, int)), this, SLOT(selectFrame(int, int, int)));
         disconnect(fullScreen, SIGNAL(closeHugeCanvas()), this, SLOT(closeFullScreen()));
 
@@ -1881,11 +1861,6 @@ void TupDocumentView::closeFullScreen()
         currentTool->init(paintArea->graphicsScene());
 
         fullScreen = nullptr;
-
-        /*
-        if (currrentTool->toolId() == TAction::Shift)
-            currentTool->setActiveView("WORKSPACE");
-        */
 
         nodesScaleFactor = cacheScaleFactor;
         updateNodesScale(1);
@@ -1969,10 +1944,10 @@ void TupDocumentView::storyboardSettings()
     TupStoryBoardDialog *storySettings = new TupStoryBoardDialog(isNetworked, imagePlugin, videoPlugin, project,
                                                                  currentSceneIndex(), this);
 
-    connect(storySettings, SIGNAL(updateStoryboard(TupStoryboard *, int)), this, SLOT(sendStoryboard(TupStoryboard *, int)));
-    connect(storySettings, SIGNAL(accepted()), paintArea, SLOT(updatePaintArea()));
-    connect(storySettings, SIGNAL(rejected()), paintArea, SLOT(updatePaintArea()));
-    connect(storySettings, SIGNAL(projectHasChanged()), this, SIGNAL(projectHasChanged()));
+    connect(storySettings, &TupStoryBoardDialog::updateStoryboard, this, &TupDocumentView::sendStoryboard);
+    connect(storySettings, &TupStoryBoardDialog::accepted, paintArea, &TupPaintArea::updatePaintArea);
+    connect(storySettings, &TupStoryBoardDialog::rejected, paintArea, &TupPaintArea::updatePaintArea);
+    connect(storySettings, &TupStoryBoardDialog::projectHasChanged, this, &TupDocumentView::projectHasChanged);
 
     if (isNetworked)
         connect(storySettings, SIGNAL(postStoryboard(int)), this, SIGNAL(postStoryboard(int)));
@@ -2176,8 +2151,8 @@ void TupDocumentView::cameraInterface()
                     TupBasicCameraInterface *dialog = new TupBasicCameraInterface(resolution, cameraDevices, devicesCombo, cameraDialog->cameraIndex(), 
                                                                                   cameraSize, photoCounter);
 
-                    connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
-                    connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode())); 
+                    connect(dialog, &TupBasicCameraInterface::pictureHasBeenSelected, this, &TupDocumentView::insertPictureInFrame);
+                    connect(dialog, &TupBasicCameraInterface::closed, this, &TupDocumentView::updateCameraMode);
                     dialog->show();
                     dialog->move(static_cast<int> (screen->geometry().width() - dialog->width()) / 2,
                                  static_cast<int> (screen->geometry().height() - dialog->height()) / 2);
@@ -2185,8 +2160,8 @@ void TupDocumentView::cameraInterface()
                     TupCameraInterface *dialog = new TupCameraInterface(resolution, cameraDevices, devicesCombo, cameraDialog->cameraIndex(),
                                                                         cameraSize, photoCounter);
 
-                    connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
-                    connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode())); 
+                    connect(dialog, &TupCameraInterface::pictureHasBeenSelected, this, &TupDocumentView::insertPictureInFrame);
+                    connect(dialog, &TupCameraInterface::closed, this, &TupDocumentView::updateCameraMode);
                     dialog->show();
                     dialog->move(static_cast<int> (screen->geometry().width() - dialog->width()) / 2,
                                  static_cast<int> (screen->geometry().height() - dialog->height()) / 2);
@@ -2196,8 +2171,8 @@ void TupDocumentView::cameraInterface()
                 TupReflexInterface *dialog = new TupReflexInterface(devicesCombo->itemText(index), resolution, cameraDevices.at(index),
                                                                     cameraSize, photoCounter);
 
-                connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
-                connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode())); 
+                connect(dialog, &TupReflexInterface::pictureHasBeenSelected, this, &TupDocumentView::insertPictureInFrame);
+                connect(dialog, &TupReflexInterface::closed, this, &TupDocumentView::updateCameraMode);
                 dialog->show();
                 dialog->move(static_cast<int> (screen->geometry().width() - dialog->width()) / 2,
                              static_cast<int> (screen->geometry().height() - dialog->height()) / 2);
@@ -2311,171 +2286,57 @@ void TupDocumentView::insertPictureInFrame(int id, const QString path)
     }
 }
 
-void TupDocumentView::importPapagayoLipSync()
+void TupDocumentView::openLipSyncCreator()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupDocumentView::importPapagayoLipSync()]";
+        qDebug() << "[TupDocumentView::openLipSyncCreator()]";
     #endif
 
-    TupPapagayoDialog *dialog = new TupPapagayoDialog();
-    dialog->show();
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    if (currentTool->toolId() != TAction::LipSyncTool)
+        papagayoAction->trigger();
 
-    if (dialog->exec() != QDialog::Rejected) {
-        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    TupPapagayoApp *papagayoApp = new TupPapagayoApp(TupPapagayoApp::Insert, project, "", getContextIndexes(), this);
+    connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);
 
-        QString file = dialog->getPGOFile();
-        QFileInfo info(file);
-        QString folder = info.fileName().toLower();
+    papagayoApp->show();
+    papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
+                      static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
+    QApplication::restoreOverrideCursor();
+}
 
-        int sceneIndex = paintArea->currentSceneIndex();
-        TupScene *scene = project->sceneAt(sceneIndex);
-        if (scene->lipSyncExists(folder)) {
-            TOsd::self()->display(TOsd::Error, tr("Papagayo project already exists!\nPlease, rename the project's file"));
-            #ifdef TUP_DEBUG
-                qDebug() << "[TupDocumentView::importPapagayoLipSync()] - Fatal Error: Papagayo file is invalid!";
-            #endif
-            QApplication::restoreOverrideCursor();
-            return;
-        }
+void TupDocumentView::openLipSyncCreator(const QString &lipsyncName)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupDocumentView::openLipSyncCreator(QString)] - lipsyncName -> " << lipsyncName;
+    #endif
 
-        QString imagesDir = dialog->getImagesDir();
-        #ifdef TUP_DEBUG
-            qDebug() << "[TupDocumentView::importPapagayoLipSync()] - imagesDir -> " << imagesDir;
-        #endif
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-        QFile projectFile(file);
-        if (projectFile.exists()) {
-            if (projectFile.size() > 0) {
-                QDir dir(imagesDir);
-                QStringList imagesList = dir.entryList(QStringList() << "*.png" << "*.jpg" << "*.jpeg" << "*.gif" << "*.svg" << "*.tobj");
-                if (imagesList.size() > 0) {
-                    if (imagesList.count() == 10) { // Mouths set always contains 10 figures
-                        QString firstImage = imagesList.at(0);
-                        int dot = firstImage.lastIndexOf(".");
-                        QString extension = firstImage.mid(dot);
+    int sceneIndex = paintArea->currentSceneIndex();
+    TupScene *scene = project->sceneAt(sceneIndex);
+    if (scene) {
+        TupLipSync *lipsync = scene->getLipSync(lipsyncName);
+        if (lipsync) {
+            QList<int> indexes;
+            indexes << sceneIndex;
+            indexes << scene->getLipSyncLayerIndex(lipsyncName);
+            indexes << lipsync->getInitFrame();
 
-                        int currentIndex = paintArea->currentFrameIndex();
-                        TupPapagayoImporter *parser = new TupPapagayoImporter(file, project->getDimension(), extension, currentIndex);
-                        if (parser->fileIsValid()) {
-                            int layerIndex = paintArea->currentLayerIndex();
-                            QString mouthPath = imagesDir;
-                            QDir mouthDir = QDir(mouthPath);
+            TupPapagayoApp *papagayoApp = new TupPapagayoApp(TupPapagayoApp::Update, project, lipsync, indexes, this);
+            connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);
 
-                            // Creating Papagayo folder in the library
-                            TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, folder,
-                                                                                                TupLibraryObject::Folder);
-                            emit requestTriggered(&request);
-
-                            TupLibraryObject::ObjectType type = TupLibraryObject::Image;
-                            if (extension.compare(".tobj") == 0)
-                                type = TupLibraryObject::Item;
-
-                            // Adding mouth images in the library
-                            foreach (QString fileName, imagesList) {
-                                QString key = fileName.toLower();
-                                QFile f(mouthPath + "/" + fileName);
-                                #ifdef TUP_DEBUG
-                                    qDebug() << "[TupDocumentView::importPapagayoLipSync()] - mouth image -> " << fileName;
-                                    qDebug() << "[TupDocumentView::importPapagayoLipSync()] - key -> " << key;
-                                    qDebug() << "[TupDocumentView::importPapagayoLipSync()] - mouthPath -> " << mouthPath;
-                                #endif
-                                if (f.open(QIODevice::ReadOnly)) {
-                                    QByteArray data = f.readAll();
-                                    f.close();
-
-                                    request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key, type, project->spaceContext(), data, folder,
-                                                                                      sceneIndex, layerIndex, currentIndex);
-                                    emit requestTriggered(&request);
-                                }
-                            }
-
-                            // Adding lip-sync sound file
-                            QString soundFile = dialog->getSoundFile();
-                            QFile f(soundFile);
-                            QFileInfo info(soundFile);
-                            QString soundKey = info.fileName().toLower();
-
-                            if (f.open(QIODevice::ReadOnly)) {
-                                QByteArray data = f.readAll();
-                                f.close();
-                                request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, soundKey, TupLibraryObject::Sound, project->spaceContext(), data, folder,
-                                                                                  sceneIndex, layerIndex, currentIndex);
-                                emit requestTriggered(&request);
-                            }
-
-                            // Adding Papagayo project
-                            parser->setSoundFile(soundKey);
-                            QString xml = parser->toString();
-
-                            request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex, TupProjectRequest::AddLipSync, xml);
-                            emit requestTriggered(&request);
-
-                            // Adding frames if they are required
-                            TupScene *scene = project->sceneAt(sceneIndex);
-                            if (scene) {
-                                int sceneFrames = scene->framesCount();
-                                int lipSyncFrames = currentIndex + parser->getFrameCount();
-
-                                #ifdef TUP_DEBUG
-                                    qDebug() << "[TupDocumentView::importPapagayoLipSync()] - scenesFrames -> " << sceneFrames;
-                                    qDebug() << "[TupDocumentView::importPapagayoLipSync()] - lipSyncFrames -> " << lipSyncFrames;
-                                #endif
-
-                                if (lipSyncFrames > sceneFrames) {
-                                    int layersCount = scene->layersCount();
-                                    for (int i = sceneFrames; i < lipSyncFrames; i++) {
-                                         for (int j = 0; j < layersCount; j++) {
-                                              request = TupRequestBuilder::createFrameRequest(sceneIndex, j, i, TupProjectRequest::Add, tr("Frame"));
-                                              emit requestTriggered(&request);
-                                         }
-                                    }
-
-                                    QString selection = QString::number(layerIndex) + "," + QString::number(layerIndex) + ","
-                                                        + QString::number(currentIndex) + "," + QString::number(currentIndex);
-
-                                    request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, currentIndex, TupProjectRequest::Select, selection);
-                                    emit requestTriggered(&request);
-                                }
-                            }
-
-                            if (currentTool->toolId() != TAction::LipSyncTool)
-                                papagayoAction->trigger();
-
-                            emit fpsUpdated(parser->getFps());
-
-                            TOsd::self()->display(TOsd::Info, tr("Papagayo file has been imported successfully"));
-                        } else {
-                            TOsd::self()->display(TOsd::Error, tr("Papagayo file is invalid!"));
-                            #ifdef TUP_DEBUG
-                                qDebug() << "[TupDocumentView::importPapagayoLipSync()] - Fatal Error: Papagayo file is invalid!";
-                            #endif
-                        }
-                    } else {
-                        TOsd::self()->display(TOsd::Error, tr("Mouth images are incomplete!"));
-                        #ifdef TUP_DEBUG
-                            qDebug() << "[TupDocumentView::importPapagayoLipSync()] - Fatal Error: Mouth images are incomplete!";
-                        #endif
-                    }
-                } else {
-                    TOsd::self()->display(TOsd::Error, tr("Images directory is empty!"));
-                    #ifdef TUP_DEBUG
-                        qDebug() << "[TupDocumentView::importPapagayoLipSync()] - Fatal Error: Images directory is empty!";
-                    #endif
-                }
-            } else {
-                TOsd::self()->display(TOsd::Error, tr("Papagayo project is invalid!"));
-                #ifdef TUP_DEBUG
-                    qDebug() << "[TupDocumentView::importPapagayoLipSync()] - Fatal Error: Papagayo file is invalid!";
-                #endif
-            }
+            papagayoApp->show();
+            papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
+                              static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
         } else {
-            TOsd::self()->display(TOsd::Error, tr("Papagayo project is invalid!"));
             #ifdef TUP_DEBUG
-                qDebug() << "[TupDocumentView::importPapagayoLipSync()] - Fatal Error: Papagayo file doesn't exist!";
+                qDebug() << "[TupDocumentView::openLipSyncCreator(QString)] - Fatal Error: Can't find lipsync -> " << lipsyncName;
             #endif
         }
-        QApplication::restoreOverrideCursor();
     }
+
+    QApplication::restoreOverrideCursor();
 }
 
 void TupDocumentView::papagayoManager()
@@ -2494,6 +2355,7 @@ void TupDocumentView::papagayoManager()
         TupProject::Mode mode = TupProject::Mode(spaceModeCombo->currentIndex());
         if (mode != TupProject::FRAMES_MODE)
             spaceModeCombo->setCurrentIndex(TupProject::FRAMES_MODE);
+
         papagayoAction->trigger();
     }
 }
@@ -2634,8 +2496,10 @@ void TupDocumentView::enableEyeDropperTool(TColorCell::FillType fillType)
             if (currentTool->toolId() == TAction::Pencil)
                 disconnect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
 
-            if (currentTool->toolId() == TAction::LipSyncTool)
-                disconnect(currentTool, SIGNAL(importLipSync()), this, SLOT(importPapagayoLipSync()));
+            if (currentTool->toolId() == TAction::LipSyncTool) {
+                disconnect(currentTool, SIGNAL(lipsyncCreatorRequested()), this, SLOT(openLipSyncCreator()));
+                disconnect(currentTool, SIGNAL(lipsyncEditionRequested(QString)), this, SLOT(openLipSyncCreator(QString)));
+            }
 
             currentTool->saveConfig();
             QWidget *toolConfigurator = currentTool->configurator();
@@ -2666,9 +2530,9 @@ void TupDocumentView::enableEyeDropperTool(TColorCell::FillType fillType)
         }
 
         paintArea->setTool(tool);
-        connect(currentTool, SIGNAL(colorPicked(TColorCell::FillType, const QColor &)),
-                                    this, SIGNAL(colorChanged(TColorCell::FillType, const QColor &)));
-        connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), this, SLOT(refreshEyeDropperPanel()));
+        connect(currentTool, SIGNAL(colorPicked(TColorCell::FillType,QColor)),
+                                    this, SIGNAL(colorChanged(TColorCell::FillType,QColor)));
+        connect(paintArea, &TupPaintArea::cursorPosition, this, &TupDocumentView::refreshEyeDropperPanel);
     } else {
         #ifdef TUP_DEBUG
            qDebug() << "[TupDocumentView::enableEyeDropperTool()] - Fatal Error: Eyedropper action is NULL!";
@@ -2683,4 +2547,40 @@ void TupDocumentView::refreshEyeDropperPanel()
     #endif
 
     currentTool->refreshEyeDropperPanel();
+}
+
+QList<int> TupDocumentView::getContextIndexes()
+{
+    QList<int> indexes;
+    indexes << paintArea->currentSceneIndex();
+    indexes << paintArea->currentLayerIndex();
+    indexes << paintArea->currentFrameIndex();
+
+    return indexes;
+}
+
+void TupDocumentView::launchLipsyncModule(bool recorded, const QString &soundFile)
+{
+    #ifdef TUP_DEBUG
+       qDebug() << "[TupDocumentView::launchLipsyncModule()] - soundFile -> " << soundFile;
+    #endif
+
+    papagayoManager(); // Launch plugin
+
+    TupPapagayoApp::Mode mode = TupPapagayoApp::Insert;
+    if (recorded)
+        mode = TupPapagayoApp::VoiceRecorded;
+
+    if (QFile::exists(soundFile)) {
+        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+        TupPapagayoApp *papagayoApp = new TupPapagayoApp(mode, project, soundFile, getContextIndexes(), this);
+        connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);
+
+        papagayoApp->show();
+        papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
+                          static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
+
+        QApplication::restoreOverrideCursor();
+    }
 }

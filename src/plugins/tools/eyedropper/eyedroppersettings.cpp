@@ -79,9 +79,11 @@ EyeDropperSettings::~EyeDropperSettings()
 
 void EyeDropperSettings::updateColor(const QColor &color)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[EyeDropperSettings::updateColor()] - color -> " << color;
     #endif
+    */
 
     colorCell->setBrush(QBrush(color));
     colorLabel->setText(color.name());

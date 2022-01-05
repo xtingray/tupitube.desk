@@ -69,7 +69,7 @@ void TupScenesWidget::setupButtons()
 
     connect(bar, SIGNAL(actionSelected(int)), this, SLOT(sendEvent(int)));
 
-    addChild(bar, Qt::AlignCenter);
+    addChild(bar, Qt::AlignHCenter);
 }
 
 void TupScenesWidget::setupTableScenes()

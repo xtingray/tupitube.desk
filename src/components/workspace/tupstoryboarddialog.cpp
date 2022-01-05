@@ -656,13 +656,14 @@ void TupStoryBoardDialog::exportAsPDF()
 
         QPrinter printer;
         if (size == QSize(520, 380)) {
-            printer.setPageSize(QPrinter::A5);
+            printer.setPageSize(QPageSize(QPageSize::A5));
+            // printer.setPageSize(QPrinter::A5);
         } else if (size == QSize(640, 480)) {
-            printer.setPageSize(QPrinter::A4);
+            printer.setPageSize(QPageSize(QPageSize::A4));
         } else if (size == QSize(720, 480)) {
-            printer.setPageSize(QPrinter::A4);
+            printer.setPageSize(QPageSize(QPageSize::A4));
         } else if (size == QSize(1920, 1080) || size == QSize(1280, 720)) {
-            printer.setPageSize(QPrinter::A2);
+            printer.setPageSize(QPageSize(QPageSize::A2));
         } else if (size == QSize(1080, 1080)) {
             QPageSize pageSize(size);
             printer.setPageSize(pageSize);

@@ -96,12 +96,12 @@ void TupMainWindow::createGUI()
     new TAction(QPixmap(THEME_DIR + "icons/svg_array.png"), tr("SVG Sequence"), QKeySequence(tr("Alt+Shift+S")), m_libraryWidget, 
 		SLOT(importSvgSequence()), m_actionManager, "importSvgSequence");
 
-    //new TAction(QPixmap(), tr("Audio File..."), QKeySequence(), m_libraryWidget, SLOT(importSound()),
-    //            m_actionManager, "importAudioFile");
+    new TAction(QPixmap(THEME_DIR + "icons/sound_object.png"), tr("Audio File"), QKeySequence(tr("Alt+A")), m_libraryWidget, SLOT(importSoundFile()),
+                m_actionManager, "importAudioFile");
 
     // SQA: Temporary code
-    //m_actionManager->enable("importSvg", false);
-    //m_actionManager->enable("importSvgArray", false);
+    // m_actionManager->enable("importSvg", false);
+    // m_actionManager->enable("importSvgArray", false);
 
     connectWidgetToManager(m_libraryWidget);
     connectWidgetToLocalManager(m_libraryWidget);
@@ -236,7 +236,7 @@ void TupMainWindow::setupMenu()
     m_insertMenu->addAction(m_actionManager->find("importImageSequence"));
     m_insertMenu->addAction(m_actionManager->find("importSvg"));
     m_insertMenu->addAction(m_actionManager->find("importSvgSequence"));
-    // m_insertMenu->addAction(m_actionManager->find("importAudioFile"));
+    m_insertMenu->addAction(m_actionManager->find("importAudioFile"));
 
     m_insertMenu->addSeparator();
     m_insertMenu->addAction(m_actionManager->find("importGimpPalettes"));
@@ -391,7 +391,7 @@ void TupMainWindow::setupFileActions()
     m_actionManager->insert(importPalette, "importGimpPalettes", "file");
 
     TAction *importPapagayo = new TAction(QPixmap(THEME_DIR + "icons/papagayo.png"), tr("&Import Papagayo Lip-sync"),
-                                         QKeySequence(tr("Alt+P")), this, SLOT(importPapagayoLipSync()), m_actionManager);
+                                         QKeySequence(tr("Ctrl+Shift+P")), this, SLOT(importPapagayoLipSync()), m_actionManager);
     importPapagayo->setStatusTip(tr("Import Papagayo lip-sync"));
     m_actionManager->insert(importPapagayo, "importPapagayoLipSync", "file");
 
@@ -409,7 +409,7 @@ void TupMainWindow::setupFileActions()
     // Post Animation action
     TAction *postProject = new TAction(QPixmap(THEME_DIR + "icons/share.png"), tr("&Post Animation"),
                                        QKeySequence(tr("Ctrl+P")), this, SLOT(postProject()), m_actionManager);
-    postProject->setStatusTip(tr("Post project on TupiTube's network"));
+    postProject->setStatusTip(tr("Post project on TupiTube network"));
     m_actionManager->insert(postProject, "post", "file");
 
     // Post Frame action
@@ -417,10 +417,10 @@ void TupMainWindow::setupFileActions()
                                      QKeySequence(tr("Ctrl+@")), this, SIGNAL(imagePosted()), m_actionManager);
     m_actionManager->insert(postFrame, "post_image", "file");
 
-    // Visit TupiTube's Network action
-    TAction *openNetwork = new TAction(QPixmap(THEME_DIR + "icons/social_network.png"), tr("Open TupiTube's Network"),
+    // Visit TupiTube Network action
+    TAction *openNetwork = new TAction(QPixmap(THEME_DIR + "icons/social_network.png"), tr("TupiTube Social Media"),
                                        QKeySequence(), this, SLOT(openTupiTubeNetwork()), m_actionManager);
-    openNetwork->setStatusTip(tr("Open TupiTube's Network"));
+    openNetwork->setStatusTip(tr("Open TupiTube Network"));
     m_actionManager->insert(openNetwork, "open_network", "file");
 
     // Exit action
@@ -569,7 +569,7 @@ void TupMainWindow::setUndoRedoActions()
 
 void TupMainWindow::importPapagayoLipSync()
 {
-    animationTab->importPapagayoLipSync();
+    animationTab->openLipSyncCreator();
 }
 
 void TupMainWindow::hideTopPanels()

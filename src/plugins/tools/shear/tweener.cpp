@@ -204,6 +204,11 @@ QMap<TAction::ActionId, TAction *> Tweener::actions() const
     return shearActions;
 }
 
+TAction * Tweener::getAction(TAction::ActionId toolId)
+{
+    return shearActions[toolId];
+}
+
 /* This method returns the list of actions defined in this plugin */
 
 int Tweener::toolType() const
@@ -283,16 +288,7 @@ void Tweener::updateScene(TupGraphicsScene *scene)
 { 
     mode = configPanel->mode();
 
-    if (mode == TupToolPlugin::Edit) {
-        int framesNumber = framesCount();
-
-        if (configPanel->startComboSize() < framesNumber)
-            configPanel->initStartCombo(framesNumber, initFrame);
-
-        int tweenLimit = initFrame + (configPanel->totalSteps() - 1);
-        if (scene->currentFrameIndex() >= initFrame && scene->currentFrameIndex() <= tweenLimit)
-            scene->addItem(target);
-    } else if (mode == TupToolPlugin::Add) {
+    if (mode == TupToolPlugin::Add) {
         int total = framesCount();
 
         if (editMode == TupToolPlugin::Properties) {

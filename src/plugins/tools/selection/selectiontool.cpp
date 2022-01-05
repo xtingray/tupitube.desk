@@ -52,7 +52,7 @@
 #include "tupprojectresponse.h"
 #include "tosd.h"
 
-SelectionTool::SelectionTool(): panel(nullptr)
+SelectionTool::SelectionTool(): settingsPanel(nullptr)
 {
     setupActions();
 }
@@ -88,7 +88,7 @@ void SelectionTool::initItems(TupGraphicsScene *gScene)
     foreach (QGraphicsView *view, gScene->views())
         view->setDragMode(QGraphicsView::RubberBandDrag);
 
-    panel->enableFormControls(false);
+    settingsPanel->enableFormControls(false);
 }
 
 void SelectionTool::removeTarget()
@@ -179,12 +179,9 @@ void SelectionTool::press(const TupInputDeviceInformation *input, TupBrushManage
                     qDebug() << "[SelectionTool::press()] - Adding node manager to item!";
                 #endif
 
-                // SQA: Temporary code
-                // item->setSelected(true);
-
-                NodeManager *manager = new NodeManager(item, gScene, nodeZValue);
-                connect(manager, SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
-                connect(manager, SIGNAL(scaleUpdated(double, double)), panel, SLOT(updateScaleFactor(double, double)));
+                NodeManager *manager = new NodeManager(Node::Selection, item, gScene, nodeZValue);
+                connect(manager, &NodeManager::rotationUpdated, settingsPanel, &SelectionSettings::updateRotationAngle);
+                connect(manager, &NodeManager::scaleUpdated, settingsPanel, &SelectionSettings::updateScaleFactor);
                 manager->show();
                 manager->resizeNodes(realFactor);
                 nodeManagers << manager;
@@ -222,13 +219,10 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
     Q_UNUSED(input)
     Q_UNUSED(brushManager)
 
-    // qDebug() << "1 - release - COUNT -> " << selectedObjects.count();
-    // qDebug() << "Is selected? -> " << selectedObjects.at(0)->isSelected();
-    // selectedObjects.at(0)->setSelected(true);
     selectedObjects = gScene->selectedItems();
 
     if (selectedObjects.count() > 0) {
-        panel->enableFormControls(true);
+        settingsPanel->enableFormControls(true);
         activeSelection = true;
         foreach (NodeManager *manager, nodeManagers) {
             QGraphicsItem *item = manager->parentItem();
@@ -237,8 +231,8 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
                 selectedObjects.removeAt(parentIndex); // Remove node's item from selected objects list
             } else { // Object is NOT IN the selected objects list
                 int index = nodeManagers.indexOf(manager);
-                disconnect(nodeManagers.at(index), SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
-                disconnect(nodeManagers.at(index), SIGNAL(scaleUpdated(double, double)), panel, SLOT(updateScaleFactor(double, double)));
+                disconnect(nodeManagers.at(index), SIGNAL(rotationUpdated(int)), settingsPanel, SLOT(updateRotationAngle(int)));
+                disconnect(nodeManagers.at(index), SIGNAL(scaleUpdated(double, double)), settingsPanel, SLOT(updateScaleFactor(double, double)));
                 delete nodeManagers.takeAt(index); // Removing node manager from nodes list
             }
         }
@@ -268,9 +262,9 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
                     #ifdef TUP_DEBUG
                         qDebug() << "[SelectionTool::release()] - Adding nodes manager to item!";
                     #endif
-                    NodeManager *manager = new NodeManager(item, gScene, nodeZValue);
-                    connect(manager, SIGNAL(rotationUpdated(int)), panel, SLOT(updateRotationAngle(int)));
-                    connect(manager, SIGNAL(scaleUpdated(double, double)), panel, SLOT(updateScaleFactor(double, double)));
+                    NodeManager *manager = new NodeManager(Node::Selection, item, gScene, nodeZValue);
+                    connect(manager, &NodeManager::rotationUpdated, settingsPanel, &SelectionSettings::updateRotationAngle);
+                    connect(manager, &NodeManager::scaleUpdated, settingsPanel, &SelectionSettings::updateScaleFactor);
                     manager->show();
                     manager->resizeNodes(realFactor);
                     nodeManagers << manager;
@@ -290,7 +284,7 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
             qDebug() << "[SelectionTool::release()] - No items selected!";
         #endif
 
-        panel->enableFormControls(false);
+        settingsPanel->enableFormControls(false);
         if (targetIsIncluded)
             targetIsIncluded = false;
 
@@ -383,6 +377,11 @@ QMap<TAction::ActionId, TAction *> SelectionTool::actions() const
     return selectActions;
 }
 
+TAction * SelectionTool::getAction(TAction::ActionId toolId)
+{
+    return selectActions[toolId];
+}
+
 int SelectionTool::toolType() const
 {
     return TupToolInterface::Selection;
@@ -390,19 +389,20 @@ int SelectionTool::toolType() const
 
 QWidget *SelectionTool::configurator()
 {
-    if (!panel) {
-        panel = new SelectionSettings;
-        connect(panel, SIGNAL(callAlignAction(SelectionSettings::Align)), this, SLOT(applyAlignAction(SelectionSettings::Align)));
-        connect(panel, SIGNAL(callFlip(SelectionSettings::Flip)), this, SLOT(applyFlip(SelectionSettings::Flip)));
-        connect(panel, SIGNAL(callOrderAction(SelectionSettings::Order)), this, SLOT(applyOrderAction(SelectionSettings::Order)));
-        connect(panel, SIGNAL(callGroupAction(SelectionSettings::Group)), this, SLOT(applyGroupAction(SelectionSettings::Group)));
-        connect(panel, SIGNAL(positionUpdated(int, int)), this, SLOT(updateItemPosition(int, int)));
-        connect(panel, SIGNAL(rotationUpdated(int)), this, SLOT(updateItemRotation(int)));
-        connect(panel, SIGNAL(scaleUpdated(double, double)), this, SLOT(updateItemScale(double, double)));
-        connect(panel, SIGNAL(activateProportion(bool)), this, SLOT(enableProportion(bool)));
+    if (!settingsPanel) {
+        settingsPanel = new SelectionSettings;
+        connect(settingsPanel, &SelectionSettings::callAlignAction, this, &SelectionTool::applyAlignAction);
+        connect(settingsPanel, &SelectionSettings::callFlip, this, &SelectionTool::applyFlip);
+        connect(settingsPanel, &SelectionSettings::callOrderAction, this, &SelectionTool::applyOrderAction);
+        connect(settingsPanel, &SelectionSettings::callGroupAction, this, &SelectionTool::applyGroupAction);
+        connect(settingsPanel, &SelectionSettings::positionUpdated, this, &SelectionTool::setItemPosition);
+        connect(settingsPanel, &SelectionSettings::rotationUpdated, this, &SelectionTool::setItemRotation);
+        connect(settingsPanel, &SelectionSettings::scaleUpdated, this, &SelectionTool::setItemScale);
+        connect(settingsPanel, &SelectionSettings::activateProportion, this, &SelectionTool::enableProportion);
+        connect(settingsPanel, &SelectionSettings::objectHasBeenReset, this, &SelectionTool::resetItemTransformations);
     }
 
-    return panel;
+    return settingsPanel;
 }
 
 void SelectionTool::aboutToChangeScene(TupGraphicsScene *scene)
@@ -433,7 +433,7 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
 
     if (response->getAction() == TupProjectRequest::Remove) {
         if (nodeManagers.count() == 1)
-            panel->enableFormControls(false);
+            settingsPanel->enableFormControls(false);
         return;
     }
 
@@ -541,12 +541,12 @@ void SelectionTool::syncNodes()
     #endif
 
     if (!nodeManagers.isEmpty()) {
-        foreach (NodeManager* node, nodeManagers) {
-            if (node) {
-                node->show();
-                QGraphicsItem *item = node->parentItem();
+        foreach (NodeManager* manager, nodeManagers) {
+            if (manager) {
+                manager->show();
+                QGraphicsItem *item = manager->parentItem();
                 if (item) {
-                    node->syncNodesFromParent();
+                    manager->syncNodesFromParent();
                     if (!item->isSelected())
                         item->setSelected(true);
                 }
@@ -626,7 +626,7 @@ void SelectionTool::keyPressEvent(QKeyEvent *event)
         } else if (event->key() == Qt::Key_U) {
             applyGroupAction(SelectionSettings::UngroupItems);
         } else {
-            panel->setProportionState(true);
+            settingsPanel->setProportionState(true);
             key = "CONTROL";
             if (selectionIsActive()) {
                 foreach (NodeManager *nodeManager, nodeManagers)
@@ -645,7 +645,7 @@ void SelectionTool::keyReleaseEvent(QKeyEvent *event)
     Q_UNUSED(event)
 
     if (key.compare("CONTROL") == 0) {
-        panel->setProportionState(false);
+        settingsPanel->setProportionState(false);
         key = "NONE";
         if (selectionIsActive()) {
             foreach (NodeManager *nodeManager, nodeManagers)
@@ -853,7 +853,7 @@ void SelectionTool::sceneResponse(const TupSceneResponse *event)
         initItems(scene);
 }
 
-void SelectionTool::updateItemPosition() 
+void SelectionTool::updateItemPosition()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[SelectionTool::updateItemPosition()]";
@@ -863,7 +863,7 @@ void SelectionTool::updateItemPosition()
         NodeManager *manager = nodeManagers.first();
         QGraphicsItem *item = manager->parentItem();
         QPoint point = item->mapToScene(item->boundingRect().center()).toPoint();
-        panel->setPos(point.x(), point.y());
+        settingsPanel->setPos(point.x(), point.y());
     } else { 
         if (selectedObjects.count() > 1) {
             QGraphicsItem *item = selectedObjects.first();
@@ -892,7 +892,7 @@ void SelectionTool::updateItemPosition()
             }
             int x = minX + ((maxX - minX)/2); 
             int y = minY + ((maxY - minY)/2);
-            panel->setPos(x, y);
+            settingsPanel->setPos(x, y);
 
             if (!targetIsIncluded) {
                 center = new TupEllipseItem(QRectF(QPointF(x - 2, y - 2), QSize(4, 4)));
@@ -979,7 +979,7 @@ void SelectionTool::updateItemRotation()
         NodeManager *manager = nodeManagers.first();
         QGraphicsItem *item = manager->parentItem();
         qreal angle = item->data(TupGraphicObject::Rotate).toReal();
-        panel->updateRotationAngle(static_cast<int>(angle));
+        settingsPanel->updateRotationAngle(static_cast<int>(angle));
     }
 }
 
@@ -1002,14 +1002,14 @@ void SelectionTool::updateItemScale()
             scaleY = 1;
             item->setData(TupGraphicObject::ScaleY, 1);
         }
-        panel->updateScaleFactor(scaleX, scaleY);
+        settingsPanel->updateScaleFactor(scaleX, scaleY);
     }
 }
 
-void SelectionTool::updateItemPosition(int x, int y) 
+void SelectionTool::setItemPosition(int x, int y)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[SelectionTool::updateItemPosition(int, int)]";
+        qDebug() << "[SelectionTool::setItemPosition(int, int)]";
     #endif
 
     if (nodeManagers.count() == 1) {
@@ -1042,10 +1042,10 @@ void SelectionTool::updateItemPosition(int x, int y)
     }
 }
 
-void SelectionTool::updateItemRotation(int angle)
+void SelectionTool::setItemRotation(int angle)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[SelectionTool::updateItemRotation(int)]";
+        qDebug() << "[SelectionTool::setItemRotation(int)]";
     #endif
 
     if (nodeManagers.count() == 1) {
@@ -1064,10 +1064,10 @@ void SelectionTool::updateItemRotation(int angle)
     }
 }
 
-void SelectionTool::updateItemScale(double xFactor, double yFactor)
+void SelectionTool::setItemScale(double xFactor, double yFactor)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[SelectionTool::updateItemScale(float, float)]";
+        qDebug() << "[SelectionTool::setItemScale(float, float)]";
     #endif
 
     if (nodeManagers.count() == 1) {
@@ -1127,7 +1127,7 @@ void SelectionTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "SelectionTool::requestTransformation() - Fatal Error: Invalid item position !!! [ "
-                        + QString::number(position) + " ]";
+                     << position << " ]";
         #endif
     }
 }
@@ -1167,4 +1167,10 @@ void SelectionTool::enableProportion(bool flag)
 void SelectionTool::setProjectSize(const QSize size)
 {
     wsCenter = QPoint(0, 0) + QPointF(size.width()/2, size.height()/2);
+}
+
+void SelectionTool::resetItemTransformations()
+{
+    setItemRotation(0);
+    setItemScale(1, 1);
 }

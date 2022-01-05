@@ -109,7 +109,7 @@ class QMake
         @path = command
 
         if verbose == 1
-            print "(Found: #{qtversion}) "
+            print "(Found: \033[91m#{qtversion}\033[0m)"
         end
 
         return true

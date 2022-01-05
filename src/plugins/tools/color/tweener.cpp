@@ -241,6 +241,11 @@ QMap<TAction::ActionId, TAction *> Tweener::actions() const
     return colorActions;
 }
 
+TAction * Tweener::getAction(TAction::ActionId toolId)
+{
+    return colorActions[toolId];
+}
+
 /* This method returns the list of actions defined in this plugin */
 
 int Tweener::toolType() const
@@ -304,35 +309,28 @@ void Tweener::updateScene(TupGraphicsScene *gScene)
 {
     mode = configPanel->mode();
 
-    if (mode == TupToolPlugin::Edit) {
-        int framesNumber = framesCount();
+    if (mode == TupToolPlugin::Add) {
+       int total = framesCount();
 
-        if (configPanel->startComboSize() < framesNumber)
-            configPanel->initStartCombo(framesNumber, initFrame);
+       if (editMode == TupToolPlugin::Properties) {
+           if (total > configPanel->startComboSize()) {
+               configPanel->activateMode(TupToolPlugin::Selection);
+               clearSelection();
+               setSelection();
+           }
+       } else if (editMode == TupToolPlugin::Selection) {
+           if (gScene->currentFrameIndex() != initFrame)
+               clearSelection();
+           initFrame = gScene->currentFrameIndex();
+           setSelection();
+       }
 
-    } else if (mode == TupToolPlugin::Add) {
-               int total = framesCount();
-
-               if (editMode == TupToolPlugin::Properties) {
-                   if (total > configPanel->startComboSize()) {
-                       configPanel->activateMode(TupToolPlugin::Selection);
-                       clearSelection();
-                       setSelection();
-                   }
-               } else if (editMode == TupToolPlugin::Selection) {
-                   if (gScene->currentFrameIndex() != initFrame)
-                       clearSelection();
-                   initFrame = gScene->currentFrameIndex();
-                   setSelection();
-               }
-
-               if (configPanel->startComboSize() < total) {
-                   configPanel->initStartCombo(total, initFrame);
-               } else {
-                   if (gScene->currentFrameIndex() != initFrame)
-                       configPanel->setStartFrame(gScene->currentFrameIndex());
-               }
-
+       if (configPanel->startComboSize() < total) {
+           configPanel->initStartCombo(total, initFrame);
+       } else {
+           if (gScene->currentFrameIndex() != initFrame)
+               configPanel->setStartFrame(gScene->currentFrameIndex());
+       }
     } else {
         if (gScene->currentFrameIndex() != initFrame)
             configPanel->setStartFrame(gScene->currentFrameIndex());

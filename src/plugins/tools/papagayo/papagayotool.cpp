@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "papagayotool.h"
+
 #include "taction.h"
 #include "tupinputdeviceinformation.h"
 #include "tupbrushmanager.h"
@@ -41,6 +42,7 @@
 #include "tuprequestbuilder.h"
 #include "tupprojectrequest.h"
 #include "tupscene.h"
+#include "tupserializer.h"
 
 PapagayoTool::PapagayoTool() : TupToolPlugin()
 {
@@ -49,7 +51,7 @@ PapagayoTool::PapagayoTool() : TupToolPlugin()
     #endif
 
     setupActions();
-    configPanel = 0;
+    configPanel = nullptr;
 }
 
 PapagayoTool::~PapagayoTool()
@@ -64,14 +66,16 @@ void PapagayoTool::init(TupGraphicsScene *gScene)
         qDebug() << "[PapagayoTool::init()]";
     #endif
 
-    target = 0;
-    targetIncluded = false;
+    nodesManager = nullptr;
+    managerIncluded = false;
     scene = gScene;
     mode = TupToolPlugin::View;
 
     sceneIndex = scene->currentSceneIndex();
-    removeTarget();
+    removeNodesManager();
     configPanel->resetUI();
+
+    nodeZValue = ((BG_LAYERS + 1) * ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
 
     QList<QString> lipSyncList = scene->currentScene()->getLipSyncNames();
     if (lipSyncList.size() > 0)
@@ -123,6 +127,11 @@ QMap<TAction::ActionId, TAction *> PapagayoTool::actions() const
     return pgActions;
 }
 
+TAction * PapagayoTool::getAction(TAction::ActionId toolId)
+{
+    return pgActions[toolId];
+}
+
 /* This method returns the list of actions defined in this plugin */
 
 int PapagayoTool::toolType() const
@@ -141,15 +150,22 @@ QWidget * PapagayoTool::configurator()
     if (!configPanel) {
         mode = TupToolPlugin::View;
 
-        configPanel = new Configurator;
-        connect(configPanel, SIGNAL(importLipSync()), this, SIGNAL(importLipSync()));
-        connect(configPanel, SIGNAL(editLipSyncSelection(const QString &)), this, SLOT(editLipSyncSelection(const QString &)));
-        connect(configPanel, SIGNAL(removeCurrentLipSync(const QString &)), this, SLOT(removeCurrentLipSync(const QString &)));
-        connect(configPanel, SIGNAL(selectMouth(const QString &, int)), this, SLOT(addTarget(const QString &, int)));
-        connect(configPanel, SIGNAL(closeLipSyncProperties()), this, SLOT(resetCanvas()));
-        connect(configPanel, SIGNAL(initFrameHasChanged(int)), this, SLOT(updateInitFrame(int)));
-        connect(configPanel, SIGNAL(xPosChanged(int)), this, SLOT(updateXPosition(int)));
-        connect(configPanel, SIGNAL(yPosChanged(int)), this, SLOT(updateYPosition(int)));
+        configPanel = new PapagayoConfigurator;
+        connect(configPanel, &PapagayoConfigurator::lipsyncCreatorRequested, this, &PapagayoTool::lipsyncCreatorRequested);
+        connect(configPanel, &PapagayoConfigurator::lipsyncEditionRequested, this, &PapagayoTool::lipsyncEditionRequested);
+        connect(configPanel, &PapagayoConfigurator::mouthEditionRequested, this, &PapagayoTool::editLipsyncMouth);
+        connect(configPanel, &PapagayoConfigurator::currentLipsyncRemoved, this, &PapagayoTool::removeCurrentLipSync);
+        // connect(configPanel, &PapagayoConfigurator::saveMouthTransRequested, this, &PapagayoTool::saveMouthTransformations);
+        connect(configPanel, &PapagayoConfigurator::closeLipSyncProperties, this, &PapagayoTool::resetCanvas);
+        connect(configPanel, &PapagayoConfigurator::initFrameHasChanged, this, &PapagayoTool::updateInitFrame);
+
+        connect(configPanel, &PapagayoConfigurator::xPosChanged, this, &PapagayoTool::updateXMouthPositionInScene);
+        connect(configPanel, &PapagayoConfigurator::yPosChanged, this, &PapagayoTool::updateYMouthPositionInScene);
+        connect(configPanel, &PapagayoConfigurator::rotationChanged, this, &PapagayoTool::updateRotationInScene);
+        connect(configPanel, &PapagayoConfigurator::scaleChanged, this, &PapagayoTool::updateScaleInScene);
+
+        connect(configPanel, &PapagayoConfigurator::objectHasBeenReset, this, &PapagayoTool::resetMouthTransformations);
+        connect(configPanel, &PapagayoConfigurator::proportionActivated, this, &PapagayoTool::enableProportion);
     } 
 
     return configPanel;
@@ -162,15 +178,17 @@ void PapagayoTool::resetCanvas()
     #endif
 
     mode = TupToolPlugin::View;
-    removeTarget();
+    removeNodesManager();
 }
 
 /* This method is called when there's a change on/of scene */
+
 void PapagayoTool::aboutToChangeScene(TupGraphicsScene *)
 {
 }
 
 /* This method is called when this plugin is off */
+
 void PapagayoTool::aboutToChangeTool()
 {
     #ifdef TUP_DEBUG
@@ -184,6 +202,10 @@ void PapagayoTool::aboutToChangeTool()
 
 void PapagayoTool::setupActions()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::setupActions()]";
+    #endif
+
     QString name = tr("Papagayo Lip-sync");
     QString shortcut = tr("Ctrl+Shift+P");
 
@@ -210,84 +232,105 @@ void PapagayoTool::updateScene(TupGraphicsScene *scene)
     Q_UNUSED(scene)
 }
 
-void PapagayoTool::editLipSyncSelection(const QString &name)
+void PapagayoTool::editLipsyncMouth(const QString &name)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::editLipsyncMouth()] - name -> " << name;
+    #endif
+
     TupScene *sceneData = scene->currentScene();
     currentLipSync = sceneData->getLipSync(name);
-
     configPanel->openLipSyncProperties(currentLipSync);
 
-    TupVoice *voice = currentLipSync->getVoices().at(0);
+    TupVoice *voice = currentLipSync->getVoice();
     if (voice) {
         TupPhoneme *phoneme = voice->getPhonemeAt(0);
         if (phoneme) {
-            configPanel->setPhoneme(phoneme->value());
+            configPanel->setPhoneme(phoneme);
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[PapagayoTool::editLipSyncSelection()] - No lipsync phoneme at index 0";
+                qDebug() << "[PapagayoTool::editLipsyncMouth()] - No lipsync phoneme at index 0";
             #endif
         }
-        configPanel->setPos(voice->mouthPos());
+
+        addNodesManager();
     }
 }
 
-void PapagayoTool::removeCurrentLipSync(const QString &name)
+void PapagayoTool::removeCurrentLipSync(const QString &lipsyncName)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[PapagayoTool::removeCurrentLipSync()] - name -> " << name;
+        qDebug() << "[PapagayoTool::removeCurrentLipSync()] - name -> " << lipsyncName;
     #endif
 
-    QGraphicsView * view = scene->views().first();
+    QList<QGraphicsView *> views = scene->views();
+    QGraphicsView * view = views.first();
     foreach (QGraphicsItem *item, view->scene()->items()) {
         QString tip = item->toolTip();
         if (tip.length() > 0) {
-            if (tip.startsWith(tr("lipsync:") + name))
+            if (tip.startsWith(tr("lipsync:") + lipsyncName))
                 scene->removeItem(item);
         }
     }
 
-    TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, 0, TupProjectRequest::RemoveLipSync, name);
+    TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, 0, TupProjectRequest::RemoveLipSync, lipsyncName);
     emit requested(&request);
 
-    request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove, name, TupLibraryObject::Folder);
+    request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove, lipsyncName, TupLibraryObject::Folder);
     emit requested(&request);
+
+    TupScene *sceneData = scene->currentScene();
+    TupProject *project = sceneData->project();
+
+    QString pgoPath = project->getDataDir() + "/pgo/" + lipsyncName;
+    if (QFile::exists(pgoPath)) {
+        if (!QFile::remove(pgoPath)) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[PapagayoTool::removeCurrentLipSync()] - Fatal Error: Can't remove PGO file -> " << pgoPath;
+            #endif
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[PapagayoTool::removeCurrentLipSync()] - Warning: PGO file doesn't exists -> " << pgoPath;
+        #endif
+    }
+
+    QString imagesPath = project->getDataDir() + "/images/" + lipsyncName;
+    QDir imgDir(imagesPath);
+    if (QFile::exists(imagesPath)) {
+        if (!imgDir.removeRecursively()) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[PapagayoTool::removeCurrentLipSync()] - Fatal Error: Can't remove folder -> " << imagesPath;
+            #endif
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[PapagayoTool::removeCurrentLipSync()] - Warning: folder doesn't exists -> " << imagesPath;
+        #endif
+    }
+
+    QString audioPath = project->getDataDir() + "/audio/" + lipsyncName;
+    QDir audioDir(audioPath);
+    if (QFile::exists(audioPath)) {
+        if (!audioDir.removeRecursively()) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[PapagayoTool::removeCurrentLipSync()] - Fatal Error: Can't remove folder -> " << audioPath;
+            #endif
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[PapagayoTool::removeCurrentLipSync()] - Warning: folder doesn't exists -> " << audioPath;
+        #endif
+    }
 }
 
-void PapagayoTool::setTargetInitPos(const QPointF &point)
-{
-    targetInitPos = point;
-}
-
-void PapagayoTool::updateOriginPoint(const QPointF &point)
+void PapagayoTool::addNodesManager()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[PapagayoTool::updateOriginPoint()] - point -> " << point;
-    #endif
-
-    origin = point;
-    mouth->setPos(origin - mouthOffset);
-
-    int sceneIndex = scene->currentFrameIndex();
-    currentLipSync->updateMouthPos(currentMouthIndex, origin, (scene->currentFrameIndex() - currentLipSync->getInitFrame()));
-
-    TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, scene->currentLayerIndex(),
-                                                                      TupProjectRequest::UpdateLipSync, currentLipSync->toString());
-    emit requested(&request);
-
-    configPanel->setPos(point);
-}
-
-void PapagayoTool::addTarget(const QString &id, int index)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[PapagayoTool::addTarget()] - id -> " << id;
-        qDebug() << "[PapagayoTool::addTarget()] - index -> " << index;
+        qDebug() << "[PapagayoTool::addNodesManager()]";
     #endif
 
     mode = TupToolPlugin::Edit;
-
-    currentMouth = id;
-    currentMouthIndex = index;
 
     TupScene *sceneData = scene->currentScene();
     int initLayer = sceneData->getLipSyncLayerIndex(currentLipSync->getLipSyncName());
@@ -300,63 +343,73 @@ void PapagayoTool::addTarget(const QString &id, int index)
                                                                       TupProjectRequest::Select, selection);
     emit requested(&request);
 
-    removeTarget();
-    setTargetEnvironment();
+    removeNodesManager();
+    setNodesManagerEnvironment();
 }
 
-void PapagayoTool::setTargetEnvironment()
+void PapagayoTool::setNodesManagerEnvironment()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[PapagayoTool::setTargetEnvironment()]";
+        qDebug() << "[PapagayoTool::setNodesManagerEnvironment()]";
     #endif
 
     QGraphicsView *view = scene->views().at(0);
     foreach (QGraphicsItem *item, view->scene()->items()) {
         QString tip = item->toolTip();
         if (tip.length() > 0) {
-            if (tip.compare(currentMouth) == 0) {
-                mouthOffset = item->boundingRect().center();
-                origin = item->pos() + mouthOffset;
+            QString mouthID = "lipsync:" + currentLipSync->getLipSyncName();
+            if (tip.compare(mouthID) == 0) {
                 mouth = item;
+                mouth->setFlag(QGraphicsItem::ItemIsSelectable, true);
+                mouth->setSelected(true);
+                break;
             }
         }
     }
 
-    target = new TMouthTarget(origin, mouth->zValue() + 1);
-    target->resize(realFactor);
-    connect(target, SIGNAL(initPos(const QPointF &)), this, SLOT(setTargetInitPos(const QPointF &)));
-    connect(target, SIGNAL(positionUpdated(const QPointF &)), this, SLOT(updateOriginPoint(const QPointF &)));
-    scene->addItem(target);
-    targetIncluded = true;
+    if (mouth) {
+        nodesManager = new NodeManager(Node::Papagayo, mouth, scene, nodeZValue);
+        connect(nodesManager, &NodeManager::positionUpdated, this, &PapagayoTool::updatePositionRecord);
+        connect(nodesManager, &NodeManager::rotationUpdated, this, &PapagayoTool::updateRotationAngleRecord);
+        connect(nodesManager, &NodeManager::scaleUpdated, this, &PapagayoTool::updateScaleFactorRecord);
+        connect(nodesManager, &NodeManager::transformationUpdated, this, &PapagayoTool::updateMouthTransformation);
+        nodesManager->show();
+        nodesManager->resizeNodes(realFactor);
+        managerIncluded = true;
 
-    TupVoice *voice = currentLipSync->getVoices().at(currentMouthIndex);
-    if (voice) {
-        int index = scene->currentFrameIndex() - currentLipSync->getInitFrame();
-        TupPhoneme *phoneme = voice->getPhonemeAt(index);
-        if (phoneme) {
-            configPanel->setPhoneme(phoneme->value());
-        } else {
-            #ifdef TUP_DEBUG
-                qDebug() << "[PapagayoTool::setTargetEnvironment()] - No lipsync phoneme at frame "
-                         << scene->currentFrameIndex() << " - index: " << index;
-            #endif
+        TupVoice *voice = currentLipSync->getVoice();
+        if (voice) {
+            int index = scene->currentFrameIndex() - currentLipSync->getInitFrame();
+            TupPhoneme *phoneme = voice->getPhonemeAt(index);
+            if (phoneme) {
+                configPanel->setPhoneme(phoneme);
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[PapagayoTool::setNodesManagerEnvironment()] - No lipsync phoneme at frame "
+                             << scene->currentFrameIndex() << " - index: " << index;
+                #endif
+            }            
         }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[PapagayoTool::setNodesManagerEnvironment()] - No lipsync mouth was found in the scene!";
+        #endif
     }
-
-    configPanel->setPos(origin);
 }
 
-void PapagayoTool::removeTarget()
+void PapagayoTool::removeNodesManager()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[PapagayoTool::removeTarget()]";
+        qDebug() << "[PapagayoTool::removeNodesManager()]";
     #endif
 
-    if (targetIncluded) {
-        if (target) {
-            scene->removeItem(target);
-            target = 0;
-            targetIncluded = false;
+    if (managerIncluded) {
+        if (nodesManager) {
+            if (nodesManager->parentItem())
+                nodesManager->parentItem()->setSelected(false);
+            nodesManager->clear();
+            nodesManager = nullptr;
+            managerIncluded = false;
         }
     }
 }
@@ -378,19 +431,27 @@ void PapagayoTool::sceneResponse(const TupSceneResponse *event)
 void PapagayoTool::layerResponse(const TupLayerResponse *event)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[PapagayoTool::layerResponse()]";
+        qDebug() << "[PapagayoTool::layerResponse()] - action -> " << event->getAction();
     #endif
 
+    QString xml = event->getArg().toString();
+    currentLipSync = new TupLipSync();
+
     if (event->getAction() == TupProjectRequest::AddLipSync) {
-        QString xml = event->getArg().toString();
-        currentLipSync = new TupLipSync();
         currentLipSync->fromXml(xml);
         configPanel->addLipSyncRecord(currentLipSync->getLipSyncName());
+        return;
     }
 
     if (event->getAction() == TupProjectRequest::UpdateLipSync) {
-        if (mode == TupToolPlugin::Edit)
-            setTargetEnvironment();
+        currentLipSync->fromXml(xml);
+        return;
+    }
+
+    if (event->getAction() == TupProjectRequest::RemoveLipSync) {
+        currentLipSync = nullptr;
+        QString name = event->getArg().toString();
+        configPanel->removeLipSyncRecord(name);
     }
 }
 
@@ -403,9 +464,9 @@ void PapagayoTool::frameResponse(const TupFrameResponse *event)
     if (event->getAction() == TupProjectRequest::Select) {
         if (mode == TupToolPlugin::Edit) {
             int frameIndex = event->getFrameIndex();
-            int lastFrame = currentLipSync->getInitFrame() + currentLipSync->getFramesCount() - 1;
+            int lastFrame = currentLipSync->getInitFrame() + currentLipSync->getFramesTotal() - 1;
             if (frameIndex >= currentLipSync->getInitFrame() && frameIndex <= lastFrame)
-                setTargetEnvironment();
+                setNodesManagerEnvironment();
         }
     }
 }
@@ -426,14 +487,13 @@ void PapagayoTool::updateInitFrame(int index)
         qDebug() << "[PapagayoTool::updateInitFrame()]";
     #endif
 
-    removeTarget();
+    removeNodesManager();
     currentLipSync->setInitFrame(index);
 
     TupScene *sceneData = scene->currentScene();
-    // sceneData->updateLipSync(currentLipSync);
 
     int sceneFrames = sceneData->framesCount();
-    int lipSyncFrames = index + currentLipSync->getFramesCount();
+    int lipSyncFrames = index + currentLipSync->getFramesTotal();
     if (lipSyncFrames > sceneFrames) {
         int layersCount = sceneData->layersCount();
         for (int i = sceneFrames; i < lipSyncFrames; i++) {
@@ -472,33 +532,27 @@ void PapagayoTool::keyPressEvent(QKeyEvent *event)
             if (event->modifiers()==Qt::ControlModifier)
                 delta = 10;
 
-            QPointF point;
-
-            if (event->key() == Qt::Key_Left) {
+            if (event->key() == Qt::Key_Left)
                 mouth->moveBy(-delta, 0);
-                target->moveBy(-delta, 0);
-                point = origin + QPointF(-delta, 0);
-            }
 
-            if (event->key() == Qt::Key_Up) {
+            if (event->key() == Qt::Key_Up)
                 mouth->moveBy(0, -delta);
-                target->moveBy(0, -delta);
-                point = origin + QPointF(0, -delta);
-            }
 
-            if (event->key() == Qt::Key_Right) {
+            if (event->key() == Qt::Key_Right)
                 mouth->moveBy(delta, 0);
-                target->moveBy(delta, 0);
-                point = origin + QPointF(delta, 0);
-            }
 
-            if (event->key() == Qt::Key_Down) {
+            if (event->key() == Qt::Key_Down)
                 mouth->moveBy(0, delta);
-                target->moveBy(0, delta);
-                point = origin + QPointF(0, delta);
-            }
-     
-            updateOriginPoint(point);
+
+            int x = mouth->pos().x() + (mouth->boundingRect().width() / 2);
+            int y = mouth->pos().y() + (mouth->boundingRect().height() / 2);
+
+            updatePositionRecord(QPointF(x, y));
+            updateMouthTransformation();
+        } else if (event->modifiers() == Qt::ControlModifier) {
+            configPanel->setProportionState(true);
+            key = "CONTROL";
+            nodesManager->setProportion(true);
         }
     } else {
         QPair<int, int> flags = TAction::setKeyAction(event->key(), event->modifiers());
@@ -509,28 +563,70 @@ void PapagayoTool::keyPressEvent(QKeyEvent *event)
 
 void PapagayoTool::keyReleaseEvent(QKeyEvent *event)
 {
-    Q_UNUSED(event)
+    Q_UNUSED(event)    
+
+    if (mode == TupToolPlugin::Edit) {
+        if (key.compare("CONTROL") == 0) {
+            configPanel->setProportionState(false);
+            key = "NONE";
+            nodesManager->setProportion(false);
+        }
+    }
 }
 
-void PapagayoTool::updateXPosition(int x)
+void PapagayoTool::updateXMouthPositionInScene(int x)
 {
-    QPointF point(x, origin.y());
-    target->setPos(point);
-    updateOriginPoint(point);
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::updateXMouthPositionInScene()] - x -> " << x;
+    #endif
+
+    mouth->setPos(x, mouth->pos().y());
+    if (nodesManager) {
+        nodesManager->syncNodesFromParent();
+        updateMouthTransformation();
+    }
 }
 
-void PapagayoTool::updateYPosition(int y)
+void PapagayoTool::updateYMouthPositionInScene(int y)
 {
-    QPointF point(origin.x(), y);
-    target->setPos(point);
-    updateOriginPoint(point);
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::updateYMouthPositionInScene()] - y -> " << y;
+    #endif
+
+    mouth->setPos(mouth->pos().x(), y);
+    if (nodesManager) {
+        nodesManager->syncNodesFromParent();
+        updateMouthTransformation();
+    }
 }
 
-void PapagayoTool::resizeNode(qreal factor)
+void PapagayoTool::updateRotationInScene(int angle)
 {
-    realFactor = factor;
-    if (target)
-        target->resize(realFactor);
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::updateRotationInScene()] - angle -> " << angle;
+    #endif
+
+    if (nodesManager) {
+        nodesManager->rotate(angle);
+        nodesManager->syncNodesFromParent();
+        updateMouthTransformation();
+    }
+}
+
+void PapagayoTool::updateScaleInScene(double xFactor, double yFactor)
+{
+    if (nodesManager) {
+        nodesManager->scale(xFactor, yFactor);
+        nodesManager->syncNodesFromParent();
+        updateMouthTransformation();
+    }
+}
+
+void PapagayoTool::resizeNode(qreal scaleFactor)
+{
+    realFactor = scaleFactor;
+    if (nodesManager)
+        nodesManager->resizeNodes(scaleFactor);
 }
 
 void PapagayoTool::updateZoomFactor(qreal factor)
@@ -542,3 +638,86 @@ TupToolPlugin::Mode PapagayoTool::currentMode()
 {
     return mode;
 }
+
+void PapagayoTool::updatePositionRecord(const QPointF &point)
+{
+    configPanel->updatePositionCoords(point.x(), point.y());
+
+    if (nodesManager) // {
+        nodesManager->syncNodesFromParent();
+        // updateMouthTransformation();
+    // }
+}
+
+void PapagayoTool::updateRotationAngleRecord(int angle)
+{
+    configPanel->updateRotationAngle(angle);
+    // if (nodesManager)
+    //     updateMouthTransformation();
+}
+
+void PapagayoTool::updateScaleFactorRecord(double x, double y)
+{
+    configPanel->updateScaleFactor(x, y);
+    // if (nodesManager)
+    //     updateMouthTransformation();
+}
+
+void PapagayoTool::enableProportion(bool flag)
+{
+    if (mode == TupToolPlugin::Edit) {
+        key = "NONE";
+        if (flag)
+            key = "CONTROL";
+
+        if (nodesManager)
+            nodesManager->setProportion(flag);
+    }
+}
+
+void PapagayoTool::resetMouthTransformations()
+{
+    QSizeF projectSize = scene->currentScene()->getDimension();
+    int projectX = projectSize.width() / 2;
+    int projectY = projectSize.height() / 2;
+    QSizeF mouthSize = mouth->boundingRect().size();
+    int mouthX = mouthSize.width() / 2;
+    int mouthY = mouthSize.height() / 2;
+
+    if (nodesManager) {
+        mouth->setPos(projectX - mouthX, projectY - mouthY);
+        nodesManager->rotate(0);
+        nodesManager->scale(1, 1);
+        nodesManager->syncNodesFromParent();
+
+        updateMouthTransformation();
+    }
+}
+
+void PapagayoTool::updateMouthTransformation()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::updateMouthTransformation()]";
+    #endif
+
+    QGraphicsItem *item = nodesManager->parentItem();
+    if (item) {
+        QDomDocument doc;
+        currentLipSync->updateMouthTransformation(TupSerializer::properties(item, doc, "", 0),
+                                                  (scene->currentFrameIndex() - currentLipSync->getInitFrame()));
+
+        TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, scene->currentLayerIndex(),
+                                                                          TupProjectRequest::UpdateLipSync, currentLipSync->toString());
+        emit requested(&request);
+
+    }
+}
+
+/*
+void PapagayoTool::saveMouthTransformations()
+{
+    TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, scene->currentLayerIndex(),
+                                                                      TupProjectRequest::UpdateLipSync, currentLipSync->toString());
+    emit requested(&request);
+}
+*/

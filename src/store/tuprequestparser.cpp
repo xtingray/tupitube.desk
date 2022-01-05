@@ -34,9 +34,11 @@
  ***************************************************************************/
 
 #include "tuprequestparser.h"
+// #include "tupprojectrequest.h"
 #include "tuplibraryobject.h"
+#include "tuprequestparserhandler.h"
 
-TupRequestParser::TupRequestParser() : TupXmlParserBase()
+TupRequestParser::TupRequestParser() : QObject()
 {
     response = nullptr;
 }
@@ -45,54 +47,17 @@ TupRequestParser::~TupRequestParser()
 {
 }
 
-void TupRequestParser::initialize()
+bool TupRequestParser::parse(const QString &xml)
 {
-    response = nullptr;
-}
+    TupRequestParserHandler handler(xml);
+    if (handler.parse()) {
+        response = handler.getResponse();
+        sign = handler.getSign();
 
-bool TupRequestParser::startTag(const QString& qname, const QXmlAttributes& atts)
-{
-    if (qname == "project_request") {
-        sign = atts.value("sign");
-    } else if (qname == "item") {
-               static_cast<TupItemResponse *>(response)->setItemIndex(atts.value("index").toInt());
-    } else if (qname == "objectType") {
-               static_cast<TupItemResponse *>(response)->setItemType(TupLibraryObject::ObjectType(atts.value("id").toInt()));
-    } else if (qname == "position") {
-               static_cast<TupItemResponse *>(response)->setPosX(atts.value("x").toDouble());
-               static_cast<TupItemResponse *>(response)->setPosY(atts.value("y").toDouble());
-    } else if (qname == "spaceMode") {
-               static_cast<TupItemResponse *>(response)->setSpaceMode(TupProject::Mode(atts.value("current").toInt()));
-    } else if (qname == "frame") {
-               static_cast<TupFrameResponse *>(response)->setFrameIndex(atts.value("index").toInt());
-    } else if (qname == "data") {
-               setReadText(true);
-    } else if (qname == "layer") {
-               static_cast<TupLayerResponse *>(response)->setLayerIndex(atts.value("index").toInt());
-    } else if (qname == "scene") {
-               static_cast<TupSceneResponse *>(response)->setSceneIndex(atts.value("index").toInt());
-    } else if (qname == "symbol") {
-               static_cast<TupLibraryResponse*>(response)->setSymbolType(TupLibraryObject::ObjectType(atts.value("type").toInt()));
-               static_cast<TupLibraryResponse*>(response)->setParent(atts.value("folder"));
-               static_cast<TupLibraryResponse*>(response)->setSpaceMode(TupProject::Mode(atts.value("spaceMode").toInt()));
-    } else if (qname == "action") {
-               response = TupProjectResponseFactory::create(atts.value("part").toInt(), atts.value("id").toInt());
-               response->setArg(atts.value("arg"));
+        return true;
     }
 
-    return true;
-}
-
-bool TupRequestParser::endTag(const QString& qname)
-{
-    Q_UNUSED(qname)
-    return true;
-}
-
-void TupRequestParser::text(const QString &ch)
-{
-    if (currentTag() == "data")
-        response->setData(QByteArray::fromBase64(QByteArray(ch.toLocal8Bit())));
+    return false;
 }
 
 TupProjectResponse *TupRequestParser::getResponse() const

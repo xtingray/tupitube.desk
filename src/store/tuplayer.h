@@ -94,6 +94,7 @@ class TUPITUBE_EXPORT TupLayer : public QObject, public TupAbstractSerializable
 
         TupLipSync *createLipSync(const QString &name, const QString &soundFile, int initFrame);
         void addLipSync(TupLipSync *lipsync);
+        bool updateLipSync(int index, TupLipSync *lipsync);
         int lipSyncCount();
         Mouths getLipSyncList();
         bool removeLipSync(const QString &name);

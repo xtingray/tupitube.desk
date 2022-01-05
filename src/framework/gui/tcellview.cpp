@@ -246,9 +246,9 @@ void TCellView::wheelEvent(QWheelEvent *event)
     if (event->modifiers() == Qt::ControlModifier) {
         #ifdef TUP_DEBUG
             #ifdef Q_OS_WIN
-                qDebug() << "[TCellView::wheelEvent()] - event->delta(): " << event->delta();
+                qDebug() << "[TCellView::wheelEvent()] - event->angleDelta(): " << event->angleDelta();
             #else
-                SHOW_VAR(event->delta());
+                SHOW_VAR(event->angleDelta());
             #endif
         #endif
     } else {

@@ -37,42 +37,32 @@
 #define TUPITEMFACTORY_H
 
 #include "tglobal.h"
-#include "txmlparserbase.h"
-#include "tupitemgroup.h"
+#include "tupfactoryhandler.h"
+// #include "tupitemgroup.h"
 
-#include <QStack>
 #include <QPen>
 #include <QBrush>
 #include <QGraphicsItem>
 
 class TupLibrary;
 
-class TUPITUBE_EXPORT TupItemFactory : public TXmlParserBase
+class TUPITUBE_EXPORT TupItemFactory : public QObject
 {
     public:
-        enum Type
-        {
-            Vectorial = 1,
-            Library 
-        };
-
     	TupItemFactory();
     	~TupItemFactory();
     	
     	void setLibrary(const TupLibrary *library);
-    	
-    	bool startTag(const QString& qname, const QXmlAttributes& atts);
-        void text(const QString &input);
-    	
-    	bool endTag(const QString& qname);
-    	
+        // void text(const QString &input);
+
     	QGraphicsItem *create(const QString &xml);
-    	bool loadItem(QGraphicsItem *item, const QString &xml);
+        // bool loadItem(QGraphicsItem *item, const QString &xml);
 
         QString itemID(const QString &xml);
 
-        TupItemFactory::Type getType();
-    	
+        TupFactoryHandler::Type getType();
+
+    /*
     private:
     	void setItemPen(const QPen &pen);
     	void setItemBrush(const QBrush &brush);
@@ -82,19 +72,11 @@ class TUPITUBE_EXPORT TupItemFactory : public TXmlParserBase
     	QBrush itemBrush() const;
     	
     	QGraphicsItem* createItem(const QString &xml);
+    */
     	
     private:
-        QGraphicsItem *item;
-        QGradient *gradient;
-        QString loading; // brush or pen
-
-        QStack<TupItemGroup *> groups;
-        QStack<QGraphicsItem *> objects;
-        bool addToGroup;
-        bool isLoading;
-        QString textReaded;
+        TupFactoryHandler handler;
         const TupLibrary *library;
-        TupItemFactory::Type type;
 };
 
 #endif

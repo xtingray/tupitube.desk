@@ -39,11 +39,7 @@ TApplication::TApplication(int & argc, char ** argv) : QApplication(argc, argv)
 {
     /*
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TApplication()]";
-        #else
-            TINIT;
-        #endif
+        qDebug() << "[TApplication()]";
     #endif
     */
 
@@ -63,15 +59,12 @@ TApplication::~TApplication()
 
     /*
     #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[~TApplication()]";
-        #else
-            TEND;
-        #endif
+        qDebug() << "[~TApplication()]";
     #endif
     */
 }
 
+/*
 void TApplication::applyTheme(const QString &file)
 {
     m_themeManager.applyTheme(file);
@@ -81,32 +74,33 @@ void TApplication::applyTheme(const ThemeDocument &kd)
 {
     m_themeManager.applyTheme(kd);
 }
+*/
 
 void TApplication::applyColors(ColorSchema cs)
 {
     QPalette pal = QApplication::palette();
 
     switch (cs) {
-            case DarkBlue:
-               {
-                  const QColor bg(32, 32, 82);
-                  const QColor bgAlt(57, 64, 98);
+        case DarkBlue:
+           {
+              const QColor bg(32, 32, 82);
+              const QColor bgAlt(57, 64, 98);
 
-                  pal.setColor(QPalette::Text, Qt::white);
-                  pal.setColor(QPalette::Base, bg);
-                  pal.setColor(QPalette::Foreground, 0xd7d7ef);
-                  pal.setColor(QPalette::Background, bgAlt);
+              pal.setColor(QPalette::Text, Qt::white);
+              pal.setColor(QPalette::Base, bg);
+              pal.setColor(QPalette::Foreground, 0xd7d7ef);
+              pal.setColor(QPalette::Background, bgAlt);
 
-                  pal.setColor(QPalette::Button, bgAlt);
-                  pal.setColor(QPalette::ButtonText, 0xd7d7ef);
+              pal.setColor(QPalette::Button, bgAlt);
+              pal.setColor(QPalette::ButtonText, 0xd7d7ef);
 
-                  pal.setColor(QPalette::Highlight, Qt::white);
-                  pal.setColor(QPalette::HighlightedText, bg);
-                  int h, s, v;
-                  bgAlt.getHsv(&h, &s, &v);
-                  pal.setColor(QPalette::Midlight, QColor(h, s/3, (int)(v * 1.2)));
-               }
-            break;
+              pal.setColor(QPalette::Highlight, Qt::white);
+              pal.setColor(QPalette::HighlightedText, bg);
+              int h, s, v;
+              bgAlt.getHsv(&h, &s, &v);
+              pal.setColor(QPalette::Midlight, QColor(h, s/3, (int)(v * 1.2)));
+           }
+        break;
     }
 
     applyPalette(pal);
@@ -147,18 +141,19 @@ void TApplication::parseArgs(int &argc, char **argv)
                  arg = QString(argv[i+1]).simplified();
              m_parseArgs.insert(opt.remove(0,2), arg);
          } else if (opt.startsWith("-")) {
-                    QString arg = "";
-                    if (argv[i+1] && ! QString(argv[i+1]).startsWith("-"))
-                        arg = QString(argv[i+1]).simplified();
+             QString arg = "";
+             if (argv[i+1] && ! QString(argv[i+1]).startsWith("-"))
+                 arg = QString(argv[i+1]).simplified();
 
-                    m_parseArgs.insert(opt.remove(0,1), arg);
+             m_parseArgs.insert(opt.remove(0,1), arg);
          }
     }
 }
 
 bool TApplication::isArg(const QString &arg)
 {
-    return m_parseArgs.keys().contains(arg);
+    QList<QString> list = m_parseArgs.keys();
+    return list.contains(arg);
 }
 
 QString TApplication::getParam(const QString &arg)

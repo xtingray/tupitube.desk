@@ -199,7 +199,7 @@ module RQonf
         elsif file =~ /.qonf$/
           if file.include? "ffmpeg"
              if @ffmpeg
-                Info.warn << "Adding ffmpeg support: " << @ffmpeg << $endl
+                Info.info << "Adding ffmpeg support: " << @ffmpeg << $endl
                 @tests << Test.new(file, @qmake)
              end
           else
@@ -272,6 +272,11 @@ module RQonf
 
       unless @options['with-quazip'].nil? then
         value = @options['with-quazip']
+        path += value + "/lib:"
+      end
+
+      unless @options['with-libsndfile'].nil? then
+        value = @options['with-libsndfile']
         path += value + "/lib:"
       end
 

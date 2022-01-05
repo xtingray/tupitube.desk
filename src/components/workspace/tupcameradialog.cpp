@@ -44,6 +44,10 @@
 TupCameraDialog::TupCameraDialog(QComboBox *devices, const QSize dimension, QList<QSize> resList,
                                  QWidget *parent) : QDialog(parent)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraDialog()]";
+    #endif
+
     setModal(true);
     setWindowTitle(tr("Camera Settings"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/photo.png")));
@@ -64,7 +68,8 @@ TupCameraDialog::TupCameraDialog(QComboBox *devices, const QSize dimension, QLis
         QLabel *cameraLabel = new QLabel(tr("Available Camera Devices:"));
         layout->addWidget(cameraLabel);
         layout->addWidget(devicesCombo);
-        connect(devicesCombo, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(changeCameraDevice(const QString &)));
+        connect(devicesCombo, SIGNAL(currentIndexChanged(const QString &)),
+                this, SLOT(changeCameraDevice(const QString &)));
     } else {
         QLabel *cameraLabel = new QLabel(tr("Camera Detected:"));
         QLabel *referenceLabel = new QLabel;
@@ -131,7 +136,7 @@ TupCameraDialog::~TupCameraDialog()
 void TupCameraDialog::changeCameraDevice(const QString &reference)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "TupCameraDialog::changeCameraDevice() - Camera selected -> " + reference;
+        qDebug() << "[TupCameraDialog::changeCameraDevice()] - Camera selected -> " << reference;
     #endif
 
     // disconnect(resolutionCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setCameraResolution(int)));
@@ -174,6 +179,10 @@ void TupCameraDialog::changeCameraDevice(const QString &reference)
 
 void TupCameraDialog::setCamera(const QString &reference)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraDialog::setCamera()] - reference -> " << reference;
+    #endif
+
     foreach(const QCameraInfo &deviceName, QCameraInfo::availableCameras()) {
         QString description = deviceName.description();
         if (description.compare(reference) == 0) {

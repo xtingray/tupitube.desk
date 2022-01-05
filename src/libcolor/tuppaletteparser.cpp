@@ -35,7 +35,7 @@
 
 #include "tuppaletteparser.h"
 
-TupPaletteParser::TupPaletteParser(): TXmlParserBase()
+TupPaletteParser::TupPaletteParser(QIODevice *device): QXmlStreamReader(device)
 {
      paletteName = "";
      isEditable = false;
@@ -46,92 +46,87 @@ TupPaletteParser::~TupPaletteParser()
 {
 }
 
-bool TupPaletteParser::startTag(const QString &tag, const QXmlAttributes &atts)
+bool TupPaletteParser::processPalette()
 {
-    if (root() == "Palette") {
-        if (tag == root()) {
-            paletteName = atts.value("name");
-            if (atts.value("editable") == "true")
+    if (readNextStartElement()) {
+        if (name() == "Palette"){
+            paletteName = attributes().value("name").toString();
+
+            isEditable = false;
+            if (attributes().value("editable").toString() == "true")
                 isEditable = true;
-            else
-                isEditable = false;
-        } else if (tag == "Color") {
-            QColor c = QColor(atts.value("colorName"));
-            c.setAlpha( atts.value("alpha").toInt() );
 
-            if (c.isValid()) {
-                brushes << c;
-            } else {
-                #ifdef TUP_DEBUG
-                   qDebug() << "TupPaletteParser::startTag() - Error: Invalid color!";
-                #endif
+            while (readNextStartElement()) {
+                if (name() == "Color") {
+                    QColor c = QColor(attributes().value("colorName"));
+                    c.setAlpha(attributes().value("alpha").toInt());
+
+                    if (c.isValid()) {
+                        brushes << c;
+                    } else {
+                        #ifdef TUP_DEBUG
+                           qDebug() << "[TupPaletteParser::processInput()] - Error: Invalid color!";
+                        #endif
+                        return false;
+                    }
+                } else if (name() == "Gradient") {
+                    if (gradient)
+                        delete gradient;
+
+                    gradient = 0;
+                    gradientStops.clear();
+
+                    QGradient::Type type = QGradient::Type(attributes().value("type").toInt());
+                    QGradient::Spread spread = QGradient::Spread(attributes().value("spread").toInt());
+
+                    switch (type) {
+                       case QGradient::LinearGradient:
+                           {
+                               gradient = new QLinearGradient(attributes().value("startX").toDouble(),
+                                              attributes().value("startY").toDouble(), attributes().value("finalX").toDouble(),
+                                              attributes().value("finalY").toDouble());
+                           }
+                       break;
+                       case QGradient::RadialGradient:
+                           {
+                               gradient = new QRadialGradient(attributes().value("centerX").toDouble(),
+                                              attributes().value("centerY").toDouble(), attributes().value("radius").toDouble(),
+                                              attributes().value("focalX").toDouble(), attributes().value("focalY").toDouble());
+                           }
+                       break;
+                       case QGradient::ConicalGradient:
+                           {
+                               gradient = new QConicalGradient(attributes().value("centerX").toDouble(),
+                                              attributes().value("centerY").toDouble(), attributes().value("angle").toDouble());
+                           }
+                       break;
+                       default:
+                           {
+                               #ifdef TUP_DEBUG
+                                   qDebug() << "[TupPaletteParser::processInput()] - No gradient type: " << QString::number(type);
+                               #endif
+                               return false;
+                           }
+                    }
+
+                    gradient->setSpread(spread);
+                } else if (name() == "Stop") {
+                    QColor c(attributes().value("colorName") );
+                    c.setAlpha(attributes().value("alpha").toInt());
+                    gradientStops << qMakePair((qreal)(attributes().value("value").toDouble()), c);
+                }
+                readElementText();
             }
-        } else if (tag == "Gradient") {
-            if (gradient)
-                delete gradient;
 
-            gradient = 0;
-            gradientStops.clear();
-
-            QGradient::Type type = QGradient::Type(atts.value("type").toInt());
-            QGradient::Spread spread = QGradient::Spread(atts.value("spread").toInt());
-
-            switch (type) {
-               case QGradient::LinearGradient:
-                   {
-                       gradient = new QLinearGradient(atts.value("startX").toDouble(),
-                                      atts.value("startY").toDouble(),atts.value("finalX").toDouble(),
-                                      atts.value("finalY").toDouble());
-                   }
-               break;
-               case QGradient::RadialGradient:
-                   {
-                       gradient = new QRadialGradient(atts.value("centerX").toDouble(),
-                                      atts.value("centerY").toDouble(), atts.value("radius").toDouble(),
-                                      atts.value("focalX").toDouble(),atts.value("focalY").toDouble() );
-                   }
-               break;
-               case QGradient::ConicalGradient:
-                   {
-                       gradient = new QConicalGradient(atts.value("centerX").toDouble(),
-                                      atts.value("centerY").toDouble(),atts.value("angle").toDouble());
-                   }
-               break;
-               default:
-                   {
-                       #ifdef TUP_DEBUG
-                           qDebug() << "TupPaletteParser::startTag() - No gradient type: " + QString::number(type);
-                       #endif
-                   }
+            if (gradient) {
+                gradient->setStops(gradientStops);
+                brushes << *gradient;
+                gradientStops.clear();
             }
-            gradient->setSpread(spread);
-        } else if (tag == "Stop") {
-            QColor c(atts.value("colorName") );
-            c.setAlpha(atts.value("alpha").toInt());
-            // gradientStops << qMakePair(atts.value("value").toDouble(), c);
-            gradientStops << qMakePair((qreal)(atts.value("value").toDouble()), c);
-        }
-     }
-
-     return true;
-}
-
-bool TupPaletteParser::endTag(const QString& tag)
-{
-    if (root() == "Palette") {
-        if (tag == "Gradient" && gradient) {
-            gradient->setStops(gradientStops);
-            brushes << *gradient;
-            gradientStops.clear();
         }
     }
 
     return true;
-}
-
-void TupPaletteParser::text(const QString& )
-{
-
 }
 
 QList<QBrush> TupPaletteParser::getBrushes() const

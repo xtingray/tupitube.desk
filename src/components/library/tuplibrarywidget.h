@@ -109,7 +109,6 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
 
     private slots:
         void previewItem(QTreeWidgetItem *item);
-        // void insertObjectManually();
         void insertObjectInWorkspace();
         void removeCurrentItem();
         void cloneObject(QTreeWidgetItem *item);
@@ -145,10 +144,13 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
     private slots:
         void openSearchDialog();
         void recoverMode();
+        void importSoundFileFromFolder(const QString &filePath);
+        // void callLipySyncModule(bool recorded, const QString &filePath);
 
     signals:
         void requestCurrentGraphic();
         void soundUpdated();
+        void lipsyncModuleCalled(bool recorded, const QString &filePath);
 
     private:
         void callExternalEditor(QTreeWidgetItem *item, const QString &software);
@@ -164,8 +166,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void saveDefaultPath(const QString &dir);
         void importNativeObject(const QString &object);
         QStringList naturalSort(QStringList photograms);
-        void refreshItem(LibraryObjects collection);
-        // QPixmap groupImage(QGraphicsItem *item);
+        void refreshItemFromCollection(LibraryObjects collection);
 
         QScreen *screen;
         TupLibrary *library;

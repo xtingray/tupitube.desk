@@ -53,7 +53,7 @@ TupProject::TupProject(QObject *parent) : QObject(parent)
     #endif    
     
     spaceMode = TupProject::NONE;
-    bgColor = QColor("#fff");
+    bgColor = QColor("#ffffff");
     dimension = QSize(1920, 1080);
     fps = 24;
     sceneCounter = 0;
@@ -730,7 +730,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                     }
                     break;
                     */
-                    case TupLibraryObject::Sound:
+                    case TupLibraryObject::Audio:
                     {
                          TupSoundLayer *sound = scene->createSoundLayer(scene->getSoundLayers().count());
                          sound->fromSymbol(object->getSymbolName());

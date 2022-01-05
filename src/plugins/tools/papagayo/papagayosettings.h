@@ -33,8 +33,8 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#ifndef PAPAGAYOSETTINGS_H
+#define PAPAGAYOSETTINGS_H
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
@@ -44,10 +44,9 @@
 #include <QLabel>
 #include <QBoxLayout>
 #include <QSpinBox>
-#include <QListWidget>
+#include <QDoubleSpinBox>
+#include <QCheckBox>
 #include <QTextEdit>
-
-// class TupLipSync;
 
 /**
  * @author Gustav Gonzalez 
@@ -64,19 +63,38 @@ class TUPITUBE_PLUGIN PapagayoSettings : public QWidget
         void openLipSyncProperties(TupLipSync *lipsync);
         void updateInterfaceRecords();
 
-        void setPhoneme(const QString &phoneme);
-        void setPos(const QPointF &point);
+        void setPhoneme(const TupPhoneme *phoneme);
+        void setTransformations(const TupTransformation::Parameters parameters);
+        void setTransformations(const QDomElement &dom);
 
-    private slots:
-        void setCurrentMouth(int index);
-        void updateInitFrame(int index);
-        
+        void updatePositionCoords(int x, int y);
+        void updateRotationAngle(int angle);
+        void updateScaleFactor(double x, double y);
+
+        void setProportionState(int flag);
+
     signals:
         void initFrameHasChanged(int index);
         void selectMouth(const QString &id, int index);
+        // void saveMouthTransRequested();
         void closeLipSyncProperties();
+
         void xPosChanged(int x);
         void yPosChanged(int y);
+        void rotationChanged(int angle);
+        void scaleChanged(double xFactor, double yFactor);
+
+        void objectHasBeenReset();
+        void proportionActivated(bool flag);
+
+    private slots:
+        void updateInitFrame(int index);
+
+        void notifyRotation(int angle);
+        void notifyXScale(double factor);
+        void notifyYScale(double factor);
+        void enableProportion(int flag);
+        // void resetTransformations();
 
     private:
         void setInnerForm();
@@ -85,25 +103,30 @@ class TUPITUBE_PLUGIN PapagayoSettings : public QWidget
         QBoxLayout *layout;
 
         QLabel *lipSyncName;
-        QLabel *fpsLabel;
         QSpinBox *comboInit;
 
         QLabel *endingLabel;
         QLabel *totalLabel;
 
-        QListWidget *mouthsList;
-        QList<TupVoice *> voices;
-
-        QTextEdit *textArea;
-
-        // QString phoneme;
         QLabel *phonemeLabel;
         QSpinBox *xPosField;
         QSpinBox *yPosField;
 
+        QSpinBox *angleField;
+        QDoubleSpinBox *factorXField;
+        QDoubleSpinBox *factorYField;
+        QCheckBox *propCheck;
+
         QString name;
         int initFrame;
         int framesCount;
+
+        int currentX;
+        int currentY;
+        double currentXFactor;
+        double currentYFactor;
+
+        const TupPhoneme *phoneme;
 };
 
 #endif

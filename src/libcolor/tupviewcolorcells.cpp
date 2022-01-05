@@ -55,6 +55,10 @@ TupViewColorCells::TupViewColorCells(QWidget *parent) : QFrame(parent)
 
 TupViewColorCells::~TupViewColorCells()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[~TupViewColorCells()]";
+    #endif
+
     TCONFIG->beginGroup("ColorPalette");
     TCONFIG->setValue("LastPalette", chooserPalette->currentIndex());
 
@@ -64,7 +68,7 @@ TupViewColorCells::~TupViewColorCells()
         brushesDir.mkdir(brushesDir.path());
 
     #ifdef TUP_DEBUG
-        qWarning() << "TupViewColorCells::~TupViewColorCells() - Saving color palettes in: " + brushesDir.path();
+        qWarning() << "[TupViewColorCells::~TupViewColorCells()] - Saving color palettes in -> " << brushesDir.path();
     #endif
 
     for (int i = 0; i < containerPalette->count(); i++) {
@@ -73,13 +77,7 @@ TupViewColorCells::~TupViewColorCells()
              if (!palette->isReadOnly())
                  palette->save(CONFIG_DIR + "palettes/" + palette->getName() + ".tpal");
          }
-    }
-
-    // delete k;
-	
-    #ifdef TUP_DEBUG
-        qDebug() << "[~TupViewColorCells()]";
-    #endif
+    }	
 }
 
 void TupViewColorCells::setupForm()
@@ -155,12 +153,17 @@ void TupViewColorCells::readPalettes(const QString &paletteDir)
     QDir dir(paletteDir);
     if (dir.exists()) {
         QStringList files = dir.entryList(QStringList() << "*.tpal");
-        QStringList::ConstIterator it = files.begin();
+        // QStringList::ConstIterator it = files.begin();
 
+        for (int i = 0; i < files.size(); ++i)
+            readPaletteFile(dir.path() + "/" + files.at(i));
+
+        /*
         while (it != files.end()) {
             readPaletteFile(dir.path() + "/" + *it);
             ++it;
         }
+        */
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TupViewColorCells::readPalettes()] - Error: Palettes path doesn't exist -> " << paletteDir;
@@ -176,8 +179,32 @@ void TupViewColorCells::readPalettes(const QString &paletteDir)
 
 void TupViewColorCells::readPaletteFile(const QString &paletteFile)
 {
-    TupPaletteParser parser;
     QFile file(paletteFile);
+    if (file.exists()) {
+        if (file.open(QFile::ReadOnly | QFile::Text)) {
+            TupPaletteParser parser(&file);
+            if (parser.processPalette()) {
+                QList<QBrush> brushes = parser.getBrushes();
+                QString name = parser.getPaletteName();
+                bool editable = parser.paletteIsEditable();
+                addPalette(name, brushes, editable);
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupViewColorCells::readPaletteFile()] - Fatal error while parsing palette file -> " << paletteFile;
+                #endif
+            }
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupViewColorCells::readPaletteFile()] - Fatal error while open palette file -> " << paletteFile;
+            #endif
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupViewColorCells::readPaletteFile()] - Fatal error: palette file doesn't exist! -> " << paletteFile;
+        #endif
+    }
+
+    /*
     if (file.exists()) {
         if (parser.parse(&file)) {
             QList<QBrush> brushes = parser.getBrushes();
@@ -194,6 +221,7 @@ void TupViewColorCells::readPaletteFile(const QString &paletteFile)
             qDebug() << "[TupViewColorCells::readPaletteFile()] - Fatal error: palette file doesn't exist! -> " + paletteFile;
         #endif
     }
+    */
 }
 
 void TupViewColorCells::addPalette(const QString & name, const QList<QBrush> & brushes, bool editable)
@@ -241,8 +269,8 @@ void TupViewColorCells::addPalette(const QString & name, const QList<QBrush> & b
 
 void TupViewColorCells::addPalette(TupCellsColor *palette)
 {
-    connect(palette, SIGNAL(itemEntered(QTableWidgetItem *)), this, SLOT(changeColor(QTableWidgetItem *)));
-    connect(palette, SIGNAL(itemPressed(QTableWidgetItem *)), this, SLOT(changeColor(QTableWidgetItem *)));
+    connect(palette, SIGNAL(itemEntered(QTableWidgetItem*)), this, SLOT(changeColor(QTableWidgetItem*)));
+    connect(palette, SIGNAL(itemPressed(QTableWidgetItem*)), this, SLOT(changeColor(QTableWidgetItem*)));
     chooserPalette->addItem(palette->getName());
     containerPalette->addWidget(palette);
 }
@@ -287,13 +315,18 @@ void TupViewColorCells::enableTransparentColor(bool flag)
 
 void TupViewColorCells::fillNamedColor()
 {
-    QStringList strColors = QColor::colorNames();
-    QStringList::ConstIterator it = strColors.begin();
+    QStringList colorStrings = QColor::colorNames();
+    // QStringList::ConstIterator it = colorStrings.begin();
 
-    while (it != strColors.end()) {
-           qtColorPalette->addItem(QColor(*it));
-           ++it;
+    for (int i = 0; i < colorStrings.size(); ++i)
+        qtColorPalette->addItem(QColor(colorStrings.at(i)));
+
+    /*
+    while (it != it.end()) {
+        qtColorPalette->addItem(QColor(*it));
+        ++it;
     }
+    */
 
     qtColorPalette->addItem(QColor(0,0,0,0));
     qtColorPalette->addItem(QColor(0,0,0,50));

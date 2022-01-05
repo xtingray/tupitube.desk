@@ -37,29 +37,23 @@
 #define TUPPALETTEPARSER_H
 
 #include "tglobal.h"
-#include "txmlparserbase.h"
 
-#include <QXmlDefaultHandler>
+#include <QXmlStreamReader>
 #include <QBrush>
 #include <QLinearGradient>
 #include <QConicalGradient>
 #include <QRadialGradient>
 
-//TODO TupPaletteParser: portar a TXmlParserBase
-
-class TUPITUBE_EXPORT TupPaletteParser : public TXmlParserBase
+class TUPITUBE_EXPORT TupPaletteParser : public QXmlStreamReader
 {
      public:
-         TupPaletteParser();
+         TupPaletteParser(QIODevice *device);
          ~TupPaletteParser();
 
+         bool processPalette();
          QList<QBrush> getBrushes() const;
          QString getPaletteName() const;
          bool paletteIsEditable() const;
-
-         bool startTag(const QString &tag, const QXmlAttributes &atts);
-         bool endTag(const QString &tag);
-         void text(const QString &text);
 
      private:
          QString paletteName;
@@ -69,5 +63,4 @@ class TUPITUBE_EXPORT TupPaletteParser : public TXmlParserBase
          QGradientStops gradientStops;
          QGradient *gradient;
 };
-
 #endif

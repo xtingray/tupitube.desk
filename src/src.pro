@@ -1,11 +1,11 @@
 SUBDIRS += themes \
            framework \
-		   libtupi \
+	   libtupi \
            store \
            libbase \
            libcolor \
            mypaint \
-           net \
+           # net \
            libui \
            components \
            plugins \

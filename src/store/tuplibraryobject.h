@@ -53,7 +53,7 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         {
             Item = 1,
             Image,
-            Sound,
+            Audio,
             Svg,
             Folder
         };

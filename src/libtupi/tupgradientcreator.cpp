@@ -55,7 +55,7 @@ TupGradientCreator::TupGradientCreator(QWidget *parent) : QFrame(parent)
     selectorAndViewer->addWidget(selector);
     selectorAndViewer->addStretch(2);
     
-    connect(selector, SIGNAL(gradientChanged(const QGradientStops&)),this, SLOT(changeGradientStops(const QGradientStops&)));
+    connect(selector, SIGNAL(gradientChanged(QGradientStops)),this, SLOT(changeGradientStops(QGradientStops)));
     connect(selector, SIGNAL(arrowAdded()), this, SIGNAL(controlArrowAdded()));
     
     QBoxLayout *subLayout = new QBoxLayout(QBoxLayout::TopToBottom);
@@ -98,7 +98,7 @@ TupGradientCreator::~TupGradientCreator()
 
 void TupGradientCreator::setCurrentColor(const QColor &color)
 {
-    Q_UNUSED(color);
+    Q_UNUSED(color)
 
     // SQA: This code has been disabled temporarily 
     /*
@@ -156,7 +156,7 @@ void TupGradientCreator::setGradient(const QBrush &brush)
         }
     } else {
         #ifdef TUP_DEBUG
-	    qDebug() << "TupGradientCreator::setGradient() - Error: Brush has no gradient (null)";
+            qDebug() << "[TupGradientCreator::setGradient()] - Error: Brush has no gradient (null)";
         #endif
     }
 }

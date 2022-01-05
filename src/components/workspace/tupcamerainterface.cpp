@@ -274,7 +274,11 @@ TupCameraInterface::~TupCameraInterface()
 
 void TupCameraInterface::closeEvent(QCloseEvent *event)
 {
-    Q_UNUSED(event);
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraInterface::closeEvent()]";
+    #endif
+
+    Q_UNUSED(event)
 
     currentCamera->reset();
     emit closed();
@@ -282,6 +286,10 @@ void TupCameraInterface::closeEvent(QCloseEvent *event)
 
 QSize TupCameraInterface::setBestResolution(QList<QSize> resolutions, QSize cameraSize)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraInterface::setBestResolution()] - cameraSize -> " << cameraSize;
+    #endif
+
     QSize maxCameraSize = QSize(0, 0);
     for (int i=0; i < resolutions.size(); i++) {
          QSize resolution = resolutions.at(i);
@@ -296,6 +304,10 @@ QSize TupCameraInterface::setBestResolution(QList<QSize> resolutions, QSize came
 
 QString TupCameraInterface::randomPath()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraInterface::randomPath()]";
+    #endif
+
     QString path = CACHE_DIR + TAlgorithm::randomString(8);
     QDir dir;
     if (!dir.mkdir(path)) {
@@ -324,6 +336,10 @@ void TupCameraInterface::takePicture()
 
 void TupCameraInterface::changeCameraDevice(int index)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraInterface::changeCameraDevice()] - index -> " << index;
+    #endif
+
     TupCameraWindow *item = (TupCameraWindow *) widgetStack->currentWidget();
     item->stopCamera(); 
 

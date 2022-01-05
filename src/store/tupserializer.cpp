@@ -61,7 +61,8 @@ QDomElement TupSerializer::properties(const QGraphicsItem *item, QDomDocument &d
     qreal e = m.dx();
     qreal f = m.dy();
     
-    matrixStr += QString::number(a) + "," + QString::number(b) + "," + QString::number(c) + "," + QString::number(d) + "," + QString::number(e) + "," + QString::number(f) + ")" ; 
+    matrixStr += QString::number(a) + "," + QString::number(b) + "," + QString::number(c) + "," + QString::number(d)
+                 + "," + QString::number(e) + "," + QString::number(f) + ")" ;
 
     properties.setAttribute("transform", matrixStr);
     properties.setAttribute("rotation", item->data(TupGraphicObject::Rotate).toInt());
@@ -82,14 +83,14 @@ QDomElement TupSerializer::properties(const QGraphicsItem *item, QDomDocument &d
     return properties;
 }
 
-void TupSerializer::loadProperties(QGraphicsItem *item, const QXmlAttributes &atts)
+void TupSerializer::loadProperties(QGraphicsItem *item, const QXmlStreamAttributes &atts)
 {
     QTransform transform;
-    TupSvg2Qt::svgmatrix2qtmatrix(atts.value("transform"), transform);
+    TupSvg2Qt::svgmatrix2qtmatrix(atts.value("transform").toString(), transform);
     item->setTransform(transform);
 
     QPointF pos;
-    TupSvg2Qt::parsePointF(atts.value("pos"), pos);
+    TupSvg2Qt::parsePointF(atts.value("pos").toString(), pos);
 
     item->setPos(pos);
     item->setEnabled(atts.value("pos") != "0"); // default true
@@ -108,8 +109,8 @@ void TupSerializer::loadProperties(QGraphicsItem *item, const QXmlAttributes &at
         option.setAlignment(alignment);
         textItem->document()->setDefaultTextOption(option);
 
-        textItem->setData(0, atts.value("text"));
-        textItem->setPlainText(atts.value("text"));
+        textItem->setData(0, atts.value("text").toString());
+        textItem->setPlainText(atts.value("text").toString());
     }
 }
 
@@ -207,7 +208,7 @@ QDomElement TupSerializer::gradient(const QGradient *gradient, QDomDocument &doc
     return element;
 }
 
-QGradient * TupSerializer::createGradient(const QXmlAttributes &atts)
+QGradient * TupSerializer::createGradient(const QXmlStreamAttributes &atts)
 {
     QGradient *result = nullptr;
 
@@ -230,7 +231,8 @@ QGradient * TupSerializer::createGradient(const QXmlAttributes &atts)
         break;
         case QGradient::ConicalGradient:
         {
-            result = new QConicalGradient(QPointF(atts.value("centerX").toDouble(),atts.value("centerY").toDouble()), atts.value("angle").toDouble());
+            result = new QConicalGradient(QPointF(atts.value("centerX").toDouble(),atts.value("centerY").toDouble()),
+                                          atts.value("angle").toDouble());
         }
         break;
         case QGradient::NoGradient:
@@ -277,12 +279,13 @@ QDomElement TupSerializer::brush(const QBrush *brush, QDomDocument &doc)
     return brushElement;
 }
 
-void TupSerializer::loadBrush(QBrush &brush, const QXmlAttributes &atts)
+// void TupSerializer::loadBrush(QBrush &brush, const QXmlAttributes &atts)
+void TupSerializer::loadBrush(QBrush &brush, const QXmlStreamAttributes &atts)
 {
     brush.setStyle(Qt::BrushStyle(atts.value("style").toInt()));
     
     if (!atts.value("color").isEmpty()) {
-        QColor color(atts.value("color"));
+        QColor color(atts.value("color").toString());
         color.setAlpha(atts.value("alpha").toInt());
         brush.setColor(color);
     } else {
@@ -290,7 +293,7 @@ void TupSerializer::loadBrush(QBrush &brush, const QXmlAttributes &atts)
     }
     
     QTransform transform;
-    TupSvg2Qt::svgmatrix2qtmatrix(atts.value("transform"), transform);
+    TupSvg2Qt::svgmatrix2qtmatrix(atts.value("transform").toString(), transform);
     brush.setTransform(transform);
 }
 
@@ -329,7 +332,7 @@ QDomElement TupSerializer::pen(const QPen *pen, QDomDocument &doc)
     return penElement;
 }
 
-void TupSerializer::loadPen(QPen &pen, const QXmlAttributes &atts)
+void TupSerializer::loadPen(QPen &pen, const QXmlStreamAttributes &atts)
 {
     pen.setCapStyle(Qt::PenCapStyle(atts.value("capStyle").toInt()));
     pen.setStyle(Qt::PenStyle(atts.value("style").toInt()));
@@ -338,7 +341,7 @@ void TupSerializer::loadPen(QPen &pen, const QXmlAttributes &atts)
     pen.setMiterLimit(atts.value("miterLimit").toInt());
    
     QColor color; 
-    QString colorName = atts.value("color");
+    QString colorName = atts.value("color").toString();
     if (!colorName.isEmpty()) {
         color = QColor(colorName);
         color.setAlpha(atts.value("alpha").toInt());
@@ -362,7 +365,6 @@ void TupSerializer::loadPen(QPen &pen, const QDomElement &e)
     QBrush brush; 
     loadBrush(brush, brushElement);
 
-    // pen.setColor(color);
     pen.setBrush(brush);
 }
 
@@ -384,17 +386,18 @@ QDomElement TupSerializer::font(const QFont *font, QDomDocument &doc)
 
 void TupSerializer::loadFont(QFont &font, const QDomElement &e)
 {
-    font = QFont(e.attribute("family"), e.attribute("pointSize", "-1").toInt(), e.attribute("weight", "-1").toInt(), e.attribute( "italic", "0").toInt());
-    
+    font = QFont(e.attribute("family"), e.attribute("pointSize", "-1").toInt(), e.attribute("weight", "-1").toInt(),
+                 e.attribute( "italic", "0").toInt());
+
     font.setBold(e.attribute("bold", "0").toInt());
     font.setStyle(QFont::Style(e.attribute("style").toInt()));
     font.setUnderline(e.attribute("underline", "0").toInt());
     font.setOverline(e.attribute("overline", "0").toInt());
 }
 
-void TupSerializer::loadFont(QFont &font, const QXmlAttributes &atts)
+void TupSerializer::loadFont(QFont &font, const QXmlStreamAttributes &atts)
 {
-    font = QFont(atts.value("family"), atts.value("pointSize").toInt(), atts.value("weight").toInt(),
+    font = QFont(atts.value("family").toString(), atts.value("pointSize").toInt(), atts.value("weight").toInt(),
                  atts.value("italic").toInt());
 
     font.setBold(atts.value("bold").toInt());

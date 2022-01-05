@@ -50,14 +50,25 @@ class T_GUI_EXPORT TOptionalDialog : public QDialog
     Q_OBJECT
 
     public:
-        TOptionalDialog(const QString &text, const QString &title = QString(), QWidget *parent = nullptr);
+        enum Result {Accepted = 0, Cancelled, Discarded};
+        TOptionalDialog(const QString &text, const QString &title = QString(), bool showAgainBox = true,
+                        bool showDiscardButton = false, QWidget *parent = nullptr);
         ~TOptionalDialog();
         
         bool shownAgain();
-        
+        TOptionalDialog::Result getResult();
+
+    private slots:
+        void callAcceptAction();
+        void callCancelAction();
+        void callDiscardAction();
+
     private:
-        QBoxLayout *m_layout;
-        QCheckBox *m_checkBox;
+        void setUIStyle();
+
+        QBoxLayout *mainLayout;
+        QCheckBox *checkBox;
+        Result result;
 };
 
 #endif

@@ -184,7 +184,7 @@ bool TupCrashHandler::containsSignalEntry(int signal)
 
 void TupCrashHandler::setConfig(const QString &filePath)
 {
-    T_FUNCINFO;
+    // T_FUNCINFO;
 
     QDomDocument doc;
     QFile file(filePath);

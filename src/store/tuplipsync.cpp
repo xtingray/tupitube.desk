@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                *
+ *   Project TUPITUBE DESK                                                 *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -34,15 +34,98 @@
  ***************************************************************************/
 
 #include "tuplipsync.h" 
+#include "tupsvg2qt.h"
+
+// Transformation
+
+TupTransformation::TupTransformation()
+{
+}
+
+TupTransformation::TupTransformation(const QDomElement &e)
+{
+    setTransformationDom(e);
+}
+
+TupTransformation::~TupTransformation()
+{
+}
+
+void TupTransformation::setTransformationDom(const QDomElement &e)
+{
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTransformation::setTransformationDom()]";
+    #endif
+    */
+
+    transDom = e;
+
+    QPointF pos;
+    TupSvg2Qt::parsePointF(e.attribute("pos"), pos);
+    transStructure.pos = pos;
+    transStructure.rotationAngle = e.attribute("rotation").toInt();
+    transStructure.scaleFactor.setX(e.attribute("scale_x").toDouble());
+    transStructure.scaleFactor.setY(e.attribute("scale_y").toDouble());
+}
+
+QDomElement TupTransformation::getTransformationDom() const
+{
+    return transDom;
+}
+
+TupTransformation::Parameters TupTransformation::getTransformationParams()
+{
+    return transStructure;
+}
+
+QPointF TupTransformation::getPosition()
+{
+    return transStructure.pos;
+}
+
+int TupTransformation::getRotationAngle()
+{
+    return transStructure.rotationAngle;
+}
+
+QPointF TupTransformation::getScaleFactor()
+{
+    return transStructure.scaleFactor;
+}
+
+void TupTransformation::fromXml(const QString &xml)
+{
+    QDomDocument document;
+    if (document.setContent(xml))
+        transDom = document.documentElement();
+}
+
+QDomElement TupTransformation::toXml(QDomDocument &doc) const
+{
+    QDomElement element = doc.createElement("properties");
+    element.setAttribute("pos", "(" + QString::number(transStructure.pos.x()) + "," +
+                                       QString::number(transStructure.pos.y()) + ")");
+    element.setAttribute("scale_x", transStructure.scaleFactor.x());
+    element.setAttribute("scale_y", transStructure.scaleFactor.y());
+    element.setAttribute("transform", transDom.attribute("transform"));
+    element.setAttribute("flags", transDom.attribute("flags"));
+    element.setAttribute("rotation", transStructure.rotationAngle);
+    element.setAttribute("enabled", transDom.attribute("enabled"));
+
+    return element;
+}
+
+// Phoneme
 
 TupPhoneme::TupPhoneme() : QObject()
 {
 }
 
-TupPhoneme::TupPhoneme(const QString &value, QPointF point) : QObject()
+TupPhoneme::TupPhoneme(const QString &value, const QDomElement &doc) : QObject()
 {
     phoneme = value;
-    pos = point;
+    setTransformationDom(doc);
 }
 
 TupPhoneme::~TupPhoneme()
@@ -59,29 +142,45 @@ QString TupPhoneme::value() const
     return phoneme;
 }
 
-void TupPhoneme::setPos(QPointF point)
+void TupPhoneme::setTransformationDom(const QDomElement &e)
 {
-    pos = point;
+    transformation = new TupTransformation(e);
 }
 
-QPointF TupPhoneme::position()
+QDomElement TupPhoneme::getTransformationDom() const
 {
-    return pos;
+    if (transformation)
+        return transformation->getTransformationDom();
+
+    return QDomElement();
+}
+
+TupTransformation::Parameters TupPhoneme::getTransformationParams() const
+{
+    if (transformation)
+        return transformation->getTransformationParams();
+
+    TupTransformation::Parameters params;
+    return params;
 }
 
 void TupPhoneme::fromXml(const QString &xml)
 {
-    QDomDocument document;
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPhoneme::fromXml()] - xml:";
+        qDebug() << xml;
+    #endif
+    */
 
+    QDomDocument document;
     if (document.setContent(xml)) {
-        QDomElement e = document.documentElement();
-        if (!e.isNull()) {
-            if (e.tagName() == "phoneme") {
-                phoneme = e.attribute("value");
-                QStringList xy = e.attribute("pos").split(",");
-                double x = xy.first().toDouble();
-                double y = xy.last().toDouble();
-                pos = QPointF(x, y);
+        QDomElement element = document.documentElement();
+        if (!element.isNull()) {
+            if (element.tagName() == "phoneme") {
+                phoneme = element.attribute("value");
+                QDomNode node = element.firstChild();
+                transformation = new TupTransformation(node.toElement());
             }
         }
     }
@@ -89,12 +188,20 @@ void TupPhoneme::fromXml(const QString &xml)
 
 QDomElement TupPhoneme::toXml(QDomDocument &doc) const
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPhoneme::toXml()]";
+    #endif
+    */
+
     QDomElement root = doc.createElement("phoneme");
     root.setAttribute("value", phoneme);
-    root.setAttribute("pos", QString::number(pos.x()) + "," + QString::number(pos.y()));
+    root.appendChild(transformation->toXml(doc));
 
     return root;
 }
+
+// Word
 
 TupWord::TupWord()
 {
@@ -140,6 +247,35 @@ QList<TupPhoneme *> TupWord::phonemesList()
     return phonemes;
 }
 
+bool TupWord::hasPhonemes()
+{
+    return !phonemes.isEmpty();
+}
+
+TupPhoneme * TupWord::firstPhoneme()
+{
+    if (!phonemes.isEmpty())
+        return phonemes.first();
+
+    return nullptr;
+}
+
+TupPhoneme * TupWord::lastPhoneme()
+{
+    if (!phonemes.isEmpty())
+        return phonemes.last();
+
+    return nullptr;
+}
+
+TupPhoneme * TupWord::phonemeAt(int frame)
+{
+    if (frame >= initIndex && frame <= endIndex)
+        return phonemes.at(frame);
+
+    return nullptr;
+}
+
 bool TupWord::contains(int frame)
 {
     if (frame >= initIndex && frame <= endIndex)
@@ -148,39 +284,69 @@ bool TupWord::contains(int frame)
     return false;
 }
 
+QDomElement TupWord::getTransformationDom(int frame)
+{
+    TupPhoneme *phoneme = phonemeAt(frame);
+    if (phoneme)
+        return  phoneme->getTransformationDom();
+
+    return QDomElement();
+}
+
+TupTransformation::Parameters TupWord::getTransformationParams(int frame)
+{
+    TupPhoneme *phoneme = phonemeAt(frame);
+    if (phoneme)
+        return  phoneme->getTransformationParams();
+
+    TupTransformation::Parameters params;
+    return params;
+}
+
 void TupWord::fromXml(const QString &xml)
 {
-    QDomDocument document;
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupWord::fromXml()] - xml:";
+        qDebug() << xml;
+    #endif
+    */
 
+    QDomDocument document;
     if (document.setContent(xml)) {
         QDomElement root = document.documentElement();
         initIndex = root.attribute("initFrame").toInt();
         endIndex = initIndex - 1;
-        QDomNode n = root.firstChild();
 
-        while (!n.isNull()) {
-               QDomElement e = n.toElement();
-               if (!e.isNull()) {
-                   if (e.tagName() == "phoneme") {
-                       TupPhoneme *phoneme = new TupPhoneme();
-                       QString newDoc;
-                       {
-                           QTextStream ts(&newDoc);
-                           ts << n;
-                       }
-                       phoneme->fromXml(newDoc);
-                       phonemes << phoneme;
-                       endIndex++;
-                   }
-               }
+        QDomNode node = root.firstChild();
+        while (!node.isNull()) {
+            QDomElement element = node.toElement();
+            if (!element.isNull()) {
+                if (element.tagName() == "phoneme") {
+                    TupPhoneme *phoneme = new TupPhoneme();
+                    QString input;
+                    {
+                        QTextStream ts(&input);
+                        ts << node;
+                    }
 
-               n = n.nextSibling();
+                    phoneme->fromXml(input);
+                    phonemes << phoneme;
+                    endIndex++;
+                }
+            }
+
+            node = node.nextSibling();
         }
     }
 }
 
 QDomElement TupWord::toXml(QDomDocument &doc) const
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupWord::toXml()]";
+    #endif
+
     QDomElement root = doc.createElement("word");
     root.setAttribute("initFrame", initIndex);
 
@@ -192,6 +358,8 @@ QDomElement TupWord::toXml(QDomDocument &doc) const
 
     return root;
 }
+
+// Phrase
 
 TupPhrase::TupPhrase()
 {
@@ -243,6 +411,16 @@ QList<TupWord *> TupPhrase::wordsList()
     return words;
 }
 
+TupWord * TupPhrase::wordAt(int index)
+{
+    if (!words.isEmpty()) {
+        if (index >= 0 && index < words.size())
+            return words.at(index);
+    }
+
+    return nullptr;
+}
+
 bool TupPhrase::contains(int frame)
 {
     if (frame >= initIndex && frame <= endIndex) 
@@ -251,32 +429,57 @@ bool TupPhrase::contains(int frame)
     return false;
 }
 
+QDomElement TupPhrase::getTransformationDom(int frame)
+{
+    TupWord *word = wordAt(frame);
+    if (word)
+        return word->getTransformationDom(frame);
+
+    return QDomElement();
+}
+
+TupTransformation::Parameters TupPhrase::getTransformationParams(int frame)
+{
+    TupWord *word = wordAt(frame);
+    if (word)
+        return word->getTransformationParams(frame);
+
+    TupTransformation::Parameters params;
+    return params;
+}
+
 void TupPhrase::fromXml(const QString &xml)
 {
-    QDomDocument document;
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPhrase::fromXml()] - xml:";
+        qDebug() << xml;
+    #endif
+    */
 
+    QDomDocument document;
     if (document.setContent(xml)) {
         QDomElement root = document.documentElement();
         initIndex = root.attribute("initFrame").toInt();
-        QDomNode n = root.firstChild();
+        QDomNode node = root.firstChild();
 
-        while (!n.isNull()) {
-               QDomElement e = n.toElement();
-               if (!e.isNull()) {
-                   if (e.tagName() == "word") {
+        while (!node.isNull()) {
+               QDomElement element = node.toElement();
+               if (!element.isNull()) {
+                   if (element.tagName() == "word") {
                        TupWord *word = new TupWord();
-                       QString newDoc;
+                       QString input;
                        {
-                           QTextStream ts(&newDoc);
-                           ts << n;
+                           QTextStream ts(&input);
+                           ts << node;
                        }
 
-                       word->fromXml(newDoc);
+                       word->fromXml(input);
                        words << word;
                    }
                }
 
-               n = n.nextSibling();
+               node = node.nextSibling();
         }
 
         TupWord *last = words.last();
@@ -286,6 +489,10 @@ void TupPhrase::fromXml(const QString &xml)
 
 QDomElement TupPhrase::toXml(QDomDocument &doc) const
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPhrase::toXml()]";
+    #endif
+
     QDomElement root = doc.createElement("phrase");
     root.setAttribute("initFrame", initIndex);
 
@@ -298,14 +505,17 @@ QDomElement TupPhrase::toXml(QDomDocument &doc) const
     return root;
 }
 
+// Voice
+
 TupVoice::TupVoice()
 {
+    phrase = new TupPhrase;
 }
 
-TupVoice::TupVoice(const QString &label, QPointF pos) 
+TupVoice::TupVoice(const QString &label)
 {
     title = label;
-    point = pos;
+    phrase = new TupPhrase;
 }
 
 TupVoice::~TupVoice()
@@ -322,76 +532,72 @@ QString TupVoice::voiceTitle() const
     return title;
 }
 
-void TupVoice::setMouthPos(QPointF pos)
-{
-    point = pos;
-}
-
-void TupVoice::updateMouthPos(QPointF pos, int frame)
+QDomElement TupVoice::setDefaultTransformation(int x, int y)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupVoice::updateMouthPos()] - pos -> " << pos;
-        qDebug() << "[TupVoice::updateMouthPos()] - frame -> " << frame;
-        qDebug() << "[TupVoice::updateMouthPos()] - initIndex -> " << initIndex;
+        qDebug() << "[TupVoice::setDefaultTransformation()] - point -> " << QPointF(x, y);
     #endif
 
-    if (initIndex == frame)
-        point = pos;
+    QDomDocument doc;
+    transformation = doc.createElement("properties");
+    transformation = doc.createElement("properties");
+    transformation.setAttribute("pos", "(" + QString::number(x) + "," + QString::number(y) + ")");
+    transformation.setAttribute("scale_x", "1");
+    transformation.setAttribute("scale_y", "1");
+    transformation.setAttribute("transform", "matrix(1,0,0,1,0,0)");
+    transformation.setAttribute("flags", "0");
+    transformation.setAttribute("rotation", "0");
+    transformation.setAttribute("enabled", "1");
+
+    return transformation;
+}
+
+QDomElement TupVoice::getDefaultTransformation() const
+{
+    return transformation;
+}
+
+QDomElement TupVoice::getTransformationDomAt(int frame) const
+{
+    return phrase->getTransformationDom(frame);
+}
+
+void TupVoice::updateMouthTransformation(const QDomElement &doc, int frame)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupVoice::updateMouthTransformation()] - frame -> " << frame;
+    #endif
 
     int index = frame - initIndex;
     // Look for phoneme for this frame index
     int i = 0;
-    foreach (TupPhrase *phrase, phrases) {
-        if (phrase->contains(index)) {
-            int j = 0;
-            QList<TupWord *> wordList = phrase->wordsList();
-            foreach (TupWord *word, wordList ) {
-                int initFrame = word->initFrame();
-                if (word->contains(index)) {
-                    QList<TupPhoneme *> phonemeList = word->phonemesList();
-                    int position = index - initFrame;
-                    TupPhoneme *phoneme = phonemeList.at(position);
-                    QPointF oldPos = phoneme->position();
-                    phoneme->setPos(pos);
+    if (phrase->contains(index)) {
+        int j = 0;
+        QList<TupWord *> wordList = phrase->wordsList();
+        foreach (TupWord *word, wordList ) {
+            int initFrame = word->initFrame();
+            if (word->contains(index)) {
+                QList<TupPhoneme *> phonemeList = word->phonemesList();
+                int position = index - initFrame;
+                TupPhoneme *phoneme = phonemeList.at(position);
+                phoneme->setTransformationDom(doc);
 
-                    for (int n=position+1; n<phonemeList.count(); n++) {
-                        TupPhoneme *p = phonemeList.at(n);
-                        if (p->position() == oldPos)
-                            p->setPos(pos);
-                        else
-                            return;
-                    }
-                    for (int n=j+1; n<wordList.count(); n++) {
-                        TupWord *w = wordList.at(n);
-                        foreach (TupPhoneme *p, w->phonemesList()) {
-                            if (p->position() == oldPos)
-                                p->setPos(pos);
-                            else
-                                return;                               }
-                        }
-                        for (int n=i+1; n<phrases.count(); n++) {
-                          TupPhrase *ph = phrases.at(n);
-                          foreach (TupWord *w, ph->wordsList()) {
-                              foreach (TupPhoneme *p, w->phonemesList()) {
-                                  if (p->position() == oldPos)
-                                      p->setPos(pos);
-                                  else
-                                      return;
-                              }
-                        }
-                    }
-                    return;
+                for (int n=position+1; n<phonemeList.count(); n++) {
+                    TupPhoneme *p = phonemeList.at(n);
+                    p->setTransformationDom(doc);
                 }
-                j++;
-             }
-         }
-         i++;
-    }
-}
 
-QPointF TupVoice::mouthPos()
-{
-    return point;
+                for (int n=j+1; n<wordList.count(); n++) {
+                    TupWord *w = wordList.at(n);
+                    foreach (TupPhoneme *p, w->phonemesList())
+                        p->setTransformationDom(doc);
+                }
+                return;
+            }
+            j++;
+        }
+    }
+    i++;
 }
 
 void TupVoice::setText(const QString &content)
@@ -414,35 +620,33 @@ int TupVoice::endFrame()
     return endIndex;
 }
 
-void TupVoice::addPhrase(TupPhrase *phrase)
+void TupVoice::setPhrase(TupPhrase *phrase)
 {
     if (phrase)
-        phrases << phrase;
+        this->phrase = phrase;
 }
 
-QList<TupPhrase *> TupVoice::getPhrases()
+TupPhrase * TupVoice::getPhrase()
 {
-    return phrases;
+    return phrase;
 }
 
 TupPhoneme * TupVoice::getPhonemeAt(int frame)
 {
-    foreach (TupPhrase *phrase, phrases) {
-             if (phrase->contains(frame)) {
-                 foreach (TupWord *word, phrase->wordsList()) {
-                      int initFrame = word->initFrame();
-                      int index = frame - initFrame;
-                      if (initFrame <= frame) {
-                          if (word->contains(frame)) {
-                              TupPhoneme *phoneme = word->phonemesList().at(index);
-                              return phoneme;
-                          }
-                      }
-                 }
-             }
+    if (phrase->contains(frame)) {
+        foreach (TupWord *word, phrase->wordsList()) {
+            int initFrame = word->initFrame();
+            int index = frame - initFrame;
+            if (initFrame <= frame) {
+                if (word->contains(frame)) {
+                    TupPhoneme *phoneme = word->phonemesList().at(index);
+                    return phoneme;
+                }
+            }
+        }
     }
 
-    return 0;
+    return nullptr;
 }
 
 bool TupVoice::contains(int frame)
@@ -455,15 +659,16 @@ bool TupVoice::contains(int frame)
 
 void TupVoice::fromXml(const QString &xml)
 {
-    QDomDocument document;
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupVoice::fromXml()] - xml:";
+        qDebug() << xml;
+    #endif
+    */
 
+    QDomDocument document;
     if (document.setContent(xml)) {
         QDomElement root = document.documentElement();
-        QStringList xy = root.attribute("pos").split(",");
-        double x = xy.first().toDouble();
-        double y = xy.last().toDouble();
-        point = QPointF(x, y);
-
         script = root.attribute("text");
 
         QDomNode n = root.firstChild();
@@ -471,43 +676,38 @@ void TupVoice::fromXml(const QString &xml)
                QDomElement e = n.toElement();
                if (!e.isNull()) {
                    if (e.tagName() == "phrase") {
-                       TupPhrase *phrase = new TupPhrase();
-                       QString newDoc;
+                       phrase = new TupPhrase();
+                       QString input;
                        {
-                           QTextStream ts(&newDoc);
+                           QTextStream ts(&input);
                            ts << n;
                        }
-
-                       phrase->fromXml(newDoc);
-                       phrases << phrase;
+                       phrase->fromXml(input);
                    }
                }
                n = n.nextSibling();
         }
 
-        TupPhrase *first = phrases.first();
-        initIndex = first->initFrame();
-
-        TupPhrase *last = phrases.last();
-        endIndex = last->endFrame();
+        initIndex = phrase->initFrame();
+        endIndex = phrase->endFrame();
     }
 }
 
 QDomElement TupVoice::toXml(QDomDocument &doc) const
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupVoice::toXml()]";
+    #endif
+
     QDomElement root = doc.createElement("voice");
     root.setAttribute("name", title);
-    root.setAttribute("pos", QString::number(point.x()) + "," + QString::number(point.y()));
     root.setAttribute("text", script);
-
-    int total = phrases.size();
-    for(int i=0; i<total; i++) {
-        TupPhrase *phrase = phrases.at(i);
-        root.appendChild(phrase->toXml(doc));
-    }
+    root.appendChild(phrase->toXml(doc));
 
     return root;
 }
+
+// LipSync
 
 TupLipSync::TupLipSync() : QObject()
 {
@@ -515,6 +715,12 @@ TupLipSync::TupLipSync() : QObject()
 
 TupLipSync::TupLipSync(const QString &name, const QString &sound, int init) : QObject()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLipSync::TupLipSync()] - lipSyncName -> " << name;
+        qDebug() << "[TupLipSync::TupLipSync()] - soundFile -> " << sound;
+        qDebug() << "[TupLipSync::TupLipSync()] - initFrame -> " << init;
+    #endif
+
     lipSyncName = name;
     soundFile = sound;
     initFrame = init;
@@ -554,16 +760,6 @@ void TupLipSync::setSoundFile(const QString &file)
     soundFile = file;
 }
 
-int TupLipSync::getFPS()
-{
-    return fps;
-}
-
-void TupLipSync::setFPS(int speed)
-{
-    fps = speed;
-}
-
 int TupLipSync::getInitFrame()
 {
     return initFrame;
@@ -574,27 +770,31 @@ void TupLipSync::setInitFrame(int frame)
     initFrame = frame;
 }
 
-int TupLipSync::getFramesCount()
+int TupLipSync::getFramesTotal()
 {
-    return framesCount;
+    return framesTotal;
 }
 
-void TupLipSync::setFramesCount(int count)
+void TupLipSync::setFramesTotal(int total)
 {
-    framesCount = count;
+    framesTotal = total;
 }
 
-void TupLipSync::addVoice(TupVoice *voice)
+void TupLipSync::setVoice(TupVoice *voice)
 {
     if (voice)
-        voices << voice;
+        this->voice = voice;
+}
+
+TupVoice * TupLipSync::getVoice()
+{
+    return voice;
 }
 
 void TupLipSync::fromXml(const QString &xml)
 {
-    QDomDocument document;
-   
-    if (! document.setContent(xml)) {
+    QDomDocument document;   
+    if (!document.setContent(xml)) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupLipSync::fromXml()] - Content:";
             qDebug() << xml;
@@ -607,143 +807,105 @@ void TupLipSync::fromXml(const QString &xml)
     lipSyncName = root.attribute("name");
     soundFile = root.attribute("soundFile");
     initFrame = root.attribute("initFrame", "1").toInt();
-    framesCount = root.attribute("framesTotal").toInt();
+    framesTotal = root.attribute("framesTotal").toInt();
     extension = root.attribute("extension");
-    fps = root.attribute("fps").toInt();
 
     QDomNode n = root.firstChild();
-
     while (!n.isNull()) {
-           QDomElement e = n.toElement();
-           if (!e.isNull()) {
-               if (e.tagName() == "voice") {
-                   QString name = e.attribute("name");
-                   QStringList xy = e.attribute("pos").split(",");
-                   double x = xy.first().toDouble();
-                   double y = xy.last().toDouble();
-                   QPointF point = QPointF(x, y);
-                   TupVoice *voice = new TupVoice(name, point);
-
-                   QString newDoc;
-                   {
-                       QTextStream ts(&newDoc);
-                       ts << n;
-                   }
-
-                   voice->fromXml(newDoc);
-                   voices << voice;
-               }
-           }
-           n = n.nextSibling();
+        QDomElement e = n.toElement();
+        if (!e.isNull()) {
+            if (e.tagName() == "voice") {
+                QString name = e.attribute("name");
+                voice = new TupVoice(name);
+                QString input;
+                {
+                    QTextStream ts(&input);
+                    ts << n;
+                }
+                voice->fromXml(input);
+            }
+        }
+        n = n.nextSibling();
     }
 }
 
 QDomElement TupLipSync::toXml(QDomDocument &doc) const
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLipSync::toXml()]";
+    #endif
+
     QDomElement root = doc.createElement("lipsync");
     root.setAttribute("name", lipSyncName);
     root.setAttribute("soundFile", soundFile);
     root.setAttribute("initFrame", initFrame);
-    root.setAttribute("framesTotal", framesCount);
+    root.setAttribute("framesTotal", framesTotal);
     root.setAttribute("extension", extension);
-    root.setAttribute("fps", fps);
 
-    int total = voices.size();
-    for(int i=0; i<total; i++) {
-        TupVoice *voice = voices.at(i);
-        root.appendChild(voice->toXml(doc));
-    }
+    root.appendChild(voice->toXml(doc));
 
     return root;
 }
 
-QList<TupVoice *> TupLipSync::getVoices()
+void TupLipSync::updateMouthTransformation(const QDomElement &doc, int frame)
 {
-    return voices;
-}
-
-TupVoice * TupLipSync::voiceAt(int index)
-{
-    if (index >= 0 && index < voices.count())
-        return voices.at(index);
-
-    return nullptr;
-}
-
-void TupLipSync::updateMouthPos(int mouthIndex, QPointF point, int frame)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupLipSync::updateMouthPos()] - mouthIndex -> " << mouthIndex;
-        qDebug() << "[TupLipSync::updateMouthPos()] - point -> " << point;
-        qDebug() << "[TupLipSync::updateMouthPos()] - frame -> " << frame;
-    #endif
-
-    TupVoice *voice = voices.at(mouthIndex);
     if (voice)
-        voice->updateMouthPos(point, frame);
+        voice->updateMouthTransformation(doc, frame);
 }
 
-void TupLipSync::verifyStructure() 
+// This method looks for "holes" inside the lipsync record, and fill them with "rest words"
+
+void TupLipSync::verifyStructure()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLipSync::verifyStructure()]";
     #endif
 
-    for (int frame=0; frame < framesCount; frame++) {
-         bool found = false;
-         foreach (TupVoice *voice, voices) {
-             foreach (TupPhrase *phrase, voice->getPhrases()) {
-                 if (phrase->contains(frame)) {
-                     int i = -1;
-                     foreach (TupWord *word, phrase->wordsList()) {
-                         i++;
-                         int initFrame = word->initFrame();
-                         if (initFrame <= frame) {
-                             if (word->contains(frame)) {
-                                 found = true;
-                                 break;
-                             }
+    for (int frame=0; frame < framesTotal; frame++) {
+         TupPhrase *phrase = voice->getPhrase();
+         if (phrase->contains(frame)) {
+             int i = -1;
+             foreach (TupWord *word, phrase->wordsList()) {
+                 i++;
+                 int initFrame = word->initFrame();
+                 if (initFrame <= frame) {
+                     if (word->contains(frame)) // Frame is part of a word
+                         break;
+                 } else { // Frame is not part of any word, the "hole" has to be filled
+                     int init = 0;
+                     int endFrame = word->initFrame() - 1;
+                     int total = word->initFrame();
+                     QDomElement transformation = voice->getDefaultTransformation();
+                     if (i > 0) { // The word is not the first one
+                         TupWord *prevWord = phrase->wordAt(i - 1);
+                         init = prevWord->endFrame() + 1;
+
+                         if (prevWord->hasPhonemes()) {
+                             TupPhoneme *phoneme = prevWord->lastPhoneme();
+                             transformation = phoneme->getTransformationDom();
                          } else {
-                             int init = 0;
-                             int endFrame = word->initFrame() - 1;
-                             int total = word->initFrame();
-                             QPointF pos = voice->mouthPos();
+                             #ifdef TUP_DEBUG
+                                 qDebug() << "[TupLipSync::verifyStructure()] - Warning: Word(" << (i-1) << ") has NO phonemes!";
+                             #endif
+                         }
 
-                             if (i > 0) {
-                                 TupWord *prev = phrase->wordsList().at(i-1);
-                                 init = prev->endFrame() + 1;
-
-                                 if (!prev->phonemesList().isEmpty()) {
-                                     pos = prev->phonemesList().last()->position();
-                                 } else {
-                                     #ifdef TUP_DEBUG
-                                         qDebug() << "[TupLipSync::verifyStructure()] - Warning: Word(" << (i-1) << ") has NO phonemes!";
-                                     #endif
-                                 }
-
-                                 total = (endFrame - init) + 1;
-                             }
-
-                             TupWord *w = new TupWord(init);
-                             for (int j=0; j<total; j++) {
-                                  TupPhoneme *phoneme = new TupPhoneme("rest", pos);
-                                  w->addPhoneme(phoneme);
-                             }
-                             w->setEndFrame(endFrame);
-                             phrase->insertWord(i, w);
-                             if (init < phrase->initFrame())
-                                 phrase->setInitFrame(init);
-
-                             found = true;
-                             break;
-                         }   
+                         total = (endFrame - init) + 1;
                      }
+
+                     // Create a word with "rest" phonemes and insert it in the hole
+                     TupWord *w = new TupWord(init);
+                     for (int j=0; j<total; j++) {
+                          TupPhoneme *phoneme = new TupPhoneme("rest", transformation);
+                          w->addPhoneme(phoneme);
+                     }
+                     w->setEndFrame(endFrame);
+                     phrase->insertWord(i, w);
+                     if (init < phrase->initFrame())
+                         phrase->setInitFrame(init);
+
+                     break; // Hole filled, test next frame
                  }
-                 if (found)
-                     break;
              }
-             if (found)
-                 break;
          }
     }
 }

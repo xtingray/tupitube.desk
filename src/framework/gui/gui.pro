@@ -32,6 +32,7 @@ HEADERS += taction.h \
            tanimwidget.h \
            tapplication.h \
            tbackupdialog.h \
+           tbutton.h \
            tbuttonbar.h \
            tcellview.h \
            tcirclebutton.h \
@@ -53,6 +54,8 @@ HEADERS += taction.h \
            ticon.h \
            # tideality.h \
            timagebutton.h \
+           timagelabel.h \
+           tinputfield.h \
            titemselector.h \
            tlabel.h \
            tmainwindow.h \
@@ -74,8 +77,8 @@ HEADERS += taction.h \
            tabbedmainwindow.h \
            tabdialog.h \
            # ttabwidget.h \
-           themedocument.h \
-           thememanager.h \
+           # themedocument.h \
+           # thememanager.h \
            tipdialog.h \
            ttoolbox.h \
            toolview.h \
@@ -100,6 +103,7 @@ SOURCES += taction.cpp \
            tanimwidget.cpp \
            tapplication.cpp \
            tbackupdialog.cpp \
+           tbutton.cpp \
            tbuttonbar.cpp \
            tcellview.cpp \
            tcirclebutton.cpp \
@@ -121,6 +125,8 @@ SOURCES += taction.cpp \
            ticon.cpp \ 
            tlabel.cpp \
            timagebutton.cpp \
+           timagelabel.cpp \
+           tinputfield.cpp \
            titemselector.cpp \
            tmainwindow.cpp \
            # tmainwindowfactory.cpp \
@@ -139,8 +145,8 @@ SOURCES += taction.cpp \
            tabbedmainwindow.cpp \
            tabdialog.cpp \
            # ttabwidget.cpp \
-           themedocument.cpp \
-           thememanager.cpp \
+           # themedocument.cpp \
+           # thememanager.cpp \
            tipdialog.cpp \
            ttoolbox.cpp \
            toolview.cpp \

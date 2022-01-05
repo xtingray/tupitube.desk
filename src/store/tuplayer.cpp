@@ -157,8 +157,27 @@ TupLipSync *TupLayer::createLipSync(const QString &name, const QString &soundFil
 
 void TupLayer::addLipSync(TupLipSync *lipsync)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLayer::addLipSync()]";
+    #endif
+
     if (lipsync)
         lipsyncList << lipsync;
+}
+
+bool TupLayer::updateLipSync(int index, TupLipSync *lipsync)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLayer::updateLipSync()] - index -> " << index;
+    #endif
+
+    if (index > -1 && index < lipsyncList.count()) {
+        delete lipsyncList.takeAt(index);
+        lipsyncList << lipsync;
+        return true;
+    }
+
+    return  false;
 }
 
 int TupLayer::lipSyncCount()
@@ -404,6 +423,10 @@ void TupLayer::fromXml(const QString &xml)
 
 QDomElement TupLayer::toXml(QDomDocument &doc) const
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLayer::toXml()]";
+    #endif
+
     QDomElement root = doc.createElement("layer");
     root.setAttribute("name", layerName);
     root.setAttribute("opacity", QString::number(opacity));
@@ -416,9 +439,8 @@ QDomElement TupLayer::toXml(QDomDocument &doc) const
     }
 
     int lipsyncTotal = lipsyncList.size();
-    for (int i = 0; i < lipsyncTotal; i++) {
+    for (int i = 0; i < lipsyncTotal; i++)
         root.appendChild(lipsyncList.at(i)->toXml(doc));
-    }
 
     return root;
 }

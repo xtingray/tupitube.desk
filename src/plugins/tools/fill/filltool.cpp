@@ -239,6 +239,11 @@ QMap<TAction::ActionId, TAction *> FillTool::actions() const
     return fillActions;
 }
 
+TAction * FillTool::getAction(TAction::ActionId toolId)
+{
+    return fillActions[toolId];
+}
+
 int FillTool::toolType() const
 {
     return TupToolInterface::Fill;

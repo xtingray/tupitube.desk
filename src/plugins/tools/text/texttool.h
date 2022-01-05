@@ -41,7 +41,6 @@
 #include "tuptextitem.h"
 #include "textconfigurator.h"
 #include "tupbrushmanager.h"
-#include "node.h"
 #include "nodemanager.h"
 
 #include <QPointF>
@@ -67,7 +66,8 @@ class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
         virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         // virtual void doubleClick(const TupInputDeviceInformation *input, TupGraphicsScene *scene);
 
-        virtual QMap<TAction::ActionId, TAction *>actions() const; 
+        virtual QMap<TAction::ActionId, TAction *>actions() const;
+        TAction * getAction(TAction::ActionId toolId);
         virtual QWidget *configurator();
         virtual void saveConfig();
         virtual void keyPressEvent(QKeyEvent *event);
@@ -97,16 +97,30 @@ class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
         void updateText();
         void syncNodes();
 
+        void updatePositionRecord(const QPointF &point);
+        void updateRotationAngleRecord(int angle);
+        void updateScaleFactorRecord(double x, double y);
+
+        void updateXPositionInScene(int x);
+        void updateYPositionInScene(int y);
+        void updateRotationInScene(int angle);
+        void updateScaleInScene(double xFactor, double yFactor);
+
+        void setItemScale(double xFactor, double yFactor);
+        void enableProportion(bool flag);
+
+        void resetTextTransformations();
+        void removeManager();
+
     private:
         void setupActions();
         void loadTextColor();
         TupFrame* getCurrentFrame();
         void requestTransformation(QGraphicsItem *item, TupFrame *frame);
         TupFrame* frameAt(int sceneIndex, int layerIndex, int frameIndex);
-        void removeManager();
 
         TupGraphicsScene *scene;
-        TextConfigurator *config;
+        TextConfigurator *configPanel;
         QMap<TAction::ActionId, TAction *> textActions;
         QColor currentColor;
 
@@ -116,7 +130,7 @@ class TUPITUBE_PLUGIN TextTool : public TupToolPlugin
 
         int nodeZValue;
         qreal realFactor;
-        NodeManager *manager;
+        NodeManager *nodesManager;
         bool activeSelection;
         QString key;
 };

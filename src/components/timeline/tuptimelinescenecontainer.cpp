@@ -37,6 +37,7 @@
 
 TupTimelineSceneContainer::TupTimelineSceneContainer(QWidget *parent) : QTabWidget(parent)
 {
+    // setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 }
 
 TupTimelineSceneContainer::~TupTimelineSceneContainer()
@@ -124,8 +125,9 @@ void TupTimelineSceneContainer::wheelEvent(QWheelEvent *ev)
     QRect rect = tabBar()->rect();
     rect.setWidth(width());
 
-    if (rect.contains(ev->pos()))
-        wheelMove(ev->delta());
+    // SQA: Evaluate this replacement (delta)
+    if (rect.contains(ev->position().toPoint()))
+        wheelMove(ev->angleDelta().y());
 }
 
 void TupTimelineSceneContainer::wheelMove(int delta)

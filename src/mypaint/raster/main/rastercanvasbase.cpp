@@ -213,7 +213,9 @@ bool RasterCanvasBase::viewportEvent(QEvent *event)
 
 void RasterCanvasBase::wheelEvent(QWheelEvent *event)
 {
-    scaleView(pow(2.0, event->delta() / 520.0));
+    // SQA: Evaluate this replacement
+    // scaleView(pow(2.0, event->delta() / 520.0));
+    scaleView(pow(2.0, event->angleDelta().y() / 520.0));
 }
 
 void RasterCanvasBase::drawBackground(QPainter *painter, const QRectF &rect)
@@ -352,7 +354,10 @@ QPointF RasterCanvasBase::getCenterPoint() const
 
 void RasterCanvasBase::scaleView(qreal scaleFactor)
 {
-    qreal factor = matrix().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)).width();
+    // SQA: Evaluate this replacement
+    // qreal factor = matrix().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)).width();
+    qreal factor = transform().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)).width();
+
     if (factor < 0.07 || factor > 100)
         return;
     scale(scaleFactor, scaleFactor);

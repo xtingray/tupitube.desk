@@ -42,14 +42,14 @@ TupGradientSelector::TupGradientSelector(QWidget *parent) : QAbstractSlider(pare
         qDebug() << "[TupGradientSelector()]";
     #endif
 
-    _orientation = Qt::Horizontal;
+    m_orientation = Qt::Horizontal;
     init();
 }
 
 TupGradientSelector::TupGradientSelector(Qt::Orientation o, QWidget *parent)
     : QAbstractSlider(parent), m_currentArrowIndex(0), m_gradient(0,0,1,1), m_currentColor(Qt::black)
 {
-    _orientation = o;
+    m_orientation = o;
     init();
 }
 
@@ -93,7 +93,7 @@ void  TupGradientSelector::setMaxArrows(int value)
 void TupGradientSelector::paintEvent(QPaintEvent *)
 {
     QPainter painter;
-    QBrush brush;
+    // QBrush brush;
     
     painter.begin(this);
     drawContents(&painter);
@@ -144,19 +144,22 @@ void TupGradientSelector::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void TupGradientSelector::mouseMoveEvent(QMouseEvent *event) {
+void TupGradientSelector::mouseMoveEvent(QMouseEvent *event)
+{
     moveArrow(event->pos());
 }
 
 void TupGradientSelector::wheelEvent(QWheelEvent *event)
 {
-    int val = value() + event->delta()/120;
+    // SQA: delta() was replaced by angleDelta() (pending for verification)
+    int val = value() + (event->angleDelta().y() / 120);
+
     setValue(val);
 }
 
 void  TupGradientSelector::resizeEvent(QResizeEvent *event)
 {
-    QAbstractSlider::setRange(0,width());
+    QAbstractSlider::setRange(0, width());
     QAbstractSlider::setMaximum(width());
 
     m_update = true;

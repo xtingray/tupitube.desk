@@ -187,6 +187,7 @@ bool TupTimeLineTableItem::isSound()
 TupTimeLineTable::TupTimeLineTable(int index, int fps, QWidget *parent) : QTableWidget(0, 200, parent)
 {
     setItemSize(5, 5);
+    // setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
     isLocalRequest = false;
     sceneIndex = index;

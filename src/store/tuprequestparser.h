@@ -37,26 +37,17 @@
 #define TUPREQUESTPARSER_H
 
 #include "tglobal.h"
-#include "tupxmlparserbase.h"
-#include "tupprojectrequest.h"
 #include "tupprojectresponse.h"
 
-#include <QXmlSimpleReader>
-#include <QXmlInputSource>
+#include <QObject>
 
-class TupProjectResponse;
-
-class TUPITUBE_EXPORT TupRequestParser : public TupXmlParserBase
+class TUPITUBE_EXPORT TupRequestParser : public QObject
 {
     public:
         TupRequestParser();
         ~TupRequestParser();
-        
-        void initialize();
-        
-        bool startTag(const QString& qname, const QXmlAttributes& atts);
-        bool endTag(const QString& qname);
-        void text(const QString & ch);
+
+        bool parse(const QString &xml);
         TupProjectResponse *getResponse() const;
         QString getSign() const;
         
@@ -64,5 +55,4 @@ class TUPITUBE_EXPORT TupRequestParser : public TupXmlParserBase
         QString sign;
         TupProjectResponse *response;
 };
-
 #endif

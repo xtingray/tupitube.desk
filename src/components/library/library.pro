@@ -7,7 +7,8 @@ target.path = /lib/
 
 CONFIG += dll warn_on
 
-HEADERS += tuplibrarywidget.h \
+HEADERS += tupsounddialog.h \
+           tuplibrarywidget.h \
            tupitemmanager.h  \
            tupsymboleditor.h \
            tuptreedelegate.h \
@@ -16,7 +17,8 @@ HEADERS += tuplibrarywidget.h \
            tupsoundplayer.h \
            tupsearchdialog.h
 
-SOURCES += tuplibrarywidget.cpp \
+SOURCES += tupsounddialog.cpp \
+           tuplibrarywidget.cpp \
            tupitemmanager.cpp  \
            tupsymboleditor.cpp \
            tuptreedelegate.cpp \
@@ -27,6 +29,9 @@ SOURCES += tuplibrarywidget.cpp \
            
 FRAMEWORK_DIR = "../../framework"
 include($$FRAMEWORK_DIR/framework.pri)
+
+MICMANAGER_DIR = ../micmanager/
+include($$MICMANAGER_DIR/micmanager.pri)
 
 unix {
     STORE_DIR = ../../store/
@@ -40,6 +45,8 @@ unix {
     LIBTUPI_DIR = ../../libtupi/
     INCLUDEPATH += $$LIBTUPI_DIR
     LIBS += -L$$LIBTUPI_DIR -ltupi
+
+    LIBS += -L$$MICMANAGER_DIR -ltupmicmanager
 
     !include(../../../tupiglobal.pri) {
              error("Run ./configure first!")
@@ -60,4 +67,6 @@ win32 {
     LIBTUPI_DIR = ../../libtupi/
     INCLUDEPATH += $$LIBTUPI_DIR
     LIBS += -L$$LIBTUPI_DIR/release/ -ltupi 
+
+    LIBS += -L$$MICMANAGER_DIR/release/ -ltupmicmanager
 }

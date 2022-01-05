@@ -20,15 +20,15 @@ FRAMEWORK_DIR = "../../../framework"
 include($$FRAMEWORK_DIR/framework.pri)
 
 HEADERS += papagayosettings.h \
-           buttonspanel.h \
-           configurator.h \
+           # buttonspanel.h \
+           papagayoconfigurator.h \
            lipsyncmanager.h \
            papagayotool.h \
            mouthsdialog.h
 
 SOURCES += papagayosettings.cpp \
-           buttonspanel.cpp \
-           configurator.cpp \
+           # buttonspanel.cpp \
+           papagayoconfigurator.cpp \
            lipsyncmanager.cpp \
            papagayotool.cpp \
            mouthsdialog.cpp
@@ -36,7 +36,9 @@ SOURCES += papagayosettings.cpp \
 LIBBASE_DIR = ../../../libbase
 STORE_DIR = ../../../store
 LIBTUPI_DIR = ../../../libtupi
+COMMON_DIR = ../common
 
 include($$LIBBASE_DIR/libbase.pri)	
 include($$STORE_DIR/store.pri)
 include($$LIBTUPI_DIR/libtupi.pri)
+include($$COMMON_DIR/common.pri)

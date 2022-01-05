@@ -130,20 +130,12 @@
         <translation>剪切属性</translation>
     </message>
     <message>
-        <source>Papagayo LipSync Files</source>
-        <translation>Papagayo 唇形同步 文件</translation>
-    </message>
-    <message>
         <source>Scale Tween Properties</source>
         <translation>补间动画比例属性</translation>
     </message>
     <message>
         <source>Motion Tween Properties</source>
         <translation>补间动画属性</translation>
-    </message>
-    <message>
-        <source>Mouth Samples</source>
-        <translation>口腔样本</translation>
     </message>
 </context>
 <context>
@@ -324,16 +316,28 @@
 <context>
     <name>LipSyncManager</name>
     <message>
-        <source>Import LipSync</source>
-        <translation>导入唇型同步</translation>
-    </message>
-    <message>
         <source>Edit LipSync</source>
         <translation>编辑唇型同步</translation>
     </message>
     <message>
         <source>Remove LipSync</source>
         <translation>删除唇型同步</translation>
+    </message>
+    <message>
+        <source>Open LipSync Creator</source>
+        <translation>打开 LipSync Creator</translation>
+    </message>
+    <message>
+        <source>Edit Mouth</source>
+        <translation>编辑嘴巴</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete this lip-sync record?</source>
+        <translation>您确定要删除此口型同步记录吗?</translation>
+    </message>
+    <message>
+        <source>Confirmation Required</source>
+        <translation>需要确认</translation>
     </message>
 </context>
 <context>
@@ -424,6 +428,10 @@
     <message>
         <source>Mouth Sample Pack No 5</source>
         <translation>口腔样本包 5</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>关闭</translation>
     </message>
 </context>
 <context>
@@ -529,6 +537,17 @@
     </message>
 </context>
 <context>
+    <name>PapagayoConfigurator</name>
+    <message>
+        <source>Papagayo LipSync Files</source>
+        <translation>Papagayo 唇形同步 文件</translation>
+    </message>
+    <message>
+        <source>Mouth Samples</source>
+        <translation>口腔样本</translation>
+    </message>
+</context>
+<context>
     <name>PapagayoSettings</name>
     <message>
         <source>Editing</source>
@@ -537,18 +556,6 @@
     <message>
         <source>Starting at frame</source>
         <translation>起始帧</translation>
-    </message>
-    <message>
-        <source>Mouths</source>
-        <translation>嘴</translation>
-    </message>
-    <message>
-        <source>Text</source>
-        <translation>文本</translation>
-    </message>
-    <message>
-        <source>Current Mouth Position</source>
-        <translation>当前口令位置</translation>
     </message>
     <message>
         <source>X</source>
@@ -563,10 +570,6 @@
         <translation>关闭属性</translation>
     </message>
     <message>
-        <source>Lip-Sync FPS</source>
-        <translation>同步唇型每秒帧数</translation>
-    </message>
-    <message>
         <source>Ending at frame</source>
         <translation>结束帧</translation>
     </message>
@@ -575,12 +578,32 @@
         <translation>总帧数</translation>
     </message>
     <message>
-        <source>mouth</source>
-        <translation>嘴</translation>
-    </message>
-    <message>
         <source>Current Phoneme</source>
         <translation>当前 音素</translation>
+    </message>
+    <message>
+        <source>Mouth Rotation</source>
+        <translation>嘴巴旋转</translation>
+    </message>
+    <message>
+        <source>Angle</source>
+        <translation>角度</translation>
+    </message>
+    <message>
+        <source>Mouth Scale</source>
+        <translation>口腔秤</translation>
+    </message>
+    <message>
+        <source>Proportion</source>
+        <translation>面积</translation>
+    </message>
+    <message>
+        <source>Reset Mouth</source>
+        <translation>重置嘴巴</translation>
+    </message>
+    <message>
+        <source>Mouth Position</source>
+        <translation>嘴的位置</translation>
     </message>
 </context>
 <context>
@@ -661,14 +684,6 @@
         <translation>关闭</translation>
     </message>
     <message>
-        <source>Error</source>
-        <translation>错误</translation>
-    </message>
-    <message>
-        <source>Wall from</source>
-        <translation>墙起</translation>
-    </message>
-    <message>
         <source>Re-launch TupiTube</source>
         <translation>重新启动Muvizu Tupi</translation>
     </message>
@@ -679,18 +694,6 @@
     <message>
         <source>This is a general failure</source>
         <translation>这是一个普遍的错误</translation>
-    </message>
-    <message>
-        <source>Critical</source>
-        <translation>关键</translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation>信息</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>警告</translation>
     </message>
     <message>
         <source>Fatal Error</source>
@@ -1202,6 +1205,10 @@
         <source>Paste objects over mouse position</source>
         <translation>将对象粘贴到鼠标位置</translation>
     </message>
+    <message>
+        <source>Reset Item</source>
+        <translation>重置项目</translation>
+    </message>
 </context>
 <context>
     <name>SelectionTool</name>
@@ -1478,6 +1485,10 @@
         <source>Don&apos;t show again</source>
         <translation>不再显示</translation>
     </message>
+    <message>
+        <source>Discard</source>
+        <translation>放弃</translation>
+    </message>
 </context>
 <context>
     <name>TOsd</name>
@@ -1583,6 +1594,34 @@
     <message>
         <source>Update Text</source>
         <translation>更新文字</translation>
+    </message>
+    <message>
+        <source>Reset Transformations</source>
+        <translation>重置转换</translation>
+    </message>
+    <message>
+        <source>Text Position</source>
+        <translation>文字位置</translation>
+    </message>
+    <message>
+        <source>X</source>
+        <translation>X</translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation>Y</translation>
+    </message>
+    <message>
+        <source>Text Rotation</source>
+        <translation>文字旋转</translation>
+    </message>
+    <message>
+        <source>Text Scale</source>
+        <translation>文字比例</translation>
+    </message>
+    <message>
+        <source>Proportion</source>
+        <translation>部分</translation>
     </message>
 </context>
 <context>
@@ -1692,6 +1731,45 @@
     <message>
         <source>Current resolution:</source>
         <translation>当前分辨率</translation>
+    </message>
+</context>
+<context>
+    <name>TupBreakdownDialog</name>
+    <message>
+        <source>Word:</source>
+        <translation>单词:</translation>
+    </message>
+    <message>
+        <source>Break down the word:</source>
+        <translation>分解一句话:</translation>
+    </message>
+    <message>
+        <source>Phonemes:</source>
+        <translation>音素：</translation>
+    </message>
+    <message>
+        <source>Clear phonemes</source>
+        <translation>清除音素</translation>
+    </message>
+    <message>
+        <source>Next word</source>
+        <translation>下一个词</translation>
+    </message>
+    <message>
+        <source>Save word</source>
+        <translation>保存单词</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>关闭</translation>
+    </message>
+    <message>
+        <source>Save sentence</source>
+        <translation>保存句子</translation>
+    </message>
+    <message>
+        <source>Word phonemes are missing!</source>
+        <translation>单词音素丢失!</translation>
     </message>
 </context>
 <context>
@@ -2071,21 +2149,6 @@
     </message>
 </context>
 <context>
-    <name>TupChat</name>
-    <message>
-        <source>Send</source>
-        <translation>发送</translation>
-    </message>
-    <message>
-        <source>Error:</source>
-        <translation>错误：</translation>
-    </message>
-    <message>
-        <source>Invalid Message. It won&apos;t be sent. Please, don&apos;t use HTML tags</source>
-        <translation>无效的消息。 它不会被发送。 请勿使用HTML标记</translation>
-    </message>
-</context>
-<context>
     <name>TupColorButtonPanel</name>
     <message>
         <source>Red</source>
@@ -2186,37 +2249,6 @@
     </message>
 </context>
 <context>
-    <name>TupConnectDialog</name>
-    <message>
-        <source>Port</source>
-        <translation>端口</translation>
-    </message>
-    <message>
-        <source>Login</source>
-        <translation>登录</translation>
-    </message>
-    <message>
-        <source>Store password</source>
-        <translation>储存密码</translation>
-    </message>
-    <message>
-        <source>Server</source>
-        <translation>服务器</translation>
-    </message>
-    <message>
-        <source>Password</source>
-        <translation>密码</translation>
-    </message>
-    <message>
-        <source>Please, fill in your password</source>
-        <translation>请填写您的密码</translation>
-    </message>
-    <message>
-        <source>Connection Dialog</source>
-        <translation>连接对话框</translation>
-    </message>
-</context>
-<context>
     <name>TupCrashWidget</name>
     <message>
         <source>Executable information</source>
@@ -2229,6 +2261,21 @@
     <message>
         <source>Backtrace</source>
         <translation>回溯</translation>
+    </message>
+</context>
+<context>
+    <name>TupCustomizedMouthView</name>
+    <message>
+        <source>Mouth images are missing!</source>
+        <translation>嘴巴图片不见了!</translation>
+    </message>
+    <message>
+        <source>Mouth images are incomplete!</source>
+        <translation>嘴部图像不完整！</translation>
+    </message>
+    <message>
+        <source>Images directory is empty!</source>
+        <translation>图像目录是空的！</translation>
     </message>
 </context>
 <context>
@@ -2280,10 +2327,6 @@
     <message>
         <source>Storyboard Settings</source>
         <translation>故事板设置</translation>
-    </message>
-    <message>
-        <source>Papagayo project is invalid!</source>
-        <translation>PAPAGAYO项目无效！</translation>
     </message>
     <message>
         <source>Paint area actions</source>
@@ -2350,25 +2393,8 @@
         <translation>笔刷</translation>
     </message>
     <message>
-        <source>Papagayo project already exists!
-Please, rename the project&apos;s file</source>
-        <translation>Papagayo 项目已经存在! 请重命名项目文件</translation>
-    </message>
-    <message>
         <source>Export Frame As Image</source>
         <translation>导出成帧图像</translation>
-    </message>
-    <message>
-        <source>Images directory is empty!</source>
-        <translation>图像目录是空的！</translation>
-    </message>
-    <message>
-        <source>Papagayo Lip-sync Files</source>
-        <translation>Papagayo 口型同步 文件</translation>
-    </message>
-    <message>
-        <source>Papagayo file is invalid!</source>
-        <translation>PAPAGAYO文件无效！</translation>
     </message>
     <message>
         <source>Frames Mode</source>
@@ -2397,10 +2423,6 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Dynamic BG Opacity</source>
         <translation>动态背景不透明度</translation>
-    </message>
-    <message>
-        <source>Papagayo file has been imported successfully</source>
-        <translation>PAPAGAYO文件已成功导入</translation>
     </message>
     <message>
         <source>Export Frame As</source>
@@ -2463,8 +2485,8 @@ Please, rename the project&apos;s file</source>
         <translation>视频格式</translation>
     </message>
     <message>
-        <source>Mouth images are incomplete!</source>
-        <translation>嘴部图像不完整！</translation>
+        <source>Papagayo Lip-sync Module</source>
+        <translation>Papagayo 唇形同步模块</translation>
     </message>
 </context>
 <context>
@@ -3141,10 +3163,6 @@ Please, rename the project&apos;s file</source>
         <translation>帧</translation>
     </message>
     <message>
-        <source>Import audio file...</source>
-        <translation>导入音频文件中...</translation>
-    </message>
-    <message>
         <source>Image</source>
         <translation>图片</translation>
     </message>
@@ -3197,14 +3215,6 @@ Please, rename the project&apos;s file</source>
         <translation>选择SVG文件目录</translation>
     </message>
     <message>
-        <source>Sound File</source>
-        <translation>音频文件</translation>
-    </message>
-    <message>
-        <source>Sound file</source>
-        <translation>声音文件</translation>
-    </message>
-    <message>
         <source>ERROR!</source>
         <translation>错误</translation>
     </message>
@@ -3215,10 +3225,6 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Image files found: %1.</source>
         <translation>找到图像文件:%1</translation>
-    </message>
-    <message>
-        <source>Sounds</source>
-        <translation>音效</translation>
     </message>
     <message>
         <source>Vector</source>
@@ -3317,10 +3323,6 @@ Please, rename the project&apos;s file</source>
         <translation>库是空的！</translation>
     </message>
     <message>
-        <source>It&apos;s a sound file! Please, pick a graphic object</source>
-        <translation>它是一个声音文件！ 请选择一个图形目标</translation>
-    </message>
-    <message>
         <source>There&apos;s no current selection!</source>
         <translation>目前没有选择！</translation>
     </message>
@@ -3336,40 +3338,24 @@ Please, rename the project&apos;s file</source>
         <source>Search for Assets</source>
         <translation>搜索资产</translation>
     </message>
+    <message>
+        <source>Audio File</source>
+        <translation>音频文件</translation>
+    </message>
+    <message>
+        <source>It&apos;s an audio file! Please, pick a graphic object</source>
+        <translation>是音频文件！ 请选择一个图形对象</translation>
+    </message>
+    <message>
+        <source>Audio</source>
+        <translation>声音的</translation>
+    </message>
 </context>
 <context>
-    <name>TupListProjectDialog</name>
+    <name>TupLipsyncDoc</name>
     <message>
-        <source>OK</source>
-        <translation>确定</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>日期</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation>名字</translation>
-    </message>
-    <message>
-        <source>Author</source>
-        <translation>作者</translation>
-    </message>
-    <message>
-        <source>My works:</source>
-        <translation>我的工作</translation>
-    </message>
-    <message>
-        <source>Description</source>
-        <translation>描述</translation>
-    </message>
-    <message>
-        <source>My contributions:</source>
-        <translation>我的文稿:</translation>
-    </message>
-    <message>
-        <source>Projects List from Server</source>
-        <translation>项目列表来自服务器</translation>
+        <source>Voice 1</source>
+        <translation>语音 1</translation>
     </message>
 </context>
 <context>
@@ -3463,10 +3449,6 @@ Please, rename the project&apos;s file</source>
         <translation>导入调色板</translation>
     </message>
     <message>
-        <source>Can&apos;t save the project. File doesn&apos;t exist!</source>
-        <translation>无法保存该项目。 文件不存在！</translation>
-    </message>
-    <message>
         <source>Open dialog box to save current project in any location</source>
         <translation>打开对话框将当前项目保存在任何位置</translation>
     </message>
@@ -3477,10 +3459,6 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>YouTube Tutorials</source>
         <translation>YouTube 教程</translation>
-    </message>
-    <message>
-        <source>Import project package</source>
-        <translation>导入项目包</translation>
     </message>
     <message>
         <source>Gimp palette import was unsuccessful</source>
@@ -3583,10 +3561,6 @@ Please, rename the project&apos;s file</source>
         <translation>新的摄像机</translation>
     </message>
     <message>
-        <source>Can&apos;t import project. File is empty!</source>
-        <translation>无法导入项目。 文件是空的！</translation>
-    </message>
-    <message>
         <source>Cannot open project!</source>
         <translation>不能打开项目!</translation>
     </message>
@@ -3613,10 +3587,6 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Pr&amp;eferences...</source>
         <translation>优先</translation>
-    </message>
-    <message>
-        <source>[ by %1 | net mode ]</source>
-        <translation>[ by %1 | 网络模式 ]</translation>
     </message>
     <message>
         <source>Gimp Palette (*.gpl *.txt *.css)</source>
@@ -3711,10 +3681,6 @@ Please, rename the project&apos;s file</source>
         <translation>打开首选项对话框</translation>
     </message>
     <message>
-        <source>Question</source>
-        <translation>问题</translation>
-    </message>
-    <message>
         <source>Export project to several video formats</source>
         <translation>将项目导出为多种视频格式</translation>
     </message>
@@ -3755,20 +3721,12 @@ Please, rename the project&apos;s file</source>
         <translation>图像序列</translation>
     </message>
     <message>
-        <source>Open TupiTube&apos;s Network</source>
-        <translation>TupiTube 社交网络</translation>
-    </message>
-    <message>
         <source>To post video add more frames!</source>
         <translation>要发布视频，请添加更多帧！</translation>
     </message>
     <message>
         <source>Project is larger than 10 MB. Too big!</source>
         <translation>项目大于10 MB。 太大！</translation>
-    </message>
-    <message>
-        <source>Post project on TupiTube&apos;s network</source>
-        <translation>在TupiTube的网络上发布项目</translation>
     </message>
     <message>
         <source>Post canceled by user!</source>
@@ -3805,6 +3763,121 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Ctrl+@</source>
         <translation>Ctrl+@</translation>
+    </message>
+    <message>
+        <source>Confirmation Required</source>
+        <translation>需要确认</translation>
+    </message>
+    <message>
+        <source>Audio File</source>
+        <translation>音频文件</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Post project on TupiTube network</source>
+        <translation>在 TupiTube 网络上发布项目</translation>
+    </message>
+    <message>
+        <source>TupiTube Social Media</source>
+        <translation>TupiTube 社交媒体</translation>
+    </message>
+    <message>
+        <source>Open TupiTube Network</source>
+        <translation>打开 TupiTube 网络</translation>
+    </message>
+</context>
+<context>
+    <name>TupMicManager</name>
+    <message>
+        <source>Record Name:</source>
+        <translation>记录名称:</translation>
+    </message>
+    <message>
+        <source>Audio 01</source>
+        <translation>音频 01</translation>
+    </message>
+    <message>
+        <source>Input Device:</source>
+        <translation>输入设备:</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>默认设备</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation>记录</translation>
+    </message>
+    <message>
+        <source>Pause</source>
+        <translation>暂停</translation>
+    </message>
+    <message>
+        <source>Play</source>
+        <translation>播放</translation>
+    </message>
+    <message>
+        <source>Discard</source>
+        <translation>放弃</translation>
+    </message>
+    <message>
+        <source>%1 sec</source>
+        <translation>%1 第二</translation>
+    </message>
+    <message>
+        <source>Recording...</source>
+        <translation>录音...</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>暂停</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>停止</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>停止</translation>
+    </message>
+    <message>
+        <source>Resume</source>
+        <translation>恢复</translation>
+    </message>
+    <message>
+        <source>Question</source>
+        <translation>问题</translation>
+    </message>
+    <message>
+        <source>Confirm Action.</source>
+        <translation>确认操作。</translation>
+    </message>
+    <message>
+        <source>Do you want to delete this sound recording?</source>
+        <translation>您要删除此录音吗？</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation>确定</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <source>Sound 01</source>
+        <translation>声音01</translation>
+    </message>
+    <message>
+        <source>Playing...</source>
+        <translation>正在播放...</translation>
+    </message>
+    <message>
+        <source>Audio Level</source>
+        <translation>音频电平</translation>
     </message>
 </context>
 <context>
@@ -3863,38 +3936,6 @@ Please, rename the project&apos;s file</source>
     <message>
         <source>Foreground</source>
         <translation>前景</translation>
-    </message>
-</context>
-<context>
-    <name>TupNetProjectManagerHandler</name>
-    <message>
-        <source>Chat</source>
-        <translation>交谈</translation>
-    </message>
-    <message>
-        <source>User &quot;%1&quot; is disabled.
-Please, contact the animation server admin to get access.</source>
-        <translation>用户不能使用。请联系动画服务器管理员得到许可。</translation>
-    </message>
-    <message>
-        <source>Notices</source>
-        <translation>通知</translation>
-    </message>
-    <message>
-        <source>User has no available projects in the server</source>
-        <translation>用户在服务器中没有可用的项目</translation>
-    </message>
-    <message>
-        <source>Unable to connect to server</source>
-        <translation>无法连接到服务器</translation>
-    </message>
-    <message>
-        <source>Fatal Error</source>
-        <translation>致命错误</translation>
-    </message>
-    <message>
-        <source>Communications</source>
-        <translation>通信</translation>
     </message>
 </context>
 <context>
@@ -4085,13 +4126,6 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>1080 (Full HD Vertical) - 24</source>
         <translation>1080 (Full HD Vertical) - 24</translation>
-    </message>
-</context>
-<context>
-    <name>TupNotice</name>
-    <message>
-        <source>Notices</source>
-        <translation>通知</translation>
     </message>
 </context>
 <context>
@@ -4338,58 +4372,42 @@ Please, contact the animation server admin to get access.</source>
     </message>
 </context>
 <context>
-    <name>TupPapagayoDialog</name>
+    <name>TupPapagayoApp</name>
     <message>
-        <source>Load &amp;Sound</source>
-        <translation>加载音频</translation>
+        <source>Close</source>
+        <translation>关闭</translation>
     </message>
     <message>
-        <source>Choose the images directory...</source>
-        <translation>选择图像目录...</translation>
+        <source>Open</source>
+        <translation>打开</translation>
     </message>
     <message>
-        <source>Load sound file</source>
-        <translation>加载音频文件</translation>
+        <source>Ctrl+O</source>
+        <translation>Ctrl+O</translation>
     </message>
     <message>
-        <source>Papagayo Project (*.pgo)</source>
-        <translation>Papagayo 项目 (*.pgo)</translation>
+        <source>Play</source>
+        <translation>播放</translation>
     </message>
     <message>
-        <source>Load Papagayo project</source>
-        <translation>加载 Papagayo 项目</translation>
+        <source>Stop</source>
+        <translation>停止</translation>
     </message>
     <message>
-        <source>&amp;Load PGO File</source>
-        <translation>加载PGO文件</translation>
+        <source>Zoom In</source>
+        <translation>放大</translation>
     </message>
     <message>
-        <source>Sound file (*.ogg *.wav *.mp3)</source>
-        <translation>音频文件(*.ogg *.wav *.mp3)</translation>
+        <source>Zoom Out</source>
+        <translation>缩小</translation>
     </message>
     <message>
-        <source>Import Papagayo project</source>
-        <translation>导入 Papagayo 项目</translation>
+        <source>Auto Zoom</source>
+        <translation>自动缩放</translation>
     </message>
     <message>
-        <source>Sound path is unset!</source>
-        <translation>音频路径未设置</translation>
-    </message>
-    <message>
-        <source>PGO path is unset!</source>
-        <translation>PGO路径未设置</translation>
-    </message>
-    <message>
-        <source>Images directory is unset!</source>
-        <translation>图像目录未设置</translation>
-    </message>
-    <message>
-        <source>Load &amp;Images</source>
-        <translation>加载图片</translation>
-    </message>
-    <message>
-        <source>Set Mouth Images</source>
-        <translation>设置口像</translation>
+        <source>Lip-Sync Manager</source>
+        <translation>口型同步管理器</translation>
     </message>
     <message>
         <source>Mouth Sample Pack No 1</source>
@@ -4410,6 +4428,162 @@ Please, contact the animation server admin to get access.</source>
     <message>
         <source>Mouth Sample Pack No 5</source>
         <translation>口腔样本包 5</translation>
+    </message>
+    <message>
+        <source>Set Mouth Images</source>
+        <translation>设置口像</translation>
+    </message>
+    <message>
+        <source>Load &amp;Images</source>
+        <translation>加载图片</translation>
+    </message>
+    <message>
+        <source>Voice name:</source>
+        <translation>语音名称：</translation>
+    </message>
+    <message>
+        <source>Spoken text:</source>
+        <translation>口语文字：</translation>
+    </message>
+    <message>
+        <source>Phonetic breakdown:</source>
+        <translation>语音分解：</translation>
+    </message>
+    <message>
+        <source>English</source>
+        <translation>英语</translation>
+    </message>
+    <message>
+        <source>Other Language</source>
+        <translation>其他语言</translation>
+    </message>
+    <message>
+        <source>Breakdown</source>
+        <translation>分解</translation>
+    </message>
+    <message>
+        <source>Save lip-sync record</source>
+        <translation>保存口型同步记录</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <source>File</source>
+        <translation>文件</translation>
+    </message>
+    <message>
+        <source>Error opening audio file.</source>
+        <translation>打开音频文件时出错。</translation>
+    </message>
+    <message>
+        <source>Updating</source>
+        <translation>更新中</translation>
+    </message>
+    <message>
+        <source>Do you want to save this lip-sync record?</source>
+        <translation>你想保存这个口型同步记录吗？</translation>
+    </message>
+    <message>
+        <source>Confirmation Required</source>
+        <translation>需要确认</translation>
+    </message>
+    <message>
+        <source>Lip-sync item added!</source>
+        <translation>添加了口型同步项目！</translation>
+    </message>
+    <message>
+        <source>Lip-sync item updated!</source>
+        <translation>口型同步项目已更新！</translation>
+    </message>
+    <message>
+        <source>Audio files (*.mp3 *.wav)</source>
+        <translation>音频文件 (*.mp3 *.wav)</translation>
+    </message>
+    <message>
+        <source>Mouth images are unset!</source>
+        <translation>嘴巴图像未设置！</translation>
+    </message>
+    <message>
+        <source>No voice text to play!</source>
+        <translation>没有可播放的语音文本！</translation>
+    </message>
+    <message>
+        <source>Pause</source>
+        <translation>暂停</translation>
+    </message>
+    <message>
+        <source>Voice text is empty!</source>
+        <translation>语音文本为空！</translation>
+    </message>
+    <message>
+        <source>Choose the images directory...</source>
+        <translation>选择图像目录...</translation>
+    </message>
+    <message>
+        <source>Mouth image is missing!</source>
+        <translation>嘴巴图片不见了！</translation>
+    </message>
+    <message>
+        <source>Mouth images are incomplete!</source>
+        <translation>嘴部图像不完整！</translation>
+    </message>
+    <message>
+        <source>Images directory is empty!</source>
+        <translation>图像目录是空的！</translation>
+    </message>
+    <message>
+        <source>Voice name is empty!</source>
+        <translation>语音名称为空！</translation>
+    </message>
+    <message>
+        <source>Customized mouths path is unset!</source>
+        <translation>自定义嘴巴路径未设置！</translation>
+    </message>
+    <message>
+        <source>Error while saving lip-sync!</source>
+        <translation>保存口型同步时出错！</translation>
+    </message>
+    <message>
+        <source>Can&apos;t load mouth image!</source>
+        <translation>无法加载嘴巴图片！</translation>
+    </message>
+    <message>
+        <source>Can&apos;t remove temporary voice sound!</source>
+        <translation>无法去除临时语音！</translation>
+    </message>
+    <message>
+        <source>Can&apos;t load voice sound!</source>
+        <translation>无法加载语音！</translation>
+    </message>
+    <message>
+        <source>Frame</source>
+        <translation>帧</translation>
+    </message>
+    <message>
+        <source>Papagayo file has been imported successfully</source>
+        <translation>PAPAGAYO文件已成功导入</translation>
+    </message>
+    <message>
+        <source>Papagayo file is invalid!</source>
+        <translation>PAPAGAYO文件无效！</translation>
+    </message>
+    <message>
+        <source>Papagayo project is invalid!</source>
+        <translation>PAPAGAYO项目无效！</translation>
+    </message>
+    <message>
+        <source>Error while saving lip-sync record!</source>
+        <translation>保存口型同步记录时出错！</translation>
+    </message>
+    <message>
+        <source>Error while updating lip-sync!</source>
+        <translation>更新口型同步时出错！</translation>
+    </message>
+    <message>
+        <source>Voice Settings</source>
+        <translation>语音设置</translation>
     </message>
 </context>
 <context>
@@ -4918,6 +5092,61 @@ Please, contact the animation server admin to get access.</source>
     </message>
 </context>
 <context>
+    <name>TupSoundDialog</name>
+    <message>
+        <source>Record Audio</source>
+        <translation>录制音频</translation>
+    </message>
+    <message>
+        <source>Open lip-sync module</source>
+        <translation>打开口型同步模块</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <source>Import audio file...</source>
+        <translation>导入音频文件中...</translation>
+    </message>
+    <message>
+        <source>Import Audio Asset</source>
+        <translation>导入音频资产</translation>
+    </message>
+    <message>
+        <source>Audio File</source>
+        <translation>音频文件</translation>
+    </message>
+    <message>
+        <source>Audio Path:</source>
+        <translation>音频路径：</translation>
+    </message>
+    <message>
+        <source>Load audio file</source>
+        <translation>加载音频文件</translation>
+    </message>
+    <message>
+        <source>Import audio file</source>
+        <translation>导入音频文件 </translation>
+    </message>
+    <message>
+        <source>Import recorded audio</source>
+        <translation>导入录制的音频</translation>
+    </message>
+    <message>
+        <source>Audio file</source>
+        <translation>音频文件</translation>
+    </message>
+    <message>
+        <source>Audio file doesn&apos;t exist!</source>
+        <translation>音频文件不存在！</translation>
+    </message>
+    <message>
+        <source>Please, choose an audio file!</source>
+        <translation>请选择一个音频文件！</translation>
+    </message>
+</context>
+<context>
     <name>TupSoundPlayer</name>
     <message>
         <source>Play</source>
@@ -5346,6 +5575,21 @@ Cover</source>
     <message>
         <source>Default Palette</source>
         <translation>默认调色板</translation>
+    </message>
+</context>
+<context>
+    <name>TupWaveFormView</name>
+    <message>
+        <source>Drop audio file here</source>
+        <translation>将音频文件拖放到此处</translation>
+    </message>
+    <message>
+        <source>Sound file has no voices!</source>
+        <translation>声音文件没有声音！</translation>
+    </message>
+    <message>
+        <source>Mouth images are unset!</source>
+        <translation>嘴巴图像未设置！</translation>
     </message>
 </context>
 <context>

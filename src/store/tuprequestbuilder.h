@@ -39,12 +39,14 @@
 #include "tglobal.h"
 #include "tuplibraryobject.h"
 #include "tupproject.h"
+#include "tupprojectrequest.h"
+#include "tupprojectresponse.h"
 
 #include <QDomDocument>
 #include <QVariant>
 
-class TupProjectRequest;
-class TupProjectResponse;
+// class TupProjectRequest;
+// class TupProjectResponse;
 
 class TUPITUBE_EXPORT TupRequestBuilder
 {

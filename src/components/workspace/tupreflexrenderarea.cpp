@@ -40,6 +40,10 @@
 
 TupReflexRenderArea::TupReflexRenderArea(const QSize &areaSize, QWidget *parent) : QWidget(parent)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupReflexRenderArea()] - areaSize -> " << areaSize;
+    #endif
+
     size = areaSize;
     width = areaSize.width();
     height = areaSize.height();

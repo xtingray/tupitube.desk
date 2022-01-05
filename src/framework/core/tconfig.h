@@ -38,13 +38,9 @@
 
 #include "tglobal.h"
 
-#include <QDir>
-#include <QCoreApplication>
-#include <QTextStream>
-#include <QTextDocument>
-#include <QDomDocument>
 #include <QObject>
-#include <QHash>
+#include <QDir>
+#include <QDomDocument>
 #include <QVariant>
 
 class TConfig;
@@ -94,11 +90,9 @@ class T_CORE_EXPORT TConfig : public QObject
         bool isConfigOk;
         QDir configDirectory;
 
-        QHash<QString, QDomElement> groups;
         QDomElement currentElementsGroup;
         QString lastGroup;        
 };
 
 #define TCONFIG TConfig::instance()
-
 #endif

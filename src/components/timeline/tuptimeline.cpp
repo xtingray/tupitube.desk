@@ -107,9 +107,10 @@ TupTimeLine::TupTimeLine(TupProject *projectData, QWidget *parent) : TupModuleWi
     toolbarLayout->addSpacing(3);
     toolbarLayout->addLayout(toolsLayout);
 
-    addChild(toolBar, Qt::AlignCenter);
+    addChild(toolBar, Qt::AlignHCenter);
     
-    scenesContainer = new TupTimelineSceneContainer(this);
+    // scenesContainer = new TupTimelineSceneContainer(this);
+    scenesContainer = new TupTimelineSceneContainer;
     addChild(scenesContainer);
     
     connect(actionBar, SIGNAL(actionSelected(int)), this, SLOT(requestCommand(int)));
@@ -465,7 +466,7 @@ void TupTimeLine::libraryResponse(TupLibraryResponse *response)
 
     if (response->getAction() == TupProjectRequest::InsertSymbolIntoFrame) {
         switch (response->symbolType()) {
-            case TupLibraryObject::Sound:
+            case TupLibraryObject::Audio:
             {
                 TupTimeLineTable *framesTable = this->framesTable(response->getSceneIndex());
                 if (framesTable) {

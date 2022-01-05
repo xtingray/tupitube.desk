@@ -35,6 +35,9 @@
 
 #include "tconfig.h"
 
+#include <QFile>
+#include <QTextStream>
+
 TConfig* TConfig::m_instance = nullptr;
 
 TConfig::TConfig() : QObject()
@@ -49,7 +52,7 @@ TConfig::TConfig() : QObject()
     if (!configDirectory.exists()) {
         isFirstTime = true;
         #ifdef TUP_DEBUG
-            qWarning() << "[TConfig::TConfig()] - Config file doesn't exist. Creating path: " << configDirectory.path();
+            qWarning() << "[TConfig::TConfig()] - Config file doesn't exist. Creating path -> " << configDirectory.path();
         #endif
 
         if (!configDirectory.mkdir(configDirectory.path())) {
@@ -96,8 +99,9 @@ void TConfig::checkConfigFile()
         isConfigOk = domDocument.setContent(&config, &errorMsg, &errorLine, &errorColumn);
         if (!isConfigOk) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TConfig::checkConfigFile()] - Fatal Error: Configuration file is corrupted - Line: " << errorLine << " - Column: " << errorColumn;
-                qDebug() << "[TConfig::checkConfigFile()] - Message: " << errorMsg;
+                qDebug() << "[TConfig::checkConfigFile()] - Fatal Error: Configuration file is corrupted - Line -> "
+                         << errorLine << " - Column -> " << errorColumn;
+                qDebug() << "[TConfig::checkConfigFile()] - Message -> " << errorMsg;
             #endif
         } else {
             if (configVersion() < QString(CONFIG_VERSION).toInt())
@@ -114,7 +118,7 @@ void TConfig::checkConfigFile()
 void TConfig::initConfigFile()
 {
     domDocument.clear();
-    QDomProcessingInstruction header = domDocument.createProcessingInstruction("xml","version=\"1.0\" encoding=\"UTF-8\"");
+    QDomProcessingInstruction header = domDocument.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"");
     domDocument.appendChild(header);
 
     QDomElement root = domDocument.createElement("Config");
@@ -154,7 +158,7 @@ void TConfig::sync()
 
     if (file.open(QIODevice::WriteOnly)) {
         QTextStream st(&file);
-        st << domDocument.toString() << endl;
+        st << domDocument.toString() << Qt::endl;
         isConfigOk = true;
         file.close();
     } else {
@@ -164,23 +168,24 @@ void TConfig::sync()
     checkConfigFile();
 }
 
-void TConfig::beginGroup(const QString & prefix)
+void TConfig::beginGroup(const QString &prefix)
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TConfig::beginGroup()] - prefix -> " << prefix;
+    #endif
+    */
+
     QString stripped = QString(prefix).toHtmlEscaped();
     stripped.replace(' ', "_");
     stripped.replace('\n', "");
 
     lastGroup = currentElementsGroup.tagName();
 
-    if (groups.contains(stripped)) {
-        currentElementsGroup = groups[stripped];
-    } else {
-        currentElementsGroup = find(domDocument.documentElement(), stripped);
-
-        if (currentElementsGroup.isNull()) {
-            currentElementsGroup = domDocument.createElement(stripped);
-            domDocument.documentElement().appendChild(currentElementsGroup);
-        }
+    currentElementsGroup = find(domDocument.documentElement(), stripped);
+    if (currentElementsGroup.isNull()) {
+        currentElementsGroup = domDocument.createElement(stripped);
+        domDocument.documentElement().appendChild(currentElementsGroup);
     }
 }
 
@@ -190,7 +195,7 @@ void TConfig::endGroup()
         beginGroup(lastGroup);
 }
 
-void TConfig::setValue(const QString & key, const QVariant & value)
+void TConfig::setValue(const QString &key, const QVariant &value)
 {
     QDomElement element = find(currentElementsGroup, key);
 
@@ -215,15 +220,13 @@ void TConfig::setValue(const QString & key, const QVariant & value)
     }
 }
 
-QVariant TConfig::value(const QString & key, const QVariant & defaultValue) const
+QVariant TConfig::value(const QString &key, const QVariant &defaultValue) const
 {
     QDomElement element = find(currentElementsGroup, key); // Current group or root?
-	
     if (element.isNull())
         return defaultValue;
 
     QVariant content = element.attribute("value");
-
     if (content.toString() == "false") {
         return false;
     } else if (content.toString() == "true") {
@@ -264,5 +267,5 @@ QStringList TConfig::languages()
 
 QStringList TConfig::timeRanges()
 {
-    return {"5", "8", "10", "12"};
+    return {"3", "5", "8", "10", "12"};
 }

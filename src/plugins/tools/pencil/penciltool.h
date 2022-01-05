@@ -73,6 +73,8 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
         virtual void move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene);
         virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene);
         virtual QMap<TAction::ActionId, TAction *>actions() const;
+        TAction * getAction(TAction::ActionId toolId);
+
         int toolType() const;
         virtual QWidget *configurator();
         virtual void aboutToChangeTool();

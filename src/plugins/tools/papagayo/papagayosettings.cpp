@@ -35,6 +35,8 @@
 
 #include "papagayosettings.h"
 #include "timagebutton.h"
+#include "tseparator.h"
+#include "tupsvg2qt.h"
 
 PapagayoSettings::PapagayoSettings(QWidget *parent) : QWidget(parent)
 {
@@ -65,13 +67,10 @@ void PapagayoSettings::setInnerForm()
     nameLayout->addWidget(nameLabel);
     nameLayout->addWidget(lipSyncName);
 
-    fpsLabel = new QLabel;
-
     QHBoxLayout *fpsLayout = new QHBoxLayout;
     fpsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
     fpsLayout->setMargin(0);
     fpsLayout->setSpacing(0);
-    fpsLayout->addWidget(fpsLabel);
 
     QLabel *startingLabel = new QLabel(tr("Starting at frame") + ": ");
     startingLabel->setAlignment(Qt::AlignVCenter);
@@ -106,33 +105,12 @@ void PapagayoSettings::setInnerForm()
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
 
-    QBoxLayout *listLayout = new QBoxLayout(QBoxLayout::TopToBottom);
-    listLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-
-    QLabel *mouthsLabel = new QLabel(tr("Mouths") + ": ");
-    mouthsLabel->setAlignment(Qt::AlignHCenter);
-
-    mouthsList = new QListWidget;
-    mouthsList->setContextMenuPolicy(Qt::CustomContextMenu);
-    mouthsList->setViewMode(QListView::ListMode);
-    mouthsList->setFlow(QListView::TopToBottom);
-    mouthsList->setMovement(QListView::Static);
-    mouthsList->setFixedHeight(68);
-
-    listLayout->addWidget(mouthsLabel);
-    listLayout->addWidget(mouthsList);
-
-    QLabel *textLabel = new QLabel(tr("Text") + ": ");
-    textLabel->setAlignment(Qt::AlignHCenter);
-
-    textArea = new QTextEdit;
-    textArea->setReadOnly(true);
-
-    // phonemeLabel = new QLabel(tr("Current Phoneme") + ": " + phoneme);
     phonemeLabel = new QLabel;
     phonemeLabel->setAlignment(Qt::AlignHCenter);
 
-    QLabel *mouthPosLabel = new QLabel(tr("Current Mouth Position") + ": ");
+    // Position section
+
+    QLabel *mouthPosLabel = new QLabel("<b>" + tr("Mouth Position") + "</b>");
     mouthPosLabel->setAlignment(Qt::AlignHCenter);
 
     QLabel *xLabel = new QLabel(tr("X") + ": ");
@@ -154,42 +132,143 @@ void PapagayoSettings::setInnerForm()
     QBoxLayout *xLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     xLayout->setMargin(0);
     xLayout->setSpacing(0);
+    xLayout->addStretch();
     xLayout->addWidget(xLabel);
     xLayout->addWidget(xPosField);
+    xLayout->addStretch();
 
     QBoxLayout *yLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     yLayout->setMargin(0);
     yLayout->setSpacing(0);
+    yLayout->addStretch();
     yLayout->addWidget(yLabel);
     yLayout->addWidget(yPosField);
+    yLayout->addStretch();
 
-    TImageButton *remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close_properties.png"), 22);
-    remove->setToolTip(tr("Close properties"));
-    connect(remove, SIGNAL(clicked()), this, SIGNAL(closeLipSyncProperties()));
+    // Rotation section
+
+    QLabel *rotationLabel = new QLabel("<b>" + tr("Mouth Rotation") + "</b>");
+    rotationLabel->setAlignment(Qt::AlignHCenter);
+
+    QLabel *angleLabel = new QLabel(tr("Angle") + ": ");
+
+    angleField = new QSpinBox;
+    angleField->setMinimum(0);
+    angleField->setMaximum(360);
+    connect(angleField, SIGNAL(valueChanged(int)), this, SIGNAL(rotationChanged(int)));
+
+    QBoxLayout *angleLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    angleLayout->setMargin(0);
+    angleLayout->setSpacing(0);
+    angleLayout->addStretch();
+    angleLayout->addWidget(angleLabel);
+    angleLayout->addWidget(angleField);
+    angleLayout->addStretch();
+
+    // Scale section
+
+    QLabel *scaleLabel = new QLabel("<b>" + tr("Mouth Scale") + "</b>");
+    scaleLabel->setAlignment(Qt::AlignHCenter);
+
+    QBoxLayout *scaleLayout = new QBoxLayout(QBoxLayout::TopToBottom);
+
+    QLabel *factorXLabel = new QLabel(tr("X") + ": ");
+    factorXField = new QDoubleSpinBox;
+    factorXField->setDecimals(2);
+    factorXField->setMinimum(0.01);
+    factorXField->setMaximum(10);
+    factorXField->setSingleStep(0.01);
+    connect(factorXField, SIGNAL(valueChanged(double)), this, SLOT(notifyXScale(double)));
+
+    QBoxLayout *factorXLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    factorXLayout->setMargin(0);
+    factorXLayout->setSpacing(0);
+    factorXLayout->addStretch();
+    factorXLayout->addWidget(factorXLabel);
+    factorXLayout->addWidget(factorXField);
+    factorXLayout->addStretch();
+
+    scaleLayout->addLayout(factorXLayout);
+
+    QLabel *factorYLabel = new QLabel(tr("Y") + ": ");
+    factorYField = new QDoubleSpinBox;
+    factorYField->setDecimals(2);
+    factorYField->setMinimum(0.01);
+    factorYField->setMaximum(10);
+    factorYField->setSingleStep(0.01);
+    connect(factorYField, SIGNAL(valueChanged(double)), this, SLOT(notifyYScale(double)));
+
+    QBoxLayout *factorYLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+    factorYLayout->setMargin(0);
+    factorYLayout->setSpacing(0);
+    factorYLayout->addStretch();
+    factorYLayout->addWidget(factorYLabel);
+    factorYLayout->addWidget(factorYField);
+    factorYLayout->addStretch();
+
+    scaleLayout->addLayout(factorYLayout);
+
+    propCheck = new QCheckBox(tr("Proportion"), this);
+    connect(propCheck, SIGNAL(stateChanged(int)), this, SLOT(enableProportion(int)));
+    scaleLayout->addWidget(propCheck);
+    scaleLayout->setAlignment(propCheck, Qt::AlignHCenter);
+
+    // Bottom section
+
+    /*
+    TImageButton *saveButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/apply.png"), 22);
+    saveButton->setToolTip(tr("Save Mouth Changes"));
+    saveButton->setMaximumWidth(50);
+    connect(saveButton, SIGNAL(clicked()), this, SIGNAL(saveMouthTransRequested()));
+    */
+
+    TImageButton *resetButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/reset.png"), 22);
+    resetButton->setToolTip(tr("Reset Mouth"));
+    resetButton->setMaximumWidth(50);
+    connect(resetButton, SIGNAL(clicked()), this, SIGNAL(objectHasBeenReset()));
+
+    TImageButton *closeButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close_properties.png"), 22);
+    closeButton->setToolTip(tr("Close properties"));
+    connect(closeButton, SIGNAL(clicked()), this, SIGNAL(closeLipSyncProperties()));
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     buttonsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
-    buttonsLayout->setMargin(0);
-    buttonsLayout->setSpacing(10);
-    buttonsLayout->addWidget(remove);
+    buttonsLayout->setSpacing(20);
+    // buttonsLayout->addWidget(saveButton);
+    buttonsLayout->addWidget(resetButton);
+    buttonsLayout->addWidget(closeButton);
+
+    // Header block
 
     innerLayout->addLayout(nameLayout);
     innerLayout->addLayout(fpsLayout);
     innerLayout->addLayout(startLayout);
     innerLayout->addLayout(endLayout);
     innerLayout->addLayout(totalLayout);
-    innerLayout->addLayout(listLayout);
-    innerLayout->addWidget(textLabel);
-    innerLayout->addWidget(textArea);
+    innerLayout->addWidget(new TSeparator());
     innerLayout->addWidget(phonemeLabel);
+
+    // Position block
+
     innerLayout->addWidget(mouthPosLabel);
     innerLayout->addLayout(xLayout);
     innerLayout->addLayout(yLayout);
+
+    // Rotation block
+
+    innerLayout->addWidget(rotationLabel);
+    innerLayout->addLayout(angleLayout);
+
+    // Scale block
+
+    innerLayout->addWidget(scaleLabel);
+    innerLayout->addLayout(scaleLayout);
 
     innerLayout->addSpacing(10);
     innerLayout->addLayout(buttonsLayout);
     innerLayout->addSpacing(5);
 
+    innerLayout->addWidget(new TSeparator());
     layout->addWidget(innerPanel);
 }
 
@@ -199,51 +278,24 @@ void PapagayoSettings::openLipSyncProperties(TupLipSync *lipsync)
 {
     name = lipsync->getLipSyncName();
     initFrame = lipsync->getInitFrame();
-    framesCount = lipsync->getFramesCount();
+    framesCount = lipsync->getFramesTotal();
 
-    lipSyncName->setText(name);
-    fpsLabel->setText(tr("Lip-Sync FPS") + ": " + QString::number(lipsync->getFPS()));
+    lipSyncName->setText("<b>" + name + "</b>");
 
     comboInit->setEnabled(true);
     comboInit->setValue(initFrame + 1);
 
     int endIndex = initFrame + framesCount;
-    endingLabel->setText(tr("Ending at frame") + ": " + QString::number(endIndex));
-    totalLabel->setText(tr("Frames Total") + ": " + QString::number(framesCount));
-
-    disconnect(mouthsList, SIGNAL(currentRowChanged(int)), this, SLOT(setCurrentMouth(int)));
-    mouthsList->clear();
-
-    voices = lipsync->getVoices();
-    int total = voices.size();
-    if (total > 0) {
-        for (int i=0; i < total; i++) {
-             QListWidgetItem *item = new QListWidgetItem(mouthsList);
-             item->setText(tr("mouth") + "_" + QString::number(i));
-             item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-        }
-
-        TupVoice *voice = voices.at(0);
-        textArea->setText(voice->text());
-
-        connect(mouthsList, SIGNAL(currentRowChanged(int)), this, SLOT(setCurrentMouth(int)));
-        mouthsList->setCurrentRow(0);
-    }
-}
-
-void PapagayoSettings::setCurrentMouth(int index) 
-{
-    QString tail = ":" + QString::number(index);
-    QString id = "lipsync:" + name + tail;
-
-    TupVoice *voice = voices.at(index);
-    textArea->setText(voice->text());
-
-    emit selectMouth(id, index);
+    endingLabel->setText(tr("Ending at frame") + ": <b>" + QString::number(endIndex) + "</b>");
+    totalLabel->setText(tr("Frames Total") + ": <b>" + QString::number(framesCount) + "</b>");
 }
 
 void PapagayoSettings::updateInitFrame(int index)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoSettings::updateInitFrame()] - index -> " << index;
+    #endif
+
     int frame = index - 1;
 
     if (frame != initFrame) {
@@ -255,25 +307,161 @@ void PapagayoSettings::updateInitFrame(int index)
 void PapagayoSettings::updateInterfaceRecords()
 {
     int endIndex = initFrame + framesCount;
-    endingLabel->setText(tr("Ending at frame") + ": " + QString::number(endIndex));
+    endingLabel->setText(tr("Ending at frame") + ": <b>" + QString::number(endIndex) + "</b>");
 }
 
-void PapagayoSettings::setPos(const QPointF &point) 
+void PapagayoSettings::setTransformations(const QDomElement &dom)
 {
-    qreal x = point.x();
-    qreal y = point.y();
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoSettings::setTransformations()]";
+    #endif
 
-    xPosField->blockSignals(true);
-    yPosField->blockSignals(true);
+    QPointF pos;
+    TupSvg2Qt::parsePointF(dom.attribute("pos"), pos);
+    TupTransformation::Parameters transStructure;
+    transStructure.pos = pos;
+    transStructure.rotationAngle = dom.attribute("rotation").toInt();
+    transStructure.scaleFactor.setX(dom.attribute("scale_x").toDouble());
+    transStructure.scaleFactor.setY(dom.attribute("scale_y").toDouble());
 
-    xPosField->setValue(x);
-    yPosField->setValue(y);
-
-    xPosField->blockSignals(false);
-    yPosField->blockSignals(false);
+    setTransformations(transStructure);
 }
 
-void PapagayoSettings::setPhoneme(const QString &phoneme)
+void PapagayoSettings::setTransformations(const TupTransformation::Parameters params)
 {
-    phonemeLabel->setText(tr("Current Phoneme") + ": " + "<b>" + phoneme + "</b>");
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoSettings::setTransformations()]";
+    #endif
+
+     updatePositionCoords(params.pos.x(), params.pos.y());
+     updateRotationAngle(params.rotationAngle);
+     updateScaleFactor(params.scaleFactor.x(), params.scaleFactor.y());
+}
+
+void PapagayoSettings::setPhoneme(const TupPhoneme *phoneme)
+{
+    this->phoneme = phoneme;
+    phonemeLabel->setText(tr("Current Phoneme") + ": <b>" + phoneme->value() + "</b>");
+    setTransformations(phoneme->getTransformationParams());
+}
+
+void PapagayoSettings::updatePositionCoords(int x, int y)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoSettings::updatePositionCoords()] - x -> " << x;
+        qDebug() << "[PapagayoSettings::updatePositionCoords()] - y -> " << y;
+    #endif
+
+   xPosField->blockSignals(true);
+   yPosField->blockSignals(true);
+
+   currentX = x;
+   xPosField->setValue(x);
+
+   currentY = y;
+   yPosField->setValue(y);
+
+   xPosField->blockSignals(false);
+   yPosField->blockSignals(false);
+}
+
+void PapagayoSettings::updateRotationAngle(int angle)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoSettings::updateRotationAngle()] - angle -> " << angle;
+    #endif
+
+    angleField->blockSignals(true);
+
+    if (angle > 359)
+        angle = 0;
+    angleField->setValue(angle);
+
+    angleField->blockSignals(false);
+}
+
+void PapagayoSettings::updateScaleFactor(double x, double y)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoSettings::updateScaleFactor()] - x -> " << x;
+        qDebug() << "[PapagayoSettings::updateScaleFactor()] - y -> " << y;
+    #endif
+
+   factorXField->blockSignals(true);
+   factorYField->blockSignals(true);
+
+   currentXFactor = x;
+   factorXField->setValue(x);
+
+   currentYFactor = y;
+   factorYField->setValue(y);
+
+   factorXField->blockSignals(false);
+   factorYField->blockSignals(false);
+}
+
+void PapagayoSettings::notifyRotation(int angle)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoSettings::notifyRotation()] - angle -> " << angle;
+    #endif
+
+    if (angle == 360) {
+        angle = 0;
+        angleField->setValue(0);
+    }
+    emit rotationChanged(angle);
+}
+
+void PapagayoSettings::notifyXScale(double factor)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoSettings::notifyXScale()] - factor -> " << factor;
+    #endif
+
+    if (propCheck->isChecked()) {
+        currentYFactor = factor;
+        factorYField->setValue(factor);
+    }
+
+    emit scaleChanged(factor, currentYFactor);
+    currentXFactor = factor;
+}
+
+void PapagayoSettings::notifyYScale(double factor)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoSettings::notifyYScale()] - factor -> " << factor;
+    #endif
+
+    if (propCheck->isChecked()) {
+       currentXFactor = factor;
+       factorXField->setValue(factor);
+    }
+
+    emit scaleChanged(currentXFactor, factor);
+    currentYFactor = factor;
+}
+
+void PapagayoSettings::enableProportion(int flag)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoSettings::enableProportion()] - flag -> " << flag;
+    #endif
+
+    bool enable = false;
+    if (flag == Qt::Checked) {
+        double factor =factorXField->value();
+        factorYField->setValue(factor);
+        emit scaleChanged(factor, factor);
+        enable = true;
+    }
+    emit proportionActivated(enable);
+}
+
+void PapagayoSettings::setProportionState(int flag)
+{
+    propCheck->blockSignals(true);
+    propCheck->setChecked(flag);
+    propCheck->blockSignals(false);
 }

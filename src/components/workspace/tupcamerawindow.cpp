@@ -77,7 +77,7 @@ TupCameraWindow::TupCameraWindow(QCamera *input, const QSize &camSize, const QSi
     QCameraInfo cameraInfo(*input); 
 
     #ifdef TUP_DEBUG
-        qDebug() << "TupCameraWindow() - Camera Orientation: " + QString::number(cameraInfo.orientation());
+        qDebug() << "[TupCameraWindow()] - Camera Orientation: " << cameraInfo.orientation();
     #endif
 
     videoSurface = new TupVideoSurface(this, this, displaySize, isScaled, cameraInfo.orientation(), this);
@@ -90,18 +90,30 @@ TupCameraWindow::~TupCameraWindow()
 
 void TupCameraWindow::startCamera()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraWindow::startCamera()]";
+    #endif
+
     stopCamera();
     camera->start();
 }
 
 void TupCameraWindow::stopCamera()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraWindow::stopCamera()]";
+    #endif
+
     if (camera->state() == QCamera::ActiveState)
         camera->stop();
 }
 
 void TupCameraWindow::reset()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraWindow::reset()]";
+    #endif
+
     if (videoSurface)
         videoSurface->stop();
 
@@ -116,13 +128,17 @@ void TupCameraWindow::reset()
 
     if (! dir.rmdir(dir.absolutePath())) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupCameraWindow::reset() - Fatal Error: Can't remove pictures directory -> " + dir.absolutePath();
+            qDebug() << "[TupCameraWindow::reset()] - Fatal Error: Can't remove pictures directory -> " << dir.absolutePath();
         #endif 
     }
 }
 
 void TupCameraWindow::error(QCamera::Error error)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraWindow::error()] - error -> " << error;
+    #endif
+
     switch (error) {
         case QCamera::NoError:
         {
@@ -158,7 +174,7 @@ void TupCameraWindow::updateVideo()
 
 void TupCameraWindow::paintEvent(QPaintEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
 
     QPainter painter(this);
 
@@ -168,6 +184,10 @@ void TupCameraWindow::paintEvent(QPaintEvent *event)
 
 void TupCameraWindow::takePicture(int i)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraWindow::takePicture()] - i -> " << i;
+    #endif
+
     QString prev = "pic";
     if (i < 10)
         prev += "00";
@@ -187,10 +207,10 @@ void TupCameraWindow::takePicture(int i)
 
 void TupCameraWindow::imageSavedFromCamera(int id, const QString path)
 {
-    Q_UNUSED(id);
+    Q_UNUSED(id)
 
     #ifdef TUP_DEBUG
-        qWarning() << "TupCameraInterface::imageSavedFromCamera() - Picture path -> " + path;
+        qWarning() << "[TupCameraInterface::imageSavedFromCamera()] - Picture path -> " << path;
     #endif
 
     if (path.isEmpty())

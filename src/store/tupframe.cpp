@@ -1190,7 +1190,7 @@ QGraphicsItem *TupFrame::createItem(QPointF coords, const QString &xml, bool loa
     #ifdef TUP_DEBUG
         qDebug() << "[TupFrame::createItem()]";
         qWarning() << "coords -> " << coords;
-        qWarning() << "XML:";
+        qWarning() << "xml:";
         qWarning() << xml;
     #endif
 
@@ -1207,7 +1207,7 @@ QGraphicsItem *TupFrame::createItem(QPointF coords, const QString &xml, bool loa
         graphicItem->setPos(coords);
         QString id = "path";
         if (library) {
-            if (itemFactory.getType() == TupItemFactory::Library)
+            if (itemFactory.getType() == TupFactoryHandler::Library)
                 id = itemFactory.itemID(xml);
         }
 
@@ -1568,6 +1568,7 @@ void TupFrame::checkTransformationStatus(TupLibraryObject::ObjectType itemType, 
 void TupFrame::storeItemTransformation(TupLibraryObject::ObjectType itemType, int index, const QString &properties)
 {
     #ifdef TUP_DEBUG
+        qDebug() << "[TupFrame::storeItemTransformation()] - index -> " << index;
         qDebug() << "[TupFrame::storeItemTransformation()] - properties -> " << properties;
     #endif
 
@@ -1584,6 +1585,10 @@ void TupFrame::storeItemTransformation(TupLibraryObject::ObjectType itemType, in
 
 void TupFrame::undoTransformation(TupLibraryObject::ObjectType itemType, int index)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupFrame::undoTransformation()] - index -> " << index;
+    #endif
+
     if (itemType == TupLibraryObject::Svg) {
         TupSvgItem *item = svg.at(index);
         if (item)

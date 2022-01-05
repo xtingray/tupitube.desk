@@ -308,6 +308,11 @@ QMap<TAction::ActionId, TAction *> InkTool::actions() const
     return inkActions;
 }
 
+TAction * InkTool::getAction(TAction::ActionId toolId)
+{
+    return inkActions[toolId];
+}
+
 int InkTool::toolType() const
 {
     return TupToolInterface::Brush;

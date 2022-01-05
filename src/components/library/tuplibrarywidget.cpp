@@ -41,6 +41,7 @@
 #include "tuptextitem.h"
 #include "tuprectitem.h"
 #include "tupellipseitem.h"
+#include "tupsounddialog.h"
 
 #define RETURN_IF_NOT_LIBRARY if (!library) return;
 
@@ -70,53 +71,52 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
 
     libraryTree = new TupItemManager;
 
-    connect(libraryTree, SIGNAL(itemSelected(QTreeWidgetItem *)), this,
-                                   SLOT(previewItem(QTreeWidgetItem *)));
+    connect(libraryTree, &TupItemManager::itemSelected, this, &TupLibraryWidget::previewItem);
 
-    connect(libraryTree, SIGNAL(itemRemoved()), this,
-                                   SLOT(removeCurrentItem()));
+    connect(libraryTree, &TupItemManager::itemRemoved, this,
+                         &TupLibraryWidget::removeCurrentItem);
 
-    connect(libraryTree, SIGNAL(itemCloned(QTreeWidgetItem*)), this,
-                                   SLOT(cloneObject(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::itemCloned, this,
+                         &TupLibraryWidget::cloneObject);
 
-    connect(libraryTree, SIGNAL(itemExported(QTreeWidgetItem*)), this,
-                                   SLOT(exportObject(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::itemExported, this,
+                         &TupLibraryWidget::exportObject);
 
-    connect(libraryTree, SIGNAL(itemRenamed(QTreeWidgetItem*)), this,
-                                   SLOT(renameObject(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::itemRenamed, this,
+                         &TupLibraryWidget::renameObject);
 
-    connect(libraryTree, SIGNAL(itemChanged(QTreeWidgetItem*, int)), this,
-                                   SLOT(refreshItem(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::itemChanged, this,
+                         &TupLibraryWidget::refreshItem);
 
-    connect(libraryTree, SIGNAL(editorClosed()), this,
-                                   SLOT(updateItemEditionState()));
+    connect(libraryTree, &TupItemManager::editorClosed, this,
+                         &TupLibraryWidget::updateItemEditionState);
 
-    connect(libraryTree, SIGNAL(itemMoved(QString, QString)), this,
-                                   SLOT(updateLibrary(QString, QString)));
+    connect(libraryTree, &TupItemManager::itemMoved, this,
+                         &TupLibraryWidget::updateLibrary);
 
-    connect(libraryTree, SIGNAL(itemRequired()), this,
-                                   SLOT(insertObjectInWorkspace()));
+    connect(libraryTree, &TupItemManager::itemRequired, this,
+                         &TupLibraryWidget::insertObjectInWorkspace);
 
-    connect(libraryTree, SIGNAL(itemCreated(QTreeWidgetItem*)), this,
-                                   SLOT(activeRefresh(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::itemCreated, this,
+                         &TupLibraryWidget::activeRefresh);
 
-    connect(libraryTree, SIGNAL(inkscapeEditCall(QTreeWidgetItem*)), this,
-                                   SLOT(openInkscapeToEdit(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::inkscapeEditCall, this,
+                         &TupLibraryWidget::openInkscapeToEdit);
 
-    connect(libraryTree, SIGNAL(gimpEditCall(QTreeWidgetItem*)), this,
-                                   SLOT(openGimpToEdit(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::gimpEditCall, this,
+                         &TupLibraryWidget::openGimpToEdit);
 
-    connect(libraryTree, SIGNAL(kritaEditCall(QTreeWidgetItem*)), this,
-                                   SLOT(openKritaToEdit(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::kritaEditCall, this,
+                         &TupLibraryWidget::openKritaToEdit);
 
-    connect(libraryTree, SIGNAL(myPaintEditCall(QTreeWidgetItem*)), this,
-                                   SLOT(openMyPaintToEdit(QTreeWidgetItem*)));
+    connect(libraryTree, &TupItemManager::myPaintEditCall, this,
+                         &TupLibraryWidget::openMyPaintToEdit);
 
-    connect(libraryTree, SIGNAL(newRasterCall()), this,
-                                   SLOT(createRasterObject()));
+    connect(libraryTree, &TupItemManager::newRasterCall, this,
+                         &TupLibraryWidget::createRasterObject);
 
-    connect(libraryTree, SIGNAL(newVectorCall()), this,
-                                   SLOT(createVectorObject()));
+    connect(libraryTree, &TupItemManager::newVectorCall, this,
+                         &TupLibraryWidget::createVectorObject);
 
     QGroupBox *buttons = new QGroupBox;
     QHBoxLayout *buttonLayout = new QHBoxLayout(buttons);
@@ -141,7 +141,7 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     itemType->addItem(QIcon(THEME_DIR + "icons/drawing_object.png"), tr("Native Object"));
     itemType->addItem(QIcon(THEME_DIR + "icons/bitmap_array.png"), tr("Image Sequence"));
     itemType->addItem(QIcon(THEME_DIR + "icons/svg_array.png"), tr("Svg Sequence"));
-    itemType->addItem(QIcon(THEME_DIR + "icons/sound_object.png"), tr("Sound File"));
+    itemType->addItem(QIcon(THEME_DIR + "icons/sound_object.png"), tr("Audio File"));
 
     comboLayout->addWidget(itemType);
 
@@ -308,7 +308,7 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                      */
                    }
                    break;
-                case TupLibraryObject::Sound:
+                case TupLibraryObject::Audio:
                    {
                      currentSound = object;
 
@@ -362,9 +362,9 @@ void TupLibraryWidget::insertObjectInWorkspace()
     }
 
     if ((extension.compare("OGG") == 0) || (extension.compare("WAV") == 0) || (extension.compare("MP3") == 0)) {
-        TOsd::self()->display(TOsd::Error, tr("It's a sound file! Please, pick a graphic object"));
+        TOsd::self()->display(TOsd::Error, tr("It's an audio file! Please, pick a graphic object"));
         #ifdef TUP_DEBUG
-            qDebug() << "[TupLibraryWidget::insertObjectInWorkspace()] - It's a sound file!";
+            qDebug() << "[TupLibraryWidget::insertObjectInWorkspace()] - It's an audio file!";
         #endif
         return;
     } 
@@ -387,7 +387,7 @@ void TupLibraryWidget::removeCurrentItem()
     bool ask = TCONFIG->value("ConfirmRemoveObject", true).toBool();
 
     if (ask) {
-        TOptionalDialog dialog(tr("Do you want to remove this object from Library?"), tr("Confirmation"), this);
+        TOptionalDialog dialog(tr("Do you want to remove this object from Library?"), tr("Confirmation"));
         dialog.setModal(true);
         dialog.move(static_cast<int> ((screen->geometry().width() - dialog.sizeHint().width()) / 2),
                     static_cast<int> ((screen->geometry().height() - dialog.sizeHint().height()) / 2));
@@ -415,7 +415,7 @@ void TupLibraryWidget::removeCurrentItem()
         if (extension.compare("TOBJ")==0)
             type = TupLibraryObject::Item;
         if ((extension.compare("OGG") == 0) || (extension.compare("WAV") == 0) || (extension.compare("MP3") == 0))
-            type = TupLibraryObject::Sound;
+            type = TupLibraryObject::Audio;
     } 
 
     TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove, objectKey, type);
@@ -503,7 +503,7 @@ void TupLibraryWidget::cloneObject(QTreeWidgetItem* item)
                         previewItem(item);
                     }
                     break;
-                case TupLibraryObject::Sound:
+                case TupLibraryObject::Audio:
                     {
                         item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
                         previewItem(item);
@@ -553,8 +553,8 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
                         filter += "(*.xpm)";
                     if (fileExtension.compare("SVG") == 0)
                         filter += "(*.svg)";
-                } else if (type == TupLibraryObject::Sound) {
-                    filter = tr("Sounds") + " ";
+                } else if (type == TupLibraryObject::Audio) {
+                    filter = tr("Audio") + " ";
                     if (fileExtension.compare("OGG") == 0)
                         filter += "(*.ogg)";
                     if (fileExtension.compare("MP3") == 0)
@@ -586,7 +586,7 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
                         target += ".xpm";
                     if (fileExtension.compare("SVG") == 0 && !filename.endsWith(".SVG"))
                         target += ".svg";
-                } else if (type == TupLibraryObject::Sound) {
+                } else if (type == TupLibraryObject::Audio) {
                     if (fileExtension.compare("OGG") == 0 && !filename.endsWith(".OGG"))
                         target += ".ogg";
                     if (fileExtension.compare("MP3") == 0 && !filename.endsWith(".MP3"))
@@ -600,7 +600,7 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
                 if (QFile::exists(target)) {
                     if (!QFile::remove(target)) {
                         #ifdef TUP_DEBUG
-                            qDebug() << "[TupLibraryWidget::exportObject()] - Fatal Error: Destination path already exists! -> " + id;
+                            qDebug() << "[TupLibraryWidget::exportObject()] - Fatal Error: Destination path already exists! -> " << id;
                         #endif
                         return;
                     }
@@ -617,13 +617,13 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupLibraryWidget::exportObject()] - Error: Object path is null! -> " + id;
+                    qDebug() << "[TupLibraryWidget::exportObject()] - Error: Object path is null! -> " << id;
                 #endif
                 return;
             }
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryWidget::exportObject()] - Error: Object doesn't exist! -> " + id;
+                qDebug() << "[TupLibraryWidget::exportObject()] - Error: Object doesn't exist! -> " << id;
             #endif
             return;
         }
@@ -1157,8 +1157,8 @@ void TupLibraryWidget::importImageSequence()
         for (int i = 0; i < filesTotal; ++i) {
              if (records.at(i).isFile()) {
                  QString extension = records.at(i).suffix().toUpper();
-                 if (extension.compare("JPEG")==0 || extension.compare("JPG")==0 || extension.compare("PNG")==0 || extension.compare("GIF")==0 || 
-                     extension.compare("XPM")==0 || extension.compare("WEBP")==0) {
+                 if (extension.compare("JPEG")==0 || extension.compare("JPG")==0 || extension.compare("PNG")==0 ||
+                     extension.compare("GIF")==0 || extension.compare("XPM")==0 || extension.compare("WEBP")==0) {
                      imagesCounter++;
                      photograms << records.at(i).absoluteFilePath();
                  }
@@ -1391,35 +1391,37 @@ void TupLibraryWidget::importSoundFile()
         qDebug() << "[TupLibraryWidget::importSoundFile()]";
     #endif
 
-    TCONFIG->beginGroup("General");
-    QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
+    TupSoundDialog *soundDialog = new TupSoundDialog();
+    connect(soundDialog, &TupSoundDialog::soundFilePicked,
+            this, &TupLibraryWidget::importSoundFileFromFolder);
+    connect(soundDialog, &TupSoundDialog::lipsyncModuleCalled,
+            this, &TupLibraryWidget::lipsyncModuleCalled);
+    soundDialog->show();
+}
 
-    QFileDialog dialog(this, tr("Import audio file..."), path);
-    dialog.setNameFilter(tr("Sound file") + " (*.ogg *.wav *.mp3)");
-    dialog.setFileMode(QFileDialog::ExistingFile);
+void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::importSoundFileFromFolder()] - filePath -> " << filePath;
+    #endif
 
-    if (dialog.exec() == QDialog::Accepted) {
-        QStringList files = dialog.selectedFiles();
-        path = files.at(0);
+    QFile file(filePath);
+    QFileInfo fileInfo(file);
+    QString key = fileInfo.fileName().toLower();
+    key = key.replace("(","_");
+    key = key.replace(")","_");
 
-        QFile file(path);
-        QFileInfo fileInfo(file);
-        QString key = fileInfo.fileName().toLower();
-        key = key.replace("(","_");
-        key = key.replace(")","_");
+    if (file.open(QIODevice::ReadOnly)) {
+        QByteArray data = file.readAll();
+        file.close();
 
-        if (file.open(QIODevice::ReadOnly)) {
-            QByteArray data = file.readAll();
-            file.close();
-
-            isEffectSound = true;
-            TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
-                                                           TupLibraryObject::Sound, project->spaceContext(), data);
-            emit requestTriggered(&request);
-            setDefaultPath(path);
-        } else {
-            TOsd::self()->display(TOsd::Error, tr("Error while opening file: %1").arg(path));
-        }
+        isEffectSound = true;
+        TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
+                                                       TupLibraryObject::Audio, project->spaceContext(), data);
+        emit requestTriggered(&request);
+        setDefaultPath(filePath);
+    } else {
+        TOsd::self()->display(TOsd::Error, tr("Error while opening file: %1").arg(filePath));
     }
 }
 
@@ -1552,7 +1554,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                              insertObjectInWorkspace();
                        }
                      break;
-                     case TupLibraryObject::Sound:
+                     case TupLibraryObject::Audio:
                        {
                          TupLibraryObject *object = library->getObject(id);
                          if (object) {
@@ -1694,7 +1696,7 @@ void TupLibraryWidget::importLibraryObject()
         return;
     }
 
-    if (option.compare(tr("Sound File")) == 0) {
+    if (option.compare(tr("Audio File")) == 0) {
         importSoundFile();
         return;
     }
@@ -1885,7 +1887,7 @@ void TupLibraryWidget::executeSoftware(const QString &software, QString &path)
     }
 }
 
-void TupLibraryWidget::refreshItem(LibraryObjects collection)
+void TupLibraryWidget::refreshItemFromCollection(LibraryObjects collection)
 {
     QMapIterator<QString, TupLibraryObject *> i(collection);
     while (i.hasNext()) {
@@ -1907,11 +1909,11 @@ void TupLibraryWidget::updateItemFromSaveAction()
         qDebug() << "[TupLibraryWidget::updateItemFromSaveAction()]";
     #endif
 
-    refreshItem(library->getObjects());
+    refreshItemFromCollection(library->getObjects());
 
     foreach (TupLibraryFolder *folder, library->getFolders()) {
         LibraryObjects objects = folder->getObjects();
-        refreshItem(objects);
+        refreshItemFromCollection(objects);
     }
 
     TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentFrame.scene, currentFrame.layer, currentFrame.frame,

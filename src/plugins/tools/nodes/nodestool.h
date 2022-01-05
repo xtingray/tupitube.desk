@@ -84,6 +84,7 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
         virtual void release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene);
         
         virtual QMap<TAction::ActionId, TAction *>actions() const;
+        TAction * getAction(TAction::ActionId toolId);
         int toolType() const;
         virtual QWidget *configurator();
         void aboutToChangeScene(TupGraphicsScene *scene);

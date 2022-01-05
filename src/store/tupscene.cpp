@@ -873,17 +873,19 @@ TupLipSync * TupScene::getLipSync(const QString &name)
 
 bool TupScene::updateLipSync(TupLipSync *lipsync)
 {
-    QString name = lipsync->getLipSyncName();
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScene::updateLipSync()] - lipsync name -> " << lipsync->getLipSyncName();
+    #endif
 
     if (layers.count()) {
+        QString name = lipsync->getLipSyncName();
         foreach (TupLayer *layer, layers) {
             if (layer->lipSyncCount() > 0) {
                 Mouths mouths = layer->getLipSyncList();
-                foreach (TupLipSync *record, mouths) {
-                    if (record->getLipSyncName().compare(name) == 0) {
-                        record = lipsync;
-                        return true;
-                    }
+                for (int i=0; i < mouths.size(); i++) {
+                    TupLipSync *record = mouths.at(i);
+                     if (record->getLipSyncName().compare(name) == 0)
+                         return layer->updateLipSync(i, lipsync);
                 }
             }
         }

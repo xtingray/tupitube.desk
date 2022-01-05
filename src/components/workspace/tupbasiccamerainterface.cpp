@@ -58,7 +58,6 @@ TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QCa
     path = randomPath();
     QSize displaySize = cameraSize;
     widgetStack = new QStackedWidget();
-    // QDesktopWidget desktop;
     QScreen *screen = QGuiApplication::screens().at(0);
     int desktopWidth = screen->geometry().width();
 
@@ -168,7 +167,11 @@ TupBasicCameraInterface::~TupBasicCameraInterface()
 
 void TupBasicCameraInterface::closeEvent(QCloseEvent *event)
 {
-    Q_UNUSED(event);
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupBasicCameraInterface::closeEvent()]";
+    #endif
+
+    Q_UNUSED(event)
 
     if (currentCamera->state() == QCamera::ActiveState)
         currentCamera->stop();
@@ -181,7 +184,7 @@ void TupBasicCameraInterface::closeEvent(QCloseEvent *event)
 
     if (! dir.rmdir(dir.absolutePath())) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupBasicCameraInterface::closeEvent() - Fatal Error: Can't remove pictures directory -> " + dir.absolutePath();
+            qDebug() << "[TupBasicCameraInterface::closeEvent()} - Fatal Error: Can't remove pictures directory -> " << dir.absolutePath();
         #endif
     }
 
@@ -194,7 +197,7 @@ QString TupBasicCameraInterface::randomPath()
     QDir dir;
     if (!dir.mkdir(imgPath)) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupBasicCameraInterface::randomPath() - Fatal Error: Can't create pictures directory -> " + imgPath;
+            qDebug() << "[TupBasicCameraInterface::randomPath()] - Fatal Error: Can't create pictures directory -> " << imgPath;
         #endif
 
         imgPath = "";
@@ -231,6 +234,10 @@ void TupBasicCameraInterface::takePicture()
 
 void TupBasicCameraInterface::changeCameraDevice(int index)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupBasicCameraInterface::changeCameraDevice()] - index -> " << index;
+    #endif
+
     currentCamera->stop();
     widgetStack->setCurrentIndex(index);
     currentCamera = (QCamera *) cameras.at(index);
@@ -242,10 +249,10 @@ void TupBasicCameraInterface::changeCameraDevice(int index)
 void TupBasicCameraInterface::imageSavedFromCamera(int id, const QString folder)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupBasicCameraInterface::imageSavedFromCamera()]";
+        qDebug() << "[TupBasicCameraInterface::imageSavedFromCamera()] - id -> " << id;
     #endif
 
-    Q_UNUSED(id);
+    Q_UNUSED(id)
 
     if (folder.isEmpty())
         return;

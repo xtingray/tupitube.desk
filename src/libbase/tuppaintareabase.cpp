@@ -320,7 +320,15 @@ bool TupPaintAreaBase::viewportEvent(QEvent *event)
 
 void TupPaintAreaBase::wheelEvent(QWheelEvent *event)
 {
-    scaleView(pow(2.0, event->delta() / 520.0));
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintAreaBase::wheelEvent()] - angleDelta -> " << event->angleDelta();
+    #endif
+    */
+
+    // SQA: Evaluate this replacemente
+    // scaleView(pow(2.0, event->delta() / 520.0));
+    scaleView(pow(2.0, event->angleDelta().y() / 520.0));
 }
 
 void TupPaintAreaBase::drawBackground(QPainter *painter, const QRectF &rect)
@@ -480,7 +488,7 @@ QPointF TupPaintAreaBase::getCenterPoint() const
 
 void TupPaintAreaBase::scaleView(qreal scaleFactor)
 {
-    qreal factor = matrix().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)).width();
+    qreal factor = transform().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)).width();
     if (factor < 0.07 || factor > 100)
         return;
     scale(scaleFactor, scaleFactor);

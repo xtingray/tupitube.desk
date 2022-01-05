@@ -131,7 +131,7 @@ class TUPITUBE_EXPORT TupGradientSelector : public QAbstractSlider
       
       Qt::Orientation orientation() const
       {   
-         return _orientation; 
+         return m_orientation;
       }
 
       QRect contentsRect() const;
@@ -143,8 +143,7 @@ class TUPITUBE_EXPORT TupGradientSelector : public QAbstractSlider
 
       int value() const
       {
-         return QAbstractSlider
-            ::value();
+         return QAbstractSlider::value();
       }
 
       void setMaxArrows(int value);
@@ -194,7 +193,7 @@ class TUPITUBE_EXPORT TupGradientSelector : public QAbstractSlider
       void init();
 
    private:
-      Qt::Orientation _orientation;
+      Qt::Orientation m_orientation;
       int m_currentArrowIndex;
       QLinearGradient m_gradient;
       QList<TupGradientArrow*> m_arrows;

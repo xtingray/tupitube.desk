@@ -139,7 +139,7 @@ TupCanvas::TupCanvas(QWidget *parent, Qt::WindowFlags flags, TupGraphicsScene *g
 
     TImageButton *color = new TImageButton(QPixmap(THEME_DIR + "icons/color_palette_big.png"), 50, this, true);
     color->setToolTip(tr("Color Palette"));
-    connect(color, SIGNAL(clicked()), this, SLOT(colorDialog()));
+    connect(color, SIGNAL(clicked()), this, SLOT(showColorDialog()));
 
     TImageButton *size = new TImageButton(QPixmap(THEME_DIR + "icons/pen_properties.png"), 50, this, true);
     size->setToolTip(tr("Pen Size"));
@@ -207,7 +207,7 @@ void TupCanvas::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
-void TupCanvas::colorDialog(const QColor &current)
+void TupCanvas::openColorDialog(const QColor &current)
 {
     QColor color = QColorDialog::getColor(current, this);
     if (color.isValid()) { 
@@ -216,7 +216,7 @@ void TupCanvas::colorDialog(const QColor &current)
     }
 }
 
-void TupCanvas::colorDialog()
+void TupCanvas::showColorDialog()
 {
     QColor color = QColorDialog::getColor(currentColor, this);
     if (color.isValid())

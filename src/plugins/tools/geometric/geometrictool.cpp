@@ -353,6 +353,11 @@ QMap<TAction::ActionId, TAction *> GeometricTool::actions() const
     return geoActions;
 }
 
+TAction * GeometricTool::getAction(TAction::ActionId toolId)
+{
+    return geoActions[toolId];
+}
+
 int GeometricTool::toolType() const
 {
     return Brush;

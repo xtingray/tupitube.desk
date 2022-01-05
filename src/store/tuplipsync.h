@@ -45,24 +45,57 @@
 #include <QTextStream>
 #include <QMap>
 
+class TUPITUBE_EXPORT TupTransformation : public QObject, public TupAbstractSerializable
+{
+    public:
+        TupTransformation();
+        TupTransformation(const QDomElement &doc);
+        ~TupTransformation();
+
+        void setTransformationDom(const QDomElement &e);
+        QDomElement getTransformationDom() const;
+
+        struct Parameters
+        {
+            QPointF pos = QPointF(0, 0);
+            int rotationAngle = 0;
+            QPointF scaleFactor = QPointF(1, 1);
+        };
+
+        TupTransformation::Parameters getTransformationParams();
+        QPointF getPosition();
+        int getRotationAngle();
+        QPointF getScaleFactor();
+
+        virtual void fromXml(const QString &xml);
+        virtual QDomElement toXml(QDomDocument &doc) const;
+
+    private:
+        QDomElement transDom;
+        Parameters transStructure;
+};
+
 class TUPITUBE_EXPORT TupPhoneme : public QObject, public TupAbstractSerializable
 {
     public:
         TupPhoneme();
-        TupPhoneme(const QString &value, QPointF point);
+        TupPhoneme(const QString &value, const QDomElement &doc);
         ~TupPhoneme();
 
         void setValue(const QString &value);
         QString value() const;
-        void setPos(QPointF point);
-        QPointF position();
+
+        void setTransformationDom(const QDomElement &doc);
+        TupTransformation getTransformation();
+        QDomElement getTransformationDom() const;
+        TupTransformation::Parameters getTransformationParams() const;
 
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
 
     private:
         QString phoneme;
-        QPointF pos;
+        TupTransformation *transformation;
 };
 
 class TUPITUBE_EXPORT TupWord : public QObject, public TupAbstractSerializable
@@ -78,7 +111,14 @@ class TUPITUBE_EXPORT TupWord : public QObject, public TupAbstractSerializable
         int endFrame();
         void addPhoneme(TupPhoneme *phoneme);
         QList<TupPhoneme *> phonemesList();
+        bool hasPhonemes();
+        TupPhoneme * firstPhoneme();
+        TupPhoneme * phonemeAt(int frame);
+        TupPhoneme * lastPhoneme();
         bool contains(int frame);
+
+        QDomElement getTransformationDom(int frame);
+        TupTransformation::Parameters getTransformationParams(int frame);
 
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
@@ -104,7 +144,11 @@ class TUPITUBE_EXPORT TupPhrase : public QObject, public TupAbstractSerializable
         void addWord(TupWord *word);
         void insertWord(int index, TupWord *word);
         QList<TupWord *> wordsList();
+        TupWord * wordAt(int index);
         bool contains(int frame);
+
+        QDomElement getTransformationDom(int frame);
+        TupTransformation::Parameters getTransformationParams(int frame);
 
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
@@ -119,20 +163,25 @@ class TUPITUBE_EXPORT TupVoice : public QObject, public TupAbstractSerializable
 {
     public:
         TupVoice();
-        TupVoice(const QString &label, QPointF pos);
+        TupVoice(const QString &label);
         ~TupVoice();
 
         void setVoiceTitle(const QString &label);
         QString voiceTitle() const;
-        void setMouthPos(QPointF pos);
-        void updateMouthPos(QPointF pos, int frame);
-        QPointF mouthPos();
+
+        QDomElement setDefaultTransformation(int x, int yl);
+        QDomElement getDefaultTransformation() const;
+
+        QDomElement getTransformationDomAt(int frame) const;
+        TupTransformation::Parameters getTransformationParamsAt(int frame) const;
+        void updateMouthTransformation(const QDomElement &doc, int frame);
+
         void setText(const QString &content);
         QString text() const;
         int initFrame();
         int endFrame();
-        void addPhrase(TupPhrase *phrase);
-        QList<TupPhrase *> getPhrases();
+        void setPhrase(TupPhrase *phrase);
+        TupPhrase * getPhrase();
         TupPhoneme * getPhonemeAt(int frame);
         bool contains(int frame);
 
@@ -141,11 +190,11 @@ class TUPITUBE_EXPORT TupVoice : public QObject, public TupAbstractSerializable
 
     private:
         QString title;
-        QPointF point;
+        QDomElement transformation;
         QString script;
         int initIndex;
         int endIndex;
-        QList<TupPhrase *> phrases;
+        TupPhrase *phrase;
 };
 
 class TUPITUBE_EXPORT TupLipSync : public QObject, public TupAbstractSerializable
@@ -163,17 +212,16 @@ class TUPITUBE_EXPORT TupLipSync : public QObject, public TupAbstractSerializabl
         bool hasNativeMouths();
         QString getSoundFile() const;
         void setSoundFile(const QString &file);
-        int getFPS();
-        void setFPS(int speed);
         int getInitFrame();
         void setInitFrame(int frame);
-        int getFramesCount();
-        void setFramesCount(int getFramesCount);
+        int getFramesTotal();
+        void setFramesTotal(int total);
 
-        void addVoice(TupVoice *voice);
-        TupVoice *voiceAt(int index);
-        QList<TupVoice *> getVoices();
-        void updateMouthPos(int mouthIndex, QPointF point, int frame);
+        void setVoice(TupVoice *voice);
+        TupVoice * getVoice();
+
+        void updateMouthTransformation(const QDomElement &doc, int frame);
+
         void verifyStructure();
         QString toString() const;
 
@@ -184,10 +232,9 @@ class TUPITUBE_EXPORT TupLipSync : public QObject, public TupAbstractSerializabl
         QString lipSyncName;
         QString soundFile;
         QString extension;
-        int fps;
         int initFrame;
-        int framesCount;
-        QList<TupVoice *> voices;
+        int framesTotal;
+        TupVoice *voice;
 };
 
 #endif

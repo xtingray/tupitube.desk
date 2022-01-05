@@ -2,11 +2,13 @@ QT += xml opengl svg
 
 INCLUDEPATH += ../plugins/tools/common
 
+MICMANAGER_DIR = ../components/micmanager
 MYPAINT_DIR = ../mypaint
 LIBCOLOR_DIR = ../libcolor
 COLORPALETTE_DIR = ../components/colorpalette
 PLAYER_DIR = ../components/player
 WORKSPACE_DIR = ../components/workspace
+PAPAGAYO_DIR = ../components/papagayo
 BRUSH_DIR = ../components/brush
 # KINAS_DIR = ../components/kinas 
 IMPORT_DIR = ../components/import 
@@ -20,12 +22,14 @@ LIBUI_DIR = ../libui
 STORE_DIR = ../store 
 LIBTUPI_DIR = ../libtupi
 LIBBASE_DIR = ../libbase
-NET_DIR = ../net
+# NET_DIR = ../net
 
+include($$MICMANAGER_DIR/micmanager.pri)
 include($$MYPAINT_DIR/mypaint.pri)
 include($$LIBCOLOR_DIR/libcolor.pri)
 include($$COLORPALETTE_DIR/colorpalette.pri)
 include($$WORKSPACE_DIR/workspace.pri)
+include($$PAPAGAYO_DIR/papagayo.pri)
 include($$PLAYER_DIR/player.pri)
 include($$BRUSH_DIR/brush.pri)
 # include($$KINAS_DIR/kinas.pri)
@@ -40,4 +44,4 @@ include($$LIBUI_DIR/libui.pri)
 include($$STORE_DIR/store.pri)
 include($$LIBTUPI_DIR/libtupi.pri)
 include($$LIBBASE_DIR/libbase.pri)
-include($$NET_DIR/net.pri)
+# include($$NET_DIR/net.pri)

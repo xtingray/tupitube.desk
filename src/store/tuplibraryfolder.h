@@ -63,7 +63,10 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
     public:
         TupLibraryFolder(const QString &id, TupProject *getProject, QObject *parent = nullptr);
         ~TupLibraryFolder();
-        
+
+        QString getImagesFolderPath() const;
+        QString getAudioFolderPath() const;
+
         void setId(const QString &id);
         QString getId() const;
         
@@ -90,6 +93,7 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
         bool exists(const QString &id);
         
         TupLibraryObject *getObject(const QString &id) const;
+        QString getObjectPath(const QString &objectKey) const;
         
         Folders getFolders() const;
         LibraryObjects getObjects() const;

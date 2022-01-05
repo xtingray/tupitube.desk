@@ -128,7 +128,7 @@ void TupConfigurationArea::shrink()
 
     QMouseEvent press(QEvent::MouseButtonPress,
                       mapToParent( QPoint(this->x(), this->y()))/2 + QPoint(wOffset, hOffset),
-                      Qt::LeftButton, 0, 0);
+                      Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
 
     if (! QApplication::sendEvent(mainWindow, &press))
         qWarning("Fail pressing");
@@ -178,7 +178,7 @@ void TupConfigurationArea::shrink()
     QMouseEvent move(QEvent::MouseMove,
                      QPoint(x1, y1),
                      QPoint(x2, y2),
-                     Qt::LeftButton, 0, 0);
+                     Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
 
     if (! QApplication::sendEvent(mainWindow, &move)) {
         #ifdef TUP_DEBUG
@@ -190,7 +190,7 @@ void TupConfigurationArea::shrink()
 
     QMouseEvent release(QEvent::MouseButtonRelease,
                         QPoint(xRelease, yRelease),
-                        Qt::LeftButton, 0, 0);
+                        Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
 
     if (! QApplication::sendEvent(mainWindow, &release)) {
         #ifdef TUP_DEBUG

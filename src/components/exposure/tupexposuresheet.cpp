@@ -65,7 +65,7 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModul
     actionBar = new TupProjectActionBar(QString("Exposure"), generalActions);
 
     connect(actionBar, SIGNAL(actionSelected(int)), this, SLOT(applyAction(int)));
-    addChild(actionBar, Qt::AlignCenter);
+    addChild(actionBar, Qt::AlignHCenter);
 
     QList<TupProjectActionBar::Action> frameActions;
     frameActions << TupProjectActionBar::InsertFrame
@@ -86,7 +86,7 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModul
     TupProjectActionBar *framesBar = new TupProjectActionBar(QString("Exposure"), frameActions);
 
     connect(framesBar, SIGNAL(actionSelected(int)), this, SLOT(applyAction(int)));
-    addChild(framesBar, Qt::AlignCenter);
+    addChild(framesBar, Qt::AlignHCenter);
 
     scenesContainer = new TupExposureSceneTabWidget(this);
     connect(scenesContainer, SIGNAL(currentChanged(int)), this, SLOT(requestChangeScene(int)));
@@ -146,7 +146,7 @@ void TupExposureSheet::createMenuForAFrame()
     insertHundred->setIconVisibleInMenu(true);
     insertMenu->addAction(insertHundred);
 
-    connect(insertMenu, SIGNAL(triggered(QAction *)), this, SLOT(insertFramesFromMenu(QAction*)));
+    connect(insertMenu, SIGNAL(triggered(QAction*)), this, SLOT(insertFramesFromMenu(QAction*)));
 
     singleMenu->addMenu(insertMenu);
 
@@ -511,7 +511,7 @@ void TupExposureSheet::selectFrame(int layerIndex, int frameIndex)
         qDebug() << "[TupExposureSheet::selectFrame()] - layerIndex, frameIndex -> " << layerIndex << "," << frameIndex;
     #endif
 
-    QList<QTableWidgetItem *> list = currentTable->selectedItems();
+    // QList<QTableWidgetItem *> list = currentTable->selectedItems();
     QString selection = "";
     QList<int> coords = currentTable->currentSelection();
 
@@ -1178,7 +1178,7 @@ void TupExposureSheet::libraryResponse(TupLibraryResponse *response)
         qDebug() << "[TupExposureSheet::libraryResponse()] - symbol type -> " << response->symbolType();
     #endif
 
-    if (response->symbolType() == TupLibraryObject::Folder || response->symbolType() == TupLibraryObject::Sound)
+    if (response->symbolType() == TupLibraryObject::Folder || response->symbolType() == TupLibraryObject::Audio)
         return;
 
     switch (response->getAction()) {

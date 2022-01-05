@@ -50,18 +50,19 @@ begin
        puts <<_EOH_
 Use: ./configure [options]
   options:
-  --help:               Show this message
-  --prefix=[path]:      Sets installation path [/usr]
-  --bindir=[path]:      Set binaries path [/usr/bin]
-  --libdir=[path]:      Set library path [/usr/lib/tupitube | /usr/lib64/tupitube]
-  --sharedir=[path]:    Set data path [/usr/share]
-  --with-ffmpeg=[path]: Set ffmpeg installation path [/usr]
-  --with-quazip=[path]: Set quazip installation path [/usr]
-  --without-ffmpeg:     Disable ffmpeg support
-  --without-debug:      Disable debug
-  --with-qtdir=[path]:  Set Qt directory [i.e. /usr/local/qt]
-  --package-build:      Option exclusive for package maintainers
-  --install-headers:    Include header files as part of installation
+  --help:                   Show this message
+  --prefix=[path]:          Sets installation path [/usr]
+  --bindir=[path]:          Set binaries path [/usr/bin]
+  --libdir=[path]:          Set library path [/usr/lib/tupitube | /usr/lib64/tupitube]
+  --sharedir=[path]:        Set data path [/usr/share]
+  --with-ffmpeg=[path]:     Set ffmpeg installation path [/usr]
+  --with-quazip=[path]:     Set quazip installation path [/usr]
+  --with-libsndfile=[path]: Set libsndfile installation path [/usr]
+  --without-ffmpeg:         Disable ffmpeg support
+  --without-debug:          Disable debug
+  --with-qtdir=[path]:      Set Qt directory [i.e. /usr/local/qt]
+  --package-build:          Option exclusive for package maintainers
+  --install-headers:        Include header files as part of installation
 _EOH_
         exit 0
     end
@@ -73,6 +74,12 @@ _EOH_
 
     config = RQonf::Config.new
 
+    version = "0.2"
+    codeName = "Aiyra"
+    revision = "19"
+    configVersion = "3"
+
+    Info.info << "Compiling \033[91mTupiTube " +  version + "." + revision + "\033[0m (" +  codeName + ")" << $endl
     Info.info << "Debug support... "
 
     file_name = 'src/components/components.pro'
@@ -107,9 +114,9 @@ _EOH_
 
     if conf.hasArgument?("with-qtdir")
        qtdir = conf.argumentValue("with-qtdir")
-       conf.verifyQtVersion("5.13.0", debug, qtdir)
+       conf.verifyQtVersion("5.15.0", debug, qtdir)
     else
-       conf.verifyQtVersion("5.13.0", debug, "")
+       conf.verifyQtVersion("5.15.0", debug, "")
     end
 
     if conf.hasArgument?("with-ffmpeg")
@@ -143,6 +150,19 @@ _EOH_
        end
     end
 
+    if conf.hasArgument?("with-libsndfile")
+       libsndfileDir = conf.argumentValue("with-libsndfile")
+       if File.directory? libsndfileDir
+          libsndfileLib = libsndfileDir + "/lib"
+          libsndfileInclude = libsndfileDir + "/include"
+          config.addLib("-L" + libsndfileLib)
+          config.addIncludePath(libsndfileInclude)
+       else
+          Info.error << " ERROR: libsndfile directory does not exist!\n"
+          exit 0
+       end
+    end
+
     conf.createTests
     conf.setTestDir("configure.tests")
     conf.runTests(config, conf, debug)
@@ -161,10 +181,10 @@ _EOH_
        config.addDefine("ADD_HEADERS");
     end
 
-    config.addDefine('TUPITUBE_VERSION=\\\\\"0.2\\\\\"')
-    config.addDefine('CODE_NAME=\\\\\"Quati\\\\\"')
-    config.addDefine('REVISION=\\\\\"18\\\\\"')
-    config.addDefine('CONFIG_VERSION=\\\\\"3\\\\\"')
+    config.addDefine('TUPITUBE_VERSION=\\\\\"' + version + '\\\\\"')
+    config.addDefine('CODE_NAME=\\\\\"' + codeName + '\\\\\"')
+    config.addDefine('REVISION=\\\\\"' + revision + '\\\\\"')
+    config.addDefine('CONFIG_VERSION=\\\\\"' + configVersion + '\\\\\"')
 
     if File.exists?('/etc/canaima_version')
        config.addDefine("CANAIMA")

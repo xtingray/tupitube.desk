@@ -48,7 +48,7 @@ class TUPITUBE_PLUGIN NodeManager : public QObject
     Q_OBJECT
 
     public:
-        NodeManager(QGraphicsItem *parent, QGraphicsScene *scene, int zValue);
+        NodeManager(Node::Context context, QGraphicsItem *parent, QGraphicsScene *scene, int zValue);
         ~NodeManager();
 
         void syncNodes(const QRectF &rect);
@@ -85,8 +85,10 @@ class TUPITUBE_PLUGIN NodeManager : public QObject
         void resizeNodes(qreal factor);
 
     signals:
+        void positionUpdated(const QPointF &point);
         void rotationUpdated(int angle);
         void scaleUpdated(double x, double y);
+        void transformationUpdated();
 
     private:
         QHash<Node::NodeType, Node *> nodes;
