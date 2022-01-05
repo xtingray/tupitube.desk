@@ -391,7 +391,7 @@ void TupMainWindow::setupFileActions()
     m_actionManager->insert(importPalette, "importGimpPalettes", "file");
 
     TAction *importPapagayo = new TAction(QPixmap(THEME_DIR + "icons/papagayo.png"), tr("&Import Papagayo Lip-sync"),
-                                         QKeySequence(tr("Alt+P")), this, SLOT(importPapagayoLipSync()), m_actionManager);
+                                         QKeySequence(tr("Ctrl+Shift+P")), this, SLOT(importPapagayoLipSync()), m_actionManager);
     importPapagayo->setStatusTip(tr("Import Papagayo lip-sync"));
     m_actionManager->insert(importPapagayo, "importPapagayoLipSync", "file");
 

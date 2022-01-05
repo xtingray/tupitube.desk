@@ -94,7 +94,7 @@ class TUPITUBE_PLUGIN PapagayoSettings : public QWidget
         void notifyXScale(double factor);
         void notifyYScale(double factor);
         void enableProportion(int flag);
-        void resetTransformations();
+        // void resetTransformations();
 
     private:
         void setInnerForm();

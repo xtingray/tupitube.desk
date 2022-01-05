@@ -68,7 +68,7 @@ int TAlgorithm::random()
         QString day = QDate::currentDate().toString("d");
         QString time = QTime::currentTime().toString("mmzzz");
         QString number = day + time;
-        if (day % 2 == 0)
+        if (day.toInt() % 2 == 0)
             number = time + day;
 
         int aux = number.toInt();
