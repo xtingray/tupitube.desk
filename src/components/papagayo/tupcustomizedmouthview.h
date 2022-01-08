@@ -28,7 +28,7 @@ class TUPITUBE_EXPORT TupCustomizedMouthView : public QWidget
     Q_OBJECT
 
     public:
-        explicit TupCustomizedMouthView(QWidget *parent = nullptr);
+        explicit TupCustomizedMouthView(TupLipsyncDictionary *lipsyncDictionary, QWidget *parent = nullptr);
         ~TupCustomizedMouthView();
 
         void setDocument(TupLipsyncDoc *doc);
@@ -48,6 +48,8 @@ class TUPITUBE_EXPORT TupCustomizedMouthView : public QWidget
         QHash<QString, QImage *> mouths;
         bool assetsLoaded;
         QString imagesPath;
+
+        TupLipsyncDictionary *dictionary;
 };
 
 #endif // TUPCUSTOMIZEDMOUTHVIEW_H

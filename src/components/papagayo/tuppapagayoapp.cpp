@@ -48,10 +48,10 @@ TupPapagayoApp::TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, c
         qDebug() << "[TupPapagayoApp::TupPapagayoApp()]";
     #endif
 
-    /*
     this->mode = mode;
     tupProject = project;
-    document = nullptr;
+    document = new TupLipsyncDoc;
+    dictionary = document->getDictionary();
     enableAutoBreakdown = true;
     defaultFps = project->getFPS();
     playerStopped = true;
@@ -64,7 +64,6 @@ TupPapagayoApp::TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, c
     frameIndex = indexes.at(2);
 
     setUICore(soundFilePath);
-    */
 }
 
 TupPapagayoApp::TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, TupLipSync *lipsync, QList<int> indexes,
@@ -76,10 +75,10 @@ TupPapagayoApp::TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, T
 
     Q_UNUSED(lipsync)
 
-    /*
     this->mode = mode;
     tupProject = project;
-    document = nullptr;
+    document = new TupLipsyncDoc;
+    dictionary = document->getDictionary();
     enableAutoBreakdown = true;
     defaultFps = project->getFPS();
     playerStopped = true;
@@ -103,12 +102,10 @@ TupPapagayoApp::TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, T
     frameIndex = indexes.at(2);
 
     setUICore(pgoFilePath);
-    */
 }
 
 TupPapagayoApp::~TupPapagayoApp()
 {
-    /*
     if (document)
         delete document;
 
@@ -117,10 +114,8 @@ TupPapagayoApp::~TupPapagayoApp()
 
     if (mouthView)
         delete mouthView;
-    */
 }
 
-/*
 void TupPapagayoApp::setUICore(const QString &filePath)
 {
     setUIStyle();
@@ -281,7 +276,7 @@ void TupPapagayoApp::setupUI()
     mouthsPath = new QLineEdit("");
     mouthsPath->setReadOnly(true);
 
-    mouthView = new TupMouthView(mouthFrame);
+    mouthView = new TupMouthView(dictionary, mouthFrame);
     viewSizePolicy.setHeightForWidth(mouthView->sizePolicy().hasHeightForWidth());
     mouthView->setSizePolicy(viewSizePolicy);
     mouthView->setMinimumSize(QSize(280, 200));
@@ -292,7 +287,7 @@ void TupPapagayoApp::setupUI()
 
     mouthFrame->addWidget(mouthView);
 
-    customView = new TupCustomizedMouthView;
+    customView = new TupCustomizedMouthView(dictionary);
     viewSizePolicy.setHeightForWidth(customView->sizePolicy().hasHeightForWidth());
     customView->setSizePolicy(viewSizePolicy);
     customView->setMinimumSize(QSize(280, 200));
@@ -459,12 +454,14 @@ void TupPapagayoApp::openFile(QString filePath)
         qDebug() << "[TupPapagayoApp::openFile()] - filePath -> " << filePath;
     #endif
 
+    /*
     if (document) {
         delete document;
         document = nullptr;
     }
-
     document = new TupLipsyncDoc;
+    */
+
     QFileInfo info(filePath);
     if (info.suffix().toLower() == "pgo") {
         document->openPGOFile(filePath, soundFilePath, defaultFps);
@@ -894,7 +891,7 @@ void TupPapagayoApp::runBreakdownAction() // English generator
         return;
     }
 
-    TupLipsyncDoc::loadDictionaries();
+    // TupLipsyncDoc::loadDictionaries();
     document->setModifiedFlag(true);
     document->runBreakdown("EN", calculateDuration());
 
@@ -1065,8 +1062,9 @@ void TupPapagayoApp::openImagesDialog()
                 QString firstImage = imagesList.at(0);
                 int dot = firstImage.lastIndexOf(".");
                 QString extension = firstImage.mid(dot);
-                for (int32 i = 0; i < TupLipsyncDoc::phonemesListSize(); i++) {
-                    QString image = TupLipsyncDoc::getPhonemeAt(i) + extension;
+                // for (int32 i = 0; i < TupLipsyncDoc::phonemesListSize(); i++) {
+                for (int32 i = 0; i < dictionary->phonemesListSize(); i++) {
+                    QString image = dictionary->getPhonemeAt(i) + extension;
                     QString path = dirPath + "/" + image;
                     if (!QFile::exists(path)) {
                         TOsd::self()->display(TOsd::Error, tr("Mouth image is missing!"));
@@ -1452,4 +1450,3 @@ void TupPapagayoApp::callUpdateProcedure()
 
     QApplication::restoreOverrideCursor();
 }
-*/

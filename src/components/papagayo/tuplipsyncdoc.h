@@ -26,6 +26,31 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+class TupLipsyncDictionary : public QObject
+{
+    Q_OBJECT
+
+    public:
+        TupLipsyncDictionary();
+        ~TupLipsyncDictionary();
+
+        QString getPhonemeFromDictionary(const QString &key, const QString &defaultValue);
+        QStringList getDictionaryValue(const QString &key);
+
+        int phonemesListSize();
+        QString getPhonemeAt(int index);
+
+    private:
+        void loadDictionaries();
+        void loadDictionary(QFile *file);
+
+        QList<QString> phonemesList;
+        QHash<QString, QString> dictionaryToPhonemeMap;
+        QHash<QString, QStringList> phonemeDictionary;
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class LipsyncPhoneme
 {
     public:
@@ -56,7 +81,7 @@ class LipsyncWord
         LipsyncWord();
         ~LipsyncWord();
 
-        void runBreakdown(const QString &language);
+        void runBreakdown(const QString &language, TupLipsyncDictionary *lipsyncDictionary);
         void repositionPhoneme(LipsyncPhoneme *phoneme);
 
         void setText(const QString string);
@@ -97,7 +122,7 @@ class LipsyncPhrase
         LipsyncPhrase();
         ~LipsyncPhrase();
 
-        void runBreakdown(QString language);
+        void runBreakdown(QString language, TupLipsyncDictionary *lipsyncDictionary);
         void repositionWord(LipsyncWord *word);
 
         void setText(const QString string);
@@ -140,7 +165,7 @@ class LipsyncVoice
 
         void open(QTextStream &in);
         void save(QTextStream &out);
-        void runBreakdown(QString language, int32 audioDuration);
+        void runBreakdown(QString language, TupLipsyncDictionary *lipsyncDictionary, int32 audioDuration);
         void repositionPhrase(LipsyncPhrase *phrase, int32 audioDuration);
         QString getPhonemeAtFrame(int32 frame);
 
@@ -175,8 +200,9 @@ class TupLipsyncDoc : public QObject
         ~TupLipsyncDoc();
 
         // static void loadDictionaries();
-        void loadDictionaries();
+        // void loadDictionaries();
 
+        TupLipsyncDictionary * getDictionary();
         void openPGOFile(const QString &pgoPath, const QString &audioPath, int fps);
         void openAudioFile(const QString &audioPath);
         bool save();
@@ -230,7 +256,7 @@ class TupLipsyncDoc : public QObject
 
     private:
         // static void loadDictionary(QFile *file);
-		void loadDictionary(QFile *file);
+        // void loadDictionary(QFile *file);
 
         int32 fps;
         int32 audioDuration;
@@ -239,13 +265,15 @@ class TupLipsyncDoc : public QObject
         TupAudioExtractor *audioExtractor;
         real maxAmplitude;
 
-        QList<QString> phonemesList;
-        QHash<QString, QString> dictionaryToPhonemeMap;
-        QHash<QString, QStringList> phonemeDictionary;
+        // QList<QString> phonemesList;
+        // QHash<QString, QString> dictionaryToPhonemeMap;
+        // QHash<QString, QStringList> phonemeDictionary;
 
         QString pgoFilePath;
         bool projectHasChanged;
         LipsyncVoice * voice;
+
+        TupLipsyncDictionary *lipsyncDictionary;
         // SQA: Consider to use a QAudioDecoder object, but it doesn't seem to actually be implemented (at least on Mac).
 };
 

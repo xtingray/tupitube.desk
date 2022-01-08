@@ -17,7 +17,7 @@
 #include "tupmouthview.h"
 #include <QPainter>
 
-TupMouthView::TupMouthView(QWidget *parent) : QWidget(parent)
+TupMouthView::TupMouthView(TupLipsyncDictionary *dictionary, QWidget *parent) : QWidget(parent)
 {
     document = nullptr;
     mouthID = 0;
@@ -36,12 +36,12 @@ TupMouthView::TupMouthView(QWidget *parent) : QWidget(parent)
             qDebug() << "[TupMouthView()] - basePath -> " << basePath;
         #endif
         mouthsPath << basePath;
-        // for (int32 i = 0; i < TupLipsyncDoc::phonemesListSize(); i++) {
-        for (int32 i = 0; i < 10; i++) {
+        for (int32 i = 0; i < dictionary->phonemesListSize(); i++) {
+        // for (int32 i = 0; i < 10; i++) {
             // QString path = basePath + TupLipsyncDoc::getPhonemeAt(i) + ".png";
-			QString path = basePath + "etc" + ".png";
-            // mouths[mouth].insert(TupLipsyncDoc::getPhonemeAt(i), new QImage(path));
-			mouths[mouth].insert("etc", new QImage(path));
+            QString path = basePath + dictionary->getPhonemeAt(i) + ".png";
+            mouths[mouth].insert(dictionary->getPhonemeAt(i), new QImage(path));
+            // mouths[mouth].insert("etc", new QImage(path));
         }
 	}
 

@@ -19,12 +19,13 @@
 
 #include <QPainter>
 
-TupCustomizedMouthView::TupCustomizedMouthView(QWidget *parent) : QWidget(parent)
+TupCustomizedMouthView::TupCustomizedMouthView(TupLipsyncDictionary *lipsyncDictionary, QWidget *parent) : QWidget(parent)
 {
     document = nullptr;
     frame = 0;
     assetsLoaded = false;
     imagesPath = "";
+    dictionary = lipsyncDictionary;
 
 	// TupLipsyncDoc::loadDictionaries();
 }
@@ -57,13 +58,13 @@ void TupCustomizedMouthView::loadImages(const QString &folderPath)
             int dot = firstImage.lastIndexOf(".");
             QString extension = firstImage.mid(dot);
 
-            // for (int32 i = 0; i < TupLipsyncDoc::phonemesListSize(); i++) {
-		    for (int32 i = 0; i < 10; i++) {
+            for (int32 i = 0; i < dictionary->phonemesListSize(); i++) {
+            // for (int32 i = 0; i < 10; i++) {
                 // QString path = folderPath + "/" + TupLipsyncDoc::getPhonemeAt(i) + extension;
-				QString path = folderPath + "/" + "etc" + extension;
+                QString path = folderPath + "/" + dictionary->getPhonemeAt(i) + extension;
                 if (QFile::exists(path)) {
                     // mouths.insert(TupLipsyncDoc::getPhonemeAt(i), new QImage(path));
-					mouths.insert("etc", new QImage(path));
+                    mouths.insert(dictionary->getPhonemeAt(i), new QImage(path));
                 } else {
                     TOsd::self()->display(TOsd::Error, tr("Mouth images are missing!"));
                     #ifdef TUP_DEBUG

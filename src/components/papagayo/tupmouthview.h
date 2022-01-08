@@ -28,7 +28,7 @@ class TUPITUBE_EXPORT TupMouthView : public QWidget
 	Q_OBJECT
 
     public:
-        explicit TupMouthView(QWidget *parent = nullptr);
+        explicit TupMouthView(TupLipsyncDictionary *dictionary, QWidget *parent = nullptr);
         ~TupMouthView();
 
         void setDocument(TupLipsyncDoc *doc);

@@ -53,7 +53,6 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
 
         ~TupPapagayoApp();
 
-    /*
     public:
         void openFile(QString filePath);
 
@@ -62,11 +61,11 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         void dragEnterEvent(QDragEnterEvent *event);
         void dropEvent(QDropEvent *event);
         void keyPressEvent(QKeyEvent *event);
-    */
+
     signals:
         void requestTriggered(const TupProjectRequest *request);
-    /*
-	public slots:
+
+    public slots:
         void updateActions();
 
     private slots:
@@ -150,7 +149,8 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         int sceneIndex;
         int layerIndex;
         int frameIndex;
-        */
+
+        TupLipsyncDictionary *dictionary;
 };
 
 #endif // TUPPAPAGAYOAPP_H
