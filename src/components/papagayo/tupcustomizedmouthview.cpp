@@ -14,11 +14,10 @@
 *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
 ***************************************************************************/
 
-#include <QPainter>
-
 #include "tupcustomizedmouthview.h"
-#include "tapplicationproperties.h"
 #include "tosd.h"
+
+#include <QPainter>
 
 TupCustomizedMouthView::TupCustomizedMouthView(QWidget *parent) : QWidget(parent)
 {
@@ -27,7 +26,7 @@ TupCustomizedMouthView::TupCustomizedMouthView(QWidget *parent) : QWidget(parent
     assetsLoaded = false;
     imagesPath = "";
 
-	TupLipsyncDoc::loadDictionaries();
+	// TupLipsyncDoc::loadDictionaries();
 }
 
 TupCustomizedMouthView::~TupCustomizedMouthView()
@@ -58,10 +57,13 @@ void TupCustomizedMouthView::loadImages(const QString &folderPath)
             int dot = firstImage.lastIndexOf(".");
             QString extension = firstImage.mid(dot);
 
-            for (int32 i = 0; i < TupLipsyncDoc::phonemesListSize(); i++) {
-                QString path = folderPath + "/" + TupLipsyncDoc::getPhonemeAt(i) + extension;
+            // for (int32 i = 0; i < TupLipsyncDoc::phonemesListSize(); i++) {
+		    for (int32 i = 0; i < 10; i++) {
+                // QString path = folderPath + "/" + TupLipsyncDoc::getPhonemeAt(i) + extension;
+				QString path = folderPath + "/" + "etc" + extension;
                 if (QFile::exists(path)) {
-                    mouths.insert(TupLipsyncDoc::getPhonemeAt(i), new QImage(path));
+                    // mouths.insert(TupLipsyncDoc::getPhonemeAt(i), new QImage(path));
+					mouths.insert("etc", new QImage(path));
                 } else {
                     TOsd::self()->display(TOsd::Error, tr("Mouth images are missing!"));
                     #ifdef TUP_DEBUG

@@ -1,10 +1,10 @@
+QT += widgets multimedia
+CONFIG += dll warn_on
 TEMPLATE = lib 
 TARGET = tupmicmanager
 
 INSTALLS += target
 target.path = /lib/
-
-QT += widgets multimedia
 
 FRAMEWORK_DIR = "../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

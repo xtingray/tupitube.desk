@@ -18,6 +18,7 @@
 #define TUPWAVEFORMVIEW_H
 
 #include "tglobal.h"
+#include "tapplicationproperties.h"
 #include "tuplipsyncdoc.h"
 
 #include <QWidget>

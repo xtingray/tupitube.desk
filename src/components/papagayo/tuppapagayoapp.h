@@ -17,15 +17,8 @@
 #ifndef TUPPAPAGAYOAPP_H
 #define TUPPAPAGAYOAPP_H
 
-#include <QMainWindow>
-#include <QLineEdit>
-#include <QListWidgetItem>
-#include <QPlainTextEdit>
-#include <QComboBox>
-#include <QPushButton>
-#include <QStackedWidget>
-
 #include "tglobal.h"
+#include "tapplicationproperties.h"
 #include "tuplipsyncdoc.h"
 #include "tupwaveformview.h"
 #include "tupmouthview.h"
@@ -35,6 +28,14 @@
 #include "tupprojectrequest.h"
 #include "tuplipsync.h"
 
+#include <QMainWindow>
+#include <QLineEdit>
+#include <QListWidgetItem>
+#include <QPlainTextEdit>
+#include <QComboBox>
+#include <QPushButton>
+#include <QStackedWidget>
+
 class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
 {
 	Q_OBJECT
@@ -43,13 +44,16 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         enum Mode { Insert = 0, Update, VoiceRecorded };
         enum Language { English = 0, OtherLang };
         enum ViewType { Predefined = 0, Customized };
-        explicit TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, const QString &soundFile = QString(),
-                                QList<int> indexes = QList<int>(), QWidget *parent = nullptr);
 
-        explicit TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, TupLipSync *lipsync, QList<int> indexes,
-                                QWidget *parent = nullptr);
+        TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, const QString &soundFile = QString(),
+                       QList<int> indexes = QList<int>(), QWidget *parent = nullptr);
+
+        TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, TupLipSync *lipsync, QList<int> indexes,
+                       QWidget *parent = nullptr);
+
         ~TupPapagayoApp();
 
+    /*
     public:
         void openFile(QString filePath);
 
@@ -58,11 +62,11 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         void dragEnterEvent(QDragEnterEvent *event);
         void dropEvent(QDropEvent *event);
         void keyPressEvent(QKeyEvent *event);
-
+    */
     signals:
         void requestTriggered(const TupProjectRequest *request);
-
-    public slots:
+    /*
+	public slots:
         void updateActions();
 
     private slots:
@@ -146,6 +150,7 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         int sceneIndex;
         int layerIndex;
         int frameIndex;
+        */
 };
 
 #endif // TUPPAPAGAYOAPP_H

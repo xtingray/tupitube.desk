@@ -17,10 +17,11 @@
 #ifndef TUPCUSTOMIZEDMOUTHVIEW_H
 #define TUPCUSTOMIZEDMOUTHVIEW_H
 
-#include <QWidget>
-
 #include "tglobal.h"
+#include "tapplicationproperties.h"
 #include "tuplipsyncdoc.h"
+
+#include <QWidget>
 
 class TUPITUBE_EXPORT TupCustomizedMouthView : public QWidget
 {

@@ -18,6 +18,7 @@
 #define TUPAUDIOEXTRACTOR_H
 
 #include "tglobal.h"
+#include "tapplicationproperties.h"
 #include "tuppg_config.h"
 #include "sndfile.h"
 
@@ -30,8 +31,11 @@
 // NOTE: If a path is already a .aiff or .wav file it is just read in directly by libsndfile.
 //
 
-class TUPITUBE_EXPORT TupAudioExtractor
+class TUPITUBE_EXPORT TupAudioExtractor : public QObject
+// class TupAudioExtractor : public QObject
 {
+    Q_OBJECT
+
     public:
         TupAudioExtractor(const char *path, bool reverse = false);
         ~TupAudioExtractor();

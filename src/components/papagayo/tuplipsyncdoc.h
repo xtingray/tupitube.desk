@@ -17,11 +17,12 @@
 #ifndef TUPLIPSYNCDOC_H
 #define TUPLIPSYNCDOC_H
 
+#include "tglobal.h"
+#include "tapplicationproperties.h"
+#include "tupaudioextractor.h"
+
 #include <QMediaPlayer>
 #include <QFile>
-
-#include "tglobal.h"
-#include "tupaudioextractor.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -165,7 +166,7 @@ class LipsyncVoice
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class TUPITUBE_EXPORT TupLipsyncDoc : public QObject
+class TupLipsyncDoc : public QObject
 {
 	Q_OBJECT
 
@@ -173,7 +174,8 @@ class TUPITUBE_EXPORT TupLipsyncDoc : public QObject
         TupLipsyncDoc();
         ~TupLipsyncDoc();
 
-        static void loadDictionaries();
+        // static void loadDictionaries();
+        void loadDictionaries();
 
         void openPGOFile(const QString &pgoPath, const QString &audioPath, int fps);
         void openAudioFile(const QString &audioPath);
@@ -204,10 +206,17 @@ class TUPITUBE_EXPORT TupLipsyncDoc : public QObject
         QString getVoiceText() const;
         QList<LipsyncWord *> getWords();
 
+        /*
         static QString getPhonemeFromDictionary(const QString &key, const QString &defaultValue);
         static QStringList getDictionaryValue(const QString &key);
         static int phonemesListSize();
         static QString getPhonemeAt(int index);
+		*/
+		QString getPhonemeFromDictionary(const QString &key, const QString &defaultValue);
+        QStringList getDictionaryValue(const QString &key);
+        int phonemesListSize();
+        QString getPhonemeAt(int index);
+		
         QString getPhonemeAtFrame(int frame) const;
         int getStartFrameFromPhrase();
         int getEndFrameFromPhrase();
@@ -220,7 +229,8 @@ class TUPITUBE_EXPORT TupLipsyncDoc : public QObject
          void clearVoice();
 
     private:
-        static void loadDictionary(QFile *file);
+        // static void loadDictionary(QFile *file);
+		void loadDictionary(QFile *file);
 
         int32 fps;
         int32 audioDuration;
@@ -229,14 +239,13 @@ class TUPITUBE_EXPORT TupLipsyncDoc : public QObject
         TupAudioExtractor *audioExtractor;
         real maxAmplitude;
 
+        QList<QString> phonemesList;
+        QHash<QString, QString> dictionaryToPhonemeMap;
+        QHash<QString, QStringList> phonemeDictionary;
+
         QString pgoFilePath;
         bool projectHasChanged;
         LipsyncVoice * voice;
-
-        static QList<QString> phonemesList;
-        static QHash<QString, QString> dictionaryToPhonemeMap;
-        static QHash<QString, QStringList> phonemeDictionary;
-
         // SQA: Consider to use a QAudioDecoder object, but it doesn't seem to actually be implemented (at least on Mac).
 };
 

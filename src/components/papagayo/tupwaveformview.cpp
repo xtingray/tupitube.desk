@@ -14,13 +14,13 @@
 *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
 ***************************************************************************/
 
-#include <QPainter>
-#include <QScrollArea>
-#include <QScrollBar>
-
 #include "tupwaveformview.h"
 #include "tupbreakdowndialog.h"
 #include "tosd.h"
+
+#include <QPainter>
+#include <QScrollArea>
+#include <QScrollBar>
 
 #define DEFAULT_SAMPLE_WIDTH 4
 #define DEFAULT_SAMPLES_PER_FRAME 2

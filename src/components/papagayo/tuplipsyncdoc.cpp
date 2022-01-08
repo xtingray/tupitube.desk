@@ -14,12 +14,11 @@
 *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
 ***************************************************************************/
 
+#include "tuplipsyncdoc.h"
+
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
-
-#include "tuplipsyncdoc.h"
-#include "tapplicationproperties.h"
 
 LipsyncPhoneme::LipsyncPhoneme()
 {
@@ -99,14 +98,16 @@ void LipsyncWord::runBreakdown(const QString &lang)
     msg.remove(QRegExp("[.,!?;-/()¿]"));
 	QStringList	pronunciation;
     if (lang == "EN") {
-        pronunciation = TupLipsyncDoc::getDictionaryValue(msg.toUpper());
+        // pronunciation = TupLipsyncDoc::getDictionaryValue(msg.toUpper());
+		pronunciation << "";
         if (pronunciation.size() > 1) {
             for (int32 i = 1; i < pronunciation.size(); i++) {
 				QString p = pronunciation.at(i);
 				if (p.length() == 0)
 					continue;
 				LipsyncPhoneme *phoneme = new LipsyncPhoneme;
-                phoneme->setText(TupLipsyncDoc::getPhonemeFromDictionary(p, "etc"));
+                // phoneme->setText(TupLipsyncDoc::getPhonemeFromDictionary(p, "etc"));
+				phoneme->setText("etc");
                 phonemes << phoneme;
 			}
 		}
@@ -753,10 +754,6 @@ void LipsyncVoice::clearPhrase()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-QList<QString> TupLipsyncDoc::phonemesList;
-QHash<QString, QString> TupLipsyncDoc::dictionaryToPhonemeMap;
-QHash<QString, QStringList>	TupLipsyncDoc::phonemeDictionary;
 
 TupLipsyncDoc::TupLipsyncDoc()
 {

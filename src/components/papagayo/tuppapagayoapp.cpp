@@ -48,6 +48,7 @@ TupPapagayoApp::TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, c
         qDebug() << "[TupPapagayoApp::TupPapagayoApp()]";
     #endif
 
+    /*
     this->mode = mode;
     tupProject = project;
     document = nullptr;
@@ -63,6 +64,7 @@ TupPapagayoApp::TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, c
     frameIndex = indexes.at(2);
 
     setUICore(soundFilePath);
+    */
 }
 
 TupPapagayoApp::TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, TupLipSync *lipsync, QList<int> indexes,
@@ -74,6 +76,7 @@ TupPapagayoApp::TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, T
 
     Q_UNUSED(lipsync)
 
+    /*
     this->mode = mode;
     tupProject = project;
     document = nullptr;
@@ -100,10 +103,12 @@ TupPapagayoApp::TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, T
     frameIndex = indexes.at(2);
 
     setUICore(pgoFilePath);
+    */
 }
 
 TupPapagayoApp::~TupPapagayoApp()
 {
+    /*
     if (document)
         delete document;
 
@@ -112,8 +117,10 @@ TupPapagayoApp::~TupPapagayoApp()
 
     if (mouthView)
         delete mouthView;
+    */
 }
 
+/*
 void TupPapagayoApp::setUICore(const QString &filePath)
 {
     setUIStyle();
@@ -1230,14 +1237,14 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                 QString key = fileName.toLower();
                                 QString imagePath = currentMouthPath + fileName;
                                 QFile imageFile(imagePath);
-                                /*
+
                                 #ifdef TUP_DEBUG
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - mouth image -> " << fileName;
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - key -> " << key;
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - mouthPath -> " << currentMouthPath;
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - imagePath -> " << imagePath;
                                 #endif
-                                */
+
                                 // Importing image into Library
                                 if (imageFile.open(QIODevice::ReadOnly)) {
                                     QByteArray data = imageFile.readAll();
@@ -1445,3 +1452,4 @@ void TupPapagayoApp::callUpdateProcedure()
 
     QApplication::restoreOverrideCursor();
 }
+*/

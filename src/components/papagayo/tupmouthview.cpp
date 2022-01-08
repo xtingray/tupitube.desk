@@ -14,10 +14,8 @@
 *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
 ***************************************************************************/
 
-#include <QPainter>
-
 #include "tupmouthview.h"
-#include "tapplicationproperties.h"
+#include <QPainter>
 
 TupMouthView::TupMouthView(QWidget *parent) : QWidget(parent)
 {
@@ -25,22 +23,25 @@ TupMouthView::TupMouthView(QWidget *parent) : QWidget(parent)
     mouthID = 0;
     frame = 0;
 
-	TupLipsyncDoc::loadDictionaries();
+	// TupLipsyncDoc::loadDictionaries();
 
     for (int32 mouth = 0; mouth < 5; mouth++) {
         #ifdef Q_OS_UNIX
             QString basePath = SHARE_DIR + "data/mouths/" + QString::number(mouth + 1) + "/";
         #else
-            QString basePath = SHARE_DIR + "mouths/" + QString::number(i) + "/";
+            QString basePath = SHARE_DIR + "mouths/" + QString::number(mouth + 1) + "/";
         #endif
 
         #ifdef TUP_DEBUG
             qDebug() << "[TupMouthView()] - basePath -> " << basePath;
         #endif
         mouthsPath << basePath;
-        for (int32 i = 0; i < TupLipsyncDoc::phonemesListSize(); i++) {
-            QString path = basePath + TupLipsyncDoc::getPhonemeAt(i) + ".png";
-            mouths[mouth].insert(TupLipsyncDoc::getPhonemeAt(i), new QImage(path));
+        // for (int32 i = 0; i < TupLipsyncDoc::phonemesListSize(); i++) {
+        for (int32 i = 0; i < 10; i++) {
+            // QString path = basePath + TupLipsyncDoc::getPhonemeAt(i) + ".png";
+			QString path = basePath + "etc" + ".png";
+            // mouths[mouth].insert(TupLipsyncDoc::getPhonemeAt(i), new QImage(path));
+			mouths[mouth].insert("etc", new QImage(path));
         }
 	}
 
