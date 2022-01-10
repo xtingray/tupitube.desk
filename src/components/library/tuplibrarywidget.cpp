@@ -71,6 +71,55 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
 
     libraryTree = new TupItemManager;
 
+    connect(libraryTree, SIGNAL(itemSelected(QTreeWidgetItem *)), this,
+                                   SLOT(previewItem(QTreeWidgetItem *)));
+
+    connect(libraryTree, SIGNAL(itemRemoved()), this,
+                                   SLOT(removeCurrentItem()));
+
+    connect(libraryTree, SIGNAL(itemCloned(QTreeWidgetItem*)), this,
+                                   SLOT(cloneObject(QTreeWidgetItem*)));
+
+    connect(libraryTree, SIGNAL(itemExported(QTreeWidgetItem*)), this,
+                                   SLOT(exportObject(QTreeWidgetItem*)));
+
+    connect(libraryTree, SIGNAL(itemRenamed(QTreeWidgetItem*)), this,
+                                   SLOT(renameObject(QTreeWidgetItem*)));
+
+    connect(libraryTree, SIGNAL(itemChanged(QTreeWidgetItem*, int)), this,
+                                   SLOT(refreshItem(QTreeWidgetItem*)));
+
+    connect(libraryTree, SIGNAL(editorClosed()), this,
+                                   SLOT(updateItemEditionState()));
+
+    connect(libraryTree, SIGNAL(itemMoved(QString, QString)), this,
+                                   SLOT(updateLibrary(QString, QString)));
+
+    connect(libraryTree, SIGNAL(itemRequired()), this,
+                                   SLOT(insertObjectInWorkspace()));
+
+    connect(libraryTree, SIGNAL(itemCreated(QTreeWidgetItem*)), this,
+                                   SLOT(activeRefresh(QTreeWidgetItem*)));
+
+    connect(libraryTree, SIGNAL(inkscapeEditCall(QTreeWidgetItem*)), this,
+                                   SLOT(openInkscapeToEdit(QTreeWidgetItem*)));
+
+    connect(libraryTree, SIGNAL(gimpEditCall(QTreeWidgetItem*)), this,
+                                   SLOT(openGimpToEdit(QTreeWidgetItem*)));
+
+    connect(libraryTree, SIGNAL(kritaEditCall(QTreeWidgetItem*)), this,
+                                   SLOT(openKritaToEdit(QTreeWidgetItem*)));
+
+    connect(libraryTree, SIGNAL(myPaintEditCall(QTreeWidgetItem*)), this,
+                                   SLOT(openMyPaintToEdit(QTreeWidgetItem*)));
+
+    connect(libraryTree, SIGNAL(newRasterCall()), this,
+                                   SLOT(createRasterObject()));
+
+    connect(libraryTree, SIGNAL(newVectorCall()), this,
+                                   SLOT(createVectorObject()));
+
+    /* SQA: These connections don't work on Windows
     connect(libraryTree, &TupItemManager::itemSelected, this, &TupLibraryWidget::previewItem);
 
     connect(libraryTree, &TupItemManager::itemRemoved, this,
@@ -117,6 +166,7 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
 
     connect(libraryTree, &TupItemManager::newVectorCall, this,
                          &TupLibraryWidget::createVectorObject);
+    */
 
     QGroupBox *buttons = new QGroupBox;
     QHBoxLayout *buttonLayout = new QHBoxLayout(buttons);
@@ -849,10 +899,10 @@ void TupLibraryWidget::createVectorObject()
                 return;
             }
         } else {
-                #ifdef TUP_DEBUG
-                    qDebug() << "[TupLibraryWidget::createVectorObject()] - Fatal Error: Object file couldn't be saved at -> " << path;
-                #endif
-                return;
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupLibraryWidget::createVectorObject()] - Fatal Error: Object file couldn't be saved at -> " << path;
+            #endif
+            return;
         }
 
     }
@@ -1517,8 +1567,8 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                  switch (obj->getObjectType()) {
                      case TupLibraryObject::Item:
                        {
-                           if (obj->getItemType() != TupLibraryObject::Text && obj->getItemType() != TupLibraryObject::Path)
-                               nativeMap[id] = TupLibraryObject::generateImage(obj->toString(), width());
+                         if (obj->getItemType() != TupLibraryObject::Text && obj->getItemType() != TupLibraryObject::Path)
+                             nativeMap[id] = TupLibraryObject::generateImage(obj->toString(), width());
 
                          item->setIcon(0, QIcon(THEME_DIR + "icons/drawing_object.png"));
                          libraryTree->setCurrentItem(item);
@@ -1976,8 +2026,9 @@ QString TupLibraryWidget::nameForClonedItem(QString &name, QString &extension, i
 {
     QString symbolName = "";
 
-    QString base = name.left(index); 
-    int counter = name.right(index).toInt();
+    QString base = name.left(index);
+    QString right = name.right(index);
+    int counter = right.toInt();
 
     while (true) {
         counter++;
@@ -2037,7 +2088,8 @@ QString TupLibraryWidget::verifyNameAvailability(QString &name, QString &extensi
             if (itemNameEndsWithDigit(name)) {
                 int index = getItemNameIndex(name);
                 QString base = name.left(index);
-                int counter = name.right(name.length() - index).toInt(&ok);
+                QString right = name.right(name.length() - index);
+                int counter = right.toInt(&ok);
                 if (ok) {
                     while (true) {
                            counter++;
@@ -2122,8 +2174,14 @@ void TupLibraryWidget::openSearchDialog()
 {
     previousMode = currentMode;
     TupSearchDialog *dialog = new TupSearchDialog(project->getDimension());
+    connect(dialog, SIGNAL(assetStored(const QString &, TupSearchDialog::AssetType, const QString &, int, QByteArray &)), this,
+            SLOT(importAsset(const QString &, TupSearchDialog::AssetType, const QString &, int, QByteArray &)));
+    connect(dialog, SIGNAL(accepted()), this, SLOT(recoverMode()));
+
+    /* SQA: These connections don't work on Windows
     connect(dialog, &TupSearchDialog::assetStored, this, &TupLibraryWidget::importAsset);
     connect(dialog, &TupSearchDialog::accepted, this, &TupLibraryWidget::recoverMode);
+    */
     dialog->show();
 }
 

@@ -125,6 +125,20 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
 
     setCentralWidget(workspace);
 
+    connect(paintArea, SIGNAL(scaled(qreal)), this, SLOT(updateZoomVars(qreal)));
+    connect(paintArea, SIGNAL(rotated(int)), this, SLOT(updateRotationVars(int)));
+    connect(paintArea, SIGNAL(zoomIn()), this, SLOT(applyZoomIn()));
+    connect(paintArea, SIGNAL(zoomOut()), this, SLOT(applyZoomOut()));
+    connect(paintArea, SIGNAL(newPerspective(int)), this, SIGNAL(newPerspective(int)));
+    connect(paintArea, SIGNAL(eyeDropperLaunched()), this, SLOT(launchEyeDropperTool()));
+
+    connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), verticalRuler, SLOT(movePointers(const QPointF&)));
+    connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), horizontalRuler, SLOT(movePointers(const QPointF&)));
+    connect(paintArea, SIGNAL(changedZero(const QPointF&)), this, SLOT(changeRulerOrigin(const QPointF&)));
+    connect(paintArea, SIGNAL(requestTriggered(const TupProjectRequest *)), this, SIGNAL(requestTriggered(const TupProjectRequest *)));
+    connect(paintArea, SIGNAL(localRequestTriggered(const TupProjectRequest *)), this, SIGNAL(localRequestTriggered(const TupProjectRequest *)));
+
+    /* SQA: This connections don't work on Windows
     connect(paintArea, &TupPaintArea::scaled, this, &TupDocumentView::updateZoomVars);
     connect(paintArea, &TupPaintArea::rotated, this, &TupDocumentView::updateRotationVars);
     connect(paintArea, &TupPaintArea::zoomIn, this, &TupDocumentView::applyZoomIn);
@@ -137,12 +151,27 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     connect(paintArea, &TupPaintArea::changedZero, this, &TupDocumentView::changeRulerOrigin);
     connect(paintArea, &TupPaintArea::requestTriggered, this, &TupDocumentView::requestTriggered);
     connect(paintArea, &TupPaintArea::localRequestTriggered, this, &TupDocumentView::localRequestTriggered);
+    */
 
     setupDrawActions();
     createLateralToolBar();
     createToolBar();
 
     status = new TupPaintAreaStatus(TupPaintAreaStatus::Vector, contourPen(), fillBrush());
+
+    connect(status, SIGNAL(newFramePointer(int)), this, SLOT(goToFrame(int)));
+    connect(status, SIGNAL(clearFrameClicked()), this, SLOT(clearFrame()));
+    connect(status, SIGNAL(resetClicked()), this, SLOT(resetWorkSpaceTransformations()));
+    connect(status, SIGNAL(safeAreaClicked()), this, SLOT(drawActionSafeArea()));
+    connect(status, SIGNAL(gridClicked()), this, SLOT(drawGrid()));
+    connect(status, SIGNAL(angleChanged(int)), this, SLOT(setRotationAngle(int)));
+    connect(status, SIGNAL(zoomChanged(qreal)), this, SLOT(setZoomFactor(qreal)));
+    connect(status, SIGNAL(fullClicked()), this, SLOT(showFullScreen()));
+
+    connect(paintArea, SIGNAL(frameChanged(int)), status, SLOT(updateFrameIndex(int)));
+    connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), status, SLOT(showPos(const QPointF &)));
+
+    /* SQA: This connections don't work on Windows
     connect(status, &TupPaintAreaStatus::newFramePointer, this, &TupDocumentView::goToFrame);
     connect(status, &TupPaintAreaStatus::clearFrameClicked, this, &TupDocumentView::clearFrame);
     connect(status, &TupPaintAreaStatus::resetClicked, this, &TupDocumentView::resetWorkSpaceTransformations);
@@ -154,12 +183,19 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
 
     connect(paintArea, &TupPaintArea::frameChanged, status, &TupPaintAreaStatus::updateFrameIndex);
     connect(paintArea, &TupPaintArea::cursorPosition, status, &TupPaintAreaStatus::showPos);
+    */
 
     brushManager()->initBgColor(project->getBgColor());
 
+    connect(brushManager(), SIGNAL(penChanged(const QPen &)), this, SLOT(updatePen(const QPen &)));
+    connect(brushManager(), SIGNAL(brushChanged(const QBrush &)), this, SLOT(updateBrush(const QBrush &)));
+    connect(brushManager(), SIGNAL(bgColorChanged(const QColor &)), this, SLOT(updateBgColor(const QColor &)));
+
+    /* SQA: This connections don't work on Windows
     connect(brushManager(), &TupBrushManager::penChanged, this, &TupDocumentView::updatePen);
     connect(brushManager(), &TupBrushManager::brushChanged, this, &TupDocumentView::updateBrush);
     connect(brushManager(), &TupBrushManager::bgColorChanged, this, &TupDocumentView::updateBgColor);
+    */
 
     setStatusBar(status);
 
@@ -1426,11 +1462,21 @@ void TupDocumentView::openRasterMode()
 
     rasterWindow = new RasterMainWindow(project, "raster", spaceContext(), currentSceneIndex(),
                                         contourColor, zoomFactor, this);
+
+    connect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString &)));
+    connect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
+            this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
+    connect(rasterWindow, SIGNAL(rasterStrokeMade()), this, SLOT(requestRasterStroke()));
+    connect(rasterWindow, SIGNAL(canvasCleared()), this, SLOT(requestClearRasterCanvas()));
+    connect(rasterWindow, SIGNAL(libraryCall(const QString &)), this, SLOT(importImageToLibrary(const QString &)));
+
+    /* SQA: These connections don't work on Windows
     connect(rasterWindow, &RasterMainWindow::closeWindow, this, &TupDocumentView::closeRasterWindow);
     connect(rasterWindow, &RasterMainWindow::paintAreaEventTriggered, this, &TupDocumentView::paintAreaEventTriggered);
     connect(rasterWindow, &RasterMainWindow::rasterStrokeMade, this, &TupDocumentView::requestRasterStroke);
     connect(rasterWindow, &RasterMainWindow::canvasCleared, this, &TupDocumentView::requestClearRasterCanvas);
     connect(rasterWindow, &RasterMainWindow::libraryCall, this, &TupDocumentView::importImageToLibrary);
+    */
 
     rasterWindowOn = true;
     rasterWindow->showFullScreen();
@@ -1816,6 +1862,21 @@ void TupDocumentView::showFullScreen()
     nodesScaleFactor = 1;
     updateNodesScale(scaleFactor);
 
+    connect(this, SIGNAL(colorDialogRequested(const QColor &)), fullScreen, SLOT(colorDialog(const QColor &)));
+    connect(fullScreen, SIGNAL(colorChanged(TColorCell::FillType, const QColor &)),
+            this, SIGNAL(colorChanged(TColorCell::FillType, const QColor &)));
+    connect(fullScreen, SIGNAL(penWidthChangedFromFullScreen(int)), this, SIGNAL(penWidthChanged(int)));
+    connect(fullScreen, SIGNAL(onionOpacityChangedFromFullScreen(double)), this, SLOT(updateOnionOpacity(double)));
+    connect(fullScreen, SIGNAL(zoomFactorChangedFromFullScreen(qreal)), this, SLOT(updateNodesScale(qreal)));
+    connect(fullScreen, SIGNAL(callAction(int, int)), this, SLOT(loadPlugin(int, int)));
+    connect(fullScreen, SIGNAL(requestTriggered(const TupProjectRequest *)), this, SIGNAL(requestTriggered(const TupProjectRequest *)));
+    connect(fullScreen, SIGNAL(localRequestTriggered(const TupProjectRequest *)), this, SIGNAL(localRequestTriggered(const TupProjectRequest *)));
+    connect(fullScreen, SIGNAL(rightClick()), this, SLOT(fullScreenRightClick()));
+    connect(fullScreen, SIGNAL(rightClick()), this, SLOT(fullScreenRightClick()));
+    connect(fullScreen, SIGNAL(goToFrame(int, int, int)), this, SLOT(selectFrame(int, int, int)));
+    connect(fullScreen, SIGNAL(closeHugeCanvas()), this, SLOT(closeFullScreen()));
+
+    /* SQA: These connections don't work on Windows
     connect(this, &TupDocumentView::colorDialogRequested, fullScreen, &TupCanvas::openColorDialog);
     connect(fullScreen, &TupCanvas::colorChanged, this, &TupDocumentView::colorChanged);
     connect(fullScreen, &TupCanvas::penWidthChangedFromFullScreen, this, &TupDocumentView::penWidthChanged);
@@ -1827,6 +1888,7 @@ void TupDocumentView::showFullScreen()
     connect(fullScreen, &TupCanvas::rightClick, this, &TupDocumentView::fullScreenRightClick);
     connect(fullScreen, &TupCanvas::goToFrame, this, &TupDocumentView::selectFrame);
     connect(fullScreen, &TupCanvas::closeHugeCanvas, this, &TupDocumentView::closeFullScreen);
+    */
 
     if (currentTool->toolId() == TAction::ObjectSelection)
         fullScreen->enableRubberBand();
@@ -1944,10 +2006,17 @@ void TupDocumentView::storyboardSettings()
     TupStoryBoardDialog *storySettings = new TupStoryBoardDialog(isNetworked, imagePlugin, videoPlugin, project,
                                                                  currentSceneIndex(), this);
 
+    connect(storySettings, SIGNAL(updateStoryboard(TupStoryboard *, int)), this, SLOT(sendStoryboard(TupStoryboard *, int)));
+    connect(storySettings, SIGNAL(accepted()), paintArea, SLOT(updatePaintArea()));
+    connect(storySettings, SIGNAL(rejected()), paintArea, SLOT(updatePaintArea()));
+    connect(storySettings, SIGNAL(projectHasChanged()), this, SIGNAL(projectHasChanged()));
+
+    /* SQA: These connections don't work on Windows
     connect(storySettings, &TupStoryBoardDialog::updateStoryboard, this, &TupDocumentView::sendStoryboard);
     connect(storySettings, &TupStoryBoardDialog::accepted, paintArea, &TupPaintArea::updatePaintArea);
     connect(storySettings, &TupStoryBoardDialog::rejected, paintArea, &TupPaintArea::updatePaintArea);
     connect(storySettings, &TupStoryBoardDialog::projectHasChanged, this, &TupDocumentView::projectHasChanged);
+    */
 
     if (isNetworked)
         connect(storySettings, SIGNAL(postStoryboard(int)), this, SIGNAL(postStoryboard(int)));
@@ -2151,8 +2220,14 @@ void TupDocumentView::cameraInterface()
                     TupBasicCameraInterface *dialog = new TupBasicCameraInterface(resolution, cameraDevices, devicesCombo, cameraDialog->cameraIndex(), 
                                                                                   cameraSize, photoCounter);
 
+                    connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
+                    connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode()));
+
+                    /* SQA: These connections don't work on Windows
                     connect(dialog, &TupBasicCameraInterface::pictureHasBeenSelected, this, &TupDocumentView::insertPictureInFrame);
                     connect(dialog, &TupBasicCameraInterface::closed, this, &TupDocumentView::updateCameraMode);
+                    */
+
                     dialog->show();
                     dialog->move(static_cast<int> (screen->geometry().width() - dialog->width()) / 2,
                                  static_cast<int> (screen->geometry().height() - dialog->height()) / 2);
@@ -2160,8 +2235,14 @@ void TupDocumentView::cameraInterface()
                     TupCameraInterface *dialog = new TupCameraInterface(resolution, cameraDevices, devicesCombo, cameraDialog->cameraIndex(),
                                                                         cameraSize, photoCounter);
 
+                    connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
+                    connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode()));
+
+                    /* SQA: These connections don't work on Windows
                     connect(dialog, &TupCameraInterface::pictureHasBeenSelected, this, &TupDocumentView::insertPictureInFrame);
                     connect(dialog, &TupCameraInterface::closed, this, &TupDocumentView::updateCameraMode);
+                    */
+
                     dialog->show();
                     dialog->move(static_cast<int> (screen->geometry().width() - dialog->width()) / 2,
                                  static_cast<int> (screen->geometry().height() - dialog->height()) / 2);
@@ -2171,8 +2252,14 @@ void TupDocumentView::cameraInterface()
                 TupReflexInterface *dialog = new TupReflexInterface(devicesCombo->itemText(index), resolution, cameraDevices.at(index),
                                                                     cameraSize, photoCounter);
 
+                connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
+                connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode()));
+
+                /* SQA: These connections don't work on Windows
                 connect(dialog, &TupReflexInterface::pictureHasBeenSelected, this, &TupDocumentView::insertPictureInFrame);
                 connect(dialog, &TupReflexInterface::closed, this, &TupDocumentView::updateCameraMode);
+                */
+
                 dialog->show();
                 dialog->move(static_cast<int> (screen->geometry().width() - dialog->width()) / 2,
                              static_cast<int> (screen->geometry().height() - dialog->height()) / 2);
@@ -2297,7 +2384,12 @@ void TupDocumentView::openLipSyncCreator()
         papagayoAction->trigger();
 
     TupPapagayoApp *papagayoApp = new TupPapagayoApp(TupPapagayoApp::Insert, project, "", getContextIndexes(), this);
+    connect(papagayoApp, SIGNAL(requestTriggered(const TupProjectRequest *)),
+            this, SIGNAL(requestTriggered(const TupProjectRequest *)));
+
+    /* SQA: This connection doesn't work on Windows
     connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);
+    */
 
     papagayoApp->show();
     papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
@@ -2324,7 +2416,12 @@ void TupDocumentView::openLipSyncCreator(const QString &lipsyncName)
             indexes << lipsync->getInitFrame();
 
             TupPapagayoApp *papagayoApp = new TupPapagayoApp(TupPapagayoApp::Update, project, lipsync, indexes, this);
+            connect(papagayoApp, SIGNAL(requestTriggered(const TupProjectRequest *)),
+                    this, SIGNAL(requestTriggered(const TupProjectRequest *)));
+
+            /* SQA: This connection doesn't work on Windows
             connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);
+            */
 
             papagayoApp->show();
             papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),
@@ -2575,7 +2672,12 @@ void TupDocumentView::launchLipsyncModule(bool recorded, const QString &soundFil
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
         TupPapagayoApp *papagayoApp = new TupPapagayoApp(mode, project, soundFile, getContextIndexes(), this);
+        connect(papagayoApp, SIGNAL(requestTriggered(const TupProjectRequest *)),
+                this, SIGNAL(requestTriggered(const TupProjectRequest *)));
+
+        /* SQA: This connection doesn't work on Windows
         connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);
+        */
 
         papagayoApp->show();
         papagayoApp->move(static_cast<int>((screen->geometry().width() - papagayoApp->width())/2),

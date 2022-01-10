@@ -30,6 +30,7 @@ fileSystem.CreateFolder tupiDir & "\plugins"
 fileSystem.CreateFolder tupiDir & "\lib"
 fileSystem.CreateFolder tupiDir & "\lib\qt5"
 fileSystem.CreateFolder tupiDir & "\lib\ffmpeg"
+fileSystem.CreateFolder tupiDir & "\lib\libsndfile"
 REM fileSystem.CreateFolder tupiDir & "\lib\ssl"
 fileSystem.CreateFolder tupiDir & "\lib\raster"
 
@@ -47,7 +48,7 @@ fileSystem.CopyFile sourceDir & "\store\release\tupistore.dll", tupiDir & "\lib\
 fileSystem.CopyFile sourceDir & "\libbase\release\tupibase.dll", tupiDir & "\lib\tupibase.dll"
 fileSystem.CopyFile sourceDir & "\libtupi\release\tupi.dll", tupiDir & "\lib\tupi.dll"
 fileSystem.CopyFile sourceDir & "\libui\release\tupigui.dll", tupiDir & "\lib\tupigui.dll"
-fileSystem.CopyFile sourceDir & "\net\release\tupinet.dll", tupiDir & "\lib\tupinet.dll"
+REM fileSystem.CopyFile sourceDir & "\net\release\tupinet.dll", tupiDir & "\lib\tupinet.dll"
 fileSystem.CopyFile sourceDir & "\libcolor\release\tupicolor.dll", tupiDir & "\lib\tupicolor.dll"
 fileSystem.CopyFile sourceDir & "\components\player\release\tupiplayer.dll", tupiDir & "\lib\tupiplayer.dll"
 fileSystem.CopyFile sourceDir & "\components\colorpalette\release\tupicolorpalette.dll", tupiDir & "\lib\tupicolorpalette.dll"
@@ -60,6 +61,8 @@ fileSystem.CopyFile sourceDir & "\components\brush\release\tupibrush.dll", tupiD
 fileSystem.CopyFile sourceDir & "\components\scenes\release\tupiscenes.dll", tupiDir & "\lib\tupiscenes.dll"
 fileSystem.CopyFile sourceDir & "\components\timeline\release\tupitimeline.dll", tupiDir & "\lib\tupitimeline.dll"
 fileSystem.CopyFile sourceDir & "\components\twitter\release\tupitwitter.dll", tupiDir & "\lib\tupitwitter.dll"
+fileSystem.CopyFile sourceDir & "\components\micmanager\release\tupmicmanager.dll", tupiDir & "\lib\tupmicmanager.dll"
+fileSystem.CopyFile sourceDir & "\components\papagayo\release\tupipapagayo.dll", tupiDir & "\lib\tupipapagayo.dll"
 fileSystem.CopyFile sourceDir & "\mypaint\json-c\release\json-c.dll", tupiDir & "\lib\raster\json-c.dll"
 fileSystem.CopyFile sourceDir & "\mypaint\libmypaint\release\libmypaint.dll", tupiDir & "\lib\raster\libmypaint.dll"
 fileSystem.CopyFile sourceDir & "\mypaint\qtmypaint\release\qtmypaint.dll", tupiDir & "\lib\raster\qtmypaint.dll"
@@ -85,6 +88,7 @@ fileSystem.CopyFile sourceDir & "\plugins\tools\text\release\tupitexttool.dll", 
 fileSystem.CopyFile sourceDir & "\plugins\tools\eyedropper\release\tupieyedropper.dll", tupiDir & "\plugins\tupieyedropper.dll"
 fileSystem.CopyFile sourceDir & "\plugins\export\imageplugin\release\tupiimageplugin.dll", tupiDir & "\plugins\tupiimageplugin.dll"
 fileSystem.CopyFile sourceDir & "\plugins\export\ffmpegplugin\release\tupiffmpegplugin.dll", tupiDir & "\plugins\tupiffmpegplugin.dll"
+fileSystem.CopyFile "c:\devel\sources\libsndfile\lib\libsndfile-1.dll", tupiDir & "\lib\libsndfile\libsndfile-1.dll"
 
 fileSystem.CopyFile "c:\devel\sources\platforms\qwindows.dll", tupiDir & "\bin\raw\platforms\qwindows.dll"
 
