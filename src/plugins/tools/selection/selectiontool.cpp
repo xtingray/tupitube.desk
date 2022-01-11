@@ -180,8 +180,13 @@ void SelectionTool::press(const TupInputDeviceInformation *input, TupBrushManage
                 #endif
 
                 NodeManager *manager = new NodeManager(Node::Selection, item, gScene, nodeZValue);
+                connect(manager, SIGNAL(rotationUpdated(int)), settingsPanel, SLOT(updateRotationAngle(int)));
+                connect(manager, SIGNAL(scaleUpdated(double,double)), settingsPanel, SLOT(updateScaleFactor(double,double)));
+
+                /* SQA: These connections don't work on Windows
                 connect(manager, &NodeManager::rotationUpdated, settingsPanel, &SelectionSettings::updateRotationAngle);
                 connect(manager, &NodeManager::scaleUpdated, settingsPanel, &SelectionSettings::updateScaleFactor);
+                */
                 manager->show();
                 manager->resizeNodes(realFactor);
                 nodeManagers << manager;
@@ -263,8 +268,13 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
                         qDebug() << "[SelectionTool::release()] - Adding nodes manager to item!";
                     #endif
                     NodeManager *manager = new NodeManager(Node::Selection, item, gScene, nodeZValue);
+                    connect(manager, SIGNAL(rotationUpdated(int)), settingsPanel, SLOT(updateRotationAngle(int)));
+                    connect(manager, SIGNAL(scaleUpdated(double,double)), settingsPanel, SLOT(updateScaleFactor(double,double)));
+
+                    /*
                     connect(manager, &NodeManager::rotationUpdated, settingsPanel, &SelectionSettings::updateRotationAngle);
                     connect(manager, &NodeManager::scaleUpdated, settingsPanel, &SelectionSettings::updateScaleFactor);
+                    */
                     manager->show();
                     manager->resizeNodes(realFactor);
                     nodeManagers << manager;
@@ -334,7 +344,7 @@ TupFrame* SelectionTool::frameAt(int sceneIndex, int layerIndex, int frameIndex)
                 frame = layer->frameAt(frameIndex);
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[SelectionTool::frameAt()] - Fatal Error: Layer is NULL! -> " + QString::number(layerIndex);
+                    qDebug() << "[SelectionTool::frameAt()] - Fatal Error: Layer is NULL! -> " << layerIndex;
                 #endif
             }
         } else {
@@ -350,7 +360,7 @@ TupFrame* SelectionTool::frameAt(int sceneIndex, int layerIndex, int frameIndex)
        }
     } else {
        #ifdef TUP_DEBUG
-           qDebug() << "[SelectionTool::frameAt()] - Fatal Error: Scene is NULL! -> " + QString::number(sceneIndex);
+           qDebug() << "[SelectionTool::frameAt()] - Fatal Error: Scene is NULL! -> " << sceneIndex;
        #endif
     }
 
@@ -391,6 +401,17 @@ QWidget *SelectionTool::configurator()
 {
     if (!settingsPanel) {
         settingsPanel = new SelectionSettings;
+        connect(settingsPanel, SIGNAL(callAlignAction(SelectionSettings::Align)), this, SLOT(applyAlignAction(SelectionSettings::Align)));
+        connect(settingsPanel, SIGNAL(callFlip(SelectionSettings::Flip)), this, SLOT(applyFlip(SelectionSettings::Flip)));
+        connect(settingsPanel, SIGNAL(callOrderAction(SelectionSettings::Order)), this, SLOT(applyOrderAction(SelectionSettings::Order)));
+        connect(settingsPanel, SIGNAL(callGroupAction(SelectionSettings::Group)), this, SLOT(applyGroupAction(SelectionSettings::Group)));
+        connect(settingsPanel, SIGNAL(positionUpdated(int, int)), this, SLOT(setItemPosition(int, int)));
+        connect(settingsPanel, SIGNAL(rotationUpdated(int)), this, SLOT(setItemRotation(int)));
+        connect(settingsPanel, SIGNAL(scaleUpdated(double, double)), this, SLOT(setItemScale(double, double)));
+        connect(settingsPanel, SIGNAL(activateProportion(bool)), this, SLOT(enableProportion(bool)));
+        connect(settingsPanel, SIGNAL(objectHasBeenReset()), this, SLOT(resetItemTransformations()));
+
+        /* SQA: These connections don't work on Windows
         connect(settingsPanel, &SelectionSettings::callAlignAction, this, &SelectionTool::applyAlignAction);
         connect(settingsPanel, &SelectionSettings::callFlip, this, &SelectionTool::applyFlip);
         connect(settingsPanel, &SelectionSettings::callOrderAction, this, &SelectionTool::applyOrderAction);
@@ -400,6 +421,7 @@ QWidget *SelectionTool::configurator()
         connect(settingsPanel, &SelectionSettings::scaleUpdated, this, &SelectionTool::setItemScale);
         connect(settingsPanel, &SelectionSettings::activateProportion, this, &SelectionTool::enableProportion);
         connect(settingsPanel, &SelectionSettings::objectHasBeenReset, this, &SelectionTool::resetItemTransformations);
+        */
     }
 
     return settingsPanel;

@@ -86,8 +86,19 @@ void PapagayoConfigurator::loadLipSyncList(QList<QString> list)
 void PapagayoConfigurator::setPropertiesPanel()
 {
     settingsPanel = new PapagayoSettings(this);
+    connect(settingsPanel, SIGNAL(selectMouth(const QString&,int)), this, SIGNAL(selectMouth(const QString&,int)));
+    connect(settingsPanel, SIGNAL(closeLipSyncProperties()), this, SLOT(closeSettingsPanel()));
+    connect(settingsPanel, SIGNAL(initFrameHasChanged(int)), this, SIGNAL(initFrameHasChanged(int)));
+    connect(settingsPanel, SIGNAL(xPosChanged(int)), this, SIGNAL(xPosChanged(int)));
+    connect(settingsPanel, SIGNAL(yPosChanged(int)), this, SIGNAL(yPosChanged(int)));
+    connect(settingsPanel, SIGNAL(rotationChanged(int)), this, SIGNAL(rotationChanged(int)));
+    connect(settingsPanel, SIGNAL(scaleChanged(double,double)), this, SIGNAL(scaleChanged(double,double)));
+
+    connect(settingsPanel, SIGNAL(objectHasBeenReset()), this, SIGNAL(objectHasBeenReset()));
+    connect(settingsPanel, SIGNAL(proportionActivated(bool)), this, SIGNAL(proportionActivated(bool)));
+
+    /* SQA: These connections don't work on Windows
     connect(settingsPanel, &PapagayoSettings::selectMouth, this, &PapagayoConfigurator::selectMouth);
-    // connect(settingsPanel, &PapagayoSettings::saveMouthTransRequested, this, &PapagayoConfigurator::saveMouthTransRequested);
     connect(settingsPanel, &PapagayoSettings::closeLipSyncProperties, this, &PapagayoConfigurator::closeSettingsPanel);
     connect(settingsPanel, &PapagayoSettings::initFrameHasChanged, this, &PapagayoConfigurator::initFrameHasChanged);
     connect(settingsPanel, &PapagayoSettings::xPosChanged, this, &PapagayoConfigurator::xPosChanged);
@@ -97,6 +108,7 @@ void PapagayoConfigurator::setPropertiesPanel()
 
     connect(settingsPanel, &PapagayoSettings::objectHasBeenReset, this, &PapagayoConfigurator::objectHasBeenReset);
     connect(settingsPanel, &PapagayoSettings::proportionActivated, this, &PapagayoConfigurator::proportionActivated);
+    */
 
     settingsLayout->addWidget(settingsPanel);
 
@@ -114,10 +126,17 @@ void PapagayoConfigurator::activePropertiesPanel(bool enable)
 void PapagayoConfigurator::setLipSyncManagerPanel()
 {
     manager = new LipSyncManager(this);
+    connect(manager, SIGNAL(lipsyncCreatorRequested()), this, SIGNAL(lipsyncCreatorRequested()));
+    connect(manager, SIGNAL(lipsyncEditionRequested(const QString&)), this, SIGNAL(lipsyncEditionRequested(const QString&)));
+    connect(manager, SIGNAL(mouthEditionRequested(const QString&)), this, SLOT(editCurrentLipSync(const QString&)));
+    connect(manager, SIGNAL(currentLipSyncRemoved(const QString&)), this, SIGNAL(currentLipsyncRemoved(const QString&)));
+
+    /* SQA: These connections don't work on Windows
     connect(manager, &LipSyncManager::lipsyncCreatorRequested, this, &PapagayoConfigurator::lipsyncCreatorRequested);
     connect(manager, &LipSyncManager::lipsyncEditionRequested, this, &PapagayoConfigurator::lipsyncEditionRequested);
     connect(manager, &LipSyncManager::mouthEditionRequested, this, &PapagayoConfigurator::editCurrentLipSync);
     connect(manager, &LipSyncManager::currentLipSyncRemoved, this, &PapagayoConfigurator::currentLipsyncRemoved);
+    */
 
     settingsLayout->addWidget(manager);
 }

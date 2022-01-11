@@ -73,15 +73,27 @@ NodeManager::NodeManager(Node::Context context, QGraphicsItem *parentItem, QGrap
     Node *bottomRight = new Node(context, Node::BottomRight, Node::Scale, rect.bottomRight(), this, parentItem, zValue);
 
     Node *center = new Node(context, Node::Center, Node::Scale, rect.center(), this, parentItem, zValue);
-    if (context == Node::Text || context == Node::Papagayo)
+    if (context == Node::Text || context == Node::Papagayo) {
+        connect(center, SIGNAL(positionUpdated(const QPointF&)), this, SIGNAL(positionUpdated(const QPointF&)));
+        /* SQA: This connection doesn't work on Windows
         connect(center, &Node::positionUpdated, this, &NodeManager::positionUpdated);
+        */
+    }
 
     if (context == Node::Papagayo) {
+        connect(topLeft, SIGNAL(transformationUpdated()), this, SIGNAL(transformationUpdated()));
+        connect(topRight, SIGNAL(transformationUpdated()), this, SIGNAL(transformationUpdated()));
+        connect(bottomLeft, SIGNAL(transformationUpdated()), this, SIGNAL(transformationUpdated()));
+        connect(bottomRight, SIGNAL(transformationUpdated()), this, SIGNAL(transformationUpdated()));
+        connect(center, SIGNAL(transformationUpdated()), this, SIGNAL(transformationUpdated()));
+
+        /* SQA: These connections don't work on Windows
         connect(topLeft, &Node::transformationUpdated, this, &NodeManager::transformationUpdated);
         connect(topRight, &Node::transformationUpdated, this, &NodeManager::transformationUpdated);
         connect(bottomLeft, &Node::transformationUpdated, this, &NodeManager::transformationUpdated);
         connect(bottomRight, &Node::transformationUpdated, this, &NodeManager::transformationUpdated);
         connect(center, &Node::transformationUpdated, this, &NodeManager::transformationUpdated);
+        */
     }
 
     nodes.insert(Node::TopLeft, topLeft);

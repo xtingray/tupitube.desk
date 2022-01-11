@@ -193,7 +193,11 @@ QWidget * TupBreakdownDialog::createMouthPanel(int row, int column)
     QVBoxLayout *panelLayout = new QVBoxLayout(panel);
 
     TButton *phonemeButton = new TButton(text);
+    connect(phonemeButton, SIGNAL(clicked(const QString&)), this, SLOT(addPhoneme(const QString&)));
+
+    /* SQA: This connection doesn't work on Windows
     connect(phonemeButton, &TButton::clicked, this, &TupBreakdownDialog::addPhoneme);
+    */
     panelLayout->addWidget(phonemeButton);
 
     QString imgPath = folder + text + "." + extension;
@@ -202,8 +206,13 @@ QWidget * TupBreakdownDialog::createMouthPanel(int row, int column)
     #endif
 
     TImageLabel *mouthImage = new TImageLabel(text, QColor(200, 255, 200));
-    connect(mouthImage, &TImageLabel::clicked, this, &TupBreakdownDialog::addPhoneme);
+    connect(mouthImage, SIGNAL(clicked(const QString&)), this, SLOT(addPhoneme(const QString&)));
     connect(phonemeButton, SIGNAL(clicked(QString)), mouthImage, SLOT(activateMark()));
+
+    /* SQA: This connection doesn't work on Windows
+    connect(mouthImage, &TImageLabel::clicked, this, &TupBreakdownDialog::addPhoneme);
+    */
+
     mouthImage->setAlignment(Qt::AlignCenter);
     mouthImage->setPixmap(QPixmap(imgPath));
     mouthImage->setStyleSheet("QWidget { border: 1px solid #cccccc; border-radius: 3px; }");

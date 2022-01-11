@@ -85,7 +85,6 @@ class TUPITUBE_PLUGIN PapagayoConfigurator : public QFrame
         void lipsyncEditionRequested(const QString &lipSyncName);
         void mouthEditionRequested(const QString &lipSyncName);
         void selectMouth(const QString &name, int index);
-        // void saveMouthTransRequested();;
         void closeLipSyncProperties();
         void initFrameHasChanged(int index);
         void currentLipsyncRemoved(const QString &name);

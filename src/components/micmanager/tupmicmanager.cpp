@@ -179,11 +179,19 @@ void TupMicManager::setupUI()
 
 void TupMicManager::setConnections()
 {
+    connect(micRecorder, SIGNAL(durationChanged(qint64)), this, SLOT(updateProgress(qint64)));
+    connect(micRecorder, SIGNAL(statusChanged(QMediaRecorder::Status)), this, SLOT(updateStatus(QMediaRecorder::Status)));
+    connect(micRecorder, SIGNAL(stateChanged(QMediaRecorder::State)), this, SLOT(onStateChanged(QMediaRecorder::State)));
+    connect(micRecorder, QOverload<QMediaRecorder::Error>::of(&QAudioRecorder::error),
+            this, &TupMicManager::showErrorMessage);
+
+    /* SQA: These connections don't work on Windows
     connect(micRecorder, &QAudioRecorder::durationChanged, this, &TupMicManager::updateProgress);
     connect(micRecorder, &QAudioRecorder::statusChanged, this, &TupMicManager::updateStatus);
     connect(micRecorder, &QAudioRecorder::stateChanged, this, &TupMicManager::onStateChanged);
     connect(micRecorder, QOverload<QMediaRecorder::Error>::of(&QAudioRecorder::error),
             this, &TupMicManager::showErrorMessage);
+    */
 }
 
 void TupMicManager::updateProgress(qint64 duration)
@@ -544,9 +552,15 @@ void TupMicManager::cancelRecording()
     #endif
 
     if (micRecorder->state() == QMediaRecorder::RecordingState) {
+        disconnect(micRecorder, SIGNAL(durationChanged(qint64)), this, SLOT(updateProgress(qint64)));
+        disconnect(micRecorder, SIGNAL(statusChanged(QMediaRecorder::Status)), this, SLOT(updateStatus(QMediaRecorder::Status)));
+        disconnect(micRecorder, SIGNAL(stateChanged(QMediaRecorder::State)), this, SLOT(onStateChanged(QMediaRecorder::State)));
+
+        /* SQA: These methods are not working on Windows
         disconnect(micRecorder, &QAudioRecorder::durationChanged, this, &TupMicManager::updateProgress);
         disconnect(micRecorder, &QAudioRecorder::statusChanged, this, &TupMicManager::updateStatus);
         disconnect(micRecorder, &QAudioRecorder::stateChanged, this, &TupMicManager::onStateChanged);
+        */
         micRecorder->stop();
     } else if (player->state() == QMediaPlayer::PlayingState) {
         player->stop();

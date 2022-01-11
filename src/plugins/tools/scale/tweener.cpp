@@ -225,6 +225,16 @@ QWidget *Tweener::configurator()
         mode = TupToolPlugin::View;
 
         configPanel = new Configurator;
+        connect(configPanel, SIGNAL(startingPointChanged(int)), this, SLOT(updateStartPoint(int)));
+        connect(configPanel, SIGNAL(clickedApplyTween()), this, SLOT(applyTween()));
+        connect(configPanel, SIGNAL(clickedSelect()), this, SLOT(setSelection()));
+        connect(configPanel, SIGNAL(clickedResetInterface()), this, SLOT(applyReset()));
+        connect(configPanel, SIGNAL(setMode(TupToolPlugin::Mode)), this, SLOT(updateMode(TupToolPlugin::Mode)));
+        connect(configPanel, SIGNAL(clickedDefineProperties()), this, SLOT(setPropertiesMode()));
+        connect(configPanel, SIGNAL(getTweenData(const QString&)), this, SLOT(setCurrentTween(const QString&)));
+        connect(configPanel, SIGNAL(clickedRemoveTween(const QString&)), this, SLOT(removeTween(const QString&)));
+
+        /* SQA: This connections don't work on Windows
         connect(configPanel, &Configurator::startingPointChanged, this, &Tweener::updateStartPoint);
         connect(configPanel, &Configurator::clickedApplyTween, this, &Tweener::applyTween);
         connect(configPanel, &Configurator::clickedSelect, this, &Tweener::setSelection);
@@ -233,6 +243,7 @@ QWidget *Tweener::configurator()
         connect(configPanel, &Configurator::clickedDefineProperties, this, &Tweener::setPropertiesMode);
         connect(configPanel, &Configurator::getTweenData, this, &Tweener::setCurrentTween);
         connect(configPanel, &Configurator::clickedRemoveTween, this, &Tweener::removeTween);
+        */
     }
 
     return configPanel;

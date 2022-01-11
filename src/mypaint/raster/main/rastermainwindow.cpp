@@ -98,7 +98,11 @@ void RasterMainWindow::createTopResources()
     QAction *closeAction = new QAction(QIcon(THEME_DIR + "icons/exit.png"), tr("Exit Raster Mode"), this);
     closeAction->setShortcuts(QKeySequence::Quit);
     closeAction->setStatusTip(tr("Exit Raster Mode"));
+    connect(closeAction, SIGNAL(triggered()), this, SLOT(close()));
+
+    /* SQA: This connection doesn't work on Windows
     connect(closeAction, &QAction::triggered, this, &QWidget::close);
+    */
 
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(libraryAction);

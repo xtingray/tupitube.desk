@@ -349,8 +349,10 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(animationTab, SIGNAL(imagePostRequested(const QString &)), this, SLOT(postFrame(const QString &)));
         connect(this, SIGNAL(activeDockChanged(TupDocumentView::DockType)), animationTab,
                 SLOT(updateActiveDock(TupDocumentView::DockType)));
-        connect(m_colorPalette, SIGNAL(eyeDropperActivated(TColorCell::FillType)), animationTab, SLOT(enableEyeDropperTool(TColorCell::FillType)));
-        connect(m_libraryWidget, &TupLibraryWidget::lipsyncModuleCalled, animationTab, &TupDocumentView::launchLipsyncModule);
+        connect(m_colorPalette, SIGNAL(eyeDropperActivated(TColorCell::FillType)),
+                animationTab, SLOT(enableEyeDropperTool(TColorCell::FillType)));
+        connect(m_libraryWidget, SIGNAL(lipsyncModuleCalled(bool,const QString&)),
+                animationTab, SLOT(launchLipsyncModule(bool,const QString&)));
         connect(this, SIGNAL(imageExported()), animationTab, SLOT(exportImage()));
         connect(this, SIGNAL(imagePosted()), animationTab, SLOT(postImage()));
 

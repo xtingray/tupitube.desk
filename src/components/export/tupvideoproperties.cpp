@@ -258,8 +258,13 @@ void TupVideoProperties::postIt()
     emit postHasStarted();
 
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(serverAuthAnswer(QNetworkReply *)));
+    connect(manager, SIGNAL(finished(QNetworkReply *)), manager, SLOT(deleteLater()));
+
+    /* SQA: These connections don't work on Windows
     connect(manager, &QNetworkAccessManager::finished, this, &TupVideoProperties::serverAuthAnswer);
     connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
+    */
 
     QString apiEntry = TUPITUBE_URL + QString("/api/desk/add/video/");
     if (mode == Image)
@@ -294,7 +299,11 @@ void TupVideoProperties::postIt()
     QByteArray postData = params.query(QUrl::FullyEncoded).toUtf8();
     QNetworkReply *reply = manager->post(request, postData);
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-    connect(this, &TupVideoProperties::postAborted, reply, &QNetworkReply::abort);
+    connect(this, SIGNAL(postAborted()), reply, SLOT(abort()));
+
+    // SQA: This connection doesn't work on Windows
+    // connect(this, &TupVideoProperties::postAborted, reply, &QNetworkReply::abort);
+
     reply->setParent(manager);
 }
 
@@ -339,8 +348,13 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
 
             if (projectCode.length() > 0) {
                 QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+                connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(closeRequest(QNetworkReply *)));
+                connect(manager, SIGNAL(finished(QNetworkReply *)), manager, SLOT(deleteLater()));
+
+                /* SQA: These connections don't work on Windows
                 connect(manager, &QNetworkAccessManager::finished, this, &TupVideoProperties::closeRequest);
                 connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
+                */
 
                 QString apiEntry = TUPITUBE_URL + QString("/api/desk/upload/video/");
                 if (mode == Image)
@@ -423,8 +437,14 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
                 multiPart->append(filePart);
 
                 QNetworkReply *projectReply = manager->post(request, multiPart);
+                connect(projectReply, SIGNAL(uploadProgress(qint64, qint64)), this, SLOT(tracingPostProgress(qint64, qint64)));
+                connect(this, SIGNAL(postAborted()), projectReply, SLOT(abort()));
+
+                /* SQA: These connections don't work on Windows
                 connect(projectReply, &QNetworkReply::uploadProgress, this, &TupVideoProperties::tracingPostProgress);
                 connect(this, &TupVideoProperties::postAborted, projectReply, &QNetworkReply::abort);
+                */
+
                 multiPart->setParent(projectReply);
                 projectReply->setParent(manager);
             } else {

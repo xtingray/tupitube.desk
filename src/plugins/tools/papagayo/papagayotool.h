@@ -122,11 +122,11 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
 
         void resetMouthTransformations();
         void enableProportion(bool flag);
+        void updateMouthTransformation();
 
     private:
         void setupActions();
         void removeNodesManager();
-        void updateMouthTransformation();
 
         QMap<TAction::ActionId, TAction *> pgActions;
         PapagayoConfigurator *configPanel;

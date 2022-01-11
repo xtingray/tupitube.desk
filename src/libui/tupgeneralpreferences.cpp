@@ -295,7 +295,11 @@ QWidget * TupGeneralPreferences::socialTab()
     emailLayout->addWidget(emailEdit);
 
     registerButton = new QPushButton(tr("Register"));
+    connect(registerButton, SIGNAL(clicked()), this, SLOT(sendRegisterRequest()));
+
+    /* SQA: This connection doesn't work on Windows
     connect(registerButton, &QPushButton::clicked, this, &TupGeneralPreferences::sendRegisterRequest);
+    */
 
     QWidget *registerWidget = new QWidget;
     QHBoxLayout *registerLayout = new QHBoxLayout(registerWidget);

@@ -55,6 +55,21 @@ TextTool::TextTool()
 
     configPanel = new TextConfigurator;
     configPanel->setTextColor(Qt::black);
+
+    connect(configPanel, SIGNAL(textAdded()), this, SLOT(insertText()));
+    connect(configPanel, SIGNAL(textUpdated()), this, SLOT(updateText()));
+
+    connect(configPanel, SIGNAL(xPosChanged(int)), this, SLOT(updateXPositionInScene(int)));
+    connect(configPanel, SIGNAL(yPosChanged(int)), this, SLOT(updateYPositionInScene(int)));
+    connect(configPanel, SIGNAL(rotationChanged(int)), this, SLOT(updateRotationInScene(int)));
+    connect(configPanel, SIGNAL(scaleChanged(double,double)), this, SLOT(updateScaleInScene(double,double)));
+    connect(configPanel, SIGNAL(resetActionCalled()), this, SLOT(resetTextTransformations()));
+
+    connect(configPanel, SIGNAL(scaleUpdated(double,double)), this, SLOT(setItemScale(double,double)));
+    connect(configPanel, SIGNAL(activateProportion(bool)), this, SLOT(enableProportion(bool)));
+    connect(configPanel, SIGNAL(textObjectReleased()), this, SLOT(removeManager()));
+
+    /* These connections doesn't work on Windows
     connect(configPanel, &TextConfigurator::textAdded, this, &TextTool::insertText);
     connect(configPanel, &TextConfigurator::textUpdated, this, &TextTool::updateText);
 
@@ -67,6 +82,7 @@ TextTool::TextTool()
     connect(configPanel, &TextConfigurator::scaleUpdated, this, &TextTool::setItemScale);
     connect(configPanel, &TextConfigurator::activateProportion, this, &TextTool::enableProportion);
     connect(configPanel, &TextConfigurator::textObjectReleased, this, &TextTool::removeManager);
+    */
 
     setupActions();
 }
@@ -157,9 +173,15 @@ void TextTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                 if (!item->isSelected())
                     item->setSelected(true);
                 nodesManager = new NodeManager(Node::Text, item, scene, nodeZValue);
+                connect(nodesManager, SIGNAL(positionUpdated(const QPointF&)), this, SLOT(updatePositionRecord(const QPointF&)));
+                connect(nodesManager, SIGNAL(rotationUpdated(int)), this, SLOT(updateRotationAngleRecord(int)));
+                connect(nodesManager, SIGNAL(scaleUpdated(double,double)), this, SLOT(updateScaleFactorRecord(double,double)));
+
+                /* SQA: These connections don't work on Windows
                 connect(nodesManager, &NodeManager::positionUpdated, this, &TextTool::updatePositionRecord);
                 connect(nodesManager, &NodeManager::rotationUpdated, this, &TextTool::updateRotationAngleRecord);
                 connect(nodesManager, &NodeManager::scaleUpdated, this, &TextTool::updateScaleFactorRecord);
+                */
             } else {
                 QGraphicsItem *parent = nodesManager->parentItem();
                 if (parent) {
@@ -171,9 +193,15 @@ void TextTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                         nodesManager->clear();
                         nodesManager = nullptr;
                         nodesManager = new NodeManager(Node::Text, item, scene, nodeZValue);
+                        connect(nodesManager, SIGNAL(positionUpdated(const QPointF&)), this, SLOT(updatePositionRecord(const QPointF&)));
+                        connect(nodesManager, SIGNAL(rotationUpdated(int)), this, SLOT(updateRotationAngleRecord(int)));
+                        connect(nodesManager, SIGNAL(scaleUpdated(double,double)), this, SLOT(updateScaleFactorRecord(double,double)));
+
+                        /* SQA: These connections don't work on Windows
                         connect(nodesManager, &NodeManager::positionUpdated, this, &TextTool::updatePositionRecord);
                         connect(nodesManager, &NodeManager::rotationUpdated, this, &TextTool::updateRotationAngleRecord);
                         connect(nodesManager, &NodeManager::scaleUpdated, this, &TextTool::updateScaleFactorRecord);
+                        */
                     }
                 }
             }            
@@ -261,9 +289,15 @@ void TextTool::release(const TupInputDeviceInformation *input, TupBrushManager *
                     textItem->setSelected(true);
 
                 nodesManager = new NodeManager(Node::Text, textItem, scene, nodeZValue);
+                connect(nodesManager, SIGNAL(positionUpdated(const QPointF &)), this, SLOT(updatePositionRecord(const QPointF&)));
+                connect(nodesManager, SIGNAL(rotationUpdated(int)), this, SLOT(updateRotationAngleRecord(int)));
+                connect(nodesManager, SIGNAL(scaleUpdated(double,double)), this, SLOT(updateScaleFactorRecord(double,double)));
+
+                /* SQA: These connections don't work on Windows
                 connect(nodesManager, &NodeManager::positionUpdated, this, &TextTool::updatePositionRecord);
                 connect(nodesManager, &NodeManager::rotationUpdated, this, &TextTool::updateRotationAngleRecord);
                 connect(nodesManager, &NodeManager::scaleUpdated, this, &TextTool::updateScaleFactorRecord);
+                */
                 nodesManager->show();
                 nodesManager->resizeNodes(realFactor);
 
@@ -459,9 +493,15 @@ void TextTool::sceneResponse(const TupSceneResponse *response)
 void TextTool::removeManager()
 {
     if (nodesManager) {
+        disconnect(nodesManager, SIGNAL(positionUpdated(const QPointF&)), this, SLOT(updatePositionRecord(const QPointF&)));
+        disconnect(nodesManager, SIGNAL(rotationUpdated(int)), this, SLOT(updateRotationAngleRecord(int)));
+        disconnect(nodesManager, SIGNAL(scaleUpdated(double,double)), this, SLOT(updateScaleFactorRecord(double,double)));
+
+        /* SQA: These connections don't work on Windows
         disconnect(nodesManager, &NodeManager::positionUpdated, this, &TextTool::updatePositionRecord);
         disconnect(nodesManager, &NodeManager::rotationUpdated, this, &TextTool::updateRotationAngleRecord);
         disconnect(nodesManager, &NodeManager::scaleUpdated, this, &TextTool::updateScaleFactorRecord);
+        */
 
         if (nodesManager->parentItem())
             nodesManager->parentItem()->setSelected(false);

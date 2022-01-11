@@ -419,8 +419,13 @@ void TupSearchDialog::startSearch()
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
         QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+        connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(processResult(QNetworkReply*)));
+        connect(manager, SIGNAL(finished(QNetworkReply*)), manager, SLOT(deleteLater()));
+
+        /* SQA: These connections don't work on Windows
         connect(manager, &QNetworkAccessManager::finished, this, &TupSearchDialog::processResult);
         connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
+        */
 
         QString apiEntry = LIBRARY_URL + QString("/api/search/");
         #ifdef TUP_DEBUG
@@ -443,7 +448,12 @@ void TupSearchDialog::startSearch()
         QByteArray postData = params.query(QUrl::FullyEncoded).toUtf8();
         QNetworkReply *reply = manager->post(request, postData);
         connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+        connect(reply, SIGNAL(finished(QNetworkReply*)), reply, SLOT(deleteLater()));
+
+        /* SQA: These connections don't work on Windows
         connect(reply, &QNetworkReply::finished, reply, &QNetworkReply::deleteLater);
+        */
+
         reply->setParent(manager);
     } else {
         TOsd::self()->display(TOsd::Warning, tr("Invalid search: Empty pattern!"));
@@ -619,8 +629,13 @@ void TupSearchDialog::getMiniature(const QString &code, const QString &desc)
     progressBar->reset();
 
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(processMiniature(QNetworkReply*)));
+    connect(manager, SIGNAL(finished(QNetworkReply*)), manager, SLOT(deleteLater()));
+
+    /* SQA: This connections don't work on Windows
     connect(manager, &QNetworkAccessManager::finished, this, &TupSearchDialog::processMiniature);
     connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
+    */
 
     QString apiEntry = LIBRARY_URL + QString("/api/miniature/");
     #ifdef TUP_DEBUG
@@ -639,9 +654,15 @@ void TupSearchDialog::getMiniature(const QString &code, const QString &desc)
 
     QByteArray postData = params.query(QUrl::FullyEncoded).toUtf8();
     QNetworkReply *reply = manager->post(request, postData);
-    connect(reply, &QNetworkReply::downloadProgress, this, &TupSearchDialog::updateProgress);
+    connect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(updateProgress(qint64,qint64)));
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, SIGNAL(finished(QNetworkReply*)), reply, SLOT(deleteLater()));
+
+    /* SQA: These connections don't work on Windows
+    connect(reply, &QNetworkReply::downloadProgress, this, &TupSearchDialog::updateProgress);
     connect(reply, &QNetworkReply::finished, reply, &QNetworkReply::deleteLater);
+    */
+
     reply->setParent(manager);
     reply = manager->post(request, postData);
 
@@ -791,8 +812,13 @@ void TupSearchDialog::getAsset()
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
         QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+        connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(processAsset(QNetworkReply*)));
+        connect(manager, SIGNAL(finished(QNetworkReply*)), manager, SLOT(deleteLater()));
+
+        /* SQA: These connections don't work on Windows
         connect(manager, &QNetworkAccessManager::finished, this, &TupSearchDialog::processAsset);
         connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
+        */
 
         QString apiEntry = LIBRARY_URL + QString("/api/item/");
         #ifdef TUP_DEBUG
@@ -816,7 +842,12 @@ void TupSearchDialog::getAsset()
         QByteArray postData = params.query(QUrl::FullyEncoded).toUtf8();
         QNetworkReply *reply = manager->post(request, postData);
         connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+        connect(reply, SIGNAL(finished(QNetworkReply*)), reply, SLOT(deleteLater()));
+
+        /* SQA: This connection doesn't work on Windows
         connect(reply, &QNetworkReply::finished, reply, &QNetworkReply::deleteLater);
+        */
+
         reply->setParent(manager);
     }
 }

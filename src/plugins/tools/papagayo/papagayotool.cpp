@@ -151,11 +151,26 @@ QWidget * PapagayoTool::configurator()
         mode = TupToolPlugin::View;
 
         configPanel = new PapagayoConfigurator;
+        connect(configPanel, SIGNAL(lipsyncCreatorRequested()), this, SIGNAL(lipsyncCreatorRequested()));
+        connect(configPanel, SIGNAL(lipsyncEditionRequested(const QString&)), this, SIGNAL(lipsyncEditionRequested(const QString&)));
+        connect(configPanel, SIGNAL(mouthEditionRequested(const QString&)), this, SLOT(editLipsyncMouth(const QString&)));
+        connect(configPanel, SIGNAL(currentLipsyncRemoved(const QString&)), this, SLOT(removeCurrentLipSync(const QString&)));
+        connect(configPanel, SIGNAL(closeLipSyncProperties()), this, SLOT(resetCanvas()));
+        connect(configPanel, SIGNAL(initFrameHasChanged(int)), this, SLOT(updateInitFrame(int)));
+
+        connect(configPanel, SIGNAL(xPosChanged(int)), this, SLOT(updateXMouthPositionInScene(int)));
+        connect(configPanel, SIGNAL(yPosChanged(int)), this, SLOT(updateYMouthPositionInScene(int)));
+        connect(configPanel, SIGNAL(rotationChanged(int)), this, SLOT(updateRotationInScene(int)));
+        connect(configPanel, SIGNAL(scaleChanged(double,double)), this, SLOT(updateScaleInScene(double,double)));
+
+        connect(configPanel, SIGNAL(objectHasBeenReset()), this, SLOT(resetMouthTransformations()));
+        connect(configPanel, SIGNAL(proportionActivated(bool)), this, SLOT(enableProportion(bool)));
+
+        /* SQA: These connection don't work on Windows
         connect(configPanel, &PapagayoConfigurator::lipsyncCreatorRequested, this, &PapagayoTool::lipsyncCreatorRequested);
         connect(configPanel, &PapagayoConfigurator::lipsyncEditionRequested, this, &PapagayoTool::lipsyncEditionRequested);
         connect(configPanel, &PapagayoConfigurator::mouthEditionRequested, this, &PapagayoTool::editLipsyncMouth);
         connect(configPanel, &PapagayoConfigurator::currentLipsyncRemoved, this, &PapagayoTool::removeCurrentLipSync);
-        // connect(configPanel, &PapagayoConfigurator::saveMouthTransRequested, this, &PapagayoTool::saveMouthTransformations);
         connect(configPanel, &PapagayoConfigurator::closeLipSyncProperties, this, &PapagayoTool::resetCanvas);
         connect(configPanel, &PapagayoConfigurator::initFrameHasChanged, this, &PapagayoTool::updateInitFrame);
 
@@ -166,6 +181,7 @@ QWidget * PapagayoTool::configurator()
 
         connect(configPanel, &PapagayoConfigurator::objectHasBeenReset, this, &PapagayoTool::resetMouthTransformations);
         connect(configPanel, &PapagayoConfigurator::proportionActivated, this, &PapagayoTool::enableProportion);
+        */
     } 
 
     return configPanel;
@@ -369,10 +385,18 @@ void PapagayoTool::setNodesManagerEnvironment()
 
     if (mouth) {
         nodesManager = new NodeManager(Node::Papagayo, mouth, scene, nodeZValue);
+        connect(nodesManager, SIGNAL(positionUpdated(const QPointF&)), this, SLOT(updatePositionRecord(const QPointF&)));
+        connect(nodesManager, SIGNAL(rotationUpdated(int)), this, SLOT(updateRotationAngleRecord(int)));
+        connect(nodesManager, SIGNAL(scaleUpdated(double,double)), this, SLOT(updateScaleFactorRecord(double,double)));
+        connect(nodesManager, SIGNAL(transformationUpdated()), this, SLOT(updateMouthTransformation()));
+
+        /* SQA: These connections don't work on Windows
         connect(nodesManager, &NodeManager::positionUpdated, this, &PapagayoTool::updatePositionRecord);
         connect(nodesManager, &NodeManager::rotationUpdated, this, &PapagayoTool::updateRotationAngleRecord);
         connect(nodesManager, &NodeManager::scaleUpdated, this, &PapagayoTool::updateScaleFactorRecord);
         connect(nodesManager, &NodeManager::transformationUpdated, this, &PapagayoTool::updateMouthTransformation);
+        */
+
         nodesManager->show();
         nodesManager->resizeNodes(realFactor);
         managerIncluded = true;

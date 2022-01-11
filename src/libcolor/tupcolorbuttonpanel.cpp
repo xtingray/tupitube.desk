@@ -57,7 +57,12 @@ void TupColorButtonPanel::setPanel(const QSize &cellSize, const QString &buttonP
 
     QBrush transBrush(color0, style);
     trans = new TupColorButton(0, tr("Transparent"), transBrush, cellSize, buttonParams);
+    connect(trans, SIGNAL(clicked(int)), this, SLOT(updateSelection(int)));
+
+    /* SQA: This connection doesn't work on Windows
     connect(trans, &TupColorButton::clicked, this, &TupColorButtonPanel::updateSelection);
+    */
+
     baseColors << trans;
 
     TCONFIG->beginGroup("ColorPalette");
@@ -66,7 +71,12 @@ void TupColorButtonPanel::setPanel(const QSize &cellSize, const QString &buttonP
 
     QBrush blackBrush(color1, style);
     TupColorButton *black = new TupColorButton(1, tr("Black"), blackBrush, cellSize, buttonParams);
+    connect(black, SIGNAL(clicked(int)), this, SLOT(updateSelection(int)));
+
+    /* SQA: This connection doesn't work on Windows
     connect(black, &TupColorButton::clicked, this, &TupColorButtonPanel::updateSelection);
+    */
+
     baseColors << black;
 
     TCONFIG->beginGroup("ColorPalette");
@@ -75,7 +85,11 @@ void TupColorButtonPanel::setPanel(const QSize &cellSize, const QString &buttonP
 
     QBrush whiteBrush(color2, style);
     TupColorButton *white = new TupColorButton(2, tr("White"), whiteBrush, cellSize, buttonParams);
+    connect(white, SIGNAL(clicked(int)), this, SLOT(updateSelection(int)));
+
+    /* SQA: This connection doesn't work on Windows
     connect(white, &TupColorButton::clicked, this, &TupColorButtonPanel::updateSelection);
+    */
     baseColors << white;
 
     TCONFIG->beginGroup("ColorPalette");
@@ -84,7 +98,12 @@ void TupColorButtonPanel::setPanel(const QSize &cellSize, const QString &buttonP
 
     QBrush redBrush(color3, style);
     TupColorButton *red = new TupColorButton(3, tr("Red"), redBrush, cellSize, buttonParams);
+    connect(red, SIGNAL(clicked(int)), this, SLOT(updateSelection(int)));
+
+    /* SQA: This connection doesn't work on Windows
     connect(red, &TupColorButton::clicked, this, &TupColorButtonPanel::updateSelection);
+    */
+
     baseColors << red;
 
     TCONFIG->beginGroup("ColorPalette");
@@ -93,7 +112,12 @@ void TupColorButtonPanel::setPanel(const QSize &cellSize, const QString &buttonP
 
     QBrush greenBrush(color4, style);
     TupColorButton *green = new TupColorButton(4, tr("Green"), greenBrush, cellSize, buttonParams);
+    connect(green, SIGNAL(clicked(int)), this, SLOT(updateSelection(int)));
+
+    /* SQA: This connection doesn't work on Windows
     connect(green, &TupColorButton::clicked, this, &TupColorButtonPanel::updateSelection);
+    */
+
     baseColors << green;
 
     TCONFIG->beginGroup("ColorPalette");
@@ -102,7 +126,12 @@ void TupColorButtonPanel::setPanel(const QSize &cellSize, const QString &buttonP
 
     QBrush blueBrush(color5, style);
     TupColorButton *blue = new TupColorButton(5, tr("Blue"), blueBrush, cellSize, buttonParams);
+    connect(blue, SIGNAL(clicked(int)), this, SLOT(updateSelection(int)));
+
+    /* SQA: This connection doesn't work on Windows
     connect(blue, &TupColorButton::clicked, this, &TupColorButtonPanel::updateSelection);
+    */
+
     baseColors << blue;
 
     TImageButton *settings = new TImageButton(QPixmap(THEME_DIR + "icons/settings.png"), 22, this, true);

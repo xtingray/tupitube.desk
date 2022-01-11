@@ -135,7 +135,12 @@ void TupViewColorCells::setupForm()
     containerPalette->setCurrentIndex(lastIndex);
 
     buttonPanel = new TupColorButtonPanel(Qt::SolidPattern, QSize(22, 22), 10, "6,4,2", this);
+    connect(buttonPanel, SIGNAL(clickColor(const QColor&)), this, SLOT(updateColorFromPanel(const QColor&)));
+
+    /* SQA: This connection doesn't work on Windows
     connect(buttonPanel, &TupColorButtonPanel::clickColor, this, &TupViewColorCells::updateColorFromPanel);
+    */
+
     buttonPanel->setFixedHeight(35);
 
     QHBoxLayout *basicLayout = new QHBoxLayout;

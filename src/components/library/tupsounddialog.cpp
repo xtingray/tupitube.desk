@@ -151,7 +151,11 @@ QWidget* TupSoundDialog::soundRecordTab()
     QVBoxLayout *layout = new QVBoxLayout;
 
     micManager = new TupMicManager;
+    connect(micManager, SIGNAL(soundReady(bool)), this, SLOT(enableDialogButtons(bool)));
+
+    /* SQA: This connect doesn't work on Windows
     connect(micManager, &TupMicManager::soundReady, this, &TupSoundDialog::enableDialogButtons);
+    */
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     importRecordButton = new QPushButton("");
