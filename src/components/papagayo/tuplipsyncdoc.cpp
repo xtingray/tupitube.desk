@@ -770,29 +770,34 @@ void TupLipsyncDictionary::loadDictionaries()
     if (phonemeDictionary.size() > 0)
         return;
 
-    QFile *file;
-    file = new QFile(SHARE_DIR + "data/dictionaries/standard_dictionary");
+#ifdef Q_OS_WIN
+    QString dictPath = SHARE_DIR + "dictionaries/";
+#else
+    QString dictPath = SHARE_DIR + "data/dictionaries/";
+#endif
+
+    QFile *file = new QFile(dictPath + "standard_dictionary");
     if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
         loadDictionary(file);
         file->close();
     }
     delete file;
 
-    file = new QFile(SHARE_DIR + "data/dictionaries/extended_dictionary");
+    file = new QFile(dictPath + "extended_dictionary");
     if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
         loadDictionary(file);
         file->close();
     }
     delete file;
 
-    file = new QFile(SHARE_DIR + "data/dictionaries/user_dictionary");
+    file = new QFile(dictPath + "user_dictionary");
     if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
         loadDictionary(file);
         file->close();
     }
     delete file;
 
-    file = new QFile(SHARE_DIR + "data/dictionaries/phoneme_mapping");
+    file = new QFile(dictPath + "phoneme_mapping");
     if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
         while (!file->atEnd()) {
             QString line = file->readLine();
@@ -814,6 +819,7 @@ void TupLipsyncDictionary::loadDictionaries()
         }
         file->close();
     }
+
     delete file;
 }
 

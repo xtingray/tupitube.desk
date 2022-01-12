@@ -45,22 +45,3 @@ SOURCES += tupaudioextractor.cpp \
            tupcustomizedmouthview.cpp \
            tuppapagayoimporter.cpp \
            tuppapagayoapp.cpp
-
-# HEADERS += tupaudioextractor.h \
-#           tuplipsyncdoc.h \
-#           tupwaveformview.h \
-#           tupmouthview.h \
-#           tupcustomizedmouthview.h \
-#           tuppg_config.h \
-#           tupbreakdowndialog.h \
-#           tuppapagayoimporter.h \
-#           tuppapagayoapp.h
-
-# SOURCES += tupaudioextractor.cpp \
-#           tuplipsyncdoc.cpp \
-#           tupwaveformview.cpp \
-#           tupmouthview.cpp \
-#           tupcustomizedmouthview.cpp \
-#           tupbreakdowndialog.cpp \
-#           tuppapagayoimporter.cpp \
-#           tuppapagayoapp.cpp
