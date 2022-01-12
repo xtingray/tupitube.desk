@@ -98,17 +98,14 @@ void LipsyncWord::runBreakdown(const QString &lang, TupLipsyncDictionary *lipsyn
     msg.remove(QRegExp("[.,!?;-/()¿]"));
 	QStringList	pronunciation;
     if (lang == "EN") {
-        // pronunciation = TupLipsyncDoc::getDictionaryValue(msg.toUpper());
         pronunciation << lipsyncDictionary->getDictionaryValue(msg.toUpper());
         if (pronunciation.size() > 1) {
             for (int32 i = 1; i < pronunciation.size(); i++) {
 				QString p = pronunciation.at(i);
-				if (p.length() == 0)
+                if (p.length() == 0)
 					continue;
 				LipsyncPhoneme *phoneme = new LipsyncPhoneme;
                 phoneme->setText(lipsyncDictionary->getPhonemeFromDictionary(p, "etc"));
-                // phoneme->setText(TupLipsyncDoc::getPhonemeFromDictionary(p, "etc"));
-				phoneme->setText("etc");
                 phonemes << phoneme;
 			}
 		}
@@ -269,10 +266,13 @@ void LipsyncPhrase::runBreakdown(QString language, TupLipsyncDictionary *lipsync
 
     QStringList strList = text.split(' ', Qt::SkipEmptyParts);
     for (int32 i = 0; i < strList.size(); i++) {
-		if (strList.at(i).length() == 0)
+        QString input = strList.at(i);
+        input.remove(QRegExp("[.,!?;-/()¿]"));
+        if (input.length() == 0)
 			continue;
+
 		LipsyncWord *word = new LipsyncWord;
-        word->setText(strList.at(i));
+        word->setText(input);
         words << word;
 	}
 
@@ -607,7 +607,7 @@ void LipsyncVoice::runBreakdown(QString language, TupLipsyncDictionary *lipsyncD
         int32 n = text.length();
         for (int32 i = 0; i < n - 1; i++) {
             if (punctuation.contains(text[i]) && !text[i + 1].isSpace()) {
-                text.insert(i + 1,	' ');
+                text.insert(i + 1, ' ');
 				repeatLoop = true;
 				break;
 			}
@@ -892,79 +892,6 @@ TupLipsyncDictionary * TupLipsyncDoc::getDictionary()
     return lipsyncDictionary;
 }
 
-/*
-void TupLipsyncDoc::loadDictionaries()
-{
-	if (phonemeDictionary.size() > 0)
-		return;
-
-    QFile *file;
-    file = new QFile(SHARE_DIR + "data/dictionaries/standard_dictionary");
-    if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-        loadDictionary(file);
-        file->close();
-	}
-    delete file;
-
-    file = new QFile(SHARE_DIR + "data/dictionaries/extended_dictionary");
-    if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-        loadDictionary(file);
-        file->close();
-	}
-    delete file;
-
-    file = new QFile(SHARE_DIR + "data/dictionaries/user_dictionary");
-    if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-        loadDictionary(file);
-        file->close();
-	}
-    delete file;
-
-    file = new QFile(SHARE_DIR + "data/dictionaries/phoneme_mapping");
-    if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-        while (!file->atEnd()) {
-            QString line = file->readLine();
-			line = line.trimmed();
-
-            if (line.isEmpty()) {
-                continue; // skip comments
-            } else if (line.at(0) == "#" || line.length() == 0) {
-				continue; // skip comments
-            }
-
-			QStringList strList = line.split(' ', Qt::SkipEmptyParts);
-            if (strList.size() > 1) {
-				if (strList[0] == ".")
-					phonemesList << strList.at(1);
-				else
-					dictionaryToPhonemeMap.insert(strList.at(0), strList.at(1));
-			}
-		}
-        file->close();
-	}
-    delete file;
-}
-
-void TupLipsyncDoc::loadDictionary(QFile *file)
-{
-    while (!file->atEnd()) {
-        QString line = file->readLine();
-		line = line.trimmed();
-        if (line.isEmpty()) {
-            continue;
-        } else if (line.at(0) == "#") {
-            continue; // skip comments
-        }
-
-		QStringList strList = line.split(' ', Qt::SkipEmptyParts);
-        if (strList.size() > 1) {
-			if (!phonemeDictionary.contains(strList.at(0)))
-				phonemeDictionary.insert(strList.at(0), strList);
-		}
-	}
-}
-*/
-
 void TupLipsyncDoc::openPGOFile(const QString &pgoPath, const QString &audioPath, int fps)
 {
     #ifdef TUP_DEBUG
@@ -1027,7 +954,6 @@ void TupLipsyncDoc::openAudioFile(const QString &path)
         qDebug() << "[TupLipsyncDoc::openAudioFile()] - Loading audio file -> " << path;
     #endif
 
-    // projectHasChanged = true;
     maxAmplitude = 1.0f;
 
     if (audioPlayer) {
@@ -1221,25 +1147,21 @@ void TupLipsyncDoc::setModifiedFlag(bool flag)
 
 QString TupLipsyncDoc::getPhonemeFromDictionary(const QString &key, const QString &defaultValue)
 {
-    // return dictionaryToPhonemeMap.value(key, defaultValue);
     return lipsyncDictionary->getPhonemeFromDictionary(key, defaultValue);
 }
 
 QStringList TupLipsyncDoc::getDictionaryValue(const QString &key)
 {
-    // return phonemeDictionary.value(key);
     return lipsyncDictionary->getDictionaryValue(key);
 }
 
 int TupLipsyncDoc::phonemesListSize()
 {
-    // return phonemesList.size();
     return lipsyncDictionary->phonemesListSize();
 }
 
 QString TupLipsyncDoc::getPhonemeAt(int index)
 {
-    // return phonemesList.at(index);
     return lipsyncDictionary->getPhonemeAt(index);
 }
 

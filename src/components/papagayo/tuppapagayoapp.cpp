@@ -454,14 +454,6 @@ void TupPapagayoApp::openFile(QString filePath)
         qDebug() << "[TupPapagayoApp::openFile()] - filePath -> " << filePath;
     #endif
 
-    /*
-    if (document) {
-        delete document;
-        document = nullptr;
-    }
-    document = new TupLipsyncDoc;
-    */
-
     QFileInfo info(filePath);
     if (info.suffix().toLower() == "pgo") {
         document->openPGOFile(filePath, soundFilePath, defaultFps);
@@ -891,7 +883,6 @@ void TupPapagayoApp::runBreakdownAction() // English generator
         return;
     }
 
-    // TupLipsyncDoc::loadDictionaries();
     document->setModifiedFlag(true);
     document->runBreakdown("EN", calculateDuration());
 
