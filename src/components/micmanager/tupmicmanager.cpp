@@ -245,7 +245,12 @@ void TupMicManager::onStateChanged(QMediaRecorder::State state)
             break;
         case QMediaRecorder::StoppedState:
             recording = false;
-            QString filename = CACHE_DIR + nameInput->text() + ".mp3";
+            #ifdef Q_OS_WIN
+                QString extension = ".wav";
+            #else
+                QString extension = ".mp3";
+            #endif
+            QString filename = CACHE_DIR + nameInput->text() + extension;
             #ifdef TUP_DEBUG
                 qDebug() << "[TupMicManager::onStateChanged()] - sound path -> " << filename;
             #endif
@@ -263,6 +268,7 @@ void TupMicManager::onStateChanged(QMediaRecorder::State state)
             pauseButton->setToolTip(tr("Pause"));
             controlsWidget->setVisible(false);
             playerWidget->setVisible(true);
+
             emit soundReady(true);
             break;
     }
@@ -289,15 +295,24 @@ void TupMicManager::toggleRecord()
         micRecorder->setAudioInput(boxValue(audioDevDropList).toString());
 
         QAudioEncoderSettings settings;
-        settings.setCodec("audio/mpeg, mpegversion=(int)1, layer=(int)3");
+        #ifdef Q_OS_WIN
+            QString codec = "audio/pcm";
+            QString container = "audio/x-wav";
+            QString extension = ".wav":
+        #else
+            QString codec = "audio/mpeg, mpegversion=(int)1, layer=(int)3";
+            QString container = "audio/mpeg, mpegversion=(int)1";
+            QString extension = ".mp3";
+        #endif
+        settings.setCodec(codec);
         settings.setSampleRate(0);
         settings.setBitRate(128000);
         settings.setChannelCount(1);
         settings.setQuality(QMultimedia::VeryHighQuality);
         settings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
 
-        micRecorder->setEncodingSettings(settings, QVideoEncoderSettings(), QString("audio/mpeg, mpegversion=(int)1"));
-        micRecorder->setOutputLocation(QUrl::fromLocalFile(CACHE_DIR + nameInput->text() + ".mp3"));
+        micRecorder->setEncodingSettings(settings, QVideoEncoderSettings(), container);
+        micRecorder->setOutputLocation(QUrl::fromLocalFile(CACHE_DIR + nameInput->text() + extension));
         micRecorder->record();
     } else {
         #ifdef TUP_DEBUG
@@ -337,7 +352,12 @@ void TupMicManager::discardRecording()
 
     playerWidget->setVisible(false);
     controlsWidget->setVisible(true);
-    QString filename = CACHE_DIR + nameInput->text() + ".mp3";
+    #ifdef Q_OS_WIN
+        QString extension = ".wav";
+    #else
+        QString extension = ".mp3";
+    #endif
+    QString filename = CACHE_DIR + nameInput->text() + extension;
     if (QFile::exists(filename)) {
         if (!QFile::remove(filename)) {
             #ifdef TUP_DEBUG
@@ -542,7 +562,12 @@ void TupMicManager::trackPlayerStatus()
 QString TupMicManager::getRecordPath() const
 {
     QString filename = nameInput->text();
-    QString path = CACHE_DIR + filename + ".mp3";    
+#ifdef Q_OS_WIN
+    QString extension = ".wav";
+#else
+    QString extension = ".mp3";
+#endif
+    QString path = CACHE_DIR + filename + extension;
     #ifdef TUP_DEBUG
         qDebug() << "[TupMicManager::getRecordPath()] - path -> " << path;
     #endif
@@ -579,7 +604,12 @@ void TupMicManager::cancelRecording()
     }
 
     QString filename = nameInput->text();
-    QString path = CACHE_DIR + filename + ".mp3";
+#ifdef Q_OS_WIN
+    QString extension = ".wav";
+#else
+    QString extension = ".mp3";
+#endif
+    QString path = CACHE_DIR + filename + extension;
     if (QFile::exists(path)) {
         if (!QFile::remove(path)) {
             #ifdef TUP_DEBUG
