@@ -1333,19 +1333,23 @@ void Tweener::updatePathColor(const QColor &color)
 
 void Tweener::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Control) {
-        lineStraightMode = true;
-        if (guideLine)
-            scene->addItem(guideLine);
+    if (editMode == TupToolPlugin::Properties) {
+        if (event->key() == Qt::Key_Control) {
+            lineStraightMode = true;
+            if (guideLine)
+                scene->addItem(guideLine);
+        }
     }
 }
 
 void Tweener::keyReleaseEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Control) {
-        lineStraightMode = false;
-        if (guideLine)
-            scene->removeItem(guideLine);
+    if (editMode == TupToolPlugin::Properties) {
+        if (event->key() == Qt::Key_Control) {
+            lineStraightMode = false;
+            if (guideLine)
+                scene->removeItem(guideLine);
+        }
     }
 }
 
