@@ -299,7 +299,7 @@ void TupMicManager::toggleRecord()
         #ifdef Q_OS_WIN
             QString codec = "audio/pcm";
             QString container = "audio/x-wav";
-            QString extension = ".wav":
+            QString extension = ".wav";
         #else
             QString codec = "audio/mpeg, mpegversion=(int)1, layer=(int)3";
             QString container = "audio/mpeg, mpegversion=(int)1";
