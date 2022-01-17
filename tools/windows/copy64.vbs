@@ -89,7 +89,7 @@ fileSystem.CopyFile sourceDir & "\plugins\tools\text\release\tupitexttool.dll", 
 fileSystem.CopyFile sourceDir & "\plugins\tools\eyedropper\release\tupieyedropper.dll", tupiDir & "\plugins\tupieyedropper.dll"
 fileSystem.CopyFile sourceDir & "\plugins\export\imageplugin\release\tupiimageplugin.dll", tupiDir & "\plugins\tupiimageplugin.dll"
 fileSystem.CopyFile sourceDir & "\plugins\export\ffmpegplugin\release\tupiffmpegplugin.dll", tupiDir & "\plugins\tupiffmpegplugin.dll"
-fileSystem.CopyFile "c:\devel\sources\libsndfile\lib\libsndfile-1.dll", tupiDir & "\lib\libsndfile\libsndfile-1.dll"
+fileSystem.CopyFile "c:\devel\sources\libsndfile\lib\sndfile.dll", tupiDir & "\lib\libsndfile\sndfile.dll"
 
 fileSystem.CopyFile "c:\devel\sources\platforms\qwindows.dll", tupiDir & "\bin\raw\platforms\qwindows.dll"
 
