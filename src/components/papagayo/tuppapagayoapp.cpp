@@ -622,8 +622,13 @@ void TupPapagayoApp::dragEnterEvent(QDragEnterEvent *event)
 
     QFileInfo info(filePath);
     QString extension = info.suffix().toLower();
+#ifdef Q_OS_WIN
+    if (extension == "wav")
+        event->acceptProposedAction();
+#else
     if (extension == "mp3" || extension == "wav")
         event->acceptProposedAction();
+#endif
 }
 
 void TupPapagayoApp::dropEvent(QDropEvent *event)
@@ -639,11 +644,19 @@ void TupPapagayoApp::dropEvent(QDropEvent *event)
 
     QFileInfo info(filePath);
     QString extension = info.suffix().toLower();
+#ifdef Q_OS_WIN
+    if (extension == "wav") {
+        event->acceptProposedAction();
+        if (confirmCloseDocument())
+            openFile(filePath);
+    }
+#else
     if (extension == "mp3" || extension == "wav") {
         event->acceptProposedAction();
         if (confirmCloseDocument())
             openFile(filePath);
     }
+#endif
 }
 
 void TupPapagayoApp::updateActions()
@@ -678,7 +691,12 @@ void TupPapagayoApp::openFile()
 
     TCONFIG->beginGroup("General");
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
-    QString filePath = QFileDialog::getOpenFileName(this, tr("Open"), path, tr("Audio files (*.mp3 *.wav)"));
+#ifdef Q_OS_WIN
+    QString filter = tr("Audio files (*.wav)");
+#else
+    QString filter = tr("Audio files (*.mp3 *.wav)");
+#endif
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Open"), path, filter);
     if (filePath.isEmpty())
         return;
 

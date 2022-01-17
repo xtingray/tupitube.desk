@@ -200,7 +200,13 @@ void TupSoundDialog::loadSoundFile()
     soundFilePath = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
 
     QFileDialog dialog(this, tr("Import audio file..."), soundFilePath);
-    dialog.setNameFilter(tr("Audio file") + " (*.ogg *.wav *.mp3)");
+#ifdef Q_OS_WIN
+    QString filter = tr("Audio file") + " (*.wav)";
+#else
+    QString filter = tr("Audio file") + " (*.ogg *.wav *.mp3)";
+#endif
+
+    dialog.setNameFilter(filter);
     dialog.setFileMode(QFileDialog::ExistingFile);
 
     if (dialog.exec() == QDialog::Accepted) {

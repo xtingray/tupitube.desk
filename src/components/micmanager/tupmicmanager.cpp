@@ -295,6 +295,7 @@ void TupMicManager::toggleRecord()
         micRecorder->setAudioInput(boxValue(audioDevDropList).toString());
 
         QAudioEncoderSettings settings;
+        // SQA: MP3 format fails on Windows system. Research is required.
         #ifdef Q_OS_WIN
             QString codec = "audio/pcm";
             QString container = "audio/x-wav";
