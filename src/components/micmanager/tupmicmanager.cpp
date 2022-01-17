@@ -246,6 +246,9 @@ void TupMicManager::onStateChanged(QMediaRecorder::State state)
         case QMediaRecorder::StoppedState:
             recording = false;
             QString filename = CACHE_DIR + nameInput->text() + ".mp3";
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupMicManager::onStateChanged()] - sound path -> " << filename;
+            #endif
             if (QFile::exists(filename)) {
                 player->setMedia(QUrl::fromLocalFile(filename));
             } else {
@@ -279,6 +282,9 @@ static QVariant boxValue(const QComboBox *box)
 void TupMicManager::toggleRecord()
 {
     if (micRecorder->state() == QMediaRecorder::StoppedState) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMicManager::toggleRecord()] - Recording...";
+        #endif
         nameInput->setReadOnly(true);
         micRecorder->setAudioInput(boxValue(audioDevDropList).toString());
 
@@ -294,6 +300,9 @@ void TupMicManager::toggleRecord()
         micRecorder->setOutputLocation(QUrl::fromLocalFile(CACHE_DIR + nameInput->text() + ".mp3"));
         micRecorder->record();
     } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMicManager::toggleRecord()] - Stop recording...";
+        #endif
         micRecorder->stop();
     }
 }
@@ -533,7 +542,10 @@ void TupMicManager::trackPlayerStatus()
 QString TupMicManager::getRecordPath() const
 {
     QString filename = nameInput->text();
-    QString path = CACHE_DIR + filename + ".mp3";
+    QString path = CACHE_DIR + filename + ".mp3";    
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMicManager::getRecordPath()] - path -> " << path;
+    #endif
     if (QFile::exists(path))
         return path;
 
