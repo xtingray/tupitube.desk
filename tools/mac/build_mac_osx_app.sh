@@ -35,7 +35,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>. #
 ###########################################################################
 
-#Usage:
+# Usage:
 # ./tools/build_mac_osx_app.sh /Users/username/tupitube/sources/tupitube.desk /Users/username/tupitube/installer
 
 QT_PATH=/Users/xtingray/Qt
@@ -48,8 +48,9 @@ INSTALLATION_PATH=$2
 INSTALLER_SCRIPT=$TUPITUBE_GIT_REPOSITORY/tools/mac/update_dylib_path.rb
 TUPITUBE_VERSION=0.2.19
 
+# libtupinet.dylib
 declare -a LIBS=('libtupifwcore.dylib' 'libtupifwgui.dylib' 'libtupigui.dylib' 'libtupistore.dylib' 'libtupi.dylib' \
-'libtupibase.dylib' 'libtupinet.dylib' 'libtupicolorpalette.1.dylib' 'libtupmicmanager.1.dylib' 'libtupipapagayo.1.dylib' 'libtupiworkspace.1.dylib' 'libtupicolor.1.dylib' \
+'libtupibase.dylib' 'libtupicolorpalette.1.dylib' 'libtupmicmanager.1.dylib' 'libtupipapagayo.1.dylib' 'libtupiworkspace.1.dylib' 'libtupicolor.1.dylib' \
 'libtupiplayer.1.dylib' 'libtupibrush.1.dylib' 'libtupimport.1.dylib' 'libtupiexport.1.dylib' 'libtupiexposure.1.dylib' \
 'libjson-c.1.dylib' 'liblibmypaint.1.dylib' 'libqtmypaint.1.dylib' \
 'librasterbrushes.1.dylib' 'librastercolor.1.dylib' 'librastermain.1.dylib' \
