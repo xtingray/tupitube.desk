@@ -245,7 +245,7 @@ void TupMicManager::onStateChanged(QMediaRecorder::State state)
             break;
         case QMediaRecorder::StoppedState:
             recording = false;
-            #ifdef Q_OS_WIN
+            #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
                 QString extension = ".wav";
             #else
                 QString extension = ".mp3";
@@ -296,7 +296,7 @@ void TupMicManager::toggleRecord()
 
         QAudioEncoderSettings settings;
         // SQA: MP3 format fails on Windows system. Research is required.
-        #ifdef Q_OS_WIN
+        #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
             QString codec = "audio/pcm";
             QString container = "audio/x-wav";
             QString extension = ".wav";
@@ -353,7 +353,7 @@ void TupMicManager::discardRecording()
 
     playerWidget->setVisible(false);
     controlsWidget->setVisible(true);
-    #ifdef Q_OS_WIN
+    #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
         QString extension = ".wav";
     #else
         QString extension = ".mp3";
@@ -563,7 +563,7 @@ void TupMicManager::trackPlayerStatus()
 QString TupMicManager::getRecordPath() const
 {
     QString filename = nameInput->text();
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
     QString extension = ".wav";
 #else
     QString extension = ".mp3";
@@ -605,7 +605,7 @@ void TupMicManager::cancelRecording()
     }
 
     QString filename = nameInput->text();
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
     QString extension = ".wav";
 #else
     QString extension = ".mp3";
