@@ -242,6 +242,7 @@ bool TupFactoryHandler::parse()
                 QRectF rect(QPointF((attributes().value("cx").toDouble() - attributes().value("rx").toDouble()),
                             attributes().value("cy").toDouble() - attributes().value("ry").toDouble()),
                             QSizeF(2 * attributes().value("rx").toDouble(), 2 * attributes().value("ry").toDouble()));
+
                 if (addToGroup) {
                     TupEllipseItem *ellipseItem = qgraphicsitem_cast<TupEllipseItem *>(createItem(tag));
                     ellipseItem->setRect(rect);

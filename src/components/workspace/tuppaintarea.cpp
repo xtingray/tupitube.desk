@@ -835,8 +835,10 @@ void TupPaintArea::copyItems()
                 QDomElement properties = root.firstChild().toElement();
                 QPointF pos;
                 TupSvg2Qt::parsePointF(properties.attribute("pos"), pos);
+
                 /*
                 qDebug() << "pos attribute -> " << pos;
+                qDebug() << "item->pos() -> " << item->pos();
                 qDebug() << "";
                 qDebug() << "DOM -> ";
                 qDebug() << dom.toString();
@@ -846,31 +848,29 @@ void TupPaintArea::copyItems()
                     int x = root.attribute("x").toInt();
                     int y = root.attribute("y").toInt();
 
-                    QString transform = properties.attribute("transform");
-
-                    if (pos != QPointF(0,0) && transform.compare("matrix(1,0,0,1,0,0)") == 0) {
-                        // qDebug() << "Adjusting object...";
-                        // qDebug() << "New (x,y) -> " << QPointF(pos.x() + x, pos.y() + y);
-                        root.setAttribute("x", pos.x() + x);
-                        root.setAttribute("y", pos.y() + y);
-                        properties.setAttribute("pos", "(0,0)");
-                        // qDebug() << "XML -> " << dom.toString();
-                    }
+                    root.setAttribute("x", pos.x() + x);
+                    root.setAttribute("y", pos.y() + y);
+                    properties.setAttribute("pos", "(0,0)");
                 } else if (plainItem.startsWith("<ellipse")) { // Ellipse
                     int cx = root.attribute("cx").toInt();
                     int cy = root.attribute("cy").toInt();
 
-                    QString transform = properties.attribute("transform");
+                    /*
+                    qDebug() << "Adjusting object...";
+                    qDebug() << "pos.x() + cx -> " << pos.x() << " + " << cx;
+                    qDebug() << "pos.y() + cy -> " << pos.y() << " + " << cy;
+                    */
 
-                    if (pos != QPointF(0,0) && transform.compare("matrix(1,0,0,1,0,0)") == 0) {
-                        // qDebug() << "Adjusting object...";
-                        // qDebug() << "New (x,y) -> " << QPointF(pos.x() + cx, pos.y() + cy);
-                        root.setAttribute("cx", pos.x() + cx);
-                        root.setAttribute("cy", pos.y() + cy);
-                        properties.setAttribute("pos", "(0,0)");
-                        // qDebug() << "XML -> " << dom.toString();
-                    }
+                    root.setAttribute("cx", pos.x() + cx);
+                    root.setAttribute("cy", pos.y() + cy);
+                    properties.setAttribute("pos", "(0,0)");
                 }
+
+                /*
+                qDebug() << "";
+                qDebug() << "DOM -> ";
+                qDebug() << dom.toString();
+                */
 
                 copiesXml << dom.toString();
 
@@ -1002,7 +1002,7 @@ void TupPaintArea::pasteItems()
                     } else { // Same position
                         // Path - Image - SVG
                         if (xml.startsWith("<path") || xml.startsWith("<symbol") || xml.startsWith("<svg") ||
-                            xml.startsWith("<text")) {
+                            xml.startsWith("<text") || xml.startsWith("<ellipse") || xml.startsWith("<rectangle")) {
                             QDomDocument dom;
                             dom.setContent(xml);
                             QDomElement root = dom.documentElement();

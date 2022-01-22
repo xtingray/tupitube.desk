@@ -1210,7 +1210,6 @@ QGraphicsItem *TupFrame::createItem(QPointF coords, const QString &xml, bool loa
             if (itemFactory.getType() == TupFactoryHandler::Library)
                 id = itemFactory.itemID(xml);
         }
-
         addItem(id, graphicItem);
 
         if (type == Regular) {
