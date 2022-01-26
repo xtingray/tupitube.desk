@@ -33,42 +33,62 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPTWITTERWIDGET_H
-#define TUPTWITTERWIDGET_H
+#ifndef TUPNEWSCOLLECTOR_H
+#define TUPNEWSCOLLECTOR_H
 
 #include "tglobal.h"
-#include "tuptwitter.h"
+#include "tapplicationproperties.h"
 
 #include <QWidget>
-#include <QSplitter>
-#include <QTextBrowser>
-#include <QTextDocument>
-#include <QBoxLayout>
-#include <QIcon>
-#include <QMenu>
-#include <QMouseEvent>
+#include <QtNetwork>
+#include <QByteArray>
 
-class TUPITUBE_EXPORT TupTwitterWidget : public QWidget
+class TUPITUBE_EXPORT TupNewsCollector : public QWidget
 {
     Q_OBJECT
 
     public:
-        TupTwitterWidget(QWidget *parent);
-        ~TupTwitterWidget();
+        TupNewsCollector(QWidget *parent = nullptr);
+        ~TupNewsCollector();
+
+        void start();
+
+    private slots:
+        void closeRequest(QNetworkReply *reply);
+        void slotError(QNetworkReply::NetworkError error);
 
     signals:
-        void newPerspective(int index);
-
-    public slots:
-        void setSource(const QString &filePath);
-
-    protected:
-        void keyPressEvent(QKeyEvent *event); 
+        void pageReady();
+        void newUpdate(bool flag);
 
     private:
-        QSplitter *separator;
-        QTextBrowser *pageArea;
-        QTextDocument *document;
+        void requestFile(const QString &target);
+        void checkSoftwareUpdates(QByteArray array);
+        void formatStatus(QByteArray array);
+        bool saveFile(const QString &answer, const QString &fileName);
+        QString getImageCode(const QString &answer) const;
+
+        static QString IS_HOST_UP_URL;
+        static QString USER_TIMELINE_URL;
+        static QString TUPITUBE_VERSION_URL;
+        static QString TUPITUBE_WEB_AD;
+        static QString TUPITUBE_IMAGES;
+
+        QNetworkAccessManager *manager;
+        QNetworkRequest request;
+        QNetworkReply *reply;
+
+        QString version;
+        QString revision;
+        QString codeName;
+        QString word;
+        QString url;
+        QString webMsg;
+        bool update;
+        bool showAds;
+        bool enableStatistics;
+        QString themeName;
+        QString locale;
 };
 
 #endif

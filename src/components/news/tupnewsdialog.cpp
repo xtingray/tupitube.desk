@@ -33,63 +33,76 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPTWITTER_H
-#define TUPTWITTER_H
+#include "tupnewsdialog.h"
+#include "tseparator.h"
 
-#include "tglobal.h"
-#include "tapplicationproperties.h"
+#include <QBoxLayout>
+#include <QTabWidget>
+#include <QPushButton>
+#include <QIcon>
 
-#include <QWidget>
-#include <QtNetwork>
-#include <QByteArray>
-
-class TUPITUBE_EXPORT TupTwitter : public QWidget
+TupNewsDialog::TupNewsDialog(QWidget *parent) : QDialog(parent)
 {
-    Q_OBJECT
+    setWindowTitle(tr("TupiTube Updates"));
+    setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/updates.png")));
 
-    public:
-        TupTwitter(QWidget *parent = nullptr);
-        ~TupTwitter();
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setMargin(15);
 
-        void start();
+    releasePage = new QTextBrowser;
+    releaseDocument = new QTextDocument(releasePage);
+    releasePage->setDocument(releaseDocument);
 
-    private slots:
-        void closeRequest(QNetworkReply *reply);
-        void slotError(QNetworkReply::NetworkError error);
+    newsPage = new QTextBrowser;
+    newsDocument = new QTextDocument(newsPage);
+    newsPage->setDocument(newsDocument);
 
-    signals:
-        void pageReady();
-        void newUpdate(bool flag);
+    QTabWidget *tabWidget = new QTabWidget;
+    tabWidget->addTab(releasePage, tr("Updates"));
+    tabWidget->addTab(newsPage, tr("News"));
 
-    private:
-        void requestFile(const QString &target);
-        void checkSoftwareUpdates(QByteArray array);
-        void formatStatus(QByteArray array);
-        bool saveFile(const QString &answer, const QString &fileName);
-        QString getImageCode(const QString &answer) const;
+    QPushButton *closeButton = new QPushButton(this);
+    closeButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
+    closeButton->setToolTip(tr("Close"));
+    closeButton->setMinimumWidth(60);
 
-        static QString IS_HOST_UP_URL;
-        static QString USER_TIMELINE_URL;
-        static QString TUPITUBE_VERSION_URL;
-        static QString TUPITUBE_WEB_AD;
-        static QString TUPITUBE_VIDEOS;
-        static QString TUPITUBE_IMAGES;
+    layout->addWidget(closeButton);
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+    setAttribute(Qt::WA_DeleteOnClose, true);
 
-        QNetworkAccessManager *manager;
-        QNetworkRequest request;
-        QNetworkReply *reply;
+    QHBoxLayout *buttonLayout = new QHBoxLayout;
+    buttonLayout->addWidget(closeButton, 1, Qt::AlignRight);
 
-        QString version;
-        QString revision;
-        QString codeName;
-        QString word;
-        QString url;
-        QString webMsg;
-        bool update;
-        bool showAds;
-        bool enableStatistics;
-        QString themeName;
-        QString locale;
-};
+    layout->addWidget(tabWidget);
+    layout->addWidget(new TSeparator);
+    layout->addLayout(buttonLayout);
+    resize(700, 405);
+}
 
-#endif
+TupNewsDialog::~TupNewsDialog()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[~TupNewsDialog()]";
+    #endif
+}
+
+void TupNewsDialog::setSource(const QString &releasePath, const QString &newsPath)
+{
+    QStringList path;
+
+    #ifdef Q_OS_WIN
+        QString resources = SHARE_DIR + "html/";
+    #else
+        QString resources = SHARE_DIR + "data/html/";
+    #endif
+
+    path << resources + "css";
+    path << resources + "images";
+    releasePage->setSearchPaths(path);
+    releasePage->setOpenExternalLinks(true);
+    releasePage->setSource(QUrl::fromLocalFile(releasePath));
+
+    newsPage->setSearchPaths(path);
+    newsPage->setOpenExternalLinks(true);
+    newsPage->setSource(QUrl::fromLocalFile(newsPath));
+}

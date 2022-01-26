@@ -1,17 +1,17 @@
 QT += opengl core gui svg xml network
 TEMPLATE = lib
-TARGET = tupitwitter
+TARGET = tupinews
 
 INSTALLS += target
 target.path = /lib/
 
 CONFIG += dll warn_on
 
-HEADERS += tuptwitter.h \  
-           tuptwitterwidget.h
+HEADERS += tupnewscollector.h \  
+           tupnewsdialog.h
 
-SOURCES += tuptwitter.cpp \
-           tuptwitterwidget.cpp
+SOURCES += tupnewscollector.cpp \
+           tupnewsdialog.cpp
 		   
 FRAMEWORK_DIR = "../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

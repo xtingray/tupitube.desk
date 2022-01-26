@@ -33,7 +33,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "tuptwitter.h"
+#include "tupnewscollector.h"
 #include "tconfig.h"
 #include "talgorithm.h"
 
@@ -44,20 +44,19 @@
 #include <QNetworkAccessManager>
 #include <QFile>
 
-QString TupTwitter::IS_HOST_UP_URL = QString("updates/test.xml");
-QString TupTwitter::USER_TIMELINE_URL = QString("updates/tweets.php");
-QString TupTwitter::TUPITUBE_VERSION_URL = QString("updates/current_version.xml");
-QString TupTwitter::TUPITUBE_WEB_AD = QString("updates/web_ad.");
-QString TupTwitter::TUPITUBE_VIDEOS = QString("updates/videos.xml");
-QString TupTwitter::TUPITUBE_IMAGES = QString("updates/images/");
+QString TupNewsCollector::IS_HOST_UP_URL = QString("updates/test.xml");
+QString TupNewsCollector::USER_TIMELINE_URL = QString("updates/news.php");
+QString TupNewsCollector::TUPITUBE_VERSION_URL = QString("updates/current_version.xml");
+QString TupNewsCollector::TUPITUBE_WEB_AD = QString("updates/web_ad.");
+QString TupNewsCollector::TUPITUBE_IMAGES = QString("updates/images/");
 
-TupTwitter::TupTwitter(QWidget *parent): QWidget(parent)
+TupNewsCollector::TupNewsCollector(QWidget *parent): QWidget(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupTwitter()] - SSL enabled? -> " << QSslSocket::supportsSsl();
-        qDebug() << "[TupTwitter()] - SSL version use for build -> " << QSslSocket::sslLibraryBuildVersionString();
-        qDebug() << "[TupTwitter()] - SSL version use for run-time -> " << QSslSocket::sslLibraryVersionNumber();
-        qDebug() << "[TupTwitter()] - Library Paths -> " << QCoreApplication::libraryPaths();
+        qDebug() << "[TupNewsCollector()] - SSL enabled? -> " << QSslSocket::supportsSsl();
+        qDebug() << "[TupNewsCollector()] - SSL version use for build -> " << QSslSocket::sslLibraryBuildVersionString();
+        qDebug() << "[TupNewsCollector()] - SSL version use for run-time -> " << QSslSocket::sslLibraryVersionNumber();
+        qDebug() << "[TupNewsCollector()] - Library Paths -> " << QCoreApplication::libraryPaths();
     #endif
 
     update = false;
@@ -77,12 +76,12 @@ TupTwitter::TupTwitter(QWidget *parent): QWidget(parent)
     }
 }
 
-void TupTwitter::start()
+void TupNewsCollector::start()
 {
     QString url = MAEFLORESTA_URL + IS_HOST_UP_URL;
 
     #ifdef TUP_DEBUG
-        qWarning() << "[TupTwitter::start()] - Getting news updates...";
+        qWarning() << "[TupNewsCollector::start()] - Getting news updates...";
     #endif
 
     manager = new QNetworkAccessManager(this);
@@ -102,10 +101,10 @@ void TupTwitter::start()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
-TupTwitter::~TupTwitter()
+TupNewsCollector::~TupNewsCollector()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[~TupTwitter()]";
+        qDebug() << "[~TupNewsCollector()]";
     #endif
 
     delete manager;
@@ -114,10 +113,10 @@ TupTwitter::~TupTwitter()
     reply = nullptr;
 }
 
-void TupTwitter::requestFile(const QString &target)
+void TupNewsCollector::requestFile(const QString &target)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "[TupTwitter::requestFile()] - Requesting url -> " + target;
+        qWarning() << "[TupNewsCollector::requestFile()] - Requesting url -> " << target;
     #endif
 
     request.setUrl(QUrl(target));
@@ -129,26 +128,27 @@ void TupTwitter::requestFile(const QString &target)
     reply = manager->get(request);
 }
 
-void TupTwitter::closeRequest(QNetworkReply *reply)
+void TupNewsCollector::closeRequest(QNetworkReply *reply)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupTwitter::closeRequest()] - Getting answer from request...";
+        qDebug() << "[TupNewsCollector::closeRequest()] - Getting answer from request...";
     #endif
 
     QByteArray array = reply->readAll();
 
+    // Reading banner image from server
     QString imageName = reply->url().fileName();
     if (imageName.endsWith(".png", Qt::CaseInsensitive)) {
         QString imgPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/images/";
         QDir dir(imgPath);
         if (!dir.exists()) {
             #ifdef TUP_DEBUG
-                qWarning() << "[TupTwitter::closeRequest()] - Image path doesn't exist -> " << imgPath;
+                qWarning() << "[TupNewsCollector::closeRequest()] - Image path doesn't exist -> " << imgPath;
                 qWarning() << "*** Creating it...";
             #endif
             if (!dir.mkpath(imgPath)) {
                 #ifdef TUP_DEBUG
-                    qWarning() << "[TupTwitter::closeRequest()] - Error while creating path -> " << imgPath;
+                    qWarning() << "[TupNewsCollector::closeRequest()] - Error while creating path -> " << imgPath;
                 #endif
             }
         }
@@ -156,18 +156,17 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
         QString image = imgPath + imageName;
         QFile file(image);
         #ifdef TUP_DEBUG
-            qDebug() << "[TupTwitter::closeRequest()] - Saving image -> " << image;
+            qDebug() << "[TupNewsCollector::closeRequest()] - Saving image -> " << image;
         #endif
         if (file.open(QIODevice::WriteOnly)) {
             file.write(array);
             file.close();
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupTwitter::closeRequest()] - Can't create file -> " << image;
+                qDebug() << "[TupNewsCollector::closeRequest()] - Can't create file -> " << image;
             #endif
         }
 
-        requestFile(MAEFLORESTA_URL + TUPITUBE_VIDEOS);
         return;
     }
 
@@ -207,7 +206,7 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
                         formatStatus(array);
                     } else {
                         #ifdef TUP_DEBUG
-                            qDebug() << "[TupTwitter::closeRequest()] - Network Error: Twitter output is NULL!";
+                            qDebug() << "[TupNewsCollector::closeRequest()] - Network Error: Twitter output is NULL!";
                         #endif
                     }
                     requestFile(MAEFLORESTA_URL + TUPITUBE_WEB_AD + locale + ".html");
@@ -226,60 +225,49 @@ void TupTwitter::closeRequest(QNetworkReply *reply)
                                 }
                             }
                         }
-                        requestFile(MAEFLORESTA_URL + TUPITUBE_VIDEOS);
-                    } else {
-                        if (answer.startsWith("<youtube>")) { // Getting video list
-                            saveFile(answer, "videos.xml");
-                            reply->deleteLater();
-                            manager->deleteLater();
-                        } else {
-                            #ifdef TUP_DEBUG
-                                qDebug() << "[TupTwitter::closeRequest()] - Network Error: Invalid data!";
-                            #endif
-                        }
                     }
                 }
             }
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupTwitter::closeRequest()] - Network Error: Gosh! No Internet? :S";
+            qDebug() << "[TupNewsCollector::closeRequest()] - Network Error: Gosh! No Internet? :S";
         #endif
     } 
 }
 
-void TupTwitter::slotError(QNetworkReply::NetworkError error)
+void TupNewsCollector::slotError(QNetworkReply::NetworkError error)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupTwitter::slotError()] - Error -> " << error;
+        qDebug() << "[TupNewsCollector::slotError()] - Error -> " << error;
     #endif
 
     switch (error) {
         case QNetworkReply::HostNotFoundError:
              {
              #ifdef TUP_DEBUG
-                 qDebug() << "[TupTwitter::slotError()] - Network Error: Host not found";
+                 qDebug() << "[TupNewsCollector::slotError()] - Network Error: Host not found";
              #endif
              }
         break;
         case QNetworkReply::TimeoutError:
              {
              #ifdef TUP_DEBUG
-                 qDebug() << "[TupTwitter::slotError()] - Network Error: Time out!";
+                 qDebug() << "[TupNewsCollector::slotError()] - Network Error: Time out!";
              #endif
              }
         break;
         case QNetworkReply::ConnectionRefusedError:
              {
              #ifdef TUP_DEBUG
-                 qDebug() << "[TupTwitter::slotError()] - Network Error: Connection Refused!";
+                 qDebug() << "[TupNewsCollector::slotError()] - Network Error: Connection Refused!";
              #endif
              }
         break;
         case QNetworkReply::ContentNotFoundError:
              {
              #ifdef TUP_DEBUG
-                 qDebug() << "[TupTwitter::slotError()] - Network Error: Content not found!";
+                 qDebug() << "[TupNewsCollector::slotError()] - Network Error: Content not found!";
              #endif
              }
         break;
@@ -287,17 +275,17 @@ void TupTwitter::slotError(QNetworkReply::NetworkError error)
         default:
              {
              #ifdef TUP_DEBUG
-                 qDebug() << "[TupTwitter::slotError()] - Network Error: Unknown Network error!";
+                 qDebug() << "[TupNewsCollector::slotError()] - Network Error: Unknown Network error!";
              #endif
              }
         break;
     }
 }
 
-void TupTwitter::checkSoftwareUpdates(QByteArray array)
+void TupNewsCollector::checkSoftwareUpdates(QByteArray array)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "[TupTwitter::checkSoftwareUpdates()] - Processing updates file...";
+        qWarning() << "[TupNewsCollector::checkSoftwareUpdates()] - Processing updates file...";
     #endif
 
     QDomDocument doc;
@@ -325,7 +313,7 @@ void TupTwitter::checkSoftwareUpdates(QByteArray array)
         }
 
         #ifdef TUP_DEBUG
-            qWarning() << "[TupTwitter::checkSoftwareUpdates()] - Update Flag -> " << update;
+            qWarning() << "[TupNewsCollector::checkSoftwareUpdates()] - Update Flag -> " << update;
             qWarning() << "*** Server Version: " << version << " - Revision: " << revision << " - Code Name: " << codeName;
             qWarning() << "*** Local Version: " << kAppProp->version() << " - Revision: " << kAppProp->revision();
         #endif
@@ -334,67 +322,94 @@ void TupTwitter::checkSoftwareUpdates(QByteArray array)
     }
 }
 
-void TupTwitter::formatStatus(QByteArray array)
+void TupNewsCollector::formatStatus(QByteArray array)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "[TupTwitter::formatStatus()] - Formatting news file...";
+        qWarning() << "[TupNewsCollector::formatStatus()] - Formatting news file...";
     #endif
 
     QString tweets = QString(array);
-    QString html = "";
+    QString releaseHtml = "";
 
-    html += "<html>\n";
-    html += "<head>\n";
-    html += "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n";
-    html += "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:tupitube.css\">\n";
-    html += "</head>\n";
+    QString htmlHeader = "";
+    htmlHeader += "<html>\n";
+    htmlHeader += "<head>\n";
+    htmlHeader += "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n";
+    htmlHeader += "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:tupitube.css\">\n";
+    htmlHeader += "</head>\n";
+    htmlHeader += "<body class=\"twitter_white\">\n";
+    htmlHeader += "<div class=\"tupi_background5\">";
 
-    if (themeName.compare("Dark") == 0) {
-        html += "<body class=\"twitter_gray\">\n";
-        html += "<div class=\"tupi_background5\">";
-    } else {
-        html += "<body class=\"twitter_white\">\n";
-        html += "<div class=\"tupi_background1\">";
-    }
+    QString htmlFooter = "</div></body>\n";
+    htmlFooter += "</html>";
 
-    html += "<center><img src=\"file:maefloresta.png\" alt=\"maefloresta\"/></center>\n";
-    html += "<div class=\"twitter_headline\"><center>&nbsp;&nbsp;@tupitube</center></div></div>\n";
+    releaseHtml = htmlHeader;
+    releaseHtml += "<center><img src=\"file:maefloresta.png\" alt=\"maefloresta\"/></center>\n";
+    releaseHtml += "<div class=\"twitter_headline\"><center>&nbsp;&nbsp;@tupitube</center></div></div>\n";
     QString css = "twitter_tupi_version";  
     if (update)
-        css = "twitter_tupi_update"; 
+        css = "twitter_tupi_update";
 
-    html += "<div class=\"" + css + "\"><center>\n";
-    html += tr("Latest Version") + ": <b>" + version + "</b> &nbsp;&nbsp;&nbsp;";
-    html += tr("Revision") + ": <b>" + revision + "</b> &nbsp;&nbsp;&nbsp;";
-    html += tr("Description") + ": <b>" + codeName + "</b>";
+    releaseHtml += "<div class=\"" + css + "\"><center>\n";
+    releaseHtml += tr("Latest Version") + ": <b>" + version + "</b> &nbsp;&nbsp;&nbsp;";
+    releaseHtml += tr("Revision") + ": <b>" + revision + "</b> &nbsp;&nbsp;&nbsp;";
+    releaseHtml += tr("Description") + ": <b>" + codeName + "</b>";
+    releaseHtml += "</center></div>";
 
     if (update)
-        html += "&nbsp;&nbsp;&nbsp;<b>[</b> <a href=\"https://www.maefloresta.com\">" + tr("It's time to upgrade! Click here!") + "</a>  <b>]</b>"; 
+        releaseHtml += "<div class=\"alert\"><center><b>[</b> <a class=\"alert\" href=\"https://www.tupitube.com\">"
+                       + tr("It's time to upgrade! Click here!") + "</a>  <b>]</center></b></div>";
 
-    html += "</center></div>\n";
-    html += "<div class=\"twitter_tupi_donation\"><center>\n";
-    html += "<a href=\"https://www.patreon.com/maefloresta\">" + tr("Want to help us to make a better project? Click here!") + "</a>";
-    html += "</center></div>\n";
-    html += tweets;
-    html += "</body>\n";
-    html += "</html>";
+    releaseHtml += "<div class=\"twitter_separator\">&nbsp;</div>"
+                "<div class=\"twitter_links\">"
+                "<center>"
+                "<a href=\"https://www.youtube.com/tupitube\">"
+                "<img src=\"file:youtube.png\" alt=\"Youtube\"/></a>"
+                "&nbsp;&nbsp;&nbsp;<a href=\"https://www.instagram.com/tupitube\"><img src=\"file:instagram.png\" alt=\"Instagram\"/></a>"
+                "&nbsp;&nbsp;&nbsp;<a href=\"https://www.facebook.com/tupitube\"><img src=\"file:facebook.png\" alt=\"Facebook\"/></a>"
+                "&nbsp;&nbsp;&nbsp;<a href=\"https://www.tiktok.com/@tupitube\"><img src=\"file:tiktok.png\" alt=\"TikTok\"/></a>"
+                "&nbsp;&nbsp;&nbsp;<a href=\"https://twitter.com/tupitube\"><img src=\"file:twitter.png\" alt=\"Twitter\"/></a>"
+                "</center>"
+                "</div>";
+    releaseHtml += "<div class=\"twitter_separator\">&nbsp;</div>";
+    releaseHtml += "<div class=\"twitter_tupi_donation\"><center>\n";
+    releaseHtml += "<a href=\"https://www.patreon.com/maefloresta\">" + tr("Want to help us to make a better project? Click here!") + "</a>";
+    releaseHtml += "</center></div>\n";
+    releaseHtml += "<p/><p/>"
+                   "<div class=\"twitter_separator\">&nbsp;</div>";
+    releaseHtml += htmlFooter;
 
-    QString twitterPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/twitter.html";
-    QFile file(twitterPath);
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QTextStream out(&file);
-        out << html;
-        file.close();
+    QString newsHtml = "";
+    newsHtml += htmlHeader;
+    newsHtml += tweets;
+    newsHtml += htmlFooter;
+
+    QString mainPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/";
+    QString releasePath = mainPath + "release.html";
+    QFile releaseFile(releasePath);
+    if (releaseFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&releaseFile);
+        out << releaseHtml;
+        releaseFile.close();
+    }
+
+    QString newsPath = mainPath + "news.html";
+    QFile newsFile(newsPath);
+    if (newsFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&newsFile);
+        out << newsHtml;
+        newsFile.close();
     }
 
     #ifdef TUP_DEBUG
-        qWarning() << "[TupTwitter::formatStatus()] - Saving file -> " << twitterPath;
+        qWarning() << "[TupNewsCollector::formatStatus()] - Saving file -> " << releasePath;
+        qWarning() << "[TupNewsCollector::formatStatus()] - Saving file -> " << newsPath;
     #endif
 
     emit pageReady();
 }
 
-bool TupTwitter::saveFile(const QString &answer, const QString &fileName)
+bool TupNewsCollector::saveFile(const QString &answer, const QString &fileName)
 {
     QString msgPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/" + fileName;
     QFile file(msgPath);
@@ -408,7 +423,7 @@ bool TupTwitter::saveFile(const QString &answer, const QString &fileName)
     return false;
 }
 
-QString TupTwitter::getImageCode(const QString &answer) const
+QString TupNewsCollector::getImageCode(const QString &answer) const
 {
     QDomDocument doc;
     if (doc.setContent(answer)) {

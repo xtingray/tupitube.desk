@@ -13,7 +13,7 @@ SUBDIRS += papagayo \
            # kinas \
            brush \
            workspace \
-           twitter \
+           news \
            player
 
 # SUBDIRS += debug

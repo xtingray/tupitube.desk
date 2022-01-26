@@ -33,56 +33,32 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "tuptwitterwidget.h"
+#ifndef TUPNEWSDIALOG_H
+#define TUPNEWSDIALOG_H
 
-TupTwitterWidget::TupTwitterWidget(QWidget *parent) : QWidget(parent)
+#include "tglobal.h"
+#include "tupnewscollector.h"
+
+#include <QDialog>
+#include <QTextBrowser>
+#include <QTextDocument>
+
+class TUPITUBE_EXPORT TupNewsDialog : public QDialog
 {
-    setWindowTitle(tr("News!"));
-    setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/news_mode.png")));
+    Q_OBJECT
 
-    QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->setMargin(15);
-    separator = new QSplitter(this);
-    layout->addWidget(separator);
+    public:
+        TupNewsDialog(QWidget *parent = nullptr);
+        ~TupNewsDialog();
 
-    pageArea = new QTextBrowser(separator);
-    document = new QTextDocument(pageArea);
-    pageArea->setDocument(document);
-}
+    public slots:
+        void setSource(const QString &releasePath, const QString &newsPath);
 
-TupTwitterWidget::~TupTwitterWidget()
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[~TupTwitterWidget()]";
-    #endif
-}
+    private:
+        QTextBrowser *releasePage;
+        QTextBrowser *newsPage;
+        QTextDocument *releaseDocument;
+        QTextDocument *newsDocument;
+};
 
-void TupTwitterWidget::setSource(const QString &filePath)
-{
-    QStringList path;
-
-    #ifdef Q_OS_WIN
-        QString resources = SHARE_DIR + "html/";
-    #else
-        QString resources = SHARE_DIR + "data/html/";
-    #endif
-
-    path << resources + "css";
-    path << resources + "images";
-    pageArea->setSearchPaths(path);
-    pageArea->setOpenExternalLinks(true);
-    pageArea->setSource(QUrl::fromLocalFile(filePath));
-}
-
-void TupTwitterWidget::keyPressEvent(QKeyEvent *event) {
-    switch (event->key()) {
-            case Qt::Key_1:
-                  if (event->modifiers() == Qt::ControlModifier)
-                      emit newPerspective(0);
-            break;
-            case Qt::Key_2:
-                  if (event->modifiers() == Qt::ControlModifier)
-                      emit newPerspective(1);
-            break;
-    }
-}
+#endif

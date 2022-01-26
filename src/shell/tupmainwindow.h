@@ -49,7 +49,7 @@
 #include "tuplibrarywidget.h"
 #include "tuptimeline.h"
 #include "tupcamerawidget.h"
-#include "tuptwitterwidget.h"
+#include "tupnewsdialog.h"
 #include "tupexportwidget.h"
 
 #include "tabbedmainwindow.h"
@@ -88,8 +88,9 @@ class TupMainWindow : public TabbedMainWindow
         enum Perspective {
              Animation = 0x01,
              Player = 0x02,
-             News = 0x04,
-             All = Animation | Player | News
+             All = Animation | Player
+             // News = 0x04,
+             // All = Animation | Player | News
         };
 
         enum RequestType {
@@ -148,7 +149,7 @@ class TupMainWindow : public TabbedMainWindow
         void postFrame(const QString &imagePath);
 
     private slots:
-        void addTwitterPage();
+        void enableUpdatesDialog();
         void setWorkSpace(const QStringList &users = QStringList());
         void createNewLocalProject();
         void newProject();
@@ -181,6 +182,7 @@ class TupMainWindow : public TabbedMainWindow
     private slots:
         void preferences();
         void showHelp();
+        void checkTupiTubeUpdates();
         void aboutTupiTube();
         void openYouTubeChannel();
         // void showTipDialog();
@@ -216,7 +218,7 @@ class TupMainWindow : public TabbedMainWindow
         QScreen *screen;
         TupDocumentView *animationTab;
         TupAnimationspace *playerTab;
-        TupTwitterWidget *newsTab;
+        TupNewsDialog *newsDialog;
         TupStatusBar *m_statusBar;
         TActionManager *m_actionManager;
         QMenu *m_fileMenu;
@@ -262,7 +264,7 @@ class TupMainWindow : public TabbedMainWindow
 
         TupCameraWidget *cameraWidget;
         bool isSaveDialogOpen; 
-        bool internetOn;
+        // bool internetOn;
         int lastTab;
         TupProject::Mode contextMode;
         TupMainWindow::RequestType requestType; 
@@ -272,7 +274,7 @@ class TupMainWindow : public TabbedMainWindow
         QString webContent;
         bool isImageMsg;
         QSize webMsgSize;
-        // TAction *helpAction;
+        TAction *updatesAction;
         TupDocumentView::DockType currentDock;
 
     signals:

@@ -3413,10 +3413,6 @@
         <translation>Alt+B</translation>
     </message>
     <message>
-        <source>Alt+P</source>
-        <translation>Alt+P</translation>
-    </message>
-    <message>
         <source>Alt+S</source>
         <translation>Alt+S</translation>
     </message>
@@ -3788,6 +3784,14 @@
         <source>Open TupiTube Network</source>
         <translation>打开 TupiTube 网络</translation>
     </message>
+    <message>
+        <source>Ctrl+Shift+P</source>
+        <translation type="unfinished">Ctrl+Shift+P</translation>
+    </message>
+    <message>
+        <source>Check for Updates</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TupMicManager</name>
@@ -4126,6 +4130,48 @@
     <message>
         <source>1080 (Full HD Vertical) - 24</source>
         <translation>1080 (Full HD Vertical) - 24</translation>
+    </message>
+</context>
+<context>
+    <name>TupNewsCollector</name>
+    <message>
+        <source>It&apos;s time to upgrade! Click here!</source>
+        <translation>现在是升级的时候了！ 点击这里！</translation>
+    </message>
+    <message>
+        <source>Latest Version</source>
+        <translation>最新版本</translation>
+    </message>
+    <message>
+        <source>Revision</source>
+        <translation>修订本</translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation>描述</translation>
+    </message>
+    <message>
+        <source>Want to help us to make a better project? Click here!</source>
+        <translation>想帮助我们做一个更好的项目吗？ 点击这里！</translation>
+    </message>
+</context>
+<context>
+    <name>TupNewsDialog</name>
+    <message>
+        <source>TupiTube Updates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>News</source>
+        <translation type="unfinished">消息</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">关闭</translation>
     </message>
 </context>
 <context>
@@ -4584,6 +4630,10 @@
     <message>
         <source>Voice Settings</source>
         <translation>语音设置</translation>
+    </message>
+    <message>
+        <source>Audio files (*.wav)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5359,36 +5409,6 @@ Cover</source>
     <message>
         <source>Current Tool</source>
         <translation>当前工具</translation>
-    </message>
-</context>
-<context>
-    <name>TupTwitter</name>
-    <message>
-        <source>It&apos;s time to upgrade! Click here!</source>
-        <translation>现在是升级的时候了！ 点击这里！</translation>
-    </message>
-    <message>
-        <source>Latest Version</source>
-        <translation>最新版本</translation>
-    </message>
-    <message>
-        <source>Revision</source>
-        <translation>修订本</translation>
-    </message>
-    <message>
-        <source>Description</source>
-        <translation>描述</translation>
-    </message>
-    <message>
-        <source>Want to help us to make a better project? Click here!</source>
-        <translation>想帮助我们做一个更好的项目吗？ 点击这里！</translation>
-    </message>
-</context>
-<context>
-    <name>TupTwitterWidget</name>
-    <message>
-        <source>News!</source>
-        <translation>新闻</translation>
     </message>
 </context>
 <context>

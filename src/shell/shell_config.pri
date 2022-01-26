@@ -17,7 +17,7 @@ EXPOSURE_DIR = ../components/exposure
 TIMELINE_DIR = ../components/timeline 
 LIBRARY_DIR = ../components/library
 SCENES_DIR = ../components/scenes 
-TWITTER_DIR = ../components/twitter
+NEWS_DIR = ../components/news
 LIBUI_DIR = ../libui
 STORE_DIR = ../store 
 LIBTUPI_DIR = ../libtupi
@@ -39,7 +39,7 @@ include($$EXPOSURE_DIR/exposure.pri)
 include($$TIMELINE_DIR/timeline.pri)
 include($$LIBRARY_DIR/library.pri)
 include($$SCENES_DIR/scenes.pri)
-include($$TWITTER_DIR/twitter.pri)
+include($$NEWS_DIR/news.pri)
 include($$LIBUI_DIR/libui.pri)
 include($$STORE_DIR/store.pri)
 include($$LIBTUPI_DIR/libtupi.pri)

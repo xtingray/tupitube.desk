@@ -34,7 +34,7 @@
  ***************************************************************************/
 
 #include "tupmainwindow.h"
-#include "tuptwitter.h"
+#include "tupnewscollector.h"
 #include "tupnewproject.h"
 #include "tupsigndialog.h"
 #include "tupabout.h"
@@ -82,7 +82,7 @@
 
 TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), m_projectManager(nullptr), animationTab(nullptr),
                                                       playerTab(nullptr), m_viewChat(nullptr), m_exposureSheet(nullptr),
-                                                      m_scenes(nullptr), isSaveDialogOpen(false), internetOn(false)
+                                                      m_scenes(nullptr), isSaveDialogOpen(false) //, internetOn(false)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupMainWindow()]";
@@ -283,19 +283,19 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         qDebug() << "[TupMainWindow::setWorkSpace()]";
     #endif
 
-    TCONFIG->beginGroup("General");
-    bool getNews = TCONFIG->value("GetNews", true).toBool();
+    // TCONFIG->beginGroup("General");
+    // bool getNews = TCONFIG->value("GetNews", true).toBool();
     #ifdef TUP_DEBUG
         qDebug() << "---";
         qDebug() << "[TupMainWindow::setWorkSpace()] - GetNews -> " << TCONFIG->value("GetNews").toBool();;
     #endif
-    if (getNews) {
-        // Downloading maefloresta Twitter status
-        TupTwitter *twitter = new TupTwitter();
-        twitter->start();
-        connect(twitter, SIGNAL(pageReady()), this, SLOT(addTwitterPage()));
-        connect(twitter, SIGNAL(newUpdate(bool)), this, SLOT(setUpdateFlag(bool)));
-    }
+    // if (getNews) {
+    // Downloading MaeFloresta news 
+    TupNewsCollector *newsCollector = new TupNewsCollector();
+    newsCollector->start();
+    connect(newsCollector, SIGNAL(pageReady()), this, SLOT(enableUpdatesDialog()));
+    connect(newsCollector, SIGNAL(newUpdate(bool)), this, SLOT(setUpdateFlag(bool)));
+    // }
 
     if (m_projectManager->isOpen()) {
         if (TupMainWindow::requestType == NewLocalProject || TupMainWindow::requestType == NewNetProject)
@@ -447,32 +447,26 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         m_projectManager->clearUndoStack();
 
+        /*
         if (internetOn && newsTab)
             addWidget(newsTab);
+        */
     }
 }
 
-void TupMainWindow::addTwitterPage()
+void TupMainWindow::enableUpdatesDialog()
 {
-    if (tabCount() == 2) {
-        QString twitterPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/twitter.html";
-        if (QFile::exists(twitterPath)) {
-            #ifdef TUP_DEBUG
-                qDebug() << "[TupMainWindow::addTwitterPage()] - Loading page -> " + twitterPath;
-            #endif
-
-            internetOn = true;
-            newsTab = new TupTwitterWidget(this);
-            newsTab->setSource(twitterPath);
-            connect(newsTab, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
-            addWidget(newsTab);
-
-            // helpAction->setEnabled(true);
-        } else {
-            #ifdef TUP_DEBUG
-               qWarning() << "[TupMainWindow::addTwitterPage()] - Warning: Couldn't load page -> " + twitterPath;
-            #endif
-        }
+    QString mainPath = QDir::homePath() + "/." + QCoreApplication::applicationName();
+    QString releasePath = mainPath + "/release.html";
+    QString newsPath = mainPath + "/news.html";
+    if (QFile::exists(releasePath) && QFile::exists(newsPath)) {
+        updatesAction->setEnabled(true);
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMainWindow::enableUpdatesDialog()] - Warning! Can't find these files:";
+            qDebug() << "Release file -> " << releasePath;
+            qDebug() << "News file -> " << newsPath;
+        #endif
     }
 }
 
@@ -617,10 +611,12 @@ void TupMainWindow::resetUI()
 
     removeAllWidgets();
 
+    /*
     if (internetOn) {
         delete newsTab;
         newsTab = nullptr;
     }
+    */
 
     if (playerTab) {
         playerTab->clearInterface();

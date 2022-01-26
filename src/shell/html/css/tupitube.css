@@ -31,11 +31,13 @@ body {
 }
 
 .tupi_background5 {
-     background-image:url('file:bg5.png');
+     /* background-image:url('file:bg5.png'); */
+     background-color:#ffffff;
 }
 
 .tupi_background6 {
-     background-image:url('file:bg6.png');
+     /* background-image:url('file:bg6.png'); */
+     background-color:#cccccc;
 }
 
 .tip_background00 {
@@ -237,7 +239,7 @@ a:hover {
      text-decoration:none;
      font-family:"Arial", Times, serif;
      font-style:normal;
-     font-size:12px;
+     font-size:16px;
      font-weight:normal;
 }
 
@@ -248,8 +250,18 @@ a:hover {
      text-decoration:none;
      font-family:"Arial", Times, serif;
      font-style:normal;
-     font-size:12px;
+     font-size:16px;
      font-weight:normal;
+}
+
+.alert {
+     color:#ff0000;
+     font-weight:bold;
+}
+
+.alert:link {
+     color:#ff0000;
+     font-weight:bold;
 }
 
 .twitter_tupi_donation {
@@ -264,16 +276,18 @@ a:hover {
 }
 
 .twitter_tweet {
-     background-color:#fff;
+     background-color:#efefef;
      color:#000000;
-     padding:10px;
-     border-radius:5px;
+     padding:20px;
+     border-radius:10px;
      text-align:justify;
      text-decoration:none;
      font-family:"Arial", Times, serif;
      font-style:normal;
-     font-size:14px;
+     font-size:16px;
      font-weight:normal;
+     margin:10px;
+     border:2px solid #000000;
 }
 
 .twitter_separator {

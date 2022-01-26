@@ -298,7 +298,7 @@ void TupMainWindow::setupMenu()
     }
 
     m_viewMenu->addActions(group->actions());
-    connect(group, SIGNAL(triggered(QAction *)), this, SLOT(changePerspective(QAction *)));
+    connect(group, SIGNAL(triggered(QAction*)), this, SLOT(changePerspective(QAction*)));
     menuBar()->addMenu(m_viewMenu);
 	
     // Setting up the help menu
@@ -307,7 +307,7 @@ void TupMainWindow::setupMenu()
     menuBar()->addMenu(m_helpMenu);
     // m_helpMenu->addAction(m_actionManager->find("help"));
     m_helpMenu->addAction(m_actionManager->find("youtube"));
-    // m_helpMenu->addAction(m_actionManager->find("tip_of_day"));
+    m_helpMenu->addAction(m_actionManager->find("check_updates"));
     m_helpMenu->addSeparator();
     m_helpMenu->addAction(m_actionManager->find("about_tupitube"));
 
@@ -450,17 +450,21 @@ void TupMainWindow::setPreferencesAction()
 void TupMainWindow::setupHelpActions()
 {
     /*
-    helpAction = new TAction(QPixmap(THEME_DIR + "icons/help_mode.png"), tr("Online Help Content"), QKeySequence(tr("F1")),
-                 this, SLOT(showHelp()), m_actionManager, "help");
-    helpAction->setEnabled(false);
+        helpAction = new TAction(QPixmap(THEME_DIR + "icons/help_mode.png"), tr("Online Help Content"), QKeySequence(tr("F1")),
+                     this, SLOT(showHelp()), m_actionManager, "help");
+        helpAction->setEnabled(false);
+
+        new TAction(QPixmap(THEME_DIR + "icons/tip.png"), tr("Tip Of The Day"), QKeySequence(tr("Ctrl+T")),
+                    this, SLOT(showTipDialog()), m_actionManager, "tip_of_day");
     */
 
     new TAction(QPixmap(THEME_DIR + "icons/youtube.png"), tr("YouTube Tutorials"), QKeySequence(tr("Y")),
-                this, SLOT(openYouTubeChannel()), m_actionManager, "youtube");
-    // new TAction(QPixmap(THEME_DIR + "icons/tip.png"), tr("Tip Of The Day"), QKeySequence(tr("Ctrl+T")),
-    //          this, SLOT(showTipDialog()), m_actionManager, "tip_of_day");
+                        this, SLOT(openYouTubeChannel()), m_actionManager, "youtube");
+    updatesAction = new TAction(QPixmap(THEME_DIR + "icons/updates.png"), tr("Check for Updates"), QKeySequence(),
+                                this, SLOT(checkTupiTubeUpdates()), m_actionManager, "check_updates");
+    updatesAction->setEnabled(false);
     new TAction(QPixmap(THEME_DIR + "icons/about.png"), tr("About TupiTube Desk"), QKeySequence(tr("Ctrl+K")), 
-                this, SLOT(aboutTupiTube()), m_actionManager, "about_tupitube");
+                        this, SLOT(aboutTupiTube()), m_actionManager, "about_tupitube");
 }
 
 void TupMainWindow::setupToolBar()
@@ -523,11 +527,11 @@ void TupMainWindow::changePerspective(QAction *action)
     int perspective = action->data().toInt();
 
     // Animation or Player perspective
-    if (perspective == Animation || perspective == Player) {
+    if (perspective == Animation || perspective == Player) // {
         setCurrentTab(perspective - 1);
-    } else if (perspective == News) { // News perspective
+    /* }  else if (perspective == News) { // News perspective
         setCurrentTab(2);
-    } 
+    } */
 
     action->setChecked(true);
 }
@@ -676,4 +680,19 @@ void TupMainWindow::updateScenesPanelStatus(bool flag)
         if (exposureView->isExpanded())
             exposureView->expandDock(false);
     }
+}
+
+void TupMainWindow::checkTupiTubeUpdates()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::checkTupiTubeUpdates()]";
+    #endif
+
+    QString mainPath = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/";
+    QString releasePath = mainPath + "release.html";
+    QString newsPath = mainPath + "news.html";
+
+    newsDialog = new TupNewsDialog(this);
+    newsDialog->setSource(releasePath, newsPath);
+    newsDialog->show();
 }
