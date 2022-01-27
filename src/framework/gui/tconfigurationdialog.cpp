@@ -65,7 +65,7 @@ TConfigurationDialog::TConfigurationDialog(QWidget *parent) : QDialog(parent)
 
     mainLayout->addLayout(pagesLayout);
     
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Horizontal);
+    QHBoxLayout *buttonBox = new QHBoxLayout; 
 
     QPushButton *applyButton = new QPushButton;
     applyButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
@@ -78,19 +78,17 @@ TConfigurationDialog::TConfigurationDialog(QWidget *parent) : QDialog(parent)
     cancelButton->setToolTip(tr("&Cancel"));
     cancelButton->setMinimumWidth(60);
 
-    buttonBox->addButton(cancelButton, QDialogButtonBox::ActionRole);
-    buttonBox->addButton(applyButton, QDialogButtonBox::ActionRole);
+    buttonBox->addWidget(cancelButton);
+    buttonBox->addWidget(applyButton);
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
     connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
 
-    /*
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Cancel | QDialogButtonBox::Apply, Qt::Horizontal, this);
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
-    connect(buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(apply()));
-    */
-    
+    QHBoxLayout *bottomLayout = new QHBoxLayout;
+    bottomLayout->setAlignment(Qt::AlignRight);
+    bottomLayout->addLayout(buttonBox);
+
     mainLayout->addWidget(new TSeparator());
-    mainLayout->addWidget(buttonBox, Qt::AlignRight);
+    mainLayout->addLayout(bottomLayout);
 }
 
 TConfigurationDialog::~TConfigurationDialog()

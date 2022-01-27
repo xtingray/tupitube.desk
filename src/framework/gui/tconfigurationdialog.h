@@ -49,12 +49,7 @@
 #include <QStackedWidget>
 #include <QLabel>
 #include <QHeaderView>
-#include <QDialogButtonBox>
 #include <QListWidget>
-
-// class QStackedWidget;
-// class QListWidget;
-// class QListWidgetItem;
 
 class T_GUI_EXPORT TConfigurationDialog : public QDialog
 {
