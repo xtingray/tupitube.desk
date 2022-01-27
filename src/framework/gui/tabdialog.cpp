@@ -72,32 +72,34 @@ void TabDialog::setupButtons(int buttons)
         QPushButton *customButton = new QPushButton(tr(""));
         connect(customButton, SIGNAL(clicked()), this, SLOT(custom2()));
         buttonLayout->addWidget(customButton);
-        m_buttons.insert( Custom2, customButton);
+        m_buttons.insert(Custom2, customButton);
     }
     
     if (buttons & Custom3) {
         QPushButton *customButton = new QPushButton(tr(""));
         connect(customButton, SIGNAL(clicked()), this, SLOT(custom3()));
         buttonLayout->addWidget(customButton);
-        m_buttons.insert( Custom3, customButton);
+        m_buttons.insert(Custom3, customButton);
     }
     
     if (buttons & Help) {
         QPushButton *helpButton = new QPushButton(tr("Help"));
         connect(helpButton, SIGNAL(clicked()), this, SLOT(help()));
         buttonLayout->addWidget(helpButton);
-        m_buttons.insert( Help, helpButton);
+        m_buttons.insert(Help, helpButton);
     }
     
     if (buttons & Apply) {
-        QPushButton *applyButton = new QPushButton(tr("Apply"));
+        QPushButton *applyButton = new QPushButton;
+        applyButton->setMinimumWidth(60);
+        applyButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
+        applyButton->setToolTip(tr("Apply"));
         connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
         buttonLayout->addWidget(applyButton);
-        m_buttons.insert( Apply, applyButton);
+        m_buttons.insert(Apply, applyButton);
     }
     
     if (buttons & Cancel) {
-        // QPushButton *cancelButton = new QPushButton(tr("Cancel"));
         QPushButton *cancelButton = new QPushButton;
         cancelButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
         cancelButton->setToolTip(tr("Cancel"));
@@ -108,14 +110,16 @@ void TabDialog::setupButtons(int buttons)
     }
 
     if (buttons & Close) {
-        QPushButton *closeButton = new QPushButton(tr("Close"));
+        QPushButton *closeButton = new QPushButton;
+        closeButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
+        closeButton->setToolTip(tr("Close"));
+        closeButton->setMinimumWidth(60);
         connect(closeButton, SIGNAL(clicked()), this, SLOT(cancel()));
         buttonLayout->addWidget(closeButton);
         m_buttons.insert(Close, closeButton);
     }
 
     if (buttons & Ok) {
-        // QPushButton *okButton = new QPushButton(tr("OK"));
         QPushButton *okButton = new QPushButton;
         okButton->setMinimumWidth(60);
         okButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));

@@ -96,7 +96,7 @@ TupModesSettingsDialog::TupModesSettingsDialog(QList<TupBackground::BgType> bgLa
 
     modesList->setDragDropMode(QAbstractItemView::InternalMove);
     modesList->setFixedHeight(170);
-    connect(modesList, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(updateListUI()));
+    connect(modesList, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(updateListUI()));
     connect(modesList, SIGNAL(listEdited()), this, SLOT(updateListUI()));
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
@@ -119,9 +119,17 @@ TupModesSettingsDialog::TupModesSettingsDialog(QList<TupBackground::BgType> bgLa
     buttonsLayout->addSpacing(20);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Horizontal);
-    QPushButton *applyButton = new QPushButton(tr("&Apply"));
+
+    QPushButton *applyButton = new QPushButton;
+    applyButton->setMinimumWidth(60);
+    applyButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
+    applyButton->setToolTip(tr("&Apply"));
     applyButton->setDefault(true);
-    QPushButton *cancelButton = new QPushButton(tr("&Cancel"));
+
+    QPushButton *cancelButton = new QPushButton;
+    cancelButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
+    cancelButton->setToolTip(tr("&Cancel"));
+    cancelButton->setMinimumWidth(60);
 
     buttonBox->addButton(cancelButton, QDialogButtonBox::ActionRole);
     buttonBox->addButton(applyButton, QDialogButtonBox::ActionRole);
@@ -129,7 +137,7 @@ TupModesSettingsDialog::TupModesSettingsDialog(QList<TupBackground::BgType> bgLa
     connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
 
     bgLayout->addWidget(modesList);
-    bgLayout->addLayout(buttonsLayout);
+    bgLayout->addLayout(buttonsLayout, Qt::AlignRight);
 
     // Foreground Tab
 
@@ -160,7 +168,7 @@ TupModesSettingsDialog::~TupModesSettingsDialog()
 
 void TupModesSettingsDialog::apply()
 {
-    QList<QPair<TupBackground::BgType, bool>> valuesList;
+    // QList<QPair<TupBackground::BgType, bool>> valuesList;
     QPair<TupBackground::BgType, bool> values;
 
     for (int i=0; i < modesList->count(); i++) {

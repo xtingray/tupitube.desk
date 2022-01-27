@@ -52,9 +52,9 @@
 #include <QDialogButtonBox>
 #include <QListWidget>
 
-class QStackedWidget;
-class QListWidget;
-class QListWidgetItem;
+// class QStackedWidget;
+// class QListWidget;
+// class QListWidgetItem;
 
 class T_GUI_EXPORT TConfigurationDialog : public QDialog
 {

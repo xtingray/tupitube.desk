@@ -36,6 +36,7 @@
  ***************************************************************************/
 
 #include "tconfigurationdialog.h"
+#include "tapplicationproperties.h"
 
 TConfigurationDialog::TConfigurationDialog(QWidget *parent) : QDialog(parent)
 {
@@ -50,7 +51,8 @@ TConfigurationDialog::TConfigurationDialog(QWidget *parent) : QDialog(parent)
     list->setMovement(QListView::Static);
     list->setSpacing(10);
     
-    connect(list, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(changePage(QListWidgetItem *, QListWidgetItem *)));
+    connect(list, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+            this, SLOT(changePage(QListWidgetItem*,QListWidgetItem*)));
 
     QWidget *widget = new QWidget;
     widget->setFixedWidth(130);
@@ -64,9 +66,17 @@ TConfigurationDialog::TConfigurationDialog(QWidget *parent) : QDialog(parent)
     mainLayout->addLayout(pagesLayout);
     
     QDialogButtonBox *buttonBox = new QDialogButtonBox(Qt::Horizontal);
-    QPushButton *applyButton = new QPushButton(tr("&Apply"));
+
+    QPushButton *applyButton = new QPushButton;
+    applyButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
+    applyButton->setToolTip(tr("&Apply"));
+    applyButton->setMinimumWidth(60);
     applyButton->setDefault(true);
-    QPushButton *cancelButton = new QPushButton(tr("&Cancel"));
+
+    QPushButton *cancelButton = new QPushButton;
+    cancelButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
+    cancelButton->setToolTip(tr("&Cancel"));
+    cancelButton->setMinimumWidth(60);
 
     buttonBox->addButton(cancelButton, QDialogButtonBox::ActionRole);
     buttonBox->addButton(applyButton, QDialogButtonBox::ActionRole);
@@ -80,7 +90,7 @@ TConfigurationDialog::TConfigurationDialog(QWidget *parent) : QDialog(parent)
     */
     
     mainLayout->addWidget(new TSeparator());
-    mainLayout->addWidget(buttonBox);
+    mainLayout->addWidget(buttonBox, Qt::AlignRight);
 }
 
 TConfigurationDialog::~TConfigurationDialog()

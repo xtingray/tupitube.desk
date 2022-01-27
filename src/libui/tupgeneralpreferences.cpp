@@ -103,7 +103,7 @@ QWidget * TupGeneralPreferences::generalTab()
     QGridLayout *interfaceForm = createForm("General", Startup, interfaceOptions, labels);
 
     confirmation << "ConfirmRemoveFrame" << "ConfirmRemoveLayer"
-                    << "ConfirmRemoveScene" << "ConfirmRemoveObject";
+                 << "ConfirmRemoveScene" << "ConfirmRemoveObject";
 
     labels.clear();
     labels << tr("Confirm \"Remove frame\" action") << tr("Confirm \"Remove layer\" action")
