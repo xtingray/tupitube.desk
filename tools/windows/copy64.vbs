@@ -61,7 +61,7 @@ fileSystem.CopyFile sourceDir & "\components\workspace\release\tupiworkspace.dll
 fileSystem.CopyFile sourceDir & "\components\brush\release\tupibrush.dll", tupiDir & "\lib\tupibrush.dll"
 fileSystem.CopyFile sourceDir & "\components\scenes\release\tupiscenes.dll", tupiDir & "\lib\tupiscenes.dll"
 fileSystem.CopyFile sourceDir & "\components\timeline\release\tupitimeline.dll", tupiDir & "\lib\tupitimeline.dll"
-fileSystem.CopyFile sourceDir & "\components\twitter\release\tupitwitter.dll", tupiDir & "\lib\tupitwitter.dll"
+fileSystem.CopyFile sourceDir & "\components\news\release\tupinews.dll", tupiDir & "\lib\tupinews.dll"
 fileSystem.CopyFile sourceDir & "\components\micmanager\release\tupmicmanager.dll", tupiDir & "\lib\tupmicmanager.dll"
 fileSystem.CopyFile sourceDir & "\components\papagayo\release\tupipapagayo.dll", tupiDir & "\lib\tupipapagayo.dll"
 fileSystem.CopyFile sourceDir & "\mypaint\json-c\release\json-c.dll", tupiDir & "\lib\raster\json-c.dll"
