@@ -111,14 +111,20 @@ TupCameraDialog::TupCameraDialog(QComboBox *devices, const QSize dimension, QLis
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->addStretch(1);
 
-    QPushButton *cancel = new QPushButton(tr("Cancel"));
-    connect(cancel, SIGNAL(clicked()), this, SLOT(reject()));
-    buttonLayout->addWidget(cancel);
+    QPushButton *cancelButton = new QPushButton;
+    cancelButton->setIcon(QIcon(THEME_DIR + "icons/close.png"));
+    cancelButton->setToolTip(tr("Cancel"));
+    cancelButton->setMinimumWidth(60);
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
+    buttonLayout->addWidget(cancelButton);
 
-    QPushButton *ok = new QPushButton(tr("Ok"));
-    connect(ok, SIGNAL(clicked()), this, SLOT(accept()));
-    buttonLayout->addWidget(ok);
-    ok->setDefault(true);
+    QPushButton *okButton = new QPushButton;
+    okButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
+    okButton->setToolTip(tr("Ok"));
+    okButton->setMinimumWidth(60);
+    connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
+    buttonLayout->addWidget(okButton);
+    okButton->setDefault(true);
 
     layout->addWidget(resolutionLabel);
     layout->addWidget(resolutionCombo);
