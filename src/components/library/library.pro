@@ -46,7 +46,7 @@ unix {
     INCLUDEPATH += $$LIBTUPI_DIR
     LIBS += -L$$LIBTUPI_DIR -ltupi
 
-    LIBS += -L$$MICMANAGER_DIR -ltupmicmanager
+    # LIBS += -L$$MICMANAGER_DIR -ltupmicmanager
 
     !include(../../../tupiglobal.pri) {
              error("Run ./configure first!")
@@ -68,5 +68,5 @@ win32 {
     INCLUDEPATH += $$LIBTUPI_DIR
     LIBS += -L$$LIBTUPI_DIR/release/ -ltupi 
 
-    LIBS += -L$$MICMANAGER_DIR/release/ -ltupmicmanager
+    # LIBS += -L$$MICMANAGER_DIR/release/ -ltupmicmanager
 }

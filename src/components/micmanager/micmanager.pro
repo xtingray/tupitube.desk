@@ -1,7 +1,7 @@
 QT += widgets multimedia
 CONFIG += dll warn_on
 TEMPLATE = lib 
-TARGET = tupmicmanager
+TARGET = tupimicmanager
 
 INSTALLS += target
 target.path = /lib/
