@@ -1296,14 +1296,16 @@ void TupMainWindow::updateCurrentTab(int index)
 
 void TupMainWindow::exportProject()
 {
-    exportWidget = new TupExportWidget(m_projectManager->getProject(), this);
-    connect(exportWidget, SIGNAL(isDone()), animationTab, SLOT(updatePaintArea()));
-    exportWidget->show();
+    if (callSave()) {
+        exportWidget = new TupExportWidget(m_projectManager->getProject(), this);
+        connect(exportWidget, SIGNAL(isDone()), animationTab, SLOT(updatePaintArea()));
+        exportWidget->show();
 
-    exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),
-                       static_cast<int> ((screen->geometry().height() - exportWidget->height()) / 2));
+        exportWidget->move(static_cast<int> ((screen->geometry().width() - exportWidget->width()) / 2),
+                           static_cast<int> ((screen->geometry().height() - exportWidget->height()) / 2));
 
-    exportWidget->exec();
+        exportWidget->exec();
+    }
 }
 
 void TupMainWindow::postProject()

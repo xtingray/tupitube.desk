@@ -147,7 +147,7 @@ void TupExportWidget::loadPlugins()
         qDebug() << "[TupExportWidget::loadPlugins()]";
     #endif
 
-    QList<TupExportInterface *> pluginList;
+    QHash<int, TupExportInterface *> pluginList;
     foreach (QObject *plugin, TupPluginManager::instance()->getFormats()) {
         if (plugin) {
             TupExportInterface *exporter = qobject_cast<TupExportInterface *> (plugin);
@@ -176,14 +176,15 @@ void TupExportWidget::loadPlugins()
                 */
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupExportWidget::loadPlugins() - [ Fatal Error ] - Can't load export plugin";
+                    qDebug() << "[TupExportWidget::loadPlugins()] - Fatal Error: Can't load export plugin";
                 #endif
             }
         }
     }
 
-    for (int i = 0; i < pluginList.size(); i++) {
-         TupExportInterface *exporter = pluginList.at(i);
+    QHash<int, TupExportInterface *>::iterator index;
+    for (index = pluginList.begin(); index != pluginList.end(); ++index) {
+         TupExportInterface *exporter = index.value();
          pluginPage->addPlugin(exporter->key(), exporter->formatName());
          plugins.insert(exporter->key(), exporter);
     }
