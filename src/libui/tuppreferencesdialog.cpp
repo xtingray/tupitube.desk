@@ -45,6 +45,7 @@ TupPreferencesDialog::TupPreferencesDialog(QWidget *parent) : TConfigurationDial
     addPage(general, tr("General"), QPixmap(THEME_DIR + "icons/tupi_general_preferences.png"));
 
     theme = new TupThemePreferences;
+    connect(theme, SIGNAL(colorPicked(const QColor&)), this, SLOT(testThemeColor(const QColor&)));
     addPage(theme, tr("Theme"), QPixmap(THEME_DIR + "icons/tupi_theme_preferences.png"));
 
     workspace = new TupPaintAreaPreferences;
@@ -73,4 +74,13 @@ void TupPreferencesDialog::apply()
 QSize TupPreferencesDialog::sizeHint() const
 {
     return QSize(600, 430);
+}
+
+void TupPreferencesDialog::testThemeColor(const QColor &color)
+{
+    QString r = QString::number(color.red());
+    QString g = QString::number(color.green());
+    QString b = QString::number(color.blue());
+    QString uiStyleSheet = "QWidget { background-color: rgb(" + r + "," + g + "," + b + ") }";
+    setStyleSheet(uiStyleSheet);
 }

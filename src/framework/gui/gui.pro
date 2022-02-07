@@ -70,6 +70,7 @@ HEADERS += taction.h \
            tosd.h \
            tpathhelper.h \
            tpushbutton.h \
+           tradiobutton.h \
            tradiobuttongroup.h \
            trulerbase.h \
            # tstackedmainwindow.h \
@@ -138,6 +139,7 @@ SOURCES += taction.cpp \
            tosd.cpp \
            tpathhelper.cpp \
            tpushbutton.cpp \
+           tradiobutton.cpp \
            tradiobuttongroup.cpp \
            trulerbase.cpp \
            # tstackedmainwindow.cpp \

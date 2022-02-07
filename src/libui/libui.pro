@@ -35,24 +35,26 @@ contains("DEFINES", "ADD_HEADERS") {
     headers.path = /include/tupigui
 }
 
-HEADERS += tupabout.h \
-           tupthemepreferences.h \
-           tuppaintareapreferences.h \
-           tupgeneralpreferences.h \
-           tuppreferencesdialog.h
- 
-SOURCES += tupabout.cpp \
-           tupthemepreferences.cpp \
-           tuppaintareapreferences.cpp \
-           tupgeneralpreferences.cpp \
-           tuppreferencesdialog.cpp 
-
 STORE_DIR = ../store
 LIBBASE_DIR = ../libbase
 LIBTUPI_DIR = ../libtupi
+LIBCOLOR_DIR = ../libcolor
 
 FRAMEWORK_DIR = "../framework"
 include($$FRAMEWORK_DIR/framework.pri)
 include($$STORE_DIR/store.pri)
 include($$LIBBASE_DIR/libbase.pri)
 include($$LIBTUPI_DIR/libtupi.pri)
+include($$LIBCOLOR_DIR/libcolor.pri)
+
+HEADERS += tupabout.h \
+           tupthemepreferences.h \
+           tuppaintareapreferences.h \
+           tupgeneralpreferences.h \
+           tuppreferencesdialog.h
+
+SOURCES += tupabout.cpp \
+           tupthemepreferences.cpp \
+           tuppaintareapreferences.cpp \
+           tupgeneralpreferences.cpp \
+           tuppreferencesdialog.cpp

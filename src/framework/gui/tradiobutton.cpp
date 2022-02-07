@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                 *
+ *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -33,44 +33,27 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPTHEMEPREFERENCES_H
-#define TUPTHEMEPREFERENCES_H
-
-#include "tglobal.h"
-#include "tcolorbutton.h"
-#include "tconfig.h"
 #include "tradiobutton.h"
-#include "tupcolorbutton.h"
-#include "tslider.h"
 
-#include <QHBoxLayout>
-
-class TUPITUBE_EXPORT TupThemePreferences : public QWidget
+TRadioButton::TRadioButton(int code, const QString &label, QWidget *parent): QRadioButton(parent)
 {
-    Q_OBJECT
+   Q_UNUSED(parent)
 
-    public:
-        TupThemePreferences(QWidget *parent = nullptr);
-        ~TupThemePreferences();
+   id = code;
+   setText(label);
+   setCheckable(true);
+}
 
-        void saveValues();        
+TRadioButton::~TRadioButton()
+{
+}
 
-    signals:
-        void colorPicked(const QColor&);
+void TRadioButton::mousePressEvent(QMouseEvent *)
+{
+    emit clicked(id);
 
-    private slots:
-        void updateCurrentRow(int row);
-        void updateCurrentColor(const QColor &color);
-        void showRestartMsg(bool enabled);
-        
-    private:
-        void setupPage();
-        QHBoxLayout * addColorEntry(int id, const QColor &initColor, const QColor &endColor);
-        QList<TRadioButton *> radioList;
-        QList<TupColorButton *> cellList;
-        QList<TSlider *> sliderList;
-        int currentRow;
-        QColor currentColor;
-};
-
-#endif
+    bool flag = true;
+    if (isChecked())
+        flag = false;
+    setChecked(flag);
+}

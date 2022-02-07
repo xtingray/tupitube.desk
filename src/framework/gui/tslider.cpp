@@ -47,6 +47,10 @@ TSlider::TSlider(Qt::Orientation orientation, TSlider::Mode mode, const QColor &
     sliderMode = mode;
     startColor = start;
     endColor = end;
+    rangeR = endColor.red() - startColor.red();
+    rangeG = endColor.green() - startColor.green();
+    rangeB = endColor.blue() - startColor.blue();
+
     value = 0;
     enabled = true;
 
@@ -55,7 +59,7 @@ TSlider::TSlider(Qt::Orientation orientation, TSlider::Mode mode, const QColor &
         imageW = image->width();
         imageH = image->height();
         setFixedWidth(imageW + 2);
-    } else {
+    } else { // Horizontal
         image = new QImage(THEME_DIR + "icons/slider_horizontal.png");
         imageW = image->width();
         imageH = image->height();
@@ -87,22 +91,22 @@ void TSlider::setRange(int min, int max)
     maxRange = max;
 }
 
-void TSlider::setValue(int value)
+void TSlider::setValue(int pos)
 {
     if (sliderOrientation == Qt::Vertical) {
         int height = viewport()->height();
-        if (value == maxRange) {
+        if (pos == maxRange) {
             value = height - image->height()/2;
-        } else if (value == minRange) {
+        } else if (pos == minRange) {
             value = 0;
         } else {
             value = height*value/maxRange;
         }
     } else {
         int width = viewport()->width();
-        if (value == maxRange) {
+        if (pos == maxRange) {
             value = width - image->width()/2;
-        } else if (value == minRange) {
+        } else if (pos == minRange) {
             value = 0;
         } else {
             value = width*value/maxRange;
@@ -127,6 +131,10 @@ void TSlider::setColors(const QColor &start, const QColor &end)
 {
     startColor = start;
     endColor = end;
+
+    rangeR = endColor.red() - startColor.red();
+    rangeG = endColor.green() - startColor.green();
+    rangeB = endColor.blue() - startColor.blue();
 
     this->update();
 }
@@ -174,7 +182,7 @@ void TSlider::calculateNewPosition(int pos)
                 emit valueChanged(minRange);
             return;
         }
-    } else {
+    } else { // Horizontal
         length = viewport()->width();
         if (pos > (length - image->width())) {
             this->update();
@@ -206,15 +214,15 @@ void TSlider::calculateNewPosition(int pos)
         emit valueChanged(value);
 }
 
-void TSlider::calculateColor(int value)
+void TSlider::calculateColor(int pos)
 {
-    int r = endColor.red();
-    int g = endColor.green();
-    int b = endColor.blue();
+    int r = startColor.red();
+    int g = startColor.green();
+    int b = startColor.blue();
 
-    r = (r*value)/100;
-    g = (g*value)/100;
-    b = (b*value)/100;
+    r += (rangeR*pos)/100;
+    g += (rangeG*pos)/100;
+    b += (rangeB*pos)/100;
 
     QColor color = QColor(r, g, b);
     emit colorChanged(color);
@@ -335,7 +343,7 @@ void TSlider::paintScales()
         } else {
             painter.drawImage(x, value - middle, *image);
         }
-    } else {
+    } else { // Horizontal
         int w = viewport()->width();
 
         if (value >= w || currentBase != w) {
@@ -346,7 +354,7 @@ void TSlider::paintScales()
         int y = (height/2)-(imageH/2);
         int middle = imageW/2;
         if (value <= middle) {
-            painter.drawImage(value, y, *image);
+            painter.drawImage(0, y, *image);
         } else if (value >= (w - middle)) {
             painter.drawImage(w - imageW, y, *image);
         } else {
@@ -357,6 +365,6 @@ void TSlider::paintScales()
 
 void TSlider::paintEvent(QPaintEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
     paintScales();
 }

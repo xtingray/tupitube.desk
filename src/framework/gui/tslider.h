@@ -56,7 +56,7 @@ class TUPITUBE_EXPORT TSlider : public QGraphicsView
         void setBrushSettings(Qt::BrushStyle style, double opacity);
         void setRange(int min, int max);
         void setColors(const QColor& start, const QColor& end);
-        void setValue(int value);
+        void setValue(int pos);
         void setEnabled(bool flag);
         bool isEnabled();
 
@@ -73,7 +73,7 @@ class TUPITUBE_EXPORT TSlider : public QGraphicsView
 
     private:
        void calculateNewPosition(int pos);
-       void calculateColor(int value);
+       void calculateColor(int pos);
 
        int minRange;
        int maxRange;
@@ -90,6 +90,9 @@ class TUPITUBE_EXPORT TSlider : public QGraphicsView
        Qt::BrushStyle sliderStyle;
        double sliderOpacity;
        int currentBase;
+       int rangeR;
+       int rangeG;
+       int rangeB;
 };
 
 #endif
