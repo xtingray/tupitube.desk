@@ -56,13 +56,15 @@ void TupThemePreferences::setupPage()
 {
     TCONFIG->beginGroup("Theme");
     currentRow = TCONFIG->value("ColorRow", 0).toInt();
+    oldRow = currentRow;
     QString bgColor = TCONFIG->value("BgColor", "#a0a0a0").toString();
     currentColor = QColor(bgColor);
+    oldColor = currentColor;
+    colorPos = TCONFIG->value("ColorPos", 0).toInt();
+
+    themeChanged = false;
 
     QHBoxLayout *layout = new QHBoxLayout(this);
-
-    QVBoxLayout *blockLayout = new QVBoxLayout;
-
     QWidget *widget = new QWidget;
     QVBoxLayout *pageLayout = new QVBoxLayout;
 
@@ -80,72 +82,79 @@ void TupThemePreferences::setupPage()
     labelFont.setBold(true);
     bgLabel->setFont(labelFont);
 
+    QVBoxLayout *blockLayout = new QVBoxLayout;
     blockLayout->addWidget(widget);
     blockLayout->setAlignment(widget, Qt::AlignLeft);
     blockLayout->addWidget(bgLabel);
 
+    QStringList labelList;
+    labelList << tr("Gray") << tr("Brown") << tr("Chocolate") << tr("Blue")
+              << tr("Honey") << tr("Green") << tr("Violet") << tr("Orange");
     QList<QColor> initList;
-    initList << QColor(160, 160 ,160) << QColor(150, 139, 139) << QColor(156, 144, 129);
-    QList<QColor> endList;
-    endList << Qt::white << Qt::white << Qt::white;
+    initList << QColor(160, 160, 160) << QColor(150, 139, 139) << QColor(156, 144, 129)
+             << QColor(132, 203, 238) << QColor(255, 221, 154) << QColor(149, 184, 140)
+             << QColor(238, 196, 206) << QColor(247, 205, 163);
 
-    for(int i=0; i<3; i++)
-        blockLayout->addLayout(addColorEntry(i, initList.at(i), endList.at(i)));
+    QWidget *formWidget = new QWidget;
+    formLayout = new QGridLayout(formWidget);
+    for(int i=0; i<labelList.size(); i++)
+        addColorEntry(i, labelList.at(i), initList.at(i), Qt::white);
 
+    blockLayout->addWidget(formWidget);
     blockLayout->addStretch(3);
 
     layout->addLayout(blockLayout);
     layout->addStretch();
 }
 
-QHBoxLayout * TupThemePreferences::addColorEntry(int id, const QColor &initColor, const QColor &endColor)
+void TupThemePreferences::addColorEntry(int id, const QString &label, const QColor &initColor, const QColor &endColor)
 {
-    TRadioButton *colorRadio = new TRadioButton(id, "", this);
+    TRadioButton *colorRadio = new TRadioButton(id, label, this);
     radioList << colorRadio;
     connect(colorRadio, SIGNAL(clicked(int)), this, SLOT(updateCurrentRow(int)));
 
     QSize cellSize(30, 30);
     QBrush cellBrush(initColor);
-    TupColorButton *colorCell = new TupColorButton(1, "", cellBrush, cellSize, "6,4,2");
+    TupColorButton *colorCell = new TupColorButton(1, "", cellBrush, cellSize, "6,4,10");
     colorCell->setEditable(false);
     cellList << colorCell;
 
     TSlider *colorSlider = new TSlider(Qt::Horizontal, TSlider::Color, initColor, endColor);
     colorSlider->setRange(0, 100);
-    colorSlider->setValue(100);
     sliderList << colorSlider;
     connect(colorSlider, SIGNAL(colorChanged(const QColor&)), this, SLOT(updateCurrentColor(const QColor&)));
 
-    QHBoxLayout *blackLayout = new QHBoxLayout;
-    blackLayout->addWidget(colorRadio);
-    blackLayout->addSpacing(5);
-    blackLayout->addWidget(colorCell);
-    blackLayout->addSpacing(5);
-    blackLayout->addWidget(colorSlider);
-    blackLayout->addStretch();
+    formLayout->addWidget(colorRadio, id, 0, Qt::AlignLeft);
+    formLayout->addWidget(colorCell, id, 1, Qt::AlignCenter);
+    formLayout->addWidget(colorSlider, id, 2, Qt::AlignCenter);
 
     bool flag = false;
-    if (id == currentRow)
+    if (id == currentRow) {
         flag = true;
+        colorCell->setBrush(QBrush(currentColor));
+        colorSlider->setValue(colorPos);
+    }
 
     colorRadio->setChecked(flag);
     colorSlider->setEnabled(flag);
-
-    return blackLayout;
 }
 
 void TupThemePreferences::saveValues()
-{       
-    TCONFIG->beginGroup("Theme");
-    TCONFIG->setValue("ColorRow", currentRow);
-    TCONFIG->value("BgColor", currentColor.name());
-    TCONFIG->sync();
+{
+    if ((oldRow != currentRow) || (oldColor != currentColor)) {
+        TCONFIG->beginGroup("Theme");
+        TCONFIG->setValue("ColorRow", currentRow);
+        TCONFIG->setValue("BgColor", currentColor.name());
+        TCONFIG->setValue("ColorPos", colorPos);
+        TCONFIG->sync();
+
+        themeChanged = true;
+    }
 }
 
-void TupThemePreferences::showRestartMsg(bool enabled)
+bool TupThemePreferences::showWarning()
 {
-    if (enabled)
-        TOsd::self()->display(TOsd::Warning, tr("Please restart TupiTube"));
+    return themeChanged;
 }
 
 void TupThemePreferences::updateCurrentRow(int row)
@@ -158,11 +167,26 @@ void TupThemePreferences::updateCurrentRow(int row)
 
         sliderList.at(i)->setEnabled(flag);
     }
+
+    currentColor = cellList.at(currentRow)->color();
+    colorPos = sliderList.at(currentRow)->currentValue();
 }
 
 void TupThemePreferences::updateCurrentColor(const QColor &color)
 {
+    /*
+    #ifdef TUP_DEBUG
+        int r = color.red();
+        int g = color.green();
+        int b = color.blue();
+        qDebug() << "[TupThemePreferences::updateCurrentColor()] - color -> " << r << "," << g << "," << b;
+        qDebug() << "[TupThemePreferences::updateCurrentColor()] - slider value -> " << sliderList.at(currentRow)->currentValue();
+    #endif
+    */
+
     currentColor = color;
+    colorPos = sliderList.at(currentRow)->currentValue();
     cellList.at(currentRow)->setBrush(QBrush(color));
+
     emit colorPicked(color);
 }

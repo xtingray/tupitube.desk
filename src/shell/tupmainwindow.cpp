@@ -804,6 +804,7 @@ void TupMainWindow::openProject(const QString &path)
             setUpdatesEnabled(true);
 
             m_exposureSheet->updateFramesState();
+            m_timeLine->updateFramesState();
 
             author = m_projectManager->getProject()->getAuthor();
             if (author.length() <= 0)

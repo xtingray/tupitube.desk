@@ -63,7 +63,7 @@ void TupPreferencesDialog::apply()
     if (general->saveValues()) {
         theme->saveValues();
         workspace->saveValues();
-        if (general->showWarning())
+        if (general->showWarning() || theme->showWarning())
             TOsd::self()->display(TOsd::Warning, tr("Please restart TupiTube"));
         else
             TOsd::self()->display(TOsd::Info, tr("Preferences saved successfully"));
@@ -81,6 +81,7 @@ void TupPreferencesDialog::testThemeColor(const QColor &color)
     QString r = QString::number(color.red());
     QString g = QString::number(color.green());
     QString b = QString::number(color.blue());
-    QString uiStyleSheet = "QWidget { background-color: rgb(" + r + "," + g + "," + b + ") }";
+    QString uiStyleSheet = "QWidget { background-color: rgb(" + r + "," + g + "," + b + ") }"
+                           "QListWidget { background-color: rgb(255,255,255) }";
     setStyleSheet(uiStyleSheet);
 }

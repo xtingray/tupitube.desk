@@ -57,6 +57,7 @@ class TUPITUBE_EXPORT TSlider : public QGraphicsView
         void setRange(int min, int max);
         void setColors(const QColor& start, const QColor& end);
         void setValue(int pos);
+        int currentValue();
         void setEnabled(bool flag);
         bool isEnabled();
 
@@ -93,6 +94,7 @@ class TUPITUBE_EXPORT TSlider : public QGraphicsView
        int rangeR;
        int rangeG;
        int rangeB;
+       int posRecord;
 };
 
 #endif

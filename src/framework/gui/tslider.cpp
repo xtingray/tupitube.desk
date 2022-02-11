@@ -39,7 +39,7 @@
 
 #include <QPainterPath>
 
-TSlider::TSlider(Qt::Orientation orientation, TSlider::Mode mode, const QColor &start, const QColor &end, QWidget *parent) : QGraphicsView(parent)
+TSlider::TSlider(Qt::Orientation orientation, TSlider::Mode mode, const QColor &start, const QColor &end, QWidget *parent): QGraphicsView(parent)
 {
     setStyleSheet("* { background-color: rgba(255,255,255,0); border: 1px solid rgb(170,170,170); }");
 
@@ -52,6 +52,7 @@ TSlider::TSlider(Qt::Orientation orientation, TSlider::Mode mode, const QColor &
     rangeB = endColor.blue() - startColor.blue();
 
     value = 0;
+    posRecord = 0;
     enabled = true;
 
     if (sliderOrientation == Qt::Vertical) {
@@ -93,6 +94,10 @@ void TSlider::setRange(int min, int max)
 
 void TSlider::setValue(int pos)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TSlider::setValue()] - pos -> " << pos;
+    #endif
+
     if (sliderOrientation == Qt::Vertical) {
         int height = viewport()->height();
         if (pos == maxRange) {
@@ -109,11 +114,18 @@ void TSlider::setValue(int pos)
         } else if (pos == minRange) {
             value = 0;
         } else {
-            value = width*value/maxRange;
+            value = width*pos/maxRange;
         }
     }
 
+    posRecord = value;
+
     this->update();
+}
+
+int TSlider::currentValue()
+{
+    return posRecord;
 }
 
 void TSlider::setEnabled(bool flag)
@@ -169,6 +181,12 @@ void TSlider::mouseMoveEvent(QMouseEvent *event)
 
 void TSlider::calculateNewPosition(int pos)
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TSlider::calculateNewPosition()] - pos -> " << pos;
+    #endif
+    */
+
     int length = -1;
     value = pos;
 
@@ -206,6 +224,7 @@ void TSlider::calculateNewPosition(int pos)
     if (value < minRange)
         value = minRange;
 
+    posRecord = value;
     this->update();
 
     if (sliderMode == Color)

@@ -122,7 +122,9 @@ void TConfigurationDialog::changePage(QListWidgetItem *current, QListWidgetItem 
     if (!current)
         current = previous;
     
-    pageArea->setCurrentIndex(list->row(current));
+    int index = list->row(current);
+    pageArea->setCurrentIndex(index);
+    emit pagePicked(index);
 }
 
 void TConfigurationDialog::setCurrentItem(int row)

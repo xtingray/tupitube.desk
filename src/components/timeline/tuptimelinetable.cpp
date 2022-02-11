@@ -587,6 +587,27 @@ void TupTimeLineTable::requestFrameSelection(int currentLayerIndex, int currentF
     }
 }
 
+void TupTimeLineTable::updateFrameState(int layerIndex, int frameIndex, bool value)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTimeLineTable::updateFrameState()] - layerIndex -> " << layerIndex;
+        qDebug() << "[TupTimeLineTable::updateFrameState()] - frameIndex -> " << frameIndex;
+    #endif
+
+    if (layerIndex < 0 || frameIndex < 0)
+        return;
+
+    QTableWidgetItem *frame = item(frameIndex, layerIndex);
+    if (frame) {
+        frame->setData(TupTimeLineTableItem::IsEmpty, value);
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupTimeLineTable::updateFrameState()] - Error: No frame at ["
+                     << layerIndex << "," << frameIndex << "]";
+        #endif
+    }
+}
+
 void TupTimeLineTable::mousePressEvent(QMouseEvent *event)
 {
     int frameIndex = columnAt(event->x());
@@ -783,7 +804,7 @@ void TupTimeLineTable::selectFrame(int layerIndex, int frameIndex, const QString
 
         selectionModel()->clearSelection();
 
-        QModelIndexList indexes;
+        // QModelIndexList indexes;
         for (int i=initLayer; i<=lastLayer; i++) {
             for (int j=initFrame; j<=lastFrame; j++)
                 selectionModel()->select(model()->index(i, j), QItemSelectionModel::Select);

@@ -91,6 +91,7 @@ class TUPITUBE_EXPORT TupTimeLineTable : public QTableWidget
         // bool frameIsLocked(int layerIndex, int frameIndex);
         QList<int> currentSelection();
         int framesCountAtCurrentLayer();
+        void updateFrameState(int layerIndex, int frameIndex, bool value);
 
     public slots:
         // Layers
@@ -157,7 +158,6 @@ class TUPITUBE_EXPORT TupTimeLineTable : public QTableWidget
         int layerIndex;
         int frameIndex;
 
-        // TupTimeLineRuler *ruler;
         TupTimeLineHeader *layersColumn;
 
         bool removingLayer;

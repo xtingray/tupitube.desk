@@ -63,6 +63,9 @@ class T_GUI_EXPORT TConfigurationDialog : public QDialog
         QWidget *currentPage() const;
         void setCurrentItem(int row);
         
+    signals:
+        void pagePicked(int index);
+
     public slots:
         virtual void apply();
         

@@ -149,7 +149,7 @@ void TupTimeLine::addScene(int sceneIndex, const QString &name)
     TupScene *tupScene = project->sceneAt(sceneIndex);
     int fps = tupScene->getFPS();
     TupTimeLineTable *framesTable = new TupTimeLineTable(sceneIndex, fps, scenesContainer);
-    connect(framesTable, SIGNAL(frameSelected(int, int)), this, SLOT(requestFrameSelection(int, int)));
+    connect(framesTable, SIGNAL(frameSelected(int,int)), this, SLOT(requestFrameSelection(int,int)));
     connect(framesTable, SIGNAL(selectionCopied()), SLOT(requestCopyFrameSelection()));
     connect(framesTable, SIGNAL(selectionPasted()), SLOT(requestPasteSelectionInCurrentFrame()));
     connect(framesTable, SIGNAL(selectionRemoved()), SLOT(removeFrameSelection()));
@@ -586,8 +586,8 @@ bool TupTimeLine::requestFrameAction(int action, int frameIndex, int layerIndex,
         qDebug() << "[TupTimeLine::requestFrameAction()]";
     #endif
 
-    Q_UNUSED(frameIndex);
-    Q_UNUSED(arg);
+    Q_UNUSED(frameIndex)
+    Q_UNUSED(arg)
 
     TupProjectRequest request;
     int currentFrame = framesTable(sceneIndex)->currentColumn();
@@ -835,7 +835,8 @@ void TupTimeLine::requestFrameSelection(int layerIndex, int frameIndex)
 
 void TupTimeLine::removeFrameSelection()
 {
-    requestRemoveFrame(false);
+    // requestRemoveFrame(false);
+    actionBar->emitActionSelected(TupProjectActionBar::RemoveFrame);
 }
 
 void TupTimeLine::requestRemoveFrame(bool flag)
@@ -1029,4 +1030,22 @@ void TupTimeLine::updateFPS(int fps)
     currentTable = scenesContainer->currentScene();
     if (currentTable)
         currentTable->updateFPS(fps);
+}
+
+void TupTimeLine::updateFramesState()
+{
+    for (int i=0; i < project->scenesCount(); i++) {
+         TupScene *scene = project->sceneAt(i);
+         TupTimeLineTable *table = scenesContainer->getTable(i);
+         for (int j=0; j < scene->layersCount(); j++) {
+              TupLayer *layer = scene->layerAt(j);
+              for (int k=0; k < layer->framesCount(); k++) {
+                   TupFrame *frame = layer->frameAt(k);
+                   bool isEmpty = false;
+                   if (frame->isEmpty())
+                       isEmpty = true;
+                   table->updateFrameState(k, j, isEmpty);
+              }
+         }
+    }
 }
