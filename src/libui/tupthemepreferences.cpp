@@ -170,6 +170,7 @@ void TupThemePreferences::updateCurrentRow(int row)
 
     currentColor = cellList.at(currentRow)->color();
     colorPos = sliderList.at(currentRow)->currentValue();
+    emit colorPicked(currentColor);
 }
 
 void TupThemePreferences::updateCurrentColor(const QColor &color)

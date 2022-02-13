@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tupmainwindow.h"
+#include "tapptheme.h"
 #include "tupnewscollector.h"
 #include "tupnewproject.h"
 #include "tupsigndialog.h"
@@ -100,6 +101,7 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
     isNetworked = false;
     exportWidget = nullptr;
 
+    /*
     QFile file(THEME_DIR + "config/ui.qss");
     if (file.exists()) {
         file.open(QFile::ReadOnly);
@@ -112,6 +114,10 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
             qWarning() << "[TupMainWindow()] - theme file doesn't exist -> " << QString(THEME_DIR + "config/ui.qss");
         #endif
     }
+    */
+
+    QString themeStr = TAppTheme::themeSettings();
+    setStyleSheet(themeStr);
 
     // Loading audio player plugin
     // TAudioPlayer::instance()->loadEngine("gstreamer"); // FIXME: Move this to the settings 

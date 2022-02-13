@@ -33,55 +33,15 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "tuppreferencesdialog.h"
-#include "tapplicationproperties.h"
-#include "tosd.h"
+#ifndef TAPPTHEME_H
+#define TAPPTHEME_H
 
-TupPreferencesDialog::TupPreferencesDialog(QWidget *parent) : TConfigurationDialog(parent)
+#include "tglobal.h"
+
+class T_CORE_EXPORT TAppTheme
 {
-    setWindowTitle(tr("TupiTube Preferences"));
+    public:
+        static QString themeSettings();
+};
 
-    general = new TupGeneralPreferences;
-    addPage(general, tr("General"), QPixmap(THEME_DIR + "icons/tupi_general_preferences.png"));
-
-    theme = new TupThemePreferences;
-    connect(theme, SIGNAL(colorPicked(const QColor&)), this, SLOT(testThemeColor(const QColor&)));
-    addPage(theme, tr("Theme"), QPixmap(THEME_DIR + "icons/tupi_theme_preferences.png"));
-
-    workspace = new TupPaintAreaPreferences;
-    addPage(workspace, tr("Workspace"), QIcon(THEME_DIR + "icons/tupi_workspace_preferences.png"));
-
-    setCurrentItem(General);
-}
-
-TupPreferencesDialog::~TupPreferencesDialog()
-{
-}
-
-void TupPreferencesDialog::apply()
-{
-    if (general->saveValues()) {
-        theme->saveValues();
-        workspace->saveValues();
-        if (general->showWarning() || theme->showWarning())
-            TOsd::self()->display(TOsd::Warning, tr("Please restart TupiTube"));
-        else
-            TOsd::self()->display(TOsd::Info, tr("Preferences saved successfully"));
-        accept();
-    }
-}
-
-QSize TupPreferencesDialog::sizeHint() const
-{
-    return QSize(600, 430);
-}
-
-void TupPreferencesDialog::testThemeColor(const QColor &color)
-{
-    QString r = QString::number(color.red());
-    QString g = QString::number(color.green());
-    QString b = QString::number(color.blue());
-    QString uiStyleSheet = "QWidget { background-color: rgb(" + r + "," + g + "," + b + ") }"
-                           "QListWidget { background-color: rgb(220,220,220) }";
-    setStyleSheet(uiStyleSheet);
-}
+#endif

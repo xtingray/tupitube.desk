@@ -33,55 +33,32 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "tuppreferencesdialog.h"
+#include "tapptheme.h"
+#include "tconfig.h"
 #include "tapplicationproperties.h"
-#include "tosd.h"
 
-TupPreferencesDialog::TupPreferencesDialog(QWidget *parent) : TConfigurationDialog(parent)
+QString TAppTheme::themeSettings()
 {
-    setWindowTitle(tr("TupiTube Preferences"));
+    QString settings = "";
 
-    general = new TupGeneralPreferences;
-    addPage(general, tr("General"), QPixmap(THEME_DIR + "icons/tupi_general_preferences.png"));
+    TCONFIG->beginGroup("Theme");
+    QString bgColor = TCONFIG->value("BgColor", "#a0a0a0").toString();
 
-    theme = new TupThemePreferences;
-    connect(theme, SIGNAL(colorPicked(const QColor&)), this, SLOT(testThemeColor(const QColor&)));
-    addPage(theme, tr("Theme"), QPixmap(THEME_DIR + "icons/tupi_theme_preferences.png"));
-
-    workspace = new TupPaintAreaPreferences;
-    addPage(workspace, tr("Workspace"), QIcon(THEME_DIR + "icons/tupi_workspace_preferences.png"));
-
-    setCurrentItem(General);
-}
-
-TupPreferencesDialog::~TupPreferencesDialog()
-{
-}
-
-void TupPreferencesDialog::apply()
-{
-    if (general->saveValues()) {
-        theme->saveValues();
-        workspace->saveValues();
-        if (general->showWarning() || theme->showWarning())
-            TOsd::self()->display(TOsd::Warning, tr("Please restart TupiTube"));
-        else
-            TOsd::self()->display(TOsd::Info, tr("Preferences saved successfully"));
-        accept();
+    QFile file(THEME_DIR + "config/ui.qss");
+    if (file.exists()) {
+        file.open(QFile::ReadOnly);
+        settings = QLatin1String(file.readAll());
+        if (settings.length() == 0) {
+        #ifdef TUP_DEBUG 
+            qWarning() << "[TAppTheme::getThemeSettings()] - Fatal Error: Theme settings input is empty!";
+        #endif
+        }
+        file.close();
+    } else {
+        #ifdef TUP_DEBUG 
+            qWarning() << "[TAppTheme::getThemeSettings()] - Fatal Error: Theme file doesn't exist -> " << QString(THEME_DIR + "config/ui.qss");
+        #endif
     }
-}
 
-QSize TupPreferencesDialog::sizeHint() const
-{
-    return QSize(600, 430);
-}
-
-void TupPreferencesDialog::testThemeColor(const QColor &color)
-{
-    QString r = QString::number(color.red());
-    QString g = QString::number(color.green());
-    QString b = QString::number(color.blue());
-    QString uiStyleSheet = "QWidget { background-color: rgb(" + r + "," + g + "," + b + ") }"
-                           "QListWidget { background-color: rgb(220,220,220) }";
-    setStyleSheet(uiStyleSheet);
+    return settings.replace("BG_PARAM", bgColor);
 }
