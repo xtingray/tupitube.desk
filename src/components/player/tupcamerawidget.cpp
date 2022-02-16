@@ -51,6 +51,9 @@ TupCameraWidget::TupCameraWidget(TupProject *work, QWidget *parent) : QFrame(par
     setObjectName("TupCameraWidget_");
     screen = QGuiApplication::screens().at(0);
 
+    TCONFIG->beginGroup("Theme");
+    uiTheme = TCONFIG->value("UITheme", DARK_THEME).toInt();
+
     currentSceneIndex = 0;
     QSize projectSize = work->getDimension();
     double factor = static_cast<double>(projectSize.width()) / static_cast<double>(projectSize.height());
@@ -171,13 +174,10 @@ void TupCameraWidget::addVideoHeader()
 
 void TupCameraWidget::setProgressBar()
 {
-    TCONFIG->beginGroup("General");
-    QString themeName = TCONFIG->value("Theme", "Light").toString();
-
     progressBar = new QProgressBar(this);
     QString style1 = "QProgressBar { background-color: #DDDDDD; text-align: center; color: #FFFFFF; border-radius: 2px; } ";
     QString color = "#009500";
-    if (themeName.compare("Dark") == 0)
+    if (uiTheme == DARK_THEME)
         color = "#444444";
     QString style2 = "QProgressBar::chunk { background-color: " + color + "; border-radius: 2px; }";
 
@@ -198,7 +198,11 @@ void TupCameraWidget::addTimerPanel()
     currentFrameBox = new QLabel("1");
     currentFrameBox->setAlignment(Qt::AlignCenter);
     currentFrameBox->setMinimumWidth(40);
-    QString style = "QLabel { background-color: #c8c8c8; border: 1px solid #777777; border-radius: 2px; }";
+
+    QString labelColor = "#ffffff";
+    if (uiTheme == DARK_THEME)
+        labelColor = "#c8c8c8";
+    QString style = "QLabel { background-color: " + labelColor + "; border: 1px solid #777777; border-radius: 2px; }";
     currentFrameBox->setStyleSheet(style);
 
     framesCount = new QLabel;

@@ -42,8 +42,8 @@ TOsd *TOsd::s_osd = 0;
 
 TOsd::TOsd(QWidget * parent) : QWidget(parent), m_timer(0)
 {
-    TCONFIG->beginGroup("General");
-    themeName = TCONFIG->value("Theme", "Light").toString();
+    TCONFIG->beginGroup("Theme");
+    uiTheme = TCONFIG->value("UITheme", DARK_THEME).toInt();
 
     setFocusPolicy(Qt::NoFocus);
     m_palette = palette();
@@ -91,7 +91,7 @@ void TOsd::display(Level level, const QString &message,int ms)
                    {
                      tail = tr("Information") + tail;
                      QString logo = THEME_DIR + "icons/info_message.png";
-                     if (themeName.compare("Dark") == 0)
+                     if (uiTheme == DARK_THEME)
                          background = QColor(0, 80, 0);
                      else
                          background = QColor(0xc1e2fb);

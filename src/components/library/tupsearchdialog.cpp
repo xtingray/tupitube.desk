@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tupsearchdialog.h"
+#include "tapptheme.h"
 #include "tosd.h"
 #include "tconfig.h"
 #include "tlabel.h"
@@ -64,19 +65,7 @@ TupSearchDialog::TupSearchDialog(const QSize &size, QWidget *parent) : QDialog(p
 
     extStrings << "jpg" << "png" << "svg" << "tobj";
 
-    QFile file(THEME_DIR + "config/ui.qss");
-    if (file.exists()) {
-        file.open(QFile::ReadOnly);
-        QString styleSheet = QLatin1String(file.readAll());
-        if (styleSheet.length() > 0)
-            setStyleSheet(styleSheet);
-        file.close();
-    } else {
-        #ifdef TUP_DEBUG
-            qWarning() << "[TupSearchDialog::TupSearchDialog()] - theme file doesn't exist -> "
-                       << QString(THEME_DIR + "config/ui.qss");
-        #endif
-    }
+    setStyleSheet(TAppTheme::themeSettings());
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -230,12 +219,12 @@ QWidget * TupSearchDialog::searchTab()
     QWidget *progressPanel = new QWidget;
     QVBoxLayout *progressLayout = new QVBoxLayout(progressPanel);
 
-    TCONFIG->beginGroup("General");
-    QString themeName = TCONFIG->value("Theme", "Light").toString();
+    TCONFIG->beginGroup("Theme");
+    int uiTheme = TCONFIG->value("UITheme", DARK_THEME).toInt();
     QString progressStyle = "QProgressBar { background-color: #DDDDDD; "
                     "text-align: center; color: #FFFFFF; border-radius: 2px; } ";
     QString color = "#009500";
-    if (themeName.compare("Dark") == 0)
+    if (uiTheme == DARK_THEME)
         color = "#444444";
     progressStyle += "QProgressBar::chunk { background-color: " + color + "; border-radius: 2px; }";
 

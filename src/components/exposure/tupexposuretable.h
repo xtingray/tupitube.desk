@@ -161,7 +161,7 @@ class TUPITUBE_EXPORT TupExposureTable : public QTableWidget
         // QMenu *multipleMenu;
         bool removingLayer;
         bool isLocalRequest;
-        QString themeName;
+        int uiTheme;
         bool isEditing;
 
         // QList<double> opacityControl;

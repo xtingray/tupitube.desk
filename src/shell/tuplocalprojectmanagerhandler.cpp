@@ -125,7 +125,7 @@ void TupLocalProjectManagerHandler::handleProjectRequest(const TupProjectRequest
         //emit sendCommand(request, isUndoCommand(request->xml()));
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupLocalProjectManagerHandler::handleProjectRequest() - INVALID REQUEST! ID: " + QString::number(request->getId());
+            qDebug() << "TupLocalProjectManagerHandler::handleProjectRequest() - INVALID REQUEST! ID -> " << request->getId();
         #endif
     }
 }
@@ -133,7 +133,7 @@ void TupLocalProjectManagerHandler::handleProjectRequest(const TupProjectRequest
 bool TupLocalProjectManagerHandler::saveProject(const QString &fileName, TupProject *project)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLocalProjectManagerHandler::saveProject()] - fileName: " << fileName;
+        qDebug() << "[TupLocalProjectManagerHandler::saveProject()] - fileName -> " << fileName;
     #endif
 
     bool result = false;

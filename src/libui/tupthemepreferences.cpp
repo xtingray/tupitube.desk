@@ -142,10 +142,18 @@ void TupThemePreferences::addColorEntry(int id, const QString &label, const QCol
 void TupThemePreferences::saveValues()
 {
     if ((oldRow != currentRow) || (oldColor != currentColor)) {
+        int r = currentColor.red();
+        int g = currentColor.green();
+        int b = currentColor.blue();
+        int theme = DARK_THEME;
+        if ((r >= 200) || (g >= 200) || (b >= 200))
+            theme = LIGHT_THEME;
+
         TCONFIG->beginGroup("Theme");
         TCONFIG->setValue("ColorRow", currentRow);
         TCONFIG->setValue("BgColor", currentColor.name());
         TCONFIG->setValue("ColorPos", colorPos);
+        TCONFIG->setValue("UITheme", theme);
         TCONFIG->sync();
 
         themeChanged = true;
@@ -170,6 +178,7 @@ void TupThemePreferences::updateCurrentRow(int row)
 
     currentColor = cellList.at(currentRow)->color();
     colorPos = sliderList.at(currentRow)->currentValue();
+
     emit colorPicked(currentColor);
 }
 
@@ -189,5 +198,5 @@ void TupThemePreferences::updateCurrentColor(const QColor &color)
     colorPos = sliderList.at(currentRow)->currentValue();
     cellList.at(currentRow)->setBrush(QBrush(color));
 
-    emit colorPicked(color);
+    emit colorPicked(currentColor);
 }

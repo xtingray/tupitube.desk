@@ -43,8 +43,8 @@
 
 TColorCell::TColorCell(FillType typeIndex, const QBrush &b, const QSize &dimension)
 {
-    TCONFIG->beginGroup("General");
-    themeName = TCONFIG->value("Theme", "Light").toString();
+    TCONFIG->beginGroup("Theme");
+    uiTheme = TCONFIG->value("UITheme", DARK_THEME).toInt();
 
     index = typeIndex;
     enabled = true;
@@ -86,7 +86,7 @@ void TColorCell::paintEvent(QPaintEvent *event)
             QColor borderColor2 = QColor(190, 190, 190);
             QColor borderColor3 = QColor(150, 150, 150);
             
-            if (themeName.compare("Dark") == 0) {
+            if (uiTheme == DARK_THEME) {
                 borderColor1 = QColor(120, 120, 120);
                 borderColor2 = QColor(110, 110, 110);
                 borderColor3 = QColor(70, 70, 70);

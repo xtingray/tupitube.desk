@@ -81,7 +81,7 @@ class TUPITUBE_EXPORT TupColorButton : public QWidget
         bool editable;
         bool selected;
         QSize size;
-        QString themeName;
+        int uiTheme;
 };
 
 #endif

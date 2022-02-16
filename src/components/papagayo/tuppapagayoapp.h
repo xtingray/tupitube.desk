@@ -90,7 +90,6 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
     private:
         void setUICore(const QString &filePath);
         void setBaseUI();
-        void setUIStyle();
         void setupActions();
         void setupUI();
         void setupMenus();

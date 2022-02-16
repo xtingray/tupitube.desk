@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tupsounddialog.h"
+#include "tapptheme.h"
 #include "tconfig.h"
 #include "tseparator.h"
 #include "tosd.h"
@@ -53,18 +54,7 @@ TupSoundDialog::TupSoundDialog(QWidget *parent) : QDialog(parent)
         qDebug() << "[TupSoundDialog()]";
     #endif
 
-    QFile file(THEME_DIR + "config/ui.qss");
-    if (file.exists()) {
-        file.open(QFile::ReadOnly);
-        QString uiStyleSheet = QLatin1String(file.readAll());
-        if (uiStyleSheet.length() > 0)
-            setStyleSheet(uiStyleSheet);
-        file.close();
-    } else {
-        #ifdef TUP_DEBUG
-            qWarning() << "[TupSoundDialog()] - theme file doesn't exist -> " << QString(THEME_DIR + "config/ui.qss");
-        #endif
-    }
+    setStyleSheet(TAppTheme::themeSettings());
 
     setWindowTitle(tr("Import Audio Asset"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/sound_object.png")));

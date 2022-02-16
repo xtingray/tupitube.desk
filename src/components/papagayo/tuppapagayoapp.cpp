@@ -17,6 +17,7 @@
 #include "tuppapagayoapp.h"
 #include "tapplicationproperties.h"
 #include "tconfig.h"
+#include "tapptheme.h"
 #include "tosd.h"
 #include "toptionaldialog.h"
 #include "tupbreakdowndialog.h"
@@ -118,7 +119,7 @@ TupPapagayoApp::~TupPapagayoApp()
 
 void TupPapagayoApp::setUICore(const QString &filePath)
 {
-    setUIStyle();
+    setStyleSheet(TAppTheme::themeSettings());
 
     setupActions();
     setupUI();
@@ -129,23 +130,6 @@ void TupPapagayoApp::setUICore(const QString &filePath)
 
     if (!filePath.isEmpty())
         openFile(filePath);
-}
-
-void TupPapagayoApp::setUIStyle()
-{
-    QFile file(THEME_DIR + "config/ui.qss");
-    if (file.exists()) {
-        file.open(QFile::ReadOnly);
-        QString uiStyleSheet = QLatin1String(file.readAll());
-        if (uiStyleSheet.length() > 0)
-            setStyleSheet(uiStyleSheet);
-        file.close();
-    } else {
-        #ifdef TUP_DEBUG
-            qWarning() << "[TupPapagayoApp()] - Error: Theme file doesn't exist -> "
-                       << QString(THEME_DIR + "config/ui.qss");
-        #endif
-    }
 }
 
 void TupPapagayoApp::setupActions()

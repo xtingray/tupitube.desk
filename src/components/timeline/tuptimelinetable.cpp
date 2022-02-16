@@ -47,13 +47,13 @@ class TupTimeLineTableItemDelegate : public QItemDelegate
         virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
     private:
-        QString themeName;
+        int uiTheme;
 };
 
 TupTimeLineTableItemDelegate::TupTimeLineTableItemDelegate(QObject *parent) : QItemDelegate(parent)
 {
-    TCONFIG->beginGroup("General");
-    themeName = TCONFIG->value("Theme", "Light").toString();
+    TCONFIG->beginGroup("Theme");
+    uiTheme = TCONFIG->value("UITheme", DARK_THEME).toInt();
 }
 
 TupTimeLineTableItemDelegate::~TupTimeLineTableItemDelegate()
@@ -106,7 +106,7 @@ void TupTimeLineTableItemDelegate::paint(QPainter *painter, const QStyleOptionVi
 
         // Painting a selected cell
         QColor color(0, 136, 0, 180);
-        if (themeName.compare("Dark") == 0)
+        if (uiTheme == DARK_THEME)
             color = QColor(80, 80, 80, 180);
 
         painter->fillRect(option.rect, color);

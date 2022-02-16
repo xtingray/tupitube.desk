@@ -49,7 +49,6 @@ class TUPITUBE_PLUGIN TupBreakdownDialog: public QDialog
 
     private:
         void setInitVars(const QString &word, const QString &mouthsPath);
-        void setUIStyle();
         void setUI(const QString &word, const QString &phonemes);
         void setButtonsPanel();
         void notifyMissingPhonemes();

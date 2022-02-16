@@ -34,12 +34,13 @@
  ***************************************************************************/
 
 #include "toptionaldialog.h"
+#include "tapptheme.h"
 #include "tapplicationproperties.h"
 
 TOptionalDialog::TOptionalDialog(const QString &text,const QString &title, bool showAgainBox,
                                  bool showDiscardButton, QWidget *parent) : QDialog(parent)
 {
-    setUIStyle();
+    setStyleSheet(TAppTheme::themeSettings());
 
     setWindowTitle(title);
     mainLayout = new QVBoxLayout;
@@ -86,23 +87,6 @@ TOptionalDialog::TOptionalDialog(const QString &text,const QString &title, bool 
 
 TOptionalDialog::~TOptionalDialog()
 {
-}
-
-void TOptionalDialog::setUIStyle()
-{
-    QFile file(THEME_DIR + "config/ui.qss");
-    if (file.exists()) {
-        file.open(QFile::ReadOnly);
-        QString uiStyleSheet = QLatin1String(file.readAll());
-        if (uiStyleSheet.length() > 0)
-            setStyleSheet(uiStyleSheet);
-        file.close();
-    } else {
-        #ifdef TUP_DEBUG
-            qWarning() << "[TupPapagayoApp()] - Error: Theme file doesn't exist -> "
-                       << QString(THEME_DIR + "config/ui.qss");
-        #endif
-    }
 }
 
 bool TOptionalDialog::shownAgain()

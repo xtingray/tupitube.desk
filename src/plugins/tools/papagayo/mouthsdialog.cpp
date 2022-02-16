@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "mouthsdialog.h"
+#include "tapptheme.h"
 
 #include <QComboBox>
 #include <QVBoxLayout>
@@ -45,18 +46,7 @@ MouthsDialog::MouthsDialog(QWidget *parent) : QDialog(parent)
     setWindowTitle(tr("LipSync Mouth Examples"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/papagayo.png")));
 
-    QFile file(THEME_DIR + "config/ui.qss");
-    if (file.exists()) {
-        file.open(QFile::ReadOnly);
-        QString styleSheet = QLatin1String(file.readAll());
-        if (styleSheet.length() > 0)
-            setStyleSheet(styleSheet);
-        file.close();
-    } else {
-        #ifdef TUP_DEBUG
-            qWarning() << "[MouthsDialog()] - theme file doesn't exist -> " << (THEME_DIR + "config/ui.qss");
-        #endif
-    }
+    setStyleSheet(TAppTheme::themeSettings());
 
     mouthLabels << "AI" << "E" << "etc" << "FV" << "L" << "MBP" << "O" << "rest" << "U" << "WQ";
     #ifdef Q_OS_UNIX

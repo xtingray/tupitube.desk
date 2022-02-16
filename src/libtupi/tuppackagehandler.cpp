@@ -78,7 +78,7 @@ bool TupPackageHandler::importPackage(const QString &packagePath)
     QStringList list = JlCompress::extractDir(packagePath, CACHE_DIR);
     if (list.size() == 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPackageHandler::importPackage()] - Project file is empty! -> " << packagePath;
+            qDebug() << "[TupPackageHandler::importPackage()] - Fatal Error: Project file is empty! -> " << packagePath;
         #endif
 
         return false;

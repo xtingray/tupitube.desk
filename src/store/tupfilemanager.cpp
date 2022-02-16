@@ -151,7 +151,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
             doc.appendChild(project->getScenes().at(i)->toXml(doc));
             scenePath = projectDir.path() + "/scene" + QString::number(index) + ".tps";
             #ifdef TUP_DEBUG
-                qDebug() << "[TupFileManager::save()] - Saving scene file " << QString::number(i);
+                qDebug() << "[TupFileManager::save()] - Saving scene file " << i;
                 qDebug() << "[TupFileManager::save()] - Scene file -> " << scenePath;
             #endif
             QFile sceneFile(scenePath);
@@ -256,7 +256,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 bool TupFileManager::load(const QString &fileName, TupProject *project)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupFileManager::load()] - fileName: " << fileName;
+        qDebug() << "[TupFileManager::load()] - fileName -> " << fileName;
     #endif
 
     TupPackageHandler packageHandler;

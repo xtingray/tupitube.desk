@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tuplibrarydialog.h"
+#include "tapptheme.h"
 #include "tformfactory.h"
 #include "tosd.h"
 #include "tupitemfactory.h"
@@ -51,18 +52,7 @@ TupLibraryDialog::TupLibraryDialog(TupLibrary *assets) : QDialog()
     setWindowTitle(tr("Library Object"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/polyline.png")));
 
-    QFile file(THEME_DIR + "config/ui.qss");
-    if (file.exists()) {
-        file.open(QFile::ReadOnly);
-        QString styleSheet = QLatin1String(file.readAll());
-        if (styleSheet.length() > 0)
-            setStyleSheet(styleSheet);
-        file.close();
-    } else {
-        #ifdef TUP_DEBUG
-            qWarning() << "[TupLibraryDialog()] - theme file doesn't exist -> " << QString(THEME_DIR + "config/ui.qss");
-        #endif
-    }
+    setStyleSheet(TAppTheme::themeSettings());
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -71,8 +61,8 @@ TupLibraryDialog::TupLibraryDialog(TupLibrary *assets) : QDialog()
 
     QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok 
                                 | QDialogButtonBox::Cancel, Qt::Horizontal);
-    connect(buttons, SIGNAL(accepted ()), this, SLOT(checkNames()));
-    connect(buttons, SIGNAL(rejected ()), this, SLOT(reject()));
+    connect(buttons, SIGNAL(accepted()), this, SLOT(checkNames()));
+    connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
 
     layout->addWidget(buttons, 0, Qt::AlignCenter);
 }

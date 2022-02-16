@@ -101,23 +101,7 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
     isNetworked = false;
     exportWidget = nullptr;
 
-    /*
-    QFile file(THEME_DIR + "config/ui.qss");
-    if (file.exists()) {
-        file.open(QFile::ReadOnly);
-        uiStyleSheet = QLatin1String(file.readAll());
-        if (uiStyleSheet.length() > 0)
-            setStyleSheet(uiStyleSheet);
-        file.close();
-    } else {
-        #ifdef TUP_DEBUG 
-            qWarning() << "[TupMainWindow()] - theme file doesn't exist -> " << QString(THEME_DIR + "config/ui.qss");
-        #endif
-    }
-    */
-
-    QString themeStr = TAppTheme::themeSettings();
-    setStyleSheet(themeStr);
+    setStyleSheet(TAppTheme::themeSettings());
 
     // Loading audio player plugin
     // TAudioPlayer::instance()->loadEngine("gstreamer"); // FIXME: Move this to the settings 

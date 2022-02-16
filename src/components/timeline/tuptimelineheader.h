@@ -102,7 +102,7 @@ class TUPITUBE_EXPORT TupTimeLineHeader : public QHeaderView
         QLineEdit *editor;
         int editorSection;
         bool sectionOnMotion;
-        QString themeName;
+        int uiTheme;
 };
 
 #endif

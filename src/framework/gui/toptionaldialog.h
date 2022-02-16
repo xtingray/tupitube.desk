@@ -64,8 +64,6 @@ class T_GUI_EXPORT TOptionalDialog : public QDialog
         void callDiscardAction();
 
     private:
-        void setUIStyle();
-
         QBoxLayout *mainLayout;
         QCheckBox *checkBox;
         Result result;

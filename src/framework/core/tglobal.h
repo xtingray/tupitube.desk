@@ -85,4 +85,8 @@ struct SoundResource {
     QString path;
     bool muted;
 };
+
+#define DARK_THEME 0
+#define LIGHT_THEME 1
+
 #endif

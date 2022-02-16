@@ -102,7 +102,7 @@ class TUPITUBE_EXPORT TupExposureHeader: public QHeaderView
         int m_editedSection;
         bool m_sectionOnMotion;
         int m_currentSection;
-        QString themeName;
+        int uiTheme;
         bool isEditing;
 };
 

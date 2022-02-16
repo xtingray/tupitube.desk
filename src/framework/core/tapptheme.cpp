@@ -39,8 +39,11 @@
 
 QString TAppTheme::themeSettings()
 {
-    QString settings = "";
+    #ifdef TUP_DEBUG
+        qDebug() << "[TAppTheme::themeSettings()] - Loading ui.qss -> " << THEME_DIR + "config/ui.qss";
+    #endif
 
+    QString settings = "";
     TCONFIG->beginGroup("Theme");
     QString bgColor = TCONFIG->value("BgColor", "#a0a0a0").toString();
 

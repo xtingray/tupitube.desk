@@ -97,7 +97,7 @@ class T_GUI_EXPORT TOsd : public QWidget
         } *m_animator;
 
         QTextDocument *m_document;
-        QString themeName;
+        int uiTheme;
 };
 
 #endif

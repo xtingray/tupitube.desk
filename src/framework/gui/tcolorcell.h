@@ -79,7 +79,7 @@ class TUPITUBE_EXPORT TColorCell : public QWidget
         FillType index;
         QBrush cellBrush;
         QSize size;
-        QString themeName;
+        int uiTheme;
 };
 
 #endif

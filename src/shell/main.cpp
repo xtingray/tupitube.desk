@@ -41,7 +41,6 @@
 #ifdef TUP_DEBUG
   #include <QDebug>
   #ifdef Q_OS_UNIX
-    // #include "tdebug.h"
     #include "tupcrashhandler.h"
   #endif
 #endif
@@ -68,7 +67,6 @@ int main(int argc, char ** argv)
 
 #ifdef Q_OS_UNIX
 #ifdef TUP_DEBUG
-    // TDebug::setOutputChannel();
     // Initializing the crash handler (bug catcher)
     TupCrashHandler::init();
 #endif
@@ -94,27 +92,6 @@ int main(int argc, char ** argv)
 		#else
             TCONFIG->setValue("Home", QString::fromLocal8Bit(::getenv("TUPITUBE_HOME")));
         #endif
-       
-        /* 
-        #ifdef Q_OS_WIN
-            if (QSysInfo::windowsVersion() == QSysInfo::WV_XP) {
-                QDir dir("C:\temp");
-                if (!dir.exists()) {
-                    if (!dir.mkdir("C:\temp")) {
-                        #ifdef TUP_DEBUG
-                            qDebug() << "[main.cpp] - Fatal error: WinXP issue!";
-                        #endif
-                        return 0;
-                    }
-                }
-                TCONFIG->setValue("Cache", QDir::tempPath());
-            } else {
-                TCONFIG->setValue("Cache", QDir::tempPath());
-            }
-        #else
-            TCONFIG->setValue("Cache", QDir::tempPath());    
-        #endif
-        */
 
         TCONFIG->setValue("Cache", QDir::tempPath());
     } else {
@@ -166,22 +143,13 @@ int main(int argc, char ** argv)
     else
         kAppProp->setDataDir(xmlDir + locale + "/");
 
-    TCONFIG->setValue("Theme", "Dark");
-    kAppProp->setThemeDir(kAppProp->shareDir() + "themes/dark/");
+    TCONFIG->beginGroup("Theme");
+    int theme = TCONFIG->value("UITheme", DARK_THEME).toInt();
+    QString themePath = "/dark/";
+    if (theme == LIGHT_THEME)
+        themePath = "/light/";
 
-    /*
-    QString themeName = TCONFIG->value("Theme").toString();
-    if (themeName.length() == 0) {
-        themeName = "Dark";
-        TCONFIG->setValue("Theme", themeName);
-    }
-
-    if (themeName.compare("Light") == 0)
-        kAppProp->setThemeDir(kAppProp->shareDir() + "themes/default/");
-    else
-        kAppProp->setThemeDir(kAppProp->shareDir() + "themes/dark/");
-    */
-
+    kAppProp->setThemeDir(kAppProp->shareDir() + "themes" + themePath);
     kAppProp->setRasterResourcesDir(kAppProp->shareDir() + "themes/raster/");
     // Setting the repository directory (where the projects are saved)
     application.createCache(TCONFIG->value("Cache").toString());

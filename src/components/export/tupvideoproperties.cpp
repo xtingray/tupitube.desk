@@ -114,12 +114,12 @@ void TupVideoProperties::setProgressBar()
     progressWidget = new QWidget;
     QHBoxLayout *progressLayout = new QHBoxLayout(progressWidget);
 
-    TCONFIG->beginGroup("General");
-    QString themeName = TCONFIG->value("Theme", "Light").toString();
+    TCONFIG->beginGroup("Theme");
+    int uiTheme = TCONFIG->value("UITheme", DARK_THEME).toInt();
     QString style = "QProgressBar { background-color: #DDDDDD; "
                     "text-align: center; color: #FFFFFF; border-radius: 2px; } ";
     QString color = "#009500";
-    if (themeName.compare("Dark") == 0)
+    if (uiTheme == DARK_THEME)
         color = "#444444";
     style += "QProgressBar::chunk { background-color: " + color + "; border-radius: 2px; }";
 

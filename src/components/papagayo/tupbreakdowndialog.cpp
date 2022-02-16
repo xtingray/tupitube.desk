@@ -16,6 +16,7 @@
 
 #include "tupbreakdowndialog.h"
 #include "tapplicationproperties.h"
+#include "tapptheme.h"
 #include "tbutton.h"
 #include "timagelabel.h"
 #include "tseparator.h"
@@ -39,7 +40,7 @@ TupBreakdownDialog::TupBreakdownDialog(const QString &word, const QString &phone
     currentIndex = 0;
 
     setInitVars(word, mouthsPath);
-    setUIStyle();
+    setStyleSheet(TAppTheme::themeSettings());
     setUI(word, phonemes);
 }
 
@@ -56,7 +57,7 @@ TupBreakdownDialog::TupBreakdownDialog(QStringList wordsList, QStringList phonem
     currentIndex = 0;
 
     setInitVars(wordsList.at(0), mouthsPath);
-    setUIStyle();
+    setStyleSheet(TAppTheme::themeSettings());
     setUI(wordsList.at(0), phonemesList.at(0));
 }
 
@@ -75,22 +76,6 @@ void TupBreakdownDialog::setInitVars(const QString &word, const QString &mouthsP
     QStringList mouthsList = directory.entryList(QStringList(), QDir::Files);
     QFileInfo info(mouthsList.at(0));
     extension = info.suffix();
-}
-
-void TupBreakdownDialog::setUIStyle()
-{
-    QFile file(THEME_DIR + "config/ui.qss");
-    if (file.exists()) {
-        file.open(QFile::ReadOnly);
-        QString styleSheet = QLatin1String(file.readAll());
-        if (styleSheet.length() > 0)
-            setStyleSheet(styleSheet);
-        file.close();
-    } else {
-        #ifdef TUP_DEBUG
-            qWarning() << "[TupBreakdownDialog()] - theme file doesn't exist -> " << (THEME_DIR + "config/ui.qss");
-        #endif
-    }
 }
 
 void TupBreakdownDialog::setUI(const QString &word, const QString &phonemes)

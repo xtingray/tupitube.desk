@@ -45,8 +45,8 @@ TupExposureHeader::TupExposureHeader(QWidget *parent): QHeaderView(Qt::Horizonta
     setSectionsMovable(true);
     isEditing = false;
 
-    TCONFIG->beginGroup("General");
-    themeName = TCONFIG->value("Theme", "Light").toString();
+    TCONFIG->beginGroup("Theme");
+    uiTheme = TCONFIG->value("UITheme", DARK_THEME).toInt();
 
     connect(this, SIGNAL(sectionDoubleClicked(int)), this, SLOT(showTitleEditor(int)));
 
@@ -249,7 +249,7 @@ void TupExposureHeader::paintSection(QPainter *painter, const QRect & rect, int 
 
     if (((section == m_currentSection) || (m_sections.size() == 1)) && m_sections[section].isVisible) { // Header selected
         QColor color(0, 136, 0, 40);
-        if (themeName.compare("Dark") == 0)
+        if (uiTheme == DARK_THEME)
             color = QColor(200, 220, 200);
 
         painter->fillRect(rect.normalized().adjusted(0, 0, 0, -1), color);

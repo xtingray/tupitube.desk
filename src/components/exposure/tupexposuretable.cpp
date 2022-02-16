@@ -121,13 +121,13 @@ class TupExposureItemDelegate : public QItemDelegate
         virtual void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
 
     private:
-        QString themeName;
+        QString uiTheme;
 };
 
 TupExposureItemDelegate::TupExposureItemDelegate(QObject * parent) :  QItemDelegate(parent)
 {
-    TCONFIG->beginGroup("General");
-    themeName = TCONFIG->value("Theme", "Light").toString();
+    TCONFIG->beginGroup("Theme");
+    uiTheme = TCONFIG->value("UITheme", DARK_THEME).toInt();
 }
 
 TupExposureItemDelegate::~TupExposureItemDelegate()
@@ -155,7 +155,7 @@ void TupExposureItemDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 
         if ((item->data(TupExposureTable::IsEmpty).toInt() == TupExposureTable::Empty)) {
             QColor color(100, 100, 100, 30);
-            if (themeName.compare("Dark") == 0)
+            if (uiTheme == DARK_THEME)
                 color = QColor(120, 120, 120);
 
             QPen pen(color);
@@ -173,12 +173,12 @@ void TupExposureItemDelegate::paint(QPainter *painter, const QStyleOptionViewIte
             path.lineTo(x + w - 8, y); 
 
             QColor color(0, 102, 255, 80);
-            if (themeName.compare("Dark") == 0)
+            if (uiTheme == DARK_THEME)
                 color = QColor(0, 0, 0, 60);
 
             painter->fillPath(path, QBrush(color));
 
-            if (themeName.compare("Dark") == 0) {
+            if (uiTheme == DARK_THEME) {
                 QPen pen(QColor(100, 100, 100));
                 painter->setPen(pen);
                 painter->drawPath(path);
@@ -191,8 +191,8 @@ void TupExposureItemDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 
 TupExposureTable::TupExposureTable(int fps, QWidget *parent) : QTableWidget(parent)
 {
-    TCONFIG->beginGroup("General");
-    themeName = TCONFIG->value("Theme", "Light").toString();
+    TCONFIG->beginGroup("Theme");
+    uiTheme = TCONFIG->value("UITheme", DARK_THEME).toInt();
 
     isLocalRequest = false;
     isEditing = false;
@@ -478,7 +478,7 @@ void TupExposureTable::insertFrame(int layerIndex, int frameIndex, const QString
     QTableWidgetItem *frame = new QTableWidgetItem;
 
     QColor color = Qt::transparent;
-    if (themeName.compare("Dark") == 0)
+    if (uiTheme == DARK_THEME)
         frame->setForeground(Qt::black);
     frame->setBackground(color);
 

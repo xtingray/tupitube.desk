@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tupexportmodule.h"
+#include "tapptheme.h"
 #include "tconfig.h"
 #include "tosd.h"
 #include "tupexportpluginobject.h"
@@ -120,11 +121,11 @@ TupExportModule::TupExportModule(TupProject *project, OutputFormat output,
         configureLayout->addWidget(bgTransparency);
     }
 
-    TCONFIG->beginGroup("General");
-    QString themeName = TCONFIG->value("Theme", "Light").toString();
+    TCONFIG->beginGroup("Theme");
+    int uiTheme = TCONFIG->value("UITheme", DARK_THEME).toInt();
     QString style = "QProgressBar { background-color: #DDDDDD; text-align: center; color: #FFFFFF; border-radius: 2px; } ";
     QString color = "#009500";
-    if (themeName.compare("Dark") == 0)
+    if (uiTheme == DARK_THEME)
         color = "#444444";
     style += "QProgressBar::chunk { background-color: " + color + "; border-radius: 2px; }";
 
@@ -424,17 +425,9 @@ void TupExportModule::exportIt()
         emit isDone();
     } else {
         QString msg = m_currentExporter->getExceptionMsg();
+
         QMessageBox msgBox;
-
-        QFile file(THEME_DIR + "config/ui.qss");
-        if (file.exists()) {
-            file.open(QFile::ReadOnly);
-            QString styleSheet = QLatin1String(file.readAll());
-            if (styleSheet.length() > 0)
-                msgBox.setStyleSheet(styleSheet);
-            file.close();
-        }
-
+        msgBox.setStyleSheet(TAppTheme::themeSettings());
         msgBox.setWindowTitle(tr("Fatal Error: Can't export video"));
         msgBox.setIcon(QMessageBox::Critical);
         msgBox.setTextFormat(Qt::RichText);

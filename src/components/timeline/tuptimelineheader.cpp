@@ -38,8 +38,8 @@
 
 TupTimeLineHeader::TupTimeLineHeader(QWidget * parent) : QHeaderView(Qt::Vertical, parent)
 {
-    TCONFIG->beginGroup("General");
-    themeName = TCONFIG->value("Theme", "Light").toString();
+    TCONFIG->beginGroup("Theme");
+    uiTheme = TCONFIG->value("UITheme", DARK_THEME).toInt();
 
     setSectionResizeMode(QHeaderView::Custom);
     setSectionsClickable(true);
@@ -80,7 +80,7 @@ void TupTimeLineHeader::paintSection(QPainter * painter, const QRect & rect, int
 
     if (currentLayer == index) {
         QColor color(0, 136, 0, 40);
-        if (themeName.compare("Dark") == 0)
+        if (uiTheme == DARK_THEME)
             color = QColor(120, 120, 120, 80);
 
         painter->fillRect(rect, color);

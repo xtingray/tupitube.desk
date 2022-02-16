@@ -37,6 +37,7 @@
 
 #include "tupcrashhandler.h"
 #include "tupcrashwidget.h"
+#include "tapptheme.h"
 
 #include <QScreen>
 
@@ -227,21 +228,7 @@ void TupCrashHandler::setConfig(const QString &filePath)
 
 QString loadStyle()
 {
-    QFile file(THEME_DIR + "config/ui.qss");
-    if (file.exists()) {
-        file.open(QFile::ReadOnly);
-        QString styleSheet = QLatin1String(file.readAll());
-        file.close();
-
-        return styleSheet;
-    } else {
-        #ifdef TUP_DEBUG
-            qWarning() << "TupCrashHandler::loadStyle() - theme file doesn't exist -> "
-                          + QString(THEME_DIR + "config/ui.qss");
-        #endif
-    }
-
-    return "";
+    return TAppTheme::themeSettings();
 }
 
 static QString runCommand(const QString &command, QStringList parameters)
