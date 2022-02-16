@@ -83,7 +83,8 @@
 
 TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), m_projectManager(nullptr), animationTab(nullptr),
                                                       playerTab(nullptr), m_viewChat(nullptr), m_exposureSheet(nullptr),
-                                                      m_scenes(nullptr), isSaveDialogOpen(false) //, internetOn(false)
+                                                      isSaveDialogOpen(false) //, internetOn(false) 
+                                                      // m_scenes(nullptr), isSaveDialogOpen(false) //, internetOn(false)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupMainWindow()]";
@@ -101,7 +102,8 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
     isNetworked = false;
     exportWidget = nullptr;
 
-    setStyleSheet(TAppTheme::themeSettings());
+    uiStyleSheet = TAppTheme::themeSettings();
+    setStyleSheet(uiStyleSheet);
 
     // Loading audio player plugin
     // TAudioPlayer::instance()->loadEngine("gstreamer"); // FIXME: Move this to the settings 
@@ -500,17 +502,6 @@ void TupMainWindow::newProject()
 bool TupMainWindow::cancelChanges()
 {
     if (m_projectManager->projectWasModified()) {
-        /*
-        TOptionalDialog dialog(tr("Do you want to remove this frame?"), tr("Confirmation"), false, true, this);
-        dialog.setModal(true);
-        QScreen *screen = QGuiApplication::screens().at(0);
-        dialog.move(static_cast<int> ((screen->geometry().width() - dialog.sizeHint().width()) / 2),
-                    static_cast<int> ((screen->geometry().height() - dialog.sizeHint().height()) / 2));
-
-        if (dialog.exec() == QDialog::Rejected)
-            return;
-        */
-
         QMessageBox msgBox;
         msgBox.setStyleSheet(uiStyleSheet);
         msgBox.setWindowTitle(tr("Confirmation Required"));
@@ -588,7 +579,7 @@ void TupMainWindow::resetUI()
     colorView->expandDock(false);
     penView->expandDock(false);
     libraryView->expandDock(false);
-    scenesView->expandDock(false);
+    // scenesView->expandDock(false);
     exposureView->expandDock(false);
     timeView->expandDock(false);
 
@@ -627,7 +618,7 @@ void TupMainWindow::resetUI()
 
     m_exposureSheet->closeAllScenes();
     m_timeLine->closeAllScenes();
-    m_scenes->closeAllScenes();
+    // m_scenes->closeAllScenes();
     m_libraryWidget->resetGUI();
 
     m_fileName = QString();
@@ -1453,7 +1444,7 @@ void TupMainWindow::restoreFramesMode(TupProject::Mode mode)
         }
         exposureView->enableButton(true);
         timeView->enableButton(true);
-        scenesView->enableButton(true);
+        // scenesView->enableButton(true);
     } else { // BG / FG modes
         if (exposureView->isExpanded()) {
             currentDock = TupDocumentView::ExposureSheet;
@@ -1463,12 +1454,14 @@ void TupMainWindow::restoreFramesMode(TupProject::Mode mode)
             timeView->expandDock(false);
         }
 
+        /*
         if (scenesView->isExpanded()) {
             scenesView->expandDock(false);
         }
+        */
         exposureView->enableButton(false);
         timeView->enableButton(false);
-        scenesView->enableButton(false);
+        // scenesView->enableButton(false);
     }
 
     if (m_libraryWidget)

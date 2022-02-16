@@ -71,6 +71,7 @@ bool TupPackageHandler::importPackage(const QString &packagePath)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupPackageHandler::importPackage()] - packagePath -> " << packagePath;
+        qDebug() << "[TupPackageHandler::importPackage()] - CACHE_DIR -> " << CACHE_DIR;
     #endif
 
     QFileInfo file(packagePath);

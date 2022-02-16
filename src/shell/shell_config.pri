@@ -16,7 +16,7 @@ EXPORT_DIR = ../components/export
 EXPOSURE_DIR = ../components/exposure 
 TIMELINE_DIR = ../components/timeline 
 LIBRARY_DIR = ../components/library
-SCENES_DIR = ../components/scenes 
+# SCENES_DIR = ../components/scenes 
 NEWS_DIR = ../components/news
 LIBUI_DIR = ../libui
 STORE_DIR = ../store 
@@ -38,7 +38,7 @@ include($$EXPORT_DIR/export.pri)
 include($$EXPOSURE_DIR/exposure.pri)
 include($$TIMELINE_DIR/timeline.pri)
 include($$LIBRARY_DIR/library.pri)
-include($$SCENES_DIR/scenes.pri)
+# include($$SCENES_DIR/scenes.pri)
 include($$NEWS_DIR/news.pri)
 include($$LIBUI_DIR/libui.pri)
 include($$STORE_DIR/store.pri)

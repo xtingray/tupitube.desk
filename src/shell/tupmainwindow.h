@@ -45,7 +45,7 @@
 #include "tupexposuresheet.h"
 #include "tupbrushwidget.h"
 #include "tupcolorpalettewidget.h"
-#include "tupsceneswidget.h"
+// #include "tupsceneswidget.h"
 #include "tuplibrarywidget.h"
 #include "tuptimeline.h"
 #include "tupcamerawidget.h"
@@ -246,7 +246,7 @@ class TupMainWindow : public TabbedMainWindow
         QToolBar *mainToolBar;
         QToolBar *alternativeToolBar;
         TupExposureSheet *m_exposureSheet;
-        TupScenesWidget *m_scenes;
+        // TupScenesWidget *m_scenes;
         TupTimeLine *m_timeLine;
 
         TupLibraryWidget *m_libraryWidget;
@@ -256,7 +256,7 @@ class TupMainWindow : public TabbedMainWindow
         ToolView *colorView;
         ToolView *penView;
         ToolView *libraryView;
-        ToolView *scenesView;  
+        // ToolView *scenesView;  
         ToolView *helpView;
         ToolView *timeView;
         ToolView *exportView;

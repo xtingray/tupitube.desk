@@ -176,7 +176,7 @@ void TupCameraWidget::setProgressBar()
 {
     progressBar = new QProgressBar(this);
     QString style1 = "QProgressBar { background-color: #DDDDDD; text-align: center; color: #FFFFFF; border-radius: 2px; } ";
-    QString color = "#009500";
+    QString color = "#666666";
     if (uiTheme == DARK_THEME)
         color = "#444444";
     QString style2 = "QProgressBar::chunk { background-color: " + color + "; border-radius: 2px; }";

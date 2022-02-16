@@ -121,7 +121,7 @@ class TupExposureItemDelegate : public QItemDelegate
         virtual void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
 
     private:
-        QString uiTheme;
+        int uiTheme;
 };
 
 TupExposureItemDelegate::TupExposureItemDelegate(QObject * parent) :  QItemDelegate(parent)
@@ -172,7 +172,7 @@ void TupExposureItemDelegate::paint(QPainter *painter, const QStyleOptionViewIte
             path.lineTo(x + w, y + 4);
             path.lineTo(x + w - 8, y); 
 
-            QColor color(0, 102, 255, 80);
+            QColor color(0, 0, 0, 40);
             if (uiTheme == DARK_THEME)
                 color = QColor(0, 0, 0, 60);
 

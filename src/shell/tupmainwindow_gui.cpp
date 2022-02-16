@@ -106,6 +106,7 @@ void TupMainWindow::createGUI()
     connectWidgetToManager(m_libraryWidget);
     connectWidgetToLocalManager(m_libraryWidget);
 
+    /*
     // Adding the scenes widget to the right side of the interface
 
     m_scenes = new TupScenesWidget;
@@ -116,6 +117,7 @@ void TupMainWindow::createGUI()
 
     connectWidgetToManager(m_scenes);
     connectWidgetToLocalManager(m_scenes);
+    */
 
     // Adding the exposure sheet to the right side of the interface
     m_exposureSheet = new TupExposureSheet(this, m_projectManager->getProject());
@@ -604,8 +606,8 @@ void TupMainWindow::checkTimeLineVisibility(bool visible)
             timeView->blockSignals(false);
         }
 
-        if (scenesView->isExpanded())
-            scenesView->expandDock(false);
+        // if (scenesView->isExpanded())
+        //     scenesView->expandDock(false);
 
         currentDock = TupDocumentView::ExposureSheet;
         emit activeDockChanged(TupDocumentView::ExposureSheet);

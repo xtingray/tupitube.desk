@@ -3,7 +3,7 @@ TEMPLATE = subdirs
 
 SUBDIRS += papagayo \
            micmanager \
-           scenes \
+           # scenes \
            colorpalette \
            library \
            timeline \

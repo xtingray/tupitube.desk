@@ -78,7 +78,7 @@ int main(int argc, char ** argv)
     kAppProp->setCodeName(CODE_NAME);
 
     // Defining TupiTube Desk global variables
-    QDir appDirPath(QApplication::applicationDirPath());
+    // QDir appDirPath(QApplication::applicationDirPath());
     TCONFIG->beginGroup("General");
 
     if (TCONFIG->value("RandomSeed", 0).toDouble() == 0.0) {
@@ -86,6 +86,7 @@ int main(int argc, char ** argv)
         TCONFIG->setValue("ClientID", TAlgorithm::randomString(20));
     }
 
+    QString cachePath = "";
     if (TCONFIG->firstTime()) {
         #if defined(Q_OS_MAC) 
             TCONFIG->setValue("Home", appDirPath.absolutePath());
@@ -93,14 +94,20 @@ int main(int argc, char ** argv)
             TCONFIG->setValue("Home", QString::fromLocal8Bit(::getenv("TUPITUBE_HOME")));
         #endif
 
-        TCONFIG->setValue("Cache", QDir::tempPath());
+        cachePath = QDir::tempPath();
+        TCONFIG->setValue("Cache", cachePath);
     } else {
-        QString cache = TCONFIG->value("Cache").toString();
-        if (cache.isEmpty())
-            TCONFIG->setValue("Cache", QDir::tempPath());
-        QDir dir(cache);
-        if (!dir.exists())
-            TCONFIG->setValue("Cache", QDir::tempPath());
+        cachePath = TCONFIG->value("Cache").toString();
+        if (cachePath.isEmpty()) {
+            cachePath = QDir::tempPath();
+            TCONFIG->setValue("Cache", cachePath);
+        }
+
+        QDir dir(cachePath);
+        if (!dir.exists()) {
+            cachePath = QDir::tempPath();
+            TCONFIG->setValue("Cache", cachePath);
+        }
     } 
 
 #if defined(Q_OS_MAC)
@@ -152,10 +159,11 @@ int main(int argc, char ** argv)
     kAppProp->setThemeDir(kAppProp->shareDir() + "themes" + themePath);
     kAppProp->setRasterResourcesDir(kAppProp->shareDir() + "themes/raster/");
     // Setting the repository directory (where the projects are saved)
-    application.createCache(TCONFIG->value("Cache").toString());
+    // application.createCache(TCONFIG->value("Cache").toString());
+    application.createCache(cachePath);
 
     #ifdef TUP_DEBUG
-        qWarning() << "[main.cpp] - CACHE path -> " << TCONFIG->value("Cache").toString();
+        qWarning() << "[main.cpp] - CACHE path -> " << cachePath;
     #endif
 
     QStyle *style = QStyleFactory::create("fusion");

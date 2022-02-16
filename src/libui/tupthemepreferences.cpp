@@ -146,7 +146,7 @@ void TupThemePreferences::saveValues()
         int g = currentColor.green();
         int b = currentColor.blue();
         int theme = DARK_THEME;
-        if ((r >= 200) || (g >= 200) || (b >= 200))
+        if ((r >= 180) || (g >= 180) || (b >= 180))
             theme = LIGHT_THEME;
 
         TCONFIG->beginGroup("Theme");
