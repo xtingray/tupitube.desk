@@ -1651,7 +1651,8 @@ void TupFrame::checkPenStatus(int itemIndex)
 void TupFrame::setPenAtItem(int itemIndex, const QString &xml)
 {
     TupGraphicObject *object = graphics.at(itemIndex);
-    object->setPen(xml);
+    if (object)
+        object->setPen(xml);
 }
 
 void TupFrame::redoPenAction(int itemIndex)

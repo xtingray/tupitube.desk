@@ -48,8 +48,6 @@
 #include <QPaintDevice>
 #include <QGraphicsView>
 
-// class TupPathItem;
-
 class TUPITUBE_PLUGIN FillTool : public TupToolPlugin
 {
     Q_OBJECT

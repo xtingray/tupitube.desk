@@ -375,7 +375,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         // TupCamera Widget
         cameraWidget = new TupCameraWidget(m_projectManager->getProject());
-        connect(cameraWidget, SIGNAL(projectAuthorUpdated(const QString &)), this, SLOT(updateProjectAuthor(const QString &)));
+        connect(cameraWidget, SIGNAL(projectAuthorUpdated(const QString&)), this, SLOT(updateProjectAuthor(const QString&)));
         connect(cameraWidget, SIGNAL(exportRequested()), this, SLOT(exportProject()));
         connect(cameraWidget, SIGNAL(postRequested()), this, SLOT(postProject()));
         connect(cameraWidget, SIGNAL(projectHasChanged(bool)), m_projectManager, SLOT(setModificationStatus(bool)));
@@ -903,13 +903,13 @@ void TupMainWindow::importPalettes()
                     m_colorPalette->parsePaletteFile(importer.getFilePath());
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "[TupMainWindow::importPalettes()] - Fatal Error: Couldn't import file -> " + QString(*file);
+                        qDebug() << "[TupMainWindow::importPalettes()] - Fatal Error: Couldn't import file -> " << QString(*file);
                     #endif
                     isOk = false;
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupMainWindow::importPalettes()] - Fatal Error: Couldn't import palette -> " + QString(*file);
+                    qDebug() << "[TupMainWindow::importPalettes()] - Fatal Error: Couldn't import palette -> " << QString(*file);
                 #endif
                 isOk = false;
             }
@@ -931,11 +931,11 @@ void TupMainWindow::importPalettes()
 
 void TupMainWindow::connectWidgetToManager(QWidget *widget)
 {
-    connect(widget, SIGNAL(requestTriggered(const TupProjectRequest *)), m_projectManager, 
-            SLOT(handleProjectRequest(const TupProjectRequest *)));
+    connect(widget, SIGNAL(requestTriggered(const TupProjectRequest*)), m_projectManager,
+            SLOT(handleProjectRequest(const TupProjectRequest*)));
 
     connect(m_projectManager, SIGNAL(responsed(TupProjectResponse*)), widget, 
-            SLOT(handleProjectResponse(TupProjectResponse *)));
+            SLOT(handleProjectResponse(TupProjectResponse*)));
 
     // SQA: Pending for revision
     //connect(widget, SIGNAL(postPage(QWidget *)), this, SLOT(addPage(QWidget *)));
@@ -943,23 +943,23 @@ void TupMainWindow::connectWidgetToManager(QWidget *widget)
 
 void TupMainWindow::connectWidgetToLocalManager(QWidget *widget)
 {
-    connect(widget, SIGNAL(localRequestTriggered(const TupProjectRequest *)),
-            m_projectManager, SLOT(handleLocalRequest(const TupProjectRequest *)));
+    connect(widget, SIGNAL(localRequestTriggered(const TupProjectRequest*)),
+            m_projectManager, SLOT(handleLocalRequest(const TupProjectRequest*)));
 }
 
 void TupMainWindow::disconnectWidgetToManager(QWidget *widget)
 {
-    disconnect(widget, SIGNAL(requestTriggered(const TupProjectRequest *)), m_projectManager,
-            SLOT(handleProjectRequest(const TupProjectRequest *)));
+    disconnect(widget, SIGNAL(requestTriggered(const TupProjectRequest*)), m_projectManager,
+            SLOT(handleProjectRequest(const TupProjectRequest*)));
 
     disconnect(m_projectManager, SIGNAL(responsed(TupProjectResponse*)), widget,
-            SLOT(handleProjectResponse(TupProjectResponse *)));
+            SLOT(handleProjectResponse(TupProjectResponse*)));
 }
 
 void TupMainWindow::connectWidgetToPaintArea(QWidget *widget)
 {
-    connect(widget, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)), 
-            this, SLOT(createPaintCommand(const TupPaintAreaEvent *)));
+    connect(widget, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent*)),
+            this, SLOT(createPaintCommand(const TupPaintAreaEvent*)));
 }
 
 bool TupMainWindow::saveAs()
@@ -1206,7 +1206,6 @@ void TupMainWindow::updateColor(TColorCell::FillType type, const QColor &color)
     if (type == TColorCell::Background)
         action = TupPaintAreaEvent::ChangeBgColor;
 
-    // TupPaintAreaEvent *event = new TupPaintAreaEvent(action, color);
     createPaintCommand(new TupPaintAreaEvent(action, color));
 }
 
@@ -1505,7 +1504,6 @@ void TupMainWindow::unexpectedClose()
     if (m_projectManager->isOpen())
         resetUI();
 
-    // QDesktopWidget desktop;
     QMessageBox msgBox;
     msgBox.setWindowTitle(tr("Fatal Error"));
     msgBox.setIcon(QMessageBox::Critical);
@@ -1561,8 +1559,8 @@ void TupMainWindow::resizeProjectDimension(const QSize dimension)
     delete cameraWidget;
 
     cameraWidget = new TupCameraWidget(m_projectManager->getProject());
-    connect(cameraWidget, SIGNAL(projectAuthorUpdated(const QString &)),
-            this, SLOT(updateProjectAuthor(const QString &)));
+    connect(cameraWidget, SIGNAL(projectAuthorUpdated(const QString&)),
+            this, SLOT(updateProjectAuthor(const QString&)));
     connectWidgetToManager(cameraWidget);
 
     playerTab->setCameraWidget(cameraWidget);

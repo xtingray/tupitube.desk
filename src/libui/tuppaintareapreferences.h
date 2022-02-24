@@ -44,6 +44,7 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QTabWidget>
+#include <QComboBox>
 
 class TUPITUBE_EXPORT TupPaintAreaPreferences : public QWidget
 {
@@ -88,6 +89,7 @@ class TUPITUBE_EXPORT TupPaintAreaPreferences : public QWidget
         QPushButton *safeRectColorButton;
         QPushButton *safeLineColorButton;
         QSpinBox *safeThickness;
+        QComboBox *safeLevelCombo;
 
         QFont labelFont;
 };

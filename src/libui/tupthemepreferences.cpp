@@ -42,6 +42,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QPushButton>
 
 TupThemePreferences::TupThemePreferences(QWidget *parent) : QWidget(parent)
 {
@@ -82,10 +83,21 @@ void TupThemePreferences::setupPage()
     labelFont.setBold(true);
     bgLabel->setFont(labelFont);
 
+    QPushButton *resetButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/reset.png")), "");
+    resetButton->setToolTip(tr("Restore Default Theme"));
+    resetButton->setMaximumWidth(50);
+    connect(resetButton, SIGNAL(clicked()), this, SLOT(restoreDefaultTheme()));
+
+    QHBoxLayout *titleLayout = new QHBoxLayout;
+    titleLayout->addWidget(bgLabel);
+    titleLayout->addSpacing(10);
+    titleLayout->addWidget(resetButton);
+    titleLayout->addStretch();
+
     QVBoxLayout *blockLayout = new QVBoxLayout;
     blockLayout->addWidget(widget);
     blockLayout->setAlignment(widget, Qt::AlignLeft);
-    blockLayout->addWidget(bgLabel);
+    blockLayout->addLayout(titleLayout);
 
     QStringList labelList;
     labelList << tr("Gray") << tr("Brown") << tr("Chocolate") << tr("Blue")
@@ -199,4 +211,10 @@ void TupThemePreferences::updateCurrentColor(const QColor &color)
     cellList.at(currentRow)->setBrush(QBrush(color));
 
     emit colorPicked(currentColor);
+}
+
+void TupThemePreferences::restoreDefaultTheme()
+{
+    radioList.at(0)->setChecked(true);
+    updateCurrentRow(0);
 }

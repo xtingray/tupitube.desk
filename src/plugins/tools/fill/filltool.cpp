@@ -121,9 +121,11 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
 
                 if (gScene->getSpaceContext() == TupProject::FRAMES_MODE) {
                     frame = gScene->currentFrame();
-                    itemIndex = frame->indexOf(item);
-                    currentLayer = gScene->currentLayerIndex();
-                    currentFrame = gScene->currentFrameIndex();
+                    if (frame) {
+                        itemIndex = frame->indexOf(item);
+                        currentLayer = gScene->currentLayerIndex();
+                        currentFrame = gScene->currentFrameIndex();
+                    }
                 } else {
                     currentLayer = -1;
                     currentFrame = -1;

@@ -83,12 +83,6 @@ void TupPaintAreaPreferences::setupPage()
     pageLayout->addWidget(safeAreaLabel);
     pageLayout->addLayout(safeAreaPanel());
 
-    /*
-    pageLayout->addSpacing(10);
-    pageLayout->addWidget(new TSeparator(Qt::Horizontal));
-    pageLayout->addSpacing(10);
-    */
-
     QLabel *ROTLabel = new QLabel(tr("Rule Of Thirds Settings"));
     ROTLabel->setFont(labelFont);
     pageLayout->addWidget(ROTLabel);
@@ -104,7 +98,6 @@ void TupPaintAreaPreferences::setupPage()
 
     resetLayout->addStretch();
     resetLayout->addWidget(resetButton);
-    // resetLayout->addStretch();
     pageLayout->addLayout(resetLayout);
 
     widget->setLayout(pageLayout);
@@ -113,7 +106,6 @@ void TupPaintAreaPreferences::setupPage()
     tabWidget->addTab(widget, tr("UI Settings"));
 
     layout->addWidget(tabWidget);
-    // layout->setAlignment(tabWidget, Qt::AlignLeft);
     layout->addStretch(3);
 }
 
@@ -185,6 +177,7 @@ QGridLayout * TupPaintAreaPreferences::safeAreaPanel()
     colorName = TCONFIG->value("SafeAreaLineColor", "#969696").toString();
     safeAreaLineColor = QColor(colorName);
     int thickness = TCONFIG->value("SafeLineThickness", 1).toInt();
+    int safeLevel = TCONFIG->value("SafeLevel", 0).toInt();
 
     QGridLayout *safeForm = new QGridLayout;
 
@@ -209,6 +202,13 @@ QGridLayout * TupPaintAreaPreferences::safeAreaPanel()
     safeThickness->setValue(thickness);
     safeForm->addWidget(safeThickness, 2, 1, Qt::AlignLeft);
 
+    safeForm->addWidget(new QLabel(tr("Safe Area Level:")), 3, 0, Qt::AlignLeft);
+    safeLevelCombo = new QComboBox(this);
+    safeLevelCombo->addItem(tr("Background"));
+    safeLevelCombo->addItem(tr("Foreground"));
+    safeLevelCombo->setCurrentIndex(safeLevel);
+    safeForm->addWidget(safeLevelCombo, 3, 1, Qt::AlignLeft);
+
     return safeForm;
 }
 
@@ -226,29 +226,30 @@ void TupPaintAreaPreferences::saveValues()
     TCONFIG->setValue("SafeAreaRectColor", safeAreaRectColor.name());
     TCONFIG->setValue("SafeAreaLineColor", safeAreaLineColor.name());
     TCONFIG->setValue("SafeLineThickness", safeThickness->value());
+    TCONFIG->setValue("SafeLevel", safeLevelCombo->currentIndex());
 
     TCONFIG->sync();
 }
 
 void TupPaintAreaPreferences::restoreValues()
 {
-    gridColor = QColor("#0000b4");
+    gridColor = QColor(0, 0, 180); // #0000b4
     gridColorButton->setText(gridColor.name());
     gridColorButton->setStyleSheet("* { background-color: " + gridColor.name() + "; }");
     gridSeparation->setValue(10);
     gridThickness->setValue(1);
 
-    rotColor = QColor("#ff0000");
+    rotColor = QColor(255, 0, 0); // #ff0000
     rotColorButton->setText(rotColor.name());
     rotColorButton->setStyleSheet("* { background-color: " + rotColor.name() + "; "
                                   " color: #ffffff; }");
     rotThickness->setValue(1);
 
-    safeAreaRectColor = QColor("#008700");
+    safeAreaRectColor = QColor(0, 135, 0); // #008700
     safeRectColorButton->setText(safeAreaRectColor.name());
     safeRectColorButton->setStyleSheet("* { background-color: " + safeAreaRectColor.name() + "; }");
 
-    safeAreaLineColor = QColor("#969696");
+    safeAreaLineColor = QColor(150, 150, 150); // #969696
     safeLineColorButton->setText(safeAreaLineColor.name());
     safeLineColorButton->setStyleSheet("* { background-color: " + safeAreaLineColor.name() + "; }");
     safeThickness->setValue(1);

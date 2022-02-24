@@ -1234,13 +1234,13 @@ bool TupCommandExecutor::setTextColor(TupItemResponse *response)
                     QGraphicsItem *item = frame->item(itemIndex);
                     if (item) {
                         if (response->getMode() == TupProjectResponse::Do)
-                            frame->setPenAtItem(itemIndex, textColor);
+                            frame->setTextColorAtItem(itemIndex, textColor);
 
                         if (response->getMode() == TupProjectResponse::Redo)
-                            frame->redoPenAction(itemIndex);
+                            frame->redoTextColorAction(itemIndex);
 
                         if (response->getMode() == TupProjectResponse::Undo)
-                            frame->undoPenAction(itemIndex);
+                            frame->undoTextColorAction(itemIndex);
 
                         emit responsed(response);
                         return true;

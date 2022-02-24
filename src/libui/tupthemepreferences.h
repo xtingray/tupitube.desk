@@ -62,6 +62,7 @@ class TUPITUBE_EXPORT TupThemePreferences : public QWidget
     private slots:
         void updateCurrentRow(int row);
         void updateCurrentColor(const QColor &color);
+        void restoreDefaultTheme();
 
     private:
         void setupPage();
