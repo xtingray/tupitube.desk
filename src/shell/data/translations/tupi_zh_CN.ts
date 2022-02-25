@@ -3625,10 +3625,6 @@
         <translation>Shift+B</translation>
     </message>
     <message>
-        <source>Shift+C</source>
-        <translation>Shift+C</translation>
-    </message>
-    <message>
         <source>Shift+E</source>
         <translation>Shift+E</translation>
     </message>
@@ -3786,11 +3782,11 @@
     </message>
     <message>
         <source>Ctrl+Shift+P</source>
-        <translation type="unfinished">Ctrl+Shift+P</translation>
+        <translation>Ctrl+Shift+P</translation>
     </message>
     <message>
         <source>Check for Updates</source>
-        <translation type="unfinished"></translation>
+        <translation>检查更新</translation>
     </message>
 </context>
 <context>
@@ -4159,19 +4155,19 @@
     <name>TupNewsDialog</name>
     <message>
         <source>TupiTube Updates</source>
-        <translation type="unfinished"></translation>
+        <translation>TupiTube 更新</translation>
     </message>
     <message>
         <source>Updates</source>
-        <translation type="unfinished"></translation>
+        <translation>更新</translation>
     </message>
     <message>
         <source>News</source>
-        <translation type="unfinished">消息</translation>
+        <translation>消息</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished">关闭</translation>
+        <translation>关闭</translation>
     </message>
 </context>
 <context>
@@ -4360,6 +4356,18 @@
     <message>
         <source>Rect Color:</source>
         <translation>矩形颜色：</translation>
+    </message>
+    <message>
+        <source>Safe Area Level:</source>
+        <translation>安全区域等级：</translation>
+    </message>
+    <message>
+        <source>Background</source>
+        <translation>背景</translation>
+    </message>
+    <message>
+        <source>Foreground</source>
+        <translation>前景</translation>
     </message>
 </context>
 <context>
@@ -4633,7 +4641,7 @@
     </message>
     <message>
         <source>Audio files (*.wav)</source>
-        <translation type="unfinished"></translation>
+        <translation>音频文件 (*.wav)</translation>
     </message>
 </context>
 <context>
@@ -4938,29 +4946,6 @@
     <message>
         <source>Select Scenes</source>
         <translation>选择场景</translation>
-    </message>
-</context>
-<context>
-    <name>TupScenesWidget</name>
-    <message>
-        <source>Frame</source>
-        <translation>帧</translation>
-    </message>
-    <message>
-        <source>Layer %1</source>
-        <translation>图层%1</translation>
-    </message>
-    <message>
-        <source>Scene %1</source>
-        <translation> 场景%1</translation>
-    </message>
-    <message>
-        <source>Scenes Manager</source>
-        <translation>场景管理器</translation>
-    </message>
-    <message>
-        <source>Filter here...</source>
-        <translation>过滤此处...</translation>
     </message>
 </context>
 <context>
@@ -5365,12 +5350,44 @@ Cover</source>
         <translation>主题首选项</translation>
     </message>
     <message>
-        <source>Dark Theme</source>
-        <translation>暗黑主题</translation>
+        <source>Background Color</source>
+        <translation>背景颜色</translation>
     </message>
     <message>
-        <source>Please restart TupiTube</source>
-        <translation>请重新启动TupiTube</translation>
+        <source>Restore Default Theme</source>
+        <translation>恢复默认主题</translation>
+    </message>
+    <message>
+        <source>Gray</source>
+        <translation>灰色的</translation>
+    </message>
+    <message>
+        <source>Brown</source>
+        <translation>棕色的</translation>
+    </message>
+    <message>
+        <source>Chocolate</source>
+        <translation>巧克力</translation>
+    </message>
+    <message>
+        <source>Blue</source>
+        <translation>蓝色</translation>
+    </message>
+    <message>
+        <source>Honey</source>
+        <translation>蜜糖</translation>
+    </message>
+    <message>
+        <source>Green</source>
+        <translation>绿色</translation>
+    </message>
+    <message>
+        <source>Violet</source>
+        <translation>紫色</translation>
+    </message>
+    <message>
+        <source>Orange</source>
+        <translation>橘子</translation>
     </message>
 </context>
 <context>

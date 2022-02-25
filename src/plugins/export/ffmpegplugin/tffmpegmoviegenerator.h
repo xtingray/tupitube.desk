@@ -85,7 +85,7 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         int writeVideoFrame(AVPacket *pkt);
         void RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint iRGBIncrement, bool bSwapRGB);
 
-        bool encodeVideoFrame(AVCodecContext *enc_ctx, AVFrame *frame, AVPacket *pkt);
+        // bool encodeVideoFrame(AVCodecContext *enc_ctx, AVFrame *frame, AVPacket *pkt);
 
         int videoW;
         int videoH;
@@ -95,7 +95,7 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         AVOutputFormat *outputFormat;
         AVCodecContext *codecContext;
         enum AVCodecID videoCodecID;
-        const AVCodec *codec;
+        const AVCodec *videoCodec;
 
         QString errorMsg;
         int framesCount;

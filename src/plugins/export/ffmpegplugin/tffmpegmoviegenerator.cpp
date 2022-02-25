@@ -98,7 +98,7 @@ void TFFmpegMovieGenerator::setFileExtension(int format)
 bool TFFmpegMovieGenerator::beginVideoFile()
 {
     int ret;
-    codec = nullptr;
+    videoCodec = nullptr;
 
     // AVOutputFormat
     outputFormat = av_guess_format("ffh264", movieFile.toLocal8Bit().data(), nullptr);
@@ -191,11 +191,11 @@ AVStream * TFFmpegMovieGenerator::addVideoStream()
         qDebug() << "[TFFmpegMovieGenerator::addVideoStream()] - codec_id: " << videoCodecID;
     #endif
 
-    AVStream *st;
+    AVStream *stream;
 
     // Find the video encoder
-    codec = avcodec_find_encoder(videoCodecID);
-    if (!codec) {
+    videoCodec = avcodec_find_encoder(videoCodecID);
+    if (!videoCodec) {
         errorMsg = "ffmpeg error: Could not find video encoder.";
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::addVideoStream()] - " << errorMsg;
@@ -204,8 +204,8 @@ AVStream * TFFmpegMovieGenerator::addVideoStream()
         return nullptr;
     }
 
-    st = avformat_new_stream(formatContext, codec);
-    if (!st) {
+    stream = avformat_new_stream(formatContext, videoCodec);
+    if (!stream) {
         errorMsg = "ffmpeg error: Could not video alloc stream."; 
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::addVideoStream()] - " << errorMsg;
@@ -225,7 +225,7 @@ AVStream * TFFmpegMovieGenerator::addVideoStream()
     }
     */
 
-    codecContext = st->codec;
+    codecContext = stream->codec;
 
     // Put sample parameters
     codecContext->bit_rate = 6000000;
@@ -242,8 +242,8 @@ AVStream * TFFmpegMovieGenerator::addVideoStream()
     codecContext->time_base = (AVRational){1, fps};
 
     if (movieFile.endsWith("gif", Qt::CaseInsensitive)) {
-        st->time_base.num = 1;
-        st->time_base.den = fps;
+        stream->time_base.num = 1;
+        stream->time_base.den = fps;
         codecContext->pix_fmt = AV_PIX_FMT_RGB24;
     } else {
         codecContext->pix_fmt = AV_PIX_FMT_YUV420P;
@@ -252,13 +252,13 @@ AVStream * TFFmpegMovieGenerator::addVideoStream()
     if (formatContext->oformat->flags & AVFMT_GLOBALHEADER)
         codecContext->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
-    return st;
+    return stream;
 }
 
 bool TFFmpegMovieGenerator::openVideoStream()
 {
     // Open the codec
-    int ret = avcodec_open2(codecContext, codec, nullptr);
+    int ret = avcodec_open2(codecContext, videoCodec, nullptr);
 
     if (ret < 0) {
         errorMsg = "ffmpeg error: Can't open video codec.";
