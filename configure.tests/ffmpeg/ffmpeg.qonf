@@ -9,12 +9,16 @@
         </defines>
         <libs>
             <lib path="-L/usr/local/ffmpeg/lib" />
+            <lib path="-lavdevice" />
             <lib path="-lavformat" />
+            <lib path="-lavfilter" />
             <lib path="-lavcodec" />
+            <lib path="-lswresample" />
+            <lib path="-lswscale" /> 
+            <lib path="-lavutil" />
         </libs>
         <includes>
-            <include path="/usr/local/ffmpeg/include/libavformat/" />
-            <include path="/usr/local/ffmpeg/include/libavcodec/" />
+            <include path="/usr/local/ffmpeg/include/" />
         </includes>
     </provide>
     <solution>

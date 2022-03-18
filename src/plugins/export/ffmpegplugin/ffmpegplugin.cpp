@@ -123,8 +123,18 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
     if (format == TFFmpegMovieGenerator::NONE)
         return false;
 
-    // SQA: Get sound files from library and pass them as QList to TFFmpegMovieGenerator 
-    TFFmpegMovieGenerator *generator = new TFFmpegMovieGenerator(format, size, fps, duration);
+    QList<SoundResource> sounds;
+    if (library) {
+        QList<SoundResource> soundItems = library->soundResourcesList();
+        if (!soundItems.isEmpty()) {
+            foreach(SoundResource item, soundItems) {
+                if (!item.muted)
+                    sounds << item;
+            }
+        }
+    }
+
+    TFFmpegMovieGenerator *generator = new TFFmpegMovieGenerator(format, size, fps, duration, sounds);
     TupAnimationRenderer renderer(color, library, waterMark);
     {
         if (!generator->validMovieHeader()) {
@@ -150,9 +160,31 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
                 generator->nextFrame();
                 generator->reset();
                 photogram++;
-                emit progressChanged((photogram * 100) / frames);
+                if (frames > 0)
+                    emit progressChanged((photogram * 100) / frames);
             }
         }
+        // generator->endImagesStream();
+
+        generator->writeAudioStreams();
+
+        /*
+        QList<SoundResource> sounds;
+        if (library) {
+            sounds = library->soundResourcesList();
+            if (!sounds.isEmpty()) {
+                bool hasSounds = true;
+                foreach(SoundResource item, sounds) {
+                    if (item.muted) {
+                        hasSounds = false;
+                        break;
+                    }
+                }
+                if (hasSounds)
+                    generator->processAudio(sounds);
+            }
+        }
+        */
     }
 
     generator->saveMovie(filePath);

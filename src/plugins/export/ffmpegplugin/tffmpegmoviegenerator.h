@@ -43,14 +43,19 @@
 
 #ifdef __cplusplus
 extern "C" {
+#include "libavcodec/avcodec.h"
+#include "libavformat/avformat.h"
+#include "libswresample/swresample.h"
+#include "libswscale/swscale.h"
+#include "libavutil/avutil.h"
 #include "libavutil/channel_layout.h"
 #include "libavutil/mathematics.h"
 #include "libavutil/opt.h"
 #include "libavutil/imgutils.h"
-#include "libavcodec/avcodec.h"
-#include "libavformat/avformat.h"
-// #include "libavresample/avresample.h"
-// #include "libswscale/swscale.h"
+
+#include "libavutil/frame.h"
+#include "libavutil/samplefmt.h"
+#include "libavutil/timestamp.h"
 }
 #endif
 
@@ -63,39 +68,75 @@ extern "C" {
 class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
 {
     public:
-        TFFmpegMovieGenerator(TMovieGeneratorInterface::Format format, const QSize &size, int fps = 24,
-                              double duration = 0);
+        enum MediaType {Video = 0, Audio};
+        TFFmpegMovieGenerator(TMovieGeneratorInterface::Format format, const QSize &size,
+                              int fps = 24, double duration = 0, QList<SoundResource> sounds = QList<SoundResource>());
         ~TFFmpegMovieGenerator();
 
         virtual bool validMovieHeader();
         virtual QString getErrorMsg() const;
         bool createVideoFrame(const QImage &image);
+        // bool processAudio(QList<SoundResource> soundsList);
+        void writeAudioStreams();
         void saveMovie(const QString &filename);
 
     protected:
         void copyMovieFile(const QString &fileName);
-        virtual void handle(const QImage &image);
-        virtual bool beginVideoFile();
-        virtual void endVideoFile();
+        void handle(const QImage &image);
+        void endVideoFile();
 
     private:
+        bool initVideoFile();
         void setFileExtension(int format);
         bool openVideoStream();
+        bool openAudioStreams();
         AVStream * addVideoStream();
+        bool addAudioStreams(const QString &soundPath);
         int writeVideoFrame(AVPacket *pkt);
         void RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint iRGBIncrement, bool bSwapRGB);
 
-        // bool encodeVideoFrame(AVCodecContext *enc_ctx, AVFrame *frame, AVPacket *pkt);
+        /*
+        AVFrame * allocAudioFrame(enum AVSampleFormat sample_fmt, uint64_t channel_layout, int sample_rate, int nb_samples);
+        AVFrame * getSilentFrame();
+        int createAudioFrame();
+        int writeAudioFrame(AVFrame *frame);
+        */
+
+        void logPacket(MediaType type, const AVFormatContext *fmt_ctx, const AVPacket *pkt);
+        double av_q2d(AVRational a);
+        QString formatTS(int64_t ts, AVRational *tb);
+        QString rationalToString(AVRational *a);
 
         int videoW;
         int videoH;
-        AVFrame *videoFrame;
-        AVStream *video_st;
         AVFormatContext *formatContext;
         AVOutputFormat *outputFormat;
-        AVCodecContext *codecContext;
+
+        AVCodecContext *videoCodecContext;
         enum AVCodecID videoCodecID;
         const AVCodec *videoCodec;
+        AVFrame *videoFrame;
+        AVStream *video_st;
+
+        QList<AVFormatContext *> audioInputList;
+
+        bool hasSounds;
+        QList<AVCodecContext *> audioCodecContextList;
+        // enum AVCodecID audioCodecID;
+        QList<AVCodec *> audioCodecList;
+        QList<AVStream *> audioStreamList;
+        QList<int> audioStreamsTotalList;
+        QList<int> audioStreamIndexesList;
+        // int audioIndex;
+
+        // AVFrame *audioTmpFrame;
+        // int64_t next_pts;
+        // int samples_count;
+
+        QList<SoundResource> sounds;
+
+        int videoPktCounter;
+        int audioPktCounter;
 
         QString errorMsg;
         int framesCount;
@@ -103,9 +144,6 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         int fps;
         double streamDuration;
         bool exception;
-
-        bool hasSounds;
-        int64_t next_pts;
 
         int realFrames;
 };
