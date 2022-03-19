@@ -50,7 +50,7 @@ TUPITUBE_VERSION=0.2.19
 
 # libtupinet.dylib
 declare -a LIBS=('libtupifwcore.dylib' 'libtupifwgui.dylib' 'libtupigui.dylib' 'libtupistore.dylib' 'libtupi.dylib' \
-'libtupibase.dylib' 'libtupicolorpalette.1.dylib' 'libtupmicmanager.1.dylib' 'libtupipapagayo.1.dylib' 'libtupiworkspace.1.dylib' 'libtupicolor.1.dylib' \
+'libtupibase.dylib' 'libtupicolorpalette.1.dylib' 'libtupimicmanager.1.dylib' 'libtupipapagayo.1.dylib' 'libtupiworkspace.1.dylib' 'libtupicolor.1.dylib' \
 'libtupiplayer.1.dylib' 'libtupibrush.1.dylib' 'libtupimport.1.dylib' 'libtupiexport.1.dylib' 'libtupiexposure.1.dylib' \
 'libjson-c.1.dylib' 'liblibmypaint.1.dylib' 'libqtmypaint.1.dylib' \
 'librasterbrushes.1.dylib' 'librastercolor.1.dylib' 'librastermain.1.dylib' \
