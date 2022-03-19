@@ -112,9 +112,11 @@ TupExportModule::TupExportModule(TupProject *project, OutputFormat output,
     configureLayout->addStretch();
 
     dimension = m_project->getDimension();
+    /*
     int maxDimension = dimension.width();
     if (maxDimension < dimension.height())
         maxDimension = dimension.height();
+    */
 
     if (output == ImagesArray) {
         connect(bgTransparency, SIGNAL(toggled(bool)), this, SLOT(enableTransparency(bool)));
@@ -225,7 +227,8 @@ void TupExportModule::chooseFile()
 
     if (!filename.isEmpty()) {
         browserWasOpened = true;
-        if (!filename.toLower().endsWith(extension))
+        QString lower = filename.toLower();
+        if (!lower.endsWith(extension))
             filename += extension;
 
         m_filePath->setText(filename);
@@ -328,7 +331,8 @@ void TupExportModule::exportIt()
         name = fileInfo.completeBaseName();
         path = fileInfo.dir().absolutePath();
 
-        if (!name.toLower().endsWith(extension))
+        QString lower = name.toLower();
+        if (!lower.endsWith(extension))
             name += extension;
 
         if (path.length() == 0) {
@@ -424,15 +428,17 @@ void TupExportModule::exportIt()
         TOsd::self()->display(TOsd::Info, tr(message.toLocal8Bit()));
         emit isDone();
     } else {
-        QString msg = m_currentExporter->getExceptionMsg();
+        if (m_currentExporter) {
+            QString msg = m_currentExporter->getExceptionMsg();
 
-        QMessageBox msgBox;
-        msgBox.setStyleSheet(TAppTheme::themeSettings());
-        msgBox.setWindowTitle(tr("Fatal Error: Can't export video"));
-        msgBox.setIcon(QMessageBox::Critical);
-        msgBox.setTextFormat(Qt::RichText);
-        msgBox.setText(msg);
-        msgBox.exec();
+            QMessageBox msgBox;
+            msgBox.setStyleSheet(TAppTheme::themeSettings());
+            msgBox.setWindowTitle(tr("Fatal Error: Can't export video"));
+            msgBox.setIcon(QMessageBox::Critical);
+            msgBox.setTextFormat(Qt::RichText);
+            msgBox.setText(msg);
+            msgBox.exec();
+        }
     }
 }
 

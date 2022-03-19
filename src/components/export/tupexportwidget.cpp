@@ -147,33 +147,16 @@ void TupExportWidget::loadPlugins()
         qDebug() << "[TupExportWidget::loadPlugins()]";
     #endif
 
-    QHash<int, TupExportInterface *> pluginList;
+    TupExportInterface *videoExporter = nullptr;
+    TupExportInterface *imagesExporter = nullptr;
     foreach (QObject *plugin, TupPluginManager::instance()->getFormats()) {
         if (plugin) {
             TupExportInterface *exporter = qobject_cast<TupExportInterface *> (plugin);
-            if (exporter) {
-                /*
-                int index = -1;
+            if (exporter) {                
                 if (exporter->key() == TupExportInterface::VideoFormats)
-                    index = 0;
-                if (exporter->key() == TupExportInterface::OpenVideoFormat)
-                    index = 1;
+                    videoExporter = exporter;
                 if (exporter->key() == TupExportInterface::ImageSequence)
-                    index = 2;
-                if (exporter->key() == TupExportInterface::AnimatedImage)
-                    index = 3;
-                */
-
-                pluginList.insert(exporter->key(), exporter);
-
-                /*
-                #if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
-                    pluginList.insert(exporter->key(), exporter);
-                #else // Q_OS_MAC
-                    if (exporter->key() != TupExportInterface::OpenVideoFormat)
-                        pluginList.insert(exporter->key(), exporter);
-                #endif
-                */
+                    imagesExporter = exporter;
             } else {
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupExportWidget::loadPlugins()] - Fatal Error: Can't load export plugin";
@@ -182,11 +165,14 @@ void TupExportWidget::loadPlugins()
         }
     }
 
-    QHash<int, TupExportInterface *>::iterator index;
-    for (index = pluginList.begin(); index != pluginList.end(); ++index) {
-         TupExportInterface *exporter = index.value();
-         pluginPage->addPlugin(exporter->key(), exporter->formatName());
-         plugins.insert(exporter->key(), exporter);
+    if (videoExporter) {
+        plugins.insert(videoExporter->key(), videoExporter);
+        pluginPage->addPlugin(videoExporter->key(), videoExporter->formatName());
+    }
+
+    if (imagesExporter) {
+        plugins.insert(imagesExporter->key(), imagesExporter);
+        pluginPage->addPlugin(imagesExporter->key(), imagesExporter->formatName());
     }
 }
 
