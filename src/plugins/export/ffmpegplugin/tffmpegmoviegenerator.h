@@ -76,7 +76,6 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         virtual bool validMovieHeader();
         virtual QString getErrorMsg() const;
         bool createVideoFrame(const QImage &image);
-        // bool processAudio(QList<SoundResource> soundsList);
         void writeAudioStreams();
         void saveMovie(const QString &filename);
 
@@ -102,10 +101,10 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         int writeAudioFrame(AVFrame *frame);
         */
 
-        void logPacket(MediaType type, const AVFormatContext *fmt_ctx, const AVPacket *pkt);
+        void logPacket(MediaType type, AVRational time_base, const AVPacket *pkt, const QString &direction);
         double av_q2d(AVRational a);
-        QString formatTS(int64_t ts, AVRational *tb);
-        QString rationalToString(AVRational *a);
+        QString formatTS(int64_t ts, AVRational tb);
+        QString rationalToString(AVRational a);
 
         int videoW;
         int videoH;
@@ -122,12 +121,10 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
 
         bool hasSounds;
         QList<AVCodecContext *> audioCodecContextList;
-        // enum AVCodecID audioCodecID;
         QList<AVCodec *> audioCodecList;
         QList<AVStream *> audioStreamList;
         QList<int> audioStreamsTotalList;
         QList<int> audioStreamIndexesList;
-        // int audioIndex;
 
         // AVFrame *audioTmpFrame;
         // int64_t next_pts;
@@ -142,7 +139,7 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         int framesCount;
         QString movieFile;
         int fps;
-        double streamDuration;
+        double mp4Duration;
         bool exception;
 
         int realFrames;

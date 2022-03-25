@@ -164,27 +164,9 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
                     emit progressChanged((photogram * 100) / frames);
             }
         }
-        // generator->endImagesStream();
 
-        generator->writeAudioStreams();
-
-        /*
-        QList<SoundResource> sounds;
-        if (library) {
-            sounds = library->soundResourcesList();
-            if (!sounds.isEmpty()) {
-                bool hasSounds = true;
-                foreach(SoundResource item, sounds) {
-                    if (item.muted) {
-                        hasSounds = false;
-                        break;
-                    }
-                }
-                if (hasSounds)
-                    generator->processAudio(sounds);
-            }
-        }
-        */
+        if (!sounds.isEmpty())
+            generator->writeAudioStreams();
     }
 
     generator->saveMovie(filePath);

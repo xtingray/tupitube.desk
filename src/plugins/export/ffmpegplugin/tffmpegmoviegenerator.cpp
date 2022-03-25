@@ -53,6 +53,7 @@ TFFmpegMovieGenerator::TFFmpegMovieGenerator(TMovieGeneratorInterface::Format fo
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TFFmpegMovieGenerator::TFFmpegMovieGenerator()] - fps -> " << fpsParam;
+        qDebug() << "[TFFmpegMovieGenerator::TFFmpegMovieGenerator()] - duration -> " << duration;
     #endif
 
     movieFile = QDir::tempPath() + "/tupitube_video_" + TAlgorithm::randomString(12);
@@ -61,7 +62,7 @@ TFFmpegMovieGenerator::TFFmpegMovieGenerator(TMovieGeneratorInterface::Format fo
     videoW = size.width();
     videoH = size.height();
     fps = fpsParam;
-    streamDuration = duration;
+    mp4Duration = duration;
     videoPktCounter = 0;
     audioPktCounter = 0;
 
@@ -71,6 +72,15 @@ TFFmpegMovieGenerator::TFFmpegMovieGenerator(TMovieGeneratorInterface::Format fo
         hasSounds = false;
 
     exception = initVideoFile();
+
+    #ifdef TUP_DEBUG
+        QFile videoFile(CACHE_DIR + "/video_packets.txt");
+        if (videoFile.exists())
+            videoFile.remove();
+        QFile audioFile(CACHE_DIR + "/audio_packets.txt");
+        if (audioFile.exists())
+            audioFile.remove();
+    #endif
 }
 
 TFFmpegMovieGenerator::~TFFmpegMovieGenerator()
@@ -117,16 +127,7 @@ bool TFFmpegMovieGenerator::initVideoFile()
         return false;
     }
 
-    if (!outputFormat) {
-        errorMsg = "ffmpeg error: Output format variable is NULL.";
-        #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::initVideoFile()] - " << errorMsg;
-        #endif
-        return false;
-    }
-
-    // AVFormatContext
-    formatContext = avformat_alloc_context();
+    avformat_alloc_output_context2(&formatContext, NULL, NULL, movieFile.toLocal8Bit().data());
     if (!formatContext) {
         errorMsg = "ffmpeg error: Memory error while allocating format context.";
         #ifdef TUP_DEBUG
@@ -135,7 +136,7 @@ bool TFFmpegMovieGenerator::initVideoFile()
         return false;
     }
 
-    formatContext->oformat = outputFormat;
+    outputFormat = formatContext->oformat;
     videoCodecID = outputFormat->video_codec;
 
     // AVStream
@@ -230,56 +231,53 @@ AVStream * TFFmpegMovieGenerator::addVideoStream()
 
     AVStream *stream = avformat_new_stream(formatContext, videoCodec);
     if (!stream) {
-        errorMsg = "ffmpeg error: Could not video alloc stream."; 
+        errorMsg = "ffmpeg error: Could not video alloc stream.";
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::addVideoStream()] - " << errorMsg;
         #endif
         return nullptr;
     }
 
-    stream->id = formatContext->nb_streams - 1;
+    stream->id = formatContext->nb_streams-1;
     videoCodecContext = avcodec_alloc_context3(videoCodec);
     if (!videoCodecContext) {
-        #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::addVideoStream()] - Fatal Error: Could not allocate video codec context";
-        #endif
-        return nullptr;
+        fprintf(stderr, "Could not alloc an encoding context\n");
+        exit(1);
     }
 
-    /*
-    // SQA: Code pending for review
-    if (avcodec_parameters_to_context(videoCodecContext, stream->codecpar) < 0) {
-        #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::addVideoStream()] - Fatal Error: Could not copy parameters to context";
-        #endif
-        return nullptr;
-    }
-    */
-
-    videoCodecContext = stream->codec;
-
+    videoCodecContext->codec_id = videoCodecID;
     // Put sample parameters
     videoCodecContext->bit_rate = 6000000;
     if (fps == 1)
         videoCodecContext->bit_rate = 4000000;
 
-    // Resolution must be a multiple of two
-    videoCodecContext->width = videoW;
-    videoCodecContext->height = videoH;
+    // Resolution must be a multiple of two.
+    videoCodecContext->width    = videoW;
+    videoCodecContext->height   = videoH;
+    /*
+       timebase: This is the fundamental unit of time (in seconds) in terms
+       of which frame timestamps are represented. For fixed-fps content,
+       timebase should be 1/framerate and timestamp increments should be
+       identical to 1.
+     */
+    stream->time_base = (AVRational){ 1, fps };
+    videoCodecContext->time_base       = stream->time_base;
 
-    videoCodecContext->gop_size = 0;
-    videoCodecContext->max_b_frames = 0;
-    videoCodecContext->time_base = (AVRational){1, fps};
-
-    if (movieFile.endsWith("gif", Qt::CaseInsensitive)) {
-        stream->time_base.num = 1;
-        stream->time_base.den = fps;
-        videoCodecContext->pix_fmt = AV_PIX_FMT_RGB24;
-    } else {
-        videoCodecContext->pix_fmt = AV_PIX_FMT_YUV420P;
+    videoCodecContext->gop_size      = 12; // emit one intra frame every twelve frames at most
+    videoCodecContext->pix_fmt       = AV_PIX_FMT_YUV420P;
+    if (videoCodecContext->codec_id == AV_CODEC_ID_MPEG2VIDEO) {
+        // just for testing, we also add B-frames
+        videoCodecContext->max_b_frames = 2;
+    }
+    if (videoCodecContext->codec_id == AV_CODEC_ID_MPEG1VIDEO) {
+        /*
+         Needed to avoid using macroblocks in which some coeffs overflow.
+         This does not happen with normal video, it just happens here as
+         the motion of the chroma plane does not match the luma plane.
+        */
+        videoCodecContext->mb_decision = 2;
     }
 
-    // Some formats want stream headers to be separate.
     if (formatContext->oformat->flags & AVFMT_GLOBALHEADER)
         videoCodecContext->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
@@ -413,13 +411,19 @@ bool TFFmpegMovieGenerator::openVideoStream()
     // Allocate and init a re-usable frame
     // AVFrame
     videoFrame = av_frame_alloc();
-
     if (!videoFrame) {
         errorMsg = "ffmpeg error: There is no available memory to export your project as a video";
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::openVideoStream()] - " << errorMsg;
         #endif
         return false;
+    }
+
+    // Copy the stream parameters to the muxer
+    ret = avcodec_parameters_from_context(video_st->codecpar, videoCodecContext);
+    if (ret < 0) {
+        fprintf(stderr, "Could not copy the stream parameters\n");
+        exit(1);
     }
 
     return true;
@@ -479,8 +483,11 @@ bool TFFmpegMovieGenerator::openAudioStreams()
 
 void TFFmpegMovieGenerator::RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint iRGBIncrement, bool bSwapRGB)
 {
-    const unsigned iPlaneSize = static_cast<const unsigned int> (videoW * videoH);
-    const unsigned iHalfWidth = static_cast<const unsigned int> (videoW >> 1);
+    // const unsigned iPlaneSize = static_cast<const unsigned int> (videoW * videoH);
+    // const unsigned iHalfWidth = static_cast<const unsigned int> (videoW >> 1);
+
+    const unsigned iPlaneSize = (videoW * videoH);
+    const unsigned iHalfWidth = (videoW >> 1);
 
     // get pointers to the data
     uint8_t *yplane = bufferYUV;
@@ -598,7 +605,7 @@ int TFFmpegMovieGenerator::writeVideoFrame(AVPacket *packet)
     packet->stream_index = video_st->index;
 
     #ifdef TUP_DEBUG
-        logPacket(Video, formatContext, packet);
+        logPacket(Video, video_st->time_base, packet, "in");
     #endif
 
     // Write the compressed frame to the media file.
@@ -749,13 +756,13 @@ void TFFmpegMovieGenerator::handle(const QImage &image)
     if (!video_st) {
         #ifdef TUP_DEBUG
             qInfo() << "[TFFmpegMovieGenerator::handle()] - The total of frames has been "
-                       "processed (" << streamDuration << " seg)";
+                       "processed (" << mp4Duration << " seg)";
         #endif
         return;
     }
 
     #ifdef TUP_DEBUG
-        qInfo() << "[TFFmpegMovieGenerator::handle()] - Duration: " << streamDuration;
+        qInfo() << "[TFFmpegMovieGenerator::handle()] - Duration: " << mp4Duration;
     #endif
 
     createVideoFrame(image);
@@ -872,24 +879,24 @@ double TFFmpegMovieGenerator::av_q2d(AVRational a)
     return a.num / (double) a.den;
 }
 
-QString TFFmpegMovieGenerator::rationalToString(AVRational *a)
+QString TFFmpegMovieGenerator::rationalToString(AVRational a)
 {
-    return "Num:" + QString::number(a->num) + "/Den:" + QString::number(a->den);
+    return "Num:" + QString::number(a.num) + "/Den:" + QString::number(a.den);
 }
 
-QString TFFmpegMovieGenerator::formatTS(int64_t ts, AVRational *tb)
+QString TFFmpegMovieGenerator::formatTS(int64_t ts, AVRational tb)
 {
     QString result = "";
     if (ts == AV_NOPTS_VALUE)
         result = "NOPTS";
     else
-        result = QString::number(av_q2d(*tb) * ts);
+        result = QString::number(av_q2d(tb) * ts);
 
     return result;
 }
 
 /* SQA: Method just for debugging */
-void TFFmpegMovieGenerator::logPacket(MediaType type, const AVFormatContext *fmt_ctx, const AVPacket *pkt)
+void TFFmpegMovieGenerator::logPacket(MediaType type, AVRational time_base, const AVPacket *pkt, const QString &direction)
 {
     int counter = 0;
     QString prefix = "audio";
@@ -904,12 +911,12 @@ void TFFmpegMovieGenerator::logPacket(MediaType type, const AVFormatContext *fmt
 
     QString filename = CACHE_DIR + "/" + prefix + "_packets.txt";
     QFile file(filename);
-    if (file.open(QIODevice::WriteOnly | QIODevice::Append)) {
-        AVRational *time_base = &fmt_ctx->streams[pkt->stream_index]->time_base;
-        QString record = QString::number(counter) + " | pts: " + QString::number(pkt->pts) + " | pts_time: " + formatTS(pkt->pts, time_base)
-                + " | dts: " + QString::number(pkt->dts) + " | dts_time: " + formatTS(pkt->dts, time_base)
-                + " | duration: " + QString::number(pkt->duration) + " | duration_time: " + formatTS(pkt->duration, time_base)
-                + " | stream_index: " + QString::number(pkt->stream_index) + " | time_base: " + rationalToString(time_base);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Append)) {       
+        QString record = QString::number(counter) + " | direction: " + direction + " | pts: " + QString::number(pkt->pts)
+                + " | pts_time: " + formatTS(pkt->pts, time_base) + " | dts: " + QString::number(pkt->dts)
+                + " | dts_time: " + formatTS(pkt->dts, time_base) + " | duration: " + QString::number(pkt->duration)
+                + " | duration_time: " + formatTS(pkt->duration, time_base) + " | stream_index: " + QString::number(pkt->stream_index)
+                + " | time_base: " + rationalToString(time_base);
 
         QTextStream stream(&file);
         stream << record << Qt::endl;
@@ -918,17 +925,33 @@ void TFFmpegMovieGenerator::logPacket(MediaType type, const AVFormatContext *fmt
 
 void TFFmpegMovieGenerator::writeAudioStreams()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TFFmpegMovieGenerator::writeAudioStreams()]";
+    #endif
+
     int init = 0;
+    int outIndex = 1;
     for(int i=0; i<audioInputList.size(); i++) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TFFmpegMovieGenerator::writeAudioStreams()] - audio -> " << sounds.at(i).path;
+        #endif
+
         AVFormatContext *audioInputFormatContext = audioInputList.at(i);
         AVPacket *pkt = av_packet_alloc();
         int indexesTotal = audioStreamsTotalList.at(i);
+
+        qDebug() << "init -> " << init;
+        qDebug() << "indexesTotal -> " << indexesTotal;
+
         QList<int> validIndexes;
-        for (int j=init; j<indexesTotal; j++)
+        for (int j=init; j<(init + indexesTotal); j++)
             validIndexes << audioStreamIndexesList[j];
         init = indexesTotal;
 
-        int outIndex = 1;
+        qDebug() << "audioStreamsTotalList -> " << audioStreamsTotalList;
+        qDebug() << "audioStreamIndexesList -> " << audioStreamIndexesList;
+        qDebug() << "validIndexes -> " << validIndexes;
+
         while (1) {
             AVStream *in_stream;
 
@@ -936,53 +959,46 @@ void TFFmpegMovieGenerator::writeAudioStreams()
             if (ret < 0)
                 break;
 
+            qDebug() << "pkt->stream_index -> " << pkt->stream_index;
+
             if (!validIndexes.contains(pkt->stream_index)) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TFFmpegMovieGenerator::writeAudioStreams()] - Warning: packet has invalid stream index! -> " << pkt->stream_index;
+                #endif
                 av_packet_unref(pkt);
                 continue;
             }
 
-            // in_stream  = inputFormatContext->streams[pkt.stream_index];
             in_stream  = audioInputFormatContext->streams[pkt->stream_index];
-            /*
-            if (pkt.stream_index >= stream_mapping_size ||
-                stream_mapping[pkt.stream_index] < 0) {
-                av_packet_unref(&pkt);
-                continue;
-            }
-            */
-
-            // pkt.stream_index = stream_mapping[pkt.stream_index];
-            // out_stream = outputFormatContext->streams[pkt.stream_index];
-
             pkt->stream_index = outIndex;
 
-            AVRational in_time_base = in_stream->time_base;
-            AVRational out_time_base = audioStreamList.at(i)->time_base;
-
-            printf("pkt->pts -> %ld\n" , pkt->pts);
-            printf("pkt->dts -> %ld\n" , pkt->dts);
-            printf("in_time_base num -> %d \n", in_time_base.num);
-            printf("in_time_base den -> %d \n", in_time_base.den);
-            printf("out_time_base num -> %d \n", out_time_base.num);
-            printf("out_time_base den -> %d \n", out_time_base.den);
-
-            // log_packet(inputFormatContext, &pkt, "in");
+            logPacket(Audio, in_stream->time_base, pkt, "in");
+            AVRational outputTimebase = audioStreamList.at(i)->time_base;
 
             // copy packet
-            pkt->pts = av_rescale_q_rnd(pkt->pts, in_stream->time_base, audioStreamList.at(i)->time_base,
+            pkt->pts = av_rescale_q_rnd(pkt->pts, in_stream->time_base, outputTimebase,
                                         static_cast<AVRounding>(AV_ROUND_NEAR_INF|AV_ROUND_PASS_MINMAX));
-            pkt->dts = av_rescale_q_rnd(pkt->dts, in_stream->time_base, audioStreamList.at(i)->time_base,
+            pkt->dts = av_rescale_q_rnd(pkt->dts, in_stream->time_base, outputTimebase,
                                         static_cast<AVRounding>(AV_ROUND_NEAR_INF|AV_ROUND_PASS_MINMAX));
-            pkt->duration = av_rescale_q(pkt->duration, in_stream->time_base, audioStreamList.at(i)->time_base);
+            pkt->duration = av_rescale_q(pkt->duration, in_stream->time_base, outputTimebase);
             pkt->pos = -1;
-            // log_packet(outputFormatContext, &pkt, "out");
-            // printf("\n");
 
-            ret = av_interleaved_write_frame(formatContext, pkt);
-            if (ret < 0) {
-                fprintf(stderr, "Error muxing packet\n");
+            logPacket(Audio, audioStreamList.at(i)->time_base, pkt, "out");
+            float currentTime = av_q2d(outputTimebase) * pkt->pts;
+            if (currentTime < mp4Duration) {
+                qDebug() << "currentTime -> " << currentTime;
+                qDebug() << "mp4Duration -> " << mp4Duration;
+
+                ret = av_interleaved_write_frame(formatContext, pkt);
+                if (ret < 0) {
+                    fprintf(stderr, "Error muxing packet\n");
+                    break;
+                }
+            } else {
+                // qDebug() << "Sound frame dropped! - currentTime -> " << currentTime;
                 break;
             }
+
             av_packet_unref(pkt);
         }
         outIndex++;
