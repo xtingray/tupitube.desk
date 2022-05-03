@@ -165,8 +165,14 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
             }
         }
 
-        if (!sounds.isEmpty())
-            generator->writeAudioStreams();
+        if (!sounds.isEmpty()) {
+            if (!generator->processAudioFiles()) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[FFmpegPlugin::exportToFormat()] - Fatal error while processing audio files!";
+                #endif
+                return false;
+            }
+        }
     }
 
     generator->saveMovie(filePath);

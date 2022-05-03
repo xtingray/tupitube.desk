@@ -56,6 +56,10 @@ extern "C" {
 #include "libavutil/frame.h"
 #include "libavutil/samplefmt.h"
 #include "libavutil/timestamp.h"
+
+#include "libavfilter/avfilter.h"
+#include "libavfilter/buffersink.h"
+#include "libavfilter/buffersrc.h"
 }
 #endif
 
@@ -76,7 +80,7 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         virtual bool validMovieHeader();
         virtual QString getErrorMsg() const;
         bool createVideoFrame(const QImage &image);
-        void writeAudioStreams();
+        bool processAudioFiles();
         void saveMovie(const QString &filename);
 
     protected:
@@ -88,23 +92,26 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         bool initVideoFile();
         void setFileExtension(int format);
         bool openVideoStream();
-        bool openAudioStreams();
+        bool openAudioInputStreams();
+        bool openAudioOutputStream();
+        bool openAudioOutputCodec();
+
         AVStream * addVideoStream();
-        bool addAudioStreams(const QString &soundPath);
+        bool loadInputAudio(const QString &soundPath);
         int writeVideoFrame(AVPacket *pkt);
         void RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint iRGBIncrement, bool bSwapRGB);
 
-        /*
-        AVFrame * allocAudioFrame(enum AVSampleFormat sample_fmt, uint64_t channel_layout, int sample_rate, int nb_samples);
-        AVFrame * getSilentFrame();
-        int createAudioFrame();
-        int writeAudioFrame(AVFrame *frame);
-        */
+        bool initFilterGraph();
 
-        void logPacket(MediaType type, AVRational time_base, const AVPacket *pkt, const QString &direction);
+        void logPacket(MediaType type, AVRational timeBase, const AVPacket *pkt, const QString &direction);
         double av_q2d(AVRational a);
         QString formatTS(int64_t ts, AVRational tb);
         QString rationalToString(AVRational a);
+
+        int decodeAudioFrame(AVFrame *frame, AVFormatContext *inputFormatContext,
+                              AVCodecContext *inputCodecContext, int *dataPresent, int *finished);
+        int encodeAudioFrame(AVFrame *frame, AVFormatContext *outputFormatContext,
+                                      AVCodecContext *outputCodecContext, int *dataPresent);
 
         int videoW;
         int videoH;
@@ -115,22 +122,26 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         enum AVCodecID videoCodecID;
         const AVCodec *videoCodec;
         AVFrame *videoFrame;
-        AVStream *video_st;
-
-        QList<AVFormatContext *> audioInputList;
+        AVStream *videoStream;
 
         bool hasSounds;
-        QList<AVCodecContext *> audioCodecContextList;
-        QList<AVCodec *> audioCodecList;
-        QList<AVStream *> audioStreamList;
-        QList<int> audioStreamsTotalList;
-        QList<int> audioStreamIndexesList;
-
-        // AVFrame *audioTmpFrame;
-        // int64_t next_pts;
-        // int samples_count;
-
+        int soundsTotal;
         QList<SoundResource> sounds;
+        enum AVCodecID audioOutputCodecID;
+        const AVCodec *audioOutputCodec;
+        AVCodecContext *audioOutputCodecContext;
+        AVStream *audioOutputStream;
+
+        QList<AVFormatContext *> audioInputFormatContextList;
+        QList<AVCodecContext *> audioInputCodecContextList;
+        QList<AVCodec *> audioCodecList;
+        // QList<AVStream *> audioStreamList;
+        // QList<int> audioStreamsTotalList;
+        // QList<int> audioStreamIndexesList;
+
+        AVFilterGraph *filterGraph;
+        QList<AVFilterContext *> abufferFilterContextList;
+        AVFilterContext *abufferSinkContext;
 
         int videoPktCounter;
         int audioPktCounter;
