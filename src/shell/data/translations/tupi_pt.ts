@@ -197,9 +197,24 @@
 <context>
     <name>FFmpegPlugin</name>
     <message>
-        <location filename="../../../plugins/export/ffmpegplugin/ffmpegplugin.cpp" line="55"/>
+        <location filename="../../../plugins/export/ffmpegplugin/ffmpegplugin.cpp" line="58"/>
         <source>Video Formats</source>
         <translation>Formatos de Vídeo</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/export/ffmpegplugin/ffmpegplugin.cpp" line="142"/>
+        <source>Merging audio files...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/export/ffmpegplugin/ffmpegplugin.cpp" line="165"/>
+        <source>Processing audio track...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/export/ffmpegplugin/ffmpegplugin.cpp" line="211"/>
+        <source>Rendering project...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -892,7 +907,7 @@
         <translation>Isto é uma falha geral</translation>
     </message>
     <message>
-        <location filename="../../../plugins/export/ffmpegplugin/tffmpegmoviegenerator.cpp" line="167"/>
+        <location filename="../../../plugins/export/ffmpegplugin/tffmpegmoviegenerator.cpp" line="224"/>
         <source>Animation created using TupiTube.com</source>
         <translation>Animação criada usando TupiTube.com</translation>
     </message>
@@ -3172,38 +3187,38 @@
         <translation>exemplo: </translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="248"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="255"/>
         <source>Choose a directory...</source>
         <translation>Escolha um diretório...</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="308"/>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="348"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="315"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="356"/>
         <source>Warning!</source>
         <translation>Alerta!</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="308"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="315"/>
         <source>Image sequence already exists. Overwrite it?</source>
         <translation>Seqüência de imagens já existe. Substituí-la?</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="361"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="369"/>
         <source>Insufficient permissions. Please, choose another directory.</source>
         <translation>Permissões insuficientes. Por favor, escolha outro diretório.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="368"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="376"/>
         <source>Insufficient permissions. Please, choose another path.</source>
         <translation>Permissões insuficientes. Por favor, escolha outro caminho.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="423"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="431"/>
         <source>Image sequence was saved successful</source>
         <translation>Sequência de imagens foi guardada satisfatoriamente</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="431"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="443"/>
         <source>Fatal Error: Can&apos;t export video</source>
         <translation>Erro fatal: Não é possível exportar vídeo</translation>
     </message>
@@ -3218,64 +3233,74 @@
         <translation>Prefixo Do Arquivo: </translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="223"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="229"/>
         <source>Export video as...</source>
         <translation>Exportar vídeo como...</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="224"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="230"/>
         <source>Video File</source>
         <translation>Arquivo de Vídeo</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="289"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="296"/>
         <source>Images name prefix is unset! Please, type a prefix.</source>
         <translation>O prefixo do nome das imagens não está definido! Por favor, digite um prefixo.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="294"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="301"/>
         <source>Images path can&apos;t be unset! Please, choose one.</source>
         <translation>O caminho das imagens não está definido! Por favor, escolha um.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="300"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="307"/>
         <source>Images path doesn&apos;t exist! Please, choose another.</source>
         <translation>O caminho das imagens não existe! Por favor escolha outro.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="319"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="326"/>
         <source>Animation path is unset! Please, choose one.</source>
         <translation>O caminho de animação não está definido! Por favor, escolha um.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="335"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="343"/>
         <source>Animation path can&apos;t be unset! Please, choose one.</source>
         <translation>O caminho de animação não está definido! Por favor, escolha um.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="341"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="349"/>
         <source>Animation path doesn&apos;t exist! Please, choose another.</source>
         <translation>O caminho de animação não existe! Por favor escolha outro.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="349"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="357"/>
         <source>File exists. Overwrite it?</source>
         <translation>Já existe um ficheiro com mesmo nome. Deseja substituí-lo?</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="415"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="423"/>
         <source>Format problem. TupiTube Internal error.</source>
         <translation>Problema no formato. Erro interno do TupiTube.</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="421"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="429"/>
         <source>Video file</source>
         <translation>Arquivo de Vídeo</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportmodule.cpp" line="421"/>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="429"/>
         <source>was saved successful</source>
         <translation>foi guardado satisfatoriamente</translation>
+    </message>
+    <message>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="447"/>
+        <source>Ok</source>
+        <translation type="unfinished">Ok</translation>
+    </message>
+    <message>
+        <location filename="../../../components/export/tupexportmodule.cpp" line="451"/>
+        <source>Sorry, export attempt failed!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3316,12 +3341,12 @@
         <translation>Publicar</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportwidget.cpp" line="246"/>
+        <location filename="../../../components/export/tupexportwidget.cpp" line="232"/>
         <source>Posting...</source>
         <translation>Publicando...</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tupexportwidget.cpp" line="248"/>
+        <location filename="../../../components/export/tupexportwidget.cpp" line="234"/>
         <source>Exporting...</source>
         <translation>Exportando...</translation>
     </message>
@@ -3588,7 +3613,7 @@
         <translation>Idioma:</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="169"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="170"/>
         <source>Confirmation Dialogs</source>
         <translation>Diálogos de Confirmação</translation>
     </message>
@@ -3608,103 +3633,103 @@
         <translation>minutos</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="172"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="173"/>
         <source>Player</source>
         <translation>Reprodutor</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="198"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="199"/>
         <source>Cache Settings</source>
         <translation>Configurações de Cache</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="204"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="205"/>
         <source>The CACHE path is the folder where TupiTube creates temporary files while you work on your animation projects.&lt;br/&gt;&lt;b&gt;Note:&lt;/b&gt; Don&apos;t change this parameter unless you know what you are doing.</source>
         <translation>O caminho do CACHE é a pasta em que o TupiTube cria arquivos temporários enquanto você trabalha em seus projetos de animação.&lt;br/&gt;&lt;b&gt;Nota:&lt;/b&gt; Não altere esse parâmetro, a menos que saiba o que está fazendo.</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="215"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="216"/>
         <source>Choose another path</source>
         <translation>Escolha outro caminho</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="219"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="220"/>
         <source>CACHE Path: </source>
         <translation>Caminho do CACHE: </translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="223"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="224"/>
         <source>Restore default value</source>
         <translation>Restaurar valor padrão</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="251"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="252"/>
         <source>TupiTube Credentials</source>
         <translation>Credenciais do TupiTube</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="258"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="259"/>
         <source>Username / Email: </source>
         <translation>Nome de Usuário / E-mail:</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="261"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="262"/>
         <source>Password: </source>
         <translation>Senha: </translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="276"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="277"/>
         <source>Enable anonymous mode</source>
         <translation>Ativar modo anônimo</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="282"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="283"/>
         <source>Don&apos;t have a TupiTube account?</source>
         <translation>Não tem uma conta no TupiTube?</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="287"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="288"/>
         <source>Email: </source>
         <translation>Email: </translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="297"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="298"/>
         <source>Register</source>
         <translation>Registro</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="362"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="363"/>
         <source>Email is invalid. Please, fix it!</source>
         <translation>Email inválido. Por favor, conserte!</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="369"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="370"/>
         <source>Email field is empty. Type one!</source>
         <translation>O campo Email está vazio. Digite um!</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="387"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="388"/>
         <source>Error: Email already registered!</source>
         <translation>Erro: Email já registrado!</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="399"/>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="407"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="400"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="408"/>
         <source>Please contact us at info@maefloresta.com</source>
         <translation>Entre em contato conosco em info@maefloresta.com</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="460"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="461"/>
         <source>Choose a directory...</source>
         <translation>Escolha um diretório...</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="510"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="511"/>
         <source>Cache path is empty. Set a value!</source>
         <translation>O caminho do Cache está vazio. Defina um valor!</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="517"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="518"/>
         <source>Cache path doesn&apos;t exist. Create it!</source>
         <translation>O caminho do Cache não existe. Crie!</translation>
     </message>
@@ -5967,27 +5992,22 @@
         <translation>Vídeo MPEG</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tuppluginselector.cpp" line="178"/>
-        <source>AVI Video</source>
-        <translation>Vídeo AVI</translation>
-    </message>
-    <message>
-        <location filename="../../../components/export/tuppluginselector.cpp" line="184"/>
+        <location filename="../../../components/export/tuppluginselector.cpp" line="186"/>
         <source>QuickTime Video</source>
         <translation>Vídeo QuickTime</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tuppluginselector.cpp" line="191"/>
+        <location filename="../../../components/export/tuppluginselector.cpp" line="193"/>
         <source>PNG Image Sequence</source>
         <translation>Sequência de Imagens PNG</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tuppluginselector.cpp" line="196"/>
+        <location filename="../../../components/export/tuppluginselector.cpp" line="198"/>
         <source>JPEG Image Sequence</source>
         <translation>Sequência de Imagens JPEG</translation>
     </message>
     <message>
-        <location filename="../../../components/export/tuppluginselector.cpp" line="201"/>
+        <location filename="../../../components/export/tuppluginselector.cpp" line="203"/>
         <source>SVG Image Sequence</source>
         <translation>Sequência de Imagens SVG</translation>
     </message>

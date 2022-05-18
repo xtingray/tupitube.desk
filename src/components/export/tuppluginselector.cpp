@@ -174,10 +174,12 @@ void TupPluginSelector::setFormats(TupExportInterface::Plugin plugin,TupExportIn
                 videoFormats << TupExportInterface::MPEG;
             }
 
+            /*
             if (formats & TupExportInterface::AVI) {
                 new QListWidgetItem(tr("AVI Video"), formatList);
                 videoFormats << TupExportInterface::AVI;
             }
+            */
         #endif
 
         if (formats & TupExportInterface::MOV) {

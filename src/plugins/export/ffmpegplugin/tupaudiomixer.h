@@ -64,8 +64,8 @@ class TUPITUBE_PLUGIN TupAudioMixer: public QObject
         int openInputFile(const char *filename);
         int openOutputFile(const char *filename, AVCodecContext *inputCodecContext);
         int initInputFrame(AVFrame **frame);
-        int decodeAudioFrame(AVFrame *frame, AVFormatContext *inputFormatContext, AVCodecContext *inputCodecContext,
-                             int *dataPresent, int *finished);
+        int decodeAudioFrame(AVFrame *frame, AVFormatContext *inputFormatContext,
+                             AVCodecContext *inputCodecContext, int *dataPresent, int *finished);
         int encodeAudioFrame(AVFrame *frame, int *dataPresent);
         bool processAudioFiles();
         int writeOutputFileHeader(AVFormatContext *outputFormatContext);

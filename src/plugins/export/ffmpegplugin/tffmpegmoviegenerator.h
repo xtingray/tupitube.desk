@@ -81,7 +81,7 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         virtual bool validMovieHeader();
         virtual QString getErrorMsg() const;
         bool createVideoFrame(const QImage &image);
-        int mergeAudioStream();
+        bool writeAudioStream();
         void saveMovie(const QString &filename);
 
     protected:
@@ -107,57 +107,7 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         QString formatTS(int64_t ts, AVRational tb);
         QString rationalToString(AVRational a);
 
-        // Audio methods
-
-        int initPacket(AVPacket **packet);
-
-        int initInputFrame(AVFrame **frame);
-
-        int initResampler(AVCodecContext *inputCodecContext,
-                          AVCodecContext *outputCodecContext,
-                          SwrContext **resampleContext);
-
-        int initFifo(AVAudioFifo **fifo, AVCodecContext *outputCodecContext);
-
-        int decodeAudioFrame(AVFrame *frame,
-                              AVFormatContext *inputFormatContext,
-                              AVCodecContext *inputCodecContext,
-                              int *dataPresent, int *finished);
-
-        int initConvertedSamples(uint8_t ***convertedInputSamples,
-                                  AVCodecContext *outputCodecContext,
-                                  int frameSize);
-
-        int convertSamples(const uint8_t **inputData,
-                           uint8_t **convertedData, const int frameSize,
-                           SwrContext *resampleContext);
-
-        int addSamplesToFifo(AVAudioFifo *fifo,
-                               uint8_t **convertedInputSamples,
-                               const int frameSize);
-
-        int readDecodeConvertAndStore(AVAudioFifo *fifo,
-                                         AVFormatContext *inputFormatContext,
-                                         AVCodecContext *inputCodecContext,
-                                         AVCodecContext *outputCodecContext,
-                                         SwrContext *resamplerContext,
-                                         int *finished);
-
-        int initOutputFrame(AVFrame **frame,
-                             AVCodecContext *outputCodecContext,
-                             int frameSize);
-
-        int encodeAudioFrame(AVFrame *frame,
-                                      AVFormatContext *outputFormatContext,
-                                      AVCodecContext *outputCodecContext,
-                                      int *dataPresent);
-
-        int loadEncodeAndWrite(AVAudioFifo *fifo,
-                                         AVFormatContext *outputFormatContext,
-                                         AVCodecContext *outputCodecContext);
-
         // Global Variables
-
         int videoW;
         int videoH;
         AVFormatContext *formatContext;

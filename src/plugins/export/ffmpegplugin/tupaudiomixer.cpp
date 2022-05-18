@@ -73,10 +73,10 @@ int TupAudioMixer::openInputFile(const char *filename)
     // Open the input file to read from it.
     AVFormatContext *inputFormatContext = avformat_alloc_context();
     if ((error = avformat_open_input(&inputFormatContext, filename, nullptr, nullptr)) < 0) {
+        errorMsg = "Fatal Error: Could not open input file -> " + QString(filename);
         #ifdef TUP_DEBUG
-            qDebug() << "[TupAudioMixer::openInputFile()] - Fatal Error: Could not open input file -> "
-                        + QString(filename);
-            qDebug() << "ERROR CODE -> " << error;
+            qCritical() << "[TupAudioMixer::openInputFile()] - " + errorMsg;
+            qCritical() << "ERROR CODE -> " << error;
         #endif
         inputFormatContext = nullptr;
         return error;
@@ -84,10 +84,10 @@ int TupAudioMixer::openInputFile(const char *filename)
 
     // Get information on the input file (number of streams etc.).
     if ((error = avformat_find_stream_info(inputFormatContext, nullptr)) < 0) {
+        errorMsg = "Fatal Error: Could not open find stream -> " + QString(filename);
         #ifdef TUP_DEBUG
-            qDebug() << "[TupAudioMixer::openInputFile()] - Fatal Error: Could not open find stream -> "
-                        + QString(filename);
-            qDebug() << "ERROR CODE -> " << error;
+            qCritical() << "[TupAudioMixer::openInputFile()] - " + errorMsg;
+            qCritical() << "ERROR CODE -> " << error;
         #endif
         avformat_close_input(&inputFormatContext);
         return error;
@@ -95,8 +95,9 @@ int TupAudioMixer::openInputFile(const char *filename)
 
     // Make sure that there is only one stream in the input file.
     if (inputFormatContext->nb_streams != 1) {
+        errorMsg = "Fatal Error: Expected one audio input stream, but found several.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TupAudioMixer::openInputFile()] - Fatal Error: Expected one audio input stream, but found several.";
+            qCritical() << "[TupAudioMixer::openInputFile()] - " + errorMsg;
         #endif
         avformat_close_input(&inputFormatContext);
         return AVERROR_EXIT;
@@ -107,9 +108,9 @@ int TupAudioMixer::openInputFile(const char *filename)
     in_stream = inputFormatContext->streams[0];
     in_codecpar = in_stream->codecpar;
     if (in_codecpar->codec_type != AVMEDIA_TYPE_AUDIO) {
+        errorMsg = "Fatal Error: File input has no stream audio -> " + QString(filename);
         #ifdef TUP_DEBUG
-            qDebug() << "[TupAudioMixer::openInputFile()] - Fatal Error: File input has no stream audio -> "
-                        + QString(filename);
+            qCritical() << "[TupAudioMixer::openInputFile()] - " + errorMsg;
         #endif
         return -1;
     }
@@ -118,9 +119,9 @@ int TupAudioMixer::openInputFile(const char *filename)
 
     // Find a decoder for the audio stream.
     if (!(input_codec = avcodec_find_decoder(audioCodecID))) {
+        errorMsg = "Fatal Error: Could not find input codec -> " + QString(avcodec_get_name(audioCodecID));
         #ifdef TUP_DEBUG
-            qDebug() << "[TupAudioMixer::openInputFile()] - Fatal Error: Could not find input codec -> "
-                     << avcodec_get_name(audioCodecID);
+            qCritical() << "[TupAudioMixer::openInputFile()] - " + errorMsg;
         #endif
         avformat_close_input(&inputFormatContext);
         return AVERROR_EXIT;
@@ -130,26 +131,29 @@ int TupAudioMixer::openInputFile(const char *filename)
     AVCodecContext *inputCodecContext;
     inputCodecContext = avcodec_alloc_context3(input_codec);
     if (!inputCodecContext) {
+        errorMsg = "Fatal Error: Could not alloc memory for input codec context.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TupAudioMixer::openInputFile()] - Fatal Error: Could not alloc memory for input codec context.";
+            qCritical() << "[TupAudioMixer::openInputFile()] - " + errorMsg;
         #endif
         return -1;
     }
 
     error = avcodec_parameters_to_context(inputCodecContext, inputFormatContext->streams[0]->codecpar);
     if (error < 0) {
+        errorMsg = "Fatal Error: Can't copy codecpar values to input codec context.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TupAudioMixer::openInputFile()] - Fatal Error: Can't copy codecpar values to input codec context.";
-            qDebug() << "ERROR CODE -> " << error;
+            qCritical() << "[TupAudioMixer::openInputFile()] - " + errorMsg;
+            qCritical() << "ERROR CODE -> " << error;
         #endif
         return error;
     }
 
     // Open the decoder for the audio stream to use it later.
     if ((error = avcodec_open2(inputCodecContext, input_codec, nullptr)) < 0) {
+        errorMsg = "Fatal Error: Could not open input codec.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TupAudioMixer::openInputFile()] - Fatal Error: Could not open input codec.";
-            qDebug() << "ERROR CODE -> " << error;
+            qCritical() << "[TupAudioMixer::openInputFile()] - " + errorMsg;
+            qCritical() << "ERROR CODE -> " << error;
         #endif
         avformat_close_input(&inputFormatContext);
         return error;
@@ -178,8 +182,9 @@ int TupAudioMixer::initFilterGraph()
     // Create a new filtergraph, which will contain all the filters.
     filterGraph = avfilter_graph_alloc();
     if (!filterGraph) {
+        errorMsg = "Fatal Error: Unable to create filter graph.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TupAudioMixer::initFilterGraph()] - Fatal Error: Unable to create filter graph.";
+            qCritical() << "[TupAudioMixer::initFilterGraph()] - " + errorMsg;
         #endif
         return AVERROR(ENOMEM);
     }
@@ -190,8 +195,9 @@ int TupAudioMixer::initFilterGraph()
         // it will be used for feeding the data into the graph.
         const AVFilter *abufferFilter = avfilter_get_by_name("abuffer");
         if (!abufferFilter) {
+            errorMsg = "Fatal Error: Could not find the abuffer filter.";
             #ifdef TUP_DEBUG
-                qDebug() << "[TupAudioMixer::initFilterGraph()] - Fatal Error: Could not find the abuffer filter.";
+                qCritical() << "[TupAudioMixer::initFilterGraph()] - " + errorMsg;
             #endif
             return AVERROR_FILTER_NOT_FOUND;
         }
@@ -210,9 +216,10 @@ int TupAudioMixer::initFilterGraph()
         error = avfilter_graph_create_filter(&abufferContext, abufferFilter, sourceTag,
                                              args, nullptr, filterGraph);
         if (error < 0) {
+            errorMsg = "Fatal Error: Cannot create audio buffer source.";
             #ifdef TUP_DEBUG
-                qDebug() << "[TupAudioMixer::initFilterGraph()] - Fatal Error: Cannot create audio buffer source.";
-                qDebug() << "ERROR CODE -> " << error;
+                qCritical() << "[TupAudioMixer::initFilterGraph()] - " + errorMsg;
+                qCritical() << "ERROR CODE -> " << error;
             #endif
             return error;
         }
@@ -224,8 +231,9 @@ int TupAudioMixer::initFilterGraph()
         // Create the delay filter;
         const AVFilter *adelayFilter = avfilter_get_by_name("adelay");
         if (!adelayFilter) {
+            errorMsg = "Fatal Error: Could not find the adelay filter.";
             #ifdef TUP_DEBUG
-                qDebug() << "[TupAudioMixer::initFilterGraph()] - Fatal Error: Could not find the adelay filter.";
+                qCritical() << "[TupAudioMixer::initFilterGraph()] - " + errorMsg;
             #endif
             return AVERROR_FILTER_NOT_FOUND;
         }
@@ -243,9 +251,10 @@ int TupAudioMixer::initFilterGraph()
         snprintf(args, sizeof(args), "delays=%d:all=1", delayTime);
         error = avfilter_graph_create_filter(&adelayContext, adelayFilter, "adelay", args, nullptr, filterGraph);
         if (error < 0) {
+            errorMsg = "Fatal Error: Cannot create audio adelay filter.";
             #ifdef TUP_DEBUG
-                qDebug() << "[TupAudioMixer::initFilterGraph()] - Fatal Error: Cannot create audio adelay filter.";
-                qDebug() << "ERROR CODE -> " << error;
+                qCritical() << "[TupAudioMixer::initFilterGraph()] - " + errorMsg;
+                qCritical() << "ERROR CODE -> " << error;
             #endif
             return error;
         }
@@ -259,8 +268,9 @@ int TupAudioMixer::initFilterGraph()
         // Create mix filter.
         mixFilter = avfilter_get_by_name("amix");
         if (!mixFilter) {
+            errorMsg = "Fatal Error: Could not find the mix filter.";
             #ifdef TUP_DEBUG
-                qDebug() << "[TFFmpegMovieGenerator::initFilterGraph()] - Fatal Error: Could not find the mix filter.";
+                qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " + errorMsg;
             #endif
             return AVERROR_FILTER_NOT_FOUND;
         }
@@ -269,9 +279,10 @@ int TupAudioMixer::initFilterGraph()
 
         error = avfilter_graph_create_filter(&mixContext, mixFilter, "amix", args, nullptr, filterGraph);
         if (error < 0) {
+            errorMsg = "Fatal Error: Cannot create audio amix filter.";
             #ifdef TUP_DEBUG
-                qDebug() << "[TFFmpegMovieGenerator::initFilterGraph()] - Fatal Error: Cannot create audio amix filter.";
-                qDebug() << "ERROR CODE -> " << error;
+                qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " + errorMsg;
+                qCritical() << "ERROR CODE -> " << error;
             #endif
             return error;
         }
@@ -282,16 +293,18 @@ int TupAudioMixer::initFilterGraph()
 
     abuffersink = avfilter_get_by_name("abuffersink");
     if (!abuffersink) {
+        errorMsg = "Fatal Error: Could not find the abuffersink filter.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::initFilterGraph()] - Fatal Error: Could not find the abuffersink filter.";
+            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " + errorMsg;
         #endif
         return AVERROR_FILTER_NOT_FOUND;
     }
     
     abuffersinkContext = avfilter_graph_alloc_filter(filterGraph, abuffersink, "sink");
     if (!abuffersinkContext) {
+        errorMsg = "Fatal Error: Could not allocate the abuffersink instance.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::initFilterGraph()] - Fatal Error: Could not allocate the abuffersink instance.";
+            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " + errorMsg;
         #endif
         return AVERROR(ENOMEM);
     }
@@ -305,20 +318,20 @@ int TupAudioMixer::initFilterGraph()
     av_opt_set(abuffersinkContext, "channel_layout", ch_layout, AV_OPT_SEARCH_CHILDREN);
 
     if (error < 0) {
+        errorMsg = "Fatal Error: Could set options to the abuffersink instance.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::initFilterGraph()] - "
-                        "Fatal Error: Could set options to the abuffersink instance.";
-            qDebug() << "ERROR CODE -> " << error;
+            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " + errorMsg;
+            qCritical() << "ERROR CODE -> " << error;
         #endif
         return error;
     }
 
     error = avfilter_init_str(abuffersinkContext, nullptr);
     if (error < 0) {
+        errorMsg = "Fatal Error: Could not initialize the abuffersink instance.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::initFilterGraph()] - "
-                        "Fatal Error: Could not initialize the abuffersink instance.";
-            qDebug() << "ERROR CODE -> " << error;
+            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " + errorMsg;
+            qCritical() << "ERROR CODE -> " << error;
         #endif
         return error;
     }
@@ -332,10 +345,10 @@ int TupAudioMixer::initFilterGraph()
             if (error >= 0)
                 error = avfilter_link(mixContext, i, abuffersinkContext, i);
             if (error < 0) {
+                errorMsg = "Fatal Error: Couldn't connect filters.";
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TFFmpegMovieGenerator::initFilterGraph()] - "
-                                "Fatal Error: Couldn't connect filters.";
-                    qDebug() << "ERROR CODE -> " << error;
+                    qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " + errorMsg;
+                    qCritical() << "ERROR CODE -> " << error;
                 #endif
                 return error;
             }
@@ -345,10 +358,10 @@ int TupAudioMixer::initFilterGraph()
         if (error >= 0)
             error = avfilter_link(adelayContextList[0], 0, abuffersinkContext, 0);
         if (error < 0) {
+            errorMsg = "Fatal Error: Couldn't connect filters for the input file.";
             #ifdef TUP_DEBUG
-                qDebug() << "[TFFmpegMovieGenerator::initFilterGraph()] - "
-                            "Fatal Error: Couldn't connect filters for the input file.";
-                qDebug() << "ERROR CODE -> " << error;
+                qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " + errorMsg;
+                qCritical() << "ERROR CODE -> " << error;
             #endif
             return error;
         }
@@ -357,46 +370,48 @@ int TupAudioMixer::initFilterGraph()
     // Configure the graph.
     error = avfilter_graph_config(filterGraph, nullptr);
     if (error < 0) {
+        errorMsg = "Fatal Error: Error while configuring graph.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::initFilterGraph()] - Fatal Error: Error while configuring graph.";
-            qDebug() << "ERROR CODE -> " << error;
+            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " + errorMsg;
+            qCritical() << "ERROR CODE -> " << error;
         #endif
         return error;
     }
 
     #ifdef TUP_DEBUG
         char* dump = avfilter_graph_dump(filterGraph, nullptr);
-        av_log(NULL, AV_LOG_ERROR, "Graph :\n%s\n", dump);
+        av_log(nullptr, AV_LOG_ERROR, "Graph :\n%s\n", dump);
     #endif
 
     return 0;
 }
 
-/**
- * Open an output file and the required encoder.
- * Also set some basic encoder parameters.
- * Some of these parameters are based on the input file's parameters.
- */
+
+// Open an output file and the required encoder.
+// Also set some basic encoder parameters.
+// Some of these parameters are based on the input file's parameters.
 int TupAudioMixer::openOutputFile(const char *filename, AVCodecContext *inputCodecContext)
 {
     AVIOContext *outputIOContext = nullptr;
     AVStream *stream = nullptr;
-    AVCodec *output_codec = nullptr;
+    AVCodec *outputCodec = nullptr;
     int error;
 
     // Open the output file to write to it.
     if ((error = avio_open(&outputIOContext, filename, AVIO_FLAG_WRITE)) < 0) {
+        errorMsg = "Fatal Error: Could not open output file -> " + QString(filename);
         #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::openOutputFile()] - Fatal Error: Could not open output file -> " << filename;
-            qDebug() << "ERROR CODE -> " << error;
+            qCritical() << "[TFFmpegMovieGenerator::openOutputFile()] - " + errorMsg;
+            qCritical() << "ERROR CODE -> " << error;
         #endif
         return error;
     }
     
     // Create a new format context for the output container format.
     if (!(outputFormatContext = avformat_alloc_context())) {
+        errorMsg = "Fatal Error: Could not allocate output format context.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::openOutputFile()] - Fatal Error: Could not allocate output format context.";
+            qCritical() << "[TFFmpegMovieGenerator::openOutputFile()] - ";
         #endif
         return AVERROR(ENOMEM);
     }
@@ -406,8 +421,9 @@ int TupAudioMixer::openOutputFile(const char *filename, AVCodecContext *inputCod
     
     // Guess the desired container format based on the file extension.
     if (!(outputFormatContext->oformat = av_guess_format(nullptr, filename, nullptr))) {
+        errorMsg = "Fatal Error: Could not find output file format.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::openOutputFile()] - Fatal Error: Could not find output file format.";
+            qCritical() << "[TFFmpegMovieGenerator::openOutputFile()] - " + errorMsg;
         #endif
         return -1;
     }
@@ -418,27 +434,30 @@ int TupAudioMixer::openOutputFile(const char *filename, AVCodecContext *inputCod
     enum AVCodecID audioCodecID = outputFormat->audio_codec;
 
     // Find the encoder to be used by its name.
-    if (!(output_codec = avcodec_find_encoder(audioCodecID))) {
+    if (!(outputCodec = avcodec_find_encoder(audioCodecID))) {
+        errorMsg = "Fatal Error: Could not find the encoder required.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::openOutputFile()] - Fatal Error: Could not find the encoder required.";
+            qCritical() << "[TFFmpegMovieGenerator::openOutputFile()] - " + errorMsg;
         #endif
         goto cleanup;
     }
 
     // Create a new audio stream in the output file container.
-    if (!(stream = avformat_new_stream(outputFormatContext, output_codec))) {
+    if (!(stream = avformat_new_stream(outputFormatContext, outputCodec))) {
+        errorMsg = "Fatal Error: Could not create new stream.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::openOutputFile()] - Fatal Error: Could not create new stream.";
-            qDebug() << "ERROR CODE -> " << error;
+            qCritical() << "[TFFmpegMovieGenerator::openOutputFile()] - " + errorMsg;
+            qCritical() << "ERROR CODE -> " << error;
         #endif
         error = AVERROR(ENOMEM);
         goto cleanup;
     }
 
-    outputCodecContext = avcodec_alloc_context3(output_codec);
+    outputCodecContext = avcodec_alloc_context3(outputCodec);
     if (!outputCodecContext) {
+        errorMsg = "Fatal Error: Can't alloc memory for output codec context.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::openOutputFile()] - Fatal Error: Can't alloc memory for output codec context.";
+            qCritical() << "[TFFmpegMovieGenerator::openOutputFile()] - " + errorMsg;
         #endif
         return -1;
     }
@@ -454,24 +473,25 @@ int TupAudioMixer::openOutputFile(const char *filename, AVCodecContext *inputCod
 
     // Some container formats (like MP4) require global headers to be present
     // Mark the encoder so that it behaves accordingly.
-
     if (outputFormatContext->oformat->flags & AVFMT_GLOBALHEADER)
         outputCodecContext->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
     
     error = avcodec_parameters_from_context(stream->codecpar, outputCodecContext);
     if (error < 0) {
+        errorMsg = "Fatal Error: Could not copy codecpar from codec context.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::openOutputFile()] - Fatal Error: Could not copy codecpar from codec context.";
-            qDebug() << "ERROR CODE -> " << error;
+            qCritical() << "[TFFmpegMovieGenerator::openOutputFile()] - " + errorMsg;
+            qCritical() << "ERROR CODE -> " << error;
         #endif
         return error;
     } 
 
     // Open the encoder for the audio stream to use it later.
-    if ((error = avcodec_open2(outputCodecContext, output_codec, nullptr)) < 0) {
+    if ((error = avcodec_open2(outputCodecContext, outputCodec, nullptr)) < 0) {
+        errorMsg = "Fatal Error: Could not open output codec";
         #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::openOutputFile()] - Fatal Error: Could not open output codec.";
-            qDebug() << "ERROR CODE -> " << error;
+            qCritical() << "[TFFmpegMovieGenerator::openOutputFile()] - " + errorMsg;
+            qCritical() << "ERROR CODE -> " << error;
         #endif
         goto cleanup;
     }
@@ -490,11 +510,13 @@ int TupAudioMixer::openOutputFile(const char *filename, AVCodecContext *inputCod
 int TupAudioMixer::initInputFrame(AVFrame **frame)
 {
     if (!(*frame = av_frame_alloc())) {
+        errorMsg = "Fatal Error: Could not allocate input frame.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::initInputFrame()] - Fatal Error: Could not allocate input frame.";
+            qCritical() << "[TFFmpegMovieGenerator::initInputFrame()] - " + errorMsg;
         #endif
         return AVERROR(ENOMEM);
     }
+
     return 0;
 }
 
@@ -513,25 +535,27 @@ int TupAudioMixer::decodeAudioFrame(AVFrame *frame, AVFormatContext *inputFormat
         if (error == AVERROR_EOF)
             *finished = 1;
         else {
+            errorMsg = "Fatal Error: Could not read frame.";
             #ifdef TUP_DEBUG
-                qDebug() << "[TFFmpegMovieGenerator::decodeAudioFrame()] - Fatal Error: Could not read frame.";
-                qDebug() << "ERROR CODE -> " << error;
+                qCritical() << "[TFFmpegMovieGenerator::decodeAudioFrame()] - " + errorMsg;
+                qCritical() << "ERROR CODE -> " << error;
             #endif
             return error;
         }
     }
 
-     // Decode the audio frame stored in the temporary packet.
-     // The input audio stream decoder is used to do this.
-     // If we are at the end of the file, pass an empty packet to the decoder
-     // to flush it.
+    // Decode the audio frame stored in the temporary packet.
+    // The input audio stream decoder is used to do this.
+    // If we are at the end of the file, pass an empty packet to the decoder
+    // to flush it.
     
     // SQA: the method avcodec_decode_audio4 is deprecated. It must be replaced.
     if ((error = avcodec_decode_audio4(inputCodecContext, frame,
                                        dataPresent, inputPacket)) < 0) {
+        errorMsg = "Fatal Error: Could not decode frame.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::decodeAudioFrame()] - Fatal Error: Could not decode frame.";
-            qDebug() << "ERROR CODE -> " << error;
+            qCritical() << "[TFFmpegMovieGenerator::decodeAudioFrame()] - " + errorMsg;
+            qCritical() << "ERROR CODE -> " << error;
         #endif
         av_packet_unref(inputPacket);
         return error;
@@ -616,9 +640,10 @@ int TupAudioMixer::encodeAudioFrame(AVFrame *frame, int *dataPresent)
         error = 0;
         goto cleanup;
     } else if (error < 0) {
+        errorMsg = "Fatal Error: Could not send frame for encoding.";
         #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::decodeAudioFrame()] - Fatal Error: Could not send frame for encoding.";
-            qDebug() << "ERROR CODE -> " << error;
+            qCritical() << "[TFFmpegMovieGenerator::decodeAudioFrame()] - " + errorMsg;
+            qCritical() << "ERROR CODE -> " << error;
         #endif
         goto cleanup;
     }
@@ -629,18 +654,20 @@ int TupAudioMixer::encodeAudioFrame(AVFrame *frame, int *dataPresent)
         if (error == AVERROR(EAGAIN) || error == AVERROR_EOF) {
             return error;
         } else if (error < 0) {
+            errorMsg = "Fatal Error: Unexpected error.";
             #ifdef TUP_DEBUG
-                qDebug() << "[TFFmpegMovieGenerator::decodeAudioFrame()] - Fatal Error: Unexpected error.";
-                qDebug() << "ERROR CODE -> " << error;
+                qCritical() << "[TFFmpegMovieGenerator::decodeAudioFrame()] - " + errorMsg;
+                qCritical() << "ERROR CODE -> " << error;
             #endif
             return error;
         }
 
         if (outputPacket) {
             if ((error = av_write_frame(outputFormatContext, outputPacket)) < 0) {
+                errorMsg = "Fatal Error: Could not write frame.";
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TFFmpegMovieGenerator::decodeAudioFrame()] - Fatal Error: Could not write frame.";
-                    qDebug() << "ERROR CODE -> " << error;
+                    qCritical() << "[TFFmpegMovieGenerator::decodeAudioFrame()] - " + errorMsg;
+                    qCritical() << "ERROR CODE -> " << error;
                 #endif
                 av_packet_unref(outputPacket);
                 return error;
@@ -820,14 +847,15 @@ bool TupAudioMixer::processAudioFiles()
             #endif
             return false;
         }
-        return true;
+
+    return true;
 }
 
 // Write the header of the output file container
-int TupAudioMixer::writeOutputFileHeader(AVFormatContext *output_format_context)
+int TupAudioMixer::writeOutputFileHeader(AVFormatContext *outputFormatContext)
 {
     int error;
-    if ((error = avformat_write_header(output_format_context, NULL)) < 0) {
+    if ((error = avformat_write_header(outputFormatContext, nullptr)) < 0) {
         errorMsg = "Fatal Error: Could not write output file header.";
         #ifdef TUP_DEBUG
             qCritical() << "[TupAudioMixer::writeOutputFileHeader()] - " + errorMsg;
@@ -840,10 +868,10 @@ int TupAudioMixer::writeOutputFileHeader(AVFormatContext *output_format_context)
 }
 
 // Write the trailer of the output file container.
-int TupAudioMixer::writeOutputFileTrailer(AVFormatContext *output_format_context)
+int TupAudioMixer::writeOutputFileTrailer(AVFormatContext *outputFormatContext)
 {
     int error;
-    if ((error = av_write_trailer(output_format_context)) < 0) {
+    if ((error = av_write_trailer(outputFormatContext)) < 0) {
         errorMsg = "Fatal Error: Could not write output file trailer.";
         #ifdef TUP_DEBUG
             qCritical() << "[TupAudioMixer::writeOutputFileTrailer()] - " + errorMsg;

@@ -78,52 +78,45 @@ class TUPITUBE_PLUGIN TupAudioTranscoder : public QObject
         QString rationalToString(AVRational a);
 
         // Audio methods
-        int openInputFile(const char *filename,
-                           AVFormatContext **inputFormatContext,
-                           AVCodecContext **inputCodecContext);
-        int openOutputFile(const char *filename,
-                            AVCodecContext *inputCodecContext,
-                            AVFormatContext **outputFormatContext,
-                            AVCodecContext **outputCodecContext);
+        int openInputFile(const char *filename, AVFormatContext **inputFormatContext,
+                          AVCodecContext **inputCodecContext);
+
+        int openOutputFile(const char *filename, AVCodecContext *inputCodecContext,
+                           AVFormatContext **outputFormatContext, AVCodecContext **outputCodecContext);
 
         int initPacket(AVPacket **packet);
-        int initInputFrame(AVFrame **frame);
-        int initResampler(AVCodecContext *inputCodecContext,
-                          AVCodecContext *outputCodecContext,
-                          SwrContext **resampleContext);
-        int initFifo(AVAudioFifo **fifo, AVCodecContext *outputCodecContext);
-        int writeOutputFileHeader(AVFormatContext *outputFormatContext);
-        int decodeAudioFrame(AVFrame *frame,
-                              AVFormatContext *inputFormatContext,
-                              AVCodecContext *inputCodecContext,
-                              int *dataPresent, int *finished);
-        int initConvertedSamples(uint8_t ***convertedInputSamples,
-                                  AVCodecContext *outputCodecContext,
-                                  int frameSize);
-        int convertSamples(const uint8_t **inputData,
-                           uint8_t **convertedData, const int frameSize,
-                           SwrContext *resampleContext);
-        int addSamplesToFifo(AVAudioFifo *fifo,
-                               uint8_t **convertedInputSamples,
-                               const int frameSize);
-        int readDecodeConvertAndStore(AVAudioFifo *fifo,
-                                         AVFormatContext *inputFormatContext,
-                                         AVCodecContext *inputCodecContext,
-                                         AVCodecContext *outputCodecContext,
-                                         SwrContext *resamplerContext,
-                                         int *finished);
-        int initOutputFrame(AVFrame **frame,
-                             AVCodecContext *outputCodecContext,
-                             int frameSize);
 
-        int encodeAudioFrame(AVFrame *frame,
-                                      AVFormatContext *outputFormatContext,
-                                      AVCodecContext *outputCodecContext,
+        int initInputFrame(AVFrame **frame);
+
+        int initResampler(AVCodecContext *inputCodecContext, AVCodecContext *outputCodecContext,
+                          SwrContext **resampleContext);
+
+        int initFifo(AVAudioFifo **fifo, AVCodecContext *outputCodecContext);
+
+        int writeOutputFileHeader(AVFormatContext *outputFormatContext);
+
+        int decodeAudioFrame(AVFrame *frame, AVFormatContext *inputFormatContext, AVCodecContext *inputCodecContext,
+                             int *dataPresent, int *finished);
+
+        int initConvertedSamples(uint8_t ***convertedInputSamples, AVCodecContext *outputCodecContext,
+                                 int frameSize);
+
+        int convertSamples(const uint8_t **inputData, uint8_t **convertedData, const int frameSize,
+                           SwrContext *resampleContext);
+
+        int addSamplesToFifo(AVAudioFifo *fifo, uint8_t **convertedInputSamples, const int frameSize);
+
+        int readDecodeConvertAndStore(AVAudioFifo *fifo, AVFormatContext *inputFormatContext,
+                                      AVCodecContext *inputCodecContext, AVCodecContext *outputCodecContext,
+                                      SwrContext *resamplerContext, int *finished);
+
+        int initOutputFrame(AVFrame **frame, AVCodecContext *outputCodecContext, int frameSize);
+
+        int encodeAudioFrame(AVFrame *frame, AVFormatContext *outputFormatContext, AVCodecContext *outputCodecContext,
                                       int *dataPresent);
 
-        int loadEncodeAndWrite(AVAudioFifo *fifo,
-                                         AVFormatContext *outputFormatContext,
-                                         AVCodecContext *outputCodecContext);
+        int loadEncodeAndWrite(AVAudioFifo *fifo, AVFormatContext *outputFormatContext,
+                               AVCodecContext *outputCodecContext);
 
         int writeOutputFileTrailer(AVFormatContext *outputFormatContext);
 
@@ -146,11 +139,7 @@ class TUPITUBE_PLUGIN TupAudioTranscoder : public QObject
         SwrContext *resampleContext;
 
         int audioPktCounter;
-        int samples_count;
-
         QString errorMsg;
-        int framesCount;
-        bool exception;
 };
 
 #endif

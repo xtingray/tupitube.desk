@@ -158,6 +158,18 @@
         <source>Video Formats</source>
         <translation>视频格式</translation>
     </message>
+    <message>
+        <source>Merging audio files...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Processing audio track...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rendering project...</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FillTool</name>
@@ -2591,6 +2603,14 @@
         <source>Images path doesn&apos;t exist! Please, choose another.</source>
         <translation>图片路径不存在，请选择另一个</translation>
     </message>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished">确定</translation>
+    </message>
+    <message>
+        <source>Sorry, export attempt failed!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TupExportWidget</name>
@@ -4696,10 +4716,6 @@
     <message>
         <source>PNG Image Sequence</source>
         <translation>PNG图片序列</translation>
-    </message>
-    <message>
-        <source>AVI Video</source>
-        <translation>AVI 视频</translation>
     </message>
     <message>
         <source>Select Plugin</source>
