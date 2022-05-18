@@ -137,8 +137,11 @@ TupExportModule::TupExportModule(TupProject *project, OutputFormat output,
     progressBar->setRange(1, 100);
 
     progressWidget = new QWidget;
-    QHBoxLayout *progressLayout = new QHBoxLayout(progressWidget);
+    progressLabel = new QLabel("");
+    progressLabel->setAlignment(Qt::AlignHCenter);
+    QVBoxLayout *progressLayout = new QVBoxLayout(progressWidget);
     progressLayout->addSpacing(50);
+    progressLayout->addWidget(progressLabel);
     progressLayout->addWidget(progressBar);
     progressLayout->addSpacing(50);
     progressWidget->setVisible(false);
@@ -174,6 +177,7 @@ void TupExportModule::setCurrentExporter(TupExportInterface *currentExporter)
     m_currentExporter = currentExporter;
 
     TupExportPluginObject *plugin = (TupExportPluginObject *) currentExporter;
+    connect(plugin, SIGNAL(messageChanged(const QString &)), this, SLOT(updateProgressMessage(const QString &)));
     connect(plugin, SIGNAL(progressChanged(int)), this, SLOT(updateProgressLabel(int)));
 }
 
@@ -430,14 +434,24 @@ void TupExportModule::exportIt()
     } else {
         if (m_currentExporter) {
             QString msg = m_currentExporter->getExceptionMsg();
+            #ifdef TUP_DEBUG
+                qWarning() << "TupExportModule::exportIt() -  Error Message: " << msg;
+            #endif
 
             QMessageBox msgBox;
             msgBox.setStyleSheet(TAppTheme::themeSettings());
             msgBox.setWindowTitle(tr("Fatal Error: Can't export video"));
             msgBox.setIcon(QMessageBox::Critical);
             msgBox.setTextFormat(Qt::RichText);
-            msgBox.setText(msg);
-            msgBox.exec();
+            msgBox.setText(tr(msg.toLocal8Bit()));
+            msgBox.addButton(QString(tr("Ok")), QMessageBox::AcceptRole);
+            msgBox.show();
+
+            if (msgBox.exec() == QMessageBox::AcceptRole) {
+                msg = tr("Sorry, export attempt failed!");
+                TOsd::self()->display(TOsd::Error, tr(msg.toLocal8Bit()));
+                emit isDone();
+            }
         }
     }
 }
@@ -449,6 +463,11 @@ QList<TupScene *> TupExportModule::scenesToExport() const
         scenes << m_project->sceneAt(index);
 
     return scenes;
+}
+
+void TupExportModule::updateProgressMessage(const QString &title)
+{
+    progressLabel->setText(title);
 }
 
 void TupExportModule::updateProgressLabel(int percent)

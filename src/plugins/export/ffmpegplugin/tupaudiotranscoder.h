@@ -33,12 +33,10 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TFFMPEGMOVIEGENERATOR_H
-#define TFFMPEGMOVIEGENERATOR_H
+#ifndef TUPAUDIOTRANSCODER_H
+#define TUPAUDIOTRANSCODER_H
 
 #include "tglobal.h"
-#include "tmoviegenerator.h"
-
 #include <QObject>
 
 #ifdef __cplusplus
@@ -57,7 +55,6 @@ extern "C" {
 #include "libavutil/samplefmt.h"
 #include "libavutil/timestamp.h"
 
-// #include <stdio.h>
 #include "libavformat/avio.h"
 #include "libavutil/audio_fifo.h"
 #include "libavutil/avassert.h"
@@ -65,84 +62,56 @@ extern "C" {
 }
 #endif
 
-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55,28,1)
-#define av_frame_alloc  avcodec_alloc_frame
-#endif
-
-#define STREAM_DURATION 4.73684
-
-class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
+class TUPITUBE_PLUGIN TupAudioTranscoder : public QObject
 {
     public:
-        TFFmpegMovieGenerator(TMovieGeneratorInterface::Format format, const QSize &size,
-                              int fps = 24, double duration = 0, const QString &audioPath = QString());
-        ~TFFmpegMovieGenerator();
+        TupAudioTranscoder(const QString &input, const QString &output);
+        ~TupAudioTranscoder();
 
-        virtual bool validMovieHeader();
-        virtual QString getErrorMsg() const;
-        bool createVideoFrame(const QImage &image);
-        int mergeAudioStream();
-        void saveMovie(const QString &filename);
-
-    protected:
-        void copyMovieFile(const QString &fileName);
-        void handle(const QImage &image);
-        void endVideoFile();
+        QString getErrorMsg() const;
+        int transcodeAudio();
 
     private:
-        bool initVideoFile();
-        void setFileExtension(int format);
-        bool openVideoStream();
-        bool openAudioInputStream();
-        bool openAudioOutputStream();
-        bool openAudioOutputCodec();
-
-        AVStream * addVideoStream();
-        bool loadInputAudio(const QString &soundPath);
-        int writeVideoFrame(AVPacket *pkt);
-        void RGBtoYUV420P(const uint8_t *bufferRGB, uint8_t *bufferYUV, uint iRGBIncrement, bool bSwapRGB);
-
-        void logPacket(MediaType type, AVRational timeBase, const AVPacket *pkt, const QString &direction);
+        void logAudioPacket(AVRational timeBase, const AVPacket *pkt, const QString &direction);
         double av_q2d(AVRational a);
         QString formatTS(int64_t ts, AVRational tb);
         QString rationalToString(AVRational a);
 
         // Audio methods
+        int openInputFile(const char *filename,
+                           AVFormatContext **inputFormatContext,
+                           AVCodecContext **inputCodecContext);
+        int openOutputFile(const char *filename,
+                            AVCodecContext *inputCodecContext,
+                            AVFormatContext **outputFormatContext,
+                            AVCodecContext **outputCodecContext);
 
         int initPacket(AVPacket **packet);
-
         int initInputFrame(AVFrame **frame);
-
         int initResampler(AVCodecContext *inputCodecContext,
                           AVCodecContext *outputCodecContext,
                           SwrContext **resampleContext);
-
         int initFifo(AVAudioFifo **fifo, AVCodecContext *outputCodecContext);
-
+        int writeOutputFileHeader(AVFormatContext *outputFormatContext);
         int decodeAudioFrame(AVFrame *frame,
                               AVFormatContext *inputFormatContext,
                               AVCodecContext *inputCodecContext,
                               int *dataPresent, int *finished);
-
         int initConvertedSamples(uint8_t ***convertedInputSamples,
                                   AVCodecContext *outputCodecContext,
                                   int frameSize);
-
         int convertSamples(const uint8_t **inputData,
                            uint8_t **convertedData, const int frameSize,
                            SwrContext *resampleContext);
-
         int addSamplesToFifo(AVAudioFifo *fifo,
                                uint8_t **convertedInputSamples,
                                const int frameSize);
-
         int readDecodeConvertAndStore(AVAudioFifo *fifo,
                                          AVFormatContext *inputFormatContext,
                                          AVCodecContext *inputCodecContext,
                                          AVCodecContext *outputCodecContext,
                                          SwrContext *resamplerContext,
                                          int *finished);
-
         int initOutputFrame(AVFrame **frame,
                              AVCodecContext *outputCodecContext,
                              int frameSize);
@@ -156,22 +125,15 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
                                          AVFormatContext *outputFormatContext,
                                          AVCodecContext *outputCodecContext);
 
+        int writeOutputFileTrailer(AVFormatContext *outputFormatContext);
+
         // Global Variables
+        AVFormatContext *audioOutputFormatContext;
+        AVOutputFormat *audioOutputFormat;
 
-        int videoW;
-        int videoH;
-        AVFormatContext *formatContext;
-        AVOutputFormat *outputFormat;
+        QString audioInputFile;
+        QString audioOutputFile;
 
-        AVCodecContext *videoCodecContext;
-        enum AVCodecID videoCodecID;
-        const AVCodec *videoCodec;
-        AVFrame *videoFrame;
-        AVStream *videoStream;
-
-        // Audio stuff
-        bool hasSound;
-        QString inputAudioPath;
         enum AVCodecID audioOutputCodecID;
         const AVCodec *audioOutputCodec;
         AVCodecContext *audioOutputCodecContext;
@@ -183,18 +145,12 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         AVStream *audioInputStream;
         SwrContext *resampleContext;
 
-        int videoPktCounter;
         int audioPktCounter;
         int samples_count;
 
         QString errorMsg;
         int framesCount;
-        QString movieFile;
-        int fps;
-        double mp4Duration;
         bool exception;
-
-        int realFrames;
 };
 
 #endif

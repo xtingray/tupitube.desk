@@ -33,61 +33,64 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TGLOBAL_H
-#define TGLOBAL_H
+#ifndef TUPAUDIOMIXER_H
+#define TUPAUDIOMIXER_H
 
-#if defined(QT_SHARED) || defined(QT_PLUGIN)
-  #define T_GUI_EXPORT Q_GUI_EXPORT
-  #define T_CORE_EXPORT Q_DECL_EXPORT
-  #define T_SOUND_EXPORT Q_DECL_EXPORT
-  #define TUPITUBE_EXPORT Q_GUI_EXPORT
-  #define TUPITUBE_PLUGIN Q_DECL_EXPORT
-#else
-  #define T_GUI_EXPORT
-  #define T_CORE_EXPORT
-  #define T_SOUND_EXPORT
-  #define TUPITUBE_EXPORT
-  #define TUPITUBE_PLUGIN
+#include "tglobal.h"
+
+#ifdef __cplusplus
+extern "C" {
+#include <libavformat/avformat.h>
+#include "libavfilter/avfilter.h"
+#include "libavfilter/buffersink.h"
+#include "libavfilter/buffersrc.h"
+#include "libavutil/opt.h"
+}
 #endif
 
-#ifdef QT_GUI_LIB
-  #include <QGuiApplication>
-#endif
+class TUPITUBE_PLUGIN TupAudioMixer: public QObject
+{
+    Q_OBJECT
 
-#ifdef TUP_DEBUG
-  #include <QDebug>
-  #define SHOW_VAR(arg) qDebug() << #arg << " = " << arg;
-#endif
+    public:
+        TupAudioMixer(int fps, QList<SoundResource> audioList, const QString &path);
+        ~TupAudioMixer();
 
-#define COMPANY "MaeFloresta"
-#define CACHE_DB "TupiTube"
+        bool mergeAudios();
+        QString getErrorMsg() const;
 
-#define LIBRARY_DIR CONFIG_DIR+"/libraries"
-#define MAEFLORESTA_URL "https://www.maefloresta.com/"
+    private:
+        int initFilterGraph();
+        int openInputFile(const char *filename);
+        int openOutputFile(const char *filename, AVCodecContext *inputCodecContext);
+        int initInputFrame(AVFrame **frame);
+        int decodeAudioFrame(AVFrame *frame, AVFormatContext *inputFormatContext, AVCodecContext *inputCodecContext,
+                             int *dataPresent, int *finished);
+        int encodeAudioFrame(AVFrame *frame, int *dataPresent);
+        bool processAudioFiles();
+        int writeOutputFileHeader(AVFormatContext *outputFormatContext);
+        int writeOutputFileTrailer(AVFormatContext *outputFormatContext);
 
-#define TUPITUBE_URL "https://www.tupitube.com"
-#define LIBRARY_URL "https://library.tupitube.com"
-#define MEDIA_URL "media.tupitube.com"
-#define BROWSER_FINGERPRINT "Tupi_Browser 2.0"
-#define MOZILLA_FINGERPRINT "Mozilla/5.0"
+    signals:
+        void progressChanged(int percent);
 
-#define SECRET_KEY "923B479F-12324679-30A0E076-34E82C77-5"
+    private:
+        int fps;
+        QList<SoundResource> sounds;
+        int soundsTotal;
+        QString errorMsg;
+        QString outputPath;
 
-#define ZLAYER_LIMIT 10000
-#define BG_LAYERS 4
-// #define BG_LAYERS_TOTAL 10
-#define ZLAYER_BASE 100000 // Initial zValue for Frames Mode layers
+        AVFormatContext *outputFormatContext;
+        AVCodecContext *outputCodecContext;
 
-#define DEFAULT_FONT_SIZE 36
+        QList<AVFormatContext *> inputFormatContextList;
+        QList<AVCodecContext *> inputCodecContextList;
 
-enum MediaType {Video = 0, Audio};
-struct SoundResource {
-    int frame;
-    QString path;
-    bool muted;
+        QList<AVFilterContext *> abufferContextList;
+        QList<AVFilterContext *> filterContextList;
+        AVFilterGraph *filterGraph;
+        AVFilterContext *abuffersinkContext;
 };
-
-#define DARK_THEME 0
-#define LIGHT_THEME 1
 
 #endif

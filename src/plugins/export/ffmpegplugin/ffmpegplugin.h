@@ -66,10 +66,14 @@ class TUPITUBE_PLUGIN FFmpegPlugin : public TupExportPluginObject
         QString errorMsg;
 
     signals:
+        void messageChanged(const QString &);
         void progressChanged(int percent);
 
     private:
         TMovieGeneratorInterface::Format videoFormat(TupExportInterface::Format format);
+
+        QString wavAudioPath;
+        QString aacAudioPath;
 };
 
 #endif

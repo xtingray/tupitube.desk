@@ -28,10 +28,14 @@ mac {
     LIBS += -lavutil
 }
 
-HEADERS += tffmpegmoviegenerator.h \
+HEADERS += tupaudiomixer.h \
+           tupaudiotranscoder.h \
+           tffmpegmoviegenerator.h \
            ffmpegplugin.h
 
-SOURCES += tffmpegmoviegenerator.cpp \
+SOURCES += tupaudiomixer.cpp \
+           tupaudiotranscoder.cpp \
+           tffmpegmoviegenerator.cpp \
            ffmpegplugin.cpp
 
 FRAMEWORK_DIR = "../../../framework"

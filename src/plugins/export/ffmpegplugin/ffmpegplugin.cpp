@@ -38,6 +38,9 @@
 #include "tupanimationrenderer.h"
 #include "tupexportinterface.h"
 #include "tffmpegmoviegenerator.h"
+#include "tupaudiomixer.h"
+#include "tupaudiotranscoder.h"
+#include "talgorithm.h"
 
 #include <QImage>
 #include <QPainter>
@@ -107,12 +110,12 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
                                   TupLibrary *library, bool waterMark)
 {
     Q_UNUSED(newSize)
-
     #ifdef TUP_DEBUG
         qDebug() << "[FFmpegPlugin::exportToFormat()] - fps -> " << fps;
     #endif
 
-    int frames = 0;
+    wavAudioPath = "";
+    int frames = 1;
     double duration = 0;
     foreach (TupScene *scene, scenes) {
         duration += static_cast<double>(scene->framesCount()) / static_cast<double>(fps);
@@ -134,7 +137,47 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
         }
     }
 
-    TFFmpegMovieGenerator *generator = new TFFmpegMovieGenerator(format, size, fps, duration, sounds);
+    if (!sounds.isEmpty()) {
+        emit messageChanged(tr("Merging audio files..."));
+
+        QString filename = TAlgorithm::randomString(12);
+        wavAudioPath = CACHE_DIR + filename + ".wav";
+        TupAudioMixer *mixer = new TupAudioMixer(fps, sounds, wavAudioPath);
+        connect(mixer, SIGNAL(progressChanged(int)), this, SIGNAL(progressChanged(int)));
+        if (!mixer->mergeAudios()) {
+            errorMsg = mixer->getErrorMsg();
+            #ifdef TUP_DEBUG
+                qDebug() << "[FFmpegPlugin::exportToFormat()] - Fatal Error: Can't create WAV audio file -> " + wavAudioPath;
+            #endif
+            delete mixer;
+
+            return false;
+        }
+
+        #ifdef TUP_DEBUG
+            qDebug() << "[FFmpegPlugin::exportToFormat()] - WAV file created successfully! -> " + wavAudioPath;
+        #endif
+
+        aacAudioPath = CACHE_DIR + filename + ".mp4";
+        TupAudioTranscoder *coder = new TupAudioTranscoder(wavAudioPath, aacAudioPath);
+        if (coder->transcodeAudio() < 0) {
+            errorMsg = coder->getErrorMsg();
+            #ifdef TUP_DEBUG
+                qDebug() << "[FFmpegPlugin::exportToFormat()] - "
+                            "Fatal Error: Can't create AAC audio file -> " + aacAudioPath;
+            #endif
+            delete mixer;
+
+            return false;
+        }
+
+        #ifdef TUP_DEBUG
+            qDebug() << "[FFmpegPlugin::exportToFormat()] - "
+                        "AAC file created successfully! -> " + aacAudioPath;
+        #endif
+    }
+
+    TFFmpegMovieGenerator *generator = new TFFmpegMovieGenerator(format, size, fps, duration, wavAudioPath);
     TupAnimationRenderer renderer(color, library, waterMark);
     {
         if (!generator->validMovieHeader()) {
@@ -150,6 +193,9 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
         QPainter painter(generator);
         painter.setRenderHint(QPainter::Antialiasing, true);
         int photogram = 0;
+
+        emit messageChanged(tr("Rendering project..."));
+        emit progressChanged(0);
         foreach (TupScene *scene, scenes) {
             renderer.setScene(scene, size);
             while (renderer.nextPhotogram()) {
@@ -160,19 +206,27 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
                 generator->nextFrame();
                 generator->reset();
                 photogram++;
-                if (frames > 0)
-                    emit progressChanged((photogram * 100) / frames);
+                emit progressChanged((photogram * 100) / frames);
             }
         }
 
-        if (!sounds.isEmpty()) {
-            if (!generator->processAudioFiles()) {
+        /*
+        QFile audioFile(wavAudioPath);
+        if (audioFile.exists()) {
+            emit messageChanged(tr("Adding sound..."));
+            emit progressChanged(0);
+
+            int result = generator->mergeAudioStream();
+            qDebug() << "RESULT -> " << result;
+            if (!audioFile.remove()) {
+                errorMsg = "Fatal Error: Can't remove file -> " + wavAudioPath;
                 #ifdef TUP_DEBUG
-                    qDebug() << "[FFmpegPlugin::exportToFormat()] - Fatal error while processing audio files!";
+                    qCritical() << "[FFmpegPlugin::exportToFormat()] - " + errorMsg;
                 #endif
                 return false;
             }
         }
+        */
     }
 
     generator->saveMovie(filePath);

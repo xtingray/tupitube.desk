@@ -43,12 +43,20 @@
 #include <QDir>
 #include <QTimer>
 
+// The output bit rate in bit/s
+#define OUTPUT_BIT_RATE 96000
+// The number of output channels
+#define OUTPUT_CHANNELS 2
+
+// Global timestamp for the audio frames.
+static int64_t pts;
+
 // Handy documentation about Libav library
 // https://github.com/leandromoreira/ffmpeg-libav-tutorial
 // http://libav-users.943685.n4.nabble.com/Save-AVFrame-to-jpg-file-td2314979.html
 
 TFFmpegMovieGenerator::TFFmpegMovieGenerator(TMovieGeneratorInterface::Format format, const QSize &size, 
-                                             int fpsParam, double duration, QList<SoundResource> soundsList)
+                                             int fpsParam, double duration, const QString &audio)
                                              : TMovieGenerator(size.width(), size.height())
 {
     #ifdef TUP_DEBUG
@@ -65,12 +73,13 @@ TFFmpegMovieGenerator::TFFmpegMovieGenerator(TMovieGeneratorInterface::Format fo
     mp4Duration = duration;
     videoPktCounter = 0;
     audioPktCounter = 0;
+    samples_count = 0;
+    pts = 0;
 
-    sounds = soundsList;
-    soundsTotal = sounds.size();
-    hasSounds = true;
-    if (sounds.isEmpty())
-        hasSounds = false;
+    hasSound = true;
+    inputAudioPath = audio;
+    if (inputAudioPath.isEmpty())
+        hasSound = false;
 
     exception = initVideoFile();
 
@@ -164,27 +173,17 @@ bool TFFmpegMovieGenerator::initVideoFile()
         return false;
     }
 
-    if (hasSounds) {
-        foreach(SoundResource item, sounds) {
-            if (!loadInputAudio(item.path)) {
-                errorMsg = "ffmpeg error: Could not load audio input streams.";
-                #ifdef TUP_DEBUG
-                    qCritical() << "[TFFmpegMovieGenerator::initVideoFile()] - " << errorMsg;
-                #endif
-                return false;
-            }
-        }
-
-        if (!openAudioInputStreams()) {
-            errorMsg = "ffmpeg error: Could not open audio input streams.";
+    if (hasSound) {
+        if (!loadInputAudio(inputAudioPath)) {
+            errorMsg = "ffmpeg error: Could not load audio input streams.";
             #ifdef TUP_DEBUG
                 qCritical() << "[TFFmpegMovieGenerator::initVideoFile()] - " << errorMsg;
             #endif
             return false;
         }
 
-        if (!initFilterGraph()) {
-            errorMsg = "ffmpeg error: Could not initialize filters.";
+        if (!openAudioInputStream()) {
+            errorMsg = "ffmpeg error: Could not open audio input streams.";
             #ifdef TUP_DEBUG
                 qCritical() << "[TFFmpegMovieGenerator::initVideoFile()] - " << errorMsg;
             #endif
@@ -320,14 +319,14 @@ AVStream * TFFmpegMovieGenerator::addVideoStream()
 bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TFFmpegMovieGenerator::loadInputAudio()] - soundPath -> " << soundPath;
+        qDebug() << "[TFFmpegMovieGenerator::loadInputAudio()] - soundPath -> " + soundPath;
     #endif
 
     QByteArray bytes = soundPath.toLocal8Bit();
     const char *inputFile = bytes.data();
     int error;
 
-    AVFormatContext *audioInputFormatContext = avformat_alloc_context();
+    audioInputFormatContext = avformat_alloc_context();
     error = avformat_open_input(&audioInputFormatContext, inputFile, 0, 0);
     if (error < 0) {
         #ifdef TUP_DEBUG
@@ -346,14 +345,13 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
     }
 
     av_dump_format(audioInputFormatContext, 0, inputFile, 0);
-    audioInputFormatContextList << audioInputFormatContext;
 
     // Process the stream from input audio
-    AVStream *audioInputStream = audioInputFormatContext->streams[0];
+    audioInputStream = audioInputFormatContext->streams[0];
     if (!audioInputStream) {
         errorMsg = "ffmpeg error: audio input stream is NULL!";
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " << errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " + errorMsg;
         #endif
         return false;
     }
@@ -362,7 +360,7 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
     if (audioInputCodecPar->codec_type != AVMEDIA_TYPE_AUDIO) {
         errorMsg = "ffmpeg error: No audio stream was found!";
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " << errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " + errorMsg;
         #endif
         return false;
     }
@@ -373,53 +371,34 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
                  << avcodec_get_name(audioInputCodecID);
     #endif
 
-    AVCodec *audioInputCodec = avcodec_find_decoder(audioInputCodecID);
+    audioInputCodec = avcodec_find_decoder(audioInputCodecID);
     if (!audioInputCodec) {
         errorMsg = "ffmpeg error: Could not find audio decoder.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " << errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " + errorMsg;
             qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - Unavailable Codec ID -> "
                         << avcodec_get_name(audioInputCodecID);
         #endif
         return false;
     }
 
-    AVCodecContext *audioCodecContext = avcodec_alloc_context3(audioInputCodec);
-    if (!audioCodecContext) {
+    audioInputCodecContext = avcodec_alloc_context3(audioInputCodec);
+    if (!audioInputCodecContext) {
         errorMsg = "ffmpeg error: Could not initialize audio codec context.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " << errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " + errorMsg;
         #endif
         return false;
     }
 
-    audioCodecContext->sample_fmt = audioInputCodec->sample_fmts ? audioInputCodec->sample_fmts[0] : AV_SAMPLE_FMT_FLTP;
-    audioCodecContext->bit_rate = audioInputFormatContext->bit_rate;
-
-    if (audioInputCodec->supported_samplerates) {
-        audioCodecContext->sample_rate = audioInputCodec->supported_samplerates[0];
-        for (int i = 0; audioInputCodec->supported_samplerates[i]; i++) {
-            if (audioInputCodec->supported_samplerates[i] == 44100)
-                audioCodecContext->sample_rate = 44100;
-        }
+    error = avcodec_parameters_to_context(audioInputCodecContext, audioInputCodecPar);
+    if (error < 0) {
+        errorMsg = "ffmpeg error: Can't copy codecpar values to input codec context.";
+        #ifdef TUP_DEBUG
+            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " + errorMsg;
+        #endif
+        return false;
     }
-    audioCodecContext->channels = av_get_channel_layout_nb_channels(audioCodecContext->channel_layout);
-    audioCodecContext->channel_layout = AV_CH_LAYOUT_STEREO;
-    if (audioInputCodec->channel_layouts) {
-        audioCodecContext->channel_layout = audioInputCodec->channel_layouts[0];
-        for (int i = 0; audioInputCodec->channel_layouts[i]; i++) {
-            if (audioInputCodec->channel_layouts[i] == AV_CH_LAYOUT_STEREO)
-                audioCodecContext->channel_layout = AV_CH_LAYOUT_STEREO;
-        }
-    }
-    audioCodecContext->channels = av_get_channel_layout_nb_channels(audioCodecContext->channel_layout);
-
-    // Some formats want stream headers to be separate.
-    if (formatContext->oformat->flags & AVFMT_GLOBALHEADER)
-        audioCodecContext->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
-
-    audioCodecList << audioInputCodec;
-    audioInputCodecContextList << audioCodecContext;
 
     return true;
 }
@@ -464,22 +443,20 @@ bool TFFmpegMovieGenerator::openVideoStream()
     return true;
 }
 
-bool TFFmpegMovieGenerator::openAudioInputStreams()
+bool TFFmpegMovieGenerator::openAudioInputStream()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TFFmpegMovieGenerator::openAudioInputStreams()]";
     #endif
 
-    for(int i=0; i<audioInputCodecContextList.size(); i++) {
-        // Open the input audio codec
-        int error = avcodec_open2(audioInputCodecContextList.at(i), audioCodecList.at(i), nullptr);
-        if (error < 0) {
-            errorMsg = "ffmpeg error: Can't open audio codec.";
-            #ifdef TUP_DEBUG
-                qCritical() << "[TFFmpegMovieGenerator::openAudioInputStreams()] - " << errorMsg;
-            #endif
-            return false;
-        }
+    // Open the input audio codec
+    int error = avcodec_open2(audioInputCodecContext, audioInputCodec, nullptr);
+    if (error < 0) {
+        errorMsg = "ffmpeg error: Can't open audio codec.";
+        #ifdef TUP_DEBUG
+            qCritical() << "[TFFmpegMovieGenerator::openAudioInputStreams()] - " << errorMsg;
+        #endif
+        return false;
     }
 
     return true;
@@ -488,9 +465,11 @@ bool TFFmpegMovieGenerator::openAudioInputStreams()
 bool TFFmpegMovieGenerator::openAudioOutputStream()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TFFmpegMovieGenerator::openAudioOutputStream()]";
+        qDebug() << "[TFFmpegMovieGenerator::openAudioOutputStream()] - audio codec -> "
+                 << avcodec_get_name(audioOutputCodecID);
     #endif
 
+    int error;
     audioOutputCodec = avcodec_find_encoder(audioOutputCodecID);
     if (!audioOutputCodec) {
         errorMsg = "ffmpeg error: Could not find audio encoder.";
@@ -502,46 +481,46 @@ bool TFFmpegMovieGenerator::openAudioOutputStream()
         return false;
     }
 
-    audioOutputStream = avformat_new_stream(formatContext, audioOutputCodec);
-    if (!audioOutputStream) {
-        errorMsg = "ffmpeg error: Could not alloc audio stream.";
+    // Create a new audio stream in the output file container.
+    if (!(audioOutputStream = avformat_new_stream(formatContext, nullptr))) {
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::openAudioOutputStream()] - " << errorMsg;
+            error = AVERROR(ENOMEM);
+            qCritical() << "[TFFmpegMovieGenerator::openAudioOutputStream()] - "
+                           "Fatal Error: Could not create new stream.";
+            qCritical() << "ERROR CODE -> " << error;
         #endif
         return false;
     }
 
     audioOutputCodecContext = avcodec_alloc_context3(audioOutputCodec);
     if (!audioOutputCodecContext) {
-        errorMsg = "ffmpeg error: Could not initialize audio codec context.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::openAudioOutputStream()] - " << errorMsg;
+            error = AVERROR(ENOMEM);
+            qCritical() << "[TFFmpegMovieGenerator::openAudioOutputStream()] - "
+                           "Fatal Error: Could not allocate an encoding context.";
+            qCritical() << "ERROR CODE -> " << error;
         #endif
+        avcodec_free_context(&audioOutputCodecContext);
         return false;
     }
 
-    audioOutputCodecContext->sample_fmt = audioOutputCodec->sample_fmts ? audioOutputCodec->sample_fmts[0] : AV_SAMPLE_FMT_FLTP;
-    audioOutputCodecContext->bit_rate = 196000;
+    // Set the basic encoder parameters.
+    // The input file's sample rate is used to avoid a sample rate conversion.
+    audioOutputCodecContext->channels       = OUTPUT_CHANNELS;
+    audioOutputCodecContext->channel_layout = av_get_default_channel_layout(OUTPUT_CHANNELS);
+    audioOutputCodecContext->sample_rate    = audioInputCodecContext->sample_rate;
+    audioOutputCodecContext->sample_fmt     = audioOutputCodec->sample_fmts[0];
+    audioOutputCodecContext->bit_rate       = OUTPUT_BIT_RATE;
 
-    if (audioOutputCodec->supported_samplerates) {
-        audioOutputCodecContext->sample_rate = audioOutputCodec->supported_samplerates[0];
-        for (int i = 0; audioOutputCodec->supported_samplerates[i]; i++) {
-            if (audioOutputCodec->supported_samplerates[i] == 44100)
-                audioOutputCodecContext->sample_rate = 44100;
-        }
-    }
-    audioOutputCodecContext->channels = av_get_channel_layout_nb_channels(audioOutputCodecContext->channel_layout);
-    audioOutputCodecContext->channel_layout = AV_CH_LAYOUT_STEREO;
-    if (audioOutputCodec->channel_layouts) {
-        audioOutputCodecContext->channel_layout = audioOutputCodec->channel_layouts[0];
-        for (int i = 0; audioOutputCodec->channel_layouts[i]; i++) {
-            if (audioOutputCodec->channel_layouts[i] == AV_CH_LAYOUT_STEREO)
-                audioOutputCodecContext->channel_layout = AV_CH_LAYOUT_STEREO;
-        }
-    }
-    audioOutputCodecContext->channels = av_get_channel_layout_nb_channels(audioOutputCodecContext->channel_layout);
+    // Allow the use of the experimental AAC encoder.
+    audioOutputCodecContext->strict_std_compliance = FF_COMPLIANCE_EXPERIMENTAL;
 
-    // Some formats want stream headers to be separate.
+    // Set the sample rate for the container.
+    audioOutputStream->time_base.den = audioInputCodecContext->sample_rate;
+    audioOutputStream->time_base.num = 1;
+
+    // Some container formats (like MP4) require global headers to be present.
+    // Mark the encoder so that it behaves accordingly.
     if (formatContext->oformat->flags & AVFMT_GLOBALHEADER)
         audioOutputCodecContext->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
@@ -555,27 +534,25 @@ bool TFFmpegMovieGenerator::openAudioOutputCodec()
     #endif
 
     // Open the audio codec
-    int ret = avcodec_open2(audioOutputCodecContext, audioOutputCodec, nullptr);
-    if (ret < 0) {
+    int error = avcodec_open2(audioOutputCodecContext, audioOutputCodec, nullptr);
+    if (error < 0) {
         errorMsg = "ffmpeg error: Can't open audio output codec.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::openAudioOutputCodec()] - " << errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::openAudioOutputCodec()] - " + errorMsg;
+            qCritical() << "ERROR CODE -> " << error;
         #endif
         return false;
     }
 
-    // Copy the codec parameters into the audio  stream
-    ret = avcodec_parameters_from_context(audioOutputStream->codecpar, audioOutputCodecContext);
-    if (ret < 0) {
-        errorMsg = "ffmpeg error: Could not copy the audio codec parameters.";
+    error = avcodec_parameters_from_context(audioOutputStream->codecpar, audioOutputCodecContext);
+    if (error < 0) {
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::openAudioOutputCodec()] - " << errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::openAudioOutputCodec()] - "
+                           "Fatal Error: Could not initialize stream parameters.";
+            qCritical() << "ERROR CODE -> " << error;
         #endif
         return false;
     }
-
-    audioOutputStream->codecpar->codec_tag = 0;
-    audioOutputStream->id = formatContext->nb_streams - 1;
 
     return true;
 }
@@ -753,23 +730,36 @@ void TFFmpegMovieGenerator::saveMovie(const QString &filename)
 
 void TFFmpegMovieGenerator::endVideoFile()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TFFmpegMovieGenerator::endVideoFile()]";
+    #endif
+
     av_write_trailer(formatContext);
 
     if (videoCodecContext)
         avcodec_close(videoCodecContext);
     av_frame_free(&videoFrame);
 
-    if (hasSounds) {
-        for(int i=0; i< audioInputCodecContextList.size(); i++) {
-            if (audioInputCodecContextList.at(i))
-                avcodec_close(audioInputCodecContextList.at(i));
+    if (hasSound) {
+        if (audioInputCodecContext) {
+            avcodec_close(audioInputCodecContext);
+            avcodec_free_context(&audioInputCodecContext);
+        }
+
+        if (audioInputFormatContext)
+            avformat_close_input(&audioInputFormatContext);
+
+        if (audioOutputCodecContext) {
+            avcodec_close(audioOutputCodecContext);
+            avcodec_free_context(&audioOutputCodecContext);
         }
     }
 
-    if (!(outputFormat->flags & AVFMT_NOFILE))
-        avio_close(formatContext->pb);
-
-    avformat_free_context(formatContext);
+    if (formatContext) {
+        if (!(outputFormat->flags & AVFMT_NOFILE))
+            avio_close(formatContext->pb);
+        avformat_free_context(formatContext);
+    }
 }
 
 void TFFmpegMovieGenerator::copyMovieFile(const QString &videoPath)
@@ -783,14 +773,16 @@ void TFFmpegMovieGenerator::copyMovieFile(const QString &videoPath)
         QFileInfo info(videoPath);
         if (!info.isFile()) {
             #ifdef TUP_DEBUG
-                qCritical() << "[TFFmpegMovieGenerator::copyMovieFile()] - Fatal Error: Video path is NOT a file! -> " << videoPath;
+                qCritical() << "[TFFmpegMovieGenerator::copyMovieFile()] - Fatal Error: Video path is NOT a file! -> "
+                            << videoPath;
             #endif
             return;
         }
 
         if (!QFile::remove(videoPath)) {
             #ifdef TUP_DEBUG
-                qCritical() << "[TFFmpegMovieGenerator::copyMovieFile()] - Fatal Error: Can't remove file! -> " << videoPath;
+                qCritical() << "[TFFmpegMovieGenerator::copyMovieFile()] - Fatal Error: Can't remove file! -> "
+                            << videoPath;
             #endif
             return;
         }
@@ -799,7 +791,8 @@ void TFFmpegMovieGenerator::copyMovieFile(const QString &videoPath)
     if (QFile::copy(movieFile, videoPath)) {
         if (QFile::exists(movieFile)) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TFFmpegMovieGenerator::copyMovieFile()] - Trying to remove temp video file -> " << movieFile;
+                qDebug() << "[TFFmpegMovieGenerator::copyMovieFile()] - Trying to remove temp video file -> "
+                         << movieFile;
             #endif
  
             if (QFile::remove(movieFile)) {
@@ -813,12 +806,14 @@ void TFFmpegMovieGenerator::copyMovieFile(const QString &videoPath)
             }
         } else {
             #ifdef TUP_DEBUG
-                qCritical() << "[TFFmpegMovieGenerator::copyMovieFile()] - Error: Temp video file wasn't found! -> " << movieFile;
+                qCritical() << "[TFFmpegMovieGenerator::copyMovieFile()] - Error: Temp video file wasn't found! -> "
+                            << movieFile;
             #endif
         }
     } else {
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::copyMovieFile()] - Error: Can't create video file -> " << videoPath;
+            qCritical() << "[TFFmpegMovieGenerator::copyMovieFile()] - Error: Can't create video file -> "
+                        << videoPath;
         #endif
     }
 }
@@ -830,9 +825,9 @@ bool TFFmpegMovieGenerator::validMovieHeader()
 
 QString TFFmpegMovieGenerator::getErrorMsg() const
 {
-    QString errorDetail = "This is not a problem directly related to <b>TupiTube Desk</b>. "
-                          "Please, check your ffmpeg installation and codec support. "
-                          "More info: <b>http://ffmpeg.org</b>";
+    QString errorDetail = "It seems there was an internal error while exporting your animation.<br/>"
+                          "Please, contact our technical support team.<br/>"
+                          "More info: <b>https://tupitube.com</b>";
     return errorDetail;
 }
 
@@ -857,7 +852,7 @@ QString TFFmpegMovieGenerator::formatTS(int64_t timeStamp, AVRational timeBase)
     return result;
 }
 
-/* SQA: Method just for debugging */
+// SQA: Method just for debugging
 void TFFmpegMovieGenerator::logPacket(MediaType type, AVRational time_base, const AVPacket *pkt, const QString &direction)
 {
     int counter = 0;
@@ -885,669 +880,643 @@ void TFFmpegMovieGenerator::logPacket(MediaType type, AVRational time_base, cons
     }
 }
 
-/*
-void TFFmpegMovieGenerator::writeAudioStreams()
+// AUDIO SECTION
+
+/**
+ * Initialize one data packet for reading or writing.
+ * @param[out] packet Packet to be initialized
+ * @return Error code (0 if successful)
+ */
+int TFFmpegMovieGenerator::initPacket(AVPacket **packet)
 {
-    #ifdef TUP_DEBUG
-        qDebug() << "[TFFmpegMovieGenerator::writeAudioStreams()]";
-    #endif
-
-    int init = 0;
-    int outIndex = 1;
-    for(int i=0; i<audioInputFormatContextList.size(); i++) {
-        #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::writeAudioStreams()] - audio -> " << sounds.at(i).path;
-        #endif
-
-        AVFormatContext *audioInputFormatContext = audioInputFormatContextList.at(i);
-        AVPacket *pkt = av_packet_alloc();
-        int indexesTotal = audioStreamsTotalList.at(i);
-
-        qDebug() << "init -> " << init;
-        qDebug() << "indexesTotal -> " << indexesTotal;
-
-        QList<int> validIndexes;
-        for (int j=init; j<(init + indexesTotal); j++)
-            validIndexes << audioStreamIndexesList[j];
-        init = indexesTotal;
-
-        qDebug() << "audioStreamsTotalList -> " << audioStreamsTotalList;
-        qDebug() << "audioStreamIndexesList -> " << audioStreamIndexesList;
-        qDebug() << "validIndexes -> " << validIndexes;
-
-        while (1) {
-            AVStream *in_stream;
-
-            int ret = av_read_frame(audioInputFormatContext, pkt);
-            if (ret < 0)
-                break;
-
-            qDebug() << "pkt->stream_index -> " << pkt->stream_index;
-
-            if (!validIndexes.contains(pkt->stream_index)) {
-                #ifdef TUP_DEBUG
-                    qDebug() << "[TFFmpegMovieGenerator::writeAudioStreams()] - Warning: packet has invalid stream index! -> " << pkt->stream_index;
-                #endif
-                av_packet_unref(pkt);
-                continue;
-            }
-
-            in_stream  = audioInputFormatContext->streams[pkt->stream_index];
-            pkt->stream_index = outIndex;
-
-            logPacket(Audio, in_stream->time_base, pkt, "in");
-            AVRational outputTimebase = audioStreamList.at(i)->time_base;
-
-            // copy packet
-            pkt->pts = av_rescale_q_rnd(pkt->pts, in_stream->time_base, outputTimebase,
-                                        static_cast<AVRounding>(AV_ROUND_NEAR_INF|AV_ROUND_PASS_MINMAX));
-            pkt->dts = av_rescale_q_rnd(pkt->dts, in_stream->time_base, outputTimebase,
-                                        static_cast<AVRounding>(AV_ROUND_NEAR_INF|AV_ROUND_PASS_MINMAX));
-            pkt->duration = av_rescale_q(pkt->duration, in_stream->time_base, outputTimebase);
-            pkt->pos = -1;
-
-            logPacket(Audio, audioStreamList.at(i)->time_base, pkt, "out");
-            float currentTime = av_q2d(outputTimebase) * pkt->pts;
-            if (currentTime < mp4Duration) {
-                qDebug() << "currentTime -> " << currentTime;
-                qDebug() << "mp4Duration -> " << mp4Duration;
-
-                ret = av_interleaved_write_frame(formatContext, pkt);
-                if (ret < 0) {
-                    #ifdef TUP_DEBUG
-                        qCritical() << "[TFFmpegMovieGenerator::writeAudioStreams()] - Error while muxing audio packet!";
-                    #endif
-                    break;
-                }
-            } else {
-                // qDebug() << "Sound frame dropped! - currentTime -> " << currentTime;
-                break;
-            }
-
-            av_packet_unref(pkt);
-        }
-        outIndex++;
+    if (!(*packet = av_packet_alloc())) {
+        fprintf(stderr, "Could not allocate packet\n");
+        return AVERROR(ENOMEM);
     }
+    return 0;
 }
-*/
 
-bool TFFmpegMovieGenerator::initFilterGraph()
+/**
+ * Initialize one audio frame for reading from the input file.
+ * @param[out] frame Frame to be initialized
+ * @return Error code (0 if successful)
+ */
+int TFFmpegMovieGenerator::initInputFrame(AVFrame **frame)
 {
-    #ifdef TUP_DEBUG
-        qDebug() << "[TFFmpegMovieGenerator::initFilterGraph()]";
-    #endif
+    if (!(*frame = av_frame_alloc())) {
+        fprintf(stderr, "Could not allocate input frame\n");
+        return AVERROR(ENOMEM);
+    }
+    return 0;
+}
 
-    QList<const AVFilter *> abufferFilterList;
-    QList<AVFilterContext *> adelayFilterContextList;
-    QList<const AVFilter *> adelayFilterList;
-    AVFilterContext *amixFilterContext = nullptr;
-    const AVFilter *amixFilter = nullptr;
-    const AVFilter *abufferSinkFilter = nullptr;
-
-    char args[512];
+/**
+ * Initialize the audio resampler based on the input and output codec settings.
+ * If the input and output sample formats differ, a conversion is required
+ * libswresample takes care of this, but requires initialization.
+ * @param      inputCodecContext  Codec context of the input file
+ * @param      outputCodecContext Codec context of the output file
+ * @param[out] resampleContext    Resample context for the required conversion
+ * @return Error code (0 if successful)
+ */
+int TFFmpegMovieGenerator::initResampler(AVCodecContext *inputCodecContext,
+                          AVCodecContext *outputCodecContext,
+                          SwrContext **resampleContext)
+{
     int error;
 
-    // Create a new filtergraph, which will contain all the filters.
-    filterGraph = avfilter_graph_alloc();
-    if (!filterGraph) {
-        errorMsg = "ffmpeg error: Unable to create filter graph.";
-        #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph() createVideoFrame()] - " << errorMsg;
-        #endif
-        return false;
-    }
-
     /*
-    // amix
-    // Create mix filter.
-    amixFilter = avfilter_get_by_name("amix");
-    if (!amixFilter) {
-        errorMsg = "ffmpeg error: Could not find the mix filter.";
-        #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " << errorMsg;
-        #endif
-        return false;
+     * Create a resampler context for the conversion.
+     * Set the conversion parameters.
+     * Default channel layouts based on the number of channels
+     * are assumed for simplicity (they are sometimes not detected
+     * properly by the demuxer and/or decoder).
+     */
+    *resampleContext = swr_alloc_set_opts(nullptr,
+                                          av_get_default_channel_layout(outputCodecContext->channels),
+                                          outputCodecContext->sample_fmt,
+                                          outputCodecContext->sample_rate,
+                                          av_get_default_channel_layout(inputCodecContext->channels),
+                                          inputCodecContext->sample_fmt,
+                                          inputCodecContext->sample_rate,
+                                          0, nullptr);
+    if (!*resampleContext) {
+        fprintf(stderr, "Could not allocate resample context\n");
+        return AVERROR(ENOMEM);
     }
-
-    snprintf(args, sizeof(args), "inputs=%d", soundsTotal);
-    error = avfilter_graph_create_filter(&amixFilterContext, amixFilter, "amix", args, nullptr, filterGraph);
-    if (error < 0) {
-        errorMsg = "ffmpeg error: Cannot create audio amix filter.";
-        #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " << errorMsg;
-        #endif
-        return false;
-    }
-
-    // Create the abuffersink filter;
-    // it will be used to get the filtered data out of the graph.
-    abufferSinkFilter = avfilter_get_by_name("abuffersink");
-    if (!abufferSinkFilter) {
-        errorMsg = "ffmpeg error: Could not find the abuffersink filter.";
-        #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " << errorMsg;
-        #endif
-        return false;
-    }
-
-    abufferSinkContext = avfilter_graph_alloc_filter(filterGraph, abufferSinkFilter, "sink");
-    if (!abufferSinkContext) {
-        errorMsg = "ffmpeg error: Could not allocate the abuffersink instance.";
-        #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " << errorMsg;
-        #endif
-        return false;
-    }
-
-    // Same sample fmts as the output file.
-    int fmtList[] = { AV_SAMPLE_FMT_FLTP, AV_SAMPLE_FMT_NONE };
-    error = av_opt_set_int_list(abufferSinkContext, "sample_fmts", fmtList,
-                                AV_SAMPLE_FMT_NONE, AV_OPT_SEARCH_CHILDREN);
-    if (error < 0) {
-        errorMsg = "ffmpeg error: Could set options to the abuffersink instance.";
-        #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " << errorMsg;
-        #endif
-        return false;
-    }
-
-    char ch_layout[64];
-    av_get_channel_layout_string(ch_layout, sizeof(ch_layout), 0, soundsTotal);
-    av_opt_set(abufferSinkContext, "channel_layout", ch_layout, AV_OPT_SEARCH_CHILDREN);
-
-    error = avfilter_init_str(abufferSinkContext, nullptr);
-    if (error < 0) {
-        errorMsg = "ffmpeg error: Could not initialize the abuffersink instance.";
-        #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " << errorMsg;
-        #endif
-        return false;
-    }
+    /*
+    * Perform a sanity check so that the number of converted samples is
+    * not greater than the number of samples to be converted.
+    * If the sample rates differ, this case has to be handled differently
     */
+    av_assert0(outputCodecContext->sample_rate == inputCodecContext->sample_rate);
 
-    for (int i=0; i<soundsTotal; i++) {
-        #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::initFilterGraph()] - iteration -> " << i;
-        #endif
-        // abuffer
-        // Create the abuffer filter;
-        // it will be used for feeding the data into the graph.
-        const AVFilter *abufferFilter = avfilter_get_by_name("abuffer");
-        if (!abufferFilter) {
-            errorMsg = "ffmpeg error: Could not find the abuffer filter.";
-            #ifdef TUP_DEBUG
-                qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " + errorMsg;
-            #endif
-            return false;
-        }
-        abufferFilterList << abufferFilter;
-
-        // buffer audio source: the decoded frames from the decoder will be inserted here.
-        if (!audioInputCodecContextList[i]->channel_layout)
-            audioInputCodecContextList[i]->channel_layout = av_get_default_channel_layout(audioInputCodecContextList[i]->channels);
-
-        snprintf(args, sizeof(args),
-                 "sample_rate=%d:sample_fmt=%s:channel_layout=0x%" PRIx64,
-                 audioInputCodecContextList[i]->sample_rate,
-                 av_get_sample_fmt_name(audioInputCodecContextList[i]->sample_fmt),
-                 audioInputCodecContextList[i]->channel_layout);
-
-        #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::initFilterGraph()] - abuffer filter args -> " << args;
-        #endif
-
-        char srcIndex[512];
-        snprintf(srcIndex, sizeof(srcIndex), "src%d", i);
-
-        AVFilterContext *abufferFilterContext;
-        error = avfilter_graph_create_filter(&abufferFilterContext, abufferFilter, srcIndex,
-                                             args, nullptr, filterGraph);
-        if (error < 0) {
-            errorMsg = "ffmpeg error: Cannot create audio buffer source.";
-            #ifdef TUP_DEBUG
-                qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " + errorMsg;
-            #endif
-            return false;
-        }
-        abufferFilterContextList << abufferFilterContext;
-
-        // * * *
-        // adelay
-        // Create the delay filter;
-        const AVFilter *adelayFilter = avfilter_get_by_name("adelay");
-        if (!adelayFilter) {
-            errorMsg = "ffmpeg error: Could not find the adelay filter.";
-            #ifdef TUP_DEBUG
-                qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " + errorMsg;
-            #endif
-            return false;
-        }
-        adelayFilterList << adelayFilter;
-
-        float millisecs = ((float) sounds.at(i).frame/ (float) fps);
-        millisecs *= 1000;
-        /*
-        qDebug() << "sounds.at(i).frame -> " << sounds.at(i).frame;
-        qDebug() << "fps -> " << fps;
-        qDebug() << "equation -> " << ((float) sounds.at(i).frame/ (float) fps);
-        float result = ((float) sounds.at(i).frame/ (float) fps);
-        qDebug() << "result -> " << (result * 1000);
-        */
-        int delayTime = millisecs;
-        snprintf(args, sizeof(args), "delays=%d:all=1", delayTime);
-
-        #ifdef TUP_DEBUG
-            qDebug() << "[TFFmpegMovieGenerator::initFilterGraph()] - adelay filter args -> " << args;
-        #endif
-
-        AVFilterContext *adelayFilterContext;
-        error = avfilter_graph_create_filter(&adelayFilterContext, adelayFilter, "adelay",
-                                             args, nullptr, filterGraph);
-        if (error < 0) {
-            errorMsg = "ffmpeg error: Cannot create audio adelay filter.";
-            #ifdef TUP_DEBUG
-                qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " + errorMsg;
-            #endif
-            return false;
-        }
-        adelayFilterContextList << adelayFilterContext;
-
-        // Connecting the abuffer filter with the adelay filter
-        error = avfilter_link(abufferFilterContextList[i], 0, adelayFilterContextList[i], 0);
-        if (error < 0) {
-            errorMsg = "ffmpeg error: Error connecting abuffer with adelay filters.";
-            #ifdef TUP_DEBUG
-                qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " + errorMsg;
-            #endif
-            return false;
-        }
-
-        if (i == 0) {
-            // amix
-            // Create mix filter.
-            amixFilter = avfilter_get_by_name("amix");
-            if (!amixFilter) {
-                errorMsg = "ffmpeg error: Could not find the mix filter.";
-                #ifdef TUP_DEBUG
-                    qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " << errorMsg;
-                #endif
-                return false;
-            }
-
-            snprintf(args, sizeof(args), "inputs=%d", soundsTotal);
-            error = avfilter_graph_create_filter(&amixFilterContext, amixFilter, "amix", args, nullptr, filterGraph);
-            if (error < 0) {
-                errorMsg = "ffmpeg error: Cannot create audio amix filter.";
-                #ifdef TUP_DEBUG
-                    qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " << errorMsg;
-                #endif
-                return false;
-            }
-        }
-
-        // Connecting the adelay filter with the amix filter
-        error = avfilter_link(adelayFilterContextList[i], 0, amixFilterContext, i);
-        if (error < 0) {
-            errorMsg = "ffmpeg error: Error connecting adelay with amix filters.";
-            #ifdef TUP_DEBUG
-                qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " + errorMsg;
-            #endif
-            return false;
-        }
-    } // end for
-
-    // Create the abuffersink filter;
-    // it will be used to get the filtered data out of the graph.
-    abufferSinkFilter = avfilter_get_by_name("abuffersink");
-    if (!abufferSinkFilter) {
-        errorMsg = "ffmpeg error: Could not find the abuffersink filter.";
-        #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " << errorMsg;
-        #endif
-        return false;
+    /* Open the resampler with the specified parameters. */
+    if ((error = swr_init(*resampleContext)) < 0) {
+        fprintf(stderr, "Could not open resample context\n");
+        swr_free(resampleContext);
+        return error;
     }
 
-    abufferSinkContext = avfilter_graph_alloc_filter(filterGraph, abufferSinkFilter, "sink");
-    if (!abufferSinkContext) {
-        errorMsg = "ffmpeg error: Could not allocate the abuffersink instance.";
-        #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " << errorMsg;
-        #endif
-        return false;
-    }
-
-    // Same sample fmts as the output file.
-    int fmtList[] = { AV_SAMPLE_FMT_FLTP, AV_SAMPLE_FMT_NONE };
-    error = av_opt_set_int_list(abufferSinkContext, "sample_fmts", fmtList,
-                                AV_SAMPLE_FMT_NONE, AV_OPT_SEARCH_CHILDREN);
-    if (error < 0) {
-        errorMsg = "ffmpeg error: Could set options to the abuffersink instance.";
-        #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " << errorMsg;
-        #endif
-        return false;
-    }
-
-    char ch_layout[64];
-    av_get_channel_layout_string(ch_layout, sizeof(ch_layout), 0, soundsTotal);
-    av_opt_set(abufferSinkContext, "channel_layout", ch_layout, AV_OPT_SEARCH_CHILDREN);
-
-    error = avfilter_init_str(abufferSinkContext, nullptr);
-    if (error < 0) {
-        errorMsg = "ffmpeg error: Could not initialize the abuffersink instance.";
-        #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " << errorMsg;
-        #endif
-        return false;
-    }
-
-    // * * *
-    error = avfilter_link(amixFilterContext, 0, abufferSinkContext, 0);
-    if (error < 0) {
-        errorMsg = "ffmpeg error: Error connecting amix and abuffer filters.";
-        #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " << errorMsg;
-        #endif
-        return false;
-    }
-
-    // Configure the graph.
-    error = avfilter_graph_config(filterGraph, nullptr);
-    if (error < 0) {
-        errorMsg = "ffmpeg error: Error while configuring graph.";
-        #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::initFilterGraph()] - " << errorMsg;
-        #endif
-        return false;
-    }
-
-    #ifdef TUP_DEBUG
-        char* dump =avfilter_graph_dump(filterGraph, nullptr);
-        av_log(nullptr, AV_LOG_ERROR, "Graph :\n%s\n", dump);
-    #endif
-
-    return true;
+    return 0;
 }
 
-// Decode one audio frame from the input file.
-int TFFmpegMovieGenerator::decodeAudioFrame(AVFrame *frame, AVFormatContext *inputFormatContext,
-                            AVCodecContext *inputCodecContext, int *dataPresent, int *finished)
+/**
+ * Initialize a FIFO buffer for the audio samples to be encoded.
+ * @param[out] fifo                 Sample buffer
+ * @param      outputCodecContext   Codec context of the output file
+ * @return Error code (0 if successful)
+ */
+int TFFmpegMovieGenerator::initFifo(AVAudioFifo **fifo, AVCodecContext *outputCodecContext)
+{
+    // Create the FIFO buffer based on the specified output sample format.
+    if (!(*fifo = av_audio_fifo_alloc(outputCodecContext->sample_fmt,
+                                      outputCodecContext->channels, 1))) {
+        fprintf(stderr, "Could not allocate FIFO\n");
+        return AVERROR(ENOMEM);
+    }
+    return 0;
+}
+
+/**
+ * Decode one audio frame from the input file.
+ * @param      frame                Audio frame to be decoded
+ * @param      inputFormatContext Format context of the input file
+ * @param      inputCodecContext  Codec context of the input file
+ * @param[out] dataPresent         Indicates whether data has been decoded
+ * @param[out] finished             Indicates whether the end of file has
+ *                                  been reached and all data has been
+ *                                  decoded. If this flag is false, there
+ *                                  is more data to be decoded, i.e., this
+ *                                  function has to be called again.
+ * @return Error code (0 if successful)
+ */
+int TFFmpegMovieGenerator::decodeAudioFrame(AVFrame *frame,
+                              AVFormatContext *inputFormatContext,
+                              AVCodecContext *inputCodecContext,
+                              int *dataPresent, int *finished)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TFFmpegMovieGenerator::decodeAudioFrame()]";
     #endif
 
     // Packet used for temporary storage.
-    AVPacket *inputPacket = av_packet_alloc();
+    AVPacket *inputPacket;
     int error;
+
+    error = initPacket(&inputPacket);
+    if (error < 0)
+        return error;
 
     // Read one audio frame from the input file into a temporary packet.
     if ((error = av_read_frame(inputFormatContext, inputPacket)) < 0) {
-        // If we are the the end of the file, flush the decoder below.
-        if (error == AVERROR_EOF) {
+        // If we are at the end of the file, flush the decoder below.
+        if (error == AVERROR_EOF)
             *finished = 1;
-        } else {
-            errorMsg = "ffmpeg error: Could not read frame.";
-            #ifdef TUP_DEBUG
-                qCritical() << "[TFFmpegMovieGenerator::decodeAudioFrame()] - " << errorMsg;
-            #endif
-            return error;
+        else {
+            fprintf(stderr, "Could not read frame (error '%d')\n",
+                    error);
+            goto cleanup;
         }
     }
 
-    // submit the packet to the decoder
-    error = avcodec_send_packet(inputCodecContext, inputPacket);
-    if (error < 0) {
-        errorMsg = "ffmpeg error: Error while sending packet to decode.";
-        #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::decodeAudioFrame()] - " << errorMsg;
-        #endif
+    #ifdef TUP_DEBUG
+        logPacket(Audio, audioInputStream->time_base, inputPacket, "in");
+    #endif
+
+    // Send the audio frame stored in the temporary packet to the decoder.
+    // The input audio stream decoder is used to do this.
+    if ((error = avcodec_send_packet(inputCodecContext, inputPacket)) < 0) {
+        fprintf(stderr, "Could not send packet for decoding (error '%d')\n",
+                error);
+        goto cleanup;
+    }
+
+    // Receive one frame from the decoder.
+    error = avcodec_receive_frame(inputCodecContext, frame);
+    // If the decoder asks for more data to be able to decode a frame,
+    // return indicating that no data is present.
+    if (error == AVERROR(EAGAIN)) {
+        error = 0;
+        goto cleanup;
+    // If the end of the input file is reached, stop decoding.
+    } else if (error == AVERROR_EOF) {
+        *finished = 1;
+        error = 0;
+        goto cleanup;
+    } else if (error < 0) {
+        fprintf(stderr, "Could not decode frame (error '%d')\n",
+                error);
+        goto cleanup;
+    // Default case: Return decoded data.
+    } else {
+        *dataPresent = 1;
+        goto cleanup;
+    }
+
+    cleanup:
+        av_packet_free(&inputPacket);
+
+        return error;
+}
+
+/**
+ * Initialize a temporary storage for the specified number of audio samples.
+ * The conversion requires temporary storage due to the different format.
+ * The number of audio samples to be allocated is specified in frame_size.
+ * @param[out] convertedInputSamples   Array of converted samples. The
+ *                                     dimensions are reference, channel
+ *                                     (for multi-channel audio), sample.
+ * @param      outputCodecContext      Codec context of the output file
+ * @param      frameSize               Number of samples to be converted in
+ *                                     each round
+ * @return Error code (0 if successful)
+ */
+int TFFmpegMovieGenerator::initConvertedSamples(uint8_t ***convertedInputSamples,
+                                  AVCodecContext *outputCodecContext,
+                                  int frameSize)
+{
+    int error;
+
+    /* Allocate as many pointers as there are audio channels.
+     * Each pointer will later point to the audio samples of the corresponding
+     * channels (although it may be nullptr for interleaved formats).
+     */
+    if (!(*convertedInputSamples = (uint8_t **) calloc(outputCodecContext->channels,
+                                            sizeof(**convertedInputSamples)))) {
+        fprintf(stderr, "Could not allocate converted input sample pointers\n");
+        return AVERROR(ENOMEM);
+    }
+
+    // Allocate memory for the samples of all channels in one consecutive
+    // block for convenience.
+    if ((error = av_samples_alloc(*convertedInputSamples, nullptr,
+                                  outputCodecContext->channels,
+                                  frameSize,
+                                  outputCodecContext->sample_fmt, 0)) < 0) {
+        fprintf(stderr,
+                "Could not allocate converted input samples (error '%d')\n",
+                error);
+        av_freep(&(*convertedInputSamples)[0]);
+        free(*convertedInputSamples);
         return error;
     }
+    return 0;
+}
 
-    // get all the available frames from the decoder
-    while (error >= 0) {
-        error = avcodec_receive_frame(inputCodecContext, frame);
-        if (error < 0) {
-            // those two return values are special and mean there is no output
-            // frame available, but there were no errors during decoding
-            if (error == AVERROR_EOF || error == AVERROR(EAGAIN)) {
-                return error;
-            }
+/**
+ * Convert the input audio samples into the output sample format.
+ * The conversion happens on a per-frame basis, the size of which is
+ * specified by frame_size.
+ * @param      inputData        Samples to be decoded. The dimensions are
+ *                              channel (for multi-channel audio), sample.
+ * @param[out] convertedData    Converted samples. The dimensions are channel
+ *                              (for multi-channel audio), sample.
+ * @param      frameSize        Number of samples to be converted
+ * @param      resampleContext  Resample context for the conversion
+ * @return Error code (0 if successful)
+ */
+int TFFmpegMovieGenerator::convertSamples(const uint8_t **inputData,
+                           uint8_t **convertedData, const int frameSize,
+                           SwrContext *resampleContext)
+{
+    int error;
 
-            return error;
-        }
-
-        *dataPresent = 0;
-        if (frame) {
-            *dataPresent = 1;
-            break;
-        }
+    // Convert the samples using the resampler.
+    if ((error = swr_convert(resampleContext,
+                             convertedData, frameSize,
+                             inputData    , frameSize)) < 0) {
+        fprintf(stderr, "Could not convert input samples (error '%d')\n",
+                error);
+        return error;
     }
-
-    // If the decoder has not been flushed completely, we are not finished,
-    // so that this function has to be called again.
-    if (*finished && *dataPresent)
-        *finished = 0;
-    av_packet_unref(inputPacket);
 
     return 0;
 }
 
-// Encode one frame worth of audio to the output file.
-int TFFmpegMovieGenerator::encodeAudioFrame(AVFrame *frame, AVFormatContext *outputFormatContext,
-                                            AVCodecContext *outputCodecContext, int *dataPresent)
+/**
+ * Add converted input audio samples to the FIFO buffer for later processing.
+ * @param fifo                    Buffer to add the samples to
+ * @param convertedInputSamples   Samples to be added. The dimensions are channel
+ *                                (for multi-channel audio), sample.
+ * @param frameSize               Number of samples to be converted
+ * @return Error code (0 if successful)
+ */
+int TFFmpegMovieGenerator::addSamplesToFifo(AVAudioFifo *fifo,
+                               uint8_t **convertedInputSamples,
+                               const int frameSize)
+{
+    int error;
+
+    /* Make the FIFO as large as it needs to be to hold both,
+     * the old and the new samples. */
+    if ((error = av_audio_fifo_realloc(fifo, av_audio_fifo_size(fifo) + frameSize)) < 0) {
+        fprintf(stderr, "Could not reallocate FIFO\n");
+        return error;
+    }
+
+    // Store the new samples in the FIFO buffer.
+    if (av_audio_fifo_write(fifo, (void **)convertedInputSamples,
+                            frameSize) < frameSize) {
+        fprintf(stderr, "Could not write data to FIFO\n");
+        return AVERROR_EXIT;
+    }
+    return 0;
+}
+
+/**
+ * Read one audio frame from the input file, decode, convert and store
+ * it in the FIFO buffer.
+ * @param      fifo                 Buffer used for temporary storage
+ * @param      input_format_context Format context of the input file
+ * @param      input_codec_context  Codec context of the input file
+ * @param      output_codec_context Codec context of the output file
+ * @param      resampler_context    Resample context for the conversion
+ * @param[out] finished             Indicates whether the end of file has
+ *                                  been reached and all data has been
+ *                                  decoded. If this flag is false,
+ *                                  there is more data to be decoded,
+ *                                  i.e., this function has to be called
+ *                                  again.
+ * @return Error code (0 if successful)
+ */
+int TFFmpegMovieGenerator::readDecodeConvertAndStore(AVAudioFifo *fifo,
+                                         AVFormatContext *inputFormatContext,
+                                         AVCodecContext *inputCodecContext,
+                                         AVCodecContext *outputCodecContext,
+                                         SwrContext *resamplerContext,
+                                         int *finished)
+{
+    /* Temporary storage of the input samples of the frame read from the file. */
+    AVFrame *inputFrame = nullptr;
+    /* Temporary storage for the converted input samples. */
+    uint8_t **convertedInputSamples = nullptr;
+    int dataPresent = 0;
+    int ret = AVERROR_EXIT;
+
+    /* Initialize temporary storage for one input frame. */
+    if (initInputFrame(&inputFrame))
+        goto cleanup;
+    /* Decode one frame worth of audio samples. */
+    if (decodeAudioFrame(inputFrame, inputFormatContext,
+                           inputCodecContext, &dataPresent, finished))
+        goto cleanup;
+    /* If we are at the end of the file and there are no more samples
+     * in the decoder which are delayed, we are actually finished.
+     * This must not be treated as an error. */
+    if (*finished) {
+        ret = 0;
+        goto cleanup;
+    }
+    /* If there is decoded data, convert and store it. */
+    if (dataPresent) {
+        /* Initialize the temporary storage for the converted input samples. */
+        if (initConvertedSamples(&convertedInputSamples, outputCodecContext,
+                                   inputFrame->nb_samples))
+            goto cleanup;
+
+        /* Convert the input samples to the desired output sample format.
+         * This requires a temporary storage provided by converted_input_samples. */
+        if (convertSamples((const uint8_t**)inputFrame->extended_data, convertedInputSamples,
+                            inputFrame->nb_samples, resamplerContext))
+            goto cleanup;
+
+        /* Add the converted input samples to the FIFO buffer for later processing. */
+        if (addSamplesToFifo(fifo, convertedInputSamples,
+                                inputFrame->nb_samples))
+            goto cleanup;
+    }
+    ret = 0;
+
+    cleanup:
+        /*
+        if (convertedInputSamples) {
+            // av_freep(&convertedInputSamples[0]);
+            free(convertedInputSamples);
+        }
+        */
+        convertedInputSamples = nullptr;
+        av_frame_free(&inputFrame);
+
+    return ret;
+}
+
+/**
+ * Initialize one input frame for writing to the output file.
+ * The frame will be exactly frame_size samples large.
+ * @param[out] frame                Frame to be initialized
+ * @param      output_codec_context Codec context of the output file
+ * @param      frame_size           Size of the frame
+ * @return Error code (0 if successful)
+ */
+int TFFmpegMovieGenerator::initOutputFrame(AVFrame **frame,
+                             AVCodecContext *outputCodecContext,
+                             int frameSize)
+{
+    int error;
+
+    /* Create a new frame to store the audio samples. */
+    if (!(*frame = av_frame_alloc())) {
+        fprintf(stderr, "Could not allocate output frame\n");
+        return AVERROR_EXIT;
+    }
+
+    /* Set the frame's parameters, especially its size and format.
+     * av_frame_get_buffer needs this to allocate memory for the
+     * audio samples of the frame.
+     * Default channel layouts based on the number of channels
+     * are assumed for simplicity. */
+    (*frame)->nb_samples     = frameSize;
+    (*frame)->channel_layout = outputCodecContext->channel_layout;
+    (*frame)->format         = outputCodecContext->sample_fmt;
+    (*frame)->sample_rate    = outputCodecContext->sample_rate;
+
+    /* Allocate the samples of the created frame. This call will make
+     * sure that the audio frame can hold as many samples as specified. */
+    if ((error = av_frame_get_buffer(*frame, 0)) < 0) {
+        fprintf(stderr, "Could not allocate output frame samples (error '%d')\n",
+                error);
+        av_frame_free(frame);
+        return error;
+    }
+
+    return 0;
+}
+
+/**
+ * Encode one frame worth of audio to the output file.
+ * @param      frame                 Samples to be encoded
+ * @param      output_format_context Format context of the output file
+ * @param      output_codec_context  Codec context of the output file
+ * @param[out] data_present          Indicates whether data has been
+ *                                   encoded
+ * @return Error code (0 if successful)
+ */
+int TFFmpegMovieGenerator::encodeAudioFrame(AVFrame *frame,
+                              AVFormatContext *outputFormatContext,
+                              AVCodecContext *outputCodecContext,
+                              int *dataPresent)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TFFmpegMovieGenerator::encodeAudioFrame()]";
     #endif
 
     // Packet used for temporary storage.
-    AVPacket *ouputPacket = av_packet_alloc();
+    AVPacket *outputPacket;
     int error;
-    *dataPresent = 0;
 
-    // send the frame for encoding
+    error = initPacket(&outputPacket);
+    if (error < 0)
+        return error;
+
+    // Set a timestamp based on the sample rate for the container.
+    if (frame) {
+        frame->pts = pts;
+        pts += frame->nb_samples;
+    }
+
+    // Send the audio frame stored in the temporary packet to the encoder.
+    // The output audio stream encoder is used to do this.
     error = avcodec_send_frame(outputCodecContext, frame);
+    // The encoder signals that it has nothing more to encode.
     if (error == AVERROR_EOF) {
         error = 0;
         goto cleanup;
     } else if (error < 0) {
-        errorMsg = "ffmpeg error: Could not send frame for encoding.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::encodeAudioFrame()] - " << errorMsg;
+            qDebug() << "[TFFmpegMovieGenerator::encodeAudioFrame()] - "
+                        "Fatal Error: Could not send packet for encoding (error '" << error << "')";
         #endif
         goto cleanup;
     }
 
-    // read all the available output packets (in general there may be any number of them
+    // Receive one encoded frame from the encoder.
+    error = avcodec_receive_packet(outputCodecContext, outputPacket);
+    // If the encoder asks for more data to be able to provide an
+    // encoded frame, return indicating that no data is present.
+    if (error == AVERROR(EAGAIN)) {
+        error = 0;
+        goto cleanup;
+    // If the last frame has been encoded, stop encoding.
+    } else if (error == AVERROR_EOF) {
+        error = 0;
+        goto cleanup;
+    } else if (error < 0) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TFFmpegMovieGenerator::encodeAudioFrame()] - "
+                        "Fatal Error: Could not encode frame (error '" << error << "')";
+        #endif
+        goto cleanup;
+    // Default case: Return encoded data.
+    } else {
+        *dataPresent = 1;
+    }
+
+    #ifdef TUP_DEBUG
+        logPacket(Audio, audioOutputStream->time_base, outputPacket, "out");
+    #endif
+
+    // Write one audio frame from the temporary packet to the output file.
+    if (*dataPresent &&
+        (error = av_write_frame(outputFormatContext, outputPacket)) < 0) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TFFmpegMovieGenerator::encodeAudioFrame()] - "
+                        "Fatal Error: Could not write frame (error '" << error << "')";
+        #endif
+        goto cleanup;
+    }
+
+    cleanup:
+        av_packet_free(&outputPacket);
+
+    return error;
+}
+
+/**
+ * Load one audio frame from the FIFO buffer, encode and write it to the
+ * output file.
+ * @param fifo                  Buffer used for temporary storage
+ * @param output_format_context Format context of the output file
+ * @param output_codec_context  Codec context of the output file
+ * @return Error code (0 if successful)
+ */
+int TFFmpegMovieGenerator::loadEncodeAndWrite(AVAudioFifo *fifo,
+                                 AVFormatContext *outputFormatContext,
+                                 AVCodecContext *outputCodecContext)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TFFmpegMovieGenerator::loadEncodeAndWrite()]";
+    #endif
+
+    // Temporary storage of the output samples of the frame written to the file.
+    AVFrame *outputFrame;
+    // Use the maximum number of possible samples per frame.
+    // If there is less than the maximum possible frame size in the FIFO
+    // buffer use this number. Otherwise, use the maximum possible frame size.
+    const int frame_size = FFMIN(av_audio_fifo_size(fifo),
+                                 outputCodecContext->frame_size);
+    int dataWritten;
+
+    // Initialize temporary storage for one output frame.
+    if (initOutputFrame(&outputFrame, outputCodecContext, frame_size))
+        return AVERROR_EXIT;
+
+    // Read as many samples from the FIFO buffer as required to fill the frame.
+    // The samples are stored in the frame temporarily.
+    if (av_audio_fifo_read(fifo, (void **)outputFrame->data, frame_size) < frame_size) {
+        fprintf(stderr, "Could not read data from FIFO\n");
+        av_frame_free(&outputFrame);
+        return AVERROR_EXIT;
+    }
+
+    // Encode one frame worth of audio samples.
+    if (encodeAudioFrame(outputFrame, outputFormatContext,
+                           outputCodecContext, &dataWritten)) {
+        av_frame_free(&outputFrame);
+        return AVERROR_EXIT;
+    }
+    av_frame_free(&outputFrame);
+
+    return 0;
+}
+
+int TFFmpegMovieGenerator::mergeAudioStream()
+{
+    SwrContext *resampleContext = nullptr;
+    AVAudioFifo *fifo = nullptr;
+    int ret = AVERROR_EXIT;
+
+    // Initialize the resampler to be able to convert audio sample formats.
+    if (initResampler(audioInputCodecContext, audioOutputCodecContext,
+                       &resampleContext))
+        goto cleanup;
+    // Initialize the FIFO buffer to store audio samples to be encoded.
+    if (initFifo(&fifo, audioOutputCodecContext))
+        goto cleanup;
+
+    // Loop as long as we have input samples to read or output samples
+    // to write; abort as soon as we have neither.
     while (1) {
-        error = avcodec_receive_packet(outputCodecContext, ouputPacket);
-        if (error == AVERROR(EAGAIN) || error == AVERROR_EOF) {
-            return error;
-        } else if (error < 0) {
-            errorMsg = "ffmpeg error: Unexpected error.";
-            #ifdef TUP_DEBUG
-                qCritical() << "[TFFmpegMovieGenerator::encodeAudioFrame()] - " << errorMsg;
-            #endif
-            return error;
+        // Use the encoder's desired frame size for processing.
+        const int outputFrameSize = audioOutputCodecContext->frame_size;
+        int finished = 0;
+
+        // Make sure that there is one frame worth of samples in the FIFO
+        // buffer so that the encoder can do its work.
+        // Since the decoder's and the encoder's frame size may differ, we
+        // need to FIFO buffer to store as many frames worth of input samples
+        // that they make up at least one frame worth of output samples.
+        while (av_audio_fifo_size(fifo) < outputFrameSize) {
+            // Decode one frame worth of audio samples, convert it to the
+            // output sample format and put it into the FIFO buffer.
+            if (readDecodeConvertAndStore(fifo, audioInputFormatContext,
+                                              audioInputCodecContext,
+                                              audioOutputCodecContext,
+                                              resampleContext, &finished))
+            {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TFFmpegMovieGenerator::mergeAudioStream()] - Tracing readDecodeConvertAndStore() method...";
+                #endif
+                goto cleanup;
+            }
+            // If we are at the end of the input file, we continue
+            // encoding the remaining audio samples to the output file.
+            if (finished)
+                break;
         }
 
-        if (ouputPacket) {
-            if ((error = av_write_frame(outputFormatContext, ouputPacket)) < 0) {
-                errorMsg = "ffmpeg error: Could not write frame.";
+        // If we have enough samples for the encoder, we encode them.
+        // At the end of the file, we pass the remaining samples to
+        // the encoder.
+        while (av_audio_fifo_size(fifo) >= outputFrameSize ||
+               (finished && av_audio_fifo_size(fifo) > 0))
+            // Take one frame worth of audio samples from the FIFO buffer,
+            // encode it and write it to the output file.
+            if (loadEncodeAndWrite(fifo, formatContext,
+                                      audioOutputCodecContext)) {
                 #ifdef TUP_DEBUG
-                    qCritical() << "[TFFmpegMovieGenerator::encodeAudioFrame()] - " << errorMsg;
+                    qDebug() << "[TFFmpegMovieGenerator::mergeAudioStream()] - Tracing loadEncodeAndWrite() method...";
                 #endif
-                av_packet_unref(ouputPacket);
-                return error;
+                goto cleanup;
             }
 
-            av_packet_unref(ouputPacket);
-            *dataPresent = 1;
+        // If we are at the end of the input file and have encoded
+        // all remaining samples, we can exit this loop and finish.
+        if (finished) {
+            int data_written;
+            // Flush the encoder as it may have delayed frames.
+            do {
+                data_written = 0;
+                if (encodeAudioFrame(nullptr, formatContext,
+                                     audioOutputCodecContext, &data_written)) {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TFFmpegMovieGenerator::mergeAudioStream()] - Audio process done!";
+                    #endif
+                    goto cleanup;
+                }
+            } while (data_written);
             break;
         }
     }
 
-    return 0;
+    ret = 0;
 
     cleanup:
-        av_frame_free(&frame);
-        avcodec_free_context(&outputCodecContext);
-        avformat_free_context(outputFormatContext);
+        if (fifo)
+            av_audio_fifo_free(fifo);
+        swr_free(&resampleContext);
 
-    return error < 0 ? error : AVERROR_EXIT;
-}
-
-bool TFFmpegMovieGenerator::processAudioFiles()
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TFFmpegMovieGenerator::processAudioFiles()]";
-    #endif
-
-    int error = 0;
-    int dataPresent = 0;
-    int finished = 0;
-    int totalOutSamples = 0;
-    int soundFinished = 0;
-    int soundsTotal = sounds.size();
-
-    int inputFinished[soundsTotal];
-    int inputToRead[soundsTotal];
-    int totalSamples[soundsTotal];
-    for (int i=0; i<soundsTotal; i++) {
-        inputFinished[i] = 0;
-        inputToRead[i] = 1;
-        totalSamples[i] = 0;
-    }
-
-    while (soundFinished < soundsTotal) {
-        int dataPresentInGraph = 0;
-        for (int i=0; i<soundsTotal; i++) {
-            if (inputFinished[i] || inputToRead[i] == 0)
-                continue;
-
-            inputToRead[i] = 0;
-
-            AVFrame *frame = av_frame_alloc();
-            if (!frame)
-                goto end;
-
-            if (!avcodec_is_open(audioInputCodecContextList[i])) {
-                qDebug() << "*** ALERT 1!";
-            }
-
-            if (!av_codec_is_decoder(audioInputCodecContextList[i]->codec)) {
-                qDebug() << "*** ALERT 2!";
-            }
-
-            const AVCodec *codec = audioInputCodecContextList[i]->codec;
-            if (!codec) {
-                qDebug() << "*** ALERT 3!";
-            }
-
-            if (!codec->decode) {
-                qDebug() << "*** ALERT 4!";
-            }
-
-            if (!codec->receive_frame) {
-                qDebug() << "*** ALERT 5!";
-            }
-
-            // Decode one frame worth of audio samples.
-            if ((error = decodeAudioFrame(frame, audioInputFormatContextList[i], audioInputCodecContextList[i],
-                                          &dataPresent, &finished))) {
-                qDebug() << "";
-                qDebug() << "*** ERROR -> " << error;
-
-                goto end;
-            }
-
-            // If we are at the end of the file and there are no more samples
-            // in the decoder which are delayed, we are actually finished.
-            // This must not be treated as an error.
-            if (finished && !dataPresent) {
-                inputFinished[i] = 1;
-                soundFinished++;
-                av_log(nullptr, AV_LOG_INFO, "Input n°%d finished. Write NULL frame \n", i);
-
-                error = av_buffersrc_write_frame(abufferFilterContextList.at(i), nullptr);
-                if (error < 0) {
-                    av_log(nullptr, AV_LOG_ERROR, "Error writing EOF null frame for input %d\n", i);
-                    goto end;
-                }
-            } else if (dataPresent) { // If there is decoded data, convert and store it
-                // push the audio data from decoded frame into the filtergraph
-                error = av_buffersrc_write_frame(abufferFilterContextList.at(i), frame);
-                if (error < 0) {
-                    av_log(nullptr, AV_LOG_ERROR, "Error while feeding the audio filtergraph\n");
-                    goto end;
-                }
-
-                av_log(nullptr, AV_LOG_INFO, "add %d samples on input %d (%d Hz, time=%f, ttime=%f)\n",
-                       frame->nb_samples, i, audioInputCodecContextList[i]->sample_rate,
-                       (double)frame->nb_samples / audioInputCodecContextList[i]->sample_rate,
-                       (double)(totalSamples[i] += frame->nb_samples) / audioInputCodecContextList[i]->sample_rate);
-            }
-
-            av_frame_free(&frame);
-            dataPresentInGraph = dataPresent | dataPresentInGraph;
+        /*
+        if (audioOutputCodecContext)
+            avcodec_free_context(&audioOutputCodecContext);
+        if (formatContext) {
+            avio_closep(&formatContext->pb);
+            avformat_free_context(formatContext);
         }
-
-        if (dataPresentInGraph) {
-            AVFrame *filterFrame = av_frame_alloc();
-            // pull filtered audio from the filtergraph
-            while (1) {
-                error = av_buffersink_get_frame(abufferSinkContext, filterFrame);
-                if (error == AVERROR(EAGAIN) || error == AVERROR_EOF) {
-                    for (int i = 0 ; i < soundsTotal ; i++) {
-                        if (av_buffersrc_get_nb_failed_requests(abufferFilterContextList[i]) > 0) {
-                            inputToRead[i] = 1;
-                            av_log(nullptr, AV_LOG_INFO, "Need to read input %d\n", i);
-                        }
-                    }
-                    break;
-                }
-
-                if (error < 0) {
-                    av_log(nullptr, AV_LOG_ERROR, "Error while getting filt_frame from sink\n");
-                    goto end;
-                }
-
-                av_log(nullptr, AV_LOG_INFO, "remove %d samples from sink (%d Hz, time=%f, ttime=%f)\n",
-                       filterFrame->nb_samples, audioOutputCodecContext->sample_rate,
-                       (double)filterFrame->nb_samples / audioOutputCodecContext->sample_rate,
-                       (double)(totalOutSamples += filterFrame->nb_samples) / audioOutputCodecContext->sample_rate);
-
-                error = encodeAudioFrame(filterFrame, formatContext, audioOutputCodecContext, &dataPresent);
-                if (error < 0) {
-                    errorMsg = "ffmpeg error: Tracing error at encodeAudioFrame().";
-                    #ifdef TUP_DEBUG
-                        qCritical() << "[TFFmpegMovieGenerator::processAudioFiles()] - " << errorMsg;
-                    #endif
-                    goto end;
-                }
-                av_frame_unref(filterFrame);
-            }
-
-            av_frame_free(&filterFrame);
-        } else {
-            av_log(nullptr, AV_LOG_INFO, "No data in graph\n");
-            for (int i=0; i<soundsTotal; i++) {
-                inputToRead[i] = 1;
-            }
-        }
-    }
-
-    return true;
-
-    end:
-        if (error < 0 && error != AVERROR_EOF) {
-            errorMsg = "ffmpeg error: Workflow has been interrupted!";
-            #ifdef TUP_DEBUG
-                qCritical() << "[TFFmpegMovieGenerator::processAudioFiles()] - " << errorMsg;
-            #endif
-            return false;
-        }
-        return true;
+        if (audioInputCodecContext)
+            avcodec_free_context(&audioInputCodecContext);
+        if (audioInputFormatContext)
+            avformat_close_input(&audioInputFormatContext);
+        */
+    return ret;
 }

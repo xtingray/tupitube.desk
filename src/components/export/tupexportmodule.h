@@ -76,6 +76,7 @@ class TUPITUBE_EXPORT TupExportModule : public TupExportWizardPage
         void setScenesIndexes(const QList<int> &indexes);
         void setCurrentExporter(TupExportInterface *currentExporter);
         void setCurrentFormat(TupExportInterface::Format format, const QString &extension);
+        void updateProgressMessage(const QString &title);
         void updateProgressLabel(int percent);
 
     signals:
@@ -104,8 +105,9 @@ class TUPITUBE_EXPORT TupExportModule : public TupExportWizardPage
         // TSizeBox *m_size;
         // QSpinBox *m_fps;
 
-        QProgressBar *progressBar;
         QWidget *progressWidget;
+        QLabel *progressLabel;
+        QProgressBar *progressBar;
 };
 
 #endif
