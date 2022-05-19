@@ -64,12 +64,17 @@ extern "C" {
 
 class TUPITUBE_PLUGIN TupAudioTranscoder : public QObject
 {
+    Q_OBJECT
+
     public:
         TupAudioTranscoder(const QString &input, const QString &output);
         ~TupAudioTranscoder();
 
         QString getErrorMsg() const;
-        int transcodeAudio();
+        int processAudio();
+
+    signals:
+        void progressChanged(int percent);
 
     private:
         void logAudioPacket(AVRational timeBase, const AVPacket *pkt, const QString &direction);

@@ -72,6 +72,7 @@ class TUPITUBE_PLUGIN TupAudioMixer: public QObject
         int writeOutputFileTrailer(AVFormatContext *outputFormatContext);
 
     signals:
+        void messageChanged(const QString &msg);
         void progressChanged(int percent);
 
     private:

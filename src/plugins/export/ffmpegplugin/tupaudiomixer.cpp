@@ -712,10 +712,10 @@ bool TupAudioMixer::processAudioFiles()
     }
 
     int percent = 0;
-    int chunk = 100/(soundsTotal * 2);
     while (soundFinished < soundsTotal) {
         int dataPresentInGraph = 0;
         for (int i=0; i<soundsTotal; i++) {
+            emit messageChanged(tr("Merging audio file %1").arg(QString::number(i + 1)));
             if (inputFinished[i] || inputToRead[i] == 0)
                 continue;
 
@@ -772,8 +772,15 @@ bool TupAudioMixer::processAudioFiles()
             av_frame_free(&frame);
             dataPresentInGraph = dataPresent | dataPresentInGraph;
 
+            /*
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupAudioMixer::processAudioFile()] - Progress -> " << percent << "%";
+            #endif
+            */
             emit progressChanged(percent);
-            percent += chunk;
+            percent++;
+            if (percent >100)
+                percent = 0;
         }
 
         if (dataPresentInGraph) {
@@ -819,9 +826,6 @@ bool TupAudioMixer::processAudioFiles()
                     goto end;
                 }
                 av_frame_unref(filterFrame);
-
-                emit progressChanged(percent);
-                percent += chunk;
             }
 
             av_frame_free(&filterFrame);

@@ -896,8 +896,6 @@ bool TFFmpegMovieGenerator::writeAudioStream()
         if (ret < 0)
             break;
 
-        qDebug() << "pkt->stream_index -> " << pkt->stream_index;
-
         AVStream *in_stream = audioInputFormatContext->streams[pkt->stream_index];
         pkt->stream_index = 1;
 
@@ -915,9 +913,6 @@ bool TFFmpegMovieGenerator::writeAudioStream()
         logPacket(Audio, in_stream->time_base, pkt, "out");
         float currentTime = av_q2d(outputTimebase) * pkt->pts;
         if (currentTime < mp4Duration) {
-            qDebug() << "currentTime -> " << currentTime;
-            qDebug() << "mp4Duration -> " << mp4Duration;
-
             ret = av_interleaved_write_frame(formatContext, pkt);
             if (ret < 0) {
                 av_packet_unref(pkt);
@@ -927,7 +922,6 @@ bool TFFmpegMovieGenerator::writeAudioStream()
                 return false;
             }
         } else {
-            // qDebug() << "Sound frame dropped! - currentTime -> " << currentTime;
             break;
         }
     }

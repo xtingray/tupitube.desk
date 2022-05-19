@@ -959,10 +959,10 @@ int TupAudioTranscoder::writeOutputFileTrailer(AVFormatContext *outputFormatCont
     return 0;
 }
 
-int TupAudioTranscoder::transcodeAudio()
+int TupAudioTranscoder::processAudio()
 {
     #ifdef TUP_DEBUG
-        qCritical() << "[TupAudioTranscoder::mergeAudioStream()]";
+        qCritical() << "[TupAudioTranscoder::processAudio()]";
     #endif
 
     audioInputFormatContext = nullptr;
@@ -972,7 +972,8 @@ int TupAudioTranscoder::transcodeAudio()
 
     SwrContext *resampleContext = nullptr;
     AVAudioFifo *fifo = nullptr;
-    int ret = AVERROR_EXIT;
+    int error = AVERROR_EXIT;
+    int percent = 0;
 
     // Open the input file for reading.
     if (openInputFile(audioInputFile.toLocal8Bit().data(), &audioInputFormatContext,
@@ -1000,6 +1001,14 @@ int TupAudioTranscoder::transcodeAudio()
     // Loop as long as we have input samples to read or output samples
     // to write; abort as soon as we have neither.
     while (1) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupAudioTranscoder::processAudio()] - Progress -> " << percent << "%";
+        #endif
+        emit progressChanged(percent);
+        percent++;
+        if (percent >100)
+            percent = 0;
+
         // Use the encoder's desired frame size for processing.
         const int outputFrameSize = audioOutputCodecContext->frame_size;
         int finished = 0;
@@ -1019,7 +1028,7 @@ int TupAudioTranscoder::transcodeAudio()
             {
                 errorMsg = "Fatal Error: Tracing readDecodeConvertAndStore() method.";
                 #ifdef TUP_DEBUG
-                    qCritical() << "[TupAudioTranscoder::mergeAudioStream()] - " + errorMsg;
+                    qCritical() << "[TupAudioTranscoder::processAudio()] - " + errorMsg;
                 #endif
                 goto cleanup;
             }
@@ -1033,17 +1042,18 @@ int TupAudioTranscoder::transcodeAudio()
         // At the end of the file, we pass the remaining samples to
         // the encoder.
         while (av_audio_fifo_size(fifo) >= outputFrameSize ||
-               (finished && av_audio_fifo_size(fifo) > 0))
+               (finished && av_audio_fifo_size(fifo) > 0)) {
             // Take one frame worth of audio samples from the FIFO buffer,
             // encode it and write it to the output file.
             if (loadEncodeAndWrite(fifo, audioOutputFormatContext,
                                       audioOutputCodecContext)) {
                 #ifdef TUP_DEBUG
-                    qCritical() << "[TupAudioTranscoder::mergeAudioStream()] - "
+                    qCritical() << "[TupAudioTranscoder::processAudio()] - "
                                    "Tracing loadEncodeAndWrite() method...";
                 #endif
                 goto cleanup;
             }
+        }
 
         // If we are at the end of the input file and have encoded
         // all remaining samples, we can exit this loop and finish.
@@ -1056,7 +1066,7 @@ int TupAudioTranscoder::transcodeAudio()
                                      audioOutputCodecContext, &data_written)) {
                     errorMsg = "Audio process done!";
                     #ifdef TUP_DEBUG
-                        qCritical() << "[TupAudioTranscoder::mergeAudioStream()] - " + errorMsg;
+                        qCritical() << "[TupAudioTranscoder::processAudio()] - " + errorMsg;
                     #endif
                     goto cleanup;
                 }
@@ -1068,7 +1078,7 @@ int TupAudioTranscoder::transcodeAudio()
     // Write the trailer of the output file container.
     if (writeOutputFileTrailer(audioOutputFormatContext))
         goto cleanup;
-    ret = 0;
+    error = 0;
 
     cleanup:
         if (fifo)
@@ -1086,5 +1096,5 @@ int TupAudioTranscoder::transcodeAudio()
         if (audioInputFormatContext)
             avformat_close_input(&audioInputFormatContext);
 
-    return ret;
+    return error;
 }

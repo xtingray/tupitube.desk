@@ -63,7 +63,6 @@ class TUPITUBE_PLUGIN FFmpegPlugin : public TupExportPluginObject
                                       TupExportInterface::Format format, const QSize &size, int fps);
 
         virtual QString getExceptionMsg() const;
-        QString errorMsg;
 
     signals:
         void messageChanged(const QString &);
@@ -74,6 +73,7 @@ class TUPITUBE_PLUGIN FFmpegPlugin : public TupExportPluginObject
 
         QString wavAudioPath;
         QString aacAudioPath;
+        QString errorMsg;
 };
 
 #endif
