@@ -259,6 +259,13 @@ void TupLibraryWidget::setLibrary(TupLibrary *assets)
     project = library->getProject();
 }
 
+void TupLibraryWidget::initCurrentFrame()
+{
+    currentFrame.frame = 0;
+    currentFrame.layer = 0;
+    currentFrame.scene = 0;
+}
+
 void TupLibraryWidget::updateSpaceContext(TupProject::Mode mode)
 {
     currentMode = mode;
@@ -1619,6 +1626,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
 
                              if (!library->isLoadingProject())
                                  object->updateFrameToPlay(currentFrame.frame);
+
                              library->updateSoundResourcesItem(object);
 
                              item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
@@ -2148,6 +2156,10 @@ void TupLibraryWidget::saveDefaultPath(const QString &dir)
 
 void TupLibraryWidget::updateSoundTiming(int frame)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::updateSoundTiming()] - frame -> " << frame;
+    #endif
+
     if (currentSound) {
         currentSound->updateFrameToPlay(frame);
         library->updateSoundResourcesItem(currentSound);

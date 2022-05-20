@@ -225,9 +225,6 @@ bool TupProjectManager::loadProject(const QString &fileName)
     if (ok) {
         project->setOpen(true);
         modified = false;
-
-        // TupProjectRequest request = TupRequestBuilder::createFrameRequest(0, 0, 0, TupProjectRequest::Select, "0,0,0,0");
-        // emit handleProjectRequest(&request);
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TupProjectManager::loadProject()] - Fatal Error: Can't load project -> " << fileName;

@@ -185,7 +185,7 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
             #endif
 
             if (!audioFile.remove()) {
-                errorMsg = "Fatal Error: Can't remove file -> " + wavAudioPath;
+                errorMsg = "Fatal Error: Can't remove WAV file -> " + wavAudioPath;
                 #ifdef TUP_DEBUG
                     qCritical() << "[FFmpegPlugin::exportToFormat()] - " + errorMsg;
                 #endif

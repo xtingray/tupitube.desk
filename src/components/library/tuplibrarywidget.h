@@ -100,6 +100,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void setNetworking(bool isNetworked);
         void stopSoundPlayer();
         void updateSpaceContext(TupProject::Mode mode);
+        void initCurrentFrame();
 
     protected:
         virtual void sceneResponse(TupSceneResponse *response);

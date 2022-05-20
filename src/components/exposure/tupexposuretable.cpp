@@ -355,10 +355,12 @@ TupExposureTable::FrameType TupExposureTable::frameState(int layerIndex, int fra
 
 void TupExposureTable::updateFrameState(int layerIndex, int frameIndex, TupExposureTable::FrameType value)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupExposureTable::updateFrameState()] - layerIndex -> " << layerIndex;
         qDebug() << "[TupExposureTable::updateFrameState()] - frameIndex -> " << frameIndex;
     #endif
+    */
 
     if (layerIndex < 0 || frameIndex < 0)
         return;

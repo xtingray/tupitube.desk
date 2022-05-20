@@ -56,7 +56,7 @@ TupLibraryObject::TupLibraryObject(const QString &name, const QString &dir, TupL
     objectIsSoundResource = false;
     lipsyncVoice = false;
     mute = false;
-    playAt = 0;
+    playAt = 1;
 }
 
 TupLibraryObject::~TupLibraryObject()
@@ -124,6 +124,10 @@ int TupLibraryObject::frameToPlay()
 
 void TupLibraryObject::updateFrameToPlay(int frame)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryObject::updateFrameToPlay()] - frame -> " << frame;
+    #endif
+
     playAt = frame;
 }
 

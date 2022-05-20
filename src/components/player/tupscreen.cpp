@@ -792,7 +792,7 @@ void TupScreen::playSoundAt(int frame)
     for (int i=0; i<size; i++) {
         SoundResource soundRecord = soundRecords.at(i);
         if (!soundRecord.muted) {
-            if (frame == soundRecord.frame) {
+            if (frame == (soundRecord.frame - 1)) {
                 if (i < soundPlayer.count()) {
                     #ifdef TUP_DEBUG
                         qWarning() << "[TupScreen::playSoundAt()] - Playing file -> " << soundRecord.path;

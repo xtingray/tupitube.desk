@@ -137,7 +137,7 @@ void TupSoundPlayer::setSoundParams(TupLibraryObject *sound)
 
     player->setMedia(QUrl::fromLocalFile(sound->getDataPath()));
     soundID = sound->getSymbolName();
-    enableLipSyncInterface(sound->isLipsyncVoice(), sound->frameToPlay() + 1);
+    enableLipSyncInterface(sound->isLipsyncVoice(), sound->frameToPlay());
 
     mute = sound->isMuted();
     if (mute) {
@@ -289,5 +289,5 @@ QString TupSoundPlayer::getSoundID() const
 
 void TupSoundPlayer::updateInitFrame(int frame)
 {
-    frameLabel->setText(tr("Play at frame:") + " " + QString::number(frame + 1));
+    frameLabel->setText(tr("Play at frame:") + " " + QString::number(frame));
 }

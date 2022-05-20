@@ -435,6 +435,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
             TOsd::self()->display(TOsd::Info, tr("Project <b>%1</b> opened!").arg(m_projectManager->getProject()->getName()));
 
         m_exposureSheet->setScene(0);
+        m_libraryWidget->initCurrentFrame();
         connect(this, SIGNAL(tabHasChanged(int)), this, SLOT(updateCurrentTab(int)));
 
         m_projectManager->clearUndoStack();
