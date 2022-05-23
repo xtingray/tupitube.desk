@@ -266,9 +266,9 @@ void TupVideoProperties::postIt()
     connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
     */
 
-    QString apiEntry = TUPITUBE_URL + QString("/api/desk/add/video/");
+    QString apiEntry = TUPITUBE_POST + QString("/api/desk/add/video/");
     if (mode == Image)
-        apiEntry = TUPITUBE_URL + QString("/api/desk/add/image/");
+        apiEntry = TUPITUBE_POST + QString("/api/desk/add/image/");
 
     #ifdef TUP_DEBUG
         qDebug() << "[TupVideoProperties::postIt()] - URL -> " << apiEntry;
@@ -356,9 +356,9 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
                 connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
                 */
 
-                QString apiEntry = TUPITUBE_URL + QString("/api/desk/upload/video/");
+                QString apiEntry = TUPITUBE_POST + QString("/api/desk/upload/video/");
                 if (mode == Image)
-                    apiEntry = TUPITUBE_URL + QString("/api/desk/upload/image/");
+                    apiEntry = TUPITUBE_POST + QString("/api/desk/upload/image/");
 
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupVideoProperties::serverAuthAnswer()] - URL -> " << apiEntry;

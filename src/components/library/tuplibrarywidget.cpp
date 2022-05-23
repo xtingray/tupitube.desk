@@ -1625,7 +1625,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                              }
 
                              if (!library->isLoadingProject())
-                                 object->updateFrameToPlay(currentFrame.frame);
+                                 object->updateFrameToPlay(currentFrame.frame + 1);
 
                              library->updateSoundResourcesItem(object);
 

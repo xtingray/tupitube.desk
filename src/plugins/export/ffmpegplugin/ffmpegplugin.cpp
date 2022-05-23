@@ -139,7 +139,8 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
         }
     }
 
-    if (!sounds.isEmpty()) {
+    bool hasSound = !sounds.isEmpty();
+    if (hasSound) {
         emit progressChanged(0);
 
         QString filename = TAlgorithm::randomString(12);
@@ -227,27 +228,31 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
             }
         }
 
-        if (!generator->writeAudioStream()) {
-            #ifdef TUP_DEBUG
-                qDebug() << "[FFmpegPlugin::exportToFormat()] - Fatal error while processing MP4 audio track!";
-            #endif
-            return false;
+        if (hasSound) {
+            if (!generator->writeAudioStream()) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[FFmpegPlugin::exportToFormat()] - Fatal error while processing MP4 audio track!";
+                #endif
+                return false;
+            }
         }
     }
 
     generator->saveMovie(filePath);
     delete generator;
 
-    QFile audioFile(aacAudioPath);
-    if (audioFile.exists()) {
-        if (!audioFile.remove()) {
-            errorMsg = "Fatal Error: Can't remove file -> " + aacAudioPath;
-            #ifdef TUP_DEBUG
-                qCritical() << "[FFmpegPlugin::exportToFormat()] - " + errorMsg;
-            #endif
-            return false;
-        }
+    if (hasSound) {
+        QFile audioFile(aacAudioPath);
+        if (audioFile.exists()) {
+            if (!audioFile.remove()) {
+                errorMsg = "Fatal Error: Can't remove file -> " + aacAudioPath;
+                #ifdef TUP_DEBUG
+                    qCritical() << "[FFmpegPlugin::exportToFormat()] - " + errorMsg;
+                #endif
+                return false;
+            }
 
+        }
     }
 
     return true;

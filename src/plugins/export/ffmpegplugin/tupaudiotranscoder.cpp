@@ -86,7 +86,7 @@ int TupAudioTranscoder::openInputFile(const char *filename, AVFormatContext **in
                                      nullptr)) < 0) {
         errorMsg = "Fatal Error: Could not open input file -> " + QString(filename);
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::openInputFile()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::openInputFile()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         *inputFormatContext = nullptr;
@@ -97,7 +97,7 @@ int TupAudioTranscoder::openInputFile(const char *filename, AVFormatContext **in
     if ((error = avformat_find_stream_info(*inputFormatContext, nullptr)) < 0) {
         errorMsg = "Fatal Error: Could not open find stream info.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::openInputFile()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::openInputFile()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         avformat_close_input(inputFormatContext);
@@ -108,7 +108,7 @@ int TupAudioTranscoder::openInputFile(const char *filename, AVFormatContext **in
     if ((*inputFormatContext)->nb_streams != 1) {
         errorMsg = "Fatal Error: Expected one audio input stream, but found more.";;
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::openInputFile()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::openInputFile()] - " << errorMsg;
         #endif
         avformat_close_input(inputFormatContext);
         return AVERROR_EXIT;
@@ -120,7 +120,7 @@ int TupAudioTranscoder::openInputFile(const char *filename, AVFormatContext **in
     if (!(inputCodec = avcodec_find_decoder(audioInputStream->codecpar->codec_id))) {
         errorMsg =  "Fatal Error: Could not find input codec.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::openInputFile()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::openInputFile()] - " << errorMsg;
         #endif
         avformat_close_input(inputFormatContext);
         return AVERROR_EXIT;
@@ -131,7 +131,7 @@ int TupAudioTranscoder::openInputFile(const char *filename, AVFormatContext **in
     if (!codecContext) {
         errorMsg = "Fatal Error: Could not allocate a decoding context.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::openInputFile()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::openInputFile()] - " << errorMsg;
         #endif
         avformat_close_input(inputFormatContext);
         return AVERROR(ENOMEM);
@@ -142,7 +142,7 @@ int TupAudioTranscoder::openInputFile(const char *filename, AVFormatContext **in
     if (error < 0) {
         errorMsg = "Fatal Error: Could not copy parameters to context.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::openInputFile()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::openInputFile()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         avformat_close_input(inputFormatContext);
@@ -154,7 +154,7 @@ int TupAudioTranscoder::openInputFile(const char *filename, AVFormatContext **in
     if ((error = avcodec_open2(codecContext, inputCodec, nullptr)) < 0) {
         errorMsg = "Fatal Error: Could not open input codec.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::openInputFile()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::openInputFile()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         avcodec_free_context(&codecContext);
@@ -171,7 +171,7 @@ int TupAudioTranscoder::openInputFile(const char *filename, AVFormatContext **in
 // Open an output file and the required encoder.
 // Also set some basic encoder parameters.
 // Some of these parameters are based on the input file's parameters.
-// @param      filename              File to be opened
+// @param      filename            File to be opened
 // @param      inputCodecContext   Codec context of input file
 // @param[out] outputFormatContext Format context of output file
 // @param[out] outputCodecContext  Codec context of output file
@@ -189,7 +189,7 @@ int TupAudioTranscoder::openOutputFile(const char *filename, AVCodecContext *inp
     if ((error = avio_open(&ouputIOContext, filename, AVIO_FLAG_WRITE)) < 0) {
         errorMsg = "Fatal Error: Could not open output file -> " + QString(filename);
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         return error;
@@ -199,7 +199,7 @@ int TupAudioTranscoder::openOutputFile(const char *filename, AVCodecContext *inp
     if (!(*ouputFormatContext = avformat_alloc_context())) {
         errorMsg = "Fatal Error: Could not allocate output format context.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " << errorMsg;
         #endif
         return AVERROR(ENOMEM);
     }
@@ -211,7 +211,7 @@ int TupAudioTranscoder::openOutputFile(const char *filename, AVCodecContext *inp
     if (!((*ouputFormatContext)->oformat = av_guess_format(nullptr, filename, nullptr))) {
         errorMsg = "Fatal Error: Could not find output file format.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " << errorMsg;
         #endif
         goto cleanup;
     }
@@ -219,7 +219,7 @@ int TupAudioTranscoder::openOutputFile(const char *filename, AVCodecContext *inp
     if (!((*ouputFormatContext)->url = av_strdup(filename))) {
         errorMsg = "Fatal Error: Could not allocate url.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " << errorMsg;
         #endif
         error = AVERROR(ENOMEM);
         goto cleanup;
@@ -229,7 +229,7 @@ int TupAudioTranscoder::openOutputFile(const char *filename, AVCodecContext *inp
     if (!(outputCodec = avcodec_find_encoder(AV_CODEC_ID_AAC))) {
         errorMsg = "Fatal Error: Could not find an AAC encoder.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " << errorMsg;
         #endif
         goto cleanup;
     }
@@ -238,7 +238,7 @@ int TupAudioTranscoder::openOutputFile(const char *filename, AVCodecContext *inp
     if (!(audioOutputStream = avformat_new_stream(*ouputFormatContext, nullptr))) {
         errorMsg = "Fatal Error: Could not create new stream.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " << errorMsg;
         #endif
         error = AVERROR(ENOMEM);
         goto cleanup;
@@ -248,7 +248,7 @@ int TupAudioTranscoder::openOutputFile(const char *filename, AVCodecContext *inp
     if (!codecContext) {
         errorMsg = "Fatal Error: Could not allocate an encoding context.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " << errorMsg;
         #endif
         error = AVERROR(ENOMEM);
         goto cleanup;
@@ -278,7 +278,7 @@ int TupAudioTranscoder::openOutputFile(const char *filename, AVCodecContext *inp
     if ((error = avcodec_open2(codecContext, outputCodec, nullptr)) < 0) {
         errorMsg = "Fatal Error: Could not open output codec.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         goto cleanup;
@@ -288,7 +288,7 @@ int TupAudioTranscoder::openOutputFile(const char *filename, AVCodecContext *inp
     if (error < 0) {
         errorMsg = "Fatal Error: Could not initialize stream parameters.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::openOutputFile()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         goto cleanup;
@@ -361,7 +361,6 @@ void TupAudioTranscoder::logAudioPacket(AVRational time_base, const AVPacket *pk
 
 // AUDIO SECTION
 
-
 // Initialize one data packet for reading or writing.
 // @param[out] packet Packet to be initialized
 // @return Error code (0 if successful)
@@ -371,7 +370,7 @@ int TupAudioTranscoder::initPacket(AVPacket **packet)
     if (!(*packet = av_packet_alloc())) {
         errorMsg = "Fatal Error: Could not allocate packet.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::initPacket()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::initPacket()] - " << errorMsg;
         #endif
         return AVERROR(ENOMEM);
     }
@@ -387,7 +386,7 @@ int TupAudioTranscoder::initInputFrame(AVFrame **frame)
     if (!(*frame = av_frame_alloc())) {
         errorMsg = "Fatal Error: Could not allocate input frame.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::initInputFrame()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::initInputFrame()] - " << errorMsg;
         #endif
         return AVERROR(ENOMEM);
     }
@@ -424,7 +423,7 @@ int TupAudioTranscoder::initResampler(AVCodecContext *inputCodecContext,
     if (!*resampleContext) {
         errorMsg = "Fatal Error: Could not allocate resample context.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::initResampler()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::initResampler()] - " << errorMsg;
         #endif
         return AVERROR(ENOMEM);
     }
@@ -438,7 +437,7 @@ int TupAudioTranscoder::initResampler(AVCodecContext *inputCodecContext,
     if ((error = swr_init(*resampleContext)) < 0) {
         errorMsg = "Fatal Error: Could not open resample context.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::initResampler()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::initResampler()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         swr_free(resampleContext);
@@ -459,7 +458,7 @@ int TupAudioTranscoder::initFifo(AVAudioFifo **fifo, AVCodecContext *outputCodec
                                       outputCodecContext->channels, 1))) {
         errorMsg = "Fatal Error: Could not allocate FIFO.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::initFifo()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::initFifo()] - " << errorMsg;
         #endif
         return AVERROR(ENOMEM);
     }
@@ -475,7 +474,7 @@ int TupAudioTranscoder::writeOutputFileHeader(AVFormatContext *outputFormatConte
     if ((error = avformat_write_header(outputFormatContext, nullptr)) < 0) {
         errorMsg = "Fatal Error: Could not write output file header.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::writeOutputFileHeadere()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::writeOutputFileHeadere()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         return error;
@@ -519,7 +518,7 @@ int TupAudioTranscoder::decodeAudioFrame(AVFrame *frame, AVFormatContext *inputF
         else {
             errorMsg = "Fatal Error: Could not read frame.";
             #ifdef TUP_DEBUG
-                qCritical() << "[TupAudioTranscoder::decodeAudioFrame()] - " + errorMsg;
+                qCritical() << "[TupAudioTranscoder::decodeAudioFrame()] - " << errorMsg;
                 qCritical() << "ERROR CODE -> " << error;
             #endif
             goto cleanup;
@@ -535,7 +534,7 @@ int TupAudioTranscoder::decodeAudioFrame(AVFrame *frame, AVFormatContext *inputF
     if ((error = avcodec_send_packet(inputCodecContext, inputPacket)) < 0) {
         errorMsg = "Fatal Error: Could not send packet for decoding.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::decodeAudioFrame()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::decodeAudioFrame()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         goto cleanup;
@@ -556,7 +555,7 @@ int TupAudioTranscoder::decodeAudioFrame(AVFrame *frame, AVFormatContext *inputF
     } else if (error < 0) {
         errorMsg = "Fatal Error: Could not decode frame.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::decodeAudioFrame()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::decodeAudioFrame()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         goto cleanup;
@@ -569,7 +568,7 @@ int TupAudioTranscoder::decodeAudioFrame(AVFrame *frame, AVFormatContext *inputF
     cleanup:
         av_packet_free(&inputPacket);
 
-        return error;
+    return error;
 }
 
 // Initialize a temporary storage for the specified number of audio samples.
@@ -594,7 +593,7 @@ int TupAudioTranscoder::initConvertedSamples(uint8_t ***convertedInputSamples,
                                             sizeof(**convertedInputSamples)))) {
         errorMsg = "Fatal Error: Could not allocate converted input sample pointer.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::initConvertedSamples()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::initConvertedSamples()] - " << errorMsg;
         #endif
         return AVERROR(ENOMEM);
     }
@@ -607,7 +606,7 @@ int TupAudioTranscoder::initConvertedSamples(uint8_t ***convertedInputSamples,
                                   outputCodecContext->sample_fmt, 0)) < 0) {
         errorMsg = "Fatal Error: Could not allocate converted input samples.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::initConvertedSamples()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::initConvertedSamples()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         av_freep(&(*convertedInputSamples)[0]);
@@ -640,7 +639,7 @@ int TupAudioTranscoder::convertSamples(const uint8_t **inputData,
                              inputData    , frameSize)) < 0) {
         errorMsg = "Fatal Error: Could not convert input samples.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::convertSamples()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::convertSamples()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         return error;
@@ -666,7 +665,7 @@ int TupAudioTranscoder::addSamplesToFifo(AVAudioFifo *fifo,
     if ((error = av_audio_fifo_realloc(fifo, av_audio_fifo_size(fifo) + frameSize)) < 0) {
         errorMsg = "Fatal Error: Could not reallocate FIFO.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::addSamplesToFifo()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::addSamplesToFifo()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         return error;
@@ -677,7 +676,7 @@ int TupAudioTranscoder::addSamplesToFifo(AVAudioFifo *fifo,
                             frameSize) < frameSize) {
         errorMsg = "Fatal Error: Could not write data to FIFO.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::addSamplesToFifo()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::addSamplesToFifo()] - " << errorMsg;
         #endif
         return AVERROR_EXIT;
     }
@@ -709,7 +708,7 @@ int TupAudioTranscoder::readDecodeConvertAndStore(AVAudioFifo *fifo,
     // Temporary storage for the converted input samples.
     uint8_t **convertedInputSamples = nullptr;
     int dataPresent = 0;
-    int ret = AVERROR_EXIT;
+    int error = AVERROR_EXIT;
 
     // Initialize temporary storage for one input frame.
     if (initInputFrame(&inputFrame))
@@ -722,7 +721,7 @@ int TupAudioTranscoder::readDecodeConvertAndStore(AVAudioFifo *fifo,
     // in the decoder which are delayed, we are actually finished.
     // This must not be treated as an error.
     if (*finished) {
-        ret = 0;
+        error = 0;
         goto cleanup;
     }
     // If there is decoded data, convert and store it.
@@ -743,13 +742,13 @@ int TupAudioTranscoder::readDecodeConvertAndStore(AVAudioFifo *fifo,
                                 inputFrame->nb_samples))
             goto cleanup;
     }
-    ret = 0;
+    error = 0;
 
     cleanup:
         convertedInputSamples = nullptr;
         av_frame_free(&inputFrame);
 
-    return ret;
+    return error;
 }
 
 // Initialize one input frame for writing to the output file.
@@ -768,7 +767,7 @@ int TupAudioTranscoder::initOutputFrame(AVFrame **frame,
     if (!(*frame = av_frame_alloc())) {
         errorMsg = "Fatal Error: Could not allocate output frame.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::initOutputFrame()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::initOutputFrame()] - " << errorMsg;
         #endif
         return AVERROR_EXIT;
     }
@@ -788,7 +787,7 @@ int TupAudioTranscoder::initOutputFrame(AVFrame **frame,
     if ((error = av_frame_get_buffer(*frame, 0)) < 0) {
         errorMsg = "Fatal Error: Could not allocate output frame samples.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::initOutputFrame()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::initOutputFrame()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         av_frame_free(frame);
@@ -840,7 +839,7 @@ int TupAudioTranscoder::encodeAudioFrame(AVFrame *frame,
     } else if (error < 0) {
         errorMsg = "Fatal Error: Could not send packet for encoding.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::encodeAudioFrame()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::encodeAudioFrame()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         goto cleanup;
@@ -860,7 +859,7 @@ int TupAudioTranscoder::encodeAudioFrame(AVFrame *frame,
     } else if (error < 0) {
         errorMsg = "Fatal Error: Could not encode frame.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::encodeAudioFrame()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::encodeAudioFrame()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         goto cleanup;
@@ -878,7 +877,7 @@ int TupAudioTranscoder::encodeAudioFrame(AVFrame *frame,
         (error = av_write_frame(outputFormatContext, outputPacket)) < 0) {
         errorMsg = "Fatal Error: Could not write frame.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::encodeAudioFrame()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::encodeAudioFrame()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         goto cleanup;
@@ -924,7 +923,7 @@ int TupAudioTranscoder::loadEncodeAndWrite(AVAudioFifo *fifo,
     if (av_audio_fifo_read(fifo, (void **)outputFrame->data, frame_size) < frame_size) {
         errorMsg = "Fatal Error: Could not read data from FIFO.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::loadEncodeAndWrite()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::loadEncodeAndWrite()] - " << errorMsg;
         #endif
         av_frame_free(&outputFrame);
         return AVERROR_EXIT;
@@ -950,7 +949,7 @@ int TupAudioTranscoder::writeOutputFileTrailer(AVFormatContext *outputFormatCont
     if ((error = av_write_trailer(outputFormatContext)) < 0) {
         errorMsg = "Fatal Error: Could not read data from FIFO.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioTranscoder::writeOutputFileTrailer()] - " + errorMsg;
+            qCritical() << "[TupAudioTranscoder::writeOutputFileTrailer()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         return error;
@@ -1028,7 +1027,7 @@ int TupAudioTranscoder::processAudio()
             {
                 errorMsg = "Fatal Error: Tracing readDecodeConvertAndStore() method.";
                 #ifdef TUP_DEBUG
-                    qCritical() << "[TupAudioTranscoder::processAudio()] - " + errorMsg;
+                    qCritical() << "[TupAudioTranscoder::processAudio()] - " << errorMsg;
                 #endif
                 goto cleanup;
             }
@@ -1066,7 +1065,7 @@ int TupAudioTranscoder::processAudio()
                                      audioOutputCodecContext, &data_written)) {
                     errorMsg = "Audio process done!";
                     #ifdef TUP_DEBUG
-                        qCritical() << "[TupAudioTranscoder::processAudio()] - " + errorMsg;
+                        qCritical() << "[TupAudioTranscoder::processAudio()] - " << errorMsg;
                     #endif
                     goto cleanup;
                 }

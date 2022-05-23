@@ -48,7 +48,7 @@ TupScreen::TupScreen(TupProject *work, const QSize viewSize, bool sizeChanged, Q
 
     project = work;
     library = work->getLibrary();
-    QList<SoundResource> effectsList = library->soundResourcesList();
+    // QList<SoundResource> effectsList = library->soundResourcesList();
 
     isScaled = sizeChanged;
     screenDimension = viewSize;
@@ -502,8 +502,13 @@ void TupScreen::itemResponse(TupItemResponse *)
 {
 }
 
-void TupScreen::libraryResponse(TupLibraryResponse *)
+void TupScreen::libraryResponse(TupLibraryResponse *response)
 {
+    #ifdef TUP_DEBUG
+       qDebug() << "[TupScreen::libraryResponse()]";
+    #endif
+
+    Q_UNUSED(response)
 }
 
 void TupScreen::render()
@@ -752,6 +757,7 @@ void TupScreen::loadSoundRecords()
                     TupLibraryObject *sound = folder->getObject(lipsync->getSoundFile());
                     if (sound) {
                         SoundResource record;
+                        record.key = sound->getSymbolName();
                         record.frame = lipsync->getInitFrame();
                         record.path = sound->getDataPath();
                         record.muted = sound->isMuted();
@@ -765,6 +771,7 @@ void TupScreen::loadSoundRecords()
         }
     }
 
+    // Loading effect sounds
     QList<SoundResource> effectsList = library->soundResourcesList();
     int total = effectsList.count();
 

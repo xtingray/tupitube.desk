@@ -109,10 +109,11 @@ TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::ObjectType ty
     if (success) {
         if (type == TupLibraryObject::Audio) {
             SoundResource record;
+            record.key = object->getSymbolName();
             record.frame = object->frameToPlay();
             record.path = object->getDataPath();
             record.muted = object->isMuted();
-            soundRecords << record;
+            soundRecords << record;            
         }
 
         if (loaded && ret)
@@ -218,12 +219,23 @@ bool TupLibraryFolder::removeObject(const QString &key, bool absolute)
     QStringList keys = objects.keys();
     foreach (QString oid, keys) {
         if (oid.compare(key) == 0) {
+            if (objects[key]->getObjectType() == TupLibraryObject::Audio) {
+                if (!removeSoundResource(key)) {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupLibraryFolder::removeObject()] - "
+                                    "Fatal Error: Can't remove sound resource -> " << key;
+                    #endif
+                    return false;
+                }
+            }
+
             QString path = objects[key]->getDataPath();
             if (absolute) {
                 QFileInfo finfo(path);
                 if (finfo.isFile())
                     QFile::remove(path);
             }
+
             return objects.remove(key);
         }
     }
@@ -485,6 +497,10 @@ LibraryObjects TupLibraryFolder::getObjects() const
 
 LibraryObjects TupLibraryFolder::getSoundObjects() const
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryFolder::getSoundObjects()]";
+    #endif
+
     LibraryObjects items;
 
     foreach (TupLibraryObject *object, objects) {
@@ -615,6 +631,7 @@ void TupLibraryFolder::loadItem(const QString &folder, QDomNode xml)
             if (object->loadDataFromPath(project->getDataDir())) {
                 if (object->isSoundResource()) {
                     SoundResource record;
+                    record.key = object->getSymbolName();
                     record.frame = object->frameToPlay();
                     record.path = object->getDataPath();
                     record.muted = object->isMuted();
@@ -677,8 +694,9 @@ void TupLibraryFolder::updatePaths(const QString &newPath)
          if (objects[oid]->getObjectType() == TupLibraryObject::Svg)
              path = newPath + "/svg/" + filename;
 
-         if (objects[oid]->getObjectType() == TupLibraryObject::Audio)
+         if (objects[oid]->getObjectType() == TupLibraryObject::Audio) {
              path = newPath + "/audio/" + filename;
+         }
 
          if (objects[oid]->getObjectType() == TupLibraryObject::Item)
              path = newPath + "/obj/" + filename;
@@ -690,6 +708,24 @@ void TupLibraryFolder::updatePaths(const QString &newPath)
         folder->updatePaths(newPath);    
 }
 
+void TupLibraryFolder::updateSoundPaths(const QString &newPath)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryFolder::updateSoundPaths()] - newPath -> " << newPath;
+    #endif
+
+    for (int i=0; i<soundRecords.size(); i++) {
+        SoundResource item = soundRecords.at(i);
+        QString oldPath = item.path;
+        QFileInfo logicalPath(oldPath);
+        QString filename = logicalPath.fileName();
+        QString path = "";
+        path = newPath + "/audio/" + filename;
+        item.path = path;
+        soundRecords[i] = item;
+    }
+}
+
 bool TupLibraryFolder::isLoadingProject()
 {
     return loadingProject;
@@ -697,15 +733,26 @@ bool TupLibraryFolder::isLoadingProject()
 
 QList<SoundResource> TupLibraryFolder::soundResourcesList()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryFolder::soundResourcesList()] - items size -> "
+                 << soundRecords.size();
+    #endif
+
     return soundRecords;
 }
 
 void TupLibraryFolder::updateSoundResourcesItem(TupLibraryObject *item)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryFolder::updateSoundResourcesItem()] - item -> "
+                 << item->getSymbolName();
+    #endif
+
     int size = soundRecords.count();
     for(int i=0; i<size; i++) {
         SoundResource record = soundRecords.at(i);
         if (item->getDataPath().compare(record.path) == 0) {
+            record.key = item->getSymbolName();
             record.frame = item->frameToPlay();
             record.muted = item->isMuted();
             soundRecords.replace(i, record);
@@ -754,3 +801,19 @@ TupLibraryObject * TupLibraryFolder::findSoundFile(const QString &folderId)
     return nullptr;
 }
 
+bool TupLibraryFolder::removeSoundResource(const QString &id)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryFolder::removeSoundResource()] - id -> " <<id;
+    #endif
+
+    for (int i=0; i<soundRecords.size(); i++) {
+        SoundResource item = soundRecords.at(i);
+        if (item.key.compare(id) == 0) {
+            soundRecords.removeAt(i);
+            return true;
+        }
+    }
+
+    return false;
+}

@@ -598,6 +598,10 @@ bool TupProject::removeFolder(const QString &name)
 
 bool TupProject::removeSound(const QString &name)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProject::removeSound()] - item -> " << name;
+    #endif
+
     return library->removeObject(name, true);
 }
 
