@@ -858,7 +858,7 @@ void TupLipSync::updateMouthTransformation(const QDomElement &doc, int frame)
 void TupLipSync::verifyStructure()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLipSync::verifyStructure()]";
+        qDebug() << "[TupLipSync::verifyStructure()] - framesTotal -> " << framesTotal;
     #endif
 
     for (int frame=0; frame < framesTotal; frame++) {
@@ -874,7 +874,7 @@ void TupLipSync::verifyStructure()
                  } else { // Frame is not part of any word, the "hole" has to be filled
                      int init = 0;
                      int endFrame = word->initFrame() - 1;
-                     int total = word->initFrame();
+                     int total; // = word->initFrame();
                      QDomElement transformation = voice->getDefaultTransformation();
                      if (i > 0) { // The word is not the first one
                          TupWord *prevWord = phrase->wordAt(i - 1);
@@ -885,11 +885,19 @@ void TupLipSync::verifyStructure()
                              transformation = phoneme->getTransformationDom();
                          } else {
                              #ifdef TUP_DEBUG
-                                 qDebug() << "[TupLipSync::verifyStructure()] - Warning: Word(" << (i-1) << ") has NO phonemes!";
+                                 qDebug() << "[TupLipSync::verifyStructure()] - "
+                                             "Warning: Word(" << (i-1) << ") has NO phonemes!";
                              #endif
                          }
 
                          total = (endFrame - init) + 1;
+                     } else {
+                         #ifdef TUP_DEBUG
+                             qDebug() << "[TupLipSync::verifyStructure()] - "
+                                         "Warning! There is a hole in the very beginning of the lipsync!";
+                         #endif
+                         init = 0;
+                         total = word->initFrame();
                      }
 
                      // Create a word with "rest" phonemes and insert it in the hole

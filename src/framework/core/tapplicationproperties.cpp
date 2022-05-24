@@ -190,7 +190,7 @@ QString TApplicationProperties::repositoryDir() const
 
 QString TApplicationProperties::projectDir() const
 {
-    return revisionStr;
+    return projectPath;
 }
 
 QString TApplicationProperties::version() const

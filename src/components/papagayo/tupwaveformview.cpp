@@ -368,30 +368,30 @@ void TupWaveFormView::mousePressEvent(QMouseEvent *event)
             if (selectedPhrase && mouseY >= selectedPhrase->getTop() && mouseY <= selectedPhrase->getBottom()) {
                 selectedWord = nullptr;
                 selectedPhoneme = nullptr;
-                draggingEnd = 0; // beginning of phrase
+                draggingEnd = Beginning; // beginning of phrase
                 frameDist = frame - selectedPhrase->getStartFrame();
                 if ((selectedPhrase->getEndFrame() - frame) < frameDist) {
-                    draggingEnd = 1; // end of phrase
+                    draggingEnd = End; // end of phrase
                     frameDist = selectedPhrase->getEndFrame() - frame;
 				}
 
                 if ((selectedPhrase->getEndFrame() - selectedPhrase->getStartFrame() > 1) &&
                         (PG_FABS((selectedPhrase->getEndFrame() + selectedPhrase->getStartFrame()) / 2 - frame) < frameDist)) {
-                    draggingEnd = 2; // middle of phrase
+                    draggingEnd = Middle; // middle of phrase
 				}
             } else if (selectedWord && mouseY >= selectedWord->getTop() && mouseY <= selectedWord->getBottom()) {
                 selectedPhrase = nullptr;
                 selectedPhoneme = nullptr;
-                draggingEnd = 0; // beginning of word
+                draggingEnd = Beginning; // beginning of word
                 frameDist = frame - selectedWord->getStartFrame();
                 if ((selectedWord->getEndFrame() - frame) < frameDist) {
-                    draggingEnd = 1; // end of word
+                    draggingEnd = End; // end of word
                     frameDist = selectedWord->getEndFrame() - frame;
 				}
 
                 if ((selectedWord->getEndFrame() - selectedWord->getStartFrame() > 1) &&
                     (PG_FABS((selectedWord->getEndFrame() + selectedWord->getStartFrame()) / 2 - frame) < frameDist)) {
-                    draggingEnd = 2; // middle of phrase
+                    draggingEnd = Middle; // middle of phrase
 				}
             } else if (selectedPhoneme && mouseY >= selectedPhoneme->getTop() && mouseY <= selectedPhoneme->getBottom()) {
                 selectedPhrase = nullptr;
@@ -464,8 +464,14 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
     real f = (real)event->x() / (real)frameWidth;
     int32 frame = PG_FLOOR(f);
 
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupWaveFormView::mouseMoveEvent()] - frame -> " << frame;
+    #endif
+    */
+
     if (selectedPhrase) {
-        if (draggingEnd == 0) {
+        if (draggingEnd == Beginning) { // beginning of word
             if (frame != selectedPhrase->getStartFrame()) {
                 document->setModifiedFlag(true);
                 selectedPhrase->setStartFrame(frame);
@@ -475,7 +481,7 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
                 document->repositionPhrase(selectedPhrase);
 				needUpdate = true;
 			}
-        } else if (draggingEnd == 1) {
+        } else if (draggingEnd == End) { // end of word
             if (frame != selectedPhrase->getEndFrame()) {
                 document->setModifiedFlag(true);
                 selectedPhrase->setEndFrame(frame);
@@ -485,7 +491,7 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
                 document->repositionPhrase(selectedPhrase);
                 needUpdate = true;
 			}
-        } else if (draggingEnd == 2) {
+        } else if (draggingEnd == Middle) { // middle of phrase
             if (frame != oldFrame) {
                 document->setModifiedFlag(true);
                 selectedPhrase->setStartFrame(selectedPhrase->getStartFrame() + (frame - oldFrame));
@@ -498,7 +504,7 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
 			}
 		}
     } else if (selectedWord) {
-        if (draggingEnd == 0) {
+        if (draggingEnd == Beginning) { // beginning of word
             if (frame != selectedWord->getStartFrame()) {
                 document->setModifiedFlag(true);
                 selectedWord->setStartFrame(frame);
@@ -508,7 +514,7 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
                 parentPhrase->repositionWord(selectedWord);
 				needUpdate = true;
 			}
-        } else if (draggingEnd == 1) {
+        } else if (draggingEnd == End) { // end of word
             if (frame != selectedWord->getEndFrame()) {
                 document->setModifiedFlag(true);
                 selectedWord->setEndFrame(frame);
@@ -518,7 +524,7 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
                 parentPhrase->repositionWord(selectedWord);
 				needUpdate = true;
 			}
-        } else if (draggingEnd == 2) {
+        } else if (draggingEnd == Middle) { // middle of word
             if (frame != oldFrame) {
                 document->setModifiedFlag(true);
                 selectedWord->setStartFrame(selectedWord->getStartFrame() + (frame - oldFrame));
@@ -531,7 +537,7 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
 			}
 		}
     } else if (selectedPhoneme) {
-        if (draggingEnd == 0) {
+        if (draggingEnd == Beginning) { // beginning of phoneme
             if (frame != selectedPhoneme->getFrame()) {
                 document->setModifiedFlag(true);
                 selectedPhoneme->setFrame(frame);
@@ -578,7 +584,8 @@ void TupWaveFormView::mouseReleaseEvent(QMouseEvent *event)
             }
 
             // manually enter the pronunciation for this word
-            TupBreakdownDialog *breakdownDialog = new TupBreakdownDialog(selectedWord->getText(), selectedWord->getPhonemesString(),
+            TupBreakdownDialog *breakdownDialog = new TupBreakdownDialog(selectedWord->getText(),
+                                                                         selectedWord->getPhonemesString(),
                                                                          mouthsPath, this);
             if (breakdownDialog->exec() == QDialog::Accepted) {
                 document->setModifiedFlag(true);

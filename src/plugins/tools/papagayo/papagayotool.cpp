@@ -201,6 +201,9 @@ void PapagayoTool::resetCanvas()
 
 void PapagayoTool::aboutToChangeScene(TupGraphicsScene *)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::aboutToChangeScene()]";
+    #endif
 }
 
 /* This method is called when this plugin is off */
@@ -244,7 +247,11 @@ void PapagayoTool::saveConfig()
 /* This method updates the workspace when the plugin changes the scene */
 
 void PapagayoTool::updateScene(TupGraphicsScene *scene)
-{ 
+{     
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::updateScene()]";
+    #endif
+
     Q_UNUSED(scene)
 }
 
@@ -256,20 +263,32 @@ void PapagayoTool::editLipsyncMouth(const QString &name)
 
     TupScene *sceneData = scene->currentScene();
     currentLipSync = sceneData->getLipSync(name);
-    configPanel->openLipSyncProperties(currentLipSync);
+    if (currentLipSync) {
+        TupVoice *voice = currentLipSync->getVoice();
+        if (voice) {
+            TupPhoneme *phoneme = voice->getPhonemeAt(0);
+            if (phoneme) {
+                configPanel->setPhoneme(phoneme);
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[PapagayoTool::editLipsyncMouth()] - No lipsync phoneme at index 0";
+                #endif
+            }
 
-    TupVoice *voice = currentLipSync->getVoice();
-    if (voice) {
-        TupPhoneme *phoneme = voice->getPhonemeAt(0);
-        if (phoneme) {
-            configPanel->setPhoneme(phoneme);
+            addNodesManager();
+            configPanel->openLipSyncProperties(currentLipSync);
+            mode = TupToolPlugin::Edit;
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[PapagayoTool::editLipsyncMouth()] - No lipsync phoneme at index 0";
+                qDebug() << "[PapagayoTool::editLipsyncMouth()] - "
+                            "Warning: voice is not available in lipsync -> " << name;
             #endif
         }
-
-        addNodesManager();
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[PapagayoTool::editLipsyncMouth()] - "
+                        "Warning: lipsync record is not available -> " << name;
+        #endif
     }
 }
 
@@ -369,6 +388,7 @@ void PapagayoTool::setNodesManagerEnvironment()
         qDebug() << "[PapagayoTool::setNodesManagerEnvironment()]";
     #endif
 
+    bool found = false;
     QGraphicsView *view = scene->views().at(0);
     foreach (QGraphicsItem *item, view->scene()->items()) {
         QString tip = item->toolTip();
@@ -378,12 +398,13 @@ void PapagayoTool::setNodesManagerEnvironment()
                 mouth = item;
                 mouth->setFlag(QGraphicsItem::ItemIsSelectable, true);
                 mouth->setSelected(true);
+                found = true;
                 break;
             }
         }
     }
 
-    if (mouth) {
+    if (found) {
         nodesManager = new NodeManager(Node::Papagayo, mouth, scene, nodeZValue);
         connect(nodesManager, SIGNAL(positionUpdated(const QPointF&)), this, SLOT(updatePositionRecord(const QPointF&)));
         connect(nodesManager, SIGNAL(rotationUpdated(int)), this, SLOT(updateRotationAngleRecord(int)));
@@ -501,8 +522,10 @@ void PapagayoTool::updateWorkSpaceContext()
         qDebug() << "[PapagayoTool::updateWorkSpaceContext()]";
     #endif
 
-    if (mode == TupToolPlugin::Edit)
+    if (mode == TupToolPlugin::Edit) {
         configPanel->closePanels();
+        mode = TupToolPlugin::View;
+    }
 }
 
 void PapagayoTool::updateInitFrame(int index)
@@ -545,6 +568,10 @@ void PapagayoTool::updateInitFrame(int index)
 
 void PapagayoTool::keyPressEvent(QKeyEvent *event)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::keyPressEvent()] - key -> " << event->key();
+    #endif
+
     if (mode == TupToolPlugin::Edit) {
         if ((event->key() == Qt::Key_Left) || (event->key() == Qt::Key_Up)
             || (event->key() == Qt::Key_Right) || (event->key() == Qt::Key_Down)) {
@@ -667,24 +694,18 @@ void PapagayoTool::updatePositionRecord(const QPointF &point)
 {
     configPanel->updatePositionCoords(point.x(), point.y());
 
-    if (nodesManager) // {
+    if (nodesManager)
         nodesManager->syncNodesFromParent();
-        // updateMouthTransformation();
-    // }
 }
 
 void PapagayoTool::updateRotationAngleRecord(int angle)
 {
     configPanel->updateRotationAngle(angle);
-    // if (nodesManager)
-    //     updateMouthTransformation();
 }
 
 void PapagayoTool::updateScaleFactorRecord(double x, double y)
 {
     configPanel->updateScaleFactor(x, y);
-    // if (nodesManager)
-    //     updateMouthTransformation();
 }
 
 void PapagayoTool::enableProportion(bool flag)
@@ -733,15 +754,5 @@ void PapagayoTool::updateMouthTransformation()
         TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, scene->currentLayerIndex(),
                                                                           TupProjectRequest::UpdateLipSync, currentLipSync->toString());
         emit requested(&request);
-
     }
 }
-
-/*
-void PapagayoTool::saveMouthTransformations()
-{
-    TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, scene->currentLayerIndex(),
-                                                                      TupProjectRequest::UpdateLipSync, currentLipSync->toString());
-    emit requested(&request);
-}
-*/

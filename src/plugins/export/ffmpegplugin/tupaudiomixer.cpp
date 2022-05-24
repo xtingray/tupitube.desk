@@ -907,9 +907,11 @@ bool TupAudioMixer::mergeAudios()
     int error;
 
     for (int i=0; i < soundsTotal; i++) {
-        char *path = sounds[i].path.toLocal8Bit().data();
+        QString source = sounds[i].path;
+        QByteArray array = source.toLocal8Bit();
+        char *path = array.data();
         if (openInputFile(path) < 0) {
-            errorMsg = "Fatal Error: Error while opening file -> " + QString(path);
+            errorMsg = "Fatal Error: Error while opening file -> " + source;
             #ifdef TUP_DEBUG
                 qCritical() << "[TupAudioMixer::mergeAudios()] - " << errorMsg;
             #endif

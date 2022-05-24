@@ -679,6 +679,7 @@ void TupLibraryFolder::updatePaths(const QString &newPath)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryFolder::updatePaths()] - newPath -> " << newPath;
+        qDebug() << "[TupLibraryFolder::updatePaths()] - old path -> " << kAppProp->projectDir();
     #endif
 
     QStringList keys = objects.keys();
@@ -695,7 +696,12 @@ void TupLibraryFolder::updatePaths(const QString &newPath)
              path = newPath + "/svg/" + filename;
 
          if (objects[oid]->getObjectType() == TupLibraryObject::Audio) {
-             path = newPath + "/audio/" + filename;
+             int range = oldPath.length() - oldPath.indexOf("audio");
+             path = newPath + "/" + oldPath.right(range);
+             #ifdef TUP_DEBUG
+                 qDebug() << "[TupLibraryFolder::updatePaths()] - oldPath -> " << oldPath;
+                 qDebug() << "[TupLibraryFolder::updatePaths()] - path -> " << path;
+             #endif
          }
 
          if (objects[oid]->getObjectType() == TupLibraryObject::Item)
@@ -712,15 +718,20 @@ void TupLibraryFolder::updateSoundPaths(const QString &newPath)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryFolder::updateSoundPaths()] - newPath -> " << newPath;
+        qDebug() << "[TupLibraryFolder::updateSoundPaths()] - old path -> " << kAppProp->projectDir();
     #endif
 
     for (int i=0; i<soundRecords.size(); i++) {
         SoundResource item = soundRecords.at(i);
         QString oldPath = item.path;
-        QFileInfo logicalPath(oldPath);
-        QString filename = logicalPath.fileName();
-        QString path = "";
-        path = newPath + "/audio/" + filename;
+        int range = oldPath.length() - oldPath.indexOf("audio");
+        QString path = newPath + "/" + oldPath.right(range);
+
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryFolder::updateSoundPaths()] - oldPath -> " << oldPath;
+            qDebug() << "[TupLibraryFolder::updateSoundPaths()] - path -> " << path;
+        #endif
+
         item.path = path;
         soundRecords[i] = item;
     }

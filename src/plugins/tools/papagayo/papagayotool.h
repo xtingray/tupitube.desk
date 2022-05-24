@@ -103,7 +103,6 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
         void callForPlugin(int menu, int index);
 
     private slots:
-        // void saveMouthTransformations();
         void editLipsyncMouth(const QString &name);
         void removeCurrentLipSync(const QString &name);
 

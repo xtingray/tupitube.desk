@@ -30,6 +30,7 @@ class TUPITUBE_EXPORT TupWaveFormView : public QWidget
 	Q_OBJECT
 
     public:
+        enum Position { Beginning = 0, End, Middle };
         explicit TupWaveFormView(QWidget *parent = nullptr);
         ~TupWaveFormView();
 
