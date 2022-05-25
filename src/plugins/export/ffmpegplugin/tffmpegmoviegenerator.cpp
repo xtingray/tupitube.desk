@@ -320,7 +320,7 @@ AVStream * TFFmpegMovieGenerator::addVideoStream()
 bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TFFmpegMovieGenerator::loadInputAudio()] - soundPath -> " + soundPath;
+        qDebug() << "[TFFmpegMovieGenerator::loadInputAudio()] - soundPath -> " << soundPath;
     #endif
 
     QByteArray bytes = soundPath.toLocal8Bit();
@@ -331,7 +331,8 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
     error = avformat_open_input(&audioInputFormatContext, inputFile, 0, 0);
     if (error < 0) {
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - Warning: Could not open input file -> "
+            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - "
+                           "Warning: Could not open input file -> "
                         << inputFile;
         #endif
         return false;
@@ -340,7 +341,8 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
     error = avformat_find_stream_info(audioInputFormatContext, 0);
     if (error < 0) {
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - Failed to retrieve input stream information";
+            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - "
+                           "Failed to retrieve input stream information";
         #endif
         return false;
     }
@@ -352,7 +354,7 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
     if (!audioInputStream) {
         errorMsg = "ffmpeg error: audio input stream is NULL!";
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " + errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " << errorMsg;
         #endif
         return false;
     }
@@ -361,7 +363,7 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
     if (audioInputCodecPar->codec_type != AVMEDIA_TYPE_AUDIO) {
         errorMsg = "ffmpeg error: No audio stream was found!";
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " + errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " << errorMsg;
         #endif
         return false;
     }
@@ -376,7 +378,7 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
     if (!audioInputCodec) {
         errorMsg = "ffmpeg error: Could not find audio decoder.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " + errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " << errorMsg;
             qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - Unavailable Codec ID -> "
                         << avcodec_get_name(audioInputCodecID);
         #endif
@@ -387,7 +389,7 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
     if (!audioInputCodecContext) {
         errorMsg = "ffmpeg error: Could not initialize audio codec context.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " + errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " << errorMsg;
         #endif
         return false;
     }
@@ -396,7 +398,7 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
     if (error < 0) {
         errorMsg = "ffmpeg error: Can't copy codecpar values to input codec context.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " + errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " << errorMsg;
         #endif
         return false;
     }
@@ -539,7 +541,7 @@ bool TFFmpegMovieGenerator::openAudioOutputCodec()
     if (error < 0) {
         errorMsg = "ffmpeg error: Can't open audio output codec.";
         #ifdef TUP_DEBUG
-            qCritical() << "[TFFmpegMovieGenerator::openAudioOutputCodec()] - " + errorMsg;
+            qCritical() << "[TFFmpegMovieGenerator::openAudioOutputCodec()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
         return false;

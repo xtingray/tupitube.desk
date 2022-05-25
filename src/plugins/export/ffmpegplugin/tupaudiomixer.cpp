@@ -350,10 +350,11 @@ int TupAudioMixer::initFilterGraph()
                 error = avfilter_link(adelayContextList[i], 0, mixContext, i);
 
             if (error < 0) {
-                errorMsg = "Fatal Error: Couldn't connect filters.";
-                qDebug() << "";
-                qDebug() << "FILTER ERROR WITHIN LOOP -> " << error;
-                qDebug() << "i -> " << i;
+                errorMsg = "Fatal Error: Couldn't connect filters. (index: " + QString::number(i) + ")";
+                #ifdef TUP_DEBUG
+                    qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
+                    qCritical() << "ERROR CODE -> " << error;
+                #endif
                 return error;
             }
         }

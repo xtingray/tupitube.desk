@@ -703,8 +703,15 @@ bool TupSvg2Qt::svgmatrix2qtmatrix(const QString &data, QTransform &transform)
                QList<qreal> points = parseNumbersList(itr);
                ++itr; // ')'
 
-               Q_ASSERT(points.count() == 6);
-               transform = transform * QTransform(points[0], points[1], points[2], points[3], points[4], points[5]);
+               // Q_ASSERT(points.count() == 6);
+               if (points.count() == 6) {
+                   transform = transform * QTransform(points[0], points[1], points[2], points[3], points[4], points[5]);
+               } else {
+                   #ifdef TUP_DEBUG
+                      qWarning() << "[TupSvg2Qt::svgmatrix2qtmatrix()] - Warning: points != 6";
+                   #endif
+                   break;
+               }
            }
     }
     
