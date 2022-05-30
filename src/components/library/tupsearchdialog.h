@@ -61,7 +61,7 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
         ~TupSearchDialog();
 
     signals:
-        void assetStored(const QString &name, AssetType assetTypeCode, const QString &extension,
+        void assetStored(const QString &name, TupSearchDialog::AssetType assetTypeCode, const QString &extension,
                          int extensionId, QByteArray &data);
 
     private slots:

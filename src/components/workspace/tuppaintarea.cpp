@@ -830,53 +830,12 @@ void TupPaintArea::copyItems()
 
                 QDomDocument dom;
                 dom.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(dom));
-                QString plainItem = dom.toString();
                 QDomElement root = dom.documentElement();
                 QDomElement properties = root.firstChild().toElement();
-                QPointF pos;
-                TupSvg2Qt::parsePointF(properties.attribute("pos"), pos);
-
-                /*
-                qDebug() << "pos attribute -> " << pos;
-                qDebug() << "item->pos() -> " << item->pos();
-                qDebug() << "";
-                qDebug() << "DOM -> ";
-                qDebug() << dom.toString();
-                */
-
-                if (plainItem.startsWith("<rect")) { // Rectangle
-                    int x = root.attribute("x").toInt();
-                    int y = root.attribute("y").toInt();
-
-                    root.setAttribute("x", pos.x() + x);
-                    root.setAttribute("y", pos.y() + y);
-                    properties.setAttribute("pos", "(0,0)");
-                } else if (plainItem.startsWith("<ellipse")) { // Ellipse
-                    int cx = root.attribute("cx").toInt();
-                    int cy = root.attribute("cy").toInt();
-
-                    /*
-                    qDebug() << "Adjusting object...";
-                    qDebug() << "pos.x() + cx -> " << pos.x() << " + " << cx;
-                    qDebug() << "pos.y() + cy -> " << pos.y() << " + " << cy;
-                    */
-
-                    root.setAttribute("cx", pos.x() + cx);
-                    root.setAttribute("cy", pos.y() + cy);
-                    properties.setAttribute("pos", "(0,0)");
-                }
-
-                /*
-                qDebug() << "";
-                qDebug() << "DOM -> ";
-                qDebug() << dom.toString();
-                */
 
                 copiesXml << dom.toString();
 
                 if (itemsCount == 1) { // One item selection
-                    // qDebug() << "";
-                    // qDebug() << "ITEM POS -> " << item->pos();
                     copyCoords << item->boundingRect().topLeft();
 
                     minX = 0;
@@ -990,19 +949,36 @@ void TupPaintArea::pasteItems()
                 QPointF pos = QPointF(0, 0);
                 if (itemsCount == 1) { // One item selection
                     if (onMouse) { // Dynamic position
-                        double x = currentPos.x() - (copyCoords.at(i).x() + centerCoord.x());
-                        if (currentPos.x() >= copyCoords.at(i).x())
-                            x = fabs(x);
+                        if (xml.startsWith("<group")) {
+                            double x = currentPos.x() - (copyCoords.at(i).x() + centerCoord.x());
+                            if (currentPos.x() >= copyCoords.at(i).x())
+                                x = fabs(x);
 
-                        double y = currentPos.y() - (copyCoords.at(i).y() + centerCoord.y());
-                        if (currentPos.y() >= copyCoords.at(i).y())
-                            y = fabs(y);
+                            double y = currentPos.y() - (copyCoords.at(i).y() + centerCoord.y());
+                            if (currentPos.y() >= copyCoords.at(i).y())
+                                y = fabs(y);
 
-                        pos = QPointF(x, y);
+                            pos = QPointF(x, y);
+                            xml = "<group f=\"1\"" + xml.right(xml.length() - 6);
+                        } else {
+                            double x = currentPos.x() - (copyCoords.at(i).x() + centerCoord.x());
+                            if (currentPos.x() >= copyCoords.at(i).x())
+                                x = fabs(x);
+
+                            double y = currentPos.y() - (copyCoords.at(i).y() + centerCoord.y());
+                            if (currentPos.y() >= copyCoords.at(i).y())
+                                y = fabs(y);
+
+                            pos = QPointF(x, y);
+
+                            int initIndex = xml.indexOf("pos=");
+                            int lastIndex = xml.indexOf(" ", initIndex);
+                            QString newPos = "pos=\"(" + QString::number(x) + ", " + QString::number(y) + ")\"";
+                            xml = xml.left(initIndex) + newPos + xml.right(xml.length() - lastIndex);
+                        }
                     } else { // Same position
-                        // Path - Image - SVG
-                        if (xml.startsWith("<path") || xml.startsWith("<symbol") || xml.startsWith("<svg") ||
-                            xml.startsWith("<text") || xml.startsWith("<ellipse") || xml.startsWith("<rectangle")) {
+                        // Symbol - SVG
+                        if (xml.startsWith("<symbol") || xml.startsWith("<svg")) {
                             QDomDocument dom;
                             dom.setContent(xml);
                             QDomElement root = dom.documentElement();
@@ -1010,26 +986,21 @@ void TupPaintArea::pasteItems()
 
                             QPointF shift;
                             TupSvg2Qt::parsePointF(properties.attribute("pos"), shift);
-                            if (shift != QPointF(0,0))
-                                pos = shift;
-                        } else if (xml.startsWith("<group")) {
-                            QDomDocument dom;
-                            dom.setContent(xml);
-                            QDomElement root = dom.documentElement();
-                            QPointF shift;
-                            TupSvg2Qt::parsePointF(root.attribute("pos"), shift);
                             if (shift != QPointF(0,0))
                                 pos = shift;
                         }
                     }
                 } else { // Several items selection
-                    if (onMouse) {
+                    if (onMouse) { // Dynamic position
                         double x = currentPos.x() - centerCoord.x();
                         double y = currentPos.y() - centerCoord.y();
-
                         pos = QPointF(x, y);
-                    } else {
-                        if (xml.startsWith("<path") || xml.startsWith("<symbol") || xml.startsWith("<svg")) {
+
+                        int firstIndex = xml.indexOf(">");
+                        QString init = xml.left(firstIndex) + " f=\"1\"";
+                        xml = init + xml.right(xml.length() - firstIndex);
+                    } else { // Same position
+                        if (xml.startsWith("<symbol") || xml.startsWith("<svg")) {
                             QDomDocument dom;
                             dom.setContent(xml);
                             QDomElement root = dom.documentElement();
@@ -1038,23 +1009,9 @@ void TupPaintArea::pasteItems()
                             TupSvg2Qt::parsePointF(properties.attribute("pos"), shift);
                             if (shift != QPointF(0,0))
                                 pos = shift;
-                        } else if (xml.startsWith("<group")) {
-                            QDomDocument dom;
-                            dom.setContent(xml);
-                            QDomElement root = dom.documentElement();
-                            QPointF shift;
-                            TupSvg2Qt::parsePointF(root.attribute("pos"), shift);
-                            if (shift != QPointF(0,0))
-                                pos = shift;
                         }
                     }
                 }
-
-                /*
-                qDebug() << "";
-                qDebug() << "POS:";
-                qDebug() << pos;
-                */
 
                 TupProjectRequest event = TupRequestBuilder::createItemRequest(currentScene->currentSceneIndex(),
                                           currentScene->currentLayerIndex(),

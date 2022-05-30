@@ -42,6 +42,7 @@
 
 #include <QDir>
 #include <QTimer>
+#include <QTextStream>
 
 // The output bit rate in bit/s
 #define OUTPUT_BIT_RATE 96000

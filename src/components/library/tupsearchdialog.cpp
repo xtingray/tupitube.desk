@@ -437,7 +437,7 @@ void TupSearchDialog::startSearch()
         QByteArray postData = params.query(QUrl::FullyEncoded).toUtf8();
         QNetworkReply *reply = manager->post(request, postData);
         connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-        connect(reply, SIGNAL(finished(QNetworkReply*)), reply, SLOT(deleteLater()));
+        connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
 
         /* SQA: These connections don't work on Windows
         connect(reply, &QNetworkReply::finished, reply, &QNetworkReply::deleteLater);
@@ -645,7 +645,7 @@ void TupSearchDialog::getMiniature(const QString &code, const QString &desc)
     QNetworkReply *reply = manager->post(request, postData);
     connect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(updateProgress(qint64,qint64)));
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-    connect(reply, SIGNAL(finished(QNetworkReply*)), reply, SLOT(deleteLater()));
+    connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
 
     /* SQA: These connections don't work on Windows
     connect(reply, &QNetworkReply::downloadProgress, this, &TupSearchDialog::updateProgress);
@@ -831,7 +831,7 @@ void TupSearchDialog::getAsset()
         QByteArray postData = params.query(QUrl::FullyEncoded).toUtf8();
         QNetworkReply *reply = manager->post(request, postData);
         connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
-        connect(reply, SIGNAL(finished(QNetworkReply*)), reply, SLOT(deleteLater()));
+        connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
 
         /* SQA: This connection doesn't work on Windows
         connect(reply, &QNetworkReply::finished, reply, &QNetworkReply::deleteLater);

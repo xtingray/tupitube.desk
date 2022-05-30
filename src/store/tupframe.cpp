@@ -700,7 +700,8 @@ bool TupFrame::moveItem(TupLibraryObject::ObjectType objectType, int currentInde
 
                     if (zLimit == zMin) {
                         #ifdef TUP_DEBUG
-                            qWarning() << "[TupFrame::moveItem()] - MoveBack: Minimum level has been reached! (VECTOR/RASTER)";
+                            qWarning() << "[TupFrame::moveItem()] - "
+                                          "MoveBack: Minimum level has been reached! (VECTOR/RASTER)";
                         #endif
                         return true;
                     }
@@ -775,7 +776,8 @@ bool TupFrame::moveItem(TupLibraryObject::ObjectType objectType, int currentInde
                     int zLimit = graphics.at(currentIndex)->itemZValue();
                     if (zLimit == zMax) {
                         #ifdef TUP_DEBUG
-                            qWarning() << "[TupFrame::moveItem()] - MoveToFront: Maximum level has been reached! (VECTOR/RASTER)";
+                            qWarning() << "[TupFrame::moveItem()] - "
+                                          "MoveToFront: Maximum level has been reached! (VECTOR/RASTER)";
                         #endif
                         return true;
                     }
@@ -817,7 +819,8 @@ bool TupFrame::moveItem(TupLibraryObject::ObjectType objectType, int currentInde
                     int zLevel = static_cast<int> (svg.at(currentIndex)->zValue());
                     if (zLevel == zMin) {
                         #ifdef TUP_DEBUG
-                            qWarning() << "[TupFrame::moveItem()] - MoveOneLevelBack: Minimum level has been reached! (SVG)";
+                            qWarning() << "[TupFrame::moveItem()] - "
+                                          "MoveOneLevelBack: Minimum level has been reached! (SVG)";
                         #endif
                         return true;
                     }
@@ -861,7 +864,8 @@ bool TupFrame::moveItem(TupLibraryObject::ObjectType objectType, int currentInde
                             }
                         } else {                            
                             #ifdef TUP_DEBUG
-                                qDebug() << "[TupFrame::moveItem()] - Fatal Error: Something went wrong [ case MoveOneLevelBack/Svg ]";
+                                qDebug() << "[TupFrame::moveItem()] - "
+                                            "Fatal Error: Something went wrong [ case MoveOneLevelBack/Svg ]";
                             #endif
 
                             return false;
@@ -870,7 +874,8 @@ bool TupFrame::moveItem(TupLibraryObject::ObjectType objectType, int currentInde
                 } else {
                     if (graphics.at(currentIndex)->itemZValue() == zMin) {
                         #ifdef TUP_DEBUG
-                            qWarning() << "[TupFrame::moveItem()] - MoveOneLevelBack: Minimum level has been reached! (VECTOR/RASTER)";
+                            qWarning() << "[TupFrame::moveItem()] - "
+                                          "MoveOneLevelBack: Minimum level has been reached! (VECTOR/RASTER)";
                         #endif
                         return true;
                     }
@@ -914,7 +919,8 @@ bool TupFrame::moveItem(TupLibraryObject::ObjectType objectType, int currentInde
                             }
                         } else {                            
                             #ifdef TUP_DEBUG
-                                qDebug() << "[TupFrame::moveItem()] - Fatal Error: Something went wrong [ case MoveOneLevelBack/Items ]";
+                                qDebug() << "[TupFrame::moveItem()] - "
+                                            "Fatal Error: Something went wrong [ case MoveOneLevelBack/Items ]";
                             #endif
                             
                             return false;
@@ -935,7 +941,8 @@ bool TupFrame::moveItem(TupLibraryObject::ObjectType objectType, int currentInde
                     int zLevel = static_cast<int> (svg.at(currentIndex)->zValue());
                     if (zLevel == zMax) {
                         #ifdef TUP_DEBUG
-                            qWarning() << "[TupFrame::moveItem()] - MoveOneLevelToFront: Maximum level has been reached! (SVG)";
+                            qWarning() << "[TupFrame::moveItem()] - "
+                                          "MoveOneLevelToFront: Maximum level has been reached! (SVG)";
                         #endif
                         return true;
                     }
@@ -979,7 +986,8 @@ bool TupFrame::moveItem(TupLibraryObject::ObjectType objectType, int currentInde
                             }
                         } else {                            
                             #ifdef TUP_DEBUG
-                                qDebug() << "[TupFrame::moveItem()] - Fatal Error: Something went wrong [ case MoveOneLevelToFront/Svg ]";
+                                qDebug() << "[TupFrame::moveItem()] - "
+                                            "Fatal Error: Something went wrong [ case MoveOneLevelToFront/Svg ]";
                             #endif
                             
                             return false;
@@ -988,7 +996,8 @@ bool TupFrame::moveItem(TupLibraryObject::ObjectType objectType, int currentInde
                 } else {
                     if (graphics.at(currentIndex)->itemZValue() == zMax) {
                         #ifdef TUP_DEBUG
-                            qWarning() << "[TupFrame::moveItem()] - MoveOneLevelToFront: Maximum level has been reached! (VECTOR/RASTER)";
+                            qWarning() << "[TupFrame::moveItem()] - "
+                                          "MoveOneLevelToFront: Maximum level has been reached! (VECTOR/RASTER)";
                         #endif
                         return true;
                     }
@@ -1032,7 +1041,8 @@ bool TupFrame::moveItem(TupLibraryObject::ObjectType objectType, int currentInde
                             }
                         } else {
                             #ifdef TUP_DEBUG
-                                qDebug() << "[TupFrame::moveItem()] - Fatal Error: Something went wrong [ case MoveOneLevelToFront/Items ]";
+                                qDebug() << "[TupFrame::moveItem()] - "
+                                            "Fatal Error: Something went wrong [ case MoveOneLevelToFront/Items ]";
                             #endif
                             return false;
                         }
@@ -1201,10 +1211,16 @@ QGraphicsItem *TupFrame::createItem(QPointF coords, const QString &xml, bool loa
     if (library)
         itemFactory.setLibrary(library);
 
+    // Check if floating option is enabled
+    bool floatOn = false;
+    QString initPart = xml.left(xml.indexOf(">"));
+    if (initPart.contains("f=\"1\""))
+        floatOn = true;
+
     QGraphicsItem *graphicItem = itemFactory.create(xml);
     if (graphicItem) {
-        // SQA: Check if this instruction is required
-        graphicItem->setPos(coords);
+        if (floatOn) // Set item position over the mouse coords
+            graphicItem->setPos(coords);
         QString id = "path";
         if (library) {
             if (itemFactory.getType() == TupFactoryHandler::Library)

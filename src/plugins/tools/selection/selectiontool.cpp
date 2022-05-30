@@ -167,6 +167,7 @@ void SelectionTool::press(const TupInputDeviceInformation *input, TupBrushManage
             if (item->group())
                 item = qgraphicsitem_cast<QGraphicsItem *>(item->group());
             bool found = false;
+            // Checking if item selected already has nodes
             foreach (NodeManager *nodeManager, nodeManagers) {
                 if (item == nodeManager->parentItem()) {
                     found = true;
@@ -179,14 +180,14 @@ void SelectionTool::press(const TupInputDeviceInformation *input, TupBrushManage
                     qDebug() << "[SelectionTool::press()] - Adding node manager to item!";
                 #endif
 
+                item->setFlag(QGraphicsItem::ItemIsMovable, false); // To avoid initial awkward movement
                 NodeManager *manager = new NodeManager(Node::Selection, item, gScene, nodeZValue);
                 connect(manager, SIGNAL(rotationUpdated(int)), settingsPanel, SLOT(updateRotationAngle(int)));
                 connect(manager, SIGNAL(scaleUpdated(double,double)), settingsPanel, SLOT(updateScaleFactor(double,double)));
 
-                /* SQA: These connections don't work on Windows
-                connect(manager, &NodeManager::rotationUpdated, settingsPanel, &SelectionSettings::updateRotationAngle);
-                connect(manager, &NodeManager::scaleUpdated, settingsPanel, &SelectionSettings::updateScaleFactor);
-                */
+                // SQA: These connections don't work on Windows
+                // connect(manager, &NodeManager::rotationUpdated, settingsPanel, &SelectionSettings::updateRotationAngle);
+                // connect(manager, &NodeManager::scaleUpdated, settingsPanel, &SelectionSettings::updateScaleFactor);
                 manager->show();
                 manager->resizeNodes(realFactor);
                 nodeManagers << manager;

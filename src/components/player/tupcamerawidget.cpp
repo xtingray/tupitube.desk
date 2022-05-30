@@ -455,7 +455,14 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
         }
     }
 
-    return previewScreen->handleResponse(response);
+    if (previewScreen)
+        return previewScreen->handleResponse(response);
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraWidget::handleProjectResponse()] - Fatal Error: previewScreen is NULL!";
+    #endif
+
+    return false;
 }
 
 /*

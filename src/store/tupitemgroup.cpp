@@ -83,9 +83,11 @@ QDomElement TupItemGroup::toXml(QDomDocument &doc) const
         root.appendChild(dynamic_cast<TupAbstractSerializable *>(item)->toXml(doc));
     }
 
+    /*
     QPointF point = this->scenePos();
     QString pos = "(" + QString::number(point.x()) + ", " + QString::number(point.y()) + ")";
     root.setAttribute("pos", pos);
+    */
 
     root.appendChild(TupSerializer::properties(this, doc));
     
