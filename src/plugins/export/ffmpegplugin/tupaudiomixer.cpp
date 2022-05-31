@@ -401,7 +401,6 @@ int TupAudioMixer::initFilterGraph()
     return 0;
 }
 
-
 // Open an output file and the required encoder.
 // Also set some basic encoder parameters.
 // Some of these parameters are based on the input file's parameters.
@@ -436,7 +435,7 @@ int TupAudioMixer::openOutputFile(const char *filename, AVCodecContext *inputCod
     
     // Guess the desired container format based on the file extension.
     if (!(outputFormatContext->oformat = av_guess_format(nullptr, filename, nullptr))) {
-        errorMsg = "Fatal Error: Could not find output file format.";
+        errorMsg = "Fatal Error: Could not find output file format -> " + QString(filename);
         #ifdef TUP_DEBUG
             qCritical() << "[TupAudioMixer::openOutputFile()] - " << errorMsg;
         #endif
@@ -942,7 +941,8 @@ bool TupAudioMixer::mergeAudios()
         }
     }
     
-    char *path = outputPath.toLocal8Bit().data();
+    QByteArray outputArray = outputPath.toLocal8Bit();
+    char *path = outputArray.data();
     error = openOutputFile(path, inputCodecContextList[0]);
     if (error < 0) {
         errorMsg = "Fatal Error: Can't open output file -> " + outputPath;

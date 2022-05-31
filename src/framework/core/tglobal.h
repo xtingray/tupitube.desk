@@ -92,4 +92,9 @@ struct SoundResource {
 #define DARK_THEME 0
 #define LIGHT_THEME 1
 
+#ifdef Q_OS_WIN
+  #define __STDC_FORMAT_MACROS 1
+  #include <inttypes.h>
+#endif
+
 #endif

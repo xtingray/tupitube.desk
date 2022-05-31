@@ -144,23 +144,32 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
         emit progressChanged(0);
 
         QString filename = TAlgorithm::randomString(12);
-        wavAudioPath = CACHE_DIR + filename + ".wav";
+
+        #ifdef Q_OS_WIN
+            wavAudioPath =  QDir::homePath() + "/" + filename + ".wav";
+        #else
+            wavAudioPath = CACHE_DIR + filename + ".wav";
+        #endif
         TupAudioMixer *mixer = new TupAudioMixer(fps, sounds, wavAudioPath);
         connect(mixer, SIGNAL(messageChanged(const QString &)), this, SIGNAL(messageChanged(const QString &)));
         connect(mixer, SIGNAL(progressChanged(int)), this, SIGNAL(progressChanged(int)));
         if (!mixer->mergeAudios()) {
             errorMsg = mixer->getErrorMsg();
             #ifdef TUP_DEBUG
-                qDebug() << "[FFmpegPlugin::exportToFormat()] - Fatal Error: Can't create WAV audio file -> " + wavAudioPath;
+                qDebug() << "[FFmpegPlugin::exportToFormat()] - "
+                            "Fatal Error: Can't create WAV audio file -> " << wavAudioPath;
             #endif
             delete mixer;
+
             return false;
         }
+        delete mixer;
 
-        QFile audioFile(wavAudioPath);
-        if (audioFile.exists()) {
+        QFile *audioFile = new QFile(wavAudioPath);
+        if (audioFile->exists()) {
             #ifdef TUP_DEBUG
-                qDebug() << "[FFmpegPlugin::exportToFormat()] - WAV file created successfully! -> " + wavAudioPath;
+                qDebug() << "[FFmpegPlugin::exportToFormat()] - "
+                            "WAV file created successfully! -> " << wavAudioPath;
             #endif
 
             emit messageChanged(tr("Processing final audio track..."));
@@ -174,22 +183,25 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
                 errorMsg = transcoder->getErrorMsg();
                 #ifdef TUP_DEBUG
                     qDebug() << "[FFmpegPlugin::exportToFormat()] - "
-                                "Fatal Error: Can't create AAC audio file -> " + aacAudioPath;
+                                "Fatal Error: Can't create AAC audio file -> " << aacAudioPath;
                 #endif
                 delete transcoder;
+
                 return false;
             }
+            delete transcoder;
 
             #ifdef TUP_DEBUG
                 qDebug() << "[FFmpegPlugin::exportToFormat()] - "
-                            "AAC file created successfully! -> " + aacAudioPath;
+                            "AAC file created successfully! -> " << aacAudioPath;
             #endif
 
-            if (!audioFile.remove()) {
+            if (!audioFile->remove()) {
                 errorMsg = "Fatal Error: Can't remove WAV file -> " + wavAudioPath;
                 #ifdef TUP_DEBUG
-                    qCritical() << "[FFmpegPlugin::exportToFormat()] - " + errorMsg;
+                    qCritical() << "[FFmpegPlugin::exportToFormat()] - " << errorMsg;
                 #endif
+
                 return false;
             }
         }
@@ -242,9 +254,9 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
     delete generator;
 
     if (hasSound) {
-        QFile audioFile(aacAudioPath);
-        if (audioFile.exists()) {
-            if (!audioFile.remove()) {
+        QFile accAudioFile(aacAudioPath);
+        if (accAudioFile.exists()) {
+            if (!accAudioFile.remove()) {
                 errorMsg = "Fatal Error: Can't remove file -> " + aacAudioPath;
                 #ifdef TUP_DEBUG
                     qCritical() << "[FFmpegPlugin::exportToFormat()] - " + errorMsg;
