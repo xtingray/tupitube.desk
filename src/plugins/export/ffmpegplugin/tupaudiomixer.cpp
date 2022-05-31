@@ -971,6 +971,13 @@ bool TupAudioMixer::mergeAudios()
         return false;
     }
 
+    avcodec_close(outputCodecContext);
+    avcodec_free_context(&outputCodecContext);
+
+    avio_close(outputFormatContext->pb);
+    avformat_free_context(outputFormatContext);
+    outputFormatContext = nullptr;
+
     return true;
 }
 
