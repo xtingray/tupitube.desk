@@ -16,8 +16,7 @@ win32 {
     LIBS += -L$$STORE_DIR/release/ -ltupistore
 
     INCLUDEPATH += C:/devel/sources/libsndfile/include
-    # LIBS += -LC:/devel/sources/libsndfile/lib -llibsndfile-1
-	LIBS += -LC:/devel/sources/libsndfile/lib -lsndfile
+    LIBS += -LC:/devel/sources/libsndfile/bin -lsndfile
 } else { # unix
     !include(../../../tupiglobal.pri) {
              error("Run ./configure first!")
