@@ -201,7 +201,7 @@ int main(int argc, char ** argv)
 
     // Looking for plugins for TupiTube Desk
     #ifdef TUP_DEBUG
-        qWarning() << "[main.cpp] - Loading plugins from: " << kAppProp->pluginDir();
+        qWarning() << "[main.cpp] - Loading plugins from -> " << kAppProp->pluginDir();
     #endif
     QApplication::addLibraryPath(kAppProp->pluginDir());
 

@@ -51,6 +51,13 @@ TupLibraryFolder::TupLibraryFolder(const QString &key, TupProject *animation, QO
 
 TupLibraryFolder::~TupLibraryFolder()
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[~TupLibraryFolder()]";
+    #endif
+
+    objects.clear();
+    */
 }
 
 QString TupLibraryFolder::getImagesFolderPath() const
@@ -379,14 +386,16 @@ TupLibraryObject *TupLibraryFolder::getObject(const QString &key) const
         TupLibraryObject *object = folder->getObject(key);
         if (object) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryFolder::getObject()] - Found it at folder -> " << folder->getId();
+                qDebug() << "[TupLibraryFolder::getObject()] - "
+                            "Found it at folder -> " << folder->getId();
             #endif
             return object;
         }
     }
     
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryFolder::getObject()] - Fatal Error: Can't get object with id -> " << key;
+        qDebug() << "[TupLibraryFolder::getObject()] - "
+                    "Fatal Error: Can't get object with id -> " << key;
     #endif
 
     return nullptr;
@@ -413,7 +422,8 @@ TupLibraryFolder *TupLibraryFolder::getFolder(const QString &key) const
     }
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryFolder::getFolder()] - Fatal Error: Can't find folder with id -> " << key;
+        qDebug() << "[TupLibraryFolder::getFolder()] - "
+                    "Fatal Error: Can't find folder with id -> " << key;
     #endif
    
     return nullptr;
@@ -427,7 +437,8 @@ bool TupLibraryFolder::folderExists(const QString &key) const
     }
   
     #ifdef TUP_DEBUG
-        qWarning() << "[TupLibraryFolder::folderExists()] - Fatal Error: Can't find folder with id -> " << key;
+        qWarning() << "[TupLibraryFolder::folderExists()] - "
+                      "Fatal Error: Can't find folder with id -> " << key;
     #endif
   
     return false;
@@ -448,7 +459,8 @@ bool TupLibraryFolder::renameObject(const QString &folder, const QString &oldId,
     } 
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryFolder::renameObject()] - Fatal Error: Object not found -> " << oldId;
+        qDebug() << "[TupLibraryFolder::renameObject()] - "
+                    "Fatal Error: Object not found -> " << oldId;
     #endif
 
     return false;
@@ -464,7 +476,8 @@ bool TupLibraryFolder::renameFolder(const QString &oldId, const QString &newId)
     } 
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryFolder::renameFolder()] - Fatal Error: Folder not found -> " << oldId;
+        qDebug() << "[TupLibraryFolder::renameFolder()] - "
+                    "Fatal Error: Folder not found -> " << oldId;
     #endif
 
     return false;
@@ -495,6 +508,7 @@ LibraryObjects TupLibraryFolder::getObjects() const
     return objects;
 }
 
+/*
 LibraryObjects TupLibraryFolder::getSoundObjects() const
 {
     #ifdef TUP_DEBUG
@@ -518,6 +532,7 @@ LibraryObjects TupLibraryFolder::getSoundObjects() const
 
     return items;
 }
+*/
 
 void TupLibraryFolder::fromXml(const QString &xml)
 {
@@ -673,6 +688,9 @@ void TupLibraryFolder::reset()
 
     if (!folders.isEmpty())
         folders.clear();
+
+    if (!soundRecords.isEmpty())
+        soundRecords.clear();
 }
 
 void TupLibraryFolder::updatePaths(const QString &newPath)

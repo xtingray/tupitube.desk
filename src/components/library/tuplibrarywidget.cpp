@@ -228,9 +228,11 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
 
 TupLibraryWidget::~TupLibraryWidget()
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[~TupLibraryWidget()]";
     #endif
+    */
 }
 
 void TupLibraryWidget::resetGUI()

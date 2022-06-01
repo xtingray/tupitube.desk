@@ -43,12 +43,11 @@
 TupScreen::TupScreen(TupProject *work, const QSize viewSize, bool sizeChanged, QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen()] - viewSize: " << viewSize;
+        qDebug() << "[TupScreen()] - viewSize -> " << viewSize;
     #endif
 
     project = work;
     library = work->getLibrary();
-    // QList<SoundResource> effectsList = library->soundResourcesList();
 
     isScaled = sizeChanged;
     screenDimension = viewSize;
@@ -90,6 +89,12 @@ TupScreen::~TupScreen()
     clearScenesArrays();
 
     renderControl.clear();
+
+    soundRecords.clear();
+
+    foreach(QMediaPlayer *player, soundPlayer)
+        player->setMedia(QMediaContent());
+
     soundPlayer.clear();
 
     delete timer;

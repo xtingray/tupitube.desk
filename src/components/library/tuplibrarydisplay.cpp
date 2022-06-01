@@ -40,6 +40,10 @@
 
 TupLibraryDisplay::TupLibraryDisplay() : QWidget()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryDisplay()]";
+    #endif
+
     previewPanel = new TupItemPreview(this);
     soundPlayer = new TupSoundPlayer(this);
     connect(soundPlayer, SIGNAL(frameUpdated(int)), this, SIGNAL(frameUpdated(int)));
@@ -55,6 +59,11 @@ TupLibraryDisplay::TupLibraryDisplay() : QWidget()
 
 TupLibraryDisplay::~TupLibraryDisplay()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[~TupLibraryDisplay()]";
+    #endif
+
+    delete soundPlayer;
 }
 
 QSize TupLibraryDisplay::sizeHint() const

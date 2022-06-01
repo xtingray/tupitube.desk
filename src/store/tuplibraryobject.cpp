@@ -576,7 +576,8 @@ bool TupLibraryObject::saveData(const QString &dataDir)
                      return true;
                  } else {
                      #ifdef TUP_DEBUG
-                         qDebug() << "[TupLibraryObject::saveData()] - Fatal Error: Lack of permission to save file -> " << dataPath;
+                         qDebug() << "[TupLibraryObject::saveData()] - "
+                                     "Fatal Error: Lack of permission to save file -> " << dataPath;
                      #endif
                      return false;
                  }
