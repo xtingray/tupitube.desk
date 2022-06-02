@@ -186,8 +186,10 @@ void TupScreen::paintEvent(QPaintEvent *)
     */
 
     if (!mute) {
-        if (playerIsActive && playFlag)
-            playSoundAt(currentFramePosition);
+        if (photograms.count() > 1) {
+            if (playerIsActive && playFlag)
+                playSoundAt(currentFramePosition);
+        }
     }
 
     if (!firstShoot) {
@@ -256,11 +258,6 @@ void TupScreen::playBack()
 
     if (playFlag) {
         stopSounds();
-
-        /*
-        foreach (TupSoundLayer *sound, k->sounds)
-            sound->stop();
-        */
 
         playFlag = false;
         if (timer->isActive())
@@ -522,6 +519,8 @@ void TupScreen::render()
        qDebug() << "[TupScreen::render()]";
     #endif
 
+    // stopSounds();
+
     emit isRendering(0);
 
     if (!project->sceneAt(sceneIndex)) {
@@ -531,15 +530,6 @@ void TupScreen::render()
         #endif
         return;
     }
-
-    /* SQA: This code will be required for the sound feature. Do not remove. 
-    k->sounds.clear();
-    int soundLayersTotal = scene->soundLayers().size();
-    for (int i=0; i<soundLayersTotal; i++) {
-         TupSoundLayer *layer = scene->soundLayers().at(i);
-         k->sounds << layer;
-    }
-    */
 
     clearPhotograms();
 
