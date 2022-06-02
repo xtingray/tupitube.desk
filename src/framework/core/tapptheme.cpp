@@ -59,7 +59,8 @@ QString TAppTheme::themeSettings()
         file.close();
     } else {
         #ifdef TUP_DEBUG 
-            qWarning() << "[TAppTheme::getThemeSettings()] - Fatal Error: Theme file doesn't exist -> " << QString(THEME_DIR + "config/ui.qss");
+            qWarning() << "[TAppTheme::getThemeSettings()] - "
+                          "Fatal Error: Theme file doesn't exist -> " << QString(THEME_DIR + "config/ui.qss");
         #endif
     }
 
