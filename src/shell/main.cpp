@@ -150,12 +150,7 @@ int main(int argc, char ** argv)
     else
         kAppProp->setDataDir(xmlDir + locale + "/");
 
-    TCONFIG->beginGroup("Theme");
-    int theme = TCONFIG->value("UITheme", DARK_THEME).toInt();
     QString themePath = "/dark/";
-    if (theme == LIGHT_THEME)
-        themePath = "/light/";
-
     kAppProp->setThemeDir(kAppProp->shareDir() + "themes" + themePath);
     kAppProp->setRasterResourcesDir(kAppProp->shareDir() + "themes/raster/");
     // Setting the repository directory (where the projects are saved)
