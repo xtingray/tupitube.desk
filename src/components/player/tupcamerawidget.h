@@ -109,7 +109,6 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         void addPlayerButtonsBar();
         void addStatusPanel();
         void setDimensionLabel(const QSize dimension);
-        // void updateFPSFromScene(const int sceneIndex);
 
         int uiTheme;
         QBoxLayout *layout;

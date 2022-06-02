@@ -202,7 +202,8 @@ void TupCameraWidget::addTimerPanel()
     QString labelColor = "#ffffff";
     if (uiTheme == DARK_THEME)
         labelColor = "#c8c8c8";
-    QString style = "QLabel { background-color: " + labelColor + "; border: 1px solid #777777; border-radius: 2px; }";
+    QString style = "QLabel { background-color: " + labelColor
+                    + "; border: 1px solid #777777; border-radius: 2px; }";
     currentFrameBox->setStyleSheet(style);
 
     framesCount = new QLabel;
@@ -344,15 +345,20 @@ QSize TupCameraWidget::sizeHint() const
 
 void TupCameraWidget::doPlay()
 {
+    int frames = previewScreen->sceneTotalFrames();
+
     #ifdef TUP_DEBUG
-        qDebug() << "[TupCameraWidget::doPlay()]";
+        qDebug() << "[TupCameraWidget::doPlay()] - frames -> " << frames;
     #endif
 
     previewScreen->play();
+
     bool flag = false;
-    if (previewScreen->currentSceneFrames() > 1)
+    if (frames > 1)
         flag = true;
+
     status->enableButtons(flag);
+    cameraBar->updatePlayButton(flag);
 }
 
 void TupCameraWidget::doPlayBack()
@@ -362,13 +368,19 @@ void TupCameraWidget::doPlayBack()
 
 void TupCameraWidget::doPause()
 {
+    int frames = previewScreen->sceneTotalFrames();
+
     #ifdef TUP_DEBUG
-        qDebug() << "[TupCameraWidget::doPause()]";
+        qDebug() << "[TupCameraWidget::doPause()] - frames -> " << frames;
     #endif
 
-    bool playOn = previewScreen->isPlaying();
-    cameraBar->updatePlayButton(!playOn);
-    previewScreen->pause();
+    if (frames > 1) {
+        bool playOn = previewScreen->isPlaying();
+        cameraBar->updatePlayButton(!playOn);
+        previewScreen->pause();
+    } else {
+        cameraBar->updatePlayButton(false);
+    }
 }
 
 void TupCameraWidget::doStop()
@@ -447,8 +459,9 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
             default:
             {
                  #ifdef TUP_DEBUG
-                     qDebug() << "[TupCameraWidget::handleProjectResponse()] - Unknown/Unhandled project action: "
-                              << sceneResponse->getAction();
+                     qDebug() << "[TupCameraWidget::handleProjectResponse()] - "
+                                 "Unknown/Unhandled project action: "
+                                 << sceneResponse->getAction();
                  #endif
             }
             break;
@@ -459,20 +472,12 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
         return previewScreen->handleResponse(response);
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupCameraWidget::handleProjectResponse()] - Fatal Error: previewScreen is NULL!";
+        qDebug() << "[TupCameraWidget::handleProjectResponse()] - "
+                    "Fatal Error: previewScreen is NULL!";
     #endif
 
     return false;
 }
-
-/*
-void TupCameraWidget::updateFPSFromScene(const int sceneIndex)
-{
-    int fps = project->getFPS(sceneIndex);
-    fpsDelta = 1.0 / fps;
-    status->setFPS(fps);
-}
-*/
 
 void TupCameraWidget::setFPS(int fps)
 {

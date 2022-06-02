@@ -408,13 +408,6 @@ void TupScreen::advance()
         stopSounds();
     }
 
-    /*
-    if (currentFramePosition == 0) {
-        foreach (TupSoundLayer *sound, k->sounds)
-            sound->play();
-    }
-    */
-
     if (currentFramePosition < photograms.count()) {
         repaint();
         currentFramePosition++;
@@ -519,8 +512,6 @@ void TupScreen::render()
        qDebug() << "[TupScreen::render()]";
     #endif
 
-    // stopSounds();
-
     emit isRendering(0);
 
     if (!project->sceneAt(sceneIndex)) {
@@ -585,7 +576,8 @@ void TupScreen::resizeEvent(QResizeEvent *event)
         photograms = animationList.at(sceneIndex);
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupScreen::resizeEvent()] - Error: Current index is invalid -> " << sceneIndex;
+            qWarning() << "[TupScreen::resizeEvent()] - "
+                          "Error: Current index is invalid -> " << sceneIndex;
         #endif
     }
 
@@ -614,7 +606,8 @@ void TupScreen::updateSceneIndex(int index)
         photograms = animationList.at(sceneIndex);
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupScreen::updateSceneIndex()] - Error: Can't set current photogram array -> " << sceneIndex;
+            qWarning() << "[TupScreen::updateSceneIndex()] - "
+                          "Error: Can't set current photogram array -> " << sceneIndex;
         #endif
     }
 }
@@ -642,6 +635,28 @@ TupScene *TupScreen::currentScene()
     return nullptr;
 }
 
+int TupScreen::sceneTotalFrames()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScreen::sceneTotalFrames()]";
+    #endif
+
+    TupScene *scene;
+    if (sceneIndex > -1) {
+        scene = project->sceneAt(sceneIndex);
+        if (scene)
+            return scene->totalPhotograms();
+    } else {
+        if (project->scenesCount() == 1) {
+            sceneIndex = 0;
+            scene = project->sceneAt(0);
+            return scene->totalPhotograms();
+        }
+    }
+
+    return 0;
+}
+
 // Update and paint the first image of the current scene
 void TupScreen::updateAnimationArea()
 {
@@ -657,8 +672,8 @@ void TupScreen::updateAnimationArea()
         update();
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupScreen::updateAnimationArea()] - Fatal Error: Can't access to scene index: "
-                       << sceneIndex;
+            qWarning() << "[TupScreen::updateAnimationArea()] - "
+                          "Fatal Error: Can't access to scene index: " << sceneIndex;
         #endif
     }
 }
@@ -686,7 +701,8 @@ void TupScreen::updateFirstFrame()
             renderer->render(painter);
 
             if (isScaled)
-                currentPhotogram = renderized.scaledToWidth(screenDimension.width(), Qt::SmoothTransformation);
+                currentPhotogram = renderized.scaledToWidth(screenDimension.width(),
+                                                            Qt::SmoothTransformation);
             else
                 currentPhotogram = renderized;
 
@@ -703,12 +719,14 @@ void TupScreen::updateFirstFrame()
             renderer = nullptr;
         } else {
             #ifdef TUP_DEBUG
-                qWarning() << "[TupScreen::updateFirstFrame()] - Fatal Error: Null scene at index -> " << sceneIndex;
+                qWarning() << "[TupScreen::updateFirstFrame()] - "
+                              "Fatal Error: Null scene at index -> " << sceneIndex;
             #endif
         }
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupScreen::updateFirstFrame()] - Fatal Error: Can't access to scene index -> " << sceneIndex;
+            qWarning() << "[TupScreen::updateFirstFrame()] - "
+                          "Fatal Error: Can't access to scene index -> " << sceneIndex;
         #endif
     }
 }
@@ -810,7 +828,8 @@ void TupScreen::playSoundAt(int frame)
             }
         } else {
             #ifdef TUP_DEBUG
-                qWarning() << "[TupScreen::playSoundAt()] - Sound file is muted -> " << soundRecord.path;
+                qWarning() << "[TupScreen::playSoundAt()] - "
+                              "Sound file is muted -> " << soundRecord.path;
             #endif
         }
     }
@@ -835,11 +854,6 @@ void TupScreen::stopSounds()
     int size = soundRecords.count();
     for (int i=0; i<size; i++)
         soundPlayer.at(i)->stop();
-}
-
-int TupScreen::currentSceneFrames()
-{
-    return photograms.count();
 }
 
 void TupScreen::mousePressEvent(QMouseEvent *event)
