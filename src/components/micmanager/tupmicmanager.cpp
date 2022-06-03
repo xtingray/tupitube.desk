@@ -347,6 +347,8 @@ void TupMicManager::discardRecording()
     if (ret == QMessageBox::RejectRole)
         return;
 
+    statusLabel->setText(tr(""));
+
     nameInput->setReadOnly(false);
     nameInput->setText(tr("Sound 01"));
     nameInput->setFocus();
