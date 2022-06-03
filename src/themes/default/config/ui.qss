@@ -1,0 +1,15 @@
+QWidget { 
+    background-color: BG_PARAM
+} 
+
+QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QTableView, QListWidget, QTextEdit, QPlainTextEdit { 
+    background: rgb(200,200,200) 
+}
+
+QGraphicsView {
+    background-color: rgb(80,80,80)
+}
+
+QListWidget { 
+    background-color: rgb(220,220,220) 
+}
