@@ -1,7 +1,0 @@
-QWidget { 
-    background-color: rgb(160,160,160) 
-} 
-
-QTreeWidget { 
-    background: rgb(200,200,200) 
-}

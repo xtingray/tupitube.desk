@@ -150,11 +150,10 @@ int main(int argc, char ** argv)
     else
         kAppProp->setDataDir(xmlDir + locale + "/");
 
-    QString themePath = "/dark/";
-    kAppProp->setThemeDir(kAppProp->shareDir() + "themes" + themePath);
+    kAppProp->setThemeDir(kAppProp->shareDir() + "themes/default/");
     kAppProp->setRasterResourcesDir(kAppProp->shareDir() + "themes/raster/");
+
     // Setting the repository directory (where the projects are saved)
-    // application.createCache(TCONFIG->value("Cache").toString());
     application.createCache(cachePath);
 
     #ifdef TUP_DEBUG
