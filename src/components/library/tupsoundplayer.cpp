@@ -110,7 +110,6 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->addSpacing(5);
     layout->addWidget(frameWidget);
-    // layout->addWidget(lipSyncWidget);
     layout->addLayout(timerLayout);
     layout->addLayout(sliderLayout);
     layout->addLayout(buttonLayout);
@@ -130,14 +129,14 @@ QSize TupSoundPlayer::sizeHint() const
 void TupSoundPlayer::setSoundParams(TupLibraryObject *sound)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupSoundPlayer::setSoundParams()] - isLipsyncVoice() -> " << sound->isLipsyncVoice();
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - getSoundType() -> " << sound->getSoundType();
         qDebug() << "[TupSoundPlayer::setSoundParams()] - frameToPlay() -> " << sound->frameToPlay();
         qDebug() << "[TupSoundPlayer::setSoundParams()] - isMuted() -> " << sound->isMuted();
     #endif
 
     player->setMedia(QUrl::fromLocalFile(sound->getDataPath()));
     soundID = sound->getSymbolName();
-    enableLipSyncInterface(sound->isLipsyncVoice(), sound->frameToPlay());
+    enableLipSyncInterface(sound->getSoundType(), sound->frameToPlay());
 
     mute = sound->isMuted();
     if (mute) {
@@ -147,9 +146,9 @@ void TupSoundPlayer::setSoundParams(TupLibraryObject *sound)
     }
 }
 
-void TupSoundPlayer::enableLipSyncInterface(bool isLipsync, int frame)
+void TupSoundPlayer::enableLipSyncInterface(SoundType type, int frame)
 {
-    if (!isLipsync) {
+    if (type != Lipsync) {
         frameBox->setVisible(true);
         frameLabel->setText(tr("Play at frame:") + " ");
         frameBox->blockSignals(true);

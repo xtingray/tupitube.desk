@@ -98,8 +98,11 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         int frameToPlay();
         void updateFrameToPlay(int frame);
 
-        bool isLipsyncVoice();
-        void setLipsyncVoiceFlag(bool isVoice);
+        // bool isLipsyncVoice();
+        // void setLipsyncVoiceFlag(bool isVoice);
+
+        SoundType getSoundType();
+        void setSoundType(SoundType type);
 
         QString getShortId() const;
         QString getExtension() const;
@@ -110,8 +113,8 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         
         bool saveData(const QString &dataDir);
 
-        void setSoundResourceFlag(bool flag);
-        bool isSoundResource();
+        // void setSoundResourceFlag(bool flag);
+        // bool isSoundResource();
 
         // bool isNativeGroup();
         QString toString() const;
@@ -138,8 +141,9 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         QByteArray rawData;
         QString xmlString;
 
-        bool objectIsSoundResource;
-        bool lipsyncVoice;
+        // bool objectIsSoundResource;
+        // bool lipsyncVoice;
+        SoundType soundType;
         bool mute;
         // bool isGroup;
         int playAt;

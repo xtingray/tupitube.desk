@@ -77,7 +77,7 @@ _EOH_
     version = "0.2"
     codeName = "Aiyra"
     revision = "19"
-    configVersion = "3"
+    configVersion = "4"
 
     Info.info << "Compiling \033[91mTupiTube " +  version + "." + revision + "\033[0m (" +  codeName + ")" << $endl
     Info.info << "Debug support... "

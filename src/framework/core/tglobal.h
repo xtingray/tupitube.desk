@@ -82,11 +82,13 @@
 #define DEFAULT_FONT_SIZE 36
 
 enum MediaType {Video = 0, Audio};
+enum SoundType {NoSound = 0, Lipsync = 1, Effect = 2};
 struct SoundResource {
     QString key;
     int frame;
     QString path;
     bool muted;
+    SoundType type;
 };
 
 #define DARK_THEME 0

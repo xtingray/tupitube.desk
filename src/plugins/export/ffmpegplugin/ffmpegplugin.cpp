@@ -131,6 +131,9 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
     QList<SoundResource> sounds;
     if (library) {
         QList<SoundResource> soundItems = library->soundResourcesList();
+        #ifdef TUP_DEBUG
+            qDebug() << "[FFmpegPlugin::exportToFormat()] - Sound items total -> " << soundItems.size();
+        #endif
         if (!soundItems.isEmpty()) {
             foreach(SoundResource item, soundItems) {
                 if (!item.muted)
@@ -205,6 +208,10 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
                 return false;
             }
         }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[FFmpegPlugin::exportToFormat()] - Warning: Project has NO sounds!";
+        #endif
     }
 
     TFFmpegMovieGenerator *generator = new TFFmpegMovieGenerator(format, size, fps, duration, aacAudioPath);

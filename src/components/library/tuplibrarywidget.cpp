@@ -1531,7 +1531,7 @@ void TupLibraryWidget::layerResponse(TupLayerResponse *event)
             TupLibraryObject *sound = library->findSoundFile(id);
             QString currentId = display->getSoundID();
             if (currentId.compare(sound->getSymbolName()) == 0)
-                display->enableLipSyncInterface(false, sound->frameToPlay() + 1);
+                display->enableLipSyncInterface(sound->getSoundType(), sound->frameToPlay() + 1);
         }
     }
 }
@@ -1625,10 +1625,12 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                          if (object) {
                              if (!library->isLoadingProject()) {
                                  if (isEffectSound) {
-                                     object->setSoundResourceFlag(true);
+                                     object->setSoundType(Effect);
+                                     // object->setSoundResourceFlag(true);
                                      isEffectSound = false;
                                  } else {
-                                     object->setLipsyncVoiceFlag(true);
+                                     object->setSoundType(Lipsync);
+                                     // object->setLipsyncVoiceFlag(true);
                                  }
                              }
 
@@ -1963,7 +1965,8 @@ void TupLibraryWidget::refreshItemFromCollection(LibraryObjects collection)
            updateItem(object->getShortId(), object->getExtension().toLower(), object);
        } else {
            #ifdef TUP_DEBUG
-               qDebug() << "[TupLibraryWidget::updateItemFromSaveAction()] - Fatal Error: The library item modified was not found!";
+               qDebug() << "[TupLibraryWidget::updateItemFromSaveAction()] - "
+                           "Fatal Error: The library item modified was not found!";
            #endif
        }
     }

@@ -70,8 +70,8 @@ QString TupLibraryFolder::getAudioFolderPath() const
     return project->getDataDir() + "audio/";
 }
 
-TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::ObjectType type, const QString &name, const QByteArray &data,
-                                                 const QString &folder, bool loaded)
+TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::ObjectType type, const QString &name,
+                                                 const QByteArray &data, const QString &folder, bool loaded)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryFolder::createSymbol()]";
@@ -115,12 +115,18 @@ TupLibraryObject *TupLibraryFolder::createSymbol(TupLibraryObject::ObjectType ty
     bool success = object->saveData(project->getDataDir());
     if (success) {
         if (type == TupLibraryObject::Audio) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupLibraryFolder::createSymbol()] - "
+                            "Adding audio item -> " << object->getSymbolName();
+            #endif
+
             SoundResource record;
             record.key = object->getSymbolName();
             record.frame = object->frameToPlay();
             record.path = object->getDataPath();
             record.muted = object->isMuted();
-            soundRecords << record;            
+            record.type = object->getSoundType();
+            soundRecords << record;
         }
 
         if (loaded && ret)
@@ -360,7 +366,8 @@ bool TupLibraryFolder::exists(const QString &key)
     }
 
     #ifdef TUP_DEBUG
-        qWarning() << "[TupLibraryFolder::exists()] - Warning: Object doesn't exist -> " << key;
+        qWarning() << "[TupLibraryFolder::exists()] - "
+                      "Warning: Object doesn't exist -> " << key;
     #endif
 
     return false;
@@ -635,7 +642,8 @@ void TupLibraryFolder::loadItem(const QString &folder, QDomNode xml)
         {
             if (!object->loadDataFromPath(project->getDataDir())) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupLibraryFolder::loadItem()] - Error: Graphic object not found -> " << object->getSymbolName();
+                    qDebug() << "[TupLibraryFolder::loadItem()] - "
+                                "Error: Graphic object not found -> " << object->getSymbolName();
                 #endif
                 return;
             }
@@ -644,17 +652,19 @@ void TupLibraryFolder::loadItem(const QString &folder, QDomNode xml)
         case TupLibraryObject::Audio:
         {
             if (object->loadDataFromPath(project->getDataDir())) {
-                if (object->isSoundResource()) {
                     SoundResource record;
                     record.key = object->getSymbolName();
                     record.frame = object->frameToPlay();
                     record.path = object->getDataPath();
                     record.muted = object->isMuted();
+                    record.type = object->getSoundType();
+
                     soundRecords << record;
-                }
+
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupLibraryFolder::loadItem()] - Error: Sound object not found -> " << object->getSymbolName();
+                    qDebug() << "[TupLibraryFolder::loadItem()] - "
+                                "Error: Sound object not found -> " << object->getSymbolName();
                 #endif
                 return;
             }
@@ -784,6 +794,7 @@ void TupLibraryFolder::updateSoundResourcesItem(TupLibraryObject *item)
             record.key = item->getSymbolName();
             record.frame = item->frameToPlay();
             record.muted = item->isMuted();
+            record.type = item->getSoundType();
             soundRecords.replace(i, record);
             return;
         }
@@ -794,10 +805,12 @@ void TupLibraryFolder::releaseLipSyncVoices(const QString &soundKey)
 {
     if (exists(soundKey)) {
         TupLibraryObject *sound = getObject(soundKey);
-        sound->setLipsyncVoiceFlag(false);
+        sound->setSoundType(Effect);
+        // sound->setLipsyncVoiceFlag(false);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupLibraryFolder::releaseLipSyncVoices()] - Sound file was NOT found! -> " << soundKey;
+            qDebug() << "[TupLibraryFolder::releaseLipSyncVoices()] - "
+                        "Sound file was NOT found! -> " << soundKey;
         #endif
     }
 }
@@ -818,12 +831,14 @@ TupLibraryObject * TupLibraryFolder::findSoundFile(const QString &folderId)
             }
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryFolder::findSoundFile()] -  Fatal Error: Folder is empty -> " << folderId;
+                qDebug() << "[TupLibraryFolder::findSoundFile()] -  "
+                            "Fatal Error: Folder is empty -> " << folderId;
             #endif
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupLibraryFolder::findSoundFile()] -  Fatal Error: Folder is NULL -> " << folderId;
+            qDebug() << "[TupLibraryFolder::findSoundFile()] -  "
+                        "Fatal Error: Folder is NULL -> " << folderId;
         #endif
     }
 

@@ -139,7 +139,7 @@ void TupLibraryDisplay::updateSoundInitFrame(int frame)
     soundPlayer->updateInitFrame(frame);
 }
 
-void TupLibraryDisplay::enableLipSyncInterface(bool isLipsync, int frame)
+void TupLibraryDisplay::enableLipSyncInterface(SoundType soundType, int frame)
 {
-    soundPlayer->enableLipSyncInterface(isLipsync, frame);
+    soundPlayer->enableLipSyncInterface(soundType, frame);
 }

@@ -753,6 +753,7 @@ void TupScreen::loadSoundRecords()
     soundPlayer.clear();
 
     // Loading lipSync sounds
+    /*
     if (project->sceneAt(sceneIndex)) {
         int total = project->sceneAt(sceneIndex)->lipSyncTotal();
         #ifdef TUP_DEBUG
@@ -783,6 +784,7 @@ void TupScreen::loadSoundRecords()
             }
         }
     }
+    */
 
     // Loading effect sounds
     QList<SoundResource> effectsList = library->soundResourcesList();
@@ -790,7 +792,7 @@ void TupScreen::loadSoundRecords()
 
     #ifdef TUP_DEBUG
         qWarning() << "[TupScreen::loadSoundRecords()] - Loading sound effects...";
-        qWarning() << "*** Sound Files Total -> " << total;
+        qWarning() << "*** Sound effect files -> " << total;
     #endif
 
     for (int i=0; i<total; i++)  {
@@ -798,6 +800,10 @@ void TupScreen::loadSoundRecords()
         soundRecords << sound;
         soundPlayer << new QMediaPlayer();
     }
+
+    #ifdef TUP_DEBUG
+        qWarning() << "*** Sound items total -> " << soundRecords.size();
+    #endif
 }
 
 void TupScreen::playSoundAt(int frame)

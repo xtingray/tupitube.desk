@@ -266,7 +266,8 @@ void TupGraphicObject::undoTransformation()
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupGraphicObject::storeItemTransformation()] - transformDoList.count() -> " << transformDoList.count();
+            qDebug() << "[TupGraphicObject::storeItemTransformation()] - "
+                        "transformDoList.count() -> " << transformDoList.count();
         #endif
     }
 }

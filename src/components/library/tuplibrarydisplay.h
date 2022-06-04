@@ -68,7 +68,7 @@ class TUPITUBE_EXPORT TupLibraryDisplay : public QWidget
         QString getSoundID() const;
         void updateSoundInitFrame(int frame);
 
-        void enableLipSyncInterface(bool isLipsync, int frame);
+        void enableLipSyncInterface(SoundType soundType, int frame);
 
     signals:
         void frameUpdated(int frame);

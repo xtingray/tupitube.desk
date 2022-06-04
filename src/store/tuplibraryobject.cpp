@@ -53,8 +53,9 @@ TupLibraryObject::TupLibraryObject(const QString &name, const QString &dir, TupL
     setSymbolName(name);
     folder = dir;
     objectType = type;
-    objectIsSoundResource = false;
-    lipsyncVoice = false;
+    // objectIsSoundResource = false;
+    // lipsyncVoice = false;
+    soundType = NoSound;
     mute = false;
     playAt = 1;
 }
@@ -131,6 +132,17 @@ void TupLibraryObject::updateFrameToPlay(int frame)
     playAt = frame;
 }
 
+SoundType TupLibraryObject::getSoundType()
+{
+    return soundType;
+}
+
+void TupLibraryObject::setSoundType(SoundType type)
+{
+    soundType = type;
+}
+
+/*
 bool TupLibraryObject::isLipsyncVoice()
 {
     return lipsyncVoice;
@@ -140,6 +152,7 @@ void TupLibraryObject::setLipsyncVoiceFlag(bool isVoice)
 {
     lipsyncVoice = isVoice;
 }
+*/
 
 void TupLibraryObject::setSymbolName(const QString &name)
 {
@@ -163,7 +176,8 @@ void TupLibraryObject::setFolder(const QString &dir)
 void TupLibraryObject::updateFolder(const QString &projectPath, const QString &name)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryObject::updateFolder()] - current folder -> " << dataPath << " - new folder -> " << name;
+        qDebug() << "[TupLibraryObject::updateFolder()] - "
+                    "current folder -> " << dataPath << " - new folder -> " << name;
     #endif
 
     QFileInfo finfo(dataPath);
@@ -202,12 +216,14 @@ void TupLibraryObject::updateFolder(const QString &projectPath, const QString &n
         if (!dir.exists(newPath)) {
             if (!dir.mkpath(newPath)) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupLibraryObject::updateFolder()] - Fatal Error: Couldn't create path -> " << newPath;
+                    qDebug() << "[TupLibraryObject::updateFolder()] - "
+                                "Fatal Error: Couldn't create path -> " << newPath;
                 #endif
                 return;
             }
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryObject::updateFolder()] - Path created successfully -> " << newPath;
+                qDebug() << "[TupLibraryObject::updateFolder()] - "
+                            "Path created successfully -> " << newPath;
             #endif
         }
     }
@@ -332,8 +348,9 @@ void TupLibraryObject::fromXml(const QString &xml)
             case TupLibraryObject::Audio:
              {
                  // <object id="audio.mp3" path="audio.mp3" type="3" soundEffect="1" playAt="30" lipsyncVoice="0" />
-                 objectIsSoundResource = objectTag.attribute("soundEffect").toInt() ? true : false;
-                 lipsyncVoice = objectTag.attribute("lipsyncVoice").toInt() ? true : false;
+                 soundType = SoundType(objectTag.attribute("soundType").toInt());
+                 // objectIsSoundResource = objectTag.attribute("soundEffect").toInt() ? true : false;
+                 // lipsyncVoice = objectTag.attribute("lipsyncVoice").toInt() ? true : false;
                  mute = objectTag.attribute("mute", "true").toInt() ? true : false;
                  playAt = objectTag.attribute("playAt", "1").toInt();
                  dataPath = objectTag.attribute("path");
@@ -384,8 +401,9 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
             break;
             case Audio:
             {
-                object.setAttribute("soundEffect", objectIsSoundResource);
-                object.setAttribute("lipsyncVoice", lipsyncVoice);
+                // object.setAttribute("soundEffect", objectIsSoundResource);
+                // object.setAttribute("lipsyncVoice", lipsyncVoice);
+                object.setAttribute("soundType", soundType);
                 object.setAttribute("mute", mute);
                 object.setAttribute("playAt", playAt);
                 object.setAttribute("path", path);
@@ -602,18 +620,21 @@ bool TupLibraryObject::saveData(const QString &dataDir)
 
                      if (isOk != -1) {
                          #ifdef TUP_DEBUG
-                             qDebug() << "[TupLibraryObject::saveData()] - Sound file has been saved successfully -> " << dataPath;
+                             qDebug() << "[TupLibraryObject::saveData()] - "
+                                         "Sound file has been saved successfully -> " << dataPath;
                          #endif
                          return true;
                      } else {
                          #ifdef TUP_DEBUG
-                             qDebug() << "[TupLibraryObject::saveData()] - Fatal Error: Can't save file -> " << dataPath;
+                             qDebug() << "[TupLibraryObject::saveData()] - "
+                                         "Fatal Error: Can't save file -> " << dataPath;
                          #endif
                          return false;
                      }
                  } else {
                      #ifdef TUP_DEBUG
-                         qDebug() << "[TupLibraryObject::saveData()] - Fatal Error: Lack of permission to save file -> " << dataPath;
+                         qDebug() << "[TupLibraryObject::saveData()] - "
+                                     "Fatal Error: Lack of permission to save file -> " << dataPath;
                      #endif
                      return false;
                  }
@@ -639,7 +660,8 @@ bool TupLibraryObject::saveData(const QString &dataDir)
                      return true;
                  } else {
                      #ifdef TUP_DEBUG
-                         qDebug() << "[TupLibraryObject::saveData()] - Fatal Error: Lack of permission to save file -> " << dataPath;
+                         qDebug() << "[TupLibraryObject::saveData()] - "
+                                     "Fatal Error: Lack of permission to save file -> " << dataPath;
                      #endif
                      return false;
                  }
@@ -669,18 +691,21 @@ bool TupLibraryObject::saveData(const QString &dataDir)
 
                      if (isOk != -1) {
                          #ifdef TUP_DEBUG
-                             qDebug() << "[TupLibraryObject::saveData()] - Image file saved successfully -> " << path << symbolName;
+                             qDebug() << "[TupLibraryObject::saveData()] - "
+                                         "Image file saved successfully -> " << path << symbolName;
                          #endif
                          return true;
                      } else {
                          #ifdef TUP_DEBUG
-                             qDebug() << "[TupLibraryObject::saveData()] - Fatal Error: Can't save file -> " << path << symbolName;
+                             qDebug() << "[TupLibraryObject::saveData()] - "
+                                         "Fatal Error: Can't save file -> " << path << symbolName;
                          #endif
                          return false;
                      }
                  } else {
                      #ifdef TUP_DEBUG
-                         qDebug() << "[TupLibraryObject::saveData()] - Fatal Error: Insufficient permissions to save file -> " << path << symbolName;
+                         qDebug() << "[TupLibraryObject::saveData()] - "
+                                     "Fatal Error: Insufficient permissions to save file -> " << path << symbolName;
                      #endif
                      return false;
                  }
@@ -689,7 +714,8 @@ bool TupLibraryObject::saveData(const QString &dataDir)
             default: 
             {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupLibraryObject::saveData()] - Fatal Error: Type is not supported -> " << objectType;
+                    qDebug() << "[TupLibraryObject::saveData()] - "
+                                "Fatal Error: Type is not supported -> " << objectType;
                 #endif
             }
     }
@@ -697,6 +723,7 @@ bool TupLibraryObject::saveData(const QString &dataDir)
     return false;
 }
 
+/*
 void TupLibraryObject::setSoundResourceFlag(bool flag)
 {
     #ifdef TUP_DEBUG
@@ -710,6 +737,7 @@ bool TupLibraryObject::isSoundResource()
 {
     return objectIsSoundResource;
 }
+*/
 
 /*
 bool TupLibraryObject::isNativeGroup()
@@ -814,9 +842,9 @@ TupLibraryObject * TupLibraryObject::clone()
     copy->setDataPath(getDataPath());
     copy->setData(getData());
 
-    if (isSoundResource()) {
-        copy->setSoundResourceFlag(isSoundResource());
-        copy->setLipsyncVoiceFlag(isLipsyncVoice());
+    if (soundType == Effect) {
+        copy->setSoundType(soundType);
+        // copy->setLipsyncVoiceFlag(isLipsyncVoice());
         copy->updateFrameToPlay(frameToPlay());
         copy->enableMute(isMuted());
     }
