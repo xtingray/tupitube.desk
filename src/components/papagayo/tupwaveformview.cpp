@@ -56,8 +56,8 @@ TupWaveFormView::TupWaveFormView(QWidget *parent) : QWidget(parent)
 
     markText = Qt::black;
     textCol = QColor(64, 64, 64);
-    sampleFillCol = QColor(162, 205, 242);
-    sampleOutlineCol = QColor(30, 121, 198);
+    sampleFillCol = QColor(162, 205, 242); // Fill color of the sound wave
+    sampleOutlineCol = QColor(30, 121, 198); // Border color of the sound wave
     playBackCol = QColor(255, 127, 127);
     playForeCol = QColor(209, 102, 121, 128);
     playOutlineCol = QColor(128, 0, 0);
@@ -641,7 +641,7 @@ void TupWaveFormView::paintEvent(QPaintEvent *event)
 
     Q_UNUSED(event)
 
-    QPainter dc(this);
+    QPainter painter(this);
     int32 clientHeight = height();
     if (onlySilent) {
         #ifdef TUP_DEBUG
@@ -670,50 +670,54 @@ void TupWaveFormView::paintEvent(QPaintEvent *event)
     bool drawPlayMarker = false;
     QRect rect;
 
-	textHeight = dc.fontMetrics().height() + 4;
+    textHeight = painter.fontMetrics().height() + 4;
 	topBorder = textHeight;
 	halfClientHeight = (clientHeight - textHeight) / 2;
 
+    // Paint the red marker when the voice is being played
     if (audioPlayer && audioPlayer->state() == QMediaPlayer::PlayingState) {
 		drawPlayMarker = true;
         x = currentFrame * frameWidth;
-        dc.fillRect(QRect(x, 0, frameWidth, clientHeight), playBackCol);
+        painter.fillRect(QRect(x, 0, frameWidth, clientHeight), playBackCol);
 	}
 
 	x = 0;
     for (int32 i = 0; i < numSamples; i++) {
         if (((sample + 1) % samplesPerFrame) == 0) {
-			dc.setPen(frameCol);
+            painter.setPen(frameCol);
 			// draw frame marker
             frameX = (frame + 1) * frameWidth;
             if (sampleWidth >= 2 && ((frameWidth > 2) || ((frame + 2) % fps == 0))) {
-				dc.drawLine(frameX, topBorder, frameX, clientHeight);
+                painter.drawLine(frameX, topBorder, frameX, clientHeight);
 			}
 
-			// draw frame label
+            // draw frame (number) label
             if ((frameWidth > 30) || ((frame + 2) % fps == 0)) {
-				dc.drawLine(frameX, 0, frameX, topBorder);
-                dc.setPen(markText);
-                dc.drawText(frameX + 4, textHeight - 4, QString::number(frame + 2));
+                painter.drawLine(frameX, 0, frameX, topBorder);
+                painter.setPen(markText);
+                painter.drawText(frameX + 4, textHeight - 4, QString::number(frame + 2));
 			}
 		}
 
+        // Painting sound wave columns
         sampleHeight = PG_ROUND(amp[i] * (real)(clientHeight - topBorder));
 		halfSampleHeight = sampleHeight / 2;
-        rect.setRect(x, topBorder + halfClientHeight - halfSampleHeight, sampleWidth + 1, sampleHeight);
-        dc.fillRect(rect, sampleFillCol);
-		dc.setPen(sampleOutlineCol);
-        dc.drawLine(rect.topLeft(), rect.topRight());
-        dc.drawLine(rect.bottomLeft(), rect.bottomRight());
-        dc.drawLine(rect.topRight(), rect.bottomRight());
+        int yPos = topBorder + halfClientHeight - halfSampleHeight;
+        rect.setRect(x, yPos, sampleWidth + 1, sampleHeight);
+        painter.fillRect(rect, sampleFillCol);
+        painter.setPen(sampleOutlineCol);
+        painter.drawLine(rect.topLeft(), rect.topRight());
+        painter.drawLine(rect.bottomLeft(), rect.bottomRight());
+        painter.drawLine(rect.topRight(), rect.bottomRight());
 
         if (i == 0) {
-            dc.drawLine(rect.topLeft(), rect.bottomLeft());
+            painter.drawLine(rect.topLeft(), rect.bottomLeft());
         } else if (amp[i] > amp[i - 1]) {
             sampleHeight = PG_ROUND(amp[i - 1] * (real)(clientHeight - topBorder));
 			halfSampleHeight = sampleHeight / 2;
-            dc.drawLine(rect.topLeft(), QPoint(rect.left(), topBorder + halfClientHeight - halfSampleHeight));
-            dc.drawLine(rect.bottomLeft(), QPoint(rect.left(), topBorder + halfClientHeight - halfSampleHeight + sampleHeight - 1));
+            yPos = topBorder + halfClientHeight - halfSampleHeight;
+            painter.drawLine(rect.topLeft(), QPoint(rect.left(), yPos));
+            painter.drawLine(rect.bottomLeft(), QPoint(rect.left(), yPos + sampleHeight - 1));
 		}
 
         x += sampleWidth;
@@ -727,19 +731,22 @@ void TupWaveFormView::paintEvent(QPaintEvent *event)
         LipsyncPhrase *phrase = document->getPhrase();
         if (phrase) {
             if (!document->voiceTextIsEmpty()) {
+                // Drawing the whole text
                 rect = QRect(phrase->getStartFrame() * frameWidth, topBorder,
-                            (phrase->getEndFrame() - phrase->getStartFrame() + 1) * frameWidth, textHeight);
+                            (phrase->getEndFrame() - phrase->getStartFrame() + 1) * frameWidth,
+                            textHeight);
                 phrase->setTop(rect.top());
                 phrase->setBottom(rect.bottom());
-                dc.fillRect(rect, phraseFillCol);
-                dc.setPen(phraseOutlineCol);
-                dc.drawRect(rect);
-                dc.setClipRect(rect);
-                dc.setPen(textCol);
+                painter.fillRect(rect, phraseFillCol);
+                painter.setPen(phraseOutlineCol);
+                painter.drawRect(rect);
+                painter.setClipRect(rect);
+                painter.setPen(textCol);
                 rect = rect.marginsRemoved(QMargins(2, 2, 2, 2));
-                dc.drawText(QPoint(rect.left(), rect.bottom() - 2), phrase->getText());
-                dc.setClipping(false);
+                painter.drawText(QPoint(rect.left(), rect.bottom() - 2), phrase->getText());
+                painter.setClipping(false);
 
+                // Drawing every word
                 for (int32 w = 0; w < phrase->wordsSize(); w++) {
                     LipsyncWord *word = phrase->getWordAt(w);
                     rect = QRect(word->getStartFrame() * frameWidth, topBorder + 4 + textHeight,
@@ -749,33 +756,35 @@ void TupWaveFormView::paintEvent(QPaintEvent *event)
                     word->setTop(rect.top());
                     word->setBottom(rect.bottom());
                     if (word->phonemesSize() == 0) {
-                        dc.fillRect(rect, wordMissingFillCol);
-                        dc.setPen(wordMissingOutlineCol);
+                        painter.fillRect(rect, wordMissingFillCol);
+                        painter.setPen(wordMissingOutlineCol);
                     } else {
-                        dc.fillRect(rect, wordFillCol);
-                        dc.setPen(wordOutlineCol);
+                        painter.fillRect(rect, wordFillCol);
+                        painter.setPen(wordOutlineCol);
                     }
 
-                    dc.drawRect(rect);
-                    dc.setClipRect(rect);
-                    dc.setPen(textCol);
+                    painter.drawRect(rect);
+                    painter.setClipRect(rect);
+                    painter.setPen(textCol);
                     rect = rect.marginsRemoved(QMargins(2, 2, 2, 2));
-                    dc.drawText(QPoint(rect.left(), rect.bottom() - 2), word->getText());
-                    dc.setClipping(false);
+                    painter.drawText(QPoint(rect.left(), rect.bottom() - 2), word->getText());
+                    painter.setClipping(false);
 
+                    // Drawing every phoneme
                     for (int32 i = 0; i < word->phonemesSize(); i++) {
                         LipsyncPhoneme *phoneme = word->getPhonemeAt(i);
-                        rect = QRect(phoneme->getFrame() * frameWidth, clientHeight - 4 - textHeight, frameWidth, textHeight);
+                        rect = QRect(phoneme->getFrame() * frameWidth, clientHeight - 4 - textHeight,
+                                     frameWidth, textHeight);
                         if (i & 1)
                             rect.translate(0, -(textHeight - textHeight / 4));
                         phoneme->setTop(rect.top());
                         phoneme->setBottom(rect.bottom());
-                        dc.fillRect(rect, phonemeFillCol);
-                        dc.setPen(phonemeOutlineCol);
-                        dc.drawRect(rect);
-                        dc.setPen(textCol);
+                        painter.fillRect(rect, phonemeFillCol);
+                        painter.setPen(phonemeOutlineCol);
+                        painter.drawRect(rect);
+                        painter.setPen(textCol);
                         rect = rect.marginsRemoved(QMargins(2, 2, 2, 2));
-                        dc.drawText(QPoint(rect.left(), rect.bottom() - 2), phoneme->getText());
+                        painter.drawText(QPoint(rect.left(), rect.bottom() - 2), phoneme->getText());
                     } // for i
                 } // for w
             } else {
@@ -796,9 +805,9 @@ void TupWaveFormView::paintEvent(QPaintEvent *event)
 
     if (drawPlayMarker) {
         x = currentFrame * frameWidth;
-        dc.fillRect(QRect(x, 0, frameWidth, clientHeight), playForeCol);
-		dc.setPen(playOutlineCol);
-        dc.drawRect(QRect(x, 0, frameWidth, clientHeight));
+        painter.fillRect(QRect(x, 0, frameWidth, clientHeight), playForeCol);
+        painter.setPen(playOutlineCol);
+        painter.drawRect(QRect(x, 0, frameWidth, clientHeight));
 	}
 }
 

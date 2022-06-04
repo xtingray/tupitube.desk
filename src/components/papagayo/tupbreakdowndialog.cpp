@@ -253,6 +253,10 @@ void TupBreakdownDialog::previousWord()
 
 void TupBreakdownDialog::nextWord()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupBreakdownDialog::nextWord()]";
+    #endif
+
     QString wordPhonemes = breakdownEdit->text().trimmed();
     if (wordPhonemes.isEmpty()) {
         notifyMissingPhonemes();
@@ -265,7 +269,15 @@ void TupBreakdownDialog::nextWord()
         QString word = wordsList.at(currentIndex);
         setWindowTitle(tr("Word:") + " " + word);
         wordLabel->setText(tr("Break down the word:") + " <b>" + word + "</b>");
-        breakdownEdit->setText(phonemesList.at(currentIndex));
+
+        if (currentIndex < phonemesList.size()) {
+            breakdownEdit->setText(phonemesList.at(currentIndex));
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupBreakdownDialog::nextWord()] - Invalid index -> " << currentIndex;
+                qDebug() << "[TupBreakdownDialog::nextWord()] - Phonemes list size -> " << phonemesList.size();
+            #endif
+        }
 
         if (currentIndex == wordsList.size() - 1) {
             okButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
@@ -286,6 +298,10 @@ QStringList TupBreakdownDialog::phomeneList()
 
 void TupBreakdownDialog::savePhonemes()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupBreakdownDialog::savePhonemes()]";
+    #endif
+
     QString field = breakdownEdit->text();
     if (field.isEmpty()) {
         notifyMissingPhonemes();

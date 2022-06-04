@@ -1001,7 +1001,7 @@ void TupPapagayoApp::runManualBreakdownAction()
 void TupPapagayoApp::keyPressEvent(QKeyEvent *event)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPapagayoApp::keyPressEvent()]";
+        qDebug() << "[TupPapagayoApp::keyPressEvent()] - key -> " << event->text();
     #endif
 
     if (event->key() == Qt::Key_Space) {
