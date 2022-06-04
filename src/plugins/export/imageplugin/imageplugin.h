@@ -73,6 +73,7 @@ class TUPITUBE_PLUGIN ImagePlugin : public TupExportPluginObject
         // const char *errorMsg;
 
     signals:
+        void messageChanged(const QString &msg);
         void progressChanged(int percent);
 
     private:
