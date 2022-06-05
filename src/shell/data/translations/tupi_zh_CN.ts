@@ -159,16 +159,12 @@
         <translation>视频格式</translation>
     </message>
     <message>
-        <source>Merging audio files...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Processing audio track...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Rendering project...</source>
-        <translation type="unfinished"></translation>
+        <translation>渲染项目...</translation>
+    </message>
+    <message>
+        <source>Processing final audio track...</source>
+        <translation>正在处理最终音轨...</translation>
     </message>
 </context>
 <context>
@@ -1715,6 +1711,13 @@
     </message>
 </context>
 <context>
+    <name>TupAudioMixer</name>
+    <message>
+        <source>Merging audio files...</source>
+        <translation>正在合并音频文件...</translation>
+    </message>
+</context>
+<context>
     <name>TupBasicCameraInterface</name>
     <message>
         <source>Take picture</source>
@@ -2605,11 +2608,11 @@
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished">确定</translation>
+        <translation>确定</translation>
     </message>
     <message>
         <source>Sorry, export attempt failed!</source>
-        <translation type="unfinished"></translation>
+        <translation>抱歉，导出尝试失败！</translation>
     </message>
 </context>
 <context>
@@ -3211,10 +3214,6 @@
         <translation>没有找到SVG文件。 请尝试另一个目录</translation>
     </message>
     <message>
-        <source>It&apos;s a directory! Please, pick a graphic object</source>
-        <translation>它是一个目录！ 请选择一个图形目标</translation>
-    </message>
-    <message>
         <source>Cannot open file: %1</source>
         <translation>不能打开文件:%1</translation>
     </message>
@@ -3369,6 +3368,10 @@
     <message>
         <source>Audio</source>
         <translation>声音的</translation>
+    </message>
+    <message>
+        <source>It&apos;s a directory! Please, pick a library object</source>
+        <translation>是目录！ 请选择一个库对象</translation>
     </message>
 </context>
 <context>

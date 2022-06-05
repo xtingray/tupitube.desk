@@ -159,16 +159,12 @@
         <translation>視訊格式</translation>
     </message>
     <message>
-        <source>Merging audio files...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Processing audio track...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Rendering project...</source>
-        <translation type="unfinished"></translation>
+        <translation>渲染項目...</translation>
+    </message>
+    <message>
+        <source>Processing final audio track...</source>
+        <translation>正在處理最終音軌...</translation>
     </message>
 </context>
 <context>
@@ -1715,6 +1711,13 @@
     </message>
 </context>
 <context>
+    <name>TupAudioMixer</name>
+    <message>
+        <source>Merging audio files...</source>
+        <translation>正在合併音頻文件...</translation>
+    </message>
+</context>
+<context>
     <name>TupBasicCameraInterface</name>
     <message>
         <source>Take picture</source>
@@ -2605,11 +2608,11 @@
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished">確定</translation>
+        <translation>確定</translation>
     </message>
     <message>
         <source>Sorry, export attempt failed!</source>
-        <translation type="unfinished"></translation>
+        <translation>抱歉，導出嘗試失敗！</translation>
     </message>
 </context>
 <context>
@@ -3211,10 +3214,6 @@
         <translation>未找到SVG檔。 請嘗試其他目錄</translation>
     </message>
     <message>
-        <source>It&apos;s a directory! Please, pick a graphic object</source>
-        <translation>它是一個目錄！ 請選擇一個圖像物件</translation>
-    </message>
-    <message>
         <source>Cannot open file: %1</source>
         <translation>無法開啟檔案:%1</translation>
     </message>
@@ -3369,6 +3368,10 @@
     <message>
         <source>Audio</source>
         <translation>聲音的</translation>
+    </message>
+    <message>
+        <source>It&apos;s a directory! Please, pick a library object</source>
+        <translation>是目錄！ 請選擇一個庫對象</translation>
     </message>
 </context>
 <context>

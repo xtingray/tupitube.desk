@@ -413,7 +413,7 @@ void TupLibraryWidget::insertObjectInWorkspace()
 
     QString extension = libraryTree->currentItem()->text(2);
     if (extension.length() == 0) {
-        TOsd::self()->display(TOsd::Error, tr("It's a directory! Please, pick a graphic object"));
+        TOsd::self()->display(TOsd::Error, tr("It's a directory! Please, pick a library object"));
         #ifdef TUP_DEBUG
             qDebug() << "[TupLibraryWidget::insertObjectInWorkspace()] - It's a directory!";
         #endif
