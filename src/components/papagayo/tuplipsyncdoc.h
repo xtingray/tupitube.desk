@@ -106,6 +106,7 @@ class LipsyncWord
         int32 getBottom();
         void setTop(int32 index);
         void setBottom(int32 index);
+        int length();
 
     private:
         QString text;
@@ -199,9 +200,6 @@ class TupLipsyncDoc : public QObject
         TupLipsyncDoc();
         ~TupLipsyncDoc();
 
-        // static void loadDictionaries();
-        // void loadDictionaries();
-
         TupLipsyncDictionary * getDictionary();
         void openPGOFile(const QString &pgoPath, const QString &audioPath, int fps);
         void openAudioFile(const QString &audioPath);
@@ -232,12 +230,6 @@ class TupLipsyncDoc : public QObject
         QString getVoiceText() const;
         QList<LipsyncWord *> getWords();
 
-        /*
-        static QString getPhonemeFromDictionary(const QString &key, const QString &defaultValue);
-        static QStringList getDictionaryValue(const QString &key);
-        static int phonemesListSize();
-        static QString getPhonemeAt(int index);
-		*/
 		QString getPhonemeFromDictionary(const QString &key, const QString &defaultValue);
         QStringList getDictionaryValue(const QString &key);
         int phonemesListSize();
@@ -255,19 +247,12 @@ class TupLipsyncDoc : public QObject
          void clearVoice();
 
     private:
-        // static void loadDictionary(QFile *file);
-        // void loadDictionary(QFile *file);
-
         int32 fps;
         int32 audioDuration;
         QString audioPath;
         QMediaPlayer *audioPlayer;
         TupAudioExtractor *audioExtractor;
         real maxAmplitude;
-
-        // QList<QString> phonemesList;
-        // QHash<QString, QString> dictionaryToPhonemeMap;
-        // QHash<QString, QStringList> phonemeDictionary;
 
         QString pgoFilePath;
         bool projectHasChanged;

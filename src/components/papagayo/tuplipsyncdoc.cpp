@@ -92,12 +92,16 @@ LipsyncWord::~LipsyncWord()
 
 void LipsyncWord::runBreakdown(const QString &lang, TupLipsyncDictionary *lipsyncDictionary)
 {
+   #ifdef TUP_DEBUG
+       qDebug() << "[LipsyncWord::runBreakdown()] - lang -> " << lang;
+   #endif
+
     clearPhonemes();
 
     QString msg = text;
     msg.remove(QRegExp("[.,!?;-/()¿]"));
-	QStringList	pronunciation;
-    if (lang == "EN") {
+    if (lang == "en") {
+        QStringList	pronunciation;
         pronunciation << lipsyncDictionary->getDictionaryValue(msg.toUpper());
         if (pronunciation.size() > 1) {
             for (int32 i = 1; i < pronunciation.size(); i++) {
@@ -109,7 +113,7 @@ void LipsyncWord::runBreakdown(const QString &lang, TupLipsyncDictionary *lipsyn
                 phonemes << phoneme;
 			}
 		}
-	}
+    }
 }
 
 void LipsyncWord::repositionPhoneme(LipsyncPhoneme *phoneme)
@@ -242,6 +246,11 @@ void LipsyncWord::clearPhonemes()
         delete phonemes.takeFirst();
 }
 
+int LipsyncWord::length()
+{
+    return text.length();
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 LipsyncPhrase::LipsyncPhrase()
@@ -259,8 +268,12 @@ LipsyncPhrase::~LipsyncPhrase()
     clearWords();
 }
 
-void LipsyncPhrase::runBreakdown(QString language, TupLipsyncDictionary *lipsyncDictionary)
+void LipsyncPhrase::runBreakdown(QString lang, TupLipsyncDictionary *lipsyncDictionary)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[LipsyncPhrase::runBreakdown()] - lang -> " << lang;
+    #endif
+
 	// break phrase into words
     clearWords();
 
@@ -278,7 +291,7 @@ void LipsyncPhrase::runBreakdown(QString language, TupLipsyncDictionary *lipsync
 
 	// now break down the words
     for (int32 i = 0; i < words.size(); i++)
-        words[i]->runBreakdown(language, lipsyncDictionary);
+        words[i]->runBreakdown(lang, lipsyncDictionary);
 }
 
 void LipsyncPhrase::repositionWord(LipsyncWord *word)
@@ -589,10 +602,10 @@ void LipsyncVoice::save(QTextStream &out)
     } // for w
 }
 
-void LipsyncVoice::runBreakdown(QString language, TupLipsyncDictionary *lipsyncDictionary, int32 audioDuration)
+void LipsyncVoice::runBreakdown(QString lang, TupLipsyncDictionary *lipsyncDictionary, int32 audioDuration)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[LipsyncVoice::runBreakdown()] - text -> " <<  text;
+        qDebug() << "[LipsyncVoice::runBreakdown()] - text -> " << text;
     #endif
 
     if (text.isEmpty()) {
@@ -626,15 +639,16 @@ void LipsyncVoice::runBreakdown(QString language, TupLipsyncDictionary *lipsyncD
         phrase->setText(strList.at(i));
 	}
 
-    phrase->runBreakdown(language, lipsyncDictionary);
+    phrase->runBreakdown(lang, lipsyncDictionary);
 
 	// for first-guess frame alignment, count how many phonemes we have
 	int32 phonemeCount = 0;
     for (int32 j = 0; j < phrase->wordsSize(); j++) {
-        if (phrase->getWordAt(j)->phonemesSize() == 0) // deal with unknown words
-            phonemeCount += 4;
+        LipsyncWord *word = phrase->getWordAt(j);
+        if (word->phonemesSize() == 0) // deal with unknown words
+            phonemeCount += (word->length()/2);
         else
-            phonemeCount += phrase->getWordAt(j)->phonemesSize();
+            phonemeCount += word->phonemesSize();
     }
 
 	// now divide up the total time by phonemes
@@ -646,19 +660,19 @@ void LipsyncVoice::runBreakdown(QString language, TupLipsyncDictionary *lipsyncD
 	}
 
 	// finally, assign frames based on phoneme durations
-	int32 curFrame = 0;
+    int32 currentFrame = 0;
     for (int32 j = 0; j < phrase->wordsSize(); j++) {
         LipsyncWord *word = phrase->getWordAt(j);
         for (int32 k = 0; k < word->phonemesSize(); k++) {
             LipsyncPhoneme *phoneme = word->getPhonemeAt(k);
-            phoneme->setFrame(curFrame);
-            curFrame += framesPerPhoneme;
+            phoneme->setFrame(currentFrame);
+            currentFrame += framesPerPhoneme;
         } // for k
 
         if (word->phonemesSize() == 0) { // deal with unknown words
-            word->setStartFrame(curFrame);
-            word->setEndFrame(curFrame + 3);
-            curFrame += 4;
+            word->setStartFrame(currentFrame);
+            word->setEndFrame(currentFrame + word->length());
+            currentFrame += word->length();
         } else {
             word->setStartFrame(word->getPhonemeAt(0)->getFrame());
             word->setEndFrame(word->getLastPhoneme()->getFrame() + framesPerPhoneme - 1);
@@ -685,10 +699,11 @@ void LipsyncVoice::repositionPhrase(LipsyncPhrase *phrase, int32 audioDuration)
 	int32 phonemeCount = 0;
     for (int32 i = 0; i < phrase->wordsSize(); i++) {
         LipsyncWord *word = phrase->getWordAt(i);
-        if (word->phonemesSize() == 0) // deal with unknown words
-			phonemeCount += 4;
-		else
+        if (word->phonemesSize() == 0) { // deal with unknown words
+            phonemeCount += (word->length()/2);
+        } else {
             phonemeCount += word->phonemesSize();
+        }
 	}
 
 	// now divide up the total time by phonemes
@@ -700,18 +715,18 @@ void LipsyncVoice::repositionPhrase(LipsyncPhrase *phrase, int32 audioDuration)
 	}
 
 	// finally, assign frames based on phoneme durations
-    float curFrame = phrase->getStartFrame();
+    float currentFrame = phrase->getStartFrame();
     for (int32 i = 0; i < phrase->wordsSize(); i++) {
         LipsyncWord *word = phrase->getWordAt(i);
         for (int32 j = 0; j < word->phonemesSize(); j++) {
-            word->getPhonemeAt(j)->setFrame(PG_ROUND(curFrame));
-			curFrame += framesPerPhoneme;
+            word->getPhonemeAt(j)->setFrame(PG_ROUND(currentFrame));
+            currentFrame += framesPerPhoneme;
 		}
 
         if (word->phonemesSize() == 0) { // deal with unknown words
-            word->setStartFrame(PG_ROUND(curFrame));
-            word->setEndFrame(word->getStartFrame() + 3);
-			curFrame += 4.0f;
+            word->setStartFrame(PG_ROUND(currentFrame));
+            word->setEndFrame(word->getStartFrame() + word->length());
+            currentFrame += word->length();
         } else {
             word->setStartFrame(word->getPhonemeAt(0)->getFrame());
             word->setEndFrame(word->getLastPhoneme()->getFrame() + PG_ROUND(framesPerPhoneme) - 1);

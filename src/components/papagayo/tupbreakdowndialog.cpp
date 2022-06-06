@@ -44,7 +44,7 @@ TupBreakdownDialog::TupBreakdownDialog(const QString &word, const QString &phone
     setUI(word, phonemes);
 }
 
-TupBreakdownDialog::TupBreakdownDialog(QStringList wordsList, QStringList phonemesList, const QString &mouthsPath,
+TupBreakdownDialog::TupBreakdownDialog(int wordIndex, QStringList wordsList, QStringList phonemesList, const QString &mouthsPath,
                                        QWidget *parent) : QDialog(parent)
 {
     #ifdef TUP_DEBUG
@@ -54,11 +54,11 @@ TupBreakdownDialog::TupBreakdownDialog(QStringList wordsList, QStringList phonem
     this->wordsList = wordsList;
     this->phonemesList = phonemesList;
     isPhrase = true;
-    currentIndex = 0;
+    currentIndex = wordIndex;
 
-    setInitVars(wordsList.at(0), mouthsPath);
+    setInitVars(wordsList.at(wordIndex), mouthsPath);
     setStyleSheet(TAppTheme::themeSettings());
-    setUI(wordsList.at(0), phonemesList.at(0));
+    setUI(wordsList.at(wordIndex), phonemesList.at(wordIndex));
 }
 
 TupBreakdownDialog::~TupBreakdownDialog()
@@ -83,6 +83,9 @@ void TupBreakdownDialog::setUI(const QString &word, const QString &phonemes)
     mainLayout = new QVBoxLayout(this);
 
     wordLabel = new QLabel(this);
+    QFont font = wordLabel->font();
+    font.setPointSize(15);
+    wordLabel->setFont(font);
     wordLabel->setAlignment(Qt::AlignCenter);
     wordLabel->setText(tr("Break down the word:") + " <b>" + word + "</b>");
     mainLayout->addWidget(wordLabel);
@@ -125,11 +128,18 @@ void TupBreakdownDialog::setButtonsPanel()
         previousButton->setIcon(QIcon(THEME_DIR + "icons/previous.png"));
         previousButton->setToolTip(tr("Next word"));
         connect(previousButton, SIGNAL(clicked()), this, SLOT(previousWord()));
-        previousButton->setEnabled(false);
+        if (currentIndex == 0)
+            previousButton->setEnabled(false);
 
-        okButton->setIcon(QIcon(THEME_DIR + "icons/next.png"));
-        okButton->setToolTip(tr("Next word"));
-        connect(okButton, SIGNAL(clicked()), this, SLOT(nextWord()));
+        if (currentIndex == (wordsList.size()-1)) {
+            okButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
+            okButton->setToolTip(tr("Save word"));
+            connect(okButton, SIGNAL(clicked()), this, SLOT(savePhonemes()));
+        } else {
+            okButton->setIcon(QIcon(THEME_DIR + "icons/next.png"));
+            okButton->setToolTip(tr("Next word"));
+            connect(okButton, SIGNAL(clicked()), this, SLOT(nextWord()));
+        }
     } else {
         okButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
         okButton->setToolTip(tr("Save word"));

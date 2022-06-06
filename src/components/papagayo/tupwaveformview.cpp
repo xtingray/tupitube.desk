@@ -604,6 +604,8 @@ void TupWaveFormView::mouseReleaseEvent(QMouseEvent *event)
 
                 if (parentPhrase)
                     parentPhrase->repositionWord(selectedWord);
+
+                // emit fonemesUpdated(const QString &word, const QString &phonemes);
                 update();
             }
 

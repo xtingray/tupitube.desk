@@ -351,8 +351,17 @@ void TupPapagayoApp::setupUI()
     languageChoice = new QComboBox();
     languageChoice->addItem(tr("English"));
     languageChoice->addItem(tr("Other Language"));
+
+    TCONFIG->beginGroup("General");
+    locale = TCONFIG->value("Language", "en").toString();
+    if (locale.compare("en") == 0) {
+        currentLanguage = English;
+    } else {
+        currentLanguage = OtherLang;
+        languageChoice->setCurrentIndex(OtherLang);
+    }
+
     connect(languageChoice, SIGNAL(activated(int)), this, SLOT(updateLanguage(int)));
-    currentLanguage = English;
 
     languageHorizontalLayout->addWidget(languageChoice);
 
@@ -765,10 +774,14 @@ void TupPapagayoApp::loadWordsFromDocument()
 
 void TupPapagayoApp::buildOtherLanguagePhonemes()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::buildOtherLanguagePhonemes()]";
+    #endif
+
     QString newText = voiceText->toPlainText();
     if (newText.isEmpty()) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::buildOtherLanguagePhonemes()] - Warning: Voice text is empty!";
+            qDebug() << "[TupPapagayoApp::buildOtherLanguagePhonemes()] - Warning: New voice text is empty!";
         #endif
         return;
     }
@@ -777,6 +790,9 @@ void TupPapagayoApp::buildOtherLanguagePhonemes()
     phonemesList.clear();
 
     if (currentText.isEmpty()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPapagayoApp::buildOtherLanguagePhonemes()] - Current voice text is empty!";
+        #endif
         wordsList = newText.split(" ");
         for(int i=0; i<wordsList.size(); i++)
             phonemesList << "";
@@ -784,6 +800,9 @@ void TupPapagayoApp::buildOtherLanguagePhonemes()
         waveformView->update();
     } else {
         if (newText.compare(currentText) != 0) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupPapagayoApp::buildOtherLanguagePhonemes()] - New voice text -> " << newText;
+            #endif
             wordsList = newText.split(" ");
             QList<LipsyncWord *> oldWords = document->getWords();
             foreach(QString word, wordsList) {
@@ -799,6 +818,9 @@ void TupPapagayoApp::buildOtherLanguagePhonemes()
             }
             waveformView->update();
         } else { // Previous text
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupPapagayoApp::buildOtherLanguagePhonemes()] - Loading previous voice text...";
+            #endif
             loadWordsFromDocument();
         }
     }
@@ -808,11 +830,12 @@ void TupPapagayoApp::onVoiceTextChanged()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupPapagayoApp::onVoiceTextChanged()] - currentLanguage -> " << currentLanguage;
+        qDebug() << "[TupPapagayoApp::onVoiceTextChanged()] - Locale -> " << locale;
     #endif
 
     if (!document) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::onVoiceTextChanged()] - Warning: Document is null!";
+            qDebug() << "[TupPapagayoApp::onVoiceTextChanged()] - Warning: Document is NULL!";
         #endif
         return;
     }
@@ -843,21 +866,12 @@ void TupPapagayoApp::onVoiceTextChanged()
     if (!breakdownButton->isEnabled())
         breakdownButton->setEnabled(true);
 
-    if (currentLanguage == English) {
-        document->setVoiceText(text);
-        if (enableAutoBreakdown)
-            runBreakdownAction(); // this is cool, but it could slow things down by doing constant breakdowns
+    document->setVoiceText(text);
+    if (enableAutoBreakdown)
+        runBreakdownAction(); // this is cool, but it could slow things down by doing constant breakdowns
 
-        loadWordsFromDocument();
-
-        updateActions();
-    } else {
-        #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::onVoiceTextChanged()] - currentLanguage -> " << currentLanguage;
-        #endif
-
-        buildOtherLanguagePhonemes();
-    }
+    loadWordsFromDocument();
+    updateActions();
 }
 
 int32 TupPapagayoApp::calculateDuration()
@@ -872,7 +886,7 @@ int32 TupPapagayoApp::calculateDuration()
     return duration;
 }
 
-void TupPapagayoApp::runBreakdownAction() // English generator
+void TupPapagayoApp::runBreakdownAction()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupPapagayoApp::runBreakdownAction()]";
@@ -886,8 +900,7 @@ void TupPapagayoApp::runBreakdownAction() // English generator
     }
 
     document->setModifiedFlag(true);
-    document->runBreakdown("EN", calculateDuration());
-
+    document->runBreakdown(locale, calculateDuration());
     waveformView->update();
 }
 
@@ -948,53 +961,64 @@ void TupPapagayoApp::runManualBreakdownAction()
     if (currentLanguage == English) {
         runBreakdownAction();
     } else {
-        TupBreakdownDialog *breakdownDialog = new TupBreakdownDialog(wordsList, phonemesList,
-                                                                     currentMouthPath, this);
-        if (breakdownDialog->exec() == QDialog::Accepted) {
-            document->setModifiedFlag(true);
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - Calling breakdown dialog...";
+            qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - wordsList -> " << wordsList;
+            qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - phonemesList -> " << phonemesList;
+        #endif
 
-            if (document->voiceTextIsEmpty() == 0) {
+        openBreakdownDialog(0);
+    }
+}
+
+void TupPapagayoApp::openBreakdownDialog(int wordIndex)
+{
+    TupBreakdownDialog *breakdownDialog = new TupBreakdownDialog(wordIndex, wordsList, phonemesList,
+                                                                 currentMouthPath, this);
+    if (breakdownDialog->exec() == QDialog::Accepted) {
+        document->setModifiedFlag(true);
+
+        if (document->voiceTextIsEmpty() == 0) {
+            loadDocumentFromScratch(breakdownDialog->phomeneList());
+        } else {
+            QString newText = voiceText->toPlainText();
+            QString currentText = document->getVoiceText();
+
+            if (newText.compare(currentText) != 0) {
                 loadDocumentFromScratch(breakdownDialog->phomeneList());
             } else {
-                QString newText = voiceText->toPlainText();
-                QString currentText = document->getVoiceText();
+                LipsyncPhrase *phrase = document->getPhrase();
+                if (phrase) {
+                    QList<LipsyncWord *> words = phrase->getWords();
+                    QStringList phonemes = breakdownDialog->phomeneList();
 
-                if (newText.compare(currentText) != 0) {
-                    loadDocumentFromScratch(breakdownDialog->phomeneList());
-                } else {
-                    LipsyncPhrase *phrase = document->getPhrase();
-                    if (phrase) {
-                        QList<LipsyncWord *> words = phrase->getWords();
-                        QStringList phonemes = breakdownDialog->phomeneList();
+                    for (int i = 0; i < words.size(); i++) {
+                        LipsyncWord *word = words.at(i);
+                        if (word) {
+                            QStringList phList = phonemes.at(i).split(' ', Qt::SkipEmptyParts);
+                            int32 wordLength = word->getEndFrame() - word->getStartFrame();
+                            int32 wordPos = word->getStartFrame();
+                            int32 phonemePos = wordPos;
+                            int32 phonemeLength = wordLength / phList.size();
+                            word->clearPhonemes();
 
-                        for (int i = 0; i < words.size(); i++) {
-                            LipsyncWord *word = words.at(i);
-                            if (word) {
-                                QStringList phList = phonemes.at(i).split(' ', Qt::SkipEmptyParts);
-                                int32 wordLength = word->getEndFrame() - word->getStartFrame();
-                                int32 wordPos = word->getStartFrame();
-                                int32 phonemePos = wordPos;
-                                int32 phonemeLength = wordLength / phList.size();
-                                word->clearPhonemes();
+                            for (int i = 0; i < phList.size(); i++) {
+                                QString phStr = phList.at(i);
+                                if (phStr.isEmpty())
+                                    continue;
 
-                                for (int i = 0; i < phList.size(); i++) {
-                                    QString phStr = phList.at(i);
-                                    if (phStr.isEmpty())
-                                        continue;
-
-                                    LipsyncPhoneme *phoneme = new LipsyncPhoneme;
-                                    phoneme->setText(phStr);
-                                    phoneme->setFrame(phonemePos);
-                                    phonemePos += phonemeLength + 1;
-                                    word->addPhoneme(phoneme);
-                                }
+                                LipsyncPhoneme *phoneme = new LipsyncPhoneme;
+                                phoneme->setText(phStr);
+                                phoneme->setFrame(phonemePos);
+                                phonemePos += phonemeLength + 1;
+                                word->addPhoneme(phoneme);
                             }
                         }
                     }
                 }
             }
-            waveformView->update();
         }
+        waveformView->update();
     }
 }
 
@@ -1055,7 +1079,6 @@ void TupPapagayoApp::openImagesDialog()
                 QString firstImage = imagesList.at(0);
                 int dot = firstImage.lastIndexOf(".");
                 QString extension = firstImage.mid(dot);
-                // for (int32 i = 0; i < TupLipsyncDoc::phonemesListSize(); i++) {
                 for (int32 i = 0; i < dictionary->phonemesListSize(); i++) {
                     QString image = dictionary->getPhonemeAt(i) + extension;
                     QString path = dirPath + "/" + image;
@@ -1117,6 +1140,10 @@ void TupPapagayoApp::updatePauseButton()
 
 bool TupPapagayoApp::validateLipsyncForm()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::validateLipsyncForm()]";
+    #endif
+
     QString title = voiceName->text();
     if (title.isEmpty()) {
         TOsd::self()->display(TOsd::Error, tr("Voice name is empty!"));
@@ -1143,6 +1170,23 @@ bool TupPapagayoApp::validateLipsyncForm()
             qDebug() << "[TupPapagayoApp::validateLipsyncForm()] - Warning: No lip-sync document!";
         #endif
         return false;
+    }
+
+    loadWordsFromDocument();
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::validateLipsyncForm()] - wordsList -> " << wordsList;
+        qDebug() << "[TupPapagayoApp::validateLipsyncForm()] - phonemesList -> " << phonemesList;
+    #endif
+
+    int i = 0;
+    foreach (QString phonemes, phonemesList) {
+        if (phonemes.isEmpty()) {
+            QApplication::restoreOverrideCursor();
+            TOsd::self()->display(TOsd::Warning, tr("Some phonemes are missing!"));
+            openBreakdownDialog(i);
+            return false;
+        }
+        i++;
     }
 
     return true;
@@ -1182,7 +1226,8 @@ bool TupPapagayoApp::saveLipsyncRecord()
     if (!QDir(pgoFolderPath).exists()) {
         if (!QDir().mkpath(pgoFolderPath)) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Can't create folder -> " << pgoFolderPath;
+                qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                            "Fatal Error: Can't create folder -> " << pgoFolderPath;
             #endif
             TOsd::self()->display(TOsd::Error, tr("Error while saving lip-sync!"));
 
@@ -1266,7 +1311,8 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                 if (mode == VoiceRecorded || mode == Update) {
                                     if (!QFile::remove(soundFilePath)) {
                                         #ifdef TUP_DEBUG
-                                            qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Can't remove sound file -> " << soundFilePath;
+                                            qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                                                        "Fatal Error: Can't remove sound file -> " << soundFilePath;
                                         #endif
                                         TOsd::self()->display(TOsd::Error, tr("Can't remove temporary voice sound!"));
 
@@ -1279,7 +1325,8 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                 emit requestTriggered(&request);
                             } else {
                                 #ifdef TUP_DEBUG
-                                    qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Can't open sound file -> " << soundFilePath;
+                                    qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                                                "Fatal Error: Can't open sound file -> " << soundFilePath;
                                 #endif
                                 TOsd::self()->display(TOsd::Error, tr("Can't load voice sound!"));
 
@@ -1385,7 +1432,8 @@ bool TupPapagayoApp::updateLipsyncRecord()
     if (QFile::exists(tempSoundFile)) {
         if (!QFile::remove(tempSoundFile)) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - Fatal Error: Can't remove file -> " << tempSoundFile;
+                qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - "
+                            "Fatal Error: Can't remove file -> " << tempSoundFile;
             #endif
             return false;
         }
@@ -1393,20 +1441,23 @@ bool TupPapagayoApp::updateLipsyncRecord()
 
     if (!QFile::copy(soundFilePath, tempSoundFile)) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - Fatal Error: Can't store sound file -> " << soundFilePath;
+            qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - "
+                        "Fatal Error: Can't store sound file -> " << soundFilePath;
         #endif
         return false;
     }
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - Removing lipsync item -> " << oldLipsyncName;
+        qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - "
+                    "Removing lipsync item -> " << oldLipsyncName;
     #endif
 
     TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex, TupProjectRequest::RemoveLipSync,
                                                                       oldLipsyncName);
     emit requestTriggered(&request);                
 
-    request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove, oldLipsyncName, TupLibraryObject::Folder);
+    request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove,
+                                                      oldLipsyncName, TupLibraryObject::Folder);
     emit requestTriggered(&request);
 
     soundFilePath = tempSoundFile;

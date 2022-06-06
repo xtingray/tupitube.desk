@@ -2227,7 +2227,7 @@
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="237"/>
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="271"/>
         <source>Break down the word:</source>
-        <translation>Dividir la palabra:</translation>
+        <translation>Escoge los fonemas para la palabra:</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="97"/>
@@ -2554,7 +2554,7 @@
     <message>
         <location filename="../../../components/player/tupcamerawidget.cpp" line="133"/>
         <source>Scene Preview</source>
-        <translation>Previsualizador de Escenas</translation>
+        <translation>Reproductor de Escenas</translation>
     </message>
     <message>
         <location filename="../../../components/player/tupcamerawidget.cpp" line="161"/>
@@ -4121,7 +4121,7 @@
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="194"/>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="1767"/>
         <source>Audio File</source>
-        <translation>Archivo de Audio</translation>
+        <translation>Audio</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="416"/>
@@ -5779,7 +5779,7 @@
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="360"/>
         <source>Breakdown</source>
-        <translation>Dividir</translation>
+        <translation>Editar Fonemas</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="367"/>

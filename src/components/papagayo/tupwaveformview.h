@@ -41,6 +41,7 @@ class TUPITUBE_EXPORT TupWaveFormView : public QWidget
 
     signals:
         void frameChanged(int index);
+        // void fonemesUpdated(const QString &word, const QString &phonemes);
         void audioStopped();
 
     public slots:

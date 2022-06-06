@@ -101,6 +101,7 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         bool confirmCloseDocument();
         bool saveLipsyncRecord();
         bool updateLipsyncRecord();
+        void openBreakdownDialog(int wordIndex);
 
         TupWaveFormView *waveformView;
         TupMouthView *mouthView;
@@ -150,6 +151,7 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         int frameIndex;
 
         TupLipsyncDictionary *dictionary;
+        QString locale;
 };
 
 #endif // TUPPAPAGAYOAPP_H

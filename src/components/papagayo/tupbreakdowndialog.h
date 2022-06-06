@@ -33,7 +33,7 @@ class TUPITUBE_PLUGIN TupBreakdownDialog: public QDialog
     public:
         TupBreakdownDialog(const QString &word, const QString &phonemes,
                            const QString &mouthsPath, QWidget *parent = nullptr);
-        TupBreakdownDialog(QStringList wordsList, QStringList phonemesList, const QString &mouthsPath,
+        TupBreakdownDialog(int wordIndex, QStringList wordsList, QStringList phonemesList, const QString &mouthsPath,
                            QWidget *parent = nullptr);
         ~TupBreakdownDialog();
 
