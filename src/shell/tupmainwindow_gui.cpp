@@ -288,16 +288,16 @@ void TupMainWindow::setupMenu()
     group->addAction(animationPerspective);
 
     // Adding Option News
-    TCONFIG->beginGroup("General");
-    bool getNews = TCONFIG->value("GetNews", true).toBool();
-    if (getNews) {
-        QAction *newsPerspective = new QAction(tr("News"), this);
-        newsPerspective->setIcon(QPixmap(THEME_DIR + "icons/news_mode.png"));
-        newsPerspective->setIconVisibleInMenu(true);
-        newsPerspective->setShortcut(QKeySequence("Ctrl+3"));
-        newsPerspective->setData(News);
-        group->addAction(newsPerspective);
-    }
+    // TCONFIG->beginGroup("General");
+    // bool getNews = TCONFIG->value("GetNews", true).toBool();
+    // if (getNews) {
+    //     QAction *newsPerspective = new QAction(tr("News"), this);
+    //     newsPerspective->setIcon(QPixmap(THEME_DIR + "icons/news_mode.png"));
+    //     newsPerspective->setIconVisibleInMenu(true);
+    //     newsPerspective->setShortcut(QKeySequence("Ctrl+3"));
+    //     newsPerspective->setData(News);
+    //     group->addAction(newsPerspective);
+    // }
 
     m_viewMenu->addActions(group->actions());
     connect(group, SIGNAL(triggered(QAction*)), this, SLOT(changePerspective(QAction*)));

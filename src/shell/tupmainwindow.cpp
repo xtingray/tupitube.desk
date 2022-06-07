@@ -277,11 +277,12 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
     // TCONFIG->beginGroup("General");
     // bool getNews = TCONFIG->value("GetNews", true).toBool();
-    #ifdef TUP_DEBUG
-        qDebug() << "---";
-        qDebug() << "[TupMainWindow::setWorkSpace()] - GetNews -> " << TCONFIG->value("GetNews").toBool();;
-    #endif
+    // #ifdef TUP_DEBUG
+    //     qDebug() << "---";
+    //     qDebug() << "[TupMainWindow::setWorkSpace()] - GetNews -> " << TCONFIG->value("GetNews").toBool();;
+    // #endif
     // if (getNews) {
+
     // Downloading MaeFloresta news 
     TupNewsCollector *newsCollector = new TupNewsCollector();
     newsCollector->start();

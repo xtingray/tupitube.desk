@@ -61,7 +61,7 @@ TupSearchDialog::TupSearchDialog(const QSize &size, QWidget *parent) : QDialog(p
     dimension = QString::number(size.width()) + ":" + QString::number(size.height());
     TCONFIG->beginGroup("General");
     assetsPath = TCONFIG->value("AssetsPath", CACHE_DIR + "assets").toString();
-    getNews = TCONFIG->value("GetNews", true).toBool();
+    // getNews = TCONFIG->value("GetNews", true).toBool();
 
     extStrings << "jpg" << "png" << "svg" << "tobj";
 
@@ -71,8 +71,8 @@ TupSearchDialog::TupSearchDialog(const QSize &size, QWidget *parent) : QDialog(p
 
     tabWidget = new QTabWidget;
     tabWidget->addTab(searchTab(), tr("Search"));
-    if (getNews)
-        tabWidget->addTab(patreonTab(), tr("Support Us"));
+    // if (getNews)
+    //     tabWidget->addTab(patreonTab(), tr("Support Us"));
 
     QPushButton *closeButton = new QPushButton(tr("Close"));
     layout->addWidget(closeButton);
@@ -273,19 +273,21 @@ QWidget * TupSearchDialog::searchTab()
     font.setBold(false);
     descLabel->setFont(font);
 
+    /*
     TLabel *supportLabel = new TLabel("<a href=\"https://tupitube.com\" " + linkStyle + ">" + tr("Want to support us?") + "</a>");
     supportLabel->setAlignment(Qt::AlignHCenter);
     supportLabel->setFont(font);
     supportLabel->setTextFormat(Qt::RichText);
     supportLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
     connect(supportLabel, SIGNAL(clicked()), this, SLOT(setSupportTab()));
+    */
 
     noResultLayout->addStretch();
     noResultLayout->addWidget(noResultIcon);
     noResultLayout->addWidget(noResultLabel);
     noResultLayout->addWidget(descLabel);
-    if (getNews)
-        noResultLayout->addWidget(supportLabel);
+    // if (getNews)
+    //     noResultLayout->addWidget(supportLabel);
     noResultLayout->addStretch();
 
     QWidget *errorPanel = new QWidget;
@@ -310,7 +312,7 @@ QWidget * TupSearchDialog::searchTab()
     dynamicPanel = new TCollapsibleWidget;
     dynamicPanel->addWidget(resultPanel);
     dynamicPanel->addWidget(progressPanel);
-    dynamicPanel->addWidget(noResultPanel);    
+    dynamicPanel->addWidget(noResultPanel);
     dynamicPanel->addWidget(errorPanel);
 
     layout->addWidget(controlPanel);
@@ -320,6 +322,7 @@ QWidget * TupSearchDialog::searchTab()
     return searchWidget;
 }
 
+/*
 QWidget * TupSearchDialog::patreonTab()
 {
     QWidget *patreonWidget = new QWidget;
@@ -370,6 +373,7 @@ QWidget * TupSearchDialog::patreonTab()
 
     return patreonWidget;
 }
+*/
 
 void TupSearchDialog::setSupportTab()
 {

@@ -82,7 +82,7 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
 
     private:
         QWidget * searchTab();
-        QWidget * patreonTab();
+        // QWidget * patreonTab();
 
         void requestResults();
         void loadAssets(const QString &input);
@@ -109,7 +109,7 @@ class TUPITUBE_EXPORT TupSearchDialog : public QDialog
 
         TCollapsibleWidget *dynamicPanel;
 
-        bool getNews;
+        // bool getNews;
         QString assetsPath;
         TComboBox *searchLine;
         QComboBox *assetCombo;
