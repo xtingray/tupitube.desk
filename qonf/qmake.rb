@@ -134,7 +134,7 @@ class QMake
         return false
     end
     
-    def compile(debug)
+    def compile(dependency, debug)
          flags = "2>/dev/null"
          if debug == 1 
              flags = ""
@@ -162,7 +162,8 @@ class QMake
                 }
 
                 if debug == 1
-                    Info.info << "Result: "
+                    print $endl
+                    Info.info << "Result: " << dependency << " " 
                 end
                 
                 endcode = $? >> 8

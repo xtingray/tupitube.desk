@@ -116,7 +116,7 @@ class Test
 
                 @qmake.run(qmakeLine, true)
 
-                if not @qmake.compile(debug)
+                if not @qmake.compile(parser.name, debug)
                     Dir.chdir(cwd)
                     
                     print "[ \033[91mFAILED\033[0m ]\n"
@@ -129,7 +129,6 @@ class Test
                     end
 
                     Info.info << "Priority: " << priority << "\n"
-
                     
                     # Provide solution
                     solution = parser.solution
@@ -186,6 +185,7 @@ class Test
         end
 
         Info.info << "Priority: " << priority << "\n"
+        print " ---\n"
         
         return true
     end
