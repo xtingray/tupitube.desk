@@ -131,7 +131,7 @@ class TUPITUBE_PLUGIN TFFmpegMovieGenerator : public TMovieGenerator
         AVCodecContext *audioInputCodecContext;
         AVCodec *audioInputCodec;
         AVStream *audioInputStream;
-        SwrContext *resampleContext;
+        // SwrContext *resampleContext;
 
         int videoPktCounter;
         int audioPktCounter;

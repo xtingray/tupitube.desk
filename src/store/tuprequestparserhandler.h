@@ -55,7 +55,7 @@ class TUPITUBE_EXPORT TupRequestParserHandler : public QXmlStreamReader
     private:
         QString sign;
         TupProjectResponse* response;
-        bool readText;
+        // bool readText;
 };
 
 #endif
