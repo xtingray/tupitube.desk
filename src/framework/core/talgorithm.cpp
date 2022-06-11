@@ -200,3 +200,36 @@ bool TAlgorithm::isKeyRandomic(const QString &id)
 
     return true;
 }
+
+bool TAlgorithm::copyFolder(const QString &src, const QString &dst)
+{
+    QDir srcDir(src);
+    if (!srcDir.exists()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TAlgorithm::copyFolder()] - "
+                        "Fatal Error: Source folder doesn't exist -> " << src;
+        #endif
+        return false;
+    }
+
+    QDir dstDir(dst);
+    if (!dstDir.exists()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TAlgorithm::copyFolder()] - "
+                        "Fatal Error: Destination folder doesn't exist -> " << dst;
+        #endif
+        return false;
+    }
+
+    foreach (QString directory, srcDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+        QString dstPath = dst + QDir::separator() + directory;
+        srcDir.mkpath(dstPath);
+        copyFolder(src + QDir::separator() + directory, dstPath);
+    }
+
+    foreach (QString file, srcDir.entryList(QDir::Files)) {
+        QFile::copy(src + QDir::separator() + file, dst + QDir::separator() + file);
+    }
+
+    return true;
+}

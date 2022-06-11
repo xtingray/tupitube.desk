@@ -41,14 +41,10 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
 	Q_OBJECT
 
     public:
-        enum Mode { Insert = 0, Update, VoiceRecorded };
-        enum Language { English = 0, OtherLang };
-        enum ViewType { Predefined = 0, Customized };
-
-        TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, const QString &soundFile = QString(),
+        TupPapagayoApp(PapagayoAppMode mode, TupProject *project, const QString &soundFile = QString(),
                        QList<int> indexes = QList<int>(), QWidget *parent = nullptr);
 
-        TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, TupLipSync *lipsync, QList<int> indexes,
+        TupPapagayoApp(PapagayoAppMode mode, TupProject *project, TupLipSync *lipsync, QList<int> indexes,
                        QWidget *parent = nullptr);
 
         ~TupPapagayoApp();
@@ -111,7 +107,7 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         bool rebuildingList;
         int defaultFps;
         bool playerStopped;
-        Mode mode;
+        PapagayoAppMode mode;
 
         QAction *actionClose;
         QAction *actionOpen;
@@ -131,8 +127,11 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         QComboBox *languageChoice;
         QPushButton *breakdownButton;
         QLineEdit *mouthsPath;
-        Language currentLanguage;
+        PapagayoAppLanguage currentLanguage;
         QString currentMouthPath;
+
+        PapagayoAppViewType mouthType;
+        int currentMouthIndex;
 
         QPushButton *okButton;
         QStringList wordsList;
@@ -142,8 +141,10 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         QString pgoFilePath;
         QString soundFilePath;
         QString soundKey;
-
         QString oldLipsyncName;
+
+        QString tempSoundFile;
+        QString tempMouthPath;
 
         TupProject *tupProject;
         int sceneIndex;

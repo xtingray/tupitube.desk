@@ -19,6 +19,7 @@
  
 #include "tglobal.h"
 #include "tuplipsyncdoc.h"
+#include "tbutton.h"
 
 #include <QDialog>
 #include <QVBoxLayout>
@@ -46,6 +47,7 @@ class TUPITUBE_PLUGIN TupBreakdownDialog: public QDialog
         void previousWord();
         void nextWord();
         void savePhonemes();
+        void updateButtons(const QString &label);
 
     private:
         void setInitVars(const QString &word, const QString &mouthsPath);
@@ -71,6 +73,8 @@ class TUPITUBE_PLUGIN TupBreakdownDialog: public QDialog
 
         QPushButton *okButton;
         QPushButton *previousButton;
+
+        QList<TButton *> mouthButtonsList;
 };
 
 #endif

@@ -48,11 +48,16 @@ class TButton : public QPushButton {
         TButton(const QString &label, QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::Widget);
         ~TButton();
 
+        QString getText() const;
+
     protected:
         void mousePressEvent(QMouseEvent *);
 
     signals:
         void clicked(const QString &label);
+
+    private:
+        QString label;
 };
 
 #endif

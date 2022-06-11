@@ -52,6 +52,7 @@ class T_CORE_EXPORT TAlgorithm
         static QString windowCacheID();
         static QStringList header(const QString &input);
         static bool isKeyRandomic(const QString &id);
+        static bool copyFolder(const QString &src, const QString &dst);
 };
 
 #endif

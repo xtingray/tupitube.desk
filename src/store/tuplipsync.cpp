@@ -760,6 +760,16 @@ void TupLipSync::setSoundFile(const QString &file)
     soundFile = file;
 }
 
+void TupLipSync::setMouthIndex(int index)
+{
+    mouthIndex = index;
+}
+
+int TupLipSync::getMouthIndex()
+{
+    return mouthIndex;
+}
+
 int TupLipSync::getInitFrame()
 {
     return initFrame;
@@ -809,6 +819,7 @@ void TupLipSync::fromXml(const QString &xml)
     initFrame = root.attribute("initFrame", "1").toInt();
     framesTotal = root.attribute("framesTotal").toInt();
     extension = root.attribute("extension");
+    mouthIndex = root.attribute("mouthIndex").toInt();
 
     QDomNode n = root.firstChild();
     while (!n.isNull()) {
@@ -841,6 +852,7 @@ QDomElement TupLipSync::toXml(QDomDocument &doc) const
     root.setAttribute("initFrame", initFrame);
     root.setAttribute("framesTotal", framesTotal);
     root.setAttribute("extension", extension);
+    root.setAttribute("mouthIndex", mouthIndex);
 
     root.appendChild(voice->toXml(doc));
 

@@ -197,10 +197,17 @@ uint32 TupAudioExtractor::timeToSample(real time, bool clamped) const
             sample--;
 	}
 
-	if (clamped)
-        return PG_CLAMP(sample, 0, numSamples - 1);
-	else
+    if (clamped) {
+        if (sample > (numSamples - 1)) {
+            return (numSamples -1);
+        } else {
+            return sample;
+        }
+
+        // return PG_CLAMP(sample, 0, numSamples - 1);
+    } else {
 		return sample;
+    }
 }
 
 bool TupAudioExtractor::readSoundFile(const char *soundFilePath)

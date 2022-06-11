@@ -240,6 +240,11 @@ void TupPapagayoImporter::setSoundFile(const QString &soundFile)
     lipsync->setSoundFile(soundFile);
 }
 
+void TupPapagayoImporter::setMouthIndex(int mouthIndex)
+{
+    lipsync->setMouthIndex(mouthIndex);
+}
+
 bool TupPapagayoImporter::fileIsValid()
 {
     return isValid;

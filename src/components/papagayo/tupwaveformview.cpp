@@ -319,6 +319,8 @@ void TupWaveFormView::mousePressEvent(QMouseEvent *event)
     parentWord = nullptr;
     selectedPhoneme = nullptr;
 
+    emit audioStopped();
+
     if (document && document->getAudioPlayer()) {
         dragging = true;
 

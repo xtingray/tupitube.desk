@@ -25,6 +25,7 @@
 
 #include "tuprequestbuilder.h"
 #include "tuplibrary.h"
+#include "talgorithm.h"
 
 #include <QAction>
 #include <QToolBar>
@@ -42,8 +43,9 @@
 #include <QLabel>
 #include <QScreen>
 
-TupPapagayoApp::TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, const QString &soundFile, QList<int> indexes,
-                               QWidget *parent) : QMainWindow(parent)
+// Constructor to open new lipsync projects
+TupPapagayoApp::TupPapagayoApp(PapagayoAppMode mode, TupProject *project, const QString &soundFile,
+                               QList<int> indexes, QWidget *parent) : QMainWindow(parent)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupPapagayoApp::TupPapagayoApp()]";
@@ -67,8 +69,9 @@ TupPapagayoApp::TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, c
     setUICore(soundFilePath);
 }
 
-TupPapagayoApp::TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, TupLipSync *lipsync, QList<int> indexes,
-                               QWidget *parent) : QMainWindow(parent)
+// Constructor to open existing lipsync projects
+TupPapagayoApp::TupPapagayoApp(PapagayoAppMode mode, TupProject *project, TupLipSync *lipsync,
+                               QList<int> indexes, QWidget *parent) : QMainWindow(parent)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupPapagayoApp::TupPapagayoApp()]";
@@ -84,7 +87,13 @@ TupPapagayoApp::TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, T
     defaultFps = project->getFPS();
     playerStopped = true;
     saveButtonPressed = false;
+
     oldLipsyncName = lipsync->getLipSyncName();
+    currentMouthIndex = lipsync->getMouthIndex();
+    mouthType = Predefined;
+    if (currentMouthIndex == CUSTOMIZED_MOUTH)
+        mouthType = Customized;
+
     pgoFolderPath = project->getDataDir() + "/pgo/";
     pgoFilePath = pgoFolderPath + oldLipsyncName;
 
@@ -94,7 +103,8 @@ TupPapagayoApp::TupPapagayoApp(TupPapagayoApp::Mode mode, TupProject *project, T
         soundFilePath = library->getObjectPath(soundKey);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::TupPapagayoApp()] - Fatal Error: Library pointer is NULL!";
+            qDebug() << "[TupPapagayoApp::TupPapagayoApp()] - "
+                        "Fatal Error: Library pointer is NULL!";
         #endif
     }
 
@@ -402,6 +412,21 @@ void TupPapagayoApp::setupUI()
 
     QScreen *screen = QGuiApplication::screens().at(0);
     setMinimumWidth(screen->geometry().width() * 0.7);
+
+    if (mode == Update) {
+        if (mouthType == Customized) {
+            mouthsCombo->setCurrentIndex(CUSTOMIZED_MOUTH);
+            currentMouthPath = PROJECT_DIR + "/images/" + oldLipsyncName + "/";
+            mouthsPath->setText(currentMouthPath);
+            customView->loadImages(currentMouthPath);
+            mouthFrame->setCurrentIndex(Customized);
+        } else {
+            mouthFrame->setCurrentIndex(mouthType);
+            mouthView->onMouthChanged(currentMouthIndex);
+            currentMouthPath = mouthView->getMouthsPath();
+        }
+        waveformView->setMouthsPath(currentMouthPath);
+    }
 }
 
 void TupPapagayoApp::setupMenus()
@@ -569,10 +594,10 @@ void TupPapagayoApp::updateLanguage(int index)
         qDebug() << "[TupPapagayoApp::updateLanguage()] - index -> " << index;
     #endif
 
-    if (index == TupPapagayoApp::English) {
-        currentLanguage = TupPapagayoApp::English;
+    if (index == English) {
+        currentLanguage = English;
     } else {
-        currentLanguage = TupPapagayoApp::OtherLang;
+        currentLanguage = OtherLang;
         buildOtherLanguagePhonemes();
     }
 }
@@ -1041,7 +1066,8 @@ void TupPapagayoApp::updateMouthView(int index)
         qDebug() << "[TupPapagayoApp::updateMouthView()] - index -> " << index;
     #endif
 
-    if (index == 5) {
+    currentMouthIndex = index;
+    if (index == CUSTOMIZED_MOUTH) {
         if (mouthFrame->currentIndex() == Predefined)
             mouthFrame->setCurrentIndex(Customized);
 
@@ -1105,7 +1131,8 @@ void TupPapagayoApp::openImagesDialog()
         } else {
             TOsd::self()->display(TOsd::Error, tr("Images directory is empty!"));
             #ifdef TUP_DEBUG
-                qDebug() << "[TupPapagayoApp::openImagesDialog()] - Fatal Error: Images directory is empty!";
+                qDebug() << "[TupPapagayoApp::openImagesDialog()] - "
+                            "Fatal Error: Images directory is empty! -> " << dirPath;
             #endif
         }
     }
@@ -1194,6 +1221,10 @@ bool TupPapagayoApp::validateLipsyncForm()
 
 void TupPapagayoApp::createLipsyncRecord()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::createLipsyncRecord()]";
+    #endif
+
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     if (validateLipsyncForm()) {
@@ -1240,7 +1271,8 @@ bool TupPapagayoApp::saveLipsyncRecord()
     document->setPGOFilePath(pgoFilePath);
     if (document->save()) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - imagesDir -> " << currentMouthPath;
+            qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                        "Mouth images path -> " << currentMouthPath;
         #endif
 
         QFile projectFile(pgoFilePath);
@@ -1317,6 +1349,11 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                         TOsd::self()->display(TOsd::Error, tr("Can't remove temporary voice sound!"));
 
                                         return false;
+                                    } else {
+                                        #ifdef TUP_DEBUG
+                                            qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                                                        "Removing temp sound file successfully -> " << soundFilePath;
+                                        #endif
                                     }
                                 }
 
@@ -1334,9 +1371,11 @@ bool TupPapagayoApp::saveLipsyncRecord()
                             }
 
                             // Adding Papagayo project
+                            parser->setMouthIndex(currentMouthIndex);
                             parser->setSoundFile(soundKey);
                             QString xml = parser->toString();
-                            request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex, TupProjectRequest::AddLipSync, xml);
+                            request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex,
+                                                                            TupProjectRequest::AddLipSync, xml);
                             emit requestTriggered(&request);
 
                             // Adding frames if they are required
@@ -1387,7 +1426,8 @@ bool TupPapagayoApp::saveLipsyncRecord()
                 } else {
                     TOsd::self()->display(TOsd::Error, tr("Images directory is empty!"));
                     #ifdef TUP_DEBUG
-                        qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Images directory is empty!";
+                        qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                                    "Fatal Error: Images directory is empty! -> " << currentMouthPath;
                     #endif
 
                     return false;
@@ -1428,12 +1468,41 @@ bool TupPapagayoApp::updateLipsyncRecord()
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    QString tempSoundFile = CACHE_DIR + soundKey;
+    tempMouthPath = CACHE_DIR + TAlgorithm::randomString(5);
+    QDir tempDir(tempMouthPath);
+    if (tempDir.exists()) {
+        if (!tempDir.removeRecursively()) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - "
+                            "Fatal Error: Can't remove temp folder -> " << tempMouthPath;
+            #endif
+            return false;
+        }
+    }
+
+    if (!tempDir.mkdir(tempMouthPath)) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - "
+                        "Fatal Error: Can't create temp folder -> " << tempMouthPath;
+        #endif
+        return false;
+    }
+
+    if (!TAlgorithm::copyFolder(currentMouthPath, tempMouthPath)) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - "
+                        "Fatal Error: Can't copy mouths folder -> " << tempMouthPath;
+        #endif
+        return false;
+    }
+    currentMouthPath = tempMouthPath + "/";
+
+    tempSoundFile = CACHE_DIR + soundKey;
     if (QFile::exists(tempSoundFile)) {
         if (!QFile::remove(tempSoundFile)) {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - "
-                            "Fatal Error: Can't remove file -> " << tempSoundFile;
+                            "Fatal Error: Can't remove previous temp sound file -> " << tempSoundFile;
             #endif
             return false;
         }
@@ -1442,7 +1511,7 @@ bool TupPapagayoApp::updateLipsyncRecord()
     if (!QFile::copy(soundFilePath, tempSoundFile)) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - "
-                        "Fatal Error: Can't store sound file -> " << soundFilePath;
+                        "Fatal Error: Can't store temp sound file -> " << soundFilePath;
         #endif
         return false;
     }
@@ -1452,7 +1521,8 @@ bool TupPapagayoApp::updateLipsyncRecord()
                     "Removing lipsync item -> " << oldLipsyncName;
     #endif
 
-    TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex, TupProjectRequest::RemoveLipSync,
+    TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex,
+                                                                      TupProjectRequest::RemoveLipSync,
                                                                       oldLipsyncName);
     emit requestTriggered(&request);                
 
@@ -1476,6 +1546,23 @@ void TupPapagayoApp::callUpdateProcedure()
     if (validateLipsyncForm()) {
         saveButtonPressed = true;
         if (updateLipsyncRecord()) {
+            // Remove tmp mouth folder
+            QDir tempDir(tempMouthPath);
+            if (tempDir.exists()) {
+                if (!tempDir.removeRecursively()) {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupPapagayoApp::callUpdateProcedured()] - "
+                                    "Fatal Error: Can't remove temp folder -> " << tempMouthPath;
+                    #endif
+                    return;
+                } else {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupPapagayoApp::callUpdateProcedure()] - "
+                                    "Mouth folder removed successfully -> " << tempMouthPath;
+                    #endif
+                }
+            }
+
             #ifdef TUP_DEBUG
                 qDebug() << "[TupPapagayoApp::callUpdateRecord()] - Lip-sync item saved successfully!";
             #endif

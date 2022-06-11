@@ -46,6 +46,7 @@ TButton::TButton(const QString &label, QWidget *parent, Qt::WindowFlags flags)
    Q_UNUSED(parent)
    Q_UNUSED(flags)
 
+   this->label = label;
    setText(label);
 }
 
@@ -56,4 +57,9 @@ TButton::~TButton()
 void TButton::mousePressEvent(QMouseEvent *)
 {
     emit clicked(text());
+}
+
+QString TButton::getText() const
+{
+    return label;
 }

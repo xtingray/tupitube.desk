@@ -2383,7 +2383,7 @@ void TupDocumentView::openLipSyncCreator()
     if (currentTool->toolId() != TAction::LipSyncTool)
         papagayoAction->trigger();
 
-    TupPapagayoApp *papagayoApp = new TupPapagayoApp(TupPapagayoApp::Insert, project, "", getContextIndexes(), this);
+    TupPapagayoApp *papagayoApp = new TupPapagayoApp(Insert, project, "", getContextIndexes(), this);
     connect(papagayoApp, SIGNAL(requestTriggered(const TupProjectRequest *)),
             this, SIGNAL(requestTriggered(const TupProjectRequest *)));
 
@@ -2415,7 +2415,7 @@ void TupDocumentView::openLipSyncCreator(const QString &lipsyncName)
             indexes << scene->getLipSyncLayerIndex(lipsyncName);
             indexes << lipsync->getInitFrame();
 
-            TupPapagayoApp *papagayoApp = new TupPapagayoApp(TupPapagayoApp::Update, project, lipsync, indexes, this);
+            TupPapagayoApp *papagayoApp = new TupPapagayoApp(Update, project, lipsync, indexes, this);
             connect(papagayoApp, SIGNAL(requestTriggered(const TupProjectRequest *)),
                     this, SIGNAL(requestTriggered(const TupProjectRequest *)));
 
@@ -2428,7 +2428,8 @@ void TupDocumentView::openLipSyncCreator(const QString &lipsyncName)
                               static_cast<int>((screen->geometry().height() - papagayoApp->height())/2));
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupDocumentView::openLipSyncCreator(QString)] - Fatal Error: Can't find lipsync -> " << lipsyncName;
+                qDebug() << "[TupDocumentView::openLipSyncCreator(QString)] - "
+                            "Fatal Error: Can't find lipsync -> " << lipsyncName;
             #endif
         }
     }
@@ -2664,9 +2665,9 @@ void TupDocumentView::launchLipsyncModule(bool recorded, const QString &soundFil
 
     papagayoManager(); // Launch plugin
 
-    TupPapagayoApp::Mode mode = TupPapagayoApp::Insert;
+    PapagayoAppMode mode = Insert;
     if (recorded)
-        mode = TupPapagayoApp::VoiceRecorded;
+        mode = VoiceRecorded;
 
     if (QFile::exists(soundFile)) {
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));

@@ -212,6 +212,10 @@ class TUPITUBE_EXPORT TupLipSync : public QObject, public TupAbstractSerializabl
         bool hasNativeMouths();
         QString getSoundFile() const;
         void setSoundFile(const QString &file);
+
+        void setMouthIndex(int index);
+        int getMouthIndex();
+
         int getInitFrame();
         void setInitFrame(int frame);
         int getFramesTotal();
@@ -235,6 +239,8 @@ class TUPITUBE_EXPORT TupLipSync : public QObject, public TupAbstractSerializabl
         int initFrame;
         int framesTotal;
         TupVoice *voice;
+
+        int mouthIndex;
 };
 
 #endif

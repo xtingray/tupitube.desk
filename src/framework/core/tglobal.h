@@ -91,6 +91,12 @@ struct SoundResource {
     SoundType type;
 };
 
+enum PapagayoAppMode { Insert = 0, Update, VoiceRecorded };
+enum PapagayoAppLanguage { English = 0, OtherLang };
+enum PapagayoAppViewType { Predefined = 0, Customized };
+
+#define CUSTOMIZED_MOUTH 5
+
 #define DARK_THEME 0
 #define LIGHT_THEME 1
 

@@ -17,7 +17,6 @@
 #include "tupbreakdowndialog.h"
 #include "tapplicationproperties.h"
 #include "tapptheme.h"
-#include "tbutton.h"
 #include "timagelabel.h"
 #include "tseparator.h"
 #include "tosd.h"
@@ -189,6 +188,7 @@ QWidget * TupBreakdownDialog::createMouthPanel(int row, int column)
 
     TButton *phonemeButton = new TButton(text);
     connect(phonemeButton, SIGNAL(clicked(const QString&)), this, SLOT(addPhoneme(const QString&)));
+    mouthButtonsList << phonemeButton;
 
     /* SQA: This connection doesn't work on Windows
     connect(phonemeButton, &TButton::clicked, this, &TupBreakdownDialog::addPhoneme);
@@ -196,6 +196,9 @@ QWidget * TupBreakdownDialog::createMouthPanel(int row, int column)
     panelLayout->addWidget(phonemeButton);
 
     QString imgPath = folder + text + "." + extension;
+    if (!QFile().exists(imgPath))
+        imgPath = folder + text.toLower() + "." + extension;
+
     #ifdef TUP_DEBUG
         qDebug() << "[TupBreakdownDialog::createMouthPanel()] - imgPath -> " << imgPath;
     #endif
@@ -203,6 +206,7 @@ QWidget * TupBreakdownDialog::createMouthPanel(int row, int column)
     TImageLabel *mouthImage = new TImageLabel(text, QColor(200, 255, 200));
     connect(mouthImage, SIGNAL(clicked(const QString&)), this, SLOT(addPhoneme(const QString&)));
     connect(phonemeButton, SIGNAL(clicked(QString)), mouthImage, SLOT(activateMark()));
+    connect(mouthImage, SIGNAL(clicked(const QString&)), this, SLOT(updateButtons(const QString&)));
 
     /* SQA: This connection doesn't work on Windows
     connect(mouthImage, &TImageLabel::clicked, this, &TupBreakdownDialog::addPhoneme);
@@ -330,4 +334,16 @@ void TupBreakdownDialog::notifyMissingPhonemes()
         qDebug() << "[TupBreakdownDialog::notifyMissingPhonemes()] - Fatal Error: Word phonemes are missing!!!";
     #endif
     breakdownEdit->setFocus();
+}
+
+void TupBreakdownDialog::updateButtons(const QString &label)
+{
+    for (int i=0; i< mouthButtonsList.size(); i++) {
+        TButton *button = mouthButtonsList.at(i);
+        QString id = button->getText();
+        if (label.compare(id) == 0) {
+            button->setFocus();
+            return;
+        }
+    }
 }

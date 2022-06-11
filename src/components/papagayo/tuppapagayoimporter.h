@@ -50,6 +50,7 @@ class TUPITUBE_EXPORT TupPapagayoImporter : public QObject
         ~TupPapagayoImporter();
 
         void setSoundFile(const QString &soundFile);
+        void setMouthIndex(int mouthIndex);
         bool fileIsValid();
         QString toString() const;
         int getFrameCount();
