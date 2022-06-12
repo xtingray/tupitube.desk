@@ -50,6 +50,7 @@ class TUPITUBE_EXPORT TupCameraBar : public QFrame
         ~TupCameraBar();
 
         void updatePlayButton(bool playOn);
+        void updatePlaybackButton(bool playOn);
 
     signals:
         void playBack();

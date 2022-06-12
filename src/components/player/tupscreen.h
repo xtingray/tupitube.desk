@@ -53,7 +53,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
 {
     Q_OBJECT
 
-    public:
+    public:    
         TupScreen(TupProject *project, const QSize viewSize = QSize(),
                   bool isScaled = false, QWidget *parent = nullptr);
         ~TupScreen();
@@ -71,6 +71,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         bool isPlaying();
         void clearPhotograms();
         void clearScenesArrays();
+        PlayMode getPlaymode();
 
     public slots:
         void render();
@@ -139,8 +140,8 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         QList<QMediaPlayer *> soundPlayer;
 
         bool playerIsActive;
-        bool playForwardFlag;
-        bool playBackFlag;
+        PlayMode playMode;
+
         bool mute;
         bool cyclicAnimation;
         bool isScaled;

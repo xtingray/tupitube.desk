@@ -58,8 +58,7 @@ TupScreen::TupScreen(TupProject *work, const QSize viewSize, bool sizeChanged, Q
     currentFramePosition = 0;
 
     playerIsActive = false;
-    playForwardFlag = true;
-    playBackFlag = false;
+    playMode = Forward;
     mute = false;
 
     timer = new QTimer(this);
@@ -164,12 +163,12 @@ void TupScreen::setFPS(int speed)
 
     fps = speed;
 
-    if (playForwardFlag) {
+    if (playMode == Forward) {
         if (timer->isActive()) {
             timer->stop();
             play();
         }
-    } else {
+    } else { // Backward
         if (playBackTimer->isActive()) {
             playBackTimer->stop();
             playBack();
@@ -187,7 +186,7 @@ void TupScreen::paintEvent(QPaintEvent *)
 
     if (!mute) {
         if (photograms.count() > 1) {
-            if (playerIsActive && playForwardFlag)
+            if (playerIsActive && (playMode == Forward))
                 playSoundAt(currentFramePosition);
         }
     }
@@ -224,14 +223,13 @@ void TupScreen::play()
         qWarning() << "[TupScreen::play()] - Playing at " << fps << " FPS";
     #endif
 
-    if (playBackFlag) {
-        playBackFlag = false;
+    if (playMode == Backward) {
+        playMode = Forward;
         if (playBackTimer->isActive())
             playBackTimer->stop();
     }
 
     playerIsActive = true;
-    playForwardFlag = true;
     currentFramePosition = 0;
 
     if (!timer->isActive()) {
@@ -256,16 +254,15 @@ void TupScreen::playBack()
     if (photograms.count() == 1)
         return;
 
-    if (playForwardFlag) {
+    if (playMode == Forward) {
         stopSounds();
 
-        playForwardFlag = false;
+        playMode = Backward;
         if (timer->isActive())
             timer->stop();
     }
 
     playerIsActive = true;
-    playBackFlag = true;
     currentFramePosition = photograms.count() - 1;
 
     if (!playBackTimer->isActive()) {
@@ -285,6 +282,11 @@ bool TupScreen::isPlaying()
     return playerIsActive;
 }
 
+PlayMode TupScreen::getPlaymode()
+{
+    return playMode;
+}
+
 void TupScreen::pause()
 {
     #ifdef TUP_DEBUG
@@ -302,7 +304,7 @@ void TupScreen::pause()
             return;
 
         playerIsActive = true;
-        if (playForwardFlag)
+        if (playMode == Forward)
             timer->start(1000 / fps);
         else
             playBackTimer->start(1000 / fps);
@@ -313,12 +315,12 @@ void TupScreen::stop()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupScreen::stop()] - Stopping player!";
-        qDebug() << "[TupScreen::stop()] - playForwardFlag -> " << playForwardFlag;
+        qDebug() << "[TupScreen::stop()] - playMode -> " << playMode;
     #endif
 
     stopAnimation();
 
-    if (playForwardFlag)
+    if (playMode == Forward)
         currentFramePosition = 0;
     else
         currentFramePosition = photograms.count() - 1;
@@ -334,12 +336,12 @@ void TupScreen::stop()
 void TupScreen::stopAnimation()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::stopAnimation()] - playForwardFlag -> " << playForwardFlag;
+        qDebug() << "[TupScreen::stopAnimation()] - playMode -> " << playMode;
     #endif
 
     playerIsActive = false;
 
-    if (playForwardFlag) {
+    if (playMode == Forward) {
         stopSounds();
 
         if (timer) {

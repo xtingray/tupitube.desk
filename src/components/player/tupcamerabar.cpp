@@ -102,3 +102,12 @@ void TupCameraBar::updatePlayButton(bool playOn)
 
     playButton->setIcon(QPixmap(THEME_DIR + "icons/play" + pic + ".png"));
 }
+
+void TupCameraBar::updatePlaybackButton(bool playOn)
+{
+    QString pic = "";
+    if (playOn)
+        pic = "_on";
+
+    playBackButton->setIcon(QPixmap(THEME_DIR + "icons/play_back" + pic + ".png"));
+}

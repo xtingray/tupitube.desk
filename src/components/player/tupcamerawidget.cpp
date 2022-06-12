@@ -175,7 +175,8 @@ void TupCameraWidget::addVideoHeader()
 void TupCameraWidget::setProgressBar()
 {
     progressBar = new QProgressBar(this);
-    QString style1 = "QProgressBar { background-color: #DDDDDD; text-align: center; color: #FFFFFF; border-radius: 2px; } ";
+    QString style1 = "QProgressBar { background-color: #DDDDDD; text-align: center; "
+                     "color: #FFFFFF; border-radius: 2px; } ";
     QString color = "#666666";
     if (uiTheme == DARK_THEME)
         color = "#444444";
@@ -258,8 +259,8 @@ void TupCameraWidget::addPlayerButtonsBar()
 
     connect(cameraBar, SIGNAL(play()), this, SLOT(doPlay()));
     connect(cameraBar, SIGNAL(playBack()), this, SLOT(doPlayBack()));
-    connect(cameraBar, SIGNAL(pause()), previewScreen, SLOT(pause()));
-    connect(cameraBar, SIGNAL(stop()), previewScreen, SLOT(stop()));
+    connect(cameraBar, SIGNAL(pause()), this, SLOT(doPause()));
+    connect(cameraBar, SIGNAL(stop()), this, SLOT(doStop()));
     connect(cameraBar, SIGNAL(ff()), previewScreen, SLOT(nextFrame()));
     connect(cameraBar, SIGNAL(rew()), previewScreen, SLOT(previousFrame()));
 
@@ -364,6 +365,8 @@ void TupCameraWidget::doPlay()
 void TupCameraWidget::doPlayBack()
 {
     previewScreen->playBack();
+    cameraBar->updatePlayButton(false);
+    cameraBar->updatePlaybackButton(true);
 }
 
 void TupCameraWidget::doPause()
@@ -376,16 +379,27 @@ void TupCameraWidget::doPause()
 
     if (frames > 1) {
         bool playOn = previewScreen->isPlaying();
-        cameraBar->updatePlayButton(!playOn);
+        if (previewScreen->getPlaymode() == Forward)
+            cameraBar->updatePlayButton(!playOn);
+        else
+            cameraBar->updatePlaybackButton(!playOn);
+
         previewScreen->pause();
     } else {
-        cameraBar->updatePlayButton(false);
+        if (previewScreen->getPlaymode() == Forward)
+            cameraBar->updatePlayButton(false);
+        else
+            cameraBar->updatePlaybackButton(false);
     }
 }
 
 void TupCameraWidget::doStop()
 {
-    cameraBar->updatePlayButton(false);
+    if (previewScreen->getPlaymode() == Forward)
+        cameraBar->updatePlayButton(false);
+    else
+        cameraBar->updatePlaybackButton(false);
+
     previewScreen->stop();
 }
 
