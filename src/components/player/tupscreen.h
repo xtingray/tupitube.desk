@@ -139,7 +139,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         QList<QMediaPlayer *> soundPlayer;
 
         bool playerIsActive;
-        bool playFlag;
+        bool playForwardFlag;
         bool playBackFlag;
         bool mute;
         bool cyclicAnimation;

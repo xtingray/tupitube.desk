@@ -58,7 +58,7 @@ TupScreen::TupScreen(TupProject *work, const QSize viewSize, bool sizeChanged, Q
     currentFramePosition = 0;
 
     playerIsActive = false;
-    playFlag = true;
+    playForwardFlag = true;
     playBackFlag = false;
     mute = false;
 
@@ -164,7 +164,7 @@ void TupScreen::setFPS(int speed)
 
     fps = speed;
 
-    if (playFlag) {
+    if (playForwardFlag) {
         if (timer->isActive()) {
             timer->stop();
             play();
@@ -187,7 +187,7 @@ void TupScreen::paintEvent(QPaintEvent *)
 
     if (!mute) {
         if (photograms.count() > 1) {
-            if (playerIsActive && playFlag)
+            if (playerIsActive && playForwardFlag)
                 playSoundAt(currentFramePosition);
         }
     }
@@ -231,7 +231,7 @@ void TupScreen::play()
     }
 
     playerIsActive = true;
-    playFlag = true;
+    playForwardFlag = true;
     currentFramePosition = 0;
 
     if (!timer->isActive()) {
@@ -256,10 +256,10 @@ void TupScreen::playBack()
     if (photograms.count() == 1)
         return;
 
-    if (playFlag) {
+    if (playForwardFlag) {
         stopSounds();
 
-        playFlag = false;
+        playForwardFlag = false;
         if (timer->isActive())
             timer->stop();
     }
@@ -302,7 +302,7 @@ void TupScreen::pause()
             return;
 
         playerIsActive = true;
-        if (playFlag)
+        if (playForwardFlag)
             timer->start(1000 / fps);
         else
             playBackTimer->start(1000 / fps);
@@ -312,12 +312,13 @@ void TupScreen::pause()
 void TupScreen::stop()
 {
     #ifdef TUP_DEBUG
-        qWarning() << "[TupScreen::stop()] - Stopping player!";
+        qDebug() << "[TupScreen::stop()] - Stopping player!";
+        qDebug() << "[TupScreen::stop()] - playForwardFlag -> " << playForwardFlag;
     #endif
 
     stopAnimation();
 
-    if (playFlag)
+    if (playForwardFlag)
         currentFramePosition = 0;
     else
         currentFramePosition = photograms.count() - 1;
@@ -332,9 +333,13 @@ void TupScreen::stop()
 
 void TupScreen::stopAnimation()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScreen::stopAnimation()] - playForwardFlag -> " << playForwardFlag;
+    #endif
+
     playerIsActive = false;
 
-    if (playFlag) {
+    if (playForwardFlag) {
         stopSounds();
 
         if (timer) {
