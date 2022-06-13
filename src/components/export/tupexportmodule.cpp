@@ -396,6 +396,7 @@ void TupExportModule::exportIt()
         #endif
 
         if (scenes.count() > 0) {
+            int fps = scenes.at(0)->getFPS();
             int width = dimension.width();
             int height = dimension.height();
             // libav requirement: resolution must be a multiple of two
@@ -415,7 +416,7 @@ void TupExportModule::exportIt()
             // SQA: The QSize second parameter will contain the resizing value of the animation
             //      * Pending feature
             done = m_currentExporter->exportToFormat(color, filename, scenes, m_currentFormat, 
-                                      QSize(width, height), QSize(width, height), m_project->getFPS(),
+                                      QSize(width, height), QSize(width, height), fps /* m_project->getFPS() */,
                                       // QSize(width, height), QSize(newWidth, newHeight), m_fps->value(),
                                       m_project->getLibrary());
         }
