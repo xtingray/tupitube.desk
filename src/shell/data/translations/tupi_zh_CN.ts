@@ -3396,10 +3396,6 @@
         <translation>Alt</translation>
     </message>
     <message>
-        <source>News</source>
-        <translation>消息</translation>
-    </message>
-    <message>
         <source>Redo</source>
         <translation>重做</translation>
     </message>
@@ -4666,6 +4662,10 @@
         <source>Audio files (*.wav)</source>
         <translation>音频文件 (*.wav)</translation>
     </message>
+    <message>
+        <source>Some phonemes are missing!</source>
+        <translation>有些音素不见了</translation>
+    </message>
 </context>
 <context>
     <name>TupPenDialog</name>
@@ -4978,10 +4978,6 @@
         <translation>搜索</translation>
     </message>
     <message>
-        <source>Support Us</source>
-        <translation>支持我们</translation>
-    </message>
-    <message>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
@@ -5018,28 +5014,8 @@
         <translation>但是我们正在开发新资产...</translation>
     </message>
     <message>
-        <source>Want to support us?</source>
-        <translation>想支持我们吗？</translation>
-    </message>
-    <message>
         <source>Error while processing request. Please, try again.</source>
         <translation>处理请求时出错。 请再试一次。</translation>
-    </message>
-    <message>
-        <source>From the &lt;b&gt;MaeFloresta&lt;/b&gt; startup we are requesting the support from our users community to keep creating new assets for our library repository. Thanks to your contributions we can deliver a better product. You can start helping from &lt;b&gt;USD 1&lt;/b&gt;.</source>
-        <translation>从&lt;b&gt;MaeFloresta&lt;/b&gt;创业公司开始，我们要求用户社区提供支持，以继续为我们的图书馆资料库创建新资产。 感谢您的贡献，我们可以提供更好的产品。 您可以从 &lt;b&gt;1美元&lt;/b&gt;开始获得帮助。</translation>
-    </message>
-    <message>
-        <source>One Time Donation</source>
-        <translation>一次性捐赠</translation>
-    </message>
-    <message>
-        <source>Join Our Patreon</source>
-        <translation>加入我们的Patreon</translation>
-    </message>
-    <message>
-        <source>Sponsors</source>
-        <translation>赞助商</translation>
     </message>
     <message>
         <source>Invalid search: Empty pattern!</source>

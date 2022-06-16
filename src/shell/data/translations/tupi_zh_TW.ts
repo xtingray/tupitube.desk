@@ -3396,10 +3396,6 @@
         <translation>Alt</translation>
     </message>
     <message>
-        <source>News</source>
-        <translation>消息</translation>
-    </message>
-    <message>
         <source>Redo</source>
         <translation>重作</translation>
     </message>
@@ -4666,6 +4662,10 @@
         <source>Audio files (*.wav)</source>
         <translation>音頻文件 (*.wav)</translation>
     </message>
+    <message>
+        <source>Some phonemes are missing!</source>
+        <translation>有些音素不見了</translation>
+    </message>
 </context>
 <context>
     <name>TupPenDialog</name>
@@ -4978,10 +4978,6 @@
         <translation>搜索</translation>
     </message>
     <message>
-        <source>Support Us</source>
-        <translation>支持我們</translation>
-    </message>
-    <message>
         <source>Close</source>
         <translation>關閉</translation>
     </message>
@@ -5018,28 +5014,8 @@
         <translation>但是我們還在製作新資產...</translation>
     </message>
     <message>
-        <source>Want to support us?</source>
-        <translation>想要支持我們嗎?</translation>
-    </message>
-    <message>
         <source>Error while processing request. Please, try again.</source>
         <translation>執行錯誤, 請重試.</translation>
-    </message>
-    <message>
-        <source>From the &lt;b&gt;MaeFloresta&lt;/b&gt; startup we are requesting the support from our users community to keep creating new assets for our library repository. Thanks to your contributions we can deliver a better product. You can start helping from &lt;b&gt;USD 1&lt;/b&gt;.</source>
-        <translation>&lt;b&gt;MaeFloresta&lt;/b&gt;新創希望能得到大家的幫助，以利之後在圖庫裡發展新資產。謝謝你們的貢獻，我們才能提供更好的產品，你只要捐一塊&lt;b&gt;美金&lt;/b&gt;。</translation>
-    </message>
-    <message>
-        <source>One Time Donation</source>
-        <translation>一次捐款</translation>
-    </message>
-    <message>
-        <source>Join Our Patreon</source>
-        <translation>加入我們的贊助團隊</translation>
-    </message>
-    <message>
-        <source>Sponsors</source>
-        <translation>贊助商</translation>
     </message>
     <message>
         <source>Invalid search: Empty pattern!</source>
