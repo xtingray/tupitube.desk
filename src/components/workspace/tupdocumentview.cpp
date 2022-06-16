@@ -693,7 +693,7 @@ void TupDocumentView::loadPlugins()
 
     miscMenu->addAction(actionManager->find("post_image"));
     miscMenu->addAction(actionManager->find("storyboard"));
-    miscMenu->addAction(actionManager->find("papagayo"));
+    // miscMenu->addAction(actionManager->find("papagayo"));
 
     foreach (QObject *plugin, TupPluginManager::instance()->getFilters()) {
         AFilterInterface *filterInterface = qobject_cast<AFilterInterface *>(plugin);
@@ -746,6 +746,9 @@ void TupDocumentView::loadPlugins()
 
     toolbar->addSeparator();
     toolbar->addAction(actionManager->find("camera"));
+
+    toolbar->addSeparator();
+    toolbar->addAction(papagayoAction);
 
     toolbar->addSeparator();
     toolbar->addAction(miscMenu->menuAction());
@@ -1102,10 +1105,12 @@ void TupDocumentView::selectTool()
                     connect(currentTool, SIGNAL(lipsyncCreatorRequested()), this, SLOT(openLipSyncCreator()));
                     connect(currentTool, SIGNAL(lipsyncEditionRequested(QString)), this, SLOT(openLipSyncCreator(QString)));
 
+                    /*
                     miscMenu->setDefaultAction(action);
                     miscMenu->setActiveAction(action);
                     if (!action->icon().isNull())
                         miscMenu->menuAction()->setIcon(action->icon());
+                    */
                 }
             }
 

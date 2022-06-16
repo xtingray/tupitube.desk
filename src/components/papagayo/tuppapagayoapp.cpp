@@ -725,7 +725,7 @@ void TupPapagayoApp::playVoice()
 {
     if (currentMouthPath.isEmpty()) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::playVoice()] - Fatal Error: Mouth images are unset!";
+            qWarning() << "[TupPapagayoApp::playVoice()] - Fatal Error: Mouth images are unset!";
         #endif
         TOsd::self()->display(TOsd::Error, tr("Mouth images are unset!"));
         return;
@@ -733,10 +733,10 @@ void TupPapagayoApp::playVoice()
 
     if (voiceText->toPlainText().isEmpty()) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::playVoice()] - Fatal Error: No voice text to play!";
+            qWarning() << "[TupPapagayoApp::playVoice()] - Warning: No voice text to play!";
         #endif
-        TOsd::self()->display(TOsd::Error, tr("No voice text to play!"));
-        return;
+        TOsd::self()->display(TOsd::Warning, tr("No voice text to play!"));
+        // return;
     }
 
     if (document && document->getAudioPlayer()) {
