@@ -274,7 +274,7 @@ void TupProjectManager::handleProjectRequest(const TupProjectRequest *request)
 {	
     #ifdef TUP_DEBUG
         qWarning() << "[TupProjectManager::handleProjectRequest()] - Package:";
-        qWarning() << request->getXml();
+        // qWarning() << request->getXml();
     #endif
 
     // SQA: the handler must advise when to build the command
@@ -365,7 +365,7 @@ void TupProjectManager::createCommand(const TupProjectRequest *request, bool add
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupProjectManager::createCommand()]";
-        qDebug() << request->getXml();
+        // qDebug() << request->getXml();
     #endif
 
     if (request->isValid()) {

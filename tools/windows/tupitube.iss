@@ -1,7 +1,7 @@
 [Setup]
 SetupIconFile=bin\raw\icon\tupitube.ico
 AppName=TupiTube Desk
-AppVersion=0.2.18
+AppVersion=0.2.19
 AppPublisher=MaeFloresta
 AppPublisherURL=https://www.tupitube.com/
 DefaultDirName={pf}\TupiTube
@@ -11,7 +11,7 @@ OutputDir=c:\devel\installer
 ChangesEnvironment=yes
 ChangesAssociations=yes
 ; Uncomment this line for 64bit installer
-; ArchitecturesInstallIn64BitMode=x64
+ArchitecturesInstallIn64BitMode=x64
 
 [Dirs]
 Name: "{app}\bin"
@@ -27,6 +27,7 @@ Name: "{app}\data\html\css"
 Name: "{app}\data\html\examples"
 Name: "{app}\data\html\images"
 Name: "{app}\data\html\pages"
+Name: "{app}\data\dictionaries"
 Name: "{app}\data\mouths"
 Name: "{app}\data\mouths\1"
 Name: "{app}\data\mouths\2"
@@ -41,11 +42,6 @@ Name: "{app}\data\themes\default\config"
 Name: "{app}\data\themes\default\cursors"
 Name: "{app}\data\themes\default\icons"
 Name: "{app}\data\themes\default\images"
-Name: "{app}\data\themes\dark"
-Name: "{app}\data\themes\dark\config"
-Name: "{app}\data\themes\dark\cursors"
-Name: "{app}\data\themes\dark\icons"
-Name: "{app}\data\themes\dark\images"
 Name: "{app}\data\themes\raster"
 Name: "{app}\data\themes\raster\brushes"
 Name: "{app}\data\themes\raster\brushes\classic"
@@ -64,8 +60,8 @@ Name: "{app}\plugins"
 Name: "{app}\lib"
 Name: "{app}\lib\qt5"
 Name: "{app}\lib\ffmpeg"
-; Name: "{app}\lib\ssl"
 Name: "{app}\lib\raster"
+Name: "{app}\lib\libsndfile"
 
 [Files]
 Source: "bin\*"; DestDir: "{app}\bin"
@@ -79,6 +75,7 @@ Source: "data\html\css\*"; DestDir: "{app}\data\html\css"
 Source: "data\html\examples\*"; DestDir: "{app}\data\html\examples"
 Source: "data\html\images\*"; DestDir: "{app}\data\html\images"
 Source: "data\html\pages\*"; DestDir: "{app}\data\html\pages"
+Source: "data\dictionaries\*"; DestDir: "{app}\data\dictionaries"
 Source: "data\mouths\1\*"; DestDir: "{app}\data\mouths\1"
 Source: "data\mouths\2\*"; DestDir: "{app}\data\mouths\2"
 Source: "data\mouths\3\*"; DestDir: "{app}\data\mouths\3"
@@ -86,14 +83,10 @@ Source: "data\mouths\4\*"; DestDir: "{app}\data\mouths\4"
 Source: "data\mouths\5\*"; DestDir: "{app}\data\mouths\5"
 Source: "data\palettes\*"; DestDir: "{app}\data\palettes"
 Source: "data\storyboard\*"; DestDir: "{app}\data\storyboard"
-;Source: "data\themes\default\config\*"; DestDir: "{app}\data\themes\default\config"
-;Source: "data\themes\default\cursors\*"; DestDir: "{app}\data\themes\default\cursors";
-;Source: "data\themes\default\icons\*"; DestDir: "{app}\data\themes\default\icons"
-;Source: "data\themes\default\images\*"; DestDir: "{app}\data\themes\default\images"
-Source: "data\themes\dark\config\*"; DestDir: "{app}\data\themes\dark\config"
-Source: "data\themes\dark\cursors\*"; DestDir: "{app}\data\themes\dark\cursors"
-Source: "data\themes\dark\icons\*"; DestDir: "{app}\data\themes\dark\icons"
-Source: "data\themes\dark\images\*"; DestDir: "{app}\data\themes\dark\images"
+Source: "data\themes\default\config\*"; DestDir: "{app}\data\themes\default\config"
+Source: "data\themes\default\cursors\*"; DestDir: "{app}\data\themes\default\cursors"
+Source: "data\themes\default\icons\*"; DestDir: "{app}\data\themes\default\icons"
+Source: "data\themes\default\images\*"; DestDir: "{app}\data\themes\default\images"
 Source: "data\themes\raster\brushes\*"; DestDir: "{app}\data\themes\raster\brushes"
 Source: "data\themes\raster\brushes\classic\*"; DestDir: "{app}\data\themes\raster\brushes\classic"
 Source: "data\themes\raster\brushes\deevad\*"; DestDir: "{app}\data\themes\raster\brushes\deevad"
@@ -110,7 +103,7 @@ Source: "plugins\*"; DestDir: "{app}\plugins"
 Source: "lib\*"; DestDir: "{app}\lib"
 Source: "lib\qt5\*"; DestDir: "{app}\lib\qt5"
 Source: "lib\ffmpeg\*"; DestDir: "{app}\lib\ffmpeg"
-; Source: "lib\ssl\*"; DestDir: "{app}\lib\ssl"
+Source: "lib\libsndfile\*"; DestDir: "{app}\lib\libsndfile"
 Source: "lib\raster\*"; DestDir: "{app}\lib\raster"
 
 [Registry]
