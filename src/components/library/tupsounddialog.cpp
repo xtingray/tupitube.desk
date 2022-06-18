@@ -252,16 +252,19 @@ void TupSoundDialog::launchLipsyncModule()
     #endif
 
     QString path = "";
-    bool isRecorded = false;
+    PapagayoAppMode mode = Insert;
+    // bool isRecorded = false;
     if (tabWidget->currentIndex() == 0) { // Audio file comes from filesystem
         path = filePathInput->text();
     } else { // Audio file was recorded
-        isRecorded = true;
+        // isRecorded = true;
+        mode = VoiceRecorded;
         path = micManager->getRecordPath();
     }
 
     if (!path.isEmpty()) {
-        emit lipsyncModuleCalled(isRecorded, path);
+        // emit lipsyncModuleCalled(isRecorded, path);
+        emit lipsyncModuleCalled(mode, path);
         close();
     } else {
         #ifdef TUP_DEBUG

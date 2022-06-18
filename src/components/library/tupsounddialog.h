@@ -65,7 +65,7 @@ class TUPITUBE_EXPORT TupSoundDialog : public QDialog
 
     signals:
         void soundFilePicked(const QString &path);
-        void lipsyncModuleCalled(bool recorded, const QString &path);
+        void lipsyncModuleCalled(PapagayoAppMode mode, const QString &path);
 
     private:
         QWidget *soundFileTab();

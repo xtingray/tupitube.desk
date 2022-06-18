@@ -92,7 +92,7 @@ struct SoundResource {
     SoundType type;
 };
 
-enum PapagayoAppMode { Insert = 0, Update, VoiceRecorded };
+enum PapagayoAppMode { Insert = 0, Update, VoiceRecorded, AudioFromLibrary };
 enum PapagayoAppLanguage { English = 0, OtherLang };
 enum PapagayoAppViewType { Predefined = 0, Customized };
 

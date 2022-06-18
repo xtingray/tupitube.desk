@@ -48,7 +48,7 @@ TupPapagayoApp::TupPapagayoApp(PapagayoAppMode mode, TupProject *project, const 
                                QList<int> indexes, QWidget *parent) : QMainWindow(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPapagayoApp::TupPapagayoApp()]";
+        qDebug() << "[TupPapagayoApp::TupPapagayoApp()] - Adding new record...";
     #endif
 
     this->mode = mode;
@@ -74,7 +74,7 @@ TupPapagayoApp::TupPapagayoApp(PapagayoAppMode mode, TupProject *project, TupLip
                                QList<int> indexes, QWidget *parent) : QMainWindow(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPapagayoApp::TupPapagayoApp()]";
+        qDebug() << "[TupPapagayoApp::TupPapagayoApp()] - Updating new record...";
     #endif
 
     Q_UNUSED(lipsync)
@@ -384,10 +384,14 @@ void TupPapagayoApp::setupUI()
     okButton->setMinimumWidth(60);
     okButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
     okButton->setToolTip(tr("Save lip-sync record"));
-    if (mode == Insert || mode == VoiceRecorded) {
+    /*
+    if (mode == Insert || mode == VoiceRecorded || mode == AudioFromLibrary) {
         connect(okButton, SIGNAL(clicked()), this, SLOT(createLipsyncRecord()));
-    } else if (mode == Update) {
+    } else */
+    if (mode == Update) {
         connect(okButton, SIGNAL(clicked()), this, SLOT(callUpdateProcedure()));
+    } else { // Insert | VoiceRecorded | AudioFromLibrary
+        connect(okButton, SIGNAL(clicked()), this, SLOT(createLipsyncRecord()));
     }
 
     QPushButton *cancelButton = new QPushButton(lateralGroupBox);
@@ -1335,25 +1339,29 @@ bool TupPapagayoApp::saveLipsyncRecord()
                             QFile soundFile(soundFilePath);
                             QFileInfo info(soundFilePath);
                             QString soundKey = info.fileName().toLower();
-
                             if (soundFile.open(QIODevice::ReadOnly)) {
                                 QByteArray data = soundFile.readAll();
                                 soundFile.close();
+                                if (mode == AudioFromLibrary) {
+                                    TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove,
+                                                                                                        soundKey, TupLibraryObject::Audio);
+                                    emit requestTriggered(&request);
+                                } else {
+                                    if (mode == VoiceRecorded || mode == Update) {
+                                        if (!QFile::remove(soundFilePath)) {
+                                            #ifdef TUP_DEBUG
+                                                qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                                                            "Fatal Error: Can't remove sound file -> " << soundFilePath;
+                                            #endif
+                                            TOsd::self()->display(TOsd::Error, tr("Can't remove temporary voice sound!"));
 
-                                if (mode == VoiceRecorded || mode == Update) {
-                                    if (!QFile::remove(soundFilePath)) {
-                                        #ifdef TUP_DEBUG
-                                            qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
-                                                        "Fatal Error: Can't remove sound file -> " << soundFilePath;
-                                        #endif
-                                        TOsd::self()->display(TOsd::Error, tr("Can't remove temporary voice sound!"));
-
-                                        return false;
-                                    } else {
-                                        #ifdef TUP_DEBUG
-                                            qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
-                                                        "Removing temp sound file successfully -> " << soundFilePath;
-                                        #endif
+                                            return false;
+                                        } else {
+                                            #ifdef TUP_DEBUG
+                                                qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                                                            "Removing temp sound file successfully -> " << soundFilePath;
+                                            #endif
+                                        }
                                     }
                                 }
 

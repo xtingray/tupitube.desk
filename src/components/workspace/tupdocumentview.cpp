@@ -2662,7 +2662,8 @@ QList<int> TupDocumentView::getContextIndexes()
     return indexes;
 }
 
-void TupDocumentView::launchLipsyncModule(bool recorded, const QString &soundFile)
+// void TupDocumentView::launchLipsyncModule(bool recorded, const QString &soundFile)
+void TupDocumentView::launchLipsyncModule(PapagayoAppMode mode, const QString &soundFile)
 {
     #ifdef TUP_DEBUG
        qDebug() << "[TupDocumentView::launchLipsyncModule()] - soundFile -> " << soundFile;
@@ -2670,9 +2671,11 @@ void TupDocumentView::launchLipsyncModule(bool recorded, const QString &soundFil
 
     papagayoManager(); // Launch plugin
 
+    /*
     PapagayoAppMode mode = Insert;
     if (recorded)
         mode = VoiceRecorded;
+    */
 
     if (QFile::exists(soundFile)) {
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));

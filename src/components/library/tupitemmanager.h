@@ -66,6 +66,7 @@ class TUPITUBE_EXPORT TupItemManager : public TreeListWidget
         QTreeWidgetItem *getFolder(const QString &folderName);
         void cleanUI();
         int itemType();
+        bool moveItem(const QString &itemKey, const QString &folderName);
 
         enum ObjectType 
         {
@@ -86,6 +87,7 @@ class TUPITUBE_EXPORT TupItemManager : public TreeListWidget
         void gimpEditCall(QTreeWidgetItem *item);
         void kritaEditCall(QTreeWidgetItem *item);
         void myPaintEditCall(QTreeWidgetItem *item);
+        void lipSyncCall(QTreeWidgetItem *item);
         void newRasterCall();
         void newVectorCall();
 
@@ -102,6 +104,7 @@ class TUPITUBE_EXPORT TupItemManager : public TreeListWidget
         void callMyPaintToEdit();
         void createNewRaster();
         void createNewSVG();
+        void callLipSync();
 
     protected:
         void dropEvent(QDropEvent *event);

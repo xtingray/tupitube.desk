@@ -200,6 +200,13 @@ void TupItemManager::createNewSVG()
      emit newVectorCall();
 }
 
+void TupItemManager::callLipSync()
+{
+    QTreeWidgetItem *item = currentItem();
+    if (item)
+        emit lipSyncCall(item);
+}
+
 void TupItemManager::mouseDoubleClickEvent(QMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton) {
@@ -323,6 +330,15 @@ void TupItemManager::mousePressEvent(QMouseEvent *event)
                 menu->addAction(remove);
                 menu->addSeparator();
 
+                if (isSound) {
+                    QTreeWidgetItem *top = item->parent();
+                    if (!top) {
+                        QAction *lipsyncAction = new QAction(tr("Open lip-sync editor"), this);
+                        connect(lipsyncAction, SIGNAL(triggered()), this, SLOT(callLipSync()));
+                        menu->addAction(lipsyncAction);
+                    }
+                }
+
                 #ifdef Q_OS_UNIX
                     if ((extension.compare("TOBJ") != 0) && !isSound) {
                         if (QFile::exists("/usr/bin/gimp") || QFile::exists("/usr/bin/krita") || QFile::exists("/usr/bin/mypaint")) {
@@ -424,7 +440,8 @@ void TupItemManager::dropEvent(QDropEvent *event)
         dataStream >> pixmap >> label >> extension >> key;
 
         #ifdef TUP_DEBUG
-            qDebug() << "[TupItemManager::dropEvent()] - item metadata (label, extension, key) -> " << label << " - " << extension << " - " << key;
+            qDebug() << "[TupItemManager::dropEvent()] - item metadata (label, extension, key) -> "
+                     << label << " - " << extension << " - " << key;
             qDebug() << "[TupItemManager::dropEvent()] - parentNode -> " << parentNode;
         #endif
 
@@ -703,4 +720,33 @@ int TupItemManager::itemType()
         type = item->data(1, 3216).toInt();
 
     return type;
+}
+
+bool TupItemManager::moveItem(const QString &itemKey, const QString &folderName)
+{
+    QList<QTreeWidgetItem *> nodes = findItems(folderName, Qt::MatchExactly, 1);
+    QTreeWidgetItem *folderNode = nullptr;
+    QTreeWidgetItem *item = nullptr;
+    int counter = 0;
+    for (int i = 0; i < nodes.size(); ++i) {
+         QTreeWidgetItem *node = nodes.at(i);
+         if ((node->text(1).compare(folderName) == 0) && (node->text(2).length() == 0)) {
+             folderNode = node;
+             counter++;
+         }
+         if ((node->text(1).compare(itemKey) == 0) && (node->text(2).length() > 0)) {
+             item = node;
+             counter++;
+         }
+         if (counter == 2) {
+             break;
+         }
+    }
+
+    if (counter == 2) {
+        folderNode->addChild(item);
+        return true;
+    }
+
+    return false;
 }

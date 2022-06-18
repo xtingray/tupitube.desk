@@ -119,6 +119,9 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     connect(libraryTree, SIGNAL(newVectorCall()), this,
                                    SLOT(createVectorObject()));
 
+    connect(libraryTree, SIGNAL(lipSyncCall(QTreeWidgetItem*)), this,
+                                   SLOT(callLipsyncEditor(QTreeWidgetItem*)));
+
     /* SQA: These connections don't work on Windows
     connect(libraryTree, &TupItemManager::itemSelected, this, &TupLibraryWidget::previewItem);
 
@@ -1705,6 +1708,11 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
              }
           }
         break;
+        case TupProjectRequest::Move:
+          {
+              // libraryTree->refreshView();
+          }
+        break;
         default:
           {
              #ifdef TUP_DEBUG
@@ -2163,6 +2171,17 @@ void TupLibraryWidget::saveDefaultPath(const QString &dir)
     TCONFIG->beginGroup("General");
     TCONFIG->setValue("DefaultPath", dir);
     TCONFIG->sync();
+}
+
+void TupLibraryWidget::callLipsyncEditor(QTreeWidgetItem *item)
+{
+    QString id = item->text(1) + "." + item->text(2).toLower();
+    TupLibraryObject *object = library->getObject(id);
+
+    if (object) {
+        QString audioPath = object->getDataPath();
+        emit lipsyncModuleCalled(AudioFromLibrary, audioPath);
+    }
 }
 
 void TupLibraryWidget::updateSoundTiming(int frame)

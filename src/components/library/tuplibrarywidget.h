@@ -132,6 +132,8 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void updateSoundMuteStatus(bool mute);
         void importAsset(const QString &name, TupSearchDialog::AssetType assetType, const QString &extension,
                          int extensionId, QByteArray &data);
+        void callLipsyncEditor(QTreeWidgetItem* item);
+
     public slots:
         void addFolder(const QString &folderName = QString());
         void importImageGroup();
@@ -151,7 +153,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
     signals:
         void requestCurrentGraphic();
         void soundUpdated();
-        void lipsyncModuleCalled(bool recorded, const QString &filePath);
+        void lipsyncModuleCalled(PapagayoAppMode mode, const QString &filePath);
 
     private:
         void callExternalEditor(QTreeWidgetItem *item, const QString &software);

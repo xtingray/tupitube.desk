@@ -344,8 +344,8 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
                 SLOT(updateActiveDock(TupDocumentView::DockType)));
         connect(m_colorPalette, SIGNAL(eyeDropperActivated(TColorCell::FillType)),
                 animationTab, SLOT(enableEyeDropperTool(TColorCell::FillType)));
-        connect(m_libraryWidget, SIGNAL(lipsyncModuleCalled(bool,const QString&)),
-                animationTab, SLOT(launchLipsyncModule(bool,const QString&)));
+        connect(m_libraryWidget, SIGNAL(lipsyncModuleCalled(PapagayoAppMode, const QString&)),
+                animationTab, SLOT(launchLipsyncModule(PapagayoAppMode, const QString&)));
         connect(this, SIGNAL(imageExported()), animationTab, SLOT(exportImage()));
         connect(this, SIGNAL(imagePosted()), animationTab, SLOT(postImage()));
 
