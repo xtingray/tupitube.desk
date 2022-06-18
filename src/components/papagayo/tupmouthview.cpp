@@ -23,8 +23,6 @@ TupMouthView::TupMouthView(TupLipsyncDictionary *dictionary, QWidget *parent) : 
     mouthID = 0;
     frame = 0;
 
-	// TupLipsyncDoc::loadDictionaries();
-
     for (int32 mouth = 0; mouth < 5; mouth++) {
         #ifdef Q_OS_UNIX
             QString basePath = SHARE_DIR + "data/mouths/" + QString::number(mouth + 1) + "/";
@@ -37,15 +35,27 @@ TupMouthView::TupMouthView(TupLipsyncDictionary *dictionary, QWidget *parent) : 
         #endif
         mouthsPath << basePath;
         for (int32 i = 0; i < dictionary->phonemesListSize(); i++) {
-        // for (int32 i = 0; i < 10; i++) {
-            // QString path = basePath + TupLipsyncDoc::getPhonemeAt(i) + ".png";
             QString path = basePath + dictionary->getPhonemeAt(i) + ".png";
+            if  (!QFile::exists(path)) {
+                #ifdef TUP_DEBUG
+                    qWarning() << "[TupMouthView()] - Warning: Mouth path doesn't exist! -> " << path;
+                #endif
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupMouthView()] - Mouth image loaded successfully! -> " << path;
+                    qDebug() << "[TupMouthView()] - Phoneme -> " << dictionary->getPhonemeAt(i);
+                #endif
+            }
+
             mouths[mouth].insert(dictionary->getPhonemeAt(i), new QImage(path));
-            // mouths[mouth].insert("etc", new QImage(path));
         }
 	}
 
     currentPath = mouthsPath.at(0);
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMouthView()] - Current mouth image -> " << currentPath;
+    #endif
 }
 
 TupMouthView::~TupMouthView()

@@ -72,28 +72,68 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
         #ifdef TUP_DEBUG
             qDebug() << "[TupFileManager::save()] - User changed project's name...";
         #endif
+
         project->setProjectName(name);
         projectDir.setPath(CACHE_DIR + name);    
         project->getLibrary()->updatePaths(CACHE_DIR + name);
         project->getLibrary()->updateSoundPaths(CACHE_DIR + name);
+        QString newPath = projectDir.path();
+
         if (!projectDir.exists()) {
             // Update the cache path with new project's name
-            if (projectDir.rename(oldDirName, projectDir.path())) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupFileManager::save()] - Renaming old path -> " << oldDirName << " into -> " << newPath;
+            #endif
+            if (projectDir.rename(oldDirName, newPath)) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupFileManager::save()] - Directory renamed to -> " << projectDir.path();
+                    qDebug() << "[TupFileManager::save()] - Directory renamed to -> " << newPath;
                 #endif
             } else {
+                #ifdef TUP_DEBUG
+                    qWarning() << "[TupFileManager::save()] - Warning: Renaming action failed!";
+                #endif
                 // If rename action fails, then try to create new project's path
-                if (!projectDir.mkdir(projectDir.path())) {
+                if (!projectDir.mkdir(newPath)) {
                     #ifdef TUP_DEBUG
-                        qWarning() << "[TupFileManager::save()] - Error: Can't create path -> " << projectDir.path();
+                        qWarning() << "[TupFileManager::save()] - Error: Can't create path -> " << newPath;
                     #endif
                     return false;
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "[TupFileManager::save()] - Directory was created successfully -> " << projectDir.path();
+                        qDebug() << "[TupFileManager::save()] - Directory was created successfully -> " << newPath;
                     #endif
+                    if (!TAlgorithm::copyFolder(oldDirName, newPath)) {
+                        #ifdef TUP_DEBUG
+                            qWarning() << "[TupFileManager::save()] - Fatal Error: Can't copy content into new path -> " << newPath;
+                        #endif
+                        return false;
+                    }
                 }
+            }
+        } else {
+            if (projectDir.removeRecursively()) {
+                // If rename action fails, then try to create new project's path
+                if (!projectDir.mkdir(newPath)) {
+                    #ifdef TUP_DEBUG
+                        qWarning() << "[TupFileManager::save()] - Error: Can't create path after removing -> " << newPath;
+                    #endif
+                    return false;
+                } else {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupFileManager::save()] - Directory was created successfully after deletion -> " << newPath;
+                    #endif
+                    if (!TAlgorithm::copyFolder(oldDirName, newPath)) {
+                        #ifdef TUP_DEBUG
+                            qWarning() << "[TupFileManager::save()] - Fatal Error: Can't copy content into new path -> " << newPath;
+                        #endif
+                        return false;
+                    }
+                }
+            } else {
+                #ifdef TUP_DEBUG
+                    qWarning() << "[TupFileManager::save()] - Error: Can't create path after removing -> " << newPath;
+                #endif
+                return false;
             }
         }
     } else {

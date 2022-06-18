@@ -147,12 +147,15 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
         emit progressChanged(0);
 
         QString filename = TAlgorithm::randomString(12);
+        wavAudioPath = CACHE_DIR + filename + ".wav";
 
+        /*
         #ifdef Q_OS_WIN
             wavAudioPath =  QDir::homePath() + "/" + filename + ".wav";
         #else
             wavAudioPath = CACHE_DIR + filename + ".wav";
         #endif
+        */
         TupAudioMixer *mixer = new TupAudioMixer(fps, sounds, wavAudioPath);
         connect(mixer, SIGNAL(messageChanged(const QString &)), this, SIGNAL(messageChanged(const QString &)));
         connect(mixer, SIGNAL(progressChanged(int)), this, SIGNAL(progressChanged(int)));

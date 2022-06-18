@@ -1068,6 +1068,7 @@ void TupPapagayoApp::updateMouthView(int index)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupPapagayoApp::updateMouthView()] - index -> " << index;
+        qDebug() << "[TupPapagayoApp::updateMouthView()] - currentMouthPath -> " << currentMouthPath;
     #endif
 
     currentMouthIndex = index;

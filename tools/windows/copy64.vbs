@@ -4,7 +4,6 @@ Set fileSystem = CreateObject("Scripting.FileSystemObject")
 
 Dim Folder
 Folder="C:\tupitube"
-REM fileSystem.DeleteFolder(Folder)
 
 quazipDir = "c:\Quazip\bin"
 sourceDir = "c:\devel\sources\tupitube.desk\src"
@@ -32,7 +31,6 @@ fileSystem.CreateFolder tupiDir & "\lib"
 fileSystem.CreateFolder tupiDir & "\lib\qt5"
 fileSystem.CreateFolder tupiDir & "\lib\ffmpeg"
 fileSystem.CreateFolder tupiDir & "\lib\libsndfile"
-REM fileSystem.CreateFolder tupiDir & "\lib\ssl"
 fileSystem.CreateFolder tupiDir & "\lib\raster"
 
 fileSystem.CopyFile quazipDir & "\quazip.dll", tupiDir & "\lib\quazip.dll"
@@ -49,7 +47,6 @@ fileSystem.CopyFile sourceDir & "\store\release\tupistore.dll", tupiDir & "\lib\
 fileSystem.CopyFile sourceDir & "\libbase\release\tupibase.dll", tupiDir & "\lib\tupibase.dll"
 fileSystem.CopyFile sourceDir & "\libtupi\release\tupi.dll", tupiDir & "\lib\tupi.dll"
 fileSystem.CopyFile sourceDir & "\libui\release\tupigui.dll", tupiDir & "\lib\tupigui.dll"
-REM fileSystem.CopyFile sourceDir & "\net\release\tupinet.dll", tupiDir & "\lib\tupinet.dll"
 fileSystem.CopyFile sourceDir & "\libcolor\release\tupicolor.dll", tupiDir & "\lib\tupicolor.dll"
 fileSystem.CopyFile sourceDir & "\components\player\release\tupiplayer.dll", tupiDir & "\lib\tupiplayer.dll"
 fileSystem.CopyFile sourceDir & "\components\colorpalette\release\tupicolorpalette.dll", tupiDir & "\lib\tupicolorpalette.dll"
@@ -105,7 +102,6 @@ fileSystem.CopyFolder "c:\devel\sources\imageformats", tupiDir & "\bin\raw\image
 fileSystem.CopyFolder "c:\devel\sources\mediaservice", tupiDir & "\bin\raw\mediaservice"
 fileSystem.CopyFolder "c:\devel\sources\audio", tupiDir & "\bin\raw\audio"
 fileSystem.CopyFolder "c:\devel\sources\ffmpeg", tupiDir & "\lib\ffmpeg"
-REM fileSystem.CopyFolder "c:\devel\sources\ssl", tupiDir & "\lib\ssl"
 
 Dim objFSO
 Set objFSO = CreateObject("Scripting.FileSystemObject")
