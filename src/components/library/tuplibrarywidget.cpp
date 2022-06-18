@@ -1708,11 +1708,6 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
              }
           }
         break;
-        case TupProjectRequest::Move:
-          {
-              // libraryTree->refreshView();
-          }
-        break;
         default:
           {
              #ifdef TUP_DEBUG

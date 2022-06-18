@@ -66,7 +66,6 @@ class TUPITUBE_EXPORT TupItemManager : public TreeListWidget
         QTreeWidgetItem *getFolder(const QString &folderName);
         void cleanUI();
         int itemType();
-        bool moveItem(const QString &itemKey, const QString &folderName);
 
         enum ObjectType 
         {
