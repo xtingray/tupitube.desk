@@ -78,6 +78,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
         projectDir.setPath(newPath);
         project->getLibrary()->updatePaths(newPath);
         project->getLibrary()->updateSoundPaths(newPath);
+        project->setDataDir(newPath);
 
         if (!projectDir.exists()) {
             // Update the cache path with new project's name
@@ -136,7 +137,8 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                     }
                 } else {
                     #ifdef TUP_DEBUG
-                        qWarning() << "[TupFileManager::save()] - Error: Can't create path after removing -> " << newPath;
+                        qWarning() << "[TupFileManager::save()] - "
+                                      "Error: Can't create path after removing -> " << newPath;
                     #endif
                     return false;
                 }

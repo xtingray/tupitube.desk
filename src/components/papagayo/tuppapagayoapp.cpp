@@ -74,7 +74,7 @@ TupPapagayoApp::TupPapagayoApp(PapagayoAppMode mode, TupProject *project, TupLip
                                QList<int> indexes, QWidget *parent) : QMainWindow(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPapagayoApp::TupPapagayoApp()] - Updating new record...";
+        qDebug() << "[TupPapagayoApp::TupPapagayoApp()] - Updating existing record...";
     #endif
 
     Q_UNUSED(lipsync)
@@ -96,6 +96,10 @@ TupPapagayoApp::TupPapagayoApp(PapagayoAppMode mode, TupProject *project, TupLip
 
     pgoFolderPath = project->getDataDir() + "/pgo/";
     pgoFilePath = pgoFolderPath + oldLipsyncName;
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::TupPapagayoApp()] - pgoFilePath -> " << pgoFilePath;
+    #endif
 
     TupLibrary *library = project->getLibrary();
     if (library) {
@@ -129,6 +133,10 @@ TupPapagayoApp::~TupPapagayoApp()
 
 void TupPapagayoApp::setUICore(const QString &filePath)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::setUICore()] - filePath -> " << filePath;
+    #endif
+
     setStyleSheet(TAppTheme::themeSettings());
 
     setupActions();
@@ -1273,6 +1281,11 @@ bool TupPapagayoApp::saveLipsyncRecord()
 
     QString folderName = QString(voiceName->text() + ".pgo").toLower();
     pgoFilePath = pgoFolderPath + folderName;
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - pgoFilePath -> " << pgoFilePath;
+    #endif
+
     document->setPGOFilePath(pgoFilePath);
     if (document->save()) {
         #ifdef TUP_DEBUG
