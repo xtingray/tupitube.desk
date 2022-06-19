@@ -1083,6 +1083,7 @@ bool TupMainWindow::storeProcedure()
         #ifdef TUP_DEBUG
             qWarning() << "TupMainWindow::saveProject() - Error: Can't save project -> " << m_fileName;
         #endif
+        QApplication::restoreOverrideCursor();
         return false;
     }
 

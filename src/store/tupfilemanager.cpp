@@ -62,29 +62,30 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
     #endif
 
     QFileInfo info(fileName);
-    QString name = info.baseName();	
-    QString oldDirName = CACHE_DIR + project->getName();
-    QDir projectDir(oldDirName);
+    QString filename = info.baseName();
+    QString currentDirName = CACHE_DIR + project->getName();
+    QDir projectDir(currentDirName);
     bool ok;
 
     // Project name has been changed by the user
-    if (name.compare(project->getName()) != 0) {
+    if (filename.compare(project->getName()) != 0) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupFileManager::save()] - User changed project's name...";
         #endif
 
-        project->setProjectName(name);
-        projectDir.setPath(CACHE_DIR + name);    
-        project->getLibrary()->updatePaths(CACHE_DIR + name);
-        project->getLibrary()->updateSoundPaths(CACHE_DIR + name);
-        QString newPath = projectDir.path();
+        QString newPath = CACHE_DIR + filename;
+        project->setProjectName(filename);
+        projectDir.setPath(newPath);
+        project->getLibrary()->updatePaths(newPath);
+        project->getLibrary()->updateSoundPaths(newPath);
 
         if (!projectDir.exists()) {
             // Update the cache path with new project's name
             #ifdef TUP_DEBUG
-                qDebug() << "[TupFileManager::save()] - Renaming old path -> " << oldDirName << " into -> " << newPath;
+                qDebug() << "[TupFileManager::save()] - "
+                            "Renaming old path -> " << currentDirName << " into -> " << newPath;
             #endif
-            if (projectDir.rename(oldDirName, newPath)) {
+            if (projectDir.rename(currentDirName, newPath)) {
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupFileManager::save()] - Directory renamed to -> " << newPath;
                 #endif
@@ -102,38 +103,43 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                     #ifdef TUP_DEBUG
                         qDebug() << "[TupFileManager::save()] - Directory was created successfully -> " << newPath;
                     #endif
-                    if (!TAlgorithm::copyFolder(oldDirName, newPath)) {
+                    if (!TAlgorithm::copyFolder(currentDirName, newPath)) {
                         #ifdef TUP_DEBUG
-                            qWarning() << "[TupFileManager::save()] - Fatal Error: Can't copy content into new path -> " << newPath;
+                            qWarning() << "[TupFileManager::save()] - "
+                                          "Fatal Error: Can't copy content into new path -> " << newPath;
                         #endif
                         return false;
                     }
                 }
             }
         } else {
-            if (projectDir.removeRecursively()) {
-                // If rename action fails, then try to create new project's path
-                if (!projectDir.mkdir(newPath)) {
+            if (projectDir.exists(currentDirName) && (newPath.compare(project->getDataDir()) != 0)) {
+                if (projectDir.removeRecursively()) {
+                    // If rename action fails, then try to create new project's path
+                    if (!projectDir.mkdir(newPath)) {
+                        #ifdef TUP_DEBUG
+                            qWarning() << "[TupFileManager::save()] - Error: Can't create path after removing -> " << newPath;
+                        #endif
+                        return false;
+                    } else {
+                        #ifdef TUP_DEBUG
+                            qDebug() << "[TupFileManager::save()] - "
+                                        "Directory was created successfully after deletion -> " << newPath;
+                        #endif
+                        if (!TAlgorithm::copyFolder(currentDirName, newPath)) {
+                            #ifdef TUP_DEBUG
+                                qWarning() << "[TupFileManager::save()] - "
+                                              "Fatal Error: Can't copy content into new path -> " << newPath;
+                            #endif
+                            return false;
+                        }
+                    }
+                } else {
                     #ifdef TUP_DEBUG
                         qWarning() << "[TupFileManager::save()] - Error: Can't create path after removing -> " << newPath;
                     #endif
                     return false;
-                } else {
-                    #ifdef TUP_DEBUG
-                        qDebug() << "[TupFileManager::save()] - Directory was created successfully after deletion -> " << newPath;
-                    #endif
-                    if (!TAlgorithm::copyFolder(oldDirName, newPath)) {
-                        #ifdef TUP_DEBUG
-                            qWarning() << "[TupFileManager::save()] - Fatal Error: Can't copy content into new path -> " << newPath;
-                        #endif
-                        return false;
-                    }
                 }
-            } else {
-                #ifdef TUP_DEBUG
-                    qWarning() << "[TupFileManager::save()] - Error: Can't create path after removing -> " << newPath;
-                #endif
-                return false;
             }
         }
     } else {
@@ -169,7 +175,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
          #endif
          QTextStream ts(&projectFile);
          QDomDocument doc;
-         project->setProjectName(name);
+         project->setProjectName(filename);
          doc.appendChild(project->toXml(doc));
          ts << doc.toString();
          projectFile.close();
@@ -254,7 +260,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 
             QApplication::restoreOverrideCursor();
             QScreen *screen = QGuiApplication::screens().at(0);
-            TBackupDialog *dialog = new TBackupDialog(projectDir.path(), name);
+            TBackupDialog *dialog = new TBackupDialog(projectDir.path(), filename);
             dialog->show();
 
             int result = dialog->exec();
@@ -273,18 +279,20 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                 msgBox.show();
                 msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
                             static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
-                result = msgBox.exec();
+                // result = msgBox.exec();
+                msgBox.exec();
             } else if (result == QDialog::Rejected) {
                 QMessageBox msgBox;
                 msgBox.setWindowTitle(tr("Information"));
                 msgBox.setIcon(QMessageBox::Critical);
                 msgBox.setText(tr("Sorry, the project <b>%1.tup</b> couldn't be recovered.<br/>"
-                                  "Please, try to backup your animation files often.").arg(name));
+                                  "Please, try to backup your animation files often.").arg(filename));
                 msgBox.setStandardButtons(QMessageBox::Ok);
                 msgBox.show();
                 msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
                             static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
-                result = msgBox.exec();
+                // result = msgBox.exec();
+                msgBox.exec();
             }
 
             return false;
