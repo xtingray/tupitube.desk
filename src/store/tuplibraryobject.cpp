@@ -353,6 +353,8 @@ void TupLibraryObject::fromXml(const QString &xml)
                  // lipsyncVoice = objectTag.attribute("lipsyncVoice").toInt() ? true : false;
                  mute = objectTag.attribute("mute", "true").toInt() ? true : false;
                  playAt = objectTag.attribute("playAt", "1").toInt();
+                 if (playAt == 0)
+                     playAt = 1;
                  dataPath = objectTag.attribute("path");
              }
             break;
