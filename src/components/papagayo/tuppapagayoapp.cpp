@@ -433,6 +433,7 @@ void TupPapagayoApp::setupUI()
             customView->loadImages(currentMouthPath);
             mouthFrame->setCurrentIndex(Customized);
         } else {
+            mouthsCombo->setCurrentIndex(currentMouthIndex);
             mouthFrame->setCurrentIndex(mouthType);
             mouthView->onMouthChanged(currentMouthIndex);
             currentMouthPath = mouthView->getMouthsPath();
