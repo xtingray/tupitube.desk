@@ -80,10 +80,20 @@ QString TupMouthView::getMouthsPath() const
 
 void TupMouthView::onMouthChanged(int id)
 {
-    setMouth(id);
-    currentPath = mouthsPath.at(id);
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMouthView::onMouthChanged()] - id -> " << id;
+    #endif
 
-	update();
+    setMouth(id);
+    if (id < mouthsPath.size()) {
+        currentPath = mouthsPath.at(id);
+        update();
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMouthView::onMouthChanged()] - Warning: mouth index is invalid -> " << id;
+            qDebug() << "*** mouth array size -> " << mouthsPath.size();
+        #endif
+    }
 }
 
 void TupMouthView::onFrameChanged(int frameIndex)

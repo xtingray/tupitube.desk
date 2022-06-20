@@ -90,6 +90,7 @@ TupPapagayoApp::TupPapagayoApp(PapagayoAppMode mode, TupProject *project, TupLip
 
     oldLipsyncName = lipsync->getLipSyncName();
     currentMouthIndex = lipsync->getMouthIndex();
+
     mouthType = Predefined;
     if (currentMouthIndex == CUSTOMIZED_MOUTH)
         mouthType = Customized;
@@ -339,7 +340,8 @@ void TupPapagayoApp::setupUI()
     voiceHorizontalLayout->addWidget(voiceLabel);
     voiceHorizontalLayout->addWidget(voiceName);
 
-    QSpacerItem *voiceHorizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    QSpacerItem *voiceHorizontalSpacer = new QSpacerItem(40, 20,
+                                                         QSizePolicy::Expanding, QSizePolicy::Minimum);
     voiceHorizontalLayout->addItem(voiceHorizontalSpacer);
     lateralVerticalLayout->addLayout(voiceHorizontalLayout);
 
@@ -392,10 +394,7 @@ void TupPapagayoApp::setupUI()
     okButton->setMinimumWidth(60);
     okButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
     okButton->setToolTip(tr("Save lip-sync record"));
-    /*
-    if (mode == Insert || mode == VoiceRecorded || mode == AudioFromLibrary) {
-        connect(okButton, SIGNAL(clicked()), this, SLOT(createLipsyncRecord()));
-    } else */
+
     if (mode == Update) {
         connect(okButton, SIGNAL(clicked()), this, SLOT(callUpdateProcedure()));
     } else { // Insert | VoiceRecorded | AudioFromLibrary
@@ -410,7 +409,8 @@ void TupPapagayoApp::setupUI()
 
     languageHorizontalLayout->addWidget(breakdownButton);
 
-    QSpacerItem *languageHorizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    QSpacerItem *languageHorizontalSpacer = new QSpacerItem(40, 20,
+                                                QSizePolicy::Expanding, QSizePolicy::Minimum);
     languageHorizontalLayout->addItem(languageHorizontalSpacer);
 
     languageHorizontalLayout->addWidget(okButton);
@@ -512,7 +512,8 @@ void TupPapagayoApp::openFile(QString filePath)
         customView->setDocument(document);
 
         document->getAudioPlayer()->setNotifyInterval(17); // 60 fps
-        connect(document->getAudioPlayer(), SIGNAL(positionChanged(qint64)), waveformView, SLOT(positionChanged(qint64)));
+        connect(document->getAudioPlayer(), SIGNAL(positionChanged(qint64)),
+                waveformView, SLOT(positionChanged(qint64)));
         connect(document->getAudioPlayer(), SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)),
                 waveformView, SLOT(updateMediaStatus(QMediaPlayer::MediaStatus)));
 
@@ -932,7 +933,8 @@ void TupPapagayoApp::runBreakdownAction()
 
     if (!document || !document->getVoice()) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::runBreakdownAction()] - Error: No lip-sync document loaded!";
+            qDebug() << "[TupPapagayoApp::runBreakdownAction()] - "
+                        "Error: No lip-sync document loaded!";
         #endif
         return;
     }
@@ -980,8 +982,10 @@ void TupPapagayoApp::loadDocumentFromScratch(QStringList phonemes)
 void TupPapagayoApp::runManualBreakdownAction()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - currentLanguage -> " << currentLanguage;
-        qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - currentMouthPath -> " << currentMouthPath;
+        qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - "
+                    "currentLanguage -> " << currentLanguage;
+        qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - "
+                    "currentMouthPath -> " << currentMouthPath;
     #endif
 
     if (wordsList.isEmpty()) {
@@ -990,7 +994,8 @@ void TupPapagayoApp::runManualBreakdownAction()
 
         waveformView->update();
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - Fatal Error: Voice text is empty!";
+            qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - "
+                        "Fatal Error: Voice text is empty!";
         #endif
         TOsd::self()->display(TOsd::Error, tr("Voice text is empty!"));
         return;
@@ -1076,8 +1081,10 @@ void TupPapagayoApp::keyPressEvent(QKeyEvent *event)
 void TupPapagayoApp::updateMouthView(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPapagayoApp::updateMouthView()] - index -> " << index;
-        qDebug() << "[TupPapagayoApp::updateMouthView()] - currentMouthPath -> " << currentMouthPath;
+        qDebug() << "[TupPapagayoApp::updateMouthView()] - "
+                    "index -> " << index;
+        qDebug() << "[TupPapagayoApp::updateMouthView()] - "
+                    "currentMouthPath -> " << currentMouthPath;
     #endif
 
     currentMouthIndex = index;
@@ -1125,7 +1132,8 @@ void TupPapagayoApp::openImagesDialog()
                     if (!QFile::exists(path)) {
                         TOsd::self()->display(TOsd::Error, tr("Mouth image is missing!"));
                         #ifdef TUP_DEBUG
-                            qDebug() << "[TupPapagayoApp::openImagesDialog()] - Fatal Error: Image file is missing -> " << path;
+                            qDebug() << "[TupPapagayoApp::openImagesDialog()] - "
+                                        "Fatal Error: Image file is missing -> " << path;
                         #endif
                         return;
                     }
@@ -1139,7 +1147,8 @@ void TupPapagayoApp::openImagesDialog()
             } else {
                 TOsd::self()->display(TOsd::Error, tr("Mouth images are incomplete!"));
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupPapagayoApp::openImagesDialog()] - Fatal Error: Mouth images are incomplete!";
+                    qDebug() << "[TupPapagayoApp::openImagesDialog()] - "
+                                "Fatal Error: Mouth images are incomplete!";
                 #endif
             }
         } else {
@@ -1208,15 +1217,18 @@ bool TupPapagayoApp::validateLipsyncForm()
 
     if (!document) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::validateLipsyncForm()] - Warning: No lip-sync document!";
+            qDebug() << "[TupPapagayoApp::validateLipsyncForm()] - "
+                        "Warning: No lip-sync document!";
         #endif
         return false;
     }
 
     loadWordsFromDocument();
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPapagayoApp::validateLipsyncForm()] - wordsList -> " << wordsList;
-        qDebug() << "[TupPapagayoApp::validateLipsyncForm()] - phonemesList -> " << phonemesList;
+        qDebug() << "[TupPapagayoApp::validateLipsyncForm()] - "
+                    "wordsList -> " << wordsList;
+        qDebug() << "[TupPapagayoApp::validateLipsyncForm()] - "
+                    "phonemesList -> " << phonemesList;
     #endif
 
     int i = 0;
@@ -1245,14 +1257,16 @@ void TupPapagayoApp::createLipsyncRecord()
         saveButtonPressed = true;
         if (saveLipsyncRecord()) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupPapagayoApp::createLipsyncRecord()] - Lip-sync item saved successfully!";
+                qDebug() << "[TupPapagayoApp::createLipsyncRecord()] - "
+                            "Lip-sync item saved successfully!";
             #endif
             TOsd::self()->display(TOsd::Info, tr("Lip-sync item added!"));
             QApplication::restoreOverrideCursor();
             close();
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupPapagayoApp::createLipsyncRecord()] - Warning: Save procedure has failed!";
+                qDebug() << "[TupPapagayoApp::createLipsyncRecord()] - "
+                            "Warning: Save procedure has failed!";
             #endif
         }
     } else {
@@ -1394,9 +1408,11 @@ bool TupPapagayoApp::saveLipsyncRecord()
                             }
 
                             // Adding Papagayo project
+                            currentMouthIndex = mouthsCombo->currentIndex();
                             parser->setMouthIndex(currentMouthIndex);
                             parser->setSoundFile(soundKey);
                             QString xml = parser->toString();
+
                             request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex,
                                                                             TupProjectRequest::AddLipSync, xml);
                             emit requestTriggered(&request);
@@ -1441,7 +1457,8 @@ bool TupPapagayoApp::saveLipsyncRecord()
                     } else {
                         TOsd::self()->display(TOsd::Error, tr("Mouth images are incomplete!"));
                         #ifdef TUP_DEBUG
-                            qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Mouth images are incomplete!";
+                            qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                                        "Fatal Error: Mouth images are incomplete!";
                         #endif
 
                         return false;
@@ -1458,7 +1475,8 @@ bool TupPapagayoApp::saveLipsyncRecord()
             } else {
                 TOsd::self()->display(TOsd::Error, tr("Papagayo project is invalid!"));
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Papagayo file is invalid!";
+                    qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                                "Fatal Error: Papagayo file is invalid!";
                 #endif
 
                 return false;
@@ -1466,14 +1484,16 @@ bool TupPapagayoApp::saveLipsyncRecord()
         } else {
             TOsd::self()->display(TOsd::Error, tr("Papagayo project is invalid!"));
             #ifdef TUP_DEBUG
-                qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Papagayo file doesn't exist!";
+                qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                            "Fatal Error: Papagayo file doesn't exist!";
             #endif
 
             return false;
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Can't save lip-sync record!";
+            qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                        "Fatal Error: Can't save lip-sync record!";
         #endif
         TOsd::self()->display(TOsd::Error, tr("Error while saving lip-sync record!"));
 
