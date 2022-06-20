@@ -203,6 +203,9 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
         TCONFIG->setValue("SafeAreaRectColor", "#008700");
         TCONFIG->setValue("SafeAreaLineColor", "#969696");
         TCONFIG->setValue("SafeLineThickness", 1);
+
+        TCONFIG->beginGroup("AnimationParameters");
+        TCONFIG->setValue("AutoPlay", true);
     }
 
     TCONFIG->beginGroup("General");
@@ -1241,7 +1244,7 @@ void TupMainWindow::updateCurrentTab(int index)
         cameraWidget->setFocus();
 
         TCONFIG->beginGroup("AnimationParameters");
-        bool autoPlay = TCONFIG->value("AutoPlay", false).toBool();
+        bool autoPlay = TCONFIG->value("AutoPlay", true).toBool();
         if (autoPlay)
             QTimer::singleShot(0, this, SLOT(doPlay()));
     } else {
