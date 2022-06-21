@@ -134,6 +134,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         QList<photoArray> animationList;
 
         QList<bool> renderControl;
+        bool renderOn;
         QSize screenDimension;
 
         TupLibrary *library;

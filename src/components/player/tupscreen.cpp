@@ -60,6 +60,7 @@ TupScreen::TupScreen(TupProject *work, const QSize viewSize, bool sizeChanged, Q
     playerIsActive = false;
     playMode = Forward;
     mute = false;
+    renderOn = false;
 
     timer = new QTimer(this);
     playBackTimer = new QTimer(this);
@@ -192,7 +193,7 @@ void TupScreen::paintEvent(QPaintEvent *)
     #endif
     */
 
-    if (!mute) {
+    if (!mute && !renderOn) {
         if (photograms.count() > 1) {
             if (playerIsActive && (playMode == Forward))
                 playSoundAt(currentFramePosition);
@@ -527,6 +528,7 @@ void TupScreen::render()
        qDebug() << "[TupScreen::render()]";
     #endif
 
+    renderOn = true;
     emit isRendering(0);
 
     if (!project->sceneAt(sceneIndex)) {
@@ -568,6 +570,7 @@ void TupScreen::render()
     delete renderer;
 
     emit isRendering(0); 
+    renderOn = false;
 }
 
 QSize TupScreen::sizeHint() const
