@@ -395,6 +395,10 @@ void TupCameraWidget::doPause()
 
 void TupCameraWidget::doStop()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraWidget::doStop()]";
+    #endif
+
     if (previewScreen->getPlaymode() == Forward)
         cameraBar->updatePlayButton(false);
     else
@@ -642,6 +646,11 @@ void TupCameraWidget::clearMemory()
 
 void TupCameraWidget::resetPlayerInterface()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraWidget::resetPlayerInterface()]";
+    #endif
+
+    previewScreen->releaseAudioResources();
     previewScreen->clearScenesArrays();
     previewScreen = nullptr;
     delete previewScreen;

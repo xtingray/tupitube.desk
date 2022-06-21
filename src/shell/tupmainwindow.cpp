@@ -474,6 +474,11 @@ void TupMainWindow::newProject()
         qWarning() << "[TupMainWindow::newProject()]";
     #endif
 
+    if (m_projectManager->isOpen()) {
+        if (playerTab)
+            cameraWidget->doStop();
+    }
+
     if (cancelChanges())
         return;
 
@@ -644,7 +649,8 @@ void TupMainWindow::resetUI()
         if (projectPath.exists()) {
             if (!projectPath.removeRecursively()) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupMainWindow::resetUI()] - Fatal Error: Can't remove project cache path! -> " << cache;
+                    qDebug() << "[TupMainWindow::resetUI()] - "
+                                "Fatal Error: Can't remove CACHE project path! -> " << cache;
                 #endif
             }
         }
@@ -718,6 +724,11 @@ void TupMainWindow::setupLocalProject(TupProjectManagerParams *params)
 
 void TupMainWindow::openProject()
 {
+    if (m_projectManager->isOpen()) {
+        if (playerTab)
+            cameraWidget->doStop();
+    }
+
     if (cancelChanges())
         return;
 
@@ -735,6 +746,11 @@ void TupMainWindow::openProject()
 
 void TupMainWindow::openExample()
 {
+    if (m_projectManager->isOpen()) {
+        if (playerTab)
+            cameraWidget->doStop();
+    }
+
     if (cancelChanges())
         return;
 
@@ -748,7 +764,8 @@ void TupMainWindow::openExample()
             openProject(example);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupMainWindow::openExample()] - Fatal Error: Couldn't open example file -> " << QString(example);
+            qDebug() << "[TupMainWindow::openExample()] - "
+                        "Fatal Error: Couldn't open example file -> " << QString(example);
         #endif
         TOsd::self()->display(TOsd::Error, tr("Cannot open project!"));
     }
@@ -973,6 +990,11 @@ bool TupMainWindow::saveAs()
         qDebug() << "[TupMainWindow::saveAs()]";
     #endif
 
+    if (m_projectManager->isOpen()) {
+        if (cameraWidget)
+            cameraWidget->doStop();
+    }
+
     TCONFIG->beginGroup("General");
     QString home = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
     home.append("/" + projectName);
@@ -1064,6 +1086,10 @@ bool TupMainWindow::storeProcedure()
     #endif
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    if (playerTab)
+        cameraWidget->doStop();
+
     m_actionManager->enable("save_project", false);
     m_actionManager->enable("save_project_as", false);
 

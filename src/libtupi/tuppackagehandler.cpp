@@ -55,7 +55,8 @@ bool TupPackageHandler::makePackage(const QString &projectPath, const QString &p
 
     if (!QFile::exists(projectPath)) {        
         #ifdef TUP_DEBUG
-            qWarning() << "[TupPackageHandler::makePackage()] - Project path doesn't exist -> " << projectPath;
+            qWarning() << "[TupPackageHandler::makePackage()] - "
+                          "Project path doesn't exist -> " << projectPath;
         #endif
 
         return false;
@@ -72,14 +73,40 @@ bool TupPackageHandler::importPackage(const QString &packagePath)
     #ifdef TUP_DEBUG
         qDebug() << "[TupPackageHandler::importPackage()] - packagePath -> " << packagePath;
         qDebug() << "[TupPackageHandler::importPackage()] - CACHE_DIR -> " << CACHE_DIR;
+        QFile file(packagePath);
+        qDebug() << "[TupPackageHandler::importPackage()] - source file size -> "
+                 << (QString::number(file.size()) + " bytes");
     #endif
 
-    QFileInfo file(packagePath);
-    projectDir = file.baseName();
+    QFileInfo fileInfo(packagePath);
+    projectDir = fileInfo.baseName();
+    QuaZip zipChecker(packagePath);
+    if (zipChecker.open(QuaZip::mdUnzip)) {
+        zipChecker.goToFirstFile();
+        QString firstFile = zipChecker.getCurrentFileName();
+        int index = firstFile.indexOf("/");
+        QString dirName = CACHE_DIR + firstFile.left(index);
+        QDir dir(dirName);
+        if (dir.exists(dirName)) {
+            if (dir.removeRecursively()) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupPackageHandler::importPackage()] - "
+                                "Warning: Project directory already exists. Removing successfully! -> " << dirName;
+                #endif
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupPackageHandler::importPackage()] - "
+                                "Fatal Error: Project directory can't be removed -> " << dirName;
+                #endif
+            }
+        }
+    }
+
     QStringList list = JlCompress::extractDir(packagePath, CACHE_DIR);
     if (list.size() == 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPackageHandler::importPackage()] - Fatal Error: Project file is empty! -> " << packagePath;
+            qDebug() << "[TupPackageHandler::importPackage()] - "
+                        "Fatal Error: Project source file has NO elements! -> " << packagePath;
         #endif
 
         return false;

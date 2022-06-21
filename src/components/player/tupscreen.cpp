@@ -89,13 +89,6 @@ TupScreen::~TupScreen()
 
     renderControl.clear();
 
-    soundRecords.clear();
-
-    foreach(QMediaPlayer *player, soundPlayer)
-        player->setMedia(QMediaContent());
-
-    soundPlayer.clear();
-
     delete timer;
     timer = nullptr;
     delete playBackTimer;
@@ -138,6 +131,21 @@ void TupScreen::clearScenesArrays()
             animationList[i][j] = QImage();
     }
     animationList.clear();
+}
+
+void TupScreen::releaseAudioResources()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScreen::releaseAudioResources()]";
+    #endif
+
+    soundRecords.clear();
+    foreach(QMediaPlayer *player, soundPlayer) {
+        player->stop();
+        player->setMedia(QMediaContent());
+        delete player;
+    }
+    soundPlayer.clear();
 }
 
 void TupScreen::initPhotogramsArray()
@@ -815,9 +823,11 @@ void TupScreen::loadSoundRecords()
 
 void TupScreen::playSoundAt(int frame)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupScreen::playSoundAt()] - frame -> " << frame;
     #endif
+    */
 
     int size = soundRecords.count();
     for (int i=0; i<size; i++) {

@@ -40,6 +40,10 @@
 
 TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundPlayer()]";
+    #endif
+
     setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
     setMidLineWidth(2);
     setLineWidth(1);
@@ -119,6 +123,12 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
 
 TupSoundPlayer::~TupSoundPlayer()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[~TupSoundPlayer()]";
+    #endif
+
+    player->setMedia(QMediaContent());
+    delete player;
 }
 
 QSize TupSoundPlayer::sizeHint() const

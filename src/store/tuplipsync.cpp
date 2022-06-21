@@ -725,7 +725,7 @@ TupLipSync::TupLipSync(const QString &name, const QString &sound, int init) : QO
     soundFile = sound;
     initFrame = init;
 
-    mouthIndex = 0;
+    // mouthIndex = 0;
 }
 
 TupLipSync::~TupLipSync()

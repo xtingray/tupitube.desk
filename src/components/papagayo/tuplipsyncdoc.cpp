@@ -72,7 +72,7 @@ void LipsyncPhoneme::setBottom(int32 index)
     bottom = index;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/***/
 
 LipsyncWord::LipsyncWord()
 {
@@ -251,7 +251,7 @@ int LipsyncWord::length()
     return text.length();
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/***/
 
 LipsyncPhrase::LipsyncPhrase()
 {
@@ -450,7 +450,7 @@ void LipsyncPhrase::clearWords()
         delete words.takeFirst();
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/***/
 
 LipsyncVoice::LipsyncVoice(const QString &name)
 {
@@ -769,7 +769,7 @@ void LipsyncVoice::clearPhrase()
     phrase->clearWords();
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/***/
 
 TupLipsyncDictionary::TupLipsyncDictionary()
 {
@@ -877,7 +877,7 @@ QString TupLipsyncDictionary::getPhonemeAt(int index)
     return phonemesList.at(index);
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/***/
 
 TupLipsyncDoc::TupLipsyncDoc()
 {
@@ -896,6 +896,10 @@ TupLipsyncDoc::~TupLipsyncDoc()
 {
     if (audioPlayer) {
         audioPlayer->stop();
+        audioPlayer->setMedia(QMediaContent());
+        delete audioPlayer;
+        audioPlayer = nullptr;
+
         delete audioPlayer;
         audioPlayer = nullptr;
 	}
@@ -979,6 +983,8 @@ void TupLipsyncDoc::openAudioFile(const QString &path)
 
     if (audioPlayer) {
         audioPlayer->stop();
+        audioPlayer->setMedia(QMediaContent());
+
         delete audioPlayer;
         audioPlayer = nullptr;
 	}

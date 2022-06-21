@@ -71,6 +71,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         bool isPlaying();
         void clearPhotograms();
         void clearScenesArrays();
+        void releaseAudioResources();
         PlayMode getPlaymode();
 
     public slots:

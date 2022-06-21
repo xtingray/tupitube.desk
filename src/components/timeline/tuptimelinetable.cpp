@@ -589,10 +589,12 @@ void TupTimeLineTable::requestFrameSelection(int currentLayerIndex, int currentF
 
 void TupTimeLineTable::updateFrameState(int layerIndex, int frameIndex, bool value)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupTimeLineTable::updateFrameState()] - layerIndex -> " << layerIndex;
         qDebug() << "[TupTimeLineTable::updateFrameState()] - frameIndex -> " << frameIndex;
     #endif
+    */
 
     if (layerIndex < 0 || frameIndex < 0)
         return;
