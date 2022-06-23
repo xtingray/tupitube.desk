@@ -244,7 +244,8 @@ class TupLipsyncDoc : public QObject
         void pauseAudio();
         void stopAudio();
 
-         void clearVoice();
+        void clearVoice();
+        void releaseAudioPlayer();
 
     private:
         int32 fps;

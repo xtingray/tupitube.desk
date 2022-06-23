@@ -1412,6 +1412,9 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                     }
                                 }
 
+                                if (mode == Update)
+                                    document->releaseAudioPlayer();
+
                                 request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, soundKey, TupLibraryObject::Audio, TupProject::FRAMES_MODE,
                                                                                   data, folderName, sceneIndex, layerIndex, frameIndex);
                                 emit requestTriggered(&request);

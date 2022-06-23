@@ -894,15 +894,7 @@ TupLipsyncDoc::TupLipsyncDoc()
 
 TupLipsyncDoc::~TupLipsyncDoc()
 {
-    if (audioPlayer) {
-        audioPlayer->stop();
-        audioPlayer->setMedia(QMediaContent());
-        delete audioPlayer;
-        audioPlayer = nullptr;
-
-        delete audioPlayer;
-        audioPlayer = nullptr;
-	}
+    releaseAudioPlayer();
 
     if (audioExtractor) {
         delete audioExtractor;
@@ -910,6 +902,17 @@ TupLipsyncDoc::~TupLipsyncDoc()
 	}
 
     clearVoice();
+}
+
+void TupLipsyncDoc::releaseAudioPlayer()
+{
+    if (audioPlayer) {
+        audioPlayer->stop();
+        audioPlayer->setMedia(QMediaContent());
+
+        delete audioPlayer;
+        audioPlayer = nullptr;
+    }
 }
 
 TupLipsyncDictionary * TupLipsyncDoc::getDictionary()
