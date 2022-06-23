@@ -48,6 +48,7 @@ TupPapagayoApp::TupPapagayoApp(PapagayoAppMode mode, TupProject *project, const 
                                QList<int> indexes, QWidget *parent) : QMainWindow(parent)
 {
     #ifdef TUP_DEBUG
+        qDebug() << "---";
         qDebug() << "[TupPapagayoApp::TupPapagayoApp()] - Adding new record...";
     #endif
 
@@ -74,6 +75,7 @@ TupPapagayoApp::TupPapagayoApp(PapagayoAppMode mode, TupProject *project, TupLip
                                QList<int> indexes, QWidget *parent) : QMainWindow(parent)
 {
     #ifdef TUP_DEBUG
+        qDebug() << "---";
         qDebug() << "[TupPapagayoApp::TupPapagayoApp()] - Updating existing record...";
     #endif
 
@@ -1372,6 +1374,10 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                 QByteArray data = soundFile.readAll();
                                 soundFile.close();
                                 if (mode == AudioFromLibrary) {
+                                    #ifdef TUP_DEBUG
+                                        qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                                                    "Removing existing audio record from library -> " << soundKey;
+                                    #endif
                                     TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove,
                                                                                                         soundKey, TupLibraryObject::Audio);
                                     emit requestTriggered(&request);

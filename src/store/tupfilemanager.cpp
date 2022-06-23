@@ -58,7 +58,8 @@ TupFileManager::~TupFileManager()
 bool TupFileManager::save(const QString &fileName, TupProject *project)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "[TupFileManager::save()] - Saving file -> " << fileName;
+        qDebug() << "---";
+        qDebug() << "[TupFileManager::save()] - Saving file -> " << fileName;
     #endif
 
     QFileInfo info(fileName);
@@ -88,7 +89,8 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
             #endif
             if (projectDir.rename(currentDirName, newPath)) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupFileManager::save()] - Directory renamed to -> " << newPath;
+                    qDebug() << "[TupFileManager::save()] - "
+                                "Success! Directory renamed to -> " << newPath;
                 #endif
             } else {
                 #ifdef TUP_DEBUG
@@ -97,12 +99,14 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                 // If rename action fails, then try to create new project's path
                 if (!projectDir.mkdir(newPath)) {
                     #ifdef TUP_DEBUG
-                        qWarning() << "[TupFileManager::save()] - Error: Can't create path -> " << newPath;
+                        qWarning() << "[TupFileManager::save()] - "
+                                      "Error: Can't create path -> " << newPath;
                     #endif
                     return false;
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "[TupFileManager::save()] - Directory was created successfully -> " << newPath;
+                        qDebug() << "[TupFileManager::save()] - "
+                                    "Directory was created successfully -> " << newPath;
                     #endif
                     if (!TAlgorithm::copyFolder(currentDirName, newPath)) {
                         #ifdef TUP_DEBUG
@@ -111,21 +115,31 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                         #endif
                         return false;
                     }
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupFileManager::save()] - "
+                                    "Success! Old path -> " << currentDirName << " copied to -> " << newPath;
+                    #endif
                 }
             }
         } else {
             if (projectDir.exists(currentDirName) && (newPath.compare(project->getDataDir()) != 0)) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupFileManager::save()] - "
+                                "Removing existing folder -> " << currentDirName;
+                #endif
                 if (projectDir.removeRecursively()) {
                     // If rename action fails, then try to create new project's path
                     if (!projectDir.mkdir(newPath)) {
                         #ifdef TUP_DEBUG
-                            qWarning() << "[TupFileManager::save()] - Error: Can't create path after removing -> " << newPath;
+                            qWarning() << "[TupFileManager::save()] - "
+                                          "Error: Can't create path after removing -> " << newPath;
                         #endif
                         return false;
                     } else {
                         #ifdef TUP_DEBUG
                             qDebug() << "[TupFileManager::save()] - "
                                         "Directory was created successfully after deletion -> " << newPath;
+                            qDebug() << "[TupFileManager::save()] - Now copying files from -> " << currentDirName;
                         #endif
                         if (!TAlgorithm::copyFolder(currentDirName, newPath)) {
                             #ifdef TUP_DEBUG
@@ -133,6 +147,11 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                                               "Fatal Error: Can't copy content into new path -> " << newPath;
                             #endif
                             return false;
+                        } else {
+                            #ifdef TUP_DEBUG
+                                qDebug() << "[TupFileManager::save()] - "
+                                            "Success! Project files copied into -> " << newPath;
+                            #endif
                         }
                     }
                 } else {

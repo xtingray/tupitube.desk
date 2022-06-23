@@ -1640,14 +1640,20 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                              if (!library->isLoadingProject())
                                  object->updateFrameToPlay(currentFrame.frame + 1);
 
-                             library->updateSoundResourcesItem(object);
+                             if (!library->updateSoundResourcesItem(object)) {
+                                #ifdef TUP_DEBUG
+                                    qWarning() << "[TupLibraryWidget::libraryResponse()] - "
+                                                  "Warning: Can't update audio object -> " << id;
+                                #endif
+                             }
 
                              item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
                              libraryTree->setCurrentItem(item);
                              previewItem(item);
                          } else {
                              #ifdef TUP_DEBUG
-                                 qDebug() << "[TupLibraryWidget::libraryResponse()] - Fatal Error: No object with id -> " << id;
+                                 qDebug() << "[TupLibraryWidget::libraryResponse()] - "
+                                             "Fatal Error: No object with id -> " << id;
                              #endif
                          }
                        }
@@ -2187,7 +2193,13 @@ void TupLibraryWidget::updateSoundTiming(int frame)
 
     if (currentSound) {
         currentSound->updateFrameToPlay(frame);
-        library->updateSoundResourcesItem(currentSound);
+        if (!library->updateSoundResourcesItem(currentSound)) {
+            #ifdef TUP_DEBUG
+                qWarning() << "[TupLibraryWidget::updateSoundTiming()] - "
+                              "Warning: Can't update audio object -> " << currentSound->getSymbolName();
+            #endif
+        }
+
         emit soundUpdated();
     }
 }
