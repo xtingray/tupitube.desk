@@ -560,16 +560,16 @@ bool TupLibraryObject::loadData(const QString &path)
     return true;
 }
 
-bool TupLibraryObject::saveData(const QString &dataDir)
+bool TupLibraryObject::saveData(const QString &projectDir)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryObject::saveData()] - dataDir -> " << dataDir;
+        qDebug() << "[TupLibraryObject::saveData()] - project dir -> " << projectDir;
     #endif
 
     switch (objectType) {
             case TupLibraryObject::Item:
             {
-                 QString path = dataDir + "/obj/";
+                 QString path = projectDir + "/obj/";
                  if (folder.length() > 0)
                      path += folder + "/";
                  if (!QFile::exists(path)) {
@@ -596,7 +596,7 @@ bool TupLibraryObject::saveData(const QString &dataDir)
 
             case TupLibraryObject::Audio:
             {
-                 QString path = dataDir + "/audio/";
+                 QString path = projectDir + "/audio/";
                  if (folder.length() > 0)
                      path += folder + "/";
                  if (!QFile::exists(path)) {
@@ -636,7 +636,7 @@ bool TupLibraryObject::saveData(const QString &dataDir)
 
             case TupLibraryObject::Svg:
             {
-                 QString path = dataDir + "/svg/";
+                 QString path = projectDir + "/svg/";
                  if (folder.length() > 0)
                      path += folder + "/";
                  if (!QFile::exists(path)) {
@@ -664,7 +664,7 @@ bool TupLibraryObject::saveData(const QString &dataDir)
 
             case TupLibraryObject::Image:
             {
-                 QString path = dataDir + "/images/";
+                 QString path = projectDir + "/images/";
                  if (folder.length() > 0)
                      path += folder + "/";
                  if (!QFile::exists(path)) {

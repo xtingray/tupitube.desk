@@ -157,13 +157,10 @@ bool TupCommandExecutor::renameLayer(TupLayerResponse *response)
     QString newName = response->getArg().toString();
 	
     #ifdef TUP_DEBUG
-        qWarning() << "[TupCommandExecutor::renameLayer()] - Renaming layer to: " << newName;
+        qWarning() << "[TupCommandExecutor::renameLayer()] - Renaming layer into -> " << newName;
     #endif	
 
-    // QString oldName;
-
     TupScene *scene = project->sceneAt(scenePos);
-
     if (!scene)
         return false;
 
@@ -273,7 +270,7 @@ bool TupCommandExecutor::updateLipSync(TupLayerResponse *response)
 bool TupCommandExecutor::removeLipSync(TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
-        qWarning() << "[TupCommandExecutor::removeLipSync()] - Adding lipsync...";
+        qWarning() << "[TupCommandExecutor::removeLipSync()] - Removing lipsync...";
     #endif
 
     int scenePos = response->getSceneIndex();
@@ -316,7 +313,7 @@ bool TupCommandExecutor::setLayerOpacity(TupLayerResponse *response)
         if (response->getMode() == TupProjectResponse::Redo)
             layer->redoOpacity();
 
-        responsed(response);
+        emit responsed(response);
 
         return true;
     }

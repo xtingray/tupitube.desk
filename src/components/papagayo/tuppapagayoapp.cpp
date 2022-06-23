@@ -1367,11 +1367,23 @@ bool TupPapagayoApp::saveLipsyncRecord()
                             }
 
                             // Adding lip-sync sound file
+                            #ifdef TUP_DEBUG
+                                qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Processing audio file -> " << soundFilePath;
+                            #endif
                             QFile soundFile(soundFilePath);
+                            if (soundFile.exists()) {
+                                qDebug() << "Sound file exists! -> " << soundFilePath;
+                            } else {
+                                qDebug() << "Sound file DOESN'T exist! -> " << soundFilePath;
+                            }
+
                             QFileInfo info(soundFilePath);
                             QString soundKey = info.fileName().toLower();
                             if (soundFile.open(QIODevice::ReadOnly)) {
                                 QByteArray data = soundFile.readAll();
+
+                                qDebug() << "Sound File size -> " << data.size();
+
                                 soundFile.close();
                                 if (mode == AudioFromLibrary) {
                                     #ifdef TUP_DEBUG
@@ -1522,7 +1534,7 @@ bool TupPapagayoApp::updateLipsyncRecord()
     if (tempDir.exists()) {
         if (!tempDir.removeRecursively()) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - "
+                qWarning() << "[TupPapagayoApp::updateLipsyncRecord()] - "
                             "Fatal Error: Can't remove temp folder -> " << tempMouthPath;
             #endif
             return false;
@@ -1531,7 +1543,7 @@ bool TupPapagayoApp::updateLipsyncRecord()
 
     if (!tempDir.mkdir(tempMouthPath)) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - "
+            qWarning() << "[TupPapagayoApp::updateLipsyncRecord()] - "
                         "Fatal Error: Can't create temp folder -> " << tempMouthPath;
         #endif
         return false;
@@ -1539,7 +1551,7 @@ bool TupPapagayoApp::updateLipsyncRecord()
 
     if (!TAlgorithm::copyFolder(currentMouthPath, tempMouthPath)) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - "
+            qWarning() << "[TupPapagayoApp::updateLipsyncRecord()] - "
                         "Fatal Error: Can't copy mouths folder -> " << tempMouthPath;
         #endif
         return false;
@@ -1550,16 +1562,21 @@ bool TupPapagayoApp::updateLipsyncRecord()
     if (QFile::exists(tempSoundFile)) {
         if (!QFile::remove(tempSoundFile)) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - "
+                qWarning() << "[TupPapagayoApp::updateLipsyncRecord()] - "
                             "Fatal Error: Can't remove previous temp sound file -> " << tempSoundFile;
             #endif
             return false;
         }
     }
 
-    if (!QFile::copy(soundFilePath, tempSoundFile)) {
+    if (QFile::copy(soundFilePath, tempSoundFile)) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - "
+                        "Success copy! Source -> " << soundFilePath << " - Destination -> " << tempSoundFile;
+        #endif
+    } else {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupPapagayoApp::updateLipsyncRecord()] - "
                         "Fatal Error: Can't store temp sound file -> " << soundFilePath;
         #endif
         return false;
@@ -1570,11 +1587,18 @@ bool TupPapagayoApp::updateLipsyncRecord()
                     "Removing lipsync item -> " << oldLipsyncName;
     #endif
 
+    // Removing lip sync record
     TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex,
                                                                       TupProjectRequest::RemoveLipSync,
                                                                       oldLipsyncName);
     emit requestTriggered(&request);                
 
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - "
+                    "Removing lipsync folder -> " << oldLipsyncName;
+    #endif
+
+    // Removing lip sync folder
     request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove,
                                                       oldLipsyncName, TupLibraryObject::Folder);
     emit requestTriggered(&request);
