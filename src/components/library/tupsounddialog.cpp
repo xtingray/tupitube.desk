@@ -253,22 +253,20 @@ void TupSoundDialog::launchLipsyncModule()
 
     QString path = "";
     PapagayoAppMode mode = Insert;
-    // bool isRecorded = false;
     if (tabWidget->currentIndex() == 0) { // Audio file comes from filesystem
         path = filePathInput->text();
     } else { // Audio file was recorded
-        // isRecorded = true;
         mode = VoiceRecorded;
         path = micManager->getRecordPath();
     }
 
     if (!path.isEmpty()) {
-        // emit lipsyncModuleCalled(isRecorded, path);
         emit lipsyncModuleCalled(mode, path);
         close();
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupSoundDialog::launchLipsyncModule()] - Fatal Error: Recording file path is empty!";
+            qWarning() << "[TupSoundDialog::launchLipsyncModule()] - "
+                          "Fatal Error: Recording file path is empty!";
         #endif
     }
 }

@@ -1483,6 +1483,7 @@ void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath)
         emit requestTriggered(&request);
         setDefaultPath(filePath);
     } else {
+        file.close();
         TOsd::self()->display(TOsd::Error, tr("Error while opening file: %1").arg(filePath));
     }
 }

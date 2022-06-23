@@ -770,40 +770,6 @@ void TupScreen::loadSoundRecords()
     soundRecords.clear();
     soundPlayer.clear();
 
-    // Loading lipSync sounds
-    /*
-    if (project->sceneAt(sceneIndex)) {
-        int total = project->sceneAt(sceneIndex)->lipSyncTotal();
-        #ifdef TUP_DEBUG
-            qWarning() << "[TupScreen::loadSoundRecords()] - Loading lip-sync files...";
-            qWarning() << "*** Lip-sync Total -> " << total;
-            qWarning() << "---";
-        #endif
-        if (total > 0) {
-            soundRecords.clear();
-            Mouths mouths = project->sceneAt(sceneIndex)->getLipSyncList();
-            int i = 0;
-            foreach(TupLipSync *lipsync, mouths) {
-                TupLibraryFolder *folder = library->getFolder(lipsync->getLipSyncName());
-                if (folder) {
-                    TupLibraryObject *sound = folder->getObject(lipsync->getSoundFile());
-                    if (sound) {
-                        SoundResource record;
-                        record.key = sound->getSymbolName();
-                        record.frame = lipsync->getInitFrame();
-                        record.path = sound->getDataPath();
-                        record.muted = sound->isMuted();
-
-                        soundRecords << record;
-                        soundPlayer << new QMediaPlayer();
-                        i++;
-                    }
-                }
-            }
-        }
-    }
-    */
-
     // Loading effect sounds
     QList<SoundResource> effectsList = library->soundResourcesList();
     int total = effectsList.count();

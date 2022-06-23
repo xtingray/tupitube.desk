@@ -242,8 +242,14 @@ bool TupLibraryFolder::removeObject(const QString &key, bool absolute)
             QString path = objects[key]->getDataPath();
             if (absolute) {
                 QFileInfo finfo(path);
-                if (finfo.isFile())
-                    QFile::remove(path);
+                if (finfo.isFile()) {
+                    if (!QFile::remove(path)) {
+                        #ifdef TUP_DEBUG
+                            qDebug() << "[TupLibraryFolder::removeObject()] - "
+                                        "Fatal Error: Can't remove sound file -> " << path;
+                        #endif
+                    }
+                }
             }
 
             return objects.remove(key);

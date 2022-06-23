@@ -36,8 +36,6 @@
 #include "tuplibraryobject.h"
 #include "tupitemfactory.h"
 #include "tuppixmapitem.h"
-// #include "tupitemgroup.h"
-// #include "taudioplayer.h"
 
 #include <QGraphicsScene>
 #include <QPainter>
@@ -53,8 +51,6 @@ TupLibraryObject::TupLibraryObject(const QString &name, const QString &dir, TupL
     setSymbolName(name);
     folder = dir;
     objectType = type;
-    // objectIsSoundResource = false;
-    // lipsyncVoice = false;
     soundType = NoSound;
     mute = false;
     playAt = 1;
@@ -141,18 +137,6 @@ void TupLibraryObject::setSoundType(SoundType type)
 {
     soundType = type;
 }
-
-/*
-bool TupLibraryObject::isLipsyncVoice()
-{
-    return lipsyncVoice;
-}
-
-void TupLibraryObject::setLipsyncVoiceFlag(bool isVoice)
-{
-    lipsyncVoice = isVoice;
-}
-*/
 
 void TupLibraryObject::setSymbolName(const QString &name)
 {
@@ -318,13 +302,15 @@ void TupLibraryObject::fromXml(const QString &xml)
                              loadRawData(array);
                          } else {
                              #ifdef TUP_DEBUG
-                                 qDebug() << "[TupLibraryObject::fromXml()] - Object data is empty! -> " << symbolName;
+                                 qDebug() << "[TupLibraryObject::fromXml()] - "
+                                             "Object data is empty! -> " << symbolName;
                              #endif
                              return;
                          }
                      } else {
                          #ifdef TUP_DEBUG
-                             qDebug() << "[TupLibraryObject::fromXml()] - Fatal Error: Object data from xml is NULL -> " << symbolName;
+                             qDebug() << "[TupLibraryObject::fromXml()] - "
+                                         "Fatal Error: Object data from xml is NULL -> " << symbolName;
                          #endif
                          return;
                      }
@@ -404,8 +390,6 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
             break;
             case Audio:
             {
-                // object.setAttribute("soundEffect", objectIsSoundResource);
-                // object.setAttribute("lipsyncVoice", lipsyncVoice);
                 object.setAttribute("soundType", soundType);
                 object.setAttribute("mute", mute);
                 object.setAttribute("playAt", playAt);
@@ -435,7 +419,8 @@ bool TupLibraryObject::loadRawData(const QByteArray &data)
                  bool isOk = pixmap.loadFromData(data);
                  if (!isOk) {
                      #ifdef TUP_DEBUG
-                         qDebug() << "[TupLibraryObject::loadRawData()] - Fatal Error: Can't load image -> " << symbolName;
+                         qDebug() << "[TupLibraryObject::loadRawData()] - "
+                                     "Fatal Error: Can't load image -> " << symbolName;
                      #endif
                      return false;
                  }
@@ -464,13 +449,6 @@ bool TupLibraryObject::loadRawData(const QByteArray &data)
                  }
             }
             break;
-            /*
-            case TupLibraryObject::Text:
-            {
-                 setData(QString::fromLocal8Bit(data));
-            }
-            break;
-            */
             case TupLibraryObject::Audio:
             {
                  setData(QVariant::fromValue(data));
@@ -550,21 +528,26 @@ bool TupLibraryObject::loadData(const QString &path)
                          #endif
                          if (!array.isEmpty() && !array.isNull()) {
                              loadRawData(array);
+                             file.close();
                          } else {
                              #ifdef TUP_DEBUG
-                                 qDebug() << "[TupLibraryObject::loadData()] - Warning: Object file is empty -> " << path;
+                                 qDebug() << "[TupLibraryObject::loadData()] - "
+                                             "Warning: Object file is empty -> " << path;
                              #endif
+                             file.close();
                              return false;
                          }
                      } else {
                          #ifdef TUP_DEBUG
-                             qDebug() << "[TupLibraryObject::loadData()] - Fatal Error: Can't access object file -> " << path;
+                             qDebug() << "[TupLibraryObject::loadData()] - "
+                                         "Fatal Error: Can't access object file -> " << path;
                          #endif
                          return false;
                      }
                  } else {
                      #ifdef TUP_DEBUG
-                         qDebug() << "[TupLibraryObject::loadData()] - Fatal Error: Object file doesn't exist -> " << path;
+                         qDebug() << "[TupLibraryObject::loadData()] - "
+                                     "Fatal Error: Object file doesn't exist -> " << path;
                      #endif
                      return false;
                  }
@@ -606,6 +589,7 @@ bool TupLibraryObject::saveData(const QString &dataDir)
                          qDebug() << "[TupLibraryObject::saveData()] - "
                                      "Fatal Error: Lack of permission to save file -> " << dataPath;
                      #endif
+                     file.close();
                      return false;
                  }
             }
@@ -645,6 +629,7 @@ bool TupLibraryObject::saveData(const QString &dataDir)
                          qDebug() << "[TupLibraryObject::saveData()] - "
                                      "Fatal Error: Lack of permissions to save audio file -> " << dataPath;
                      #endif
+                     file.close();
                      return false;
                  }
             }
@@ -672,6 +657,7 @@ bool TupLibraryObject::saveData(const QString &dataDir)
                          qDebug() << "[TupLibraryObject::saveData()] - "
                                      "Fatal Error: Lack of permission to save file -> " << dataPath;
                      #endif
+                     file.close();
                      return false;
                  }
             }
@@ -716,6 +702,7 @@ bool TupLibraryObject::saveData(const QString &dataDir)
                          qDebug() << "[TupLibraryObject::saveData()] - "
                                      "Fatal Error: Insufficient permissions to save image file -> " << path << symbolName;
                      #endif
+                     file.close();
                      return false;
                  }
             }
@@ -731,29 +718,6 @@ bool TupLibraryObject::saveData(const QString &dataDir)
 
     return false;
 }
-
-/*
-void TupLibraryObject::setSoundResourceFlag(bool flag)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryObject::setSoundEffectFlag(bool)] - flag -> " << flag;
-    #endif
-
-    objectIsSoundResource = flag;
-}
-
-bool TupLibraryObject::isSoundResource()
-{
-    return objectIsSoundResource;
-}
-*/
-
-/*
-bool TupLibraryObject::isNativeGroup()
-{
-    return isGroup;
-}
-*/
 
 QString TupLibraryObject::toString() const
 {
@@ -787,7 +751,8 @@ QPixmap TupLibraryObject::renderImage(const QString &xml, int width)
             return pixmap;
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryObject::renderImage()] - Fatal Error: QGraphicsItem from XML failed!";
+                qDebug() << "[TupLibraryObject::renderImage()] - "
+                            "Fatal Error: QGraphicsItem from XML failed!";
             #endif
         }
     } else {
@@ -853,7 +818,6 @@ TupLibraryObject * TupLibraryObject::clone()
 
     if (soundType == Effect) {
         copy->setSoundType(soundType);
-        // copy->setLipsyncVoiceFlag(isLipsyncVoice());
         copy->updateFrameToPlay(frameToPlay());
         copy->enableMute(isMuted());
     }
