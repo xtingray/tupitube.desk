@@ -917,7 +917,7 @@ void TupPapagayoApp::onVoiceTextChanged()
 
 int32 TupPapagayoApp::calculateDuration()
 {
-    int32 duration = document->getFps() * 10;
+    int32 duration = document->getFps() * MOUTHS_PACKAGE_SIZE;
     if (document->getAudioExtractor()) {
         real time = document->getAudioExtractor()->duration();
         time *= document->getFps();
@@ -1124,7 +1124,7 @@ void TupPapagayoApp::openImagesDialog()
         QDir dir(dirPath);
         QStringList imagesList = dir.entryList(QStringList() << "*.png" << "*.jpg" << "*.jpeg");
         if (imagesList.size() > 0) {
-            if (imagesList.count() == 10) { // Mouths set always contains 10 figures
+            if (imagesList.count() == MOUTHS_PACKAGE_SIZE) { // Mouths set always contains 10 figures
                 QString firstImage = imagesList.at(0);
                 int dot = firstImage.lastIndexOf(".");
                 QString extension = firstImage.mid(dot);
@@ -1316,7 +1316,7 @@ bool TupPapagayoApp::saveLipsyncRecord()
                 QDir dir(currentMouthPath);
                 QStringList imagesList = dir.entryList(QStringList() << "*.png" << "*.jpg" << "*.jpeg");
                 if (imagesList.size() > 0) {
-                    if (imagesList.count() == 10) { // Mouths set always contains 10 figures
+                    if (imagesList.count() == MOUTHS_PACKAGE_SIZE) { // Mouths set always contains 10 figures
                         QString firstImage = imagesList.at(0);
                         int dot = firstImage.lastIndexOf(".");
                         QString extension = firstImage.mid(dot);
@@ -1341,12 +1341,14 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                 QString imagePath = currentMouthPath + fileName;
                                 QFile imageFile(imagePath);
 
+                                /*
                                 #ifdef TUP_DEBUG
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - mouth image -> " << fileName;
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - key -> " << key;
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - mouthPath -> " << currentMouthPath;
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - imagePath -> " << imagePath;
                                 #endif
+                                */
 
                                 // Importing image into Library
                                 if (imageFile.open(QIODevice::ReadOnly)) {
@@ -1371,19 +1373,10 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                 qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Processing audio file -> " << soundFilePath;
                             #endif
                             QFile soundFile(soundFilePath);
-                            if (soundFile.exists()) {
-                                qDebug() << "Sound file exists! -> " << soundFilePath;
-                            } else {
-                                qDebug() << "Sound file DOESN'T exist! -> " << soundFilePath;
-                            }
-
                             QFileInfo info(soundFilePath);
                             QString soundKey = info.fileName().toLower();
                             if (soundFile.open(QIODevice::ReadOnly)) {
                                 QByteArray data = soundFile.readAll();
-
-                                qDebug() << "Sound File size -> " << data.size();
-
                                 soundFile.close();
                                 if (mode == AudioFromLibrary) {
                                     #ifdef TUP_DEBUG
@@ -1412,8 +1405,12 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                     }
                                 }
 
-                                if (mode == Update)
-                                    document->releaseAudioPlayer();
+                                document->releaseAudioPlayer();
+
+                                #ifdef TUP_DEBUG
+                                    qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                                                "Adding sound file into library again -> " << soundKey;
+                                #endif
 
                                 request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, soundKey, TupLibraryObject::Audio, TupProject::FRAMES_MODE,
                                                                                   data, folderName, sceneIndex, layerIndex, frameIndex);
@@ -1563,7 +1560,12 @@ bool TupPapagayoApp::updateLipsyncRecord()
 
     tempSoundFile = CACHE_DIR + soundKey;
     if (QFile::exists(tempSoundFile)) {
-        if (!QFile::remove(tempSoundFile)) {
+        if (QFile::remove(tempSoundFile)) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - "
+                            "Success. Temp sound file removed! -> " << tempSoundFile;
+            #endif
+        } else {
             #ifdef TUP_DEBUG
                 qWarning() << "[TupPapagayoApp::updateLipsyncRecord()] - "
                             "Fatal Error: Can't remove previous temp sound file -> " << tempSoundFile;

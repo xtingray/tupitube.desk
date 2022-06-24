@@ -97,6 +97,7 @@ enum PapagayoAppLanguage { English = 0, OtherLang };
 enum PapagayoAppViewType { Predefined = 0, Customized };
 
 #define CUSTOMIZED_MOUTH 5
+#define MOUTHS_PACKAGE_SIZE 10
 
 #define DARK_THEME 0
 #define LIGHT_THEME 1

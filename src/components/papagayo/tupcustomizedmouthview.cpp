@@ -26,8 +26,6 @@ TupCustomizedMouthView::TupCustomizedMouthView(TupLipsyncDictionary *lipsyncDict
     assetsLoaded = false;
     imagesPath = "";
     dictionary = lipsyncDictionary;
-
-	// TupLipsyncDoc::loadDictionaries();
 }
 
 TupCustomizedMouthView::~TupCustomizedMouthView()
@@ -53,7 +51,7 @@ void TupCustomizedMouthView::loadImages(const QString &folderPath)
     QDir dir(folderPath);
     QStringList imagesList = dir.entryList(QStringList() << "*.png" << "*.jpg" << "*.jpeg");
     if (imagesList.size() > 0) {
-        if (imagesList.count() == 10) { // Mouths set always contains 10 figures
+        if (imagesList.count() == MOUTHS_PACKAGE_SIZE) { // Mouths set always contains 10 figures
             QString firstImage = imagesList.at(0);
             int dot = firstImage.lastIndexOf(".");
             QString extension = firstImage.mid(dot);

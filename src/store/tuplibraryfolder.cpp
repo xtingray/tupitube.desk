@@ -229,9 +229,13 @@ bool TupLibraryFolder::removeObject(const QString &key, bool absolute)
         if (oid.compare(key) == 0) {
             if (objects[key]->getObjectType() == TupLibraryObject::Audio) {
                 if (!soundRecords.isEmpty()) {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupLibraryFolder::removeObject()] - "
+                                    "Removing audio resource record...";
+                    #endif
                     if (!removeSoundResource(key)) {
                         #ifdef TUP_DEBUG
-                            qDebug() << "[TupLibraryFolder::removeObject()] - "
+                            qWarning() << "[TupLibraryFolder::removeObject()] - "
                                         "Fatal Error: Can't remove sound resource -> " << key;
                         #endif
                         return false;
@@ -245,7 +249,7 @@ bool TupLibraryFolder::removeObject(const QString &key, bool absolute)
                 if (finfo.isFile()) {
                     if (!QFile::remove(path)) {
                         #ifdef TUP_DEBUG
-                            qDebug() << "[TupLibraryFolder::removeObject()] - "
+                            qWarning() << "[TupLibraryFolder::removeObject()] - "
                                         "Fatal Error: Can't remove sound file -> " << path;
                         #endif
                     }
