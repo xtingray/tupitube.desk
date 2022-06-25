@@ -78,7 +78,8 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
         project->setProjectName(filename);
         projectDir.setPath(newPath);
         project->getLibrary()->updatePaths(newPath);
-        project->getLibrary()->updateSoundPaths(newPath);
+        // project->getLibrary()->updateSoundPaths(newPath);
+        project->updateSoundPaths(newPath);
         project->setDataDir(newPath);
 
         if (!projectDir.exists()) {

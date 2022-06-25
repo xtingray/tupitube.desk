@@ -252,6 +252,9 @@ void TupLibraryWidget::resetGUI()
 
     if (libraryTree)
         libraryTree->cleanUI();
+
+    currentSound = nullptr;
+    delete currentSound;
 }
 
 void TupLibraryWidget::setLibrary(TupLibrary *assets)
@@ -1543,7 +1546,8 @@ void TupLibraryWidget::layerResponse(TupLayerResponse *event)
 void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::libraryResponse()] - response->action() -> " << response->getAction();
+        qDebug() << "[TupLibraryWidget::libraryResponse()] - response->action() -> "
+                 << response->getAction();
     #endif
 
     RETURN_IF_NOT_LIBRARY;
@@ -1630,23 +1634,16 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                              if (!library->isLoadingProject()) {
                                  if (isEffectSound) {
                                      object->setSoundType(Effect);
-                                     // object->setSoundResourceFlag(true);
                                      isEffectSound = false;
                                  } else {
                                      object->setSoundType(Lipsync);
-                                     // object->setLipsyncVoiceFlag(true);
                                  }
                              }
 
                              if (!library->isLoadingProject())
                                  object->updateFrameToPlay(currentFrame.frame + 1);
 
-                             if (!library->updateSoundResourcesItem(object)) {
-                                #ifdef TUP_DEBUG
-                                    qWarning() << "[TupLibraryWidget::libraryResponse()] - "
-                                                  "Warning: Can't update audio object -> " << id;
-                                #endif
-                             }
+                             project->addSoundResource(object);
 
                              item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
                              libraryTree->setCurrentItem(item);
@@ -1689,6 +1686,11 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
         case TupProjectRequest::Remove:
           {
              QString id = response->getArg().toString();
+             #ifdef TUP_DEBUG
+                 qDebug() << "[TupLibraryWidget::libraryResponse()] - Removing item -> " << id;
+             #endif
+
+             bool isFolder = false;
              QTreeWidgetItemIterator it(libraryTree);
              while ((*it)) {
                     // If target is NOT a folder
@@ -1700,11 +1702,23 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                     } else {
                         // If target is a folder
                         if (id == (*it)->text(1)) {
+                            isFolder = true;
                             delete (*it);
                             break;
                         }
                     }
                     ++it;
+             }
+
+             if (!isFolder) {
+                 if (response->symbolType() == TupLibraryObject::Audio) {
+                     if (!project->removeSoundResource(id)) {
+                         #ifdef TUP_DEBUG
+                             qWarning() << "[TupLibraryWidget::libraryResponse()] - "
+                                           "Warning: Can't remove sound resource record -> " << id;
+                             #endif
+                     }
+                 }
              }
 
              if (libraryTree->topLevelItemCount() > 0) {
@@ -2194,7 +2208,7 @@ void TupLibraryWidget::updateSoundTiming(int frame)
 
     if (currentSound) {
         currentSound->updateFrameToPlay(frame);
-        if (!library->updateSoundResourcesItem(currentSound)) {
+        if (!project->updateSoundResourcesItem(currentSound)) {
             #ifdef TUP_DEBUG
                 qWarning() << "[TupLibraryWidget::updateSoundTiming()] - "
                               "Warning: Can't update audio object -> " << currentSound->getSymbolName();
@@ -2209,7 +2223,7 @@ void TupLibraryWidget::updateSoundMuteStatus(bool mute)
 {
     if (currentSound) {
         currentSound->enableMute(mute);
-        library->updateSoundResourcesItem(currentSound);
+        project->updateSoundResourcesItem(currentSound);
         emit soundUpdated();
     }
 }

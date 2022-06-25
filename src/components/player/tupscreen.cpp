@@ -771,7 +771,7 @@ void TupScreen::loadSoundRecords()
     soundPlayer.clear();
 
     // Loading effect sounds
-    QList<SoundResource> effectsList = library->soundResourcesList();
+    QList<SoundResource> effectsList = project->soundResourcesList();
     int total = effectsList.count();
 
     #ifdef TUP_DEBUG

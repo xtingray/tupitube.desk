@@ -81,10 +81,10 @@ class TUPITUBE_EXPORT TupExportInterface
         virtual Plugin key() = 0;
         virtual Formats availableFormats() = 0;
         virtual bool exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes, 
-                                    Format format, const QSize &size, const QSize &newSize, int fps, TupLibrary *library = nullptr, 
+                                    Format format, const QSize &size, const QSize &newSize, int fps, TupProject *project, 
                                     bool waterMark = false) = 0;
         virtual bool exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene, const QSize &size, 
-                                 TupLibrary *library = nullptr, bool waterMark = false) = 0;
+                                 TupProject *project, bool waterMark = false) = 0;
         virtual bool exportToAnimatic(const QString &filePath, const QList<QImage> images, const QList<int> indexes,
                                       TupExportInterface::Format format, const QSize &size, int fps) = 0;
         virtual QString getExceptionMsg() const = 0;

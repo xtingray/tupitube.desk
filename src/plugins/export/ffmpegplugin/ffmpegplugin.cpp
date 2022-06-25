@@ -108,13 +108,14 @@ TMovieGeneratorInterface::Format FFmpegPlugin::videoFormat(TupExportInterface::F
 
 bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes,
                                   TupExportInterface::Format fmt, const QSize &size, const QSize &newSize, int fps,
-                                  TupLibrary *library, bool waterMark)
+                                  TupProject *project, bool waterMark)
 {
     Q_UNUSED(newSize)
     #ifdef TUP_DEBUG
         qDebug() << "[FFmpegPlugin::exportToFormat()] - fps -> " << fps;
     #endif
 
+    TupLibrary *library = project->getLibrary();
     wavAudioPath = "";
     aacAudioPath = "";
     int frames = 1;
@@ -129,8 +130,8 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
         return false;
 
     QList<SoundResource> sounds;
-    if (library) {
-        QList<SoundResource> soundItems = library->soundResourcesList();
+    if (project) {
+        QList<SoundResource> soundItems = project->soundResourcesList();
         #ifdef TUP_DEBUG
             qDebug() << "[FFmpegPlugin::exportToFormat()] - Sound items total -> " << soundItems.size();
         #endif
@@ -148,7 +149,6 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
 
         QString filename = TAlgorithm::randomString(12);
         wavAudioPath = CACHE_DIR + filename + ".wav";
-
         /*
         #ifdef Q_OS_WIN
             wavAudioPath =  QDir::homePath() + "/" + filename + ".wav";
@@ -281,14 +281,14 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
 }
 
 bool FFmpegPlugin::exportFrame(int frameIndex, const QColor color, const QString &filePath, TupScene *scene,
-                               const QSize &size, TupLibrary *library, bool waterMark = false)
+                               const QSize &size, TupProject *project, bool waterMark = false)
 {
     Q_UNUSED(frameIndex)
     Q_UNUSED(color)
     Q_UNUSED(filePath)
     Q_UNUSED(scene)
     Q_UNUSED(size)
-    Q_UNUSED(library)
+    Q_UNUSED(project)
     Q_UNUSED(waterMark)
 
     return false;

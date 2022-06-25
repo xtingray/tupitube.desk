@@ -45,19 +45,21 @@
 
 bool TupCommandExecutor::createSymbol(TupLibraryResponse *response)
 {
+    QString id = response->getArg().toString();
+
     #ifdef TUP_DEBUG
         qDebug() << "[TupCommandExecutor::createSymbol()]";
-        qDebug() << "*** Creating object: " << response->getArg().toString();
+        qDebug() << "*** Creating object: " << id;
     #endif
 
     if (response->symbolType() == TupLibraryObject::Folder) {
-        if (project->addFolder(response->getArg().toString())) {
+        if (project->addFolder(id)) {
             emit responsed(response);
             return true;
         }
     } else {
         if (response->getMode() == TupProjectResponse::Do) {
-            if (project->createSymbol(response->symbolType(), response->getArg().toString(), response->getData(),
+            if (project->createSymbol(response->symbolType(), id, response->getData(),
                                       response->getParent())) {
                 emit responsed(response);
                 return true;
@@ -74,23 +76,26 @@ bool TupCommandExecutor::createSymbol(TupLibraryResponse *response)
 
 bool TupCommandExecutor::removeSymbol(TupLibraryResponse *response)
 {
+    QString id = response->getArg().toString();
+
     #ifdef TUP_DEBUG
         qDebug() << "[TupCommandExecutor::removeSymbol()]";
+        qDebug() << "*** Removing object: " << id;
     #endif
 
     if (response->symbolType() == TupLibraryObject::Folder) {
-        if (project->removeFolder(response->getArg().toString())) {
+        if (project->removeFolder(id)) {
             emit responsed(response);
             return true;
         }
     } else {
         if (response->symbolType() == TupLibraryObject::Audio) {
-            if (project->removeSound(response->getArg().toString())) {
+            if (project->removeSound(id)) {
                 emit responsed(response);
                 return true;
             }
         } else {
-            if (project->removeSymbol(response->getArg().toString(), response->symbolType())) {
+            if (project->removeSymbol(id, response->symbolType())) {
                 emit responsed(response);
                 return true;
             }

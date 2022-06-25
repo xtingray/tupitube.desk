@@ -418,7 +418,7 @@ void TupExportModule::exportIt()
             done = m_currentExporter->exportToFormat(color, filename, scenes, m_currentFormat, 
                                       QSize(width, height), QSize(width, height), fps /* m_project->getFPS() */,
                                       // QSize(width, height), QSize(newWidth, newHeight), m_fps->value(),
-                                      m_project->getLibrary());
+                                      m_project);
         }
     } else {
         TOsd::self()->display(TOsd::Error, tr("Format problem. TupiTube Internal error."));

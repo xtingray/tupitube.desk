@@ -1020,7 +1020,164 @@ void TupProject::releaseLipSyncVoices(int sceneIndex, const QString &lipSyncName
     TupScene *scene = scenesList.at(sceneIndex);
     if (scene) {
         TupLipSync *lipsync = scene->getLipSync(lipSyncName);
-        if (lipsync)
-            library->releaseLipSyncVoices(lipsync->getSoundFile());
+        if (lipsync) {
+            QString soundKey = lipsync->getSoundFile();
+            library->releaseLipSyncVoices(soundKey);
+            if (!updateSoundType(soundKey, Effect)) {
+                #ifdef TUP_DEBUG
+                    qWarning() << "[TupProject::releaseLipSyncVoices()] - "
+                                  "Fatal Error: Couldn't update sound resource type -> "
+                               << soundKey;
+                #endif
+            }
+        }
     }
+}
+
+// Sound Records API
+
+void TupProject::addSoundResource(TupLibraryObject *object)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProject::addSoundResource()]";
+    #endif
+
+    SoundResource record;
+    record.key = object->getSymbolName();
+    record.frame = object->frameToPlay();
+    record.path = object->getDataPath();
+    record.muted = object->isMuted();
+    record.type = object->getSoundType();
+
+    soundRecords << record;
+}
+
+bool TupProject::removeSoundResource(const QString &id)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+        qDebug() << "[TupProject::removeSoundResource()] - id -> " << id;
+        qDebug() << "[TupProject::removeSoundResource()] - soundRecords.size() -> " << soundRecords.size();
+    #endif
+
+    for (int i=0; i<soundRecords.size(); i++) {
+        SoundResource item = soundRecords.at(i);
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupProject::removeSoundResource()] - record key -> " << item.key;
+        #endif
+        if (item.key.compare(id) == 0) {
+            soundRecords.removeAt(i);
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupProject::removeSoundResource()] - Success!";
+                qDebug() << "---";
+            #endif
+
+            return true;
+        }
+    }
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProject::removeSoundResource()] - Failed!";
+        qDebug() << "---";
+    #endif
+
+    return false;
+}
+
+bool TupProject::updateSoundResourcesItem(TupLibraryObject *item)
+{
+    int size = soundRecords.count();
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProject::updateSoundResourcesItem()] - item -> "
+                 << item->getSymbolName();
+        qDebug() << "[TupProject::updateSoundResourcesItem()] - item path -> "
+                 << item->getDataPath();
+        qDebug() << "[TupProject::updateSoundResourcesItem()] - soundRecords.count() -> "
+                 << size;
+    #endif
+
+    for(int i=0; i<size; i++) {
+        SoundResource record = soundRecords.at(i);
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupProject::updateSoundResourcesItem()] - record path -> "
+                     << record.path;
+        #endif
+        if (item->getDataPath().compare(record.path) == 0) {
+            record.key = item->getSymbolName();
+            record.frame = item->frameToPlay();
+            record.muted = item->isMuted();
+            record.type = item->getSoundType();
+            soundRecords.replace(i, record);
+
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupProject::updateSoundResourcesItem()] - Record updated successfully!";
+            #endif
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void TupProject::updateSoundPaths(const QString &newPath)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+        qDebug() << "[TupProject::updateSoundPaths()] - newPath -> " << newPath;
+        qDebug() << "[TupProject::updateSoundPaths()] - old path -> " << kAppProp->projectDir();
+        qDebug() << "[TupProject::updateSoundPaths()] - soundRecords.size() -> " << soundRecords.size();
+    #endif
+
+    for (int i=0; i<soundRecords.size(); i++) {
+        SoundResource item = soundRecords.at(i);
+        QString oldPath = item.path;
+        int range = oldPath.length() - oldPath.indexOf("audio");
+        QString path = newPath + "/" + oldPath.right(range);
+
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupProject::updateSoundPaths()] - oldPath -> " << oldPath;
+            qDebug() << "[TupProject::updateSoundPaths()] - path -> " << path;
+        #endif
+
+        item.path = path;
+        soundRecords[i] = item;
+    }
+}
+
+bool TupProject::updateSoundType(const QString audioId, SoundType type)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProject::updateSoundType()] - audioId -> " << audioId;
+    #endif
+
+    for (int i=0; i<soundRecords.size(); i++) {
+        SoundResource item = soundRecords.at(i);
+        if (item.key.compare(audioId) == 0) {
+            item.type = type;
+            soundRecords[i] = item;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+QList<SoundResource> TupProject::soundResourcesList()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProject::soundResourcesList()] - items size -> "
+                 << soundRecords.size();
+    #endif
+
+    return soundRecords;
+}
+
+void TupProject::resetSoundRecordsList()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProject::resetSoundRecordsList()]";
+    #endif
+
+    if (!soundRecords.isEmpty())
+        soundRecords.clear();
 }

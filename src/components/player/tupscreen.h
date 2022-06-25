@@ -118,7 +118,8 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void playSoundAt(int frame);
         void stopSounds();
 
-        const TupProject *project;
+        // const TupProject *project;
+        TupProject *project;
         int currentFramePosition;
         int sceneIndex;
         int fps;

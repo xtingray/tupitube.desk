@@ -109,14 +109,15 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
         bool folderExists(const QString &id) const;
 
         void updatePaths(const QString &newPath);
-        void updateSoundPaths(const QString &newPath);
 
         bool isLoadingProject();
 
-        QList<SoundResource> soundResourcesList();
-        bool updateSoundResourcesItem(TupLibraryObject *item);
         void releaseLipSyncVoices(const QString &soundFile);
         TupLibraryObject * findSoundFile(const QString &folder);
+
+        // QList<SoundResource> soundResourcesList();
+        // bool updateSoundResourcesItem(TupLibraryObject *item);
+        // void updateSoundPaths(const QString &newPath);
 
     public:
         virtual void fromXml(const QString &xml);
@@ -126,8 +127,9 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
         void loadObjects(const QString &folder, const QString &xml);
         void loadItem(const QString &folder, QDomNode xml);
         bool reloadObject(const QString &key, LibraryObjects bag);
-        void addSoundResource(TupLibraryObject *object);
-        bool removeSoundResource(const QString &key);
+
+        // void addSoundResource(TupLibraryObject *object);
+        // bool removeSoundResource(const QString &key);
 
         QString id;
         Folders folders;
@@ -135,6 +137,6 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
         TupProject *project;
         bool loadingProject;
 
-        QList<SoundResource> soundRecords;
+        // QList<SoundResource> soundRecords;
 };
 #endif

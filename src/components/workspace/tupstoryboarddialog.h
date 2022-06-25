@@ -139,7 +139,6 @@ class TUPITUBE_EXPORT TupStoryBoardDialog : public QDialog
         QDoubleSpinBox *coverSecSpinBox;
 
         QLocale utf;
-        TupLibrary *library;
 };
 
 #endif

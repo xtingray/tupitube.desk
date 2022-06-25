@@ -63,7 +63,6 @@ TupStoryBoardDialog::TupStoryBoardDialog(bool network, TupExportInterface *imgPl
     scene =  project->sceneAt(sIndex);
     sceneIndex = sIndex;
     storyboard = scene->getStoryboard();
-    library = project->getLibrary();
     utf = QLocale(QLocale::AnyLanguage, QLocale::AnyCountry);
 
     QScreen *screen = QGuiApplication::screens().at(0);
@@ -378,7 +377,7 @@ void TupStoryBoardDialog::thumbnailsGenerator()
     // Creating scenes thumbnails
     for (int i=0; i < framesCount; i++) {
          QString fileName = path + "images/scene" + QString::number(i) + ".png";
-         bool isOk = imagePlugin->exportFrame(i, bgColor, fileName, scene, size, library);
+         bool isOk = imagePlugin->exportFrame(i, bgColor, fileName, scene, size, project);
 
          QPixmap displayPic = QPixmap(fileName);
          displayPic = displayPic.scaledToWidth(scaledSize.width(), Qt::SmoothTransformation);

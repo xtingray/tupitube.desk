@@ -126,6 +126,8 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
 
         TupLibrary *getLibrary();
         void setLibrary(TupLibrary *lib);
+        void resetSoundRecordsList();
+
         void emitResponse(TupProjectResponse *response);
 
         virtual void fromXml(const QString &xml);
@@ -142,6 +144,14 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         void updateRasterBackground(TupProject::Mode spaceContext, int sceneIndex, const QString &imgPath);
 
         void releaseLipSyncVoices(int sceneIndex, const QString &lipSyncName);
+
+        // Sound Records API
+        void addSoundResource(TupLibraryObject *object);
+        bool removeSoundResource(const QString &key);
+        QList<SoundResource> soundResourcesList();
+        bool updateSoundResourcesItem(TupLibraryObject *item);
+        bool updateSoundType(const QString audioId, SoundType type);
+        void updateSoundPaths(const QString &newPath);
 
     signals:
         void responsed(TupProjectResponse *response);
@@ -163,6 +173,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         TupLibrary *library;
         bool isOpen;
         TupProject::Mode spaceMode;
-};
 
+        QList<SoundResource> soundRecords;
+};
 #endif
