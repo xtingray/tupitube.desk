@@ -198,17 +198,18 @@ void TupLibraryObject::updateFolder(const QString &projectPath, const QString &n
     if (!name.isEmpty()) {
         newPath += name + "/";
         if (!dir.exists(newPath)) {
-            if (!dir.mkpath(newPath)) {
+            if (dir.mkpath(newPath)) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupLibraryObject::updateFolder()] - "
+                                "Path created successfully -> " << newPath;
+                #endif
+            } else {
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupLibraryObject::updateFolder()] - "
                                 "Fatal Error: Couldn't create path -> " << newPath;
                 #endif
                 return;
             }
-            #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryObject::updateFolder()] - "
-                            "Path created successfully -> " << newPath;
-            #endif
         }
     }
     newPath += filename;

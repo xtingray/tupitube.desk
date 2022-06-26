@@ -644,13 +644,18 @@ void TupMainWindow::resetUI()
 
     m_projectManager->closeProject();
     if (!projectName.isEmpty()) {
-        QString cache(CACHE_DIR + projectName);
-        QDir projectPath(cache);
+        QString projectCache(CACHE_DIR + projectName);
+        QDir projectPath(projectCache);
         if (projectPath.exists()) {
-            if (!projectPath.removeRecursively()) {
+            if (projectPath.removeRecursively()) {
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupMainWindow::resetUI()] - "
-                                "Fatal Error: Can't remove CACHE project path! -> " << cache;
+                                "CACHE project path removed successfully! -> " << projectCache;
+                #endif
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupMainWindow::resetUI()] - "
+                                "Fatal Error: Can't remove CACHE project path! -> " << projectCache;
                 #endif
             }
         }
