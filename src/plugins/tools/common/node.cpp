@@ -166,10 +166,9 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
             if (context == Text)
                 emit positionUpdated(newPos);
-        } else { /* Papagayo context */
+        } else { // Papagayo context
             QPointF center = newPos - QPointF(parent->boundingRect().width()/2, parent->boundingRect().height()/2);
             parent->setPos(center.x(), center.y());
-
             emit positionUpdated(newPos);
         }
         QGraphicsItem::mouseMoveEvent(event);

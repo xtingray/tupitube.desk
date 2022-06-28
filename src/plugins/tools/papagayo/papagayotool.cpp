@@ -632,10 +632,6 @@ void PapagayoTool::updateXMouthPositionInScene(int x)
     #endif
 
     mouth->setPos(x, mouth->pos().y());
-    if (nodesManager) {
-        nodesManager->syncNodesFromParent();
-        updateMouthTransformation();
-    }
 }
 
 void PapagayoTool::updateYMouthPositionInScene(int y)
@@ -645,10 +641,7 @@ void PapagayoTool::updateYMouthPositionInScene(int y)
     #endif
 
     mouth->setPos(mouth->pos().x(), y);
-    if (nodesManager) {
-        nodesManager->syncNodesFromParent();
-        updateMouthTransformation();
-    }
+    updateMouthTransformation();
 }
 
 void PapagayoTool::updateRotationInScene(int angle)
@@ -659,7 +652,6 @@ void PapagayoTool::updateRotationInScene(int angle)
 
     if (nodesManager) {
         nodesManager->rotate(angle);
-        nodesManager->syncNodesFromParent();
         updateMouthTransformation();
     }
 }
@@ -668,7 +660,6 @@ void PapagayoTool::updateScaleInScene(double xFactor, double yFactor)
 {
     if (nodesManager) {
         nodesManager->scale(xFactor, yFactor);
-        nodesManager->syncNodesFromParent();
         updateMouthTransformation();
     }
 }
@@ -733,7 +724,6 @@ void PapagayoTool::resetMouthTransformations()
         mouth->setPos(projectX - mouthX, projectY - mouthY);
         nodesManager->rotate(0);
         nodesManager->scale(1, 1);
-        nodesManager->syncNodesFromParent();
 
         updateMouthTransformation();
     }
@@ -745,14 +735,17 @@ void PapagayoTool::updateMouthTransformation()
         qDebug() << "[PapagayoTool::updateMouthTransformation()]";
     #endif
 
-    QGraphicsItem *item = nodesManager->parentItem();
-    if (item) {
-        QDomDocument doc;
-        currentLipSync->updateMouthTransformation(TupSerializer::properties(item, doc, "", 0),
-                                                  (scene->currentFrameIndex() - currentLipSync->getInitFrame()));
+    if (nodesManager) {
+        nodesManager->syncNodesFromParent();
+        QGraphicsItem *item = nodesManager->parentItem();
+        if (item) {
+            QDomDocument doc;
+            currentLipSync->updateMouthTransformation(TupSerializer::properties(item, doc, "", 0),
+                                                      (scene->currentFrameIndex() - currentLipSync->getInitFrame()));
 
-        TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, scene->currentLayerIndex(),
-                                                                          TupProjectRequest::UpdateLipSync, currentLipSync->toString());
-        emit requested(&request);
+            TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, scene->currentLayerIndex(),
+                                                                              TupProjectRequest::UpdateLipSync, currentLipSync->toString());
+            emit requested(&request);
+        }
     }
 }

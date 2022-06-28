@@ -170,7 +170,7 @@ void TextTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
         QGraphicsItem *item = currentSelection.at(0);
         if (TupTextItem *textItem = qgraphicsitem_cast<TupTextItem *>(item)) {
             if (!nodesManager) {
-                item->setFlag(QGraphicsItem::ItemIsMovable, false);
+                item->setFlag(QGraphicsItem::ItemIsMovable, false); // To avoid undesired small movements
                 if (!item->isSelected())
                     item->setSelected(true);
                 nodesManager = new NodeManager(Node::Text, item, scene, nodeZValue);
