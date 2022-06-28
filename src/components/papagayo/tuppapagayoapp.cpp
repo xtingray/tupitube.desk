@@ -1405,7 +1405,7 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                     }
                                 }
 
-                                document->releaseAudioPlayer();
+                                document->resetDocument();
 
                                 #ifdef TUP_DEBUG
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "

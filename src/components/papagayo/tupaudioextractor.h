@@ -32,7 +32,6 @@
 //
 
 class TUPITUBE_EXPORT TupAudioExtractor : public QObject
-// class TupAudioExtractor : public QObject
 {
     Q_OBJECT
 

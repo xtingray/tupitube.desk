@@ -615,20 +615,23 @@ bool TupLibraryObject::saveData(const QString &projectDir)
                      if (isOk != -1) {
                          #ifdef TUP_DEBUG
                              qDebug() << "[TupLibraryObject::saveData()] - "
-                                         "Audio file has been saved successfully -> " << dataPath;
+                                         "Audio file has been saved successfully -> "
+                                         << dataPath;
                          #endif
                          return true;
                      } else {
                          #ifdef TUP_DEBUG
                              qDebug() << "[TupLibraryObject::saveData()] - "
-                                         "Fatal Error: Can't save audio file -> " << dataPath;
+                                         "Fatal Error: Can't save audio file -> "
+                                         << dataPath;
                          #endif
                          return false;
                      }
                  } else {
                      #ifdef TUP_DEBUG
                          qDebug() << "[TupLibraryObject::saveData()] - "
-                                     "Fatal Error: Lack of permissions to save audio file -> " << dataPath;
+                                     "Fatal Error: Lack of permissions to save audio file -> "
+                                  << dataPath;
                      #endif
                      file.close();
                      return false;
@@ -656,7 +659,8 @@ bool TupLibraryObject::saveData(const QString &projectDir)
                  } else {
                      #ifdef TUP_DEBUG
                          qDebug() << "[TupLibraryObject::saveData()] - "
-                                     "Fatal Error: Lack of permission to save file -> " << dataPath;
+                                     "Fatal Error: Lack of permission to save file -> "
+                                  << dataPath;
                      #endif
                      file.close();
                      return false;

@@ -64,6 +64,7 @@ TupLibraryDisplay::~TupLibraryDisplay()
     #endif
 
     delete soundPlayer;
+    delete previewPanel;
 }
 
 QSize TupLibraryDisplay::sizeHint() const

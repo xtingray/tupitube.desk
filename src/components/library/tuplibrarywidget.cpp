@@ -384,7 +384,8 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                 default:
                    {
                      #ifdef TUP_DEBUG
-                         qDebug() << "[TupLibraryWidget::previewItem()] - Unknown symbol id -> " << object->getObjectType();
+                         qDebug() << "[TupLibraryWidget::previewItem()] - "
+                                     "Unknown symbol type -> " << object->getObjectType();
                      #endif
                    }
                    break;

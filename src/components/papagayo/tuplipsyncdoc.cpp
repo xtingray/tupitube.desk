@@ -16,7 +16,6 @@
 
 #include "tuplipsyncdoc.h"
 
-#include <QFile>
 #include <QFileInfo>
 #include <QDir>
 
@@ -87,6 +86,10 @@ LipsyncWord::LipsyncWord()
 
 LipsyncWord::~LipsyncWord()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[~LipsyncWord()]";
+    #endif
+
     clearPhonemes();
 }
 
@@ -255,16 +258,21 @@ int LipsyncWord::length()
 
 LipsyncPhrase::LipsyncPhrase()
 {
-    text = "";
+    text = QString();
     startFrame = 0;
     endFrame = 0;
-    top = bottom = 0;
+    top = 0;
+    bottom = 0;
 
     words = QList<LipsyncWord *>();
 }
 
 LipsyncPhrase::~LipsyncPhrase()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[~LipsyncPhrase()]";
+    #endif
+
     clearWords();
 }
 
@@ -460,7 +468,9 @@ LipsyncVoice::LipsyncVoice(const QString &name)
 
 LipsyncVoice::~LipsyncVoice()
 {
-    clearPhrase();
+    #ifdef TUP_DEBUG
+        qDebug() << "[~LipsyncVoice()]";
+    #endif
 }
 
 void LipsyncVoice::setName(const QString &name)
@@ -765,8 +775,10 @@ bool LipsyncVoice::textIsEmpty()
 
 void LipsyncVoice::clearPhrase()
 {
-    phrase->setText("");
-    phrase->clearWords();
+    if (phrase) {
+        phrase->setText("");
+        phrase->clearWords();
+    }
 }
 
 /***/
@@ -894,17 +906,10 @@ TupLipsyncDoc::TupLipsyncDoc()
 
 TupLipsyncDoc::~TupLipsyncDoc()
 {
-    releaseAudioPlayer();
-
-    if (audioExtractor) {
-        delete audioExtractor;
-        audioExtractor = nullptr;
-	}
-
-    clearVoice();
+    resetDocument();
 }
 
-void TupLipsyncDoc::releaseAudioPlayer()
+void TupLipsyncDoc::resetDocument()
 {
     if (audioPlayer) {
         audioPlayer->stop();
@@ -912,6 +917,11 @@ void TupLipsyncDoc::releaseAudioPlayer()
 
         delete audioPlayer;
         audioPlayer = nullptr;
+    }
+
+    if (audioExtractor) {
+        delete audioExtractor;
+        audioExtractor = nullptr;
     }
 }
 

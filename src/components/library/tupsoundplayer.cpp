@@ -127,8 +127,9 @@ TupSoundPlayer::~TupSoundPlayer()
         qDebug() << "[~TupSoundPlayer()]";
     #endif
 
-    player->setMedia(QMediaContent());
-    delete player;
+    reset();
+    // player->setMedia(QMediaContent());
+    // delete player;
 }
 
 QSize TupSoundPlayer::sizeHint() const
@@ -266,6 +267,7 @@ bool TupSoundPlayer::isPlaying()
 
 void TupSoundPlayer::reset()
 {
+    player->stop();
     player->setMedia(QMediaContent());
     loop = false;
     loopBox->setChecked(false);
