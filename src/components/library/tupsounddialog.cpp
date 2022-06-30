@@ -54,6 +54,7 @@ TupSoundDialog::TupSoundDialog(QWidget *parent) : QDialog(parent)
         qDebug() << "[TupSoundDialog()]";
     #endif
 
+    setModal(true);
     setStyleSheet(TAppTheme::themeSettings());
 
     setWindowTitle(tr("Import Audio Asset"));

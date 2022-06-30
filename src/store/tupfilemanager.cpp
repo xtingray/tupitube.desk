@@ -173,13 +173,16 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                     return false;
                 }
             } else { // Source dir doesn't exist or source path == target path
-                qDebug() << "---";
-                qDebug() << "NEW CASE!!!";
-                qDebug() << "currentDirName -> " << currentDirName;
-                qDebug() << "projectDir.exists(currentDirName) -> " << projectDir.exists(currentDirName);
-                qDebug() << "newPath -> " << newPath;
-                qDebug() << "projectDir.exists(newPath) -> " << projectDir.exists(newPath);
-                qDebug() << "project->getDataDir() -> " << project->getDataDir();
+                #ifdef TUP_DEBUG
+                    // SQA: This case is still under tracking
+                    qDebug() << "---";
+                    qDebug() << "NEW CASE!!!";
+                    qDebug() << "currentDirName -> " << currentDirName;
+                    qDebug() << "projectDir.exists(currentDirName) -> " << projectDir.exists(currentDirName);
+                    qDebug() << "newPath -> " << newPath;
+                    qDebug() << "projectDir.exists(newPath) -> " << projectDir.exists(newPath);
+                    qDebug() << "project->getDataDir() -> " << project->getDataDir();
+                #endif
             }
         }
     } else {
