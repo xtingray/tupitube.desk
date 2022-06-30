@@ -42,6 +42,7 @@
 #include "tuppackagehandler.h"
 #include "talgorithm.h"
 #include "tbackupdialog.h"
+#include "tosd.h"
 
 #include <QDir>
 #include <QScreen>
@@ -69,7 +70,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
     bool ok;
 
     // Project name has been changed by the user
-    if (filename.compare(project->getName()) != 0) {
+    if (filename.compare(project->getName()) != 0 || projectDir.exists(currentDirName)) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupFileManager::save()] - User changed project's name...";
         #endif
@@ -114,6 +115,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                             qWarning() << "[TupFileManager::save()] - "
                                           "Fatal Error: Can't copy content into new path -> " << newPath;
                         #endif
+                        TOsd::self()->display(TOsd::Error, tr("Can't save project!"));
                         return false;
                     }
                 } else { // New path creation failed
@@ -121,6 +123,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                         qWarning() << "[TupFileManager::save()] - "
                                       "Error: Can't create path -> " << newPath;
                     #endif
+                    TOsd::self()->display(TOsd::Error, tr("Can't save project!"));
                     return false;
                 }
             }
@@ -156,6 +159,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                                 qWarning() << "[TupFileManager::save()] - "
                                               "Fatal Error: Can't copy content into new path -> " << newPath;
                             #endif
+                            TOsd::self()->display(TOsd::Error, tr("Can't save project!"));
                             return false;
                         }
                     } else { // Failed while creating target dir
@@ -163,6 +167,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                             qWarning() << "[TupFileManager::save()] - "
                                           "Error: Can't create path after removing -> " << newPath;
                         #endif
+                        TOsd::self()->display(TOsd::Error, tr("Can't save project!"));
                         return false;
                     }
                 } else { // Failed removing target dir
@@ -170,6 +175,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                         qWarning() << "[TupFileManager::save()] - "
                                       "Error: Can't create path after removing -> " << newPath;
                     #endif
+                    TOsd::self()->display(TOsd::Error, tr("Can't save project!"));
                     return false;
                 }
             } else { // Source dir doesn't exist or source path == target path
@@ -201,6 +207,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                     qWarning() << "[TupFileManager::save()] - Error: Can't create path -> "
                                << projectDir.path();
                 #endif
+                TOsd::self()->display(TOsd::Error, tr("Can't save project!"));
                 return false;
             }
         }

@@ -1087,7 +1087,7 @@ bool TupMainWindow::saveProject()
 bool TupMainWindow::storeProcedure()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupMainWindow::storeProcedure()]";
+        qDebug() << "[TupMainWindow::storeProcedure()] - m_fileName -> " << m_fileName;
     #endif
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));

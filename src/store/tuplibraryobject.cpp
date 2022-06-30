@@ -60,10 +60,10 @@ TupLibraryObject::~TupLibraryObject()
 {
 }
 
-/**
- * Items, pics, text, etc...
- * @param data 
- */
+/*
+ Items, pics, text, etc...
+ @param data
+*/
 void TupLibraryObject::setData(const QVariant &input)
 {
     data = input;
@@ -157,11 +157,11 @@ void TupLibraryObject::setFolder(const QString &dir)
     folder = dir;
 }
 
-void TupLibraryObject::updateFolder(const QString &projectPath, const QString &name)
+void TupLibraryObject::updateFolder(const QString &projectPath, const QString &newFolder)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryObject::updateFolder()] - "
-                    "current folder -> " << dataPath << " - new folder -> " << name;
+                    "current folder -> " << dataPath << " - new folder -> " << newFolder;
     #endif
 
     QFileInfo finfo(dataPath);
@@ -195,8 +195,8 @@ void TupLibraryObject::updateFolder(const QString &projectPath, const QString &n
 
     QString newPath = root;
     QDir dir(newPath);
-    if (!name.isEmpty()) {
-        newPath += name + "/";
+    if (!newFolder.isEmpty()) {
+        newPath += newFolder + "/";
         if (!dir.exists(newPath)) {
             if (dir.mkpath(newPath)) {
                 #ifdef TUP_DEBUG
@@ -219,14 +219,14 @@ void TupLibraryObject::updateFolder(const QString &projectPath, const QString &n
             qDebug() << "[TupLibraryObject::updateFolder()] - old dataPath -> " << dataPath;
         #endif
         if (dir.rename(dataPath, newPath)) {
-            folder = name;
+            folder = newFolder;
             dataPath = newPath;
             #ifdef TUP_DEBUG
                 qDebug() << "[TupLibraryObject::updateFolder()] - new dataPath -> " << dataPath;
             #endif
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryObject::updateFolder()] - Fatal Error: Couldn't move object -> "
+                qDebug() << "[TupLibraryObject::updateFolder()] - Fatal Error: Couldn't rename folder -> "
                          << dataPath << " to " << newPath;
             #endif
         }
@@ -588,7 +588,7 @@ bool TupLibraryObject::saveData(const QString &projectDir)
                  } else {
                      #ifdef TUP_DEBUG
                          qDebug() << "[TupLibraryObject::saveData()] - "
-                                     "Fatal Error: Lack of permission to save file -> " << dataPath;
+                                     "Fatal Error: Lack of permission to save item file -> " << dataPath;
                      #endif
                      file.close();
                      return false;
@@ -659,7 +659,7 @@ bool TupLibraryObject::saveData(const QString &projectDir)
                  } else {
                      #ifdef TUP_DEBUG
                          qDebug() << "[TupLibraryObject::saveData()] - "
-                                     "Fatal Error: Lack of permission to save file -> "
+                                     "Fatal Error: Lack of permissions to save SVG file -> "
                                   << dataPath;
                      #endif
                      file.close();
