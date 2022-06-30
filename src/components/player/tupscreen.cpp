@@ -141,12 +141,23 @@ void TupScreen::releaseAudioResources()
     #endif
 
     soundRecords.clear();
+    while(!soundPlayer.isEmpty()) {
+        QMediaPlayer *player = soundPlayer.takeFirst();
+        player->stop();
+        player->setMedia(QMediaContent());
+        delete player;
+        player = nullptr;
+    }
+
+    /*
     foreach(QMediaPlayer *player, soundPlayer) {
         player->stop();
         player->setMedia(QMediaContent());
         delete player;
+        player = nullptr;
     }
     soundPlayer.clear();
+    */
 }
 
 void TupScreen::initPhotogramsArray()

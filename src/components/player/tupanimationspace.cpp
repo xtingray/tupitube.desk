@@ -124,6 +124,10 @@ void TupAnimationspace::keyPressEvent(QKeyEvent *event)
 
 void TupAnimationspace::clearInterface()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupAnimationspace::clearInterface()]";
+    #endif
+
     playerInterface->doStop();
     playerInterface->clearMemory();
     playerInterface->resetPlayerInterface();
