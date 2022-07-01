@@ -148,16 +148,6 @@ void TupScreen::releaseAudioResources()
         delete player;
         player = nullptr;
     }
-
-    /*
-    foreach(QMediaPlayer *player, soundPlayer) {
-        player->stop();
-        player->setMedia(QMediaContent());
-        delete player;
-        player = nullptr;
-    }
-    soundPlayer.clear();
-    */
 }
 
 void TupScreen::initPhotogramsArray()

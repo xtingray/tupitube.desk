@@ -2311,9 +2311,12 @@ void TupLibraryWidget::updateItemSoundPath()
     #endif
 
     if (display) {
-        QString key = currentSound->getSymbolName();
-        currentSound = library->getObject(key);
-        if (display->isSoundPanelVisible())
-            display->setSoundParams(currentSound);
+        if (display->isSoundPanelVisible()) {
+            if (currentSound) {
+                QString key = currentSound->getSymbolName();
+                currentSound = library->getObject(key);
+                display->setSoundParams(currentSound);
+            }
+        }
     }
 }

@@ -81,7 +81,8 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
         project->updateLibraryPaths(newPath);
         project->setDataDir(newPath);
 
-        emit projectPathChanged();
+        if (project->soundsListSize()) // The project has at least one sound
+            emit projectPathChanged();
 
         if (!projectDir.exists(newPath)) { // Target dir doesn't exist
             // Update the cache path with new project's name
@@ -179,16 +180,14 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                     TOsd::self()->display(TOsd::Error, tr("Can't save project!"));
                     return false;
                 }
-            } else { // Source dir doesn't exist or source path == target path
+            } else {
                 #ifdef TUP_DEBUG
                     // SQA: This case is still under tracking
                     qDebug() << "---";
-                    qDebug() << "NEW CASE!!!";
-                    qDebug() << "currentDirName -> " << currentDirName;
-                    qDebug() << "projectDir.exists(currentDirName) -> " << projectDir.exists(currentDirName);
-                    qDebug() << "newPath -> " << newPath;
-                    qDebug() << "projectDir.exists(newPath) -> " << projectDir.exists(newPath);
-                    qDebug() << "project->getDataDir() -> " << project->getDataDir();
+                    qDebug() << "[TupFileManager::save()] - "
+                                "User is saving the current opened project in same/other folder using same name...";
+                    qDebug() << "*** fileName -> " << fileName;
+                    qDebug() << "---";
                 #endif
             }
         }

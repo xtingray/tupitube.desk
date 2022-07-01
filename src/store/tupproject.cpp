@@ -1136,6 +1136,7 @@ void TupProject::updateSoundPaths(const QString &newPath)
         qDebug() << "[TupProject::updateSoundPaths()] - newPath -> " << newPath;
         qDebug() << "[TupProject::updateSoundPaths()] - old path -> " << kAppProp->projectDir();
         qDebug() << "[TupProject::updateSoundPaths()] - soundRecords.size() -> " << soundRecords.size();
+        qDebug() << "---";
     #endif
 
     for (int i=0; i<soundRecords.size(); i++) {
@@ -1180,6 +1181,11 @@ QList<SoundResource> TupProject::soundResourcesList()
     #endif
 
     return soundRecords;
+}
+
+int TupProject::soundsListSize()
+{
+    return soundRecords.size();
 }
 
 void TupProject::resetSoundRecordsList()

@@ -1123,7 +1123,7 @@ bool TupMainWindow::storeProcedure()
             qWarning() << "TupMainWindow::saveProject() - Error: Can't save project -> " << m_fileName;
         #endif
         disconnect(m_projectManager, SIGNAL(projectPathChanged()),
-                   this, SLOT(updateSondPaths()));
+                   this, SLOT(updateSoundsPath()));
         QApplication::restoreOverrideCursor();
         return false;
     }
