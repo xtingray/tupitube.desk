@@ -55,6 +55,9 @@ class TUPITUBE_EXPORT TupFileManager : public QObject
 
         virtual bool createImageProject(const QString &projectCode, const QString &imgPath,
                                         TupProject *project);
+
+    signals:
+        void projectPathChanged();
 };
 
 #endif

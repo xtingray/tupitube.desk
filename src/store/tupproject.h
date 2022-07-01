@@ -151,6 +151,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         QList<SoundResource> soundResourcesList();
         bool updateSoundResourcesItem(TupLibraryObject *item);
         bool updateSoundType(const QString audioId, SoundType type);
+        void updateLibraryPaths(const QString &newPath);
         void updateSoundPaths(const QString &newPath);
 
     signals:

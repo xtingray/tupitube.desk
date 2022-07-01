@@ -655,3 +655,8 @@ void TupCameraWidget::resetPlayerInterface()
     previewScreen = nullptr;
     delete previewScreen;
 }
+
+void TupCameraWidget::loadSoundRecords()
+{
+    previewScreen->loadSoundRecords();
+}

@@ -101,6 +101,8 @@ void TupProjectManager::setHandler(TupAbstractProjectHandler *pHandler, bool net
                    this, SLOT(createCommand(const TupProjectRequest *, bool)));
         disconnect(handler, SIGNAL(sendLocalCommand(const TupProjectRequest *)),
                    this, SLOT(handleLocalRequest(const TupProjectRequest *)));
+        disconnect(handler, SIGNAL(projectPathChanged()), this, SIGNAL(projectPathChanged()));
+
         delete handler;
         handler = nullptr;
     }
@@ -113,6 +115,7 @@ void TupProjectManager::setHandler(TupAbstractProjectHandler *pHandler, bool net
             this, SLOT(createCommand(const TupProjectRequest *, bool)));
     connect(handler, SIGNAL(sendLocalCommand(const TupProjectRequest *)),
             this, SLOT(handleLocalRequest(const TupProjectRequest *)));
+    connect(handler, SIGNAL(projectPathChanged()), this, SIGNAL(projectPathChanged()));
 
     isNetworked = networked;
 }

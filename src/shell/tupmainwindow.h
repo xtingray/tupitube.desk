@@ -208,6 +208,8 @@ class TupMainWindow : public TabbedMainWindow
         void doPlay();
         void requestSaveAction();
 
+        void updateSoundsPath();
+
     private:
         QString appTitle;
         TupProjectManager *m_projectManager;

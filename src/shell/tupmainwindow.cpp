@@ -1098,6 +1098,8 @@ bool TupMainWindow::storeProcedure()
     m_actionManager->enable("save_project", false);
     m_actionManager->enable("save_project_as", false);
 
+    connect(m_projectManager, SIGNAL(projectPathChanged()),
+            this, SLOT(updateSoundsPath()));
     if (m_projectManager->saveProject(m_fileName)) {
         updateRecentProjectList();
 
@@ -1113,10 +1115,15 @@ bool TupMainWindow::storeProcedure()
         int last = m_fileName.lastIndexOf("/");
         QString dir = m_fileName.left(last);
         saveDefaultPath(dir);
+
+        disconnect(m_projectManager, SIGNAL(projectPathChanged()),
+                   this, SLOT(updateSoundsPath()));
     } else {
         #ifdef TUP_DEBUG
             qWarning() << "TupMainWindow::saveProject() - Error: Can't save project -> " << m_fileName;
         #endif
+        disconnect(m_projectManager, SIGNAL(projectPathChanged()),
+                   this, SLOT(updateSondPaths()));
         QApplication::restoreOverrideCursor();
         return false;
     }
@@ -1128,6 +1135,19 @@ bool TupMainWindow::storeProcedure()
     QApplication::restoreOverrideCursor();
 
     return true;
+}
+
+void TupMainWindow::updateSoundsPath()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::updateSoundsPath()]";
+    #endif
+
+    if (m_libraryWidget)
+        m_libraryWidget->updateItemSoundPath();
+
+    if (cameraWidget)
+        cameraWidget->loadSoundRecords();
 }
 
 void TupMainWindow::openRecentProject()

@@ -54,6 +54,9 @@ class TupLocalProjectManagerHandler : public TupAbstractProjectHandler
         virtual bool loadProject(const QString &fileName, TupProject *project);
         virtual void setProject(TupProject *project);
 
+    signals:
+        void projectPathChanged();
+
     private:
         bool isUndoCommand(const QString &xml);
 };

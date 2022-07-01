@@ -101,6 +101,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void stopSoundPlayer();
         void updateSpaceContext(TupProject::Mode mode);
         void initCurrentFrame();
+        void updateItemSoundPath();
 
     protected:
         virtual void sceneResponse(TupSceneResponse *response);

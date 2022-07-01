@@ -1119,6 +1119,16 @@ bool TupProject::updateSoundResourcesItem(TupLibraryObject *item)
     return false;
 }
 
+void TupProject::updateLibraryPaths(const QString &newPath)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProject::updateLibraryPaths()] - newPath -> " << newPath;
+    #endif
+
+    library->updatePaths(newPath);
+    updateSoundPaths(newPath);
+}
+
 void TupProject::updateSoundPaths(const QString &newPath)
 {
     #ifdef TUP_DEBUG

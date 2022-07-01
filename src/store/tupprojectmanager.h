@@ -103,6 +103,7 @@ class TUPITUBE_EXPORT TupProjectManager : public QObject
     signals:
         void responsed(TupProjectResponse *reponse);
         void requestOpenProject(const QString &filename);
+        void projectPathChanged();
 
     private:
         bool modified;

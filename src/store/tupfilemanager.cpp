@@ -78,9 +78,10 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
         QString newPath = CACHE_DIR + filename;
         project->setProjectName(filename);
         projectDir.setPath(newPath);
-        project->getLibrary()->updatePaths(newPath);
-        project->updateSoundPaths(newPath);
+        project->updateLibraryPaths(newPath);
         project->setDataDir(newPath);
+
+        emit projectPathChanged();
 
         if (!projectDir.exists(newPath)) { // Target dir doesn't exist
             // Update the cache path with new project's name

@@ -143,7 +143,10 @@ bool TupLocalProjectManagerHandler::saveProject(const QString &fileName, TupProj
         file += ".tup";
 
     TupFileManager *manager = new TupFileManager;
+    connect(manager, SIGNAL(projectPathChanged()), this, SIGNAL(projectPathChanged()));
     result = manager->save(file, project);
+    disconnect(manager, SIGNAL(projectPathChanged()), this, SIGNAL(projectPathChanged()));
+
     delete manager;
 
     return result;

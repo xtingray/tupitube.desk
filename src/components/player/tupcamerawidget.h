@@ -63,6 +63,7 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         void updateScenes(int sceneIndex);
         void clearMemory();
         void resetPlayerInterface();
+        void loadSoundRecords();
 
     signals:
         void requestTriggered(const TupProjectRequest *event);

@@ -103,6 +103,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         QSpinBox *frameBox;
         QWidget *frameWidget;
         QString soundID;
+        QString url;
 };
 
 #endif

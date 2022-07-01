@@ -143,7 +143,8 @@ void TupSoundPlayer::setSoundParams(TupLibraryObject *sound)
         qDebug() << "[TupSoundPlayer::setSoundParams()] - isMuted() -> " << sound->isMuted();
     #endif
 
-    player->setMedia(QUrl::fromLocalFile(sound->getDataPath()));
+    url = sound->getDataPath();
+    player->setMedia(QUrl::fromLocalFile(url));
     soundID = sound->getSymbolName();
     enableLipSyncInterface(sound->getSoundType(), sound->frameToPlay());
 
@@ -179,6 +180,10 @@ void TupSoundPlayer::playFile()
 
 void TupSoundPlayer::startPlayer()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundPlayer::startPlayer()] - Playing audio -> " << url;
+    #endif
+
     playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/pause.png")));
     playing = true;
     player->setVolume(60);

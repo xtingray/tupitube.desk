@@ -2303,3 +2303,17 @@ void TupLibraryWidget::importAsset(const QString &name, TupSearchDialog::AssetTy
     emit requestTriggered(&request);
     data.clear();
 }
+
+void TupLibraryWidget::updateItemSoundPath()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::updateItemSoundPath()]";
+    #endif
+
+    if (display) {
+        QString key = currentSound->getSymbolName();
+        currentSound = library->getObject(key);
+        if (display->isSoundPanelVisible())
+            display->setSoundParams(currentSound);
+    }
+}
