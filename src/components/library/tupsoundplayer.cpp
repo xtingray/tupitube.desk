@@ -55,6 +55,7 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     connect(player, SIGNAL(positionChanged(qint64)), SLOT(positionChanged(qint64)));
     connect(player, SIGNAL(durationChanged(qint64)), SLOT(durationChanged(qint64)));
     connect(player, SIGNAL(stateChanged(QMediaPlayer::State)), SLOT(stateChanged(QMediaPlayer::State)));
+    connect(player, SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)), SLOT(statusChanged(QMediaPlayer::MediaStatus)));
 
     frameWidget = new QWidget;
 
@@ -249,6 +250,10 @@ void TupSoundPlayer::durationChanged(qint64 value)
 
 void TupSoundPlayer::stateChanged(QMediaPlayer::State state)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundPlayer::stateChanged()] - state -> " << state;
+    #endif
+
     if (state == QMediaPlayer::StoppedState) {
         slider->setValue(0);
         playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/play_small.png")));
@@ -261,6 +266,13 @@ void TupSoundPlayer::stateChanged(QMediaPlayer::State state)
         if (loop)
             QTimer::singleShot(200, this, SLOT(startPlayer()));
     }
+}
+
+void TupSoundPlayer::statusChanged(QMediaPlayer::MediaStatus status)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundPlayer::statusChanged()] - status -> " << status;
+    #endif
 }
 
 void TupSoundPlayer::updateSoundPos(int pos)
