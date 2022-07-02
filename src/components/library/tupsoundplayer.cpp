@@ -48,7 +48,7 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     setMidLineWidth(2);
     setLineWidth(1);
 
-    totalTime = "00:00:00";
+    totalTime = "00:00";
     playing = false;
     loop = false;
     player = new QMediaPlayer;
@@ -195,7 +195,7 @@ void TupSoundPlayer::startPlayer()
 
     QString initTime = "00:00";
     if (duration > 3600)
-        initTime = "00:00:00";
+        initTime = "00:00";
     initTime = initTime + " / " + totalTime;
     timer->setText(initTime);
 
@@ -255,7 +255,7 @@ void TupSoundPlayer::stateChanged(QMediaPlayer::State state)
         playing = false;
         QString init = "00:00";
         if (duration > 3600)
-            init = "00:00:00";
+            init = "00:00";
         timer->setText(init + " / " + totalTime);
 
         if (loop)
