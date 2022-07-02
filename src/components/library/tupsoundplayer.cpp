@@ -48,6 +48,7 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     setMidLineWidth(2);
     setLineWidth(1);
 
+    totalTime = "00:00:00";
     playing = false;
     loop = false;
     player = new QMediaPlayer;
@@ -137,13 +138,17 @@ QSize TupSoundPlayer::sizeHint() const
 
 void TupSoundPlayer::setSoundParams(TupLibraryObject *sound)
 {
+    url = sound->getDataPath();
+
     #ifdef TUP_DEBUG
         qDebug() << "[TupSoundPlayer::setSoundParams()] - getSoundType() -> " << sound->getSoundType();
         qDebug() << "[TupSoundPlayer::setSoundParams()] - frameToPlay() -> " << sound->frameToPlay();
         qDebug() << "[TupSoundPlayer::setSoundParams()] - isMuted() -> " << sound->isMuted();
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - audio url -> " << url;
     #endif
 
-    url = sound->getDataPath();
+    player->stop();
+    player = new QMediaPlayer;
     player->setMedia(QUrl::fromLocalFile(url));
     soundID = sound->getSymbolName();
     enableLipSyncInterface(sound->getSoundType(), sound->frameToPlay());
