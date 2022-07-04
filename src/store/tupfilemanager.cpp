@@ -214,7 +214,10 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
     } else {
         // If project's path doesn't exist, create it
         if (!projectDir.exists()) {
-            if (filename.compare(project->getName()) != 0) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupFileManager::save()] - Project dir doesn't exist... -> " << projectDir.path();
+            #endif
+            if (filename.compare(project->getName()) != 0) { // User renamed the source file name
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupFileManager::save()] - Updating project name to -> " << filename;
                 #endif
@@ -223,25 +226,33 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                 project->setProjectName(filename);
             }
 
-            #ifdef TUP_DEBUG
-                qDebug() << "[TupFileManager::save()] - Creating project's directory...";
-            #endif
-            if (projectDir.mkdir(projectDir.path())) {
+            if (!projectDir.exists()) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupFileManager::save()] - Directory was created successfully -> "
-                             << projectDir.path();
+                    qDebug() << "[TupFileManager::save()] - Creating project's directory -> " << projectDir.path();
                 #endif
+                if (projectDir.mkdir(projectDir.path())) {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupFileManager::save()] - Directory was created successfully -> "
+                                 << projectDir.path();
+                    #endif
+                } else {
+                    #ifdef TUP_DEBUG
+                        qWarning() << "[TupFileManager::save()] - Error: Can't create path -> "
+                                   << projectDir.path();
+                    #endif
+                    TOsd::self()->display(TOsd::Error, tr("Can't save project! (Code %1)").arg("007"));
+                    return false;
+                }
             } else {
                 #ifdef TUP_DEBUG
-                    qWarning() << "[TupFileManager::save()] - Error: Can't create path -> "
-                               << projectDir.path();
+                    qDebug() << "[TupFileManager::save()] - "
+                                "Project's directory already exists! -> " << projectDir.path();
                 #endif
-                TOsd::self()->display(TOsd::Error, tr("Can't save project! (Code %1)").arg("007"));
-                return false;
             }
         }
     }
 
+    // Saving project components...
     {
         #ifdef TUP_DEBUG
             qDebug() << "[TupFileManager::save()] - source files path -> " << projectDir.path();
