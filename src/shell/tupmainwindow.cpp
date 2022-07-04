@@ -649,8 +649,10 @@ void TupMainWindow::resetUI()
         if (projectPath.exists()) {
             if (projectPath.removeRecursively()) {
                 #ifdef TUP_DEBUG
+                    qDebug() << "---";
                     qDebug() << "[TupMainWindow::resetUI()] - "
-                                "CACHE project path removed successfully! -> " << projectCache;
+                                "*** CACHE project path removed successfully! -> " << projectCache;
+                    qDebug() << "---";
                 #endif
             } else {
                 #ifdef TUP_DEBUG
@@ -1100,6 +1102,9 @@ bool TupMainWindow::storeProcedure()
 
     connect(m_projectManager, SIGNAL(projectPathChanged()),
             this, SLOT(updateSoundsPath()));
+    connect(m_projectManager, SIGNAL(soundPathsChanged()),
+            m_libraryWidget, SLOT(updateSoundPlayer()));
+
     if (m_projectManager->saveProject(m_fileName)) {
         updateRecentProjectList();
 
@@ -1118,12 +1123,17 @@ bool TupMainWindow::storeProcedure()
 
         disconnect(m_projectManager, SIGNAL(projectPathChanged()),
                    this, SLOT(updateSoundsPath()));
+        disconnect(m_projectManager, SIGNAL(soundPathsChanged()),
+                   m_libraryWidget, SLOT(updateSoundPlayer()));
     } else {
         #ifdef TUP_DEBUG
             qWarning() << "TupMainWindow::saveProject() - Error: Can't save project -> " << m_fileName;
         #endif
         disconnect(m_projectManager, SIGNAL(projectPathChanged()),
                    this, SLOT(updateSoundsPath()));
+        disconnect(m_projectManager, SIGNAL(soundPathsChanged()),
+                   m_libraryWidget, SLOT(updateSoundPlayer()));
+
         QApplication::restoreOverrideCursor();
         return false;
     }
@@ -1144,7 +1154,7 @@ void TupMainWindow::updateSoundsPath()
     #endif
 
     if (m_libraryWidget)
-        m_libraryWidget->updateItemSoundPath();
+        m_libraryWidget->resetSoundPlayer();
 
     if (cameraWidget)
         cameraWidget->loadSoundRecords();

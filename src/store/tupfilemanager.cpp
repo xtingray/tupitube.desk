@@ -70,7 +70,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
     bool ok;
 
     // Project name has been changed by the user
-    if (filename.compare(project->getName()) != 0 || projectDir.exists(currentDirName)) {
+    if ((filename.compare(project->getName()) != 0) && projectDir.exists(currentDirName)) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupFileManager::save()] - User changed project's name...";
         #endif
@@ -90,6 +90,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                 qDebug() << "[TupFileManager::save()] - "
                             "Renaming old path -> " << currentDirName << " into -> " << newPath;
             #endif
+
             // Try to rename old folder into new one
             if (projectDir.rename(currentDirName, newPath)) {
                 #ifdef TUP_DEBUG
@@ -112,12 +113,27 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                             qDebug() << "[TupFileManager::save()] - "
                                         "Success! Old path -> " << currentDirName << " copied to -> " << newPath;
                         #endif
+                        // Removing old path
+                        projectDir.setPath(currentDirName);
+                        if (projectDir.removeRecursively()) {
+                            #ifdef TUP_DEBUG
+                                qDebug() << "[TupFileManager::save()] - "
+                                            "Success! Old path removed -> " << currentDirName;
+                            #endif
+                        } else {
+                            #ifdef TUP_DEBUG
+                                qDebug() << "[TupFileManager::save()] - "
+                                            "Fatal Error: Can't remove old path -> " << currentDirName;
+                            #endif
+                            TOsd::self()->display(TOsd::Error, tr("Can't save project! (Code %1)").arg("001"));
+                            return false;
+                        }
                     } else { // Copy action failed
                         #ifdef TUP_DEBUG
                             qWarning() << "[TupFileManager::save()] - "
                                           "Fatal Error: Can't copy content into new path -> " << newPath;
                         #endif
-                        TOsd::self()->display(TOsd::Error, tr("Can't save project!"));
+                        TOsd::self()->display(TOsd::Error, tr("Can't save project! (Code %1)").arg("002"));
                         return false;
                     }
                 } else { // New path creation failed
@@ -125,7 +141,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                         qWarning() << "[TupFileManager::save()] - "
                                       "Error: Can't create path -> " << newPath;
                     #endif
-                    TOsd::self()->display(TOsd::Error, tr("Can't save project!"));
+                    TOsd::self()->display(TOsd::Error, tr("Can't save project! (Code %1)").arg("003"));
                     return false;
                 }
             }
@@ -161,7 +177,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                                 qWarning() << "[TupFileManager::save()] - "
                                               "Fatal Error: Can't copy content into new path -> " << newPath;
                             #endif
-                            TOsd::self()->display(TOsd::Error, tr("Can't save project!"));
+                            TOsd::self()->display(TOsd::Error, tr("Can't save project! (Code %1)").arg("004"));
                             return false;
                         }
                     } else { // Failed while creating target dir
@@ -169,7 +185,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                             qWarning() << "[TupFileManager::save()] - "
                                           "Error: Can't create path after removing -> " << newPath;
                         #endif
-                        TOsd::self()->display(TOsd::Error, tr("Can't save project!"));
+                        TOsd::self()->display(TOsd::Error, tr("Can't save project! (Code %1)").arg("005"));
                         return false;
                     }
                 } else { // Failed removing target dir
@@ -177,7 +193,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                         qWarning() << "[TupFileManager::save()] - "
                                       "Error: Can't create path after removing -> " << newPath;
                     #endif
-                    TOsd::self()->display(TOsd::Error, tr("Can't save project!"));
+                    TOsd::self()->display(TOsd::Error, tr("Can't save project! (Code %1)").arg("006"));
                     return false;
                 }
             } else {
@@ -191,9 +207,22 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                 #endif
             }
         }
+
+        if (project->soundsListSize()) // The project has at least one sound
+            emit soundPathsChanged();
+
     } else {
         // If project's path doesn't exist, create it
         if (!projectDir.exists()) {
+            if (filename.compare(project->getName()) != 0) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupFileManager::save()] - Updating project name to -> " << filename;
+                #endif
+                QString newPath = CACHE_DIR + filename;
+                projectDir.setPath(newPath);
+                project->setProjectName(filename);
+            }
+
             #ifdef TUP_DEBUG
                 qDebug() << "[TupFileManager::save()] - Creating project's directory...";
             #endif
@@ -207,36 +236,36 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                     qWarning() << "[TupFileManager::save()] - Error: Can't create path -> "
                                << projectDir.path();
                 #endif
-                TOsd::self()->display(TOsd::Error, tr("Can't save project!"));
+                TOsd::self()->display(TOsd::Error, tr("Can't save project! (Code %1)").arg("007"));
                 return false;
             }
         }
     }
 
     {
-     #ifdef TUP_DEBUG
-         qDebug() << "[TupFileManager::save()] - source files path -> " << projectDir.path();
-     #endif
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupFileManager::save()] - source files path -> " << projectDir.path();
+        #endif
 
-     // Save project
-     QFile projectFile(projectDir.path() + "/project.tpp");
+        // Save project
+        QFile projectFile(projectDir.path() + "/project.tpp");
 
-     if (projectFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-         #ifdef TUP_DEBUG
-             qDebug() << "[TupFileManager::save()] - Saving config file (TPP)";
-         #endif
-         QTextStream ts(&projectFile);
-         QDomDocument doc;
-         project->setProjectName(filename);
-         doc.appendChild(project->toXml(doc));
-         ts << doc.toString();
-         projectFile.close();
-     } else {
-         #ifdef TUP_DEBUG
-             qWarning() << "[TupFileManager::save()] - Error: Can't create file -> " << projectDir.path() << "/project.tpp";
-         #endif
-         return false;
-     }
+        if (projectFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupFileManager::save()] - Saving config file (TPP)";
+            #endif
+            QTextStream ts(&projectFile);
+            QDomDocument doc;
+            project->setProjectName(filename);
+            doc.appendChild(project->toXml(doc));
+            ts << doc.toString();
+            projectFile.close();
+        } else {
+            #ifdef TUP_DEBUG
+                qWarning() << "[TupFileManager::save()] - Error: Can't create file -> " << projectDir.path() << "/project.tpp";
+            #endif
+            return false;
+        }
     }
 
     // Save scenes

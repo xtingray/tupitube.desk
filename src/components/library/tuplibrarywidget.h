@@ -101,7 +101,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void stopSoundPlayer();
         void updateSpaceContext(TupProject::Mode mode);
         void initCurrentFrame();
-        void updateItemSoundPath();
+        void resetSoundPlayer();
 
     protected:
         virtual void sceneResponse(TupSceneResponse *response);
@@ -150,6 +150,9 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void recoverMode();
         void importSoundFileFromFolder(const QString &filePath);
         // void callLipySyncModule(bool recorded, const QString &filePath);
+
+    public slots:
+        void updateSoundPlayer();
 
     signals:
         void requestCurrentGraphic();

@@ -68,6 +68,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         void stopFile();
         bool isPlaying();
         void reset();
+        void resetMediaPlayer();
         QString getSoundID() const;
         void updateInitFrame(int frame);
         void enableLipSyncInterface(SoundType type, int frame);
@@ -82,7 +83,6 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         void positionChanged(qint64 value);
         void durationChanged(qint64 value);
         void stateChanged(QMediaPlayer::State state);
-        void statusChanged(QMediaPlayer::MediaStatus status);
         void updateSoundPos(int pos);
         void updateLoopState();
         void muteAction();

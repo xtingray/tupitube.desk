@@ -768,8 +768,10 @@ void TupScreen::loadSoundRecords()
         qDebug() << "[TupScreen::loadSoundRecords()]";
     #endif
 
-    soundRecords.clear();
-    soundPlayer.clear();
+    // soundRecords.clear();
+    // soundPlayer.clear();
+
+    releaseAudioResources();
 
     // Loading effect sounds
     QList<SoundResource> effectsList = project->soundResourcesList();

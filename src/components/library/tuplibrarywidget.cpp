@@ -2304,19 +2304,45 @@ void TupLibraryWidget::importAsset(const QString &name, TupSearchDialog::AssetTy
     data.clear();
 }
 
-void TupLibraryWidget::updateItemSoundPath()
+void TupLibraryWidget::resetSoundPlayer()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::updateItemSoundPath()]";
+        qDebug() << "[TupLibraryWidget::resetSoundPlayer()]";
     #endif
 
     if (display) {
-        if (display->isSoundPanelVisible()) {
-            if (currentSound) {
-                QString key = currentSound->getSymbolName();
-                currentSound = library->getObject(key);
+        if (display->isSoundPanelVisible())
+            display->resetSoundPlayer();
+    }
+}
+
+void TupLibraryWidget::updateSoundPlayer()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+        qDebug() << "[TupLibraryWidget::updateSoundPlayer()]";
+    #endif
+
+    if (currentSound) {
+        QString key = currentSound->getSymbolName();
+        currentSound = library->getObject(key);
+        #ifdef TUP_DEBUG
+            QString path = currentSound->getDataPath();
+            qDebug() << "[TupLibraryWidget::updateSoundPlayer()] - Sound key -> " << key;
+            qDebug() << "[TupLibraryWidget::updateSoundPlayer()] - Sound path -> " << path;
+            if (QFile::exists(path))
+                qDebug() << "[TupLibraryWidget::updateSoundPlayer()] - Sound file exists!";
+            else
+                qDebug() << "[TupLibraryWidget::updateSoundPlayer()] - Sound file doesn't exist!";
+        #endif
+
+        if (display) {
+            if (display->isSoundPanelVisible())
                 display->setSoundParams(currentSound);
-            }
         }
     }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+    #endif
 }

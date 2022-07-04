@@ -228,7 +228,13 @@ bool TAlgorithm::copyFolder(const QString &src, const QString &dst)
     }
 
     foreach (QString file, srcDir.entryList(QDir::Files)) {
-        QFile::copy(src + QDir::separator() + file, dst + QDir::separator() + file);
+        QString sourceFile = src + QDir::separator() + file;
+        QString targetFile = dst + QDir::separator() + file;
+        #ifdef TUP_DEBUG
+            qDebug() << "[TAlgorithm::copyFolder()] - sourceFile -> " << sourceFile;
+            qDebug() << "[TAlgorithm::copyFolder()] - targetFile -> " << targetFile;
+        #endif
+        QFile::copy(sourceFile, targetFile);
     }
 
     return true;

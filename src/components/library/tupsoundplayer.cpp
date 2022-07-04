@@ -52,10 +52,9 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     playing = false;
     loop = false;
     player = new QMediaPlayer;
-    connect(player, SIGNAL(positionChanged(qint64)), SLOT(positionChanged(qint64)));
-    connect(player, SIGNAL(durationChanged(qint64)), SLOT(durationChanged(qint64)));
-    connect(player, SIGNAL(stateChanged(QMediaPlayer::State)), SLOT(stateChanged(QMediaPlayer::State)));
-    connect(player, SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)), SLOT(statusChanged(QMediaPlayer::MediaStatus)));
+    connect(player, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    connect(player, SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
+    connect(player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
 
     frameWidget = new QWidget;
 
@@ -137,24 +136,34 @@ QSize TupSoundPlayer::sizeHint() const
     return QWidget::sizeHint().expandedTo(QSize(100, 100));
 }
 
-void TupSoundPlayer::setSoundParams(TupLibraryObject *sound)
+void TupSoundPlayer::setSoundParams(TupLibraryObject *objectSound)
 {
-    url = sound->getDataPath();
+    url = objectSound->getDataPath();
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupSoundPlayer::setSoundParams()] - getSoundType() -> " << sound->getSoundType();
-        qDebug() << "[TupSoundPlayer::setSoundParams()] - frameToPlay() -> " << sound->frameToPlay();
-        qDebug() << "[TupSoundPlayer::setSoundParams()] - isMuted() -> " << sound->isMuted();
+        qDebug() << "---";
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - getSoundType() -> " << objectSound->getSoundType();
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - frameToPlay() -> " << objectSound->frameToPlay();
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - isMuted() -> " << objectSound->isMuted();
         qDebug() << "[TupSoundPlayer::setSoundParams()] - audio url -> " << url;
+        qDebug() << "---";
     #endif
+
+    disconnect(player, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    disconnect(player, SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
+    disconnect(player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
 
     player->stop();
     player = new QMediaPlayer;
     player->setMedia(QUrl::fromLocalFile(url));
-    soundID = sound->getSymbolName();
-    enableLipSyncInterface(sound->getSoundType(), sound->frameToPlay());
+    connect(player, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    connect(player, SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
+    connect(player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
 
-    mute = sound->isMuted();
+    soundID = objectSound->getSymbolName();
+    enableLipSyncInterface(objectSound->getSoundType(), objectSound->frameToPlay());
+
+    mute = objectSound->isMuted();
     if (mute) {
         muteButton->setToolTip(tr("Unmute"));
         playButton->setEnabled(false);
@@ -268,13 +277,6 @@ void TupSoundPlayer::stateChanged(QMediaPlayer::State state)
     }
 }
 
-void TupSoundPlayer::statusChanged(QMediaPlayer::MediaStatus status)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupSoundPlayer::statusChanged()] - status -> " << status;
-    #endif
-}
-
 void TupSoundPlayer::updateSoundPos(int pos)
 {
     player->setPosition(pos*1000);
@@ -291,13 +293,22 @@ void TupSoundPlayer::reset()
         qDebug() << "[TupSoundPlayer::reset()]";
     #endif
 
-    player->stop();
-    player->setMedia(QMediaContent());
-    player = new QMediaPlayer;
+    resetMediaPlayer();
 
     loop = false;
     loopBox->setChecked(false);
     hide();
+}
+
+void TupSoundPlayer::resetMediaPlayer()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundPlayer::resetMediaPlayer()]";
+    #endif
+
+    player->stop();
+    player->setMedia(QMediaContent());
+    player = new QMediaPlayer;
 }
 
 void TupSoundPlayer::muteAction()

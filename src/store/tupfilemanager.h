@@ -58,6 +58,7 @@ class TUPITUBE_EXPORT TupFileManager : public QObject
 
     signals:
         void projectPathChanged();
+        void soundPathsChanged();
 };
 
 #endif

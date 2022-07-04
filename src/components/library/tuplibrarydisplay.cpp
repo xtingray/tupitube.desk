@@ -78,6 +78,11 @@ void TupLibraryDisplay::reset()
     previewPanel->reset();
 }
 
+void TupLibraryDisplay::resetSoundPlayer()
+{
+    soundPlayer->resetMediaPlayer();
+}
+
 void TupLibraryDisplay::render(QGraphicsItem *item)
 {
     #ifdef TUP_DEBUG

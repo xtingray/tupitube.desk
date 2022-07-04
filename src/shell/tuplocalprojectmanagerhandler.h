@@ -56,6 +56,7 @@ class TupLocalProjectManagerHandler : public TupAbstractProjectHandler
 
     signals:
         void projectPathChanged();
+        void soundPathsChanged();
 
     private:
         bool isUndoCommand(const QString &xml);

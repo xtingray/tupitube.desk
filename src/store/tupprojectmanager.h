@@ -104,6 +104,7 @@ class TUPITUBE_EXPORT TupProjectManager : public QObject
         void responsed(TupProjectResponse *reponse);
         void requestOpenProject(const QString &filename);
         void projectPathChanged();
+        void soundPathsChanged();
 
     private:
         bool modified;

@@ -144,8 +144,12 @@ bool TupLocalProjectManagerHandler::saveProject(const QString &fileName, TupProj
 
     TupFileManager *manager = new TupFileManager;
     connect(manager, SIGNAL(projectPathChanged()), this, SIGNAL(projectPathChanged()));
+    connect(manager, SIGNAL(soundPathsChanged()), this, SIGNAL(soundPathsChanged()));
+
     result = manager->save(file, project);
+
     disconnect(manager, SIGNAL(projectPathChanged()), this, SIGNAL(projectPathChanged()));
+    disconnect(manager, SIGNAL(soundPathsChanged()), this, SIGNAL(soundPathsChanged()));
 
     delete manager;
 

@@ -817,6 +817,10 @@ void TupWaveFormView::paintEvent(QPaintEvent *event)
 
 void TupWaveFormView::updateMediaStatus(QMediaPlayer::MediaStatus status)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupWaveFormView::updateMediaStatus()] - status -> " << status;
+    #endif
+
     if (status == QMediaPlayer::EndOfMedia)
         emit audioStopped();
 }
