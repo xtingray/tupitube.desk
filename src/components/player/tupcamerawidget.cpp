@@ -69,7 +69,7 @@ TupCameraWidget::TupCameraWidget(TupProject *work, QWidget *parent) : QFrame(par
     if (height <= 800)
         percent = 30;
     if (height >= 1080) {
-        if (factor < 1.4)
+        if (factor < 1.5)
             percent = 45;
         else
             percent = 55;
